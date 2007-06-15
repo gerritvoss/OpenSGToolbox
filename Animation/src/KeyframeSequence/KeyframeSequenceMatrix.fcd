@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="KeyframeSequenceMatrix"
+	parent="KeyframeSequence"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+	<Field
+		name="Values"
+		type="Matrix"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

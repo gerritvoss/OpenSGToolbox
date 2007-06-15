@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="ElapsedTimeAnimationAdvancer"
+	parent="AnimationAdvancer"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+   >
+   <Field
+         name="StartTime"
+         type="Real32"
+         cardinality="single"
+         visibility="external"
+         access="public"
+         >
+   </Field>
+   <Field
+         name="ElpsTime"
+         type="Real32"
+         cardinality="single"
+         visibility="external"
+         access="public"
+         >
+   </Field>
+   <Field
+         name="PrevElpsTime"
+         type="Real32"
+         cardinality="single"
+         visibility="external"
+         access="protected"
+         >
+   </Field>
+</FieldContainer>

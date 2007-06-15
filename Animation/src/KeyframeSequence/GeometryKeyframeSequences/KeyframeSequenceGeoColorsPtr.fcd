@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="KeyframeSequenceGeoColorsPtr"
+	parent="KeyframeSequence"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+	<Field
+		name="BaseValues"
+      type="GeoColorsPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+   </Field>
+   <Field
+         name="KeyframeDifferenceSets"
+         type="GeoColorDifferenceSetPtr"
+         cardinality="multi"
+         visibility="external"
+         access="public"
+         header="GeometryAnimation/OSGGeoColorDifferenceSet.h"
+         >
+   </Field>
+</FieldContainer>

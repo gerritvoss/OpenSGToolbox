@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="KeyframeSequence"
+	parent="FieldContainer"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+>
+KeyframeSequence is the base class of all Keyframe Sequences.
+</FieldContainer>

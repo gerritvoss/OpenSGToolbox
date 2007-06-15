@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+   name="GeoTexCoordDifferenceSet"
+   parent="GeoDifferenceSet"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+   <Field
+         name="TexCoords"
+         type="GeoTexCoordsPtr"
+         cardinality="single"
+         visibility="external"
+         access="public"
+         >
+   </Field>
+   <Field
+         name="Indices"
+         type="GeoIndicesPtr"
+         cardinality="single"
+         visibility="external"
+         access="public"
+         >
+   </Field>
+   <Field
+         name="TreatAsNormals"
+         type="bool"
+         cardinality="single"
+         visibility="external"
+         access="public"
+         >
+   </Field>
+</FieldContainer>

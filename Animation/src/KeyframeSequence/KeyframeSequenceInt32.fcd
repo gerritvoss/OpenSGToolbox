@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="KeyframeSequenceInt32"
+	parent="KeyframeSequence"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+	<Field
+		name="Values"
+		type="Int32"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="FieldAnimation"
+	parent="Animation"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+Field Animation Class.
+	<Field
+		name="Animator"
+		type="AnimatorPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+      header="Animators/OSGAnimator.h"
+	>
+	</Field>
+	<Field
+		name="Container"
+		type="FieldContainerPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+      defailt="NullFC"
+	>
+	</Field>
+	<Field
+		name="FieldName"
+		type="std::string"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="FieldId"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+   
+	<Field
+		name="InterpolationType"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ReplacementPolicy"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

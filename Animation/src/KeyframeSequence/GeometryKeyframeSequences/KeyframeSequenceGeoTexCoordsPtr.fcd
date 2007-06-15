@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="KeyframeSequenceGeoTexCoordsPtr"
+	parent="KeyframeSequence"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+	<Field
+		name="BaseValues"
+      type="GeoTexCoordsPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+   </Field>
+   <Field
+         name="KeyframeDifferenceSets"
+         type="GeoTexCoordDifferenceSetPtr"
+         cardinality="multi"
+         visibility="external"
+         access="public"
+         header="GeometryAnimation/OSGGeoTexCoordDifferenceSet.h"
+         >
+   </Field>
+</FieldContainer>

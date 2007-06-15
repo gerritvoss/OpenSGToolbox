@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="Animation"
+	parent="FieldContainer"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+>
+Animation is the base class of all Animation
+	<Field
+		name="Cycling"
+		type="Int32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+   
+	<Field
+		name="Cycles"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

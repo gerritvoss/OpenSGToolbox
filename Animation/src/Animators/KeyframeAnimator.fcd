@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="KeyframeAnimator"
+	parent="Animator"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+Keyframe Animator Class.
+	<Field
+		name="Values"
+		type="KeyframeSequencePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+      header="KeyframeSequence/OSGKeyframeSequence.h"
+	>
+	</Field>
+	<Field
+		name="Keys"
+		type="Real32"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

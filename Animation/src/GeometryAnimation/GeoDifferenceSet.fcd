@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="GeoDifferenceSet"
+   parent="FieldContainer"
+	pointerfieldtypes="both"
+   structure="abstract"
+	systemcomponent="false"
+   parentsystemcomponent="true"
+>
+</FieldContainer>

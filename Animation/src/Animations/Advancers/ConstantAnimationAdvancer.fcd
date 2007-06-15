@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="ConstantAnimationAdvancer"
+	parent="AnimationAdvancer"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+	<Field
+		name="Constant"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+   </Field>
+   <Field
+         name="PrevConstant"
+         type="Real32"
+         cardinality="single"
+         visibility="external"
+         access="protected"
+         >
+   </Field>
+</FieldContainer>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="KeyframeSequenceGeoPositionsPtr"
+	parent="KeyframeSequence"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+	<Field
+		name="BaseValues"
+      type="GeoPositionsPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+   </Field>
+   <Field
+         name="KeyframeDifferenceSets"
+         type="GeoPositionDifferenceSetPtr"
+         cardinality="multi"
+         visibility="external"
+         access="public"
+         header="GeometryAnimation/OSGGeoPositionDifferenceSet.h"
+         >
+   </Field>
+</FieldContainer>

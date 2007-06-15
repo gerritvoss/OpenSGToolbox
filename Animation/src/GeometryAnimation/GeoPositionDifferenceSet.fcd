@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+   name="GeoPositionDifferenceSet"
+   parent="GeoDifferenceSet"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+   <Field
+         name="Positions"
+         type="GeoPositionsPtr"
+         cardinality="single"
+         visibility="external"
+         access="public"
+         >
+   </Field>
+   <Field
+         name="Indices"
+         type="GeoIndicesPtr"
+         cardinality="single"
+         visibility="external"
+         access="public"
+         >
+   </Field>
+</FieldContainer>
