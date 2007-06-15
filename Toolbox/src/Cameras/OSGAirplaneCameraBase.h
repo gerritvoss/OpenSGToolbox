@@ -58,7 +58,7 @@
 #endif
 
 
-#include "OSGAnimationConfig.h"
+#include "OSGToolboxConfig.h"
 #include <OpenSG/OSGConfig.h>
 
 #include <OpenSG/OSGBaseTypes.h>
@@ -81,7 +81,7 @@ class BinaryDataHandler;
 
 //! \brief AirplaneCamera Base Class.
 
-class OSG_ANIMATION_CLASS_API AirplaneCameraBase : public Camera
+class OSG_TOOLBOX_CLASS_API AirplaneCameraBase : public Camera
 {
   private:
 

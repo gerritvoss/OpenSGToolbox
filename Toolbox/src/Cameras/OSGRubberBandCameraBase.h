@@ -58,7 +58,7 @@
 #endif
 
 
-#include "OSGAnimationConfig.h"
+#include "OSGToolboxConfig.h"
 #include <OpenSG/OSGConfig.h>
 
 #include <OpenSG/OSGBaseTypes.h>
@@ -83,7 +83,7 @@ class BinaryDataHandler;
 
 //! \brief RubberBandCamera Base Class.
 
-class OSG_ANIMATION_CLASS_API RubberBandCameraBase : public CameraDecorator
+class OSG_TOOLBOX_CLASS_API RubberBandCameraBase : public CameraDecorator
 {
   private:
 
