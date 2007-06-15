@@ -125,7 +125,7 @@ int main(int argc, char **argv)
     
     // create the scene
 
-    BubbleBlendGeometryNode = SceneFileHandler::the().read("C:\\Documents and Settings\\David\\My Documents\\Work\\VSE\\Plugins\\OpenSG\\Animation\\Builds\\Windows.Build\\lib\\BubbleBlendShape.osb");
+    BubbleBlendGeometryNode = SceneFileHandler::the().read("Data\\BubbleBlendShape.wrl");
 
 
     //Make Torus Node
