@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="ForceSystem"
+	parent="PhysicsSystem"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+	<Field
+		name="Forces"
+		type="ForcePtr"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+      header="Physics/Systems/Forces/OSGForce.h"
+	>
+	</Field>
+</FieldContainer>

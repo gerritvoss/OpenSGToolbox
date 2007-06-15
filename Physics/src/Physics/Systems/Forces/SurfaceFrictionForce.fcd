@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="SurfaceFrictionForce"
+	parent="Force"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+	<Field
+		name="FrictionConstant"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="NormalForce"
+		type="NormalForcePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+      header="Physics/Systems/Forces/OSGNormalForce.h"
+	>
+	</Field>
+</FieldContainer>

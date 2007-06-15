@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="ImprovedEulerIntegration"
+	parent="Integration"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+</FieldContainer>

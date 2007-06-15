@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="Fluid"
+	parent="AttachmentContainer"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+>
+	<Field
+		name="Viscosity"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Density"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

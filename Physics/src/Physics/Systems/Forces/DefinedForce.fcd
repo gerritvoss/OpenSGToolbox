@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DefinedForce"
+	parent="Force"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+	<Field
+		name="Force"
+		type="Vec3f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="PointOfApplication"
+		type="Pnt3f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

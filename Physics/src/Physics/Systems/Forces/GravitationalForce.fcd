@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="GravitationalForce"
+	parent="Force"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+	<Field
+		name="Acceleration"
+		type="Vec3f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>
