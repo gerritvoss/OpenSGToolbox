@@ -1,0 +1,2 @@
+LIBTYPE=		dbg
+include ../Makefile
