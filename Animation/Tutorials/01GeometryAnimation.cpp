@@ -25,9 +25,9 @@
 #include <OpenSG/OSGSimpleSceneManager.h>
 
 #include <OpenSG/OSGTime.h>
-#include "Animations/OSGAnimation.h"
-#include "GeometryAnimation/OSGBlendGeometry.h"
-#include "Animations/Advancers/OSGElapsedTimeAnimationAdvancer.h"
+#include <OpenSG/Animation/OSGAnimation.h>
+#include <OpenSG/Animation/OSGBlendGeometry.h>
+#include <OpenSG/Animation/OSGElapsedTimeAnimationAdvancer.h>
 #include <OpenSG/OSGComponentTransform.h>
 #include <OpenSG/OSGTransform.h>
 #include <OpenSG/OSGTypeFactory.h>
@@ -286,16 +286,16 @@ int setupGLUT(int *argc, char *argv[])
 //#include "KeyframeSequence/OSGKeyframeSequenceReal32.h"
 //#include "KeyframeSequence/OSGKeyframeSequencePnt3f.h"
 //#include "KeyframeSequence/OSGKeyframeSequenceColor3f.h"
-#include "KeyframeSequence/OSGKeyframeSequenceVec3f.h"
+#include <OpenSG/Animation/OSGKeyframeSequenceVec3f.h>
 //#include "KeyframeSequence/OSGKeyframeSequenceQuaternion.h"
-#include "Animators/OSGKeyframeAnimator.h"
-#include "Animations/OSGFieldAnimation.h"
+#include <OpenSG/Animation/OSGKeyframeAnimator.h>
+#include <OpenSG/Animation/OSGFieldAnimation.h>
 
-#include "KeyframeSequence/GeometryKeyframeSequences/OSGKeyframeSequenceGeoPositionsPtr.h"
-#include "GeometryAnimation/OSGGeoPositionDifferenceSet.h"
-#include "KeyframeSequence/GeometryKeyframeSequences/OSGKeyframeSequenceGeoNormalsPtr.h"
-#include "GeometryAnimation/OSGGeoNormalDifferenceSet.h"
-#include "Animations/OSGGeometryAnimation.h"
+#include <OpenSG/Animation/OSGKeyframeSequenceGeoPositionsPtr.h>
+#include <OpenSG/Animation/OSGGeoPositionDifferenceSet.h>
+#include <OpenSG/Animation/OSGKeyframeSequenceGeoNormalsPtr.h>
+#include <OpenSG/Animation/OSGGeoNormalDifferenceSet.h>
+#include <OpenSG/Animation/OSGGeometryAnimation.h>
 #include <OpenSG/OSGGeometry.h>
 
 void setupBlendGeometry(void)

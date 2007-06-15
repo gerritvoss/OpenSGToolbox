@@ -110,7 +110,8 @@ LDFLAGS = $(LINK) `$(OSGCONFIG) --libs --$(LIBTYPE) Base System`
 LIB_NAME = OSGAnimation
 
 srcdir = ../../../src
-VPATH = ../../../src:../../../src/Animations:../../../src/Animators:../../../src/KeyframeSequence:../../../src/Interpolation:../../../src/Cameras:../../../src/Animations/Advancers:../../../src/GeometryAnimation:../../../src/KeyframeSequence/GeometryKeyframeSequences:../../../src/Util
+installdir = ../Install
+VPATH = $(srcdir):$(srcdir)/Animations:$(srcdir)/Animators:$(srcdir)/KeyframeSequence:$(srcdir)/Interpolation:$(srcdir)/Cameras:$(srcdir)/Animations/Advancers:$(srcdir)/GeometryAnimation:$(srcdir)/KeyframeSequence/GeometryKeyframeSequences:$(srcdir)/Util
 #.SUFFIX = .cpp .o
 
 INCLUDES = -I$(srcdir)
@@ -141,7 +142,7 @@ OBJECTS = OSGFieldAnimation.o \
 	OSGAnimatorBase.o \
 	OSGKeyframeAnimator.o \
 	OSGInterpolationFactory.o \
-	OSGMFInterpolations.o \
+	OSGMFieldInterpolations.o \
 	OSGGeometryInterpolations.o \
 	OSGAirplaneCameraBase.o \
 	OSGAirplaneCamera.o \
@@ -207,23 +208,48 @@ SHARED_LIB_NAME=lib$(LIB_NAME)$(DGB_OPT_EXT).so
 
 STATIC_LIB_NAME=lib$(LIB_NAME)$(DGB_OPT_EXT).a
 
-default:	$(SHARED_LIB_NAME) \
+build:	$(SHARED_LIB_NAME) \
+	$(STATIC_LIB_NAME)
+        
+default:	build
+        
+build:	$(SHARED_LIB_NAME) \
 	$(STATIC_LIB_NAME)
 
 $(SHARED_LIB_NAME): $(OBJECTS)
 	$(CC) -shared $(LDOUT) $(SHARED_LIB_NAME) $(OBJECTS) $(LDFLAGS)
-	cp $(SHARED_LIB_NAME) ../../../../../../Linux.Build/$(LIBTYPE)/
         
 $(STATIC_LIB_NAME): $(OBJECTS)
 	ar -ruv $(STATIC_LIB_NAME) $(OBJECTS)
-	cp $(STATIC_LIB_NAME) ../../../../../../Linux.Build/$(LIBTYPE)/
 
 %.o: %.cpp
 	$(CC) -c $(CCFLAGS) $(INCLUDES) $<
 
 %: %.o
 	$(CC) $(LDOUT)$@ $< $(LDFLAGS)
-                                                                                                                                                             
+
+install:	build
+	@if [ ! -w $(installdir) ]; then                               \
+		mkdir $(installdir);                                   \
+		fi;
+	@if [ ! -w $(installdir)/include ]; then                               \
+		mkdir $(installdir)/include;                                   \
+		fi;
+	@if [ ! -w $(installdir)/include/OpenSG ]; then                               \
+		mkdir $(installdir)/include/OpenSG;                                   \
+		fi;
+	@if [ ! -w $(installdir)/include/OpenSG/Animation ]; then                               \
+		mkdir $(installdir)/include/OpenSG/Animation;                                   \
+		fi;
+	@if [ ! -w $(installdir)/lib ]; then                               \
+		mkdir $(installdir)/lib;                                   \
+		fi;
+	@if [ ! -w $(installdir)/bin ]; then                               \
+		mkdir $(installdir)/bin;                                   \
+		fi;
+	../CopyIncludes.sh $(srcdir) $(installdir)/include/OpenSG/Animation;
+	cp $(SHARED_LIB_NAME) $(installdir)/lib
+	cp $(STATIC_LIB_NAME) $(installdir)/lib
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------

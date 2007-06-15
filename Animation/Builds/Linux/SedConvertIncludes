@@ -1,0 +1,2 @@
+
+s-\"[^\"]*OSG\([^\"]*\)\"-\<OpenSG/Animation/OSG\1\>-

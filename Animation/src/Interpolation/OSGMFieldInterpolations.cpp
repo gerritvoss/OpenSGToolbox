@@ -71,3 +71,4 @@
       osg::InterpolationFactory::the()->registerMFieldInterpFunc(osg::STEP_INTERPOLATION, osg::MFVec3d::getClassType(), osg::MFieldStepInterpFunc<osg::MFVec3d>) &&
       osg::InterpolationFactory::the()->registerMFieldInterpFunc(osg::STEP_INTERPOLATION, osg::MFVec4d::getClassType(), osg::MFieldStepInterpFunc<osg::MFVec4d>)
       ;
+      

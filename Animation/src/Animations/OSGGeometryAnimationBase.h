@@ -67,7 +67,7 @@
 
 #include "OSGAnimation.h" // Parent
 
-#include <Animators/OSGAnimator.h> // Animator type
+#include "Animators/OSGAnimator.h" // Animator type
 #include <OpenSG/OSGGeometryFields.h> // GeometryCore type
 #include <OpenSG/OSGStringFields.h> // FieldName type
 #include <OpenSG/OSGUInt32Fields.h> // FieldId type

@@ -67,7 +67,7 @@
 #include "KeyframeSequence/OSGKeyframeSequence.h" // Parent
 
 #include <OpenSG/OSGGeoNormalsFields.h> // BaseValues type
-#include <GeometryAnimation/OSGGeoNormalDifferenceSet.h> // KeyframeDifferenceSets type
+#include "GeometryAnimation/OSGGeoNormalDifferenceSet.h" // KeyframeDifferenceSets type
 
 #include "OSGKeyframeSequenceGeoNormalsPtrFields.h"
 
