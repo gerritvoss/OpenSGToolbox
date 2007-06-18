@@ -59,7 +59,6 @@ OSG_USING_NAMESPACE
 SimpleSceneManager *mgr;
 
 osg::Time TimeLastIdle;
-osg::AnimationPtr TheAnimation;
 osg::AnimationPtr TheGeometryPositionAnimation;
 osg::AnimationPtr TheGeometryNormalAnimation;
 osg::AnimationAdvancerPtr TheAnimationAdvancer;
@@ -69,7 +68,6 @@ NodePtr BlendGeometryTransNode;
 
 // forward declaration so we can have the interesting stuff upfront
 int setupGLUT( int *argc, char *argv[] );
-void setupAnimation(void);
 void display(void);
 void setupGeometryAnimation(void);
 void setupBlendGeometry(void);
@@ -134,8 +132,7 @@ int main(int argc, char **argv)
     gwin->init();
     
     // create the scene
-
-    BubbleBlendGeometryNode = SceneFileHandler::the().read("Data\\BubbleBlendShape.wrl");
+    BubbleBlendGeometryNode = SceneFileHandler::the().read(".\\Data\\BubbleBlendShape.osb");
 
     //Make the Blend Geometry Node
     setupBlendGeometry();
@@ -155,6 +152,12 @@ int main(int argc, char **argv)
     }
     endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
+   //Animation Advancer
+   TheAnimationAdvancer = osg::ElapsedTimeAnimationAdvancer::create();
+   osg::beginEditCP(TheAnimationAdvancer);
+   osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->setStartTime( 0.0 );
+   osg::beginEditCP(TheAnimationAdvancer);
+
     setupGeometryAnimation();
 
     // create the SimpleSceneManager helper
@@ -168,7 +171,6 @@ int main(int argc, char **argv)
     mgr->showAll();
 
     TimeLastIdle = osg::getSystemTime();
-    TheAnimation->start();
     TheGeometryPositionAnimation->start();
     TheGeometryNormalAnimation->start();
     
@@ -191,7 +193,6 @@ void idle(void)
    
    osg::ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(Elps);
 
-   TheAnimation->update(TheAnimationAdvancer);
    TheGeometryPositionAnimation->update(TheAnimationAdvancer);
    TheGeometryNormalAnimation->update(TheAnimationAdvancer);
 
@@ -274,22 +275,26 @@ void setupBlendGeometry(void)
    if(BaseGeometryNode == NullFC)
    {
       std::cout << "BaseGeometryNode Not Found." << std::endl;
-      return;
+      std::cout << "Are you using Data/BubbleBlendShape.osb" << std::endl;
+      exit(0);
    }
    if(XDeformGeometryNode == NullFC)
    {
       std::cout << "XDeformGeometryNode Not Found." << std::endl;
-      return;
+      std::cout << "Are you using Data/BubbleBlendShape.osb" << std::endl;
+      exit(0);
    }
    if(YDeformGeometryNode == NullFC)
    {
       std::cout << "YDeformGeometryNode Not Found." << std::endl;
-      return;
+      std::cout << "Are you using Data/BubbleBlendShape.osb" << std::endl;
+      exit(0);
    }
    if(ZDeformGeometryNode == NullFC)
    {
       std::cout << "ZDeformGeometryNode Not Found." << std::endl;
-      return;
+      std::cout << "Are you using Data/BubbleBlendShape.osb" << std::endl;
+      exit(0);
    }
 
    osg::GeometryPtr BaseGeometryCore= osg::Geometry::Ptr::dcast( BaseGeometryNode->getCore() );

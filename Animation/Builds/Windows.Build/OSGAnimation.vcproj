@@ -4,6 +4,7 @@
 	Version="7.10"
 	Name="OSGAnimation"
 	ProjectGUID="{77623743-1948-4AC4-8227-7FF6072BD16F}"
+	RootNamespace="OSGAnimation"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -37,18 +38,22 @@
 				DisableSpecificWarnings="4244;4251;4275;4290;4231;4267"
 				ForcedIncludeFiles="WinSock2.h;windows.h"/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCCustomBuildTool"
+				Description="Installing Includes"
+				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Animation
+"
+				Outputs="include"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
-				OutputFile="..\..\..\..\..\Windows.Build\bin\$(ProjectName)_d.dll"
+				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="&quot;$(OSGROOT)\lib&quot;"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="..\..\..\..\..\Windows.Build\bin\$(ProjectName).pdb"
+				ProgramDatabaseFile="&quot;$(TargetDir)\$(ProjectName)D.pdb&quot;"
 				SubSystem="1"
-				ImportLibrary="..\..\..\..\..\Windows.Build\bin\$(ProjectName)_d.lib"
+				ImportLibrary="&quot;$(TargetDir)\$(ProjectName)D.lib&quot;"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -96,11 +101,13 @@
 				DisableSpecificWarnings="4244;4251;4275;4290;4231;4267"
 				ForcedIncludeFiles="WinSock2.h;windows.h"/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCCustomBuildTool"
+				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Animation"
+				Outputs="include"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="OSGBase.lib OSGSystem.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
-				OutputFile="..\..\..\..\..\Windows.Build\bin\$(ProjectName).dll"
+				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="&quot;$(OSGROOT)\lib&quot;"
@@ -110,7 +117,7 @@
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="..\..\..\..\..\Windows.Build\bin\$(ProjectName).lib"
+				ImportLibrary="&quot;$(TargetDir)\$(ProjectName).lib&quot;"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -1009,73 +1016,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Animations\OSGShaderAnimationFields.h">
-				</File>
-			</Filter>
-			<Filter
-				Name="Cameras"
-				Filter="">
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCamera.cpp">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCamera.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCamera.inl">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.cpp">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.inl">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCameraFields.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCamera.cpp">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCamera.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCamera.inl">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCameraBase.cpp">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCameraBase.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCameraBase.inl">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCameraFields.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCamera.cpp">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCamera.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCamera.inl">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.cpp">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.inl">
-				</File>
-				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCameraFields.h">
 				</File>
 			</Filter>
 			<Filter

@@ -54,19 +54,12 @@ SimpleSceneManager *mgr;
 
 osg::Time TimeLastIdle;
 osg::AnimationPtr TheAnimation;
-osg::AnimationPtr TheGeometryPositionAnimation;
-osg::AnimationPtr TheGeometryNormalAnimation;
 osg::AnimationAdvancerPtr TheAnimationAdvancer;
-
-NodePtr BubbleBlendGeometryNode;
-NodePtr BlendGeometryTransNode;
 
 // forward declaration so we can have the interesting stuff upfront
 int setupGLUT( int *argc, char *argv[] );
 void setupAnimation(void);
 void display(void);
-void setupGeometryAnimation(void);
-void setupBlendGeometry(void);
 
 FieldContainerPtr getFieldContainer(const Char8 *szTypeName, const std::string &namestring);
 
@@ -167,8 +160,6 @@ int main(int argc, char **argv)
 
     TimeLastIdle = osg::getSystemTime();
     TheAnimation->start();
-    TheGeometryPositionAnimation->start();
-    TheGeometryNormalAnimation->start();
 
     //osg::StatElemDescBase::printAll();
     
@@ -279,11 +270,11 @@ void setupAnimation(void)
    //Vector
    osg::KeyframeSequencePtr KeyframeSequence = osg::KeyframeSequenceVec3f::create();
    
-   osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(-3.0,-3.0,0.0));
-   osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(-3.0,3.0,0.0));
-   osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(3.0,3.0,0.0));
-   osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(3.0,-3.0,0.0));
-   osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(-3.0,-3.0,0.0));
+   osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(-1.5,-1.5,0.0));
+   osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(-1.5,1.5,0.0));
+   osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(1.5,1.5,0.0));
+   osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(1.5,-1.5,0.0));
+   osg::KeyframeSequenceVec3fPtr::dcast(KeyframeSequence)->getValues().push_back(osg::Vec3f(-1.5,-1.5,0.0));
          
    //Point
    /*osg::KeyframeSequencePtr KeyframeSequence = osg::KeyframeSequencePnt3f::create();
