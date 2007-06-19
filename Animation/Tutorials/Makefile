@@ -2,7 +2,7 @@
 
 # use debug or opt libs?
 LIBTYPE ?= opt
-OSGANIMATIONROOT ?= ../Builds/Linux/Install
+OSGANIMATIONROOT ?= ../../Builds/Linux
 
 ifeq ($(LIBTYPE),dbg)
 	DGB_OPT_EXT := D

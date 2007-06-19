@@ -4,7 +4,7 @@ LIB_NAME = OSGPhysics
 LIB_INCLUDE_DIR_NAME = Physics
 
 srcdir = ../../../src
-installdir = ../Install
+installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
 VPATH = $(srcdir):$(srcdir)/Physics:$(srcdir)/Physics/Actors:$(srcdir)/Physics/Integrations:$(srcdir)/Physics/Objects:$(srcdir)/Physics/Objects/Attributes:$(srcdir)/Physics/Systems:$(srcdir)/Physics/Systems/Forces
 
