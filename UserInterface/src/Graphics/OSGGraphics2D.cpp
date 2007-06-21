@@ -37,23 +37,15 @@ void Graphics2D::postDraw()
 	glPolygonMode(GL_BACK , _fill[1]);
 }
 
-void Graphics2D::drawSolidRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color3f& Color) const
+void Graphics2D::drawRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color) const
 {
-	glBegin(GL_QUADS);
-	   glColor3fv(Color.getValuesRGB());
-	   glVertex2sv(TopLeft.getValues());
-	   glVertex2s(BottomRight.x(), TopLeft.y());
-	   glVertex2sv(BottomRight.getValues());
-	   glVertex2s(TopLeft.x(), BottomRight.y());
-	glEnd();
-}
+	if(Color.alpha() < 1.0)
+	{
+		//Setup the Blending equations properly
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+	}
 
-void Graphics2D::drawTransleucentRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color) const
-{
-	//Setup the Blending equations properly
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);
-	
 	glBegin(GL_QUADS);
 	   glColor4fv(Color.getValuesRGBA());
 	   glVertex2sv(TopLeft.getValues());
@@ -62,7 +54,10 @@ void Graphics2D::drawTransleucentRect(const Pnt2s& TopLeft, const Pnt2s& BottomR
 	   glVertex2s(TopLeft.x(), BottomRight.y());
 	glEnd();
 	
-	glDisable(GL_BLEND);
+	if(Color.alpha() < 1.0)
+	{
+		glDisable(GL_BLEND);
+	}
 }
 
 OSG_END_NAMESPACE

@@ -21,8 +21,7 @@ public:
 	virtual void preDraw();
 	virtual void postDraw();
 
-	virtual void drawSolidRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color3f& Color) const;
-	virtual void drawTransleucentRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color) const;
+	virtual void drawRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color) const;
 };
 
 OSG_END_NAMESPACE
