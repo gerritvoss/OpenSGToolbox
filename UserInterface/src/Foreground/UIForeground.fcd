@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="UIForeground"
+	parent="Foreground"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+>
+A Foreground for rendering a UI on.
+	<Field
+		name="RootPanel"
+		type="Panel"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>
