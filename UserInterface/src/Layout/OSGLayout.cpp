@@ -36,86 +36,101 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGCOMPONENT_H_
-#define _OSGCOMPONENT_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
-#include "OSGUserInterfaceConfig.h"
+#include <stdlib.h>
+#include <stdio.h>
 
-#include "OSGComponentBase.h"
-#include "Graphics/OSGGraphics.h"
+#include <OpenSG/OSGConfig.h>
+
+#include "OSGLayout.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API Component : public ComponentBase
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class osg::Layout
+A UI Layout Interface.
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void Layout::initMethod (void)
 {
-  private:
+}
 
-    typedef ComponentBase Inherited;
 
-    /*==========================  PUBLIC  =================================*/
-  public:
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
-    /*! \{                                                                 */
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+/*----------------------- constructors & destructors ----------------------*/
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
+Layout::Layout(void) :
+    Inherited()
+{
+}
 
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
+Layout::Layout(const Layout &source) :
+    Inherited(source)
+{
+}
 
-    /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr Graphics) const = 0;
-    /*=========================  PROTECTED  ===============================*/
-  protected:
+Layout::~Layout(void)
+{
+}
 
-    // Variables should all be in ComponentBase.
+/*----------------------------- class specific ----------------------------*/
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                  Constructors                                */
-    /*! \{                                                                 */
+void Layout::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
 
-    Component(void);
-    Component(const Component &source);
+void Layout::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump Layout NI" << std::endl;
+}
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Destructors                                */
-    /*! \{                                                                 */
 
-    virtual ~Component(void); 
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
 
-    /*! \}                                                                 */
-    
-    /*==========================  PRIVATE  ================================*/
-  private:
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
 
-    friend class FieldContainer;
-    friend class ComponentBase;
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
 
-    static void initMethod(void);
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGLAYOUTBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGLAYOUTBASE_INLINE_CVSID;
 
-    // prohibit default functions (move to 'public' if you need one)
+    static Char8 cvsid_fields_hpp[] = OSGLAYOUTFIELDS_HEADER_CVSID;
+}
 
-    void operator =(const Component &source);
-};
-
-typedef Component *ComponentP;
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
 
 OSG_END_NAMESPACE
 
-#include "OSGComponentBase.inl"
-#include "OSGComponent.inl"
-
-#define OSGCOMPONENT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
-#endif /* _OSGCOMPONENT_H_ */

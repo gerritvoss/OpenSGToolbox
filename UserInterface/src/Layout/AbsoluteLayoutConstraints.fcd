@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="AbsoluteLayoutConstraints"
+	parent="LayoutConstraints"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+A UI AbsoluteLayoutConstraints.
+<Field
+		name="Position"
+		type="Pnt2s"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

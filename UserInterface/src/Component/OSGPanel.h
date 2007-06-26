@@ -36,24 +36,23 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGCOMPONENT_H_
-#define _OSGCOMPONENT_H_
+#ifndef _OSGPANEL_H_
+#define _OSGPANEL_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include "OSGUserInterfaceConfig.h"
 
-#include "OSGComponentBase.h"
-#include "Graphics/OSGGraphics.h"
+#include "OSGPanelBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API Component : public ComponentBase
+class OSG_USER_INTERFACE_CLASS_API Panel : public PanelBase
 {
   private:
 
-    typedef ComponentBase Inherited;
+    typedef PanelBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -74,25 +73,25 @@ class OSG_USER_INTERFACE_CLASS_API Component : public ComponentBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr Graphics) const = 0;
+	virtual void draw(const GraphicsPtr Graphics) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in ComponentBase.
+    // Variables should all be in PanelBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Component(void);
-    Component(const Component &source);
+    Panel(void);
+    Panel(const Panel &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Component(void); 
+    virtual ~Panel(void); 
 
     /*! \}                                                                 */
     
@@ -100,22 +99,22 @@ class OSG_USER_INTERFACE_CLASS_API Component : public ComponentBase
   private:
 
     friend class FieldContainer;
-    friend class ComponentBase;
+    friend class PanelBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Component &source);
+    void operator =(const Panel &source);
 };
 
-typedef Component *ComponentP;
+typedef Panel *PanelP;
 
 OSG_END_NAMESPACE
 
-#include "OSGComponentBase.inl"
-#include "OSGComponent.inl"
+#include "OSGPanelBase.inl"
+#include "OSGPanel.inl"
 
-#define OSGCOMPONENT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGPANEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGCOMPONENT_H_ */
+#endif /* _OSGPANEL_H_ */

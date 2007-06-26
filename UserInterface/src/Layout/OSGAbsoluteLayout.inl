@@ -4,8 +4,6 @@
  *                                                                           *
  *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
- *                                                                           *
  *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -40,102 +38,11 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
-
 #include <OpenSG/OSGConfig.h>
-
-#include "OSGButton.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::Button
-A UI Button.
-*/
-
-/***************************************************************************\
- *                           Class variables                               *
-\***************************************************************************/
-
-/***************************************************************************\
- *                           Class methods                                 *
-\***************************************************************************/
-
-void Button::initMethod (void)
-{
-}
-
-
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
-
-void Button::draw(const GraphicsPtr TheGraphics) const
-{
-	TheGraphics->drawRect( Pnt2s(0,0),getPreferredSize(), Color4f(0.0f,1.0f,0.0f,0.5));
-}
-
-/*-------------------------------------------------------------------------*\
- -  private                                                                 -
-\*-------------------------------------------------------------------------*/
-
-/*----------------------- constructors & destructors ----------------------*/
-
-Button::Button(void) :
-    Inherited()
-{
-}
-
-Button::Button(const Button &source) :
-    Inherited(source)
-{
-}
-
-Button::~Button(void)
-{
-}
-
-/*----------------------------- class specific ----------------------------*/
-
-void Button::changed(BitVector whichField, UInt32 origin)
-{
-    Inherited::changed(whichField, origin);
-}
-
-void Button::dump(      UInt32    , 
-                         const BitVector ) const
-{
-    SLOG << "Dump Button NI" << std::endl;
-}
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGBUTTONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGBUTTONBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGBUTTONFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
+
+#define OSGABSOLUTELAYOUT_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

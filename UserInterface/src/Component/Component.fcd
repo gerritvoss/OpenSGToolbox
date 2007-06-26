@@ -9,4 +9,61 @@
 	parentsystemcomponent="true"
 >
 A UI Component Interface.
+<Field
+		name="MinSize"
+		type="Vec2s"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+<Field
+		name="MaxSize"
+		type="Vec2s"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+<Field
+		name="PreferredSize"
+		type="Vec2s"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+<Field
+		name="Size"
+		type="Vec2s"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+<Field
+		name="Visible"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+<Field
+		name="Enabled"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+<Field
+		name="Constraints"
+		type="LayoutConstraintsPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+      header="Layout/OSGLayoutConstraints.h"
+	>
+	</Field>
 </FieldContainer>

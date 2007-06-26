@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="LayoutConstraints"
+	parent="AttachmentContainer"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+>
+A UI LayoutConstraints Interface.
+</FieldContainer>

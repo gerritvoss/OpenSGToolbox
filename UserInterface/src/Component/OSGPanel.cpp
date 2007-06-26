@@ -36,86 +36,109 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGCOMPONENT_H_
-#define _OSGCOMPONENT_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
-#include "OSGUserInterfaceConfig.h"
+#include <stdlib.h>
+#include <stdio.h>
 
-#include "OSGComponentBase.h"
-#include "Graphics/OSGGraphics.h"
+#include <OpenSG/OSGConfig.h>
+
+#include "OSGPanel.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API Component : public ComponentBase
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class osg::Panel
+A UI Panel.
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void Panel::initMethod (void)
 {
-  private:
+}
 
-    typedef ComponentBase Inherited;
 
-    /*==========================  PUBLIC  =================================*/
-  public:
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
-    /*! \{                                                                 */
+void Panel::draw(const GraphicsPtr TheGraphics) const
+{
+	for(UInt32 i=0 ; i<getChildren().size() ; ++i)
+	{
+		getArrangement()->draw(getChildren().getValue(i));
+	}
+}
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
+/*----------------------- constructors & destructors ----------------------*/
 
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
+Panel::Panel(void) :
+    Inherited()
+{
+}
 
-    /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr Graphics) const = 0;
-    /*=========================  PROTECTED  ===============================*/
-  protected:
+Panel::Panel(const Panel &source) :
+    Inherited(source)
+{
+}
 
-    // Variables should all be in ComponentBase.
+Panel::~Panel(void)
+{
+}
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                  Constructors                                */
-    /*! \{                                                                 */
+/*----------------------------- class specific ----------------------------*/
 
-    Component(void);
-    Component(const Component &source);
+void Panel::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Destructors                                */
-    /*! \{                                                                 */
+void Panel::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump Panel NI" << std::endl;
+}
 
-    virtual ~Component(void); 
 
-    /*! \}                                                                 */
-    
-    /*==========================  PRIVATE  ================================*/
-  private:
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
 
-    friend class FieldContainer;
-    friend class ComponentBase;
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
 
-    static void initMethod(void);
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
 
-    // prohibit default functions (move to 'public' if you need one)
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGPANELBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGPANELBASE_INLINE_CVSID;
 
-    void operator =(const Component &source);
-};
+    static Char8 cvsid_fields_hpp[] = OSGPANELFIELDS_HEADER_CVSID;
+}
 
-typedef Component *ComponentP;
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
 
 OSG_END_NAMESPACE
 
-#include "OSGComponentBase.inl"
-#include "OSGComponent.inl"
-
-#define OSGCOMPONENT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
-#endif /* _OSGCOMPONENT_H_ */

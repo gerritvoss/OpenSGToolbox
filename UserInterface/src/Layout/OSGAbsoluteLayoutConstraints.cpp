@@ -45,7 +45,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGButton.h"
+#include "OSGAbsoluteLayoutConstraints.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -53,8 +53,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::Button
-A UI Button.
+/*! \class osg::AbsoluteLayoutConstraints
+A UI AbsoluteLayoutConstraints.
 */
 
 /***************************************************************************\
@@ -65,7 +65,7 @@ A UI Button.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Button::initMethod (void)
+void AbsoluteLayoutConstraints::initMethod (void)
 {
 }
 
@@ -74,42 +74,37 @@ void Button::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Button::draw(const GraphicsPtr TheGraphics) const
-{
-	TheGraphics->drawRect( Pnt2s(0,0),getPreferredSize(), Color4f(0.0f,1.0f,0.0f,0.5));
-}
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-Button::Button(void) :
+AbsoluteLayoutConstraints::AbsoluteLayoutConstraints(void) :
     Inherited()
 {
 }
 
-Button::Button(const Button &source) :
+AbsoluteLayoutConstraints::AbsoluteLayoutConstraints(const AbsoluteLayoutConstraints &source) :
     Inherited(source)
 {
 }
 
-Button::~Button(void)
+AbsoluteLayoutConstraints::~AbsoluteLayoutConstraints(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void Button::changed(BitVector whichField, UInt32 origin)
+void AbsoluteLayoutConstraints::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void Button::dump(      UInt32    , 
+void AbsoluteLayoutConstraints::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump Button NI" << std::endl;
+    SLOG << "Dump AbsoluteLayoutConstraints NI" << std::endl;
 }
 
 
@@ -127,10 +122,10 @@ void Button::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGBUTTONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGBUTTONBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGABSOLUTELAYOUTCONSTRAINTSBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGABSOLUTELAYOUTCONSTRAINTSBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGBUTTONFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGABSOLUTELAYOUTCONSTRAINTSFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

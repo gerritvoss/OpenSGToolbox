@@ -36,24 +36,25 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGCOMPONENT_H_
-#define _OSGCOMPONENT_H_
+#ifndef _OSGLAYOUT_H_
+#define _OSGLAYOUT_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include "OSGUserInterfaceConfig.h"
 
-#include "OSGComponentBase.h"
+#include "OSGLayoutBase.h"
 #include "Graphics/OSGGraphics.h"
+#include "Component/OSGComponent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API Component : public ComponentBase
+class OSG_USER_INTERFACE_CLASS_API Layout : public LayoutBase
 {
   private:
 
-    typedef ComponentBase Inherited;
+    typedef LayoutBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -74,25 +75,26 @@ class OSG_USER_INTERFACE_CLASS_API Component : public ComponentBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr Graphics) const = 0;
+
+	virtual void draw(const ComponentPtr c, const GraphicsPtr g) const = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in ComponentBase.
+    // Variables should all be in LayoutBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Component(void);
-    Component(const Component &source);
+    Layout(void);
+    Layout(const Layout &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Component(void); 
+    virtual ~Layout(void); 
 
     /*! \}                                                                 */
     
@@ -100,22 +102,22 @@ class OSG_USER_INTERFACE_CLASS_API Component : public ComponentBase
   private:
 
     friend class FieldContainer;
-    friend class ComponentBase;
+    friend class LayoutBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Component &source);
+    void operator =(const Layout &source);
 };
 
-typedef Component *ComponentP;
+typedef Layout *LayoutP;
 
 OSG_END_NAMESPACE
 
-#include "OSGComponentBase.inl"
-#include "OSGComponent.inl"
+#include "OSGLayoutBase.inl"
+#include "OSGLayout.inl"
 
-#define OSGCOMPONENT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGLAYOUT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGCOMPONENT_H_ */
+#endif /* _OSGLAYOUT_H_ */

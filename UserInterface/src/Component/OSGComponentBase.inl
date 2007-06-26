@@ -70,6 +70,202 @@ OSG::UInt32 ComponentBase::getClassTypeId(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the Component::_sfMinSize field.
+inline
+SFVec2s *ComponentBase::getSFMinSize(void)
+{
+    return &_sfMinSize;
+}
+
+//! Get the Component::_sfMaxSize field.
+inline
+SFVec2s *ComponentBase::getSFMaxSize(void)
+{
+    return &_sfMaxSize;
+}
+
+//! Get the Component::_sfPreferredSize field.
+inline
+SFVec2s *ComponentBase::getSFPreferredSize(void)
+{
+    return &_sfPreferredSize;
+}
+
+//! Get the Component::_sfSize field.
+inline
+SFVec2s *ComponentBase::getSFSize(void)
+{
+    return &_sfSize;
+}
+
+//! Get the Component::_sfVisible field.
+inline
+SFBool *ComponentBase::getSFVisible(void)
+{
+    return &_sfVisible;
+}
+
+//! Get the Component::_sfEnabled field.
+inline
+SFBool *ComponentBase::getSFEnabled(void)
+{
+    return &_sfEnabled;
+}
+
+//! Get the Component::_sfConstraints field.
+inline
+SFLayoutConstraintsPtr *ComponentBase::getSFConstraints(void)
+{
+    return &_sfConstraints;
+}
+
+
+//! Get the value of the Component::_sfMinSize field.
+inline
+Vec2s &ComponentBase::getMinSize(void)
+{
+    return _sfMinSize.getValue();
+}
+
+//! Get the value of the Component::_sfMinSize field.
+inline
+const Vec2s &ComponentBase::getMinSize(void) const
+{
+    return _sfMinSize.getValue();
+}
+
+//! Set the value of the Component::_sfMinSize field.
+inline
+void ComponentBase::setMinSize(const Vec2s &value)
+{
+    _sfMinSize.setValue(value);
+}
+
+//! Get the value of the Component::_sfMaxSize field.
+inline
+Vec2s &ComponentBase::getMaxSize(void)
+{
+    return _sfMaxSize.getValue();
+}
+
+//! Get the value of the Component::_sfMaxSize field.
+inline
+const Vec2s &ComponentBase::getMaxSize(void) const
+{
+    return _sfMaxSize.getValue();
+}
+
+//! Set the value of the Component::_sfMaxSize field.
+inline
+void ComponentBase::setMaxSize(const Vec2s &value)
+{
+    _sfMaxSize.setValue(value);
+}
+
+//! Get the value of the Component::_sfPreferredSize field.
+inline
+Vec2s &ComponentBase::getPreferredSize(void)
+{
+    return _sfPreferredSize.getValue();
+}
+
+//! Get the value of the Component::_sfPreferredSize field.
+inline
+const Vec2s &ComponentBase::getPreferredSize(void) const
+{
+    return _sfPreferredSize.getValue();
+}
+
+//! Set the value of the Component::_sfPreferredSize field.
+inline
+void ComponentBase::setPreferredSize(const Vec2s &value)
+{
+    _sfPreferredSize.setValue(value);
+}
+
+//! Get the value of the Component::_sfSize field.
+inline
+Vec2s &ComponentBase::getSize(void)
+{
+    return _sfSize.getValue();
+}
+
+//! Get the value of the Component::_sfSize field.
+inline
+const Vec2s &ComponentBase::getSize(void) const
+{
+    return _sfSize.getValue();
+}
+
+//! Set the value of the Component::_sfSize field.
+inline
+void ComponentBase::setSize(const Vec2s &value)
+{
+    _sfSize.setValue(value);
+}
+
+//! Get the value of the Component::_sfVisible field.
+inline
+bool &ComponentBase::getVisible(void)
+{
+    return _sfVisible.getValue();
+}
+
+//! Get the value of the Component::_sfVisible field.
+inline
+const bool &ComponentBase::getVisible(void) const
+{
+    return _sfVisible.getValue();
+}
+
+//! Set the value of the Component::_sfVisible field.
+inline
+void ComponentBase::setVisible(const bool &value)
+{
+    _sfVisible.setValue(value);
+}
+
+//! Get the value of the Component::_sfEnabled field.
+inline
+bool &ComponentBase::getEnabled(void)
+{
+    return _sfEnabled.getValue();
+}
+
+//! Get the value of the Component::_sfEnabled field.
+inline
+const bool &ComponentBase::getEnabled(void) const
+{
+    return _sfEnabled.getValue();
+}
+
+//! Set the value of the Component::_sfEnabled field.
+inline
+void ComponentBase::setEnabled(const bool &value)
+{
+    _sfEnabled.setValue(value);
+}
+
+//! Get the value of the Component::_sfConstraints field.
+inline
+LayoutConstraintsPtr &ComponentBase::getConstraints(void)
+{
+    return _sfConstraints.getValue();
+}
+
+//! Get the value of the Component::_sfConstraints field.
+inline
+const LayoutConstraintsPtr &ComponentBase::getConstraints(void) const
+{
+    return _sfConstraints.getValue();
+}
+
+//! Set the value of the Component::_sfConstraints field.
+inline
+void ComponentBase::setConstraints(const LayoutConstraintsPtr &value)
+{
+    _sfConstraints.setValue(value);
+}
 
 
 OSG_END_NAMESPACE

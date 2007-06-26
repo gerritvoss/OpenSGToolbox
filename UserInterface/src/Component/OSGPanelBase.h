@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Component
+ **     class Panel
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGCOMPONENTBASE_H_
-#define _OSGCOMPONENTBASE_H_
+#ifndef _OSGPANELBASE_H_
+#define _OSGPANELBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -64,55 +64,40 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGAttachmentContainer.h> // Parent
+#include "OSGComponent.h" // Parent
 
-#include <OpenSG/OSGVec2sFields.h> // MinSize type
-#include <OpenSG/OSGVec2sFields.h> // MaxSize type
-#include <OpenSG/OSGVec2sFields.h> // PreferredSize type
-#include <OpenSG/OSGVec2sFields.h> // Size type
-#include <OpenSG/OSGBoolFields.h> // Visible type
-#include <OpenSG/OSGBoolFields.h> // Enabled type
-#include "Layout/OSGLayoutConstraints.h" // Constraints type
+#include <Component/OSGComponent.h> // Children type
+#include <Layout/OSGLayout.h> // Arrangement type
 
-#include "OSGComponentFields.h"
+#include "OSGPanelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Component;
+class Panel;
 class BinaryDataHandler;
 
-//! \brief Component Base Class.
+//! \brief Panel Base Class.
 
-class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
+class OSG_USER_INTERFACE_CLASS_API PanelBase : public Component
 {
   private:
 
-    typedef AttachmentContainer    Inherited;
+    typedef Component    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ComponentPtr  Ptr;
+    typedef PanelPtr  Ptr;
 
     enum
     {
-        MinSizeFieldId       = Inherited::NextFieldId,
-        MaxSizeFieldId       = MinSizeFieldId       + 1,
-        PreferredSizeFieldId = MaxSizeFieldId       + 1,
-        SizeFieldId          = PreferredSizeFieldId + 1,
-        VisibleFieldId       = SizeFieldId          + 1,
-        EnabledFieldId       = VisibleFieldId       + 1,
-        ConstraintsFieldId   = EnabledFieldId       + 1,
-        NextFieldId          = ConstraintsFieldId   + 1
+        ChildrenFieldId    = Inherited::NextFieldId,
+        ArrangementFieldId = ChildrenFieldId    + 1,
+        NextFieldId        = ArrangementFieldId + 1
     };
 
-    static const OSG::BitVector MinSizeFieldMask;
-    static const OSG::BitVector MaxSizeFieldMask;
-    static const OSG::BitVector PreferredSizeFieldMask;
-    static const OSG::BitVector SizeFieldMask;
-    static const OSG::BitVector VisibleFieldMask;
-    static const OSG::BitVector EnabledFieldMask;
-    static const OSG::BitVector ConstraintsFieldMask;
+    static const OSG::BitVector ChildrenFieldMask;
+    static const OSG::BitVector ArrangementFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -139,37 +124,21 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFVec2s             *getSFMinSize        (void);
-           SFVec2s             *getSFMaxSize        (void);
-           SFVec2s             *getSFPreferredSize  (void);
-           SFBool              *getSFVisible        (void);
-           SFBool              *getSFEnabled        (void);
-           SFLayoutConstraintsPtr *getSFConstraints    (void);
+           MFComponentPtr      *getMFChildren       (void);
+           SFLayoutPtr         *getSFArrangement    (void);
 
-           Vec2s               &getMinSize        (void);
-     const Vec2s               &getMinSize        (void) const;
-           Vec2s               &getMaxSize        (void);
-     const Vec2s               &getMaxSize        (void) const;
-           Vec2s               &getPreferredSize  (void);
-     const Vec2s               &getPreferredSize  (void) const;
-           bool                &getVisible        (void);
-     const bool                &getVisible        (void) const;
-           bool                &getEnabled        (void);
-     const bool                &getEnabled        (void) const;
-           LayoutConstraintsPtr &getConstraints    (void);
-     const LayoutConstraintsPtr &getConstraints    (void) const;
+           LayoutPtr           &getArrangement    (void);
+     const LayoutPtr           &getArrangement    (void) const;
+           ComponentPtr        &getChildren       (const UInt32 index);
+           MFComponentPtr      &getChildren       (void);
+     const MFComponentPtr      &getChildren       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setMinSize        ( const Vec2s &value );
-     void setMaxSize        ( const Vec2s &value );
-     void setPreferredSize  ( const Vec2s &value );
-     void setVisible        ( const bool &value );
-     void setEnabled        ( const bool &value );
-     void setConstraints    ( const LayoutConstraintsPtr &value );
+     void setArrangement    ( const LayoutPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -189,6 +158,22 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
 
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Construction                               */
+    /*! \{                                                                 */
+
+    static  PanelPtr      create          (void); 
+    static  PanelPtr      createEmpty     (void); 
+
+    /*! \}                                                                 */
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Copy                                   */
+    /*! \{                                                                 */
+
+    virtual FieldContainerPtr     shallowCopy     (void) const; 
+
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -196,45 +181,23 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFVec2s             _sfMinSize;
-    SFVec2s             _sfMaxSize;
-    SFVec2s             _sfPreferredSize;
-    SFVec2s             _sfSize;
-    SFBool              _sfVisible;
-    SFBool              _sfEnabled;
-    SFLayoutConstraintsPtr   _sfConstraints;
+    MFComponentPtr      _mfChildren;
+    SFLayoutPtr         _sfArrangement;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ComponentBase(void);
-    ComponentBase(const ComponentBase &source);
+    PanelBase(void);
+    PanelBase(const PanelBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ComponentBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFVec2s             *getSFSize           (void);
-
-           Vec2s               &getSize           (void);
-     const Vec2s               &getSize           (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setSize           (const Vec2s &value);
+    virtual ~PanelBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -242,13 +205,13 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ComponentBase *pOther,
+    void executeSyncImpl(      PanelBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      ComponentBase *pOther,
+    void executeSyncImpl(      PanelBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -278,7 +241,7 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ComponentBase &source);
+    void operator =(const PanelBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -286,17 +249,17 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
 //---------------------------------------------------------------------------
 
 
-typedef ComponentBase *ComponentBaseP;
+typedef PanelBase *PanelBaseP;
 
-typedef osgIF<ComponentBase::isNodeCore,
-              CoredNodePtr<Component>,
+typedef osgIF<PanelBase::isNodeCore,
+              CoredNodePtr<Panel>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ComponentNodePtr;
+              >::_IRet PanelNodePtr;
 
-typedef RefPtr<ComponentPtr> ComponentRefPtr;
+typedef RefPtr<PanelPtr> PanelRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGCOMPONENTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGPANELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGCOMPONENTBASE_H_ */
+#endif /* _OSGPANELBASE_H_ */

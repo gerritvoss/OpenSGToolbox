@@ -36,24 +36,23 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGCOMPONENT_H_
-#define _OSGCOMPONENT_H_
+#ifndef _OSGABSOLUTELAYOUTCONSTRAINTS_H_
+#define _OSGABSOLUTELAYOUTCONSTRAINTS_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include "OSGUserInterfaceConfig.h"
 
-#include "OSGComponentBase.h"
-#include "Graphics/OSGGraphics.h"
+#include "OSGAbsoluteLayoutConstraintsBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API Component : public ComponentBase
+class OSG_USER_INTERFACE_CLASS_API AbsoluteLayoutConstraints : public AbsoluteLayoutConstraintsBase
 {
   private:
 
-    typedef ComponentBase Inherited;
+    typedef AbsoluteLayoutConstraintsBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -74,25 +73,24 @@ class OSG_USER_INTERFACE_CLASS_API Component : public ComponentBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr Graphics) const = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in ComponentBase.
+    // Variables should all be in AbsoluteLayoutConstraintsBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Component(void);
-    Component(const Component &source);
+    AbsoluteLayoutConstraints(void);
+    AbsoluteLayoutConstraints(const AbsoluteLayoutConstraints &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Component(void); 
+    virtual ~AbsoluteLayoutConstraints(void); 
 
     /*! \}                                                                 */
     
@@ -100,22 +98,22 @@ class OSG_USER_INTERFACE_CLASS_API Component : public ComponentBase
   private:
 
     friend class FieldContainer;
-    friend class ComponentBase;
+    friend class AbsoluteLayoutConstraintsBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Component &source);
+    void operator =(const AbsoluteLayoutConstraints &source);
 };
 
-typedef Component *ComponentP;
+typedef AbsoluteLayoutConstraints *AbsoluteLayoutConstraintsP;
 
 OSG_END_NAMESPACE
 
-#include "OSGComponentBase.inl"
-#include "OSGComponent.inl"
+#include "OSGAbsoluteLayoutConstraintsBase.inl"
+#include "OSGAbsoluteLayoutConstraints.inl"
 
-#define OSGCOMPONENT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGABSOLUTELAYOUTCONSTRAINTS_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGCOMPONENT_H_ */
+#endif /* _OSGABSOLUTELAYOUTCONSTRAINTS_H_ */

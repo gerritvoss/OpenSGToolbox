@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="Panel"
+	parent="Component"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+A UI Panel.
+<Field
+		name="Children"
+		type="ComponentPtr"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+      header="Component/OSGComponent.h"
+	>
+	</Field>
+<Field
+		name="Arrangement"
+		type="LayoutPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+      header="Layout/OSGLayout.h"
+	>
+	</Field>
+</FieldContainer>

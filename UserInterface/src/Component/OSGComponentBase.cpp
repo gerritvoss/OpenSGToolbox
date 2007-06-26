@@ -64,10 +64,96 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  ComponentBase::MinSizeFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::MinSizeFieldId);
+
+const OSG::BitVector  ComponentBase::MaxSizeFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::MaxSizeFieldId);
+
+const OSG::BitVector  ComponentBase::PreferredSizeFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::PreferredSizeFieldId);
+
+const OSG::BitVector  ComponentBase::SizeFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::SizeFieldId);
+
+const OSG::BitVector  ComponentBase::VisibleFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::VisibleFieldId);
+
+const OSG::BitVector  ComponentBase::EnabledFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::EnabledFieldId);
+
+const OSG::BitVector  ComponentBase::ConstraintsFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::ConstraintsFieldId);
+
 const OSG::BitVector ComponentBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+// Field descriptions
+
+/*! \var Vec2s           ComponentBase::_sfMinSize
+    
+*/
+/*! \var Vec2s           ComponentBase::_sfMaxSize
+    
+*/
+/*! \var Vec2s           ComponentBase::_sfPreferredSize
+    
+*/
+/*! \var Vec2s           ComponentBase::_sfSize
+    
+*/
+/*! \var bool            ComponentBase::_sfVisible
+    
+*/
+/*! \var bool            ComponentBase::_sfEnabled
+    
+*/
+/*! \var LayoutConstraintPtr ComponentBase::_sfConstraints
+    
+*/
+
+//! Component description
+
+FieldDescription *ComponentBase::_desc[] = 
+{
+    new FieldDescription(SFVec2s::getClassType(), 
+                     "MinSize", 
+                     MinSizeFieldId, MinSizeFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFMinSize),
+    new FieldDescription(SFVec2s::getClassType(), 
+                     "MaxSize", 
+                     MaxSizeFieldId, MaxSizeFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFMaxSize),
+    new FieldDescription(SFVec2s::getClassType(), 
+                     "PreferredSize", 
+                     PreferredSizeFieldId, PreferredSizeFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFPreferredSize),
+    new FieldDescription(SFVec2s::getClassType(), 
+                     "Size", 
+                     SizeFieldId, SizeFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFSize),
+    new FieldDescription(SFBool::getClassType(), 
+                     "Visible", 
+                     VisibleFieldId, VisibleFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFVisible),
+    new FieldDescription(SFBool::getClassType(), 
+                     "Enabled", 
+                     EnabledFieldId, EnabledFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFEnabled),
+    new FieldDescription(SFLayoutConstraintsPtr::getClassType(), 
+                     "Constraints", 
+                     ConstraintsFieldId, ConstraintsFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFConstraints)
+};
 
 
 FieldContainerType ComponentBase::_type(
@@ -76,8 +162,8 @@ FieldContainerType ComponentBase::_type(
     NULL,
     NULL, 
     Component::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //OSG_FIELD_CONTAINER_DEF(ComponentBase, ComponentPtr)
 
@@ -133,6 +219,13 @@ void ComponentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ComponentBase::ComponentBase(void) :
+    _sfMinSize                (), 
+    _sfMaxSize                (), 
+    _sfPreferredSize          (), 
+    _sfSize                   (), 
+    _sfVisible                (), 
+    _sfEnabled                (), 
+    _sfConstraints            (), 
     Inherited() 
 {
 }
@@ -142,6 +235,13 @@ ComponentBase::ComponentBase(void) :
 #endif
 
 ComponentBase::ComponentBase(const ComponentBase &source) :
+    _sfMinSize                (source._sfMinSize                ), 
+    _sfMaxSize                (source._sfMaxSize                ), 
+    _sfPreferredSize          (source._sfPreferredSize          ), 
+    _sfSize                   (source._sfSize                   ), 
+    _sfVisible                (source._sfVisible                ), 
+    _sfEnabled                (source._sfEnabled                ), 
+    _sfConstraints            (source._sfConstraints            ), 
     Inherited                 (source)
 {
 }
@@ -158,6 +258,41 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (MinSizeFieldMask & whichField))
+    {
+        returnValue += _sfMinSize.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MaxSizeFieldMask & whichField))
+    {
+        returnValue += _sfMaxSize.getBinSize();
+    }
+
+    if(FieldBits::NoField != (PreferredSizeFieldMask & whichField))
+    {
+        returnValue += _sfPreferredSize.getBinSize();
+    }
+
+    if(FieldBits::NoField != (SizeFieldMask & whichField))
+    {
+        returnValue += _sfSize.getBinSize();
+    }
+
+    if(FieldBits::NoField != (VisibleFieldMask & whichField))
+    {
+        returnValue += _sfVisible.getBinSize();
+    }
+
+    if(FieldBits::NoField != (EnabledFieldMask & whichField))
+    {
+        returnValue += _sfEnabled.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
+    {
+        returnValue += _sfConstraints.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -167,6 +302,41 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (MinSizeFieldMask & whichField))
+    {
+        _sfMinSize.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MaxSizeFieldMask & whichField))
+    {
+        _sfMaxSize.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (PreferredSizeFieldMask & whichField))
+    {
+        _sfPreferredSize.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SizeFieldMask & whichField))
+    {
+        _sfSize.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (VisibleFieldMask & whichField))
+    {
+        _sfVisible.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EnabledFieldMask & whichField))
+    {
+        _sfEnabled.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
+    {
+        _sfConstraints.copyToBin(pMem);
+    }
+
 
 }
 
@@ -174,6 +344,41 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (MinSizeFieldMask & whichField))
+    {
+        _sfMinSize.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MaxSizeFieldMask & whichField))
+    {
+        _sfMaxSize.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (PreferredSizeFieldMask & whichField))
+    {
+        _sfPreferredSize.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SizeFieldMask & whichField))
+    {
+        _sfSize.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (VisibleFieldMask & whichField))
+    {
+        _sfVisible.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EnabledFieldMask & whichField))
+    {
+        _sfEnabled.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
+    {
+        _sfConstraints.copyFromBin(pMem);
+    }
 
 
 }
@@ -185,6 +390,27 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (MinSizeFieldMask & whichField))
+        _sfMinSize.syncWith(pOther->_sfMinSize);
+
+    if(FieldBits::NoField != (MaxSizeFieldMask & whichField))
+        _sfMaxSize.syncWith(pOther->_sfMaxSize);
+
+    if(FieldBits::NoField != (PreferredSizeFieldMask & whichField))
+        _sfPreferredSize.syncWith(pOther->_sfPreferredSize);
+
+    if(FieldBits::NoField != (SizeFieldMask & whichField))
+        _sfSize.syncWith(pOther->_sfSize);
+
+    if(FieldBits::NoField != (VisibleFieldMask & whichField))
+        _sfVisible.syncWith(pOther->_sfVisible);
+
+    if(FieldBits::NoField != (EnabledFieldMask & whichField))
+        _sfEnabled.syncWith(pOther->_sfEnabled);
+
+    if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
+        _sfConstraints.syncWith(pOther->_sfConstraints);
+
 
 }
 #else
@@ -194,6 +420,27 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (MinSizeFieldMask & whichField))
+        _sfMinSize.syncWith(pOther->_sfMinSize);
+
+    if(FieldBits::NoField != (MaxSizeFieldMask & whichField))
+        _sfMaxSize.syncWith(pOther->_sfMaxSize);
+
+    if(FieldBits::NoField != (PreferredSizeFieldMask & whichField))
+        _sfPreferredSize.syncWith(pOther->_sfPreferredSize);
+
+    if(FieldBits::NoField != (SizeFieldMask & whichField))
+        _sfSize.syncWith(pOther->_sfSize);
+
+    if(FieldBits::NoField != (VisibleFieldMask & whichField))
+        _sfVisible.syncWith(pOther->_sfVisible);
+
+    if(FieldBits::NoField != (EnabledFieldMask & whichField))
+        _sfEnabled.syncWith(pOther->_sfEnabled);
+
+    if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
+        _sfConstraints.syncWith(pOther->_sfConstraints);
 
 
 

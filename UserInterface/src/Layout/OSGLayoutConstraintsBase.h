@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Component
+ **     class LayoutConstraints
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGCOMPONENTBASE_H_
-#define _OSGCOMPONENTBASE_H_
+#ifndef _OSGLAYOUTCONSTRAINTSBASE_H_
+#define _OSGLAYOUTCONSTRAINTSBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -66,24 +66,17 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
-#include <OpenSG/OSGVec2sFields.h> // MinSize type
-#include <OpenSG/OSGVec2sFields.h> // MaxSize type
-#include <OpenSG/OSGVec2sFields.h> // PreferredSize type
-#include <OpenSG/OSGVec2sFields.h> // Size type
-#include <OpenSG/OSGBoolFields.h> // Visible type
-#include <OpenSG/OSGBoolFields.h> // Enabled type
-#include "Layout/OSGLayoutConstraints.h" // Constraints type
 
-#include "OSGComponentFields.h"
+#include "OSGLayoutConstraintsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Component;
+class LayoutConstraints;
 class BinaryDataHandler;
 
-//! \brief Component Base Class.
+//! \brief LayoutConstraints Base Class.
 
-class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
+class OSG_USER_INTERFACE_CLASS_API LayoutConstraintsBase : public AttachmentContainer
 {
   private:
 
@@ -92,27 +85,7 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ComponentPtr  Ptr;
-
-    enum
-    {
-        MinSizeFieldId       = Inherited::NextFieldId,
-        MaxSizeFieldId       = MinSizeFieldId       + 1,
-        PreferredSizeFieldId = MaxSizeFieldId       + 1,
-        SizeFieldId          = PreferredSizeFieldId + 1,
-        VisibleFieldId       = SizeFieldId          + 1,
-        EnabledFieldId       = VisibleFieldId       + 1,
-        ConstraintsFieldId   = EnabledFieldId       + 1,
-        NextFieldId          = ConstraintsFieldId   + 1
-    };
-
-    static const OSG::BitVector MinSizeFieldMask;
-    static const OSG::BitVector MaxSizeFieldMask;
-    static const OSG::BitVector PreferredSizeFieldMask;
-    static const OSG::BitVector SizeFieldMask;
-    static const OSG::BitVector VisibleFieldMask;
-    static const OSG::BitVector EnabledFieldMask;
-    static const OSG::BitVector ConstraintsFieldMask;
+    typedef LayoutConstraintsPtr  Ptr;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -136,43 +109,6 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFVec2s             *getSFMinSize        (void);
-           SFVec2s             *getSFMaxSize        (void);
-           SFVec2s             *getSFPreferredSize  (void);
-           SFBool              *getSFVisible        (void);
-           SFBool              *getSFEnabled        (void);
-           SFLayoutConstraintsPtr *getSFConstraints    (void);
-
-           Vec2s               &getMinSize        (void);
-     const Vec2s               &getMinSize        (void) const;
-           Vec2s               &getMaxSize        (void);
-     const Vec2s               &getMaxSize        (void) const;
-           Vec2s               &getPreferredSize  (void);
-     const Vec2s               &getPreferredSize  (void) const;
-           bool                &getVisible        (void);
-     const bool                &getVisible        (void) const;
-           bool                &getEnabled        (void);
-     const bool                &getEnabled        (void) const;
-           LayoutConstraintsPtr &getConstraints    (void);
-     const LayoutConstraintsPtr &getConstraints    (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setMinSize        ( const Vec2s &value );
-     void setMaxSize        ( const Vec2s &value );
-     void setPreferredSize  ( const Vec2s &value );
-     void setVisible        ( const bool &value );
-     void setEnabled        ( const bool &value );
-     void setConstraints    ( const LayoutConstraintsPtr &value );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -193,48 +129,18 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
   protected:
 
     /*---------------------------------------------------------------------*/
-    /*! \name                      Fields                                  */
-    /*! \{                                                                 */
-
-    SFVec2s             _sfMinSize;
-    SFVec2s             _sfMaxSize;
-    SFVec2s             _sfPreferredSize;
-    SFVec2s             _sfSize;
-    SFBool              _sfVisible;
-    SFBool              _sfEnabled;
-    SFLayoutConstraintsPtr   _sfConstraints;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ComponentBase(void);
-    ComponentBase(const ComponentBase &source);
+    LayoutConstraintsBase(void);
+    LayoutConstraintsBase(const LayoutConstraintsBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ComponentBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFVec2s             *getSFSize           (void);
-
-           Vec2s               &getSize           (void);
-     const Vec2s               &getSize           (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setSize           (const Vec2s &value);
+    virtual ~LayoutConstraintsBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -242,13 +148,13 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ComponentBase *pOther,
+    void executeSyncImpl(      LayoutConstraintsBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      ComponentBase *pOther,
+    void executeSyncImpl(      LayoutConstraintsBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -273,12 +179,11 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
 
     friend class FieldContainer;
 
-    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ComponentBase &source);
+    void operator =(const LayoutConstraintsBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -286,17 +191,17 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
 //---------------------------------------------------------------------------
 
 
-typedef ComponentBase *ComponentBaseP;
+typedef LayoutConstraintsBase *LayoutConstraintsBaseP;
 
-typedef osgIF<ComponentBase::isNodeCore,
-              CoredNodePtr<Component>,
+typedef osgIF<LayoutConstraintsBase::isNodeCore,
+              CoredNodePtr<LayoutConstraints>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ComponentNodePtr;
+              >::_IRet LayoutConstraintsNodePtr;
 
-typedef RefPtr<ComponentPtr> ComponentRefPtr;
+typedef RefPtr<LayoutConstraintsPtr> LayoutConstraintsRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGCOMPONENTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGLAYOUTCONSTRAINTSBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGCOMPONENTBASE_H_ */
+#endif /* _OSGLAYOUTCONSTRAINTSBASE_H_ */

@@ -84,6 +84,9 @@ int main(int argc, char **argv)
 
 	//Create A Button Component
 	ButtonPtr button = osg::Button::create();
+    beginEditCP(button, Button::SizeFieldMask);
+		button->setPreferredSize(Vec2s(100,100));
+    endEditCP  (button, Button::SizeFieldMask);
 	ComponentPtr canvas = osg::Canvas::create();
 
 	//Create the UI Foreground Object
@@ -91,7 +94,7 @@ int main(int argc, char **argv)
 
     beginEditCP(foreground, UIForeground::GraphicsFieldMask | UIForeground::RootComponentFieldMask);
 		foreground->setGraphics(graphics);
-		foreground->setRootComponent(canvas);
+		foreground->setRootComponent(button);
     endEditCP  (foreground, UIForeground::GraphicsFieldMask | UIForeground::RootComponentFieldMask);
 
     // create the SimpleSceneManager helper
