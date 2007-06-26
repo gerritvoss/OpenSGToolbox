@@ -44,9 +44,9 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include <hash_set>
+#include <set>
 #include <vector>
-#include <hash_map>
+#include <map>
 
 #include "OSGWindowEventProducerBase.h"
 
@@ -64,16 +64,16 @@ class WindowEventProducer : public WindowEventProducerBase
 
     typedef WindowEventProducerBase Inherited;
 
-    typedef std::hash_set<MouseListenerPtr> MouseListenerSet;
+	typedef std::set<MouseListenerPtr> MouseListenerSet;
     typedef MouseListenerSet::iterator MouseListenerSetItor;
     typedef MouseListenerSet::const_iterator MouseListenerSetConstItor;
-    typedef std::hash_set<MouseMotionListenerPtr> MouseMotionListenerSet;
+    typedef std::set<MouseMotionListenerPtr> MouseMotionListenerSet;
     typedef MouseMotionListenerSet::iterator MouseMotionListenerSetItor;
     typedef MouseMotionListenerSet::const_iterator MouseMotionListenerSetConstItor;
-    typedef std::hash_set<MouseWheelListenerPtr> MouseWheelListenerSet;
+    typedef std::set<MouseWheelListenerPtr> MouseWheelListenerSet;
     typedef MouseWheelListenerSet::iterator MouseWheelListenerSetItor;
     typedef MouseWheelListenerSet::const_iterator MouseWheelListenerSetConstItor;
-    typedef std::hash_set<KeyListenerPtr> KeyListenerSet;
+    typedef std::set<KeyListenerPtr> KeyListenerSet;
     typedef KeyListenerSet::iterator KeyListenerSetItor;
     typedef KeyListenerSet::const_iterator KeyListenerSetConstItor;
 

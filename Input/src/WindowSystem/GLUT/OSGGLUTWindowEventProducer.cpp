@@ -44,8 +44,10 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGGLUTWindow.h>
 
 #include "OSGGLUTWindowEventProducer.h"
+#include "WindowSystem/OSGWindowEventProducerFactory.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -67,6 +69,8 @@ GLUTWindowEventProducer Class.
 
 void GLUTWindowEventProducer::initMethod (void)
 {
+	//Register this WindowEventProducer As the GLUTWindow WindowEventProducer with the factory
+	WindowEventProducerFactory::the()->registerProducer(&GLUTWindow::getClassType(), &GLUTWindowEventProducer::getClassType());
 }
 
 

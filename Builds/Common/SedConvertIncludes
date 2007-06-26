@@ -1,2 +1,11 @@
+/#include "OSG.*Config.h"/ {
+h
+}
 
-s-\"[^\"]*OSG\([^\"]*\)\"-\<OpenSG/Animation/OSG\1\>-
+/\"[^\"]*OSG\([^\"]*\)\"/ {
+G
+s-\"[^\"]*OSG\([^\"]*\)\".*\n#include "OSG\(.*\)Config.h"-\<OpenSG/\2/OSG\1\>-
+}
+
+
+#s-\"[^\"]*OSG\([^\"]*\)\"-\<OpenSG/Animation/OSG\1\>-

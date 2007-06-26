@@ -44,8 +44,10 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGWin32Window.h>
 
 #include "OSGWin32WindowEventProducer.h"
+#include "WindowSystem/OSGWindowEventProducerFactory.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -67,6 +69,8 @@ Win32WindowEventProducer Class.
 
 void Win32WindowEventProducer::initMethod (void)
 {
+	//Register this WindowEventProducer As the WIN32Window WindowEventProducer with the factory
+	WindowEventProducerFactory::the()->registerProducer(&WIN32Window::getClassType(), &Win32WindowEventProducer::getClassType());
 }
 
 

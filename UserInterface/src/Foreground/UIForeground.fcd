@@ -10,11 +10,21 @@
 >
 A Foreground for rendering a UI on.
 	<Field
-		name="RootPanel"
-		type="Panel"
+		name="RootComponent"
+		type="ComponentPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
+      header="Component/OSGComponent.h"
+	>
+	</Field>
+	<Field
+		name="Graphics"
+		type="GraphicsPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+      header="Graphics/OSGGraphics.h"
 	>
 	</Field>
 </FieldContainer>
