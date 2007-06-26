@@ -131,8 +131,27 @@ void Graphics2D::drawRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const 
 	}
 }
 
-void Graphics2D::drawLine(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Int16& Width, const Color4f& Color) const
+void Graphics2D::drawLine(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32& Width, const Color4f& Color) const
 {
+	GLfloat previousLineWidth;
+	glGetFloatv(GL_LINE_WIDTH, &previousLineWidth);
+	if(Color.alpha() < 1.0)
+	{
+		//Setup the blending equations properly
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+	}
+	glLineWidth(Width);
+	glBegin(GL_LINES);
+		glColor4fv(Color.getValuesRGBA());
+		glVertex2sv(TopLeft.getValues());
+		glVertex2sv(BottomRight.getValues());
+	glEnd();
+	if(Color.alpha() < 1.0)
+	{
+		glDisable(GL_BLEND);
+	}
+	glLineWidth(previousLineWidth);
 }
 
 void Graphics2D::drawPolygon(const MFPnt2s Verticies, const Color4f& Color) const
@@ -158,12 +177,66 @@ void Graphics2D::drawPolygon(const MFPnt2s Verticies, const Color4f& Color) cons
 	}
 }
 
-void Graphics2D::drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Int16& StartAngleRad, const Int16& EndAngleRad, const UInt16& SubDivisions, const Color4f& Color) const
+void Graphics2D::drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& Color) const
 {
+	Real32 angleNow = StartAngleRad;
+	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(float)SubDivisions;
+	if(EndAngleRad-StartAngleRad > 2*3.1415926535)
+		angleDiff = 2*3.1415926535;
+	if(Color.alpha() < 1.0)
+	{
+		//Setup the blending equations properly
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+	}
+	
+	glBegin(GL_TRIANGLE_FAN);
+		glColor4fv(Color.getValuesRGBA());
+		glVertex2sv(Center.getValues());
+		while(angleNow < EndAngleRad){
+			glVertex2s(Center.x() + Width*osgcos(angleNow), Center.y() + Height*osgsin(angleNow));
+			angleNow += angleDiff;
+		}
+	glEnd();
+
+		if(Color.alpha() < 1.0)
+	{
+		glDisable(GL_BLEND);
+	}
 }
 
-void Graphics2D::drawArc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Int16& StartAngleRad, const Int16& EndAngleRad, const Int16& LineWidth, const UInt16& SubDivisions, const Color4f& Color) const
+void Graphics2D::drawArc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const Real32& LineWidth, const UInt16& SubDivisions, const Color4f& Color) const
 {
+	GLfloat previousLineWidth;
+	glGetFloatv(GL_LINE_WIDTH, &previousLineWidth);
+	Real32 angleNow = StartAngleRad;
+	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(float)SubDivisions;
+	//If andle difference is bigger to a circle, set it to equal to a circle
+	if(EndAngleRad-StartAngleRad > 2*3.1415926535)
+		angleDiff = 2*3.1415926535;
+	if(Color.alpha() < 1.0)
+	{
+		//Setup the blending equations properly
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+	}
+	glLineWidth(LineWidth);
+	glBegin(GL_LINE_STRIP);
+		glColor4fv(Color.getValuesRGBA());
+		//draw vertex lines
+		while(angleNow + angleDiff  < EndAngleRad){
+			glVertex2s( Center.x() + Width*osgcos(angleNow ),Center.y() +Height*osgsin(angleNow));
+			//glVertex2s(Center.x() + Width*osgcos(angleNow + angleDiff), Center.y() + Height*osgsin(angleNow+angleDiff));
+			angleNow += angleDiff;
+		}
+	glEnd();
+
+	
+		if(Color.alpha() < 1.0)
+	{
+		glDisable(GL_BLEND);
+	}
+			glLineWidth(previousLineWidth);
 }
 
 void Graphics2D::drawLoweredBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color3f& Color, const Int16& Width) const

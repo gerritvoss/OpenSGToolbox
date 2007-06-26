@@ -84,13 +84,13 @@ class OSG_USER_INTERFACE_CLASS_API Graphics2D : public Graphics2DBase
 
 	virtual void drawRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color) const;
 	
-	virtual void drawLine(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Int16& Width, const Color4f& Color) const;
+	virtual void drawLine(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32& Width, const Color4f& Color) const;
 	
 	virtual void drawPolygon(const MFPnt2s Verticies, const Color4f& Color) const;
 	
-	virtual void drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Int16& StartAngleRad, const Int16& EndAngleRad, const UInt16& SubDivisions, const Color4f& Color) const;
+	virtual void drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& Color) const;
 	
-	virtual void drawArc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Int16& StartAngleRad, const Int16& EndAngleRad, const Int16& LineWidth, const UInt16& SubDivisions, const Color4f& Color) const;
+	virtual void drawArc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const Real32& LineWidth, const UInt16& SubDivisions, const Color4f& Color) const;
 
 	virtual void drawLoweredBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color3f& Color, const Int16& Width) const;
 
