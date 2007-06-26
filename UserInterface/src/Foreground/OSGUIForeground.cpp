@@ -83,7 +83,7 @@ void UIForeground::draw( DrawActionBase * action, Viewport * port )
     glPushMatrix();
     glLoadIdentity();
      
-    glOrtho(0, port->getPixelWidth(), 0, port->getPixelHeight(), 0, 1);
+    glOrtho(0, port->getPixelWidth(), port->getPixelHeight(), 0 , 0, 1);
 	
 	glMatrixMode(GL_MODELVIEW);
 

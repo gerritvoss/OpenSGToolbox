@@ -66,8 +66,8 @@
 
 #include "OSGComponent.h" // Parent
 
-#include <Component/OSGComponent.h> // Children type
-#include <Layout/OSGLayout.h> // Arrangement type
+#include "Component/OSGComponent.h" // Children type
+#include "Layout/OSGLayout.h" // Arrangement type
 
 #include "OSGPanelFields.h"
 

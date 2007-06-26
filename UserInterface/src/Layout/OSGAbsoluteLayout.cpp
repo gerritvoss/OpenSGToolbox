@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGAbsoluteLayout.h"
+#include "OSGAbsoluteLayoutConstraints.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -75,8 +76,18 @@ void AbsoluteLayout::initMethod (void)
 \***************************************************************************/
 
 void AbsoluteLayout::draw(const ComponentPtr c, const GraphicsPtr g) const
-{
-	c->draw(g);
+{	
+	if(c->getConstraints() != NullFC)
+	{
+		Pnt2s pos = AbsoluteLayoutConstraintsPtr::dcast(c->getConstraints())->getPosition();
+		glTranslatef(pos.x(), pos.y(), 0.0);
+		c->draw(g);
+		glTranslatef(-pos.x(), -pos.y(), 0.0);
+	}
+	else
+	{
+		c->draw(g);
+	}
 }
 
 /*-------------------------------------------------------------------------*\
