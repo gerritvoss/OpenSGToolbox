@@ -1,55 +1,59 @@
 #include "OSGInputConfig.h"
+#include <assert.h>
 
 OSG_BEGIN_NAMESPACE
 
 inline
-MouseButton MouseEvent::getButton(void)
+MouseEvent::MouseButton MouseEvent::getButton(void) const
 {
-    return _Button; 
+   return _Button; 
 }
 
 inline
-UInt16 MouseEvent::getClickCount(void)
+UInt16 MouseEvent::getClickCount(void) const
 {
-    return _ClickCount; 
-}
-
-
-inline
-Pnt2us MouseEvent::getLocationOnScreen(void)
-{
-    return _Location; 
-}
-
-inline
-Pnt2us MouseEvent::getLocation(void)
-{
-    return _Location; 
+   return _ClickCount; 
 }
 
 
 inline
-UInt16 MouseEvent::getX(void)
+Pnt2s MouseEvent::getLocationOnScreen(void) const
 {
-    return _Location.x(); 
+   assert(false && "MouseEvent::getLocationOnScreen(void) Not Implemented");
+   return _Location; 
 }
 
 inline
-UInt16 MouseEvent::getXOnScreen(void)
+Pnt2s MouseEvent::getLocation(void) const
 {
-    return _Location.x();
+   return _Location; 
+}
+
+
+inline
+Int16 MouseEvent::getX(void) const
+{
+   return _Location.x(); 
 }
 
 inline
-UInt16 MouseEvent::getY(void)
+Int16 MouseEvent::getXOnScreen(void) const
 {
-    return _Location.y();
+   assert(false && "MouseEvent::getXOnScreen(void) Not Implemented");
+   return _Location.x();
 }
 
 inline
-UInt16 MouseEvent::getYOnScreen(void)
+Int16 MouseEvent::getY(void) const
 {
-    return _Location.y();
+   return _Location.y();
+}
+
+inline
+Int16 MouseEvent::getYOnScreen(void) const
+{
+   assert(false && "MouseEvent::getYOnScreen(void) Not Implemented");
+   return _Location.y();
 }
 
 inline

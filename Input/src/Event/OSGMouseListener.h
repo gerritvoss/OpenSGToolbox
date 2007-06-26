@@ -1,12 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
- *             Copyright (C) 2000-2002 by the OpenSG Forum                   *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *   contact: dkabala@vrac.iastate.edu                                       *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -14,7 +12,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 2.                               *
+ * by the Free Software Foundation, version 3.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -24,15 +22,6 @@
  * You should have received a copy of the GNU Library General Public         *
  * License along with this library; if not, write to the Free Software       *
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
@@ -49,25 +38,20 @@
 
 OSG_BEGIN_NAMESPACE
 
-/*! \ingroup GrpBaseBaseTypeSystem
- */
-
 class OSG_INPUT_CLASS_API MouseListener : public EventListener
 {
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    void mouseClicked(MouseEvent& e) = 0;
-    void mouseEntered(MouseEvent& e) = 0;
-    void mouseExited(MouseEvent& e) = 0;
-    void mousePressed(MouseEvent& e) = 0;
-    void mouseReleased(MouseEvent& e) = 0;
+    virtual void mouseClicked(const MouseEvent& e) = 0;
+    virtual void mouseEntered(const MouseEvent& e) = 0;
+    virtual void mouseExited(const MouseEvent& e) = 0;
+    virtual void mousePressed(const MouseEvent& e) = 0;
+    virtual void mouseReleased(const MouseEvent& e) = 0;
 };
 
-OSG_END_NAMESPACE
+typedef MouseListener* MouseListenerPtr;
 
-#include "OSGMOUSELISTENER.inl"
-      
-#define _OSGMOUSELISTENER_H_ "@(#)$Id: $"
+OSG_END_NAMESPACE
 
 #endif /* _OSGEVENT_H_ */

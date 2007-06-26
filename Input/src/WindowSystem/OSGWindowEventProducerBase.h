@@ -68,7 +68,7 @@
 
 #include <OpenSG/OSGWindowFields.h> // Window type
 
-#include <OSGWindowEventProducerFields.h>
+#include "OSGWindowEventProducerFields.h"
 
 OSG_BEGIN_NAMESPACE
 

@@ -23,7 +23,7 @@ public:
 	
 	virtual void drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Int16& StartAngleRad, const Int16& EndAngleRad, const UInt16& SubDivisions, const Color4f& Color) const = 0;
 	
-	virtual void drawArc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Int16& StartAngleRad, const Int16& EndAngleRad, const Int16& Width, const UInt16& SubDivisions, const Color4f& Color) const = 0;
+	virtual void drawArc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Int16& StartAngleRad, const Int16& EndAngleRad, const Int16& LineWidth, const UInt16& SubDivisions, const Color4f& Color) const = 0;
 
 	virtual void drawLoweredBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color3f& Color, const Int16& Width) const = 0;
 

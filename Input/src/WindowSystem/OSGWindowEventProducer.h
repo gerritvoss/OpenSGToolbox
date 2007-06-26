@@ -44,7 +44,17 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include <OSGWindowEventProducerBase.h>
+#include <hash_set>
+#include <vector>
+#include <hash_map>
+
+#include "OSGWindowEventProducerBase.h"
+
+
+#include "Event/OSGMouseListener.h"
+#include "Event/OSGMouseMotionListener.h"
+#include "Event/OSGMouseWheelListener.h"
+#include "Event/OSGKeyListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -53,6 +63,39 @@ class WindowEventProducer : public WindowEventProducerBase
   private:
 
     typedef WindowEventProducerBase Inherited;
+
+    typedef std::hash_set<MouseListenerPtr> MouseListenerSet;
+    typedef MouseListenerSet::iterator MouseListenerSetItor;
+    typedef MouseListenerSet::const_iterator MouseListenerSetConstItor;
+    typedef std::hash_set<MouseMotionListenerPtr> MouseMotionListenerSet;
+    typedef MouseMotionListenerSet::iterator MouseMotionListenerSetItor;
+    typedef MouseMotionListenerSet::const_iterator MouseMotionListenerSetConstItor;
+    typedef std::hash_set<MouseWheelListenerPtr> MouseWheelListenerSet;
+    typedef MouseWheelListenerSet::iterator MouseWheelListenerSetItor;
+    typedef MouseWheelListenerSet::const_iterator MouseWheelListenerSetConstItor;
+    typedef std::hash_set<KeyListenerPtr> KeyListenerSet;
+    typedef KeyListenerSet::iterator KeyListenerSetItor;
+    typedef KeyListenerSet::const_iterator KeyListenerSetConstItor;
+
+    MouseListenerSet       _MouseListeners;
+    MouseMotionListenerSet _MouseMotionListeners;
+    MouseWheelListenerSet  _MouseWheelListeners;
+    KeyListenerSet         _KeyListeners;
+
+    struct Click
+    {
+       Time _TimeStamp;
+       Pnt2s _Location;
+
+       Click(Time TimeStamp, Pnt2s Location);
+    };
+    typedef std::vector<Click> ClickVector;
+    typedef ClickVector::iterator ClickVectorIter;
+    typedef ClickVector::const_iterator ClickVectorConstIter;
+
+    typedef std::map<MouseEvent::MouseButton, ClickVector> ButtonClickMap;
+
+    ButtonClickMap _ButtonClickMap;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -73,6 +116,17 @@ class WindowEventProducer : public WindowEventProducerBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    
+    void addMouseListener(MouseListenerPtr Listener);
+    void addMouseMotionListener(MouseMotionListenerPtr Listener);
+    void addMouseWheelListener(MouseWheelListenerPtr Listener);
+    void addKeyListener(KeyListenerPtr Listener);
+
+    void removeMouseListener(MouseListenerPtr Listener);
+    void removeMouseMotionListener(MouseMotionListenerPtr Listener);
+    void removeMouseWheelListener(MouseWheelListenerPtr Listener);
+    void removeKeyListener(KeyListenerPtr Listener);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -94,6 +148,22 @@ class WindowEventProducer : public WindowEventProducerBase
 
     /*! \}                                                                 */
     
+    void updateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2s& Location);
+
+    void produceMouseClicked(const MouseEvent::MouseButton& Button, const Pnt2s& Location);
+    void produceMouseEntered(const Pnt2s& Location);
+    void produceMouseExited(const Pnt2s& Location);
+    void produceMousePressed(const MouseEvent::MouseButton& Button, const Pnt2s& Location);
+    void produceMouseReleased(const MouseEvent::MouseButton& Button, const Pnt2s& Location);
+
+    void produceMouseWheelMoved(const Int32& WheelRotation, const MouseWheelEvent::ScrollType& TheScrollType);
+
+    void produceMouseMoved(const Pnt2s& Location);
+    void produceMouseDragged(const MouseEvent::MouseButton& Button, const Pnt2s& Location);
+
+    void produceKeyPressed(const KeyEvent::Key& TheKey, const UInt32& Modifiers);
+    void produceKeyReleased(const KeyEvent::Key& TheKey, const UInt32& Modifiers);
+    void produceKeyTyped(const KeyEvent::Key& TheKey, const UInt32& Modifiers);
     /*==========================  PRIVATE  ================================*/
   private:
 
@@ -111,8 +181,8 @@ typedef WindowEventProducer *WindowEventProducerP;
 
 OSG_END_NAMESPACE
 
-#include <OSGWindowEventProducerBase.inl>
-#include <OSGWindowEventProducer.inl>
+#include "OSGWindowEventProducerBase.inl"
+#include "OSGWindowEventProducer.inl"
 
 #define OSGWINDOWEVENTPRODUCER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 

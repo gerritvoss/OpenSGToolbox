@@ -24,36 +24,38 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-
-#ifndef _OSGEVENT_H_
-#define _OSGEVENT_H_
+#ifndef _OSGMOUSEWHEELEVENT_H_
+#define _OSGMOUSEWHEELEVENT_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include "OSGInputConfig.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGBaseTypes.h>
+#include "Event/OSGEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUT_CLASS_API Event
+class OSG_INPUT_CLASS_API MouseWheelEvent : public Event
 {
     /*=========================  PUBLIC  ===============================*/
   public:
-    FieldContainerPtr getSource(void) const;
-    Time getTimeStamp(void) const;
+    enum ScrollType {UNIT_SCROLL = 1, BLOCK_SCROLL};
+
+    Int32 getWheelRotation(void) const;
+    Int32 getScrollAmount(void) const;
+    Int32 getUnitsToScroll(void) const;
+    ScrollType getScrollType(void) const;
     
-  protected:
-    Event(FieldContainerPtr Source, Time TimeStamp);
-  
-    FieldContainerPtr _Source;
-    Time _TimeStamp;
+    MouseWheelEvent(FieldContainerPtr Source, Time TimeStamp, Int32 WheelRotation, ScrollType TheScrollType);
+  private:
+    ScrollType _ScrollType;
+    Int32      _WheelRotation;
+    
 };
 
 OSG_END_NAMESPACE
 
-#include "OSGEvent.inl"
+#include "OSGMouseWheelEvent.inl"
 
 #endif /* _OSGEVENT_H_ */

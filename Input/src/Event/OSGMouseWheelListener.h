@@ -25,35 +25,29 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGEVENT_H_
-#define _OSGEVENT_H_
+#ifndef _OSGMOUSEWHEELLISTENER_H_
+#define _OSGMOUSEWHEELLISTENER_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include "OSGInputConfig.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGBaseTypes.h>
+#include "OSGEventListener.h"
+#include "OSGMouseWheelEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUT_CLASS_API Event
+class OSG_INPUT_CLASS_API MouseWheelListener : public EventListener
 {
     /*=========================  PUBLIC  ===============================*/
   public:
-    FieldContainerPtr getSource(void) const;
-    Time getTimeStamp(void) const;
-    
-  protected:
-    Event(FieldContainerPtr Source, Time TimeStamp);
   
-    FieldContainerPtr _Source;
-    Time _TimeStamp;
+    virtual void mouseWheelMoved(const MouseWheelEvent& e) = 0;
 };
+
+typedef MouseWheelListener* MouseWheelListenerPtr;
 
 OSG_END_NAMESPACE
 
-#include "OSGEvent.inl"
-
-#endif /* _OSGEVENT_H_ */
+#endif /* _OSGMOUSEWHEELLISTENER_H_ */

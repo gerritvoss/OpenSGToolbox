@@ -3,13 +3,13 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-FieldContainerPtr Event::getSource()
+FieldContainerPtr Event::getSource() const
 {
     return _Source; 
 }
 
 inline
-Time Event::getTimeStamp()
+Time Event::getTimeStamp() const
 {
     return _TimeStamp; 
 }

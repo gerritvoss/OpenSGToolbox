@@ -25,35 +25,31 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGEVENT_H_
-#define _OSGEVENT_H_
+#ifndef _OSGKEYLISTENER_H_
+#define _OSGKEYLISTENER_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include "OSGInputConfig.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGBaseTypes.h>
+#include "OSGEventListener.h"
+#include "OSGKeyEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUT_CLASS_API Event
+class OSG_INPUT_CLASS_API KeyListener : public EventListener
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-    FieldContainerPtr getSource(void) const;
-    Time getTimeStamp(void) const;
-    
-  protected:
-    Event(FieldContainerPtr Source, Time TimeStamp);
-  
-    FieldContainerPtr _Source;
-    Time _TimeStamp;
+   /*=========================  PUBLIC  ===============================*/
+public:
+
+   virtual void keyPressed(const KeyEvent& e) = 0;
+   virtual void keyReleased(const KeyEvent& e) = 0;
+   virtual void keyTyped(const KeyEvent& e) = 0;
 };
 
-OSG_END_NAMESPACE
+typedef KeyListener* KeyListenerPtr;
 
-#include "OSGEvent.inl"
+OSG_END_NAMESPACE
 
 #endif /* _OSGEVENT_H_ */

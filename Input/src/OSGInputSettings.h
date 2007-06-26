@@ -24,36 +24,44 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-
-#ifndef _OSGEVENT_H_
-#define _OSGEVENT_H_
+#ifndef _OSGINPUTSETTINGS_H_
+#define _OSGINPUTSETTINGS_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include "OSGInputConfig.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGBaseTypes.h>
+#include "Event/OSGEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUT_CLASS_API Event
+class OSG_INPUT_CLASS_API InputSettings
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-    FieldContainerPtr getSource(void) const;
-    Time getTimeStamp(void) const;
+   /*=========================  PUBLIC  ===============================*/
+public:
+   static InputSettings* the(void);
+
+   UInt32 getUnitsPerMouseScrollClick(void) const;
+   Real32 getMultipleClickRate(void) const;
+   Real32 getMultipleClickMouseDriftAllowance(void) const;
+
+   void setUnitsPerMouseScrollClick(const UInt32 Ratio);
+   void setMultipleClickRate(const Real32 Rate);
+   void setMultipleClickMouseDriftAllowance(const Real32 Allowance);
+private:
+   static InputSettings* _the;
+
+   UInt32      _UnitsPerMouseScrollClick;
+   Real32      _MultipleClickRate;
+   Real32      _MultipleClickMouseDriftAllowance;
+
+   InputSettings(void);
     
-  protected:
-    Event(FieldContainerPtr Source, Time TimeStamp);
-  
-    FieldContainerPtr _Source;
-    Time _TimeStamp;
 };
 
 OSG_END_NAMESPACE
 
-#include "OSGEvent.inl"
+#include "OSGInputSettings.inl"
 
-#endif /* _OSGEVENT_H_ */
+#endif /* _OSGINPUTSETTINGS_H_ */

@@ -44,6 +44,8 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGTime.h>
+#include <OpenSG/OSGBaseFunctions.h>
 
 #include "OSGWindowEventProducer.h"
 
@@ -83,6 +85,16 @@ void WindowEventProducer::initMethod (void)
 WindowEventProducer::WindowEventProducer(void) :
     Inherited()
 {
+   _ButtonClickMap[MouseEvent::BUTTON1] = ClickVector();
+   _ButtonClickMap[MouseEvent::BUTTON2] = ClickVector();
+   _ButtonClickMap[MouseEvent::BUTTON3] = ClickVector();
+   _ButtonClickMap[MouseEvent::BUTTON4] = ClickVector();
+   _ButtonClickMap[MouseEvent::BUTTON5] = ClickVector();
+   _ButtonClickMap[MouseEvent::BUTTON6] = ClickVector();
+   _ButtonClickMap[MouseEvent::BUTTON7] = ClickVector();
+   _ButtonClickMap[MouseEvent::BUTTON8] = ClickVector();
+   _ButtonClickMap[MouseEvent::BUTTON9] = ClickVector();
+   _ButtonClickMap[MouseEvent::BUTTON10] = ClickVector();
 }
 
 WindowEventProducer::WindowEventProducer(const WindowEventProducer &source) :
@@ -107,30 +119,128 @@ void WindowEventProducer::dump(      UInt32    ,
     SLOG << "Dump WindowEventProducer NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
+void WindowEventProducer::produceMouseClicked(const MouseEvent::MouseButton& Button, const Pnt2s& Location)
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGWINDOWEVENTPRODUCERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGWINDOWEVENTPRODUCERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGWINDOWEVENTPRODUCERFIELDS_HEADER_CVSID;
+   Time t(getSystemTime());
+   updateClickCount(Button, t, Location);
+   MouseEvent TheEvent( WindowEventProducerPtr(this), t, Button, _ButtonClickMap[Button].size(), Location );
+   for(MouseListenerSetConstItor SetItor(_MouseListeners.begin()) ; SetItor != _MouseListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->mouseClicked(TheEvent);
+   }
 }
 
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
+void WindowEventProducer::produceMouseEntered(const Pnt2s& Location)
+{
+   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), MouseEvent::NO_BUTTON, 0, Location );
+   for(MouseListenerSetConstItor SetItor(_MouseListeners.begin()) ; SetItor != _MouseListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->mouseEntered(TheEvent);
+   }
+}
+
+void WindowEventProducer::produceMouseExited(const Pnt2s& Location)
+{
+   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), MouseEvent::NO_BUTTON, 0, Location );
+   for(MouseListenerSetConstItor SetItor(_MouseListeners.begin()) ; SetItor != _MouseListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->mouseExited(TheEvent);
+   }
+}
+
+void WindowEventProducer::produceMousePressed(const MouseEvent::MouseButton& Button, const Pnt2s& Location)
+{
+   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), Button, _ButtonClickMap[Button].size(), Location );
+   for(MouseListenerSetConstItor SetItor(_MouseListeners.begin()) ; SetItor != _MouseListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->mousePressed(TheEvent);
+   }
+}
+
+void WindowEventProducer::produceMouseReleased(const MouseEvent::MouseButton& Button, const Pnt2s& Location)
+{
+   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), Button, _ButtonClickMap[Button].size(), Location );
+   for(MouseListenerSetConstItor SetItor(_MouseListeners.begin()) ; SetItor != _MouseListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->mouseReleased(TheEvent);
+   }
+}
+
+
+void WindowEventProducer::produceMouseWheelMoved(const Int32& WheelRotation, const MouseWheelEvent::ScrollType& TheScrollType)
+{
+   MouseWheelEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), WheelRotation, TheScrollType);
+   for(MouseWheelListenerSetConstItor SetItor(_MouseWheelListeners.begin()) ; SetItor != _MouseWheelListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->mouseWheelMoved(TheEvent);
+   }
+}
+
+void WindowEventProducer::produceMouseMoved(const Pnt2s& Location)
+{
+   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), MouseEvent::NO_BUTTON, 0, Location );
+   for(MouseMotionListenerSetConstItor SetItor(_MouseMotionListeners.begin()) ; SetItor != _MouseMotionListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->mouseMoved(TheEvent);
+   }
+}
+
+void WindowEventProducer::produceMouseDragged(const MouseEvent::MouseButton& Button, const Pnt2s& Location)
+{
+   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), Button, 0, Location );
+   for(MouseMotionListenerSetConstItor SetItor(_MouseMotionListeners.begin()) ; SetItor != _MouseMotionListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->mouseDragged(TheEvent);
+   }
+}
+
+void WindowEventProducer::produceKeyPressed(const KeyEvent::Key& TheKey, const UInt32& Modifiers)
+{
+   KeyEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), TheKey, Modifiers );
+   for(KeyListenerSetConstItor SetItor(_KeyListeners.begin()) ; SetItor != _KeyListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->keyPressed(TheEvent);
+   }
+}
+
+void WindowEventProducer::produceKeyReleased(const KeyEvent::Key& TheKey, const UInt32& Modifiers)
+{
+   KeyEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), TheKey, Modifiers );
+   for(KeyListenerSetConstItor SetItor(_KeyListeners.begin()) ; SetItor != _KeyListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->keyReleased(TheEvent);
+   }
+}
+
+void WindowEventProducer::produceKeyTyped(const KeyEvent::Key& TheKey, const UInt32& Modifiers)
+{
+   KeyEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), TheKey, Modifiers );
+   for(KeyListenerSetConstItor SetItor(_KeyListeners.begin()) ; SetItor != _KeyListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->keyTyped(TheEvent);
+   }
+}
+
+void WindowEventProducer::updateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2s& Location)
+{
+   //Get the vector of Clicks for this Button
+   ClickVector& TheClickVector( _ButtonClickMap[Button] );
+
+   //If the vector not empty
+   if(TheClickVector.size() > 0) 
+   {
+      //Check if the timestamp for this click is less than the default multiple click Rate
+      //Check if the Location of the click is greater then the default allowance away from the last click location
+      if((TimeStamp - TheClickVector.back()._TimeStamp) > InputSettings::the()->getMultipleClickRate() ||
+         Location.dist2(TheClickVector.back()._Location) > (InputSettings::the()->getMultipleClickMouseDriftAllowance() * InputSettings::the()->getMultipleClickMouseDriftAllowance()) )
+      {
+         //If so then clear the deque
+         TheClickVector.clear();
+      }
+   }
+   //Put the Click on the back of the vector
+   TheClickVector.push_back( Click(TimeStamp, Location) );
+}
 
 OSG_END_NAMESPACE
 
