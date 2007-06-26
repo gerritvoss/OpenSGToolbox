@@ -66,7 +66,8 @@
 
 #include "OSGLayoutConstraints.h" // Parent
 
-#include <OpenSG/OSGPnt2sFields.h> // Position type
+//#include <OpenSG/OSGPnt2sFields.h> // Position type
+#include <OpenSG/OSGVec2sFields.h> // Size type
 
 #include "OSGAbsoluteLayoutConstraintsFields.h"
 

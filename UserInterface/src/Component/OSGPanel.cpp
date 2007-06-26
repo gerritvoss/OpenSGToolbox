@@ -78,7 +78,7 @@ void Panel::draw(const GraphicsPtr TheGraphics) const
 {
 	for(UInt32 i=0 ; i<getChildren().size() ; ++i)
 	{
-		getArrangement()->draw(getChildren().getValue(i));
+		getArrangement()->draw(getChildren().getValue(i), TheGraphics);
 	}
 }
 
