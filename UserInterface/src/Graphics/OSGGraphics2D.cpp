@@ -180,7 +180,7 @@ void Graphics2D::drawPolygon(const MFPnt2s Verticies, const Color4f& Color) cons
 void Graphics2D::drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& Color) const
 {
 	Real32 angleNow = StartAngleRad;
-	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(float)SubDivisions;
+	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(Real32)SubDivisions;
 	if(EndAngleRad-StartAngleRad > 2*3.1415926535)
 		angleDiff = 2*3.1415926535;
 	if(Color.alpha() < 1.0)
@@ -210,7 +210,7 @@ void Graphics2D::drawArc(const Pnt2s& Center, const Int16& Width, const Int16& H
 	GLfloat previousLineWidth;
 	glGetFloatv(GL_LINE_WIDTH, &previousLineWidth);
 	Real32 angleNow = StartAngleRad;
-	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(float)SubDivisions;
+	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(Real32)SubDivisions;
 	//If andle difference is bigger to a circle, set it to equal to a circle
 	if(EndAngleRad-StartAngleRad > 2*3.1415926535)
 		angleDiff = 2*3.1415926535;
