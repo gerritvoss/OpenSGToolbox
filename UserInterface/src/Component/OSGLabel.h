@@ -36,24 +36,24 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGUIFOREGROUND_H_
-#define _OSGUIFOREGROUND_H_
+#ifndef _OSGLABEL_H_
+#define _OSGLABEL_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include "OSGUserInterfaceConfig.h"
 
-#include "OSGUIForegroundBase.h"
+#include "OSGLabelBase.h"
 #include "Util/OSGUIDefines.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API UIForeground : public UIForegroundBase
+class OSG_USER_INTERFACE_CLASS_API Label : public LabelBase
 {
   private:
 
-    typedef UIForegroundBase Inherited;
+    typedef LabelBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -74,49 +74,48 @@ class OSG_USER_INTERFACE_CLASS_API UIForeground : public UIForegroundBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw( DrawActionBase * action, Viewport * port );
+	virtual void draw(const GraphicsPtr Graphics) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in UIForegroundBase.
+    // Variables should all be in LabelBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    UIForeground(void);
-    UIForeground(const UIForeground &source);
+    Label(void);
+    Label(const Label &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~UIForeground(void); 
+    virtual ~Label(void); 
 
     /*! \}                                                                 */
     
-	void updateFrameBounds(Viewport * port);
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class UIForegroundBase;
+    friend class LabelBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const UIForeground &source);
+    void operator =(const Label &source);
 };
 
-typedef UIForeground *UIForegroundP;
+typedef Label *LabelP;
 
 OSG_END_NAMESPACE
 
-#include "OSGUIForegroundBase.inl"
-#include "OSGUIForeground.inl"
+#include "OSGLabelBase.inl"
+#include "OSGLabel.inl"
 
-#define OSGUIFOREGROUND_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGLABEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGUIFOREGROUND_H_ */
+#endif /* _OSGLABEL_H_ */

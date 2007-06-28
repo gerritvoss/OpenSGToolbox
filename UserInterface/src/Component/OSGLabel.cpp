@@ -44,10 +44,8 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGViewport.h>
-#include <OpenSG/OSGMFVecTypes.h>
 
-#include "OSGUIForeground.h"
+#include "OSGLabel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,8 +53,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::UIForeground
-A Foreground for rendering a UI on.
+/*! \class osg::Label
+A UI Label. 	
 */
 
 /***************************************************************************\
@@ -67,7 +65,7 @@ A Foreground for rendering a UI on.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void UIForeground::initMethod (void)
+void Label::initMethod (void)
 {
 }
 
@@ -75,102 +73,57 @@ void UIForeground::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-void UIForeground::draw( DrawActionBase * action, Viewport * port )
+
+void Label::draw(const GraphicsPtr TheGraphics) const
 {
-	//Update the Frames Bounds
-	updateFrameBounds(port);
+   //Draw My Border
+   drawBorder(TheGraphics);
 
-	glPushMatrix();
-    glLoadIdentity();
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-     
-    glOrtho(0, port->getPixelWidth(), port->getPixelHeight(), 0 , 0, 1);
-	
-	glMatrixMode(GL_MODELVIEW);
+   //Draw the Background on the Inside of my border
+   Pnt2s TopLeft, BottomRight;
+   getInsideBorderSizing(TopLeft, BottomRight);
+	TheGraphics->drawRect( TopLeft, BottomRight, getBackgroundColor(), getOpacity());
 
-	//Render the UI to the Foreground
-    getGraphics()->setDrawAction(action);
-	//Call The PreDraw on the Graphics
-	getGraphics()->preDraw();
-
-	//Translate to the Frames Position
+   //If I have Text Then Draw it
+   if(getText() != "" && getFont() != NullFC)
+   {
       //Calculate Alignment
       Pnt2s AlignedPosition;
-      Vec2s FrameBounds( getRootFrame()->getSize() );
+      Vec2s TextBounds( TheGraphics->getTextBounds(getText(), getFont()));
       if(getVerticalAlignment() == VERTICAL_TOP)
       {
          //VerticalTop
-         AlignedPosition[1] = 0;
+         AlignedPosition[1] = TopLeft[1];
       }
       else if(getVerticalAlignment() == VERTICAL_BOTTOM)
       {
          //VerticalBottom
-         AlignedPosition[1] = port->getPixelHeight()-FrameBounds[1];
+         AlignedPosition[1] = BottomRight[1]-TextBounds[1];
       }
       else if(getVerticalAlignment() == VERTICAL_CENTER)
       {
          //VerticalCenter
-         AlignedPosition[1] = 0.5*(port->getPixelHeight()-FrameBounds[1]);
+         AlignedPosition[1] = TopLeft[1]+0.5*(BottomRight[1]-TopLeft[1]-TextBounds[1]);
       }
 
       if(getHorizontalAlignment() == HORIZONTAL_LEFT)
       {
          //HorizontalLeft
-         AlignedPosition[0] = 0;
+         AlignedPosition[0] = TopLeft[0];
       }
       else if(getHorizontalAlignment() == HORIZONTAL_RIGHT)
       {
          //HorizontalRight
-         AlignedPosition[0] = port->getPixelWidth()-FrameBounds[0];
+         AlignedPosition[0] = BottomRight[0]-TextBounds[0];
       }
       else if(getHorizontalAlignment() == HORIZONTAL_CENTER)
       {
          //HorizontalCenter
-         AlignedPosition[0] = 0.5*(port->getPixelWidth()-FrameBounds[0]);
+         AlignedPosition[0] = TopLeft[0]+0.5*(BottomRight[0]-TopLeft[0]-TextBounds[0]);
       }
-	  AlignedPosition += getFramePositionOffset();
-	glTranslatef(AlignedPosition.x(),AlignedPosition.y(),0.0);
-	//Draw The Component
-	getRootFrame()->draw(getGraphics());
 
-	//Call the PostDraw on the Graphics
-	getGraphics()->postDraw();
-
-	glPopMatrix();
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-}
-
-void UIForeground::updateFrameBounds(Viewport * port)
-{
-	Vec2s Size;
-	
-	//Horizontal Bound
-	if(getFrameBounds().x()<=1.0)
-	{
-		Size[0] = getFrameBounds()[0]*port->getPixelWidth();
-	}
-	else
-	{
-		Size[0] = getFrameBounds()[0];
-	}
-
-	//Vertical Bound
-	if(getFrameBounds().x()<=1.0)
-	{
-		Size[1] = getFrameBounds()[1]*port->getPixelHeight();
-	}
-	else
-	{
-		Size[1] = getFrameBounds()[1];
-	}
-	
-	beginEditCP(getRootFrame());
-		getRootFrame()->setSize(Size);
-	endEditCP(getRootFrame());
+      TheGraphics->drawText(AlignedPosition, getText(), getFont(), getForegroundColor(), getOpacity());
+   }
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -178,31 +131,31 @@ void UIForeground::updateFrameBounds(Viewport * port)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-UIForeground::UIForeground(void) :
+Label::Label(void) :
     Inherited()
 {
 }
 
-UIForeground::UIForeground(const UIForeground &source) :
+Label::Label(const Label &source) :
     Inherited(source)
 {
 }
 
-UIForeground::~UIForeground(void)
+Label::~Label(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void UIForeground::changed(BitVector whichField, UInt32 origin)
+void Label::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void UIForeground::dump(      UInt32    , 
+void Label::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump UIForeground NI" << std::endl;
+    SLOG << "Dump Label NI" << std::endl;
 }
 
 
@@ -220,10 +173,10 @@ void UIForeground::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGUIFOREGROUNDBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGUIFOREGROUNDBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGLABELBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGLABELBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGUIFOREGROUNDFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGLABELFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

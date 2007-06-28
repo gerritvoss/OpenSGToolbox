@@ -77,6 +77,22 @@ void LineBorder::initMethod (void)
 
 void LineBorder::draw(const GraphicsPtr g, const Int16 x, const Int16 y , const UInt16 Width, const UInt16 Height, const Real32 Opacity) const
 {
+	if(getWidth() % 2 == 1)
+	{
+   //Top
+   g->drawLine(Pnt2s(x,y+osgceil(static_cast<Real32>(getWidth())/2.0)-1), Pnt2s(x+Width, y+osgceil(static_cast<Real32>(getWidth())/2.0)-1), getWidth(), getColor(), Opacity);
+   //Bottom
+   g->drawLine(Pnt2s(x,y+Height-getWidth()/2-1), Pnt2s(x+Width, y+Height-getWidth()/2-1), getWidth(), getColor(), Opacity);
+   
+   //Left
+   g->drawLine(Pnt2s(x+getWidth()/2,y+getWidth()), Pnt2s(x+getWidth()/2, y+Height-getWidth()), getWidth(), getColor(), Opacity);
+   
+   //Right
+   g->drawLine(Pnt2s(x+Width-getWidth()/2,y+getWidth()), Pnt2s(x+Width-getWidth()/2, y+Height-getWidth()), getWidth(), getColor(), Opacity);
+
+	}
+	else
+	{
    //Top
    g->drawLine(Pnt2s(x,y+osgceil(static_cast<Real32>(getWidth())/2.0)), Pnt2s(x+Width, y+osgceil(static_cast<Real32>(getWidth())/2.0)), getWidth(), getColor(), Opacity);
    //Bottom
@@ -87,7 +103,7 @@ void LineBorder::draw(const GraphicsPtr g, const Int16 x, const Int16 y , const 
    
    //Right
    g->drawLine(Pnt2s(x+Width-osgceil(static_cast<Real32>(getWidth())/2.0),y+getWidth()), Pnt2s(x+Width-osgceil(static_cast<Real32>(getWidth())/2.0), y+Height-getWidth()), getWidth(), getColor(), Opacity);
-}
+	}}
 
 void LineBorder::getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& Bottom) const
 {

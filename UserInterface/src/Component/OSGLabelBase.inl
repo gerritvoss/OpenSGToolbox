@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class UIForeground!
+ **     class Label!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &UIForegroundBase::getClassType(void)
+OSG::FieldContainerType &LabelBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 UIForegroundBase::getClassTypeId(void) 
+OSG::UInt32 LabelBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-UIForegroundPtr UIForegroundBase::create(void) 
+LabelPtr LabelBase::create(void) 
 {
-    UIForegroundPtr fc; 
+    LabelPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = UIForegroundPtr::dcast(
+        fc = LabelPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ UIForegroundPtr UIForegroundBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-UIForegroundPtr UIForegroundBase::createEmpty(void) 
+LabelPtr LabelBase::createEmpty(void) 
 { 
-    UIForegroundPtr returnValue; 
+    LabelPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,171 +96,115 @@ UIForegroundPtr UIForegroundBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the UIForeground::_sfRootFrame field.
+//! Get the Label::_sfFont field.
 inline
-SFFramePtr *UIForegroundBase::getSFRootFrame(void)
+SFFontPtr *LabelBase::getSFFont(void)
 {
-    return &_sfRootFrame;
+    return &_sfFont;
 }
 
-//! Get the UIForeground::_sfGraphics field.
+//! Get the Label::_sfText field.
 inline
-SFGraphicsPtr *UIForegroundBase::getSFGraphics(void)
+SFString *LabelBase::getSFText(void)
 {
-    return &_sfGraphics;
+    return &_sfText;
 }
 
-//! Get the UIForeground::_sfFramePositionOffset field.
+//! Get the Label::_sfVerticalAlignment field.
 inline
-SFVec2s *UIForegroundBase::getSFFramePositionOffset(void)
-{
-    return &_sfFramePositionOffset;
-}
-
-//! Get the UIForeground::_sfFrameBounds field.
-inline
-SFVec2f *UIForegroundBase::getSFFrameBounds(void)
-{
-    return &_sfFrameBounds;
-}
-
-//! Get the UIForeground::_sfVerticalAlignment field.
-inline
-SFUInt32 *UIForegroundBase::getSFVerticalAlignment(void)
+SFUInt32 *LabelBase::getSFVerticalAlignment(void)
 {
     return &_sfVerticalAlignment;
 }
 
-//! Get the UIForeground::_sfHorizontalAlignment field.
+//! Get the Label::_sfHorizontalAlignment field.
 inline
-SFUInt32 *UIForegroundBase::getSFHorizontalAlignment(void)
+SFUInt32 *LabelBase::getSFHorizontalAlignment(void)
 {
     return &_sfHorizontalAlignment;
 }
 
 
-//! Get the value of the UIForeground::_sfRootFrame field.
+//! Get the value of the Label::_sfFont field.
 inline
-FramePtr &UIForegroundBase::getRootFrame(void)
+FontPtr &LabelBase::getFont(void)
 {
-    return _sfRootFrame.getValue();
+    return _sfFont.getValue();
 }
 
-//! Get the value of the UIForeground::_sfRootFrame field.
+//! Get the value of the Label::_sfFont field.
 inline
-const FramePtr &UIForegroundBase::getRootFrame(void) const
+const FontPtr &LabelBase::getFont(void) const
 {
-    return _sfRootFrame.getValue();
+    return _sfFont.getValue();
 }
 
-//! Set the value of the UIForeground::_sfRootFrame field.
+//! Set the value of the Label::_sfFont field.
 inline
-void UIForegroundBase::setRootFrame(const FramePtr &value)
+void LabelBase::setFont(const FontPtr &value)
 {
-    _sfRootFrame.setValue(value);
+    _sfFont.setValue(value);
 }
 
-//! Get the value of the UIForeground::_sfGraphics field.
+//! Get the value of the Label::_sfText field.
 inline
-GraphicsPtr &UIForegroundBase::getGraphics(void)
+std::string &LabelBase::getText(void)
 {
-    return _sfGraphics.getValue();
+    return _sfText.getValue();
 }
 
-//! Get the value of the UIForeground::_sfGraphics field.
+//! Get the value of the Label::_sfText field.
 inline
-const GraphicsPtr &UIForegroundBase::getGraphics(void) const
+const std::string &LabelBase::getText(void) const
 {
-    return _sfGraphics.getValue();
+    return _sfText.getValue();
 }
 
-//! Set the value of the UIForeground::_sfGraphics field.
+//! Set the value of the Label::_sfText field.
 inline
-void UIForegroundBase::setGraphics(const GraphicsPtr &value)
+void LabelBase::setText(const std::string &value)
 {
-    _sfGraphics.setValue(value);
+    _sfText.setValue(value);
 }
 
-//! Get the value of the UIForeground::_sfFramePositionOffset field.
+//! Get the value of the Label::_sfVerticalAlignment field.
 inline
-Vec2s &UIForegroundBase::getFramePositionOffset(void)
-{
-    return _sfFramePositionOffset.getValue();
-}
-
-//! Get the value of the UIForeground::_sfFramePositionOffset field.
-inline
-const Vec2s &UIForegroundBase::getFramePositionOffset(void) const
-{
-    return _sfFramePositionOffset.getValue();
-}
-
-//! Set the value of the UIForeground::_sfFramePositionOffset field.
-inline
-void UIForegroundBase::setFramePositionOffset(const Vec2s &value)
-{
-    _sfFramePositionOffset.setValue(value);
-}
-
-//! Get the value of the UIForeground::_sfFrameBounds field.
-inline
-Vec2f &UIForegroundBase::getFrameBounds(void)
-{
-    return _sfFrameBounds.getValue();
-}
-
-//! Get the value of the UIForeground::_sfFrameBounds field.
-inline
-const Vec2f &UIForegroundBase::getFrameBounds(void) const
-{
-    return _sfFrameBounds.getValue();
-}
-
-//! Set the value of the UIForeground::_sfFrameBounds field.
-inline
-void UIForegroundBase::setFrameBounds(const Vec2f &value)
-{
-    _sfFrameBounds.setValue(value);
-}
-
-//! Get the value of the UIForeground::_sfVerticalAlignment field.
-inline
-UInt32 &UIForegroundBase::getVerticalAlignment(void)
+UInt32 &LabelBase::getVerticalAlignment(void)
 {
     return _sfVerticalAlignment.getValue();
 }
 
-//! Get the value of the UIForeground::_sfVerticalAlignment field.
+//! Get the value of the Label::_sfVerticalAlignment field.
 inline
-const UInt32 &UIForegroundBase::getVerticalAlignment(void) const
+const UInt32 &LabelBase::getVerticalAlignment(void) const
 {
     return _sfVerticalAlignment.getValue();
 }
 
-//! Set the value of the UIForeground::_sfVerticalAlignment field.
+//! Set the value of the Label::_sfVerticalAlignment field.
 inline
-void UIForegroundBase::setVerticalAlignment(const UInt32 &value)
+void LabelBase::setVerticalAlignment(const UInt32 &value)
 {
     _sfVerticalAlignment.setValue(value);
 }
 
-//! Get the value of the UIForeground::_sfHorizontalAlignment field.
+//! Get the value of the Label::_sfHorizontalAlignment field.
 inline
-UInt32 &UIForegroundBase::getHorizontalAlignment(void)
+UInt32 &LabelBase::getHorizontalAlignment(void)
 {
     return _sfHorizontalAlignment.getValue();
 }
 
-//! Get the value of the UIForeground::_sfHorizontalAlignment field.
+//! Get the value of the Label::_sfHorizontalAlignment field.
 inline
-const UInt32 &UIForegroundBase::getHorizontalAlignment(void) const
+const UInt32 &LabelBase::getHorizontalAlignment(void) const
 {
     return _sfHorizontalAlignment.getValue();
 }
 
-//! Set the value of the UIForeground::_sfHorizontalAlignment field.
+//! Set the value of the Label::_sfHorizontalAlignment field.
 inline
-void UIForegroundBase::setHorizontalAlignment(const UInt32 &value)
+void LabelBase::setHorizontalAlignment(const UInt32 &value)
 {
     _sfHorizontalAlignment.setValue(value);
 }
@@ -268,5 +212,5 @@ void UIForegroundBase::setHorizontalAlignment(const UInt32 &value)
 
 OSG_END_NAMESPACE
 
-#define OSGUIFOREGROUNDBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGLABELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

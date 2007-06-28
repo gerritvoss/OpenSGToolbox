@@ -36,24 +36,23 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGUIFOREGROUND_H_
-#define _OSGUIFOREGROUND_H_
+#ifndef _OSGFRAME_H_
+#define _OSGFRAME_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include "OSGUserInterfaceConfig.h"
 
-#include "OSGUIForegroundBase.h"
-#include "Util/OSGUIDefines.h"
+#include "OSGFrameBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API UIForeground : public UIForegroundBase
+class OSG_USER_INTERFACE_CLASS_API Frame : public FrameBase
 {
   private:
 
-    typedef UIForegroundBase Inherited;
+    typedef FrameBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -74,49 +73,48 @@ class OSG_USER_INTERFACE_CLASS_API UIForeground : public UIForegroundBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw( DrawActionBase * action, Viewport * port );
+	virtual void draw(const GraphicsPtr Graphics) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in UIForegroundBase.
+    // Variables should all be in FrameBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    UIForeground(void);
-    UIForeground(const UIForeground &source);
+    Frame(void);
+    Frame(const Frame &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~UIForeground(void); 
+    virtual ~Frame(void); 
 
     /*! \}                                                                 */
     
-	void updateFrameBounds(Viewport * port);
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class UIForegroundBase;
+    friend class FrameBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const UIForeground &source);
+    void operator =(const Frame &source);
 };
 
-typedef UIForeground *UIForegroundP;
+typedef Frame *FrameP;
 
 OSG_END_NAMESPACE
 
-#include "OSGUIForegroundBase.inl"
-#include "OSGUIForeground.inl"
+#include "OSGFrameBase.inl"
+#include "OSGFrame.inl"
 
-#define OSGUIFOREGROUND_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGFRAME_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGUIFOREGROUND_H_ */
+#endif /* _OSGFRAME_H_ */

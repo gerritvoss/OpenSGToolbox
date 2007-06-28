@@ -36,6 +36,7 @@
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGLineBorder.h>
+#include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -82,6 +83,7 @@ int main(int argc, char **argv)
 	//Create the Graphics
 	GraphicsPtr graphics = osg::Graphics2D::create();
 
+
 	//Create A Button Component
 	ButtonPtr button = osg::Button::create();
 	LineBorderPtr buttonBorder = osg::LineBorder::create();
@@ -95,7 +97,7 @@ int main(int argc, char **argv)
       buttonBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
    endEditCP  (buttonBorder, LineBorder::WidthFieldMask | LineBorder::ColorFieldMask);
 
-    beginEditCP(button, Button::SizeFieldMask);
+    beginEditCP(button);
 		button->setPreferredSize(Vec2s(100,50));
 		button->setSize(Vec2s(100,50));
 		button->setBackgroundColor(Color4f(0.8,0.8,0.8,1.0));
@@ -103,15 +105,26 @@ int main(int argc, char **argv)
 		button->setBorder(buttonBorder);
 		button->setFont(buttonFont);
 		button->setText("Button 1");
-    endEditCP  (button, Button::SizeFieldMask);
+    endEditCP  (button);
+
+	//Create The Main Frame
+	FramePtr MainFrame = osg::Frame::create();
+	LayoutPtr MainFrameLayout = osg::AbsoluteLayout::create();
+	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundColorFieldMask);
+	   MainFrame->getChildren().addValue(button);
+	   MainFrame->setLayout(MainFrameLayout);
+	   MainFrame->setBackgroundColor(Color4f(0.0,0.0,0.5,0.3));
+    endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundColorFieldMask);
 
 	//Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();
 
-    beginEditCP(foreground, UIForeground::GraphicsFieldMask | UIForeground::RootComponentFieldMask);
+	beginEditCP(foreground, UIForeground::GraphicsFieldMask | UIForeground::RootFrameFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 		foreground->setGraphics(graphics);
-		foreground->setRootComponent(button);
-    endEditCP  (foreground, UIForeground::GraphicsFieldMask | UIForeground::RootComponentFieldMask);
+		foreground->setRootFrame(MainFrame);
+		foreground->setFramePositionOffset(Vec2s(0,0));
+		foreground->setFrameBounds(Vec2f(0.5,0.5));
+    endEditCP  (foreground, UIForeground::GraphicsFieldMask | UIForeground::RootFrameFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
     // create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;

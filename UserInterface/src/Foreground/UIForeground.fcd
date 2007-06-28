@@ -10,12 +10,12 @@
 >
 A Foreground for rendering a UI on.
 	<Field
-		name="RootComponent"
-		type="ComponentPtr"
+		name="RootFrame"
+		type="FramePtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
-      header="Component/OSGComponent.h"
+      header="Component/OSGFrame.h"
 	>
 	</Field>
 	<Field
@@ -25,6 +25,41 @@ A Foreground for rendering a UI on.
 		visibility="external"
 		access="public"
       header="Graphics/OSGGraphics.h"
+	>
+	</Field>
+   
+	<Field
+		name="FramePositionOffset"
+		type="Vec2s"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="FrameBounds"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="VerticalAlignment"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>
+	</Field>
+	<Field
+		name="HorizontalAlignment"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
 	>
 	</Field>
 </FieldContainer>

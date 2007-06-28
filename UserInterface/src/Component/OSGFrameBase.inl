@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class UIForeground!
+ **     class Frame!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &UIForegroundBase::getClassType(void)
+OSG::FieldContainerType &FrameBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 UIForegroundBase::getClassTypeId(void) 
+OSG::UInt32 FrameBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-UIForegroundPtr UIForegroundBase::create(void) 
+FramePtr FrameBase::create(void) 
 {
-    UIForegroundPtr fc; 
+    FramePtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = UIForegroundPtr::dcast(
+        fc = FramePtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ UIForegroundPtr UIForegroundBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-UIForegroundPtr UIForegroundBase::createEmpty(void) 
+FramePtr FrameBase::createEmpty(void) 
 { 
-    UIForegroundPtr returnValue; 
+    FramePtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,177 +96,65 @@ UIForegroundPtr UIForegroundBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the UIForeground::_sfRootFrame field.
+//! Get the Frame::_mfChildren field.
 inline
-SFFramePtr *UIForegroundBase::getSFRootFrame(void)
+MFComponentPtr *FrameBase::getMFChildren(void)
 {
-    return &_sfRootFrame;
+    return &_mfChildren;
 }
 
-//! Get the UIForeground::_sfGraphics field.
+//! Get the Frame::_sfLayout field.
 inline
-SFGraphicsPtr *UIForegroundBase::getSFGraphics(void)
+SFLayoutPtr *FrameBase::getSFLayout(void)
 {
-    return &_sfGraphics;
-}
-
-//! Get the UIForeground::_sfFramePositionOffset field.
-inline
-SFVec2s *UIForegroundBase::getSFFramePositionOffset(void)
-{
-    return &_sfFramePositionOffset;
-}
-
-//! Get the UIForeground::_sfFrameBounds field.
-inline
-SFVec2f *UIForegroundBase::getSFFrameBounds(void)
-{
-    return &_sfFrameBounds;
-}
-
-//! Get the UIForeground::_sfVerticalAlignment field.
-inline
-SFUInt32 *UIForegroundBase::getSFVerticalAlignment(void)
-{
-    return &_sfVerticalAlignment;
-}
-
-//! Get the UIForeground::_sfHorizontalAlignment field.
-inline
-SFUInt32 *UIForegroundBase::getSFHorizontalAlignment(void)
-{
-    return &_sfHorizontalAlignment;
+    return &_sfLayout;
 }
 
 
-//! Get the value of the UIForeground::_sfRootFrame field.
+//! Get the value of the Frame::_sfLayout field.
 inline
-FramePtr &UIForegroundBase::getRootFrame(void)
+LayoutPtr &FrameBase::getLayout(void)
 {
-    return _sfRootFrame.getValue();
+    return _sfLayout.getValue();
 }
 
-//! Get the value of the UIForeground::_sfRootFrame field.
+//! Get the value of the Frame::_sfLayout field.
 inline
-const FramePtr &UIForegroundBase::getRootFrame(void) const
+const LayoutPtr &FrameBase::getLayout(void) const
 {
-    return _sfRootFrame.getValue();
+    return _sfLayout.getValue();
 }
 
-//! Set the value of the UIForeground::_sfRootFrame field.
+//! Set the value of the Frame::_sfLayout field.
 inline
-void UIForegroundBase::setRootFrame(const FramePtr &value)
+void FrameBase::setLayout(const LayoutPtr &value)
 {
-    _sfRootFrame.setValue(value);
+    _sfLayout.setValue(value);
 }
 
-//! Get the value of the UIForeground::_sfGraphics field.
+
+//! Get the value of the \a index element the Frame::_mfChildren field.
 inline
-GraphicsPtr &UIForegroundBase::getGraphics(void)
+ComponentPtr &FrameBase::getChildren(const UInt32 index)
 {
-    return _sfGraphics.getValue();
+    return _mfChildren[index];
 }
 
-//! Get the value of the UIForeground::_sfGraphics field.
+//! Get the Frame::_mfChildren field.
 inline
-const GraphicsPtr &UIForegroundBase::getGraphics(void) const
+MFComponentPtr &FrameBase::getChildren(void)
 {
-    return _sfGraphics.getValue();
+    return _mfChildren;
 }
 
-//! Set the value of the UIForeground::_sfGraphics field.
+//! Get the Frame::_mfChildren field.
 inline
-void UIForegroundBase::setGraphics(const GraphicsPtr &value)
+const MFComponentPtr &FrameBase::getChildren(void) const
 {
-    _sfGraphics.setValue(value);
+    return _mfChildren;
 }
-
-//! Get the value of the UIForeground::_sfFramePositionOffset field.
-inline
-Vec2s &UIForegroundBase::getFramePositionOffset(void)
-{
-    return _sfFramePositionOffset.getValue();
-}
-
-//! Get the value of the UIForeground::_sfFramePositionOffset field.
-inline
-const Vec2s &UIForegroundBase::getFramePositionOffset(void) const
-{
-    return _sfFramePositionOffset.getValue();
-}
-
-//! Set the value of the UIForeground::_sfFramePositionOffset field.
-inline
-void UIForegroundBase::setFramePositionOffset(const Vec2s &value)
-{
-    _sfFramePositionOffset.setValue(value);
-}
-
-//! Get the value of the UIForeground::_sfFrameBounds field.
-inline
-Vec2f &UIForegroundBase::getFrameBounds(void)
-{
-    return _sfFrameBounds.getValue();
-}
-
-//! Get the value of the UIForeground::_sfFrameBounds field.
-inline
-const Vec2f &UIForegroundBase::getFrameBounds(void) const
-{
-    return _sfFrameBounds.getValue();
-}
-
-//! Set the value of the UIForeground::_sfFrameBounds field.
-inline
-void UIForegroundBase::setFrameBounds(const Vec2f &value)
-{
-    _sfFrameBounds.setValue(value);
-}
-
-//! Get the value of the UIForeground::_sfVerticalAlignment field.
-inline
-UInt32 &UIForegroundBase::getVerticalAlignment(void)
-{
-    return _sfVerticalAlignment.getValue();
-}
-
-//! Get the value of the UIForeground::_sfVerticalAlignment field.
-inline
-const UInt32 &UIForegroundBase::getVerticalAlignment(void) const
-{
-    return _sfVerticalAlignment.getValue();
-}
-
-//! Set the value of the UIForeground::_sfVerticalAlignment field.
-inline
-void UIForegroundBase::setVerticalAlignment(const UInt32 &value)
-{
-    _sfVerticalAlignment.setValue(value);
-}
-
-//! Get the value of the UIForeground::_sfHorizontalAlignment field.
-inline
-UInt32 &UIForegroundBase::getHorizontalAlignment(void)
-{
-    return _sfHorizontalAlignment.getValue();
-}
-
-//! Get the value of the UIForeground::_sfHorizontalAlignment field.
-inline
-const UInt32 &UIForegroundBase::getHorizontalAlignment(void) const
-{
-    return _sfHorizontalAlignment.getValue();
-}
-
-//! Set the value of the UIForeground::_sfHorizontalAlignment field.
-inline
-void UIForegroundBase::setHorizontalAlignment(const UInt32 &value)
-{
-    _sfHorizontalAlignment.setValue(value);
-}
-
 
 OSG_END_NAMESPACE
 
-#define OSGUIFOREGROUNDBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGFRAMEBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class UIForeground
+ **     class Label
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGUIFOREGROUNDBASE_H_
-#define _OSGUIFOREGROUNDBASE_H_
+#ifndef _OSGLABELBASE_H_
+#define _OSGLABELBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -64,50 +64,44 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGForeground.h> // Parent
+#include "OSGComponent.h" // Parent
 
-#include "Component/OSGFrame.h" // RootFrame type
-#include "Graphics/OSGGraphics.h" // Graphics type
-#include <OpenSG/OSGVec2sFields.h> // FramePositionOffset type
-#include <OpenSG/OSGVec2fFields.h> // FrameBounds type
+#include "Text/OSGFont.h" // Font type
+#include <OpenSG/OSGStringFields.h> // Text type
 #include <OpenSG/OSGUInt32Fields.h> // VerticalAlignment type
 #include <OpenSG/OSGUInt32Fields.h> // HorizontalAlignment type
 
-#include "OSGUIForegroundFields.h"
+#include "OSGLabelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class UIForeground;
+class Label;
 class BinaryDataHandler;
 
-//! \brief UIForeground Base Class.
+//! \brief Label Base Class.
 
-class OSG_USER_INTERFACE_CLASS_API UIForegroundBase : public Foreground
+class OSG_USER_INTERFACE_CLASS_API LabelBase : public Component
 {
   private:
 
-    typedef Foreground    Inherited;
+    typedef Component    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef UIForegroundPtr  Ptr;
+    typedef LabelPtr  Ptr;
 
     enum
     {
-        RootFrameFieldId           = Inherited::NextFieldId,
-        GraphicsFieldId            = RootFrameFieldId           + 1,
-        FramePositionOffsetFieldId = GraphicsFieldId            + 1,
-        FrameBoundsFieldId         = FramePositionOffsetFieldId + 1,
-        VerticalAlignmentFieldId   = FrameBoundsFieldId         + 1,
+        FontFieldId                = Inherited::NextFieldId,
+        TextFieldId                = FontFieldId                + 1,
+        VerticalAlignmentFieldId   = TextFieldId                + 1,
         HorizontalAlignmentFieldId = VerticalAlignmentFieldId   + 1,
         NextFieldId                = HorizontalAlignmentFieldId + 1
     };
 
-    static const OSG::BitVector RootFrameFieldMask;
-    static const OSG::BitVector GraphicsFieldMask;
-    static const OSG::BitVector FramePositionOffsetFieldMask;
-    static const OSG::BitVector FrameBoundsFieldMask;
+    static const OSG::BitVector FontFieldMask;
+    static const OSG::BitVector TextFieldMask;
     static const OSG::BitVector VerticalAlignmentFieldMask;
     static const OSG::BitVector HorizontalAlignmentFieldMask;
 
@@ -136,21 +130,15 @@ class OSG_USER_INTERFACE_CLASS_API UIForegroundBase : public Foreground
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFFramePtr          *getSFRootFrame      (void);
-           SFGraphicsPtr       *getSFGraphics       (void);
-           SFVec2s             *getSFFramePositionOffset(void);
-           SFVec2f             *getSFFrameBounds    (void);
+           SFFontPtr           *getSFFont           (void);
+           SFString            *getSFText           (void);
            SFUInt32            *getSFVerticalAlignment(void);
            SFUInt32            *getSFHorizontalAlignment(void);
 
-           FramePtr            &getRootFrame      (void);
-     const FramePtr            &getRootFrame      (void) const;
-           GraphicsPtr         &getGraphics       (void);
-     const GraphicsPtr         &getGraphics       (void) const;
-           Vec2s               &getFramePositionOffset(void);
-     const Vec2s               &getFramePositionOffset(void) const;
-           Vec2f               &getFrameBounds    (void);
-     const Vec2f               &getFrameBounds    (void) const;
+           FontPtr             &getFont           (void);
+     const FontPtr             &getFont           (void) const;
+           std::string         &getText           (void);
+     const std::string         &getText           (void) const;
            UInt32              &getVerticalAlignment(void);
      const UInt32              &getVerticalAlignment(void) const;
            UInt32              &getHorizontalAlignment(void);
@@ -161,10 +149,8 @@ class OSG_USER_INTERFACE_CLASS_API UIForegroundBase : public Foreground
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setRootFrame      ( const FramePtr &value );
-     void setGraphics       ( const GraphicsPtr &value );
-     void setFramePositionOffset( const Vec2s &value );
-     void setFrameBounds    ( const Vec2f &value );
+     void setFont           ( const FontPtr &value );
+     void setText           ( const std::string &value );
      void setVerticalAlignment( const UInt32 &value );
      void setHorizontalAlignment( const UInt32 &value );
 
@@ -190,8 +176,8 @@ class OSG_USER_INTERFACE_CLASS_API UIForegroundBase : public Foreground
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  UIForegroundPtr      create          (void); 
-    static  UIForegroundPtr      createEmpty     (void); 
+    static  LabelPtr      create          (void); 
+    static  LabelPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -209,10 +195,8 @@ class OSG_USER_INTERFACE_CLASS_API UIForegroundBase : public Foreground
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFFramePtr          _sfRootFrame;
-    SFGraphicsPtr       _sfGraphics;
-    SFVec2s             _sfFramePositionOffset;
-    SFVec2f             _sfFrameBounds;
+    SFFontPtr           _sfFont;
+    SFString            _sfText;
     SFUInt32            _sfVerticalAlignment;
     SFUInt32            _sfHorizontalAlignment;
 
@@ -221,15 +205,15 @@ class OSG_USER_INTERFACE_CLASS_API UIForegroundBase : public Foreground
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    UIForegroundBase(void);
-    UIForegroundBase(const UIForegroundBase &source);
+    LabelBase(void);
+    LabelBase(const LabelBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~UIForegroundBase(void); 
+    virtual ~LabelBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -237,13 +221,13 @@ class OSG_USER_INTERFACE_CLASS_API UIForegroundBase : public Foreground
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      UIForegroundBase *pOther,
+    void executeSyncImpl(      LabelBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      UIForegroundBase *pOther,
+    void executeSyncImpl(      LabelBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -273,7 +257,7 @@ class OSG_USER_INTERFACE_CLASS_API UIForegroundBase : public Foreground
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const UIForegroundBase &source);
+    void operator =(const LabelBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -281,17 +265,17 @@ class OSG_USER_INTERFACE_CLASS_API UIForegroundBase : public Foreground
 //---------------------------------------------------------------------------
 
 
-typedef UIForegroundBase *UIForegroundBaseP;
+typedef LabelBase *LabelBaseP;
 
-typedef osgIF<UIForegroundBase::isNodeCore,
-              CoredNodePtr<UIForeground>,
+typedef osgIF<LabelBase::isNodeCore,
+              CoredNodePtr<Label>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet UIForegroundNodePtr;
+              >::_IRet LabelNodePtr;
 
-typedef RefPtr<UIForegroundPtr> UIForegroundRefPtr;
+typedef RefPtr<LabelPtr> LabelRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGUIFOREGROUNDBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGLABELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGUIFOREGROUNDBASE_H_ */
+#endif /* _OSGLABELBASE_H_ */

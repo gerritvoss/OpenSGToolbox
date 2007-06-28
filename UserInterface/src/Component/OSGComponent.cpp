@@ -79,7 +79,7 @@ void Component::drawBorder(const GraphicsPtr TheGraphics) const
    if(getBorder() != NullFC)
    {
       //Draw My Border
-      getBorder()->draw(TheGraphics,0,0,getPreferredSize().x(),getPreferredSize().y(), getOpacity());
+      getBorder()->draw(TheGraphics,0,0,getSize().x(),getSize().y(), getOpacity());
    }
 }
 

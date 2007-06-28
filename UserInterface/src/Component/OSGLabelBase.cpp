@@ -45,165 +45,143 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class UIForeground!
+ **     class Label!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEUIFOREGROUNDINST
+#define OSG_COMPILELABELINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGUIForegroundBase.h"
-#include "OSGUIForeground.h"
+#include "OSGLabelBase.h"
+#include "OSGLabel.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  UIForegroundBase::RootFrameFieldMask = 
-    (TypeTraits<BitVector>::One << UIForegroundBase::RootFrameFieldId);
+const OSG::BitVector  LabelBase::FontFieldMask = 
+    (TypeTraits<BitVector>::One << LabelBase::FontFieldId);
 
-const OSG::BitVector  UIForegroundBase::GraphicsFieldMask = 
-    (TypeTraits<BitVector>::One << UIForegroundBase::GraphicsFieldId);
+const OSG::BitVector  LabelBase::TextFieldMask = 
+    (TypeTraits<BitVector>::One << LabelBase::TextFieldId);
 
-const OSG::BitVector  UIForegroundBase::FramePositionOffsetFieldMask = 
-    (TypeTraits<BitVector>::One << UIForegroundBase::FramePositionOffsetFieldId);
+const OSG::BitVector  LabelBase::VerticalAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << LabelBase::VerticalAlignmentFieldId);
 
-const OSG::BitVector  UIForegroundBase::FrameBoundsFieldMask = 
-    (TypeTraits<BitVector>::One << UIForegroundBase::FrameBoundsFieldId);
+const OSG::BitVector  LabelBase::HorizontalAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << LabelBase::HorizontalAlignmentFieldId);
 
-const OSG::BitVector  UIForegroundBase::VerticalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << UIForegroundBase::VerticalAlignmentFieldId);
-
-const OSG::BitVector  UIForegroundBase::HorizontalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << UIForegroundBase::HorizontalAlignmentFieldId);
-
-const OSG::BitVector UIForegroundBase::MTInfluenceMask = 
+const OSG::BitVector LabelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var FramePtr        UIForegroundBase::_sfRootFrame
+/*! \var FontPtr         LabelBase::_sfFont
     
 */
-/*! \var GraphicsPtr     UIForegroundBase::_sfGraphics
+/*! \var std::string     LabelBase::_sfText
     
 */
-/*! \var Vec2s           UIForegroundBase::_sfFramePositionOffset
+/*! \var UInt32          LabelBase::_sfVerticalAlignment
     
 */
-/*! \var Vec2f           UIForegroundBase::_sfFrameBounds
-    
-*/
-/*! \var UInt32          UIForegroundBase::_sfVerticalAlignment
-    
-*/
-/*! \var UInt32          UIForegroundBase::_sfHorizontalAlignment
+/*! \var UInt32          LabelBase::_sfHorizontalAlignment
     
 */
 
-//! UIForeground description
+//! Label description
 
-FieldDescription *UIForegroundBase::_desc[] = 
+FieldDescription *LabelBase::_desc[] = 
 {
-    new FieldDescription(SFFramePtr::getClassType(), 
-                     "RootFrame", 
-                     RootFrameFieldId, RootFrameFieldMask,
+    new FieldDescription(SFFontPtr::getClassType(), 
+                     "Font", 
+                     FontFieldId, FontFieldMask,
                      false,
-                     (FieldAccessMethod) &UIForegroundBase::getSFRootFrame),
-    new FieldDescription(SFGraphicsPtr::getClassType(), 
-                     "Graphics", 
-                     GraphicsFieldId, GraphicsFieldMask,
+                     (FieldAccessMethod) &LabelBase::getSFFont),
+    new FieldDescription(SFString::getClassType(), 
+                     "Text", 
+                     TextFieldId, TextFieldMask,
                      false,
-                     (FieldAccessMethod) &UIForegroundBase::getSFGraphics),
-    new FieldDescription(SFVec2s::getClassType(), 
-                     "FramePositionOffset", 
-                     FramePositionOffsetFieldId, FramePositionOffsetFieldMask,
-                     false,
-                     (FieldAccessMethod) &UIForegroundBase::getSFFramePositionOffset),
-    new FieldDescription(SFVec2f::getClassType(), 
-                     "FrameBounds", 
-                     FrameBoundsFieldId, FrameBoundsFieldMask,
-                     false,
-                     (FieldAccessMethod) &UIForegroundBase::getSFFrameBounds),
+                     (FieldAccessMethod) &LabelBase::getSFText),
     new FieldDescription(SFUInt32::getClassType(), 
                      "VerticalAlignment", 
                      VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &UIForegroundBase::getSFVerticalAlignment),
+                     (FieldAccessMethod) &LabelBase::getSFVerticalAlignment),
     new FieldDescription(SFUInt32::getClassType(), 
                      "HorizontalAlignment", 
                      HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &UIForegroundBase::getSFHorizontalAlignment)
+                     (FieldAccessMethod) &LabelBase::getSFHorizontalAlignment)
 };
 
 
-FieldContainerType UIForegroundBase::_type(
-    "UIForeground",
-    "Foreground",
+FieldContainerType LabelBase::_type(
+    "Label",
+    "Component",
     NULL,
-    (PrototypeCreateF) &UIForegroundBase::createEmpty,
-    UIForeground::initMethod,
+    (PrototypeCreateF) &LabelBase::createEmpty,
+    Label::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(UIForegroundBase, UIForegroundPtr)
+//OSG_FIELD_CONTAINER_DEF(LabelBase, LabelPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &UIForegroundBase::getType(void) 
+FieldContainerType &LabelBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &UIForegroundBase::getType(void) const 
+const FieldContainerType &LabelBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr UIForegroundBase::shallowCopy(void) const 
+FieldContainerPtr LabelBase::shallowCopy(void) const 
 { 
-    UIForegroundPtr returnValue; 
+    LabelPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const UIForeground *>(this)); 
+    newPtr(returnValue, dynamic_cast<const Label *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 UIForegroundBase::getContainerSize(void) const 
+UInt32 LabelBase::getContainerSize(void) const 
 { 
-    return sizeof(UIForeground); 
+    return sizeof(Label); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void UIForegroundBase::executeSync(      FieldContainer &other,
+void LabelBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((UIForegroundBase *) &other, whichField);
+    this->executeSyncImpl((LabelBase *) &other, whichField);
 }
 #else
-void UIForegroundBase::executeSync(      FieldContainer &other,
+void LabelBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((UIForegroundBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((LabelBase *) &other, whichField, sInfo);
 }
-void UIForegroundBase::execBeginEdit(const BitVector &whichField, 
+void LabelBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void UIForegroundBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void LabelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -216,11 +194,9 @@ void UIForegroundBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-UIForegroundBase::UIForegroundBase(void) :
-    _sfRootFrame              (), 
-    _sfGraphics               (), 
-    _sfFramePositionOffset    (), 
-    _sfFrameBounds            (), 
+LabelBase::LabelBase(void) :
+    _sfFont                   (), 
+    _sfText                   (), 
     _sfVerticalAlignment      (UInt32(0)), 
     _sfHorizontalAlignment    (UInt32(0)), 
     Inherited() 
@@ -231,11 +207,9 @@ UIForegroundBase::UIForegroundBase(void) :
 #pragma warning (default : 383)
 #endif
 
-UIForegroundBase::UIForegroundBase(const UIForegroundBase &source) :
-    _sfRootFrame              (source._sfRootFrame              ), 
-    _sfGraphics               (source._sfGraphics               ), 
-    _sfFramePositionOffset    (source._sfFramePositionOffset    ), 
-    _sfFrameBounds            (source._sfFrameBounds            ), 
+LabelBase::LabelBase(const LabelBase &source) :
+    _sfFont                   (source._sfFont                   ), 
+    _sfText                   (source._sfText                   ), 
     _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
     _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
     Inherited                 (source)
@@ -244,34 +218,24 @@ UIForegroundBase::UIForegroundBase(const UIForegroundBase &source) :
 
 /*-------------------------- destructors ----------------------------------*/
 
-UIForegroundBase::~UIForegroundBase(void)
+LabelBase::~LabelBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 UIForegroundBase::getBinSize(const BitVector &whichField)
+UInt32 LabelBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (RootFrameFieldMask & whichField))
+    if(FieldBits::NoField != (FontFieldMask & whichField))
     {
-        returnValue += _sfRootFrame.getBinSize();
+        returnValue += _sfFont.getBinSize();
     }
 
-    if(FieldBits::NoField != (GraphicsFieldMask & whichField))
+    if(FieldBits::NoField != (TextFieldMask & whichField))
     {
-        returnValue += _sfGraphics.getBinSize();
-    }
-
-    if(FieldBits::NoField != (FramePositionOffsetFieldMask & whichField))
-    {
-        returnValue += _sfFramePositionOffset.getBinSize();
-    }
-
-    if(FieldBits::NoField != (FrameBoundsFieldMask & whichField))
-    {
-        returnValue += _sfFrameBounds.getBinSize();
+        returnValue += _sfText.getBinSize();
     }
 
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
@@ -288,29 +252,19 @@ UInt32 UIForegroundBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void UIForegroundBase::copyToBin(      BinaryDataHandler &pMem,
+void LabelBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (RootFrameFieldMask & whichField))
+    if(FieldBits::NoField != (FontFieldMask & whichField))
     {
-        _sfRootFrame.copyToBin(pMem);
+        _sfFont.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (GraphicsFieldMask & whichField))
+    if(FieldBits::NoField != (TextFieldMask & whichField))
     {
-        _sfGraphics.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (FramePositionOffsetFieldMask & whichField))
-    {
-        _sfFramePositionOffset.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (FrameBoundsFieldMask & whichField))
-    {
-        _sfFrameBounds.copyToBin(pMem);
+        _sfText.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
@@ -326,29 +280,19 @@ void UIForegroundBase::copyToBin(      BinaryDataHandler &pMem,
 
 }
 
-void UIForegroundBase::copyFromBin(      BinaryDataHandler &pMem,
+void LabelBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (RootFrameFieldMask & whichField))
+    if(FieldBits::NoField != (FontFieldMask & whichField))
     {
-        _sfRootFrame.copyFromBin(pMem);
+        _sfFont.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (GraphicsFieldMask & whichField))
+    if(FieldBits::NoField != (TextFieldMask & whichField))
     {
-        _sfGraphics.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (FramePositionOffsetFieldMask & whichField))
-    {
-        _sfFramePositionOffset.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (FrameBoundsFieldMask & whichField))
-    {
-        _sfFrameBounds.copyFromBin(pMem);
+        _sfText.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
@@ -365,23 +309,17 @@ void UIForegroundBase::copyFromBin(      BinaryDataHandler &pMem,
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void UIForegroundBase::executeSyncImpl(      UIForegroundBase *pOther,
+void LabelBase::executeSyncImpl(      LabelBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (RootFrameFieldMask & whichField))
-        _sfRootFrame.syncWith(pOther->_sfRootFrame);
+    if(FieldBits::NoField != (FontFieldMask & whichField))
+        _sfFont.syncWith(pOther->_sfFont);
 
-    if(FieldBits::NoField != (GraphicsFieldMask & whichField))
-        _sfGraphics.syncWith(pOther->_sfGraphics);
-
-    if(FieldBits::NoField != (FramePositionOffsetFieldMask & whichField))
-        _sfFramePositionOffset.syncWith(pOther->_sfFramePositionOffset);
-
-    if(FieldBits::NoField != (FrameBoundsFieldMask & whichField))
-        _sfFrameBounds.syncWith(pOther->_sfFrameBounds);
+    if(FieldBits::NoField != (TextFieldMask & whichField))
+        _sfText.syncWith(pOther->_sfText);
 
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
         _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
@@ -392,24 +330,18 @@ void UIForegroundBase::executeSyncImpl(      UIForegroundBase *pOther,
 
 }
 #else
-void UIForegroundBase::executeSyncImpl(      UIForegroundBase *pOther,
+void LabelBase::executeSyncImpl(      LabelBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (RootFrameFieldMask & whichField))
-        _sfRootFrame.syncWith(pOther->_sfRootFrame);
+    if(FieldBits::NoField != (FontFieldMask & whichField))
+        _sfFont.syncWith(pOther->_sfFont);
 
-    if(FieldBits::NoField != (GraphicsFieldMask & whichField))
-        _sfGraphics.syncWith(pOther->_sfGraphics);
-
-    if(FieldBits::NoField != (FramePositionOffsetFieldMask & whichField))
-        _sfFramePositionOffset.syncWith(pOther->_sfFramePositionOffset);
-
-    if(FieldBits::NoField != (FrameBoundsFieldMask & whichField))
-        _sfFrameBounds.syncWith(pOther->_sfFrameBounds);
+    if(FieldBits::NoField != (TextFieldMask & whichField))
+        _sfText.syncWith(pOther->_sfText);
 
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
         _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
@@ -421,7 +353,7 @@ void UIForegroundBase::executeSyncImpl(      UIForegroundBase *pOther,
 
 }
 
-void UIForegroundBase::execBeginEditImpl (const BitVector &whichField, 
+void LabelBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -440,11 +372,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<UIForegroundPtr>::_type("UIForegroundPtr", "ForegroundPtr");
+DataType FieldDataTraits<LabelPtr>::_type("LabelPtr", "ComponentPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(UIForegroundPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(UIForegroundPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(LabelPtr, );
+OSG_DLLEXPORT_MFIELD_DEF1(LabelPtr, );
 
 
 /*------------------------------------------------------------------------*/
@@ -461,10 +393,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(UIForegroundPtr, );
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGUIFOREGROUNDBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGUIFOREGROUNDBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGLABELBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGLABELBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGUIFOREGROUNDFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGLABELFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE
