@@ -67,6 +67,12 @@ A UI Button.
 
 void Button::initMethod (void)
 {
+   /*ButtonPtr DefaultButton = createEmpty();
+   beginEditCP(DefaultButton, Button::BorderFieldMask);
+      DefaultButton->setBorder
+   endEditCP(DefaultButton, Button::BorderFieldMask);
+
+   Button::getClassType().setPrototype(DefaultButton);*/
 }
 
 
@@ -76,7 +82,54 @@ void Button::initMethod (void)
 
 void Button::draw(const GraphicsPtr TheGraphics) const
 {
-	TheGraphics->drawRect( Pnt2s(0,0),getPreferredSize(), Color4f(0.0f,1.0f,0.0f,0.5));
+   //Draw My Border
+   drawBorder(TheGraphics);
+
+   //Draw the Background on the Inside of my border
+   Pnt2s TopLeft, BottomRight;
+   getInsideBorderSizing(TopLeft, BottomRight);
+	TheGraphics->drawRect( TopLeft, BottomRight, getBackgroundColor(), getOpacity());
+
+   //If I have Text Then Draw it
+   if(getText() != "" && getFont() != NullFC)
+   {
+      //Calculate Alignment
+      Pnt2s AlignedPosition;
+      Vec2s TextBounds( TheGraphics->getTextBounds(getText(), getFont()));
+      if(getVerticalAlignment() == VERTICAL_TOP)
+      {
+         //VerticalTop
+         AlignedPosition[1] = TopLeft[1];
+      }
+      else if(getVerticalAlignment() == VERTICAL_BOTTOM)
+      {
+         //VerticalBottom
+         AlignedPosition[1] = BottomRight[1]-TextBounds[1];
+      }
+      else if(getVerticalAlignment() == VERTICAL_CENTER)
+      {
+         //VerticalCenter
+         AlignedPosition[1] = TopLeft[1]+0.5*(BottomRight[1]-TopLeft[1]-TextBounds[1]);
+      }
+
+      if(getHorizontalAlignment() == HORIZONTAL_LEFT)
+      {
+         //HorizontalLeft
+         AlignedPosition[0] = TopLeft[0];
+      }
+      else if(getHorizontalAlignment() == HORIZONTAL_RIGHT)
+      {
+         //HorizontalRight
+         AlignedPosition[0] = BottomRight[0]-TextBounds[0];
+      }
+      else if(getHorizontalAlignment() == HORIZONTAL_CENTER)
+      {
+         //HorizontalCenter
+         AlignedPosition[0] = TopLeft[0]+0.5*(BottomRight[0]-TopLeft[0]-TextBounds[0]);
+      }
+
+      TheGraphics->drawText(AlignedPosition, getText(), getFont(), getForegroundColor(), getOpacity());
+   }
 }
 
 /*-------------------------------------------------------------------------*\

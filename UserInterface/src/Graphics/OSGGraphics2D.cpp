@@ -44,6 +44,9 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGTextLayoutParam.h>
+#include <OpenSG/OSGTextLayoutResult.h>
+#include <OpenSG/OSGTextureChunk.h>
 
 #include "OSGGraphics2D.h"
 
@@ -76,23 +79,22 @@ void Graphics2D::initMethod (void)
 
 void Graphics2D::preDraw()
 {
-	_light = glIsEnabled(GL_LIGHTING);
+   glPushAttrib(GL_LIGHTING_BIT | GL_POLYGON_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	//_light = glIsEnabled(GL_LIGHTING);
 
-	glGetIntegerv(GL_POLYGON_MODE, _fill);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glGetIntegerv(GL_POLYGON_MODE, _fill);
+	glPolygonMode(GL_FRONT, GL_FILL);
 
-	_depth = glIsEnabled(GL_DEPTH_TEST);
+	//_depth = glIsEnabled(GL_DEPTH_TEST);
 	glDisable(GL_DEPTH_TEST);
 
-	_colmat = glIsEnabled(GL_COLOR_MATERIAL);
+	//_colmat = glIsEnabled(GL_COLOR_MATERIAL);
 	glDisable(GL_COLOR_MATERIAL);
-
-	glDisable(GL_TEXTURE_2D);
 }
 
 void Graphics2D::postDraw()
 {
-	if(_depth == GL_TRUE)
+	/*if(_depth == GL_TRUE)
 	{
 		glEnable(GL_DEPTH_TEST);
 	}
@@ -105,12 +107,15 @@ void Graphics2D::postDraw()
 		glEnable(GL_COLOR_MATERIAL);
 	}
 	glPolygonMode(GL_FRONT, _fill[0]);
-	glPolygonMode(GL_BACK , _fill[1]);
+	glPolygonMode(GL_BACK , _fill[1]);*/
+   
+   glPopAttrib();
 }
 
-void Graphics2D::drawRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color) const
+void Graphics2D::drawRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color, const Real32& Opacity) const
 {
-	if(Color.alpha() < 1.0)
+   Real32 Alpha(Color.alpha() * Opacity * getOpacity());
+	if(Alpha < 1.0)
 	{
 		//Setup the Blending equations properly
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -118,24 +123,24 @@ void Graphics2D::drawRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const 
 	}
 
 	glBegin(GL_QUADS);
-	   glColor4fv(Color.getValuesRGBA());
+      glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
 	   glVertex2sv(TopLeft.getValues());
 	   glVertex2s(BottomRight.x(), TopLeft.y());
 	   glVertex2sv(BottomRight.getValues());
 	   glVertex2s(TopLeft.x(), BottomRight.y());
 	glEnd();
 	
-	if(Color.alpha() < 1.0)
+	if(Alpha < 1.0)
 	{
 		glDisable(GL_BLEND);
 	}
 }
-
-void Graphics2D::drawLine(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32& Width, const Color4f& Color) const
+void Graphics2D::drawLine(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32& Width, const Color4f& Color, const Real32& Opacity) const
 {
 	GLfloat previousLineWidth;
 	glGetFloatv(GL_LINE_WIDTH, &previousLineWidth);
-	if(Color.alpha() < 1.0)
+   Real32 Alpha(Color.alpha() * Opacity * getOpacity());
+	if(Alpha < 1.0)
 	{
 		//Setup the blending equations properly
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -143,20 +148,21 @@ void Graphics2D::drawLine(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const 
 	}
 	glLineWidth(Width);
 	glBegin(GL_LINES);
-		glColor4fv(Color.getValuesRGBA());
+      glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
 		glVertex2sv(TopLeft.getValues());
 		glVertex2sv(BottomRight.getValues());
 	glEnd();
-	if(Color.alpha() < 1.0)
+	if(Alpha < 1.0)
 	{
 		glDisable(GL_BLEND);
 	}
 	glLineWidth(previousLineWidth);
 }
 
-void Graphics2D::drawPolygon(const MFPnt2s Verticies, const Color4f& Color) const
+void Graphics2D::drawPolygon(const MFPnt2s Verticies, const Color4f& Color, const Real32& Opacity) const
 {
-	if(Color.alpha() < 1.0)
+   Real32 Alpha(Color.alpha() * Opacity * getOpacity());
+	if(Alpha < 1.0)
 	{
 		//Setup the Blending equations properly
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -164,26 +170,27 @@ void Graphics2D::drawPolygon(const MFPnt2s Verticies, const Color4f& Color) cons
 	}
 	
 	glBegin(GL_POLYGON);
-	   glColor4fv(Color.getValuesRGBA());
+      glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
 	   for(UInt32 i=0 ; i<Verticies.size() ; ++i)
 	   {
 	      glVertex2sv(Verticies.getValue(i).getValues());
 	   }
 	glEnd();
 	
-	if(Color.alpha() < 1.0)
+	if(Alpha < 1.0)
 	{
 		glDisable(GL_BLEND);
 	}
 }
 
-void Graphics2D::drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& Color) const
+void Graphics2D::drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& Color, const Real32& Opacity) const
 {
 	Real32 angleNow = StartAngleRad;
 	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(Real32)SubDivisions;
 	if(EndAngleRad-StartAngleRad > 2*3.1415926535)
 		angleDiff = 2*3.1415926535;
-	if(Color.alpha() < 1.0)
+   Real32 Alpha(Color.alpha() * Opacity * getOpacity());
+	if(Alpha < 1.0)
 	{
 		//Setup the blending equations properly
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -191,21 +198,22 @@ void Graphics2D::drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& 
 	}
 	
 	glBegin(GL_TRIANGLE_FAN);
-		glColor4fv(Color.getValuesRGBA());
+      glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
 		glVertex2sv(Center.getValues());
-		while(angleNow < EndAngleRad){
+      for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
+      {
 			glVertex2s(Center.x() + Width*osgcos(angleNow), Center.y() + Height*osgsin(angleNow));
 			angleNow += angleDiff;
 		}
 	glEnd();
 
-		if(Color.alpha() < 1.0)
+		if(Alpha < 1.0)
 	{
 		glDisable(GL_BLEND);
 	}
 }
 
-void Graphics2D::drawArc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const Real32& LineWidth, const UInt16& SubDivisions, const Color4f& Color) const
+void Graphics2D::drawArc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const Real32& LineWidth, const UInt16& SubDivisions, const Color4f& Color, const Real32& Opacity) const
 {
 	GLfloat previousLineWidth;
 	glGetFloatv(GL_LINE_WIDTH, &previousLineWidth);
@@ -214,7 +222,8 @@ void Graphics2D::drawArc(const Pnt2s& Center, const Int16& Width, const Int16& H
 	//If andle difference is bigger to a circle, set it to equal to a circle
 	if(EndAngleRad-StartAngleRad > 2*3.1415926535)
 		angleDiff = 2*3.1415926535;
-	if(Color.alpha() < 1.0)
+   Real32 Alpha(Color.alpha() * Opacity * getOpacity());
+	if(Alpha < 1.0)
 	{
 		//Setup the blending equations properly
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -222,9 +231,10 @@ void Graphics2D::drawArc(const Pnt2s& Center, const Int16& Width, const Int16& H
 	}
 	glLineWidth(LineWidth);
 	glBegin(GL_LINE_STRIP);
-		glColor4fv(Color.getValuesRGBA());
+      glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
 		//draw vertex lines
-		while(angleNow + angleDiff  < EndAngleRad){
+      for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
+      {
 			glVertex2s( Center.x() + Width*osgcos(angleNow ),Center.y() +Height*osgsin(angleNow));
 			//glVertex2s(Center.x() + Width*osgcos(angleNow + angleDiff), Center.y() + Height*osgsin(angleNow+angleDiff));
 			angleNow += angleDiff;
@@ -232,25 +242,112 @@ void Graphics2D::drawArc(const Pnt2s& Center, const Int16& Width, const Int16& H
 	glEnd();
 
 	
-		if(Color.alpha() < 1.0)
+	if(Alpha < 1.0)
 	{
 		glDisable(GL_BLEND);
 	}
-			glLineWidth(previousLineWidth);
+   glLineWidth(previousLineWidth);
 }
 
-void Graphics2D::drawLoweredBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color3f& Color, const Int16& Width) const
+void Graphics2D::drawLoweredBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color3f& Color, const Int16& Width, const Real32& Opacity) const
 {
 }
 
-void Graphics2D::drawRaisedBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color3f& Color, const Int16& Width) const
+void Graphics2D::drawRaisedBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color3f& Color, const Int16& Width, const Real32& Opacity) const
 {
 }
 
-void Graphics2D::drawString(const Pnt2s& Position, const std::string& Text) const
+void Graphics2D::drawText(const Pnt2s& Position, const std::string& Text, const FontPtr TheFont, const Color4f& Color, const Real32& Opacity) const
 {
+   TextLayoutParam layoutParam;
+   layoutParam.spacing = 1.1;
+   layoutParam.majorAlignment = TextLayoutParam::ALIGN_BEGIN;
+   layoutParam.minorAlignment = TextLayoutParam::ALIGN_BEGIN;
+ 
+   TextLayoutResult layoutResult;
+   TheFont->layout(Text, layoutParam, layoutResult);
+
+   TheFont->getTexture()->activate(getDrawAction());
+
+   Real32 Alpha(Color.alpha() * Opacity * getOpacity());
+	
+   //Setup the blending equations properly
+   glPushAttrib(GL_COLOR_BUFFER_BIT);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+
+   glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
+   glPushMatrix();
+   glTranslatef(Position.x(), Position.y(), 0.0);
+   glScalef(TheFont->getSize(), TheFont->getSize(), 1);
+   drawCharacters(layoutResult, TheFont);
+   glPopMatrix();
+
+   TheFont->getTexture()->deactivate(getDrawAction());
+
+	glDisable(GL_BLEND);
+   glPopAttrib();
 }
 
+Vec2s Graphics2D::getTextBounds(const std::string& Text, const FontPtr TheFont) const
+{
+   TextLayoutParam layoutParam;
+   layoutParam.spacing = 1.1;
+   layoutParam.majorAlignment = TextLayoutParam::ALIGN_BEGIN;
+   layoutParam.minorAlignment = TextLayoutParam::ALIGN_BEGIN;
+ 
+   TextLayoutResult layoutResult;
+   TheFont->layout(Text, layoutParam, layoutResult);
+   return Vec2s(layoutResult.textBounds.x()*TheFont->getSize(),layoutResult.textBounds.y()*TheFont->getSize());
+}
+
+void Graphics2D::drawCharacters( const TextLayoutResult& layoutResult, const FontPtr TheFont) const
+{
+    glBegin(GL_QUADS);
+
+    UInt32 i, numGlyphs = layoutResult.getNumGlyphs();
+    Real32 width, height;
+    for(i = 0; i < numGlyphs; ++i)
+    {
+        const TextTXFGlyph &glyph = TheFont->getTXFGlyph(layoutResult.indices[i]);
+        width = glyph.getWidth();
+        height = glyph.getHeight();
+        // No need to draw invisible glyphs
+        if ((width <= 0.f) || (height <= 0.f))
+            continue;
+
+        // Calculate coordinates
+        const Vec2f &pos = layoutResult.positions[i];
+        Real32 posLeft = pos.x();
+        Real32 posTop = -pos.y();
+        Real32 posRight = pos.x() + width;
+        Real32 posBottom = -pos.y() + height;
+        Real32 texCoordLeft = glyph.getTexCoord(TextTXFGlyph::COORD_LEFT);
+        Real32 texCoordTop = glyph.getTexCoord(TextTXFGlyph::COORD_TOP);
+        Real32 texCoordRight = glyph.getTexCoord(TextTXFGlyph::COORD_RIGHT);
+        Real32 texCoordBottom = glyph.getTexCoord(TextTXFGlyph::COORD_BOTTOM);
+
+        // lower left corner
+        glTexCoord2f(texCoordLeft, texCoordBottom);
+        glVertex2f(posLeft, posBottom);
+
+        // upper left corner
+        glTexCoord2f(texCoordLeft, texCoordTop);
+        glVertex2f(posLeft, posTop);
+
+        // upper right corner
+        glTexCoord2f(texCoordRight, texCoordTop);
+        glVertex2f(posRight, posTop);
+
+        // lower right corner
+        glTexCoord2f(texCoordRight, texCoordBottom);
+        glVertex2f(posRight, posBottom);
+
+
+    }
+
+    glEnd();
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

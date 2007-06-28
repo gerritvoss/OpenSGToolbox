@@ -19,7 +19,7 @@ A UI Panel.
 	>
 	</Field>
 <Field
-		name="Arrangement"
+		name="Layout"
 		type="LayoutPtr"
 		cardinality="single"
 		visibility="external"

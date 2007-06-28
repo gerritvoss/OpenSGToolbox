@@ -73,7 +73,7 @@ class OSG_USER_INTERFACE_CLASS_API AbsoluteLayout : public AbsoluteLayoutBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const ComponentPtr, const GraphicsPtr) const;
+	virtual void draw(const MFComponentPtr Components, const GraphicsPtr TheGraphics) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

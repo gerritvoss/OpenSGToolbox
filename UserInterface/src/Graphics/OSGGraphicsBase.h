@@ -66,6 +66,7 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
+#include <OpenSG/OSGReal32Fields.h> // Opacity type
 
 #include "OSGGraphicsFields.h"
 
@@ -86,6 +87,14 @@ class OSG_USER_INTERFACE_CLASS_API GraphicsBase : public AttachmentContainer
   public:
 
     typedef GraphicsPtr  Ptr;
+
+    enum
+    {
+        OpacityFieldId = Inherited::NextFieldId,
+        NextFieldId    = OpacityFieldId + 1
+    };
+
+    static const OSG::BitVector OpacityFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -109,6 +118,23 @@ class OSG_USER_INTERFACE_CLASS_API GraphicsBase : public AttachmentContainer
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFReal32            *getSFOpacity        (void);
+
+           Real32              &getOpacity        (void);
+     const Real32              &getOpacity        (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setOpacity        ( const Real32 &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -128,6 +154,13 @@ class OSG_USER_INTERFACE_CLASS_API GraphicsBase : public AttachmentContainer
     /*=========================  PROTECTED  ===============================*/
   protected:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFReal32            _sfOpacity;
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -179,6 +212,7 @@ class OSG_USER_INTERFACE_CLASS_API GraphicsBase : public AttachmentContainer
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

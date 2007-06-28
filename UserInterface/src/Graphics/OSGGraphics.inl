@@ -42,6 +42,18 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+DrawActionBase* Graphics::getDrawAction(void) const
+{
+   return _Action;
+}
+
+inline
+void Graphics::setDrawAction(DrawActionBase* action)
+{
+   _Action = action;
+}
+
 OSG_END_NAMESPACE
 
 #define OSGGRAPHICS_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

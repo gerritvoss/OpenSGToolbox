@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="EmptyBorder"
+	parent="Border"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+UI Empty Border.
+A Empty border that takes up space on each side.
+	<Field
+		name="LeftWidth"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>
+	</Field>
+	<Field
+		name="RightWidth"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>
+	</Field>
+	<Field
+		name="TopWidth"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>
+	</Field>
+	<Field
+		name="BottomWidth"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>
+	</Field>
+</FieldContainer>

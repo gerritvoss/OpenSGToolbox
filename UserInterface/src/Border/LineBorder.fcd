@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="LineBorder"
+	parent="Border"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+UI Line Border.
+	<Field
+		name="Width"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1"
+	>
+	</Field>
+	<Field
+		name="Color"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0,0.0,0.0,1.0"
+	>
+	</Field>
+	<Field
+		name="Material"
+		type="MaterialPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

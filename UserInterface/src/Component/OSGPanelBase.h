@@ -67,7 +67,7 @@
 #include "OSGComponent.h" // Parent
 
 #include "Component/OSGComponent.h" // Children type
-#include "Layout/OSGLayout.h" // Arrangement type
+#include "Layout/OSGLayout.h" // Layout type
 
 #include "OSGPanelFields.h"
 
@@ -91,13 +91,13 @@ class OSG_USER_INTERFACE_CLASS_API PanelBase : public Component
 
     enum
     {
-        ChildrenFieldId    = Inherited::NextFieldId,
-        ArrangementFieldId = ChildrenFieldId    + 1,
-        NextFieldId        = ArrangementFieldId + 1
+        ChildrenFieldId = Inherited::NextFieldId,
+        LayoutFieldId   = ChildrenFieldId + 1,
+        NextFieldId     = LayoutFieldId   + 1
     };
 
     static const OSG::BitVector ChildrenFieldMask;
-    static const OSG::BitVector ArrangementFieldMask;
+    static const OSG::BitVector LayoutFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -125,10 +125,10 @@ class OSG_USER_INTERFACE_CLASS_API PanelBase : public Component
     /*! \{                                                                 */
 
            MFComponentPtr      *getMFChildren       (void);
-           SFLayoutPtr         *getSFArrangement    (void);
+           SFLayoutPtr         *getSFLayout         (void);
 
-           LayoutPtr           &getArrangement    (void);
-     const LayoutPtr           &getArrangement    (void) const;
+           LayoutPtr           &getLayout         (void);
+     const LayoutPtr           &getLayout         (void) const;
            ComponentPtr        &getChildren       (const UInt32 index);
            MFComponentPtr      &getChildren       (void);
      const MFComponentPtr      &getChildren       (void) const;
@@ -138,7 +138,7 @@ class OSG_USER_INTERFACE_CLASS_API PanelBase : public Component
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setArrangement    ( const LayoutPtr &value );
+     void setLayout         ( const LayoutPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -182,7 +182,7 @@ class OSG_USER_INTERFACE_CLASS_API PanelBase : public Component
     /*! \{                                                                 */
 
     MFComponentPtr      _mfChildren;
-    SFLayoutPtr         _sfArrangement;
+    SFLayoutPtr         _sfLayout;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

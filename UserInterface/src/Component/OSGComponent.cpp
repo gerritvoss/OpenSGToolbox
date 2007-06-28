@@ -74,6 +74,28 @@ void Component::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void Component::drawBorder(const GraphicsPtr TheGraphics) const
+{
+   if(getBorder() != NullFC)
+   {
+      //Draw My Border
+      getBorder()->draw(TheGraphics,0,0,getPreferredSize().x(),getPreferredSize().y(), getOpacity());
+   }
+}
+
+void Component::getInsideBorderSizing(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+{
+   UInt16 TopInset(0), LeftInset(0), BottomInset(0), RightInset(0);
+
+   if(getBorder() != NullFC)
+   {
+      //Get Border Insets
+      getBorder()->getInsets(LeftInset,RightInset,TopInset,BottomInset);
+   }
+   TopLeft.setValues(LeftInset, TopInset);
+   BottomRight.setValues(TopLeft.x()+getSize().x()-(LeftInset + RightInset), TopLeft.y()+getSize().y()-(TopInset + BottomInset));
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

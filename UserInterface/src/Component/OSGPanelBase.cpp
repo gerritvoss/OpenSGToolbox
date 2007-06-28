@@ -67,8 +67,8 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  PanelBase::ChildrenFieldMask = 
     (TypeTraits<BitVector>::One << PanelBase::ChildrenFieldId);
 
-const OSG::BitVector  PanelBase::ArrangementFieldMask = 
-    (TypeTraits<BitVector>::One << PanelBase::ArrangementFieldId);
+const OSG::BitVector  PanelBase::LayoutFieldMask = 
+    (TypeTraits<BitVector>::One << PanelBase::LayoutFieldId);
 
 const OSG::BitVector PanelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -80,7 +80,7 @@ const OSG::BitVector PanelBase::MTInfluenceMask =
 /*! \var ComponentPtr    PanelBase::_mfChildren
     
 */
-/*! \var LayoutPtr       PanelBase::_sfArrangement
+/*! \var LayoutPtr       PanelBase::_sfLayout
     
 */
 
@@ -94,10 +94,10 @@ FieldDescription *PanelBase::_desc[] =
                      false,
                      (FieldAccessMethod) &PanelBase::getMFChildren),
     new FieldDescription(SFLayoutPtr::getClassType(), 
-                     "Arrangement", 
-                     ArrangementFieldId, ArrangementFieldMask,
+                     "Layout", 
+                     LayoutFieldId, LayoutFieldMask,
                      false,
-                     (FieldAccessMethod) &PanelBase::getSFArrangement)
+                     (FieldAccessMethod) &PanelBase::getSFLayout)
 };
 
 
@@ -175,7 +175,7 @@ void PanelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 PanelBase::PanelBase(void) :
     _mfChildren               (), 
-    _sfArrangement            (), 
+    _sfLayout                 (), 
     Inherited() 
 {
 }
@@ -186,7 +186,7 @@ PanelBase::PanelBase(void) :
 
 PanelBase::PanelBase(const PanelBase &source) :
     _mfChildren               (source._mfChildren               ), 
-    _sfArrangement            (source._sfArrangement            ), 
+    _sfLayout                 (source._sfLayout                 ), 
     Inherited                 (source)
 {
 }
@@ -208,9 +208,9 @@ UInt32 PanelBase::getBinSize(const BitVector &whichField)
         returnValue += _mfChildren.getBinSize();
     }
 
-    if(FieldBits::NoField != (ArrangementFieldMask & whichField))
+    if(FieldBits::NoField != (LayoutFieldMask & whichField))
     {
-        returnValue += _sfArrangement.getBinSize();
+        returnValue += _sfLayout.getBinSize();
     }
 
 
@@ -227,9 +227,9 @@ void PanelBase::copyToBin(      BinaryDataHandler &pMem,
         _mfChildren.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ArrangementFieldMask & whichField))
+    if(FieldBits::NoField != (LayoutFieldMask & whichField))
     {
-        _sfArrangement.copyToBin(pMem);
+        _sfLayout.copyToBin(pMem);
     }
 
 
@@ -245,9 +245,9 @@ void PanelBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfChildren.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ArrangementFieldMask & whichField))
+    if(FieldBits::NoField != (LayoutFieldMask & whichField))
     {
-        _sfArrangement.copyFromBin(pMem);
+        _sfLayout.copyFromBin(pMem);
     }
 
 
@@ -263,8 +263,8 @@ void PanelBase::executeSyncImpl(      PanelBase *pOther,
     if(FieldBits::NoField != (ChildrenFieldMask & whichField))
         _mfChildren.syncWith(pOther->_mfChildren);
 
-    if(FieldBits::NoField != (ArrangementFieldMask & whichField))
-        _sfArrangement.syncWith(pOther->_sfArrangement);
+    if(FieldBits::NoField != (LayoutFieldMask & whichField))
+        _sfLayout.syncWith(pOther->_sfLayout);
 
 
 }
@@ -276,8 +276,8 @@ void PanelBase::executeSyncImpl(      PanelBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (ArrangementFieldMask & whichField))
-        _sfArrangement.syncWith(pOther->_sfArrangement);
+    if(FieldBits::NoField != (LayoutFieldMask & whichField))
+        _sfLayout.syncWith(pOther->_sfLayout);
 
 
     if(FieldBits::NoField != (ChildrenFieldMask & whichField))

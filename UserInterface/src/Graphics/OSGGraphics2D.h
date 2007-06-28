@@ -54,10 +54,10 @@ class OSG_USER_INTERFACE_CLASS_API Graphics2D : public Graphics2DBase
 
     typedef Graphics2DBase Inherited;
 	
-	GLboolean _light;
-	GLint _fill[2];
-	GLboolean _depth;
-	GLboolean _colmat;
+	//GLboolean _light;
+	//GLint _fill[2];
+	//GLboolean _depth;
+	//GLboolean _colmat;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -82,21 +82,22 @@ class OSG_USER_INTERFACE_CLASS_API Graphics2D : public Graphics2DBase
 	virtual void preDraw();
 	virtual void postDraw();
 
-	virtual void drawRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color) const;
+	virtual void drawRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color, const Real32& Opacity) const;
 	
-	virtual void drawLine(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32& Width, const Color4f& Color) const;
+	virtual void drawLine(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32& Width, const Color4f& Color, const Real32& Opacity) const;
 	
-	virtual void drawPolygon(const MFPnt2s Verticies, const Color4f& Color) const;
+	virtual void drawPolygon(const MFPnt2s Verticies, const Color4f& Color, const Real32& Opacity) const;
 	
-	virtual void drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& Color) const;
+	virtual void drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& Color, const Real32& Opacity) const;
 	
-	virtual void drawArc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const Real32& LineWidth, const UInt16& SubDivisions, const Color4f& Color) const;
+	virtual void drawArc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const Real32& LineWidth, const UInt16& SubDivisions, const Color4f& Color, const Real32& Opacity) const;
 
-	virtual void drawLoweredBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color3f& Color, const Int16& Width) const;
+	virtual void drawLoweredBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color3f& Color, const Int16& Width, const Real32& Opacity) const;
 
-	virtual void drawRaisedBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color3f& Color, const Int16& Width) const;
+	virtual void drawRaisedBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color3f& Color, const Int16& Width, const Real32& Opacity) const;
 	
-	virtual void drawString(const Pnt2s& Position, const std::string& Text) const;
+	virtual void drawText(const Pnt2s& Position, const std::string& Text, const FontPtr TheFont, const Color4f& Color, const Real32& Opacity) const;
+   virtual Vec2s getTextBounds(const std::string& Text, const FontPtr TheFont) const;
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -128,7 +129,7 @@ class OSG_USER_INTERFACE_CLASS_API Graphics2D : public Graphics2DBase
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
-
+    void drawCharacters( const TextLayoutResult& layoutResult, const FontPtr TheFont) const;
     void operator =(const Graphics2D &source);
 };
 

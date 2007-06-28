@@ -15,6 +15,7 @@ A UI Component Interface.
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0,0"
 	>
 	</Field>
 <Field
@@ -38,7 +39,7 @@ A UI Component Interface.
 		type="Vec2s"
 		cardinality="single"
 		visibility="external"
-		access="protected"
+		access="public"
 	>
 	</Field>
 <Field
@@ -47,6 +48,7 @@ A UI Component Interface.
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="true"
 	>
 	</Field>
 <Field
@@ -55,6 +57,7 @@ A UI Component Interface.
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="true"
 	>
 	</Field>
 <Field
@@ -64,6 +67,56 @@ A UI Component Interface.
 		visibility="external"
 		access="public"
       header="Layout/OSGLayoutConstraints.h"
+	>
+	</Field>
+	<Field
+		name="BackgroundColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="BackgroundMaterial"
+		type="MaterialPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ForegroundColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ForegroundMaterial"
+		type="MaterialPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Border"
+		type="BorderPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+      header="Border/OSGBorder.h"
+	>
+	</Field>
+   <Field
+		name="Opacity"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0"
 	>
 	</Field>
 </FieldContainer>

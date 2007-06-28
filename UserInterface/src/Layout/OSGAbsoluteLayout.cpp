@@ -75,19 +75,25 @@ void AbsoluteLayout::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void AbsoluteLayout::draw(const ComponentPtr c, const GraphicsPtr g) const
+void AbsoluteLayout::draw(const MFComponentPtr Components, const GraphicsPtr TheGraphics) const
 {	
-	if(c->getConstraints() != NullFC)
-	{
-		Pnt2s pos = AbsoluteLayoutConstraintsPtr::dcast(c->getConstraints())->getPosition();
-		glTranslatef(pos.x(), pos.y(), 0.0);
-		c->draw(g);
-		glTranslatef(-pos.x(), -pos.y(), 0.0);
-	}
-	else
-	{
-		c->draw(g);
-	}
+   for(UInt32 i = 0 ; i<Components.size(); ++i)
+   {
+      //Calculate the Components Size
+      Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
+	   if(Components.getValue(i)->getConstraints() != NullFC)
+	   {
+         //Get the Components Position
+		   Pnt2s pos = AbsoluteLayoutConstraintsPtr::dcast(Components.getValue(i)->getConstraints())->getPosition();
+		   glTranslatef(pos.x(), pos.y(), 0.0);
+		   Components.getValue(i)->draw(TheGraphics);
+		   glTranslatef(-pos.x(), -pos.y(), 0.0);
+	   }
+	   else
+	   {
+		   Components.getValue(i)->draw(TheGraphics);
+	   }
+   }
 }
 
 /*-------------------------------------------------------------------------*\

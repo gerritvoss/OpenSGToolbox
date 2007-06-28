@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="CompoundBorder"
+	parent="Border"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+UI Compound Border.
+A Compound Border made up of an inner border and outer border of any type.
+	<Field
+		name="InnerBorder"
+		type="BorderPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+      header="Border/OSGBorder.h"
+	>
+	</Field>
+	<Field
+		name="OuterBorder"
+		type="BorderPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+      header="Border/OSGBorder.h"
+	>
+	</Field>
+</FieldContainer>

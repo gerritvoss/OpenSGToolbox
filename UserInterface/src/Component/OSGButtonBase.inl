@@ -96,6 +96,118 @@ ButtonPtr ButtonBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the Button::_sfFont field.
+inline
+SFFontPtr *ButtonBase::getSFFont(void)
+{
+    return &_sfFont;
+}
+
+//! Get the Button::_sfText field.
+inline
+SFString *ButtonBase::getSFText(void)
+{
+    return &_sfText;
+}
+
+//! Get the Button::_sfVerticalAlignment field.
+inline
+SFUInt32 *ButtonBase::getSFVerticalAlignment(void)
+{
+    return &_sfVerticalAlignment;
+}
+
+//! Get the Button::_sfHorizontalAlignment field.
+inline
+SFUInt32 *ButtonBase::getSFHorizontalAlignment(void)
+{
+    return &_sfHorizontalAlignment;
+}
+
+
+//! Get the value of the Button::_sfFont field.
+inline
+FontPtr &ButtonBase::getFont(void)
+{
+    return _sfFont.getValue();
+}
+
+//! Get the value of the Button::_sfFont field.
+inline
+const FontPtr &ButtonBase::getFont(void) const
+{
+    return _sfFont.getValue();
+}
+
+//! Set the value of the Button::_sfFont field.
+inline
+void ButtonBase::setFont(const FontPtr &value)
+{
+    _sfFont.setValue(value);
+}
+
+//! Get the value of the Button::_sfText field.
+inline
+std::string &ButtonBase::getText(void)
+{
+    return _sfText.getValue();
+}
+
+//! Get the value of the Button::_sfText field.
+inline
+const std::string &ButtonBase::getText(void) const
+{
+    return _sfText.getValue();
+}
+
+//! Set the value of the Button::_sfText field.
+inline
+void ButtonBase::setText(const std::string &value)
+{
+    _sfText.setValue(value);
+}
+
+//! Get the value of the Button::_sfVerticalAlignment field.
+inline
+UInt32 &ButtonBase::getVerticalAlignment(void)
+{
+    return _sfVerticalAlignment.getValue();
+}
+
+//! Get the value of the Button::_sfVerticalAlignment field.
+inline
+const UInt32 &ButtonBase::getVerticalAlignment(void) const
+{
+    return _sfVerticalAlignment.getValue();
+}
+
+//! Set the value of the Button::_sfVerticalAlignment field.
+inline
+void ButtonBase::setVerticalAlignment(const UInt32 &value)
+{
+    _sfVerticalAlignment.setValue(value);
+}
+
+//! Get the value of the Button::_sfHorizontalAlignment field.
+inline
+UInt32 &ButtonBase::getHorizontalAlignment(void)
+{
+    return _sfHorizontalAlignment.getValue();
+}
+
+//! Get the value of the Button::_sfHorizontalAlignment field.
+inline
+const UInt32 &ButtonBase::getHorizontalAlignment(void) const
+{
+    return _sfHorizontalAlignment.getValue();
+}
+
+//! Set the value of the Button::_sfHorizontalAlignment field.
+inline
+void ButtonBase::setHorizontalAlignment(const UInt32 &value)
+{
+    _sfHorizontalAlignment.setValue(value);
+}
 
 
 OSG_END_NAMESPACE

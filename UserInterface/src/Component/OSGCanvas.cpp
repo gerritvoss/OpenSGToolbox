@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGCanvas.h"
+#include "Text/OSGFont.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -76,14 +77,28 @@ void Canvas::initMethod (void)
 
 void Canvas::draw(const GraphicsPtr TheGraphics) const
 {
-	MFPnt2s polygon;
+   //Draw My Border
+   drawBorder(TheGraphics);
+
+   //Draw the Background on the Inside of my border
+   Pnt2s TopLeft, BottomRight;
+   getInsideBorderSizing(TopLeft, BottomRight);
+	TheGraphics->drawRect( TopLeft, BottomRight, getBackgroundColor(), getOpacity());
+
+	/*MFPnt2s polygon;
 	polygon.addValue(Pnt2s(120,120));
 	polygon.addValue(Pnt2s(120,0));
 	polygon.addValue(Pnt2s(180,120));
 	polygon.addValue(Pnt2s(170,230));
 	polygon.addValue(Pnt2s(130,180));
 
-	TheGraphics->drawPolygon( polygon, Color4f(0.0f,1.0f,1.0f,0.5));
+	TheGraphics->drawPolygon( polygon, Color4f(0.0f,1.0f,1.0f,0.5));*/
+
+   //TheGraphics->drawLine(Pnt2s( 50,50), Pnt2s(150,150),5.0, Color4f(1.0,0.0,0.0,1.0),1.0);
+   
+   TheGraphics->drawDisc(Pnt2s(100,100), 50,50, 0.0, 3.14159, 24, Color4f(0.0,0.0,1.0,1.0),1.0);
+   TheGraphics->drawArc(Pnt2s(100,100), 50,50, 0.0, 3.14159,3.0, 24, Color4f(1.0,1.0,1.0,1.0),1.0);
+   //TheGraphics->drawText(Pnt2s(10,150), std::string("Eat my shorts foo!"), TheFont, Color4f(1.0,0.0,0.0,1.0), 1.0);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

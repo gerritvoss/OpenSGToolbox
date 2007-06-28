@@ -76,10 +76,16 @@ void Panel::initMethod (void)
 
 void Panel::draw(const GraphicsPtr TheGraphics) const
 {
-	for(UInt32 i=0 ; i<getChildren().size() ; ++i)
-	{
-		getArrangement()->draw(getChildren().getValue(i), TheGraphics);
-	}
+   //Draw My Border
+   drawBorder(TheGraphics);
+
+   //Draw the Background on the Inside of my border
+   Pnt2s TopLeft, BottomRight;
+   getInsideBorderSizing(TopLeft, BottomRight);
+	TheGraphics->drawRect( TopLeft, BottomRight, getBackgroundColor(), getOpacity());
+
+   //Render all of my Child Components
+   getLayout()->draw(getChildren(), TheGraphics);
 }
 
 /*-------------------------------------------------------------------------*\

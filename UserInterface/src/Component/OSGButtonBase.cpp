@@ -64,10 +64,63 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  ButtonBase::FontFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::FontFieldId);
+
+const OSG::BitVector  ButtonBase::TextFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::TextFieldId);
+
+const OSG::BitVector  ButtonBase::VerticalAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::VerticalAlignmentFieldId);
+
+const OSG::BitVector  ButtonBase::HorizontalAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::HorizontalAlignmentFieldId);
+
 const OSG::BitVector ButtonBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+// Field descriptions
+
+/*! \var FontPtr         ButtonBase::_sfFont
+    
+*/
+/*! \var std::string     ButtonBase::_sfText
+    
+*/
+/*! \var UInt32          ButtonBase::_sfVerticalAlignment
+    
+*/
+/*! \var UInt32          ButtonBase::_sfHorizontalAlignment
+    
+*/
+
+//! Button description
+
+FieldDescription *ButtonBase::_desc[] = 
+{
+    new FieldDescription(SFFontPtr::getClassType(), 
+                     "Font", 
+                     FontFieldId, FontFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFFont),
+    new FieldDescription(SFString::getClassType(), 
+                     "Text", 
+                     TextFieldId, TextFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFText),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "VerticalAlignment", 
+                     VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFVerticalAlignment),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "HorizontalAlignment", 
+                     HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFHorizontalAlignment)
+};
 
 
 FieldContainerType ButtonBase::_type(
@@ -76,8 +129,8 @@ FieldContainerType ButtonBase::_type(
     NULL,
     (PrototypeCreateF) &ButtonBase::createEmpty,
     Button::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //OSG_FIELD_CONTAINER_DEF(ButtonBase, ButtonPtr)
 
@@ -142,6 +195,10 @@ void ButtonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ButtonBase::ButtonBase(void) :
+    _sfFont                   (), 
+    _sfText                   (), 
+    _sfVerticalAlignment      (UInt32(0)), 
+    _sfHorizontalAlignment    (UInt32(0)), 
     Inherited() 
 {
 }
@@ -151,6 +208,10 @@ ButtonBase::ButtonBase(void) :
 #endif
 
 ButtonBase::ButtonBase(const ButtonBase &source) :
+    _sfFont                   (source._sfFont                   ), 
+    _sfText                   (source._sfText                   ), 
+    _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
+    _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
     Inherited                 (source)
 {
 }
@@ -167,6 +228,26 @@ UInt32 ButtonBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (FontFieldMask & whichField))
+    {
+        returnValue += _sfFont.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TextFieldMask & whichField))
+    {
+        returnValue += _sfText.getBinSize();
+    }
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfVerticalAlignment.getBinSize();
+    }
+
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfHorizontalAlignment.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -176,6 +257,26 @@ void ButtonBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (FontFieldMask & whichField))
+    {
+        _sfFont.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TextFieldMask & whichField))
+    {
+        _sfText.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    {
+        _sfVerticalAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+    {
+        _sfHorizontalAlignment.copyToBin(pMem);
+    }
+
 
 }
 
@@ -183,6 +284,26 @@ void ButtonBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (FontFieldMask & whichField))
+    {
+        _sfFont.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TextFieldMask & whichField))
+    {
+        _sfText.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    {
+        _sfVerticalAlignment.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+    {
+        _sfHorizontalAlignment.copyFromBin(pMem);
+    }
 
 
 }
@@ -194,6 +315,18 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (FontFieldMask & whichField))
+        _sfFont.syncWith(pOther->_sfFont);
+
+    if(FieldBits::NoField != (TextFieldMask & whichField))
+        _sfText.syncWith(pOther->_sfText);
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
+
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
+
 
 }
 #else
@@ -203,6 +336,18 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (FontFieldMask & whichField))
+        _sfFont.syncWith(pOther->_sfFont);
+
+    if(FieldBits::NoField != (TextFieldMask & whichField))
+        _sfText.syncWith(pOther->_sfText);
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
+
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
 
 
 

@@ -103,33 +103,33 @@ MFComponentPtr *PanelBase::getMFChildren(void)
     return &_mfChildren;
 }
 
-//! Get the Panel::_sfArrangement field.
+//! Get the Panel::_sfLayout field.
 inline
-SFLayoutPtr *PanelBase::getSFArrangement(void)
+SFLayoutPtr *PanelBase::getSFLayout(void)
 {
-    return &_sfArrangement;
+    return &_sfLayout;
 }
 
 
-//! Get the value of the Panel::_sfArrangement field.
+//! Get the value of the Panel::_sfLayout field.
 inline
-LayoutPtr &PanelBase::getArrangement(void)
+LayoutPtr &PanelBase::getLayout(void)
 {
-    return _sfArrangement.getValue();
+    return _sfLayout.getValue();
 }
 
-//! Get the value of the Panel::_sfArrangement field.
+//! Get the value of the Panel::_sfLayout field.
 inline
-const LayoutPtr &PanelBase::getArrangement(void) const
+const LayoutPtr &PanelBase::getLayout(void) const
 {
-    return _sfArrangement.getValue();
+    return _sfLayout.getValue();
 }
 
-//! Set the value of the Panel::_sfArrangement field.
+//! Set the value of the Panel::_sfLayout field.
 inline
-void PanelBase::setArrangement(const LayoutPtr &value)
+void PanelBase::setLayout(const LayoutPtr &value)
 {
-    _sfArrangement.setValue(value);
+    _sfLayout.setValue(value);
 }
 
 

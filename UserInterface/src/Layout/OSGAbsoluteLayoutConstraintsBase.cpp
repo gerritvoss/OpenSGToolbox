@@ -162,7 +162,7 @@ void AbsoluteLayoutConstraintsBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect
 #endif
 
 AbsoluteLayoutConstraintsBase::AbsoluteLayoutConstraintsBase(void) :
-    _sfPosition               (), 
+    _sfPosition               (Pnt2s(0,0)), 
     Inherited() 
 {
 }

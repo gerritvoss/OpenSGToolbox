@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="Border"
+	parent="FieldContainer"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+>
+UI Border Interface.
+</FieldContainer>

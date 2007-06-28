@@ -76,7 +76,7 @@ class OSG_USER_INTERFACE_CLASS_API Layout : public LayoutBase
 
     /*! \}                                                                 */
 
-	virtual void draw(const ComponentPtr c, const GraphicsPtr g) const = 0;
+	virtual void draw(const MFComponentPtr Components, const GraphicsPtr TheGraphics) const = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

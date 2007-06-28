@@ -66,6 +66,10 @@
 
 #include "OSGComponent.h" // Parent
 
+#include "Text/OSGFont.h" // Font type
+#include <OpenSG/OSGStringFields.h> // Text type
+#include <OpenSG/OSGUInt32Fields.h> // VerticalAlignment type
+#include <OpenSG/OSGUInt32Fields.h> // HorizontalAlignment type
 
 #include "OSGButtonFields.h"
 
@@ -87,6 +91,20 @@ class OSG_USER_INTERFACE_CLASS_API ButtonBase : public Component
 
     typedef ButtonPtr  Ptr;
 
+    enum
+    {
+        FontFieldId                = Inherited::NextFieldId,
+        TextFieldId                = FontFieldId                + 1,
+        VerticalAlignmentFieldId   = TextFieldId                + 1,
+        HorizontalAlignmentFieldId = VerticalAlignmentFieldId   + 1,
+        NextFieldId                = HorizontalAlignmentFieldId + 1
+    };
+
+    static const OSG::BitVector FontFieldMask;
+    static const OSG::BitVector TextFieldMask;
+    static const OSG::BitVector VerticalAlignmentFieldMask;
+    static const OSG::BitVector HorizontalAlignmentFieldMask;
+
 
     static const OSG::BitVector MTInfluenceMask;
 
@@ -106,6 +124,35 @@ class OSG_USER_INTERFACE_CLASS_API ButtonBase : public Component
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFFontPtr           *getSFFont           (void);
+           SFString            *getSFText           (void);
+           SFUInt32            *getSFVerticalAlignment(void);
+           SFUInt32            *getSFHorizontalAlignment(void);
+
+           FontPtr             &getFont           (void);
+     const FontPtr             &getFont           (void) const;
+           std::string         &getText           (void);
+     const std::string         &getText           (void) const;
+           UInt32              &getVerticalAlignment(void);
+     const UInt32              &getVerticalAlignment(void) const;
+           UInt32              &getHorizontalAlignment(void);
+     const UInt32              &getHorizontalAlignment(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setFont           ( const FontPtr &value );
+     void setText           ( const std::string &value );
+     void setVerticalAlignment( const UInt32 &value );
+     void setHorizontalAlignment( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -144,6 +191,16 @@ class OSG_USER_INTERFACE_CLASS_API ButtonBase : public Component
     /*=========================  PROTECTED  ===============================*/
   protected:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFFontPtr           _sfFont;
+    SFString            _sfText;
+    SFUInt32            _sfVerticalAlignment;
+    SFUInt32            _sfHorizontalAlignment;
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -195,6 +252,7 @@ class OSG_USER_INTERFACE_CLASS_API ButtonBase : public Component
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

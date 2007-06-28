@@ -73,6 +73,12 @@
 #include <OpenSG/OSGBoolFields.h> // Visible type
 #include <OpenSG/OSGBoolFields.h> // Enabled type
 #include "Layout/OSGLayoutConstraints.h" // Constraints type
+#include <OpenSG/OSGColor4fFields.h> // BackgroundColor type
+#include <OpenSG/OSGMaterialFields.h> // BackgroundMaterial type
+#include <OpenSG/OSGColor4fFields.h> // ForegroundColor type
+#include <OpenSG/OSGMaterialFields.h> // ForegroundMaterial type
+#include "Border/OSGBorder.h" // Border type
+#include <OpenSG/OSGReal32Fields.h> // Opacity type
 
 #include "OSGComponentFields.h"
 
@@ -96,14 +102,20 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
 
     enum
     {
-        MinSizeFieldId       = Inherited::NextFieldId,
-        MaxSizeFieldId       = MinSizeFieldId       + 1,
-        PreferredSizeFieldId = MaxSizeFieldId       + 1,
-        SizeFieldId          = PreferredSizeFieldId + 1,
-        VisibleFieldId       = SizeFieldId          + 1,
-        EnabledFieldId       = VisibleFieldId       + 1,
-        ConstraintsFieldId   = EnabledFieldId       + 1,
-        NextFieldId          = ConstraintsFieldId   + 1
+        MinSizeFieldId            = Inherited::NextFieldId,
+        MaxSizeFieldId            = MinSizeFieldId            + 1,
+        PreferredSizeFieldId      = MaxSizeFieldId            + 1,
+        SizeFieldId               = PreferredSizeFieldId      + 1,
+        VisibleFieldId            = SizeFieldId               + 1,
+        EnabledFieldId            = VisibleFieldId            + 1,
+        ConstraintsFieldId        = EnabledFieldId            + 1,
+        BackgroundColorFieldId    = ConstraintsFieldId        + 1,
+        BackgroundMaterialFieldId = BackgroundColorFieldId    + 1,
+        ForegroundColorFieldId    = BackgroundMaterialFieldId + 1,
+        ForegroundMaterialFieldId = ForegroundColorFieldId    + 1,
+        BorderFieldId             = ForegroundMaterialFieldId + 1,
+        OpacityFieldId            = BorderFieldId             + 1,
+        NextFieldId               = OpacityFieldId            + 1
     };
 
     static const OSG::BitVector MinSizeFieldMask;
@@ -113,6 +125,12 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
     static const OSG::BitVector VisibleFieldMask;
     static const OSG::BitVector EnabledFieldMask;
     static const OSG::BitVector ConstraintsFieldMask;
+    static const OSG::BitVector BackgroundColorFieldMask;
+    static const OSG::BitVector BackgroundMaterialFieldMask;
+    static const OSG::BitVector ForegroundColorFieldMask;
+    static const OSG::BitVector ForegroundMaterialFieldMask;
+    static const OSG::BitVector BorderFieldMask;
+    static const OSG::BitVector OpacityFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -142,9 +160,16 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
            SFVec2s             *getSFMinSize        (void);
            SFVec2s             *getSFMaxSize        (void);
            SFVec2s             *getSFPreferredSize  (void);
+           SFVec2s             *getSFSize           (void);
            SFBool              *getSFVisible        (void);
            SFBool              *getSFEnabled        (void);
            SFLayoutConstraintsPtr *getSFConstraints    (void);
+           SFColor4f           *getSFBackgroundColor(void);
+           SFMaterialPtr       *getSFBackgroundMaterial(void);
+           SFColor4f           *getSFForegroundColor(void);
+           SFMaterialPtr       *getSFForegroundMaterial(void);
+           SFBorderPtr         *getSFBorder         (void);
+           SFReal32            *getSFOpacity        (void);
 
            Vec2s               &getMinSize        (void);
      const Vec2s               &getMinSize        (void) const;
@@ -152,12 +177,26 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
      const Vec2s               &getMaxSize        (void) const;
            Vec2s               &getPreferredSize  (void);
      const Vec2s               &getPreferredSize  (void) const;
+           Vec2s               &getSize           (void);
+     const Vec2s               &getSize           (void) const;
            bool                &getVisible        (void);
      const bool                &getVisible        (void) const;
            bool                &getEnabled        (void);
      const bool                &getEnabled        (void) const;
            LayoutConstraintsPtr &getConstraints    (void);
      const LayoutConstraintsPtr &getConstraints    (void) const;
+           Color4f             &getBackgroundColor(void);
+     const Color4f             &getBackgroundColor(void) const;
+           MaterialPtr         &getBackgroundMaterial(void);
+     const MaterialPtr         &getBackgroundMaterial(void) const;
+           Color4f             &getForegroundColor(void);
+     const Color4f             &getForegroundColor(void) const;
+           MaterialPtr         &getForegroundMaterial(void);
+     const MaterialPtr         &getForegroundMaterial(void) const;
+           BorderPtr           &getBorder         (void);
+     const BorderPtr           &getBorder         (void) const;
+           Real32              &getOpacity        (void);
+     const Real32              &getOpacity        (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -167,9 +206,16 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
      void setMinSize        ( const Vec2s &value );
      void setMaxSize        ( const Vec2s &value );
      void setPreferredSize  ( const Vec2s &value );
+     void setSize           ( const Vec2s &value );
      void setVisible        ( const bool &value );
      void setEnabled        ( const bool &value );
      void setConstraints    ( const LayoutConstraintsPtr &value );
+     void setBackgroundColor( const Color4f &value );
+     void setBackgroundMaterial( const MaterialPtr &value );
+     void setForegroundColor( const Color4f &value );
+     void setForegroundMaterial( const MaterialPtr &value );
+     void setBorder         ( const BorderPtr &value );
+     void setOpacity        ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -203,6 +249,12 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
     SFBool              _sfVisible;
     SFBool              _sfEnabled;
     SFLayoutConstraintsPtr   _sfConstraints;
+    SFColor4f           _sfBackgroundColor;
+    SFMaterialPtr       _sfBackgroundMaterial;
+    SFColor4f           _sfForegroundColor;
+    SFMaterialPtr       _sfForegroundMaterial;
+    SFBorderPtr         _sfBorder;
+    SFReal32            _sfOpacity;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -218,23 +270,6 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
     /*! \{                                                                 */
 
     virtual ~ComponentBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFVec2s             *getSFSize           (void);
-
-           Vec2s               &getSize           (void);
-     const Vec2s               &getSize           (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setSize           (const Vec2s &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -35,7 +35,7 @@
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGCanvas.h>
+#include <OpenSG/UserInterface/OSGLineBorder.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -84,10 +84,26 @@ int main(int argc, char **argv)
 
 	//Create A Button Component
 	ButtonPtr button = osg::Button::create();
+	LineBorderPtr buttonBorder = osg::LineBorder::create();
+   FontPtr buttonFont = Font::create();
+   beginEditCP(buttonFont);
+      buttonFont->setSize(18);
+   endEditCP(buttonFont);
+
+   beginEditCP(buttonBorder, LineBorder::WidthFieldMask | LineBorder::ColorFieldMask);
+      buttonBorder->setWidth(1);
+      buttonBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
+   endEditCP  (buttonBorder, LineBorder::WidthFieldMask | LineBorder::ColorFieldMask);
+
     beginEditCP(button, Button::SizeFieldMask);
-		button->setPreferredSize(Vec2s(100,100));
+		button->setPreferredSize(Vec2s(100,50));
+		button->setSize(Vec2s(100,50));
+		button->setBackgroundColor(Color4f(0.8,0.8,0.8,1.0));
+		button->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
+		button->setBorder(buttonBorder);
+		button->setFont(buttonFont);
+		button->setText("Button 1");
     endEditCP  (button, Button::SizeFieldMask);
-	ComponentPtr canvas = osg::Canvas::create();
 
 	//Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();

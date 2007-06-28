@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="EtchedBorder"
+	parent="Border"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+UI Etched Border.
+	<Field
+		name="Highlight"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Shadow"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Raised"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

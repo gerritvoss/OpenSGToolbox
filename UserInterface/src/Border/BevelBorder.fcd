@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="BevelBorder"
+	parent="Border"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+UI Bevel Border.
+	<Field
+		name="HighlightInner"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="HighlightOuter"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ShadowInner"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ShadowOuter"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Raised"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

@@ -9,4 +9,40 @@
 	parentsystemcomponent="false"
 >
 A UI Button.
+	<Field
+		name="Font"
+		type="FontPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+      header="Text/OSGFont.h"
+	>
+	</Field>
+	<Field
+		name="Text"
+		type="std::string"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue=""
+	>
+	</Field>
+	<Field
+		name="VerticalAlignment"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>
+	</Field>
+	<Field
+		name="HorizontalAlignment"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>
+	</Field>
 </FieldContainer>

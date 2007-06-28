@@ -88,6 +88,7 @@ void UIForeground::draw( DrawActionBase * action, Viewport * port )
 	glMatrixMode(GL_MODELVIEW);
 
 	//Render the UI to the Foreground
+   getGraphics()->setDrawAction(action);
 	//Call The PreDraw on the Graphics
 	getGraphics()->preDraw();
 

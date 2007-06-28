@@ -15,6 +15,7 @@ A UI AbsoluteLayoutConstraints.
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0,0"
 	>
 	</Field>
 </FieldContainer>

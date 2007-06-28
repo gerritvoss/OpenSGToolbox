@@ -70,6 +70,34 @@ OSG::UInt32 GraphicsBase::getClassTypeId(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the Graphics::_sfOpacity field.
+inline
+SFReal32 *GraphicsBase::getSFOpacity(void)
+{
+    return &_sfOpacity;
+}
+
+
+//! Get the value of the Graphics::_sfOpacity field.
+inline
+Real32 &GraphicsBase::getOpacity(void)
+{
+    return _sfOpacity.getValue();
+}
+
+//! Get the value of the Graphics::_sfOpacity field.
+inline
+const Real32 &GraphicsBase::getOpacity(void) const
+{
+    return _sfOpacity.getValue();
+}
+
+//! Set the value of the Graphics::_sfOpacity field.
+inline
+void GraphicsBase::setOpacity(const Real32 &value)
+{
+    _sfOpacity.setValue(value);
+}
 
 
 OSG_END_NAMESPACE

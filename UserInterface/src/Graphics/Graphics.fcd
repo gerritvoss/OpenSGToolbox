@@ -9,4 +9,13 @@
 	parentsystemcomponent="true"
 >
 A UI Graphics Interface.
+   <Field
+		name="Opacity"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0"
+	>
+	</Field>
 </FieldContainer>

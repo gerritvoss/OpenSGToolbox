@@ -119,6 +119,48 @@ SFLayoutConstraintsPtr *ComponentBase::getSFConstraints(void)
     return &_sfConstraints;
 }
 
+//! Get the Component::_sfBackgroundColor field.
+inline
+SFColor4f *ComponentBase::getSFBackgroundColor(void)
+{
+    return &_sfBackgroundColor;
+}
+
+//! Get the Component::_sfBackgroundMaterial field.
+inline
+SFMaterialPtr *ComponentBase::getSFBackgroundMaterial(void)
+{
+    return &_sfBackgroundMaterial;
+}
+
+//! Get the Component::_sfForegroundColor field.
+inline
+SFColor4f *ComponentBase::getSFForegroundColor(void)
+{
+    return &_sfForegroundColor;
+}
+
+//! Get the Component::_sfForegroundMaterial field.
+inline
+SFMaterialPtr *ComponentBase::getSFForegroundMaterial(void)
+{
+    return &_sfForegroundMaterial;
+}
+
+//! Get the Component::_sfBorder field.
+inline
+SFBorderPtr *ComponentBase::getSFBorder(void)
+{
+    return &_sfBorder;
+}
+
+//! Get the Component::_sfOpacity field.
+inline
+SFReal32 *ComponentBase::getSFOpacity(void)
+{
+    return &_sfOpacity;
+}
+
 
 //! Get the value of the Component::_sfMinSize field.
 inline
@@ -265,6 +307,132 @@ inline
 void ComponentBase::setConstraints(const LayoutConstraintsPtr &value)
 {
     _sfConstraints.setValue(value);
+}
+
+//! Get the value of the Component::_sfBackgroundColor field.
+inline
+Color4f &ComponentBase::getBackgroundColor(void)
+{
+    return _sfBackgroundColor.getValue();
+}
+
+//! Get the value of the Component::_sfBackgroundColor field.
+inline
+const Color4f &ComponentBase::getBackgroundColor(void) const
+{
+    return _sfBackgroundColor.getValue();
+}
+
+//! Set the value of the Component::_sfBackgroundColor field.
+inline
+void ComponentBase::setBackgroundColor(const Color4f &value)
+{
+    _sfBackgroundColor.setValue(value);
+}
+
+//! Get the value of the Component::_sfBackgroundMaterial field.
+inline
+MaterialPtr &ComponentBase::getBackgroundMaterial(void)
+{
+    return _sfBackgroundMaterial.getValue();
+}
+
+//! Get the value of the Component::_sfBackgroundMaterial field.
+inline
+const MaterialPtr &ComponentBase::getBackgroundMaterial(void) const
+{
+    return _sfBackgroundMaterial.getValue();
+}
+
+//! Set the value of the Component::_sfBackgroundMaterial field.
+inline
+void ComponentBase::setBackgroundMaterial(const MaterialPtr &value)
+{
+    _sfBackgroundMaterial.setValue(value);
+}
+
+//! Get the value of the Component::_sfForegroundColor field.
+inline
+Color4f &ComponentBase::getForegroundColor(void)
+{
+    return _sfForegroundColor.getValue();
+}
+
+//! Get the value of the Component::_sfForegroundColor field.
+inline
+const Color4f &ComponentBase::getForegroundColor(void) const
+{
+    return _sfForegroundColor.getValue();
+}
+
+//! Set the value of the Component::_sfForegroundColor field.
+inline
+void ComponentBase::setForegroundColor(const Color4f &value)
+{
+    _sfForegroundColor.setValue(value);
+}
+
+//! Get the value of the Component::_sfForegroundMaterial field.
+inline
+MaterialPtr &ComponentBase::getForegroundMaterial(void)
+{
+    return _sfForegroundMaterial.getValue();
+}
+
+//! Get the value of the Component::_sfForegroundMaterial field.
+inline
+const MaterialPtr &ComponentBase::getForegroundMaterial(void) const
+{
+    return _sfForegroundMaterial.getValue();
+}
+
+//! Set the value of the Component::_sfForegroundMaterial field.
+inline
+void ComponentBase::setForegroundMaterial(const MaterialPtr &value)
+{
+    _sfForegroundMaterial.setValue(value);
+}
+
+//! Get the value of the Component::_sfBorder field.
+inline
+BorderPtr &ComponentBase::getBorder(void)
+{
+    return _sfBorder.getValue();
+}
+
+//! Get the value of the Component::_sfBorder field.
+inline
+const BorderPtr &ComponentBase::getBorder(void) const
+{
+    return _sfBorder.getValue();
+}
+
+//! Set the value of the Component::_sfBorder field.
+inline
+void ComponentBase::setBorder(const BorderPtr &value)
+{
+    _sfBorder.setValue(value);
+}
+
+//! Get the value of the Component::_sfOpacity field.
+inline
+Real32 &ComponentBase::getOpacity(void)
+{
+    return _sfOpacity.getValue();
+}
+
+//! Get the value of the Component::_sfOpacity field.
+inline
+const Real32 &ComponentBase::getOpacity(void) const
+{
+    return _sfOpacity.getValue();
+}
+
+//! Set the value of the Component::_sfOpacity field.
+inline
+void ComponentBase::setOpacity(const Real32 &value)
+{
+    _sfOpacity.setValue(value);
 }
 
 

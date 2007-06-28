@@ -95,6 +95,9 @@ class OSG_USER_INTERFACE_CLASS_API Component : public ComponentBase
     virtual ~Component(void); 
 
     /*! \}                                                                 */
+
+    virtual void drawBorder(const GraphicsPtr TheGraphics) const;
+    virtual void getInsideBorderSizing(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
     
     /*==========================  PRIVATE  ================================*/
   private:

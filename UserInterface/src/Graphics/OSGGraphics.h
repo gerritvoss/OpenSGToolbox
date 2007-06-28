@@ -42,11 +42,14 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGMFVecTypes.h>
 
 #include "OSGUserInterfaceConfig.h"
 
+#include <OpenSG/OSGMFVecTypes.h>
+#include <OpenSG/OSGDrawAction.h>
+
 #include "OSGGraphicsBase.h"
+#include "Text/OSGFont.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -76,30 +79,34 @@ class OSG_USER_INTERFACE_CLASS_API Graphics : public GraphicsBase
 
     /*! \}                                                                 */
 	
-	virtual void drawRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color) const = 0;
+	virtual void drawRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color, const Real32& Opacity) const = 0;
 	
-	virtual void drawLine(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32& Width, const Color4f& Color) const = 0;
+	virtual void drawLine(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32& Width, const Color4f& Color, const Real32& Opacity) const = 0;
 	
-	virtual void drawPolygon(const MFPnt2s Verticies, const Color4f& Color) const = 0;
+	virtual void drawPolygon(const MFPnt2s Verticies, const Color4f& Color, const Real32& Opacity) const = 0;
 	
-	virtual void drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& Color) const = 0;
+	virtual void drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& Color, const Real32& Opacity) const = 0;
 	
-	virtual void drawArc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const Real32& LineWidth, const UInt16& SubDivisions, const Color4f& Color) const = 0;
+	virtual void drawArc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const Real32& LineWidth, const UInt16& SubDivisions, const Color4f& Color, const Real32& Opacity) const = 0;
 
-	virtual void drawLoweredBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color3f& Color, const Int16& Width) const = 0;
+	virtual void drawLoweredBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color3f& Color, const Int16& Width, const Real32& Opacity) const = 0;
 
-	virtual void drawRaisedBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color3f& Color, const Int16& Width) const = 0;
+	virtual void drawRaisedBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color3f& Color, const Int16& Width, const Real32& Opacity) const = 0;
 	
-	virtual void drawString(const Pnt2s& Position, const std::string& Text) const = 0;
+	virtual void drawText(const Pnt2s& Position, const std::string& Text, const FontPtr TheFont, const Color4f& Color, const Real32& Opacity) const = 0;
+   virtual Vec2s getTextBounds(const std::string& Text, const FontPtr TheFont) const = 0;
 
 	virtual void preDraw() = 0;
 	virtual void postDraw() = 0;
+
+   DrawActionBase* getDrawAction(void) const;
+   void setDrawAction(DrawActionBase* action);
 
     /*=========================  PROTECTED  ===============================*/
   protected:
 
     // Variables should all be in GraphicsBase.
-
+ 	 mutable DrawActionBase *   	 _Action;
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */

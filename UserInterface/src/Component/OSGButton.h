@@ -56,6 +56,8 @@ class OSG_USER_INTERFACE_CLASS_API Button : public ButtonBase
 
     /*==========================  PUBLIC  =================================*/
   public:
+     enum HorizontalAlignment {HORIZONTAL_CENTER=0, HORIZONTAL_LEFT, HORIZONTAL_RIGHT};
+     enum VerticalAlignment {VERTICAL_CENTER=0, VERTICAL_TOP, VERTICAL_BOTTOM};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

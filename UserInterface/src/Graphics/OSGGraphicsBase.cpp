@@ -64,10 +64,30 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  GraphicsBase::OpacityFieldMask = 
+    (TypeTraits<BitVector>::One << GraphicsBase::OpacityFieldId);
+
 const OSG::BitVector GraphicsBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+// Field descriptions
+
+/*! \var Real32          GraphicsBase::_sfOpacity
+    
+*/
+
+//! Graphics description
+
+FieldDescription *GraphicsBase::_desc[] = 
+{
+    new FieldDescription(SFReal32::getClassType(), 
+                     "Opacity", 
+                     OpacityFieldId, OpacityFieldMask,
+                     false,
+                     (FieldAccessMethod) &GraphicsBase::getSFOpacity)
+};
 
 
 FieldContainerType GraphicsBase::_type(
@@ -76,8 +96,8 @@ FieldContainerType GraphicsBase::_type(
     NULL,
     NULL, 
     Graphics::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //OSG_FIELD_CONTAINER_DEF(GraphicsBase, GraphicsPtr)
 
@@ -133,6 +153,7 @@ void GraphicsBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 GraphicsBase::GraphicsBase(void) :
+    _sfOpacity                (Real32(1.0)), 
     Inherited() 
 {
 }
@@ -142,6 +163,7 @@ GraphicsBase::GraphicsBase(void) :
 #endif
 
 GraphicsBase::GraphicsBase(const GraphicsBase &source) :
+    _sfOpacity                (source._sfOpacity                ), 
     Inherited                 (source)
 {
 }
@@ -158,6 +180,11 @@ UInt32 GraphicsBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (OpacityFieldMask & whichField))
+    {
+        returnValue += _sfOpacity.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -167,6 +194,11 @@ void GraphicsBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (OpacityFieldMask & whichField))
+    {
+        _sfOpacity.copyToBin(pMem);
+    }
+
 
 }
 
@@ -174,6 +206,11 @@ void GraphicsBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (OpacityFieldMask & whichField))
+    {
+        _sfOpacity.copyFromBin(pMem);
+    }
 
 
 }
@@ -185,6 +222,9 @@ void GraphicsBase::executeSyncImpl(      GraphicsBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (OpacityFieldMask & whichField))
+        _sfOpacity.syncWith(pOther->_sfOpacity);
+
 
 }
 #else
@@ -194,6 +234,9 @@ void GraphicsBase::executeSyncImpl(      GraphicsBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (OpacityFieldMask & whichField))
+        _sfOpacity.syncWith(pOther->_sfOpacity);
 
 
 

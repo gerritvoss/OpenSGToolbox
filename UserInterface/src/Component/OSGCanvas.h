@@ -97,7 +97,6 @@ class OSG_USER_INTERFACE_CLASS_API Canvas : public CanvasBase
     
     /*==========================  PRIVATE  ================================*/
   private:
-
     friend class FieldContainer;
     friend class CanvasBase;
 
