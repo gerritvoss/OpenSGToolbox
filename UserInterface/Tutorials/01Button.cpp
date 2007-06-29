@@ -35,8 +35,8 @@
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
+#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -83,38 +83,25 @@ int main(int argc, char **argv)
 	//Create the Graphics
 	GraphicsPtr graphics = osg::Graphics2D::create();
 
+	//Init the LookAndFeel
+	LookAndFeelManager::the()->getLookAndFeel()->init();
 
 	//Create A Button Component
 	ButtonPtr button = osg::Button::create();
-	LineBorderPtr buttonBorder = osg::LineBorder::create();
-   FontPtr buttonFont = Font::create();
-   beginEditCP(buttonFont);
-      buttonFont->setSize(18);
-   endEditCP(buttonFont);
 
-   beginEditCP(buttonBorder, LineBorder::WidthFieldMask | LineBorder::ColorFieldMask);
-      buttonBorder->setWidth(1);
-      buttonBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
-   endEditCP  (buttonBorder, LineBorder::WidthFieldMask | LineBorder::ColorFieldMask);
-
-    beginEditCP(button);
+	beginEditCP(button, Button::PreferredSizeFieldMask | Button::TextFieldMask);
 		button->setPreferredSize(Vec2s(100,50));
-		button->setSize(Vec2s(100,50));
-		button->setBackgroundColor(Color4f(0.8,0.8,0.8,1.0));
-		button->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
-		button->setBorder(buttonBorder);
-		button->setFont(buttonFont);
 		button->setText("Button 1");
-    endEditCP  (button);
+    endEditCP  (button, Button::PreferredSizeFieldMask | Button::TextFieldMask);
 
 	//Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
 	LayoutPtr MainFrameLayout = osg::AbsoluteLayout::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundColorFieldMask);
+	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 	   MainFrame->getChildren().addValue(button);
 	   MainFrame->setLayout(MainFrameLayout);
-	   MainFrame->setBackgroundColor(Color4f(0.0,0.0,0.5,0.3));
-    endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundColorFieldMask);
+	   //MainFrame->setBackgroundColor(Color4f(0.0,0.0,0.5,0.3));
+    endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 
 	//Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();

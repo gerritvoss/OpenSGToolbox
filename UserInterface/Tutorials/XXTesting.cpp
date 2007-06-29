@@ -35,10 +35,12 @@
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGCanvas.h>
+#include <OpenSG/UserInterface/OSGLabel.h>
 #include <OpenSG/UserInterface/OSGPanel.h>
 #include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
-#include <OpenSG/UserInterface/OSGLineBorder.h>
+#include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
+#include <OpenSG/UserInterface/OSGGradientUIBackground.h>
+#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -85,43 +87,50 @@ int main(int argc, char **argv)
 	//Create the Graphics
 	GraphicsPtr graphics = osg::Graphics2D::create();
 
+	//Init the LookAndFeel
+	LookAndFeelManager::the()->getLookAndFeel()->init();
+
 	//Create A Button Component
 	ButtonPtr button = osg::Button::create();
-	LineBorderPtr buttonBorder = osg::LineBorder::create();
-   FontPtr buttonFont = Font::create();
-   beginEditCP(buttonFont);
-      buttonFont->setSize(24);
-   endEditCP(buttonFont);
+	AbsoluteLayoutConstraintsPtr buttonLayoutConstraints = osg::AbsoluteLayoutConstraints::create();
+    beginEditCP(buttonLayoutConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
+		buttonLayoutConstraints->setPosition( Pnt2s(0,0) );
+    endEditCP  (buttonLayoutConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
 
-   beginEditCP(buttonBorder, LineBorder::WidthFieldMask | LineBorder::ColorFieldMask);
-      buttonBorder->setWidth(1);
-      buttonBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
-   endEditCP  (buttonBorder, LineBorder::WidthFieldMask | LineBorder::ColorFieldMask);
+	//Create Gradient Background
+	GradientUIBackgroundPtr gradientUIBackground = osg::GradientUIBackground::create();
+    beginEditCP(gradientUIBackground);
+		gradientUIBackground->setAlignment(VERTICAL_ALIGNMENT);
+		gradientUIBackground->setColorStart(Color4f(0.0,1.0,1.0,1.0));
+		gradientUIBackground->setColorEnd(Color4f(1.0,0.0,0.0,1.0));
+    endEditCP(gradientUIBackground);
 
-    beginEditCP(button, Button::SizeFieldMask);
-		button->setPreferredSize(Vec2s(100,100));
-		button->setBackgroundColor(Color4f(0.8,0.8,0.8,1.0));
-		button->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
-		button->setBorder(buttonBorder);
-		button->setFont(buttonFont);
+
+    beginEditCP(button, Button::TextFieldMask);
 		button->setText("Button 1");
-    endEditCP  (button, Button::SizeFieldMask);
-	ComponentPtr canvas = osg::Canvas::create();
+		button->setConstraints(buttonLayoutConstraints);
+		button->setBackground(gradientUIBackground);
+    endEditCP  (button, Button::TextFieldMask);
+	
+	//Create A Label Component
+	LabelPtr label = osg::Label::create();
+	AbsoluteLayoutConstraintsPtr labelLayoutConstraints = osg::AbsoluteLayoutConstraints::create();
+    beginEditCP(labelLayoutConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
+		labelLayoutConstraints->setPosition( Pnt2s(0,100) );
+    endEditCP  (labelLayoutConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
+
+    beginEditCP(label, Label::TextFieldMask);
+		label->setText("Label 1");
+		label->setConstraints(labelLayoutConstraints);
+    endEditCP  (label, Label::TextFieldMask);
 
 	//Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
 	LayoutPtr MainFrameLayout = osg::AbsoluteLayout::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundColorFieldMask);
-	   MainFrame->getChildren().addValue(button);
-	   MainFrame->setLayout(MainFrameLayout);
-	   MainFrame->setBackgroundColor(Color4f(0.0,0.0,0.5,0.3));
-    endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundColorFieldMask);
-
    beginEditCP(MainFrame, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
       MainFrame->getChildren().addValue(button);
-      MainFrame->getChildren().addValue(canvas);
+      MainFrame->getChildren().addValue(label);
       MainFrame->setLayout(MainFrameLayout);
-      MainFrame->setBackgroundColor(Color4f(0.8,0.8,0.8,1.0));
    endEditCP  (MainFrame, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
 
 	//Create the UI Foreground Object
