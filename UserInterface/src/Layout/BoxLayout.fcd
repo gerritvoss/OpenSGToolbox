@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="BoxLayout"
+	parent="Layout"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+A UI BoxLayout.
+<Field
+		name="Alignment"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>
+	</Field>
+</FieldContainer>
