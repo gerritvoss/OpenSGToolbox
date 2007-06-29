@@ -70,19 +70,12 @@ A UI Component Interface.
 	>
 	</Field>
 	<Field
-		name="BackgroundColor"
-		type="Color4f"
+		name="Background"
+		type="UIBackgroundPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
-	>
-	</Field>
-	<Field
-		name="BackgroundMaterial"
-		type="MaterialPtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
+      header="Background/OSGUIBackground.h"
 	>
 	</Field>
 	<Field

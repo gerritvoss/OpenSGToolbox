@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="CompoundUIBackground"
+	parent="UIBackground"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+UI Compound Background.
+	<Field
+		name="Backgrounds"
+		type="UIBackgroundPtr"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+      header="Background/OSGUIBackground.h"
+	>
+	</Field>
+</FieldContainer>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="LookAndFeel"
+	parent="FieldContainer"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+>
+UI LookAndFeel Interface.
+<Field
+		name="Prototypes"
+		type="ComponentPtr"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+      header="Component/OSGComponent.h"
+	>
+	</Field>
+</FieldContainer>

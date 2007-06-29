@@ -85,11 +85,8 @@ const OSG::BitVector  ComponentBase::EnabledFieldMask =
 const OSG::BitVector  ComponentBase::ConstraintsFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::ConstraintsFieldId);
 
-const OSG::BitVector  ComponentBase::BackgroundColorFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::BackgroundColorFieldId);
-
-const OSG::BitVector  ComponentBase::BackgroundMaterialFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::BackgroundMaterialFieldId);
+const OSG::BitVector  ComponentBase::BackgroundFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::BackgroundFieldId);
 
 const OSG::BitVector  ComponentBase::ForegroundColorFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::ForegroundColorFieldId);
@@ -131,10 +128,7 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
 /*! \var LayoutConstraintsPtr ComponentBase::_sfConstraints
     
 */
-/*! \var Color4f         ComponentBase::_sfBackgroundColor
-    
-*/
-/*! \var MaterialPtr     ComponentBase::_sfBackgroundMaterial
+/*! \var UIBackgroundPtr ComponentBase::_sfBackground
     
 */
 /*! \var Color4f         ComponentBase::_sfForegroundColor
@@ -189,16 +183,11 @@ FieldDescription *ComponentBase::_desc[] =
                      ConstraintsFieldId, ConstraintsFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFConstraints),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "BackgroundColor", 
-                     BackgroundColorFieldId, BackgroundColorFieldMask,
+    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+                     "Background", 
+                     BackgroundFieldId, BackgroundFieldMask,
                      false,
-                     (FieldAccessMethod) &ComponentBase::getSFBackgroundColor),
-    new FieldDescription(SFMaterialPtr::getClassType(), 
-                     "BackgroundMaterial", 
-                     BackgroundMaterialFieldId, BackgroundMaterialFieldMask,
-                     false,
-                     (FieldAccessMethod) &ComponentBase::getSFBackgroundMaterial),
+                     (FieldAccessMethod) &ComponentBase::getSFBackground),
     new FieldDescription(SFColor4f::getClassType(), 
                      "ForegroundColor", 
                      ForegroundColorFieldId, ForegroundColorFieldMask,
@@ -292,8 +281,7 @@ ComponentBase::ComponentBase(void) :
     _sfVisible                (bool(true)), 
     _sfEnabled                (bool(true)), 
     _sfConstraints            (), 
-    _sfBackgroundColor        (), 
-    _sfBackgroundMaterial     (), 
+    _sfBackground             (), 
     _sfForegroundColor        (), 
     _sfForegroundMaterial     (), 
     _sfBorder                 (), 
@@ -314,8 +302,7 @@ ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfVisible                (source._sfVisible                ), 
     _sfEnabled                (source._sfEnabled                ), 
     _sfConstraints            (source._sfConstraints            ), 
-    _sfBackgroundColor        (source._sfBackgroundColor        ), 
-    _sfBackgroundMaterial     (source._sfBackgroundMaterial     ), 
+    _sfBackground             (source._sfBackground             ), 
     _sfForegroundColor        (source._sfForegroundColor        ), 
     _sfForegroundMaterial     (source._sfForegroundMaterial     ), 
     _sfBorder                 (source._sfBorder                 ), 
@@ -371,14 +358,9 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfConstraints.getBinSize();
     }
 
-    if(FieldBits::NoField != (BackgroundColorFieldMask & whichField))
+    if(FieldBits::NoField != (BackgroundFieldMask & whichField))
     {
-        returnValue += _sfBackgroundColor.getBinSize();
-    }
-
-    if(FieldBits::NoField != (BackgroundMaterialFieldMask & whichField))
-    {
-        returnValue += _sfBackgroundMaterial.getBinSize();
+        returnValue += _sfBackground.getBinSize();
     }
 
     if(FieldBits::NoField != (ForegroundColorFieldMask & whichField))
@@ -445,14 +427,9 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
         _sfConstraints.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (BackgroundColorFieldMask & whichField))
+    if(FieldBits::NoField != (BackgroundFieldMask & whichField))
     {
-        _sfBackgroundColor.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (BackgroundMaterialFieldMask & whichField))
-    {
-        _sfBackgroundMaterial.copyToBin(pMem);
+        _sfBackground.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (ForegroundColorFieldMask & whichField))
@@ -518,14 +495,9 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfConstraints.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (BackgroundColorFieldMask & whichField))
+    if(FieldBits::NoField != (BackgroundFieldMask & whichField))
     {
-        _sfBackgroundColor.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (BackgroundMaterialFieldMask & whichField))
-    {
-        _sfBackgroundMaterial.copyFromBin(pMem);
+        _sfBackground.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (ForegroundColorFieldMask & whichField))
@@ -579,11 +551,8 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
         _sfConstraints.syncWith(pOther->_sfConstraints);
 
-    if(FieldBits::NoField != (BackgroundColorFieldMask & whichField))
-        _sfBackgroundColor.syncWith(pOther->_sfBackgroundColor);
-
-    if(FieldBits::NoField != (BackgroundMaterialFieldMask & whichField))
-        _sfBackgroundMaterial.syncWith(pOther->_sfBackgroundMaterial);
+    if(FieldBits::NoField != (BackgroundFieldMask & whichField))
+        _sfBackground.syncWith(pOther->_sfBackground);
 
     if(FieldBits::NoField != (ForegroundColorFieldMask & whichField))
         _sfForegroundColor.syncWith(pOther->_sfForegroundColor);
@@ -628,11 +597,8 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
         _sfConstraints.syncWith(pOther->_sfConstraints);
 
-    if(FieldBits::NoField != (BackgroundColorFieldMask & whichField))
-        _sfBackgroundColor.syncWith(pOther->_sfBackgroundColor);
-
-    if(FieldBits::NoField != (BackgroundMaterialFieldMask & whichField))
-        _sfBackgroundMaterial.syncWith(pOther->_sfBackgroundMaterial);
+    if(FieldBits::NoField != (BackgroundFieldMask & whichField))
+        _sfBackground.syncWith(pOther->_sfBackground);
 
     if(FieldBits::NoField != (ForegroundColorFieldMask & whichField))
         _sfForegroundColor.syncWith(pOther->_sfForegroundColor);

@@ -83,6 +83,17 @@ void Component::drawBorder(const GraphicsPtr TheGraphics) const
    }
 }
 
+void Component::drawBackground(const GraphicsPtr TheGraphics) const
+{
+   //Draw the Background on the Inside of my border
+   Pnt2s TopLeft, BottomRight;
+   getInsideBorderSizing(TopLeft, BottomRight);
+   if(getBackground() != NullFC)
+   {
+	   getBackground()->draw(TheGraphics, TopLeft, BottomRight, getOpacity());
+   }
+}
+
 void Component::getInsideBorderSizing(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 {
    UInt16 TopInset(0), LeftInset(0), BottomInset(0), RightInset(0);

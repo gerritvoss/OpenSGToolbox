@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="TextureUIBackground"
+	parent="UIBackground"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+UI Texture Background.
+	<Field
+		name="Texture"
+		type="TextureChunkPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

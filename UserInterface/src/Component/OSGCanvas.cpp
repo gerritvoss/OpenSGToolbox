@@ -80,10 +80,11 @@ void Canvas::draw(const GraphicsPtr TheGraphics) const
    //Draw My Border
    drawBorder(TheGraphics);
 
-   //Draw the Background on the Inside of my border
+   //Draw My Background
+   drawBackground(TheGraphics);
+
    Pnt2s TopLeft, BottomRight;
    getInsideBorderSizing(TopLeft, BottomRight);
-	TheGraphics->drawRect( TopLeft, BottomRight, getBackgroundColor(), getOpacity());
 
 	/*MFPnt2s polygon;
 	polygon.addValue(Pnt2s(120,120));

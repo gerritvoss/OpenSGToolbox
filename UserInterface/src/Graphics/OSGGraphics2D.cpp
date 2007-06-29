@@ -135,6 +135,36 @@ void Graphics2D::drawRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const 
 		glDisable(GL_BLEND);
 	}
 }
+
+void Graphics2D::drawQuad(const Pnt2s& p1, const Pnt2s& p2, const Pnt2s& p3, const Pnt2s& p4, 
+						const Color4f& c1, const Color4f& c2, const Color4f& c3, const Color4f& c4,
+						const Real32& Opacity) const
+{
+	Real32 MinAlpha( osgMin(osgMin(c1.alpha(), c2.alpha()), osgMin(c3.alpha(), c4.alpha())) * Opacity * getOpacity());
+	if(MinAlpha < 1.0)
+	{
+		//Setup the Blending equations properly
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+	}
+	
+	glBegin(GL_QUADS);
+	   glColor4f(c1.red(), c1.green(), c1.blue(), c1.alpha() * Opacity * getOpacity() );
+	   glVertex2sv(p1.getValues());
+	   glColor4f(c2.red(), c2.green(), c2.blue(), c2.alpha() * Opacity * getOpacity() );
+	   glVertex2sv(p2.getValues());
+	   glColor4f(c3.red(), c3.green(), c3.blue(), c3.alpha() * Opacity * getOpacity() );
+	   glVertex2sv(p3.getValues());
+	   glColor4f(c4.red(), c4.green(), c4.blue(), c4.alpha() * Opacity * getOpacity() );
+	   glVertex2sv(p4.getValues());
+	glEnd();
+
+	if(MinAlpha < 1.0)
+	{
+		glDisable(GL_BLEND);
+	}
+}
+
 void Graphics2D::drawLine(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32& Width, const Color4f& Color, const Real32& Opacity) const
 {
 	GLfloat previousLineWidth;

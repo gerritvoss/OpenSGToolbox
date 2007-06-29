@@ -80,6 +80,10 @@ class OSG_USER_INTERFACE_CLASS_API Graphics : public GraphicsBase
     /*! \}                                                                 */
 	
 	virtual void drawRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color, const Real32& Opacity) const = 0;
+
+	virtual void drawQuad(const Pnt2s& p1, const Pnt2s& p2, const Pnt2s& p3, const Pnt2s& p4, 
+							const Color4f& c1, const Color4f& c2, const Color4f& c3, const Color4f& c4,
+							const Real32& Opacity) const = 0;
 	
 	virtual void drawLine(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32& Width, const Color4f& Color, const Real32& Opacity) const = 0;
 	

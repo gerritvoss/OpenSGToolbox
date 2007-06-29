@@ -79,10 +79,8 @@ void Panel::draw(const GraphicsPtr TheGraphics) const
    //Draw My Border
    drawBorder(TheGraphics);
 
-   //Draw the Background on the Inside of my border
-   Pnt2s TopLeft, BottomRight;
-   getInsideBorderSizing(TopLeft, BottomRight);
-   TheGraphics->drawRect( TopLeft, BottomRight, getBackgroundColor(), getOpacity());
+   //Draw My Background
+   drawBackground(TheGraphics);
 
    //Render all of my Child Components
    getLayout()->draw(getChildren(), TheGraphics);

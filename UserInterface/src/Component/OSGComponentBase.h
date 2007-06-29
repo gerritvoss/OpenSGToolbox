@@ -73,8 +73,7 @@
 #include <OpenSG/OSGBoolFields.h> // Visible type
 #include <OpenSG/OSGBoolFields.h> // Enabled type
 #include "Layout/OSGLayoutConstraints.h" // Constraints type
-#include <OpenSG/OSGColor4fFields.h> // BackgroundColor type
-#include <OpenSG/OSGMaterialFields.h> // BackgroundMaterial type
+#include "Background/OSGUIBackground.h" // Background type
 #include <OpenSG/OSGColor4fFields.h> // ForegroundColor type
 #include <OpenSG/OSGMaterialFields.h> // ForegroundMaterial type
 #include "Border/OSGBorder.h" // Border type
@@ -109,9 +108,8 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
         VisibleFieldId            = SizeFieldId               + 1,
         EnabledFieldId            = VisibleFieldId            + 1,
         ConstraintsFieldId        = EnabledFieldId            + 1,
-        BackgroundColorFieldId    = ConstraintsFieldId        + 1,
-        BackgroundMaterialFieldId = BackgroundColorFieldId    + 1,
-        ForegroundColorFieldId    = BackgroundMaterialFieldId + 1,
+        BackgroundFieldId         = ConstraintsFieldId        + 1,
+        ForegroundColorFieldId    = BackgroundFieldId         + 1,
         ForegroundMaterialFieldId = ForegroundColorFieldId    + 1,
         BorderFieldId             = ForegroundMaterialFieldId + 1,
         OpacityFieldId            = BorderFieldId             + 1,
@@ -125,8 +123,7 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
     static const OSG::BitVector VisibleFieldMask;
     static const OSG::BitVector EnabledFieldMask;
     static const OSG::BitVector ConstraintsFieldMask;
-    static const OSG::BitVector BackgroundColorFieldMask;
-    static const OSG::BitVector BackgroundMaterialFieldMask;
+    static const OSG::BitVector BackgroundFieldMask;
     static const OSG::BitVector ForegroundColorFieldMask;
     static const OSG::BitVector ForegroundMaterialFieldMask;
     static const OSG::BitVector BorderFieldMask;
@@ -164,8 +161,7 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
            SFBool              *getSFVisible        (void);
            SFBool              *getSFEnabled        (void);
            SFLayoutConstraintsPtr *getSFConstraints    (void);
-           SFColor4f           *getSFBackgroundColor(void);
-           SFMaterialPtr       *getSFBackgroundMaterial(void);
+           SFUIBackgroundPtr   *getSFBackground     (void);
            SFColor4f           *getSFForegroundColor(void);
            SFMaterialPtr       *getSFForegroundMaterial(void);
            SFBorderPtr         *getSFBorder         (void);
@@ -185,10 +181,8 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
      const bool                &getEnabled        (void) const;
            LayoutConstraintsPtr &getConstraints    (void);
      const LayoutConstraintsPtr &getConstraints    (void) const;
-           Color4f             &getBackgroundColor(void);
-     const Color4f             &getBackgroundColor(void) const;
-           MaterialPtr         &getBackgroundMaterial(void);
-     const MaterialPtr         &getBackgroundMaterial(void) const;
+           UIBackgroundPtr     &getBackground     (void);
+     const UIBackgroundPtr     &getBackground     (void) const;
            Color4f             &getForegroundColor(void);
      const Color4f             &getForegroundColor(void) const;
            MaterialPtr         &getForegroundMaterial(void);
@@ -210,8 +204,7 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
      void setVisible        ( const bool &value );
      void setEnabled        ( const bool &value );
      void setConstraints    ( const LayoutConstraintsPtr &value );
-     void setBackgroundColor( const Color4f &value );
-     void setBackgroundMaterial( const MaterialPtr &value );
+     void setBackground     ( const UIBackgroundPtr &value );
      void setForegroundColor( const Color4f &value );
      void setForegroundMaterial( const MaterialPtr &value );
      void setBorder         ( const BorderPtr &value );
@@ -249,8 +242,7 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
     SFBool              _sfVisible;
     SFBool              _sfEnabled;
     SFLayoutConstraintsPtr   _sfConstraints;
-    SFColor4f           _sfBackgroundColor;
-    SFMaterialPtr       _sfBackgroundMaterial;
+    SFUIBackgroundPtr   _sfBackground;
     SFColor4f           _sfForegroundColor;
     SFMaterialPtr       _sfForegroundMaterial;
     SFBorderPtr         _sfBorder;

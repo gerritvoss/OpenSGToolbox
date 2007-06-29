@@ -67,14 +67,7 @@ A UI Button.
 
 void Button::initMethod (void)
 {
-   /*ButtonPtr DefaultButton = createEmpty();
-   beginEditCP(DefaultButton, Button::BorderFieldMask);
-      DefaultButton->setBorder
-   endEditCP(DefaultButton, Button::BorderFieldMask);
-
-   Button::getClassType().setPrototype(DefaultButton);*/
 }
-
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -85,11 +78,11 @@ void Button::draw(const GraphicsPtr TheGraphics) const
    //Draw My Border
    drawBorder(TheGraphics);
 
-   //Draw the Background on the Inside of my border
+   //Draw My Background
+   drawBackground(TheGraphics);
+
    Pnt2s TopLeft, BottomRight;
    getInsideBorderSizing(TopLeft, BottomRight);
-	TheGraphics->drawRect( TopLeft, BottomRight, getBackgroundColor(), getOpacity());
-
    //If I have Text Then Draw it
    if(getText() != "" && getFont() != NullFC)
    {

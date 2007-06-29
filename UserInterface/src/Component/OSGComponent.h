@@ -75,6 +75,7 @@ class OSG_USER_INTERFACE_CLASS_API Component : public ComponentBase
 
     /*! \}                                                                 */
 	virtual void draw(const GraphicsPtr Graphics) const = 0;
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -97,6 +98,7 @@ class OSG_USER_INTERFACE_CLASS_API Component : public ComponentBase
     /*! \}                                                                 */
 
     virtual void drawBorder(const GraphicsPtr TheGraphics) const;
+    virtual void drawBackground(const GraphicsPtr TheGraphics) const;
     virtual void getInsideBorderSizing(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
     
     /*==========================  PRIVATE  ================================*/

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="MaterialUIBackground"
+	parent="UIBackground"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+UI Material Background.
+	<Field
+		name="Material"
+		type="MaterialPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

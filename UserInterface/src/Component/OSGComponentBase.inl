@@ -119,18 +119,11 @@ SFLayoutConstraintsPtr *ComponentBase::getSFConstraints(void)
     return &_sfConstraints;
 }
 
-//! Get the Component::_sfBackgroundColor field.
+//! Get the Component::_sfBackground field.
 inline
-SFColor4f *ComponentBase::getSFBackgroundColor(void)
+SFUIBackgroundPtr *ComponentBase::getSFBackground(void)
 {
-    return &_sfBackgroundColor;
-}
-
-//! Get the Component::_sfBackgroundMaterial field.
-inline
-SFMaterialPtr *ComponentBase::getSFBackgroundMaterial(void)
-{
-    return &_sfBackgroundMaterial;
+    return &_sfBackground;
 }
 
 //! Get the Component::_sfForegroundColor field.
@@ -309,46 +302,25 @@ void ComponentBase::setConstraints(const LayoutConstraintsPtr &value)
     _sfConstraints.setValue(value);
 }
 
-//! Get the value of the Component::_sfBackgroundColor field.
+//! Get the value of the Component::_sfBackground field.
 inline
-Color4f &ComponentBase::getBackgroundColor(void)
+UIBackgroundPtr &ComponentBase::getBackground(void)
 {
-    return _sfBackgroundColor.getValue();
+    return _sfBackground.getValue();
 }
 
-//! Get the value of the Component::_sfBackgroundColor field.
+//! Get the value of the Component::_sfBackground field.
 inline
-const Color4f &ComponentBase::getBackgroundColor(void) const
+const UIBackgroundPtr &ComponentBase::getBackground(void) const
 {
-    return _sfBackgroundColor.getValue();
+    return _sfBackground.getValue();
 }
 
-//! Set the value of the Component::_sfBackgroundColor field.
+//! Set the value of the Component::_sfBackground field.
 inline
-void ComponentBase::setBackgroundColor(const Color4f &value)
+void ComponentBase::setBackground(const UIBackgroundPtr &value)
 {
-    _sfBackgroundColor.setValue(value);
-}
-
-//! Get the value of the Component::_sfBackgroundMaterial field.
-inline
-MaterialPtr &ComponentBase::getBackgroundMaterial(void)
-{
-    return _sfBackgroundMaterial.getValue();
-}
-
-//! Get the value of the Component::_sfBackgroundMaterial field.
-inline
-const MaterialPtr &ComponentBase::getBackgroundMaterial(void) const
-{
-    return _sfBackgroundMaterial.getValue();
-}
-
-//! Set the value of the Component::_sfBackgroundMaterial field.
-inline
-void ComponentBase::setBackgroundMaterial(const MaterialPtr &value)
-{
-    _sfBackgroundMaterial.setValue(value);
+    _sfBackground.setValue(value);
 }
 
 //! Get the value of the Component::_sfForegroundColor field.
