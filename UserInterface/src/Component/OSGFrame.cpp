@@ -83,7 +83,7 @@ void Frame::draw(const GraphicsPtr TheGraphics) const
    drawBackground(TheGraphics);
    
    //Render all of my Child Components
-   getLayout()->draw(getChildren(), TheGraphics);
+   getLayout()->draw(getChildren(), FramePtr(this), TheGraphics);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
