@@ -76,10 +76,42 @@ void EtchedBorder::initMethod (void)
 
 void EtchedBorder::draw(const GraphicsPtr g, const Int16 x, const Int16 y , const UInt16 Width, const UInt16 Height, const Real32 Opacity) const
 {
+	Pnt2s TopLeft = Pnt2s(x, y);
+	Pnt2s BottomLeft = Pnt2s(x, y + Height);
+	Pnt2s TopRight = Pnt2s(x + Width, y);
+	Pnt2s BottomRight = Pnt2s(x + Width, y + Height);
+	Color4f TopColor, BottomColor;
+	if(getRaised())
+	{
+		TopColor = getHighlight();
+		BottomColor = getShadow();
+	}
+	else
+	{
+		TopColor = getShadow();
+		BottomColor = getHighlight();
+	}
+	//Top
+	g->drawLine(TopLeft, Pnt2s(TopRight.x()-1, TopRight.y()), 1, TopColor,Opacity);
+	g->drawLine(Pnt2s(TopLeft.x()+1, TopLeft.y()-1),Pnt2s(TopRight.x()-2, TopRight.y()-1), 1, BottomColor, Opacity);
+
+	//Left
+	g->drawLine(TopLeft, Pnt2s(BottomLeft.x(), BottomLeft.y()-1), 1, TopColor, Opacity);
+	g->drawLine(Pnt2s(TopLeft.x()+1, TopLeft.y()+1),Pnt2s(BottomLeft.x()+1, BottomLeft.y()-2), 1, BottomColor, Opacity);
+
+	//Bottom
+	g->drawLine(Pnt2s(BottomLeft.x(), BottomLeft.y()-1),Pnt2s(BottomRight.x()-1, BottomRight.y()-1), 1, TopColor, Opacity);
+	g->drawLine(BottomLeft, BottomRight, 1, BottomColor, Opacity);
+
+	//Right
+	g->drawLine(Pnt2s(BottomRight.x()-1, BottomRight.y()+1), Pnt2s(TopRight.x()-1,TopRight.y()) , 1, TopColor, Opacity);
+	g->drawLine(BottomRight, TopRight, 1, BottomColor, Opacity);
+
 }
 
 void EtchedBorder::getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& Bottom) const
 {
+	Left=Right=Top=Bottom=2;
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
