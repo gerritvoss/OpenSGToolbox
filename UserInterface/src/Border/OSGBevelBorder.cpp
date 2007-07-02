@@ -76,6 +76,7 @@ void BevelBorder::initMethod (void)
 
 void BevelBorder::draw(const GraphicsPtr g, const Int16 x, const Int16 y , const UInt16 Width, const UInt16 Height, const Real32 Opacity) const
 {
+	//x, y is upper right hand side.
 }
 
 void BevelBorder::getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& Bottom) const
