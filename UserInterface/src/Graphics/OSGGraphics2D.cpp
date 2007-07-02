@@ -216,7 +216,7 @@ void Graphics2D::drawPolygon(const MFPnt2s Verticies, const Color4f& Color, cons
 void Graphics2D::drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& Color, const Real32& Opacity) const
 {
 	Real32 angleNow = StartAngleRad;
-	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(Real32)SubDivisions;
+	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(static_cast<Real32>(SubDivisions));
 	if(EndAngleRad-StartAngleRad > 2*3.1415926535)
 		angleDiff = 2*3.1415926535;
    Real32 Alpha(Color.alpha() * Opacity * getOpacity());
@@ -248,7 +248,7 @@ void Graphics2D::drawArc(const Pnt2s& Center, const Int16& Width, const Int16& H
 	GLfloat previousLineWidth;
 	glGetFloatv(GL_LINE_WIDTH, &previousLineWidth);
 	Real32 angleNow = StartAngleRad;
-	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(Real32)SubDivisions;
+	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(static_cast<Real32>(SubDivisions));
 	//If andle difference is bigger to a circle, set it to equal to a circle
 	if(EndAngleRad-StartAngleRad > 2*3.1415926535)
 		angleDiff = 2*3.1415926535;
@@ -279,12 +279,110 @@ void Graphics2D::drawArc(const Pnt2s& Center, const Int16& Width, const Int16& H
    glLineWidth(previousLineWidth);
 }
 
-void Graphics2D::drawLoweredBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color3f& Color, const Int16& Width, const Real32& Opacity) const
+void Graphics2D::drawLoweredBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color, const Int16& Width, const Real32& Opacity) const
 {
+Pnt2s TopRight = Pnt2s(BottomRight.x(), TopLeft.y());
+	Pnt2s BottomLeft = Pnt2s(TopLeft.x(), BottomRight.y());
+	Color4f LightColor;
+	Color4f DarkColor;
+	Color4f DarkerColor;
+	Real32 hue, sat, val;
+	Real32 valdark, valdarker;
+	Color.getValuesHSV(hue, sat, val);
+	//set value of darker shades
+	valdark = .7*val;
+	valdarker = .5*val;
+	DarkColor.setValuesHSV(hue, sat, valdark);
+	DarkerColor.setValuesHSV(hue, sat, valdarker);
+	//value is 100 b/c that allows the color to be brighter
+	LightColor.setValuesHSV(hue, sat, 100);
+
+	//bottom
+	drawLine(Pnt2s(BottomLeft.x(), BottomLeft.y()-(Width/2.0-.5)), Pnt2s(BottomRight.x(), BottomRight.y()-(Width/2.0-0.5)), Width, LightColor,Opacity);
+	//right
+	drawLine(Pnt2s(TopRight.x()-(Width/2.0-.5), TopRight.y()), Pnt2s(BottomRight.x()-(Width/2.0-.5), BottomRight.y()), Width, LightColor, Opacity);
+	if(Width == 1)
+	{
+		//top
+		drawLine(Pnt2s(TopLeft.x()-1, TopLeft.y()), Pnt2s(TopRight.x(),TopRight.y()), 1, DarkerColor, Opacity);
+
+		//left
+		drawLine(Pnt2s(TopLeft.x(), TopLeft.x()), Pnt2s(BottomLeft.x(), BottomLeft.y()), 1, DarkerColor, Opacity);
+	}
+	else if(Width%2 == 1)//Odd still has some work to be done.... so use even sizes only for bevel borders for the time being.
+	{
+			//Top
+		drawLine(Pnt2s(TopLeft.x(), TopLeft.y()+Width/4.0), Pnt2s(TopRight.x(), TopRight.y()+Width/4.0), Width/2.0,DarkerColor, Opacity);
+		drawLine(Pnt2s(TopLeft.x() + Width/2.0, TopLeft.y()+3*Width/4.0), Pnt2s(TopRight.x()-Width/2.0, TopRight.y()+3*Width/4.0),Width/2.0,DarkColor, Opacity);
+		
+		//Left
+		drawLine(Pnt2s(BottomLeft.x()+Width/4.0, BottomLeft.y()), Pnt2s(TopLeft.x()+Width/4.0, TopLeft.y()), Width/2.0, DarkerColor, Opacity);
+		drawLine(Pnt2s(BottomLeft.x()+3*Width/4.0, BottomLeft.y()-Width/2.0), Pnt2s(TopLeft.x()+3*Width/4.0, TopLeft.y()+Width/2.0), Width/2.0, DarkColor, Opacity);
+	}
+	else
+	{	
+		//Top
+		drawLine(Pnt2s(TopLeft.x(), TopLeft.y()+Width/4.0), Pnt2s(TopRight.x(), TopRight.y()+Width/4.0), Width/2.0,DarkerColor, Opacity);
+		drawLine(Pnt2s(TopLeft.x() + Width/2.0, TopLeft.y()+3*Width/4.0), Pnt2s(TopRight.x()-Width/2.0, TopRight.y()+3*Width/4.0),Width/2.0,DarkColor, Opacity);
+		
+		//Left
+		drawLine(Pnt2s(BottomLeft.x()+Width/4.0, BottomLeft.y()), Pnt2s(TopLeft.x()+Width/4.0, TopLeft.y()), Width/2.0, DarkerColor, Opacity);
+		drawLine(Pnt2s(BottomLeft.x()+3*Width/4.0, BottomLeft.y()-Width/2.0), Pnt2s(TopLeft.x()+3*Width/4.0, TopLeft.y()+Width/2.0), Width/2.0, DarkColor, Opacity);
+	}
 }
 
-void Graphics2D::drawRaisedBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color3f& Color, const Int16& Width, const Real32& Opacity) const
+void Graphics2D::drawRaisedBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color, const Int16& Width, const Real32& Opacity) const
 {
+	Pnt2s TopRight = Pnt2s(BottomRight.x(), TopLeft.y());
+	Pnt2s BottomLeft = Pnt2s(TopLeft.x(), BottomRight.y());
+	Color4f LightColor;
+	Color4f DarkColor;
+	Color4f DarkerColor;
+	Real32 hue;
+	Real32 sat;
+	Real32 val;
+	Real32 valdark, valdarker;
+	Color.getValuesHSV(hue, sat, val);
+	//set value of darker shades
+	valdark = .7*val;
+	valdarker = .5*val;
+	DarkColor.setValuesHSV(hue, sat, valdark);
+	DarkerColor.setValuesHSV(hue, sat, valdarker);
+	//value is 100 b/c that allows the color to be brighter
+	LightColor.setValuesHSV(hue, sat, 100);
+
+	//top
+	drawLine(Pnt2s(TopLeft.x(), TopLeft.y()+(Width/2.0+.5)), Pnt2s(TopRight.x(), TopRight.y()+(Width/2.0+0.5)), Width, LightColor,Opacity);
+	//Left
+	drawLine(Pnt2s(TopLeft.x()+(Width/2.0+.5), TopLeft.y()), Pnt2s(BottomLeft.x()+(Width/2.0+.5), BottomLeft.y()), Width, LightColor, Opacity);
+	if(Width == 1)
+	{
+		//Bottom
+		drawLine(Pnt2s(BottomLeft.x()-1, BottomLeft.y()), Pnt2s(BottomRight.x(),BottomRight.y()), 1, DarkerColor, Opacity);
+
+		//Right
+		drawLine(Pnt2s(TopRight.x(), TopRight.x()), Pnt2s(BottomRight.x(), BottomRight.y()), 1, DarkerColor, Opacity);
+	}
+	else if(Width%2 == 1)//Odd still has some work to be done.... so use even sizes only for bevel borders for the time being.
+	{
+		//Bottom
+		drawLine(Pnt2s(BottomLeft.x(), BottomLeft.y()-Width/4.0), Pnt2s(BottomRight.x(), BottomRight.y()-Width/4.0), Width/2.0,DarkerColor, Opacity);
+		drawLine(Pnt2s(BottomLeft.x() + Width/2.0, BottomLeft.y()-3*Width/4.0), Pnt2s(BottomRight.x()-Width/2.0, BottomRight.y()-3*Width/4.0),Width/2.0,DarkColor, Opacity);
+		
+		//Right
+		drawLine(Pnt2s(BottomRight.x()-Width/4.0, BottomRight.y()), Pnt2s(TopRight.x()-Width/4.0, TopRight.y()), Width/2.0, DarkerColor, Opacity);
+		drawLine(Pnt2s(BottomRight.x()-3*Width/4.0, BottomRight.y()-Width/2.0), Pnt2s(TopRight.x()-3*Width/4.0, TopRight.y()+Width/2.0), Width/2.0, DarkColor, Opacity);
+	}
+	else
+	{
+		//Bottom
+		drawLine(Pnt2s(BottomLeft.x(), BottomLeft.y()-Width/4.0), Pnt2s(BottomRight.x(), BottomRight.y()-Width/4.0), Width/2.0,DarkerColor, Opacity);
+		drawLine(Pnt2s(BottomLeft.x() + Width/2.0, BottomLeft.y()-3*Width/4.0), Pnt2s(BottomRight.x()-Width/2.0, BottomRight.y()-3*Width/4.0),Width/2.0,DarkColor, Opacity);
+		
+		//Right
+		drawLine(Pnt2s(BottomRight.x()-Width/4.0, BottomRight.y()), Pnt2s(TopRight.x()-Width/4.0, TopRight.y()), Width/2.0, DarkerColor, Opacity);
+		drawLine(Pnt2s(BottomRight.x()-3*Width/4.0, BottomRight.y()-Width/2.0), Pnt2s(TopRight.x()-3*Width/4.0, TopRight.y()+Width/2.0), Width/2.0, DarkColor, Opacity);
+	}
 }
 
 void Graphics2D::drawText(const Pnt2s& Position, const std::string& Text, const FontPtr TheFont, const Color4f& Color, const Real32& Opacity) const
