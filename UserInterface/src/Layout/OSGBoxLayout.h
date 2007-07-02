@@ -73,6 +73,8 @@ class OSG_USER_INTERFACE_CLASS_API BoxLayout : public BoxLayoutBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+	virtual void draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const;
+    
     /*=========================  PROTECTED  ===============================*/
   protected:
 
