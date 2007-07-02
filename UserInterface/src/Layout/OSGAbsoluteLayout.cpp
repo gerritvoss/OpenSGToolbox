@@ -75,7 +75,7 @@ void AbsoluteLayout::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void AbsoluteLayout::draw(const MFComponentPtr Components, const GraphicsPtr TheGraphics) const
+void AbsoluteLayout::draw(const MFComponentPtr Components, const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
 {	
    for(UInt32 i = 0 ; i<Components.size(); ++i)
    {
