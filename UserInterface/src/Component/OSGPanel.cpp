@@ -83,7 +83,7 @@ void Panel::draw(const GraphicsPtr TheGraphics) const
    drawBackground(TheGraphics);
 
    //Render all of my Child Components
-   getLayout()->draw(getChildren(), TheGraphics);
+   getLayout()->draw(getChildren(), PanelPtr(this), TheGraphics);
 }
 
 /*-------------------------------------------------------------------------*\
