@@ -76,6 +76,30 @@ void MatteBorder::initMethod (void)
 
 void MatteBorder::draw(const GraphicsPtr g, const Int16 x, const Int16 y , const UInt16 Width, const UInt16 Height, const Real32 Opacity) const
 {
+	//x, y is upper left point
+	
+	//top
+	if(getTopWidth()%2 == 1)
+		g->drawLine(Pnt2s(x,y+osgceil(static_cast<Real32>(getTopWidth())/2.0)-1), Pnt2s(x+Width, y+osgceil(static_cast<Real32>(getTopWidth())/2.0)-1), getTopWidth(), getColor(), Opacity);
+	else
+		g->drawLine(Pnt2s(x,y+osgceil(static_cast<Real32>(getTopWidth())/2.0)), Pnt2s(x+Width, y+osgceil(static_cast<Real32>(getTopWidth())/2.0)), getTopWidth(), getColor(), Opacity);
+	//bottom
+	if(getBottomWidth()%2 == 1)
+		g->drawLine(Pnt2s(x,y+Height-getBottomWidth()/2-1), Pnt2s(x+Width, y+Height-getBottomWidth()/2-1), getBottomWidth(), getColor(), Opacity);
+	else
+		g->drawLine(Pnt2s(x,y+Height-getBottomWidth()/2), Pnt2s(x+Width, y+Height-getBottomWidth()/2), getBottomWidth(), getColor(), Opacity);
+	//Left
+	if(getLeftWidth()%2 == 1)
+		g->drawLine(Pnt2s(x+getLeftWidth()/2,y+getLeftWidth()), Pnt2s(x+getLeftWidth()/2, y+Height-getLeftWidth()), getLeftWidth(), getColor(), Opacity);
+	else
+		g->drawLine(Pnt2s(x+getLeftWidth()/2,y+getLeftWidth()), Pnt2s(x+getLeftWidth()/2, y+Height-getLeftWidth()), getLeftWidth(), getColor(), Opacity);
+	//Right
+	if(getRightWidth()%2 == 1)
+		g->drawLine(Pnt2s(x+Width-getRightWidth()/2,y+getRightWidth()), Pnt2s(x+Width-getRightWidth()/2, y+Height-getRightWidth()), getRightWidth(), getColor(), Opacity);
+	else
+		g->drawLine(Pnt2s(x+Width-osgceil(static_cast<Real32>(getRightWidth())/2.0),y+getRightWidth()), Pnt2s(x+Width-osgceil(static_cast<Real32>(getRightWidth())/2.0), y+Height-getRightWidth()), getRightWidth(), getColor(), Opacity);
+
+
 }
 
 void MatteBorder::getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& Bottom) const
