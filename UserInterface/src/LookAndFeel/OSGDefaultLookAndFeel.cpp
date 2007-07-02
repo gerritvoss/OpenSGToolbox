@@ -48,7 +48,9 @@
 #include "OSGDefaultLookAndFeel.h"
 #include "Text/OSGFont.h"
 #include "Border/OSGLineBorder.h"
+#include "Border/OSGEmptyBorder.h"
 #include "Background/OSGColorUIBackground.h"
+#include "Background/OSGEmptyUIBackground.h"
 #include "Component/OSGButton.h"
 #include "Component/OSGLabel.h"
 #include "Component/OSGFrame.h"
@@ -190,17 +192,16 @@ void DefaultLookAndFeel::init(void)
 	
 	//************************** Frame *****************************
 	//Default FrameBorder
-	LineBorderPtr DefaultFrameBorder = LineBorder::create();
+	EmptyBorderPtr DefaultFrameBorder = EmptyBorder::create();
 	beginEditCP(DefaultFrameBorder);
-		DefaultFrameBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
-		DefaultFrameBorder->setWidth(1);
+		DefaultFrameBorder->setLeftWidth(0);
+		DefaultFrameBorder->setRightWidth(0);
+		DefaultFrameBorder->setTopWidth(0);
+		DefaultFrameBorder->setBottomWidth(0);
 	endEditCP(DefaultFrameBorder);
 
 	//Default FrameBackground
-	ColorUIBackgroundPtr DefaultFrameBackground = ColorUIBackground::create();
-	beginEditCP(DefaultFrameBackground);
-		DefaultFrameBackground->setColor(Color4f(0.7,0.7,0.7,1.0));
-	endEditCP(DefaultFrameBackground);
+	EmptyUIBackgroundPtr DefaultFrameBackground = EmptyUIBackground::create();
 
 	//Default Frame
 	FramePtr DefaultFrame = Frame::create();
