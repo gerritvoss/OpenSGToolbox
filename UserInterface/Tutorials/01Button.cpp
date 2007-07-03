@@ -1,13 +1,11 @@
-// OpenSG Tutorial Example: Hello World
+// OpenSG Tutorial Example: Creating a Button
 //
-// Minimalistic OpenSG program
+// This example explains how to edit the basic features of
+// a button created in the OSG User Interface library.
 // 
-// This is the shortest useful OpenSG program 
-// (if you remove all the comments ;)
-//
-// It shows how to use OpenSG together with GLUT to create a little
-// interactive scene viewer.
-//
+// Includes: button size, button font and text, button color, button border,
+// and adding a button to a scene.
+
 
 // GLUT is used for window handling
 #include <OpenSG/OSGGLUT.h>
@@ -35,6 +33,7 @@
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
+#include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 
@@ -66,8 +65,9 @@ int main(int argc, char **argv)
     gwin->init();
 
 
-    //Make Torus Node
+   //Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+
 
     //Make Main Scene Node
     NodePtr scene = osg::Node::create();
@@ -83,25 +83,30 @@ int main(int argc, char **argv)
 	//Create the Graphics
 	GraphicsPtr graphics = osg::Graphics2D::create();
 
-	//Init the LookAndFeel
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
-	//Create A Button Component
+	//Create a button component
 	ButtonPtr button = osg::Button::create();
 
-	beginEditCP(button, Button::PreferredSizeFieldMask | Button::TextFieldMask);
+	//Assign created attributes of button to the button.
+	//The Vec2s requires 2 inputs, X and Y, which control 
+	//the vertical and horizontal dimensions of the button.
+	//Essentially, the input is the vector from the top left 
+	//corner to the bottom right corner of the button.
+	beginEditCP(button);
 		button->setPreferredSize(Vec2s(100,50));
 		button->setText("Button 1");
-    endEditCP  (button, Button::PreferredSizeFieldMask | Button::TextFieldMask);
+    endEditCP(button);
 
 	//Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
 	LayoutPtr MainFrameLayout = osg::AbsoluteLayout::create();
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+	   //Assign the button to the mainframe so it will be displayed
+	   //when the view is rendered.
 	   MainFrame->getChildren().addValue(button);
 	   MainFrame->setLayout(MainFrameLayout);
-	   //MainFrame->setBackgroundColor(Color4f(0.0,0.0,0.5,0.3));
-    endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 
 	//Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();
