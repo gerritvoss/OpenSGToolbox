@@ -78,32 +78,23 @@ void MatteBorder::draw(const GraphicsPtr g, const Int16 x, const Int16 y , const
 {
 	//x, y is upper left point
 	
-	//top
-	if(getTopWidth()%2 == 1)
-		g->drawLine(Pnt2s(x,y+osgceil(static_cast<Real32>(getTopWidth())/2.0)-1), Pnt2s(x+Width, y+osgceil(static_cast<Real32>(getTopWidth())/2.0)-1), getTopWidth(), getColor(), Opacity);
-	else
-		g->drawLine(Pnt2s(x,y+osgceil(static_cast<Real32>(getTopWidth())/2.0)), Pnt2s(x+Width, y+osgceil(static_cast<Real32>(getTopWidth())/2.0)), getTopWidth(), getColor(), Opacity);
-	//bottom
-	if(getBottomWidth()%2 == 1)
-		g->drawLine(Pnt2s(x,y+Height-getBottomWidth()/2-1), Pnt2s(x+Width, y+Height-getBottomWidth()/2-1), getBottomWidth(), getColor(), Opacity);
-	else
-		g->drawLine(Pnt2s(x,y+Height-getBottomWidth()/2), Pnt2s(x+Width, y+Height-getBottomWidth()/2), getBottomWidth(), getColor(), Opacity);
+	//Top
+	g->drawRect(Pnt2s(x,y), Pnt2s(x+Width, y+getTopWidth()), getColor(), Opacity);
 	//Left
-	if(getLeftWidth()%2 == 1)
-		g->drawLine(Pnt2s(x+getLeftWidth()/2,y+getLeftWidth()), Pnt2s(x+getLeftWidth()/2, y+Height-getLeftWidth()), getLeftWidth(), getColor(), Opacity);
-	else
-		g->drawLine(Pnt2s(x+getLeftWidth()/2,y+getLeftWidth()), Pnt2s(x+getLeftWidth()/2, y+Height-getLeftWidth()), getLeftWidth(), getColor(), Opacity);
+	g->drawRect(Pnt2s(x,y+getTopWidth()), Pnt2s(x+getLeftWidth(), y+getTopWidth()+Height-getBottomWidth()), getColor(), Opacity);
 	//Right
-	if(getRightWidth()%2 == 1)
-		g->drawLine(Pnt2s(x+Width-getRightWidth()/2,y+getRightWidth()), Pnt2s(x+Width-getRightWidth()/2, y+Height-getRightWidth()), getRightWidth(), getColor(), Opacity);
-	else
-		g->drawLine(Pnt2s(x+Width-osgceil(static_cast<Real32>(getRightWidth())/2.0),y+getRightWidth()), Pnt2s(x+Width-osgceil(static_cast<Real32>(getRightWidth())/2.0), y+Height-getRightWidth()), getRightWidth(), getColor(), Opacity);
-
+	g->drawRect(Pnt2s(x+Width-getRightWidth(), y+getTopWidth()), Pnt2s(x+Width, y+getTopWidth()+Height-getBottomWidth()), getColor(), Opacity);
+	//Bottom
+	g->drawRect(Pnt2s(x, y+Height-getBottomWidth()), Pnt2s(x+Width, y+Height), getColor(), Opacity);
 
 }
 
 void MatteBorder::getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& Bottom) const
 {
+	Left = getLeftWidth();
+	Right = getRightWidth();
+	Top = getTopWidth();
+	Bottom = getBottomWidth();
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
