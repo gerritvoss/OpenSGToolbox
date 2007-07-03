@@ -69,6 +69,7 @@
 #include <OpenSG/OSGColor4fFields.h> // Highlight type
 #include <OpenSG/OSGColor4fFields.h> // Shadow type
 #include <OpenSG/OSGBoolFields.h> // Raised type
+#include <OpenSG/OSGUInt32Fields.h> // Width type
 
 #include "OSGEtchedBorderFields.h"
 
@@ -95,12 +96,14 @@ class OSG_USER_INTERFACE_CLASS_API EtchedBorderBase : public Border
         HighlightFieldId = Inherited::NextFieldId,
         ShadowFieldId    = HighlightFieldId + 1,
         RaisedFieldId    = ShadowFieldId    + 1,
-        NextFieldId      = RaisedFieldId    + 1
+        WidthFieldId     = RaisedFieldId    + 1,
+        NextFieldId      = WidthFieldId     + 1
     };
 
     static const OSG::BitVector HighlightFieldMask;
     static const OSG::BitVector ShadowFieldMask;
     static const OSG::BitVector RaisedFieldMask;
+    static const OSG::BitVector WidthFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -130,6 +133,7 @@ class OSG_USER_INTERFACE_CLASS_API EtchedBorderBase : public Border
            SFColor4f           *getSFHighlight      (void);
            SFColor4f           *getSFShadow         (void);
            SFBool              *getSFRaised         (void);
+           SFUInt32            *getSFWidth          (void);
 
            Color4f             &getHighlight      (void);
      const Color4f             &getHighlight      (void) const;
@@ -137,6 +141,8 @@ class OSG_USER_INTERFACE_CLASS_API EtchedBorderBase : public Border
      const Color4f             &getShadow         (void) const;
            bool                &getRaised         (void);
      const bool                &getRaised         (void) const;
+           UInt32              &getWidth          (void);
+     const UInt32              &getWidth          (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -146,6 +152,7 @@ class OSG_USER_INTERFACE_CLASS_API EtchedBorderBase : public Border
      void setHighlight      ( const Color4f &value );
      void setShadow         ( const Color4f &value );
      void setRaised         ( const bool &value );
+     void setWidth          ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -191,6 +198,7 @@ class OSG_USER_INTERFACE_CLASS_API EtchedBorderBase : public Border
     SFColor4f           _sfHighlight;
     SFColor4f           _sfShadow;
     SFBool              _sfRaised;
+    SFUInt32            _sfWidth;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

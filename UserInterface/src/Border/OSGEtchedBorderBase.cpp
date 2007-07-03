@@ -73,6 +73,9 @@ const OSG::BitVector  EtchedBorderBase::ShadowFieldMask =
 const OSG::BitVector  EtchedBorderBase::RaisedFieldMask = 
     (TypeTraits<BitVector>::One << EtchedBorderBase::RaisedFieldId);
 
+const OSG::BitVector  EtchedBorderBase::WidthFieldMask = 
+    (TypeTraits<BitVector>::One << EtchedBorderBase::WidthFieldId);
+
 const OSG::BitVector EtchedBorderBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -87,6 +90,9 @@ const OSG::BitVector EtchedBorderBase::MTInfluenceMask =
     
 */
 /*! \var bool            EtchedBorderBase::_sfRaised
+    
+*/
+/*! \var UInt32          EtchedBorderBase::_sfWidth
     
 */
 
@@ -108,7 +114,12 @@ FieldDescription *EtchedBorderBase::_desc[] =
                      "Raised", 
                      RaisedFieldId, RaisedFieldMask,
                      false,
-                     (FieldAccessMethod) &EtchedBorderBase::getSFRaised)
+                     (FieldAccessMethod) &EtchedBorderBase::getSFRaised),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "Width", 
+                     WidthFieldId, WidthFieldMask,
+                     false,
+                     (FieldAccessMethod) &EtchedBorderBase::getSFWidth)
 };
 
 
@@ -187,6 +198,7 @@ EtchedBorderBase::EtchedBorderBase(void) :
     _sfHighlight              (), 
     _sfShadow                 (), 
     _sfRaised                 (bool(true)), 
+    _sfWidth                  (UInt32(1)), 
     Inherited() 
 {
 }
@@ -199,6 +211,7 @@ EtchedBorderBase::EtchedBorderBase(const EtchedBorderBase &source) :
     _sfHighlight              (source._sfHighlight              ), 
     _sfShadow                 (source._sfShadow                 ), 
     _sfRaised                 (source._sfRaised                 ), 
+    _sfWidth                  (source._sfWidth                  ), 
     Inherited                 (source)
 {
 }
@@ -230,6 +243,11 @@ UInt32 EtchedBorderBase::getBinSize(const BitVector &whichField)
         returnValue += _sfRaised.getBinSize();
     }
 
+    if(FieldBits::NoField != (WidthFieldMask & whichField))
+    {
+        returnValue += _sfWidth.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -252,6 +270,11 @@ void EtchedBorderBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (RaisedFieldMask & whichField))
     {
         _sfRaised.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (WidthFieldMask & whichField))
+    {
+        _sfWidth.copyToBin(pMem);
     }
 
 
@@ -277,6 +300,11 @@ void EtchedBorderBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfRaised.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (WidthFieldMask & whichField))
+    {
+        _sfWidth.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -296,6 +324,9 @@ void EtchedBorderBase::executeSyncImpl(      EtchedBorderBase *pOther,
     if(FieldBits::NoField != (RaisedFieldMask & whichField))
         _sfRaised.syncWith(pOther->_sfRaised);
 
+    if(FieldBits::NoField != (WidthFieldMask & whichField))
+        _sfWidth.syncWith(pOther->_sfWidth);
+
 
 }
 #else
@@ -314,6 +345,9 @@ void EtchedBorderBase::executeSyncImpl(      EtchedBorderBase *pOther,
 
     if(FieldBits::NoField != (RaisedFieldMask & whichField))
         _sfRaised.syncWith(pOther->_sfRaised);
+
+    if(FieldBits::NoField != (WidthFieldMask & whichField))
+        _sfWidth.syncWith(pOther->_sfWidth);
 
 
 

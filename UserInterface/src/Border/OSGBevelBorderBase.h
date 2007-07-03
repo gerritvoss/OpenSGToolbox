@@ -67,6 +67,7 @@
 #include "OSGBorder.h" // Parent
 
 #include <OpenSG/OSGColor4fFields.h> // HighlightInner type
+#include <OpenSG/OSGUInt32Fields.h> // Width type
 #include <OpenSG/OSGColor4fFields.h> // HighlightOuter type
 #include <OpenSG/OSGColor4fFields.h> // ShadowInner type
 #include <OpenSG/OSGColor4fFields.h> // ShadowOuter type
@@ -95,7 +96,8 @@ class OSG_USER_INTERFACE_CLASS_API BevelBorderBase : public Border
     enum
     {
         HighlightInnerFieldId = Inherited::NextFieldId,
-        HighlightOuterFieldId = HighlightInnerFieldId + 1,
+        WidthFieldId          = HighlightInnerFieldId + 1,
+        HighlightOuterFieldId = WidthFieldId          + 1,
         ShadowInnerFieldId    = HighlightOuterFieldId + 1,
         ShadowOuterFieldId    = ShadowInnerFieldId    + 1,
         RaisedFieldId         = ShadowOuterFieldId    + 1,
@@ -103,6 +105,7 @@ class OSG_USER_INTERFACE_CLASS_API BevelBorderBase : public Border
     };
 
     static const OSG::BitVector HighlightInnerFieldMask;
+    static const OSG::BitVector WidthFieldMask;
     static const OSG::BitVector HighlightOuterFieldMask;
     static const OSG::BitVector ShadowInnerFieldMask;
     static const OSG::BitVector ShadowOuterFieldMask;
@@ -134,6 +137,7 @@ class OSG_USER_INTERFACE_CLASS_API BevelBorderBase : public Border
     /*! \{                                                                 */
 
            SFColor4f           *getSFHighlightInner (void);
+           SFUInt32            *getSFWidth          (void);
            SFColor4f           *getSFHighlightOuter (void);
            SFColor4f           *getSFShadowInner    (void);
            SFColor4f           *getSFShadowOuter    (void);
@@ -141,6 +145,8 @@ class OSG_USER_INTERFACE_CLASS_API BevelBorderBase : public Border
 
            Color4f             &getHighlightInner (void);
      const Color4f             &getHighlightInner (void) const;
+           UInt32              &getWidth          (void);
+     const UInt32              &getWidth          (void) const;
            Color4f             &getHighlightOuter (void);
      const Color4f             &getHighlightOuter (void) const;
            Color4f             &getShadowInner    (void);
@@ -156,6 +162,7 @@ class OSG_USER_INTERFACE_CLASS_API BevelBorderBase : public Border
     /*! \{                                                                 */
 
      void setHighlightInner ( const Color4f &value );
+     void setWidth          ( const UInt32 &value );
      void setHighlightOuter ( const Color4f &value );
      void setShadowInner    ( const Color4f &value );
      void setShadowOuter    ( const Color4f &value );
@@ -203,6 +210,7 @@ class OSG_USER_INTERFACE_CLASS_API BevelBorderBase : public Border
     /*! \{                                                                 */
 
     SFColor4f           _sfHighlightInner;
+    SFUInt32            _sfWidth;
     SFColor4f           _sfHighlightOuter;
     SFColor4f           _sfShadowInner;
     SFColor4f           _sfShadowOuter;

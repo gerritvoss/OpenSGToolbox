@@ -18,6 +18,15 @@ UI Bevel Border.
 	>
 	</Field>
 	<Field
+		name="Width"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1"
+	>
+	</Field>
+	<Field
 		name="HighlightOuter"
 		type="Color4f"
 		cardinality="single"

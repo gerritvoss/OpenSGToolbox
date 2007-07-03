@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  BevelBorderBase::HighlightInnerFieldMask = 
     (TypeTraits<BitVector>::One << BevelBorderBase::HighlightInnerFieldId);
 
+const OSG::BitVector  BevelBorderBase::WidthFieldMask = 
+    (TypeTraits<BitVector>::One << BevelBorderBase::WidthFieldId);
+
 const OSG::BitVector  BevelBorderBase::HighlightOuterFieldMask = 
     (TypeTraits<BitVector>::One << BevelBorderBase::HighlightOuterFieldId);
 
@@ -87,6 +90,9 @@ const OSG::BitVector BevelBorderBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var Color4f         BevelBorderBase::_sfHighlightInner
+    
+*/
+/*! \var UInt32          BevelBorderBase::_sfWidth
     
 */
 /*! \var Color4f         BevelBorderBase::_sfHighlightOuter
@@ -111,6 +117,11 @@ FieldDescription *BevelBorderBase::_desc[] =
                      HighlightInnerFieldId, HighlightInnerFieldMask,
                      false,
                      (FieldAccessMethod) &BevelBorderBase::getSFHighlightInner),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "Width", 
+                     WidthFieldId, WidthFieldMask,
+                     false,
+                     (FieldAccessMethod) &BevelBorderBase::getSFWidth),
     new FieldDescription(SFColor4f::getClassType(), 
                      "HighlightOuter", 
                      HighlightOuterFieldId, HighlightOuterFieldMask,
@@ -207,6 +218,7 @@ void BevelBorderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 BevelBorderBase::BevelBorderBase(void) :
     _sfHighlightInner         (), 
+    _sfWidth                  (UInt32(1)), 
     _sfHighlightOuter         (), 
     _sfShadowInner            (), 
     _sfShadowOuter            (), 
@@ -221,6 +233,7 @@ BevelBorderBase::BevelBorderBase(void) :
 
 BevelBorderBase::BevelBorderBase(const BevelBorderBase &source) :
     _sfHighlightInner         (source._sfHighlightInner         ), 
+    _sfWidth                  (source._sfWidth                  ), 
     _sfHighlightOuter         (source._sfHighlightOuter         ), 
     _sfShadowInner            (source._sfShadowInner            ), 
     _sfShadowOuter            (source._sfShadowOuter            ), 
@@ -244,6 +257,11 @@ UInt32 BevelBorderBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (HighlightInnerFieldMask & whichField))
     {
         returnValue += _sfHighlightInner.getBinSize();
+    }
+
+    if(FieldBits::NoField != (WidthFieldMask & whichField))
+    {
+        returnValue += _sfWidth.getBinSize();
     }
 
     if(FieldBits::NoField != (HighlightOuterFieldMask & whichField))
@@ -280,6 +298,11 @@ void BevelBorderBase::copyToBin(      BinaryDataHandler &pMem,
         _sfHighlightInner.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (WidthFieldMask & whichField))
+    {
+        _sfWidth.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (HighlightOuterFieldMask & whichField))
     {
         _sfHighlightOuter.copyToBin(pMem);
@@ -311,6 +334,11 @@ void BevelBorderBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (HighlightInnerFieldMask & whichField))
     {
         _sfHighlightInner.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (WidthFieldMask & whichField))
+    {
+        _sfWidth.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (HighlightOuterFieldMask & whichField))
@@ -346,6 +374,9 @@ void BevelBorderBase::executeSyncImpl(      BevelBorderBase *pOther,
     if(FieldBits::NoField != (HighlightInnerFieldMask & whichField))
         _sfHighlightInner.syncWith(pOther->_sfHighlightInner);
 
+    if(FieldBits::NoField != (WidthFieldMask & whichField))
+        _sfWidth.syncWith(pOther->_sfWidth);
+
     if(FieldBits::NoField != (HighlightOuterFieldMask & whichField))
         _sfHighlightOuter.syncWith(pOther->_sfHighlightOuter);
 
@@ -370,6 +401,9 @@ void BevelBorderBase::executeSyncImpl(      BevelBorderBase *pOther,
 
     if(FieldBits::NoField != (HighlightInnerFieldMask & whichField))
         _sfHighlightInner.syncWith(pOther->_sfHighlightInner);
+
+    if(FieldBits::NoField != (WidthFieldMask & whichField))
+        _sfWidth.syncWith(pOther->_sfWidth);
 
     if(FieldBits::NoField != (HighlightOuterFieldMask & whichField))
         _sfHighlightOuter.syncWith(pOther->_sfHighlightOuter);

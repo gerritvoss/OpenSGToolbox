@@ -34,4 +34,13 @@ UI Etched Border.
 		defaultValue="true"
 	>
 	</Field>
+	<Field
+		name="Width"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1"
+	>
+	</Field>
 </FieldContainer>

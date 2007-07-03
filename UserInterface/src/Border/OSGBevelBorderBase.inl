@@ -103,6 +103,13 @@ SFColor4f *BevelBorderBase::getSFHighlightInner(void)
     return &_sfHighlightInner;
 }
 
+//! Get the BevelBorder::_sfWidth field.
+inline
+SFUInt32 *BevelBorderBase::getSFWidth(void)
+{
+    return &_sfWidth;
+}
+
 //! Get the BevelBorder::_sfHighlightOuter field.
 inline
 SFColor4f *BevelBorderBase::getSFHighlightOuter(void)
@@ -151,6 +158,27 @@ inline
 void BevelBorderBase::setHighlightInner(const Color4f &value)
 {
     _sfHighlightInner.setValue(value);
+}
+
+//! Get the value of the BevelBorder::_sfWidth field.
+inline
+UInt32 &BevelBorderBase::getWidth(void)
+{
+    return _sfWidth.getValue();
+}
+
+//! Get the value of the BevelBorder::_sfWidth field.
+inline
+const UInt32 &BevelBorderBase::getWidth(void) const
+{
+    return _sfWidth.getValue();
+}
+
+//! Set the value of the BevelBorder::_sfWidth field.
+inline
+void BevelBorderBase::setWidth(const UInt32 &value)
+{
+    _sfWidth.setValue(value);
 }
 
 //! Get the value of the BevelBorder::_sfHighlightOuter field.
