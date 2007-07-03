@@ -42,7 +42,7 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGInputConfig.h"
 
 #include <set>
 #include <vector>
@@ -56,9 +56,11 @@
 #include "Event/OSGMouseWheelListener.h"
 #include "Event/OSGKeyListener.h"
 
+#include "OSGEventDispatchThread.h"
+
 OSG_BEGIN_NAMESPACE
 
-class WindowEventProducer : public WindowEventProducerBase
+class OSG_INPUT_CLASS_API WindowEventProducer : public WindowEventProducerBase
 {
   private:
 
@@ -97,6 +99,8 @@ class WindowEventProducer : public WindowEventProducerBase
 
     ButtonClickMap _ButtonClickMap;
 
+    EventDispatchThread* _EventDispatchThread;
+
     /*==========================  PUBLIC  =================================*/
   public:
 
@@ -127,6 +131,47 @@ class WindowEventProducer : public WindowEventProducerBase
     void removeMouseWheelListener(MouseWheelListenerPtr Listener);
     void removeKeyListener(KeyListenerPtr Listener);
 
+    //Set the Window Position
+    virtual void setPosition(Pnt2s Pos) = 0;
+    //Set the Window Position
+    virtual Pnt2s getPosition(void) const = 0;
+
+    //Set the Window size
+    virtual void setSize(Vec2us Size) = 0;
+
+    //Get the Window size
+    virtual Vec2s getSize(void) const = 0;
+
+    //Focused
+    //Set the Window Focus
+    virtual void setFocused(bool Focused) = 0;
+
+    //Get the Window Focus
+    virtual bool getFocused(void) const = 0;
+
+    //Visible / Iconify / Normal
+    //Set the Window Visible
+    virtual void setVisible(bool Visible) = 0;
+
+    //Get the Window Visible
+    virtual bool getVisible(void) const = 0;
+
+    //Set the Window Iconify
+    virtual void setIconify(bool Iconify) = 0;
+
+    //Get the Window Iconify
+    virtual bool getIconify(void) const = 0;
+
+    //Fullscreen
+    virtual void setFullscreen(bool Fullscreen) = 0;
+
+    //Get the Window Fullscreen
+    virtual bool getFullscreen(void) const = 0;
+
+    
+    void initEventDispatchThread(void);
+    
+    void exitEventDispatchThread(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

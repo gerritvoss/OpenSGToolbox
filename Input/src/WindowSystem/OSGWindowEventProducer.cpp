@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGTime.h>
 #include <OpenSG/OSGBaseFunctions.h>
+//#include <OpenSG/OSGThreadManager.h>
 
 #include "OSGWindowEventProducer.h"
 
@@ -83,7 +84,7 @@ void WindowEventProducer::initMethod (void)
 /*----------------------- constructors & destructors ----------------------*/
 
 WindowEventProducer::WindowEventProducer(void) :
-    Inherited()
+    Inherited(), _EventDispatchThread(NULL)
 {
    _ButtonClickMap[MouseEvent::BUTTON1] = ClickVector();
    _ButtonClickMap[MouseEvent::BUTTON2] = ClickVector();
@@ -98,12 +99,27 @@ WindowEventProducer::WindowEventProducer(void) :
 }
 
 WindowEventProducer::WindowEventProducer(const WindowEventProducer &source) :
-    Inherited(source)
+    Inherited(source), _EventDispatchThread(source._EventDispatchThread)
 {
+   _ButtonClickMap[MouseEvent::BUTTON1] = ClickVector();
+   _ButtonClickMap[MouseEvent::BUTTON2] = ClickVector();
+   _ButtonClickMap[MouseEvent::BUTTON3] = ClickVector();
+   _ButtonClickMap[MouseEvent::BUTTON4] = ClickVector();
+   _ButtonClickMap[MouseEvent::BUTTON5] = ClickVector();
+   _ButtonClickMap[MouseEvent::BUTTON6] = ClickVector();
+   _ButtonClickMap[MouseEvent::BUTTON7] = ClickVector();
+   _ButtonClickMap[MouseEvent::BUTTON8] = ClickVector();
+   _ButtonClickMap[MouseEvent::BUTTON9] = ClickVector();
+   _ButtonClickMap[MouseEvent::BUTTON10] = ClickVector();
 }
 
 WindowEventProducer::~WindowEventProducer(void)
 {
+   if(_EventDispatchThread != NULL)
+   {
+      _EventDispatchThread->setEventDispatchThreadFinish();
+      Thread::join(_EventDispatchThread);
+   }
 }
 
 /*----------------------------- class specific ----------------------------*/
@@ -111,12 +127,51 @@ WindowEventProducer::~WindowEventProducer(void)
 void WindowEventProducer::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & WindowFieldMask)
+    {
+       initEventDispatchThread();
+    }
 }
 
 void WindowEventProducer::dump(      UInt32    , 
                          const BitVector ) const
 {
     SLOG << "Dump WindowEventProducer NI" << std::endl;
+}
+
+void WindowEventProducer::initEventDispatchThread(void)
+{
+   //If my EventDispatchThread has not been created yet
+   if(_EventDispatchThread == NULL)
+   {
+      //Create the thread
+      _EventDispatchThread = dynamic_cast<EventDispatchThread *>(ThreadManager::the()->getThread("WindowEventProducer", "OSGEventDispatchThread"));
+   }
+   else
+   {
+      _EventDispatchThread->setEventDispatchThreadFinish();
+      Thread::join(_EventDispatchThread);
+   }
+   
+   if(getWindow() == NullFC)
+   {
+      _EventDispatchThread = NULL;
+      return;
+   }
+
+   //Start the EventDispatchThread
+   //Run it on with the MainAspect id
+   _EventDispatchThread->run(0);
+}
+
+void WindowEventProducer::exitEventDispatchThread(void)
+{
+   if(_EventDispatchThread != NULL)
+   {
+      _EventDispatchThread->setEventDispatchThreadFinish();
+      Thread::join(_EventDispatchThread);
+   }
 }
 
 void WindowEventProducer::produceMouseClicked(const MouseEvent::MouseButton& Button, const Pnt2s& Location)

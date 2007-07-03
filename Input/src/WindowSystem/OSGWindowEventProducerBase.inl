@@ -77,6 +77,13 @@ SFWindowPtr *WindowEventProducerBase::getSFWindow(void)
     return &_sfWindow;
 }
 
+//! Get the WindowEventProducer::_sfEnabled field.
+inline
+SFBool *WindowEventProducerBase::getSFEnabled(void)
+{
+    return &_sfEnabled;
+}
+
 
 //! Get the value of the WindowEventProducer::_sfWindow field.
 inline
@@ -97,6 +104,27 @@ inline
 void WindowEventProducerBase::setWindow(const WindowPtr &value)
 {
     _sfWindow.setValue(value);
+}
+
+//! Get the value of the WindowEventProducer::_sfEnabled field.
+inline
+bool &WindowEventProducerBase::getEnabled(void)
+{
+    return _sfEnabled.getValue();
+}
+
+//! Get the value of the WindowEventProducer::_sfEnabled field.
+inline
+const bool &WindowEventProducerBase::getEnabled(void) const
+{
+    return _sfEnabled.getValue();
+}
+
+//! Set the value of the WindowEventProducer::_sfEnabled field.
+inline
+void WindowEventProducerBase::setEnabled(const bool &value)
+{
+    _sfEnabled.setValue(value);
 }
 
 

@@ -8,13 +8,22 @@
 	systemcomponent="false"
 	parentsystemcomponent="true"
 >
-WindowEventProducer is the base class for all Window specific Event producers
+WindowEventProducer is the base class for all Window specific Event producers.
+It also contains code for Window Manipulation: Position, size, iconify, enable, visible, fullscreen, etc.
 	<Field
 		name="Window"
 		type="WindowPtr"
 		cardinality="single"
 		visibility="external"
-		access="protected"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Enabled"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
 	>
 	</Field>
 </FieldContainer>

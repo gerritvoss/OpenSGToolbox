@@ -73,6 +73,45 @@ class GLUTWindowEventProducer : public GLUTWindowEventProducerBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    
+    //Set the Window Position
+    virtual void setPosition(Pnt2s Pos);
+
+    //Set the Window Position
+    virtual Pnt2s getPosition(void) const;
+
+    //Set the Window size
+    virtual void setSize(Vec2us Size);
+
+    //Get the Window size
+    virtual Vec2s getSize(void) const;
+
+    //Focused
+    //Set the Window Focus
+    virtual void setFocused(bool Focused);
+
+    //Get the Window Focus
+    virtual bool getFocused(void) const;
+
+    //Visible / Iconify / Normal
+    //Set the Window Visible
+    virtual void setVisible(bool Visible);
+
+    //Get the Window Visible
+    virtual bool getVisible(void) const;
+
+    //Set the Window Iconify
+    virtual void setIconify(bool Iconify);
+
+    //Get the Window Iconify
+    virtual bool getIconify(void) const;
+
+    //Fullscreen
+    virtual void setFullscreen(bool Fullscreen);
+
+    //Get the Window Fullscreen
+    virtual bool getFullscreen(void) const;
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 

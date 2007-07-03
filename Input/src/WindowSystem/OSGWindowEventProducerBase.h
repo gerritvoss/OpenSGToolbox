@@ -58,7 +58,7 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGInputConfig.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -67,6 +67,7 @@
 #include <OpenSG/OSGFieldContainer.h> // Parent
 
 #include <OpenSG/OSGWindowFields.h> // Window type
+#include <OpenSG/OSGBoolFields.h> // Enabled type
 
 #include "OSGWindowEventProducerFields.h"
 
@@ -77,7 +78,7 @@ class BinaryDataHandler;
 
 //! \brief WindowEventProducer Base Class.
 
-class WindowEventProducerBase : public FieldContainer
+class OSG_INPUT_CLASS_API WindowEventProducerBase : public FieldContainer
 {
   private:
 
@@ -90,11 +91,13 @@ class WindowEventProducerBase : public FieldContainer
 
     enum
     {
-        WindowFieldId = Inherited::NextFieldId,
-        NextFieldId   = WindowFieldId + 1
+        WindowFieldId  = Inherited::NextFieldId,
+        EnabledFieldId = WindowFieldId  + 1,
+        NextFieldId    = EnabledFieldId + 1
     };
 
     static const OSG::BitVector WindowFieldMask;
+    static const OSG::BitVector EnabledFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -115,6 +118,27 @@ class WindowEventProducerBase : public FieldContainer
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFWindowPtr         *getSFWindow         (void);
+           SFBool              *getSFEnabled        (void);
+
+           WindowPtr           &getWindow         (void);
+     const WindowPtr           &getWindow         (void) const;
+           bool                &getEnabled        (void);
+     const bool                &getEnabled        (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setWindow         ( const WindowPtr &value );
+     void setEnabled        ( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -142,6 +166,7 @@ class WindowEventProducerBase : public FieldContainer
     /*! \{                                                                 */
 
     SFWindowPtr         _sfWindow;
+    SFBool              _sfEnabled;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -157,23 +182,6 @@ class WindowEventProducerBase : public FieldContainer
     /*! \{                                                                 */
 
     virtual ~WindowEventProducerBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFWindowPtr         *getSFWindow         (void);
-
-           WindowPtr           &getWindow         (void);
-     const WindowPtr           &getWindow         (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setWindow         (const WindowPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

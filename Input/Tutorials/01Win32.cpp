@@ -49,6 +49,7 @@ using namespace osg;
 HWND           hwnd;
 
 WIN32WindowPtr win;
+//WIN32WindowPtr win;
 
 DrawAction     *ract;
 NodePtr            root;
@@ -206,7 +207,6 @@ LRESULT CALLBACK WndProc(HWND hwnd2, UINT uMsg,
             pfd.iLayerType = PFD_MAIN_PLANE;
             pfd.cDepthBits = 16;            
 
-            win->setHwnd ( hwnd2 );
 
 
             // init the OSG window  
@@ -215,7 +215,11 @@ LRESULT CALLBACK WndProc(HWND hwnd2, UINT uMsg,
             iPixelFormat = ChoosePixelFormat(hDC, &pfd);
             SetPixelFormat(hDC, iPixelFormat, &pfd);    
             
-//            win->setHDC ( hDC );
+            beginEditCP(win);
+               win->setHwnd ( hwnd2 );
+               //win->setHdc ( hDC ); // This is done in the init() function of WindowWIN32
+               //win->setHglrc (  ); // This is done in the init() function of WindowWIN32
+            endEditCP(win);
             
             win->init();
             win->deactivate();
@@ -378,11 +382,15 @@ int main (int argc, char **argv)
 
     // Viewport
     ViewportPtr vp = Viewport::create();
-    vp->setCamera( cam );
-    vp->setBackground( bkgnd );
-    vp->setRoot( root );
-    vp->setSize( 0,0, 1,1 );                
-    win->addPort( vp );
+    beginEditCP(vp);
+      vp->setCamera( cam );
+      vp->setBackground( bkgnd );
+      vp->setRoot( root );
+      vp->setSize( 0,0, 1,1 );
+    endEditCP(vp);
+    beginEditCP(win);
+      win->addPort( vp );
+    endEditCP(win);
 
 
     // main loop 

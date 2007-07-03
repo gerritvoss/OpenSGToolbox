@@ -78,6 +78,74 @@ void Win32WindowEventProducer::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+//Set the Window Position
+void Win32WindowEventProducer::setPosition(Pnt2s Pos)
+{
+}
+
+//Set the Window Position
+Pnt2s Win32WindowEventProducer::getPosition(void) const
+{
+   return Pnt2s();
+}
+
+//Set the Window size
+void Win32WindowEventProducer::setSize(Vec2us Size)
+{
+}
+
+//Get the Window size
+Vec2s Win32WindowEventProducer::getSize(void) const
+{
+   return Vec2s();
+}
+
+//Focused
+//Set the Window Focus
+void Win32WindowEventProducer::setFocused(bool Focused)
+{
+}
+
+//Get the Window Focus
+bool Win32WindowEventProducer::getFocused(void) const
+{
+   return false;
+}
+
+//Visible / Iconify / Normal
+//Set the Window Visible
+void Win32WindowEventProducer::setVisible(bool Visible)
+{
+}
+
+//Get the Window Visible
+bool Win32WindowEventProducer::getVisible(void) const
+{
+   return false;
+}
+
+//Set the Window Iconify
+void Win32WindowEventProducer::setIconify(bool Iconify)
+{
+}
+
+//Get the Window Iconify
+bool Win32WindowEventProducer::getIconify(void) const
+{
+   return false;
+}
+
+//Fullscreen
+void Win32WindowEventProducer::setFullscreen(bool Fullscreen)
+{
+}
+
+//Get the Window Fullscreen
+bool Win32WindowEventProducer::getFullscreen(void) const
+{
+   return false;
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

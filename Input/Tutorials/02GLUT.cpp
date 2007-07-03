@@ -30,6 +30,9 @@
 // the general scene file loading handler
 #include <OpenSG/OSGSceneFileHandler.h>
 
+//Input
+#include <OpenSG/Input/OSGWindowEventProducerFactory.h>
+
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
 // with OSG::, but that would be a bit tedious for this example
@@ -37,6 +40,8 @@ OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
+
+WindowEventProducerPtr TheWindowEventProducer;
 
 // forward declaration so we can have the interesting stuff upfront
 int setupGLUT( int *argc, char *argv[] );
@@ -82,9 +87,11 @@ int main(int argc, char **argv)
     // show the whole scene
     mgr->showAll();
 
+    //Setup the WindowEventProducer
+    TheWindowEventProducer = WindowEventProducerFactory::the()->createWindowEventProducer(gwin);
+
     // GLUT main loop
     glutMainLoop();
-
     return 0;
 }
 
@@ -135,8 +142,19 @@ void keyboard(unsigned char k, int x, int y)
     {
         case 27:        
         {
+            TheWindowEventProducer->exitEventDispatchThread();
             OSG::osgExit();
             exit(0);
+        }
+        break;
+        case 'f':        
+        {
+           TheWindowEventProducer->setFullscreen(true);
+        }
+        break;
+        case 'g':        
+        {
+           TheWindowEventProducer->setFullscreen(false);
         }
         break;
     }

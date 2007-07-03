@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  WindowEventProducerBase::WindowFieldMask = 
     (TypeTraits<BitVector>::One << WindowEventProducerBase::WindowFieldId);
 
+const OSG::BitVector  WindowEventProducerBase::EnabledFieldMask = 
+    (TypeTraits<BitVector>::One << WindowEventProducerBase::EnabledFieldId);
+
 const OSG::BitVector WindowEventProducerBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +78,9 @@ const OSG::BitVector WindowEventProducerBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var WindowPtr       WindowEventProducerBase::_sfWindow
+    
+*/
+/*! \var bool            WindowEventProducerBase::_sfEnabled
     
 */
 
@@ -86,7 +92,12 @@ FieldDescription *WindowEventProducerBase::_desc[] =
                      "Window", 
                      WindowFieldId, WindowFieldMask,
                      false,
-                     (FieldAccessMethod) &WindowEventProducerBase::getSFWindow)
+                     (FieldAccessMethod) &WindowEventProducerBase::getSFWindow),
+    new FieldDescription(SFBool::getClassType(), 
+                     "Enabled", 
+                     EnabledFieldId, EnabledFieldMask,
+                     false,
+                     (FieldAccessMethod) &WindowEventProducerBase::getSFEnabled)
 };
 
 
@@ -154,6 +165,7 @@ void WindowEventProducerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 WindowEventProducerBase::WindowEventProducerBase(void) :
     _sfWindow                 (), 
+    _sfEnabled                (), 
     Inherited() 
 {
 }
@@ -164,6 +176,7 @@ WindowEventProducerBase::WindowEventProducerBase(void) :
 
 WindowEventProducerBase::WindowEventProducerBase(const WindowEventProducerBase &source) :
     _sfWindow                 (source._sfWindow                 ), 
+    _sfEnabled                (source._sfEnabled                ), 
     Inherited                 (source)
 {
 }
@@ -185,6 +198,11 @@ UInt32 WindowEventProducerBase::getBinSize(const BitVector &whichField)
         returnValue += _sfWindow.getBinSize();
     }
 
+    if(FieldBits::NoField != (EnabledFieldMask & whichField))
+    {
+        returnValue += _sfEnabled.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -197,6 +215,11 @@ void WindowEventProducerBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (WindowFieldMask & whichField))
     {
         _sfWindow.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EnabledFieldMask & whichField))
+    {
+        _sfEnabled.copyToBin(pMem);
     }
 
 
@@ -212,6 +235,11 @@ void WindowEventProducerBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfWindow.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (EnabledFieldMask & whichField))
+    {
+        _sfEnabled.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -225,6 +253,9 @@ void WindowEventProducerBase::executeSyncImpl(      WindowEventProducerBase *pOt
     if(FieldBits::NoField != (WindowFieldMask & whichField))
         _sfWindow.syncWith(pOther->_sfWindow);
 
+    if(FieldBits::NoField != (EnabledFieldMask & whichField))
+        _sfEnabled.syncWith(pOther->_sfEnabled);
+
 
 }
 #else
@@ -237,6 +268,9 @@ void WindowEventProducerBase::executeSyncImpl(      WindowEventProducerBase *pOt
 
     if(FieldBits::NoField != (WindowFieldMask & whichField))
         _sfWindow.syncWith(pOther->_sfWindow);
+
+    if(FieldBits::NoField != (EnabledFieldMask & whichField))
+        _sfEnabled.syncWith(pOther->_sfEnabled);
 
 
 
