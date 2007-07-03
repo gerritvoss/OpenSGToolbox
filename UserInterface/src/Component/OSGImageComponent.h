@@ -36,29 +36,92 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_DEFINES_H_
-#define _OSG_UI_DEFINES_H_
-
+#ifndef _OSGIMAGECOMPONENT_H_
+#define _OSGIMAGECOMPONENT_H_
 #ifdef __sgi
 #pragma once
 #endif
- 
+
 #include "OSGUserInterfaceConfig.h"
 
-#define OSG_UI_BEGIN_NAMESPACE namespace OSG { namespace ui
-#define OSG_UI_END_NAMESPACE } }
-
-#define OSG_UI_USING_NAMESPACE namespace OSG {} namespace ui using namespace OSG::ui;
-
+#include "OSGImageComponentBase.h"
+#include <OpenSG/OSGImage.h>
+#include <OpenSG/OSGTextureChunk.h>
 
 OSG_BEGIN_NAMESPACE
 
-enum HorizontalAlignment {HORIZONTAL_CENTER=0, HORIZONTAL_LEFT, HORIZONTAL_RIGHT};
-enum VerticalAlignment {VERTICAL_CENTER=0, VERTICAL_TOP, VERTICAL_BOTTOM};
+class OSG_USER_INTERFACE_CLASS_API ImageComponent : public ImageComponentBase
+{
+  private:
 
-enum Alignment {HORIZONTAL_ALIGNMENT=0, VERTICAL_ALIGNMENT=1};
-enum Scale {SCALE_NONE=0, SCALE_STRETCH, SCALE_MIN_AXIS, SCALE_MAX_AXIS, SCALE_ABSOLUTE};
-	 
+    typedef ImageComponentBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+	virtual void draw(const GraphicsPtr Graphics) const;
+
+	void setImage(ImagePtr Image);
+
+	void setImage(const char *fileName, const char *mimeType = 0);
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+    TextureChunkPtr createTexture(void);
+
+    // Variables should all be in ImageComponentBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    ImageComponent(void);
+    ImageComponent(const ImageComponent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~ImageComponent(void); 
+
+    /*! \}                                                                 */
+    
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class ImageComponentBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const ImageComponent &source);
+};
+
+typedef ImageComponent *ImageComponentP;
+
 OSG_END_NAMESPACE
 
-#endif /* _OSG_UI_DEFINES_H_ */
+#include "OSGImageComponentBase.inl"
+#include "OSGImageComponent.inl"
+
+#define OSGIMAGECOMPONENT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+
+#endif /* _OSGIMAGECOMPONENT_H_ */

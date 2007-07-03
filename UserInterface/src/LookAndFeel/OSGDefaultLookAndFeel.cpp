@@ -55,6 +55,7 @@
 #include "Component/OSGLabel.h"
 #include "Component/OSGFrame.h"
 #include "Component/OSGPanel.h"
+#include "Component/OSGImageComponent.h"
 #include "Util/OSGUIDefines.h"
 
 OSG_BEGIN_NAMESPACE
@@ -272,12 +273,53 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(DefaultPanel);
 	
 	Panel::getClassType().setPrototype(DefaultPanel);
+	
+	//************************** ImageComponent *****************************
+	//Default ImageComponentBorder
+	EmptyBorderPtr DefaultImageComponentBorder = EmptyBorder::create();
+
+	//Default ImageComponentBackground
+	EmptyUIBackgroundPtr DefaultImageComponentBackground = EmptyUIBackground::create();
+
+	//Default ImageComponent
+	ImageComponentPtr DefaultImageComponent = ImageComponent::create();
+	beginEditCP(DefaultImageComponent);
+		DefaultImageComponent->setEnabled(true);
+		DefaultImageComponent->setVisible(true);
+		
+		DefaultImageComponent->setConstraints(NullFC);
+		//Sizes
+		DefaultImageComponent->setMinSize(Vec2s(0,0));
+		DefaultImageComponent->setMaxSize(Vec2s(32767,32767)); //2^15
+		DefaultImageComponent->setPreferredSize(Vec2s(100,100));
+		DefaultImageComponent->setSize(Vec2s(0,0));
+
+		//Border
+		DefaultImageComponent->setBorder(DefaultImageComponentBorder);
+		
+		//Background
+		DefaultImageComponent->setBackground(DefaultImageComponentBackground);
+
+		//Foreground
+		DefaultImageComponent->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
+		
+		//Opacity
+		DefaultImageComponent->setOpacity(1.0);
+
+		//Image Alignment
+		DefaultImageComponent->setScale(SCALE_NONE);
+		DefaultImageComponent->setVerticalAlignment(VERTICAL_CENTER);
+		DefaultImageComponent->setHorizontalAlignment(HORIZONTAL_CENTER);
+	endEditCP(DefaultImageComponent);
+	
+	ImageComponent::getClassType().setPrototype(DefaultImageComponent);
 
 	beginEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);
 		getPrototypes().addValue(DefaultButton);
 		getPrototypes().addValue(DefaultLabel);
 		getPrototypes().addValue(DefaultFrame);
 		getPrototypes().addValue(DefaultPanel);
+		getPrototypes().addValue(DefaultImageComponent);
 	endEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);
 }
 /*-------------------------------------------------------------------------*\

@@ -1,4 +1,5 @@
 #include "OSGUIDrawUtils.h"
+#include "OSGUIDefines.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -20,6 +21,48 @@ void convertTopRightToCenteredLine(const Pnt2s& Point1, const Pnt2s& Point2, con
 
    ResultPoint1 = Point1 + Vec2s(DirOffset.x(),DirOffset.y());
    ResultPoint2 = Point2 + Vec2s(DirOffset.x(),DirOffset.y());
+}
+
+Pnt2s OSG_USER_INTERFACE_FUNC_API calculateAlignment(const Pnt2s& Position1, const Vec2s& Size1, const Vec2s& Size2, const UInt32& VAlign, const UInt32& HAlign)
+{
+	Pnt2s AlignedPosition;
+	switch(VAlign)
+	{
+	case VERTICAL_TOP:
+	 //VerticalTop
+	 AlignedPosition[1] = Position1[1];
+	  break;
+	case VERTICAL_BOTTOM:
+	 //VerticalBottom
+	 AlignedPosition[1] = Position1[1]+Size1[1]-Size2[1];
+	  break;
+	case VERTICAL_CENTER:
+	 //VerticalCenter
+	 AlignedPosition[1] = Position1[1]+0.5*(Size1[1]-Size2[1]);
+	  break;
+	default:
+	  break;
+	}
+
+	switch(HAlign)
+	{
+	case HORIZONTAL_LEFT:
+	 //HorizontalLeft
+	 AlignedPosition[0] = Position1[0];
+	  break;
+	case HORIZONTAL_RIGHT:
+	 //HorizontalRight
+	 AlignedPosition[0] = Position1[0]+Size1[0]-Size2[0];
+	  break;
+	case HORIZONTAL_CENTER:
+	 //HorizontalCenter
+	 AlignedPosition[0] = Position1[0]+0.5*(Size1[0]-Size2[0]);
+	  break;
+	default:
+	  break;
+	}
+
+	return AlignedPosition;
 }
 
 OSG_END_NAMESPACE

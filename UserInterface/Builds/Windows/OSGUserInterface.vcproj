@@ -359,6 +359,34 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Component\OSGImageComponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGImageComponent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGImageComponent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGImageComponentBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGImageComponentBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGImageComponentBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGImageComponentFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Component\OSGLabel.cpp"
 					>
 				</File>

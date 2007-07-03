@@ -42,6 +42,9 @@
 #include <OpenSG/UserInterface/OSGGradientUIBackground.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 
+#include <OpenSG/UserInterface/OSGImageComponent.h>
+#include <OpenSG/UserInterface/OSGUIDefines.h>
+
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
 // with OSG::, but that would be a bit tedious for this example
@@ -119,17 +122,27 @@ int main(int argc, char **argv)
 		labelLayoutConstraints->setPosition( Pnt2s(0,100) );
     endEditCP  (labelLayoutConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
 
-    beginEditCP(label, Label::TextFieldMask);
+	beginEditCP(label, Label::TextFieldMask | Label::ConstraintsFieldMask);
 		label->setText("Label 1");
 		label->setConstraints(labelLayoutConstraints);
-    endEditCP  (label, Label::TextFieldMask);
+    endEditCP  (label, Label::TextFieldMask | Label::ConstraintsFieldMask);
+
+	
+	//Create Image Component
+	ImageComponentPtr imageComponent = osg::ImageComponent::create();
+	imageComponent->setImage("Data/Checker.jpg");
+	beginEditCP(imageComponent, ImageComponent::ScaleFieldMask | ImageComponent::PreferredSizeFieldMask);
+		imageComponent->setPreferredSize(Vec2s(10,10));
+		imageComponent->setScale(SCALE_NONE);
+    endEditCP  (imageComponent, ImageComponent::ScaleFieldMask | ImageComponent::PreferredSizeFieldMask);
 
 	//Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
 	LayoutPtr MainFrameLayout = osg::AbsoluteLayout::create();
    beginEditCP(MainFrame, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
-      MainFrame->getChildren().addValue(button);
-      MainFrame->getChildren().addValue(label);
+      MainFrame->getChildren().addValue(imageComponent);
+      //MainFrame->getChildren().addValue(button);
+      //MainFrame->getChildren().addValue(label);
       MainFrame->setLayout(MainFrameLayout);
    endEditCP  (MainFrame, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
 
