@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="Container"
+	parent="Component"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+A UI Container.
+<Field
+		name="Children"
+		type="ComponentPtr"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+      header="Component/OSGComponent.h"
+	>
+	</Field>
+   <Field
+		name="Layout"
+		type="LayoutPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+      header="Layout/OSGLayout.h"
+	>
+	</Field>
+</FieldContainer>
+

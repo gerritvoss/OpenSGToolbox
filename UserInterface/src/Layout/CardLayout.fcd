@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="CardLayout"
+	parent="Layout"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+A UI CardLayout.
+	<Field
+		name="Card"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>
+	</Field>
+</FieldContainer>

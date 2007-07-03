@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="FlowLayout"
+	parent="Layout"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+A UI FlowLayout.
+	<Field
+		name="Alignment"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>
+	</Field>
+	<Field
+		name="HorizontalGap"
+		type="Int32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="10"
+	>
+	</Field>
+	<Field
+		name="VerticalGap"
+		type="Int32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="10"
+	>
+	</Field>
+</FieldContainer>

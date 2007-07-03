@@ -96,63 +96,7 @@ FramePtr FrameBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Frame::_mfChildren field.
-inline
-MFComponentPtr *FrameBase::getMFChildren(void)
-{
-    return &_mfChildren;
-}
 
-//! Get the Frame::_sfLayout field.
-inline
-SFLayoutPtr *FrameBase::getSFLayout(void)
-{
-    return &_sfLayout;
-}
-
-
-//! Get the value of the Frame::_sfLayout field.
-inline
-LayoutPtr &FrameBase::getLayout(void)
-{
-    return _sfLayout.getValue();
-}
-
-//! Get the value of the Frame::_sfLayout field.
-inline
-const LayoutPtr &FrameBase::getLayout(void) const
-{
-    return _sfLayout.getValue();
-}
-
-//! Set the value of the Frame::_sfLayout field.
-inline
-void FrameBase::setLayout(const LayoutPtr &value)
-{
-    _sfLayout.setValue(value);
-}
-
-
-//! Get the value of the \a index element the Frame::_mfChildren field.
-inline
-ComponentPtr &FrameBase::getChildren(const UInt32 index)
-{
-    return _mfChildren[index];
-}
-
-//! Get the Frame::_mfChildren field.
-inline
-MFComponentPtr &FrameBase::getChildren(void)
-{
-    return _mfChildren;
-}
-
-//! Get the Frame::_mfChildren field.
-inline
-const MFComponentPtr &FrameBase::getChildren(void) const
-{
-    return _mfChildren;
-}
 
 OSG_END_NAMESPACE
 

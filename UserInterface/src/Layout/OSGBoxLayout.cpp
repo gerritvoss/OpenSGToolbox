@@ -93,7 +93,7 @@ void BoxLayout::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void BoxLayout::draw(const MFComponentPtr Components, const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
+void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
 {
 	/*!
       TotalComponentWidth will be the sum of the width of all of the

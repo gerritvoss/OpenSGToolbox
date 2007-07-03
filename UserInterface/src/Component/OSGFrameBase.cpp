@@ -64,51 +64,20 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  FrameBase::ChildrenFieldMask = 
-    (TypeTraits<BitVector>::One << FrameBase::ChildrenFieldId);
-
-const OSG::BitVector  FrameBase::LayoutFieldMask = 
-    (TypeTraits<BitVector>::One << FrameBase::LayoutFieldId);
-
 const OSG::BitVector FrameBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
-// Field descriptions
-
-/*! \var ComponentPtr    FrameBase::_mfChildren
-    
-*/
-/*! \var LayoutPtr       FrameBase::_sfLayout
-    
-*/
-
-//! Frame description
-
-FieldDescription *FrameBase::_desc[] = 
-{
-    new FieldDescription(MFComponentPtr::getClassType(), 
-                     "Children", 
-                     ChildrenFieldId, ChildrenFieldMask,
-                     false,
-                     (FieldAccessMethod) &FrameBase::getMFChildren),
-    new FieldDescription(SFLayoutPtr::getClassType(), 
-                     "Layout", 
-                     LayoutFieldId, LayoutFieldMask,
-                     false,
-                     (FieldAccessMethod) &FrameBase::getSFLayout)
-};
-
 
 FieldContainerType FrameBase::_type(
     "Frame",
-    "Component",
+    "Container",
     NULL,
     (PrototypeCreateF) &FrameBase::createEmpty,
     Frame::initMethod,
-    _desc,
-    sizeof(_desc));
+    NULL,
+    0);
 
 //OSG_FIELD_CONTAINER_DEF(FrameBase, FramePtr)
 
@@ -163,7 +132,6 @@ void FrameBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
-    _mfChildren.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -174,8 +142,6 @@ void FrameBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 FrameBase::FrameBase(void) :
-    _mfChildren               (), 
-    _sfLayout                 (), 
     Inherited() 
 {
 }
@@ -185,8 +151,6 @@ FrameBase::FrameBase(void) :
 #endif
 
 FrameBase::FrameBase(const FrameBase &source) :
-    _mfChildren               (source._mfChildren               ), 
-    _sfLayout                 (source._sfLayout                 ), 
     Inherited                 (source)
 {
 }
@@ -203,16 +167,6 @@ UInt32 FrameBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (ChildrenFieldMask & whichField))
-    {
-        returnValue += _mfChildren.getBinSize();
-    }
-
-    if(FieldBits::NoField != (LayoutFieldMask & whichField))
-    {
-        returnValue += _sfLayout.getBinSize();
-    }
-
 
     return returnValue;
 }
@@ -222,16 +176,6 @@ void FrameBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ChildrenFieldMask & whichField))
-    {
-        _mfChildren.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (LayoutFieldMask & whichField))
-    {
-        _sfLayout.copyToBin(pMem);
-    }
-
 
 }
 
@@ -239,16 +183,6 @@ void FrameBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
-
-    if(FieldBits::NoField != (ChildrenFieldMask & whichField))
-    {
-        _mfChildren.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (LayoutFieldMask & whichField))
-    {
-        _sfLayout.copyFromBin(pMem);
-    }
 
 
 }
@@ -260,12 +194,6 @@ void FrameBase::executeSyncImpl(      FrameBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (ChildrenFieldMask & whichField))
-        _mfChildren.syncWith(pOther->_mfChildren);
-
-    if(FieldBits::NoField != (LayoutFieldMask & whichField))
-        _sfLayout.syncWith(pOther->_sfLayout);
-
 
 }
 #else
@@ -276,12 +204,6 @@ void FrameBase::executeSyncImpl(      FrameBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (LayoutFieldMask & whichField))
-        _sfLayout.syncWith(pOther->_sfLayout);
-
-
-    if(FieldBits::NoField != (ChildrenFieldMask & whichField))
-        _mfChildren.syncWith(pOther->_mfChildren, sInfo);
 
 
 }
@@ -291,9 +213,6 @@ void FrameBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
-
-    if(FieldBits::NoField != (ChildrenFieldMask & whichField))
-        _mfChildren.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif
@@ -308,7 +227,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<FramePtr>::_type("FramePtr", "ComponentPtr");
+DataType FieldDataTraits<FramePtr>::_type("FramePtr", "ContainerPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(FramePtr, );

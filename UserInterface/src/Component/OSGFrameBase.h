@@ -64,10 +64,8 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGComponent.h" // Parent
+#include "OSGContainer.h" // Parent
 
-#include "Component/OSGComponent.h" // Children type
-#include "Layout/OSGLayout.h" // Layout type
 
 #include "OSGFrameFields.h"
 
@@ -78,26 +76,16 @@ class BinaryDataHandler;
 
 //! \brief Frame Base Class.
 
-class OSG_USER_INTERFACE_CLASS_API FrameBase : public Component
+class OSG_USER_INTERFACE_CLASS_API FrameBase : public Container
 {
   private:
 
-    typedef Component    Inherited;
+    typedef Container    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
     typedef FramePtr  Ptr;
-
-    enum
-    {
-        ChildrenFieldId = Inherited::NextFieldId,
-        LayoutFieldId   = ChildrenFieldId + 1,
-        NextFieldId     = LayoutFieldId   + 1
-    };
-
-    static const OSG::BitVector ChildrenFieldMask;
-    static const OSG::BitVector LayoutFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -118,27 +106,6 @@ class OSG_USER_INTERFACE_CLASS_API FrameBase : public Component
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           MFComponentPtr      *getMFChildren       (void);
-           SFLayoutPtr         *getSFLayout         (void);
-
-           LayoutPtr           &getLayout         (void);
-     const LayoutPtr           &getLayout         (void) const;
-           ComponentPtr        &getChildren       (const UInt32 index);
-           MFComponentPtr      &getChildren       (void);
-     const MFComponentPtr      &getChildren       (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setLayout         ( const LayoutPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -177,14 +144,6 @@ class OSG_USER_INTERFACE_CLASS_API FrameBase : public Component
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Fields                                  */
-    /*! \{                                                                 */
-
-    MFComponentPtr      _mfChildren;
-    SFLayoutPtr         _sfLayout;
-
-    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -236,7 +195,6 @@ class OSG_USER_INTERFACE_CLASS_API FrameBase : public Component
 
     friend class FieldContainer;
 
-    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

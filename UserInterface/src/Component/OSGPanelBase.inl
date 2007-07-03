@@ -96,63 +96,7 @@ PanelPtr PanelBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Panel::_mfChildren field.
-inline
-MFComponentPtr *PanelBase::getMFChildren(void)
-{
-    return &_mfChildren;
-}
 
-//! Get the Panel::_sfLayout field.
-inline
-SFLayoutPtr *PanelBase::getSFLayout(void)
-{
-    return &_sfLayout;
-}
-
-
-//! Get the value of the Panel::_sfLayout field.
-inline
-LayoutPtr &PanelBase::getLayout(void)
-{
-    return _sfLayout.getValue();
-}
-
-//! Get the value of the Panel::_sfLayout field.
-inline
-const LayoutPtr &PanelBase::getLayout(void) const
-{
-    return _sfLayout.getValue();
-}
-
-//! Set the value of the Panel::_sfLayout field.
-inline
-void PanelBase::setLayout(const LayoutPtr &value)
-{
-    _sfLayout.setValue(value);
-}
-
-
-//! Get the value of the \a index element the Panel::_mfChildren field.
-inline
-ComponentPtr &PanelBase::getChildren(const UInt32 index)
-{
-    return _mfChildren[index];
-}
-
-//! Get the Panel::_mfChildren field.
-inline
-MFComponentPtr &PanelBase::getChildren(void)
-{
-    return _mfChildren;
-}
-
-//! Get the Panel::_mfChildren field.
-inline
-const MFComponentPtr &PanelBase::getChildren(void) const
-{
-    return _mfChildren;
-}
 
 OSG_END_NAMESPACE
 

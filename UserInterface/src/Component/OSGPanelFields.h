@@ -59,7 +59,7 @@
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 
-#include "OSGComponentFields.h"
+#include "OSGContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -68,7 +68,7 @@ class Panel;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! PanelPtr
 
-typedef FCPtr<ComponentPtr, Panel> PanelPtr;
+typedef FCPtr<ContainerPtr, Panel> PanelPtr;
 
 #endif
 

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="OverlayLayoutConstraints"
+	parent="LayoutConstraints"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+A UI OverlayLayout.
+	<Field
+		name="Alignment"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0,0.0"
+	>
+	</Field>
+</FieldContainer>
