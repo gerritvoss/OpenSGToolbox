@@ -33,7 +33,8 @@ UI Gradient Background.
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="0"
+		defaultValue="VERTICAL_ALIGNMENT"
+		defaultHeader="Util/OSGUIDefines.h"
 	>
 	</Field>
 </FieldContainer>

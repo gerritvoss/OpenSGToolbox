@@ -414,6 +414,46 @@
 					RelativePath="..\..\src\Component\OSGPanelFields.h"
 					>
 				</File>
+				<Filter
+					Name="List"
+					>
+					<File
+						RelativePath="..\..\src\Component\List\OSGList.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGList.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGList.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListCellGenerator.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListModel.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Graphics"

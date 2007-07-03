@@ -15,7 +15,8 @@ A UI BorderLayoutConstraints.
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="0"
+		defaultValue="BorderLayoutConstraints::BORDER_CENTER"
+		defaultHeader="Layout/OSGBorderLayoutConstraints.h"
 	>
 	</Field>
 </FieldContainer>

@@ -1,22 +1,23 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="BoxLayout"
-	parent="Layout"
+	name="List"
+	parent="Component"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	useLocalIncludes="true"
 >
-A UI BoxLayout.
-<Field
-		name="Alignment"
+A UI List.
+	<Field
+		name="CellLayout"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
-		defaultValue="HORIZONTAL_ALIGNMENT"
+		defaultValue="VERTICAL_ALIGNMENT"
 		defaultHeader="Util/OSGUIDefines.h"
+		access="public"
 	>
 	</Field>
 </FieldContainer>

@@ -15,7 +15,8 @@ A UI FlowLayout.
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="0"
+		defaultValue="HORIZONTAL_ALIGNMENT"
+		defaultHeader="Util/OSGUIDefines.h"
 	>
 	</Field>
 	<Field

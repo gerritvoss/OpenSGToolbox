@@ -61,8 +61,9 @@ UI Font.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="0"
 		access="public"
+		defaultValue="TextFace::STYLE_PLAIN"
+		defaultHeader="OpenSG/OSGTextFace.h"
 	>
 	</Field>
 	<Field

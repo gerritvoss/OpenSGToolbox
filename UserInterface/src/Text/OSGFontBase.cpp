@@ -61,6 +61,7 @@
 #include "OSGFontBase.h"
 #include "OSGFont.h"
 
+#include <OpenSG/OSGTextFace.h>           // Style default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -233,7 +234,7 @@ FontBase::FontBase(void) :
     _sfSize                   (UInt32(12)), 
     _sfGap                    (UInt32(1)), 
     _sfTextureWidth           (UInt32(0)), 
-    _sfStyle                  (UInt32(0)), 
+    _sfStyle                  (UInt32(TextFace::STYLE_PLAIN)), 
     _sfTexture                (), 
     Inherited() 
 {

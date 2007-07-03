@@ -61,6 +61,7 @@
 #include "OSGGradientUIBackgroundBase.h"
 #include "OSGGradientUIBackground.h"
 
+#include <Util/OSGUIDefines.h>            // Alignment default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -186,7 +187,7 @@ void GradientUIBackgroundBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 GradientUIBackgroundBase::GradientUIBackgroundBase(void) :
     _sfColorStart             (Color4f(1.0,1.0,1.0,1.0)), 
     _sfColorEnd               (Color4f(0.0,0.0,0.0,1.0)), 
-    _sfAlignment              (UInt32(0)), 
+    _sfAlignment              (UInt32(VERTICAL_ALIGNMENT)), 
     Inherited() 
 {
 }

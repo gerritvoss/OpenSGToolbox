@@ -61,6 +61,8 @@
 #include "OSGButtonBase.h"
 #include "OSGButton.h"
 
+#include <Util/OSGUIDefines.h>            // VerticalAlignment default header
+#include <Util/OSGUIDefines.h>            // HorizontalAlignment default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -197,8 +199,8 @@ void ButtonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 ButtonBase::ButtonBase(void) :
     _sfFont                   (), 
     _sfText                   (), 
-    _sfVerticalAlignment      (UInt32(0)), 
-    _sfHorizontalAlignment    (UInt32(0)), 
+    _sfVerticalAlignment      (UInt32(VERTICAL_CENTER)), 
+    _sfHorizontalAlignment    (UInt32(HORIZONTAL_CENTER)), 
     Inherited() 
 {
 }

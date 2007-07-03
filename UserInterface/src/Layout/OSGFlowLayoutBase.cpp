@@ -61,6 +61,7 @@
 #include "OSGFlowLayoutBase.h"
 #include "OSGFlowLayout.h"
 
+#include <Util/OSGUIDefines.h>            // Alignment default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -184,7 +185,7 @@ void FlowLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 FlowLayoutBase::FlowLayoutBase(void) :
-    _sfAlignment              (UInt32(0)), 
+    _sfAlignment              (UInt32(HORIZONTAL_ALIGNMENT)), 
     _sfHorizontalGap          (Int32(10)), 
     _sfVerticalGap            (Int32(10)), 
     Inherited() 

@@ -50,7 +50,8 @@ A Foreground for rendering a UI on.
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="0"
+		defaultValue="VERTICAL_CENTER"
+		defaultHeader="Util/OSGUIDefines.h"
 	>
 	</Field>
 	<Field
@@ -59,7 +60,8 @@ A Foreground for rendering a UI on.
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="0"
+		defaultValue="HORIZONTAL_CENTER"
+		defaultHeader="Util/OSGUIDefines.h"
 	>
 	</Field>
 </FieldContainer>

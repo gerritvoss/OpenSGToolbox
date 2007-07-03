@@ -210,7 +210,7 @@ BevelBorderBase::BevelBorderBase(void) :
     _sfHighlightOuter         (), 
     _sfShadowInner            (), 
     _sfShadowOuter            (), 
-    _sfRaised                 (), 
+    _sfRaised                 (bool(true)), 
     Inherited() 
 {
 }

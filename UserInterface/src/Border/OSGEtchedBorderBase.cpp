@@ -186,7 +186,7 @@ void EtchedBorderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 EtchedBorderBase::EtchedBorderBase(void) :
     _sfHighlight              (), 
     _sfShadow                 (), 
-    _sfRaised                 (), 
+    _sfRaised                 (bool(true)), 
     Inherited() 
 {
 }

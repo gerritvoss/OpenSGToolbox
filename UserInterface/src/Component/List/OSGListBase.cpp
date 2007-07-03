@@ -45,111 +45,111 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class BorderLayoutConstraints!
+ **     class List!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEBORDERLAYOUTCONSTRAINTSINST
+#define OSG_COMPILELISTINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGBorderLayoutConstraintsBase.h"
-#include "OSGBorderLayoutConstraints.h"
+#include "OSGListBase.h"
+#include "OSGList.h"
 
-#include <Layout/OSGBorderLayoutConstraints.h>   // Region default header
+#include <Util/OSGUIDefines.h>              // CellLayout default header
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  BorderLayoutConstraintsBase::RegionFieldMask = 
-    (TypeTraits<BitVector>::One << BorderLayoutConstraintsBase::RegionFieldId);
+const OSG::BitVector  ListBase::CellLayoutFieldMask = 
+    (TypeTraits<BitVector>::One << ListBase::CellLayoutFieldId);
 
-const OSG::BitVector BorderLayoutConstraintsBase::MTInfluenceMask = 
+const OSG::BitVector ListBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+    (static_cast<BitVector>(0x0) << Inherited::NextFieldId);
 
 
 // Field descriptions
 
-/*! \var UInt32          BorderLayoutConstraintsBase::_sfRegion
+/*! \var UInt32          ListBase::_sfCellLayout
     
 */
 
-//! BorderLayoutConstraints description
+//! List description
 
-FieldDescription *BorderLayoutConstraintsBase::_desc[] = 
+FieldDescription *ListBase::_desc[] = 
 {
     new FieldDescription(SFUInt32::getClassType(), 
-                     "Region", 
-                     RegionFieldId, RegionFieldMask,
+                     "CellLayout", 
+                     CellLayoutFieldId, CellLayoutFieldMask,
                      false,
-                     (FieldAccessMethod) &BorderLayoutConstraintsBase::getSFRegion)
+                     (FieldAccessMethod) &ListBase::getSFCellLayout)
 };
 
 
-FieldContainerType BorderLayoutConstraintsBase::_type(
-    "BorderLayoutConstraints",
-    "LayoutConstraints",
+FieldContainerType ListBase::_type(
+    "List",
+    "Component",
     NULL,
-    (PrototypeCreateF) &BorderLayoutConstraintsBase::createEmpty,
-    BorderLayoutConstraints::initMethod,
+    (PrototypeCreateF) &ListBase::createEmpty,
+    List::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(BorderLayoutConstraintsBase, BorderLayoutConstraintsPtr)
+//OSG_FIELD_CONTAINER_DEF(ListBase, ListPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &BorderLayoutConstraintsBase::getType(void) 
+FieldContainerType &ListBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &BorderLayoutConstraintsBase::getType(void) const 
+const FieldContainerType &ListBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr BorderLayoutConstraintsBase::shallowCopy(void) const 
+FieldContainerPtr ListBase::shallowCopy(void) const 
 { 
-    BorderLayoutConstraintsPtr returnValue; 
+    ListPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const BorderLayoutConstraints *>(this)); 
+    newPtr(returnValue, dynamic_cast<const List *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 BorderLayoutConstraintsBase::getContainerSize(void) const 
+UInt32 ListBase::getContainerSize(void) const 
 { 
-    return sizeof(BorderLayoutConstraints); 
+    return sizeof(List); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void BorderLayoutConstraintsBase::executeSync(      FieldContainer &other,
+void ListBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((BorderLayoutConstraintsBase *) &other, whichField);
+    this->executeSyncImpl((ListBase *) &other, whichField);
 }
 #else
-void BorderLayoutConstraintsBase::executeSync(      FieldContainer &other,
+void ListBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((BorderLayoutConstraintsBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((ListBase *) &other, whichField, sInfo);
 }
-void BorderLayoutConstraintsBase::execBeginEdit(const BitVector &whichField, 
+void ListBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void BorderLayoutConstraintsBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void ListBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -162,8 +162,8 @@ void BorderLayoutConstraintsBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-BorderLayoutConstraintsBase::BorderLayoutConstraintsBase(void) :
-    _sfRegion                 (UInt32(BorderLayoutConstraints::BORDER_CENTER)), 
+ListBase::ListBase(void) :
+    _sfCellLayout             (UInt32(VERTICAL_ALIGNMENT)), 
     Inherited() 
 {
 }
@@ -172,87 +172,87 @@ BorderLayoutConstraintsBase::BorderLayoutConstraintsBase(void) :
 #pragma warning (default : 383)
 #endif
 
-BorderLayoutConstraintsBase::BorderLayoutConstraintsBase(const BorderLayoutConstraintsBase &source) :
-    _sfRegion                 (source._sfRegion                 ), 
+ListBase::ListBase(const ListBase &source) :
+    _sfCellLayout             (source._sfCellLayout             ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-BorderLayoutConstraintsBase::~BorderLayoutConstraintsBase(void)
+ListBase::~ListBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 BorderLayoutConstraintsBase::getBinSize(const BitVector &whichField)
+UInt32 ListBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (RegionFieldMask & whichField))
+    if(FieldBits::NoField != (CellLayoutFieldMask & whichField))
     {
-        returnValue += _sfRegion.getBinSize();
+        returnValue += _sfCellLayout.getBinSize();
     }
 
 
     return returnValue;
 }
 
-void BorderLayoutConstraintsBase::copyToBin(      BinaryDataHandler &pMem,
+void ListBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (RegionFieldMask & whichField))
+    if(FieldBits::NoField != (CellLayoutFieldMask & whichField))
     {
-        _sfRegion.copyToBin(pMem);
+        _sfCellLayout.copyToBin(pMem);
     }
 
 
 }
 
-void BorderLayoutConstraintsBase::copyFromBin(      BinaryDataHandler &pMem,
+void ListBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (RegionFieldMask & whichField))
+    if(FieldBits::NoField != (CellLayoutFieldMask & whichField))
     {
-        _sfRegion.copyFromBin(pMem);
+        _sfCellLayout.copyFromBin(pMem);
     }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void BorderLayoutConstraintsBase::executeSyncImpl(      BorderLayoutConstraintsBase *pOther,
+void ListBase::executeSyncImpl(      ListBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (RegionFieldMask & whichField))
-        _sfRegion.syncWith(pOther->_sfRegion);
+    if(FieldBits::NoField != (CellLayoutFieldMask & whichField))
+        _sfCellLayout.syncWith(pOther->_sfCellLayout);
 
 
 }
 #else
-void BorderLayoutConstraintsBase::executeSyncImpl(      BorderLayoutConstraintsBase *pOther,
+void ListBase::executeSyncImpl(      ListBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (RegionFieldMask & whichField))
-        _sfRegion.syncWith(pOther->_sfRegion);
+    if(FieldBits::NoField != (CellLayoutFieldMask & whichField))
+        _sfCellLayout.syncWith(pOther->_sfCellLayout);
 
 
 
 }
 
-void BorderLayoutConstraintsBase::execBeginEditImpl (const BitVector &whichField, 
+void ListBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -271,11 +271,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<BorderLayoutConstraintsPtr>::_type("BorderLayoutConstraintsPtr", "LayoutConstraintsPtr");
+DataType FieldDataTraits<ListPtr>::_type("ListPtr", "ComponentPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(BorderLayoutConstraintsPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(BorderLayoutConstraintsPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(ListPtr, );
+OSG_DLLEXPORT_MFIELD_DEF1(ListPtr, );
 
 
 /*------------------------------------------------------------------------*/
@@ -292,10 +292,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(BorderLayoutConstraintsPtr, );
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGBORDERLAYOUTCONSTRAINTSBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGBORDERLAYOUTCONSTRAINTSBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGLISTBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGLISTBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGBORDERLAYOUTCONSTRAINTSFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGLISTFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

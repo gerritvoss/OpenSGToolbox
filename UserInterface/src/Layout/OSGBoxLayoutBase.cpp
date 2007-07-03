@@ -61,6 +61,7 @@
 #include "OSGBoxLayoutBase.h"
 #include "OSGBoxLayout.h"
 
+#include <Util/OSGUIDefines.h>            // Alignment default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -162,7 +163,7 @@ void BoxLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 BoxLayoutBase::BoxLayoutBase(void) :
-    _sfAlignment              (UInt32(0)), 
+    _sfAlignment              (UInt32(HORIZONTAL_ALIGNMENT)), 
     Inherited() 
 {
 }

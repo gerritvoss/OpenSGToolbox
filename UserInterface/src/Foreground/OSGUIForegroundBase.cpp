@@ -61,6 +61,8 @@
 #include "OSGUIForegroundBase.h"
 #include "OSGUIForeground.h"
 
+#include <Util/OSGUIDefines.h>            // VerticalAlignment default header
+#include <Util/OSGUIDefines.h>            // HorizontalAlignment default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -221,8 +223,8 @@ UIForegroundBase::UIForegroundBase(void) :
     _sfGraphics               (), 
     _sfFramePositionOffset    (), 
     _sfFrameBounds            (), 
-    _sfVerticalAlignment      (UInt32(0)), 
-    _sfHorizontalAlignment    (UInt32(0)), 
+    _sfVerticalAlignment      (UInt32(VERTICAL_CENTER)), 
+    _sfHorizontalAlignment    (UInt32(HORIZONTAL_CENTER)), 
     Inherited() 
 {
 }
