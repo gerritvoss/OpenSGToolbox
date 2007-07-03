@@ -130,17 +130,35 @@ void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentCo
 	  matching highest height, then draws each component equally spaced apart
     */
 	for(UInt32 i=0 ; i<Components.size() ; ++i)
-	{	// change the component's height only if necessary
-		if (largestHeight > Components.getValue(i)->getSize().y() 
-			&& largestHeight <= Components.getValue(i)->getMaxSize().y())
-		{	Vec2s size(Components.getValue(i)->getSize().x(), largestHeight);
-			beginEditCP(Components.getValue(i), Component::SizeFieldMask);
-				Components.getValue(i)->setSize(size);
-			endEditCP(Components.getValue(i), Component::SizeFieldMask);
+	{	
+		// for each individual button, keep track of the difference in height
+		// for use in keeping them vertically centered
+		UInt32 difference(0);
+		// change the component's height only if necessary
+		if (largestHeight > Components.getValue(i)->getSize().y())
+		{	
+			if (largestHeight <= Components.getValue(i)->getMaxSize().y())
+			{	// for when the max height is larger than the largestHeight
+				Vec2s size(Components.getValue(i)->getSize().x(), largestHeight);
+				beginEditCP(Components.getValue(i), Component::SizeFieldMask);
+					Components.getValue(i)->setSize(size);
+				endEditCP(Components.getValue(i), Component::SizeFieldMask);
+			}
+			else
+			{	// in this case, max out the button to its max height
+				Vec2s size(Components.getValue(i)->getSize().x(), Components.getValue(i)->getMaxSize().y());
+				beginEditCP(Components.getValue(i), Component::SizeFieldMask);
+					Components.getValue(i)->setSize(size);
+				endEditCP(Components.getValue(i), Component::SizeFieldMask);
+				// the height of this component is smaller than the others,
+				// so keep track of difference for alignment purposes
+				// it's already cut in half for centering
+				difference = (largestHeight - Components.getValue(i)->getMaxSize().y())/2;
+			}
 		}
-		glTranslatef(spacing, 0, 0);
+		glTranslatef(spacing, difference, 0);
 		Components.getValue(i)->draw(TheGraphics);
-		glTranslatef(Components.getValue(i)->getSize().x(), 0, 0);
+		glTranslatef(Components.getValue(i)->getSize().x(), -(Int64)difference, 0);
 		transBack -= spacing;
 		transBack -= Components.getValue(i)->getSize().x();
 	}
