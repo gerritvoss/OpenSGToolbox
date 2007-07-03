@@ -76,6 +76,40 @@ void FlowLayout::initMethod (void)
 
 void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
 {
+	/*!
+      totalWidth will hold the width of its container, and cumWidth will hold
+	  the width of all of the buttons. That way it will always know when to
+	  move to the next line. In addition, maxHeight keeps track of the largest
+	  height so it knows how far down to move the next row. Also, oneInRow is used
+	  to make sure that it places at least one component in every row
+    */
+	UInt32 totalWidth(ParentComponent->getSize().x());
+	UInt32 cumWidth(0);
+	UInt32 maxHeight(0);
+	UInt32 cumHeight(0);
+	bool oneInRow = false;
+
+	for(UInt32 i=0 ; i<Components.size(); ++i)
+	{
+		// set the component to its preferred size
+		beginEditCP(Components.getValue(i), Component::SizeFieldMask);
+			Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
+		endEditCP(Components.getValue(i), Component::SizeFieldMask);
+		Components.getValue(i)->draw(TheGraphics);
+		// check to see if it will run off the side
+		if (!oneInRow)
+		{
+			oneInRow = true;
+		}
+		else if (cumWidth + Components.getValue(i)->getSize().x() > totalWidth)
+		{
+
+		}
+		// update the maxHeight
+		if (Components.getValue(i)->getSize().y() > maxHeight)
+			maxHeight = Components.getValue(i)->getSize().y();
+		
+	}
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
