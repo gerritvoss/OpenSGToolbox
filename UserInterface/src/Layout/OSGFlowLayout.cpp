@@ -80,14 +80,17 @@ void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
       totalWidth will hold the width of its container, and cumWidth will hold
 	  the width of all of the buttons. That way it will always know when to
 	  move to the next line. In addition, maxHeight keeps track of the largest
-	  height so it knows how far down to move the next row. Also, oneInRow is used
-	  to make sure that it places at least one component in every row
+	  height so it knows how far down to move the next row. Also, oneInRow is
+	  used to make sure that it places at least one component in every row
     */
-	UInt32 totalWidth(ParentComponent->getSize().x());
+	Int64 totalWidth(ParentComponent->getSize().x());
 	UInt32 cumWidth(0);
 	UInt32 maxHeight(0);
 	UInt32 cumHeight(0);
-	bool oneInRow = false;
+	UInt32 prevComponent(0);
+	Int64 offsetx(0);
+	Int64 offsety(0);
+	bool firstOne = true;
 
 	for(UInt32 i=0 ; i<Components.size(); ++i)
 	{
@@ -95,21 +98,85 @@ void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 		beginEditCP(Components.getValue(i), Component::SizeFieldMask);
 			Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
 		endEditCP(Components.getValue(i), Component::SizeFieldMask);
-		Components.getValue(i)->draw(TheGraphics);
-		// check to see if it will run off the side
-		if (!oneInRow)
-		{
-			oneInRow = true;
-		}
-		else if (cumWidth + Components.getValue(i)->getSize().x() > totalWidth)
-		{
 
+		// if there is only one so far, then it can't draw it using cumWidth
+		// because it hasn't been set yet
+		if (firstOne) // this one might draw i
+		{
+			firstOne = false;
+			// if this is the last component or it is already too big for the
+			// container, draw it centered on its line
+			if (i == Components.size() || Components.getValue(i)->getSize().x() >= totalWidth)
+			{
+				// find how far to translate to make it centered
+				offsetx = totalWidth/2 - Components.getValue(i)->getSize().x()/2;
+				glTranslatef(offsetx, 0, 0);
+				Components.getValue(i)->draw(TheGraphics);
+				glTranslatef(-offsetx, Components.getValue(i)->getSize().y(), 0);
+				// update cumHeight, other values should still be at 0
+				cumHeight += Components.getValue(i)->getSize().y();
+				// update prevComponent
+				prevComponent++;
+				// next component is still just like the first one
+				firstOne = true;
+			}
+			else
+			{
+				// update the maxHeight
+				if (Components.getValue(i)->getSize().y() > maxHeight)
+					maxHeight = Components.getValue(i)->getSize().y();
+				// update cumWidth
+				cumWidth += Components.getValue(i)->getSize().x();
+			}
 		}
-		// update the maxHeight
-		if (Components.getValue(i)->getSize().y() > maxHeight)
+		else if (cumWidth + Components.getValue(i)->getSize().x() > totalWidth) // this one draws up to i
+		{
+			// find how far to translate to make it centered
+			offsetx = totalWidth/2 - cumWidth/2;
+			glTranslatef(offsetx, 0, 0);
+			for (int j = prevComponent; j < i; j++)
+			{
+				// translate to center up and down
+				offsety = (maxHeight-Components.getValue(j)->getSize().y())/2;
+				glTranslatef(0, offsety, 0);
+				Components.getValue(j)->draw(TheGraphics);
+				glTranslatef(Components.getValue(j)->getSize().x(), -offsety, 0);
+			}
+			// translate to the next row
+			glTranslatef(-(offsetx+cumWidth), maxHeight, 0);
+			cumHeight += maxHeight;
 			maxHeight = Components.getValue(i)->getSize().y();
-		
+			prevComponent = i;
+			cumWidth = Components.getValue(i)->getSize().x();
+		}
+		else
+		{
+			// update the maxHeight
+			if (Components.getValue(i)->getSize().y() > maxHeight)
+				maxHeight = Components.getValue(i)->getSize().y();
+			// update cumWidth
+			cumWidth += Components.getValue(i)->getSize().x();
+		}
+		if (i+1 == Components.size() && !firstOne) // if on the last one, draw the last buttons
+		{
+			// find how far to translate to make it centered
+			offsetx = totalWidth/2 - cumWidth/2;
+			glTranslatef(offsetx, 0, 0);
+			for (int j = prevComponent; j < i+1; j++)
+			{
+				// translate to center up and down
+				offsety = (maxHeight-Components.getValue(j)->getSize().y())/2;
+				glTranslatef(0, offsety, 0);
+				Components.getValue(j)->draw(TheGraphics);
+				glTranslatef(Components.getValue(j)->getSize().x(), -(Int64)offsety, 0);
+			}
+			// translate to the next row
+			glTranslatef(-(offsetx+cumWidth), maxHeight, 0);
+			cumHeight += maxHeight;
+		}
 	}
+	// get back to the corner of the container
+	glTranslatef(0, -cumHeight, 0);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
