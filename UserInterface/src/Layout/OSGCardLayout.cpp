@@ -84,21 +84,21 @@ void CardLayout::first(const ContainerPtr TheContainer)
 void CardLayout::last(const ContainerPtr TheContainer)
 {
 	beginEditCP(CardLayoutPtr(this), CardFieldMask);
-		setCard(Components.size()-1);
+		setCard(TheContainer->getChildren().size()-1);
 	endEditCP(CardLayoutPtr(this), CardFieldMask);
 }
 
 void CardLayout::next(const ContainerPtr TheContainer)
 {	
 	beginEditCP(CardLayoutPtr(this), CardFieldMask);
-		setCard((getCard()+1)%Components.size());
+		setCard((getCard()+1)%TheContainer->getChildren().size());
 	endEditCP(CardLayoutPtr(this), CardFieldMask);
 }
 
 void CardLayout::previous(const ContainerPtr TheContainer)
 {
 	beginEditCP(CardLayoutPtr(this), CardFieldMask);
-		setCard((getCard()-1)%Components.size());
+		setCard((getCard()-1)%TheContainer->getChildren().size());
 	endEditCP(CardLayoutPtr(this), CardFieldMask);
 }
 
@@ -113,8 +113,8 @@ void CardLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 		curCard->setSize(curCard->getPreferredSize());
 	endEditCP(curCard, Component::SizeFieldMask);
 
-	Int64 offsetx(ParentComponent->getSize().x() - curCard->getSize().x());
-	Int64 offsety(ParentComponent->getSize().y() - curCard->getSize().y());
+	Int64 offsetx( (ParentComponent->getSize().x() - curCard->getSize().x()) /2);
+	Int64 offsety( (ParentComponent->getSize().y() - curCard->getSize().y()) /2);
 
 	glTranslatef(offsetx, offsety, 0);
 	curCard->draw(TheGraphics);
