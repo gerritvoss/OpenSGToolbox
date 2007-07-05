@@ -105,7 +105,8 @@ void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentCo
 	UInt32 totalComponentWidth(0);
 	UInt32 largestHeight(0);
 	UInt32 spacing(0);
-	UInt32 transBack(0);
+	UInt32 oddSpacing(0);
+	Int64 transBack(0);
 
 	/*!
 	  This first sweep through the components sets each component to its
@@ -123,7 +124,14 @@ void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentCo
 			largestHeight = Components.getValue(i)->getSize().y();
 	}
 	if(width > totalComponentWidth)
+	{
 		spacing = (width-totalComponentWidth)/(Components.size()+1);
+		// in the case where there isn't equal spacing between each button,
+		// translate more the first time to center the components
+		oddSpacing = (width - (spacing*(Components.size()+1)+totalComponentWidth))/2;
+		glTranslatef(oddSpacing, 0, 0);
+		transBack -= oddSpacing;
+	}
 
 	/*!
 	  This second sweep through the components sets each component to the
