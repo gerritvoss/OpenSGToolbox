@@ -96,9 +96,9 @@ void CardLayout::next(const ContainerPtr TheContainer)
 }
 
 void CardLayout::previous(const ContainerPtr TheContainer)
-{
+{   
 	beginEditCP(CardLayoutPtr(this), CardFieldMask);
-		setCard((getCard()-1)%TheContainer->getChildren().size());
+		setCard((getCard()-1+TheContainer->getChildren().size())%TheContainer->getChildren().size());
 	endEditCP(CardLayoutPtr(this), CardFieldMask);
 }
 
