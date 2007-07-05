@@ -246,13 +246,13 @@ void DefaultLookAndFeel::init(void)
 		DefaultPanelBorder->setWidth(1);
 	endEditCP(DefaultPanelBorder);*/
 
-	EtchedBorderPtr DefaultPanelBackground = EtchedBorder::create();
-	beginEditCP(DefaultPanelBackground);
-		DefaultPanelBackground->setWidth(2);
-		DefaultPanelBackground->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
-		DefaultPanelBackground->setShadow(Color4f(0.65, 0.65, 0.65, 1.0));
-		DefaultPanelBackground->setRaised(true);
-	endEditCP(DefaultPanelBackground);
+	EtchedBorderPtr DefaultPanelBorder = EtchedBorder::create();
+	beginEditCP(DefaultPanelBorder);
+		DefaultPanelBorder->setWidth(2);
+		DefaultPanelBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultPanelBorder->setShadow(Color4f(0.65, 0.65, 0.65, 1.0));
+		DefaultPanelBorder->setRaised(true);
+	endEditCP(DefaultPanelBorder);
 
 	//Default PanelBackground
 	ColorUIBackgroundPtr DefaultPanelBackground = ColorUIBackground::create();
