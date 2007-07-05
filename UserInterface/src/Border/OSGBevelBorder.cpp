@@ -76,55 +76,44 @@ void BevelBorder::initMethod (void)
 
 void BevelBorder::draw(const GraphicsPtr g, const Int16 x, const Int16 y , const UInt16 Width, const UInt16 Height, const Real32 Opacity) const
 {
-	Pnt2s TopLeft = Pnt2s(x, y);
-	Pnt2s BottomLeft = Pnt2s(x, y+Height);
-	Pnt2s BottomRight = Pnt2s(x + Width, y + Height);
-	Pnt2s TopRight = Pnt2s(x + Width, y);
+
 	//x, y is upper left hand side.
 	if(getRaised())
 	{
 		//Top
-		g->drawLine(TopLeft, TopRight, 1, getHighlightOuter(),Opacity);
-		g->drawLine(Pnt2s(TopLeft.x()+1, TopLeft.y()+1), Pnt2s(TopRight.x()-1, TopRight.y()+1), 1, getHighlightInner(), Opacity);
-		
+		g->drawRect(Pnt2s(x+getWidth()/2.0, y+getWidth()/2.0), Pnt2s(x+Width-getWidth(), y+getWidth()), getHighlightInner(), Opacity);
+		g->drawRect(Pnt2s(x,y), Pnt2s(x+Width-getWidth()/2.0, y+(getWidth()/2.0+.5)), getHighlightOuter(), Opacity);
 		//Left
-		g->drawLine(TopLeft, BottomLeft, 1, getHighlightOuter(), Opacity);
-		g->drawLine(Pnt2s(TopLeft.x()+1, TopLeft.y()+1), Pnt2s(BottomLeft.x()+1, BottomLeft.y()-1), 1, getHighlightInner(), Opacity);
-
-		//Bottom
-		g->drawLine(BottomLeft, BottomRight, 1, getShadowOuter(), Opacity);
-		g->drawLine(Pnt2s(BottomLeft.x()+1, BottomLeft.y()-1), Pnt2s(BottomRight.x()-1, BottomRight.y()-1), 1, getShadowInner(), Opacity);
-		
+		g->drawRect(Pnt2s(x+getWidth()/2.0, y+getWidth()), Pnt2s(x+getWidth(), y+Height-getWidth()), getHighlightInner(), Opacity);
+		g->drawRect(Pnt2s(x, y+getWidth()/2.0), Pnt2s(x+(getWidth()/2.0+.5), y+Height-getWidth()/2.0), getHighlightOuter(), Opacity);
 		//Right
-		g->drawLine(BottomRight, TopRight, 1, getShadowOuter(), Opacity);
-		g->drawLine(Pnt2s(BottomRight.x()-1, BottomRight.y()-1),Pnt2s(TopRight.x()-1, TopRight.y()+1), 1, getShadowInner(), Opacity);
+		g->drawRect(Pnt2s(x+Width-getWidth(), y+getWidth()/2.0), Pnt2s(x+Width-getWidth()/2.0, y+Height-getWidth()), getShadowInner(), Opacity);
+		g->drawRect(Pnt2s(x+Width-getWidth()/2.0, y), Pnt2s(x+Width, y + Height-getWidth()/2.0), getShadowOuter(), Opacity);
+		//Bottom
+		g->drawRect(Pnt2s(x+getWidth()/2.0, y+Height-getWidth()), Pnt2s(x+Width-getWidth()/2.0, y+Height-getWidth()/2.0), getShadowInner(), Opacity);
+		g->drawRect(Pnt2s(x, y+Height-getWidth()/2.0), Pnt2s(x+Width, y+Height), getShadowOuter(), Opacity);
 	}
 	else//Lines need to be drawn in a different order, with different colors.
 	{
-		
-		//Bottom
-		g->drawLine(BottomLeft, BottomRight, 1, getHighlightOuter(), Opacity);
-		g->drawLine(Pnt2s(BottomLeft.x()+1, BottomLeft.y()-1), Pnt2s(BottomRight.x()-1, BottomRight.y()-1), 1, getHighlightInner(), Opacity);
-		
-		//Right
-		g->drawLine(BottomRight, TopRight, 1, getHighlightOuter(), Opacity);
-		g->drawLine(Pnt2s(BottomRight.x()-1, BottomRight.y()-1),Pnt2s(TopRight.x()-1, TopRight.y()+1), 1, getHighlightInner(), Opacity);
-
 		//Top
-		g->drawLine(TopLeft, TopRight, 1, getShadowOuter(),Opacity);
-		g->drawLine(Pnt2s(TopLeft.x()+1, TopLeft.y()+1), Pnt2s(TopRight.x()-1, TopRight.y()+1), 1, getShadowInner(), Opacity);
-		
+		g->drawRect(Pnt2s(x+getWidth()/2.0, y+getWidth()/2.0), Pnt2s(x+Width-getWidth()/2.0, y+getWidth()), getShadowInner(), Opacity);
+		g->drawRect(Pnt2s(x, y), Pnt2s(x+Width, y+(getWidth()/2.0+.5)), getShadowOuter(), Opacity);
 		//Left
-		g->drawLine(TopLeft, BottomLeft, 1, getShadowOuter(), Opacity);
-		g->drawLine(Pnt2s(TopLeft.x()+1, TopLeft.y()+1), Pnt2s(BottomLeft.x()+1, BottomLeft.y()-1), 1, getShadowInner(), Opacity);
-
+		g->drawRect(Pnt2s(x+getWidth()/2.0, y+getWidth()), Pnt2s(x+getWidth(), y+Height-getWidth()/2.0), getShadowInner(), Opacity);
+		g->drawRect(Pnt2s(x, y+getWidth()/2.0), Pnt2s(x+(getWidth()/2.0+.5), y+Height), getShadowOuter(), Opacity);
+		//Right
+		g->drawRect(Pnt2s(x+getWidth()/2.0, y+Height-getWidth()/2.0), Pnt2s(x+Width-getWidth()/2.0, y+Height), getHighlightOuter(), Opacity);
+		g->drawRect(Pnt2s(x+getWidth(), y+Height-getWidth()), Pnt2s(x+Width-getWidth(), y+Height-getWidth()/2.0), getHighlightInner(), Opacity);
+		//Bottom
+		g->drawRect(Pnt2s(x+Width-getWidth()/2.0, y+getWidth()/2.0), Pnt2s(x+Width, y+Height), getHighlightOuter(), Opacity);
+		g->drawRect(Pnt2s(x+Width-getWidth(), y+getWidth()), Pnt2s(x+Width-getWidth()/2.0, y+Height-getWidth()/2.0), getHighlightInner(), Opacity);
 	}
 
 }
 
 void BevelBorder::getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& Bottom) const
 {
-	Left = Right = Top = Bottom = 2;
+	Left = Right = Top = Bottom = getWidth();
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
