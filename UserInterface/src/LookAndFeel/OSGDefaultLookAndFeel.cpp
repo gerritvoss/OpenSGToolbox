@@ -49,6 +49,8 @@
 #include "Text/OSGFont.h"
 #include "Border/OSGLineBorder.h"
 #include "Border/OSGEmptyBorder.h"
+#include "Border/OSGEtchedBorder.h"
+#include "Border/OSGBevelBorder.h"
 #include "Background/OSGColorUIBackground.h"
 #include "Background/OSGEmptyUIBackground.h"
 #include "Component/OSGButton.h"
@@ -99,16 +101,20 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(DefaultFont);
 
 	//Default ButtonBorder
-	LineBorderPtr DefaultButtonBorder = LineBorder::create();
+	BevelBorderPtr DefaultButtonBorder = BevelBorder::create();
 	beginEditCP(DefaultButtonBorder);
-		DefaultButtonBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
-		DefaultButtonBorder->setWidth(1);
+		DefaultButtonBorder->setRaised(true);
+		DefaultButtonBorder->setWidth(2);
+		DefaultButtonBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultButtonBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultButtonBorder->setShadowInner(Color4f(0.65, 0.65, 0.65, 1.0));
+		DefaultButtonBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
 	endEditCP(DefaultButtonBorder);
 
 	//Default ButtonBackground
 	ColorUIBackgroundPtr DefaultButtonBackground = ColorUIBackground::create();
 	beginEditCP(DefaultButtonBackground);
-		DefaultButtonBackground->setColor(Color4f(0.7,0.7,0.7,1.0));
+		DefaultButtonBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
 	endEditCP(DefaultButtonBackground);
 
 	//Default Button
@@ -234,17 +240,26 @@ void DefaultLookAndFeel::init(void)
 	
 	//************************** Panel *****************************
 	//Default PanelBorder
-	LineBorderPtr DefaultPanelBorder = LineBorder::create();
+	/*LineBorderPtr DefaultPanelBorder = LineBorder::create();
 	beginEditCP(DefaultPanelBorder);
 		DefaultPanelBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultPanelBorder->setWidth(1);
-	endEditCP(DefaultPanelBorder);
+	endEditCP(DefaultPanelBorder);*/
+
+	EtchedBorderPtr DefaultPanelBackground = EtchedBorder::create();
+	beginEditCP(DefaultPanelBackground);
+		DefaultPanelBackground->setWidth(2);
+		DefaultPanelBackground->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultPanelBackground->setShadow(Color4f(0.65, 0.65, 0.65, 1.0));
+		DefaultPanelBackground->setRaised(true);
+	endEditCP(DefaultPanelBackground);
 
 	//Default PanelBackground
 	ColorUIBackgroundPtr DefaultPanelBackground = ColorUIBackground::create();
 	beginEditCP(DefaultPanelBackground);
-		DefaultPanelBackground->setColor(Color4f(0.7,0.7,0.7,1.0));
+		DefaultPanelBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
 	endEditCP(DefaultPanelBackground);
+
 
 	//Default Panel
 	PanelPtr DefaultPanel = Panel::create();
