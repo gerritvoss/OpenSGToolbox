@@ -92,26 +92,24 @@ void EtchedBorder::draw(const GraphicsPtr g, const Int16 x, const Int16 y , cons
 		BottomColor = getHighlight();
 	}
 	//Top
-	g->drawLine(TopLeft, Pnt2s(TopRight.x()-1, TopRight.y()), 1, TopColor,Opacity);
-	g->drawLine(Pnt2s(TopLeft.x()+1, TopLeft.y()-1),Pnt2s(TopRight.x()-2, TopRight.y()-1), 1, BottomColor, Opacity);
 
-	//Left
-	g->drawLine(TopLeft, Pnt2s(BottomLeft.x(), BottomLeft.y()-1), 1, TopColor, Opacity);
-	g->drawLine(Pnt2s(TopLeft.x()+1, TopLeft.y()+1),Pnt2s(BottomLeft.x()+1, BottomLeft.y()-2), 1, BottomColor, Opacity);
-
+	g->drawRect(Pnt2s(x+getWidth(), y+getWidth()/2.0), Pnt2s(x+Width-getWidth(), y+getWidth()), BottomColor, Opacity);
+	g->drawRect(Pnt2s(x,y), Pnt2s(x+Width-getWidth(), y+getWidth()/2.0), TopColor, Opacity);
+	//Left	
+	g->drawRect(Pnt2s(x, y+getWidth()/2.0), Pnt2s(x+getWidth()/2.0, y+Height-getWidth()), TopColor, Opacity);
+	g->drawRect(Pnt2s(x+getWidth()/2.0, y+getWidth()/2.0), Pnt2s(x+getWidth(), y+Height-getWidth()), BottomColor, Opacity);
 	//Bottom
-	g->drawLine(Pnt2s(BottomLeft.x(), BottomLeft.y()-1),Pnt2s(BottomRight.x()-1, BottomRight.y()-1), 1, TopColor, Opacity);
-	g->drawLine(BottomLeft, BottomRight, 1, BottomColor, Opacity);
-
+	g->drawRect(Pnt2s(x, y+Height-getWidth()), Pnt2s(x+Width-getWidth(), y+Height-getWidth()/2.0), TopColor, Opacity);
+	g->drawRect(Pnt2s(x, y+Height-getWidth()/2.0), Pnt2s(x+Width-getWidth()/2.0, y+Height), BottomColor, Opacity);
 	//Right
-	g->drawLine(Pnt2s(BottomRight.x()-1, BottomRight.y()+1), Pnt2s(TopRight.x()-1,TopRight.y()) , 1, TopColor, Opacity);
-	g->drawLine(BottomRight, TopRight, 1, BottomColor, Opacity);
+	g->drawRect(Pnt2s(x+Width-getWidth(), y), Pnt2s(x+Width-getWidth()/2.0, y+Height-getWidth()/2.0), TopColor, Opacity);
+	g->drawRect(Pnt2s(x+Width-getWidth()/2.0, y), Pnt2s(x+Width, y+Height), BottomColor, Opacity);
 
 }
 
 void EtchedBorder::getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& Bottom) const
 {
-	Left=Right=Top=Bottom=2;
+	Left=Right=Top=Bottom=getWidth();
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
