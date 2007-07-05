@@ -45,6 +45,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
+#include "Util/OSGUIDefines.h"
 #include "OSGFlowLayout.h"
 
 OSG_BEGIN_NAMESPACE
@@ -77,19 +78,23 @@ void FlowLayout::initMethod (void)
 void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
 {
 	/*!
-      totalWidth will hold the width of its container, and cumWidth will hold
+      totalMajorAxis will hold the width of its container, and cumMajorAxis will hold
 	  the width of all of the buttons. That way it will always know when to
-	  move to the next line. In addition, maxHeight keeps track of the largest
+	  move to the next line. In addition, maxMinorAxis keeps track of the largest
 	  height so it knows how far down to move the next row. Also, oneInRow is
 	  used to make sure that it places at least one component in every row
     */
-	Int64 totalWidth(ParentComponent->getSize().x());
-	UInt32 cumWidth(0);
-	UInt32 maxHeight(0);
-	UInt32 cumHeight(0);
+	UInt32 AxisIndex(0);
+	if(getAlignment() != HORIZONTAL_ALIGNMENT ) AxisIndex = 1;
+	AxisIndex = 1;
+
+	Int64 totalMajorAxis(ParentComponent->getSize()[AxisIndex]);
+	UInt32 cumMajorAxis(0);
+	UInt32 maxMinorAxis(0);
+	UInt32 cumMinorAxis(0);
 	UInt32 prevComponent(0);
-	Int64 offsetx(0);
-	Int64 offsety(0);
+	Int64 offsetMajorAxis(0);
+	Int64 offsetMinorAxis(0);
 	bool firstOne = true;
 
 	for(UInt32 i=0 ; i<Components.size(); ++i)
@@ -99,22 +104,24 @@ void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 			Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
 		endEditCP(Components.getValue(i), Component::SizeFieldMask);
 
-		// if there is only one so far, then it can't draw it using cumWidth
+		// if there is only one so far, then it can't draw it using cumMajorAxis
 		// because it hasn't been set yet
 		if (firstOne) // this one might draw i
 		{
 			firstOne = false;
 			// if this is the last component or it is already too big for the
 			// container, draw it centered on its line
-			if (i == Components.size() || Components.getValue(i)->getSize().x() >= totalWidth)
+			if (i == Components.size() || Components.getValue(i)->getSize()[AxisIndex] >= totalMajorAxis)
 			{
 				// find how far to translate to make it centered
-				offsetx = totalWidth/2 - Components.getValue(i)->getSize().x()/2;
-				glTranslatef(offsetx, 0, 0);
+				offsetMajorAxis = totalMajorAxis/2 - Components.getValue(i)->getSize()[AxisIndex]/2;
+				if (AxisIndex) glTranslatef(0, offsetMajorAxis, 0);
+				else glTranslatef(offsetMajorAxis, 0, 0);
 				Components.getValue(i)->draw(TheGraphics);
-				glTranslatef(-offsetx, Components.getValue(i)->getSize().y(), 0);
-				// update cumHeight, other values should still be at 0
-				cumHeight += Components.getValue(i)->getSize().y();
+				if (AxisIndex) glTranslatef(Components.getValue(i)->getSize()[(AxisIndex+1)%2], -offsetMajorAxis, 0);
+				else glTranslatef(-offsetMajorAxis, Components.getValue(i)->getSize()[(AxisIndex+1)%2], 0);
+				// update cumMinorAxis, other values should still be at 0
+				cumMinorAxis += Components.getValue(i)->getSize()[(AxisIndex+1)%2];
 				// update prevComponent
 				prevComponent++;
 				// next component is still just like the first one
@@ -122,61 +129,71 @@ void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 			}
 			else
 			{
-				// update the maxHeight
-				if (Components.getValue(i)->getSize().y() > maxHeight)
-					maxHeight = Components.getValue(i)->getSize().y();
-				// update cumWidth
-				cumWidth += Components.getValue(i)->getSize().x();
+				// update the maxMinorAxis
+				if (Components.getValue(i)->getSize()[(AxisIndex+1)%2] > maxMinorAxis)
+					maxMinorAxis = Components.getValue(i)->getSize()[(AxisIndex+1)%2];
+				// update cumMajorAxis
+				cumMajorAxis += Components.getValue(i)->getSize()[AxisIndex];
 			}
 		}
-		else if (cumWidth + Components.getValue(i)->getSize().x() > totalWidth) // this one draws up to i
+		else if (cumMajorAxis + Components.getValue(i)->getSize()[AxisIndex] > totalMajorAxis) // this one draws up to i
 		{
 			// find how far to translate to make it centered
-			offsetx = totalWidth/2 - cumWidth/2;
-			glTranslatef(offsetx, 0, 0);
+			offsetMajorAxis = totalMajorAxis/2 - cumMajorAxis/2;
+			if (AxisIndex) glTranslatef(0, offsetMajorAxis, 0);
+			else glTranslatef(offsetMajorAxis, 0, 0);
 			for (int j = prevComponent; j < i; j++)
 			{
+				offsetMinorAxis = (maxMinorAxis-Components.getValue(j)->getSize()[(AxisIndex+1)%2])/2;
 				// translate to center up and down
-				offsety = (maxHeight-Components.getValue(j)->getSize().y())/2;
-				glTranslatef(0, offsety, 0);
+				if (AxisIndex) glTranslatef(offsetMinorAxis, 0, 0);
+				else glTranslatef(0, offsetMinorAxis, 0);
 				Components.getValue(j)->draw(TheGraphics);
-				glTranslatef(Components.getValue(j)->getSize().x(), -offsety, 0);
+				// translate to next button
+				if (AxisIndex) glTranslatef(-offsetMinorAxis, Components.getValue(j)->getSize()[AxisIndex], 0);
+				else glTranslatef(Components.getValue(j)->getSize()[AxisIndex], -offsetMinorAxis, 0);
 			}
 			// translate to the next row
-			glTranslatef(-(offsetx+cumWidth), maxHeight, 0);
-			cumHeight += maxHeight;
-			maxHeight = Components.getValue(i)->getSize().y();
+			if (AxisIndex) glTranslatef(maxMinorAxis, -(offsetMajorAxis+cumMajorAxis), 0);
+			else glTranslatef(-(offsetMajorAxis+cumMajorAxis), maxMinorAxis, 0);
+			cumMinorAxis += maxMinorAxis;
+			maxMinorAxis = Components.getValue(i)->getSize()[(AxisIndex+1)%2];
 			prevComponent = i;
-			cumWidth = Components.getValue(i)->getSize().x();
+			cumMajorAxis = Components.getValue(i)->getSize()[AxisIndex];
 		}
 		else
 		{
-			// update the maxHeight
-			if (Components.getValue(i)->getSize().y() > maxHeight)
-				maxHeight = Components.getValue(i)->getSize().y();
-			// update cumWidth
-			cumWidth += Components.getValue(i)->getSize().x();
+			// update the maxMinorAxis
+			if (Components.getValue(i)->getSize()[(AxisIndex+1)%2] > maxMinorAxis)
+				maxMinorAxis = Components.getValue(i)->getSize()[(AxisIndex+1)%2];
+			// update cumMajorAxis
+			cumMajorAxis += Components.getValue(i)->getSize()[AxisIndex];
 		}
 		if (i+1 == Components.size() && !firstOne) // if on the last one, draw the last buttons
 		{
 			// find how far to translate to make it centered
-			offsetx = totalWidth/2 - cumWidth/2;
-			glTranslatef(offsetx, 0, 0);
+			offsetMajorAxis = totalMajorAxis/2 - cumMajorAxis/2;
+			if (AxisIndex) glTranslatef(0, offsetMajorAxis, 0);
+			else glTranslatef(offsetMajorAxis, 0, 0);
 			for (int j = prevComponent; j < i+1; j++)
 			{
 				// translate to center up and down
-				offsety = (maxHeight-Components.getValue(j)->getSize().y())/2;
-				glTranslatef(0, offsety, 0);
+				offsetMinorAxis = (maxMinorAxis-Components.getValue(j)->getSize()[(AxisIndex+1)%2])/2;
+				if (AxisIndex) glTranslatef(offsetMinorAxis, 0, 0);
+				else glTranslatef(0, offsetMinorAxis, 0);
 				Components.getValue(j)->draw(TheGraphics);
-				glTranslatef(Components.getValue(j)->getSize().x(), -(Int64)offsety, 0);
+				if (AxisIndex) glTranslatef(-(Int64)offsetMinorAxis, Components.getValue(j)->getSize()[AxisIndex], 0);
+				else glTranslatef(Components.getValue(j)->getSize()[AxisIndex], -(Int64)offsetMinorAxis, 0);
 			}
 			// translate to the next row
-			glTranslatef(-(offsetx+cumWidth), maxHeight, 0);
-			cumHeight += maxHeight;
+			if (AxisIndex) glTranslatef(maxMinorAxis, -(offsetMajorAxis+cumMajorAxis), 0);
+			else glTranslatef(-(offsetMajorAxis+cumMajorAxis), maxMinorAxis, 0);
+			cumMinorAxis += maxMinorAxis;
 		}
 	}
 	// get back to the corner of the container
-	glTranslatef(0, -cumHeight, 0);
+	if (AxisIndex) glTranslatef(-(Int64)cumMinorAxis, 0, 0);
+	else glTranslatef(0, -(Int64)cumMinorAxis, 0);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
