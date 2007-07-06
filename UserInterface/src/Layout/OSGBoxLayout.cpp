@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGBoxLayout.h"
+#include "Util/OSGUIDefines.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -57,7 +58,7 @@ OSG_BEGIN_NAMESPACE
 A UI BoxLayout. 
 Based off of the Java.swing boxLayout, which bears the following description:
 
-BoxLayout attempts to arrange components at their preferred widths (for
+BoxLayout attempts to arrange components at their preferred MajorAxiss (for
 horizontal layout) or heights (for vertical layout). For a horizontal layout,
 if not all the components are the same height, BoxLayout attempts to make all
 the components as high as the highest component. If that's not possible for a
@@ -96,21 +97,27 @@ void BoxLayout::initMethod (void)
 void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
 {
 	/*!
-      TotalComponentWidth will be the sum of the width of all of the
-	  components, which is compared to width, which is width of the parent
+      totalMajorAxis will be the sum of the MajorAxis of all of the
+	  components, which is compared to MajorAxis, which is MajorAxis of the parent
 	  component. These two variables will be used to determine the spacing of
 	  each of the objects.
     */
-	UInt32 width(ParentComponent->getSize().x());
-	UInt32 totalComponentWidth(0);
-	UInt32 largestHeight(0);
+	UInt32 AxisIndex(0);
+	if(getAlignment() != HORIZONTAL_ALIGNMENT ) AxisIndex = 1;
+	AxisIndex = 1;
+
+	UInt32 MajorAxis(ParentComponent->getSize()[AxisIndex]);
+	UInt32 totalMajorAxis(0);
+	UInt32 largestMinorAxis(0);
 	UInt32 spacing(0);
 	UInt32 oddSpacing(0);
 	Int64 transBack(0);
+	UInt32 difference(0);
+	Vec2s size;
 
 	/*!
 	  This first sweep through the components sets each component to its
-	  preferred size, gets a sum of all the widths, and finds the
+	  preferred size, gets a sum of all the MajorAxiss, and finds the
 	  largest height.
     */
 	for(UInt32 i=0 ; i<Components.size() ; ++i)
@@ -119,17 +126,18 @@ void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentCo
 			Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
 		endEditCP(Components.getValue(i), Component::SizeFieldMask);
 		// get sum of all components
-		totalComponentWidth += Components.getValue(i)->getSize().x();
-		if (Components.getValue(i)->getSize().y() > largestHeight)
-			largestHeight = Components.getValue(i)->getSize().y();
+		totalMajorAxis += Components.getValue(i)->getSize()[AxisIndex];
+		if (Components.getValue(i)->getSize()[(AxisIndex+1)%2] > largestMinorAxis)
+			largestMinorAxis = Components.getValue(i)->getSize()[(AxisIndex+1)%2];
 	}
-	if(width > totalComponentWidth)
+	if(MajorAxis > totalMajorAxis)
 	{
-		spacing = (width-totalComponentWidth)/(Components.size()+1);
+		spacing = (MajorAxis-totalMajorAxis)/(Components.size()+1);
 		// in the case where there isn't equal spacing between each button,
 		// translate more the first time to center the components
-		oddSpacing = (width - (spacing*(Components.size()+1)+totalComponentWidth))/2;
-		glTranslatef(oddSpacing, 0, 0);
+		oddSpacing = (MajorAxis - (spacing*(Components.size()+1)+totalMajorAxis))/2;
+		if (AxisIndex) glTranslatef(0, oddSpacing, 0);
+		else  glTranslatef(oddSpacing, 0, 0);
 		transBack -= oddSpacing;
 	}
 
@@ -141,37 +149,58 @@ void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentCo
 	{	
 		// for each individual button, keep track of the difference in height
 		// for use in keeping them vertically centered
-		UInt32 difference(0);
+		difference = 0;
 		// change the component's height only if necessary
-		if (largestHeight > Components.getValue(i)->getSize().y())
+		if (largestMinorAxis > Components.getValue(i)->getSize()[(AxisIndex+1)%2])
 		{	
-			if (largestHeight <= Components.getValue(i)->getMaxSize().y())
-			{	// for when the max height is larger than the largestHeight
-				Vec2s size(Components.getValue(i)->getSize().x(), largestHeight);
+			if (largestMinorAxis <= Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2])
+			{	// for when the max height is larger than the largestMinorAxis
+				if (AxisIndex) 
+				{
+					size[0] = largestMinorAxis;
+					size[1] = Components.getValue(i)->getSize()[AxisIndex];
+				}
+				else 
+				{
+					size[0] = Components.getValue(i)->getSize()[AxisIndex];
+					size[1] = largestMinorAxis;
+				}
 				beginEditCP(Components.getValue(i), Component::SizeFieldMask);
 					Components.getValue(i)->setSize(size);
 				endEditCP(Components.getValue(i), Component::SizeFieldMask);
 			}
 			else
 			{	// in this case, max out the button to its max height
-				Vec2s size(Components.getValue(i)->getSize().x(), Components.getValue(i)->getMaxSize().y());
+				if (AxisIndex) 
+				{
+					size[0] = Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2];
+					size[1] = Components.getValue(i)->getSize()[AxisIndex];
+				}
+				else 
+				{
+					size[0] = Components.getValue(i)->getSize()[AxisIndex];
+					size[1] = Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2];
+				}
 				beginEditCP(Components.getValue(i), Component::SizeFieldMask);
 					Components.getValue(i)->setSize(size);
 				endEditCP(Components.getValue(i), Component::SizeFieldMask);
 				// the height of this component is smaller than the others,
 				// so keep track of difference for alignment purposes
 				// it's already cut in half for centering
-				difference = (largestHeight - Components.getValue(i)->getMaxSize().y())/2;
+				difference = (largestMinorAxis - Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2])/2;
 			}
 		}
-		glTranslatef(spacing, difference, 0);
+		if (AxisIndex) glTranslatef(difference, spacing, 0);
+		else glTranslatef(spacing, difference, 0);
 		Components.getValue(i)->draw(TheGraphics);
-		glTranslatef(Components.getValue(i)->getSize().x(), -(Int64)difference, 0);
+		if (AxisIndex) glTranslatef(-(Int64)difference, Components.getValue(i)->getSize()[AxisIndex], 0);
+		else glTranslatef(Components.getValue(i)->getSize()[AxisIndex], -(Int64)difference, 0);
 		transBack -= spacing;
-		transBack -= Components.getValue(i)->getSize().x();
+		transBack -= Components.getValue(i)->getSize()[AxisIndex];
 	}
 	// now translate back to the original spot
-	glTranslatef(transBack, 0, 0);
+	if (AxisIndex) glTranslatef(0, transBack, 0);
+	else glTranslatef(transBack, 0, 0);
 }
 
 /*-------------------------------------------------------------------------*\
