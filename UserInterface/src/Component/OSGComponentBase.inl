@@ -70,6 +70,13 @@ OSG::UInt32 ComponentBase::getClassTypeId(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the Component::_sfPosition field.
+inline
+SFPnt2s *ComponentBase::getSFPosition(void)
+{
+    return &_sfPosition;
+}
+
 //! Get the Component::_sfMinSize field.
 inline
 SFVec2s *ComponentBase::getSFMinSize(void)
@@ -154,6 +161,27 @@ SFReal32 *ComponentBase::getSFOpacity(void)
     return &_sfOpacity;
 }
 
+
+//! Get the value of the Component::_sfPosition field.
+inline
+Pnt2s &ComponentBase::getPosition(void)
+{
+    return _sfPosition.getValue();
+}
+
+//! Get the value of the Component::_sfPosition field.
+inline
+const Pnt2s &ComponentBase::getPosition(void) const
+{
+    return _sfPosition.getValue();
+}
+
+//! Set the value of the Component::_sfPosition field.
+inline
+void ComponentBase::setPosition(const Pnt2s &value)
+{
+    _sfPosition.setValue(value);
+}
 
 //! Get the value of the Component::_sfMinSize field.
 inline

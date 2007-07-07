@@ -138,7 +138,7 @@ void ImageComponent::draw(const GraphicsPtr TheGraphics) const
 
    //Figure out Clipping
    //Left
-   if(Pos.x() < TopLeft.x())
+   /*if(Pos.x() < TopLeft.x())
    {
 	   //Clip Tex Coordinates
 	   TexTopLeft[0] = TexBottomLeft[0] = ((Real32)TopLeft[0]-(Real32)Pos[0])/((Real32)Size[0]);
@@ -170,7 +170,7 @@ void ImageComponent::draw(const GraphicsPtr TheGraphics) const
 	   //Clip Right X
 	   Pos[1] = BottomRight[1];
 	   Size[1] = ComponentSize[1];
-   }
+   }*/
 
    //Draw the Image as a quad
    TheGraphics->drawQuad(Pos,Pnt2s(Pos[0]+Size[0],Pos[1]),Pos+Size,Pnt2s(Pos[0],Pos[1]+Size[1]),TexTopLeft,TexTopRight, TexBottomRight, TexBottomLeft, getTexture(), getOpacity() );

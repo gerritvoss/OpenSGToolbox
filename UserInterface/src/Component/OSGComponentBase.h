@@ -101,7 +101,8 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
 
     enum
     {
-        MinSizeFieldId            = Inherited::NextFieldId,
+        PositionFieldId           = Inherited::NextFieldId,
+        MinSizeFieldId            = PositionFieldId           + 1,
         MaxSizeFieldId            = MinSizeFieldId            + 1,
         PreferredSizeFieldId      = MaxSizeFieldId            + 1,
         SizeFieldId               = PreferredSizeFieldId      + 1,
@@ -116,6 +117,7 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
         NextFieldId               = OpacityFieldId            + 1
     };
 
+    static const OSG::BitVector PositionFieldMask;
     static const OSG::BitVector MinSizeFieldMask;
     static const OSG::BitVector MaxSizeFieldMask;
     static const OSG::BitVector PreferredSizeFieldMask;
@@ -235,6 +237,7 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
+    SFPnt2s             _sfPosition;
     SFVec2s             _sfMinSize;
     SFVec2s             _sfMaxSize;
     SFVec2s             _sfPreferredSize;
@@ -262,6 +265,23 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
     /*! \{                                                                 */
 
     virtual ~ComponentBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFPnt2s             *getSFPosition       (void);
+
+           Pnt2s               &getPosition       (void);
+     const Pnt2s               &getPosition       (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setPosition       (const Pnt2s &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

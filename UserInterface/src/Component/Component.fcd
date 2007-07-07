@@ -10,6 +10,15 @@
 >
 A UI Component Interface.
 <Field
+		name="Position"
+		type="Pnt2s"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="0,0"
+	>
+	</Field>
+<Field
 		name="MinSize"
 		type="Vec2s"
 		cardinality="single"

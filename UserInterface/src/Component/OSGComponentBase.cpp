@@ -64,6 +64,9 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  ComponentBase::PositionFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::PositionFieldId);
+
 const OSG::BitVector  ComponentBase::MinSizeFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::MinSizeFieldId);
 
@@ -107,6 +110,9 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
 
 // Field descriptions
 
+/*! \var Pnt2s           ComponentBase::_sfPosition
+    
+*/
 /*! \var Vec2s           ComponentBase::_sfMinSize
     
 */
@@ -148,6 +154,11 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
 
 FieldDescription *ComponentBase::_desc[] = 
 {
+    new FieldDescription(SFPnt2s::getClassType(), 
+                     "Position", 
+                     PositionFieldId, PositionFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFPosition),
     new FieldDescription(SFVec2s::getClassType(), 
                      "MinSize", 
                      MinSizeFieldId, MinSizeFieldMask,
@@ -274,6 +285,7 @@ void ComponentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ComponentBase::ComponentBase(void) :
+    _sfPosition               (Pnt2s(0,0)), 
     _sfMinSize                (Vec2s(0,0)), 
     _sfMaxSize                (), 
     _sfPreferredSize          (), 
@@ -295,6 +307,7 @@ ComponentBase::ComponentBase(void) :
 #endif
 
 ComponentBase::ComponentBase(const ComponentBase &source) :
+    _sfPosition               (source._sfPosition               ), 
     _sfMinSize                (source._sfMinSize                ), 
     _sfMaxSize                (source._sfMaxSize                ), 
     _sfPreferredSize          (source._sfPreferredSize          ), 
@@ -322,6 +335,11 @@ ComponentBase::~ComponentBase(void)
 UInt32 ComponentBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
+
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+    {
+        returnValue += _sfPosition.getBinSize();
+    }
 
     if(FieldBits::NoField != (MinSizeFieldMask & whichField))
     {
@@ -392,6 +410,11 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+    {
+        _sfPosition.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (MinSizeFieldMask & whichField))
     {
         _sfMinSize.copyToBin(pMem);
@@ -459,6 +482,11 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+    {
+        _sfPosition.copyFromBin(pMem);
+    }
 
     if(FieldBits::NoField != (MinSizeFieldMask & whichField))
     {
@@ -530,6 +558,9 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+        _sfPosition.syncWith(pOther->_sfPosition);
+
     if(FieldBits::NoField != (MinSizeFieldMask & whichField))
         _sfMinSize.syncWith(pOther->_sfMinSize);
 
@@ -575,6 +606,9 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+        _sfPosition.syncWith(pOther->_sfPosition);
 
     if(FieldBits::NoField != (MinSizeFieldMask & whichField))
         _sfMinSize.syncWith(pOther->_sfMinSize);
