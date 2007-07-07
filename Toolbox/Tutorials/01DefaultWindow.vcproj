@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="02GLUT"
+	Name="01DefaultWindow"
 	ProjectGUID="{D3723E7B-717E-4E11-9548-77565177B477}"
 	RootNamespace="02GLUT"
 	Keyword="Win32Proj">
@@ -41,7 +41,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGWindowGLUTD.lib OSGInputD.lib OSGToolboxD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
+				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGWindowGLUTD.lib OSGToolboxD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
 				OutputFile="$(ProjectName)D.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -100,7 +100,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGWindowGLUT.lib OSGInput.lib OSGToolbox.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
+				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGWindowGLUT.lib OSGToolbox.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
 				OutputFile="$(ProjectName).exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -142,7 +142,7 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl">
 			<File
-				RelativePath=".\02GLUT.cpp">
+				RelativePath=".\01DefaultWindow.cpp">
 			</File>
 		</Filter>
 	</Files>

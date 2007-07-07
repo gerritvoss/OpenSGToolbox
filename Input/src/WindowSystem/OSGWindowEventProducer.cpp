@@ -77,6 +77,15 @@ void WindowEventProducer::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void WindowEventProducer::setDisplayCallback(DisplayCallbackFunc Callback)
+{
+   _DisplayCallbackFunc = Callback;
+}
+
+void WindowEventProducer::setReshapeCallback(ReshapeCallbackFunc Callback)
+{
+   _ReshapeCallbackFunc = Callback;
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -84,7 +93,9 @@ void WindowEventProducer::initMethod (void)
 /*----------------------- constructors & destructors ----------------------*/
 
 WindowEventProducer::WindowEventProducer(void) :
-    Inherited(), _EventDispatchThread(NULL)
+    Inherited(), _EventDispatchThread(NULL),
+       _DisplayCallbackFunc(NULL),
+       _ReshapeCallbackFunc(NULL)
 {
    _ButtonClickMap[MouseEvent::BUTTON1] = ClickVector();
    _ButtonClickMap[MouseEvent::BUTTON2] = ClickVector();
@@ -99,7 +110,9 @@ WindowEventProducer::WindowEventProducer(void) :
 }
 
 WindowEventProducer::WindowEventProducer(const WindowEventProducer &source) :
-    Inherited(source), _EventDispatchThread(source._EventDispatchThread)
+    Inherited(source), _EventDispatchThread(source._EventDispatchThread),
+       _DisplayCallbackFunc(source._DisplayCallbackFunc),
+       _ReshapeCallbackFunc(source._ReshapeCallbackFunc)
 {
    _ButtonClickMap[MouseEvent::BUTTON1] = ClickVector();
    _ButtonClickMap[MouseEvent::BUTTON2] = ClickVector();

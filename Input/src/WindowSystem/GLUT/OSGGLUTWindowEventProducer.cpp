@@ -212,7 +212,7 @@ bool GLUTWindowEventProducer::getIconify(void) const
 void GLUTWindowEventProducer::setFullscreen(bool Fullscreen)
 {
    //Set the correct GLUT Window
-   glutSetWindow( GLUTWindow::Ptr::dcast(getWindow())->getId() );\
+   glutSetWindow( GLUTWindow::Ptr::dcast(getWindow())->getId() );
 
    if(Fullscreen)
    {
@@ -237,6 +237,26 @@ bool GLUTWindowEventProducer::getFullscreen(void) const
    SWARNING << "GLUTWindowEventProducer::getFullscreen(void): GLUT Does not define a query for Fullscreen." << std::endl;
    
    return false;
+}
+
+void GLUTWindowEventProducer::setDisplayCallback(DisplayCallbackFunc Callback)
+{
+   WindowEventProducer::setDisplayCallback(Callback);
+
+   //Set the correct GLUT Window
+   glutSetWindow( GLUTWindow::Ptr::dcast(getWindow())->getId() );
+   
+   glutDisplayFunc(_DisplayCallbackFunc);
+}
+
+void GLUTWindowEventProducer::setReshapeCallback(ReshapeCallbackFunc Callback)
+{
+   WindowEventProducer::setReshapeCallback(Callback);
+
+   //Set the correct GLUT Window
+   glutSetWindow( GLUTWindow::Ptr::dcast(getWindow())->getId() );
+
+   glutReshapeFunc(_ReshapeCallbackFunc);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

@@ -62,7 +62,7 @@ OSG_BEGIN_NAMESPACE
 
 class OSG_INPUT_CLASS_API WindowEventProducer : public WindowEventProducerBase
 {
-  private:
+  protected:
 
     typedef WindowEventProducerBase Inherited;
 
@@ -100,6 +100,12 @@ class OSG_INPUT_CLASS_API WindowEventProducer : public WindowEventProducerBase
     ButtonClickMap _ButtonClickMap;
 
     EventDispatchThread* _EventDispatchThread;
+
+    typedef void (*DisplayCallbackFunc)(void);
+    typedef void (*ReshapeCallbackFunc)(int,int);
+
+    DisplayCallbackFunc _DisplayCallbackFunc;
+    ReshapeCallbackFunc _ReshapeCallbackFunc;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -172,6 +178,12 @@ class OSG_INPUT_CLASS_API WindowEventProducer : public WindowEventProducerBase
     void initEventDispatchThread(void);
     
     void exitEventDispatchThread(void);
+
+    //Set Display Callback Function
+    virtual void setDisplayCallback(DisplayCallbackFunc Callback);
+
+    //Set Reshape Callback Function
+    virtual void setReshapeCallback(ReshapeCallbackFunc Callback);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

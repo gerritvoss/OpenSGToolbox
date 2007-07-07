@@ -111,6 +111,12 @@ class GLUTWindowEventProducer : public GLUTWindowEventProducerBase
 
     //Get the Window Fullscreen
     virtual bool getFullscreen(void) const;
+    
+    //Set Display Callback Function
+    virtual void setDisplayCallback(DisplayCallbackFunc Callback);
+
+    //Set Reshape Callback Function
+    virtual void setReshapeCallback(ReshapeCallbackFunc Callback);
 
     /*=========================  PROTECTED  ===============================*/
   protected:

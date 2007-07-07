@@ -9,30 +9,20 @@
 // interactive scene viewer.
 //
 
-// GLUT is used for window handling
-#include <OpenSG/OSGGLUT.h>
-
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
 
-// The GLUT-OpenSG connection class
-#include <OpenSG/OSGGLUTWindow.h>
-
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
 
-// the general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+// Methods to create simple geometry: boxes, spheres, tori etc.
+#include <OpenSG/OSGGLUTWindow.h>
+#include <OpenSG/OSGGLUT.h>
 
 #include <OpenSG/Toolbox/OSGWindowUtils.h>
-//Input
-#include <OpenSG/Input/OSGWindowEventProducerFactory.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -42,26 +32,34 @@ OSG_USING_NAMESPACE
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 
-WindowEventProducerPtr TheWindowEventProducer;
+// redraw the window
+void display(void)
+{
+    mgr->redraw();
+}
 
-// forward declaration so we can have the interesting stuff upfront
-int setupGLUT( int *argc, char *argv[] );
-void display(void);
-void reshape(int w, int h);
+// react to size changes
+void reshape(int w, int h)
+{
+    mgr->resize(w, h);
+    glutPostRedisplay();
+}
 
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
+
     WindowPtr MainWindow = createWindow(GLUTWindow::getClassType(),
                                         Pnt2s(50,50),
                                         Vec2s(250,250),
                                         "GLUT Window");
+    
     MainWindow->init();
-    TheWindowEventProducer = WindowEventProducerFactory::the()->createWindowEventProducer(MainWindow);
-    TheWindowEventProducer->setDisplayCallback(display);
-    TheWindowEventProducer->setReshapeCallback(reshape);
+    
+   glutReshapeFunc(reshape);
+   glutDisplayFunc(display);
 
     // create the scene
     NodePtr scene = makeTorus(.5, 2, 16, 16);
@@ -83,18 +81,3 @@ int main(int argc, char **argv)
     return 0;
 }
 
-//
-// callback functions
-//
-
-// redraw the window
-void display(void)
-{
-    mgr->redraw();
-}
-
-// react to size changes
-void reshape(int w, int h)
-{
-    mgr->resize(w, h);
-}
