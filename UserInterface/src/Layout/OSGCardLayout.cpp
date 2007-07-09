@@ -106,11 +106,18 @@ void CardLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 {
 	/*!
 	  Draw the current "card" component centered in the parent component
+	  and set to the size of the parent component, or to its max size
 	*/
 	ComponentPtr curCard(Components.getValue(getCard()));
-	// set the component to its preferred size
+	Vec2s size(ParentComponent->getSize());
+	// check each dimension against the max size of the component;
+	if (size[0] > curCard->getMaxSize()[0]) 
+		size[0] = curCard->getMaxSize()[0];
+	if (size[1] > curCard->getMaxSize()[1]) 
+		size[1] = curCard->getMaxSize()[1];
+	// set the component to its parent component's size, or its max size
 	beginEditCP(curCard, Component::SizeFieldMask);
-		curCard->setSize(curCard->getPreferredSize());
+		curCard->setSize(size);
 	endEditCP(curCard, Component::SizeFieldMask);
 
 	Int64 offsetx( (ParentComponent->getSize().x() - curCard->getSize().x()) /2);
