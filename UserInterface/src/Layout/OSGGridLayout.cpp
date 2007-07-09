@@ -76,40 +76,51 @@ void GridLayout::initMethod (void)
 
 void GridLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
 {
-	Int32 Xadj = 0;
+	Int32 Xpos = 0;
 	Int32 Ypos = 0;
-	Int32 maxSize = 0;
+	Int32 maxSizeX = 0;
+	Int32 maxSizeY = 0;
+	Int32 debug = 10;
 	Int32 numComp = Components.getSize();
+	Int32 buttonXSize, buttonYSize;
 
 	//set the size to the perfered sizes for the buttons
 	for(UInt16 i = 0; i<Components.size(); i++){
-			beginEditCP(Components.getValue(i), Component::SizeFieldMask);
-				Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
-			endEditCP(Components.getValue(i), Component::SizeFieldMask);
+		if(Components.getValue(i)->getPreferredSize().x()>maxSizeX)
+			maxSizeX = Components.getValue(i)->getPreferredSize().x();
+		if(Components.getValue(i)->getPreferredSize().y()>maxSizeY)
+			maxSizeY = Components.getValue(i)->getPreferredSize().y();
 	}
+	//set the  size of the button
+	for(UInt16 i = 0; i < Components.size(); i++){
+		if(maxSizeX < Components.getValue(i)->getMaxSize().x())
+			buttonXSize = maxSizeX;
+		else
+			buttonXSize = Components.getValue(i)->getMaxSize().x();
+		if(maxSizeY<Components.getValue(i)->getMaxSize().y())
+			buttonYSize = maxSizeY;
+		else
+			buttonYSize = Components.getValue(i)->getMaxSize().y();
+		Components.getValue(i)->setSize(Vec2s(buttonXSize, buttonYSize));
+	}
+
+
 	//position each button
-	for(UInt16 i = 0; i < getRows(); i++){
-		if(numComp==0)
-			break;
+	for(UInt16 i = 0; i <= getRows()&& numComp>=0; i++){
 		glPushMatrix();
 		glTranslatef(0.0, Ypos, 0.0);
-		for(UInt16 j = 0; j < getColumns(); j++){
-			if(numComp==0)
-				break;
+		for(UInt16 j = 0; j < getColumns()&& numComp>0; j++){
 			glPushMatrix();
-			glTranslatef(Xadj, 0.0, 0.0);
+			debug = i*getColumns()+j;
+			glTranslatef(Xpos, 0.0, 0.0);
 			Components.getValue(i*getColumns()+j)->draw(TheGraphics);
-			Xadj += Components.getValue(i*getColumns()+j)->getSize().x();
-			Xadj += getHorizontalGap();
-			glPopMatrix();
 			numComp--;
-			if(Components.getValue(i*getColumns()+j)->getSize().y()>maxSize)
-				maxSize = Components.getValue(i*getColumns()+j)->getSize().y();
+			Xpos = Xpos + (maxSizeX+getHorizontalGap());
+			glPopMatrix();
 		}
-		Xadj = 0;
-		Ypos = maxSize+getVerticalGap();
+		Xpos = 0;
+		Ypos += maxSizeY+getVerticalGap();
 
-		maxSize = 0;
 		glPopMatrix();
 	}
 }
