@@ -1,13 +1,11 @@
-// OpenSG Tutorial Example: Hello World
+// OpenSG Tutorial Example: Creating a Button
 //
-// Minimalistic OpenSG program
+// This tutorial explains how to implement the 
+// borders offered by the OSG User Interface 
+// library and how to modify their features.
 // 
-// This is the shortest useful OpenSG program 
-// (if you remove all the comments ;)
-//
-// It shows how to use OpenSG together with GLUT to create a little
-// interactive scene viewer.
-//
+// Includes: BevelBorder, CompoundBorder, EtchedBorder, 
+// LineBorder, MatteBorder
 
 // GLUT is used for window handling
 #include <OpenSG/OSGGLUT.h>
@@ -35,13 +33,14 @@
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
+#include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGMatteBorder.h>
 #include <OpenSG/UserInterface/OSGCompoundBorder.h>
 #include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGBevelBorder.h>
 #include <OpenSG/UserInterface/OSGEtchedBorder.h>
+#include <OpenSG/UserInterface/OSGColorUIBackground.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -88,77 +87,154 @@ int main(int argc, char **argv)
 	//Create the Graphics
 	GraphicsPtr graphics = osg::Graphics2D::create();
 
-	//Init the LookAndFeel
+	//Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
-	//Create A Button Component
-	ButtonPtr button = osg::Button::create();
-	MatteBorderPtr border = osg::MatteBorder::create();
-	MatteBorderPtr border2 = osg::MatteBorder::create();
-	CompoundBorderPtr fborder = osg::CompoundBorder::create();
-	LineBorderPtr lborder = osg::LineBorder::create();
-	BevelBorderPtr bborder = osg::BevelBorder::create();
-	EtchedBorderPtr eborder = osg::EtchedBorder::create();
+	/******************************************************
+
+		Create Border components and assign
+		each attribute to each Border.  Note
+		that the LookAndFeelManager automatically
+		assigns default settings to Borders.
+		Each attribute will be set in this 
+		tutorial.
+
+	******************************************************/
+	BevelBorderPtr bevelBorder = osg::BevelBorder::create();
+	CompoundBorderPtr compoundBorder = osg::CompoundBorder::create();
+	EtchedBorderPtr etchedBorder = osg::EtchedBorder::create();
+	LineBorderPtr lineBorder = osg::LineBorder::create();
+	MatteBorderPtr matteBorder = osg::MatteBorder::create();
+	
+	//Edit each Border Component and set all attributes
+	
+	//The BevelBorder causes the Button to appear three dimensional
+	beginEditCP(bevelBorder, BevelBorder::HighlightInnerFieldMask | BevelBorder::RaisedFieldMask | BevelBorder::HighlightOuterFieldMask);
+		//Determines whether Button appears raised (true) or indented into screen (false)
+		bevelBorder->setRaised(true);
+		//Determines width of Border
+		bevelBorder->setWidth(5);
+		//Determines the four colors involved in BevelBorder
+		//The HighlightInner and HighlightOuter are the left and top
+		//of the border while setRaised(false) and the bottom and right 
+		//while setRaised(true).  The ShadowInner and ShadowOuter are the 
+		//opposite two sides.
+		bevelBorder->setHighlightInner(Color4f(1.0, 1.0, 0.5, 1.0));
+		bevelBorder->setHighlightOuter(Color4f(0.5, 0.5, 1.0, 1.0));
+		bevelBorder->setShadowInner(Color4f(1.0, 0.5, 1.0, 1.0));
+		bevelBorder->setShadowOuter(Color4f(0.5, 1.0, 1.0, 1.0));
+	endEditCP(bevelBorder);
+
+	//The CompoundBorder takes two Border components and creates a single Border
+	//out of the two components.  It is possible to take use a CompoundBorder
+	//within a CompoundBorder.
+	beginEditCP(compoundBorder, CompoundBorder::InnerBorderFieldMask | CompoundBorder::OuterBorderFieldMask);
+		//Determine the Inner and Outer Borders of the CompoundBorder
+		compoundBorder->setInnerBorder(bevelBorder);
+		compoundBorder->setOuterBorder(matteBorder);
+	endEditCP(compoundBorder, CompoundBorder::InnerBorderFieldMask | CompoundBorder::OuterBorderFieldMask);
+		
+	//The EtchedBorder causes the Button to appear raised
+	//or indented into the screen similar to the BevelBorder
+	//but in a different style
+	beginEditCP(etchedBorder, EtchedBorder::WidthFieldMask | EtchedBorder::HighlightFieldMask | EtchedBorder::ShadowFieldMask | EtchedBorder::RaisedFieldMask);
+		//Determine the Width of the Border
+		etchedBorder->setWidth(3);
+		//Determine Highlight and Shadow colors
+		etchedBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
+		etchedBorder->setShadow(Color4f(0.8, 0.8, 0.8, 1.0));
+		//Determines if the Border appears Raised (true) or indented (false)
+		etchedBorder->setRaised(false);
+	endEditCP(etchedBorder, EtchedBorder::WidthFieldMask | EtchedBorder::HighlightFieldMask | EtchedBorder::ShadowFieldMask | EtchedBorder::RaisedFieldMask);
+
+	//the LineBorder is simply a line border
+	beginEditCP(lineBorder, LineBorder::WidthFieldMask | LineBorder::ColorFieldMask);
+		//Determine Width and Color of lineBorder
+		lineBorder->setWidth(1);
+		//Determine Color
+		lineBorder->setColor(Color4f(.7, 0.0, .5, 1.0));
+	endEditCP(lineBorder, LineBorder::WidthFieldMask | LineBorder::ColorFieldMask);
+	
+	//The MatteBorder creates a Border with dimensions
+	//in all directions specified individually
+	beginEditCP(matteBorder, MatteBorder::LeftWidthFieldMask | MatteBorder::RightWidthFieldMask | MatteBorder::BottomWidthFieldMask | MatteBorder::TopWidthFieldMask | MatteBorder::ColorFieldMask);
+		//Determine the four Widths
+		matteBorder->setLeftWidth(3);
+		matteBorder->setRightWidth(2);
+		matteBorder->setBottomWidth(5);
+		matteBorder->setTopWidth(1);
+		//Determine Color
+		matteBorder->setColor(Color4f(1.0, .5, .5, 1.0));
+	endEditCP(matteBorder, MatteBorder::LeftWidthFieldMask | MatteBorder::RightWidthFieldMask | MatteBorder::BottomWidthFieldMask | MatteBorder::TopWidthFieldMask | MatteBorder::ColorFieldMask);
 
 
-	beginEditCP(lborder);
-		lborder->setWidth(1);
-		lborder->setColor(Color4f(.7, 0.0, .5, 1.0));
-	endEditCP(lborder);
+	
+	/******************************************************
 
-	beginEditCP(eborder);
-		eborder->setWidth(9);
-		eborder->setHighlight(Color4f(0.0, 0.0, 1.0, 1.0));
-		eborder->setShadow(Color4f(1.0, 0.0, 0.0, 1.0));
-		eborder->setRaised(true);
-	endEditCP(eborder);
+		Create Button components to display each 
+		of the varying Borders.  Buttons will 
+		be placed via the Flow layout.  The Preferred
+		Size, Text, and Border will be edited for each
+		Button.
+
+	******************************************************/
+	//Create Button components
+	ButtonPtr bevelButton = osg::Button::create();
+	ButtonPtr compoundButton = osg::Button::create();
+	ButtonPtr etchedButton = osg::Button::create();
+	ButtonPtr lineButton = osg::Button::create();
+	ButtonPtr matteButton = osg::Button::create();
+	
+	//Edit each Button component
+	beginEditCP(bevelButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+		bevelButton->setPreferredSize(Vec2s(100,50));
+		bevelButton->setText("Bevel Border");
+		bevelButton->setBorder(bevelBorder);
+	endEditCP  (bevelButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+	
+	beginEditCP(compoundButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+		compoundButton->setPreferredSize(Vec2s(100,50));
+		compoundButton->setText("Compound Border");
+		compoundButton->setBorder(compoundBorder);
+	endEditCP  (compoundButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+
+	beginEditCP(etchedButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+		etchedButton->setPreferredSize(Vec2s(100,50));
+		etchedButton->setText("Etched Border");
+		etchedButton->setBorder(etchedBorder);
+	endEditCP  (etchedButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+
+	beginEditCP(lineButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+		lineButton->setPreferredSize(Vec2s(100,50));
+		lineButton->setText("Line Border");
+		lineButton->setBorder(lineBorder);
+	endEditCP  (lineButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+
+	beginEditCP(matteButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+		matteButton->setPreferredSize(Vec2s(100,50));
+		matteButton->setText("Matte Border");
+		matteButton->setBorder(matteBorder);
+	endEditCP  (matteButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 
 
-	beginEditCP(border);
-		border->setLeftWidth(3);
-		border->setRightWidth(2);
-		border->setBottomWidth(9);
-		border->setTopWidth(1);
-		border->setColor(Color4f(1.0, .5, .5, 1.0));
-	endEditCP(border);
-
-	beginEditCP(border2);
-		border2->setLeftWidth(6);
-		border2->setRightWidth(8);
-		border2->setBottomWidth(5);
-		border2->setTopWidth(3);
-		border2->setColor(Color4f(0.0, .5, .5, 1.0));
-	endEditCP(border2);
-
-	beginEditCP(bborder);
-		bborder->setRaised(false);
-		bborder->setWidth(5);
-		bborder->setHighlightInner(Color4f(1.0, 1.0, .5, 1.0));
-		bborder->setHighlightOuter(Color4f(.5, 1.0, 1.0, 1.0));
-		bborder->setShadowInner(Color4f(1.0, .5, 1.0, 1.0));
-		bborder->setShadowOuter(Color4f(.5, .5, 1.0, 1.0));
-	endEditCP(bborder);
-
-	beginEditCP(fborder);
-		fborder->setInnerBorder(border);
-		fborder->setOuterBorder(border2);
-	endEditCP(fborder);
-
-
-	beginEditCP(button, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
-		button->setPreferredSize(Vec2s(100,50));
-		button->setText("Button 1");
-		button->setBorder(eborder);
-	endEditCP  (button, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
-
+	
 	//Create The Main Frame
+	//Create Background to be used with the Main Frame
+	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
+	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
 	FramePtr MainFrame = osg::Frame::create();
-	LayoutPtr MainFrameLayout = osg::AbsoluteLayout::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
-	   MainFrame->getChildren().addValue(button);
+	LayoutPtr MainFrameLayout = osg::FlowLayout::create();
+	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+	   MainFrame->getChildren().addValue(bevelButton);
+	   MainFrame->getChildren().addValue(compoundButton);
+	   MainFrame->getChildren().addValue(etchedButton);
+	   MainFrame->getChildren().addValue(lineButton);
+	   MainFrame->getChildren().addValue(matteButton);
 	   MainFrame->setLayout(MainFrameLayout);
-	   //MainFrame->setBackgroundColor(Color4f(0.0,0.0,0.5,0.3));
-    endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+	   MainFrame->setBackground(mainBackground);
+	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask| Frame::BackgroundFieldMask);
 
 	//Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();
@@ -169,7 +245,7 @@ int main(int argc, char **argv)
 		foreground->setFramePositionOffset(Vec2s(0,0));
 		foreground->setFrameBounds(Vec2f(0.5,0.5));
     endEditCP  (foreground, UIForeground::GraphicsFieldMask | UIForeground::RootFrameFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-
+ 
     // create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 

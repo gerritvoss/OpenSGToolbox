@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="04Background"
 	ProjectGUID="{1CBD0B76-B21A-4C37-A984-575673256F9E}"
 	Keyword="Win32Proj"

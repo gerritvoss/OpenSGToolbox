@@ -1,6 +1,6 @@
 // OpenSG Tutorial Example: Creating a Button
 //
-// This example explains how to edit the basic features of
+// This tutorial explains how to edit the basic features of
 // a button created in the OSG User Interface library.
 // 
 // Includes: button size, button font and text, button color, button border,
@@ -36,6 +36,7 @@
 #include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include <OpenSG/UserInterface/OSGFont.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -83,22 +84,55 @@ int main(int argc, char **argv)
 	//Create the Graphics
 	GraphicsPtr graphics = osg::Graphics2D::create();
 
-	//Initialize the LookAndFeelManager to enable default 
-	//settings for the Button
+	//Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
-	//Create a button component
+	//Create a Button component
 	ButtonPtr button = osg::Button::create();
+	//Create a simple Font to be used with the Button
+	FontPtr fonts = osg::Font::create();
+	beginEditCP(fonts, Font::SizeFieldMask);
+		fonts->setSize(12);
+	endEditCP(fonts, Font::SizeFieldMask);
 
-	//Assign created attributes of button to the button.
-	//The Vec2s requires 2 inputs, X and Y, which control 
-	//the vertical and horizontal dimensions of the button.
-	//Essentially, the input is the vector from the top left 
-	//corner to the bottom right corner of the button.
-	beginEditCP(button);
-		button->setPreferredSize(Vec2s(100,50));
+	/******************************************************
+
+	Assign created attributes of button to the button.
+	The Vec2s requires 2 inputs, X and Y, which control 
+	the vertical and horizontal dimensions of the button.
+	Essentially, the input is the vector from the top left 
+	corner to the bottom right corner of the button.
+
+	******************************************************/
+
+	beginEditCP(button, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
+	    //The following 4 function calls are not specific to Button, 
+		//but can be used with any Component
+
+		//Set the Minimum and Maximum size that the Component can ever have
+		//due to various Layouts (some change the size of the Components within
+		//the layouts)
+		button->setMinSize( Vec2s (50, 25) );
+		button->setMaxSize( Vec2s (200, 100) );
+
+		//Set what the size the Component will be displayed at
+		button->setSize( Vec2s (200, 50) );	
+		//Set an absolute size for the Component, which will
+		//always be the size regard.  It is possible to play around with 
+		//changing the setSize to a much larger value, with the
+		//display size staying the same.  By commenting out the
+		//setPreferredSize line, this will no longer occur.  Note
+		//that even though the Button size is 200 by 50, it currently
+		//displays with the PreferredSize, of 100 by 50.
+		button->setPreferredSize( Vec2s (100, 50) );
+	
+		
+		//The following functions are specific to Button
 		button->setText("Button 1");
-    endEditCP(button);
+		//button->setFont(fonts);
+		//button->setAlignment(VERTICAL_ALIGNMENT);
+		//button->setAlignment(HORIZONTAL_ALIGNMENT);
+    endEditCP(button, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
 
 	//Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
@@ -124,7 +158,7 @@ int main(int argc, char **argv)
     mgr = new SimpleSceneManager;
 
     // tell the manager what to manage
-    mgr->setWindow(gwin );
+    mgr->setWindow(gwin);
     mgr->setRoot  (scene);
 
 	//Add the UI Foreground Object to the Scene

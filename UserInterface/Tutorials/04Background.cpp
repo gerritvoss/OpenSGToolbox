@@ -1,10 +1,12 @@
 // OpenSG Tutorial Example: Creating a Button
 //
-// This example explains how to implement the various
-// backgrounds offered by the OSG User Interface library.
+// This tutorial explains how to implement the 
+// backgrounds offered by the OSG User Interface 
+// library and how to modify their features.
 // 
-// Includes:
-
+// Includes: explanations and examples of how to create
+// and use the six different backgrounds included in the
+// OSG User Interface library.
 
 // GLUT is used for window handling
 #include <OpenSG/OSGGLUT.h>
@@ -43,7 +45,7 @@
 #include <OpenSG/UserInterface/OSGGradientUIBackground.h>
 #include <OpenSG/UserInterface/OSGMaterialUIBackground.h>
 #include <OpenSG/UserInterface/OSGTextureUIBackground.h>
-#include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
+
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -91,7 +93,6 @@ int main(int argc, char **argv)
 	GraphicsPtr graphics = osg::Graphics2D::create();
 
 	//Initialize the LookAndFeelManager to enable default settings
-	//for the Button
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
 	
@@ -133,9 +134,9 @@ int main(int argc, char **argv)
 
 
 	//Set colorBackground- set color
-	beginEditCP(colorBackground);
+	beginEditCP(colorBackground, ColorUIBackground::ColorFieldMask);
 		colorBackground->setColor(Color4f(1.0,0.0,0.0,1.0));
-	endEditCP(colorBackground);
+	endEditCP(colorBackground, ColorUIBackground::ColorFieldMask);
 
 	//Set compoundBackground
 	beginEditCP(compoundBackground);
@@ -149,15 +150,14 @@ int main(int argc, char **argv)
 
 	//Set gradientBackground- Set initial color, end color,
 	//and orientation of gradient
-	beginEditCP(gradientBackground);
+	beginEditCP(gradientBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
 		 gradientBackground->setColorStart( Color4f(1.0, 0.0, 0.0, 1.0));
 		 gradientBackground->setColorEnd( Color4f(0.0, 0.0, 1.0, 1.0));
 		 //The input into the following call is either
 		 //HORIZONTAL_ALIGNMENT or VERTICAL_ALIGNMENT,
 		 //which orient the gradient in the obvious manner 
 		 gradientBackground->setAlignment(HORIZONTAL_ALIGNMENT);
-	endEditCP(gradientBackground);
-
+	endEditCP(gradientBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
 	//Set materialBackground- Set material
 	beginEditCP(materialBackground);
 		//materialBackground->setMaterial(MATERIAL_NAME);
@@ -169,14 +169,18 @@ int main(int argc, char **argv)
 	endEditCP(textureBackground);
 
 
+	//Create and define simple line border to be used on Buttons
+	LineBorderPtr lineBorder = osg::LineBorder::create();
+	beginEditCP(lineBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+		lineBorder->setColor( Color4f(0.0, 0.0, 0.0, 1.0) );
+		lineBorder->setWidth( 1 );
+	endEditCP(lineBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
 	
 	/******************************************************
 
 		Create Button components to display each 
 		of the varying backgrounds.  Buttons will 
-		also be modified (see previous tutorials
-		for more information) and located with the
-		AbsoluteLayoutConstraints option.
+		be placed via the Flow layout.
 
 	******************************************************/
 	ButtonPtr buttonColor = osg::Button::create();
@@ -186,49 +190,54 @@ int main(int argc, char **argv)
 	ButtonPtr buttonMaterial = osg::Button::create();
 	ButtonPtr buttonTexture = osg::Button::create();
 	
-	//Set the visible text, Background, and AbsoluteLayoutConstraints
-	//to the various Button components
-	beginEditCP(buttonColor);
+	//Set the visible text, border, and Background for
+	//each of the various Button components
+	beginEditCP(buttonColor, Button::TextFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
 		buttonColor->setText("Color Background");
 		buttonColor->setBackground(colorBackground);
-    endEditCP(buttonColor);
+		buttonColor->setBorder(lineBorder);
+    endEditCP(buttonColor, Button::TextFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
 
-	beginEditCP(buttonCompound);
+	beginEditCP(buttonCompound, Button::TextFieldMask | Button::BackgroundFieldMask | Button::PreferredSizeFieldMask |Button::BorderFieldMask);
 		buttonCompound->setText("Compound Background");
 		buttonCompound->setBackground(compoundBackground);
 		buttonCompound->setPreferredSize(Vec2s(150,50));
-    endEditCP(buttonCompound);
+		buttonCompound->setBorder(lineBorder);
+		endEditCP(buttonCompound, Button::TextFieldMask | Button::BackgroundFieldMask | Button::PreferredSizeFieldMask |Button::BorderFieldMask);
 
-	beginEditCP(buttonEmpty);
+	beginEditCP(buttonEmpty, Button::TextFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
 		buttonEmpty->setText("Empty Background");
 		buttonEmpty->setBackground(emptyBackground);
-	endEditCP(buttonEmpty);
+		buttonEmpty->setBorder(lineBorder);
+	endEditCP(buttonEmpty, Button::TextFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
 
-	beginEditCP(buttonGradient);
+	beginEditCP(buttonGradient, Button::TextFieldMask | Button::BackgroundFieldMask | Button::PreferredSizeFieldMask |Button::BorderFieldMask);
 		buttonGradient->setText("Gradient Background");
 		buttonGradient->setBackground(gradientBackground);
 		buttonGradient->setPreferredSize(Vec2s(150,50));
-    endEditCP(buttonGradient);
+		buttonGradient->setBorder(lineBorder);
+    endEditCP(buttonGradient, Button::TextFieldMask | Button::BackgroundFieldMask | Button::PreferredSizeFieldMask |Button::BorderFieldMask);
 	
-	//add material and texture buttons
+	//add material and texture buttons at some point
 
 
 
 	//This creates a background for the MainFrame so that 
-	//the button backgrounds are more obvious.  The process
-	//is identical, except where the background is added.
+	//the button backgrounds are easier to see. The process
+	//is identical, except the background is added to the 
+	//MainFrame instead of a Button.
 	//The background is a semi-transparent white background.
 	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	beginEditCP(mainBackground);
+	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
 		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-	endEditCP(mainBackground);
+	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
 
 
 
 	//Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
 	LayoutPtr MainFrameLayout = osg::FlowLayout::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 	   //Assign the button to the mainframe so it will be displayed
 	   //when the view is rendered.
 	   MainFrame->getChildren().addValue(buttonColor);
@@ -237,7 +246,7 @@ int main(int argc, char **argv)
 	   MainFrame->getChildren().addValue(buttonGradient);
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
 	//Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();

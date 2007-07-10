@@ -1,9 +1,8 @@
-// OpenSG Tutorial Example: Creating Multiple Buttons
-//		and Placing Buttons in the Window
+// OpenSG Tutorial Example: Using the AbsoluteLayout
 //
-// This example explains how to place buttons within a 
-// frame utilizing the Absolute Layout command to 
-// manage the layout through the OSG User Interface library.
+// This tutorial explains how to place buttons within a 
+// frame utilizing the Absolute Layout to manage the layout 
+// through the OSG User Interface library.
 // 
 // Includes: placing multiple buttons and using 
 // AbsoluteLayoutConstraints to locate the buttons.
@@ -40,6 +39,7 @@
 #include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
 #include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include <OpenSG/UserInterface/OSGColorUIBackground.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -112,26 +112,26 @@ int main(int argc, char **argv)
    //Define the Button constraints (where the buttons are located in the layout)
    //setPosition gives you the location of the button relative to the 
    //layout manager's upper left hand corner.  Note that with the AbsoluteLayoutConstraints,
-   //the buttons may appear out of the light purple box, as their positions are absolute and
+   //the buttons may appear out of the lightly colored box, as their positions are absolute and
    //not relative to other objects.  By adjusting the window size, this can be easily seen.
-   beginEditCP(buttonConstraints);
+	beginEditCP(buttonConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
 		buttonConstraints->setPosition(Pnt2s (0,150) );
-   endEditCP(buttonConstraints);
+   endEditCP(buttonConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
 
-   beginEditCP(buttonConstraints2);
+   beginEditCP(buttonConstraints2, AbsoluteLayoutConstraints::PositionFieldMask);
 		buttonConstraints2->setPosition(Pnt2s (200,200) );
-   endEditCP(buttonConstraints2);
+   endEditCP(buttonConstraints2, AbsoluteLayoutConstraints::PositionFieldMask);
 	
    //Note that this will cause the button's position to overlap with Button2
    //when the program is run; the AbsoluteLayoutConstraints will overlap
    //if the specified coordinates overlap
-   beginEditCP(buttonConstraints3);
+   beginEditCP(buttonConstraints3, AbsoluteLayoutConstraints::PositionFieldMask);
 		buttonConstraints3->setPosition(Pnt2s (150,220) );
-   endEditCP(buttonConstraints3);
+   endEditCP(buttonConstraints3, AbsoluteLayoutConstraints::PositionFieldMask);
 
    //Edit the first button, set size, color, border, font, text, and constraints
    //to those created above
-    beginEditCP(button);
+   beginEditCP(button, Button::PreferredSizeFieldMask |  Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 		button->setPreferredSize(Vec2s(100,50));
 		button->setSize(Vec2s(100,50));
 		button->setText("Button 1");
@@ -139,11 +139,11 @@ int main(int argc, char **argv)
 		//Set the constraints created above to button
 		//to place the Button within the scene
 		button->setConstraints(buttonConstraints);
-    endEditCP  (button);
+		endEditCP(button, Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 
 	//Edit the second button, set size, color, border, font, text, and constraints
     //to those created above
-    beginEditCP(button2);
+    beginEditCP(button2, Button::PreferredSizeFieldMask |  Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 		button2->setPreferredSize(Vec2s(100,50));
 		button2->setSize(Vec2s(100,50));
 		button2->setText("Button 2");
@@ -151,11 +151,11 @@ int main(int argc, char **argv)
 		//Set the constraints created above to button2
 		//to place the Button within the scene
 		button2->setConstraints(buttonConstraints2);
-    endEditCP  (button2);
+    endEditCP  (button2, Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 
 	//Edit the third button, set size, color, border, font, text, and constraints
     //to those created above
-    beginEditCP(button3);
+    beginEditCP(button3,  Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::ConstraintsFieldMask);
 		button3->setPreferredSize(Vec2s(100,50));
 		button3->setSize(Vec2s(100,50));
 		button3->setText("Button 3");
@@ -163,25 +163,32 @@ int main(int argc, char **argv)
 		//Set the constraints created above to button3
 		//to place the Button within the scene
 		button3->setConstraints(buttonConstraints3);
-    endEditCP  (button3);
+    endEditCP  (button3,  Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::ConstraintsFieldMask);
 
 	//Create The Main Frame
+	//Create Background to be used with the Main Frame
+	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
+	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+	
 	FramePtr MainFrame = osg::Frame::create();
 	LayoutPtr MainFrameLayout = osg::AbsoluteLayout::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 	   //Add the buttons to the mainframe so they will be displayed.
 	   //They are displayed in reverse order, so in this case, since button2
-	   //and button3 are in conflict, button2 will cover button3.  By commenting
-	   //out the addValue commands and uncommenting the others, this will
-	   //be reversed.
+	   //and button3 are in conflict with their locations, button2 will cover 
+	   //button3.  By commenting out their addValue commands and uncommenting 
+	   //the other two, this will be reversed.
 	   MainFrame->getChildren().addValue(button);
 	   MainFrame->getChildren().addValue(button3);
 	   MainFrame->getChildren().addValue(button2);
 	   //MainFrame->getChildren().addValue(button2);
 	   //MainFrame->getChildren().addValue(button3);
 	   MainFrame->setLayout(MainFrameLayout);
+	   MainFrame->setBackground(mainBackground);
 	 
-    endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+    endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
 	//Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();
