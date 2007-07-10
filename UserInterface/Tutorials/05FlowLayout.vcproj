@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="XXTesting"
-	ProjectGUID="{3FDE43F0-DEF8-4CB8-8CE4-51DB7BAD6A51}"
+	Name="05FlowLayout"
+	ProjectGUID="{0BCAD713-F611-4208-AF9C-9DBC2102668F}"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -206,7 +206,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\XXTesting.cpp"
+				RelativePath=".\05FlowLayout.cpp"
 				>
 			</File>
 		</Filter>
