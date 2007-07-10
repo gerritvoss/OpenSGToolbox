@@ -104,7 +104,6 @@ void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentCo
     */
 	UInt32 AxisIndex(0);
 	if(getAlignment() != HORIZONTAL_ALIGNMENT ) AxisIndex = 1;
-	AxisIndex = 1;
 
 	UInt32 MajorAxis(ParentComponent->getSize()[AxisIndex]);
 	UInt32 totalMajorAxis(0);
