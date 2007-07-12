@@ -72,6 +72,15 @@ const OSG::BitVector  ButtonBase::FontFieldMask =
 const OSG::BitVector  ButtonBase::TextFieldMask = 
     (TypeTraits<BitVector>::One << ButtonBase::TextFieldId);
 
+const OSG::BitVector  ButtonBase::ActiveBorderFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::ActiveBorderFieldId);
+
+const OSG::BitVector  ButtonBase::ActiveBackgroundFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::ActiveBackgroundFieldId);
+
+const OSG::BitVector  ButtonBase::ActiveForegroundColorFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::ActiveForegroundColorFieldId);
+
 const OSG::BitVector  ButtonBase::VerticalAlignmentFieldMask = 
     (TypeTraits<BitVector>::One << ButtonBase::VerticalAlignmentFieldId);
 
@@ -89,6 +98,15 @@ const OSG::BitVector ButtonBase::MTInfluenceMask =
     
 */
 /*! \var std::string     ButtonBase::_sfText
+    
+*/
+/*! \var BorderPtr       ButtonBase::_sfActiveBorder
+    
+*/
+/*! \var UIBackgroundPtr ButtonBase::_sfActiveBackground
+    
+*/
+/*! \var Color4f         ButtonBase::_sfActiveForegroundColor
     
 */
 /*! \var UInt32          ButtonBase::_sfVerticalAlignment
@@ -112,6 +130,21 @@ FieldDescription *ButtonBase::_desc[] =
                      TextFieldId, TextFieldMask,
                      false,
                      (FieldAccessMethod) &ButtonBase::getSFText),
+    new FieldDescription(SFBorderPtr::getClassType(), 
+                     "ActiveBorder", 
+                     ActiveBorderFieldId, ActiveBorderFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFActiveBorder),
+    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+                     "ActiveBackground", 
+                     ActiveBackgroundFieldId, ActiveBackgroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFActiveBackground),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "ActiveForegroundColor", 
+                     ActiveForegroundColorFieldId, ActiveForegroundColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFActiveForegroundColor),
     new FieldDescription(SFUInt32::getClassType(), 
                      "VerticalAlignment", 
                      VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
@@ -199,6 +232,9 @@ void ButtonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 ButtonBase::ButtonBase(void) :
     _sfFont                   (), 
     _sfText                   (), 
+    _sfActiveBorder           (), 
+    _sfActiveBackground       (), 
+    _sfActiveForegroundColor  (), 
     _sfVerticalAlignment      (UInt32(VERTICAL_CENTER)), 
     _sfHorizontalAlignment    (UInt32(HORIZONTAL_CENTER)), 
     Inherited() 
@@ -212,6 +248,9 @@ ButtonBase::ButtonBase(void) :
 ButtonBase::ButtonBase(const ButtonBase &source) :
     _sfFont                   (source._sfFont                   ), 
     _sfText                   (source._sfText                   ), 
+    _sfActiveBorder           (source._sfActiveBorder           ), 
+    _sfActiveBackground       (source._sfActiveBackground       ), 
+    _sfActiveForegroundColor  (source._sfActiveForegroundColor  ), 
     _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
     _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
     Inherited                 (source)
@@ -238,6 +277,21 @@ UInt32 ButtonBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (TextFieldMask & whichField))
     {
         returnValue += _sfText.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
+    {
+        returnValue += _sfActiveBorder.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ActiveBackgroundFieldMask & whichField))
+    {
+        returnValue += _sfActiveBackground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ActiveForegroundColorFieldMask & whichField))
+    {
+        returnValue += _sfActiveForegroundColor.getBinSize();
     }
 
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
@@ -269,6 +323,21 @@ void ButtonBase::copyToBin(      BinaryDataHandler &pMem,
         _sfText.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
+    {
+        _sfActiveBorder.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ActiveBackgroundFieldMask & whichField))
+    {
+        _sfActiveBackground.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ActiveForegroundColorFieldMask & whichField))
+    {
+        _sfActiveForegroundColor.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
     {
         _sfVerticalAlignment.copyToBin(pMem);
@@ -297,6 +366,21 @@ void ButtonBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfText.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
+    {
+        _sfActiveBorder.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ActiveBackgroundFieldMask & whichField))
+    {
+        _sfActiveBackground.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ActiveForegroundColorFieldMask & whichField))
+    {
+        _sfActiveForegroundColor.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
     {
         _sfVerticalAlignment.copyFromBin(pMem);
@@ -323,6 +407,15 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
     if(FieldBits::NoField != (TextFieldMask & whichField))
         _sfText.syncWith(pOther->_sfText);
 
+    if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
+        _sfActiveBorder.syncWith(pOther->_sfActiveBorder);
+
+    if(FieldBits::NoField != (ActiveBackgroundFieldMask & whichField))
+        _sfActiveBackground.syncWith(pOther->_sfActiveBackground);
+
+    if(FieldBits::NoField != (ActiveForegroundColorFieldMask & whichField))
+        _sfActiveForegroundColor.syncWith(pOther->_sfActiveForegroundColor);
+
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
         _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
 
@@ -344,6 +437,15 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
 
     if(FieldBits::NoField != (TextFieldMask & whichField))
         _sfText.syncWith(pOther->_sfText);
+
+    if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
+        _sfActiveBorder.syncWith(pOther->_sfActiveBorder);
+
+    if(FieldBits::NoField != (ActiveBackgroundFieldMask & whichField))
+        _sfActiveBackground.syncWith(pOther->_sfActiveBackground);
+
+    if(FieldBits::NoField != (ActiveForegroundColorFieldMask & whichField))
+        _sfActiveForegroundColor.syncWith(pOther->_sfActiveForegroundColor);
 
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
         _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);

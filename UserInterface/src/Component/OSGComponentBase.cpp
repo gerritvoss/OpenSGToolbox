@@ -85,8 +85,14 @@ const OSG::BitVector  ComponentBase::VisibleFieldMask =
 const OSG::BitVector  ComponentBase::EnabledFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::EnabledFieldId);
 
+const OSG::BitVector  ComponentBase::FocusedFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::FocusedFieldId);
+
 const OSG::BitVector  ComponentBase::ConstraintsFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::ConstraintsFieldId);
+
+const OSG::BitVector  ComponentBase::BorderFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::BorderFieldId);
 
 const OSG::BitVector  ComponentBase::BackgroundFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::BackgroundFieldId);
@@ -94,11 +100,26 @@ const OSG::BitVector  ComponentBase::BackgroundFieldMask =
 const OSG::BitVector  ComponentBase::ForegroundColorFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::ForegroundColorFieldId);
 
+const OSG::BitVector  ComponentBase::DisabledBorderFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::DisabledBorderFieldId);
+
+const OSG::BitVector  ComponentBase::DisabledBackgroundFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::DisabledBackgroundFieldId);
+
+const OSG::BitVector  ComponentBase::DisabledForegroundColorFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::DisabledForegroundColorFieldId);
+
+const OSG::BitVector  ComponentBase::FocusedBorderFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::FocusedBorderFieldId);
+
+const OSG::BitVector  ComponentBase::FocusedBackgroundFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::FocusedBackgroundFieldId);
+
+const OSG::BitVector  ComponentBase::FocusedForegroundColorFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::FocusedForegroundColorFieldId);
+
 const OSG::BitVector  ComponentBase::ForegroundMaterialFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::ForegroundMaterialFieldId);
-
-const OSG::BitVector  ComponentBase::BorderFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::BorderFieldId);
 
 const OSG::BitVector  ComponentBase::OpacityFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::OpacityFieldId);
@@ -131,7 +152,13 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
 /*! \var bool            ComponentBase::_sfEnabled
     
 */
+/*! \var bool            ComponentBase::_sfFocused
+    
+*/
 /*! \var LayoutConstraintsPtr ComponentBase::_sfConstraints
+    
+*/
+/*! \var BorderPtr       ComponentBase::_sfBorder
     
 */
 /*! \var UIBackgroundPtr ComponentBase::_sfBackground
@@ -140,10 +167,25 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
 /*! \var Color4f         ComponentBase::_sfForegroundColor
     
 */
-/*! \var MaterialPtr     ComponentBase::_sfForegroundMaterial
+/*! \var BorderPtr       ComponentBase::_sfDisabledBorder
     
 */
-/*! \var BorderPtr       ComponentBase::_sfBorder
+/*! \var UIBackgroundPtr ComponentBase::_sfDisabledBackground
+    
+*/
+/*! \var Color4f         ComponentBase::_sfDisabledForegroundColor
+    
+*/
+/*! \var BorderPtr       ComponentBase::_sfFocusedBorder
+    
+*/
+/*! \var UIBackgroundPtr ComponentBase::_sfFocusedBackground
+    
+*/
+/*! \var Color4f         ComponentBase::_sfFocusedForegroundColor
+    
+*/
+/*! \var MaterialPtr     ComponentBase::_sfForegroundMaterial
     
 */
 /*! \var Real32          ComponentBase::_sfOpacity
@@ -189,11 +231,21 @@ FieldDescription *ComponentBase::_desc[] =
                      EnabledFieldId, EnabledFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFEnabled),
+    new FieldDescription(SFBool::getClassType(), 
+                     "Focused", 
+                     FocusedFieldId, FocusedFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFFocused),
     new FieldDescription(SFLayoutConstraintsPtr::getClassType(), 
                      "Constraints", 
                      ConstraintsFieldId, ConstraintsFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFConstraints),
+    new FieldDescription(SFBorderPtr::getClassType(), 
+                     "Border", 
+                     BorderFieldId, BorderFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFBorder),
     new FieldDescription(SFUIBackgroundPtr::getClassType(), 
                      "Background", 
                      BackgroundFieldId, BackgroundFieldMask,
@@ -204,16 +256,41 @@ FieldDescription *ComponentBase::_desc[] =
                      ForegroundColorFieldId, ForegroundColorFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFForegroundColor),
+    new FieldDescription(SFBorderPtr::getClassType(), 
+                     "DisabledBorder", 
+                     DisabledBorderFieldId, DisabledBorderFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFDisabledBorder),
+    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+                     "DisabledBackground", 
+                     DisabledBackgroundFieldId, DisabledBackgroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFDisabledBackground),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "DisabledForegroundColor", 
+                     DisabledForegroundColorFieldId, DisabledForegroundColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFDisabledForegroundColor),
+    new FieldDescription(SFBorderPtr::getClassType(), 
+                     "FocusedBorder", 
+                     FocusedBorderFieldId, FocusedBorderFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFFocusedBorder),
+    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+                     "FocusedBackground", 
+                     FocusedBackgroundFieldId, FocusedBackgroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFFocusedBackground),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "FocusedForegroundColor", 
+                     FocusedForegroundColorFieldId, FocusedForegroundColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFFocusedForegroundColor),
     new FieldDescription(SFMaterialPtr::getClassType(), 
                      "ForegroundMaterial", 
                      ForegroundMaterialFieldId, ForegroundMaterialFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFForegroundMaterial),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "Border", 
-                     BorderFieldId, BorderFieldMask,
-                     false,
-                     (FieldAccessMethod) &ComponentBase::getSFBorder),
     new FieldDescription(SFReal32::getClassType(), 
                      "Opacity", 
                      OpacityFieldId, OpacityFieldMask,
@@ -292,11 +369,18 @@ ComponentBase::ComponentBase(void) :
     _sfSize                   (), 
     _sfVisible                (bool(true)), 
     _sfEnabled                (bool(true)), 
+    _sfFocused                (bool(false)), 
     _sfConstraints            (), 
+    _sfBorder                 (), 
     _sfBackground             (), 
     _sfForegroundColor        (), 
+    _sfDisabledBorder         (), 
+    _sfDisabledBackground     (), 
+    _sfDisabledForegroundColor(), 
+    _sfFocusedBorder          (), 
+    _sfFocusedBackground      (), 
+    _sfFocusedForegroundColor (), 
     _sfForegroundMaterial     (), 
-    _sfBorder                 (), 
     _sfOpacity                (Real32(1.0)), 
     Inherited() 
 {
@@ -314,11 +398,18 @@ ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfSize                   (source._sfSize                   ), 
     _sfVisible                (source._sfVisible                ), 
     _sfEnabled                (source._sfEnabled                ), 
+    _sfFocused                (source._sfFocused                ), 
     _sfConstraints            (source._sfConstraints            ), 
+    _sfBorder                 (source._sfBorder                 ), 
     _sfBackground             (source._sfBackground             ), 
     _sfForegroundColor        (source._sfForegroundColor        ), 
+    _sfDisabledBorder         (source._sfDisabledBorder         ), 
+    _sfDisabledBackground     (source._sfDisabledBackground     ), 
+    _sfDisabledForegroundColor(source._sfDisabledForegroundColor), 
+    _sfFocusedBorder          (source._sfFocusedBorder          ), 
+    _sfFocusedBackground      (source._sfFocusedBackground      ), 
+    _sfFocusedForegroundColor (source._sfFocusedForegroundColor ), 
     _sfForegroundMaterial     (source._sfForegroundMaterial     ), 
-    _sfBorder                 (source._sfBorder                 ), 
     _sfOpacity                (source._sfOpacity                ), 
     Inherited                 (source)
 {
@@ -371,9 +462,19 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfEnabled.getBinSize();
     }
 
+    if(FieldBits::NoField != (FocusedFieldMask & whichField))
+    {
+        returnValue += _sfFocused.getBinSize();
+    }
+
     if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
     {
         returnValue += _sfConstraints.getBinSize();
+    }
+
+    if(FieldBits::NoField != (BorderFieldMask & whichField))
+    {
+        returnValue += _sfBorder.getBinSize();
     }
 
     if(FieldBits::NoField != (BackgroundFieldMask & whichField))
@@ -386,14 +487,39 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfForegroundColor.getBinSize();
     }
 
+    if(FieldBits::NoField != (DisabledBorderFieldMask & whichField))
+    {
+        returnValue += _sfDisabledBorder.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
+    {
+        returnValue += _sfDisabledBackground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DisabledForegroundColorFieldMask & whichField))
+    {
+        returnValue += _sfDisabledForegroundColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
+    {
+        returnValue += _sfFocusedBorder.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
+    {
+        returnValue += _sfFocusedBackground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FocusedForegroundColorFieldMask & whichField))
+    {
+        returnValue += _sfFocusedForegroundColor.getBinSize();
+    }
+
     if(FieldBits::NoField != (ForegroundMaterialFieldMask & whichField))
     {
         returnValue += _sfForegroundMaterial.getBinSize();
-    }
-
-    if(FieldBits::NoField != (BorderFieldMask & whichField))
-    {
-        returnValue += _sfBorder.getBinSize();
     }
 
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
@@ -445,9 +571,19 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
         _sfEnabled.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (FocusedFieldMask & whichField))
+    {
+        _sfFocused.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
     {
         _sfConstraints.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BorderFieldMask & whichField))
+    {
+        _sfBorder.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (BackgroundFieldMask & whichField))
@@ -460,14 +596,39 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
         _sfForegroundColor.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (DisabledBorderFieldMask & whichField))
+    {
+        _sfDisabledBorder.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
+    {
+        _sfDisabledBackground.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledForegroundColorFieldMask & whichField))
+    {
+        _sfDisabledForegroundColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
+    {
+        _sfFocusedBorder.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
+    {
+        _sfFocusedBackground.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedForegroundColorFieldMask & whichField))
+    {
+        _sfFocusedForegroundColor.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (ForegroundMaterialFieldMask & whichField))
     {
         _sfForegroundMaterial.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (BorderFieldMask & whichField))
-    {
-        _sfBorder.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
@@ -518,9 +679,19 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfEnabled.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (FocusedFieldMask & whichField))
+    {
+        _sfFocused.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
     {
         _sfConstraints.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BorderFieldMask & whichField))
+    {
+        _sfBorder.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (BackgroundFieldMask & whichField))
@@ -533,14 +704,39 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfForegroundColor.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (DisabledBorderFieldMask & whichField))
+    {
+        _sfDisabledBorder.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
+    {
+        _sfDisabledBackground.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledForegroundColorFieldMask & whichField))
+    {
+        _sfDisabledForegroundColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
+    {
+        _sfFocusedBorder.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
+    {
+        _sfFocusedBackground.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedForegroundColorFieldMask & whichField))
+    {
+        _sfFocusedForegroundColor.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (ForegroundMaterialFieldMask & whichField))
     {
         _sfForegroundMaterial.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (BorderFieldMask & whichField))
-    {
-        _sfBorder.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
@@ -579,8 +775,14 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (EnabledFieldMask & whichField))
         _sfEnabled.syncWith(pOther->_sfEnabled);
 
+    if(FieldBits::NoField != (FocusedFieldMask & whichField))
+        _sfFocused.syncWith(pOther->_sfFocused);
+
     if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
         _sfConstraints.syncWith(pOther->_sfConstraints);
+
+    if(FieldBits::NoField != (BorderFieldMask & whichField))
+        _sfBorder.syncWith(pOther->_sfBorder);
 
     if(FieldBits::NoField != (BackgroundFieldMask & whichField))
         _sfBackground.syncWith(pOther->_sfBackground);
@@ -588,11 +790,26 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (ForegroundColorFieldMask & whichField))
         _sfForegroundColor.syncWith(pOther->_sfForegroundColor);
 
+    if(FieldBits::NoField != (DisabledBorderFieldMask & whichField))
+        _sfDisabledBorder.syncWith(pOther->_sfDisabledBorder);
+
+    if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
+        _sfDisabledBackground.syncWith(pOther->_sfDisabledBackground);
+
+    if(FieldBits::NoField != (DisabledForegroundColorFieldMask & whichField))
+        _sfDisabledForegroundColor.syncWith(pOther->_sfDisabledForegroundColor);
+
+    if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
+        _sfFocusedBorder.syncWith(pOther->_sfFocusedBorder);
+
+    if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
+        _sfFocusedBackground.syncWith(pOther->_sfFocusedBackground);
+
+    if(FieldBits::NoField != (FocusedForegroundColorFieldMask & whichField))
+        _sfFocusedForegroundColor.syncWith(pOther->_sfFocusedForegroundColor);
+
     if(FieldBits::NoField != (ForegroundMaterialFieldMask & whichField))
         _sfForegroundMaterial.syncWith(pOther->_sfForegroundMaterial);
-
-    if(FieldBits::NoField != (BorderFieldMask & whichField))
-        _sfBorder.syncWith(pOther->_sfBorder);
 
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
         _sfOpacity.syncWith(pOther->_sfOpacity);
@@ -628,8 +845,14 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (EnabledFieldMask & whichField))
         _sfEnabled.syncWith(pOther->_sfEnabled);
 
+    if(FieldBits::NoField != (FocusedFieldMask & whichField))
+        _sfFocused.syncWith(pOther->_sfFocused);
+
     if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
         _sfConstraints.syncWith(pOther->_sfConstraints);
+
+    if(FieldBits::NoField != (BorderFieldMask & whichField))
+        _sfBorder.syncWith(pOther->_sfBorder);
 
     if(FieldBits::NoField != (BackgroundFieldMask & whichField))
         _sfBackground.syncWith(pOther->_sfBackground);
@@ -637,11 +860,26 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (ForegroundColorFieldMask & whichField))
         _sfForegroundColor.syncWith(pOther->_sfForegroundColor);
 
+    if(FieldBits::NoField != (DisabledBorderFieldMask & whichField))
+        _sfDisabledBorder.syncWith(pOther->_sfDisabledBorder);
+
+    if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
+        _sfDisabledBackground.syncWith(pOther->_sfDisabledBackground);
+
+    if(FieldBits::NoField != (DisabledForegroundColorFieldMask & whichField))
+        _sfDisabledForegroundColor.syncWith(pOther->_sfDisabledForegroundColor);
+
+    if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
+        _sfFocusedBorder.syncWith(pOther->_sfFocusedBorder);
+
+    if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
+        _sfFocusedBackground.syncWith(pOther->_sfFocusedBackground);
+
+    if(FieldBits::NoField != (FocusedForegroundColorFieldMask & whichField))
+        _sfFocusedForegroundColor.syncWith(pOther->_sfFocusedForegroundColor);
+
     if(FieldBits::NoField != (ForegroundMaterialFieldMask & whichField))
         _sfForegroundMaterial.syncWith(pOther->_sfForegroundMaterial);
-
-    if(FieldBits::NoField != (BorderFieldMask & whichField))
-        _sfBorder.syncWith(pOther->_sfBorder);
 
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
         _sfOpacity.syncWith(pOther->_sfOpacity);

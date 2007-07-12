@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="05FlowLayout"
 	ProjectGUID="{0BCAD713-F611-4208-AF9C-9DBC2102668F}"
 	Keyword="Win32Proj"

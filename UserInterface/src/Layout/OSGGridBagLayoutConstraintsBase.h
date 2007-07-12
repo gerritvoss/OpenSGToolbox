@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Button
+ **     class GridBagLayoutConstraints
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGBUTTONBASE_H_
-#define _OSGBUTTONBASE_H_
+#ifndef _OSGGRIDBAGLAYOUTCONSTRAINTSBASE_H_
+#define _OSGGRIDBAGLAYOUTCONSTRAINTSBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -64,55 +64,76 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGComponent.h" // Parent
+#include "OSGLayoutConstraints.h" // Parent
 
-#include "Text/OSGFont.h" // Font type
-#include <OpenSG/OSGStringFields.h> // Text type
-#include "Border/OSGBorder.h" // ActiveBorder type
-#include "Background/OSGUIBackground.h" // ActiveBackground type
-#include <OpenSG/OSGColor4fFields.h> // ActiveForegroundColor type
-#include <OpenSG/OSGUInt32Fields.h> // VerticalAlignment type
-#include <OpenSG/OSGUInt32Fields.h> // HorizontalAlignment type
+#include <OpenSG/OSGUInt16Fields.h> // GridX type
+#include <OpenSG/OSGUInt16Fields.h> // GridY type
+#include <OpenSG/OSGUInt16Fields.h> // GridWidth type
+#include <OpenSG/OSGUInt16Fields.h> // GridHeight type
+#include <OpenSG/OSGUInt32Fields.h> // Fill type
+#include <OpenSG/OSGUInt32Fields.h> // Anchor type
+#include <OpenSG/OSGReal32Fields.h> // WeightX type
+#include <OpenSG/OSGReal32Fields.h> // WeightY type
+#include <OpenSG/OSGUInt32Fields.h> // InternalPadX type
+#include <OpenSG/OSGUInt32Fields.h> // InternalPadY type
+#include <OpenSG/OSGUInt32Fields.h> // PadLeft type
+#include <OpenSG/OSGUInt32Fields.h> // PadRight type
+#include <OpenSG/OSGUInt32Fields.h> // PadTop type
+#include <OpenSG/OSGUInt32Fields.h> // PadBottom type
 
-#include "OSGButtonFields.h"
+#include "OSGGridBagLayoutConstraintsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Button;
+class GridBagLayoutConstraints;
 class BinaryDataHandler;
 
-//! \brief Button Base Class.
+//! \brief GridBagLayoutConstraints Base Class.
 
-class OSG_USER_INTERFACE_CLASS_API ButtonBase : public Component
+class OSG_USER_INTERFACE_CLASS_API GridBagLayoutConstraintsBase : public LayoutConstraints
 {
   private:
 
-    typedef Component    Inherited;
+    typedef LayoutConstraints    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ButtonPtr  Ptr;
+    typedef GridBagLayoutConstraintsPtr  Ptr;
 
     enum
     {
-        FontFieldId                  = Inherited::NextFieldId,
-        TextFieldId                  = FontFieldId                  + 1,
-        ActiveBorderFieldId          = TextFieldId                  + 1,
-        ActiveBackgroundFieldId      = ActiveBorderFieldId          + 1,
-        ActiveForegroundColorFieldId = ActiveBackgroundFieldId      + 1,
-        VerticalAlignmentFieldId     = ActiveForegroundColorFieldId + 1,
-        HorizontalAlignmentFieldId   = VerticalAlignmentFieldId     + 1,
-        NextFieldId                  = HorizontalAlignmentFieldId   + 1
+        GridXFieldId        = Inherited::NextFieldId,
+        GridYFieldId        = GridXFieldId        + 1,
+        GridWidthFieldId    = GridYFieldId        + 1,
+        GridHeightFieldId   = GridWidthFieldId    + 1,
+        FillFieldId         = GridHeightFieldId   + 1,
+        AnchorFieldId       = FillFieldId         + 1,
+        WeightXFieldId      = AnchorFieldId       + 1,
+        WeightYFieldId      = WeightXFieldId      + 1,
+        InternalPadXFieldId = WeightYFieldId      + 1,
+        InternalPadYFieldId = InternalPadXFieldId + 1,
+        PadLeftFieldId      = InternalPadYFieldId + 1,
+        PadRightFieldId     = PadLeftFieldId      + 1,
+        PadTopFieldId       = PadRightFieldId     + 1,
+        PadBottomFieldId    = PadTopFieldId       + 1,
+        NextFieldId         = PadBottomFieldId    + 1
     };
 
-    static const OSG::BitVector FontFieldMask;
-    static const OSG::BitVector TextFieldMask;
-    static const OSG::BitVector ActiveBorderFieldMask;
-    static const OSG::BitVector ActiveBackgroundFieldMask;
-    static const OSG::BitVector ActiveForegroundColorFieldMask;
-    static const OSG::BitVector VerticalAlignmentFieldMask;
-    static const OSG::BitVector HorizontalAlignmentFieldMask;
+    static const OSG::BitVector GridXFieldMask;
+    static const OSG::BitVector GridYFieldMask;
+    static const OSG::BitVector GridWidthFieldMask;
+    static const OSG::BitVector GridHeightFieldMask;
+    static const OSG::BitVector FillFieldMask;
+    static const OSG::BitVector AnchorFieldMask;
+    static const OSG::BitVector WeightXFieldMask;
+    static const OSG::BitVector WeightYFieldMask;
+    static const OSG::BitVector InternalPadXFieldMask;
+    static const OSG::BitVector InternalPadYFieldMask;
+    static const OSG::BitVector PadLeftFieldMask;
+    static const OSG::BitVector PadRightFieldMask;
+    static const OSG::BitVector PadTopFieldMask;
+    static const OSG::BitVector PadBottomFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -139,41 +160,69 @@ class OSG_USER_INTERFACE_CLASS_API ButtonBase : public Component
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFFontPtr           *getSFFont           (void);
-           SFString            *getSFText           (void);
-           SFBorderPtr         *getSFActiveBorder   (void);
-           SFUIBackgroundPtr   *getSFActiveBackground(void);
-           SFColor4f           *getSFActiveForegroundColor(void);
-           SFUInt32            *getSFVerticalAlignment(void);
-           SFUInt32            *getSFHorizontalAlignment(void);
+           SFUInt16            *getSFGridX          (void);
+           SFUInt16            *getSFGridY          (void);
+           SFUInt16            *getSFGridWidth      (void);
+           SFUInt16            *getSFGridHeight     (void);
+           SFUInt32            *getSFFill           (void);
+           SFUInt32            *getSFAnchor         (void);
+           SFReal32            *getSFWeightX        (void);
+           SFReal32            *getSFWeightY        (void);
+           SFUInt32            *getSFInternalPadX   (void);
+           SFUInt32            *getSFInternalPadY   (void);
+           SFUInt32            *getSFPadLeft        (void);
+           SFUInt32            *getSFPadRight       (void);
+           SFUInt32            *getSFPadTop         (void);
+           SFUInt32            *getSFPadBottom      (void);
 
-           FontPtr             &getFont           (void);
-     const FontPtr             &getFont           (void) const;
-           std::string         &getText           (void);
-     const std::string         &getText           (void) const;
-           BorderPtr           &getActiveBorder   (void);
-     const BorderPtr           &getActiveBorder   (void) const;
-           UIBackgroundPtr     &getActiveBackground(void);
-     const UIBackgroundPtr     &getActiveBackground(void) const;
-           Color4f             &getActiveForegroundColor(void);
-     const Color4f             &getActiveForegroundColor(void) const;
-           UInt32              &getVerticalAlignment(void);
-     const UInt32              &getVerticalAlignment(void) const;
-           UInt32              &getHorizontalAlignment(void);
-     const UInt32              &getHorizontalAlignment(void) const;
+           UInt16              &getGridX          (void);
+     const UInt16              &getGridX          (void) const;
+           UInt16              &getGridY          (void);
+     const UInt16              &getGridY          (void) const;
+           UInt16              &getGridWidth      (void);
+     const UInt16              &getGridWidth      (void) const;
+           UInt16              &getGridHeight     (void);
+     const UInt16              &getGridHeight     (void) const;
+           UInt32              &getFill           (void);
+     const UInt32              &getFill           (void) const;
+           UInt32              &getAnchor         (void);
+     const UInt32              &getAnchor         (void) const;
+           Real32              &getWeightX        (void);
+     const Real32              &getWeightX        (void) const;
+           Real32              &getWeightY        (void);
+     const Real32              &getWeightY        (void) const;
+           UInt32              &getInternalPadX   (void);
+     const UInt32              &getInternalPadX   (void) const;
+           UInt32              &getInternalPadY   (void);
+     const UInt32              &getInternalPadY   (void) const;
+           UInt32              &getPadLeft        (void);
+     const UInt32              &getPadLeft        (void) const;
+           UInt32              &getPadRight       (void);
+     const UInt32              &getPadRight       (void) const;
+           UInt32              &getPadTop         (void);
+     const UInt32              &getPadTop         (void) const;
+           UInt32              &getPadBottom      (void);
+     const UInt32              &getPadBottom      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setFont           ( const FontPtr &value );
-     void setText           ( const std::string &value );
-     void setActiveBorder   ( const BorderPtr &value );
-     void setActiveBackground( const UIBackgroundPtr &value );
-     void setActiveForegroundColor( const Color4f &value );
-     void setVerticalAlignment( const UInt32 &value );
-     void setHorizontalAlignment( const UInt32 &value );
+     void setGridX          ( const UInt16 &value );
+     void setGridY          ( const UInt16 &value );
+     void setGridWidth      ( const UInt16 &value );
+     void setGridHeight     ( const UInt16 &value );
+     void setFill           ( const UInt32 &value );
+     void setAnchor         ( const UInt32 &value );
+     void setWeightX        ( const Real32 &value );
+     void setWeightY        ( const Real32 &value );
+     void setInternalPadX   ( const UInt32 &value );
+     void setInternalPadY   ( const UInt32 &value );
+     void setPadLeft        ( const UInt32 &value );
+     void setPadRight       ( const UInt32 &value );
+     void setPadTop         ( const UInt32 &value );
+     void setPadBottom      ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -197,8 +246,8 @@ class OSG_USER_INTERFACE_CLASS_API ButtonBase : public Component
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ButtonPtr      create          (void); 
-    static  ButtonPtr      createEmpty     (void); 
+    static  GridBagLayoutConstraintsPtr      create          (void); 
+    static  GridBagLayoutConstraintsPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -216,28 +265,35 @@ class OSG_USER_INTERFACE_CLASS_API ButtonBase : public Component
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFFontPtr           _sfFont;
-    SFString            _sfText;
-    SFBorderPtr         _sfActiveBorder;
-    SFUIBackgroundPtr   _sfActiveBackground;
-    SFColor4f           _sfActiveForegroundColor;
-    SFUInt32            _sfVerticalAlignment;
-    SFUInt32            _sfHorizontalAlignment;
+    SFUInt16            _sfGridX;
+    SFUInt16            _sfGridY;
+    SFUInt16            _sfGridWidth;
+    SFUInt16            _sfGridHeight;
+    SFUInt32            _sfFill;
+    SFUInt32            _sfAnchor;
+    SFReal32            _sfWeightX;
+    SFReal32            _sfWeightY;
+    SFUInt32            _sfInternalPadX;
+    SFUInt32            _sfInternalPadY;
+    SFUInt32            _sfPadLeft;
+    SFUInt32            _sfPadRight;
+    SFUInt32            _sfPadTop;
+    SFUInt32            _sfPadBottom;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ButtonBase(void);
-    ButtonBase(const ButtonBase &source);
+    GridBagLayoutConstraintsBase(void);
+    GridBagLayoutConstraintsBase(const GridBagLayoutConstraintsBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ButtonBase(void); 
+    virtual ~GridBagLayoutConstraintsBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -245,13 +301,13 @@ class OSG_USER_INTERFACE_CLASS_API ButtonBase : public Component
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ButtonBase *pOther,
+    void executeSyncImpl(      GridBagLayoutConstraintsBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      ButtonBase *pOther,
+    void executeSyncImpl(      GridBagLayoutConstraintsBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -281,7 +337,7 @@ class OSG_USER_INTERFACE_CLASS_API ButtonBase : public Component
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ButtonBase &source);
+    void operator =(const GridBagLayoutConstraintsBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -289,17 +345,17 @@ class OSG_USER_INTERFACE_CLASS_API ButtonBase : public Component
 //---------------------------------------------------------------------------
 
 
-typedef ButtonBase *ButtonBaseP;
+typedef GridBagLayoutConstraintsBase *GridBagLayoutConstraintsBaseP;
 
-typedef osgIF<ButtonBase::isNodeCore,
-              CoredNodePtr<Button>,
+typedef osgIF<GridBagLayoutConstraintsBase::isNodeCore,
+              CoredNodePtr<GridBagLayoutConstraints>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ButtonNodePtr;
+              >::_IRet GridBagLayoutConstraintsNodePtr;
 
-typedef RefPtr<ButtonPtr> ButtonRefPtr;
+typedef RefPtr<GridBagLayoutConstraintsPtr> GridBagLayoutConstraintsRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGBUTTONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGGRIDBAGLAYOUTCONSTRAINTSBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGBUTTONBASE_H_ */
+#endif /* _OSGGRIDBAGLAYOUTCONSTRAINTSBASE_H_ */

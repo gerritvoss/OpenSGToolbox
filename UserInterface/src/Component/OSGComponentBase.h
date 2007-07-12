@@ -72,11 +72,18 @@
 #include <OpenSG/OSGVec2sFields.h> // Size type
 #include <OpenSG/OSGBoolFields.h> // Visible type
 #include <OpenSG/OSGBoolFields.h> // Enabled type
+#include <OpenSG/OSGBoolFields.h> // Focused type
 #include "Layout/OSGLayoutConstraints.h" // Constraints type
+#include "Border/OSGBorder.h" // Border type
 #include "Background/OSGUIBackground.h" // Background type
 #include <OpenSG/OSGColor4fFields.h> // ForegroundColor type
+#include "Border/OSGBorder.h" // DisabledBorder type
+#include "Background/OSGUIBackground.h" // DisabledBackground type
+#include <OpenSG/OSGColor4fFields.h> // DisabledForegroundColor type
+#include "Border/OSGBorder.h" // FocusedBorder type
+#include "Background/OSGUIBackground.h" // FocusedBackground type
+#include <OpenSG/OSGColor4fFields.h> // FocusedForegroundColor type
 #include <OpenSG/OSGMaterialFields.h> // ForegroundMaterial type
-#include "Border/OSGBorder.h" // Border type
 #include <OpenSG/OSGReal32Fields.h> // Opacity type
 
 #include "OSGComponentFields.h"
@@ -101,20 +108,27 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
 
     enum
     {
-        PositionFieldId           = Inherited::NextFieldId,
-        MinSizeFieldId            = PositionFieldId           + 1,
-        MaxSizeFieldId            = MinSizeFieldId            + 1,
-        PreferredSizeFieldId      = MaxSizeFieldId            + 1,
-        SizeFieldId               = PreferredSizeFieldId      + 1,
-        VisibleFieldId            = SizeFieldId               + 1,
-        EnabledFieldId            = VisibleFieldId            + 1,
-        ConstraintsFieldId        = EnabledFieldId            + 1,
-        BackgroundFieldId         = ConstraintsFieldId        + 1,
-        ForegroundColorFieldId    = BackgroundFieldId         + 1,
-        ForegroundMaterialFieldId = ForegroundColorFieldId    + 1,
-        BorderFieldId             = ForegroundMaterialFieldId + 1,
-        OpacityFieldId            = BorderFieldId             + 1,
-        NextFieldId               = OpacityFieldId            + 1
+        PositionFieldId                = Inherited::NextFieldId,
+        MinSizeFieldId                 = PositionFieldId                + 1,
+        MaxSizeFieldId                 = MinSizeFieldId                 + 1,
+        PreferredSizeFieldId           = MaxSizeFieldId                 + 1,
+        SizeFieldId                    = PreferredSizeFieldId           + 1,
+        VisibleFieldId                 = SizeFieldId                    + 1,
+        EnabledFieldId                 = VisibleFieldId                 + 1,
+        FocusedFieldId                 = EnabledFieldId                 + 1,
+        ConstraintsFieldId             = FocusedFieldId                 + 1,
+        BorderFieldId                  = ConstraintsFieldId             + 1,
+        BackgroundFieldId              = BorderFieldId                  + 1,
+        ForegroundColorFieldId         = BackgroundFieldId              + 1,
+        DisabledBorderFieldId          = ForegroundColorFieldId         + 1,
+        DisabledBackgroundFieldId      = DisabledBorderFieldId          + 1,
+        DisabledForegroundColorFieldId = DisabledBackgroundFieldId      + 1,
+        FocusedBorderFieldId           = DisabledForegroundColorFieldId + 1,
+        FocusedBackgroundFieldId       = FocusedBorderFieldId           + 1,
+        FocusedForegroundColorFieldId  = FocusedBackgroundFieldId       + 1,
+        ForegroundMaterialFieldId      = FocusedForegroundColorFieldId  + 1,
+        OpacityFieldId                 = ForegroundMaterialFieldId      + 1,
+        NextFieldId                    = OpacityFieldId                 + 1
     };
 
     static const OSG::BitVector PositionFieldMask;
@@ -124,11 +138,18 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
     static const OSG::BitVector SizeFieldMask;
     static const OSG::BitVector VisibleFieldMask;
     static const OSG::BitVector EnabledFieldMask;
+    static const OSG::BitVector FocusedFieldMask;
     static const OSG::BitVector ConstraintsFieldMask;
+    static const OSG::BitVector BorderFieldMask;
     static const OSG::BitVector BackgroundFieldMask;
     static const OSG::BitVector ForegroundColorFieldMask;
+    static const OSG::BitVector DisabledBorderFieldMask;
+    static const OSG::BitVector DisabledBackgroundFieldMask;
+    static const OSG::BitVector DisabledForegroundColorFieldMask;
+    static const OSG::BitVector FocusedBorderFieldMask;
+    static const OSG::BitVector FocusedBackgroundFieldMask;
+    static const OSG::BitVector FocusedForegroundColorFieldMask;
     static const OSG::BitVector ForegroundMaterialFieldMask;
-    static const OSG::BitVector BorderFieldMask;
     static const OSG::BitVector OpacityFieldMask;
 
 
@@ -162,11 +183,18 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
            SFVec2s             *getSFSize           (void);
            SFBool              *getSFVisible        (void);
            SFBool              *getSFEnabled        (void);
+           SFBool              *getSFFocused        (void);
            SFLayoutConstraintsPtr *getSFConstraints    (void);
+           SFBorderPtr         *getSFBorder         (void);
            SFUIBackgroundPtr   *getSFBackground     (void);
            SFColor4f           *getSFForegroundColor(void);
+           SFBorderPtr         *getSFDisabledBorder (void);
+           SFUIBackgroundPtr   *getSFDisabledBackground(void);
+           SFColor4f           *getSFDisabledForegroundColor(void);
+           SFBorderPtr         *getSFFocusedBorder  (void);
+           SFUIBackgroundPtr   *getSFFocusedBackground(void);
+           SFColor4f           *getSFFocusedForegroundColor(void);
            SFMaterialPtr       *getSFForegroundMaterial(void);
-           SFBorderPtr         *getSFBorder         (void);
            SFReal32            *getSFOpacity        (void);
 
            Vec2s               &getMinSize        (void);
@@ -181,16 +209,30 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
      const bool                &getVisible        (void) const;
            bool                &getEnabled        (void);
      const bool                &getEnabled        (void) const;
+           bool                &getFocused        (void);
+     const bool                &getFocused        (void) const;
            LayoutConstraintsPtr &getConstraints    (void);
      const LayoutConstraintsPtr &getConstraints    (void) const;
+           BorderPtr           &getBorder         (void);
+     const BorderPtr           &getBorder         (void) const;
            UIBackgroundPtr     &getBackground     (void);
      const UIBackgroundPtr     &getBackground     (void) const;
            Color4f             &getForegroundColor(void);
      const Color4f             &getForegroundColor(void) const;
+           BorderPtr           &getDisabledBorder (void);
+     const BorderPtr           &getDisabledBorder (void) const;
+           UIBackgroundPtr     &getDisabledBackground(void);
+     const UIBackgroundPtr     &getDisabledBackground(void) const;
+           Color4f             &getDisabledForegroundColor(void);
+     const Color4f             &getDisabledForegroundColor(void) const;
+           BorderPtr           &getFocusedBorder  (void);
+     const BorderPtr           &getFocusedBorder  (void) const;
+           UIBackgroundPtr     &getFocusedBackground(void);
+     const UIBackgroundPtr     &getFocusedBackground(void) const;
+           Color4f             &getFocusedForegroundColor(void);
+     const Color4f             &getFocusedForegroundColor(void) const;
            MaterialPtr         &getForegroundMaterial(void);
      const MaterialPtr         &getForegroundMaterial(void) const;
-           BorderPtr           &getBorder         (void);
-     const BorderPtr           &getBorder         (void) const;
            Real32              &getOpacity        (void);
      const Real32              &getOpacity        (void) const;
 
@@ -205,11 +247,18 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
      void setSize           ( const Vec2s &value );
      void setVisible        ( const bool &value );
      void setEnabled        ( const bool &value );
+     void setFocused        ( const bool &value );
      void setConstraints    ( const LayoutConstraintsPtr &value );
+     void setBorder         ( const BorderPtr &value );
      void setBackground     ( const UIBackgroundPtr &value );
      void setForegroundColor( const Color4f &value );
+     void setDisabledBorder ( const BorderPtr &value );
+     void setDisabledBackground( const UIBackgroundPtr &value );
+     void setDisabledForegroundColor( const Color4f &value );
+     void setFocusedBorder  ( const BorderPtr &value );
+     void setFocusedBackground( const UIBackgroundPtr &value );
+     void setFocusedForegroundColor( const Color4f &value );
      void setForegroundMaterial( const MaterialPtr &value );
-     void setBorder         ( const BorderPtr &value );
      void setOpacity        ( const Real32 &value );
 
     /*! \}                                                                 */
@@ -244,11 +293,18 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
     SFVec2s             _sfSize;
     SFBool              _sfVisible;
     SFBool              _sfEnabled;
+    SFBool              _sfFocused;
     SFLayoutConstraintsPtr   _sfConstraints;
+    SFBorderPtr         _sfBorder;
     SFUIBackgroundPtr   _sfBackground;
     SFColor4f           _sfForegroundColor;
+    SFBorderPtr         _sfDisabledBorder;
+    SFUIBackgroundPtr   _sfDisabledBackground;
+    SFColor4f           _sfDisabledForegroundColor;
+    SFBorderPtr         _sfFocusedBorder;
+    SFUIBackgroundPtr   _sfFocusedBackground;
+    SFColor4f           _sfFocusedForegroundColor;
     SFMaterialPtr       _sfForegroundMaterial;
-    SFBorderPtr         _sfBorder;
     SFReal32            _sfOpacity;
 
     /*! \}                                                                 */

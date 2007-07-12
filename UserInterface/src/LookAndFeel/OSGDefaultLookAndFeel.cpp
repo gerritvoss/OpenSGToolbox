@@ -111,11 +111,28 @@ void DefaultLookAndFeel::init(void)
 		DefaultButtonBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
 	endEditCP(DefaultButtonBorder);
 
+	//Default Disabled ButtonBorder
+	BevelBorderPtr DefaultDisabledButtonBorder = BevelBorder::create();
+	beginEditCP(DefaultDisabledButtonBorder);
+		DefaultDisabledButtonBorder->setRaised(true);
+		DefaultDisabledButtonBorder->setWidth(2);
+		DefaultDisabledButtonBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultDisabledButtonBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultButtonBorder->setShadowInner(Color4f(0.85, 0.85, 0.85, 1.0));
+		DefaultButtonBorder->setShadowOuter(Color4f(0.65, 0.65, 0.65, 1.0));
+	endEditCP(DefaultDisabledButtonBorder);
+
 	//Default ButtonBackground
 	ColorUIBackgroundPtr DefaultButtonBackground = ColorUIBackground::create();
 	beginEditCP(DefaultButtonBackground);
 		DefaultButtonBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
 	endEditCP(DefaultButtonBackground);
+	
+	//Default Disabled ButtonBackground
+	ColorUIBackgroundPtr DefaultDisabledButtonBackground = ColorUIBackground::create();
+	beginEditCP(DefaultDisabledButtonBackground);
+		DefaultDisabledButtonBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+	endEditCP(DefaultDisabledButtonBackground);
 
 	//Default Button
 	ButtonPtr DefaultButton = Button::create();
@@ -132,12 +149,15 @@ void DefaultLookAndFeel::init(void)
 
 		//Border
 		DefaultButton->setBorder(DefaultButtonBorder);
+		DefaultButton->setDisabledBorder(DefaultDisabledButtonBorder);
 		
 		//Background
 		DefaultButton->setBackground(DefaultButtonBackground);
+		DefaultButton->setDisabledBackground(DefaultDisabledButtonBackground);
 
 		//Foreground
 		DefaultButton->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultButton->setDisabledForegroundColor(Color4f(0.4,0.4,0.4,1.0));
 		
 		//Opacity
 		DefaultButton->setOpacity(1.0);
@@ -397,4 +417,3 @@ namespace
 #endif
 
 OSG_END_NAMESPACE
-

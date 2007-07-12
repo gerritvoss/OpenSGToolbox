@@ -129,6 +129,7 @@ int main(int argc, char **argv)
 		
 		//The following functions are specific to Button
 		button->setText("Button 1");
+		button->setEnabled(false);
 		//button->setFont(fonts);
 		//button->setAlignment(VERTICAL_ALIGNMENT);
 		//button->setAlignment(HORIZONTAL_ALIGNMENT);

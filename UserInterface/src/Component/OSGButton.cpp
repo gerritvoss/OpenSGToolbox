@@ -121,7 +121,17 @@ void Button::draw(const GraphicsPtr TheGraphics) const
          AlignedPosition[0] = TopLeft[0]+0.5*(BottomRight[0]-TopLeft[0]-TextBounds[0]);
       }
 
-      TheGraphics->drawText(AlignedPosition, getText(), getFont(), getForegroundColor(), getOpacity());
+	  //Foreground Color
+	  Color4f ForeColor;
+	  if(getEnabled())
+	  {
+		  ForeColor = getForegroundColor();
+	  }
+	  else
+	  {
+		  ForeColor = getDisabledForegroundColor();
+	  }
+      TheGraphics->drawText(AlignedPosition, getText(), getFont(), ForeColor, getOpacity());
    }
 }
 

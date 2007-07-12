@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="GridBagLayoutConstraints"
+	parent="LayoutConstraints"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+A UI GridBagLayoutConstraints.
+<Field
+		name="GridX"
+		type="UInt16"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>Specifies the cell containing the leading corner of the component's display area
+	</Field>
+<Field
+		name="GridY"
+		type="UInt16"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>Specifies the cell containing the leading corner of the component's display area
+	</Field>
+<Field
+		name="GridWidth"
+		type="UInt16"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1"
+	>Specifies the number of cells in a row in the component's display area
+	</Field>
+<Field
+		name="GridHeight"
+		type="UInt16"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1"
+	>Specifies the number of cells in a column in the component's display area
+	</Field>
+<Field
+		name="Fill"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue=""
+	>Used when the component's display area is larger than the component's requested size to determine whether (and how) to resize the component
+	</Field>
+<Field
+		name="Anchor"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue=""
+	>Used when the component is smaller than its display area to determine where (within the display area) to place the component
+	</Field>
+<Field
+		name="WeightX"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0"
+	>Used to determine how to distribute space, which is important for specifying resizing behavior
+	</Field>
+<Field
+		name="WeightY"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0"
+	>Used to determine how to distribute space, which is important for specifying resizing behavior
+	</Field>
+<Field
+		name="InternalPadX"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>Specifies the component's internal padding within the layout, how much to add to the minimum size of the component. The width of the component will be at least its minimum width plus (ipadx * 2) pixels (since the padding applies to both sides of the component)
+	</Field>
+<Field
+		name="InternalPadY"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>Specifies the component's internal padding within the layout, how much to add to the minimum size of the component. The height of the component will be at least its minimum height plus (ipady * 2) pixels (since the padding applies to both sides of the component)
+	</Field>
+<Field
+		name="PadLeft"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>This field specifies the external padding of the component, the minimum amount of space between the component and the Left edge of its display area.
+	</Field>
+<Field
+		name="PadRight"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>This field specifies the external padding of the component, the minimum amount of space between the component and the Right edge of its display area.
+	</Field>
+<Field
+		name="PadTop"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>This field specifies the external padding of the component, the minimum amount of space between the component and the Top edge of its display area.
+	</Field>
+<Field
+		name="PadBottom"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>This field specifies the external padding of the component, the minimum amount of space between the component and the Bottom edge of its display area.
+	</Field>
+</FieldContainer>

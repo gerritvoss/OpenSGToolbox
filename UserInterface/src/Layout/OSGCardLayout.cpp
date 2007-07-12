@@ -84,21 +84,21 @@ void CardLayout::first(const ContainerPtr TheContainer)
 void CardLayout::last(const ContainerPtr TheContainer)
 {
 	beginEditCP(CardLayoutPtr(this), CardFieldMask);
-		setCard(TheContainer->getChildren().size()-1);
+	setCard(TheContainer->getChildren().getSize()-1);
 	endEditCP(CardLayoutPtr(this), CardFieldMask);
 }
 
 void CardLayout::next(const ContainerPtr TheContainer)
 {	
 	beginEditCP(CardLayoutPtr(this), CardFieldMask);
-		setCard((getCard()+1)%TheContainer->getChildren().size());
+		setCard((getCard()+1)%TheContainer->getChildren().getSize());
 	endEditCP(CardLayoutPtr(this), CardFieldMask);
 }
 
 void CardLayout::previous(const ContainerPtr TheContainer)
 {   
 	beginEditCP(CardLayoutPtr(this), CardFieldMask);
-		setCard((getCard()-1+TheContainer->getChildren().size())%TheContainer->getChildren().size());
+		setCard((getCard()-1)%TheContainer->getChildren().getSize());
 	endEditCP(CardLayoutPtr(this), CardFieldMask);
 }
 

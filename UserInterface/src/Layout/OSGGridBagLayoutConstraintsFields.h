@@ -48,27 +48,27 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGBUTTONFIELDS_H_
-#define _OSGBUTTONFIELDS_H_
+#ifndef _OSGGRIDBAGLAYOUTCONSTRAINTSFIELDS_H_
+#define _OSGGRIDBAGLAYOUTCONSTRAINTSFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceConfig.h"
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 
-#include "OSGComponentFields.h"
+#include "OSGLayoutConstraintsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Button;
+class GridBagLayoutConstraints;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ButtonPtr
+//! GridBagLayoutConstraintsPtr
 
-typedef FCPtr<ComponentPtr, Button> ButtonPtr;
+typedef FCPtr<LayoutConstraintsPtr, GridBagLayoutConstraints> GridBagLayoutConstraintsPtr;
 
 #endif
 
@@ -78,8 +78,8 @@ typedef FCPtr<ComponentPtr, Button> ButtonPtr;
 #endif
 
 template <>
-struct FieldDataTraits<ButtonPtr> : 
-    public FieldTraitsRecurseMapper<ButtonPtr, true>
+struct FieldDataTraits<GridBagLayoutConstraintsPtr> : 
+    public FieldTraitsRecurseMapper<GridBagLayoutConstraintsPtr, true>
 {
     static DataType             _type;                       
 
@@ -88,12 +88,12 @@ struct FieldDataTraits<ButtonPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFButtonPtr"; }
-    static const char *getMName(void) { return "MFButtonPtr"; }
+    static const char *getSName(void) { return "SFGridBagLayoutConstraintsPtr"; }
+    static const char *getMName(void) { return "MFGridBagLayoutConstraintsPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ButtonPtr, true>
+/*! \class  FieldTraitsRecurseMapper<GridBagLayoutConstraintsPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -102,16 +102,16 @@ struct FieldDataTraits<ButtonPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-typedef SField<ButtonPtr> SFButtonPtr;
+typedef SField<GridBagLayoutConstraintsPtr> SFGridBagLayoutConstraintsPtr;
 #endif
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-typedef MField<ButtonPtr> MFButtonPtr;
+typedef MField<GridBagLayoutConstraintsPtr> MFGridBagLayoutConstraintsPtr;
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGBUTTONFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGGRIDBAGLAYOUTCONSTRAINTSFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGBUTTONFIELDS_H_ */
+#endif /* _OSGGRIDBAGLAYOUTCONSTRAINTSFIELDS_H_ */

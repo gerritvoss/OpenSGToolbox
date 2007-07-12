@@ -28,6 +28,32 @@ A UI Button.
 	>
 	</Field>
 	<Field
+		name="ActiveBorder"
+		type="BorderPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+      header="Border/OSGBorder.h"
+	>
+	</Field>
+	<Field
+		name="ActiveBackground"
+		type="UIBackgroundPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+      header="Background/OSGUIBackground.h"
+	>
+	</Field>
+	<Field
+		name="ActiveForegroundColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
 		name="VerticalAlignment"
 		type="UInt32"
 		cardinality="single"

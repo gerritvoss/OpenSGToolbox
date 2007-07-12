@@ -70,12 +70,30 @@ A UI Component Interface.
 	>
 	</Field>
 <Field
+		name="Focused"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="false"
+	>
+	</Field>
+<Field
 		name="Constraints"
 		type="LayoutConstraintsPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
       header="Layout/OSGLayoutConstraints.h"
+	>
+	</Field>
+	<Field
+		name="Border"
+		type="BorderPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+      header="Border/OSGBorder.h"
 	>
 	</Field>
 	<Field
@@ -96,20 +114,63 @@ A UI Component Interface.
 	>
 	</Field>
 	<Field
-		name="ForegroundMaterial"
-		type="MaterialPtr"
+		name="DisabledBorder"
+		type="BorderPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+      header="Border/OSGBorder.h"
+	>
+	</Field>
+	<Field
+		name="DisabledBackground"
+		type="UIBackgroundPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+      header="Background/OSGUIBackground.h"
+	>
+	</Field>
+	<Field
+		name="DisabledForegroundColor"
+		type="Color4f"
 		cardinality="single"
 		visibility="external"
 		access="public"
 	>
 	</Field>
 	<Field
-		name="Border"
+		name="FocusedBorder"
 		type="BorderPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
       header="Border/OSGBorder.h"
+	>
+	</Field>
+	<Field
+		name="FocusedBackground"
+		type="UIBackgroundPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+      header="Background/OSGUIBackground.h"
+	>
+	</Field>
+	<Field
+		name="FocusedForegroundColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ForegroundMaterial"
+		type="MaterialPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
 	>
 	</Field>
    <Field

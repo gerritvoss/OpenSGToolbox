@@ -45,7 +45,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGComponent.h"
+#include "OSGGridBagLayout.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -53,8 +53,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::Component
-A UI Component Interface.
+/*! \class osg::GridBagLayout
+A UI GridBagLayout. 
 */
 
 /***************************************************************************\
@@ -65,7 +65,7 @@ A UI Component Interface.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Component::initMethod (void)
+void GridBagLayout::initMethod (void)
 {
 }
 
@@ -74,84 +74,40 @@ void Component::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Component::drawBorder(const GraphicsPtr TheGraphics) const
+void GridBagLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
 {
-   if(getBorder() != NullFC)
-   {
-      //Draw My Border
-	  if(getEnabled())
-	  {
-		getBorder()->draw(TheGraphics,0,0,getSize().x(),getSize().y(), getOpacity());
-	  }
-	  else
-	  {
-		getDisabledBorder()->draw(TheGraphics,0,0,getSize().x(),getSize().y(), getOpacity());
-	  }
-   }
 }
-
-void Component::drawBackground(const GraphicsPtr TheGraphics) const
-{
-   //Draw the Background on the Inside of my border
-   Pnt2s TopLeft, BottomRight;
-   getInsideBorderSizing(TopLeft, BottomRight);
-   if(getBackground() != NullFC)
-   {
-	  if(getEnabled())
-	  {
-	     getBackground()->draw(TheGraphics, TopLeft, BottomRight, getOpacity());
-	  }
-	  else
-	  {
-	     getDisabledBackground()->draw(TheGraphics, TopLeft, BottomRight, getOpacity());
-	  }
-   }
-}
-
-void Component::getInsideBorderSizing(Pnt2s& TopLeft, Pnt2s& BottomRight) const
-{
-   UInt16 TopInset(0), LeftInset(0), BottomInset(0), RightInset(0);
-
-   if(getBorder() != NullFC)
-   {
-      //Get Border Insets
-      getBorder()->getInsets(LeftInset,RightInset,TopInset,BottomInset);
-   }
-   TopLeft.setValues(LeftInset, TopInset);
-   BottomRight.setValues(TopLeft.x()+getSize().x()-(LeftInset + RightInset), TopLeft.y()+getSize().y()-(TopInset + BottomInset));
-}
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-Component::Component(void) :
+GridBagLayout::GridBagLayout(void) :
     Inherited()
 {
 }
 
-Component::Component(const Component &source) :
+GridBagLayout::GridBagLayout(const GridBagLayout &source) :
     Inherited(source)
 {
 }
 
-Component::~Component(void)
+GridBagLayout::~GridBagLayout(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void Component::changed(BitVector whichField, UInt32 origin)
+void GridBagLayout::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void Component::dump(      UInt32    , 
+void GridBagLayout::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump Component NI" << std::endl;
+    SLOG << "Dump GridBagLayout NI" << std::endl;
 }
 
 
@@ -169,10 +125,10 @@ void Component::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGCOMPONENTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCOMPONENTBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGGRIDBAGLAYOUTBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGGRIDBAGLAYOUTBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGCOMPONENTFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGGRIDBAGLAYOUTFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

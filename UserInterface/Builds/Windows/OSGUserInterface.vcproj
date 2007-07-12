@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="OSGUserInterface"
 	ProjectGUID="{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}"
 	RootNamespace="OSGAnimation"
@@ -856,6 +856,62 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Layout\OSGFlowLayoutFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGGridBagLayout.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGGridBagLayout.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGGridBagLayout.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraints.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraints.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraints.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraintsBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraintsBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraintsBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraintsFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutFields.h"
 					>
 				</File>
 				<File

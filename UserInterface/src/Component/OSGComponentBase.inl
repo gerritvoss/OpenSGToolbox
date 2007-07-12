@@ -119,11 +119,25 @@ SFBool *ComponentBase::getSFEnabled(void)
     return &_sfEnabled;
 }
 
+//! Get the Component::_sfFocused field.
+inline
+SFBool *ComponentBase::getSFFocused(void)
+{
+    return &_sfFocused;
+}
+
 //! Get the Component::_sfConstraints field.
 inline
 SFLayoutConstraintsPtr *ComponentBase::getSFConstraints(void)
 {
     return &_sfConstraints;
+}
+
+//! Get the Component::_sfBorder field.
+inline
+SFBorderPtr *ComponentBase::getSFBorder(void)
+{
+    return &_sfBorder;
 }
 
 //! Get the Component::_sfBackground field.
@@ -140,18 +154,53 @@ SFColor4f *ComponentBase::getSFForegroundColor(void)
     return &_sfForegroundColor;
 }
 
+//! Get the Component::_sfDisabledBorder field.
+inline
+SFBorderPtr *ComponentBase::getSFDisabledBorder(void)
+{
+    return &_sfDisabledBorder;
+}
+
+//! Get the Component::_sfDisabledBackground field.
+inline
+SFUIBackgroundPtr *ComponentBase::getSFDisabledBackground(void)
+{
+    return &_sfDisabledBackground;
+}
+
+//! Get the Component::_sfDisabledForegroundColor field.
+inline
+SFColor4f *ComponentBase::getSFDisabledForegroundColor(void)
+{
+    return &_sfDisabledForegroundColor;
+}
+
+//! Get the Component::_sfFocusedBorder field.
+inline
+SFBorderPtr *ComponentBase::getSFFocusedBorder(void)
+{
+    return &_sfFocusedBorder;
+}
+
+//! Get the Component::_sfFocusedBackground field.
+inline
+SFUIBackgroundPtr *ComponentBase::getSFFocusedBackground(void)
+{
+    return &_sfFocusedBackground;
+}
+
+//! Get the Component::_sfFocusedForegroundColor field.
+inline
+SFColor4f *ComponentBase::getSFFocusedForegroundColor(void)
+{
+    return &_sfFocusedForegroundColor;
+}
+
 //! Get the Component::_sfForegroundMaterial field.
 inline
 SFMaterialPtr *ComponentBase::getSFForegroundMaterial(void)
 {
     return &_sfForegroundMaterial;
-}
-
-//! Get the Component::_sfBorder field.
-inline
-SFBorderPtr *ComponentBase::getSFBorder(void)
-{
-    return &_sfBorder;
 }
 
 //! Get the Component::_sfOpacity field.
@@ -309,6 +358,27 @@ void ComponentBase::setEnabled(const bool &value)
     _sfEnabled.setValue(value);
 }
 
+//! Get the value of the Component::_sfFocused field.
+inline
+bool &ComponentBase::getFocused(void)
+{
+    return _sfFocused.getValue();
+}
+
+//! Get the value of the Component::_sfFocused field.
+inline
+const bool &ComponentBase::getFocused(void) const
+{
+    return _sfFocused.getValue();
+}
+
+//! Set the value of the Component::_sfFocused field.
+inline
+void ComponentBase::setFocused(const bool &value)
+{
+    _sfFocused.setValue(value);
+}
+
 //! Get the value of the Component::_sfConstraints field.
 inline
 LayoutConstraintsPtr &ComponentBase::getConstraints(void)
@@ -328,6 +398,27 @@ inline
 void ComponentBase::setConstraints(const LayoutConstraintsPtr &value)
 {
     _sfConstraints.setValue(value);
+}
+
+//! Get the value of the Component::_sfBorder field.
+inline
+BorderPtr &ComponentBase::getBorder(void)
+{
+    return _sfBorder.getValue();
+}
+
+//! Get the value of the Component::_sfBorder field.
+inline
+const BorderPtr &ComponentBase::getBorder(void) const
+{
+    return _sfBorder.getValue();
+}
+
+//! Set the value of the Component::_sfBorder field.
+inline
+void ComponentBase::setBorder(const BorderPtr &value)
+{
+    _sfBorder.setValue(value);
 }
 
 //! Get the value of the Component::_sfBackground field.
@@ -372,6 +463,132 @@ void ComponentBase::setForegroundColor(const Color4f &value)
     _sfForegroundColor.setValue(value);
 }
 
+//! Get the value of the Component::_sfDisabledBorder field.
+inline
+BorderPtr &ComponentBase::getDisabledBorder(void)
+{
+    return _sfDisabledBorder.getValue();
+}
+
+//! Get the value of the Component::_sfDisabledBorder field.
+inline
+const BorderPtr &ComponentBase::getDisabledBorder(void) const
+{
+    return _sfDisabledBorder.getValue();
+}
+
+//! Set the value of the Component::_sfDisabledBorder field.
+inline
+void ComponentBase::setDisabledBorder(const BorderPtr &value)
+{
+    _sfDisabledBorder.setValue(value);
+}
+
+//! Get the value of the Component::_sfDisabledBackground field.
+inline
+UIBackgroundPtr &ComponentBase::getDisabledBackground(void)
+{
+    return _sfDisabledBackground.getValue();
+}
+
+//! Get the value of the Component::_sfDisabledBackground field.
+inline
+const UIBackgroundPtr &ComponentBase::getDisabledBackground(void) const
+{
+    return _sfDisabledBackground.getValue();
+}
+
+//! Set the value of the Component::_sfDisabledBackground field.
+inline
+void ComponentBase::setDisabledBackground(const UIBackgroundPtr &value)
+{
+    _sfDisabledBackground.setValue(value);
+}
+
+//! Get the value of the Component::_sfDisabledForegroundColor field.
+inline
+Color4f &ComponentBase::getDisabledForegroundColor(void)
+{
+    return _sfDisabledForegroundColor.getValue();
+}
+
+//! Get the value of the Component::_sfDisabledForegroundColor field.
+inline
+const Color4f &ComponentBase::getDisabledForegroundColor(void) const
+{
+    return _sfDisabledForegroundColor.getValue();
+}
+
+//! Set the value of the Component::_sfDisabledForegroundColor field.
+inline
+void ComponentBase::setDisabledForegroundColor(const Color4f &value)
+{
+    _sfDisabledForegroundColor.setValue(value);
+}
+
+//! Get the value of the Component::_sfFocusedBorder field.
+inline
+BorderPtr &ComponentBase::getFocusedBorder(void)
+{
+    return _sfFocusedBorder.getValue();
+}
+
+//! Get the value of the Component::_sfFocusedBorder field.
+inline
+const BorderPtr &ComponentBase::getFocusedBorder(void) const
+{
+    return _sfFocusedBorder.getValue();
+}
+
+//! Set the value of the Component::_sfFocusedBorder field.
+inline
+void ComponentBase::setFocusedBorder(const BorderPtr &value)
+{
+    _sfFocusedBorder.setValue(value);
+}
+
+//! Get the value of the Component::_sfFocusedBackground field.
+inline
+UIBackgroundPtr &ComponentBase::getFocusedBackground(void)
+{
+    return _sfFocusedBackground.getValue();
+}
+
+//! Get the value of the Component::_sfFocusedBackground field.
+inline
+const UIBackgroundPtr &ComponentBase::getFocusedBackground(void) const
+{
+    return _sfFocusedBackground.getValue();
+}
+
+//! Set the value of the Component::_sfFocusedBackground field.
+inline
+void ComponentBase::setFocusedBackground(const UIBackgroundPtr &value)
+{
+    _sfFocusedBackground.setValue(value);
+}
+
+//! Get the value of the Component::_sfFocusedForegroundColor field.
+inline
+Color4f &ComponentBase::getFocusedForegroundColor(void)
+{
+    return _sfFocusedForegroundColor.getValue();
+}
+
+//! Get the value of the Component::_sfFocusedForegroundColor field.
+inline
+const Color4f &ComponentBase::getFocusedForegroundColor(void) const
+{
+    return _sfFocusedForegroundColor.getValue();
+}
+
+//! Set the value of the Component::_sfFocusedForegroundColor field.
+inline
+void ComponentBase::setFocusedForegroundColor(const Color4f &value)
+{
+    _sfFocusedForegroundColor.setValue(value);
+}
+
 //! Get the value of the Component::_sfForegroundMaterial field.
 inline
 MaterialPtr &ComponentBase::getForegroundMaterial(void)
@@ -391,27 +608,6 @@ inline
 void ComponentBase::setForegroundMaterial(const MaterialPtr &value)
 {
     _sfForegroundMaterial.setValue(value);
-}
-
-//! Get the value of the Component::_sfBorder field.
-inline
-BorderPtr &ComponentBase::getBorder(void)
-{
-    return _sfBorder.getValue();
-}
-
-//! Get the value of the Component::_sfBorder field.
-inline
-const BorderPtr &ComponentBase::getBorder(void) const
-{
-    return _sfBorder.getValue();
-}
-
-//! Set the value of the Component::_sfBorder field.
-inline
-void ComponentBase::setBorder(const BorderPtr &value)
-{
-    _sfBorder.setValue(value);
 }
 
 //! Get the value of the Component::_sfOpacity field.

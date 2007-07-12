@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Button!
+ **     class GridBagLayout!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &ButtonBase::getClassType(void)
+OSG::FieldContainerType &GridBagLayoutBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ButtonBase::getClassTypeId(void) 
+OSG::UInt32 GridBagLayoutBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-ButtonPtr ButtonBase::create(void) 
+GridBagLayoutPtr GridBagLayoutBase::create(void) 
 {
-    ButtonPtr fc; 
+    GridBagLayoutPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = ButtonPtr::dcast(
+        fc = GridBagLayoutPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ ButtonPtr ButtonBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-ButtonPtr ButtonBase::createEmpty(void) 
+GridBagLayoutPtr GridBagLayoutBase::createEmpty(void) 
 { 
-    ButtonPtr returnValue; 
+    GridBagLayoutPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,205 +96,121 @@ ButtonPtr ButtonBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Button::_sfFont field.
+//! Get the GridBagLayout::_mfColumnWeights field.
 inline
-SFFontPtr *ButtonBase::getSFFont(void)
+MFReal32 *GridBagLayoutBase::getMFColumnWeights(void)
 {
-    return &_sfFont;
+    return &_mfColumnWeights;
 }
 
-//! Get the Button::_sfText field.
+//! Get the GridBagLayout::_mfColumnHeights field.
 inline
-SFString *ButtonBase::getSFText(void)
+MFUInt16 *GridBagLayoutBase::getMFColumnHeights(void)
 {
-    return &_sfText;
+    return &_mfColumnHeights;
 }
 
-//! Get the Button::_sfActiveBorder field.
+//! Get the GridBagLayout::_mfRowWeights field.
 inline
-SFBorderPtr *ButtonBase::getSFActiveBorder(void)
+MFReal32 *GridBagLayoutBase::getMFRowWeights(void)
 {
-    return &_sfActiveBorder;
+    return &_mfRowWeights;
 }
 
-//! Get the Button::_sfActiveBackground field.
+//! Get the GridBagLayout::_mfRowWidths field.
 inline
-SFUIBackgroundPtr *ButtonBase::getSFActiveBackground(void)
+MFUInt16 *GridBagLayoutBase::getMFRowWidths(void)
 {
-    return &_sfActiveBackground;
-}
-
-//! Get the Button::_sfActiveForegroundColor field.
-inline
-SFColor4f *ButtonBase::getSFActiveForegroundColor(void)
-{
-    return &_sfActiveForegroundColor;
-}
-
-//! Get the Button::_sfVerticalAlignment field.
-inline
-SFUInt32 *ButtonBase::getSFVerticalAlignment(void)
-{
-    return &_sfVerticalAlignment;
-}
-
-//! Get the Button::_sfHorizontalAlignment field.
-inline
-SFUInt32 *ButtonBase::getSFHorizontalAlignment(void)
-{
-    return &_sfHorizontalAlignment;
+    return &_mfRowWidths;
 }
 
 
-//! Get the value of the Button::_sfFont field.
+
+//! Get the value of the \a index element the GridBagLayout::_mfColumnWeights field.
 inline
-FontPtr &ButtonBase::getFont(void)
+Real32 &GridBagLayoutBase::getColumnWeights(const UInt32 index)
 {
-    return _sfFont.getValue();
+    return _mfColumnWeights[index];
 }
 
-//! Get the value of the Button::_sfFont field.
+//! Get the GridBagLayout::_mfColumnWeights field.
 inline
-const FontPtr &ButtonBase::getFont(void) const
+MFReal32 &GridBagLayoutBase::getColumnWeights(void)
 {
-    return _sfFont.getValue();
+    return _mfColumnWeights;
 }
 
-//! Set the value of the Button::_sfFont field.
+//! Get the GridBagLayout::_mfColumnWeights field.
 inline
-void ButtonBase::setFont(const FontPtr &value)
+const MFReal32 &GridBagLayoutBase::getColumnWeights(void) const
 {
-    _sfFont.setValue(value);
+    return _mfColumnWeights;
 }
 
-//! Get the value of the Button::_sfText field.
+//! Get the value of the \a index element the GridBagLayout::_mfColumnHeights field.
 inline
-std::string &ButtonBase::getText(void)
+UInt16 &GridBagLayoutBase::getColumnHeights(const UInt32 index)
 {
-    return _sfText.getValue();
+    return _mfColumnHeights[index];
 }
 
-//! Get the value of the Button::_sfText field.
+//! Get the GridBagLayout::_mfColumnHeights field.
 inline
-const std::string &ButtonBase::getText(void) const
+MFUInt16 &GridBagLayoutBase::getColumnHeights(void)
 {
-    return _sfText.getValue();
+    return _mfColumnHeights;
 }
 
-//! Set the value of the Button::_sfText field.
+//! Get the GridBagLayout::_mfColumnHeights field.
 inline
-void ButtonBase::setText(const std::string &value)
+const MFUInt16 &GridBagLayoutBase::getColumnHeights(void) const
 {
-    _sfText.setValue(value);
+    return _mfColumnHeights;
 }
 
-//! Get the value of the Button::_sfActiveBorder field.
+//! Get the value of the \a index element the GridBagLayout::_mfRowWeights field.
 inline
-BorderPtr &ButtonBase::getActiveBorder(void)
+Real32 &GridBagLayoutBase::getRowWeights(const UInt32 index)
 {
-    return _sfActiveBorder.getValue();
+    return _mfRowWeights[index];
 }
 
-//! Get the value of the Button::_sfActiveBorder field.
+//! Get the GridBagLayout::_mfRowWeights field.
 inline
-const BorderPtr &ButtonBase::getActiveBorder(void) const
+MFReal32 &GridBagLayoutBase::getRowWeights(void)
 {
-    return _sfActiveBorder.getValue();
+    return _mfRowWeights;
 }
 
-//! Set the value of the Button::_sfActiveBorder field.
+//! Get the GridBagLayout::_mfRowWeights field.
 inline
-void ButtonBase::setActiveBorder(const BorderPtr &value)
+const MFReal32 &GridBagLayoutBase::getRowWeights(void) const
 {
-    _sfActiveBorder.setValue(value);
+    return _mfRowWeights;
 }
 
-//! Get the value of the Button::_sfActiveBackground field.
+//! Get the value of the \a index element the GridBagLayout::_mfRowWidths field.
 inline
-UIBackgroundPtr &ButtonBase::getActiveBackground(void)
+UInt16 &GridBagLayoutBase::getRowWidths(const UInt32 index)
 {
-    return _sfActiveBackground.getValue();
+    return _mfRowWidths[index];
 }
 
-//! Get the value of the Button::_sfActiveBackground field.
+//! Get the GridBagLayout::_mfRowWidths field.
 inline
-const UIBackgroundPtr &ButtonBase::getActiveBackground(void) const
+MFUInt16 &GridBagLayoutBase::getRowWidths(void)
 {
-    return _sfActiveBackground.getValue();
+    return _mfRowWidths;
 }
 
-//! Set the value of the Button::_sfActiveBackground field.
+//! Get the GridBagLayout::_mfRowWidths field.
 inline
-void ButtonBase::setActiveBackground(const UIBackgroundPtr &value)
+const MFUInt16 &GridBagLayoutBase::getRowWidths(void) const
 {
-    _sfActiveBackground.setValue(value);
+    return _mfRowWidths;
 }
-
-//! Get the value of the Button::_sfActiveForegroundColor field.
-inline
-Color4f &ButtonBase::getActiveForegroundColor(void)
-{
-    return _sfActiveForegroundColor.getValue();
-}
-
-//! Get the value of the Button::_sfActiveForegroundColor field.
-inline
-const Color4f &ButtonBase::getActiveForegroundColor(void) const
-{
-    return _sfActiveForegroundColor.getValue();
-}
-
-//! Set the value of the Button::_sfActiveForegroundColor field.
-inline
-void ButtonBase::setActiveForegroundColor(const Color4f &value)
-{
-    _sfActiveForegroundColor.setValue(value);
-}
-
-//! Get the value of the Button::_sfVerticalAlignment field.
-inline
-UInt32 &ButtonBase::getVerticalAlignment(void)
-{
-    return _sfVerticalAlignment.getValue();
-}
-
-//! Get the value of the Button::_sfVerticalAlignment field.
-inline
-const UInt32 &ButtonBase::getVerticalAlignment(void) const
-{
-    return _sfVerticalAlignment.getValue();
-}
-
-//! Set the value of the Button::_sfVerticalAlignment field.
-inline
-void ButtonBase::setVerticalAlignment(const UInt32 &value)
-{
-    _sfVerticalAlignment.setValue(value);
-}
-
-//! Get the value of the Button::_sfHorizontalAlignment field.
-inline
-UInt32 &ButtonBase::getHorizontalAlignment(void)
-{
-    return _sfHorizontalAlignment.getValue();
-}
-
-//! Get the value of the Button::_sfHorizontalAlignment field.
-inline
-const UInt32 &ButtonBase::getHorizontalAlignment(void) const
-{
-    return _sfHorizontalAlignment.getValue();
-}
-
-//! Set the value of the Button::_sfHorizontalAlignment field.
-inline
-void ButtonBase::setHorizontalAlignment(const UInt32 &value)
-{
-    _sfHorizontalAlignment.setValue(value);
-}
-
 
 OSG_END_NAMESPACE
 
-#define OSGBUTTONBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGGRIDBAGLAYOUTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 
