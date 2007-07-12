@@ -72,6 +72,9 @@ const OSG::BitVector  ButtonBase::FontFieldMask =
 const OSG::BitVector  ButtonBase::TextFieldMask = 
     (TypeTraits<BitVector>::One << ButtonBase::TextFieldId);
 
+const OSG::BitVector  ButtonBase::ActiveFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::ActiveFieldId);
+
 const OSG::BitVector  ButtonBase::ActiveBorderFieldMask = 
     (TypeTraits<BitVector>::One << ButtonBase::ActiveBorderFieldId);
 
@@ -98,6 +101,9 @@ const OSG::BitVector ButtonBase::MTInfluenceMask =
     
 */
 /*! \var std::string     ButtonBase::_sfText
+    
+*/
+/*! \var bool            ButtonBase::_sfActive
     
 */
 /*! \var BorderPtr       ButtonBase::_sfActiveBorder
@@ -130,6 +136,11 @@ FieldDescription *ButtonBase::_desc[] =
                      TextFieldId, TextFieldMask,
                      false,
                      (FieldAccessMethod) &ButtonBase::getSFText),
+    new FieldDescription(SFBool::getClassType(), 
+                     "Active", 
+                     ActiveFieldId, ActiveFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFActive),
     new FieldDescription(SFBorderPtr::getClassType(), 
                      "ActiveBorder", 
                      ActiveBorderFieldId, ActiveBorderFieldMask,
@@ -232,6 +243,7 @@ void ButtonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 ButtonBase::ButtonBase(void) :
     _sfFont                   (), 
     _sfText                   (), 
+    _sfActive                 (bool(false)), 
     _sfActiveBorder           (), 
     _sfActiveBackground       (), 
     _sfActiveForegroundColor  (), 
@@ -248,6 +260,7 @@ ButtonBase::ButtonBase(void) :
 ButtonBase::ButtonBase(const ButtonBase &source) :
     _sfFont                   (source._sfFont                   ), 
     _sfText                   (source._sfText                   ), 
+    _sfActive                 (source._sfActive                 ), 
     _sfActiveBorder           (source._sfActiveBorder           ), 
     _sfActiveBackground       (source._sfActiveBackground       ), 
     _sfActiveForegroundColor  (source._sfActiveForegroundColor  ), 
@@ -277,6 +290,11 @@ UInt32 ButtonBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (TextFieldMask & whichField))
     {
         returnValue += _sfText.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+    {
+        returnValue += _sfActive.getBinSize();
     }
 
     if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
@@ -323,6 +341,11 @@ void ButtonBase::copyToBin(      BinaryDataHandler &pMem,
         _sfText.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+    {
+        _sfActive.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
     {
         _sfActiveBorder.copyToBin(pMem);
@@ -366,6 +389,11 @@ void ButtonBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfText.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+    {
+        _sfActive.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
     {
         _sfActiveBorder.copyFromBin(pMem);
@@ -407,6 +435,9 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
     if(FieldBits::NoField != (TextFieldMask & whichField))
         _sfText.syncWith(pOther->_sfText);
 
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+        _sfActive.syncWith(pOther->_sfActive);
+
     if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
         _sfActiveBorder.syncWith(pOther->_sfActiveBorder);
 
@@ -437,6 +468,9 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
 
     if(FieldBits::NoField != (TextFieldMask & whichField))
         _sfText.syncWith(pOther->_sfText);
+
+    if(FieldBits::NoField != (ActiveFieldMask & whichField))
+        _sfActive.syncWith(pOther->_sfActive);
 
     if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
         _sfActiveBorder.syncWith(pOther->_sfActiveBorder);

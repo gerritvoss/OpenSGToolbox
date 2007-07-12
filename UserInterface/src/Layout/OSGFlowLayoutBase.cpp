@@ -62,6 +62,8 @@
 #include "OSGFlowLayout.h"
 
 #include <Util/OSGUIDefines.h>            // Alignment default header
+#include <Util/OSGUIDefines.h>            // MajorAxisAlignment default header
+#include <Util/OSGUIDefines.h>            // MinorAxisAlignment default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -73,6 +75,12 @@ const OSG::BitVector  FlowLayoutBase::HorizontalGapFieldMask =
 
 const OSG::BitVector  FlowLayoutBase::VerticalGapFieldMask = 
     (TypeTraits<BitVector>::One << FlowLayoutBase::VerticalGapFieldId);
+
+const OSG::BitVector  FlowLayoutBase::MajorAxisAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << FlowLayoutBase::MajorAxisAlignmentFieldId);
+
+const OSG::BitVector  FlowLayoutBase::MinorAxisAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << FlowLayoutBase::MinorAxisAlignmentFieldId);
 
 const OSG::BitVector FlowLayoutBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -88,6 +96,12 @@ const OSG::BitVector FlowLayoutBase::MTInfluenceMask =
     
 */
 /*! \var Int32           FlowLayoutBase::_sfVerticalGap
+    
+*/
+/*! \var UInt32          FlowLayoutBase::_sfMajorAxisAlignment
+    
+*/
+/*! \var UInt32          FlowLayoutBase::_sfMinorAxisAlignment
     
 */
 
@@ -109,7 +123,17 @@ FieldDescription *FlowLayoutBase::_desc[] =
                      "VerticalGap", 
                      VerticalGapFieldId, VerticalGapFieldMask,
                      false,
-                     (FieldAccessMethod) &FlowLayoutBase::getSFVerticalGap)
+                     (FieldAccessMethod) &FlowLayoutBase::getSFVerticalGap),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "MajorAxisAlignment", 
+                     MajorAxisAlignmentFieldId, MajorAxisAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &FlowLayoutBase::getSFMajorAxisAlignment),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "MinorAxisAlignment", 
+                     MinorAxisAlignmentFieldId, MinorAxisAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &FlowLayoutBase::getSFMinorAxisAlignment)
 };
 
 
@@ -188,6 +212,8 @@ FlowLayoutBase::FlowLayoutBase(void) :
     _sfAlignment              (UInt32(HORIZONTAL_ALIGNMENT)), 
     _sfHorizontalGap          (Int32(10)), 
     _sfVerticalGap            (Int32(10)), 
+    _sfMajorAxisAlignment     (UInt32(AXIS_CENTER_ALIGNMENT)), 
+    _sfMinorAxisAlignment     (UInt32(AXIS_CENTER_ALIGNMENT)), 
     Inherited() 
 {
 }
@@ -200,6 +226,8 @@ FlowLayoutBase::FlowLayoutBase(const FlowLayoutBase &source) :
     _sfAlignment              (source._sfAlignment              ), 
     _sfHorizontalGap          (source._sfHorizontalGap          ), 
     _sfVerticalGap            (source._sfVerticalGap            ), 
+    _sfMajorAxisAlignment     (source._sfMajorAxisAlignment     ), 
+    _sfMinorAxisAlignment     (source._sfMinorAxisAlignment     ), 
     Inherited                 (source)
 {
 }
@@ -231,6 +259,16 @@ UInt32 FlowLayoutBase::getBinSize(const BitVector &whichField)
         returnValue += _sfVerticalGap.getBinSize();
     }
 
+    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfMajorAxisAlignment.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfMinorAxisAlignment.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -253,6 +291,16 @@ void FlowLayoutBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (VerticalGapFieldMask & whichField))
     {
         _sfVerticalGap.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
+    {
+        _sfMajorAxisAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
+    {
+        _sfMinorAxisAlignment.copyToBin(pMem);
     }
 
 
@@ -278,6 +326,16 @@ void FlowLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfVerticalGap.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
+    {
+        _sfMajorAxisAlignment.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
+    {
+        _sfMinorAxisAlignment.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -297,6 +355,12 @@ void FlowLayoutBase::executeSyncImpl(      FlowLayoutBase *pOther,
     if(FieldBits::NoField != (VerticalGapFieldMask & whichField))
         _sfVerticalGap.syncWith(pOther->_sfVerticalGap);
 
+    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
+        _sfMajorAxisAlignment.syncWith(pOther->_sfMajorAxisAlignment);
+
+    if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
+        _sfMinorAxisAlignment.syncWith(pOther->_sfMinorAxisAlignment);
+
 
 }
 #else
@@ -315,6 +379,12 @@ void FlowLayoutBase::executeSyncImpl(      FlowLayoutBase *pOther,
 
     if(FieldBits::NoField != (VerticalGapFieldMask & whichField))
         _sfVerticalGap.syncWith(pOther->_sfVerticalGap);
+
+    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
+        _sfMajorAxisAlignment.syncWith(pOther->_sfMajorAxisAlignment);
+
+    if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
+        _sfMinorAxisAlignment.syncWith(pOther->_sfMinorAxisAlignment);
 
 
 

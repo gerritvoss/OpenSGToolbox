@@ -110,6 +110,13 @@ SFString *ButtonBase::getSFText(void)
     return &_sfText;
 }
 
+//! Get the Button::_sfActive field.
+inline
+SFBool *ButtonBase::getSFActive(void)
+{
+    return &_sfActive;
+}
+
 //! Get the Button::_sfActiveBorder field.
 inline
 SFBorderPtr *ButtonBase::getSFActiveBorder(void)
@@ -186,6 +193,27 @@ inline
 void ButtonBase::setText(const std::string &value)
 {
     _sfText.setValue(value);
+}
+
+//! Get the value of the Button::_sfActive field.
+inline
+bool &ButtonBase::getActive(void)
+{
+    return _sfActive.getValue();
+}
+
+//! Get the value of the Button::_sfActive field.
+inline
+const bool &ButtonBase::getActive(void) const
+{
+    return _sfActive.getValue();
+}
+
+//! Set the value of the Button::_sfActive field.
+inline
+void ButtonBase::setActive(const bool &value)
+{
+    _sfActive.setValue(value);
 }
 
 //! Get the value of the Button::_sfActiveBorder field.

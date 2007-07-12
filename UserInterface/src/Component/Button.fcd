@@ -28,6 +28,15 @@ A UI Button.
 	>
 	</Field>
 	<Field
+		name="Active"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="false"
+	>
+	</Field>
+	<Field
 		name="ActiveBorder"
 		type="BorderPtr"
 		cardinality="single"

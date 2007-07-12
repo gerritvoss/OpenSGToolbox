@@ -69,6 +69,8 @@
 #include <OpenSG/OSGUInt32Fields.h> // Alignment type
 #include <OpenSG/OSGInt32Fields.h> // HorizontalGap type
 #include <OpenSG/OSGInt32Fields.h> // VerticalGap type
+#include <OpenSG/OSGUInt32Fields.h> // MajorAxisAlignment type
+#include <OpenSG/OSGUInt32Fields.h> // MinorAxisAlignment type
 
 #include "OSGFlowLayoutFields.h"
 
@@ -92,15 +94,19 @@ class OSG_USER_INTERFACE_CLASS_API FlowLayoutBase : public Layout
 
     enum
     {
-        AlignmentFieldId     = Inherited::NextFieldId,
-        HorizontalGapFieldId = AlignmentFieldId     + 1,
-        VerticalGapFieldId   = HorizontalGapFieldId + 1,
-        NextFieldId          = VerticalGapFieldId   + 1
+        AlignmentFieldId          = Inherited::NextFieldId,
+        HorizontalGapFieldId      = AlignmentFieldId          + 1,
+        VerticalGapFieldId        = HorizontalGapFieldId      + 1,
+        MajorAxisAlignmentFieldId = VerticalGapFieldId        + 1,
+        MinorAxisAlignmentFieldId = MajorAxisAlignmentFieldId + 1,
+        NextFieldId               = MinorAxisAlignmentFieldId + 1
     };
 
     static const OSG::BitVector AlignmentFieldMask;
     static const OSG::BitVector HorizontalGapFieldMask;
     static const OSG::BitVector VerticalGapFieldMask;
+    static const OSG::BitVector MajorAxisAlignmentFieldMask;
+    static const OSG::BitVector MinorAxisAlignmentFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -130,6 +136,8 @@ class OSG_USER_INTERFACE_CLASS_API FlowLayoutBase : public Layout
            SFUInt32            *getSFAlignment      (void);
            SFInt32             *getSFHorizontalGap  (void);
            SFInt32             *getSFVerticalGap    (void);
+           SFUInt32            *getSFMajorAxisAlignment(void);
+           SFUInt32            *getSFMinorAxisAlignment(void);
 
            UInt32              &getAlignment      (void);
      const UInt32              &getAlignment      (void) const;
@@ -137,6 +145,10 @@ class OSG_USER_INTERFACE_CLASS_API FlowLayoutBase : public Layout
      const Int32               &getHorizontalGap  (void) const;
            Int32               &getVerticalGap    (void);
      const Int32               &getVerticalGap    (void) const;
+           UInt32              &getMajorAxisAlignment(void);
+     const UInt32              &getMajorAxisAlignment(void) const;
+           UInt32              &getMinorAxisAlignment(void);
+     const UInt32              &getMinorAxisAlignment(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -146,6 +158,8 @@ class OSG_USER_INTERFACE_CLASS_API FlowLayoutBase : public Layout
      void setAlignment      ( const UInt32 &value );
      void setHorizontalGap  ( const Int32 &value );
      void setVerticalGap    ( const Int32 &value );
+     void setMajorAxisAlignment( const UInt32 &value );
+     void setMinorAxisAlignment( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -191,6 +205,8 @@ class OSG_USER_INTERFACE_CLASS_API FlowLayoutBase : public Layout
     SFUInt32            _sfAlignment;
     SFInt32             _sfHorizontalGap;
     SFInt32             _sfVerticalGap;
+    SFUInt32            _sfMajorAxisAlignment;
+    SFUInt32            _sfMinorAxisAlignment;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

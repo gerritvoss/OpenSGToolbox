@@ -36,30 +36,101 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_DEFINES_H_
-#define _OSG_UI_DEFINES_H_
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
-#ifdef __sgi
-#pragma once
-#endif
- 
-#include "OSGUserInterfaceConfig.h"
+#include <stdlib.h>
+#include <stdio.h>
 
-#define OSG_UI_BEGIN_NAMESPACE namespace OSG { namespace ui
-#define OSG_UI_END_NAMESPACE } }
+#include <OpenSG/OSGConfig.h>
 
-#define OSG_UI_USING_NAMESPACE namespace OSG {} namespace ui using namespace OSG::ui;
-
+#include "OSGCheckboxButton.h"
 
 OSG_BEGIN_NAMESPACE
 
-enum HorizontalAlignment {HORIZONTAL_CENTER=0, HORIZONTAL_LEFT, HORIZONTAL_RIGHT};
-enum VerticalAlignment {VERTICAL_CENTER=0, VERTICAL_TOP, VERTICAL_BOTTOM};
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-enum Alignment {HORIZONTAL_ALIGNMENT=0, VERTICAL_ALIGNMENT=1};
-enum AxisAlignment {AXIS_MIN_ALIGNMENT=0, AXIS_CENTER_ALIGNMENT, AXIS_MAX_ALIGNMENT};
-enum Scale {SCALE_NONE=0, SCALE_STRETCH, SCALE_MIN_AXIS, SCALE_MAX_AXIS, SCALE_ABSOLUTE};
-	 
+/*! \class osg::CheckboxButton
+A UI Checkbox Button. 
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void CheckboxButton::initMethod (void)
+{
+}
+
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+CheckboxButton::CheckboxButton(void) :
+    Inherited()
+{
+}
+
+CheckboxButton::CheckboxButton(const CheckboxButton &source) :
+    Inherited(source)
+{
+}
+
+CheckboxButton::~CheckboxButton(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void CheckboxButton::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void CheckboxButton::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump CheckboxButton NI" << std::endl;
+}
+
+
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
+
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
+
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
+
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGCHECKBOXBUTTONBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGCHECKBOXBUTTONBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGCHECKBOXBUTTONFIELDS_HEADER_CVSID;
+}
+
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
+
 OSG_END_NAMESPACE
 
-#endif /* _OSG_UI_DEFINES_H_ */

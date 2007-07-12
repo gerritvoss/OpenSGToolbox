@@ -4,8 +4,6 @@
  *                                                                           *
  *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
- *                                                                           *
  *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -36,30 +34,15 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_DEFINES_H_
-#define _OSG_UI_DEFINES_H_
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
-#ifdef __sgi
-#pragma once
-#endif
- 
-#include "OSGUserInterfaceConfig.h"
-
-#define OSG_UI_BEGIN_NAMESPACE namespace OSG { namespace ui
-#define OSG_UI_END_NAMESPACE } }
-
-#define OSG_UI_USING_NAMESPACE namespace OSG {} namespace ui using namespace OSG::ui;
-
+#include <OpenSG/OSGConfig.h>
 
 OSG_BEGIN_NAMESPACE
 
-enum HorizontalAlignment {HORIZONTAL_CENTER=0, HORIZONTAL_LEFT, HORIZONTAL_RIGHT};
-enum VerticalAlignment {VERTICAL_CENTER=0, VERTICAL_TOP, VERTICAL_BOTTOM};
-
-enum Alignment {HORIZONTAL_ALIGNMENT=0, VERTICAL_ALIGNMENT=1};
-enum AxisAlignment {AXIS_MIN_ALIGNMENT=0, AXIS_CENTER_ALIGNMENT, AXIS_MAX_ALIGNMENT};
-enum Scale {SCALE_NONE=0, SCALE_STRETCH, SCALE_MIN_AXIS, SCALE_MAX_AXIS, SCALE_ABSOLUTE};
-	 
 OSG_END_NAMESPACE
 
-#endif /* _OSG_UI_DEFINES_H_ */
+#define OSGCHECKBOXBUTTON_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+

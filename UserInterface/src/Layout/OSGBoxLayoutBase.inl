@@ -103,6 +103,13 @@ SFUInt32 *BoxLayoutBase::getSFAlignment(void)
     return &_sfAlignment;
 }
 
+//! Get the BoxLayout::_sfMajorAxisAlignment field.
+inline
+SFUInt32 *BoxLayoutBase::getSFMajorAxisAlignment(void)
+{
+    return &_sfMajorAxisAlignment;
+}
+
 
 //! Get the value of the BoxLayout::_sfAlignment field.
 inline
@@ -123,6 +130,27 @@ inline
 void BoxLayoutBase::setAlignment(const UInt32 &value)
 {
     _sfAlignment.setValue(value);
+}
+
+//! Get the value of the BoxLayout::_sfMajorAxisAlignment field.
+inline
+UInt32 &BoxLayoutBase::getMajorAxisAlignment(void)
+{
+    return _sfMajorAxisAlignment.getValue();
+}
+
+//! Get the value of the BoxLayout::_sfMajorAxisAlignment field.
+inline
+const UInt32 &BoxLayoutBase::getMajorAxisAlignment(void) const
+{
+    return _sfMajorAxisAlignment.getValue();
+}
+
+//! Set the value of the BoxLayout::_sfMajorAxisAlignment field.
+inline
+void BoxLayoutBase::setMajorAxisAlignment(const UInt32 &value)
+{
+    _sfMajorAxisAlignment.setValue(value);
 }
 
 

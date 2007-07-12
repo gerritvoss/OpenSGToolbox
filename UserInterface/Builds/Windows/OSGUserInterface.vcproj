@@ -275,6 +275,34 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Component\OSGCheckboxButton.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGCheckboxButton.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGCheckboxButton.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGCheckboxButtonBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGCheckboxButtonBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGCheckboxButtonBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGCheckboxButtonFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Component\OSGComponent.cpp"
 					>
 				</File>
@@ -440,6 +468,62 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Component\OSGPanelFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGRadioButton.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGRadioButton.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGRadioButton.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGRadioButtonBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGRadioButtonBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGRadioButtonBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGRadioButtonFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGToggleButton.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGToggleButton.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGToggleButton.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGToggleButtonBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGToggleButtonBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGToggleButtonBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGToggleButtonFields.h"
 					>
 				</File>
 				<Filter

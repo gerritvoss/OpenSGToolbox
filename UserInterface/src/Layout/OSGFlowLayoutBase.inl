@@ -117,6 +117,20 @@ SFInt32 *FlowLayoutBase::getSFVerticalGap(void)
     return &_sfVerticalGap;
 }
 
+//! Get the FlowLayout::_sfMajorAxisAlignment field.
+inline
+SFUInt32 *FlowLayoutBase::getSFMajorAxisAlignment(void)
+{
+    return &_sfMajorAxisAlignment;
+}
+
+//! Get the FlowLayout::_sfMinorAxisAlignment field.
+inline
+SFUInt32 *FlowLayoutBase::getSFMinorAxisAlignment(void)
+{
+    return &_sfMinorAxisAlignment;
+}
+
 
 //! Get the value of the FlowLayout::_sfAlignment field.
 inline
@@ -179,6 +193,48 @@ inline
 void FlowLayoutBase::setVerticalGap(const Int32 &value)
 {
     _sfVerticalGap.setValue(value);
+}
+
+//! Get the value of the FlowLayout::_sfMajorAxisAlignment field.
+inline
+UInt32 &FlowLayoutBase::getMajorAxisAlignment(void)
+{
+    return _sfMajorAxisAlignment.getValue();
+}
+
+//! Get the value of the FlowLayout::_sfMajorAxisAlignment field.
+inline
+const UInt32 &FlowLayoutBase::getMajorAxisAlignment(void) const
+{
+    return _sfMajorAxisAlignment.getValue();
+}
+
+//! Set the value of the FlowLayout::_sfMajorAxisAlignment field.
+inline
+void FlowLayoutBase::setMajorAxisAlignment(const UInt32 &value)
+{
+    _sfMajorAxisAlignment.setValue(value);
+}
+
+//! Get the value of the FlowLayout::_sfMinorAxisAlignment field.
+inline
+UInt32 &FlowLayoutBase::getMinorAxisAlignment(void)
+{
+    return _sfMinorAxisAlignment.getValue();
+}
+
+//! Get the value of the FlowLayout::_sfMinorAxisAlignment field.
+inline
+const UInt32 &FlowLayoutBase::getMinorAxisAlignment(void) const
+{
+    return _sfMinorAxisAlignment.getValue();
+}
+
+//! Set the value of the FlowLayout::_sfMinorAxisAlignment field.
+inline
+void FlowLayoutBase::setMinorAxisAlignment(const UInt32 &value)
+{
+    _sfMinorAxisAlignment.setValue(value);
 }
 
 

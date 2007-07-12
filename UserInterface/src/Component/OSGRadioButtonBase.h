@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Button
+ **     class RadioButton
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGBUTTONBASE_H_
-#define _OSGBUTTONBASE_H_
+#ifndef _OSGRADIOBUTTONBASE_H_
+#define _OSGRADIOBUTTONBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -64,58 +64,28 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGComponent.h" // Parent
+#include "OSGToggleButton.h" // Parent
 
-#include "Text/OSGFont.h" // Font type
-#include <OpenSG/OSGStringFields.h> // Text type
-#include <OpenSG/OSGBoolFields.h> // Active type
-#include "Border/OSGBorder.h" // ActiveBorder type
-#include "Background/OSGUIBackground.h" // ActiveBackground type
-#include <OpenSG/OSGColor4fFields.h> // ActiveForegroundColor type
-#include <OpenSG/OSGUInt32Fields.h> // VerticalAlignment type
-#include <OpenSG/OSGUInt32Fields.h> // HorizontalAlignment type
 
-#include "OSGButtonFields.h"
+#include "OSGRadioButtonFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Button;
+class RadioButton;
 class BinaryDataHandler;
 
-//! \brief Button Base Class.
+//! \brief RadioButton Base Class.
 
-class OSG_USER_INTERFACE_CLASS_API ButtonBase : public Component
+class OSG_USER_INTERFACE_CLASS_API RadioButtonBase : public ToggleButton
 {
   private:
 
-    typedef Component    Inherited;
+    typedef ToggleButton    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ButtonPtr  Ptr;
-
-    enum
-    {
-        FontFieldId                  = Inherited::NextFieldId,
-        TextFieldId                  = FontFieldId                  + 1,
-        ActiveFieldId                = TextFieldId                  + 1,
-        ActiveBorderFieldId          = ActiveFieldId                + 1,
-        ActiveBackgroundFieldId      = ActiveBorderFieldId          + 1,
-        ActiveForegroundColorFieldId = ActiveBackgroundFieldId      + 1,
-        VerticalAlignmentFieldId     = ActiveForegroundColorFieldId + 1,
-        HorizontalAlignmentFieldId   = VerticalAlignmentFieldId     + 1,
-        NextFieldId                  = HorizontalAlignmentFieldId   + 1
-    };
-
-    static const OSG::BitVector FontFieldMask;
-    static const OSG::BitVector TextFieldMask;
-    static const OSG::BitVector ActiveFieldMask;
-    static const OSG::BitVector ActiveBorderFieldMask;
-    static const OSG::BitVector ActiveBackgroundFieldMask;
-    static const OSG::BitVector ActiveForegroundColorFieldMask;
-    static const OSG::BitVector VerticalAlignmentFieldMask;
-    static const OSG::BitVector HorizontalAlignmentFieldMask;
+    typedef RadioButtonPtr  Ptr;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -139,47 +109,6 @@ class OSG_USER_INTERFACE_CLASS_API ButtonBase : public Component
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFFontPtr           *getSFFont           (void);
-           SFString            *getSFText           (void);
-           SFBorderPtr         *getSFActiveBorder   (void);
-           SFUIBackgroundPtr   *getSFActiveBackground(void);
-           SFColor4f           *getSFActiveForegroundColor(void);
-           SFUInt32            *getSFVerticalAlignment(void);
-           SFUInt32            *getSFHorizontalAlignment(void);
-
-           FontPtr             &getFont           (void);
-     const FontPtr             &getFont           (void) const;
-           std::string         &getText           (void);
-     const std::string         &getText           (void) const;
-           BorderPtr           &getActiveBorder   (void);
-     const BorderPtr           &getActiveBorder   (void) const;
-           UIBackgroundPtr     &getActiveBackground(void);
-     const UIBackgroundPtr     &getActiveBackground(void) const;
-           Color4f             &getActiveForegroundColor(void);
-     const Color4f             &getActiveForegroundColor(void) const;
-           UInt32              &getVerticalAlignment(void);
-     const UInt32              &getVerticalAlignment(void) const;
-           UInt32              &getHorizontalAlignment(void);
-     const UInt32              &getHorizontalAlignment(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setFont           ( const FontPtr &value );
-     void setText           ( const std::string &value );
-     void setActiveBorder   ( const BorderPtr &value );
-     void setActiveBackground( const UIBackgroundPtr &value );
-     void setActiveForegroundColor( const Color4f &value );
-     void setVerticalAlignment( const UInt32 &value );
-     void setHorizontalAlignment( const UInt32 &value );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -200,8 +129,8 @@ class OSG_USER_INTERFACE_CLASS_API ButtonBase : public Component
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ButtonPtr      create          (void); 
-    static  ButtonPtr      createEmpty     (void); 
+    static  RadioButtonPtr      create          (void); 
+    static  RadioButtonPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -216,49 +145,18 @@ class OSG_USER_INTERFACE_CLASS_API ButtonBase : public Component
   protected:
 
     /*---------------------------------------------------------------------*/
-    /*! \name                      Fields                                  */
-    /*! \{                                                                 */
-
-    SFFontPtr           _sfFont;
-    SFString            _sfText;
-    SFBool              _sfActive;
-    SFBorderPtr         _sfActiveBorder;
-    SFUIBackgroundPtr   _sfActiveBackground;
-    SFColor4f           _sfActiveForegroundColor;
-    SFUInt32            _sfVerticalAlignment;
-    SFUInt32            _sfHorizontalAlignment;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ButtonBase(void);
-    ButtonBase(const ButtonBase &source);
+    RadioButtonBase(void);
+    RadioButtonBase(const RadioButtonBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ButtonBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFBool              *getSFActive         (void);
-
-           bool                &getActive         (void);
-     const bool                &getActive         (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setActive         (const bool &value);
+    virtual ~RadioButtonBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -266,13 +164,13 @@ class OSG_USER_INTERFACE_CLASS_API ButtonBase : public Component
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ButtonBase *pOther,
+    void executeSyncImpl(      RadioButtonBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      ButtonBase *pOther,
+    void executeSyncImpl(      RadioButtonBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -297,12 +195,11 @@ class OSG_USER_INTERFACE_CLASS_API ButtonBase : public Component
 
     friend class FieldContainer;
 
-    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ButtonBase &source);
+    void operator =(const RadioButtonBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -310,17 +207,17 @@ class OSG_USER_INTERFACE_CLASS_API ButtonBase : public Component
 //---------------------------------------------------------------------------
 
 
-typedef ButtonBase *ButtonBaseP;
+typedef RadioButtonBase *RadioButtonBaseP;
 
-typedef osgIF<ButtonBase::isNodeCore,
-              CoredNodePtr<Button>,
+typedef osgIF<RadioButtonBase::isNodeCore,
+              CoredNodePtr<RadioButton>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ButtonNodePtr;
+              >::_IRet RadioButtonNodePtr;
 
-typedef RefPtr<ButtonPtr> ButtonRefPtr;
+typedef RefPtr<RadioButtonPtr> RadioButtonRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGBUTTONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGRADIOBUTTONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGBUTTONBASE_H_ */
+#endif /* _OSGRADIOBUTTONBASE_H_ */

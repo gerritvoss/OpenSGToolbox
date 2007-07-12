@@ -36,30 +36,84 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_DEFINES_H_
-#define _OSG_UI_DEFINES_H_
-
+#ifndef _OSGCHECKBOXBUTTON_H_
+#define _OSGCHECKBOXBUTTON_H_
 #ifdef __sgi
 #pragma once
 #endif
- 
+
 #include "OSGUserInterfaceConfig.h"
 
-#define OSG_UI_BEGIN_NAMESPACE namespace OSG { namespace ui
-#define OSG_UI_END_NAMESPACE } }
-
-#define OSG_UI_USING_NAMESPACE namespace OSG {} namespace ui using namespace OSG::ui;
-
+#include "OSGCheckboxButtonBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-enum HorizontalAlignment {HORIZONTAL_CENTER=0, HORIZONTAL_LEFT, HORIZONTAL_RIGHT};
-enum VerticalAlignment {VERTICAL_CENTER=0, VERTICAL_TOP, VERTICAL_BOTTOM};
+class OSG_USER_INTERFACE_CLASS_API CheckboxButton : public CheckboxButtonBase
+{
+  private:
 
-enum Alignment {HORIZONTAL_ALIGNMENT=0, VERTICAL_ALIGNMENT=1};
-enum AxisAlignment {AXIS_MIN_ALIGNMENT=0, AXIS_CENTER_ALIGNMENT, AXIS_MAX_ALIGNMENT};
-enum Scale {SCALE_NONE=0, SCALE_STRETCH, SCALE_MIN_AXIS, SCALE_MAX_AXIS, SCALE_ABSOLUTE};
-	 
+    typedef CheckboxButtonBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in CheckboxButtonBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    CheckboxButton(void);
+    CheckboxButton(const CheckboxButton &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~CheckboxButton(void); 
+
+    /*! \}                                                                 */
+    
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class CheckboxButtonBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const CheckboxButton &source);
+};
+
+typedef CheckboxButton *CheckboxButtonP;
+
 OSG_END_NAMESPACE
 
-#endif /* _OSG_UI_DEFINES_H_ */
+#include "OSGCheckboxButtonBase.inl"
+#include "OSGCheckboxButton.inl"
+
+#define OSGCHECKBOXBUTTON_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+
+#endif /* _OSGCHECKBOXBUTTON_H_ */

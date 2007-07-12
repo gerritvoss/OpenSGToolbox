@@ -45,123 +45,90 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class BoxLayout!
+ **     class ToggleButton!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEBOXLAYOUTINST
+#define OSG_COMPILETOGGLEBUTTONINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGBoxLayoutBase.h"
-#include "OSGBoxLayout.h"
+#include "OSGToggleButtonBase.h"
+#include "OSGToggleButton.h"
 
-#include <Util/OSGUIDefines.h>            // Alignment default header
-#include <Util/OSGUIDefines.h>            // MajorAxisAlignment default header
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  BoxLayoutBase::AlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << BoxLayoutBase::AlignmentFieldId);
-
-const OSG::BitVector  BoxLayoutBase::MajorAxisAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << BoxLayoutBase::MajorAxisAlignmentFieldId);
-
-const OSG::BitVector BoxLayoutBase::MTInfluenceMask = 
+const OSG::BitVector ToggleButtonBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
-// Field descriptions
 
-/*! \var UInt32          BoxLayoutBase::_sfAlignment
-    
-*/
-/*! \var UInt32          BoxLayoutBase::_sfMajorAxisAlignment
-    
-*/
-
-//! BoxLayout description
-
-FieldDescription *BoxLayoutBase::_desc[] = 
-{
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Alignment", 
-                     AlignmentFieldId, AlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &BoxLayoutBase::getSFAlignment),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "MajorAxisAlignment", 
-                     MajorAxisAlignmentFieldId, MajorAxisAlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &BoxLayoutBase::getSFMajorAxisAlignment)
-};
-
-
-FieldContainerType BoxLayoutBase::_type(
-    "BoxLayout",
-    "Layout",
+FieldContainerType ToggleButtonBase::_type(
+    "ToggleButton",
+    "Button",
     NULL,
-    (PrototypeCreateF) &BoxLayoutBase::createEmpty,
-    BoxLayout::initMethod,
-    _desc,
-    sizeof(_desc));
+    (PrototypeCreateF) &ToggleButtonBase::createEmpty,
+    ToggleButton::initMethod,
+    NULL,
+    0);
 
-//OSG_FIELD_CONTAINER_DEF(BoxLayoutBase, BoxLayoutPtr)
+//OSG_FIELD_CONTAINER_DEF(ToggleButtonBase, ToggleButtonPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &BoxLayoutBase::getType(void) 
+FieldContainerType &ToggleButtonBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &BoxLayoutBase::getType(void) const 
+const FieldContainerType &ToggleButtonBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr BoxLayoutBase::shallowCopy(void) const 
+FieldContainerPtr ToggleButtonBase::shallowCopy(void) const 
 { 
-    BoxLayoutPtr returnValue; 
+    ToggleButtonPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const BoxLayout *>(this)); 
+    newPtr(returnValue, dynamic_cast<const ToggleButton *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 BoxLayoutBase::getContainerSize(void) const 
+UInt32 ToggleButtonBase::getContainerSize(void) const 
 { 
-    return sizeof(BoxLayout); 
+    return sizeof(ToggleButton); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void BoxLayoutBase::executeSync(      FieldContainer &other,
+void ToggleButtonBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((BoxLayoutBase *) &other, whichField);
+    this->executeSyncImpl((ToggleButtonBase *) &other, whichField);
 }
 #else
-void BoxLayoutBase::executeSync(      FieldContainer &other,
+void ToggleButtonBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((BoxLayoutBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((ToggleButtonBase *) &other, whichField, sInfo);
 }
-void BoxLayoutBase::execBeginEdit(const BitVector &whichField, 
+void ToggleButtonBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void BoxLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void ToggleButtonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -174,9 +141,7 @@ void BoxLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-BoxLayoutBase::BoxLayoutBase(void) :
-    _sfAlignment              (UInt32(HORIZONTAL_ALIGNMENT)), 
-    _sfMajorAxisAlignment     (UInt32(AXIS_CENTER_ALIGNMENT)), 
+ToggleButtonBase::ToggleButtonBase(void) :
     Inherited() 
 {
 }
@@ -185,109 +150,65 @@ BoxLayoutBase::BoxLayoutBase(void) :
 #pragma warning (default : 383)
 #endif
 
-BoxLayoutBase::BoxLayoutBase(const BoxLayoutBase &source) :
-    _sfAlignment              (source._sfAlignment              ), 
-    _sfMajorAxisAlignment     (source._sfMajorAxisAlignment     ), 
+ToggleButtonBase::ToggleButtonBase(const ToggleButtonBase &source) :
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-BoxLayoutBase::~BoxLayoutBase(void)
+ToggleButtonBase::~ToggleButtonBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 BoxLayoutBase::getBinSize(const BitVector &whichField)
+UInt32 ToggleButtonBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
-
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-    {
-        returnValue += _sfAlignment.getBinSize();
-    }
-
-    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
-    {
-        returnValue += _sfMajorAxisAlignment.getBinSize();
-    }
 
 
     return returnValue;
 }
 
-void BoxLayoutBase::copyToBin(      BinaryDataHandler &pMem,
+void ToggleButtonBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-    {
-        _sfAlignment.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
-    {
-        _sfMajorAxisAlignment.copyToBin(pMem);
-    }
-
 
 }
 
-void BoxLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
+void ToggleButtonBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
-
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-    {
-        _sfAlignment.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
-    {
-        _sfMajorAxisAlignment.copyFromBin(pMem);
-    }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void BoxLayoutBase::executeSyncImpl(      BoxLayoutBase *pOther,
+void ToggleButtonBase::executeSyncImpl(      ToggleButtonBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
-
-    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
-        _sfMajorAxisAlignment.syncWith(pOther->_sfMajorAxisAlignment);
-
 
 }
 #else
-void BoxLayoutBase::executeSyncImpl(      BoxLayoutBase *pOther,
+void ToggleButtonBase::executeSyncImpl(      ToggleButtonBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
-
-    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
-        _sfMajorAxisAlignment.syncWith(pOther->_sfMajorAxisAlignment);
-
 
 
 }
 
-void BoxLayoutBase::execBeginEditImpl (const BitVector &whichField, 
+void ToggleButtonBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -306,11 +227,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<BoxLayoutPtr>::_type("BoxLayoutPtr", "LayoutPtr");
+DataType FieldDataTraits<ToggleButtonPtr>::_type("ToggleButtonPtr", "ButtonPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(BoxLayoutPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(BoxLayoutPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(ToggleButtonPtr, );
+OSG_DLLEXPORT_MFIELD_DEF1(ToggleButtonPtr, );
 
 
 /*------------------------------------------------------------------------*/
@@ -327,10 +248,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(BoxLayoutPtr, );
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGBOXLAYOUTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGBOXLAYOUTBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGTOGGLEBUTTONBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGTOGGLEBUTTONBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGBOXLAYOUTFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGTOGGLEBUTTONFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

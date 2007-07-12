@@ -37,4 +37,24 @@ A UI FlowLayout.
 		defaultValue="10"
 	>
 	</Field>
+	<Field
+		name="MajorAxisAlignment"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="AXIS_CENTER_ALIGNMENT"
+		defaultHeader="Util/OSGUIDefines.h"
+	>
+	</Field>
+	<Field
+		name="MinorAxisAlignment"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="AXIS_CENTER_ALIGNMENT"
+		defaultHeader="Util/OSGUIDefines.h"
+	>
+	</Field>
 </FieldContainer>
