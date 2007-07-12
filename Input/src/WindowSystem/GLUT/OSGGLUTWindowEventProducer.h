@@ -44,15 +44,50 @@
 
 #include <OpenSG/OSGConfig.h>
 
+#include <map>
+
 #include "OSGGLUTWindowEventProducerBase.h"
 
 OSG_BEGIN_NAMESPACE
+
 
 class GLUTWindowEventProducer : public GLUTWindowEventProducerBase
 {
   private:
 
     typedef GLUTWindowEventProducerBase Inherited;
+
+    typedef std::map<Int32, GLUTWindowEventProducerPtr> GLUTWindowToProducerMap;
+
+    static GLUTWindowToProducerMap _GLUTWindowToProducerMap;
+    
+    static void GLUTWindowEventProducerDisplayFunction(void);
+    static void GLUTWindowEventProducerReshapeFunction(int width,int height);
+    static void GLUTWindowEventProducerOverlayDisplayFunction(void);
+    static void GLUTWindowEventProducerKeyboardFunction(unsigned char key, int x,int y);
+    static void GLUTWindowEventProducerKeyboardUpFunction(unsigned char key, int x,int y);
+    static void GLUTWindowEventProducerMouseFunction(int button, int state, int x, int y);
+    static void GLUTWindowEventProducerMotionFunction(int x, int y);
+    static void GLUTWindowEventProducerPassiveMotionFunction(int x, int y);
+    static void GLUTWindowEventProducerVisibilityFunction(int state);
+    static void GLUTWindowEventProducerSpecialFunction(int key, int x, int y);
+    static void GLUTWindowEventProducerSpecialUpFunction(int key, int x, int y);
+    static void GLUTWindowEventProducerIdleFunction(void);
+    static void GLUTWindowEventProducerMenuStatusFunction(int status, int x, int y);
+
+    void glutDisplay(void);
+    void glutReshape(Vec2s Size);
+    void glutKeyboard(UChar8 key, Pnt2s MousePos);
+    void glutKeyboardUp(UChar8 key, Pnt2s MousePos);
+    void glutSpecial(UChar8 key, Pnt2s MousePos);
+    void glutSpecialUp(UChar8 key, Pnt2s MousePos);
+    void glutMouse(Int32 Button, Int32 State, Pnt2s MousePos);
+    void glutMotion(Pnt2s MousePos);
+    void glutPassiveMotion(Pnt2s MousePos);
+
+    static KeyEvent::Key determineKey(UChar8 key);
+    static KeyEvent::Key determineSpecialKey(UChar8 key);
+    static UInt32 determineModifiers(void);
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -112,11 +147,7 @@ class GLUTWindowEventProducer : public GLUTWindowEventProducerBase
     //Get the Window Fullscreen
     virtual bool getFullscreen(void) const;
     
-    //Set Display Callback Function
-    virtual void setDisplayCallback(DisplayCallbackFunc Callback);
-
-    //Set Reshape Callback Function
-    virtual void setReshapeCallback(ReshapeCallbackFunc Callback);
+    virtual bool attachWindow(WindowPtr Win);
 
     /*=========================  PROTECTED  ===============================*/
   protected:

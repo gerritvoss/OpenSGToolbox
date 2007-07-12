@@ -102,7 +102,7 @@ class OSG_INPUT_CLASS_API WindowEventProducer : public WindowEventProducerBase
     EventDispatchThread* _EventDispatchThread;
 
     typedef void (*DisplayCallbackFunc)(void);
-    typedef void (*ReshapeCallbackFunc)(int,int);
+    typedef void (*ReshapeCallbackFunc)(Vec2s);
 
     DisplayCallbackFunc _DisplayCallbackFunc;
     ReshapeCallbackFunc _ReshapeCallbackFunc;
@@ -184,6 +184,9 @@ class OSG_INPUT_CLASS_API WindowEventProducer : public WindowEventProducerBase
 
     //Set Reshape Callback Function
     virtual void setReshapeCallback(ReshapeCallbackFunc Callback);
+
+    
+    virtual bool attachWindow(WindowPtr Win);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

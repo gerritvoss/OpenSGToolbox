@@ -157,12 +157,6 @@
 				<File
 					RelativePath="..\..\src\Util\OSGQuatOperations.h">
 				</File>
-				<File
-					RelativePath="..\..\src\Util\OSGWindowUtils.cpp">
-				</File>
-				<File
-					RelativePath="..\..\src\Util\OSGWindowUtils.h">
-				</File>
 			</Filter>
 			<Filter
 				Name="Cameras"

@@ -246,6 +246,12 @@
 				<File
 					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducerFields.h">
 				</File>
+				<File
+					RelativePath="..\..\src\WindowSystem\OSGWindowUtils.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\WindowSystem\OSGWindowUtils.h">
+				</File>
 				<Filter
 					Name="GLUT">
 					<File

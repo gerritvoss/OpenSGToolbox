@@ -28,6 +28,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04Background", "04Backgroun
 		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "05FlowLayout", "05FlowLayout.vcproj", "{0BCAD713-F611-4208-AF9C-9DBC2102668F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "06BoxLayout", "06BoxLayout.vcproj", "{1D08CC95-A5FE-48F8-BD8E-D7EA4A02F0F9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -58,6 +68,14 @@ Global
 		{1CBD0B76-B21A-4C37-A984-575673256F9E}.Debug.Build.0 = Debug|Win32
 		{1CBD0B76-B21A-4C37-A984-575673256F9E}.Release.ActiveCfg = Release|Win32
 		{1CBD0B76-B21A-4C37-A984-575673256F9E}.Release.Build.0 = Release|Win32
+		{0BCAD713-F611-4208-AF9C-9DBC2102668F}.Debug.ActiveCfg = Debug|Win32
+		{0BCAD713-F611-4208-AF9C-9DBC2102668F}.Debug.Build.0 = Debug|Win32
+		{0BCAD713-F611-4208-AF9C-9DBC2102668F}.Release.ActiveCfg = Release|Win32
+		{0BCAD713-F611-4208-AF9C-9DBC2102668F}.Release.Build.0 = Release|Win32
+		{1D08CC95-A5FE-48F8-BD8E-D7EA4A02F0F9}.Debug.ActiveCfg = Debug|Win32
+		{1D08CC95-A5FE-48F8-BD8E-D7EA4A02F0F9}.Debug.Build.0 = Debug|Win32
+		{1D08CC95-A5FE-48F8-BD8E-D7EA4A02F0F9}.Release.ActiveCfg = Release|Win32
+		{1D08CC95-A5FE-48F8-BD8E-D7EA4A02F0F9}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

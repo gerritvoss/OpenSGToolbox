@@ -45,9 +45,8 @@ WindowEventProducerPtr WindowEventProducerFactory::createWindowEventProducer(Win
 	if(_WindowToWindowEventProducerMap.find(TheWindow->getType().getId()) != _WindowToWindowEventProducerMap.end())
 	{
       WindowEventProducerPtr TheProducer = WindowEventProducerPtr::dcast( FieldContainerFactory::the()->findType( _WindowToWindowEventProducerMap[TheWindow->getType().getId()] )->createFieldContainer() );
-      beginEditCP(TheProducer, WindowEventProducer::WindowFieldMask);
-         TheProducer->setWindow(TheWindow);
-      endEditCP(TheProducer, WindowEventProducer::WindowFieldMask);
+      
+      TheProducer->attachWindow(TheWindow);
 		return TheProducer;
 	}
 	else

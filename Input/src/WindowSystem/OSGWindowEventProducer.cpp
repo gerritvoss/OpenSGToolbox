@@ -86,6 +86,21 @@ void WindowEventProducer::setReshapeCallback(ReshapeCallbackFunc Callback)
 {
    _ReshapeCallbackFunc = Callback;
 }
+
+bool WindowEventProducer::attachWindow(WindowPtr Win)
+{
+   if(getWindow() == NullFC)
+   {
+      beginEditCP(WindowEventProducerPtr(this), WindowEventProducer::WindowFieldMask);
+         setWindow(Win);
+      endEditCP(WindowEventProducerPtr(this), WindowEventProducer::WindowFieldMask);
+      return true;
+   }
+   else
+   {
+      return false;
+   }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

@@ -30,9 +30,8 @@
 // the general scene file loading handler
 #include <OpenSG/OSGSceneFileHandler.h>
 
-#include <OpenSG/Toolbox/OSGWindowUtils.h>
 //Input
-#include <OpenSG/Input/OSGWindowEventProducerFactory.h>
+#include <OpenSG/Input/OSGWindowUtils.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -45,23 +44,85 @@ SimpleSceneManager *mgr;
 WindowEventProducerPtr TheWindowEventProducer;
 
 // forward declaration so we can have the interesting stuff upfront
-int setupGLUT( int *argc, char *argv[] );
 void display(void);
-void reshape(int w, int h);
+void reshape(Vec2s Size);
+
+class TutorialMouseListener : public osg::MouseListener
+{
+    /*=========================  PUBLIC  ===============================*/
+  public:
+  
+    virtual void mouseClicked(const MouseEvent& e)
+    {
+       std::cout << "mouseClicked" << std::endl;
+    }
+    virtual void mouseEntered(const MouseEvent& e)
+    {
+       std::cout << "mouseEntered" << std::endl;
+    }
+    virtual void mouseExited(const MouseEvent& e)
+    {
+       std::cout << "mouseExited" << std::endl;
+    }
+    virtual void mousePressed(const MouseEvent& e)
+    {
+       std::cout << "mousePressed" << std::endl;
+    }
+    virtual void mouseReleased(const MouseEvent& e)
+    {
+       std::cout << "mouseReleased" << std::endl;
+    }
+};
+
+class TutorialKeyListener : public KeyListener
+{
+   /*=========================  PUBLIC  ===============================*/
+public:
+
+   virtual void keyPressed(const KeyEvent& e)
+    {
+       std::cout << "keyPressed" << std::endl;
+       switch(e.getKey()){
+         case KeyEvent::KEY_ESCAPE:
+            osgExit();
+            exit(0);
+            break;
+         default:
+            break;
+       }
+    }
+   virtual void keyReleased(const KeyEvent& e)
+    {
+       std::cout << "keyReleased" << std::endl;
+    }
+   virtual void keyTyped(const KeyEvent& e)
+    {
+       std::cout << "keyTyped" << std::endl;
+    }
+};
 
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
-    WindowPtr MainWindow = createWindow(GLUTWindow::getClassType(),
+    
+    WindowPtr MainWindow;
+    WindowPtr ;
+    createWindow(GLUTWindow::getClassType(),
                                         Pnt2s(50,50),
                                         Vec2s(250,250),
-                                        "GLUT Window");
-    MainWindow->init();
-    TheWindowEventProducer = WindowEventProducerFactory::the()->createWindowEventProducer(MainWindow);
+                                        "GLUT Window",
+                                        MainWindow,
+                                        TheWindowEventProducer);
+    
     TheWindowEventProducer->setDisplayCallback(display);
     TheWindowEventProducer->setReshapeCallback(reshape);
+
+    //Attach Mouse Listener
+    TheWindowEventProducer->addMouseListener(new TutorialMouseListener());
+    //Attach Key Listener
+    TheWindowEventProducer->addKeyListener(new TutorialKeyListener());
 
     // create the scene
     NodePtr scene = makeTorus(.5, 2, 16, 16);
@@ -76,9 +137,7 @@ int main(int argc, char **argv)
     // show the whole scene
     mgr->showAll();
 
-    openWindow(MainWindow);
-
-    osgExit();
+    openWindow(TheWindowEventProducer);
 
     return 0;
 }
@@ -94,7 +153,8 @@ void display(void)
 }
 
 // react to size changes
-void reshape(int w, int h)
+void reshape(Vec2s Size)
 {
-    mgr->resize(w, h);
+    mgr->resize(Size.x(), Size.y());
 }
+

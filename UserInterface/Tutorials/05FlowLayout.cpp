@@ -123,8 +123,8 @@ int main(int argc, char **argv)
 	//Determine whether the Layout is Horizontal (HORIZONTAL_ALIGNMENT) or
 	//Vertical (VERTICAL_ALIGNMENT)
 	beginEditCP(MainFrameLayout);
-		MainFrameLayout->setAlignment(VERTICAL_ALIGNMENT);
-		//MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
+		//MainFrameLayout->setAlignment(VERTICAL_ALIGNMENT);
+		MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
 	endEditCP(MainFrameLayout);
 	
  	//Create The Main Frame

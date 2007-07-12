@@ -21,36 +21,39 @@
 
 //#include <OpenSG/OSGQTWindow.h>
 //#include <OpenSG/OSGQT4Window.h>
+#include "OSGWindowEventProducerFactory.h"
 
 OSG_BEGIN_NAMESPACE
 
-WindowPtr createWindow(FieldContainerType WindowType,
+void createWindow(FieldContainerType WindowType,
                        const Pnt2s& ScreenPosition,
                        const Vec2s& Size,
-                       const std::string& WindowName)
+                       const std::string& WindowName,
+                       WindowPtr& ResultWindow,
+                       WindowEventProducerPtr& ResultWindowEventProducer)
 {
 #if defined(__APPLE__)
    if(WindowType == CocoaWindow::getClassType())
    {
-      return NullFC;
+      //return NullFC;
    }
    else if(WindowType == CarbonWindow::getClassType())
    {
-      return NullFC;
+      //return NullFC;
    }
    else if(WindowType == CoreGLWindow::getClassType())
    {
-      return NullFC;
+      //return NullFC;
    }
 #elif defined(WIN32)
    if(WindowType == WIN32Window::getClassType())
    {
-      return NullFC;
+      //return NullFC;
    }
 #elif defined(__linux)
    if(WindowType == XWindow::getClassType())
    {
-      return NullFC;
+      //return NullFC;
    }
 #endif
 
@@ -67,38 +70,49 @@ WindowPtr createWindow(FieldContainerType WindowType,
       glutPositionWindow(ScreenPosition.x(), ScreenPosition.y());
       glutReshapeWindow(Size.x(), Size.y());
       
-      GLUTWindowPtr gwin= GLUTWindow::create();
-      gwin->setId(winid);
-
-      return gwin;
+      ResultWindow = GLUTWindow::create();
+      GLUTWindow::Ptr::dcast(ResultWindow)->setId(winid);
    }
 #endif
    else
    {
-      return NullFC;
+      ResultWindow = NullFC;
+   }
+
+   //Create the WindowEventProducer
+   if(ResultWindow != NullFC)
+   {
+      ResultWindow->init();
+      ResultWindowEventProducer = WindowEventProducerFactory::the()->createWindowEventProducer(ResultWindow);
+   }
+   else
+   {
+      ResultWindowEventProducer = NullFC;
    }
 }
 
-WindowPtr createDefaultWindow(const Pnt2s& ScreenPosition,
+void createDefaultWindow(const Pnt2s& ScreenPosition,
                        const Vec2s& Size,
-                       const std::string& WindowName)
+                       const std::string& WindowName,
+                       WindowPtr& ResultWindow,
+                       WindowEventProducerPtr& ResultWindowEventProducer)
 {
 #if defined(__APPLE__)
-   return createWindow(CocoaWindow::getClassType(), ScreenPosition, Size, WindowName);
+   createWindow(CocoaWindow::getClassType(), ScreenPosition, Size, WindowName, ResultWindow, ResultWindowEventProducer);
 #elif defined(WIN32)
-   return createWindow(WIN32Window::getClassType(), ScreenPosition, Size, WindowName);
+   createWindow(WIN32Window::getClassType(), ScreenPosition, Size, WindowName, ResultWindow, ResultWindowEventProducer);
 #elif defined(__linux)
-   return createWindow(XWindow::getClassType(), ScreenPosition, Size, WindowName);
+   createWindow(XWindow::getClassType(), ScreenPosition, Size, WindowName, ResultWindow, ResultWindowEventProducer);
 #endif
 }
 
-void openWindow(WindowPtr TheWindow)
+void openWindow(WindowEventProducerPtr TheWindowEventProducer)
 {
 #ifdef OSG_WITH_GLUT
-   if(TheWindow->getType() == GLUTWindow::getClassType())
+   if(TheWindowEventProducer->getWindow()->getType() == GLUTWindow::getClassType())
    {
       //Get the GLUT window ID
-      Int32 winid = GLUTWindow::Ptr::dcast(TheWindow)->getId();
+      Int32 winid = GLUTWindow::Ptr::dcast(TheWindowEventProducer->getWindow())->getId();
 
       //Set the current window to this one
       glutSetWindow(winid);

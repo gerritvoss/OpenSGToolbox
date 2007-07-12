@@ -13,7 +13,7 @@ void EventDispatchThread::workProc(void)
    _EventDispatchThreadFinish = false;
    while(!_EventDispatchThreadFinish)
    {
-      std::cout << "bla" << std::endl;
+      //std::cout << "bla" << std::endl;
    }
 }
 EventDispatchThread *EventDispatchThread::create(const Char8 *szName, UInt32 uiId)
