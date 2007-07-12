@@ -125,11 +125,11 @@ int main(int argc, char **argv)
 		//that even though the Button size is 200 by 50, it currently
 		//displays with the PreferredSize, of 100 by 50.
 		button->setPreferredSize( Vec2s (100, 50) );
+		//button->setEnabled(false);
 	
 		
 		//The following functions are specific to Button
 		button->setText("Button 1");
-		button->setEnabled(false);
 		//button->setFont(fonts);
 		//button->setAlignment(VERTICAL_ALIGNMENT);
 		//button->setAlignment(HORIZONTAL_ALIGNMENT);
