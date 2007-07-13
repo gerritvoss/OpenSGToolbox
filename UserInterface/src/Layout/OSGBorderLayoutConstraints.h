@@ -56,7 +56,7 @@ class OSG_USER_INTERFACE_CLASS_API BorderLayoutConstraints : public BorderLayout
 
     /*==========================  PUBLIC  =================================*/
   public:
-	  enum BorderRegion {BORDER_CENTER=0, BORDER_NORTH, BORDER_EAST, BORDER_SOUTH,BORDER_WEST};
+	enum BorderRegion {BORDER_CENTER=0, BORDER_NORTH, BORDER_EAST, BORDER_SOUTH, BORDER_WEST};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
