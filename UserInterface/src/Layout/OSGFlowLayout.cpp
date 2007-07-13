@@ -114,21 +114,33 @@ void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 
 		// if there is only one so far, then it can't draw it using cumMajorAxis
 		// because it hasn't been set yet
-		if (firstOne) // this one might draw i
+		if (firstOne) // this one might draw it
 		{
 			firstOne = false;
 			// if this is the last component or it is already too big for the
 			// container, draw it centered on its line
 			if (i == Components.size() || Components.getValue(i)->getSize()[AxisIndex] >= totalMajorAxis)
 			{
-				// find how far to translate to make it centered
-				offsetMajorAxis = totalMajorAxis/2 - Components.getValue(i)->getSize()[AxisIndex]/2;
+				// find how far to translate to make it properly aligned
+				if (getMajorAxisAlignment() == AXIS_MIN_ALIGNMENT)
+				{
+					offsetMajorAxis = 0;
+				} else if (getMajorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
+				{
+					offsetMajorAxis = totalMajorAxis/2 - Components.getValue(i)->getSize()[AxisIndex]/2;
+				} else {
+					offsetMajorAxis = totalMajorAxis - Components.getValue(i)->getSize()[AxisIndex];
+				}
+
 				if (AxisIndex) glTranslatef(0, offsetMajorAxis, 0);
 				else glTranslatef(offsetMajorAxis, 0, 0);
+
 				Components.getValue(i)->draw(TheGraphics);
+
 				// get to the next row
 				if (AxisIndex) glTranslatef(Components.getValue(i)->getSize()[(AxisIndex+1)%2]+gap[(AxisIndex+1)%2], -offsetMajorAxis, 0);
 				else glTranslatef(-offsetMajorAxis, Components.getValue(i)->getSize()[(AxisIndex+1)%2]+gap[(AxisIndex+1)%2], 0);
+
 				// update cumMinorAxis, other values should still be at 0
 				cumMinorAxis += Components.getValue(i)->getSize()[(AxisIndex+1)%2] + gap[(AxisIndex+1)%2];
 				// update prevComponent
@@ -150,17 +162,41 @@ void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 			// is actually translates once for each component, so it must be compensated
 			// when returning to the next row.
 			numGaps = i-prevComponent-1;
-			// find how far to translate to make it centered
-			offsetMajorAxis = totalMajorAxis/2 - (cumMajorAxis+numGaps*gap[AxisIndex])/2;
+
+			// find how far to translate to make it properly aligned
+			if (getMajorAxisAlignment() == AXIS_MIN_ALIGNMENT)
+			{
+				offsetMajorAxis = 0;
+			} else if (getMajorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
+			{
+				offsetMajorAxis = totalMajorAxis/2 - (cumMajorAxis+numGaps*gap[AxisIndex])/2;
+			} else {
+				offsetMajorAxis = totalMajorAxis - (cumMajorAxis+numGaps*gap[AxisIndex]);
+			}
+			
+
 			if (AxisIndex) glTranslatef(0, offsetMajorAxis, 0);
 			else glTranslatef(offsetMajorAxis, 0, 0);
+
 			for (int j = prevComponent; j < i; j++)
 			{
-				offsetMinorAxis = (maxMinorAxis-Components.getValue(j)->getSize()[(AxisIndex+1)%2])/2;
-				// translate to center up and down
+				// find how far to translate to make this button properly aligned
+				if (getMinorAxisAlignment() == AXIS_MIN_ALIGNMENT)
+				{
+					offsetMinorAxis = 0;
+				} else if (getMajorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
+				{
+					offsetMinorAxis = (maxMinorAxis-Components.getValue(j)->getSize()[(AxisIndex+1)%2])/2;
+				} else {
+					offsetMinorAxis = maxMinorAxis-Components.getValue(j)->getSize()[(AxisIndex+1)%2];
+				}
+
+				// translate to make it properly aligned
 				if (AxisIndex) glTranslatef(offsetMinorAxis, 0, 0);
 				else glTranslatef(0, offsetMinorAxis, 0);
+
 				Components.getValue(j)->draw(TheGraphics);
+
 				// translate to next button
 				if (AxisIndex) glTranslatef(-(Int64)offsetMinorAxis, Components.getValue(j)->getSize()[AxisIndex] + gap[AxisIndex], 0);
 				else glTranslatef(Components.getValue(j)->getSize()[AxisIndex] + gap[AxisIndex], -offsetMinorAxis, 0);
@@ -168,6 +204,7 @@ void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 			// translate to the next row
 			if (AxisIndex) glTranslatef(maxMinorAxis+gap[(AxisIndex+1)%2], -(offsetMajorAxis+cumMajorAxis+(numGaps+1)*gap[AxisIndex]), 0);
 			else glTranslatef(-(offsetMajorAxis+cumMajorAxis+(numGaps+1)*gap[AxisIndex]), maxMinorAxis+gap[(AxisIndex+1)%2], 0);
+
 			cumMinorAxis += maxMinorAxis + gap[(AxisIndex+1)%2];
 			maxMinorAxis = Components.getValue(i)->getSize()[(AxisIndex+1)%2];
 			prevComponent = i;
@@ -184,23 +221,47 @@ void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 		if (i+1 == Components.size() && !firstOne) // if on the last one, draw the last buttons
 		{
 			numGaps = i-prevComponent;
-			// find how far to translate to make it centered
-			offsetMajorAxis = totalMajorAxis/2 - (cumMajorAxis+numGaps*gap[AxisIndex])/2;
+
+			// find how far to translate to make it properly aligned
+			if (getMajorAxisAlignment() == AXIS_MIN_ALIGNMENT)
+			{
+				offsetMajorAxis = 0;
+			} else if (getMajorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
+			{
+				offsetMajorAxis = totalMajorAxis/2 - (cumMajorAxis+numGaps*gap[AxisIndex])/2;
+			} else {
+				offsetMajorAxis = totalMajorAxis - (cumMajorAxis+numGaps*gap[AxisIndex]);
+			}
+
 			if (AxisIndex) glTranslatef(0, offsetMajorAxis, 0);
 			else glTranslatef(offsetMajorAxis, 0, 0);
+			 
 			for (int j = prevComponent; j < i+1; j++)
 			{
-				// translate to center up and down
-				offsetMinorAxis = (maxMinorAxis-Components.getValue(j)->getSize()[(AxisIndex+1)%2])/2;
+				// find how far to translate to make this button properly aligned
+				if (getMinorAxisAlignment() == AXIS_MIN_ALIGNMENT)
+				{
+					offsetMinorAxis = 0;
+				} else if (getMajorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
+				{
+					offsetMinorAxis = (maxMinorAxis-Components.getValue(j)->getSize()[(AxisIndex+1)%2])/2;
+				} else {
+					offsetMinorAxis = maxMinorAxis-Components.getValue(j)->getSize()[(AxisIndex+1)%2];
+				}
+
+				// translate to make it properly aligned
 				if (AxisIndex) glTranslatef(offsetMinorAxis, 0, 0);
 				else glTranslatef(0, offsetMinorAxis, 0);
+
 				Components.getValue(j)->draw(TheGraphics);
+
 				if (AxisIndex) glTranslatef(-(Int64)offsetMinorAxis, Components.getValue(j)->getSize()[AxisIndex] + gap[AxisIndex], 0);
 				else glTranslatef(Components.getValue(j)->getSize()[AxisIndex] + gap[AxisIndex], -(Int64)offsetMinorAxis, 0);
 			}
 			// translate to the next row
 			if (AxisIndex) glTranslatef(maxMinorAxis+gap[(AxisIndex+1)%2], -(offsetMajorAxis+cumMajorAxis+(numGaps+1)*gap[AxisIndex]), 0);
 			else glTranslatef(-(offsetMajorAxis+cumMajorAxis+(numGaps+1)*gap[AxisIndex]), maxMinorAxis+gap[(AxisIndex+1)%2], 0);
+
 			cumMinorAxis += maxMinorAxis;
 		}
 	}
