@@ -31,14 +31,18 @@
 #include <OpenSG/OSGSceneFileHandler.h>
 
 
-//UserInterface Headers
+// UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+
+// Include UIDefines- used for HORITONAL_ALIGNMENT and VERTICAL_ALIGNMENT
 #include <OpenSG/UserInterface/OSGUIDefines.h>
+
+// Include UIBackground header files
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
 #include <OpenSG/UserInterface/OSGCompoundUIBackground.h>
 #include <OpenSG/UserInterface/OSGEmptyUIBackground.h>
@@ -75,7 +79,7 @@ int main(int argc, char **argv)
     gwin->init();
 
 
-   //Make Torus Node (creates Torus in background of scene)
+   // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
 
@@ -89,10 +93,10 @@ int main(int argc, char **argv)
     }
     endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	//Create the Graphics
+	// Create the Graphics
 	GraphicsPtr graphics = osg::Graphics2D::create();
 
-	//Initialize the LookAndFeelManager to enable default settings
+	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
 	
@@ -106,22 +110,22 @@ int main(int argc, char **argv)
 
 	******************************************************/
 
-	//Creates a ColorUIBackgroundPtr (colorBackground)
+	// Creates a ColorUIBackgroundPtr (colorBackground)
 	ColorUIBackgroundPtr colorBackground = osg::ColorUIBackground::create();
 
-	//Creates a CompoundUIBackgroundPtr (compoundBackground)
+	// Creates a CompoundUIBackgroundPtr (compoundBackground)
 	CompoundUIBackgroundPtr compoundBackground = osg::CompoundUIBackground::create();
 	
-	//Creates an EmptyUIBackgroundPtr (emptyBackground)
+	// Creates an EmptyUIBackgroundPtr (emptyBackground)
 	EmptyUIBackgroundPtr emptyBackground = osg::EmptyUIBackground::create();
 
-	//Create a GradientUIBackgroundPtr (gradientBackground)
+	// Create a GradientUIBackgroundPtr (gradientBackground)
 	GradientUIBackgroundPtr gradientBackground = osg::GradientUIBackground::create();
 	
-	//Create a MaterialUIBackgroundPtr (materialBackground)
+	// Create a MaterialUIBackgroundPtr (materialBackground)
 	MaterialUIBackgroundPtr materialBackground = osg::MaterialUIBackground::create();
 
-	//Create a TextureUIBackgroundPtr (textureBackground)
+	// Create a TextureUIBackgroundPtr (textureBackground)
 	TextureUIBackgroundPtr textureBackground = osg::TextureUIBackground::create();
 
 	/******************************************************
@@ -133,43 +137,43 @@ int main(int argc, char **argv)
 	******************************************************/
 
 
-	//Set colorBackground- set color
+	// Set colorBackground- set color
 	beginEditCP(colorBackground, ColorUIBackground::ColorFieldMask);
 		colorBackground->setColor(Color4f(1.0,0.0,0.0,1.0));
 	endEditCP(colorBackground, ColorUIBackground::ColorFieldMask);
 
-	//Set compoundBackground
+	// Set compoundBackground
 	beginEditCP(compoundBackground);
 
 	endEditCP(compoundBackground);
 
-	//Set emptyBackground (note that empty background is just that,
-	//a background with no attributes
+	// Set emptyBackground (note that empty background is just that,
+	// a background with no attributes
 	beginEditCP(emptyBackground);
 	endEditCP(emptyBackground);
 
-	//Set gradientBackground- Set initial color, end color,
-	//and orientation of gradient
+	// Set gradientBackground- Set initial color, end color,
+	// and orientation of gradient
 	beginEditCP(gradientBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
 		 gradientBackground->setColorStart( Color4f(1.0, 0.0, 0.0, 1.0));
 		 gradientBackground->setColorEnd( Color4f(0.0, 0.0, 1.0, 1.0));
-		 //The input into the following call is either
-		 //HORIZONTAL_ALIGNMENT or VERTICAL_ALIGNMENT,
-		 //which orient the gradient in the obvious manner 
+		 // The input into the following call is either
+		 // HORIZONTAL_ALIGNMENT or VERTICAL_ALIGNMENT,
+		 // which orient the gradient in the obvious manner 
 		 gradientBackground->setAlignment(HORIZONTAL_ALIGNMENT);
 	endEditCP(gradientBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
-	//Set materialBackground- Set material
+	// Set materialBackground- Set material
 	beginEditCP(materialBackground);
-		//materialBackground->setMaterial(MATERIAL_NAME);
+		// materialBackground->setMaterial(MATERIAL_NAME);
 	endEditCP(materialBackground);
 
-	//Set textureBackground- set texture
+	// Set textureBackground- set texture
 	beginEditCP(textureBackground);
-		//textureBackground->setTexture(TEXTURE_NAME);
+		// textureBackground->setTexture(TEXTURE_NAME);
 	endEditCP(textureBackground);
 
 
-	//Create and define simple line border to be used on Buttons
+	// Create and define simple line border to be used on Buttons
 	LineBorderPtr lineBorder = osg::LineBorder::create();
 	beginEditCP(lineBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
 		lineBorder->setColor( Color4f(0.0, 0.0, 0.0, 1.0) );
@@ -190,8 +194,8 @@ int main(int argc, char **argv)
 	ButtonPtr buttonMaterial = osg::Button::create();
 	ButtonPtr buttonTexture = osg::Button::create();
 	
-	//Set the visible text, border, and Background for
-	//each of the various Button components
+	// Set the visible text, border, and Background for
+	// each of the various Button components
 	beginEditCP(buttonColor, Button::TextFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
 		buttonColor->setText("Color Background");
 		buttonColor->setBackground(colorBackground);
@@ -218,15 +222,15 @@ int main(int argc, char **argv)
 		buttonGradient->setBorder(lineBorder);
     endEditCP(buttonGradient, Button::TextFieldMask | Button::BackgroundFieldMask | Button::PreferredSizeFieldMask |Button::BorderFieldMask);
 	
-	//add material and texture buttons at some point
+	// add material and texture buttons at some point
 
 
 
-	//This creates a background for the MainFrame so that 
-	//the button backgrounds are easier to see. The process
-	//is identical, except the background is added to the 
-	//MainFrame instead of a Button.
-	//The background is a semi-transparent white background.
+	// This creates a background for the MainFrame so that 
+	// the button backgrounds are easier to see. The process
+	// is identical, except the background is added to the 
+	// MainFrame instead of a Button.
+	// The background is a semi-transparent white background.
 	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
 	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
 		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
@@ -234,12 +238,12 @@ int main(int argc, char **argv)
 
 
 
-	//Create The Main Frame
+	// Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
 	LayoutPtr MainFrameLayout = osg::FlowLayout::create();
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-	   //Assign the button to the mainframe so it will be displayed
-	   //when the view is rendered.
+	   // Assign the button to the mainframe so it will be displayed
+	   // when the view is rendered.
 	   MainFrame->getChildren().addValue(buttonColor);
 	   MainFrame->getChildren().addValue(buttonCompound);
 	   MainFrame->getChildren().addValue(buttonEmpty);
@@ -248,7 +252,7 @@ int main(int argc, char **argv)
 	   MainFrame->setBackground(mainBackground);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
-	//Create the UI Foreground Object
+	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();
 
 	beginEditCP(foreground, UIForeground::GraphicsFieldMask | UIForeground::RootFrameFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
@@ -265,7 +269,7 @@ int main(int argc, char **argv)
     mgr->setWindow(gwin );
     mgr->setRoot  (scene);
 
-	//Add the UI Foreground Object to the Scene
+	// Add the UI Foreground Object to the Scene
 	ViewportPtr viewport = mgr->getWindow()->getPort(0);
     beginEditCP(viewport, Viewport::ForegroundsFieldMask);
 		viewport->getForegrounds().addValue(foreground);

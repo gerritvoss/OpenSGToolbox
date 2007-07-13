@@ -66,11 +66,11 @@ int main(int argc, char **argv)
     gwin->init();
 
 
-   //Make Torus Node (creates Torus in background of scene)
+   // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
 
-    //Make Main Scene Node
+    // Make Main Scene Node
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
     {
@@ -81,15 +81,15 @@ int main(int argc, char **argv)
     }
     endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	//Create the Graphics
+	// Create the Graphics
 	GraphicsPtr graphics = osg::Graphics2D::create();
 
-	//Initialize the LookAndFeelManager to enable default settings
+	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
-	//Create a Button component
+	// Create a Button component
 	ButtonPtr button = osg::Button::create();
-	//Create a simple Font to be used with the Button
+	// Create a simple Font to be used with the Button
 	FontPtr fonts = osg::Font::create();
 	beginEditCP(fonts, Font::SizeFieldMask);
 		fonts->setSize(12);
@@ -97,55 +97,52 @@ int main(int argc, char **argv)
 
 	/******************************************************
 
-	Assign created attributes of button to the button.
-	The Vec2s requires 2 inputs, X and Y, which control 
-	the vertical and horizontal dimensions of the button.
-	Essentially, the input is the vector from the top left 
-	corner to the bottom right corner of the button.
+		Edit the Button.  The functions setMinSize and 
+		setMaxSize do exactly that; they impose restrictions
+		on what the maximum and minimum size of the Button
+		can be.
 
 	******************************************************/
 
 	beginEditCP(button, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
-	    //The following 4 function calls are not specific to Button, 
-		//but can be used with any Component
+	    // The following 4 function calls are not specific to Button, 
+		// but can be used with any Component
 
-		//Set the Minimum and Maximum size that the Component can ever have
-		//due to various Layouts (some change the size of the Components within
-		//the layouts)
+		// Set the Minimum and Maximum size that the Component can ever have
+		// due to various Layouts (some change the size of the Components within
+		// the layouts)
 		button->setMinSize( Vec2s (50, 25) );
 		button->setMaxSize( Vec2s (200, 100) );
 
-		//Set what the size the Component will be displayed at
-		button->setSize( Vec2s (200, 50) );	
-		//Set an absolute size for the Component, which will
-		//always be the size regard.  It is possible to play around with 
-		//changing the setSize to a much larger value, with the
-		//display size staying the same.  By commenting out the
-		//setPreferredSize line, this will no longer occur.  Note
-		//that even though the Button size is 200 by 50, it currently
-		//displays with the PreferredSize, of 100 by 50.
+		// Set an absolute size for the Component, which will
+		// always be the size regardless.  It is possible to play around with 
+		// changing the setSize to a much larger value, with the
+		// display size staying the same.  By commenting out the
+		// setPreferredSize line, this will no longer occur.  Note
+		// that even though the Button size is 200 by 50, it currently
+		// displays with the PreferredSize, of 100 by 50.
 		button->setPreferredSize( Vec2s (100, 50) );
 		//button->setEnabled(false);
 	
 		
-		//The following functions are specific to Button
+		// The following functions are specific to Button
 		button->setText("Button 1");
 		//button->setFont(fonts);
-		//button->setAlignment(VERTICAL_ALIGNMENT);
-		//button->setAlignment(HORIZONTAL_ALIGNMENT);
+		button->setVerticalAlignment(VERTICAL_ALIGNMENT);
+		// button->setHorizontalAlignment(HORIZONTAL_ALIGNMENT);
     endEditCP(button, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
 
-	//Create The Main Frame
+	// Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
 	LayoutPtr MainFrameLayout = osg::AbsoluteLayout::create();
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
-	   //Assign the button to the mainframe so it will be displayed
-	   //when the view is rendered.
+	   // Assign the button to the mainframe so it will be displayed
+	   // when the view is rendered.
 	   MainFrame->getChildren().addValue(button);
 	   MainFrame->setLayout(MainFrameLayout);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 
-	//Create the UI Foreground Object
+	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();
 
 	beginEditCP(foreground, UIForeground::GraphicsFieldMask | UIForeground::RootFrameFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
@@ -162,7 +159,7 @@ int main(int argc, char **argv)
     mgr->setWindow(gwin);
     mgr->setRoot  (scene);
 
-	//Add the UI Foreground Object to the Scene
+	// Add the UI Foreground Object to the Scene
 	ViewportPtr viewport = mgr->getWindow()->getPort(0);
     beginEditCP(viewport, Viewport::ForegroundsFieldMask);
 		viewport->getForegrounds().addValue(foreground);

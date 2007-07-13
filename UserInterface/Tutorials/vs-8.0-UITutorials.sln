@@ -32,6 +32,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "05FlowLayout", "05FlowLayou
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "06BoxLayout", "06BoxLayout.vcproj", "{1D08CC95-A5FE-48F8-BD8E-D7EA4A02F0F9}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "07GridLayout", "07GridLayout.vcproj", "{F2CF018D-298E-4241-9005-1B3372BE81AB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "08OverlayLayout", "08OverlayLayout.vcproj", "{CBF5BB23-CAF0-4DAF-9A0C-54A263ECF8EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -70,6 +74,14 @@ Global
 		{1D08CC95-A5FE-48F8-BD8E-D7EA4A02F0F9}.Debug|Win32.Build.0 = Debug|Win32
 		{1D08CC95-A5FE-48F8-BD8E-D7EA4A02F0F9}.Release|Win32.ActiveCfg = Release|Win32
 		{1D08CC95-A5FE-48F8-BD8E-D7EA4A02F0F9}.Release|Win32.Build.0 = Release|Win32
+		{F2CF018D-298E-4241-9005-1B3372BE81AB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F2CF018D-298E-4241-9005-1B3372BE81AB}.Debug|Win32.Build.0 = Debug|Win32
+		{F2CF018D-298E-4241-9005-1B3372BE81AB}.Release|Win32.ActiveCfg = Release|Win32
+		{F2CF018D-298E-4241-9005-1B3372BE81AB}.Release|Win32.Build.0 = Release|Win32
+		{CBF5BB23-CAF0-4DAF-9A0C-54A263ECF8EE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CBF5BB23-CAF0-4DAF-9A0C-54A263ECF8EE}.Debug|Win32.Build.0 = Debug|Win32
+		{CBF5BB23-CAF0-4DAF-9A0C-54A263ECF8EE}.Release|Win32.ActiveCfg = Release|Win32
+		{CBF5BB23-CAF0-4DAF-9A0C-54A263ECF8EE}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -29,12 +29,14 @@
 #include <OpenSG/OSGSceneFileHandler.h>
 
 
-//UserInterface Headers
+// UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+
+// Include Border header files
 #include <OpenSG/UserInterface/OSGMatteBorder.h>
 #include <OpenSG/UserInterface/OSGCompoundBorder.h>
 #include <OpenSG/UserInterface/OSGLineBorder.h>
@@ -70,10 +72,10 @@ int main(int argc, char **argv)
     gwin->init();
 
 
-    //Make Torus Node
+    // Make Torus Node
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-    //Make Main Scene Node
+    // Make Main Scene Node
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
     {
@@ -84,10 +86,10 @@ int main(int argc, char **argv)
     }
     endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	//Create the Graphics
+	// Create the Graphics
 	GraphicsPtr graphics = osg::Graphics2D::create();
 
-	//Initialize the LookAndFeelManager to enable default settings
+	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
 	/******************************************************
@@ -106,64 +108,64 @@ int main(int argc, char **argv)
 	LineBorderPtr lineBorder = osg::LineBorder::create();
 	MatteBorderPtr matteBorder = osg::MatteBorder::create();
 	
-	//Edit each Border Component and set all attributes
+	// Edit each Border Component and set all attributes
 	
-	//The BevelBorder causes the Button to appear three dimensional
+	// The BevelBorder causes the Button to appear raised or lowered
 	beginEditCP(bevelBorder, BevelBorder::HighlightInnerFieldMask | BevelBorder::RaisedFieldMask | BevelBorder::HighlightOuterFieldMask);
-		//Determines whether Button appears raised (true) or indented into screen (false)
+		// Determines whether Button appears raised (true) or indented into screen (false)
 		bevelBorder->setRaised(true);
-		//Determines width of Border
+		// Determines width of Border
 		bevelBorder->setWidth(5);
-		//Determines the four colors involved in BevelBorder
-		//The HighlightInner and HighlightOuter are the left and top
-		//of the border while setRaised(false) and the bottom and right 
-		//while setRaised(true).  The ShadowInner and ShadowOuter are the 
-		//opposite two sides.
+		// Determines the four colors involved in BevelBorder
+		// The HighlightInner and HighlightOuter are the left and top
+		// of the border while setRaised(false) and the bottom and right 
+		// while setRaised(true).  The ShadowInner and ShadowOuter are the 
+		// opposite two sides.
 		bevelBorder->setHighlightInner(Color4f(1.0, 1.0, 0.5, 1.0));
 		bevelBorder->setHighlightOuter(Color4f(0.5, 0.5, 1.0, 1.0));
 		bevelBorder->setShadowInner(Color4f(1.0, 0.5, 1.0, 1.0));
 		bevelBorder->setShadowOuter(Color4f(0.5, 1.0, 1.0, 1.0));
 	endEditCP(bevelBorder);
 
-	//The CompoundBorder takes two Border components and creates a single Border
-	//out of the two components.  It is possible to take use a CompoundBorder
-	//within a CompoundBorder.
+	// The CompoundBorder takes two Border components and creates a single Border
+	// out of the two components.  It is possible to take use a CompoundBorder
+	// within a CompoundBorder.
 	beginEditCP(compoundBorder, CompoundBorder::InnerBorderFieldMask | CompoundBorder::OuterBorderFieldMask);
-		//Determine the Inner and Outer Borders of the CompoundBorder
+		// Determine the Inner and Outer Borders of the CompoundBorder
 		compoundBorder->setInnerBorder(bevelBorder);
 		compoundBorder->setOuterBorder(matteBorder);
 	endEditCP(compoundBorder, CompoundBorder::InnerBorderFieldMask | CompoundBorder::OuterBorderFieldMask);
 		
-	//The EtchedBorder causes the Button to appear raised
-	//or indented into the screen similar to the BevelBorder
-	//but in a different style
+	// The EtchedBorder causes the Button to appear raised
+	// or indented into the screen similar to the BevelBorder
+	// but in a different style
 	beginEditCP(etchedBorder, EtchedBorder::WidthFieldMask | EtchedBorder::HighlightFieldMask | EtchedBorder::ShadowFieldMask | EtchedBorder::RaisedFieldMask);
-		//Determine the Width of the Border
+		// Determine the Width of the Border
 		etchedBorder->setWidth(3);
-		//Determine Highlight and Shadow colors
+		// Determine Highlight and Shadow colors
 		etchedBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
 		etchedBorder->setShadow(Color4f(0.8, 0.8, 0.8, 1.0));
-		//Determines if the Border appears Raised (true) or indented (false)
+		// Determines if the Border appears Raised (true) or indented (false)
 		etchedBorder->setRaised(false);
 	endEditCP(etchedBorder, EtchedBorder::WidthFieldMask | EtchedBorder::HighlightFieldMask | EtchedBorder::ShadowFieldMask | EtchedBorder::RaisedFieldMask);
 
-	//the LineBorder is simply a line border
+	// The LineBorder is simply a line border
 	beginEditCP(lineBorder, LineBorder::WidthFieldMask | LineBorder::ColorFieldMask);
-		//Determine Width and Color of lineBorder
+		// Determine Width
 		lineBorder->setWidth(1);
-		//Determine Color
+		// Determine Color
 		lineBorder->setColor(Color4f(.7, 0.0, .5, 1.0));
 	endEditCP(lineBorder, LineBorder::WidthFieldMask | LineBorder::ColorFieldMask);
 	
-	//The MatteBorder creates a Border with dimensions
-	//in all directions specified individually
+	// The MatteBorder creates a Border with dimensions
+	// on all edges specified individually
 	beginEditCP(matteBorder, MatteBorder::LeftWidthFieldMask | MatteBorder::RightWidthFieldMask | MatteBorder::BottomWidthFieldMask | MatteBorder::TopWidthFieldMask | MatteBorder::ColorFieldMask);
-		//Determine the four Widths
+		// Determine the four Edge Widths
 		matteBorder->setLeftWidth(3);
 		matteBorder->setRightWidth(2);
 		matteBorder->setBottomWidth(5);
 		matteBorder->setTopWidth(1);
-		//Determine Color
+		// Determine Color
 		matteBorder->setColor(Color4f(1.0, .5, .5, 1.0));
 	endEditCP(matteBorder, MatteBorder::LeftWidthFieldMask | MatteBorder::RightWidthFieldMask | MatteBorder::BottomWidthFieldMask | MatteBorder::TopWidthFieldMask | MatteBorder::ColorFieldMask);
 
@@ -178,14 +180,14 @@ int main(int argc, char **argv)
 		Button.
 
 	******************************************************/
-	//Create Button components
+	// Create Button components
 	ButtonPtr bevelButton = osg::Button::create();
 	ButtonPtr compoundButton = osg::Button::create();
 	ButtonPtr etchedButton = osg::Button::create();
 	ButtonPtr lineButton = osg::Button::create();
 	ButtonPtr matteButton = osg::Button::create();
 	
-	//Edit each Button component
+	// Edit each Button component
 	beginEditCP(bevelButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 		bevelButton->setPreferredSize(Vec2s(100,50));
 		bevelButton->setText("Bevel Border");
@@ -218,8 +220,8 @@ int main(int argc, char **argv)
 
 
 	
-	//Create The Main Frame
-	//Create Background to be used with the Main Frame
+	// Create The Main Frame
+	// Create Background to be used with the Main Frame
 	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
 	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
 		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
@@ -236,7 +238,7 @@ int main(int argc, char **argv)
 	   MainFrame->setBackground(mainBackground);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask| Frame::BackgroundFieldMask);
 
-	//Create the UI Foreground Object
+	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();
 
 	beginEditCP(foreground, UIForeground::GraphicsFieldMask | UIForeground::RootFrameFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
@@ -253,7 +255,7 @@ int main(int argc, char **argv)
     mgr->setWindow(gwin );
     mgr->setRoot  (scene);
 
-	//Add the UI Foreground Object to the Scene
+	// Add the UI Foreground Object to the Scene
 	ViewportPtr viewport = mgr->getWindow()->getPort(0);
     beginEditCP(viewport, Viewport::ForegroundsFieldMask);
 		viewport->getForegrounds().addValue(foreground);

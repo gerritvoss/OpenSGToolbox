@@ -1,11 +1,11 @@
-// OpenSG Tutorial Example: Creating Multiple Buttons
-//		and Placing Buttons in the Window
+// OpenSG Tutorial Example: Using the Box Layout
+//		to place Components 
 //
 // This tutorial explains how to place buttons within a 
 // frame utilizing the Box Layout command to 
 // manage the layout through the OSG User Interface library.
 // 
-// Includes: placing multiple buttons using BoxLayout
+// Includes: placing multiple buttons using Box Layout
 
 
 // GLUT is used for window handling
@@ -36,10 +36,10 @@
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGLineBorder.h>
-#include <OpenSG/UserInterface/OSGBoxLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
-
+// Include BoxLayout header file
+#include <OpenSG/UserInterface/OSGBoxLayout.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -69,10 +69,10 @@ int main(int argc, char **argv)
     gwin->init();
 
 
-    //Make Torus Node (creates Torus in background of scene)
+    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-    //Make Main Scene Node
+    // Make Main Scene Node
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
     {
@@ -83,16 +83,16 @@ int main(int argc, char **argv)
     }
     endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	//Create the Graphics
+	// Create the Graphics
 	GraphicsPtr graphics = osg::Graphics2D::create();
 
-	//Initialize the LookAndFeelManager to enable default 
-	//settings for the Buttons
+	// Initialize the LookAndFeelManager to enable default 
+	// settings for the Buttons
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
 
-	//Creates some Button components to add
+	// Creates some Button components to add
 	ButtonPtr button = osg::Button::create();
 	ButtonPtr button2 = osg::Button::create();
 	ButtonPtr button3 = osg::Button::create();
@@ -127,38 +127,38 @@ int main(int argc, char **argv)
 	******************************************************/
 	BoxLayoutPtr MainFrameLayout = osg::BoxLayout::create();
 
-	//Determine whether the Layout is Horizontal (HORIZONTAL_ALIGNMENT) or
-	//Vertical (VERTICAL_ALIGNMENT)
+	// Determine whether the Layout is Horizontal (HORIZONTAL_ALIGNMENT) or
+	// Vertical (VERTICAL_ALIGNMENT)
 	beginEditCP(MainFrameLayout);
 		MainFrameLayout->setAlignment(VERTICAL_ALIGNMENT);
-		//MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
+		// MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
 	endEditCP(MainFrameLayout); 
 	
 
-	//Edit two different Buttons
+	// Edit two different Buttons
 	beginEditCP(button, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::SizeFieldMask);
-		button->setPreferredSize( Vec2s(80,50) );
-		//Set button to have a MaxSize.  This is never exceeded, therefore
-		//even in BoxLayout it will not change to have a width of greater than
-		//80.  By commenting the setMaxSize line, button will have its width 
-		//expanded to match the size of the largest object in the BoxLayout;
-		//in this case button2.
-		button->setMaxSize( Vec2s (80, 50) );
+		button->setPreferredSize( Vec2s(50,50) );
+		// Set button to have a MaxSize.  This is never exceeded, therefore
+		// even in BoxLayout it will not change to have a width of greater than
+		// 80.  By commenting the setMaxSize line, button will have its width 
+		// expanded to match the size of the largest object in the BoxLayout;
+		// in this case button2.
+		button->setMaxSize( Vec2s (50, 50) );
 	endEditCP(button, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::SizeFieldMask);
 
 	beginEditCP(button2, Button::PreferredSizeFieldMask | Button::SizeFieldMask);
-		//Edit the PreferredSize of button2.  Because this is the largest
-		//PreferredSize, all Buttons will have the same width unless they
-		//have MaxSize limits (see above).  If setPreferredSize is commented, 
-		//and setSize uncommented, note that button2 will no longer have the same
-		//display size.
-		//button2->setPreferredSize( Vec2s(200,100) );
+		// Edit the PreferredSize of button2.  Because this is the largest
+		// PreferredSize, all Buttons will have the same width unless they
+		// have MaxSize limits (see above).  If setPreferredSize is commented, 
+		// and setSize uncommented, note that button2 will no longer have the same
+		// display size.
+		// button2->setPreferredSize( Vec2s(200,100) );
 		button2->setSize( Vec2s(200,100) );
 	endEditCP(button2, Button::PreferredSizeFieldMask | Button::SizeFieldMask);
 
- 	//Create The Main Frame
+ 	// Create The Main Frame
 
-	//Create Background to be used with the Main Frame
+	// Create Background to be used with the Main Frame
 	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
 	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
 		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
@@ -166,18 +166,18 @@ int main(int argc, char **argv)
 	
 	FramePtr MainFrame = osg::Frame::create();
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-	   //Add the buttons to the mainframe so they will be displayed
+	   // Add the buttons to the mainframe so they will be displayed
 	   MainFrame->getChildren().addValue(button);
 	   MainFrame->getChildren().addValue(button2);
 	   MainFrame->getChildren().addValue(button3);
 	   MainFrame->getChildren().addValue(button4);
-	   //Add the Layout to the MainFrame
+	   // Add the Layout to the MainFrame
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
 	 
     endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
-	//Create the UI Foreground Object
+	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();
 
 	beginEditCP(foreground, UIForeground::GraphicsFieldMask | UIForeground::RootFrameFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
@@ -194,7 +194,7 @@ int main(int argc, char **argv)
     mgr->setWindow(gwin );
     mgr->setRoot  (scene);
 
-	//Add the UI Foreground Object to the Scene
+	// Add the UI Foreground Object to the Scene
 	ViewportPtr viewport = mgr->getWindow()->getPort(0);
     beginEditCP(viewport, Viewport::ForegroundsFieldMask);
 		viewport->getForegrounds().addValue(foreground);

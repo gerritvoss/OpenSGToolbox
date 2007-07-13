@@ -1,11 +1,11 @@
-// OpenSG Tutorial Example: Using the Flow Layout
+// OpenSG Tutorial Example: Using the Grid Layout
 //		to place Components 
 //
 // This tutorial explains how to place buttons within a 
-// frame utilizing the Flow Layout command to 
+// frame utilizing the Grid Layout command to 
 // manage the layout through the OSG User Interface library.
 // 
-// Includes: placing multiple buttons using Flow Layout
+// Includes: placing multiple buttons using Grid Layout
 
 
 // GLUT is used for window handling
@@ -38,8 +38,8 @@
 #include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
-// Include FlowLayout header file
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
+#include <OpenSG/UserInterface/OSGOverlayLayout.h>
+
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
 // with OSG::, but that would be a bit tedious for this example
@@ -86,12 +86,12 @@ int main(int argc, char **argv)
 	GraphicsPtr graphics = osg::Graphics2D::create();
 
 	// Initialize the LookAndFeelManager to enable default 
-	// settings for the Button
+	// settings for the Buttons
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
 
-	// Creates some Button components
+	// Creates some Button components to add 
 	ButtonPtr button = osg::Button::create();
 	ButtonPtr button2 = osg::Button::create();
 	ButtonPtr button3 = osg::Button::create();
@@ -99,40 +99,63 @@ int main(int argc, char **argv)
 	ButtonPtr button5 = osg::Button::create();
 	ButtonPtr button6 = osg::Button::create();
 
+
 	/******************************************************
 
-		Create Flow Layout.  Flow Layout arranges objects
-		automatically within the Frame, so that depending 
-		on Frame size, the objects may appear in a vertical
-		line, horizontal line, or multiple lines.  Objects 
-		fill from the upper left hand corner of the Frame
-		across, then down (when the line becomes full) while
-		arranged Vertically, or from the upper left hand
-		corner across, starting a new column when necessary .
+		Create Grid Layout.  Grid Layout arranges the 
+		objects in a grid, with user specified rows, 
+		columns, and gap size (conceptually imagine that
+		an invisible grid is drawn, and components are 
+		placed into that grid one per "box).
 
-		You can experiment with this by changing the window 
-		size, changing the orientation,or changing the size 
-		of the buttons as shown in 01Button, or adding more 
-		Buttons to the view.
+		Objects within the Grid Layout fill from left
+		to right, and top to bottom, filling in each space
+		sequentially.  The Grid Layout "boxes" are each the 
+		same size as the largest object within the Layout. 
+		
+		Smaller objects are automatically resized to fit 
+		this size unless they have Max/Min sizes assigned
+		(similar to Box Layout).
+
+		You can experiment with this by changing the size of 
+		the Buttons as shown in 01Button, editing the Max/Min
+		size of the Buttons, or adding more Buttons to the 
+		view.
 
 		Note that if the Frame is too small, the objects will 
 		appear out of the Frame background.
 
 
 	******************************************************/
-	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
-	// Determine whether the Layout is Horizontal (HORIZONTAL_ALIGNMENT) or
-	// Vertical (VERTICAL_ALIGNMENT) and determine gap size
+	OverlayLayoutPtr MainFrameLayout = osg::OverlayLayout::create();
+
 	beginEditCP(MainFrameLayout);
-		// Determine the Horizontal and Vertical gaps between objects.
-		// These gaps are absolute, and measured in pixels.
-		MainFrameLayout->setHorizontalGap(3);
-		MainFrameLayout->setVerticalGap(3);
-		MainFrameLayout->setAlignment(VERTICAL_ALIGNMENT);
-		// MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
-	endEditCP(MainFrameLayout);
+
+	endEditCP(MainFrameLayout); 
+
 	
+
+	// Edit Buttons to change their sizes
+	// Note that as with Box Layout, unless a setMaxSize
+	// option is specified, the 
+	beginEditCP(button, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
+		button->setPreferredSize( Vec2s(50,50) );
+		button->setMaxSize( Vec2s(50,50) );
+	endEditCP(button, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
+
+	beginEditCP(button2, Button::PreferredSizeFieldMask);
+		 button2->setPreferredSize( Vec2s(300,50) );
+	endEditCP(button2, Button::PreferredSizeFieldMask);
+		
+	// Note that button3 will be resized to be the same
+	// size as button2, while button will not
+	beginEditCP(button3, Button::PreferredSizeFieldMask);
+		 button3->setPreferredSize( Vec2s(50,300) );
+	endEditCP(button3, Button::PreferredSizeFieldMask);
+
+
  	// Create The Main Frame
+
 	// Create Background to be used with the Main Frame
 	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
 	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
@@ -148,6 +171,7 @@ int main(int argc, char **argv)
 	   MainFrame->getChildren().addValue(button4);
 	   MainFrame->getChildren().addValue(button5);
 	   MainFrame->getChildren().addValue(button6);
+	   // Add the Layout to the MainFrame
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
 	 
