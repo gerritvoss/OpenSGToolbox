@@ -88,7 +88,7 @@ void OverlayLayout::draw(const MFComponentPtr Components,const ComponentPtr Pare
 	for(int i = 0; i <Components.size(); i++){
 		Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
 		glPushMatrix();
-		glTranslatef((maxX-Components.getValue(i)->getSize().x())/2.0, (maxY-Components.getValue(i)->getSize().x())/2.0, 0);
+		glTranslatef((maxX-Components.getValue(i)->getSize().x())/2.0, (maxY-Components.getValue(i)->getSize().y())/2.0, 0);
 		Components.getValue(i)->draw(TheGraphics);
 		glPopMatrix();
 	}
