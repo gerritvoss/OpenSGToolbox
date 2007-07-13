@@ -128,7 +128,8 @@ void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 				} else if (getMajorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
 				{
 					offsetMajorAxis = totalMajorAxis/2 - Components.getValue(i)->getSize()[AxisIndex]/2;
-				} else {
+				} else 
+				{
 					offsetMajorAxis = totalMajorAxis - Components.getValue(i)->getSize()[AxisIndex];
 				}
 
@@ -170,7 +171,8 @@ void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 			} else if (getMajorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
 			{
 				offsetMajorAxis = totalMajorAxis/2 - (cumMajorAxis+numGaps*gap[AxisIndex])/2;
-			} else {
+			} else 
+			{
 				offsetMajorAxis = totalMajorAxis - (cumMajorAxis+numGaps*gap[AxisIndex]);
 			}
 			
@@ -184,10 +186,11 @@ void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 				if (getMinorAxisAlignment() == AXIS_MIN_ALIGNMENT)
 				{
 					offsetMinorAxis = 0;
-				} else if (getMajorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
+				} else if (getMinorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
 				{
 					offsetMinorAxis = (maxMinorAxis-Components.getValue(j)->getSize()[(AxisIndex+1)%2])/2;
-				} else {
+				} else 
+				{
 					offsetMinorAxis = maxMinorAxis-Components.getValue(j)->getSize()[(AxisIndex+1)%2];
 				}
 
@@ -229,7 +232,8 @@ void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 			} else if (getMajorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
 			{
 				offsetMajorAxis = totalMajorAxis/2 - (cumMajorAxis+numGaps*gap[AxisIndex])/2;
-			} else {
+			} else 
+			{
 				offsetMajorAxis = totalMajorAxis - (cumMajorAxis+numGaps*gap[AxisIndex]);
 			}
 
@@ -242,10 +246,11 @@ void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 				if (getMinorAxisAlignment() == AXIS_MIN_ALIGNMENT)
 				{
 					offsetMinorAxis = 0;
-				} else if (getMajorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
+				} else if (getMinorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
 				{
 					offsetMinorAxis = (maxMinorAxis-Components.getValue(j)->getSize()[(AxisIndex+1)%2])/2;
-				} else {
+				} else 
+				{
 					offsetMinorAxis = maxMinorAxis-Components.getValue(j)->getSize()[(AxisIndex+1)%2];
 				}
 
