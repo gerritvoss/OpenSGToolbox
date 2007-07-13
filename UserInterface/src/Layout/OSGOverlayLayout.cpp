@@ -76,6 +76,11 @@ void OverlayLayout::initMethod (void)
 
 void OverlayLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
 {
+	//overlay layout simply draws all the components on top of each other, with the reference point for all the components being the same
+	for(int i = 0; i <Components.size(); i++){
+		Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
+		Components.getValue(i)->draw(TheGraphics);
+	}
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
