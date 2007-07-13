@@ -76,10 +76,21 @@ void OverlayLayout::initMethod (void)
 
 void OverlayLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
 {
+	int maxX = 0;
+	int maxY = 0;
+	for(int i = 0; i < Components.size(); i++){
+		if(Components.getValue(i)->getSize().x()>maxX)
+			maxX = Components.getValue(i)->getSize().x();
+		if(Components.getValue(i)->getSize().y()>maxY)
+			maxY = Components.getValue(i)->getSize().y();
+	}
 	//overlay layout simply draws all the components on top of each other, with the reference point for all the components being the same
 	for(int i = 0; i <Components.size(); i++){
 		Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
+		glPushMatrix();
+		glTranslatef((maxX-Components.getValue(i)->getSize().x())/2.0, (maxY-Components.getValue(i)->getSize().x())/2.0, 0);
 		Components.getValue(i)->draw(TheGraphics);
+		glPopMatrix();
 	}
 }
 /*-------------------------------------------------------------------------*\
