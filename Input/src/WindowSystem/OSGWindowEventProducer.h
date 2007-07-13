@@ -54,6 +54,7 @@
 #include "Event/OSGMouseListener.h"
 #include "Event/OSGMouseMotionListener.h"
 #include "Event/OSGMouseWheelListener.h"
+#include "Event/OSGWindowListener.h"
 #include "Event/OSGKeyListener.h"
 
 #include "OSGEventDispatchThread.h"
@@ -78,11 +79,16 @@ class OSG_INPUT_CLASS_API WindowEventProducer : public WindowEventProducerBase
     typedef std::set<KeyListenerPtr> KeyListenerSet;
     typedef KeyListenerSet::iterator KeyListenerSetItor;
     typedef KeyListenerSet::const_iterator KeyListenerSetConstItor;
+	
+	typedef std::set<WindowListenerPtr> WindowListenerSet;
+    typedef WindowListenerSet::iterator WindowListenerSetItor;
+    typedef WindowListenerSet::const_iterator WindowListenerSetConstItor;
 
     MouseListenerSet       _MouseListeners;
     MouseMotionListenerSet _MouseMotionListeners;
     MouseWheelListenerSet  _MouseWheelListeners;
     KeyListenerSet         _KeyListeners;
+    WindowListenerSet       _WindowListeners;
 
     struct Click
     {
@@ -131,11 +137,13 @@ class OSG_INPUT_CLASS_API WindowEventProducer : public WindowEventProducerBase
     void addMouseMotionListener(MouseMotionListenerPtr Listener);
     void addMouseWheelListener(MouseWheelListenerPtr Listener);
     void addKeyListener(KeyListenerPtr Listener);
+    void addWindowListener(WindowListenerPtr Listener);
 
     void removeMouseListener(MouseListenerPtr Listener);
     void removeMouseMotionListener(MouseMotionListenerPtr Listener);
     void removeMouseWheelListener(MouseWheelListenerPtr Listener);
     void removeKeyListener(KeyListenerPtr Listener);
+    void removeWindowListener(WindowListenerPtr Listener);
 
     //Set the Window Position
     virtual void setPosition(Pnt2s Pos) = 0;
@@ -224,6 +232,18 @@ class OSG_INPUT_CLASS_API WindowEventProducer : public WindowEventProducerBase
     void produceKeyPressed(const KeyEvent::Key& TheKey, const UInt32& Modifiers);
     void produceKeyReleased(const KeyEvent::Key& TheKey, const UInt32& Modifiers);
     void produceKeyTyped(const KeyEvent::Key& TheKey, const UInt32& Modifiers);
+
+	
+    void produceWindowOpened(void);
+    void produceWindowClosing(void);
+    void produceWindowClosed(void);
+    void produceWindowIconified(void);
+    void produceWindowDeiconified(void);
+    void produceWindowActivated(void);
+    void produceWindowDeactivated(void);
+    void produceWindowEntered(void);
+    void produceWindowExited(void);
+
     /*==========================  PRIVATE  ================================*/
   private:
 

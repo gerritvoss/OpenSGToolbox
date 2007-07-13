@@ -304,6 +304,88 @@ void WindowEventProducer::produceKeyTyped(const KeyEvent::Key& TheKey, const UIn
    }
 }
 
+void WindowEventProducer::produceWindowOpened(void)
+{
+   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), getWindow() );
+   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->windowOpened(TheEvent);
+   }
+}
+
+void WindowEventProducer::produceWindowClosing(void)
+{
+   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), getWindow() );
+   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->windowClosing(TheEvent);
+   }
+}
+
+void WindowEventProducer::produceWindowClosed(void)
+{
+   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), getWindow() );
+   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->windowClosed(TheEvent);
+   }
+}
+
+void WindowEventProducer::produceWindowIconified(void)
+{
+   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), getWindow() );
+   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->windowIconified(TheEvent);
+   }
+}
+
+void WindowEventProducer::produceWindowDeiconified(void)
+{
+   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), getWindow() );
+   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->windowDeiconified(TheEvent);
+   }
+}
+
+void WindowEventProducer::produceWindowActivated(void)
+{
+   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), getWindow() );
+   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->windowActivated(TheEvent);
+   }
+}
+
+void WindowEventProducer::produceWindowDeactivated(void)
+{
+   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), getWindow() );
+   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->windowDeactivated(TheEvent);
+   }
+}
+
+void WindowEventProducer::produceWindowEntered(void)
+{
+   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), getWindow() );
+   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->windowEntered(TheEvent);
+   }
+}
+
+void WindowEventProducer::produceWindowExited(void)
+{
+   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), getWindow() );
+   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->windowExited(TheEvent);
+   }
+}
+
+
 void WindowEventProducer::updateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2s& Location)
 {
    //Get the vector of Clicks for this Button

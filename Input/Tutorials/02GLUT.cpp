@@ -101,6 +101,58 @@ public:
     }
 };
 
+class TutorialWindowListener : public WindowListener
+{
+    /*=========================  PUBLIC  ===============================*/
+  public:
+  
+    virtual void windowOpened(const WindowEvent& e)
+    {
+       std::cout << "windowOpened" << std::endl;
+    }
+
+    virtual void windowClosing(const WindowEvent& e)
+    {
+       std::cout << "windowClosing" << std::endl;
+    }
+
+    virtual void windowClosed(const WindowEvent& e)
+    {
+       std::cout << "windowClosed" << std::endl;
+    }
+
+    virtual void windowIconified(const WindowEvent& e)
+    {
+       std::cout << "windowIconified" << std::endl;
+    }
+
+    virtual void windowDeiconified(const WindowEvent& e)
+    {
+       std::cout << "windowDeiconified" << std::endl;
+    }
+
+    virtual void windowActivated(const WindowEvent& e)
+    {
+       std::cout << "windowActivated" << std::endl;
+    }
+
+    virtual void windowDeactivated(const WindowEvent& e)
+    {
+       std::cout << "windowDeactivated" << std::endl;
+    }
+
+    virtual void windowEntered(const WindowEvent& e)
+    {
+       std::cout << "windowEntered" << std::endl;
+    }
+
+    virtual void windowExited(const WindowEvent& e)
+    {
+       std::cout << "windowExited" << std::endl;
+    }
+
+};
+
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
 {
@@ -123,6 +175,8 @@ int main(int argc, char **argv)
     TheWindowEventProducer->addMouseListener(new TutorialMouseListener());
     //Attach Key Listener
     TheWindowEventProducer->addKeyListener(new TutorialKeyListener());
+    //Attach Window Listener
+    TheWindowEventProducer->addWindowListener(new TutorialWindowListener());
 
     // create the scene
     NodePtr scene = makeTorus(.5, 2, 16, 16);

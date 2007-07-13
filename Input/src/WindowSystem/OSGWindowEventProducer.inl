@@ -31,6 +31,12 @@ void WindowEventProducer::addKeyListener(KeyListenerPtr Listener)
 }
 
 inline
+void WindowEventProducer::addWindowListener(WindowListenerPtr Listener)
+{
+   _WindowListeners.insert(Listener);
+}
+
+inline
 void WindowEventProducer::removeMouseListener(MouseListenerPtr Listener)
 {
    MouseListenerSetItor EraseIter(_MouseListeners.find(Listener));
@@ -67,6 +73,16 @@ void WindowEventProducer::removeKeyListener(KeyListenerPtr Listener)
    if(EraseIter != _KeyListeners.end())
    {
       _KeyListeners.erase(EraseIter);
+   }
+}
+
+inline
+void WindowEventProducer::removeWindowListener(WindowListenerPtr Listener)
+{
+   WindowListenerSetItor EraseIter(_WindowListeners.find(Listener));
+   if(EraseIter != _WindowListeners.end())
+   {
+      _WindowListeners.erase(EraseIter);
    }
 }
 

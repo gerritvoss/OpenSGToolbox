@@ -124,6 +124,19 @@ void GLUTWindowEventProducer::glutPassiveMotion(Pnt2s MousePos)
    produceMouseMoved(MousePos);
 }
 
+inline
+void GLUTWindowEventProducer::glutEntry(Int32 State)
+{
+	if(State ==  GLUT_ENTERED)
+	{
+		produceWindowActivated();
+	}
+	else if(State ==  GLUT_LEFT)
+	{
+		produceWindowDeactivated();
+	}
+}
+
 OSG_END_NAMESPACE
 
 #define OSGGLUTWINDOWEVENTPRODUCER_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

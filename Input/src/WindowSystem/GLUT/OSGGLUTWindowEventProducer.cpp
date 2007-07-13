@@ -115,6 +115,11 @@ void GLUTWindowEventProducer::GLUTWindowEventProducerVisibilityFunction(int stat
    _GLUTWindowToProducerMap[glutGetWindow()];
 }
 
+void GLUTWindowEventProducer::GLUTWindowEventProducerEntryFunction(int state)
+{
+	_GLUTWindowToProducerMap[glutGetWindow()]->glutEntry(state);
+}
+
 void GLUTWindowEventProducer::GLUTWindowEventProducerSpecialFunction(int key, int x, int y)
 {
    _GLUTWindowToProducerMap[glutGetWindow()]->glutSpecial(key,Pnt2s(x,y));
@@ -683,6 +688,7 @@ bool GLUTWindowEventProducer::attachWindow(WindowPtr Win)
       glutMouseFunc(GLUTWindowEventProducerMouseFunction);
       glutMotionFunc(GLUTWindowEventProducerMotionFunction);
       glutPassiveMotionFunc(GLUTWindowEventProducerPassiveMotionFunction);
+      glutEntryFunc(GLUTWindowEventProducerEntryFunction);
       
       return true;
    }

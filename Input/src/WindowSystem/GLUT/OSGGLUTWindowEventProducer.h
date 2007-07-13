@@ -70,6 +70,7 @@ class GLUTWindowEventProducer : public GLUTWindowEventProducerBase
     static void GLUTWindowEventProducerMotionFunction(int x, int y);
     static void GLUTWindowEventProducerPassiveMotionFunction(int x, int y);
     static void GLUTWindowEventProducerVisibilityFunction(int state);
+    static void GLUTWindowEventProducerEntryFunction(int state);
     static void GLUTWindowEventProducerSpecialFunction(int key, int x, int y);
     static void GLUTWindowEventProducerSpecialUpFunction(int key, int x, int y);
     static void GLUTWindowEventProducerIdleFunction(void);
@@ -84,6 +85,7 @@ class GLUTWindowEventProducer : public GLUTWindowEventProducerBase
     void glutMouse(Int32 Button, Int32 State, Pnt2s MousePos);
     void glutMotion(Pnt2s MousePos);
     void glutPassiveMotion(Pnt2s MousePos);
+    void glutEntry(Int32 State);
 
     static KeyEvent::Key determineKey(UChar8 key);
     static KeyEvent::Key determineSpecialKey(UChar8 key);
