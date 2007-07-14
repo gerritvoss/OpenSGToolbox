@@ -96,16 +96,16 @@ void BorderLayout::draw(const MFComponentPtr Components,const ComponentPtr Paren
 		{
 			switch (BorderLayoutConstraintsPtr::dcast(Components.getValue(i)->getConstraints())->getRegion()) {
 				// don't need to do anything with the center quite yet
-				case BORDER_NORTH:
+				case BorderLayoutConstraints::BORDER_NORTH:
 					NorthHeight = Components.getValue(i)->getPreferredSize().y();
 					break;
-				case BORDER_EAST:
+				case BorderLayoutConstraints::BORDER_EAST:
 					EastWidth = Components.getValue(i)->getPreferredSize().x();
 					break;
-				case BORDER_SOUTH:
+				case BorderLayoutConstraints::BORDER_SOUTH:
 					SouthHeight = Components.getValue(i)->getPreferredSize().y();
 					break;
-				case BORDER_WEST:
+				case BorderLayoutConstraints::BORDER_WEST:
 					WestWidth = Components.getValue(i)->getPreferredSize().x();
 					break;
 				default:
@@ -120,7 +120,7 @@ void BorderLayout::draw(const MFComponentPtr Components,const ComponentPtr Paren
 		if(Components.getValue(i)->getConstraints() != NullFC)
 		{
 			switch (BorderLayoutConstraintsPtr::dcast(Components.getValue(i)->getConstraints())->getRegion()) {
-				case BORDER_CENTER: 
+				case BorderLayoutConstraints::BORDER_CENTER: 
 					// set up the size of the button and its extra displacement
 					if (Components.getValue(i)->getMaxSize().x() < ParentComponent->getSize().x()-(WestWidth+EastWidth))
 					{
@@ -154,7 +154,7 @@ void BorderLayout::draw(const MFComponentPtr Components,const ComponentPtr Paren
 						glTranslatef(-offsetx, -offsety, 0);
 					}
 					break;
-				case BORDER_NORTH:
+				case BorderLayoutConstraints::BORDER_NORTH:
 					// set up the size of the button and its extra displacement
 					size[1] = Components.getValue(i)->getPreferredSize().y();
 					if (Components.getValue(i)->getMaxSize().x() < ParentComponent->getSize().x())
@@ -179,7 +179,7 @@ void BorderLayout::draw(const MFComponentPtr Components,const ComponentPtr Paren
 						glTranslatef(-offsetx, 0, 0);
 					}
 					break;
-				case BORDER_EAST:
+				case BorderLayoutConstraints::BORDER_EAST:
 					// set up the size of the button and its extra displacement
 					size[0] = Components.getValue(i)->getPreferredSize().x();
 					offsetx = ParentComponent->getSize().x()-Components.getValue(i)->getSize().x();
@@ -205,7 +205,7 @@ void BorderLayout::draw(const MFComponentPtr Components,const ComponentPtr Paren
 						glTranslatef(-offsetx, -offsety, 0);
 					}
 					break;
-				case BORDER_SOUTH:
+				case BorderLayoutConstraints::BORDER_SOUTH:
 					// set up the size of the button and its extra displacement
 					size[1] = Components.getValue(i)->getPreferredSize().y();
 					offsety = ParentComponent->getSize().y()-Components.getValue(i)->getSize().y();
@@ -231,7 +231,7 @@ void BorderLayout::draw(const MFComponentPtr Components,const ComponentPtr Paren
 						glTranslatef(-offsetx, -offsety, 0);
 					}
 					break;
-				case BORDER_WEST:
+				case BorderLayoutConstraints::BORDER_WEST:
 					// set up the size of the button and its extra displacement
 					size[0] = Components.getValue(i)->getPreferredSize().x();
 					if (Components.getValue(i)->getMaxSize().y() < ParentComponent->getSize().y()-(NorthHeight+SouthHeight))
