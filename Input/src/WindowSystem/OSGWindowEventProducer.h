@@ -224,7 +224,7 @@ class OSG_INPUT_CLASS_API WindowEventProducer : public WindowEventProducerBase
     void produceMousePressed(const MouseEvent::MouseButton& Button, const Pnt2s& Location);
     void produceMouseReleased(const MouseEvent::MouseButton& Button, const Pnt2s& Location);
 
-    void produceMouseWheelMoved(const Int32& WheelRotation, const MouseWheelEvent::ScrollType& TheScrollType);
+    void produceMouseWheelMoved(const Int32& WheelRotation, const MouseWheelEvent::ScrollType& TheScrollType = MouseWheelEvent::UNIT_SCROLL);
 
     void produceMouseMoved(const Pnt2s& Location);
     void produceMouseDragged(const MouseEvent::MouseButton& Button, const Pnt2s& Location);

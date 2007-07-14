@@ -2,200 +2,136 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="01Win32"
+	Name="03DefaultWindow"
 	ProjectGUID="{D53A80EF-C636-4DC3-92FC-58852DF46F1A}"
-	Keyword="Win32Proj"
-	>
+	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
-			Name="Win32"
-		/>
+			Name="Win32"/>
 	</Platforms>
-	<ToolFiles>
-	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="Windows/Debug"
 			IntermediateDirectory="Windows/Debug"
 			ConfigurationType="1"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
+			CharacterSet="0">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="0"
 				AdditionalIncludeDirectories="&quot;$(OPENSG)\..\include&quot;;..\..\Builds\Windows\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG"
-				StringPooling="true"
-				MinimalRebuild="true"
+				StringPooling="TRUE"
+				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				BufferSecurityCheck="false"
-				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="true"
+				BufferSecurityCheck="FALSE"
+				EnableFunctionLevelLinking="TRUE"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(OutDir)/"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"
 				DisableSpecificWarnings="4244;4251;4275;4290;4231;4267;4996"
-				ForcedIncludeFiles="WinSock2.h;windows.h"
-			/>
+				ForcedIncludeFiles="WinSock2.h;windows.h"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGWindowWIN32D.lib OSGInputD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="$(ProjectName)D.exe"
 				LinkIncremental="1"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName)D.pdb"
 				SubSystem="1"
 				ImportLibrary="$(OutDir)/$(ProjectName)D.lib"
-				TargetMachine="1"
-			/>
+				TargetMachine="1"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCManifestTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCFxCopTool"
-			/>
+				Name="VCResourceCompilerTool"/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
+				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
+				Name="VCXMLDataGeneratorTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="Windows\Release"
 			IntermediateDirectory="Windows\Release"
 			ConfigurationType="1"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
+			CharacterSet="0">
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="&quot;$(OPENSG)\..\include&quot;;..\..\Builds\Windows\include"
 				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG"
-				StringPooling="true"
-				MinimalRebuild="true"
+				StringPooling="TRUE"
+				MinimalRebuild="TRUE"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="false"
-				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="true"
+				BufferSecurityCheck="FALSE"
+				EnableFunctionLevelLinking="TRUE"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(IntDir)/"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="0"
 				DisableSpecificWarnings="4244;4251;4275;4290;4231;4267;4996"
-				ForcedIncludeFiles="WinSock2.h;windows.h"
-			/>
+				ForcedIncludeFiles="WinSock2.h;windows.h"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGWindowWIN32.lib OSGInput.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="$(ProjectName).exe"
 				LinkIncremental="1"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;"
-				IgnoreAllDefaultLibraries="false"
-				GenerateDebugInformation="false"
+				IgnoreAllDefaultLibraries="FALSE"
+				GenerateDebugInformation="FALSE"
 				ProgramDatabaseFile=""
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				ImportLibrary="lib/$(ProjectName).lib"
-				TargetMachine="1"
-			/>
+				TargetMachine="1"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCManifestTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCFxCopTool"
-			/>
+				Name="VCResourceCompilerTool"/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
+				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
+				Name="VCXMLDataGeneratorTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -203,11 +139,9 @@
 	<Files>
 		<Filter
 			Name="Source Files"
-			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
-			>
+			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl">
 			<File
-				RelativePath=".\01Win32.cpp"
-				>
+				RelativePath=".\03DefaultWindow.cpp">
 			</File>
 		</Filter>
 	</Files>

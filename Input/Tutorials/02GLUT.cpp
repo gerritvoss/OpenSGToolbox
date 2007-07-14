@@ -160,7 +160,6 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
     
     WindowPtr MainWindow;
-    WindowPtr ;
     createWindow(GLUTWindow::getClassType(),
                                         Pnt2s(50,50),
                                         Vec2s(250,250),

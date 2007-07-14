@@ -42,7 +42,7 @@ class OSG_INPUT_CLASS_API KeyEvent : public Event
 {
   /*=========================  PUBLIC  ===============================*/
   public:
-     enum KeyModifiers { SHIFT=1, CTRL=2, ALT=4, META=8, CAPS_LOCK=16, NUM_LOCK=32, SCROLL_LOCK=64 };
+     enum KeyModifiers { KEY_MODIFIER_SHIFT=1, KEY_MODIFIER_CONTROL=2, KEY_MODIFIER_ALT=4, KEY_MODIFIER_META=8, KEY_MODIFIER_CAPS_LOCK=16, KEY_MODIFIER_NUM_LOCK=32, KEY_MODIFIER_SCROLL_LOCK=64 };
      enum Key
       {
          KEY_0,
@@ -195,11 +195,12 @@ class OSG_INPUT_CLASS_API KeyEvent : public Event
       };
 
    Key getKey(void) const;
-   static UChar8 getCharFromKey(Key k);
+   static UChar8 getUpperLetterKey(Key k, UInt32 Modifier);
+   static UChar8 getLowerLetterKey(Key k, UInt32 Modifier);
+   static UChar8 getNonLetterKey(Key k, UInt32 Modifier);
    static UChar8 getCharFromKey(Key k, UInt32 Modifier);
    UInt32 getModifiers(void) const;
    UChar8 getKeyChar(void) const;
-   UChar8 getKeyCharWithModifiers(void) const;
 
    KeyEvent(FieldContainerPtr Source, Time TimeStamp, Key TheKey, UInt32 Modifiers);
 

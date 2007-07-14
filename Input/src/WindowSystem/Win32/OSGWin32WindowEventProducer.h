@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include <map>
 
 #include "OSGWin32WindowEventProducerBase.h"
 
@@ -52,10 +53,21 @@ class Win32WindowEventProducer : public Win32WindowEventProducerBase
 {
   private:
 
+    typedef std::map<HWND, Win32WindowEventProducerPtr> WIN32HWNDToProducerMap;
     typedef Win32WindowEventProducerBase Inherited;
-
+    
+    static WIN32HWNDToProducerMap _WIN32HWNDToProducerMap;
+    
+    LRESULT WndProc(HWND hwnd2, UINT uMsg,
+                           WPARAM wParam, LPARAM lParam);
+    
+    static KeyEvent::Key determineKey(WPARAM key);
+    UInt32 determineModifiers(void);
     /*==========================  PUBLIC  =================================*/
   public:
+    static LRESULT CALLBACK staticWndProc(HWND hwnd2, UINT uMsg,
+                           WPARAM wParam, LPARAM lParam);
+    virtual bool attachWindow(WindowPtr Win);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

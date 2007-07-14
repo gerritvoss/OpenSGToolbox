@@ -167,12 +167,11 @@ int main(int argc, char **argv)
     
     WindowPtr MainWindow;
     WindowPtr ;
-    createWindow(WIN32Window::getClassType(),
-                                        Pnt2s(50,50),
-                                        Vec2s(250,250),
-                                        "WIN32 Window",
-                                        MainWindow,
-                                        TheWindowEventProducer);
+    createDefaultWindow(Pnt2s(50,50),
+                        Vec2s(250,250),
+                        "Default Window",
+                        MainWindow,
+                        TheWindowEventProducer);
     
     TheWindowEventProducer->setDisplayCallback(display);
     TheWindowEventProducer->setReshapeCallback(reshape);

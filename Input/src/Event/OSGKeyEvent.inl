@@ -17,12 +17,6 @@ UInt32 KeyEvent::getModifiers(void) const
 inline
 UChar8 KeyEvent::getKeyChar(void) const
 {
-   return getCharFromKey(_Key);
-}
-
-inline
-UChar8 KeyEvent::getKeyCharWithModifiers(void) const
-{
    return getCharFromKey(_Key, _Modifiers);
 }
 
