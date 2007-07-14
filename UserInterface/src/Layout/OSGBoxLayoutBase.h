@@ -67,7 +67,7 @@
 #include "OSGLayout.h" // Parent
 
 #include <OpenSG/OSGUInt32Fields.h> // Alignment type
-#include <OpenSG/OSGUInt32Fields.h> // MajorAxisAlignment type
+#include <OpenSG/OSGUInt32Fields.h> // MinorAxisAlignment type
 
 #include "OSGBoxLayoutFields.h"
 
@@ -92,12 +92,12 @@ class OSG_USER_INTERFACE_CLASS_API BoxLayoutBase : public Layout
     enum
     {
         AlignmentFieldId          = Inherited::NextFieldId,
-        MajorAxisAlignmentFieldId = AlignmentFieldId          + 1,
-        NextFieldId               = MajorAxisAlignmentFieldId + 1
+        MinorAxisAlignmentFieldId = AlignmentFieldId          + 1,
+        NextFieldId               = MinorAxisAlignmentFieldId + 1
     };
 
     static const OSG::BitVector AlignmentFieldMask;
-    static const OSG::BitVector MajorAxisAlignmentFieldMask;
+    static const OSG::BitVector MinorAxisAlignmentFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -125,12 +125,12 @@ class OSG_USER_INTERFACE_CLASS_API BoxLayoutBase : public Layout
     /*! \{                                                                 */
 
            SFUInt32            *getSFAlignment      (void);
-           SFUInt32            *getSFMajorAxisAlignment(void);
+           SFUInt32            *getSFMinorAxisAlignment(void);
 
            UInt32              &getAlignment      (void);
      const UInt32              &getAlignment      (void) const;
-           UInt32              &getMajorAxisAlignment(void);
-     const UInt32              &getMajorAxisAlignment(void) const;
+           UInt32              &getMinorAxisAlignment(void);
+     const UInt32              &getMinorAxisAlignment(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -138,7 +138,7 @@ class OSG_USER_INTERFACE_CLASS_API BoxLayoutBase : public Layout
     /*! \{                                                                 */
 
      void setAlignment      ( const UInt32 &value );
-     void setMajorAxisAlignment( const UInt32 &value );
+     void setMinorAxisAlignment( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -182,7 +182,7 @@ class OSG_USER_INTERFACE_CLASS_API BoxLayoutBase : public Layout
     /*! \{                                                                 */
 
     SFUInt32            _sfAlignment;
-    SFUInt32            _sfMajorAxisAlignment;
+    SFUInt32            _sfMinorAxisAlignment;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

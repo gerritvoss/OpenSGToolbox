@@ -111,7 +111,7 @@ void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentCo
 	UInt32 spacing(0);
 	UInt32 oddSpacing(0);
 	Int64 transBack(0);
-	UInt32 difference(0);
+	UInt32 offsetMinorAxis(0);
 	Vec2s size;
 
 	/*!
@@ -146,9 +146,9 @@ void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentCo
     */
 	for(UInt32 i=0 ; i<Components.size() ; ++i)
 	{	
-		// for each individual button, keep track of the difference in height
+		// for each individual button, keep track of the offsetMinorAxis in height
 		// for use in keeping them vertically centered
-		difference = 0;
+		offsetMinorAxis = 0;
 		// change the component's height only if necessary
 		if (largestMinorAxis > Components.getValue(i)->getSize()[(AxisIndex+1)%2])
 		{	
@@ -183,17 +183,25 @@ void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentCo
 				beginEditCP(Components.getValue(i), Component::SizeFieldMask);
 					Components.getValue(i)->setSize(size);
 				endEditCP(Components.getValue(i), Component::SizeFieldMask);
-				// the height of this component is smaller than the others,
-				// so keep track of difference for alignment purposes
-				// it's already cut in half for centering
-				difference = (largestMinorAxis - Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2])/2;
+
+				// find how far to translate to make this button properly aligned
+				if (getMinorAxisAlignment() == AXIS_MIN_ALIGNMENT)
+				{
+					offsetMinorAxis = 0;
+				} else if (getMinorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
+				{
+					offsetMinorAxis = (largestMinorAxis - Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2])/2;
+				} else 
+				{
+					offsetMinorAxis = largestMinorAxis - Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2];
+				}
 			}
 		}
-		if (AxisIndex) glTranslatef(difference, spacing, 0);
-		else glTranslatef(spacing, difference, 0);
+		if (AxisIndex) glTranslatef(offsetMinorAxis, spacing, 0);
+		else glTranslatef(spacing, offsetMinorAxis, 0);
 		Components.getValue(i)->draw(TheGraphics);
-		if (AxisIndex) glTranslatef(-(Int64)difference, Components.getValue(i)->getSize()[AxisIndex], 0);
-		else glTranslatef(Components.getValue(i)->getSize()[AxisIndex], -(Int64)difference, 0);
+		if (AxisIndex) glTranslatef(-(Int64)offsetMinorAxis, Components.getValue(i)->getSize()[AxisIndex], 0);
+		else glTranslatef(Components.getValue(i)->getSize()[AxisIndex], -(Int64)offsetMinorAxis, 0);
 		transBack -= spacing;
 		transBack -= Components.getValue(i)->getSize()[AxisIndex];
 	}

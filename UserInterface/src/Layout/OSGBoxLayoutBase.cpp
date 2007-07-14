@@ -62,15 +62,15 @@
 #include "OSGBoxLayout.h"
 
 #include <Util/OSGUIDefines.h>            // Alignment default header
-#include <Util/OSGUIDefines.h>            // MajorAxisAlignment default header
+#include <Util/OSGUIDefines.h>            // MinorAxisAlignment default header
 
 OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  BoxLayoutBase::AlignmentFieldMask = 
     (TypeTraits<BitVector>::One << BoxLayoutBase::AlignmentFieldId);
 
-const OSG::BitVector  BoxLayoutBase::MajorAxisAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << BoxLayoutBase::MajorAxisAlignmentFieldId);
+const OSG::BitVector  BoxLayoutBase::MinorAxisAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << BoxLayoutBase::MinorAxisAlignmentFieldId);
 
 const OSG::BitVector BoxLayoutBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -82,7 +82,7 @@ const OSG::BitVector BoxLayoutBase::MTInfluenceMask =
 /*! \var UInt32          BoxLayoutBase::_sfAlignment
     
 */
-/*! \var UInt32          BoxLayoutBase::_sfMajorAxisAlignment
+/*! \var UInt32          BoxLayoutBase::_sfMinorAxisAlignment
     
 */
 
@@ -96,10 +96,10 @@ FieldDescription *BoxLayoutBase::_desc[] =
                      false,
                      (FieldAccessMethod) &BoxLayoutBase::getSFAlignment),
     new FieldDescription(SFUInt32::getClassType(), 
-                     "MajorAxisAlignment", 
-                     MajorAxisAlignmentFieldId, MajorAxisAlignmentFieldMask,
+                     "MinorAxisAlignment", 
+                     MinorAxisAlignmentFieldId, MinorAxisAlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &BoxLayoutBase::getSFMajorAxisAlignment)
+                     (FieldAccessMethod) &BoxLayoutBase::getSFMinorAxisAlignment)
 };
 
 
@@ -176,7 +176,7 @@ void BoxLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 BoxLayoutBase::BoxLayoutBase(void) :
     _sfAlignment              (UInt32(HORIZONTAL_ALIGNMENT)), 
-    _sfMajorAxisAlignment     (UInt32(AXIS_CENTER_ALIGNMENT)), 
+    _sfMinorAxisAlignment     (UInt32(AXIS_CENTER_ALIGNMENT)), 
     Inherited() 
 {
 }
@@ -187,7 +187,7 @@ BoxLayoutBase::BoxLayoutBase(void) :
 
 BoxLayoutBase::BoxLayoutBase(const BoxLayoutBase &source) :
     _sfAlignment              (source._sfAlignment              ), 
-    _sfMajorAxisAlignment     (source._sfMajorAxisAlignment     ), 
+    _sfMinorAxisAlignment     (source._sfMinorAxisAlignment     ), 
     Inherited                 (source)
 {
 }
@@ -209,9 +209,9 @@ UInt32 BoxLayoutBase::getBinSize(const BitVector &whichField)
         returnValue += _sfAlignment.getBinSize();
     }
 
-    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
     {
-        returnValue += _sfMajorAxisAlignment.getBinSize();
+        returnValue += _sfMinorAxisAlignment.getBinSize();
     }
 
 
@@ -228,9 +228,9 @@ void BoxLayoutBase::copyToBin(      BinaryDataHandler &pMem,
         _sfAlignment.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
     {
-        _sfMajorAxisAlignment.copyToBin(pMem);
+        _sfMinorAxisAlignment.copyToBin(pMem);
     }
 
 
@@ -246,9 +246,9 @@ void BoxLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfAlignment.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
     {
-        _sfMajorAxisAlignment.copyFromBin(pMem);
+        _sfMinorAxisAlignment.copyFromBin(pMem);
     }
 
 
@@ -264,8 +264,8 @@ void BoxLayoutBase::executeSyncImpl(      BoxLayoutBase *pOther,
     if(FieldBits::NoField != (AlignmentFieldMask & whichField))
         _sfAlignment.syncWith(pOther->_sfAlignment);
 
-    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
-        _sfMajorAxisAlignment.syncWith(pOther->_sfMajorAxisAlignment);
+    if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
+        _sfMinorAxisAlignment.syncWith(pOther->_sfMinorAxisAlignment);
 
 
 }
@@ -280,8 +280,8 @@ void BoxLayoutBase::executeSyncImpl(      BoxLayoutBase *pOther,
     if(FieldBits::NoField != (AlignmentFieldMask & whichField))
         _sfAlignment.syncWith(pOther->_sfAlignment);
 
-    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
-        _sfMajorAxisAlignment.syncWith(pOther->_sfMajorAxisAlignment);
+    if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
+        _sfMinorAxisAlignment.syncWith(pOther->_sfMinorAxisAlignment);
 
 
 

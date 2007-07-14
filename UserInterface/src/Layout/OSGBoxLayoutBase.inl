@@ -103,11 +103,11 @@ SFUInt32 *BoxLayoutBase::getSFAlignment(void)
     return &_sfAlignment;
 }
 
-//! Get the BoxLayout::_sfMajorAxisAlignment field.
+//! Get the BoxLayout::_sfMinorAxisAlignment field.
 inline
-SFUInt32 *BoxLayoutBase::getSFMajorAxisAlignment(void)
+SFUInt32 *BoxLayoutBase::getSFMinorAxisAlignment(void)
 {
-    return &_sfMajorAxisAlignment;
+    return &_sfMinorAxisAlignment;
 }
 
 
@@ -132,25 +132,25 @@ void BoxLayoutBase::setAlignment(const UInt32 &value)
     _sfAlignment.setValue(value);
 }
 
-//! Get the value of the BoxLayout::_sfMajorAxisAlignment field.
+//! Get the value of the BoxLayout::_sfMinorAxisAlignment field.
 inline
-UInt32 &BoxLayoutBase::getMajorAxisAlignment(void)
+UInt32 &BoxLayoutBase::getMinorAxisAlignment(void)
 {
-    return _sfMajorAxisAlignment.getValue();
+    return _sfMinorAxisAlignment.getValue();
 }
 
-//! Get the value of the BoxLayout::_sfMajorAxisAlignment field.
+//! Get the value of the BoxLayout::_sfMinorAxisAlignment field.
 inline
-const UInt32 &BoxLayoutBase::getMajorAxisAlignment(void) const
+const UInt32 &BoxLayoutBase::getMinorAxisAlignment(void) const
 {
-    return _sfMajorAxisAlignment.getValue();
+    return _sfMinorAxisAlignment.getValue();
 }
 
-//! Set the value of the BoxLayout::_sfMajorAxisAlignment field.
+//! Set the value of the BoxLayout::_sfMinorAxisAlignment field.
 inline
-void BoxLayoutBase::setMajorAxisAlignment(const UInt32 &value)
+void BoxLayoutBase::setMinorAxisAlignment(const UInt32 &value)
 {
-    _sfMajorAxisAlignment.setValue(value);
+    _sfMinorAxisAlignment.setValue(value);
 }
 
 
