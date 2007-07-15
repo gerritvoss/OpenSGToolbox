@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="SegmentSetDistribution1D"
+	parent="Distribution1D"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+An SegmentSetDistribution1D.
+	<Field
+		name="Segment"
+		type="Vec2f"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

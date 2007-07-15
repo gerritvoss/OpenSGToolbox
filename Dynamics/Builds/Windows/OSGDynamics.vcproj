@@ -266,6 +266,69 @@
 					<File
 						RelativePath="..\..\src\Distributions\1d\OSGDistribution1DFields.h">
 					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1D.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1D.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1D.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1DBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1DBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1DBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1DFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1D.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1D.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1D.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1DBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1DBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1DBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1DFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1D.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1D.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1D.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1DBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1DBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1DBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1DFields.h">
+					</File>
 				</Filter>
 				<Filter
 					Name="2D"

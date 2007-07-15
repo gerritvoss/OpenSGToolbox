@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="SegmentDistribution1D"
+	parent="Distribution1D"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+An SegmentDistribution1D.
+	<Field
+		name="Segment"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0,1.0"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

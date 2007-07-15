@@ -73,6 +73,7 @@ class OSG_DYNAMICS_CLASS_API Distribution3D : public Distribution3DBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    virtual Vec3f generate(void)=0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

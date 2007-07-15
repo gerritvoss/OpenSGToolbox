@@ -36,23 +36,23 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDISTRIBUTION2D_H_
-#define _OSGDISTRIBUTION2D_H_
+#ifndef _OSGSEGMENTDISTRIBUTION1D_H_
+#define _OSGSEGMENTDISTRIBUTION1D_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include "OSGDynamicsConfig.h"
 
-#include "OSGDistribution2DBase.h"
+#include "OSGSegmentDistribution1DBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_DYNAMICS_CLASS_API Distribution2D : public Distribution2DBase
+class OSG_DYNAMICS_CLASS_API SegmentDistribution1D : public SegmentDistribution1DBase
 {
   private:
 
-    typedef Distribution2DBase Inherited;
+    typedef SegmentDistribution1DBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -73,25 +73,25 @@ class OSG_DYNAMICS_CLASS_API Distribution2D : public Distribution2DBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual Vec2f generate(void)=0;
+    virtual Real32 generate(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in Distribution2DBase.
+    // Variables should all be in SegmentDistribution1DBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Distribution2D(void);
-    Distribution2D(const Distribution2D &source);
+    SegmentDistribution1D(void);
+    SegmentDistribution1D(const SegmentDistribution1D &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Distribution2D(void); 
+    virtual ~SegmentDistribution1D(void); 
 
     /*! \}                                                                 */
     
@@ -99,22 +99,22 @@ class OSG_DYNAMICS_CLASS_API Distribution2D : public Distribution2DBase
   private:
 
     friend class FieldContainer;
-    friend class Distribution2DBase;
+    friend class SegmentDistribution1DBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Distribution2D &source);
+    void operator =(const SegmentDistribution1D &source);
 };
 
-typedef Distribution2D *Distribution2DP;
+typedef SegmentDistribution1D *SegmentDistribution1DP;
 
 OSG_END_NAMESPACE
 
-#include "OSGDistribution2DBase.inl"
-#include "OSGDistribution2D.inl"
+#include "OSGSegmentDistribution1DBase.inl"
+#include "OSGSegmentDistribution1D.inl"
 
-#define OSGDISTRIBUTION2D_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGSEGMENTDISTRIBUTION1D_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGDISTRIBUTION2D_H_ */
+#endif /* _OSGSEGMENTDISTRIBUTION1D_H_ */
