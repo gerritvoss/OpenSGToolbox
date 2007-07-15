@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Function!
+ **     class QuadDistribution2D!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,24 +55,162 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &FunctionBase::getClassType(void)
+OSG::FieldContainerType &QuadDistribution2DBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 FunctionBase::getClassTypeId(void) 
+OSG::UInt32 QuadDistribution2DBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
+//! create a new instance of the class
+inline
+QuadDistribution2DPtr QuadDistribution2DBase::create(void) 
+{
+    QuadDistribution2DPtr fc; 
+
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = QuadDistribution2DPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    
+    return fc; 
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+inline
+QuadDistribution2DPtr QuadDistribution2DBase::createEmpty(void) 
+{ 
+    QuadDistribution2DPtr returnValue; 
+    
+    newPtr(returnValue); 
+
+    return returnValue; 
+}
+
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the QuadDistribution2D::_sfPoint1 field.
+inline
+SFPnt2f *QuadDistribution2DBase::getSFPoint1(void)
+{
+    return &_sfPoint1;
+}
+
+//! Get the QuadDistribution2D::_sfPoint2 field.
+inline
+SFPnt2f *QuadDistribution2DBase::getSFPoint2(void)
+{
+    return &_sfPoint2;
+}
+
+//! Get the QuadDistribution2D::_sfPoint3 field.
+inline
+SFPnt2f *QuadDistribution2DBase::getSFPoint3(void)
+{
+    return &_sfPoint3;
+}
+
+//! Get the QuadDistribution2D::_sfPoint4 field.
+inline
+SFPnt2f *QuadDistribution2DBase::getSFPoint4(void)
+{
+    return &_sfPoint4;
+}
+
+
+//! Get the value of the QuadDistribution2D::_sfPoint1 field.
+inline
+Pnt2f &QuadDistribution2DBase::getPoint1(void)
+{
+    return _sfPoint1.getValue();
+}
+
+//! Get the value of the QuadDistribution2D::_sfPoint1 field.
+inline
+const Pnt2f &QuadDistribution2DBase::getPoint1(void) const
+{
+    return _sfPoint1.getValue();
+}
+
+//! Set the value of the QuadDistribution2D::_sfPoint1 field.
+inline
+void QuadDistribution2DBase::setPoint1(const Pnt2f &value)
+{
+    _sfPoint1.setValue(value);
+}
+
+//! Get the value of the QuadDistribution2D::_sfPoint2 field.
+inline
+Pnt2f &QuadDistribution2DBase::getPoint2(void)
+{
+    return _sfPoint2.getValue();
+}
+
+//! Get the value of the QuadDistribution2D::_sfPoint2 field.
+inline
+const Pnt2f &QuadDistribution2DBase::getPoint2(void) const
+{
+    return _sfPoint2.getValue();
+}
+
+//! Set the value of the QuadDistribution2D::_sfPoint2 field.
+inline
+void QuadDistribution2DBase::setPoint2(const Pnt2f &value)
+{
+    _sfPoint2.setValue(value);
+}
+
+//! Get the value of the QuadDistribution2D::_sfPoint3 field.
+inline
+Pnt2f &QuadDistribution2DBase::getPoint3(void)
+{
+    return _sfPoint3.getValue();
+}
+
+//! Get the value of the QuadDistribution2D::_sfPoint3 field.
+inline
+const Pnt2f &QuadDistribution2DBase::getPoint3(void) const
+{
+    return _sfPoint3.getValue();
+}
+
+//! Set the value of the QuadDistribution2D::_sfPoint3 field.
+inline
+void QuadDistribution2DBase::setPoint3(const Pnt2f &value)
+{
+    _sfPoint3.setValue(value);
+}
+
+//! Get the value of the QuadDistribution2D::_sfPoint4 field.
+inline
+Pnt2f &QuadDistribution2DBase::getPoint4(void)
+{
+    return _sfPoint4.getValue();
+}
+
+//! Get the value of the QuadDistribution2D::_sfPoint4 field.
+inline
+const Pnt2f &QuadDistribution2DBase::getPoint4(void) const
+{
+    return _sfPoint4.getValue();
+}
+
+//! Set the value of the QuadDistribution2D::_sfPoint4 field.
+inline
+void QuadDistribution2DBase::setPoint4(const Pnt2f &value)
+{
+    _sfPoint4.setValue(value);
+}
 
 
 OSG_END_NAMESPACE
 
-#define OSGFUNCTIONBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGQUADDISTRIBUTION2DBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

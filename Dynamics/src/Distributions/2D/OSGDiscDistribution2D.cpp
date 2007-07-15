@@ -36,85 +36,106 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDISTRIBUTION3D_H_
-#define _OSGDISTRIBUTION3D_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
-#include "OSGDynamicsConfig.h"
+#include <stdlib.h>
+#include <stdio.h>
 
-#include "OSGDistribution3DBase.h"
+#include <OpenSG/OSGConfig.h>
+
+#include "OSGDiscDistribution2D.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_DYNAMICS_CLASS_API Distribution3D : public Distribution3DBase
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class osg::DiscDistribution2D
+An DiscDistribution2D. 	
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void DiscDistribution2D::initMethod (void)
 {
-  private:
+}
 
-    typedef Distribution3DBase Inherited;
 
-    /*==========================  PUBLIC  =================================*/
-  public:
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
-    /*! \{                                                                 */
+Pnt2f DiscDistribution2D::generate(void)
+{
+   //TODO:Implement
+   return Pnt2f(0.0f,0.0f);
+}
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+/*----------------------- constructors & destructors ----------------------*/
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
+DiscDistribution2D::DiscDistribution2D(void) :
+    Inherited()
+{
+}
 
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
+DiscDistribution2D::DiscDistribution2D(const DiscDistribution2D &source) :
+    Inherited(source)
+{
+}
 
-    /*! \}                                                                 */
-    virtual Pnt3f generate(void)=0;
-    /*=========================  PROTECTED  ===============================*/
-  protected:
+DiscDistribution2D::~DiscDistribution2D(void)
+{
+}
 
-    // Variables should all be in Distribution3DBase.
+/*----------------------------- class specific ----------------------------*/
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                  Constructors                                */
-    /*! \{                                                                 */
+void DiscDistribution2D::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
 
-    Distribution3D(void);
-    Distribution3D(const Distribution3D &source);
+void DiscDistribution2D::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump DiscDistribution2D NI" << std::endl;
+}
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Destructors                                */
-    /*! \{                                                                 */
 
-    virtual ~Distribution3D(void); 
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
 
-    /*! \}                                                                 */
-    
-    /*==========================  PRIVATE  ================================*/
-  private:
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
 
-    friend class FieldContainer;
-    friend class Distribution3DBase;
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
 
-    static void initMethod(void);
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGDISCDISTRIBUTION2DBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGDISCDISTRIBUTION2DBASE_INLINE_CVSID;
 
-    // prohibit default functions (move to 'public' if you need one)
+    static Char8 cvsid_fields_hpp[] = OSGDISCDISTRIBUTION2DFIELDS_HEADER_CVSID;
+}
 
-    void operator =(const Distribution3D &source);
-};
-
-typedef Distribution3D *Distribution3DP;
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
 
 OSG_END_NAMESPACE
 
-#include "OSGDistribution3DBase.inl"
-#include "OSGDistribution3D.inl"
-
-#define OSGDISTRIBUTION3D_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
-#endif /* _OSGDISTRIBUTION3D_H_ */

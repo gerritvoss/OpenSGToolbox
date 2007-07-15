@@ -36,23 +36,23 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDISTRIBUTION3D_H_
-#define _OSGDISTRIBUTION3D_H_
+#ifndef _OSGGAUSSIANNORMADISTRIBUTION2D_H_
+#define _OSGGAUSSIANNORMADISTRIBUTION2D_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include "OSGDynamicsConfig.h"
 
-#include "OSGDistribution3DBase.h"
+#include "OSGGaussianNormaDistribution2DBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_DYNAMICS_CLASS_API Distribution3D : public Distribution3DBase
+class OSG_DYNAMICS_CLASS_API GaussianNormaDistribution2D : public GaussianNormaDistribution2DBase
 {
   private:
 
-    typedef Distribution3DBase Inherited;
+    typedef GaussianNormaDistribution2DBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -73,25 +73,25 @@ class OSG_DYNAMICS_CLASS_API Distribution3D : public Distribution3DBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual Pnt3f generate(void)=0;
+    virtual Pnt2f generate(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in Distribution3DBase.
+    // Variables should all be in GaussianNormaDistribution2DBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Distribution3D(void);
-    Distribution3D(const Distribution3D &source);
+    GaussianNormaDistribution2D(void);
+    GaussianNormaDistribution2D(const GaussianNormaDistribution2D &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Distribution3D(void); 
+    virtual ~GaussianNormaDistribution2D(void); 
 
     /*! \}                                                                 */
     
@@ -99,22 +99,22 @@ class OSG_DYNAMICS_CLASS_API Distribution3D : public Distribution3DBase
   private:
 
     friend class FieldContainer;
-    friend class Distribution3DBase;
+    friend class GaussianNormaDistribution2DBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Distribution3D &source);
+    void operator =(const GaussianNormaDistribution2D &source);
 };
 
-typedef Distribution3D *Distribution3DP;
+typedef GaussianNormaDistribution2D *GaussianNormaDistribution2DP;
 
 OSG_END_NAMESPACE
 
-#include "OSGDistribution3DBase.inl"
-#include "OSGDistribution3D.inl"
+#include "OSGGaussianNormaDistribution2DBase.inl"
+#include "OSGGaussianNormaDistribution2D.inl"
 
-#define OSGDISTRIBUTION3D_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGGAUSSIANNORMADISTRIBUTION2D_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGDISTRIBUTION3D_H_ */
+#endif /* _OSGGAUSSIANNORMADISTRIBUTION2D_H_ */

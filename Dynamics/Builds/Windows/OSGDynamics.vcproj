@@ -176,6 +176,48 @@
 					RelativePath="..\..\src\Function\OSGFunctionFields.h">
 				</File>
 				<File
+					RelativePath="..\..\src\Function\OSGOutputPnt2fFunction.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGOutputPnt2fFunction.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGOutputPnt2fFunction.inl">
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGOutputPnt2fFunctionBase.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGOutputPnt2fFunctionBase.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGOutputPnt2fFunctionBase.inl">
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGOutputPnt2fFunctionFields.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGOutputPnt3fFunction.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGOutputPnt3fFunction.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGOutputPnt3fFunction.inl">
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGOutputPnt3fFunctionBase.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGOutputPnt3fFunctionBase.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGOutputPnt3fFunctionBase.inl">
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGOutputPnt3fFunctionFields.h">
+				</File>
+				<File
 					RelativePath="..\..\src\Function\OSGOutputReal32Function.cpp">
 				</File>
 				<File
@@ -334,6 +376,27 @@
 					Name="2D"
 					Filter="">
 					<File
+						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2D.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2D.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2D.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2DBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2DBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2DBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2DFields.h">
+					</File>
+					<File
 						RelativePath="..\..\src\Distributions\2d\OSGDistribution2D.cpp">
 					</File>
 					<File
@@ -353,6 +416,90 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Distributions\2d\OSGDistribution2DFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormaDistribution2D.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormaDistribution2D.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormaDistribution2D.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormaDistribution2DBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormaDistribution2DBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormaDistribution2DBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormaDistribution2DFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2D.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2D.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2D.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2DBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2DBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2DBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2DFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2D.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2D.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2D.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2DBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2DBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2DBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2DFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGTriangleDistribution2D.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGTriangleDistribution2D.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGTriangleDistribution2D.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGTriangleDistribution2DBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGTriangleDistribution2DBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGTriangleDistribution2DBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Distributions\2d\OSGTriangleDistribution2DFields.h">
 					</File>
 				</Filter>
 				<Filter

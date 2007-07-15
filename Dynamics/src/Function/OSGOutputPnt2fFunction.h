@@ -36,23 +36,23 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDISTRIBUTION3D_H_
-#define _OSGDISTRIBUTION3D_H_
+#ifndef _OSGOUTPUTPNT2FFUNCTION_H_
+#define _OSGOUTPUTPNT2FFUNCTION_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include "OSGDynamicsConfig.h"
 
-#include "OSGDistribution3DBase.h"
+#include "OSGOutputPnt2fFunctionBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_DYNAMICS_CLASS_API Distribution3D : public Distribution3DBase
+class OSG_DYNAMICS_CLASS_API OutputPnt2fFunction : public OutputPnt2fFunctionBase
 {
   private:
 
-    typedef Distribution3DBase Inherited;
+    typedef OutputPnt2fFunctionBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -73,25 +73,24 @@ class OSG_DYNAMICS_CLASS_API Distribution3D : public Distribution3DBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual Pnt3f generate(void)=0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in Distribution3DBase.
+    // Variables should all be in OutputPnt2fFunctionBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Distribution3D(void);
-    Distribution3D(const Distribution3D &source);
+    OutputPnt2fFunction(void);
+    OutputPnt2fFunction(const OutputPnt2fFunction &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Distribution3D(void); 
+    virtual ~OutputPnt2fFunction(void); 
 
     /*! \}                                                                 */
     
@@ -99,22 +98,22 @@ class OSG_DYNAMICS_CLASS_API Distribution3D : public Distribution3DBase
   private:
 
     friend class FieldContainer;
-    friend class Distribution3DBase;
+    friend class OutputPnt2fFunctionBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Distribution3D &source);
+    void operator =(const OutputPnt2fFunction &source);
 };
 
-typedef Distribution3D *Distribution3DP;
+typedef OutputPnt2fFunction *OutputPnt2fFunctionP;
 
 OSG_END_NAMESPACE
 
-#include "OSGDistribution3DBase.inl"
-#include "OSGDistribution3D.inl"
+#include "OSGOutputPnt2fFunctionBase.inl"
+#include "OSGOutputPnt2fFunction.inl"
 
-#define OSGDISTRIBUTION3D_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGOUTPUTPNT2FFUNCTION_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGDISTRIBUTION3D_H_ */
+#endif /* _OSGOUTPUTPNT2FFUNCTION_H_ */

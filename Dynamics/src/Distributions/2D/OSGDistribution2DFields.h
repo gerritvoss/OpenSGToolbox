@@ -59,7 +59,7 @@
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 
-#include "Function/OSGOutputVec2fFunctionFields.h"
+#include "Function/OSGOutputPnt2fFunctionFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -68,7 +68,7 @@ class Distribution2D;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! Distribution2DPtr
 
-typedef FCPtr<OutputVec2fFunctionPtr, Distribution2D> Distribution2DPtr;
+typedef FCPtr<OutputPnt2fFunctionPtr, Distribution2D> Distribution2DPtr;
 
 #endif
 

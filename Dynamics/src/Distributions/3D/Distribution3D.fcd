@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="Distribution3D"
-	parent="OutputVec3fFunction"
+	parent="OutputPnt3fFunction"
 	pointerfieldtypes="both"
 	structure="abstract"
 	systemcomponent="false"

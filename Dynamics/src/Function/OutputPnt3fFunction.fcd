@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="Distribution2D"
-	parent="OutputPnt2fFunction"
+	name="OutputPnt3fFunction"
+	parent="Function"
 	pointerfieldtypes="both"
 	structure="abstract"
 	systemcomponent="false"
 	parentsystemcomponent="false"
 >
-An Distribution2D.
+An OutputPnt3fFunction.
 </FieldContainer>

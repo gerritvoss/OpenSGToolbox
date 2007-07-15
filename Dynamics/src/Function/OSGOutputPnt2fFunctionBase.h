@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Distribution3D
+ **     class OutputPnt2fFunction
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGDISTRIBUTION3DBASE_H_
-#define _OSGDISTRIBUTION3DBASE_H_
+#ifndef _OSGOUTPUTPNT2FFUNCTIONBASE_H_
+#define _OSGOUTPUTPNT2FFUNCTIONBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -64,28 +64,28 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Function/OSGOutputPnt3fFunction.h" // Parent
+#include "OSGFunction.h" // Parent
 
 
-#include "OSGDistribution3DFields.h"
+#include "OSGOutputPnt2fFunctionFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Distribution3D;
+class OutputPnt2fFunction;
 class BinaryDataHandler;
 
-//! \brief Distribution3D Base Class.
+//! \brief OutputPnt2fFunction Base Class.
 
-class OSG_DYNAMICS_CLASS_API Distribution3DBase : public OutputPnt3fFunction
+class OSG_DYNAMICS_CLASS_API OutputPnt2fFunctionBase : public Function
 {
   private:
 
-    typedef OutputPnt3fFunction    Inherited;
+    typedef Function    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef Distribution3DPtr  Ptr;
+    typedef OutputPnt2fFunctionPtr  Ptr;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -132,15 +132,15 @@ class OSG_DYNAMICS_CLASS_API Distribution3DBase : public OutputPnt3fFunction
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    Distribution3DBase(void);
-    Distribution3DBase(const Distribution3DBase &source);
+    OutputPnt2fFunctionBase(void);
+    OutputPnt2fFunctionBase(const OutputPnt2fFunctionBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Distribution3DBase(void); 
+    virtual ~OutputPnt2fFunctionBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -148,13 +148,13 @@ class OSG_DYNAMICS_CLASS_API Distribution3DBase : public OutputPnt3fFunction
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      Distribution3DBase *pOther,
+    void executeSyncImpl(      OutputPnt2fFunctionBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      Distribution3DBase *pOther,
+    void executeSyncImpl(      OutputPnt2fFunctionBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -183,7 +183,7 @@ class OSG_DYNAMICS_CLASS_API Distribution3DBase : public OutputPnt3fFunction
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const Distribution3DBase &source);
+    void operator =(const OutputPnt2fFunctionBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -191,17 +191,17 @@ class OSG_DYNAMICS_CLASS_API Distribution3DBase : public OutputPnt3fFunction
 //---------------------------------------------------------------------------
 
 
-typedef Distribution3DBase *Distribution3DBaseP;
+typedef OutputPnt2fFunctionBase *OutputPnt2fFunctionBaseP;
 
-typedef osgIF<Distribution3DBase::isNodeCore,
-              CoredNodePtr<Distribution3D>,
+typedef osgIF<OutputPnt2fFunctionBase::isNodeCore,
+              CoredNodePtr<OutputPnt2fFunction>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet Distribution3DNodePtr;
+              >::_IRet OutputPnt2fFunctionNodePtr;
 
-typedef RefPtr<Distribution3DPtr> Distribution3DRefPtr;
+typedef RefPtr<OutputPnt2fFunctionPtr> OutputPnt2fFunctionRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGDISTRIBUTION3DBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGOUTPUTPNT2FFUNCTIONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGDISTRIBUTION3DBASE_H_ */
+#endif /* _OSGOUTPUTPNT2FFUNCTIONBASE_H_ */

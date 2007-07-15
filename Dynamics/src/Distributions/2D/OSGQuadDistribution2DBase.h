@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Distribution3D
+ **     class QuadDistribution2D
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGDISTRIBUTION3DBASE_H_
-#define _OSGDISTRIBUTION3DBASE_H_
+#ifndef _OSGQUADDISTRIBUTION2DBASE_H_
+#define _OSGQUADDISTRIBUTION2DBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -64,28 +64,46 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Function/OSGOutputPnt3fFunction.h" // Parent
+#include "OSGDistribution2D.h" // Parent
 
+#include <OpenSG/OSGPnt2fFields.h> // Point1 type
+#include <OpenSG/OSGPnt2fFields.h> // Point2 type
+#include <OpenSG/OSGPnt2fFields.h> // Point3 type
+#include <OpenSG/OSGPnt2fFields.h> // Point4 type
 
-#include "OSGDistribution3DFields.h"
+#include "OSGQuadDistribution2DFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Distribution3D;
+class QuadDistribution2D;
 class BinaryDataHandler;
 
-//! \brief Distribution3D Base Class.
+//! \brief QuadDistribution2D Base Class.
 
-class OSG_DYNAMICS_CLASS_API Distribution3DBase : public OutputPnt3fFunction
+class OSG_DYNAMICS_CLASS_API QuadDistribution2DBase : public Distribution2D
 {
   private:
 
-    typedef OutputPnt3fFunction    Inherited;
+    typedef Distribution2D    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef Distribution3DPtr  Ptr;
+    typedef QuadDistribution2DPtr  Ptr;
+
+    enum
+    {
+        Point1FieldId = Inherited::NextFieldId,
+        Point2FieldId = Point1FieldId + 1,
+        Point3FieldId = Point2FieldId + 1,
+        Point4FieldId = Point3FieldId + 1,
+        NextFieldId   = Point4FieldId + 1
+    };
+
+    static const OSG::BitVector Point1FieldMask;
+    static const OSG::BitVector Point2FieldMask;
+    static const OSG::BitVector Point3FieldMask;
+    static const OSG::BitVector Point4FieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -109,6 +127,35 @@ class OSG_DYNAMICS_CLASS_API Distribution3DBase : public OutputPnt3fFunction
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFPnt2f             *getSFPoint1         (void);
+           SFPnt2f             *getSFPoint2         (void);
+           SFPnt2f             *getSFPoint3         (void);
+           SFPnt2f             *getSFPoint4         (void);
+
+           Pnt2f               &getPoint1         (void);
+     const Pnt2f               &getPoint1         (void) const;
+           Pnt2f               &getPoint2         (void);
+     const Pnt2f               &getPoint2         (void) const;
+           Pnt2f               &getPoint3         (void);
+     const Pnt2f               &getPoint3         (void) const;
+           Pnt2f               &getPoint4         (void);
+     const Pnt2f               &getPoint4         (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setPoint1         ( const Pnt2f &value );
+     void setPoint2         ( const Pnt2f &value );
+     void setPoint3         ( const Pnt2f &value );
+     void setPoint4         ( const Pnt2f &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -125,22 +172,48 @@ class OSG_DYNAMICS_CLASS_API Distribution3DBase : public OutputPnt3fFunction
 
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Construction                               */
+    /*! \{                                                                 */
+
+    static  QuadDistribution2DPtr      create          (void); 
+    static  QuadDistribution2DPtr      createEmpty     (void); 
+
+    /*! \}                                                                 */
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Copy                                   */
+    /*! \{                                                                 */
+
+    virtual FieldContainerPtr     shallowCopy     (void) const; 
+
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
     /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFPnt2f             _sfPoint1;
+    SFPnt2f             _sfPoint2;
+    SFPnt2f             _sfPoint3;
+    SFPnt2f             _sfPoint4;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    Distribution3DBase(void);
-    Distribution3DBase(const Distribution3DBase &source);
+    QuadDistribution2DBase(void);
+    QuadDistribution2DBase(const QuadDistribution2DBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Distribution3DBase(void); 
+    virtual ~QuadDistribution2DBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -148,13 +221,13 @@ class OSG_DYNAMICS_CLASS_API Distribution3DBase : public OutputPnt3fFunction
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      Distribution3DBase *pOther,
+    void executeSyncImpl(      QuadDistribution2DBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      Distribution3DBase *pOther,
+    void executeSyncImpl(      QuadDistribution2DBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -179,11 +252,12 @@ class OSG_DYNAMICS_CLASS_API Distribution3DBase : public OutputPnt3fFunction
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const Distribution3DBase &source);
+    void operator =(const QuadDistribution2DBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -191,17 +265,17 @@ class OSG_DYNAMICS_CLASS_API Distribution3DBase : public OutputPnt3fFunction
 //---------------------------------------------------------------------------
 
 
-typedef Distribution3DBase *Distribution3DBaseP;
+typedef QuadDistribution2DBase *QuadDistribution2DBaseP;
 
-typedef osgIF<Distribution3DBase::isNodeCore,
-              CoredNodePtr<Distribution3D>,
+typedef osgIF<QuadDistribution2DBase::isNodeCore,
+              CoredNodePtr<QuadDistribution2D>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet Distribution3DNodePtr;
+              >::_IRet QuadDistribution2DNodePtr;
 
-typedef RefPtr<Distribution3DPtr> Distribution3DRefPtr;
+typedef RefPtr<QuadDistribution2DPtr> QuadDistribution2DRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGDISTRIBUTION3DBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGQUADDISTRIBUTION2DBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGDISTRIBUTION3DBASE_H_ */
+#endif /* _OSGQUADDISTRIBUTION2DBASE_H_ */

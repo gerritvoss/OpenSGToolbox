@@ -72,7 +72,7 @@ const OSG::BitVector Distribution2DBase::MTInfluenceMask =
 
 FieldContainerType Distribution2DBase::_type(
     "Distribution2D",
-    "OutputVec2fFunction",
+    "OutputPnt2fFunction",
     NULL,
     NULL, 
     Distribution2D::initMethod,
@@ -218,7 +218,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<Distribution2DPtr>::_type("Distribution2DPtr", "OutputVec2fFunctionPtr");
+DataType FieldDataTraits<Distribution2DPtr>::_type("Distribution2DPtr", "OutputPnt2fFunctionPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(Distribution2DPtr, );

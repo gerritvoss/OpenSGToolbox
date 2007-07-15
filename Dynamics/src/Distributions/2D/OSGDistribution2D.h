@@ -73,7 +73,7 @@ class OSG_DYNAMICS_CLASS_API Distribution2D : public Distribution2DBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual Vec2f generate(void)=0;
+    virtual Pnt2f generate(void)=0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

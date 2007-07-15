@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Function!
+ **     class TriangleDistribution2D!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,24 +55,134 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &FunctionBase::getClassType(void)
+OSG::FieldContainerType &TriangleDistribution2DBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 FunctionBase::getClassTypeId(void) 
+OSG::UInt32 TriangleDistribution2DBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
+//! create a new instance of the class
+inline
+TriangleDistribution2DPtr TriangleDistribution2DBase::create(void) 
+{
+    TriangleDistribution2DPtr fc; 
+
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = TriangleDistribution2DPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    
+    return fc; 
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+inline
+TriangleDistribution2DPtr TriangleDistribution2DBase::createEmpty(void) 
+{ 
+    TriangleDistribution2DPtr returnValue; 
+    
+    newPtr(returnValue); 
+
+    return returnValue; 
+}
+
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the TriangleDistribution2D::_sfPoint1 field.
+inline
+SFPnt2f *TriangleDistribution2DBase::getSFPoint1(void)
+{
+    return &_sfPoint1;
+}
+
+//! Get the TriangleDistribution2D::_sfPoint2 field.
+inline
+SFPnt2f *TriangleDistribution2DBase::getSFPoint2(void)
+{
+    return &_sfPoint2;
+}
+
+//! Get the TriangleDistribution2D::_sfPoint3 field.
+inline
+SFPnt2f *TriangleDistribution2DBase::getSFPoint3(void)
+{
+    return &_sfPoint3;
+}
+
+
+//! Get the value of the TriangleDistribution2D::_sfPoint1 field.
+inline
+Pnt2f &TriangleDistribution2DBase::getPoint1(void)
+{
+    return _sfPoint1.getValue();
+}
+
+//! Get the value of the TriangleDistribution2D::_sfPoint1 field.
+inline
+const Pnt2f &TriangleDistribution2DBase::getPoint1(void) const
+{
+    return _sfPoint1.getValue();
+}
+
+//! Set the value of the TriangleDistribution2D::_sfPoint1 field.
+inline
+void TriangleDistribution2DBase::setPoint1(const Pnt2f &value)
+{
+    _sfPoint1.setValue(value);
+}
+
+//! Get the value of the TriangleDistribution2D::_sfPoint2 field.
+inline
+Pnt2f &TriangleDistribution2DBase::getPoint2(void)
+{
+    return _sfPoint2.getValue();
+}
+
+//! Get the value of the TriangleDistribution2D::_sfPoint2 field.
+inline
+const Pnt2f &TriangleDistribution2DBase::getPoint2(void) const
+{
+    return _sfPoint2.getValue();
+}
+
+//! Set the value of the TriangleDistribution2D::_sfPoint2 field.
+inline
+void TriangleDistribution2DBase::setPoint2(const Pnt2f &value)
+{
+    _sfPoint2.setValue(value);
+}
+
+//! Get the value of the TriangleDistribution2D::_sfPoint3 field.
+inline
+Pnt2f &TriangleDistribution2DBase::getPoint3(void)
+{
+    return _sfPoint3.getValue();
+}
+
+//! Get the value of the TriangleDistribution2D::_sfPoint3 field.
+inline
+const Pnt2f &TriangleDistribution2DBase::getPoint3(void) const
+{
+    return _sfPoint3.getValue();
+}
+
+//! Set the value of the TriangleDistribution2D::_sfPoint3 field.
+inline
+void TriangleDistribution2DBase::setPoint3(const Pnt2f &value)
+{
+    _sfPoint3.setValue(value);
+}
 
 
 OSG_END_NAMESPACE
 
-#define OSGFUNCTIONBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGTRIANGLEDISTRIBUTION2DBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

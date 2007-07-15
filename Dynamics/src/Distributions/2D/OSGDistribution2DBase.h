@@ -64,7 +64,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Function/OSGOutputVec2fFunction.h" // Parent
+#include "Function/OSGOutputPnt2fFunction.h" // Parent
 
 
 #include "OSGDistribution2DFields.h"
@@ -76,11 +76,11 @@ class BinaryDataHandler;
 
 //! \brief Distribution2D Base Class.
 
-class OSG_DYNAMICS_CLASS_API Distribution2DBase : public OutputVec2fFunction
+class OSG_DYNAMICS_CLASS_API Distribution2DBase : public OutputPnt2fFunction
 {
   private:
 
-    typedef OutputVec2fFunction    Inherited;
+    typedef OutputPnt2fFunction    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:

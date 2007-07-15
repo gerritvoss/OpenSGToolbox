@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Distribution3D
+ **     class GaussianNormaDistribution2D
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGDISTRIBUTION3DBASE_H_
-#define _OSGDISTRIBUTION3DBASE_H_
+#ifndef _OSGGAUSSIANNORMADISTRIBUTION2DBASE_H_
+#define _OSGGAUSSIANNORMADISTRIBUTION2DBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -64,28 +64,46 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Function/OSGOutputPnt3fFunction.h" // Parent
+#include "OSGDistribution2D.h" // Parent
 
+#include <OpenSG/OSGPnt2fFields.h> // Mean type
+#include <OpenSG/OSGReal32Fields.h> // StandardDeviationX type
+#include <OpenSG/OSGReal32Fields.h> // StandardDeviationY type
+#include <OpenSG/OSGReal32Fields.h> // XYCorrelation type
 
-#include "OSGDistribution3DFields.h"
+#include "OSGGaussianNormaDistribution2DFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Distribution3D;
+class GaussianNormaDistribution2D;
 class BinaryDataHandler;
 
-//! \brief Distribution3D Base Class.
+//! \brief GaussianNormaDistribution2D Base Class.
 
-class OSG_DYNAMICS_CLASS_API Distribution3DBase : public OutputPnt3fFunction
+class OSG_DYNAMICS_CLASS_API GaussianNormaDistribution2DBase : public Distribution2D
 {
   private:
 
-    typedef OutputPnt3fFunction    Inherited;
+    typedef Distribution2D    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef Distribution3DPtr  Ptr;
+    typedef GaussianNormaDistribution2DPtr  Ptr;
+
+    enum
+    {
+        MeanFieldId               = Inherited::NextFieldId,
+        StandardDeviationXFieldId = MeanFieldId               + 1,
+        StandardDeviationYFieldId = StandardDeviationXFieldId + 1,
+        XYCorrelationFieldId      = StandardDeviationYFieldId + 1,
+        NextFieldId               = XYCorrelationFieldId      + 1
+    };
+
+    static const OSG::BitVector MeanFieldMask;
+    static const OSG::BitVector StandardDeviationXFieldMask;
+    static const OSG::BitVector StandardDeviationYFieldMask;
+    static const OSG::BitVector XYCorrelationFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -109,6 +127,35 @@ class OSG_DYNAMICS_CLASS_API Distribution3DBase : public OutputPnt3fFunction
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFPnt2f             *getSFMean           (void);
+           SFReal32            *getSFStandardDeviationX(void);
+           SFReal32            *getSFStandardDeviationY(void);
+           SFReal32            *getSFXYCorrelation  (void);
+
+           Pnt2f               &getMean           (void);
+     const Pnt2f               &getMean           (void) const;
+           Real32              &getStandardDeviationX(void);
+     const Real32              &getStandardDeviationX(void) const;
+           Real32              &getStandardDeviationY(void);
+     const Real32              &getStandardDeviationY(void) const;
+           Real32              &getXYCorrelation  (void);
+     const Real32              &getXYCorrelation  (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setMean           ( const Pnt2f &value );
+     void setStandardDeviationX( const Real32 &value );
+     void setStandardDeviationY( const Real32 &value );
+     void setXYCorrelation  ( const Real32 &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -125,22 +172,48 @@ class OSG_DYNAMICS_CLASS_API Distribution3DBase : public OutputPnt3fFunction
 
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Construction                               */
+    /*! \{                                                                 */
+
+    static  GaussianNormaDistribution2DPtr      create          (void); 
+    static  GaussianNormaDistribution2DPtr      createEmpty     (void); 
+
+    /*! \}                                                                 */
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Copy                                   */
+    /*! \{                                                                 */
+
+    virtual FieldContainerPtr     shallowCopy     (void) const; 
+
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
     /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFPnt2f             _sfMean;
+    SFReal32            _sfStandardDeviationX;
+    SFReal32            _sfStandardDeviationY;
+    SFReal32            _sfXYCorrelation;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    Distribution3DBase(void);
-    Distribution3DBase(const Distribution3DBase &source);
+    GaussianNormaDistribution2DBase(void);
+    GaussianNormaDistribution2DBase(const GaussianNormaDistribution2DBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Distribution3DBase(void); 
+    virtual ~GaussianNormaDistribution2DBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -148,13 +221,13 @@ class OSG_DYNAMICS_CLASS_API Distribution3DBase : public OutputPnt3fFunction
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      Distribution3DBase *pOther,
+    void executeSyncImpl(      GaussianNormaDistribution2DBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      Distribution3DBase *pOther,
+    void executeSyncImpl(      GaussianNormaDistribution2DBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -179,11 +252,12 @@ class OSG_DYNAMICS_CLASS_API Distribution3DBase : public OutputPnt3fFunction
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const Distribution3DBase &source);
+    void operator =(const GaussianNormaDistribution2DBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -191,17 +265,17 @@ class OSG_DYNAMICS_CLASS_API Distribution3DBase : public OutputPnt3fFunction
 //---------------------------------------------------------------------------
 
 
-typedef Distribution3DBase *Distribution3DBaseP;
+typedef GaussianNormaDistribution2DBase *GaussianNormaDistribution2DBaseP;
 
-typedef osgIF<Distribution3DBase::isNodeCore,
-              CoredNodePtr<Distribution3D>,
+typedef osgIF<GaussianNormaDistribution2DBase::isNodeCore,
+              CoredNodePtr<GaussianNormaDistribution2D>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet Distribution3DNodePtr;
+              >::_IRet GaussianNormaDistribution2DNodePtr;
 
-typedef RefPtr<Distribution3DPtr> Distribution3DRefPtr;
+typedef RefPtr<GaussianNormaDistribution2DPtr> GaussianNormaDistribution2DRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGDISTRIBUTION3DBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGGAUSSIANNORMADISTRIBUTION2DBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGDISTRIBUTION3DBASE_H_ */
+#endif /* _OSGGAUSSIANNORMADISTRIBUTION2DBASE_H_ */

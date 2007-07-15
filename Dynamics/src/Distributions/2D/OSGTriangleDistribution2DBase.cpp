@@ -45,81 +45,132 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Function!
+ **     class TriangleDistribution2D!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEFUNCTIONINST
+#define OSG_COMPILETRIANGLEDISTRIBUTION2DINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGFunctionBase.h"
-#include "OSGFunction.h"
+#include "OSGTriangleDistribution2DBase.h"
+#include "OSGTriangleDistribution2D.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector FunctionBase::MTInfluenceMask = 
+const OSG::BitVector  TriangleDistribution2DBase::Point1FieldMask = 
+    (TypeTraits<BitVector>::One << TriangleDistribution2DBase::Point1FieldId);
+
+const OSG::BitVector  TriangleDistribution2DBase::Point2FieldMask = 
+    (TypeTraits<BitVector>::One << TriangleDistribution2DBase::Point2FieldId);
+
+const OSG::BitVector  TriangleDistribution2DBase::Point3FieldMask = 
+    (TypeTraits<BitVector>::One << TriangleDistribution2DBase::Point3FieldId);
+
+const OSG::BitVector TriangleDistribution2DBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
+// Field descriptions
 
-FieldContainerType FunctionBase::_type(
-    "Function",
-    "FieldContainer",
-    NULL,
-    NULL, 
-    Function::initMethod,
-    NULL,
-    0);
+/*! \var Pnt2f           TriangleDistribution2DBase::_sfPoint1
+    
+*/
+/*! \var Pnt2f           TriangleDistribution2DBase::_sfPoint2
+    
+*/
+/*! \var Pnt2f           TriangleDistribution2DBase::_sfPoint3
+    
+*/
 
-//OSG_FIELD_CONTAINER_DEF(FunctionBase, FunctionPtr)
+//! TriangleDistribution2D description
+
+FieldDescription *TriangleDistribution2DBase::_desc[] = 
+{
+    new FieldDescription(SFPnt2f::getClassType(), 
+                     "Point1", 
+                     Point1FieldId, Point1FieldMask,
+                     false,
+                     (FieldAccessMethod) &TriangleDistribution2DBase::getSFPoint1),
+    new FieldDescription(SFPnt2f::getClassType(), 
+                     "Point2", 
+                     Point2FieldId, Point2FieldMask,
+                     false,
+                     (FieldAccessMethod) &TriangleDistribution2DBase::getSFPoint2),
+    new FieldDescription(SFPnt2f::getClassType(), 
+                     "Point3", 
+                     Point3FieldId, Point3FieldMask,
+                     false,
+                     (FieldAccessMethod) &TriangleDistribution2DBase::getSFPoint3)
+};
+
+
+FieldContainerType TriangleDistribution2DBase::_type(
+    "TriangleDistribution2D",
+    "Distribution2D",
+    NULL,
+    (PrototypeCreateF) &TriangleDistribution2DBase::createEmpty,
+    TriangleDistribution2D::initMethod,
+    _desc,
+    sizeof(_desc));
+
+//OSG_FIELD_CONTAINER_DEF(TriangleDistribution2DBase, TriangleDistribution2DPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &FunctionBase::getType(void) 
+FieldContainerType &TriangleDistribution2DBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &FunctionBase::getType(void) const 
+const FieldContainerType &TriangleDistribution2DBase::getType(void) const 
 {
     return _type;
 } 
 
 
-UInt32 FunctionBase::getContainerSize(void) const 
+FieldContainerPtr TriangleDistribution2DBase::shallowCopy(void) const 
 { 
-    return sizeof(Function); 
+    TriangleDistribution2DPtr returnValue; 
+
+    newPtr(returnValue, dynamic_cast<const TriangleDistribution2D *>(this)); 
+
+    return returnValue; 
+}
+
+UInt32 TriangleDistribution2DBase::getContainerSize(void) const 
+{ 
+    return sizeof(TriangleDistribution2D); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void FunctionBase::executeSync(      FieldContainer &other,
+void TriangleDistribution2DBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((FunctionBase *) &other, whichField);
+    this->executeSyncImpl((TriangleDistribution2DBase *) &other, whichField);
 }
 #else
-void FunctionBase::executeSync(      FieldContainer &other,
+void TriangleDistribution2DBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((FunctionBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((TriangleDistribution2DBase *) &other, whichField, sInfo);
 }
-void FunctionBase::execBeginEdit(const BitVector &whichField, 
+void TriangleDistribution2DBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void FunctionBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void TriangleDistribution2DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -132,7 +183,10 @@ void FunctionBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-FunctionBase::FunctionBase(void) :
+TriangleDistribution2DBase::TriangleDistribution2DBase(void) :
+    _sfPoint1                 (Pnt2f(0.0,0.0)), 
+    _sfPoint2                 (Pnt2f(1.0,0.0)), 
+    _sfPoint3                 (Pnt2f(0.0,1.0)), 
     Inherited() 
 {
 }
@@ -141,65 +195,131 @@ FunctionBase::FunctionBase(void) :
 #pragma warning (default : 383)
 #endif
 
-FunctionBase::FunctionBase(const FunctionBase &source) :
+TriangleDistribution2DBase::TriangleDistribution2DBase(const TriangleDistribution2DBase &source) :
+    _sfPoint1                 (source._sfPoint1                 ), 
+    _sfPoint2                 (source._sfPoint2                 ), 
+    _sfPoint3                 (source._sfPoint3                 ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-FunctionBase::~FunctionBase(void)
+TriangleDistribution2DBase::~TriangleDistribution2DBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 FunctionBase::getBinSize(const BitVector &whichField)
+UInt32 TriangleDistribution2DBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
+
+    if(FieldBits::NoField != (Point1FieldMask & whichField))
+    {
+        returnValue += _sfPoint1.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Point2FieldMask & whichField))
+    {
+        returnValue += _sfPoint2.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Point3FieldMask & whichField))
+    {
+        returnValue += _sfPoint3.getBinSize();
+    }
 
 
     return returnValue;
 }
 
-void FunctionBase::copyToBin(      BinaryDataHandler &pMem,
+void TriangleDistribution2DBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (Point1FieldMask & whichField))
+    {
+        _sfPoint1.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Point2FieldMask & whichField))
+    {
+        _sfPoint2.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Point3FieldMask & whichField))
+    {
+        _sfPoint3.copyToBin(pMem);
+    }
+
 
 }
 
-void FunctionBase::copyFromBin(      BinaryDataHandler &pMem,
+void TriangleDistribution2DBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (Point1FieldMask & whichField))
+    {
+        _sfPoint1.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Point2FieldMask & whichField))
+    {
+        _sfPoint2.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Point3FieldMask & whichField))
+    {
+        _sfPoint3.copyFromBin(pMem);
+    }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void FunctionBase::executeSyncImpl(      FunctionBase *pOther,
+void TriangleDistribution2DBase::executeSyncImpl(      TriangleDistribution2DBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (Point1FieldMask & whichField))
+        _sfPoint1.syncWith(pOther->_sfPoint1);
+
+    if(FieldBits::NoField != (Point2FieldMask & whichField))
+        _sfPoint2.syncWith(pOther->_sfPoint2);
+
+    if(FieldBits::NoField != (Point3FieldMask & whichField))
+        _sfPoint3.syncWith(pOther->_sfPoint3);
+
 
 }
 #else
-void FunctionBase::executeSyncImpl(      FunctionBase *pOther,
+void TriangleDistribution2DBase::executeSyncImpl(      TriangleDistribution2DBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
+    if(FieldBits::NoField != (Point1FieldMask & whichField))
+        _sfPoint1.syncWith(pOther->_sfPoint1);
+
+    if(FieldBits::NoField != (Point2FieldMask & whichField))
+        _sfPoint2.syncWith(pOther->_sfPoint2);
+
+    if(FieldBits::NoField != (Point3FieldMask & whichField))
+        _sfPoint3.syncWith(pOther->_sfPoint3);
+
 
 
 }
 
-void FunctionBase::execBeginEditImpl (const BitVector &whichField, 
+void TriangleDistribution2DBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -218,11 +338,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<FunctionPtr>::_type("FunctionPtr", "FieldContainerPtr");
+DataType FieldDataTraits<TriangleDistribution2DPtr>::_type("TriangleDistribution2DPtr", "Distribution2DPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(FunctionPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(FunctionPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(TriangleDistribution2DPtr, );
+OSG_DLLEXPORT_MFIELD_DEF1(TriangleDistribution2DPtr, );
 
 
 /*------------------------------------------------------------------------*/
@@ -239,10 +359,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(FunctionPtr, );
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGFUNCTIONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGFUNCTIONBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGTRIANGLEDISTRIBUTION2DBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGTRIANGLEDISTRIBUTION2DBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGFUNCTIONFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGTRIANGLEDISTRIBUTION2DFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

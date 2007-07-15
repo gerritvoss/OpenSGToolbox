@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DiscDistribution2D"
+	parent="Distribution2D"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+An DiscDistribution2D.
+	<Field
+		name="Center"
+		type="Pnt2f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0,0.0"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="MinRadius"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="MaxRadius"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1.0"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="MinTheta"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="MaxTheta"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="6.28319"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

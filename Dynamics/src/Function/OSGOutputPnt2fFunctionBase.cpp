@@ -45,81 +45,81 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Function!
+ **     class OutputPnt2fFunction!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEFUNCTIONINST
+#define OSG_COMPILEOUTPUTPNT2FFUNCTIONINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGFunctionBase.h"
-#include "OSGFunction.h"
+#include "OSGOutputPnt2fFunctionBase.h"
+#include "OSGOutputPnt2fFunction.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector FunctionBase::MTInfluenceMask = 
+const OSG::BitVector OutputPnt2fFunctionBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 
-FieldContainerType FunctionBase::_type(
+FieldContainerType OutputPnt2fFunctionBase::_type(
+    "OutputPnt2fFunction",
     "Function",
-    "FieldContainer",
     NULL,
     NULL, 
-    Function::initMethod,
+    OutputPnt2fFunction::initMethod,
     NULL,
     0);
 
-//OSG_FIELD_CONTAINER_DEF(FunctionBase, FunctionPtr)
+//OSG_FIELD_CONTAINER_DEF(OutputPnt2fFunctionBase, OutputPnt2fFunctionPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &FunctionBase::getType(void) 
+FieldContainerType &OutputPnt2fFunctionBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &FunctionBase::getType(void) const 
+const FieldContainerType &OutputPnt2fFunctionBase::getType(void) const 
 {
     return _type;
 } 
 
 
-UInt32 FunctionBase::getContainerSize(void) const 
+UInt32 OutputPnt2fFunctionBase::getContainerSize(void) const 
 { 
-    return sizeof(Function); 
+    return sizeof(OutputPnt2fFunction); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void FunctionBase::executeSync(      FieldContainer &other,
+void OutputPnt2fFunctionBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((FunctionBase *) &other, whichField);
+    this->executeSyncImpl((OutputPnt2fFunctionBase *) &other, whichField);
 }
 #else
-void FunctionBase::executeSync(      FieldContainer &other,
+void OutputPnt2fFunctionBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((FunctionBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((OutputPnt2fFunctionBase *) &other, whichField, sInfo);
 }
-void FunctionBase::execBeginEdit(const BitVector &whichField, 
+void OutputPnt2fFunctionBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void FunctionBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void OutputPnt2fFunctionBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -132,7 +132,7 @@ void FunctionBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-FunctionBase::FunctionBase(void) :
+OutputPnt2fFunctionBase::OutputPnt2fFunctionBase(void) :
     Inherited() 
 {
 }
@@ -141,20 +141,20 @@ FunctionBase::FunctionBase(void) :
 #pragma warning (default : 383)
 #endif
 
-FunctionBase::FunctionBase(const FunctionBase &source) :
+OutputPnt2fFunctionBase::OutputPnt2fFunctionBase(const OutputPnt2fFunctionBase &source) :
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-FunctionBase::~FunctionBase(void)
+OutputPnt2fFunctionBase::~OutputPnt2fFunctionBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 FunctionBase::getBinSize(const BitVector &whichField)
+UInt32 OutputPnt2fFunctionBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -162,7 +162,7 @@ UInt32 FunctionBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void FunctionBase::copyToBin(      BinaryDataHandler &pMem,
+void OutputPnt2fFunctionBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
@@ -170,7 +170,7 @@ void FunctionBase::copyToBin(      BinaryDataHandler &pMem,
 
 }
 
-void FunctionBase::copyFromBin(      BinaryDataHandler &pMem,
+void OutputPnt2fFunctionBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
@@ -179,7 +179,7 @@ void FunctionBase::copyFromBin(      BinaryDataHandler &pMem,
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void FunctionBase::executeSyncImpl(      FunctionBase *pOther,
+void OutputPnt2fFunctionBase::executeSyncImpl(      OutputPnt2fFunctionBase *pOther,
                                         const BitVector         &whichField)
 {
 
@@ -188,7 +188,7 @@ void FunctionBase::executeSyncImpl(      FunctionBase *pOther,
 
 }
 #else
-void FunctionBase::executeSyncImpl(      FunctionBase *pOther,
+void OutputPnt2fFunctionBase::executeSyncImpl(      OutputPnt2fFunctionBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
@@ -199,7 +199,7 @@ void FunctionBase::executeSyncImpl(      FunctionBase *pOther,
 
 }
 
-void FunctionBase::execBeginEditImpl (const BitVector &whichField, 
+void OutputPnt2fFunctionBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -218,11 +218,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<FunctionPtr>::_type("FunctionPtr", "FieldContainerPtr");
+DataType FieldDataTraits<OutputPnt2fFunctionPtr>::_type("OutputPnt2fFunctionPtr", "FunctionPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(FunctionPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(FunctionPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(OutputPnt2fFunctionPtr, );
+OSG_DLLEXPORT_MFIELD_DEF1(OutputPnt2fFunctionPtr, );
 
 
 /*------------------------------------------------------------------------*/
@@ -239,10 +239,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(FunctionPtr, );
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGFUNCTIONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGFUNCTIONBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGOUTPUTPNT2FFUNCTIONBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGOUTPUTPNT2FFUNCTIONBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGFUNCTIONFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGOUTPUTPNT2FFUNCTIONFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

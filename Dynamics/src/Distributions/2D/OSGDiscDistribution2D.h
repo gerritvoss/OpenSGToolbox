@@ -36,23 +36,23 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDISTRIBUTION3D_H_
-#define _OSGDISTRIBUTION3D_H_
+#ifndef _OSGDISCDISTRIBUTION2D_H_
+#define _OSGDISCDISTRIBUTION2D_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include "OSGDynamicsConfig.h"
 
-#include "OSGDistribution3DBase.h"
+#include "OSGDiscDistribution2DBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_DYNAMICS_CLASS_API Distribution3D : public Distribution3DBase
+class OSG_DYNAMICS_CLASS_API DiscDistribution2D : public DiscDistribution2DBase
 {
   private:
 
-    typedef Distribution3DBase Inherited;
+    typedef DiscDistribution2DBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -73,25 +73,25 @@ class OSG_DYNAMICS_CLASS_API Distribution3D : public Distribution3DBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual Pnt3f generate(void)=0;
+    virtual Pnt2f generate(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in Distribution3DBase.
+    // Variables should all be in DiscDistribution2DBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Distribution3D(void);
-    Distribution3D(const Distribution3D &source);
+    DiscDistribution2D(void);
+    DiscDistribution2D(const DiscDistribution2D &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Distribution3D(void); 
+    virtual ~DiscDistribution2D(void); 
 
     /*! \}                                                                 */
     
@@ -99,22 +99,22 @@ class OSG_DYNAMICS_CLASS_API Distribution3D : public Distribution3DBase
   private:
 
     friend class FieldContainer;
-    friend class Distribution3DBase;
+    friend class DiscDistribution2DBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Distribution3D &source);
+    void operator =(const DiscDistribution2D &source);
 };
 
-typedef Distribution3D *Distribution3DP;
+typedef DiscDistribution2D *DiscDistribution2DP;
 
 OSG_END_NAMESPACE
 
-#include "OSGDistribution3DBase.inl"
-#include "OSGDistribution3D.inl"
+#include "OSGDiscDistribution2DBase.inl"
+#include "OSGDiscDistribution2D.inl"
 
-#define OSGDISTRIBUTION3D_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGDISCDISTRIBUTION2D_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGDISTRIBUTION3D_H_ */
+#endif /* _OSGDISCDISTRIBUTION2D_H_ */

@@ -72,7 +72,7 @@ const OSG::BitVector Distribution3DBase::MTInfluenceMask =
 
 FieldContainerType Distribution3DBase::_type(
     "Distribution3D",
-    "OutputVec3fFunction",
+    "OutputPnt3fFunction",
     NULL,
     NULL, 
     Distribution3D::initMethod,
@@ -218,7 +218,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<Distribution3DPtr>::_type("Distribution3DPtr", "OutputVec3fFunctionPtr");
+DataType FieldDataTraits<Distribution3DPtr>::_type("Distribution3DPtr", "OutputPnt3fFunctionPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(Distribution3DPtr, );

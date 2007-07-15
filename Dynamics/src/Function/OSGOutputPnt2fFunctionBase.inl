@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Function!
+ **     class OutputPnt2fFunction!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,14 +55,14 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &FunctionBase::getClassType(void)
+OSG::FieldContainerType &OutputPnt2fFunctionBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 FunctionBase::getClassTypeId(void) 
+OSG::UInt32 OutputPnt2fFunctionBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
@@ -74,5 +74,5 @@ OSG::UInt32 FunctionBase::getClassTypeId(void)
 
 OSG_END_NAMESPACE
 
-#define OSGFUNCTIONBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGOUTPUTPNT2FFUNCTIONBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 
