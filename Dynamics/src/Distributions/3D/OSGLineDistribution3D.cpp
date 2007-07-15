@@ -76,8 +76,7 @@ void LineDistribution3D::initMethod (void)
 
 Pnt3f LineDistribution3D::generate(void)
 {
-   //TODO:Implement
-   return Pnt3f(0.0f,0.0f,0.0f);
+   return Pnt3f(getPoint1() + osgrand()*(getPoint2() - getPoint1()));
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

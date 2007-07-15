@@ -24,9 +24,15 @@
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
+#include <OpenSG/OSGParticles.h>
+
+#include <OpenSG/OSGGeoPropertyBase.h>
 
 // the general scene file loading handler
 #include <OpenSG/OSGSceneFileHandler.h>
+
+//Dynamics Distributions
+#include <OpenSG/Dynamics/OSGLineDistribution3D.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -60,6 +66,58 @@ int main(int argc, char **argv)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
 
+    //Make The Distribution
+    LineDistribution3DPtr TheDistribution = LineDistribution3D::create();
+    beginEditCP(TheDistribution);
+      TheDistribution->setPoint1(Pnt3f(-10.0,0.0,0.0));
+      TheDistribution->setPoint2(Pnt3f(10.0,0.0,0.0));
+    endEditCP(TheDistribution);
+
+
+    //Use the Distribution to generate Positions
+    GeoPositionsPtr ParticlePositions = GeoPositions3f::create();
+    for(UInt32 i(0) ; i< 20 ; ++i)
+    {
+      ParticlePositions->addValue(Vec3f(TheDistribution->generate()));
+    }
+    
+    //Create the ParticleCore and set up its properties
+    ParticlesPtr ParticlesCore = Particles::create();
+    GeoColorsPtr ParticleColors = GeoColors3f::create();
+    GeoNormalsPtr ParticleNormals = GeoNormals3f::create();
+    beginEditCP(ParticlesCore);
+      //Positions
+      ParticlesCore->setPositions(ParticlePositions);
+      //SecPositions
+      ParticlesCore->setSecPositions(ParticlePositions);
+      //Color
+      ParticlesCore->setColors(ParticleColors);
+      ParticleColors->addValue(Color3f(1.0,0.0,0.0));
+      //Normal
+      ParticlesCore->setNormals(ParticleNormals);
+      ParticleNormals->addValue(Vec3f(0.0,0.0,1.0));
+      //Sizes
+      ParticlesCore->getSizes().addValue(Vec3f(4.0,4.0,4.0));
+      //Draw Mode
+      ParticlesCore->setMode(Particles::Points);
+      //ParticlesCore->setMode(Particles::Lines);
+      //ParticlesCore->setMode(Particles::ViewDirQuads);
+      //ParticlesCore->setMode(Particles::ViewerQuads);
+      //ParticlesCore->setMode(Particles::Arrows);
+      //ParticlesCore->setMode(Particles::ViewerArrows);
+      //ParticlesCore->setMode(Particles::Rectangles);
+      //ParticlesCore->setMode(Particles::ShaderQuads);
+      //ParticlesCore->setMode(Particles::ShaderStrips);
+    endEditCP(ParticlesCore);
+
+
+    // Make Particles Node
+    NodePtr ParticlesNode = Node::create();
+    beginEditCP(ParticlesNode, Node::CoreFieldMask);
+        ParticlesNode->setCore(ParticlesCore);
+    endEditCP(ParticlesNode, Node::CoreFieldMask);
+
+
     // Make Main Scene Node
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
@@ -68,6 +126,7 @@ int main(int argc, char **argv)
  
         // add the torus as a child
         scene->addChild(TorusGeometryNode);
+        scene->addChild(ParticlesNode);
     }
     endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
