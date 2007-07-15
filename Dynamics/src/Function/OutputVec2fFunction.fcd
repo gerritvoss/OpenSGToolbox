@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="OutputVec2fFunction"
+	parent="Function"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+An OutputVec2fFunction.
+</FieldContainer>

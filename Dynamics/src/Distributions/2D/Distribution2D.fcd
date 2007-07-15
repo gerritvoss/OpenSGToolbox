@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="Distribution2D"
+	parent="OutputVec2fFunction"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+An Distribution2D.
+</FieldContainer>
