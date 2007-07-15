@@ -89,6 +89,10 @@ class OSG_USER_INTERFACE_CLASS_API Graphics : public GraphicsBase
 							const Vec2f& t1, const Vec2f& t2, const Vec2f& t3, const Vec2f& t4,
 							const TextureChunkPtr Texture,
 							const Real32& Opacity) const = 0;
+	virtual void drawQuad(const Pnt2s& p1, const Pnt2s& p2, const Pnt2s& p3, const Pnt2s& p4, 
+							const Vec2f& t1, const Vec2f& t2, const Vec2f& t3, const Vec2f& t4,
+							const MaterialPtr Material,
+							const Real32& Opacity) const = 0;
 	
 	virtual void drawLine(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32& Width, const Color4f& Color, const Real32& Opacity) const = 0;
 	

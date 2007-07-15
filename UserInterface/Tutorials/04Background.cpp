@@ -50,6 +50,11 @@
 #include <OpenSG/UserInterface/OSGMaterialUIBackground.h>
 #include <OpenSG/UserInterface/OSGTextureUIBackground.h>
 
+#include <OpenSG/OSGChunkMaterial.h>
+#include <OpenSG/OSGMaterialChunk.h>
+#include <OpenSG/OSGTextureChunk.h>
+#include <OpenSG/OSGImageFileHandler.h>
+
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -162,14 +167,33 @@ int main(int argc, char **argv)
 		 // which orient the gradient in the obvious manner 
 		 gradientBackground->setAlignment(HORIZONTAL_ALIGNMENT);
 	endEditCP(gradientBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
-	// Set materialBackground- Set material
+	
+   // Set materialBackground- Set material
+   ChunkMaterialPtr BackgroundMaterial = ChunkMaterial::create();
+   MaterialChunkPtr BackgroundMaterialChunk = MaterialChunk::create();
+	beginEditCP(BackgroundMaterialChunk);
+      BackgroundMaterialChunk->setAmbient (  Color4f(1.0,0.0,0.0,1.0));
+      BackgroundMaterialChunk->setDiffuse (  Color4f(0.0,1.0,0.0,1.0));
+      BackgroundMaterialChunk->setSpecular(  Color4f(0.0,0.0,1.0,1.0));
+	endEditCP(BackgroundMaterialChunk);
+
+	beginEditCP(BackgroundMaterial);
+		BackgroundMaterial->addChunk(BackgroundMaterialChunk);
+	endEditCP(BackgroundMaterial);
+
 	beginEditCP(materialBackground);
-		// materialBackground->setMaterial(MATERIAL_NAME);
+		materialBackground->setMaterial(BackgroundMaterial);
 	endEditCP(materialBackground);
 
 	// Set textureBackground- set texture
+   TextureChunkPtr BackgroundTextureChunk = TextureChunk::create();
+	
+   beginEditCP(BackgroundTextureChunk);
+		BackgroundTextureChunk->setImage(ImageFileHandler::the().read("Data/Checker.jpg"));
+	endEditCP(BackgroundTextureChunk);
+
 	beginEditCP(textureBackground);
-		// textureBackground->setTexture(TEXTURE_NAME);
+		textureBackground->setTexture(BackgroundTextureChunk);
 	endEditCP(textureBackground);
 
 
@@ -224,6 +248,18 @@ int main(int argc, char **argv)
 	
 	// add material and texture buttons at some point
 
+	beginEditCP(buttonMaterial, Button::TextFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
+		buttonMaterial->setText("Material Background");
+		buttonMaterial->setBackground(materialBackground);
+		buttonMaterial->setBorder(lineBorder);
+	endEditCP(buttonMaterial, Button::TextFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
+
+	beginEditCP(buttonTexture, Button::TextFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
+		buttonTexture->setText("Texture Background");
+		buttonTexture->setBackground(textureBackground);
+		buttonTexture->setBorder(lineBorder);
+	endEditCP(buttonTexture, Button::TextFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
+
 
 
 	// This creates a background for the MainFrame so that 
@@ -248,6 +284,8 @@ int main(int argc, char **argv)
 	   MainFrame->getChildren().addValue(buttonCompound);
 	   MainFrame->getChildren().addValue(buttonEmpty);
 	   MainFrame->getChildren().addValue(buttonGradient);
+	   MainFrame->getChildren().addValue(buttonMaterial);
+	   MainFrame->getChildren().addValue(buttonTexture);
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);

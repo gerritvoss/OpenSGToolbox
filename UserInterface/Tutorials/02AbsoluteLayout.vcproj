@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="02AbsoluteLayout"
 	ProjectGUID="{4AA62C5C-D8B1-4954-8D66-BFC10AD5D1C7}"
 	Keyword="Win32Proj"

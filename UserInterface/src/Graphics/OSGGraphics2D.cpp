@@ -206,6 +206,47 @@ void Graphics2D::drawQuad(const Pnt2s& p1, const Pnt2s& p2, const Pnt2s& p3, con
 	}
 }
 
+void Graphics2D::drawQuad(const Pnt2s& p1, const Pnt2s& p2, const Pnt2s& p3, const Pnt2s& p4, 
+						const Vec2f& t1, const Vec2f& t2, const Vec2f& t3, const Vec2f& t4,
+						const MaterialPtr Material,
+						const Real32& Opacity) const
+{
+	Real32 Alpha( Opacity * getOpacity());
+	if(Alpha < 1.0 || Material->isTransparent())
+	{
+		//Setup the Blending equations properly
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+	}
+
+	if(Material != NullFC)
+	{
+		Material->makeState()->activate(getDrawAction());
+	}
+	
+	glBegin(GL_QUADS);
+	   glColor4f(1.0, 1.0, 1.0, Alpha );
+	   glTexCoord2fv(t1.getValues());
+	   glVertex2sv(p1.getValues());
+	   glTexCoord2fv(t2.getValues());
+	   glVertex2sv(p2.getValues());
+	   glTexCoord2fv(t3.getValues());
+	   glVertex2sv(p3.getValues());
+	   glTexCoord2fv(t4.getValues());
+	   glVertex2sv(p4.getValues());
+	glEnd();
+	
+	if(Material != NullFC)
+	{
+		Material->makeState()->deactivate(getDrawAction());
+	}
+
+	if(Alpha < 1.0 || Material->isTransparent())
+	{
+		glDisable(GL_BLEND);
+	}
+}
+
 void Graphics2D::drawLine(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32& Width, const Color4f& Color, const Real32& Opacity) const
 {
 	GLfloat previousLineWidth;
