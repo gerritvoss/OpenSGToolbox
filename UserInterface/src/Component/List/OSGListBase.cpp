@@ -61,21 +61,33 @@
 #include "OSGListBase.h"
 #include "OSGList.h"
 
-#include <Util/OSGUIDefines.h>              // CellLayout default header
+#include <Util/OSGUIDefines.h>            // CellLayout default header
 
 OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  ListBase::CellLayoutFieldMask = 
     (TypeTraits<BitVector>::One << ListBase::CellLayoutFieldId);
 
+const OSG::BitVector  ListBase::ListFieldMask = 
+    (TypeTraits<BitVector>::One << ListBase::ListFieldId);
+
+const OSG::BitVector  ListBase::SelectedIndicesFieldMask = 
+    (TypeTraits<BitVector>::One << ListBase::SelectedIndicesFieldId);
+
 const OSG::BitVector ListBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId);
+    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
 /*! \var UInt32          ListBase::_sfCellLayout
+    
+*/
+/*! \var ComponentPtr    ListBase::_mfList
+    
+*/
+/*! \var UInt32          ListBase::_mfSelectedIndices
     
 */
 
@@ -87,7 +99,17 @@ FieldDescription *ListBase::_desc[] =
                      "CellLayout", 
                      CellLayoutFieldId, CellLayoutFieldMask,
                      false,
-                     (FieldAccessMethod) &ListBase::getSFCellLayout)
+                     (FieldAccessMethod) &ListBase::getSFCellLayout),
+    new FieldDescription(MFComponentPtr::getClassType(), 
+                     "List", 
+                     ListFieldId, ListFieldMask,
+                     false,
+                     (FieldAccessMethod) &ListBase::getMFList),
+    new FieldDescription(MFUInt32::getClassType(), 
+                     "SelectedIndices", 
+                     SelectedIndicesFieldId, SelectedIndicesFieldMask,
+                     false,
+                     (FieldAccessMethod) &ListBase::getMFSelectedIndices)
 };
 
 
@@ -153,6 +175,8 @@ void ListBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfList.terminateShare(uiAspect, this->getContainerSize());
+    _mfSelectedIndices.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -164,6 +188,8 @@ void ListBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 ListBase::ListBase(void) :
     _sfCellLayout             (UInt32(VERTICAL_ALIGNMENT)), 
+    _mfList                   (), 
+    _mfSelectedIndices        (), 
     Inherited() 
 {
 }
@@ -174,6 +200,8 @@ ListBase::ListBase(void) :
 
 ListBase::ListBase(const ListBase &source) :
     _sfCellLayout             (source._sfCellLayout             ), 
+    _mfList                   (source._mfList                   ), 
+    _mfSelectedIndices        (source._mfSelectedIndices        ), 
     Inherited                 (source)
 {
 }
@@ -195,6 +223,16 @@ UInt32 ListBase::getBinSize(const BitVector &whichField)
         returnValue += _sfCellLayout.getBinSize();
     }
 
+    if(FieldBits::NoField != (ListFieldMask & whichField))
+    {
+        returnValue += _mfList.getBinSize();
+    }
+
+    if(FieldBits::NoField != (SelectedIndicesFieldMask & whichField))
+    {
+        returnValue += _mfSelectedIndices.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -207,6 +245,16 @@ void ListBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (CellLayoutFieldMask & whichField))
     {
         _sfCellLayout.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ListFieldMask & whichField))
+    {
+        _mfList.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SelectedIndicesFieldMask & whichField))
+    {
+        _mfSelectedIndices.copyToBin(pMem);
     }
 
 
@@ -222,6 +270,16 @@ void ListBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfCellLayout.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ListFieldMask & whichField))
+    {
+        _mfList.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SelectedIndicesFieldMask & whichField))
+    {
+        _mfSelectedIndices.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -234,6 +292,12 @@ void ListBase::executeSyncImpl(      ListBase *pOther,
 
     if(FieldBits::NoField != (CellLayoutFieldMask & whichField))
         _sfCellLayout.syncWith(pOther->_sfCellLayout);
+
+    if(FieldBits::NoField != (ListFieldMask & whichField))
+        _mfList.syncWith(pOther->_mfList);
+
+    if(FieldBits::NoField != (SelectedIndicesFieldMask & whichField))
+        _mfSelectedIndices.syncWith(pOther->_mfSelectedIndices);
 
 
 }
@@ -249,6 +313,12 @@ void ListBase::executeSyncImpl(      ListBase *pOther,
         _sfCellLayout.syncWith(pOther->_sfCellLayout);
 
 
+    if(FieldBits::NoField != (ListFieldMask & whichField))
+        _mfList.syncWith(pOther->_mfList, sInfo);
+
+    if(FieldBits::NoField != (SelectedIndicesFieldMask & whichField))
+        _mfSelectedIndices.syncWith(pOther->_mfSelectedIndices, sInfo);
+
 
 }
 
@@ -257,6 +327,12 @@ void ListBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (ListFieldMask & whichField))
+        _mfList.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (SelectedIndicesFieldMask & whichField))
+        _mfSelectedIndices.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

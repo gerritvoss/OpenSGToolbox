@@ -210,6 +210,13 @@ SFReal32 *ComponentBase::getSFOpacity(void)
     return &_sfOpacity;
 }
 
+//! Get the Component::_sfParentContainer field.
+inline
+SFAttachmentContainerPtr *ComponentBase::getSFParentContainer(void)
+{
+    return &_sfParentContainer;
+}
+
 
 //! Get the value of the Component::_sfPosition field.
 inline
@@ -629,6 +636,27 @@ inline
 void ComponentBase::setOpacity(const Real32 &value)
 {
     _sfOpacity.setValue(value);
+}
+
+//! Get the value of the Component::_sfParentContainer field.
+inline
+AttachmentContainerPtr &ComponentBase::getParentContainer(void)
+{
+    return _sfParentContainer.getValue();
+}
+
+//! Get the value of the Component::_sfParentContainer field.
+inline
+const AttachmentContainerPtr &ComponentBase::getParentContainer(void) const
+{
+    return _sfParentContainer.getValue();
+}
+
+//! Set the value of the Component::_sfParentContainer field.
+inline
+void ComponentBase::setParentContainer(const AttachmentContainerPtr &value)
+{
+    _sfParentContainer.setValue(value);
 }
 
 

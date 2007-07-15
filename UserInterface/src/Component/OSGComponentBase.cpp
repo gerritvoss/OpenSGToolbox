@@ -124,6 +124,9 @@ const OSG::BitVector  ComponentBase::ForegroundMaterialFieldMask =
 const OSG::BitVector  ComponentBase::OpacityFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::OpacityFieldId);
 
+const OSG::BitVector  ComponentBase::ParentContainerFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::ParentContainerFieldId);
+
 const OSG::BitVector ComponentBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -189,6 +192,9 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
     
 */
 /*! \var Real32          ComponentBase::_sfOpacity
+    
+*/
+/*! \var AttachmentContainerPtr ComponentBase::_sfParentContainer
     
 */
 
@@ -295,7 +301,12 @@ FieldDescription *ComponentBase::_desc[] =
                      "Opacity", 
                      OpacityFieldId, OpacityFieldMask,
                      false,
-                     (FieldAccessMethod) &ComponentBase::getSFOpacity)
+                     (FieldAccessMethod) &ComponentBase::getSFOpacity),
+    new FieldDescription(SFAttachmentContainerPtr::getClassType(), 
+                     "ParentContainer", 
+                     ParentContainerFieldId, ParentContainerFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFParentContainer)
 };
 
 
@@ -382,6 +393,7 @@ ComponentBase::ComponentBase(void) :
     _sfFocusedForegroundColor (), 
     _sfForegroundMaterial     (), 
     _sfOpacity                (Real32(1.0)), 
+    _sfParentContainer        (AttachmentContainerPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -411,6 +423,7 @@ ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfFocusedForegroundColor (source._sfFocusedForegroundColor ), 
     _sfForegroundMaterial     (source._sfForegroundMaterial     ), 
     _sfOpacity                (source._sfOpacity                ), 
+    _sfParentContainer        (source._sfParentContainer        ), 
     Inherited                 (source)
 {
 }
@@ -527,6 +540,11 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfOpacity.getBinSize();
     }
 
+    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+    {
+        returnValue += _sfParentContainer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -634,6 +652,11 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         _sfOpacity.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+    {
+        _sfParentContainer.copyToBin(pMem);
     }
 
 
@@ -744,6 +767,11 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfOpacity.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+    {
+        _sfParentContainer.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -814,6 +842,9 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
         _sfOpacity.syncWith(pOther->_sfOpacity);
 
+    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+        _sfParentContainer.syncWith(pOther->_sfParentContainer);
+
 
 }
 #else
@@ -883,6 +914,9 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
 
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
         _sfOpacity.syncWith(pOther->_sfOpacity);
+
+    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+        _sfParentContainer.syncWith(pOther->_sfParentContainer);
 
 
 

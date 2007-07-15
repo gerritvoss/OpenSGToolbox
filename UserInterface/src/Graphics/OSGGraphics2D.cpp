@@ -219,9 +219,14 @@ void Graphics2D::drawQuad(const Pnt2s& p1, const Pnt2s& p2, const Pnt2s& p3, con
 		glEnable(GL_BLEND);
 	}
 
+   StatePtr state = NullFC;
 	if(Material != NullFC)
 	{
-		Material->makeState()->activate(getDrawAction());
+      state = Material->makeState();
+
+      addRefCP(state);
+
+      state->activate(getDrawAction());
 	}
 	
 	glBegin(GL_QUADS);
@@ -236,9 +241,10 @@ void Graphics2D::drawQuad(const Pnt2s& p1, const Pnt2s& p2, const Pnt2s& p3, con
 	   glVertex2sv(p4.getValues());
 	glEnd();
 	
-	if(Material != NullFC)
+	if(state != NullFC)
 	{
-		Material->makeState()->deactivate(getDrawAction());
+		state->deactivate(getDrawAction());
+      subRefCP(state);
 	}
 
 	if(Alpha < 1.0 || Material->isTransparent())

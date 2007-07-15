@@ -74,6 +74,18 @@ void Component::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void Component::getBounds(Pnt2s& TopLeft, Vec2s& Size)
+{
+   TopLeft = getPosition();
+   Size = getSize();
+}
+
+void Component::getBoundsWindowSpace(Pnt2s& TopLeft, Vec2s& Size)
+{
+   TopLeft = getPosition();
+   Size = getSize();
+}
+
 void Component::drawBorder(const GraphicsPtr TheGraphics) const
 {
    if(getBorder() != NullFC)

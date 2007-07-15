@@ -96,6 +96,34 @@ FramePtr FrameBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the Frame::_sfEventProducer field.
+inline
+SFWindowEventProducerPtr *FrameBase::getSFEventProducer(void)
+{
+    return &_sfEventProducer;
+}
+
+
+//! Get the value of the Frame::_sfEventProducer field.
+inline
+WindowEventProducerPtr &FrameBase::getEventProducer(void)
+{
+    return _sfEventProducer.getValue();
+}
+
+//! Get the value of the Frame::_sfEventProducer field.
+inline
+const WindowEventProducerPtr &FrameBase::getEventProducer(void) const
+{
+    return _sfEventProducer.getValue();
+}
+
+//! Set the value of the Frame::_sfEventProducer field.
+inline
+void FrameBase::setEventProducer(const WindowEventProducerPtr &value)
+{
+    _sfEventProducer.setValue(value);
+}
 
 
 OSG_END_NAMESPACE

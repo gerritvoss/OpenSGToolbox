@@ -76,6 +76,9 @@ class OSG_USER_INTERFACE_CLASS_API Component : public ComponentBase
     /*! \}                                                                 */
 	virtual void draw(const GraphicsPtr Graphics) const = 0;
 
+   virtual void getBounds(Pnt2s& TopLeft, Vec2s& Size);
+   virtual void getBoundsWindowSpace(Pnt2s& TopLeft, Vec2s& Size);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 

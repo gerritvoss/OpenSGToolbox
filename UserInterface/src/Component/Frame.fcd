@@ -7,6 +7,17 @@
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="false"
 >
 A UI Frame.
+	<Field
+		name="EventProducer"
+		type="WindowEventProducerPtr"
+		cardinality="single"
+		visibility="external"
+		header="OpenSG/Input/OSGWindowEventProducer.h"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

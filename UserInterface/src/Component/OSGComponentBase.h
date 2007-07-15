@@ -85,6 +85,7 @@
 #include <OpenSG/OSGColor4fFields.h> // FocusedForegroundColor type
 #include <OpenSG/OSGMaterialFields.h> // ForegroundMaterial type
 #include <OpenSG/OSGReal32Fields.h> // Opacity type
+#include <OpenSG/OSGAttachmentContainerFields.h> // ParentContainer type
 
 #include "OSGComponentFields.h"
 
@@ -128,7 +129,8 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
         FocusedForegroundColorFieldId  = FocusedBackgroundFieldId       + 1,
         ForegroundMaterialFieldId      = FocusedForegroundColorFieldId  + 1,
         OpacityFieldId                 = ForegroundMaterialFieldId      + 1,
-        NextFieldId                    = OpacityFieldId                 + 1
+        ParentContainerFieldId         = OpacityFieldId                 + 1,
+        NextFieldId                    = ParentContainerFieldId         + 1
     };
 
     static const OSG::BitVector PositionFieldMask;
@@ -151,6 +153,7 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
     static const OSG::BitVector FocusedForegroundColorFieldMask;
     static const OSG::BitVector ForegroundMaterialFieldMask;
     static const OSG::BitVector OpacityFieldMask;
+    static const OSG::BitVector ParentContainerFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -196,6 +199,7 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
            SFColor4f           *getSFFocusedForegroundColor(void);
            SFMaterialPtr       *getSFForegroundMaterial(void);
            SFReal32            *getSFOpacity        (void);
+           SFAttachmentContainerPtr *getSFParentContainer(void);
 
            Vec2s               &getMinSize        (void);
      const Vec2s               &getMinSize        (void) const;
@@ -235,6 +239,8 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
      const MaterialPtr         &getForegroundMaterial(void) const;
            Real32              &getOpacity        (void);
      const Real32              &getOpacity        (void) const;
+           AttachmentContainerPtr &getParentContainer(void);
+     const AttachmentContainerPtr &getParentContainer(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -260,6 +266,7 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
      void setFocusedForegroundColor( const Color4f &value );
      void setForegroundMaterial( const MaterialPtr &value );
      void setOpacity        ( const Real32 &value );
+     void setParentContainer( const AttachmentContainerPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -306,6 +313,7 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
     SFColor4f           _sfFocusedForegroundColor;
     SFMaterialPtr       _sfForegroundMaterial;
     SFReal32            _sfOpacity;
+    SFAttachmentContainerPtr   _sfParentContainer;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

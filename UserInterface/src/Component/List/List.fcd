@@ -20,4 +20,20 @@ A UI List.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="List"
+		type="ComponentPtr"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="SelectedIndices"
+		type="UInt32"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
 </FieldContainer>

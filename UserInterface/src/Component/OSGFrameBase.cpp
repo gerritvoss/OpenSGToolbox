@@ -64,10 +64,30 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  FrameBase::EventProducerFieldMask = 
+    (TypeTraits<BitVector>::One << FrameBase::EventProducerFieldId);
+
 const OSG::BitVector FrameBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+// Field descriptions
+
+/*! \var WindowEventProducerPtr FrameBase::_sfEventProducer
+    
+*/
+
+//! Frame description
+
+FieldDescription *FrameBase::_desc[] = 
+{
+    new FieldDescription(SFWindowEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId, EventProducerFieldMask,
+                     false,
+                     (FieldAccessMethod) &FrameBase::getSFEventProducer)
+};
 
 
 FieldContainerType FrameBase::_type(
@@ -76,8 +96,8 @@ FieldContainerType FrameBase::_type(
     NULL,
     (PrototypeCreateF) &FrameBase::createEmpty,
     Frame::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //OSG_FIELD_CONTAINER_DEF(FrameBase, FramePtr)
 
@@ -142,6 +162,7 @@ void FrameBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 FrameBase::FrameBase(void) :
+    _sfEventProducer          (), 
     Inherited() 
 {
 }
@@ -151,6 +172,7 @@ FrameBase::FrameBase(void) :
 #endif
 
 FrameBase::FrameBase(const FrameBase &source) :
+    _sfEventProducer          (source._sfEventProducer          ), 
     Inherited                 (source)
 {
 }
@@ -167,6 +189,11 @@ UInt32 FrameBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -176,6 +203,11 @@ void FrameBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
+    }
+
 
 }
 
@@ -183,6 +215,11 @@ void FrameBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
 
 
 }
@@ -194,6 +231,9 @@ void FrameBase::executeSyncImpl(      FrameBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
+
 
 }
 #else
@@ -203,6 +243,9 @@ void FrameBase::executeSyncImpl(      FrameBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 

@@ -5,8 +5,8 @@ OSG_BEGIN_NAMESPACE
 
 UChar8 KeyEvent::getCharFromKey(Key k, UInt32 Modifier)
 {
-   if( (Modifier & KEY_MODIFIER_SHIFT) != KEY_MODIFIER_SHIFT ^
-       (Modifier & KEY_MODIFIER_CAPS_LOCK) != KEY_MODIFIER_CAPS_LOCK)
+   if( ((Modifier & KEY_MODIFIER_SHIFT) != KEY_MODIFIER_SHIFT) ^
+       ((Modifier & KEY_MODIFIER_CAPS_LOCK) != KEY_MODIFIER_CAPS_LOCK))
    {
       return getUpperLetterKey(k,Modifier);
    }

@@ -59,7 +59,7 @@
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 
-#include "Component/OSGComponentFields.h"
+#include "OSGComponentFields.h"
 
 OSG_BEGIN_NAMESPACE
 

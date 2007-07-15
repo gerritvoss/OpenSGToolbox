@@ -66,6 +66,7 @@
 
 #include "OSGContainer.h" // Parent
 
+#include <OpenSG/Input/OSGWindowEventProducer.h> // EventProducer type
 
 #include "OSGFrameFields.h"
 
@@ -87,6 +88,14 @@ class OSG_USER_INTERFACE_CLASS_API FrameBase : public Container
 
     typedef FramePtr  Ptr;
 
+    enum
+    {
+        EventProducerFieldId = Inherited::NextFieldId,
+        NextFieldId          = EventProducerFieldId + 1
+    };
+
+    static const OSG::BitVector EventProducerFieldMask;
+
 
     static const OSG::BitVector MTInfluenceMask;
 
@@ -106,6 +115,23 @@ class OSG_USER_INTERFACE_CLASS_API FrameBase : public Container
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFWindowEventProducerPtr *getSFEventProducer  (void);
+
+           WindowEventProducerPtr &getEventProducer  (void);
+     const WindowEventProducerPtr &getEventProducer  (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setEventProducer  ( const WindowEventProducerPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -144,6 +170,13 @@ class OSG_USER_INTERFACE_CLASS_API FrameBase : public Container
     /*=========================  PROTECTED  ===============================*/
   protected:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFWindowEventProducerPtr   _sfEventProducer;
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -195,6 +228,7 @@ class OSG_USER_INTERFACE_CLASS_API FrameBase : public Container
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

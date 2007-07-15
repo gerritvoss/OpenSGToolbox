@@ -182,4 +182,13 @@ A UI Component Interface.
 		defaultValue="1.0"
 	>
 	</Field>
+   <Field
+		name="ParentContainer"
+		type="AttachmentContainerPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NullFC"
+	>
+	</Field>
 </FieldContainer>
