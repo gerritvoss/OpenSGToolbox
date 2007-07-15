@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="Function"
+	parent="FieldContainer"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+>
+A Function.
+</FieldContainer>
