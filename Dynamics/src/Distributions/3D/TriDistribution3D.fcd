@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="TriDistribution3D"
+	parent="Distribution3D"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+An TriDistribution3D.
+	<Field
+		name="Point1"
+		type="Pnt3f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0,0.0,0.0"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Point2"
+		type="Pnt3f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1.0,0.0,0.0"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Point3"
+		type="Pnt3f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0,1.0,0.0"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

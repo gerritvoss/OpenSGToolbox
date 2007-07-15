@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="GeoVolumeDistribution3D"
+	parent="Distribution3D"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+>
+An GeoVolumeDistribution3D.
+	<Field
+		name="Volume"
+		type="GeometryPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		access="public"
+	>
+	</Field>
+</FieldContainer>
