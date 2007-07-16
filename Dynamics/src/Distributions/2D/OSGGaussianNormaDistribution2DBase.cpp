@@ -375,8 +375,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<GaussianNormaDistribution2DPtr>::_type("GaussianNormaDistribution2DPtr", "Distribution2DPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(GaussianNormaDistribution2DPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(GaussianNormaDistribution2DPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(GaussianNormaDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(GaussianNormaDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

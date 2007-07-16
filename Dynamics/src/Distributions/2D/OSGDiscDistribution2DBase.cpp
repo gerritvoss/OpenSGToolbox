@@ -409,8 +409,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<DiscDistribution2DPtr>::_type("DiscDistribution2DPtr", "Distribution2DPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(DiscDistribution2DPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(DiscDistribution2DPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(DiscDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(DiscDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

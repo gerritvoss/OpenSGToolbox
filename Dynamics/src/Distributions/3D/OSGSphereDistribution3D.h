@@ -42,13 +42,13 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsConfig.h"
+#include "OSGDynamicsDef.h"
 
 #include "OSGSphereDistribution3DBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_DYNAMICS_CLASS_API SphereDistribution3D : public SphereDistribution3DBase
+class OSG_DYNAMICSLIB_DLLMAPPING SphereDistribution3D : public SphereDistribution3DBase
 {
   private:
 

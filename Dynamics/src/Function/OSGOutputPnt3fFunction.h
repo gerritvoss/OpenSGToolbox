@@ -42,13 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGDynamicsDef.h"
 
 #include "OSGOutputPnt3fFunctionBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_DYNAMICS_CLASS_API OutputPnt3fFunction : public OutputPnt3fFunctionBase
+class OSG_DYNAMICSLIB_DLLMAPPING OutputPnt3fFunction : public OutputPnt3fFunctionBase
 {
   private:
 

@@ -3,10 +3,13 @@
 <FieldContainer
 	name="TriangleDistribution2D"
 	parent="Distribution2D"
+	library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 An TriangleDistribution2D.
 	<Field

@@ -221,8 +221,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<OutputPnt2fFunctionPtr>::_type("OutputPnt2fFunctionPtr", "FunctionPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(OutputPnt2fFunctionPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(OutputPnt2fFunctionPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(OutputPnt2fFunctionPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(OutputPnt2fFunctionPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

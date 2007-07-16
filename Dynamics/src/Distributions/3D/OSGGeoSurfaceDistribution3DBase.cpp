@@ -273,8 +273,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<GeoSurfaceDistribution3DPtr>::_type("GeoSurfaceDistribution3DPtr", "Distribution3DPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(GeoSurfaceDistribution3DPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(GeoSurfaceDistribution3DPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(GeoSurfaceDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(GeoSurfaceDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

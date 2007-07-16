@@ -443,8 +443,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<DiscDistribution3DPtr>::_type("DiscDistribution3DPtr", "Distribution3DPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(DiscDistribution3DPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(DiscDistribution3DPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(DiscDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(DiscDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

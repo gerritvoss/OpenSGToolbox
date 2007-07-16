@@ -54,10 +54,11 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGDynamicsDef.h"
 
 #include <OpenSG/OSGFieldContainerFields.h>
 
@@ -73,6 +74,8 @@ typedef FCPtr<FieldContainerPtr, Function> FunctionPtr;
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpDynamicsFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -102,12 +105,23 @@ struct FieldDataTraits<FunctionPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldSingle */
+
 typedef SField<FunctionPtr> SFFunctionPtr;
 #endif
 
+#ifndef OSG_COMPILEFUNCTIONINST
+OSG_DLLEXPORT_DECL1(SField, FunctionPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldMulti */
+
 typedef MField<FunctionPtr> MFFunctionPtr;
+#endif
+
+#ifndef OSG_COMPILEFUNCTIONINST
+OSG_DLLEXPORT_DECL1(MField, FunctionPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE

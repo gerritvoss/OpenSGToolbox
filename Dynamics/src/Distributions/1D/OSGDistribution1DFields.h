@@ -54,10 +54,11 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGDynamicsDef.h"
 
 #include "Function/OSGOutputReal32FunctionFields.h"
 
@@ -73,6 +74,8 @@ typedef FCPtr<OutputReal32FunctionPtr, Distribution1D> Distribution1DPtr;
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpDynamicsFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -102,12 +105,23 @@ struct FieldDataTraits<Distribution1DPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldSingle */
+
 typedef SField<Distribution1DPtr> SFDistribution1DPtr;
 #endif
 
+#ifndef OSG_COMPILEDISTRIBUTION1DINST
+OSG_DLLEXPORT_DECL1(SField, Distribution1DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldMulti */
+
 typedef MField<Distribution1DPtr> MFDistribution1DPtr;
+#endif
+
+#ifndef OSG_COMPILEDISTRIBUTION1DINST
+OSG_DLLEXPORT_DECL1(MField, Distribution1DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE

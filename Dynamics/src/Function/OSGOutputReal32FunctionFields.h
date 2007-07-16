@@ -54,10 +54,11 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGDynamicsDef.h"
 
 #include "OSGFunctionFields.h"
 
@@ -73,6 +74,8 @@ typedef FCPtr<FunctionPtr, OutputReal32Function> OutputReal32FunctionPtr;
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpDynamicsFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -102,12 +105,23 @@ struct FieldDataTraits<OutputReal32FunctionPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldSingle */
+
 typedef SField<OutputReal32FunctionPtr> SFOutputReal32FunctionPtr;
 #endif
 
+#ifndef OSG_COMPILEOUTPUTREAL32FUNCTIONINST
+OSG_DLLEXPORT_DECL1(SField, OutputReal32FunctionPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldMulti */
+
 typedef MField<OutputReal32FunctionPtr> MFOutputReal32FunctionPtr;
+#endif
+
+#ifndef OSG_COMPILEOUTPUTREAL32FUNCTIONINST
+OSG_DLLEXPORT_DECL1(MField, OutputReal32FunctionPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE

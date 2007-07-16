@@ -54,10 +54,11 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGDynamicsDef.h"
 
 #include "OSGDistribution3DFields.h"
 
@@ -73,6 +74,8 @@ typedef FCPtr<Distribution3DPtr, DiscDistribution3D> DiscDistribution3DPtr;
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpDynamicsFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -102,12 +105,23 @@ struct FieldDataTraits<DiscDistribution3DPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldSingle */
+
 typedef SField<DiscDistribution3DPtr> SFDiscDistribution3DPtr;
 #endif
 
+#ifndef OSG_COMPILEDISCDISTRIBUTION3DINST
+OSG_DLLEXPORT_DECL1(SField, DiscDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldMulti */
+
 typedef MField<DiscDistribution3DPtr> MFDiscDistribution3DPtr;
+#endif
+
+#ifndef OSG_COMPILEDISCDISTRIBUTION3DINST
+OSG_DLLEXPORT_DECL1(MField, DiscDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE

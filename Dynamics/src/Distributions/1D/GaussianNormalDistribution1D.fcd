@@ -3,10 +3,13 @@
 <FieldContainer
 	name="GaussianNormalDistribution1D"
 	parent="Distribution1D"
+	library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 An GaussianNormalDistribution1D.
 	<Field

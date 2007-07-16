@@ -42,13 +42,13 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsConfig.h"
+#include "OSGDynamicsDef.h"
 
 #include "OSGCylinderDistribution3DBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_DYNAMICS_CLASS_API CylinderDistribution3D : public CylinderDistribution3DBase
+class OSG_DYNAMICSLIB_DLLMAPPING CylinderDistribution3D : public CylinderDistribution3DBase
 {
   private:
 

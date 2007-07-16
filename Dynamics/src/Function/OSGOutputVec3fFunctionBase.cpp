@@ -221,8 +221,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<OutputVec3fFunctionPtr>::_type("OutputVec3fFunctionPtr", "FunctionPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(OutputVec3fFunctionPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(OutputVec3fFunctionPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(OutputVec3fFunctionPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(OutputVec3fFunctionPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

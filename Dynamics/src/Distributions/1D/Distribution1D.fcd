@@ -3,10 +3,13 @@
 <FieldContainer
 	name="Distribution1D"
 	parent="OutputReal32Function"
+	library="Dynamics"
 	pointerfieldtypes="both"
 	structure="abstract"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 An Distribution1D.
 </FieldContainer>

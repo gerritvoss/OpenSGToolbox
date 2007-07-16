@@ -58,7 +58,8 @@
 #endif
 
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGDynamicsDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -76,7 +77,7 @@ class BinaryDataHandler;
 
 //! \brief Distribution3D Base Class.
 
-class OSG_DYNAMICS_CLASS_API Distribution3DBase : public OutputPnt3fFunction
+class OSG_DYNAMICSLIB_DLLMAPPING Distribution3DBase : public OutputPnt3fFunction
 {
   private:
 

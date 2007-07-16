@@ -221,8 +221,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<FunctionPtr>::_type("FunctionPtr", "FieldContainerPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(FunctionPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(FunctionPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(FunctionPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(FunctionPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

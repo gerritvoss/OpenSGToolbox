@@ -54,10 +54,11 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGDynamicsDef.h"
 
 #include "OSGFunctionFields.h"
 
@@ -73,6 +74,8 @@ typedef FCPtr<FunctionPtr, OutputPnt2fFunction> OutputPnt2fFunctionPtr;
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpDynamicsFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -102,12 +105,23 @@ struct FieldDataTraits<OutputPnt2fFunctionPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldSingle */
+
 typedef SField<OutputPnt2fFunctionPtr> SFOutputPnt2fFunctionPtr;
 #endif
 
+#ifndef OSG_COMPILEOUTPUTPNT2FFUNCTIONINST
+OSG_DLLEXPORT_DECL1(SField, OutputPnt2fFunctionPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldMulti */
+
 typedef MField<OutputPnt2fFunctionPtr> MFOutputPnt2fFunctionPtr;
+#endif
+
+#ifndef OSG_COMPILEOUTPUTPNT2FFUNCTIONINST
+OSG_DLLEXPORT_DECL1(MField, OutputPnt2fFunctionPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE

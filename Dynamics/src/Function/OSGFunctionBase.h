@@ -58,7 +58,8 @@
 #endif
 
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGDynamicsDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -76,7 +77,7 @@ class BinaryDataHandler;
 
 //! \brief Function Base Class.
 
-class OSG_DYNAMICS_CLASS_API FunctionBase : public FieldContainer
+class OSG_DYNAMICSLIB_DLLMAPPING FunctionBase : public FieldContainer
 {
   private:
 

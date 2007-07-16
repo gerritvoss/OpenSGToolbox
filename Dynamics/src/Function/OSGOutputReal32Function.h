@@ -42,13 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGDynamicsDef.h"
 
 #include "OSGOutputReal32FunctionBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_DYNAMICS_CLASS_API OutputReal32Function : public OutputReal32FunctionBase
+class OSG_DYNAMICSLIB_DLLMAPPING OutputReal32Function : public OutputReal32FunctionBase
 {
   private:
 

@@ -54,10 +54,11 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGDynamicsDef.h"
 
 #include "OSGDistribution2DFields.h"
 
@@ -73,6 +74,8 @@ typedef FCPtr<Distribution2DPtr, TriangleDistribution2D> TriangleDistribution2DP
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpDynamicsFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -102,12 +105,23 @@ struct FieldDataTraits<TriangleDistribution2DPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldSingle */
+
 typedef SField<TriangleDistribution2DPtr> SFTriangleDistribution2DPtr;
 #endif
 
+#ifndef OSG_COMPILETRIANGLEDISTRIBUTION2DINST
+OSG_DLLEXPORT_DECL1(SField, TriangleDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldMulti */
+
 typedef MField<TriangleDistribution2DPtr> MFTriangleDistribution2DPtr;
+#endif
+
+#ifndef OSG_COMPILETRIANGLEDISTRIBUTION2DINST
+OSG_DLLEXPORT_DECL1(MField, TriangleDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE

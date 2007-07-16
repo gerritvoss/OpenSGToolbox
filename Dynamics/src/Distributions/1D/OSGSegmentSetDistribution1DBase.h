@@ -58,7 +58,8 @@
 #endif
 
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGDynamicsDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -77,7 +78,7 @@ class BinaryDataHandler;
 
 //! \brief SegmentSetDistribution1D Base Class.
 
-class OSG_DYNAMICS_CLASS_API SegmentSetDistribution1DBase : public Distribution1D
+class OSG_DYNAMICSLIB_DLLMAPPING SegmentSetDistribution1DBase : public Distribution1D
 {
   private:
 

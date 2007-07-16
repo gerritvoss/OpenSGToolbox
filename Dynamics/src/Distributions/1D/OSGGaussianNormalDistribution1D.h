@@ -42,13 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGDynamicsDef.h"
 
 #include "OSGGaussianNormalDistribution1DBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_DYNAMICS_CLASS_API GaussianNormalDistribution1D : public GaussianNormalDistribution1DBase
+class OSG_DYNAMICSLIB_DLLMAPPING GaussianNormalDistribution1D : public GaussianNormalDistribution1DBase
 {
   private:
 

@@ -58,7 +58,8 @@
 #endif
 
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGDynamicsDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -76,7 +77,7 @@ class BinaryDataHandler;
 
 //! \brief Distribution2D Base Class.
 
-class OSG_DYNAMICS_CLASS_API Distribution2DBase : public OutputPnt2fFunction
+class OSG_DYNAMICSLIB_DLLMAPPING Distribution2DBase : public OutputPnt2fFunction
 {
   private:
 

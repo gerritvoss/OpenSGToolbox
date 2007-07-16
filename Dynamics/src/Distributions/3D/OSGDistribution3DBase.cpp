@@ -221,8 +221,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<Distribution3DPtr>::_type("Distribution3DPtr", "OutputPnt3fFunctionPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(Distribution3DPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(Distribution3DPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(Distribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(Distribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

@@ -58,7 +58,8 @@
 #endif
 
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGDynamicsDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -79,7 +80,7 @@ class BinaryDataHandler;
 
 //! \brief TriangleDistribution2D Base Class.
 
-class OSG_DYNAMICS_CLASS_API TriangleDistribution2DBase : public Distribution2D
+class OSG_DYNAMICSLIB_DLLMAPPING TriangleDistribution2DBase : public Distribution2D
 {
   private:
 

@@ -42,13 +42,13 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsConfig.h"
+#include "OSGDynamicsDef.h"
 
 #include "OSGTriDistribution3DBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_DYNAMICS_CLASS_API TriDistribution3D : public TriDistribution3DBase
+class OSG_DYNAMICSLIB_DLLMAPPING TriDistribution3D : public TriDistribution3DBase
 {
   private:
 

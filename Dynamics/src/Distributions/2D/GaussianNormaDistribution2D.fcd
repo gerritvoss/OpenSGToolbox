@@ -3,10 +3,13 @@
 <FieldContainer
 	name="GaussianNormaDistribution2D"
 	parent="Distribution2D"
+	library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 An GaussianNormaDistribution2D.
 	<Field

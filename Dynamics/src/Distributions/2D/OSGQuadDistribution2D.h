@@ -42,13 +42,13 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsConfig.h"
+#include "OSGDynamicsDef.h"
 
 #include "OSGQuadDistribution2DBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_DYNAMICS_CLASS_API QuadDistribution2D : public QuadDistribution2DBase
+class OSG_DYNAMICSLIB_DLLMAPPING QuadDistribution2D : public QuadDistribution2DBase
 {
   private:
 

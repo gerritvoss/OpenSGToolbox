@@ -42,13 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGDynamicsDef.h"
 
 #include "OSGSegmentSetDistribution1DBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_DYNAMICS_CLASS_API SegmentSetDistribution1D : public SegmentSetDistribution1DBase
+class OSG_DYNAMICSLIB_DLLMAPPING SegmentSetDistribution1D : public SegmentSetDistribution1DBase
 {
   private:
 

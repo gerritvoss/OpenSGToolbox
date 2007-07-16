@@ -221,8 +221,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<OutputReal32FunctionPtr>::_type("OutputReal32FunctionPtr", "FunctionPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(OutputReal32FunctionPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(OutputReal32FunctionPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(OutputReal32FunctionPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(OutputReal32FunctionPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

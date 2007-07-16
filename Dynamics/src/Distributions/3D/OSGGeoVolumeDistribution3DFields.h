@@ -54,10 +54,11 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGDynamicsDef.h"
 
 #include "OSGDistribution3DFields.h"
 
@@ -73,6 +74,8 @@ typedef FCPtr<Distribution3DPtr, GeoVolumeDistribution3D> GeoVolumeDistribution3
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpDynamicsFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -102,12 +105,23 @@ struct FieldDataTraits<GeoVolumeDistribution3DPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldSingle */
+
 typedef SField<GeoVolumeDistribution3DPtr> SFGeoVolumeDistribution3DPtr;
 #endif
 
+#ifndef OSG_COMPILEGEOVOLUMEDISTRIBUTION3DINST
+OSG_DLLEXPORT_DECL1(SField, GeoVolumeDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldMulti */
+
 typedef MField<GeoVolumeDistribution3DPtr> MFGeoVolumeDistribution3DPtr;
+#endif
+
+#ifndef OSG_COMPILEGEOVOLUMEDISTRIBUTION3DINST
+OSG_DLLEXPORT_DECL1(MField, GeoVolumeDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE

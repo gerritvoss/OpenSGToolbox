@@ -58,7 +58,8 @@
 #endif
 
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGDynamicsDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -76,7 +77,7 @@ class BinaryDataHandler;
 
 //! \brief Distribution1D Base Class.
 
-class OSG_DYNAMICS_CLASS_API Distribution1DBase : public OutputReal32Function
+class OSG_DYNAMICSLIB_DLLMAPPING Distribution1DBase : public OutputReal32Function
 {
   private:
 

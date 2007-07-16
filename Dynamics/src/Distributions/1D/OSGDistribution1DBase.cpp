@@ -221,8 +221,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<Distribution1DPtr>::_type("Distribution1DPtr", "OutputReal32FunctionPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(Distribution1DPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(Distribution1DPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(Distribution1DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(Distribution1DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

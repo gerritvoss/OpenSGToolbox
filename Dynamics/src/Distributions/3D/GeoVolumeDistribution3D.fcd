@@ -3,10 +3,13 @@
 <FieldContainer
 	name="GeoVolumeDistribution3D"
 	parent="Distribution3D"
+	library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 An GeoVolumeDistribution3D.
 	<Field

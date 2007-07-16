@@ -273,8 +273,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<CylinderDistribution3DPtr>::_type("CylinderDistribution3DPtr", "DiscDistribution3DPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(CylinderDistribution3DPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(CylinderDistribution3DPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(CylinderDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(CylinderDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

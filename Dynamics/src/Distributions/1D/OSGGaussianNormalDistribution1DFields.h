@@ -54,10 +54,11 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGDynamicsDef.h"
 
 #include "OSGDistribution1DFields.h"
 
@@ -73,6 +74,8 @@ typedef FCPtr<Distribution1DPtr, GaussianNormalDistribution1D> GaussianNormalDis
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpDynamicsFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -102,12 +105,23 @@ struct FieldDataTraits<GaussianNormalDistribution1DPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldSingle */
+
 typedef SField<GaussianNormalDistribution1DPtr> SFGaussianNormalDistribution1DPtr;
 #endif
 
+#ifndef OSG_COMPILEGAUSSIANNORMALDISTRIBUTION1DINST
+OSG_DLLEXPORT_DECL1(SField, GaussianNormalDistribution1DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldMulti */
+
 typedef MField<GaussianNormalDistribution1DPtr> MFGaussianNormalDistribution1DPtr;
+#endif
+
+#ifndef OSG_COMPILEGAUSSIANNORMALDISTRIBUTION1DINST
+OSG_DLLEXPORT_DECL1(MField, GaussianNormalDistribution1DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE

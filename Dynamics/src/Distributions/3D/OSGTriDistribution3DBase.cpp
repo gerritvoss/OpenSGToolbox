@@ -341,8 +341,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<TriDistribution3DPtr>::_type("TriDistribution3DPtr", "Distribution3DPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(TriDistribution3DPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(TriDistribution3DPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(TriDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(TriDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

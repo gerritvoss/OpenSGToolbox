@@ -3,10 +3,13 @@
 <FieldContainer
 	name="OutputVec2fFunction"
 	parent="Function"
+	library="Dynamics"
 	pointerfieldtypes="both"
 	structure="abstract"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 An OutputVec2fFunction.
 </FieldContainer>

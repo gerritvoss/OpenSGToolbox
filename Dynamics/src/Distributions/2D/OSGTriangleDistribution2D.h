@@ -42,13 +42,13 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsConfig.h"
+#include "OSGDynamicsDef.h"
 
 #include "OSGTriangleDistribution2DBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_DYNAMICS_CLASS_API TriangleDistribution2D : public TriangleDistribution2DBase
+class OSG_DYNAMICSLIB_DLLMAPPING TriangleDistribution2D : public TriangleDistribution2DBase
 {
   private:
 

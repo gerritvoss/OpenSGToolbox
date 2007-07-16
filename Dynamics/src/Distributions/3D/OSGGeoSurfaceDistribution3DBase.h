@@ -58,7 +58,8 @@
 #endif
 
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGDynamicsDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -77,7 +78,7 @@ class BinaryDataHandler;
 
 //! \brief GeoSurfaceDistribution3D Base Class.
 
-class OSG_DYNAMICS_CLASS_API GeoSurfaceDistribution3DBase : public Distribution3D
+class OSG_DYNAMICSLIB_DLLMAPPING GeoSurfaceDistribution3DBase : public Distribution3D
 {
   private:
 

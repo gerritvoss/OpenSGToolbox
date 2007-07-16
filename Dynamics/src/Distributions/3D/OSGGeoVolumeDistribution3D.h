@@ -42,13 +42,13 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsConfig.h"
+#include "OSGDynamicsDef.h"
 
 #include "OSGGeoVolumeDistribution3DBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_DYNAMICS_CLASS_API GeoVolumeDistribution3D : public GeoVolumeDistribution3DBase
+class OSG_DYNAMICSLIB_DLLMAPPING GeoVolumeDistribution3D : public GeoVolumeDistribution3DBase
 {
   private:
 

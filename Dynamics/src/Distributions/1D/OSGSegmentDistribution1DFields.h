@@ -54,10 +54,11 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsConfig.h"
+#include <OpenSG/OSGConfig.h>
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGDynamicsDef.h"
 
 #include "OSGDistribution1DFields.h"
 
@@ -73,6 +74,8 @@ typedef FCPtr<Distribution1DPtr, SegmentDistribution1D> SegmentDistribution1DPtr
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpDynamicsFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -102,12 +105,23 @@ struct FieldDataTraits<SegmentDistribution1DPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldSingle */
+
 typedef SField<SegmentDistribution1DPtr> SFSegmentDistribution1DPtr;
 #endif
 
+#ifndef OSG_COMPILESEGMENTDISTRIBUTION1DINST
+OSG_DLLEXPORT_DECL1(SField, SegmentDistribution1DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldMulti */
+
 typedef MField<SegmentDistribution1DPtr> MFSegmentDistribution1DPtr;
+#endif
+
+#ifndef OSG_COMPILESEGMENTDISTRIBUTION1DINST
+OSG_DLLEXPORT_DECL1(MField, SegmentDistribution1DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE

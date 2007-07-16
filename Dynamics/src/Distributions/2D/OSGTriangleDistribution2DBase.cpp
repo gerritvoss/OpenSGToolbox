@@ -341,8 +341,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<TriangleDistribution2DPtr>::_type("TriangleDistribution2DPtr", "Distribution2DPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(TriangleDistribution2DPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(TriangleDistribution2DPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(TriangleDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(TriangleDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

@@ -277,8 +277,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<SegmentSetDistribution1DPtr>::_type("SegmentSetDistribution1DPtr", "Distribution1DPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(SegmentSetDistribution1DPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(SegmentSetDistribution1DPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(SegmentSetDistribution1DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(SegmentSetDistribution1DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
