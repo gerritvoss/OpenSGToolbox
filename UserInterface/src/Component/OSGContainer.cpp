@@ -95,8 +95,8 @@ void Container::getInsideBorderSizing(Pnt2s& TopLeft, Pnt2s& BottomRight) const
       //Get Border Insets
       getBorder()->getInsets(LeftInset,RightInset,TopInset,BottomInset);
    }
-   TopLeft.setValues(LeftInset, TopInset);
-   BottomRight.setValues(TopLeft.x()+getSize().x()-(LeftInset + RightInset), TopLeft.y()+getSize().y()-(TopInset + BottomInset));
+   TopLeft.setValues(LeftInset + getLeftInset(), TopInset + getTopInset());
+   BottomRight.setValues(TopLeft.x()+getSize().x()-(LeftInset + RightInset)-getRightInset(), TopLeft.y()+getSize().y()-(TopInset + BottomInset)-getBottomInset());
 }
 
 void Container::setAllInsets(UInt32 inset)
