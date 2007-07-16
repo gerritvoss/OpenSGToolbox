@@ -36,28 +36,29 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGLIST_H_
-#define _OSGLIST_H_
+#ifndef _OSGDEFAULTLISTSELECTIONMODEL_H_
+#define _OSGDEFAULTLISTSELECTIONMODEL_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGListBase.h"
+#include "OSGDefaultListSelectionModelBase.h"
+#include "OSGListSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-class ListModel;
-class ListCellGenerator;
-class ListSelectionModel;
+/*! \brief DefaultListSelectionModel class. See \ref 
+           PageUserInterfaceDefaultListSelectionModel for a description.
+*/
 
-class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public DefaultListSelectionModelBase
+   , public ListSelectionModel
 {
   private:
 
-    typedef ListBase Inherited;
+    typedef DefaultListSelectionModelBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -78,59 +79,86 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr Graphics) const;
-   
-    void setModel(ListModel* Model);
-    void setCellGenerator(ListCellGenerator* CellGenerator);
-    void setSelectionModel(ListSelectionModel* SelectionModel);
+   virtual void 	addListSelectionListener(ListSelectionListenerPtr x);
 
-    ListModel* getModel(void) const;
-    ListCellGenerator* getCellGenerator(void) const;
-    ListSelectionModel* getSelectionModel(void) const;
+   virtual void 	addSelectionInterval(UInt32 index0, UInt32 index1);
+   
+   virtual void 	clearSelection(void);
+   
+   virtual UInt32 	getAnchorSelectionIndex(void) const;
+   
+   virtual UInt32 	getLeadSelectionIndex(void) const;
+   
+   virtual UInt32 	getMaxSelectionIndex(void) const;
+   
+   virtual UInt32 	getMinSelectionIndex(void) const;
+   
+   virtual Int32 	getSelectionMode(void) const;
+   
+   virtual bool 	getValueIsAdjusting(void) const;
+   
+   virtual void 	insertIndexInterval(UInt32 index, UInt32 length, bool before);
+   
+   virtual bool 	isSelectedIndex(UInt32 index) const;
+   
+   virtual bool 	isSelectionEmpty(void) const;
+   
+   virtual void 	removeIndexInterval(UInt32 index0, UInt32 index1);
+   
+   virtual void 	removeListSelectionListener(ListSelectionListenerPtr x);
+   
+   virtual void 	removeSelectionInterval(UInt32 index0, UInt32 index1);
+   
+   virtual void 	setAnchorSelectionIndex(UInt32 index);
+   
+   virtual void 	setLeadSelectionIndex(UInt32 index);
+   
+   virtual void 	setSelectionInterval(UInt32 index0, UInt32 index1);
+   
+   virtual void 	setSelectionMode(Int32 selectionMode);
+   
+   virtual void 	setValueIsAdjusting(bool valueIsAdjusting);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in ListBase.
+    // Variables should all be in DefaultListSelectionModelBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    List(void);
-    List(const List &source);
+    DefaultListSelectionModel(void);
+    DefaultListSelectionModel(const DefaultListSelectionModel &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~List(void); 
+    virtual ~DefaultListSelectionModel(void); 
 
     /*! \}                                                                 */
-    ListModel *_Model;
-    ListCellGenerator *_CellGenerator;
-    ListSelectionModel *_SelectionModel;
-
+    
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class ListBase;
+    friend class DefaultListSelectionModelBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const List &source);
+    void operator =(const DefaultListSelectionModel &source);
 };
 
-typedef List *ListP;
+typedef DefaultListSelectionModel *DefaultListSelectionModelP;
 
 OSG_END_NAMESPACE
 
-#include "OSGListBase.inl"
-#include "OSGList.inl"
+#include "OSGDefaultListSelectionModelBase.inl"
+#include "OSGDefaultListSelectionModel.inl"
 
-#define OSGLIST_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGDEFAULTLISTSELECTIONMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGLIST_H_ */
+#endif /* _OSGDEFAULTLISTSELECTIONMODEL_H_ */

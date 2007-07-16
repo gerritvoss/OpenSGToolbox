@@ -387,6 +387,69 @@
 				<Filter
 					Name="List">
 					<File
+						RelativePath="..\..\src\Component\List\OSGAbstractListModel.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGAbstractListModel.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGAbstractListModel.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGAbstractListModelBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGAbstractListModelBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGAbstractListModelBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGAbstractListModelFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGDefaultListCellGenerator.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGDefaultListCellGenerator.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGDefaultListCellGenerator.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGDefaultListCellGeneratorBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGDefaultListCellGeneratorBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGDefaultListCellGeneratorBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGDefaultListCellGeneratorFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModel.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModel.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModel.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModelBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModelBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModelBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModelFields.h">
+					</File>
+					<File
 						RelativePath="..\..\src\Component\List\OSGList.cpp">
 					</File>
 					<File

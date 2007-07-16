@@ -40,49 +40,9 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGListModel.h"
-#include "OSGListCellGenerator.h"
-#include "OSGListSelectionModel.h"
-
 OSG_BEGIN_NAMESPACE
-
-inline
-void List::setModel(ListModel* Model)
-{
-   _Model = Model;
-}
-
-inline
-void List::setCellGenerator(ListCellGenerator* CellGenerator)
-{
-   _CellGenerator = CellGenerator;
-}
-
-inline
-void List::setSelectionModel(ListSelectionModel* SelectionModel)
-{
-   _SelectionModel = SelectionModel;
-}
-
-inline
-ListModel* List::getModel(void) const
-{
-   return _Model;
-}
-
-inline
-ListCellGenerator* List::getCellGenerator(void) const
-{
-   return _CellGenerator;
-}
-
-inline
-ListSelectionModel* List::getSelectionModel(void) const
-{
-   return _SelectionModel;
-}
 
 OSG_END_NAMESPACE
 
-#define OSGLIST_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+#define OSGDEFAULTLISTCELLGENERATOR_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

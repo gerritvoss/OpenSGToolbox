@@ -36,28 +36,29 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGLIST_H_
-#define _OSGLIST_H_
+#ifndef _OSGABSTRACTLISTMODEL_H_
+#define _OSGABSTRACTLISTMODEL_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGListBase.h"
+#include "OSGAbstractListModelBase.h"
+#include "OSGListModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-class ListModel;
-class ListCellGenerator;
-class ListSelectionModel;
+/*! \brief AbstractListModel class. See \ref 
+           PageUserInterfaceAbstractListModel for a description.
+*/
 
-class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase
+class OSG_USERINTERFACELIB_DLLMAPPING AbstractListModel : public AbstractListModelBase
+   , public ListModel
 {
   private:
 
-    typedef ListBase Inherited;
+    typedef AbstractListModelBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -78,59 +79,52 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr Graphics) const;
-   
-    void setModel(ListModel* Model);
-    void setCellGenerator(ListCellGenerator* CellGenerator);
-    void setSelectionModel(ListSelectionModel* SelectionModel);
+	virtual UInt32 getSize(void);
+	virtual Field* getElementAt(UInt32 index);
 
-    ListModel* getModel(void) const;
-    ListCellGenerator* getCellGenerator(void) const;
-    ListSelectionModel* getSelectionModel(void) const;
+	virtual void addListDataListener(ListDataListenerPtr l);
+	virtual void removeListDataListener(ListDataListenerPtr l);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in ListBase.
+    // Variables should all be in AbstractListModelBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    List(void);
-    List(const List &source);
+    AbstractListModel(void);
+    AbstractListModel(const AbstractListModel &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~List(void); 
+    virtual ~AbstractListModel(void); 
 
     /*! \}                                                                 */
-    ListModel *_Model;
-    ListCellGenerator *_CellGenerator;
-    ListSelectionModel *_SelectionModel;
-
+    
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class ListBase;
+    friend class AbstractListModelBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const List &source);
+    void operator =(const AbstractListModel &source);
 };
 
-typedef List *ListP;
+typedef AbstractListModel *AbstractListModelP;
 
 OSG_END_NAMESPACE
 
-#include "OSGListBase.inl"
-#include "OSGList.inl"
+#include "OSGAbstractListModelBase.inl"
+#include "OSGAbstractListModel.inl"
 
-#define OSGLIST_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGABSTRACTLISTMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGLIST_H_ */
+#endif /* _OSGABSTRACTLISTMODEL_H_ */

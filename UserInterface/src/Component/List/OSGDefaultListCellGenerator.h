@@ -36,28 +36,29 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGLIST_H_
-#define _OSGLIST_H_
+#ifndef _OSGDEFAULTLISTCELLGENERATOR_H_
+#define _OSGDEFAULTLISTCELLGENERATOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGListBase.h"
+#include "OSGDefaultListCellGeneratorBase.h"
+#include "OSGListCellGenerator.h"
 
 OSG_BEGIN_NAMESPACE
 
-class ListModel;
-class ListCellGenerator;
-class ListSelectionModel;
+/*! \brief DefaultListCellGenerator class. See \ref 
+           PageUserInterfaceDefaultListCellGenerator for a description.
+*/
 
-class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultListCellGenerator : public DefaultListCellGeneratorBase
+   , public ListCellGenerator
 {
   private:
 
-    typedef ListBase Inherited;
+    typedef DefaultListCellGeneratorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -78,59 +79,49 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr Graphics) const;
-   
-    void setModel(ListModel* Model);
-    void setCellGenerator(ListCellGenerator* CellGenerator);
-    void setSelectionModel(ListSelectionModel* SelectionModel);
+    virtual ComponentPtr getListCellGeneratorComponent(ListPtr list, Field* value, UInt32 index, bool isSelected, bool cellHasFocus);
 
-    ListModel* getModel(void) const;
-    ListCellGenerator* getCellGenerator(void) const;
-    ListSelectionModel* getSelectionModel(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in ListBase.
+    // Variables should all be in DefaultListCellGeneratorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    List(void);
-    List(const List &source);
+    DefaultListCellGenerator(void);
+    DefaultListCellGenerator(const DefaultListCellGenerator &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~List(void); 
+    virtual ~DefaultListCellGenerator(void); 
 
     /*! \}                                                                 */
-    ListModel *_Model;
-    ListCellGenerator *_CellGenerator;
-    ListSelectionModel *_SelectionModel;
-
+    
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class ListBase;
+    friend class DefaultListCellGeneratorBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const List &source);
+    void operator =(const DefaultListCellGenerator &source);
 };
 
-typedef List *ListP;
+typedef DefaultListCellGenerator *DefaultListCellGeneratorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGListBase.inl"
-#include "OSGList.inl"
+#include "OSGDefaultListCellGeneratorBase.inl"
+#include "OSGDefaultListCellGenerator.inl"
 
-#define OSGLIST_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGDEFAULTLISTCELLGENERATOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGLIST_H_ */
+#endif /* _OSGDEFAULTLISTCELLGENERATOR_H_ */
