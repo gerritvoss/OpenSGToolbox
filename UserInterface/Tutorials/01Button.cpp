@@ -105,22 +105,16 @@ int main(int argc, char **argv)
 	******************************************************/
 
 	beginEditCP(button, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
-	    // The following 4 function calls are not specific to Button, 
+	    // The following 3 function calls are not specific to Button, 
 		// but can be used with any Component
 
-		// Set the Minimum and Maximum size that the Component can ever have
+		// Determine the Minimum and Maximum size that the Component can ever have
 		// due to various Layouts (some change the size of the Components within
 		// the layouts)
 		button->setMinSize( Vec2s (50, 25) );
 		button->setMaxSize( Vec2s (200, 100) );
 
-		// Set an absolute size for the Component, which will
-		// always be the size regardless.  It is possible to play around with 
-		// changing the setSize to a much larger value, with the
-		// display size staying the same.  By commenting out the
-		// setPreferredSize line, this will no longer occur.  Note
-		// that even though the Button size is 200 by 50, it currently
-		// displays with the PreferredSize, of 100 by 50.
+		// Determine what size the Button will display at
 		button->setPreferredSize( Vec2s (100, 50) );
 		//button->setEnabled(false);
 	
@@ -128,8 +122,8 @@ int main(int argc, char **argv)
 		// The following functions are specific to Button
 		button->setText("Button 1");
 		//button->setFont(fonts);
-		button->setVerticalAlignment(VERTICAL_ALIGNMENT);
-		// button->setHorizontalAlignment(HORIZONTAL_ALIGNMENT);
+		//button->setVerticalAlignment(VERTICAL_ALIGNMENT);
+		button->setHorizontalAlignment(HORIZONTAL_ALIGNMENT);
     endEditCP(button, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
 
 	// Create The Main Frame

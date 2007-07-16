@@ -129,7 +129,7 @@ int main(int argc, char **argv)
 	******************************************************/
 	GridLayoutPtr MainFrameLayout = osg::GridLayout::create();
 
-	beginEditCP(MainFrameLayout);
+	beginEditCP(MainFrameLayout, GridLayout::RowsFieldMask | GridLayout::ColumnsFieldMask | GridLayout::HorizontalGapFieldMask | GridLayout::VerticalGapFieldMask);
 		// Determine the number of Rows and Columns
 		// in the Grid Layout
 		MainFrameLayout->setRows(3);
@@ -138,13 +138,14 @@ int main(int argc, char **argv)
 		// gaps in the Grid Layout
 		MainFrameLayout->setHorizontalGap(4);
 		MainFrameLayout->setVerticalGap(4);
-	endEditCP(MainFrameLayout); 
+	endEditCP(MainFrameLayout, GridLayout::RowsFieldMask | GridLayout::ColumnsFieldMask | GridLayout::HorizontalGapFieldMask | GridLayout::VerticalGapFieldMask);
 
 	
 
 	// Edit Buttons to change their sizes
 	// Note that as with Box Layout, unless a setMaxSize
-	// option is specified, the 
+	// option is specified, the components are resized
+	// to fit the grid "box" they are in
 	beginEditCP(button, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
 		button->setPreferredSize( Vec2s(50,50) );
 		button->setMaxSize( Vec2s(50,50) );

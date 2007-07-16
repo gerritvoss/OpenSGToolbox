@@ -99,6 +99,15 @@ int main(int argc, char **argv)
 	ButtonPtr button5 = osg::Button::create();
 	ButtonPtr button6 = osg::Button::create();
 
+	//Change some of their sizes
+	beginEditCP(button, Component::PreferredSizeFieldMask);
+		button->setPreferredSize( Vec2s (200, 50) );
+	endEditCP(button, Component::PreferredSizeFieldMask);
+
+	beginEditCP(button4, Component::PreferredSizeFieldMask);
+		button4->setPreferredSize( Vec2s (50, 50) );
+	endEditCP(button4, Component::PreferredSizeFieldMask);
+
 	/******************************************************
 
 		Create Flow Layout.  Flow Layout arranges objects
@@ -107,8 +116,12 @@ int main(int argc, char **argv)
 		line, horizontal line, or multiple lines.  Objects 
 		fill from the upper left hand corner of the Frame
 		across, then down (when the line becomes full) while
-		arranged Vertically, or from the upper left hand
-		corner across, starting a new column when necessary .
+		arranged Horizontally, or from the upper left hand
+		corner across when arranged Vertically, starting a 
+		new column when necessary.
+
+		Alignment of the layout and objects within the layout
+		can be changed.
 
 		You can experiment with this by changing the window 
 		size, changing the orientation,or changing the size 
@@ -122,13 +135,28 @@ int main(int argc, char **argv)
 	******************************************************/
 	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
 	// Determine whether the Layout is Horizontal (HORIZONTAL_ALIGNMENT) or
-	// Vertical (VERTICAL_ALIGNMENT) and determine gap size
+	// Vertical (VERTICAL_ALIGNMENT) and determine gap size, and determine
+	// alignment along Horizontal and Vertical axis 
 	beginEditCP(MainFrameLayout);
 		// Determine the Horizontal and Vertical gaps between objects.
 		// These gaps are absolute, and measured in pixels.
 		MainFrameLayout->setHorizontalGap(3);
 		MainFrameLayout->setVerticalGap(3);
+		// Determine whether layout is arranged Vertically (VERTICAL_ALIGNMENT)
+		// or Horizontally (HORIZONTAL_ALIGNMENT)
 		MainFrameLayout->setAlignment(VERTICAL_ALIGNMENT);
+
+		// The options for the following two functions are:
+		// AXIS_MAX_ALIGNMENT, AXIS_CENTER_ALIGNMENT, and
+		// AXIS_MIN_ALIGNMENT.
+
+		// Determine alignment of entire layout; MAX puts it to the buttom (for vertical
+		// overall layout) or right (horizontal overall layout), CENTER centers it, and
+		// MIN does the opposite of MAX
+		MainFrameLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
+
+		// Determine alignment of Components within layout
+		MainFrameLayout->setMinorAxisAlignment(AXIS_MAX_ALIGNMENT);
 		// MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
 	endEditCP(MainFrameLayout);
 	

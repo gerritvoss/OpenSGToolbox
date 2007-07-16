@@ -102,35 +102,22 @@ int main(int argc, char **argv)
 
 	/******************************************************
 
-		Create Grid Layout.  Grid Layout arranges the 
-		objects in a grid, with user specified rows, 
-		columns, and gap size (conceptually imagine that
-		an invisible grid is drawn, and components are 
-		placed into that grid one per "box).
+		Create Overlay Layout.  This layout simply
+		places all components within it on top of
+		each other.
 
-		Objects within the Grid Layout fill from left
-		to right, and top to bottom, filling in each space
-		sequentially.  The Grid Layout "boxes" are each the 
-		same size as the largest object within the Layout. 
-		
-		Smaller objects are automatically resized to fit 
-		this size unless they have Max/Min sizes assigned
-		(similar to Box Layout).
-
-		You can experiment with this by changing the size of 
-		the Buttons as shown in 01Button, editing the Max/Min
-		size of the Buttons, or adding more Buttons to the 
-		view.
-
-		Note that if the Frame is too small, the objects will 
-		appear out of the Frame background.
+		They are placed in reverse order of how they
+		are added to the MainFrame (components added
+		first are rendered last, those added last are
+		rendered first).
 
 
 	******************************************************/
 	OverlayLayoutPtr MainFrameLayout = osg::OverlayLayout::create();
 
+	// Overlay Layout has no options!
 	beginEditCP(MainFrameLayout);
-
+		// NOTHING : )
 	endEditCP(MainFrameLayout); 
 
 	

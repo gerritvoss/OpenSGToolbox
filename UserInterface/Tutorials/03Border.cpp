@@ -4,8 +4,8 @@
 // borders offered by the OSG User Interface 
 // library and how to modify their features.
 // 
-// Includes: BevelBorder, CompoundBorder, EtchedBorder, 
-// LineBorder, MatteBorder
+// Includes: BevelBorder, CompoundBorder, EmptyBorder
+// EtchedBorder, LineBorder, MatteBorder
 
 // GLUT is used for window handling
 #include <OpenSG/OSGGLUT.h>
@@ -42,6 +42,7 @@
 #include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGBevelBorder.h>
 #include <OpenSG/UserInterface/OSGEtchedBorder.h>
+#include <OpenSG/UserInterface/OSGEmptyBorder.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
 
 // Activate the OpenSG namespace
@@ -98,8 +99,8 @@ int main(int argc, char **argv)
 		each attribute to each Border.  Note
 		that the LookAndFeelManager automatically
 		assigns default settings to Borders.
-		Each attribute will be set in this 
-		tutorial.
+		Each attribute will be set individually
+		in this	tutorial.
 
 	******************************************************/
 	BevelBorderPtr bevelBorder = osg::BevelBorder::create();
@@ -107,6 +108,7 @@ int main(int argc, char **argv)
 	EtchedBorderPtr etchedBorder = osg::EtchedBorder::create();
 	LineBorderPtr lineBorder = osg::LineBorder::create();
 	MatteBorderPtr matteBorder = osg::MatteBorder::create();
+	EmptyBorderPtr emptyBorder = osg::EmptyBorder::create();
 	
 	// Edit each Border Component and set all attributes
 	
@@ -135,7 +137,19 @@ int main(int argc, char **argv)
 		compoundBorder->setInnerBorder(bevelBorder);
 		compoundBorder->setOuterBorder(matteBorder);
 	endEditCP(compoundBorder, CompoundBorder::InnerBorderFieldMask | CompoundBorder::OuterBorderFieldMask);
-		
+	
+	// The EmptyBorder does not have a visible border, however 
+	// the Border still is a part of the component with its 
+	// assigned dimensions (note how this causes the button
+	// to appear spaced out from the other buttons)
+	beginEditCP(emptyBorder, EmptyBorder::LeftWidthFieldMask | EmptyBorder::TopWidthFieldMask | EmptyBorder::RightWidthFieldMask | EmptyBorder::BottomWidthFieldMask);
+		// Determine the four Edge Widths
+		emptyBorder->setBottomWidth(5);
+		emptyBorder->setLeftWidth(5);
+		emptyBorder->setRightWidth(30);
+		emptyBorder->setTopWidth(30);
+	endEditCP(emptyBorder, EmptyBorder::LeftWidthFieldMask | EmptyBorder::TopWidthFieldMask | EmptyBorder::RightWidthFieldMask | EmptyBorder::BottomWidthFieldMask);
+	
 	// The EtchedBorder causes the Button to appear raised
 	// or indented into the screen similar to the BevelBorder
 	// but in a different style
@@ -183,6 +197,7 @@ int main(int argc, char **argv)
 	// Create Button components
 	ButtonPtr bevelButton = osg::Button::create();
 	ButtonPtr compoundButton = osg::Button::create();
+	ButtonPtr emptyButton = osg::Button::create();
 	ButtonPtr etchedButton = osg::Button::create();
 	ButtonPtr lineButton = osg::Button::create();
 	ButtonPtr matteButton = osg::Button::create();
@@ -200,6 +215,12 @@ int main(int argc, char **argv)
 		compoundButton->setBorder(compoundBorder);
 	endEditCP  (compoundButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 
+	beginEditCP(emptyButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+		emptyButton->setPreferredSize(Vec2s(100,50));
+		emptyButton->setText("Empty Border");
+		emptyButton->setBorder(emptyBorder);
+	endEditCP  (emptyButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+	
 	beginEditCP(etchedButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 		etchedButton->setPreferredSize(Vec2s(100,50));
 		etchedButton->setText("Etched Border");
@@ -232,6 +253,7 @@ int main(int argc, char **argv)
 	   MainFrame->getChildren().addValue(bevelButton);
 	   MainFrame->getChildren().addValue(compoundButton);
 	   MainFrame->getChildren().addValue(etchedButton);
+	   MainFrame->getChildren().addValue(emptyButton);
 	   MainFrame->getChildren().addValue(lineButton);
 	   MainFrame->getChildren().addValue(matteButton);
 	   MainFrame->setLayout(MainFrameLayout);

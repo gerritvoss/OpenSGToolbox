@@ -129,14 +129,14 @@ int main(int argc, char **argv)
 
 	// Determine whether the Layout is Horizontal (HORIZONTAL_ALIGNMENT) or
 	// Vertical (VERTICAL_ALIGNMENT)
-	beginEditCP(MainFrameLayout);
+	beginEditCP(MainFrameLayout, BoxLayout::AlignmentFieldMask);
 		MainFrameLayout->setAlignment(VERTICAL_ALIGNMENT);
 		// MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
-	endEditCP(MainFrameLayout); 
+	endEditCP(MainFrameLayout, BoxLayout::AlignmentFieldMask); 
 	
 
 	// Edit two different Buttons
-	beginEditCP(button, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::SizeFieldMask);
+	beginEditCP(button, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
 		button->setPreferredSize( Vec2s(50,50) );
 		// Set button to have a MaxSize.  This is never exceeded, therefore
 		// even in BoxLayout it will not change to have a width of greater than
@@ -144,17 +144,17 @@ int main(int argc, char **argv)
 		// expanded to match the size of the largest object in the BoxLayout;
 		// in this case button2.
 		button->setMaxSize( Vec2s (50, 50) );
-	endEditCP(button, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::SizeFieldMask);
+	endEditCP(button, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
 
-	beginEditCP(button2, Button::PreferredSizeFieldMask | Button::SizeFieldMask);
+	beginEditCP(button2, Button::PreferredSizeFieldMask);
 		// Edit the PreferredSize of button2.  Because this is the largest
 		// PreferredSize, all Buttons will have the same width unless they
 		// have MaxSize limits (see above).  If setPreferredSize is commented, 
 		// and setSize uncommented, note that button2 will no longer have the same
 		// display size.
-		// button2->setPreferredSize( Vec2s(200,100) );
-		button2->setSize( Vec2s(200,100) );
-	endEditCP(button2, Button::PreferredSizeFieldMask | Button::SizeFieldMask);
+		button2->setPreferredSize( Vec2s(200,100) );
+		
+	endEditCP(button2, Button::PreferredSizeFieldMask);
 
  	// Create The Main Frame
 
