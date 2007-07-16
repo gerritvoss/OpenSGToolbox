@@ -81,9 +81,9 @@ void LineBorder::draw(const GraphicsPtr g, const Int16 x, const Int16 y , const 
 	//Top
 	g->drawRect(Pnt2s(x,y), Pnt2s(x+Width, y+getWidth()), getColor(), Opacity);
 	//Left
-	g->drawRect(Pnt2s(x,y+getWidth()), Pnt2s(x+getWidth(), y+getWidth()+Height-getWidth()), getColor(), Opacity);
+	g->drawRect(Pnt2s(x,y+getWidth()), Pnt2s(x+getWidth(), y+Height-getWidth()), getColor(), Opacity);
 	//Right
-	g->drawRect(Pnt2s(x+Width-getWidth(), y+getWidth()), Pnt2s(x+Width, y+getWidth()+Height-getWidth()), getColor(), Opacity);
+	g->drawRect(Pnt2s(x+Width-getWidth(), y+getWidth()), Pnt2s(x+Width, y+Height-getWidth()), getColor(), Opacity);
 	//Bottom
 	g->drawRect(Pnt2s(x, y+Height-getWidth()), Pnt2s(x+Width, y+Height), getColor(), Opacity);
 	
