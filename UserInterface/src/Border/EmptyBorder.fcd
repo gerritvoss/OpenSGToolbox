@@ -3,20 +3,22 @@
 <FieldContainer
 	name="EmptyBorder"
 	parent="Border"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
-UI Empty Border.
-A Empty border that takes up space on each side.
+UI Empty Border. A Empty border that takes up space on each side.
 	<Field
 		name="LeftWidth"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="0"
+		access="public"
 	>
 	</Field>
 	<Field
@@ -24,8 +26,8 @@ A Empty border that takes up space on each side.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="0"
+		access="public"
 	>
 	</Field>
 	<Field
@@ -33,8 +35,8 @@ A Empty border that takes up space on each side.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="0"
+		access="public"
 	>
 	</Field>
 	<Field
@@ -42,8 +44,8 @@ A Empty border that takes up space on each side.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="0"
+		access="public"
 	>
 	</Field>
 </FieldContainer>

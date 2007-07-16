@@ -42,14 +42,15 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGUIForegroundBase.h"
 #include "Util/OSGUIDefines.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API UIForeground : public UIForegroundBase
+class OSG_USERINTERFACELIB_DLLMAPPING UIForeground : public UIForegroundBase
 {
   private:
 

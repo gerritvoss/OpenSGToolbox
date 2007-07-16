@@ -3,29 +3,31 @@
 <FieldContainer
 	name="Container"
 	parent="Component"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="abstract"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 A UI Container.
-<Field
+	<Field
 		name="Children"
 		type="ComponentPtr"
 		cardinality="multi"
 		visibility="external"
+		header="Component/OSGComponent.h"
 		access="public"
-      header="Component/OSGComponent.h"
 	>
 	</Field>
-   <Field
+	<Field
 		name="Layout"
 		type="LayoutPtr"
 		cardinality="single"
 		visibility="external"
+		header="Layout/OSGLayout.h"
 		access="public"
-      header="Layout/OSGLayout.h"
 	>
 	</Field>
 </FieldContainer>
-

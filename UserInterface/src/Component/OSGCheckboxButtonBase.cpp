@@ -230,8 +230,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<CheckboxButtonPtr>::_type("CheckboxButtonPtr", "ToggleButtonPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(CheckboxButtonPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(CheckboxButtonPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(CheckboxButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(CheckboxButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

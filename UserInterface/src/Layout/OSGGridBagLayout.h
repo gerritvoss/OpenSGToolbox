@@ -42,13 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGGridBagLayoutBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API GridBagLayout : public GridBagLayoutBase
+class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayout : public GridBagLayoutBase
 {
   private:
 

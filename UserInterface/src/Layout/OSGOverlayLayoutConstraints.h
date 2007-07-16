@@ -42,13 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGOverlayLayoutConstraintsBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API OverlayLayoutConstraints : public OverlayLayoutConstraintsBase
+class OSG_USERINTERFACELIB_DLLMAPPING OverlayLayoutConstraints : public OverlayLayoutConstraintsBase
 {
   private:
 

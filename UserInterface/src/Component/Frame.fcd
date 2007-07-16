@@ -3,12 +3,13 @@
 <FieldContainer
 	name="Frame"
 	parent="Container"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
 	decoratable="false"
-	useLocalIncludes="false"
+	useLocalIncludes="true"
 >
 A UI Frame.
 	<Field

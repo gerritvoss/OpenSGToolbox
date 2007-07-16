@@ -3,10 +3,13 @@
 <FieldContainer
 	name="BorderLayoutConstraints"
 	parent="LayoutConstraints"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 A UI BorderLayoutConstraints.
 	<Field
@@ -14,9 +17,9 @@ A UI BorderLayoutConstraints.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="BorderLayoutConstraints::BORDER_CENTER"
 		defaultHeader="Layout/OSGBorderLayoutConstraints.h"
+		access="public"
 	>
 	</Field>
 </FieldContainer>

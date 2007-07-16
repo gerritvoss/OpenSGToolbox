@@ -375,8 +375,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<GridLayoutPtr>::_type("GridLayoutPtr", "LayoutPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(GridLayoutPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(GridLayoutPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(GridLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(GridLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

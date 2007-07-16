@@ -42,13 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGMatteBorderBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API MatteBorder : public MatteBorderBase
+class OSG_USERINTERFACELIB_DLLMAPPING MatteBorder : public MatteBorderBase
 {
   private:
 

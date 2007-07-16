@@ -3,10 +3,13 @@
 <FieldContainer
 	name="OverlayLayout"
 	parent="Layout"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 A UI OverlayLayout.
 </FieldContainer>

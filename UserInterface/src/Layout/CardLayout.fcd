@@ -3,10 +3,13 @@
 <FieldContainer
 	name="CardLayout"
 	parent="Layout"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 A UI CardLayout.
 	<Field
@@ -14,8 +17,8 @@ A UI CardLayout.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="0"
+		access="public"
 	>
 	</Field>
 </FieldContainer>

@@ -23,7 +23,7 @@ void convertTopRightToCenteredLine(const Pnt2s& Point1, const Pnt2s& Point2, con
    ResultPoint2 = Point2 + Vec2s(DirOffset.x(),DirOffset.y());
 }
 
-Pnt2s OSG_USER_INTERFACE_FUNC_API calculateAlignment(const Pnt2s& Position1, const Vec2s& Size1, const Vec2s& Size2, const UInt32& VAlign, const UInt32& HAlign)
+Pnt2s OSG_USERINTERFACELIB_DLLMAPPING calculateAlignment(const Pnt2s& Position1, const Vec2s& Size1, const Vec2s& Size2, const UInt32& VAlign, const UInt32& HAlign)
 {
 	Pnt2s AlignedPosition;
 	switch(VAlign)

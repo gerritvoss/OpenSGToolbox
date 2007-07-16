@@ -221,8 +221,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<BorderPtr>::_type("BorderPtr", "FieldContainerPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(BorderPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(BorderPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(BorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(BorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

@@ -3,19 +3,22 @@
 <FieldContainer
 	name="Graphics"
 	parent="AttachmentContainer"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="abstract"
 	systemcomponent="false"
 	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 A UI Graphics Interface.
-   <Field
+	<Field
 		name="Opacity"
 		type="Real32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="1.0"
+		access="public"
 	>
 	</Field>
 </FieldContainer>

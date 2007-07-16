@@ -42,13 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGAbsoluteLayoutConstraintsBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API AbsoluteLayoutConstraints : public AbsoluteLayoutConstraintsBase
+class OSG_USERINTERFACELIB_DLLMAPPING AbsoluteLayoutConstraints : public AbsoluteLayoutConstraintsBase
 {
   private:
 

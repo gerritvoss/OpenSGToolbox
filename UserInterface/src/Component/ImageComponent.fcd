@@ -3,10 +3,13 @@
 <FieldContainer
 	name="ImageComponent"
 	parent="Component"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 A UI Button.
 	<Field
@@ -22,9 +25,9 @@ A UI Button.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="SCALE_NONE"
 		defaultHeader="Util/OSGUIDefines.h"
+		access="public"
 	>
 	</Field>
 	<Field
@@ -32,8 +35,8 @@ A UI Button.
 		type="Vec2s"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="1,1"
+		access="public"
 	>
 	</Field>
 	<Field
@@ -41,9 +44,9 @@ A UI Button.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="VERTICAL_CENTER"
 		defaultHeader="Util/OSGUIDefines.h"
+		access="public"
 	>
 	</Field>
 	<Field
@@ -51,9 +54,9 @@ A UI Button.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="HORIZONTAL_CENTER"
 		defaultHeader="Util/OSGUIDefines.h"
+		access="public"
 	>
 	</Field>
 </FieldContainer>

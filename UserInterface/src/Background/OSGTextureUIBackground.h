@@ -42,13 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGTextureUIBackgroundBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API TextureUIBackground : public TextureUIBackgroundBase
+class OSG_USERINTERFACELIB_DLLMAPPING TextureUIBackground : public TextureUIBackgroundBase
 {
   private:
 

@@ -42,13 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGLookAndFeelBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API LookAndFeel : public LookAndFeelBase
+class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeel : public LookAndFeelBase
 {
   private:
 

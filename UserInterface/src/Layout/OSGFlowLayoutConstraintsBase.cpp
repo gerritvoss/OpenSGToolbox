@@ -230,8 +230,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<FlowLayoutConstraintsPtr>::_type("FlowLayoutConstraintsPtr", "LayoutConstraintsPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(FlowLayoutConstraintsPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(FlowLayoutConstraintsPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(FlowLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(FlowLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

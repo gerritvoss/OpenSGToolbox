@@ -4,14 +4,15 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGLookAndFeel.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API LookAndFeelManager
+class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeelManager
 {
 public:
    static LookAndFeelManager* the(void);

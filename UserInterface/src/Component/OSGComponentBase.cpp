@@ -978,8 +978,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<ComponentPtr>::_type("ComponentPtr", "AttachmentContainerPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ComponentPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(ComponentPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(ComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(ComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

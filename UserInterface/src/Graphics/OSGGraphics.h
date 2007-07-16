@@ -43,7 +43,8 @@
 #endif
 
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/OSGMFVecTypes.h>
 #include <OpenSG/OSGDrawAction.h>
@@ -53,7 +54,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API Graphics : public GraphicsBase
+class OSG_USERINTERFACELIB_DLLMAPPING Graphics : public GraphicsBase
 {
   private:
 

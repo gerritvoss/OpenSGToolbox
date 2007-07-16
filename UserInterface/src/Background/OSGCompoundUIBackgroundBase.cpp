@@ -277,8 +277,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<CompoundUIBackgroundPtr>::_type("CompoundUIBackgroundPtr", "UIBackgroundPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(CompoundUIBackgroundPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(CompoundUIBackgroundPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(CompoundUIBackgroundPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(CompoundUIBackgroundPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

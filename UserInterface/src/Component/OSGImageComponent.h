@@ -42,7 +42,8 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGImageComponentBase.h"
 #include <OpenSG/OSGImage.h>
@@ -50,7 +51,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API ImageComponent : public ImageComponentBase
+class OSG_USERINTERFACELIB_DLLMAPPING ImageComponent : public ImageComponentBase
 {
   private:
 

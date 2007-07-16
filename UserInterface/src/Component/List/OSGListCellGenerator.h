@@ -43,7 +43,8 @@
 #pragma once
 #endif
  
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 #include "Component/OSGComponent.h"
 #include "OSGList.h"
 
@@ -51,7 +52,7 @@
 
 OSG_BEGIN_NAMESPACE
 	 
-class OSG_USER_INTERFACE_CLASS_API ListCellGenerator
+class OSG_USERINTERFACELIB_DLLMAPPING ListCellGenerator
 {
 private:
 protected:

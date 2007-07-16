@@ -54,10 +54,11 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/OSGAttachmentContainerFields.h>
 
@@ -73,6 +74,8 @@ typedef FCPtr<AttachmentContainerPtr, LayoutConstraints> LayoutConstraintsPtr;
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpUserInterfaceFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -102,12 +105,23 @@ struct FieldDataTraits<LayoutConstraintsPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpUserInterfaceFieldSingle */
+
 typedef SField<LayoutConstraintsPtr> SFLayoutConstraintsPtr;
 #endif
 
+#ifndef OSG_COMPILELAYOUTCONSTRAINTSINST
+OSG_DLLEXPORT_DECL1(SField, LayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpUserInterfaceFieldMulti */
+
 typedef MField<LayoutConstraintsPtr> MFLayoutConstraintsPtr;
+#endif
+
+#ifndef OSG_COMPILELAYOUTCONSTRAINTSINST
+OSG_DLLEXPORT_DECL1(MField, LayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE

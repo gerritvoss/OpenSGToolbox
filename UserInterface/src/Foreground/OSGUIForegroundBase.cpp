@@ -445,8 +445,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<UIForegroundPtr>::_type("UIForegroundPtr", "ForegroundPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(UIForegroundPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(UIForegroundPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(UIForegroundPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(UIForegroundPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

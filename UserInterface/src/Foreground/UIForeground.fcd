@@ -3,10 +3,13 @@
 <FieldContainer
 	name="UIForeground"
 	parent="Foreground"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 A Foreground for rendering a UI on.
 	<Field
@@ -14,8 +17,8 @@ A Foreground for rendering a UI on.
 		type="FramePtr"
 		cardinality="single"
 		visibility="external"
+		header="Component/OSGFrame.h"
 		access="public"
-      header="Component/OSGFrame.h"
 	>
 	</Field>
 	<Field
@@ -23,11 +26,10 @@ A Foreground for rendering a UI on.
 		type="GraphicsPtr"
 		cardinality="single"
 		visibility="external"
+		header="Graphics/OSGGraphics.h"
 		access="public"
-      header="Graphics/OSGGraphics.h"
 	>
 	</Field>
-   
 	<Field
 		name="FramePositionOffset"
 		type="Vec2s"
@@ -49,9 +51,9 @@ A Foreground for rendering a UI on.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="VERTICAL_CENTER"
 		defaultHeader="Util/OSGUIDefines.h"
+		access="public"
 	>
 	</Field>
 	<Field
@@ -59,9 +61,9 @@ A Foreground for rendering a UI on.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="HORIZONTAL_CENTER"
 		defaultHeader="Util/OSGUIDefines.h"
+		access="public"
 	>
 	</Field>
 </FieldContainer>

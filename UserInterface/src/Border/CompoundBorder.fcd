@@ -3,20 +3,22 @@
 <FieldContainer
 	name="CompoundBorder"
 	parent="Border"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
-UI Compound Border.
-A Compound Border made up of an inner border and outer border of any type.
+UI Compound Border. A Compound Border made up of an inner border and outer border of any type.
 	<Field
 		name="InnerBorder"
 		type="BorderPtr"
 		cardinality="single"
 		visibility="external"
+		header="Border/OSGBorder.h"
 		access="public"
-      header="Border/OSGBorder.h"
 	>
 	</Field>
 	<Field
@@ -24,8 +26,8 @@ A Compound Border made up of an inner border and outer border of any type.
 		type="BorderPtr"
 		cardinality="single"
 		visibility="external"
+		header="Border/OSGBorder.h"
 		access="public"
-      header="Border/OSGBorder.h"
 	>
 	</Field>
 </FieldContainer>

@@ -3,10 +3,13 @@
 <FieldContainer
 	name="DefaultLookAndFeel"
 	parent="LookAndFeel"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 UI Default LookAndFeel.
 </FieldContainer>

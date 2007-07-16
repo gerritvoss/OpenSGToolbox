@@ -3,12 +3,13 @@
 <FieldContainer
 	name="Font"
 	parent="FieldContainer"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="false"
+	useLocalIncludes="true"
 >
 UI Font.
 	<Field
@@ -61,9 +62,9 @@ UI Font.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="TextFace::STYLE_PLAIN"
 		defaultHeader="OpenSG/OSGTextFace.h"
+		access="public"
 	>
 	</Field>
 	<Field

@@ -221,8 +221,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<LayoutConstraintsPtr>::_type("LayoutConstraintsPtr", "AttachmentContainerPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(LayoutConstraintsPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(LayoutConstraintsPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(LayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(LayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

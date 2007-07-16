@@ -273,8 +273,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<TextureUIBackgroundPtr>::_type("TextureUIBackgroundPtr", "UIBackgroundPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(TextureUIBackgroundPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(TextureUIBackgroundPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(TextureUIBackgroundPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(TextureUIBackgroundPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

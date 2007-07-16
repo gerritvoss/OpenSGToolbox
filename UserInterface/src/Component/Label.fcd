@@ -3,10 +3,13 @@
 <FieldContainer
 	name="Label"
 	parent="Component"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 A UI Label.
 	<Field
@@ -14,8 +17,8 @@ A UI Label.
 		type="FontPtr"
 		cardinality="single"
 		visibility="external"
+		header="Text/OSGFont.h"
 		access="public"
-      header="Text/OSGFont.h"
 	>
 	</Field>
 	<Field
@@ -24,7 +27,6 @@ A UI Label.
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue=""
 	>
 	</Field>
 	<Field
@@ -32,9 +34,9 @@ A UI Label.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="VERTICAL_CENTER"
 		defaultHeader="Util/OSGUIDefines.h"
+		access="public"
 	>
 	</Field>
 	<Field
@@ -42,9 +44,9 @@ A UI Label.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="HORIZONTAL_CENTER"
 		defaultHeader="Util/OSGUIDefines.h"
+		access="public"
 	>
 	</Field>
 </FieldContainer>

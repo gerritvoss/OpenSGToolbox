@@ -3,19 +3,22 @@
 <FieldContainer
 	name="AbsoluteLayoutConstraints"
 	parent="LayoutConstraints"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 A UI AbsoluteLayoutConstraints.
-<Field
+	<Field
 		name="Position"
 		type="Pnt2s"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="0,0"
+		access="public"
 	>
 	</Field>
 </FieldContainer>

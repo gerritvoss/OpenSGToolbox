@@ -58,7 +58,8 @@
 #endif
 
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -77,7 +78,7 @@ class BinaryDataHandler;
 
 //! \brief OverlayLayoutConstraints Base Class.
 
-class OSG_USER_INTERFACE_CLASS_API OverlayLayoutConstraintsBase : public LayoutConstraints
+class OSG_USERINTERFACELIB_DLLMAPPING OverlayLayoutConstraintsBase : public LayoutConstraints
 {
   private:
 

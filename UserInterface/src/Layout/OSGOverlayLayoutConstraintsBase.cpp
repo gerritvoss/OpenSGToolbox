@@ -273,8 +273,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<OverlayLayoutConstraintsPtr>::_type("OverlayLayoutConstraintsPtr", "LayoutConstraintsPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(OverlayLayoutConstraintsPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(OverlayLayoutConstraintsPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(OverlayLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(OverlayLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

@@ -30,13 +30,14 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/Input/OSGEvent.h>
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API ListDataEvent : public Event
+class OSG_USERINTERFACELIB_DLLMAPPING ListDataEvent : public Event
 {
     /*=========================  PUBLIC  ===============================*/
   public:

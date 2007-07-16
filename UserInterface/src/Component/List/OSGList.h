@@ -42,7 +42,8 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGListBase.h"
 #include "OSGListModel.h"
@@ -51,7 +52,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API List : public ListBase
+class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase
 {
   private:
 

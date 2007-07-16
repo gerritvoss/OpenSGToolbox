@@ -443,8 +443,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<BevelBorderPtr>::_type("BevelBorderPtr", "BorderPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(BevelBorderPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(BevelBorderPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(BevelBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(BevelBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

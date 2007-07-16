@@ -230,8 +230,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<Graphics2DPtr>::_type("Graphics2DPtr", "GraphicsPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(Graphics2DPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(Graphics2DPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(Graphics2DPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(Graphics2DPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

@@ -412,8 +412,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<FlowLayoutPtr>::_type("FlowLayoutPtr", "LayoutPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(FlowLayoutPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(FlowLayoutPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(FlowLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(FlowLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

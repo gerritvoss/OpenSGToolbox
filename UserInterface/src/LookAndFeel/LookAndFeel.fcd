@@ -3,19 +3,22 @@
 <FieldContainer
 	name="LookAndFeel"
 	parent="FieldContainer"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="abstract"
 	systemcomponent="false"
 	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 UI LookAndFeel Interface.
-<Field
+	<Field
 		name="Prototypes"
 		type="ComponentPtr"
 		cardinality="multi"
 		visibility="external"
+		header="Component/OSGComponent.h"
 		access="protected"
-      header="Component/OSGComponent.h"
 	>
 	</Field>
 </FieldContainer>

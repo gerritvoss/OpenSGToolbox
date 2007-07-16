@@ -3,21 +3,22 @@
 <FieldContainer
 	name="MatteBorder"
 	parent="Border"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
-UI Matte Border.
-Creates a matte-look border using a solid color or Material.
-(The difference between this border and a line border is that you can specify the individual border dimensions.)
+UI Matte Border. Creates a matte-look border using a solid color or Material. (The difference between this border and a line border is that you can specify the individual border dimensions.)
 	<Field
 		name="LeftWidth"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="1"
+		access="public"
 	>
 	</Field>
 	<Field
@@ -25,8 +26,8 @@ Creates a matte-look border using a solid color or Material.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="1"
+		access="public"
 	>
 	</Field>
 	<Field
@@ -34,8 +35,8 @@ Creates a matte-look border using a solid color or Material.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="1"
+		access="public"
 	>
 	</Field>
 	<Field
@@ -43,8 +44,8 @@ Creates a matte-look border using a solid color or Material.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="1"
+		access="public"
 	>
 	</Field>
 	<Field
@@ -52,8 +53,8 @@ Creates a matte-look border using a solid color or Material.
 		type="Color4f"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="0.0,0.0,0.0,1.0"
+		access="public"
 	>
 	</Field>
 	<Field

@@ -58,7 +58,8 @@
 #endif
 
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -80,7 +81,7 @@ class BinaryDataHandler;
 
 //! \brief Label Base Class.
 
-class OSG_USER_INTERFACE_CLASS_API LabelBase : public Component
+class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public Component
 {
   private:
 

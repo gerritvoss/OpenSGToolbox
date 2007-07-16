@@ -264,8 +264,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<GraphicsPtr>::_type("GraphicsPtr", "AttachmentContainerPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(GraphicsPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(GraphicsPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(GraphicsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(GraphicsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

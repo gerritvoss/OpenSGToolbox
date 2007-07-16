@@ -221,8 +221,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<LayoutPtr>::_type("LayoutPtr", "AttachmentContainerPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(LayoutPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(LayoutPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(LayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(LayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

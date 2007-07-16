@@ -42,13 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGGraphics2DBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API Graphics2D : public Graphics2DBase
+class OSG_USERINTERFACELIB_DLLMAPPING Graphics2D : public Graphics2DBase
 {
   private:
 

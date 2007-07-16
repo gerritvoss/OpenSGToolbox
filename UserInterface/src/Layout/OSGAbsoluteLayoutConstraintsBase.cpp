@@ -273,8 +273,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<AbsoluteLayoutConstraintsPtr>::_type("AbsoluteLayoutConstraintsPtr", "LayoutConstraintsPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(AbsoluteLayoutConstraintsPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(AbsoluteLayoutConstraintsPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(AbsoluteLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(AbsoluteLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

@@ -42,14 +42,15 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGBorderBase.h"
 #include "Graphics/OSGGraphics.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API Border : public BorderBase
+class OSG_USERINTERFACELIB_DLLMAPPING Border : public BorderBase
 {
   private:
 

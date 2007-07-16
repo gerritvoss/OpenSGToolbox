@@ -412,8 +412,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<ImageComponentPtr>::_type("ImageComponentPtr", "ComponentPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ImageComponentPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(ImageComponentPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(ImageComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(ImageComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

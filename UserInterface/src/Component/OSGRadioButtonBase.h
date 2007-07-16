@@ -58,7 +58,8 @@
 #endif
 
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -76,7 +77,7 @@ class BinaryDataHandler;
 
 //! \brief RadioButton Base Class.
 
-class OSG_USER_INTERFACE_CLASS_API RadioButtonBase : public ToggleButton
+class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
 {
   private:
 

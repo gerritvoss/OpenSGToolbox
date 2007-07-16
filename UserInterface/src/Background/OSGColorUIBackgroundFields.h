@@ -54,10 +54,11 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGUIBackgroundFields.h"
 
@@ -73,6 +74,8 @@ typedef FCPtr<UIBackgroundPtr, ColorUIBackground> ColorUIBackgroundPtr;
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpUserInterfaceFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -102,12 +105,23 @@ struct FieldDataTraits<ColorUIBackgroundPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpUserInterfaceFieldSingle */
+
 typedef SField<ColorUIBackgroundPtr> SFColorUIBackgroundPtr;
 #endif
 
+#ifndef OSG_COMPILECOLORUIBACKGROUNDINST
+OSG_DLLEXPORT_DECL1(SField, ColorUIBackgroundPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpUserInterfaceFieldMulti */
+
 typedef MField<ColorUIBackgroundPtr> MFColorUIBackgroundPtr;
+#endif
+
+#ifndef OSG_COMPILECOLORUIBACKGROUNDINST
+OSG_DLLEXPORT_DECL1(MField, ColorUIBackgroundPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE

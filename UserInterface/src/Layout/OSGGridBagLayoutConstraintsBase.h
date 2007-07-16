@@ -58,7 +58,8 @@
 #endif
 
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -90,7 +91,7 @@ class BinaryDataHandler;
 
 //! \brief GridBagLayoutConstraints Base Class.
 
-class OSG_USER_INTERFACE_CLASS_API GridBagLayoutConstraintsBase : public LayoutConstraints
+class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutConstraintsBase : public LayoutConstraints
 {
   private:
 

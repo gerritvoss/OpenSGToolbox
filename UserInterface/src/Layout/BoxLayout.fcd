@@ -3,30 +3,33 @@
 <FieldContainer
 	name="BoxLayout"
 	parent="Layout"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 A UI BoxLayout.
-<Field
+	<Field
 		name="Alignment"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="HORIZONTAL_ALIGNMENT"
 		defaultHeader="Util/OSGUIDefines.h"
+		access="public"
 	>
 	</Field>
 	<Field
-		name="MajorAxisAlignment"
+		name="MinorAxisAlignment"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="AXIS_CENTER_ALIGNMENT"
 		defaultHeader="Util/OSGUIDefines.h"
+		access="public"
 	>
 	</Field>
 </FieldContainer>

@@ -42,13 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGCardLayoutConstraintsBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API CardLayoutConstraints : public CardLayoutConstraintsBase
+class OSG_USERINTERFACELIB_DLLMAPPING CardLayoutConstraints : public CardLayoutConstraintsBase
 {
   private:
 

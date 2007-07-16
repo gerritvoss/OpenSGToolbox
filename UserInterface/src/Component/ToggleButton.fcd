@@ -3,10 +3,13 @@
 <FieldContainer
 	name="ToggleButton"
 	parent="Button"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 A UI Toggle Button.
 </FieldContainer>

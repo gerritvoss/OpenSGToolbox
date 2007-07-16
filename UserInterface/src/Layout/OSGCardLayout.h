@@ -42,14 +42,15 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGCardLayoutBase.h"
 #include "Component/OSGContainer.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API CardLayout : public CardLayoutBase
+class OSG_USERINTERFACELIB_DLLMAPPING CardLayout : public CardLayoutBase
 {
   private:
 

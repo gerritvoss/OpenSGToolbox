@@ -31,7 +31,8 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGListSelectionEvent.h"
 
@@ -39,7 +40,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API ListSelectionListener : public EventListener
+class OSG_USERINTERFACELIB_DLLMAPPING ListSelectionListener : public EventListener
 {
     /*=========================  PUBLIC  ===============================*/
   public:

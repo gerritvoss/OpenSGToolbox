@@ -3,10 +3,13 @@
 <FieldContainer
 	name="GridLayout"
 	parent="Layout"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 A UI GridLayout.
 	<Field
@@ -14,8 +17,8 @@ A UI GridLayout.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="2"
+		access="public"
 	>
 	</Field>
 	<Field
@@ -23,8 +26,8 @@ A UI GridLayout.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="2"
+		access="public"
 	>
 	</Field>
 	<Field
@@ -32,8 +35,8 @@ A UI GridLayout.
 		type="Int32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="10"
+		access="public"
 	>
 	</Field>
 	<Field
@@ -41,8 +44,8 @@ A UI GridLayout.
 		type="Int32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="10"
+		access="public"
 	>
 	</Field>
 </FieldContainer>

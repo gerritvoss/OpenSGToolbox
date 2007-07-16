@@ -342,8 +342,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<GradientUIBackgroundPtr>::_type("GradientUIBackgroundPtr", "UIBackgroundPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(GradientUIBackgroundPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(GradientUIBackgroundPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(GradientUIBackgroundPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(GradientUIBackgroundPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

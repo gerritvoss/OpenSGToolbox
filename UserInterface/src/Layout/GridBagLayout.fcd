@@ -3,42 +3,49 @@
 <FieldContainer
 	name="GridBagLayout"
 	parent="Layout"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 A UI GridBagLayout.
-<Field
+	<Field
 		name="ColumnWeights"
 		type="Real32"
 		cardinality="multi"
 		visibility="external"
 		access="public"
-	>This field holds the overrides to the column weights
+	>
+	This field holds the overrides to the column weights
 	</Field>
-<Field
+	<Field
 		name="ColumnHeights"
 		type="UInt16"
 		cardinality="multi"
 		visibility="external"
 		access="public"
-	>This field holds the overrides to the column minimum widths
+	>
+	This field holds the overrides to the column minimum widths
 	</Field>
-<Field
+	<Field
 		name="RowWeights"
 		type="Real32"
 		cardinality="multi"
 		visibility="external"
 		access="public"
-	>This field holds the overrides to the row weights
+	>
+	This field holds the overrides to the row weights
 	</Field>
-<Field
+	<Field
 		name="RowWidths"
 		type="UInt16"
 		cardinality="multi"
 		visibility="external"
 		access="public"
-	>This field holds the overrides to the row minimum widths
+	>
+	This field holds the overrides to the row minimum widths
 	</Field>
 </FieldContainer>

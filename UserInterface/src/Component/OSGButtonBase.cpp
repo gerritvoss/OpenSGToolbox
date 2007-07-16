@@ -513,8 +513,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<ButtonPtr>::_type("ButtonPtr", "ComponentPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ButtonPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(ButtonPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(ButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(ButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

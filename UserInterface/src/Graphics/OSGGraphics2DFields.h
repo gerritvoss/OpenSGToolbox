@@ -54,10 +54,11 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGGraphicsFields.h"
 
@@ -73,6 +74,8 @@ typedef FCPtr<GraphicsPtr, Graphics2D> Graphics2DPtr;
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpUserInterfaceFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -102,12 +105,23 @@ struct FieldDataTraits<Graphics2DPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpUserInterfaceFieldSingle */
+
 typedef SField<Graphics2DPtr> SFGraphics2DPtr;
 #endif
 
+#ifndef OSG_COMPILEGRAPHICS2DINST
+OSG_DLLEXPORT_DECL1(SField, Graphics2DPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpUserInterfaceFieldMulti */
+
 typedef MField<Graphics2DPtr> MFGraphics2DPtr;
+#endif
+
+#ifndef OSG_COMPILEGRAPHICS2DINST
+OSG_DLLEXPORT_DECL1(MField, Graphics2DPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE

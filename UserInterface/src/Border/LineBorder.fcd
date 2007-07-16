@@ -3,10 +3,13 @@
 <FieldContainer
 	name="LineBorder"
 	parent="Border"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 UI Line Border.
 	<Field
@@ -14,8 +17,8 @@ UI Line Border.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="1"
+		access="public"
 	>
 	</Field>
 	<Field
@@ -23,8 +26,8 @@ UI Line Border.
 		type="Color4f"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="0.0,0.0,0.0,1.0"
+		access="public"
 	>
 	</Field>
 	<Field

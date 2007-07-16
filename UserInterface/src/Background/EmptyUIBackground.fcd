@@ -3,10 +3,13 @@
 <FieldContainer
 	name="EmptyUIBackground"
 	parent="UIBackground"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 UI Empty Background.
 </FieldContainer>

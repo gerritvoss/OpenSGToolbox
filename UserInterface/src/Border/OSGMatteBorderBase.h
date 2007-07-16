@@ -58,7 +58,8 @@
 #endif
 
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -82,7 +83,7 @@ class BinaryDataHandler;
 
 //! \brief MatteBorder Base Class.
 
-class OSG_USER_INTERFACE_CLASS_API MatteBorderBase : public Border
+class OSG_USERINTERFACELIB_DLLMAPPING MatteBorderBase : public Border
 {
   private:
 

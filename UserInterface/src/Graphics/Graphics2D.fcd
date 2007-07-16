@@ -3,10 +3,13 @@
 <FieldContainer
 	name="Graphics2D"
 	parent="Graphics"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 A Concrete 2D UI Graphics.
 </FieldContainer>

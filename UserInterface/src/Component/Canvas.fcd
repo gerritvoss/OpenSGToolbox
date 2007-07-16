@@ -3,10 +3,13 @@
 <FieldContainer
 	name="Canvas"
 	parent="Component"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 A UI Canvas.
 </FieldContainer>

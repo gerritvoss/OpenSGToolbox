@@ -58,7 +58,8 @@
 #endif
 
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -76,7 +77,7 @@ class BinaryDataHandler;
 
 //! \brief BorderLayout Base Class.
 
-class OSG_USER_INTERFACE_CLASS_API BorderLayoutBase : public Layout
+class OSG_USERINTERFACELIB_DLLMAPPING BorderLayoutBase : public Layout
 {
   private:
 

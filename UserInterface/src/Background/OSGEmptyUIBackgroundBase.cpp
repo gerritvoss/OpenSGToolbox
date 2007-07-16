@@ -230,8 +230,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<EmptyUIBackgroundPtr>::_type("EmptyUIBackgroundPtr", "UIBackgroundPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(EmptyUIBackgroundPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(EmptyUIBackgroundPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(EmptyUIBackgroundPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(EmptyUIBackgroundPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

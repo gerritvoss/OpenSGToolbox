@@ -3,10 +3,13 @@
 <FieldContainer
 	name="Layout"
 	parent="AttachmentContainer"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="abstract"
 	systemcomponent="false"
 	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 A UI Layout Interface.
 </FieldContainer>

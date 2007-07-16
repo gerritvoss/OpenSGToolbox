@@ -3,10 +3,13 @@
 <FieldContainer
 	name="ColorUIBackground"
 	parent="UIBackground"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 UI Color Background.
 	<Field
@@ -14,8 +17,8 @@ UI Color Background.
 		type="Color4f"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="0.0,0.0,0.0,1.0"
+		access="public"
 	>
 	</Field>
 </FieldContainer>

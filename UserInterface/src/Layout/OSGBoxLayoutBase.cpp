@@ -309,8 +309,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<BoxLayoutPtr>::_type("BoxLayoutPtr", "LayoutPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(BoxLayoutPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(BoxLayoutPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(BoxLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(BoxLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

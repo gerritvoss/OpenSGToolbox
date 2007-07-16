@@ -42,13 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGCompoundUIBackgroundBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API CompoundUIBackground : public CompoundUIBackgroundBase
+class OSG_USERINTERFACELIB_DLLMAPPING CompoundUIBackground : public CompoundUIBackgroundBase
 {
   private:
 

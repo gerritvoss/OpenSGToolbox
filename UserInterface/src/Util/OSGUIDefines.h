@@ -43,7 +43,8 @@
 #pragma once
 #endif
  
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #define OSG_UI_BEGIN_NAMESPACE namespace OSG { namespace ui
 #define OSG_UI_END_NAMESPACE } }

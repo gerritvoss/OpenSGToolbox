@@ -3,31 +3,34 @@
 <FieldContainer
 	name="Component"
 	parent="AttachmentContainer"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="abstract"
 	systemcomponent="false"
 	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 A UI Component Interface.
-<Field
+	<Field
 		name="Position"
 		type="Pnt2s"
 		cardinality="single"
 		visibility="external"
-		access="protected"
 		defaultValue="0,0"
+		access="protected"
 	>
 	</Field>
-<Field
+	<Field
 		name="MinSize"
 		type="Vec2s"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="0,0"
+		access="public"
 	>
 	</Field>
-<Field
+	<Field
 		name="MaxSize"
 		type="Vec2s"
 		cardinality="single"
@@ -35,7 +38,7 @@ A UI Component Interface.
 		access="public"
 	>
 	</Field>
-<Field
+	<Field
 		name="PreferredSize"
 		type="Vec2s"
 		cardinality="single"
@@ -43,7 +46,7 @@ A UI Component Interface.
 		access="public"
 	>
 	</Field>
-<Field
+	<Field
 		name="Size"
 		type="Vec2s"
 		cardinality="single"
@@ -51,40 +54,40 @@ A UI Component Interface.
 		access="public"
 	>
 	</Field>
-<Field
+	<Field
 		name="Visible"
 		type="bool"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="true"
+		access="public"
 	>
 	</Field>
-<Field
+	<Field
 		name="Enabled"
 		type="bool"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="true"
+		access="public"
 	>
 	</Field>
-<Field
+	<Field
 		name="Focused"
 		type="bool"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="false"
+		access="public"
 	>
 	</Field>
-<Field
+	<Field
 		name="Constraints"
 		type="LayoutConstraintsPtr"
 		cardinality="single"
 		visibility="external"
+		header="Layout/OSGLayoutConstraints.h"
 		access="public"
-      header="Layout/OSGLayoutConstraints.h"
 	>
 	</Field>
 	<Field
@@ -92,8 +95,8 @@ A UI Component Interface.
 		type="BorderPtr"
 		cardinality="single"
 		visibility="external"
+		header="Border/OSGBorder.h"
 		access="public"
-      header="Border/OSGBorder.h"
 	>
 	</Field>
 	<Field
@@ -101,8 +104,8 @@ A UI Component Interface.
 		type="UIBackgroundPtr"
 		cardinality="single"
 		visibility="external"
+		header="Background/OSGUIBackground.h"
 		access="public"
-      header="Background/OSGUIBackground.h"
 	>
 	</Field>
 	<Field
@@ -118,8 +121,8 @@ A UI Component Interface.
 		type="BorderPtr"
 		cardinality="single"
 		visibility="external"
+		header="Border/OSGBorder.h"
 		access="public"
-      header="Border/OSGBorder.h"
 	>
 	</Field>
 	<Field
@@ -127,8 +130,8 @@ A UI Component Interface.
 		type="UIBackgroundPtr"
 		cardinality="single"
 		visibility="external"
+		header="Background/OSGUIBackground.h"
 		access="public"
-      header="Background/OSGUIBackground.h"
 	>
 	</Field>
 	<Field
@@ -144,8 +147,8 @@ A UI Component Interface.
 		type="BorderPtr"
 		cardinality="single"
 		visibility="external"
+		header="Border/OSGBorder.h"
 		access="public"
-      header="Border/OSGBorder.h"
 	>
 	</Field>
 	<Field
@@ -153,8 +156,8 @@ A UI Component Interface.
 		type="UIBackgroundPtr"
 		cardinality="single"
 		visibility="external"
+		header="Background/OSGUIBackground.h"
 		access="public"
-      header="Background/OSGUIBackground.h"
 	>
 	</Field>
 	<Field
@@ -173,31 +176,31 @@ A UI Component Interface.
 		access="public"
 	>
 	</Field>
-   <Field
+	<Field
 		name="Opacity"
 		type="Real32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="1.0"
+		access="public"
 	>
 	</Field>
-   <Field
+	<Field
 		name="ParentContainer"
 		type="AttachmentContainerPtr"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="NullFC"
+		access="public"
 	>
 	</Field>
-   <Field
+	<Field
 		name="Clipping"
 		type="bool"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="true"
+		access="public"
 	>
 	</Field>
 </FieldContainer>

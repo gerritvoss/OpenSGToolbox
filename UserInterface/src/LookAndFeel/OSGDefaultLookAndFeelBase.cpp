@@ -230,8 +230,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<DefaultLookAndFeelPtr>::_type("DefaultLookAndFeelPtr", "LookAndFeelPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(DefaultLookAndFeelPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(DefaultLookAndFeelPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(DefaultLookAndFeelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(DefaultLookAndFeelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

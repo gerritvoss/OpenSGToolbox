@@ -42,13 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGFlowLayoutBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API FlowLayout : public FlowLayoutBase
+class OSG_USERINTERFACELIB_DLLMAPPING FlowLayout : public FlowLayoutBase
 {
   private:
 

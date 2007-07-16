@@ -3,10 +3,13 @@
 <FieldContainer
 	name="Button"
 	parent="Component"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 A UI Button.
 	<Field
@@ -14,8 +17,8 @@ A UI Button.
 		type="FontPtr"
 		cardinality="single"
 		visibility="external"
+		header="Text/OSGFont.h"
 		access="public"
-      header="Text/OSGFont.h"
 	>
 	</Field>
 	<Field
@@ -24,7 +27,6 @@ A UI Button.
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue=""
 	>
 	</Field>
 	<Field
@@ -32,8 +34,8 @@ A UI Button.
 		type="bool"
 		cardinality="single"
 		visibility="external"
-		access="protected"
 		defaultValue="false"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -41,8 +43,8 @@ A UI Button.
 		type="BorderPtr"
 		cardinality="single"
 		visibility="external"
+		header="Border/OSGBorder.h"
 		access="public"
-      header="Border/OSGBorder.h"
 	>
 	</Field>
 	<Field
@@ -50,8 +52,8 @@ A UI Button.
 		type="UIBackgroundPtr"
 		cardinality="single"
 		visibility="external"
+		header="Background/OSGUIBackground.h"
 		access="public"
-      header="Background/OSGUIBackground.h"
 	>
 	</Field>
 	<Field
@@ -67,9 +69,9 @@ A UI Button.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="VERTICAL_CENTER"
 		defaultHeader="Util/OSGUIDefines.h"
+		access="public"
 	>
 	</Field>
 	<Field
@@ -77,9 +79,9 @@ A UI Button.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="HORIZONTAL_CENTER"
 		defaultHeader="Util/OSGUIDefines.h"
+		access="public"
 	>
 	</Field>
 </FieldContainer>

@@ -42,13 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGMaterialUIBackgroundBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API MaterialUIBackground : public MaterialUIBackgroundBase
+class OSG_USERINTERFACELIB_DLLMAPPING MaterialUIBackground : public MaterialUIBackgroundBase
 {
   private:
 

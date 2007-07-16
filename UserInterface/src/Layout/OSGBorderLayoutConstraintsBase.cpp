@@ -274,8 +274,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<BorderLayoutConstraintsPtr>::_type("BorderLayoutConstraintsPtr", "LayoutConstraintsPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(BorderLayoutConstraintsPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(BorderLayoutConstraintsPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(BorderLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(BorderLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

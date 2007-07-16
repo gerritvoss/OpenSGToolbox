@@ -3,10 +3,13 @@
 <FieldContainer
 	name="EtchedBorder"
 	parent="Border"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 UI Etched Border.
 	<Field
@@ -30,8 +33,8 @@ UI Etched Border.
 		type="bool"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="true"
+		access="public"
 	>
 	</Field>
 	<Field
@@ -39,8 +42,8 @@ UI Etched Border.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		access="public"
 		defaultValue="1"
+		access="public"
 	>
 	</Field>
 </FieldContainer>

@@ -42,13 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGBoxLayoutBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USER_INTERFACE_CLASS_API BoxLayout : public BoxLayoutBase
+class OSG_USERINTERFACELIB_DLLMAPPING BoxLayout : public BoxLayoutBase
 {
   private:
 

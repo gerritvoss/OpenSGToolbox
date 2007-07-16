@@ -307,8 +307,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<CompoundBorderPtr>::_type("CompoundBorderPtr", "BorderPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(CompoundBorderPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(CompoundBorderPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(CompoundBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(CompoundBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
