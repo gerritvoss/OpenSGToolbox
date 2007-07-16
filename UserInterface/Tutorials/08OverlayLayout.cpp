@@ -35,9 +35,10 @@
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
+
+// Include Overlay Layout header files
 #include <OpenSG/UserInterface/OSGOverlayLayout.h>
 
 // Activate the OpenSG namespace
@@ -92,7 +93,7 @@ int main(int argc, char **argv)
 
 
 	// Creates some Button components to add 
-	ButtonPtr button = osg::Button::create();
+	ButtonPtr button1 = osg::Button::create();
 	ButtonPtr button2 = osg::Button::create();
 	ButtonPtr button3 = osg::Button::create();
 	ButtonPtr button4 = osg::Button::create();
@@ -125,10 +126,10 @@ int main(int argc, char **argv)
 	// Edit Buttons to change their sizes
 	// Note that as with Box Layout, unless a setMaxSize
 	// option is specified, the 
-	beginEditCP(button, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
-		button->setPreferredSize( Vec2s(50,50) );
-		button->setMaxSize( Vec2s(50,50) );
-	endEditCP(button, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
+	beginEditCP(button1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
+		button1->setPreferredSize( Vec2s(50,50) );
+		button1->setMaxSize( Vec2s(50,50) );
+	endEditCP(button1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
 
 	beginEditCP(button2, Button::PreferredSizeFieldMask);
 		 button2->setPreferredSize( Vec2s(300,50) );
@@ -152,7 +153,7 @@ int main(int argc, char **argv)
 	FramePtr MainFrame = osg::Frame::create();
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 	   // Add the buttons to the mainframe so they will be displayed
-	   MainFrame->getChildren().addValue(button);
+	   MainFrame->getChildren().addValue(button1);
 	   MainFrame->getChildren().addValue(button2);
 	   MainFrame->getChildren().addValue(button3);
 	   MainFrame->getChildren().addValue(button4);

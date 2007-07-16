@@ -35,7 +35,6 @@
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
 // Include BoxLayout header file
@@ -93,7 +92,7 @@ int main(int argc, char **argv)
 
 
 	// Creates some Button components to add
-	ButtonPtr button = osg::Button::create();
+	ButtonPtr button1 = osg::Button::create();
 	ButtonPtr button2 = osg::Button::create();
 	ButtonPtr button3 = osg::Button::create();
 	ButtonPtr button4 = osg::Button::create();
@@ -136,15 +135,15 @@ int main(int argc, char **argv)
 	
 
 	// Edit two different Buttons
-	beginEditCP(button, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
-		button->setPreferredSize( Vec2s(50,50) );
+	beginEditCP(button1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
+		button1->setPreferredSize( Vec2s(50,50) );
 		// Set button to have a MaxSize.  This is never exceeded, therefore
 		// even in BoxLayout it will not change to have a width of greater than
 		// 80.  By commenting the setMaxSize line, button will have its width 
 		// expanded to match the size of the largest object in the BoxLayout;
 		// in this case button2.
-		button->setMaxSize( Vec2s (50, 50) );
-	endEditCP(button, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
+		button1->setMaxSize( Vec2s (50, 50) );
+	endEditCP(button1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
 
 	beginEditCP(button2, Button::PreferredSizeFieldMask);
 		// Edit the PreferredSize of button2.  Because this is the largest
@@ -167,7 +166,7 @@ int main(int argc, char **argv)
 	FramePtr MainFrame = osg::Frame::create();
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 	   // Add the buttons to the mainframe so they will be displayed
-	   MainFrame->getChildren().addValue(button);
+	   MainFrame->getChildren().addValue(button1);
 	   MainFrame->getChildren().addValue(button2);
 	   MainFrame->getChildren().addValue(button3);
 	   MainFrame->getChildren().addValue(button4);

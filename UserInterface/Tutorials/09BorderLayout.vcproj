@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="08OverlayLayout"
-	ProjectGUID="{CBF5BB23-CAF0-4DAF-9A0C-54A263ECF8EE}"
+	Name="09BorderLayout"
+	ProjectGUID="{3CB50FB7-387C-4FF7-BE23-2B709B03E7DE}"
 	RootNamespace="07GridLayout"
 	Keyword="Win32Proj"
 	>
@@ -207,7 +207,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\08OverlayLayout.cpp"
+				RelativePath=".\09BorderLayout.cpp"
 				>
 			</File>
 		</Filter>

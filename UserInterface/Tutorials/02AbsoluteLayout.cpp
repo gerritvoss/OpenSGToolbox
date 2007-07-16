@@ -93,32 +93,44 @@ int main(int argc, char **argv)
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
+	/******************************************************
 
-	// Create three different Buttons (button, button2, and
-	// button3) and their Components.  All Buttons will have the same
-	// border, though this could also be changed and give each Button
-	// a unique border.
+		Create three Button Components (button, button2,
+		and button3) and their AbsoluteLayoutConstraints.
 
-	// Creates three Button components
-	ButtonPtr button = osg::Button::create();
+		AbsoluteLayoutConstraints are used within the 
+		AbsoluteLayout to define where the Components will
+		be placed.  Most other Layouts do not need 
+		constraints, as they place objects within the Layout
+		automatically.
+
+	******************************************************/
+
+	ButtonPtr button1 = osg::Button::create();
 	ButtonPtr button2 = osg::Button::create();
 	ButtonPtr button3 = osg::Button::create();
 	
-	// Create the three unique AbsoluteLayoutConstraints pointers,
-	// one for each Button
-	AbsoluteLayoutConstraintsPtr buttonConstraints = osg::AbsoluteLayoutConstraints::create();
+	AbsoluteLayoutConstraintsPtr buttonConstraints1 = osg::AbsoluteLayoutConstraints::create();
 	AbsoluteLayoutConstraintsPtr buttonConstraints2 = osg::AbsoluteLayoutConstraints::create();
 	AbsoluteLayoutConstraintsPtr buttonConstraints3 = osg::AbsoluteLayoutConstraints::create();
 
+	/******************************************************
+
+		Define the Button constraints (where the buttons 
+		are located in the layout)setPosition gives you 
+		the location of the button relative to the layout
+		manager's upper left hand corner.  Note that with 
+		the AbsoluteLayoutConstraints,the buttons may 
+		appear out of the lightly colored box, as their 
+		positions are absolute and not relative to other 
+		objects.  By adjusting the window size, this can 
+		be easily seen.
+
+	******************************************************/
   
-   // Define the Button constraints (where the buttons are located in the layout)
-   // setPosition gives you the location of the button relative to the 
-   // layout manager's upper left hand corner.  Note that with the AbsoluteLayoutConstraints,
-   // the buttons may appear out of the lightly colored box, as their positions are absolute and
-   // not relative to other objects.  By adjusting the window size, this can be easily seen.
-	beginEditCP(buttonConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
-		buttonConstraints->setPosition(Pnt2s (0,150) );
-   endEditCP(buttonConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
+   beginEditCP(buttonConstraints1, AbsoluteLayoutConstraints::PositionFieldMask);
+		buttonConstraints1->setPosition(Pnt2s (0,150) );
+   endEditCP(buttonConstraints1, AbsoluteLayoutConstraints::PositionFieldMask);
 
    beginEditCP(buttonConstraints2, AbsoluteLayoutConstraints::PositionFieldMask);
 		buttonConstraints2->setPosition(Pnt2s (200,200) );
@@ -131,20 +143,23 @@ int main(int argc, char **argv)
 		buttonConstraints3->setPosition(Pnt2s (150,220) );
    endEditCP(buttonConstraints3, AbsoluteLayoutConstraints::PositionFieldMask);
 
-   // Edit the first button, set size, color, border, font, text, and constraints
-   // to those created above
-   beginEditCP(button, Button::PreferredSizeFieldMask |  Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
-		button->setPreferredSize(Vec2s(100,50));
-		button->setSize(Vec2s(100,50));
-		button->setText("Button 1");
+	/******************************************************
+
+		Edit Button Components and assign Text,
+		PreferredSize, and AbsoluteLayoutConstraints
+
+	******************************************************/
+
+   beginEditCP(button1, Button::PreferredSizeFieldMask |  Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
+		button1->setPreferredSize(Vec2s(100,50));
+		button1->setSize(Vec2s(100,50));
+		button1->setText("Button 1");
 		
 		// Set the constraints created above to button
 		// to place the Button within the scene
-		button->setConstraints(buttonConstraints);
-		endEditCP(button, Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
+		button1->setConstraints(buttonConstraints1);
+	endEditCP(button1, Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 
-	// Edit the second button, set size, color, border, font, text, and constraints
-    // to those created above
     beginEditCP(button2, Button::PreferredSizeFieldMask |  Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 		button2->setPreferredSize(Vec2s(100,50));
 		button2->setSize(Vec2s(100,50));
@@ -155,8 +170,6 @@ int main(int argc, char **argv)
 		button2->setConstraints(buttonConstraints2);
     endEditCP  (button2, Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 
-	// Edit the third button, set size, color, border, font, text, and constraints
-    // to those created above
     beginEditCP(button3,  Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::ConstraintsFieldMask);
 		button3->setPreferredSize(Vec2s(100,50));
 		button3->setSize(Vec2s(100,50));
@@ -182,7 +195,7 @@ int main(int argc, char **argv)
 	   // and button3 are in conflict with their locations, button2 will cover 
 	   // button3.  By commenting out their addValue commands and uncommenting 
 	   // the other two, this will be reversed.
-	   MainFrame->getChildren().addValue(button);
+	   MainFrame->getChildren().addValue(button1);
 	   MainFrame->getChildren().addValue(button3);
 	   MainFrame->getChildren().addValue(button2);
 	   // MainFrame->getChildren().addValue(button2);

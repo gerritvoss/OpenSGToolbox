@@ -1,10 +1,10 @@
-// OpenSG Tutorial Example: Creating a Button
+// OpenSG Tutorial Example: Creating a Button Component
 //
 // This tutorial explains how to edit the basic features of
-// a button created in the OSG User Interface library.
+// a Button created in the OSG User Interface library.
 // 
-// Includes: button size, button font and text, button color, button border,
-// and adding a button to a scene.
+// Includes: Button PreferredSize, MaximumSize, MinimumSize, Font,
+// Text,and adding a Button to a Scene.
 
 
 // GLUT is used for window handling
@@ -88,43 +88,44 @@ int main(int argc, char **argv)
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
 	// Create a Button component
-	ButtonPtr button = osg::Button::create();
+	ButtonPtr button1 = osg::Button::create();
 	// Create a simple Font to be used with the Button
-	FontPtr fonts = osg::Font::create();
-	beginEditCP(fonts, Font::SizeFieldMask);
-		fonts->setSize(12);
-	endEditCP(fonts, Font::SizeFieldMask);
+	FontPtr sampleFont = osg::Font::create();
+	beginEditCP(sampleFont, Font::SizeFieldMask);
+		sampleFont->setSize(12);
+	endEditCP(sampleFont, Font::SizeFieldMask);
 
 	/******************************************************
 
-		Edit the Button.  The functions setMinSize and 
-		setMaxSize do exactly that; they impose restrictions
-		on what the maximum and minimum size of the Button
-		can be.
+		Edit the Button and determine its characteristics
 
 	******************************************************/
 
-	beginEditCP(button, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
-	    // The following 3 function calls are not specific to Button, 
-		// but can be used with any Component
+	beginEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
+			// The following 4 function calls are not specific to Button, 
+			// but can be used with any Component
 
-		// Determine the Minimum and Maximum size that the Component can ever have
-		// due to various Layouts (some change the size of the Components within
-		// the layouts)
-		button->setMinSize( Vec2s (50, 25) );
-		button->setMaxSize( Vec2s (200, 100) );
-
-		// Determine what size the Button will display at
-		button->setPreferredSize( Vec2s (100, 50) );
-		//button->setEnabled(false);
-	
-		
+			// Determine the Minimum and Maximum size that the Component can ever have
+			// due to various Layouts (some change the size of the Components within
+			// the Layouts)
+		button1->setMinSize( Vec2s (50, 25) );
+		button1->setMaxSize( Vec2s (200, 100) );
+			// Determine what size the Component will display at
+		button1->setPreferredSize( Vec2s (100, 50) );
+			// Determine whether the Button appears pressed (false) or not-pressed (true)
+		button1->setEnabled(true);
 		// The following functions are specific to Button
-		button->setText("Button 1");
-		//button->setFont(fonts);
-		//button->setVerticalAlignment(VERTICAL_ALIGNMENT);
-		button->setHorizontalAlignment(HORIZONTAL_ALIGNMENT);
-    endEditCP(button, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
+			// Determine the visible Text (note this can display off the 
+			// Button if the Text is too long)
+		button1->setText("Button 1");
+		//button1->setFont(sampleFont);
+			// Determine the VerticalAlignment of the text- VERTICAL_CENTER, 
+			// or VERTICAL_TOP, VERTICAL_BOTTOM
+		button1->setVerticalAlignment(VERTICAL_TOP);
+			// Determine the HorizontalAlignment of the text- HORIZONTAL_CENTER,
+			// HORIZONTAL_LEFT, HORIZONTAL_RIGHT
+		button1->setHorizontalAlignment(HORIZONTAL_RIGHT);
+    endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
 
 	// Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
@@ -132,7 +133,7 @@ int main(int argc, char **argv)
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 	   // Assign the button to the mainframe so it will be displayed
 	   // when the view is rendered.
-	   MainFrame->getChildren().addValue(button);
+	   MainFrame->getChildren().addValue(button1);
 	   MainFrame->setLayout(MainFrameLayout);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 

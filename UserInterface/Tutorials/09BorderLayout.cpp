@@ -1,11 +1,11 @@
-// OpenSG Tutorial Example: Using the Flow Layout
+// OpenSG Tutorial Example: Using the Border Layout
 //		to place Components 
 //
 // This tutorial explains how to place buttons within a 
-// frame utilizing the Flow Layout command to 
+// frame utilizing the Border Layout command to 
 // manage the layout through the OSG User Interface library.
 // 
-// Includes: placing multiple buttons using Flow Layout
+// Includes: placing multiple buttons using Border Layout
 
 
 // GLUT is used for window handling
@@ -37,8 +37,11 @@
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
-// Include FlowLayout header file
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
+
+// Include BorderLayout and BorderLayoutConstraints header files
+#include <OpenSG/UserInterface/OSGBorderLayout.h>
+#include <OpenSG/UserInterface/OSGBorderLayoutConstraints.h>
+
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
 // with OSG::, but that would be a bit tedious for this example
@@ -85,81 +88,143 @@ int main(int argc, char **argv)
 	GraphicsPtr graphics = osg::Graphics2D::create();
 
 	// Initialize the LookAndFeelManager to enable default 
-	// settings for the Button
+	// settings for the Buttons
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
 
-	// Creates some Button components
+
+	/******************************************************
+
+		Create Border Layout.  The Border Layout has
+		five regions, North, South, East, West, and 
+		Center.  The heights of the North/South region 
+		are the heights of the Components loctated there 
+		(so in the North region, the height of the North 
+		region is determined by whatever is in the the
+		North region).  The width of the Component is 
+		automatically expanded to fit the width of the 
+		region.  For the East and West regions, it is the 
+		same except the width of the region is determined 
+		by the width of what is in the region, and the height
+		is automatically expanded to fit the region.  The 
+		Center region is the entire middle area which is not 
+		part of the N, W, S, or E regions.
+
+		Note that by setting Max/Min size for Components, 
+		the Components become centered in their region.  So
+		a Component in the North or South region with a Max 
+		width smaller than its region will be centered 
+		horizontally ; likewise a Component in the East/
+		West region	will be centered vertically if the Max
+		height is exceeded.
+
+		Experiment by changing the Button PreferredSizes and 
+		adjusting window size for an example of this.  The
+		North region currently has a Button with MaxSize 
+		restraints.
+
+
+
+	******************************************************/
+	BorderLayoutPtr MainFrameLayout = osg::BorderLayout::create();
+
+	// The main BorderLayout has no options to set, so this 
+	// could be ommitted
+	beginEditCP(MainFrameLayout);
+		// Nothing!
+	endEditCP(MainFrameLayout);
+
+
+	/******************************************************
+
+		Create BorderLayoutConstraints and define
+		them.
+
+		BorderLayoutConstraints determine where in the
+		BorderLayout the Components appear.  The following
+		are the arguments: BORDER_CENTER, BORDER_NORTH, 
+		BORDER_EAST, BORDER_SOUTH, and BORDER_WEST, all 
+		preceeded by "BorderLayoutConstraints::".
+
+
+
+	******************************************************/
+	BorderLayoutConstraintsPtr buttonConstraints1 = osg::BorderLayoutConstraints::create();
+	BorderLayoutConstraintsPtr buttonConstraints2 = osg::BorderLayoutConstraints::create();
+	BorderLayoutConstraintsPtr buttonConstraints3 = osg::BorderLayoutConstraints::create();
+	BorderLayoutConstraintsPtr buttonConstraints4 = osg::BorderLayoutConstraints::create();
+	BorderLayoutConstraintsPtr buttonConstraints5 = osg::BorderLayoutConstraints::create();
+
+
+	beginEditCP(buttonConstraints1, BorderLayoutConstraints::RegionFieldMask);
+		buttonConstraints1->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+	endEditCP(buttonConstraints1, BorderLayoutConstraints::RegionFieldMask);
+
+	beginEditCP(buttonConstraints2, BorderLayoutConstraints::RegionFieldMask);
+		buttonConstraints2->setRegion(BorderLayoutConstraints::BORDER_NORTH);
+	endEditCP(buttonConstraints2, BorderLayoutConstraints::RegionFieldMask);
+	
+	beginEditCP(buttonConstraints3, BorderLayoutConstraints::RegionFieldMask);
+		buttonConstraints3->setRegion(BorderLayoutConstraints::BORDER_EAST);
+	endEditCP(buttonConstraints3, BorderLayoutConstraints::RegionFieldMask);
+	
+	beginEditCP(buttonConstraints4, BorderLayoutConstraints::RegionFieldMask);
+		buttonConstraints4->setRegion(BorderLayoutConstraints::BORDER_SOUTH);
+	endEditCP(buttonConstraints4, BorderLayoutConstraints::RegionFieldMask);
+	
+	beginEditCP(buttonConstraints5, BorderLayoutConstraints::RegionFieldMask);
+		buttonConstraints5->setRegion(BorderLayoutConstraints::BORDER_WEST);
+	endEditCP(buttonConstraints5, BorderLayoutConstraints::RegionFieldMask);
+	
+
+
+
+	/******************************************************
+
+		Create some Button Components and Assign the
+		BorderLayoutConstraints to those Components. 
+
+		Note that unless BorderLayoutConstraints are 
+		assigned, a Component will not display within
+		BorderLayout (such as button1 currently).
+
+
+	******************************************************/
 	ButtonPtr button1 = osg::Button::create();
 	ButtonPtr button2 = osg::Button::create();
 	ButtonPtr button3 = osg::Button::create();
 	ButtonPtr button4 = osg::Button::create();
 	ButtonPtr button5 = osg::Button::create();
-	ButtonPtr button6 = osg::Button::create();
-
-	//Change some of their sizes
-	beginEditCP(button1, Component::PreferredSizeFieldMask);
-		button1->setPreferredSize( Vec2s (200, 50) );
-	endEditCP(button1, Component::PreferredSizeFieldMask);
-
-	beginEditCP(button4, Component::PreferredSizeFieldMask);
-		button4->setPreferredSize( Vec2s (50, 50) );
-	endEditCP(button4, Component::PreferredSizeFieldMask);
-
-	/******************************************************
-
-		Create Flow Layout.  Flow Layout arranges objects
-		automatically within the Frame, so that depending 
-		on Frame size, the objects may appear in a vertical
-		line, horizontal line, or multiple lines.  Objects 
-		fill from the upper left hand corner of the Frame
-		across, then down (when the line becomes full) while
-		arranged Horizontally, or from the upper left hand
-		corner across when arranged Vertically, starting a 
-		new column when necessary.
-
-		Alignment of the layout and the alignment of objects 
-		within the layout can be changed.
-
-		You can experiment with this by changing the window 
-		size, changing the orientation,or changing the size 
-		of the buttons as shown in 01Button, or adding more 
-		Buttons to the view.
-
-		Note that if the Frame is too small, the objects will 
-		appear out of the Frame background.
-
-
-	******************************************************/
-	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
-	// Determine whether the Layout is Horizontal (HORIZONTAL_ALIGNMENT) or
-	// Vertical (VERTICAL_ALIGNMENT) and determine gap size, and determine
-	// alignment along Horizontal and Vertical axis 
-	beginEditCP(MainFrameLayout);
-		// Determine the Horizontal and Vertical gaps between objects.
-		// These gaps are absolute, and measured in pixels.
-		MainFrameLayout->setHorizontalGap(3);
-		MainFrameLayout->setVerticalGap(3);
-		// Determine whether layout is arranged Vertically (VERTICAL_ALIGNMENT)
-		// or Horizontally (HORIZONTAL_ALIGNMENT)
-		MainFrameLayout->setAlignment(VERTICAL_ALIGNMENT);
-
-		// The options for the following two functions are:
-		// AXIS_MAX_ALIGNMENT, AXIS_CENTER_ALIGNMENT, and
-		// AXIS_MIN_ALIGNMENT.
-
-		// Determine alignment of entire layout; MAX puts it to the buttom (for vertical
-		// overall layout) or right (horizontal overall layout), CENTER centers it, and
-		// MIN does the opposite of MAX
-		MainFrameLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-
-		// Determine alignment of Components within layout
-		MainFrameLayout->setMinorAxisAlignment(AXIS_MAX_ALIGNMENT);
-		// MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
-	endEditCP(MainFrameLayout);
 	
+
+	beginEditCP(button1, Component::ConstraintsFieldMask);
+		//button1->setConstraints(buttonConstraints1);
+	endEditCP(button1, Component::ConstraintsFieldMask);
+	
+	beginEditCP(button2, Component::ConstraintsFieldMask | Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask);
+		button2->setConstraints(buttonConstraints2);
+		button2->setPreferredSize( Vec2s(200, 200) );
+		button2->setMaxSize( Vec2s(200,200) );
+	endEditCP(button2, Component::ConstraintsFieldMask | Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask);
+	
+	beginEditCP(button3, Component::ConstraintsFieldMask);
+		button3->setConstraints(buttonConstraints3);
+	endEditCP(button3, Component::ConstraintsFieldMask);
+	
+	beginEditCP(button4, Component::ConstraintsFieldMask);
+		button4->setConstraints(buttonConstraints4);
+	endEditCP(button4, Component::ConstraintsFieldMask);
+	
+	beginEditCP(button5, Component::ConstraintsFieldMask);
+		button5->setConstraints(buttonConstraints5);
+	endEditCP(button5, Component::ConstraintsFieldMask);
+	
+
+
+
  	// Create The Main Frame
+
 	// Create Background to be used with the Main Frame
 	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
 	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
@@ -174,7 +239,7 @@ int main(int argc, char **argv)
 	   MainFrame->getChildren().addValue(button3);
 	   MainFrame->getChildren().addValue(button4);
 	   MainFrame->getChildren().addValue(button5);
-	   MainFrame->getChildren().addValue(button6);
+	   // Add the Layout to the MainFrame
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
 	 
