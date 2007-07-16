@@ -58,8 +58,8 @@
 #endif
 
 
-#include "OSGToolboxConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGToolboxDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -78,7 +78,7 @@ class BinaryDataHandler;
 
 //! \brief MatrixBeaconCamera Base Class.
 
-class OSG_TOOLBOX_CLASS_API MatrixBeaconCameraBase : public Camera
+class OSG_TOOLBOXLIB_DLLMAPPING MatrixBeaconCameraBase : public Camera
 {
   private:
 
@@ -92,7 +92,7 @@ class OSG_TOOLBOX_CLASS_API MatrixBeaconCameraBase : public Camera
     enum
     {
         TransformationMatrixFieldId = Inherited::NextFieldId,
-        NextFieldId                  = TransformationMatrixFieldId + 1
+        NextFieldId                 = TransformationMatrixFieldId + 1
     };
 
     static const OSG::BitVector TransformationMatrixFieldMask;

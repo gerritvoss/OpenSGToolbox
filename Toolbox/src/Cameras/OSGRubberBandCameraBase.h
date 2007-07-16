@@ -58,8 +58,8 @@
 #endif
 
 
-#include "OSGToolboxConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGToolboxDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -83,11 +83,11 @@ class BinaryDataHandler;
 
 //! \brief RubberBandCamera Base Class.
 
-class OSG_TOOLBOX_CLASS_API RubberBandCameraBase : public CameraDecorator
+class OSG_TOOLBOXLIB_DLLMAPPING RubberBandCameraBase : public CameraDecorator
 {
   private:
 
-     typedef CameraDecorator    Inherited;
+    typedef CameraDecorator    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -137,37 +137,37 @@ class OSG_TOOLBOX_CLASS_API RubberBandCameraBase : public CameraDecorator
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFPositionConstant(void);
-           SFReal32            *getSFPositionLinear (void);
-           SFReal32            *getSFPositionQuadratic(void);
-           SFReal32            *getSFOrientationConstant(void);
-           SFReal32            *getSFOrientationLinear(void);
-           SFReal32            *getSFOrientationQuadratic(void);
+    virtual       SFReal32            *getSFPositionConstant(void);
+    virtual       SFReal32            *getSFPositionLinear (void);
+    virtual       SFReal32            *getSFPositionQuadratic(void);
+    virtual       SFReal32            *getSFOrientationConstant(void);
+    virtual       SFReal32            *getSFOrientationLinear(void);
+    virtual       SFReal32            *getSFOrientationQuadratic(void);
 
-           Real32              &getPositionConstant(void);
-     const Real32              &getPositionConstant(void) const;
-           Real32              &getPositionLinear (void);
-     const Real32              &getPositionLinear (void) const;
-           Real32              &getPositionQuadratic(void);
-     const Real32              &getPositionQuadratic(void) const;
-           Real32              &getOrientationConstant(void);
-     const Real32              &getOrientationConstant(void) const;
-           Real32              &getOrientationLinear(void);
-     const Real32              &getOrientationLinear(void) const;
-           Real32              &getOrientationQuadratic(void);
-     const Real32              &getOrientationQuadratic(void) const;
+    virtual       Real32              &getPositionConstant(void);
+    virtual const Real32              &getPositionConstant(void) const;
+    virtual       Real32              &getPositionLinear (void);
+    virtual const Real32              &getPositionLinear (void) const;
+    virtual       Real32              &getPositionQuadratic(void);
+    virtual const Real32              &getPositionQuadratic(void) const;
+    virtual       Real32              &getOrientationConstant(void);
+    virtual const Real32              &getOrientationConstant(void) const;
+    virtual       Real32              &getOrientationLinear(void);
+    virtual const Real32              &getOrientationLinear(void) const;
+    virtual       Real32              &getOrientationQuadratic(void);
+    virtual const Real32              &getOrientationQuadratic(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setPositionConstant( const Real32 &value );
-     void setPositionLinear ( const Real32 &value );
-     void setPositionQuadratic( const Real32 &value );
-     void setOrientationConstant( const Real32 &value );
-     void setOrientationLinear( const Real32 &value );
-     void setOrientationQuadratic( const Real32 &value );
+    virtual void setPositionConstant( const Real32 &value );
+    virtual void setPositionLinear ( const Real32 &value );
+    virtual void setPositionQuadratic( const Real32 &value );
+    virtual void setOrientationConstant( const Real32 &value );
+    virtual void setOrientationLinear( const Real32 &value );
+    virtual void setOrientationQuadratic( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

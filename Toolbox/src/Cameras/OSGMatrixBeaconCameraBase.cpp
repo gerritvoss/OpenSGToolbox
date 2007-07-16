@@ -62,7 +62,7 @@
 #include "OSGMatrixBeaconCamera.h"
 
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  MatrixBeaconCameraBase::TransformationMatrixFieldMask = 
     (TypeTraits<BitVector>::One << MatrixBeaconCameraBase::TransformationMatrixFieldId);
@@ -162,7 +162,7 @@ void MatrixBeaconCameraBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 MatrixBeaconCameraBase::MatrixBeaconCameraBase(void) :
-    _sfTransformationMatrix  (), 
+    _sfTransformationMatrix   (), 
     Inherited() 
 {
 }
@@ -172,7 +172,7 @@ MatrixBeaconCameraBase::MatrixBeaconCameraBase(void) :
 #endif
 
 MatrixBeaconCameraBase::MatrixBeaconCameraBase(const MatrixBeaconCameraBase &source) :
-    _sfTransformationMatrix  (source._sfTransformationMatrix  ), 
+    _sfTransformationMatrix   (source._sfTransformationMatrix   ), 
     Inherited                 (source)
 {
 }
@@ -262,6 +262,8 @@ void MatrixBeaconCameraBase::execBeginEditImpl (const BitVector &whichField,
 
 
 
+OSG_END_NAMESPACE
+
 #include <OpenSG/OSGSFieldTypeDef.inl>
 #include <OpenSG/OSGMFieldTypeDef.inl>
 
@@ -271,10 +273,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<MatrixBeaconCameraPtr>::_type("MatrixBeaconCameraPtr", "CameraPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(MatrixBeaconCameraPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(MatrixBeaconCameraPtr, );
-
-OSG_END_NAMESPACE
+OSG_DLLEXPORT_SFIELD_DEF1(MatrixBeaconCameraPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(MatrixBeaconCameraPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -290,10 +290,12 @@ OSG_END_NAMESPACE
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.45 2005/07/20 00:10:14 vossg Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
     static Char8 cvsid_hpp       [] = OSGMATRIXBEACONCAMERABASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGMATRIXBEACONCAMERABASE_INLINE_CVSID;
 
     static Char8 cvsid_fields_hpp[] = OSGMATRIXBEACONCAMERAFIELDS_HEADER_CVSID;
 }
+
+OSG_END_NAMESPACE
 

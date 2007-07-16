@@ -2,11 +2,14 @@
 
 <FieldContainer
 	name="RubberBandCamera"
-	parent="Camera"
+	parent="CameraDecorator"
+	library="Toolbox"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="true"
+	decoratable="true"
+	useLocalIncludes="true"
 >
 Rubber Band Camera.
 	<Field

@@ -58,6 +58,7 @@
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGToolboxDef.h"
 
 #include <OpenSG/OSGCameraFields.h>
 
@@ -73,6 +74,8 @@ typedef FCPtr<CameraPtr, AirplaneCamera> AirplaneCameraPtr;
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpToolboxFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -86,10 +89,10 @@ struct FieldDataTraits<AirplaneCameraPtr> :
     enum                        { StringConvertable = 0x00 };
     enum                        { bHasParent        = 0x01 };
 
-    static DataType &getType (void) { return _type;        }
+    static DataType   &getType (void) { return _type;        }
 
-    static char     *getSName(void) { return "SFAirplaneCameraPtr"; }
-    static char     *getMName(void) { return "MFAirplaneCameraPtr"; }
+    static const char *getSName(void) { return "SFAirplaneCameraPtr"; }
+    static const char *getMName(void) { return "MFAirplaneCameraPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
@@ -102,16 +105,27 @@ struct FieldDataTraits<AirplaneCameraPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpToolboxFieldSingle */
+
 typedef SField<AirplaneCameraPtr> SFAirplaneCameraPtr;
 #endif
 
+#ifndef OSG_COMPILEAIRPLANECAMERAINST
+OSG_DLLEXPORT_DECL1(SField, AirplaneCameraPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpToolboxFieldMulti */
+
 typedef MField<AirplaneCameraPtr> MFAirplaneCameraPtr;
+#endif
+
+#ifndef OSG_COMPILEAIRPLANECAMERAINST
+OSG_DLLEXPORT_DECL1(MField, AirplaneCameraPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGAIRPLANECAMERAFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.25 2005/04/04 14:51:48 dirk Exp $"
+#define OSGAIRPLANECAMERAFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGAIRPLANECAMERAFIELDS_H_ */

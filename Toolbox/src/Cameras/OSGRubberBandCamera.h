@@ -42,14 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGToolboxConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGToolboxDef.h"
 
 #include "OSGRubberBandCameraBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_TOOLBOX_CLASS_API RubberBandCamera : public RubberBandCameraBase
+class OSG_TOOLBOXLIB_DLLMAPPING RubberBandCamera : public RubberBandCameraBase
 {
   private:
 

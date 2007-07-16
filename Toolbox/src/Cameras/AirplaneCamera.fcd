@@ -3,10 +3,13 @@
 <FieldContainer
 	name="AirplaneCamera"
 	parent="Camera"
+	library="Toolbox"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 Airplane Camera.
 	<Field

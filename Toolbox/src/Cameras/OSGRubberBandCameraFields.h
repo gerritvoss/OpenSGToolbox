@@ -58,8 +58,9 @@
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGToolboxDef.h"
 
-#include <OpenSG/OSGCameraFields.h>
+#include <OpenSG/OSGCameraDecoratorFields.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -68,11 +69,13 @@ class RubberBandCamera;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! RubberBandCameraPtr
 
-typedef FCPtr<CameraPtr, RubberBandCamera> RubberBandCameraPtr;
+typedef FCPtr<CameraDecoratorPtr, RubberBandCamera> RubberBandCameraPtr;
 
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpToolboxFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -86,10 +89,10 @@ struct FieldDataTraits<RubberBandCameraPtr> :
     enum                        { StringConvertable = 0x00 };
     enum                        { bHasParent        = 0x01 };
 
-    static DataType &getType (void) { return _type;        }
+    static DataType   &getType (void) { return _type;        }
 
-    static char     *getSName(void) { return "SFRubberBandCameraPtr"; }
-    static char     *getMName(void) { return "MFRubberBandCameraPtr"; }
+    static const char *getSName(void) { return "SFRubberBandCameraPtr"; }
+    static const char *getMName(void) { return "MFRubberBandCameraPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
@@ -102,16 +105,27 @@ struct FieldDataTraits<RubberBandCameraPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpToolboxFieldSingle */
+
 typedef SField<RubberBandCameraPtr> SFRubberBandCameraPtr;
 #endif
 
+#ifndef OSG_COMPILERUBBERBANDCAMERAINST
+OSG_DLLEXPORT_DECL1(SField, RubberBandCameraPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpToolboxFieldMulti */
+
 typedef MField<RubberBandCameraPtr> MFRubberBandCameraPtr;
+#endif
+
+#ifndef OSG_COMPILERUBBERBANDCAMERAINST
+OSG_DLLEXPORT_DECL1(MField, RubberBandCameraPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGRUBBERBANDCAMERAFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.25 2005/04/04 14:51:48 dirk Exp $"
+#define OSGRUBBERBANDCAMERAFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGRUBBERBANDCAMERAFIELDS_H_ */

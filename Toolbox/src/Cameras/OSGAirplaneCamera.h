@@ -42,14 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGToolboxConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGToolboxDef.h"
 
 #include "OSGAirplaneCameraBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_TOOLBOX_CLASS_API AirplaneCamera : public AirplaneCameraBase
+class OSG_TOOLBOXLIB_DLLMAPPING AirplaneCamera : public AirplaneCameraBase
 {
   private:
 

@@ -62,7 +62,7 @@
 #include "OSGRubberBandCamera.h"
 
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  RubberBandCameraBase::PositionConstantFieldMask = 
     (TypeTraits<BitVector>::One << RubberBandCameraBase::PositionConstantFieldId);
@@ -147,7 +147,7 @@ FieldDescription *RubberBandCameraBase::_desc[] =
 
 FieldContainerType RubberBandCameraBase::_type(
     "RubberBandCamera",
-    "Camera",
+    "CameraDecorator",
     NULL,
     (PrototypeCreateF) &RubberBandCameraBase::createEmpty,
     RubberBandCamera::initMethod,
@@ -430,7 +430,157 @@ void RubberBandCameraBase::execBeginEditImpl (const BitVector &whichField,
 }
 #endif
 
+/*------------------------------ get -----------------------------------*/
 
+OSG_TOOLBOXLIB_DLLMAPPING
+SFReal32 *RubberBandCameraBase::getSFPositionConstant(void)
+{
+    return &_sfPositionConstant;
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+SFReal32 *RubberBandCameraBase::getSFPositionLinear(void)
+{
+    return &_sfPositionLinear;
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+SFReal32 *RubberBandCameraBase::getSFPositionQuadratic(void)
+{
+    return &_sfPositionQuadratic;
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+SFReal32 *RubberBandCameraBase::getSFOrientationConstant(void)
+{
+    return &_sfOrientationConstant;
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+SFReal32 *RubberBandCameraBase::getSFOrientationLinear(void)
+{
+    return &_sfOrientationLinear;
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+SFReal32 *RubberBandCameraBase::getSFOrientationQuadratic(void)
+{
+    return &_sfOrientationQuadratic;
+}
+
+
+OSG_TOOLBOXLIB_DLLMAPPING
+Real32 &RubberBandCameraBase::getPositionConstant(void)
+{
+    return _sfPositionConstant.getValue();
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+const Real32 &RubberBandCameraBase::getPositionConstant(void) const
+{
+    return _sfPositionConstant.getValue();
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+void RubberBandCameraBase::setPositionConstant(const Real32 &value)
+{
+    _sfPositionConstant.setValue(value);
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+Real32 &RubberBandCameraBase::getPositionLinear(void)
+{
+    return _sfPositionLinear.getValue();
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+const Real32 &RubberBandCameraBase::getPositionLinear(void) const
+{
+    return _sfPositionLinear.getValue();
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+void RubberBandCameraBase::setPositionLinear(const Real32 &value)
+{
+    _sfPositionLinear.setValue(value);
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+Real32 &RubberBandCameraBase::getPositionQuadratic(void)
+{
+    return _sfPositionQuadratic.getValue();
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+const Real32 &RubberBandCameraBase::getPositionQuadratic(void) const
+{
+    return _sfPositionQuadratic.getValue();
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+void RubberBandCameraBase::setPositionQuadratic(const Real32 &value)
+{
+    _sfPositionQuadratic.setValue(value);
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+Real32 &RubberBandCameraBase::getOrientationConstant(void)
+{
+    return _sfOrientationConstant.getValue();
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+const Real32 &RubberBandCameraBase::getOrientationConstant(void) const
+{
+    return _sfOrientationConstant.getValue();
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+void RubberBandCameraBase::setOrientationConstant(const Real32 &value)
+{
+    _sfOrientationConstant.setValue(value);
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+Real32 &RubberBandCameraBase::getOrientationLinear(void)
+{
+    return _sfOrientationLinear.getValue();
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+const Real32 &RubberBandCameraBase::getOrientationLinear(void) const
+{
+    return _sfOrientationLinear.getValue();
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+void RubberBandCameraBase::setOrientationLinear(const Real32 &value)
+{
+    _sfOrientationLinear.setValue(value);
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+Real32 &RubberBandCameraBase::getOrientationQuadratic(void)
+{
+    return _sfOrientationQuadratic.getValue();
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+const Real32 &RubberBandCameraBase::getOrientationQuadratic(void) const
+{
+    return _sfOrientationQuadratic.getValue();
+}
+
+OSG_TOOLBOXLIB_DLLMAPPING
+void RubberBandCameraBase::setOrientationQuadratic(const Real32 &value)
+{
+    _sfOrientationQuadratic.setValue(value);
+}
+
+
+
+
+OSG_END_NAMESPACE
 
 #include <OpenSG/OSGSFieldTypeDef.inl>
 #include <OpenSG/OSGMFieldTypeDef.inl>
@@ -438,13 +588,11 @@ void RubberBandCameraBase::execBeginEditImpl (const BitVector &whichField,
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<RubberBandCameraPtr>::_type("RubberBandCameraPtr", "CameraPtr");
+DataType FieldDataTraits<RubberBandCameraPtr>::_type("RubberBandCameraPtr", "CameraDecoratorPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(RubberBandCameraPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(RubberBandCameraPtr, );
-
-OSG_END_NAMESPACE
+OSG_DLLEXPORT_SFIELD_DEF1(RubberBandCameraPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(RubberBandCameraPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -460,10 +608,12 @@ OSG_END_NAMESPACE
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.45 2005/07/20 00:10:14 vossg Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
     static Char8 cvsid_hpp       [] = OSGRUBBERBANDCAMERABASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGRUBBERBANDCAMERABASE_INLINE_CVSID;
 
     static Char8 cvsid_fields_hpp[] = OSGRUBBERBANDCAMERAFIELDS_HEADER_CVSID;
 }
+
+OSG_END_NAMESPACE
 

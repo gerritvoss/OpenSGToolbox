@@ -42,14 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGToolboxConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGToolboxDef.h"
 
 #include "OSGMatrixBeaconCameraBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_TOOLBOX_CLASS_API MatrixBeaconCamera : public MatrixBeaconCameraBase
+class OSG_TOOLBOXLIB_DLLMAPPING MatrixBeaconCamera : public MatrixBeaconCameraBase
 {
   private:
 

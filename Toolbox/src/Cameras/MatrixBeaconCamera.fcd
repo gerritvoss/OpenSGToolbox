@@ -3,10 +3,13 @@
 <FieldContainer
 	name="MatrixBeaconCamera"
 	parent="Camera"
+	library="Toolbox"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 Matrix Beacon Camera.
 	<Field
