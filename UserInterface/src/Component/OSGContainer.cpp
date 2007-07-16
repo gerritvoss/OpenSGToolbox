@@ -74,6 +74,40 @@ void Container::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void Container::getInsideBorderBounds(Pnt2s& TopLeft, Vec2s& Size)
+{
+   UInt16 TopInset(0), LeftInset(0), BottomInset(0), RightInset(0);
+   if(getBorder() != NullFC)
+   {
+      //Get Border Insets
+      getBorder()->getInsets(LeftInset,RightInset,TopInset,BottomInset);
+   }
+   TopLeft.setValues(LeftInset+getLeftInset(), TopInset+getTopInset());
+   Size.setValues(getSize().x()-RightInset-LeftInset-getLeftInset()-getRightInset(), getSize().y()-BottomInset-TopInset-getBottomInset()-getTopInset());
+}
+
+void Container::getInsideBorderSizing(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+{
+   UInt16 TopInset(0), LeftInset(0), BottomInset(0), RightInset(0);
+
+   if(getBorder() != NullFC)
+   {
+      //Get Border Insets
+      getBorder()->getInsets(LeftInset,RightInset,TopInset,BottomInset);
+   }
+   TopLeft.setValues(LeftInset, TopInset);
+   BottomRight.setValues(TopLeft.x()+getSize().x()-(LeftInset + RightInset), TopLeft.y()+getSize().y()-(TopInset + BottomInset));
+}
+
+void Container::setAllInsets(UInt32 inset)
+{
+	beginEditCP(ContainerPtr(this), Container::LeftInsetFieldMask | Container::RightInsetFieldMask | Container::TopInsetFieldMask | Container::BottomInsetFieldMask);
+		setLeftInset(inset);
+		setRightInset(inset);
+		setTopInset(inset);
+		setBottomInset(inset);
+	endEditCP(ContainerPtr(this), Container::LeftInsetFieldMask | Container::RightInsetFieldMask | Container::TopInsetFieldMask | Container::BottomInsetFieldMask);
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

@@ -58,7 +58,7 @@
 #endif
 
 
-#include "OSGUserInterfaceConfig.h"
+#include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
@@ -83,7 +83,7 @@ class BinaryDataHandler;
 
 //! \brief Container Base Class.
 
-class OSG_USER_INTERFACE_CLASS_API OSG_USERINTERFACELIB_DLLMAPPING ContainerBase : public Component
+class OSG_USERINTERFACELIB_DLLMAPPING ContainerBase : public Component
 {
   private:
 
