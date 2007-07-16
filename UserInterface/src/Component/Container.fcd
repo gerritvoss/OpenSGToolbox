@@ -30,4 +30,40 @@ A UI Container.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="LeftInset"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>
+	</Field>
+	<Field
+		name="RightInset"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>
+	</Field>
+	<Field
+		name="TopInset"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"                                                                         
+		defaultValue="0"
+	>
+	</Field>
+	<Field
+		name="BottomInset"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>
+	</Field>
 </FieldContainer>

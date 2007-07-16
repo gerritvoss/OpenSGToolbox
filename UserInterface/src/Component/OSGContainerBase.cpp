@@ -70,6 +70,18 @@ const OSG::BitVector  ContainerBase::ChildrenFieldMask =
 const OSG::BitVector  ContainerBase::LayoutFieldMask = 
     (TypeTraits<BitVector>::One << ContainerBase::LayoutFieldId);
 
+const OSG::BitVector  ContainerBase::LeftInsetFieldMask = 
+    (TypeTraits<BitVector>::One << ContainerBase::LeftInsetFieldId);
+
+const OSG::BitVector  ContainerBase::RightInsetFieldMask = 
+    (TypeTraits<BitVector>::One << ContainerBase::RightInsetFieldId);
+
+const OSG::BitVector  ContainerBase::TopInsetFieldMask = 
+    (TypeTraits<BitVector>::One << ContainerBase::TopInsetFieldId);
+
+const OSG::BitVector  ContainerBase::BottomInsetFieldMask = 
+    (TypeTraits<BitVector>::One << ContainerBase::BottomInsetFieldId);
+
 const OSG::BitVector ContainerBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -81,6 +93,18 @@ const OSG::BitVector ContainerBase::MTInfluenceMask =
     
 */
 /*! \var LayoutPtr       ContainerBase::_sfLayout
+    
+*/
+/*! \var UInt32          ContainerBase::_sfLeftInset
+    
+*/
+/*! \var UInt32          ContainerBase::_sfRightInset
+    
+*/
+/*! \var UInt32          ContainerBase::_sfTopInset
+    
+*/
+/*! \var UInt32          ContainerBase::_sfBottomInset
     
 */
 
@@ -97,7 +121,27 @@ FieldDescription *ContainerBase::_desc[] =
                      "Layout", 
                      LayoutFieldId, LayoutFieldMask,
                      false,
-                     (FieldAccessMethod) &ContainerBase::getSFLayout)
+                     (FieldAccessMethod) &ContainerBase::getSFLayout),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "LeftInset", 
+                     LeftInsetFieldId, LeftInsetFieldMask,
+                     false,
+                     (FieldAccessMethod) &ContainerBase::getSFLeftInset),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "RightInset", 
+                     RightInsetFieldId, RightInsetFieldMask,
+                     false,
+                     (FieldAccessMethod) &ContainerBase::getSFRightInset),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "TopInset", 
+                     TopInsetFieldId, TopInsetFieldMask,
+                     false,
+                     (FieldAccessMethod) &ContainerBase::getSFTopInset),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "BottomInset", 
+                     BottomInsetFieldId, BottomInsetFieldMask,
+                     false,
+                     (FieldAccessMethod) &ContainerBase::getSFBottomInset)
 };
 
 
@@ -167,6 +211,10 @@ void ContainerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 ContainerBase::ContainerBase(void) :
     _mfChildren               (), 
     _sfLayout                 (), 
+    _sfLeftInset              (UInt32(0)), 
+    _sfRightInset             (UInt32(0)), 
+    _sfTopInset               (UInt32(0)), 
+    _sfBottomInset            (UInt32(0)), 
     Inherited() 
 {
 }
@@ -178,6 +226,10 @@ ContainerBase::ContainerBase(void) :
 ContainerBase::ContainerBase(const ContainerBase &source) :
     _mfChildren               (source._mfChildren               ), 
     _sfLayout                 (source._sfLayout                 ), 
+    _sfLeftInset              (source._sfLeftInset              ), 
+    _sfRightInset             (source._sfRightInset             ), 
+    _sfTopInset               (source._sfTopInset               ), 
+    _sfBottomInset            (source._sfBottomInset            ), 
     Inherited                 (source)
 {
 }
@@ -204,6 +256,26 @@ UInt32 ContainerBase::getBinSize(const BitVector &whichField)
         returnValue += _sfLayout.getBinSize();
     }
 
+    if(FieldBits::NoField != (LeftInsetFieldMask & whichField))
+    {
+        returnValue += _sfLeftInset.getBinSize();
+    }
+
+    if(FieldBits::NoField != (RightInsetFieldMask & whichField))
+    {
+        returnValue += _sfRightInset.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TopInsetFieldMask & whichField))
+    {
+        returnValue += _sfTopInset.getBinSize();
+    }
+
+    if(FieldBits::NoField != (BottomInsetFieldMask & whichField))
+    {
+        returnValue += _sfBottomInset.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -221,6 +293,26 @@ void ContainerBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (LayoutFieldMask & whichField))
     {
         _sfLayout.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LeftInsetFieldMask & whichField))
+    {
+        _sfLeftInset.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RightInsetFieldMask & whichField))
+    {
+        _sfRightInset.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TopInsetFieldMask & whichField))
+    {
+        _sfTopInset.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BottomInsetFieldMask & whichField))
+    {
+        _sfBottomInset.copyToBin(pMem);
     }
 
 
@@ -241,6 +333,26 @@ void ContainerBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfLayout.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (LeftInsetFieldMask & whichField))
+    {
+        _sfLeftInset.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RightInsetFieldMask & whichField))
+    {
+        _sfRightInset.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TopInsetFieldMask & whichField))
+    {
+        _sfTopInset.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BottomInsetFieldMask & whichField))
+    {
+        _sfBottomInset.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -257,6 +369,18 @@ void ContainerBase::executeSyncImpl(      ContainerBase *pOther,
     if(FieldBits::NoField != (LayoutFieldMask & whichField))
         _sfLayout.syncWith(pOther->_sfLayout);
 
+    if(FieldBits::NoField != (LeftInsetFieldMask & whichField))
+        _sfLeftInset.syncWith(pOther->_sfLeftInset);
+
+    if(FieldBits::NoField != (RightInsetFieldMask & whichField))
+        _sfRightInset.syncWith(pOther->_sfRightInset);
+
+    if(FieldBits::NoField != (TopInsetFieldMask & whichField))
+        _sfTopInset.syncWith(pOther->_sfTopInset);
+
+    if(FieldBits::NoField != (BottomInsetFieldMask & whichField))
+        _sfBottomInset.syncWith(pOther->_sfBottomInset);
+
 
 }
 #else
@@ -269,6 +393,18 @@ void ContainerBase::executeSyncImpl(      ContainerBase *pOther,
 
     if(FieldBits::NoField != (LayoutFieldMask & whichField))
         _sfLayout.syncWith(pOther->_sfLayout);
+
+    if(FieldBits::NoField != (LeftInsetFieldMask & whichField))
+        _sfLeftInset.syncWith(pOther->_sfLeftInset);
+
+    if(FieldBits::NoField != (RightInsetFieldMask & whichField))
+        _sfRightInset.syncWith(pOther->_sfRightInset);
+
+    if(FieldBits::NoField != (TopInsetFieldMask & whichField))
+        _sfTopInset.syncWith(pOther->_sfTopInset);
+
+    if(FieldBits::NoField != (BottomInsetFieldMask & whichField))
+        _sfBottomInset.syncWith(pOther->_sfBottomInset);
 
 
     if(FieldBits::NoField != (ChildrenFieldMask & whichField))

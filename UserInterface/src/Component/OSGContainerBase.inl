@@ -84,6 +84,34 @@ SFLayoutPtr *ContainerBase::getSFLayout(void)
     return &_sfLayout;
 }
 
+//! Get the Container::_sfLeftInset field.
+inline
+SFUInt32 *ContainerBase::getSFLeftInset(void)
+{
+    return &_sfLeftInset;
+}
+
+//! Get the Container::_sfRightInset field.
+inline
+SFUInt32 *ContainerBase::getSFRightInset(void)
+{
+    return &_sfRightInset;
+}
+
+//! Get the Container::_sfTopInset field.
+inline
+SFUInt32 *ContainerBase::getSFTopInset(void)
+{
+    return &_sfTopInset;
+}
+
+//! Get the Container::_sfBottomInset field.
+inline
+SFUInt32 *ContainerBase::getSFBottomInset(void)
+{
+    return &_sfBottomInset;
+}
+
 
 //! Get the value of the Container::_sfLayout field.
 inline
@@ -104,6 +132,90 @@ inline
 void ContainerBase::setLayout(const LayoutPtr &value)
 {
     _sfLayout.setValue(value);
+}
+
+//! Get the value of the Container::_sfLeftInset field.
+inline
+UInt32 &ContainerBase::getLeftInset(void)
+{
+    return _sfLeftInset.getValue();
+}
+
+//! Get the value of the Container::_sfLeftInset field.
+inline
+const UInt32 &ContainerBase::getLeftInset(void) const
+{
+    return _sfLeftInset.getValue();
+}
+
+//! Set the value of the Container::_sfLeftInset field.
+inline
+void ContainerBase::setLeftInset(const UInt32 &value)
+{
+    _sfLeftInset.setValue(value);
+}
+
+//! Get the value of the Container::_sfRightInset field.
+inline
+UInt32 &ContainerBase::getRightInset(void)
+{
+    return _sfRightInset.getValue();
+}
+
+//! Get the value of the Container::_sfRightInset field.
+inline
+const UInt32 &ContainerBase::getRightInset(void) const
+{
+    return _sfRightInset.getValue();
+}
+
+//! Set the value of the Container::_sfRightInset field.
+inline
+void ContainerBase::setRightInset(const UInt32 &value)
+{
+    _sfRightInset.setValue(value);
+}
+
+//! Get the value of the Container::_sfTopInset field.
+inline
+UInt32 &ContainerBase::getTopInset(void)
+{
+    return _sfTopInset.getValue();
+}
+
+//! Get the value of the Container::_sfTopInset field.
+inline
+const UInt32 &ContainerBase::getTopInset(void) const
+{
+    return _sfTopInset.getValue();
+}
+
+//! Set the value of the Container::_sfTopInset field.
+inline
+void ContainerBase::setTopInset(const UInt32 &value)
+{
+    _sfTopInset.setValue(value);
+}
+
+//! Get the value of the Container::_sfBottomInset field.
+inline
+UInt32 &ContainerBase::getBottomInset(void)
+{
+    return _sfBottomInset.getValue();
+}
+
+//! Get the value of the Container::_sfBottomInset field.
+inline
+const UInt32 &ContainerBase::getBottomInset(void) const
+{
+    return _sfBottomInset.getValue();
+}
+
+//! Set the value of the Container::_sfBottomInset field.
+inline
+void ContainerBase::setBottomInset(const UInt32 &value)
+{
+    _sfBottomInset.setValue(value);
 }
 
 

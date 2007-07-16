@@ -42,14 +42,14 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceConfig.h"
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGContainerBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
+class OSG_USER_INTERFACE_CLASS_API OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
 {
   private:
 
