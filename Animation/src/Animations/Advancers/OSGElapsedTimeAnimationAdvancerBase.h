@@ -58,8 +58,8 @@
 #endif
 
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -80,7 +80,7 @@ class BinaryDataHandler;
 
 //! \brief ElapsedTimeAnimationAdvancer Base Class.
 
-class OSG_ANIMATION_CLASS_API ElapsedTimeAnimationAdvancerBase : public AnimationAdvancer
+class OSG_ANIMATIONLIB_DLLMAPPING ElapsedTimeAnimationAdvancerBase : public AnimationAdvancer
 {
   private:
 

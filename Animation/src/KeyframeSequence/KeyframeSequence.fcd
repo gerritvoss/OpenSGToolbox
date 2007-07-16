@@ -3,10 +3,13 @@
 <FieldContainer
 	name="KeyframeSequence"
 	parent="FieldContainer"
+	library="Animation"
 	pointerfieldtypes="both"
 	structure="abstract"
 	systemcomponent="false"
 	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 KeyframeSequence is the base class of all Keyframe Sequences.
 </FieldContainer>

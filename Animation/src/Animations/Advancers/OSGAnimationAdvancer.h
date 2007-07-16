@@ -42,14 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include "OSGAnimationAdvancerBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_ANIMATION_CLASS_API AnimationAdvancer : public AnimationAdvancerBase
+class OSG_ANIMATIONLIB_DLLMAPPING AnimationAdvancer : public AnimationAdvancerBase
 {
   private:
 

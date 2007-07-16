@@ -58,8 +58,8 @@
 #endif
 
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -79,7 +79,7 @@ class BinaryDataHandler;
 
 //! \brief KeyframeAnimator Base Class.
 
-class OSG_ANIMATION_CLASS_API KeyframeAnimatorBase : public Animator
+class OSG_ANIMATIONLIB_DLLMAPPING KeyframeAnimatorBase : public Animator
 {
   private:
 

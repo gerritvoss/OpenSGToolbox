@@ -57,8 +57,9 @@
 #pragma once
 #endif
 
-#include "OSGAnimationConfig.h"
+
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -79,7 +80,7 @@ class BinaryDataHandler;
 
 //! \brief GeoTexCoordDifferenceSet Base Class.
 
-class OSG_ANIMATION_CLASS_API GeoTexCoordDifferenceSetBase : public GeoDifferenceSet
+class OSG_ANIMATIONLIB_DLLMAPPING GeoTexCoordDifferenceSetBase : public GeoDifferenceSet
 {
   private:
 

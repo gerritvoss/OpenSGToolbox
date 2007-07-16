@@ -54,11 +54,11 @@
 #pragma once
 #endif
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGAnimationDef.h"
 
 #include "OSGAnimationFields.h"
 
@@ -74,6 +74,8 @@ typedef FCPtr<AnimationPtr, FieldAnimation> FieldAnimationPtr;
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpAnimationFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -87,10 +89,10 @@ struct FieldDataTraits<FieldAnimationPtr> :
     enum                        { StringConvertable = 0x00 };
     enum                        { bHasParent        = 0x01 };
 
-    static DataType &getType (void) { return _type;        }
+    static DataType   &getType (void) { return _type;        }
 
-    static char     *getSName(void) { return "SFFieldAnimationPtr"; }
-    static char     *getMName(void) { return "MFFieldAnimationPtr"; }
+    static const char *getSName(void) { return "SFFieldAnimationPtr"; }
+    static const char *getMName(void) { return "MFFieldAnimationPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
@@ -103,16 +105,27 @@ struct FieldDataTraits<FieldAnimationPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpAnimationFieldSingle */
+
 typedef SField<FieldAnimationPtr> SFFieldAnimationPtr;
 #endif
 
+#ifndef OSG_COMPILEFIELDANIMATIONINST
+OSG_DLLEXPORT_DECL1(SField, FieldAnimationPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpAnimationFieldMulti */
+
 typedef MField<FieldAnimationPtr> MFFieldAnimationPtr;
+#endif
+
+#ifndef OSG_COMPILEFIELDANIMATIONINST
+OSG_DLLEXPORT_DECL1(MField, FieldAnimationPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGFIELDANIMATIONFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.25 2005/04/04 14:51:48 dirk Exp $"
+#define OSGFIELDANIMATIONFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGFIELDANIMATIONFIELDS_H_ */

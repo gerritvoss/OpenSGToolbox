@@ -41,14 +41,14 @@
 #ifdef __sgi
 #pragma once
 #endif
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include "OSGGeoTexCoordDifferenceSetBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_ANIMATION_CLASS_API GeoTexCoordDifferenceSet : public GeoTexCoordDifferenceSetBase
+class OSG_ANIMATIONLIB_DLLMAPPING GeoTexCoordDifferenceSet : public GeoTexCoordDifferenceSetBase
 {
   private:
 

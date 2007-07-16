@@ -3,14 +3,17 @@
 <FieldContainer
 	name="KeyframeSequenceTextureChunkPtr"
 	parent="KeyframeSequence"
+	library="Animation"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 	<Field
 		name="Values"
-      type="TextureChunkPtr"
+		type="TextureChunkPtr"
 		cardinality="multi"
 		visibility="external"
 		access="public"

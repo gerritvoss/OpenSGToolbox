@@ -50,7 +50,7 @@
 #include "OSGKeyframeSequenceQuaternion.h"
 #include "Interpolation/OSGKeyframeInterpolations.h"
 #include "Interpolation/OSGInterpolationFactory.h"
-#include "Util/OSGQuatOperations.h"
+#include <OpenSG/Toolbox/OSGQuatOperations.h>
 
 OSG_USING_NAMESPACE
 

@@ -42,14 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include "OSGKeyframeSequenceBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_ANIMATION_CLASS_API KeyframeSequence : public KeyframeSequenceBase
+class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequence : public KeyframeSequenceBase
 {
   private:
 

@@ -1,27 +1,30 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-   name="GeoPositionDifferenceSet"
-   parent="GeoDifferenceSet"
+	name="GeoPositionDifferenceSet"
+	parent="GeoDifferenceSet"
+	library="Animation"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
-   <Field
-         name="Positions"
-         type="GeoPositionsPtr"
-         cardinality="single"
-         visibility="external"
-         access="public"
-         >
-   </Field>
-   <Field
-         name="Indices"
-         type="GeoIndicesPtr"
-         cardinality="single"
-         visibility="external"
-         access="public"
-         >
-   </Field>
+	<Field
+		name="Positions"
+		type="GeoPositionsPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Indices"
+		type="GeoIndicesPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

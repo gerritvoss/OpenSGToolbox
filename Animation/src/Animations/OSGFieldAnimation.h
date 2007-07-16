@@ -42,8 +42,8 @@
 #pragma once
 #endif
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include "OSGFieldAnimationBase.h"
 
@@ -53,7 +53,7 @@ OSG_BEGIN_NAMESPACE
            PageSystemFieldAnimation for a description.
 */
 
-class OSG_ANIMATION_CLASS_API FieldAnimation : public FieldAnimationBase
+class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimation : public FieldAnimationBase
 {
   private:
 

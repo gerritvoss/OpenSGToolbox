@@ -62,7 +62,7 @@
 #include "OSGKeyframeSequencePnt2f.h"
 
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  KeyframeSequencePnt2fBase::ValuesFieldMask = 
     (TypeTraits<BitVector>::One << KeyframeSequencePnt2fBase::ValuesFieldId);
@@ -266,6 +266,8 @@ void KeyframeSequencePnt2fBase::execBeginEditImpl (const BitVector &whichField,
 
 
 
+OSG_END_NAMESPACE
+
 #include <OpenSG/OSGSFieldTypeDef.inl>
 #include <OpenSG/OSGMFieldTypeDef.inl>
 
@@ -275,10 +277,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<KeyframeSequencePnt2fPtr>::_type("KeyframeSequencePnt2fPtr", "KeyframeSequencePtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(KeyframeSequencePnt2fPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(KeyframeSequencePnt2fPtr, );
-
-OSG_END_NAMESPACE
+OSG_DLLEXPORT_SFIELD_DEF1(KeyframeSequencePnt2fPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(KeyframeSequencePnt2fPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -294,10 +294,12 @@ OSG_END_NAMESPACE
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.45 2005/07/20 00:10:14 vossg Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
     static Char8 cvsid_hpp       [] = OSGKEYFRAMESEQUENCEPNT2FBASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGKEYFRAMESEQUENCEPNT2FBASE_INLINE_CVSID;
 
     static Char8 cvsid_fields_hpp[] = OSGKEYFRAMESEQUENCEPNT2FFIELDS_HEADER_CVSID;
 }
+
+OSG_END_NAMESPACE
 

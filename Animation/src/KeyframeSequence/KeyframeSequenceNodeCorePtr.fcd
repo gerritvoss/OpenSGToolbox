@@ -3,14 +3,17 @@
 <FieldContainer
 	name="KeyframeSequenceNodeCorePtr"
 	parent="KeyframeSequence"
+	library="Animation"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 	<Field
 		name="Values"
-      type="NodeCorePtr"
+		type="NodeCorePtr"
 		cardinality="multi"
 		visibility="external"
 		access="public"

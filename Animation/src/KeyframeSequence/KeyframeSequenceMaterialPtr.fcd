@@ -3,14 +3,17 @@
 <FieldContainer
 	name="KeyframeSequenceMaterialPtr"
 	parent="KeyframeSequence"
+	library="Animation"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 	<Field
 		name="Values"
-      type="MaterialPtr"
+		type="MaterialPtr"
 		cardinality="multi"
 		visibility="external"
 		access="public"

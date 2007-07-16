@@ -2,10 +2,13 @@
 
 <FieldContainer
 	name="GeoDifferenceSet"
-   parent="FieldContainer"
+	parent="FieldContainer"
+	library="Animation"
 	pointerfieldtypes="both"
-   structure="abstract"
+	structure="abstract"
 	systemcomponent="false"
-   parentsystemcomponent="true"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 </FieldContainer>

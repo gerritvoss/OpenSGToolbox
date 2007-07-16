@@ -58,6 +58,7 @@
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGAnimationDef.h"
 
 #include <OpenSG/OSGFieldContainerFields.h>
 
@@ -73,6 +74,8 @@ typedef FCPtr<FieldContainerPtr, GeoDifferenceSet> GeoDifferenceSetPtr;
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpAnimationFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -86,10 +89,10 @@ struct FieldDataTraits<GeoDifferenceSetPtr> :
     enum                        { StringConvertable = 0x00 };
     enum                        { bHasParent        = 0x01 };
 
-    static DataType &getType (void) { return _type;        }
+    static DataType   &getType (void) { return _type;        }
 
-    static char     *getSName(void) { return "SFGeoDifferenceSetPtr"; }
-    static char     *getMName(void) { return "MFGeoDifferenceSetPtr"; }
+    static const char *getSName(void) { return "SFGeoDifferenceSetPtr"; }
+    static const char *getMName(void) { return "MFGeoDifferenceSetPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
@@ -102,16 +105,27 @@ struct FieldDataTraits<GeoDifferenceSetPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpAnimationFieldSingle */
+
 typedef SField<GeoDifferenceSetPtr> SFGeoDifferenceSetPtr;
 #endif
 
+#ifndef OSG_COMPILEGEODIFFERENCESETINST
+OSG_DLLEXPORT_DECL1(SField, GeoDifferenceSetPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpAnimationFieldMulti */
+
 typedef MField<GeoDifferenceSetPtr> MFGeoDifferenceSetPtr;
+#endif
+
+#ifndef OSG_COMPILEGEODIFFERENCESETINST
+OSG_DLLEXPORT_DECL1(MField, GeoDifferenceSetPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGGEODIFFERENCESETFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.25 2005/04/04 14:51:48 dirk Exp $"
+#define OSGGEODIFFERENCESETFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGGEODIFFERENCESETFIELDS_H_ */

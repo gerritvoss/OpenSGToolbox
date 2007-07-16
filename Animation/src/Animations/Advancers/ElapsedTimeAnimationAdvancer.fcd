@@ -3,33 +3,36 @@
 <FieldContainer
 	name="ElapsedTimeAnimationAdvancer"
 	parent="AnimationAdvancer"
+	library="Animation"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
-   >
-   <Field
-         name="StartTime"
-         type="Real32"
-         cardinality="single"
-         visibility="external"
-         access="public"
-         >
-   </Field>
-   <Field
-         name="ElpsTime"
-         type="Real32"
-         cardinality="single"
-         visibility="external"
-         access="public"
-         >
-   </Field>
-   <Field
-         name="PrevElpsTime"
-         type="Real32"
-         cardinality="single"
-         visibility="external"
-         access="protected"
-         >
-   </Field>
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="StartTime"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ElpsTime"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="PrevElpsTime"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
 </FieldContainer>

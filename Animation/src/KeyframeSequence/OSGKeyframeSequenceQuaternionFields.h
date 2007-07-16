@@ -58,6 +58,7 @@
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGAnimationDef.h"
 
 #include "OSGKeyframeSequenceFields.h"
 
@@ -73,6 +74,8 @@ typedef FCPtr<KeyframeSequencePtr, KeyframeSequenceQuaternion> KeyframeSequenceQ
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpAnimationFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -86,10 +89,10 @@ struct FieldDataTraits<KeyframeSequenceQuaternionPtr> :
     enum                        { StringConvertable = 0x00 };
     enum                        { bHasParent        = 0x01 };
 
-    static DataType &getType (void) { return _type;        }
+    static DataType   &getType (void) { return _type;        }
 
-    static char     *getSName(void) { return "SFKeyframeSequenceQuaternionPtr"; }
-    static char     *getMName(void) { return "MFKeyframeSequenceQuaternionPtr"; }
+    static const char *getSName(void) { return "SFKeyframeSequenceQuaternionPtr"; }
+    static const char *getMName(void) { return "MFKeyframeSequenceQuaternionPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
@@ -102,16 +105,27 @@ struct FieldDataTraits<KeyframeSequenceQuaternionPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpAnimationFieldSingle */
+
 typedef SField<KeyframeSequenceQuaternionPtr> SFKeyframeSequenceQuaternionPtr;
 #endif
 
+#ifndef OSG_COMPILEKEYFRAMESEQUENCEQUATERNIONINST
+OSG_DLLEXPORT_DECL1(SField, KeyframeSequenceQuaternionPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpAnimationFieldMulti */
+
 typedef MField<KeyframeSequenceQuaternionPtr> MFKeyframeSequenceQuaternionPtr;
+#endif
+
+#ifndef OSG_COMPILEKEYFRAMESEQUENCEQUATERNIONINST
+OSG_DLLEXPORT_DECL1(MField, KeyframeSequenceQuaternionPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGKEYFRAMESEQUENCEQUATERNIONFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.25 2005/04/04 14:51:48 dirk Exp $"
+#define OSGKEYFRAMESEQUENCEQUATERNIONFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGKEYFRAMESEQUENCEQUATERNIONFIELDS_H_ */

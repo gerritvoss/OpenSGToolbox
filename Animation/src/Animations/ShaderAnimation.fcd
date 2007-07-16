@@ -3,10 +3,13 @@
 <FieldContainer
 	name="ShaderAnimation"
 	parent="Animation"
+	library="Animation"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 Field Animation Class.
 	<Field
@@ -14,8 +17,8 @@ Field Animation Class.
 		type="AnimatorPtr"
 		cardinality="single"
 		visibility="external"
+		header="Animators/OSGAnimator.h"
 		access="public"
-      header="Animators/OSGAnimator.h"
 	>
 	</Field>
 	<Field
@@ -24,7 +27,6 @@ Field Animation Class.
 		cardinality="single"
 		visibility="external"
 		access="public"
-      defailt="NullFC"
 	>
 	</Field>
 	<Field
@@ -41,7 +43,6 @@ Field Animation Class.
 		cardinality="single"
 		visibility="external"
 		access="protected"
-      defailt="NullFC"
 	>
 	</Field>
 	<Field
@@ -50,10 +51,8 @@ Field Animation Class.
 		cardinality="single"
 		visibility="external"
 		access="protected"
-      defailt="0"
 	>
 	</Field>
-   
 	<Field
 		name="InterpolationType"
 		type="UInt32"

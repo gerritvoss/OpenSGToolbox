@@ -3,10 +3,13 @@
 <FieldContainer
 	name="KeyframeSequenceUInt16"
 	parent="KeyframeSequence"
+	library="Animation"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 	<Field
 		name="Values"

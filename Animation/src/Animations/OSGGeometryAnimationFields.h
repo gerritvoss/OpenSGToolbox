@@ -58,6 +58,7 @@
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGAnimationDef.h"
 
 #include "OSGAnimationFields.h"
 
@@ -73,6 +74,8 @@ typedef FCPtr<AnimationPtr, GeometryAnimation> GeometryAnimationPtr;
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpAnimationFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -86,10 +89,10 @@ struct FieldDataTraits<GeometryAnimationPtr> :
     enum                        { StringConvertable = 0x00 };
     enum                        { bHasParent        = 0x01 };
 
-    static DataType &getType (void) { return _type;        }
+    static DataType   &getType (void) { return _type;        }
 
-    static char     *getSName(void) { return "SFGeometryAnimationPtr"; }
-    static char     *getMName(void) { return "MFGeometryAnimationPtr"; }
+    static const char *getSName(void) { return "SFGeometryAnimationPtr"; }
+    static const char *getMName(void) { return "MFGeometryAnimationPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
@@ -102,16 +105,27 @@ struct FieldDataTraits<GeometryAnimationPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpAnimationFieldSingle */
+
 typedef SField<GeometryAnimationPtr> SFGeometryAnimationPtr;
 #endif
 
+#ifndef OSG_COMPILEGEOMETRYANIMATIONINST
+OSG_DLLEXPORT_DECL1(SField, GeometryAnimationPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpAnimationFieldMulti */
+
 typedef MField<GeometryAnimationPtr> MFGeometryAnimationPtr;
+#endif
+
+#ifndef OSG_COMPILEGEOMETRYANIMATIONINST
+OSG_DLLEXPORT_DECL1(MField, GeometryAnimationPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGGEOMETRYANIMATIONFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.25 2005/04/04 14:51:48 dirk Exp $"
+#define OSGGEOMETRYANIMATIONFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGGEOMETRYANIMATIONFIELDS_H_ */

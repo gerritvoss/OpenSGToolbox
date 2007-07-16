@@ -42,8 +42,8 @@
 #pragma once
 #endif
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 #include <OpenSG/OSGMFSysTypes.h>
 
 #include "OSGKeyframeSequenceGLenumBase.h"
@@ -55,7 +55,7 @@ OSG_BEGIN_NAMESPACE
            PageSystemKeyframeSequenceGLenum for a description.
 */
 
-class OSG_ANIMATION_CLASS_API KeyframeSequenceGLenum : public KeyframeSequenceGLenumBase
+class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequenceGLenum : public KeyframeSequenceGLenumBase
 {
   private:
 

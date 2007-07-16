@@ -58,6 +58,7 @@
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGAnimationDef.h"
 
 #include "OSGKeyframeSequenceFields.h"
 
@@ -73,6 +74,8 @@ typedef FCPtr<KeyframeSequencePtr, KeyframeSequenceUInt32> KeyframeSequenceUInt3
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpAnimationFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -86,10 +89,10 @@ struct FieldDataTraits<KeyframeSequenceUInt32Ptr> :
     enum                        { StringConvertable = 0x00 };
     enum                        { bHasParent        = 0x01 };
 
-    static DataType &getType (void) { return _type;        }
+    static DataType   &getType (void) { return _type;        }
 
-    static char     *getSName(void) { return "SFKeyframeSequenceUInt32Ptr"; }
-    static char     *getMName(void) { return "MFKeyframeSequenceUInt32Ptr"; }
+    static const char *getSName(void) { return "SFKeyframeSequenceUInt32Ptr"; }
+    static const char *getMName(void) { return "MFKeyframeSequenceUInt32Ptr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
@@ -102,16 +105,27 @@ struct FieldDataTraits<KeyframeSequenceUInt32Ptr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpAnimationFieldSingle */
+
 typedef SField<KeyframeSequenceUInt32Ptr> SFKeyframeSequenceUInt32Ptr;
 #endif
 
+#ifndef OSG_COMPILEKEYFRAMESEQUENCEUINT32INST
+OSG_DLLEXPORT_DECL1(SField, KeyframeSequenceUInt32Ptr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpAnimationFieldMulti */
+
 typedef MField<KeyframeSequenceUInt32Ptr> MFKeyframeSequenceUInt32Ptr;
+#endif
+
+#ifndef OSG_COMPILEKEYFRAMESEQUENCEUINT32INST
+OSG_DLLEXPORT_DECL1(MField, KeyframeSequenceUInt32Ptr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGKEYFRAMESEQUENCEUINT32FIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.25 2005/04/04 14:51:48 dirk Exp $"
+#define OSGKEYFRAMESEQUENCEUINT32FIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGKEYFRAMESEQUENCEUINT32FIELDS_H_ */

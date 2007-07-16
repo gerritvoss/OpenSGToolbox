@@ -42,8 +42,8 @@
 #pragma once
 #endif
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include "OSGAnimatorBase.h"
 
@@ -53,7 +53,7 @@ OSG_BEGIN_NAMESPACE
            PageSystemAnimator for a description.
 */
 
-class OSG_ANIMATION_CLASS_API Animator : public AnimatorBase
+class OSG_ANIMATIONLIB_DLLMAPPING Animator : public AnimatorBase
 {
   private:
 

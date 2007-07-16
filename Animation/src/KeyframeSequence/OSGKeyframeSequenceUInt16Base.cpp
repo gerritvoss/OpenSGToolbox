@@ -62,7 +62,7 @@
 #include "OSGKeyframeSequenceUInt16.h"
 
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  KeyframeSequenceUInt16Base::ValuesFieldMask = 
     (TypeTraits<BitVector>::One << KeyframeSequenceUInt16Base::ValuesFieldId);
@@ -266,6 +266,8 @@ void KeyframeSequenceUInt16Base::execBeginEditImpl (const BitVector &whichField,
 
 
 
+OSG_END_NAMESPACE
+
 #include <OpenSG/OSGSFieldTypeDef.inl>
 #include <OpenSG/OSGMFieldTypeDef.inl>
 
@@ -275,10 +277,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<KeyframeSequenceUInt16Ptr>::_type("KeyframeSequenceUInt16Ptr", "KeyframeSequencePtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(KeyframeSequenceUInt16Ptr, );
-OSG_DLLEXPORT_MFIELD_DEF1(KeyframeSequenceUInt16Ptr, );
-
-OSG_END_NAMESPACE
+OSG_DLLEXPORT_SFIELD_DEF1(KeyframeSequenceUInt16Ptr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(KeyframeSequenceUInt16Ptr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -294,10 +294,12 @@ OSG_END_NAMESPACE
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.45 2005/07/20 00:10:14 vossg Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
     static Char8 cvsid_hpp       [] = OSGKEYFRAMESEQUENCEUINT16BASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGKEYFRAMESEQUENCEUINT16BASE_INLINE_CVSID;
 
     static Char8 cvsid_fields_hpp[] = OSGKEYFRAMESEQUENCEUINT16FIELDS_HEADER_CVSID;
 }
+
+OSG_END_NAMESPACE
 

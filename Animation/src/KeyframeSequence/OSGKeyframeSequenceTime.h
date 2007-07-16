@@ -42,8 +42,8 @@
 #pragma once
 #endif
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 #include <OpenSG/OSGMFSysTypes.h>
 
 #include "OSGKeyframeSequenceTimeBase.h"
@@ -55,7 +55,7 @@ OSG_BEGIN_NAMESPACE
            PageSystemKeyframeSequenceTime for a description.
 */
 
-class OSG_ANIMATION_CLASS_API KeyframeSequenceTime : public KeyframeSequenceTimeBase
+class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequenceTime : public KeyframeSequenceTimeBase
 {
   private:
 

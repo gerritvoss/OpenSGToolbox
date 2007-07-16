@@ -3,10 +3,13 @@
 <FieldContainer
 	name="FieldAnimationAdvancer"
 	parent="AnimationAdvancer"
+	library="Animation"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 	<Field
 		name="Container"
@@ -14,7 +17,6 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
-      defailt="NullFC"
 	>
 	</Field>
 	<Field
@@ -32,13 +34,13 @@
 		visibility="external"
 		access="public"
 	>
-   </Field>
-   <Field
-         name="PrevFieldValue"
-         type="Real32"
-         cardinality="single"
-         visibility="external"
-         access="protected"
-         >
-   </Field>
+	</Field>
+	<Field
+		name="PrevFieldValue"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
 </FieldContainer>

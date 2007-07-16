@@ -58,8 +58,8 @@
 #endif
 
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -84,7 +84,7 @@ class BinaryDataHandler;
 
 //! \brief ShaderAnimation Base Class.
 
-class OSG_ANIMATION_CLASS_API ShaderAnimationBase : public Animation
+class OSG_ANIMATIONLIB_DLLMAPPING ShaderAnimationBase : public Animation
 {
   private:
 

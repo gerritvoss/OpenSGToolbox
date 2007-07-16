@@ -62,7 +62,7 @@
 #include "OSGKeyframeSequenceGeoNormalsPtr.h"
 
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  KeyframeSequenceGeoNormalsPtrBase::BaseValuesFieldMask = 
     (TypeTraits<BitVector>::One << KeyframeSequenceGeoNormalsPtrBase::BaseValuesFieldId);
@@ -300,6 +300,8 @@ void KeyframeSequenceGeoNormalsPtrBase::execBeginEditImpl (const BitVector &whic
 
 
 
+OSG_END_NAMESPACE
+
 #include <OpenSG/OSGSFieldTypeDef.inl>
 #include <OpenSG/OSGMFieldTypeDef.inl>
 
@@ -309,10 +311,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<KeyframeSequenceGeoNormalsPtrPtr>::_type("KeyframeSequenceGeoNormalsPtrPtr", "KeyframeSequencePtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(KeyframeSequenceGeoNormalsPtrPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(KeyframeSequenceGeoNormalsPtrPtr, );
-
-OSG_END_NAMESPACE
+OSG_DLLEXPORT_SFIELD_DEF1(KeyframeSequenceGeoNormalsPtrPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(KeyframeSequenceGeoNormalsPtrPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -328,10 +328,12 @@ OSG_END_NAMESPACE
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.45 2005/07/20 00:10:14 vossg Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
     static Char8 cvsid_hpp       [] = OSGKEYFRAMESEQUENCEGEONORMALSPTRBASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGKEYFRAMESEQUENCEGEONORMALSPTRBASE_INLINE_CVSID;
 
     static Char8 cvsid_fields_hpp[] = OSGKEYFRAMESEQUENCEGEONORMALSPTRFIELDS_HEADER_CVSID;
 }
+
+OSG_END_NAMESPACE
 

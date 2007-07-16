@@ -1,7 +1,7 @@
 #ifndef _OPENSG_MFINTERPOLATIONS_H_
 #define _OPENSG_MFINTERPOLATIONS_H_
 
-#include "OSGAnimationConfig.h"
+#include "OSGAnimationDef.h"
 
 #include <vector>
 
@@ -15,9 +15,9 @@
 
 OSG_BEGIN_NAMESPACE
 
-bool OSG_ANIMATION_FUNC_API getInterpolationIndexes(const osg::MFReal32& Keys, const osg::Real32& Time, osg::UInt32& LastKeyframeIndex, osg::UInt32& NextKeyframeIndex, osg::Real32& t, bool isCyclic=false);
+bool OSG_ANIMATIONLIB_DLLMAPPING getInterpolationIndexes(const osg::MFReal32& Keys, const osg::Real32& Time, osg::UInt32& LastKeyframeIndex, osg::UInt32& NextKeyframeIndex, osg::Real32& t, bool isCyclic=false);
 
-bool OSG_ANIMATION_FUNC_API getInterpolationIndex(const osg::MFReal32& Keys, const osg::Real32& Time, osg::UInt32& Index, osg::Real32& t, bool isCyclic=false);
+bool OSG_ANIMATIONLIB_DLLMAPPING getInterpolationIndex(const osg::MFReal32& Keys, const osg::Real32& Time, osg::UInt32& Index, osg::Real32& t, bool isCyclic=false);
 
 //Generic Lerp
 template <class FieldTypeT, osg::Int32 fieldNameSpace>

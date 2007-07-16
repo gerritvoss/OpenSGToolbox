@@ -58,8 +58,8 @@
 #endif
 
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -94,7 +94,7 @@ class BinaryDataHandler;
 
 //! \brief BlendGeometry Base Class.
 
-class OSG_ANIMATION_CLASS_API BlendGeometryBase : public Geometry
+class OSG_ANIMATIONLIB_DLLMAPPING BlendGeometryBase : public Geometry
 {
   private:
 

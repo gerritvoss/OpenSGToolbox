@@ -42,8 +42,8 @@
 #pragma once
 #endif
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 #include <OpenSG/OSGMFSysTypes.h>
 
 #include "OSGKeyframeSequenceColor3fBase.h"
@@ -55,7 +55,7 @@ OSG_BEGIN_NAMESPACE
            PageSystemKeyframeSequenceColor3f for a description.
 */
 
-class OSG_ANIMATION_CLASS_API KeyframeSequenceColor3f : public KeyframeSequenceColor3fBase
+class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequenceColor3f : public KeyframeSequenceColor3fBase
 {
   private:
 

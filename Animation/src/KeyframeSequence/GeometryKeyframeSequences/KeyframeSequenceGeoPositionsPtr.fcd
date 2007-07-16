@@ -3,26 +3,29 @@
 <FieldContainer
 	name="KeyframeSequenceGeoPositionsPtr"
 	parent="KeyframeSequence"
+	library="Animation"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 	<Field
 		name="BaseValues"
-      type="GeoPositionsPtr"
+		type="GeoPositionsPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
 	>
-   </Field>
-   <Field
-         name="KeyframeDifferenceSets"
-         type="GeoPositionDifferenceSetPtr"
-         cardinality="multi"
-         visibility="external"
-         access="public"
-         header="GeometryAnimation/OSGGeoPositionDifferenceSet.h"
-         >
-   </Field>
+	</Field>
+	<Field
+		name="KeyframeDifferenceSets"
+		type="GeoPositionDifferenceSetPtr"
+		cardinality="multi"
+		visibility="external"
+		header="GeometryAnimation/OSGGeoPositionDifferenceSet.h"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

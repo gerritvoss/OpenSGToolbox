@@ -42,7 +42,7 @@
 #pragma once
 #endif
 
-#include "OSGAnimationConfig.h"
+#include "OSGAnimationDef.h"
 #include <OpenSG/OSGMFSysTypes.h>
 #include <OpenSG/OSGGeoPositionsFields.h> // BaseValues type
 
@@ -58,7 +58,7 @@ class TypeBase;
 /*! \ingroup GrpBaseBaseTypeSystem
  */
 
-class OSG_ANIMATION_CLASS_API InterpolationFactory
+class OSG_ANIMATIONLIB_DLLMAPPING InterpolationFactory
 {
   public:
     typedef bool (*InterpFunc)(const osg::KeyframeSequencePtr& KeyValues,

@@ -42,15 +42,15 @@
 #pragma once
 #endif
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include "OSGKeyframeSequenceBoolBase.h"
 
 #include "Interpolation/OSGInterpolationFactory.h"
 OSG_BEGIN_NAMESPACE
 
-class OSG_ANIMATION_CLASS_API KeyframeSequenceBool : public KeyframeSequenceBoolBase
+class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequenceBool : public KeyframeSequenceBoolBase
 {
   private:
 

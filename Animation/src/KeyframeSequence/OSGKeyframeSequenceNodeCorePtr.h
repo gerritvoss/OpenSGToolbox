@@ -42,15 +42,15 @@
 #pragma once
 #endif
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include "OSGKeyframeSequenceNodeCorePtrBase.h"
 
 #include "Interpolation/OSGInterpolationFactory.h"
 OSG_BEGIN_NAMESPACE
 
-class OSG_ANIMATION_CLASS_API KeyframeSequenceNodeCorePtr : public KeyframeSequenceNodeCorePtrBase
+class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequenceNodeCorePtr : public KeyframeSequenceNodeCorePtrBase
 {
   private:
 

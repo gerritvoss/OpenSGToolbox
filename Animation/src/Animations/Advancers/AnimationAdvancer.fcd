@@ -3,9 +3,12 @@
 <FieldContainer
 	name="AnimationAdvancer"
 	parent="FieldContainer"
+	library="Animation"
 	pointerfieldtypes="both"
 	structure="abstract"
 	systemcomponent="false"
 	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 </FieldContainer>

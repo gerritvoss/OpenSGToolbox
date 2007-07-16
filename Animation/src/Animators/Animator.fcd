@@ -3,10 +3,13 @@
 <FieldContainer
 	name="Animator"
 	parent="FieldContainer"
+	library="Animation"
 	pointerfieldtypes="both"
 	structure="abstract"
 	systemcomponent="false"
 	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 Animator is the base class of all Animators.
 </FieldContainer>

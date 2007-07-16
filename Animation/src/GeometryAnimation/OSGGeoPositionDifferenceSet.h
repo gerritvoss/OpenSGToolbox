@@ -42,14 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include "OSGGeoPositionDifferenceSetBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_ANIMATION_CLASS_API GeoPositionDifferenceSet : public GeoPositionDifferenceSetBase
+class OSG_ANIMATIONLIB_DLLMAPPING GeoPositionDifferenceSet : public GeoPositionDifferenceSetBase
 {
   private:
 

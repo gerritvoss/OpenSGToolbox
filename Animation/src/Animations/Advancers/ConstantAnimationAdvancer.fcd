@@ -3,10 +3,13 @@
 <FieldContainer
 	name="ConstantAnimationAdvancer"
 	parent="AnimationAdvancer"
+	library="Animation"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 	<Field
 		name="Constant"
@@ -15,13 +18,13 @@
 		visibility="external"
 		access="public"
 	>
-   </Field>
-   <Field
-         name="PrevConstant"
-         type="Real32"
-         cardinality="single"
-         visibility="external"
-         access="protected"
-         >
-   </Field>
+	</Field>
+	<Field
+		name="PrevConstant"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
 </FieldContainer>

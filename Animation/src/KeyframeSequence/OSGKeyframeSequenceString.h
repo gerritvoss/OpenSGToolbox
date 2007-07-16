@@ -42,8 +42,8 @@
 #pragma once
 #endif
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 #include <OpenSG/OSGMFSysTypes.h>
 
 #include "OSGKeyframeSequenceStringBase.h"
@@ -55,7 +55,7 @@ OSG_BEGIN_NAMESPACE
            PageSystemKeyframeSequenceString for a description.
 */
 
-class OSG_ANIMATION_CLASS_API KeyframeSequenceString : public KeyframeSequenceStringBase
+class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequenceString : public KeyframeSequenceStringBase
 {
   private:
 

@@ -129,7 +129,6 @@ const Real32 &ConstantAnimationAdvancerBase::getConstant(void) const
 inline
 void ConstantAnimationAdvancerBase::setConstant(const Real32 &value)
 {
-    _sfPrevConstant.setValue(_sfConstant.getValue());
     _sfConstant.setValue(value);
 }
 

@@ -58,8 +58,8 @@
 #endif
 
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -78,7 +78,7 @@ class BinaryDataHandler;
 
 //! \brief KeyframeSequenceVec2f Base Class.
 
-class OSG_ANIMATION_CLASS_API KeyframeSequenceVec2fBase : public KeyframeSequence
+class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequenceVec2fBase : public KeyframeSequence
 {
   private:
 

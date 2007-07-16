@@ -3,10 +3,13 @@
 <FieldContainer
 	name="KeyframeAnimator"
 	parent="Animator"
+	library="Animation"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 Keyframe Animator Class.
 	<Field
@@ -14,8 +17,8 @@ Keyframe Animator Class.
 		type="KeyframeSequencePtr"
 		cardinality="single"
 		visibility="external"
+		header="KeyframeSequence/OSGKeyframeSequence.h"
 		access="public"
-      header="KeyframeSequence/OSGKeyframeSequence.h"
 	>
 	</Field>
 	<Field

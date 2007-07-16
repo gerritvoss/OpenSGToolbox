@@ -3,26 +3,29 @@
 <FieldContainer
 	name="KeyframeSequenceGeoColorsPtr"
 	parent="KeyframeSequence"
+	library="Animation"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 	<Field
 		name="BaseValues"
-      type="GeoColorsPtr"
+		type="GeoColorsPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
 	>
-   </Field>
-   <Field
-         name="KeyframeDifferenceSets"
-         type="GeoColorDifferenceSetPtr"
-         cardinality="multi"
-         visibility="external"
-         access="public"
-         header="GeometryAnimation/OSGGeoColorDifferenceSet.h"
-         >
-   </Field>
+	</Field>
+	<Field
+		name="KeyframeDifferenceSets"
+		type="GeoColorDifferenceSetPtr"
+		cardinality="multi"
+		visibility="external"
+		header="GeometryAnimation/OSGGeoColorDifferenceSet.h"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

@@ -42,14 +42,14 @@
 #pragma once
 #endif
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include "OSGGeometryAnimationBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_ANIMATION_CLASS_API GeometryAnimation : public GeometryAnimationBase
+class OSG_ANIMATIONLIB_DLLMAPPING GeometryAnimation : public GeometryAnimationBase
 {
   private:
 

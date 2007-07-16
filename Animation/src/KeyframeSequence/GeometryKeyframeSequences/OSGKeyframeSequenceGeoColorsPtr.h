@@ -41,15 +41,15 @@
 #ifdef __sgi
 #pragma once
 #endif
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include "OSGKeyframeSequenceGeoColorsPtrBase.h"
 #include "Interpolation/OSGInterpolationFactory.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_ANIMATION_CLASS_API KeyframeSequenceGeoColorsPtr : public KeyframeSequenceGeoColorsPtrBase
+class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequenceGeoColorsPtr : public KeyframeSequenceGeoColorsPtrBase
 {
   private:
 

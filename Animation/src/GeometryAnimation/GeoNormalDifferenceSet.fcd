@@ -1,27 +1,30 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-   name="GeoNormalDifferenceSet"
-   parent="GeoDifferenceSet"
+	name="GeoNormalDifferenceSet"
+	parent="GeoDifferenceSet"
+	library="Animation"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
 >
-   <Field
-         name="Normals"
-         type="GeoNormalsPtr"
-         cardinality="single"
-         visibility="external"
-         access="public"
-         >
-   </Field>
-   <Field
-         name="Indices"
-         type="GeoIndicesPtr"
-         cardinality="single"
-         visibility="external"
-         access="public"
-         >
-   </Field>
+	<Field
+		name="Normals"
+		type="GeoNormalsPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Indices"
+		type="GeoIndicesPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

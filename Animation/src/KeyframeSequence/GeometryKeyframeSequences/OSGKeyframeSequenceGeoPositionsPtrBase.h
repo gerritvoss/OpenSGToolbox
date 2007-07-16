@@ -59,13 +59,12 @@
 
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-
-#include "OSGAnimationConfig.h"
 #include "KeyframeSequence/OSGKeyframeSequence.h" // Parent
 
 #include <OpenSG/OSGGeoPositionsFields.h> // BaseValues type
@@ -80,7 +79,7 @@ class BinaryDataHandler;
 
 //! \brief KeyframeSequenceGeoPositionsPtr Base Class.
 
-class OSG_ANIMATION_CLASS_API KeyframeSequenceGeoPositionsPtrBase : public KeyframeSequence
+class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequenceGeoPositionsPtrBase : public KeyframeSequence
 {
   private:
 

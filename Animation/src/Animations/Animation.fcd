@@ -3,10 +3,13 @@
 <FieldContainer
 	name="Animation"
 	parent="FieldContainer"
+	library="Animation"
 	pointerfieldtypes="both"
 	structure="abstract"
 	systemcomponent="false"
 	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 Animation is the base class of all Animation
 	<Field
@@ -17,7 +20,6 @@ Animation is the base class of all Animation
 		access="public"
 	>
 	</Field>
-   
 	<Field
 		name="Cycles"
 		type="Real32"

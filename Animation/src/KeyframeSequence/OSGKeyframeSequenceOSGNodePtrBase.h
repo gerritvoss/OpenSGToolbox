@@ -58,8 +58,8 @@
 #endif
 
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -71,7 +71,6 @@
 
 #include "OSGKeyframeSequenceOSGNodePtrFields.h"
 
-#include "Interpolation/OSGInterpolationFactory.h"
 OSG_BEGIN_NAMESPACE
 
 class KeyframeSequenceOSGNodePtr;
@@ -79,7 +78,7 @@ class BinaryDataHandler;
 
 //! \brief KeyframeSequenceOSGNodePtr Base Class.
 
-class OSG_ANIMATION_CLASS_API KeyframeSequenceOSGNodePtrBase : public KeyframeSequence
+class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequenceOSGNodePtrBase : public KeyframeSequence
 {
   private:
 

@@ -5,203 +5,141 @@
 	Name="OSGAnimation"
 	ProjectGUID="{77623743-1948-4AC4-8227-7FF6072BD16F}"
 	RootNamespace="OSGAnimation"
-	Keyword="Win32Proj"
-	>
+	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
-			Name="Win32"
-		/>
+			Name="Win32"/>
 	</Platforms>
-	<ToolFiles>
-	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-				Description="Installing Includes"
-				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Animation&#x0D;&#x0A;"
-				Outputs="include"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
+			CharacterSet="0">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="&quot;$(OPENSG)\..\include&quot;;..\..\src"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;_OSG_ANIMATION_BUILD_"
-				StringPooling="true"
-				MinimalRebuild="true"
+				AdditionalIncludeDirectories="&quot;$(OPENSG)\..\include&quot;;..\..\src;..\..\..\Builds\Windows\include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEANIMATIONLIB"
+				StringPooling="TRUE"
+				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				BufferSecurityCheck="false"
-				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="true"
+				BufferSecurityCheck="FALSE"
+				EnableFunctionLevelLinking="TRUE"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(OutDir)/"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"
 				DisableSpecificWarnings="4244;4251;4275;4290;4231;4267;4996"
-				ForcedIncludeFiles="WinSock2.h;windows.h"
-			/>
+				ForcedIncludeFiles="WinSock2.h;windows.h"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool"
+				Description="Installing Includes"
+				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Animation
+"
+				Outputs="include"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="&quot;$(OPENSG)&quot;"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="&quot;$(TargetDir)\$(ProjectName)D.pdb&quot;"
 				SubSystem="1"
 				ImportLibrary="&quot;$(TargetDir)\$(ProjectName)D.lib&quot;"
-				TargetMachine="1"
-			/>
+				TargetMachine="1"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCManifestTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCFxCopTool"
-			/>
+				Name="VCResourceCompilerTool"/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
+				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
+				Name="VCXMLDataGeneratorTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Animation&#x0D;&#x0A;"
-				Outputs="include"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
+			CharacterSet="0">
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;$(OPENSG)\..\include&quot;;..\..\src"
-				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;_OSG_ANIMATION_BUILD_"
-				StringPooling="true"
-				MinimalRebuild="false"
+				AdditionalIncludeDirectories="&quot;$(OPENSG)\..\include&quot;;..\..\src;..\..\..\Builds\Windows\include"
+				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEANIMATIONLIB"
+				StringPooling="TRUE"
+				MinimalRebuild="FALSE"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="false"
-				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="true"
+				BufferSecurityCheck="FALSE"
+				EnableFunctionLevelLinking="TRUE"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(IntDir)/"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="0"
 				DisableSpecificWarnings="4244;4251;4275;4290;4231;4267;4996"
-				ForcedIncludeFiles="WinSock2.h;windows.h"
-			/>
+				ForcedIncludeFiles="WinSock2.h;windows.h"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool"
+				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Animation
+"
+				Outputs="include"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="OSGBase.lib OSGSystem.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="&quot;$(OPENSG)&quot;"
-				IgnoreAllDefaultLibraries="false"
-				GenerateDebugInformation="false"
+				IgnoreAllDefaultLibraries="FALSE"
+				GenerateDebugInformation="FALSE"
 				ProgramDatabaseFile=""
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				ImportLibrary="&quot;$(TargetDir)\$(ProjectName).lib&quot;"
-				TargetMachine="1"
-			/>
+				TargetMachine="1"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCManifestTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCFxCopTool"
-			/>
+				Name="VCResourceCompilerTool"/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
+				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
+				Name="VCXMLDataGeneratorTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -209,1330 +147,989 @@
 	<Files>
 		<Filter
 			Name="Source Files"
-			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
-			>
+			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl">
 			<File
-				RelativePath="..\..\src\OSGAnimationConfig.h"
-				>
+				RelativePath="..\..\src\OSGAnimationDef.h">
 			</File>
 			<Filter
-				Name="KeyframeSequence"
-				>
+				Name="KeyframeSequence">
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequence.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequence.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequence.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequence.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequence.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequence.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBase.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBase.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBase.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBool.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBool.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBool.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBool.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBool.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBool.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBoolBase.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBoolBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBoolBase.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBoolBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBoolBase.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBoolBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBoolFields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceBoolFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor3f.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor3f.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor3f.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor3f.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor3f.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor3f.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor3fBase.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor3fBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor3fBase.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor3fBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor3fBase.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor3fBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor3fFields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor3fFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor4f.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor4f.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor4f.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor4f.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor4f.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor4f.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor4fBase.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor4fBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor4fBase.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor4fBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor4fBase.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor4fBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor4fFields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceColor4fFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceFields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceGLenum.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceGLenum.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceGLenum.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceGLenum.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceGLenum.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceGLenum.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceGLenumBase.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceGLenumBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceGLenumBase.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceGLenumBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceGLenumBase.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceGLenumBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceGLenumFields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceGLenumFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceImagePtr.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceImagePtr.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceImagePtr.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceImagePtr.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceImagePtr.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceImagePtr.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceImagePtrBase.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceImagePtrBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceImagePtrBase.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceImagePtrBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceImagePtrBase.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceImagePtrBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceImagePtrFields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceImagePtrFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceInt32.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceInt32.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceInt32.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceInt32.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceInt32.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceInt32.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceInt32Base.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceInt32Base.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceInt32Base.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceInt32Base.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceInt32Base.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceInt32Base.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceInt32Fields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceInt32Fields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMaterialPtr.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMaterialPtr.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMaterialPtr.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMaterialPtr.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMaterialPtr.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMaterialPtr.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMaterialPtrBase.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMaterialPtrBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMaterialPtrBase.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMaterialPtrBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMaterialPtrBase.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMaterialPtrBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMaterialPtrFields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMaterialPtrFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMatrix.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMatrix.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMatrix.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMatrix.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMatrix.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMatrix.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMatrixBase.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMatrixBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMatrixBase.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMatrixBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMatrixBase.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMatrixBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMatrixFields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceMatrixFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceNodeCorePtr.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceNodeCorePtr.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceNodeCorePtr.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceNodeCorePtr.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceNodeCorePtr.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceNodeCorePtr.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceNodeCorePtrBase.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceNodeCorePtrBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceNodeCorePtrBase.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceNodeCorePtrBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceNodeCorePtrBase.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceNodeCorePtrBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceNodeCorePtrFields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceNodeCorePtrFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceOSGNodePtr.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceOSGNodePtr.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceOSGNodePtr.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceOSGNodePtr.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceOSGNodePtr.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceOSGNodePtr.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceOSGNodePtrBase.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceOSGNodePtrBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceOSGNodePtrBase.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceOSGNodePtrBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceOSGNodePtrBase.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceOSGNodePtrBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceOSGNodePtrFields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceOSGNodePtrFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt2f.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt2f.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt2f.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt2f.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt2f.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt2f.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt2fBase.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt2fBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt2fBase.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt2fBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt2fBase.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt2fBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt2fFields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt2fFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt3f.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt3f.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt3f.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt3f.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt3f.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt3f.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt3fBase.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt3fBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt3fBase.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt3fBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt3fBase.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt3fBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt3fFields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequencePnt3fFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceQuaternion.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceQuaternion.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceQuaternion.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceQuaternion.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceQuaternion.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceQuaternion.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceQuaternionBase.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceQuaternionBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceQuaternionBase.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceQuaternionBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceQuaternionBase.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceQuaternionBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceQuaternionFields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceQuaternionFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceReal32.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceReal32.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceReal32.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceReal32.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceReal32.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceReal32.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceReal32Base.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceReal32Base.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceReal32Base.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceReal32Base.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceReal32Base.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceReal32Base.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceReal32Fields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceReal32Fields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStateChunkPtr.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStateChunkPtr.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStateChunkPtr.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStateChunkPtr.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStateChunkPtr.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStateChunkPtr.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStateChunkPtrBase.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStateChunkPtrBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStateChunkPtrBase.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStateChunkPtrBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStateChunkPtrBase.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStateChunkPtrBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStateChunkPtrFields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStateChunkPtrFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceString.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceString.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceString.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceString.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceString.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceString.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStringBase.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStringBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStringBase.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStringBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStringBase.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStringBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStringFields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceStringFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTextureChunkPtr.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTextureChunkPtr.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTextureChunkPtr.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTextureChunkPtr.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTextureChunkPtr.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTextureChunkPtr.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTextureChunkPtrBase.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTextureChunkPtrBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTextureChunkPtrBase.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTextureChunkPtrBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTextureChunkPtrBase.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTextureChunkPtrBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTextureChunkPtrFields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTextureChunkPtrFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTime.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTime.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTime.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTime.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTime.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTime.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTimeBase.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTimeBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTimeBase.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTimeBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTimeBase.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTimeBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTimeFields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceTimeFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt16.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt16.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt16.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt16.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt16.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt16.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt16Base.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt16Base.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt16Base.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt16Base.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt16Base.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt16Base.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt16Fields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt16Fields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt32.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt32.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt32.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt32.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt32.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt32.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt32Base.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt32Base.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt32Base.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt32Base.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt32Base.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt32Base.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt32Fields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt32Fields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt8.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt8.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt8.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt8.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt8.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt8.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt8Base.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt8Base.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt8Base.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt8Base.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt8Base.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt8Base.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt8Fields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceUInt8Fields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec2f.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec2f.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec2f.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec2f.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec2f.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec2f.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec2fBase.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec2fBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec2fBase.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec2fBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec2fBase.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec2fBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec2fFields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec2fFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec3f.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec3f.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec3f.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec3f.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec3f.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec3f.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec3fBase.cpp"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec3fBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec3fBase.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec3fBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec3fBase.inl"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec3fBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec3fFields.h"
-					>
+					RelativePath="..\..\src\KeyframeSequence\OSGKeyframeSequenceVec3fFields.h">
 				</File>
 				<Filter
-					Name="GeometryKeyframeSequences"
-					>
+					Name="GeometryKeyframeSequences">
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoColorsPtr.cpp"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoColorsPtr.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoColorsPtr.h"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoColorsPtr.h">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoColorsPtr.inl"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoColorsPtr.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoColorsPtrBase.cpp"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoColorsPtrBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoColorsPtrBase.h"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoColorsPtrBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoColorsPtrBase.inl"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoColorsPtrBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoColorsPtrFields.h"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoColorsPtrFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoNormalsPtr.cpp"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoNormalsPtr.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoNormalsPtr.h"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoNormalsPtr.h">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoNormalsPtr.inl"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoNormalsPtr.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoNormalsPtrBase.cpp"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoNormalsPtrBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoNormalsPtrBase.h"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoNormalsPtrBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoNormalsPtrBase.inl"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoNormalsPtrBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoNormalsPtrFields.h"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoNormalsPtrFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoPositionsPtr.cpp"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoPositionsPtr.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoPositionsPtr.h"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoPositionsPtr.h">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoPositionsPtr.inl"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoPositionsPtr.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoPositionsPtrBase.cpp"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoPositionsPtrBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoPositionsPtrBase.h"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoPositionsPtrBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoPositionsPtrBase.inl"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoPositionsPtrBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoPositionsPtrFields.h"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoPositionsPtrFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoTexCoordsPtr.cpp"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoTexCoordsPtr.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoTexCoordsPtr.h"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoTexCoordsPtr.h">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoTexCoordsPtr.inl"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoTexCoordsPtr.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoTexCoordsPtrBase.cpp"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoTexCoordsPtrBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoTexCoordsPtrBase.h"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoTexCoordsPtrBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoTexCoordsPtrBase.inl"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoTexCoordsPtrBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoTexCoordsPtrFields.h"
-						>
+						RelativePath="..\..\src\KeyframeSequence\GeometryKeyframeSequences\OSGKeyframeSequenceGeoTexCoordsPtrFields.h">
 					</File>
 				</Filter>
 			</Filter>
 			<Filter
-				Name="Interpolation"
-				>
+				Name="Interpolation">
 				<File
-					RelativePath="..\..\src\Interpolation\OSGGeometryInterpolations.cpp"
-					>
+					RelativePath="..\..\src\Interpolation\OSGGeometryInterpolations.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Interpolation\OSGGeometryInterpolations.h"
-					>
+					RelativePath="..\..\src\Interpolation\OSGGeometryInterpolations.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Interpolation\OSGInterpolationFactory.cpp"
-					>
+					RelativePath="..\..\src\Interpolation\OSGInterpolationFactory.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Interpolation\OSGInterpolationFactory.h"
-					>
+					RelativePath="..\..\src\Interpolation\OSGInterpolationFactory.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Interpolation\OSGInterpolations.h"
-					>
+					RelativePath="..\..\src\Interpolation\OSGInterpolations.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Interpolation\OSGKeyframeInterpolations.cpp"
-					>
+					RelativePath="..\..\src\Interpolation\OSGKeyframeInterpolations.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Interpolation\OSGKeyframeInterpolations.h"
-					>
+					RelativePath="..\..\src\Interpolation\OSGKeyframeInterpolations.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Interpolation\OSGMFieldInterpolations.cpp"
-					>
+					RelativePath="..\..\src\Interpolation\OSGMFieldInterpolations.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Interpolation\OSGMFieldInterpolations.h"
-					>
+					RelativePath="..\..\src\Interpolation\OSGMFieldInterpolations.h">
 				</File>
 			</Filter>
 			<Filter
-				Name="Util"
-				>
+				Name="Util">
 				<File
-					RelativePath="..\..\src\Util\OSGColorOperations.h"
-					>
+					RelativePath="..\..\src\Util\OSGGeoPropertyOperations.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGGeoPropertyOperations.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Util\OSGGeoPropertyOperations.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Util\OSGPntOperations.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Util\OSGQuatOperations.h"
-					>
+					RelativePath="..\..\src\Util\OSGGeoPropertyOperations.h">
 				</File>
 			</Filter>
 			<Filter
-				Name="Animators"
-				>
+				Name="Animators">
 				<File
-					RelativePath="..\..\src\Animators\OSGAnimator.cpp"
-					>
+					RelativePath="..\..\src\Animators\OSGAnimator.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Animators\OSGAnimator.h"
-					>
+					RelativePath="..\..\src\Animators\OSGAnimator.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Animators\OSGAnimator.inl"
-					>
+					RelativePath="..\..\src\Animators\OSGAnimator.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Animators\OSGAnimatorBase.cpp"
-					>
+					RelativePath="..\..\src\Animators\OSGAnimatorBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Animators\OSGAnimatorBase.h"
-					>
+					RelativePath="..\..\src\Animators\OSGAnimatorBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Animators\OSGAnimatorBase.inl"
-					>
+					RelativePath="..\..\src\Animators\OSGAnimatorBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Animators\OSGAnimatorFields.h"
-					>
+					RelativePath="..\..\src\Animators\OSGAnimatorFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Animators\OSGKeyframeAnimator.cpp"
-					>
+					RelativePath="..\..\src\Animators\OSGKeyframeAnimator.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Animators\OSGKeyframeAnimator.h"
-					>
+					RelativePath="..\..\src\Animators\OSGKeyframeAnimator.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Animators\OSGKeyframeAnimator.inl"
-					>
+					RelativePath="..\..\src\Animators\OSGKeyframeAnimator.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Animators\OSGKeyframeAnimatorBase.cpp"
-					>
+					RelativePath="..\..\src\Animators\OSGKeyframeAnimatorBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Animators\OSGKeyframeAnimatorBase.h"
-					>
+					RelativePath="..\..\src\Animators\OSGKeyframeAnimatorBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Animators\OSGKeyframeAnimatorBase.inl"
-					>
+					RelativePath="..\..\src\Animators\OSGKeyframeAnimatorBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Animators\OSGKeyframeAnimatorFields.h"
-					>
+					RelativePath="..\..\src\Animators\OSGKeyframeAnimatorFields.h">
 				</File>
 				<Filter
-					Name="AnimationAdvancers"
-					>
+					Name="AnimationAdvancers">
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGAnimationAdvancer.cpp"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGAnimationAdvancer.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGAnimationAdvancer.h"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGAnimationAdvancer.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGAnimationAdvancer.inl"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGAnimationAdvancer.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGAnimationAdvancerBase.cpp"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGAnimationAdvancerBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGAnimationAdvancerBase.h"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGAnimationAdvancerBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGAnimationAdvancerBase.inl"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGAnimationAdvancerBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGAnimationAdvancerFields.h"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGAnimationAdvancerFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGConstantAnimationAdvancer.cpp"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGConstantAnimationAdvancer.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGConstantAnimationAdvancer.h"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGConstantAnimationAdvancer.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGConstantAnimationAdvancer.inl"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGConstantAnimationAdvancer.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGConstantAnimationAdvancerBase.cpp"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGConstantAnimationAdvancerBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGConstantAnimationAdvancerBase.h"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGConstantAnimationAdvancerBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGConstantAnimationAdvancerBase.inl"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGConstantAnimationAdvancerBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGConstantAnimationAdvancerFields.h"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGConstantAnimationAdvancerFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGElapsedTimeAnimationAdvancer.cpp"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGElapsedTimeAnimationAdvancer.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGElapsedTimeAnimationAdvancer.h"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGElapsedTimeAnimationAdvancer.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGElapsedTimeAnimationAdvancer.inl"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGElapsedTimeAnimationAdvancer.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGElapsedTimeAnimationAdvancerBase.cpp"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGElapsedTimeAnimationAdvancerBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGElapsedTimeAnimationAdvancerBase.h"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGElapsedTimeAnimationAdvancerBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGElapsedTimeAnimationAdvancerBase.inl"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGElapsedTimeAnimationAdvancerBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGElapsedTimeAnimationAdvancerFields.h"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGElapsedTimeAnimationAdvancerFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGFieldAnimationAdvancer.cpp"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGFieldAnimationAdvancer.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGFieldAnimationAdvancer.h"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGFieldAnimationAdvancer.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGFieldAnimationAdvancer.inl"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGFieldAnimationAdvancer.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGFieldAnimationAdvancerBase.cpp"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGFieldAnimationAdvancerBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGFieldAnimationAdvancerBase.h"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGFieldAnimationAdvancerBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGFieldAnimationAdvancerBase.inl"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGFieldAnimationAdvancerBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Animations\Advancers\OSGFieldAnimationAdvancerFields.h"
-						>
+						RelativePath="..\..\src\Animations\Advancers\OSGFieldAnimationAdvancerFields.h">
 					</File>
 				</Filter>
 			</Filter>
 			<Filter
-				Name="Animations"
-				>
+				Name="Animations">
 				<File
-					RelativePath="..\..\src\Animations\OSGAnimation.cpp"
-					>
+					RelativePath="..\..\src\Animations\OSGAnimation.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGAnimation.h"
-					>
+					RelativePath="..\..\src\Animations\OSGAnimation.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGAnimation.inl"
-					>
+					RelativePath="..\..\src\Animations\OSGAnimation.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGAnimationBase.cpp"
-					>
+					RelativePath="..\..\src\Animations\OSGAnimationBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGAnimationBase.h"
-					>
+					RelativePath="..\..\src\Animations\OSGAnimationBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGAnimationBase.inl"
-					>
+					RelativePath="..\..\src\Animations\OSGAnimationBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGAnimationFields.h"
-					>
+					RelativePath="..\..\src\Animations\OSGAnimationFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGFieldAnimation.cpp"
-					>
+					RelativePath="..\..\src\Animations\OSGFieldAnimation.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGFieldAnimation.h"
-					>
+					RelativePath="..\..\src\Animations\OSGFieldAnimation.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGFieldAnimation.inl"
-					>
+					RelativePath="..\..\src\Animations\OSGFieldAnimation.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGFieldAnimationBase.cpp"
-					>
+					RelativePath="..\..\src\Animations\OSGFieldAnimationBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGFieldAnimationBase.h"
-					>
+					RelativePath="..\..\src\Animations\OSGFieldAnimationBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGFieldAnimationBase.inl"
-					>
+					RelativePath="..\..\src\Animations\OSGFieldAnimationBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGFieldAnimationFields.h"
-					>
+					RelativePath="..\..\src\Animations\OSGFieldAnimationFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGGeometryAnimation.cpp"
-					>
+					RelativePath="..\..\src\Animations\OSGGeometryAnimation.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGGeometryAnimation.h"
-					>
+					RelativePath="..\..\src\Animations\OSGGeometryAnimation.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGGeometryAnimation.inl"
-					>
+					RelativePath="..\..\src\Animations\OSGGeometryAnimation.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGGeometryAnimationBase.cpp"
-					>
+					RelativePath="..\..\src\Animations\OSGGeometryAnimationBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGGeometryAnimationBase.h"
-					>
+					RelativePath="..\..\src\Animations\OSGGeometryAnimationBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGGeometryAnimationBase.inl"
-					>
+					RelativePath="..\..\src\Animations\OSGGeometryAnimationBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGGeometryAnimationFields.h"
-					>
+					RelativePath="..\..\src\Animations\OSGGeometryAnimationFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGShaderAnimation.cpp"
-					>
+					RelativePath="..\..\src\Animations\OSGShaderAnimation.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGShaderAnimation.h"
-					>
+					RelativePath="..\..\src\Animations\OSGShaderAnimation.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGShaderAnimation.inl"
-					>
+					RelativePath="..\..\src\Animations\OSGShaderAnimation.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGShaderAnimationBase.cpp"
-					>
+					RelativePath="..\..\src\Animations\OSGShaderAnimationBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGShaderAnimationBase.h"
-					>
+					RelativePath="..\..\src\Animations\OSGShaderAnimationBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGShaderAnimationBase.inl"
-					>
+					RelativePath="..\..\src\Animations\OSGShaderAnimationBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Animations\OSGShaderAnimationFields.h"
-					>
+					RelativePath="..\..\src\Animations\OSGShaderAnimationFields.h">
 				</File>
 			</Filter>
 			<Filter
-				Name="GeometryAnimation"
-				>
+				Name="GeometryAnimation">
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGBlendGeometry.cpp"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGBlendGeometry.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGBlendGeometry.h"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGBlendGeometry.h">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGBlendGeometry.inl"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGBlendGeometry.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGBlendGeometryBase.cpp"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGBlendGeometryBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGBlendGeometryBase.h"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGBlendGeometryBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGBlendGeometryBase.inl"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGBlendGeometryBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGBlendGeometryFields.h"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGBlendGeometryFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoColorDifferenceSet.cpp"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoColorDifferenceSet.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoColorDifferenceSet.h"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoColorDifferenceSet.h">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoColorDifferenceSet.inl"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoColorDifferenceSet.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoColorDifferenceSetBase.cpp"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoColorDifferenceSetBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoColorDifferenceSetBase.h"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoColorDifferenceSetBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoColorDifferenceSetBase.inl"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoColorDifferenceSetBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoColorDifferenceSetFields.h"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoColorDifferenceSetFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoDifferenceSet.cpp"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoDifferenceSet.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoDifferenceSet.h"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoDifferenceSet.h">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoDifferenceSet.inl"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoDifferenceSet.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoDifferenceSetBase.cpp"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoDifferenceSetBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoDifferenceSetBase.h"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoDifferenceSetBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoDifferenceSetBase.inl"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoDifferenceSetBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoDifferenceSetFields.h"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoDifferenceSetFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoNormalDifferenceSet.cpp"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoNormalDifferenceSet.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoNormalDifferenceSet.h"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoNormalDifferenceSet.h">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoNormalDifferenceSet.inl"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoNormalDifferenceSet.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoNormalDifferenceSetBase.cpp"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoNormalDifferenceSetBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoNormalDifferenceSetBase.h"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoNormalDifferenceSetBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoNormalDifferenceSetBase.inl"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoNormalDifferenceSetBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoNormalDifferenceSetFields.h"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoNormalDifferenceSetFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoPositionDifferenceSet.cpp"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoPositionDifferenceSet.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoPositionDifferenceSet.h"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoPositionDifferenceSet.h">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoPositionDifferenceSet.inl"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoPositionDifferenceSet.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoPositionDifferenceSetBase.cpp"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoPositionDifferenceSetBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoPositionDifferenceSetBase.h"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoPositionDifferenceSetBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoPositionDifferenceSetBase.inl"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoPositionDifferenceSetBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoPositionDifferenceSetFields.h"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoPositionDifferenceSetFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoTexCoordDifferenceSet.cpp"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoTexCoordDifferenceSet.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoTexCoordDifferenceSet.h"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoTexCoordDifferenceSet.h">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoTexCoordDifferenceSet.inl"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoTexCoordDifferenceSet.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoTexCoordDifferenceSetBase.cpp"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoTexCoordDifferenceSetBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoTexCoordDifferenceSetBase.h"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoTexCoordDifferenceSetBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoTexCoordDifferenceSetBase.inl"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoTexCoordDifferenceSetBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\GeometryAnimation\OSGGeoTexCoordDifferenceSetFields.h"
-					>
+					RelativePath="..\..\src\GeometryAnimation\OSGGeoTexCoordDifferenceSetFields.h">
 				</File>
 			</Filter>
 		</Filter>

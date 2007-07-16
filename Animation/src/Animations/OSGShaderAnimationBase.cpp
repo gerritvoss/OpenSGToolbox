@@ -62,7 +62,7 @@
 #include "OSGShaderAnimation.h"
 
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  ShaderAnimationBase::AnimatorFieldMask = 
     (TypeTraits<BitVector>::One << ShaderAnimationBase::AnimatorFieldId);
@@ -466,6 +466,8 @@ void ShaderAnimationBase::execBeginEditImpl (const BitVector &whichField,
 
 
 
+OSG_END_NAMESPACE
+
 #include <OpenSG/OSGSFieldTypeDef.inl>
 #include <OpenSG/OSGMFieldTypeDef.inl>
 
@@ -475,10 +477,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<ShaderAnimationPtr>::_type("ShaderAnimationPtr", "AnimationPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ShaderAnimationPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(ShaderAnimationPtr, );
-
-OSG_END_NAMESPACE
+OSG_DLLEXPORT_SFIELD_DEF1(ShaderAnimationPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(ShaderAnimationPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -494,10 +494,12 @@ OSG_END_NAMESPACE
 
 namespace
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.45 2005/07/20 00:10:14 vossg Exp $";
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
     static Char8 cvsid_hpp       [] = OSGSHADERANIMATIONBASE_HEADER_CVSID;
     static Char8 cvsid_inl       [] = OSGSHADERANIMATIONBASE_INLINE_CVSID;
 
     static Char8 cvsid_fields_hpp[] = OSGSHADERANIMATIONFIELDS_HEADER_CVSID;
 }
+
+OSG_END_NAMESPACE
 

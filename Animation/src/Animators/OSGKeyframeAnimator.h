@@ -44,8 +44,8 @@
 
 #include <map>
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 
 #include "OSGKeyframeAnimatorBase.h"
 #include "Interpolation/OSGInterpolations.h"
@@ -57,7 +57,7 @@ OSG_BEGIN_NAMESPACE
            PageSystemKeyframeAnimator for a description.
 */
 
-class OSG_ANIMATION_CLASS_API KeyframeAnimator : public KeyframeAnimatorBase
+class OSG_ANIMATIONLIB_DLLMAPPING KeyframeAnimator : public KeyframeAnimatorBase
 {
   private:
 

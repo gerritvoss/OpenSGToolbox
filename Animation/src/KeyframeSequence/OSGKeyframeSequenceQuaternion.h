@@ -42,8 +42,8 @@
 #pragma once
 #endif
 
-#include "OSGAnimationConfig.h"
 #include <OpenSG/OSGConfig.h>
+#include "OSGAnimationDef.h"
 #include <OpenSG/OSGMFSysTypes.h>
 
 #include "OSGKeyframeSequenceQuaternionBase.h"
@@ -55,7 +55,7 @@ OSG_BEGIN_NAMESPACE
            PageSystemKeyframeSequenceQuaternion for a description.
 */
 
-class OSG_ANIMATION_CLASS_API KeyframeSequenceQuaternion : public KeyframeSequenceQuaternionBase
+class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequenceQuaternion : public KeyframeSequenceQuaternionBase
 {
   private:
 
