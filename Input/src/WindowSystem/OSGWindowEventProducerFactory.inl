@@ -1,4 +1,4 @@
-#include "OSGInputConfig.h"
+#include <OpenSG/OSGConfig.h>
 
 #include <OpenSG/OSGFieldContainerFactory.h>
 #include <OpenSG/OSGWindow.h>

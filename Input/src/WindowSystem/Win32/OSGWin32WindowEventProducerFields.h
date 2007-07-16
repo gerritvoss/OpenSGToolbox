@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGInputDef.h"
 
-#include <OSGWindowEventProducerFields.h>
+#include "WindowSystem/OSGWindowEventProducerFields.h"
 
 OSG_BEGIN_NAMESPACE
 

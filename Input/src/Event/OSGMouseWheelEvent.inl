@@ -1,4 +1,4 @@
-#include "OSGInputConfig.h"
+#include <OpenSG/OSGConfig.h>
 
 #include "OSGInputSettings.h"
 

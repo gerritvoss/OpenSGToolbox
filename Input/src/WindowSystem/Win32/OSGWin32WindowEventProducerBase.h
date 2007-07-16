@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OSGWindowEventProducer.h> // Parent
+#include "WindowSystem/OSGWindowEventProducer.h" // Parent
 
 
 #include "OSGWin32WindowEventProducerFields.h"
