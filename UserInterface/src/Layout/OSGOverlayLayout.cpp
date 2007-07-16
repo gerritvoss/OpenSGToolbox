@@ -76,6 +76,10 @@ void OverlayLayout::initMethod (void)
 
 void OverlayLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
 {
+	Pnt2s borderOffset;
+	Vec2s borderSize;
+	ParentComponent->getInsideBorderBounds(borderOffset, borderSize);
+	glTranslatef(borderOffset.x(), borderOffset.y(), 0);
 	int maxX = 0;
 	int maxY = 0;
 	for(int i = 0; i < Components.size(); i++){
@@ -92,6 +96,7 @@ void OverlayLayout::draw(const MFComponentPtr Components,const ComponentPtr Pare
 		Components.getValue(i)->draw(TheGraphics);
 		glPopMatrix();
 	}
+	glTranslatef(-borderOffset.x(), -borderOffset.y(), 0);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

@@ -96,7 +96,10 @@ void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 	  components there are in that row/column.
 	*/
 
-	Int64 totalMajorAxis(ParentComponent->getSize()[AxisIndex]);
+	Pnt2s borderOffset;
+	Vec2s borderSize;
+	ParentComponent->getInsideBorderBounds(borderOffset, borderSize);
+	Int64 totalMajorAxis(borderSize[AxisIndex]);
 	UInt32 cumMajorAxis(0);
 	UInt32 maxMinorAxis(0);
 	UInt32 cumMinorAxis(0);
@@ -105,6 +108,7 @@ void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 	Int64 offsetMinorAxis(0);
 	bool firstOne = true;
 
+	glTranslatef(borderOffset.x(), borderOffset.y(), 0);
 	for(UInt32 i=0 ; i<Components.size(); ++i)
 	{
 		// set the component to its preferred size
@@ -273,6 +277,7 @@ void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 	// get back to the corner of the container
 	if (AxisIndex) glTranslatef(-(Int64)(cumMinorAxis+gap[(AxisIndex+1)%2]), 0, 0);
 	else glTranslatef(0, -(Int64)(cumMinorAxis+gap[(AxisIndex+1)%2]), 0);
+	glTranslatef(-borderOffset.x(), -borderOffset.y(), 0);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

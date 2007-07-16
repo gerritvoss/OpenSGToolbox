@@ -77,23 +77,28 @@ void AbsoluteLayout::initMethod (void)
 
 void AbsoluteLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
 {	
-   for(UInt32 i = 0 ; i<Components.size(); ++i)
-   {
-      //Calculate the Components Size
-      Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
-	   if(Components.getValue(i)->getConstraints() != NullFC)
-	   {
-         //Get the Components Position
-		   Pnt2s pos = AbsoluteLayoutConstraintsPtr::dcast(Components.getValue(i)->getConstraints())->getPosition();
-		   glTranslatef(pos.x(), pos.y(), 0.0);
+	Pnt2s borderOffset;
+	Vec2s borderSize;
+	ParentComponent->getInsideBorderBounds(borderOffset, borderSize);
+	glTranslatef(borderOffset.x(), borderOffset.y(), 0);
+	for(UInt32 i = 0 ; i<Components.size(); ++i)
+	{
+		//Calculate the Components Size
+		Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
+		if(Components.getValue(i)->getConstraints() != NullFC)
+		{
+			//Get the Components Position
+			Pnt2s pos = AbsoluteLayoutConstraintsPtr::dcast(Components.getValue(i)->getConstraints())->getPosition();
+			glTranslatef(pos.x(), pos.y(), 0.0);
+			Components.getValue(i)->draw(TheGraphics);
+			glTranslatef(-pos.x(), -pos.y(), 0.0);
+		}
+		else
+		{
 		   Components.getValue(i)->draw(TheGraphics);
-		   glTranslatef(-pos.x(), -pos.y(), 0.0);
-	   }
-	   else
-	   {
-		   Components.getValue(i)->draw(TheGraphics);
-	   }
-   }
+		}
+	}
+	glTranslatef(-borderOffset.x(), -borderOffset.y(), 0);
 }
 
 /*-------------------------------------------------------------------------*\

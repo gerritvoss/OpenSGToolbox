@@ -108,8 +108,11 @@ void CardLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 	  Draw the current "card" component centered in the parent component
 	  and set to the size of the parent component, or to its max size
 	*/
+	Pnt2s borderOffset;
+	Vec2s size;
+	ParentComponent->getInsideBorderBounds(borderOffset, size);
 	ComponentPtr curCard(Components.getValue(getCard()));
-	Vec2s size(ParentComponent->getSize());
+
 	// check each dimension against the max size of the component;
 	if (size[0] > curCard->getMaxSize()[0]) 
 		size[0] = curCard->getMaxSize()[0];
@@ -123,9 +126,11 @@ void CardLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 	Int64 offsetx( (ParentComponent->getSize().x() - curCard->getSize().x()) /2);
 	Int64 offsety( (ParentComponent->getSize().y() - curCard->getSize().y()) /2);
 
+	glTranslatef(borderOffset.x(), borderOffset.y(), 0);
 	glTranslatef(offsetx, offsety, 0);
 	curCard->draw(TheGraphics);
 	glTranslatef(-offsetx, -offsety, 0);
+	glTranslatef(-borderOffset.x(), -borderOffset.y(), 0);
 }
 
 /*-------------------------------------------------------------------------*\

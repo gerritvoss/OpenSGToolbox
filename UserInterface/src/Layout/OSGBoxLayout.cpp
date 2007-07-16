@@ -105,7 +105,10 @@ void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentCo
 	UInt32 AxisIndex(0);
 	if(getAlignment() != HORIZONTAL_ALIGNMENT ) AxisIndex = 1;
 
-	UInt32 MajorAxis(ParentComponent->getSize()[AxisIndex]);
+	Pnt2s borderOffset;
+	Vec2s borderSize;
+	ParentComponent->getInsideBorderBounds(borderOffset, borderSize);
+	UInt32 MajorAxis(borderSize[AxisIndex]);
 	UInt32 totalMajorAxis(0);
 	UInt32 largestMinorAxis(0);
 	UInt32 spacing(0);
@@ -144,6 +147,7 @@ void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentCo
 	  This second sweep through the components sets each component to the
 	  matching highest height, then draws each component equally spaced apart
     */
+	glTranslatef(borderOffset.x(), borderOffset.y(), 0);
 	for(UInt32 i=0 ; i<Components.size() ; ++i)
 	{	
 		// for each individual button, keep track of the offsetMinorAxis in height
@@ -206,6 +210,7 @@ void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentCo
 		transBack -= Components.getValue(i)->getSize()[AxisIndex];
 	}
 	// now translate back to the original spot
+	glTranslatef(-borderOffset.x(), -borderOffset.y(), 0);
 	if (AxisIndex) glTranslatef(0, transBack, 0);
 	else glTranslatef(transBack, 0, 0);
 }
