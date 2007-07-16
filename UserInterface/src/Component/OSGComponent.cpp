@@ -80,6 +80,18 @@ void Component::getBounds(Pnt2s& TopLeft, Vec2s& Size)
    Size = getSize();
 }
 
+void Component::getInsideBorderBounds(Pnt2s& TopLeft, Vec2s& Size)
+{
+   UInt16 TopInset(0), LeftInset(0), BottomInset(0), RightInset(0);
+   if(getBorder() != NullFC)
+   {
+      //Get Border Insets
+      getBorder()->getInsets(LeftInset,RightInset,TopInset,BottomInset);
+   }
+   TopLeft.setValues(LeftInset, TopInset);
+   Size.setValues(getSize().x()-RightInset-LeftInset, getSize().y()-BottomInset-TopInset);
+}
+
 void Component::getBoundsWindowSpace(Pnt2s& TopLeft, Vec2s& Size)
 {
    TopLeft = getPosition();
