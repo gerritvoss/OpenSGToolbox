@@ -47,6 +47,10 @@
 
 #include <OpenSG/OSGConfig.h>
 
+#include "Background/OSGColorUIBackground.h"
+#include "Border/OSGLineBorder.h"
+#include "Border/OSGEmptyBorder.h"
+
 #include "OSGDefaultListCellGenerator.h"
 
 OSG_BEGIN_NAMESPACE
@@ -77,8 +81,62 @@ void DefaultListCellGenerator::initMethod (void)
 \***************************************************************************/
 ComponentPtr DefaultListCellGenerator::getListCellGeneratorComponent(ListPtr list, Field* value, UInt32 index, bool isSelected, bool cellHasFocus)
 {
-   //TODO: Implement
-   return NullFC;
+	if(value == NULL){
+		return NullFC;
+	}
+	beginEditCP(DefaultListCellGeneratorPtr(this), DefaultListCellGenerator::TextFieldMask);
+		std::string tempString;
+		value->getValueByStr(tempString);
+		setText(tempString);
+	endEditCP(DefaultListCellGeneratorPtr(this), DefaultListCellGenerator::TextFieldMask);
+	ColorUIBackgroundPtr tempBackground;
+	if(getBackground()->getType() == ColorUIBackground::getClassType()){
+		tempBackground = ColorUIBackground::Ptr::dcast(getBackground());
+	}
+	else{
+		tempBackground = ColorUIBackground::create();
+		beginEditCP(DefaultListCellGeneratorPtr(this), DefaultListCellGenerator::BackgroundFieldMask);
+			setBackground(tempBackground);
+		endEditCP(DefaultListCellGeneratorPtr(this), DefaultListCellGenerator::BackgroundFieldMask);
+	}
+	beginEditCP(tempBackground, ColorUIBackground::ColorFieldMask);
+		if(isSelected){
+			tempBackground->setColor(Color4f(0.4, 0.4, 1.0, 1.0));
+		}
+		else{
+			tempBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
+		}
+	endEditCP(tempBackground, ColorUIBackground::ColorFieldMask);
+	if(cellHasFocus){
+		LineBorderPtr tempBorder;
+		if(getBorder()->getType() == LineBorder::getClassType()){
+			tempBorder = LineBorder::Ptr::dcast(getBorder());
+		}
+		else{
+			tempBorder = LineBorder::create();
+			beginEditCP(DefaultListCellGeneratorPtr(this), DefaultListCellGenerator::BorderFieldMask);
+				setBorder(tempBorder);
+			endEditCP(DefaultListCellGeneratorPtr(this), DefaultListCellGenerator::BorderFieldMask);
+		}
+		beginEditCP(tempBorder, LineBorder::ColorFieldMask);
+			tempBorder->setColor(Color4f(0.0, 0.0, 1.0, 1.0));
+		endEditCP(tempBorder, LineBorder::ColorFieldMask);
+	}
+	else{
+		EmptyBorderPtr tempBorder;
+		if(getBorder()->getType()==EmptyBorder::getClassType()){
+			tempBorder = EmptyBorder::Ptr::dcast(getBorder());
+		}
+		else{
+			tempBorder = EmptyBorder::create();
+			beginEditCP(DefaultListCellGeneratorPtr(this), DefaultListCellGenerator::BorderFieldMask);
+				setBorder(tempBorder);
+			endEditCP(DefaultListCellGeneratorPtr(this), DefaultListCellGenerator::BorderFieldMask);
+		}
+	}
+	return Component::Ptr::dcast(deepClone(DefaultListCellGeneratorPtr(this), "Material"));
+	
+	
 }
 
 /*-------------------------------------------------------------------------*\

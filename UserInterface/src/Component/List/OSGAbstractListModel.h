@@ -85,6 +85,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractListModel : public AbstractListMod
 
 	virtual void addListDataListener(ListDataListenerPtr l);
 	virtual void removeListDataListener(ListDataListenerPtr l);
+	void pushBack(Field* f);
+	void popBack(void);
+
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -104,8 +108,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractListModel : public AbstractListMod
 
     virtual ~AbstractListModel(void); 
 
-    /*! \}                                                                 */
+    /*! \}      */
     
+	std::vector<Field*> _FieldList;
+
     /*==========================  PRIVATE  ================================*/
   private:
 
@@ -114,7 +120,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractListModel : public AbstractListMod
 
     static void initMethod(void);
 
+	typedef std::list<ListDataListenerPtr> ListDataListenerList;
+	typedef ListDataListenerList::iterator ListDataListenerListIter;
+	ListDataListenerList _DataListeners;
+
     // prohibit default functions (move to 'public' if you need one)
+
+	void fireListDataContentsChanged(void);
+	void fireListDataIntervalAdded(UInt32 index0, UInt32 index1);
+	void fireListDataIntervalRemoved(UInt32 index0, UInt32 index1);
 
     void operator =(const AbstractListModel &source);
 };

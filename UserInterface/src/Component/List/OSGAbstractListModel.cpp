@@ -78,25 +78,29 @@ void AbstractListModel::initMethod (void)
 
 UInt32 AbstractListModel::getSize(void)
 {
-   //TODO:Implement
-   return 0;
+	return _FieldList.size();
 }
 
 Field* AbstractListModel::getElementAt(UInt32 index)
 {
-   //TODO:Implement
-   return NULL;
+   return _FieldList[index];
 }
 
 
 void AbstractListModel::addListDataListener(ListDataListenerPtr l)
 {
-   //TODO:Implement
+   if(std::find(_DataListeners.begin(), _DataListeners.end(), l) != _DataListeners.end())
+   {
+	   _DataListeners.push_back(l);
+   }
 }
 
 void AbstractListModel::removeListDataListener(ListDataListenerPtr l)
 {
-   //TODO:Implement
+   if(std::find(_DataListeners.begin(), _DataListeners.end(), l) != _DataListeners.end())
+   {
+	   _DataListeners.remove(l);
+   }
 }
 
 /*-------------------------------------------------------------------------*\
@@ -132,6 +136,35 @@ void AbstractListModel::dump(      UInt32    ,
     SLOG << "Dump AbstractListModel NI" << std::endl;
 }
 
+void AbstractListModel::fireListDataContentsChanged(void)
+{
+	ListDataEvent e(AbstractListModelPtr(this), getSystemTime(), 0, _FieldList.size()-1, ListDataEvent::CONTENTS_CHANGED);
+	ListDataListenerListIter Iter;
+	for(Iter = _DataListeners.begin() ; Iter != _DataListeners.end() ; ++Iter)
+	{
+		(*Iter)->contentsChanged(e);
+	}
+}
+
+void AbstractListModel::fireListDataIntervalAdded(UInt32 index0, UInt32 index1)
+{
+	ListDataEvent e(AbstractListModelPtr(this), getSystemTime(), index0, index1, ListDataEvent::INTERVAL_ADDED);
+	ListDataListenerListIter Iter;
+	for(Iter = _DataListeners.begin(); Iter != _DataListeners.end(); ++Iter)
+	{
+		(*Iter)->intervalAdded(e);
+	}
+}
+
+void AbstractListModel::fireListDataIntervalRemoved(UInt32 index0, UInt32 index1)
+{
+	ListDataEvent e(AbstractListModelPtr(this), getSystemTime(), index0, index1, ListDataEvent::INTERVAL_REMOVED);
+	ListDataListenerListIter Iter;
+	for(Iter = _DataListeners.begin(); Iter != _DataListeners.end(); ++Iter)
+	{
+		(*Iter)->intervalRemoved(e);
+	}
+}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
