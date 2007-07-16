@@ -45,6 +45,9 @@
 #include "OSGUserInterfaceConfig.h"
 
 #include "OSGListBase.h"
+#include "OSGListModel.h"
+#include "OSGListCellGenerator.h"
+#include "OSGListSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -74,6 +77,14 @@ class OSG_USER_INTERFACE_CLASS_API List : public ListBase
 
     /*! \}                                                                 */
 	virtual void draw(const GraphicsPtr Graphics) const;
+   
+    void setModel(ListModelPtr Model);
+    void setCellGenerator(ListCellGeneratorPtr CellGenerator);
+    void setSelectionModel(ListSelectionModelPtr SelectionModel);
+
+    ListModelPtr getModel(void) const;
+    ListCellGeneratorPtr getCellGenerator(void) const;
+    ListSelectionModelPtr getSelectionModel(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -94,7 +105,10 @@ class OSG_USER_INTERFACE_CLASS_API List : public ListBase
     virtual ~List(void); 
 
     /*! \}                                                                 */
-    
+    ListModel *_Model;
+    ListCellGenerator *_CellGenerator;
+    ListSelectionModel *_SelectionModel;
+
     /*==========================  PRIVATE  ================================*/
   private:
 

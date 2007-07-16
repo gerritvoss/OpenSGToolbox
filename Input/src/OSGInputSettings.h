@@ -30,13 +30,14 @@
 #pragma once
 #endif
 
-#include "OSGInputConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGInputDef.h"
 
 #include "Event/OSGEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUT_CLASS_API InputSettings
+class OSG_INPUTLIB_DLLMAPPING InputSettings
 {
    /*=========================  PUBLIC  ===============================*/
 public:

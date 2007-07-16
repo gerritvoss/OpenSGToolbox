@@ -59,12 +59,13 @@
 
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGInputDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "WindowSystem/OSGWindowEventProducer.h" // Parent
+#include <OSGWindowEventProducer.h> // Parent
 
 
 #include "OSGWin32WindowEventProducerFields.h"
@@ -76,7 +77,7 @@ class BinaryDataHandler;
 
 //! \brief Win32WindowEventProducer Base Class.
 
-class Win32WindowEventProducerBase : public WindowEventProducer
+class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducerBase : public WindowEventProducer
 {
   private:
 

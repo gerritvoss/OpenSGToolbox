@@ -298,8 +298,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<WindowEventProducerPtr>::_type("WindowEventProducerPtr", "FieldContainerPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(WindowEventProducerPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(WindowEventProducerPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(WindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(WindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

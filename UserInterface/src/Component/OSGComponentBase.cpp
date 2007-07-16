@@ -127,6 +127,9 @@ const OSG::BitVector  ComponentBase::OpacityFieldMask =
 const OSG::BitVector  ComponentBase::ParentContainerFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::ParentContainerFieldId);
 
+const OSG::BitVector  ComponentBase::ClippingFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::ClippingFieldId);
+
 const OSG::BitVector ComponentBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -195,6 +198,9 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
     
 */
 /*! \var AttachmentContainerPtr ComponentBase::_sfParentContainer
+    
+*/
+/*! \var bool            ComponentBase::_sfClipping
     
 */
 
@@ -306,7 +312,12 @@ FieldDescription *ComponentBase::_desc[] =
                      "ParentContainer", 
                      ParentContainerFieldId, ParentContainerFieldMask,
                      false,
-                     (FieldAccessMethod) &ComponentBase::getSFParentContainer)
+                     (FieldAccessMethod) &ComponentBase::getSFParentContainer),
+    new FieldDescription(SFBool::getClassType(), 
+                     "Clipping", 
+                     ClippingFieldId, ClippingFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFClipping)
 };
 
 
@@ -394,6 +405,7 @@ ComponentBase::ComponentBase(void) :
     _sfForegroundMaterial     (), 
     _sfOpacity                (Real32(1.0)), 
     _sfParentContainer        (AttachmentContainerPtr(NullFC)), 
+    _sfClipping               (bool(true)), 
     Inherited() 
 {
 }
@@ -424,6 +436,7 @@ ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfForegroundMaterial     (source._sfForegroundMaterial     ), 
     _sfOpacity                (source._sfOpacity                ), 
     _sfParentContainer        (source._sfParentContainer        ), 
+    _sfClipping               (source._sfClipping               ), 
     Inherited                 (source)
 {
 }
@@ -545,6 +558,11 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfParentContainer.getBinSize();
     }
 
+    if(FieldBits::NoField != (ClippingFieldMask & whichField))
+    {
+        returnValue += _sfClipping.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -657,6 +675,11 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
     {
         _sfParentContainer.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ClippingFieldMask & whichField))
+    {
+        _sfClipping.copyToBin(pMem);
     }
 
 
@@ -772,6 +795,11 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfParentContainer.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ClippingFieldMask & whichField))
+    {
+        _sfClipping.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -845,6 +873,9 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
         _sfParentContainer.syncWith(pOther->_sfParentContainer);
 
+    if(FieldBits::NoField != (ClippingFieldMask & whichField))
+        _sfClipping.syncWith(pOther->_sfClipping);
+
 
 }
 #else
@@ -917,6 +948,9 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
 
     if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
         _sfParentContainer.syncWith(pOther->_sfParentContainer);
+
+    if(FieldBits::NoField != (ClippingFieldMask & whichField))
+        _sfClipping.syncWith(pOther->_sfClipping);
 
 
 

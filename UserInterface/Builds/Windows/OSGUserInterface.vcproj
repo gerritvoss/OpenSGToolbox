@@ -408,10 +408,31 @@
 						RelativePath="..\..\src\Component\List\OSGListCellGenerator.h">
 					</File>
 					<File
+						RelativePath="..\..\src\Component\List\OSGListDataEvent.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListDataEvent.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListDataListener.h">
+					</File>
+					<File
 						RelativePath="..\..\src\Component\List\OSGListFields.h">
 					</File>
 					<File
 						RelativePath="..\..\src\Component\List\OSGListModel.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListSelectionEvent.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListSelectionEvent.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListSelectionListener.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListSelectionModel.h">
 					</File>
 				</Filter>
 			</Filter>

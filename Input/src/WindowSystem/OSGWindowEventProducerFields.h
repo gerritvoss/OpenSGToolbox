@@ -54,10 +54,11 @@
 #pragma once
 #endif
 
-#include "OSGInputConfig.h"
+#include <OpenSG/OSGConfig.h>
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGInputDef.h"
 
 #include <OpenSG/OSGFieldContainerFields.h>
 
@@ -73,6 +74,8 @@ typedef FCPtr<FieldContainerPtr, WindowEventProducer> WindowEventProducerPtr;
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpInputFieldTraits
+ */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
@@ -102,12 +105,23 @@ struct FieldDataTraits<WindowEventProducerPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpInputFieldSingle */
+
 typedef SField<WindowEventProducerPtr> SFWindowEventProducerPtr;
 #endif
 
+#ifndef OSG_COMPILEWINDOWEVENTPRODUCERINST
+OSG_DLLEXPORT_DECL1(SField, WindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPPING)
+#endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpInputFieldMulti */
+
 typedef MField<WindowEventProducerPtr> MFWindowEventProducerPtr;
+#endif
+
+#ifndef OSG_COMPILEWINDOWEVENTPRODUCERINST
+OSG_DLLEXPORT_DECL1(MField, WindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE

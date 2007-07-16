@@ -217,6 +217,13 @@ SFAttachmentContainerPtr *ComponentBase::getSFParentContainer(void)
     return &_sfParentContainer;
 }
 
+//! Get the Component::_sfClipping field.
+inline
+SFBool *ComponentBase::getSFClipping(void)
+{
+    return &_sfClipping;
+}
+
 
 //! Get the value of the Component::_sfPosition field.
 inline
@@ -657,6 +664,27 @@ inline
 void ComponentBase::setParentContainer(const AttachmentContainerPtr &value)
 {
     _sfParentContainer.setValue(value);
+}
+
+//! Get the value of the Component::_sfClipping field.
+inline
+bool &ComponentBase::getClipping(void)
+{
+    return _sfClipping.getValue();
+}
+
+//! Get the value of the Component::_sfClipping field.
+inline
+const bool &ComponentBase::getClipping(void) const
+{
+    return _sfClipping.getValue();
+}
+
+//! Set the value of the Component::_sfClipping field.
+inline
+void ComponentBase::setClipping(const bool &value)
+{
+    _sfClipping.setValue(value);
 }
 
 

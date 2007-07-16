@@ -3,13 +3,15 @@
 <FieldContainer
 	name="WindowEventProducer"
 	parent="FieldContainer"
+	library="Input"
 	pointerfieldtypes="both"
 	structure="abstract"
 	systemcomponent="false"
 	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
 >
-WindowEventProducer is the base class for all Window specific Event producers.
-It also contains code for Window Manipulation: Position, size, iconify, enable, visible, fullscreen, etc.
+WindowEventProducer is the base class for all Window specific Event producers. It also contains code for Window Manipulation: Position, size, iconify, enable, visible, fullscreen, etc.
 	<Field
 		name="Window"
 		type="WindowPtr"

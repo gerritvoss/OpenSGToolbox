@@ -43,13 +43,15 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGInputDef.h"
+
 #include <map>
 
 #include "OSGWin32WindowEventProducerBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Win32WindowEventProducer : public Win32WindowEventProducerBase
+class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEventProducerBase
 {
   private:
 

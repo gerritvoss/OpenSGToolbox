@@ -31,14 +31,15 @@
 #pragma once
 #endif
 
-#include "OSGInputConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGInputDef.h"
 
 #include "OSGEventListener.h"
 #include "OSGMouseEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUT_CLASS_API MouseListener : public EventListener
+class OSG_INPUTLIB_DLLMAPPING MouseListener : public EventListener
 {
     /*=========================  PUBLIC  ===============================*/
   public:

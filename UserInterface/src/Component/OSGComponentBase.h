@@ -86,6 +86,7 @@
 #include <OpenSG/OSGMaterialFields.h> // ForegroundMaterial type
 #include <OpenSG/OSGReal32Fields.h> // Opacity type
 #include <OpenSG/OSGAttachmentContainerFields.h> // ParentContainer type
+#include <OpenSG/OSGBoolFields.h> // Clipping type
 
 #include "OSGComponentFields.h"
 
@@ -130,7 +131,8 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
         ForegroundMaterialFieldId      = FocusedForegroundColorFieldId  + 1,
         OpacityFieldId                 = ForegroundMaterialFieldId      + 1,
         ParentContainerFieldId         = OpacityFieldId                 + 1,
-        NextFieldId                    = ParentContainerFieldId         + 1
+        ClippingFieldId                = ParentContainerFieldId         + 1,
+        NextFieldId                    = ClippingFieldId                + 1
     };
 
     static const OSG::BitVector PositionFieldMask;
@@ -154,6 +156,7 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
     static const OSG::BitVector ForegroundMaterialFieldMask;
     static const OSG::BitVector OpacityFieldMask;
     static const OSG::BitVector ParentContainerFieldMask;
+    static const OSG::BitVector ClippingFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -200,6 +203,7 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
            SFMaterialPtr       *getSFForegroundMaterial(void);
            SFReal32            *getSFOpacity        (void);
            SFAttachmentContainerPtr *getSFParentContainer(void);
+           SFBool              *getSFClipping       (void);
 
            Vec2s               &getMinSize        (void);
      const Vec2s               &getMinSize        (void) const;
@@ -241,6 +245,8 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
      const Real32              &getOpacity        (void) const;
            AttachmentContainerPtr &getParentContainer(void);
      const AttachmentContainerPtr &getParentContainer(void) const;
+           bool                &getClipping       (void);
+     const bool                &getClipping       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -267,6 +273,7 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
      void setForegroundMaterial( const MaterialPtr &value );
      void setOpacity        ( const Real32 &value );
      void setParentContainer( const AttachmentContainerPtr &value );
+     void setClipping       ( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -314,6 +321,7 @@ class OSG_USER_INTERFACE_CLASS_API ComponentBase : public AttachmentContainer
     SFMaterialPtr       _sfForegroundMaterial;
     SFReal32            _sfOpacity;
     SFAttachmentContainerPtr   _sfParentContainer;
+    SFBool              _sfClipping;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

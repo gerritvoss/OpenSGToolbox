@@ -191,4 +191,13 @@ A UI Component Interface.
 		defaultValue="NullFC"
 	>
 	</Field>
+   <Field
+		name="Clipping"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="true"
+	>
+	</Field>
 </FieldContainer>

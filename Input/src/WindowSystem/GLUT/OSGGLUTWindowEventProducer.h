@@ -42,7 +42,8 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGDynamicsConfig.h"
+#include "OSGInputDef.h"
 
 #include <map>
 
@@ -51,7 +52,7 @@
 OSG_BEGIN_NAMESPACE
 
 
-class GLUTWindowEventProducer : public GLUTWindowEventProducerBase
+class OSG_DYNAMICS_CLASS_API OSG_INPUTLIB_DLLMAPPING GLUTWindowEventProducer : public GLUTWindowEventProducerBase
 {
   private:
 

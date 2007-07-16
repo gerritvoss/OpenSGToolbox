@@ -230,8 +230,8 @@ OSG_BEGIN_NAMESPACE
 DataType FieldDataTraits<GLUTWindowEventProducerPtr>::_type("GLUTWindowEventProducerPtr", "WindowEventProducerPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(GLUTWindowEventProducerPtr, );
-OSG_DLLEXPORT_MFIELD_DEF1(GLUTWindowEventProducerPtr, );
+OSG_DLLEXPORT_SFIELD_DEF1(GLUTWindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(GLUTWindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/

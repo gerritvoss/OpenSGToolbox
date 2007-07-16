@@ -30,15 +30,16 @@
 #pragma once
 #endif
 
-#include <map>
+#include <OpenSG/OSGConfig.h>
+#include "OSGInputDef.h"
 
-#include "OSGInputConfig.h"
+#include <map>
 
 #include "OSGWindowEventProducer.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUT_CLASS_API WindowEventProducerFactory
+class OSG_INPUTLIB_DLLMAPPING WindowEventProducerFactory
 {
    /*=========================  PUBLIC  ===============================*/
 public:

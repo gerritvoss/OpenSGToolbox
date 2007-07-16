@@ -44,7 +44,8 @@
 #endif
  
 #include "OSGUserInterfaceConfig.h"
-#include <OpenSG/OSGFieldContainerPtr.h>
+#include "OSGListDataListener.h"
+#include <OpenSG/OSGField.h>
 
 OSG_BEGIN_NAMESPACE
 	 
@@ -54,11 +55,10 @@ private:
 protected:
 public:
 	virtual UInt32 getSize(void) = 0;
-	virtual FieldContainerPtr getElementAt(UInt32 index) = 0;
+	virtual Field* getElementAt(UInt32 index) = 0;
 
-	//addListDataListener(ListDataListener l);
-	//removeListDataListener(ListDataListener l)
-
+	virtual void addListDataListener(ListDataListenerPtr l) = 0;
+	virtual void removeListDataListener(ListDataListenerPtr l) = 0;
 };
 
 typedef ListModel* ListModelPtr;

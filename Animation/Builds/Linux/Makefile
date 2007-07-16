@@ -6,106 +6,106 @@ LIB_INCLUDE_DIR_NAME = Animation
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir):$(srcdir)/Animations:$(srcdir)/Animators:$(srcdir)/KeyframeSequence:$(srcdir)/Interpolation:$(srcdir)/Animations/Advancers:$(srcdir)/GeometryAnimation:$(srcdir)/KeyframeSequence/GeometryKeyframeSequences:$(srcdir)/Util
+VPATH = $(srcdir)/:$(srcdir)/Animations:$(srcdir)/Animations/Advancers:$(srcdir)/Animators:$(srcdir)/GeometryAnimation:$(srcdir)/Interpolation:$(srcdir)/KeyframeSequence:$(srcdir)/KeyframeSequence/GeometryKeyframeSequences:$(srcdir)/Util:
 
 
 #.SUFFIX = .o .o
 
 EXTRA_CCFLAGS = -I$(srcdir)
 
-OBJECTS = OSGAnimator.o \
-	OSGKeyframeAnimatorBase.o \
+OBJECTS = OSGAnimation.o \
+	OSGAnimationBase.o \
+	OSGFieldAnimation.o \
+	OSGFieldAnimationBase.o \
+	OSGGeometryAnimation.o \
+	OSGGeometryAnimationBase.o \
+	OSGShaderAnimation.o \
+	OSGShaderAnimationBase.o \
+	OSGAnimationAdvancer.o \
+	OSGAnimationAdvancerBase.o \
+	OSGConstantAnimationAdvancer.o \
+	OSGConstantAnimationAdvancerBase.o \
+	OSGElapsedTimeAnimationAdvancer.o \
+	OSGElapsedTimeAnimationAdvancerBase.o \
+	OSGFieldAnimationAdvancer.o \
+	OSGFieldAnimationAdvancerBase.o \
+	OSGAnimator.o \
 	OSGAnimatorBase.o \
 	OSGKeyframeAnimator.o \
-	OSGGeoPropertyOperations.o \
-	OSGMFieldInterpolations.o \
-	OSGInterpolationFactory.o \
+	OSGKeyframeAnimatorBase.o \
+	OSGBlendGeometry.o \
+	OSGBlendGeometryBase.o \
+	OSGGeoColorDifferenceSet.o \
+	OSGGeoColorDifferenceSetBase.o \
+	OSGGeoDifferenceSet.o \
+	OSGGeoDifferenceSetBase.o \
+	OSGGeoNormalDifferenceSet.o \
+	OSGGeoNormalDifferenceSetBase.o \
+	OSGGeoPositionDifferenceSet.o \
+	OSGGeoPositionDifferenceSetBase.o \
+	OSGGeoTexCoordDifferenceSet.o \
+	OSGGeoTexCoordDifferenceSetBase.o \
 	OSGGeometryInterpolations.o \
+	OSGInterpolationFactory.o \
 	OSGKeyframeInterpolations.o \
+	OSGMFieldInterpolations.o \
 	OSGKeyframeSequence.o \
-	OSGKeyframeSequenceReal32.o \
+	OSGKeyframeSequenceBase.o \
+	OSGKeyframeSequenceBool.o \
+	OSGKeyframeSequenceBoolBase.o \
+	OSGKeyframeSequenceColor3f.o \
+	OSGKeyframeSequenceColor3fBase.o \
+	OSGKeyframeSequenceColor4f.o \
+	OSGKeyframeSequenceColor4fBase.o \
+	OSGKeyframeSequenceGLenum.o \
+	OSGKeyframeSequenceGLenumBase.o \
+	OSGKeyframeSequenceImagePtr.o \
 	OSGKeyframeSequenceImagePtrBase.o \
+	OSGKeyframeSequenceInt32.o \
+	OSGKeyframeSequenceInt32Base.o \
+	OSGKeyframeSequenceMaterialPtr.o \
+	OSGKeyframeSequenceMaterialPtrBase.o \
+	OSGKeyframeSequenceMatrix.o \
+	OSGKeyframeSequenceMatrixBase.o \
 	OSGKeyframeSequenceNodeCorePtr.o \
 	OSGKeyframeSequenceNodeCorePtrBase.o \
-	OSGKeyframeSequenceInt32.o \
-	OSGKeyframeSequenceStateChunkPtrBase.o \
-	OSGKeyframeSequenceTextureChunkPtrBase.o \
+	OSGKeyframeSequenceOSGNodePtr.o \
+	OSGKeyframeSequenceOSGNodePtrBase.o \
+	OSGKeyframeSequencePnt2f.o \
+	OSGKeyframeSequencePnt2fBase.o \
+	OSGKeyframeSequencePnt3f.o \
 	OSGKeyframeSequencePnt3fBase.o \
-	OSGKeyframeSequenceColor4f.o \
-	OSGKeyframeSequenceVec2f.o \
+	OSGKeyframeSequenceQuaternion.o \
+	OSGKeyframeSequenceQuaternionBase.o \
+	OSGKeyframeSequenceReal32.o \
+	OSGKeyframeSequenceReal32Base.o \
+	OSGKeyframeSequenceStateChunkPtr.o \
+	OSGKeyframeSequenceStateChunkPtrBase.o \
+	OSGKeyframeSequenceString.o \
 	OSGKeyframeSequenceStringBase.o \
-	OSGKeyframeSequenceMatrix.o \
-	OSGKeyframeSequenceColor3f.o \
-	OSGKeyframeSequenceGLenum.o \
+	OSGKeyframeSequenceTextureChunkPtr.o \
+	OSGKeyframeSequenceTextureChunkPtrBase.o \
+	OSGKeyframeSequenceTime.o \
+	OSGKeyframeSequenceTimeBase.o \
+	OSGKeyframeSequenceUInt16.o \
+	OSGKeyframeSequenceUInt16Base.o \
+	OSGKeyframeSequenceUInt32.o \
+	OSGKeyframeSequenceUInt32Base.o \
+	OSGKeyframeSequenceUInt8.o \
+	OSGKeyframeSequenceUInt8Base.o \
+	OSGKeyframeSequenceVec2f.o \
 	OSGKeyframeSequenceVec2fBase.o \
-	OSGKeyframeSequenceMaterialPtrBase.o \
+	OSGKeyframeSequenceVec3f.o \
+	OSGKeyframeSequenceVec3fBase.o \
 	OSGKeyframeSequenceGeoColorsPtr.o \
 	OSGKeyframeSequenceGeoColorsPtrBase.o \
 	OSGKeyframeSequenceGeoNormalsPtr.o \
 	OSGKeyframeSequenceGeoNormalsPtrBase.o \
+	OSGKeyframeSequenceGeoPositionsPtr.o \
 	OSGKeyframeSequenceGeoPositionsPtrBase.o \
 	OSGKeyframeSequenceGeoTexCoordsPtr.o \
 	OSGKeyframeSequenceGeoTexCoordsPtrBase.o \
-	OSGKeyframeSequenceGeoPositionsPtr.o \
-	OSGKeyframeSequenceUInt8Base.o \
-	OSGKeyframeSequenceTimeBase.o \
-	OSGKeyframeSequenceGLenumBase.o \
-	OSGKeyframeSequenceUInt16Base.o \
-	OSGKeyframeSequenceUInt8.o \
-	OSGKeyframeSequenceTime.o \
-	OSGKeyframeSequenceBool.o \
-	OSGKeyframeSequenceBase.o \
-	OSGKeyframeSequenceQuaternion.o \
-	OSGKeyframeSequenceImagePtr.o \
-	OSGKeyframeSequenceColor3fBase.o \
-	OSGKeyframeSequenceVec3fBase.o \
-	OSGKeyframeSequenceUInt16.o \
-	OSGKeyframeSequenceQuaternionBase.o \
-	OSGKeyframeSequenceStateChunkPtr.o \
-	OSGKeyframeSequenceUInt32Base.o \
-	OSGKeyframeSequencePnt3f.o \
-	OSGKeyframeSequenceVec3f.o \
-	OSGKeyframeSequenceUInt32.o \
-	OSGKeyframeSequenceColor4fBase.o \
-	OSGKeyframeSequenceMatrixBase.o \
-	OSGKeyframeSequenceInt32Base.o \
-	OSGKeyframeSequenceReal32Base.o \
-	OSGKeyframeSequenceOSGNodePtr.o \
-	OSGKeyframeSequencePnt2f.o \
-	OSGKeyframeSequencePnt2fBase.o \
-	OSGKeyframeSequenceBoolBase.o \
-	OSGKeyframeSequenceString.o \
-	OSGKeyframeSequenceOSGNodePtrBase.o \
-	OSGKeyframeSequenceTextureChunkPtr.o \
-	OSGKeyframeSequenceMaterialPtr.o \
-	OSGFieldAnimation.o \
-	OSGFieldAnimationBase.o \
-	OSGGeometryAnimation.o \
-	OSGFieldAnimationAdvancer.o \
-	OSGAnimationAdvancer.o \
-	OSGElapsedTimeAnimationAdvancer.o \
-	OSGConstantAnimationAdvancerBase.o \
-	OSGFieldAnimationAdvancerBase.o \
-	OSGElapsedTimeAnimationAdvancerBase.o \
-	OSGConstantAnimationAdvancer.o \
-	OSGAnimationAdvancerBase.o \
-	OSGGeometryAnimationBase.o \
-	OSGAnimation.o \
-	OSGAnimationBase.o \
-	OSGShaderAnimation.o \
-	OSGShaderAnimationBase.o \
-	OSGBlendGeometry.o \
-	OSGGeoNormalDifferenceSet.o \
-	OSGGeoPositionDifferenceSetBase.o \
-	OSGGeoDifferenceSet.o \
-	OSGGeoTexCoordDifferenceSet.o \
-	OSGGeoNormalDifferenceSetBase.o \
-	OSGGeoTexCoordDifferenceSetBase.o \
-	OSGGeoColorDifferenceSet.o \
-	OSGGeoPositionDifferenceSet.o \
-	OSGGeoColorDifferenceSetBase.o \
-	OSGGeoDifferenceSetBase.o \
-	OSGBlendGeometryBase.o
+	OSGGeoPropertyOperations.o
         
         
 include $(commondir)/CommonMake.mk

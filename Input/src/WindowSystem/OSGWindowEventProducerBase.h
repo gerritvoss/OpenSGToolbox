@@ -58,7 +58,8 @@
 #endif
 
 
-#include "OSGInputConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGInputDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
@@ -78,7 +79,7 @@ class BinaryDataHandler;
 
 //! \brief WindowEventProducer Base Class.
 
-class OSG_INPUT_CLASS_API WindowEventProducerBase : public FieldContainer
+class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
 {
   private:
 

@@ -64,10 +64,10 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGComponent.h" // Parent
+#include "Component/OSGComponent.h" // Parent
 
 #include <OpenSG/OSGUInt32Fields.h> // CellLayout type
-#include <OpenSG/OSGComponentFields.h> // List type
+#include "Component/OSGComponentFields.h" // List type
 #include <OpenSG/OSGUInt32Fields.h> // SelectedIndices type
 
 #include "OSGListFields.h"

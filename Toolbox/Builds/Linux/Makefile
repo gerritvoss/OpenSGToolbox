@@ -6,19 +6,19 @@ LIB_INCLUDE_DIR_NAME = Toolbox
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir):$(srcdir)/Cameras
+VPATH = $(srcdir)/:$(srcdir)/Cameras:$(srcdir)/Util:
 
 
 #.SUFFIX = .cpp .o
 
 EXTRA_CCFLAGS = -I$(srcdir)
 
-OBJECTS = OSGAirplaneCameraBase.o \
-	OSGAirplaneCamera.o \
-	OSGMatrixBeaconCameraBase.o \
+OBJECTS = OSGAirplaneCamera.o \
+	OSGAirplaneCameraBase.o \
 	OSGMatrixBeaconCamera.o \
-	OSGRubberBandCameraBase.o \
-	OSGRubberBandCamera.o
+	OSGMatrixBeaconCameraBase.o \
+	OSGRubberBandCamera.o \
+	OSGRubberBandCameraBase.o
         
         
 include $(commondir)/CommonMake.mk

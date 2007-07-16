@@ -47,6 +47,8 @@
 #include "Component/OSGComponent.h"
 #include "OSGList.h"
 
+#include <OpenSG/OSGField.h>
+
 OSG_BEGIN_NAMESPACE
 	 
 class OSG_USER_INTERFACE_CLASS_API ListCellGenerator
@@ -54,7 +56,7 @@ class OSG_USER_INTERFACE_CLASS_API ListCellGenerator
 private:
 protected:
 public:
-	virtual ComponentPtr getListCellGeneratorComponent(ListPtr list, Object value, UInt32 index, bool isSelected, bool cellHasFocus) = 0;
+	virtual ComponentPtr getListCellGeneratorComponent(ListPtr list, Field* value, UInt32 index, bool isSelected, bool cellHasFocus) = 0;
 
 };
 

@@ -1,24 +1,22 @@
 ###
 
-LIB_NAME = OSGToolbox
-LIB_INCLUDE_DIR_NAME = Toolbox
+LIB_NAME = OSGParticleSystem
+LIB_INCLUDE_DIR_NAME = ParticleSystem
 
 srcdir = ../../../src
-installdir = ../Install
+installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir):$(srcdir)/Cameras
+VPATH = $(srcdir)/:
 
 
-#.SUFFIX = .cpp .o
+#.SUFFIX = .o .o
 
 EXTRA_CCFLAGS = -I$(srcdir)
 
-OBJECTS = OSGAirplaneCameraBase.o \
-	OSGAirplaneCamera.o \
-	OSGMatrixBeaconCameraBase.o \
-	OSGMatrixBeaconCamera.o \
-	OSGRubberBandCameraBase.o \
-	OSGRubberBandCamera.o
+OBJECTS = OSGListTypeInst.o \
+	OSGParticleSystem.o \
+	OSGParticleSystemBase.o \
+	OSGParticleSystemIterator.o
         
         
 include $(commondir)/CommonMake.mk

@@ -31,14 +31,15 @@
 #pragma once
 #endif
 
-#include "OSGInputConfig.h"
+#include <OpenSG/OSGConfig.h>
+#include "OSGInputDef.h"
 
 #include "OSGEventListener.h"
 #include "OSGKeyEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUT_CLASS_API KeyListener : public EventListener
+class OSG_INPUTLIB_DLLMAPPING KeyListener : public EventListener
 {
    /*=========================  PUBLIC  ===============================*/
 public:
