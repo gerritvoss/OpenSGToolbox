@@ -110,6 +110,13 @@ SFUInt32 *BoxLayoutBase::getSFMinorAxisAlignment(void)
     return &_sfMinorAxisAlignment;
 }
 
+//! Get the BoxLayout::_sfComponentAlignment field.
+inline
+SFUInt32 *BoxLayoutBase::getSFComponentAlignment(void)
+{
+    return &_sfComponentAlignment;
+}
+
 
 //! Get the value of the BoxLayout::_sfAlignment field.
 inline
@@ -151,6 +158,27 @@ inline
 void BoxLayoutBase::setMinorAxisAlignment(const UInt32 &value)
 {
     _sfMinorAxisAlignment.setValue(value);
+}
+
+//! Get the value of the BoxLayout::_sfComponentAlignment field.
+inline
+UInt32 &BoxLayoutBase::getComponentAlignment(void)
+{
+    return _sfComponentAlignment.getValue();
+}
+
+//! Get the value of the BoxLayout::_sfComponentAlignment field.
+inline
+const UInt32 &BoxLayoutBase::getComponentAlignment(void) const
+{
+    return _sfComponentAlignment.getValue();
+}
+
+//! Set the value of the BoxLayout::_sfComponentAlignment field.
+inline
+void BoxLayoutBase::setComponentAlignment(const UInt32 &value)
+{
+    _sfComponentAlignment.setValue(value);
 }
 
 

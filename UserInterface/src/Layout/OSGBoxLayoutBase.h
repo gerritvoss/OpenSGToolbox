@@ -69,6 +69,7 @@
 
 #include <OpenSG/OSGUInt32Fields.h> // Alignment type
 #include <OpenSG/OSGUInt32Fields.h> // MinorAxisAlignment type
+#include <OpenSG/OSGUInt32Fields.h> // ComponentAlignment type
 
 #include "OSGBoxLayoutFields.h"
 
@@ -94,11 +95,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING BoxLayoutBase : public Layout
     {
         AlignmentFieldId          = Inherited::NextFieldId,
         MinorAxisAlignmentFieldId = AlignmentFieldId          + 1,
-        NextFieldId               = MinorAxisAlignmentFieldId + 1
+        ComponentAlignmentFieldId = MinorAxisAlignmentFieldId + 1,
+        NextFieldId               = ComponentAlignmentFieldId + 1
     };
 
     static const OSG::BitVector AlignmentFieldMask;
     static const OSG::BitVector MinorAxisAlignmentFieldMask;
+    static const OSG::BitVector ComponentAlignmentFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -127,11 +130,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING BoxLayoutBase : public Layout
 
            SFUInt32            *getSFAlignment      (void);
            SFUInt32            *getSFMinorAxisAlignment(void);
+           SFUInt32            *getSFComponentAlignment(void);
 
            UInt32              &getAlignment      (void);
      const UInt32              &getAlignment      (void) const;
            UInt32              &getMinorAxisAlignment(void);
      const UInt32              &getMinorAxisAlignment(void) const;
+           UInt32              &getComponentAlignment(void);
+     const UInt32              &getComponentAlignment(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -140,6 +146,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING BoxLayoutBase : public Layout
 
      void setAlignment      ( const UInt32 &value );
      void setMinorAxisAlignment( const UInt32 &value );
+     void setComponentAlignment( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -184,6 +191,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING BoxLayoutBase : public Layout
 
     SFUInt32            _sfAlignment;
     SFUInt32            _sfMinorAxisAlignment;
+    SFUInt32            _sfComponentAlignment;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

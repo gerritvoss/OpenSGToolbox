@@ -63,6 +63,7 @@
 
 #include <Util/OSGUIDefines.h>            // Alignment default header
 #include <Util/OSGUIDefines.h>            // MinorAxisAlignment default header
+#include <Util/OSGUIDefines.h>            // ComponentAlignment default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -71,6 +72,9 @@ const OSG::BitVector  BoxLayoutBase::AlignmentFieldMask =
 
 const OSG::BitVector  BoxLayoutBase::MinorAxisAlignmentFieldMask = 
     (TypeTraits<BitVector>::One << BoxLayoutBase::MinorAxisAlignmentFieldId);
+
+const OSG::BitVector  BoxLayoutBase::ComponentAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << BoxLayoutBase::ComponentAlignmentFieldId);
 
 const OSG::BitVector BoxLayoutBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -83,6 +87,9 @@ const OSG::BitVector BoxLayoutBase::MTInfluenceMask =
     
 */
 /*! \var UInt32          BoxLayoutBase::_sfMinorAxisAlignment
+    
+*/
+/*! \var UInt32          BoxLayoutBase::_sfComponentAlignment
     
 */
 
@@ -99,7 +106,12 @@ FieldDescription *BoxLayoutBase::_desc[] =
                      "MinorAxisAlignment", 
                      MinorAxisAlignmentFieldId, MinorAxisAlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &BoxLayoutBase::getSFMinorAxisAlignment)
+                     (FieldAccessMethod) &BoxLayoutBase::getSFMinorAxisAlignment),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "ComponentAlignment", 
+                     ComponentAlignmentFieldId, ComponentAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &BoxLayoutBase::getSFComponentAlignment)
 };
 
 
@@ -177,6 +189,7 @@ void BoxLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 BoxLayoutBase::BoxLayoutBase(void) :
     _sfAlignment              (UInt32(HORIZONTAL_ALIGNMENT)), 
     _sfMinorAxisAlignment     (UInt32(AXIS_CENTER_ALIGNMENT)), 
+    _sfComponentAlignment     (UInt32(AXIS_CENTER_ALIGNMENT)), 
     Inherited() 
 {
 }
@@ -188,6 +201,7 @@ BoxLayoutBase::BoxLayoutBase(void) :
 BoxLayoutBase::BoxLayoutBase(const BoxLayoutBase &source) :
     _sfAlignment              (source._sfAlignment              ), 
     _sfMinorAxisAlignment     (source._sfMinorAxisAlignment     ), 
+    _sfComponentAlignment     (source._sfComponentAlignment     ), 
     Inherited                 (source)
 {
 }
@@ -214,6 +228,11 @@ UInt32 BoxLayoutBase::getBinSize(const BitVector &whichField)
         returnValue += _sfMinorAxisAlignment.getBinSize();
     }
 
+    if(FieldBits::NoField != (ComponentAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfComponentAlignment.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -231,6 +250,11 @@ void BoxLayoutBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
     {
         _sfMinorAxisAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ComponentAlignmentFieldMask & whichField))
+    {
+        _sfComponentAlignment.copyToBin(pMem);
     }
 
 
@@ -251,6 +275,11 @@ void BoxLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfMinorAxisAlignment.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ComponentAlignmentFieldMask & whichField))
+    {
+        _sfComponentAlignment.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -267,6 +296,9 @@ void BoxLayoutBase::executeSyncImpl(      BoxLayoutBase *pOther,
     if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
         _sfMinorAxisAlignment.syncWith(pOther->_sfMinorAxisAlignment);
 
+    if(FieldBits::NoField != (ComponentAlignmentFieldMask & whichField))
+        _sfComponentAlignment.syncWith(pOther->_sfComponentAlignment);
+
 
 }
 #else
@@ -282,6 +314,9 @@ void BoxLayoutBase::executeSyncImpl(      BoxLayoutBase *pOther,
 
     if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
         _sfMinorAxisAlignment.syncWith(pOther->_sfMinorAxisAlignment);
+
+    if(FieldBits::NoField != (ComponentAlignmentFieldMask & whichField))
+        _sfComponentAlignment.syncWith(pOther->_sfComponentAlignment);
 
 
 

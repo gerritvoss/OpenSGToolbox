@@ -131,6 +131,13 @@ SFUInt32 *FlowLayoutBase::getSFMinorAxisAlignment(void)
     return &_sfMinorAxisAlignment;
 }
 
+//! Get the FlowLayout::_sfComponentAlignment field.
+inline
+SFUInt32 *FlowLayoutBase::getSFComponentAlignment(void)
+{
+    return &_sfComponentAlignment;
+}
+
 
 //! Get the value of the FlowLayout::_sfAlignment field.
 inline
@@ -235,6 +242,27 @@ inline
 void FlowLayoutBase::setMinorAxisAlignment(const UInt32 &value)
 {
     _sfMinorAxisAlignment.setValue(value);
+}
+
+//! Get the value of the FlowLayout::_sfComponentAlignment field.
+inline
+UInt32 &FlowLayoutBase::getComponentAlignment(void)
+{
+    return _sfComponentAlignment.getValue();
+}
+
+//! Get the value of the FlowLayout::_sfComponentAlignment field.
+inline
+const UInt32 &FlowLayoutBase::getComponentAlignment(void) const
+{
+    return _sfComponentAlignment.getValue();
+}
+
+//! Set the value of the FlowLayout::_sfComponentAlignment field.
+inline
+void FlowLayoutBase::setComponentAlignment(const UInt32 &value)
+{
+    _sfComponentAlignment.setValue(value);
 }
 
 

@@ -32,4 +32,14 @@ A UI BoxLayout.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="ComponentAlignment"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="AXIS_CENTER_ALIGNMENT"
+		defaultHeader="Util/OSGUIDefines.h"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

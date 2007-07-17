@@ -64,6 +64,7 @@
 #include <Util/OSGUIDefines.h>            // Alignment default header
 #include <Util/OSGUIDefines.h>            // MajorAxisAlignment default header
 #include <Util/OSGUIDefines.h>            // MinorAxisAlignment default header
+#include <Util/OSGUIDefines.h>            // ComponentAlignment default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -81,6 +82,9 @@ const OSG::BitVector  FlowLayoutBase::MajorAxisAlignmentFieldMask =
 
 const OSG::BitVector  FlowLayoutBase::MinorAxisAlignmentFieldMask = 
     (TypeTraits<BitVector>::One << FlowLayoutBase::MinorAxisAlignmentFieldId);
+
+const OSG::BitVector  FlowLayoutBase::ComponentAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << FlowLayoutBase::ComponentAlignmentFieldId);
 
 const OSG::BitVector FlowLayoutBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -102,6 +106,9 @@ const OSG::BitVector FlowLayoutBase::MTInfluenceMask =
     
 */
 /*! \var UInt32          FlowLayoutBase::_sfMinorAxisAlignment
+    
+*/
+/*! \var UInt32          FlowLayoutBase::_sfComponentAlignment
     
 */
 
@@ -133,7 +140,12 @@ FieldDescription *FlowLayoutBase::_desc[] =
                      "MinorAxisAlignment", 
                      MinorAxisAlignmentFieldId, MinorAxisAlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &FlowLayoutBase::getSFMinorAxisAlignment)
+                     (FieldAccessMethod) &FlowLayoutBase::getSFMinorAxisAlignment),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "ComponentAlignment", 
+                     ComponentAlignmentFieldId, ComponentAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &FlowLayoutBase::getSFComponentAlignment)
 };
 
 
@@ -214,6 +226,7 @@ FlowLayoutBase::FlowLayoutBase(void) :
     _sfVerticalGap            (Int32(10)), 
     _sfMajorAxisAlignment     (UInt32(AXIS_CENTER_ALIGNMENT)), 
     _sfMinorAxisAlignment     (UInt32(AXIS_CENTER_ALIGNMENT)), 
+    _sfComponentAlignment     (UInt32(AXIS_CENTER_ALIGNMENT)), 
     Inherited() 
 {
 }
@@ -228,6 +241,7 @@ FlowLayoutBase::FlowLayoutBase(const FlowLayoutBase &source) :
     _sfVerticalGap            (source._sfVerticalGap            ), 
     _sfMajorAxisAlignment     (source._sfMajorAxisAlignment     ), 
     _sfMinorAxisAlignment     (source._sfMinorAxisAlignment     ), 
+    _sfComponentAlignment     (source._sfComponentAlignment     ), 
     Inherited                 (source)
 {
 }
@@ -269,6 +283,11 @@ UInt32 FlowLayoutBase::getBinSize(const BitVector &whichField)
         returnValue += _sfMinorAxisAlignment.getBinSize();
     }
 
+    if(FieldBits::NoField != (ComponentAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfComponentAlignment.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -301,6 +320,11 @@ void FlowLayoutBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
     {
         _sfMinorAxisAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ComponentAlignmentFieldMask & whichField))
+    {
+        _sfComponentAlignment.copyToBin(pMem);
     }
 
 
@@ -336,6 +360,11 @@ void FlowLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfMinorAxisAlignment.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ComponentAlignmentFieldMask & whichField))
+    {
+        _sfComponentAlignment.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -361,6 +390,9 @@ void FlowLayoutBase::executeSyncImpl(      FlowLayoutBase *pOther,
     if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
         _sfMinorAxisAlignment.syncWith(pOther->_sfMinorAxisAlignment);
 
+    if(FieldBits::NoField != (ComponentAlignmentFieldMask & whichField))
+        _sfComponentAlignment.syncWith(pOther->_sfComponentAlignment);
+
 
 }
 #else
@@ -385,6 +417,9 @@ void FlowLayoutBase::executeSyncImpl(      FlowLayoutBase *pOther,
 
     if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
         _sfMinorAxisAlignment.syncWith(pOther->_sfMinorAxisAlignment);
+
+    if(FieldBits::NoField != (ComponentAlignmentFieldMask & whichField))
+        _sfComponentAlignment.syncWith(pOther->_sfComponentAlignment);
 
 
 

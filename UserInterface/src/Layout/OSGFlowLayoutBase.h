@@ -72,6 +72,7 @@
 #include <OpenSG/OSGInt32Fields.h> // VerticalGap type
 #include <OpenSG/OSGUInt32Fields.h> // MajorAxisAlignment type
 #include <OpenSG/OSGUInt32Fields.h> // MinorAxisAlignment type
+#include <OpenSG/OSGUInt32Fields.h> // ComponentAlignment type
 
 #include "OSGFlowLayoutFields.h"
 
@@ -100,7 +101,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FlowLayoutBase : public Layout
         VerticalGapFieldId        = HorizontalGapFieldId      + 1,
         MajorAxisAlignmentFieldId = VerticalGapFieldId        + 1,
         MinorAxisAlignmentFieldId = MajorAxisAlignmentFieldId + 1,
-        NextFieldId               = MinorAxisAlignmentFieldId + 1
+        ComponentAlignmentFieldId = MinorAxisAlignmentFieldId + 1,
+        NextFieldId               = ComponentAlignmentFieldId + 1
     };
 
     static const OSG::BitVector AlignmentFieldMask;
@@ -108,6 +110,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FlowLayoutBase : public Layout
     static const OSG::BitVector VerticalGapFieldMask;
     static const OSG::BitVector MajorAxisAlignmentFieldMask;
     static const OSG::BitVector MinorAxisAlignmentFieldMask;
+    static const OSG::BitVector ComponentAlignmentFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -139,6 +142,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FlowLayoutBase : public Layout
            SFInt32             *getSFVerticalGap    (void);
            SFUInt32            *getSFMajorAxisAlignment(void);
            SFUInt32            *getSFMinorAxisAlignment(void);
+           SFUInt32            *getSFComponentAlignment(void);
 
            UInt32              &getAlignment      (void);
      const UInt32              &getAlignment      (void) const;
@@ -150,6 +154,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FlowLayoutBase : public Layout
      const UInt32              &getMajorAxisAlignment(void) const;
            UInt32              &getMinorAxisAlignment(void);
      const UInt32              &getMinorAxisAlignment(void) const;
+           UInt32              &getComponentAlignment(void);
+     const UInt32              &getComponentAlignment(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -161,6 +167,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FlowLayoutBase : public Layout
      void setVerticalGap    ( const Int32 &value );
      void setMajorAxisAlignment( const UInt32 &value );
      void setMinorAxisAlignment( const UInt32 &value );
+     void setComponentAlignment( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -208,6 +215,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FlowLayoutBase : public Layout
     SFInt32             _sfVerticalGap;
     SFUInt32            _sfMajorAxisAlignment;
     SFUInt32            _sfMinorAxisAlignment;
+    SFUInt32            _sfComponentAlignment;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
