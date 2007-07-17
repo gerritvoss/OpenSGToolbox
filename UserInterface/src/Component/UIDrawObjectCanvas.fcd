@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="UIDrawObjectCanvas"
+	parent="Component"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI UIDrawObjectCanvas.
+	<Field
+		name="DrawObjects"
+		type="UIDrawObjectPtr"
+		cardinality="multi"
+		visibility="external"
+		header="Graphics\UIDrawObjects/OSGUIDrawObject.h"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

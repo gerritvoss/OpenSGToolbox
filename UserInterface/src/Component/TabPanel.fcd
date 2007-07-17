@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="TabPanel"
+	parent="Component"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI Tab Panel.
+	<Field
+		name="Tabs"
+		type="ComponentPtr"
+		cardinality="multi"
+		visibility="external"
+		header="Component/OSGComponent.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="TabContents"
+		type="ComponentPtr"
+		cardinality="multi"
+		visibility="external"
+		header="Component/OSGComponent.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ActiveTab"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>
+	</Field>
+</FieldContainer>

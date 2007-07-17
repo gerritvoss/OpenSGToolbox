@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="LineUIDrawObject"
+	parent="UIDrawObject"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI DrawObject.
+	<Field
+		name="TopLeft"
+		type="Pnt2s"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0,0"
+	>
+	</Field>
+	<Field
+		name="BottomRight"
+		type="Pnt2s"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0,0"
+	>
+	</Field>
+	<Field
+		name="Width"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1"
+	>
+	</Field>
+	<Field
+		name="Color"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0,1.0,1.0,1.0"
+	>
+	</Field>
+	<Field
+		name="Opacity"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0"
+	>
+	</Field>
+</FieldContainer>

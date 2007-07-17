@@ -76,6 +76,7 @@ void CheckboxButton::initMethod (void)
 
 void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
 {
+	//TODO:Implement
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

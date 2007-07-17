@@ -96,6 +96,118 @@ RadioButtonPtr RadioButtonBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the RadioButton::_sfDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *RadioButtonBase::getSFDrawObject(void)
+{
+    return &_sfDrawObject;
+}
+
+//! Get the RadioButton::_sfCheckedDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *RadioButtonBase::getSFCheckedDrawObject(void)
+{
+    return &_sfCheckedDrawObject;
+}
+
+//! Get the RadioButton::_sfActiveDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *RadioButtonBase::getSFActiveDrawObject(void)
+{
+    return &_sfActiveDrawObject;
+}
+
+//! Get the RadioButton::_sfActiveCheckedDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *RadioButtonBase::getSFActiveCheckedDrawObject(void)
+{
+    return &_sfActiveCheckedDrawObject;
+}
+
+
+//! Get the value of the RadioButton::_sfDrawObject field.
+inline
+UIDrawObjectCanvasPtr &RadioButtonBase::getDrawObject(void)
+{
+    return _sfDrawObject.getValue();
+}
+
+//! Get the value of the RadioButton::_sfDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &RadioButtonBase::getDrawObject(void) const
+{
+    return _sfDrawObject.getValue();
+}
+
+//! Set the value of the RadioButton::_sfDrawObject field.
+inline
+void RadioButtonBase::setDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfDrawObject.setValue(value);
+}
+
+//! Get the value of the RadioButton::_sfCheckedDrawObject field.
+inline
+UIDrawObjectCanvasPtr &RadioButtonBase::getCheckedDrawObject(void)
+{
+    return _sfCheckedDrawObject.getValue();
+}
+
+//! Get the value of the RadioButton::_sfCheckedDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &RadioButtonBase::getCheckedDrawObject(void) const
+{
+    return _sfCheckedDrawObject.getValue();
+}
+
+//! Set the value of the RadioButton::_sfCheckedDrawObject field.
+inline
+void RadioButtonBase::setCheckedDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfCheckedDrawObject.setValue(value);
+}
+
+//! Get the value of the RadioButton::_sfActiveDrawObject field.
+inline
+UIDrawObjectCanvasPtr &RadioButtonBase::getActiveDrawObject(void)
+{
+    return _sfActiveDrawObject.getValue();
+}
+
+//! Get the value of the RadioButton::_sfActiveDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &RadioButtonBase::getActiveDrawObject(void) const
+{
+    return _sfActiveDrawObject.getValue();
+}
+
+//! Set the value of the RadioButton::_sfActiveDrawObject field.
+inline
+void RadioButtonBase::setActiveDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfActiveDrawObject.setValue(value);
+}
+
+//! Get the value of the RadioButton::_sfActiveCheckedDrawObject field.
+inline
+UIDrawObjectCanvasPtr &RadioButtonBase::getActiveCheckedDrawObject(void)
+{
+    return _sfActiveCheckedDrawObject.getValue();
+}
+
+//! Get the value of the RadioButton::_sfActiveCheckedDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &RadioButtonBase::getActiveCheckedDrawObject(void) const
+{
+    return _sfActiveCheckedDrawObject.getValue();
+}
+
+//! Set the value of the RadioButton::_sfActiveCheckedDrawObject field.
+inline
+void RadioButtonBase::setActiveCheckedDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfActiveCheckedDrawObject.setValue(value);
+}
 
 
 OSG_END_NAMESPACE

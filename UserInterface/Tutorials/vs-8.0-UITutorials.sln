@@ -54,7 +54,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Bui
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "09BorderLayout", "09BorderLayout.vcproj", "{3CB50FB7-387C-4FF7-BE23-2B709B03E7DE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10ComplexLayout", "10ComplexLayout.vcproj", "{126EDB01-C01C-4847-9E3E-EB473D0444FC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10Frame", "10ComplexLayout.vcproj", "{126EDB01-C01C-4847-9E3E-EB473D0444FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

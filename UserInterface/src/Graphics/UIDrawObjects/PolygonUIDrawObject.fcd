@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="PolygonUIDrawObject"
+	parent="UIDrawObject"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI PolygonUIDrawObject.
+	<Field
+		name="Verticies"
+		type="Pnt2s"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Color"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0,1.0,1.0,1.0"
+	>
+	</Field>
+	<Field
+		name="Opacity"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0"
+	>
+	</Field>
+</FieldContainer>

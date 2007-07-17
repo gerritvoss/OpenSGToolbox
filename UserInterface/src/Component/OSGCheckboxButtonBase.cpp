@@ -64,10 +64,63 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  CheckboxButtonBase::DrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << CheckboxButtonBase::DrawObjectFieldId);
+
+const OSG::BitVector  CheckboxButtonBase::CheckedDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << CheckboxButtonBase::CheckedDrawObjectFieldId);
+
+const OSG::BitVector  CheckboxButtonBase::ActiveDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << CheckboxButtonBase::ActiveDrawObjectFieldId);
+
+const OSG::BitVector  CheckboxButtonBase::ActiveCheckedDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << CheckboxButtonBase::ActiveCheckedDrawObjectFieldId);
+
 const OSG::BitVector CheckboxButtonBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+// Field descriptions
+
+/*! \var UIDrawObjectCanvasPtr CheckboxButtonBase::_sfDrawObject
+    
+*/
+/*! \var UIDrawObjectCanvasPtr CheckboxButtonBase::_sfCheckedDrawObject
+    
+*/
+/*! \var UIDrawObjectCanvasPtr CheckboxButtonBase::_sfActiveDrawObject
+    
+*/
+/*! \var UIDrawObjectCanvasPtr CheckboxButtonBase::_sfActiveCheckedDrawObject
+    
+*/
+
+//! CheckboxButton description
+
+FieldDescription *CheckboxButtonBase::_desc[] = 
+{
+    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
+                     "DrawObject", 
+                     DrawObjectFieldId, DrawObjectFieldMask,
+                     false,
+                     (FieldAccessMethod) &CheckboxButtonBase::getSFDrawObject),
+    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
+                     "CheckedDrawObject", 
+                     CheckedDrawObjectFieldId, CheckedDrawObjectFieldMask,
+                     false,
+                     (FieldAccessMethod) &CheckboxButtonBase::getSFCheckedDrawObject),
+    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
+                     "ActiveDrawObject", 
+                     ActiveDrawObjectFieldId, ActiveDrawObjectFieldMask,
+                     false,
+                     (FieldAccessMethod) &CheckboxButtonBase::getSFActiveDrawObject),
+    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
+                     "ActiveCheckedDrawObject", 
+                     ActiveCheckedDrawObjectFieldId, ActiveCheckedDrawObjectFieldMask,
+                     false,
+                     (FieldAccessMethod) &CheckboxButtonBase::getSFActiveCheckedDrawObject)
+};
 
 
 FieldContainerType CheckboxButtonBase::_type(
@@ -76,8 +129,8 @@ FieldContainerType CheckboxButtonBase::_type(
     NULL,
     (PrototypeCreateF) &CheckboxButtonBase::createEmpty,
     CheckboxButton::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //OSG_FIELD_CONTAINER_DEF(CheckboxButtonBase, CheckboxButtonPtr)
 
@@ -142,6 +195,10 @@ void CheckboxButtonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 CheckboxButtonBase::CheckboxButtonBase(void) :
+    _sfDrawObject             (), 
+    _sfCheckedDrawObject      (), 
+    _sfActiveDrawObject       (), 
+    _sfActiveCheckedDrawObject(), 
     Inherited() 
 {
 }
@@ -151,6 +208,10 @@ CheckboxButtonBase::CheckboxButtonBase(void) :
 #endif
 
 CheckboxButtonBase::CheckboxButtonBase(const CheckboxButtonBase &source) :
+    _sfDrawObject             (source._sfDrawObject             ), 
+    _sfCheckedDrawObject      (source._sfCheckedDrawObject      ), 
+    _sfActiveDrawObject       (source._sfActiveDrawObject       ), 
+    _sfActiveCheckedDrawObject(source._sfActiveCheckedDrawObject), 
     Inherited                 (source)
 {
 }
@@ -167,6 +228,26 @@ UInt32 CheckboxButtonBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
+    {
+        returnValue += _sfDrawObject.getBinSize();
+    }
+
+    if(FieldBits::NoField != (CheckedDrawObjectFieldMask & whichField))
+    {
+        returnValue += _sfCheckedDrawObject.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
+    {
+        returnValue += _sfActiveDrawObject.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ActiveCheckedDrawObjectFieldMask & whichField))
+    {
+        returnValue += _sfActiveCheckedDrawObject.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -176,6 +257,26 @@ void CheckboxButtonBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
+    {
+        _sfDrawObject.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CheckedDrawObjectFieldMask & whichField))
+    {
+        _sfCheckedDrawObject.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
+    {
+        _sfActiveDrawObject.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ActiveCheckedDrawObjectFieldMask & whichField))
+    {
+        _sfActiveCheckedDrawObject.copyToBin(pMem);
+    }
+
 
 }
 
@@ -183,6 +284,26 @@ void CheckboxButtonBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
+    {
+        _sfDrawObject.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CheckedDrawObjectFieldMask & whichField))
+    {
+        _sfCheckedDrawObject.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
+    {
+        _sfActiveDrawObject.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ActiveCheckedDrawObjectFieldMask & whichField))
+    {
+        _sfActiveCheckedDrawObject.copyFromBin(pMem);
+    }
 
 
 }
@@ -194,6 +315,18 @@ void CheckboxButtonBase::executeSyncImpl(      CheckboxButtonBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
+        _sfDrawObject.syncWith(pOther->_sfDrawObject);
+
+    if(FieldBits::NoField != (CheckedDrawObjectFieldMask & whichField))
+        _sfCheckedDrawObject.syncWith(pOther->_sfCheckedDrawObject);
+
+    if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
+        _sfActiveDrawObject.syncWith(pOther->_sfActiveDrawObject);
+
+    if(FieldBits::NoField != (ActiveCheckedDrawObjectFieldMask & whichField))
+        _sfActiveCheckedDrawObject.syncWith(pOther->_sfActiveCheckedDrawObject);
+
 
 }
 #else
@@ -203,6 +336,18 @@ void CheckboxButtonBase::executeSyncImpl(      CheckboxButtonBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
+        _sfDrawObject.syncWith(pOther->_sfDrawObject);
+
+    if(FieldBits::NoField != (CheckedDrawObjectFieldMask & whichField))
+        _sfCheckedDrawObject.syncWith(pOther->_sfCheckedDrawObject);
+
+    if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
+        _sfActiveDrawObject.syncWith(pOther->_sfActiveDrawObject);
+
+    if(FieldBits::NoField != (ActiveCheckedDrawObjectFieldMask & whichField))
+        _sfActiveCheckedDrawObject.syncWith(pOther->_sfActiveCheckedDrawObject);
 
 
 

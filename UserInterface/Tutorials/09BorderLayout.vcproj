@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="09BorderLayout"
 	ProjectGUID="{3CB50FB7-387C-4FF7-BE23-2B709B03E7DE}"
 	RootNamespace="07GridLayout"

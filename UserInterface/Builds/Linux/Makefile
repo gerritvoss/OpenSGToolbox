@@ -6,7 +6,7 @@ LIB_INCLUDE_DIR_NAME = UserInterface
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Background:$(srcdir)/Border:$(srcdir)/Component:$(srcdir)/Component/List:$(srcdir)/Foreground:$(srcdir)/Graphics:$(srcdir)/Layout:$(srcdir)/LookAndFeel:$(srcdir)/Text:$(srcdir)/Util:
+VPATH = $(srcdir)/:$(srcdir)/Background:$(srcdir)/Border:$(srcdir)/Component:$(srcdir)/Component/List:$(srcdir)/Foreground:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Layout:$(srcdir)/LookAndFeel:$(srcdir)/Text:$(srcdir)/Util:
 
 
 #.SUFFIX = .o .o
@@ -61,8 +61,12 @@ OBJECTS = OSGColorUIBackground.o \
 	OSGPanelBase.o \
 	OSGRadioButton.o \
 	OSGRadioButtonBase.o \
+	OSGTabPanel.o \
+	OSGTabPanelBase.o \
 	OSGToggleButton.o \
 	OSGToggleButtonBase.o \
+	OSGUIDrawObjectCanvas.o \
+	OSGUIDrawObjectCanvasBase.o \
 	OSGAbstractListModel.o \
 	OSGAbstractListModelBase.o \
 	OSGDefaultListCellGenerator.o \
@@ -77,6 +81,20 @@ OBJECTS = OSGColorUIBackground.o \
 	OSGGraphics2D.o \
 	OSGGraphics2DBase.o \
 	OSGGraphicsBase.o \
+	OSGArcUIDrawObject.o \
+	OSGArcUIDrawObjectBase.o \
+	OSGDiscUIDrawObject.o \
+	OSGDiscUIDrawObjectBase.o \
+	OSGLineUIDrawObject.o \
+	OSGLineUIDrawObjectBase.o \
+	OSGPolygonUIDrawObject.o \
+	OSGPolygonUIDrawObjectBase.o \
+	OSGRectUIDrawObject.o \
+	OSGRectUIDrawObjectBase.o \
+	OSGTextUIDrawObject.o \
+	OSGTextUIDrawObjectBase.o \
+	OSGUIDrawObject.o \
+	OSGUIDrawObjectBase.o \
 	OSGAbsoluteLayout.o \
 	OSGAbsoluteLayoutBase.o \
 	OSGAbsoluteLayoutConstraints.o \

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="UIDrawObject"
+	parent="FieldContainer"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="ture"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI DrawObject.
+</FieldContainer>

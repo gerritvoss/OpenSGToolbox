@@ -12,4 +12,40 @@
 	useLocalIncludes="true"
 >
 A UI Checkbox Button.
+	<Field
+		name="DrawObject"
+		type="UIDrawObjectCanvasPtr"
+		cardinality="single"
+		visibility="external"
+		header="OSGUIDrawObjectCanvas.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="CheckedDrawObject"
+		type="UIDrawObjectCanvasPtr"
+		cardinality="single"
+		visibility="external"
+		header="OSGUIDrawObjectCanvas.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ActiveDrawObject"
+		type="UIDrawObjectCanvasPtr"
+		cardinality="single"
+		visibility="external"
+		header="OSGUIDrawObjectCanvas.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ActiveCheckedDrawObject"
+		type="UIDrawObjectCanvasPtr"
+		cardinality="single"
+		visibility="external"
+		header="OSGUIDrawObjectCanvas.h"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

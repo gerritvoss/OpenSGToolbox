@@ -67,6 +67,10 @@
 
 #include "OSGToggleButton.h" // Parent
 
+#include "OSGUIDrawObjectCanvas.h" // DrawObject type
+#include "OSGUIDrawObjectCanvas.h" // CheckedDrawObject type
+#include "OSGUIDrawObjectCanvas.h" // ActiveDrawObject type
+#include "OSGUIDrawObjectCanvas.h" // ActiveCheckedDrawObject type
 
 #include "OSGCheckboxButtonFields.h"
 
@@ -88,6 +92,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
 
     typedef CheckboxButtonPtr  Ptr;
 
+    enum
+    {
+        DrawObjectFieldId              = Inherited::NextFieldId,
+        CheckedDrawObjectFieldId       = DrawObjectFieldId              + 1,
+        ActiveDrawObjectFieldId        = CheckedDrawObjectFieldId       + 1,
+        ActiveCheckedDrawObjectFieldId = ActiveDrawObjectFieldId        + 1,
+        NextFieldId                    = ActiveCheckedDrawObjectFieldId + 1
+    };
+
+    static const OSG::BitVector DrawObjectFieldMask;
+    static const OSG::BitVector CheckedDrawObjectFieldMask;
+    static const OSG::BitVector ActiveDrawObjectFieldMask;
+    static const OSG::BitVector ActiveCheckedDrawObjectFieldMask;
+
 
     static const OSG::BitVector MTInfluenceMask;
 
@@ -107,6 +125,35 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFUIDrawObjectCanvasPtr *getSFDrawObject     (void);
+           SFUIDrawObjectCanvasPtr *getSFCheckedDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFActiveDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFActiveCheckedDrawObject(void);
+
+           UIDrawObjectCanvasPtr &getDrawObject     (void);
+     const UIDrawObjectCanvasPtr &getDrawObject     (void) const;
+           UIDrawObjectCanvasPtr &getCheckedDrawObject(void);
+     const UIDrawObjectCanvasPtr &getCheckedDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getActiveDrawObject(void);
+     const UIDrawObjectCanvasPtr &getActiveDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getActiveCheckedDrawObject(void);
+     const UIDrawObjectCanvasPtr &getActiveCheckedDrawObject(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setDrawObject     ( const UIDrawObjectCanvasPtr &value );
+     void setCheckedDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setActiveDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setActiveCheckedDrawObject( const UIDrawObjectCanvasPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -145,6 +192,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
     /*=========================  PROTECTED  ===============================*/
   protected:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFUIDrawObjectCanvasPtr   _sfDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfCheckedDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfActiveDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfActiveCheckedDrawObject;
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -196,6 +253,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
