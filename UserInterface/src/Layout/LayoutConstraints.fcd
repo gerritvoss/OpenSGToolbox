@@ -12,4 +12,13 @@
 	useLocalIncludes="true"
 >
 A UI LayoutConstraints Interface.
+	<Field
+		name="ParentComponent"
+		type="AttachmentContainerPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

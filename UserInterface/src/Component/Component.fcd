@@ -18,7 +18,7 @@ A UI Component Interface.
 		cardinality="single"
 		visibility="external"
 		defaultValue="0,0"
-		access="protected"
+		access="public"
 	>
 	</Field>
 	<Field

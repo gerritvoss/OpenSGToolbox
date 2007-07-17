@@ -78,7 +78,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr Graphics) const;
    
     void setModel(ListModel* Model);
     void setCellGenerator(ListCellGenerator* CellGenerator);
@@ -107,6 +106,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase
     virtual ~List(void); 
 
     /*! \}                                                                 */
+	virtual void drawInternal(const GraphicsPtr Graphics) const;
+
     ListModel *_Model;
     ListCellGenerator *_CellGenerator;
     ListSelectionModel *_SelectionModel;

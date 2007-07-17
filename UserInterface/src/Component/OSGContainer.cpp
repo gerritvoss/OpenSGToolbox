@@ -74,7 +74,7 @@ void Container::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Container::getInsideBorderBounds(Pnt2s& TopLeft, Vec2s& Size)
+void Container::getInsideBorderBounds(Pnt2s& TopLeft, Vec2s& Size) const
 {
    UInt16 TopInset(0), LeftInset(0), BottomInset(0), RightInset(0);
    if(getBorder() != NullFC)
@@ -108,6 +108,20 @@ void Container::setAllInsets(UInt32 inset)
 		setBottomInset(inset);
 	endEditCP(ContainerPtr(this), Container::LeftInsetFieldMask | Container::RightInsetFieldMask | Container::TopInsetFieldMask | Container::BottomInsetFieldMask);
 }
+
+void Container::drawInternal(const GraphicsPtr TheGraphics) const
+{
+    //Render all of my Child Components
+	Pnt2s borderOffset;
+	Vec2s borderSize;
+	getInsideBorderBounds(borderOffset, borderSize);
+    glTranslatef(borderOffset.x(), borderOffset.y(), 0);
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        getChildren().getValue(i)->draw(TheGraphics);
+    }
+    glTranslatef(borderOffset.x(), borderOffset.y(), 0);
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -133,6 +147,46 @@ Container::~Container(void)
 void Container::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if( (whichField & ChildrenFieldMask) )
+    {
+        //Set All of my children's parent to me
+        for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+        {
+            beginEditCP(getChildren().getValue(i), Component::ParentContainerFieldMask);
+               getChildren().getValue(i)->setParentContainer(ContainerPtr(this));
+            endEditCP(getChildren().getValue(i), Component::ParentContainerFieldMask);
+        }
+    }
+    if( (whichField & LayoutFieldMask) &&
+        getLayout() != NullFC)
+    {
+        beginEditCP(getLayout(), Layout::ParentContainerFieldMask);
+            getLayout()->setParentContainer(ContainerPtr(this));
+        endEditCP(getLayout(), Layout::ParentContainerFieldMask);
+    }
+    
+    if( (whichField & LayoutFieldMask) ||
+        (whichField & LeftInsetFieldMask) ||
+        (whichField & RightInsetFieldMask) ||
+        (whichField & TopInsetFieldMask) ||
+        (whichField & BottomInsetFieldMask) ||
+        (whichField & ChildrenFieldMask) ||
+        (whichField & SizeFieldMask) ||
+        (whichField & BorderFieldMask))
+    {
+        //Layout needs to be recalculated
+        updateLayout();
+    }
+}
+
+void Container::updateLayout(void)
+{
+    //Update Layout
+    if(getLayout() != NullFC)
+    {
+        getLayout()->updateLayout(getChildren(), ContainerPtr(this));
+    }
 }
 
 void Container::dump(      UInt32    , 

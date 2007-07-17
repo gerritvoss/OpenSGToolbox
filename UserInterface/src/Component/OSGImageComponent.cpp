@@ -77,13 +77,8 @@ void ImageComponent::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ImageComponent::draw(const GraphicsPtr TheGraphics) const
+void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
 {
-   //Draw My Border
-   drawBorder(TheGraphics);
-
-   //Draw My Background
-   drawBackground(TheGraphics);
    
    //Get Border Insets
    Pnt2s TopLeft, BottomRight;

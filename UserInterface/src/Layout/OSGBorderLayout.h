@@ -76,6 +76,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING BorderLayout : public BorderLayoutBase
     /*! \}                                                                 */
 	
 	virtual void draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const;
+    virtual void updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

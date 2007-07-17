@@ -64,10 +64,30 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  LayoutConstraintsBase::ParentComponentFieldMask = 
+    (TypeTraits<BitVector>::One << LayoutConstraintsBase::ParentComponentFieldId);
+
 const OSG::BitVector LayoutConstraintsBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+// Field descriptions
+
+/*! \var AttachmentContainerPtr LayoutConstraintsBase::_sfParentComponent
+    
+*/
+
+//! LayoutConstraints description
+
+FieldDescription *LayoutConstraintsBase::_desc[] = 
+{
+    new FieldDescription(SFAttachmentContainerPtr::getClassType(), 
+                     "ParentComponent", 
+                     ParentComponentFieldId, ParentComponentFieldMask,
+                     false,
+                     (FieldAccessMethod) &LayoutConstraintsBase::getSFParentComponent)
+};
 
 
 FieldContainerType LayoutConstraintsBase::_type(
@@ -76,8 +96,8 @@ FieldContainerType LayoutConstraintsBase::_type(
     NULL,
     NULL, 
     LayoutConstraints::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //OSG_FIELD_CONTAINER_DEF(LayoutConstraintsBase, LayoutConstraintsPtr)
 
@@ -133,6 +153,7 @@ void LayoutConstraintsBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 LayoutConstraintsBase::LayoutConstraintsBase(void) :
+    _sfParentComponent        (AttachmentContainerPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -142,6 +163,7 @@ LayoutConstraintsBase::LayoutConstraintsBase(void) :
 #endif
 
 LayoutConstraintsBase::LayoutConstraintsBase(const LayoutConstraintsBase &source) :
+    _sfParentComponent        (source._sfParentComponent        ), 
     Inherited                 (source)
 {
 }
@@ -158,6 +180,11 @@ UInt32 LayoutConstraintsBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (ParentComponentFieldMask & whichField))
+    {
+        returnValue += _sfParentComponent.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -167,6 +194,11 @@ void LayoutConstraintsBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (ParentComponentFieldMask & whichField))
+    {
+        _sfParentComponent.copyToBin(pMem);
+    }
+
 
 }
 
@@ -174,6 +206,11 @@ void LayoutConstraintsBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (ParentComponentFieldMask & whichField))
+    {
+        _sfParentComponent.copyFromBin(pMem);
+    }
 
 
 }
@@ -185,6 +222,9 @@ void LayoutConstraintsBase::executeSyncImpl(      LayoutConstraintsBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (ParentComponentFieldMask & whichField))
+        _sfParentComponent.syncWith(pOther->_sfParentComponent);
+
 
 }
 #else
@@ -194,6 +234,9 @@ void LayoutConstraintsBase::executeSyncImpl(      LayoutConstraintsBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (ParentComponentFieldMask & whichField))
+        _sfParentComponent.syncWith(pOther->_sfParentComponent);
 
 
 

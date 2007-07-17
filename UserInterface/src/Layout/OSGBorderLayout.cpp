@@ -268,6 +268,9 @@ void BorderLayout::draw(const MFComponentPtr Components,const ComponentPtr Paren
 	glTranslatef(-borderOffset.x(), -borderOffset.y(), 0);
 }
 
+void BorderLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

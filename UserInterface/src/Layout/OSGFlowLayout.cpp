@@ -279,6 +279,10 @@ void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 	else glTranslatef(0, -(Int64)(cumMinorAxis+gap[(AxisIndex+1)%2]), 0);
 	glTranslatef(-borderOffset.x(), -borderOffset.y(), 0);
 }
+
+void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

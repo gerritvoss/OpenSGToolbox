@@ -76,7 +76,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponent : public ImageComponentBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr Graphics) const;
 
 	void setImage(ImagePtr Image);
 
@@ -102,6 +101,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponent : public ImageComponentBase
     virtual ~ImageComponent(void); 
 
     /*! \}                                                                 */
+	virtual void drawInternal(const GraphicsPtr Graphics) const;
     
     /*==========================  PRIVATE  ================================*/
   private:

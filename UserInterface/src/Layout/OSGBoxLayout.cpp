@@ -215,6 +215,9 @@ void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentCo
 	else glTranslatef(transBack, 0, 0);
 }
 
+void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

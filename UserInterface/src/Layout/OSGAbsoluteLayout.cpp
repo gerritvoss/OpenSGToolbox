@@ -76,11 +76,14 @@ void AbsoluteLayout::initMethod (void)
 \***************************************************************************/
 
 void AbsoluteLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
-{	
+{
+}
+
+void AbsoluteLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
 	Pnt2s borderOffset;
 	Vec2s borderSize;
 	ParentComponent->getInsideBorderBounds(borderOffset, borderSize);
-	glTranslatef(borderOffset.x(), borderOffset.y(), 0);
 	for(UInt32 i = 0 ; i<Components.size(); ++i)
 	{
 		//Calculate the Components Size
@@ -89,16 +92,14 @@ void AbsoluteLayout::draw(const MFComponentPtr Components,const ComponentPtr Par
 		{
 			//Get the Components Position
 			Pnt2s pos = AbsoluteLayoutConstraintsPtr::dcast(Components.getValue(i)->getConstraints())->getPosition();
-			glTranslatef(pos.x(), pos.y(), 0.0);
-			Components.getValue(i)->draw(TheGraphics);
-			glTranslatef(-pos.x(), -pos.y(), 0.0);
+			
+            Components.getValue(i)->setPosition(borderOffset + Vec2s(pos));
 		}
 		else
 		{
-		   Components.getValue(i)->draw(TheGraphics);
+           Components.getValue(i)->setPosition(borderOffset);
 		}
 	}
-	glTranslatef(-borderOffset.x(), -borderOffset.y(), 0);
 }
 
 /*-------------------------------------------------------------------------*\

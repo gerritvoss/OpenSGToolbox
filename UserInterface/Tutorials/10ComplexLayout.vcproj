@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="10Frame"
 	ProjectGUID="{126EDB01-C01C-4847-9E3E-EB473D0444FC}"
 	RootNamespace="10Frame"

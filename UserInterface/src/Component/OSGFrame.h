@@ -74,7 +74,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr Graphics) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

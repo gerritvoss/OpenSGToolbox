@@ -184,6 +184,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+           SFPnt2s             *getSFPosition       (void);
            SFVec2s             *getSFMinSize        (void);
            SFVec2s             *getSFMaxSize        (void);
            SFVec2s             *getSFPreferredSize  (void);
@@ -206,6 +207,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
            SFAttachmentContainerPtr *getSFParentContainer(void);
            SFBool              *getSFClipping       (void);
 
+           Pnt2s               &getPosition       (void);
+     const Pnt2s               &getPosition       (void) const;
            Vec2s               &getMinSize        (void);
      const Vec2s               &getMinSize        (void) const;
            Vec2s               &getMaxSize        (void);
@@ -254,6 +257,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setPosition       ( const Pnt2s &value );
      void setMinSize        ( const Vec2s &value );
      void setMaxSize        ( const Vec2s &value );
      void setPreferredSize  ( const Vec2s &value );
@@ -338,23 +342,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \{                                                                 */
 
     virtual ~ComponentBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFPnt2s             *getSFPosition       (void);
-
-           Pnt2s               &getPosition       (void);
-     const Pnt2s               &getPosition       (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setPosition       (const Pnt2s &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

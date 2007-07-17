@@ -77,6 +77,11 @@ void GridBagLayout::initMethod (void)
 void GridBagLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
 {
 }
+
+void GridBagLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

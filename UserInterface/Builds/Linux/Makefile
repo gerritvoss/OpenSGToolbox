@@ -63,6 +63,12 @@ OBJECTS = OSGColorUIBackground.o \
 	OSGRadioButtonBase.o \
 	OSGToggleButton.o \
 	OSGToggleButtonBase.o \
+	OSGAbstractListModel.o \
+	OSGAbstractListModelBase.o \
+	OSGDefaultListCellGenerator.o \
+	OSGDefaultListCellGeneratorBase.o \
+	OSGDefaultListSelectionModel.o \
+	OSGDefaultListSelectionModelBase.o \
 	OSGList.o \
 	OSGListBase.o \
 	OSGUIForeground.o \

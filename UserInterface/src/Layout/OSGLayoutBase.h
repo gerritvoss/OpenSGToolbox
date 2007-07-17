@@ -67,6 +67,7 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
+#include <OpenSG/OSGAttachmentContainerFields.h> // ParentContainer type
 
 #include "OSGLayoutFields.h"
 
@@ -87,6 +88,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING LayoutBase : public AttachmentContainer
   public:
 
     typedef LayoutPtr  Ptr;
+
+    enum
+    {
+        ParentContainerFieldId = Inherited::NextFieldId,
+        NextFieldId            = ParentContainerFieldId + 1
+    };
+
+    static const OSG::BitVector ParentContainerFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -110,6 +119,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING LayoutBase : public AttachmentContainer
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFAttachmentContainerPtr *getSFParentContainer(void);
+
+           AttachmentContainerPtr &getParentContainer(void);
+     const AttachmentContainerPtr &getParentContainer(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setParentContainer( const AttachmentContainerPtr &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -129,6 +155,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING LayoutBase : public AttachmentContainer
     /*=========================  PROTECTED  ===============================*/
   protected:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFAttachmentContainerPtr   _sfParentContainer;
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -180,6 +213,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LayoutBase : public AttachmentContainer
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

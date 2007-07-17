@@ -98,6 +98,11 @@ void OverlayLayout::draw(const MFComponentPtr Components,const ComponentPtr Pare
 	}
 	glTranslatef(-borderOffset.x(), -borderOffset.y(), 0);
 }
+
+void OverlayLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

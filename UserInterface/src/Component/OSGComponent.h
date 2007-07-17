@@ -75,12 +75,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr Graphics) const = 0;
+	virtual void draw(const GraphicsPtr Graphics) const;
 
-   virtual void getBounds(Pnt2s& TopLeft, Vec2s& Size);
-   virtual void getInsideBorderBounds(Pnt2s& TopLeft, Vec2s& Size);
-   virtual void getBoundsWindowSpace(Pnt2s& TopLeft, Vec2s& Size);
-   virtual void getInsideBorderSizing(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+    virtual void getBounds(Pnt2s& TopLeft, Vec2s& Size) const;
+    virtual void getInsideBorderBounds(Pnt2s& TopLeft, Vec2s& Size) const;
+    virtual void getBoundsRenderingSurfaceSpace(Pnt2s& TopLeft, Vec2s& Size) const;
+    virtual void getInsideBorderSizing(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+    virtual void updateContainerLayout(void);
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -105,6 +106,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 
     virtual void drawBorder(const GraphicsPtr TheGraphics) const;
     virtual void drawBackground(const GraphicsPtr TheGraphics) const;
+    
+	virtual void drawInternal(const GraphicsPtr Graphics) const = 0;
     
     /*==========================  PRIVATE  ================================*/
   private:

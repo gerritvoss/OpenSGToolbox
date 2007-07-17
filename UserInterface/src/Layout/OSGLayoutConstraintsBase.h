@@ -67,6 +67,7 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
+#include <OpenSG/OSGAttachmentContainerFields.h> // ParentComponent type
 
 #include "OSGLayoutConstraintsFields.h"
 
@@ -87,6 +88,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING LayoutConstraintsBase : public AttachmentC
   public:
 
     typedef LayoutConstraintsPtr  Ptr;
+
+    enum
+    {
+        ParentComponentFieldId = Inherited::NextFieldId,
+        NextFieldId            = ParentComponentFieldId + 1
+    };
+
+    static const OSG::BitVector ParentComponentFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -110,6 +119,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING LayoutConstraintsBase : public AttachmentC
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFAttachmentContainerPtr *getSFParentComponent(void);
+
+           AttachmentContainerPtr &getParentComponent(void);
+     const AttachmentContainerPtr &getParentComponent(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setParentComponent( const AttachmentContainerPtr &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -129,6 +155,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING LayoutConstraintsBase : public AttachmentC
     /*=========================  PROTECTED  ===============================*/
   protected:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFAttachmentContainerPtr   _sfParentComponent;
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -180,6 +213,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LayoutConstraintsBase : public AttachmentC
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

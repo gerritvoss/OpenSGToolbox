@@ -44,8 +44,11 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGViewport.h>
 
 #include "OSGComponent.h"
+#include "OSGContainer.h"
+#include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -74,13 +77,13 @@ void Component::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Component::getBounds(Pnt2s& TopLeft, Vec2s& Size)
+void Component::getBounds(Pnt2s& TopLeft, Vec2s& Size) const
 {
    TopLeft = getPosition();
    Size = getSize();
 }
 
-void Component::getInsideBorderBounds(Pnt2s& TopLeft, Vec2s& Size)
+void Component::getInsideBorderBounds(Pnt2s& TopLeft, Vec2s& Size) const
 {
    UInt16 TopInset(0), LeftInset(0), BottomInset(0), RightInset(0);
    if(getBorder() != NullFC)
@@ -92,10 +95,16 @@ void Component::getInsideBorderBounds(Pnt2s& TopLeft, Vec2s& Size)
    Size.setValues(getSize().x()-RightInset-LeftInset, getSize().y()-BottomInset-TopInset);
 }
 
-void Component::getBoundsWindowSpace(Pnt2s& TopLeft, Vec2s& Size)
+void Component::getBoundsRenderingSurfaceSpace(Pnt2s& TopLeft, Vec2s& Size) const
 {
-   TopLeft = getPosition();
-   Size = getSize();
+    Pnt2s ParentContainerTopLeft(0,0);
+    Vec2s ParentContainerSize(0,0);
+    if(getParentContainer() != NullFC)
+    {
+        Container::Ptr::dcast(getParentContainer())->getBoundsRenderingSurfaceSpace(ParentContainerTopLeft, ParentContainerSize);
+    }
+    TopLeft = ParentContainerTopLeft + Vec2s(getPosition());
+    Size = getSize();
 }
 
 void Component::drawBorder(const GraphicsPtr TheGraphics) const
@@ -130,6 +139,87 @@ void Component::drawBackground(const GraphicsPtr TheGraphics) const
 	     getDisabledBackground()->draw(TheGraphics, TopLeft, BottomRight, getOpacity());
 	  }
    }
+}
+
+void Component::draw(const GraphicsPtr TheGraphics) const
+{
+    //Translate to my position
+    glTranslatef(getPosition().x(), getPosition().y(), 0);
+
+    //Get Clipping initial settings
+    //bool WasClippingEnabled = glIsEnabled(GL_SCISSOR_TEST);
+    bool WasClippPlane0Enabled = glIsEnabled(GL_CLIP_PLANE0);
+    bool WasClippPlane1Enabled = glIsEnabled(GL_CLIP_PLANE1);
+    bool WasClippPlane2Enabled = glIsEnabled(GL_CLIP_PLANE2);
+    bool WasClippPlane3Enabled = glIsEnabled(GL_CLIP_PLANE3);
+    if(getClipping())
+    {
+        //glScissor
+        //Clip with the Intersection of this components RenderingSurface bounds
+        //and its parents RenderingSurface bounds
+        Pnt2s Quad1TopLeft,Quad2TopLeft;
+        Vec2s Quad1Size,Quad2Size;
+
+        Pnt2s ScissorQuadTopLeft;
+        Vec2s ScissorQuadSize;
+        if(getParentContainer() != NullFC)
+        {
+            getBounds(Quad1TopLeft,Quad1Size);
+            Container::Ptr::dcast(getParentContainer())->getInsideBorderBounds(Quad2TopLeft,Quad2Size);
+
+            quadIntersection(Quad1TopLeft,Quad1Size,
+                                Quad2TopLeft,Quad2Size,
+                                ScissorQuadTopLeft,ScissorQuadSize);
+        }
+        else
+        {
+            ScissorQuadTopLeft = getPosition();
+            ScissorQuadSize = getSize();
+        }
+        if(ScissorQuadSize.x() <= 0 || ScissorQuadSize.y()<= 0)
+        {
+            glTranslatef(-getPosition().x(), -getPosition().y(), 0);
+            return;
+        }
+
+        if(!WasClippPlane0Enabled) { glEnable(GL_CLIP_PLANE0); }
+        if(!WasClippPlane1Enabled) { glEnable(GL_CLIP_PLANE1); }
+        if(!WasClippPlane2Enabled) { glEnable(GL_CLIP_PLANE2); }
+        if(!WasClippPlane3Enabled) { glEnable(GL_CLIP_PLANE3); }
+        
+        //Clip Plane Equations
+        //Clip Planes get transformed by the ModelViewMatrix when set
+        //So we can rely on the fact that our current coordinate space
+        //is relative to the this components position
+        Vec4d LeftPlaneEquation(1.0,0.0,0.0,0.0),
+              RightPlaneEquation(-1.0,0.0,0.0,ScissorQuadSize.x()),
+              TopPlaneEquation(0.0,1.0,0.0,0.0),
+              BottomPlaneEquation(0.0,-1.0,0.0,ScissorQuadSize.y());
+        
+        glClipPlane(GL_CLIP_PLANE0,LeftPlaneEquation.getValues());
+        glClipPlane(GL_CLIP_PLANE1,RightPlaneEquation.getValues());
+        glClipPlane(GL_CLIP_PLANE2,TopPlaneEquation.getValues());
+        glClipPlane(GL_CLIP_PLANE3,BottomPlaneEquation.getValues());
+    }
+
+    //Draw My Border
+    drawBorder(TheGraphics);
+
+    //Draw My Background
+    drawBackground(TheGraphics);
+
+    //Draw Internal
+    drawInternal(TheGraphics);
+    glTranslatef(-getPosition().x(), -getPosition().y(), 0);
+    
+    //Set Clipping to initial settings
+    if(getClipping())
+    {
+        if(!WasClippPlane0Enabled){glDisable(GL_CLIP_PLANE0);}
+        if(!WasClippPlane1Enabled){glDisable(GL_CLIP_PLANE1);}
+        if(!WasClippPlane2Enabled){glDisable(GL_CLIP_PLANE2);}
+        if(!WasClippPlane3Enabled){glDisable(GL_CLIP_PLANE3);}
+    }
 }
 
 void Component::getInsideBorderSizing(Pnt2s& TopLeft, Pnt2s& BottomRight) const
@@ -170,6 +260,30 @@ Component::~Component(void)
 void Component::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+    
+    if( (whichField & MinSizeFieldMask) ||
+        (whichField & MaxSizeFieldMask) ||
+        (whichField & PreferredSizeFieldMask) ||
+        (whichField & ConstraintsFieldMask))
+    {
+        //Layout needs to be recalculated for my parent Container
+        updateContainerLayout();
+    }
+    if( (whichField & ConstraintsFieldMask) &&
+        getConstraints() != NullFC)
+    {
+        beginEditCP(getConstraints(), LayoutConstraints::ParentComponentFieldMask);
+           getConstraints()->setParentComponent(ComponentPtr(this));
+        endEditCP(getConstraints(), LayoutConstraints::ParentComponentFieldMask);
+    }
+}
+
+void Component::updateContainerLayout(void)
+{
+    if(getParentContainer() != NullFC)
+    {
+        Container::Ptr::dcast(getParentContainer())->updateLayout();
+    }
 }
 
 void Component::dump(      UInt32    , 

@@ -74,7 +74,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Canvas : public CanvasBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr Graphics) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -95,6 +94,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Canvas : public CanvasBase
     virtual ~Canvas(void); 
 
     /*! \}                                                                 */
+	virtual void drawInternal(const GraphicsPtr Graphics) const;
     
     /*==========================  PRIVATE  ================================*/
   private:

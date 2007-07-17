@@ -95,43 +95,6 @@ void UIForeground::draw( DrawActionBase * action, Viewport * port )
 	//Call The PreDraw on the Graphics
 	getGraphics()->preDraw();
 
-	//Translate to the Frames Position
-      //Calculate Alignment
-      Pnt2s AlignedPosition;
-      Vec2s FrameBounds( getRootFrame()->getSize() );
-      if(getVerticalAlignment() == VERTICAL_TOP)
-      {
-         //VerticalTop
-         AlignedPosition[1] = 0;
-      }
-      else if(getVerticalAlignment() == VERTICAL_BOTTOM)
-      {
-         //VerticalBottom
-         AlignedPosition[1] = port->getPixelHeight()-FrameBounds[1];
-      }
-      else if(getVerticalAlignment() == VERTICAL_CENTER)
-      {
-         //VerticalCenter
-         AlignedPosition[1] = 0.5*(port->getPixelHeight()-FrameBounds[1]);
-      }
-
-      if(getHorizontalAlignment() == HORIZONTAL_LEFT)
-      {
-         //HorizontalLeft
-         AlignedPosition[0] = 0;
-      }
-      else if(getHorizontalAlignment() == HORIZONTAL_RIGHT)
-      {
-         //HorizontalRight
-         AlignedPosition[0] = port->getPixelWidth()-FrameBounds[0];
-      }
-      else if(getHorizontalAlignment() == HORIZONTAL_CENTER)
-      {
-         //HorizontalCenter
-         AlignedPosition[0] = 0.5*(port->getPixelWidth()-FrameBounds[0]);
-      }
-	  AlignedPosition += getFramePositionOffset();
-	glTranslatef(AlignedPosition.x(),AlignedPosition.y(),0.0);
 	//Draw The Component
 	getRootFrame()->draw(getGraphics());
 
@@ -168,9 +131,50 @@ void UIForeground::updateFrameBounds(Viewport * port)
 		Size[1] = getFrameBounds()[1];
 	}
 	
-	beginEditCP(getRootFrame());
-		getRootFrame()->setSize(Size);
-	endEditCP(getRootFrame());
+	//Translate to the Frames Position
+    //Calculate Alignment
+    Pnt2s AlignedPosition;
+    if(getVerticalAlignment() == VERTICAL_TOP)
+    {
+        //VerticalTop
+        AlignedPosition[1] = 0;
+    }
+    else if(getVerticalAlignment() == VERTICAL_BOTTOM)
+    {
+        //VerticalBottom
+        AlignedPosition[1] = port->getPixelHeight()-Size[1];
+    }
+    else if(getVerticalAlignment() == VERTICAL_CENTER)
+    {
+        //VerticalCenter
+        AlignedPosition[1] = 0.5*(port->getPixelHeight()-Size[1]);
+    }
+
+    if(getHorizontalAlignment() == HORIZONTAL_LEFT)
+    {
+        //HorizontalLeft
+        AlignedPosition[0] = 0;
+    }
+    else if(getHorizontalAlignment() == HORIZONTAL_RIGHT)
+    {
+        //HorizontalRight
+        AlignedPosition[0] = port->getPixelWidth()-Size[0];
+    }
+    else if(getHorizontalAlignment() == HORIZONTAL_CENTER)
+    {
+        //HorizontalCenter
+        AlignedPosition[0] = 0.5*(port->getPixelWidth()-Size[0]);
+    }
+	AlignedPosition += getFramePositionOffset();
+
+    if(getRootFrame()->getSize() != Size ||
+       getRootFrame()->getPosition() != AlignedPosition)
+    {
+        beginEditCP(getRootFrame(), Frame::SizeFieldMask | Frame::PositionFieldMask);
+		    getRootFrame()->setSize(Size);
+		    getRootFrame()->setPosition(AlignedPosition);
+	    endEditCP(getRootFrame(), Frame::SizeFieldMask | Frame::PositionFieldMask);
+    }
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

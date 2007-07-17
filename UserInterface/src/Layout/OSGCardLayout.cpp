@@ -133,6 +133,9 @@ void CardLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 	glTranslatef(-borderOffset.x(), -borderOffset.y(), 0);
 }
 
+void CardLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

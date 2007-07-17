@@ -76,6 +76,10 @@ void GridLayout::initMethod (void)
 
 void GridLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
 {
+}
+
+void GridLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
 	Pnt2s borderOffset;
 	Vec2s borderSize;
 	ParentComponent->getInsideBorderBounds(borderOffset, borderSize);
@@ -119,26 +123,18 @@ void GridLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 	for(UInt16 i = 0; i <= getRows()&& numComp>=0; i++){
 		if (Components.getValue(i) != NullFC) 
 		{
-			glPushMatrix();
-			glTranslatef(0.0, Ypos, 0.0);
 			for(UInt16 j = 0; j < getColumns()&& numComp>0; j++){
-				glPushMatrix();
 				debug = i*getColumns()+j;
-				glTranslatef(Xpos, 0.0, 0.0);
-				if (Components.getValue(i*getColumns()+j) != NullFC) 
-					Components.getValue(i*getColumns()+j)->draw(TheGraphics);
+                Components.getValue(i*getColumns()+j)->setPosition(Pnt2s(Xpos, Ypos));
 				numComp--;
 				Xpos = Xpos + (maxSizeX+getHorizontalGap());
-				glPopMatrix();
 			}
 			Xpos = 0;
 			Ypos += maxSizeY+getVerticalGap();
-
-			glPopMatrix();
 		}
 	}
-	glTranslatef(-borderOffset.x(), -borderOffset.y(), 0);
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

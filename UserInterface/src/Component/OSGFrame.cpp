@@ -73,18 +73,6 @@ void Frame::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
-void Frame::draw(const GraphicsPtr TheGraphics) const
-{
-   //Draw My Border
-   drawBorder(TheGraphics);
-
-   //Draw My Background
-   drawBackground(TheGraphics);
-   
-   //Render all of my Child Components
-   getLayout()->draw(getChildren(), FramePtr(this), TheGraphics);
-}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

@@ -70,6 +70,34 @@ OSG::UInt32 LayoutConstraintsBase::getClassTypeId(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the LayoutConstraints::_sfParentComponent field.
+inline
+SFAttachmentContainerPtr *LayoutConstraintsBase::getSFParentComponent(void)
+{
+    return &_sfParentComponent;
+}
+
+
+//! Get the value of the LayoutConstraints::_sfParentComponent field.
+inline
+AttachmentContainerPtr &LayoutConstraintsBase::getParentComponent(void)
+{
+    return _sfParentComponent.getValue();
+}
+
+//! Get the value of the LayoutConstraints::_sfParentComponent field.
+inline
+const AttachmentContainerPtr &LayoutConstraintsBase::getParentComponent(void) const
+{
+    return _sfParentComponent.getValue();
+}
+
+//! Set the value of the LayoutConstraints::_sfParentComponent field.
+inline
+void LayoutConstraintsBase::setParentComponent(const AttachmentContainerPtr &value)
+{
+    _sfParentComponent.setValue(value);
+}
 
 
 OSG_END_NAMESPACE

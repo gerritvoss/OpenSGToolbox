@@ -75,8 +75,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	
-	virtual void draw(const GraphicsPtr Graphics) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -96,6 +94,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
 
     virtual ~Button(void); 
 
+	virtual void drawInternal(const GraphicsPtr Graphics) const;
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/

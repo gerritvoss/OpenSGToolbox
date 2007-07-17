@@ -74,9 +74,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-   virtual void getInsideBorderBounds(Pnt2s& TopLeft, Vec2s& Size);
-   virtual void getInsideBorderSizing(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
-   virtual void setAllInsets(UInt32);
+    virtual void getInsideBorderBounds(Pnt2s& TopLeft, Vec2s& Size) const;
+    virtual void getInsideBorderSizing(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+    virtual void setAllInsets(UInt32);
+    virtual void updateLayout(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -97,6 +98,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
     virtual ~Container(void); 
 
     /*! \}                                                                 */
+	virtual void drawInternal(const GraphicsPtr Graphics) const;
     
     /*==========================  PRIVATE  ================================*/
   private:

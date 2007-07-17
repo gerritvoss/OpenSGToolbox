@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGLayout.h"
+#include "Component/OSGContainer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -99,6 +100,11 @@ Layout::~Layout(void)
 void Layout::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(getParentContainer() != NullFC)
+    {
+        Container::Ptr::dcast(getParentContainer())->updateLayout();
+    }
 }
 
 void Layout::dump(      UInt32    , 

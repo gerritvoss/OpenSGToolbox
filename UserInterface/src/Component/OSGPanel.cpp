@@ -73,19 +73,6 @@ void Panel::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
-void Panel::draw(const GraphicsPtr TheGraphics) const
-{
-   //Draw My Border
-   drawBorder(TheGraphics);
-
-   //Draw My Background
-   drawBackground(TheGraphics);
-
-   //Render all of my Child Components
-   getLayout()->draw(getChildren(), PanelPtr(this), TheGraphics);
-}
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

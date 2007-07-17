@@ -74,6 +74,9 @@ void CheckboxButton::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
+{
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

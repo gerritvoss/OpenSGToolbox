@@ -7,6 +7,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 #include <OpenSG/OSGVector.h>
+#include "Component/OSGComponent.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -15,6 +16,12 @@ void OSG_USERINTERFACELIB_DLLMAPPING convertTopRightToCenteredLine(const Pnt2s& 
 
 Pnt2s OSG_USERINTERFACELIB_DLLMAPPING calculateAlignment(const Pnt2s& Position1, const Vec2s& Size1, const Vec2s& Size2, const UInt32& VAlign, const UInt32& HAlign);
 
+void OSG_USERINTERFACELIB_DLLMAPPING quadIntersection(const Pnt2s& Quad1TopLeft, const Vec2s& Quad1Size,
+                                                      const Pnt2s& Quad2TopLeft, const Vec2s& Quad2Size,
+                                                      Pnt2s& ResultQuadTopLeft, Vec2s& ResultQuadSize);
+void OSG_USERINTERFACELIB_DLLMAPPING componentQuadIntersection(const ComponentPtr c1,
+                                                      const ComponentPtr c2,
+                                                      Pnt2s& ResultQuadTopLeft, Vec2s& ResultQuadSize);
 OSG_END_NAMESPACE
 
 #endif /* _OSG_UI_DRAW_UTILS_H_ */

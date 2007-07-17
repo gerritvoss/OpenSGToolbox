@@ -74,7 +74,7 @@ void List::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void List::draw(const GraphicsPtr Graphics) const
+void List::drawInternal(const GraphicsPtr Graphics) const
 {
 }
 /*-------------------------------------------------------------------------*\

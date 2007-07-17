@@ -53,6 +53,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Bui
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "09BorderLayout", "09BorderLayout.vcproj", "{3CB50FB7-387C-4FF7-BE23-2B709B03E7DE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -103,6 +108,10 @@ Global
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Debug.Build.0 = Debug|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release.ActiveCfg = Release|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release.Build.0 = Release|Win32
+		{3CB50FB7-387C-4FF7-BE23-2B709B03E7DE}.Debug.ActiveCfg = Debug|Win32
+		{3CB50FB7-387C-4FF7-BE23-2B709B03E7DE}.Debug.Build.0 = Debug|Win32
+		{3CB50FB7-387C-4FF7-BE23-2B709B03E7DE}.Release.ActiveCfg = Release|Win32
+		{3CB50FB7-387C-4FF7-BE23-2B709B03E7DE}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

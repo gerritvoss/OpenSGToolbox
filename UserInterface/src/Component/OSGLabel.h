@@ -75,7 +75,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Label : public LabelBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr Graphics) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -96,6 +95,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Label : public LabelBase
     virtual ~Label(void); 
 
     /*! \}                                                                 */
+	virtual void drawInternal(const GraphicsPtr Graphics) const;
     
     /*==========================  PRIVATE  ================================*/
   private:

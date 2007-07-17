@@ -73,14 +73,8 @@ void Button::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Button::draw(const GraphicsPtr TheGraphics) const
+void Button::drawInternal(const GraphicsPtr TheGraphics) const
 {
-   //Draw My Border
-   drawBorder(TheGraphics);
-
-   //Draw My Background
-   drawBackground(TheGraphics);
-
    Pnt2s TopLeft, BottomRight;
    getInsideBorderSizing(TopLeft, BottomRight);
    //If I have Text Then Draw it

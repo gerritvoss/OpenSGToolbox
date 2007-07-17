@@ -43,8 +43,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
 #include <OpenSG/OSGConfig.h>
 
 #include "Background/OSGColorUIBackground.h"

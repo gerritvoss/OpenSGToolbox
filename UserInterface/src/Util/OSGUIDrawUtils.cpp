@@ -1,6 +1,7 @@
 #include "OSGUIDrawUtils.h"
 #include "OSGUIDefines.h"
 
+
 OSG_BEGIN_NAMESPACE
 
 void convertTopLeftToCenteredLine(const Pnt2s& Point1, const Pnt2s& Point2, const UInt16 Width,Pnt2s& ResultPoint1, Pnt2s& ResultPoint2)
@@ -23,7 +24,7 @@ void convertTopRightToCenteredLine(const Pnt2s& Point1, const Pnt2s& Point2, con
    ResultPoint2 = Point2 + Vec2s(DirOffset.x(),DirOffset.y());
 }
 
-Pnt2s OSG_USERINTERFACELIB_DLLMAPPING calculateAlignment(const Pnt2s& Position1, const Vec2s& Size1, const Vec2s& Size2, const UInt32& VAlign, const UInt32& HAlign)
+Pnt2s calculateAlignment(const Pnt2s& Position1, const Vec2s& Size1, const Vec2s& Size2, const UInt32& VAlign, const UInt32& HAlign)
 {
 	Pnt2s AlignedPosition;
 	switch(VAlign)
@@ -63,6 +64,34 @@ Pnt2s OSG_USERINTERFACELIB_DLLMAPPING calculateAlignment(const Pnt2s& Position1,
 	}
 
 	return AlignedPosition;
+}
+
+void quadIntersection(const Pnt2s& Quad1TopLeft, const Vec2s& Quad1Size,
+                      const Pnt2s& Quad2TopLeft, const Vec2s& Quad2Size,
+                      Pnt2s& ResultQuadTopLeft, Vec2s& ResultQuadSize)
+{
+    Pnt2s Quad1BottomRight(Quad1TopLeft + Quad1Size),
+          Quad2BottomRight(Quad2TopLeft + Quad2Size);
+    ResultQuadTopLeft[0] = osgMax(Quad1TopLeft[0],Quad2TopLeft[0]);
+    ResultQuadTopLeft[1] = osgMax(Quad1TopLeft[1],Quad2TopLeft[1]);
+    
+    ResultQuadSize[0] = osgMin(Quad1BottomRight[0],Quad2BottomRight[0]) - ResultQuadTopLeft[0];
+    ResultQuadSize[1] = osgMin(Quad1BottomRight[1],Quad2BottomRight[1]) - ResultQuadTopLeft[1];
+}
+
+void componentQuadIntersection(const ComponentPtr c1,
+                                const ComponentPtr c2,
+                                Pnt2s& ResultQuadTopLeft, Vec2s& ResultQuadSize)
+{
+    Pnt2s Quad1TopLeft,Quad2TopLeft;
+    Vec2s Quad1Size,Quad2Size;
+
+    c1->getBoundsRenderingSurfaceSpace(Quad1TopLeft,Quad1Size);
+    c2->getBoundsRenderingSurfaceSpace(Quad2TopLeft,Quad2Size);
+
+    quadIntersection(Quad1TopLeft,Quad1Size,
+                     Quad2TopLeft,Quad2Size,
+                     ResultQuadTopLeft,ResultQuadSize);
 }
 
 OSG_END_NAMESPACE
