@@ -79,6 +79,10 @@ void BorderLayout::initMethod (void)
 
 void BorderLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
 {
+}
+
+void BorderLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
 	Pnt2s borderOffset;
 	Vec2s borderSize;
 	ParentComponent->getInsideBorderBounds(borderOffset, borderSize);
@@ -87,9 +91,7 @@ void BorderLayout::draw(const MFComponentPtr Components,const ComponentPtr Paren
 	Int32 WestWidth(0);
 	Int32 EastWidth(0);
 	Vec2s size;
-	Int32 offsetx(0);
-	Int32 offsety(0);
-
+	Vec2s offset;
 
 	// the first pass through gets some crucial dimensions to determine
 	// the sizes of the buttons
@@ -129,110 +131,67 @@ void BorderLayout::draw(const MFComponentPtr Components,const ComponentPtr Paren
 					if (Components.getValue(i)->getMaxSize().x() < borderSize.x()-(WestWidth+EastWidth))
 					{
 						size[0] = Components.getValue(i)->getMaxSize().x();
-						offsetx = (borderSize.x()-(WestWidth+EastWidth)-size[0])/2 + WestWidth;
+						offset[0] = (borderSize.x()-(WestWidth+EastWidth)-size[0])/2 + WestWidth;
 					}
 					else
 					{
 						size[0] = borderSize.x()-(WestWidth+EastWidth);
-						offsetx = WestWidth;
+						offset[0] = WestWidth;
 					}
 					if (Components.getValue(i)->getMaxSize().y() < borderSize.y()-(NorthHeight+SouthHeight))
 					{
 						size[1] = Components.getValue(i)->getMaxSize().y();
-						offsety = (borderSize.y()-(NorthHeight+SouthHeight)-size[1])/2 + NorthHeight;
+						offset[1] = (borderSize.y()-(NorthHeight+SouthHeight)-size[1])/2 + NorthHeight;
 					}
 					else
 					{
 						size[1] = borderSize.y()-(NorthHeight+SouthHeight);
-						offsety = NorthHeight;
-					}
-					beginEditCP(Components.getValue(i), Component::SizeFieldMask);
-						Components.getValue(i)->setSize(size);
-					endEditCP(Components.getValue(i), Component::SizeFieldMask);
-
-					if (size[0] >= Components.getValue(i)->getMinSize().x() && size[1] > Components.getValue(i)->getMinSize().y()) // only draw it if it isn't too small
-					{
-						// translate and draw, then translate back
-						glTranslatef(offsetx, offsety, 0);
-						Components.getValue(i)->draw(TheGraphics);
-						glTranslatef(-offsetx, -offsety, 0);
+						offset[1] = NorthHeight;
 					}
 					break;
 				case BorderLayoutConstraints::BORDER_NORTH:
 					// set up the size of the button and its extra displacement
 					size[1] = Components.getValue(i)->getPreferredSize().y();
+					offset[1] = 0;
 					if (Components.getValue(i)->getMaxSize().x() < borderSize.x())
 					{
 						size[0] = Components.getValue(i)->getMaxSize().x();
-						offsetx = (borderSize.x()-size[0])/2;
+						offset[0] = (borderSize.x()-size[0])/2;
 					}
 					else
 					{
 						size[0] = borderSize.x();
-						offsetx = 0;
-					}
-					beginEditCP(Components.getValue(i), Component::SizeFieldMask);
-						Components.getValue(i)->setSize(size);
-					endEditCP(Components.getValue(i), Component::SizeFieldMask);
-
-					if (size[0] > Components.getValue(i)->getMinSize().x())
-					{
-						// translate and draw, then translate back
-						glTranslatef(offsetx, 0, 0);
-						Components.getValue(i)->draw(TheGraphics);
-						glTranslatef(-offsetx, 0, 0);
+						offset[0] = 0;
 					}
 					break;
 				case BorderLayoutConstraints::BORDER_EAST:
 					// set up the size of the button and its extra displacement
 					size[0] = Components.getValue(i)->getPreferredSize().x();
-					offsetx = borderSize.x()-Components.getValue(i)->getSize().x();
+					offset[0] = borderSize.x()-Components.getValue(i)->getSize().x();
 					if (Components.getValue(i)->getMaxSize().y() < borderSize.y()-(NorthHeight+SouthHeight))
 					{
 						size[1] = Components.getValue(i)->getMaxSize().y();
-						offsety = (borderSize.y()-size[1]-(NorthHeight+SouthHeight))/2+NorthHeight;
+						offset[1] = (borderSize.y()-size[1]-(NorthHeight+SouthHeight))/2+NorthHeight;
 					}
 					else
 					{
 						size[1] = borderSize.y()-(NorthHeight+SouthHeight);
-						offsety = NorthHeight;
-					}
-					beginEditCP(Components.getValue(i), Component::SizeFieldMask);
-						Components.getValue(i)->setSize(size);
-					endEditCP(Components.getValue(i), Component::SizeFieldMask);
-
-					if (size[1] > Components.getValue(i)->getMinSize().y())
-					{
-						// translate and draw, then translate back
-						glTranslatef(offsetx, offsety, 0);
-						Components.getValue(i)->draw(TheGraphics);
-						glTranslatef(-offsetx, -offsety, 0);
+						offset[1] = NorthHeight;
 					}
 					break;
 				case BorderLayoutConstraints::BORDER_SOUTH:
 					// set up the size of the button and its extra displacement
 					size[1] = Components.getValue(i)->getPreferredSize().y();
-					offsety = borderSize.y()-Components.getValue(i)->getSize().y();
+					offset[1] = borderSize.y()-Components.getValue(i)->getSize().y();
 					if (Components.getValue(i)->getMaxSize().x() < borderSize.x())
 					{
 						size[0] = Components.getValue(i)->getMaxSize().x();
-						offsetx = (borderSize.x()-size[0])/2;
+						offset[0] = (borderSize.x()-size[0])/2;
 					}
 					else
 					{
 						size[0] = borderSize.x();
-						offsetx = 0;
-					}
-					beginEditCP(Components.getValue(i), Component::SizeFieldMask);
-						Components.getValue(i)->setSize(size);
-					endEditCP(Components.getValue(i), Component::SizeFieldMask);
-
-					if (size[0] > Components.getValue(i)->getMinSize().x())
-					{
-						// translate and draw, then translate back
-						glTranslatef(offsetx, offsety, 0);
-						Components.getValue(i)->draw(TheGraphics);
-						glTranslatef(-offsetx, -offsety, 0);
+						offset[0] = 0;
 					}
 					break;
 				case BorderLayoutConstraints::BORDER_WEST:
@@ -241,35 +200,29 @@ void BorderLayout::draw(const MFComponentPtr Components,const ComponentPtr Paren
 					if (Components.getValue(i)->getMaxSize().y() < borderSize.y()-(NorthHeight+SouthHeight))
 					{
 						size[1] = Components.getValue(i)->getMaxSize().y();
-						offsety = (borderSize.y()-size[1]-(NorthHeight+SouthHeight))/2 + NorthHeight;
+						offset[1] = (borderSize.y()-size[1]-(NorthHeight+SouthHeight))/2 + NorthHeight;
 					}
 					else
 					{
 						size[1] = borderSize.y()-(NorthHeight+SouthHeight);
-						offsety = NorthHeight;
-					}
-					beginEditCP(Components.getValue(i), Component::SizeFieldMask);
-						Components.getValue(i)->setSize(size);
-					endEditCP(Components.getValue(i), Component::SizeFieldMask);
-
-					if (size[1] > Components.getValue(i)->getMinSize().y())
-					{
-						// translate and draw, then translate back
-						glTranslatef(0, offsety, 0);
-						Components.getValue(i)->draw(TheGraphics);
-						glTranslatef(0, -offsety, 0);
+						offset[1] = NorthHeight;
 					}
 					break;
 				default:
+					// if it isn't any of the regions, set it up to not be drawn
+					size[0] = size[1] = offset[0] = offset[1] = 0;
 					break; 
 			}
+			// now set the position and size of the button
+			beginEditCP(Components.getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
+				if (size[0] >= Components.getValue(i)->getMinSize().x() && size[1] > Components.getValue(i)->getMinSize().y())
+					Components.getValue(i)->setSize(size);
+				else
+					Components.getValue(i)->setSize(Vec2s(0,0));
+				Components.getValue(i)->setPosition(borderOffset + offset);
+			endEditCP(Components.getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
 		}
 	}
-	glTranslatef(-borderOffset.x(), -borderOffset.y(), 0);
-}
-
-void BorderLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
-{
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

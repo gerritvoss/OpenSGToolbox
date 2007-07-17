@@ -96,6 +96,10 @@ void BoxLayout::initMethod (void)
 
 void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
 {
+}
+
+void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
 	/*!
       totalMajorAxis will be the sum of the MajorAxis of all of the
 	  components, which is compared to MajorAxis, which is MajorAxis of the parent
@@ -112,53 +116,57 @@ void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentCo
 	UInt32 totalMajorAxis(0);
 	UInt32 largestMinorAxis(0);
 	UInt32 spacing(0);
-	UInt32 oddSpacing(0);
-	Int64 transBack(0);
-	UInt32 offsetMinorAxis(0);
+	//UInt32 oddSpacing(0);
+	//Int64 transBack(0);
+	//UInt32 offsetMinorAxis(0);
 	Vec2s size;
+	Vec2s offset(0,0);
 
 	/*!
 	  This first sweep through the components sets each component to its
-	  preferred size, gets a sum of all the MajorAxiss, and finds the
+	  preferred size, gets a sum of all the MajorAxes, and finds the
 	  largest height.
     */
 	for(UInt32 i=0 ; i<Components.size() ; ++i)
 	{	// set the component to its preferred size
-		beginEditCP(Components.getValue(i), Component::SizeFieldMask);
+		/*beginEditCP(Components.getValue(i), Component::SizeFieldMask);
 			Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
-		endEditCP(Components.getValue(i), Component::SizeFieldMask);
+		endEditCP(Components.getValue(i), Component::SizeFieldMask);*/
 		// get sum of all components
-		totalMajorAxis += Components.getValue(i)->getSize()[AxisIndex];
-		if (Components.getValue(i)->getSize()[(AxisIndex+1)%2] > largestMinorAxis)
-			largestMinorAxis = Components.getValue(i)->getSize()[(AxisIndex+1)%2];
+		totalMajorAxis += Components.getValue(i)->getPreferredSize()[AxisIndex];
+		if (Components.getValue(i)->getPreferredSize()[(AxisIndex+1)%2] > largestMinorAxis)
+			largestMinorAxis = Components.getValue(i)->getPreferredSize()[(AxisIndex+1)%2];
 	}
 	if(MajorAxis > totalMajorAxis)
 	{
 		spacing = (MajorAxis-totalMajorAxis)/(Components.size()+1);
 		// in the case where there isn't equal spacing between each button,
 		// translate more the first time to center the components
-		oddSpacing = (MajorAxis - (spacing*(Components.size()+1)+totalMajorAxis))/2;
-		if (AxisIndex) glTranslatef(0, oddSpacing, 0);
-		else  glTranslatef(oddSpacing, 0, 0);
-		transBack -= oddSpacing;
+		borderOffset[AxisIndex] += (MajorAxis - (spacing*(Components.size()+1)+totalMajorAxis))/2 + spacing;
+		//if (AxisIndex) glTranslatef(0, oddSpacing, 0);
+		//else  glTranslatef(oddSpacing, 0, 0);
+		//transBack -= oddSpacing;
 	}
 
 	/*!
 	  This second sweep through the components sets each component to the
 	  matching highest height, then draws each component equally spaced apart
     */
-	glTranslatef(borderOffset.x(), borderOffset.y(), 0);
-	for(UInt32 i=0 ; i<Components.size() ; ++i)
+	//glTranslatef(borderOffset.x(), borderOffset.y(), 0);
+	for(UInt32 i=0; i<Components.size(); ++i)
 	{	
 		// for each individual button, keep track of the offsetMinorAxis in height
 		// for use in keeping them vertically centered
-		offsetMinorAxis = 0;
+		//offsetMinorAxis = 0;
+		offset[(AxisIndex+1)%2] = 0;
 		// change the component's height only if necessary
-		if (largestMinorAxis > Components.getValue(i)->getSize()[(AxisIndex+1)%2])
+		if (largestMinorAxis > Components.getValue(i)->getPreferredSize()[(AxisIndex+1)%2])
 		{	
 			if (largestMinorAxis <= Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2])
 			{	// for when the max height is larger than the largestMinorAxis
-				if (AxisIndex) 
+				size[AxisIndex] = Components.getValue(i)->getPreferredSize()[AxisIndex];
+				size[(AxisIndex+1)%2] = largestMinorAxis;
+				/*if (AxisIndex) 
 				{
 					size[0] = largestMinorAxis;
 					size[1] = Components.getValue(i)->getSize()[AxisIndex];
@@ -167,14 +175,13 @@ void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentCo
 				{
 					size[0] = Components.getValue(i)->getSize()[AxisIndex];
 					size[1] = largestMinorAxis;
-				}
-				beginEditCP(Components.getValue(i), Component::SizeFieldMask);
-					Components.getValue(i)->setSize(size);
-				endEditCP(Components.getValue(i), Component::SizeFieldMask);
+				}*/
 			}
 			else
 			{	// in this case, max out the button to its max height
-				if (AxisIndex) 
+				size[AxisIndex] = Components.getValue(i)->getPreferredSize()[AxisIndex];
+				size[(AxisIndex+1)%2] = Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2];
+				/*if (AxisIndex) 
 				{
 					size[0] = Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2];
 					size[1] = Components.getValue(i)->getSize()[AxisIndex];
@@ -183,40 +190,43 @@ void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentCo
 				{
 					size[0] = Components.getValue(i)->getSize()[AxisIndex];
 					size[1] = Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2];
-				}
-				beginEditCP(Components.getValue(i), Component::SizeFieldMask);
-					Components.getValue(i)->setSize(size);
-				endEditCP(Components.getValue(i), Component::SizeFieldMask);
+				}*/
 
 				// find how far to translate to make this button properly aligned
 				if (getMinorAxisAlignment() == AXIS_MIN_ALIGNMENT)
 				{
-					offsetMinorAxis = 0;
+					offset[(AxisIndex+1)%2] = 0;
 				} else if (getMinorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
 				{
-					offsetMinorAxis = (largestMinorAxis - Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2])/2;
+					offset[(AxisIndex+1)%2] = (largestMinorAxis - Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2])/2;
 				} else 
 				{
-					offsetMinorAxis = largestMinorAxis - Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2];
+					offset[(AxisIndex+1)%2] = largestMinorAxis - Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2];
 				}
 			}
 		}
-		if (AxisIndex) glTranslatef(offsetMinorAxis, spacing, 0);
-		else glTranslatef(spacing, offsetMinorAxis, 0);
-		Components.getValue(i)->draw(TheGraphics);
-		if (AxisIndex) glTranslatef(-(Int64)offsetMinorAxis, Components.getValue(i)->getSize()[AxisIndex], 0);
-		else glTranslatef(Components.getValue(i)->getSize()[AxisIndex], -(Int64)offsetMinorAxis, 0);
-		transBack -= spacing;
-		transBack -= Components.getValue(i)->getSize()[AxisIndex];
+		else
+		{
+			size = Components.getValue(i)->getPreferredSize();
+		}
+		//if (AxisIndex) glTranslatef(offsetMinorAxis, spacing, 0);
+		//else glTranslatef(spacing, offsetMinorAxis, 0);
+		beginEditCP(Components.getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
+			Components.getValue(i)->setSize(size);
+			Components.getValue(i)->setPosition(borderOffset + offset);
+		endEditCP(Components.getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
+		//if (AxisIndex) glTranslatef(-(Int64)offsetMinorAxis, Components.getValue(i)->getSize()[AxisIndex], 0);
+		//else glTranslatef(Components.getValue(i)->getSize()[AxisIndex], -(Int64)offsetMinorAxis, 0);
+		//transBack -= spacing;
+		//transBack -= Components.getValue(i)->getSize()[AxisIndex];
+
+		// now set offset for the next button
+		offset[AxisIndex] += spacing + Components.getValue(i)->getPreferredSize()[AxisIndex];
 	}
 	// now translate back to the original spot
-	glTranslatef(-borderOffset.x(), -borderOffset.y(), 0);
-	if (AxisIndex) glTranslatef(0, transBack, 0);
-	else glTranslatef(transBack, 0, 0);
-}
-
-void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
-{
+	//glTranslatef(-borderOffset.x(), -borderOffset.y(), 0);
+	//if (AxisIndex) glTranslatef(0, transBack, 0);
+	//else glTranslatef(transBack, 0, 0);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

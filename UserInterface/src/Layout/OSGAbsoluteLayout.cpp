@@ -87,18 +87,20 @@ void AbsoluteLayout::updateLayout(const MFComponentPtr Components,const Componen
 	for(UInt32 i = 0 ; i<Components.size(); ++i)
 	{
 		//Calculate the Components Size
-		Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
-		if(Components.getValue(i)->getConstraints() != NullFC)
-		{
-			//Get the Components Position
-			Pnt2s pos = AbsoluteLayoutConstraintsPtr::dcast(Components.getValue(i)->getConstraints())->getPosition();
-			
-            Components.getValue(i)->setPosition(borderOffset + Vec2s(pos));
-		}
-		else
-		{
-           Components.getValue(i)->setPosition(borderOffset);
-		}
+		beginEditCP(Components.getValue(i), Component::PositionFieldMask|Component::SizeFieldMask);
+			Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
+			if(Components.getValue(i)->getConstraints() != NullFC)
+			{
+				//Get the Components Position
+				Pnt2s pos = AbsoluteLayoutConstraintsPtr::dcast(Components.getValue(i)->getConstraints())->getPosition();
+				
+				Components.getValue(i)->setPosition(borderOffset + pos);
+			}
+			else
+			{
+			   Components.getValue(i)->setPosition(borderOffset);
+			}
+		endEditCP(Components.getValue(i), Component::PositionFieldMask|Component::SizeFieldMask);
 	}
 }
 
