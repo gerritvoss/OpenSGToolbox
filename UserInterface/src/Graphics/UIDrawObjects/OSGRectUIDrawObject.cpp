@@ -81,6 +81,8 @@ void RectUIDrawObject::draw(const GraphicsPtr Graphics) const
 
 void RectUIDrawObject::getBounds(Pnt2s& TopLeft, Vec2s& Size) const
 {
+	TopLeft = getTopLeft();
+	Size = getBottomRight() - getTopLeft();
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

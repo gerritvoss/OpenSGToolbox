@@ -81,6 +81,21 @@ void PolygonUIDrawObject::draw(const GraphicsPtr Graphics) const
 
 void PolygonUIDrawObject::getBounds(Pnt2s& TopLeft, Vec2s& Size) const
 {
+	if(getVerticies().size() > 0)
+	{
+		TopLeft = getVerticies().getValue(0);
+		Pnt2s BottomRight = TopLeft;
+		//Determine Top Left And Bottom Right
+		for(UInt32 i(0) ; i<getVerticies().size(); ++i)
+		{
+		    TopLeft.setValues( osgMin(TopLeft.x(), getVerticies().getValue(i).x()),
+				               osgMin(TopLeft.y(), getVerticies().getValue(i).y()) );
+
+		    BottomRight.setValues(osgMax<UInt16>(BottomRight.x(), getVerticies().getValue(i).x()),
+		                          osgMax<UInt16>(BottomRight.y(), getVerticies().getValue(i).y()) );
+		}
+		Size = BottomRight - TopLeft;
+	}
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

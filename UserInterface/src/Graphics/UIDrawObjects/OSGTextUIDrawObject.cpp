@@ -44,6 +44,9 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGTextLayoutParam.h>
+#include <OpenSG/OSGTextLayoutResult.h>
+#include <OpenSG/OSGTextureChunk.h>
 
 #include "OSGTextUIDrawObject.h"
 
@@ -81,7 +84,17 @@ void TextUIDrawObject::draw(const GraphicsPtr Graphics) const
 
 void TextUIDrawObject::getBounds(Pnt2s& TopLeft, Vec2s& Size) const
 {
+   TextLayoutParam layoutParam;
+   layoutParam.spacing = 1.1;
+   layoutParam.majorAlignment = TextLayoutParam::ALIGN_BEGIN;
+   layoutParam.minorAlignment = TextLayoutParam::ALIGN_BEGIN;
+ 
+   TextLayoutResult layoutResult;
+   getFont()->layout(getText(), layoutParam, layoutResult);
+   Size.setValues(layoutResult.textBounds.x()*getFont()->getSize(),layoutResult.textBounds.y()*getFont()->getSize());
+   TopLeft = getPosition();
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

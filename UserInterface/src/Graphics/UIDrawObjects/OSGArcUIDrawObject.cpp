@@ -81,6 +81,8 @@ void ArcUIDrawObject::draw(const GraphicsPtr Graphics) const
 
 void ArcUIDrawObject::getBounds(Pnt2s& TopLeft, Vec2s& Size) const
 {
+	TopLeft = Pnt2s(getCenter().x()-getWidth()/2, getCenter().y()-getHeight()/2);
+	Size = Vec2s(getWidth(), getHeight());
 }
 
 /*-------------------------------------------------------------------------*\
