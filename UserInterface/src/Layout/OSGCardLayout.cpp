@@ -104,6 +104,10 @@ void CardLayout::previous(const ContainerPtr TheContainer)
 
 void CardLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
 {
+}
+
+void CardLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+{
 	/*!
 	  Draw the current "card" component centered in the parent component
 	  and set to the size of the parent component, or to its max size
@@ -126,15 +130,10 @@ void CardLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentC
 	Int64 offsetx( (ParentComponent->getSize().x() - curCard->getSize().x()) /2);
 	Int64 offsety( (ParentComponent->getSize().y() - curCard->getSize().y()) /2);
 
-	glTranslatef(borderOffset.x(), borderOffset.y(), 0);
-	glTranslatef(offsetx, offsety, 0);
-	curCard->draw(TheGraphics);
-	glTranslatef(-offsetx, -offsety, 0);
-	glTranslatef(-borderOffset.x(), -borderOffset.y(), 0);
-}
+	beginEditCP(curCard, Component::PositionFieldMask);	
+		curCard->setPosition(Pnt2s(borderOffset.x()+offsetx, borderOffset.y()+offsety));
+	endEditCP(curCard, Component::PositionFieldMask);
 
-void CardLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
-{
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
