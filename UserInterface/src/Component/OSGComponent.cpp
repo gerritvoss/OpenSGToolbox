@@ -143,6 +143,8 @@ void Component::drawBackground(const GraphicsPtr TheGraphics) const
 
 void Component::draw(const GraphicsPtr TheGraphics) const
 {
+	if (!getVisible())
+		return;
     //Translate to my position
     glTranslatef(getPosition().x(), getPosition().y(), 0);
 
