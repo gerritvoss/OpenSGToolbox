@@ -73,6 +73,15 @@ const OSG::BitVector  TabPanelBase::TabContentsFieldMask =
 const OSG::BitVector  TabPanelBase::ActiveTabFieldMask = 
     (TypeTraits<BitVector>::One << TabPanelBase::ActiveTabFieldId);
 
+const OSG::BitVector  TabPanelBase::TabPlacementFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::TabPlacementFieldId);
+
+const OSG::BitVector  TabPanelBase::TabAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::TabAlignmentFieldId);
+
+const OSG::BitVector  TabPanelBase::TabRotationFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::TabRotationFieldId);
+
 const OSG::BitVector TabPanelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -87,6 +96,15 @@ const OSG::BitVector TabPanelBase::MTInfluenceMask =
     
 */
 /*! \var UInt32          TabPanelBase::_sfActiveTab
+    
+*/
+/*! \var UInt32          TabPanelBase::_sfTabPlacement
+    
+*/
+/*! \var UInt32          TabPanelBase::_sfTabAlignment
+    
+*/
+/*! \var UInt32          TabPanelBase::_sfTabRotation
     
 */
 
@@ -108,7 +126,22 @@ FieldDescription *TabPanelBase::_desc[] =
                      "ActiveTab", 
                      ActiveTabFieldId, ActiveTabFieldMask,
                      false,
-                     (FieldAccessMethod) &TabPanelBase::getSFActiveTab)
+                     (FieldAccessMethod) &TabPanelBase::getSFActiveTab),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "TabPlacement", 
+                     TabPlacementFieldId, TabPlacementFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFTabPlacement),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "TabAlignment", 
+                     TabAlignmentFieldId, TabAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFTabAlignment),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "TabRotation", 
+                     TabRotationFieldId, TabRotationFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFTabRotation)
 };
 
 
@@ -189,6 +222,9 @@ TabPanelBase::TabPanelBase(void) :
     _mfTabs                   (), 
     _mfTabContents            (), 
     _sfActiveTab              (UInt32(0)), 
+    _sfTabPlacement           (UInt32(0)), 
+    _sfTabAlignment           (UInt32(0)), 
+    _sfTabRotation            (UInt32(0)), 
     Inherited() 
 {
 }
@@ -201,6 +237,9 @@ TabPanelBase::TabPanelBase(const TabPanelBase &source) :
     _mfTabs                   (source._mfTabs                   ), 
     _mfTabContents            (source._mfTabContents            ), 
     _sfActiveTab              (source._sfActiveTab              ), 
+    _sfTabPlacement           (source._sfTabPlacement           ), 
+    _sfTabAlignment           (source._sfTabAlignment           ), 
+    _sfTabRotation            (source._sfTabRotation            ), 
     Inherited                 (source)
 {
 }
@@ -232,6 +271,21 @@ UInt32 TabPanelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfActiveTab.getBinSize();
     }
 
+    if(FieldBits::NoField != (TabPlacementFieldMask & whichField))
+    {
+        returnValue += _sfTabPlacement.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TabAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfTabAlignment.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TabRotationFieldMask & whichField))
+    {
+        returnValue += _sfTabRotation.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -254,6 +308,21 @@ void TabPanelBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ActiveTabFieldMask & whichField))
     {
         _sfActiveTab.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabPlacementFieldMask & whichField))
+    {
+        _sfTabPlacement.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabAlignmentFieldMask & whichField))
+    {
+        _sfTabAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabRotationFieldMask & whichField))
+    {
+        _sfTabRotation.copyToBin(pMem);
     }
 
 
@@ -279,6 +348,21 @@ void TabPanelBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfActiveTab.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (TabPlacementFieldMask & whichField))
+    {
+        _sfTabPlacement.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabAlignmentFieldMask & whichField))
+    {
+        _sfTabAlignment.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabRotationFieldMask & whichField))
+    {
+        _sfTabRotation.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -298,6 +382,15 @@ void TabPanelBase::executeSyncImpl(      TabPanelBase *pOther,
     if(FieldBits::NoField != (ActiveTabFieldMask & whichField))
         _sfActiveTab.syncWith(pOther->_sfActiveTab);
 
+    if(FieldBits::NoField != (TabPlacementFieldMask & whichField))
+        _sfTabPlacement.syncWith(pOther->_sfTabPlacement);
+
+    if(FieldBits::NoField != (TabAlignmentFieldMask & whichField))
+        _sfTabAlignment.syncWith(pOther->_sfTabAlignment);
+
+    if(FieldBits::NoField != (TabRotationFieldMask & whichField))
+        _sfTabRotation.syncWith(pOther->_sfTabRotation);
+
 
 }
 #else
@@ -310,6 +403,15 @@ void TabPanelBase::executeSyncImpl(      TabPanelBase *pOther,
 
     if(FieldBits::NoField != (ActiveTabFieldMask & whichField))
         _sfActiveTab.syncWith(pOther->_sfActiveTab);
+
+    if(FieldBits::NoField != (TabPlacementFieldMask & whichField))
+        _sfTabPlacement.syncWith(pOther->_sfTabPlacement);
+
+    if(FieldBits::NoField != (TabAlignmentFieldMask & whichField))
+        _sfTabAlignment.syncWith(pOther->_sfTabAlignment);
+
+    if(FieldBits::NoField != (TabRotationFieldMask & whichField))
+        _sfTabRotation.syncWith(pOther->_sfTabRotation);
 
 
     if(FieldBits::NoField != (TabsFieldMask & whichField))

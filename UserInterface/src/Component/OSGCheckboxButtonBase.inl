@@ -96,6 +96,13 @@ CheckboxButtonPtr CheckboxButtonBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the CheckboxButton::_sfChecked field.
+inline
+SFBool *CheckboxButtonBase::getSFChecked(void)
+{
+    return &_sfChecked;
+}
+
 //! Get the CheckboxButton::_sfDrawObject field.
 inline
 SFUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFDrawObject(void)
@@ -124,6 +131,27 @@ SFUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFActiveCheckedDrawObject(void)
     return &_sfActiveCheckedDrawObject;
 }
 
+
+//! Get the value of the CheckboxButton::_sfChecked field.
+inline
+bool &CheckboxButtonBase::getChecked(void)
+{
+    return _sfChecked.getValue();
+}
+
+//! Get the value of the CheckboxButton::_sfChecked field.
+inline
+const bool &CheckboxButtonBase::getChecked(void) const
+{
+    return _sfChecked.getValue();
+}
+
+//! Set the value of the CheckboxButton::_sfChecked field.
+inline
+void CheckboxButtonBase::setChecked(const bool &value)
+{
+    _sfChecked.setValue(value);
+}
 
 //! Get the value of the CheckboxButton::_sfDrawObject field.
 inline

@@ -39,4 +39,31 @@ A UI Tab Panel.
 		defaultValue="0"
 	>
 	</Field>
+	<Field
+		name="TabPlacement"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>
+	</Field>
+	<Field
+		name="TabAlignment"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>
+	</Field>
+	<Field
+		name="TabRotation"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>
+	</Field>
 </FieldContainer>

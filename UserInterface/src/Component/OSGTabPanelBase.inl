@@ -117,6 +117,27 @@ SFUInt32 *TabPanelBase::getSFActiveTab(void)
     return &_sfActiveTab;
 }
 
+//! Get the TabPanel::_sfTabPlacement field.
+inline
+SFUInt32 *TabPanelBase::getSFTabPlacement(void)
+{
+    return &_sfTabPlacement;
+}
+
+//! Get the TabPanel::_sfTabAlignment field.
+inline
+SFUInt32 *TabPanelBase::getSFTabAlignment(void)
+{
+    return &_sfTabAlignment;
+}
+
+//! Get the TabPanel::_sfTabRotation field.
+inline
+SFUInt32 *TabPanelBase::getSFTabRotation(void)
+{
+    return &_sfTabRotation;
+}
+
 
 //! Get the value of the TabPanel::_sfActiveTab field.
 inline
@@ -137,6 +158,69 @@ inline
 void TabPanelBase::setActiveTab(const UInt32 &value)
 {
     _sfActiveTab.setValue(value);
+}
+
+//! Get the value of the TabPanel::_sfTabPlacement field.
+inline
+UInt32 &TabPanelBase::getTabPlacement(void)
+{
+    return _sfTabPlacement.getValue();
+}
+
+//! Get the value of the TabPanel::_sfTabPlacement field.
+inline
+const UInt32 &TabPanelBase::getTabPlacement(void) const
+{
+    return _sfTabPlacement.getValue();
+}
+
+//! Set the value of the TabPanel::_sfTabPlacement field.
+inline
+void TabPanelBase::setTabPlacement(const UInt32 &value)
+{
+    _sfTabPlacement.setValue(value);
+}
+
+//! Get the value of the TabPanel::_sfTabAlignment field.
+inline
+UInt32 &TabPanelBase::getTabAlignment(void)
+{
+    return _sfTabAlignment.getValue();
+}
+
+//! Get the value of the TabPanel::_sfTabAlignment field.
+inline
+const UInt32 &TabPanelBase::getTabAlignment(void) const
+{
+    return _sfTabAlignment.getValue();
+}
+
+//! Set the value of the TabPanel::_sfTabAlignment field.
+inline
+void TabPanelBase::setTabAlignment(const UInt32 &value)
+{
+    _sfTabAlignment.setValue(value);
+}
+
+//! Get the value of the TabPanel::_sfTabRotation field.
+inline
+UInt32 &TabPanelBase::getTabRotation(void)
+{
+    return _sfTabRotation.getValue();
+}
+
+//! Get the value of the TabPanel::_sfTabRotation field.
+inline
+const UInt32 &TabPanelBase::getTabRotation(void) const
+{
+    return _sfTabRotation.getValue();
+}
+
+//! Set the value of the TabPanel::_sfTabRotation field.
+inline
+void TabPanelBase::setTabRotation(const UInt32 &value)
+{
+    _sfTabRotation.setValue(value);
 }
 
 

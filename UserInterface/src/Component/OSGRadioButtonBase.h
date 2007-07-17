@@ -71,6 +71,7 @@
 #include "OSGUIDrawObjectCanvas.h" // CheckedDrawObject type
 #include "OSGUIDrawObjectCanvas.h" // ActiveDrawObject type
 #include "OSGUIDrawObjectCanvas.h" // ActiveCheckedDrawObject type
+#include <OpenSG/OSGBoolFields.h> // Checked type
 
 #include "OSGRadioButtonFields.h"
 
@@ -98,13 +99,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
         CheckedDrawObjectFieldId       = DrawObjectFieldId              + 1,
         ActiveDrawObjectFieldId        = CheckedDrawObjectFieldId       + 1,
         ActiveCheckedDrawObjectFieldId = ActiveDrawObjectFieldId        + 1,
-        NextFieldId                    = ActiveCheckedDrawObjectFieldId + 1
+        CheckedFieldId                 = ActiveCheckedDrawObjectFieldId + 1,
+        NextFieldId                    = CheckedFieldId                 + 1
     };
 
     static const OSG::BitVector DrawObjectFieldMask;
     static const OSG::BitVector CheckedDrawObjectFieldMask;
     static const OSG::BitVector ActiveDrawObjectFieldMask;
     static const OSG::BitVector ActiveCheckedDrawObjectFieldMask;
+    static const OSG::BitVector CheckedFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -135,6 +138,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
            SFUIDrawObjectCanvasPtr *getSFCheckedDrawObject(void);
            SFUIDrawObjectCanvasPtr *getSFActiveDrawObject(void);
            SFUIDrawObjectCanvasPtr *getSFActiveCheckedDrawObject(void);
+           SFBool              *getSFChecked        (void);
 
            UIDrawObjectCanvasPtr &getDrawObject     (void);
      const UIDrawObjectCanvasPtr &getDrawObject     (void) const;
@@ -144,6 +148,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
      const UIDrawObjectCanvasPtr &getActiveDrawObject(void) const;
            UIDrawObjectCanvasPtr &getActiveCheckedDrawObject(void);
      const UIDrawObjectCanvasPtr &getActiveCheckedDrawObject(void) const;
+           bool                &getChecked        (void);
+     const bool                &getChecked        (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -154,6 +160,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
      void setCheckedDrawObject( const UIDrawObjectCanvasPtr &value );
      void setActiveDrawObject( const UIDrawObjectCanvasPtr &value );
      void setActiveCheckedDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setChecked        ( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -200,6 +207,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
     SFUIDrawObjectCanvasPtr   _sfCheckedDrawObject;
     SFUIDrawObjectCanvasPtr   _sfActiveDrawObject;
     SFUIDrawObjectCanvasPtr   _sfActiveCheckedDrawObject;
+    SFBool              _sfChecked;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

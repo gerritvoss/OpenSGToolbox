@@ -13,6 +13,15 @@
 >
 A UI Checkbox Button.
 	<Field
+		name="Checked"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="false"
+		access="public"
+	>
+	</Field>
+	<Field
 		name="DrawObject"
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"

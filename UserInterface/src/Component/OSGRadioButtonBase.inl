@@ -124,6 +124,13 @@ SFUIDrawObjectCanvasPtr *RadioButtonBase::getSFActiveCheckedDrawObject(void)
     return &_sfActiveCheckedDrawObject;
 }
 
+//! Get the RadioButton::_sfChecked field.
+inline
+SFBool *RadioButtonBase::getSFChecked(void)
+{
+    return &_sfChecked;
+}
+
 
 //! Get the value of the RadioButton::_sfDrawObject field.
 inline
@@ -207,6 +214,27 @@ inline
 void RadioButtonBase::setActiveCheckedDrawObject(const UIDrawObjectCanvasPtr &value)
 {
     _sfActiveCheckedDrawObject.setValue(value);
+}
+
+//! Get the value of the RadioButton::_sfChecked field.
+inline
+bool &RadioButtonBase::getChecked(void)
+{
+    return _sfChecked.getValue();
+}
+
+//! Get the value of the RadioButton::_sfChecked field.
+inline
+const bool &RadioButtonBase::getChecked(void) const
+{
+    return _sfChecked.getValue();
+}
+
+//! Set the value of the RadioButton::_sfChecked field.
+inline
+void RadioButtonBase::setChecked(const bool &value)
+{
+    _sfChecked.setValue(value);
 }
 
 

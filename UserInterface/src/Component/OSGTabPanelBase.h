@@ -70,6 +70,9 @@
 #include "Component/OSGComponent.h" // Tabs type
 #include "Component/OSGComponent.h" // TabContents type
 #include <OpenSG/OSGUInt32Fields.h> // ActiveTab type
+#include <OpenSG/OSGUInt32Fields.h> // TabPlacement type
+#include <OpenSG/OSGUInt32Fields.h> // TabAlignment type
+#include <OpenSG/OSGUInt32Fields.h> // TabRotation type
 
 #include "OSGTabPanelFields.h"
 
@@ -93,15 +96,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Component
 
     enum
     {
-        TabsFieldId        = Inherited::NextFieldId,
-        TabContentsFieldId = TabsFieldId        + 1,
-        ActiveTabFieldId   = TabContentsFieldId + 1,
-        NextFieldId        = ActiveTabFieldId   + 1
+        TabsFieldId         = Inherited::NextFieldId,
+        TabContentsFieldId  = TabsFieldId         + 1,
+        ActiveTabFieldId    = TabContentsFieldId  + 1,
+        TabPlacementFieldId = ActiveTabFieldId    + 1,
+        TabAlignmentFieldId = TabPlacementFieldId + 1,
+        TabRotationFieldId  = TabAlignmentFieldId + 1,
+        NextFieldId         = TabRotationFieldId  + 1
     };
 
     static const OSG::BitVector TabsFieldMask;
     static const OSG::BitVector TabContentsFieldMask;
     static const OSG::BitVector ActiveTabFieldMask;
+    static const OSG::BitVector TabPlacementFieldMask;
+    static const OSG::BitVector TabAlignmentFieldMask;
+    static const OSG::BitVector TabRotationFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -131,9 +140,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Component
            MFComponentPtr      *getMFTabs           (void);
            MFComponentPtr      *getMFTabContents    (void);
            SFUInt32            *getSFActiveTab      (void);
+           SFUInt32            *getSFTabPlacement   (void);
+           SFUInt32            *getSFTabAlignment   (void);
+           SFUInt32            *getSFTabRotation    (void);
 
            UInt32              &getActiveTab      (void);
      const UInt32              &getActiveTab      (void) const;
+           UInt32              &getTabPlacement   (void);
+     const UInt32              &getTabPlacement   (void) const;
+           UInt32              &getTabAlignment   (void);
+     const UInt32              &getTabAlignment   (void) const;
+           UInt32              &getTabRotation    (void);
+     const UInt32              &getTabRotation    (void) const;
            ComponentPtr        &getTabs           (const UInt32 index);
            MFComponentPtr      &getTabs           (void);
      const MFComponentPtr      &getTabs           (void) const;
@@ -147,6 +165,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Component
     /*! \{                                                                 */
 
      void setActiveTab      ( const UInt32 &value );
+     void setTabPlacement   ( const UInt32 &value );
+     void setTabAlignment   ( const UInt32 &value );
+     void setTabRotation    ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -192,6 +213,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Component
     MFComponentPtr      _mfTabs;
     MFComponentPtr      _mfTabContents;
     SFUInt32            _sfActiveTab;
+    SFUInt32            _sfTabPlacement;
+    SFUInt32            _sfTabAlignment;
+    SFUInt32            _sfTabRotation;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
