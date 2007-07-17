@@ -78,6 +78,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase
 
     /*! \}                                                                 */
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
+
+	virtual void addTab(const ComponentPtr Tab, const ComponentPtr TabContent);
+	virtual void removeTab(const ComponentPtr Tab);
+	virtual void removeTab(const UInt32 TabIndex);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -98,7 +102,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase
     virtual ~TabPanel(void); 
 
     /*! \}                                                                 */
-    
+    void updateTabLayout(void);
     /*==========================  PRIVATE  ================================*/
   private:
 

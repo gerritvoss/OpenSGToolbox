@@ -153,7 +153,9 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 					offsetX += offsetMajorAxis;
 				}
 
-				Components.getValue(i)->setPosition(Pnt2s(offsetX, offsetY));
+				beginEditCP(Components.getValue(i), Component::PositionFieldMask);
+					Components.getValue(i)->setPosition(Pnt2s(offsetX, offsetY));
+				endEditCP(Components.getValue(i), Component::PositionFieldMask);
 
 				// get to the next row
 				if (AxisIndex)
@@ -232,7 +234,9 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 					offsetY += offsetMinorAxis;
 				}
 
-				Components.getValue(j)->setPosition(Pnt2s(offsetX, offsetY));
+				beginEditCP(Components.getValue(i), Component::PositionFieldMask);
+					Components.getValue(i)->setPosition(Pnt2s(offsetX, offsetY));
+				endEditCP(Components.getValue(i), Component::PositionFieldMask);
 
 				// translate to next button
 				if (AxisIndex)
@@ -317,6 +321,7 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 				{
 					offsetY += offsetMinorAxis;
 				}
+
 				Components.getValue(j)->setPosition(Pnt2s(offsetX, offsetY));
 
 				if (AxisIndex)
@@ -327,7 +332,7 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 				else
 				{
 					offsetX += Components.getValue(j)->getSize()[AxisIndex] + gap[AxisIndex];
-					offsetY+= -(Int64)offsetMinorAxis;
+					offsetY += -(Int64)offsetMinorAxis;
 				}
 			}
 			// translate to the next row
@@ -344,17 +349,9 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 			cumMinorAxis += maxMinorAxis;
 		}
 	}
-	// get back to the corner of the container
-	/*if (AxisIndex)
-	{
-		offsetX += -(Int64)(cumMinorAxis+gap[(AxisIndex+1)%2]);
-	}
-	else
-	{
-		offsetY += -(Int64)(cumMinorAxis+gap[(AxisIndex+1)%2]);
-	}*/
-	//offsetX += -borderOffset.x();
-	//offsetY += -borderOffset.y();
+	
+	// now align the minor axis
+	offsetY = borderSize[(AxisIndex+1)%2] - (offsetY - gap[(AxisIndex+1)%2]);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

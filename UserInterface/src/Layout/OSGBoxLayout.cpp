@@ -139,6 +139,15 @@ void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr 
 		borderOffset[AxisIndex] += (MajorAxis - (spacing*(Components.size()+1)+totalMajorAxis))/2 + spacing;
 	}
 
+	// set up the MinorAxisAlignment by adding it to the borderOffset
+	if (getMinorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
+	{
+		borderOffset[(AxisIndex+1)%2] = (borderSize[(AxisIndex+1)%2] - largestMinorAxis)/2;
+	} else if (getMinorAxisAlignment() == AXIS_MAX_ALIGNMENT)
+	{
+		borderOffset[(AxisIndex+1)%2] = borderSize[(AxisIndex+1)%2] - largestMinorAxis;
+	} // in the case of a min alignment, do nothing
+
 	/*!
 	  This second sweep through the components sets each component to the
 	  matching highest height, then positions each component equally spaced apart
@@ -162,10 +171,10 @@ void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr 
 				size[(AxisIndex+1)%2] = Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2];
 
 				// find how far to set offset to make this button properly aligned
-				if (getMinorAxisAlignment() == AXIS_MIN_ALIGNMENT)
+				if (getComponentAlignment() == AXIS_MIN_ALIGNMENT)
 				{
 					offset[(AxisIndex+1)%2] = 0;
-				} else if (getMinorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
+				} else if (getComponentAlignment() == AXIS_CENTER_ALIGNMENT)
 				{
 					offset[(AxisIndex+1)%2] = (largestMinorAxis - Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2])/2;
 				} else 

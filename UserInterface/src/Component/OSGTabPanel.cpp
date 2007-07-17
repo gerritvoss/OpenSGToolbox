@@ -76,8 +76,39 @@ void TabPanel::initMethod (void)
 
 void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 {
-	//TODO:Implement
+	Pnt2s TopLeft, BottomRight;
+	getInsideBorderSizing(TopLeft, BottomRight);
+	Vec2s pos;
+
+	// translate past the border and inset
+	//glTranslatef(TopLeft.x(), TopLeft.y(), 0);
+
+	// draw the tabs
+	for (int i = 0; i < getTabs().size(); ++i)
+	{
+
+	}
+	
+	// draw the active tab component
+	pos = getTabContents().getValue(getActiveTab())->getPosition();
+	glTranslatef(pos.x(), pos.y(), 0);
+	getTabContents().getValue(getActiveTab())->draw(Graphics);
+	glTranslatef(-pos.x(), -pos.y(), 0);
 }
+
+void TabPanel::addTab(const ComponentPtr Tab, const ComponentPtr TabContent)
+{
+}
+void TabPanel::removeTab(const ComponentPtr Tab)
+{
+}
+void TabPanel::removeTab(const UInt32 TabIndex)
+{
+}
+void TabPanel::updateTabLayout(void)
+{
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -103,6 +134,11 @@ TabPanel::~TabPanel(void)
 void TabPanel::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if( (whichField & SizeFieldMask) )
+    {
+		updateTabLayout();
+	}
 }
 
 void TabPanel::dump(      UInt32    , 
