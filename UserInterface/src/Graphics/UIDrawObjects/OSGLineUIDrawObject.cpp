@@ -44,7 +44,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-
+#include "OSGUserInterfaceDef.h"
 #include "OSGLineUIDrawObject.h"
 
 OSG_BEGIN_NAMESPACE

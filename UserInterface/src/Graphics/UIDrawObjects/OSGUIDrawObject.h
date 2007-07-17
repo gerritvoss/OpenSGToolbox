@@ -43,7 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-
+#include "OSGUserInterfaceDef.h"
 #include "OSGUIDrawObjectBase.h"
 #include "Graphics/OSGGraphics.h"
 

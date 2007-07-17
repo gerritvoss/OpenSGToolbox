@@ -17,7 +17,7 @@ A UI UIDrawObjectCanvas.
 		type="UIDrawObjectPtr"
 		cardinality="multi"
 		visibility="external"
-		header="Graphics\UIDrawObjects/OSGUIDrawObject.h"
+		header="Graphics/UIDrawObjects/OSGUIDrawObject.h"
 		access="public"
 	>
 	</Field>

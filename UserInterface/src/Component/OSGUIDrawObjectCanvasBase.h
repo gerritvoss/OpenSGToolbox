@@ -67,7 +67,7 @@
 
 #include "OSGComponent.h" // Parent
 
-#include "Graphics\UIDrawObjects/OSGUIDrawObject.h" // DrawObjects type
+#include "Graphics/UIDrawObjects/OSGUIDrawObject.h" // DrawObjects type
 
 #include "OSGUIDrawObjectCanvasFields.h"
 

@@ -43,7 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-
+#include "OSGUserInterfaceDef.h"
 #include "OSGTabPanelBase.h"
 
 OSG_BEGIN_NAMESPACE

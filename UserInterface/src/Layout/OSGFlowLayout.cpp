@@ -44,7 +44,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-
+#include "OSGUserInterfaceDef.h"
 #include "Util/OSGUIDefines.h"
 #include "OSGFlowLayout.h"
 

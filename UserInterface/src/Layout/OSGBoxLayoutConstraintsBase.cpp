@@ -57,7 +57,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-
+#include "OSGUserInterfaceDef.h"
 #include "OSGBoxLayoutConstraintsBase.h"
 #include "OSGBoxLayoutConstraints.h"
 

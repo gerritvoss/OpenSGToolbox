@@ -43,7 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-
+#include "OSGUserInterfaceDef.h"
 #include "OSGUIDrawObjectCanvasBase.h"
 
 OSG_BEGIN_NAMESPACE

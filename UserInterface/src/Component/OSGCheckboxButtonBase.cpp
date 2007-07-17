@@ -57,7 +57,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-
+#include "OSGUserInterfaceDef.h"
 #include "OSGCheckboxButtonBase.h"
 #include "OSGCheckboxButton.h"
 
