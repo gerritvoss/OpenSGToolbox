@@ -120,7 +120,7 @@ void Container::drawInternal(const GraphicsPtr TheGraphics) const
     {
         getChildren().getValue(i)->draw(TheGraphics);
     }
-    glTranslatef(borderOffset.x(), borderOffset.y(), 0);
+    glTranslatef(-borderOffset.x(), -borderOffset.y(), 0);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
