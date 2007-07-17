@@ -110,19 +110,19 @@ int main(int argc, char **argv)
 			// the Layouts)
 		button1->setMinSize( Vec2s (50, 25) );
 		button1->setMaxSize( Vec2s (200, 100) );
-			// Determine what size the Component will display at
+			// Determine the PreferredSize for the Component
 		button1->setPreferredSize( Vec2s (100, 50) );
 			// Determine whether the Button appears pressed (false) or not-pressed (true)
 		button1->setEnabled(true);
 		// The following functions are specific to Button
-			// Determine the visible Text (note this can display off the 
-			// Button if the Text is too long)
+			// Determine the visible Text (Text must fit within Button Size
+			// or extra Text will not display)
 		button1->setText("Button 1");
 		//button1->setFont(sampleFont);
-			// Determine the VerticalAlignment of the text- VERTICAL_CENTER, 
+			// Determine the VerticalAlignment of the Text- VERTICAL_CENTER, 
 			// or VERTICAL_TOP, VERTICAL_BOTTOM
 		button1->setVerticalAlignment(VERTICAL_TOP);
-			// Determine the HorizontalAlignment of the text- HORIZONTAL_CENTER,
+			// Determine the HorizontalAlignment of the Text- HORIZONTAL_CENTER,
 			// HORIZONTAL_LEFT, HORIZONTAL_RIGHT
 		button1->setHorizontalAlignment(HORIZONTAL_RIGHT);
     endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
@@ -131,7 +131,7 @@ int main(int argc, char **argv)
 	FramePtr MainFrame = osg::Frame::create();
 	LayoutPtr MainFrameLayout = osg::AbsoluteLayout::create();
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
-	   // Assign the button to the mainframe so it will be displayed
+	   // Assign the Button to the MainFrame so it will be displayed
 	   // when the view is rendered.
 	   MainFrame->getChildren().addValue(button1);
 	   MainFrame->setLayout(MainFrameLayout);

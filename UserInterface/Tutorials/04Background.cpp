@@ -1,7 +1,7 @@
-// OpenSG Tutorial Example: Creating a Button
+// OpenSG Tutorial Example: Creating a Background
 //
 // This tutorial explains how to implement the 
-// backgrounds offered by the OSG User Interface 
+// Backgrounds offered by the OSG User Interface 
 // library and how to modify their features.
 // 
 // Includes: explanations and examples of how to create
@@ -149,7 +149,7 @@ int main(int argc, char **argv)
 
 	// Set compoundBackground
 	beginEditCP(compoundBackground);
-
+		//gradient with transparency and texture
 	endEditCP(compoundBackground);
 
 	// Set emptyBackground (note that empty background is just that,

@@ -173,8 +173,7 @@ int main(int argc, char **argv)
 	   // Add the Layout to the MainFrame
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
-	 
-    endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
 	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();

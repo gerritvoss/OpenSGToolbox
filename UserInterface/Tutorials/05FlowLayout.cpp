@@ -1,7 +1,7 @@
 // OpenSG Tutorial Example: Using the Flow Layout
 //		to place Components 
 //
-// This tutorial explains how to place buttons within a 
+// This tutorial explains how to place Buttons within a 
 // frame utilizing the Flow Layout command to 
 // manage the layout through the OSG User Interface library.
 // 
@@ -90,7 +90,7 @@ int main(int argc, char **argv)
 
 
 
-	// Creates some Button components
+	// Creates some Button Components
 	ButtonPtr button1 = osg::Button::create();
 	ButtonPtr button2 = osg::Button::create();
 	ButtonPtr button3 = osg::Button::create();
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
 	ButtonPtr button5 = osg::Button::create();
 	ButtonPtr button6 = osg::Button::create();
 
-	//Change some of their sizes
+	//Change some of their PreferredSizes
 	beginEditCP(button1, Component::PreferredSizeFieldMask);
 		button1->setPreferredSize( Vec2s (200, 50) );
 	endEditCP(button1, Component::PreferredSizeFieldMask);
@@ -119,16 +119,16 @@ int main(int argc, char **argv)
 		corner across when arranged Vertically, starting a 
 		new column when necessary.
 
-		Alignment of the layout and the alignment of objects 
-		within the layout can be changed.
+		Alignment of the Layout and the alignment of objects 
+		within the Layout can be changed.
 
 		You can experiment with this by changing the window 
-		size, changing the orientation,or changing the size 
-		of the buttons as shown in 01Button, or adding more 
-		Buttons to the view.
+		size, changing the orientation, changing the 
+		PreferredSize of the Buttons as shown in 01Button, 
+		or adding more Buttons to the view.
 
 		Note that if the Frame is too small, the objects will 
-		appear out of the Frame background.
+		appear out of the Frame Background.
 
 
 	******************************************************/
@@ -149,12 +149,12 @@ int main(int argc, char **argv)
 		// AXIS_MAX_ALIGNMENT, AXIS_CENTER_ALIGNMENT, and
 		// AXIS_MIN_ALIGNMENT.
 
-		// Determine alignment of entire layout; MAX puts it to the buttom (for vertical
+		// Determine alignment of entire layout; MAX puts it to the bottom (for vertical
 		// overall layout) or right (horizontal overall layout), CENTER centers it, and
 		// MIN does the opposite of MAX
 		MainFrameLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
 
-		// Determine alignment of Components within layout
+		// Determine alignment of Components within Layout
 		MainFrameLayout->setMinorAxisAlignment(AXIS_MAX_ALIGNMENT);
 		// MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
 	endEditCP(MainFrameLayout);
@@ -177,8 +177,7 @@ int main(int argc, char **argv)
 	   MainFrame->getChildren().addValue(button6);
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
-	 
-    endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
 	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();

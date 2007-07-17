@@ -110,33 +110,10 @@ int main(int argc, char **argv)
 
 	/******************************************************
 
-		Create Flow Layout.  Flow Layout arranges objects
-		automatically within the Frame, so that depending 
-		on Frame size, the objects may appear in a vertical
-		line, horizontal line, or multiple lines.  Objects 
-		fill from the upper left hand corner of the Frame
-		across, then down (when the line becomes full) while
-		arranged Horizontally, or from the upper left hand
-		corner across when arranged Vertically, starting a 
-		new column when necessary.
-
-		Alignment of the layout and the alignment of objects 
-		within the layout can be changed.
-
-		You can experiment with this by changing the window 
-		size, changing the orientation,or changing the size 
-		of the buttons as shown in 01Button, or adding more 
-		Buttons to the view.
-
-		Note that if the Frame is too small, the objects will 
-		appear out of the Frame background.
-
 
 	******************************************************/
 	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
-	// Determine whether the Layout is Horizontal (HORIZONTAL_ALIGNMENT) or
-	// Vertical (VERTICAL_ALIGNMENT) and determine gap size, and determine
-	// alignment along Horizontal and Vertical axis 
+
 	beginEditCP(MainFrameLayout);
 		// Determine the Horizontal and Vertical gaps between objects.
 		// These gaps are absolute, and measured in pixels.
@@ -178,8 +155,7 @@ int main(int argc, char **argv)
 	   MainFrame->getChildren().addValue(button6);
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
-	 
-    endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
 	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();

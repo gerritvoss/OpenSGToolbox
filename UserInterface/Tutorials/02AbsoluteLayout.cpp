@@ -95,13 +95,13 @@ int main(int argc, char **argv)
 
 	/******************************************************
 
-		Create three Button Components (button, button2,
+		Create three Button Components (button1, button2,
 		and button3) and their AbsoluteLayoutConstraints.
 
 		AbsoluteLayoutConstraints are used within the 
 		AbsoluteLayout to define where the Components will
 		be placed.  Most other Layouts do not need 
-		constraints, as they place objects within the Layout
+		Constraints, as they place things within the Layout
 		automatically.
 
 	******************************************************/
@@ -116,15 +116,15 @@ int main(int argc, char **argv)
 
 	/******************************************************
 
-		Define the Button constraints (where the buttons 
-		are located in the layout)setPosition gives you 
-		the location of the button relative to the layout
-		manager's upper left hand corner.  Note that with 
-		the AbsoluteLayoutConstraints,the buttons may 
-		appear out of the lightly colored box, as their 
-		positions are absolute and not relative to other 
-		objects.  By adjusting the window size, this can 
-		be easily seen.
+		Define the AbsoluteLayoutConstraints (where Buttons 
+		are located in the Layout).  setPosition gives you 
+		the location of the Button relative to the Layout
+		manager's upper left hand corner.  Buttons will
+		not display if their AbsoluteLayoutConstraints 
+		place them outside the Frame in which they are to
+		be rendered (the part within the Frame still does
+		display).  Changing the window size shows an 
+		example of this.
 
 	******************************************************/
   

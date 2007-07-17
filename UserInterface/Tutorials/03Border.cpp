@@ -1,7 +1,7 @@
-// OpenSG Tutorial Example: Creating a Button
+// OpenSG Tutorial Example: Creating a Border
 //
 // This tutorial explains how to implement the 
-// borders offered by the OSG User Interface 
+// Borders offered by the OSG User Interface 
 // library and how to modify their features.
 // 
 // Includes: BevelBorder, CompoundBorder, EmptyBorder
@@ -116,11 +116,11 @@ int main(int argc, char **argv)
 	beginEditCP(bevelBorder, BevelBorder::HighlightInnerFieldMask | BevelBorder::RaisedFieldMask | BevelBorder::HighlightOuterFieldMask);
 		// Determines whether Button appears raised (true) or indented into screen (false)
 		bevelBorder->setRaised(true);
-		// Determines width of Border
+		// Determines Width of Border
 		bevelBorder->setWidth(5);
 		// Determines the four colors involved in BevelBorder
 		// The HighlightInner and HighlightOuter are the left and top
-		// of the border while setRaised(false) and the bottom and right 
+		// of the Border while setRaised(false) and the bottom and right 
 		// while setRaised(true).  The ShadowInner and ShadowOuter are the 
 		// opposite two sides.
 		bevelBorder->setHighlightInner(Color4f(1.0, 1.0, 0.5, 1.0));
@@ -129,19 +129,19 @@ int main(int argc, char **argv)
 		bevelBorder->setShadowOuter(Color4f(0.5, 1.0, 1.0, 1.0));
 	endEditCP(bevelBorder);
 
-	// The CompoundBorder takes two Border components and creates a single Border
-	// out of the two components.  It is possible to take use a CompoundBorder
-	// within a CompoundBorder.
+	// The CompoundBorder takes two Border Components and creates a single Border
+	// out of the two Components.  It is possible to take use a CompoundBorder
+	// within a CompoundBorder within a CompoundBorder... etc.
 	beginEditCP(compoundBorder, CompoundBorder::InnerBorderFieldMask | CompoundBorder::OuterBorderFieldMask);
 		// Determine the Inner and Outer Borders of the CompoundBorder
 		compoundBorder->setInnerBorder(bevelBorder);
 		compoundBorder->setOuterBorder(matteBorder);
 	endEditCP(compoundBorder, CompoundBorder::InnerBorderFieldMask | CompoundBorder::OuterBorderFieldMask);
 	
-	// The EmptyBorder does not have a visible border, however 
-	// the Border still is a part of the component with its 
-	// assigned dimensions (note how this causes the button
-	// to appear spaced out from the other buttons)
+	// The EmptyBorder does not have a visible Border, however 
+	// the Border still is a part of the Component with its 
+	// assigned dimensions (note how this causes the Button
+	// to appear spaced out from the other Buttons)
 	beginEditCP(emptyBorder, EmptyBorder::LeftWidthFieldMask | EmptyBorder::TopWidthFieldMask | EmptyBorder::RightWidthFieldMask | EmptyBorder::BottomWidthFieldMask);
 		// Determine the four Edge Widths
 		emptyBorder->setBottomWidth(5);
@@ -159,11 +159,11 @@ int main(int argc, char **argv)
 		// Determine Highlight and Shadow colors
 		etchedBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
 		etchedBorder->setShadow(Color4f(0.8, 0.8, 0.8, 1.0));
-		// Determines if the Border appears Raised (true) or indented (false)
+		// Determines if the Border appears raised (true) or indented (false)
 		etchedBorder->setRaised(false);
 	endEditCP(etchedBorder, EtchedBorder::WidthFieldMask | EtchedBorder::HighlightFieldMask | EtchedBorder::ShadowFieldMask | EtchedBorder::RaisedFieldMask);
 
-	// The LineBorder is simply a line border
+	// The LineBorder is simply a line Border
 	beginEditCP(lineBorder, LineBorder::WidthFieldMask | LineBorder::ColorFieldMask);
 		// Determine Width
 		lineBorder->setWidth(1);
@@ -202,7 +202,8 @@ int main(int argc, char **argv)
 	ButtonPtr lineButton = osg::Button::create();
 	ButtonPtr matteButton = osg::Button::create();
 	
-	// Edit each Button component
+	// Edit each Button Component and assign its Border via the
+	// setBorder function
 	beginEditCP(bevelButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 		bevelButton->setPreferredSize(Vec2s(100,50));
 		bevelButton->setText("Bevel Border");
