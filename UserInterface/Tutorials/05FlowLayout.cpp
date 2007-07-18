@@ -90,7 +90,13 @@ int main(int argc, char **argv)
 
 
 
-	// Creates some Button Components
+
+	/******************************************************
+			
+				Creates some Button components
+				and edit their PreferredSizes
+
+	******************************************************/
 	ButtonPtr button1 = osg::Button::create();
 	ButtonPtr button2 = osg::Button::create();
 	ButtonPtr button3 = osg::Button::create();
@@ -98,7 +104,7 @@ int main(int argc, char **argv)
 	ButtonPtr button5 = osg::Button::create();
 	ButtonPtr button6 = osg::Button::create();
 
-	//Change some of their PreferredSizes
+
 	beginEditCP(button1, Component::PreferredSizeFieldMask);
 		button1->setPreferredSize( Vec2s (200, 50) );
 	endEditCP(button1, Component::PreferredSizeFieldMask);
@@ -144,6 +150,7 @@ int main(int argc, char **argv)
 		// Determine whether layout is arranged Vertically (VERTICAL_ALIGNMENT)
 		// or Horizontally (HORIZONTAL_ALIGNMENT)
 		MainFrameLayout->setAlignment(VERTICAL_ALIGNMENT);
+		// MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
 
 		// The options for the following two functions are:
 		// AXIS_MAX_ALIGNMENT, AXIS_CENTER_ALIGNMENT, and
@@ -156,7 +163,6 @@ int main(int argc, char **argv)
 
 		// Determine alignment of Components within Layout
 		MainFrameLayout->setMinorAxisAlignment(AXIS_MAX_ALIGNMENT);
-		// MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
 	endEditCP(MainFrameLayout);
 	
  	// Create The Main Frame

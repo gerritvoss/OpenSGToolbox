@@ -91,7 +91,12 @@ int main(int argc, char **argv)
 
 
 
-	// Creates some Button components to add
+
+	/******************************************************
+			
+				Creates some Button components
+
+	******************************************************/
 	ButtonPtr button1 = osg::Button::create();
 	ButtonPtr button2 = osg::Button::create();
 	ButtonPtr button3 = osg::Button::create();
@@ -139,7 +144,7 @@ int main(int argc, char **argv)
 		button1->setPreferredSize( Vec2s(50,50) );
 		// Set button to have a MaxSize.  This is never exceeded, therefore
 		// even in BoxLayout it will not change to have a width of greater than
-		// 80.  By commenting the setMaxSize line, button will have its width 
+		// 80.  By commenting the setMaxSize line, button1 will have its width 
 		// expanded to match the size of the largest object in the BoxLayout;
 		// in this case button2.
 		button1->setMaxSize( Vec2s (50, 50) );

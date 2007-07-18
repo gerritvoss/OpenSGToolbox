@@ -148,7 +148,6 @@ int main(int argc, char **argv)
 		preceeded by "BorderLayoutConstraints::".
 
 
-
 	******************************************************/
 	BorderLayoutConstraintsPtr buttonConstraints1 = osg::BorderLayoutConstraints::create();
 	BorderLayoutConstraintsPtr buttonConstraints2 = osg::BorderLayoutConstraints::create();

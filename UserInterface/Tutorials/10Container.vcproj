@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="10Frame"
+	Name="10Container"
 	ProjectGUID="{126EDB01-C01C-4847-9E3E-EB473D0444FC}"
 	RootNamespace="10Frame"
 	Keyword="Win32Proj"
@@ -207,7 +207,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\10Frame.cpp"
+				RelativePath=".\10Container.cpp"
 				>
 			</File>
 		</Filter>

@@ -129,18 +129,18 @@ int main(int argc, char **argv)
 	******************************************************/
   
    beginEditCP(buttonConstraints1, AbsoluteLayoutConstraints::PositionFieldMask);
-		buttonConstraints1->setPosition(Pnt2s (0,150) );
+		buttonConstraints1->setPosition( Pnt2s(0,150) );
    endEditCP(buttonConstraints1, AbsoluteLayoutConstraints::PositionFieldMask);
 
    beginEditCP(buttonConstraints2, AbsoluteLayoutConstraints::PositionFieldMask);
-		buttonConstraints2->setPosition(Pnt2s (200,200) );
+		buttonConstraints2->setPosition( Pnt2s(200,200) );
    endEditCP(buttonConstraints2, AbsoluteLayoutConstraints::PositionFieldMask);
 	
    // Note that this will cause the button's position to overlap with Button2
    // when the program is run; the AbsoluteLayoutConstraints will overlap
    // if the specified coordinates overlap
    beginEditCP(buttonConstraints3, AbsoluteLayoutConstraints::PositionFieldMask);
-		buttonConstraints3->setPosition(Pnt2s (150,220) );
+		buttonConstraints3->setPosition( Pnt2s(150,220) );
    endEditCP(buttonConstraints3, AbsoluteLayoutConstraints::PositionFieldMask);
 
 	/******************************************************

@@ -1,11 +1,9 @@
-// OpenSG Tutorial Example: Using the Flow Layout
-//		to place Components 
+// OpenSG Tutorial Example: Using Containers (Frames and Panels)
 //
-// This tutorial explains how to place buttons within a 
-// frame utilizing the Flow Layout command to 
-// manage the layout through the OSG User Interface library.
+// This tutorial explains how use Frame and Panel Containers
 // 
-// Includes: placing multiple buttons using Flow Layout
+// Includes: creating and editing Frames, Panels, and adding
+// Panels
 
 
 // GLUT is used for window handling
@@ -38,8 +36,18 @@
 #include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
-// Include FlowLayout header file
+
+// Include relevant header files
+#include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
+#include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
+#include <OpenSG/UserInterface/OSGBoxLayout.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
+#include <OpenSG/UserInterface/OSGContainer.h>
+#include <OpenSG/UserInterface/OSGPanel.h>
+#include <OpenSG/UserInterface/OSGLineBorder.h>
+#include <OpenSG/UserInterface/OSGBevelBorder.h>
+#include <OpenSG/UserInterface/OSGUIDefines.h>
+
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
 // with OSG::, but that would be a bit tedious for this example
@@ -90,8 +98,12 @@ int main(int argc, char **argv)
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
+	/******************************************************
+			
+				Creates some Button components
 
-	// Creates some Button components
+	******************************************************/
+
 	ButtonPtr button1 = osg::Button::create();
 	ButtonPtr button2 = osg::Button::create();
 	ButtonPtr button3 = osg::Button::create();
@@ -99,60 +111,96 @@ int main(int argc, char **argv)
 	ButtonPtr button5 = osg::Button::create();
 	ButtonPtr button6 = osg::Button::create();
 
-	//Change some of their sizes
-	beginEditCP(button1, Component::PreferredSizeFieldMask);
-		button1->setPreferredSize( Vec2s (200, 50) );
-	endEditCP(button1, Component::PreferredSizeFieldMask);
-
-	beginEditCP(button4, Component::PreferredSizeFieldMask);
-		button4->setPreferredSize( Vec2s (50, 50) );
-	endEditCP(button4, Component::PreferredSizeFieldMask);
-
+	
 	/******************************************************
 
+			Create some Flow and Box Layouts to be 
+			used with the Main Frame and the two 
+			Panels
 
 	******************************************************/
 	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
+	BoxLayoutPtr panel1Layout = osg::BoxLayout::create();
+	BoxLayoutPtr panel2Layout = osg::BoxLayout::create();
 
-	beginEditCP(MainFrameLayout);
-		// Determine the Horizontal and Vertical gaps between objects.
-		// These gaps are absolute, and measured in pixels.
-		MainFrameLayout->setHorizontalGap(3);
-		MainFrameLayout->setVerticalGap(3);
-		// Determine whether layout is arranged Vertically (VERTICAL_ALIGNMENT)
-		// or Horizontally (HORIZONTAL_ALIGNMENT)
-		MainFrameLayout->setAlignment(VERTICAL_ALIGNMENT);
+	beginEditCP(panel1Layout, BoxLayout::AlignmentFieldMask);
+		panel1Layout->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(panel1Layout, BoxLayout::AlignmentFieldMask);
+	beginEditCP(panel2Layout, BoxLayout::AlignmentFieldMask);
+		panel2Layout->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(panel2Layout, BoxLayout::AlignmentFieldMask);
 
-		// The options for the following two functions are:
-		// AXIS_MAX_ALIGNMENT, AXIS_CENTER_ALIGNMENT, and
-		// AXIS_MIN_ALIGNMENT.
+	/******************************************************
+			
+			Create two Backgrounds to be used with
+			Panels and MainFrame
 
-		// Determine alignment of entire layout; MAX puts it to the buttom (for vertical
-		// overall layout) or right (horizontal overall layout), CENTER centers it, and
-		// MIN does the opposite of MAX
-		MainFrameLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-
-		// Determine alignment of Components within layout
-		MainFrameLayout->setMinorAxisAlignment(AXIS_MAX_ALIGNMENT);
-		// MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
-	endEditCP(MainFrameLayout);
-	
- 	// Create The Main Frame
-	// Create Background to be used with the Main Frame
+	******************************************************/
 	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
+	ColorUIBackgroundPtr panelBackground = osg::ColorUIBackground::create();
 	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
 		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+	beginEditCP(panelBackground, ColorUIBackground::ColorFieldMask);
+		panelBackground->setColor(Color4f(0.0,0.0,0.0,1.0));
+	endEditCP(panelBackground, ColorUIBackground::ColorFieldMask);
 	
+	/******************************************************
+			
+			Create a Border to be used with
+			the two Panels
+
+	******************************************************/
+	LineBorderPtr panelBorder = osg::LineBorder::create();
+	beginEditCP(panelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+		panelBorder->setColor( Color4f(0.9, 0.9, 0.9, 1.0) );
+		panelBorder->setWidth(3);
+	endEditCP(panelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+
+
+	/******************************************************
+
+		Create MainFrame and two Panel Components and
+		edit their characteristics: 
+		-PreferredSize changes their size
+		-getChildren adds Components to the Panel or
+		Frame (you can add Panels or Frames to other
+		Panels and Frames)
+		-setLayout determines the Layout of the Panel/
+		Frame (each Frame and Panel can have its own 
+		Layout, even within another Frame/Panel)
+
+
+	******************************************************/
 	FramePtr MainFrame = osg::Frame::create();
+	PanelPtr panel1 = osg::Panel::create();
+	PanelPtr panel2 = osg::Panel::create();
+	
+	// Edit Panel1, Panel2
+	beginEditCP(panel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+		panel1->setPreferredSize( Vec2s(200, 200) );
+		panel1->getChildren().addValue(button1);
+		panel1->getChildren().addValue(button2);
+		panel1->getChildren().addValue(button3);
+		panel1->setLayout(panel1Layout);
+		panel1->setBackground(panelBackground);
+		panel1->setBorder(panelBorder);
+	endEditCP(panel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+
+	beginEditCP(panel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+		panel2->setPreferredSize( Vec2s(200, 200) );
+		panel2->getChildren().addValue(button4);
+		panel2->getChildren().addValue(button5);
+		panel2->getChildren().addValue(button6);
+		panel2->setLayout(panel2Layout);
+		panel2->setBackground(panelBackground);
+		panel2->setBorder(panelBorder);
+	endEditCP(panel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+
+	// Edit MainFrame
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-	   // Add the buttons to the mainframe so they will be displayed
-	   MainFrame->getChildren().addValue(button1);
-	   MainFrame->getChildren().addValue(button2);
-	   MainFrame->getChildren().addValue(button3);
-	   MainFrame->getChildren().addValue(button4);
-	   MainFrame->getChildren().addValue(button5);
-	   MainFrame->getChildren().addValue(button6);
+	   MainFrame->getChildren().addValue(panel1);
+	   MainFrame->getChildren().addValue(panel2);
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
@@ -163,7 +211,10 @@ int main(int argc, char **argv)
 	beginEditCP(foreground, UIForeground::GraphicsFieldMask | UIForeground::RootFrameFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 		foreground->setGraphics(graphics);
 		foreground->setRootFrame(MainFrame);
-		foreground->setFramePositionOffset(Vec2s(0,0));
+		foreground->setFramePositionOffset(Vec2s(0.0,0.0));
+		// Determines MainFrameBounds, or the portion of the window
+		// that the Frame occupies (0.0, 0.0) would not appear,
+		// (1.0, 1.0) would cover the entire screen
 		foreground->setFrameBounds(Vec2f(0.5,0.5));
     endEditCP  (foreground, UIForeground::GraphicsFieldMask | UIForeground::RootFrameFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
@@ -249,7 +300,7 @@ int setupGLUT(int *argc, char *argv[])
     glutInit(argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
     
-    int winid = glutCreateWindow("OpenSG UserInterface Button");
+    int winid = glutCreateWindow("OpenSG UserInterface");
     
     glutReshapeFunc(reshape);
     glutDisplayFunc(display);

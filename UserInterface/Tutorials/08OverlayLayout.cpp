@@ -92,7 +92,11 @@ int main(int argc, char **argv)
 
 
 
-	// Creates some Button components to add 
+	/******************************************************
+			
+				Creates some Button components
+
+	******************************************************/
 	ButtonPtr button1 = osg::Button::create();
 	ButtonPtr button2 = osg::Button::create();
 	ButtonPtr button3 = osg::Button::create();
