@@ -68,6 +68,9 @@
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
 #include <OpenSG/OSGReal32Fields.h> // Opacity type
+#include <OpenSG/OSGBoolFields.h> // EnablePointAntiAliasing type
+#include <OpenSG/OSGBoolFields.h> // EnableLineAntiAliasing type
+#include <OpenSG/OSGBoolFields.h> // EnablePolygonAntiAliasing type
 
 #include "OSGGraphicsFields.h"
 
@@ -91,11 +94,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING GraphicsBase : public AttachmentContainer
 
     enum
     {
-        OpacityFieldId = Inherited::NextFieldId,
-        NextFieldId    = OpacityFieldId + 1
+        OpacityFieldId                   = Inherited::NextFieldId,
+        EnablePointAntiAliasingFieldId   = OpacityFieldId                   + 1,
+        EnableLineAntiAliasingFieldId    = EnablePointAntiAliasingFieldId   + 1,
+        EnablePolygonAntiAliasingFieldId = EnableLineAntiAliasingFieldId    + 1,
+        NextFieldId                      = EnablePolygonAntiAliasingFieldId + 1
     };
 
     static const OSG::BitVector OpacityFieldMask;
+    static const OSG::BitVector EnablePointAntiAliasingFieldMask;
+    static const OSG::BitVector EnableLineAntiAliasingFieldMask;
+    static const OSG::BitVector EnablePolygonAntiAliasingFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -123,9 +132,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING GraphicsBase : public AttachmentContainer
     /*! \{                                                                 */
 
            SFReal32            *getSFOpacity        (void);
+           SFBool              *getSFEnablePointAntiAliasing(void);
+           SFBool              *getSFEnableLineAntiAliasing(void);
+           SFBool              *getSFEnablePolygonAntiAliasing(void);
 
            Real32              &getOpacity        (void);
      const Real32              &getOpacity        (void) const;
+           bool                &getEnablePointAntiAliasing(void);
+     const bool                &getEnablePointAntiAliasing(void) const;
+           bool                &getEnableLineAntiAliasing(void);
+     const bool                &getEnableLineAntiAliasing(void) const;
+           bool                &getEnablePolygonAntiAliasing(void);
+     const bool                &getEnablePolygonAntiAliasing(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -133,6 +151,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING GraphicsBase : public AttachmentContainer
     /*! \{                                                                 */
 
      void setOpacity        ( const Real32 &value );
+     void setEnablePointAntiAliasing( const bool &value );
+     void setEnableLineAntiAliasing( const bool &value );
+     void setEnablePolygonAntiAliasing( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -160,6 +181,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING GraphicsBase : public AttachmentContainer
     /*! \{                                                                 */
 
     SFReal32            _sfOpacity;
+    SFBool              _sfEnablePointAntiAliasing;
+    SFBool              _sfEnableLineAntiAliasing;
+    SFBool              _sfEnablePolygonAntiAliasing;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

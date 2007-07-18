@@ -79,7 +79,7 @@ void Graphics2D::initMethod (void)
 
 void Graphics2D::preDraw()
 {
-   glPushAttrib(GL_LIGHTING_BIT | GL_POLYGON_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+   glPushAttrib(GL_LIGHTING_BIT | GL_POLYGON_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT);
 	//_light = glIsEnabled(GL_LIGHTING);
 
 	//glGetIntegerv(GL_POLYGON_MODE, _fill);
@@ -90,6 +90,19 @@ void Graphics2D::preDraw()
 
 	//_colmat = glIsEnabled(GL_COLOR_MATERIAL);
 	glDisable(GL_COLOR_MATERIAL);
+
+	if(getEnablePointAntiAliasing())
+	{
+		glEnable(GL_POINT_SMOOTH);
+	}
+	if(getEnableLineAntiAliasing())
+	{
+		glEnable(GL_LINE_SMOOTH);
+	}
+	if(getEnablePolygonAntiAliasing())
+	{
+		glEnable(GL_POLYGON_SMOOTH);
+	}
 }
 
 void Graphics2D::postDraw()

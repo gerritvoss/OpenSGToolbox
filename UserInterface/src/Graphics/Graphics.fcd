@@ -21,4 +21,31 @@ A UI Graphics Interface.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="EnablePointAntiAliasing"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="EnableLineAntiAliasing"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="EnablePolygonAntiAliasing"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

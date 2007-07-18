@@ -67,6 +67,15 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  GraphicsBase::OpacityFieldMask = 
     (TypeTraits<BitVector>::One << GraphicsBase::OpacityFieldId);
 
+const OSG::BitVector  GraphicsBase::EnablePointAntiAliasingFieldMask = 
+    (TypeTraits<BitVector>::One << GraphicsBase::EnablePointAntiAliasingFieldId);
+
+const OSG::BitVector  GraphicsBase::EnableLineAntiAliasingFieldMask = 
+    (TypeTraits<BitVector>::One << GraphicsBase::EnableLineAntiAliasingFieldId);
+
+const OSG::BitVector  GraphicsBase::EnablePolygonAntiAliasingFieldMask = 
+    (TypeTraits<BitVector>::One << GraphicsBase::EnablePolygonAntiAliasingFieldId);
+
 const OSG::BitVector GraphicsBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +84,15 @@ const OSG::BitVector GraphicsBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var Real32          GraphicsBase::_sfOpacity
+    
+*/
+/*! \var bool            GraphicsBase::_sfEnablePointAntiAliasing
+    
+*/
+/*! \var bool            GraphicsBase::_sfEnableLineAntiAliasing
+    
+*/
+/*! \var bool            GraphicsBase::_sfEnablePolygonAntiAliasing
     
 */
 
@@ -86,7 +104,22 @@ FieldDescription *GraphicsBase::_desc[] =
                      "Opacity", 
                      OpacityFieldId, OpacityFieldMask,
                      false,
-                     (FieldAccessMethod) &GraphicsBase::getSFOpacity)
+                     (FieldAccessMethod) &GraphicsBase::getSFOpacity),
+    new FieldDescription(SFBool::getClassType(), 
+                     "EnablePointAntiAliasing", 
+                     EnablePointAntiAliasingFieldId, EnablePointAntiAliasingFieldMask,
+                     false,
+                     (FieldAccessMethod) &GraphicsBase::getSFEnablePointAntiAliasing),
+    new FieldDescription(SFBool::getClassType(), 
+                     "EnableLineAntiAliasing", 
+                     EnableLineAntiAliasingFieldId, EnableLineAntiAliasingFieldMask,
+                     false,
+                     (FieldAccessMethod) &GraphicsBase::getSFEnableLineAntiAliasing),
+    new FieldDescription(SFBool::getClassType(), 
+                     "EnablePolygonAntiAliasing", 
+                     EnablePolygonAntiAliasingFieldId, EnablePolygonAntiAliasingFieldMask,
+                     false,
+                     (FieldAccessMethod) &GraphicsBase::getSFEnablePolygonAntiAliasing)
 };
 
 
@@ -154,6 +187,9 @@ void GraphicsBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 GraphicsBase::GraphicsBase(void) :
     _sfOpacity                (Real32(1.0)), 
+    _sfEnablePointAntiAliasing(bool(true)), 
+    _sfEnableLineAntiAliasing (bool(true)), 
+    _sfEnablePolygonAntiAliasing(bool(true)), 
     Inherited() 
 {
 }
@@ -164,6 +200,9 @@ GraphicsBase::GraphicsBase(void) :
 
 GraphicsBase::GraphicsBase(const GraphicsBase &source) :
     _sfOpacity                (source._sfOpacity                ), 
+    _sfEnablePointAntiAliasing(source._sfEnablePointAntiAliasing), 
+    _sfEnableLineAntiAliasing (source._sfEnableLineAntiAliasing ), 
+    _sfEnablePolygonAntiAliasing(source._sfEnablePolygonAntiAliasing), 
     Inherited                 (source)
 {
 }
@@ -185,6 +224,21 @@ UInt32 GraphicsBase::getBinSize(const BitVector &whichField)
         returnValue += _sfOpacity.getBinSize();
     }
 
+    if(FieldBits::NoField != (EnablePointAntiAliasingFieldMask & whichField))
+    {
+        returnValue += _sfEnablePointAntiAliasing.getBinSize();
+    }
+
+    if(FieldBits::NoField != (EnableLineAntiAliasingFieldMask & whichField))
+    {
+        returnValue += _sfEnableLineAntiAliasing.getBinSize();
+    }
+
+    if(FieldBits::NoField != (EnablePolygonAntiAliasingFieldMask & whichField))
+    {
+        returnValue += _sfEnablePolygonAntiAliasing.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -197,6 +251,21 @@ void GraphicsBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         _sfOpacity.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EnablePointAntiAliasingFieldMask & whichField))
+    {
+        _sfEnablePointAntiAliasing.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EnableLineAntiAliasingFieldMask & whichField))
+    {
+        _sfEnableLineAntiAliasing.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EnablePolygonAntiAliasingFieldMask & whichField))
+    {
+        _sfEnablePolygonAntiAliasing.copyToBin(pMem);
     }
 
 
@@ -212,6 +281,21 @@ void GraphicsBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfOpacity.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (EnablePointAntiAliasingFieldMask & whichField))
+    {
+        _sfEnablePointAntiAliasing.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EnableLineAntiAliasingFieldMask & whichField))
+    {
+        _sfEnableLineAntiAliasing.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EnablePolygonAntiAliasingFieldMask & whichField))
+    {
+        _sfEnablePolygonAntiAliasing.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -225,6 +309,15 @@ void GraphicsBase::executeSyncImpl(      GraphicsBase *pOther,
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
         _sfOpacity.syncWith(pOther->_sfOpacity);
 
+    if(FieldBits::NoField != (EnablePointAntiAliasingFieldMask & whichField))
+        _sfEnablePointAntiAliasing.syncWith(pOther->_sfEnablePointAntiAliasing);
+
+    if(FieldBits::NoField != (EnableLineAntiAliasingFieldMask & whichField))
+        _sfEnableLineAntiAliasing.syncWith(pOther->_sfEnableLineAntiAliasing);
+
+    if(FieldBits::NoField != (EnablePolygonAntiAliasingFieldMask & whichField))
+        _sfEnablePolygonAntiAliasing.syncWith(pOther->_sfEnablePolygonAntiAliasing);
+
 
 }
 #else
@@ -237,6 +330,15 @@ void GraphicsBase::executeSyncImpl(      GraphicsBase *pOther,
 
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
         _sfOpacity.syncWith(pOther->_sfOpacity);
+
+    if(FieldBits::NoField != (EnablePointAntiAliasingFieldMask & whichField))
+        _sfEnablePointAntiAliasing.syncWith(pOther->_sfEnablePointAntiAliasing);
+
+    if(FieldBits::NoField != (EnableLineAntiAliasingFieldMask & whichField))
+        _sfEnableLineAntiAliasing.syncWith(pOther->_sfEnableLineAntiAliasing);
+
+    if(FieldBits::NoField != (EnablePolygonAntiAliasingFieldMask & whichField))
+        _sfEnablePolygonAntiAliasing.syncWith(pOther->_sfEnablePolygonAntiAliasing);
 
 
 

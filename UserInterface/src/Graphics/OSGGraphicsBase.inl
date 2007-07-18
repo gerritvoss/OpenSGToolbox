@@ -77,6 +77,27 @@ SFReal32 *GraphicsBase::getSFOpacity(void)
     return &_sfOpacity;
 }
 
+//! Get the Graphics::_sfEnablePointAntiAliasing field.
+inline
+SFBool *GraphicsBase::getSFEnablePointAntiAliasing(void)
+{
+    return &_sfEnablePointAntiAliasing;
+}
+
+//! Get the Graphics::_sfEnableLineAntiAliasing field.
+inline
+SFBool *GraphicsBase::getSFEnableLineAntiAliasing(void)
+{
+    return &_sfEnableLineAntiAliasing;
+}
+
+//! Get the Graphics::_sfEnablePolygonAntiAliasing field.
+inline
+SFBool *GraphicsBase::getSFEnablePolygonAntiAliasing(void)
+{
+    return &_sfEnablePolygonAntiAliasing;
+}
+
 
 //! Get the value of the Graphics::_sfOpacity field.
 inline
@@ -97,6 +118,69 @@ inline
 void GraphicsBase::setOpacity(const Real32 &value)
 {
     _sfOpacity.setValue(value);
+}
+
+//! Get the value of the Graphics::_sfEnablePointAntiAliasing field.
+inline
+bool &GraphicsBase::getEnablePointAntiAliasing(void)
+{
+    return _sfEnablePointAntiAliasing.getValue();
+}
+
+//! Get the value of the Graphics::_sfEnablePointAntiAliasing field.
+inline
+const bool &GraphicsBase::getEnablePointAntiAliasing(void) const
+{
+    return _sfEnablePointAntiAliasing.getValue();
+}
+
+//! Set the value of the Graphics::_sfEnablePointAntiAliasing field.
+inline
+void GraphicsBase::setEnablePointAntiAliasing(const bool &value)
+{
+    _sfEnablePointAntiAliasing.setValue(value);
+}
+
+//! Get the value of the Graphics::_sfEnableLineAntiAliasing field.
+inline
+bool &GraphicsBase::getEnableLineAntiAliasing(void)
+{
+    return _sfEnableLineAntiAliasing.getValue();
+}
+
+//! Get the value of the Graphics::_sfEnableLineAntiAliasing field.
+inline
+const bool &GraphicsBase::getEnableLineAntiAliasing(void) const
+{
+    return _sfEnableLineAntiAliasing.getValue();
+}
+
+//! Set the value of the Graphics::_sfEnableLineAntiAliasing field.
+inline
+void GraphicsBase::setEnableLineAntiAliasing(const bool &value)
+{
+    _sfEnableLineAntiAliasing.setValue(value);
+}
+
+//! Get the value of the Graphics::_sfEnablePolygonAntiAliasing field.
+inline
+bool &GraphicsBase::getEnablePolygonAntiAliasing(void)
+{
+    return _sfEnablePolygonAntiAliasing.getValue();
+}
+
+//! Get the value of the Graphics::_sfEnablePolygonAntiAliasing field.
+inline
+const bool &GraphicsBase::getEnablePolygonAntiAliasing(void) const
+{
+    return _sfEnablePolygonAntiAliasing.getValue();
+}
+
+//! Set the value of the Graphics::_sfEnablePolygonAntiAliasing field.
+inline
+void GraphicsBase::setEnablePolygonAntiAliasing(const bool &value)
+{
+    _sfEnablePolygonAntiAliasing.setValue(value);
 }
 
 
