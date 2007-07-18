@@ -169,13 +169,13 @@ void Component::draw(const GraphicsPtr TheGraphics) const
             getBounds(Quad1TopLeft,Quad1Size);
             Container::Ptr::dcast(getParentContainer())->getInsideBorderBounds(Quad2TopLeft,Quad2Size);
 
-            quadIntersection(Quad1TopLeft,Quad1Size,
-                                Quad2TopLeft,Quad2Size,
+            quadIntersection(Pnt2s(0,0),Quad1Size,
+                                Quad2TopLeft-Vec2s(Quad1TopLeft),Quad2Size,
                                 ScissorQuadTopLeft,ScissorQuadSize);
         }
         else
         {
-            ScissorQuadTopLeft = getPosition();
+            ScissorQuadTopLeft = Pnt2s(0,0);
             ScissorQuadSize = getSize();
         }
         if(ScissorQuadSize.x() <= 0 || ScissorQuadSize.y()<= 0)
@@ -193,10 +193,10 @@ void Component::draw(const GraphicsPtr TheGraphics) const
         //Clip Planes get transformed by the ModelViewMatrix when set
         //So we can rely on the fact that our current coordinate space
         //is relative to the this components position
-        Vec4d LeftPlaneEquation(1.0,0.0,0.0,0.0),
-              RightPlaneEquation(-1.0,0.0,0.0,ScissorQuadSize.x()),
-              TopPlaneEquation(0.0,1.0,0.0,0.0),
-              BottomPlaneEquation(0.0,-1.0,0.0,ScissorQuadSize.y());
+        Vec4d LeftPlaneEquation(1.0,0.0,0.0,-ScissorQuadTopLeft.x()),
+              RightPlaneEquation(-1.0,0.0,0.0,ScissorQuadTopLeft.x()+ScissorQuadSize.x()),
+              TopPlaneEquation(0.0,1.0,0.0,-ScissorQuadTopLeft.y()),
+              BottomPlaneEquation(0.0,-1.0,0.0,ScissorQuadTopLeft.y()+ScissorQuadSize.y());
         
         glClipPlane(GL_CLIP_PLANE0,LeftPlaneEquation.getValues());
         glClipPlane(GL_CLIP_PLANE1,RightPlaneEquation.getValues());
