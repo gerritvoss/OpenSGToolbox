@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 #include "OSGCheckboxButton.h"
+#include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -76,7 +77,50 @@ void CheckboxButton::initMethod (void)
 
 void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
 {
-	//TODO:Implement
+	Pnt2s TopLeft, BottomRight;
+	Pnt2s drawObjectTopLeft;
+	Vec2s drawObjectSize;
+	Pnt2s TempPos;
+	Int32 totalWidth;
+	Int32 yAdj = 0;
+	getInsideBorderSizing(TopLeft, BottomRight);
+
+   if(getActive()){
+	   if(getChecked()){
+		   getActiveCheckedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
+		   totalWidth =	drawObjectSize.x()+5+TheGraphics->getTextBounds(getText(), getFont()).x();
+		   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
+		   getActiveCheckedDrawObject()->setPosition(TempPos);
+		   getActiveCheckedDrawObject()->draw(TheGraphics);
+
+	   }
+	   else
+	   {
+		   getActiveDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
+		   totalWidth = drawObjectSize.x()+5+TheGraphics->getTextBounds(getText(), getFont()).x();
+		   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
+		   getActiveDrawObject()->setPosition(TempPos);
+		   getActiveDrawObject()->draw(TheGraphics);
+	   }
+   }
+   else if(getChecked()){
+	   getCheckedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
+	   totalWidth =	drawObjectSize.x()+5+TheGraphics->getTextBounds(getText(), getFont()).x();
+	   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
+	   getCheckedDrawObject()->setPosition(TempPos);
+ 	   getCheckedDrawObject()->draw(TheGraphics);
+  }
+   else{
+		getDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
+		totalWidth = drawObjectSize.x()+5+TheGraphics->getTextBounds(getText(), getFont()).x();
+		TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
+   	    getDrawObject()->setPosition(TempPos);
+		getDrawObject()->draw(TheGraphics);
+   }
+   if(drawObjectSize.y()> TheGraphics->getTextBounds(getText(), getFont()).y())
+	   yAdj = (drawObjectSize.y()-TheGraphics->getTextBounds(getText(), getFont()).x())/2.0;
+   TheGraphics->drawText(Pnt2s(TempPos.x()+drawObjectSize.x()+5, TempPos.y()-yAdj),   getText(), getFont(), getForegroundColor(), getOpacity());
+
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -103,6 +147,7 @@ CheckboxButton::~CheckboxButton(void)
 void CheckboxButton::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+	
 }
 
 void CheckboxButton::dump(      UInt32    , 
