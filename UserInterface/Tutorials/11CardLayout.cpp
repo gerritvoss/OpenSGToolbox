@@ -86,7 +86,7 @@ int main(int argc, char **argv)
         scene->setCore(osg::Group::create());
  
         // add the torus as a child
-        scene->addChild(TorusGeometryNode);
+        //scene->addChild(TorusGeometryNode);
     }
     endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
@@ -111,22 +111,49 @@ int main(int argc, char **argv)
 	ButtonPtr button5 = osg::Button::create();
 	ButtonPtr button6 = osg::Button::create();
 
-	
+	beginEditCP(button1);
+		button1->setText("This");
+	endEditCP(button1);
+
+	beginEditCP(button2);
+		button2->setText("is a");
+	endEditCP(button2);
+
+	beginEditCP(button3);
+		button3->setText("sample");
+	endEditCP(button3);
+
+	beginEditCP(button4);
+	button4->setText("two");
+	endEditCP(button4);
+
+	beginEditCP(button5);
+		button5->setText("panel");
+	endEditCP(button5);
+
+	beginEditCP(button6);
+		button6->setText("layout");
+	endEditCP(button6);
 	/******************************************************
 
-			Create some Flow and Box Layouts to be 
-			used with the Main Frame and the two 
+			Create some Flow Layouts to be used
+			with the Main Frame and the two 
 			Panels
 
 	******************************************************/
-	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
-	FlowLayoutPtr panel1Layout = osg::FlowLayout::create();
-	FlowLayoutPtr panel2Layout = osg::FlowLayout::create();
+	BoxLayoutPtr MainFrameLayout = osg::BoxLayout::create();
+	BoxLayoutPtr panel1Layout = osg::BoxLayout::create();
+	BoxLayoutPtr panel2Layout = osg::BoxLayout::create();
 
-	beginEditCP(panel1Layout);
+	beginEditCP(panel1Layout, BoxLayout::AlignmentFieldMask);
 		panel1Layout->setAlignment(VERTICAL_ALIGNMENT);
-	endEditCP(panel1Layout);
-
+	endEditCP(panel1Layout, BoxLayout::AlignmentFieldMask);
+	beginEditCP(panel2Layout, BoxLayout::AlignmentFieldMask);
+		panel2Layout->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(panel2Layout, BoxLayout::AlignmentFieldMask);
+	beginEditCP(MainFrameLayout, BoxLayout::AlignmentFieldMask);
+		MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
+	endEditCP(MainFrameLayout, BoxLayout::AlignmentFieldMask);
 
 	/******************************************************
 			
@@ -137,7 +164,7 @@ int main(int argc, char **argv)
 	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
 	ColorUIBackgroundPtr panelBackground = osg::ColorUIBackground::create();
 	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+		mainBackground->setColor(Color4f(0,0,1.0,0.5));
 	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
 	beginEditCP(panelBackground, ColorUIBackground::ColorFieldMask);
 		panelBackground->setColor(Color4f(0.0,0.0,0.0,1.0));
@@ -213,7 +240,7 @@ int main(int argc, char **argv)
 		// Determines MainFrameBounds, or the portion of the window
 		// that the Frame occupies (0.0, 0.0) would not appear,
 		// (1.0, 1.0) would cover the entire screen
-		foreground->setFrameBounds(Vec2f(0.5,0.5));
+		foreground->setFrameBounds(Vec2f(1.0,1.0));
     endEditCP  (foreground, UIForeground::GraphicsFieldMask | UIForeground::RootFrameFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
     // create the SimpleSceneManager helper
@@ -298,7 +325,7 @@ int setupGLUT(int *argc, char *argv[])
     glutInit(argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
     
-    int winid = glutCreateWindow("OpenSG UserInterface");
+    int winid = glutCreateWindow("OpenSG UserInterface Example");
     
     glutReshapeFunc(reshape);
     glutDisplayFunc(display);
