@@ -51,8 +51,14 @@
 #include "Border/OSGEmptyBorder.h"
 #include "Border/OSGEtchedBorder.h"
 #include "Border/OSGBevelBorder.h"
+#include "Border/OSGMatteBorder.h"
+#include "Border/OSGCompoundBorder.h"
 #include "Background/OSGColorUIBackground.h"
 #include "Background/OSGEmptyUIBackground.h"
+#include "Background/OSGCompoundUIBackground.h"
+#include "Background/OSGGradientUIBackground.h"
+#include "Background/OSGMaterialUIBackground.h"
+#include "Background/OSGTextureUIBackground.h"
 #include "Component/OSGButton.h"
 #include "Component/OSGLabel.h"
 #include "Component/OSGFrame.h"
@@ -481,7 +487,6 @@ void DefaultLookAndFeel::init(void)
 
 	DiscUIDrawObjectPtr RadioBackground = DiscUIDrawObject::create();
 	beginEditCP(RadioBackground);
-		//RadioBackground->setCenter(Pnt2s(10, 10));
 		RadioBackground->setWidth(10);
 		RadioBackground->setHeight(10);
 		RadioBackground->setSubDivisions(10);
@@ -493,7 +498,6 @@ void DefaultLookAndFeel::init(void)
 
 	ArcUIDrawObjectPtr RadioBackgroundBorder = ArcUIDrawObject::create();
 	beginEditCP(RadioBackgroundBorder);
-		//RadioBackgroundBorder->setCenter(Pnt2s(10, 10));
 		RadioBackgroundBorder->setWidth(10);
 		RadioBackgroundBorder->setHeight(10);
 		RadioBackgroundBorder->setSubDivisions(20);
@@ -506,7 +510,6 @@ void DefaultLookAndFeel::init(void)
 
 	DiscUIDrawObjectPtr RadioChecked = DiscUIDrawObject::create();
 	beginEditCP(RadioChecked);
-		//RadioChecked->setCenter(Pnt2s(10, 10));
 		RadioChecked->setWidth(6);
 		RadioChecked->setHeight(6);
 		RadioChecked->setSubDivisions(20);
@@ -518,7 +521,6 @@ void DefaultLookAndFeel::init(void)
 
 	ArcUIDrawObjectPtr RadioActiveBorder = ArcUIDrawObject::create();
 	beginEditCP(RadioActiveBorder);
-		//RadioActiveBorder->setCenter(Pnt2s(10, 10));
 		RadioActiveBorder->setWidth(9);
 		RadioActiveBorder->setHeight(9);
 		RadioActiveBorder->setSubDivisions(10);
@@ -583,6 +585,115 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(DefaultRadioButton);
 	
 	RadioButton::getClassType().setPrototype(DefaultRadioButton);
+
+	/*******Borders********/
+	/*******Line Border********/
+
+	LineBorderPtr DefaultLineBorder = LineBorder::create();
+	beginEditCP(DefaultLineBorder);
+		DefaultLineBorder->setWidth(1);
+		DefaultLineBorder->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
+	endEditCP(DefaultLineBorder);
+
+	LineBorder::getClassType().setPrototype(DefaultLineBorder);
+
+	/********Etched Border********/
+
+	EtchedBorderPtr DefaultEtchedBorder = EtchedBorder::create();
+	beginEditCP(DefaultEtchedBorder);
+		DefaultEtchedBorder->setWidth(2);
+		DefaultEtchedBorder->setRaised(true);
+		DefaultEtchedBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultEtchedBorder->setShadow(Color4f(0.65, 0.65, 0.65, 1.0));
+	endEditCP(DefaultEtchedBorder);
+
+	EtchedBorder::getClassType().setPrototype(DefaultEtchedBorder);
+	
+	/********Empty Border*********/
+	EmptyBorderPtr DefaultEmptyBorder = EmptyBorder::create();
+	beginEditCP(DefaultEmptyBorder);
+		DefaultEmptyBorder->setTopWidth(0);
+		DefaultEmptyBorder->setBottomWidth(0);
+		DefaultEmptyBorder->setRightWidth(0);
+		DefaultEmptyBorder->setLeftWidth(0);
+	endEditCP(DefaultEmptyBorder);
+
+	EmptyBorder::getClassType().setPrototype(DefaultEmptyBorder);
+
+
+	/********Bevel Border**********/
+
+	BevelBorderPtr DefaultBevelBorder = BevelBorder::create();
+	beginEditCP(DefaultBevelBorder);
+		DefaultBevelBorder->setRaised(true);
+		DefaultBevelBorder->setWidth(2);
+		DefaultBevelBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultBevelBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultBevelBorder->setShadowInner(Color4f(0.65, 0.65, 0.65, 1.0));
+		DefaultBevelBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
+	endEditCP(DefaultBevelBorder);
+
+	BevelBorder::getClassType().setPrototype(DefaultBevelBorder);
+
+	/********Matte Border**********/
+
+	MatteBorderPtr DefaultMatteBorder = MatteBorder::create();
+	beginEditCP(DefaultMatteBorder);
+		DefaultMatteBorder->setRightWidth(1);
+		DefaultMatteBorder->setLeftWidth(1);
+		DefaultMatteBorder->setTopWidth(1);
+		DefaultMatteBorder->setBottomWidth(1);
+		DefaultMatteBorder->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
+	endEditCP(DefaultMatteBorder);
+
+	MatteBorder::getClassType().setPrototype(DefaultMatteBorder);
+
+	/********Compound Border********/
+	CompoundBorderPtr DefaultCompoundBorder = CompoundBorder::create();
+	beginEditCP(DefaultCompoundBorder);
+		DefaultCompoundBorder->setInnerBorder(NullFC);
+		DefaultCompoundBorder->setOuterBorder(NullFC);
+	endEditCP(DefaultCompoundBorder);
+
+	CompoundBorder::getClassType().setPrototype(DefaultCompoundBorder);
+
+	/*********Backgounds***********/
+	/*********Color Background**********/
+	ColorUIBackgroundPtr DefaultColorBackground = ColorUIBackground::create();
+	beginEditCP(DefaultColorBackground);
+		DefaultColorBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
+	endEditCP(DefaultColorBackground);
+
+	ColorUIBackground::getClassType().setPrototype(DefaultColorBackground);
+	
+	/**********Gradient Background***********/
+	GradientUIBackgroundPtr DefaultGradientBackground = GradientUIBackground::create();
+	beginEditCP(DefaultGradientBackground);
+		DefaultGradientBackground->setColorStart(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultGradientBackground->setColorStart(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultGradientBackground->setAlignment(HORIZONTAL_ALIGNMENT);
+	endEditCP(DefaultGradientBackground);
+
+	GradientUIBackground::getClassType().setPrototype(DefaultGradientBackground);
+
+	/**********Material Background***********/
+	MaterialUIBackgroundPtr DefaultMaterialBackground = MaterialUIBackground::create();
+	beginEditCP(DefaultMaterialBackground);
+		DefaultMaterialBackground->setMaterial(NullFC);
+	endEditCP(DefaultMaterialBackground);
+
+	MaterialUIBackground::getClassType().setPrototype(DefaultMaterialBackground);
+
+	/*********Texture Background********/
+	TextureUIBackgroundPtr DefaultTextureBackground = TextureUIBackground::create();
+	beginEditCP(DefaultTextureBackground);
+		DefaultTextureBackground->setTexture(NullFC);
+	endEditCP(DefaultTextureBackground);
+
+	TextureUIBackground::getClassType().setPrototype(DefaultTextureBackground);
+
+	//CompoundBackground and Empty Background don't require prototypes.
+
 
 	beginEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);
 		getPrototypes().addValue(DefaultButton);
