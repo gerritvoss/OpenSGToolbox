@@ -6,7 +6,7 @@ LIB_INCLUDE_DIR_NAME = UserInterface
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Background:$(srcdir)/Border:$(srcdir)/Component:$(srcdir)/Component/List:$(srcdir)/Foreground:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Layout:$(srcdir)/LookAndFeel:$(srcdir)/Text:$(srcdir)/Util:
+VPATH = $(srcdir)/:$(srcdir)/Background:$(srcdir)/Border:$(srcdir)/Component:$(srcdir)/Component/List:$(srcdir)/Foreground:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Layout:$(srcdir)/LookAndFeel:$(srcdir)/Text:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/Util:
 
 
 #.SUFFIX = .o .o
@@ -75,8 +75,6 @@ OBJECTS = OSGColorUIBackground.o \
 	OSGDefaultListSelectionModelBase.o \
 	OSGList.o \
 	OSGListBase.o \
-	OSGUIForeground.o \
-	OSGUIForegroundBase.o \
 	OSGGraphics.o \
 	OSGGraphics2D.o \
 	OSGGraphics2DBase.o \
@@ -138,6 +136,10 @@ OBJECTS = OSGColorUIBackground.o \
 	OSGLookAndFeelManager.o \
 	OSGFont.o \
 	OSGFontBase.o \
+	OSGUIDrawingSurface.o \
+	OSGUIDrawingSurfaceBase.o \
+	OSGUIForeground.o \
+	OSGUIForegroundBase.o \
 	OSGUIDrawUtils.o
         
         

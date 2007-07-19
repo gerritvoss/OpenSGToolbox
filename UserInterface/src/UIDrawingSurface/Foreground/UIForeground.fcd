@@ -13,20 +13,10 @@
 >
 A Foreground for rendering a UI on.
 	<Field
-		name="RootFrame"
-		type="FramePtr"
+		name="DrawingSurface"
+		type="UIDrawingSurfacePtr"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGFrame.h"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="Graphics"
-		type="GraphicsPtr"
-		cardinality="single"
-		visibility="external"
-		header="Graphics/OSGGraphics.h"
 		access="public"
 	>
 	</Field>

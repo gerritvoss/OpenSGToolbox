@@ -76,7 +76,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING CardLayout : public CardLayoutBase
 
     /*! \}                                                                 */
 
-	virtual void draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const;
     virtual void updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
     
 	void first(ContainerPtr TheContainer);

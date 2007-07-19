@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class UIForeground!
+ **     class UIDrawingSurface!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &UIForegroundBase::getClassType(void)
+OSG::FieldContainerType &UIDrawingSurfaceBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 UIForegroundBase::getClassTypeId(void) 
+OSG::UInt32 UIDrawingSurfaceBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-UIForegroundPtr UIForegroundBase::create(void) 
+UIDrawingSurfacePtr UIDrawingSurfaceBase::create(void) 
 {
-    UIForegroundPtr fc; 
+    UIDrawingSurfacePtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = UIForegroundPtr::dcast(
+        fc = UIDrawingSurfacePtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ UIForegroundPtr UIForegroundBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-UIForegroundPtr UIForegroundBase::createEmpty(void) 
+UIDrawingSurfacePtr UIDrawingSurfaceBase::createEmpty(void) 
 { 
-    UIForegroundPtr returnValue; 
+    UIDrawingSurfacePtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,177 +96,93 @@ UIForegroundPtr UIForegroundBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the UIForeground::_sfRootFrame field.
+//! Get the UIDrawingSurface::_sfRootFrame field.
 inline
-SFFramePtr *UIForegroundBase::getSFRootFrame(void)
+SFFramePtr *UIDrawingSurfaceBase::getSFRootFrame(void)
 {
     return &_sfRootFrame;
 }
 
-//! Get the UIForeground::_sfGraphics field.
+//! Get the UIDrawingSurface::_sfEventProducer field.
 inline
-SFGraphicsPtr *UIForegroundBase::getSFGraphics(void)
+SFWindowEventProducerPtr *UIDrawingSurfaceBase::getSFEventProducer(void)
+{
+    return &_sfEventProducer;
+}
+
+//! Get the UIDrawingSurface::_sfGraphics field.
+inline
+SFGraphicsPtr *UIDrawingSurfaceBase::getSFGraphics(void)
 {
     return &_sfGraphics;
 }
 
-//! Get the UIForeground::_sfFramePositionOffset field.
-inline
-SFVec2s *UIForegroundBase::getSFFramePositionOffset(void)
-{
-    return &_sfFramePositionOffset;
-}
 
-//! Get the UIForeground::_sfFrameBounds field.
+//! Get the value of the UIDrawingSurface::_sfRootFrame field.
 inline
-SFVec2f *UIForegroundBase::getSFFrameBounds(void)
-{
-    return &_sfFrameBounds;
-}
-
-//! Get the UIForeground::_sfVerticalAlignment field.
-inline
-SFUInt32 *UIForegroundBase::getSFVerticalAlignment(void)
-{
-    return &_sfVerticalAlignment;
-}
-
-//! Get the UIForeground::_sfHorizontalAlignment field.
-inline
-SFUInt32 *UIForegroundBase::getSFHorizontalAlignment(void)
-{
-    return &_sfHorizontalAlignment;
-}
-
-
-//! Get the value of the UIForeground::_sfRootFrame field.
-inline
-FramePtr &UIForegroundBase::getRootFrame(void)
+FramePtr &UIDrawingSurfaceBase::getRootFrame(void)
 {
     return _sfRootFrame.getValue();
 }
 
-//! Get the value of the UIForeground::_sfRootFrame field.
+//! Get the value of the UIDrawingSurface::_sfRootFrame field.
 inline
-const FramePtr &UIForegroundBase::getRootFrame(void) const
+const FramePtr &UIDrawingSurfaceBase::getRootFrame(void) const
 {
     return _sfRootFrame.getValue();
 }
 
-//! Set the value of the UIForeground::_sfRootFrame field.
+//! Set the value of the UIDrawingSurface::_sfRootFrame field.
 inline
-void UIForegroundBase::setRootFrame(const FramePtr &value)
+void UIDrawingSurfaceBase::setRootFrame(const FramePtr &value)
 {
     _sfRootFrame.setValue(value);
 }
 
-//! Get the value of the UIForeground::_sfGraphics field.
+//! Get the value of the UIDrawingSurface::_sfEventProducer field.
 inline
-GraphicsPtr &UIForegroundBase::getGraphics(void)
+WindowEventProducerPtr &UIDrawingSurfaceBase::getEventProducer(void)
+{
+    return _sfEventProducer.getValue();
+}
+
+//! Get the value of the UIDrawingSurface::_sfEventProducer field.
+inline
+const WindowEventProducerPtr &UIDrawingSurfaceBase::getEventProducer(void) const
+{
+    return _sfEventProducer.getValue();
+}
+
+//! Set the value of the UIDrawingSurface::_sfEventProducer field.
+inline
+void UIDrawingSurfaceBase::setEventProducer(const WindowEventProducerPtr &value)
+{
+    _sfEventProducer.setValue(value);
+}
+
+//! Get the value of the UIDrawingSurface::_sfGraphics field.
+inline
+GraphicsPtr &UIDrawingSurfaceBase::getGraphics(void)
 {
     return _sfGraphics.getValue();
 }
 
-//! Get the value of the UIForeground::_sfGraphics field.
+//! Get the value of the UIDrawingSurface::_sfGraphics field.
 inline
-const GraphicsPtr &UIForegroundBase::getGraphics(void) const
+const GraphicsPtr &UIDrawingSurfaceBase::getGraphics(void) const
 {
     return _sfGraphics.getValue();
 }
 
-//! Set the value of the UIForeground::_sfGraphics field.
+//! Set the value of the UIDrawingSurface::_sfGraphics field.
 inline
-void UIForegroundBase::setGraphics(const GraphicsPtr &value)
+void UIDrawingSurfaceBase::setGraphics(const GraphicsPtr &value)
 {
     _sfGraphics.setValue(value);
-}
-
-//! Get the value of the UIForeground::_sfFramePositionOffset field.
-inline
-Vec2s &UIForegroundBase::getFramePositionOffset(void)
-{
-    return _sfFramePositionOffset.getValue();
-}
-
-//! Get the value of the UIForeground::_sfFramePositionOffset field.
-inline
-const Vec2s &UIForegroundBase::getFramePositionOffset(void) const
-{
-    return _sfFramePositionOffset.getValue();
-}
-
-//! Set the value of the UIForeground::_sfFramePositionOffset field.
-inline
-void UIForegroundBase::setFramePositionOffset(const Vec2s &value)
-{
-    _sfFramePositionOffset.setValue(value);
-}
-
-//! Get the value of the UIForeground::_sfFrameBounds field.
-inline
-Vec2f &UIForegroundBase::getFrameBounds(void)
-{
-    return _sfFrameBounds.getValue();
-}
-
-//! Get the value of the UIForeground::_sfFrameBounds field.
-inline
-const Vec2f &UIForegroundBase::getFrameBounds(void) const
-{
-    return _sfFrameBounds.getValue();
-}
-
-//! Set the value of the UIForeground::_sfFrameBounds field.
-inline
-void UIForegroundBase::setFrameBounds(const Vec2f &value)
-{
-    _sfFrameBounds.setValue(value);
-}
-
-//! Get the value of the UIForeground::_sfVerticalAlignment field.
-inline
-UInt32 &UIForegroundBase::getVerticalAlignment(void)
-{
-    return _sfVerticalAlignment.getValue();
-}
-
-//! Get the value of the UIForeground::_sfVerticalAlignment field.
-inline
-const UInt32 &UIForegroundBase::getVerticalAlignment(void) const
-{
-    return _sfVerticalAlignment.getValue();
-}
-
-//! Set the value of the UIForeground::_sfVerticalAlignment field.
-inline
-void UIForegroundBase::setVerticalAlignment(const UInt32 &value)
-{
-    _sfVerticalAlignment.setValue(value);
-}
-
-//! Get the value of the UIForeground::_sfHorizontalAlignment field.
-inline
-UInt32 &UIForegroundBase::getHorizontalAlignment(void)
-{
-    return _sfHorizontalAlignment.getValue();
-}
-
-//! Get the value of the UIForeground::_sfHorizontalAlignment field.
-inline
-const UInt32 &UIForegroundBase::getHorizontalAlignment(void) const
-{
-    return _sfHorizontalAlignment.getValue();
-}
-
-//! Set the value of the UIForeground::_sfHorizontalAlignment field.
-inline
-void UIForegroundBase::setHorizontalAlignment(const UInt32 &value)
-{
-    _sfHorizontalAlignment.setValue(value);
 }
 
 
 OSG_END_NAMESPACE
 
-#define OSGUIFOREGROUNDBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGUIDRAWINGSURFACEBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

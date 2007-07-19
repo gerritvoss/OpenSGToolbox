@@ -69,25 +69,22 @@ void UIDrawObjectCanvas::initMethod (void)
 {
 }
 
-void UIDrawObjectCanvas::getDrawObjectBounds(Pnt2s& TopLeft, Vec2s& Size) const
+void UIDrawObjectCanvas::getDrawObjectBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 {
 	if(getDrawObjects().size() > 0)
 	{
-		Vec2s TempSize;
-		Pnt2s TempTopLeft;
-		getDrawObjects().getValue(0)->getBounds(TopLeft, Size);
-		Pnt2s BottomRight = TopLeft + Size;
+		Pnt2s TempTopLeft, TempBottomRight;
+		getDrawObjects().getValue(0)->getBounds(TopLeft, BottomRight);
 		//Determine Top Left And Bottom Right
 		for(UInt32 i(0) ; i<getDrawObjects().size(); ++i)
 		{
-			getDrawObjects().getValue(0)->getBounds(TempTopLeft, TempSize);
+			getDrawObjects().getValue(0)->getBounds(TempTopLeft, TempBottomRight);
 		    TopLeft.setValues( osgMin(TopLeft.x(), TempTopLeft.x()),
 				               osgMin(TopLeft.y(), TempTopLeft.y()) );
 
-		    BottomRight.setValues(osgMax<UInt16>(BottomRight.x(), TopLeft.x()+TempSize.x()),
-		                          osgMax<UInt16>(BottomRight.y(), TopLeft.y()+TempSize.y()) );
+		    BottomRight.setValues(osgMax<UInt16>(BottomRight.x(), TempBottomRight.x()),
+		                          osgMax<UInt16>(BottomRight.y(), TempBottomRight.y()) );
 		}
-		Size = BottomRight - TopLeft;
 	}
 }
 

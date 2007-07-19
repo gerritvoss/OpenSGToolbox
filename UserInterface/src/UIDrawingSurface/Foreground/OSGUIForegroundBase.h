@@ -67,8 +67,7 @@
 
 #include <OpenSG/OSGForeground.h> // Parent
 
-#include "Component/OSGFrame.h" // RootFrame type
-#include "Graphics/OSGGraphics.h" // Graphics type
+#include "UIDrawingSurface/OSGUIDrawingSurfaceFields.h" // DrawingSurface type
 #include <OpenSG/OSGVec2sFields.h> // FramePositionOffset type
 #include <OpenSG/OSGVec2fFields.h> // FrameBounds type
 #include <OpenSG/OSGUInt32Fields.h> // VerticalAlignment type
@@ -96,17 +95,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIForegroundBase : public Foreground
 
     enum
     {
-        RootFrameFieldId           = Inherited::NextFieldId,
-        GraphicsFieldId            = RootFrameFieldId           + 1,
-        FramePositionOffsetFieldId = GraphicsFieldId            + 1,
+        DrawingSurfaceFieldId      = Inherited::NextFieldId,
+        FramePositionOffsetFieldId = DrawingSurfaceFieldId      + 1,
         FrameBoundsFieldId         = FramePositionOffsetFieldId + 1,
         VerticalAlignmentFieldId   = FrameBoundsFieldId         + 1,
         HorizontalAlignmentFieldId = VerticalAlignmentFieldId   + 1,
         NextFieldId                = HorizontalAlignmentFieldId + 1
     };
 
-    static const OSG::BitVector RootFrameFieldMask;
-    static const OSG::BitVector GraphicsFieldMask;
+    static const OSG::BitVector DrawingSurfaceFieldMask;
     static const OSG::BitVector FramePositionOffsetFieldMask;
     static const OSG::BitVector FrameBoundsFieldMask;
     static const OSG::BitVector VerticalAlignmentFieldMask;
@@ -137,17 +134,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIForegroundBase : public Foreground
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFFramePtr          *getSFRootFrame      (void);
-           SFGraphicsPtr       *getSFGraphics       (void);
+           SFUIDrawingSurfacePtr *getSFDrawingSurface (void);
            SFVec2s             *getSFFramePositionOffset(void);
            SFVec2f             *getSFFrameBounds    (void);
            SFUInt32            *getSFVerticalAlignment(void);
            SFUInt32            *getSFHorizontalAlignment(void);
 
-           FramePtr            &getRootFrame      (void);
-     const FramePtr            &getRootFrame      (void) const;
-           GraphicsPtr         &getGraphics       (void);
-     const GraphicsPtr         &getGraphics       (void) const;
+           UIDrawingSurfacePtr &getDrawingSurface (void);
+     const UIDrawingSurfacePtr &getDrawingSurface (void) const;
            Vec2s               &getFramePositionOffset(void);
      const Vec2s               &getFramePositionOffset(void) const;
            Vec2f               &getFrameBounds    (void);
@@ -162,8 +156,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIForegroundBase : public Foreground
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setRootFrame      ( const FramePtr &value );
-     void setGraphics       ( const GraphicsPtr &value );
+     void setDrawingSurface ( const UIDrawingSurfacePtr &value );
      void setFramePositionOffset( const Vec2s &value );
      void setFrameBounds    ( const Vec2f &value );
      void setVerticalAlignment( const UInt32 &value );
@@ -210,8 +203,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIForegroundBase : public Foreground
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFFramePtr          _sfRootFrame;
-    SFGraphicsPtr       _sfGraphics;
+    SFUIDrawingSurfacePtr   _sfDrawingSurface;
     SFVec2s             _sfFramePositionOffset;
     SFVec2f             _sfFrameBounds;
     SFUInt32            _sfVerticalAlignment;

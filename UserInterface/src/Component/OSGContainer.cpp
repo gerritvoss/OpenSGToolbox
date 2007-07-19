@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGContainer.h"
+#include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -74,19 +75,7 @@ void Container::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Container::getInsideBorderBounds(Pnt2s& TopLeft, Vec2s& Size) const
-{
-   UInt16 TopInset(0), LeftInset(0), BottomInset(0), RightInset(0);
-   if(getBorder() != NullFC)
-   {
-      //Get Border Insets
-      getBorder()->getInsets(LeftInset,RightInset,TopInset,BottomInset);
-   }
-   TopLeft.setValues(LeftInset+getLeftInset(), TopInset+getTopInset());
-   Size.setValues(getSize().x()-RightInset-LeftInset-getLeftInset()-getRightInset(), getSize().y()-BottomInset-TopInset-getBottomInset()-getTopInset());
-}
-
-void Container::getInsideBorderSizing(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+void Container::getInsideBorderBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 {
    UInt16 TopInset(0), LeftInset(0), BottomInset(0), RightInset(0);
 
@@ -122,6 +111,110 @@ void Container::drawInternal(const GraphicsPtr TheGraphics) const
     }
     glTranslatef(-borderOffset.x(), -borderOffset.y(), 0);
 }
+void Container::mouseClicked(const MouseEvent& e)
+{
+	bool isContained;
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+		isContained = isContainedClipBounds(e.getLocation(), getChildren().getValue(i));
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
+		if(isContained)
+		{
+			getChildren().getValue(i)->mouseClicked(e);
+		}
+    }
+	Component::mouseClicked(e);
+}
+
+void Container::mouseEntered(const MouseEvent& e)
+{
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+		//checkMouseEnterExit(e, e.getLocation());
+    }
+	Component::mouseEntered(e);
+}
+
+void Container::mouseExited(const MouseEvent& e)
+{
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+		//checkMouseEnterExit(e, e.getLocation());
+    }
+	Component::mouseExited(e);
+}
+
+void Container::mousePressed(const MouseEvent& e)
+{
+	bool isContained;
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+		isContained = isContainedClipBounds(e.getLocation(), getChildren().getValue(i));
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
+		if(isContained)
+		{
+			getChildren().getValue(i)->mousePressed(e);
+		}
+    }
+	Component::mousePressed(e);
+}
+
+void Container::mouseReleased(const MouseEvent& e)
+{
+	bool isContained;
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+		isContained = isContainedClipBounds(e.getLocation(), getChildren().getValue(i));
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
+		if(isContained)
+		{
+			getChildren().getValue(i)->mouseReleased(e);
+		}
+    }
+	Component::mouseReleased(e);
+}
+
+
+void Container::mouseMoved(const MouseEvent& e)
+{
+	bool isContained;
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+		isContained = isContainedClipBounds(e.getLocation(), getChildren().getValue(i));
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
+		if(isContained)
+		{
+			getChildren().getValue(i)->mouseMoved(e);
+		}
+    }
+	Component::mouseMoved(e);
+}
+
+void Container::mouseDragged(const MouseEvent& e)
+{
+	bool isContained;
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+		isContained = isContainedClipBounds(e.getLocation(), getChildren().getValue(i));
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
+		if(isContained)
+		{
+			getChildren().getValue(i)->mouseDragged(e);
+		}
+    }
+	Component::mouseDragged(e);
+}
+
+void Container::mouseWheelMoved(const MouseWheelEvent& e)
+{
+	bool isContained;
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+		isContained = isContainedClipBounds(e.getLocation(), getChildren().getValue(i));
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
+    }
+	Component::mouseWheelMoved(e);
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -142,6 +235,30 @@ Container::~Container(void)
 {
 }
 
+void Container::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, ComponentPtr Comp, bool isMouseContained)
+{
+	//Check if mouse is inside of the frame
+	if(!isMouseContained)
+	{
+		if(Comp->getMouseContained())
+		{
+		    //Mouse has exited the frame
+			MouseEvent ExitedEvent(e.getSource(), e.getTimeStamp(), MouseEvent::MouseButton::NO_BUTTON,0,MouseLocation);
+			Comp->mouseExited(ExitedEvent);
+		}
+		Comp->setMouseContained(false);
+	}
+	else
+	{
+		if(!Comp->getMouseContained())
+		{
+			//Mouse has exited the frame
+			MouseEvent EnteredEvent(e.getSource(), e.getTimeStamp(), MouseEvent::MouseButton::NO_BUTTON,0,MouseLocation);
+			Comp->mouseEntered(EnteredEvent);
+		}
+		Comp->setMouseContained(true);
+	}
+}
 /*----------------------------- class specific ----------------------------*/
 
 void Container::changed(BitVector whichField, UInt32 origin)

@@ -47,6 +47,8 @@
 #include <OpenSG/OSGViewport.h>
 #include <OpenSG/OSGMFVecTypes.h>
 
+#include "UIDrawingSurface/OSGUIDrawingSurface.h" // DrawingSurface type
+
 #include "OSGUIForeground.h"
 
 OSG_BEGIN_NAMESPACE
@@ -91,15 +93,15 @@ void UIForeground::draw( DrawActionBase * action, Viewport * port )
 	glMatrixMode(GL_MODELVIEW);
 
 	//Render the UI to the Foreground
-    getGraphics()->setDrawAction(action);
+    getDrawingSurface()->getGraphics()->setDrawAction(action);
 	//Call The PreDraw on the Graphics
-	getGraphics()->preDraw();
+	getDrawingSurface()->getGraphics()->preDraw();
 
 	//Draw The Component
-	getRootFrame()->draw(getGraphics());
+	getDrawingSurface()->getRootFrame()->draw(getDrawingSurface()->getGraphics());
 
 	//Call the PostDraw on the Graphics
-	getGraphics()->postDraw();
+	getDrawingSurface()->getGraphics()->postDraw();
 
 	glPopMatrix();
     glMatrixMode(GL_PROJECTION);
@@ -167,13 +169,13 @@ void UIForeground::updateFrameBounds(Viewport * port)
     }
 	AlignedPosition += getFramePositionOffset();
 
-    if(getRootFrame()->getSize() != Size ||
-       getRootFrame()->getPosition() != AlignedPosition)
+    if(getDrawingSurface()->getRootFrame()->getSize() != Size ||
+       getDrawingSurface()->getRootFrame()->getPosition() != AlignedPosition)
     {
-        beginEditCP(getRootFrame(), Frame::SizeFieldMask | Frame::PositionFieldMask);
-		    getRootFrame()->setSize(Size);
-		    getRootFrame()->setPosition(AlignedPosition);
-	    endEditCP(getRootFrame(), Frame::SizeFieldMask | Frame::PositionFieldMask);
+        beginEditCP(getDrawingSurface()->getRootFrame(), Frame::SizeFieldMask | Frame::PositionFieldMask);
+		    getDrawingSurface()->getRootFrame()->setSize(Size);
+		    getDrawingSurface()->getRootFrame()->setPosition(AlignedPosition);
+	    endEditCP(getDrawingSurface()->getRootFrame(), Frame::SizeFieldMask | Frame::PositionFieldMask);
     }
 }
 /*-------------------------------------------------------------------------*\

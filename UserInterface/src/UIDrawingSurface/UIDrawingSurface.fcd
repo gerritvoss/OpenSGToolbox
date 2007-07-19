@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="UIDrawingSurface"
+	parent="FieldContainer"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI DrawingSurface.
+	<Field
+		name="RootFrame"
+		type="FramePtr"
+		cardinality="single"
+		visibility="external"
+		header="Component/OSGFrame.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="EventProducer"
+		type="WindowEventProducerPtr"
+		cardinality="single"
+		visibility="external"
+		header="OpenSG/Input/OSGWindowEventProducer.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Graphics"
+		type="GraphicsPtr"
+		cardinality="single"
+		visibility="external"
+		header="Graphics/OSGGraphics.h"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

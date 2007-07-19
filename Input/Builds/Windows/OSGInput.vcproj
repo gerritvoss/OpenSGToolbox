@@ -73,7 +73,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGWindowGLUTD.lib OSGWindowWIN32D.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGWindowGLUTD.lib OSGWindowWIN32D.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib User32.lib gdi32.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -243,6 +243,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGEventProducer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGEventProducer.inl"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGKeyEvent.cpp"
 					>
 				</File>
@@ -252,6 +260,18 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGKeyEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGKeyEventProducer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGKeyEventProducer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGKeyEventProducer.inl"
 					>
 				</File>
 				<File
@@ -267,7 +287,31 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGMouseEventProducer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGMouseEventProducer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGMouseEventProducer.inl"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGMouseListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGMouseMotionEventProducer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGMouseMotionEventProducer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGMouseMotionEventProducer.inl"
 					>
 				</File>
 				<File
@@ -280,6 +324,18 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGMouseWheelEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGMouseWheelEventProducer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGMouseWheelEventProducer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGMouseWheelEventProducer.inl"
 					>
 				</File>
 				<File

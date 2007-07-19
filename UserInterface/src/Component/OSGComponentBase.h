@@ -112,7 +112,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     enum
     {
         PositionFieldId                = Inherited::NextFieldId,
-        MinSizeFieldId                 = PositionFieldId                + 1,
+        ClipTopLeftFieldId             = PositionFieldId                + 1,
+        ClipBottomRightFieldId         = ClipTopLeftFieldId             + 1,
+        MinSizeFieldId                 = ClipBottomRightFieldId         + 1,
         MaxSizeFieldId                 = MinSizeFieldId                 + 1,
         PreferredSizeFieldId           = MaxSizeFieldId                 + 1,
         SizeFieldId                    = PreferredSizeFieldId           + 1,
@@ -137,6 +139,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     };
 
     static const OSG::BitVector PositionFieldMask;
+    static const OSG::BitVector ClipTopLeftFieldMask;
+    static const OSG::BitVector ClipBottomRightFieldMask;
     static const OSG::BitVector MinSizeFieldMask;
     static const OSG::BitVector MaxSizeFieldMask;
     static const OSG::BitVector PreferredSizeFieldMask;
@@ -306,6 +310,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \{                                                                 */
 
     SFPnt2s             _sfPosition;
+    SFPnt2s             _sfClipTopLeft;
+    SFPnt2s             _sfClipBottomRight;
     SFVec2s             _sfMinSize;
     SFVec2s             _sfMaxSize;
     SFVec2s             _sfPreferredSize;
@@ -342,6 +348,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \{                                                                 */
 
     virtual ~ComponentBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFPnt2s             *getSFClipTopLeft    (void);
+           SFPnt2s             *getSFClipBottomRight(void);
+
+           Pnt2s               &getClipTopLeft    (void);
+     const Pnt2s               &getClipTopLeft    (void) const;
+           Pnt2s               &getClipBottomRight(void);
+     const Pnt2s               &getClipBottomRight(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setClipTopLeft    (const Pnt2s &value);
+     void setClipBottomRight(const Pnt2s &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

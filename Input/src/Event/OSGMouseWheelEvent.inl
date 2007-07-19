@@ -36,10 +36,17 @@ MouseWheelEvent::ScrollType MouseWheelEvent::getScrollType(void) const
 }
 
 inline
-MouseWheelEvent::MouseWheelEvent(FieldContainerPtr Source, Time TimeStamp, Int32 WheelRotation, ScrollType TheScrollType)
+Pnt2s MouseWheelEvent::getLocation(void) const
+{
+   return _Location;
+}
+
+inline
+MouseWheelEvent::MouseWheelEvent(FieldContainerPtr Source, Time TimeStamp, Int32 WheelRotation, ScrollType TheScrollType, Pnt2s Location)
 : Event(Source, TimeStamp),
 _WheelRotation(WheelRotation),
-_ScrollType(TheScrollType)
+_ScrollType(TheScrollType),
+_Location(Location)
 {}
 
 OSG_END_NAMESPACE

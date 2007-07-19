@@ -67,6 +67,12 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  ComponentBase::PositionFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::PositionFieldId);
 
+const OSG::BitVector  ComponentBase::ClipTopLeftFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::ClipTopLeftFieldId);
+
+const OSG::BitVector  ComponentBase::ClipBottomRightFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::ClipBottomRightFieldId);
+
 const OSG::BitVector  ComponentBase::MinSizeFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::MinSizeFieldId);
 
@@ -140,6 +146,12 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
 /*! \var Pnt2s           ComponentBase::_sfPosition
     
 */
+/*! \var Pnt2s           ComponentBase::_sfClipTopLeft
+    
+*/
+/*! \var Pnt2s           ComponentBase::_sfClipBottomRight
+    
+*/
 /*! \var Vec2s           ComponentBase::_sfMinSize
     
 */
@@ -211,8 +223,18 @@ FieldDescription *ComponentBase::_desc[] =
     new FieldDescription(SFPnt2s::getClassType(), 
                      "Position", 
                      PositionFieldId, PositionFieldMask,
-                     false,
+                     true,
                      (FieldAccessMethod) &ComponentBase::getSFPosition),
+    new FieldDescription(SFPnt2s::getClassType(), 
+                     "ClipTopLeft", 
+                     ClipTopLeftFieldId, ClipTopLeftFieldMask,
+                     true,
+                     (FieldAccessMethod) &ComponentBase::getSFClipTopLeft),
+    new FieldDescription(SFPnt2s::getClassType(), 
+                     "ClipBottomRight", 
+                     ClipBottomRightFieldId, ClipBottomRightFieldMask,
+                     true,
+                     (FieldAccessMethod) &ComponentBase::getSFClipBottomRight),
     new FieldDescription(SFVec2s::getClassType(), 
                      "MinSize", 
                      MinSizeFieldId, MinSizeFieldMask,
@@ -231,7 +253,7 @@ FieldDescription *ComponentBase::_desc[] =
     new FieldDescription(SFVec2s::getClassType(), 
                      "Size", 
                      SizeFieldId, SizeFieldMask,
-                     false,
+                     true,
                      (FieldAccessMethod) &ComponentBase::getSFSize),
     new FieldDescription(SFBool::getClassType(), 
                      "Visible", 
@@ -385,9 +407,11 @@ void ComponentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 ComponentBase::ComponentBase(void) :
     _sfPosition               (Pnt2s(0,0)), 
+    _sfClipTopLeft            (Pnt2s(0,0)), 
+    _sfClipBottomRight        (Pnt2s(0,0)), 
     _sfMinSize                (Vec2s(0,0)), 
-    _sfMaxSize                (), 
-    _sfPreferredSize          (), 
+    _sfMaxSize                (Vec2s(32767,32767)), 
+    _sfPreferredSize          (Vec2s(1,1)), 
     _sfSize                   (), 
     _sfVisible                (bool(true)), 
     _sfEnabled                (bool(true)), 
@@ -416,6 +440,8 @@ ComponentBase::ComponentBase(void) :
 
 ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfPosition               (source._sfPosition               ), 
+    _sfClipTopLeft            (source._sfClipTopLeft            ), 
+    _sfClipBottomRight        (source._sfClipBottomRight        ), 
     _sfMinSize                (source._sfMinSize                ), 
     _sfMaxSize                (source._sfMaxSize                ), 
     _sfPreferredSize          (source._sfPreferredSize          ), 
@@ -456,6 +482,16 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (PositionFieldMask & whichField))
     {
         returnValue += _sfPosition.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ClipTopLeftFieldMask & whichField))
+    {
+        returnValue += _sfClipTopLeft.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ClipBottomRightFieldMask & whichField))
+    {
+        returnValue += _sfClipBottomRight.getBinSize();
     }
 
     if(FieldBits::NoField != (MinSizeFieldMask & whichField))
@@ -577,6 +613,16 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
         _sfPosition.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (ClipTopLeftFieldMask & whichField))
+    {
+        _sfClipTopLeft.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ClipBottomRightFieldMask & whichField))
+    {
+        _sfClipBottomRight.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (MinSizeFieldMask & whichField))
     {
         _sfMinSize.copyToBin(pMem);
@@ -693,6 +739,16 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (PositionFieldMask & whichField))
     {
         _sfPosition.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ClipTopLeftFieldMask & whichField))
+    {
+        _sfClipTopLeft.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ClipBottomRightFieldMask & whichField))
+    {
+        _sfClipBottomRight.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (MinSizeFieldMask & whichField))
@@ -813,6 +869,12 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (PositionFieldMask & whichField))
         _sfPosition.syncWith(pOther->_sfPosition);
 
+    if(FieldBits::NoField != (ClipTopLeftFieldMask & whichField))
+        _sfClipTopLeft.syncWith(pOther->_sfClipTopLeft);
+
+    if(FieldBits::NoField != (ClipBottomRightFieldMask & whichField))
+        _sfClipBottomRight.syncWith(pOther->_sfClipBottomRight);
+
     if(FieldBits::NoField != (MinSizeFieldMask & whichField))
         _sfMinSize.syncWith(pOther->_sfMinSize);
 
@@ -888,6 +950,12 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
 
     if(FieldBits::NoField != (PositionFieldMask & whichField))
         _sfPosition.syncWith(pOther->_sfPosition);
+
+    if(FieldBits::NoField != (ClipTopLeftFieldMask & whichField))
+        _sfClipTopLeft.syncWith(pOther->_sfClipTopLeft);
+
+    if(FieldBits::NoField != (ClipBottomRightFieldMask & whichField))
+        _sfClipBottomRight.syncWith(pOther->_sfClipBottomRight);
 
     if(FieldBits::NoField != (MinSizeFieldMask & whichField))
         _sfMinSize.syncWith(pOther->_sfMinSize);

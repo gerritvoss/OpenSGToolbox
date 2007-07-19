@@ -74,7 +74,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridLayout : public GridLayoutBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const;
     virtual void updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
     /*=========================  PROTECTED  ===============================*/
   protected:

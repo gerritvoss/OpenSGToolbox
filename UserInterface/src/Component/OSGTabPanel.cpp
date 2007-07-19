@@ -77,6 +77,8 @@ void TabPanel::initMethod (void)
 
 void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 {
+	Pnt2s TopLeft, BottomRight;
+	getInsideBorderBounds(TopLeft, BottomRight);
 	Vec2s pos;
 
 	// translate past the border and inset

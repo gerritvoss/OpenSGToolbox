@@ -16,12 +16,25 @@ void OSG_USERINTERFACELIB_DLLMAPPING convertTopRightToCenteredLine(const Pnt2s& 
 
 Pnt2s OSG_USERINTERFACELIB_DLLMAPPING calculateAlignment(const Pnt2s& Position1, const Vec2s& Size1, const Vec2s& Size2, const UInt32& VAlign, const UInt32& HAlign);
 
-void OSG_USERINTERFACELIB_DLLMAPPING quadIntersection(const Pnt2s& Quad1TopLeft, const Vec2s& Quad1Size,
-                                                      const Pnt2s& Quad2TopLeft, const Vec2s& Quad2Size,
-                                                      Pnt2s& ResultQuadTopLeft, Vec2s& ResultQuadSize);
+void OSG_USERINTERFACELIB_DLLMAPPING quadIntersection(const Pnt2s& Quad1TopLeft, const Pnt2s& Quad1BottomRight,
+                                                      const Pnt2s& Quad2TopLeft, const Pnt2s& Quad2BottomRight,
+                                                      Pnt2s& ResultQuadTopLeft, Pnt2s& ResultQuadBottomRight);
+
 void OSG_USERINTERFACELIB_DLLMAPPING componentQuadIntersection(const ComponentPtr c1,
                                                       const ComponentPtr c2,
-                                                      Pnt2s& ResultQuadTopLeft, Vec2s& ResultQuadSize);
+                                                      Pnt2s& ResultQuadTopLeft, Pnt2s& ResultQuadBottomRight);
+
+bool OSG_USERINTERFACELIB_DLLMAPPING isContainedBounds(const Pnt2s& Point, const ComponentPtr Comp);
+
+//Point: a point in Window space
+//Comp: A component
+bool OSG_USERINTERFACELIB_DLLMAPPING isContainedClipBounds(const Pnt2s& Point, const ComponentPtr Comp);
+
+bool OSG_USERINTERFACELIB_DLLMAPPING isContainedBounds(const Pnt2s& Point, const Pnt2s& TopLeft, const Pnt2s& BottomRight);
+Pnt2s OSG_USERINTERFACELIB_DLLMAPPING WindowToComponent(const Pnt2s& WindowPoint, const ComponentPtr Comp);
+Pnt2s OSG_USERINTERFACELIB_DLLMAPPING ComponentToWindow(const Pnt2s& ComponentPoint, const ComponentPtr Comp);
+
 OSG_END_NAMESPACE
 
+#include "OSGUIDefines.inl"
 #endif /* _OSG_UI_DRAW_UTILS_H_ */

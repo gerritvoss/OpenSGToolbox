@@ -77,34 +77,28 @@ void Component::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Component::getBounds(Pnt2s& TopLeft, Vec2s& Size) const
-{
-   TopLeft = getPosition();
-   Size = getSize();
-}
-
-void Component::getInsideBorderBounds(Pnt2s& TopLeft, Vec2s& Size) const
+void Component::getInsideBorderBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 {
    UInt16 TopInset(0), LeftInset(0), BottomInset(0), RightInset(0);
+
    if(getBorder() != NullFC)
    {
       //Get Border Insets
       getBorder()->getInsets(LeftInset,RightInset,TopInset,BottomInset);
    }
    TopLeft.setValues(LeftInset, TopInset);
-   Size.setValues(getSize().x()-RightInset-LeftInset, getSize().y()-BottomInset-TopInset);
+   BottomRight.setValues(TopLeft.x()+getSize().x()-(LeftInset + RightInset), TopLeft.y()+getSize().y()-(TopInset + BottomInset));
 }
 
-void Component::getBoundsRenderingSurfaceSpace(Pnt2s& TopLeft, Vec2s& Size) const
+void Component::getBoundsRenderingSurfaceSpace(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 {
-    Pnt2s ParentContainerTopLeft(0,0);
-    Vec2s ParentContainerSize(0,0);
+    Pnt2s ParentContainerTopLeft(0,0),ParentContainerBottomRight(0,0);
     if(getParentContainer() != NullFC)
     {
-        Container::Ptr::dcast(getParentContainer())->getBoundsRenderingSurfaceSpace(ParentContainerTopLeft, ParentContainerSize);
+        Container::Ptr::dcast(getParentContainer())->getBoundsRenderingSurfaceSpace(ParentContainerTopLeft, ParentContainerBottomRight);
     }
     TopLeft = ParentContainerTopLeft + Vec2s(getPosition());
-    Size = getSize();
+    BottomRight = TopLeft + getSize();
 }
 
 void Component::drawBorder(const GraphicsPtr TheGraphics) const
@@ -127,7 +121,7 @@ void Component::drawBackground(const GraphicsPtr TheGraphics) const
 {
    //Draw the Background on the Inside of my border
    Pnt2s TopLeft, BottomRight;
-   getInsideBorderSizing(TopLeft, BottomRight);
+   getInsideBorderBounds(TopLeft, BottomRight);
    if(getBackground() != NullFC)
    {
 	  if(getEnabled())
@@ -145,6 +139,7 @@ void Component::draw(const GraphicsPtr TheGraphics) const
 {
 	if (!getVisible())
 		return;
+
     //Translate to my position
     glTranslatef(getPosition().x(), getPosition().y(), 0);
 
@@ -159,28 +154,12 @@ void Component::draw(const GraphicsPtr TheGraphics) const
         //glScissor
         //Clip with the Intersection of this components RenderingSurface bounds
         //and its parents RenderingSurface bounds
-        Pnt2s Quad1TopLeft,Quad2TopLeft;
-        Vec2s Quad1Size,Quad2Size;
-
-        Pnt2s ScissorQuadTopLeft;
-        Vec2s ScissorQuadSize;
-        if(getParentContainer() != NullFC)
+        Pnt2s ClipTopLeft,ClipBottomRight;
+		getClipBounds(ClipTopLeft,ClipBottomRight);
+        if(ClipBottomRight.x()-ClipTopLeft.x() <= 0 || ClipBottomRight.y()-ClipTopLeft.y()<= 0)
         {
-            getBounds(Quad1TopLeft,Quad1Size);
-            Container::Ptr::dcast(getParentContainer())->getInsideBorderBounds(Quad2TopLeft,Quad2Size);
-
-            quadIntersection(Pnt2s(0,0),Quad1Size,
-                                Quad2TopLeft-Vec2s(Quad1TopLeft),Quad2Size,
-                                ScissorQuadTopLeft,ScissorQuadSize);
-        }
-        else
-        {
-            ScissorQuadTopLeft = Pnt2s(0,0);
-            ScissorQuadSize = getSize();
-        }
-        if(ScissorQuadSize.x() <= 0 || ScissorQuadSize.y()<= 0)
-        {
-            glTranslatef(-getPosition().x(), -getPosition().y(), 0);
+			//Translate to my position
+			glTranslatef(-getPosition().x(), -getPosition().y(), 0);
             return;
         }
 
@@ -193,10 +172,10 @@ void Component::draw(const GraphicsPtr TheGraphics) const
         //Clip Planes get transformed by the ModelViewMatrix when set
         //So we can rely on the fact that our current coordinate space
         //is relative to the this components position
-        Vec4d LeftPlaneEquation(1.0,0.0,0.0,-ScissorQuadTopLeft.x()),
-              RightPlaneEquation(-1.0,0.0,0.0,ScissorQuadTopLeft.x()+ScissorQuadSize.x()),
-              TopPlaneEquation(0.0,1.0,0.0,-ScissorQuadTopLeft.y()),
-              BottomPlaneEquation(0.0,-1.0,0.0,ScissorQuadTopLeft.y()+ScissorQuadSize.y());
+        Vec4d LeftPlaneEquation(1.0,0.0,0.0,-ClipTopLeft.x()),
+              RightPlaneEquation(-1.0,0.0,0.0,ClipBottomRight.x()),
+              TopPlaneEquation(0.0,1.0,0.0,-ClipTopLeft.y()),
+              BottomPlaneEquation(0.0,-1.0,0.0,ClipBottomRight.y());
         
         glClipPlane(GL_CLIP_PLANE0,LeftPlaneEquation.getValues());
         glClipPlane(GL_CLIP_PLANE1,RightPlaneEquation.getValues());
@@ -224,17 +203,191 @@ void Component::draw(const GraphicsPtr TheGraphics) const
     }
 }
 
-void Component::getInsideBorderSizing(Pnt2s& TopLeft, Pnt2s& BottomRight) const
-{
-   UInt16 TopInset(0), LeftInset(0), BottomInset(0), RightInset(0);
 
-   if(getBorder() != NullFC)
+void Component::updateClipBounds(void)
+{
+	Pnt2s TopLeft, BottomRight;
+	if(getParentContainer() == NullFC)
+	{
+		TopLeft = getPosition();
+		BottomRight = (getPosition()+getSize());
+	}
+	else
+	{
+		Container::Ptr::dcast(getParentContainer())->updateClipBounds();
+        Pnt2s MyTopLeft,ContainerTopLeft,
+			  MyBottomRight, ContainerBottomRight;
+
+        getBounds(MyTopLeft,MyBottomRight);
+		Container::Ptr::dcast(getParentContainer())->getClipBounds(ContainerTopLeft,ContainerBottomRight);
+		
+		//Get the intersection of my bounds with my parent containers clip bounds
+		quadIntersection(MyTopLeft,MyBottomRight,
+			ContainerTopLeft,ContainerBottomRight,
+			TopLeft, BottomRight);
+	}
+	//The Clip Bounds calculated are in my Parent Containers coordinate space
+	//Translate these bounds into my own coordinate space
+	beginEditCP(ComponentPtr(this), Component::ClipTopLeftFieldMask | Component::ClipBottomRightFieldMask);
+		setClipTopLeft(TopLeft - Vec2s(getPosition()));
+		setClipBottomRight(BottomRight - Vec2s(getPosition()));
+	endEditCP(ComponentPtr(this), Component::ClipTopLeftFieldMask | Component::ClipBottomRightFieldMask);
+}
+
+void Component::mouseClicked(const MouseEvent& e)
+{
+	std::cout << getType().getCName() << " mouseClicked" << std::endl;
+	produceMouseClicked(e);
+}
+
+void Component::mouseEntered(const MouseEvent& e)
+{
+	std::cout << getType().getCName() << " mouseEntered" << std::endl;
+	produceMouseEntered(e);
+}
+
+void Component::mouseExited(const MouseEvent& e)
+{
+	std::cout << getType().getCName() << " mouseExited" << std::endl;
+	produceMouseExited(e);
+}
+
+void Component::mousePressed(const MouseEvent& e)
+{
+	std::cout << getType().getCName() << " mousePressed" << std::endl;
+	produceMousePressed(e);
+}
+
+void Component::mouseReleased(const MouseEvent& e)
+{
+	std::cout << getType().getCName() << " mouseReleased" << std::endl;
+	produceMouseReleased(e);
+}
+
+
+void Component::mouseMoved(const MouseEvent& e)
+{
+	//std::cout << getType().getCName() << " mouseMoved" << std::endl;
+	produceMouseMoved(e);
+}
+
+void Component::mouseDragged(const MouseEvent& e)
+{
+	//std::cout << getType().getCName() << " mouseDragged" << std::endl;
+	produceMouseDragged(e);
+}
+
+void Component::mouseWheelMoved(const MouseWheelEvent& e)
+{
+	std::cout << getType().getCName() << " mouseWheelMoved" << std::endl;
+	produceMouseWheelMoved(e);
+}
+
+void Component::keyPressed(const KeyEvent& e)
+{
+	std::cout << getType().getCName() << " keyPressed" << std::endl;
+	produceKeyPressed(e);
+}
+
+void Component::keyReleased(const KeyEvent& e)
+{
+	std::cout << getType().getCName() << " keyReleased" << std::endl;
+	produceKeyReleased(e);
+}
+
+void Component::keyTyped(const KeyEvent& e)
+{
+	std::cout << getType().getCName() << " keyTyped" << std::endl;
+	produceKeyTyped(e);
+}
+
+//Producers
+void Component::produceMouseWheelMoved(const MouseWheelEvent& e)
+{
+   for(MouseWheelListenerSetConstItor SetItor(_MouseWheelListeners.begin()) ; SetItor != _MouseWheelListeners.end() ; ++SetItor)
    {
-      //Get Border Insets
-      getBorder()->getInsets(LeftInset,RightInset,TopInset,BottomInset);
+      (*SetItor)->mouseWheelMoved(e);
    }
-   TopLeft.setValues(LeftInset, TopInset);
-   BottomRight.setValues(TopLeft.x()+getSize().x()-(LeftInset + RightInset), TopLeft.y()+getSize().y()-(TopInset + BottomInset));
+}
+
+void Component::produceMouseMoved(const MouseEvent& e)
+{
+   for(MouseMotionListenerSetConstItor SetItor(_MouseMotionListeners.begin()) ; SetItor != _MouseMotionListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->mouseMoved(e);
+   }
+}
+
+void Component::produceMouseDragged(const MouseEvent& e)
+{
+   for(MouseMotionListenerSetConstItor SetItor(_MouseMotionListeners.begin()) ; SetItor != _MouseMotionListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->mouseDragged(e);
+   }
+}
+
+void Component::produceMouseClicked(const MouseEvent& e)
+{
+   for(MouseListenerSetConstItor SetItor(_MouseListeners.begin()) ; SetItor != _MouseListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->mouseClicked(e);
+   }
+}
+
+void Component::produceMouseEntered(const MouseEvent& e)
+{
+   for(MouseListenerSetConstItor SetItor(_MouseListeners.begin()) ; SetItor != _MouseListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->mouseEntered(e);
+   }
+}
+
+void Component::produceMouseExited(const MouseEvent& e)
+{
+   for(MouseListenerSetConstItor SetItor(_MouseListeners.begin()) ; SetItor != _MouseListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->mouseExited(e);
+   }
+}
+
+void Component::produceMousePressed(const MouseEvent& e)
+{
+   for(MouseListenerSetConstItor SetItor(_MouseListeners.begin()) ; SetItor != _MouseListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->mousePressed(e);
+   }
+}
+
+void Component::produceMouseReleased(const MouseEvent& e)
+{
+   for(MouseListenerSetConstItor SetItor(_MouseListeners.begin()) ; SetItor != _MouseListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->mouseReleased(e);
+   }
+}
+
+void Component::produceKeyPressed(const KeyEvent& e)
+{
+   for(KeyListenerSetConstItor SetItor(_KeyListeners.begin()) ; SetItor != _KeyListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->keyPressed(e);
+   }
+}
+
+void Component::produceKeyReleased(const KeyEvent& e)
+{
+   for(KeyListenerSetConstItor SetItor(_KeyListeners.begin()) ; SetItor != _KeyListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->keyReleased(e);
+   }
+}
+
+void Component::produceKeyTyped(const KeyEvent& e)
+{
+   for(KeyListenerSetConstItor SetItor(_KeyListeners.begin()) ; SetItor != _KeyListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->keyTyped(e);
+   }
 }
 
 /*-------------------------------------------------------------------------*\
@@ -244,12 +397,14 @@ void Component::getInsideBorderSizing(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 /*----------------------- constructors & destructors ----------------------*/
 
 Component::Component(void) :
-    Inherited()
+    Inherited(),
+		_MouseInComponentLastMouse(false)
 {
 }
 
 Component::Component(const Component &source) :
-    Inherited(source)
+    Inherited(source),
+		_MouseInComponentLastMouse(false)
 {
 }
 
@@ -271,6 +426,13 @@ void Component::changed(BitVector whichField, UInt32 origin)
         //Layout needs to be recalculated for my parent Container
         updateContainerLayout();
     }
+	
+    if( (whichField & SizeFieldMask) ||
+        (whichField & PositionFieldMask) )
+	{
+		updateClipBounds();
+	}
+
     if( (whichField & ConstraintsFieldMask) &&
         getConstraints() != NullFC)
     {

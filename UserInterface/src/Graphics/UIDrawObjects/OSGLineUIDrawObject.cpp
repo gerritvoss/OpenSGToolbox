@@ -79,10 +79,10 @@ void LineUIDrawObject::draw(const GraphicsPtr Graphics) const
 	Graphics->drawLine(getTopLeft(), getBottomRight(), getWidth(), getColor(), getOpacity());
 }
 
-void LineUIDrawObject::getBounds(Pnt2s& TopLeft, Vec2s& Size) const
+void LineUIDrawObject::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 {
 	TopLeft = getTopLeft();
-	Size = getBottomRight()-getTopLeft();
+	BottomRight = getBottomRight();
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

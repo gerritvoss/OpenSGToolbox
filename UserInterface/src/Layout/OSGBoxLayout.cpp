@@ -94,10 +94,6 @@ void BoxLayout::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void BoxLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
-{
-}
-
 void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
 	/*!

@@ -77,6 +77,20 @@ SFPnt2s *ComponentBase::getSFPosition(void)
     return &_sfPosition;
 }
 
+//! Get the Component::_sfClipTopLeft field.
+inline
+SFPnt2s *ComponentBase::getSFClipTopLeft(void)
+{
+    return &_sfClipTopLeft;
+}
+
+//! Get the Component::_sfClipBottomRight field.
+inline
+SFPnt2s *ComponentBase::getSFClipBottomRight(void)
+{
+    return &_sfClipBottomRight;
+}
+
 //! Get the Component::_sfMinSize field.
 inline
 SFVec2s *ComponentBase::getSFMinSize(void)
@@ -244,6 +258,48 @@ inline
 void ComponentBase::setPosition(const Pnt2s &value)
 {
     _sfPosition.setValue(value);
+}
+
+//! Get the value of the Component::_sfClipTopLeft field.
+inline
+Pnt2s &ComponentBase::getClipTopLeft(void)
+{
+    return _sfClipTopLeft.getValue();
+}
+
+//! Get the value of the Component::_sfClipTopLeft field.
+inline
+const Pnt2s &ComponentBase::getClipTopLeft(void) const
+{
+    return _sfClipTopLeft.getValue();
+}
+
+//! Set the value of the Component::_sfClipTopLeft field.
+inline
+void ComponentBase::setClipTopLeft(const Pnt2s &value)
+{
+    _sfClipTopLeft.setValue(value);
+}
+
+//! Get the value of the Component::_sfClipBottomRight field.
+inline
+Pnt2s &ComponentBase::getClipBottomRight(void)
+{
+    return _sfClipBottomRight.getValue();
+}
+
+//! Get the value of the Component::_sfClipBottomRight field.
+inline
+const Pnt2s &ComponentBase::getClipBottomRight(void) const
+{
+    return _sfClipBottomRight.getValue();
+}
+
+//! Set the value of the Component::_sfClipBottomRight field.
+inline
+void ComponentBase::setClipBottomRight(const Pnt2s &value)
+{
+    _sfClipBottomRight.setValue(value);
 }
 
 //! Get the value of the Component::_sfMinSize field.

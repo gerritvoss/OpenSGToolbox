@@ -79,7 +79,7 @@ void PolygonUIDrawObject::draw(const GraphicsPtr Graphics) const
 	Graphics->drawPolygon(getVerticies(), getColor(), getOpacity());
 }
 
-void PolygonUIDrawObject::getBounds(Pnt2s& TopLeft, Vec2s& Size) const
+void PolygonUIDrawObject::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 {
 	if(getVerticies().size() > 0)
 	{
@@ -94,7 +94,6 @@ void PolygonUIDrawObject::getBounds(Pnt2s& TopLeft, Vec2s& Size) const
 		    BottomRight.setValues(osgMax<UInt16>(BottomRight.x(), getVerticies().getValue(i).x()),
 		                          osgMax<UInt16>(BottomRight.y(), getVerticies().getValue(i).y()) );
 		}
-		Size = BottomRight - TopLeft;
 	}
 }
 /*-------------------------------------------------------------------------*\

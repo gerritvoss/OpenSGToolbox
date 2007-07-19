@@ -16,9 +16,27 @@ A UI Component Interface.
 		name="Position"
 		type="Pnt2s"
 		cardinality="single"
-		visibility="external"
+		visibility="internal"
 		defaultValue="0,0"
 		access="public"
+	>
+	</Field>
+	<Field
+		name="ClipTopLeft"
+		type="Pnt2s"
+		cardinality="single"
+		visibility="internal"
+		defaultValue="0,0"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="ClipBottomRight"
+		type="Pnt2s"
+		cardinality="single"
+		visibility="internal"
+		defaultValue="0,0"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -35,6 +53,7 @@ A UI Component Interface.
 		type="Vec2s"
 		cardinality="single"
 		visibility="external"
+		defaultValue="32767,32767"
 		access="public"
 	>
 	</Field>
@@ -44,13 +63,14 @@ A UI Component Interface.
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="1,1"
 	>
 	</Field>
 	<Field
 		name="Size"
 		type="Vec2s"
 		cardinality="single"
-		visibility="external"
+		visibility="internal"
 		access="public"
 	>
 	</Field>

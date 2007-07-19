@@ -34,6 +34,7 @@
 #include "OSGInputDef.h"
 
 #include "Event/OSGEvent.h"
+#include <OpenSG/OSGVector.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -47,11 +48,13 @@ class OSG_INPUTLIB_DLLMAPPING MouseWheelEvent : public Event
     Int32 getScrollAmount(void) const;
     Int32 getUnitsToScroll(void) const;
     ScrollType getScrollType(void) const;
+    Pnt2s getLocation(void) const;
     
-    MouseWheelEvent(FieldContainerPtr Source, Time TimeStamp, Int32 WheelRotation, ScrollType TheScrollType);
+    MouseWheelEvent(FieldContainerPtr Source, Time TimeStamp, Int32 WheelRotation, ScrollType TheScrollType, Pnt2s Location);
   private:
     ScrollType _ScrollType;
     Int32      _WheelRotation;
+    Pnt2s       _Location;
     
 };
 

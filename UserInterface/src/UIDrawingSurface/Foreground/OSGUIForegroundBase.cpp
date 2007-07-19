@@ -66,11 +66,8 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  UIForegroundBase::RootFrameFieldMask = 
-    (TypeTraits<BitVector>::One << UIForegroundBase::RootFrameFieldId);
-
-const OSG::BitVector  UIForegroundBase::GraphicsFieldMask = 
-    (TypeTraits<BitVector>::One << UIForegroundBase::GraphicsFieldId);
+const OSG::BitVector  UIForegroundBase::DrawingSurfaceFieldMask = 
+    (TypeTraits<BitVector>::One << UIForegroundBase::DrawingSurfaceFieldId);
 
 const OSG::BitVector  UIForegroundBase::FramePositionOffsetFieldMask = 
     (TypeTraits<BitVector>::One << UIForegroundBase::FramePositionOffsetFieldId);
@@ -91,10 +88,7 @@ const OSG::BitVector UIForegroundBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var FramePtr        UIForegroundBase::_sfRootFrame
-    
-*/
-/*! \var GraphicsPtr     UIForegroundBase::_sfGraphics
+/*! \var UIDrawingSurfacePtr UIForegroundBase::_sfDrawingSurface
     
 */
 /*! \var Vec2s           UIForegroundBase::_sfFramePositionOffset
@@ -114,16 +108,11 @@ const OSG::BitVector UIForegroundBase::MTInfluenceMask =
 
 FieldDescription *UIForegroundBase::_desc[] = 
 {
-    new FieldDescription(SFFramePtr::getClassType(), 
-                     "RootFrame", 
-                     RootFrameFieldId, RootFrameFieldMask,
+    new FieldDescription(SFUIDrawingSurfacePtr::getClassType(), 
+                     "DrawingSurface", 
+                     DrawingSurfaceFieldId, DrawingSurfaceFieldMask,
                      false,
-                     (FieldAccessMethod) &UIForegroundBase::getSFRootFrame),
-    new FieldDescription(SFGraphicsPtr::getClassType(), 
-                     "Graphics", 
-                     GraphicsFieldId, GraphicsFieldMask,
-                     false,
-                     (FieldAccessMethod) &UIForegroundBase::getSFGraphics),
+                     (FieldAccessMethod) &UIForegroundBase::getSFDrawingSurface),
     new FieldDescription(SFVec2s::getClassType(), 
                      "FramePositionOffset", 
                      FramePositionOffsetFieldId, FramePositionOffsetFieldMask,
@@ -219,8 +208,7 @@ void UIForegroundBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 UIForegroundBase::UIForegroundBase(void) :
-    _sfRootFrame              (), 
-    _sfGraphics               (), 
+    _sfDrawingSurface         (), 
     _sfFramePositionOffset    (), 
     _sfFrameBounds            (), 
     _sfVerticalAlignment      (UInt32(VERTICAL_CENTER)), 
@@ -234,8 +222,7 @@ UIForegroundBase::UIForegroundBase(void) :
 #endif
 
 UIForegroundBase::UIForegroundBase(const UIForegroundBase &source) :
-    _sfRootFrame              (source._sfRootFrame              ), 
-    _sfGraphics               (source._sfGraphics               ), 
+    _sfDrawingSurface         (source._sfDrawingSurface         ), 
     _sfFramePositionOffset    (source._sfFramePositionOffset    ), 
     _sfFrameBounds            (source._sfFrameBounds            ), 
     _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
@@ -256,14 +243,9 @@ UInt32 UIForegroundBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (RootFrameFieldMask & whichField))
+    if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
     {
-        returnValue += _sfRootFrame.getBinSize();
-    }
-
-    if(FieldBits::NoField != (GraphicsFieldMask & whichField))
-    {
-        returnValue += _sfGraphics.getBinSize();
+        returnValue += _sfDrawingSurface.getBinSize();
     }
 
     if(FieldBits::NoField != (FramePositionOffsetFieldMask & whichField))
@@ -295,14 +277,9 @@ void UIForegroundBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (RootFrameFieldMask & whichField))
+    if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
     {
-        _sfRootFrame.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (GraphicsFieldMask & whichField))
-    {
-        _sfGraphics.copyToBin(pMem);
+        _sfDrawingSurface.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (FramePositionOffsetFieldMask & whichField))
@@ -333,14 +310,9 @@ void UIForegroundBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (RootFrameFieldMask & whichField))
+    if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
     {
-        _sfRootFrame.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (GraphicsFieldMask & whichField))
-    {
-        _sfGraphics.copyFromBin(pMem);
+        _sfDrawingSurface.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (FramePositionOffsetFieldMask & whichField))
@@ -373,11 +345,8 @@ void UIForegroundBase::executeSyncImpl(      UIForegroundBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (RootFrameFieldMask & whichField))
-        _sfRootFrame.syncWith(pOther->_sfRootFrame);
-
-    if(FieldBits::NoField != (GraphicsFieldMask & whichField))
-        _sfGraphics.syncWith(pOther->_sfGraphics);
+    if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
+        _sfDrawingSurface.syncWith(pOther->_sfDrawingSurface);
 
     if(FieldBits::NoField != (FramePositionOffsetFieldMask & whichField))
         _sfFramePositionOffset.syncWith(pOther->_sfFramePositionOffset);
@@ -401,11 +370,8 @@ void UIForegroundBase::executeSyncImpl(      UIForegroundBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (RootFrameFieldMask & whichField))
-        _sfRootFrame.syncWith(pOther->_sfRootFrame);
-
-    if(FieldBits::NoField != (GraphicsFieldMask & whichField))
-        _sfGraphics.syncWith(pOther->_sfGraphics);
+    if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
+        _sfDrawingSurface.syncWith(pOther->_sfDrawingSurface);
 
     if(FieldBits::NoField != (FramePositionOffsetFieldMask & whichField))
         _sfFramePositionOffset.syncWith(pOther->_sfFramePositionOffset);

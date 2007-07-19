@@ -102,10 +102,6 @@ void CardLayout::previous(const ContainerPtr TheContainer)
 	endEditCP(CardLayoutPtr(this), CardFieldMask);
 }
 
-void CardLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
-{
-}
-
 void CardLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
 	/*!

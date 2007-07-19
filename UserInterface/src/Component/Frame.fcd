@@ -13,12 +13,13 @@
 >
 A UI Frame.
 	<Field
-		name="EventProducer"
-		type="WindowEventProducerPtr"
+		name="FocusedComponent"
+		type="ComponentPtr"
 		cardinality="single"
 		visibility="external"
-		header="OpenSG/Input/OSGWindowEventProducer.h"
 		access="public"
+		header="OSGComponent.h"
+		defaultValue="NullFC"
 	>
 	</Field>
 </FieldContainer>

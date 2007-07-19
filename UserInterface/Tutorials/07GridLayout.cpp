@@ -33,6 +33,7 @@
 
 //UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
+#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
@@ -191,15 +192,24 @@ int main(int argc, char **argv)
 	 
     endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
+	//Create the Drawing Surface
+	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
+	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+		drawingSurface->setGraphics(graphics);
+		drawingSurface->setRootFrame(MainFrame);
+	    //drawingSurface->setEventProducer(TheWindowEventProducer);
+    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+	
 	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();
 
-	beginEditCP(foreground, UIForeground::GraphicsFieldMask | UIForeground::RootFrameFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-		foreground->setGraphics(graphics);
-		foreground->setRootFrame(MainFrame);
+	beginEditCP(foreground, UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+	    foreground->setDrawingSurface(drawingSurface);
 		foreground->setFramePositionOffset(Vec2s(0,0));
 		foreground->setFrameBounds(Vec2f(0.5,0.5));
-    endEditCP  (foreground, UIForeground::GraphicsFieldMask | UIForeground::RootFrameFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+	   //Set the Event Producer for the DrawingSurface
+	   //This is needed in order to get Mouse/Keyboard/etc Input to the UI DrawingSurface
+    endEditCP  (foreground, UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
     // create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;

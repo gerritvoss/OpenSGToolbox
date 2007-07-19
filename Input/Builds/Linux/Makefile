@@ -14,6 +14,10 @@ VPATH = $(srcdir)/:$(srcdir)/Event:$(srcdir)/WindowSystem:$(srcdir)/WindowSystem
 EXTRA_CCFLAGS = -I$(srcdir)
 
 OBJECTS = OSGKeyEvent.o \
+	OSGKeyEventProducer.o \
+	OSGMouseEventProducer.o \
+	OSGMouseMotionEventProducer.o \
+	OSGMouseWheelEventProducer.o \
 	OSGEventDispatchThread.o \
 	OSGWindowEventProducer.o \
 	OSGWindowEventProducerBase.o \

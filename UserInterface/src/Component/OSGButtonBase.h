@@ -145,6 +145,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
 
            SFFontPtr           *getSFFont           (void);
            SFString            *getSFText           (void);
+           SFBool              *getSFActive         (void);
            SFBorderPtr         *getSFActiveBorder   (void);
            SFUIBackgroundPtr   *getSFActiveBackground(void);
            SFColor4f           *getSFActiveForegroundColor(void);
@@ -155,6 +156,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
      const FontPtr             &getFont           (void) const;
            std::string         &getText           (void);
      const std::string         &getText           (void) const;
+           bool                &getActive         (void);
+     const bool                &getActive         (void) const;
            BorderPtr           &getActiveBorder   (void);
      const BorderPtr           &getActiveBorder   (void) const;
            UIBackgroundPtr     &getActiveBackground(void);
@@ -173,6 +176,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
 
      void setFont           ( const FontPtr &value );
      void setText           ( const std::string &value );
+     void setActive         ( const bool &value );
      void setActiveBorder   ( const BorderPtr &value );
      void setActiveBackground( const UIBackgroundPtr &value );
      void setActiveForegroundColor( const Color4f &value );
@@ -243,23 +247,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     /*! \{                                                                 */
 
     virtual ~ButtonBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFBool              *getSFActive         (void);
-
-           bool                &getActive         (void);
-     const bool                &getActive         (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setActive         (const bool &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

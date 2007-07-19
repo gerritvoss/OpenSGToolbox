@@ -8,17 +8,11 @@
 // AbsoluteLayoutConstraints to locate the buttons.
 
 
-// GLUT is used for window handling
-#include <OpenSG/OSGGLUT.h>
-
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
-
-// The GLUT-OpenSG connection class
-#include <OpenSG/OSGGLUTWindow.h>
 
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
@@ -31,8 +25,12 @@
 #include <OpenSG/OSGSceneFileHandler.h>
 
 
+//Input
+#include <OpenSG/Input/OSGWindowUtils.h>
+
 //UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
+#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGLineBorder.h>
@@ -54,6 +52,7 @@ SimpleSceneManager *mgr;
 // forward declaration so we can have the interesting stuff upfront
 int setupGLUT( int *argc, char *argv[] );
 void display(void);
+void reshape(Vec2s Size);
 
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
@@ -61,14 +60,16 @@ int main(int argc, char **argv)
     // OSG init
     osgInit(argc,argv);
 
-
-    // GLUT init
-    int winid = setupGLUT(&argc, argv);
-
-    // the connection between GLUT and OpenSG
-    GLUTWindowPtr gwin= GLUTWindow::create();
-    gwin->setId(winid);
-    gwin->init();
+    WindowPtr MainWindow;
+    WindowEventProducerPtr TheWindowEventProducer;
+    createDefaultWindow(Pnt2s(50,50),
+                                        Vec2s(550,550),
+                                        "OpenSG 02AbsoluteLayout Window",
+                                        MainWindow,
+                                        TheWindowEventProducer);
+    
+    TheWindowEventProducer->setDisplayCallback(display);
+    TheWindowEventProducer->setReshapeCallback(reshape);
 
 
     // Make Torus Node (creates Torus in background of scene)
@@ -205,21 +206,30 @@ int main(int argc, char **argv)
 	 
     endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
+	//Create the Drawing Surface
+	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
+	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+		drawingSurface->setGraphics(graphics);
+		drawingSurface->setRootFrame(MainFrame);
+	    drawingSurface->setEventProducer(TheWindowEventProducer);
+    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+	
 	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();
 
-	beginEditCP(foreground, UIForeground::GraphicsFieldMask | UIForeground::RootFrameFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-		foreground->setGraphics(graphics);
-		foreground->setRootFrame(MainFrame);
+	beginEditCP(foreground, UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+	    foreground->setDrawingSurface(drawingSurface);
 		foreground->setFramePositionOffset(Vec2s(0,0));
 		foreground->setFrameBounds(Vec2f(0.5,0.5));
-    endEditCP  (foreground, UIForeground::GraphicsFieldMask | UIForeground::RootFrameFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+	   //Set the Event Producer for the DrawingSurface
+	   //This is needed in order to get Mouse/Keyboard/etc Input to the UI DrawingSurface
+    endEditCP  (foreground, UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
     // create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // tell the manager what to manage
-    mgr->setWindow(gwin );
+    mgr->setWindow(MainWindow );
     mgr->setRoot  (scene);
 
 	// Add the UI Foreground Object to the Scene
@@ -231,20 +241,12 @@ int main(int argc, char **argv)
     // show the whole scene
     mgr->showAll();
 
-    // GLUT main loop
-    glutMainLoop();
+    // main loop
+    openWindow(TheWindowEventProducer);
 
     return 0;
 }
 
-//
-// GLUT callback functions
-//
-
-void idle(void)
-{
-   glutPostRedisplay();
-}
 
 // redraw the window
 void display(void)
@@ -253,14 +255,13 @@ void display(void)
 }
 
 // react to size changes
-void reshape(int w, int h)
+void reshape(Vec2s Size)
 {
-    mgr->resize(w, h);
-    glutPostRedisplay();
+    mgr->resize(Size.x(), Size.y());
 }
 
 // react to mouse button presses
-void mouse(int button, int state, int x, int y)
+/*void mouse(int button, int state, int x, int y)
 {
     if (state)
         mgr->mouseButtonRelease(button, x, y);
@@ -307,4 +308,4 @@ int setupGLUT(int *argc, char *argv[])
     glutIdleFunc(idle);
 
     return winid;
-}
+}*/

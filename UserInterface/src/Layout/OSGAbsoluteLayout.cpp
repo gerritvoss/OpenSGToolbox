@@ -75,10 +75,6 @@ void AbsoluteLayout::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void AbsoluteLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
-{
-}
-
 void AbsoluteLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
 	Pnt2s borderOffset;

@@ -74,10 +74,6 @@ void OverlayLayout::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void OverlayLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
-{
-}
-
 void OverlayLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
 	Pnt2s borderOffset;

@@ -78,7 +78,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DiscUIDrawObject : public DiscUIDrawObject
 
     /*! \}                                                                 */
 	virtual void draw(const GraphicsPtr Graphics) const;
-    virtual void getBounds(Pnt2s& TopLeft, Vec2s& Size) const;
+    virtual void getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

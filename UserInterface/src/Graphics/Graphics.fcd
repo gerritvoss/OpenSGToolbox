@@ -44,7 +44,7 @@ A UI Graphics Interface.
 		type="bool"
 		cardinality="single"
 		visibility="external"
-		defaultValue="true"
+		defaultValue="false"
 		access="public"
 	>
 	</Field>

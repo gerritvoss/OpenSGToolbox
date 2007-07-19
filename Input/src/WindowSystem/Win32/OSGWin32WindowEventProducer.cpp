@@ -538,11 +538,36 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd2, UINT uMsg,
             produceMouseReleased(MouseEvent::BUTTON3, Pnt2s(LOWORD(lParam), HIWORD(lParam)));
             break;
         case WM_MOUSEWHEEL:
-            produceMouseWheelMoved(static_cast<short>(HIWORD(wParam))/WHEEL_DELTA);
+			{
+				//The lParam gives the Mouse location in screen space
+				//Convert it to client area space
+				LPPOINT ClientPoint = new POINT;
+				ClientPoint->x = LOWORD(lParam);
+				ClientPoint->y = HIWORD(lParam);
+				if(ScreenToClient(hwnd2, ClientPoint))
+				{
+					produceMouseWheelMoved(static_cast<short>(HIWORD(wParam))/WHEEL_DELTA, Pnt2s(ClientPoint->x,ClientPoint->y));
+				}
+				else
+				{
+				}
+			}
             break;
 
         case WM_MOUSEMOVE:
-            produceMouseMoved(Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+			if(wParam & MK_LBUTTON)
+			{
+				produceMouseDragged(MouseEvent::BUTTON1,Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+			}
+			else if(wParam & MK_MBUTTON)
+			{
+				produceMouseDragged(MouseEvent::BUTTON1,Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+			}
+			else if(wParam & MK_RBUTTON)
+			{
+				produceMouseDragged(MouseEvent::BUTTON1,Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+			}
+			produceMouseMoved(Pnt2s(LOWORD(lParam), HIWORD(lParam)));
             break;
                                     
         case WM_KEYDOWN:
@@ -599,6 +624,9 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd2, UINT uMsg,
             PostQuitMessage(0);
             break;
 
+		case WM_SETCURSOR:
+			SetCursor(LoadCursor(NULL, IDC_ARROW));
+            return DefWindowProc(hwnd2, uMsg, wParam, lParam);
         default:
             return DefWindowProc(hwnd2, uMsg, wParam, lParam);
 			break;

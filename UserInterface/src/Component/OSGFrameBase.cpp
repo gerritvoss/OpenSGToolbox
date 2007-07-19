@@ -64,8 +64,8 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  FrameBase::EventProducerFieldMask = 
-    (TypeTraits<BitVector>::One << FrameBase::EventProducerFieldId);
+const OSG::BitVector  FrameBase::FocusedComponentFieldMask = 
+    (TypeTraits<BitVector>::One << FrameBase::FocusedComponentFieldId);
 
 const OSG::BitVector FrameBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -74,7 +74,7 @@ const OSG::BitVector FrameBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var WindowEventProducerPtr FrameBase::_sfEventProducer
+/*! \var ComponentPtr    FrameBase::_sfFocusedComponent
     
 */
 
@@ -82,11 +82,11 @@ const OSG::BitVector FrameBase::MTInfluenceMask =
 
 FieldDescription *FrameBase::_desc[] = 
 {
-    new FieldDescription(SFWindowEventProducerPtr::getClassType(), 
-                     "EventProducer", 
-                     EventProducerFieldId, EventProducerFieldMask,
+    new FieldDescription(SFComponentPtr::getClassType(), 
+                     "FocusedComponent", 
+                     FocusedComponentFieldId, FocusedComponentFieldMask,
                      false,
-                     (FieldAccessMethod) &FrameBase::getSFEventProducer)
+                     (FieldAccessMethod) &FrameBase::getSFFocusedComponent)
 };
 
 
@@ -162,7 +162,7 @@ void FrameBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 FrameBase::FrameBase(void) :
-    _sfEventProducer          (), 
+    _sfFocusedComponent       (ComponentPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -172,7 +172,7 @@ FrameBase::FrameBase(void) :
 #endif
 
 FrameBase::FrameBase(const FrameBase &source) :
-    _sfEventProducer          (source._sfEventProducer          ), 
+    _sfFocusedComponent       (source._sfFocusedComponent       ), 
     Inherited                 (source)
 {
 }
@@ -189,9 +189,9 @@ UInt32 FrameBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    if(FieldBits::NoField != (FocusedComponentFieldMask & whichField))
     {
-        returnValue += _sfEventProducer.getBinSize();
+        returnValue += _sfFocusedComponent.getBinSize();
     }
 
 
@@ -203,9 +203,9 @@ void FrameBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    if(FieldBits::NoField != (FocusedComponentFieldMask & whichField))
     {
-        _sfEventProducer.copyToBin(pMem);
+        _sfFocusedComponent.copyToBin(pMem);
     }
 
 
@@ -216,9 +216,9 @@ void FrameBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    if(FieldBits::NoField != (FocusedComponentFieldMask & whichField))
     {
-        _sfEventProducer.copyFromBin(pMem);
+        _sfFocusedComponent.copyFromBin(pMem);
     }
 
 
@@ -231,8 +231,8 @@ void FrameBase::executeSyncImpl(      FrameBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-        _sfEventProducer.syncWith(pOther->_sfEventProducer);
+    if(FieldBits::NoField != (FocusedComponentFieldMask & whichField))
+        _sfFocusedComponent.syncWith(pOther->_sfFocusedComponent);
 
 
 }
@@ -244,8 +244,8 @@ void FrameBase::executeSyncImpl(      FrameBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-        _sfEventProducer.syncWith(pOther->_sfEventProducer);
+    if(FieldBits::NoField != (FocusedComponentFieldMask & whichField))
+        _sfFocusedComponent.syncWith(pOther->_sfFocusedComponent);
 
 
 

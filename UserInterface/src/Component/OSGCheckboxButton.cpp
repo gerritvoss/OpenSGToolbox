@@ -83,7 +83,7 @@ void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
 	Pnt2s TempPos;
 	Int32 totalWidth;
 	Int32 yAdj = 0;
-	getInsideBorderSizing(TopLeft, BottomRight);
+	getInsideBorderBounds(TopLeft, BottomRight);
 
    if(getActive()){
 	   if(getChecked()){

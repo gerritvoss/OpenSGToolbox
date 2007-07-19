@@ -74,10 +74,6 @@ void GridLayout::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void GridLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
-{
-}
-
 void GridLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
 	Pnt2s borderOffset;

@@ -79,7 +79,7 @@ void Canvas::drawInternal(const GraphicsPtr TheGraphics) const
 {
 
    Pnt2s TopLeft, BottomRight;
-   getInsideBorderSizing(TopLeft, BottomRight);
+   getInsideBorderBounds(TopLeft, BottomRight);
 
 	/*MFPnt2s polygon;
 	polygon.addValue(Pnt2s(120,120));

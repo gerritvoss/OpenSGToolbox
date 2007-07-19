@@ -74,6 +74,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+	
+	//Key Events
+	virtual void keyPressed(const KeyEvent& e);
+	virtual void keyReleased(const KeyEvent& e);
+	virtual void keyTyped(const KeyEvent& e);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 

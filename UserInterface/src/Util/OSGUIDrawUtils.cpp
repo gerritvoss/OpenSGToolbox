@@ -66,32 +66,74 @@ Pnt2s calculateAlignment(const Pnt2s& Position1, const Vec2s& Size1, const Vec2s
 	return AlignedPosition;
 }
 
-void quadIntersection(const Pnt2s& Quad1TopLeft, const Vec2s& Quad1Size,
-                      const Pnt2s& Quad2TopLeft, const Vec2s& Quad2Size,
-                      Pnt2s& ResultQuadTopLeft, Vec2s& ResultQuadSize)
+void quadIntersection(const Pnt2s& Quad1TopLeft, const Pnt2s& Quad1BottomRight,
+                      const Pnt2s& Quad2TopLeft, const Pnt2s& Quad2BottomRight,
+                      Pnt2s& ResultQuadTopLeft, Pnt2s& ResultQuadBottomRight)
 {
-    Pnt2s Quad1BottomRight(Quad1TopLeft + Quad1Size),
-          Quad2BottomRight(Quad2TopLeft + Quad2Size);
     ResultQuadTopLeft[0] = osgMax(Quad1TopLeft[0],Quad2TopLeft[0]);
     ResultQuadTopLeft[1] = osgMax(Quad1TopLeft[1],Quad2TopLeft[1]);
     
-    ResultQuadSize[0] = osgMin(Quad1BottomRight[0],Quad2BottomRight[0]) - ResultQuadTopLeft[0];
-    ResultQuadSize[1] = osgMin(Quad1BottomRight[1],Quad2BottomRight[1]) - ResultQuadTopLeft[1];
+    ResultQuadBottomRight[0] = osgMin(Quad1BottomRight[0],Quad2BottomRight[0]);
+    ResultQuadBottomRight[1] = osgMin(Quad1BottomRight[1],Quad2BottomRight[1]);
 }
 
 void componentQuadIntersection(const ComponentPtr c1,
                                 const ComponentPtr c2,
-                                Pnt2s& ResultQuadTopLeft, Vec2s& ResultQuadSize)
+                                Pnt2s& ResultQuadTopLeft, Pnt2s& ResultQuadBottomRight)
 {
     Pnt2s Quad1TopLeft,Quad2TopLeft;
-    Vec2s Quad1Size,Quad2Size;
+    Pnt2s Quad1BottomRight,Quad2BottomRight;
 
-    c1->getBoundsRenderingSurfaceSpace(Quad1TopLeft,Quad1Size);
-    c2->getBoundsRenderingSurfaceSpace(Quad2TopLeft,Quad2Size);
+    c1->getBoundsRenderingSurfaceSpace(Quad1TopLeft,Quad1BottomRight);
+    c2->getBoundsRenderingSurfaceSpace(Quad2TopLeft,Quad2BottomRight);
 
-    quadIntersection(Quad1TopLeft,Quad1Size,
-                     Quad2TopLeft,Quad2Size,
-                     ResultQuadTopLeft,ResultQuadSize);
+    quadIntersection(Quad1TopLeft,Quad1BottomRight,
+                     Quad2TopLeft,Quad2BottomRight,
+                     ResultQuadTopLeft,ResultQuadBottomRight);
+}
+
+bool isContainedBounds(const Pnt2s& Point, const Pnt2s& TopLeft, const Pnt2s& BottomRight)
+{
+	return (Point.x() >= TopLeft.x()) &&
+		(Point.x() <= BottomRight.x()) &&
+		(Point.y() >= TopLeft.y()) &&
+		(Point.y() <= BottomRight.y());
+}
+
+bool isContainedClipBounds(const Pnt2s& Point, const ComponentPtr Comp)
+{
+	Pnt2s CompTopLeft,CompBottomRight;
+
+	Comp->getClipBounds(CompTopLeft, CompBottomRight);
+
+	//Point is in screen coordinates
+	//Convert it into component coordinates
+	return isContainedBounds(WindowToComponent(Point,Comp), CompTopLeft, CompBottomRight);
+}
+
+Pnt2s WindowToComponent(const Pnt2s& WindowPoint, const ComponentPtr Comp)
+{
+	Pnt2s Result(WindowPoint);
+	ComponentPtr CompRecurse = Comp;
+	while(CompRecurse != NullFC)
+	{
+		Result -= Vec2s(CompRecurse->getPosition());
+		CompRecurse = Component::Ptr::dcast(CompRecurse->getParentContainer());
+	}
+
+	return Result;
+}
+
+Pnt2s ComponentToWindow(const Pnt2s& ComponentPoint, const ComponentPtr Comp)
+{
+	Pnt2s Result;
+	ComponentPtr CompRecurse = Comp;
+	while(CompRecurse != NullFC)
+	{
+		Result += Vec2s(CompRecurse->getPosition());
+		CompRecurse = Component::Ptr::dcast(CompRecurse->getParentContainer());
+	}
+	return Result;
 }
 
 OSG_END_NAMESPACE

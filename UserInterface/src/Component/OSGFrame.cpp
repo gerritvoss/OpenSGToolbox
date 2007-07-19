@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGFrame.h"
+#include "UIDrawingSurface/OSGUIDrawingSurface.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -73,6 +74,37 @@ void Frame::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+void Frame::keyPressed(const KeyEvent& e)
+{
+	//Send Key event to Component that has Focus
+	//If there is not Focused Component then do nothing
+	if(getFocusedComponent() != NullFC)
+	{
+		getFocusedComponent()->keyPressed(e);
+	}
+}
+
+void Frame::keyReleased(const KeyEvent& e)
+{
+	//Send Key event to Component that has Focus
+	//If there is not Focused Component then do nothing
+	if(getFocusedComponent() != NullFC)
+	{
+		getFocusedComponent()->keyReleased(e);
+	}
+}
+
+void Frame::keyTyped(const KeyEvent& e)
+{
+	//Send Key event to Component that has Focus
+	//If there is not Focused Component then do nothing
+	if(getFocusedComponent() != NullFC)
+	{
+		getFocusedComponent()->keyTyped(e);
+	}
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

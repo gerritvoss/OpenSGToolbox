@@ -96,33 +96,33 @@ FramePtr FrameBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Frame::_sfEventProducer field.
+//! Get the Frame::_sfFocusedComponent field.
 inline
-SFWindowEventProducerPtr *FrameBase::getSFEventProducer(void)
+SFComponentPtr *FrameBase::getSFFocusedComponent(void)
 {
-    return &_sfEventProducer;
+    return &_sfFocusedComponent;
 }
 
 
-//! Get the value of the Frame::_sfEventProducer field.
+//! Get the value of the Frame::_sfFocusedComponent field.
 inline
-WindowEventProducerPtr &FrameBase::getEventProducer(void)
+ComponentPtr &FrameBase::getFocusedComponent(void)
 {
-    return _sfEventProducer.getValue();
+    return _sfFocusedComponent.getValue();
 }
 
-//! Get the value of the Frame::_sfEventProducer field.
+//! Get the value of the Frame::_sfFocusedComponent field.
 inline
-const WindowEventProducerPtr &FrameBase::getEventProducer(void) const
+const ComponentPtr &FrameBase::getFocusedComponent(void) const
 {
-    return _sfEventProducer.getValue();
+    return _sfFocusedComponent.getValue();
 }
 
-//! Set the value of the Frame::_sfEventProducer field.
+//! Set the value of the Frame::_sfFocusedComponent field.
 inline
-void FrameBase::setEventProducer(const WindowEventProducerPtr &value)
+void FrameBase::setFocusedComponent(const ComponentPtr &value)
 {
-    _sfEventProducer.setValue(value);
+    _sfFocusedComponent.setValue(value);
 }
 
 

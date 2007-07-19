@@ -82,7 +82,7 @@ void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
 	Pnt2s drawObjectTopLeft;
 	Pnt2s TempPosition;
 	Vec2s drawObjectSize;
-	getInsideBorderSizing(TopLeft, BottomRight);
+	getInsideBorderBounds(TopLeft, BottomRight);
 	//TempPosition = calculateAlignment(TopLeft, BottomRight-TopLeft, drawObjectSize/2.0+TheGraphics->getTextBounds(getText(), getFont()), getVerticalAlignment(), getHorizontalAlignment());
    if(getActive()){
 	   if(getChecked()){

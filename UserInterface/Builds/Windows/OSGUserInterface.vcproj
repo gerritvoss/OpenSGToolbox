@@ -996,36 +996,68 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="Foreground"
+				Name="UIDrawingSurface"
 				>
 				<File
-					RelativePath="..\..\src\Foreground\OSGUIForeground.cpp"
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurface.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Foreground\OSGUIForeground.h"
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurface.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Foreground\OSGUIForeground.inl"
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurface.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Foreground\OSGUIForegroundBase.cpp"
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Foreground\OSGUIForegroundBase.h"
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Foreground\OSGUIForegroundBase.inl"
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Foreground\OSGUIForegroundFields.h"
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceFields.h"
 					>
 				</File>
+				<Filter
+					Name="Foreground"
+					>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForeground.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForeground.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForeground.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundFields.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Layout"
@@ -1812,6 +1844,10 @@
 				>
 				<File
 					RelativePath="..\..\src\Util\OSGUIDefines.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Util\OSGUIDefines.inl"
 					>
 				</File>
 				<File

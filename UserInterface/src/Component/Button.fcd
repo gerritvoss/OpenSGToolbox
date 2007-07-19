@@ -35,7 +35,7 @@ A UI Button.
 		cardinality="single"
 		visibility="external"
 		defaultValue="false"
-		access="protected"
+		access="public"
 	>
 	</Field>
 	<Field

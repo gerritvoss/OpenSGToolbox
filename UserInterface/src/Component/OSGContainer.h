@@ -46,6 +46,7 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGContainerBase.h"
+#include <map>
 
 OSG_BEGIN_NAMESPACE
 
@@ -74,10 +75,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual void getInsideBorderBounds(Pnt2s& TopLeft, Vec2s& Size) const;
-    virtual void getInsideBorderSizing(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+    virtual void getInsideBorderBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
     virtual void setAllInsets(UInt32);
     virtual void updateLayout(void);
+	
+	//Mouse Events
+    virtual void mouseClicked(const MouseEvent& e);
+    virtual void mouseEntered(const MouseEvent& e);
+    virtual void mouseExited(const MouseEvent& e);
+    virtual void mousePressed(const MouseEvent& e);
+    virtual void mouseReleased(const MouseEvent& e);
+
+	//Mouse Motion Events
+    virtual void mouseMoved(const MouseEvent& e);
+    virtual void mouseDragged(const MouseEvent& e);
+
+	//Mouse Wheel Events
+    virtual void mouseWheelMoved(const MouseWheelEvent& e);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -111,6 +125,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const Container &source);
+
+	void checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, ComponentPtr Comp, bool isMouseContained);
 };
 
 typedef Container *ContainerP;

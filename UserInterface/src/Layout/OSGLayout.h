@@ -76,8 +76,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Layout : public LayoutBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-	virtual void draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const = 0;
 	virtual void updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:

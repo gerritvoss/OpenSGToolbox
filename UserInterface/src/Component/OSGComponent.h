@@ -48,6 +48,18 @@
 #include "OSGComponentBase.h"
 #include "Graphics/OSGGraphics.h"
 
+#include <OpenSG/Input/OSGKeyListener.h>
+#include <OpenSG/Input/OSGMouseListener.h>
+#include <OpenSG/Input/OSGMouseWheelListener.h>
+#include <OpenSG/Input/OSGMouseMotionListener.h>
+
+#include <set>
+
+//#include <OpenSG/Input/OSGKeyEventProducer.h>
+//#include <OpenSG/Input/OSGMouseEventProducer.h>
+//#include <OpenSG/Input/OSGMouseWheelEventProducer.h>
+//#include <OpenSG/Input/OSGMouseMotionEventProducer.h>
+
 OSG_BEGIN_NAMESPACE
 
 class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
@@ -77,12 +89,43 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     /*! \}                                                                 */
 	virtual void draw(const GraphicsPtr Graphics) const;
 
-    virtual void getBounds(Pnt2s& TopLeft, Vec2s& Size) const;
-    virtual void getInsideBorderBounds(Pnt2s& TopLeft, Vec2s& Size) const;
-    virtual void getBoundsRenderingSurfaceSpace(Pnt2s& TopLeft, Vec2s& Size) const;
-    virtual void getInsideBorderSizing(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+    virtual void getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+	virtual void getClipBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+    virtual void getInsideBorderBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+    virtual void getBoundsRenderingSurfaceSpace(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
     virtual void updateContainerLayout(void);
+	virtual void updateClipBounds(void);
+	
+	//Mouse Events
+    virtual void mouseClicked(const MouseEvent& e);
+    virtual void mouseEntered(const MouseEvent& e);
+    virtual void mouseExited(const MouseEvent& e);
+    virtual void mousePressed(const MouseEvent& e);
+    virtual void mouseReleased(const MouseEvent& e);
 
+	//Mouse Motion Events
+    virtual void mouseMoved(const MouseEvent& e);
+    virtual void mouseDragged(const MouseEvent& e);
+
+	//Mouse Wheel Events
+    virtual void mouseWheelMoved(const MouseWheelEvent& e);
+
+	//Key Events
+	virtual void keyPressed(const KeyEvent& e);
+	virtual void keyReleased(const KeyEvent& e);
+	virtual void keyTyped(const KeyEvent& e);
+	
+    void addMouseMotionListener(MouseMotionListenerPtr Listener);
+    void removeMouseMotionListener(MouseMotionListenerPtr Listener);
+    void addMouseWheelListener(MouseWheelListenerPtr Listener);
+    void removeMouseWheelListener(MouseWheelListenerPtr Listener);
+    void addMouseListener(MouseListenerPtr Listener);
+    void removeMouseListener(MouseListenerPtr Listener);
+    void addKeyListener(KeyListenerPtr Listener);
+    void removeKeyListener(KeyListenerPtr Listener);
+
+	void setMouseContained(bool Value);
+	bool getMouseContained(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -120,6 +163,47 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const Component &source);
+	
+	typedef std::set<MouseMotionListenerPtr> MouseMotionListenerSet;
+    typedef MouseMotionListenerSet::iterator MouseMotionListenerSetItor;
+    typedef MouseMotionListenerSet::const_iterator MouseMotionListenerSetConstItor;
+	
+    MouseMotionListenerSet       _MouseMotionListeners;
+	
+    virtual void produceMouseMoved(const MouseEvent& e);
+    virtual void produceMouseDragged(const MouseEvent& e);
+
+	typedef std::set<MouseWheelListenerPtr> MouseWheelListenerSet;
+    typedef MouseWheelListenerSet::iterator MouseWheelListenerSetItor;
+    typedef MouseWheelListenerSet::const_iterator MouseWheelListenerSetConstItor;
+	
+    MouseWheelListenerSet       _MouseWheelListeners;
+	
+    void produceMouseWheelMoved(const MouseWheelEvent& e);
+	
+	typedef std::set<MouseListenerPtr> MouseListenerSet;
+    typedef MouseListenerSet::iterator MouseListenerSetItor;
+    typedef MouseListenerSet::const_iterator MouseListenerSetConstItor;
+	
+    MouseListenerSet       _MouseListeners;
+	
+    void produceMouseClicked(const MouseEvent& e);
+    void produceMouseEntered(const MouseEvent& e);
+    void produceMouseExited(const MouseEvent& e);
+    void produceMousePressed(const MouseEvent& e);
+    void produceMouseReleased(const MouseEvent& e);
+	
+	typedef std::set<KeyListenerPtr> KeyListenerSet;
+    typedef KeyListenerSet::iterator KeyListenerSetItor;
+    typedef KeyListenerSet::const_iterator KeyListenerSetConstItor;
+	
+    KeyListenerSet       _KeyListeners;
+	
+    void produceKeyPressed(const KeyEvent& e);
+    void produceKeyReleased(const KeyEvent& e);
+    void produceKeyTyped(const KeyEvent& e);
+	
+	bool _MouseInComponentLastMouse;
 };
 
 typedef Component *ComponentP;

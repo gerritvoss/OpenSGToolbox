@@ -77,6 +77,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ArcUIDrawObject : public ArcUIDrawObjectBa
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+	virtual void draw(const GraphicsPtr Graphics) const;
+    virtual void getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -97,8 +99,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ArcUIDrawObject : public ArcUIDrawObjectBa
     virtual ~ArcUIDrawObject(void); 
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr Graphics) const;
-    virtual void getBounds(Pnt2s& TopLeft, Vec2s& Size) const;
     
     /*==========================  PRIVATE  ================================*/
   private:

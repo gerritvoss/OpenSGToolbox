@@ -225,7 +225,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     void produceMousePressed(const MouseEvent::MouseButton& Button, const Pnt2s& Location);
     void produceMouseReleased(const MouseEvent::MouseButton& Button, const Pnt2s& Location);
 
-    void produceMouseWheelMoved(const Int32& WheelRotation, const MouseWheelEvent::ScrollType& TheScrollType = MouseWheelEvent::UNIT_SCROLL);
+    void produceMouseWheelMoved(const Int32& WheelRotation, const Pnt2s& Location, const MouseWheelEvent::ScrollType& TheScrollType = MouseWheelEvent::UNIT_SCROLL);
 
     void produceMouseMoved(const Pnt2s& Location);
     void produceMouseDragged(const MouseEvent::MouseButton& Button, const Pnt2s& Location);

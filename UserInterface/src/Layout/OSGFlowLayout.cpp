@@ -75,10 +75,6 @@ void FlowLayout::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void FlowLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
-{
-}
-
 void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
 	/*!

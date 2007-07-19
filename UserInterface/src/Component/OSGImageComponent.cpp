@@ -82,7 +82,7 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
    
    //Get Border Insets
    Pnt2s TopLeft, BottomRight;
-   getInsideBorderSizing(TopLeft, BottomRight);
+   getInsideBorderBounds(TopLeft, BottomRight);
    Vec2s ComponentSize(BottomRight-TopLeft);
 
    //Render the Image

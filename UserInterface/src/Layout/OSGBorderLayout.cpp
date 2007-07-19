@@ -77,10 +77,6 @@ void BorderLayout::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void BorderLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
-{
-}
-
 void BorderLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
 	Pnt2s borderOffset;

@@ -42,6 +42,96 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+void Component::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+{
+   TopLeft = getPosition();
+   BottomRight = getPosition()+getSize();
+}
+
+inline
+void Component::getClipBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+{
+	TopLeft = getClipTopLeft();
+	BottomRight = getClipBottomRight();
+}
+
+inline
+void Component::addKeyListener(KeyListenerPtr Listener)
+{
+   _KeyListeners.insert(Listener);
+}
+
+inline
+void Component::removeKeyListener(KeyListenerPtr Listener)
+{
+   KeyListenerSetItor EraseIter(_KeyListeners.find(Listener));
+   if(EraseIter != _KeyListeners.end())
+   {
+      _KeyListeners.erase(EraseIter);
+   }
+}
+
+inline
+void Component::addMouseListener(MouseListenerPtr Listener)
+{
+   _MouseListeners.insert(Listener);
+}
+
+inline
+void Component::removeMouseListener(MouseListenerPtr Listener)
+{
+   MouseListenerSetItor EraseIter(_MouseListeners.find(Listener));
+   if(EraseIter != _MouseListeners.end())
+   {
+      _MouseListeners.erase(EraseIter);
+   }
+}
+
+inline
+void Component::addMouseWheelListener(MouseWheelListenerPtr Listener)
+{
+   _MouseWheelListeners.insert(Listener);
+}
+
+inline
+void Component::removeMouseWheelListener(MouseWheelListenerPtr Listener)
+{
+   MouseWheelListenerSetItor EraseIter(_MouseWheelListeners.find(Listener));
+   if(EraseIter != _MouseWheelListeners.end())
+   {
+      _MouseWheelListeners.erase(EraseIter);
+   }
+}
+
+inline
+void Component::addMouseMotionListener(MouseMotionListenerPtr Listener)
+{
+   _MouseMotionListeners.insert(Listener);
+}
+
+inline
+void Component::removeMouseMotionListener(MouseMotionListenerPtr Listener)
+{
+   MouseMotionListenerSetItor EraseIter(_MouseMotionListeners.find(Listener));
+   if(EraseIter != _MouseMotionListeners.end())
+   {
+      _MouseMotionListeners.erase(EraseIter);
+   }
+}
+
+inline
+void Component::setMouseContained(bool Value)
+{
+	_MouseInComponentLastMouse = Value;
+}
+
+inline
+bool Component::getMouseContained(void)
+{
+	return _MouseInComponentLastMouse;
+}
+
 OSG_END_NAMESPACE
 
 #define OSGCOMPONENT_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

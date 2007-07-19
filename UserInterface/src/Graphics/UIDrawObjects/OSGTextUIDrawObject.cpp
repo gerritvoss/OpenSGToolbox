@@ -82,7 +82,7 @@ void TextUIDrawObject::draw(const GraphicsPtr Graphics) const
 	Graphics->drawText(getPosition(), getText(), getFont(), getColor(), getOpacity());
 }
 
-void TextUIDrawObject::getBounds(Pnt2s& TopLeft, Vec2s& Size) const
+void TextUIDrawObject::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 {
    TextLayoutParam layoutParam;
    layoutParam.spacing = 1.1;
@@ -91,8 +91,8 @@ void TextUIDrawObject::getBounds(Pnt2s& TopLeft, Vec2s& Size) const
  
    TextLayoutResult layoutResult;
    getFont()->layout(getText(), layoutParam, layoutResult);
-   Size.setValues(layoutResult.textBounds.x()*getFont()->getSize(),layoutResult.textBounds.y()*getFont()->getSize());
    TopLeft = getPosition();
+   BottomRight = getPosition()+Vec2s(layoutResult.textBounds.x()*getFont()->getSize(),layoutResult.textBounds.y()*getFont()->getSize());
 }
 
 /*-------------------------------------------------------------------------*\

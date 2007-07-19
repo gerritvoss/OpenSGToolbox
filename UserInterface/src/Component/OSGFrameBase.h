@@ -67,7 +67,7 @@
 
 #include "OSGContainer.h" // Parent
 
-#include <OpenSG/Input/OSGWindowEventProducer.h> // EventProducer type
+#include "OSGComponent.h" // FocusedComponent type
 
 #include "OSGFrameFields.h"
 
@@ -91,11 +91,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
 
     enum
     {
-        EventProducerFieldId = Inherited::NextFieldId,
-        NextFieldId          = EventProducerFieldId + 1
+        FocusedComponentFieldId = Inherited::NextFieldId,
+        NextFieldId             = FocusedComponentFieldId + 1
     };
 
-    static const OSG::BitVector EventProducerFieldMask;
+    static const OSG::BitVector FocusedComponentFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -122,17 +122,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFWindowEventProducerPtr *getSFEventProducer  (void);
+           SFComponentPtr      *getSFFocusedComponent(void);
 
-           WindowEventProducerPtr &getEventProducer  (void);
-     const WindowEventProducerPtr &getEventProducer  (void) const;
+           ComponentPtr        &getFocusedComponent(void);
+     const ComponentPtr        &getFocusedComponent(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setEventProducer  ( const WindowEventProducerPtr &value );
+     void setFocusedComponent( const ComponentPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -175,7 +175,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFWindowEventProducerPtr   _sfEventProducer;
+    SFComponentPtr      _sfFocusedComponent;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

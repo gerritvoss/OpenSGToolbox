@@ -74,10 +74,6 @@ void GridBagLayout::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void GridBagLayout::draw(const MFComponentPtr Components,const ComponentPtr ParentComponent, const GraphicsPtr TheGraphics) const
-{
-}
-
 void GridBagLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
 }

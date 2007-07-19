@@ -53,6 +53,8 @@ class OSG_INPUTLIB_DLLMAPPING Event
     Time _TimeStamp;
 };
 
+typedef Event* EventPtr;
+
 OSG_END_NAMESPACE
 
 #include "OSGEvent.inl"

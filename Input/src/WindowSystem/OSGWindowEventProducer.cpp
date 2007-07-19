@@ -250,9 +250,9 @@ void WindowEventProducer::produceMouseReleased(const MouseEvent::MouseButton& Bu
 }
 
 
-void WindowEventProducer::produceMouseWheelMoved(const Int32& WheelRotation, const MouseWheelEvent::ScrollType& TheScrollType)
+void WindowEventProducer::produceMouseWheelMoved(const Int32& WheelRotation, const Pnt2s& Location, const MouseWheelEvent::ScrollType& TheScrollType)
 {
-   MouseWheelEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), WheelRotation, TheScrollType);
+   MouseWheelEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), WheelRotation, TheScrollType, Location);
    for(MouseWheelListenerSetConstItor SetItor(_MouseWheelListeners.begin()) ; SetItor != _MouseWheelListeners.end() ; ++SetItor)
    {
       (*SetItor)->mouseWheelMoved(TheEvent);

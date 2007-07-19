@@ -189,7 +189,7 @@ GraphicsBase::GraphicsBase(void) :
     _sfOpacity                (Real32(1.0)), 
     _sfEnablePointAntiAliasing(bool(true)), 
     _sfEnableLineAntiAliasing (bool(true)), 
-    _sfEnablePolygonAntiAliasing(bool(true)), 
+    _sfEnablePolygonAntiAliasing(bool(false)), 
     Inherited() 
 {
 }

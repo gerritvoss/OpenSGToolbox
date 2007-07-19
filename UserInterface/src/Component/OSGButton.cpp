@@ -76,7 +76,7 @@ void Button::initMethod (void)
 void Button::drawInternal(const GraphicsPtr TheGraphics) const
 {
    Pnt2s TopLeft, BottomRight;
-   getInsideBorderSizing(TopLeft, BottomRight);
+   getInsideBorderBounds(TopLeft, BottomRight);
    //If I have Text Then Draw it
    if(getText() != "" && getFont() != NullFC)
    {
