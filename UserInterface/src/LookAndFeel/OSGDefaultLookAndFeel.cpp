@@ -59,6 +59,13 @@
 #include "Component/OSGPanel.h"
 #include "Component/OSGImageComponent.h"
 #include "Util/OSGUIDefines.h"
+#include "Component/OSGCheckboxButton.h"
+#include "Component/OSGRadioButton.h"
+#include "Graphics/UIDrawObjects/OSGRectUIDrawObject.h"
+#include "Graphics/UIDrawObjects/OSGArcUIDrawObject.h"
+#include "Graphics/UIDrawObjects/OSGDiscUIDrawObject.h"
+#include "Graphics/UIDrawObjects/OSGLineUIDrawObject.h"
+#include "Component/OSGUIDrawObjectCanvas.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -349,12 +356,242 @@ void DefaultLookAndFeel::init(void)
 	
 	ImageComponent::getClassType().setPrototype(DefaultImageComponent);
 
+	
+	//************************** Checkbox Button Component *****************************
+	UIDrawObjectCanvasPtr defaultCheckboxDrawObject = UIDrawObjectCanvas::create();
+	UIDrawObjectCanvasPtr defaultCheckedCheckboxDrawObject = UIDrawObjectCanvas::create();
+	UIDrawObjectCanvasPtr defaultActiveCheckboxDrawObject = UIDrawObjectCanvas::create();
+	UIDrawObjectCanvasPtr defaultActiveCheckedCheckboxDrawObject = UIDrawObjectCanvas::create();
+
+	RectUIDrawObjectPtr CheckboxBackground = RectUIDrawObject::create();
+	beginEditCP(CheckboxBackground);
+		CheckboxBackground->setTopLeft(Pnt2s(1,1));
+		CheckboxBackground->setBottomRight(Pnt2s(25,25));
+		CheckboxBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+		CheckboxBackground->setOpacity(1.0);
+	endEditCP(CheckboxBackground);
+
+	RectUIDrawObjectPtr CheckboxBackgroundBorder = RectUIDrawObject::create();
+	beginEditCP(CheckboxBackgroundBorder);
+		CheckboxBackgroundBorder->setTopLeft(Pnt2s(0,0));
+		CheckboxBackgroundBorder->setBottomRight(Pnt2s(26,26));
+		CheckboxBackgroundBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
+		CheckboxBackgroundBorder->setOpacity(1.0);
+	endEditCP(CheckboxBackgroundBorder);
+
+	RectUIDrawObjectPtr CheckboxActiveBorder = RectUIDrawObject::create();
+	beginEditCP(CheckboxActiveBorder);
+		CheckboxActiveBorder->setTopLeft(Pnt2s(1,1));
+		CheckboxActiveBorder->setBottomRight(Pnt2s(25, 25));
+		CheckboxActiveBorder->setColor(Color4f(0.0, 1.0, 0.0, 1.0));
+		CheckboxActiveBorder->setOpacity(1.0);
+	endEditCP(CheckboxActiveBorder);
+
+	LineUIDrawObjectPtr CheckboxLine1 = LineUIDrawObject::create();
+	beginEditCP(CheckboxLine1);
+		CheckboxLine1->setTopLeft(Pnt2s(1,1));
+		CheckboxLine1->setBottomRight(Pnt2s(25,25));
+		CheckboxLine1->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
+		CheckboxLine1->setOpacity(1.0);
+		CheckboxLine1->setWidth(4);
+	endEditCP(CheckboxLine1);
+
+	LineUIDrawObjectPtr CheckboxLine2 = LineUIDrawObject::create();
+	beginEditCP(CheckboxLine2);
+		CheckboxLine2->setTopLeft(Pnt2s(1,25));
+		CheckboxLine2->setBottomRight(Pnt2s(25,1));
+		CheckboxLine2->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
+		CheckboxLine2->setOpacity(1.0);
+		CheckboxLine2->setWidth(4);
+	endEditCP(CheckboxLine1);
+
+	beginEditCP(defaultCheckboxDrawObject);
+	   defaultCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
+	   defaultCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
+	endEditCP(defaultCheckboxDrawObject);
+
+	beginEditCP(defaultCheckedCheckboxDrawObject);
+		defaultCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
+		defaultCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
+		defaultCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine1);
+		defaultCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine2);
+	endEditCP(defaultCheckedCheckboxDrawObject);
+
+	beginEditCP(defaultActiveCheckedCheckboxDrawObject);
+		defaultActiveCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
+		defaultActiveCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
+		defaultActiveCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxActiveBorder);
+		defaultActiveCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine1);
+		defaultActiveCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine2);
+	endEditCP(defaultActiveCheckedCheckboxDrawObject);
+	 
+	EmptyBorderPtr DefaultCheckboxButtonBorder = EmptyBorder::create();
+
+
+	ColorUIBackgroundPtr DefaultCheckboxButtonBackground = ColorUIBackground::create();
+	beginEditCP(DefaultCheckboxButtonBackground);
+		DefaultCheckboxButtonBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
+	endEditCP(DefaultCheckboxButtonBackground);
+
+	CheckboxButtonPtr DefaultCheckboxButton = CheckboxButton::create();
+	beginEditCP(DefaultCheckboxButton);
+		DefaultCheckboxButton->setEnabled(true);
+		DefaultCheckboxButton->setVisible(true);
+		
+		DefaultCheckboxButton->setConstraints(NullFC);
+		//Sizes
+		DefaultCheckboxButton->setMinSize(Vec2s(0,0));
+		DefaultCheckboxButton->setMaxSize(Vec2s(32767,32767)); //2^15
+		DefaultCheckboxButton->setPreferredSize(Vec2s(100,50));
+		DefaultCheckboxButton->setSize(Vec2s(0,0));
+		DefaultCheckboxButton->setDrawObject(defaultCheckboxDrawObject);
+		DefaultCheckboxButton->setCheckedDrawObject(defaultCheckedCheckboxDrawObject);
+		DefaultCheckboxButton->setActiveDrawObject(defaultActiveCheckboxDrawObject);
+		DefaultCheckboxButton->setActiveCheckedDrawObject(defaultActiveCheckedCheckboxDrawObject);
+
+		//Border
+		DefaultCheckboxButton->setBorder(DefaultCheckboxButtonBorder);
+		//DefaultCheckboxButton->setDisabledBorder(DefaultDisabledButtonBorder);
+		
+		//Background
+		DefaultCheckboxButton->setBackground(DefaultCheckboxButtonBackground);
+		//DefaultCheckboxButton->setDisabledBackground(DefaultDisabledCheckboxButtonBackground);
+
+		//Foreground
+		DefaultCheckboxButton->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
+		//DefaultCheckboxButton->setDisabledForegroundColor(Color4f(0.4,0.4,0.4,1.0));
+		
+		//Opacity
+		DefaultCheckboxButton->setOpacity(1.0);
+
+		//Text
+		DefaultCheckboxButton->setText("");
+		DefaultCheckboxButton->setFont(DefaultFont);
+		DefaultCheckboxButton->setVerticalAlignment(VERTICAL_CENTER);
+		DefaultCheckboxButton->setHorizontalAlignment(HORIZONTAL_CENTER);
+	endEditCP(DefaultCheckboxButton);
+
+	CheckboxButton::getClassType().setPrototype(DefaultCheckboxButton);
+
+	//************************** Radio Button Component *****************************
+	UIDrawObjectCanvasPtr defaultRadioDrawObject = UIDrawObjectCanvas::create();
+	UIDrawObjectCanvasPtr defaultCheckedRadioDrawObject = UIDrawObjectCanvas::create();
+	UIDrawObjectCanvasPtr defaultActiveRadioDrawObject = UIDrawObjectCanvas::create();
+	UIDrawObjectCanvasPtr defaultActiveCheckedRadioDrawObject = UIDrawObjectCanvas::create();
+
+	DiscUIDrawObjectPtr RadioBackground = DiscUIDrawObject::create();
+	beginEditCP(RadioBackground);
+		//RadioBackground->setCenter(Pnt2s(10, 10));
+		RadioBackground->setWidth(10);
+		RadioBackground->setHeight(10);
+		RadioBackground->setSubDivisions(10);
+		RadioBackground->setStartAngleRad(0);
+		RadioBackground->setEndAngleRad(6.28318531);
+		RadioBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+		RadioBackground->setOpacity(1.0);
+	endEditCP(RadioBackground);
+
+	ArcUIDrawObjectPtr RadioBackgroundBorder = ArcUIDrawObject::create();
+	beginEditCP(RadioBackgroundBorder);
+		//RadioBackgroundBorder->setCenter(Pnt2s(10, 10));
+		RadioBackgroundBorder->setWidth(10);
+		RadioBackgroundBorder->setHeight(10);
+		RadioBackgroundBorder->setSubDivisions(20);
+		RadioBackgroundBorder->setStartAngleRad(0);
+		RadioBackgroundBorder->setEndAngleRad(6.28318531);
+		RadioBackgroundBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
+		RadioBackgroundBorder->setOpacity(1.0);
+		RadioBackgroundBorder->setLineWidth(1);
+	endEditCP(RadioBackgroundBorder);
+
+	DiscUIDrawObjectPtr RadioChecked = DiscUIDrawObject::create();
+	beginEditCP(RadioChecked);
+		//RadioChecked->setCenter(Pnt2s(10, 10));
+		RadioChecked->setWidth(6);
+		RadioChecked->setHeight(6);
+		RadioChecked->setSubDivisions(20);
+		RadioChecked->setStartAngleRad(0);
+		RadioChecked->setEndAngleRad(6.28318531);
+		RadioChecked->setColor(Color4f(0.0,0.0,0.0,1.0));
+		RadioChecked->setOpacity(1.0);
+	endEditCP(RadioChecked);
+
+	ArcUIDrawObjectPtr RadioActiveBorder = ArcUIDrawObject::create();
+	beginEditCP(RadioActiveBorder);
+		//RadioActiveBorder->setCenter(Pnt2s(10, 10));
+		RadioActiveBorder->setWidth(9);
+		RadioActiveBorder->setHeight(9);
+		RadioActiveBorder->setSubDivisions(10);
+		RadioActiveBorder->setStartAngleRad(0);
+		RadioActiveBorder->setEndAngleRad(6.28318531);
+		RadioActiveBorder->setColor(Color4f(0.0,0.0,1.0,1.0));
+		RadioActiveBorder->setOpacity(1.0);
+	endEditCP(RadioActiveBorder);
+
+	beginEditCP(defaultRadioDrawObject);
+		defaultRadioDrawObject->getDrawObjects().addValue(RadioBackground);
+		defaultRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
+	endEditCP(defaultRadioDrawObject);
+
+	beginEditCP(defaultCheckedRadioDrawObject);
+		defaultCheckedRadioDrawObject->getDrawObjects().addValue(RadioBackground);
+		defaultCheckedRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
+		defaultCheckedRadioDrawObject->getDrawObjects().addValue(RadioChecked);
+	endEditCP(defaultCheckedRadioDrawObject);
+
+	beginEditCP(defaultActiveRadioDrawObject);
+		defaultActiveRadioDrawObject->getDrawObjects().addValue(RadioBackground);
+		defaultActiveRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
+		defaultActiveRadioDrawObject->getDrawObjects().addValue(RadioActiveBorder);
+	endEditCP(defaultActiveRadioDrawObject);
+
+	beginEditCP(defaultActiveCheckedRadioDrawObject);
+		defaultActiveCheckedRadioDrawObject->getDrawObjects().addValue(RadioBackground);
+		defaultActiveCheckedRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
+		defaultActiveCheckedRadioDrawObject->getDrawObjects().addValue(RadioChecked);
+		defaultActiveCheckedRadioDrawObject->getDrawObjects().addValue(RadioActiveBorder);
+	endEditCP(defaultActiveCheckedRadioDrawObject);
+		
+	EmptyBorderPtr DefaultRadioButtonBorder = EmptyBorder::create();
+
+	ColorUIBackgroundPtr DefaultRadioButtonBackground = ColorUIBackground::create();
+	beginEditCP(DefaultRadioButtonBackground);
+		DefaultRadioButtonBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
+	endEditCP(DefaultRadioButtonBackground);	
+
+	RadioButtonPtr DefaultRadioButton = RadioButton::create();
+	beginEditCP(DefaultRadioButton);
+		DefaultRadioButton->setEnabled(true);
+		DefaultRadioButton->setVisible(true);
+		DefaultRadioButton->setConstraints(NullFC);
+		DefaultRadioButton->setMinSize(Vec2s(0, 0));
+		DefaultRadioButton->setMaxSize(Vec2s(32767,32767));
+		DefaultRadioButton->setPreferredSize(Vec2s(100, 100));
+		DefaultRadioButton->setSize(Vec2s(0, 0));
+		DefaultRadioButton->setDrawObject(defaultRadioDrawObject);
+		DefaultRadioButton->setCheckedDrawObject(defaultCheckedRadioDrawObject);
+		DefaultRadioButton->setActiveDrawObject(defaultActiveRadioDrawObject);
+		DefaultRadioButton->setActiveCheckedDrawObject(defaultActiveCheckedRadioDrawObject);
+		DefaultRadioButton->setBorder(DefaultRadioButtonBorder);
+		DefaultRadioButton->setBackground(DefaultRadioButtonBackground);
+		DefaultRadioButton->setForegroundColor(Color4f(0.0,0.0, 0.0, 1.0));
+		DefaultRadioButton->setOpacity(1.0);
+		DefaultRadioButton->setText("");
+		DefaultRadioButton->setFont(DefaultFont);
+		DefaultRadioButton->setVerticalAlignment(VERTICAL_CENTER);
+		DefaultRadioButton->setHorizontalAlignment(HORIZONTAL_CENTER);
+	endEditCP(DefaultRadioButton);
+	
+	RadioButton::getClassType().setPrototype(DefaultRadioButton);
+
 	beginEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);
 		getPrototypes().addValue(DefaultButton);
 		getPrototypes().addValue(DefaultLabel);
 		getPrototypes().addValue(DefaultFrame);
 		getPrototypes().addValue(DefaultPanel);
 		getPrototypes().addValue(DefaultImageComponent);
+		getPrototypes().addValue(DefaultCheckboxButton);
+		getPrototypes().addValue(DefaultRadioButton);
 	endEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);
 }
 /*-------------------------------------------------------------------------*\
