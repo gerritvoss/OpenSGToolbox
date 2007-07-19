@@ -149,7 +149,8 @@ int main(int argc, char **argv)
 
 	// Set compoundBackground
 	beginEditCP(compoundBackground);
-		//gradient with transparency and texture
+		compoundBackground->getBackgrounds().addValue(textureBackground);
+		compoundBackground->getBackgrounds().addValue(gradientBackground);
 	endEditCP(compoundBackground);
 
 	// Set emptyBackground (note that empty background is just that,
@@ -161,7 +162,7 @@ int main(int argc, char **argv)
 	// and orientation of gradient
 	beginEditCP(gradientBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
 		 gradientBackground->setColorStart( Color4f(1.0, 0.0, 0.0, 1.0));
-		 gradientBackground->setColorEnd( Color4f(0.0, 0.0, 1.0, 1.0));
+		 gradientBackground->setColorEnd( Color4f(0.0, 0.0, 1.0, 0.5));
 		 // The input into the following call is either
 		 // HORIZONTAL_ALIGNMENT or VERTICAL_ALIGNMENT,
 		 // which orient the gradient in the obvious manner 
