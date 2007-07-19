@@ -670,7 +670,7 @@ void DefaultLookAndFeel::init(void)
 	GradientUIBackgroundPtr DefaultGradientBackground = GradientUIBackground::create();
 	beginEditCP(DefaultGradientBackground);
 		DefaultGradientBackground->setColorStart(Color4f(1.0, 1.0, 1.0, 1.0));
-		DefaultGradientBackground->setColorStart(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultGradientBackground->setColorEnd(Color4f(1.0, 1.0, 1.0, 1.0));
 		DefaultGradientBackground->setAlignment(HORIZONTAL_ALIGNMENT);
 	endEditCP(DefaultGradientBackground);
 
