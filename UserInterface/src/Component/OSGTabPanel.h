@@ -82,6 +82,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase
 	virtual void addTab(const ComponentPtr Tab, const ComponentPtr TabContent);
 	virtual void removeTab(const ComponentPtr Tab);
 	virtual void removeTab(const UInt32 TabIndex);
+	virtual void insertTab(const ComponentPtr TabInsert, const ComponentPtr Tab, const ComponentPtr TabContent);
+	virtual void insertTab(const UInt32 TabIndex, const ComponentPtr Tab, const ComponentPtr TabContent);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

@@ -119,7 +119,6 @@ void BorderLayout::updateLayout(const MFComponentPtr Components,const ComponentP
 		}
 	}
 	// this second pass sets its size and draws them
-	glTranslatef(borderOffset.x(), borderOffset.y(), 0);
 	for(UInt32 i = 0 ; i<Components.size(); ++i)
     {
 		// Find its region and draw it accordingly

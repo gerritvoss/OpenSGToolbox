@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 #include "OSGTabPanel.h"
+#include "Util/OSGUIDefines.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -76,37 +77,156 @@ void TabPanel::initMethod (void)
 
 void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 {
-	Pnt2s TopLeft, BottomRight;
-	getInsideBorderSizing(TopLeft, BottomRight);
 	Vec2s pos;
 
 	// translate past the border and inset
 	//glTranslatef(TopLeft.x(), TopLeft.y(), 0);
 
 	// draw the tabs
-	for (int i = 0; i < getTabs().size(); ++i)
+	for (UInt32 i = 0; i < getTabs().size(); ++i)
 	{
-
+		getTabs().getValue(i)->draw(Graphics);
 	}
 	
 	// draw the active tab component
-	pos = getTabContents().getValue(getActiveTab())->getPosition();
-	glTranslatef(pos.x(), pos.y(), 0);
 	getTabContents().getValue(getActiveTab())->draw(Graphics);
-	glTranslatef(-pos.x(), -pos.y(), 0);
 }
 
 void TabPanel::addTab(const ComponentPtr Tab, const ComponentPtr TabContent)
 {
+	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
+		getTabs().addValue(Tab);
+		getTabContents().addValue(TabContent);
+	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
 }
+
 void TabPanel::removeTab(const ComponentPtr Tab)
 {
+	UInt32 index(0);
+	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
+		// check if the component is a tab or tabcontent, then erase accordingly
+		if (getTabs().end() == getTabs().find(Tab))
+		{
+			getTabContents().erase(getTabContents().find(Tab));
+			for (UInt32 i = 0; i < getTabContents().size(); ++i)
+			{
+				if(getTabContents().find(Tab) == getTabContents().find(getTabContents().getValue(i)))
+					index = i;
+			}
+			getTabs().erase(getTabs().find(getTabs().getValue(index)));
+		}
+		else
+		{
+			getTabs().erase(getTabs().find(Tab));
+			for (UInt32 i = 0; i < getTabs().size(); ++i)
+			{
+				if(getTabs().find(Tab) == getTabs().find(getTabs().getValue(i)))
+					index = i;
+			}
+			getTabContents().erase(getTabContents().find(getTabContents().getValue(index)));
+		}
+	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
 }
+
 void TabPanel::removeTab(const UInt32 TabIndex)
 {
+	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
+		getTabs().erase(getTabs().find(getTabs().getValue(TabIndex))); // an incredibly ridiculous function call
+		getTabContents().erase(getTabContents().find(getTabContents().getValue(TabIndex)));
+	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
 }
+
+void TabPanel::insertTab(const ComponentPtr TabInsert, const ComponentPtr Tab, const ComponentPtr TabContent)
+{
+	UInt32 index(0);
+	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
+		// check if the component is a tab or tabcontent, then insert accordingly
+		if (getTabs().end() == getTabs().find(TabInsert))
+		{
+			getTabContents().insert(getTabContents().find(TabInsert), TabContent);
+			for (UInt32 i = 0; i < getTabContents().size(); ++i)
+			{
+				if(getTabContents().find(TabInsert) == getTabContents().find(getTabContents().getValue(i)))
+					index = i;
+			}
+			getTabs().insert(getTabs().find(getTabs().getValue(index)), Tab);
+		}
+		else
+		{
+			getTabs().insert(getTabs().find(TabInsert), Tab);
+			for (UInt32 i = 0; i < getTabs().size(); ++i)
+			{
+				if(getTabs().find(TabInsert) == getTabs().find(getTabs().getValue(i)))
+					index = i;
+			}
+			getTabContents().insert(getTabContents().find(getTabContents().getValue(index)), TabContent);
+		}
+		endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
+}
+
+void TabPanel::insertTab(const UInt32 TabIndex, const ComponentPtr Tab, const ComponentPtr TabContent)
+{
+	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
+		getTabs().insert(getTabs().find(getTabs().getValue(TabIndex)), Tab); // an incredibly ridiculous function call
+		getTabContents().insert(getTabContents().find(getTabContents().getValue(TabIndex)), TabContent);
+	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
+}
+
 void TabPanel::updateTabLayout(void)
 {
+	Pnt2s borderOffset;
+	Vec2s borderSize;
+	getInsideBorderBounds(borderOffset, borderSize);
+
+	UInt16 AxisIndex(0);
+	if (getTabPlacement() == PLACEMENT_EAST || getTabPlacement() == PLACEMENT_WEST)
+		AxisIndex=1;
+	UInt32 largestMinorAxis(0);
+	UInt32 cumMajorAxis(0);
+	Pnt2s alignOffset(0,0);
+	Pnt2s offset(0,0);
+	
+	// first layout all of the tabs
+	// naturally the alignments and such is necessary
+	// on the first sweep, get the maximum size and cumLength
+	for (UInt32 i=0; i < getTabs().size(); ++i)
+	{
+		cumMajorAxis += getTabs().getValue(i)->getPreferredSize()[AxisIndex];
+		if (getTabs().getValue(i)->getPreferredSize()[(AxisIndex+1)%2] > largestMinorAxis)
+			largestMinorAxis = getTabs().getValue(i)->getPreferredSize()[(AxisIndex+1)%2];
+	}
+	// set up the alignment and offset
+	if (getTabAlignment() == AXIS_CENTER_ALIGNMENT)
+		alignOffset[AxisIndex] = (borderSize[AxisIndex] - cumMajorAxis)/2;
+	else if (getTabAlignment() == AXIS_MAX_ALIGNMENT)
+		alignOffset[AxisIndex] = borderSize[AxisIndex] - cumMajorAxis;
+	if (getTabPlacement() == PLACEMENT_EAST || getTabPlacement() == PLACEMENT_SOUTH)
+		alignOffset[(AxisIndex+1)%2] = borderSize[(AxisIndex+1)%2] - largestMinorAxis;
+	offset = borderOffset;
+
+	// set sizes and positions of all tabs
+	for (UInt32 i=0; i < getTabs().size(); ++i)
+	{
+		if ( (getTabPlacement() == PLACEMENT_NORTH || getTabPlacement() == PLACEMENT_WEST) && getTabs().getValue(i)->getPreferredSize()[(AxisIndex+1)%2] < largestMinorAxis)
+			offset[(AxisIndex+1)%2] += largestMinorAxis - getTabs().getValue(i)->getPreferredSize()[(AxisIndex+1)%2];
+		beginEditCP(getTabs().getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
+			getTabs().getValue(i)->setSize(getTabs().getValue(i)->getPreferredSize());
+			getTabs().getValue(i)->setPosition(alignOffset + offset);
+		endEditCP(getTabs().getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
+		offset[AxisIndex] += getTabs().getValue(i)->getSize()[AxisIndex];
+		if ( (getTabPlacement() == PLACEMENT_NORTH || getTabPlacement() == PLACEMENT_WEST) && getTabs().getValue(i)->getPreferredSize()[(AxisIndex+1)%2] < largestMinorAxis)
+			offset[(AxisIndex+1)%2] -= largestMinorAxis - getTabs().getValue(i)->getPreferredSize()[(AxisIndex+1)%2];
+	}
+
+	// now set size and position of the active tab's contents
+	offset = borderOffset;
+	if (getTabPlacement() == PLACEMENT_NORTH || getTabPlacement() == PLACEMENT_WEST)
+		offset[(AxisIndex+1)%2] += largestMinorAxis;
+	borderSize[(AxisIndex+1)%2] -= largestMinorAxis;
+	beginEditCP(getTabs().getValue(getActiveTab()), Component::SizeFieldMask|Component::PositionFieldMask);
+		getTabContents().getValue(getActiveTab())->setSize(borderSize);
+		getTabContents().getValue(getActiveTab())->setPosition(offset);
+	endEditCP(getTabContents().getValue(getActiveTab()), Component::SizeFieldMask|Component::PositionFieldMask);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -135,7 +255,7 @@ void TabPanel::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-    if( (whichField & SizeFieldMask) )
+    if( (whichField & SizeFieldMask) || (whichField & TabsFieldMask) || (whichField & TabContentsFieldMask) )
     {
 		updateTabLayout();
 	}
