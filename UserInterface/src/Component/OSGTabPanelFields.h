@@ -55,12 +55,12 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGComponentFields.h"
+#include "OSGContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class TabPanel;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! TabPanelPtr
 
-typedef FCPtr<ComponentPtr, TabPanel> TabPanelPtr;
+typedef FCPtr<ContainerPtr, TabPanel> TabPanelPtr;
 
 #endif
 

@@ -57,7 +57,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 #include "OSGTabPanelBase.h"
 #include "OSGTabPanel.h"
 
@@ -147,7 +147,7 @@ FieldDescription *TabPanelBase::_desc[] =
 
 FieldContainerType TabPanelBase::_type(
     "TabPanel",
-    "Component",
+    "Container",
     NULL,
     (PrototypeCreateF) &TabPanelBase::createEmpty,
     TabPanel::initMethod,
@@ -448,7 +448,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TabPanelPtr>::_type("TabPanelPtr", "ComponentPtr");
+DataType FieldDataTraits<TabPanelPtr>::_type("TabPanelPtr", "ContainerPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(TabPanelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);

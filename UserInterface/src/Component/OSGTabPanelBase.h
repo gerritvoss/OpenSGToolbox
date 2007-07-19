@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGComponent.h" // Parent
+#include "OSGContainer.h" // Parent
 
 #include "Component/OSGComponent.h" // Tabs type
 #include "Component/OSGComponent.h" // TabContents type
@@ -83,11 +83,11 @@ class BinaryDataHandler;
 
 //! \brief TabPanel Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Component
+class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Container
 {
   private:
 
-    typedef Component    Inherited;
+    typedef Container    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
