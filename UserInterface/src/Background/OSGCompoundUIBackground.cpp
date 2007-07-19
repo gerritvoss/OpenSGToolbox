@@ -76,6 +76,10 @@ void CompoundUIBackground::initMethod (void)
 
 void CompoundUIBackground::draw(const GraphicsPtr g, const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32 Opacity) const
 {
+	for(UInt32 i(0) ; i<getBackgrounds().size(); ++i)
+	{
+		getBackgrounds().getValue(i)->draw(g, TopLeft, BottomRight, Opacity);
+	}
 }
 
 /*-------------------------------------------------------------------------*\
