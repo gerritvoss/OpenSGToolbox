@@ -112,11 +112,13 @@ void UIDrawObjectCanvas::drawInternal(const GraphicsPtr Graphics) const
 UIDrawObjectCanvas::UIDrawObjectCanvas(void) :
     Inherited()
 {
+	setClipping(false);
 }
 
 UIDrawObjectCanvas::UIDrawObjectCanvas(const UIDrawObjectCanvas &source) :
     Inherited(source)
 {
+	setClipping(false);
 }
 
 UIDrawObjectCanvas::~UIDrawObjectCanvas(void)
@@ -128,6 +130,17 @@ UIDrawObjectCanvas::~UIDrawObjectCanvas(void)
 void UIDrawObjectCanvas::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+	
+	if( (whichField & DrawObjectsFieldMask) )
+    {
+		Pnt2s Pos;
+		Vec2s Size;
+		getDrawObjectBounds(Pos,Size);
+		beginEditCP(UIDrawObjectCanvasPtr(this), SizeFieldMask|PositionFieldMask);
+			setPosition(Pos);
+			setSize(Size);
+		endEditCP(UIDrawObjectCanvasPtr(this), SizeFieldMask|PositionFieldMask);
+    }
 }
 
 void UIDrawObjectCanvas::dump(      UInt32    , 
