@@ -147,7 +147,9 @@ int main(int argc, char **argv)
 		colorBackground->setColor(Color4f(1.0,0.0,0.0,1.0));
 	endEditCP(colorBackground, ColorUIBackground::ColorFieldMask);
 
-	// Set compoundBackground
+	// Set compoundBackground- use getBackgrounds().addValue(BACKGROUND_TO_BE_ADDED) 
+	// function.  Backgrounds render in order, so in this case textureBackground is
+	// rendered before gradientBackground.
 	beginEditCP(compoundBackground);
 		compoundBackground->getBackgrounds().addValue(textureBackground);
 		compoundBackground->getBackgrounds().addValue(gradientBackground);
