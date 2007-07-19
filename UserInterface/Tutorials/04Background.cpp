@@ -150,10 +150,10 @@ int main(int argc, char **argv)
 	// Set compoundBackground- use getBackgrounds().addValue(BACKGROUND_TO_BE_ADDED) 
 	// function.  Backgrounds render in order, so in this case textureBackground is
 	// rendered before gradientBackground.
-	beginEditCP(compoundBackground);
+	beginEditCP(compoundBackground, CompoundUIBackground::BackgroundsFieldMask);
 		compoundBackground->getBackgrounds().addValue(textureBackground);
 		compoundBackground->getBackgrounds().addValue(gradientBackground);
-	endEditCP(compoundBackground);
+	endEditCP(compoundBackground, CompoundUIBackground::BackgroundsFieldMask);
 
 	// Set emptyBackground (note that empty background is just that,
 	// a background with no attributes
@@ -180,24 +180,24 @@ int main(int argc, char **argv)
       BackgroundMaterialChunk->setSpecular(  Color4f(0.0,0.0,1.0,1.0));
 	endEditCP(BackgroundMaterialChunk);
 
-	beginEditCP(BackgroundMaterial);
+	beginEditCP(BackgroundMaterial, ChunkMaterial::ChunksFieldMask);
 		BackgroundMaterial->addChunk(BackgroundMaterialChunk);
-	endEditCP(BackgroundMaterial);
+	endEditCP(BackgroundMaterial, ChunkMaterial::ChunksFieldMask);
 
-	beginEditCP(materialBackground);
+	beginEditCP(materialBackground, MaterialUIBackground::MaterialFieldMask);
 		materialBackground->setMaterial(BackgroundMaterial);
-	endEditCP(materialBackground);
+	endEditCP(materialBackground, MaterialUIBackground::MaterialFieldMask);
 
 	// Set textureBackground- set texture
    TextureChunkPtr BackgroundTextureChunk = TextureChunk::create();
 	
-   beginEditCP(BackgroundTextureChunk);
+   beginEditCP(BackgroundTextureChunk, TextureChunk::ImageFieldMask);
 		BackgroundTextureChunk->setImage(ImageFileHandler::the().read("Data/Checker.jpg"));
-	endEditCP(BackgroundTextureChunk);
+	endEditCP(BackgroundTextureChunk, TextureChunk::ImageFieldMask);
 
-	beginEditCP(textureBackground);
+	beginEditCP(textureBackground, TextureUIBackground::TextureFieldMask);
 		textureBackground->setTexture(BackgroundTextureChunk);
-	endEditCP(textureBackground);
+	endEditCP(textureBackground, TextureUIBackground::TextureFieldMask);
 
 
 	// Create and define simple line border to be used on Buttons
