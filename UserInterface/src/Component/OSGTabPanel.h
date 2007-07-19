@@ -105,6 +105,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase
 
     /*! \}                                                                 */
     void updateTabLayout(void);
+
+	//Mouse Events
+    virtual void mouseClicked(const MouseEvent& e);
+    virtual void mouseEntered(const MouseEvent& e);
+    virtual void mouseExited(const MouseEvent& e);
+    virtual void mousePressed(const MouseEvent& e);
+    virtual void mouseReleased(const MouseEvent& e);
+
+	//Mouse Motion Events
+    virtual void mouseMoved(const MouseEvent& e);
+    virtual void mouseDragged(const MouseEvent& e);
+
+	//Mouse Wheel Events
+    virtual void mouseWheelMoved(const MouseWheelEvent& e);
     /*==========================  PRIVATE  ================================*/
   private:
 

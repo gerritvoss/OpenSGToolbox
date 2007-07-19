@@ -215,25 +215,6 @@ void Container::mouseWheelMoved(const MouseWheelEvent& e)
     }
 	Component::mouseWheelMoved(e);
 }
-/*-------------------------------------------------------------------------*\
- -  private                                                                 -
-\*-------------------------------------------------------------------------*/
-
-/*----------------------- constructors & destructors ----------------------*/
-
-Container::Container(void) :
-    Inherited()
-{
-}
-
-Container::Container(const Container &source) :
-    Inherited(source)
-{
-}
-
-Container::~Container(void)
-{
-}
 
 void Container::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, ComponentPtr Comp, bool isMouseContained)
 {
@@ -259,6 +240,26 @@ void Container::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, 
 		Comp->setMouseContained(true);
 	}
 }
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+Container::Container(void) :
+    Inherited()
+{
+}
+
+Container::Container(const Container &source) :
+    Inherited(source)
+{
+}
+
+Container::~Container(void)
+{
+}
+
 /*----------------------------- class specific ----------------------------*/
 
 void Container::changed(BitVector whichField, UInt32 origin)

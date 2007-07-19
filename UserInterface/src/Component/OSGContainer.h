@@ -113,6 +113,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
 
     /*! \}                                                                 */
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
+
+	void checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, ComponentPtr Comp, bool isMouseContained);
     
     /*==========================  PRIVATE  ================================*/
   private:
@@ -125,8 +127,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const Container &source);
-
-	void checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, ComponentPtr Comp, bool isMouseContained);
 };
 
 typedef Container *ContainerP;

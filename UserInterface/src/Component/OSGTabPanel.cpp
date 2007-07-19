@@ -47,6 +47,7 @@
 #include "OSGUserInterfaceDef.h"
 #include "OSGTabPanel.h"
 #include "Util/OSGUIDefines.h"
+#include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -96,82 +97,102 @@ void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 
 void TabPanel::addTab(const ComponentPtr Tab, const ComponentPtr TabContent)
 {
-	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
+	// three lists of components are actually kept
+	// every component, whether tab or tabcontent is kept in the children list
+	// this is for clipping and clicking purposes
+	// for drawing, the tabs and tabcontents are kept seperately in two other lists
+	// so, there are three lists, and every component is kept in two of them
+	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
 		getTabs().addValue(Tab);
 		getTabContents().addValue(TabContent);
-	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
+		getChildren().addValue(Tab);
+		getChildren().addValue(TabContent);
+	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
+
 }
 
 void TabPanel::removeTab(const ComponentPtr Tab)
 {
 	UInt32 index(0);
-	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
+	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
+		// also erase the the tab from the components list
+		getChildren().erase(getChildren().find(Tab));
 		// check if the component is a tab or tabcontent, then erase accordingly
 		if (getTabs().end() == getTabs().find(Tab))
-		{
-			getTabContents().erase(getTabContents().find(Tab));
+		{	// so it isn't in tabs
 			for (UInt32 i = 0; i < getTabContents().size(); ++i)
 			{
 				if(getTabContents().find(Tab) == getTabContents().find(getTabContents().getValue(i)))
 					index = i;
 			}
+			getTabContents().erase(getTabContents().find(Tab));
+			// also erase the the tab from the components list
+			getChildren().erase(getChildren().find(getTabs().getValue(index)));
 			getTabs().erase(getTabs().find(getTabs().getValue(index)));
 		}
 		else
 		{
-			getTabs().erase(getTabs().find(Tab));
 			for (UInt32 i = 0; i < getTabs().size(); ++i)
 			{
 				if(getTabs().find(Tab) == getTabs().find(getTabs().getValue(i)))
 					index = i;
 			}
+			getTabs().erase(getTabs().find(Tab));
+			// also erase the the tab from the components list
+			getChildren().erase(getChildren().find(getTabContents().getValue(index))); 
 			getTabContents().erase(getTabContents().find(getTabContents().getValue(index)));
 		}
-	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
+	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
 }
 
 void TabPanel::removeTab(const UInt32 TabIndex)
 {
-	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
+	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
+		getChildren().erase(getChildren().find(getTabs().getValue(TabIndex))); // an incredibly ridiculous function call
+		getChildren().erase(getChildren().find(getTabContents().getValue(TabIndex)));
 		getTabs().erase(getTabs().find(getTabs().getValue(TabIndex))); // an incredibly ridiculous function call
 		getTabContents().erase(getTabContents().find(getTabContents().getValue(TabIndex)));
-	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
+	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
 }
 
 void TabPanel::insertTab(const ComponentPtr TabInsert, const ComponentPtr Tab, const ComponentPtr TabContent)
 {
 	UInt32 index(0);
-	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
+	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask | ChildrenFieldMask);
+		getChildren().addValue(Tab);
+		getChildren().addValue(TabContent);
 		// check if the component is a tab or tabcontent, then insert accordingly
 		if (getTabs().end() == getTabs().find(TabInsert))
 		{
-			getTabContents().insert(getTabContents().find(TabInsert), TabContent);
 			for (UInt32 i = 0; i < getTabContents().size(); ++i)
 			{
 				if(getTabContents().find(TabInsert) == getTabContents().find(getTabContents().getValue(i)))
 					index = i;
 			}
+			getTabContents().insert(getTabContents().find(TabInsert), TabContent);
 			getTabs().insert(getTabs().find(getTabs().getValue(index)), Tab);
 		}
 		else
 		{
-			getTabs().insert(getTabs().find(TabInsert), Tab);
 			for (UInt32 i = 0; i < getTabs().size(); ++i)
 			{
 				if(getTabs().find(TabInsert) == getTabs().find(getTabs().getValue(i)))
 					index = i;
 			}
+			getTabs().insert(getTabs().find(TabInsert), Tab);
 			getTabContents().insert(getTabContents().find(getTabContents().getValue(index)), TabContent);
 		}
-		endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
+		endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
 }
 
 void TabPanel::insertTab(const UInt32 TabIndex, const ComponentPtr Tab, const ComponentPtr TabContent)
 {
-	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
+	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
+		getChildren().addValue(Tab);
+		getChildren().addValue(TabContent);
 		getTabs().insert(getTabs().find(getTabs().getValue(TabIndex)), Tab); // an incredibly ridiculous function call
 		getTabContents().insert(getTabContents().find(getTabContents().getValue(TabIndex)), TabContent);
-	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask);
+	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask| ChildrenFieldMask);
 }
 
 void TabPanel::updateTabLayout(void)
@@ -229,6 +250,161 @@ void TabPanel::updateTabLayout(void)
 		getTabContents().getValue(getActiveTab())->setSize(borderSize);
 		getTabContents().getValue(getActiveTab())->setPosition(offset);
 	endEditCP(getTabContents().getValue(getActiveTab()), Component::SizeFieldMask|Component::PositionFieldMask);
+}
+
+void TabPanel::mouseClicked(const MouseEvent& e)
+{
+	bool isContained;
+    for(UInt32 i(0) ; i<getTabs().size() ; ++i)
+    {
+		isContained = isContainedClipBounds(e.getLocation(), getTabs().getValue(i));
+		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained);
+		if(isContained)
+		{
+			getTabs().getValue(i)->mouseClicked(e);
+		}
+    }
+
+	isContained = isContainedClipBounds(e.getLocation(), getTabContents().getValue(getActiveTab()));
+	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained);
+	if(isContained)
+	{
+		getTabContents().getValue(getActiveTab())->mouseClicked(e);
+	}
+
+	Component::mouseClicked(e);
+}
+
+void TabPanel::mouseEntered(const MouseEvent& e)
+{
+    for(UInt32 i(0) ; i<getTabs().size() ; ++i)
+    {
+		//checkMouseEnterExit(e, e.getLocation());
+    }
+
+	//checkMouseEnterExit(e, e.getLocation());
+
+	Component::mouseEntered(e);
+}
+
+void TabPanel::mouseExited(const MouseEvent& e)
+{
+    for(UInt32 i(0) ; i<getTabs().size() ; ++i)
+    {
+		//checkMouseEnterExit(e, e.getLocation());
+    }
+
+	//checkMouseEnterExit(e, e.getLocation());
+
+	Component::mouseExited(e);
+}
+
+void TabPanel::mousePressed(const MouseEvent& e)
+{
+	bool isContained;
+    for(UInt32 i(0) ; i<getTabs().size() ; ++i)
+    {
+		isContained = isContainedClipBounds(e.getLocation(), getTabs().getValue(i));
+		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained);
+		if(isContained)
+		{
+			getTabs().getValue(i)->mousePressed(e);
+		}
+    }
+
+	isContained = isContainedClipBounds(e.getLocation(), getTabContents().getValue(getActiveTab()));
+	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained);
+	if(isContained)
+	{
+		getTabContents().getValue(getActiveTab())->mousePressed(e);
+	}
+
+	Component::mousePressed(e);
+}
+
+void TabPanel::mouseReleased(const MouseEvent& e)
+{
+	bool isContained;
+    for(UInt32 i(0) ; i<getTabs().size() ; ++i)
+    {
+		isContained = isContainedClipBounds(e.getLocation(), getTabs().getValue(i));
+		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained);
+		if(isContained)
+		{
+			getTabs().getValue(i)->mouseReleased(e);
+		}
+    }
+
+	isContained = isContainedClipBounds(e.getLocation(), getTabContents().getValue(getActiveTab()));
+	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained);
+	if(isContained)
+	{
+		getTabContents().getValue(getActiveTab())->mouseReleased(e);
+	}
+
+	Component::mouseReleased(e);
+}
+
+
+void TabPanel::mouseMoved(const MouseEvent& e)
+{
+	bool isContained;
+    for(UInt32 i(0) ; i<getTabs().size() ; ++i)
+    {
+		isContained = isContainedClipBounds(e.getLocation(), getTabs().getValue(i));
+		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained);
+		if(isContained)
+		{
+			getTabs().getValue(i)->mouseMoved(e);
+		}
+    }
+
+	isContained = isContainedClipBounds(e.getLocation(), getTabContents().getValue(getActiveTab()));
+	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained);
+	if(isContained)
+	{
+		getTabContents().getValue(getActiveTab())->mouseMoved(e);
+	}
+
+	Component::mouseMoved(e);
+}
+
+void TabPanel::mouseDragged(const MouseEvent& e)
+{
+	bool isContained;
+    for(UInt32 i(0) ; i<getTabs().size() ; ++i)
+    {
+		isContained = isContainedClipBounds(e.getLocation(), getTabs().getValue(i));
+		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained);
+		if(isContained)
+		{
+			getTabs().getValue(i)->mouseDragged(e);
+		}
+    }
+
+	isContained = isContainedClipBounds(e.getLocation(), getTabContents().getValue(getActiveTab()));
+	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained);
+	if(isContained)
+	{
+		getTabContents().getValue(getActiveTab())->mouseDragged(e);
+	}
+
+	Component::mouseDragged(e);
+}
+
+void TabPanel::mouseWheelMoved(const MouseWheelEvent& e)
+{
+	bool isContained;
+    for(UInt32 i(0) ; i<getTabs().size() ; ++i)
+    {
+		isContained = isContainedClipBounds(e.getLocation(), getTabs().getValue(i));
+		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained);
+    }
+
+	isContained = isContainedClipBounds(e.getLocation(), getTabContents().getValue(getActiveTab()));
+	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained);
+
+	Component::mouseWheelMoved(e);
 }
 
 /*-------------------------------------------------------------------------*\
