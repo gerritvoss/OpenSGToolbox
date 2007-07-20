@@ -123,7 +123,7 @@ void Container::drawInternal(const GraphicsPtr TheGraphics) const
 void Container::mouseClicked(const MouseEvent& e)
 {
 	bool isContained;
-    for(UInt32 i(getChildren().size()-1) ; i>=0 ; --i)
+    for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
 		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
@@ -139,7 +139,7 @@ void Container::mouseClicked(const MouseEvent& e)
 void Container::mouseEntered(const MouseEvent& e)
 {
 	bool isContained;
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
 		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
@@ -154,7 +154,7 @@ void Container::mouseEntered(const MouseEvent& e)
 void Container::mouseExited(const MouseEvent& e)
 {
 	bool isContained;
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
 		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
@@ -169,7 +169,7 @@ void Container::mouseExited(const MouseEvent& e)
 void Container::mousePressed(const MouseEvent& e)
 {
 	bool isContained;
-    for(UInt32 i(getChildren().size()-1) ; i>=0 ; --i)
+    for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
 		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
@@ -185,7 +185,7 @@ void Container::mousePressed(const MouseEvent& e)
 void Container::mouseReleased(const MouseEvent& e)
 {
 	bool isContained;
-    for(UInt32 i(getChildren().size()-1) ; i>=0 ; --i)
+    for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
 		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
@@ -202,7 +202,7 @@ void Container::mouseReleased(const MouseEvent& e)
 void Container::mouseMoved(const MouseEvent& e)
 {
 	bool isContained;
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
 		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
@@ -217,7 +217,7 @@ void Container::mouseMoved(const MouseEvent& e)
 void Container::mouseDragged(const MouseEvent& e)
 {
 	bool isContained;
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
 		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
@@ -232,7 +232,7 @@ void Container::mouseDragged(const MouseEvent& e)
 void Container::mouseWheelMoved(const MouseWheelEvent& e)
 {
 	bool isContained;
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
 		isContained = isContainedClipBounds(e.getLocation(), getChildren().getValue(i));
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);

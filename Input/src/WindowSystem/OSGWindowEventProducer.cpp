@@ -112,16 +112,27 @@ WindowEventProducer::WindowEventProducer(void) :
        _DisplayCallbackFunc(NULL),
        _ReshapeCallbackFunc(NULL)
 {
-   _ButtonClickMap[MouseEvent::BUTTON1] = ClickVector();
-   _ButtonClickMap[MouseEvent::BUTTON2] = ClickVector();
-   _ButtonClickMap[MouseEvent::BUTTON3] = ClickVector();
-   _ButtonClickMap[MouseEvent::BUTTON4] = ClickVector();
-   _ButtonClickMap[MouseEvent::BUTTON5] = ClickVector();
-   _ButtonClickMap[MouseEvent::BUTTON6] = ClickVector();
-   _ButtonClickMap[MouseEvent::BUTTON7] = ClickVector();
-   _ButtonClickMap[MouseEvent::BUTTON8] = ClickVector();
-   _ButtonClickMap[MouseEvent::BUTTON9] = ClickVector();
-   _ButtonClickMap[MouseEvent::BUTTON10] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON1] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON2] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON3] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON4] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON5] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON6] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON7] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON8] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON9] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON10] = ClickVector();
+   
+   _ButtonClickMap[MouseEvent::BUTTON1] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON2] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON3] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON4] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON5] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON6] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON7] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON8] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON9] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON10] = Pnt2s(0,0);
 }
 
 WindowEventProducer::WindowEventProducer(const WindowEventProducer &source) :
@@ -129,16 +140,27 @@ WindowEventProducer::WindowEventProducer(const WindowEventProducer &source) :
        _DisplayCallbackFunc(source._DisplayCallbackFunc),
        _ReshapeCallbackFunc(source._ReshapeCallbackFunc)
 {
-   _ButtonClickMap[MouseEvent::BUTTON1] = ClickVector();
-   _ButtonClickMap[MouseEvent::BUTTON2] = ClickVector();
-   _ButtonClickMap[MouseEvent::BUTTON3] = ClickVector();
-   _ButtonClickMap[MouseEvent::BUTTON4] = ClickVector();
-   _ButtonClickMap[MouseEvent::BUTTON5] = ClickVector();
-   _ButtonClickMap[MouseEvent::BUTTON6] = ClickVector();
-   _ButtonClickMap[MouseEvent::BUTTON7] = ClickVector();
-   _ButtonClickMap[MouseEvent::BUTTON8] = ClickVector();
-   _ButtonClickMap[MouseEvent::BUTTON9] = ClickVector();
-   _ButtonClickMap[MouseEvent::BUTTON10] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON1] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON2] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON3] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON4] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON5] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON6] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON7] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON8] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON9] = ClickVector();
+   _ButtonClickCountMap[MouseEvent::BUTTON10] = ClickVector();
+   
+   _ButtonClickMap[MouseEvent::BUTTON1] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON2] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON3] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON4] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON5] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON6] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON7] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON8] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON9] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON10] = Pnt2s(0,0);
 }
 
 WindowEventProducer::~WindowEventProducer(void)
@@ -206,7 +228,7 @@ void WindowEventProducer::produceMouseClicked(const MouseEvent::MouseButton& But
 {
    Time t(getSystemTime());
    updateClickCount(Button, t, Location);
-   MouseEvent TheEvent( WindowEventProducerPtr(this), t, Button, _ButtonClickMap[Button].size(), Location );
+   MouseEvent TheEvent( WindowEventProducerPtr(this), t, Button, _ButtonClickCountMap[Button].size(), Location );
    for(MouseListenerSetConstItor SetItor(_MouseListeners.begin()) ; SetItor != _MouseListeners.end() ; ++SetItor)
    {
       (*SetItor)->mouseClicked(TheEvent);
@@ -233,7 +255,8 @@ void WindowEventProducer::produceMouseExited(const Pnt2s& Location)
 
 void WindowEventProducer::produceMousePressed(const MouseEvent::MouseButton& Button, const Pnt2s& Location)
 {
-   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), Button, _ButtonClickMap[Button].size(), Location );
+	_ButtonClickMap[Button] = Location;
+   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), Button, _ButtonClickCountMap[Button].size(), Location );
    for(MouseListenerSetConstItor SetItor(_MouseListeners.begin()) ; SetItor != _MouseListeners.end() ; ++SetItor)
    {
       (*SetItor)->mousePressed(TheEvent);
@@ -242,10 +265,14 @@ void WindowEventProducer::produceMousePressed(const MouseEvent::MouseButton& But
 
 void WindowEventProducer::produceMouseReleased(const MouseEvent::MouseButton& Button, const Pnt2s& Location)
 {
-   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), Button, _ButtonClickMap[Button].size(), Location );
+   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), Button, _ButtonClickCountMap[Button].size(), Location );
    for(MouseListenerSetConstItor SetItor(_MouseListeners.begin()) ; SetItor != _MouseListeners.end() ; ++SetItor)
    {
       (*SetItor)->mouseReleased(TheEvent);
+   }
+   if(_ButtonClickMap[Button] == Location)
+   {
+	   produceMouseClicked(Button, Location);
    }
 }
 
@@ -389,7 +416,7 @@ void WindowEventProducer::produceWindowExited(void)
 void WindowEventProducer::updateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2s& Location)
 {
    //Get the vector of Clicks for this Button
-   ClickVector& TheClickVector( _ButtonClickMap[Button] );
+   ClickVector& TheClickVector( _ButtonClickCountMap[Button] );
 
    //If the vector not empty
    if(TheClickVector.size() > 0) 

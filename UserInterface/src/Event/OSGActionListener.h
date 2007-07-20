@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *   contact: dkabala@vrac.iastate.edu                                       *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -12,7 +12,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 2.                               *
+ * by the Free Software Foundation, version 3.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -24,40 +24,31 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSGACTIONLISTENER_H_
+#define _OSGACTIONLISTENER_H_
+#ifdef __sgi
+#pragma once
+#endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
+
+#include <OpenSG/Input/OSGEventListener.h>
+#include "OSGActionEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-inline
-void Button::addActionListener(ActionListenerPtr Listener)
+class OSG_USERINTERFACELIB_DLLMAPPING ActionListener : public EventListener
 {
-   _ActionListeners.insert(Listener);
-}
+   /*=========================  PUBLIC  ===============================*/
+public:
 
-inline
-void Button::removeActionListener(ActionListenerPtr Listener)
-{
-   ActionListenerSetItor EraseIter(_ActionListeners.find(Listener));
-   if(EraseIter != _ActionListeners.end())
-   {
-      _ActionListeners.erase(EraseIter);
-   }
-}
+   virtual void actionPreformed(const ActionEvent& e) = 0;
+};
+
+typedef ActionListener* ActionListenerPtr;
+
 OSG_END_NAMESPACE
 
-#define OSGBUTTON_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-
+#endif /* _OSGACTIONLISTENER_H_ */

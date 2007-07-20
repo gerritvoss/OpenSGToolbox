@@ -102,8 +102,10 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     typedef ClickVector::iterator ClickVectorIter;
     typedef ClickVector::const_iterator ClickVectorConstIter;
 
-    typedef std::map<MouseEvent::MouseButton, ClickVector> ButtonClickMap;
+    typedef std::map<MouseEvent::MouseButton, ClickVector> ButtonClickCountMap;
+    typedef std::map<MouseEvent::MouseButton, Pnt2s> ButtonClickMap;
 
+    ButtonClickCountMap _ButtonClickCountMap;
     ButtonClickMap _ButtonClickMap;
 
     EventDispatchThread* _EventDispatchThread;

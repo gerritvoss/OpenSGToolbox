@@ -47,6 +47,7 @@
 
 #include "OSGButtonBase.h"
 #include "Util/OSGUIDefines.h"
+#include "Event/OSGActionListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -83,6 +84,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     virtual void mousePressed(const MouseEvent& e);
     virtual void mouseReleased(const MouseEvent& e);
 
+    void addActionListener(ActionListenerPtr Listener);
+    void removeActionListener(ActionListenerPtr Listener);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -116,6 +119,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const Button &source);
+	
+	
+	typedef std::set<ActionListenerPtr> ActionListenerSet;
+    typedef ActionListenerSet::iterator ActionListenerSetItor;
+    typedef ActionListenerSet::const_iterator ActionListenerSetConstItor;
+	
+    ActionListenerSet       _ActionListeners;
+	
+    virtual void produceActionPreformed(const ActionEvent& e);
 };
 
 typedef Button *ButtonP;

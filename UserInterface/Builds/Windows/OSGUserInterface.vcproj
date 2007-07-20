@@ -2091,6 +2091,22 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Event"
+				>
+				<File
+					RelativePath="..\..\src\Event\OSGActionEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGActionEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGActionListener.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

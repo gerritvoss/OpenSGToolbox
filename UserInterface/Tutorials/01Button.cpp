@@ -54,6 +54,16 @@ SimpleSceneManager *mgr;
 void display(void);
 void reshape(Vec2s Size);
 
+class Button1ActionListener : public ActionListener
+{
+public:
+
+   virtual void actionPreformed(const ActionEvent& e)
+	{
+		std::cout << "Button 1 Action" << std::endl;
+	}
+};
+
 // Initialize WIN32 & OpenSG and set up the scene
 int main(int argc, char **argv)
 {
@@ -146,7 +156,7 @@ int main(int argc, char **argv)
 			// HORIZONTAL_LEFT, HORIZONTAL_RIGHT
 		button1->setHorizontalAlignment(HORIZONTAL_RIGHT);
     endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
-
+	button1->addActionListener( new Button1ActionListener());
 
 
 	// Create The Main Frame
