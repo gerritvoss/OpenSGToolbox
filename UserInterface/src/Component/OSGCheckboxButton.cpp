@@ -118,7 +118,7 @@ void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
 		getDrawObject()->draw(TheGraphics);
    }
    if(drawObjectSize.y()> TheGraphics->getTextBounds(getText(), getFont()).y())
-	   yAdj = (drawObjectSize.y()-TheGraphics->getTextBounds(getText(), getFont()).x())/2.0;
+	   yAdj = (drawObjectSize.y()-TheGraphics->getTextBounds(getText(), getFont()).y())/2.0;
    TheGraphics->drawText(Pnt2s(TempPos.x()+drawObjectSize.x()+5, TempPos.y()+yAdj),   getText(), getFont(), getForegroundColor(), getOpacity());
 
 }
@@ -129,11 +129,15 @@ void CheckboxButton::mouseReleased(const MouseEvent& e)
 		if(getActive()){
 			if(getChecked())
 			{
-				setChecked(false);
+				beginEditCP(CheckboxButtonPtr(this), CheckboxButton::CheckedFieldMask);
+					setChecked(false);
+				endEditCP(CheckboxButtonPtr(this), CheckboxButton::CheckedFieldMask);
 			}
 			else
 			{
-				setChecked(true);
+				beginEditCP(CheckboxButtonPtr(this), CheckboxButton::CheckedFieldMask);
+					setChecked(true);
+				endEditCP(CheckboxButtonPtr(this), CheckboxButton::CheckedFieldMask);
 			}
 		}
 	}
