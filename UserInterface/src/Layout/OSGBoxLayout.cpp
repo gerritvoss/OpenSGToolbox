@@ -47,6 +47,7 @@
 #include "OSGUserInterfaceDef.h"
 #include "OSGBoxLayout.h"
 #include "Util/OSGUIDefines.h"
+#include "Component/OSGContainer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -105,9 +106,10 @@ void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr 
 	UInt32 AxisIndex(0);
 	if(getAlignment() != HORIZONTAL_ALIGNMENT ) AxisIndex = 1;
 
-	Pnt2s borderOffset;
-	Vec2s borderSize;
-	ParentComponent->getInsideBorderBounds(borderOffset, borderSize);
+	Pnt2s borderTopLeft, borderBottomRight;
+	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
+	Vec2s borderSize(borderBottomRight-borderTopLeft);
+	borderTopLeft.setValues(0,0);
 	UInt32 MajorAxis(borderSize[AxisIndex]);
 	UInt32 totalMajorAxis(0);
 	UInt32 largestMinorAxis(0);
@@ -132,16 +134,16 @@ void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr 
 		spacing = (MajorAxis-totalMajorAxis)/(Components.size()+1);
 		// in the case where there isn't equal spacing between each button,
 		// translate more the first time to center the components
-		borderOffset[AxisIndex] += (MajorAxis - (spacing*(Components.size()+1)+totalMajorAxis))/2 + spacing;
+		borderTopLeft[AxisIndex] += (MajorAxis - (spacing*(Components.size()+1)+totalMajorAxis))/2 + spacing;
 	}
 
-	// set up the MinorAxisAlignment by adding it to the borderOffset
+	// set up the MinorAxisAlignment by adding it to the borderTopLeft
 	if (getMinorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
 	{
-		borderOffset[(AxisIndex+1)%2] = (borderSize[(AxisIndex+1)%2] - largestMinorAxis)/2;
+		borderTopLeft[(AxisIndex+1)%2] = (borderSize[(AxisIndex+1)%2] - largestMinorAxis)/2;
 	} else if (getMinorAxisAlignment() == AXIS_MAX_ALIGNMENT)
 	{
-		borderOffset[(AxisIndex+1)%2] = borderSize[(AxisIndex+1)%2] - largestMinorAxis;
+		borderTopLeft[(AxisIndex+1)%2] = borderSize[(AxisIndex+1)%2] - largestMinorAxis;
 	} // in the case of a min alignment, do nothing
 
 	/*!
@@ -185,7 +187,7 @@ void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr 
 		}
 		beginEditCP(Components.getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
 			Components.getValue(i)->setSize(size);
-			Components.getValue(i)->setPosition(borderOffset + offset);
+			Components.getValue(i)->setPosition(borderTopLeft + offset);
 		endEditCP(Components.getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
 
 		// now set offset for the next button

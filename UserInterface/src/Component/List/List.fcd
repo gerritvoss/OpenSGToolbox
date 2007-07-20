@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="List"
-	parent="Component"
+	parent="Container"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -28,6 +28,7 @@ A UI List.
 		cardinality="multi"
 		visibility="external"
 		access="protected"
+		header="Component/OSGComponent.h"
 	>
 	</Field>
 	<Field

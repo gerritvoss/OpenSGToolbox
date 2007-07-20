@@ -131,7 +131,7 @@ bool Component::setupClipping(const GraphicsPtr Graphics) const
     bool WasClippPlane3Enabled = glIsEnabled(GL_CLIP_PLANE3);
     if(getClipping())
     {
-        //glScissor
+        //glClipPlane
         //Clip with the Intersection of this components RenderingSurface bounds
         //and its parents RenderingSurface bounds
         Pnt2s ClipTopLeft,ClipBottomRight;
@@ -216,21 +216,41 @@ void Component::updateClipBounds(void)
 	Pnt2s TopLeft, BottomRight;
 	if(getParentContainer() == NullFC)
 	{
-		TopLeft = getPosition();
-		BottomRight = (getPosition()+getSize());
+		//If I have no parent container use my bounds
+		getBounds(TopLeft, BottomRight);
 	}
 	else
 	{
-		Container::Ptr::dcast(getParentContainer())->updateClipBounds();
-        Pnt2s MyTopLeft,ContainerTopLeft,
-			  MyBottomRight, ContainerBottomRight;
-
+		//Get the intersection of:
+		     //My Bounds
+		     //My Parent Containers Clip Bounds
+		     //My Parent Containers Inset Bounds
+        Pnt2s MyTopLeft,MyBottomRight;
         getBounds(MyTopLeft,MyBottomRight);
-		Container::Ptr::dcast(getParentContainer())->getClipBounds(ContainerTopLeft,ContainerBottomRight);
+
+		//Update my Parent Container's Clip Bounds
+		Container::Ptr::dcast(getParentContainer())->updateClipBounds();
+
+		//Get Parent Container's Clip Bounds
+		Pnt2s ContainerClipTopLeft, ContainerClipBottomRight;
+		Container::Ptr::dcast(getParentContainer())->getClipBounds(ContainerClipTopLeft,ContainerClipBottomRight);
+		ContainerClipTopLeft -= Vec2s(Container::Ptr::dcast(getParentContainer())->getLeftInset(), Container::Ptr::dcast(getParentContainer())->getTopInset());
+		ContainerClipBottomRight -= Vec2s(Container::Ptr::dcast(getParentContainer())->getLeftInset(), Container::Ptr::dcast(getParentContainer())->getTopInset());
+
+		
+		//Get Parent Container's Inset Bounds
+		Pnt2s ContainerInsetTopLeft, ContainerInsetBottomRight;
+		Container::Ptr::dcast(getParentContainer())->getInsideInsetsBounds(ContainerInsetTopLeft, ContainerInsetBottomRight);
+		ContainerInsetTopLeft -= Vec2s(Container::Ptr::dcast(getParentContainer())->getLeftInset(), Container::Ptr::dcast(getParentContainer())->getTopInset());
+		ContainerInsetBottomRight -= Vec2s(Container::Ptr::dcast(getParentContainer())->getLeftInset(), Container::Ptr::dcast(getParentContainer())->getTopInset());
 		
 		//Get the intersection of my bounds with my parent containers clip bounds
 		quadIntersection(MyTopLeft,MyBottomRight,
-			ContainerTopLeft,ContainerBottomRight,
+			ContainerClipTopLeft,ContainerClipBottomRight,
+			TopLeft, BottomRight);
+
+		quadIntersection(TopLeft,BottomRight,
+			ContainerInsetTopLeft,ContainerInsetBottomRight,
 			TopLeft, BottomRight);
 	}
 	//The Clip Bounds calculated are in my Parent Containers coordinate space
@@ -243,68 +263,57 @@ void Component::updateClipBounds(void)
 
 void Component::mouseClicked(const MouseEvent& e)
 {
-	std::cout << getType().getCName() << " mouseClicked" << std::endl;
 	produceMouseClicked(e);
 }
 
 void Component::mouseEntered(const MouseEvent& e)
 {
-	std::cout << getType().getCName() << " mouseEntered" << std::endl;
 	produceMouseEntered(e);
 }
 
 void Component::mouseExited(const MouseEvent& e)
 {
-	std::cout << getType().getCName() << " mouseExited" << std::endl;
 	produceMouseExited(e);
 }
 
 void Component::mousePressed(const MouseEvent& e)
 {
-	std::cout << getType().getCName() << " mousePressed" << std::endl;
 	produceMousePressed(e);
 }
 
 void Component::mouseReleased(const MouseEvent& e)
 {
-	std::cout << getType().getCName() << " mouseReleased" << std::endl;
 	produceMouseReleased(e);
 }
 
 
 void Component::mouseMoved(const MouseEvent& e)
 {
-	//std::cout << getType().getCName() << " mouseMoved" << std::endl;
 	produceMouseMoved(e);
 }
 
 void Component::mouseDragged(const MouseEvent& e)
 {
-	//std::cout << getType().getCName() << " mouseDragged" << std::endl;
 	produceMouseDragged(e);
 }
 
 void Component::mouseWheelMoved(const MouseWheelEvent& e)
 {
-	std::cout << getType().getCName() << " mouseWheelMoved" << std::endl;
 	produceMouseWheelMoved(e);
 }
 
 void Component::keyPressed(const KeyEvent& e)
 {
-	std::cout << getType().getCName() << " keyPressed" << std::endl;
 	produceKeyPressed(e);
 }
 
 void Component::keyReleased(const KeyEvent& e)
 {
-	std::cout << getType().getCName() << " keyReleased" << std::endl;
 	produceKeyReleased(e);
 }
 
 void Component::keyTyped(const KeyEvent& e)
 {
-	std::cout << getType().getCName() << " keyTyped" << std::endl;
 	produceKeyTyped(e);
 }
 

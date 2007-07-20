@@ -8,17 +8,11 @@
 // and use the six different backgrounds included in the
 // OSG User Interface library.
 
-// GLUT is used for window handling
-#include <OpenSG/OSGGLUT.h>
-
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
-
-// The GLUT-OpenSG connection class
-#include <OpenSG/OSGGLUTWindow.h>
 
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
@@ -30,6 +24,8 @@
 // the general scene file loading handler
 #include <OpenSG/OSGSceneFileHandler.h>
 
+//Input
+#include <OpenSG/Input/OSGWindowUtils.h>
 
 // UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
@@ -66,8 +62,8 @@ OSG_USING_NAMESPACE
 SimpleSceneManager *mgr;
 
 // forward declaration so we can have the interesting stuff upfront
-int setupGLUT( int *argc, char *argv[] );
 void display(void);
+void reshape(Vec2s Size);
 
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
@@ -75,14 +71,16 @@ int main(int argc, char **argv)
     // OSG init
     osgInit(argc,argv);
 
-
-    // GLUT init
-    int winid = setupGLUT(&argc, argv);
-
-    // the connection between GLUT and OpenSG
-    GLUTWindowPtr gwin= GLUTWindow::create();
-    gwin->setId(winid);
-    gwin->init();
+    WindowPtr MainWindow;
+    WindowEventProducerPtr TheWindowEventProducer;
+    createDefaultWindow(Pnt2s(50,50),
+                                        Vec2s(900,900),
+                                        "OpenSG 04Background Window",
+                                        MainWindow,
+                                        TheWindowEventProducer);
+    
+    TheWindowEventProducer->setDisplayCallback(display);
+    TheWindowEventProducer->setReshapeCallback(reshape);
 
 
    // Make Torus Node (creates Torus in background of scene)
@@ -299,7 +297,7 @@ int main(int argc, char **argv)
 	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
 		drawingSurface->setRootFrame(MainFrame);
-	    //drawingSurface->setEventProducer(TheWindowEventProducer);
+	    drawingSurface->setEventProducer(TheWindowEventProducer);
     endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
 	
 	// Create the UI Foreground Object
@@ -317,7 +315,7 @@ int main(int argc, char **argv)
     mgr = new SimpleSceneManager;
 
     // tell the manager what to manage
-    mgr->setWindow(gwin );
+    mgr->setWindow(MainWindow );
     mgr->setRoot  (scene);
 
 	// Add the UI Foreground Object to the Scene
@@ -329,19 +327,9 @@ int main(int argc, char **argv)
     // show the whole scene
     mgr->showAll();
 
-    // GLUT main loop
-    glutMainLoop();
+    openWindow(TheWindowEventProducer);
 
     return 0;
-}
-
-//
-// GLUT callback functions
-//
-
-void idle(void)
-{
-   glutPostRedisplay();
 }
 
 // redraw the window
@@ -351,58 +339,7 @@ void display(void)
 }
 
 // react to size changes
-void reshape(int w, int h)
+void reshape(Vec2s Size)
 {
-    mgr->resize(w, h);
-    glutPostRedisplay();
-}
-
-// react to mouse button presses
-void mouse(int button, int state, int x, int y)
-{
-    if (state)
-        mgr->mouseButtonRelease(button, x, y);
-    else
-        mgr->mouseButtonPress(button, x, y);
-        
-    glutPostRedisplay();
-}
-
-// react to mouse motions with pressed buttons
-void motion(int x, int y)
-{
-    mgr->mouseMove(x, y);
-    glutPostRedisplay();
-}
-
-// react to keys
-void keyboard(unsigned char k, int x, int y)
-{
-    switch(k)
-    {
-        case 27:        
-        {
-            OSG::osgExit();
-            exit(0);
-        }
-        break;
-    }
-}
-
-// setup the GLUT library which handles the windows for us
-int setupGLUT(int *argc, char *argv[])
-{
-    glutInit(argc, argv);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
-    
-    int winid = glutCreateWindow("OpenSG UserInterface Button");
-    
-    glutReshapeFunc(reshape);
-    glutDisplayFunc(display);
-    glutMouseFunc(mouse);
-    glutMotionFunc(motion);
-    glutKeyboardFunc(keyboard);
-    glutIdleFunc(idle);
-
-    return winid;
+    mgr->resize(Size.x(), Size.y());
 }

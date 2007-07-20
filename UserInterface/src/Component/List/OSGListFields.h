@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "Component/OSGComponentFields.h"
+#include "Component/OSGContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class List;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! ListPtr
 
-typedef FCPtr<ComponentPtr, List> ListPtr;
+typedef FCPtr<ContainerPtr, List> ListPtr;
 
 #endif
 

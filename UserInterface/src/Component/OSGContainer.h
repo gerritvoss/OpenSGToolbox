@@ -76,6 +76,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
 
     /*! \}                                                                 */
     virtual void getInsideBorderBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+    virtual void getInsideInsetsBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
     virtual void setAllInsets(UInt32);
     virtual void updateLayout(void);
 	
@@ -115,6 +116,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
 
 	void checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, ComponentPtr Comp, bool isMouseContained);
+    bool isPointInComponent(const Pnt2s& Point, const ComponentPtr Comp);
     
     /*==========================  PRIVATE  ================================*/
   private:

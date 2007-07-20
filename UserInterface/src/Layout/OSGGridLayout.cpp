@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGGridLayout.h"
+#include "Component/OSGContainer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -76,9 +77,10 @@ void GridLayout::initMethod (void)
 
 void GridLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
-	Pnt2s borderOffset;
-	Vec2s borderSize;
-	ParentComponent->getInsideBorderBounds(borderOffset, borderSize);
+	Pnt2s borderTopLeft, borderBottomRight;
+	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
+	Vec2s borderSize(borderBottomRight-borderTopLeft);
+
 	Int32 Xpos = 0;
 	Int32 Ypos = 0;
 	Int32 maxSizeX = 0;
@@ -87,7 +89,6 @@ void GridLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 	Int32 numComp = Components.getSize();
 	Int32 buttonXSize, buttonYSize;
 
-	glTranslatef(borderOffset.x(), borderOffset.y(), 0);
 	//set the size to the perfered sizes for the buttons
 	for(UInt16 i = 0; i<Components.size(); i++){
 		if (Components.getValue(i) != NullFC) 
@@ -110,7 +111,9 @@ void GridLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 				buttonYSize = maxSizeY;
 			else
 				buttonYSize = Components.getValue(i)->getMaxSize().y();
-			Components.getValue(i)->setSize(Vec2s(buttonXSize, buttonYSize));
+			beginEditCP(Components.getValue(i), Component::SizeFieldMask);
+			   Components.getValue(i)->setSize(Vec2s(buttonXSize, buttonYSize));
+			endEditCP(Components.getValue(i), Component::SizeFieldMask);
 		}
 	}
 
@@ -121,7 +124,9 @@ void GridLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 		{
 			for(UInt16 j = 0; j < getColumns()&& numComp>0; j++){
 				debug = i*getColumns()+j;
-                Components.getValue(i*getColumns()+j)->setPosition(Pnt2s(Xpos, Ypos));
+			    beginEditCP(Components.getValue(i), Component::PositionFieldMask);
+                   Components.getValue(i*getColumns()+j)->setPosition(Pnt2s(Xpos, Ypos));
+			    endEditCP(Components.getValue(i), Component::PositionFieldMask);
 				numComp--;
 				Xpos = Xpos + (maxSizeX+getHorizontalGap());
 			}

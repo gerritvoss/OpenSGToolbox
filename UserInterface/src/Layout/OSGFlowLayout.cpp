@@ -47,6 +47,7 @@
 
 #include "Util/OSGUIDefines.h"
 #include "OSGFlowLayout.h"
+#include "Component/OSGContainer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -96,10 +97,11 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 	  components there are in that row/column.
 	*/
 
-	Pnt2s borderOffset;
-	Vec2s borderSize;
-	ParentComponent->getInsideBorderBounds(borderOffset, borderSize);
-	Int64 totalMajorAxis(borderSize[AxisIndex]-borderOffset[AxisIndex]);
+	Pnt2s borderTopLeft, borderBottomRight;
+	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
+	Vec2s borderSize(borderBottomRight-borderTopLeft);
+	borderTopLeft.setValues(0,0);
+	Int64 totalMajorAxis(borderSize[AxisIndex]-borderTopLeft[AxisIndex]);
 	UInt32 cumMajorAxis(0);
 	UInt32 maxMinorAxis(0);
 	UInt32 cumMinorAxis(0);
@@ -110,8 +112,8 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 	Int64 offsetY=0;
 	bool firstOne = true;
 
-	offsetX += borderOffset.x();
-	offsetY += borderOffset.y();
+	offsetX += borderTopLeft.x();
+	offsetY += borderTopLeft.y();
 	for(UInt32 i=0 ; i<Components.size(); ++i)
 	{
 		// set the component to its preferred size

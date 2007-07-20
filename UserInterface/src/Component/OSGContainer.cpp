@@ -75,6 +75,16 @@ void Container::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void Container::getInsideInsetsBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+{
+   getInsideBorderBounds(TopLeft, BottomRight);
+
+   TopLeft[0] += getLeftInset();
+   TopLeft[1] += getTopInset();
+   BottomRight[0] -= getRightInset();
+   BottomRight[1] -= getBottomInset();
+   UInt16 TopInset(0), LeftInset(0), BottomInset(0), RightInset(0);
+}
 void Container::getInsideBorderBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 {
    UInt16 TopInset(0), LeftInset(0), BottomInset(0), RightInset(0);
@@ -84,8 +94,8 @@ void Container::getInsideBorderBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
       //Get Border Insets
       getBorder()->getInsets(LeftInset,RightInset,TopInset,BottomInset);
    }
-   TopLeft.setValues(LeftInset + getLeftInset(), TopInset + getTopInset());
-   BottomRight.setValues(TopLeft.x()+getSize().x()-(LeftInset + RightInset)-getRightInset(), TopLeft.y()+getSize().y()-(TopInset + BottomInset)-getBottomInset());
+   TopLeft.setValues(LeftInset, TopInset);
+   BottomRight.setValues(TopLeft.x()+getSize().x()-(LeftInset + RightInset), TopLeft.y()+getSize().y()-(TopInset + BottomInset));
 }
 
 void Container::setAllInsets(UInt32 inset)
@@ -101,26 +111,26 @@ void Container::setAllInsets(UInt32 inset)
 void Container::drawInternal(const GraphicsPtr TheGraphics) const
 {
     //Render all of my Child Components
-	Pnt2s borderOffset;
-	Vec2s borderSize;
-	getInsideBorderBounds(borderOffset, borderSize);
-    glTranslatef(borderOffset.x(), borderOffset.y(), 0);
+	Pnt2s borderTopLeft, BorderBottomRight;
+	getInsideInsetsBounds(borderTopLeft, BorderBottomRight);
+    glTranslatef(borderTopLeft.x(), borderTopLeft.y(), 0);
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
         getChildren().getValue(i)->draw(TheGraphics);
     }
-    glTranslatef(-borderOffset.x(), -borderOffset.y(), 0);
+    glTranslatef(-borderTopLeft.x(), -borderTopLeft.y(), 0);
 }
 void Container::mouseClicked(const MouseEvent& e)
 {
 	bool isContained;
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(UInt32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-		isContained = isContainedClipBounds(e.getLocation(), getChildren().getValue(i));
+		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
 		if(isContained)
 		{
 			getChildren().getValue(i)->mouseClicked(e);
+			break;
 		}
     }
 	Component::mouseClicked(e);
@@ -128,18 +138,30 @@ void Container::mouseClicked(const MouseEvent& e)
 
 void Container::mouseEntered(const MouseEvent& e)
 {
+	bool isContained;
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-		//checkMouseEnterExit(e, e.getLocation());
+		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
+		if(isContained)
+		{
+			getChildren().getValue(i)->mouseDragged(e);
+		}
     }
 	Component::mouseEntered(e);
 }
 
 void Container::mouseExited(const MouseEvent& e)
 {
+	bool isContained;
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-		//checkMouseEnterExit(e, e.getLocation());
+		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
+		if(isContained)
+		{
+			getChildren().getValue(i)->mouseDragged(e);
+		}
     }
 	Component::mouseExited(e);
 }
@@ -147,13 +169,14 @@ void Container::mouseExited(const MouseEvent& e)
 void Container::mousePressed(const MouseEvent& e)
 {
 	bool isContained;
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(UInt32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-		isContained = isContainedClipBounds(e.getLocation(), getChildren().getValue(i));
+		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
 		if(isContained)
 		{
 			getChildren().getValue(i)->mousePressed(e);
+			break;
 		}
     }
 	Component::mousePressed(e);
@@ -162,13 +185,14 @@ void Container::mousePressed(const MouseEvent& e)
 void Container::mouseReleased(const MouseEvent& e)
 {
 	bool isContained;
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(UInt32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-		isContained = isContainedClipBounds(e.getLocation(), getChildren().getValue(i));
+		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
 		if(isContained)
 		{
 			getChildren().getValue(i)->mouseReleased(e);
+			break;
 		}
     }
 	Component::mouseReleased(e);
@@ -180,7 +204,7 @@ void Container::mouseMoved(const MouseEvent& e)
 	bool isContained;
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-		isContained = isContainedClipBounds(e.getLocation(), getChildren().getValue(i));
+		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
 		if(isContained)
 		{
@@ -195,7 +219,7 @@ void Container::mouseDragged(const MouseEvent& e)
 	bool isContained;
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-		isContained = isContainedClipBounds(e.getLocation(), getChildren().getValue(i));
+		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
 		if(isContained)
 		{
@@ -239,6 +263,13 @@ void Container::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, 
 		}
 		Comp->setMouseContained(true);
 	}
+}
+
+bool Container::isPointInComponent(const Pnt2s& Point, const ComponentPtr Comp)
+{
+	Pnt2s borderTopLeft, BorderBottomRight;
+	getInsideInsetsBounds(borderTopLeft, BorderBottomRight);
+	return isContainedClipBounds(Point - Vec2s(borderTopLeft), Comp);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

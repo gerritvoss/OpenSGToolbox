@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGCardLayout.h"
+#include "Component/OSGContainer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -108,10 +109,11 @@ void CardLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 	  Draw the current "card" component centered in the parent component
 	  and set to the size of the parent component, or to its max size
 	*/
-	Pnt2s borderOffset, offset;
-	Vec2s size, borderSize;
-	ParentComponent->getInsideBorderBounds(borderOffset, borderSize);
-	size = borderSize;
+	Pnt2s borderTopLeft, borderBottomRight;
+	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
+	Vec2s borderSize(borderBottomRight-borderTopLeft);
+	borderTopLeft.setValues(0,0);
+	Vec2s size(borderSize),offset;
 	ComponentPtr curCard(Components.getValue(getCard()));
 
 	// check each dimension against the max size of the component;
@@ -128,7 +130,7 @@ void CardLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 	offset[1] = (borderSize.y()-size.y())/2;
 
 	beginEditCP(curCard, Component::PositionFieldMask);	
-		curCard->setPosition(borderOffset + offset);
+		curCard->setPosition(Pnt2s(offset));
 	endEditCP(curCard, Component::PositionFieldMask);
 
 }

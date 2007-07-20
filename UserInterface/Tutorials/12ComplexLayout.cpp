@@ -6,17 +6,11 @@
 // Panels
 
 
-// GLUT is used for window handling
-#include <OpenSG/OSGGLUT.h>
-
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
-
-// The GLUT-OpenSG connection class
-#include <OpenSG/OSGGLUTWindow.h>
 
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
@@ -78,23 +72,12 @@ int main(int argc, char **argv)
     WindowEventProducerPtr TheWindowEventProducer;
     createDefaultWindow(Pnt2s(50,50),
                                         Vec2s(900,900),
-                                        "OpenSG 01Button Window",
+                                        "OpenSG 12ComplexLayout Window",
                                         MainWindow,
                                         TheWindowEventProducer);
     
     TheWindowEventProducer->setDisplayCallback(display);
     TheWindowEventProducer->setReshapeCallback(reshape);
-
-    //Attach Mouse Listener
-    //TheWindowEventProducer->addMouseListener(new TutorialMouseListener());
-    //Attach Mouse Wheel Listener
-    //TheWindowEventProducer->addMouseWheelListener(new TutorialMouseWheelListener());
-    //Attach Key Listener
-    //TheWindowEventProducer->addKeyListener(new TutorialKeyListener());
-    //Attach Window Listener
-    //TheWindowEventProducer->addWindowListener(new TutorialWindowListener());
-
-
 
 
     // Make Torus Node (creates Torus in background of scene)

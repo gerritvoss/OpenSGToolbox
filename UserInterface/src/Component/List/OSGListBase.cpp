@@ -115,7 +115,7 @@ FieldDescription *ListBase::_desc[] =
 
 FieldContainerType ListBase::_type(
     "List",
-    "Component",
+    "Container",
     NULL,
     (PrototypeCreateF) &ListBase::createEmpty,
     List::initMethod,
@@ -347,7 +347,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ListPtr>::_type("ListPtr", "ComponentPtr");
+DataType FieldDataTraits<ListPtr>::_type("ListPtr", "ContainerPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(ListPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);

@@ -65,10 +65,10 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/OSGComponent.h" // Parent
+#include "Component/OSGContainer.h" // Parent
 
 #include <OpenSG/OSGUInt32Fields.h> // CellLayout type
-#include "Component/OSGComponentFields.h" // List type
+#include "Component/OSGComponent.h" // List type
 #include <OpenSG/OSGUInt32Fields.h> // SelectedIndices type
 
 #include "OSGListFields.h"
@@ -80,11 +80,11 @@ class BinaryDataHandler;
 
 //! \brief List Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Component
+class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
 {
   private:
 
-    typedef Component    Inherited;
+    typedef Container    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:

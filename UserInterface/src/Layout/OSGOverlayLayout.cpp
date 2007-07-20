@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGOverlayLayout.h"
+#include "Component/OSGContainer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -76,9 +77,10 @@ void OverlayLayout::initMethod (void)
 
 void OverlayLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
-	Pnt2s borderOffset;
-	Vec2s borderSize;
-	ParentComponent->getInsideBorderBounds(borderOffset, borderSize);
+	Pnt2s borderTopLeft, borderBottomRight;
+	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
+	Vec2s borderSize(borderBottomRight-borderTopLeft);
+
 	int maxX = 0;
 	int maxY = 0;
 	for(int i = 0; i < Components.size(); i++){
@@ -94,8 +96,8 @@ void OverlayLayout::updateLayout(const MFComponentPtr Components,const Component
 	for(int i = 0; i <Components.size(); i++){
 		//Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
 		beginEditCP(Components.getValue(i), Component::PositionFieldMask);
-		Components.getValue(i)->setPosition(Pnt2s((maxX-Components.getValue(i)->getSize().x())/2.0+borderOffset.x(),
-			(maxY-Components.getValue(i)->getSize().y())/2.0+borderOffset.y()));
+		Components.getValue(i)->setPosition(Pnt2s((maxX-Components.getValue(i)->getSize().x())/2.0,
+			(maxY-Components.getValue(i)->getSize().y())/2.0));
 		endEditCP(Components.getValue(i), Component::PositionFieldMask);
 	}
 }

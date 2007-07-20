@@ -79,7 +79,7 @@ void TabPanel::initMethod (void)
 void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 {
 	Pnt2s TopLeft, BottomRight;
-	getInsideBorderBounds(TopLeft, BottomRight);
+	getInsideInsetsBounds(TopLeft, BottomRight);
 	Vec2s pos;
 
 	// translate past the border and inset
@@ -199,7 +199,7 @@ void TabPanel::updateTabLayout(void)
 {
 	Pnt2s borderOffset;
 	Vec2s borderSize;
-	getInsideBorderBounds(borderOffset, borderSize);
+	getInsideInsetsBounds(borderOffset, borderSize);
 
 	UInt16 AxisIndex(0);
 	if (getTabPlacement() == PLACEMENT_EAST || getTabPlacement() == PLACEMENT_WEST)

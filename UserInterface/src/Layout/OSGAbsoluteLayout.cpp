@@ -79,7 +79,6 @@ void AbsoluteLayout::updateLayout(const MFComponentPtr Components,const Componen
 {
 	Pnt2s borderOffset;
 	Vec2s borderSize;
-	ParentComponent->getInsideBorderBounds(borderOffset, borderSize);
 	for(UInt32 i = 0 ; i<Components.size(); ++i)
 	{
 		//Calculate the Components Size
@@ -90,11 +89,11 @@ void AbsoluteLayout::updateLayout(const MFComponentPtr Components,const Componen
 				//Get the Components Position
 				Pnt2s pos = AbsoluteLayoutConstraintsPtr::dcast(Components.getValue(i)->getConstraints())->getPosition();
 				
-				Components.getValue(i)->setPosition(borderOffset + pos);
+				Components.getValue(i)->setPosition(pos);
 			}
 			else
 			{
-			   Components.getValue(i)->setPosition(borderOffset);
+			   Components.getValue(i)->setPosition(Pnt2s(0,0));
 			}
 		endEditCP(Components.getValue(i), Component::PositionFieldMask|Component::SizeFieldMask);
 	}

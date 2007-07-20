@@ -49,6 +49,7 @@
 #include "OSGBorderLayoutConstraints.h"
 
 #include "Util/OSGUIDefines.h"
+#include "Component/OSGContainer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -79,9 +80,10 @@ void BorderLayout::initMethod (void)
 
 void BorderLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
-	Pnt2s borderOffset;
-	Vec2s borderSize;
-	ParentComponent->getInsideBorderBounds(borderOffset, borderSize);
+	Pnt2s borderTopLeft, borderBottomRight;
+	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
+	Vec2s borderSize(borderBottomRight-borderTopLeft);
+
 	Int32 NorthHeight(0);
 	Int32 SouthHeight(0);
 	Int32 WestWidth(0);
@@ -214,7 +216,7 @@ void BorderLayout::updateLayout(const MFComponentPtr Components,const ComponentP
 					Components.getValue(i)->setSize(size);
 				else
 					Components.getValue(i)->setSize(Vec2s(0,0));
-				Components.getValue(i)->setPosition(borderOffset + offset);
+				Components.getValue(i)->setPosition(Pnt2s(offset));
 			endEditCP(Components.getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
 		}
 	}
