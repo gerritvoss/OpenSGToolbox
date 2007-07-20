@@ -99,7 +99,7 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 	Pnt2s borderOffset;
 	Vec2s borderSize;
 	ParentComponent->getInsideBorderBounds(borderOffset, borderSize);
-	Int64 totalMajorAxis(borderSize[AxisIndex]);
+	Int64 totalMajorAxis(borderSize[AxisIndex]-borderOffset[AxisIndex]);
 	UInt32 cumMajorAxis(0);
 	UInt32 maxMinorAxis(0);
 	UInt32 cumMinorAxis(0);
@@ -288,11 +288,11 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 
 			if (AxisIndex)
 			{
-				offsetY = offsetMajorAxis;
+				offsetY += offsetMajorAxis;
 			}
 			else
 			{			
-				offsetX = offsetMajorAxis;
+				offsetX += offsetMajorAxis;
 			}
 			for (int j = prevComponent; j < i+1; j++)
 			{
