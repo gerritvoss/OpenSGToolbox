@@ -135,6 +135,18 @@ void DefaultLookAndFeel::init(void)
 		DefaultButtonBorder->setShadowOuter(Color4f(0.65, 0.65, 0.65, 1.0));
 	endEditCP(DefaultDisabledButtonBorder);
 
+
+	//default active button border
+	BevelBorderPtr DefaultActiveButtonBorder = BevelBorder::create();
+	beginEditCP(DefaultActiveButtonBorder);
+		DefaultActiveButtonBorder->setRaised(false);
+		DefaultActiveButtonBorder->setWidth(2);
+		DefaultActiveButtonBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultActiveButtonBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultActiveButtonBorder->setShadowInner(Color4f(0.65, 0.65, 0.65, 1.0));
+		DefaultActiveButtonBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
+	endEditCP(DefaultActiveButtonBorder);
+
 	//Default ButtonBackground
 	ColorUIBackgroundPtr DefaultButtonBackground = ColorUIBackground::create();
 	beginEditCP(DefaultButtonBackground);
@@ -158,15 +170,16 @@ void DefaultLookAndFeel::init(void)
 		DefaultButton->setMinSize(Vec2s(0,0));
 		DefaultButton->setMaxSize(Vec2s(32767,32767)); //2^15
 		DefaultButton->setPreferredSize(Vec2s(100,50));
-		DefaultButton->setSize(Vec2s(0,0));
 
 		//Border
 		DefaultButton->setBorder(DefaultButtonBorder);
 		DefaultButton->setDisabledBorder(DefaultDisabledButtonBorder);
+		DefaultButton->setActiveBorder(DefaultActiveButtonBorder);
 		
 		//Background
 		DefaultButton->setBackground(DefaultButtonBackground);
 		DefaultButton->setDisabledBackground(DefaultDisabledButtonBackground);
+		DefaultButton->setActiveBackground(DefaultButtonBackground);
 
 		//Foreground
 		DefaultButton->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
@@ -209,7 +222,6 @@ void DefaultLookAndFeel::init(void)
 		DefaultLabel->setMinSize(Vec2s(0,0));
 		DefaultLabel->setMaxSize(Vec2s(32767,32767)); //2^15
 		DefaultLabel->setPreferredSize(Vec2s(100,50));
-		DefaultLabel->setSize(Vec2s(0,0));
 
 		//Border
 		DefaultLabel->setBorder(DefaultLabelBorder);
@@ -254,7 +266,6 @@ void DefaultLookAndFeel::init(void)
 		DefaultFrame->setMinSize(Vec2s(0,0));
 		DefaultFrame->setMaxSize(Vec2s(32767,32767)); //2^15
 		DefaultFrame->setPreferredSize(Vec2s(100,100));
-		DefaultFrame->setSize(Vec2s(0,0));
 
 		//Border
 		DefaultFrame->setBorder(DefaultFrameBorder);
@@ -305,7 +316,6 @@ void DefaultLookAndFeel::init(void)
 		DefaultPanel->setMinSize(Vec2s(0,0));
 		DefaultPanel->setMaxSize(Vec2s(32767,32767)); //2^15
 		DefaultPanel->setPreferredSize(Vec2s(100,100));
-		DefaultPanel->setSize(Vec2s(0,0));
 
 		//Border
 		DefaultPanel->setBorder(DefaultPanelBorder);
@@ -430,7 +440,13 @@ void DefaultLookAndFeel::init(void)
 		defaultActiveCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine1);
 		defaultActiveCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine2);
 	endEditCP(defaultActiveCheckedCheckboxDrawObject);
-	 
+
+	beginEditCP(defaultActiveCheckboxDrawObject);
+	 	defaultActiveCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
+		defaultActiveCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
+		defaultActiveCheckboxDrawObject->getDrawObjects().addValue(CheckboxActiveBorder);
+	endEditCP(defaultActiveCheckboxDrawObject);
+
 	EmptyBorderPtr DefaultCheckboxButtonBorder = EmptyBorder::create();
 
 
@@ -457,15 +473,15 @@ void DefaultLookAndFeel::init(void)
 
 		//Border
 		DefaultCheckboxButton->setBorder(DefaultCheckboxButtonBorder);
-		//DefaultCheckboxButton->setDisabledBorder(DefaultDisabledButtonBorder);
+		DefaultCheckboxButton->setActiveBorder(DefaultCheckboxButtonBorder);
 		
 		//Background
 		DefaultCheckboxButton->setBackground(DefaultCheckboxButtonBackground);
-		//DefaultCheckboxButton->setDisabledBackground(DefaultDisabledCheckboxButtonBackground);
+		DefaultCheckboxButton->setActiveBackground(DefaultCheckboxButtonBackground);
 
 		//Foreground
 		DefaultCheckboxButton->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
-		//DefaultCheckboxButton->setDisabledForegroundColor(Color4f(0.4,0.4,0.4,1.0));
+
 		
 		//Opacity
 		DefaultCheckboxButton->setOpacity(1.0);
@@ -494,6 +510,7 @@ void DefaultLookAndFeel::init(void)
 		RadioBackground->setEndAngleRad(6.28318531);
 		RadioBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 		RadioBackground->setOpacity(1.0);
+		RadioBackground->setCenter(Pnt2s(0,0));
 	endEditCP(RadioBackground);
 
 	ArcUIDrawObjectPtr RadioBackgroundBorder = ArcUIDrawObject::create();
@@ -506,6 +523,7 @@ void DefaultLookAndFeel::init(void)
 		RadioBackgroundBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
 		RadioBackgroundBorder->setOpacity(1.0);
 		RadioBackgroundBorder->setLineWidth(1);
+		RadioBackgroundBorder->setCenter(Pnt2s(0,0));
 	endEditCP(RadioBackgroundBorder);
 
 	DiscUIDrawObjectPtr RadioChecked = DiscUIDrawObject::create();
@@ -517,6 +535,7 @@ void DefaultLookAndFeel::init(void)
 		RadioChecked->setEndAngleRad(6.28318531);
 		RadioChecked->setColor(Color4f(0.0,0.0,0.0,1.0));
 		RadioChecked->setOpacity(1.0);
+		RadioChecked->setCenter(Pnt2s(0,0));
 	endEditCP(RadioChecked);
 
 	ArcUIDrawObjectPtr RadioActiveBorder = ArcUIDrawObject::create();
@@ -528,6 +547,7 @@ void DefaultLookAndFeel::init(void)
 		RadioActiveBorder->setEndAngleRad(6.28318531);
 		RadioActiveBorder->setColor(Color4f(0.0,0.0,1.0,1.0));
 		RadioActiveBorder->setOpacity(1.0);
+		RadioActiveBorder->setCenter(Pnt2s(0,0));
 	endEditCP(RadioActiveBorder);
 
 	beginEditCP(defaultRadioDrawObject);
@@ -569,13 +589,14 @@ void DefaultLookAndFeel::init(void)
 		DefaultRadioButton->setMinSize(Vec2s(0, 0));
 		DefaultRadioButton->setMaxSize(Vec2s(32767,32767));
 		DefaultRadioButton->setPreferredSize(Vec2s(100, 100));
-		DefaultRadioButton->setSize(Vec2s(0, 0));
 		DefaultRadioButton->setDrawObject(defaultRadioDrawObject);
 		DefaultRadioButton->setCheckedDrawObject(defaultCheckedRadioDrawObject);
 		DefaultRadioButton->setActiveDrawObject(defaultActiveRadioDrawObject);
 		DefaultRadioButton->setActiveCheckedDrawObject(defaultActiveCheckedRadioDrawObject);
 		DefaultRadioButton->setBorder(DefaultRadioButtonBorder);
+		DefaultRadioButton->setActiveBorder(DefaultRadioButtonBorder);
 		DefaultRadioButton->setBackground(DefaultRadioButtonBackground);
+		DefaultRadioButton->setActiveBackground(DefaultRadioButtonBackground);
 		DefaultRadioButton->setForegroundColor(Color4f(0.0,0.0, 0.0, 1.0));
 		DefaultRadioButton->setOpacity(1.0);
 		DefaultRadioButton->setText("");
