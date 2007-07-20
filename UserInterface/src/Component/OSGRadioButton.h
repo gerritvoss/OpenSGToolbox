@@ -74,7 +74,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButton : public RadioButtonBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    /*=========================  PROTECTED  ===============================*/
+	virtual void mouseReleased(const MouseEvent& e);
+
+	/*=========================  PROTECTED  ===============================*/
   protected:
 
     // Variables should all be in RadioButtonBase.

@@ -101,48 +101,28 @@ void Component::getBoundsRenderingSurfaceSpace(Pnt2s& TopLeft, Pnt2s& BottomRigh
     BottomRight = TopLeft + getSize();
 }
 
-void Component::drawBorder(const GraphicsPtr TheGraphics) const
+void Component::drawBorder(const GraphicsPtr TheGraphics, const BorderPtr Border) const
 {
-   if(getBorder() != NullFC)
+   if(Border != NullFC)
    {
       //Draw My Border
-	  if(getEnabled())
-	  {
-		getBorder()->draw(TheGraphics,0,0,getSize().x(),getSize().y(), getOpacity());
-	  }
-	  else
-	  {
-		getDisabledBorder()->draw(TheGraphics,0,0,getSize().x(),getSize().y(), getOpacity());
-	  }
+      Border->draw(TheGraphics,0,0,getSize().x(),getSize().y(), getOpacity());
    }
 }
 
-void Component::drawBackground(const GraphicsPtr TheGraphics) const
+void Component::drawBackground(const GraphicsPtr TheGraphics, const UIBackgroundPtr Background) const
 {
    //Draw the Background on the Inside of my border
    Pnt2s TopLeft, BottomRight;
    getInsideBorderBounds(TopLeft, BottomRight);
-   if(getBackground() != NullFC)
+   if(Background != NullFC)
    {
-	  if(getEnabled())
-	  {
-	     getBackground()->draw(TheGraphics, TopLeft, BottomRight, getOpacity());
-	  }
-	  else
-	  {
-	     getDisabledBackground()->draw(TheGraphics, TopLeft, BottomRight, getOpacity());
-	  }
+	   Background->draw(TheGraphics, TopLeft, BottomRight, getOpacity());
    }
 }
 
-void Component::draw(const GraphicsPtr TheGraphics) const
+bool Component::setupClipping(const GraphicsPtr Graphics) const
 {
-	if (!getVisible())
-		return;
-
-    //Translate to my position
-    glTranslatef(getPosition().x(), getPosition().y(), 0);
-
     //Get Clipping initial settings
     //bool WasClippingEnabled = glIsEnabled(GL_SCISSOR_TEST);
     bool WasClippPlane0Enabled = glIsEnabled(GL_CLIP_PLANE0);
@@ -158,9 +138,7 @@ void Component::draw(const GraphicsPtr TheGraphics) const
 		getClipBounds(ClipTopLeft,ClipBottomRight);
         if(ClipBottomRight.x()-ClipTopLeft.x() <= 0 || ClipBottomRight.y()-ClipTopLeft.y()<= 0)
         {
-			//Translate to my position
-			glTranslatef(-getPosition().x(), -getPosition().y(), 0);
-            return;
+            return false;
         }
 
         if(!WasClippPlane0Enabled) { glEnable(GL_CLIP_PLANE0); }
@@ -182,12 +160,40 @@ void Component::draw(const GraphicsPtr TheGraphics) const
         glClipPlane(GL_CLIP_PLANE2,TopPlaneEquation.getValues());
         glClipPlane(GL_CLIP_PLANE3,BottomPlaneEquation.getValues());
     }
+	return true;
+}
 
-    //Draw My Border
-    drawBorder(TheGraphics);
+void Component::draw(const GraphicsPtr TheGraphics) const
+{
+	if (!getVisible())
+		return;
 
-    //Draw My Background
-    drawBackground(TheGraphics);
+    //Translate to my position
+    glTranslatef(getPosition().x(), getPosition().y(), 0);
+
+	if(!setupClipping(TheGraphics))
+	{
+		//Translate to my position
+		glTranslatef(-getPosition().x(), -getPosition().y(), 0);
+		return;
+	}
+
+	if(getEnabled())
+	{
+		//Draw My Border
+		drawBorder(TheGraphics, getBorder());
+
+		//Draw My Background
+		drawBackground(TheGraphics, getBackground());
+	}
+	else
+	{
+		//Draw My Border
+		drawBorder(TheGraphics, getDisabledBorder());
+
+		//Draw My Background
+		drawBackground(TheGraphics, getDisabledBackground());
+	}
 
     //Draw Internal
     drawInternal(TheGraphics);
@@ -196,10 +202,11 @@ void Component::draw(const GraphicsPtr TheGraphics) const
     //Set Clipping to initial settings
     if(getClipping())
     {
-        if(!WasClippPlane0Enabled){glDisable(GL_CLIP_PLANE0);}
-        if(!WasClippPlane1Enabled){glDisable(GL_CLIP_PLANE1);}
-        if(!WasClippPlane2Enabled){glDisable(GL_CLIP_PLANE2);}
-        if(!WasClippPlane3Enabled){glDisable(GL_CLIP_PLANE3);}
+		//TODO:Fix
+        //if(!WasClippPlane0Enabled){glDisable(GL_CLIP_PLANE0);}
+        //if(!WasClippPlane1Enabled){glDisable(GL_CLIP_PLANE1);}
+        //if(!WasClippPlane2Enabled){glDisable(GL_CLIP_PLANE2);}
+        //if(!WasClippPlane3Enabled){glDisable(GL_CLIP_PLANE3);}
     }
 }
 

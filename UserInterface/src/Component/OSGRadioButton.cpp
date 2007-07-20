@@ -45,9 +45,8 @@
 
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
-#include "Util/OSGUIDrawUtils.h"
 #include "OSGRadioButton.h"
-
+#include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -80,56 +79,64 @@ void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
 {
 	Pnt2s TopLeft, BottomRight;
 	Pnt2s drawObjectTopLeft;
-	Pnt2s TempPosition;
 	Vec2s drawObjectSize;
+	Pnt2s TempPos;
+	Int32 totalWidth;
+	Int32 yAdj = 0;
 	getInsideBorderBounds(TopLeft, BottomRight);
-	//TempPosition = calculateAlignment(TopLeft, BottomRight-TopLeft, drawObjectSize/2.0+TheGraphics->getTextBounds(getText(), getFont()), getVerticalAlignment(), getHorizontalAlignment());
+
    if(getActive()){
 	   if(getChecked()){
-			getActiveCheckedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-		    TempPosition = Pnt2s(drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x(), 0);
-			TempPosition = calculateAlignment(TopLeft, BottomRight-TopLeft, TempPosition, getVerticalAlignment(), getHorizontalAlignment());
-			beginEditCP(getActiveCheckedDrawObject(), Component::PositionFieldMask);
-				getActiveCheckedDrawObject()->setPosition(TempPosition);
-			endEditCP(getActiveCheckedDrawObject(), Component::PositionFieldMask);
-			getActiveCheckedDrawObject()->draw(TheGraphics);
+		   getActiveCheckedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
+		   totalWidth =	drawObjectSize.x()+5+TheGraphics->getTextBounds(getText(), getFont()).x();
+		   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
+		   getActiveCheckedDrawObject()->setPosition(TempPos);
+		   getActiveCheckedDrawObject()->draw(TheGraphics);
+
 	   }
 	   else
 	   {
-			getActiveDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-		    TempPosition = Pnt2s(drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x(), 0);
-			TempPosition = calculateAlignment(TopLeft, BottomRight-TopLeft, TempPosition, getVerticalAlignment(), getHorizontalAlignment());
-			beginEditCP(getActiveDrawObject(), Component::PositionFieldMask);
-				getActiveDrawObject()->setPosition(TempPosition);
-			endEditCP(getActiveDrawObject(), Component::PositionFieldMask);
-			getActiveDrawObject()->draw(TheGraphics);
+		   getActiveDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
+		   totalWidth = drawObjectSize.x()+5+TheGraphics->getTextBounds(getText(), getFont()).x();
+		   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
+		   getActiveDrawObject()->setPosition(TempPos);
+		   getActiveDrawObject()->draw(TheGraphics);
 	   }
    }
    else if(getChecked()){
 	   getCheckedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-	   TempPosition = Pnt2s(drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x(), 0);
-	   TempPosition = calculateAlignment(TopLeft, BottomRight-TopLeft, TempPosition, getVerticalAlignment(), getHorizontalAlignment());
-	   beginEditCP(getCheckedDrawObject(), Component::PositionFieldMask);
-			getCheckedDrawObject()->setPosition(TempPosition);
-		endEditCP(getCheckedDrawObject(), Component::PositionFieldMask);
-		getCheckedDrawObject()->draw(TheGraphics);
-   }
+	   totalWidth =	drawObjectSize.x()+5+TheGraphics->getTextBounds(getText(), getFont()).x();
+	   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
+	   getCheckedDrawObject()->setPosition(TempPos);
+ 	   getCheckedDrawObject()->draw(TheGraphics);
+  }
    else{
 		getDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-		TempPosition = Pnt2s(drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x(), 0);
-		TempPosition = calculateAlignment(TopLeft, BottomRight-TopLeft, TempPosition, getVerticalAlignment(), getHorizontalAlignment());
-		beginEditCP(getDrawObject(), Component::PositionFieldMask);
-			getDrawObject()->setPosition(TempPosition);
-		endEditCP(getDrawObject(), Component::PositionFieldMask);
+		totalWidth = drawObjectSize.x()+5+TheGraphics->getTextBounds(getText(), getFont()).x();
+		TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
+   	    getDrawObject()->setPosition(TempPos);
 		getDrawObject()->draw(TheGraphics);
    }
+   if(drawObjectSize.y()> TheGraphics->getTextBounds(getText(), getFont()).y())
+	   yAdj = (drawObjectSize.y()-TheGraphics->getTextBounds(getText(), getFont()).x())/2.0;
+   TheGraphics->drawText(Pnt2s(TempPos.x()+drawObjectSize.x()+5, TempPos.y()-yAdj),   getText(), getFont(), getForegroundColor(), getOpacity());
 
-   TempPosition = Pnt2s(TempPosition.x() + 2*drawObjectSize.x(), TempPosition.y()-TheGraphics->getTextBounds(getText(), getFont()).y()/2.0);
-   TheGraphics->drawText(TempPosition, getText(), getFont(), getForegroundColor(), getOpacity());
-   
-   
 }
 
+void RadioButton::mouseReleased(const MouseEvent& e)
+{
+	if(getActive()){
+		if(getChecked())
+		{
+			setChecked(false);
+		}
+		else
+		{
+			setChecked(true);
+		}
+	}
+	Button::mouseReleased(e);
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -155,6 +162,7 @@ RadioButton::~RadioButton(void)
 void RadioButton::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+	
 }
 
 void RadioButton::dump(      UInt32    , 

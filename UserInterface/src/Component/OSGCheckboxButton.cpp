@@ -122,6 +122,21 @@ void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
    TheGraphics->drawText(Pnt2s(TempPos.x()+drawObjectSize.x()+5, TempPos.y()-yAdj),   getText(), getFont(), getForegroundColor(), getOpacity());
 
 }
+
+void CheckboxButton::mouseReleased(const MouseEvent& e)
+{
+	if(getActive()){
+		if(getChecked())
+		{
+			setChecked(false);
+		}
+		else
+		{
+			setChecked(true);
+		}
+	}
+	Button::mouseReleased(e);
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

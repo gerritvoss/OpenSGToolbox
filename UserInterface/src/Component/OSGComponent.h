@@ -147,8 +147,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 
     /*! \}                                                                 */
 
-    virtual void drawBorder(const GraphicsPtr TheGraphics) const;
-    virtual void drawBackground(const GraphicsPtr TheGraphics) const;
+	virtual bool setupClipping(const GraphicsPtr Graphics) const;
+    virtual void drawBorder(const GraphicsPtr TheGraphics, const BorderPtr Border) const;
+    virtual void drawBackground(const GraphicsPtr TheGraphics, const UIBackgroundPtr Background) const;
     
 	virtual void drawInternal(const GraphicsPtr Graphics) const = 0;
     

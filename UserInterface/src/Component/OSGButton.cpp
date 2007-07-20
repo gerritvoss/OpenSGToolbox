@@ -73,6 +73,64 @@ void Button::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void Button::draw(const GraphicsPtr Graphics) const
+{
+	if (!getVisible())
+		return;
+
+    //Translate to my position
+    glTranslatef(getPosition().x(), getPosition().y(), 0);
+
+	if(!setupClipping(Graphics))
+	{
+		//Translate to my position
+		glTranslatef(-getPosition().x(), -getPosition().y(), 0);
+		return;
+	}
+
+	if(getActive())
+	{
+		//Draw My Border
+		drawBorder(Graphics, getActiveBorder());
+
+		//Draw My Background
+		drawBackground(Graphics, getActiveBackground());
+	}
+	else
+	{
+		if(getEnabled())
+		{
+			//Draw My Border
+			drawBorder(Graphics, getBorder());
+
+			//Draw My Background
+			drawBackground(Graphics, getBackground());
+		}
+		else
+		{
+			//Draw My Border
+			drawBorder(Graphics, getDisabledBorder());
+
+			//Draw My Background
+			drawBackground(Graphics, getDisabledBackground());
+		}
+	}
+
+    //Draw Internal
+    drawInternal(Graphics);
+    glTranslatef(-getPosition().x(), -getPosition().y(), 0);
+    
+    //Set Clipping to initial settings
+    if(getClipping())
+    {
+		//TODO:Fix
+        //if(!WasClippPlane0Enabled){glDisable(GL_CLIP_PLANE0);}
+        //if(!WasClippPlane1Enabled){glDisable(GL_CLIP_PLANE1);}
+        //if(!WasClippPlane2Enabled){glDisable(GL_CLIP_PLANE2);}
+        //if(!WasClippPlane3Enabled){glDisable(GL_CLIP_PLANE3);}
+    }
+}
+
 void Button::drawInternal(const GraphicsPtr TheGraphics) const
 {
    Pnt2s TopLeft, BottomRight;
@@ -129,6 +187,46 @@ void Button::drawInternal(const GraphicsPtr TheGraphics) const
    }
 }
 
+void Button::mouseClicked(const MouseEvent& e)
+{
+	Component::mouseClicked(e);
+}
+
+void Button::mouseEntered(const MouseEvent& e)
+{
+
+	Component::mouseEntered(e);
+}
+
+void Button::mouseExited(const MouseEvent& e)
+{
+
+	beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+		ButtonPtr(this)->setActive(false);
+	endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+
+	Component::mouseExited(e);
+}
+
+void Button::mousePressed(const MouseEvent& e)
+{
+	if(e.getButton()==MouseEvent::BUTTON1){
+		beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+			ButtonPtr(this)->setActive(true);
+		endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+	}
+	Component::mousePressed(e);
+}
+
+void Button::mouseReleased(const MouseEvent& e)
+{	
+	if(e.getButton() == MouseEvent::BUTTON1){
+		beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+			ButtonPtr(this)->setActive(false);
+		endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+	}
+	Component::mouseReleased(e);
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

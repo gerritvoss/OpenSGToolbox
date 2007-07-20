@@ -75,6 +75,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+	virtual void draw(const GraphicsPtr Graphics) const;
+
+	virtual void mouseClicked(const MouseEvent& e);
+    virtual void mouseEntered(const MouseEvent& e);
+    virtual void mouseExited(const MouseEvent& e);
+    virtual void mousePressed(const MouseEvent& e);
+    virtual void mouseReleased(const MouseEvent& e);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
