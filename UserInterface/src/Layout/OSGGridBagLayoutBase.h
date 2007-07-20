@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OSGLayout.h> // Parent
+#include "OSGLayout.h" // Parent
 
 #include <OpenSG/OSGUInt32Fields.h> // Rows type
 #include <OpenSG/OSGUInt32Fields.h> // Columns type
