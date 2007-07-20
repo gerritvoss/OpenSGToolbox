@@ -129,11 +129,15 @@ void RadioButton::mouseReleased(const MouseEvent& e)
 		if(getActive()){
 			if(getChecked())
 			{
-				setChecked(false);
+				beginEditCP(RadioButtonPtr(this), RadioButton::CheckedFieldMask);
+					setChecked(false);
+				endEditCP(RadioButtonPtr(this), RadioButton::CheckedFieldMask);
 			}
 			else
 			{
-				setChecked(true);
+				beginEditCP(RadioButtonPtr(this), RadioButton::CheckedFieldMask);
+					setChecked(true);
+				endEditCP(RadioButtonPtr(this), RadioButton::CheckedFieldMask);
 			}
 		}
 	}
