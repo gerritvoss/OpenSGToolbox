@@ -96,6 +96,20 @@ GridBagLayoutPtr GridBagLayoutBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the GridBagLayout::_mfRows field.
+inline
+MFUInt32 *GridBagLayoutBase::getMFRows(void)
+{
+    return &_mfRows;
+}
+
+//! Get the GridBagLayout::_mfColumns field.
+inline
+MFUInt32 *GridBagLayoutBase::getMFColumns(void)
+{
+    return &_mfColumns;
+}
+
 //! Get the GridBagLayout::_mfColumnWeights field.
 inline
 MFReal32 *GridBagLayoutBase::getMFColumnWeights(void)
@@ -125,6 +139,48 @@ MFUInt16 *GridBagLayoutBase::getMFRowWidths(void)
 }
 
 
+
+//! Get the value of the \a index element the GridBagLayout::_mfRows field.
+inline
+UInt32 &GridBagLayoutBase::getRows(const UInt32 index)
+{
+    return _mfRows[index];
+}
+
+//! Get the GridBagLayout::_mfRows field.
+inline
+MFUInt32 &GridBagLayoutBase::getRows(void)
+{
+    return _mfRows;
+}
+
+//! Get the GridBagLayout::_mfRows field.
+inline
+const MFUInt32 &GridBagLayoutBase::getRows(void) const
+{
+    return _mfRows;
+}
+
+//! Get the value of the \a index element the GridBagLayout::_mfColumns field.
+inline
+UInt32 &GridBagLayoutBase::getColumns(const UInt32 index)
+{
+    return _mfColumns[index];
+}
+
+//! Get the GridBagLayout::_mfColumns field.
+inline
+MFUInt32 &GridBagLayoutBase::getColumns(void)
+{
+    return _mfColumns;
+}
+
+//! Get the GridBagLayout::_mfColumns field.
+inline
+const MFUInt32 &GridBagLayoutBase::getColumns(void) const
+{
+    return _mfColumns;
+}
 
 //! Get the value of the \a index element the GridBagLayout::_mfColumnWeights field.
 inline

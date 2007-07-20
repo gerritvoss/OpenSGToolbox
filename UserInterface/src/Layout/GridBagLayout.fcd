@@ -13,6 +13,24 @@
 >
 A UI GridBagLayout.
 	<Field
+		name="Rows"
+		type="UInt32"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	This field holds the number of rows
+	</Field>
+	<Field
+		name="Columns"
+		type="UInt32"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	This field holds the number of columns
+	</Field>
+	<Field
 		name="ColumnWeights"
 		type="Real32"
 		cardinality="multi"

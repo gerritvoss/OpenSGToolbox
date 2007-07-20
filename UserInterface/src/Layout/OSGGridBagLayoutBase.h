@@ -67,6 +67,8 @@
 
 #include "OSGLayout.h" // Parent
 
+#include <OpenSG/OSGUInt32Fields.h> // Rows type
+#include <OpenSG/OSGUInt32Fields.h> // Columns type
 #include <OpenSG/OSGReal32Fields.h> // ColumnWeights type
 #include <OpenSG/OSGUInt16Fields.h> // ColumnHeights type
 #include <OpenSG/OSGReal32Fields.h> // RowWeights type
@@ -94,13 +96,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutBase : public Layout
 
     enum
     {
-        ColumnWeightsFieldId = Inherited::NextFieldId,
+        RowsFieldId          = Inherited::NextFieldId,
+        ColumnsFieldId       = RowsFieldId          + 1,
+        ColumnWeightsFieldId = ColumnsFieldId       + 1,
         ColumnHeightsFieldId = ColumnWeightsFieldId + 1,
         RowWeightsFieldId    = ColumnHeightsFieldId + 1,
         RowWidthsFieldId     = RowWeightsFieldId    + 1,
         NextFieldId          = RowWidthsFieldId     + 1
     };
 
+    static const OSG::BitVector RowsFieldMask;
+    static const OSG::BitVector ColumnsFieldMask;
     static const OSG::BitVector ColumnWeightsFieldMask;
     static const OSG::BitVector ColumnHeightsFieldMask;
     static const OSG::BitVector RowWeightsFieldMask;
@@ -131,11 +137,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutBase : public Layout
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+           MFUInt32            *getMFRows           (void);
+           MFUInt32            *getMFColumns        (void);
            MFReal32            *getMFColumnWeights  (void);
            MFUInt16            *getMFColumnHeights  (void);
            MFReal32            *getMFRowWeights     (void);
            MFUInt16            *getMFRowWidths      (void);
 
+           UInt32              &getRows           (const UInt32 index);
+           MFUInt32            &getRows           (void);
+     const MFUInt32            &getRows           (void) const;
+           UInt32              &getColumns        (const UInt32 index);
+           MFUInt32            &getColumns        (void);
+     const MFUInt32            &getColumns        (void) const;
            Real32              &getColumnWeights  (const UInt32 index);
            MFReal32            &getColumnWeights  (void);
      const MFReal32            &getColumnWeights  (void) const;
@@ -196,6 +210,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutBase : public Layout
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
+    MFUInt32            _mfRows;
+    MFUInt32            _mfColumns;
     MFReal32            _mfColumnWeights;
     MFUInt16            _mfColumnHeights;
     MFReal32            _mfRowWeights;

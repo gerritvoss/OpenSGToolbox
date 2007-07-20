@@ -64,6 +64,12 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  GridBagLayoutBase::RowsFieldMask = 
+    (TypeTraits<BitVector>::One << GridBagLayoutBase::RowsFieldId);
+
+const OSG::BitVector  GridBagLayoutBase::ColumnsFieldMask = 
+    (TypeTraits<BitVector>::One << GridBagLayoutBase::ColumnsFieldId);
+
 const OSG::BitVector  GridBagLayoutBase::ColumnWeightsFieldMask = 
     (TypeTraits<BitVector>::One << GridBagLayoutBase::ColumnWeightsFieldId);
 
@@ -83,6 +89,12 @@ const OSG::BitVector GridBagLayoutBase::MTInfluenceMask =
 
 // Field descriptions
 
+/*! \var UInt32          GridBagLayoutBase::_mfRows
+    This field holds the number of rows
+*/
+/*! \var UInt32          GridBagLayoutBase::_mfColumns
+    This field holds the number of columns
+*/
 /*! \var Real32          GridBagLayoutBase::_mfColumnWeights
     This field holds the overrides to the column weights
 */
@@ -100,6 +112,16 @@ const OSG::BitVector GridBagLayoutBase::MTInfluenceMask =
 
 FieldDescription *GridBagLayoutBase::_desc[] = 
 {
+    new FieldDescription(MFUInt32::getClassType(), 
+                     "Rows", 
+                     RowsFieldId, RowsFieldMask,
+                     false,
+                     (FieldAccessMethod) &GridBagLayoutBase::getMFRows),
+    new FieldDescription(MFUInt32::getClassType(), 
+                     "Columns", 
+                     ColumnsFieldId, ColumnsFieldMask,
+                     false,
+                     (FieldAccessMethod) &GridBagLayoutBase::getMFColumns),
     new FieldDescription(MFReal32::getClassType(), 
                      "ColumnWeights", 
                      ColumnWeightsFieldId, ColumnWeightsFieldMask,
@@ -185,6 +207,8 @@ void GridBagLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfRows.terminateShare(uiAspect, this->getContainerSize());
+    _mfColumns.terminateShare(uiAspect, this->getContainerSize());
     _mfColumnWeights.terminateShare(uiAspect, this->getContainerSize());
     _mfColumnHeights.terminateShare(uiAspect, this->getContainerSize());
     _mfRowWeights.terminateShare(uiAspect, this->getContainerSize());
@@ -199,6 +223,8 @@ void GridBagLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 GridBagLayoutBase::GridBagLayoutBase(void) :
+    _mfRows                   (), 
+    _mfColumns                (), 
     _mfColumnWeights          (), 
     _mfColumnHeights          (), 
     _mfRowWeights             (), 
@@ -212,6 +238,8 @@ GridBagLayoutBase::GridBagLayoutBase(void) :
 #endif
 
 GridBagLayoutBase::GridBagLayoutBase(const GridBagLayoutBase &source) :
+    _mfRows                   (source._mfRows                   ), 
+    _mfColumns                (source._mfColumns                ), 
     _mfColumnWeights          (source._mfColumnWeights          ), 
     _mfColumnHeights          (source._mfColumnHeights          ), 
     _mfRowWeights             (source._mfRowWeights             ), 
@@ -231,6 +259,16 @@ GridBagLayoutBase::~GridBagLayoutBase(void)
 UInt32 GridBagLayoutBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
+
+    if(FieldBits::NoField != (RowsFieldMask & whichField))
+    {
+        returnValue += _mfRows.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ColumnsFieldMask & whichField))
+    {
+        returnValue += _mfColumns.getBinSize();
+    }
 
     if(FieldBits::NoField != (ColumnWeightsFieldMask & whichField))
     {
@@ -261,6 +299,16 @@ void GridBagLayoutBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (RowsFieldMask & whichField))
+    {
+        _mfRows.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ColumnsFieldMask & whichField))
+    {
+        _mfColumns.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (ColumnWeightsFieldMask & whichField))
     {
         _mfColumnWeights.copyToBin(pMem);
@@ -288,6 +336,16 @@ void GridBagLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (RowsFieldMask & whichField))
+    {
+        _mfRows.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ColumnsFieldMask & whichField))
+    {
+        _mfColumns.copyFromBin(pMem);
+    }
 
     if(FieldBits::NoField != (ColumnWeightsFieldMask & whichField))
     {
@@ -319,6 +377,12 @@ void GridBagLayoutBase::executeSyncImpl(      GridBagLayoutBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (RowsFieldMask & whichField))
+        _mfRows.syncWith(pOther->_mfRows);
+
+    if(FieldBits::NoField != (ColumnsFieldMask & whichField))
+        _mfColumns.syncWith(pOther->_mfColumns);
+
     if(FieldBits::NoField != (ColumnWeightsFieldMask & whichField))
         _mfColumnWeights.syncWith(pOther->_mfColumnWeights);
 
@@ -342,6 +406,12 @@ void GridBagLayoutBase::executeSyncImpl(      GridBagLayoutBase *pOther,
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
 
+    if(FieldBits::NoField != (RowsFieldMask & whichField))
+        _mfRows.syncWith(pOther->_mfRows, sInfo);
+
+    if(FieldBits::NoField != (ColumnsFieldMask & whichField))
+        _mfColumns.syncWith(pOther->_mfColumns, sInfo);
+
     if(FieldBits::NoField != (ColumnWeightsFieldMask & whichField))
         _mfColumnWeights.syncWith(pOther->_mfColumnWeights, sInfo);
 
@@ -362,6 +432,12 @@ void GridBagLayoutBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (RowsFieldMask & whichField))
+        _mfRows.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (ColumnsFieldMask & whichField))
+        _mfColumns.beginEdit(uiAspect, uiContainerSize);
 
     if(FieldBits::NoField != (ColumnWeightsFieldMask & whichField))
         _mfColumnWeights.beginEdit(uiAspect, uiContainerSize);
