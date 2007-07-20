@@ -155,8 +155,9 @@ int main(int argc, char **argv)
 	// or indented into the screen similar to the BevelBorder
 	// but in a different style
 	beginEditCP(etchedBorder, EtchedBorder::WidthFieldMask | EtchedBorder::HighlightFieldMask | EtchedBorder::ShadowFieldMask | EtchedBorder::RaisedFieldMask);
-		// Determine the Width of the Border
-		etchedBorder->setWidth(3);
+		// Determine the Width of the Border (note EtchedBorder works best
+		// with a Width which is a multiple of 2)
+		etchedBorder->setWidth(4);
 		// Determine Highlight and Shadow colors
 		etchedBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
 		etchedBorder->setShadow(Color4f(0.8, 0.8, 0.8, 1.0));

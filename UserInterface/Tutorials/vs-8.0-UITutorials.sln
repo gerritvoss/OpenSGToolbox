@@ -67,6 +67,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "11CardLayout", "11CardLayou
 		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "12ComplexLayout", "12ComplexLayout.vcproj", "{BB72CA5A-1B61-4E61-8C92-6F5DAAAB23EC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -127,6 +132,10 @@ Global
 		{1A6FB8C3-06D7-4D1D-BFA8-74E2ED533BA6}.Debug|Win32.Build.0 = Debug|Win32
 		{1A6FB8C3-06D7-4D1D-BFA8-74E2ED533BA6}.Release|Win32.ActiveCfg = Release|Win32
 		{1A6FB8C3-06D7-4D1D-BFA8-74E2ED533BA6}.Release|Win32.Build.0 = Release|Win32
+		{BB72CA5A-1B61-4E61-8C92-6F5DAAAB23EC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BB72CA5A-1B61-4E61-8C92-6F5DAAAB23EC}.Debug|Win32.Build.0 = Debug|Win32
+		{BB72CA5A-1B61-4E61-8C92-6F5DAAAB23EC}.Release|Win32.ActiveCfg = Release|Win32
+		{BB72CA5A-1B61-4E61-8C92-6F5DAAAB23EC}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,6 +5,9 @@
 // Includes: creating and editing Frames, Panels, and adding
 // Panels
 
+// Note: in almost all cases, each Scene will have only ONE
+// Frame, but may have unlimited Panels.
+
 
 // GLUT is used for window handling
 #include <OpenSG/OSGGLUT.h>
@@ -102,6 +105,7 @@ int main(int argc, char **argv)
 	/******************************************************
 			
 				Creates some Button components
+				and give them some Text
 
 	******************************************************/
 
@@ -111,6 +115,30 @@ int main(int argc, char **argv)
 	ButtonPtr button4 = osg::Button::create();
 	ButtonPtr button5 = osg::Button::create();
 	ButtonPtr button6 = osg::Button::create();
+	
+	beginEditCP(button1);
+		button1->setText("This");
+	endEditCP(button1);
+
+	beginEditCP(button2);
+		button2->setText("is a");
+	endEditCP(button2);
+
+	beginEditCP(button3);
+		button3->setText("sample");
+	endEditCP(button3);
+
+	beginEditCP(button4);
+	button4->setText("two");
+	endEditCP(button4);
+
+	beginEditCP(button5);
+		button5->setText("panel");
+	endEditCP(button5);
+
+	beginEditCP(button6);
+		button6->setText("layout");
+	endEditCP(button6);
 
 	
 	/******************************************************

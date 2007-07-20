@@ -47,6 +47,7 @@
 #include <OpenSG/UserInterface/OSGPanel.h>
 #include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGBevelBorder.h>
+#include <OpenSG/UserInterface/OSGEtchedBorder.h>
 #include <OpenSG/UserInterface/OSGUIDefines.h>
 
 // Activate the OpenSG namespace
@@ -177,10 +178,11 @@ int main(int argc, char **argv)
 			the two Panels
 
 	******************************************************/
-	LineBorderPtr panelBorder = osg::LineBorder::create();
+	EtchedBorderPtr panelBorder = osg::EtchedBorder::create();
 	beginEditCP(panelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
-		panelBorder->setColor( Color4f(0.9, 0.9, 0.9, 1.0) );
-		panelBorder->setWidth(3);
+		panelBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
+		panelBorder->setShadow(Color4f(0.8, 0.8, 0.8, 1.0));
+		panelBorder->setWidth(6);
 	endEditCP(panelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
 
 

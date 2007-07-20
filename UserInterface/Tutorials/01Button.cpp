@@ -4,7 +4,8 @@
 // a Button created in the OSG User Interface library.
 // 
 // Includes: Button PreferredSize, MaximumSize, MinimumSize, Font,
-// Text,and adding a Button to a Scene.
+// Text,and adding a Button to a Scene.  Also note that clicking
+// the Button causes it to appear pressed
 
 
 // GLUT is used for window handling
@@ -105,17 +106,24 @@ int main(int argc, char **argv)
 	// Create a simple Font to be used with the Button
 	FontPtr sampleFont = osg::Font::create();
 	beginEditCP(sampleFont, Font::SizeFieldMask);
-		sampleFont->setSize(12);
+		sampleFont->setFamily("SANS");
+		sampleFont->setGap(1);
+		sampleFont->setGlyphPixelSize(46);
+		sampleFont->setSize(14);
+		sampleFont->setTextureWidth(0);
+		sampleFont->setStyle(TextFace::STYLE_PLAIN);
 	endEditCP(sampleFont, Font::SizeFieldMask);
 
 	/******************************************************
 
+
 		Edit the Button and determine its characteristics
+
 
 	******************************************************/
 
 	beginEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
-			// The following 4 function calls are not specific to Button, 
+			// The following 3 function calls are not specific to Button, 
 			// but can be used with any Component
 
 			// Determine the Minimum and Maximum size that the Component can ever have
@@ -125,8 +133,7 @@ int main(int argc, char **argv)
 		button1->setMaxSize( Vec2s (200, 100) );
 			// Determine the PreferredSize for the Component
 		button1->setPreferredSize( Vec2s (100, 50) );
-			// Determine whether the Button appears pressed (false) or not-pressed (true)
-		button1->setEnabled(true);
+
 		// The following functions are specific to Button
 			// Determine the visible Text (Text must fit within Button Size
 			// or extra Text will not display)
@@ -139,6 +146,8 @@ int main(int argc, char **argv)
 			// HORIZONTAL_LEFT, HORIZONTAL_RIGHT
 		button1->setHorizontalAlignment(HORIZONTAL_RIGHT);
     endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
+
+
 
 	// Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
