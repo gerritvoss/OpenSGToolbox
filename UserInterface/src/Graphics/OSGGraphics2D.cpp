@@ -319,7 +319,7 @@ void Graphics2D::drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& 
 	Real32 angleNow = StartAngleRad;
 	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(static_cast<Real32>(SubDivisions));
 	if(EndAngleRad-StartAngleRad > 2*3.1415926535)
-		angleDiff = 2*3.1415926535;
+		angleDiff = 2*3.1415926535/static_cast<Real32>(SubDivisions);
    Real32 Alpha(Color.alpha() * Opacity * getOpacity());
 	if(Alpha < 1.0)
 	{
@@ -352,7 +352,7 @@ void Graphics2D::drawArc(const Pnt2s& Center, const Int16& Width, const Int16& H
 	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(static_cast<Real32>(SubDivisions));
 	//If andle difference is bigger to a circle, set it to equal to a circle
 	if(EndAngleRad-StartAngleRad > 2*3.1415926535)
-		angleDiff = 2*3.1415926535;
+		angleDiff = 2*3.1415926535/static_cast<Real32>(SubDivisions);
    Real32 Alpha(Color.alpha() * Opacity * getOpacity());
 	if(Alpha < 1.0)
 	{
