@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGLayout.h" // Parent
+#include <OSGLayout.h> // Parent
 
 #include <OpenSG/OSGUInt32Fields.h> // Rows type
 #include <OpenSG/OSGUInt32Fields.h> // Columns type
@@ -137,19 +137,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutBase : public Layout
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFUInt32            *getMFRows           (void);
-           MFUInt32            *getMFColumns        (void);
+           SFUInt32            *getSFRows           (void);
+           SFUInt32            *getSFColumns        (void);
            MFReal32            *getMFColumnWeights  (void);
            MFUInt16            *getMFColumnHeights  (void);
            MFReal32            *getMFRowWeights     (void);
            MFUInt16            *getMFRowWidths      (void);
 
-           UInt32              &getRows           (const UInt32 index);
-           MFUInt32            &getRows           (void);
-     const MFUInt32            &getRows           (void) const;
-           UInt32              &getColumns        (const UInt32 index);
-           MFUInt32            &getColumns        (void);
-     const MFUInt32            &getColumns        (void) const;
+           UInt32              &getRows           (void);
+     const UInt32              &getRows           (void) const;
+           UInt32              &getColumns        (void);
+     const UInt32              &getColumns        (void) const;
            Real32              &getColumnWeights  (const UInt32 index);
            MFReal32            &getColumnWeights  (void);
      const MFReal32            &getColumnWeights  (void) const;
@@ -168,6 +166,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutBase : public Layout
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setRows           ( const UInt32 &value );
+     void setColumns        ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -210,8 +210,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutBase : public Layout
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFUInt32            _mfRows;
-    MFUInt32            _mfColumns;
+    SFUInt32            _sfRows;
+    SFUInt32            _sfColumns;
     MFReal32            _mfColumnWeights;
     MFUInt16            _mfColumnHeights;
     MFReal32            _mfRowWeights;

@@ -15,7 +15,7 @@ A UI GridBagLayout.
 	<Field
 		name="Rows"
 		type="UInt32"
-		cardinality="multi"
+		cardinality="single"
 		visibility="external"
 		access="public"
 	>
@@ -24,7 +24,7 @@ A UI GridBagLayout.
 	<Field
 		name="Columns"
 		type="UInt32"
-		cardinality="multi"
+		cardinality="single"
 		visibility="external"
 		access="public"
 	>

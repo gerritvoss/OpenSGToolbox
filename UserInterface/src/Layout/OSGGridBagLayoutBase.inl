@@ -96,18 +96,18 @@ GridBagLayoutPtr GridBagLayoutBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the GridBagLayout::_mfRows field.
+//! Get the GridBagLayout::_sfRows field.
 inline
-MFUInt32 *GridBagLayoutBase::getMFRows(void)
+SFUInt32 *GridBagLayoutBase::getSFRows(void)
 {
-    return &_mfRows;
+    return &_sfRows;
 }
 
-//! Get the GridBagLayout::_mfColumns field.
+//! Get the GridBagLayout::_sfColumns field.
 inline
-MFUInt32 *GridBagLayoutBase::getMFColumns(void)
+SFUInt32 *GridBagLayoutBase::getSFColumns(void)
 {
-    return &_mfColumns;
+    return &_sfColumns;
 }
 
 //! Get the GridBagLayout::_mfColumnWeights field.
@@ -139,48 +139,48 @@ MFUInt16 *GridBagLayoutBase::getMFRowWidths(void)
 }
 
 
-
-//! Get the value of the \a index element the GridBagLayout::_mfRows field.
+//! Get the value of the GridBagLayout::_sfRows field.
 inline
-UInt32 &GridBagLayoutBase::getRows(const UInt32 index)
+UInt32 &GridBagLayoutBase::getRows(void)
 {
-    return _mfRows[index];
+    return _sfRows.getValue();
 }
 
-//! Get the GridBagLayout::_mfRows field.
+//! Get the value of the GridBagLayout::_sfRows field.
 inline
-MFUInt32 &GridBagLayoutBase::getRows(void)
+const UInt32 &GridBagLayoutBase::getRows(void) const
 {
-    return _mfRows;
+    return _sfRows.getValue();
 }
 
-//! Get the GridBagLayout::_mfRows field.
+//! Set the value of the GridBagLayout::_sfRows field.
 inline
-const MFUInt32 &GridBagLayoutBase::getRows(void) const
+void GridBagLayoutBase::setRows(const UInt32 &value)
 {
-    return _mfRows;
+    _sfRows.setValue(value);
 }
 
-//! Get the value of the \a index element the GridBagLayout::_mfColumns field.
+//! Get the value of the GridBagLayout::_sfColumns field.
 inline
-UInt32 &GridBagLayoutBase::getColumns(const UInt32 index)
+UInt32 &GridBagLayoutBase::getColumns(void)
 {
-    return _mfColumns[index];
+    return _sfColumns.getValue();
 }
 
-//! Get the GridBagLayout::_mfColumns field.
+//! Get the value of the GridBagLayout::_sfColumns field.
 inline
-MFUInt32 &GridBagLayoutBase::getColumns(void)
+const UInt32 &GridBagLayoutBase::getColumns(void) const
 {
-    return _mfColumns;
+    return _sfColumns.getValue();
 }
 
-//! Get the GridBagLayout::_mfColumns field.
+//! Set the value of the GridBagLayout::_sfColumns field.
 inline
-const MFUInt32 &GridBagLayoutBase::getColumns(void) const
+void GridBagLayoutBase::setColumns(const UInt32 &value)
 {
-    return _mfColumns;
+    _sfColumns.setValue(value);
 }
+
 
 //! Get the value of the \a index element the GridBagLayout::_mfColumnWeights field.
 inline

@@ -89,10 +89,10 @@ const OSG::BitVector GridBagLayoutBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var UInt32          GridBagLayoutBase::_mfRows
+/*! \var UInt32          GridBagLayoutBase::_sfRows
     This field holds the number of rows
 */
-/*! \var UInt32          GridBagLayoutBase::_mfColumns
+/*! \var UInt32          GridBagLayoutBase::_sfColumns
     This field holds the number of columns
 */
 /*! \var Real32          GridBagLayoutBase::_mfColumnWeights
@@ -112,16 +112,16 @@ const OSG::BitVector GridBagLayoutBase::MTInfluenceMask =
 
 FieldDescription *GridBagLayoutBase::_desc[] = 
 {
-    new FieldDescription(MFUInt32::getClassType(), 
+    new FieldDescription(SFUInt32::getClassType(), 
                      "Rows", 
                      RowsFieldId, RowsFieldMask,
                      false,
-                     (FieldAccessMethod) &GridBagLayoutBase::getMFRows),
-    new FieldDescription(MFUInt32::getClassType(), 
+                     (FieldAccessMethod) &GridBagLayoutBase::getSFRows),
+    new FieldDescription(SFUInt32::getClassType(), 
                      "Columns", 
                      ColumnsFieldId, ColumnsFieldMask,
                      false,
-                     (FieldAccessMethod) &GridBagLayoutBase::getMFColumns),
+                     (FieldAccessMethod) &GridBagLayoutBase::getSFColumns),
     new FieldDescription(MFReal32::getClassType(), 
                      "ColumnWeights", 
                      ColumnWeightsFieldId, ColumnWeightsFieldMask,
@@ -207,8 +207,6 @@ void GridBagLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
-    _mfRows.terminateShare(uiAspect, this->getContainerSize());
-    _mfColumns.terminateShare(uiAspect, this->getContainerSize());
     _mfColumnWeights.terminateShare(uiAspect, this->getContainerSize());
     _mfColumnHeights.terminateShare(uiAspect, this->getContainerSize());
     _mfRowWeights.terminateShare(uiAspect, this->getContainerSize());
@@ -223,8 +221,8 @@ void GridBagLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 GridBagLayoutBase::GridBagLayoutBase(void) :
-    _mfRows                   (), 
-    _mfColumns                (), 
+    _sfRows                   (), 
+    _sfColumns                (), 
     _mfColumnWeights          (), 
     _mfColumnHeights          (), 
     _mfRowWeights             (), 
@@ -238,8 +236,8 @@ GridBagLayoutBase::GridBagLayoutBase(void) :
 #endif
 
 GridBagLayoutBase::GridBagLayoutBase(const GridBagLayoutBase &source) :
-    _mfRows                   (source._mfRows                   ), 
-    _mfColumns                (source._mfColumns                ), 
+    _sfRows                   (source._sfRows                   ), 
+    _sfColumns                (source._sfColumns                ), 
     _mfColumnWeights          (source._mfColumnWeights          ), 
     _mfColumnHeights          (source._mfColumnHeights          ), 
     _mfRowWeights             (source._mfRowWeights             ), 
@@ -262,12 +260,12 @@ UInt32 GridBagLayoutBase::getBinSize(const BitVector &whichField)
 
     if(FieldBits::NoField != (RowsFieldMask & whichField))
     {
-        returnValue += _mfRows.getBinSize();
+        returnValue += _sfRows.getBinSize();
     }
 
     if(FieldBits::NoField != (ColumnsFieldMask & whichField))
     {
-        returnValue += _mfColumns.getBinSize();
+        returnValue += _sfColumns.getBinSize();
     }
 
     if(FieldBits::NoField != (ColumnWeightsFieldMask & whichField))
@@ -301,12 +299,12 @@ void GridBagLayoutBase::copyToBin(      BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (RowsFieldMask & whichField))
     {
-        _mfRows.copyToBin(pMem);
+        _sfRows.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (ColumnsFieldMask & whichField))
     {
-        _mfColumns.copyToBin(pMem);
+        _sfColumns.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (ColumnWeightsFieldMask & whichField))
@@ -339,12 +337,12 @@ void GridBagLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (RowsFieldMask & whichField))
     {
-        _mfRows.copyFromBin(pMem);
+        _sfRows.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (ColumnsFieldMask & whichField))
     {
-        _mfColumns.copyFromBin(pMem);
+        _sfColumns.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (ColumnWeightsFieldMask & whichField))
@@ -378,10 +376,10 @@ void GridBagLayoutBase::executeSyncImpl(      GridBagLayoutBase *pOther,
     Inherited::executeSyncImpl(pOther, whichField);
 
     if(FieldBits::NoField != (RowsFieldMask & whichField))
-        _mfRows.syncWith(pOther->_mfRows);
+        _sfRows.syncWith(pOther->_sfRows);
 
     if(FieldBits::NoField != (ColumnsFieldMask & whichField))
-        _mfColumns.syncWith(pOther->_mfColumns);
+        _sfColumns.syncWith(pOther->_sfColumns);
 
     if(FieldBits::NoField != (ColumnWeightsFieldMask & whichField))
         _mfColumnWeights.syncWith(pOther->_mfColumnWeights);
@@ -405,12 +403,12 @@ void GridBagLayoutBase::executeSyncImpl(      GridBagLayoutBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-
     if(FieldBits::NoField != (RowsFieldMask & whichField))
-        _mfRows.syncWith(pOther->_mfRows, sInfo);
+        _sfRows.syncWith(pOther->_sfRows);
 
     if(FieldBits::NoField != (ColumnsFieldMask & whichField))
-        _mfColumns.syncWith(pOther->_mfColumns, sInfo);
+        _sfColumns.syncWith(pOther->_sfColumns);
+
 
     if(FieldBits::NoField != (ColumnWeightsFieldMask & whichField))
         _mfColumnWeights.syncWith(pOther->_mfColumnWeights, sInfo);
@@ -432,12 +430,6 @@ void GridBagLayoutBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
-
-    if(FieldBits::NoField != (RowsFieldMask & whichField))
-        _mfRows.beginEdit(uiAspect, uiContainerSize);
-
-    if(FieldBits::NoField != (ColumnsFieldMask & whichField))
-        _mfColumns.beginEdit(uiAspect, uiContainerSize);
 
     if(FieldBits::NoField != (ColumnWeightsFieldMask & whichField))
         _mfColumnWeights.beginEdit(uiAspect, uiContainerSize);
