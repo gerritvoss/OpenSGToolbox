@@ -119,20 +119,22 @@ void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
    }
    if(drawObjectSize.y()> TheGraphics->getTextBounds(getText(), getFont()).y())
 	   yAdj = (drawObjectSize.y()-TheGraphics->getTextBounds(getText(), getFont()).x())/2.0;
-   TheGraphics->drawText(Pnt2s(TempPos.x()+drawObjectSize.x()+5, TempPos.y()-yAdj),   getText(), getFont(), getForegroundColor(), getOpacity());
+   TheGraphics->drawText(Pnt2s(TempPos.x()+drawObjectSize.x()+5, TempPos.y()+yAdj),   getText(), getFont(), getForegroundColor(), getOpacity());
 
 }
 
 void CheckboxButton::mouseReleased(const MouseEvent& e)
 {
-	if(getActive()){
-		if(getChecked())
-		{
-			setChecked(false);
-		}
-		else
-		{
-			setChecked(true);
+	if(e.getButton()==MouseEvent::BUTTON1){
+		if(getActive()){
+			if(getChecked())
+			{
+				setChecked(false);
+			}
+			else
+			{
+				setChecked(true);
+			}
 		}
 	}
 	Button::mouseReleased(e);

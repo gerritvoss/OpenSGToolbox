@@ -82,13 +82,13 @@ void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
 	Vec2s drawObjectSize;
 	Pnt2s TempPos;
 	Int32 totalWidth;
-	Int32 yAdj = 0;
+	Real32 yAdj = 0;
 	getInsideBorderBounds(TopLeft, BottomRight);
 
    if(getActive()){
 	   if(getChecked()){
 		   getActiveCheckedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-		   totalWidth =	drawObjectSize.x()+5+TheGraphics->getTextBounds(getText(), getFont()).x();
+		   totalWidth =	3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
 		   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
 		   getActiveCheckedDrawObject()->setPosition(TempPos);
 		   getActiveCheckedDrawObject()->draw(TheGraphics);
@@ -97,7 +97,7 @@ void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
 	   else
 	   {
 		   getActiveDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-		   totalWidth = drawObjectSize.x()+5+TheGraphics->getTextBounds(getText(), getFont()).x();
+		   totalWidth = 3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
 		   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
 		   getActiveDrawObject()->setPosition(TempPos);
 		   getActiveDrawObject()->draw(TheGraphics);
@@ -105,34 +105,36 @@ void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
    }
    else if(getChecked()){
 	   getCheckedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-	   totalWidth =	drawObjectSize.x()+5+TheGraphics->getTextBounds(getText(), getFont()).x();
+	   totalWidth =	3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
 	   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
 	   getCheckedDrawObject()->setPosition(TempPos);
  	   getCheckedDrawObject()->draw(TheGraphics);
   }
    else{
 		getDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-		totalWidth = drawObjectSize.x()+5+TheGraphics->getTextBounds(getText(), getFont()).x();
+		totalWidth = 3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
 		TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
    	    getDrawObject()->setPosition(TempPos);
 		getDrawObject()->draw(TheGraphics);
    }
-   if(drawObjectSize.y()> TheGraphics->getTextBounds(getText(), getFont()).y())
-	   yAdj = (drawObjectSize.y()-TheGraphics->getTextBounds(getText(), getFont()).x())/2.0;
-   TheGraphics->drawText(Pnt2s(TempPos.x()+drawObjectSize.x()+5, TempPos.y()-yAdj),   getText(), getFont(), getForegroundColor(), getOpacity());
+  // if(drawObjectSize.y()> TheGraphics->getTextBounds(getText(), getFont()).y())
+	   yAdj = drawObjectSize.y()/*+(TheGraphics->getTextBounds(getText(), getFont()).x())/2.0*/;
+   TheGraphics->drawText(Pnt2s(TempPos.x()+3*drawObjectSize.x(), TempPos.y()-yAdj),   getText(), getFont(), getForegroundColor(), getOpacity());
 
 }
 
 void RadioButton::mouseReleased(const MouseEvent& e)
 {
-	if(getActive()){
-		if(getChecked())
-		{
-			setChecked(false);
-		}
-		else
-		{
-			setChecked(true);
+	if(e.getButton()==MouseEvent::BUTTON1){
+		if(getActive()){
+			if(getChecked())
+			{
+				setChecked(false);
+			}
+			else
+			{
+				setChecked(true);
+			}
 		}
 	}
 	Button::mouseReleased(e);
