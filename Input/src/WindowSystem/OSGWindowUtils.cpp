@@ -25,8 +25,6 @@
 //#include <OpenSG/OSGQT4Window.h>
 #include "OSGWindowEventProducerFactory.h"
 
-LRESULT CALLBACK WndProc(HWND hwnd2, UINT uMsg,
-                         WPARAM wParam, LPARAM lParam);
 OSG_BEGIN_NAMESPACE
 
 void createWindow(FieldContainerType WindowType,
@@ -127,6 +125,9 @@ void createWindow(FieldContainerType WindowType,
       ResultWindow->deactivate();
    }
 #elif defined(__linux)
+   if(WindowType == XWindow::getClassType())
+   {
+   }
 #endif
 #ifdef OSG_WITH_GLUT
    else if(WindowType == GLUTWindow::getClassType())
@@ -179,6 +180,9 @@ void openWindow(WindowEventProducerPtr TheWindowEventProducer)
 		}
 	}
 #elif defined(__linux)
+   if(TheWindowEventProducer->getWindow()->getType() == XWindow::getClassType())
+   {
+   }
 #endif
 
 #if defined OSG_WITH_GLUT

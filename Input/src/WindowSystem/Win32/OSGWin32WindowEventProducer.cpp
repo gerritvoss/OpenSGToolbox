@@ -39,16 +39,17 @@
 //---------------------------------------------------------------------------
 //  Includes
 //---------------------------------------------------------------------------
+#include <OpenSG/OSGConfig.h>
+
+#include "OSGWin32WindowEventProducer.h"
+#include "WindowSystem/OSGWindowEventProducerFactory.h"
+
+#ifdef WIN32
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <windows.h>
-
-#include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGWin32Window.h>
-
-#include "OSGWin32WindowEventProducer.h"
-#include "WindowSystem/OSGWindowEventProducerFactory.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -760,4 +761,6 @@ namespace
 #endif
 
 OSG_END_NAMESPACE
+
+#endif
 

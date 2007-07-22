@@ -53,14 +53,15 @@
 
 #define OSG_COMPILEWIN32WINDOWEVENTPRODUCERINST
 
-#include <stdlib.h>
-#include <stdio.h>
-
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGWin32WindowEventProducerBase.h"
 #include "OSGWin32WindowEventProducer.h"
 
+#ifdef WIN32
+
+#include <stdlib.h>
+#include <stdio.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -255,4 +256,6 @@ namespace
 }
 
 OSG_END_NAMESPACE
+
+#endif
 
