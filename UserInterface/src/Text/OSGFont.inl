@@ -45,12 +45,20 @@ OSG_BEGIN_NAMESPACE
 inline
 void Font::layout(const std::string &utf8Text, const TextLayoutParam &param, TextLayoutResult &result)
 {
+   if (_face == NULL)
+   {
+      initText();
+   }
    _face->layout(utf8Text,param,result);
 }
 
 inline
 const TextTXFGlyph& Font::getTXFGlyph(TextGlyph::Index glyphIndex)
 {
+   if (_face == NULL)
+   {
+      initText();
+   }
    return _face->getTXFGlyph(glyphIndex);
 }
     

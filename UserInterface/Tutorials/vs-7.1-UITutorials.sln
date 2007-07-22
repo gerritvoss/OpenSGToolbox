@@ -58,6 +58,24 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "09BorderLayout", "09BorderL
 		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10Container", "10Container.vcproj", "{126EDB01-C01C-4847-9E3E-EB473D0444FC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "11CardLayout", "11CardLayout.vcproj", "{1A6FB8C3-06D7-4D1D-BFA8-74E2ED533BA6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "12ComplexLayout", "12ComplexLayout.vcproj", "{BB72CA5A-1B61-4E61-8C92-6F5DAAAB23EC}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "13CheckboxButton", "13CheckboxButton.vcproj", "{FA6AD85A-5A29-4D3A-9AD6-9A5CC84BB307}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -112,6 +130,22 @@ Global
 		{3CB50FB7-387C-4FF7-BE23-2B709B03E7DE}.Debug.Build.0 = Debug|Win32
 		{3CB50FB7-387C-4FF7-BE23-2B709B03E7DE}.Release.ActiveCfg = Release|Win32
 		{3CB50FB7-387C-4FF7-BE23-2B709B03E7DE}.Release.Build.0 = Release|Win32
+		{126EDB01-C01C-4847-9E3E-EB473D0444FC}.Debug.ActiveCfg = Debug|Win32
+		{126EDB01-C01C-4847-9E3E-EB473D0444FC}.Debug.Build.0 = Debug|Win32
+		{126EDB01-C01C-4847-9E3E-EB473D0444FC}.Release.ActiveCfg = Release|Win32
+		{126EDB01-C01C-4847-9E3E-EB473D0444FC}.Release.Build.0 = Release|Win32
+		{1A6FB8C3-06D7-4D1D-BFA8-74E2ED533BA6}.Debug.ActiveCfg = Debug|Win32
+		{1A6FB8C3-06D7-4D1D-BFA8-74E2ED533BA6}.Debug.Build.0 = Debug|Win32
+		{1A6FB8C3-06D7-4D1D-BFA8-74E2ED533BA6}.Release.ActiveCfg = Release|Win32
+		{1A6FB8C3-06D7-4D1D-BFA8-74E2ED533BA6}.Release.Build.0 = Release|Win32
+		{BB72CA5A-1B61-4E61-8C92-6F5DAAAB23EC}.Debug.ActiveCfg = Debug|Win32
+		{BB72CA5A-1B61-4E61-8C92-6F5DAAAB23EC}.Debug.Build.0 = Debug|Win32
+		{BB72CA5A-1B61-4E61-8C92-6F5DAAAB23EC}.Release.ActiveCfg = Release|Win32
+		{BB72CA5A-1B61-4E61-8C92-6F5DAAAB23EC}.Release.Build.0 = Release|Win32
+		{FA6AD85A-5A29-4D3A-9AD6-9A5CC84BB307}.Debug.ActiveCfg = Debug|Win32
+		{FA6AD85A-5A29-4D3A-9AD6-9A5CC84BB307}.Debug.Build.0 = Debug|Win32
+		{FA6AD85A-5A29-4D3A-9AD6-9A5CC84BB307}.Release.ActiveCfg = Release|Win32
+		{FA6AD85A-5A29-4D3A-9AD6-9A5CC84BB307}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

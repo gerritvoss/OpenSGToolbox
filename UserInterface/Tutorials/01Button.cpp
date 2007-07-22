@@ -81,15 +81,6 @@ int main(int argc, char **argv)
     TheWindowEventProducer->setDisplayCallback(display);
     TheWindowEventProducer->setReshapeCallback(reshape);
 
-    //Attach Mouse Listener
-    //TheWindowEventProducer->addMouseListener(new TutorialMouseListener());
-    //Attach Mouse Wheel Listener
-    //TheWindowEventProducer->addMouseWheelListener(new TutorialMouseWheelListener());
-    //Attach Key Listener
-    //TheWindowEventProducer->addKeyListener(new TutorialKeyListener());
-    //Attach Window Listener
-    //TheWindowEventProducer->addWindowListener(new TutorialWindowListener());
-
    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
@@ -115,14 +106,14 @@ int main(int argc, char **argv)
 	ButtonPtr button1 = osg::Button::create();
 	// Create a simple Font to be used with the Button
 	FontPtr sampleFont = osg::Font::create();
-	beginEditCP(sampleFont, Font::SizeFieldMask);
+    beginEditCP(sampleFont, Font::SizeFieldMask | Font::FamilyFieldMask | Font::GapFieldMask | Font::GlyphPixelSizeFieldMask | Font::TextureWidthFieldMask | Font::StyleFieldMask);
 		sampleFont->setFamily("SANS");
 		sampleFont->setGap(1);
 		sampleFont->setGlyphPixelSize(46);
-		sampleFont->setSize(14);
-		sampleFont->setTextureWidth(0);
-		sampleFont->setStyle(TextFace::STYLE_PLAIN);
-	endEditCP(sampleFont, Font::SizeFieldMask);
+		sampleFont->setSize(16);
+		//sampleFont->setTextureWidth(0);
+        sampleFont->setStyle(TextFace::STYLE_PLAIN);
+	endEditCP(sampleFont, Font::SizeFieldMask | Font::FamilyFieldMask | Font::GapFieldMask | Font::GlyphPixelSizeFieldMask | Font::TextureWidthFieldMask | Font::StyleFieldMask);
 
 	/******************************************************
 
@@ -148,7 +139,7 @@ int main(int argc, char **argv)
 			// Determine the visible Text (Text must fit within Button Size
 			// or extra Text will not display)
 		button1->setText("Button 1");
-		//button1->setFont(sampleFont);
+		button1->setFont(sampleFont);
 			// Determine the VerticalAlignment of the Text- VERTICAL_CENTER, 
 			// or VERTICAL_TOP, VERTICAL_BOTTOM
 		button1->setVerticalAlignment(VERTICAL_TOP);

@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGDefaultListSelectionModelBase.h"
 #include "OSGListSelectionModel.h"

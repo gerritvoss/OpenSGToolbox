@@ -234,7 +234,7 @@ void TabPanel::updateTabLayout(void)
 			offset[(AxisIndex+1)%2] += largestMinorAxis - getTabs().getValue(i)->getPreferredSize()[(AxisIndex+1)%2];
 		beginEditCP(getTabs().getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
 			getTabs().getValue(i)->setSize(getTabs().getValue(i)->getPreferredSize());
-			getTabs().getValue(i)->setPosition(alignOffset + offset);
+			getTabs().getValue(i)->setPosition(alignOffset + Vec2s(offset));
 		endEditCP(getTabs().getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
 		offset[AxisIndex] += getTabs().getValue(i)->getSize()[AxisIndex];
 		if ( (getTabPlacement() == PLACEMENT_NORTH || getTabPlacement() == PLACEMENT_WEST) && getTabs().getValue(i)->getPreferredSize()[(AxisIndex+1)%2] < largestMinorAxis)

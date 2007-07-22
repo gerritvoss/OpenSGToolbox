@@ -43,7 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-
+#include "OSGUserInterfaceDef.h"
 #include "OSGDefaultListCellGeneratorBase.h"
 #include "OSGListCellGenerator.h"
 
