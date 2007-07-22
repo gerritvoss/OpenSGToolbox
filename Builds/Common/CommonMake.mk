@@ -23,8 +23,8 @@ ifneq ($(OSGINSTALLPREFIX),notset)
     OSGCONFIG := $(OSGINSTALLPREFIX)/bin/osg-config
 endif
 
-ifneq ($(OPENSG_BASE_DIR),notset)
-	OSGCONF := $(wildcard $(OPENSG_BASE_DIR)/bin/osg-config)
+ifneq ($(OSGROOT),notset)
+	OSGCONF := $(wildcard $(OSGROOT)/bin/osg-config)
 
     ifneq ($(OSGCONF),)
 		OSGCONFIG := $(OSGCONF)
