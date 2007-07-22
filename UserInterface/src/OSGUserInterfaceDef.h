@@ -22,3 +22,4 @@
 #endif
 
 #endif /* _OSGUSERINTERFACEDEF_H_ */
+

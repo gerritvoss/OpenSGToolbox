@@ -6,140 +6,140 @@ LIB_INCLUDE_DIR_NAME = UserInterface
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Background:$(srcdir)/Border:$(srcdir)/Component:$(srcdir)/Component/List:$(srcdir)/Foreground:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Layout:$(srcdir)/LookAndFeel:$(srcdir)/Text:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/Util:
+VPATH = $(srcdir)/:$(srcdir)/Background:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Event:$(srcdir)/Component:$(srcdir)/Component/List:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/LookAndFeel:$(srcdir)/Text:$(srcdir)/Border:$(srcdir)/Layout:$(srcdir)/Util:
 
 
 #.SUFFIX = .o .o
 
-EXTRA_CCFLAGS = -I$(srcdir)
+EXTRA_CCFLAGS = -I$(srcdir) -I../../../../Builds/Linux/include
 
-OBJECTS = OSGColorUIBackground.o \
-	OSGColorUIBackgroundBase.o \
-	OSGCompoundUIBackground.o \
-	OSGCompoundUIBackgroundBase.o \
-	OSGEmptyUIBackground.o \
+OBJECTS = OSGGradientUIBackgroundBase.o \
 	OSGEmptyUIBackgroundBase.o \
-	OSGGradientUIBackground.o \
-	OSGGradientUIBackgroundBase.o \
 	OSGMaterialUIBackground.o \
-	OSGMaterialUIBackgroundBase.o \
 	OSGTextureUIBackground.o \
-	OSGTextureUIBackgroundBase.o \
+	OSGColorUIBackgroundBase.o \
+	OSGCompoundUIBackgroundBase.o \
 	OSGUIBackground.o \
+	OSGMaterialUIBackgroundBase.o \
+	OSGTextureUIBackgroundBase.o \
+	OSGGradientUIBackground.o \
+	OSGEmptyUIBackground.o \
 	OSGUIBackgroundBase.o \
-	OSGBevelBorder.o \
-	OSGBevelBorderBase.o \
-	OSGBorder.o \
-	OSGBorderBase.o \
-	OSGCompoundBorder.o \
-	OSGCompoundBorderBase.o \
-	OSGEmptyBorder.o \
-	OSGEmptyBorderBase.o \
-	OSGEtchedBorder.o \
-	OSGEtchedBorderBase.o \
-	OSGLineBorder.o \
-	OSGLineBorderBase.o \
-	OSGMatteBorder.o \
-	OSGMatteBorderBase.o \
-	OSGButton.o \
-	OSGButtonBase.o \
-	OSGCanvas.o \
-	OSGCanvasBase.o \
-	OSGCheckboxButton.o \
-	OSGCheckboxButtonBase.o \
-	OSGComponent.o \
-	OSGComponentBase.o \
-	OSGContainer.o \
-	OSGContainerBase.o \
-	OSGFrame.o \
-	OSGFrameBase.o \
-	OSGImageComponent.o \
-	OSGImageComponentBase.o \
-	OSGLabel.o \
-	OSGLabelBase.o \
-	OSGPanel.o \
-	OSGPanelBase.o \
-	OSGRadioButton.o \
-	OSGRadioButtonBase.o \
-	OSGTabPanel.o \
-	OSGTabPanelBase.o \
-	OSGToggleButton.o \
-	OSGToggleButtonBase.o \
-	OSGUIDrawObjectCanvas.o \
-	OSGUIDrawObjectCanvasBase.o \
-	OSGAbstractListModel.o \
-	OSGAbstractListModelBase.o \
-	OSGDefaultListCellGenerator.o \
-	OSGDefaultListCellGeneratorBase.o \
-	OSGDefaultListSelectionModel.o \
-	OSGDefaultListSelectionModelBase.o \
-	OSGList.o \
-	OSGListBase.o \
-	OSGGraphics.o \
+	OSGColorUIBackground.o \
+	OSGCompoundUIBackground.o \
 	OSGGraphics2D.o \
-	OSGGraphics2DBase.o \
 	OSGGraphicsBase.o \
-	OSGArcUIDrawObject.o \
-	OSGArcUIDrawObjectBase.o \
-	OSGDiscUIDrawObject.o \
-	OSGDiscUIDrawObjectBase.o \
-	OSGLineUIDrawObject.o \
-	OSGLineUIDrawObjectBase.o \
-	OSGPolygonUIDrawObject.o \
+	OSGGraphics.o \
+	OSGGraphics2DBase.o \
 	OSGPolygonUIDrawObjectBase.o \
-	OSGRectUIDrawObject.o \
+	OSGLineUIDrawObject.o \
 	OSGRectUIDrawObjectBase.o \
+	OSGArcUIDrawObjectBase.o \
+	OSGUIDrawObjectBase.o \
+	OSGLineUIDrawObjectBase.o \
+	OSGDiscUIDrawObject.o \
 	OSGTextUIDrawObject.o \
+	OSGPolygonUIDrawObject.o \
+	OSGRectUIDrawObject.o \
+	OSGArcUIDrawObject.o \
+	OSGDiscUIDrawObjectBase.o \
 	OSGTextUIDrawObjectBase.o \
 	OSGUIDrawObject.o \
-	OSGUIDrawObjectBase.o \
-	OSGAbsoluteLayout.o \
-	OSGAbsoluteLayoutBase.o \
-	OSGAbsoluteLayoutConstraints.o \
-	OSGAbsoluteLayoutConstraintsBase.o \
-	OSGBorderLayout.o \
-	OSGBorderLayoutBase.o \
-	OSGBorderLayoutConstraints.o \
-	OSGBorderLayoutConstraintsBase.o \
-	OSGBoxLayout.o \
-	OSGBoxLayoutBase.o \
-	OSGBoxLayoutConstraints.o \
-	OSGBoxLayoutConstraintsBase.o \
-	OSGCardLayout.o \
-	OSGCardLayoutBase.o \
-	OSGCardLayoutConstraints.o \
-	OSGCardLayoutConstraintsBase.o \
-	OSGFlowLayout.o \
-	OSGFlowLayoutBase.o \
-	OSGFlowLayoutConstraints.o \
-	OSGFlowLayoutConstraintsBase.o \
-	OSGGridBagLayout.o \
-	OSGGridBagLayoutBase.o \
-	OSGGridBagLayoutConstraints.o \
-	OSGGridBagLayoutConstraintsBase.o \
-	OSGGridLayout.o \
-	OSGGridLayoutBase.o \
-	OSGGridLayoutConstraints.o \
-	OSGGridLayoutConstraintsBase.o \
-	OSGLayout.o \
-	OSGLayoutBase.o \
-	OSGLayoutConstraints.o \
-	OSGLayoutConstraintsBase.o \
-	OSGOverlayLayout.o \
-	OSGOverlayLayoutBase.o \
-	OSGOverlayLayoutConstraints.o \
-	OSGOverlayLayoutConstraintsBase.o \
-	OSGDefaultLookAndFeel.o \
-	OSGDefaultLookAndFeelBase.o \
-	OSGLookAndFeel.o \
-	OSGLookAndFeelBase.o \
-	OSGLookAndFeelManager.o \
-	OSGFont.o \
-	OSGFontBase.o \
-	OSGUIDrawingSurface.o \
+	OSGFrameBase.o \
+	OSGRadioButtonBase.o \
+	OSGTabPanel.o \
+	OSGPanel.o \
+	OSGUIDrawObjectCanvas.o \
+	OSGFrame.o \
+	OSGRadioButton.o \
+	OSGImageComponentBase.o \
+	OSGButtonBase.o \
+	OSGCanvasBase.o \
+	OSGToggleButtonBase.o \
+	OSGContainerBase.o \
+	OSGComponentBase.o \
+	OSGImageComponent.o \
+	OSGLabelBase.o \
+	OSGButton.o \
+	OSGCanvas.o \
+	OSGCheckboxButtonBase.o \
+	OSGToggleButton.o \
+	OSGTabPanelBase.o \
+	OSGContainer.o \
+	OSGPanelBase.o \
+	OSGComponent.o \
+	OSGUIDrawObjectCanvasBase.o \
+	OSGLabel.o \
+	OSGCheckboxButton.o \
+	OSGListBase.o \
+	OSGDefaultListSelectionModel.o \
+	OSGAbstractListModel.o \
+	OSGDefaultListCellGenerator.o \
+	OSGDefaultListSelectionModelBase.o \
+	OSGList.o \
+	OSGAbstractListModelBase.o \
+	OSGDefaultListCellGeneratorBase.o \
 	OSGUIDrawingSurfaceBase.o \
+	OSGUIDrawingSurface.o \
 	OSGUIForeground.o \
 	OSGUIForegroundBase.o \
+	OSGDefaultLookAndFeel.o \
+	OSGLookAndFeelBase.o \
+	OSGLookAndFeelManager.o \
+	OSGLookAndFeel.o \
+	OSGDefaultLookAndFeelBase.o \
+	OSGFont.o \
+	OSGFontBase.o \
+	OSGEtchedBorderBase.o \
+	OSGLineBorder.o \
+	OSGBevelBorder.o \
+	OSGEmptyBorder.o \
+	OSGMatteBorderBase.o \
+	OSGBorderBase.o \
+	OSGLineBorderBase.o \
+	OSGCompoundBorder.o \
+	OSGBevelBorderBase.o \
+	OSGEmptyBorderBase.o \
+	OSGEtchedBorder.o \
+	OSGMatteBorder.o \
+	OSGCompoundBorderBase.o \
+	OSGBorder.o \
+	OSGFlowLayoutBase.o \
+	OSGCardLayout.o \
+	OSGBoxLayoutConstraints.o \
+	OSGGridBagLayoutConstraints.o \
+	OSGBoxLayout.o \
+	OSGAbsoluteLayoutConstraints.o \
+	OSGFlowLayout.o \
+	OSGCardLayoutConstraintsBase.o \
+	OSGAbsoluteLayoutBase.o \
+	OSGGridBagLayoutBase.o \
+	OSGBorderLayoutConstraintsBase.o \
+	OSGCardLayoutConstraints.o \
+	OSGLayoutConstraintsBase.o \
+	OSGGridLayoutConstraintsBase.o \
+	OSGBoxLayoutConstraintsBase.o \
+	OSGOverlayLayoutBase.o \
+	OSGBoxLayoutBase.o \
+	OSGGridBagLayout.o \
+	OSGAbsoluteLayoutConstraintsBase.o \
+	OSGBorderLayoutConstraints.o \
+	OSGLayoutConstraints.o \
+	OSGBorderLayoutBase.o \
+	OSGGridLayoutConstraints.o \
+	OSGGridLayoutBase.o \
+	OSGOverlayLayout.o \
+	OSGFlowLayoutConstraintsBase.o \
+	OSGBorderLayout.o \
+	OSGGridLayout.o \
+	OSGFlowLayoutConstraints.o \
+	OSGOverlayLayoutConstraintsBase.o \
+	OSGLayoutBase.o \
+	OSGCardLayoutBase.o \
+	OSGOverlayLayoutConstraints.o \
+	OSGAbsoluteLayout.o \
+	OSGLayout.o \
+	OSGGridBagLayoutConstraintsBase.o \
 	OSGUIDrawUtils.o
         
         

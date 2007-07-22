@@ -192,8 +192,9 @@ void ImageComponent::setImage(const char *fileName, const char *mimeType)
 			setTexture(createTexture());
 		endEditCP(ImageComponentPtr(this), TextureFieldMask);
 	}
+   ImagePtr LoadedImage = ImageFileHandler::the().read(fileName, mimeType);
 	beginEditCP(getTexture(), TextureChunk::ImageFieldMask);
-		getTexture()->setImage(ImageFileHandler::the().read(fileName, mimeType));
+		getTexture()->setImage(LoadedImage);
 	endEditCP(getTexture(), TextureChunk::ImageFieldMask);
 }
 

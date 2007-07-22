@@ -48,6 +48,8 @@
 #include "OSGContainer.h"
 #include "Util/OSGUIDrawUtils.h"
 
+#include <OpenSG/Input/OSGMouseEvent.h>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -248,7 +250,7 @@ void Container::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, 
 		if(Comp->getMouseContained())
 		{
 		    //Mouse has exited the frame
-			MouseEvent ExitedEvent(e.getSource(), e.getTimeStamp(), MouseEvent::MouseButton::NO_BUTTON,0,MouseLocation);
+			MouseEvent ExitedEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation);
 			Comp->mouseExited(ExitedEvent);
 		}
 		Comp->setMouseContained(false);
@@ -258,7 +260,7 @@ void Container::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, 
 		if(!Comp->getMouseContained())
 		{
 			//Mouse has exited the frame
-			MouseEvent EnteredEvent(e.getSource(), e.getTimeStamp(), MouseEvent::MouseButton::NO_BUTTON,0,MouseLocation);
+			MouseEvent EnteredEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation);
 			Comp->mouseEntered(EnteredEvent);
 		}
 		Comp->setMouseContained(true);

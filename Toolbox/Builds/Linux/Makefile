@@ -13,12 +13,12 @@ VPATH = $(srcdir)/:$(srcdir)/Cameras:$(srcdir)/Util:
 
 EXTRA_CCFLAGS = -I$(srcdir)
 
-OBJECTS = OSGAirplaneCamera.o \
+OBJECTS = OSGMatrixBeaconCamera.o \
 	OSGAirplaneCameraBase.o \
-	OSGMatrixBeaconCamera.o \
-	OSGMatrixBeaconCameraBase.o \
+	OSGAirplaneCamera.o \
+	OSGRubberBandCameraBase.o \
 	OSGRubberBandCamera.o \
-	OSGRubberBandCameraBase.o
+	OSGMatrixBeaconCameraBase.o
         
         
 include $(commondir)/CommonMake.mk

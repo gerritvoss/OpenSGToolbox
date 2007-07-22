@@ -189,9 +189,9 @@ int main(int argc, char **argv)
 
 	// Set textureBackground- set texture
    TextureChunkPtr BackgroundTextureChunk = TextureChunk::create();
-	
+   ImagePtr LoadedImage = ImageFileHandler::the().read("Data/Checker.jpg");	
    beginEditCP(BackgroundTextureChunk, TextureChunk::ImageFieldMask);
-		BackgroundTextureChunk->setImage(ImageFileHandler::the().read("Data/Checker.jpg"));
+		BackgroundTextureChunk->setImage(LoadedImage);
 	endEditCP(BackgroundTextureChunk, TextureChunk::ImageFieldMask);
 
 	beginEditCP(textureBackground, TextureUIBackground::TextureFieldMask);

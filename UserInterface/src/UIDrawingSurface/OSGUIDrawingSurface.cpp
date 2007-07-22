@@ -190,7 +190,7 @@ void UIDrawingSurface::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLoc
 		{
 			//Mouse has exited the frame
 			_MouseInFrameLastMouse = !_MouseInFrameLastMouse;
-			MouseEvent ExitedEvent(e.getSource(), e.getTimeStamp(), MouseEvent::MouseButton::NO_BUTTON,0,MouseLocation);
+			MouseEvent ExitedEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation);
 			getRootFrame()->mouseExited(ExitedEvent);
 		}
 	}
@@ -201,7 +201,7 @@ void UIDrawingSurface::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLoc
 		{
 			//Mouse has exited the frame
 			_MouseInFrameLastMouse = !_MouseInFrameLastMouse;
-			MouseEvent EnteredEvent(e.getSource(), e.getTimeStamp(), MouseEvent::MouseButton::NO_BUTTON,0,MouseLocation);
+			MouseEvent EnteredEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation);
 			getRootFrame()->mouseEntered(EnteredEvent);
 		}
 	}

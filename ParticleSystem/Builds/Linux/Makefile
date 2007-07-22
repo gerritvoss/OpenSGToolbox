@@ -13,9 +13,9 @@ VPATH = $(srcdir)/:
 
 EXTRA_CCFLAGS = -I$(srcdir)
 
-OBJECTS = OSGListTypeInst.o \
+OBJECTS = OSGParticleSystemBase.o \
 	OSGParticleSystem.o \
-	OSGParticleSystemBase.o \
+	OSGListTypeInst.o \
 	OSGParticleSystemIterator.o
         
         
