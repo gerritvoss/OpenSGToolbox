@@ -67,6 +67,7 @@
 #include "Util/OSGUIDefines.h"
 #include "Component/OSGCheckboxButton.h"
 #include "Component/OSGRadioButton.h"
+#include "Component/OSGToggleButton.h"
 #include "Graphics/UIDrawObjects/OSGRectUIDrawObject.h"
 #include "Graphics/UIDrawObjects/OSGArcUIDrawObject.h"
 #include "Graphics/UIDrawObjects/OSGDiscUIDrawObject.h"
@@ -607,6 +608,45 @@ void DefaultLookAndFeel::init(void)
 	
 	RadioButton::getClassType().setPrototype(DefaultRadioButton);
 
+	/********Toggle Button********/
+
+	ToggleButtonPtr DefaultToggleButton = ToggleButton::create();
+	beginEditCP(DefaultToggleButton);
+		DefaultToggleButton->setEnabled(true);
+		DefaultToggleButton->setVisible(true);
+		
+		DefaultToggleButton->setConstraints(NullFC);
+		//Sizes
+		DefaultToggleButton->setMinSize(Vec2s(0,0));
+		DefaultToggleButton->setMaxSize(Vec2s(32767,32767)); //2^15
+		DefaultToggleButton->setPreferredSize(Vec2s(100,50));
+
+		//Border
+		DefaultToggleButton->setBorder(DefaultButtonBorder);
+		DefaultToggleButton->setDisabledBorder(DefaultDisabledButtonBorder);
+		DefaultToggleButton->setActiveBorder(DefaultActiveButtonBorder);
+		
+		//Background
+		DefaultToggleButton->setBackground(DefaultButtonBackground);
+		DefaultToggleButton->setDisabledBackground(DefaultDisabledButtonBackground);
+		DefaultToggleButton->setActiveBackground(DefaultButtonBackground);
+
+		//Foreground
+		DefaultToggleButton->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultToggleButton->setDisabledForegroundColor(Color4f(0.4,0.4,0.4,1.0));
+		
+		//Opacity
+		DefaultToggleButton->setOpacity(1.0);
+
+		//Text
+		DefaultToggleButton->setText("");
+		DefaultToggleButton->setFont(DefaultFont);
+		DefaultToggleButton->setVerticalAlignment(VERTICAL_CENTER);
+		DefaultToggleButton->setHorizontalAlignment(HORIZONTAL_CENTER);
+	endEditCP(DefaultToggleButton);
+
+	ToggleButton::getClassType().setPrototype(DefaultToggleButton);
+
 	/*******Borders********/
 	/*******Line Border********/
 
@@ -724,6 +764,7 @@ void DefaultLookAndFeel::init(void)
 		getPrototypes().addValue(DefaultImageComponent);
 		getPrototypes().addValue(DefaultCheckboxButton);
 		getPrototypes().addValue(DefaultRadioButton);
+		getPrototypes().addValue(DefaultToggleButton);
 	endEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);
 }
 /*-------------------------------------------------------------------------*\
