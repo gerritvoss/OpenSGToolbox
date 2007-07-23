@@ -76,8 +76,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
     /*! \}                                                                 */
 
 	virtual void mouseReleased(const MouseEvent& e);
-	virtual void mouseExited(const MouseEvent& e);
-	virtual void mousePressed(const MouseEvent& e);
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -99,6 +97,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
     virtual ~ToggleButton(void); 
 
     /*! \}                                                                 */
+	virtual void draw(const GraphicsPtr TheGraphics) const;
     
     /*==========================  PRIVATE  ================================*/
   private:

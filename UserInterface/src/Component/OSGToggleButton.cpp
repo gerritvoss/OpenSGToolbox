@@ -94,6 +94,65 @@ ToggleButton::~ToggleButton(void)
 {
 }
 
+
+void ToggleButton::draw(const GraphicsPtr Graphics) const
+{
+	if (!getVisible())
+		return;
+
+    //Translate to my position
+    glTranslatef(getPosition().x(), getPosition().y(), 0);
+
+	if(!setupClipping(Graphics))
+	{
+		//Translate to my position
+		glTranslatef(-getPosition().x(), -getPosition().y(), 0);
+		return;
+	}
+
+	if(getSelected())
+	{
+		//Draw My Border
+		drawBorder(Graphics, getActiveBorder());
+
+		//Draw My Background
+		drawBackground(Graphics, getActiveBackground());
+	}
+	else
+	{
+		if(getEnabled())
+		{
+			//Draw My Border
+			drawBorder(Graphics, getBorder());
+
+			//Draw My Background
+			drawBackground(Graphics, getBackground());
+		}
+		else
+		{
+			//Draw My Border
+			drawBorder(Graphics, getDisabledBorder());
+
+			//Draw My Background
+			drawBackground(Graphics, getDisabledBackground());
+		}
+	}
+
+    //Draw Internal
+    drawInternal(Graphics);
+    glTranslatef(-getPosition().x(), -getPosition().y(), 0);
+    
+    //Set Clipping to initial settings
+    if(getClipping())
+    {
+		//TODO:Fix
+        //if(!WasClippPlane0Enabled){glDisable(GL_CLIP_PLANE0);}
+        //if(!WasClippPlane1Enabled){glDisable(GL_CLIP_PLANE1);}
+        //if(!WasClippPlane2Enabled){glDisable(GL_CLIP_PLANE2);}
+        //if(!WasClippPlane3Enabled){glDisable(GL_CLIP_PLANE3);}
+    }
+}
+
 /*----------------------------- class specific ----------------------------*/
 
 void ToggleButton::changed(BitVector whichField, UInt32 origin)
@@ -110,33 +169,23 @@ void ToggleButton::dump(      UInt32    ,
 void ToggleButton::mouseReleased(const MouseEvent& e)
 {
 	if(e.getButton()==MouseEvent::BUTTON1){
-		if(getActive())
+		if(getSelected())
 		{
-			beginEditCP(ToggleButtonPtr(this), Button::ActiveFieldMask);
-				setActive(false);
-			endEditCP(ToggleButtonPtr(this), Button::ActiveFieldMask);
+			beginEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
+				setSelected(false);
+			endEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
 		}
 		else
 		{
-			beginEditCP(ToggleButtonPtr(this), Button::ActiveFieldMask);
-				setActive(true);
-			endEditCP(ToggleButtonPtr(this), ToggleButton::ActiveFieldMask);
+			beginEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
+				setSelected(true);
+			endEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
 		}
 		
 	}
 	Component::mouseReleased(e);
 }
-void ToggleButton::mousePressed(const MouseEvent& e)
-{
 
-	Component::mousePressed(e);
-}
-void ToggleButton::mouseExited(const MouseEvent& e)
-{
-
-
-	Component::mouseExited(e);
-}
 
 
 /*------------------------------------------------------------------------*/

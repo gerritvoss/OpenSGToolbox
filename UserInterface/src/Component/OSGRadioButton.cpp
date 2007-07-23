@@ -143,7 +143,6 @@ void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
    TheGraphics->drawText(Pnt2s(TempPos.x()+3*drawObjectSize.x(), TempPos.y()-yAdj),   getText(), getFont(), getForegroundColor(), getOpacity());
 
 }
-
 void RadioButton::mouseReleased(const MouseEvent& e)
 {
 	if(e.getButton()==MouseEvent::BUTTON1){
@@ -161,8 +160,11 @@ void RadioButton::mouseReleased(const MouseEvent& e)
 				endEditCP(RadioButtonPtr(this), RadioButton::CheckedFieldMask);
 			}
 		}
+		beginEditCP(RadioButtonPtr(this), RadioButton::ActiveFieldMask);
+			setActive(false);
+		endEditCP(RadioButtonPtr(this), RadioButton::ActiveFieldMask);
 	}
-	Button::mouseReleased(e);
+	ToggleButton::mouseReleased(e);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

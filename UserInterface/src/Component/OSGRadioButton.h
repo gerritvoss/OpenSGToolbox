@@ -74,7 +74,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButton : public RadioButtonBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void mouseReleased(const MouseEvent& e);
+	virtual void RadioButton::mouseReleased(const MouseEvent& e);
 
 	/*=========================  PROTECTED  ===============================*/
   protected:
@@ -97,6 +97,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButton : public RadioButtonBase
 
     /*! \}                                                                 */
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
+
     
     /*==========================  PRIVATE  ================================*/
   private:
