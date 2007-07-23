@@ -57,6 +57,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
+#include "Util/OSGUIDefines.h"
 
 #include "OSGGridBagLayoutConstraintsBase.h"
 #include "OSGGridBagLayoutConstraints.h"
@@ -320,7 +321,7 @@ GridBagLayoutConstraintsBase::GridBagLayoutConstraintsBase(void) :
     _sfGridY                  (UInt16(0)), 
     _sfGridWidth              (UInt16(1)), 
     _sfGridHeight             (UInt16(1)), 
-    _sfFill                   (), 
+    _sfFill                   (UInt16(0)), 
     _sfHorizontalAlignment    (Real32(0.5)), 
     _sfVerticalAlignment      (Real32(0.5)), 
     _sfWeightX                (Real32(1.0)), 

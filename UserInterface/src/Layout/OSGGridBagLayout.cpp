@@ -44,6 +44,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
+#include "Util/OSGUIDefines.h"
 
 #include "OSGGridBagLayout.h"
 #include "OSGGridBagLayoutConstraints.h"
