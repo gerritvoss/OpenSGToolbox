@@ -127,7 +127,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
 	
     ActionListenerSet       _ActionListeners;
 	
-    virtual void produceActionPreformed(const ActionEvent& e);
+    virtual void produceactionPerformed(const ActionEvent& e);
 };
 
 typedef Button *ButtonP;

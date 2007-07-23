@@ -58,7 +58,7 @@ class Button1ActionListener : public ActionListener
 {
 public:
 
-   virtual void actionPreformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEvent& e)
 	{
 		std::cout << "Button 1 Action" << std::endl;
 	}

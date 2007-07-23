@@ -222,7 +222,7 @@ void Button::mouseReleased(const MouseEvent& e)
 {	
 	if(getActive())
 	{
-	   produceActionPreformed(ActionEvent(ButtonPtr(this), e.getTimeStamp()));
+	   produceactionPerformed(ActionEvent(ButtonPtr(this), e.getTimeStamp()));
 	}
 	if(e.getButton() == MouseEvent::BUTTON1){
 		beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
@@ -232,11 +232,11 @@ void Button::mouseReleased(const MouseEvent& e)
 	Component::mouseReleased(e);
 }
 
-void Button::produceActionPreformed(const ActionEvent& e)
+void Button::produceactionPerformed(const ActionEvent& e)
 {
    for(ActionListenerSetConstItor SetItor(_ActionListeners.begin()) ; SetItor != _ActionListeners.end() ; ++SetItor)
    {
-	   (*SetItor)->actionPreformed(e);
+	   (*SetItor)->actionPerformed(e);
    }
 }
 /*-------------------------------------------------------------------------*\
