@@ -96,6 +96,34 @@ ToggleButtonPtr ToggleButtonBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the ToggleButton::_sfSelected field.
+inline
+SFBool *ToggleButtonBase::getSFSelected(void)
+{
+    return &_sfSelected;
+}
+
+
+//! Get the value of the ToggleButton::_sfSelected field.
+inline
+bool &ToggleButtonBase::getSelected(void)
+{
+    return _sfSelected.getValue();
+}
+
+//! Get the value of the ToggleButton::_sfSelected field.
+inline
+const bool &ToggleButtonBase::getSelected(void) const
+{
+    return _sfSelected.getValue();
+}
+
+//! Set the value of the ToggleButton::_sfSelected field.
+inline
+void ToggleButtonBase::setSelected(const bool &value)
+{
+    _sfSelected.setValue(value);
+}
 
 
 OSG_END_NAMESPACE

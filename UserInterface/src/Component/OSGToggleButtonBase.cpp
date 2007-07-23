@@ -64,10 +64,30 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  ToggleButtonBase::SelectedFieldMask = 
+    (TypeTraits<BitVector>::One << ToggleButtonBase::SelectedFieldId);
+
 const OSG::BitVector ToggleButtonBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+// Field descriptions
+
+/*! \var bool            ToggleButtonBase::_sfSelected
+    
+*/
+
+//! ToggleButton description
+
+FieldDescription *ToggleButtonBase::_desc[] = 
+{
+    new FieldDescription(SFBool::getClassType(), 
+                     "Selected", 
+                     SelectedFieldId, SelectedFieldMask,
+                     false,
+                     (FieldAccessMethod) &ToggleButtonBase::getSFSelected)
+};
 
 
 FieldContainerType ToggleButtonBase::_type(
@@ -76,8 +96,8 @@ FieldContainerType ToggleButtonBase::_type(
     NULL,
     (PrototypeCreateF) &ToggleButtonBase::createEmpty,
     ToggleButton::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //OSG_FIELD_CONTAINER_DEF(ToggleButtonBase, ToggleButtonPtr)
 
@@ -142,6 +162,7 @@ void ToggleButtonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ToggleButtonBase::ToggleButtonBase(void) :
+    _sfSelected               (bool(false)), 
     Inherited() 
 {
 }
@@ -151,6 +172,7 @@ ToggleButtonBase::ToggleButtonBase(void) :
 #endif
 
 ToggleButtonBase::ToggleButtonBase(const ToggleButtonBase &source) :
+    _sfSelected               (source._sfSelected               ), 
     Inherited                 (source)
 {
 }
@@ -167,6 +189,11 @@ UInt32 ToggleButtonBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (SelectedFieldMask & whichField))
+    {
+        returnValue += _sfSelected.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -176,6 +203,11 @@ void ToggleButtonBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (SelectedFieldMask & whichField))
+    {
+        _sfSelected.copyToBin(pMem);
+    }
+
 
 }
 
@@ -183,6 +215,11 @@ void ToggleButtonBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (SelectedFieldMask & whichField))
+    {
+        _sfSelected.copyFromBin(pMem);
+    }
 
 
 }
@@ -194,6 +231,9 @@ void ToggleButtonBase::executeSyncImpl(      ToggleButtonBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (SelectedFieldMask & whichField))
+        _sfSelected.syncWith(pOther->_sfSelected);
+
 
 }
 #else
@@ -203,6 +243,9 @@ void ToggleButtonBase::executeSyncImpl(      ToggleButtonBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (SelectedFieldMask & whichField))
+        _sfSelected.syncWith(pOther->_sfSelected);
 
 
 

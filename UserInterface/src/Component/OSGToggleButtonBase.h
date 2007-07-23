@@ -67,6 +67,7 @@
 
 #include "OSGButton.h" // Parent
 
+#include <OpenSG/OSGBoolFields.h> // Selected type
 
 #include "OSGToggleButtonFields.h"
 
@@ -88,6 +89,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButtonBase : public Button
 
     typedef ToggleButtonPtr  Ptr;
 
+    enum
+    {
+        SelectedFieldId = Inherited::NextFieldId,
+        NextFieldId     = SelectedFieldId + 1
+    };
+
+    static const OSG::BitVector SelectedFieldMask;
+
 
     static const OSG::BitVector MTInfluenceMask;
 
@@ -107,6 +116,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButtonBase : public Button
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFBool              *getSFSelected       (void);
+
+           bool                &getSelected       (void);
+     const bool                &getSelected       (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setSelected       ( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -145,6 +171,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButtonBase : public Button
     /*=========================  PROTECTED  ===============================*/
   protected:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFBool              _sfSelected;
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -196,6 +229,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButtonBase : public Button
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
