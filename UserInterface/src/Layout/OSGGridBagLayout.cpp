@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGGridBagLayout.h"
+#include "OSGGridBagLayoutConstraints.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -87,8 +88,16 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 	std::vector<UInt16> posY;
 
 	Pnt2s offset(borderOffset);
+	Vec2s size(0,0);
 	Real32 weight(0.0);
 	UInt32 i;
+	GridBagLayoutConstraintsPtr constraints;
+
+	// check to make sure there are enough ColumnHeights and RowWidths
+	/*while (getColumnHeights().size() < getColumns())
+		getColumnHeights().addValue(0);
+	while (getRowWidths().size() < getRows())
+		getRowWidths().addValue(0);*/
 
 	// set up all of the positions and sizes of the grid
 	posX.push_back(0);
@@ -97,6 +106,7 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 		weight+=getColumnWeights().getValue(i-1);
 		posX.push_back((UInt16)(weight*borderSize[0]));
 		widths.push_back(posX[i]-posX[i-1]);
+		//getRowWidths().setValue(posX[i]-posX[i-1], i-1);
 	}
 	// i increments again before this statement, so it
 	// still must be i-1
@@ -109,10 +119,39 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 		weight+=getRowWeights().getValue(i-1);
 		posY.push_back((UInt16)(weight*borderSize[1]));
 		heights.push_back(posY[i]-posY[i-1]);
+		//getColumnHeights.setValue(posY[i]-posY[i-1], i-1);
 	}
 	heights.push_back(borderSize[1]-posY[i-1]);
 
+	// now go through each component and place them on the grid
+	for (i = 0; i < Components.size(); ++i)
+	{
+		// begin by resetting offset to borderoffset and size to 0
+		offset = borderOffset;
+		size[0] = size[1] = 0;
+		constraints = GridBagLayoutConstraintsPtr::dcast(Components.getValue(i)->getConstraints());
+		if(constraints != NullFC)
+		{
+			if (constraints->getGridX() < posX.size())
+				offset[0] += posX[constraints->getGridX()];
 
+			if (constraints->getGridY() < posY.size())
+				offset[1] += posY[constraints->getGridY()];
+
+			for (UInt16 j = 0; j < constraints->getGridWidth() && constraints->getGridX()+j < widths.size(); ++j)
+				size[0] += widths[constraints->getGridX()+j];
+			
+			for (UInt16 j = 0; j < constraints->getGridHeight() && constraints->getGridY()+j < heights.size(); ++j)
+				size[1] += heights[constraints->getGridY()+j];
+		}
+		beginEditCP(Components.getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
+			if (size[0] >= Components.getValue(i)->getMinSize().x() && size[1] > Components.getValue(i)->getMinSize().y())
+				Components.getValue(i)->setSize(size);
+			else
+				Components.getValue(i)->setSize(Vec2s(0,0));
+			Components.getValue(i)->setPosition(Pnt2s(offset));
+		endEditCP(Components.getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
+	}
 }
 
 /*-------------------------------------------------------------------------*\
