@@ -107,6 +107,37 @@ void ToggleButton::dump(      UInt32    ,
     SLOG << "Dump ToggleButton NI" << std::endl;
 }
 
+void ToggleButton::mouseReleased(const MouseEvent& e)
+{
+	if(e.getButton()==MouseEvent::BUTTON1){
+		if(getActive())
+		{
+			beginEditCP(ToggleButtonPtr(this), Button::ActiveFieldMask);
+				setActive(false);
+			endEditCP(ToggleButtonPtr(this), Button::ActiveFieldMask);
+		}
+		else
+		{
+			beginEditCP(ToggleButtonPtr(this), Button::ActiveFieldMask);
+				setActive(true);
+			endEditCP(ToggleButtonPtr(this), ToggleButton::ActiveFieldMask);
+		}
+		
+	}
+	Component::mouseReleased(e);
+}
+void ToggleButton::mousePressed(const MouseEvent& e)
+{
+
+	Component::mousePressed(e);
+}
+void ToggleButton::mouseExited(const MouseEvent& e)
+{
+
+
+	Component::mouseExited(e);
+}
+
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

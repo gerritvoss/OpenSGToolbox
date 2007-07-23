@@ -88,7 +88,12 @@ void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
    if(getActive()){
 	   if(getChecked()){
 		   getActiveCheckedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-		   totalWidth =	3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
+		   if(TheGraphics->getTextBounds(getText(), getFont()).x()>0){
+			totalWidth =	3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
+		   }
+		   else{
+			   totalWidth= drawObjectSize.x();
+		   }
 		   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
 		   getActiveCheckedDrawObject()->setPosition(TempPos);
 		   getActiveCheckedDrawObject()->draw(TheGraphics);
@@ -97,7 +102,12 @@ void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
 	   else
 	   {
 		   getActiveDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-		   totalWidth = 3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
+		   if(TheGraphics->getTextBounds(getText(), getFont()).x()>0){
+			totalWidth =	3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
+		   }
+		   else{
+			   totalWidth= drawObjectSize.x();
+		   }
 		   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
 		   getActiveDrawObject()->setPosition(TempPos);
 		   getActiveDrawObject()->draw(TheGraphics);
@@ -105,14 +115,25 @@ void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
    }
    else if(getChecked()){
 	   getCheckedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-	   totalWidth =	3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
+   	   if(TheGraphics->getTextBounds(getText(), getFont()).x()>0){
+		totalWidth =	3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
+	   }
+	   else{
+		   totalWidth= drawObjectSize.x();
+	   }
+
 	   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
 	   getCheckedDrawObject()->setPosition(TempPos);
  	   getCheckedDrawObject()->draw(TheGraphics);
   }
    else{
 		getDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-		totalWidth = 3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
+	   if(TheGraphics->getTextBounds(getText(), getFont()).x()>0){
+		totalWidth =	3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
+	   }
+	   else{
+		   totalWidth= drawObjectSize.x();
+	   }
 		TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
    	    getDrawObject()->setPosition(TempPos);
 		getDrawObject()->draw(TheGraphics);

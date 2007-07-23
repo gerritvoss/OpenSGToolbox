@@ -74,6 +74,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+	virtual void mouseReleased(const MouseEvent& e);
+	virtual void mouseExited(const MouseEvent& e);
+	virtual void mousePressed(const MouseEvent& e);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
