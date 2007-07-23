@@ -177,10 +177,26 @@ void Container::mousePressed(const MouseEvent& e)
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
 		if(isContained)
 		{
+			//Give myself temporary focus
+			takeFocus(true);
+			if(!getChildren().getValue(i)->getType().isDerivedFrom(Container::getClassType()))
+			{
+				getChildren().getValue(i)->takeFocus();
+			}
 			getChildren().getValue(i)->mousePressed(e);
 			break;
 		}
     }
+	if(isContained)
+	{
+		//Remove my temporary focus
+		giveFocus(NullFC, false);
+	}
+	else
+	{
+		//Give myself permenant focus
+		takeFocus();
+	}
 	Component::mousePressed(e);
 }
 

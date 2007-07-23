@@ -48,6 +48,7 @@
 
 #include "OSGComponent.h"
 #include "OSGContainer.h"
+#include "OSGFrame.h"
 #include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
@@ -470,22 +471,7 @@ void  Component::produceComponentDisabled(const ComponentEvent& e)
    }
 }
 
-bool Component::giveFocus(void)
-{
-    if(!getFocusable())
-    {
-        return false;
-    }
-    else
-    {
-        beginEditCP(ComponentPtr(this), FocusedFieldMask);
-           setFocused(true);
-        endEditCP(ComponentPtr(this), FocusedFieldMask);
-        produceFocusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,false, NullFC));
-    }
-}
-
-bool Component::takeFocus(void)
+bool Component::giveFocus(ComponentPtr NewFocusedComponent, bool Temporary)
 {
     if(!getFocusable())
     {
@@ -496,7 +482,44 @@ bool Component::takeFocus(void)
         beginEditCP(ComponentPtr(this), FocusedFieldMask);
            setFocused(false);
         endEditCP(ComponentPtr(this), FocusedFieldMask);
-        produceFocusLost(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_LOST,false, NullFC));
+        produceFocusLost(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_LOST,Temporary, NewFocusedComponent));
+		return true;
+    }
+}
+
+bool Component::takeFocus(bool Temporary)
+{
+    if(!getFocusable())
+    {
+        return false;
+    }
+    else
+    {
+		if(getFocused() &&
+		   getParentFrame() != NullFC &&
+		   getParentFrame()->getFocusedComponent() == ComponentPtr(this))
+		{
+			return true;
+		}
+        beginEditCP(ComponentPtr(this), FocusedFieldMask);
+           setFocused(true);
+        endEditCP(ComponentPtr(this), FocusedFieldMask);
+		if(Temporary || getParentFrame() == NullFC)
+		{
+            produceFocusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, NullFC));
+		}
+		else
+		{
+			if(getParentFrame()->getFocusedComponent() != NullFC)
+			{
+				getParentFrame()->getFocusedComponent()->giveFocus(ComponentPtr(this));
+			}
+            produceFocusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, getParentFrame()->getFocusedComponent()));
+			//beginEditCP(getParentFrame(), Frame::FocusedComponentFieldMask);
+				getParentFrame()->setFocusedComponent(ComponentPtr(this));
+			//endEditCP(getParentFrame(), Frame::FocusedComponentFieldMask);
+		}
+		return true;
     }
 }
 

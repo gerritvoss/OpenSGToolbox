@@ -62,11 +62,22 @@ A UI GridBagLayoutConstraints.
 	Used when the component's display area is larger than the component's requested size to determine whether (and how) to resize the component
 	</Field>
 	<Field
-		name="Anchor"
-		type="UInt32"
+		name="HorizontalAlignment"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0.5"
+	>
+	Used when the component is smaller than its display area to determine where (within the display area) to place the component
+	</Field>
+	<Field
+		name="VerticalAlignment"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.5"
 	>
 	Used when the component is smaller than its display area to determine where (within the display area) to place the component
 	</Field>
