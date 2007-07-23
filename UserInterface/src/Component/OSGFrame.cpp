@@ -105,6 +105,30 @@ void Frame::keyTyped(const KeyEvent& e)
 	}
 }
 
+FramePtr &Frame::getParentFrame(void)
+{
+    if(Component::getParentFrame() == NullFC)
+    {
+        return FramePtr(this);
+    }
+    else
+    {
+        return Component::getParentFrame();
+    }
+}
+
+const FramePtr &Frame::getParentFrame(void) const
+{
+    if(Component::getParentFrame() == NullFC)
+    {
+        return FramePtr(this);
+    }
+    else
+    {
+        return Component::getParentFrame();
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

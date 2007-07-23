@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="OSGInput"
 	ProjectGUID="{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
 	RootNamespace="OSGAnimation"

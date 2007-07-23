@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Frame
+ **     class UIRectangle
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGFRAMEBASE_H_
-#define _OSGFRAMEBASE_H_
+#ifndef _OSGUIRECTANGLEBASE_H_
+#define _OSGUIRECTANGLEBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,39 +65,42 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGContainer.h" // Parent
+#include <OpenSG/OSGDrawable.h> // Parent
 
-#include "OSGComponentFields.h" // FocusedComponent type
+#include <OpenSG/OSGPnt3fFields.h> // Point1 type
+#include <OpenSG/OSGPnt3fFields.h> // Point2 type
 #include "UIDrawingSurface/OSGUIDrawingSurfaceFields.h" // DrawingSurface type
 
-#include "OSGFrameFields.h"
+#include "OSGUIRectangleFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Frame;
+class UIRectangle;
 class BinaryDataHandler;
 
-//! \brief Frame Base Class.
+//! \brief UIRectangle Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
+class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleBase : public Drawable
 {
   private:
 
-    typedef Container    Inherited;
+    typedef Drawable    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef FramePtr  Ptr;
+    typedef UIRectanglePtr  Ptr;
 
     enum
     {
-        FocusedComponentFieldId = Inherited::NextFieldId,
-        DrawingSurfaceFieldId   = FocusedComponentFieldId + 1,
-        NextFieldId             = DrawingSurfaceFieldId   + 1
+        Point1FieldId         = Inherited::NextFieldId,
+        Point2FieldId         = Point1FieldId         + 1,
+        DrawingSurfaceFieldId = Point2FieldId         + 1,
+        NextFieldId           = DrawingSurfaceFieldId + 1
     };
 
-    static const OSG::BitVector FocusedComponentFieldMask;
+    static const OSG::BitVector Point1FieldMask;
+    static const OSG::BitVector Point2FieldMask;
     static const OSG::BitVector DrawingSurfaceFieldMask;
 
 
@@ -125,11 +128,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFComponentPtr      *getSFFocusedComponent(void);
+           SFPnt3f             *getSFPoint1         (void);
+           SFPnt3f             *getSFPoint2         (void);
            SFUIDrawingSurfacePtr *getSFDrawingSurface (void);
 
-           ComponentPtr        &getFocusedComponent(void);
-     const ComponentPtr        &getFocusedComponent(void) const;
+           Pnt3f               &getPoint1         (void);
+     const Pnt3f               &getPoint1         (void) const;
+           Pnt3f               &getPoint2         (void);
+     const Pnt3f               &getPoint2         (void) const;
            UIDrawingSurfacePtr &getDrawingSurface (void);
      const UIDrawingSurfacePtr &getDrawingSurface (void) const;
 
@@ -138,7 +144,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setFocusedComponent( const ComponentPtr &value );
+     void setPoint1         ( const Pnt3f &value );
+     void setPoint2         ( const Pnt3f &value );
      void setDrawingSurface ( const UIDrawingSurfacePtr &value );
 
     /*! \}                                                                 */
@@ -163,8 +170,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  FramePtr      create          (void); 
-    static  FramePtr      createEmpty     (void); 
+    static  UIRectanglePtr      create          (void); 
+    static  UIRectanglePtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -182,7 +189,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFComponentPtr      _sfFocusedComponent;
+    SFPnt3f             _sfPoint1;
+    SFPnt3f             _sfPoint2;
     SFUIDrawingSurfacePtr   _sfDrawingSurface;
 
     /*! \}                                                                 */
@@ -190,15 +198,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    FrameBase(void);
-    FrameBase(const FrameBase &source);
+    UIRectangleBase(void);
+    UIRectangleBase(const UIRectangleBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~FrameBase(void); 
+    virtual ~UIRectangleBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -206,13 +214,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      FrameBase *pOther,
+    void executeSyncImpl(      UIRectangleBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      FrameBase *pOther,
+    void executeSyncImpl(      UIRectangleBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -242,7 +250,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const FrameBase &source);
+    void operator =(const UIRectangleBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -250,17 +258,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
 //---------------------------------------------------------------------------
 
 
-typedef FrameBase *FrameBaseP;
+typedef UIRectangleBase *UIRectangleBaseP;
 
-typedef osgIF<FrameBase::isNodeCore,
-              CoredNodePtr<Frame>,
+typedef osgIF<UIRectangleBase::isNodeCore,
+              CoredNodePtr<UIRectangle>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet FrameNodePtr;
+              >::_IRet UIRectangleNodePtr;
 
-typedef RefPtr<FramePtr> FrameRefPtr;
+typedef RefPtr<UIRectanglePtr> UIRectangleRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGFRAMEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGUIRECTANGLEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGFRAMEBASE_H_ */
+#endif /* _OSGUIRECTANGLEBASE_H_ */

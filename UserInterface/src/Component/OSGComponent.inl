@@ -121,6 +121,39 @@ void Component::removeMouseMotionListener(MouseMotionListenerPtr Listener)
 }
 
 inline
+void Component::addFocusListener(FocusListenerPtr Listener)
+{
+   _FocusListeners.insert(Listener);
+}
+
+inline
+void Component::removeFocusListener(FocusListenerPtr Listener)
+{
+   FocusListenerSetItor EraseIter(_FocusListeners.find(Listener));
+   if(EraseIter != _FocusListeners.end())
+   {
+      _FocusListeners.erase(EraseIter);
+   }
+}
+
+inline
+void Component::addComponentListener(ComponentListener* Listener)
+{
+   _ComponentListeners.insert(Listener);
+}
+
+inline
+void Component::removeComponentListener(ComponentListener* Listener)
+{
+   ComponentListenerSetItor EraseIter(_ComponentListeners.find(Listener));
+   if(EraseIter != _ComponentListeners.end())
+   {
+      _ComponentListeners.erase(EraseIter);
+   }
+}
+
+
+inline
 void Component::setMouseContained(bool Value)
 {
 	_MouseInComponentLastMouse = Value;

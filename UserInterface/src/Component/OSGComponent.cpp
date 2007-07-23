@@ -406,6 +406,100 @@ void Component::produceKeyTyped(const KeyEvent& e)
    }
 }
 
+void  Component::produceFocusGained(const FocusEvent& e)
+{
+   for(FocusListenerSetConstItor SetItor(_FocusListeners.begin()) ; SetItor != _FocusListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->focusGained(e);
+   }
+}
+
+void  Component::produceFocusLost(const FocusEvent& e)
+{
+   for(FocusListenerSetConstItor SetItor(_FocusListeners.begin()) ; SetItor != _FocusListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->focusLost(e);
+   }
+}
+
+void  Component::produceComponentHidden(const ComponentEvent& e)
+{
+   for(ComponentListenerSetConstItor SetItor(_ComponentListeners.begin()) ; SetItor != _ComponentListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->componentHidden(e);
+   }
+}
+
+void  Component::produceComponentVisible(const ComponentEvent& e)
+{
+   for(ComponentListenerSetConstItor SetItor(_ComponentListeners.begin()) ; SetItor != _ComponentListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->componentVisible(e);
+   }
+}
+
+void  Component::produceComponentMoved(const ComponentEvent& e)
+{
+   for(ComponentListenerSetConstItor SetItor(_ComponentListeners.begin()) ; SetItor != _ComponentListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->componentMoved(e);
+   }
+}
+
+void  Component::produceComponentResized(const ComponentEvent& e)
+{
+   for(ComponentListenerSetConstItor SetItor(_ComponentListeners.begin()) ; SetItor != _ComponentListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->componentResized(e);
+   }
+}
+
+void  Component::produceComponentEnabled(const ComponentEvent& e)
+{
+   for(ComponentListenerSetConstItor SetItor(_ComponentListeners.begin()) ; SetItor != _ComponentListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->componentEnabled(e);
+   }
+}
+
+void  Component::produceComponentDisabled(const ComponentEvent& e)
+{
+   for(ComponentListenerSetConstItor SetItor(_ComponentListeners.begin()) ; SetItor != _ComponentListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->componentDisabled(e);
+   }
+}
+
+bool Component::giveFocus(void)
+{
+    if(!getFocusable())
+    {
+        return false;
+    }
+    else
+    {
+        beginEditCP(ComponentPtr(this), FocusedFieldMask);
+           setFocused(true);
+        endEditCP(ComponentPtr(this), FocusedFieldMask);
+        produceFocusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,false, NullFC));
+    }
+}
+
+bool Component::takeFocus(void)
+{
+    if(!getFocusable())
+    {
+        return false;
+    }
+    else
+    {
+        beginEditCP(ComponentPtr(this), FocusedFieldMask);
+           setFocused(false);
+        endEditCP(ComponentPtr(this), FocusedFieldMask);
+        produceFocusLost(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_LOST,false, NullFC));
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -456,6 +550,37 @@ void Component::changed(BitVector whichField, UInt32 origin)
            getConstraints()->setParentComponent(ComponentPtr(this));
         endEditCP(getConstraints(), LayoutConstraints::ParentComponentFieldMask);
     }
+    
+    if( (whichField & SizeFieldMask) )
+    {
+        produceComponentResized( ComponentEvent(ComponentPtr(this),getSystemTime(),ComponentEvent::COMPONENT_RESIZED, ComponentPtr(this)) );
+    }
+    if( (whichField & PositionFieldMask) )
+    {
+        produceComponentMoved( ComponentEvent(ComponentPtr(this),getSystemTime(),ComponentEvent::COMPONENT_MOVED, ComponentPtr(this)) );
+    }
+    if( (whichField & EnabledFieldMask) )
+    {
+        if(getEnabled())
+        {
+            produceComponentEnabled( ComponentEvent(ComponentPtr(this),getSystemTime(),ComponentEvent::COMPONENT_ENABLED, ComponentPtr(this)) );    
+        }
+        else
+        {
+            produceComponentDisabled( ComponentEvent(ComponentPtr(this),getSystemTime(),ComponentEvent::COMPONENT_DISABLED, ComponentPtr(this)) );    
+        }
+     }
+    if( (whichField & VisibleFieldMask) )
+    {
+        if(getVisible())
+        {
+            produceComponentVisible( ComponentEvent(ComponentPtr(this),getSystemTime(),ComponentEvent::COMPONENT_VISIBLE, ComponentPtr(this)) );    
+        }
+        else
+        {
+            produceComponentHidden( ComponentEvent(ComponentPtr(this),getSystemTime(),ComponentEvent::COMPONENT_HIDDEN, ComponentPtr(this)) );    
+        }
+     }
 }
 
 void Component::updateContainerLayout(void)

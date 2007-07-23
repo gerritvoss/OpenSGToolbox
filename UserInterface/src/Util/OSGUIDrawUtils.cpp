@@ -118,7 +118,7 @@ Pnt2s WindowToComponent(const Pnt2s& WindowPoint, const ComponentPtr Comp)
 	while(CompRecurse != NullFC)
 	{
 		Result -= Vec2s(CompRecurse->getPosition());
-		CompRecurse = Component::Ptr::dcast(CompRecurse->getParentContainer());
+		CompRecurse = CompRecurse->getParentContainer();
 	}
 
 	return Result;
@@ -131,7 +131,7 @@ Pnt2s ComponentToWindow(const Pnt2s& ComponentPoint, const ComponentPtr Comp)
 	while(CompRecurse != NullFC)
 	{
 		Result += Vec2s(CompRecurse->getPosition());
-		CompRecurse = Component::Ptr::dcast(CompRecurse->getParentContainer());
+		CompRecurse = CompRecurse->getParentContainer();
 	}
 	return Result;
 }

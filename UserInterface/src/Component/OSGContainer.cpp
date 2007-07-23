@@ -299,14 +299,16 @@ void Container::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-    if( (whichField & ChildrenFieldMask) )
+    if( (whichField & ChildrenFieldMask) ||
+        (whichField & ParentFrameFieldMask))
     {
         //Set All of my children's parent to me
         for(UInt32 i(0) ; i<getChildren().size() ; ++i)
         {
-            beginEditCP(getChildren().getValue(i), Component::ParentContainerFieldMask);
+            beginEditCP(getChildren().getValue(i), ParentContainerFieldMask | ParentFrameFieldMask);
                getChildren().getValue(i)->setParentContainer(ContainerPtr(this));
-            endEditCP(getChildren().getValue(i), Component::ParentContainerFieldMask);
+               getChildren().getValue(i)->setParentFrame(getParentFrame());
+            endEditCP(getChildren().getValue(i), ParentContainerFieldMask | ParentFrameFieldMask);
         }
     }
     if( (whichField & LayoutFieldMask) &&

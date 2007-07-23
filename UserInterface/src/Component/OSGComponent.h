@@ -55,10 +55,8 @@
 
 #include <set>
 
-//#include <OpenSG/Input/OSGKeyEventProducer.h>
-//#include <OpenSG/Input/OSGMouseEventProducer.h>
-//#include <OpenSG/Input/OSGMouseWheelEventProducer.h>
-//#include <OpenSG/Input/OSGMouseMotionEventProducer.h>
+#include "Event/OSGFocusListener.h"
+#include "Event/OSGComponentListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -123,9 +121,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     void removeMouseListener(MouseListenerPtr Listener);
     void addKeyListener(KeyListenerPtr Listener);
     void removeKeyListener(KeyListenerPtr Listener);
+    
+    void addFocusListener(FocusListenerPtr Listener);
+    void removeFocusListener(FocusListenerPtr Listener);
+
+    void addComponentListener(ComponentListenerPtr Listener);
+    void removeComponentListener(ComponentListenerPtr Listener);
 
 	void setMouseContained(bool Value);
 	bool getMouseContained(void);
+
+    virtual bool giveFocus(void);
+    virtual bool takeFocus(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -203,6 +210,26 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     void produceKeyPressed(const KeyEvent& e);
     void produceKeyReleased(const KeyEvent& e);
     void produceKeyTyped(const KeyEvent& e);
+    
+	typedef std::set<FocusListenerPtr> FocusListenerSet;
+    typedef FocusListenerSet::iterator FocusListenerSetItor;
+    typedef FocusListenerSet::const_iterator FocusListenerSetConstItor;
+	
+    FocusListenerSet       _FocusListeners;
+    void produceFocusGained(const FocusEvent& e);
+    void produceFocusLost(const FocusEvent& e);
+    
+	typedef std::set<ComponentListenerPtr> ComponentListenerSet;
+    typedef ComponentListenerSet::iterator ComponentListenerSetItor;
+    typedef ComponentListenerSet::const_iterator ComponentListenerSetConstItor;
+	
+    ComponentListenerSet       _ComponentListeners;
+    void produceComponentHidden(const ComponentEvent& e);
+    void produceComponentVisible(const ComponentEvent& e);
+    void produceComponentMoved(const ComponentEvent& e);
+    void produceComponentResized(const ComponentEvent& e);
+    void produceComponentEnabled(const ComponentEvent& e);
+    void produceComponentDisabled(const ComponentEvent& e);
 	
 	bool _MouseInComponentLastMouse;
 };

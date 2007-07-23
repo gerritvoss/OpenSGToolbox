@@ -81,12 +81,14 @@
 #include "Border/OSGBorder.h" // DisabledBorder type
 #include "Background/OSGUIBackground.h" // DisabledBackground type
 #include <OpenSG/OSGColor4fFields.h> // DisabledForegroundColor type
+#include <OpenSG/OSGBoolFields.h> // Focusable type
 #include "Border/OSGBorder.h" // FocusedBorder type
 #include "Background/OSGUIBackground.h" // FocusedBackground type
 #include <OpenSG/OSGColor4fFields.h> // FocusedForegroundColor type
 #include <OpenSG/OSGMaterialFields.h> // ForegroundMaterial type
 #include <OpenSG/OSGReal32Fields.h> // Opacity type
-#include <OpenSG/OSGAttachmentContainerFields.h> // ParentContainer type
+#include "Component/OSGContainerFields.h" // ParentContainer type
+#include "Component/OSGFrameFields.h" // ParentFrame type
 #include <OpenSG/OSGBoolFields.h> // Clipping type
 
 #include "OSGComponentFields.h"
@@ -128,13 +130,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
         DisabledBorderFieldId          = ForegroundColorFieldId         + 1,
         DisabledBackgroundFieldId      = DisabledBorderFieldId          + 1,
         DisabledForegroundColorFieldId = DisabledBackgroundFieldId      + 1,
-        FocusedBorderFieldId           = DisabledForegroundColorFieldId + 1,
+        FocusableFieldId               = DisabledForegroundColorFieldId + 1,
+        FocusedBorderFieldId           = FocusableFieldId               + 1,
         FocusedBackgroundFieldId       = FocusedBorderFieldId           + 1,
         FocusedForegroundColorFieldId  = FocusedBackgroundFieldId       + 1,
         ForegroundMaterialFieldId      = FocusedForegroundColorFieldId  + 1,
         OpacityFieldId                 = ForegroundMaterialFieldId      + 1,
         ParentContainerFieldId         = OpacityFieldId                 + 1,
-        ClippingFieldId                = ParentContainerFieldId         + 1,
+        ParentFrameFieldId             = ParentContainerFieldId         + 1,
+        ClippingFieldId                = ParentFrameFieldId             + 1,
         NextFieldId                    = ClippingFieldId                + 1
     };
 
@@ -155,12 +159,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     static const OSG::BitVector DisabledBorderFieldMask;
     static const OSG::BitVector DisabledBackgroundFieldMask;
     static const OSG::BitVector DisabledForegroundColorFieldMask;
+    static const OSG::BitVector FocusableFieldMask;
     static const OSG::BitVector FocusedBorderFieldMask;
     static const OSG::BitVector FocusedBackgroundFieldMask;
     static const OSG::BitVector FocusedForegroundColorFieldMask;
     static const OSG::BitVector ForegroundMaterialFieldMask;
     static const OSG::BitVector OpacityFieldMask;
     static const OSG::BitVector ParentContainerFieldMask;
+    static const OSG::BitVector ParentFrameFieldMask;
     static const OSG::BitVector ClippingFieldMask;
 
 
@@ -188,101 +194,109 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPnt2s             *getSFPosition       (void);
-           SFVec2s             *getSFMinSize        (void);
-           SFVec2s             *getSFMaxSize        (void);
-           SFVec2s             *getSFPreferredSize  (void);
-           SFVec2s             *getSFSize           (void);
-           SFBool              *getSFVisible        (void);
-           SFBool              *getSFEnabled        (void);
-           SFBool              *getSFFocused        (void);
-           SFLayoutConstraintsPtr *getSFConstraints    (void);
-           SFBorderPtr         *getSFBorder         (void);
-           SFUIBackgroundPtr   *getSFBackground     (void);
-           SFColor4f           *getSFForegroundColor(void);
-           SFBorderPtr         *getSFDisabledBorder (void);
-           SFUIBackgroundPtr   *getSFDisabledBackground(void);
-           SFColor4f           *getSFDisabledForegroundColor(void);
-           SFBorderPtr         *getSFFocusedBorder  (void);
-           SFUIBackgroundPtr   *getSFFocusedBackground(void);
-           SFColor4f           *getSFFocusedForegroundColor(void);
-           SFMaterialPtr       *getSFForegroundMaterial(void);
-           SFReal32            *getSFOpacity        (void);
-           SFAttachmentContainerPtr *getSFParentContainer(void);
-           SFBool              *getSFClipping       (void);
+    virtual       SFPnt2s             *getSFPosition       (void);
+    virtual       SFVec2s             *getSFMinSize        (void);
+    virtual       SFVec2s             *getSFMaxSize        (void);
+    virtual       SFVec2s             *getSFPreferredSize  (void);
+    virtual       SFVec2s             *getSFSize           (void);
+    virtual       SFBool              *getSFVisible        (void);
+    virtual       SFBool              *getSFEnabled        (void);
+    virtual       SFBool              *getSFFocused        (void);
+    virtual       SFLayoutConstraintsPtr *getSFConstraints    (void);
+    virtual       SFBorderPtr         *getSFBorder         (void);
+    virtual       SFUIBackgroundPtr   *getSFBackground     (void);
+    virtual       SFColor4f           *getSFForegroundColor(void);
+    virtual       SFBorderPtr         *getSFDisabledBorder (void);
+    virtual       SFUIBackgroundPtr   *getSFDisabledBackground(void);
+    virtual       SFColor4f           *getSFDisabledForegroundColor(void);
+    virtual       SFBool              *getSFFocusable      (void);
+    virtual       SFBorderPtr         *getSFFocusedBorder  (void);
+    virtual       SFUIBackgroundPtr   *getSFFocusedBackground(void);
+    virtual       SFColor4f           *getSFFocusedForegroundColor(void);
+    virtual       SFMaterialPtr       *getSFForegroundMaterial(void);
+    virtual       SFReal32            *getSFOpacity        (void);
+    virtual       SFContainerPtr      *getSFParentContainer(void);
+    virtual       SFFramePtr          *getSFParentFrame    (void);
+    virtual       SFBool              *getSFClipping       (void);
 
-           Pnt2s               &getPosition       (void);
-     const Pnt2s               &getPosition       (void) const;
-           Vec2s               &getMinSize        (void);
-     const Vec2s               &getMinSize        (void) const;
-           Vec2s               &getMaxSize        (void);
-     const Vec2s               &getMaxSize        (void) const;
-           Vec2s               &getPreferredSize  (void);
-     const Vec2s               &getPreferredSize  (void) const;
-           Vec2s               &getSize           (void);
-     const Vec2s               &getSize           (void) const;
-           bool                &getVisible        (void);
-     const bool                &getVisible        (void) const;
-           bool                &getEnabled        (void);
-     const bool                &getEnabled        (void) const;
-           bool                &getFocused        (void);
-     const bool                &getFocused        (void) const;
-           LayoutConstraintsPtr &getConstraints    (void);
-     const LayoutConstraintsPtr &getConstraints    (void) const;
-           BorderPtr           &getBorder         (void);
-     const BorderPtr           &getBorder         (void) const;
-           UIBackgroundPtr     &getBackground     (void);
-     const UIBackgroundPtr     &getBackground     (void) const;
-           Color4f             &getForegroundColor(void);
-     const Color4f             &getForegroundColor(void) const;
-           BorderPtr           &getDisabledBorder (void);
-     const BorderPtr           &getDisabledBorder (void) const;
-           UIBackgroundPtr     &getDisabledBackground(void);
-     const UIBackgroundPtr     &getDisabledBackground(void) const;
-           Color4f             &getDisabledForegroundColor(void);
-     const Color4f             &getDisabledForegroundColor(void) const;
-           BorderPtr           &getFocusedBorder  (void);
-     const BorderPtr           &getFocusedBorder  (void) const;
-           UIBackgroundPtr     &getFocusedBackground(void);
-     const UIBackgroundPtr     &getFocusedBackground(void) const;
-           Color4f             &getFocusedForegroundColor(void);
-     const Color4f             &getFocusedForegroundColor(void) const;
-           MaterialPtr         &getForegroundMaterial(void);
-     const MaterialPtr         &getForegroundMaterial(void) const;
-           Real32              &getOpacity        (void);
-     const Real32              &getOpacity        (void) const;
-           AttachmentContainerPtr &getParentContainer(void);
-     const AttachmentContainerPtr &getParentContainer(void) const;
-           bool                &getClipping       (void);
-     const bool                &getClipping       (void) const;
+    virtual       Pnt2s               &getPosition       (void);
+    virtual const Pnt2s               &getPosition       (void) const;
+    virtual       Vec2s               &getMinSize        (void);
+    virtual const Vec2s               &getMinSize        (void) const;
+    virtual       Vec2s               &getMaxSize        (void);
+    virtual const Vec2s               &getMaxSize        (void) const;
+    virtual       Vec2s               &getPreferredSize  (void);
+    virtual const Vec2s               &getPreferredSize  (void) const;
+    virtual       Vec2s               &getSize           (void);
+    virtual const Vec2s               &getSize           (void) const;
+    virtual       bool                &getVisible        (void);
+    virtual const bool                &getVisible        (void) const;
+    virtual       bool                &getEnabled        (void);
+    virtual const bool                &getEnabled        (void) const;
+    virtual       bool                &getFocused        (void);
+    virtual const bool                &getFocused        (void) const;
+    virtual       LayoutConstraintsPtr &getConstraints    (void);
+    virtual const LayoutConstraintsPtr &getConstraints    (void) const;
+    virtual       BorderPtr           &getBorder         (void);
+    virtual const BorderPtr           &getBorder         (void) const;
+    virtual       UIBackgroundPtr     &getBackground     (void);
+    virtual const UIBackgroundPtr     &getBackground     (void) const;
+    virtual       Color4f             &getForegroundColor(void);
+    virtual const Color4f             &getForegroundColor(void) const;
+    virtual       BorderPtr           &getDisabledBorder (void);
+    virtual const BorderPtr           &getDisabledBorder (void) const;
+    virtual       UIBackgroundPtr     &getDisabledBackground(void);
+    virtual const UIBackgroundPtr     &getDisabledBackground(void) const;
+    virtual       Color4f             &getDisabledForegroundColor(void);
+    virtual const Color4f             &getDisabledForegroundColor(void) const;
+    virtual       bool                &getFocusable      (void);
+    virtual const bool                &getFocusable      (void) const;
+    virtual       BorderPtr           &getFocusedBorder  (void);
+    virtual const BorderPtr           &getFocusedBorder  (void) const;
+    virtual       UIBackgroundPtr     &getFocusedBackground(void);
+    virtual const UIBackgroundPtr     &getFocusedBackground(void) const;
+    virtual       Color4f             &getFocusedForegroundColor(void);
+    virtual const Color4f             &getFocusedForegroundColor(void) const;
+    virtual       MaterialPtr         &getForegroundMaterial(void);
+    virtual const MaterialPtr         &getForegroundMaterial(void) const;
+    virtual       Real32              &getOpacity        (void);
+    virtual const Real32              &getOpacity        (void) const;
+    virtual       ContainerPtr        &getParentContainer(void);
+    virtual const ContainerPtr        &getParentContainer(void) const;
+    virtual       FramePtr            &getParentFrame    (void);
+    virtual const FramePtr            &getParentFrame    (void) const;
+    virtual       bool                &getClipping       (void);
+    virtual const bool                &getClipping       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setPosition       ( const Pnt2s &value );
-     void setMinSize        ( const Vec2s &value );
-     void setMaxSize        ( const Vec2s &value );
-     void setPreferredSize  ( const Vec2s &value );
-     void setSize           ( const Vec2s &value );
-     void setVisible        ( const bool &value );
-     void setEnabled        ( const bool &value );
-     void setFocused        ( const bool &value );
-     void setConstraints    ( const LayoutConstraintsPtr &value );
-     void setBorder         ( const BorderPtr &value );
-     void setBackground     ( const UIBackgroundPtr &value );
-     void setForegroundColor( const Color4f &value );
-     void setDisabledBorder ( const BorderPtr &value );
-     void setDisabledBackground( const UIBackgroundPtr &value );
-     void setDisabledForegroundColor( const Color4f &value );
-     void setFocusedBorder  ( const BorderPtr &value );
-     void setFocusedBackground( const UIBackgroundPtr &value );
-     void setFocusedForegroundColor( const Color4f &value );
-     void setForegroundMaterial( const MaterialPtr &value );
-     void setOpacity        ( const Real32 &value );
-     void setParentContainer( const AttachmentContainerPtr &value );
-     void setClipping       ( const bool &value );
+    virtual void setPosition       ( const Pnt2s &value );
+    virtual void setMinSize        ( const Vec2s &value );
+    virtual void setMaxSize        ( const Vec2s &value );
+    virtual void setPreferredSize  ( const Vec2s &value );
+    virtual void setSize           ( const Vec2s &value );
+    virtual void setVisible        ( const bool &value );
+    virtual void setEnabled        ( const bool &value );
+    virtual void setFocused        ( const bool &value );
+    virtual void setConstraints    ( const LayoutConstraintsPtr &value );
+    virtual void setBorder         ( const BorderPtr &value );
+    virtual void setBackground     ( const UIBackgroundPtr &value );
+    virtual void setForegroundColor( const Color4f &value );
+    virtual void setDisabledBorder ( const BorderPtr &value );
+    virtual void setDisabledBackground( const UIBackgroundPtr &value );
+    virtual void setDisabledForegroundColor( const Color4f &value );
+    virtual void setFocusable      ( const bool &value );
+    virtual void setFocusedBorder  ( const BorderPtr &value );
+    virtual void setFocusedBackground( const UIBackgroundPtr &value );
+    virtual void setFocusedForegroundColor( const Color4f &value );
+    virtual void setForegroundMaterial( const MaterialPtr &value );
+    virtual void setOpacity        ( const Real32 &value );
+    virtual void setParentContainer( const ContainerPtr &value );
+    virtual void setParentFrame    ( const FramePtr &value );
+    virtual void setClipping       ( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -326,12 +340,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     SFBorderPtr         _sfDisabledBorder;
     SFUIBackgroundPtr   _sfDisabledBackground;
     SFColor4f           _sfDisabledForegroundColor;
+    SFBool              _sfFocusable;
     SFBorderPtr         _sfFocusedBorder;
     SFUIBackgroundPtr   _sfFocusedBackground;
     SFColor4f           _sfFocusedForegroundColor;
     SFMaterialPtr       _sfForegroundMaterial;
     SFReal32            _sfOpacity;
-    SFAttachmentContainerPtr   _sfParentContainer;
+    SFContainerPtr      _sfParentContainer;
+    SFFramePtr          _sfParentFrame;
     SFBool              _sfClipping;
 
     /*! \}                                                                 */
@@ -354,21 +370,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPnt2s             *getSFClipTopLeft    (void);
-           SFPnt2s             *getSFClipBottomRight(void);
+    virtual       SFPnt2s             *getSFClipTopLeft    (void);
+    virtual       SFPnt2s             *getSFClipBottomRight(void);
 
-           Pnt2s               &getClipTopLeft    (void);
-     const Pnt2s               &getClipTopLeft    (void) const;
-           Pnt2s               &getClipBottomRight(void);
-     const Pnt2s               &getClipBottomRight(void) const;
+    virtual       Pnt2s               &getClipTopLeft    (void);
+    virtual const Pnt2s               &getClipTopLeft    (void) const;
+    virtual       Pnt2s               &getClipBottomRight(void);
+    virtual const Pnt2s               &getClipBottomRight(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setClipTopLeft    (const Pnt2s &value);
-     void setClipBottomRight(const Pnt2s &value);
+    virtual void setClipTopLeft    (const Pnt2s &value);
+    virtual void setClipBottomRight(const Pnt2s &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

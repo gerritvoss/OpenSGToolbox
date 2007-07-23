@@ -36,24 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGFRAME_H_
-#define _OSGFRAME_H_
+#ifndef _OSGUIRECTANGLE_H_
+#define _OSGUIRECTANGLE_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGFrameBase.h"
+#include "OSGUIRectangleBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
+/*! \brief UIRectangle class. See \ref 
+           PageUserInterfaceUIRectangle for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING UIRectangle : public UIRectangleBase
 {
   private:
 
-    typedef FrameBase Inherited;
+    typedef UIRectangleBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -74,33 +77,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	
-	//Key Events
-	virtual void keyPressed(const KeyEvent& e);
-	virtual void keyReleased(const KeyEvent& e);
-	virtual void keyTyped(const KeyEvent& e);
-
-    virtual       FramePtr            &getParentFrame    (void);
-    virtual const FramePtr            &getParentFrame    (void) const;
-
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in FrameBase.
+    // Variables should all be in UIRectangleBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Frame(void);
-    Frame(const Frame &source);
+    UIRectangle(void);
+    UIRectangle(const UIRectangle &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Frame(void); 
+    virtual ~UIRectangle(void); 
 
     /*! \}                                                                 */
     
@@ -108,22 +102,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
   private:
 
     friend class FieldContainer;
-    friend class FrameBase;
+    friend class UIRectangleBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Frame &source);
+    void operator =(const UIRectangle &source);
 };
 
-typedef Frame *FrameP;
+typedef UIRectangle *UIRectangleP;
 
 OSG_END_NAMESPACE
 
-#include "OSGFrameBase.inl"
-#include "OSGFrame.inl"
+#include "OSGUIRectangleBase.inl"
+#include "OSGUIRectangle.inl"
 
-#define OSGFRAME_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGUIRECTANGLE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGFRAME_H_ */
+#endif /* _OSGUIRECTANGLE_H_ */

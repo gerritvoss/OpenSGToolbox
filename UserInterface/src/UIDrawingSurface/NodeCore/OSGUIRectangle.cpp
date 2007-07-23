@@ -36,94 +36,103 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGFRAME_H_
-#define _OSGFRAME_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEUSERINTERFACELIB
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGFrameBase.h"
+#include "OSGUIRectangle.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class osg::UIRectangle
+A UI Rectangle. 	
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void UIRectangle::initMethod (void)
 {
-  private:
+}
 
-    typedef FrameBase Inherited;
 
-    /*==========================  PUBLIC  =================================*/
-  public:
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
-    /*! \{                                                                 */
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+/*----------------------- constructors & destructors ----------------------*/
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
+UIRectangle::UIRectangle(void) :
+    Inherited()
+{
+}
 
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
+UIRectangle::UIRectangle(const UIRectangle &source) :
+    Inherited(source)
+{
+}
 
-    /*! \}                                                                 */
-	
-	//Key Events
-	virtual void keyPressed(const KeyEvent& e);
-	virtual void keyReleased(const KeyEvent& e);
-	virtual void keyTyped(const KeyEvent& e);
+UIRectangle::~UIRectangle(void)
+{
+}
 
-    virtual       FramePtr            &getParentFrame    (void);
-    virtual const FramePtr            &getParentFrame    (void) const;
+/*----------------------------- class specific ----------------------------*/
 
-    /*=========================  PROTECTED  ===============================*/
-  protected:
+void UIRectangle::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
 
-    // Variables should all be in FrameBase.
+void UIRectangle::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump UIRectangle NI" << std::endl;
+}
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                  Constructors                                */
-    /*! \{                                                                 */
 
-    Frame(void);
-    Frame(const Frame &source);
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Destructors                                */
-    /*! \{                                                                 */
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
 
-    virtual ~Frame(void); 
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
 
-    /*! \}                                                                 */
-    
-    /*==========================  PRIVATE  ================================*/
-  private:
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGUIRECTANGLEBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGUIRECTANGLEBASE_INLINE_CVSID;
 
-    friend class FieldContainer;
-    friend class FrameBase;
+    static Char8 cvsid_fields_hpp[] = OSGUIRECTANGLEFIELDS_HEADER_CVSID;
+}
 
-    static void initMethod(void);
-
-    // prohibit default functions (move to 'public' if you need one)
-
-    void operator =(const Frame &source);
-};
-
-typedef Frame *FrameP;
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
 
 OSG_END_NAMESPACE
 
-#include "OSGFrameBase.inl"
-#include "OSGFrame.inl"
-
-#define OSGFRAME_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
-#endif /* _OSGFRAME_H_ */

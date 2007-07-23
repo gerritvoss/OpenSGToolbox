@@ -1,25 +1,33 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="Frame"
-	parent="Container"
+	name="UIRectangle"
+	parent="Drawable"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
-	parentsystemcomponent="false"
+	parentsystemcomponent="true"
 	decoratable="false"
 	useLocalIncludes="true"
 >
-A UI Frame.
+A UI Rectangle.
 	<Field
-		name="FocusedComponent"
-		type="ComponentPtr"
+		name="Point1"
+		type="Pnt3f"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="OSGComponentFields.h"
-		defaultValue="NullFC"
+		defaultValue="0.0,0.0,0.0"
+	>
+	</Field>
+	<Field
+		name="Point2"
+		type="Pnt3f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0,0.0,0.0"
 	>
 	</Field>
 	<Field

@@ -45,121 +45,132 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Frame!
+ **     class UIRectangle!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEFRAMEINST
+#define OSG_COMPILEUIRECTANGLEINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGFrameBase.h"
-#include "OSGFrame.h"
+#include "OSGUIRectangleBase.h"
+#include "OSGUIRectangle.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  FrameBase::FocusedComponentFieldMask = 
-    (TypeTraits<BitVector>::One << FrameBase::FocusedComponentFieldId);
+const OSG::BitVector  UIRectangleBase::Point1FieldMask = 
+    (TypeTraits<BitVector>::One << UIRectangleBase::Point1FieldId);
 
-const OSG::BitVector  FrameBase::DrawingSurfaceFieldMask = 
-    (TypeTraits<BitVector>::One << FrameBase::DrawingSurfaceFieldId);
+const OSG::BitVector  UIRectangleBase::Point2FieldMask = 
+    (TypeTraits<BitVector>::One << UIRectangleBase::Point2FieldId);
 
-const OSG::BitVector FrameBase::MTInfluenceMask = 
+const OSG::BitVector  UIRectangleBase::DrawingSurfaceFieldMask = 
+    (TypeTraits<BitVector>::One << UIRectangleBase::DrawingSurfaceFieldId);
+
+const OSG::BitVector UIRectangleBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var ComponentPtr    FrameBase::_sfFocusedComponent
+/*! \var Pnt3f           UIRectangleBase::_sfPoint1
     
 */
-/*! \var UIDrawingSurfacePtr FrameBase::_sfDrawingSurface
+/*! \var Pnt3f           UIRectangleBase::_sfPoint2
+    
+*/
+/*! \var UIDrawingSurfacePtr UIRectangleBase::_sfDrawingSurface
     
 */
 
-//! Frame description
+//! UIRectangle description
 
-FieldDescription *FrameBase::_desc[] = 
+FieldDescription *UIRectangleBase::_desc[] = 
 {
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "FocusedComponent", 
-                     FocusedComponentFieldId, FocusedComponentFieldMask,
+    new FieldDescription(SFPnt3f::getClassType(), 
+                     "Point1", 
+                     Point1FieldId, Point1FieldMask,
                      false,
-                     (FieldAccessMethod) &FrameBase::getSFFocusedComponent),
+                     (FieldAccessMethod) &UIRectangleBase::getSFPoint1),
+    new FieldDescription(SFPnt3f::getClassType(), 
+                     "Point2", 
+                     Point2FieldId, Point2FieldMask,
+                     false,
+                     (FieldAccessMethod) &UIRectangleBase::getSFPoint2),
     new FieldDescription(SFUIDrawingSurfacePtr::getClassType(), 
                      "DrawingSurface", 
                      DrawingSurfaceFieldId, DrawingSurfaceFieldMask,
                      false,
-                     (FieldAccessMethod) &FrameBase::getSFDrawingSurface)
+                     (FieldAccessMethod) &UIRectangleBase::getSFDrawingSurface)
 };
 
 
-FieldContainerType FrameBase::_type(
-    "Frame",
-    "Container",
+FieldContainerType UIRectangleBase::_type(
+    "UIRectangle",
+    "Drawable",
     NULL,
-    (PrototypeCreateF) &FrameBase::createEmpty,
-    Frame::initMethod,
+    (PrototypeCreateF) &UIRectangleBase::createEmpty,
+    UIRectangle::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(FrameBase, FramePtr)
+//OSG_FIELD_CONTAINER_DEF(UIRectangleBase, UIRectanglePtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &FrameBase::getType(void) 
+FieldContainerType &UIRectangleBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &FrameBase::getType(void) const 
+const FieldContainerType &UIRectangleBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr FrameBase::shallowCopy(void) const 
+FieldContainerPtr UIRectangleBase::shallowCopy(void) const 
 { 
-    FramePtr returnValue; 
+    UIRectanglePtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const Frame *>(this)); 
+    newPtr(returnValue, dynamic_cast<const UIRectangle *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 FrameBase::getContainerSize(void) const 
+UInt32 UIRectangleBase::getContainerSize(void) const 
 { 
-    return sizeof(Frame); 
+    return sizeof(UIRectangle); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void FrameBase::executeSync(      FieldContainer &other,
+void UIRectangleBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((FrameBase *) &other, whichField);
+    this->executeSyncImpl((UIRectangleBase *) &other, whichField);
 }
 #else
-void FrameBase::executeSync(      FieldContainer &other,
+void UIRectangleBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((FrameBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((UIRectangleBase *) &other, whichField, sInfo);
 }
-void FrameBase::execBeginEdit(const BitVector &whichField, 
+void UIRectangleBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void FrameBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void UIRectangleBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -172,8 +183,9 @@ void FrameBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-FrameBase::FrameBase(void) :
-    _sfFocusedComponent       (ComponentPtr(NullFC)), 
+UIRectangleBase::UIRectangleBase(void) :
+    _sfPoint1                 (Pnt3f(0.0,0.0,0.0)), 
+    _sfPoint2                 (Pnt3f(0.0,0.0,0.0)), 
     _sfDrawingSurface         (UIDrawingSurfacePtr(NullFC)), 
     Inherited() 
 {
@@ -183,8 +195,9 @@ FrameBase::FrameBase(void) :
 #pragma warning (default : 383)
 #endif
 
-FrameBase::FrameBase(const FrameBase &source) :
-    _sfFocusedComponent       (source._sfFocusedComponent       ), 
+UIRectangleBase::UIRectangleBase(const UIRectangleBase &source) :
+    _sfPoint1                 (source._sfPoint1                 ), 
+    _sfPoint2                 (source._sfPoint2                 ), 
     _sfDrawingSurface         (source._sfDrawingSurface         ), 
     Inherited                 (source)
 {
@@ -192,19 +205,24 @@ FrameBase::FrameBase(const FrameBase &source) :
 
 /*-------------------------- destructors ----------------------------------*/
 
-FrameBase::~FrameBase(void)
+UIRectangleBase::~UIRectangleBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 FrameBase::getBinSize(const BitVector &whichField)
+UInt32 UIRectangleBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (FocusedComponentFieldMask & whichField))
+    if(FieldBits::NoField != (Point1FieldMask & whichField))
     {
-        returnValue += _sfFocusedComponent.getBinSize();
+        returnValue += _sfPoint1.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Point2FieldMask & whichField))
+    {
+        returnValue += _sfPoint2.getBinSize();
     }
 
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
@@ -216,14 +234,19 @@ UInt32 FrameBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void FrameBase::copyToBin(      BinaryDataHandler &pMem,
+void UIRectangleBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (FocusedComponentFieldMask & whichField))
+    if(FieldBits::NoField != (Point1FieldMask & whichField))
     {
-        _sfFocusedComponent.copyToBin(pMem);
+        _sfPoint1.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Point2FieldMask & whichField))
+    {
+        _sfPoint2.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
@@ -234,14 +257,19 @@ void FrameBase::copyToBin(      BinaryDataHandler &pMem,
 
 }
 
-void FrameBase::copyFromBin(      BinaryDataHandler &pMem,
+void UIRectangleBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (FocusedComponentFieldMask & whichField))
+    if(FieldBits::NoField != (Point1FieldMask & whichField))
     {
-        _sfFocusedComponent.copyFromBin(pMem);
+        _sfPoint1.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Point2FieldMask & whichField))
+    {
+        _sfPoint2.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
@@ -253,14 +281,17 @@ void FrameBase::copyFromBin(      BinaryDataHandler &pMem,
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void FrameBase::executeSyncImpl(      FrameBase *pOther,
+void UIRectangleBase::executeSyncImpl(      UIRectangleBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (FocusedComponentFieldMask & whichField))
-        _sfFocusedComponent.syncWith(pOther->_sfFocusedComponent);
+    if(FieldBits::NoField != (Point1FieldMask & whichField))
+        _sfPoint1.syncWith(pOther->_sfPoint1);
+
+    if(FieldBits::NoField != (Point2FieldMask & whichField))
+        _sfPoint2.syncWith(pOther->_sfPoint2);
 
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
         _sfDrawingSurface.syncWith(pOther->_sfDrawingSurface);
@@ -268,15 +299,18 @@ void FrameBase::executeSyncImpl(      FrameBase *pOther,
 
 }
 #else
-void FrameBase::executeSyncImpl(      FrameBase *pOther,
+void UIRectangleBase::executeSyncImpl(      UIRectangleBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (FocusedComponentFieldMask & whichField))
-        _sfFocusedComponent.syncWith(pOther->_sfFocusedComponent);
+    if(FieldBits::NoField != (Point1FieldMask & whichField))
+        _sfPoint1.syncWith(pOther->_sfPoint1);
+
+    if(FieldBits::NoField != (Point2FieldMask & whichField))
+        _sfPoint2.syncWith(pOther->_sfPoint2);
 
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
         _sfDrawingSurface.syncWith(pOther->_sfDrawingSurface);
@@ -285,7 +319,7 @@ void FrameBase::executeSyncImpl(      FrameBase *pOther,
 
 }
 
-void FrameBase::execBeginEditImpl (const BitVector &whichField, 
+void UIRectangleBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -304,11 +338,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<FramePtr>::_type("FramePtr", "ContainerPtr");
+DataType FieldDataTraits<UIRectanglePtr>::_type("UIRectanglePtr", "DrawablePtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(FramePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(FramePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(UIRectanglePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(UIRectanglePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -325,10 +359,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(FramePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGFRAMEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGFRAMEBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGUIRECTANGLEBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGUIRECTANGLEBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGFRAMEFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGUIRECTANGLEFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

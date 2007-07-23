@@ -115,6 +115,9 @@ const OSG::BitVector  ComponentBase::DisabledBackgroundFieldMask =
 const OSG::BitVector  ComponentBase::DisabledForegroundColorFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::DisabledForegroundColorFieldId);
 
+const OSG::BitVector  ComponentBase::FocusableFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::FocusableFieldId);
+
 const OSG::BitVector  ComponentBase::FocusedBorderFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::FocusedBorderFieldId);
 
@@ -132,6 +135,9 @@ const OSG::BitVector  ComponentBase::OpacityFieldMask =
 
 const OSG::BitVector  ComponentBase::ParentContainerFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::ParentContainerFieldId);
+
+const OSG::BitVector  ComponentBase::ParentFrameFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::ParentFrameFieldId);
 
 const OSG::BitVector  ComponentBase::ClippingFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::ClippingFieldId);
@@ -194,6 +200,9 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
 /*! \var Color4f         ComponentBase::_sfDisabledForegroundColor
     
 */
+/*! \var bool            ComponentBase::_sfFocusable
+    
+*/
 /*! \var BorderPtr       ComponentBase::_sfFocusedBorder
     
 */
@@ -209,7 +218,10 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
 /*! \var Real32          ComponentBase::_sfOpacity
     
 */
-/*! \var AttachmentContainerPtr ComponentBase::_sfParentContainer
+/*! \var ContainerPtr    ComponentBase::_sfParentContainer
+    
+*/
+/*! \var FramePtr        ComponentBase::_sfParentFrame
     
 */
 /*! \var bool            ComponentBase::_sfClipping
@@ -305,6 +317,11 @@ FieldDescription *ComponentBase::_desc[] =
                      DisabledForegroundColorFieldId, DisabledForegroundColorFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFDisabledForegroundColor),
+    new FieldDescription(SFBool::getClassType(), 
+                     "Focusable", 
+                     FocusableFieldId, FocusableFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFFocusable),
     new FieldDescription(SFBorderPtr::getClassType(), 
                      "FocusedBorder", 
                      FocusedBorderFieldId, FocusedBorderFieldMask,
@@ -330,11 +347,16 @@ FieldDescription *ComponentBase::_desc[] =
                      OpacityFieldId, OpacityFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFOpacity),
-    new FieldDescription(SFAttachmentContainerPtr::getClassType(), 
+    new FieldDescription(SFContainerPtr::getClassType(), 
                      "ParentContainer", 
                      ParentContainerFieldId, ParentContainerFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFParentContainer),
+    new FieldDescription(SFFramePtr::getClassType(), 
+                     "ParentFrame", 
+                     ParentFrameFieldId, ParentFrameFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFParentFrame),
     new FieldDescription(SFBool::getClassType(), 
                      "Clipping", 
                      ClippingFieldId, ClippingFieldMask,
@@ -423,12 +445,14 @@ ComponentBase::ComponentBase(void) :
     _sfDisabledBorder         (), 
     _sfDisabledBackground     (), 
     _sfDisabledForegroundColor(), 
+    _sfFocusable              (bool(true)), 
     _sfFocusedBorder          (), 
     _sfFocusedBackground      (), 
     _sfFocusedForegroundColor (), 
     _sfForegroundMaterial     (), 
     _sfOpacity                (Real32(1.0)), 
-    _sfParentContainer        (AttachmentContainerPtr(NullFC)), 
+    _sfParentContainer        (ContainerPtr(NullFC)), 
+    _sfParentFrame            (FramePtr(NullFC)), 
     _sfClipping               (bool(true)), 
     Inherited() 
 {
@@ -456,12 +480,14 @@ ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfDisabledBorder         (source._sfDisabledBorder         ), 
     _sfDisabledBackground     (source._sfDisabledBackground     ), 
     _sfDisabledForegroundColor(source._sfDisabledForegroundColor), 
+    _sfFocusable              (source._sfFocusable              ), 
     _sfFocusedBorder          (source._sfFocusedBorder          ), 
     _sfFocusedBackground      (source._sfFocusedBackground      ), 
     _sfFocusedForegroundColor (source._sfFocusedForegroundColor ), 
     _sfForegroundMaterial     (source._sfForegroundMaterial     ), 
     _sfOpacity                (source._sfOpacity                ), 
     _sfParentContainer        (source._sfParentContainer        ), 
+    _sfParentFrame            (source._sfParentFrame            ), 
     _sfClipping               (source._sfClipping               ), 
     Inherited                 (source)
 {
@@ -564,6 +590,11 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfDisabledForegroundColor.getBinSize();
     }
 
+    if(FieldBits::NoField != (FocusableFieldMask & whichField))
+    {
+        returnValue += _sfFocusable.getBinSize();
+    }
+
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
     {
         returnValue += _sfFocusedBorder.getBinSize();
@@ -592,6 +623,11 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
     {
         returnValue += _sfParentContainer.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ParentFrameFieldMask & whichField))
+    {
+        returnValue += _sfParentFrame.getBinSize();
     }
 
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
@@ -693,6 +729,11 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
         _sfDisabledForegroundColor.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (FocusableFieldMask & whichField))
+    {
+        _sfFocusable.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
     {
         _sfFocusedBorder.copyToBin(pMem);
@@ -721,6 +762,11 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
     {
         _sfParentContainer.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ParentFrameFieldMask & whichField))
+    {
+        _sfParentFrame.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
@@ -821,6 +867,11 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfDisabledForegroundColor.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (FocusableFieldMask & whichField))
+    {
+        _sfFocusable.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
     {
         _sfFocusedBorder.copyFromBin(pMem);
@@ -849,6 +900,11 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
     {
         _sfParentContainer.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ParentFrameFieldMask & whichField))
+    {
+        _sfParentFrame.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
@@ -917,6 +973,9 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (DisabledForegroundColorFieldMask & whichField))
         _sfDisabledForegroundColor.syncWith(pOther->_sfDisabledForegroundColor);
 
+    if(FieldBits::NoField != (FocusableFieldMask & whichField))
+        _sfFocusable.syncWith(pOther->_sfFocusable);
+
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
         _sfFocusedBorder.syncWith(pOther->_sfFocusedBorder);
 
@@ -934,6 +993,9 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
 
     if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
         _sfParentContainer.syncWith(pOther->_sfParentContainer);
+
+    if(FieldBits::NoField != (ParentFrameFieldMask & whichField))
+        _sfParentFrame.syncWith(pOther->_sfParentFrame);
 
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
         _sfClipping.syncWith(pOther->_sfClipping);
@@ -999,6 +1061,9 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (DisabledForegroundColorFieldMask & whichField))
         _sfDisabledForegroundColor.syncWith(pOther->_sfDisabledForegroundColor);
 
+    if(FieldBits::NoField != (FocusableFieldMask & whichField))
+        _sfFocusable.syncWith(pOther->_sfFocusable);
+
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
         _sfFocusedBorder.syncWith(pOther->_sfFocusedBorder);
 
@@ -1017,6 +1082,9 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
         _sfParentContainer.syncWith(pOther->_sfParentContainer);
 
+    if(FieldBits::NoField != (ParentFrameFieldMask & whichField))
+        _sfParentFrame.syncWith(pOther->_sfParentFrame);
+
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
         _sfClipping.syncWith(pOther->_sfClipping);
 
@@ -1032,6 +1100,634 @@ void ComponentBase::execBeginEditImpl (const BitVector &whichField,
 
 }
 #endif
+
+/*------------------------------ get -----------------------------------*/
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFPnt2s *ComponentBase::getSFPosition(void)
+{
+    return &_sfPosition;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFPnt2s *ComponentBase::getSFClipTopLeft(void)
+{
+    return &_sfClipTopLeft;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFPnt2s *ComponentBase::getSFClipBottomRight(void)
+{
+    return &_sfClipBottomRight;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFVec2s *ComponentBase::getSFMinSize(void)
+{
+    return &_sfMinSize;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFVec2s *ComponentBase::getSFMaxSize(void)
+{
+    return &_sfMaxSize;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFVec2s *ComponentBase::getSFPreferredSize(void)
+{
+    return &_sfPreferredSize;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFVec2s *ComponentBase::getSFSize(void)
+{
+    return &_sfSize;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFBool *ComponentBase::getSFVisible(void)
+{
+    return &_sfVisible;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFBool *ComponentBase::getSFEnabled(void)
+{
+    return &_sfEnabled;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFBool *ComponentBase::getSFFocused(void)
+{
+    return &_sfFocused;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFLayoutConstraintsPtr *ComponentBase::getSFConstraints(void)
+{
+    return &_sfConstraints;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFBorderPtr *ComponentBase::getSFBorder(void)
+{
+    return &_sfBorder;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFUIBackgroundPtr *ComponentBase::getSFBackground(void)
+{
+    return &_sfBackground;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFColor4f *ComponentBase::getSFForegroundColor(void)
+{
+    return &_sfForegroundColor;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFBorderPtr *ComponentBase::getSFDisabledBorder(void)
+{
+    return &_sfDisabledBorder;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFUIBackgroundPtr *ComponentBase::getSFDisabledBackground(void)
+{
+    return &_sfDisabledBackground;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFColor4f *ComponentBase::getSFDisabledForegroundColor(void)
+{
+    return &_sfDisabledForegroundColor;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFBool *ComponentBase::getSFFocusable(void)
+{
+    return &_sfFocusable;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFBorderPtr *ComponentBase::getSFFocusedBorder(void)
+{
+    return &_sfFocusedBorder;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFUIBackgroundPtr *ComponentBase::getSFFocusedBackground(void)
+{
+    return &_sfFocusedBackground;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFColor4f *ComponentBase::getSFFocusedForegroundColor(void)
+{
+    return &_sfFocusedForegroundColor;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFMaterialPtr *ComponentBase::getSFForegroundMaterial(void)
+{
+    return &_sfForegroundMaterial;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFReal32 *ComponentBase::getSFOpacity(void)
+{
+    return &_sfOpacity;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFContainerPtr *ComponentBase::getSFParentContainer(void)
+{
+    return &_sfParentContainer;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFFramePtr *ComponentBase::getSFParentFrame(void)
+{
+    return &_sfParentFrame;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFBool *ComponentBase::getSFClipping(void)
+{
+    return &_sfClipping;
+}
+
+
+OSG_USERINTERFACELIB_DLLMAPPING
+Pnt2s &ComponentBase::getPosition(void)
+{
+    return _sfPosition.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const Pnt2s &ComponentBase::getPosition(void) const
+{
+    return _sfPosition.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setPosition(const Pnt2s &value)
+{
+    _sfPosition.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+Pnt2s &ComponentBase::getClipTopLeft(void)
+{
+    return _sfClipTopLeft.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const Pnt2s &ComponentBase::getClipTopLeft(void) const
+{
+    return _sfClipTopLeft.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setClipTopLeft(const Pnt2s &value)
+{
+    _sfClipTopLeft.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+Pnt2s &ComponentBase::getClipBottomRight(void)
+{
+    return _sfClipBottomRight.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const Pnt2s &ComponentBase::getClipBottomRight(void) const
+{
+    return _sfClipBottomRight.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setClipBottomRight(const Pnt2s &value)
+{
+    _sfClipBottomRight.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+Vec2s &ComponentBase::getMinSize(void)
+{
+    return _sfMinSize.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const Vec2s &ComponentBase::getMinSize(void) const
+{
+    return _sfMinSize.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setMinSize(const Vec2s &value)
+{
+    _sfMinSize.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+Vec2s &ComponentBase::getMaxSize(void)
+{
+    return _sfMaxSize.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const Vec2s &ComponentBase::getMaxSize(void) const
+{
+    return _sfMaxSize.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setMaxSize(const Vec2s &value)
+{
+    _sfMaxSize.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+Vec2s &ComponentBase::getPreferredSize(void)
+{
+    return _sfPreferredSize.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const Vec2s &ComponentBase::getPreferredSize(void) const
+{
+    return _sfPreferredSize.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setPreferredSize(const Vec2s &value)
+{
+    _sfPreferredSize.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+Vec2s &ComponentBase::getSize(void)
+{
+    return _sfSize.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const Vec2s &ComponentBase::getSize(void) const
+{
+    return _sfSize.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setSize(const Vec2s &value)
+{
+    _sfSize.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+bool &ComponentBase::getVisible(void)
+{
+    return _sfVisible.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const bool &ComponentBase::getVisible(void) const
+{
+    return _sfVisible.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setVisible(const bool &value)
+{
+    _sfVisible.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+bool &ComponentBase::getEnabled(void)
+{
+    return _sfEnabled.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const bool &ComponentBase::getEnabled(void) const
+{
+    return _sfEnabled.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setEnabled(const bool &value)
+{
+    _sfEnabled.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+bool &ComponentBase::getFocused(void)
+{
+    return _sfFocused.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const bool &ComponentBase::getFocused(void) const
+{
+    return _sfFocused.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setFocused(const bool &value)
+{
+    _sfFocused.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+LayoutConstraintsPtr &ComponentBase::getConstraints(void)
+{
+    return _sfConstraints.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const LayoutConstraintsPtr &ComponentBase::getConstraints(void) const
+{
+    return _sfConstraints.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setConstraints(const LayoutConstraintsPtr &value)
+{
+    _sfConstraints.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+BorderPtr &ComponentBase::getBorder(void)
+{
+    return _sfBorder.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const BorderPtr &ComponentBase::getBorder(void) const
+{
+    return _sfBorder.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setBorder(const BorderPtr &value)
+{
+    _sfBorder.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+UIBackgroundPtr &ComponentBase::getBackground(void)
+{
+    return _sfBackground.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const UIBackgroundPtr &ComponentBase::getBackground(void) const
+{
+    return _sfBackground.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setBackground(const UIBackgroundPtr &value)
+{
+    _sfBackground.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+Color4f &ComponentBase::getForegroundColor(void)
+{
+    return _sfForegroundColor.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const Color4f &ComponentBase::getForegroundColor(void) const
+{
+    return _sfForegroundColor.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setForegroundColor(const Color4f &value)
+{
+    _sfForegroundColor.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+BorderPtr &ComponentBase::getDisabledBorder(void)
+{
+    return _sfDisabledBorder.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const BorderPtr &ComponentBase::getDisabledBorder(void) const
+{
+    return _sfDisabledBorder.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setDisabledBorder(const BorderPtr &value)
+{
+    _sfDisabledBorder.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+UIBackgroundPtr &ComponentBase::getDisabledBackground(void)
+{
+    return _sfDisabledBackground.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const UIBackgroundPtr &ComponentBase::getDisabledBackground(void) const
+{
+    return _sfDisabledBackground.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setDisabledBackground(const UIBackgroundPtr &value)
+{
+    _sfDisabledBackground.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+Color4f &ComponentBase::getDisabledForegroundColor(void)
+{
+    return _sfDisabledForegroundColor.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const Color4f &ComponentBase::getDisabledForegroundColor(void) const
+{
+    return _sfDisabledForegroundColor.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setDisabledForegroundColor(const Color4f &value)
+{
+    _sfDisabledForegroundColor.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+bool &ComponentBase::getFocusable(void)
+{
+    return _sfFocusable.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const bool &ComponentBase::getFocusable(void) const
+{
+    return _sfFocusable.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setFocusable(const bool &value)
+{
+    _sfFocusable.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+BorderPtr &ComponentBase::getFocusedBorder(void)
+{
+    return _sfFocusedBorder.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const BorderPtr &ComponentBase::getFocusedBorder(void) const
+{
+    return _sfFocusedBorder.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setFocusedBorder(const BorderPtr &value)
+{
+    _sfFocusedBorder.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+UIBackgroundPtr &ComponentBase::getFocusedBackground(void)
+{
+    return _sfFocusedBackground.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const UIBackgroundPtr &ComponentBase::getFocusedBackground(void) const
+{
+    return _sfFocusedBackground.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setFocusedBackground(const UIBackgroundPtr &value)
+{
+    _sfFocusedBackground.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+Color4f &ComponentBase::getFocusedForegroundColor(void)
+{
+    return _sfFocusedForegroundColor.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const Color4f &ComponentBase::getFocusedForegroundColor(void) const
+{
+    return _sfFocusedForegroundColor.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setFocusedForegroundColor(const Color4f &value)
+{
+    _sfFocusedForegroundColor.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+MaterialPtr &ComponentBase::getForegroundMaterial(void)
+{
+    return _sfForegroundMaterial.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const MaterialPtr &ComponentBase::getForegroundMaterial(void) const
+{
+    return _sfForegroundMaterial.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setForegroundMaterial(const MaterialPtr &value)
+{
+    _sfForegroundMaterial.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+Real32 &ComponentBase::getOpacity(void)
+{
+    return _sfOpacity.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const Real32 &ComponentBase::getOpacity(void) const
+{
+    return _sfOpacity.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setOpacity(const Real32 &value)
+{
+    _sfOpacity.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+ContainerPtr &ComponentBase::getParentContainer(void)
+{
+    return _sfParentContainer.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const ContainerPtr &ComponentBase::getParentContainer(void) const
+{
+    return _sfParentContainer.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setParentContainer(const ContainerPtr &value)
+{
+    _sfParentContainer.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+FramePtr &ComponentBase::getParentFrame(void)
+{
+    return _sfParentFrame.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const FramePtr &ComponentBase::getParentFrame(void) const
+{
+    return _sfParentFrame.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setParentFrame(const FramePtr &value)
+{
+    _sfParentFrame.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+bool &ComponentBase::getClipping(void)
+{
+    return _sfClipping.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const bool &ComponentBase::getClipping(void) const
+{
+    return _sfClipping.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setClipping(const bool &value)
+{
+    _sfClipping.setValue(value);
+}
+
 
 
 

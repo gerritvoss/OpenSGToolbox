@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Frame!
+ **     class UIRectangle!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &FrameBase::getClassType(void)
+OSG::FieldContainerType &UIRectangleBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 FrameBase::getClassTypeId(void) 
+OSG::UInt32 UIRectangleBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-FramePtr FrameBase::create(void) 
+UIRectanglePtr UIRectangleBase::create(void) 
 {
-    FramePtr fc; 
+    UIRectanglePtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = FramePtr::dcast(
+        fc = UIRectanglePtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ FramePtr FrameBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-FramePtr FrameBase::createEmpty(void) 
+UIRectanglePtr UIRectangleBase::createEmpty(void) 
 { 
-    FramePtr returnValue; 
+    UIRectanglePtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,59 +96,87 @@ FramePtr FrameBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Frame::_sfFocusedComponent field.
+//! Get the UIRectangle::_sfPoint1 field.
 inline
-SFComponentPtr *FrameBase::getSFFocusedComponent(void)
+SFPnt3f *UIRectangleBase::getSFPoint1(void)
 {
-    return &_sfFocusedComponent;
+    return &_sfPoint1;
 }
 
-//! Get the Frame::_sfDrawingSurface field.
+//! Get the UIRectangle::_sfPoint2 field.
 inline
-SFUIDrawingSurfacePtr *FrameBase::getSFDrawingSurface(void)
+SFPnt3f *UIRectangleBase::getSFPoint2(void)
+{
+    return &_sfPoint2;
+}
+
+//! Get the UIRectangle::_sfDrawingSurface field.
+inline
+SFUIDrawingSurfacePtr *UIRectangleBase::getSFDrawingSurface(void)
 {
     return &_sfDrawingSurface;
 }
 
 
-//! Get the value of the Frame::_sfFocusedComponent field.
+//! Get the value of the UIRectangle::_sfPoint1 field.
 inline
-ComponentPtr &FrameBase::getFocusedComponent(void)
+Pnt3f &UIRectangleBase::getPoint1(void)
 {
-    return _sfFocusedComponent.getValue();
+    return _sfPoint1.getValue();
 }
 
-//! Get the value of the Frame::_sfFocusedComponent field.
+//! Get the value of the UIRectangle::_sfPoint1 field.
 inline
-const ComponentPtr &FrameBase::getFocusedComponent(void) const
+const Pnt3f &UIRectangleBase::getPoint1(void) const
 {
-    return _sfFocusedComponent.getValue();
+    return _sfPoint1.getValue();
 }
 
-//! Set the value of the Frame::_sfFocusedComponent field.
+//! Set the value of the UIRectangle::_sfPoint1 field.
 inline
-void FrameBase::setFocusedComponent(const ComponentPtr &value)
+void UIRectangleBase::setPoint1(const Pnt3f &value)
 {
-    _sfFocusedComponent.setValue(value);
+    _sfPoint1.setValue(value);
 }
 
-//! Get the value of the Frame::_sfDrawingSurface field.
+//! Get the value of the UIRectangle::_sfPoint2 field.
 inline
-UIDrawingSurfacePtr &FrameBase::getDrawingSurface(void)
+Pnt3f &UIRectangleBase::getPoint2(void)
+{
+    return _sfPoint2.getValue();
+}
+
+//! Get the value of the UIRectangle::_sfPoint2 field.
+inline
+const Pnt3f &UIRectangleBase::getPoint2(void) const
+{
+    return _sfPoint2.getValue();
+}
+
+//! Set the value of the UIRectangle::_sfPoint2 field.
+inline
+void UIRectangleBase::setPoint2(const Pnt3f &value)
+{
+    _sfPoint2.setValue(value);
+}
+
+//! Get the value of the UIRectangle::_sfDrawingSurface field.
+inline
+UIDrawingSurfacePtr &UIRectangleBase::getDrawingSurface(void)
 {
     return _sfDrawingSurface.getValue();
 }
 
-//! Get the value of the Frame::_sfDrawingSurface field.
+//! Get the value of the UIRectangle::_sfDrawingSurface field.
 inline
-const UIDrawingSurfacePtr &FrameBase::getDrawingSurface(void) const
+const UIDrawingSurfacePtr &UIRectangleBase::getDrawingSurface(void) const
 {
     return _sfDrawingSurface.getValue();
 }
 
-//! Set the value of the Frame::_sfDrawingSurface field.
+//! Set the value of the UIRectangle::_sfDrawingSurface field.
 inline
-void FrameBase::setDrawingSurface(const UIDrawingSurfacePtr &value)
+void UIRectangleBase::setDrawingSurface(const UIDrawingSurfacePtr &value)
 {
     _sfDrawingSurface.setValue(value);
 }
@@ -156,5 +184,5 @@ void FrameBase::setDrawingSurface(const UIDrawingSurfacePtr &value)
 
 OSG_END_NAMESPACE
 
-#define OSGFRAMEBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGUIRECTANGLEBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

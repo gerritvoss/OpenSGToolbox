@@ -8,7 +8,7 @@
 	structure="abstract"
 	systemcomponent="false"
 	parentsystemcomponent="true"
-	decoratable="false"
+	decoratable="true"
 	useLocalIncludes="true"
 >
 A UI Component Interface.
@@ -163,6 +163,15 @@ A UI Component Interface.
 	>
 	</Field>
 	<Field
+		name="Focusable"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+	</Field>
+	<Field
 		name="FocusedBorder"
 		type="BorderPtr"
 		cardinality="single"
@@ -207,10 +216,21 @@ A UI Component Interface.
 	</Field>
 	<Field
 		name="ParentContainer"
-		type="AttachmentContainerPtr"
+		type="ContainerPtr"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
+		header="Component/OSGContainerFields.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ParentFrame"
+		type="FramePtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Component/OSGFrameFields.h"
 		access="public"
 	>
 	</Field>
