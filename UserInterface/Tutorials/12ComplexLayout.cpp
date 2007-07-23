@@ -1,9 +1,9 @@
-// OpenSG Tutorial Example: Using Containers (Frames and Panels)
+// OpenSG Tutorial Example: Creating a complex Layout
 //
-// This tutorial explains how use Frame and Panel Containers
+// This tutorial gives an example of creating a complex Scene
+// Layout with multiple Buttons, Borders, and Panels
 // 
-// Includes: creating and editing Frames, Panels, and adding
-// Panels
+// Includes: Containers, Layouts, Borders, and Backgrounds
 
 
 // General OpenSG configuration, needed everywhere
@@ -68,7 +68,8 @@ int main(int argc, char **argv)
      // OSG init
     osgInit(argc,argv);
     
-    WindowPtr MainWindow;
+    // Set up Window
+	WindowPtr MainWindow;
     WindowEventProducerPtr TheWindowEventProducer;
     createDefaultWindow(Pnt2s(50,50),
                                         Vec2s(900,900),
@@ -109,6 +110,7 @@ int main(int argc, char **argv)
 	******************************************************/
 	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
 	ColorUIBackgroundPtr panelBackground = osg::ColorUIBackground::create();
+	ColorUIBackgroundPtr panelSmallBackground = osg::ColorUIBackground::create();
 	ColorUIBackgroundPtr button1Color = osg::ColorUIBackground::create();
 	GradientUIBackgroundPtr button1Gradient = osg::GradientUIBackground::create();
 	CompoundUIBackgroundPtr button1Compound = osg::CompoundUIBackground::create();
@@ -116,19 +118,25 @@ int main(int argc, char **argv)
 	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
 		mainBackground->setColor(Color4f(0,0,1.0,0.5));
 	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+
 	beginEditCP(panelBackground, ColorUIBackground::ColorFieldMask);
 		panelBackground->setColor(Color4f(0.0,0.0,0.0,0.5));
 	endEditCP(panelBackground, ColorUIBackground::ColorFieldMask);
+
+	beginEditCP(panelSmallBackground, ColorUIBackground::ColorFieldMask);
+		panelSmallBackground->setColor(Color4f(0.0,0.5,0.7,1.0));
+	endEditCP(panelSmallBackground, ColorUIBackground::ColorFieldMask);
 	
-	// button1 Backgrounds
 	beginEditCP(button1Color, ColorUIBackground::ColorFieldMask);
 		button1Color->setColor( Color4f(0.0, 0.0, 0.0, 1.0) );
 	endEditCP(button1Color, ColorUIBackground::ColorFieldMask);
+	
 	beginEditCP(button1Gradient);
 		button1Gradient->setColorStart( Color4f(1.0, 0.0, 1.0, 0.8) );
 		button1Gradient->setColorEnd( Color4f(0.0, 0.0, 1.0, 0.3) );
 		button1Gradient->setAlignment(HORIZONTAL_ALIGNMENT);
 	endEditCP(button1Gradient);
+	
 	beginEditCP(button1Compound);
 		button1Compound->getBackgrounds().addValue(button1Color);
 		button1Compound->getBackgrounds().addValue(button1Gradient);
@@ -164,10 +172,7 @@ int main(int argc, char **argv)
 	ButtonPtr button9 = osg::Button::create();
 	ButtonPtr button10 = osg::Button::create();
 	ButtonPtr button11 = osg::Button::create();
-	ButtonPtr button12 = osg::Button::create();
-	ButtonPtr button13 = osg::Button::create();
-	ButtonPtr button14 = osg::Button::create();
-	ButtonPtr button15 = osg::Button::create();
+
 
 	beginEditCP(button1, Component::PreferredSizeFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
 		button1->setPreferredSize( Vec2s(800, 50) );
@@ -186,35 +191,44 @@ int main(int argc, char **argv)
 	endEditCP(button3, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
 
 	beginEditCP(button4, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
-		button4->setPreferredSize( Vec2s(50, 50) );
-		button4->setMaxSize( Vec2s(50, 50) );
+		button4->setPreferredSize( Vec2s(100, 50) );
+		button4->setMaxSize( Vec2s(100, 50) );
 	endEditCP(button4, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
 
 	beginEditCP(button5, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
-		button5->setPreferredSize( Vec2s(50, 50) );
-		button5->setMaxSize( Vec2s(50, 50) );
+		button5->setPreferredSize( Vec2s(100, 50) );
+		button5->setMaxSize( Vec2s(100, 50) );
 	endEditCP(button5, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
 
 	beginEditCP(button6, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
-		button6->setPreferredSize( Vec2s(50, 50) );
-		button6->setMaxSize( Vec2s(50, 50) );
+		button6->setPreferredSize( Vec2s(100, 50) );
+		button6->setMaxSize( Vec2s(100, 50) );
 	endEditCP(button6, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
 
 	beginEditCP(button7, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
-		button7->setPreferredSize( Vec2s(50, 50) );
-		button7->setMaxSize( Vec2s(50, 50) );
+		button7->setPreferredSize( Vec2s(100, 50) );
+		button7->setMaxSize( Vec2s(100, 50) );
 	endEditCP(button7, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
 
 	beginEditCP(button8, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
-		button8->setPreferredSize( Vec2s(50, 50) );
-		button8->setMaxSize( Vec2s(50, 50) );
+		button8->setPreferredSize( Vec2s(100, 50) );
+		button8->setMaxSize( Vec2s(100, 50) );
 	endEditCP(button8, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
 
 	beginEditCP(button9, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
-		button9->setPreferredSize( Vec2s(50, 50) );
-		button9->setMaxSize( Vec2s(50, 50) );
+		button9->setPreferredSize( Vec2s(100, 50) );
+		button9->setMaxSize( Vec2s(100, 50) );
 	endEditCP(button9, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
 
+	beginEditCP(button10, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+		button10->setPreferredSize( Vec2s(100, 50) );
+		button10->setMaxSize( Vec2s(100, 50) );
+	endEditCP(button10, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+
+	beginEditCP(button11, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+		button11->setPreferredSize( Vec2s(100, 50) );
+		button11->setMaxSize( Vec2s(100, 50) );
+	endEditCP(button11, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
 
 	/******************************************************
 
@@ -296,12 +310,37 @@ int main(int argc, char **argv)
 		panel2->setBorder(panelBorder);
 	endEditCP(panel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
 	
-	beginEditCP(panel3);
+	beginEditCP(panel3, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
 		panel3->getChildren().addValue(button4);
 		panel3->getChildren().addValue(button5);
 		panel3->setLayout(panel3Layout);
-		panel3->setPreferredSize( Vec2s(75, 130) );
-	endEditCP(panel3);
+		panel3->setPreferredSize( Vec2s(125, 130) );
+		panel3->setBackground(panelSmallBackground);
+	endEditCP(panel3, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+	
+	beginEditCP(panel4, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+		panel4->getChildren().addValue(button6);
+		panel4->getChildren().addValue(button7);
+		panel4->setLayout(panel4Layout);
+		panel4->setPreferredSize( Vec2s(125, 130) );
+		panel4->setBackground(panelSmallBackground);
+	endEditCP(panel4, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+		
+	beginEditCP(panel5, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+		panel5->getChildren().addValue(button8);
+		panel5->getChildren().addValue(button9);
+		panel5->setLayout(panel5Layout);
+		panel5->setPreferredSize( Vec2s(125, 130) );
+		panel5->setBackground(panelSmallBackground);
+	endEditCP(panel5, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+		
+	beginEditCP(panel6, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+		panel6->getChildren().addValue(button10);
+		panel6->getChildren().addValue(button11);
+		panel6->setLayout(panel6Layout);
+		panel6->setPreferredSize( Vec2s(125, 130) );
+		panel6->setBackground(panelSmallBackground);
+	endEditCP(panel6, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
 
 
 	// Edit MainFrame

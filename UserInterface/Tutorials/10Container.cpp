@@ -5,7 +5,7 @@
 // Includes: creating and editing Frames, Panels, and adding
 // Panels
 
-// Note: in almost all cases, each Scene will have only ONE
+// Note: in almost all cases, each Scene should have only ONE
 // Frame, but may have unlimited Panels.
 
 // General OpenSG configuration, needed everywhere
@@ -65,7 +65,7 @@ int main(int argc, char **argv)
     // OSG init
     osgInit(argc,argv);
 
-
+    // Set up Window
     WindowPtr MainWindow;
     WindowEventProducerPtr TheWindowEventProducer;
     createDefaultWindow(Pnt2s(50,50),

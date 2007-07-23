@@ -34,15 +34,7 @@
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
 
 // Include relevant header files
-#include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
-#include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
-#include <OpenSG/UserInterface/OSGBoxLayout.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGContainer.h>
-#include <OpenSG/UserInterface/OSGPanel.h>
-#include <OpenSG/UserInterface/OSGLineBorder.h>
-#include <OpenSG/UserInterface/OSGBevelBorder.h>
-#include <OpenSG/UserInterface/OSGEtchedBorder.h>
+#include <OpenSG/UserInterface/OSGCardLayout.h>
 #include <OpenSG/UserInterface/OSGUIDefines.h>
 
 // Activate the OpenSG namespace
@@ -63,6 +55,7 @@ int main(int argc, char **argv)
     // OSG init
     osgInit(argc,argv);
 
+    // Set up Window
     WindowPtr MainWindow;
     WindowEventProducerPtr TheWindowEventProducer;
     createDefaultWindow(Pnt2s(50,50),
@@ -107,8 +100,7 @@ int main(int argc, char **argv)
 	ButtonPtr button2 = osg::Button::create();
 	ButtonPtr button3 = osg::Button::create();
 	ButtonPtr button4 = osg::Button::create();
-	ButtonPtr button5 = osg::Button::create();
-	ButtonPtr button6 = osg::Button::create();
+	
 
 	beginEditCP(button1);
 		button1->setText("This");
@@ -126,108 +118,27 @@ int main(int argc, char **argv)
 	button4->setText("two");
 	endEditCP(button4);
 
-	beginEditCP(button5);
-		button5->setText("panel");
-	endEditCP(button5);
-
-	beginEditCP(button6);
-		button6->setText("layout");
-	endEditCP(button6);
 	/******************************************************
 
-			Create some Flow Layouts to be used
+			Create some  Layouts to be used
 			with the Main Frame and the two 
 			Panels
 
 	******************************************************/
-	BoxLayoutPtr MainFrameLayout = osg::BoxLayout::create();
-	BoxLayoutPtr panel1Layout = osg::BoxLayout::create();
-	BoxLayoutPtr panel2Layout = osg::BoxLayout::create();
-
-	beginEditCP(panel1Layout, BoxLayout::AlignmentFieldMask);
-		panel1Layout->setAlignment(VERTICAL_ALIGNMENT);
-	endEditCP(panel1Layout, BoxLayout::AlignmentFieldMask);
-	beginEditCP(panel2Layout, BoxLayout::AlignmentFieldMask);
-		panel2Layout->setAlignment(VERTICAL_ALIGNMENT);
-	endEditCP(panel2Layout, BoxLayout::AlignmentFieldMask);
-	beginEditCP(MainFrameLayout, BoxLayout::AlignmentFieldMask);
-		MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
-	endEditCP(MainFrameLayout, BoxLayout::AlignmentFieldMask);
-
-	/******************************************************
-			
-			Create two Backgrounds to be used with
-			Panels and MainFrame
-
-	******************************************************/
-	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	ColorUIBackgroundPtr panelBackground = osg::ColorUIBackground::create();
-	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(0,0,1.0,0.5));
-	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-	beginEditCP(panelBackground, ColorUIBackground::ColorFieldMask);
-		panelBackground->setColor(Color4f(0.0,0.0,0.0,1.0));
-	endEditCP(panelBackground, ColorUIBackground::ColorFieldMask);
-	
-	/******************************************************
-			
-			Create a Border to be used with
-			the two Panels
-
-	******************************************************/
-	EtchedBorderPtr panelBorder = osg::EtchedBorder::create();
-	beginEditCP(panelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
-		panelBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
-		panelBorder->setShadow(Color4f(0.8, 0.8, 0.8, 1.0));
-		panelBorder->setWidth(6);
-	endEditCP(panelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+	CardLayoutPtr MainFrameLayout = osg::CardLayout::create();
 
 
-	/******************************************************
-
-		Create MainFrame and two Panel Components and
-		edit their characteristics: 
-		-PreferredSize changes their size
-		-getChildren adds Components to the Panel or
-		Frame (you can add Panels or Frames to other
-		Panels and Frames)
-		-setLayout determines the Layout of the Panel/
-		Frame (each Frame and Panel can have its own 
-		Layout, even within another Frame/Panel)
 
 
-	******************************************************/
 	FramePtr MainFrame = osg::Frame::create();
-	PanelPtr panel1 = osg::Panel::create();
-	PanelPtr panel2 = osg::Panel::create();
-	
-	// Edit Panel1, Panel2
-	beginEditCP(panel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
-		panel1->setPreferredSize( Vec2s(200, 200) );
-		panel1->getChildren().addValue(button1);
-		panel1->getChildren().addValue(button2);
-		panel1->getChildren().addValue(button3);
-		panel1->setLayout(panel1Layout);
-		panel1->setBackground(panelBackground);
-		panel1->setBorder(panelBorder);
-	endEditCP(panel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
-
-	beginEditCP(panel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
-		panel2->setPreferredSize( Vec2s(200, 200) );
-		panel2->getChildren().addValue(button4);
-		panel2->getChildren().addValue(button5);
-		panel2->getChildren().addValue(button6);
-		panel2->setLayout(panel2Layout);
-		panel2->setBackground(panelBackground);
-		panel2->setBorder(panelBorder);
-	endEditCP(panel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
-
 	// Edit MainFrame
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-	   MainFrame->getChildren().addValue(panel1);
-	   MainFrame->getChildren().addValue(panel2);
 	   MainFrame->setLayout(MainFrameLayout);
-	   MainFrame->setBackground(mainBackground);
+	   MainFrame->getChildren().addValue(button1);
+	   MainFrame->getChildren().addValue(button2);
+	   MainFrame->getChildren().addValue(button3);
+	   MainFrame->getChildren().addValue(button4);
+	   //MainFrame->setBackground(mainBackground);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
 	//Create the Drawing Surface

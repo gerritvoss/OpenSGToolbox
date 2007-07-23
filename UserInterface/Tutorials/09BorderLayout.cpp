@@ -57,6 +57,7 @@ int main(int argc, char **argv)
     // OSG init
     osgInit(argc,argv);
 
+    // Set up Window
     WindowPtr MainWindow;
     WindowEventProducerPtr TheWindowEventProducer;
     createDefaultWindow(Pnt2s(50,50),
