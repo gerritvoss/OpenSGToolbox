@@ -89,6 +89,7 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 	std::vector<UInt16> posY;
 
 	Pnt2s offset(borderOffset);
+	Vec2s cellSize(0,0);
 	Vec2s size(0,0);
 	Real32 weight(0.0);
 	UInt32 i;
@@ -129,21 +130,29 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 	{
 		// begin by resetting offset to borderoffset and size to 0
 		offset = borderOffset;
-		size[0] = size[1] = 0;
+		cellSize[0] = cellSize[1] = 0;
+		size = Components.getValue(i)->getPreferredSize();
 		constraints = GridBagLayoutConstraintsPtr::dcast(Components.getValue(i)->getConstraints());
 		if(constraints != NullFC)
 		{
+			// find the offsets for the cell
 			if (constraints->getGridX() < posX.size())
 				offset[0] += posX[constraints->getGridX()];
-
 			if (constraints->getGridY() < posY.size())
 				offset[1] += posY[constraints->getGridY()];
 
+			// find the size of cell/cells containing the component
 			for (UInt16 j = 0; j < constraints->getGridWidth() && constraints->getGridX()+j < widths.size(); ++j)
-				size[0] += widths[constraints->getGridX()+j];
-			
+				cellSize[0] += widths[constraints->getGridX()+j];
 			for (UInt16 j = 0; j < constraints->getGridHeight() && constraints->getGridY()+j < heights.size(); ++j)
-				size[1] += heights[constraints->getGridY()+j];
+				cellSize[1] += heights[constraints->getGridY()+j];
+
+			// remove the padding from the size of the cell
+			cellSize[0] -= constraints->getPadRight() + constraints->getPadLeft();
+			cellSize[1] -= constraints->getPadTop() + constraints->getPadBottom();
+
+			// set the size of the component by the size of the cell/cells
+			//if (cellSize[0] <=
 		}
 		beginEditCP(Components.getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
 			if (size[0] >= Components.getValue(i)->getMinSize().x() && size[1] > Components.getValue(i)->getMinSize().y())

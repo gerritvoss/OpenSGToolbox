@@ -45,6 +45,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 #include "OSGTabPanelBase.h"
+#include "Event/OSGFocusListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -52,7 +53,7 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceTabPanel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase
+class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase, public FocusListener
 {
   private:
 
@@ -61,6 +62,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase
     /*==========================  PUBLIC  =================================*/
   public:
 
+	virtual void focusGained(const FocusEvent& e);
+	virtual void focusLost(const FocusEvent& e);
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */

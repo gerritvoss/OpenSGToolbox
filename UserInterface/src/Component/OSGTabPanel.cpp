@@ -82,9 +82,6 @@ void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 	getInsideInsetsBounds(TopLeft, BottomRight);
 	Vec2s pos;
 
-	// translate past the border and inset
-	//glTranslatef(TopLeft.x(), TopLeft.y(), 0);
-
 	// draw the tabs
 	for (UInt32 i = 0; i < getTabs().size(); ++i)
 	{
@@ -95,6 +92,29 @@ void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 	getTabContents().getValue(getActiveTab())->draw(Graphics);
 }
 
+void TabPanel::focusGained(const FocusEvent& e)
+{
+	ComponentPtr Tab = Component::Ptr::dcast(e.getSource());
+	Int32 index(-1);
+
+	for (UInt32 i = 0; i < getTabs().size(); ++i)
+	{
+		if(getTabs().find(Tab) == getTabs().find(getTabs().getValue(i)))
+			index = i;
+	}
+	if (index != -1)
+	{
+		beginEditCP(TabPanelPtr(this), ActiveTabFieldMask);
+			setActiveTab(index);
+		endEditCP(TabPanelPtr(this), ActiveTabFieldMask);
+	}
+	updateTabLayout();
+}
+
+void TabPanel::focusLost(const FocusEvent& e)
+{
+}
+
 void TabPanel::addTab(const ComponentPtr Tab, const ComponentPtr TabContent)
 {
 	// three lists of components are actually kept
@@ -102,13 +122,14 @@ void TabPanel::addTab(const ComponentPtr Tab, const ComponentPtr TabContent)
 	// this is for clipping and clicking purposes
 	// for drawing, the tabs and tabcontents are kept seperately in two other lists
 	// so, there are three lists, and every component is kept in two of them
+	Tab->addFocusListener(this);
+
 	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
 		getTabs().addValue(Tab);
 		getTabContents().addValue(TabContent);
 		getChildren().addValue(Tab);
 		getChildren().addValue(TabContent);
 	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
-
 }
 
 void TabPanel::removeTab(const ComponentPtr Tab)
@@ -127,6 +148,7 @@ void TabPanel::removeTab(const ComponentPtr Tab)
 			}
 			getTabContents().erase(getTabContents().find(Tab));
 			// also erase the the tab from the components list
+			getTabs().getValue(index)->removeFocusListener(this);
 			getChildren().erase(getChildren().find(getTabs().getValue(index)));
 			getTabs().erase(getTabs().find(getTabs().getValue(index)));
 		}
@@ -137,6 +159,7 @@ void TabPanel::removeTab(const ComponentPtr Tab)
 				if(getTabs().find(Tab) == getTabs().find(getTabs().getValue(i)))
 					index = i;
 			}
+			Tab->removeFocusListener(this);
 			getTabs().erase(getTabs().find(Tab));
 			// also erase the the tab from the components list
 			getChildren().erase(getChildren().find(getTabContents().getValue(index))); 
@@ -147,6 +170,7 @@ void TabPanel::removeTab(const ComponentPtr Tab)
 
 void TabPanel::removeTab(const UInt32 TabIndex)
 {
+	getTabs().getValue(TabIndex)->removeFocusListener(this);
 	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
 		getChildren().erase(getChildren().find(getTabs().getValue(TabIndex))); // an incredibly ridiculous function call
 		getChildren().erase(getChildren().find(getTabContents().getValue(TabIndex)));
@@ -157,6 +181,7 @@ void TabPanel::removeTab(const UInt32 TabIndex)
 
 void TabPanel::insertTab(const ComponentPtr TabInsert, const ComponentPtr Tab, const ComponentPtr TabContent)
 {
+	Tab->addFocusListener(this);
 	UInt32 index(0);
 	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask | ChildrenFieldMask);
 		getChildren().addValue(Tab);
@@ -187,6 +212,7 @@ void TabPanel::insertTab(const ComponentPtr TabInsert, const ComponentPtr Tab, c
 
 void TabPanel::insertTab(const UInt32 TabIndex, const ComponentPtr Tab, const ComponentPtr TabContent)
 {
+	Tab->addFocusListener(this);
 	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
 		getChildren().addValue(Tab);
 		getChildren().addValue(TabContent);
@@ -302,21 +328,52 @@ void TabPanel::mouseExited(const MouseEvent& e)
 void TabPanel::mousePressed(const MouseEvent& e)
 {
 	bool isContained;
-    for(UInt32 i(0) ; i<getTabs().size() ; ++i)
-    {
-		isContained = isContainedClipBounds(e.getLocation(), getTabs().getValue(i));
+    for(Int32 i(getTabs().size()-1) ; i>=0 ; --i)
+    {   // going backwards through through elements, so only top button is pressed
+		isContained = isPointInComponent(e.getLocation(), getTabs().getValue(i));
 		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained);
 		if(isContained)
 		{
+			//Give myself temporary focus
+			takeFocus(true);
+			if(!getTabs().getValue(i)->getType().isDerivedFrom(Container::getClassType()))
+			{
+				getTabs().getValue(i)->takeFocus();
+			}
 			getTabs().getValue(i)->mousePressed(e);
+			break;
 		}
     }
+	if(isContained)
+	{
+		//Remove my temporary focus
+		giveFocus(NullFC, false);
+	}
+	else
+	{
+		//Give myself permanant focus
+		takeFocus();
+	}
 
-	isContained = isContainedClipBounds(e.getLocation(), getTabContents().getValue(getActiveTab()));
+	// now do it for the content tab
+	isContained = isPointInComponent(e.getLocation(), getTabContents().getValue(getActiveTab()));
 	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained);
 	if(isContained)
 	{
+		//Give myself temporary focus
+		takeFocus(true);
+		if(!getTabContents().getValue(getActiveTab())->getType().isDerivedFrom(Container::getClassType()))
+		{
+			getTabContents().getValue(getActiveTab())->takeFocus();
+		}
 		getTabContents().getValue(getActiveTab())->mousePressed(e);
+
+		giveFocus(NullFC, false);
+	}
+	else
+	{
+		//Give myself permanent focus
+		takeFocus();
 	}
 
 	Component::mousePressed(e);
