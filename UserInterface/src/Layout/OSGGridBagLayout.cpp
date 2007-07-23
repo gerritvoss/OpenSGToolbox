@@ -76,6 +76,43 @@ void GridBagLayout::initMethod (void)
 
 void GridBagLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
+	Pnt2s borderOffset;
+	Vec2s borderSize;
+	ParentComponent->getInsideBorderBounds(borderOffset, borderSize);
+	borderSize -= borderOffset;
+
+	std::vector<UInt16> widths;
+	std::vector<UInt16> posX;
+	std::vector<UInt16> heights;
+	std::vector<UInt16> posY;
+
+	Pnt2s offset(borderOffset);
+	Real32 weight(0.0);
+	UInt32 i;
+
+	// set up all of the positions and sizes of the grid
+	posX.push_back(0);
+	for (i = 1; i < getColumns(); ++i)
+	{
+		weight+=getColumnWeights().getValue(i-1);
+		posX.push_back((UInt16)(weight*borderSize[0]));
+		widths.push_back(posX[i]-posX[i-1]);
+	}
+	// i increments again before this statement, so it
+	// still must be i-1
+	widths.push_back(borderSize[0]-posX[i-1]);
+
+	weight = 0.0;
+	posY.push_back(0);
+	for (i = 1; i < getRows(); ++i)
+	{
+		weight+=getRowWeights().getValue(i-1);
+		posY.push_back((UInt16)(weight*borderSize[1]));
+		heights.push_back(posY[i]-posY[i-1]);
+	}
+	heights.push_back(borderSize[1]-posY[i-1]);
+
+
 }
 
 /*-------------------------------------------------------------------------*\
