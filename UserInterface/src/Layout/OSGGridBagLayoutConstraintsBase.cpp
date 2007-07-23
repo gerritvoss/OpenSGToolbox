@@ -79,8 +79,11 @@ const OSG::BitVector  GridBagLayoutConstraintsBase::GridHeightFieldMask =
 const OSG::BitVector  GridBagLayoutConstraintsBase::FillFieldMask = 
     (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::FillFieldId);
 
-const OSG::BitVector  GridBagLayoutConstraintsBase::AnchorFieldMask = 
-    (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::AnchorFieldId);
+const OSG::BitVector  GridBagLayoutConstraintsBase::HorizontalAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::HorizontalAlignmentFieldId);
+
+const OSG::BitVector  GridBagLayoutConstraintsBase::VerticalAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::VerticalAlignmentFieldId);
 
 const OSG::BitVector  GridBagLayoutConstraintsBase::WeightXFieldMask = 
     (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::WeightXFieldId);
@@ -128,7 +131,10 @@ const OSG::BitVector GridBagLayoutConstraintsBase::MTInfluenceMask =
 /*! \var UInt32          GridBagLayoutConstraintsBase::_sfFill
     Used when the component's display area is larger than the component's requested size to determine whether (and how) to resize the component
 */
-/*! \var UInt32          GridBagLayoutConstraintsBase::_sfAnchor
+/*! \var Real32          GridBagLayoutConstraintsBase::_sfHorizontalAlignment
+    Used when the component is smaller than its display area to determine where (within the display area) to place the component
+*/
+/*! \var Real32          GridBagLayoutConstraintsBase::_sfVerticalAlignment
     Used when the component is smaller than its display area to determine where (within the display area) to place the component
 */
 /*! \var Real32          GridBagLayoutConstraintsBase::_sfWeightX
@@ -185,11 +191,16 @@ FieldDescription *GridBagLayoutConstraintsBase::_desc[] =
                      FillFieldId, FillFieldMask,
                      false,
                      (FieldAccessMethod) &GridBagLayoutConstraintsBase::getSFFill),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Anchor", 
-                     AnchorFieldId, AnchorFieldMask,
+    new FieldDescription(SFReal32::getClassType(), 
+                     "HorizontalAlignment", 
+                     HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &GridBagLayoutConstraintsBase::getSFAnchor),
+                     (FieldAccessMethod) &GridBagLayoutConstraintsBase::getSFHorizontalAlignment),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "VerticalAlignment", 
+                     VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &GridBagLayoutConstraintsBase::getSFVerticalAlignment),
     new FieldDescription(SFReal32::getClassType(), 
                      "WeightX", 
                      WeightXFieldId, WeightXFieldMask,
@@ -310,7 +321,8 @@ GridBagLayoutConstraintsBase::GridBagLayoutConstraintsBase(void) :
     _sfGridWidth              (UInt16(1)), 
     _sfGridHeight             (UInt16(1)), 
     _sfFill                   (), 
-    _sfAnchor                 (), 
+    _sfHorizontalAlignment    (Real32(0.5)), 
+    _sfVerticalAlignment      (Real32(0.5)), 
     _sfWeightX                (Real32(1.0)), 
     _sfWeightY                (Real32(1.0)), 
     _sfInternalPadX           (UInt32(0)), 
@@ -333,7 +345,8 @@ GridBagLayoutConstraintsBase::GridBagLayoutConstraintsBase(const GridBagLayoutCo
     _sfGridWidth              (source._sfGridWidth              ), 
     _sfGridHeight             (source._sfGridHeight             ), 
     _sfFill                   (source._sfFill                   ), 
-    _sfAnchor                 (source._sfAnchor                 ), 
+    _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
+    _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
     _sfWeightX                (source._sfWeightX                ), 
     _sfWeightY                (source._sfWeightY                ), 
     _sfInternalPadX           (source._sfInternalPadX           ), 
@@ -383,9 +396,14 @@ UInt32 GridBagLayoutConstraintsBase::getBinSize(const BitVector &whichField)
         returnValue += _sfFill.getBinSize();
     }
 
-    if(FieldBits::NoField != (AnchorFieldMask & whichField))
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
     {
-        returnValue += _sfAnchor.getBinSize();
+        returnValue += _sfHorizontalAlignment.getBinSize();
+    }
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfVerticalAlignment.getBinSize();
     }
 
     if(FieldBits::NoField != (WeightXFieldMask & whichField))
@@ -462,9 +480,14 @@ void GridBagLayoutConstraintsBase::copyToBin(      BinaryDataHandler &pMem,
         _sfFill.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (AnchorFieldMask & whichField))
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
     {
-        _sfAnchor.copyToBin(pMem);
+        _sfHorizontalAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    {
+        _sfVerticalAlignment.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (WeightXFieldMask & whichField))
@@ -540,9 +563,14 @@ void GridBagLayoutConstraintsBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfFill.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (AnchorFieldMask & whichField))
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
     {
-        _sfAnchor.copyFromBin(pMem);
+        _sfHorizontalAlignment.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    {
+        _sfVerticalAlignment.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (WeightXFieldMask & whichField))
@@ -610,8 +638,11 @@ void GridBagLayoutConstraintsBase::executeSyncImpl(      GridBagLayoutConstraint
     if(FieldBits::NoField != (FillFieldMask & whichField))
         _sfFill.syncWith(pOther->_sfFill);
 
-    if(FieldBits::NoField != (AnchorFieldMask & whichField))
-        _sfAnchor.syncWith(pOther->_sfAnchor);
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
 
     if(FieldBits::NoField != (WeightXFieldMask & whichField))
         _sfWeightX.syncWith(pOther->_sfWeightX);
@@ -662,8 +693,11 @@ void GridBagLayoutConstraintsBase::executeSyncImpl(      GridBagLayoutConstraint
     if(FieldBits::NoField != (FillFieldMask & whichField))
         _sfFill.syncWith(pOther->_sfFill);
 
-    if(FieldBits::NoField != (AnchorFieldMask & whichField))
-        _sfAnchor.syncWith(pOther->_sfAnchor);
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
 
     if(FieldBits::NoField != (WeightXFieldMask & whichField))
         _sfWeightX.syncWith(pOther->_sfWeightX);

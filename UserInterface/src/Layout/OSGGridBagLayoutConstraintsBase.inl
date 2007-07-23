@@ -131,11 +131,18 @@ SFUInt32 *GridBagLayoutConstraintsBase::getSFFill(void)
     return &_sfFill;
 }
 
-//! Get the GridBagLayoutConstraints::_sfAnchor field.
+//! Get the GridBagLayoutConstraints::_sfHorizontalAlignment field.
 inline
-SFUInt32 *GridBagLayoutConstraintsBase::getSFAnchor(void)
+SFReal32 *GridBagLayoutConstraintsBase::getSFHorizontalAlignment(void)
 {
-    return &_sfAnchor;
+    return &_sfHorizontalAlignment;
+}
+
+//! Get the GridBagLayoutConstraints::_sfVerticalAlignment field.
+inline
+SFReal32 *GridBagLayoutConstraintsBase::getSFVerticalAlignment(void)
+{
+    return &_sfVerticalAlignment;
 }
 
 //! Get the GridBagLayoutConstraints::_sfWeightX field.
@@ -300,25 +307,46 @@ void GridBagLayoutConstraintsBase::setFill(const UInt32 &value)
     _sfFill.setValue(value);
 }
 
-//! Get the value of the GridBagLayoutConstraints::_sfAnchor field.
+//! Get the value of the GridBagLayoutConstraints::_sfHorizontalAlignment field.
 inline
-UInt32 &GridBagLayoutConstraintsBase::getAnchor(void)
+Real32 &GridBagLayoutConstraintsBase::getHorizontalAlignment(void)
 {
-    return _sfAnchor.getValue();
+    return _sfHorizontalAlignment.getValue();
 }
 
-//! Get the value of the GridBagLayoutConstraints::_sfAnchor field.
+//! Get the value of the GridBagLayoutConstraints::_sfHorizontalAlignment field.
 inline
-const UInt32 &GridBagLayoutConstraintsBase::getAnchor(void) const
+const Real32 &GridBagLayoutConstraintsBase::getHorizontalAlignment(void) const
 {
-    return _sfAnchor.getValue();
+    return _sfHorizontalAlignment.getValue();
 }
 
-//! Set the value of the GridBagLayoutConstraints::_sfAnchor field.
+//! Set the value of the GridBagLayoutConstraints::_sfHorizontalAlignment field.
 inline
-void GridBagLayoutConstraintsBase::setAnchor(const UInt32 &value)
+void GridBagLayoutConstraintsBase::setHorizontalAlignment(const Real32 &value)
 {
-    _sfAnchor.setValue(value);
+    _sfHorizontalAlignment.setValue(value);
+}
+
+//! Get the value of the GridBagLayoutConstraints::_sfVerticalAlignment field.
+inline
+Real32 &GridBagLayoutConstraintsBase::getVerticalAlignment(void)
+{
+    return _sfVerticalAlignment.getValue();
+}
+
+//! Get the value of the GridBagLayoutConstraints::_sfVerticalAlignment field.
+inline
+const Real32 &GridBagLayoutConstraintsBase::getVerticalAlignment(void) const
+{
+    return _sfVerticalAlignment.getValue();
+}
+
+//! Set the value of the GridBagLayoutConstraints::_sfVerticalAlignment field.
+inline
+void GridBagLayoutConstraintsBase::setVerticalAlignment(const Real32 &value)
+{
+    _sfVerticalAlignment.setValue(value);
 }
 
 //! Get the value of the GridBagLayoutConstraints::_sfWeightX field.

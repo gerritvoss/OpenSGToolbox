@@ -72,7 +72,8 @@
 #include <OpenSG/OSGUInt16Fields.h> // GridWidth type
 #include <OpenSG/OSGUInt16Fields.h> // GridHeight type
 #include <OpenSG/OSGUInt32Fields.h> // Fill type
-#include <OpenSG/OSGUInt32Fields.h> // Anchor type
+#include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
+#include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
 #include <OpenSG/OSGReal32Fields.h> // WeightX type
 #include <OpenSG/OSGReal32Fields.h> // WeightY type
 #include <OpenSG/OSGUInt32Fields.h> // InternalPadX type
@@ -104,21 +105,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutConstraintsBase : public Layo
 
     enum
     {
-        GridXFieldId        = Inherited::NextFieldId,
-        GridYFieldId        = GridXFieldId        + 1,
-        GridWidthFieldId    = GridYFieldId        + 1,
-        GridHeightFieldId   = GridWidthFieldId    + 1,
-        FillFieldId         = GridHeightFieldId   + 1,
-        AnchorFieldId       = FillFieldId         + 1,
-        WeightXFieldId      = AnchorFieldId       + 1,
-        WeightYFieldId      = WeightXFieldId      + 1,
-        InternalPadXFieldId = WeightYFieldId      + 1,
-        InternalPadYFieldId = InternalPadXFieldId + 1,
-        PadLeftFieldId      = InternalPadYFieldId + 1,
-        PadRightFieldId     = PadLeftFieldId      + 1,
-        PadTopFieldId       = PadRightFieldId     + 1,
-        PadBottomFieldId    = PadTopFieldId       + 1,
-        NextFieldId         = PadBottomFieldId    + 1
+        GridXFieldId               = Inherited::NextFieldId,
+        GridYFieldId               = GridXFieldId               + 1,
+        GridWidthFieldId           = GridYFieldId               + 1,
+        GridHeightFieldId          = GridWidthFieldId           + 1,
+        FillFieldId                = GridHeightFieldId          + 1,
+        HorizontalAlignmentFieldId = FillFieldId                + 1,
+        VerticalAlignmentFieldId   = HorizontalAlignmentFieldId + 1,
+        WeightXFieldId             = VerticalAlignmentFieldId   + 1,
+        WeightYFieldId             = WeightXFieldId             + 1,
+        InternalPadXFieldId        = WeightYFieldId             + 1,
+        InternalPadYFieldId        = InternalPadXFieldId        + 1,
+        PadLeftFieldId             = InternalPadYFieldId        + 1,
+        PadRightFieldId            = PadLeftFieldId             + 1,
+        PadTopFieldId              = PadRightFieldId            + 1,
+        PadBottomFieldId           = PadTopFieldId              + 1,
+        NextFieldId                = PadBottomFieldId           + 1
     };
 
     static const OSG::BitVector GridXFieldMask;
@@ -126,7 +128,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutConstraintsBase : public Layo
     static const OSG::BitVector GridWidthFieldMask;
     static const OSG::BitVector GridHeightFieldMask;
     static const OSG::BitVector FillFieldMask;
-    static const OSG::BitVector AnchorFieldMask;
+    static const OSG::BitVector HorizontalAlignmentFieldMask;
+    static const OSG::BitVector VerticalAlignmentFieldMask;
     static const OSG::BitVector WeightXFieldMask;
     static const OSG::BitVector WeightYFieldMask;
     static const OSG::BitVector InternalPadXFieldMask;
@@ -166,7 +169,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutConstraintsBase : public Layo
            SFUInt16            *getSFGridWidth      (void);
            SFUInt16            *getSFGridHeight     (void);
            SFUInt32            *getSFFill           (void);
-           SFUInt32            *getSFAnchor         (void);
+           SFReal32            *getSFHorizontalAlignment(void);
+           SFReal32            *getSFVerticalAlignment(void);
            SFReal32            *getSFWeightX        (void);
            SFReal32            *getSFWeightY        (void);
            SFUInt32            *getSFInternalPadX   (void);
@@ -186,8 +190,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutConstraintsBase : public Layo
      const UInt16              &getGridHeight     (void) const;
            UInt32              &getFill           (void);
      const UInt32              &getFill           (void) const;
-           UInt32              &getAnchor         (void);
-     const UInt32              &getAnchor         (void) const;
+           Real32              &getHorizontalAlignment(void);
+     const Real32              &getHorizontalAlignment(void) const;
+           Real32              &getVerticalAlignment(void);
+     const Real32              &getVerticalAlignment(void) const;
            Real32              &getWeightX        (void);
      const Real32              &getWeightX        (void) const;
            Real32              &getWeightY        (void);
@@ -215,7 +221,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutConstraintsBase : public Layo
      void setGridWidth      ( const UInt16 &value );
      void setGridHeight     ( const UInt16 &value );
      void setFill           ( const UInt32 &value );
-     void setAnchor         ( const UInt32 &value );
+     void setHorizontalAlignment( const Real32 &value );
+     void setVerticalAlignment( const Real32 &value );
      void setWeightX        ( const Real32 &value );
      void setWeightY        ( const Real32 &value );
      void setInternalPadX   ( const UInt32 &value );
@@ -271,7 +278,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutConstraintsBase : public Layo
     SFUInt16            _sfGridWidth;
     SFUInt16            _sfGridHeight;
     SFUInt32            _sfFill;
-    SFUInt32            _sfAnchor;
+    SFReal32            _sfHorizontalAlignment;
+    SFReal32            _sfVerticalAlignment;
     SFReal32            _sfWeightX;
     SFReal32            _sfWeightY;
     SFUInt32            _sfInternalPadX;
