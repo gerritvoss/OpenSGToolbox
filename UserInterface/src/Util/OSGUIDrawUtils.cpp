@@ -24,9 +24,20 @@ void convertTopRightToCenteredLine(const Pnt2s& Point1, const Pnt2s& Point2, con
    ResultPoint2 = Point2 + Vec2s(DirOffset.x(),DirOffset.y());
 }
 
+Pnt2s calculateAlignment(const Pnt2s& Position1, const Vec2s& Size1, const Vec2s& Size2, const Real32& VAlign, const Real32& HAlign)
+{
+	Pnt2s AlignedPosition;
+
+	AlignedPosition[0] = Position1[0]+HAlign*(Size1[0]-Size2[0]);
+	AlignedPosition[1] = Position1[1]+VAlign*(Size1[1]-Size2[1]);
+	
+	return AlignedPosition;
+}
+
 Pnt2s calculateAlignment(const Pnt2s& Position1, const Vec2s& Size1, const Vec2s& Size2, const UInt32& VAlign, const UInt32& HAlign)
 {
 	Pnt2s AlignedPosition;
+
 	switch(VAlign)
 	{
 	case VERTICAL_TOP:
