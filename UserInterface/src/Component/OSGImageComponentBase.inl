@@ -119,14 +119,14 @@ SFVec2s *ImageComponentBase::getSFScaleAbsoluteSize(void)
 
 //! Get the ImageComponent::_sfVerticalAlignment field.
 inline
-SFUInt32 *ImageComponentBase::getSFVerticalAlignment(void)
+SFReal32 *ImageComponentBase::getSFVerticalAlignment(void)
 {
     return &_sfVerticalAlignment;
 }
 
 //! Get the ImageComponent::_sfHorizontalAlignment field.
 inline
-SFUInt32 *ImageComponentBase::getSFHorizontalAlignment(void)
+SFReal32 *ImageComponentBase::getSFHorizontalAlignment(void)
 {
     return &_sfHorizontalAlignment;
 }
@@ -197,42 +197,42 @@ void ImageComponentBase::setScaleAbsoluteSize(const Vec2s &value)
 
 //! Get the value of the ImageComponent::_sfVerticalAlignment field.
 inline
-UInt32 &ImageComponentBase::getVerticalAlignment(void)
+Real32 &ImageComponentBase::getVerticalAlignment(void)
 {
     return _sfVerticalAlignment.getValue();
 }
 
 //! Get the value of the ImageComponent::_sfVerticalAlignment field.
 inline
-const UInt32 &ImageComponentBase::getVerticalAlignment(void) const
+const Real32 &ImageComponentBase::getVerticalAlignment(void) const
 {
     return _sfVerticalAlignment.getValue();
 }
 
 //! Set the value of the ImageComponent::_sfVerticalAlignment field.
 inline
-void ImageComponentBase::setVerticalAlignment(const UInt32 &value)
+void ImageComponentBase::setVerticalAlignment(const Real32 &value)
 {
     _sfVerticalAlignment.setValue(value);
 }
 
 //! Get the value of the ImageComponent::_sfHorizontalAlignment field.
 inline
-UInt32 &ImageComponentBase::getHorizontalAlignment(void)
+Real32 &ImageComponentBase::getHorizontalAlignment(void)
 {
     return _sfHorizontalAlignment.getValue();
 }
 
 //! Get the value of the ImageComponent::_sfHorizontalAlignment field.
 inline
-const UInt32 &ImageComponentBase::getHorizontalAlignment(void) const
+const Real32 &ImageComponentBase::getHorizontalAlignment(void) const
 {
     return _sfHorizontalAlignment.getValue();
 }
 
 //! Set the value of the ImageComponent::_sfHorizontalAlignment field.
 inline
-void ImageComponentBase::setHorizontalAlignment(const UInt32 &value)
+void ImageComponentBase::setHorizontalAlignment(const Real32 &value)
 {
     _sfHorizontalAlignment.setValue(value);
 }

@@ -62,8 +62,6 @@
 #include "OSGImageComponent.h"
 
 #include <Util/OSGUIDefines.h>            // Scale default header
-#include <Util/OSGUIDefines.h>            // VerticalAlignment default header
-#include <Util/OSGUIDefines.h>            // HorizontalAlignment default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -98,10 +96,10 @@ const OSG::BitVector ImageComponentBase::MTInfluenceMask =
 /*! \var Vec2s           ImageComponentBase::_sfScaleAbsoluteSize
     
 */
-/*! \var UInt32          ImageComponentBase::_sfVerticalAlignment
+/*! \var Real32          ImageComponentBase::_sfVerticalAlignment
     
 */
-/*! \var UInt32          ImageComponentBase::_sfHorizontalAlignment
+/*! \var Real32          ImageComponentBase::_sfHorizontalAlignment
     
 */
 
@@ -124,12 +122,12 @@ FieldDescription *ImageComponentBase::_desc[] =
                      ScaleAbsoluteSizeFieldId, ScaleAbsoluteSizeFieldMask,
                      false,
                      (FieldAccessMethod) &ImageComponentBase::getSFScaleAbsoluteSize),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "VerticalAlignment", 
                      VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
                      false,
                      (FieldAccessMethod) &ImageComponentBase::getSFVerticalAlignment),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "HorizontalAlignment", 
                      HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
                      false,
@@ -212,8 +210,8 @@ ImageComponentBase::ImageComponentBase(void) :
     _sfTexture                (), 
     _sfScale                  (UInt32(SCALE_NONE)), 
     _sfScaleAbsoluteSize      (Vec2s(1,1)), 
-    _sfVerticalAlignment      (UInt32(VERTICAL_CENTER)), 
-    _sfHorizontalAlignment    (UInt32(HORIZONTAL_CENTER)), 
+    _sfVerticalAlignment      (Real32(0.5)), 
+    _sfHorizontalAlignment    (Real32(0.5)), 
     Inherited() 
 {
 }
