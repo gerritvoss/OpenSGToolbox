@@ -47,4 +47,22 @@ A UI Button.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="SelectionBoxColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0,0.0,1.0,1.0"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="SelectionTextColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1.0,1.0,1.0,1.0"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

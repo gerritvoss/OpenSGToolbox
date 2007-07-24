@@ -76,6 +76,12 @@ const OSG::BitVector  TextComponentBase::CaretPositionFieldMask =
 const OSG::BitVector  TextComponentBase::FontFieldMask = 
     (TypeTraits<BitVector>::One << TextComponentBase::FontFieldId);
 
+const OSG::BitVector  TextComponentBase::SelectionBoxColorFieldMask = 
+    (TypeTraits<BitVector>::One << TextComponentBase::SelectionBoxColorFieldId);
+
+const OSG::BitVector  TextComponentBase::SelectionTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << TextComponentBase::SelectionTextColorFieldId);
+
 const OSG::BitVector TextComponentBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -93,6 +99,12 @@ const OSG::BitVector TextComponentBase::MTInfluenceMask =
     
 */
 /*! \var FontPtr         TextComponentBase::_sfFont
+    
+*/
+/*! \var Color4f         TextComponentBase::_sfSelectionBoxColor
+    
+*/
+/*! \var Color4f         TextComponentBase::_sfSelectionTextColor
     
 */
 
@@ -119,7 +131,17 @@ FieldDescription *TextComponentBase::_desc[] =
                      "Font", 
                      FontFieldId, FontFieldMask,
                      false,
-                     (FieldAccessMethod) &TextComponentBase::getSFFont)
+                     (FieldAccessMethod) &TextComponentBase::getSFFont),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "SelectionBoxColor", 
+                     SelectionBoxColorFieldId, SelectionBoxColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &TextComponentBase::getSFSelectionBoxColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "SelectionTextColor", 
+                     SelectionTextColorFieldId, SelectionTextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &TextComponentBase::getSFSelectionTextColor)
 };
 
 
@@ -190,6 +212,8 @@ TextComponentBase::TextComponentBase(void) :
     _sfEditable               (bool(true)), 
     _sfCaretPosition          (UInt32(0)), 
     _sfFont                   (), 
+    _sfSelectionBoxColor      (Color4f(0.0,0.0,1.0,1.0)), 
+    _sfSelectionTextColor     (Color4f(1.0,1.0,1.0,1.0)), 
     Inherited() 
 {
 }
@@ -203,6 +227,8 @@ TextComponentBase::TextComponentBase(const TextComponentBase &source) :
     _sfEditable               (source._sfEditable               ), 
     _sfCaretPosition          (source._sfCaretPosition          ), 
     _sfFont                   (source._sfFont                   ), 
+    _sfSelectionBoxColor      (source._sfSelectionBoxColor      ), 
+    _sfSelectionTextColor     (source._sfSelectionTextColor     ), 
     Inherited                 (source)
 {
 }
@@ -239,6 +265,16 @@ UInt32 TextComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfFont.getBinSize();
     }
 
+    if(FieldBits::NoField != (SelectionBoxColorFieldMask & whichField))
+    {
+        returnValue += _sfSelectionBoxColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (SelectionTextColorFieldMask & whichField))
+    {
+        returnValue += _sfSelectionTextColor.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -266,6 +302,16 @@ void TextComponentBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (FontFieldMask & whichField))
     {
         _sfFont.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SelectionBoxColorFieldMask & whichField))
+    {
+        _sfSelectionBoxColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SelectionTextColorFieldMask & whichField))
+    {
+        _sfSelectionTextColor.copyToBin(pMem);
     }
 
 
@@ -296,6 +342,16 @@ void TextComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfFont.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (SelectionBoxColorFieldMask & whichField))
+    {
+        _sfSelectionBoxColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SelectionTextColorFieldMask & whichField))
+    {
+        _sfSelectionTextColor.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -318,6 +374,12 @@ void TextComponentBase::executeSyncImpl(      TextComponentBase *pOther,
     if(FieldBits::NoField != (FontFieldMask & whichField))
         _sfFont.syncWith(pOther->_sfFont);
 
+    if(FieldBits::NoField != (SelectionBoxColorFieldMask & whichField))
+        _sfSelectionBoxColor.syncWith(pOther->_sfSelectionBoxColor);
+
+    if(FieldBits::NoField != (SelectionTextColorFieldMask & whichField))
+        _sfSelectionTextColor.syncWith(pOther->_sfSelectionTextColor);
+
 
 }
 #else
@@ -339,6 +401,12 @@ void TextComponentBase::executeSyncImpl(      TextComponentBase *pOther,
 
     if(FieldBits::NoField != (FontFieldMask & whichField))
         _sfFont.syncWith(pOther->_sfFont);
+
+    if(FieldBits::NoField != (SelectionBoxColorFieldMask & whichField))
+        _sfSelectionBoxColor.syncWith(pOther->_sfSelectionBoxColor);
+
+    if(FieldBits::NoField != (SelectionTextColorFieldMask & whichField))
+        _sfSelectionTextColor.syncWith(pOther->_sfSelectionTextColor);
 
 
 

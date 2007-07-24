@@ -71,6 +71,8 @@
 #include <OpenSG/OSGBoolFields.h> // Editable type
 #include <OpenSG/OSGUInt32Fields.h> // CaretPosition type
 #include "Text/OSGFont.h" // Font type
+#include <OpenSG/OSGColor4fFields.h> // SelectionBoxColor type
+#include <OpenSG/OSGColor4fFields.h> // SelectionTextColor type
 
 #include "OSGTextComponentFields.h"
 
@@ -94,17 +96,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
 
     enum
     {
-        TextFieldId          = Inherited::NextFieldId,
-        EditableFieldId      = TextFieldId          + 1,
-        CaretPositionFieldId = EditableFieldId      + 1,
-        FontFieldId          = CaretPositionFieldId + 1,
-        NextFieldId          = FontFieldId          + 1
+        TextFieldId               = Inherited::NextFieldId,
+        EditableFieldId           = TextFieldId               + 1,
+        CaretPositionFieldId      = EditableFieldId           + 1,
+        FontFieldId               = CaretPositionFieldId      + 1,
+        SelectionBoxColorFieldId  = FontFieldId               + 1,
+        SelectionTextColorFieldId = SelectionBoxColorFieldId  + 1,
+        NextFieldId               = SelectionTextColorFieldId + 1
     };
 
     static const OSG::BitVector TextFieldMask;
     static const OSG::BitVector EditableFieldMask;
     static const OSG::BitVector CaretPositionFieldMask;
     static const OSG::BitVector FontFieldMask;
+    static const OSG::BitVector SelectionBoxColorFieldMask;
+    static const OSG::BitVector SelectionTextColorFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -135,6 +141,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
            SFBool              *getSFEditable       (void);
            SFUInt32            *getSFCaretPosition  (void);
            SFFontPtr           *getSFFont           (void);
+           SFColor4f           *getSFSelectionBoxColor(void);
+           SFColor4f           *getSFSelectionTextColor(void);
 
            std::string         &getText           (void);
      const std::string         &getText           (void) const;
@@ -144,6 +152,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
      const UInt32              &getCaretPosition  (void) const;
            FontPtr             &getFont           (void);
      const FontPtr             &getFont           (void) const;
+           Color4f             &getSelectionBoxColor(void);
+     const Color4f             &getSelectionBoxColor(void) const;
+           Color4f             &getSelectionTextColor(void);
+     const Color4f             &getSelectionTextColor(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -154,6 +166,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
      void setEditable       ( const bool &value );
      void setCaretPosition  ( const UInt32 &value );
      void setFont           ( const FontPtr &value );
+     void setSelectionBoxColor( const Color4f &value );
+     void setSelectionTextColor( const Color4f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -184,6 +198,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
     SFBool              _sfEditable;
     SFUInt32            _sfCaretPosition;
     SFFontPtr           _sfFont;
+    SFColor4f           _sfSelectionBoxColor;
+    SFColor4f           _sfSelectionTextColor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

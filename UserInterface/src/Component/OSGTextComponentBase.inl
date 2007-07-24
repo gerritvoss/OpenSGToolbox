@@ -98,6 +98,20 @@ SFFontPtr *TextComponentBase::getSFFont(void)
     return &_sfFont;
 }
 
+//! Get the TextComponent::_sfSelectionBoxColor field.
+inline
+SFColor4f *TextComponentBase::getSFSelectionBoxColor(void)
+{
+    return &_sfSelectionBoxColor;
+}
+
+//! Get the TextComponent::_sfSelectionTextColor field.
+inline
+SFColor4f *TextComponentBase::getSFSelectionTextColor(void)
+{
+    return &_sfSelectionTextColor;
+}
+
 
 //! Get the value of the TextComponent::_sfText field.
 inline
@@ -181,6 +195,48 @@ inline
 void TextComponentBase::setFont(const FontPtr &value)
 {
     _sfFont.setValue(value);
+}
+
+//! Get the value of the TextComponent::_sfSelectionBoxColor field.
+inline
+Color4f &TextComponentBase::getSelectionBoxColor(void)
+{
+    return _sfSelectionBoxColor.getValue();
+}
+
+//! Get the value of the TextComponent::_sfSelectionBoxColor field.
+inline
+const Color4f &TextComponentBase::getSelectionBoxColor(void) const
+{
+    return _sfSelectionBoxColor.getValue();
+}
+
+//! Set the value of the TextComponent::_sfSelectionBoxColor field.
+inline
+void TextComponentBase::setSelectionBoxColor(const Color4f &value)
+{
+    _sfSelectionBoxColor.setValue(value);
+}
+
+//! Get the value of the TextComponent::_sfSelectionTextColor field.
+inline
+Color4f &TextComponentBase::getSelectionTextColor(void)
+{
+    return _sfSelectionTextColor.getValue();
+}
+
+//! Get the value of the TextComponent::_sfSelectionTextColor field.
+inline
+const Color4f &TextComponentBase::getSelectionTextColor(void) const
+{
+    return _sfSelectionTextColor.getValue();
+}
+
+//! Set the value of the TextComponent::_sfSelectionTextColor field.
+inline
+void TextComponentBase::setSelectionTextColor(const Color4f &value)
+{
+    _sfSelectionTextColor.setValue(value);
 }
 
 
