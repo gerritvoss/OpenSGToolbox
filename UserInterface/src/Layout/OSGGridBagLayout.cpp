@@ -135,11 +135,11 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 		constraints = GridBagLayoutConstraintsPtr::dcast(Components.getValue(i)->getConstraints());
 		if(constraints != NullFC)
 		{
-			// find the offsets for the cell
+			// find the offsets for the cell, including the padding
 			if (constraints->getGridX() < posX.size())
-				offset[0] += posX[constraints->getGridX()];
+				offset[0] += posX[constraints->getGridX()] + constraints->getPadLeft();
 			if (constraints->getGridY() < posY.size())
-				offset[1] += posY[constraints->getGridY()];
+				offset[1] += posY[constraints->getGridY()] + constraints->getPadRight();
 
 			// find the size of cell/cells containing the component
 			for (UInt16 j = 0; j < constraints->getGridWidth() && constraints->getGridX()+j < widths.size(); ++j)
@@ -151,8 +151,33 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 			cellSize[0] -= constraints->getPadRight() + constraints->getPadLeft();
 			cellSize[1] -= constraints->getPadTop() + constraints->getPadBottom();
 
-			// set the size of the component by the size of the cell/cells
-			//if (cellSize[0] <=
+			// set the size of the component by the size of the cell/cells if it set to fill
+			if ( (constraints->getFill() == FILL_BOTH || constraints->getFill() == FILL_HORIZONTAL) && constraints->getWeightX() > 0.0)
+				size[0] = cellSize[0] * constraints->getWeightX();
+			if ( (constraints->getFill() == FILL_BOTH || constraints->getFill() == FILL_VERTICAL) && constraints->getWeightY() > 0.0)
+				size[1] = cellSize[1] * constraints->getWeightY();
+
+			// check to see if it is bigger than the maximum size
+			if (size[0] > Components.getValue(i)->getMaxSize()[0])
+				size[0] = Components.getValue(i)->getMaxSize()[0];
+			if (size[1] > Components.getValue(i)->getMaxSize()[1])
+				size[1] = Components.getValue(i)->getMaxSize()[1];
+
+			// check to see if it is smaller than the minimum size
+			if (size[0] < Components.getValue(i)->getMinSize()[0]+constraints->getInternalPadX())
+				size[0] = Components.getValue(i)->getMinSize()[0]+constraints->getInternalPadX();
+			if (size[1] < Components.getValue(i)->getMinSize()[1]+constraints->getInternalPadY())
+				size[1] = Components.getValue(i)->getMinSize()[1]+constraints->getInternalPadY();
+
+			// check to see if it is too big for the cell
+			if (size[0] > cellSize[0])
+				size[0] = cellSize[0];
+			if (size[1] > cellSize[1])
+				size[1] = cellSize[1];
+
+			// align it properly in the cell
+			offset[0] += (cellSize[0] - size[0]) * constraints->getHorizontalAlignment();
+			offset[1] += (cellSize[1] - size[1]) * constraints->getVerticalAlignment();
 		}
 		beginEditCP(Components.getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
 			if (size[0] >= Components.getValue(i)->getMinSize().x() && size[1] > Components.getValue(i)->getMinSize().y())
