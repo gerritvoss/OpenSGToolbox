@@ -567,6 +567,62 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Component\OSGTextComponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGTextComponent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGTextComponent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGTextComponentBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGTextComponentBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGTextComponentBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGTextComponentFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGTextField.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGTextField.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGTextField.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGTextFieldBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGTextFieldBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGTextFieldBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGTextFieldFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Component\OSGToggleButton.cpp"
 					>
 				</File>

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="TextField"
+	parent="TextComponent"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI TextField
+</FieldContainer>
