@@ -35,10 +35,11 @@
 
 #include <vector>
 #include "Component/OSGRadioButtonFields.h"
+#include "Event/OSGButtonSelectedListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonGroup
+class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonGroup : public ButtonSelectedListener
 {
   /*=========================  PUBLIC  ===============================*/
 public:
@@ -49,6 +50,8 @@ public:
 
     bool isSelected(const RadioButtonPtr Button) const;
     void setSelected(RadioButtonPtr Button, bool SelectedValue);
+	virtual void buttonSelected(const ButtonSelectedEvent& e);
+   virtual void buttonDeselected(const ButtonSelectedEvent& e);
 
     RadioButtonGroup(void);
 private:

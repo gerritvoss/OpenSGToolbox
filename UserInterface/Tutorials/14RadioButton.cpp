@@ -34,9 +34,11 @@
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
 #include <OpenSG/UserInterface/OSGBevelBorder.h>
-#include <OpenSG/UserInterface/OSGRadioButton.h>
-// Include FlowLayout header file
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
+//include the radio button classes
+#include <OpenSG/UserInterface/OSGRadioButton.h>
+#include <OpenSG/UserInterface/OSGRadioButtonGroup.h>
+
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
 // with OSG::, but that would be a bit tedious for this example
@@ -94,13 +96,49 @@ int main(int argc, char **argv)
 
 	/******************************************************
 			
-				Creates some Radio Button components
-				and edit their PreferredSizes
+				Creates some Radio Button components and edit
+				them
 
 	******************************************************/
 	RadioButtonPtr button1 = osg::RadioButton::create();
 	RadioButtonPtr button2 = osg::RadioButton::create();
 	RadioButtonPtr button3 = osg::RadioButton::create();
+
+	beginEditCP(button1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
+		button1->setVerticalAlignment(VERTICAL_CENTER);
+		button1->setHorizontalAlignment(HORIZONTAL_LEFT);
+		button1->setPreferredSize(Vec2s(100, 50));
+		button1->setText("Option 1");
+	endEditCP(button1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+
+	beginEditCP(button2,Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+		button2->setVerticalAlignment(VERTICAL_CENTER);
+		button2->setHorizontalAlignment(HORIZONTAL_LEFT);
+		button2->setPreferredSize(Vec2s(100, 50));
+		button2->setText("Option 2");
+	endEditCP(button2, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+
+	beginEditCP(button3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+		button3->setVerticalAlignment(VERTICAL_CENTER);
+		button3->setHorizontalAlignment(HORIZONTAL_LEFT);
+		button3->setPreferredSize(Vec2s(100, 50));
+		button3->setText("Option 3");
+	endEditCP(button3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+
+	/***************************************************
+					
+				Create and populate the group of Radio Buttons
+				Defining the group allows you to pick which radio
+				buttons are tied together so that only one can be
+				selected. Note that RadioButtonGroup is not a Field
+				Container, so it is edited differently
+
+
+	******************************************************/
+	RadioButtonGroup buttonGroup;
+	buttonGroup.addButton(button1);
+	buttonGroup.addButton(button2);
+	buttonGroup.addButton(button3);
 
 
 
@@ -119,7 +157,7 @@ int main(int argc, char **argv)
 	beginEditCP(MainFrameLayout);
 		// Determine the Horizontal and Vertical gaps between objects.
 		// These gaps are absolute, and measured in pixels.
-		MainFrameLayout->setHorizontalGap(3);
+		MainFrameLayout->setHorizontalGap(0);
 		MainFrameLayout->setVerticalGap(3);
 		// Determine whether layout is arranged Vertically (VERTICAL_ALIGNMENT)
 		// or Horizontally (HORIZONTAL_ALIGNMENT)
