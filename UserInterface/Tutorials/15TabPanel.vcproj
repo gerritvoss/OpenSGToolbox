@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="15TabPanel"
-	ProjectGUID="{6905F238-9916-4815-90E2-1B868BE61C78}"
+	ProjectGUID="{21C6EF91-E8D5-41AE-AAC1-E00F354CB5D4}"
 	Keyword="Win32Proj"
 	>
 	<Platforms>

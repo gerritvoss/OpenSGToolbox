@@ -90,55 +90,16 @@ int main(int argc, char **argv)
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
-	/******************************************************
-			
-				Creates some Button components
-
-	******************************************************/
-
-	ButtonPtr button1 = osg::Button::create();
-	ButtonPtr button2 = osg::Button::create();
-	ButtonPtr button3 = osg::Button::create();
-	ButtonPtr button4 = osg::Button::create();
-	
-
-	beginEditCP(button1);
-		button1->setText("This");
-	endEditCP(button1);
-
-	beginEditCP(button2);
-		button2->setText("is a");
-	endEditCP(button2);
-
-	beginEditCP(button3);
-		button3->setText("sample");
-	endEditCP(button3);
-
-	beginEditCP(button4);
-	button4->setText("two");
-	endEditCP(button4);
-
-	/******************************************************
-
-			Create some  Layouts to be used
-			with the Main Frame and the two 
-			Panels
-
-	******************************************************/
 	CardLayoutPtr MainFrameLayout = osg::CardLayout::create();
-
-
+	beginEditCP(MainFrameLayout);
+	MainFrameLayout.next();
+	endEditCP(MainFrameLayout);
 
 
 	FramePtr MainFrame = osg::Frame::create();
 	// Edit MainFrame
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 	   MainFrame->setLayout(MainFrameLayout);
-	   MainFrame->getChildren().addValue(button1);
-	   MainFrame->getChildren().addValue(button2);
-	   MainFrame->getChildren().addValue(button3);
-	   MainFrame->getChildren().addValue(button4);
-	   //MainFrame->setBackground(mainBackground);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
 	//Create the Drawing Surface
