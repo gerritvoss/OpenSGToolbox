@@ -409,7 +409,8 @@ void Component::produceKeyTyped(const KeyEvent& e)
 
 void  Component::produceFocusGained(const FocusEvent& e)
 {
-   for(FocusListenerSetConstItor SetItor(_FocusListeners.begin()) ; SetItor != _FocusListeners.end() ; ++SetItor)
+	FocusListenerSet ListenerSet(_FocusListeners);
+   for(FocusListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->focusGained(e);
    }
@@ -417,7 +418,8 @@ void  Component::produceFocusGained(const FocusEvent& e)
 
 void  Component::produceFocusLost(const FocusEvent& e)
 {
-   for(FocusListenerSetConstItor SetItor(_FocusListeners.begin()) ; SetItor != _FocusListeners.end() ; ++SetItor)
+	FocusListenerSet ListenerSet(_FocusListeners);
+   for(FocusListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->focusLost(e);
    }
@@ -514,9 +516,9 @@ bool Component::takeFocus(bool Temporary)
 			{
 				getParentFrame()->getFocusedComponent()->giveFocus(ComponentPtr(this));
 			}
+		    getParentFrame()->setFocusedComponent(ComponentPtr(this));
             produceFocusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, getParentFrame()->getFocusedComponent()));
 			//beginEditCP(getParentFrame(), Frame::FocusedComponentFieldMask);
-				getParentFrame()->setFocusedComponent(ComponentPtr(this));
 			//endEditCP(getParentFrame(), Frame::FocusedComponentFieldMask);
 		}
 		return true;

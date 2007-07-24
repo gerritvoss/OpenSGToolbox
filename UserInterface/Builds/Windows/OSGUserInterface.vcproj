@@ -511,6 +511,34 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Component\OSGRotatedComponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGRotatedComponent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGRotatedComponent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGRotatedComponentBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGRotatedComponentBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGRotatedComponentBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Component\OSGRotatedComponentFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Component\OSGTabPanel.cpp"
 					>
 				</File>

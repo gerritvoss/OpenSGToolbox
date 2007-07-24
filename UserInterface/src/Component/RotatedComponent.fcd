@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="RotatedComponent"
+	parent="Component"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI Button.
+	<Field
+		name="Component"
+		type="ComponentPtr"
+		cardinality="single"
+		visibility="external"
+		header="Component/OSGComponentFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Angle"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

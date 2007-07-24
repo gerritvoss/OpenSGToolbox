@@ -43,10 +43,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define OSG_COMPILEUSERINTERFACELIB
+
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGFrame.h"
-#include "UIDrawingSurface/OSGUIDrawingSurface.h"
+#include "OSGRotatedComponent.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -54,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::Frame
-A UI Frame. 
+/*! \class osg::RotatedComponent
+A UI Button. 	
 */
 
 /***************************************************************************\
@@ -66,7 +67,7 @@ A UI Frame.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Frame::initMethod (void)
+void RotatedComponent::initMethod (void)
 {
 }
 
@@ -75,90 +76,47 @@ void Frame::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Frame::keyPressed(const KeyEvent& e)
+void RotatedComponent::drawInternal(const GraphicsPtr TheGraphics) const
 {
-	//Send Key event to Component that has Focus
-	//If there is not Focused Component then do nothing
-	if(getFocusedComponent() != NullFC)
-	{
-		getFocusedComponent()->keyPressed(e);
-	}
+   Pnt2s TopLeft, BottomRight;
+   getInsideBorderBounds(TopLeft, BottomRight);
 }
-
-void Frame::keyReleased(const KeyEvent& e)
-{
-	//Send Key event to Component that has Focus
-	//If there is not Focused Component then do nothing
-	if(getFocusedComponent() != NullFC)
-	{
-		getFocusedComponent()->keyReleased(e);
-	}
-}
-
-void Frame::keyTyped(const KeyEvent& e)
-{
-	//Send Key event to Component that has Focus
-	//If there is not Focused Component then do nothing
-	if(getFocusedComponent() != NullFC)
-	{
-		getFocusedComponent()->keyTyped(e);
-	}
-}
-
-FramePtr &Frame::getParentFrame(void)
-{
-    if(Component::getParentFrame() == NullFC)
-    {
-		beginEditCP(FramePtr(this), Component::ParentFrameFieldMask);
-		setParentFrame(FramePtr(this));
-		endEditCP(FramePtr(this), Component::ParentFrameFieldMask);
-    }
-    return Component::getParentFrame();
-}
-
-const FramePtr &Frame::getParentFrame(void) const
-{
-    if(Component::getParentFrame() == NullFC)
-    {
-        return FramePtr(this);
-    }
-    else
-    {
-        return Component::getParentFrame();
-    }
-}
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-Frame::Frame(void) :
+RotatedComponent::RotatedComponent(void) :
     Inherited()
 {
 }
 
-Frame::Frame(const Frame &source) :
+RotatedComponent::RotatedComponent(const RotatedComponent &source) :
     Inherited(source)
 {
 }
 
-Frame::~Frame(void)
+RotatedComponent::~RotatedComponent(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void Frame::changed(BitVector whichField, UInt32 origin)
+void RotatedComponent::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+	
+    if( (whichField & ComponentFieldMask) )
+    {
+		//Update my Preferred/Min/Max sizes so that I will contain the Component
+    }
 }
 
-void Frame::dump(      UInt32    , 
+void RotatedComponent::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump Frame NI" << std::endl;
+    SLOG << "Dump RotatedComponent NI" << std::endl;
 }
 
 
@@ -176,10 +134,10 @@ void Frame::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGFRAMEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGFRAMEBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGROTATEDCOMPONENTBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGROTATEDCOMPONENTBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGFRAMEFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGROTATEDCOMPONENTFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi
