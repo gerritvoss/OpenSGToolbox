@@ -7,6 +7,10 @@
 // Includes: explanations and examples of how to create
 // and use the six different backgrounds included in the
 // OSG User Interface library.
+//
+// Note that the Active Border and Background are not set, 
+// meaning that if pressed, the Buttons revert to the default
+// settings for Background and Border.
 
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
@@ -103,8 +107,6 @@ int main(int argc, char **argv)
 
 	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
-
-	
 
 	/******************************************************
 

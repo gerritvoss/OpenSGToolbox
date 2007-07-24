@@ -79,6 +79,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "13CheckboxButton", "13Check
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "14RadioButton", "14RadioButton.vcproj", "{71BD8B69-00CB-42D0-A400-4AB557827EFD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "15TabbedPanel", "15TabbedPanel.vcproj", "{6905F238-9916-4815-90E2-1B868BE61C78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -151,6 +153,10 @@ Global
 		{71BD8B69-00CB-42D0-A400-4AB557827EFD}.Debug|Win32.Build.0 = Debug|Win32
 		{71BD8B69-00CB-42D0-A400-4AB557827EFD}.Release|Win32.ActiveCfg = Release|Win32
 		{71BD8B69-00CB-42D0-A400-4AB557827EFD}.Release|Win32.Build.0 = Release|Win32
+		{6905F238-9916-4815-90E2-1B868BE61C78}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6905F238-9916-4815-90E2-1B868BE61C78}.Debug|Win32.Build.0 = Debug|Win32
+		{6905F238-9916-4815-90E2-1B868BE61C78}.Release|Win32.ActiveCfg = Release|Win32
+		{6905F238-9916-4815-90E2-1B868BE61C78}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

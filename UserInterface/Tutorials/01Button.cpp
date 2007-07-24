@@ -108,12 +108,7 @@ int main(int argc, char **argv)
 	// Create a simple Font to be used with the Button
 	FontPtr sampleFont = osg::Font::create();
     beginEditCP(sampleFont, Font::SizeFieldMask | Font::FamilyFieldMask | Font::GapFieldMask | Font::GlyphPixelSizeFieldMask | Font::TextureWidthFieldMask | Font::StyleFieldMask);
-		sampleFont->setFamily("SANS");
-		sampleFont->setGap(1);
-		sampleFont->setGlyphPixelSize(46);
 		sampleFont->setSize(16);
-		//sampleFont->setTextureWidth(0);
-        sampleFont->setStyle(TextFace::STYLE_PLAIN);
 	endEditCP(sampleFont, Font::SizeFieldMask | Font::FamilyFieldMask | Font::GapFieldMask | Font::GlyphPixelSizeFieldMask | Font::TextureWidthFieldMask | Font::StyleFieldMask);
 
 	/******************************************************
@@ -148,7 +143,10 @@ int main(int argc, char **argv)
 			// HORIZONTAL_LEFT, HORIZONTAL_RIGHT
 		button1->setHorizontalAlignment(HORIZONTAL_RIGHT);
     endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
-	button1->addActionListener( new Button1ActionListener());
+	
+	Button1ActionListener button1AL;
+	
+	button1->addActionListener( &button1AL);
 
 
 	// Create The Main Frame

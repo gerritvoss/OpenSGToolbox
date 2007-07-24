@@ -3,9 +3,6 @@
 // This tutorial explains how to implement the 
 // Borders offered by the OSG User Interface 
 // library and how to modify their features.
-//
-// Note the difference when clicking on matteButton
-// as compared with the other Buttons.
 // 
 // Includes: BevelBorder, CompoundBorder, EmptyBorder
 // EtchedBorder, LineBorder, MatteBorder
@@ -207,50 +204,41 @@ int main(int argc, char **argv)
 	ButtonPtr matteButton = osg::Button::create();
 	
 	// Edit each Button Component and assign its Border via the
-	// setBorder function.  Note that setActiveBorder assigns the
-	// Border to also be present while the Button is pressed by
-	// clicking on it.
+	// setBorder function
 	beginEditCP(bevelButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 		bevelButton->setPreferredSize(Vec2s(100,50));
 		bevelButton->setText("Bevel Border");
 		bevelButton->setBorder(bevelBorder);
-		bevelButton->setActiveBorder(bevelBorder);
 	endEditCP  (bevelButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 	
 	beginEditCP(compoundButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 		compoundButton->setPreferredSize(Vec2s(100,50));
 		compoundButton->setText("Compound Border");
 		compoundButton->setBorder(compoundBorder);
-		compoundButton->setActiveBorder(compoundBorder);
 	endEditCP  (compoundButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 
 	beginEditCP(emptyButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 		emptyButton->setPreferredSize(Vec2s(100,50));
 		emptyButton->setText("Empty Border");
 		emptyButton->setBorder(emptyBorder);
-		emptyButton->setActiveBorder(emptyBorder);
 	endEditCP  (emptyButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 	
 	beginEditCP(etchedButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 		etchedButton->setPreferredSize(Vec2s(100,50));
 		etchedButton->setText("Etched Border");
 		etchedButton->setBorder(etchedBorder);
-		etchedButton->setActiveBorder(etchedBorder);
 	endEditCP  (etchedButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 
 	beginEditCP(lineButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 		lineButton->setPreferredSize(Vec2s(100,50));
 		lineButton->setText("Line Border");
 		lineButton->setBorder(lineBorder);
-		lineButton->setActiveBorder(lineBorder);
 	endEditCP  (lineButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 
 	beginEditCP(matteButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 		matteButton->setPreferredSize(Vec2s(100,50));
 		matteButton->setText("Matte Border");
 		matteButton->setBorder(matteBorder);
-		// Note that when matteButton is pressed, the Border will revert to the 
-		// default Border for Buttons, a "pressed" BevelBorder
 	endEditCP  (matteButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 
 
