@@ -67,11 +67,10 @@
 
 #include "OSGToggleButton.h" // Parent
 
-#include <OpenSG/OSGBoolFields.h> // Checked type
 #include "OSGUIDrawObjectCanvas.h" // DrawObject type
-#include "OSGUIDrawObjectCanvas.h" // CheckedDrawObject type
+#include "OSGUIDrawObjectCanvas.h" // SelectedDrawObject type
 #include "OSGUIDrawObjectCanvas.h" // ActiveDrawObject type
-#include "OSGUIDrawObjectCanvas.h" // ActiveCheckedDrawObject type
+#include "OSGUIDrawObjectCanvas.h" // ActiveSelectedDrawObject type
 
 #include "OSGCheckboxButtonFields.h"
 
@@ -95,19 +94,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
 
     enum
     {
-        CheckedFieldId                 = Inherited::NextFieldId,
-        DrawObjectFieldId              = CheckedFieldId                 + 1,
-        CheckedDrawObjectFieldId       = DrawObjectFieldId              + 1,
-        ActiveDrawObjectFieldId        = CheckedDrawObjectFieldId       + 1,
-        ActiveCheckedDrawObjectFieldId = ActiveDrawObjectFieldId        + 1,
-        NextFieldId                    = ActiveCheckedDrawObjectFieldId + 1
+        DrawObjectFieldId              = Inherited::NextFieldId,
+        SelectedDrawObjectFieldId       = DrawObjectFieldId              + 1,
+        ActiveDrawObjectFieldId        = SelectedDrawObjectFieldId       + 1,
+        ActiveSelectedDrawObjectFieldId = ActiveDrawObjectFieldId        + 1,
+        NextFieldId                    = ActiveSelectedDrawObjectFieldId + 1
     };
 
-    static const OSG::BitVector CheckedFieldMask;
     static const OSG::BitVector DrawObjectFieldMask;
-    static const OSG::BitVector CheckedDrawObjectFieldMask;
+    static const OSG::BitVector SelectedDrawObjectFieldMask;
     static const OSG::BitVector ActiveDrawObjectFieldMask;
-    static const OSG::BitVector ActiveCheckedDrawObjectFieldMask;
+    static const OSG::BitVector ActiveSelectedDrawObjectFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -134,33 +131,29 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFBool              *getSFChecked        (void);
            SFUIDrawObjectCanvasPtr *getSFDrawObject     (void);
-           SFUIDrawObjectCanvasPtr *getSFCheckedDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFSelectedDrawObject(void);
            SFUIDrawObjectCanvasPtr *getSFActiveDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFActiveCheckedDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFActiveSelectedDrawObject(void);
 
-           bool                &getChecked        (void);
-     const bool                &getChecked        (void) const;
            UIDrawObjectCanvasPtr &getDrawObject     (void);
      const UIDrawObjectCanvasPtr &getDrawObject     (void) const;
-           UIDrawObjectCanvasPtr &getCheckedDrawObject(void);
-     const UIDrawObjectCanvasPtr &getCheckedDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getSelectedDrawObject(void);
+     const UIDrawObjectCanvasPtr &getSelectedDrawObject(void) const;
            UIDrawObjectCanvasPtr &getActiveDrawObject(void);
      const UIDrawObjectCanvasPtr &getActiveDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getActiveCheckedDrawObject(void);
-     const UIDrawObjectCanvasPtr &getActiveCheckedDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getActiveSelectedDrawObject(void);
+     const UIDrawObjectCanvasPtr &getActiveSelectedDrawObject(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setChecked        ( const bool &value );
      void setDrawObject     ( const UIDrawObjectCanvasPtr &value );
-     void setCheckedDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
      void setActiveDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setActiveCheckedDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setActiveSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -203,11 +196,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFBool              _sfChecked;
     SFUIDrawObjectCanvasPtr   _sfDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfCheckedDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfSelectedDrawObject;
     SFUIDrawObjectCanvasPtr   _sfActiveDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfActiveCheckedDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfActiveSelectedDrawObject;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

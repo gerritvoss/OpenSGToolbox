@@ -45,10 +45,11 @@
  
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
-#include "OSGListDataListener.h"
 #include <OpenSG/OSGField.h>
 
 OSG_BEGIN_NAMESPACE
+class ListDataListener;
+typedef ListDataListener* ListDataListenerPtr;
 	 
 class OSG_USERINTERFACELIB_DLLMAPPING ListModel
 {

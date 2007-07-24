@@ -46,6 +46,7 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGListBase.h"
+#include "Event/OSGFocusListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -53,7 +54,7 @@ class ListModel;
 class ListCellGenerator;
 class ListSelectionModel;
 
-class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase
+class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public FocusListener
 {
   private:
 
@@ -62,6 +63,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase
     /*==========================  PUBLIC  =================================*/
   public:
 
+	virtual void focusGained(const FocusEvent& e);
+	virtual void focusLost(const FocusEvent& e);
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -79,6 +82,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase
 
     /*! \}                                                                 */
    
+    virtual void updateLayout(void);
+
     void setModel(ListModel* Model);
     void setCellGenerator(ListCellGenerator* CellGenerator);
     void setSelectionModel(ListSelectionModel* SelectionModel);
@@ -106,7 +111,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase
     virtual ~List(void); 
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
 
     ListModel *_Model;
     ListCellGenerator *_CellGenerator;

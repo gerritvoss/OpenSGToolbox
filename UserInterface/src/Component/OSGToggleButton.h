@@ -46,6 +46,7 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGToggleButtonBase.h"
+#include "Event/OSGButtonSelectedListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -76,6 +77,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
     /*! \}                                                                 */
 
 	virtual void mouseReleased(const MouseEvent& e);
+    void addButtonSelectedListener(ButtonSelectedListenerPtr Listener);
+    void removeButtonSelectedListener(ButtonSelectedListenerPtr Listener);
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -99,6 +102,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
     /*! \}                                                                 */
 	virtual void draw(const GraphicsPtr TheGraphics) const;
     
+	typedef std::set<ButtonSelectedListenerPtr> ButtonSelectedListenerSet;
+    typedef ButtonSelectedListenerSet::iterator ButtonSelectedListenerSetItor;
+    typedef ButtonSelectedListenerSet::const_iterator ButtonSelectedListenerSetConstItor;
+	
+    ButtonSelectedListenerSet       _ButtonSelectedListeners;
+    void produceButtonSelected(const ButtonSelectedEvent& e);
+    void produceButtonDeselected(const ButtonSelectedEvent& e);
     /*==========================  PRIVATE  ================================*/
   private:
 

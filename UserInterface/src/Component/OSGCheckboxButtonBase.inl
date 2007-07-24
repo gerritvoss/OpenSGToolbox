@@ -49,7 +49,7 @@
 \*****************************************************************************/
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -96,13 +96,6 @@ CheckboxButtonPtr CheckboxButtonBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the CheckboxButton::_sfChecked field.
-inline
-SFBool *CheckboxButtonBase::getSFChecked(void)
-{
-    return &_sfChecked;
-}
-
 //! Get the CheckboxButton::_sfDrawObject field.
 inline
 SFUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFDrawObject(void)
@@ -110,11 +103,11 @@ SFUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFDrawObject(void)
     return &_sfDrawObject;
 }
 
-//! Get the CheckboxButton::_sfCheckedDrawObject field.
+//! Get the CheckboxButton::_sfSelectedDrawObject field.
 inline
-SFUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFCheckedDrawObject(void)
+SFUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFSelectedDrawObject(void)
 {
-    return &_sfCheckedDrawObject;
+    return &_sfSelectedDrawObject;
 }
 
 //! Get the CheckboxButton::_sfActiveDrawObject field.
@@ -124,34 +117,13 @@ SFUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFActiveDrawObject(void)
     return &_sfActiveDrawObject;
 }
 
-//! Get the CheckboxButton::_sfActiveCheckedDrawObject field.
+//! Get the CheckboxButton::_sfActiveSelectedDrawObject field.
 inline
-SFUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFActiveCheckedDrawObject(void)
+SFUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFActiveSelectedDrawObject(void)
 {
-    return &_sfActiveCheckedDrawObject;
+    return &_sfActiveSelectedDrawObject;
 }
 
-
-//! Get the value of the CheckboxButton::_sfChecked field.
-inline
-bool &CheckboxButtonBase::getChecked(void)
-{
-    return _sfChecked.getValue();
-}
-
-//! Get the value of the CheckboxButton::_sfChecked field.
-inline
-const bool &CheckboxButtonBase::getChecked(void) const
-{
-    return _sfChecked.getValue();
-}
-
-//! Set the value of the CheckboxButton::_sfChecked field.
-inline
-void CheckboxButtonBase::setChecked(const bool &value)
-{
-    _sfChecked.setValue(value);
-}
 
 //! Get the value of the CheckboxButton::_sfDrawObject field.
 inline
@@ -174,25 +146,25 @@ void CheckboxButtonBase::setDrawObject(const UIDrawObjectCanvasPtr &value)
     _sfDrawObject.setValue(value);
 }
 
-//! Get the value of the CheckboxButton::_sfCheckedDrawObject field.
+//! Get the value of the CheckboxButton::_sfSelectedDrawObject field.
 inline
-UIDrawObjectCanvasPtr &CheckboxButtonBase::getCheckedDrawObject(void)
+UIDrawObjectCanvasPtr &CheckboxButtonBase::getSelectedDrawObject(void)
 {
-    return _sfCheckedDrawObject.getValue();
+    return _sfSelectedDrawObject.getValue();
 }
 
-//! Get the value of the CheckboxButton::_sfCheckedDrawObject field.
+//! Get the value of the CheckboxButton::_sfSelectedDrawObject field.
 inline
-const UIDrawObjectCanvasPtr &CheckboxButtonBase::getCheckedDrawObject(void) const
+const UIDrawObjectCanvasPtr &CheckboxButtonBase::getSelectedDrawObject(void) const
 {
-    return _sfCheckedDrawObject.getValue();
+    return _sfSelectedDrawObject.getValue();
 }
 
-//! Set the value of the CheckboxButton::_sfCheckedDrawObject field.
+//! Set the value of the CheckboxButton::_sfSelectedDrawObject field.
 inline
-void CheckboxButtonBase::setCheckedDrawObject(const UIDrawObjectCanvasPtr &value)
+void CheckboxButtonBase::setSelectedDrawObject(const UIDrawObjectCanvasPtr &value)
 {
-    _sfCheckedDrawObject.setValue(value);
+    _sfSelectedDrawObject.setValue(value);
 }
 
 //! Get the value of the CheckboxButton::_sfActiveDrawObject field.
@@ -216,25 +188,25 @@ void CheckboxButtonBase::setActiveDrawObject(const UIDrawObjectCanvasPtr &value)
     _sfActiveDrawObject.setValue(value);
 }
 
-//! Get the value of the CheckboxButton::_sfActiveCheckedDrawObject field.
+//! Get the value of the CheckboxButton::_sfActiveSelectedDrawObject field.
 inline
-UIDrawObjectCanvasPtr &CheckboxButtonBase::getActiveCheckedDrawObject(void)
+UIDrawObjectCanvasPtr &CheckboxButtonBase::getActiveSelectedDrawObject(void)
 {
-    return _sfActiveCheckedDrawObject.getValue();
+    return _sfActiveSelectedDrawObject.getValue();
 }
 
-//! Get the value of the CheckboxButton::_sfActiveCheckedDrawObject field.
+//! Get the value of the CheckboxButton::_sfActiveSelectedDrawObject field.
 inline
-const UIDrawObjectCanvasPtr &CheckboxButtonBase::getActiveCheckedDrawObject(void) const
+const UIDrawObjectCanvasPtr &CheckboxButtonBase::getActiveSelectedDrawObject(void) const
 {
-    return _sfActiveCheckedDrawObject.getValue();
+    return _sfActiveSelectedDrawObject.getValue();
 }
 
-//! Set the value of the CheckboxButton::_sfActiveCheckedDrawObject field.
+//! Set the value of the CheckboxButton::_sfActiveSelectedDrawObject field.
 inline
-void CheckboxButtonBase::setActiveCheckedDrawObject(const UIDrawObjectCanvasPtr &value)
+void CheckboxButtonBase::setActiveSelectedDrawObject(const UIDrawObjectCanvasPtr &value)
 {
-    _sfActiveCheckedDrawObject.setValue(value);
+    _sfActiveSelectedDrawObject.setValue(value);
 }
 
 

@@ -142,7 +142,7 @@ int main(int argc, char **argv)
 			// Determine the HorizontalAlignment of the Text- HORIZONTAL_CENTER,
 			// HORIZONTAL_LEFT, HORIZONTAL_RIGHT
 		checkboxButton->setHorizontalAlignment(HORIZONTAL_CENTER);
-		checkboxButton->setChecked(true);
+		checkboxButton->setSelected(true);
 			// You can also change the way that the checkbox button looks by assigning
 			// different draw objects using the setDrawObject, setCheckedDrawObject, setActiveDrawObject,
 			// and setActiveCheckedDrawObject.

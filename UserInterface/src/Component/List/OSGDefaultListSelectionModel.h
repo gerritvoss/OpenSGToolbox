@@ -45,7 +45,6 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGDefaultListSelectionModelBase.h"
 #include "OSGListSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
@@ -54,32 +53,10 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceDefaultListSelectionModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public DefaultListSelectionModelBase
-   , public ListSelectionModel
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public ListSelectionModel
 {
-  private:
-
-    typedef DefaultListSelectionModelBase Inherited;
-
     /*==========================  PUBLIC  =================================*/
   public:
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
-    /*! \{                                                                 */
-
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
-
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
-
-    /*! \}                                                                 */
    virtual void 	addListSelectionListener(ListSelectionListenerPtr x);
 
    virtual void 	addSelectionInterval(UInt32 index0, UInt32 index1);
@@ -119,17 +96,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public Default
    virtual void 	setSelectionMode(Int32 selectionMode);
    
    virtual void 	setValueIsAdjusting(bool valueIsAdjusting);
-    /*=========================  PROTECTED  ===============================*/
-  protected:
-
-    // Variables should all be in DefaultListSelectionModelBase.
-
+   
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
     DefaultListSelectionModel(void);
-    DefaultListSelectionModel(const DefaultListSelectionModel &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -139,27 +111,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public Default
     virtual ~DefaultListSelectionModel(void); 
 
     /*! \}                                                                 */
+
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in DefaultListSelectionModelBase.
+
     
     /*==========================  PRIVATE  ================================*/
   private:
-
-    friend class FieldContainer;
-    friend class DefaultListSelectionModelBase;
-
-    static void initMethod(void);
-
-    // prohibit default functions (move to 'public' if you need one)
-
-    void operator =(const DefaultListSelectionModel &source);
 };
 
 typedef DefaultListSelectionModel *DefaultListSelectionModelP;
 
 OSG_END_NAMESPACE
 
-#include "OSGDefaultListSelectionModelBase.inl"
 #include "OSGDefaultListSelectionModel.inl"
-
-#define OSGDEFAULTLISTSELECTIONMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGDEFAULTLISTSELECTIONMODEL_H_ */

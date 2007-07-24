@@ -74,8 +74,51 @@ void List::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void List::drawInternal(const GraphicsPtr Graphics) const
+void List::focusGained(const FocusEvent& e)
 {
+
+}
+
+void List::focusLost(const FocusEvent& e)
+{
+}
+
+void List::setModel(ListModel* Model)
+{
+	beginEditCP(ListPtr(this), ChildrenFieldMask);
+		getChildren().clear();
+	endEditCP(ListPtr(this), ChildrenFieldMask);
+	//Should through a ListDataEvent of removeInterval
+
+	_Model = Model;
+}
+
+void List::updateLayout(void)
+{
+    //Update Layout
+	if(getModel() != NULL)
+	{
+		if(getModel()->getSize() != getChildren().size())
+		{
+			beginEditCP(ListPtr(this), ChildrenFieldMask);
+				for(UInt32 i(0) ; i<getModel()->getSize() ; ++i )
+				{
+					getChildren().addValue(getCellGenerator()->getListCellGeneratorComponent(ListPtr(this),getModel()->getElementAt(i),i,false,false));
+					getChildren().getValue(i)->addFocusListener(this);
+				}
+			endEditCP(ListPtr(this), ChildrenFieldMask);
+		}
+		Pnt2s Position(0,0);
+		for(UInt32 i(0) ; i<getChildren().size() ; ++i )
+		{
+			beginEditCP(getChildren().getValue(i), PositionFieldMask | SizeFieldMask);
+			   getChildren().getValue(i)->setPosition(Position);
+			   getChildren().getValue(i)->setSize( Vec2s(getSize().x(), getChildren().getValue(i)->getPreferredSize().y()) );
+			endEditCP(getChildren().getValue(i), PositionFieldMask | SizeFieldMask);
+
+			Position[1] += getChildren().getValue(i)->getSize()[1];
+		}
+	}
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -84,12 +127,18 @@ void List::drawInternal(const GraphicsPtr Graphics) const
 /*----------------------- constructors & destructors ----------------------*/
 
 List::List(void) :
-    Inherited()
+    Inherited(),
+		_Model(NULL),
+		_CellGenerator(NULL),
+		_SelectionModel(NULL)
 {
 }
 
 List::List(const List &source) :
-    Inherited(source)
+    Inherited(source),
+		_Model(source._Model),
+		_CellGenerator(source._CellGenerator),
+		_SelectionModel(source._SelectionModel)
 {
 }
 

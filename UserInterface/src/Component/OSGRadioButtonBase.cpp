@@ -57,7 +57,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 #include "OSGRadioButtonBase.h"
 #include "OSGRadioButton.h"
 
@@ -67,17 +67,14 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  RadioButtonBase::DrawObjectFieldMask = 
     (TypeTraits<BitVector>::One << RadioButtonBase::DrawObjectFieldId);
 
-const OSG::BitVector  RadioButtonBase::CheckedDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << RadioButtonBase::CheckedDrawObjectFieldId);
+const OSG::BitVector  RadioButtonBase::SelectedDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << RadioButtonBase::SelectedDrawObjectFieldId);
 
 const OSG::BitVector  RadioButtonBase::ActiveDrawObjectFieldMask = 
     (TypeTraits<BitVector>::One << RadioButtonBase::ActiveDrawObjectFieldId);
 
-const OSG::BitVector  RadioButtonBase::ActiveCheckedDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << RadioButtonBase::ActiveCheckedDrawObjectFieldId);
-
-const OSG::BitVector  RadioButtonBase::CheckedFieldMask = 
-    (TypeTraits<BitVector>::One << RadioButtonBase::CheckedFieldId);
+const OSG::BitVector  RadioButtonBase::ActiveSelectedDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << RadioButtonBase::ActiveSelectedDrawObjectFieldId);
 
 const OSG::BitVector RadioButtonBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -89,16 +86,13 @@ const OSG::BitVector RadioButtonBase::MTInfluenceMask =
 /*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfDrawObject
     
 */
-/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfCheckedDrawObject
+/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfSelectedDrawObject
     
 */
 /*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfActiveDrawObject
     
 */
-/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfActiveCheckedDrawObject
-    
-*/
-/*! \var bool            RadioButtonBase::_sfChecked
+/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfActiveSelectedDrawObject
     
 */
 
@@ -112,25 +106,20 @@ FieldDescription *RadioButtonBase::_desc[] =
                      false,
                      (FieldAccessMethod) &RadioButtonBase::getSFDrawObject),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "CheckedDrawObject", 
-                     CheckedDrawObjectFieldId, CheckedDrawObjectFieldMask,
+                     "SelectedDrawObject", 
+                     SelectedDrawObjectFieldId, SelectedDrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &RadioButtonBase::getSFCheckedDrawObject),
+                     (FieldAccessMethod) &RadioButtonBase::getSFSelectedDrawObject),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
                      "ActiveDrawObject", 
                      ActiveDrawObjectFieldId, ActiveDrawObjectFieldMask,
                      false,
                      (FieldAccessMethod) &RadioButtonBase::getSFActiveDrawObject),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "ActiveCheckedDrawObject", 
-                     ActiveCheckedDrawObjectFieldId, ActiveCheckedDrawObjectFieldMask,
+                     "ActiveSelectedDrawObject", 
+                     ActiveSelectedDrawObjectFieldId, ActiveSelectedDrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &RadioButtonBase::getSFActiveCheckedDrawObject),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Checked", 
-                     CheckedFieldId, CheckedFieldMask,
-                     false,
-                     (FieldAccessMethod) &RadioButtonBase::getSFChecked)
+                     (FieldAccessMethod) &RadioButtonBase::getSFActiveSelectedDrawObject)
 };
 
 
@@ -207,10 +196,9 @@ void RadioButtonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 RadioButtonBase::RadioButtonBase(void) :
     _sfDrawObject             (), 
-    _sfCheckedDrawObject      (), 
+    _sfSelectedDrawObject      (), 
     _sfActiveDrawObject       (), 
-    _sfActiveCheckedDrawObject(), 
-    _sfChecked                (bool(false)), 
+    _sfActiveSelectedDrawObject(), 
     Inherited() 
 {
 }
@@ -221,10 +209,9 @@ RadioButtonBase::RadioButtonBase(void) :
 
 RadioButtonBase::RadioButtonBase(const RadioButtonBase &source) :
     _sfDrawObject             (source._sfDrawObject             ), 
-    _sfCheckedDrawObject      (source._sfCheckedDrawObject      ), 
+    _sfSelectedDrawObject      (source._sfSelectedDrawObject      ), 
     _sfActiveDrawObject       (source._sfActiveDrawObject       ), 
-    _sfActiveCheckedDrawObject(source._sfActiveCheckedDrawObject), 
-    _sfChecked                (source._sfChecked                ), 
+    _sfActiveSelectedDrawObject(source._sfActiveSelectedDrawObject), 
     Inherited                 (source)
 {
 }
@@ -246,9 +233,9 @@ UInt32 RadioButtonBase::getBinSize(const BitVector &whichField)
         returnValue += _sfDrawObject.getBinSize();
     }
 
-    if(FieldBits::NoField != (CheckedDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (SelectedDrawObjectFieldMask & whichField))
     {
-        returnValue += _sfCheckedDrawObject.getBinSize();
+        returnValue += _sfSelectedDrawObject.getBinSize();
     }
 
     if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
@@ -256,14 +243,9 @@ UInt32 RadioButtonBase::getBinSize(const BitVector &whichField)
         returnValue += _sfActiveDrawObject.getBinSize();
     }
 
-    if(FieldBits::NoField != (ActiveCheckedDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (ActiveSelectedDrawObjectFieldMask & whichField))
     {
-        returnValue += _sfActiveCheckedDrawObject.getBinSize();
-    }
-
-    if(FieldBits::NoField != (CheckedFieldMask & whichField))
-    {
-        returnValue += _sfChecked.getBinSize();
+        returnValue += _sfActiveSelectedDrawObject.getBinSize();
     }
 
 
@@ -280,9 +262,9 @@ void RadioButtonBase::copyToBin(      BinaryDataHandler &pMem,
         _sfDrawObject.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (CheckedDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (SelectedDrawObjectFieldMask & whichField))
     {
-        _sfCheckedDrawObject.copyToBin(pMem);
+        _sfSelectedDrawObject.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
@@ -290,14 +272,9 @@ void RadioButtonBase::copyToBin(      BinaryDataHandler &pMem,
         _sfActiveDrawObject.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ActiveCheckedDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (ActiveSelectedDrawObjectFieldMask & whichField))
     {
-        _sfActiveCheckedDrawObject.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (CheckedFieldMask & whichField))
-    {
-        _sfChecked.copyToBin(pMem);
+        _sfActiveSelectedDrawObject.copyToBin(pMem);
     }
 
 
@@ -313,9 +290,9 @@ void RadioButtonBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfDrawObject.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (CheckedDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (SelectedDrawObjectFieldMask & whichField))
     {
-        _sfCheckedDrawObject.copyFromBin(pMem);
+        _sfSelectedDrawObject.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
@@ -323,14 +300,9 @@ void RadioButtonBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfActiveDrawObject.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ActiveCheckedDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (ActiveSelectedDrawObjectFieldMask & whichField))
     {
-        _sfActiveCheckedDrawObject.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (CheckedFieldMask & whichField))
-    {
-        _sfChecked.copyFromBin(pMem);
+        _sfActiveSelectedDrawObject.copyFromBin(pMem);
     }
 
 
@@ -346,17 +318,14 @@ void RadioButtonBase::executeSyncImpl(      RadioButtonBase *pOther,
     if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
         _sfDrawObject.syncWith(pOther->_sfDrawObject);
 
-    if(FieldBits::NoField != (CheckedDrawObjectFieldMask & whichField))
-        _sfCheckedDrawObject.syncWith(pOther->_sfCheckedDrawObject);
+    if(FieldBits::NoField != (SelectedDrawObjectFieldMask & whichField))
+        _sfSelectedDrawObject.syncWith(pOther->_sfSelectedDrawObject);
 
     if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
         _sfActiveDrawObject.syncWith(pOther->_sfActiveDrawObject);
 
-    if(FieldBits::NoField != (ActiveCheckedDrawObjectFieldMask & whichField))
-        _sfActiveCheckedDrawObject.syncWith(pOther->_sfActiveCheckedDrawObject);
-
-    if(FieldBits::NoField != (CheckedFieldMask & whichField))
-        _sfChecked.syncWith(pOther->_sfChecked);
+    if(FieldBits::NoField != (ActiveSelectedDrawObjectFieldMask & whichField))
+        _sfActiveSelectedDrawObject.syncWith(pOther->_sfActiveSelectedDrawObject);
 
 
 }
@@ -371,17 +340,14 @@ void RadioButtonBase::executeSyncImpl(      RadioButtonBase *pOther,
     if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
         _sfDrawObject.syncWith(pOther->_sfDrawObject);
 
-    if(FieldBits::NoField != (CheckedDrawObjectFieldMask & whichField))
-        _sfCheckedDrawObject.syncWith(pOther->_sfCheckedDrawObject);
+    if(FieldBits::NoField != (SelectedDrawObjectFieldMask & whichField))
+        _sfSelectedDrawObject.syncWith(pOther->_sfSelectedDrawObject);
 
     if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
         _sfActiveDrawObject.syncWith(pOther->_sfActiveDrawObject);
 
-    if(FieldBits::NoField != (ActiveCheckedDrawObjectFieldMask & whichField))
-        _sfActiveCheckedDrawObject.syncWith(pOther->_sfActiveCheckedDrawObject);
-
-    if(FieldBits::NoField != (CheckedFieldMask & whichField))
-        _sfChecked.syncWith(pOther->_sfChecked);
+    if(FieldBits::NoField != (ActiveSelectedDrawObjectFieldMask & whichField))
+        _sfActiveSelectedDrawObject.syncWith(pOther->_sfActiveSelectedDrawObject);
 
 
 

@@ -34,6 +34,7 @@
 #include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/Input/OSGEvent.h>
+#include "OSGListModel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -49,12 +50,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListDataEvent : public Event
       UInt32 	getIndex1(void) const;
       //Returns the event type.
       EventType 	getType(void) const;
+      //Returns the event type.
+      ListModelPtr 	getModel(void) const;
     
-    ListDataEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 Index0, UInt32 Index1, EventType Type);
+    ListDataEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 Index0, UInt32 Index1, EventType Type, ListModelPtr Model);
   private:
      UInt32 _Index0;
      UInt32 _Index1;
      EventType _Type;
+	 ListModelPtr _Model;
     
 };
 

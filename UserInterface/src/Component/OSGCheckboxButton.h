@@ -74,7 +74,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButton : public CheckboxButtonBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void mouseReleased(const MouseEvent& e);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

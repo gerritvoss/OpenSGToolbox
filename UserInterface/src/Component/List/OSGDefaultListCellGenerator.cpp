@@ -48,6 +48,7 @@
 #include "Background/OSGColorUIBackground.h"
 #include "Border/OSGLineBorder.h"
 #include "Border/OSGEmptyBorder.h"
+#include "Component/OSGLabel.h"
 
 #include "OSGDefaultListCellGenerator.h"
 
@@ -69,10 +70,6 @@ A DefaultListCellGenerator.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DefaultListCellGenerator::initMethod (void)
-{
-}
-
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -82,20 +79,29 @@ ComponentPtr DefaultListCellGenerator::getListCellGeneratorComponent(ListPtr lis
 	if(value == NULL){
 		return NullFC;
 	}
-	beginEditCP(DefaultListCellGeneratorPtr(this), DefaultListCellGenerator::TextFieldMask);
+	LabelPtr TheLabel = Label::create();
+	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
 		std::string tempString;
-		value->getValueByStr(tempString);
-		setText(tempString);
-	endEditCP(DefaultListCellGeneratorPtr(this), DefaultListCellGenerator::TextFieldMask);
+		if(value->getType() == SFString::getClassType())
+		{
+			tempString = dynamic_cast<SFString*>(value)->getValue();
+		}
+		else
+		{
+			value->getValueByStr(tempString);
+		}
+		TheLabel->setText(tempString);
+		TheLabel->setPreferredSize(Vec2s(100,30));
+	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
 	ColorUIBackgroundPtr tempBackground;
-	if(getBackground()->getType() == ColorUIBackground::getClassType()){
-		tempBackground = ColorUIBackground::Ptr::dcast(getBackground());
+	if(TheLabel->getBackground()->getType() == ColorUIBackground::getClassType()){
+		tempBackground = ColorUIBackground::Ptr::dcast(TheLabel->getBackground());
 	}
 	else{
 		tempBackground = ColorUIBackground::create();
-		beginEditCP(DefaultListCellGeneratorPtr(this), DefaultListCellGenerator::BackgroundFieldMask);
-			setBackground(tempBackground);
-		endEditCP(DefaultListCellGeneratorPtr(this), DefaultListCellGenerator::BackgroundFieldMask);
+		beginEditCP(TheLabel, Label::BackgroundFieldMask);
+			TheLabel->setBackground(tempBackground);
+		endEditCP(TheLabel, Label::BackgroundFieldMask);
 	}
 	beginEditCP(tempBackground, ColorUIBackground::ColorFieldMask);
 		if(isSelected){
@@ -107,14 +113,14 @@ ComponentPtr DefaultListCellGenerator::getListCellGeneratorComponent(ListPtr lis
 	endEditCP(tempBackground, ColorUIBackground::ColorFieldMask);
 	if(cellHasFocus){
 		LineBorderPtr tempBorder;
-		if(getBorder()->getType() == LineBorder::getClassType()){
-			tempBorder = LineBorder::Ptr::dcast(getBorder());
+		if(TheLabel->getBorder()->getType() == LineBorder::getClassType()){
+			tempBorder = LineBorder::Ptr::dcast(TheLabel->getBorder());
 		}
 		else{
 			tempBorder = LineBorder::create();
-			beginEditCP(DefaultListCellGeneratorPtr(this), DefaultListCellGenerator::BorderFieldMask);
-				setBorder(tempBorder);
-			endEditCP(DefaultListCellGeneratorPtr(this), DefaultListCellGenerator::BorderFieldMask);
+			beginEditCP(TheLabel, Label::BorderFieldMask);
+				TheLabel->setBorder(tempBorder);
+			endEditCP(TheLabel, Label::BorderFieldMask);
 		}
 		beginEditCP(tempBorder, LineBorder::ColorFieldMask);
 			tempBorder->setColor(Color4f(0.0, 0.0, 1.0, 1.0));
@@ -122,17 +128,17 @@ ComponentPtr DefaultListCellGenerator::getListCellGeneratorComponent(ListPtr lis
 	}
 	else{
 		EmptyBorderPtr tempBorder;
-		if(getBorder()->getType()==EmptyBorder::getClassType()){
-			tempBorder = EmptyBorder::Ptr::dcast(getBorder());
+		if(TheLabel->getBorder()->getType()==EmptyBorder::getClassType()){
+			tempBorder = EmptyBorder::Ptr::dcast(TheLabel->getBorder());
 		}
 		else{
 			tempBorder = EmptyBorder::create();
-			beginEditCP(DefaultListCellGeneratorPtr(this), DefaultListCellGenerator::BorderFieldMask);
-				setBorder(tempBorder);
-			endEditCP(DefaultListCellGeneratorPtr(this), DefaultListCellGenerator::BorderFieldMask);
+			beginEditCP(TheLabel, Label::BorderFieldMask);
+				TheLabel->setBorder(tempBorder);
+			endEditCP(TheLabel, Label::BorderFieldMask);
 		}
 	}
-	return Component::Ptr::dcast(deepClone(DefaultListCellGeneratorPtr(this), "Material"));
+	return Component::Ptr::dcast(deepClone(TheLabel, "Material"));
 	
 	
 }
@@ -143,13 +149,7 @@ ComponentPtr DefaultListCellGenerator::getListCellGeneratorComponent(ListPtr lis
 
 /*----------------------- constructors & destructors ----------------------*/
 
-DefaultListCellGenerator::DefaultListCellGenerator(void) :
-    Inherited()
-{
-}
-
-DefaultListCellGenerator::DefaultListCellGenerator(const DefaultListCellGenerator &source) :
-    Inherited(source)
+DefaultListCellGenerator::DefaultListCellGenerator(void)
 {
 }
 
@@ -158,42 +158,6 @@ DefaultListCellGenerator::~DefaultListCellGenerator(void)
 }
 
 /*----------------------------- class specific ----------------------------*/
-
-void DefaultListCellGenerator::changed(BitVector whichField, UInt32 origin)
-{
-    Inherited::changed(whichField, origin);
-}
-
-void DefaultListCellGenerator::dump(      UInt32    , 
-                         const BitVector ) const
-{
-    SLOG << "Dump DefaultListCellGenerator NI" << std::endl;
-}
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTLISTCELLGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTLISTCELLGENERATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTLISTCELLGENERATORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

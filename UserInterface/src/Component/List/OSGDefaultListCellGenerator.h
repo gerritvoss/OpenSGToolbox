@@ -44,7 +44,7 @@
 
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
-#include "OSGDefaultListCellGeneratorBase.h"
+
 #include "OSGListCellGenerator.h"
 
 OSG_BEGIN_NAMESPACE
@@ -53,45 +53,17 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceDefaultListCellGenerator for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultListCellGenerator : public DefaultListCellGeneratorBase
-   , public ListCellGenerator
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultListCellGenerator : public ListCellGenerator
 {
-  private:
-
-    typedef DefaultListCellGeneratorBase Inherited;
-
     /*==========================  PUBLIC  =================================*/
   public:
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
-    /*! \{                                                                 */
-
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
-
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
-
-    /*! \}                                                                 */
     virtual ComponentPtr getListCellGeneratorComponent(ListPtr list, Field* value, UInt32 index, bool isSelected, bool cellHasFocus);
-
-    /*=========================  PROTECTED  ===============================*/
-  protected:
-
-    // Variables should all be in DefaultListCellGeneratorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
     DefaultListCellGenerator(void);
-    DefaultListCellGenerator(const DefaultListCellGenerator &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -101,27 +73,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListCellGenerator : public DefaultL
     virtual ~DefaultListCellGenerator(void); 
 
     /*! \}                                                                 */
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in DefaultListCellGeneratorBase.
+
     
     /*==========================  PRIVATE  ================================*/
   private:
-
-    friend class FieldContainer;
-    friend class DefaultListCellGeneratorBase;
-
-    static void initMethod(void);
-
-    // prohibit default functions (move to 'public' if you need one)
-
-    void operator =(const DefaultListCellGenerator &source);
 };
 
 typedef DefaultListCellGenerator *DefaultListCellGeneratorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGDefaultListCellGeneratorBase.inl"
 #include "OSGDefaultListCellGenerator.inl"
-
-#define OSGDEFAULTLISTCELLGENERATOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGDEFAULTLISTCELLGENERATOR_H_ */

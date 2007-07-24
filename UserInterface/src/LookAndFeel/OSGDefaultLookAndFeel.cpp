@@ -376,9 +376,9 @@ void DefaultLookAndFeel::init(void)
 	
 	//************************** Checkbox Button Component *****************************
 	UIDrawObjectCanvasPtr defaultCheckboxDrawObject = UIDrawObjectCanvas::create();
-	UIDrawObjectCanvasPtr defaultCheckedCheckboxDrawObject = UIDrawObjectCanvas::create();
+	UIDrawObjectCanvasPtr defaultSelectedCheckboxDrawObject = UIDrawObjectCanvas::create();
 	UIDrawObjectCanvasPtr defaultActiveCheckboxDrawObject = UIDrawObjectCanvas::create();
-	UIDrawObjectCanvasPtr defaultActiveCheckedCheckboxDrawObject = UIDrawObjectCanvas::create();
+	UIDrawObjectCanvasPtr defaultActiveSelectedCheckboxDrawObject = UIDrawObjectCanvas::create();
 
 	RectUIDrawObjectPtr CheckboxBackground = RectUIDrawObject::create();
 	beginEditCP(CheckboxBackground);
@@ -427,20 +427,20 @@ void DefaultLookAndFeel::init(void)
 	   defaultCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
 	endEditCP(defaultCheckboxDrawObject);
 
-	beginEditCP(defaultCheckedCheckboxDrawObject);
-		defaultCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
-		defaultCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
-		defaultCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine1);
-		defaultCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine2);
-	endEditCP(defaultCheckedCheckboxDrawObject);
+	beginEditCP(defaultSelectedCheckboxDrawObject);
+		defaultSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
+		defaultSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
+		defaultSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine1);
+		defaultSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine2);
+	endEditCP(defaultSelectedCheckboxDrawObject);
 
-	beginEditCP(defaultActiveCheckedCheckboxDrawObject);
-		defaultActiveCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
-		defaultActiveCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
-		defaultActiveCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxActiveBorder);
-		defaultActiveCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine1);
-		defaultActiveCheckedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine2);
-	endEditCP(defaultActiveCheckedCheckboxDrawObject);
+	beginEditCP(defaultActiveSelectedCheckboxDrawObject);
+		defaultActiveSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
+		defaultActiveSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
+		defaultActiveSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxActiveBorder);
+		defaultActiveSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine1);
+		defaultActiveSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine2);
+	endEditCP(defaultActiveSelectedCheckboxDrawObject);
 
 	beginEditCP(defaultActiveCheckboxDrawObject);
 	 	defaultActiveCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
@@ -468,9 +468,9 @@ void DefaultLookAndFeel::init(void)
 		DefaultCheckboxButton->setPreferredSize(Vec2s(100,50));
 		DefaultCheckboxButton->setSize(Vec2s(0,0));
 		DefaultCheckboxButton->setDrawObject(defaultCheckboxDrawObject);
-		DefaultCheckboxButton->setCheckedDrawObject(defaultCheckedCheckboxDrawObject);
+		DefaultCheckboxButton->setSelectedDrawObject(defaultSelectedCheckboxDrawObject);
 		DefaultCheckboxButton->setActiveDrawObject(defaultActiveCheckboxDrawObject);
-		DefaultCheckboxButton->setActiveCheckedDrawObject(defaultActiveCheckedCheckboxDrawObject);
+		DefaultCheckboxButton->setActiveSelectedDrawObject(defaultActiveSelectedCheckboxDrawObject);
 
 		//Border
 		DefaultCheckboxButton->setBorder(DefaultCheckboxButtonBorder);
@@ -498,9 +498,9 @@ void DefaultLookAndFeel::init(void)
 
 	//************************** Radio Button Component *****************************
 	UIDrawObjectCanvasPtr defaultRadioDrawObject = UIDrawObjectCanvas::create();
-	UIDrawObjectCanvasPtr defaultCheckedRadioDrawObject = UIDrawObjectCanvas::create();
+	UIDrawObjectCanvasPtr defaultSelectedRadioDrawObject = UIDrawObjectCanvas::create();
 	UIDrawObjectCanvasPtr defaultActiveRadioDrawObject = UIDrawObjectCanvas::create();
-	UIDrawObjectCanvasPtr defaultActiveCheckedRadioDrawObject = UIDrawObjectCanvas::create();
+	UIDrawObjectCanvasPtr defaultActiveSelectedRadioDrawObject = UIDrawObjectCanvas::create();
 
 	DiscUIDrawObjectPtr RadioBackground = DiscUIDrawObject::create();
 	beginEditCP(RadioBackground);
@@ -527,17 +527,17 @@ void DefaultLookAndFeel::init(void)
 		RadioBackgroundBorder->setCenter(Pnt2s(0,0));
 	endEditCP(RadioBackgroundBorder);
 
-	DiscUIDrawObjectPtr RadioChecked = DiscUIDrawObject::create();
-	beginEditCP(RadioChecked);
-		RadioChecked->setWidth(6);
-		RadioChecked->setHeight(6);
-		RadioChecked->setSubDivisions(20);
-		RadioChecked->setStartAngleRad(0);
-		RadioChecked->setEndAngleRad(6.28318531);
-		RadioChecked->setColor(Color4f(0.0,0.0,0.0,1.0));
-		RadioChecked->setOpacity(1.0);
-		RadioChecked->setCenter(Pnt2s(0,0));
-	endEditCP(RadioChecked);
+	DiscUIDrawObjectPtr RadioSelected = DiscUIDrawObject::create();
+	beginEditCP(RadioSelected);
+		RadioSelected->setWidth(6);
+		RadioSelected->setHeight(6);
+		RadioSelected->setSubDivisions(20);
+		RadioSelected->setStartAngleRad(0);
+		RadioSelected->setEndAngleRad(6.28318531);
+		RadioSelected->setColor(Color4f(0.0,0.0,0.0,1.0));
+		RadioSelected->setOpacity(1.0);
+		RadioSelected->setCenter(Pnt2s(0,0));
+	endEditCP(RadioSelected);
 
 	ArcUIDrawObjectPtr RadioActiveBorder = ArcUIDrawObject::create();
 	beginEditCP(RadioActiveBorder);
@@ -556,11 +556,11 @@ void DefaultLookAndFeel::init(void)
 		defaultRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
 	endEditCP(defaultRadioDrawObject);
 
-	beginEditCP(defaultCheckedRadioDrawObject);
-		defaultCheckedRadioDrawObject->getDrawObjects().addValue(RadioBackground);
-		defaultCheckedRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
-		defaultCheckedRadioDrawObject->getDrawObjects().addValue(RadioChecked);
-	endEditCP(defaultCheckedRadioDrawObject);
+	beginEditCP(defaultSelectedRadioDrawObject);
+		defaultSelectedRadioDrawObject->getDrawObjects().addValue(RadioBackground);
+		defaultSelectedRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
+		defaultSelectedRadioDrawObject->getDrawObjects().addValue(RadioSelected);
+	endEditCP(defaultSelectedRadioDrawObject);
 
 	beginEditCP(defaultActiveRadioDrawObject);
 		defaultActiveRadioDrawObject->getDrawObjects().addValue(RadioBackground);
@@ -568,12 +568,12 @@ void DefaultLookAndFeel::init(void)
 		defaultActiveRadioDrawObject->getDrawObjects().addValue(RadioActiveBorder);
 	endEditCP(defaultActiveRadioDrawObject);
 
-	beginEditCP(defaultActiveCheckedRadioDrawObject);
-		defaultActiveCheckedRadioDrawObject->getDrawObjects().addValue(RadioBackground);
-		defaultActiveCheckedRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
-		defaultActiveCheckedRadioDrawObject->getDrawObjects().addValue(RadioChecked);
-		defaultActiveCheckedRadioDrawObject->getDrawObjects().addValue(RadioActiveBorder);
-	endEditCP(defaultActiveCheckedRadioDrawObject);
+	beginEditCP(defaultActiveSelectedRadioDrawObject);
+		defaultActiveSelectedRadioDrawObject->getDrawObjects().addValue(RadioBackground);
+		defaultActiveSelectedRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
+		defaultActiveSelectedRadioDrawObject->getDrawObjects().addValue(RadioSelected);
+		defaultActiveSelectedRadioDrawObject->getDrawObjects().addValue(RadioActiveBorder);
+	endEditCP(defaultActiveSelectedRadioDrawObject);
 		
 	EmptyBorderPtr DefaultRadioButtonBorder = EmptyBorder::create();
 
@@ -591,9 +591,9 @@ void DefaultLookAndFeel::init(void)
 		DefaultRadioButton->setMaxSize(Vec2s(32767,32767));
 		DefaultRadioButton->setPreferredSize(Vec2s(100, 100));
 		DefaultRadioButton->setDrawObject(defaultRadioDrawObject);
-		DefaultRadioButton->setCheckedDrawObject(defaultCheckedRadioDrawObject);
+		DefaultRadioButton->setSelectedDrawObject(defaultSelectedRadioDrawObject);
 		DefaultRadioButton->setActiveDrawObject(defaultActiveRadioDrawObject);
-		DefaultRadioButton->setActiveCheckedDrawObject(defaultActiveCheckedRadioDrawObject);
+		DefaultRadioButton->setActiveSelectedDrawObject(defaultActiveSelectedRadioDrawObject);
 		DefaultRadioButton->setBorder(DefaultRadioButtonBorder);
 		DefaultRadioButton->setActiveBorder(DefaultRadioButtonBorder);
 		DefaultRadioButton->setBackground(DefaultRadioButtonBackground);

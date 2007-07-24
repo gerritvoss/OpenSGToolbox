@@ -45,7 +45,6 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGAbstractListModelBase.h"
 #include "OSGListModel.h"
 
 OSG_BEGIN_NAMESPACE
@@ -54,32 +53,10 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceAbstractListModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractListModel : public AbstractListModelBase
-   , public ListModel
+class OSG_USERINTERFACELIB_DLLMAPPING AbstractListModel : public ListModel
 {
-  private:
-
-    typedef AbstractListModelBase Inherited;
-
     /*==========================  PUBLIC  =================================*/
   public:
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
-    /*! \{                                                                 */
-
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
-
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
-
-    /*! \}                                                                 */
 	virtual UInt32 getSize(void);
 	virtual Field* getElementAt(UInt32 index);
 
@@ -88,43 +65,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractListModel : public AbstractListMod
 	void pushBack(Field* f);
 	void popBack(void);
 
-
-    /*=========================  PROTECTED  ===============================*/
-  protected:
-
-    // Variables should all be in AbstractListModelBase.
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                  Constructors                                */
-    /*! \{                                                                 */
-
     AbstractListModel(void);
-    AbstractListModel(const AbstractListModel &source);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Destructors                                */
-    /*! \{                                                                 */
-
     virtual ~AbstractListModel(void); 
-
-    /*! \}      */
-    
+  protected:
 	std::vector<Field*> _FieldList;
 
     /*==========================  PRIVATE  ================================*/
   private:
-
-    friend class FieldContainer;
-    friend class AbstractListModelBase;
-
-    static void initMethod(void);
-
 	typedef std::list<ListDataListenerPtr> ListDataListenerList;
 	typedef ListDataListenerList::iterator ListDataListenerListIter;
 	ListDataListenerList _DataListeners;
-
-    // prohibit default functions (move to 'public' if you need one)
 
 	void fireListDataContentsChanged(void);
 	void fireListDataIntervalAdded(UInt32 index0, UInt32 index1);
@@ -133,11 +83,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractListModel : public AbstractListMod
     void operator =(const AbstractListModel &source);
 };
 
-typedef AbstractListModel *AbstractListModelP;
+typedef AbstractListModel *AbstractListModelPtr;
 
 OSG_END_NAMESPACE
 
-#include "OSGAbstractListModelBase.inl"
 #include "OSGAbstractListModel.inl"
 
 #define OSGABSTRACTLISTMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"

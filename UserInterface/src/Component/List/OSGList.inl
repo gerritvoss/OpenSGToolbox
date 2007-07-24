@@ -46,11 +46,6 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-void List::setModel(ListModel* Model)
-{
-   _Model = Model;
-}
 
 inline
 void List::setCellGenerator(ListCellGenerator* CellGenerator)

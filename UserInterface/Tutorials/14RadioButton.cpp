@@ -136,7 +136,7 @@ int main(int argc, char **argv)
 		MainFrameLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
 
 		// Determine alignment of Components within Layout
-		MainFrameLayout->setMinorAxisAlignment(AXIS_MAX_ALIGNMENT);
+		MainFrameLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
 	endEditCP(MainFrameLayout);
 	
  	// Create The Main Frame

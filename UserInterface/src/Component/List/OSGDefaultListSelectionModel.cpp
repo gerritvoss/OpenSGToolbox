@@ -67,11 +67,6 @@ A DefaultListSelectionModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DefaultListSelectionModel::initMethod (void)
-{
-}
-
-
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
@@ -189,57 +184,13 @@ void 	DefaultListSelectionModel::setValueIsAdjusting(bool valueIsAdjusting)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-DefaultListSelectionModel::DefaultListSelectionModel(void) :
-    Inherited()
-{
-}
-
-DefaultListSelectionModel::DefaultListSelectionModel(const DefaultListSelectionModel &source) :
-    Inherited(source)
+DefaultListSelectionModel::DefaultListSelectionModel(void)
 {
 }
 
 DefaultListSelectionModel::~DefaultListSelectionModel(void)
 {
 }
-
-/*----------------------------- class specific ----------------------------*/
-
-void DefaultListSelectionModel::changed(BitVector whichField, UInt32 origin)
-{
-    Inherited::changed(whichField, origin);
-}
-
-void DefaultListSelectionModel::dump(      UInt32    , 
-                         const BitVector ) const
-{
-    SLOG << "Dump DefaultListSelectionModel NI" << std::endl;
-}
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTLISTSELECTIONMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTLISTSELECTIONMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTLISTSELECTIONMODELFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

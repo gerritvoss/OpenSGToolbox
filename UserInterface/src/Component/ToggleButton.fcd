@@ -12,4 +12,13 @@
 	useLocalIncludes="true"
 >
 A UI Toggle Button.
+	<Field
+		name="Selected"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="false"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

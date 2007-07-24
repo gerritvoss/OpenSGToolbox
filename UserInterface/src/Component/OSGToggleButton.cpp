@@ -153,11 +153,37 @@ void ToggleButton::draw(const GraphicsPtr Graphics) const
     }
 }
 
+void  ToggleButton::produceButtonSelected(const ButtonSelectedEvent& e)
+{
+   for(ButtonSelectedListenerSetConstItor SetItor(_ButtonSelectedListeners.begin()) ; SetItor != _ButtonSelectedListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->buttonSelected(e);
+   }
+}
+
+void  ToggleButton::produceButtonDeselected(const ButtonSelectedEvent& e)
+{
+   for(ButtonSelectedListenerSetConstItor SetItor(_ButtonSelectedListeners.begin()) ; SetItor != _ButtonSelectedListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->buttonDeselected(e);
+   }
+}
 /*----------------------------- class specific ----------------------------*/
 
 void ToggleButton::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+    if( (whichField & SelectedFieldMask) )
+    {
+        if(getSelected())
+        {
+			produceButtonSelected( ButtonSelectedEvent(ComponentPtr(this),getSystemTime(),ButtonSelectedEvent::BUTTONSELECTED, ButtonPtr(this)) );    
+        }
+        else
+        {
+            produceButtonDeselected( ButtonSelectedEvent(ComponentPtr(this),getSystemTime(),ButtonSelectedEvent::BUTTONDESELECTED, ButtonPtr(this)) );    
+        }
+     }
 }
 
 void ToggleButton::dump(      UInt32    , 
@@ -169,19 +195,23 @@ void ToggleButton::dump(      UInt32    ,
 void ToggleButton::mouseReleased(const MouseEvent& e)
 {
 	if(e.getButton()==MouseEvent::BUTTON1){
-		if(getSelected())
-		{
-			beginEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
-				setSelected(false);
-			endEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
+		if(getActive()){
+			if(getSelected())
+			{
+				beginEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
+					setSelected(false);
+				endEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
+			}
+			else
+			{
+				beginEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
+					setSelected(true);
+				endEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
+			}
 		}
-		else
-		{
-			beginEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
-				setSelected(true);
-			endEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
-		}
-		
+		beginEditCP(ToggleButtonPtr(this), ToggleButton::ActiveFieldMask);
+			setActive(false);
+		endEditCP(ToggleButtonPtr(this), ToggleButton::ActiveFieldMask);
 	}
 	Component::mouseReleased(e);
 }

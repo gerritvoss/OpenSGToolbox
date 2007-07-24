@@ -47,13 +47,13 @@ public:
     void removeButton(UInt32 Index);
     UInt32 getButtonCount(void) const;
 
-    bool isChecked(const RadioButtonPtr Button) const;
-    void setChecked(RadioButtonPtr Button, bool CheckedValue);
+    bool isSelected(const RadioButtonPtr Button) const;
+    void setSelected(RadioButtonPtr Button, bool SelectedValue);
 
     RadioButtonGroup(void);
 private:
     std::vector<RadioButtonPtr> _Buttons;
-    RadioButtonPtr _CheckedButton;
+    RadioButtonPtr _SelectedButton;
 };
 
 OSG_END_NAMESPACE

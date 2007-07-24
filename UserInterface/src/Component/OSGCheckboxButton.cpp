@@ -86,8 +86,8 @@ void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
 	getInsideBorderBounds(TopLeft, BottomRight);
 
    if(getActive()){
-	   if(getChecked()){
-		   getActiveCheckedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
+	   if(getSelected()){
+		   getActiveSelectedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
 
 		   if(TheGraphics->getTextBounds(getText(), getFont()).x()>0){
 			totalWidth =	3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
@@ -96,8 +96,8 @@ void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
 			   totalWidth= drawObjectSize.x();
 		   }
 		   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
-		   getActiveCheckedDrawObject()->setPosition(TempPos);
-		   getActiveCheckedDrawObject()->draw(TheGraphics);
+		   getActiveSelectedDrawObject()->setPosition(TempPos);
+		   getActiveSelectedDrawObject()->draw(TheGraphics);
 
 	   }
 	   else
@@ -114,8 +114,8 @@ void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
 		   getActiveDrawObject()->draw(TheGraphics);
 	   }
    }
-   else if(getChecked()){
-	   getCheckedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
+   else if(getSelected()){
+	   getSelectedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
 	   if(TheGraphics->getTextBounds(getText(), getFont()).x()>0){
 			totalWidth =	3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
 	   }
@@ -123,8 +123,8 @@ void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
 		   totalWidth= drawObjectSize.x();
 	   }
 	   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
-	   getCheckedDrawObject()->setPosition(TempPos);
- 	   getCheckedDrawObject()->draw(TheGraphics);
+	   getSelectedDrawObject()->setPosition(TempPos);
+ 	   getSelectedDrawObject()->draw(TheGraphics);
   }
    else{
 	   getDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
@@ -143,26 +143,6 @@ void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
 
 }
 
-void CheckboxButton::mouseReleased(const MouseEvent& e)
-{
-	if(e.getButton()==MouseEvent::BUTTON1){
-		if(getActive()){
-			if(getChecked())
-			{
-				beginEditCP(CheckboxButtonPtr(this), CheckboxButton::CheckedFieldMask);
-					setChecked(false);
-				endEditCP(CheckboxButtonPtr(this), CheckboxButton::CheckedFieldMask);
-			}
-			else
-			{
-				beginEditCP(CheckboxButtonPtr(this), CheckboxButton::CheckedFieldMask);
-					setChecked(true);
-				endEditCP(CheckboxButtonPtr(this), CheckboxButton::CheckedFieldMask);
-			}
-		}
-	}
-	Button::mouseReleased(e);
-}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

@@ -3,7 +3,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-RadioButtonGroup::RadioButtonGroup(void) : _CheckedButton(NullFC)
+RadioButtonGroup::RadioButtonGroup(void) : _SelectedButton(NullFC)
 {
 }
 

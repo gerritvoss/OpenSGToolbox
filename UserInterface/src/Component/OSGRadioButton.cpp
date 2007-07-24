@@ -86,8 +86,8 @@ void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
 	getInsideBorderBounds(TopLeft, BottomRight);
 
    if(getActive()){
-	   if(getChecked()){
-		   getActiveCheckedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
+	   if(getSelected()){
+		   getActiveSelectedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
 		   if(TheGraphics->getTextBounds(getText(), getFont()).x()>0){
 			totalWidth =	3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
 		   }
@@ -95,8 +95,8 @@ void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
 			   totalWidth= drawObjectSize.x();
 		   }
 		   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
-		   getActiveCheckedDrawObject()->setPosition(TempPos);
-		   getActiveCheckedDrawObject()->draw(TheGraphics);
+		   getActiveSelectedDrawObject()->setPosition(TempPos);
+		   getActiveSelectedDrawObject()->draw(TheGraphics);
 
 	   }
 	   else
@@ -113,8 +113,8 @@ void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
 		   getActiveDrawObject()->draw(TheGraphics);
 	   }
    }
-   else if(getChecked()){
-	   getCheckedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
+   else if(getSelected()){
+	   getSelectedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
    	   if(TheGraphics->getTextBounds(getText(), getFont()).x()>0){
 		totalWidth =	3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
 	   }
@@ -123,8 +123,8 @@ void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
 	   }
 
 	   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
-	   getCheckedDrawObject()->setPosition(TempPos);
- 	   getCheckedDrawObject()->draw(TheGraphics);
+	   getSelectedDrawObject()->setPosition(TempPos);
+ 	   getSelectedDrawObject()->draw(TheGraphics);
   }
    else{
 		getDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
@@ -147,24 +147,15 @@ void RadioButton::mouseReleased(const MouseEvent& e)
 {
 	if(e.getButton()==MouseEvent::BUTTON1){
 		if(getActive()){
-			if(getChecked())
-			{
-				beginEditCP(RadioButtonPtr(this), RadioButton::CheckedFieldMask);
-					setChecked(false);
-				endEditCP(RadioButtonPtr(this), RadioButton::CheckedFieldMask);
-			}
-			else
-			{
-				beginEditCP(RadioButtonPtr(this), RadioButton::CheckedFieldMask);
-					setChecked(true);
-				endEditCP(RadioButtonPtr(this), RadioButton::CheckedFieldMask);
-			}
+			beginEditCP(RadioButtonPtr(this), RadioButton::SelectedFieldMask);
+				setSelected(true);
+			endEditCP(RadioButtonPtr(this), RadioButton::SelectedFieldMask);
 		}
 		beginEditCP(RadioButtonPtr(this), RadioButton::ActiveFieldMask);
 			setActive(false);
 		endEditCP(RadioButtonPtr(this), RadioButton::ActiveFieldMask);
 	}
-	ToggleButton::mouseReleased(e);
+	Component::mouseReleased(e);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

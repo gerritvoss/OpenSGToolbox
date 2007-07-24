@@ -13,15 +13,6 @@
 >
 A UI Checkbox Button.
 	<Field
-		name="Checked"
-		type="bool"
-		cardinality="single"
-		visibility="external"
-		defaultValue="false"
-		access="public"
-	>
-	</Field>
-	<Field
 		name="DrawObject"
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
@@ -31,7 +22,7 @@ A UI Checkbox Button.
 	>
 	</Field>
 	<Field
-		name="CheckedDrawObject"
+		name="SelectedDrawObject"
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
@@ -49,7 +40,7 @@ A UI Checkbox Button.
 	>
 	</Field>
 	<Field
-		name="ActiveCheckedDrawObject"
+		name="ActiveSelectedDrawObject"
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"

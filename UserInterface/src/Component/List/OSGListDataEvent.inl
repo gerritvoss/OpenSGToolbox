@@ -21,12 +21,18 @@ ListDataEvent::EventType 	ListDataEvent::getType(void) const
    return _Type;
 }
 
+ListModelPtr ListDataEvent::getModel(void) const
+{
+	return _Model;
+}
+
 inline
-ListDataEvent::ListDataEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 Index0, UInt32 Index1, EventType Type)
+ListDataEvent::ListDataEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 Index0, UInt32 Index1, EventType Type, ListModelPtr Model)
  : Event(Source, TimeStamp),
    _Index0(Index0),
    _Index1(Index1),
-   _Type(Type)
+   _Type(Type),
+   _Model(Model)
 {
 }
     

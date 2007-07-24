@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGAbstractListModel.h"
+#include "OSGListDataListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -66,11 +67,6 @@ A AbstractListModel.
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
-
-void AbstractListModel::initMethod (void)
-{
-}
-
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -109,13 +105,7 @@ void AbstractListModel::removeListDataListener(ListDataListenerPtr l)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-AbstractListModel::AbstractListModel(void) :
-    Inherited()
-{
-}
-
-AbstractListModel::AbstractListModel(const AbstractListModel &source) :
-    Inherited(source)
+AbstractListModel::AbstractListModel(void)
 {
 }
 
@@ -123,22 +113,12 @@ AbstractListModel::~AbstractListModel(void)
 {
 }
 
+
 /*----------------------------- class specific ----------------------------*/
-
-void AbstractListModel::changed(BitVector whichField, UInt32 origin)
-{
-    Inherited::changed(whichField, origin);
-}
-
-void AbstractListModel::dump(      UInt32    , 
-                         const BitVector ) const
-{
-    SLOG << "Dump AbstractListModel NI" << std::endl;
-}
 
 void AbstractListModel::fireListDataContentsChanged(void)
 {
-	ListDataEvent e(AbstractListModelPtr(this), getSystemTime(), 0, _FieldList.size()-1, ListDataEvent::CONTENTS_CHANGED);
+	ListDataEvent e(NullFC, getSystemTime(), 0, _FieldList.size()-1, ListDataEvent::CONTENTS_CHANGED, this);
 	ListDataListenerListIter Iter;
 	for(Iter = _DataListeners.begin() ; Iter != _DataListeners.end() ; ++Iter)
 	{
@@ -148,7 +128,7 @@ void AbstractListModel::fireListDataContentsChanged(void)
 
 void AbstractListModel::fireListDataIntervalAdded(UInt32 index0, UInt32 index1)
 {
-	ListDataEvent e(AbstractListModelPtr(this), getSystemTime(), index0, index1, ListDataEvent::INTERVAL_ADDED);
+	ListDataEvent e(NullFC, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_ADDED, this);
 	ListDataListenerListIter Iter;
 	for(Iter = _DataListeners.begin(); Iter != _DataListeners.end(); ++Iter)
 	{
@@ -158,7 +138,7 @@ void AbstractListModel::fireListDataIntervalAdded(UInt32 index0, UInt32 index1)
 
 void AbstractListModel::fireListDataIntervalRemoved(UInt32 index0, UInt32 index1)
 {
-	ListDataEvent e(AbstractListModelPtr(this), getSystemTime(), index0, index1, ListDataEvent::INTERVAL_REMOVED);
+	ListDataEvent e(NullFC, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_REMOVED, this);
 	ListDataListenerListIter Iter;
 	for(Iter = _DataListeners.begin(); Iter != _DataListeners.end(); ++Iter)
 	{
@@ -176,15 +156,6 @@ void AbstractListModel::fireListDataIntervalRemoved(UInt32 index0, UInt32 index1
 #ifdef OSG_LINUX_ICC
 #pragma warning( disable : 177 )
 #endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGABSTRACTLISTMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGABSTRACTLISTMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGABSTRACTLISTMODELFIELDS_HEADER_CVSID;
-}
 
 #ifdef __sgi
 #pragma reset woff 1174

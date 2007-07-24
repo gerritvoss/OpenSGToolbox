@@ -19,12 +19,12 @@ UInt32 RadioButtonGroup::getButtonCount(void) const
 }
 
 
-bool RadioButtonGroup::isChecked(const RadioButtonPtr Button) const
+bool RadioButtonGroup::isSelected(const RadioButtonPtr Button) const
 {
     return false;
 }
 
-void RadioButtonGroup::setChecked(RadioButtonPtr Button, bool CheckedValue)
+void RadioButtonGroup::setSelected(RadioButtonPtr Button, bool SelectedValue)
 {
 }
 

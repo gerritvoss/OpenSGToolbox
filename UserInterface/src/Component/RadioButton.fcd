@@ -22,7 +22,7 @@ A UI Radio Button.
 	>
 	</Field>
 	<Field
-		name="CheckedDrawObject"
+		name="SelectedDrawObject"
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
@@ -40,20 +40,11 @@ A UI Radio Button.
 	>
 	</Field>
 	<Field
-		name="ActiveCheckedDrawObject"
+		name="ActiveSelectedDrawObject"
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
 		header="OSGUIDrawObjectCanvas.h"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="Checked"
-		type="bool"
-		cardinality="single"
-		visibility="external"
-		defaultValue="false"
 		access="public"
 	>
 	</Field>

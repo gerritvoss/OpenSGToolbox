@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="OSGUserInterface"
 	ProjectGUID="{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}"
 	RootNamespace="OSGAnimation"
@@ -610,22 +610,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGAbstractListModelBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGAbstractListModelBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGAbstractListModelBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGAbstractListModelFields.h"
-						>
-					</File>
-					<File
 						RelativePath="..\..\src\Component\List\OSGDefaultListCellGenerator.cpp"
 						>
 					</File>
@@ -638,22 +622,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListCellGeneratorBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListCellGeneratorBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListCellGeneratorBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListCellGeneratorFields.h"
-						>
-					</File>
-					<File
 						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModel.cpp"
 						>
 					</File>
@@ -663,22 +631,6 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModel.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModelBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModelBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModelBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModelFields.h"
 						>
 					</File>
 					<File
@@ -2148,6 +2100,18 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGActionListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGButtonSelectedEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGButtonSelectedEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGButtonSelectedListener.h"
 					>
 				</File>
 				<File
