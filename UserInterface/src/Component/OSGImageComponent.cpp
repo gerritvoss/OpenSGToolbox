@@ -103,8 +103,20 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
 	   //Figure out the aspect ratio of this Component
 	   Real32 AspectComponent = ComponentSize.x()/ComponentSize.y();
 	   Real32 AspectImage = getTexture()->getImage()->getWidth()/getTexture()->getImage()->getHeight();
-	   
+
+	   Vec2s vector(0,0);
 	   //TODO: Implement
+	   if (AspectComponent < AspectImage)
+	   {
+		   vector[0] = ComponentSize.x();
+		   vector[1] = (Int16)((Real32)ComponentSize.x()/AspectImage);
+	   }
+	   else
+	   {
+		   vector[0] = (Int16)((Real32)ComponentSize.y()*AspectImage);
+		   vector[1] = ComponentSize.y();
+	   }
+	   Size.setValue(vector);
 	   }
 	   break;
    case SCALE_MAX_AXIS:
@@ -113,7 +125,19 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
 	   Real32 AspectComponent = ComponentSize.x()/ComponentSize.y();
 	   Real32 AspectImage = getTexture()->getImage()->getWidth()/getTexture()->getImage()->getHeight();
 
+	   Vec2s vector(0,0);
 	   //TODO: Implement
+	   if (AspectComponent > AspectImage)
+	   {
+		   vector[0] = ComponentSize.x();
+		   vector[1] = (Int16)((Real32)ComponentSize.x()/AspectImage);
+	   }
+	   else
+	   {
+		   vector[0] = (Int16)((Real32)ComponentSize.y()*AspectImage);
+		   vector[1] = ComponentSize.y();
+	   }
+	   Size.setValue(vector);
 	   }
 	   break;
    case SCALE_ABSOLUTE:
