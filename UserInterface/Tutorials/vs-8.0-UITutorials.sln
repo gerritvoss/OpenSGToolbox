@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+# Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01Button", "01Button.vcproj", "{77623743-1948-4AC4-8227-7FF6072BD16F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
@@ -79,8 +79,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "13CheckboxButton", "13Check
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "14RadioButton", "14RadioButton.vcproj", "{71BD8B69-00CB-42D0-A400-4AB557827EFD}"
 EndProject
+<<<<<<< .mine
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "20UIRectangle", "20UIRectangle.vcproj", "{E27C0CBF-59D6-41CD-B0F0-FDA426B5706E}"
+EndProject
+=======
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "15TabbedPanel", "15TabbedPanel.vcproj", "{6905F238-9916-4815-90E2-1B868BE61C78}"
 EndProject
+>>>>>>> .r199
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -153,10 +158,17 @@ Global
 		{71BD8B69-00CB-42D0-A400-4AB557827EFD}.Debug|Win32.Build.0 = Debug|Win32
 		{71BD8B69-00CB-42D0-A400-4AB557827EFD}.Release|Win32.ActiveCfg = Release|Win32
 		{71BD8B69-00CB-42D0-A400-4AB557827EFD}.Release|Win32.Build.0 = Release|Win32
+<<<<<<< .mine
+		{E27C0CBF-59D6-41CD-B0F0-FDA426B5706E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E27C0CBF-59D6-41CD-B0F0-FDA426B5706E}.Debug|Win32.Build.0 = Debug|Win32
+		{E27C0CBF-59D6-41CD-B0F0-FDA426B5706E}.Release|Win32.ActiveCfg = Release|Win32
+		{E27C0CBF-59D6-41CD-B0F0-FDA426B5706E}.Release|Win32.Build.0 = Release|Win32
+=======
 		{6905F238-9916-4815-90E2-1B868BE61C78}.Debug|Win32.ActiveCfg = Debug|Win32
 		{6905F238-9916-4815-90E2-1B868BE61C78}.Debug|Win32.Build.0 = Debug|Win32
 		{6905F238-9916-4815-90E2-1B868BE61C78}.Release|Win32.ActiveCfg = Release|Win32
 		{6905F238-9916-4815-90E2-1B868BE61C78}.Release|Win32.Build.0 = Release|Win32
+>>>>>>> .r199
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
