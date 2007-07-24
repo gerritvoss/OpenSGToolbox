@@ -116,6 +116,15 @@ void CardLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 	Vec2s size(borderSize),offset;
 	ComponentPtr curCard(Components.getValue(getCard()));
 
+	for(UInt32 i(0) ; i<Components.getSize() ; ++i)
+	{
+		if(Components.getValue(i) != curCard)
+		{
+			beginEditCP(Components.getValue(i), Component::SizeFieldMask);
+				Components.getValue(i)->setSize(Vec2s(0,0));
+			endEditCP(Components.getValue(i), Component::SizeFieldMask);
+		}
+	}
 	// check each dimension against the max size of the component;
 	if (size[0] > curCard->getMaxSize()[0]) 
 		size[0] = curCard->getMaxSize()[0];
