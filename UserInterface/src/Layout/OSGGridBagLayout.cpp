@@ -139,7 +139,7 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 			if (constraints->getGridX() < posX.size())
 				offset[0] += posX[constraints->getGridX()] + constraints->getPadLeft();
 			if (constraints->getGridY() < posY.size())
-				offset[1] += posY[constraints->getGridY()] + constraints->getPadRight();
+				offset[1] += posY[constraints->getGridY()] + constraints->getPadTop();
 
 			// find the size of cell/cells containing the component
 			for (UInt16 j = 0; j < constraints->getGridWidth() && constraints->getGridX()+j < widths.size(); ++j)
