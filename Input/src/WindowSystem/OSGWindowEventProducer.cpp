@@ -320,6 +320,7 @@ void WindowEventProducer::produceKeyReleased(const KeyEvent::Key& TheKey, const 
    {
       (*SetItor)->keyReleased(TheEvent);
    }
+   produceKeyTyped(TheKey, Modifiers);
 }
 
 void WindowEventProducer::produceKeyTyped(const KeyEvent::Key& TheKey, const UInt32& Modifiers)
