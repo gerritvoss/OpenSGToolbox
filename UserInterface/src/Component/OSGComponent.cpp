@@ -230,7 +230,7 @@ void Component::updateClipBounds(void)
         getBounds(MyTopLeft,MyBottomRight);
 
 		//Update my Parent Container's Clip Bounds
-		Container::Ptr::dcast(getParentContainer())->updateClipBounds();
+		//Container::Ptr::dcast(getParentContainer())->updateClipBounds();
 
 		//Get Parent Container's Clip Bounds
 		Pnt2s ContainerClipTopLeft, ContainerClipBottomRight;

@@ -313,7 +313,6 @@ Container::~Container(void)
 
 void Container::changed(BitVector whichField, UInt32 origin)
 {
-    Inherited::changed(whichField, origin);
 
     if( (whichField & ChildrenFieldMask) ||
         (whichField & ParentFrameFieldMask))
@@ -335,6 +334,16 @@ void Container::changed(BitVector whichField, UInt32 origin)
         endEditCP(getLayout(), Layout::ParentContainerFieldMask);
     }
     
+    if( (whichField & ClipTopLeftFieldMask) ||
+		(whichField & ClipBottomRightFieldMask) )
+	{
+        //Set All of my children's parent to me
+        for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+        {
+			getChildren().getValue(i)->updateClipBounds();
+        }
+	}
+
     if( (whichField & LayoutFieldMask) ||
         (whichField & LeftInsetFieldMask) ||
         (whichField & RightInsetFieldMask) ||
@@ -347,6 +356,8 @@ void Container::changed(BitVector whichField, UInt32 origin)
         //Layout needs to be recalculated
         updateLayout();
     }
+	
+    Inherited::changed(whichField, origin);
 }
 
 void Container::updateLayout(void)

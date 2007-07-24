@@ -232,9 +232,9 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 					offsetY += offsetMinorAxis;
 				}
 
-				beginEditCP(Components.getValue(i), Component::PositionFieldMask);
+				beginEditCP(Components.getValue(j), Component::PositionFieldMask);
 					Components.getValue(j)->setPosition(Pnt2s(offsetX, offsetY));
-				endEditCP(Components.getValue(i), Component::PositionFieldMask);
+				endEditCP(Components.getValue(j), Component::PositionFieldMask);
 
 				// translate to next button
 				if (AxisIndex)
@@ -319,9 +319,9 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 				{
 					offsetY += offsetMinorAxis;
 				}
-				beginEditCP(Components.getValue(i), Component::PositionFieldMask);
+				beginEditCP(Components.getValue(j), Component::PositionFieldMask);
 					Components.getValue(j)->setPosition(Pnt2s(offsetX, offsetY));
-				endEditCP(Components.getValue(i), Component::PositionFieldMask);
+				endEditCP(Components.getValue(j), Component::PositionFieldMask);
 
 				if (AxisIndex)
 				{
