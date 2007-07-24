@@ -119,8 +119,8 @@ int main(int argc, char **argv)
 
 	******************************************************/
 
-	beginEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
-			// The following 3 function calls are not specific to Button, 
+	beginEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::ForegroundColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
+			// The following 4 function calls are not specific to Button, 
 			// but can be used with any Component
 
 			// Determine the Minimum and Maximum size that the Component can ever have
@@ -130,7 +130,9 @@ int main(int argc, char **argv)
 		button1->setMaxSize( Vec2s (200, 100) );
 			// Determine the PreferredSize for the Component
 		button1->setPreferredSize( Vec2s (100, 50) );
-
+			// Determine the Font color for the Component (only
+			// relevant if Component has text)
+		button1->setForegroundColor( Color4f(1.0, 0.0, 0.0, 1.0) );
 		// The following functions are specific to Button
 			// Determine the visible Text (Text must fit within Button Size
 			// or extra Text will not display)
@@ -142,7 +144,7 @@ int main(int argc, char **argv)
 			// Determine the HorizontalAlignment of the Text- HORIZONTAL_CENTER,
 			// HORIZONTAL_LEFT, HORIZONTAL_RIGHT
 		button1->setHorizontalAlignment(HORIZONTAL_RIGHT);
-    endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
+		endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::ForegroundColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
 	
 	Button1ActionListener button1AL;
 	

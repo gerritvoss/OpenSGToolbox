@@ -225,45 +225,45 @@ int main(int argc, char **argv)
 	
 	// Set the visible text, border, and Background for
 	// each of the various Button components
-	beginEditCP(buttonColor, Button::TextFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
+	beginEditCP(buttonColor, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
 		buttonColor->setText("Color Background");
 		buttonColor->setBackground(colorBackground);
 		buttonColor->setBorder(lineBorder);
-    endEditCP(buttonColor, Button::TextFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
+    endEditCP(buttonColor, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
 
-	beginEditCP(buttonCompound, Button::TextFieldMask | Button::BackgroundFieldMask | Button::PreferredSizeFieldMask |Button::BorderFieldMask);
+	beginEditCP(buttonCompound, Button::TextFieldMask | Component::BackgroundFieldMask | Component::PreferredSizeFieldMask |Component::BorderFieldMask);
 		buttonCompound->setText("Compound Background");
 		buttonCompound->setBackground(compoundBackground);
 		buttonCompound->setPreferredSize(Vec2s(150,50));
 		buttonCompound->setBorder(lineBorder);
-		endEditCP(buttonCompound, Button::TextFieldMask | Button::BackgroundFieldMask | Button::PreferredSizeFieldMask |Button::BorderFieldMask);
+		endEditCP(buttonCompound, Button::TextFieldMask | Component::BackgroundFieldMask | Component::PreferredSizeFieldMask |Component::BorderFieldMask);
 
-	beginEditCP(buttonEmpty, Button::TextFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
+	beginEditCP(buttonEmpty, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
 		buttonEmpty->setText("Empty Background");
 		buttonEmpty->setBackground(emptyBackground);
 		buttonEmpty->setBorder(lineBorder);
-	endEditCP(buttonEmpty, Button::TextFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
+	endEditCP(buttonEmpty, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
 
-	beginEditCP(buttonGradient, Button::TextFieldMask | Button::BackgroundFieldMask | Button::PreferredSizeFieldMask |Button::BorderFieldMask);
+	beginEditCP(buttonGradient, Button::TextFieldMask | Component::BackgroundFieldMask | Component::PreferredSizeFieldMask |Component::BorderFieldMask);
 		buttonGradient->setText("Gradient Background");
 		buttonGradient->setBackground(gradientBackground);
 		buttonGradient->setPreferredSize(Vec2s(150,50));
 		buttonGradient->setBorder(lineBorder);
-    endEditCP(buttonGradient, Button::TextFieldMask | Button::BackgroundFieldMask | Button::PreferredSizeFieldMask |Button::BorderFieldMask);
+    endEditCP(buttonGradient, Button::TextFieldMask | Component::BackgroundFieldMask | Component::PreferredSizeFieldMask |Component::BorderFieldMask);
 	
-	// add material and texture buttons at some point
-
-	beginEditCP(buttonMaterial, Button::TextFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
+	beginEditCP(buttonMaterial, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask | Component::ForegroundColorFieldMask);
 		buttonMaterial->setText("Material Background");
 		buttonMaterial->setBackground(materialBackground);
 		buttonMaterial->setBorder(lineBorder);
-	endEditCP(buttonMaterial, Button::TextFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
+		buttonMaterial->setForegroundColor( Color4f(1.0,1.0,1.0,1.0) );
+		endEditCP(buttonMaterial, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask | Component::ForegroundColorFieldMask);
 
-	beginEditCP(buttonTexture, Button::TextFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
+	beginEditCP(buttonTexture, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask | Component::ForegroundColorFieldMask);
 		buttonTexture->setText("Texture Background");
 		buttonTexture->setBackground(textureBackground);
 		buttonTexture->setBorder(lineBorder);
-	endEditCP(buttonTexture, Button::TextFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
+		buttonTexture->setForegroundColor( Color4f(0.0,0.0,0.0,1.0) );
+	endEditCP(buttonTexture, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask | Component::ForegroundColorFieldMask);
 
 
 

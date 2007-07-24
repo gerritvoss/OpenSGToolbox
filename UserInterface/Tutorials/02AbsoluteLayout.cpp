@@ -33,7 +33,6 @@
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
 
@@ -189,12 +188,6 @@ int main(int argc, char **argv)
 		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
 	
-	LineBorderPtr MainFrameLineBorder = LineBorder::create();
-	beginEditCP(MainFrameLineBorder);
-	MainFrameLineBorder->setColor(Color4f(1.0,0.0,0.0,1.0));
-	MainFrameLineBorder->setWidth(2);
-	endEditCP(MainFrameLineBorder);
-
 	FramePtr MainFrame = osg::Frame::create();
 	LayoutPtr MainFrameLayout = osg::AbsoluteLayout::create();
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
@@ -210,8 +203,6 @@ int main(int argc, char **argv)
 	   // MainFrame->getChildren().addValue(button3);
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
-	   MainFrame->setBorder(MainFrameLineBorder);
-	 
     endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
 	//Create the Drawing Surface
