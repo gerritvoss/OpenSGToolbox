@@ -65,11 +65,12 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGComponent.h" // Parent
+#include "Component/OSGComponent.h" // Parent
 
 #include <OpenSG/OSGStringFields.h> // Text type
 #include <OpenSG/OSGBoolFields.h> // Editable type
 #include <OpenSG/OSGUInt32Fields.h> // CaretPosition type
+#include "Text/OSGFont.h" // Font type
 
 #include "OSGTextComponentFields.h"
 
@@ -96,12 +97,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
         TextFieldId          = Inherited::NextFieldId,
         EditableFieldId      = TextFieldId          + 1,
         CaretPositionFieldId = EditableFieldId      + 1,
-        NextFieldId          = CaretPositionFieldId + 1
+        FontFieldId          = CaretPositionFieldId + 1,
+        NextFieldId          = FontFieldId          + 1
     };
 
     static const OSG::BitVector TextFieldMask;
     static const OSG::BitVector EditableFieldMask;
     static const OSG::BitVector CaretPositionFieldMask;
+    static const OSG::BitVector FontFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -131,6 +134,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
            SFString            *getSFText           (void);
            SFBool              *getSFEditable       (void);
            SFUInt32            *getSFCaretPosition  (void);
+           SFFontPtr           *getSFFont           (void);
 
            std::string         &getText           (void);
      const std::string         &getText           (void) const;
@@ -138,6 +142,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
      const bool                &getEditable       (void) const;
            UInt32              &getCaretPosition  (void);
      const UInt32              &getCaretPosition  (void) const;
+           FontPtr             &getFont           (void);
+     const FontPtr             &getFont           (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -147,6 +153,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
      void setText           ( const std::string &value );
      void setEditable       ( const bool &value );
      void setCaretPosition  ( const UInt32 &value );
+     void setFont           ( const FontPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +183,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
     SFString            _sfText;
     SFBool              _sfEditable;
     SFUInt32            _sfCaretPosition;
+    SFFontPtr           _sfFont;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

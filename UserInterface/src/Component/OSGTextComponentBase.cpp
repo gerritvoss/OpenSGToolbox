@@ -73,6 +73,9 @@ const OSG::BitVector  TextComponentBase::EditableFieldMask =
 const OSG::BitVector  TextComponentBase::CaretPositionFieldMask = 
     (TypeTraits<BitVector>::One << TextComponentBase::CaretPositionFieldId);
 
+const OSG::BitVector  TextComponentBase::FontFieldMask = 
+    (TypeTraits<BitVector>::One << TextComponentBase::FontFieldId);
+
 const OSG::BitVector TextComponentBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -87,6 +90,9 @@ const OSG::BitVector TextComponentBase::MTInfluenceMask =
     
 */
 /*! \var UInt32          TextComponentBase::_sfCaretPosition
+    
+*/
+/*! \var FontPtr         TextComponentBase::_sfFont
     
 */
 
@@ -108,7 +114,12 @@ FieldDescription *TextComponentBase::_desc[] =
                      "CaretPosition", 
                      CaretPositionFieldId, CaretPositionFieldMask,
                      true,
-                     (FieldAccessMethod) &TextComponentBase::getSFCaretPosition)
+                     (FieldAccessMethod) &TextComponentBase::getSFCaretPosition),
+    new FieldDescription(SFFontPtr::getClassType(), 
+                     "Font", 
+                     FontFieldId, FontFieldMask,
+                     false,
+                     (FieldAccessMethod) &TextComponentBase::getSFFont)
 };
 
 
@@ -178,6 +189,7 @@ TextComponentBase::TextComponentBase(void) :
     _sfText                   (), 
     _sfEditable               (bool(true)), 
     _sfCaretPosition          (UInt32(0)), 
+    _sfFont                   (), 
     Inherited() 
 {
 }
@@ -190,6 +202,7 @@ TextComponentBase::TextComponentBase(const TextComponentBase &source) :
     _sfText                   (source._sfText                   ), 
     _sfEditable               (source._sfEditable               ), 
     _sfCaretPosition          (source._sfCaretPosition          ), 
+    _sfFont                   (source._sfFont                   ), 
     Inherited                 (source)
 {
 }
@@ -221,6 +234,11 @@ UInt32 TextComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfCaretPosition.getBinSize();
     }
 
+    if(FieldBits::NoField != (FontFieldMask & whichField))
+    {
+        returnValue += _sfFont.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -243,6 +261,11 @@ void TextComponentBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (CaretPositionFieldMask & whichField))
     {
         _sfCaretPosition.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FontFieldMask & whichField))
+    {
+        _sfFont.copyToBin(pMem);
     }
 
 
@@ -268,6 +291,11 @@ void TextComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfCaretPosition.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (FontFieldMask & whichField))
+    {
+        _sfFont.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -287,6 +315,9 @@ void TextComponentBase::executeSyncImpl(      TextComponentBase *pOther,
     if(FieldBits::NoField != (CaretPositionFieldMask & whichField))
         _sfCaretPosition.syncWith(pOther->_sfCaretPosition);
 
+    if(FieldBits::NoField != (FontFieldMask & whichField))
+        _sfFont.syncWith(pOther->_sfFont);
+
 
 }
 #else
@@ -305,6 +336,9 @@ void TextComponentBase::executeSyncImpl(      TextComponentBase *pOther,
 
     if(FieldBits::NoField != (CaretPositionFieldMask & whichField))
         _sfCaretPosition.syncWith(pOther->_sfCaretPosition);
+
+    if(FieldBits::NoField != (FontFieldMask & whichField))
+        _sfFont.syncWith(pOther->_sfFont);
 
 
 

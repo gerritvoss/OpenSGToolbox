@@ -91,6 +91,13 @@ SFUInt32 *TextComponentBase::getSFCaretPosition(void)
     return &_sfCaretPosition;
 }
 
+//! Get the TextComponent::_sfFont field.
+inline
+SFFontPtr *TextComponentBase::getSFFont(void)
+{
+    return &_sfFont;
+}
+
 
 //! Get the value of the TextComponent::_sfText field.
 inline
@@ -153,6 +160,27 @@ inline
 void TextComponentBase::setCaretPosition(const UInt32 &value)
 {
     _sfCaretPosition.setValue(value);
+}
+
+//! Get the value of the TextComponent::_sfFont field.
+inline
+FontPtr &TextComponentBase::getFont(void)
+{
+    return _sfFont.getValue();
+}
+
+//! Get the value of the TextComponent::_sfFont field.
+inline
+const FontPtr &TextComponentBase::getFont(void) const
+{
+    return _sfFont.getValue();
+}
+
+//! Set the value of the TextComponent::_sfFont field.
+inline
+void TextComponentBase::setFont(const FontPtr &value)
+{
+    _sfFont.setValue(value);
 }
 
 

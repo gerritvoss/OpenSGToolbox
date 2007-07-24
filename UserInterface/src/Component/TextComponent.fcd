@@ -38,4 +38,13 @@ A UI Button.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="Font"
+		type="FontPtr"
+		cardinality="single"
+		visibility="external"
+		header="Text/OSGFont.h"
+		access="public"
+	>
+	</Field>
 </FieldContainer>
