@@ -64,11 +64,14 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  UIRectangleBase::Point1FieldMask = 
-    (TypeTraits<BitVector>::One << UIRectangleBase::Point1FieldId);
+const OSG::BitVector  UIRectangleBase::PointFieldMask = 
+    (TypeTraits<BitVector>::One << UIRectangleBase::PointFieldId);
 
-const OSG::BitVector  UIRectangleBase::Point2FieldMask = 
-    (TypeTraits<BitVector>::One << UIRectangleBase::Point2FieldId);
+const OSG::BitVector  UIRectangleBase::Side1FieldMask = 
+    (TypeTraits<BitVector>::One << UIRectangleBase::Side1FieldId);
+
+const OSG::BitVector  UIRectangleBase::Side2FieldMask = 
+    (TypeTraits<BitVector>::One << UIRectangleBase::Side2FieldId);
 
 const OSG::BitVector  UIRectangleBase::DrawingSurfaceFieldMask = 
     (TypeTraits<BitVector>::One << UIRectangleBase::DrawingSurfaceFieldId);
@@ -80,10 +83,13 @@ const OSG::BitVector UIRectangleBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Pnt3f           UIRectangleBase::_sfPoint1
+/*! \var Pnt3f           UIRectangleBase::_sfPoint
     
 */
-/*! \var Pnt3f           UIRectangleBase::_sfPoint2
+/*! \var Vec3f           UIRectangleBase::_sfSide1
+    
+*/
+/*! \var Vec3f           UIRectangleBase::_sfSide2
     
 */
 /*! \var UIDrawingSurfacePtr UIRectangleBase::_sfDrawingSurface
@@ -95,15 +101,20 @@ const OSG::BitVector UIRectangleBase::MTInfluenceMask =
 FieldDescription *UIRectangleBase::_desc[] = 
 {
     new FieldDescription(SFPnt3f::getClassType(), 
-                     "Point1", 
-                     Point1FieldId, Point1FieldMask,
+                     "Point", 
+                     PointFieldId, PointFieldMask,
                      false,
-                     (FieldAccessMethod) &UIRectangleBase::getSFPoint1),
-    new FieldDescription(SFPnt3f::getClassType(), 
-                     "Point2", 
-                     Point2FieldId, Point2FieldMask,
+                     (FieldAccessMethod) &UIRectangleBase::getSFPoint),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "Side1", 
+                     Side1FieldId, Side1FieldMask,
                      false,
-                     (FieldAccessMethod) &UIRectangleBase::getSFPoint2),
+                     (FieldAccessMethod) &UIRectangleBase::getSFSide1),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "Side2", 
+                     Side2FieldId, Side2FieldMask,
+                     false,
+                     (FieldAccessMethod) &UIRectangleBase::getSFSide2),
     new FieldDescription(SFUIDrawingSurfacePtr::getClassType(), 
                      "DrawingSurface", 
                      DrawingSurfaceFieldId, DrawingSurfaceFieldMask,
@@ -184,8 +195,9 @@ void UIRectangleBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 UIRectangleBase::UIRectangleBase(void) :
-    _sfPoint1                 (Pnt3f(0.0,0.0,0.0)), 
-    _sfPoint2                 (Pnt3f(0.0,0.0,0.0)), 
+    _sfPoint                  (Pnt3f(0.0,0.0,0.0)), 
+    _sfSide1                  (Vec3f(1.0,0.0,0.0)), 
+    _sfSide2                  (Vec3f(0.0,1.0,0.0)), 
     _sfDrawingSurface         (UIDrawingSurfacePtr(NullFC)), 
     Inherited() 
 {
@@ -196,8 +208,9 @@ UIRectangleBase::UIRectangleBase(void) :
 #endif
 
 UIRectangleBase::UIRectangleBase(const UIRectangleBase &source) :
-    _sfPoint1                 (source._sfPoint1                 ), 
-    _sfPoint2                 (source._sfPoint2                 ), 
+    _sfPoint                  (source._sfPoint                  ), 
+    _sfSide1                  (source._sfSide1                  ), 
+    _sfSide2                  (source._sfSide2                  ), 
     _sfDrawingSurface         (source._sfDrawingSurface         ), 
     Inherited                 (source)
 {
@@ -215,14 +228,19 @@ UInt32 UIRectangleBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (Point1FieldMask & whichField))
+    if(FieldBits::NoField != (PointFieldMask & whichField))
     {
-        returnValue += _sfPoint1.getBinSize();
+        returnValue += _sfPoint.getBinSize();
     }
 
-    if(FieldBits::NoField != (Point2FieldMask & whichField))
+    if(FieldBits::NoField != (Side1FieldMask & whichField))
     {
-        returnValue += _sfPoint2.getBinSize();
+        returnValue += _sfSide1.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Side2FieldMask & whichField))
+    {
+        returnValue += _sfSide2.getBinSize();
     }
 
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
@@ -239,14 +257,19 @@ void UIRectangleBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (Point1FieldMask & whichField))
+    if(FieldBits::NoField != (PointFieldMask & whichField))
     {
-        _sfPoint1.copyToBin(pMem);
+        _sfPoint.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (Point2FieldMask & whichField))
+    if(FieldBits::NoField != (Side1FieldMask & whichField))
     {
-        _sfPoint2.copyToBin(pMem);
+        _sfSide1.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Side2FieldMask & whichField))
+    {
+        _sfSide2.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
@@ -262,14 +285,19 @@ void UIRectangleBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (Point1FieldMask & whichField))
+    if(FieldBits::NoField != (PointFieldMask & whichField))
     {
-        _sfPoint1.copyFromBin(pMem);
+        _sfPoint.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (Point2FieldMask & whichField))
+    if(FieldBits::NoField != (Side1FieldMask & whichField))
     {
-        _sfPoint2.copyFromBin(pMem);
+        _sfSide1.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Side2FieldMask & whichField))
+    {
+        _sfSide2.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
@@ -287,11 +315,14 @@ void UIRectangleBase::executeSyncImpl(      UIRectangleBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (Point1FieldMask & whichField))
-        _sfPoint1.syncWith(pOther->_sfPoint1);
+    if(FieldBits::NoField != (PointFieldMask & whichField))
+        _sfPoint.syncWith(pOther->_sfPoint);
 
-    if(FieldBits::NoField != (Point2FieldMask & whichField))
-        _sfPoint2.syncWith(pOther->_sfPoint2);
+    if(FieldBits::NoField != (Side1FieldMask & whichField))
+        _sfSide1.syncWith(pOther->_sfSide1);
+
+    if(FieldBits::NoField != (Side2FieldMask & whichField))
+        _sfSide2.syncWith(pOther->_sfSide2);
 
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
         _sfDrawingSurface.syncWith(pOther->_sfDrawingSurface);
@@ -306,11 +337,14 @@ void UIRectangleBase::executeSyncImpl(      UIRectangleBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (Point1FieldMask & whichField))
-        _sfPoint1.syncWith(pOther->_sfPoint1);
+    if(FieldBits::NoField != (PointFieldMask & whichField))
+        _sfPoint.syncWith(pOther->_sfPoint);
 
-    if(FieldBits::NoField != (Point2FieldMask & whichField))
-        _sfPoint2.syncWith(pOther->_sfPoint2);
+    if(FieldBits::NoField != (Side1FieldMask & whichField))
+        _sfSide1.syncWith(pOther->_sfSide1);
+
+    if(FieldBits::NoField != (Side2FieldMask & whichField))
+        _sfSide2.syncWith(pOther->_sfSide2);
 
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
         _sfDrawingSurface.syncWith(pOther->_sfDrawingSurface);

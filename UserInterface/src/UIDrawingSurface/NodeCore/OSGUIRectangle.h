@@ -45,6 +45,8 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGUIRectangleBase.h"
+#include <OpenSG/OSGAction.h>
+#include <OpenSG/OSGDrawActionBase.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -76,6 +78,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangle : public UIRectangleBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
+    Action::ResultE drawPrimitives (DrawActionBase *action);
+    Action::ResultE drawActionHandler( Action* action );
+    Action::ResultE renderActionHandler( Action* action );
+    Action::ResultE intersect( Action* action );
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -97,7 +103,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangle : public UIRectangleBase
     virtual ~UIRectangle(void); 
 
     /*! \}                                                                 */
+    void    adjustVolume(Volume & volume);
     
+	void updateFrameBounds(void);
     /*==========================  PRIVATE  ================================*/
   private:
 

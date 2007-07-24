@@ -46,6 +46,12 @@
 #define OSG_COMPILEUSERINTERFACELIB
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGRenderAction.h>
+#include <OpenSG/OSGDrawAction.h>
+#include <OpenSG/OSGIntersectAction.h>
+#include <OpenSG/OSGSimpleGeometry.h>
+
+#include "UIDrawingSurface/OSGUIDrawingSurface.h"
 
 #include "OSGUIRectangle.h"
 
@@ -69,13 +75,92 @@ A UI Rectangle.
 
 void UIRectangle::initMethod (void)
 {
+    DrawAction::registerEnterDefault(getClassType(),
+        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, UIRectanglePtr,
+              CNodePtr, Action *>(&UIRectangle::drawActionHandler));
+
+    IntersectAction::registerEnterDefault(getClassType(),
+        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, UIRectanglePtr,
+              CNodePtr, Action *>(&UIRectangle::intersect));
+
+    RenderAction::registerEnterDefault(getClassType(),
+        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, UIRectanglePtr,
+              CNodePtr, Action *>(&UIRectangle::renderActionHandler));
 }
 
+Action::ResultE UIRectangle::drawPrimitives (DrawActionBase *action)
+{
+    glPushMatrix();
+    glTranslatef(0.0,getSide2().length(),0.0);
+    glScalef(1.0,-1.0,1.0);
+	//Render the UI to the Rectangle
+    getDrawingSurface()->getGraphics()->setDrawAction(action);
+	//Call The PreDraw on the Graphics
+	getDrawingSurface()->getGraphics()->preDraw();
+
+	//Draw The Component
+	getDrawingSurface()->getRootFrame()->draw(getDrawingSurface()->getGraphics());
+
+	//Call the PostDraw on the Graphics
+	getDrawingSurface()->getGraphics()->postDraw();
+    glPopMatrix();
+    return Action::Continue;
+}
+
+Action::ResultE UIRectangle::drawActionHandler( Action* action )
+{
+    return drawPrimitives(dynamic_cast<DrawAction *>(action));
+}
+
+Action::ResultE UIRectangle::renderActionHandler( Action* action )
+{
+
+    dynamic_cast<RenderAction *>(action)->dropFunctor(osgTypedMethodFunctor1ObjPtr(this, 
+                                        &UIRectangle::drawPrimitives), getDefaultUnlitMaterial().getCPtr());
+    return Action::Continue;
+}
+
+Action::ResultE UIRectangle::intersect( Action* action )
+{
+    return Action::Continue;
+}
+
+void UIRectangle::adjustVolume(Volume & volume)
+{
+    volume.setValid();
+    volume.setEmpty();
+
+    volume.extendBy(getPoint());
+    volume.extendBy(getPoint()+ getSide1());
+    volume.extendBy(getPoint()+ getSide1()+ getSide2());
+    volume.extendBy(getPoint()+ getSide2());
+}
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
+void UIRectangle::updateFrameBounds(void)
+{
+    if(getDrawingSurface() == NullFC)
+    {
+        return;
+    }
+	Vec2s Size(getSide1().length(),getSide2().length());
+	
+	//Translate to the Frames Position
+    //Calculate Alignment
+    Pnt2s AlignedPosition(0,0);
+
+    if(getDrawingSurface()->getRootFrame()->getSize() != Size ||
+       getDrawingSurface()->getRootFrame()->getPosition() != AlignedPosition)
+    {
+        beginEditCP(getDrawingSurface()->getRootFrame(), Frame::SizeFieldMask | Frame::PositionFieldMask);
+		    getDrawingSurface()->getRootFrame()->setSize(Size);
+		    getDrawingSurface()->getRootFrame()->setPosition(AlignedPosition);
+	    endEditCP(getDrawingSurface()->getRootFrame(), Frame::SizeFieldMask | Frame::PositionFieldMask);
+    }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -101,6 +186,13 @@ UIRectangle::~UIRectangle(void)
 void UIRectangle::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+    
+    if( (whichField & Side1FieldMask) ||
+        (whichField & Side2FieldMask) ||
+        (whichField & DrawingSurfaceFieldMask) )
+    {
+        updateFrameBounds();
+    }
 }
 
 void UIRectangle::dump(      UInt32    , 

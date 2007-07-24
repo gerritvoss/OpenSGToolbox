@@ -13,7 +13,7 @@
 >
 A UI Rectangle.
 	<Field
-		name="Point1"
+		name="Point"
 		type="Pnt3f"
 		cardinality="single"
 		visibility="external"
@@ -22,12 +22,21 @@ A UI Rectangle.
 	>
 	</Field>
 	<Field
-		name="Point2"
-		type="Pnt3f"
+		name="Side1"
+		type="Vec3f"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="0.0,0.0,0.0"
+		defaultValue="1.0,0.0,0.0"
+	>
+	</Field>
+	<Field
+		name="Side2"
+		type="Vec3f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0,1.0,0.0"
 	>
 	</Field>
 	<Field

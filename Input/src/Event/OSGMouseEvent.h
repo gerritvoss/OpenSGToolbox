@@ -43,7 +43,7 @@ class OSG_INPUTLIB_DLLMAPPING MouseEvent : public Event
 {
     /*=========================  PUBLIC  ===============================*/
   public:
-    enum MouseButton {NO_BUTTON = 0, BUTTON1 = 1, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8, BUTTON9, BUTTON10};
+    enum MouseButton {BUTTON1 = 0, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8, BUTTON9, BUTTON10, NO_BUTTON};
   
     MouseButton getButton(void) const;
     UInt16 getClickCount(void) const;

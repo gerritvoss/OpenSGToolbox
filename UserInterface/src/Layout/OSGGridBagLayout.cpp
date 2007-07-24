@@ -81,7 +81,7 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 	Pnt2s borderOffset;
 	Vec2s borderSize;
 	ParentComponent->getInsideBorderBounds(borderOffset, borderSize);
-	borderSize -= borderOffset;
+	borderSize -= Vec2s(borderOffset);
 
 	std::vector<UInt16> widths;
 	std::vector<UInt16> posX;

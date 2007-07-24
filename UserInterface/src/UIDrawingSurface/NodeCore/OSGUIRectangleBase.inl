@@ -96,18 +96,25 @@ UIRectanglePtr UIRectangleBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the UIRectangle::_sfPoint1 field.
+//! Get the UIRectangle::_sfPoint field.
 inline
-SFPnt3f *UIRectangleBase::getSFPoint1(void)
+SFPnt3f *UIRectangleBase::getSFPoint(void)
 {
-    return &_sfPoint1;
+    return &_sfPoint;
 }
 
-//! Get the UIRectangle::_sfPoint2 field.
+//! Get the UIRectangle::_sfSide1 field.
 inline
-SFPnt3f *UIRectangleBase::getSFPoint2(void)
+SFVec3f *UIRectangleBase::getSFSide1(void)
 {
-    return &_sfPoint2;
+    return &_sfSide1;
+}
+
+//! Get the UIRectangle::_sfSide2 field.
+inline
+SFVec3f *UIRectangleBase::getSFSide2(void)
+{
+    return &_sfSide2;
 }
 
 //! Get the UIRectangle::_sfDrawingSurface field.
@@ -118,46 +125,67 @@ SFUIDrawingSurfacePtr *UIRectangleBase::getSFDrawingSurface(void)
 }
 
 
-//! Get the value of the UIRectangle::_sfPoint1 field.
+//! Get the value of the UIRectangle::_sfPoint field.
 inline
-Pnt3f &UIRectangleBase::getPoint1(void)
+Pnt3f &UIRectangleBase::getPoint(void)
 {
-    return _sfPoint1.getValue();
+    return _sfPoint.getValue();
 }
 
-//! Get the value of the UIRectangle::_sfPoint1 field.
+//! Get the value of the UIRectangle::_sfPoint field.
 inline
-const Pnt3f &UIRectangleBase::getPoint1(void) const
+const Pnt3f &UIRectangleBase::getPoint(void) const
 {
-    return _sfPoint1.getValue();
+    return _sfPoint.getValue();
 }
 
-//! Set the value of the UIRectangle::_sfPoint1 field.
+//! Set the value of the UIRectangle::_sfPoint field.
 inline
-void UIRectangleBase::setPoint1(const Pnt3f &value)
+void UIRectangleBase::setPoint(const Pnt3f &value)
 {
-    _sfPoint1.setValue(value);
+    _sfPoint.setValue(value);
 }
 
-//! Get the value of the UIRectangle::_sfPoint2 field.
+//! Get the value of the UIRectangle::_sfSide1 field.
 inline
-Pnt3f &UIRectangleBase::getPoint2(void)
+Vec3f &UIRectangleBase::getSide1(void)
 {
-    return _sfPoint2.getValue();
+    return _sfSide1.getValue();
 }
 
-//! Get the value of the UIRectangle::_sfPoint2 field.
+//! Get the value of the UIRectangle::_sfSide1 field.
 inline
-const Pnt3f &UIRectangleBase::getPoint2(void) const
+const Vec3f &UIRectangleBase::getSide1(void) const
 {
-    return _sfPoint2.getValue();
+    return _sfSide1.getValue();
 }
 
-//! Set the value of the UIRectangle::_sfPoint2 field.
+//! Set the value of the UIRectangle::_sfSide1 field.
 inline
-void UIRectangleBase::setPoint2(const Pnt3f &value)
+void UIRectangleBase::setSide1(const Vec3f &value)
 {
-    _sfPoint2.setValue(value);
+    _sfSide1.setValue(value);
+}
+
+//! Get the value of the UIRectangle::_sfSide2 field.
+inline
+Vec3f &UIRectangleBase::getSide2(void)
+{
+    return _sfSide2.getValue();
+}
+
+//! Get the value of the UIRectangle::_sfSide2 field.
+inline
+const Vec3f &UIRectangleBase::getSide2(void) const
+{
+    return _sfSide2.getValue();
+}
+
+//! Set the value of the UIRectangle::_sfSide2 field.
+inline
+void UIRectangleBase::setSide2(const Vec3f &value)
+{
+    _sfSide2.setValue(value);
 }
 
 //! Get the value of the UIRectangle::_sfDrawingSurface field.
