@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include <Component/OSGComponentFields.h>
+#include "OSGContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class RotatedComponent;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! RotatedComponentPtr
 
-typedef FCPtr<ComponentPtr, RotatedComponent> RotatedComponentPtr;
+typedef FCPtr<ContainerPtr, RotatedComponent> RotatedComponentPtr;
 
 #endif
 

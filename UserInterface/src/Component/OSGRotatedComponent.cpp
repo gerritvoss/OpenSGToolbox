@@ -106,11 +106,6 @@ RotatedComponent::~RotatedComponent(void)
 void RotatedComponent::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
-	
-    if( (whichField & ComponentFieldMask) )
-    {
-		//Update my Preferred/Min/Max sizes so that I will contain the Component
-    }
 }
 
 void RotatedComponent::dump(      UInt32    , 

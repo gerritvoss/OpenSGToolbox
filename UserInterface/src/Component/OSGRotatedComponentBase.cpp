@@ -64,9 +64,6 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  RotatedComponentBase::ComponentFieldMask = 
-    (TypeTraits<BitVector>::One << RotatedComponentBase::ComponentFieldId);
-
 const OSG::BitVector  RotatedComponentBase::AngleFieldMask = 
     (TypeTraits<BitVector>::One << RotatedComponentBase::AngleFieldId);
 
@@ -77,9 +74,6 @@ const OSG::BitVector RotatedComponentBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var ComponentPtr    RotatedComponentBase::_sfComponent
-    
-*/
 /*! \var Real32          RotatedComponentBase::_sfAngle
     
 */
@@ -88,11 +82,6 @@ const OSG::BitVector RotatedComponentBase::MTInfluenceMask =
 
 FieldDescription *RotatedComponentBase::_desc[] = 
 {
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "Component", 
-                     ComponentFieldId, ComponentFieldMask,
-                     false,
-                     (FieldAccessMethod) &RotatedComponentBase::getSFComponent),
     new FieldDescription(SFReal32::getClassType(), 
                      "Angle", 
                      AngleFieldId, AngleFieldMask,
@@ -103,7 +92,7 @@ FieldDescription *RotatedComponentBase::_desc[] =
 
 FieldContainerType RotatedComponentBase::_type(
     "RotatedComponent",
-    "Component",
+    "Container",
     NULL,
     (PrototypeCreateF) &RotatedComponentBase::createEmpty,
     RotatedComponent::initMethod,
@@ -173,7 +162,6 @@ void RotatedComponentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 RotatedComponentBase::RotatedComponentBase(void) :
-    _sfComponent              (ComponentPtr(NullFC)), 
     _sfAngle                  (Real32(0.0)), 
     Inherited() 
 {
@@ -184,7 +172,6 @@ RotatedComponentBase::RotatedComponentBase(void) :
 #endif
 
 RotatedComponentBase::RotatedComponentBase(const RotatedComponentBase &source) :
-    _sfComponent              (source._sfComponent              ), 
     _sfAngle                  (source._sfAngle                  ), 
     Inherited                 (source)
 {
@@ -202,11 +189,6 @@ UInt32 RotatedComponentBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (ComponentFieldMask & whichField))
-    {
-        returnValue += _sfComponent.getBinSize();
-    }
-
     if(FieldBits::NoField != (AngleFieldMask & whichField))
     {
         returnValue += _sfAngle.getBinSize();
@@ -221,11 +203,6 @@ void RotatedComponentBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ComponentFieldMask & whichField))
-    {
-        _sfComponent.copyToBin(pMem);
-    }
-
     if(FieldBits::NoField != (AngleFieldMask & whichField))
     {
         _sfAngle.copyToBin(pMem);
@@ -238,11 +215,6 @@ void RotatedComponentBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
-
-    if(FieldBits::NoField != (ComponentFieldMask & whichField))
-    {
-        _sfComponent.copyFromBin(pMem);
-    }
 
     if(FieldBits::NoField != (AngleFieldMask & whichField))
     {
@@ -259,9 +231,6 @@ void RotatedComponentBase::executeSyncImpl(      RotatedComponentBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (ComponentFieldMask & whichField))
-        _sfComponent.syncWith(pOther->_sfComponent);
-
     if(FieldBits::NoField != (AngleFieldMask & whichField))
         _sfAngle.syncWith(pOther->_sfAngle);
 
@@ -274,9 +243,6 @@ void RotatedComponentBase::executeSyncImpl(      RotatedComponentBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ComponentFieldMask & whichField))
-        _sfComponent.syncWith(pOther->_sfComponent);
 
     if(FieldBits::NoField != (AngleFieldMask & whichField))
         _sfAngle.syncWith(pOther->_sfAngle);
@@ -304,7 +270,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<RotatedComponentPtr>::_type("RotatedComponentPtr", "ComponentPtr");
+DataType FieldDataTraits<RotatedComponentPtr>::_type("RotatedComponentPtr", "ContainerPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(RotatedComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);

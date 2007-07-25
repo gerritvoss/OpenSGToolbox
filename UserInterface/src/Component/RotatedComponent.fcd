@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="RotatedComponent"
-	parent="Component"
+	parent="Container"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -11,17 +11,7 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
-A UI Button.
-	<Field
-		name="Component"
-		type="ComponentPtr"
-		cardinality="single"
-		visibility="external"
-		header="Component/OSGComponentFields.h"
-		defaultValue="NullFC"
-		access="public"
-	>
-	</Field>
+A UI Rotated Component.
 	<Field
 		name="Angle"
 		type="Real32"

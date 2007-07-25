@@ -96,13 +96,6 @@ RotatedComponentPtr RotatedComponentBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the RotatedComponent::_sfComponent field.
-inline
-SFComponentPtr *RotatedComponentBase::getSFComponent(void)
-{
-    return &_sfComponent;
-}
-
 //! Get the RotatedComponent::_sfAngle field.
 inline
 SFReal32 *RotatedComponentBase::getSFAngle(void)
@@ -110,27 +103,6 @@ SFReal32 *RotatedComponentBase::getSFAngle(void)
     return &_sfAngle;
 }
 
-
-//! Get the value of the RotatedComponent::_sfComponent field.
-inline
-ComponentPtr &RotatedComponentBase::getComponent(void)
-{
-    return _sfComponent.getValue();
-}
-
-//! Get the value of the RotatedComponent::_sfComponent field.
-inline
-const ComponentPtr &RotatedComponentBase::getComponent(void) const
-{
-    return _sfComponent.getValue();
-}
-
-//! Set the value of the RotatedComponent::_sfComponent field.
-inline
-void RotatedComponentBase::setComponent(const ComponentPtr &value)
-{
-    _sfComponent.setValue(value);
-}
 
 //! Get the value of the RotatedComponent::_sfAngle field.
 inline

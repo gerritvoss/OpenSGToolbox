@@ -65,9 +65,8 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/OSGComponent.h" // Parent
+#include "OSGContainer.h" // Parent
 
-#include "Component/OSGComponentFields.h" // Component type
 #include <OpenSG/OSGReal32Fields.h> // Angle type
 
 #include "OSGRotatedComponentFields.h"
@@ -79,11 +78,11 @@ class BinaryDataHandler;
 
 //! \brief RotatedComponent Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Component
+class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
 {
   private:
 
-    typedef Component    Inherited;
+    typedef Container    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -92,12 +91,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Component
 
     enum
     {
-        ComponentFieldId = Inherited::NextFieldId,
-        AngleFieldId     = ComponentFieldId + 1,
-        NextFieldId      = AngleFieldId     + 1
+        AngleFieldId = Inherited::NextFieldId,
+        NextFieldId  = AngleFieldId + 1
     };
 
-    static const OSG::BitVector ComponentFieldMask;
     static const OSG::BitVector AngleFieldMask;
 
 
@@ -125,11 +122,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Component
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFComponentPtr      *getSFComponent      (void);
            SFReal32            *getSFAngle          (void);
 
-           ComponentPtr        &getComponent      (void);
-     const ComponentPtr        &getComponent      (void) const;
            Real32              &getAngle          (void);
      const Real32              &getAngle          (void) const;
 
@@ -138,7 +132,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Component
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setComponent      ( const ComponentPtr &value );
      void setAngle          ( const Real32 &value );
 
     /*! \}                                                                 */
@@ -182,7 +175,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Component
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFComponentPtr      _sfComponent;
     SFReal32            _sfAngle;
 
     /*! \}                                                                 */
