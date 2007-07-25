@@ -303,24 +303,46 @@ void TabPanel::mouseClicked(const MouseEvent& e)
 
 void TabPanel::mouseEntered(const MouseEvent& e)
 {
+	bool isContained;
     for(UInt32 i(0) ; i<getTabs().size() ; ++i)
     {
-		//checkMouseEnterExit(e, e.getLocation());
+		isContained = isPointInComponent(e.getLocation(), getTabs().getValue(i));
+		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained);
+		if(isContained)
+		{
+			getTabs().getValue(i)->mouseDragged(e);
+		}
     }
 
-	//checkMouseEnterExit(e, e.getLocation());
+	isContained = isPointInComponent(e.getLocation(), getTabContents().getValue(getActiveTab()));
+	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained);
+	if(isContained)
+	{
+		getTabContents().getValue(getActiveTab())->mouseDragged(e);
+	}
 
 	Component::mouseEntered(e);
 }
 
 void TabPanel::mouseExited(const MouseEvent& e)
 {
+	bool isContained;
     for(UInt32 i(0) ; i<getTabs().size() ; ++i)
     {
-		//checkMouseEnterExit(e, e.getLocation());
+		isContained = isPointInComponent(e.getLocation(), getTabs().getValue(i));
+		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained);
+		if(isContained)
+		{
+			getTabs().getValue(i)->mouseDragged(e);
+		}
     }
 
-	//checkMouseEnterExit(e, e.getLocation());
+	isContained = isPointInComponent(e.getLocation(), getTabContents().getValue(getActiveTab()));
+	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained);
+	if(isContained)
+	{
+		getTabContents().getValue(getActiveTab())->mouseDragged(e);
+	}
 
 	Component::mouseExited(e);
 }
