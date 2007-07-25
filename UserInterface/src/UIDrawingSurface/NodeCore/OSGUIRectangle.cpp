@@ -114,9 +114,10 @@ Action::ResultE UIRectangle::drawActionHandler( Action* action )
 
 Action::ResultE UIRectangle::renderActionHandler( Action* action )
 {
-
-    dynamic_cast<RenderAction *>(action)->dropFunctor(osgTypedMethodFunctor1ObjPtr(this, 
-                                        &UIRectangle::drawPrimitives), getDefaultUnlitMaterial().getCPtr());
+    Material::DrawFunctor func;
+    func = osgTypedMethodFunctor1ObjPtr(this,
+                                                  &UIRectangle::drawPrimitives);
+    dynamic_cast<RenderAction *>(action)->dropFunctor(func, getDefaultUnlitMaterial().getCPtr());
     return Action::Continue;
 }
 

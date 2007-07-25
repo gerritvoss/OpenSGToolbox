@@ -6,7 +6,7 @@ LIB_INCLUDE_DIR_NAME = UserInterface
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Background:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Event:$(srcdir)/Component:$(srcdir)/Component/List:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/LookAndFeel:$(srcdir)/Text:$(srcdir)/Border:$(srcdir)/Layout:$(srcdir)/Util:
+VPATH = $(srcdir)/:$(srcdir)/Background:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Event:$(srcdir)/Component:$(srcdir)/Component/List:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/LookAndFeel:$(srcdir)/Text:$(srcdir)/Border:$(srcdir)/Layout:$(srcdir)/Util:
 
 
 #.SUFFIX = .o .o
@@ -71,18 +71,24 @@ OBJECTS = OSGGradientUIBackgroundBase.o \
 	OSGUIDrawObjectCanvasBase.o \
 	OSGLabel.o \
 	OSGCheckboxButton.o \
+	OSGTextField.o \
+	OSGRotatedComponentBase.o \
+	OSGRotatedComponent.o \
+	OSGTextFieldBase.o \
+	OSGTextComponentBase.o \
+	OSGRadioButtonGroup.o \
+	OSGTextComponent.o \
 	OSGListBase.o \
 	OSGDefaultListSelectionModel.o \
 	OSGAbstractListModel.o \
 	OSGDefaultListCellGenerator.o \
-	OSGDefaultListSelectionModelBase.o \
 	OSGList.o \
-	OSGAbstractListModelBase.o \
-	OSGDefaultListCellGeneratorBase.o \
 	OSGUIDrawingSurfaceBase.o \
 	OSGUIDrawingSurface.o \
 	OSGUIForeground.o \
 	OSGUIForegroundBase.o \
+	OSGUIRectangleBase.o \
+	OSGUIRectangle.o \
 	OSGDefaultLookAndFeel.o \
 	OSGLookAndFeelBase.o \
 	OSGLookAndFeelManager.o \
