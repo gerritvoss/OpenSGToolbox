@@ -143,10 +143,10 @@ int main(int argc, char **argv)
 			-setGridX(X_LOCATION) and setGridY(Y_LOCATION) 
 				determine where the starting Grid space
 				for the Constraints are, keeping in mind
-				that 0,0 is the upper right corner
+				that 0,0 is the upper left corner
 			-setGridHeight(HEIGHT) and setGridWidth(WIDTH)
 				determine the number of Grid spaces that
-				the Constraints encompass
+				the Constraints' Component encompass
 			-setFill(FILL_TYPE) determines the Fill categories.
 				Options are:
 				FILL_BOTH: Stretches both X/Y directions
@@ -162,16 +162,24 @@ int main(int argc, char **argv)
 				determine the percent of the grid space
 				in each respective direction that the Component
 				occupies.  PERCENT in this case is a float 
-				between 0.0 and 1.0
+				between 0.0 and 1.0. This is only used if the
+				fill property is set for its direction, i.e.
+				if you use setFill(FILL_VERTICAL), it will stretch
+				by the weightY but not weightX.
 			-setPadBottom/Top/Right/Left(AMOUNT) determines the
 				padding	within the Grid space in each direction 
 				in pixels
 			-setInternalPadX(AMOUNT) and setInternalPadY(AMOUNT)
-				
+				will increase the minimum size that the component
+				is set to. If the component is supposed to be drawn
+				below its minSize + 2*internalPad, then it will
+				be increased until then, unless it is too big to fit
+				into the cell.
 			-setHorizontalAlignment(PERCENT) and 
 				setVerticalAlignment(PERCENT) determine the 
 				alignment in both directions, based on a float 
-				between 0.0 and 1.0
+				between 0.0 and 1.0, where 0.0 is the same as
+				MIN_ALIGN and 0.5 will center it.
 
 
 
