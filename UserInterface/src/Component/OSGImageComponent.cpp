@@ -105,7 +105,6 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
 	   Real32 AspectImage = getTexture()->getImage()->getWidth()/getTexture()->getImage()->getHeight();
 
 	   Vec2s vector(0,0);
-	   //TODO: Implement
 	   if (AspectComponent < AspectImage)
 	   {
 		   vector[0] = ComponentSize.x();
@@ -126,7 +125,6 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
 	   Real32 AspectImage = getTexture()->getImage()->getWidth()/getTexture()->getImage()->getHeight();
 
 	   Vec2s vector(0,0);
-	   //TODO: Implement
 	   if (AspectComponent > AspectImage)
 	   {
 		   vector[0] = ComponentSize.x();

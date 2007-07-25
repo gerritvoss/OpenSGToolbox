@@ -87,6 +87,10 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 	std::vector<UInt16> posX;
 	std::vector<UInt16> heights;
 	std::vector<UInt16> posY;
+	std::vector<Real32> columnWeights;
+	std::vector<Real32> rowWeights;
+	Real32 cumColumnWeights(0.0);
+	Real32 cumRowWeights(0.0);
 
 	Pnt2s offset(borderOffset);
 	Vec2s cellSize(0,0);
@@ -95,20 +99,84 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 	UInt32 i;
 	GridBagLayoutConstraintsPtr constraints;
 
-	// check to make sure there are enough ColumnHeights and RowWidths
-	/*while (getColumnHeights().size() < getColumns())
-		getColumnHeights().addValue(0);
-	while (getRowWidths().size() < getRows())
-		getRowWidths().addValue(0);*/
+	// check the number of weights. if there aren't enough, then it fills in
+	// the blanks evenly.
+	for (i = 0; i < getColumnWeights().size(); ++i)
+	{
+		columnWeights.push_back(getColumnWeights().getValue(i));
+		cumColumnWeights += columnWeights[i];
+	}
+	for (i = 0; i < getRowWeights().size(); ++i)
+	{
+		rowWeights.push_back(getRowWeights().getValue(i));
+		cumRowWeights += rowWeights[i];
+	}
+
+	// fix the weights so there are the correct number of them, and they add up to 1.0
+	if (columnWeights.size() < getColumns())
+	{
+		if (cumColumnWeights > .95)
+		{
+			// first make the existing weights fill their portion of the grid
+			Real32 ratio( ((Real32)columnWeights.size()/(Real32)getColumns()) / cumColumnWeights );
+			for (i = 0; i < columnWeights.size(); ++i)
+				columnWeights[i] *= ratio;
+			// then add in equally spaced weights
+			ratio = (1.0 - (Real32)columnWeights.size()/(Real32)getColumns()) / (getColumns() - columnWeights.size());
+			for (i = 0; i < getColumns() - columnWeights.size(); ++i)
+				columnWeights.push_back(ratio);
+		}
+		else
+		{
+			// fill in equally spaced weights
+			Real32 ratio( (1.0 - cumColumnWeights) / (getColumns() - columnWeights.size()) );
+			for (i = 0; i < getColumns() - columnWeights.size(); ++i)
+				columnWeights.push_back(ratio);
+		}
+	}
+	else if (osgabs(cumColumnWeights-1.0) > 0.01)
+	{
+		// force the total weight to be 1.0
+		Real32 ratio(1.0 / cumColumnWeights);
+		for (i = 0; i < columnWeights.size(); ++i)
+			columnWeights[i] *= ratio;
+	}
+	if (rowWeights.size() < getRows())
+	{
+		if (cumRowWeights > .95)
+		{
+			// first make the existing weights fill their portion of the grid
+			Real32 ratio( ((Real32)rowWeights.size()/(Real32)getRows()) / cumRowWeights );
+			for (i = 0; i < rowWeights.size(); ++i)
+				rowWeights[i] *= ratio;
+			// then add in equally spaced weights
+			ratio = (1.0 - (Real32)rowWeights.size()/(Real32)getRows()) / (getRows() - rowWeights.size());
+			for (i = 0; i < getRows() - rowWeights.size(); ++i)
+				rowWeights.push_back(ratio);
+		}
+		else
+		{
+			// fill in equally spaced weights
+			Real32 ratio( (1.0 - cumRowWeights) / (getRows() - rowWeights.size()) );
+			for (i = 0; i < getRows() - rowWeights.size(); ++i)
+				rowWeights.push_back(ratio);
+		}
+	}
+	else if (osgabs(cumRowWeights-1.0) > 0.01)
+	{
+		// force the total weight to be 1.0
+		Real32 ratio(1.0 / cumRowWeights);
+		for (i = 0; i < rowWeights.size(); ++i)
+			rowWeights[i] *= ratio;
+	}
 
 	// set up all of the positions and sizes of the grid
 	posX.push_back(0);
 	for (i = 1; i < getColumns(); ++i)
 	{
-		weight+=getColumnWeights().getValue(i-1);
+		weight+=columnWeights[i-1];
 		posX.push_back((UInt16)(weight*borderSize[0]));
 		widths.push_back(posX[i]-posX[i-1]);
-		//getRowWidths().setValue(posX[i]-posX[i-1], i-1);
 	}
 	// i increments again before this statement, so it
 	// still must be i-1
@@ -118,10 +186,9 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 	posY.push_back(0);
 	for (i = 1; i < getRows(); ++i)
 	{
-		weight+=getRowWeights().getValue(i-1);
+		weight+=rowWeights[i-1];
 		posY.push_back((UInt16)(weight*borderSize[1]));
 		heights.push_back(posY[i]-posY[i-1]);
-		//getColumnHeights.setValue(posY[i]-posY[i-1], i-1);
 	}
 	heights.push_back(borderSize[1]-posY[i-1]);
 

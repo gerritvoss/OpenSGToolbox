@@ -208,7 +208,7 @@ void TextureUIBackgroundBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 TextureUIBackgroundBase::TextureUIBackgroundBase(void) :
     _sfTexture                (), 
-    _sfScale                  (UInt32(SCALE_NONE)), 
+    _sfScale                  (UInt32(SCALE_STRETCH)), 
     _sfScaleAbsoluteSize      (Vec2s(1,1)), 
     _sfVerticalAlignment      (Real32(0.5)), 
     _sfHorizontalAlignment    (Real32(0.5)), 

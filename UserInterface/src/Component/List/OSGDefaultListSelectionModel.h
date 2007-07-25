@@ -132,6 +132,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public ListSel
 	
     virtual void produceSelectionChanged(const ListSelectionEvent& e);
 	SelectionMode _SelectionMode;
+
+	// These are used to help with setting the Selection Intervals
+
+   UInt32 	_AnchorSelectionIndex;
+   UInt32 	_LeadSelectionIndex;   
+   UInt32 	_MaxSelectionIndex;   
+   UInt32 	_MinSelectionIndex;   
+   bool 	_ValueIsAdjusting;
     
     /*==========================  PRIVATE  ================================*/
   private:

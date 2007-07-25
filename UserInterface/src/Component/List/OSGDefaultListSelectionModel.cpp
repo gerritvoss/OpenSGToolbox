@@ -125,6 +125,7 @@ void 	DefaultListSelectionModel::insertIndexInterval(UInt32 index, UInt32 length
 bool 	DefaultListSelectionModel::isSelectedIndex(UInt32 index) const
 {
    //TODO:Implement
+	if(index==1) return true;
    return false;
 }
 
