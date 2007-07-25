@@ -129,6 +129,10 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
 	
 	virtual UInt32 getKeyModifiers(void) const;
 
+	virtual std::string getClipboard(void) const;
+
+	virtual void putClipboard(const std::string Value);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -150,6 +154,7 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
 
     /*! \}                                                                 */
     
+	virtual void setCursor(void);
     /*==========================  PRIVATE  ================================*/
   private:
 

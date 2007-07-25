@@ -123,6 +123,59 @@ LRESULT Win32WindowEventProducer::staticWndProc(HWND hwnd2, UINT uMsg,
    return 0;
 }
 
+std::string Win32WindowEventProducer::getClipboard(void) const
+{
+	//TODO:Implement
+	return std::string("");
+}
+
+void Win32WindowEventProducer::putClipboard(const std::string Value)
+{
+	//TODO:Implement
+}
+
+void Win32WindowEventProducer::setCursor(void)
+{
+	LPSTR c;
+	switch(getCursorType())
+	{
+	case CURSOR_POINTER:
+		c = IDC_ARROW;
+		break;
+	case CURSOR_HAND:
+		c = IDC_HAND;
+		break;
+	case CURSOR_I_BEAM:
+		c = IDC_IBEAM;
+		break;
+	case CURSOR_WAIT:
+		c = IDC_WAIT;
+		break;
+	case CURSOR_RESIZE_W_TO_E:
+		c = IDC_SIZEWE;
+		break;
+	case CURSOR_RESIZE_N_TO_S:
+		c = IDC_SIZENS;
+		break;
+	case CURSOR_RESIZE_NW_TO_SE:
+		c = IDC_SIZENWSE;
+		break;
+	case CURSOR_RESIZE_SW_TO_NE:
+		c = IDC_SIZENESW;
+		break;
+	case CURSOR_RESIZE_ALL:
+		c = IDC_SIZEALL;
+		break;
+	case CURSOR_NONE:
+		c = IDC_NO;
+		break;
+	default:
+		c = IDC_ARROW;
+		break;
+	}
+	SetCursor(LoadCursor(NULL, c));
+}
+
 UInt32 Win32WindowEventProducer::getKeyModifiers(void) const
 {
    UInt32 Modifiers = 0;
@@ -626,7 +679,7 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd2, UINT uMsg,
             break;
 
 		case WM_SETCURSOR:
-			SetCursor(LoadCursor(NULL, IDC_ARROW));
+			setCursor();
             return DefWindowProc(hwnd2, uMsg, wParam, lParam);
         default:
             return DefWindowProc(hwnd2, uMsg, wParam, lParam);

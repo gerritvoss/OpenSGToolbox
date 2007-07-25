@@ -145,6 +145,22 @@ void GLUTWindowEventProducer::initMethod (void)
 	WindowEventProducerFactory::the()->registerProducer(&GLUTWindow::getClassType(), &GLUTWindowEventProducer::getClassType());
 }
 
+std::string GLUTWindowEventProducer::getClipboard(void) const
+{
+	//TODO:Implement
+	return std::string("");
+}
+
+void GLUTWindowEventProducer::putClipboard(const std::string Value)
+{
+	//TODO:Implement
+}
+
+void GLUTWindowEventProducer::setCursor(void)
+{
+	//TODO:Implement
+}
+
 UInt32 GLUTWindowEventProducer::getKeyModifiers(void) const
 {
 	//TODO:Implement

@@ -110,7 +110,8 @@ bool WindowEventProducer::attachWindow(WindowPtr Win)
 WindowEventProducer::WindowEventProducer(void) :
     Inherited(), _EventDispatchThread(NULL),
        _DisplayCallbackFunc(NULL),
-       _ReshapeCallbackFunc(NULL)
+       _ReshapeCallbackFunc(NULL),
+	   _CursorType(CURSOR_POINTER)
 {
    _ButtonClickCountMap[MouseEvent::BUTTON1] = ClickVector();
    _ButtonClickCountMap[MouseEvent::BUTTON2] = ClickVector();
@@ -138,7 +139,8 @@ WindowEventProducer::WindowEventProducer(void) :
 WindowEventProducer::WindowEventProducer(const WindowEventProducer &source) :
     Inherited(source), _EventDispatchThread(source._EventDispatchThread),
        _DisplayCallbackFunc(source._DisplayCallbackFunc),
-       _ReshapeCallbackFunc(source._ReshapeCallbackFunc)
+       _ReshapeCallbackFunc(source._ReshapeCallbackFunc),
+	   _CursorType(source._CursorType)
 {
    _ButtonClickCountMap[MouseEvent::BUTTON1] = ClickVector();
    _ButtonClickCountMap[MouseEvent::BUTTON2] = ClickVector();

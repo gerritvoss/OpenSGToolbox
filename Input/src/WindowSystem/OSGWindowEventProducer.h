@@ -118,6 +118,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
 
     /*==========================  PUBLIC  =================================*/
   public:
+	enum CursorType {CURSOR_POINTER=0, CURSOR_HAND, CURSOR_I_BEAM, CURSOR_WAIT, CURSOR_RESIZE_W_TO_E, CURSOR_RESIZE_N_TO_S, CURSOR_RESIZE_NW_TO_SE, CURSOR_RESIZE_SW_TO_NE, CURSOR_RESIZE_ALL, CURSOR_NONE};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -200,6 +201,13 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     virtual bool attachWindow(WindowPtr Win);
 
 	virtual UInt32 getKeyModifiers(void) const = 0;
+
+	virtual std::string getClipboard(void) const = 0;
+
+	virtual void putClipboard(const std::string Value) = 0;
+
+	CursorType getCursorType(void) const;
+	void setCursorType(CursorType Type); 
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -249,6 +257,9 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     void produceWindowEntered(void);
     void produceWindowExited(void);
 
+	CursorType _CursorType;
+
+	virtual void setCursor(void) = 0;
     /*==========================  PRIVATE  ================================*/
   private:
 

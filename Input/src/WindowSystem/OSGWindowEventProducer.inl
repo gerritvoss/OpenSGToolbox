@@ -7,6 +7,18 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+WindowEventProducer::CursorType WindowEventProducer::getCursorType(void) const
+{
+	return _CursorType;
+}
+
+inline
+void WindowEventProducer::setCursorType(CursorType Type)
+{
+	_CursorType = Type;
+}
+
+inline
 void WindowEventProducer::addMouseListener(MouseListenerPtr Listener)
 {
    _MouseListeners.insert(Listener);
