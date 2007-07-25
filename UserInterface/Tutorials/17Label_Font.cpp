@@ -31,6 +31,7 @@
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGUIDefines.h>
+#include <OpenSG/OSGTextFaceFactory.h>
 
 // Include Label and Font headerfiles
 #include <OpenSG/UserInterface/OSGLabel.h>
@@ -88,12 +89,37 @@ int main(int argc, char **argv)
 
 	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
+
+	
+	/******************************************************
+
+			Determine which Fonts your computer can
+			use as a Font
+
+
+	******************************************************/
+	std::vector<std::string> family;
+	TextFaceFactory::the().getFontFamilies(family);
+	// Display all Fonts available
+	for (int i =0; i<family.size(); ++i)
+	{
+		std::cout << family[i] << std::endl;
+	}
+	// Set default Font to Times New Roman if Wide
+	// Latin is not included on your machine.  
+	std::string buttonFontFamily("Wide Latin");
+	if (std::find(family.begin(), family.end(), buttonFontFamily) == family.end())
+	{
+		buttonFontFamily = "Times New Roman";
+	}
 	
 	/******************************************************
 
 			Create a Font.
 			-setFamily(TYPE) determines what format the Font
-				is (choices are: SANS, INSERT REMAINDER)
+				is.  The above For loop displays all the
+				Font options you have on your machine in the
+				console window.
 			-setSize(SIZE) determines the size of the 
 				Font.
 			-setFont(TextFace::STYLE) determines the 
@@ -103,10 +129,13 @@ int main(int argc, char **argv)
 
 
 	******************************************************/
-
 	FontPtr labelFont = Font::create();
 	beginEditCP(labelFont);
-		labelFont->setFamily("SANS");
+		// Determines Font Family (as determined above)	Note:
+		// a default setting is included if the Font 
+		// given to the Font does not exist; try putting
+		// random characterssgjs in for setFamily.  
+		labelFont->setFamily("gkldsgjs");
 		labelFont->setSize(25);
 		labelFont->setStyle(TextFace::STYLE_PLAIN);
 	endEditCP(labelFont);

@@ -87,6 +87,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "18List", "18List.vcproj", "
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "17Label_Font", "17Label_Font.vcproj", "{E4289413-B11F-4480-B87F-E6AF81FACD12}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "19GridBagLayout", "19GridBagLayout.vcproj", "{95FF4486-939F-41A2-98AD-830581B5B251}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -175,6 +177,10 @@ Global
 		{E4289413-B11F-4480-B87F-E6AF81FACD12}.Debug|Win32.Build.0 = Debug|Win32
 		{E4289413-B11F-4480-B87F-E6AF81FACD12}.Release|Win32.ActiveCfg = Release|Win32
 		{E4289413-B11F-4480-B87F-E6AF81FACD12}.Release|Win32.Build.0 = Release|Win32
+		{95FF4486-939F-41A2-98AD-830581B5B251}.Debug|Win32.ActiveCfg = Debug|Win32
+		{95FF4486-939F-41A2-98AD-830581B5B251}.Debug|Win32.Build.0 = Debug|Win32
+		{95FF4486-939F-41A2-98AD-830581B5B251}.Release|Win32.ActiveCfg = Release|Win32
+		{95FF4486-939F-41A2-98AD-830581B5B251}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
