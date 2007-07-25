@@ -66,7 +66,6 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
                            WPARAM wParam, LPARAM lParam);
     
     static KeyEvent::Key determineKey(WPARAM key);
-    UInt32 determineModifiers(void);
     /*==========================  PUBLIC  =================================*/
   public:
     static LRESULT CALLBACK staticWndProc(HWND hwnd2, UINT uMsg,
@@ -127,6 +126,8 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
 
     //Get the Window Fullscreen
     virtual bool getFullscreen(void) const;
+	
+	virtual UInt32 getKeyModifiers(void) const;
 
     /*=========================  PROTECTED  ===============================*/
   protected:

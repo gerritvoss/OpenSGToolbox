@@ -145,6 +145,11 @@ void GLUTWindowEventProducer::initMethod (void)
 	WindowEventProducerFactory::the()->registerProducer(&GLUTWindow::getClassType(), &GLUTWindowEventProducer::getClassType());
 }
 
+UInt32 GLUTWindowEventProducer::getKeyModifiers(void) const
+{
+	//TODO:Implement
+	return 0;
+}
 KeyEvent::Key GLUTWindowEventProducer::determineSpecialKey(UChar8 key)
 {
    KeyEvent::Key OSGKey;
@@ -492,11 +497,6 @@ KeyEvent::Key GLUTWindowEventProducer::determineKey(UChar8 key)
       break;
    }
    return OSGKey;
-}
-
-UInt32 GLUTWindowEventProducer::determineModifiers(void)
-{
-   return 0;
 }
 
 

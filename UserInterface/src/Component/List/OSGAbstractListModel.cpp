@@ -98,6 +98,16 @@ void AbstractListModel::removeListDataListener(ListDataListenerPtr l)
 	   _DataListeners.remove(l);
    }
 }
+ 
+void AbstractListModel::pushBack(Field* f){
+	_FieldList.push_back(f);
+	produceListDataIntervalAdded(_FieldList.size()-1,_FieldList.size());
+}
+
+void AbstractListModel::popBack(void){
+	_FieldList.pop_back();
+	produceListDataIntervalRemoved(_FieldList.size(),_FieldList.size());
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -116,7 +126,7 @@ AbstractListModel::~AbstractListModel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void AbstractListModel::fireListDataContentsChanged(void)
+void AbstractListModel::produceListDataContentsChanged(void)
 {
 	ListDataEvent e(NullFC, getSystemTime(), 0, _FieldList.size()-1, ListDataEvent::CONTENTS_CHANGED, this);
 	ListDataListenerListIter Iter;
@@ -126,7 +136,7 @@ void AbstractListModel::fireListDataContentsChanged(void)
 	}
 }
 
-void AbstractListModel::fireListDataIntervalAdded(UInt32 index0, UInt32 index1)
+void AbstractListModel::produceListDataIntervalAdded(UInt32 index0, UInt32 index1)
 {
 	ListDataEvent e(NullFC, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_ADDED, this);
 	ListDataListenerListIter Iter;
@@ -136,7 +146,7 @@ void AbstractListModel::fireListDataIntervalAdded(UInt32 index0, UInt32 index1)
 	}
 }
 
-void AbstractListModel::fireListDataIntervalRemoved(UInt32 index0, UInt32 index1)
+void AbstractListModel::produceListDataIntervalRemoved(UInt32 index0, UInt32 index1)
 {
 	ListDataEvent e(NullFC, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_REMOVED, this);
 	ListDataListenerListIter Iter;

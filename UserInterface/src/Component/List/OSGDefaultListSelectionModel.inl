@@ -58,6 +58,18 @@ void DefaultListSelectionModel::removeListSelectionListener(ListSelectionListene
    }
 }
 
+inline
+void DefaultListSelectionModel::setMode(SelectionMode Mode)
+{
+	_SelectionMode = Mode;
+}
+
+inline
+DefaultListSelectionModel::SelectionMode DefaultListSelectionModel::getMode(void) const
+{
+	return _SelectionMode;
+}
+
 OSG_END_NAMESPACE
 
 

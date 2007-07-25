@@ -54,12 +54,6 @@ void List::setCellGenerator(ListCellGenerator* CellGenerator)
 }
 
 inline
-void List::setSelectionModel(ListSelectionModel* SelectionModel)
-{
-   _SelectionModel = SelectionModel;
-}
-
-inline
 ListModel* List::getModel(void) const
 {
    return _Model;

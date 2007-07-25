@@ -247,6 +247,14 @@ void UIDrawingSurface::changed(BitVector whichField, UInt32 origin)
 			getEventProducer()->addKeyListener(this);
 		}
 	}
+	
+	if( (whichField & RootFrameFieldMask) &&
+		getRootFrame() != NullFC)
+	{
+		beginEditCP(getRootFrame(), Frame::DrawingSurfaceFieldMask);
+		    getRootFrame()->setDrawingSurface(UIDrawingSurfacePtr(this));
+		endEditCP(getRootFrame(), Frame::DrawingSurfaceFieldMask);
+	}
 }
 
 void UIDrawingSurface::dump(      UInt32    , 

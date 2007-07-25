@@ -76,9 +76,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractListModel : public ListModel
 	typedef ListDataListenerList::iterator ListDataListenerListIter;
 	ListDataListenerList _DataListeners;
 
-	void fireListDataContentsChanged(void);
-	void fireListDataIntervalAdded(UInt32 index0, UInt32 index1);
-	void fireListDataIntervalRemoved(UInt32 index0, UInt32 index1);
+	void produceListDataContentsChanged(void);
+	void produceListDataIntervalAdded(UInt32 index0, UInt32 index1);
+	void produceListDataIntervalRemoved(UInt32 index0, UInt32 index1);
 
     void operator =(const AbstractListModel &source);
 };

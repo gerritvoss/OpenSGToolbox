@@ -58,6 +58,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public ListSel
 {
     /*==========================  PUBLIC  =================================*/
   public:
+   enum SelectionMode {SINGLE_SELECTION, SINGLE_INTERVAL_SELECTION, MULTIPLE_INTERVAL_SELECTION};
+
    virtual void 	addListSelectionListener(ListSelectionListenerPtr x);
 
    virtual void 	addSelectionInterval(UInt32 index0, UInt32 index1);
@@ -98,6 +100,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public ListSel
    
    virtual void 	setValueIsAdjusting(bool valueIsAdjusting);
    
+   void setMode(SelectionMode Mode);
+   
+   SelectionMode getMode(void) const;
+   
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
@@ -124,7 +130,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public ListSel
 	
     ListSelectionListenerSet       _ListSelectionListeners;
 	
-    virtual void produceValueChanged(const ListSelectionEvent& e);
+    virtual void produceSelectionChanged(const ListSelectionEvent& e);
+	SelectionMode _SelectionMode;
     
     /*==========================  PRIVATE  ================================*/
   private:

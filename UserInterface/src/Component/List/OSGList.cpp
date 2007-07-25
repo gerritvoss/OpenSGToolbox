@@ -46,6 +46,9 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGList.h"
+#include "Component/OSGFrame.h"
+#include "UIDrawingSurface/OSGUIDrawingSurface.h"
+#include <OpenSG/Input/OSGWindowEventProducer.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -74,14 +77,150 @@ void List::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void List::focusGained(const FocusEvent& e)
+void List::selectionChanged(const ListSelectionEvent& e)
 {
+	beginEditCP(ListPtr(this), ChildrenFieldMask);
+		for(UInt32 i(e.getFirstIndex()) ; i<e.getLastIndex() ; ++i)
+		{
+			getChildren().setValue(
+				getCellGenerator()->getListCellGeneratorComponent(ListPtr(this),getModel()->getElementAt(i),i,getSelectionModel()->isSelectedIndex(i),getChildren().getValue(i)->getFocused())
+				,i);
+		}
+	endEditCP(ListPtr(this), ChildrenFieldMask);
+}
 
+/*void List::focusGained(const FocusEvent& e)
+{
+	//Find this component
+	MFComponentPtr::iterator Child = getChildren().find(Component::Ptr::dcast(e.getSource()));
+	if(Child != getChildren().end())
+	{
+		UInt32 index(0);
+		for( ; index< getChildren().size(); ++index)
+		{
+			if((*Child) == getChildren().getValue(index))
+			{
+				break;
+			}
+		}
+		//Pnt2s Pos = (*Child)->getPosition();
+		//Vec2s Size = (*Child)->getSize();
+		(*Child)->removeFocusListener(this);
+		beginEditCP(ListPtr(this), ChildrenFieldMask);
+			(*Child) = getCellGenerator()->getListCellGeneratorComponent(ListPtr(this),getModel()->getElementAt(index),index,true,true);
+		endEditCP(ListPtr(this), ChildrenFieldMask);
+		(*Child)->takeFocus();
+		(*Child)->addFocusListener(this);
+		//beginEditCP((*Child), Component::PositionFieldMask | Component::SizeFieldMask);
+		//	(*Child)->setSize(Size);
+		//	(*Child)->setPosition(Pos);
+		//endEditCP((*Child), Component::PositionFieldMask | Component::SizeFieldMask);
+	}
 }
 
 void List::focusLost(const FocusEvent& e)
 {
+	//Find this component
+	MFComponentPtr::iterator Child = getChildren().find(Component::Ptr::dcast(e.getSource()));
+	if(Child != getChildren().end())
+	{
+		UInt32 index(0);
+		for( ; index< getChildren().size(); ++index)
+		{
+			if((*Child) == getChildren().getValue(index))
+			{
+				break;
+			}
+		}
+		//Pnt2s Pos = (*Child)->getPosition();
+		//Vec2s Size = (*Child)->getSize();
+		(*Child)->removeFocusListener(this);
+		beginEditCP(ListPtr(this), ChildrenFieldMask);
+			(*Child) = getCellGenerator()->getListCellGeneratorComponent(ListPtr(this),getModel()->getElementAt(index),index,false,false);
+		endEditCP(ListPtr(this), ChildrenFieldMask);
+
+		(*Child)->addFocusListener(this);
+		//beginEditCP((*Child), Component::PositionFieldMask | Component::SizeFieldMask);
+		//	(*Child)->setSize(Size);
+		//	(*Child)->setPosition(Pos);
+		//endEditCP((*Child), Component::PositionFieldMask | Component::SizeFieldMask);
+	}
+}*/
+
+void List::mousePressed(const MouseEvent& e)
+{
+	bool isContained;
+    for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
+    {
+		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
+		if(isContained)
+		{
+			//Give myself temporary focus
+			takeFocus(true);
+			if(!getChildren().getValue(i)->getType().isDerivedFrom(Container::getClassType()))
+			{
+				getChildren().getValue(i)->takeFocus();
+				if(getParentFrame() != NullFC &&
+				   getParentFrame()->getDrawingSurface() != NullFC &&
+				   getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+				{
+					if(getParentFrame()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+					{
+						getSelectionModel()->setSelectionInterval(getSelectionModel()->getAnchorSelectionIndex(), i);
+					}
+					else if(getParentFrame()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+					{
+						if(getSelectionModel()->isSelectedIndex(i))
+						{
+						   getSelectionModel()->removeSelectionInterval(i, i);
+						}
+						else
+						{
+						   getSelectionModel()->addSelectionInterval(i, i);
+						}
+					}
+					else
+					{
+						getSelectionModel()->setSelectionInterval(i,i);
+					}
+				}
+			}
+			getChildren().getValue(i)->mousePressed(e);
+			break;
+		}
+    }
+	if(isContained)
+	{
+		//Remove my temporary focus
+		giveFocus(NullFC, false);
+	}
+	else
+	{
+		//Give myself permenant focus
+		takeFocus();
+	}
+	Component::mousePressed(e);
 }
+
+void List::contentsChanged(ListDataEvent e)
+{
+	//TODO: Implement
+	updateLayout();
+}
+
+void List::intervalAdded(ListDataEvent e)
+{
+	//TODO: Implement
+	updateLayout();
+}
+
+void List::intervalRemoved(ListDataEvent e)
+{
+	//TODO: Implement
+	updateLayout();
+}
+
 
 void List::setModel(ListModel* Model)
 {
@@ -90,7 +229,32 @@ void List::setModel(ListModel* Model)
 	endEditCP(ListPtr(this), ChildrenFieldMask);
 	//Should through a ListDataEvent of removeInterval
 
+	if(_Model != NULL)
+	{
+		_Model->removeListDataListener(this);
+	}
+
 	_Model = Model;
+
+	if(_Model != NULL)
+	{
+		_Model->addListDataListener(this);
+	}
+}
+
+
+void List::setSelectionModel(ListSelectionModel* SelectionModel)
+{
+	if(_SelectionModel != NULL)
+	{
+		_SelectionModel->removeListSelectionListener(this);
+	}
+   _SelectionModel = SelectionModel;
+   
+	if(_SelectionModel != NULL)
+	{
+		_SelectionModel->addListSelectionListener(this);
+	}
 }
 
 void List::updateLayout(void)
@@ -103,8 +267,8 @@ void List::updateLayout(void)
 			beginEditCP(ListPtr(this), ChildrenFieldMask);
 				for(UInt32 i(0) ; i<getModel()->getSize() ; ++i )
 				{
-					getChildren().addValue(getCellGenerator()->getListCellGeneratorComponent(ListPtr(this),getModel()->getElementAt(i),i,false,false));
-					getChildren().getValue(i)->addFocusListener(this);
+					getChildren().addValue(getCellGenerator()->getListCellGeneratorComponent(ListPtr(this),getModel()->getElementAt(i),i,getSelectionModel()->isSelectedIndex(i),false));
+					//getChildren().getValue(i)->addFocusListener(this);
 				}
 			endEditCP(ListPtr(this), ChildrenFieldMask);
 		}

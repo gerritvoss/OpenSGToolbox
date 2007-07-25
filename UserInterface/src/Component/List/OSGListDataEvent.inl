@@ -21,6 +21,7 @@ ListDataEvent::EventType 	ListDataEvent::getType(void) const
    return _Type;
 }
 
+inline
 ListModelPtr ListDataEvent::getModel(void) const
 {
 	return _Model;

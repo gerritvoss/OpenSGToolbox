@@ -198,6 +198,8 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
 
     
     virtual bool attachWindow(WindowPtr Win);
+
+	virtual UInt32 getKeyModifiers(void) const = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

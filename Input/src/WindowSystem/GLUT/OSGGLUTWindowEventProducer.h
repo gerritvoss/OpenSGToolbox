@@ -90,7 +90,6 @@ class OSG_INPUTLIB_DLLMAPPING GLUTWindowEventProducer : public GLUTWindowEventPr
 
     static KeyEvent::Key determineKey(UChar8 key);
     static KeyEvent::Key determineSpecialKey(UChar8 key);
-    static UInt32 determineModifiers(void);
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -152,6 +151,7 @@ class OSG_INPUTLIB_DLLMAPPING GLUTWindowEventProducer : public GLUTWindowEventPr
     
     virtual bool attachWindow(WindowPtr Win);
 
+	virtual UInt32 getKeyModifiers(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

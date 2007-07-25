@@ -169,11 +169,11 @@ void 	DefaultListSelectionModel::setValueIsAdjusting(bool valueIsAdjusting)
    //TODO:Implement
 }
 
-void DefaultListSelectionModel::produceValueChanged(const ListSelectionEvent& e)
+void DefaultListSelectionModel::produceSelectionChanged(const ListSelectionEvent& e)
 {
    for(ListSelectionListenerSetConstItor SetItor(_ListSelectionListeners.begin()) ; SetItor != _ListSelectionListeners.end() ; ++SetItor)
    {
-	   (*SetItor)->valueChanged(e);
+	   (*SetItor)->selectionChanged(e);
    }
 }
 /*-------------------------------------------------------------------------*\
@@ -182,7 +182,8 @@ void DefaultListSelectionModel::produceValueChanged(const ListSelectionEvent& e)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-DefaultListSelectionModel::DefaultListSelectionModel(void)
+DefaultListSelectionModel::DefaultListSelectionModel(void) :
+_SelectionMode(SINGLE_SELECTION)
 {
 }
 

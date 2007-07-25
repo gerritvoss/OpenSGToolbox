@@ -123,6 +123,37 @@ LRESULT Win32WindowEventProducer::staticWndProc(HWND hwnd2, UINT uMsg,
    return 0;
 }
 
+UInt32 Win32WindowEventProducer::getKeyModifiers(void) const
+{
+   UInt32 Modifiers = 0;
+
+   if(GetKeyState(VK_SHIFT)<0)
+   {
+      Modifiers |= KeyEvent::KEY_MODIFIER_SHIFT;
+   }
+   if(GetKeyState(VK_CONTROL)<0)
+   {
+      Modifiers |= KeyEvent::KEY_MODIFIER_CONTROL;
+   }
+   if(GetKeyState(VK_MENU)<0)
+   {
+      Modifiers |= KeyEvent::KEY_MODIFIER_ALT;
+   }
+   if(GetKeyState(VK_CAPITAL)>0)
+   {
+      Modifiers |= KeyEvent::KEY_MODIFIER_CAPS_LOCK;
+   }
+   if(GetKeyState(VK_NUMLOCK)>0)
+   {
+      Modifiers |= KeyEvent::KEY_MODIFIER_NUM_LOCK;
+   }
+   if(GetKeyState(VK_SCROLL)>0)
+   {
+      Modifiers |= KeyEvent::KEY_MODIFIER_SCROLL_LOCK;
+   }
+   return Modifiers;
+}
+
 KeyEvent::Key Win32WindowEventProducer::determineKey(WPARAM key)
 {
    KeyEvent::Key OSGKey;
@@ -461,37 +492,6 @@ KeyEvent::Key Win32WindowEventProducer::determineKey(WPARAM key)
    return OSGKey;
 }
 
-UInt32 Win32WindowEventProducer::determineModifiers(void)
-{
-   UInt32 Modifiers = 0;
-
-   if(GetKeyState(VK_SHIFT)<0)
-   {
-      Modifiers |= KeyEvent::KEY_MODIFIER_SHIFT;
-   }
-   if(GetKeyState(VK_CONTROL)<0)
-   {
-      Modifiers |= KeyEvent::KEY_MODIFIER_CONTROL;
-   }
-   if(GetKeyState(VK_MENU)<0)
-   {
-      Modifiers |= KeyEvent::KEY_MODIFIER_ALT;
-   }
-   if(GetKeyState(VK_CAPITAL)>0)
-   {
-      Modifiers |= KeyEvent::KEY_MODIFIER_CAPS_LOCK;
-   }
-   if(GetKeyState(VK_NUMLOCK)>0)
-   {
-      Modifiers |= KeyEvent::KEY_MODIFIER_NUM_LOCK;
-   }
-   if(GetKeyState(VK_SCROLL)>0)
-   {
-      Modifiers |= KeyEvent::KEY_MODIFIER_SCROLL_LOCK;
-   }
-   return Modifiers;
-}
-
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
@@ -572,10 +572,10 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd2, UINT uMsg,
             break;
                                     
         case WM_KEYDOWN:
-            produceKeyPressed(determineKey(wParam),determineModifiers());
+            produceKeyPressed(determineKey(wParam),getKeyModifiers());
             break;                 
         case WM_KEYUP:
-            produceKeyReleased(determineKey(wParam),determineModifiers());
+            produceKeyReleased(determineKey(wParam),getKeyModifiers());
             break;
                                     
         case WM_SIZE:
