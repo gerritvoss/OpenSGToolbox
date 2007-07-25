@@ -81,6 +81,14 @@ void TextField::drawInternal(const GraphicsPtr TheGraphics) const
    Pnt2s TopLeft, BottomRight;
    getInsideBorderBounds(TopLeft, BottomRight);
 }
+
+void TextField::produceActionPerformed(const ActionEvent& e)
+{
+   for(ActionListenerSetConstItor SetItor(_ActionListeners.begin()) ; SetItor != _ActionListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->actionPerformed(e);
+   }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

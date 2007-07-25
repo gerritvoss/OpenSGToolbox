@@ -46,6 +46,7 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGListSelectionModel.h"
+#include <set>
 
 OSG_BEGIN_NAMESPACE
 
@@ -117,6 +118,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public ListSel
 
     // Variables should all be in DefaultListSelectionModelBase.
 
+	typedef std::set<ListSelectionListenerPtr> ListSelectionListenerSet;
+    typedef ListSelectionListenerSet::iterator ListSelectionListenerSetItor;
+    typedef ListSelectionListenerSet::const_iterator ListSelectionListenerSetConstItor;
+	
+    ListSelectionListenerSet       _ListSelectionListeners;
+	
+    virtual void produceValueChanged(const ListSelectionEvent& e);
     
     /*==========================  PRIVATE  ================================*/
   private:

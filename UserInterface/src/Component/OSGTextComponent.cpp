@@ -76,6 +76,14 @@ void TextComponent::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void  TextComponent::produceTextValueChanged(const TextEvent& e)
+{
+   for(TextListenerSetConstItor SetItor(_TextListeners.begin()) ; SetItor != _TextListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->textValueChanged(e);
+   }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

@@ -45,6 +45,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGTextComponentBase.h"
+#include "Event/OSGTextListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,6 +78,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponent : public TextComponentBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    void addTextListener(TextListenerPtr Listener);
+    void removeTextListener(TextListenerPtr Listener);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -98,6 +101,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponent : public TextComponentBase
 
     /*! \}                                                                 */
     
+	typedef std::set<TextListenerPtr> TextListenerSet;
+    typedef TextListenerSet::iterator TextListenerSetItor;
+    typedef TextListenerSet::const_iterator TextListenerSetConstItor;
+	
+    TextListenerSet       _TextListeners;
+    void produceTextValueChanged(const TextEvent& e);
     /*==========================  PRIVATE  ================================*/
   private:
 

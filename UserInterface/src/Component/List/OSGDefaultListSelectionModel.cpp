@@ -71,11 +71,6 @@ A DefaultListSelectionModel.
  *                           Instance methods                              *
 \***************************************************************************/
 
-void 	DefaultListSelectionModel::addListSelectionListener(ListSelectionListenerPtr x)
-{
-   //TODO:Implement
-}
-
 void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 index1)
 {
    //TODO:Implement
@@ -144,11 +139,6 @@ void 	DefaultListSelectionModel::removeIndexInterval(UInt32 index0, UInt32 index
    //TODO:Implement
 }
 
-void 	DefaultListSelectionModel::removeListSelectionListener(ListSelectionListenerPtr x)
-{
-   //TODO:Implement
-}
-
 void 	DefaultListSelectionModel::removeSelectionInterval(UInt32 index0, UInt32 index1)
 {
    //TODO:Implement
@@ -177,6 +167,14 @@ void 	DefaultListSelectionModel::setSelectionMode(Int32 selectionMode)
 void 	DefaultListSelectionModel::setValueIsAdjusting(bool valueIsAdjusting)
 {
    //TODO:Implement
+}
+
+void DefaultListSelectionModel::produceValueChanged(const ListSelectionEvent& e)
+{
+   for(ListSelectionListenerSetConstItor SetItor(_ListSelectionListeners.begin()) ; SetItor != _ListSelectionListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->valueChanged(e);
+   }
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

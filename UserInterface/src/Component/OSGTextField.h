@@ -45,6 +45,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGTextFieldBase.h"
+#include "Event/OSGActionListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,6 +78,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    void addActionListener(ActionListenerPtr Listener);
+    void removeActionListener(ActionListenerPtr Listener);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -99,6 +102,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
     /*! \}                                                                 */
     
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
+
+	typedef std::set<ActionListenerPtr> ActionListenerSet;
+    typedef ActionListenerSet::iterator ActionListenerSetItor;
+    typedef ActionListenerSet::const_iterator ActionListenerSetConstItor;
+	
+    ActionListenerSet       _ActionListeners;
+	
+    virtual void produceActionPerformed(const ActionEvent& e);
     /*==========================  PRIVATE  ================================*/
   private:
 

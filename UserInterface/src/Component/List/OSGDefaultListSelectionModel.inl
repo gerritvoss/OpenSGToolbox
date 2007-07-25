@@ -42,6 +42,22 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+void DefaultListSelectionModel::addListSelectionListener(ListSelectionListenerPtr Listener)
+{
+   _ListSelectionListeners.insert(Listener);
+}
+
+inline
+void DefaultListSelectionModel::removeListSelectionListener(ListSelectionListenerPtr Listener)
+{
+   ListSelectionListenerSetItor EraseIter(_ListSelectionListeners.find(Listener));
+   if(EraseIter != _ListSelectionListeners.end())
+   {
+      _ListSelectionListeners.erase(EraseIter);
+   }
+}
+
 OSG_END_NAMESPACE
 
 
