@@ -1,9 +1,9 @@
-// OpenSG Tutorial Example: Using Containers (Frames and Panels)
+// OpenSG Tutorial Example: Using CardLayout
 //
-// This tutorial explains how use Frame and Panel Containers
+// This tutorial explains how use CardLayout
 // 
-// Includes: creating and editing Frames, Panels, and adding
-// Panels
+// Includes: Using CardLayout, including a brief introduction
+// to ActionListeners
 
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
@@ -32,6 +32,9 @@
 #include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
+#include <OpenSG/UserInterface/OSGPanel.h>
+#include <OpenSG/UserInterface/OSGBorderLayout.h>
+#include <OpenSG/UserInterface/OSGBorderLayoutConstraints.h>
 
 // Include relevant header files
 #include <OpenSG/UserInterface/OSGCardLayout.h>
@@ -49,6 +52,81 @@ SimpleSceneManager *mgr;
 void display(void);
 void reshape(Vec2s Size);
 
+	/******************************************************
+
+			Create CardLayout and its container
+			so they can be referenced in the 
+			ActionListeners (this is required
+			when using ActionListeners in this
+			manner)
+
+	******************************************************/
+	CardLayoutPtr cardLayout;
+	PanelPtr cardPanel;
+
+	/******************************************************
+
+			Create ActionListeners to use with
+			CardLayout and assign each its action.
+
+			EditCP loops with the CardLayout are
+			used in the following manner:
+			CardLayoutName->FUNCTION(CardLayoutContainer)
+
+	******************************************************/
+class nextCard : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+	{
+		beginEditCP(cardLayout, CardLayout::CardFieldMask);
+			// Displays the next Card in CardLayout
+			cardLayout->next(cardPanel);
+		endEditCP(cardLayout, CardLayout::CardFieldMask);
+
+
+	}
+};
+
+class backCard : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+	{
+		beginEditCP(cardLayout, CardLayout::CardFieldMask);
+			cardLayout->previous(cardPanel);
+		endEditCP(cardLayout, CardLayout::CardFieldMask);
+	}
+
+};
+class firstCard : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+	{
+		beginEditCP(cardLayout, CardLayout::CardFieldMask);
+			cardLayout->first(cardPanel);
+		endEditCP(cardLayout, CardLayout::CardFieldMask);
+
+
+	}
+};
+class lastCard : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+	{
+		beginEditCP(cardLayout, CardLayout::CardFieldMask);
+			cardLayout->last(cardPanel);
+		endEditCP(cardLayout, CardLayout::CardFieldMask);
+
+
+	}
+};
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
 {
@@ -88,19 +166,162 @@ int main(int argc, char **argv)
 	// Initialize the LookAndFeelManager to enable default 
 	// settings for the Button
 	LookAndFeelManager::the()->getLookAndFeel()->init();
+	
+	/******************************************************
+
+			Create some BorderLayouts and 
+			BorderLayoutConstraints to be used 
+			to set up CardLayout
+
+	******************************************************/
+	
+	BorderLayoutPtr MainFrameLayout = osg::BorderLayout::create();
+	BorderLayoutConstraintsPtr button1Constraints = osg::BorderLayoutConstraints::create();
+	BorderLayoutConstraintsPtr button2Constraints = osg::BorderLayoutConstraints::create();
+	BorderLayoutConstraintsPtr button7Constraints = osg::BorderLayoutConstraints::create();
+	BorderLayoutConstraintsPtr button8Constraints = osg::BorderLayoutConstraints::create();
+	BorderLayoutConstraintsPtr cardPanelConstraints = osg::BorderLayoutConstraints::create();
+		
+	beginEditCP(button1Constraints, BorderLayoutConstraints::RegionFieldMask);
+		button1Constraints->setRegion(BorderLayoutConstraints::BORDER_EAST);
+	endEditCP(button1Constraints, BorderLayoutConstraints::RegionFieldMask);
+			
+	beginEditCP(button2Constraints, BorderLayoutConstraints::RegionFieldMask);
+		button2Constraints->setRegion(BorderLayoutConstraints::BORDER_WEST);
+	endEditCP(button2Constraints, BorderLayoutConstraints::RegionFieldMask);
+			
+	beginEditCP(button7Constraints, BorderLayoutConstraints::RegionFieldMask);
+		button7Constraints->setRegion(BorderLayoutConstraints::BORDER_NORTH);
+	endEditCP(button7Constraints, BorderLayoutConstraints::RegionFieldMask);
+			
+	beginEditCP(button8Constraints, BorderLayoutConstraints::RegionFieldMask);
+		button8Constraints->setRegion(BorderLayoutConstraints::BORDER_SOUTH);
+	endEditCP(button8Constraints, BorderLayoutConstraints::RegionFieldMask);
+			
+	beginEditCP(cardPanelConstraints, BorderLayoutConstraints::RegionFieldMask);
+		cardPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+	endEditCP(cardPanelConstraints, BorderLayoutConstraints::RegionFieldMask);
+
+	/******************************************************
+
+			Create CardLayout.  CardLayout shows 
+			a single Component at a time, meaning
+			it is not exactly practical to use it
+			alone for a Layout.  This tutorial uses
+			the BorderLayout to include a Panel in
+			the Center Region, and within that Panel
+			setting the CardLayout.
+
+			CardLayout has four function calls-
+			next, previous, first, and last.
+
+			To call these functions, use  the "->" 
+			command.  For example, in an EditCP loop
+			CardLayoutName->FUNCTION(ContainerWithCardLayout)
+
+			These are most useful when combined with 
+			ActionListeners, as shown at the top of 
+			the code, to assign actions to the Buttons 
+			or Components to allow the user to cycle
+			through the Card Layout and view different
+			cards.
+
+	******************************************************/
+	
+	cardLayout = osg::CardLayout::create();
+	cardPanel = osg::Panel::create();
+
+	/******************************************************
+
+			Create Button Components to be used with 
+			CardLayout and specify their characteristics
+
+	******************************************************/
+	ButtonPtr button1 = osg::Button::create();
+	ButtonPtr button2 = osg::Button::create();
+	ButtonPtr button3 = osg::Button::create();
+	ButtonPtr button4 = osg::Button::create();
+	ButtonPtr button5 = osg::Button::create();
+	ButtonPtr button6 = osg::Button::create();	
+	ButtonPtr button7 = osg::Button::create();
+	ButtonPtr button8 = osg::Button::create();
+
+	beginEditCP(button1, Button::TextFieldMask | Component::ConstraintsFieldMask);
+		button1->setText("Next Card");
+		button1->setConstraints(button1Constraints);
+	endEditCP(button1, Button::TextFieldMask | Component::ConstraintsFieldMask);
+	
+	// Add ActionListener
+	nextCard button1Next;
+	button1->addActionListener( &button1Next);
+	
+
+	beginEditCP(button2, Button::TextFieldMask | Component::ConstraintsFieldMask);
+		button2->setText("Previous Card");
+		button2->setConstraints(button2Constraints);
+	endEditCP(button2, Button::TextFieldMask | Component::ConstraintsFieldMask);
+
+	// Add ActionListener
+	backCard button2Previous;
+	button2->addActionListener( &button2Previous);
+
+	beginEditCP(button3, Button::TextFieldMask);
+		button3->setText("This");
+	endEditCP(button3, Button::TextFieldMask);
+
+	beginEditCP(button4, Button::TextFieldMask);
+		button4->setText("is");
+	endEditCP(button4, Button::TextFieldMask);
+
+	beginEditCP(button5, Button::TextFieldMask);
+		button5->setText("Card");
+	endEditCP(button5, Button::TextFieldMask);
+	
+	beginEditCP(button6, Button::TextFieldMask);
+		button6->setText("Layout");
+	endEditCP(button6, Button::TextFieldMask);
+
+	beginEditCP(button7, Button::TextFieldMask | Component::ConstraintsFieldMask);
+		button7->setText("First Card");
+		button7->setConstraints(button7Constraints);
+	endEditCP(button7, Button::TextFieldMask | Component::ConstraintsFieldMask);
+		
+	// Add ActionListener
+	firstCard button7First;
+	button7->addActionListener( &button7First);
+
+	beginEditCP(button8, Button::TextFieldMask | Component::ConstraintsFieldMask);
+		button8->setText("Last Card");
+		button8->setConstraints(button8Constraints);
+	endEditCP(button8, Button::TextFieldMask | Component::ConstraintsFieldMask);
+	
+	// Add ActionListener
+	lastCard button8Last;
+	button8->addActionListener( &button8Last);
 
 
-	CardLayoutPtr MainFrameLayout = osg::CardLayout::create();
-	beginEditCP(MainFrameLayout);
-	MainFrameLayout.next();
-	endEditCP(MainFrameLayout);
+	beginEditCP(cardPanel);
+		cardPanel->setLayout(cardLayout);
+		cardPanel->getChildren().addValue(button3);
+		cardPanel->getChildren().addValue(button4);
+		cardPanel->getChildren().addValue(button5);
+		cardPanel->getChildren().addValue(button6);
+		cardPanel->setConstraints(cardPanelConstraints);
+	endEditCP(cardPanel);
+
+
 
 
 	FramePtr MainFrame = osg::Frame::create();
 	// Edit MainFrame
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-	   MainFrame->setLayout(MainFrameLayout);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+		MainFrame->getChildren().addValue(button1);
+		MainFrame->getChildren().addValue(button2);
+		MainFrame->getChildren().addValue(button7);
+		MainFrame->getChildren().addValue(button8);
+		MainFrame->getChildren().addValue(cardPanel);
+		MainFrame->setLayout(MainFrameLayout);
+	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 
 	//Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();

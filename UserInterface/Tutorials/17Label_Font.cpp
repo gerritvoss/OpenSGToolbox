@@ -1,11 +1,9 @@
-// OpenSG Tutorial Example: Using the Box Layout
-//		to place Components 
+// OpenSG Tutorial Example: Creating a Label and Creating Fonts
 //
-// This tutorial explains how to place buttons within a 
-// frame utilizing the Box Layout command to 
-// manage the layout through the OSG User Interface library.
+// This tutorial explains how to change Fonts and create
+// Labels
 // 
-// Includes: placing multiple buttons using Box Layout
+// Includes: Font and Label creation and settings
 
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
@@ -19,22 +17,25 @@
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
 
-
 // the general scene file loading handler
 #include <OpenSG/OSGSceneFileHandler.h>
 
 //Input
 #include <OpenSG/Input/OSGWindowUtils.h>
 
-//UserInterface Headers
+// UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
+#include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGColorUIBackground.h>
-// Include BoxLayout header file
-#include <OpenSG/UserInterface/OSGBoxLayout.h>
+#include <OpenSG/UserInterface/OSGUIDefines.h>
+
+// Include Label and Font headerfiles
+#include <OpenSG/UserInterface/OSGLabel.h>
+#include <OpenSG/UserInterface/OSGFont.h>
+
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -48,6 +49,7 @@ SimpleSceneManager *mgr;
 void display(void);
 void reshape(Vec2s Size);
 
+
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
 {
@@ -59,7 +61,7 @@ int main(int argc, char **argv)
     WindowEventProducerPtr TheWindowEventProducer;
     createDefaultWindow(Pnt2s(50,50),
                                         Vec2s(900,900),
-                                        "OpenSG 06BoxLayout Window",
+                                        "OpenSG 17Label/Font Window",
                                         MainWindow,
                                         TheWindowEventProducer);
     
@@ -67,7 +69,7 @@ int main(int argc, char **argv)
     TheWindowEventProducer->setReshapeCallback(reshape);
 
 
-    // Make Torus Node (creates Torus in background of scene)
+    // Make Torus Node
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
     // Make Main Scene Node
@@ -84,100 +86,81 @@ int main(int argc, char **argv)
 	// Create the Graphics
 	GraphicsPtr graphics = osg::Graphics2D::create();
 
-	// Initialize the LookAndFeelManager to enable default 
-	// settings for the Buttons
+	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
-
-
-
-
-	/******************************************************
-			
-				Creates some Button components
-
-	******************************************************/
-	ButtonPtr button1 = osg::Button::create();
-	ButtonPtr button2 = osg::Button::create();
-	ButtonPtr button3 = osg::Button::create();
-	ButtonPtr button4 = osg::Button::create();
-
-
+	
 	/******************************************************
 
-		Create Box Layout.  Box Layout arranges objects
-		automatically within the Frame, so that the objects
-		are evenly spaced within the Frame.
-
-		Box Layout also causes all objects to have the same 
-		height (if arranged Horizontally) or the same width
-		(if arranged Vertically) using the maximum width of the
-		objects in the Layout.  This overrides the specified 
-		dimensions of the object, unless the object has a 
-		Maximum or Minimum size set.  In this case, the object 
-		size cannot be changed to greater than the Maximum size,
-		or less than the Minimum size (it will still be changed,
-		however it will not exceed the Max/Min size).
-
-		You can experiment with this by changing the window 
-		size, changing the size of the Buttons as shown 
-		in 01Button, editing the Buttons, or adding more 
-		Buttons to the view.
-
-		Note that if the Frame is too small, the objects will 
-		appear out of the Frame background.
+			Create a Font.
+			-setFamily(TYPE) determines what format the Font
+				is (choices are: SANS, INSERT REMAINDER)
+			-setSize(SIZE) determines the size of the 
+				Font.
+			-setFont(TextFace::STYLE) determines the 
+				style the Font is.  Options are: (all 
+				preceeded by "TextFace::" : STYLE_PLAIN,
+				STYLE_BOLD, STYLE_ITALIC,
 
 
 	******************************************************/
-	BoxLayoutPtr MainFrameLayout = osg::BoxLayout::create();
 
-	// Determine whether the Layout is Horizontal (HORIZONTAL_ALIGNMENT) or
-	// Vertical (VERTICAL_ALIGNMENT)
-	beginEditCP(MainFrameLayout, BoxLayout::AlignmentFieldMask);
-		MainFrameLayout->setAlignment(VERTICAL_ALIGNMENT);
-		// MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
-	endEditCP(MainFrameLayout, BoxLayout::AlignmentFieldMask); 
+	FontPtr labelFont = Font::create();
+	beginEditCP(labelFont);
+		labelFont->setFamily("SANS");
+		labelFont->setSize(25);
+		labelFont->setStyle(TextFace::STYLE_PLAIN);
+	endEditCP(labelFont);
+
+	/******************************************************
+
+
+		Create a few Labels and edit their characteristics.
+
+		Note that all Component characteristics can be 
+		modified as well (Background, PreferredSize, etc).
+
+		-setFont(FONT_NAME) assigns a Font to the Label
+		-setText("TEXT") displays TEXT on the Label (or
+			whatever else is in the parenthesis
+		-setVerticalAlignment(ALIGNMENT) determines the 
+			alignment of the text on the Vertical Axis.
+			Arguments are: VERTICAL_TOP, VERTICAL_CENTER,
+			and VERTICAL_BOTTOM
+		-setHorizontalAlignment(ALIGNMENT) determines the
+			alignment of the text on the Horizontal Axis.
+			Arguments are: HORIZONTAL_CENTER, HORIZONTAL_LEFT, 
+			and HORIZONTAL_RIGHT
+
+	******************************************************/
+
+	LabelPtr label1 = osg::Label::create();
+	// EditCP for Label ONLY settings
+	beginEditCP(label1, Label::FontFieldMask | Label::TextFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask);
+		label1->setFont(labelFont);
+		label1->setText("Sample Label");
+		label1->setVerticalAlignment(VERTICAL_CENTER);
+		label1->setHorizontalAlignment(HORIZONTAL_RIGHT);
+	endEditCP(label1, Label::FontFieldMask | Label::TextFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask);
 	
 
-	// Edit two different Buttons
-	beginEditCP(button1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
-		button1->setPreferredSize( Vec2s(50,50) );
-		// Set button to have a MaxSize.  This is never exceeded, therefore
-		// even in BoxLayout it will not change to have a width of greater than
-		// 80.  By commenting the setMaxSize line, button1 will have its width 
-		// expanded to match the size of the largest object in the BoxLayout;
-		// in this case button2.
-		button1->setMaxSize( Vec2s (50, 50) );
-	endEditCP(button1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
+	// SecondEditCP for Component settings
+	beginEditCP(label1, Component::PreferredSizeFieldMask | Component::ForegroundColorFieldMask);
+		label1->setPreferredSize( Vec2s(200, 50) );
+		// Determine the Color the Font displays at
+		label1->setForegroundColor( Color4f(0.1, 0.1, 0.1, 1.0) );
+	endEditCP(label1, Component::PreferredSizeFieldMask | Component::ForegroundColorFieldMask);
 
-	beginEditCP(button2, Button::PreferredSizeFieldMask);
-		// Edit the PreferredSize of button2.  Because this is the largest
-		// PreferredSize, all Buttons will have the same width unless they
-		// have MaxSize limits (see above).  If setPreferredSize is commented, 
-		// and setSize uncommented, note that button2 will no longer have the same
-		// display size.
-		button2->setPreferredSize( Vec2s(200,100) );
-		
-	endEditCP(button2, Button::PreferredSizeFieldMask);
 
- 	// Create The Main Frame
-
+	
+	// Create The Main Frame
 	// Create Background to be used with the Main Frame
-	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-	
 	FramePtr MainFrame = osg::Frame::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-	   // Add the buttons to the mainframe so they will be displayed
-	   MainFrame->getChildren().addValue(button1);
-	   MainFrame->getChildren().addValue(button2);
-	   MainFrame->getChildren().addValue(button3);
-	   MainFrame->getChildren().addValue(button4);
-	   // Add the Layout to the MainFrame
+	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
+
+	beginEditCP(MainFrame, Frame::ChildrenFieldMask);
+	   MainFrame->getChildren().addValue(label1);
 	   MainFrame->setLayout(MainFrameLayout);
-	   MainFrame->setBackground(mainBackground);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+	endEditCP  (MainFrame, Frame::ChildrenFieldMask);
 
 	//Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
@@ -197,7 +180,7 @@ int main(int argc, char **argv)
 	   //Set the Event Producer for the DrawingSurface
 	   //This is needed in order to get Mouse/Keyboard/etc Input to the UI DrawingSurface
     endEditCP  (foreground, UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-
+ 
     // create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 

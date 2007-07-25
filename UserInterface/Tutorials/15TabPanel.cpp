@@ -1,11 +1,9 @@
 // OpenSG Tutorial Example: Creating a Border
 //
 // This tutorial explains how to implement the 
-// Borders offered by the OSG User Interface 
-// library and how to modify their features.
+// TabPanel and its characteristics
 // 
-// Includes: BevelBorder, CompoundBorder, EmptyBorder
-// EtchedBorder, LineBorder, MatteBorder
+// Includes: TabPanel creation and example 
 
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
@@ -37,6 +35,8 @@
 // Include TabPanel header file
 #include <OpenSG/UserInterface/OSGTabPanel.h>
 
+#include <sstream>
+
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
 // with OSG::, but that would be a bit tedious for this example
@@ -49,6 +49,67 @@ SimpleSceneManager *mgr;
 void display(void);
 void reshape(Vec2s Size);
 
+	/******************************************************
+			Declare some variables up front to be 
+			able to create an ActionListener to 
+			remove and add a Tab by pressing a Button
+
+	******************************************************/
+TabPanelPtr tabPanel;
+ButtonPtr button6, buttonF;
+
+
+
+class addTab : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+	{
+		ButtonPtr tabButton = Button::create(),
+			tabContents = Button::create();
+		
+		std::stringstream stream;
+		stream << _TabNumber;
+
+		beginEditCP(tabButton, Button::TextFieldMask);
+		    tabButton->setText("Tab " + stream.str());
+		endEditCP(tabButton, Button::TextFieldMask);
+		beginEditCP(tabContents, Button::TextFieldMask);
+		    tabContents->setText("Tab Contents " + stream.str());
+		endEditCP(tabContents, Button::TextFieldMask);
+
+		beginEditCP(tabPanel, TabPanel::TabsFieldMask);
+		
+			tabPanel->addTab(tabButton, tabContents);
+
+		endEditCP(tabPanel, TabPanel::TabsFieldMask);
+
+		_TabNumber++;
+
+	}
+   
+	addTab(void) : _TabNumber(6)
+	{
+	}
+private:
+	UInt32 _TabNumber;
+
+};
+
+class removeTab : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+	{
+		beginEditCP(tabPanel, TabPanel::TabsFieldMask);
+			tabPanel->removeTab(2);
+		endEditCP(tabPanel, TabPanel::TabsFieldMask);
+		
+	}
+};
+
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
 {
@@ -60,7 +121,7 @@ int main(int argc, char **argv)
     WindowEventProducerPtr TheWindowEventProducer;
     createDefaultWindow(Pnt2s(50,50),
                                         Vec2s(900,900),
-                                        "OpenSG 03Border Window",
+                                        "OpenSG 15TabPanel Window",
                                         MainWindow,
                                         TheWindowEventProducer);
     
@@ -101,13 +162,13 @@ int main(int argc, char **argv)
 	ButtonPtr button3 = osg::Button::create();
 	ButtonPtr button4 = osg::Button::create();
 	ButtonPtr button5 = osg::Button::create();
-	ButtonPtr button6 = osg::Button::create();
+	button6 = osg::Button::create();
 	ButtonPtr buttonA = osg::Button::create();
 	ButtonPtr buttonB = osg::Button::create();
 	ButtonPtr buttonC = osg::Button::create();
 	ButtonPtr buttonD = osg::Button::create();
 	ButtonPtr buttonE = osg::Button::create();
-	ButtonPtr buttonF = osg::Button::create();
+	buttonF = osg::Button::create();
 
 
 	beginEditCP(button1, Button::TextFieldMask);
@@ -133,18 +194,22 @@ int main(int argc, char **argv)
 	beginEditCP(button6, Button::TextFieldMask);
 		button6->setText("Tab6");
 	endEditCP(button6, Button::TextFieldMask);
-		
-	beginEditCP(button1, Button::TextFieldMask);
-		button1->setText("Tab1");
-	endEditCP(button1, Button::TextFieldMask);
-		
+			
 	beginEditCP(buttonA, Button::TextFieldMask);
-		buttonA->setText("Stuff for Tab1");
+		buttonA->setText("Add another Tab");
 	endEditCP(buttonA, Button::TextFieldMask);
+	
+	// Add ActionListener
+	addTab button6Add;
+	buttonA->addActionListener( &button6Add);
 		
 	beginEditCP(buttonB, Button::TextFieldMask);
-		buttonB->setText("Stuff for Tab2");
+		buttonB->setText("Remove Tab6");
 	endEditCP(buttonB, Button::TextFieldMask);
+
+	// Add ActionListener
+	removeTab button6Remove;
+	buttonB->addActionListener( &button6Remove);
 		
 	beginEditCP(buttonC, Button::TextFieldMask);
 		buttonC->setText("Stuff for Tab3");
@@ -205,7 +270,7 @@ int main(int argc, char **argv)
 			too small, then the TabPanel will appear
 			distorted.
 	******************************************************/
-	TabPanelPtr tabPanel = osg::TabPanel::create();
+	tabPanel = osg::TabPanel::create();
 	beginEditCP(tabPanel, Component::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
 		tabPanel->setPreferredSize( Vec2s(350,350) );
 		tabPanel->addTab(button1, buttonA);
@@ -213,8 +278,7 @@ int main(int argc, char **argv)
 		tabPanel->addTab(button3, buttonC);
 		tabPanel->addTab(button4, buttonD);
 		tabPanel->addTab(button5, buttonE);
-		tabPanel->addTab(button6, buttonF);
-		tabPanel->removeTab(button5);
+		//tabPanel->addTab(button6, buttonF);
 		tabPanel->setActiveTab(3);
 		tabPanel->setTabAlignment(AXIS_CENTER_ALIGNMENT);
 		tabPanel->setTabPlacement(PLACEMENT_SOUTH);

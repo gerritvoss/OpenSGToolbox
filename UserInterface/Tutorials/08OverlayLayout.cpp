@@ -1,11 +1,11 @@
-// OpenSG Tutorial Example: Using the Grid Layout
+// OpenSG Tutorial Example: Using the Overlay Layout
 //		to place Components 
 //
 // This tutorial explains how to place buttons within a 
-// frame utilizing the Grid Layout command to 
+// frame utilizing the Overlay Layout command to 
 // manage the layout through the OSG User Interface library.
 // 
-// Includes: placing multiple buttons using Grid Layout
+// Includes: placing multiple buttons using Overlay Layout
 
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
