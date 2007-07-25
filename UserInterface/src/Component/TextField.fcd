@@ -12,4 +12,13 @@
 	useLocalIncludes="true"
 >
 A UI TextField
+	<Field
+		name="VerticalAlignment"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.5"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

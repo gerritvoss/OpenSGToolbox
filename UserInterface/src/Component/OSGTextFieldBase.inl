@@ -96,6 +96,34 @@ TextFieldPtr TextFieldBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the TextField::_sfVerticalAlignment field.
+inline
+SFReal32 *TextFieldBase::getSFVerticalAlignment(void)
+{
+    return &_sfVerticalAlignment;
+}
+
+
+//! Get the value of the TextField::_sfVerticalAlignment field.
+inline
+Real32 &TextFieldBase::getVerticalAlignment(void)
+{
+    return _sfVerticalAlignment.getValue();
+}
+
+//! Get the value of the TextField::_sfVerticalAlignment field.
+inline
+const Real32 &TextFieldBase::getVerticalAlignment(void) const
+{
+    return _sfVerticalAlignment.getValue();
+}
+
+//! Set the value of the TextField::_sfVerticalAlignment field.
+inline
+void TextFieldBase::setVerticalAlignment(const Real32 &value)
+{
+    _sfVerticalAlignment.setValue(value);
+}
 
 
 OSG_END_NAMESPACE

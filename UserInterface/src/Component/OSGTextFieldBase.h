@@ -67,6 +67,7 @@
 
 #include "OSGTextComponent.h" // Parent
 
+#include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
 
 #include "OSGTextFieldFields.h"
 
@@ -88,6 +89,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public TextComponent
 
     typedef TextFieldPtr  Ptr;
 
+    enum
+    {
+        VerticalAlignmentFieldId = Inherited::NextFieldId,
+        NextFieldId              = VerticalAlignmentFieldId + 1
+    };
+
+    static const OSG::BitVector VerticalAlignmentFieldMask;
+
 
     static const OSG::BitVector MTInfluenceMask;
 
@@ -107,6 +116,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public TextComponent
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFReal32            *getSFVerticalAlignment(void);
+
+           Real32              &getVerticalAlignment(void);
+     const Real32              &getVerticalAlignment(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setVerticalAlignment( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -145,6 +171,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public TextComponent
     /*=========================  PROTECTED  ===============================*/
   protected:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFReal32            _sfVerticalAlignment;
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -196,6 +229,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public TextComponent
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

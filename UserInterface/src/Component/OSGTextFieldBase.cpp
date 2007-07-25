@@ -64,10 +64,30 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  TextFieldBase::VerticalAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << TextFieldBase::VerticalAlignmentFieldId);
+
 const OSG::BitVector TextFieldBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+// Field descriptions
+
+/*! \var Real32          TextFieldBase::_sfVerticalAlignment
+    
+*/
+
+//! TextField description
+
+FieldDescription *TextFieldBase::_desc[] = 
+{
+    new FieldDescription(SFReal32::getClassType(), 
+                     "VerticalAlignment", 
+                     VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &TextFieldBase::getSFVerticalAlignment)
+};
 
 
 FieldContainerType TextFieldBase::_type(
@@ -76,8 +96,8 @@ FieldContainerType TextFieldBase::_type(
     NULL,
     (PrototypeCreateF) &TextFieldBase::createEmpty,
     TextField::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //OSG_FIELD_CONTAINER_DEF(TextFieldBase, TextFieldPtr)
 
@@ -142,6 +162,7 @@ void TextFieldBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 TextFieldBase::TextFieldBase(void) :
+    _sfVerticalAlignment      (Real32(0.5)), 
     Inherited() 
 {
 }
@@ -151,6 +172,7 @@ TextFieldBase::TextFieldBase(void) :
 #endif
 
 TextFieldBase::TextFieldBase(const TextFieldBase &source) :
+    _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
     Inherited                 (source)
 {
 }
@@ -167,6 +189,11 @@ UInt32 TextFieldBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfVerticalAlignment.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -176,6 +203,11 @@ void TextFieldBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    {
+        _sfVerticalAlignment.copyToBin(pMem);
+    }
+
 
 }
 
@@ -183,6 +215,11 @@ void TextFieldBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    {
+        _sfVerticalAlignment.copyFromBin(pMem);
+    }
 
 
 }
@@ -194,6 +231,9 @@ void TextFieldBase::executeSyncImpl(      TextFieldBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
+
 
 }
 #else
@@ -203,6 +243,9 @@ void TextFieldBase::executeSyncImpl(      TextFieldBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
 
 
 
