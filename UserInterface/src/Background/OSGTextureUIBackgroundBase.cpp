@@ -61,11 +61,24 @@
 #include "OSGTextureUIBackgroundBase.h"
 #include "OSGTextureUIBackground.h"
 
+#include <Util/OSGUIDefines.h>            // Scale default header
 
 OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  TextureUIBackgroundBase::TextureFieldMask = 
     (TypeTraits<BitVector>::One << TextureUIBackgroundBase::TextureFieldId);
+
+const OSG::BitVector  TextureUIBackgroundBase::ScaleFieldMask = 
+    (TypeTraits<BitVector>::One << TextureUIBackgroundBase::ScaleFieldId);
+
+const OSG::BitVector  TextureUIBackgroundBase::ScaleAbsoluteSizeFieldMask = 
+    (TypeTraits<BitVector>::One << TextureUIBackgroundBase::ScaleAbsoluteSizeFieldId);
+
+const OSG::BitVector  TextureUIBackgroundBase::VerticalAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << TextureUIBackgroundBase::VerticalAlignmentFieldId);
+
+const OSG::BitVector  TextureUIBackgroundBase::HorizontalAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << TextureUIBackgroundBase::HorizontalAlignmentFieldId);
 
 const OSG::BitVector TextureUIBackgroundBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -77,6 +90,18 @@ const OSG::BitVector TextureUIBackgroundBase::MTInfluenceMask =
 /*! \var TextureChunkPtr TextureUIBackgroundBase::_sfTexture
     
 */
+/*! \var UInt32          TextureUIBackgroundBase::_sfScale
+    
+*/
+/*! \var Vec2s           TextureUIBackgroundBase::_sfScaleAbsoluteSize
+    
+*/
+/*! \var Real32          TextureUIBackgroundBase::_sfVerticalAlignment
+    
+*/
+/*! \var Real32          TextureUIBackgroundBase::_sfHorizontalAlignment
+    
+*/
 
 //! TextureUIBackground description
 
@@ -86,7 +111,27 @@ FieldDescription *TextureUIBackgroundBase::_desc[] =
                      "Texture", 
                      TextureFieldId, TextureFieldMask,
                      false,
-                     (FieldAccessMethod) &TextureUIBackgroundBase::getSFTexture)
+                     (FieldAccessMethod) &TextureUIBackgroundBase::getSFTexture),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "Scale", 
+                     ScaleFieldId, ScaleFieldMask,
+                     false,
+                     (FieldAccessMethod) &TextureUIBackgroundBase::getSFScale),
+    new FieldDescription(SFVec2s::getClassType(), 
+                     "ScaleAbsoluteSize", 
+                     ScaleAbsoluteSizeFieldId, ScaleAbsoluteSizeFieldMask,
+                     false,
+                     (FieldAccessMethod) &TextureUIBackgroundBase::getSFScaleAbsoluteSize),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "VerticalAlignment", 
+                     VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &TextureUIBackgroundBase::getSFVerticalAlignment),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "HorizontalAlignment", 
+                     HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &TextureUIBackgroundBase::getSFHorizontalAlignment)
 };
 
 
@@ -163,6 +208,10 @@ void TextureUIBackgroundBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 TextureUIBackgroundBase::TextureUIBackgroundBase(void) :
     _sfTexture                (), 
+    _sfScale                  (UInt32(SCALE_NONE)), 
+    _sfScaleAbsoluteSize      (Vec2s(1,1)), 
+    _sfVerticalAlignment      (Real32(0.5)), 
+    _sfHorizontalAlignment    (Real32(0.5)), 
     Inherited() 
 {
 }
@@ -173,6 +222,10 @@ TextureUIBackgroundBase::TextureUIBackgroundBase(void) :
 
 TextureUIBackgroundBase::TextureUIBackgroundBase(const TextureUIBackgroundBase &source) :
     _sfTexture                (source._sfTexture                ), 
+    _sfScale                  (source._sfScale                  ), 
+    _sfScaleAbsoluteSize      (source._sfScaleAbsoluteSize      ), 
+    _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
+    _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
     Inherited                 (source)
 {
 }
@@ -194,6 +247,26 @@ UInt32 TextureUIBackgroundBase::getBinSize(const BitVector &whichField)
         returnValue += _sfTexture.getBinSize();
     }
 
+    if(FieldBits::NoField != (ScaleFieldMask & whichField))
+    {
+        returnValue += _sfScale.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ScaleAbsoluteSizeFieldMask & whichField))
+    {
+        returnValue += _sfScaleAbsoluteSize.getBinSize();
+    }
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfVerticalAlignment.getBinSize();
+    }
+
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfHorizontalAlignment.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -206,6 +279,26 @@ void TextureUIBackgroundBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (TextureFieldMask & whichField))
     {
         _sfTexture.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ScaleFieldMask & whichField))
+    {
+        _sfScale.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ScaleAbsoluteSizeFieldMask & whichField))
+    {
+        _sfScaleAbsoluteSize.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    {
+        _sfVerticalAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+    {
+        _sfHorizontalAlignment.copyToBin(pMem);
     }
 
 
@@ -221,6 +314,26 @@ void TextureUIBackgroundBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfTexture.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ScaleFieldMask & whichField))
+    {
+        _sfScale.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ScaleAbsoluteSizeFieldMask & whichField))
+    {
+        _sfScaleAbsoluteSize.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+    {
+        _sfVerticalAlignment.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+    {
+        _sfHorizontalAlignment.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -234,6 +347,18 @@ void TextureUIBackgroundBase::executeSyncImpl(      TextureUIBackgroundBase *pOt
     if(FieldBits::NoField != (TextureFieldMask & whichField))
         _sfTexture.syncWith(pOther->_sfTexture);
 
+    if(FieldBits::NoField != (ScaleFieldMask & whichField))
+        _sfScale.syncWith(pOther->_sfScale);
+
+    if(FieldBits::NoField != (ScaleAbsoluteSizeFieldMask & whichField))
+        _sfScaleAbsoluteSize.syncWith(pOther->_sfScaleAbsoluteSize);
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
+
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
+
 
 }
 #else
@@ -246,6 +371,18 @@ void TextureUIBackgroundBase::executeSyncImpl(      TextureUIBackgroundBase *pOt
 
     if(FieldBits::NoField != (TextureFieldMask & whichField))
         _sfTexture.syncWith(pOther->_sfTexture);
+
+    if(FieldBits::NoField != (ScaleFieldMask & whichField))
+        _sfScale.syncWith(pOther->_sfScale);
+
+    if(FieldBits::NoField != (ScaleAbsoluteSizeFieldMask & whichField))
+        _sfScaleAbsoluteSize.syncWith(pOther->_sfScaleAbsoluteSize);
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
+
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
 
 
 

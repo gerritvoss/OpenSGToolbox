@@ -103,6 +103,34 @@ SFTextureChunkPtr *TextureUIBackgroundBase::getSFTexture(void)
     return &_sfTexture;
 }
 
+//! Get the TextureUIBackground::_sfScale field.
+inline
+SFUInt32 *TextureUIBackgroundBase::getSFScale(void)
+{
+    return &_sfScale;
+}
+
+//! Get the TextureUIBackground::_sfScaleAbsoluteSize field.
+inline
+SFVec2s *TextureUIBackgroundBase::getSFScaleAbsoluteSize(void)
+{
+    return &_sfScaleAbsoluteSize;
+}
+
+//! Get the TextureUIBackground::_sfVerticalAlignment field.
+inline
+SFReal32 *TextureUIBackgroundBase::getSFVerticalAlignment(void)
+{
+    return &_sfVerticalAlignment;
+}
+
+//! Get the TextureUIBackground::_sfHorizontalAlignment field.
+inline
+SFReal32 *TextureUIBackgroundBase::getSFHorizontalAlignment(void)
+{
+    return &_sfHorizontalAlignment;
+}
+
 
 //! Get the value of the TextureUIBackground::_sfTexture field.
 inline
@@ -123,6 +151,90 @@ inline
 void TextureUIBackgroundBase::setTexture(const TextureChunkPtr &value)
 {
     _sfTexture.setValue(value);
+}
+
+//! Get the value of the TextureUIBackground::_sfScale field.
+inline
+UInt32 &TextureUIBackgroundBase::getScale(void)
+{
+    return _sfScale.getValue();
+}
+
+//! Get the value of the TextureUIBackground::_sfScale field.
+inline
+const UInt32 &TextureUIBackgroundBase::getScale(void) const
+{
+    return _sfScale.getValue();
+}
+
+//! Set the value of the TextureUIBackground::_sfScale field.
+inline
+void TextureUIBackgroundBase::setScale(const UInt32 &value)
+{
+    _sfScale.setValue(value);
+}
+
+//! Get the value of the TextureUIBackground::_sfScaleAbsoluteSize field.
+inline
+Vec2s &TextureUIBackgroundBase::getScaleAbsoluteSize(void)
+{
+    return _sfScaleAbsoluteSize.getValue();
+}
+
+//! Get the value of the TextureUIBackground::_sfScaleAbsoluteSize field.
+inline
+const Vec2s &TextureUIBackgroundBase::getScaleAbsoluteSize(void) const
+{
+    return _sfScaleAbsoluteSize.getValue();
+}
+
+//! Set the value of the TextureUIBackground::_sfScaleAbsoluteSize field.
+inline
+void TextureUIBackgroundBase::setScaleAbsoluteSize(const Vec2s &value)
+{
+    _sfScaleAbsoluteSize.setValue(value);
+}
+
+//! Get the value of the TextureUIBackground::_sfVerticalAlignment field.
+inline
+Real32 &TextureUIBackgroundBase::getVerticalAlignment(void)
+{
+    return _sfVerticalAlignment.getValue();
+}
+
+//! Get the value of the TextureUIBackground::_sfVerticalAlignment field.
+inline
+const Real32 &TextureUIBackgroundBase::getVerticalAlignment(void) const
+{
+    return _sfVerticalAlignment.getValue();
+}
+
+//! Set the value of the TextureUIBackground::_sfVerticalAlignment field.
+inline
+void TextureUIBackgroundBase::setVerticalAlignment(const Real32 &value)
+{
+    _sfVerticalAlignment.setValue(value);
+}
+
+//! Get the value of the TextureUIBackground::_sfHorizontalAlignment field.
+inline
+Real32 &TextureUIBackgroundBase::getHorizontalAlignment(void)
+{
+    return _sfHorizontalAlignment.getValue();
+}
+
+//! Get the value of the TextureUIBackground::_sfHorizontalAlignment field.
+inline
+const Real32 &TextureUIBackgroundBase::getHorizontalAlignment(void) const
+{
+    return _sfHorizontalAlignment.getValue();
+}
+
+//! Set the value of the TextureUIBackground::_sfHorizontalAlignment field.
+inline
+void TextureUIBackgroundBase::setHorizontalAlignment(const Real32 &value)
+{
+    _sfHorizontalAlignment.setValue(value);
 }
 
 

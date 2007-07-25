@@ -68,6 +68,10 @@
 #include "OSGUIBackground.h" // Parent
 
 #include <OpenSG/OSGTextureChunkFields.h> // Texture type
+#include <OpenSG/OSGUInt32Fields.h> // Scale type
+#include <OpenSG/OSGVec2sFields.h> // ScaleAbsoluteSize type
+#include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
+#include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
 
 #include "OSGTextureUIBackgroundFields.h"
 
@@ -91,11 +95,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextureUIBackgroundBase : public UIBackgro
 
     enum
     {
-        TextureFieldId = Inherited::NextFieldId,
-        NextFieldId    = TextureFieldId + 1
+        TextureFieldId             = Inherited::NextFieldId,
+        ScaleFieldId               = TextureFieldId             + 1,
+        ScaleAbsoluteSizeFieldId   = ScaleFieldId               + 1,
+        VerticalAlignmentFieldId   = ScaleAbsoluteSizeFieldId   + 1,
+        HorizontalAlignmentFieldId = VerticalAlignmentFieldId   + 1,
+        NextFieldId                = HorizontalAlignmentFieldId + 1
     };
 
     static const OSG::BitVector TextureFieldMask;
+    static const OSG::BitVector ScaleFieldMask;
+    static const OSG::BitVector ScaleAbsoluteSizeFieldMask;
+    static const OSG::BitVector VerticalAlignmentFieldMask;
+    static const OSG::BitVector HorizontalAlignmentFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -123,9 +135,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextureUIBackgroundBase : public UIBackgro
     /*! \{                                                                 */
 
            SFTextureChunkPtr   *getSFTexture        (void);
+           SFUInt32            *getSFScale          (void);
+           SFVec2s             *getSFScaleAbsoluteSize(void);
+           SFReal32            *getSFVerticalAlignment(void);
+           SFReal32            *getSFHorizontalAlignment(void);
 
            TextureChunkPtr     &getTexture        (void);
      const TextureChunkPtr     &getTexture        (void) const;
+           UInt32              &getScale          (void);
+     const UInt32              &getScale          (void) const;
+           Vec2s               &getScaleAbsoluteSize(void);
+     const Vec2s               &getScaleAbsoluteSize(void) const;
+           Real32              &getVerticalAlignment(void);
+     const Real32              &getVerticalAlignment(void) const;
+           Real32              &getHorizontalAlignment(void);
+     const Real32              &getHorizontalAlignment(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -133,6 +157,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextureUIBackgroundBase : public UIBackgro
     /*! \{                                                                 */
 
      void setTexture        ( const TextureChunkPtr &value );
+     void setScale          ( const UInt32 &value );
+     void setScaleAbsoluteSize( const Vec2s &value );
+     void setVerticalAlignment( const Real32 &value );
+     void setHorizontalAlignment( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +204,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextureUIBackgroundBase : public UIBackgro
     /*! \{                                                                 */
 
     SFTextureChunkPtr   _sfTexture;
+    SFUInt32            _sfScale;
+    SFVec2s             _sfScaleAbsoluteSize;
+    SFReal32            _sfVerticalAlignment;
+    SFReal32            _sfHorizontalAlignment;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

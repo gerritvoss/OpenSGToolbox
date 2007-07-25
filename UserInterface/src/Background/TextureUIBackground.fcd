@@ -20,4 +20,41 @@ UI Texture Background.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="Scale"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="SCALE_NONE"
+		defaultHeader="Util/OSGUIDefines.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ScaleAbsoluteSize"
+		type="Vec2s"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1,1"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="VerticalAlignment"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.5"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="HorizontalAlignment"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.5"
+		access="public"
+	>
+	</Field>
 </FieldContainer>
