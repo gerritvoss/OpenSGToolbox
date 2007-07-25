@@ -194,6 +194,7 @@ void BorderLayout::updateLayout(const MFComponentPtr Components,const ComponentP
 				case BorderLayoutConstraints::BORDER_WEST:
 					// set up the size of the button and its extra displacement
 					size[0] = Components.getValue(i)->getPreferredSize().x();
+					offset[0] = 0;
 					if (Components.getValue(i)->getMaxSize().y() < borderSize.y()-(NorthHeight+SouthHeight))
 					{
 						size[1] = Components.getValue(i)->getMaxSize().y();
