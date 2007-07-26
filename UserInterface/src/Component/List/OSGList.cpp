@@ -80,7 +80,7 @@ void List::initMethod (void)
 void List::selectionChanged(const ListSelectionEvent& e)
 {
 	beginEditCP(ListPtr(this), ChildrenFieldMask);
-		for(UInt32 i(e.getFirstIndex()) ; i<e.getLastIndex() ; ++i)
+		for(UInt32 i(e.getFirstIndex()) ; i<=e.getLastIndex() ; ++i)
 		{
 			getChildren().setValue(
 				getCellGenerator()->getListCellGeneratorComponent(ListPtr(this),getModel()->getElementAt(i),i,getSelectionModel()->isSelectedIndex(i),getChildren().getValue(i)->getFocused())

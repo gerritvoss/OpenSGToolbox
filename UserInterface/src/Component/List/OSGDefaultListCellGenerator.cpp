@@ -94,15 +94,12 @@ ComponentPtr DefaultListCellGenerator::getListCellGeneratorComponent(ListPtr lis
 		TheLabel->setPreferredSize(Vec2s(100,30));
 	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
 	ColorUIBackgroundPtr tempBackground;
-	if(TheLabel->getBackground()->getType() == ColorUIBackground::getClassType()){
-		tempBackground = ColorUIBackground::Ptr::dcast(TheLabel->getBackground());
-	}
-	else{
-		tempBackground = ColorUIBackground::create();
-		beginEditCP(TheLabel, Label::BackgroundFieldMask);
-			TheLabel->setBackground(tempBackground);
-		endEditCP(TheLabel, Label::BackgroundFieldMask);
-	}
+	tempBackground = ColorUIBackground::create();
+
+	beginEditCP(TheLabel, Label::BackgroundFieldMask);
+		TheLabel->setBackground(tempBackground);
+	endEditCP(TheLabel, Label::BackgroundFieldMask);
+
 	beginEditCP(tempBackground, ColorUIBackground::ColorFieldMask);
 		if(isSelected){
 			tempBackground->setColor(Color4f(0.4, 0.4, 1.0, 1.0));
@@ -111,32 +108,26 @@ ComponentPtr DefaultListCellGenerator::getListCellGeneratorComponent(ListPtr lis
 			tempBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 		}
 	endEditCP(tempBackground, ColorUIBackground::ColorFieldMask);
+
 	if(cellHasFocus){
 		LineBorderPtr tempBorder;
-		if(TheLabel->getBorder()->getType() == LineBorder::getClassType()){
-			tempBorder = LineBorder::Ptr::dcast(TheLabel->getBorder());
-		}
-		else{
+
 			tempBorder = LineBorder::create();
 			beginEditCP(TheLabel, Label::BorderFieldMask);
 				TheLabel->setBorder(tempBorder);
 			endEditCP(TheLabel, Label::BorderFieldMask);
-		}
+
 		beginEditCP(tempBorder, LineBorder::ColorFieldMask);
 			tempBorder->setColor(Color4f(0.0, 0.0, 1.0, 1.0));
 		endEditCP(tempBorder, LineBorder::ColorFieldMask);
 	}
 	else{
 		EmptyBorderPtr tempBorder;
-		if(TheLabel->getBorder()->getType()==EmptyBorder::getClassType()){
-			tempBorder = EmptyBorder::Ptr::dcast(TheLabel->getBorder());
-		}
-		else{
+
 			tempBorder = EmptyBorder::create();
 			beginEditCP(TheLabel, Label::BorderFieldMask);
 				TheLabel->setBorder(tempBorder);
 			endEditCP(TheLabel, Label::BorderFieldMask);
-		}
 	}
 	return Component::Ptr::dcast(TheLabel);
 	

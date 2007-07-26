@@ -79,7 +79,7 @@ public:
    virtual UInt32 	getMinSelectionIndex(void) const = 0;
    
    //Returns the current selection mode.
-   virtual Int32 	getSelectionMode(void) const = 0;
+   virtual UInt32 	getSelectionMode(void) const = 0;
    
    //Returns true if the value is undergoing a series of changes.
    virtual bool 	getValueIsAdjusting(void) const = 0;
@@ -112,7 +112,7 @@ public:
    virtual void 	setSelectionInterval(UInt32 index0, UInt32 index1) = 0;
    
    //Set the selection mode.
-   virtual void 	setSelectionMode(Int32 selectionMode) = 0;
+   virtual void 	setSelectionMode(UInt32 selectionMode) = 0;
    
    //This property is true if upcoming changes to the value of the model should be considered a single event.
    virtual void 	setValueIsAdjusting(bool valueIsAdjusting) = 0;

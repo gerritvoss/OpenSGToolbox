@@ -47,6 +47,7 @@
 
 #include "OSGListSelectionModel.h"
 #include <set>
+#include <list>
 
 OSG_BEGIN_NAMESPACE
 
@@ -74,7 +75,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public ListSel
    
    virtual UInt32 	getMinSelectionIndex(void) const;
    
-   virtual Int32 	getSelectionMode(void) const;
+   virtual UInt32 	getSelectionMode(void) const;
    
    virtual bool 	getValueIsAdjusting(void) const;
    
@@ -96,7 +97,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public ListSel
    
    virtual void 	setSelectionInterval(UInt32 index0, UInt32 index1);
    
-   virtual void 	setSelectionMode(Int32 selectionMode);
+   virtual void 	setSelectionMode(UInt32 selectionMode);
    
    virtual void 	setValueIsAdjusting(bool valueIsAdjusting);
    
@@ -131,14 +132,42 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public ListSel
     ListSelectionListenerSet       _ListSelectionListeners;
 	
     virtual void produceSelectionChanged(const ListSelectionEvent& e);
-	SelectionMode _SelectionMode;
+
+	struct IndexRange{  //Inclusive
+		IndexRange(UInt32 start, UInt32 end)
+		{
+			StartIndex = start;
+			EndIndex = end;
+		}
+		bool operator== (const IndexRange& right) const
+		{
+			return StartIndex == right.StartIndex && EndIndex == right.EndIndex;
+		}
+		bool operator!= (const IndexRange& right) const
+		{
+			return StartIndex != right.StartIndex || EndIndex != right.EndIndex;
+		}
+		UInt32 StartIndex;
+		UInt32 EndIndex;
+	};
+
+	IndexRange getMinMaxSelection(const IndexRange& range);
+	static IndexRange getMinMaxSelection(const IndexRange& range1, const IndexRange& range2);
+	void updateMinMax(void);
+
+	typedef std::list<IndexRange> RangeSelectionList;
+	typedef RangeSelectionList::iterator RangeSelectionListItor;
+	typedef RangeSelectionList::const_iterator RangeSelectionListConstItor;
+
+	RangeSelectionList _RangeSelectionList;
 
 	// These are used to help with setting the Selection Intervals
 
+   SelectionMode _SelectionMode;
    UInt32 	_AnchorSelectionIndex;
-   UInt32 	_LeadSelectionIndex;   
-   UInt32 	_MaxSelectionIndex;   
-   UInt32 	_MinSelectionIndex;   
+   UInt32 	_LeadSelectionIndex;
+   UInt32 	_MaxSelectionIndex;
+   UInt32 	_MinSelectionIndex;
    bool 	_ValueIsAdjusting;
     
     /*==========================  PRIVATE  ================================*/
