@@ -68,8 +68,8 @@
 #include <OpenSG/OSGDrawable.h> // Parent
 
 #include <OpenSG/OSGPnt3fFields.h> // Point type
-#include <OpenSG/OSGVec3fFields.h> // Side1 type
-#include <OpenSG/OSGVec3fFields.h> // Side2 type
+#include <OpenSG/OSGReal32Fields.h> // Width type
+#include <OpenSG/OSGReal32Fields.h> // Height type
 #include "UIDrawingSurface/OSGUIDrawingSurfaceFields.h" // DrawingSurface type
 
 #include "OSGUIRectangleFields.h"
@@ -95,15 +95,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleBase : public Drawable
     enum
     {
         PointFieldId          = Inherited::NextFieldId,
-        Side1FieldId          = PointFieldId          + 1,
-        Side2FieldId          = Side1FieldId          + 1,
-        DrawingSurfaceFieldId = Side2FieldId          + 1,
+        WidthFieldId          = PointFieldId          + 1,
+        HeightFieldId         = WidthFieldId          + 1,
+        DrawingSurfaceFieldId = HeightFieldId         + 1,
         NextFieldId           = DrawingSurfaceFieldId + 1
     };
 
     static const OSG::BitVector PointFieldMask;
-    static const OSG::BitVector Side1FieldMask;
-    static const OSG::BitVector Side2FieldMask;
+    static const OSG::BitVector WidthFieldMask;
+    static const OSG::BitVector HeightFieldMask;
     static const OSG::BitVector DrawingSurfaceFieldMask;
 
 
@@ -132,16 +132,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleBase : public Drawable
     /*! \{                                                                 */
 
            SFPnt3f             *getSFPoint          (void);
-           SFVec3f             *getSFSide1          (void);
-           SFVec3f             *getSFSide2          (void);
+           SFReal32            *getSFWidth          (void);
+           SFReal32            *getSFHeight         (void);
            SFUIDrawingSurfacePtr *getSFDrawingSurface (void);
 
            Pnt3f               &getPoint          (void);
      const Pnt3f               &getPoint          (void) const;
-           Vec3f               &getSide1          (void);
-     const Vec3f               &getSide1          (void) const;
-           Vec3f               &getSide2          (void);
-     const Vec3f               &getSide2          (void) const;
+           Real32              &getWidth          (void);
+     const Real32              &getWidth          (void) const;
+           Real32              &getHeight         (void);
+     const Real32              &getHeight         (void) const;
            UIDrawingSurfacePtr &getDrawingSurface (void);
      const UIDrawingSurfacePtr &getDrawingSurface (void) const;
 
@@ -151,8 +151,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleBase : public Drawable
     /*! \{                                                                 */
 
      void setPoint          ( const Pnt3f &value );
-     void setSide1          ( const Vec3f &value );
-     void setSide2          ( const Vec3f &value );
+     void setWidth          ( const Real32 &value );
+     void setHeight         ( const Real32 &value );
      void setDrawingSurface ( const UIDrawingSurfacePtr &value );
 
     /*! \}                                                                 */
@@ -197,8 +197,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleBase : public Drawable
     /*! \{                                                                 */
 
     SFPnt3f             _sfPoint;
-    SFVec3f             _sfSide1;
-    SFVec3f             _sfSide2;
+    SFReal32            _sfWidth;
+    SFReal32            _sfHeight;
     SFUIDrawingSurfacePtr   _sfDrawingSurface;
 
     /*! \}                                                                 */

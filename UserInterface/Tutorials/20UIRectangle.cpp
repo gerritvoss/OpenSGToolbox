@@ -56,6 +56,8 @@ OSG_USING_NAMESPACE
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 
+WindowEventProducerPtr TheWindowEventProducer;
+
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2s Size);
@@ -74,11 +76,17 @@ class TutorialMouseListener : public MouseListener
     }
     virtual void mousePressed(const MouseEvent& e)
     {
-        mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+		if(TheWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+		{
+			mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+		}
     }
     virtual void mouseReleased(const MouseEvent& e)
     {
-        mgr->mouseButtonRelease(e.getButton(), e.getLocation().x(), e.getLocation().y());
+		if(TheWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+		{
+           mgr->mouseButtonRelease(e.getButton(), e.getLocation().x(), e.getLocation().y());
+		}
     }
 };
 
@@ -87,12 +95,18 @@ class TutorialMouseMotionListener : public MouseMotionListener
   public:
     virtual void mouseMoved(const MouseEvent& e)
     {
-        mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+		if(TheWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+		{
+            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+		}
     }
 
     virtual void mouseDragged(const MouseEvent& e)
     {
-        mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+		if(TheWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+		{
+		    mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+		}
     }
 };
 
@@ -104,7 +118,6 @@ int main(int argc, char **argv)
 
     // Set up Window
     WindowPtr MainWindow;
-    WindowEventProducerPtr TheWindowEventProducer;
     createDefaultWindow(Pnt2s(50,50),
                                         Vec2s(550,550),
                                         "OpenSG 20UIRectangle Window",
@@ -120,7 +133,7 @@ int main(int argc, char **argv)
     TheWindowEventProducer->addMouseMotionListener(&mouseMotionListener);
 
    // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    NodePtr TorusGeometryNode = makeTorus(200, 270, 16, 16);
 
 
     // Make Main Scene Node
@@ -283,12 +296,12 @@ int main(int argc, char **argv)
 	
     //Make A 3D Rectangle to draw the UI on
     UIRectanglePtr UIRectCore = UIRectangle::create();
-    beginEditCP(UIRectCore, UIRectangle::PointFieldMask | UIRectangle::Side1FieldMask | UIRectangle::Side2FieldMask | UIRectangle::DrawingSurfaceFieldMask);
-        UIRectCore->setPoint(Pnt3f(0.0,0.0,0.0));
-        UIRectCore->setSide1(Vec3f(500.0,0.0,0.0));
-        UIRectCore->setSide2(Vec3f(0.0,500.0,0.0));
+    beginEditCP(UIRectCore, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask | UIRectangle::DrawingSurfaceFieldMask);
+        UIRectCore->setPoint(Pnt3f(-250.0,-250.0,70.0));
+        UIRectCore->setWidth(500.0);
+        UIRectCore->setHeight(500.0);
         UIRectCore->setDrawingSurface(drawingSurface);
-	endEditCP(UIRectCore, UIRectangle::PointFieldMask | UIRectangle::Side1FieldMask | UIRectangle::Side2FieldMask | UIRectangle::DrawingSurfaceFieldMask);
+	endEditCP(UIRectCore, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask | UIRectangle::DrawingSurfaceFieldMask);
 	
     NodePtr UIRectNode = osg::Node::create();
     beginEditCP(UIRectNode, Node::CoreFieldMask);

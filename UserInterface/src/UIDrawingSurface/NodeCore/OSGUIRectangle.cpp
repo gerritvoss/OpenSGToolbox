@@ -91,7 +91,7 @@ void UIRectangle::initMethod (void)
 Action::ResultE UIRectangle::drawPrimitives (DrawActionBase *action)
 {
     glPushMatrix();
-    glTranslatef(0.0,getSide2().length(),0.0);
+    glTranslatef(getPoint().x(),getPoint().y()+getHeight(),getPoint().z());
     glScalef(1.0,-1.0,1.0);
 	//Render the UI to the Rectangle
     getDrawingSurface()->getGraphics()->setDrawAction(action);
@@ -132,9 +132,9 @@ void UIRectangle::adjustVolume(Volume & volume)
     volume.setEmpty();
 
     volume.extendBy(getPoint());
-    volume.extendBy(getPoint()+ getSide1());
-    volume.extendBy(getPoint()+ getSide1()+ getSide2());
-    volume.extendBy(getPoint()+ getSide2());
+    volume.extendBy(getPoint()+ Vec3f(getWidth(),0.0,0.0));
+    volume.extendBy(getPoint()+ Vec3f(getWidth(),0.0,0.0)+ Vec3f(0.0,getHeight(),0.0));
+    volume.extendBy(getPoint()+ Vec3f(0.0,getHeight(),0.0));
 }
 
 /***************************************************************************\
@@ -147,7 +147,7 @@ void UIRectangle::updateFrameBounds(void)
     {
         return;
     }
-	Vec2s Size(getSide1().length(),getSide2().length());
+	Vec2s Size(getWidth(),getHeight());
 	
 	//Translate to the Frames Position
     //Calculate Alignment
@@ -188,10 +188,11 @@ void UIRectangle::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
     
-    if( (whichField & Side1FieldMask) ||
-        (whichField & Side2FieldMask) ||
+    if( (whichField & HeightFieldMask) ||
+        (whichField & WidthFieldMask) ||
         (whichField & DrawingSurfaceFieldMask) )
     {
+		invalidateVolume();
         updateFrameBounds();
     }
 }

@@ -22,21 +22,21 @@ A UI Rectangle.
 	>
 	</Field>
 	<Field
-		name="Side1"
-		type="Vec3f"
+		name="Width"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="1.0,0.0,0.0"
+		defaultValue="1.0"
 	>
 	</Field>
 	<Field
-		name="Side2"
-		type="Vec3f"
+		name="Height"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="0.0,1.0,0.0"
+		defaultValue="1.0"
 	>
 	</Field>
 	<Field

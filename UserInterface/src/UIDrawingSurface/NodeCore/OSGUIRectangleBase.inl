@@ -103,18 +103,18 @@ SFPnt3f *UIRectangleBase::getSFPoint(void)
     return &_sfPoint;
 }
 
-//! Get the UIRectangle::_sfSide1 field.
+//! Get the UIRectangle::_sfWidth field.
 inline
-SFVec3f *UIRectangleBase::getSFSide1(void)
+SFReal32 *UIRectangleBase::getSFWidth(void)
 {
-    return &_sfSide1;
+    return &_sfWidth;
 }
 
-//! Get the UIRectangle::_sfSide2 field.
+//! Get the UIRectangle::_sfHeight field.
 inline
-SFVec3f *UIRectangleBase::getSFSide2(void)
+SFReal32 *UIRectangleBase::getSFHeight(void)
 {
-    return &_sfSide2;
+    return &_sfHeight;
 }
 
 //! Get the UIRectangle::_sfDrawingSurface field.
@@ -146,46 +146,46 @@ void UIRectangleBase::setPoint(const Pnt3f &value)
     _sfPoint.setValue(value);
 }
 
-//! Get the value of the UIRectangle::_sfSide1 field.
+//! Get the value of the UIRectangle::_sfWidth field.
 inline
-Vec3f &UIRectangleBase::getSide1(void)
+Real32 &UIRectangleBase::getWidth(void)
 {
-    return _sfSide1.getValue();
+    return _sfWidth.getValue();
 }
 
-//! Get the value of the UIRectangle::_sfSide1 field.
+//! Get the value of the UIRectangle::_sfWidth field.
 inline
-const Vec3f &UIRectangleBase::getSide1(void) const
+const Real32 &UIRectangleBase::getWidth(void) const
 {
-    return _sfSide1.getValue();
+    return _sfWidth.getValue();
 }
 
-//! Set the value of the UIRectangle::_sfSide1 field.
+//! Set the value of the UIRectangle::_sfWidth field.
 inline
-void UIRectangleBase::setSide1(const Vec3f &value)
+void UIRectangleBase::setWidth(const Real32 &value)
 {
-    _sfSide1.setValue(value);
+    _sfWidth.setValue(value);
 }
 
-//! Get the value of the UIRectangle::_sfSide2 field.
+//! Get the value of the UIRectangle::_sfHeight field.
 inline
-Vec3f &UIRectangleBase::getSide2(void)
+Real32 &UIRectangleBase::getHeight(void)
 {
-    return _sfSide2.getValue();
+    return _sfHeight.getValue();
 }
 
-//! Get the value of the UIRectangle::_sfSide2 field.
+//! Get the value of the UIRectangle::_sfHeight field.
 inline
-const Vec3f &UIRectangleBase::getSide2(void) const
+const Real32 &UIRectangleBase::getHeight(void) const
 {
-    return _sfSide2.getValue();
+    return _sfHeight.getValue();
 }
 
-//! Set the value of the UIRectangle::_sfSide2 field.
+//! Set the value of the UIRectangle::_sfHeight field.
 inline
-void UIRectangleBase::setSide2(const Vec3f &value)
+void UIRectangleBase::setHeight(const Real32 &value)
 {
-    _sfSide2.setValue(value);
+    _sfHeight.setValue(value);
 }
 
 //! Get the value of the UIRectangle::_sfDrawingSurface field.
