@@ -67,6 +67,7 @@
 
 #include "OSGGraphics.h" // Parent
 
+#include <OpenSG/OSGDepthChunkFields.h> // UIDepth type
 
 #include "OSGGraphics2DFields.h"
 
@@ -87,6 +88,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics2DBase : public Graphics
   public:
 
     typedef Graphics2DPtr  Ptr;
+
+    enum
+    {
+        UIDepthFieldId = Inherited::NextFieldId,
+        NextFieldId    = UIDepthFieldId + 1
+    };
+
+    static const OSG::BitVector UIDepthFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -146,6 +155,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics2DBase : public Graphics
   protected:
 
     /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFDepthChunkPtr     _sfUIDepth;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
@@ -158,6 +174,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics2DBase : public Graphics
     /*! \{                                                                 */
 
     virtual ~Graphics2DBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFDepthChunkPtr     *getSFUIDepth        (void);
+
+           DepthChunkPtr       &getUIDepth        (void);
+     const DepthChunkPtr       &getUIDepth        (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setUIDepth        (const DepthChunkPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -196,6 +229,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics2DBase : public Graphics
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

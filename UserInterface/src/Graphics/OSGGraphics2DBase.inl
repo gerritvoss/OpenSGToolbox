@@ -96,6 +96,34 @@ Graphics2DPtr Graphics2DBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the Graphics2D::_sfUIDepth field.
+inline
+SFDepthChunkPtr *Graphics2DBase::getSFUIDepth(void)
+{
+    return &_sfUIDepth;
+}
+
+
+//! Get the value of the Graphics2D::_sfUIDepth field.
+inline
+DepthChunkPtr &Graphics2DBase::getUIDepth(void)
+{
+    return _sfUIDepth.getValue();
+}
+
+//! Get the value of the Graphics2D::_sfUIDepth field.
+inline
+const DepthChunkPtr &Graphics2DBase::getUIDepth(void) const
+{
+    return _sfUIDepth.getValue();
+}
+
+//! Set the value of the Graphics2D::_sfUIDepth field.
+inline
+void Graphics2DBase::setUIDepth(const DepthChunkPtr &value)
+{
+    _sfUIDepth.setValue(value);
+}
 
 
 OSG_END_NAMESPACE

@@ -47,6 +47,7 @@
 #include <OpenSG/OSGTextLayoutParam.h>
 #include <OpenSG/OSGTextLayoutResult.h>
 #include <OpenSG/OSGTextureChunk.h>
+#include <OpenSG/OSGDepthChunk.h>
 
 #include "OSGGraphics2D.h"
 
@@ -80,13 +81,16 @@ void Graphics2D::initMethod (void)
 void Graphics2D::preDraw()
 {
    glPushAttrib(GL_LIGHTING_BIT | GL_POLYGON_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT);
+   
+	getUIDepth()->activate(getDrawAction());
+
 	//_light = glIsEnabled(GL_LIGHTING);
 
 	//glGetIntegerv(GL_POLYGON_MODE, _fill);
 	glPolygonMode(GL_FRONT, GL_FILL);
 
 	//_depth = glIsEnabled(GL_DEPTH_TEST);
-	glDisable(GL_DEPTH_TEST);
+	//glDisable(GL_DEPTH_TEST);
 
 	//_colmat = glIsEnabled(GL_COLOR_MATERIAL);
 	glDisable(GL_COLOR_MATERIAL);
@@ -122,6 +126,7 @@ void Graphics2D::postDraw()
 	glPolygonMode(GL_FRONT, _fill[0]);
 	glPolygonMode(GL_BACK , _fill[1]);*/
    
+	getUIDepth()->deactivate(getDrawAction());
    glPopAttrib();
 }
 
@@ -586,6 +591,8 @@ void Graphics2D::drawCharacters( const TextLayoutResult& layoutResult, const Fon
 Graphics2D::Graphics2D(void) :
     Inherited()
 {
+	setUIDepth(DepthChunk::create());
+	getUIDepth()->setReadOnly(true);
 }
 
 Graphics2D::Graphics2D(const Graphics2D &source) :

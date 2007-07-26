@@ -124,6 +124,20 @@ SFUIDrawingSurfacePtr *UIRectangleBase::getSFDrawingSurface(void)
     return &_sfDrawingSurface;
 }
 
+//! Get the UIRectangle::_sfRectColorMask field.
+inline
+SFColorMaskChunkPtr *UIRectangleBase::getSFRectColorMask(void)
+{
+    return &_sfRectColorMask;
+}
+
+//! Get the UIRectangle::_sfRectPolygon field.
+inline
+SFPolygonChunkPtr *UIRectangleBase::getSFRectPolygon(void)
+{
+    return &_sfRectPolygon;
+}
+
 
 //! Get the value of the UIRectangle::_sfPoint field.
 inline
@@ -207,6 +221,48 @@ inline
 void UIRectangleBase::setDrawingSurface(const UIDrawingSurfacePtr &value)
 {
     _sfDrawingSurface.setValue(value);
+}
+
+//! Get the value of the UIRectangle::_sfRectColorMask field.
+inline
+ColorMaskChunkPtr &UIRectangleBase::getRectColorMask(void)
+{
+    return _sfRectColorMask.getValue();
+}
+
+//! Get the value of the UIRectangle::_sfRectColorMask field.
+inline
+const ColorMaskChunkPtr &UIRectangleBase::getRectColorMask(void) const
+{
+    return _sfRectColorMask.getValue();
+}
+
+//! Set the value of the UIRectangle::_sfRectColorMask field.
+inline
+void UIRectangleBase::setRectColorMask(const ColorMaskChunkPtr &value)
+{
+    _sfRectColorMask.setValue(value);
+}
+
+//! Get the value of the UIRectangle::_sfRectPolygon field.
+inline
+PolygonChunkPtr &UIRectangleBase::getRectPolygon(void)
+{
+    return _sfRectPolygon.getValue();
+}
+
+//! Get the value of the UIRectangle::_sfRectPolygon field.
+inline
+const PolygonChunkPtr &UIRectangleBase::getRectPolygon(void) const
+{
+    return _sfRectPolygon.getValue();
+}
+
+//! Set the value of the UIRectangle::_sfRectPolygon field.
+inline
+void UIRectangleBase::setRectPolygon(const PolygonChunkPtr &value)
+{
+    _sfRectPolygon.setValue(value);
 }
 
 

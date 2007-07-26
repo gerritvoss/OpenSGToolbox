@@ -49,4 +49,22 @@ A UI Rectangle.
 		defaultValue="NullFC"
 	>
 	</Field>
+	<Field
+		name="RectColorMask"
+		type="ColorMaskChunkPtr"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="RectPolygon"
+		type="PolygonChunkPtr"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+		defaultValue="NullFC"
+	>
+	</Field>
 </FieldContainer>

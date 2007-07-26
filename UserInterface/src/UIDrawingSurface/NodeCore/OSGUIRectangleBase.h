@@ -71,6 +71,8 @@
 #include <OpenSG/OSGReal32Fields.h> // Width type
 #include <OpenSG/OSGReal32Fields.h> // Height type
 #include "UIDrawingSurface/OSGUIDrawingSurfaceFields.h" // DrawingSurface type
+#include <OpenSG/OSGColorMaskChunkFields.h> // RectColorMask type
+#include <OpenSG/OSGPolygonChunkFields.h> // RectPolygon type
 
 #include "OSGUIRectangleFields.h"
 
@@ -98,13 +100,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleBase : public Drawable
         WidthFieldId          = PointFieldId          + 1,
         HeightFieldId         = WidthFieldId          + 1,
         DrawingSurfaceFieldId = HeightFieldId         + 1,
-        NextFieldId           = DrawingSurfaceFieldId + 1
+        RectColorMaskFieldId  = DrawingSurfaceFieldId + 1,
+        RectPolygonFieldId    = RectColorMaskFieldId  + 1,
+        NextFieldId           = RectPolygonFieldId    + 1
     };
 
     static const OSG::BitVector PointFieldMask;
     static const OSG::BitVector WidthFieldMask;
     static const OSG::BitVector HeightFieldMask;
     static const OSG::BitVector DrawingSurfaceFieldMask;
+    static const OSG::BitVector RectColorMaskFieldMask;
+    static const OSG::BitVector RectPolygonFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -200,6 +206,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleBase : public Drawable
     SFReal32            _sfWidth;
     SFReal32            _sfHeight;
     SFUIDrawingSurfacePtr   _sfDrawingSurface;
+    SFColorMaskChunkPtr   _sfRectColorMask;
+    SFPolygonChunkPtr   _sfRectPolygon;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -215,6 +223,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleBase : public Drawable
     /*! \{                                                                 */
 
     virtual ~UIRectangleBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFColorMaskChunkPtr *getSFRectColorMask  (void);
+           SFPolygonChunkPtr   *getSFRectPolygon    (void);
+
+           ColorMaskChunkPtr   &getRectColorMask  (void);
+     const ColorMaskChunkPtr   &getRectColorMask  (void) const;
+           PolygonChunkPtr     &getRectPolygon    (void);
+     const PolygonChunkPtr     &getRectPolygon    (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setRectColorMask  (const ColorMaskChunkPtr &value);
+     void setRectPolygon    (const PolygonChunkPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

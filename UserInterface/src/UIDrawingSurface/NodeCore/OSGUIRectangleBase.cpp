@@ -76,6 +76,12 @@ const OSG::BitVector  UIRectangleBase::HeightFieldMask =
 const OSG::BitVector  UIRectangleBase::DrawingSurfaceFieldMask = 
     (TypeTraits<BitVector>::One << UIRectangleBase::DrawingSurfaceFieldId);
 
+const OSG::BitVector  UIRectangleBase::RectColorMaskFieldMask = 
+    (TypeTraits<BitVector>::One << UIRectangleBase::RectColorMaskFieldId);
+
+const OSG::BitVector  UIRectangleBase::RectPolygonFieldMask = 
+    (TypeTraits<BitVector>::One << UIRectangleBase::RectPolygonFieldId);
+
 const OSG::BitVector UIRectangleBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -93,6 +99,12 @@ const OSG::BitVector UIRectangleBase::MTInfluenceMask =
     
 */
 /*! \var UIDrawingSurfacePtr UIRectangleBase::_sfDrawingSurface
+    
+*/
+/*! \var ColorMaskChunkPtr UIRectangleBase::_sfRectColorMask
+    
+*/
+/*! \var PolygonChunkPtr UIRectangleBase::_sfRectPolygon
     
 */
 
@@ -119,7 +131,17 @@ FieldDescription *UIRectangleBase::_desc[] =
                      "DrawingSurface", 
                      DrawingSurfaceFieldId, DrawingSurfaceFieldMask,
                      false,
-                     (FieldAccessMethod) &UIRectangleBase::getSFDrawingSurface)
+                     (FieldAccessMethod) &UIRectangleBase::getSFDrawingSurface),
+    new FieldDescription(SFColorMaskChunkPtr::getClassType(), 
+                     "RectColorMask", 
+                     RectColorMaskFieldId, RectColorMaskFieldMask,
+                     true,
+                     (FieldAccessMethod) &UIRectangleBase::getSFRectColorMask),
+    new FieldDescription(SFPolygonChunkPtr::getClassType(), 
+                     "RectPolygon", 
+                     RectPolygonFieldId, RectPolygonFieldMask,
+                     true,
+                     (FieldAccessMethod) &UIRectangleBase::getSFRectPolygon)
 };
 
 
@@ -199,6 +221,8 @@ UIRectangleBase::UIRectangleBase(void) :
     _sfWidth                  (Real32(1.0)), 
     _sfHeight                 (Real32(1.0)), 
     _sfDrawingSurface         (UIDrawingSurfacePtr(NullFC)), 
+    _sfRectColorMask          (ColorMaskChunkPtr(NullFC)), 
+    _sfRectPolygon            (PolygonChunkPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -212,6 +236,8 @@ UIRectangleBase::UIRectangleBase(const UIRectangleBase &source) :
     _sfWidth                  (source._sfWidth                  ), 
     _sfHeight                 (source._sfHeight                 ), 
     _sfDrawingSurface         (source._sfDrawingSurface         ), 
+    _sfRectColorMask          (source._sfRectColorMask          ), 
+    _sfRectPolygon            (source._sfRectPolygon            ), 
     Inherited                 (source)
 {
 }
@@ -248,6 +274,16 @@ UInt32 UIRectangleBase::getBinSize(const BitVector &whichField)
         returnValue += _sfDrawingSurface.getBinSize();
     }
 
+    if(FieldBits::NoField != (RectColorMaskFieldMask & whichField))
+    {
+        returnValue += _sfRectColorMask.getBinSize();
+    }
+
+    if(FieldBits::NoField != (RectPolygonFieldMask & whichField))
+    {
+        returnValue += _sfRectPolygon.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -275,6 +311,16 @@ void UIRectangleBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
     {
         _sfDrawingSurface.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RectColorMaskFieldMask & whichField))
+    {
+        _sfRectColorMask.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RectPolygonFieldMask & whichField))
+    {
+        _sfRectPolygon.copyToBin(pMem);
     }
 
 
@@ -305,6 +351,16 @@ void UIRectangleBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfDrawingSurface.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (RectColorMaskFieldMask & whichField))
+    {
+        _sfRectColorMask.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RectPolygonFieldMask & whichField))
+    {
+        _sfRectPolygon.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -327,6 +383,12 @@ void UIRectangleBase::executeSyncImpl(      UIRectangleBase *pOther,
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
         _sfDrawingSurface.syncWith(pOther->_sfDrawingSurface);
 
+    if(FieldBits::NoField != (RectColorMaskFieldMask & whichField))
+        _sfRectColorMask.syncWith(pOther->_sfRectColorMask);
+
+    if(FieldBits::NoField != (RectPolygonFieldMask & whichField))
+        _sfRectPolygon.syncWith(pOther->_sfRectPolygon);
+
 
 }
 #else
@@ -348,6 +410,12 @@ void UIRectangleBase::executeSyncImpl(      UIRectangleBase *pOther,
 
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
         _sfDrawingSurface.syncWith(pOther->_sfDrawingSurface);
+
+    if(FieldBits::NoField != (RectColorMaskFieldMask & whichField))
+        _sfRectColorMask.syncWith(pOther->_sfRectColorMask);
+
+    if(FieldBits::NoField != (RectPolygonFieldMask & whichField))
+        _sfRectPolygon.syncWith(pOther->_sfRectPolygon);
 
 
 

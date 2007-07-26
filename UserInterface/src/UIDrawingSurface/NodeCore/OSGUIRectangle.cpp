@@ -50,6 +50,8 @@
 #include <OpenSG/OSGDrawAction.h>
 #include <OpenSG/OSGIntersectAction.h>
 #include <OpenSG/OSGSimpleGeometry.h>
+#include <OpenSG/OSGColorMaskChunk.h>
+#include <OpenSG/OSGPolygonChunk.h>
 
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 
@@ -91,7 +93,19 @@ void UIRectangle::initMethod (void)
 Action::ResultE UIRectangle::drawPrimitives (DrawActionBase *action)
 {
     glPushMatrix();
+	getRectColorMask()->activate(action);
+	getRectPolygon()->activate(action);
+	glBegin(GL_QUADS);
+	   glVertex3fv(getPoint().getValues());
+	   glVertex3f(getPoint().x(), getPoint().y()+getHeight(), getPoint().z());
+	   glVertex3f(getPoint().x()+getWidth(), getPoint().y()+getHeight(), getPoint().z());
+	   glVertex3f(getPoint().x()+getWidth(), getPoint().y(), getPoint().z());
+	glEnd();
+	getRectPolygon()->deactivate(action);
+	getRectColorMask()->deactivate(action);
+
     glTranslatef(getPoint().x(),getPoint().y()+getHeight(),getPoint().z());
+
     glScalef(1.0,-1.0,1.0);
 	//Render the UI to the Rectangle
     getDrawingSurface()->getGraphics()->setDrawAction(action);
@@ -171,6 +185,16 @@ void UIRectangle::updateFrameBounds(void)
 UIRectangle::UIRectangle(void) :
     Inherited()
 {
+	setRectColorMask(ColorMaskChunk::create());
+	getRectColorMask()->setMaskR(false);
+	getRectColorMask()->setMaskG(false);
+	getRectColorMask()->setMaskB(false);
+	getRectColorMask()->setMaskA(false);
+
+	setRectPolygon(PolygonChunk::create());
+	getRectPolygon()->setOffsetFactor(1.0);
+	getRectPolygon()->setOffsetBias(1.0);
+	getRectPolygon()->setOffsetFill(true); 
 }
 
 UIRectangle::UIRectangle(const UIRectangle &source) :

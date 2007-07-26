@@ -64,10 +64,30 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  Graphics2DBase::UIDepthFieldMask = 
+    (TypeTraits<BitVector>::One << Graphics2DBase::UIDepthFieldId);
+
 const OSG::BitVector Graphics2DBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+// Field descriptions
+
+/*! \var DepthChunkPtr   Graphics2DBase::_sfUIDepth
+    
+*/
+
+//! Graphics2D description
+
+FieldDescription *Graphics2DBase::_desc[] = 
+{
+    new FieldDescription(SFDepthChunkPtr::getClassType(), 
+                     "UIDepth", 
+                     UIDepthFieldId, UIDepthFieldMask,
+                     true,
+                     (FieldAccessMethod) &Graphics2DBase::getSFUIDepth)
+};
 
 
 FieldContainerType Graphics2DBase::_type(
@@ -76,8 +96,8 @@ FieldContainerType Graphics2DBase::_type(
     NULL,
     (PrototypeCreateF) &Graphics2DBase::createEmpty,
     Graphics2D::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //OSG_FIELD_CONTAINER_DEF(Graphics2DBase, Graphics2DPtr)
 
@@ -142,6 +162,7 @@ void Graphics2DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 Graphics2DBase::Graphics2DBase(void) :
+    _sfUIDepth                (DepthChunkPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -151,6 +172,7 @@ Graphics2DBase::Graphics2DBase(void) :
 #endif
 
 Graphics2DBase::Graphics2DBase(const Graphics2DBase &source) :
+    _sfUIDepth                (source._sfUIDepth                ), 
     Inherited                 (source)
 {
 }
@@ -167,6 +189,11 @@ UInt32 Graphics2DBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (UIDepthFieldMask & whichField))
+    {
+        returnValue += _sfUIDepth.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -176,6 +203,11 @@ void Graphics2DBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (UIDepthFieldMask & whichField))
+    {
+        _sfUIDepth.copyToBin(pMem);
+    }
+
 
 }
 
@@ -183,6 +215,11 @@ void Graphics2DBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (UIDepthFieldMask & whichField))
+    {
+        _sfUIDepth.copyFromBin(pMem);
+    }
 
 
 }
@@ -194,6 +231,9 @@ void Graphics2DBase::executeSyncImpl(      Graphics2DBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (UIDepthFieldMask & whichField))
+        _sfUIDepth.syncWith(pOther->_sfUIDepth);
+
 
 }
 #else
@@ -203,6 +243,9 @@ void Graphics2DBase::executeSyncImpl(      Graphics2DBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (UIDepthFieldMask & whichField))
+        _sfUIDepth.syncWith(pOther->_sfUIDepth);
 
 
 
