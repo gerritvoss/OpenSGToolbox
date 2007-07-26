@@ -109,7 +109,7 @@ void TextureUIBackground::draw(const GraphicsPtr g, const Pnt2s& TopLeft, const 
     glClipPlane(GL_CLIP_PLANE2,TopPlaneEquation.getValues());
     glClipPlane(GL_CLIP_PLANE3,BottomPlaneEquation.getValues());
 
-	Pnt2s BackgroundSize (BottomRight - TopLeft);
+	Vec2s BackgroundSize (BottomRight - TopLeft);
 
 	Vec2s Size(0.0,0.0);
 	switch(getScale())
