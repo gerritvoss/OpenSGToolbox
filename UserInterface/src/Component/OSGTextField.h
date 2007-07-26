@@ -78,7 +78,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-    /*! \}                                                                 */
+    /*! \}*/
+
+	virtual void keyTyped(const KeyEvent& e);
+
     void addActionListener(ActionListenerPtr Listener);
     void removeActionListener(ActionListenerPtr Listener);
     /*=========================  PROTECTED  ===============================*/

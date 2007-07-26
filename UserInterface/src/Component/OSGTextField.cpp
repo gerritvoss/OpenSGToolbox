@@ -46,6 +46,9 @@
 #define OSG_COMPILEUSERINTERFACELIB
 
 #include <OpenSG/OSGConfig.h>
+#include "Util/OSGUIDrawUtils.h"
+
+#include "Graphics/UIDrawObjects/OSGLineUIDrawObject.h"
 
 #include "OSGTextField.h"
 
@@ -79,7 +82,55 @@ void TextField::initMethod (void)
 void TextField::drawInternal(const GraphicsPtr TheGraphics) const
 {
    Pnt2s TopLeft, BottomRight;
+   Pnt2s TempPos;
    getInsideBorderBounds(TopLeft, BottomRight);
+   TempPos = calculateAlignment(TopLeft, TheGraphics->getTextBounds(getText(), getFont()), BottomRight-TopLeft, getVerticalAlignment(), getHorizontalAlignment());
+   if(getText() != "" && getFont() != NullFC)
+   {
+	  //Foreground Color
+	  Color4f ForeColor;
+	  if(getEnabled())
+	  {
+		  ForeColor = getForegroundColor();
+	  }
+	  else
+	  {
+		  ForeColor = getDisabledForegroundColor();
+	  }
+	  if(_TextSelectionStart >= _TextSelectionEnd)
+	  {
+	      TheGraphics->drawText(TempPos, getText(), getFont(), ForeColor, getOpacity());
+		  //Draw the caret
+		  TheGraphics->drawLine(TempPos+Pnt2s(TheGraphics->getTextBounds(getText().substr(0, getCaretPosition()), getFont()).x()+ TopLeft.x(), TopLeft.y()),
+	      TempPos + Pnt2s(TheGraphics->getTextBounds(getText().substr(0, getCaretPosition()), getFont()).x()+TopLeft.x(),  TheGraphics->getTextBounds(getText(), getFont()).y()+TopLeft.y()), 
+	      .5, ForeColor, 1.0);
+	  }
+	  else
+	  {
+		  TheGraphics->drawText(TempPos, getText().substr(0, _TextSelectionStart), getFont(), ForeColor, getOpacity());
+		  //Draw Selection
+		  TheGraphics->drawQuad(TempPos+Pnt2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionStart), getFont()).x(), 0),
+			 TempPos + Pnt2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionEnd), getFont()).x(), 0),
+			 TempPos + Pnt2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionEnd), getFont())),
+			 TempPos + Pnt2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionStart), getFont())),
+			  getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(), getOpacity()); 
+		  TheGraphics->drawText(TempPos + Pnt2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionStart), getFont()).x(), 0), 
+			  getText().substr(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart), getFont(), getSelectionTextColor(), getOpacity());
+
+		  //draw end text
+		  TheGraphics->drawText(TempPos + Pnt2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionEnd), getFont()).x(), 0),
+			  getText().substr(_TextSelectionEnd, getText().size()-_TextSelectionEnd), getFont(), ForeColor, getOpacity());
+	   }
+   }
+}
+void TextField::keyTyped(const KeyEvent& e)
+{
+	if(e.getKey() == e.KEY_ENTER)
+	{
+		produceActionPerformed(ActionEvent(TextFieldPtr(this), getTimeStamp()));
+	}
+
+	TextComponent::keyTyped(e);
 }
 
 void TextField::produceActionPerformed(const ActionEvent& e)

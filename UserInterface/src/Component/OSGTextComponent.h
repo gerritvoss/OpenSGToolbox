@@ -43,7 +43,6 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
 #include "OSGTextComponentBase.h"
 #include "Event/OSGTextListener.h"
@@ -81,6 +80,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponent : public TextComponentBase
     /*! \}                                                                 */
     void addTextListener(TextListenerPtr Listener);
     void removeTextListener(TextListenerPtr Listener);
+	
+	virtual void select(const UInt32& index1,
+						const UInt32& index2);
+	virtual void selectAll(void);
+	virtual void setSelectionStart(const UInt32& index);
+	virtual void setSelectionEnd(const UInt32& index);
+	virtual std::string getSelectedText(void)const;
+
+	virtual void keyPressed(const KeyEvent& e);
+	virtual void keyReleased(const KeyEvent& e);
+	virtual void keyTyped(const KeyEvent& e);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -101,6 +112,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponent : public TextComponentBase
     virtual ~TextComponent(void); 
 
     /*! \}                                                                 */
+	UInt32 _TextSelectionStart;
+	UInt32 _TextSelectionEnd;
     
 	typedef std::set<TextListenerPtr> TextListenerSet;
     typedef TextListenerSet::iterator TextListenerSetItor;

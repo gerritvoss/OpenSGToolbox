@@ -73,6 +73,7 @@
 #include "Graphics/UIDrawObjects/OSGDiscUIDrawObject.h"
 #include "Graphics/UIDrawObjects/OSGLineUIDrawObject.h"
 #include "Component/OSGUIDrawObjectCanvas.h"
+#include "Component/OSGTextField.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -587,21 +588,35 @@ void DefaultLookAndFeel::init(void)
 		DefaultRadioButton->setEnabled(true);
 		DefaultRadioButton->setVisible(true);
 		DefaultRadioButton->setConstraints(NullFC);
+
+		//sizes
 		DefaultRadioButton->setMinSize(Vec2s(0, 0));
 		DefaultRadioButton->setMaxSize(Vec2s(32767,32767));
 		DefaultRadioButton->setPreferredSize(Vec2s(100, 100));
+
+		//draw objecs
 		DefaultRadioButton->setDrawObject(defaultRadioDrawObject);
 		DefaultRadioButton->setSelectedDrawObject(defaultSelectedRadioDrawObject);
 		DefaultRadioButton->setActiveDrawObject(defaultActiveRadioDrawObject);
 		DefaultRadioButton->setActiveSelectedDrawObject(defaultActiveSelectedRadioDrawObject);
+
+		//borders
 		DefaultRadioButton->setBorder(DefaultRadioButtonBorder);
 		DefaultRadioButton->setActiveBorder(DefaultRadioButtonBorder);
+
+		//backgrounds
 		DefaultRadioButton->setBackground(DefaultRadioButtonBackground);
 		DefaultRadioButton->setActiveBackground(DefaultRadioButtonBackground);
+
+		//colors
 		DefaultRadioButton->setForegroundColor(Color4f(0.0,0.0, 0.0, 1.0));
 		DefaultRadioButton->setOpacity(1.0);
+
+		//text
 		DefaultRadioButton->setText("");
 		DefaultRadioButton->setFont(DefaultFont);
+
+		//alignment
 		DefaultRadioButton->setVerticalAlignment(VERTICAL_CENTER);
 		DefaultRadioButton->setHorizontalAlignment(HORIZONTAL_CENTER);
 	endEditCP(DefaultRadioButton);
@@ -646,6 +661,55 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(DefaultToggleButton);
 
 	ToggleButton::getClassType().setPrototype(DefaultToggleButton);
+
+	/********Text Field********/
+	ColorUIBackgroundPtr DefaultTextFieldBackground = ColorUIBackground::create();
+	beginEditCP(DefaultTextFieldBackground);
+		DefaultTextFieldBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
+	endEditCP(DefaultTextFieldBackground);
+
+	ColorUIBackgroundPtr DefaultDisabledTextFieldBackground = ColorUIBackground::create();
+	beginEditCP(DefaultDisabledTextFieldBackground);
+		DefaultDisabledTextFieldBackground->setColor(Color4f(.8, .8, .8, 1.0));
+	endEditCP(DefaultDisabledTextFieldBackground);
+
+	BevelBorderPtr DefaultTextFieldBorder = BevelBorder::create();
+	beginEditCP(DefaultTextFieldBorder, BevelBorder::RaisedFieldMask);
+		DefaultTextFieldBorder->setRaised(false);
+		DefaultTextFieldBorder->setWidth(2);
+		DefaultTextFieldBorder->setHighlightInner(Color4f(.9, .9, .9, 1.0));
+		DefaultTextFieldBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultTextFieldBorder->setShadowInner(Color4f(0.65, 0.65, 0.65, 1.0));
+		DefaultTextFieldBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
+	endEditCP(DefaultTextFieldBorder, BevelBorder::RaisedFieldMask);
+
+	TextFieldPtr DefaultTextField = TextField::create();
+	beginEditCP(DefaultTextField);
+		//size
+		DefaultTextField->setMinSize(Vec2s(0, 0));
+		DefaultTextField->setMaxSize(Vec2s(32767,32767));
+		DefaultTextField->setPreferredSize(Vec2s(100, 25));
+
+		//font
+		DefaultTextField->setFont(DefaultFont);
+
+		//background
+		DefaultTextField->setBackground(DefaultTextFieldBackground);
+		DefaultTextField->setDisabledBackground(DefaultDisabledTextFieldBackground);
+
+		//Border
+		DefaultTextField->setBorder(DefaultTextFieldBorder);
+		DefaultTextField->setDisabledBorder(DefaultTextFieldBorder);
+
+		//Color
+		DefaultTextField->setForegroundColor(Color4f(0.0, 0.0, 0.0, 1.0));
+		DefaultTextField->setDisabledForegroundColor(Color4f(.1, .1, .1, 1.0));
+
+	endEditCP(DefaultTextField);
+
+	TextField::getClassType().setPrototype(DefaultTextField);
+
+
 
 	/*******Borders********/
 	/*******Line Border********/
@@ -765,6 +829,7 @@ void DefaultLookAndFeel::init(void)
 		getPrototypes().addValue(DefaultCheckboxButton);
 		getPrototypes().addValue(DefaultRadioButton);
 		getPrototypes().addValue(DefaultToggleButton);
+		getPrototypes().addValue(DefaultTextField);
 	endEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);
 }
 /*-------------------------------------------------------------------------*\
