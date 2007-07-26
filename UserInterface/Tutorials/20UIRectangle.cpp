@@ -133,7 +133,7 @@ int main(int argc, char **argv)
     TheWindowEventProducer->addMouseMotionListener(&mouseMotionListener);
 
    // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(200, 270, 16, 16);
+    NodePtr TorusGeometryNode = makeTorus(90, 270, 16, 16);
 
 
     // Make Main Scene Node
@@ -297,7 +297,7 @@ int main(int argc, char **argv)
     //Make A 3D Rectangle to draw the UI on
     UIRectanglePtr UIRectCore = UIRectangle::create();
     beginEditCP(UIRectCore, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask | UIRectangle::DrawingSurfaceFieldMask);
-        UIRectCore->setPoint(Pnt3f(-250.0,-250.0,70.0));
+        UIRectCore->setPoint(Pnt3f(-250.0,-250.0,370.0));
         UIRectCore->setWidth(500.0);
         UIRectCore->setHeight(500.0);
         UIRectCore->setDrawingSurface(drawingSurface);
