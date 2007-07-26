@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGBUTTON_H_
-#define _OSGBUTTON_H_
+#ifndef _OSGSCROLLBAR_H_
+#define _OSGSCROLLBAR_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,17 +45,21 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGButtonBase.h"
-#include "Util/OSGUIDefines.h"
-#include "Event/OSGActionListener.h"
+#include "OSGScrollBarBase.h"
+#include "OSGBoundedRangeModel.h"
+#include "Event/OSGAdjustmentListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
+/*! \brief ScrollBar class. See \ref 
+           PageUserInterfaceScrollBar for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 {
   private:
 
-    typedef ButtonBase Inherited;
+    typedef ScrollBarBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -76,67 +80,86 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr Graphics) const;
 
-	virtual void mouseClicked(const MouseEvent& e);
-    virtual void mouseEntered(const MouseEvent& e);
-    virtual void mouseExited(const MouseEvent& e);
-    virtual void mousePressed(const MouseEvent& e);
-    virtual void mouseReleased(const MouseEvent& e);
+    void setModel(BoundedRangeModel* Model);
+    BoundedRangeModel* getModel(void) const;
+    
+    void addAdjustmentListener(AdjustmentListenerPtr Listener);
+    void removeAdjustmentListener(AdjustmentListenerPtr Listener);
 
-    void addActionListener(ActionListenerPtr Listener);
-    void removeActionListener(ActionListenerPtr Listener);
+    UInt32 getExtent(void) const;
+    
+    UInt32 getMaximum(void) const;
+    
+    UInt32 getMinimum(void) const;
+    
+    UInt32 getValue(void) const;
+    
+    bool getValueIsAdjusting(void) const;
+    
+    void setExtent(UInt32 newExtent);
+    
+    void setMaximum(UInt32 newMaximum);
+    
+    void setMinimum(UInt32 newMinimum);
+    
+    void setRangeProperties(UInt32 value, UInt32 extent, UInt32 min, UInt32 max, bool adjusting);
+    
+    void setValue(UInt32 newValue);
+    
+    void setValueIsAdjusting(bool Value);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in ButtonBase.
+    // Variables should all be in ScrollBarBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Button(void);
-    Button(const Button &source);
+    ScrollBar(void);
+    ScrollBar(const ScrollBar &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Button(void); 
+    virtual ~ScrollBar(void); 
 
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
     /*! \}                                                                 */
     
+	virtual void drawInternal(const GraphicsPtr Graphics) const;
+
+	typedef std::set<AdjustmentListenerPtr> AdjustmentListenerSet;
+    typedef AdjustmentListenerSet::iterator AdjustmentListenerSetItor;
+    typedef AdjustmentListenerSet::const_iterator AdjustmentListenerSetConstItor;
+	
+    AdjustmentListenerSet       _AdjustmentListeners;
+    void produceAdjustmentValueChanged(const AdjustmentEvent& e);
+
+    BoundedRangeModel* _Model;
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class ButtonBase;
+    friend class ScrollBarBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Button &source);
-	
-	
-	typedef std::set<ActionListenerPtr> ActionListenerSet;
-    typedef ActionListenerSet::iterator ActionListenerSetItor;
-    typedef ActionListenerSet::const_iterator ActionListenerSetConstItor;
-	
-    ActionListenerSet       _ActionListeners;
-	
-    virtual void produceActionPerformed(const ActionEvent& e);
+    void operator =(const ScrollBar &source);
 };
 
-typedef Button *ButtonP;
+typedef ScrollBar *ScrollBarP;
 
 OSG_END_NAMESPACE
 
-#include "OSGButtonBase.inl"
-#include "OSGButton.inl"
+#include "OSGScrollBarBase.inl"
+#include "OSGScrollBar.inl"
 
-#define OSGBUTTON_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGSCROLLBAR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGBUTTON_H_ */
+#endif /* _OSGSCROLLBAR_H_ */
