@@ -138,7 +138,7 @@ ComponentPtr DefaultListCellGenerator::getListCellGeneratorComponent(ListPtr lis
 			endEditCP(TheLabel, Label::BorderFieldMask);
 		}
 	}
-	return Component::Ptr::dcast(deepClone(TheLabel, "Material"));
+	return Component::Ptr::dcast(TheLabel);
 	
 	
 }
