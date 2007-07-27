@@ -55,16 +55,6 @@ SimpleSceneManager *mgr;
 void display(void);
 void reshape(Vec2s Size);
 
-class TextActionListener : public ActionListener
-{
-public:
-
-   virtual void actionPerformed(const ActionEvent& e)
-	{
-		std::cout << "Text Field Action" << std::endl;
-	}
-};
-
 // Initialize WIN32 & OpenSG and set up the scene
 int main(int argc, char **argv)
 {
@@ -115,26 +105,40 @@ int main(int argc, char **argv)
 	/******************************************************
 
 
-		Edit the Button and determine its characteristics
+		Edit the TextField and determine its characteristics.
+		A text field is a component that allows you to enter text
+		into the box via keyboard input.  You can select text by
+		using your mouse or pressing shift and the left and right
+		arrow keys.
 
 
 	******************************************************/
 
-	beginEditCP(textField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::ForegroundColorFieldMask | TextComponent::FontFieldMask);
+	beginEditCP(textField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
+		| Component::ForegroundColorFieldMask | TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask 
+		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
 			// Determine the Minimum and Maximum size that the Component can ever have
 			// due to various Layouts (some change the size of the Components within
-			// the Layouts)
+			// the Layouts) as well as the preferred size
 		textField->setMinSize( Vec2s (50, 25) );
 		textField->setMaxSize( Vec2s (200, 100) );
 		textField->setPreferredSize( Vec2s (100, 50) );
 			// Determine the Font color for the Field
 		textField->setForegroundColor( Color4f(0.0, 0.0, 0.0, 1.0) );
-			// Determine the font
+			// Set the color for selected areas
+		textField->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
+		textField->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
+			// Determine the font and initial text
 		textField->setText("What");
 		textField->setFont(sampleFont);
+			// Set the area that is to be selected at first 
 		textField->setSelectionStart(2);
 		textField->setSelectionEnd(3);
-		endEditCP(textField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::ForegroundColorFieldMask| TextComponent::FontFieldMask );
+			// set the alignment
+		textField->setVerticalAlignment(.3);
+		endEditCP(textField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
+			| Component::ForegroundColorFieldMask| TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask
+			| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
 		
 //	TextActionListener button1AL;
 	
