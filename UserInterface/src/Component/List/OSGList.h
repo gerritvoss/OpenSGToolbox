@@ -56,7 +56,7 @@ class ListModel;
 class ListCellGenerator;
 class ListSelectionModel;
 
-class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelectionListener, public ListDataListener
+class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelectionListener, public ListDataListener, public FocusListener
 {
   private:
 
@@ -64,6 +64,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
 
     /*==========================  PUBLIC  =================================*/
   public:
+
+	//Focus Events
+	virtual void focusGained(const FocusEvent& e);
+	virtual void focusLost(const FocusEvent& e);
 
     //Selection Event
 	virtual void selectionChanged(const ListSelectionEvent& e);

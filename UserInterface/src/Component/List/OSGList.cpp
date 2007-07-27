@@ -89,7 +89,7 @@ void List::selectionChanged(const ListSelectionEvent& e)
 	endEditCP(ListPtr(this), ChildrenFieldMask);
 }
 
-/*void List::focusGained(const FocusEvent& e)
+void List::focusGained(const FocusEvent& e)
 {
 	//Find this component
 	MFComponentPtr::iterator Child = getChildren().find(Component::Ptr::dcast(e.getSource()));
@@ -103,18 +103,12 @@ void List::selectionChanged(const ListSelectionEvent& e)
 				break;
 			}
 		}
-		//Pnt2s Pos = (*Child)->getPosition();
-		//Vec2s Size = (*Child)->getSize();
 		(*Child)->removeFocusListener(this);
 		beginEditCP(ListPtr(this), ChildrenFieldMask);
-			(*Child) = getCellGenerator()->getListCellGeneratorComponent(ListPtr(this),getModel()->getElementAt(index),index,true,true);
+			(*Child) = getCellGenerator()->getListCellGeneratorComponent(ListPtr(this),getModel()->getElementAt(index),index,getSelectionModel()->isSelectedIndex(index),true);
 		endEditCP(ListPtr(this), ChildrenFieldMask);
 		(*Child)->takeFocus();
 		(*Child)->addFocusListener(this);
-		//beginEditCP((*Child), Component::PositionFieldMask | Component::SizeFieldMask);
-		//	(*Child)->setSize(Size);
-		//	(*Child)->setPosition(Pos);
-		//endEditCP((*Child), Component::PositionFieldMask | Component::SizeFieldMask);
 	}
 }
 
@@ -132,20 +126,14 @@ void List::focusLost(const FocusEvent& e)
 				break;
 			}
 		}
-		//Pnt2s Pos = (*Child)->getPosition();
-		//Vec2s Size = (*Child)->getSize();
 		(*Child)->removeFocusListener(this);
 		beginEditCP(ListPtr(this), ChildrenFieldMask);
-			(*Child) = getCellGenerator()->getListCellGeneratorComponent(ListPtr(this),getModel()->getElementAt(index),index,false,false);
+			(*Child) = getCellGenerator()->getListCellGeneratorComponent(ListPtr(this),getModel()->getElementAt(index),index,getSelectionModel()->isSelectedIndex(index),false);
 		endEditCP(ListPtr(this), ChildrenFieldMask);
 
 		(*Child)->addFocusListener(this);
-		//beginEditCP((*Child), Component::PositionFieldMask | Component::SizeFieldMask);
-		//	(*Child)->setSize(Size);
-		//	(*Child)->setPosition(Pos);
-		//endEditCP((*Child), Component::PositionFieldMask | Component::SizeFieldMask);
 	}
-}*/
+}
 
 void List::mousePressed(const MouseEvent& e)
 {
@@ -268,7 +256,7 @@ void List::updateLayout(void)
 				for(UInt32 i(0) ; i<getModel()->getSize() ; ++i )
 				{
 					getChildren().addValue(getCellGenerator()->getListCellGeneratorComponent(ListPtr(this),getModel()->getElementAt(i),i,getSelectionModel()->isSelectedIndex(i),false));
-					//getChildren().getValue(i)->addFocusListener(this);
+					getChildren().getValue(i)->addFocusListener(this);
 				}
 			endEditCP(ListPtr(this), ChildrenFieldMask);
 		}
