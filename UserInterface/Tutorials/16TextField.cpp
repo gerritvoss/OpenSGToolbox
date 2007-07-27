@@ -66,7 +66,7 @@ int main(int argc, char **argv)
     WindowEventProducerPtr TheWindowEventProducer;
     createDefaultWindow(Pnt2s(50,50),
                                         Vec2s(550,550),
-                                        "OpenSG 01Button Window",
+                                        "OpenSG 16TextField Window",
                                         MainWindow,
                                         TheWindowEventProducer);
     

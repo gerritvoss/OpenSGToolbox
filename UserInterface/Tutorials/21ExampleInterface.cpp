@@ -130,7 +130,7 @@ int main(int argc, char **argv)
     WindowEventProducerPtr TheWindowEventProducer;
     createDefaultWindow(Pnt2s(50,50),
                                         Vec2s(550,550),
-                                        "OpenSG 20UIRectangle Window",
+                                        "OpenSG 21ExampleInterface Window",
                                         MainWindow,
                                         TheWindowEventProducer);
     

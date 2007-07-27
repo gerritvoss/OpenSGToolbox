@@ -62,7 +62,7 @@ int main(int argc, char **argv)
     WindowEventProducerPtr TheWindowEventProducer;
     createDefaultWindow(Pnt2s(50,50),
                                         Vec2s(900,900),
-                                        "OpenSG 05FlowLayout Window",
+                                        "OpenSG 14RadioButton Window",
                                         MainWindow,
                                         TheWindowEventProducer);
     
