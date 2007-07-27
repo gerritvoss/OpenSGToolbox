@@ -164,7 +164,7 @@ void BorderLayout::updateLayout(const MFComponentPtr Components,const ComponentP
 				case BorderLayoutConstraints::BORDER_EAST:
 					// set up the size of the button and its extra displacement
 					size[0] = Components.getValue(i)->getPreferredSize().x();
-					offset[0] = borderSize.x()-Components.getValue(i)->getSize().x();
+					offset[0] = borderSize.x()-size.x();
 					if (Components.getValue(i)->getMaxSize().y() < borderSize.y()-(NorthHeight+SouthHeight))
 					{
 						size[1] = Components.getValue(i)->getMaxSize().y();
@@ -179,7 +179,7 @@ void BorderLayout::updateLayout(const MFComponentPtr Components,const ComponentP
 				case BorderLayoutConstraints::BORDER_SOUTH:
 					// set up the size of the button and its extra displacement
 					size[1] = Components.getValue(i)->getPreferredSize().y();
-					offset[1] = borderSize.y()-Components.getValue(i)->getSize().y();
+					offset[1] = borderSize.y()-size[1];
 					if (Components.getValue(i)->getMaxSize().x() < borderSize.x())
 					{
 						size[0] = Components.getValue(i)->getMaxSize().x();
