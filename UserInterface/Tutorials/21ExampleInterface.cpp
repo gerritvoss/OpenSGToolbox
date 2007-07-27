@@ -44,9 +44,25 @@
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
 #include <OpenSG/UserInterface/OSGFont.h>
 
-// Include AbsoluteLayout and AbsoluteLayoutConstraints header files
+// Include relevant header files
 #include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
 #include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
+#include <OpenSG/UserInterface/OSGBoxLayout.h>
+#include <OpenSG/UserInterface/OSGFlowLayout.h>
+#include <OpenSG/UserInterface/OSGGridLayout.h>
+#include <OpenSG/UserInterface/OSGContainer.h>
+#include <OpenSG/UserInterface/OSGPanel.h>
+#include <OpenSG/UserInterface/OSGFrame.h>
+#include <OpenSG/UserInterface/OSGLineBorder.h>
+#include <OpenSG/UserInterface/OSGEmptyBorder.h>
+#include <OpenSG/UserInterface/OSGEtchedBorder.h>
+#include <OpenSG/UserInterface/OSGUIDefines.h>
+#include <OpenSG/UserInterface/OSGColorUIBackground.h>
+#include <OpenSG/UserInterface/OSGGradientUIBackground.h>
+#include <OpenSG/UserInterface/OSGCompoundUIBackground.h>
+#include <OpenSG/UserInterface/OSGLabel.h>
+#include <OpenSG/UserInterface/OSGCheckboxButton.h>
+
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -59,6 +75,13 @@ SimpleSceneManager *mgr;
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2s Size);
+
+// Create functions create Component Panels to make 
+// code easier to read
+ComponentPtr createleftPanelButtonPanel(void);
+ComponentPtr createleftPanelTextPanel(void);
+ComponentPtr createrightPanelButtonPanel(void);
+ComponentPtr createrightPanelCheckPanel(void);
 
 class TutorialMouseListener : public MouseListener
 {
@@ -120,7 +143,7 @@ int main(int argc, char **argv)
     TheWindowEventProducer->addMouseMotionListener(&mouseMotionListener);
 
    // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    NodePtr TorusGeometryNode = makeTorus(90, 270, 16, 16);
 
 
     // Make Main Scene Node
@@ -140,137 +163,132 @@ int main(int argc, char **argv)
 	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
+		
 	/******************************************************
-
-		Create three Button Components (button1, button2,
-		and button3) and their AbsoluteLayoutConstraints.
-
-		AbsoluteLayoutConstraints are used within the 
-		AbsoluteLayout to define where the Components will
-		be placed.  Most other Layouts do not need 
-		Constraints, as they place things within the Layout
-		automatically.
+			
+			Create some Backgrounds
 
 	******************************************************/
+	ColorUIBackgroundPtr greyBackground = osg::ColorUIBackground::create();
+	ColorUIBackgroundPtr button1Color = osg::ColorUIBackground::create();
+	GradientUIBackgroundPtr button1Gradient = osg::GradientUIBackground::create();
+	CompoundUIBackgroundPtr button1Compound = osg::CompoundUIBackground::create();
 
-	ButtonPtr button1 = osg::Button::create();
-	ButtonPtr button2 = osg::Button::create();
-	ButtonPtr button3 = osg::Button::create();
-	
-	AbsoluteLayoutConstraintsPtr buttonConstraints1 = osg::AbsoluteLayoutConstraints::create();
-	AbsoluteLayoutConstraintsPtr buttonConstraints2 = osg::AbsoluteLayoutConstraints::create();
-	AbsoluteLayoutConstraintsPtr buttonConstraints3 = osg::AbsoluteLayoutConstraints::create();
+	beginEditCP(greyBackground, ColorUIBackground::ColorFieldMask);
+		greyBackground->setColor( Color4f(.93,.93,.93,1.0) );
+	endEditCP(greyBackground, ColorUIBackground::ColorFieldMask);
+
 
 	/******************************************************
-
-		Define the AbsoluteLayoutConstraints (where Buttons 
-		are located in the Layout).  setPosition gives you 
-		the location of the Button relative to the Layout
-		manager's upper left hand corner.  Buttons will
-		not display if their AbsoluteLayoutConstraints 
-		place them outside the Frame in which they are to
-		be rendered (the part within the Frame still does
-		display).  Changing the window size shows an 
-		example of this.
+			
+			Create some Borders
 
 	******************************************************/
-  
-   beginEditCP(buttonConstraints1, AbsoluteLayoutConstraints::PositionFieldMask);
-		buttonConstraints1->setPosition( Pnt2s(0,150) );
-   endEditCP(buttonConstraints1, AbsoluteLayoutConstraints::PositionFieldMask);
-
-   beginEditCP(buttonConstraints2, AbsoluteLayoutConstraints::PositionFieldMask);
-		buttonConstraints2->setPosition( Pnt2s(200,200) );
-   endEditCP(buttonConstraints2, AbsoluteLayoutConstraints::PositionFieldMask);
+	LineBorderPtr panelBorder0 = osg::LineBorder::create();
+	EmptyBorderPtr panel1Border = osg::EmptyBorder::create();
+	EmptyBorderPtr panel2Border = osg::EmptyBorder::create();
 	
-   // Note that this will cause the button's position to overlap with Button2
-   // when the program is run; the AbsoluteLayoutConstraints will overlap
-   // if the specified coordinates overlap
-   beginEditCP(buttonConstraints3, AbsoluteLayoutConstraints::PositionFieldMask);
-		buttonConstraints3->setPosition( Pnt2s(150,220) );
-   endEditCP(buttonConstraints3, AbsoluteLayoutConstraints::PositionFieldMask);
+	beginEditCP(panelBorder0, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+		panelBorder0->setColor( Color4f(0.0,0.0,0.0,1.0) );
+		panelBorder0->setWidth(1);
+	endEditCP(panelBorder0, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+
+	beginEditCP(panel1Border, EmptyBorder::TopWidthFieldMask | EmptyBorder::BottomWidthFieldMask | EmptyBorder::LeftWidthFieldMask | EmptyBorder::RightWidthFieldMask);
+		panel1Border->setTopWidth(0);
+		panel1Border->setBottomWidth(6);
+		panel1Border->setLeftWidth(0);
+		panel1Border->setRightWidth(0);
+	beginEditCP(panel1Border, EmptyBorder::TopWidthFieldMask | EmptyBorder::BottomWidthFieldMask | EmptyBorder::LeftWidthFieldMask | EmptyBorder::RightWidthFieldMask);
+	beginEditCP(panel2Border, EmptyBorder::TopWidthFieldMask | EmptyBorder::BottomWidthFieldMask | EmptyBorder::LeftWidthFieldMask | EmptyBorder::RightWidthFieldMask);
+		panel2Border->setTopWidth(0);
+		panel2Border->setBottomWidth(0);
+		panel2Border->setLeftWidth(0);
+		panel2Border->setRightWidth(0);
+	beginEditCP(panel2Border, EmptyBorder::TopWidthFieldMask | EmptyBorder::BottomWidthFieldMask | EmptyBorder::LeftWidthFieldMask | EmptyBorder::RightWidthFieldMask);
+	
 
 	/******************************************************
 
-		Edit Button Components and assign Text,
-		PreferredSize, and AbsoluteLayoutConstraints
+			Create some Labels and stuff to go 
+			with them
 
 	******************************************************/
+	LabelPtr leftPanelLabel1 = osg::Label::create();
+	FontPtr leftPanelLabel1Font = osg::Font::create();
 
-	// Create a simple Font to be used with the Button
-	FontPtr sampleFont = osg::Font::create();
-    beginEditCP(sampleFont, Font::SizeFieldMask | Font::FamilyFieldMask | Font::GapFieldMask | Font::GlyphPixelSizeFieldMask | Font::TextureWidthFieldMask | Font::StyleFieldMask);
-		sampleFont->setFamily("SANS");
-		sampleFont->setGap(1);
-		sampleFont->setGlyphPixelSize(46);
-		sampleFont->setSize(16);
-		//sampleFont->setTextureWidth(0);
-        sampleFont->setStyle(TextFace::STYLE_PLAIN);
-	endEditCP(sampleFont, Font::SizeFieldMask | Font::FamilyFieldMask | Font::GapFieldMask | Font::GlyphPixelSizeFieldMask | Font::TextureWidthFieldMask | Font::StyleFieldMask);
+	beginEditCP(leftPanelLabel1Font, Font::SizeFieldMask);
+		leftPanelLabel1Font->setSize(50);
+	endEditCP(leftPanelLabel1Font, Font::SizeFieldMask);
 
-   beginEditCP(button1, Button::PreferredSizeFieldMask |  Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
-		button1->setPreferredSize(Vec2s(100,50));
-		button1->setSize(Vec2s(100,50));
-		button1->setText("Button 1");
-		
-		// Set the constraints created above to button
-		// to place the Button within the scene
-		button1->setConstraints(buttonConstraints1);
-		button1->setFont(sampleFont);
-	endEditCP(button1, Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
+	beginEditCP(leftPanelLabel1, Component::BackgroundFieldMask | Label::FontFieldMask | Label::TextFieldMask | Component::PreferredSizeFieldMask);
+		leftPanelLabel1->setBackground(greyBackground);
+		leftPanelLabel1->setFont(leftPanelLabel1Font);
+		leftPanelLabel1->setText("Sample Label");
+		leftPanelLabel1->setPreferredSize( Vec2s(300, 100) );
+	endEditCP(leftPanelLabel1, Component::BackgroundFieldMask | Label::FontFieldMask | Label::TextFieldMask | Component::PreferredSizeFieldMask);
 
-    beginEditCP(button2, Button::PreferredSizeFieldMask |  Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
-		button2->setPreferredSize(Vec2s(100,50));
-		button2->setSize(Vec2s(100,50));
-		button2->setText("Button 2");
-		
-		// Set the constraints created above to button2
-		// to place the Button within the scene
-		button2->setConstraints(buttonConstraints2);
-		button2->setFont(sampleFont);
-    endEditCP  (button2, Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
-
-    beginEditCP(button3,  Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::ConstraintsFieldMask);
-		button3->setPreferredSize(Vec2s(100,50));
-		button3->setSize(Vec2s(100,50));
-		button3->setText("Button 3");
-		
-		// Set the constraints created above to button3
-		// to place the Button within the scene
-		button3->setConstraints(buttonConstraints3);
-		button3->setFont(sampleFont);
-    endEditCP  (button3,  Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::ConstraintsFieldMask);
-
-	// Create The Main Frame
-	// Create Background to be used with the Main Frame
-	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
 	
-	LineBorderPtr MainFrameLineBorder = LineBorder::create();
-	beginEditCP(MainFrameLineBorder);
-	MainFrameLineBorder->setColor(Color4f(1.0,0.0,0.0,1.0));
-	MainFrameLineBorder->setWidth(2);
-	endEditCP(MainFrameLineBorder);
+
+	/******************************************************
+
+			Create some Layouts
+
+	******************************************************/
+	BoxLayoutPtr MainFrameLayout = osg::BoxLayout::create();
+	FlowLayoutPtr leftPanelLayout = osg::FlowLayout::create();
+	BoxLayoutPtr rightPanelLayout = osg::BoxLayout::create();
+	beginEditCP(MainFrameLayout, BoxLayout::AlignmentFieldMask);
+		MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
+	endEditCP(MainFrameLayout, BoxLayout::AlignmentFieldMask);
+
+	beginEditCP(leftPanelLayout, FlowLayout::AlignmentFieldMask);
+		leftPanelLayout->setAlignment(HORIZONTAL_ALIGNMENT);
+		leftPanelLayout->setMinorAxisAlignment(AXIS_MAX_ALIGNMENT);
+	endEditCP(leftPanelLayout, FlowLayout::AlignmentFieldMask);
+
+	beginEditCP(rightPanelLayout, BoxLayout::AlignmentFieldMask);
+		rightPanelLayout->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(rightPanelLayout, BoxLayout::AlignmentFieldMask);
+	
+
+	/******************************************************
+
+		Create MainFrame and Panels
+
+	******************************************************/
+	PanelPtr leftPanel = osg::Panel::create();
+	PanelPtr rightPanel = osg::Panel::create();
+
+	//Panel 1 stuff
+	beginEditCP(leftPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+		leftPanel->setPreferredSize( Vec2s(400, 500) );
+		leftPanel->getChildren().addValue(leftPanelLabel1);
+		leftPanel->getChildren().addValue(createleftPanelButtonPanel());
+		leftPanel->getChildren().addValue(createleftPanelTextPanel());
+		leftPanel->setLayout(leftPanelLayout);
+		leftPanel->setBackground(greyBackground);
+		leftPanel->setBorder(panel1Border);
+	endEditCP(leftPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+
+	//Panel 2 stuff
+	beginEditCP(rightPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+		rightPanel->setPreferredSize( Vec2s(200, 620) );
+		rightPanel->getChildren().addValue(createrightPanelButtonPanel());
+		rightPanel->getChildren().addValue(createrightPanelCheckPanel());
+		rightPanel->setLayout(rightPanelLayout);
+		rightPanel->setBackground(greyBackground);
+		rightPanel->setBorder(panel2Border);
+	endEditCP(rightPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+	
+	
 
 	FramePtr MainFrame = osg::Frame::create();
-	LayoutPtr MainFrameLayout = osg::AbsoluteLayout::create();
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-	   // Add the buttons to the mainframe so they will be displayed.
-	   // They are displayed in reverse order, so in this case, since button2
-	   // and button3 are in conflict with their locations, button2 will cover 
-	   // button3.  By commenting out their addValue commands and uncommenting 
-	   // the other two, this will be reversed.
-	   MainFrame->getChildren().addValue(button1);
-	   MainFrame->getChildren().addValue(button3);
-	   MainFrame->getChildren().addValue(button2);
-	   // MainFrame->getChildren().addValue(button2);
-	   // MainFrame->getChildren().addValue(button3);
+	   MainFrame->setBorder(panelBorder0);
+	   MainFrame->getChildren().addValue(leftPanel);
+	   MainFrame->getChildren().addValue(rightPanel);
 	   MainFrame->setLayout(MainFrameLayout);
-	   MainFrame->setBackground(mainBackground);
-	   MainFrame->setBorder(MainFrameLineBorder);
-	 
+	   MainFrame->setBackground(greyBackground); 
     endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
 	//Create the Drawing Surface
@@ -283,12 +301,12 @@ int main(int argc, char **argv)
 	
     //Make A 3D Rectangle to draw the UI on
     UIRectanglePtr UIRectCore = UIRectangle::create();
-    beginEditCP(UIRectCore, UIRectangle::PointFieldMask | UIRectangle::Side1FieldMask | UIRectangle::Side2FieldMask | UIRectangle::DrawingSurfaceFieldMask);
-        UIRectCore->setPoint(Pnt3f(0.0,0.0,0.0));
-        UIRectCore->setSide1(Vec3f(500.0,0.0,0.0));
-        UIRectCore->setSide2(Vec3f(0.0,500.0,0.0));
+    beginEditCP(UIRectCore, UIRectangle::PointFieldMask | UIRectangle::DrawingSurfaceFieldMask);
+        UIRectCore->setPoint(Pnt3f(0.0,0.0,370.0));
+        UIRectCore->setWidth(620);
+        UIRectCore->setHeight(620);
         UIRectCore->setDrawingSurface(drawingSurface);
-	endEditCP(UIRectCore, UIRectangle::PointFieldMask | UIRectangle::Side1FieldMask | UIRectangle::Side2FieldMask | UIRectangle::DrawingSurfaceFieldMask);
+	endEditCP(UIRectCore, UIRectangle::PointFieldMask | UIRectangle::DrawingSurfaceFieldMask);
 	
     NodePtr UIRectNode = osg::Node::create();
     beginEditCP(UIRectNode, Node::CoreFieldMask);
@@ -329,4 +347,260 @@ void display(void)
 void reshape(Vec2s Size)
 {
     mgr->resize(Size.x(), Size.y());
+}
+
+
+ComponentPtr createleftPanelButtonPanel(void)
+
+{
+
+
+
+	// Create and edit the Panel buttons
+	ButtonPtr leftPanelButton1 = osg::Button::create();
+	ButtonPtr leftPanelButton2 = osg::Button::create();
+	ButtonPtr leftPanelButton3 = osg::Button::create();
+	ButtonPtr leftPanelButton4 = osg::Button::create();
+	ButtonPtr leftPanelButton5 = osg::Button::create();
+	ButtonPtr leftPanelButton6 = osg::Button::create();
+
+	beginEditCP(leftPanelButton1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+		leftPanelButton1->setText("button1");
+		leftPanelButton1->setPreferredSize( Vec2s(100,50) );
+	endEditCP(leftPanelButton1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+	
+	beginEditCP(leftPanelButton2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+		leftPanelButton2->setText("button2");
+		leftPanelButton2->setPreferredSize( Vec2s(100,50) );
+	endEditCP(leftPanelButton2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+
+	beginEditCP(leftPanelButton3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+		leftPanelButton3->setText("button3");
+		leftPanelButton3->setPreferredSize( Vec2s(100,50) );
+	endEditCP(leftPanelButton3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+
+	beginEditCP(leftPanelButton4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+		leftPanelButton4->setText("button4");
+		leftPanelButton4->setPreferredSize( Vec2s(100,50) );
+	endEditCP(leftPanelButton4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+
+	beginEditCP(leftPanelButton5, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+		leftPanelButton5->setText("button5");
+		leftPanelButton5->setPreferredSize( Vec2s(100,50) );
+	endEditCP(leftPanelButton5, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+	
+	beginEditCP(leftPanelButton6, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+		leftPanelButton6->setText("button6");
+		leftPanelButton6->setPreferredSize( Vec2s(100,50) );
+	endEditCP(leftPanelButton6, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+	
+
+	// Create and edit Panel layout
+	BoxLayoutPtr leftPanelButtonPanelLayout = osg::BoxLayout::create();
+	beginEditCP(leftPanelButtonPanelLayout, BoxLayout::AlignmentFieldMask);
+		leftPanelButtonPanelLayout->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(leftPanelButtonPanelLayout, BoxLayout::AlignmentFieldMask);
+
+	// Create an edit Panel Background
+	ColorUIBackgroundPtr leftPanelButtonPanelBackground = osg::ColorUIBackground::create();
+	beginEditCP(leftPanelButtonPanelBackground, ColorUIBackground::ColorFieldMask);
+		leftPanelButtonPanelBackground->setColor( Color4f(0.93,0.93,0.93,1.0) );
+	endEditCP(leftPanelButtonPanelBackground, ColorUIBackground::ColorFieldMask);
+
+	// Create Panel Border
+	LineBorderPtr panelBorder = osg::LineBorder::create();
+	beginEditCP(panelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+		panelBorder->setColor( Color4f(0.0,0.0,0.0,1.0) );
+		panelBorder->setWidth(1);
+	endEditCP(panelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+
+	// Create and edit Panel
+	PanelPtr leftPanelButtonPanel = osg::Panel::create();
+	beginEditCP(leftPanelButtonPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+		leftPanelButtonPanel->setPreferredSize( Vec2s(180, 500) );
+		leftPanelButtonPanel->getChildren().addValue(leftPanelButton1);
+		leftPanelButtonPanel->getChildren().addValue(leftPanelButton2);
+		leftPanelButtonPanel->getChildren().addValue(leftPanelButton3);
+		leftPanelButtonPanel->getChildren().addValue(leftPanelButton4);
+		leftPanelButtonPanel->getChildren().addValue(leftPanelButton5);
+		leftPanelButtonPanel->getChildren().addValue(leftPanelButton6);
+		leftPanelButtonPanel->setLayout(leftPanelButtonPanelLayout);
+		leftPanelButtonPanel->setBackground(leftPanelButtonPanelBackground);
+		leftPanelButtonPanel->setBorder(panelBorder);
+	endEditCP(leftPanelButtonPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+
+	return leftPanelButtonPanel;
+}
+
+
+
+ComponentPtr createleftPanelTextPanel(void)
+{
+
+
+// Create and edit the Panel Text areas
+
+	// Create and edit Panel layout
+	FlowLayoutPtr leftPanelTextPanelLayout = osg::FlowLayout::create();
+	/*beginEditCP(leftPanelTextPanelLayout, GridLayout::RowsFieldMask | GridLayout::ColumnsFieldMask);
+		leftPanelTextPanelLayout->setRows(2);
+		leftPanelTextPanelLayout->setColumns(1);
+	endEditCP(leftPanelTextPanelLayout, GridLayout::RowsFieldMask | GridLayout::ColumnsFieldMask);
+	*/
+	ButtonPtr test1 = osg::Button::create();
+	ButtonPtr test2 = osg::Button::create();
+	
+	// Create an edit Panel Background
+	ColorUIBackgroundPtr leftPanelTextPanelBackground = osg::ColorUIBackground::create();
+	beginEditCP(leftPanelTextPanelBackground, ColorUIBackground::ColorFieldMask);
+		leftPanelTextPanelBackground->setColor( Color4f(0.93,0.93,0.93,1.0) );
+	endEditCP(leftPanelTextPanelBackground, ColorUIBackground::ColorFieldMask);
+
+	// Create Panel Border
+	LineBorderPtr panelBorder1 = osg::LineBorder::create();
+	beginEditCP(panelBorder1, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+		panelBorder1->setColor( Color4f(0.0,0.0,0.0,1.0) );
+		panelBorder1->setWidth(1);
+	endEditCP(panelBorder1, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+
+	// Create and edit Panel
+	PanelPtr leftPanelTextPanel = osg::Panel::create();
+	beginEditCP(leftPanelTextPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+		leftPanelTextPanel->setPreferredSize( Vec2s(180, 500) );
+		leftPanelTextPanel->getChildren().addValue(test1);
+		leftPanelTextPanel->getChildren().addValue(test2);
+		leftPanelTextPanel->setLayout(leftPanelTextPanelLayout);
+		leftPanelTextPanel->setBackground(leftPanelTextPanelBackground);
+		leftPanelTextPanel->setBorder(panelBorder1);
+	endEditCP(leftPanelTextPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+
+	return leftPanelTextPanel;
+}
+
+ComponentPtr createrightPanelButtonPanel(void)
+{
+	// Create and edit the Panel Buttons
+	ButtonPtr rightPanelButton1 = osg::Button::create();
+	ButtonPtr rightPanelButton2 = osg::Button::create();
+	ButtonPtr rightPanelButton3 = osg::Button::create();
+	ButtonPtr rightPanelButton4 = osg::Button::create();
+
+	beginEditCP(rightPanelButton1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+		rightPanelButton1->setText("r button1");
+		rightPanelButton1->setPreferredSize( Vec2s(100,50) );
+	endEditCP(rightPanelButton1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+	
+	beginEditCP(rightPanelButton2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+		rightPanelButton2->setText("r button2");
+		rightPanelButton2->setPreferredSize( Vec2s(100,50) );
+	endEditCP(rightPanelButton2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+
+	beginEditCP(rightPanelButton3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+		rightPanelButton3->setText("r button3");
+		rightPanelButton3->setPreferredSize( Vec2s(100,50) );
+	endEditCP(rightPanelButton3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+
+	beginEditCP(rightPanelButton4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+		rightPanelButton4->setText("r button4");
+		rightPanelButton4->setPreferredSize( Vec2s(100,50) );
+	endEditCP(rightPanelButton4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+
+
+	// Create an edit Panel Background
+	ColorUIBackgroundPtr rightPanelButtonPanelBackground = osg::ColorUIBackground::create();
+	beginEditCP(rightPanelButtonPanelBackground, ColorUIBackground::ColorFieldMask);
+		rightPanelButtonPanelBackground->setColor( Color4f(0.93,0.93,0.93,1.0) );
+	endEditCP(rightPanelButtonPanelBackground, ColorUIBackground::ColorFieldMask);
+
+	// Create and edit Panel layout
+	BoxLayoutPtr rightPanelButtonPanelLayout = osg::BoxLayout::create();
+	beginEditCP(rightPanelButtonPanelLayout, BoxLayout::AlignmentFieldMask);
+		rightPanelButtonPanelLayout->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(rightPanelButtonPanelLayout, BoxLayout::AlignmentFieldMask);
+
+	// Create Panel Border
+	LineBorderPtr panelBorder2 = osg::LineBorder::create();
+	beginEditCP(panelBorder2, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+		panelBorder2->setColor( Color4f(0.0,0.0,0.0,1.0) );
+		panelBorder2->setWidth(1);
+	endEditCP(panelBorder2, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+
+	// Create and edit Panel
+	PanelPtr rightPanelButtonPanel = osg::Panel::create();
+	beginEditCP(rightPanelButtonPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+		rightPanelButtonPanel->setPreferredSize( Vec2s(200, 300) );
+		rightPanelButtonPanel->getChildren().addValue(rightPanelButton1);
+		rightPanelButtonPanel->getChildren().addValue(rightPanelButton2);
+		rightPanelButtonPanel->getChildren().addValue(rightPanelButton3);
+		rightPanelButtonPanel->getChildren().addValue(rightPanelButton4);
+		rightPanelButtonPanel->setLayout(rightPanelButtonPanelLayout);
+		rightPanelButtonPanel->setBackground(rightPanelButtonPanelBackground);
+		rightPanelButtonPanel->setBorder(panelBorder2);
+	endEditCP(rightPanelButtonPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+
+	return rightPanelButtonPanel;
+
+}
+ComponentPtr createrightPanelCheckPanel(void)
+{
+	// Create and edit the CheckBoxes
+	CheckboxButtonPtr rightPanelCheck1 = osg::CheckboxButton::create();
+	CheckboxButtonPtr rightPanelCheck2 = osg::CheckboxButton::create();
+	CheckboxButtonPtr rightPanelCheck3 = osg::CheckboxButton::create();
+	CheckboxButtonPtr rightPanelCheck4 = osg::CheckboxButton::create();
+
+	beginEditCP(rightPanelCheck1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+		rightPanelCheck1->setText("check1");
+		rightPanelCheck1->setPreferredSize( Vec2s(100,50) );
+	endEditCP(rightPanelCheck1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+	
+	beginEditCP(rightPanelCheck2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+		rightPanelCheck2->setText("check2");
+		rightPanelCheck2->setPreferredSize( Vec2s(100,50) );
+	endEditCP(rightPanelCheck2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+
+	beginEditCP(rightPanelCheck3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+		rightPanelCheck3->setText("check3");
+		rightPanelCheck3->setPreferredSize( Vec2s(100,50) );
+	endEditCP(rightPanelCheck3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+
+	beginEditCP(rightPanelCheck4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+		rightPanelCheck4->setText("check4");
+		rightPanelCheck4->setPreferredSize( Vec2s(100,50) );
+	endEditCP(rightPanelCheck4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
+
+
+	// Create an edit Panel Background
+	ColorUIBackgroundPtr rightPanelCheckPanelBackground = osg::ColorUIBackground::create();
+	beginEditCP(rightPanelCheckPanelBackground, ColorUIBackground::ColorFieldMask);
+		rightPanelCheckPanelBackground->setColor( Color4f(0.93,0.93,0.93,1.0) );
+	endEditCP(rightPanelCheckPanelBackground, ColorUIBackground::ColorFieldMask);
+
+	// Create and edit Panel layout
+	BoxLayoutPtr rightPanelCheckPanelLayout = osg::BoxLayout::create();
+	beginEditCP(rightPanelCheckPanelLayout, BoxLayout::AlignmentFieldMask);
+		rightPanelCheckPanelLayout->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(rightPanelCheckPanelLayout, BoxLayout::AlignmentFieldMask);
+
+	// Create Panel Border
+	LineBorderPtr panelBorder3 = osg::LineBorder::create();
+	beginEditCP(panelBorder3, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+		panelBorder3->setColor( Color4f(0.0,0.0,0.0,1.0) );
+		panelBorder3->setWidth(1);
+	endEditCP(panelBorder3, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+
+	// Create and edit Panel
+	PanelPtr rightPanelCheckPanel = osg::Panel::create();
+	beginEditCP(rightPanelCheckPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+		rightPanelCheckPanel->setPreferredSize( Vec2s(200, 300) );
+		rightPanelCheckPanel->getChildren().addValue(rightPanelCheck1);
+		rightPanelCheckPanel->getChildren().addValue(rightPanelCheck2);
+		rightPanelCheckPanel->getChildren().addValue(rightPanelCheck3);
+		rightPanelCheckPanel->getChildren().addValue(rightPanelCheck4);
+		rightPanelCheckPanel->setLayout(rightPanelCheckPanelLayout);
+		rightPanelCheckPanel->setBackground(rightPanelCheckPanelBackground);
+		rightPanelCheckPanel->setBorder(panelBorder3);
+	endEditCP(rightPanelCheckPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+
+	return rightPanelCheckPanel;
 }

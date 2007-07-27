@@ -94,9 +94,10 @@ int main(int argc, char **argv)
 	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
-	// Create a Button component
+	// Create a TextField component
 	TextFieldPtr textField = osg::TextField::create();
-	// Create a simple Font to be used with the Button
+
+	// Create a simple Font to be used with the TextField
 	FontPtr sampleFont = osg::Font::create();
     beginEditCP(sampleFont, Font::SizeFieldMask | Font::FamilyFieldMask | Font::GapFieldMask | Font::GlyphPixelSizeFieldMask | Font::TextureWidthFieldMask | Font::StyleFieldMask);
 		sampleFont->setSize(16);
@@ -117,15 +118,10 @@ int main(int argc, char **argv)
 	beginEditCP(textField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
 		| Component::ForegroundColorFieldMask | TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask 
 		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
-			// Determine the Minimum and Maximum size that the Component can ever have
-			// due to various Layouts (some change the size of the Components within
-			// the Layouts) as well as the preferred size
-		textField->setMinSize( Vec2s (50, 25) );
-		textField->setMaxSize( Vec2s (200, 100) );
 		textField->setPreferredSize( Vec2s (100, 50) );
 			// Determine the Font color for the Field
 		textField->setForegroundColor( Color4f(0.0, 0.0, 0.0, 1.0) );
-			// Set the color for selected areas
+			// Determine the Box Color and the Selection Color
 		textField->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
 		textField->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
 			// Determine the font and initial text
@@ -134,7 +130,10 @@ int main(int argc, char **argv)
 			// Set the area that is to be selected at first 
 		textField->setSelectionStart(2);
 		textField->setSelectionEnd(3);
-			// set the alignment
+			// Set the initial alignment of the Text
+			// from the top (top of the Text will be
+			// 30% of the way down from the top of the
+			// TextField
 		textField->setVerticalAlignment(.3);
 		endEditCP(textField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
 			| Component::ForegroundColorFieldMask| TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask
