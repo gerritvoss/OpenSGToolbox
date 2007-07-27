@@ -79,9 +79,16 @@ void Frame::keyPressed(const KeyEvent& e)
 {
 	//Send Key event to Component that has Focus
 	//If there is not Focused Component then do nothing
-	if(getFocusedComponent() != NullFC)
+	if(getFocusedComponent() != NullFC &&
+	   getFocusedComponent() != ComponentPtr(this))
 	{
 		getFocusedComponent()->keyPressed(e);
+		ContainerPtr ParentContainer(getFocusedComponent()->getParentContainer());
+		while(ParentContainer != NullFC &&
+			ParentContainer != ContainerPtr(this))
+		{
+			ParentContainer->keyPressed(e);
+		}
 	}
 }
 
@@ -89,9 +96,16 @@ void Frame::keyReleased(const KeyEvent& e)
 {
 	//Send Key event to Component that has Focus
 	//If there is not Focused Component then do nothing
-	if(getFocusedComponent() != NullFC)
+	if(getFocusedComponent() != NullFC &&
+	   getFocusedComponent() != ComponentPtr(this))
 	{
 		getFocusedComponent()->keyReleased(e);
+		ContainerPtr ParentContainer(getFocusedComponent()->getParentContainer());
+		while(ParentContainer != NullFC &&
+			ParentContainer != ContainerPtr(this))
+		{
+			ParentContainer->keyReleased(e);
+		}
 	}
 }
 
@@ -99,9 +113,16 @@ void Frame::keyTyped(const KeyEvent& e)
 {
 	//Send Key event to Component that has Focus
 	//If there is not Focused Component then do nothing
-	if(getFocusedComponent() != NullFC)
+	if(getFocusedComponent() != NullFC &&
+	   getFocusedComponent() != ComponentPtr(this))
 	{
 		getFocusedComponent()->keyTyped(e);
+		ContainerPtr ParentContainer(getFocusedComponent()->getParentContainer());
+		while(ParentContainer != NullFC &&
+			ParentContainer != ContainerPtr(this))
+		{
+			ParentContainer->keyTyped(e);
+		}
 	}
 }
 
