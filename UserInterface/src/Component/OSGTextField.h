@@ -81,9 +81,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
     /*! \}*/
 
 	virtual void keyTyped(const KeyEvent& e);
+	virtual void mouseEntered(const MouseEvent& e);
+    virtual void mouseExited(const MouseEvent& e);
 
     void addActionListener(ActionListenerPtr Listener);
     void removeActionListener(ActionListenerPtr Listener);
+
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 

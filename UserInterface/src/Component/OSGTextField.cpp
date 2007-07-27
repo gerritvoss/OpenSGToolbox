@@ -52,6 +52,11 @@
 
 #include "OSGTextField.h"
 
+
+#include "Component/OSGFrame.h"
+#include "UIDrawingSurface/OSGUIDrawingSurface.h"
+#include <OpenSG/Input/OSGWindowEventProducer.h>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -84,26 +89,23 @@ void TextField::drawInternal(const GraphicsPtr TheGraphics) const
    Pnt2s TopLeft, BottomRight;
    Pnt2s TempPos;
    getInsideBorderBounds(TopLeft, BottomRight);
-   TempPos = calculateAlignment(TopLeft, TheGraphics->getTextBounds(getText(), getFont()), BottomRight-TopLeft, getVerticalAlignment(), getHorizontalAlignment());
-   if(getText() != "" && getFont() != NullFC)
+   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, TheGraphics->getTextBounds(getText(), getFont()), getVerticalAlignment(), 0.0);
+  //Foreground Color
+  Color4f ForeColor;
+  if(getEnabled())
+  {
+	  ForeColor = getForegroundColor();
+  }
+  else
+  {
+	  ForeColor = getDisabledForegroundColor();
+  }
+  if(getText() != "" && getFont() != NullFC)
    {
-	  //Foreground Color
-	  Color4f ForeColor;
-	  if(getEnabled())
-	  {
-		  ForeColor = getForegroundColor();
-	  }
-	  else
-	  {
-		  ForeColor = getDisabledForegroundColor();
-	  }
+
 	  if(_TextSelectionStart >= _TextSelectionEnd)
 	  {
 	      TheGraphics->drawText(TempPos, getText(), getFont(), ForeColor, getOpacity());
-		  //Draw the caret
-		  TheGraphics->drawLine(TempPos+Pnt2s(TheGraphics->getTextBounds(getText().substr(0, getCaretPosition()), getFont()).x()+ TopLeft.x(), TopLeft.y()),
-	      TempPos + Pnt2s(TheGraphics->getTextBounds(getText().substr(0, getCaretPosition()), getFont()).x()+TopLeft.x(),  TheGraphics->getTextBounds(getText(), getFont()).y()+TopLeft.y()), 
-	      .5, ForeColor, 1.0);
 	  }
 	  else
 	  {
@@ -122,6 +124,13 @@ void TextField::drawInternal(const GraphicsPtr TheGraphics) const
 			  getText().substr(_TextSelectionEnd, getText().size()-_TextSelectionEnd), getFont(), ForeColor, getOpacity());
 	   }
    }
+   if(_TextSelectionStart>=_TextSelectionEnd)
+   {
+   		  //Draw the caret
+		  TheGraphics->drawLine(TempPos+Pnt2s(TheGraphics->getTextBounds(getText().substr(0, getCaretPosition()), getFont()).x(), 0),
+	      TempPos + Pnt2s(TheGraphics->getTextBounds(getText().substr(0, getCaretPosition()), getFont()).x(),  TheGraphics->getTextBounds(getText(), getFont()).y()), 
+	      .5, ForeColor, 1.0);
+   }
 }
 void TextField::keyTyped(const KeyEvent& e)
 {
@@ -131,6 +140,23 @@ void TextField::keyTyped(const KeyEvent& e)
 	}
 
 	TextComponent::keyTyped(e);
+}
+
+void TextField::mouseEntered(const MouseEvent& e)
+{
+	if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&&getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+	{
+		getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_I_BEAM);
+	}
+	TextComponent::mouseEntered(e);
+}
+void TextField::mouseExited(const MouseEvent& e)
+{
+	if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!= NullFC && getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+	{
+		getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
+	}
+	TextComponent::mouseExited(e);
 }
 
 void TextField::produceActionPerformed(const ActionEvent& e)

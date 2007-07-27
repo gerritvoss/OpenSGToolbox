@@ -48,6 +48,9 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGTextComponent.h"
+#include "UIDrawingSurface/OSGUIDrawingSurface.h"
+#include <OpenSG/Input/OSGWindowEventProducer.h>
+
 
 OSG_BEGIN_NAMESPACE
 
@@ -169,10 +172,14 @@ std::string TextComponent::getSelectedText(void) const
 
 void TextComponent::keyPressed(const KeyEvent& e)
 {
+
 }
+
 void TextComponent::keyReleased(const KeyEvent& e)
 {
+
 }
+
 void TextComponent::keyTyped(const KeyEvent& e)
 {
 
@@ -250,9 +257,30 @@ void TextComponent::keyTyped(const KeyEvent& e)
 			_TextSelectionEnd = _TextSelectionStart;
 		}
 	}
+	
 	if(e.getKey()== e.KEY_RIGHT ||e.getKey()== e.KEY_KEYPAD_RIGHT)
 	{
-		if(_TextSelectionEnd > _TextSelectionStart)
+		if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&&getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC 
+			&& getParentFrame()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+		{
+			if(_TextSelectionEnd > _TextSelectionStart && _TextSelectionEnd < getText().size() && getCaretPosition()>_TextSelectionStart)
+			{
+				setCaretPosition(getCaretPosition()+1);
+				_TextSelectionEnd=getCaretPosition();
+			}
+			else if(_TextSelectionEnd >_TextSelectionStart && _TextSelectionEnd <= getText().size()&& getCaretPosition() < getText().size())
+			{
+				setCaretPosition(getCaretPosition()+1);
+				_TextSelectionStart = getCaretPosition();
+			}
+			else if(getCaretPosition()< getText().size() && _TextSelectionEnd <=_TextSelectionStart )
+			{
+				_TextSelectionStart = getCaretPosition();
+				setCaretPosition(getCaretPosition()+1);
+				_TextSelectionEnd = getCaretPosition();
+			}
+		}
+		else if(_TextSelectionEnd > _TextSelectionStart)
 		{
 			//Caret is now the end of the selection
 			setCaretPosition(_TextSelectionEnd);
@@ -263,12 +291,33 @@ void TextComponent::keyTyped(const KeyEvent& e)
 			//increment the caret position
 			setCaretPosition(getCaretPosition()+1);
 			_TextSelectionStart = getCaretPosition();
-			_TextSelectionEnd = _TextSelectionStart;
+			_TextSelectionEnd = getCaretPosition();
 		}
 	}
 	if(e.getKey()== e.KEY_LEFT||e.getKey()== e.KEY_KEYPAD_LEFT)
 	{
-		if(_TextSelectionEnd > _TextSelectionStart)
+
+		if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&&getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC
+			&& getParentFrame()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+		{
+			if(_TextSelectionEnd >_TextSelectionStart && _TextSelectionEnd <= getText().size() && getCaretPosition()>_TextSelectionStart && getCaretPosition()>0)
+			{
+				setCaretPosition(getCaretPosition()-1);
+				_TextSelectionEnd=getCaretPosition();
+			}
+			else if(_TextSelectionEnd >_TextSelectionStart && _TextSelectionEnd <= getText().size()&& getCaretPosition()>0)
+			{
+				setCaretPosition(getCaretPosition()-1);
+				_TextSelectionStart = getCaretPosition();
+			}
+			else if(_TextSelectionEnd <=_TextSelectionStart && getCaretPosition()>0 )
+			{
+				_TextSelectionEnd = getCaretPosition();
+				setCaretPosition(getCaretPosition()-1);
+				_TextSelectionStart = getCaretPosition();
+			}
+		}
+		else if(_TextSelectionEnd > _TextSelectionStart)
 		{
 			//Caret is now the start of the selection
 			setCaretPosition(_TextSelectionStart);
