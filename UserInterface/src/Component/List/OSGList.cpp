@@ -159,14 +159,15 @@ void List::mousePressed(const MouseEvent& e)
 					}
 					else if(getParentFrame()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 					{
-						if(getSelectionModel()->isSelectedIndex(i))
-						{
-						   getSelectionModel()->removeSelectionInterval(i, i);
-						}
-						else
-						{
-						   getSelectionModel()->addSelectionInterval(i, i);
-						}
+						getSelectionModel()->removeSelectionInterval(i,i);
+						//if(getSelectionModel()->isSelectedIndex(i))
+						//{
+						//   getSelectionModel()->removeSelectionInterval(i, i);
+						//}
+						//else
+						//{
+						//   getSelectionModel()->addSelectionInterval(i, i);
+						//}
 					}
 					else
 					{

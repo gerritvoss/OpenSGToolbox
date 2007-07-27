@@ -103,7 +103,7 @@ int main(int argc, char **argv)
 	SFString StrField3;
 	StrField3.setValue("Blue");
 	Model.pushBack(&StrField3);
-	/*SFString StrField4;
+	SFString StrField4;
 	StrField4.setValue("Orange");
 	Model.pushBack(&StrField4);
 	SFString StrField5;
@@ -112,7 +112,7 @@ int main(int argc, char **argv)
 	SFString StrField6;
 	StrField6.setValue("Purple");
 	Model.pushBack(&StrField6);
-	Model.pushBack(&StrField6);
+	/*Model.pushBack(&StrField6);
 	Model.pushBack(&StrField6);
 	Model.pushBack(&StrField6);
 	Model.pushBack(&StrField6);
@@ -140,6 +140,8 @@ int main(int argc, char **argv)
 	list->setModel(&Model);
 	list->setCellGenerator(&CellGenerator);
 	list->setSelectionModel(&SelectionModel);
+
+	SelectionModel.setMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
 	
 
 	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
