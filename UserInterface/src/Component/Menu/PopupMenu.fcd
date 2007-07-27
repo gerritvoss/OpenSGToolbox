@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="PopupMenu"
+	parent="Component"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI Menu.
+	<Field
+		name="Items"
+		type="MenuItemPtr"
+		cardinality="multi"
+		visibility="external"
+		header="Component/Menu/OSGMenuItem.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="SubMenuDelay"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.5"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Selected"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="false"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="TopLevelMenu"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="false"
+		access="public"
+	>
+	</Field>
+</FieldContainer>
