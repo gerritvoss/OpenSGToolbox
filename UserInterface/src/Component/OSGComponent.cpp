@@ -235,15 +235,24 @@ void Component::updateClipBounds(void)
 		//Get Parent Container's Clip Bounds
 		Pnt2s ContainerClipTopLeft, ContainerClipBottomRight;
 		Container::Ptr::dcast(getParentContainer())->getClipBounds(ContainerClipTopLeft,ContainerClipBottomRight);
-		ContainerClipTopLeft -= Vec2s(Container::Ptr::dcast(getParentContainer())->getLeftInset(), Container::Ptr::dcast(getParentContainer())->getTopInset());
-		ContainerClipBottomRight -= Vec2s(Container::Ptr::dcast(getParentContainer())->getLeftInset(), Container::Ptr::dcast(getParentContainer())->getTopInset());
-
 		
+        //Parent Container's Clip Bounds are in the Parent Container's Coordinate space
+        //We need to convert them to the Parent Container's Inset Coordinate space
+        UInt16 Left(0),Right(0),Top,Bottom(0);
+        if(getParentContainer() != NullFC &&
+           getParentContainer()->getBorder() != NullFC)
+        {
+           getParentContainer()->getBorder()->getInsets(Left,Right,Top,Bottom);
+        }
+		
+        ContainerClipTopLeft -= Vec2s(Container::Ptr::dcast(getParentContainer())->getLeftInset()+Left, Container::Ptr::dcast(getParentContainer())->getTopInset()+Top);
+		ContainerClipBottomRight -= Vec2s(Container::Ptr::dcast(getParentContainer())->getLeftInset()+Left, Container::Ptr::dcast(getParentContainer())->getTopInset()+Top);
+
 		//Get Parent Container's Inset Bounds
 		Pnt2s ContainerInsetTopLeft, ContainerInsetBottomRight;
 		Container::Ptr::dcast(getParentContainer())->getInsideInsetsBounds(ContainerInsetTopLeft, ContainerInsetBottomRight);
-		ContainerInsetTopLeft -= Vec2s(Container::Ptr::dcast(getParentContainer())->getLeftInset(), Container::Ptr::dcast(getParentContainer())->getTopInset());
-		ContainerInsetBottomRight -= Vec2s(Container::Ptr::dcast(getParentContainer())->getLeftInset(), Container::Ptr::dcast(getParentContainer())->getTopInset());
+		ContainerInsetTopLeft -= Vec2s(Container::Ptr::dcast(getParentContainer())->getLeftInset()+Left, Container::Ptr::dcast(getParentContainer())->getTopInset()+Top);
+		ContainerInsetBottomRight -= Vec2s(Container::Ptr::dcast(getParentContainer())->getLeftInset()+Left, Container::Ptr::dcast(getParentContainer())->getTopInset()+Top);
 		
 		//Get the intersection of my bounds with my parent containers clip bounds
 		quadIntersection(MyTopLeft,MyBottomRight,
