@@ -111,24 +111,24 @@ void TextField::drawInternal(const GraphicsPtr TheGraphics) const
 	  {
 		  TheGraphics->drawText(TempPos, getText().substr(0, _TextSelectionStart), getFont(), ForeColor, getOpacity());
 		  //Draw Selection
-		  TheGraphics->drawQuad(TempPos+Pnt2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionStart), getFont()).x(), 0),
-			 TempPos + Pnt2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionEnd), getFont()).x(), 0),
-			 TempPos + Pnt2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionEnd), getFont())),
-			 TempPos + Pnt2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionStart), getFont())),
+		  TheGraphics->drawQuad(TempPos + Vec2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionStart), getFont()).x(), 0),
+			 TempPos + Vec2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionEnd), getFont()).x(), 0),
+			 TempPos + Vec2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionEnd), getFont())),
+			 TempPos + Vec2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionStart), getFont())),
 			  getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(), getOpacity()); 
-		  TheGraphics->drawText(TempPos + Pnt2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionStart), getFont()).x(), 0), 
+		  TheGraphics->drawText(TempPos + Vec2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionStart), getFont()).x(), 0), 
 			  getText().substr(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart), getFont(), getSelectionTextColor(), getOpacity());
 
 		  //draw end text
-		  TheGraphics->drawText(TempPos + Pnt2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionEnd), getFont()).x(), 0),
+		  TheGraphics->drawText(TempPos + Vec2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionEnd), getFont()).x(), 0),
 			  getText().substr(_TextSelectionEnd, getText().size()-_TextSelectionEnd), getFont(), ForeColor, getOpacity());
 	   }
    }
    if(_TextSelectionStart>=_TextSelectionEnd)
    {
    		  //Draw the caret
-		  TheGraphics->drawLine(TempPos+Pnt2s(TheGraphics->getTextBounds(getText().substr(0, getCaretPosition()), getFont()).x(), 0),
-	      TempPos + Pnt2s(TheGraphics->getTextBounds(getText().substr(0, getCaretPosition()), getFont()).x(),  TheGraphics->getTextBounds(getText(), getFont()).y()), 
+		  TheGraphics->drawLine(TempPos+Vec2s(TheGraphics->getTextBounds(getText().substr(0, getCaretPosition()), getFont()).x(), 0),
+	      TempPos + Vec2s(TheGraphics->getTextBounds(getText().substr(0, getCaretPosition()), getFont()).x(),  TheGraphics->getTextBounds(getText(), getFont()).y()), 
 	      .5, ForeColor, 1.0);
    }
 }

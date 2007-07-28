@@ -90,6 +90,7 @@ void Frame::keyPressed(const KeyEvent& e)
 			ParentContainer->keyPressed(e);
 		}
 	}
+    Component::keyPressed(e);
 }
 
 void Frame::keyReleased(const KeyEvent& e)
@@ -107,6 +108,7 @@ void Frame::keyReleased(const KeyEvent& e)
 			ParentContainer->keyReleased(e);
 		}
 	}
+    Component::keyReleased(e);
 }
 
 void Frame::keyTyped(const KeyEvent& e)
@@ -124,6 +126,7 @@ void Frame::keyTyped(const KeyEvent& e)
 			ParentContainer->keyTyped(e);
 		}
 	}
+    Component::keyTyped(e);
 }
 
 FramePtr &Frame::getParentFrame(void)
