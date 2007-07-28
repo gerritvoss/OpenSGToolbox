@@ -302,7 +302,7 @@ int main(int argc, char **argv)
     //Make A 3D Rectangle to draw the UI on
     UIRectanglePtr UIRectCore = UIRectangle::create();
     beginEditCP(UIRectCore, UIRectangle::PointFieldMask | UIRectangle::DrawingSurfaceFieldMask);
-        UIRectCore->setPoint(Pnt3f(0.0,0.0,370.0));
+        UIRectCore->setPoint(Pnt3f(-310.0,-310.0,370.0));
         UIRectCore->setWidth(620);
         UIRectCore->setHeight(620);
         UIRectCore->setDrawingSurface(drawingSurface);

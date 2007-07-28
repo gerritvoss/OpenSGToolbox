@@ -107,7 +107,7 @@ int main(int argc, char **argv)
 	}
 	// Set default Font to Times New Roman if Wide
 	// Latin is not included on your machine.  
-	std::string buttonFontFamily("Wide Latin");
+	std::string buttonFontFamily("Arial");
 	if (std::find(family.begin(), family.end(), buttonFontFamily) == family.end())
 	{
 		buttonFontFamily = "Times New Roman";
@@ -135,7 +135,7 @@ int main(int argc, char **argv)
 		// a default setting is included if the Font 
 		// given to the Font does not exist; try putting
 		// random characterssgjs in for setFamily.  
-		labelFont->setFamily("gkldsgjs");
+		labelFont->setFamily(buttonFontFamily);
 		labelFont->setSize(25);
 		labelFont->setStyle(TextFace::STYLE_PLAIN);
 	endEditCP(labelFont);

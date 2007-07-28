@@ -205,8 +205,8 @@ int main(int argc, char **argv)
 	beginEditCP(panel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
 		panel1->setPreferredSize( Vec2s(200, 200) );
 		panel1->getChildren().addValue(button1);
-		panel1->getChildren().addValue(button2);
-		panel1->getChildren().addValue(button3);
+		//panel1->getChildren().addValue(button2);
+		//panel1->getChildren().addValue(button3);
 		panel1->setLayout(panel1Layout);
 		panel1->setBackground(panelBackground);
 		panel1->setBorder(panelBorder);
@@ -215,8 +215,8 @@ int main(int argc, char **argv)
 	beginEditCP(panel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
 		panel2->setPreferredSize( Vec2s(200, 200) );
 		panel2->getChildren().addValue(button4);
-		panel2->getChildren().addValue(button5);
-		panel2->getChildren().addValue(button6);
+		//panel2->getChildren().addValue(button5);
+		//panel2->getChildren().addValue(button6);
 		panel2->setLayout(panel2Layout);
 		panel2->setBackground(panelBackground);
 		panel2->setBorder(panelBorder);
@@ -228,6 +228,7 @@ int main(int argc, char **argv)
 	   MainFrame->getChildren().addValue(panel2);
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
+       MainFrame->setAllInsets(5);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
 	//Create the Drawing Surface
