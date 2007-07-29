@@ -43,13 +43,6 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void Component::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
-{
-   TopLeft = getPosition();
-   BottomRight = getPosition()+getSize();
-}
-
-inline
 void Component::getClipBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 {
 	TopLeft = getClipTopLeft();

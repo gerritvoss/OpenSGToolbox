@@ -72,7 +72,7 @@ int main(int argc, char **argv)
 	WindowPtr MainWindow;
     WindowEventProducerPtr TheWindowEventProducer;
     createDefaultWindow(Pnt2s(50,50),
-                                        Vec2s(900,900),
+                                        Vec2s(1100,900),
                                         "OpenSG 12ComplexLayout Window",
                                         MainWindow,
                                         TheWindowEventProducer);

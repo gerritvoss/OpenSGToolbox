@@ -85,19 +85,6 @@ void Container::getInsideInsetsBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
    TopLeft[1] += getTopInset();
    BottomRight[0] -= getRightInset();
    BottomRight[1] -= getBottomInset();
-   UInt16 TopInset(0), LeftInset(0), BottomInset(0), RightInset(0);
-}
-void Container::getInsideBorderBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
-{
-   UInt16 TopInset(0), LeftInset(0), BottomInset(0), RightInset(0);
-
-   if(getBorder() != NullFC)
-   {
-      //Get Border Insets
-      getBorder()->getInsets(LeftInset,RightInset,TopInset,BottomInset);
-   }
-   TopLeft.setValues(LeftInset, TopInset);
-   BottomRight.setValues(TopLeft.x()+getSize().x()-(LeftInset + RightInset), TopLeft.y()+getSize().y()-(TopInset + BottomInset));
 }
 
 void Container::setAllInsets(UInt32 inset)
@@ -114,13 +101,13 @@ void Container::drawInternal(const GraphicsPtr TheGraphics) const
 {
     //Render all of my Child Components
 	Pnt2s borderTopLeft, BorderBottomRight;
-	getInsideInsetsBounds(borderTopLeft, BorderBottomRight);
-    glTranslatef(borderTopLeft.x(), borderTopLeft.y(), 0);
+	//getInsideInsetsBounds(borderTopLeft, BorderBottomRight);
+    //glTranslatef(borderTopLeft.x(), borderTopLeft.y(), 0);
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
         getChildren().getValue(i)->draw(TheGraphics);
     }
-    glTranslatef(-borderTopLeft.x(), -borderTopLeft.y(), 0);
+    //glTranslatef(-borderTopLeft.x(), -borderTopLeft.y(), 0);
 }
 void Container::mouseClicked(const MouseEvent& e)
 {
@@ -285,9 +272,9 @@ void Container::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, 
 
 bool Container::isPointInComponent(const Pnt2s& Point, const ComponentPtr Comp)
 {
-	Pnt2s borderTopLeft, BorderBottomRight;
-	getInsideInsetsBounds(borderTopLeft, BorderBottomRight);
-	return isContainedClipBounds(Point - Vec2s(borderTopLeft), Comp);
+	//Pnt2s borderTopLeft, BorderBottomRight;
+	//getInsideInsetsBounds(borderTopLeft, BorderBottomRight);
+	return isContainedClipBounds(Point, Comp);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

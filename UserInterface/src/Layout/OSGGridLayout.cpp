@@ -125,7 +125,7 @@ void GridLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 			for(UInt16 j = 0; j < getColumns()&& numComp>0; j++){
 				debug = i*getColumns()+j;
 			    beginEditCP(Components.getValue(i), Component::PositionFieldMask);
-                   Components.getValue(i*getColumns()+j)->setPosition(Pnt2s(Xpos, Ypos));
+                   Components.getValue(i*getColumns()+j)->setPosition(borderTopLeft + Vec2s(Xpos, Ypos));
 			    endEditCP(Components.getValue(i), Component::PositionFieldMask);
 				numComp--;
 				Xpos = Xpos + (maxSizeX+getHorizontalGap());

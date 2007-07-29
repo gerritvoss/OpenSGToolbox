@@ -217,7 +217,7 @@ void BorderLayout::updateLayout(const MFComponentPtr Components,const ComponentP
 					Components.getValue(i)->setSize(size);
 				else
 					Components.getValue(i)->setSize(Vec2s(0,0));
-				Components.getValue(i)->setPosition(Pnt2s(offset));
+				Components.getValue(i)->setPosition(borderTopLeft + Vec2s(offset));
 			endEditCP(Components.getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
 		}
 	}

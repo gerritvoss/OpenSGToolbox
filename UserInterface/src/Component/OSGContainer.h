@@ -75,7 +75,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual void getInsideBorderBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
     virtual void getInsideInsetsBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
     virtual void setAllInsets(UInt32);
     virtual void updateLayout(void);

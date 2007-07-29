@@ -54,6 +54,27 @@ SimpleSceneManager *mgr;
 void display(void);
 void reshape(Vec2s Size);
 
+class TutorialKeyListener : public KeyListener
+{
+public:
+
+   virtual void keyPressed(const KeyEvent& e)
+   {
+       if(e.getKey() == KeyEvent::KEY_ESCAPE)
+       {
+           exit(0);
+       }
+   }
+
+   virtual void keyReleased(const KeyEvent& e)
+   {
+   }
+
+   virtual void keyTyped(const KeyEvent& e)
+   {
+   }
+};
+
 class Button1ActionListener : public ActionListener
 {
 public:
@@ -160,6 +181,9 @@ int main(int argc, char **argv)
 	   MainFrame->getChildren().addValue(button1);
 	   MainFrame->setLayout(MainFrameLayout);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+
+    TutorialKeyListener TheKeyListener;
+    MainFrame->addKeyListener(&TheKeyListener);
 
 	//Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();

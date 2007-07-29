@@ -48,6 +48,7 @@
 
 #include "OSGGridBagLayout.h"
 #include "OSGGridBagLayoutConstraints.h"
+#include "Component/OSGContainer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,10 +79,10 @@ void GridBagLayout::initMethod (void)
 
 void GridBagLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
-	Pnt2s borderOffset;
-	Vec2s borderSize;
-	ParentComponent->getInsideBorderBounds(borderOffset, borderSize);
-	borderSize -= Vec2s(borderOffset);
+    Pnt2s ParentInsetsTopLeft, ParentInsetBottomRight;
+    Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(ParentInsetsTopLeft, ParentInsetBottomRight);
+	
+	Vec2s borderSize(ParentInsetBottomRight - ParentInsetsTopLeft);
 
 	std::vector<UInt16> widths;
 	std::vector<UInt16> posX;
@@ -92,7 +93,7 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 	Real32 cumColumnWeights(0.0);
 	Real32 cumRowWeights(0.0);
 
-	Pnt2s offset(borderOffset);
+	Pnt2s offset(ParentInsetsTopLeft);
 	Vec2s cellSize(0,0);
 	Vec2s size(0,0);
 	Real32 weight(0.0);
@@ -196,7 +197,7 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 	for (i = 0; i < Components.size(); ++i)
 	{
 		// begin by resetting offset to borderoffset and size to 0
-		offset = borderOffset;
+		offset = ParentInsetsTopLeft;
 		cellSize[0] = cellSize[1] = 0;
 		size = Components.getValue(i)->getPreferredSize();
 		constraints = GridBagLayoutConstraintsPtr::dcast(Components.getValue(i)->getConstraints());

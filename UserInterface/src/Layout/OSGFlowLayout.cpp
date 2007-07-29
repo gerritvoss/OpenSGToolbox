@@ -100,7 +100,6 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 	Pnt2s borderTopLeft, borderBottomRight;
 	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
 	Vec2s borderSize(borderBottomRight-borderTopLeft);
-	borderTopLeft.setValues(0,0);
 	Int64 totalMajorAxis(borderSize[AxisIndex]-borderTopLeft[AxisIndex]);
 	UInt32 cumMajorAxis(0);
 	UInt32 maxMinorAxis(0);
@@ -167,7 +166,11 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 					offsetY += Components.getValue(i)->getSize()[(AxisIndex+1)%2]+gap[(AxisIndex+1)%2];
 				}
 				// update cumMinorAxis, other values should still be at 0
-				cumMinorAxis += Components.getValue(i)->getSize()[(AxisIndex+1)%2] + gap[(AxisIndex+1)%2];
+                cumMinorAxis += Components.getValue(i)->getSize()[(AxisIndex+1)%2];
+                if(i < Components.size()-1)
+                {
+				    cumMinorAxis += gap[(AxisIndex+1)%2];
+                }
 				// update prevComponent
 				prevComponent++;
 				// next component is still just like the first one
@@ -259,6 +262,7 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 				offsetX += -(offsetMajorAxis+cumMajorAxis+(numGaps+1)*gap[AxisIndex]);
 				offsetY += maxMinorAxis+gap[(AxisIndex+1)%2];
 			}
+				
 			cumMinorAxis += maxMinorAxis + gap[(AxisIndex+1)%2];
 			maxMinorAxis = Components.getValue(i)->getSize()[(AxisIndex+1)%2];
 			prevComponent = i;

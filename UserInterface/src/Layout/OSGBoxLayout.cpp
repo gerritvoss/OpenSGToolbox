@@ -109,7 +109,6 @@ void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr 
 	Pnt2s borderTopLeft, borderBottomRight;
 	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
 	Vec2s borderSize(borderBottomRight-borderTopLeft);
-	borderTopLeft.setValues(0,0);
 	UInt32 MajorAxis(borderSize[AxisIndex]);
 	UInt32 totalMajorAxis(0);
 	UInt32 largestMinorAxis(0);
@@ -140,10 +139,10 @@ void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr 
 	// set up the MinorAxisAlignment by adding it to the borderTopLeft
 	if (getMinorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
 	{
-		borderTopLeft[(AxisIndex+1)%2] = (borderSize[(AxisIndex+1)%2] - largestMinorAxis)/2;
+		borderTopLeft[(AxisIndex+1)%2] += (borderSize[(AxisIndex+1)%2] - largestMinorAxis)/2;
 	} else if (getMinorAxisAlignment() == AXIS_MAX_ALIGNMENT)
 	{
-		borderTopLeft[(AxisIndex+1)%2] = borderSize[(AxisIndex+1)%2] - largestMinorAxis;
+		borderTopLeft[(AxisIndex+1)%2] += borderSize[(AxisIndex+1)%2] - largestMinorAxis;
 	} // in the case of a min alignment, do nothing
 
 	/*!

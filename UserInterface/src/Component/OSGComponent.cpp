@@ -78,6 +78,13 @@ void Component::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+
+void Component::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+{
+   TopLeft = Pnt2s(0,0);
+   BottomRight = Pnt2s(getSize());
+}
+
 void Component::getInsideBorderBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 {
    UInt16 TopInset(0), LeftInset(0), BottomInset(0), RightInset(0);
@@ -237,23 +244,19 @@ void Component::updateClipBounds(void)
 		Container::Ptr::dcast(getParentContainer())->getClipBounds(ContainerClipTopLeft,ContainerClipBottomRight);
 		
         //Parent Container's Clip Bounds are in the Parent Container's Coordinate space
-        //We need to convert them to the Parent Container's Inset Coordinate space
-        UInt16 Left(0),Right(0),Top,Bottom(0);
-        if(getParentContainer() != NullFC &&
-           getParentContainer()->getBorder() != NullFC)
-        {
-           getParentContainer()->getBorder()->getInsets(Left,Right,Top,Bottom);
-        }
-		
-        ContainerClipTopLeft -= Vec2s(Container::Ptr::dcast(getParentContainer())->getLeftInset()+Left, Container::Ptr::dcast(getParentContainer())->getTopInset()+Top);
-		ContainerClipBottomRight -= Vec2s(Container::Ptr::dcast(getParentContainer())->getLeftInset()+Left, Container::Ptr::dcast(getParentContainer())->getTopInset()+Top);
+        //We need to convert them to this Components Coordinate space
+        ContainerClipTopLeft -= Vec2s(getPosition());
+		ContainerClipBottomRight -= Vec2s(getPosition());
 
 		//Get Parent Container's Inset Bounds
 		Pnt2s ContainerInsetTopLeft, ContainerInsetBottomRight;
 		Container::Ptr::dcast(getParentContainer())->getInsideInsetsBounds(ContainerInsetTopLeft, ContainerInsetBottomRight);
-		ContainerInsetTopLeft -= Vec2s(Container::Ptr::dcast(getParentContainer())->getLeftInset()+Left, Container::Ptr::dcast(getParentContainer())->getTopInset()+Top);
-		ContainerInsetBottomRight -= Vec2s(Container::Ptr::dcast(getParentContainer())->getLeftInset()+Left, Container::Ptr::dcast(getParentContainer())->getTopInset()+Top);
 		
+        //Parent Container's Inset Bounds are in the Parent Container's Coordinate space
+        //We need to convert them to this Components Coordinate space
+        ContainerInsetTopLeft -= Vec2s(getPosition());
+		ContainerInsetBottomRight -= Vec2s(getPosition());
+
 		//Get the intersection of my bounds with my parent containers clip bounds
 		quadIntersection(MyTopLeft,MyBottomRight,
 			ContainerClipTopLeft,ContainerClipBottomRight,
@@ -266,8 +269,8 @@ void Component::updateClipBounds(void)
 	//The Clip Bounds calculated are in my Parent Containers coordinate space
 	//Translate these bounds into my own coordinate space
 	beginEditCP(ComponentPtr(this), Component::ClipTopLeftFieldMask | Component::ClipBottomRightFieldMask);
-		setClipTopLeft(TopLeft - Vec2s(getPosition()));
-		setClipBottomRight(BottomRight - Vec2s(getPosition()));
+		setClipTopLeft(TopLeft);
+		setClipBottomRight(BottomRight);
 	endEditCP(ComponentPtr(this), Component::ClipTopLeftFieldMask | Component::ClipBottomRightFieldMask);
 }
 

@@ -47,6 +47,7 @@
 
 #include "OSGAbsoluteLayout.h"
 #include "OSGAbsoluteLayoutConstraints.h"
+#include "Component/OSGContainer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,8 +78,8 @@ void AbsoluteLayout::initMethod (void)
 
 void AbsoluteLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
-	Pnt2s borderOffset;
-	Vec2s borderSize;
+	Pnt2s ParentInsetsTopLeft, ParentInsetBottomRight;
+    Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(ParentInsetsTopLeft, ParentInsetBottomRight);
 	for(UInt32 i = 0 ; i<Components.size(); ++i)
 	{
 		//Calculate the Components Size
@@ -89,11 +90,11 @@ void AbsoluteLayout::updateLayout(const MFComponentPtr Components,const Componen
 				//Get the Components Position
 				Pnt2s pos = AbsoluteLayoutConstraintsPtr::dcast(Components.getValue(i)->getConstraints())->getPosition();
 				
-				Components.getValue(i)->setPosition(pos);
+				Components.getValue(i)->setPosition(ParentInsetsTopLeft + Vec2s(pos));
 			}
 			else
 			{
-			   Components.getValue(i)->setPosition(Pnt2s(0,0));
+			   Components.getValue(i)->setPosition(ParentInsetsTopLeft);
 			}
 		endEditCP(Components.getValue(i), Component::PositionFieldMask|Component::SizeFieldMask);
 	}

@@ -112,7 +112,6 @@ void CardLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 	Pnt2s borderTopLeft, borderBottomRight;
 	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
 	Vec2s borderSize(borderBottomRight-borderTopLeft);
-	borderTopLeft.setValues(0,0);
 	Vec2s size(borderSize),offset;
 	ComponentPtr curCard(Components.getValue(getCard()));
 
@@ -139,7 +138,7 @@ void CardLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 	offset[1] = (borderSize.y()-size.y())/2;
 
 	beginEditCP(curCard, Component::PositionFieldMask);	
-		curCard->setPosition(Pnt2s(offset));
+		curCard->setPosition(borderTopLeft + Vec2s(offset));
 	endEditCP(curCard, Component::PositionFieldMask);
 
 }

@@ -80,11 +80,11 @@ void TextureUIBackground::initMethod (void)
 void TextureUIBackground::draw(const GraphicsPtr g, const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32 Opacity) const
 {
 	glPushAttrib(GL_ENABLE_BIT | GL_TRANSFORM_BIT);
-	//GLdouble Plane0[4], Plane1[4], Plane2[4], Plane3[4];
-	//glGetClipPlane(GL_CLIP_PLANE0, Plane0);
-	//glGetClipPlane(GL_CLIP_PLANE1, Plane1);
-	//glGetClipPlane(GL_CLIP_PLANE2, Plane2);
-	//glGetClipPlane(GL_CLIP_PLANE3, Plane3);
+	GLdouble Plane0[4], Plane1[4], Plane2[4], Plane3[4];
+	glGetClipPlane(GL_CLIP_PLANE0, Plane0);
+	glGetClipPlane(GL_CLIP_PLANE1, Plane1);
+	glGetClipPlane(GL_CLIP_PLANE2, Plane2);
+	glGetClipPlane(GL_CLIP_PLANE3, Plane3);
 
 	//bool WasClipPlane0Enabled = glIsEnabled(GL_CLIP_PLANE0);
  //   bool WasClipPlane1Enabled = glIsEnabled(GL_CLIP_PLANE1);
@@ -95,6 +95,10 @@ void TextureUIBackground::draw(const GraphicsPtr g, const Pnt2s& TopLeft, const 
  //   if(!WasClipPlane1Enabled) { glEnable(GL_CLIP_PLANE1); }
  //   if(!WasClipPlane2Enabled) { glEnable(GL_CLIP_PLANE2); }
  //   if(!WasClipPlane3Enabled) { glEnable(GL_CLIP_PLANE3); }
+    glEnable(GL_CLIP_PLANE0);
+    glEnable(GL_CLIP_PLANE1);
+    glEnable(GL_CLIP_PLANE2);
+    glEnable(GL_CLIP_PLANE3);
 
 	// The clipping plane for the background must get set to inside the
 	// border of the component. It was the outside of the component,
