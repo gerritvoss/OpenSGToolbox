@@ -106,11 +106,12 @@ int main(int argc, char **argv)
 	/******************************************************
 
 
-		Edit the TextField and determine its characteristics.
-		A text field is a component that allows you to enter text
-		into the box via keyboard input.  You can select text by
-		using your mouse or pressing shift and the left and right
-		arrow keys.
+		Edit the TextField and determine its 
+		characteristics.  A text field is a component 
+		that allows you to enter text into the box via 
+		keyboard input.  You can select text by	using 
+		your mouse or pressing shift and the left and 
+		right arrow keys.
 
 
 	******************************************************/
@@ -118,6 +119,7 @@ int main(int argc, char **argv)
 	beginEditCP(textField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
 		| Component::ForegroundColorFieldMask | TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask 
 		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
+			// Determine initial size of TextField
 		textField->setPreferredSize( Vec2s (100, 50) );
 			// Determine the Font color for the Field
 		textField->setForegroundColor( Color4f(0.0, 0.0, 0.0, 1.0) );
@@ -127,29 +129,25 @@ int main(int argc, char **argv)
 			// Determine the font and initial text
 		textField->setText("What");
 		textField->setFont(sampleFont);
-			// Set the area that is to be selected at first 
+			// Determine the area that is to be selected at first 
+			// so the selection would be "a" in this case
 		textField->setSelectionStart(2);
 		textField->setSelectionEnd(3);
-			// Set the initial alignment of the Text
+			// Determine the initial alignment of the Text
 			// from the top (top of the Text will be
 			// 30% of the way down from the top of the
-			// TextField
+			// TextField in this case
 		textField->setVerticalAlignment(.3);
 		endEditCP(textField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
 			| Component::ForegroundColorFieldMask| TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask
 			| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
-		
-//	TextActionListener button1AL;
-	
-//	textField->addActionListener( &button1AL);
 
 
 	// Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
 	LayoutPtr MainFrameLayout = osg::AbsoluteLayout::create();
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
-	   // Assign the Text Field to the MainFrame so it will be displayed
-	   // when the view is rendered.
+	   // Add TextField to MainFrame
 	   MainFrame->getChildren().addValue(textField);
 	   MainFrame->setLayout(MainFrameLayout);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);

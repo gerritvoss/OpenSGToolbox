@@ -50,6 +50,7 @@ void display(void);
 void reshape(Vec2s Size);
 
 	/******************************************************
+			
 			Declare some variables up front to be 
 			able to create an ActionListener to 
 			remove and add a Tab by pressing a Button
@@ -278,7 +279,8 @@ int main(int argc, char **argv)
 		tabPanel->addTab(button3, buttonC);
 		tabPanel->addTab(button4, buttonD);
 		tabPanel->addTab(button5, buttonE);
-		//tabPanel->addTab(button6, buttonF);
+		tabPanel->addTab(button6, buttonF);
+		//tabPanel->removeTab(button6);
 		tabPanel->setActiveTab(3);
 		tabPanel->setTabAlignment(AXIS_CENTER_ALIGNMENT);
 		tabPanel->setTabPlacement(PLACEMENT_SOUTH);

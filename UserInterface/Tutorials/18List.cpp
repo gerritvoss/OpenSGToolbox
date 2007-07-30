@@ -1,5 +1,4 @@
-// OpenSG Tutorial Example: Using the Flow Layout
-//		to place Components 
+// OpenSG Tutorial Example: Creating a List
 //
 // This tutorial explains how to place Buttons within a 
 // frame utilizing the Flow Layout command to 
