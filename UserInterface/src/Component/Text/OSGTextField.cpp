@@ -124,7 +124,7 @@ void TextField::drawInternal(const GraphicsPtr TheGraphics) const
 			  getText().substr(_TextSelectionEnd, getText().size()-_TextSelectionEnd), getFont(), ForeColor, getOpacity());
 	   }
    }
-   if(_TextSelectionStart>=_TextSelectionEnd)
+   if(getFocused() && _TextSelectionStart>=_TextSelectionEnd)
    {
    		  //Draw the caret
 		  TheGraphics->drawLine(TempPos+Vec2s(TheGraphics->getTextBounds(getText().substr(0, getCaretPosition()), getFont()).x(), 0),
