@@ -142,22 +142,130 @@ void TextField::keyTyped(const KeyEvent& e)
 	TextComponent::keyTyped(e);
 }
 
-void TextField::mouseEntered(const MouseEvent& e)
+void TextField::mousePressed(const MouseEvent& e)
 {
-	if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&&getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+	Pnt2s TopLeftText, BottomRightText, TempPos;
+	Pnt2s TopLeftText1, BottomRightText1;
+	Pnt2s TopLeft, BottomRight;
+	Pnt2s CurrentPosition;
+	getFont()->getBounds(getText(), TopLeftText, BottomRightText);
+    getInsideBorderBounds(TopLeft, BottomRight);
+    TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText, getVerticalAlignment(), 0.0);
+	if(e.getButton() == e.BUTTON1)
 	{
-		getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_I_BEAM);
+		//set caret position to proper place
+		//if the mouse is to the left of the text, set it to the begining.
+		Pnt2s temp = WindowToComponent(e.getLocation(), TextFieldPtr(this));
+		if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() <= TempPos.x())
+		{
+			setCaretPosition(0);
+		}		//if the mouse is to the right of the text, set it to the end
+		else if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() >= TempPos.x()+BottomRightText.x())
+		{
+			setCaretPosition(getText().size());
+		}
+		else
+		{
+			for(UInt32 i = 0; i <getText().size(); i++)
+			{		
+				getFont()->getBounds(getText().substr(0, i), TopLeftText, BottomRightText);
+				getFont()->getBounds(getText().substr(0, i+1), TopLeftText1, BottomRightText1);
+				if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x()>BottomRightText.x()
+				   && WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
+				{
+					if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() <= (BottomRightText1.x()-BottomRightText.x())/2.0+0.5 + BottomRightText.x())
+					{
+						setCaretPosition(i);
+						break;
+					}
+					else
+					{
+						setCaretPosition(i+1);
+						break;
+					}
+				}
+			}
+		}
+
+		_TextSelectionEnd = getCaretPosition();
+		_TextSelectionStart = getCaretPosition();
 	}
-	TextComponent::mouseEntered(e);
+	TextComponent::mousePressed(e);
 }
-void TextField::mouseExited(const MouseEvent& e)
+void TextField::mouseDragged(const MouseEvent& e)
 {
-	if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!= NullFC && getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+	Pnt2s TopLeftText, BottomRightText, TempPos;
+	Pnt2s TopLeftText1, BottomRightText1;
+	Pnt2s TopLeft, BottomRight;
+	Pnt2s CurrentPosition;
+	Int32 OriginalPosition = getCaretPosition();
+	getFont()->getBounds(getText(), TopLeftText, BottomRightText);
+    getInsideBorderBounds(TopLeft, BottomRight);
+    TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText, getVerticalAlignment(), 0.0);
+	if(e.getButton() == e.BUTTON1)
 	{
-		getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
+		//set caret position to proper place
+		//if the mouse is to the left of the text, set it to the begining.
+		Pnt2s temp = WindowToComponent(e.getLocation(), TextFieldPtr(this));
+		if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() <= TempPos.x())
+		{
+			setCaretPosition(0);
+		}		//if the mouse is to the right of the text, set it to the end
+		else if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() >= TempPos.x()+BottomRightText.x())
+		{
+			setCaretPosition(getText().size());
+		}
+		else
+		{
+			//check letter by letter for the mouse's position
+			for(UInt32 i = 0; i <getText().size(); i++)
+			{		
+				getFont()->getBounds(getText().substr(0, i), TopLeftText, BottomRightText);
+				getFont()->getBounds(getText().substr(0, i+1), TopLeftText1, BottomRightText1);
+				if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x()>BottomRightText.x()
+				   && WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
+				{
+					if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() < (BottomRightText1.x()-BottomRightText.x())/2.0 + BottomRightText.x())
+					{
+
+						setCaretPosition(i);
+						break;
+					}
+					else
+					{
+
+						setCaretPosition(i+1);
+						break;
+					}
+				}
+			}
+		}
 	}
-	TextComponent::mouseExited(e);
+	
+	if(getCaretPosition() < OriginalPosition)
+	{
+		if(getCaretPosition() < _TextSelectionStart)
+		{
+			_TextSelectionStart = getCaretPosition();
+		}
+		else
+		{
+			_TextSelectionEnd = getCaretPosition();
+		}
+	}
+	else if(getCaretPosition() > OriginalPosition)
+	{
+		if(getCaretPosition() > _TextSelectionEnd)
+		{
+			_TextSelectionEnd = getCaretPosition();
+		}
+		else
+		{
+			_TextSelectionStart = getCaretPosition();
+		}
+	}
 }
+
 
 void TextField::produceActionPerformed(const ActionEvent& e)
 {

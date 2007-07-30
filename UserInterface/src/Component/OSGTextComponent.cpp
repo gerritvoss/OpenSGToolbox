@@ -332,6 +332,22 @@ void TextComponent::keyTyped(const KeyEvent& e)
 		}
 	}
 }
+void TextComponent::mouseEntered(const MouseEvent& e)
+{
+	if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&&getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+	{
+		getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_I_BEAM);
+	}
+	Component::mouseEntered(e);
+}
+void TextComponent::mouseExited(const MouseEvent& e)
+{
+	if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!= NullFC && getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+	{
+		getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
+	}
+	Component::mouseExited(e);
+}
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
 
