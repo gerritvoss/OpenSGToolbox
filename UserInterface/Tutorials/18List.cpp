@@ -30,15 +30,19 @@
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
+#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include <OpenSG/UserInterface/OSGColorUIBackground.h>
+#include <OpenSG/UserInterface/OSGBevelBorder.h>
+
+// Include relevant header files
+#include <OpenSG/UserInterface/OSGFlowLayout.h>
+#include <OpenSG/UserInterface/OSGButton.h>
+
+// List header files
 #include <OpenSG/UserInterface/OSGList.h>
 #include <OpenSG/UserInterface/OSGAbstractListModel.h>
 #include <OpenSG/UserInterface/OSGDefaultListCellGenerator.h>
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGColorUIBackground.h>
-#include <OpenSG/UserInterface/OSGBevelBorder.h>
-// Include FlowLayout header file
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
 // with OSG::, but that would be a bit tedious for this example
@@ -51,7 +55,44 @@ SimpleSceneManager *mgr;
 void display(void);
 void reshape(Vec2s Size);
 
-// Initialize GLUT & OpenSG and set up the scene
+
+
+// Declare the SelectionModel up front to allow for
+// the ActionListeners
+DefaultListSelectionModel SelectionModel;
+class SingleSelection : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+	{
+		SelectionModel.setMode(DefaultListSelectionModel::SINGLE_SELECTION);
+		
+	}
+};
+
+class SingleIntervalSelection : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+	{
+		SelectionModel.setMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
+	}
+};
+
+class MultipleIntervalSelection : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+	{
+		SelectionModel.setMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
+	}
+};
+
+
+
 int main(int argc, char **argv)
 {
     // OSG init
@@ -90,14 +131,60 @@ int main(int argc, char **argv)
 	// settings for the Button
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
+
+	// Create some Buttons to show changing List format
+	ButtonPtr singleButton = osg::Button::create();
+	ButtonPtr singleIntervalButton = osg::Button::create();
+	ButtonPtr multipleIntervalButton = osg::Button::create();
+	// Give them text, change sizes, add ActionListeners
+	beginEditCP(singleButton, Button::TextFieldMask);
+		singleButton->setText("Single Selection");
+		singleButton->setPreferredSize( Vec2s(200, 50) );
+	endEditCP(singleButton, Button::TextFieldMask);
+	SingleSelection singleButtonListener;
+		singleButton->addActionListener(&singleButtonListener);
+	
+	beginEditCP(singleIntervalButton, Button::TextFieldMask);
+		singleIntervalButton->setText("Single Inteveral Selection");
+		singleIntervalButton->setPreferredSize( Vec2s(200, 50) );
+	endEditCP(singleIntervalButton, Button::TextFieldMask);
+	SingleIntervalSelection singleIntervalButtonListener;
+		singleIntervalButton->addActionListener(&singleIntervalButtonListener);
+	
+	beginEditCP(multipleIntervalButton, Button::TextFieldMask);
+		multipleIntervalButton->setText("Multiple Inverval Selection");
+		multipleIntervalButton->setPreferredSize( Vec2s(200, 50) );
+	endEditCP(multipleIntervalButton, Button::TextFieldMask);
+	MultipleIntervalSelection multipleIntervalButtonListener;
+		multipleIntervalButton->addActionListener(&multipleIntervalButtonListener);
+
+
 	/******************************************************
 
 			Create ListModel.  This is where you set
 			the values for the List.
 
+			After creating an AbstractListModel,
+			do the following to make a list.
+			
+			First, create SFStrings and use the 
+			.setValue("VALUE") function to set their
+			values.  Then, use the .pushBack(&SFStringName)
+			to add them to the List.
+
+			Next, create the CellGenerator and ListSelectionModel
+			defaults.
+
+			Finally, actually create the List.  Set
+			its Model, CellGenerator, and SelectionModel
+			as shown below.  Finally, choose the
+			type of display for the List (choices outlined
+			below).
+
+			
 
 	******************************************************/
-	// Create ListModel Component
+	// Create ListModel Component to add things to
 	AbstractListModel Model;
 
 	// Add values to it
@@ -119,32 +206,53 @@ int main(int argc, char **argv)
 	SFString StrField6;
 	StrField6.setValue("Purple");
 	Model.pushBack(&StrField6);
-	/*Model.pushBack(&StrField6);
-	Model.pushBack(&StrField6);
-	Model.pushBack(&StrField6);
-	Model.pushBack(&StrField6);
-	Model.pushBack(&StrField6);
-	Model.pushBack(&StrField6);
-	Model.pushBack(&StrField6);*/
+
 
 	// Create ListCellRenderer and ListSelectionModel
-	// (should always be default)
+	// (should always be default).
+	// Note that the DefaultListSelectionModel was
+	// created at the top of this file before
+	// the ActionListeners
 	DefaultListCellGenerator CellGenerator;
-	DefaultListSelectionModel SelectionModel;
+	//DefaultListSelectionModel SelectionModel;
 
-
-	//Create List
+	// Create Background to be used with the Main Frame
+	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
+	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+	// Create ListPtr
 	ListPtr list = List::create();
 	beginEditCP(list);
 		list->setPreferredSize( Vec2s (200, 300) );
 		list->setBackground(mainBackground);
 	endEditCP(list);
+	// Assign the Model, CellGenerator, and SelectionModel
+	// to the List
 	list->setModel(&Model);
 	list->setCellGenerator(&CellGenerator);
 	list->setSelectionModel(&SelectionModel);
 
-	SelectionModel.setMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
-	
+
+	/******************************************************
+
+			Determine the SelectionModel
+			-SINGLE_SELECTION lets you select ONE item
+				via a single mouse click
+			-SINGLE_INTERVAL_SELECTION lets you select
+				one interval via mouse and SHIFT key
+			-MULTIPLE_INTERVAL_SELECTION lets you select
+				via mouse, and SHIFT and CONTRL keys
+
+			Note: this tutorial is currently set up
+			to allow for this to be changed via Buttons
+			with ActionListeners attached to them
+
+	******************************************************/
+
+	//SelectionModel.setMode(DefaultListSelectionModel::SINGLE_SELECTION);
+	//SelectionModel.setMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
+	//SelectionModel.setMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
 
 
 	// Create MainFramelayout
@@ -155,15 +263,14 @@ int main(int argc, char **argv)
 		MainFrameLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
 	endEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
 		
-	// Create Background to be used with the Main Frame
-	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+
 	// Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-	   // Add the buttons to the mainframe so they will be displayed
+	   // Add things to the MainFrame
+	   MainFrame->getChildren().addValue(singleButton);
+	   MainFrame->getChildren().addValue(singleIntervalButton);
+	   MainFrame->getChildren().addValue(multipleIntervalButton);
 	   MainFrame->getChildren().addValue(list);
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
