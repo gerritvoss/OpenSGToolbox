@@ -104,6 +104,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
     ListSelectionModel* getSelectionModel(void) const;
 	
     virtual void mousePressed(const MouseEvent& e);
+	virtual void keyTyped(const KeyEvent& e);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

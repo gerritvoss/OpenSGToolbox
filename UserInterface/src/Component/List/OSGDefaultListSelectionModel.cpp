@@ -78,29 +78,32 @@ void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 inde
 	// range is still necessary so that anchor and lead get set correctly
 	IndexRange range(index0, index1);
 	IndexRange newRange(index0, index1);
-   //TODO:Implement
 	if (index0 >= 0 && index1 >= 0)
 	{
 		switch (_SelectionMode)
 		{
 			case SINGLE_SELECTION:
+				// you can only select one, so choose the second because the first is often the anchor
 				range.StartIndex = range.EndIndex;
 				if (_RangeSelectionList.empty())
-				{
+				{   // if it's empty, then you only have to push onto the list
 					_RangeSelectionList.push_back(range);
+					// the only objects changed is in the range itself
 					produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), range.StartIndex, range.EndIndex, _ValueIsAdjusting));
 				}
-				else if (_RangeSelectionList.front() != range)
+				else if (_RangeSelectionList.front() != range) // if the new range is the same as the first one, then nothing has to be done
 				{
+					// this is necessary to make sure that the entire range is noted as changed for later
 					IndexRange minMax(getMinMaxSelection(_RangeSelectionList.front(), range));
-					updateMinMax();
-					minMax = getMinMaxSelection(minMax, IndexRange(_MinSelectionIndex, _MaxSelectionIndex));
+					//updateMinMax();
+					//minMax = getMinMaxSelection(minMax, IndexRange(_MinSelectionIndex, _MaxSelectionIndex));
 					_RangeSelectionList.clear();
 					_RangeSelectionList.push_back(range);
 					produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), minMax.StartIndex, minMax.EndIndex, _ValueIsAdjusting));
 				}
 				break;
 			case SINGLE_INTERVAL_SELECTION:
+				// this is where newRange gets switched if it is necessary
 				if (range.EndIndex < range.StartIndex)
 				{
 					newRange.EndIndex = range.StartIndex;
@@ -108,20 +111,23 @@ void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 inde
 				}
 				if (_RangeSelectionList.empty())
 				{
+					// if it is empty, then the new range merely needs to be pushed onto the list
 					_RangeSelectionList.push_back(newRange);
 					produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), newRange.StartIndex, newRange.EndIndex, _ValueIsAdjusting));
 				}
 				else if (_RangeSelectionList.front() != newRange)
 				{
+					// this is necessary to make sure that the entire range is noted as changed for later
 					IndexRange minMax(getMinMaxSelection(_RangeSelectionList.front(), newRange));
-					updateMinMax();
-					minMax = getMinMaxSelection(minMax, IndexRange(_MinSelectionIndex, _MaxSelectionIndex));
+					//updateMinMax();
+					//minMax = getMinMaxSelection(minMax, IndexRange(_MinSelectionIndex, _MaxSelectionIndex));
 					_RangeSelectionList.clear();
 					_RangeSelectionList.push_back(newRange);
 					produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), minMax.StartIndex, minMax.EndIndex, _ValueIsAdjusting));
 				}
 				break;
 			case MULTIPLE_INTERVAL_SELECTION:
+				// at this moment, you can only add single intervals, and it is the leading not the anchor index
 				range.StartIndex = range.EndIndex;
 				if (!isSelectedIndex(index1))
 				{
@@ -224,7 +230,7 @@ bool 	DefaultListSelectionModel::isSelectedIndex(UInt32 index) const
 		if(index >= (*ListItor).StartIndex && index<= (*ListItor).EndIndex)
 		{
 			return true;
-		};
+		}
 	}
    return false;
 }
@@ -237,13 +243,18 @@ bool 	DefaultListSelectionModel::isSelectionEmpty(void) const
 void 	DefaultListSelectionModel::removeIndexInterval(UInt32 index0, UInt32 index1)
 {
 	RangeSelectionListItor ListItor;
+	IndexRange range(index0, index1);
 	switch (_SelectionMode)
 	{
-		case SINGLE_SELECTION:
-			_RangeSelectionList.clear();
-			break;
 		case SINGLE_INTERVAL_SELECTION:
-			_RangeSelectionList.clear();
+		case SINGLE_SELECTION:
+			// presently, these two options merely removes the existing range
+			if (!_RangeSelectionList.empty())
+			{   // only necessary to do anything if it isn't already empty
+				range = _RangeSelectionList.front();
+				_RangeSelectionList.clear();
+				produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), range.StartIndex, range.EndIndex, _ValueIsAdjusting));
+			}
 			break;
 		case MULTIPLE_INTERVAL_SELECTION:
 			// presently this only works for intervals of length 1
@@ -252,7 +263,6 @@ void 	DefaultListSelectionModel::removeIndexInterval(UInt32 index0, UInt32 index
 			{
 				if(index1 >= (*ListItor).StartIndex && index1 <= (*ListItor).EndIndex)
 				{
-					//IndexRange range(index1, index1);
 					if (index1 == (*ListItor).StartIndex)
 						++(*ListItor).StartIndex;
 					else if (index1 == (*ListItor).EndIndex)
@@ -275,14 +285,17 @@ void 	DefaultListSelectionModel::removeIndexInterval(UInt32 index0, UInt32 index
 
 void 	DefaultListSelectionModel::removeSelectionInterval(UInt32 index0, UInt32 index1)
 {
-   //TODO:Implement
 	switch (_SelectionMode)
 	{
-		case SINGLE_SELECTION:
-			_RangeSelectionList.clear();
-			break;
 		case SINGLE_INTERVAL_SELECTION:
-			_RangeSelectionList.clear();
+		case SINGLE_SELECTION:
+			// presently, these two options merely removes the existing range
+			if (!_RangeSelectionList.empty())
+			{   // only necessary to do anything if it isn't already empty
+				IndexRange range( _RangeSelectionList.front());
+				_RangeSelectionList.clear();
+				produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), range.StartIndex, range.EndIndex, _ValueIsAdjusting));
+			}
 			break;
 		case MULTIPLE_INTERVAL_SELECTION:
 			// basically, this toggles all of them across the interval
@@ -305,10 +318,10 @@ void 	DefaultListSelectionModel::removeSelectionInterval(UInt32 index0, UInt32 i
 
 void 	DefaultListSelectionModel::setAnchorSelectionIndex(UInt32 index)
 {
-   //TODO:Implement
 	switch (_SelectionMode)
 	{
 		case SINGLE_SELECTION:
+			// in SINGLE_SELECTION, the anchor and lead are always forced to be the same
 			_LeadSelectionIndex = _AnchorSelectionIndex = index;
 			break;
 		case MULTIPLE_INTERVAL_SELECTION:
@@ -322,10 +335,10 @@ void 	DefaultListSelectionModel::setAnchorSelectionIndex(UInt32 index)
 
 void 	DefaultListSelectionModel::setLeadSelectionIndex(UInt32 index)
 {
-   //TODO:Implement
 	switch (_SelectionMode)
 	{
 		case SINGLE_SELECTION:
+			// in SINGLE_SELECTION, the anchor and lead are always forced to be the same
 			_LeadSelectionIndex = _AnchorSelectionIndex = index;
 			break;
 		case MULTIPLE_INTERVAL_SELECTION:
@@ -341,11 +354,12 @@ void 	DefaultListSelectionModel::setSelectionInterval(UInt32 index0, UInt32 inde
 {
 	IndexRange range(index0, index1);
 	IndexRange newRange(index0, index1);
-	if (index0 >= 0 && index1 >= 0) // it is possible to have the anchor or lead be negative
+	if (index0 >= 0 && index1 >= 0) // anchor and lead are initiated to -1
 	{
 		switch (_SelectionMode)
 		{
 			case SINGLE_SELECTION:
+				// for single selection, setting and adding intervals are the same thing
 				range.StartIndex = range.EndIndex;
 				if (_RangeSelectionList.empty())
 				{
@@ -355,8 +369,8 @@ void 	DefaultListSelectionModel::setSelectionInterval(UInt32 index0, UInt32 inde
 				else if (_RangeSelectionList.front() != range)
 				{
 					IndexRange minMax(getMinMaxSelection(_RangeSelectionList.front(), range));
-					updateMinMax();
-					minMax = getMinMaxSelection(minMax, IndexRange(_MinSelectionIndex, _MaxSelectionIndex));
+					//updateMinMax();
+					//minMax = getMinMaxSelection(minMax, IndexRange(_MinSelectionIndex, _MaxSelectionIndex));
 					_RangeSelectionList.clear();
 					_RangeSelectionList.push_back(range);
 					produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), minMax.StartIndex, minMax.EndIndex, _ValueIsAdjusting));
@@ -364,6 +378,8 @@ void 	DefaultListSelectionModel::setSelectionInterval(UInt32 index0, UInt32 inde
 				break;
 			case MULTIPLE_INTERVAL_SELECTION:
 			case SINGLE_INTERVAL_SELECTION:
+				// when setting the interval, MULTIPLE_INTERVAL_SELECTION and SINGLE_INTERVAL_SELECTION
+				// do the same thing, which replaces everything 
 				if (range.EndIndex < range.StartIndex)
 				{
 					newRange.EndIndex = range.StartIndex;
@@ -376,6 +392,8 @@ void 	DefaultListSelectionModel::setSelectionInterval(UInt32 index0, UInt32 inde
 				}
 				else if (_RangeSelectionList.front() != newRange)
 				{
+					// updateMinMax is necessary for the MULTIPLE_INTERVAL_SELECTION, since there
+					// might be some selected outside of any range
 					IndexRange minMax(getMinMaxSelection(_RangeSelectionList.front(), newRange));
 					updateMinMax();
 					minMax = getMinMaxSelection(minMax, IndexRange(_MinSelectionIndex, _MaxSelectionIndex));
@@ -396,7 +414,14 @@ void 	DefaultListSelectionModel::setSelectionInterval(UInt32 index0, UInt32 inde
 void 	DefaultListSelectionModel::setSelectionMode(UInt32 selectionMode)
 {
 	_SelectionMode = static_cast<SelectionMode>(selectionMode);
-	_RangeSelectionList.clear();
+	// if there were objects selected, since they might not fit into
+	// the new mode, just clear them all out
+	if (!_RangeSelectionList.empty())
+	{   // only necessary to do anything if it isn't already empty
+		updateMinMax();
+		_RangeSelectionList.clear();
+		produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), _MinSelectionIndex, _MaxSelectionIndex, _ValueIsAdjusting));
+	}
 }
 
 void 	DefaultListSelectionModel::setValueIsAdjusting(bool valueIsAdjusting)
@@ -429,12 +454,16 @@ void DefaultListSelectionModel::updateMinMax(void)
 	}
 	else
 	{
+		// in the event of _RangeSelectionList being empty, just set
+		// them both to zero
 		_MaxSelectionIndex = _MinSelectionIndex = 0;
 	}
 }
 
 DefaultListSelectionModel::IndexRange DefaultListSelectionModel::getMinMaxSelection(const IndexRange& range1, const IndexRange& range2)
 {
+	// this function returns a range that has the minimum of the
+	// two ranges and the maximum of the two ranges
 	IndexRange range(0,0);
 	if (range1.StartIndex > range2.StartIndex)
 		range.StartIndex = range2.StartIndex;
@@ -455,10 +484,10 @@ DefaultListSelectionModel::IndexRange DefaultListSelectionModel::getMinMaxSelect
 DefaultListSelectionModel::DefaultListSelectionModel(void) :
 _SelectionMode(SINGLE_SELECTION)
 {
-	_AnchorSelectionIndex = -1;
-	_LeadSelectionIndex = -1;
-	_MaxSelectionIndex = -1;
-	_MinSelectionIndex = -1;
+	_AnchorSelectionIndex = 0;
+	_LeadSelectionIndex = 0;
+	_MaxSelectionIndex = 0;
+	_MinSelectionIndex = 0;
 	_ValueIsAdjusting = false;
 }
 

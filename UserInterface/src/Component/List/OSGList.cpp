@@ -159,15 +159,7 @@ void List::mousePressed(const MouseEvent& e)
 					}
 					else if(getParentFrame()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 					{
-						getSelectionModel()->removeSelectionInterval(i,i);
-						//if(getSelectionModel()->isSelectedIndex(i))
-						//{
-						//   getSelectionModel()->removeSelectionInterval(i, i);
-						//}
-						//else
-						//{
-						//   getSelectionModel()->addSelectionInterval(i, i);
-						//}
+						getSelectionModel()->removeSelectionInterval(i,i);// this toggles the interval
 					}
 					else
 					{
@@ -210,6 +202,10 @@ void List::intervalRemoved(ListDataEvent e)
 	updateLayout();
 }
 
+void List::keyTyped(const KeyEvent& e)
+{
+	Component::keyTyped(e);
+}
 
 void List::setModel(ListModel* Model)
 {
