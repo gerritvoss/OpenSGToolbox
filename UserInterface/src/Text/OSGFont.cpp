@@ -97,7 +97,7 @@ void Font::initText(void)
       beginEditCP(getTexture());
       {
             ImagePtr image = _face->getTexture();
-			image->setPixelFormat(Image::OSG_A_PF);
+		//	image->setPixelFormat(Image::OSG_A_PF);
             getTexture()->setImage(image);
             getTexture()->setWrapS(GL_CLAMP);
             getTexture()->setWrapT(GL_CLAMP);
@@ -118,6 +118,24 @@ void Font::initText(void)
 
     // Increment reference counters
     addRefP(_face);
+}
+
+void Font::getBounds(const std::string& Text, Pnt2s& TopLeft, Pnt2s& BottomRight)
+{
+   TextLayoutParam layoutParam;
+   layoutParam.spacing = 1.1;
+   layoutParam.majorAlignment = TextLayoutParam::ALIGN_BEGIN;
+   layoutParam.minorAlignment = TextLayoutParam::ALIGN_BEGIN;
+ 
+   TextLayoutResult layoutResult;
+   layout(Text, layoutParam, layoutResult);
+
+   //Vec2f BottomLeft, TopRight;
+   Vec2s size = Vec2s(layoutResult.textBounds.x()*getSize(),layoutResult.textBounds.y()*getSize());
+  // _face->calculateBoundingBox(layoutResult,BottomLeft, TopRight);
+
+   TopLeft.setValues(0, 0);
+   BottomRight.setValue(size);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

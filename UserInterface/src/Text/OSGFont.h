@@ -81,6 +81,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Font : public FontBase
     /*! \}                                                                 */
     void layout(const std::string &utf8Text, const TextLayoutParam &param, TextLayoutResult &result);
     const TextTXFGlyph& getTXFGlyph(TextGlyph::Index glyphIndex);
+
+	void getBounds(const std::string& Text, Pnt2s& TopLeft, Pnt2s& BottomRight);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
