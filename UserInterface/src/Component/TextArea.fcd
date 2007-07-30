@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="TextArea"
+	parent="TextComponent"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI TextArea
+	<Field
+		name="LineWrap"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="WrapStyleWord"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="TabSize"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="3"
+		access="public"
+	>
+	</Field>
+</FieldContainer>
