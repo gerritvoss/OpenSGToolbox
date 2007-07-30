@@ -130,6 +130,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
     ListCellGenerator *_CellGenerator;
     ListSelectionModel *_SelectionModel;
 
+	void updateItem(const UInt32& index);
+
     /*==========================  PRIVATE  ================================*/
   private:
 

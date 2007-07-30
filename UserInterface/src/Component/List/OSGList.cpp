@@ -77,14 +77,34 @@ void List::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void List::updateItem(const UInt32& index)
+{
+	//Transfer focus, enabled, Listeners
+	ComponentPtr PrevComponent = getChildren().getValue(index);
+	getChildren().getValue(index)->removeFocusListener(this);
+	getChildren().setValue(
+				getCellGenerator()->getListCellGeneratorComponent(ListPtr(this),getModel()->getElementAt(index),index,getSelectionModel()->isSelectedIndex(index),PrevComponent->getFocused())
+				,index);
+	if(PrevComponent->getFocused())
+	{
+		//getChildren().getValue(index)->takeFocus();
+		getParentFrame()->setFocusedComponent(getChildren().getValue(index));
+	}
+	getChildren().getValue(index)->addFocusListener(this);
+	getChildren().getValue(index)->setFocused(PrevComponent->getFocused());
+	getChildren().getValue(index)->setPosition(PrevComponent->getPosition());
+	getChildren().getValue(index)->setSize(PrevComponent->getSize());
+	getChildren().getValue(index)->updateClipBounds();
+	getChildren().getValue(index)->setParentContainer(PrevComponent->getParentContainer());
+	getChildren().getValue(index)->setParentFrame(PrevComponent->getParentFrame());
+}
+
 void List::selectionChanged(const ListSelectionEvent& e)
 {
 	beginEditCP(ListPtr(this), ChildrenFieldMask);
 		for(UInt32 i(e.getFirstIndex()) ; i<=e.getLastIndex() ; ++i)
 		{
-			getChildren().setValue(
-				getCellGenerator()->getListCellGeneratorComponent(ListPtr(this),getModel()->getElementAt(i),i,getSelectionModel()->isSelectedIndex(i),getChildren().getValue(i)->getFocused())
-				,i);
+			updateItem(i);
 		}
 	endEditCP(ListPtr(this), ChildrenFieldMask);
 }
@@ -103,12 +123,7 @@ void List::focusGained(const FocusEvent& e)
 				break;
 			}
 		}
-		(*Child)->removeFocusListener(this);
-		beginEditCP(ListPtr(this), ChildrenFieldMask);
-			(*Child) = getCellGenerator()->getListCellGeneratorComponent(ListPtr(this),getModel()->getElementAt(index),index,getSelectionModel()->isSelectedIndex(index),true);
-		endEditCP(ListPtr(this), ChildrenFieldMask);
-		(*Child)->takeFocus();
-		(*Child)->addFocusListener(this);
+		updateItem(index);
 	}
 }
 
@@ -126,12 +141,7 @@ void List::focusLost(const FocusEvent& e)
 				break;
 			}
 		}
-		(*Child)->removeFocusListener(this);
-		beginEditCP(ListPtr(this), ChildrenFieldMask);
-			(*Child) = getCellGenerator()->getListCellGeneratorComponent(ListPtr(this),getModel()->getElementAt(index),index,getSelectionModel()->isSelectedIndex(index),false);
-		endEditCP(ListPtr(this), ChildrenFieldMask);
-
-		(*Child)->addFocusListener(this);
+		updateItem(index);
 	}
 }
 
@@ -250,8 +260,28 @@ void List::keyTyped(const KeyEvent& e)
 
 void List::contentsChanged(ListDataEvent e)
 {
-	//TODO: Implement
-	updateLayout();
+	if(getModel() != NULL)
+	{
+		if(getModel()->getSize() != getChildren().size())
+		{
+			beginEditCP(ListPtr(this), ChildrenFieldMask);
+				for(UInt32 i(e.getIndex0()) ; i<getModel()->getSize() && i<=e.getIndex1() ; ++i )
+				{
+		            updateItem(i);
+				}
+			endEditCP(ListPtr(this), ChildrenFieldMask);
+		}
+		Pnt2s Position(0,0);
+		for(UInt32 i(0) ; i<getModel()->getSize() && i<=e.getIndex1() ; ++i )
+		{
+			beginEditCP(getChildren().getValue(i), PositionFieldMask | SizeFieldMask);
+			   getChildren().getValue(i)->setPosition(Position);
+			   getChildren().getValue(i)->setSize( Vec2s(getSize().x(), getChildren().getValue(i)->getPreferredSize().y()) );
+			endEditCP(getChildren().getValue(i), PositionFieldMask | SizeFieldMask);
+
+			Position[1] += getChildren().getValue(i)->getSize()[1];
+		}
+	}
 }
 
 void List::intervalAdded(ListDataEvent e)
