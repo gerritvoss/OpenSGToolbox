@@ -54,6 +54,8 @@ SimpleSceneManager *mgr;
 void display(void);
 void reshape(Vec2s Size);
 
+// Create a class to allow for the use of the Escape
+// key to exit
 class TutorialKeyListener : public KeyListener
 {
 public:
@@ -74,7 +76,9 @@ public:
    {
    }
 };
-
+// Create an ActionListener to display text
+// in the CommandWindow when the Button is
+// pressed
 class Button1ActionListener : public ActionListener
 {
 public:
@@ -167,8 +171,8 @@ int main(int argc, char **argv)
 		button1->setHorizontalAlignment(HORIZONTAL_RIGHT);
 		endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::ForegroundColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
 	
+	// Create an ActionListener and assign it to button1
 	Button1ActionListener button1AL;
-	
 	button1->addActionListener( &button1AL);
 
 

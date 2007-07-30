@@ -353,9 +353,6 @@ void reshape(Vec2s Size)
 ComponentPtr createleftPanelButtonPanel(void)
 
 {
-
-
-
 	// Create and edit the Panel buttons
 	ButtonPtr leftPanelButton1 = osg::Button::create();
 	ButtonPtr leftPanelButton2 = osg::Button::create();
@@ -437,8 +434,7 @@ ComponentPtr createleftPanelButtonPanel(void)
 ComponentPtr createleftPanelTextPanel(void)
 {
 
-
-// Create and edit the Panel Text areas
+	// Create and edit the Panel Text areas
 
 	// Create and edit Panel layout
 	FlowLayoutPtr leftPanelTextPanelLayout = osg::FlowLayout::create();

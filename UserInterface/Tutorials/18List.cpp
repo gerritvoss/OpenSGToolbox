@@ -1,8 +1,7 @@
 // OpenSG Tutorial Example: Creating a List
 //
-// This tutorial explains how to place Buttons within a 
-// frame utilizing the Flow Layout command to 
-// manage the layout through the OSG User Interface library.
+// This tutorial explains how to create a List 
+// via the  OSG User Interface library.
 // 
 // Includes: placing multiple buttons using Flow Layout
 
