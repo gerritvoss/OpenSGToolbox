@@ -66,7 +66,7 @@ public:
 
    virtual void actionPerformed(const ActionEvent& e)
 	{
-		SelectionModel.setMode(DefaultListSelectionModel::SINGLE_SELECTION);
+		SelectionModel.setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
 		
 	}
 };
@@ -77,7 +77,7 @@ public:
 
    virtual void actionPerformed(const ActionEvent& e)
 	{
-		SelectionModel.setMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
+		SelectionModel.setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
 	}
 };
 
@@ -87,7 +87,7 @@ public:
 
    virtual void actionPerformed(const ActionEvent& e)
 	{
-		SelectionModel.setMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
+		SelectionModel.setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
 	}
 };
 

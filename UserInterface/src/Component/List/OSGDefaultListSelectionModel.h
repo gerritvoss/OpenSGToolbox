@@ -101,10 +101,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public ListSel
    
    virtual void 	setValueIsAdjusting(bool valueIsAdjusting);
    
-   void setMode(SelectionMode Mode);
-   
-   SelectionMode getMode(void) const;
-   
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
