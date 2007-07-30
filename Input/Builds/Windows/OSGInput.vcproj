@@ -507,6 +507,18 @@
 					>
 				</Filter>
 			</Filter>
+			<Filter
+				Name="Utils"
+				>
+				<File
+					RelativePath="..\..\src\Utils\OSGStringUtils.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Utils\OSGStringUtils.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

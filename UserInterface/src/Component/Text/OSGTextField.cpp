@@ -56,6 +56,7 @@
 #include "Component/OSGFrame.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
+#include <OpenSG/Input/OSGStringUtils.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -141,6 +142,82 @@ void TextField::keyTyped(const KeyEvent& e)
 
 	TextComponent::keyTyped(e);
 }
+
+void TextField::mouseClicked(const MouseEvent& e)
+{	
+	Int32 Position;
+	Int32 BeginWord = 0;
+	Int32 EndWord = getText().size();
+	if(e.getButton() == e.BUTTON1)
+	{
+
+		if(e.getClickCount() == 2)
+		{
+			Pnt2s TopLeftText, BottomRightText, TempPos;
+			Pnt2s TopLeftText1, BottomRightText1;
+			Pnt2s TopLeft, BottomRight;
+			Pnt2s CurrentPosition;
+			getFont()->getBounds(getText(), TopLeftText, BottomRightText);
+			getInsideBorderBounds(TopLeft, BottomRight);
+			TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText, getVerticalAlignment(), 0.0);
+
+			//set caret position to proper place
+			//if the mouse is to the left of the text, set it to the begining.
+			Pnt2s temp = WindowToComponent(e.getLocation(), TextFieldPtr(this));
+			if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() <= TempPos.x())
+			{
+				Position = 0;
+			}		//if the mouse is to the right of the text, set it to the end
+			else if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() >= TempPos.x()+BottomRightText.x())
+			{
+				Position = getText().size();
+			}
+			else
+			{
+				for(UInt32 i = 0; i <getText().size(); i++)
+				{		
+					getFont()->getBounds(getText().substr(0, i), TopLeftText, BottomRightText);
+					getFont()->getBounds(getText().substr(0, i+1), TopLeftText1, BottomRightText1);
+					if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x()>BottomRightText.x()
+					   && WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
+					{
+						Position = i;
+						break;
+					}
+				}
+			}
+			if(isPunctuationChar(getText()[Position]))
+			{
+				EndWord = Position + 1;
+				BeginWord = Position;
+			}
+			else{
+				for(Int32 i = Position; i < getText().size(); i++)
+				{
+					if(!isWordChar(getText()[i]))
+					{
+						EndWord = i;
+						break;
+					}
+				}
+				for(Int32 i = Position; i >= 0; i--)
+				{
+					if(!isWordChar(getText()[i]))
+					{
+						BeginWord = i + 1;
+						break;
+					}
+				}
+			}
+			_TextSelectionEnd = EndWord;
+			_TextSelectionStart = BeginWord;
+			setCaretPosition(EndWord);
+		}
+	}
+	TextComponent::mouseClicked(e);
+
+}
+
 
 void TextField::mousePressed(const MouseEvent& e)
 {

@@ -48,6 +48,7 @@
 #include "OSGTextFieldBase.h"
 #include "Event/OSGActionListener.h"
 
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief TextField class. See \ref 
@@ -82,6 +83,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
 
 	virtual void keyTyped(const KeyEvent& e);
 
+	virtual void mouseClicked(const MouseEvent& e);
 	virtual void mousePressed(const MouseEvent& e);
 	virtual void mouseDragged(const MouseEvent& e);
 
