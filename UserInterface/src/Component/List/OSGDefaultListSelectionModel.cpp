@@ -289,12 +289,16 @@ void 	DefaultListSelectionModel::removeSelectionInterval(UInt32 index0, UInt32 i
 	{
 		case SINGLE_INTERVAL_SELECTION:
 		case SINGLE_SELECTION:
-			// presently, these two options merely removes the existing range
+			// presently, these two options merely removes the existing range if there is something there
 			if (!_RangeSelectionList.empty())
 			{   // only necessary to do anything if it isn't already empty
 				IndexRange range( _RangeSelectionList.front());
 				_RangeSelectionList.clear();
 				produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), range.StartIndex, range.EndIndex, _ValueIsAdjusting));
+			}
+			else
+			{
+				setSelectionInterval(index0, index1);
 			}
 			break;
 		case MULTIPLE_INTERVAL_SELECTION:

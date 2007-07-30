@@ -178,10 +178,74 @@ void List::mousePressed(const MouseEvent& e)
 	}
 	else
 	{
-		//Give myself permenant focus
+		//Give myself permanent focus
 		takeFocus();
 	}
 	Component::mousePressed(e);
+}
+
+void List::keyTyped(const KeyEvent& e)
+{
+	bool noFocus = true;
+	if (e.getKey() == KeyEvent::KEY_UP || e.getKey() == KeyEvent::KEY_DOWN || e.getKey() == KeyEvent::KEY_ENTER)
+	{
+		for(Int32 i(getChildren().size()-1) ; i>=0 && noFocus; --i)
+		{
+			if (getChildren().getValue(i)->getFocused())
+			{
+				noFocus = false; // this exits the loop
+				UInt32 index(0);
+				switch (e.getKey())
+				{
+					case KeyEvent::KEY_UP:
+					case KeyEvent::KEY_DOWN:
+						if (e.getKey() == KeyEvent::KEY_DOWN)
+							index = (i+1) % getChildren().size();
+						else
+							index = (i-1+getChildren().size()) % getChildren().size();
+
+						getChildren().getValue(index)->takeFocus();
+						getSelectionModel()->setLeadSelectionIndex(index);
+						if (e.getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+						{
+							getSelectionModel()->setSelectionInterval(getSelectionModel()->getAnchorSelectionIndex(), index);
+						}
+						else
+						{
+							getSelectionModel()->setAnchorSelectionIndex(index);
+						}
+						break;
+					
+					case KeyEvent::KEY_ENTER: 
+						if (e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+						{
+							getSelectionModel()->removeSelectionInterval(i,i);// this toggles the interval
+						}
+						else
+						{
+							getSelectionModel()->setSelectionInterval(i, i);
+						}
+						break;
+					default:
+						break;
+				}
+			}
+		}	
+		if (noFocus)
+		{
+			UInt32 index(0);
+			if (e.getKey() == KeyEvent::KEY_UP)
+			{
+				index = getChildren().size() - 1;
+				getChildren().getValue(getChildren().size() - 1)->takeFocus();
+			}
+			else if (e.getKey() == KeyEvent::KEY_DOWN)
+			{
+				getChildren().getValue(0)->takeFocus();
+			}
+		}
+	}
+	Component::keyTyped(e);
 }
 
 void List::contentsChanged(ListDataEvent e)
@@ -200,11 +264,6 @@ void List::intervalRemoved(ListDataEvent e)
 {
 	//TODO: Implement
 	updateLayout();
-}
-
-void List::keyTyped(const KeyEvent& e)
-{
-	Component::keyTyped(e);
 }
 
 void List::setModel(ListModel* Model)
