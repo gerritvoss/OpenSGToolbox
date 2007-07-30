@@ -88,6 +88,7 @@ void Frame::keyPressed(const KeyEvent& e)
 			ParentContainer != ContainerPtr(this))
 		{
 			ParentContainer->keyPressed(e);
+			ParentContainer = Container::Ptr::dcast(ParentContainer->getParentContainer());
 		}
 	}
     Component::keyPressed(e);
@@ -106,6 +107,7 @@ void Frame::keyReleased(const KeyEvent& e)
 			ParentContainer != ContainerPtr(this))
 		{
 			ParentContainer->keyReleased(e);
+			ParentContainer = Container::Ptr::dcast(ParentContainer->getParentContainer());
 		}
 	}
     Component::keyReleased(e);
@@ -124,6 +126,7 @@ void Frame::keyTyped(const KeyEvent& e)
 			ParentContainer != ContainerPtr(this))
 		{
 			ParentContainer->keyTyped(e);
+			ParentContainer = Container::Ptr::dcast(ParentContainer->getParentContainer());
 		}
 	}
     Component::keyTyped(e);
