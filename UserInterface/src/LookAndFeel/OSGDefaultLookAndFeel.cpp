@@ -73,7 +73,7 @@
 #include "Graphics/UIDrawObjects/OSGDiscUIDrawObject.h"
 #include "Graphics/UIDrawObjects/OSGLineUIDrawObject.h"
 #include "Component/OSGUIDrawObjectCanvas.h"
-#include "Component/OSGTextField.h"
+#include "Component/Text/OSGTextField.h"
 
 OSG_BEGIN_NAMESPACE
 

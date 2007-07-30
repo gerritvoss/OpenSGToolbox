@@ -90,9 +90,17 @@ int main(int argc, char **argv)
 	// settings for the Button
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
+	/******************************************************
 
-	//ListModel
+			Create ListModel.  This is where you set
+			the values for the List.
+
+
+	******************************************************/
+	// Create ListModel Component
 	AbstractListModel Model;
+
+	// Add values to it
 	SFString StrField1;
 	StrField1.setValue("Red");
 	Model.pushBack(&StrField1);
@@ -119,16 +127,11 @@ int main(int argc, char **argv)
 	Model.pushBack(&StrField6);
 	Model.pushBack(&StrField6);*/
 
-	//ListCellRenderer
+	// Create ListCellRenderer and ListSelectionModel
+	// (should always be default)
 	DefaultListCellGenerator CellGenerator;
-	//ListSelectionModel
 	DefaultListSelectionModel SelectionModel;
 
-	// Create Background to be used with the Main Frame
-	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
 
 	//Create List
 	ListPtr list = List::create();
@@ -143,15 +146,21 @@ int main(int argc, char **argv)
 	SelectionModel.setMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
 	
 
+
+	// Create MainFramelayout
 	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
-	beginEditCP(MainFrameLayout);
+	beginEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
 		MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
 		MainFrameLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
 		MainFrameLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-	endEditCP(MainFrameLayout);
-	
- 	// Create The Main Frame
-	
+	endEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+		
+	// Create Background to be used with the Main Frame
+	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
+	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+	// Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 	   // Add the buttons to the mainframe so they will be displayed
