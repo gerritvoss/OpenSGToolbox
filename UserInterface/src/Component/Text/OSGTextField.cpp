@@ -58,6 +58,8 @@
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include <OpenSG/Input/OSGStringUtils.h>
 
+#include "LookAndFeel/OSGLookAndFeelManager.h"
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -125,8 +127,10 @@ void TextField::drawInternal(const GraphicsPtr TheGraphics) const
 			  getText().substr(_TextSelectionEnd, getText().size()-_TextSelectionEnd), getFont(), ForeColor, getOpacity());
 	   }
    }
-   if(getFocused() && _TextSelectionStart>=_TextSelectionEnd)
+
+   if(getFocused() && _TextSelectionStart>=_TextSelectionEnd && _CurrentCaretBlinkElps <= 0.5*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
    {
+	   ;
    		  //Draw the caret
 		  TheGraphics->drawLine(TempPos+Vec2s(TheGraphics->getTextBounds(getText().substr(0, getCaretPosition()), getFont()).x(), 0),
 	      TempPos + Vec2s(TheGraphics->getTextBounds(getText().substr(0, getCaretPosition()), getFont()).x(),  TheGraphics->getTextBounds(getText(), getFont()).y()), 
@@ -351,6 +355,38 @@ void TextField::produceActionPerformed(const ActionEvent& e)
 	   (*SetItor)->actionPerformed(e);
    }
 }
+
+void TextField::update(const UpdateEvent& e)
+{
+   _CurrentCaretBlinkElps += e.getElapsedTime();
+   if(_CurrentCaretBlinkElps > LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
+   {
+	   _CurrentCaretBlinkElps -= osgfloor<Time>(_CurrentCaretBlinkElps/LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
+   }
+}
+
+void TextField::focusGained(const FocusEvent& e)
+{
+	if( getParentFrame() != NullFC &&
+		getParentFrame()->getDrawingSurface() != NullFC &&
+		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+    {
+		getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(this);
+	}
+	TextComponent::focusGained(e);
+}
+
+void TextField::focusLost(const FocusEvent& e)
+{
+	if( getParentFrame() != NullFC &&
+		getParentFrame()->getDrawingSurface() != NullFC &&
+		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+    {
+		getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+	}
+	TextComponent::focusLost(e);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -358,12 +394,14 @@ void TextField::produceActionPerformed(const ActionEvent& e)
 /*----------------------- constructors & destructors ----------------------*/
 
 TextField::TextField(void) :
-    Inherited()
+    Inherited(),
+		_CurrentCaretBlinkElps(0.0)
 {
 }
 
 TextField::TextField(const TextField &source) :
-    Inherited(source)
+    Inherited(source),
+		_CurrentCaretBlinkElps(0.0)
 {
 }
 

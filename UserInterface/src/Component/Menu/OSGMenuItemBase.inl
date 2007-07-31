@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class WindowEventProducer!
+ **     class MenuItem!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,108 +55,190 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &WindowEventProducerBase::getClassType(void)
+OSG::FieldContainerType &MenuItemBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 WindowEventProducerBase::getClassTypeId(void) 
+OSG::UInt32 MenuItemBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
+//! create a new instance of the class
+inline
+MenuItemPtr MenuItemBase::create(void) 
+{
+    MenuItemPtr fc; 
+
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = MenuItemPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    
+    return fc; 
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+inline
+MenuItemPtr MenuItemBase::createEmpty(void) 
+{ 
+    MenuItemPtr returnValue; 
+    
+    newPtr(returnValue); 
+
+    return returnValue; 
+}
+
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the WindowEventProducer::_sfWindow field.
+//! Get the MenuItem::_sfFont field.
 inline
-SFWindowPtr *WindowEventProducerBase::getSFWindow(void)
+SFFontPtr *MenuItemBase::getSFFont(void)
 {
-    return &_sfWindow;
+    return &_sfFont;
 }
 
-//! Get the WindowEventProducer::_sfEnabled field.
+//! Get the MenuItem::_sfText field.
 inline
-SFBool *WindowEventProducerBase::getSFEnabled(void)
+SFString *MenuItemBase::getSFText(void)
 {
-    return &_sfEnabled;
+    return &_sfText;
 }
 
-//! Get the WindowEventProducer::_sfLastUpdateTime field.
+//! Get the MenuItem::_sfAcceleratorModifiers field.
 inline
-SFTime *WindowEventProducerBase::getSFLastUpdateTime(void)
+SFUInt32 *MenuItemBase::getSFAcceleratorModifiers(void)
 {
-    return &_sfLastUpdateTime;
+    return &_sfAcceleratorModifiers;
+}
+
+//! Get the MenuItem::_sfAcceleratorKey field.
+inline
+SFUInt32 *MenuItemBase::getSFAcceleratorKey(void)
+{
+    return &_sfAcceleratorKey;
+}
+
+//! Get the MenuItem::_sfArmed field.
+inline
+SFBool *MenuItemBase::getSFArmed(void)
+{
+    return &_sfArmed;
 }
 
 
-//! Get the value of the WindowEventProducer::_sfWindow field.
+//! Get the value of the MenuItem::_sfFont field.
 inline
-WindowPtr &WindowEventProducerBase::getWindow(void)
+FontPtr &MenuItemBase::getFont(void)
 {
-    return _sfWindow.getValue();
+    return _sfFont.getValue();
 }
 
-//! Get the value of the WindowEventProducer::_sfWindow field.
+//! Get the value of the MenuItem::_sfFont field.
 inline
-const WindowPtr &WindowEventProducerBase::getWindow(void) const
+const FontPtr &MenuItemBase::getFont(void) const
 {
-    return _sfWindow.getValue();
+    return _sfFont.getValue();
 }
 
-//! Set the value of the WindowEventProducer::_sfWindow field.
+//! Set the value of the MenuItem::_sfFont field.
 inline
-void WindowEventProducerBase::setWindow(const WindowPtr &value)
+void MenuItemBase::setFont(const FontPtr &value)
 {
-    _sfWindow.setValue(value);
+    _sfFont.setValue(value);
 }
 
-//! Get the value of the WindowEventProducer::_sfEnabled field.
+//! Get the value of the MenuItem::_sfText field.
 inline
-bool &WindowEventProducerBase::getEnabled(void)
+std::string &MenuItemBase::getText(void)
 {
-    return _sfEnabled.getValue();
+    return _sfText.getValue();
 }
 
-//! Get the value of the WindowEventProducer::_sfEnabled field.
+//! Get the value of the MenuItem::_sfText field.
 inline
-const bool &WindowEventProducerBase::getEnabled(void) const
+const std::string &MenuItemBase::getText(void) const
 {
-    return _sfEnabled.getValue();
+    return _sfText.getValue();
 }
 
-//! Set the value of the WindowEventProducer::_sfEnabled field.
+//! Set the value of the MenuItem::_sfText field.
 inline
-void WindowEventProducerBase::setEnabled(const bool &value)
+void MenuItemBase::setText(const std::string &value)
 {
-    _sfEnabled.setValue(value);
+    _sfText.setValue(value);
 }
 
-//! Get the value of the WindowEventProducer::_sfLastUpdateTime field.
+//! Get the value of the MenuItem::_sfAcceleratorModifiers field.
 inline
-Time &WindowEventProducerBase::getLastUpdateTime(void)
+UInt32 &MenuItemBase::getAcceleratorModifiers(void)
 {
-    return _sfLastUpdateTime.getValue();
+    return _sfAcceleratorModifiers.getValue();
 }
 
-//! Get the value of the WindowEventProducer::_sfLastUpdateTime field.
+//! Get the value of the MenuItem::_sfAcceleratorModifiers field.
 inline
-const Time &WindowEventProducerBase::getLastUpdateTime(void) const
+const UInt32 &MenuItemBase::getAcceleratorModifiers(void) const
 {
-    return _sfLastUpdateTime.getValue();
+    return _sfAcceleratorModifiers.getValue();
 }
 
-//! Set the value of the WindowEventProducer::_sfLastUpdateTime field.
+//! Set the value of the MenuItem::_sfAcceleratorModifiers field.
 inline
-void WindowEventProducerBase::setLastUpdateTime(const Time &value)
+void MenuItemBase::setAcceleratorModifiers(const UInt32 &value)
 {
-    _sfLastUpdateTime.setValue(value);
+    _sfAcceleratorModifiers.setValue(value);
+}
+
+//! Get the value of the MenuItem::_sfAcceleratorKey field.
+inline
+UInt32 &MenuItemBase::getAcceleratorKey(void)
+{
+    return _sfAcceleratorKey.getValue();
+}
+
+//! Get the value of the MenuItem::_sfAcceleratorKey field.
+inline
+const UInt32 &MenuItemBase::getAcceleratorKey(void) const
+{
+    return _sfAcceleratorKey.getValue();
+}
+
+//! Set the value of the MenuItem::_sfAcceleratorKey field.
+inline
+void MenuItemBase::setAcceleratorKey(const UInt32 &value)
+{
+    _sfAcceleratorKey.setValue(value);
+}
+
+//! Get the value of the MenuItem::_sfArmed field.
+inline
+bool &MenuItemBase::getArmed(void)
+{
+    return _sfArmed.getValue();
+}
+
+//! Get the value of the MenuItem::_sfArmed field.
+inline
+const bool &MenuItemBase::getArmed(void) const
+{
+    return _sfArmed.getValue();
+}
+
+//! Set the value of the MenuItem::_sfArmed field.
+inline
+void MenuItemBase::setArmed(const bool &value)
+{
+    _sfArmed.setValue(value);
 }
 
 
 OSG_END_NAMESPACE
 
-#define OSGWINDOWEVENTPRODUCERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGMENUITEMBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

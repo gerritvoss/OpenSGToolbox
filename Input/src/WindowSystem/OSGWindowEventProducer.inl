@@ -19,6 +19,12 @@ void WindowEventProducer::setCursorType(CursorType Type)
 }
 
 inline
+void WindowEventProducer::addUpdateListener(UpdateListenerPtr Listener)
+{
+   _UpdateListeners.insert(Listener);
+}
+
+inline
 void WindowEventProducer::addMouseListener(MouseListenerPtr Listener)
 {
    _MouseListeners.insert(Listener);
@@ -55,6 +61,16 @@ void WindowEventProducer::removeMouseListener(MouseListenerPtr Listener)
    if(EraseIter != _MouseListeners.end())
    {
       _MouseListeners.erase(EraseIter);
+   }
+}
+
+inline
+void WindowEventProducer::removeUpdateListener(UpdateListenerPtr Listener)
+{
+   UpdateListenerSetItor EraseIter(_UpdateListeners.find(Listener));
+   if(EraseIter != _UpdateListeners.end())
+   {
+      _UpdateListeners.erase(EraseIter);
    }
 }
 

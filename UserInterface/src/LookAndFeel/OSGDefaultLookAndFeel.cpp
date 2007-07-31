@@ -102,6 +102,11 @@ void DefaultLookAndFeel::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+Real32 DefaultLookAndFeel::getTextCaretRate(void) const
+{
+	return _TextCaretRate;
+}
+
 void DefaultLookAndFeel::init(void)
 {
 	//Default Font
@@ -839,13 +844,15 @@ void DefaultLookAndFeel::init(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 DefaultLookAndFeel::DefaultLookAndFeel(void) :
-    Inherited()
+    Inherited(),
+		_TextCaretRate(1.0)
 {
 
 }
 
 DefaultLookAndFeel::DefaultLookAndFeel(const DefaultLookAndFeel &source) :
-    Inherited(source)
+    Inherited(source),
+		_TextCaretRate(source._TextCaretRate)
 {
 }
 

@@ -637,6 +637,18 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd2, UINT uMsg,
             break;
                                     
         case WM_PAINT:
+			{
+				//Updating
+				Time Now(getSystemTime());
+				Time ElapsedTime(Now - getLastUpdateTime());
+				if(ElapsedTime > 0.0 && ElapsedTime < 10.0)
+				{
+					produceUpdate(ElapsedTime);
+				}
+				beginEditCP(Win32WindowEventProducerPtr(this), LastUpdateTimeFieldMask);
+				   setLastUpdateTime(Now);
+				endEditCP(Win32WindowEventProducerPtr(this), LastUpdateTimeFieldMask);
+			}
             _DisplayCallbackFunc();
             break;
 

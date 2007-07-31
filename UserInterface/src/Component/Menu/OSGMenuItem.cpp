@@ -36,89 +36,107 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGLOOKANDFEEL_H_
-#define _OSGLOOKANDFEEL_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEUSERINTERFACELIB
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGLookAndFeelBase.h"
+#include "OSGMenuItem.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeel : public LookAndFeelBase
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class osg::MenuItem
+A UI MenuItem. 	
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void MenuItem::initMethod (void)
 {
-  private:
+}
 
-    typedef LookAndFeelBase Inherited;
 
-    /*==========================  PUBLIC  =================================*/
-  public:
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
-    /*! \{                                                                 */
+void MenuItem::drawInternal(const GraphicsPtr TheGraphics) const
+{
+}
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
+/*----------------------- constructors & destructors ----------------------*/
 
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
+MenuItem::MenuItem(void) :
+    Inherited()
+{
+}
 
-    /*! \}                                                                 */
+MenuItem::MenuItem(const MenuItem &source) :
+    Inherited(source)
+{
+}
 
-	virtual void init(void) = 0;
+MenuItem::~MenuItem(void)
+{
+}
 
-	virtual Real32 getTextCaretRate(void) const = 0;
-    /*=========================  PROTECTED  ===============================*/
-  protected:
+/*----------------------------- class specific ----------------------------*/
 
-    // Variables should all be in LookAndFeelBase.
+void MenuItem::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                  Constructors                                */
-    /*! \{                                                                 */
+void MenuItem::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump MenuItem NI" << std::endl;
+}
 
-    LookAndFeel(void);
-    LookAndFeel(const LookAndFeel &source);
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Destructors                                */
-    /*! \{                                                                 */
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
 
-    virtual ~LookAndFeel(void); 
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
 
-    /*! \}                                                                 */
-    
-    /*==========================  PRIVATE  ================================*/
-  private:
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
 
-    friend class FieldContainer;
-    friend class LookAndFeelBase;
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGMENUITEMBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGMENUITEMBASE_INLINE_CVSID;
 
-    static void initMethod(void);
+    static Char8 cvsid_fields_hpp[] = OSGMENUITEMFIELDS_HEADER_CVSID;
+}
 
-    // prohibit default functions (move to 'public' if you need one)
-
-    void operator =(const LookAndFeel &source);
-};
-
-typedef LookAndFeel *LookAndFeelP;
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
 
 OSG_END_NAMESPACE
 
-#include "OSGLookAndFeelBase.inl"
-#include "OSGLookAndFeel.inl"
-
-#define OSGLOOKANDFEEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
-#endif /* _OSGLOOKANDFEEL_H_ */

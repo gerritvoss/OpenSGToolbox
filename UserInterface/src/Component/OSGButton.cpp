@@ -200,7 +200,14 @@ void Button::mouseEntered(const MouseEvent& e)
 
 void Button::mouseExited(const MouseEvent& e)
 {
-
+	/*if(getActive())
+	{
+		if(getParentFrame() != NullFC &&
+				   getParentFrame()->getDrawingSurface() != NullFC &&
+				   getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+				{
+	            }
+	}*/
 	beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
 		ButtonPtr(this)->setActive(false);
 	endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
@@ -246,12 +253,14 @@ void Button::produceActionPerformed(const ActionEvent& e)
 /*----------------------- constructors & destructors ----------------------*/
 
 Button::Button(void) :
-    Inherited()
+    Inherited(),
+		_ButtonMouseListener(ButtonPtr(this))
 {
 }
 
 Button::Button(const Button &source) :
-    Inherited(source)
+    Inherited(source),
+		_ButtonMouseListener(ButtonPtr(this))
 {
 }
 
@@ -270,6 +279,39 @@ void Button::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump Button NI" << std::endl;
+}
+
+
+Button::ButtonMouseListener::ButtonMouseListener(ButtonPtr TheButton) :
+_Button(TheButton)
+{
+}
+
+void Button::ButtonMouseListener::mouseClicked(const MouseEvent& e)
+{
+}
+
+void Button::ButtonMouseListener::mouseEntered(const MouseEvent& e)
+{
+}
+
+void Button::ButtonMouseListener::mouseExited(const MouseEvent& e)
+{
+}
+
+void Button::ButtonMouseListener::mousePressed(const MouseEvent& e)
+{
+}
+
+void Button::ButtonMouseListener::mouseReleased(const MouseEvent& e)
+{
+	if(e.getButton() == MouseEvent::BUTTON1)
+	{
+		beginEditCP(_Button, Button::ActiveFieldMask);
+	        _Button->setActive(false);
+		endEditCP(_Button, Button::ActiveFieldMask);
+		//Remove myself from the listener
+	}
 }
 
 

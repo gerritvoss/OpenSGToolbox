@@ -43,6 +43,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <OpenSG/OSGGL.h>
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGTextLayoutParam.h>
 #include <OpenSG/OSGTextLayoutResult.h>
@@ -133,7 +134,7 @@ void Graphics2D::postDraw()
 void Graphics2D::drawRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color, const Real32& Opacity) const
 {
    Real32 Alpha(Color.alpha() * Opacity * getOpacity());
-	if(Alpha < 1.0)
+	if(Alpha < 1.0 || getEnablePolygonAntiAliasing())
 	{
 		//Setup the Blending equations properly
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -148,7 +149,7 @@ void Graphics2D::drawRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const 
 	   glVertex2s(TopLeft.x(), BottomRight.y());
 	glEnd();
 	
-	if(Alpha < 1.0)
+	if(Alpha < 1.0 || getEnablePolygonAntiAliasing())
 	{
 		glDisable(GL_BLEND);
 	}

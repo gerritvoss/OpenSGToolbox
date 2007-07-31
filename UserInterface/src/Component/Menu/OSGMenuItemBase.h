@@ -45,63 +45,69 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class WindowEventProducer
+ **     class MenuItem
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGWINDOWEVENTPRODUCERBASE_H_
-#define _OSGWINDOWEVENTPRODUCERBASE_H_
+#ifndef _OSGMENUITEMBASE_H_
+#define _OSGMENUITEMBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGInputDef.h"
+#include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGFieldContainer.h> // Parent
+#include "Component/OSGComponent.h" // Parent
 
-#include <OpenSG/OSGWindowFields.h> // Window type
-#include <OpenSG/OSGBoolFields.h> // Enabled type
-#include <OpenSG/OSGTimeFields.h> // LastUpdateTime type
+#include "Text/OSGFont.h" // Font type
+#include <OpenSG/OSGStringFields.h> // Text type
+#include <OpenSG/OSGUInt32Fields.h> // AcceleratorModifiers type
+#include <OpenSG/OSGUInt32Fields.h> // AcceleratorKey type
+#include <OpenSG/OSGBoolFields.h> // Armed type
 
-#include "OSGWindowEventProducerFields.h"
+#include "OSGMenuItemFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class WindowEventProducer;
+class MenuItem;
 class BinaryDataHandler;
 
-//! \brief WindowEventProducer Base Class.
+//! \brief MenuItem Base Class.
 
-class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
+class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
 {
   private:
 
-    typedef FieldContainer    Inherited;
+    typedef Component    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef WindowEventProducerPtr  Ptr;
+    typedef MenuItemPtr  Ptr;
 
     enum
     {
-        WindowFieldId         = Inherited::NextFieldId,
-        EnabledFieldId        = WindowFieldId         + 1,
-        LastUpdateTimeFieldId = EnabledFieldId        + 1,
-        NextFieldId           = LastUpdateTimeFieldId + 1
+        FontFieldId                 = Inherited::NextFieldId,
+        TextFieldId                 = FontFieldId                 + 1,
+        AcceleratorModifiersFieldId = TextFieldId                 + 1,
+        AcceleratorKeyFieldId       = AcceleratorModifiersFieldId + 1,
+        ArmedFieldId                = AcceleratorKeyFieldId       + 1,
+        NextFieldId                 = ArmedFieldId                + 1
     };
 
-    static const OSG::BitVector WindowFieldMask;
-    static const OSG::BitVector EnabledFieldMask;
-    static const OSG::BitVector LastUpdateTimeFieldMask;
+    static const OSG::BitVector FontFieldMask;
+    static const OSG::BitVector TextFieldMask;
+    static const OSG::BitVector AcceleratorModifiersFieldMask;
+    static const OSG::BitVector AcceleratorKeyFieldMask;
+    static const OSG::BitVector ArmedFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -128,25 +134,33 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFWindowPtr         *getSFWindow         (void);
-           SFBool              *getSFEnabled        (void);
-           SFTime              *getSFLastUpdateTime (void);
+           SFFontPtr           *getSFFont           (void);
+           SFString            *getSFText           (void);
+           SFUInt32            *getSFAcceleratorModifiers(void);
+           SFUInt32            *getSFAcceleratorKey (void);
+           SFBool              *getSFArmed          (void);
 
-           WindowPtr           &getWindow         (void);
-     const WindowPtr           &getWindow         (void) const;
-           bool                &getEnabled        (void);
-     const bool                &getEnabled        (void) const;
-           Time                &getLastUpdateTime (void);
-     const Time                &getLastUpdateTime (void) const;
+           FontPtr             &getFont           (void);
+     const FontPtr             &getFont           (void) const;
+           std::string         &getText           (void);
+     const std::string         &getText           (void) const;
+           UInt32              &getAcceleratorModifiers(void);
+     const UInt32              &getAcceleratorModifiers(void) const;
+           UInt32              &getAcceleratorKey (void);
+     const UInt32              &getAcceleratorKey (void) const;
+           bool                &getArmed          (void);
+     const bool                &getArmed          (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setWindow         ( const WindowPtr &value );
-     void setEnabled        ( const bool &value );
-     void setLastUpdateTime ( const Time &value );
+     void setFont           ( const FontPtr &value );
+     void setText           ( const std::string &value );
+     void setAcceleratorModifiers( const UInt32 &value );
+     void setAcceleratorKey ( const UInt32 &value );
+     void setArmed          ( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -166,6 +180,22 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
 
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Construction                               */
+    /*! \{                                                                 */
+
+    static  MenuItemPtr      create          (void); 
+    static  MenuItemPtr      createEmpty     (void); 
+
+    /*! \}                                                                 */
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Copy                                   */
+    /*! \{                                                                 */
+
+    virtual FieldContainerPtr     shallowCopy     (void) const; 
+
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -173,24 +203,26 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFWindowPtr         _sfWindow;
-    SFBool              _sfEnabled;
-    SFTime              _sfLastUpdateTime;
+    SFFontPtr           _sfFont;
+    SFString            _sfText;
+    SFUInt32            _sfAcceleratorModifiers;
+    SFUInt32            _sfAcceleratorKey;
+    SFBool              _sfArmed;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    WindowEventProducerBase(void);
-    WindowEventProducerBase(const WindowEventProducerBase &source);
+    MenuItemBase(void);
+    MenuItemBase(const MenuItemBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~WindowEventProducerBase(void); 
+    virtual ~MenuItemBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -198,13 +230,13 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      WindowEventProducerBase *pOther,
+    void executeSyncImpl(      MenuItemBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      WindowEventProducerBase *pOther,
+    void executeSyncImpl(      MenuItemBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -234,7 +266,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const WindowEventProducerBase &source);
+    void operator =(const MenuItemBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -242,17 +274,17 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
 //---------------------------------------------------------------------------
 
 
-typedef WindowEventProducerBase *WindowEventProducerBaseP;
+typedef MenuItemBase *MenuItemBaseP;
 
-typedef osgIF<WindowEventProducerBase::isNodeCore,
-              CoredNodePtr<WindowEventProducer>,
+typedef osgIF<MenuItemBase::isNodeCore,
+              CoredNodePtr<MenuItem>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet WindowEventProducerNodePtr;
+              >::_IRet MenuItemNodePtr;
 
-typedef RefPtr<WindowEventProducerPtr> WindowEventProducerRefPtr;
+typedef RefPtr<MenuItemPtr> MenuItemRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGWINDOWEVENTPRODUCERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGMENUITEMBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGWINDOWEVENTPRODUCERBASE_H_ */
+#endif /* _OSGMENUITEMBASE_H_ */

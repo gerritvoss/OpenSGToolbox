@@ -76,6 +76,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultLookAndFeel : public DefaultLookAnd
     /*! \}                                                                 */
 	
 	virtual void init(void);
+	virtual Real32 getTextCaretRate(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -104,6 +105,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultLookAndFeel : public DefaultLookAnd
     friend class DefaultLookAndFeelBase;
 
     static void initMethod(void);
+
+	Real32 _TextCaretRate;
 
     // prohibit default functions (move to 'public' if you need one)
 

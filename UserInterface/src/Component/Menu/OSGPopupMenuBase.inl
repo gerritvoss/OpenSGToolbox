@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class WindowEventProducer!
+ **     class PopupMenu!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,108 +55,134 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &WindowEventProducerBase::getClassType(void)
+OSG::FieldContainerType &PopupMenuBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 WindowEventProducerBase::getClassTypeId(void) 
+OSG::UInt32 PopupMenuBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
+//! create a new instance of the class
+inline
+PopupMenuPtr PopupMenuBase::create(void) 
+{
+    PopupMenuPtr fc; 
+
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = PopupMenuPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    
+    return fc; 
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+inline
+PopupMenuPtr PopupMenuBase::createEmpty(void) 
+{ 
+    PopupMenuPtr returnValue; 
+    
+    newPtr(returnValue); 
+
+    return returnValue; 
+}
+
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the WindowEventProducer::_sfWindow field.
+//! Get the PopupMenu::_mfItems field.
 inline
-SFWindowPtr *WindowEventProducerBase::getSFWindow(void)
+MFMenuItemPtr *PopupMenuBase::getMFItems(void)
 {
-    return &_sfWindow;
+    return &_mfItems;
 }
 
-//! Get the WindowEventProducer::_sfEnabled field.
+//! Get the PopupMenu::_sfSubMenuDelay field.
 inline
-SFBool *WindowEventProducerBase::getSFEnabled(void)
+SFReal32 *PopupMenuBase::getSFSubMenuDelay(void)
 {
-    return &_sfEnabled;
+    return &_sfSubMenuDelay;
 }
 
-//! Get the WindowEventProducer::_sfLastUpdateTime field.
+//! Get the PopupMenu::_sfInvoker field.
 inline
-SFTime *WindowEventProducerBase::getSFLastUpdateTime(void)
+SFComponentPtr *PopupMenuBase::getSFInvoker(void)
 {
-    return &_sfLastUpdateTime;
+    return &_sfInvoker;
 }
 
 
-//! Get the value of the WindowEventProducer::_sfWindow field.
+//! Get the value of the PopupMenu::_sfSubMenuDelay field.
 inline
-WindowPtr &WindowEventProducerBase::getWindow(void)
+Real32 &PopupMenuBase::getSubMenuDelay(void)
 {
-    return _sfWindow.getValue();
+    return _sfSubMenuDelay.getValue();
 }
 
-//! Get the value of the WindowEventProducer::_sfWindow field.
+//! Get the value of the PopupMenu::_sfSubMenuDelay field.
 inline
-const WindowPtr &WindowEventProducerBase::getWindow(void) const
+const Real32 &PopupMenuBase::getSubMenuDelay(void) const
 {
-    return _sfWindow.getValue();
+    return _sfSubMenuDelay.getValue();
 }
 
-//! Set the value of the WindowEventProducer::_sfWindow field.
+//! Set the value of the PopupMenu::_sfSubMenuDelay field.
 inline
-void WindowEventProducerBase::setWindow(const WindowPtr &value)
+void PopupMenuBase::setSubMenuDelay(const Real32 &value)
 {
-    _sfWindow.setValue(value);
+    _sfSubMenuDelay.setValue(value);
 }
 
-//! Get the value of the WindowEventProducer::_sfEnabled field.
+//! Get the value of the PopupMenu::_sfInvoker field.
 inline
-bool &WindowEventProducerBase::getEnabled(void)
+ComponentPtr &PopupMenuBase::getInvoker(void)
 {
-    return _sfEnabled.getValue();
+    return _sfInvoker.getValue();
 }
 
-//! Get the value of the WindowEventProducer::_sfEnabled field.
+//! Get the value of the PopupMenu::_sfInvoker field.
 inline
-const bool &WindowEventProducerBase::getEnabled(void) const
+const ComponentPtr &PopupMenuBase::getInvoker(void) const
 {
-    return _sfEnabled.getValue();
+    return _sfInvoker.getValue();
 }
 
-//! Set the value of the WindowEventProducer::_sfEnabled field.
+//! Set the value of the PopupMenu::_sfInvoker field.
 inline
-void WindowEventProducerBase::setEnabled(const bool &value)
+void PopupMenuBase::setInvoker(const ComponentPtr &value)
 {
-    _sfEnabled.setValue(value);
+    _sfInvoker.setValue(value);
 }
 
-//! Get the value of the WindowEventProducer::_sfLastUpdateTime field.
+
+//! Get the value of the \a index element the PopupMenu::_mfItems field.
 inline
-Time &WindowEventProducerBase::getLastUpdateTime(void)
+MenuItemPtr &PopupMenuBase::getItems(const UInt32 index)
 {
-    return _sfLastUpdateTime.getValue();
+    return _mfItems[index];
 }
 
-//! Get the value of the WindowEventProducer::_sfLastUpdateTime field.
+//! Get the PopupMenu::_mfItems field.
 inline
-const Time &WindowEventProducerBase::getLastUpdateTime(void) const
+MFMenuItemPtr &PopupMenuBase::getItems(void)
 {
-    return _sfLastUpdateTime.getValue();
+    return _mfItems;
 }
 
-//! Set the value of the WindowEventProducer::_sfLastUpdateTime field.
+//! Get the PopupMenu::_mfItems field.
 inline
-void WindowEventProducerBase::setLastUpdateTime(const Time &value)
+const MFMenuItemPtr &PopupMenuBase::getItems(void) const
 {
-    _sfLastUpdateTime.setValue(value);
+    return _mfItems;
 }
-
 
 OSG_END_NAMESPACE
 
-#define OSGWINDOWEVENTPRODUCERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGPOPUPMENUBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

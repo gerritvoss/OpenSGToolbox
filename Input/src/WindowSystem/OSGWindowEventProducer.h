@@ -57,6 +57,7 @@
 #include "Event/OSGMouseWheelListener.h"
 #include "Event/OSGWindowListener.h"
 #include "Event/OSGKeyListener.h"
+#include "Event/OSGUpdateListener.h"
 
 #include "OSGEventDispatchThread.h"
 
@@ -90,6 +91,12 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     MouseWheelListenerSet  _MouseWheelListeners;
     KeyListenerSet         _KeyListeners;
     WindowListenerSet       _WindowListeners;
+
+	typedef std::set<UpdateListenerPtr> UpdateListenerSet;
+    typedef UpdateListenerSet::iterator UpdateListenerSetItor;
+    typedef UpdateListenerSet::const_iterator UpdateListenerSetConstItor;
+	
+    UpdateListenerSet       _UpdateListeners;
 
     struct Click
     {
@@ -142,12 +149,14 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     void addMouseWheelListener(MouseWheelListenerPtr Listener);
     void addKeyListener(KeyListenerPtr Listener);
     void addWindowListener(WindowListenerPtr Listener);
+    void addUpdateListener(UpdateListenerPtr Listener);
 
     void removeMouseListener(MouseListenerPtr Listener);
     void removeMouseMotionListener(MouseMotionListenerPtr Listener);
     void removeMouseWheelListener(MouseWheelListenerPtr Listener);
     void removeKeyListener(KeyListenerPtr Listener);
     void removeWindowListener(WindowListenerPtr Listener);
+    void removeUpdateListener(UpdateListenerPtr Listener);
 
     //Set the Window Position
     virtual void setPosition(Pnt2s Pos) = 0;
@@ -245,7 +254,8 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     void produceKeyPressed(const KeyEvent::Key& TheKey, const UInt32& Modifiers);
     void produceKeyReleased(const KeyEvent::Key& TheKey, const UInt32& Modifiers);
     void produceKeyTyped(const KeyEvent::Key& TheKey, const UInt32& Modifiers);
-
+	
+    void produceUpdate(const Time& ElapsedTime);
 	
     void produceWindowOpened(void);
     void produceWindowClosing(void);

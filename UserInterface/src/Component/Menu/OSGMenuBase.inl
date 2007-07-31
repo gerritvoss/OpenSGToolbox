@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class WindowEventProducer!
+ **     class Menu!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,108 +55,190 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &WindowEventProducerBase::getClassType(void)
+OSG::FieldContainerType &MenuBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 WindowEventProducerBase::getClassTypeId(void) 
+OSG::UInt32 MenuBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
+//! create a new instance of the class
+inline
+MenuPtr MenuBase::create(void) 
+{
+    MenuPtr fc; 
+
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = MenuPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    
+    return fc; 
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+inline
+MenuPtr MenuBase::createEmpty(void) 
+{ 
+    MenuPtr returnValue; 
+    
+    newPtr(returnValue); 
+
+    return returnValue; 
+}
+
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the WindowEventProducer::_sfWindow field.
+//! Get the Menu::_sfButton field.
 inline
-SFWindowPtr *WindowEventProducerBase::getSFWindow(void)
+SFToggleButtonPtr *MenuBase::getSFButton(void)
 {
-    return &_sfWindow;
+    return &_sfButton;
 }
 
-//! Get the WindowEventProducer::_sfEnabled field.
+//! Get the Menu::_mfItems field.
 inline
-SFBool *WindowEventProducerBase::getSFEnabled(void)
+MFMenuItemPtr *MenuBase::getMFItems(void)
 {
-    return &_sfEnabled;
+    return &_mfItems;
 }
 
-//! Get the WindowEventProducer::_sfLastUpdateTime field.
+//! Get the Menu::_sfSubMenuDelay field.
 inline
-SFTime *WindowEventProducerBase::getSFLastUpdateTime(void)
+SFReal32 *MenuBase::getSFSubMenuDelay(void)
 {
-    return &_sfLastUpdateTime;
+    return &_sfSubMenuDelay;
+}
+
+//! Get the Menu::_sfSelected field.
+inline
+SFBool *MenuBase::getSFSelected(void)
+{
+    return &_sfSelected;
+}
+
+//! Get the Menu::_sfTopLevelMenu field.
+inline
+SFBool *MenuBase::getSFTopLevelMenu(void)
+{
+    return &_sfTopLevelMenu;
 }
 
 
-//! Get the value of the WindowEventProducer::_sfWindow field.
+//! Get the value of the Menu::_sfButton field.
 inline
-WindowPtr &WindowEventProducerBase::getWindow(void)
+ToggleButtonPtr &MenuBase::getButton(void)
 {
-    return _sfWindow.getValue();
+    return _sfButton.getValue();
 }
 
-//! Get the value of the WindowEventProducer::_sfWindow field.
+//! Get the value of the Menu::_sfButton field.
 inline
-const WindowPtr &WindowEventProducerBase::getWindow(void) const
+const ToggleButtonPtr &MenuBase::getButton(void) const
 {
-    return _sfWindow.getValue();
+    return _sfButton.getValue();
 }
 
-//! Set the value of the WindowEventProducer::_sfWindow field.
+//! Set the value of the Menu::_sfButton field.
 inline
-void WindowEventProducerBase::setWindow(const WindowPtr &value)
+void MenuBase::setButton(const ToggleButtonPtr &value)
 {
-    _sfWindow.setValue(value);
+    _sfButton.setValue(value);
 }
 
-//! Get the value of the WindowEventProducer::_sfEnabled field.
+//! Get the value of the Menu::_sfSubMenuDelay field.
 inline
-bool &WindowEventProducerBase::getEnabled(void)
+Real32 &MenuBase::getSubMenuDelay(void)
 {
-    return _sfEnabled.getValue();
+    return _sfSubMenuDelay.getValue();
 }
 
-//! Get the value of the WindowEventProducer::_sfEnabled field.
+//! Get the value of the Menu::_sfSubMenuDelay field.
 inline
-const bool &WindowEventProducerBase::getEnabled(void) const
+const Real32 &MenuBase::getSubMenuDelay(void) const
 {
-    return _sfEnabled.getValue();
+    return _sfSubMenuDelay.getValue();
 }
 
-//! Set the value of the WindowEventProducer::_sfEnabled field.
+//! Set the value of the Menu::_sfSubMenuDelay field.
 inline
-void WindowEventProducerBase::setEnabled(const bool &value)
+void MenuBase::setSubMenuDelay(const Real32 &value)
 {
-    _sfEnabled.setValue(value);
+    _sfSubMenuDelay.setValue(value);
 }
 
-//! Get the value of the WindowEventProducer::_sfLastUpdateTime field.
+//! Get the value of the Menu::_sfSelected field.
 inline
-Time &WindowEventProducerBase::getLastUpdateTime(void)
+bool &MenuBase::getSelected(void)
 {
-    return _sfLastUpdateTime.getValue();
+    return _sfSelected.getValue();
 }
 
-//! Get the value of the WindowEventProducer::_sfLastUpdateTime field.
+//! Get the value of the Menu::_sfSelected field.
 inline
-const Time &WindowEventProducerBase::getLastUpdateTime(void) const
+const bool &MenuBase::getSelected(void) const
 {
-    return _sfLastUpdateTime.getValue();
+    return _sfSelected.getValue();
 }
 
-//! Set the value of the WindowEventProducer::_sfLastUpdateTime field.
+//! Set the value of the Menu::_sfSelected field.
 inline
-void WindowEventProducerBase::setLastUpdateTime(const Time &value)
+void MenuBase::setSelected(const bool &value)
 {
-    _sfLastUpdateTime.setValue(value);
+    _sfSelected.setValue(value);
 }
 
+//! Get the value of the Menu::_sfTopLevelMenu field.
+inline
+bool &MenuBase::getTopLevelMenu(void)
+{
+    return _sfTopLevelMenu.getValue();
+}
+
+//! Get the value of the Menu::_sfTopLevelMenu field.
+inline
+const bool &MenuBase::getTopLevelMenu(void) const
+{
+    return _sfTopLevelMenu.getValue();
+}
+
+//! Set the value of the Menu::_sfTopLevelMenu field.
+inline
+void MenuBase::setTopLevelMenu(const bool &value)
+{
+    _sfTopLevelMenu.setValue(value);
+}
+
+
+//! Get the value of the \a index element the Menu::_mfItems field.
+inline
+MenuItemPtr &MenuBase::getItems(const UInt32 index)
+{
+    return _mfItems[index];
+}
+
+//! Get the Menu::_mfItems field.
+inline
+MFMenuItemPtr &MenuBase::getItems(void)
+{
+    return _mfItems;
+}
+
+//! Get the Menu::_mfItems field.
+inline
+const MFMenuItemPtr &MenuBase::getItems(void) const
+{
+    return _mfItems;
+}
 
 OSG_END_NAMESPACE
 
-#define OSGWINDOWEVENTPRODUCERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGMENUBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

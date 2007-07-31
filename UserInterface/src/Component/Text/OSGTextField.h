@@ -47,6 +47,8 @@
 
 #include "OSGTextFieldBase.h"
 #include "Event/OSGActionListener.h"
+#include <OpenSG/Input/OSGWindowEventProducer.h>
+#include <OpenSG/Input/OSGUpdateListener.h>
 
 
 OSG_BEGIN_NAMESPACE
@@ -55,7 +57,8 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceTextField for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
+class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase, public UpdateListener
+
 {
   private:
 
@@ -86,6 +89,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
 	virtual void mouseClicked(const MouseEvent& e);
 	virtual void mousePressed(const MouseEvent& e);
 	virtual void mouseDragged(const MouseEvent& e);
+    virtual void update(const UpdateEvent& e);
+	
+	virtual void focusGained(const FocusEvent& e);
+	virtual void focusLost(const FocusEvent& e);
 
     void addActionListener(ActionListenerPtr Listener);
     void removeActionListener(ActionListenerPtr Listener);
@@ -121,6 +128,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
     ActionListenerSet       _ActionListeners;
 	
     virtual void produceActionPerformed(const ActionEvent& e);
+	
+	mutable Time _CurrentCaretBlinkElps;
     /*==========================  PRIVATE  ================================*/
   private:
 

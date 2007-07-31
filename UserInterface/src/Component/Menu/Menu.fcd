@@ -13,11 +13,20 @@
 >
 A UI Menu.
 	<Field
+		name="Button"
+		type="ToggleButtonPtr"
+		cardinality="single"
+		visibility="external"
+		header="Component/OSGToggleButtonFields.h"
+		access="public"
+	>
+	</Field>
+	<Field
 		name="Items"
 		type="MenuItemPtr"
 		cardinality="multi"
 		visibility="external"
-		header="Component/Menu/OSGMenuItem.h"
+		header="Component/Menu/OSGMenuItemFields.h"
 		access="public"
 	>
 	</Field>

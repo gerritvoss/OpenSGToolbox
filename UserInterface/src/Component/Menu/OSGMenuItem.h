@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGLOOKANDFEEL_H_
-#define _OSGLOOKANDFEEL_H_
+#ifndef _OSGMENUITEM_H_
+#define _OSGMENUITEM_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,15 +45,19 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGLookAndFeelBase.h"
+#include "OSGMenuItemBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeel : public LookAndFeelBase
+/*! \brief MenuItem class. See \ref 
+           PageUserInterfaceMenuItem for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
 {
   private:
 
-    typedef LookAndFeelBase Inherited;
+    typedef MenuItemBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -74,51 +78,48 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeel : public LookAndFeelBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-	virtual void init(void) = 0;
-
-	virtual Real32 getTextCaretRate(void) const = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in LookAndFeelBase.
+    // Variables should all be in MenuItemBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    LookAndFeel(void);
-    LookAndFeel(const LookAndFeel &source);
+    MenuItem(void);
+    MenuItem(const MenuItem &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~LookAndFeel(void); 
+    virtual ~MenuItem(void); 
 
+	virtual void drawInternal(const GraphicsPtr Graphics) const;
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class LookAndFeelBase;
+    friend class MenuItemBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const LookAndFeel &source);
+    void operator =(const MenuItem &source);
 };
 
-typedef LookAndFeel *LookAndFeelP;
+typedef MenuItem *MenuItemP;
 
 OSG_END_NAMESPACE
 
-#include "OSGLookAndFeelBase.inl"
-#include "OSGLookAndFeel.inl"
+#include "OSGMenuItemBase.inl"
+#include "OSGMenuItem.inl"
 
-#define OSGLOOKANDFEEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGMENUITEM_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGLOOKANDFEEL_H_ */
+#endif /* _OSGMENUITEM_H_ */

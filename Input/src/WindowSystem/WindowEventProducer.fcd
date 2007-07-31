@@ -28,4 +28,13 @@ WindowEventProducer is the base class for all Window specific Event producers. I
 		access="public"
 	>
 	</Field>
+	<Field
+		name="LastUpdateTime"
+		type="Time"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="-1.0"
+	>
+	</Field>
 </FieldContainer>

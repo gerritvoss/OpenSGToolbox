@@ -112,6 +112,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 	virtual void keyPressed(const KeyEvent& e);
 	virtual void keyReleased(const KeyEvent& e);
 	virtual void keyTyped(const KeyEvent& e);
+
+	//Focus Events
+	virtual void focusGained(const FocusEvent& e);
+	virtual void focusLost(const FocusEvent& e);
 	
     void addMouseMotionListener(MouseMotionListenerPtr Listener);
     void removeMouseMotionListener(MouseMotionListenerPtr Listener);

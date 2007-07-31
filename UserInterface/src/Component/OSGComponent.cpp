@@ -330,6 +330,16 @@ void Component::keyTyped(const KeyEvent& e)
 	produceKeyTyped(e);
 }
 
+void Component::focusGained(const FocusEvent& e)
+{
+	produceFocusGained(e);
+}
+
+void Component::focusLost(const FocusEvent& e)
+{
+	produceFocusLost(e);
+}
+
 //Producers
 void Component::produceMouseWheelMoved(const MouseWheelEvent& e)
 {
@@ -496,7 +506,7 @@ bool Component::giveFocus(ComponentPtr NewFocusedComponent, bool Temporary)
         beginEditCP(ComponentPtr(this), FocusedFieldMask);
            setFocused(false);
         endEditCP(ComponentPtr(this), FocusedFieldMask);
-        produceFocusLost(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_LOST,Temporary, NewFocusedComponent));
+        focusLost(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_LOST,Temporary, NewFocusedComponent));
 		return true;
     }
 }
@@ -520,7 +530,7 @@ bool Component::takeFocus(bool Temporary)
         endEditCP(ComponentPtr(this), FocusedFieldMask);
 		if(Temporary || getParentFrame() == NullFC)
 		{
-            produceFocusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, NullFC));
+            focusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, NullFC));
 		}
 		else
 		{
@@ -529,7 +539,7 @@ bool Component::takeFocus(bool Temporary)
 				getParentFrame()->getFocusedComponent()->giveFocus(ComponentPtr(this));
 			}
 		    getParentFrame()->setFocusedComponent(ComponentPtr(this));
-            produceFocusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, getParentFrame()->getFocusedComponent()));
+            focusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, getParentFrame()->getFocusedComponent()));
 			//beginEditCP(getParentFrame(), Frame::FocusedComponentFieldMask);
 			//endEditCP(getParentFrame(), Frame::FocusedComponentFieldMask);
 		}

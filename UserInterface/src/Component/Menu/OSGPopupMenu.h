@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGLOOKANDFEEL_H_
-#define _OSGLOOKANDFEEL_H_
+#ifndef _OSGPOPUPMENU_H_
+#define _OSGPOPUPMENU_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,15 +45,19 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGLookAndFeelBase.h"
+#include "OSGPopupMenuBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeel : public LookAndFeelBase
+/*! \brief PopupMenu class. See \ref 
+           PageUserInterfacePopupMenu for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
 {
   private:
 
-    typedef LookAndFeelBase Inherited;
+    typedef PopupMenuBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -74,51 +78,48 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeel : public LookAndFeelBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-	virtual void init(void) = 0;
-
-	virtual Real32 getTextCaretRate(void) const = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in LookAndFeelBase.
+    // Variables should all be in PopupMenuBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    LookAndFeel(void);
-    LookAndFeel(const LookAndFeel &source);
+    PopupMenu(void);
+    PopupMenu(const PopupMenu &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~LookAndFeel(void); 
+    virtual ~PopupMenu(void); 
 
+	virtual void drawInternal(const GraphicsPtr Graphics) const;
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class LookAndFeelBase;
+    friend class PopupMenuBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const LookAndFeel &source);
+    void operator =(const PopupMenu &source);
 };
 
-typedef LookAndFeel *LookAndFeelP;
+typedef PopupMenu *PopupMenuP;
 
 OSG_END_NAMESPACE
 
-#include "OSGLookAndFeelBase.inl"
-#include "OSGLookAndFeel.inl"
+#include "OSGPopupMenuBase.inl"
+#include "OSGPopupMenu.inl"
 
-#define OSGLOOKANDFEEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGPOPUPMENU_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGLOOKANDFEEL_H_ */
+#endif /* _OSGPOPUPMENU_H_ */

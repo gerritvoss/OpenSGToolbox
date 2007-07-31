@@ -31,20 +31,12 @@ A UI Menu.
 	>
 	</Field>
 	<Field
-		name="Selected"
-		type="bool"
+		name="Invoker"
+		type="ComponentPtr"
 		cardinality="single"
 		visibility="external"
-		defaultValue="false"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="TopLevelMenu"
-		type="bool"
-		cardinality="single"
-		visibility="external"
-		defaultValue="false"
+		defaultValue="NullFC"
+		header="Component/OSGComponentFields.h"
 		access="public"
 	>
 	</Field>

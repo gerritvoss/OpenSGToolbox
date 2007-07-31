@@ -48,13 +48,26 @@
 #include "OSGButtonBase.h"
 #include "Util/OSGUIDefines.h"
 #include "Event/OSGActionListener.h"
+#include <OpenSG/Input/OSGMouseListener.h>
 
 OSG_BEGIN_NAMESPACE
 
 class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
 {
   private:
-
+	  class ButtonMouseListener : public MouseListener
+	  {
+	  private:
+		  ButtonPtr _Button;
+		  friend class Button;
+		  ButtonMouseListener(ButtonPtr TheButton);
+	  public:
+		virtual void mouseClicked(const MouseEvent& e);
+		virtual void mouseEntered(const MouseEvent& e);
+		virtual void mouseExited(const MouseEvent& e);
+		virtual void mousePressed(const MouseEvent& e);
+		virtual void mouseReleased(const MouseEvent& e);
+	  };
     typedef ButtonBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
@@ -126,6 +139,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     typedef ActionListenerSet::const_iterator ActionListenerSetConstItor;
 	
     ActionListenerSet       _ActionListeners;
+	ButtonMouseListener _ButtonMouseListener;
 	
     virtual void produceActionPerformed(const ActionEvent& e);
 };

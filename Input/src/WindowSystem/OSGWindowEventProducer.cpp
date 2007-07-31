@@ -313,6 +313,7 @@ void WindowEventProducer::produceKeyPressed(const KeyEvent::Key& TheKey, const U
    {
       (*SetItor)->keyPressed(TheEvent);
    }
+   produceKeyTyped(TheKey, Modifiers);
 }
 
 void WindowEventProducer::produceKeyReleased(const KeyEvent::Key& TheKey, const UInt32& Modifiers)
@@ -322,7 +323,6 @@ void WindowEventProducer::produceKeyReleased(const KeyEvent::Key& TheKey, const 
    {
       (*SetItor)->keyReleased(TheEvent);
    }
-   produceKeyTyped(TheKey, Modifiers);
 }
 
 void WindowEventProducer::produceKeyTyped(const KeyEvent::Key& TheKey, const UInt32& Modifiers)
@@ -412,6 +412,15 @@ void WindowEventProducer::produceWindowExited(void)
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowExited(TheEvent);
+   }
+}
+
+void WindowEventProducer::produceUpdate(const Time& ElapsedTime)
+{
+   UpdateEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), ElapsedTime );
+   for(UpdateListenerSetConstItor SetItor(_UpdateListeners.begin()) ; SetItor != _UpdateListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->update(TheEvent);
    }
 }
 

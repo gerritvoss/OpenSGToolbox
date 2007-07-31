@@ -45,126 +45,136 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class WindowEventProducer!
+ **     class PopupMenu!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEWINDOWEVENTPRODUCERINST
+#define OSG_COMPILEPOPUPMENUINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGWindowEventProducerBase.h"
-#include "OSGWindowEventProducer.h"
+#include "OSGPopupMenuBase.h"
+#include "OSGPopupMenu.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  WindowEventProducerBase::WindowFieldMask = 
-    (TypeTraits<BitVector>::One << WindowEventProducerBase::WindowFieldId);
+const OSG::BitVector  PopupMenuBase::ItemsFieldMask = 
+    (TypeTraits<BitVector>::One << PopupMenuBase::ItemsFieldId);
 
-const OSG::BitVector  WindowEventProducerBase::EnabledFieldMask = 
-    (TypeTraits<BitVector>::One << WindowEventProducerBase::EnabledFieldId);
+const OSG::BitVector  PopupMenuBase::SubMenuDelayFieldMask = 
+    (TypeTraits<BitVector>::One << PopupMenuBase::SubMenuDelayFieldId);
 
-const OSG::BitVector  WindowEventProducerBase::LastUpdateTimeFieldMask = 
-    (TypeTraits<BitVector>::One << WindowEventProducerBase::LastUpdateTimeFieldId);
+const OSG::BitVector  PopupMenuBase::InvokerFieldMask = 
+    (TypeTraits<BitVector>::One << PopupMenuBase::InvokerFieldId);
 
-const OSG::BitVector WindowEventProducerBase::MTInfluenceMask = 
+const OSG::BitVector PopupMenuBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var WindowPtr       WindowEventProducerBase::_sfWindow
+/*! \var MenuItemPtr     PopupMenuBase::_mfItems
     
 */
-/*! \var bool            WindowEventProducerBase::_sfEnabled
+/*! \var Real32          PopupMenuBase::_sfSubMenuDelay
     
 */
-/*! \var Time            WindowEventProducerBase::_sfLastUpdateTime
+/*! \var ComponentPtr    PopupMenuBase::_sfInvoker
     
 */
 
-//! WindowEventProducer description
+//! PopupMenu description
 
-FieldDescription *WindowEventProducerBase::_desc[] = 
+FieldDescription *PopupMenuBase::_desc[] = 
 {
-    new FieldDescription(SFWindowPtr::getClassType(), 
-                     "Window", 
-                     WindowFieldId, WindowFieldMask,
+    new FieldDescription(MFMenuItemPtr::getClassType(), 
+                     "Items", 
+                     ItemsFieldId, ItemsFieldMask,
                      false,
-                     (FieldAccessMethod) &WindowEventProducerBase::getSFWindow),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Enabled", 
-                     EnabledFieldId, EnabledFieldMask,
+                     (FieldAccessMethod) &PopupMenuBase::getMFItems),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "SubMenuDelay", 
+                     SubMenuDelayFieldId, SubMenuDelayFieldMask,
                      false,
-                     (FieldAccessMethod) &WindowEventProducerBase::getSFEnabled),
-    new FieldDescription(SFTime::getClassType(), 
-                     "LastUpdateTime", 
-                     LastUpdateTimeFieldId, LastUpdateTimeFieldMask,
+                     (FieldAccessMethod) &PopupMenuBase::getSFSubMenuDelay),
+    new FieldDescription(SFComponentPtr::getClassType(), 
+                     "Invoker", 
+                     InvokerFieldId, InvokerFieldMask,
                      false,
-                     (FieldAccessMethod) &WindowEventProducerBase::getSFLastUpdateTime)
+                     (FieldAccessMethod) &PopupMenuBase::getSFInvoker)
 };
 
 
-FieldContainerType WindowEventProducerBase::_type(
-    "WindowEventProducer",
-    "FieldContainer",
+FieldContainerType PopupMenuBase::_type(
+    "PopupMenu",
+    "Component",
     NULL,
-    NULL, 
-    WindowEventProducer::initMethod,
+    (PrototypeCreateF) &PopupMenuBase::createEmpty,
+    PopupMenu::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(WindowEventProducerBase, WindowEventProducerPtr)
+//OSG_FIELD_CONTAINER_DEF(PopupMenuBase, PopupMenuPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &WindowEventProducerBase::getType(void) 
+FieldContainerType &PopupMenuBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &WindowEventProducerBase::getType(void) const 
+const FieldContainerType &PopupMenuBase::getType(void) const 
 {
     return _type;
 } 
 
 
-UInt32 WindowEventProducerBase::getContainerSize(void) const 
+FieldContainerPtr PopupMenuBase::shallowCopy(void) const 
 { 
-    return sizeof(WindowEventProducer); 
+    PopupMenuPtr returnValue; 
+
+    newPtr(returnValue, dynamic_cast<const PopupMenu *>(this)); 
+
+    return returnValue; 
+}
+
+UInt32 PopupMenuBase::getContainerSize(void) const 
+{ 
+    return sizeof(PopupMenu); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void WindowEventProducerBase::executeSync(      FieldContainer &other,
+void PopupMenuBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((WindowEventProducerBase *) &other, whichField);
+    this->executeSyncImpl((PopupMenuBase *) &other, whichField);
 }
 #else
-void WindowEventProducerBase::executeSync(      FieldContainer &other,
+void PopupMenuBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((WindowEventProducerBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((PopupMenuBase *) &other, whichField, sInfo);
 }
-void WindowEventProducerBase::execBeginEdit(const BitVector &whichField, 
+void PopupMenuBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void WindowEventProducerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void PopupMenuBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfItems.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -174,10 +184,10 @@ void WindowEventProducerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-WindowEventProducerBase::WindowEventProducerBase(void) :
-    _sfWindow                 (), 
-    _sfEnabled                (), 
-    _sfLastUpdateTime         (Time(-1.0)), 
+PopupMenuBase::PopupMenuBase(void) :
+    _mfItems                  (), 
+    _sfSubMenuDelay           (Real32(0.5)), 
+    _sfInvoker                (ComponentPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -186,135 +196,138 @@ WindowEventProducerBase::WindowEventProducerBase(void) :
 #pragma warning (default : 383)
 #endif
 
-WindowEventProducerBase::WindowEventProducerBase(const WindowEventProducerBase &source) :
-    _sfWindow                 (source._sfWindow                 ), 
-    _sfEnabled                (source._sfEnabled                ), 
-    _sfLastUpdateTime         (source._sfLastUpdateTime         ), 
+PopupMenuBase::PopupMenuBase(const PopupMenuBase &source) :
+    _mfItems                  (source._mfItems                  ), 
+    _sfSubMenuDelay           (source._sfSubMenuDelay           ), 
+    _sfInvoker                (source._sfInvoker                ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-WindowEventProducerBase::~WindowEventProducerBase(void)
+PopupMenuBase::~PopupMenuBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 WindowEventProducerBase::getBinSize(const BitVector &whichField)
+UInt32 PopupMenuBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (WindowFieldMask & whichField))
+    if(FieldBits::NoField != (ItemsFieldMask & whichField))
     {
-        returnValue += _sfWindow.getBinSize();
+        returnValue += _mfItems.getBinSize();
     }
 
-    if(FieldBits::NoField != (EnabledFieldMask & whichField))
+    if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
     {
-        returnValue += _sfEnabled.getBinSize();
+        returnValue += _sfSubMenuDelay.getBinSize();
     }
 
-    if(FieldBits::NoField != (LastUpdateTimeFieldMask & whichField))
+    if(FieldBits::NoField != (InvokerFieldMask & whichField))
     {
-        returnValue += _sfLastUpdateTime.getBinSize();
+        returnValue += _sfInvoker.getBinSize();
     }
 
 
     return returnValue;
 }
 
-void WindowEventProducerBase::copyToBin(      BinaryDataHandler &pMem,
+void PopupMenuBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (WindowFieldMask & whichField))
+    if(FieldBits::NoField != (ItemsFieldMask & whichField))
     {
-        _sfWindow.copyToBin(pMem);
+        _mfItems.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (EnabledFieldMask & whichField))
+    if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
     {
-        _sfEnabled.copyToBin(pMem);
+        _sfSubMenuDelay.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (LastUpdateTimeFieldMask & whichField))
+    if(FieldBits::NoField != (InvokerFieldMask & whichField))
     {
-        _sfLastUpdateTime.copyToBin(pMem);
+        _sfInvoker.copyToBin(pMem);
     }
 
 
 }
 
-void WindowEventProducerBase::copyFromBin(      BinaryDataHandler &pMem,
+void PopupMenuBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (WindowFieldMask & whichField))
+    if(FieldBits::NoField != (ItemsFieldMask & whichField))
     {
-        _sfWindow.copyFromBin(pMem);
+        _mfItems.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (EnabledFieldMask & whichField))
+    if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
     {
-        _sfEnabled.copyFromBin(pMem);
+        _sfSubMenuDelay.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (LastUpdateTimeFieldMask & whichField))
+    if(FieldBits::NoField != (InvokerFieldMask & whichField))
     {
-        _sfLastUpdateTime.copyFromBin(pMem);
+        _sfInvoker.copyFromBin(pMem);
     }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void WindowEventProducerBase::executeSyncImpl(      WindowEventProducerBase *pOther,
+void PopupMenuBase::executeSyncImpl(      PopupMenuBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (WindowFieldMask & whichField))
-        _sfWindow.syncWith(pOther->_sfWindow);
+    if(FieldBits::NoField != (ItemsFieldMask & whichField))
+        _mfItems.syncWith(pOther->_mfItems);
 
-    if(FieldBits::NoField != (EnabledFieldMask & whichField))
-        _sfEnabled.syncWith(pOther->_sfEnabled);
+    if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
+        _sfSubMenuDelay.syncWith(pOther->_sfSubMenuDelay);
 
-    if(FieldBits::NoField != (LastUpdateTimeFieldMask & whichField))
-        _sfLastUpdateTime.syncWith(pOther->_sfLastUpdateTime);
+    if(FieldBits::NoField != (InvokerFieldMask & whichField))
+        _sfInvoker.syncWith(pOther->_sfInvoker);
 
 
 }
 #else
-void WindowEventProducerBase::executeSyncImpl(      WindowEventProducerBase *pOther,
+void PopupMenuBase::executeSyncImpl(      PopupMenuBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (WindowFieldMask & whichField))
-        _sfWindow.syncWith(pOther->_sfWindow);
+    if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
+        _sfSubMenuDelay.syncWith(pOther->_sfSubMenuDelay);
 
-    if(FieldBits::NoField != (EnabledFieldMask & whichField))
-        _sfEnabled.syncWith(pOther->_sfEnabled);
+    if(FieldBits::NoField != (InvokerFieldMask & whichField))
+        _sfInvoker.syncWith(pOther->_sfInvoker);
 
-    if(FieldBits::NoField != (LastUpdateTimeFieldMask & whichField))
-        _sfLastUpdateTime.syncWith(pOther->_sfLastUpdateTime);
 
+    if(FieldBits::NoField != (ItemsFieldMask & whichField))
+        _mfItems.syncWith(pOther->_mfItems, sInfo);
 
 
 }
 
-void WindowEventProducerBase::execBeginEditImpl (const BitVector &whichField, 
+void PopupMenuBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (ItemsFieldMask & whichField))
+        _mfItems.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif
@@ -329,11 +342,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<WindowEventProducerPtr>::_type("WindowEventProducerPtr", "FieldContainerPtr");
+DataType FieldDataTraits<PopupMenuPtr>::_type("PopupMenuPtr", "ComponentPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(WindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(WindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(PopupMenuPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(PopupMenuPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -350,10 +363,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(WindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPPING);
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGWINDOWEVENTPRODUCERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGWINDOWEVENTPRODUCERBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGPOPUPMENUBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGPOPUPMENUBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGWINDOWEVENTPRODUCERFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGPOPUPMENUFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

@@ -45,63 +45,69 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class WindowEventProducer
+ **     class Menu
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGWINDOWEVENTPRODUCERBASE_H_
-#define _OSGWINDOWEVENTPRODUCERBASE_H_
+#ifndef _OSGMENUBASE_H_
+#define _OSGMENUBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGInputDef.h"
+#include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGFieldContainer.h> // Parent
+#include "OSGMenuItem.h" // Parent
 
-#include <OpenSG/OSGWindowFields.h> // Window type
-#include <OpenSG/OSGBoolFields.h> // Enabled type
-#include <OpenSG/OSGTimeFields.h> // LastUpdateTime type
+#include "Component/OSGToggleButtonFields.h" // Button type
+#include "Component/Menu/OSGMenuItemFields.h" // Items type
+#include <OpenSG/OSGReal32Fields.h> // SubMenuDelay type
+#include <OpenSG/OSGBoolFields.h> // Selected type
+#include <OpenSG/OSGBoolFields.h> // TopLevelMenu type
 
-#include "OSGWindowEventProducerFields.h"
+#include "OSGMenuFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class WindowEventProducer;
+class Menu;
 class BinaryDataHandler;
 
-//! \brief WindowEventProducer Base Class.
+//! \brief Menu Base Class.
 
-class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
+class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public MenuItem
 {
   private:
 
-    typedef FieldContainer    Inherited;
+    typedef MenuItem    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef WindowEventProducerPtr  Ptr;
+    typedef MenuPtr  Ptr;
 
     enum
     {
-        WindowFieldId         = Inherited::NextFieldId,
-        EnabledFieldId        = WindowFieldId         + 1,
-        LastUpdateTimeFieldId = EnabledFieldId        + 1,
-        NextFieldId           = LastUpdateTimeFieldId + 1
+        ButtonFieldId       = Inherited::NextFieldId,
+        ItemsFieldId        = ButtonFieldId       + 1,
+        SubMenuDelayFieldId = ItemsFieldId        + 1,
+        SelectedFieldId     = SubMenuDelayFieldId + 1,
+        TopLevelMenuFieldId = SelectedFieldId     + 1,
+        NextFieldId         = TopLevelMenuFieldId + 1
     };
 
-    static const OSG::BitVector WindowFieldMask;
-    static const OSG::BitVector EnabledFieldMask;
-    static const OSG::BitVector LastUpdateTimeFieldMask;
+    static const OSG::BitVector ButtonFieldMask;
+    static const OSG::BitVector ItemsFieldMask;
+    static const OSG::BitVector SubMenuDelayFieldMask;
+    static const OSG::BitVector SelectedFieldMask;
+    static const OSG::BitVector TopLevelMenuFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -128,25 +134,33 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFWindowPtr         *getSFWindow         (void);
-           SFBool              *getSFEnabled        (void);
-           SFTime              *getSFLastUpdateTime (void);
+           SFToggleButtonPtr   *getSFButton         (void);
+           MFMenuItemPtr       *getMFItems          (void);
+           SFReal32            *getSFSubMenuDelay   (void);
+           SFBool              *getSFSelected       (void);
+           SFBool              *getSFTopLevelMenu   (void);
 
-           WindowPtr           &getWindow         (void);
-     const WindowPtr           &getWindow         (void) const;
-           bool                &getEnabled        (void);
-     const bool                &getEnabled        (void) const;
-           Time                &getLastUpdateTime (void);
-     const Time                &getLastUpdateTime (void) const;
+           ToggleButtonPtr     &getButton         (void);
+     const ToggleButtonPtr     &getButton         (void) const;
+           Real32              &getSubMenuDelay   (void);
+     const Real32              &getSubMenuDelay   (void) const;
+           bool                &getSelected       (void);
+     const bool                &getSelected       (void) const;
+           bool                &getTopLevelMenu   (void);
+     const bool                &getTopLevelMenu   (void) const;
+           MenuItemPtr         &getItems          (const UInt32 index);
+           MFMenuItemPtr       &getItems          (void);
+     const MFMenuItemPtr       &getItems          (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setWindow         ( const WindowPtr &value );
-     void setEnabled        ( const bool &value );
-     void setLastUpdateTime ( const Time &value );
+     void setButton         ( const ToggleButtonPtr &value );
+     void setSubMenuDelay   ( const Real32 &value );
+     void setSelected       ( const bool &value );
+     void setTopLevelMenu   ( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -166,6 +180,22 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
 
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Construction                               */
+    /*! \{                                                                 */
+
+    static  MenuPtr      create          (void); 
+    static  MenuPtr      createEmpty     (void); 
+
+    /*! \}                                                                 */
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Copy                                   */
+    /*! \{                                                                 */
+
+    virtual FieldContainerPtr     shallowCopy     (void) const; 
+
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -173,24 +203,26 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFWindowPtr         _sfWindow;
-    SFBool              _sfEnabled;
-    SFTime              _sfLastUpdateTime;
+    SFToggleButtonPtr   _sfButton;
+    MFMenuItemPtr       _mfItems;
+    SFReal32            _sfSubMenuDelay;
+    SFBool              _sfSelected;
+    SFBool              _sfTopLevelMenu;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    WindowEventProducerBase(void);
-    WindowEventProducerBase(const WindowEventProducerBase &source);
+    MenuBase(void);
+    MenuBase(const MenuBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~WindowEventProducerBase(void); 
+    virtual ~MenuBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -198,13 +230,13 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      WindowEventProducerBase *pOther,
+    void executeSyncImpl(      MenuBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      WindowEventProducerBase *pOther,
+    void executeSyncImpl(      MenuBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -234,7 +266,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const WindowEventProducerBase &source);
+    void operator =(const MenuBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -242,17 +274,17 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
 //---------------------------------------------------------------------------
 
 
-typedef WindowEventProducerBase *WindowEventProducerBaseP;
+typedef MenuBase *MenuBaseP;
 
-typedef osgIF<WindowEventProducerBase::isNodeCore,
-              CoredNodePtr<WindowEventProducer>,
+typedef osgIF<MenuBase::isNodeCore,
+              CoredNodePtr<Menu>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet WindowEventProducerNodePtr;
+              >::_IRet MenuNodePtr;
 
-typedef RefPtr<WindowEventProducerPtr> WindowEventProducerRefPtr;
+typedef RefPtr<MenuPtr> MenuRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGWINDOWEVENTPRODUCERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGMENUBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGWINDOWEVENTPRODUCERBASE_H_ */
+#endif /* _OSGMENUBASE_H_ */
