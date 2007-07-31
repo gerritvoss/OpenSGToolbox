@@ -40,7 +40,7 @@ A UI GridBagLayout.
 	This field holds the overrides to the column weights
 	</Field>
 	<Field
-		name="ColumnHeights"
+		name="ColumnWidths"
 		type="UInt16"
 		cardinality="multi"
 		visibility="external"
@@ -58,12 +58,12 @@ A UI GridBagLayout.
 	This field holds the overrides to the row weights
 	</Field>
 	<Field
-		name="RowWidths"
+		name="RowHeights"
 		type="UInt16"
 		cardinality="multi"
 		visibility="external"
 		access="public"
 	>
-	This field holds the overrides to the row minimum widths
+	This field holds the overrides to the row minimum Heights
 	</Field>
 </FieldContainer>

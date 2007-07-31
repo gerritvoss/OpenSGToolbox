@@ -65,14 +65,14 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGLayout.h" // Parent
+#include "Layout/OSGLayout.h" // Parent
 
 #include <OpenSG/OSGUInt32Fields.h> // Rows type
 #include <OpenSG/OSGUInt32Fields.h> // Columns type
 #include <OpenSG/OSGReal32Fields.h> // ColumnWeights type
-#include <OpenSG/OSGUInt16Fields.h> // ColumnHeights type
+#include <OpenSG/OSGUInt16Fields.h> // ColumnWidths type
 #include <OpenSG/OSGReal32Fields.h> // RowWeights type
-#include <OpenSG/OSGUInt16Fields.h> // RowWidths type
+#include <OpenSG/OSGUInt16Fields.h> // RowHeights type
 
 #include "OSGGridBagLayoutFields.h"
 
@@ -99,18 +99,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutBase : public Layout
         RowsFieldId          = Inherited::NextFieldId,
         ColumnsFieldId       = RowsFieldId          + 1,
         ColumnWeightsFieldId = ColumnsFieldId       + 1,
-        ColumnHeightsFieldId = ColumnWeightsFieldId + 1,
-        RowWeightsFieldId    = ColumnHeightsFieldId + 1,
-        RowWidthsFieldId     = RowWeightsFieldId    + 1,
-        NextFieldId          = RowWidthsFieldId     + 1
+        ColumnWidthsFieldId  = ColumnWeightsFieldId + 1,
+        RowWeightsFieldId    = ColumnWidthsFieldId  + 1,
+        RowHeightsFieldId    = RowWeightsFieldId    + 1,
+        NextFieldId          = RowHeightsFieldId    + 1
     };
 
     static const OSG::BitVector RowsFieldMask;
     static const OSG::BitVector ColumnsFieldMask;
     static const OSG::BitVector ColumnWeightsFieldMask;
-    static const OSG::BitVector ColumnHeightsFieldMask;
+    static const OSG::BitVector ColumnWidthsFieldMask;
     static const OSG::BitVector RowWeightsFieldMask;
-    static const OSG::BitVector RowWidthsFieldMask;
+    static const OSG::BitVector RowHeightsFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -140,9 +140,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutBase : public Layout
            SFUInt32            *getSFRows           (void);
            SFUInt32            *getSFColumns        (void);
            MFReal32            *getMFColumnWeights  (void);
-           MFUInt16            *getMFColumnHeights  (void);
+           MFUInt16            *getMFColumnWidths   (void);
            MFReal32            *getMFRowWeights     (void);
-           MFUInt16            *getMFRowWidths      (void);
+           MFUInt16            *getMFRowHeights     (void);
 
            UInt32              &getRows           (void);
      const UInt32              &getRows           (void) const;
@@ -151,15 +151,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutBase : public Layout
            Real32              &getColumnWeights  (const UInt32 index);
            MFReal32            &getColumnWeights  (void);
      const MFReal32            &getColumnWeights  (void) const;
-           UInt16              &getColumnHeights  (const UInt32 index);
-           MFUInt16            &getColumnHeights  (void);
-     const MFUInt16            &getColumnHeights  (void) const;
+           UInt16              &getColumnWidths   (const UInt32 index);
+           MFUInt16            &getColumnWidths   (void);
+     const MFUInt16            &getColumnWidths   (void) const;
            Real32              &getRowWeights     (const UInt32 index);
            MFReal32            &getRowWeights     (void);
      const MFReal32            &getRowWeights     (void) const;
-           UInt16              &getRowWidths      (const UInt32 index);
-           MFUInt16            &getRowWidths      (void);
-     const MFUInt16            &getRowWidths      (void) const;
+           UInt16              &getRowHeights     (const UInt32 index);
+           MFUInt16            &getRowHeights     (void);
+     const MFUInt16            &getRowHeights     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -213,9 +213,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutBase : public Layout
     SFUInt32            _sfRows;
     SFUInt32            _sfColumns;
     MFReal32            _mfColumnWeights;
-    MFUInt16            _mfColumnHeights;
+    MFUInt16            _mfColumnWidths;
     MFReal32            _mfRowWeights;
-    MFUInt16            _mfRowWidths;
+    MFUInt16            _mfRowHeights;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

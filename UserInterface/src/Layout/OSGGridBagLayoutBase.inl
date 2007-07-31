@@ -117,11 +117,11 @@ MFReal32 *GridBagLayoutBase::getMFColumnWeights(void)
     return &_mfColumnWeights;
 }
 
-//! Get the GridBagLayout::_mfColumnHeights field.
+//! Get the GridBagLayout::_mfColumnWidths field.
 inline
-MFUInt16 *GridBagLayoutBase::getMFColumnHeights(void)
+MFUInt16 *GridBagLayoutBase::getMFColumnWidths(void)
 {
-    return &_mfColumnHeights;
+    return &_mfColumnWidths;
 }
 
 //! Get the GridBagLayout::_mfRowWeights field.
@@ -131,11 +131,11 @@ MFReal32 *GridBagLayoutBase::getMFRowWeights(void)
     return &_mfRowWeights;
 }
 
-//! Get the GridBagLayout::_mfRowWidths field.
+//! Get the GridBagLayout::_mfRowHeights field.
 inline
-MFUInt16 *GridBagLayoutBase::getMFRowWidths(void)
+MFUInt16 *GridBagLayoutBase::getMFRowHeights(void)
 {
-    return &_mfRowWidths;
+    return &_mfRowHeights;
 }
 
 
@@ -203,25 +203,25 @@ const MFReal32 &GridBagLayoutBase::getColumnWeights(void) const
     return _mfColumnWeights;
 }
 
-//! Get the value of the \a index element the GridBagLayout::_mfColumnHeights field.
+//! Get the value of the \a index element the GridBagLayout::_mfColumnWidths field.
 inline
-UInt16 &GridBagLayoutBase::getColumnHeights(const UInt32 index)
+UInt16 &GridBagLayoutBase::getColumnWidths(const UInt32 index)
 {
-    return _mfColumnHeights[index];
+    return _mfColumnWidths[index];
 }
 
-//! Get the GridBagLayout::_mfColumnHeights field.
+//! Get the GridBagLayout::_mfColumnWidths field.
 inline
-MFUInt16 &GridBagLayoutBase::getColumnHeights(void)
+MFUInt16 &GridBagLayoutBase::getColumnWidths(void)
 {
-    return _mfColumnHeights;
+    return _mfColumnWidths;
 }
 
-//! Get the GridBagLayout::_mfColumnHeights field.
+//! Get the GridBagLayout::_mfColumnWidths field.
 inline
-const MFUInt16 &GridBagLayoutBase::getColumnHeights(void) const
+const MFUInt16 &GridBagLayoutBase::getColumnWidths(void) const
 {
-    return _mfColumnHeights;
+    return _mfColumnWidths;
 }
 
 //! Get the value of the \a index element the GridBagLayout::_mfRowWeights field.
@@ -245,25 +245,25 @@ const MFReal32 &GridBagLayoutBase::getRowWeights(void) const
     return _mfRowWeights;
 }
 
-//! Get the value of the \a index element the GridBagLayout::_mfRowWidths field.
+//! Get the value of the \a index element the GridBagLayout::_mfRowHeights field.
 inline
-UInt16 &GridBagLayoutBase::getRowWidths(const UInt32 index)
+UInt16 &GridBagLayoutBase::getRowHeights(const UInt32 index)
 {
-    return _mfRowWidths[index];
+    return _mfRowHeights[index];
 }
 
-//! Get the GridBagLayout::_mfRowWidths field.
+//! Get the GridBagLayout::_mfRowHeights field.
 inline
-MFUInt16 &GridBagLayoutBase::getRowWidths(void)
+MFUInt16 &GridBagLayoutBase::getRowHeights(void)
 {
-    return _mfRowWidths;
+    return _mfRowHeights;
 }
 
-//! Get the GridBagLayout::_mfRowWidths field.
+//! Get the GridBagLayout::_mfRowHeights field.
 inline
-const MFUInt16 &GridBagLayoutBase::getRowWidths(void) const
+const MFUInt16 &GridBagLayoutBase::getRowHeights(void) const
 {
-    return _mfRowWidths;
+    return _mfRowHeights;
 }
 
 OSG_END_NAMESPACE
