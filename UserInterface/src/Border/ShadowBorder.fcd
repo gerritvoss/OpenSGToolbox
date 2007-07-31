@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="ShadowBorder"
+	parent="Border"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+UI Shadow Border.
+	<Field
+		name="VerticalOffset"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="5"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="HorizontalOffset"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="5"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Color"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0,0.0,0.0,1.0"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="InsideBorder"
+		type="BorderPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="OSGBorder.h"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

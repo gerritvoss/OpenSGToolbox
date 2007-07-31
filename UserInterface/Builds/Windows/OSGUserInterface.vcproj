@@ -2046,6 +2046,62 @@
 					RelativePath="..\..\src\Border\OSGMatteBorderFields.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorder.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorder.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorder.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorderBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorderBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorderBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorderFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGShadowBorder.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGShadowBorder.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGShadowBorder.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGShadowBorderBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGShadowBorderBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGShadowBorderBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGShadowBorderFields.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="LookAndFeel"
