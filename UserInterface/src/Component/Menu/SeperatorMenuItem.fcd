@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="SeperatorMenuItem"
+	parent="MenuItem"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI Seperator MenuItem
+	<Field
+		name="DrawObject"
+		type="UIDrawObjectCanvasPtr"
+		cardinality="single"
+		visibility="external"
+		header="Component/OSGUIDrawObjectCanvas.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

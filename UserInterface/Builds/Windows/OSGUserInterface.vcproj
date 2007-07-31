@@ -977,6 +977,34 @@
 						RelativePath="..\..\src\Component\Menu\OSGPopupMenuFields.h"
 						>
 					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItem.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItem.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItem.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItemBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItemBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItemBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItemFields.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
