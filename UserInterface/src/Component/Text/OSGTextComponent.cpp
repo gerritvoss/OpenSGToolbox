@@ -192,7 +192,7 @@ void TextComponent::keyTyped(const KeyEvent& e)
 				setText(getText().erase(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart));
 				setText(getText().insert(_TextSelectionStart, std::string( 1,e.getKeyChar() )));
 			endEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
-			setCaretPosition(_TextSelectionStart);
+			setCaretPosition(_TextSelectionStart+1);
 			_TextSelectionStart = getCaretPosition();
 			_TextSelectionEnd = _TextSelectionStart;
 		}
