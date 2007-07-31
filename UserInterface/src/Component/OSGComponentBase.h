@@ -90,6 +90,7 @@
 #include "Component/OSGContainerFields.h" // ParentContainer type
 #include "Component/OSGFrameFields.h" // ParentFrame type
 #include <OpenSG/OSGBoolFields.h> // Clipping type
+#include "Component/Menu/OSGPopupMenuFields.h" // PopupMenu type
 
 #include "OSGComponentFields.h"
 
@@ -139,7 +140,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
         ParentContainerFieldId         = OpacityFieldId                 + 1,
         ParentFrameFieldId             = ParentContainerFieldId         + 1,
         ClippingFieldId                = ParentFrameFieldId             + 1,
-        NextFieldId                    = ClippingFieldId                + 1
+        PopupMenuFieldId               = ClippingFieldId                + 1,
+        NextFieldId                    = PopupMenuFieldId               + 1
     };
 
     static const OSG::BitVector PositionFieldMask;
@@ -168,6 +170,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     static const OSG::BitVector ParentContainerFieldMask;
     static const OSG::BitVector ParentFrameFieldMask;
     static const OSG::BitVector ClippingFieldMask;
+    static const OSG::BitVector PopupMenuFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -218,6 +221,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual       SFContainerPtr      *getSFParentContainer(void);
     virtual       SFFramePtr          *getSFParentFrame    (void);
     virtual       SFBool              *getSFClipping       (void);
+    virtual       SFPopupMenuPtr      *getSFPopupMenu      (void);
 
     virtual       Pnt2s               &getPosition       (void);
     virtual const Pnt2s               &getPosition       (void) const;
@@ -267,6 +271,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual const FramePtr            &getParentFrame    (void) const;
     virtual       bool                &getClipping       (void);
     virtual const bool                &getClipping       (void) const;
+    virtual       PopupMenuPtr        &getPopupMenu      (void);
+    virtual const PopupMenuPtr        &getPopupMenu      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -297,6 +303,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual void setParentContainer( const ContainerPtr &value );
     virtual void setParentFrame    ( const FramePtr &value );
     virtual void setClipping       ( const bool &value );
+    virtual void setPopupMenu      ( const PopupMenuPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -349,6 +356,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     SFContainerPtr      _sfParentContainer;
     SFFramePtr          _sfParentFrame;
     SFBool              _sfClipping;
+    SFPopupMenuPtr      _sfPopupMenu;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

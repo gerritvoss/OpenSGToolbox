@@ -128,9 +128,8 @@ void TextField::drawInternal(const GraphicsPtr TheGraphics) const
 	   }
    }
 
-   if(getFocused() && _TextSelectionStart>=_TextSelectionEnd && _CurrentCaretBlinkElps <= 0.5*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
+   if(getFocused() && _CurrentCaretBlinkElps <= 0.5*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
    {
-	   ;
    		  //Draw the caret
 		  TheGraphics->drawLine(TempPos+Vec2s(TheGraphics->getTextBounds(getText().substr(0, getCaretPosition()), getFont()).x(), 0),
 	      TempPos + Vec2s(TheGraphics->getTextBounds(getText().substr(0, getCaretPosition()), getFont()).x(),  TheGraphics->getTextBounds(getText(), getFont()).y()), 

@@ -142,6 +142,9 @@ const OSG::BitVector  ComponentBase::ParentFrameFieldMask =
 const OSG::BitVector  ComponentBase::ClippingFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::ClippingFieldId);
 
+const OSG::BitVector  ComponentBase::PopupMenuFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::PopupMenuFieldId);
+
 const OSG::BitVector ComponentBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -225,6 +228,9 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
     
 */
 /*! \var bool            ComponentBase::_sfClipping
+    
+*/
+/*! \var PopupMenuPtr    ComponentBase::_sfPopupMenu
     
 */
 
@@ -361,7 +367,12 @@ FieldDescription *ComponentBase::_desc[] =
                      "Clipping", 
                      ClippingFieldId, ClippingFieldMask,
                      false,
-                     (FieldAccessMethod) &ComponentBase::getSFClipping)
+                     (FieldAccessMethod) &ComponentBase::getSFClipping),
+    new FieldDescription(SFPopupMenuPtr::getClassType(), 
+                     "PopupMenu", 
+                     PopupMenuFieldId, PopupMenuFieldMask,
+                     true,
+                     (FieldAccessMethod) &ComponentBase::getSFPopupMenu)
 };
 
 
@@ -454,6 +465,7 @@ ComponentBase::ComponentBase(void) :
     _sfParentContainer        (ContainerPtr(NullFC)), 
     _sfParentFrame            (FramePtr(NullFC)), 
     _sfClipping               (bool(true)), 
+    _sfPopupMenu              (PopupMenuPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -489,6 +501,7 @@ ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfParentContainer        (source._sfParentContainer        ), 
     _sfParentFrame            (source._sfParentFrame            ), 
     _sfClipping               (source._sfClipping               ), 
+    _sfPopupMenu              (source._sfPopupMenu              ), 
     Inherited                 (source)
 {
 }
@@ -635,6 +648,11 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfClipping.getBinSize();
     }
 
+    if(FieldBits::NoField != (PopupMenuFieldMask & whichField))
+    {
+        returnValue += _sfPopupMenu.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -772,6 +790,11 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
     {
         _sfClipping.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (PopupMenuFieldMask & whichField))
+    {
+        _sfPopupMenu.copyToBin(pMem);
     }
 
 
@@ -912,6 +935,11 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfClipping.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (PopupMenuFieldMask & whichField))
+    {
+        _sfPopupMenu.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -1000,6 +1028,9 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
         _sfClipping.syncWith(pOther->_sfClipping);
 
+    if(FieldBits::NoField != (PopupMenuFieldMask & whichField))
+        _sfPopupMenu.syncWith(pOther->_sfPopupMenu);
+
 
 }
 #else
@@ -1087,6 +1118,9 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
 
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
         _sfClipping.syncWith(pOther->_sfClipping);
+
+    if(FieldBits::NoField != (PopupMenuFieldMask & whichField))
+        _sfPopupMenu.syncWith(pOther->_sfPopupMenu);
 
 
 
@@ -1257,6 +1291,12 @@ OSG_USERINTERFACELIB_DLLMAPPING
 SFBool *ComponentBase::getSFClipping(void)
 {
     return &_sfClipping;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFPopupMenuPtr *ComponentBase::getSFPopupMenu(void)
+{
+    return &_sfPopupMenu;
 }
 
 
@@ -1726,6 +1766,24 @@ OSG_USERINTERFACELIB_DLLMAPPING
 void ComponentBase::setClipping(const bool &value)
 {
     _sfClipping.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+PopupMenuPtr &ComponentBase::getPopupMenu(void)
+{
+    return _sfPopupMenu.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const PopupMenuPtr &ComponentBase::getPopupMenu(void) const
+{
+    return _sfPopupMenu.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setPopupMenu(const PopupMenuPtr &value)
+{
+    _sfPopupMenu.setValue(value);
 }
 
 

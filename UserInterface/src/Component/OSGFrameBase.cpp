@@ -70,6 +70,9 @@ const OSG::BitVector  FrameBase::FocusedComponentFieldMask =
 const OSG::BitVector  FrameBase::DrawingSurfaceFieldMask = 
     (TypeTraits<BitVector>::One << FrameBase::DrawingSurfaceFieldId);
 
+const OSG::BitVector  FrameBase::ActivePopupMenuFieldMask = 
+    (TypeTraits<BitVector>::One << FrameBase::ActivePopupMenuFieldId);
+
 const OSG::BitVector FrameBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -81,6 +84,9 @@ const OSG::BitVector FrameBase::MTInfluenceMask =
     
 */
 /*! \var UIDrawingSurfacePtr FrameBase::_sfDrawingSurface
+    
+*/
+/*! \var PopupMenuPtr    FrameBase::_sfActivePopupMenu
     
 */
 
@@ -97,7 +103,12 @@ FieldDescription *FrameBase::_desc[] =
                      "DrawingSurface", 
                      DrawingSurfaceFieldId, DrawingSurfaceFieldMask,
                      false,
-                     (FieldAccessMethod) &FrameBase::getSFDrawingSurface)
+                     (FieldAccessMethod) &FrameBase::getSFDrawingSurface),
+    new FieldDescription(SFPopupMenuPtr::getClassType(), 
+                     "ActivePopupMenu", 
+                     ActivePopupMenuFieldId, ActivePopupMenuFieldMask,
+                     true,
+                     (FieldAccessMethod) &FrameBase::getSFActivePopupMenu)
 };
 
 
@@ -175,6 +186,7 @@ void FrameBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 FrameBase::FrameBase(void) :
     _sfFocusedComponent       (ComponentPtr(NullFC)), 
     _sfDrawingSurface         (UIDrawingSurfacePtr(NullFC)), 
+    _sfActivePopupMenu        (PopupMenuPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -186,6 +198,7 @@ FrameBase::FrameBase(void) :
 FrameBase::FrameBase(const FrameBase &source) :
     _sfFocusedComponent       (source._sfFocusedComponent       ), 
     _sfDrawingSurface         (source._sfDrawingSurface         ), 
+    _sfActivePopupMenu        (source._sfActivePopupMenu        ), 
     Inherited                 (source)
 {
 }
@@ -212,6 +225,11 @@ UInt32 FrameBase::getBinSize(const BitVector &whichField)
         returnValue += _sfDrawingSurface.getBinSize();
     }
 
+    if(FieldBits::NoField != (ActivePopupMenuFieldMask & whichField))
+    {
+        returnValue += _sfActivePopupMenu.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -229,6 +247,11 @@ void FrameBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
     {
         _sfDrawingSurface.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ActivePopupMenuFieldMask & whichField))
+    {
+        _sfActivePopupMenu.copyToBin(pMem);
     }
 
 
@@ -249,6 +272,11 @@ void FrameBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfDrawingSurface.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ActivePopupMenuFieldMask & whichField))
+    {
+        _sfActivePopupMenu.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -265,6 +293,9 @@ void FrameBase::executeSyncImpl(      FrameBase *pOther,
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
         _sfDrawingSurface.syncWith(pOther->_sfDrawingSurface);
 
+    if(FieldBits::NoField != (ActivePopupMenuFieldMask & whichField))
+        _sfActivePopupMenu.syncWith(pOther->_sfActivePopupMenu);
+
 
 }
 #else
@@ -280,6 +311,9 @@ void FrameBase::executeSyncImpl(      FrameBase *pOther,
 
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
         _sfDrawingSurface.syncWith(pOther->_sfDrawingSurface);
+
+    if(FieldBits::NoField != (ActivePopupMenuFieldMask & whichField))
+        _sfActivePopupMenu.syncWith(pOther->_sfActivePopupMenu);
 
 
 

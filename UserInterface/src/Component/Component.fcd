@@ -243,4 +243,14 @@ A UI Component Interface.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="PopupMenu"
+		type="PopupMenuPtr"
+		cardinality="single"
+		visibility="internal"
+		header="Component/Menu/OSGPopupMenuFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

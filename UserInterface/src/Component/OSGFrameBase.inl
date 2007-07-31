@@ -110,6 +110,13 @@ SFUIDrawingSurfacePtr *FrameBase::getSFDrawingSurface(void)
     return &_sfDrawingSurface;
 }
 
+//! Get the Frame::_sfActivePopupMenu field.
+inline
+SFPopupMenuPtr *FrameBase::getSFActivePopupMenu(void)
+{
+    return &_sfActivePopupMenu;
+}
+
 
 //! Get the value of the Frame::_sfFocusedComponent field.
 inline
@@ -151,6 +158,27 @@ inline
 void FrameBase::setDrawingSurface(const UIDrawingSurfacePtr &value)
 {
     _sfDrawingSurface.setValue(value);
+}
+
+//! Get the value of the Frame::_sfActivePopupMenu field.
+inline
+PopupMenuPtr &FrameBase::getActivePopupMenu(void)
+{
+    return _sfActivePopupMenu.getValue();
+}
+
+//! Get the value of the Frame::_sfActivePopupMenu field.
+inline
+const PopupMenuPtr &FrameBase::getActivePopupMenu(void) const
+{
+    return _sfActivePopupMenu.getValue();
+}
+
+//! Set the value of the Frame::_sfActivePopupMenu field.
+inline
+void FrameBase::setActivePopupMenu(const PopupMenuPtr &value)
+{
+    _sfActivePopupMenu.setValue(value);
 }
 
 

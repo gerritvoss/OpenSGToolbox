@@ -32,4 +32,14 @@ A UI Frame.
 		defaultValue="NullFC"
 	>
 	</Field>
+	<Field
+		name="ActivePopupMenu"
+		type="PopupMenuPtr"
+		cardinality="single"
+		visibility="internal"
+		header="Component/Menu/OSGPopupMenuFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+	</Field>
 </FieldContainer>
