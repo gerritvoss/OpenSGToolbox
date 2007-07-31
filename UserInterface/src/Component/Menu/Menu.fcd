@@ -22,12 +22,12 @@ A UI Menu.
 	>
 	</Field>
 	<Field
-		name="Items"
-		type="MenuItemPtr"
+		name="InternalPopupMenu"
+		type="PopupMenuPtr"
 		cardinality="multi"
 		visibility="external"
-		header="Component/Menu/OSGMenuItemFields.h"
-		access="public"
+		header="Component/Menu/OSGPopupMenuFields.h"
+		access="protected"
 	>
 	</Field>
 	<Field

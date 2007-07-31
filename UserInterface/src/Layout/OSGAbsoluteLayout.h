@@ -46,6 +46,7 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGAbsoluteLayoutBase.h"
+#include "OSGAbsoluteLayoutConstraints.h"
 
 OSG_BEGIN_NAMESPACE
 

@@ -67,8 +67,8 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  MenuBase::ButtonFieldMask = 
     (TypeTraits<BitVector>::One << MenuBase::ButtonFieldId);
 
-const OSG::BitVector  MenuBase::ItemsFieldMask = 
-    (TypeTraits<BitVector>::One << MenuBase::ItemsFieldId);
+const OSG::BitVector  MenuBase::InternalPopupMenuFieldMask = 
+    (TypeTraits<BitVector>::One << MenuBase::InternalPopupMenuFieldId);
 
 const OSG::BitVector  MenuBase::SubMenuDelayFieldMask = 
     (TypeTraits<BitVector>::One << MenuBase::SubMenuDelayFieldId);
@@ -89,7 +89,7 @@ const OSG::BitVector MenuBase::MTInfluenceMask =
 /*! \var ToggleButtonPtr MenuBase::_sfButton
     
 */
-/*! \var MenuItemPtr     MenuBase::_mfItems
+/*! \var PopupMenuPtr    MenuBase::_mfInternalPopupMenu
     
 */
 /*! \var Real32          MenuBase::_sfSubMenuDelay
@@ -111,11 +111,11 @@ FieldDescription *MenuBase::_desc[] =
                      ButtonFieldId, ButtonFieldMask,
                      false,
                      (FieldAccessMethod) &MenuBase::getSFButton),
-    new FieldDescription(MFMenuItemPtr::getClassType(), 
-                     "Items", 
-                     ItemsFieldId, ItemsFieldMask,
+    new FieldDescription(MFPopupMenuPtr::getClassType(), 
+                     "InternalPopupMenu", 
+                     InternalPopupMenuFieldId, InternalPopupMenuFieldMask,
                      false,
-                     (FieldAccessMethod) &MenuBase::getMFItems),
+                     (FieldAccessMethod) &MenuBase::getMFInternalPopupMenu),
     new FieldDescription(SFReal32::getClassType(), 
                      "SubMenuDelay", 
                      SubMenuDelayFieldId, SubMenuDelayFieldMask,
@@ -196,7 +196,7 @@ void MenuBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
-    _mfItems.terminateShare(uiAspect, this->getContainerSize());
+    _mfInternalPopupMenu.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -208,7 +208,7 @@ void MenuBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 MenuBase::MenuBase(void) :
     _sfButton                 (), 
-    _mfItems                  (), 
+    _mfInternalPopupMenu      (), 
     _sfSubMenuDelay           (Real32(0.5)), 
     _sfSelected               (bool(false)), 
     _sfTopLevelMenu           (bool(false)), 
@@ -222,7 +222,7 @@ MenuBase::MenuBase(void) :
 
 MenuBase::MenuBase(const MenuBase &source) :
     _sfButton                 (source._sfButton                 ), 
-    _mfItems                  (source._mfItems                  ), 
+    _mfInternalPopupMenu      (source._mfInternalPopupMenu      ), 
     _sfSubMenuDelay           (source._sfSubMenuDelay           ), 
     _sfSelected               (source._sfSelected               ), 
     _sfTopLevelMenu           (source._sfTopLevelMenu           ), 
@@ -247,9 +247,9 @@ UInt32 MenuBase::getBinSize(const BitVector &whichField)
         returnValue += _sfButton.getBinSize();
     }
 
-    if(FieldBits::NoField != (ItemsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalPopupMenuFieldMask & whichField))
     {
-        returnValue += _mfItems.getBinSize();
+        returnValue += _mfInternalPopupMenu.getBinSize();
     }
 
     if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
@@ -281,9 +281,9 @@ void MenuBase::copyToBin(      BinaryDataHandler &pMem,
         _sfButton.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ItemsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalPopupMenuFieldMask & whichField))
     {
-        _mfItems.copyToBin(pMem);
+        _mfInternalPopupMenu.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
@@ -314,9 +314,9 @@ void MenuBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfButton.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ItemsFieldMask & whichField))
+    if(FieldBits::NoField != (InternalPopupMenuFieldMask & whichField))
     {
-        _mfItems.copyFromBin(pMem);
+        _mfInternalPopupMenu.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
@@ -347,8 +347,8 @@ void MenuBase::executeSyncImpl(      MenuBase *pOther,
     if(FieldBits::NoField != (ButtonFieldMask & whichField))
         _sfButton.syncWith(pOther->_sfButton);
 
-    if(FieldBits::NoField != (ItemsFieldMask & whichField))
-        _mfItems.syncWith(pOther->_mfItems);
+    if(FieldBits::NoField != (InternalPopupMenuFieldMask & whichField))
+        _mfInternalPopupMenu.syncWith(pOther->_mfInternalPopupMenu);
 
     if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
         _sfSubMenuDelay.syncWith(pOther->_sfSubMenuDelay);
@@ -382,8 +382,8 @@ void MenuBase::executeSyncImpl(      MenuBase *pOther,
         _sfTopLevelMenu.syncWith(pOther->_sfTopLevelMenu);
 
 
-    if(FieldBits::NoField != (ItemsFieldMask & whichField))
-        _mfItems.syncWith(pOther->_mfItems, sInfo);
+    if(FieldBits::NoField != (InternalPopupMenuFieldMask & whichField))
+        _mfInternalPopupMenu.syncWith(pOther->_mfInternalPopupMenu, sInfo);
 
 
 }
@@ -394,8 +394,8 @@ void MenuBase::execBeginEditImpl (const BitVector &whichField,
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 
-    if(FieldBits::NoField != (ItemsFieldMask & whichField))
-        _mfItems.beginEdit(uiAspect, uiContainerSize);
+    if(FieldBits::NoField != (InternalPopupMenuFieldMask & whichField))
+        _mfInternalPopupMenu.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

@@ -36,25 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGOVERLAYLAYOUT_H_
-#define _OSGOVERLAYLAYOUT_H_
+#ifndef _OSGWINDOWSLOOKANDFEEL_H_
+#define _OSGWINDOWSLOOKANDFEEL_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGOverlayLayoutBase.h"
-#include "OSGOverlayLayoutConstraints.h"
+#include "OSGWindowsLookAndFeelBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING OverlayLayout : public OverlayLayoutBase
+/*! \brief WindowsLookAndFeel class. See \ref 
+           PageUserInterfaceWindowsLookAndFeel for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING WindowsLookAndFeel : public WindowsLookAndFeelBase
 {
   private:
 
-    typedef OverlayLayoutBase Inherited;
+    typedef WindowsLookAndFeelBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -74,26 +76,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING OverlayLayout : public OverlayLayoutBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
+	virtual void init(void);
+	virtual Real32 getTextCaretRate(void) const;
     /*! \}                                                                 */
-    virtual void updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in OverlayLayoutBase.
+    // Variables should all be in WindowsLookAndFeelBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    OverlayLayout(void);
-    OverlayLayout(const OverlayLayout &source);
+    WindowsLookAndFeel(void);
+    WindowsLookAndFeel(const WindowsLookAndFeel &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~OverlayLayout(void); 
+    virtual ~WindowsLookAndFeel(void); 
 
     /*! \}                                                                 */
     
@@ -101,22 +104,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING OverlayLayout : public OverlayLayoutBase
   private:
 
     friend class FieldContainer;
-    friend class OverlayLayoutBase;
+    friend class WindowsLookAndFeelBase;
 
     static void initMethod(void);
+	
+	Real32 _TextCaretRate;
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const OverlayLayout &source);
+    void operator =(const WindowsLookAndFeel &source);
 };
 
-typedef OverlayLayout *OverlayLayoutP;
+typedef WindowsLookAndFeel *WindowsLookAndFeelP;
 
 OSG_END_NAMESPACE
 
-#include "OSGOverlayLayoutBase.inl"
-#include "OSGOverlayLayout.inl"
+#include "OSGWindowsLookAndFeelBase.inl"
+#include "OSGWindowsLookAndFeel.inl"
 
-#define OSGOVERLAYLAYOUT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGWINDOWSLOOKANDFEEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGOVERLAYLAYOUT_H_ */
+#endif /* _OSGWINDOWSLOOKANDFEEL_H_ */

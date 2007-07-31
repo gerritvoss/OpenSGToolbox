@@ -36,87 +36,9 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGFLOWLAYOUT_H_
-#define _OSGFLOWLAYOUT_H_
-#ifdef __sgi
-#pragma once
-#endif
-
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
-#include "OSGFlowLayoutBase.h"
-#include "OSGFlowLayoutConstraints.h"
-
-OSG_BEGIN_NAMESPACE
-
-class OSG_USERINTERFACELIB_DLLMAPPING FlowLayout : public FlowLayoutBase
-{
-  private:
-
-    typedef FlowLayoutBase Inherited;
-
-    /*==========================  PUBLIC  =================================*/
-  public:
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
-    /*! \{                                                                 */
-
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
-
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
-
-    /*! \}                                                                 */
-    virtual void updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
-    /*=========================  PROTECTED  ===============================*/
-  protected:
-
-    // Variables should all be in FlowLayoutBase.
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                  Constructors                                */
-    /*! \{                                                                 */
-
-    FlowLayout(void);
-    FlowLayout(const FlowLayout &source);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Destructors                                */
-    /*! \{                                                                 */
-
-    virtual ~FlowLayout(void); 
-
-    /*! \}                                                                 */
-    
-    /*==========================  PRIVATE  ================================*/
-  private:
-
-    friend class FieldContainer;
-    friend class FlowLayoutBase;
-
-    static void initMethod(void);
-
-    // prohibit default functions (move to 'public' if you need one)
-
-    void operator =(const FlowLayout &source);
-};
-
-typedef FlowLayout *FlowLayoutP;
-
-OSG_END_NAMESPACE
-
-#include "OSGFlowLayoutBase.inl"
-#include "OSGFlowLayout.inl"
-
-#define OSGFLOWLAYOUT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
-#endif /* _OSGFLOWLAYOUT_H_ */
+#include "OSGBevelBorder.h"
+#include "OSGCompoundBorder.h"
+#include "OSGEmptyBorder.h"
+#include "OSGEtchedBorder.h"
+#include "OSGLineBorder.h"
+#include "OSGMatteBorder.h"

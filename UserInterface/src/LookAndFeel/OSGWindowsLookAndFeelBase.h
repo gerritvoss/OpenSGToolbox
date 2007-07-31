@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Menu
+ **     class WindowsLookAndFeel
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGMENUBASE_H_
-#define _OSGMENUBASE_H_
+#ifndef _OSGWINDOWSLOOKANDFEELBASE_H_
+#define _OSGWINDOWSLOOKANDFEELBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,49 +65,28 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGMenuItem.h" // Parent
+#include "OSGLookAndFeel.h" // Parent
 
-#include "Component/OSGToggleButtonFields.h" // Button type
-#include "Component/Menu/OSGPopupMenuFields.h" // InternalPopupMenu type
-#include <OpenSG/OSGReal32Fields.h> // SubMenuDelay type
-#include <OpenSG/OSGBoolFields.h> // Selected type
-#include <OpenSG/OSGBoolFields.h> // TopLevelMenu type
 
-#include "OSGMenuFields.h"
+#include "OSGWindowsLookAndFeelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Menu;
+class WindowsLookAndFeel;
 class BinaryDataHandler;
 
-//! \brief Menu Base Class.
+//! \brief WindowsLookAndFeel Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public MenuItem
+class OSG_USERINTERFACELIB_DLLMAPPING WindowsLookAndFeelBase : public LookAndFeel
 {
   private:
 
-    typedef MenuItem    Inherited;
+    typedef LookAndFeel    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef MenuPtr  Ptr;
-
-    enum
-    {
-        ButtonFieldId            = Inherited::NextFieldId,
-        InternalPopupMenuFieldId = ButtonFieldId            + 1,
-        SubMenuDelayFieldId      = InternalPopupMenuFieldId + 1,
-        SelectedFieldId          = SubMenuDelayFieldId      + 1,
-        TopLevelMenuFieldId      = SelectedFieldId          + 1,
-        NextFieldId              = TopLevelMenuFieldId      + 1
-    };
-
-    static const OSG::BitVector ButtonFieldMask;
-    static const OSG::BitVector InternalPopupMenuFieldMask;
-    static const OSG::BitVector SubMenuDelayFieldMask;
-    static const OSG::BitVector SelectedFieldMask;
-    static const OSG::BitVector TopLevelMenuFieldMask;
+    typedef WindowsLookAndFeelPtr  Ptr;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -131,35 +110,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public MenuItem
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFToggleButtonPtr   *getSFButton         (void);
-           SFReal32            *getSFSubMenuDelay   (void);
-           SFBool              *getSFSelected       (void);
-           SFBool              *getSFTopLevelMenu   (void);
-
-           ToggleButtonPtr     &getButton         (void);
-     const ToggleButtonPtr     &getButton         (void) const;
-           Real32              &getSubMenuDelay   (void);
-     const Real32              &getSubMenuDelay   (void) const;
-           bool                &getSelected       (void);
-     const bool                &getSelected       (void) const;
-           bool                &getTopLevelMenu   (void);
-     const bool                &getTopLevelMenu   (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setButton         ( const ToggleButtonPtr &value );
-     void setSubMenuDelay   ( const Real32 &value );
-     void setSelected       ( const bool &value );
-     void setTopLevelMenu   ( const bool &value );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -180,8 +130,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public MenuItem
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  MenuPtr      create          (void); 
-    static  MenuPtr      createEmpty     (void); 
+    static  WindowsLookAndFeelPtr      create          (void); 
+    static  WindowsLookAndFeelPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -196,46 +146,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public MenuItem
   protected:
 
     /*---------------------------------------------------------------------*/
-    /*! \name                      Fields                                  */
-    /*! \{                                                                 */
-
-    SFToggleButtonPtr   _sfButton;
-    MFPopupMenuPtr      _mfInternalPopupMenu;
-    SFReal32            _sfSubMenuDelay;
-    SFBool              _sfSelected;
-    SFBool              _sfTopLevelMenu;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    MenuBase(void);
-    MenuBase(const MenuBase &source);
+    WindowsLookAndFeelBase(void);
+    WindowsLookAndFeelBase(const WindowsLookAndFeelBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MenuBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           MFPopupMenuPtr      *getMFInternalPopupMenu(void);
-
-           PopupMenuPtr        &getInternalPopupMenu(UInt32 index);
-           MFPopupMenuPtr      &getInternalPopupMenu(void);
-     const MFPopupMenuPtr      &getInternalPopupMenu(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
+    virtual ~WindowsLookAndFeelBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -243,13 +165,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public MenuItem
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      MenuBase *pOther,
+    void executeSyncImpl(      WindowsLookAndFeelBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      MenuBase *pOther,
+    void executeSyncImpl(      WindowsLookAndFeelBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -274,12 +196,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public MenuItem
 
     friend class FieldContainer;
 
-    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const MenuBase &source);
+    void operator =(const WindowsLookAndFeelBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -287,17 +208,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public MenuItem
 //---------------------------------------------------------------------------
 
 
-typedef MenuBase *MenuBaseP;
+typedef WindowsLookAndFeelBase *WindowsLookAndFeelBaseP;
 
-typedef osgIF<MenuBase::isNodeCore,
-              CoredNodePtr<Menu>,
+typedef osgIF<WindowsLookAndFeelBase::isNodeCore,
+              CoredNodePtr<WindowsLookAndFeel>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet MenuNodePtr;
+              >::_IRet WindowsLookAndFeelNodePtr;
 
-typedef RefPtr<MenuPtr> MenuRefPtr;
+typedef RefPtr<WindowsLookAndFeelPtr> WindowsLookAndFeelRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGMENUBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGWINDOWSLOOKANDFEELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGMENUBASE_H_ */
+#endif /* _OSGWINDOWSLOOKANDFEELBASE_H_ */

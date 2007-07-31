@@ -46,6 +46,7 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGBorderLayoutBase.h"
+#include "OSGBorderLayoutConstraints.h"
 
 OSG_BEGIN_NAMESPACE
 

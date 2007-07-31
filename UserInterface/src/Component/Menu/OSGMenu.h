@@ -77,6 +77,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING Menu : public MenuBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
+	//void addMenuItem(MenuItemPtr item);
+	//void removeMenuItem(MenuItemPtr item);
+	//void removeMenuItem(UInt32 index);
+	//void insertMenuItem(UInt32 index, MenuItemPtr item);
+
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:

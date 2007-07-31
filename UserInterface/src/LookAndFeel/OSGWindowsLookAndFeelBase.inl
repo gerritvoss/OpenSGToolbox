@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Menu!
+ **     class WindowsLookAndFeel!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &MenuBase::getClassType(void)
+OSG::FieldContainerType &WindowsLookAndFeelBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 MenuBase::getClassTypeId(void) 
+OSG::UInt32 WindowsLookAndFeelBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-MenuPtr MenuBase::create(void) 
+WindowsLookAndFeelPtr WindowsLookAndFeelBase::create(void) 
 {
-    MenuPtr fc; 
+    WindowsLookAndFeelPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = MenuPtr::dcast(
+        fc = WindowsLookAndFeelPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ MenuPtr MenuBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-MenuPtr MenuBase::createEmpty(void) 
+WindowsLookAndFeelPtr WindowsLookAndFeelBase::createEmpty(void) 
 { 
-    MenuPtr returnValue; 
+    WindowsLookAndFeelPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,149 +96,9 @@ MenuPtr MenuBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Menu::_sfButton field.
-inline
-SFToggleButtonPtr *MenuBase::getSFButton(void)
-{
-    return &_sfButton;
-}
 
-//! Get the Menu::_mfInternalPopupMenu field.
-inline
-MFPopupMenuPtr *MenuBase::getMFInternalPopupMenu(void)
-{
-    return &_mfInternalPopupMenu;
-}
-
-//! Get the Menu::_sfSubMenuDelay field.
-inline
-SFReal32 *MenuBase::getSFSubMenuDelay(void)
-{
-    return &_sfSubMenuDelay;
-}
-
-//! Get the Menu::_sfSelected field.
-inline
-SFBool *MenuBase::getSFSelected(void)
-{
-    return &_sfSelected;
-}
-
-//! Get the Menu::_sfTopLevelMenu field.
-inline
-SFBool *MenuBase::getSFTopLevelMenu(void)
-{
-    return &_sfTopLevelMenu;
-}
-
-
-//! Get the value of the Menu::_sfButton field.
-inline
-ToggleButtonPtr &MenuBase::getButton(void)
-{
-    return _sfButton.getValue();
-}
-
-//! Get the value of the Menu::_sfButton field.
-inline
-const ToggleButtonPtr &MenuBase::getButton(void) const
-{
-    return _sfButton.getValue();
-}
-
-//! Set the value of the Menu::_sfButton field.
-inline
-void MenuBase::setButton(const ToggleButtonPtr &value)
-{
-    _sfButton.setValue(value);
-}
-
-//! Get the value of the Menu::_sfSubMenuDelay field.
-inline
-Real32 &MenuBase::getSubMenuDelay(void)
-{
-    return _sfSubMenuDelay.getValue();
-}
-
-//! Get the value of the Menu::_sfSubMenuDelay field.
-inline
-const Real32 &MenuBase::getSubMenuDelay(void) const
-{
-    return _sfSubMenuDelay.getValue();
-}
-
-//! Set the value of the Menu::_sfSubMenuDelay field.
-inline
-void MenuBase::setSubMenuDelay(const Real32 &value)
-{
-    _sfSubMenuDelay.setValue(value);
-}
-
-//! Get the value of the Menu::_sfSelected field.
-inline
-bool &MenuBase::getSelected(void)
-{
-    return _sfSelected.getValue();
-}
-
-//! Get the value of the Menu::_sfSelected field.
-inline
-const bool &MenuBase::getSelected(void) const
-{
-    return _sfSelected.getValue();
-}
-
-//! Set the value of the Menu::_sfSelected field.
-inline
-void MenuBase::setSelected(const bool &value)
-{
-    _sfSelected.setValue(value);
-}
-
-//! Get the value of the Menu::_sfTopLevelMenu field.
-inline
-bool &MenuBase::getTopLevelMenu(void)
-{
-    return _sfTopLevelMenu.getValue();
-}
-
-//! Get the value of the Menu::_sfTopLevelMenu field.
-inline
-const bool &MenuBase::getTopLevelMenu(void) const
-{
-    return _sfTopLevelMenu.getValue();
-}
-
-//! Set the value of the Menu::_sfTopLevelMenu field.
-inline
-void MenuBase::setTopLevelMenu(const bool &value)
-{
-    _sfTopLevelMenu.setValue(value);
-}
-
-
-//! Get the value of the \a index element the Menu::_mfInternalPopupMenu field.
-inline
-PopupMenuPtr &MenuBase::getInternalPopupMenu(const UInt32 index)
-{
-    return _mfInternalPopupMenu[index];
-}
-
-//! Get the Menu::_mfInternalPopupMenu field.
-inline
-MFPopupMenuPtr &MenuBase::getInternalPopupMenu(void)
-{
-    return _mfInternalPopupMenu;
-}
-
-//! Get the Menu::_mfInternalPopupMenu field.
-inline
-const MFPopupMenuPtr &MenuBase::getInternalPopupMenu(void) const
-{
-    return _mfInternalPopupMenu;
-}
 
 OSG_END_NAMESPACE
 
-#define OSGMENUBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGWINDOWSLOOKANDFEELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 
