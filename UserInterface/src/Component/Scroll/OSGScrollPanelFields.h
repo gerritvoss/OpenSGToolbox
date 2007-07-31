@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGSCROLLBARFIELDS_H_
-#define _OSGSCROLLBARFIELDS_H_
+#ifndef _OSGSCROLLPANELFIELDS_H_
+#define _OSGSCROLLPANELFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -64,12 +64,12 @@
 
 OSG_BEGIN_NAMESPACE
 
-class Scrollbar;
+class ScrollPanel;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ScrollbarPtr
+//! ScrollPanelPtr
 
-typedef FCPtr<ContainerPtr, Scrollbar> ScrollbarPtr;
+typedef FCPtr<ContainerPtr, ScrollPanel> ScrollPanelPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<ContainerPtr, Scrollbar> ScrollbarPtr;
 #endif
 
 template <>
-struct FieldDataTraits<ScrollbarPtr> : 
-    public FieldTraitsRecurseMapper<ScrollbarPtr, true>
+struct FieldDataTraits<ScrollPanelPtr> : 
+    public FieldTraitsRecurseMapper<ScrollPanelPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<ScrollbarPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFScrollbarPtr"; }
-    static const char *getMName(void) { return "MFScrollbarPtr"; }
+    static const char *getSName(void) { return "SFScrollPanelPtr"; }
+    static const char *getMName(void) { return "MFScrollPanelPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ScrollbarPtr, true>
+/*! \class  FieldTraitsRecurseMapper<ScrollPanelPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<ScrollbarPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldSingle */
 
-typedef SField<ScrollbarPtr> SFScrollbarPtr;
+typedef SField<ScrollPanelPtr> SFScrollPanelPtr;
 #endif
 
-#ifndef OSG_COMPILESCROLLBARINST
-OSG_DLLEXPORT_DECL1(SField, ScrollbarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILESCROLLPANELINST
+OSG_DLLEXPORT_DECL1(SField, ScrollPanelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<ScrollbarPtr> MFScrollbarPtr;
+typedef MField<ScrollPanelPtr> MFScrollPanelPtr;
 #endif
 
-#ifndef OSG_COMPILESCROLLBARINST
-OSG_DLLEXPORT_DECL1(MField, ScrollbarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILESCROLLPANELINST
+OSG_DLLEXPORT_DECL1(MField, ScrollPanelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGSCROLLBARFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGSCROLLPANELFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGSCROLLBARFIELDS_H_ */
+#endif /* _OSGSCROLLPANELFIELDS_H_ */

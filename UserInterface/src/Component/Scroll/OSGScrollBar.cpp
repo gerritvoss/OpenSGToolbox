@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGScrollBar.h"
+#include "OSGScrollbar.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,7 +55,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::ScrollBar
+/*! \class osg::Scrollbar
 A UI Scrollbar. 	
 */
 
@@ -67,7 +67,7 @@ A UI Scrollbar.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ScrollBar::initMethod (void)
+void Scrollbar::initMethod (void)
 {
 }
 
@@ -76,12 +76,12 @@ void ScrollBar::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ScrollBar::drawInternal(const GraphicsPtr Graphics) const
+void Scrollbar::drawInternal(const GraphicsPtr Graphics) const
 {
     //TODO:Implement
 }
 
-void  ScrollBar::produceAdjustmentValueChanged(const AdjustmentEvent& e)
+void  Scrollbar::produceAdjustmentValueChanged(const AdjustmentEvent& e)
 {
    for(AdjustmentListenerSetConstItor SetItor(_AdjustmentListeners.begin()) ; SetItor != _AdjustmentListeners.end() ; ++SetItor)
    {
@@ -95,34 +95,34 @@ void  ScrollBar::produceAdjustmentValueChanged(const AdjustmentEvent& e)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-ScrollBar::ScrollBar(void) :
+Scrollbar::Scrollbar(void) :
     Inherited(),
         _Model(NULL)
 {
 }
 
-ScrollBar::ScrollBar(const ScrollBar &source) :
+Scrollbar::Scrollbar(const Scrollbar &source) :
     Inherited(source),
         _Model(source._Model)
 
 {
 }
 
-ScrollBar::~ScrollBar(void)
+Scrollbar::~Scrollbar(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void ScrollBar::changed(BitVector whichField, UInt32 origin)
+void Scrollbar::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void ScrollBar::dump(      UInt32    , 
+void Scrollbar::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump ScrollBar NI" << std::endl;
+    SLOG << "Dump Scrollbar NI" << std::endl;
 }
 
 

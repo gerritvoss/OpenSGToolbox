@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGSCROLLBAR_H_
-#define _OSGSCROLLBAR_H_
+#ifndef _OSGSCROLLPANEL_H_
+#define _OSGSCROLLPANEL_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,24 +45,23 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGScrollbarBase.h"
-#include "OSGBoundedRangeModel.h"
-#include "Event/OSGAdjustmentListener.h"
+#include "OSGScrollPanelBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Scrollbar class. See \ref 
-           PageUserInterfaceScrollbar for a description.
+/*! \brief ScrollPanel class. See \ref 
+           PageUserInterfaceScrollPanel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING Scrollbar : public ScrollbarBase
+class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanel : public ScrollPanelBase
 {
   private:
 
-    typedef ScrollbarBase Inherited;
+    typedef ScrollPanelBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
+      enum ScrollbarDisplayPolicy{SCROLLBAR_AS_NEEDED=0,SCROLLBAR_AS_ALWAYS,SCROLLBAR_AS_NEVER};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -80,86 +79,47 @@ class OSG_USERINTERFACELIB_DLLMAPPING Scrollbar : public ScrollbarBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-    void setModel(BoundedRangeModel* Model);
-    BoundedRangeModel* getModel(void) const;
-    
-    void addAdjustmentListener(AdjustmentListenerPtr Listener);
-    void removeAdjustmentListener(AdjustmentListenerPtr Listener);
-
-    UInt32 getExtent(void) const;
-    
-    UInt32 getMaximum(void) const;
-    
-    UInt32 getMinimum(void) const;
-    
-    UInt32 getValue(void) const;
-    
-    bool getValueIsAdjusting(void) const;
-    
-    void setExtent(UInt32 newExtent);
-    
-    void setMaximum(UInt32 newMaximum);
-    
-    void setMinimum(UInt32 newMinimum);
-    
-    void setRangeProperties(UInt32 value, UInt32 extent, UInt32 min, UInt32 max, bool adjusting);
-    
-    void setValue(UInt32 newValue);
-    
-    void setValueIsAdjusting(bool Value);
-
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in ScrollbarBase.
+    // Variables should all be in ScrollPanelBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Scrollbar(void);
-    Scrollbar(const Scrollbar &source);
+    ScrollPanel(void);
+    ScrollPanel(const ScrollPanel &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Scrollbar(void); 
+    virtual ~ScrollPanel(void); 
 
     /*! \}                                                                 */
     
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
-
-	typedef std::set<AdjustmentListenerPtr> AdjustmentListenerSet;
-    typedef AdjustmentListenerSet::iterator AdjustmentListenerSetItor;
-    typedef AdjustmentListenerSet::const_iterator AdjustmentListenerSetConstItor;
-	
-    AdjustmentListenerSet       _AdjustmentListeners;
-    void produceAdjustmentValueChanged(const AdjustmentEvent& e);
-
-    BoundedRangeModel* _Model;
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class ScrollbarBase;
+    friend class ScrollPanelBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Scrollbar &source);
+    void operator =(const ScrollPanel &source);
 };
 
-typedef Scrollbar *ScrollbarP;
+typedef ScrollPanel *ScrollPanelP;
 
 OSG_END_NAMESPACE
 
-#include "OSGScrollbarBase.inl"
-#include "OSGScrollbar.inl"
+#include "OSGScrollPanelBase.inl"
+#include "OSGScrollPanel.inl"
 
-#define OSGSCROLLBAR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGSCROLLPANEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGSCROLLBAR_H_ */
+#endif /* _OSGSCROLLPANEL_H_ */

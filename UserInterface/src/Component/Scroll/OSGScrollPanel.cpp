@@ -4,6 +4,8 @@
  *                                                                           *
  *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
+ *                                                                           *
  *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -38,105 +40,99 @@
 //  Includes
 //---------------------------------------------------------------------------
 
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEUSERINTERFACELIB
+
 #include <OpenSG/OSGConfig.h>
+
+#include "OSGScrollPanel.h"
 
 OSG_BEGIN_NAMESPACE
 
-inline
-void Scrollbar::setModel(BoundedRangeModel* Model)
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class osg::ScrollPanel
+A UI ScrollPanel 	
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void ScrollPanel::initMethod (void)
 {
-    _Model = Model;
 }
 
-inline
-BoundedRangeModel* Scrollbar::getModel(void) const
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+ScrollPanel::ScrollPanel(void) :
+    Inherited()
 {
-    return _Model;
 }
 
-inline
-bool Scrollbar::getValueIsAdjusting(void) const
+ScrollPanel::ScrollPanel(const ScrollPanel &source) :
+    Inherited(source)
 {
-    return _Model->getValueIsAdjusting();
 }
 
-inline
-void Scrollbar::setValueIsAdjusting(bool Value)
+ScrollPanel::~ScrollPanel(void)
 {
-    _Model->setValueIsAdjusting(Value);
 }
 
-inline
-UInt32 Scrollbar::getExtent(void) const
+/*----------------------------- class specific ----------------------------*/
+
+void ScrollPanel::changed(BitVector whichField, UInt32 origin)
 {
-    return _Model->getExtent();
+    Inherited::changed(whichField, origin);
 }
 
-inline
-UInt32 Scrollbar::getMaximum(void) const
+void ScrollPanel::dump(      UInt32    , 
+                         const BitVector ) const
 {
-    return _Model->getMaximum();
+    SLOG << "Dump ScrollPanel NI" << std::endl;
 }
 
-inline
-UInt32 Scrollbar::getMinimum(void) const
+
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
+
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
+
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
+
+namespace
 {
-    return _Model->getMinimum();
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGSCROLLPANELBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGSCROLLPANELBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGSCROLLPANELFIELDS_HEADER_CVSID;
 }
 
-inline
-UInt32 Scrollbar::getValue(void) const
-{
-    return _Model->getValue();
-}
-
-inline
-void Scrollbar::setExtent(UInt32 newExtent)
-{
-    _Model->setExtent(newExtent);
-}
-
-inline
-void Scrollbar::setMaximum(UInt32 newMaximum)
-{
-    _Model->setMaximum(newMaximum);
-}
-
-inline
-void Scrollbar::setMinimum(UInt32 newMinimum)
-{
-    _Model->setMinimum(newMinimum);
-}
-
-inline
-void Scrollbar::setRangeProperties(UInt32 value, UInt32 extent, UInt32 min, UInt32 max, bool adjusting)
-{
-    _Model->setRangeProperties(value, extent, min, max, adjusting);
-}
-
-inline
-void Scrollbar::setValue(UInt32 newValue)
-{
-    _Model->setValue(newValue);
-}
-
-inline
-void Scrollbar::addAdjustmentListener(AdjustmentListenerPtr Listener)
-{
-   _AdjustmentListeners.insert(Listener);
-}
-
-inline
-void Scrollbar::removeAdjustmentListener(AdjustmentListenerPtr Listener)
-{
-   AdjustmentListenerSetItor EraseIter(_AdjustmentListeners.find(Listener));
-   if(EraseIter != _AdjustmentListeners.end())
-   {
-      _AdjustmentListeners.erase(EraseIter);
-   }
-}
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
 
 OSG_END_NAMESPACE
-
-#define OSGSCROLLBAR_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

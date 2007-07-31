@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Scrollbar!
+ **     class ScrollPanel!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &ScrollbarBase::getClassType(void)
+OSG::FieldContainerType &ScrollPanelBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ScrollbarBase::getClassTypeId(void) 
+OSG::UInt32 ScrollPanelBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-ScrollbarPtr ScrollbarBase::create(void) 
+ScrollPanelPtr ScrollPanelBase::create(void) 
 {
-    ScrollbarPtr fc; 
+    ScrollPanelPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = ScrollbarPtr::dcast(
+        fc = ScrollPanelPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ ScrollbarPtr ScrollbarBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-ScrollbarPtr ScrollbarBase::createEmpty(void) 
+ScrollPanelPtr ScrollPanelBase::createEmpty(void) 
 { 
-    ScrollbarPtr returnValue; 
+    ScrollPanelPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,205 +96,149 @@ ScrollbarPtr ScrollbarBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Scrollbar::_sfOrientation field.
+//! Get the ScrollPanel::_sfScrollPosition field.
 inline
-SFUInt32 *ScrollbarBase::getSFOrientation(void)
+SFPnt2s *ScrollPanelBase::getSFScrollPosition(void)
 {
-    return &_sfOrientation;
+    return &_sfScrollPosition;
 }
 
-//! Get the Scrollbar::_sfUnitIncrement field.
+//! Get the ScrollPanel::_sfVerticalScrollbar field.
 inline
-SFUInt32 *ScrollbarBase::getSFUnitIncrement(void)
+SFScrollbarPtr *ScrollPanelBase::getSFVerticalScrollbar(void)
 {
-    return &_sfUnitIncrement;
+    return &_sfVerticalScrollbar;
 }
 
-//! Get the Scrollbar::_sfBlockIncrement field.
+//! Get the ScrollPanel::_sfHorizontalScrollbar field.
 inline
-SFUInt32 *ScrollbarBase::getSFBlockIncrement(void)
+SFScrollbarPtr *ScrollPanelBase::getSFHorizontalScrollbar(void)
 {
-    return &_sfBlockIncrement;
+    return &_sfHorizontalScrollbar;
 }
 
-//! Get the Scrollbar::_sfMinButton field.
+//! Get the ScrollPanel::_sfVerticalScrollbarDisplayPolicy field.
 inline
-SFButtonPtr *ScrollbarBase::getSFMinButton(void)
+SFUInt32 *ScrollPanelBase::getSFVerticalScrollbarDisplayPolicy(void)
 {
-    return &_sfMinButton;
+    return &_sfVerticalScrollbarDisplayPolicy;
 }
 
-//! Get the Scrollbar::_sfMaxButton field.
+//! Get the ScrollPanel::_sfHorizontalScrollbarDisplayPolicy field.
 inline
-SFButtonPtr *ScrollbarBase::getSFMaxButton(void)
+SFUInt32 *ScrollPanelBase::getSFHorizontalScrollbarDisplayPolicy(void)
 {
-    return &_sfMaxButton;
-}
-
-//! Get the Scrollbar::_sfScrollbar field.
-inline
-SFUIDrawObjectCanvasPtr *ScrollbarBase::getSFScrollbar(void)
-{
-    return &_sfScrollbar;
-}
-
-//! Get the Scrollbar::_sfScrollField field.
-inline
-SFUIDrawObjectCanvasPtr *ScrollbarBase::getSFScrollField(void)
-{
-    return &_sfScrollField;
+    return &_sfHorizontalScrollbarDisplayPolicy;
 }
 
 
-//! Get the value of the Scrollbar::_sfOrientation field.
+//! Get the value of the ScrollPanel::_sfScrollPosition field.
 inline
-UInt32 &ScrollbarBase::getOrientation(void)
+Pnt2s &ScrollPanelBase::getScrollPosition(void)
 {
-    return _sfOrientation.getValue();
+    return _sfScrollPosition.getValue();
 }
 
-//! Get the value of the Scrollbar::_sfOrientation field.
+//! Get the value of the ScrollPanel::_sfScrollPosition field.
 inline
-const UInt32 &ScrollbarBase::getOrientation(void) const
+const Pnt2s &ScrollPanelBase::getScrollPosition(void) const
 {
-    return _sfOrientation.getValue();
+    return _sfScrollPosition.getValue();
 }
 
-//! Set the value of the Scrollbar::_sfOrientation field.
+//! Set the value of the ScrollPanel::_sfScrollPosition field.
 inline
-void ScrollbarBase::setOrientation(const UInt32 &value)
+void ScrollPanelBase::setScrollPosition(const Pnt2s &value)
 {
-    _sfOrientation.setValue(value);
+    _sfScrollPosition.setValue(value);
 }
 
-//! Get the value of the Scrollbar::_sfUnitIncrement field.
+//! Get the value of the ScrollPanel::_sfVerticalScrollbar field.
 inline
-UInt32 &ScrollbarBase::getUnitIncrement(void)
+ScrollbarPtr &ScrollPanelBase::getVerticalScrollbar(void)
 {
-    return _sfUnitIncrement.getValue();
+    return _sfVerticalScrollbar.getValue();
 }
 
-//! Get the value of the Scrollbar::_sfUnitIncrement field.
+//! Get the value of the ScrollPanel::_sfVerticalScrollbar field.
 inline
-const UInt32 &ScrollbarBase::getUnitIncrement(void) const
+const ScrollbarPtr &ScrollPanelBase::getVerticalScrollbar(void) const
 {
-    return _sfUnitIncrement.getValue();
+    return _sfVerticalScrollbar.getValue();
 }
 
-//! Set the value of the Scrollbar::_sfUnitIncrement field.
+//! Set the value of the ScrollPanel::_sfVerticalScrollbar field.
 inline
-void ScrollbarBase::setUnitIncrement(const UInt32 &value)
+void ScrollPanelBase::setVerticalScrollbar(const ScrollbarPtr &value)
 {
-    _sfUnitIncrement.setValue(value);
+    _sfVerticalScrollbar.setValue(value);
 }
 
-//! Get the value of the Scrollbar::_sfBlockIncrement field.
+//! Get the value of the ScrollPanel::_sfHorizontalScrollbar field.
 inline
-UInt32 &ScrollbarBase::getBlockIncrement(void)
+ScrollbarPtr &ScrollPanelBase::getHorizontalScrollbar(void)
 {
-    return _sfBlockIncrement.getValue();
+    return _sfHorizontalScrollbar.getValue();
 }
 
-//! Get the value of the Scrollbar::_sfBlockIncrement field.
+//! Get the value of the ScrollPanel::_sfHorizontalScrollbar field.
 inline
-const UInt32 &ScrollbarBase::getBlockIncrement(void) const
+const ScrollbarPtr &ScrollPanelBase::getHorizontalScrollbar(void) const
 {
-    return _sfBlockIncrement.getValue();
+    return _sfHorizontalScrollbar.getValue();
 }
 
-//! Set the value of the Scrollbar::_sfBlockIncrement field.
+//! Set the value of the ScrollPanel::_sfHorizontalScrollbar field.
 inline
-void ScrollbarBase::setBlockIncrement(const UInt32 &value)
+void ScrollPanelBase::setHorizontalScrollbar(const ScrollbarPtr &value)
 {
-    _sfBlockIncrement.setValue(value);
+    _sfHorizontalScrollbar.setValue(value);
 }
 
-//! Get the value of the Scrollbar::_sfMinButton field.
+//! Get the value of the ScrollPanel::_sfVerticalScrollbarDisplayPolicy field.
 inline
-ButtonPtr &ScrollbarBase::getMinButton(void)
+UInt32 &ScrollPanelBase::getVerticalScrollbarDisplayPolicy(void)
 {
-    return _sfMinButton.getValue();
+    return _sfVerticalScrollbarDisplayPolicy.getValue();
 }
 
-//! Get the value of the Scrollbar::_sfMinButton field.
+//! Get the value of the ScrollPanel::_sfVerticalScrollbarDisplayPolicy field.
 inline
-const ButtonPtr &ScrollbarBase::getMinButton(void) const
+const UInt32 &ScrollPanelBase::getVerticalScrollbarDisplayPolicy(void) const
 {
-    return _sfMinButton.getValue();
+    return _sfVerticalScrollbarDisplayPolicy.getValue();
 }
 
-//! Set the value of the Scrollbar::_sfMinButton field.
+//! Set the value of the ScrollPanel::_sfVerticalScrollbarDisplayPolicy field.
 inline
-void ScrollbarBase::setMinButton(const ButtonPtr &value)
+void ScrollPanelBase::setVerticalScrollbarDisplayPolicy(const UInt32 &value)
 {
-    _sfMinButton.setValue(value);
+    _sfVerticalScrollbarDisplayPolicy.setValue(value);
 }
 
-//! Get the value of the Scrollbar::_sfMaxButton field.
+//! Get the value of the ScrollPanel::_sfHorizontalScrollbarDisplayPolicy field.
 inline
-ButtonPtr &ScrollbarBase::getMaxButton(void)
+UInt32 &ScrollPanelBase::getHorizontalScrollbarDisplayPolicy(void)
 {
-    return _sfMaxButton.getValue();
+    return _sfHorizontalScrollbarDisplayPolicy.getValue();
 }
 
-//! Get the value of the Scrollbar::_sfMaxButton field.
+//! Get the value of the ScrollPanel::_sfHorizontalScrollbarDisplayPolicy field.
 inline
-const ButtonPtr &ScrollbarBase::getMaxButton(void) const
+const UInt32 &ScrollPanelBase::getHorizontalScrollbarDisplayPolicy(void) const
 {
-    return _sfMaxButton.getValue();
+    return _sfHorizontalScrollbarDisplayPolicy.getValue();
 }
 
-//! Set the value of the Scrollbar::_sfMaxButton field.
+//! Set the value of the ScrollPanel::_sfHorizontalScrollbarDisplayPolicy field.
 inline
-void ScrollbarBase::setMaxButton(const ButtonPtr &value)
+void ScrollPanelBase::setHorizontalScrollbarDisplayPolicy(const UInt32 &value)
 {
-    _sfMaxButton.setValue(value);
-}
-
-//! Get the value of the Scrollbar::_sfScrollbar field.
-inline
-UIDrawObjectCanvasPtr &ScrollbarBase::getScrollbar(void)
-{
-    return _sfScrollbar.getValue();
-}
-
-//! Get the value of the Scrollbar::_sfScrollbar field.
-inline
-const UIDrawObjectCanvasPtr &ScrollbarBase::getScrollbar(void) const
-{
-    return _sfScrollbar.getValue();
-}
-
-//! Set the value of the Scrollbar::_sfScrollbar field.
-inline
-void ScrollbarBase::setScrollbar(const UIDrawObjectCanvasPtr &value)
-{
-    _sfScrollbar.setValue(value);
-}
-
-//! Get the value of the Scrollbar::_sfScrollField field.
-inline
-UIDrawObjectCanvasPtr &ScrollbarBase::getScrollField(void)
-{
-    return _sfScrollField.getValue();
-}
-
-//! Get the value of the Scrollbar::_sfScrollField field.
-inline
-const UIDrawObjectCanvasPtr &ScrollbarBase::getScrollField(void) const
-{
-    return _sfScrollField.getValue();
-}
-
-//! Set the value of the Scrollbar::_sfScrollField field.
-inline
-void ScrollbarBase::setScrollField(const UIDrawObjectCanvasPtr &value)
-{
-    _sfScrollField.setValue(value);
+    _sfHorizontalScrollbarDisplayPolicy.setValue(value);
 }
 
 
 OSG_END_NAMESPACE
 
-#define OSGSCROLLBARBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGSCROLLPANELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

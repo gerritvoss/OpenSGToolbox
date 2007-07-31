@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="ScrollPanel"
+	parent="Container"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI ScrollPanel
+	<Field
+		name="ScrollPosition"
+		type="Pnt2s"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0,0"
+	>
+	</Field>
+	<Field
+		name="VerticalScrollbar"
+		type="ScrollbarPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/Scroll/OSGScrollbar.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="HorizontalScrollbar"
+		type="ScrollbarPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/Scroll/OSGScrollbar.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="VerticalScrollbarDisplayPolicy"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultHeader="Component/Scroll/OSGScrollPanel.h"
+		defaultValue="ScrollPanel::SCROLLBAR_AS_NEEDED"
+	>
+	</Field>
+	<Field
+		name="HorizontalScrollbarDisplayPolicy"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultHeader="Component/Scroll/OSGScrollPanel.h"
+		defaultValue="ScrollPanel::SCROLLBAR_AS_NEEDED"
+	>
+	</Field>
+</FieldContainer>
