@@ -331,62 +331,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Component\OSGContainer.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGContainer.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGContainer.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGContainerBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGContainerBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGContainerBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGContainerFields.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGFrame.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGFrame.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGFrame.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGFrameBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGFrameBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGFrameBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGFrameFields.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\Component\OSGImageComponent.cpp"
 					>
 				</File>
@@ -440,34 +384,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Component\OSGLabelFields.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGPanel.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGPanel.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGPanel.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGPanelBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGPanelBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGPanelBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGPanelFields.h"
 					>
 				</File>
 				<File
@@ -536,34 +452,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Component\OSGRotatedComponentFields.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGTabPanel.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGTabPanel.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGTabPanel.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGTabPanelBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGTabPanelBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGTabPanelBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGTabPanelFields.h"
 					>
 				</File>
 				<File
@@ -1003,6 +891,150 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItemFields.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Container"
+					>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGContainer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGContainer.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGContainer.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGContainerBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGContainerBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGContainerBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGContainerFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGFrame.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGFrame.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGFrame.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGFrameBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGFrameBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGFrameBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGFrameFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGPanel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGPanel.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGPanel.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGPanelBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGPanelBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGPanelBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGPanelFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGSplitPanel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGSplitPanel.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGSplitPanel.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGSplitPanelBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGSplitPanelBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGSplitPanelBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGSplitPanelFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGTabPanel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGTabPanel.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGTabPanel.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGTabPanelBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGTabPanelBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGTabPanelBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGTabPanelFields.h"
 						>
 					</File>
 				</Filter>

@@ -47,7 +47,7 @@
 
 #include "OSGAbsoluteLayout.h"
 #include "OSGAbsoluteLayoutConstraints.h"
-#include "Component/OSGContainer.h"
+#include "Component/Container/OSGContainer.h"
 
 OSG_BEGIN_NAMESPACE
 

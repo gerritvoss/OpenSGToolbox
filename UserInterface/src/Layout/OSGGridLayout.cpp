@@ -46,7 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGGridLayout.h"
-#include "Component/OSGContainer.h"
+#include "Component/Container/OSGContainer.h"
 
 OSG_BEGIN_NAMESPACE
 

@@ -48,7 +48,7 @@
 
 #include "OSGGridBagLayout.h"
 #include "OSGGridBagLayoutConstraints.h"
-#include "Component/OSGContainer.h"
+#include "Component/Container/OSGContainer.h"
 
 OSG_BEGIN_NAMESPACE
 

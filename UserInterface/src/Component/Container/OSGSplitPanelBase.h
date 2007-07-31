@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Frame
+ **     class SplitPanel
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGFRAMEBASE_H_
-#define _OSGFRAMEBASE_H_
+#ifndef _OSGSPLITPANELBASE_H_
+#define _OSGSPLITPANELBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -67,20 +67,26 @@
 
 #include "OSGContainer.h" // Parent
 
-#include "OSGComponentFields.h" // FocusedComponent type
-#include "UIDrawingSurface/OSGUIDrawingSurfaceFields.h" // DrawingSurface type
-#include "Component/Menu/OSGPopupMenuFields.h" // ActivePopupMenu type
+#include "Component/OSGComponent.h" // MinComponent type
+#include "Component/OSGComponent.h" // MaxComponent type
+#include <OpenSG/OSGUInt32Fields.h> // DividerSize type
+#include <OpenSG/OSGReal32Fields.h> // DividerPosition type
+#include <OpenSG/OSGReal32Fields.h> // MinDividerPosition type
+#include <OpenSG/OSGReal32Fields.h> // MaxDividerPosition type
+#include "Component/OSGUIDrawObjectCanvas.h" // DividerDrawObject type
+#include <OpenSG/OSGBoolFields.h> // Expandable type
+#include <OpenSG/OSGUInt32Fields.h> // Alignment type
 
-#include "OSGFrameFields.h"
+#include "OSGSplitPanelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Frame;
+class SplitPanel;
 class BinaryDataHandler;
 
-//! \brief Frame Base Class.
+//! \brief SplitPanel Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
+class OSG_USERINTERFACELIB_DLLMAPPING SplitPanelBase : public Container
 {
   private:
 
@@ -89,19 +95,31 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef FramePtr  Ptr;
+    typedef SplitPanelPtr  Ptr;
 
     enum
     {
-        FocusedComponentFieldId = Inherited::NextFieldId,
-        DrawingSurfaceFieldId   = FocusedComponentFieldId + 1,
-        ActivePopupMenuFieldId  = DrawingSurfaceFieldId   + 1,
-        NextFieldId             = ActivePopupMenuFieldId  + 1
+        MinComponentFieldId       = Inherited::NextFieldId,
+        MaxComponentFieldId       = MinComponentFieldId       + 1,
+        DividerSizeFieldId        = MaxComponentFieldId       + 1,
+        DividerPositionFieldId    = DividerSizeFieldId        + 1,
+        MinDividerPositionFieldId = DividerPositionFieldId    + 1,
+        MaxDividerPositionFieldId = MinDividerPositionFieldId + 1,
+        DividerDrawObjectFieldId  = MaxDividerPositionFieldId + 1,
+        ExpandableFieldId         = DividerDrawObjectFieldId  + 1,
+        AlignmentFieldId          = ExpandableFieldId         + 1,
+        NextFieldId               = AlignmentFieldId          + 1
     };
 
-    static const OSG::BitVector FocusedComponentFieldMask;
-    static const OSG::BitVector DrawingSurfaceFieldMask;
-    static const OSG::BitVector ActivePopupMenuFieldMask;
+    static const OSG::BitVector MinComponentFieldMask;
+    static const OSG::BitVector MaxComponentFieldMask;
+    static const OSG::BitVector DividerSizeFieldMask;
+    static const OSG::BitVector DividerPositionFieldMask;
+    static const OSG::BitVector MinDividerPositionFieldMask;
+    static const OSG::BitVector MaxDividerPositionFieldMask;
+    static const OSG::BitVector DividerDrawObjectFieldMask;
+    static const OSG::BitVector ExpandableFieldMask;
+    static const OSG::BitVector AlignmentFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -128,25 +146,49 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFComponentPtr      *getSFFocusedComponent(void);
-           SFUIDrawingSurfacePtr *getSFDrawingSurface (void);
-           SFPopupMenuPtr      *getSFActivePopupMenu(void);
+           SFComponentPtr      *getSFMinComponent   (void);
+           SFComponentPtr      *getSFMaxComponent   (void);
+           SFUInt32            *getSFDividerSize    (void);
+           SFReal32            *getSFDividerPosition(void);
+           SFReal32            *getSFMinDividerPosition(void);
+           SFReal32            *getSFMaxDividerPosition(void);
+           SFUIDrawObjectCanvasPtr *getSFDividerDrawObject(void);
+           SFBool              *getSFExpandable     (void);
+           SFUInt32            *getSFAlignment      (void);
 
-           ComponentPtr        &getFocusedComponent(void);
-     const ComponentPtr        &getFocusedComponent(void) const;
-           UIDrawingSurfacePtr &getDrawingSurface (void);
-     const UIDrawingSurfacePtr &getDrawingSurface (void) const;
-           PopupMenuPtr        &getActivePopupMenu(void);
-     const PopupMenuPtr        &getActivePopupMenu(void) const;
+           ComponentPtr        &getMinComponent   (void);
+     const ComponentPtr        &getMinComponent   (void) const;
+           ComponentPtr        &getMaxComponent   (void);
+     const ComponentPtr        &getMaxComponent   (void) const;
+           UInt32              &getDividerSize    (void);
+     const UInt32              &getDividerSize    (void) const;
+           Real32              &getDividerPosition(void);
+     const Real32              &getDividerPosition(void) const;
+           Real32              &getMinDividerPosition(void);
+     const Real32              &getMinDividerPosition(void) const;
+           Real32              &getMaxDividerPosition(void);
+     const Real32              &getMaxDividerPosition(void) const;
+           UIDrawObjectCanvasPtr &getDividerDrawObject(void);
+     const UIDrawObjectCanvasPtr &getDividerDrawObject(void) const;
+           bool                &getExpandable     (void);
+     const bool                &getExpandable     (void) const;
+           UInt32              &getAlignment      (void);
+     const UInt32              &getAlignment      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setFocusedComponent( const ComponentPtr &value );
-     void setDrawingSurface ( const UIDrawingSurfacePtr &value );
-     void setActivePopupMenu( const PopupMenuPtr &value );
+     void setMinComponent   ( const ComponentPtr &value );
+     void setMaxComponent   ( const ComponentPtr &value );
+     void setDividerSize    ( const UInt32 &value );
+     void setDividerPosition( const Real32 &value );
+     void setMinDividerPosition( const Real32 &value );
+     void setMaxDividerPosition( const Real32 &value );
+     void setDividerDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setExpandable     ( const bool &value );
+     void setAlignment      ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -170,8 +212,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  FramePtr      create          (void); 
-    static  FramePtr      createEmpty     (void); 
+    static  SplitPanelPtr      create          (void); 
+    static  SplitPanelPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -189,24 +231,30 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFComponentPtr      _sfFocusedComponent;
-    SFUIDrawingSurfacePtr   _sfDrawingSurface;
-    SFPopupMenuPtr      _sfActivePopupMenu;
+    SFComponentPtr      _sfMinComponent;
+    SFComponentPtr      _sfMaxComponent;
+    SFUInt32            _sfDividerSize;
+    SFReal32            _sfDividerPosition;
+    SFReal32            _sfMinDividerPosition;
+    SFReal32            _sfMaxDividerPosition;
+    SFUIDrawObjectCanvasPtr   _sfDividerDrawObject;
+    SFBool              _sfExpandable;
+    SFUInt32            _sfAlignment;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    FrameBase(void);
-    FrameBase(const FrameBase &source);
+    SplitPanelBase(void);
+    SplitPanelBase(const SplitPanelBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~FrameBase(void); 
+    virtual ~SplitPanelBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -214,13 +262,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      FrameBase *pOther,
+    void executeSyncImpl(      SplitPanelBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      FrameBase *pOther,
+    void executeSyncImpl(      SplitPanelBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -250,7 +298,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const FrameBase &source);
+    void operator =(const SplitPanelBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -258,17 +306,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
 //---------------------------------------------------------------------------
 
 
-typedef FrameBase *FrameBaseP;
+typedef SplitPanelBase *SplitPanelBaseP;
 
-typedef osgIF<FrameBase::isNodeCore,
-              CoredNodePtr<Frame>,
+typedef osgIF<SplitPanelBase::isNodeCore,
+              CoredNodePtr<SplitPanel>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet FrameNodePtr;
+              >::_IRet SplitPanelNodePtr;
 
-typedef RefPtr<FramePtr> FrameRefPtr;
+typedef RefPtr<SplitPanelPtr> SplitPanelRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGFRAMEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGSPLITPANELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGFRAMEBASE_H_ */
+#endif /* _OSGSPLITPANELBASE_H_ */

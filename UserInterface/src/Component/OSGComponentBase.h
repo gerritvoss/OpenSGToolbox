@@ -87,8 +87,8 @@
 #include <OpenSG/OSGColor4fFields.h> // FocusedForegroundColor type
 #include <OpenSG/OSGMaterialFields.h> // ForegroundMaterial type
 #include <OpenSG/OSGReal32Fields.h> // Opacity type
-#include "Component/OSGContainerFields.h" // ParentContainer type
-#include "Component/OSGFrameFields.h" // ParentFrame type
+#include "Component/Container/OSGContainerFields.h" // ParentContainer type
+#include "Component/Container/OSGFrameFields.h" // ParentFrame type
 #include <OpenSG/OSGBoolFields.h> // Clipping type
 #include "Component/Menu/OSGPopupMenuFields.h" // PopupMenu type
 

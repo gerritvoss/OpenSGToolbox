@@ -67,7 +67,7 @@
 
 #include <OpenSG/OSGFieldContainer.h> // Parent
 
-#include "Component/OSGFrame.h" // RootFrame type
+#include "Component/Container/OSGFrame.h" // RootFrame type
 #include <OpenSG/Input/OSGWindowEventProducer.h> // EventProducer type
 #include "Graphics/OSGGraphics.h" // Graphics type
 

@@ -18,7 +18,7 @@ A UI Frame.
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="OSGComponentFields.h"
+		header="Component/OSGComponentFields.h"
 		defaultValue="NullFC"
 	>
 	</Field>

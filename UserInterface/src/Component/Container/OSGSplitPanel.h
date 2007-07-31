@@ -36,107 +36,89 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
-
-#include <stdlib.h>
-#include <stdio.h>
+#ifndef _OSGSPLITPANEL_H_
+#define _OSGSPLITPANEL_H_
+#ifdef __sgi
+#pragma once
+#endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
-#include "OSGLayout.h"
-#include "Component/Container/OSGContainer.h"
+#include "OSGSplitPanelBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::Layout
-A UI Layout Interface.
+/*! \brief SplitPanel class. See \ref 
+           PageUserInterfaceSplitPanel for a description.
 */
 
-/***************************************************************************\
- *                           Class variables                               *
-\***************************************************************************/
-
-/***************************************************************************\
- *                           Class methods                                 *
-\***************************************************************************/
-
-void Layout::initMethod (void)
+class OSG_USERINTERFACELIB_DLLMAPPING SplitPanel : public SplitPanelBase
 {
-}
+  private:
 
+    typedef SplitPanelBase Inherited;
 
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
+    /*==========================  PUBLIC  =================================*/
+  public:
 
-/*-------------------------------------------------------------------------*\
- -  private                                                                 -
-\*-------------------------------------------------------------------------*/
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
 
-/*----------------------- constructors & destructors ----------------------*/
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
 
-Layout::Layout(void) :
-    Inherited()
-{
-}
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
 
-Layout::Layout(const Layout &source) :
-    Inherited(source)
-{
-}
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
 
-Layout::~Layout(void)
-{
-}
+    /*! \}                                                                 */
+    /*=========================  PROTECTED  ===============================*/
+  protected:
 
-/*----------------------------- class specific ----------------------------*/
+    // Variables should all be in SplitPanelBase.
 
-void Layout::changed(BitVector whichField, UInt32 origin)
-{
-    Inherited::changed(whichField, origin);
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
 
-    if(getParentContainer() != NullFC)
-    {
-        Container::Ptr::dcast(getParentContainer())->updateLayout();
-    }
-}
+    SplitPanel(void);
+    SplitPanel(const SplitPanel &source);
 
-void Layout::dump(      UInt32    , 
-                         const BitVector ) const
-{
-    SLOG << "Dump Layout NI" << std::endl;
-}
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
 
+    virtual ~SplitPanel(void); 
 
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
+    /*! \}                                                                 */
+    
+    /*==========================  PRIVATE  ================================*/
+  private:
 
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
+    friend class FieldContainer;
+    friend class SplitPanelBase;
 
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
+    static void initMethod(void);
 
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGLAYOUTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLAYOUTBASE_INLINE_CVSID;
+    // prohibit default functions (move to 'public' if you need one)
 
-    static Char8 cvsid_fields_hpp[] = OSGLAYOUTFIELDS_HEADER_CVSID;
-}
+    void operator =(const SplitPanel &source);
+};
 
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
+typedef SplitPanel *SplitPanelP;
 
 OSG_END_NAMESPACE
 
+#include "OSGSplitPanelBase.inl"
+#include "OSGSplitPanel.inl"
+
+#define OSGSPLITPANEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+
+#endif /* _OSGSPLITPANEL_H_ */

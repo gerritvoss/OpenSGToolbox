@@ -46,7 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGList.h"
-#include "Component/OSGFrame.h"
+#include "Component/Container/OSGFrame.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 

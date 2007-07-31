@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/OSGContainer.h" // Parent
+#include "Component/Container/OSGContainer.h" // Parent
 
 #include <OpenSG/OSGUInt32Fields.h> // CellLayout type
 #include "Component/OSGComponent.h" // List type

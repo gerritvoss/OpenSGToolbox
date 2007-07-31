@@ -47,7 +47,7 @@
 
 #include "Util/OSGUIDefines.h"
 #include "OSGFlowLayout.h"
-#include "Component/OSGContainer.h"
+#include "Component/Container/OSGContainer.h"
 
 OSG_BEGIN_NAMESPACE
 

@@ -47,8 +47,8 @@
 #include <OpenSG/OSGViewport.h>
 
 #include "OSGComponent.h"
-#include "OSGContainer.h"
-#include "OSGFrame.h"
+#include "Component/Container/OSGContainer.h"
+#include "Component/Container/OSGFrame.h"
 #include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE

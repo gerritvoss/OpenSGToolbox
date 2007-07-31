@@ -53,7 +53,7 @@
 #include "OSGTextField.h"
 
 
-#include "Component/OSGFrame.h"
+#include "Component/Container/OSGFrame.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include <OpenSG/Input/OSGStringUtils.h>
@@ -148,7 +148,7 @@ void TextField::keyTyped(const KeyEvent& e)
 
 void TextField::mouseClicked(const MouseEvent& e)
 {	
-	Int32 Position;
+	Int32 Position(0);
 	Int32 BeginWord = 0;
 	Int32 EndWord = getText().size();
 	if(e.getButton() == e.BUTTON1)

@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class ScrollPanel
+ **     class Frame
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGSCROLLPANELBASE_H_
-#define _OSGSCROLLPANELBASE_H_
+#ifndef _OSGFRAMEBASE_H_
+#define _OSGFRAMEBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,24 +65,22 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "OSGContainer.h" // Parent
 
-#include <OpenSG/OSGVec2sFields.h> // ScrollPosition type
-#include "Component/Scroll/OSGScrollbar.h" // VerticalScrollbar type
-#include "Component/Scroll/OSGScrollbar.h" // HorizontalScrollbar type
-#include <OpenSG/OSGUInt32Fields.h> // VerticalScrollbarDisplayPolicy type
-#include <OpenSG/OSGUInt32Fields.h> // HorizontalScrollbarDisplayPolicy type
+#include "Component/OSGComponentFields.h" // FocusedComponent type
+#include "UIDrawingSurface/OSGUIDrawingSurfaceFields.h" // DrawingSurface type
+#include "Component/Menu/OSGPopupMenuFields.h" // ActivePopupMenu type
 
-#include "OSGScrollPanelFields.h"
+#include "OSGFrameFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class ScrollPanel;
+class Frame;
 class BinaryDataHandler;
 
-//! \brief ScrollPanel Base Class.
+//! \brief Frame Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
+class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
 {
   private:
 
@@ -91,23 +89,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ScrollPanelPtr  Ptr;
+    typedef FramePtr  Ptr;
 
     enum
     {
-        ScrollPositionFieldId                   = Inherited::NextFieldId,
-        VerticalScrollbarFieldId                = ScrollPositionFieldId                   + 1,
-        HorizontalScrollbarFieldId              = VerticalScrollbarFieldId                + 1,
-        VerticalScrollbarDisplayPolicyFieldId   = HorizontalScrollbarFieldId              + 1,
-        HorizontalScrollbarDisplayPolicyFieldId = VerticalScrollbarDisplayPolicyFieldId   + 1,
-        NextFieldId                             = HorizontalScrollbarDisplayPolicyFieldId + 1
+        FocusedComponentFieldId = Inherited::NextFieldId,
+        DrawingSurfaceFieldId   = FocusedComponentFieldId + 1,
+        ActivePopupMenuFieldId  = DrawingSurfaceFieldId   + 1,
+        NextFieldId             = ActivePopupMenuFieldId  + 1
     };
 
-    static const OSG::BitVector ScrollPositionFieldMask;
-    static const OSG::BitVector VerticalScrollbarFieldMask;
-    static const OSG::BitVector HorizontalScrollbarFieldMask;
-    static const OSG::BitVector VerticalScrollbarDisplayPolicyFieldMask;
-    static const OSG::BitVector HorizontalScrollbarDisplayPolicyFieldMask;
+    static const OSG::BitVector FocusedComponentFieldMask;
+    static const OSG::BitVector DrawingSurfaceFieldMask;
+    static const OSG::BitVector ActivePopupMenuFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -134,33 +128,25 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPnt2s             *getSFScrollPosition (void);
-           SFScrollbarPtr      *getSFVerticalScrollbar(void);
-           SFScrollbarPtr      *getSFHorizontalScrollbar(void);
-           SFUInt32            *getSFVerticalScrollbarDisplayPolicy(void);
-           SFUInt32            *getSFHorizontalScrollbarDisplayPolicy(void);
+           SFComponentPtr      *getSFFocusedComponent(void);
+           SFUIDrawingSurfacePtr *getSFDrawingSurface (void);
+           SFPopupMenuPtr      *getSFActivePopupMenu(void);
 
-           Pnt2s               &getScrollPosition (void);
-     const Pnt2s               &getScrollPosition (void) const;
-           ScrollbarPtr        &getVerticalScrollbar(void);
-     const ScrollbarPtr        &getVerticalScrollbar(void) const;
-           ScrollbarPtr        &getHorizontalScrollbar(void);
-     const ScrollbarPtr        &getHorizontalScrollbar(void) const;
-           UInt32              &getVerticalScrollbarDisplayPolicy(void);
-     const UInt32              &getVerticalScrollbarDisplayPolicy(void) const;
-           UInt32              &getHorizontalScrollbarDisplayPolicy(void);
-     const UInt32              &getHorizontalScrollbarDisplayPolicy(void) const;
+           ComponentPtr        &getFocusedComponent(void);
+     const ComponentPtr        &getFocusedComponent(void) const;
+           UIDrawingSurfacePtr &getDrawingSurface (void);
+     const UIDrawingSurfacePtr &getDrawingSurface (void) const;
+           PopupMenuPtr        &getActivePopupMenu(void);
+     const PopupMenuPtr        &getActivePopupMenu(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setScrollPosition ( const Pnt2s &value );
-     void setVerticalScrollbar( const ScrollbarPtr &value );
-     void setHorizontalScrollbar( const ScrollbarPtr &value );
-     void setVerticalScrollbarDisplayPolicy( const UInt32 &value );
-     void setHorizontalScrollbarDisplayPolicy( const UInt32 &value );
+     void setFocusedComponent( const ComponentPtr &value );
+     void setDrawingSurface ( const UIDrawingSurfacePtr &value );
+     void setActivePopupMenu( const PopupMenuPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -184,8 +170,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ScrollPanelPtr      create          (void); 
-    static  ScrollPanelPtr      createEmpty     (void); 
+    static  FramePtr      create          (void); 
+    static  FramePtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -203,26 +189,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt2s             _sfScrollPosition;
-    SFScrollbarPtr      _sfVerticalScrollbar;
-    SFScrollbarPtr      _sfHorizontalScrollbar;
-    SFUInt32            _sfVerticalScrollbarDisplayPolicy;
-    SFUInt32            _sfHorizontalScrollbarDisplayPolicy;
+    SFComponentPtr      _sfFocusedComponent;
+    SFUIDrawingSurfacePtr   _sfDrawingSurface;
+    SFPopupMenuPtr      _sfActivePopupMenu;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ScrollPanelBase(void);
-    ScrollPanelBase(const ScrollPanelBase &source);
+    FrameBase(void);
+    FrameBase(const FrameBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ScrollPanelBase(void); 
+    virtual ~FrameBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -230,13 +214,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ScrollPanelBase *pOther,
+    void executeSyncImpl(      FrameBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      ScrollPanelBase *pOther,
+    void executeSyncImpl(      FrameBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -266,7 +250,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ScrollPanelBase &source);
+    void operator =(const FrameBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -274,17 +258,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
 //---------------------------------------------------------------------------
 
 
-typedef ScrollPanelBase *ScrollPanelBaseP;
+typedef FrameBase *FrameBaseP;
 
-typedef osgIF<ScrollPanelBase::isNodeCore,
-              CoredNodePtr<ScrollPanel>,
+typedef osgIF<FrameBase::isNodeCore,
+              CoredNodePtr<Frame>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ScrollPanelNodePtr;
+              >::_IRet FrameNodePtr;
 
-typedef RefPtr<ScrollPanelPtr> ScrollPanelRefPtr;
+typedef RefPtr<FramePtr> FrameRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGSCROLLPANELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGFRAMEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGSCROLLPANELBASE_H_ */
+#endif /* _OSGFRAMEBASE_H_ */

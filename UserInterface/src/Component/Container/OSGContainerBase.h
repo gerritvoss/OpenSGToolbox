@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGComponent.h" // Parent
+#include "Component/OSGComponent.h" // Parent
 
 #include "Component/OSGComponent.h" // Children type
 #include "Layout/OSGLayout.h" // Layout type

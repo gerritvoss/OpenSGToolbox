@@ -220,7 +220,7 @@ A UI Component Interface.
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Component/OSGContainerFields.h"
+		header="Component/Container/OSGContainerFields.h"
 		access="public"
 	>
 	</Field>
@@ -230,7 +230,7 @@ A UI Component Interface.
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Component/OSGFrameFields.h"
+		header="Component/Container/OSGFrameFields.h"
 		access="public"
 	>
 	</Field>

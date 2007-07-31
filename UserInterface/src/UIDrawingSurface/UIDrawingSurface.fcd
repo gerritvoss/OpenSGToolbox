@@ -17,7 +17,7 @@ A UI DrawingSurface.
 		type="FramePtr"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGFrame.h"
+		header="Component/Container/OSGFrame.h"
 		access="public"
 	>
 	</Field>

@@ -43,10 +43,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define OSG_COMPILEUSERINTERFACELIB
+
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGLayout.h"
-#include "Component/Container/OSGContainer.h"
+#include "OSGSplitPanel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -54,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::Layout
-A UI Layout Interface.
+/*! \class osg::SplitPanel
+A UI Split Panel. 	
 */
 
 /***************************************************************************\
@@ -66,7 +67,7 @@ A UI Layout Interface.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Layout::initMethod (void)
+void SplitPanel::initMethod (void)
 {
 }
 
@@ -81,36 +82,31 @@ void Layout::initMethod (void)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-Layout::Layout(void) :
+SplitPanel::SplitPanel(void) :
     Inherited()
 {
 }
 
-Layout::Layout(const Layout &source) :
+SplitPanel::SplitPanel(const SplitPanel &source) :
     Inherited(source)
 {
 }
 
-Layout::~Layout(void)
+SplitPanel::~SplitPanel(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void Layout::changed(BitVector whichField, UInt32 origin)
+void SplitPanel::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
-
-    if(getParentContainer() != NullFC)
-    {
-        Container::Ptr::dcast(getParentContainer())->updateLayout();
-    }
 }
 
-void Layout::dump(      UInt32    , 
+void SplitPanel::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump Layout NI" << std::endl;
+    SLOG << "Dump SplitPanel NI" << std::endl;
 }
 
 
@@ -128,10 +124,10 @@ void Layout::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGLAYOUTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLAYOUTBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGSPLITPANELBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGSPLITPANELBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGLAYOUTFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGSPLITPANELFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi
