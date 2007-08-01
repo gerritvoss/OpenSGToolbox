@@ -1,7 +1,8 @@
 // OpenSG Tutorial Example: Creating a Button Component
 //
 // This tutorial explains how to edit the basic features of
-// a Button created in the OSG User Interface library.
+// a Button and a ToggleButtoncreated in the OSG User 
+// Interface library.
 // 
 // Includes: Button PreferredSize, MaximumSize, MinimumSize, Font,
 // Text,and adding a Button to a Scene.  Also note that clicking
@@ -37,10 +38,11 @@
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGLineBorder.h>
-#include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
+#include <OpenSG/UserInterface/OSGToggleButton.h>
+#include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGFont.h>
+#include <OpenSG/UserInterface/OSGColorUIBackground.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -77,7 +79,7 @@ public:
    }
 };
 // Create an ActionListener to display text
-// in the CommandWindow when the Button is
+// in the Console Window when the Button is
 // pressed
 class Button1ActionListener : public ActionListener
 {
@@ -132,17 +134,10 @@ int main(int argc, char **argv)
 	ButtonPtr button1 = osg::Button::create();
 	// Create a simple Font to be used with the Button
 	FontPtr sampleFont = osg::Font::create();
-    beginEditCP(sampleFont, Font::SizeFieldMask | Font::FamilyFieldMask | Font::GapFieldMask | Font::GlyphPixelSizeFieldMask | Font::TextureWidthFieldMask | Font::StyleFieldMask);
+    beginEditCP(sampleFont, Font::SizeFieldMask);
 		sampleFont->setSize(16);
-	endEditCP(sampleFont, Font::SizeFieldMask | Font::FamilyFieldMask | Font::GapFieldMask | Font::GlyphPixelSizeFieldMask | Font::TextureWidthFieldMask | Font::StyleFieldMask);
+	endEditCP(sampleFont, Font::SizeFieldMask);
 
-	/******************************************************
-
-
-		Edit the Button and determine its characteristics
-
-
-	******************************************************/
 
 	beginEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::ForegroundColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
 			// The following 4 function calls are not specific to Button, 
@@ -172,19 +167,49 @@ int main(int argc, char **argv)
 		endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::ForegroundColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
 	
 	// Create an ActionListener and assign it to button1
+	// This is defined above, and wil
 	Button1ActionListener button1AL;
 	button1->addActionListener( &button1AL);
 
+	/******************************************************
 
+
+		Create a ToggleButton and determine its 
+		characteristics.  All characteristics Buttons
+		have are also present in ToggleButton.
+
+		The only difference is that when pressed,
+		ToggleButton remains pressed until pressed 
+		again.
+
+
+
+	******************************************************/
+	ToggleButtonPtr toggleButton1 = osg::ToggleButton::create();
+	
+	beginEditCP(toggleButton1, ToggleButton::SelectedFieldMask | Button::TextFieldMask);
+		// Determine if the ToggleButton appears pressed (TRUE) or released (FALSE)
+		toggleButton1->setSelected(FALSE);
+		toggleButton1->setText("ToggleMe");
+	endEditCP(toggleButton1, ToggleButton::SelectedFieldMask | Button::TextFieldMask);
+
+
+	// Create Background to be used with the MainFrame
+	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
+	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
 	// Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
-	LayoutPtr MainFrameLayout = osg::AbsoluteLayout::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+	LayoutPtr MainFrameLayout = osg::FlowLayout::create();
+	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
 	   // Assign the Button to the MainFrame so it will be displayed
 	   // when the view is rendered.
 	   MainFrame->getChildren().addValue(button1);
+	   MainFrame->getChildren().addValue(toggleButton1);
 	   MainFrame->setLayout(MainFrameLayout);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+	   MainFrame->setBackground(mainBackground);
+	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
 
     TutorialKeyListener TheKeyListener;
     MainFrame->addKeyListener(&TheKeyListener);

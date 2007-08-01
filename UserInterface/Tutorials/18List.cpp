@@ -36,6 +36,7 @@
 // Include relevant header files
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGButton.h>
+#include <OpenSG/UserInterface/OSGToggleButton.h>
 
 // List header files
 #include <OpenSG/UserInterface/OSGList.h>
@@ -59,35 +60,79 @@ void reshape(Vec2s Size);
 // Declare the SelectionModel up front to allow for
 // the ActionListeners
 DefaultListSelectionModel SelectionModel;
-class SingleSelection : public ActionListener
+ToggleButtonPtr singleButton;
+ToggleButtonPtr singleIntervalButton;
+ToggleButtonPtr multipleIntervalButton;
+
+class SingleSelection : public ButtonSelectedListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEvent& e)
 	{
+
+		beginEditCP(singleIntervalButton, ToggleButton::SelectedFieldMask);
+			singleIntervalButton->setSelected(FALSE);
+		endEditCP(singleIntervalButton, ToggleButton::SelectedFieldMask);
+
+		beginEditCP(multipleIntervalButton, ToggleButton::SelectedFieldMask);
+			multipleIntervalButton->setSelected(FALSE);
+		endEditCP(multipleIntervalButton, ToggleButton::SelectedFieldMask);
+
 		SelectionModel.setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
 		
 	}
+      virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   {
+   }
+
 };
 
-class SingleIntervalSelection : public ActionListener
+class SingleIntervalSelection : public ButtonSelectedListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEvent& e)
 	{
+		beginEditCP(singleButton, ToggleButton::SelectedFieldMask);
+			singleButton->setSelected(FALSE);
+		endEditCP(singleButton, ToggleButton::SelectedFieldMask);
+
+		beginEditCP(multipleIntervalButton, ToggleButton::SelectedFieldMask);
+			multipleIntervalButton->setSelected(FALSE);
+		endEditCP(multipleIntervalButton, ToggleButton::SelectedFieldMask);
+
 		SelectionModel.setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
 	}
+
+   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   {
+
+   }
 };
 
-class MultipleIntervalSelection : public ActionListener
+class MultipleIntervalSelection : public ButtonSelectedListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
-	{
+   virtual void buttonSelected(const ButtonSelectedEvent& e)
+	{	
+		beginEditCP(singleButton, ToggleButton::SelectedFieldMask);
+			singleButton->setSelected(FALSE);
+		endEditCP(singleButton, ToggleButton::SelectedFieldMask);
+
+		beginEditCP(singleIntervalButton, ToggleButton::SelectedFieldMask);
+			singleIntervalButton->setSelected(FALSE);
+		endEditCP(singleIntervalButton, ToggleButton::SelectedFieldMask);
+
 		SelectionModel.setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
 	}
+
+   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   {
+   }
+
+
 };
 
 
@@ -132,30 +177,30 @@ int main(int argc, char **argv)
 
 
 	// Create some Buttons to show changing List format
-	ButtonPtr singleButton = osg::Button::create();
-	ButtonPtr singleIntervalButton = osg::Button::create();
-	ButtonPtr multipleIntervalButton = osg::Button::create();
+	singleButton = osg::ToggleButton::create();
+	singleIntervalButton = osg::ToggleButton::create();
+	multipleIntervalButton = osg::ToggleButton::create();
 	// Give them text, change sizes, add ActionListeners
-	beginEditCP(singleButton, Button::TextFieldMask);
+	beginEditCP(singleButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
 		singleButton->setText("Single Selection");
-		singleButton->setPreferredSize( Vec2s(200, 50) );
-	endEditCP(singleButton, Button::TextFieldMask);
+		singleButton->setPreferredSize( Vec2s(160, 50) );
+	endEditCP(singleButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
 	SingleSelection singleButtonListener;
-		singleButton->addActionListener(&singleButtonListener);
+		singleButton->addButtonSelectedListener(&singleButtonListener);
 	
-	beginEditCP(singleIntervalButton, Button::TextFieldMask);
-		singleIntervalButton->setText("Single Inteveral Selection");
-		singleIntervalButton->setPreferredSize( Vec2s(200, 50) );
-	endEditCP(singleIntervalButton, Button::TextFieldMask);
+	beginEditCP(singleIntervalButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
+		singleIntervalButton->setText("Single Interval Selection");
+		singleIntervalButton->setPreferredSize( Vec2s(160, 50) );
+	endEditCP(singleIntervalButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
 	SingleIntervalSelection singleIntervalButtonListener;
-		singleIntervalButton->addActionListener(&singleIntervalButtonListener);
+		singleIntervalButton->addButtonSelectedListener(&singleIntervalButtonListener);
 	
-	beginEditCP(multipleIntervalButton, Button::TextFieldMask);
-		multipleIntervalButton->setText("Multiple Inverval Selection");
-		multipleIntervalButton->setPreferredSize( Vec2s(200, 50) );
-	endEditCP(multipleIntervalButton, Button::TextFieldMask);
+	beginEditCP(multipleIntervalButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
+		multipleIntervalButton->setText("Multiple Interval Selection");
+		multipleIntervalButton->setPreferredSize( Vec2s(160, 50) );
+	endEditCP(multipleIntervalButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
 	MultipleIntervalSelection multipleIntervalButtonListener;
-		multipleIntervalButton->addActionListener(&multipleIntervalButtonListener);
+		multipleIntervalButton->addButtonSelectedListener(&multipleIntervalButtonListener);
 
 
 	/******************************************************
@@ -245,7 +290,8 @@ int main(int argc, char **argv)
 
 			Note: this tutorial is currently set up
 			to allow for this to be changed via Buttons
-			with ActionListeners attached to them
+			with ActionListeners attached to them so
+			this code is commented out
 
 	******************************************************/
 
@@ -289,7 +335,7 @@ int main(int argc, char **argv)
 	beginEditCP(foreground, UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 	    foreground->setDrawingSurface(drawingSurface);
 		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.5,0.5));
+		foreground->setFrameBounds(Vec2f(0.7,0.5));
 	   //Set the Event Producer for the DrawingSurface
 	   //This is needed in order to get Mouse/Keyboard/etc Input to the UI DrawingSurface
     endEditCP  (foreground, UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
