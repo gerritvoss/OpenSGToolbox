@@ -112,10 +112,27 @@ int main(int argc, char **argv)
 
 			Create GridBagLayout
 			-setColumns(NUMBER) determines the number of
-				Columns in the Layout
+				Columns in the Layout, and then sets the
+				correct number of weights in the MF
+				ColumnWeights and the correct number of
+				widths in the MF ColumnWidths. The default
+				value for the weights sets their sum to 1.0
+				(so they all have equal weight), and it
+				fills ColumnWidths with 0s, which signals
+				to use the weights instead of an absolute
+				height.
 			-setRows(NUMBER) determines the number of Rows
-				in the Layout
+				in the Layout, then sets its corresponding
+				MFs in the same fashion as its column
+				counterpart.
 
+			NOTE: If values have already been pushed onto
+				any of the MFs, they will not be
+				overwritten, the remaining spots will be
+				filled. Also, when resetting the values
+				to something lower than the previous 
+				value, then the extra weights and lengths
+				will be removed.
 
 	******************************************************/
 	GridBagLayoutPtr MainFrameLayout = osg::GridBagLayout::create();
@@ -124,12 +141,6 @@ int main(int argc, char **argv)
 	beginEditCP(MainFrameLayout, GridBagLayout::ColumnsFieldMask | GridBagLayout::RowsFieldMask);
 		MainFrameLayout->setColumns(3);
 		MainFrameLayout->setRows(3);
-		MainFrameLayout->getColumnWeights().addValue(.33);
-		MainFrameLayout->getColumnWeights().addValue(.33);
-		MainFrameLayout->getColumnWeights().addValue(.33);
-		MainFrameLayout->getRowWeights().addValue(.33);
-		MainFrameLayout->getRowWeights().addValue(.33);
-		MainFrameLayout->getRowWeights().addValue(.33);
 	endEditCP(MainFrameLayout); 
 
 	
