@@ -158,6 +158,19 @@ inline
 void GridBagLayoutBase::setRows(const UInt32 &value)
 {
     _sfRows.setValue(value);
+	// force the rows mf to be the same number as the value
+	while (_mfRowWeights.size() > value)
+		_mfRowWeights.erase(_mfRowWeights.end());
+	if (_mfRowWeights.size() < value)
+	{
+		Real32 ratio = 1.0 / (_mfRowWeights.size() - value);
+		while (_mfRowWeights.size() < value)
+			_mfRowWeights.addValue(ratio);
+	}
+	while (_mfRowHeights.size() > value)
+		_mfRowHeights.erase(_mfRowHeights.end());
+	while (_mfRowHeights.size() < value)
+		_mfRowHeights.addValue(0);
 }
 
 //! Get the value of the GridBagLayout::_sfColumns field.
@@ -179,6 +192,19 @@ inline
 void GridBagLayoutBase::setColumns(const UInt32 &value)
 {
     _sfColumns.setValue(value);
+	// force the columns mf to be the same number as the value
+	while (_mfColumnWeights.size() > value)
+		_mfColumnWeights.erase(_mfColumnWeights.end());
+	if (_mfColumnWeights.size() < value)
+	{
+		Real32 ratio = 1.0 / (_mfColumnWeights.size() - value);
+		while (_mfColumnWeights.size() < value)
+			_mfColumnWeights.addValue(ratio);
+	}
+	while (_mfColumnWidths.size() > value)
+		_mfColumnWidths.erase(_mfColumnWidths.end());
+	while (_mfColumnWidths.size() < value)
+		_mfColumnWidths.addValue(0);
 }
 
 
