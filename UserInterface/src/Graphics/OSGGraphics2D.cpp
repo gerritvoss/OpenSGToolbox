@@ -339,7 +339,7 @@ void Graphics2D::drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& 
 		glVertex2sv(Center.getValues());
       for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
       {
-			glVertex2s(Center.x() + Width*osgcos(angleNow), Center.y() + Height*osgsin(angleNow));
+			glVertex2f(static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(Height)*osgsin(angleNow));
 			angleNow += angleDiff;
 		}
 	glEnd();
@@ -372,7 +372,7 @@ void Graphics2D::drawArc(const Pnt2s& Center, const Int16& Width, const Int16& H
 		//draw vertex lines
       for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
       {
-			glVertex2s( Center.x() + Width*osgcos(angleNow ),Center.y() +Height*osgsin(angleNow));
+			glVertex2f( static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgcos(angleNow ),static_cast<Real32>(Center.y()) +static_cast<Real32>(Height)*osgsin(angleNow));
 			//glVertex2s(Center.x() + Width*osgcos(angleNow + angleDiff), Center.y() + Height*osgsin(angleNow+angleDiff));
 			angleNow += angleDiff;
 		}
