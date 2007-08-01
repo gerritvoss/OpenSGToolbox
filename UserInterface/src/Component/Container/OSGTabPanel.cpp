@@ -78,10 +78,6 @@ void TabPanel::initMethod (void)
 
 void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 {
-	Pnt2s TopLeft, BottomRight;
-	getInsideInsetsBounds(TopLeft, BottomRight);
-	Vec2s pos;
-
 	// draw the tabs
 	for (UInt32 i = 0; i < getTabs().size(); ++i)
 	{
@@ -108,7 +104,6 @@ void TabPanel::focusGained(const FocusEvent& e)
 			setActiveTab(index);
 		endEditCP(TabPanelPtr(this), ActiveTabFieldMask);
 	}
-	updateTabLayout();
 }
 
 void TabPanel::focusLost(const FocusEvent& e)
@@ -221,7 +216,7 @@ void TabPanel::insertTab(const UInt32 TabIndex, const ComponentPtr Tab, const Co
 	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask| ChildrenFieldMask);
 }
 
-void TabPanel::updateTabLayout(void)
+void TabPanel::updateLayout(void)
 {
 	Pnt2s borderOffset;
 	Vec2s borderSize;
@@ -512,9 +507,10 @@ void TabPanel::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-    if( (whichField & SizeFieldMask) || (whichField & TabsFieldMask) || (whichField & TabContentsFieldMask) )
+    if( (whichField & TabsFieldMask) || (whichField & TabContentsFieldMask) ||
+		(whichField & ActiveTabFieldMask) )
     {
-		updateTabLayout();
+		updateLayout();
 	}
 }
 

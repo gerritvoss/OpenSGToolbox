@@ -46,6 +46,7 @@
 #define OSG_COMPILEUSERINTERFACELIB
 
 #include <OpenSG/OSGConfig.h>
+#include "Util/OSGUIDefines.h"
 
 #include "OSGSplitPanel.h"
 
@@ -75,6 +76,43 @@ void SplitPanel::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+void SplitPanel::drawInternal(const GraphicsPtr Graphics) const
+{
+	// draw the divider
+
+	// draw the two contained components
+	getMinComponent()->draw(Graphics);
+	getMaxComponent()->draw(Graphics);
+}
+
+void SplitPanel::updateLayout(void)
+{
+	Pnt2s TopLeft, BottomRight;
+	getInsideBorderBounds(TopLeft, BottomRight);
+	Vec2s BorderSize(BottomRight - TopLeft);
+
+	UInt32 AxisIndex(0);
+	if(getAlignment() != HORIZONTAL_ALIGNMENT ) AxisIndex = 1;
+
+	Vec2s minSize;
+	Vec2s maxSize;
+
+	Pnt2s minPos(0,0);
+	Pnt2s maxPos;
+
+	//minSize[AxisIndex] = 
+
+	beginEditCP(getMinComponent(), Component::SizeFieldMask|Component::PositionFieldMask);
+		getMinComponent()->setSize(minSize);
+		getMinComponent()->setPosition(minPos);
+	endEditCP(getMinComponent(), Component::SizeFieldMask|Component::PositionFieldMask);
+
+	beginEditCP(getMaxComponent(), Component::SizeFieldMask|Component::PositionFieldMask);
+		getMaxComponent()->setSize(maxSize);
+		getMaxComponent()->setPosition(maxPos);
+	endEditCP(getMaxComponent(), Component::SizeFieldMask|Component::PositionFieldMask);
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

@@ -74,6 +74,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanel : public SplitPanelBase
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
+	virtual void drawInternal(const GraphicsPtr Graphics) const;
+
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
@@ -82,6 +84,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanel : public SplitPanelBase
   protected:
 
     // Variables should all be in SplitPanelBase.
+
+    virtual void updateLayout(void);
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */

@@ -107,7 +107,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase, public Foc
     virtual ~TabPanel(void); 
 
     /*! \}                                                                 */
-    void updateTabLayout(void);
+    virtual void updateLayout(void);
 
 	//Mouse Events
     virtual void mouseClicked(const MouseEvent& e);
