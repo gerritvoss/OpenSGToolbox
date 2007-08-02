@@ -303,7 +303,7 @@ void 	DefaultListSelectionModel::removeSelectionInterval(UInt32 index0, UInt32 i
 			break;
 		case MULTIPLE_INTERVAL_SELECTION:
 			// basically, this toggles all of them across the interval
-			if (index1 < index0);
+			if (index1 < index0)
 			{
 				UInt32 temp(index0);
 				index0 = index1;
