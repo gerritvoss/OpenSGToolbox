@@ -93,6 +93,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase, public Upd
 	};
 
 	virtual void keyTyped(const KeyEvent& e);
+	virtual void mouseClicked(const MouseEvent& e);
+	virtual void mousePressed(const MouseEvent& e);
+	virtual void mouseDragged(const MouseEvent& e);
 
     virtual void update(const UpdateEvent& e);
 	

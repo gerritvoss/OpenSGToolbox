@@ -215,6 +215,8 @@ void TextArea::changed(BitVector whichField, UInt32 origin)
 	std::string temptext;
 	Int32 XPosition = 0;
 	Int32 YPosition = 0;
+	Int32 Backtrack = 0;
+	bool brokeAtWord = false;
 
 	//take care of tabs
 	temptext = getText();
@@ -253,12 +255,51 @@ void TextArea::changed(BitVector whichField, UInt32 origin)
 		}
 		if(TempBottomRight.x() > BottomRight.x())
 		{
-			XPosition = i;
-			_LineContents[YPosition]._EndPosition = i;
-			_LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
-			_LineContents.push_back(TextLine());
-			++YPosition;
-			_LineContents[YPosition]._StartPosition = i;
+			if(!getWrapStyleWord())
+			{
+				XPosition = i;
+				_LineContents[YPosition]._EndPosition = i;
+				_LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
+				_LineContents.push_back(TextLine());
+				++YPosition;
+				_LineContents[YPosition]._StartPosition = i;
+			}
+			else
+			{
+				Int32 j;
+				brokeAtWord = false; 
+				for(j = i; j > _LineContents[YPosition]._StartPosition; --j)
+				{
+					if(!isWordChar(getText()[j])&& !isPunctuationChar(getText()[j]))
+					{
+						brokeAtWord = true;
+						break;
+					}
+				}
+				if(!brokeAtWord)
+				{
+					XPosition = i;
+					_LineContents[YPosition]._EndPosition = i;
+					_LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
+					_LineContents.push_back(TextLine());
+					++YPosition;
+					_LineContents[YPosition]._StartPosition = i;
+				}
+				else
+				{
+					i = j;		
+					while(temptext[i] == ' ')
+					{
+						i++;
+					}
+					XPosition = i;
+					_LineContents[YPosition]._EndPosition = i;
+					_LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
+					_LineContents.push_back(TextLine());
+					++YPosition;
+					_LineContents[YPosition]._StartPosition = i;
+				}
+			}
 
 		}
 	}
@@ -288,6 +329,10 @@ void TextArea::keyTyped(const KeyEvent& e)//broken
 	if(e.getKey() == e.KEY_ENTER)
 	{
 		beginEditCP(TextAreaPtr(this), TextArea::TextFieldMask | TextArea::CaretPositionFieldMask);
+			if(_TextSelectionStart < _TextSelectionEnd)
+			{
+				setText(getText().erase(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart));
+			}
 			setText(getText().insert(getCaretPosition(),"\n"));
 			setCaretPosition(getCaretPosition()+1);
 		endEditCP(TextAreaPtr(this), TextArea::TextFieldMask | TextArea::CaretPositionFieldMask);
@@ -307,20 +352,11 @@ void TextArea::keyTyped(const KeyEvent& e)//broken
 		}
 		if(LineSelector > 0)
 		{
-			//if(getCaretPosition()-_LineContents[LineSelector]._StartPosition <= _LineContents[LineSelector-1]._Contents.size())
-			//{
-			//setCaretPosition(getCaretPosition()-_LineContents[LineSelector-1]._Contents.size());//TODO: Switch to size, not position
 			Pnt2s TempTopLeft, TempBottomRight;
 			getFont()->getBounds(_LineContents[LineSelector]._Contents.substr(0, getCaretPosition()-_LineContents[LineSelector]._StartPosition),TempTopLeft, TempBottomRight);
-			Int32 temp = findTextPosition(Pnt2s(_LineContents[LineSelector]._LeftHorizontalOffset+TempBottomRight.x(), _LineContents[LineSelector-1]._VerticalOffset));
-		
-			setCaretPosition(findTextPosition(Pnt2s(_LineContents[LineSelector]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[LineSelector-1]._VerticalOffset)));
-		
-			//}
-			//else
-			//{
-			//	setCaretPosition(_LineContents[LineSelector-1]._EndPosition);
-			//}
+			beginEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
+				setCaretPosition(findTextPosition(Pnt2s(_LineContents[LineSelector]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[LineSelector-1]._VerticalOffset)));
+			endEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
 		}
 		if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&&getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC 
 			&& getParentFrame()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
@@ -354,16 +390,11 @@ void TextArea::keyTyped(const KeyEvent& e)//broken
 		}
 		if(LineSelector < _LineContents.size()-1)
 		{
-		/*	if(getCaretPosition()-_LineContents[LineSelector]._StartPosition <= _LineContents[LineSelector+1]._Contents.size())
-			{*/
 			Pnt2s TempTopLeft, TempBottomRight;
 			getFont()->getBounds(_LineContents[LineSelector]._Contents.substr(0,getCaretPosition()-_LineContents[LineSelector]._StartPosition),TempTopLeft, TempBottomRight);
-			setCaretPosition(findTextPosition(Pnt2s(_LineContents[LineSelector]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[LineSelector+1]._VerticalOffset)));
-			//}
-			//else
-			//{
-			//	setCaretPosition(_LineContents[LineSelector+1]._EndPosition);
-			//}
+			beginEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
+				setCaretPosition(findTextPosition(Pnt2s(_LineContents[LineSelector]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[LineSelector+1]._VerticalOffset)));
+			endEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
 		}
 		if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&&getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC 
 			&& getParentFrame()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
@@ -386,6 +417,106 @@ void TextArea::keyTyped(const KeyEvent& e)//broken
 	TextComponent::keyTyped(e);
 }
 
+void TextArea::mouseClicked(const MouseEvent& e)
+{	
+	Int32 Position(0);
+	Int32 BeginWord = 0;
+	Int32 EndWord = getText().size();
+	if(e.getButton() == e.BUTTON1)
+	{
+
+		if(e.getClickCount() == 2)
+		{
+
+			//set caret position to proper place
+			Position = findTextPosition(WindowToComponent(e.getLocation(), TextAreaPtr(this)));
+			if(isPunctuationChar(getText()[Position]))
+			{
+				EndWord = Position + 1;
+				BeginWord = Position;
+			}
+			else{
+				for(Int32 i = Position; i < getText().size(); i++)
+				{
+					if(!isWordChar(getText()[i]))
+					{
+						EndWord = i;
+						break;
+					}
+				}
+				for(Int32 i = Position; i >= 0; i--)
+				{
+					if(!isWordChar(getText()[i]))
+					{
+						BeginWord = i + 1;
+						break;
+					}
+				}
+			}
+			_TextSelectionEnd = EndWord;
+			_TextSelectionStart = BeginWord;
+			beginEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
+				setCaretPosition(EndWord);
+			endEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
+		}
+	}
+	TextComponent::mouseClicked(e);
+
+}
+
+void TextArea::mousePressed(const MouseEvent& e)
+{
+  Int32 Position;
+	if(e.getButton() == e.BUTTON1)
+	{
+		//set caret position to proper place
+		beginEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
+			setCaretPosition( findTextPosition(WindowToComponent(e.getLocation(), TextAreaPtr(this))));
+		endEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
+
+		_TextSelectionEnd = getCaretPosition();
+		_TextSelectionStart = getCaretPosition();
+	}
+	TextComponent::mousePressed(e);
+}
+void TextArea::mouseDragged(const MouseEvent& e)
+{
+	Int32 OriginalPosition = getCaretPosition();
+	if(e.getButton() == e.BUTTON1)
+	{
+		//set caret position to proper place
+		
+		beginEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
+			setCaretPosition( findTextPosition(WindowToComponent(e.getLocation(), TextAreaPtr(this))));
+		endEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
+		if(getCaretPosition() < OriginalPosition)
+		{
+			if(getCaretPosition() < _TextSelectionStart)
+			{
+				_TextSelectionStart = getCaretPosition();
+			}
+			else
+			{
+				_TextSelectionEnd = getCaretPosition();
+			}
+		}
+		else if(getCaretPosition() > OriginalPosition)
+		{
+			if(getCaretPosition() > _TextSelectionEnd)
+			{
+				_TextSelectionEnd = getCaretPosition();
+			}
+			else
+			{
+				_TextSelectionStart = getCaretPosition();
+			}
+		}
+	}
+	TextComponent::mouseDragged(e);
+}
+
+
+
 Int32 TextArea::findTextPosition(osg::Pnt2s Input)
 {
 	Int32 output = 0;
@@ -393,7 +524,6 @@ Int32 TextArea::findTextPosition(osg::Pnt2s Input)
 	Int32 column = 0;
 	Pnt2s TempTopLeft,  TempBottomRight, TempTopLeft1,  TempBottomRight1;
 	Pnt2s offset;
-	//getFont()->getBounds(_LineContents[_LineContents.size()-1]._Contents, TempTopLeft, TempBottomRight);
 	//find row it belongs in
 	for(Int32 i = 0; i < _LineContents.size(); ++i)
 	{
@@ -406,7 +536,7 @@ Int32 TextArea::findTextPosition(osg::Pnt2s Input)
 	}
 	//find column it belongs in
 	offset = Pnt2s(_LineContents[row]._LeftHorizontalOffset, _LineContents[row]._VerticalOffset);
-	for(Int32 i = 1; i < _LineContents[row]._Contents.size(); ++i)
+	for(Int32 i = 1; i <= _LineContents[row]._Contents.size(); ++i)
 	{
 		getFont()->getBounds(_LineContents[row]._Contents.substr(0, i), TempTopLeft, TempBottomRight);
 		getFont()->getBounds(_LineContents[row]._Contents.substr(0, i-1), TempTopLeft1, TempBottomRight1);
@@ -415,6 +545,7 @@ Int32 TextArea::findTextPosition(osg::Pnt2s Input)
 			column = i;
 		}
 	}
+
 	for(Int32 i = 0; i < row; ++i)
 	{
 		output+=_LineContents[i]._Contents.size();
