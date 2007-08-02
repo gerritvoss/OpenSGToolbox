@@ -43,12 +43,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
 #define OSG_COMPILEUSERINTERFACELIB
 
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGTextArea.h"
 
+#include "Component/OSGFrame.h"
+#include "UIDrawingSurface/OSGUIDrawingSurface.h"
+#include <OpenSG/Input/OSGWindowEventProducer.h>
+#include <OpenSG/Input/OSGStringUtils.h>
+#include "Util/OSGUIDrawUtils.h"
+
+#include "LookAndFeel/OSGLookAndFeelManager.h"
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -72,13 +80,105 @@ void TextArea::initMethod (void)
 }
 
 void TextArea::drawInternal(const GraphicsPtr TheGraphics) const
-{
+{	
+	Color4f ForeColor;
+	if(getEnabled())
+	{
+		ForeColor = getForegroundColor();
+	}
+	else
+	{
+		ForeColor = getDisabledForegroundColor();
+	}
+	for(Int32 i = 0; i < _LineContents.size(); i++)//draw each line seperately
+	{	
+		//draw like normal if not selected
+		if(_LineContents[i]._StartPosition >= _TextSelectionEnd || _LineContents[i]._EndPosition <= _TextSelectionStart || _TextSelectionStart >= _TextSelectionEnd)
+		{
+
+			TheGraphics->drawText(Pnt2s(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset), _LineContents[i]._Contents, getFont(), ForeColor, getOpacity());
+		}
+
+
+		else if(_TextSelectionStart < _TextSelectionEnd) //if text is only on this line
+		{
+			Int32 StartSelection = 0;
+			Int32 EndSelection = _LineContents[i]._Contents.size();
+			if(_TextSelectionStart > _LineContents[i]._StartPosition)
+			{
+				StartSelection = _TextSelectionStart-_LineContents[i]._StartPosition;
+			}
+			if(_TextSelectionEnd <= _LineContents[i]._EndPosition)
+			{
+				if(_TextSelectionEnd-_LineContents[i]._StartPosition > 0)
+				{
+				EndSelection = _TextSelectionEnd-_LineContents[i]._StartPosition;
+				}
+				else
+				{
+					EndSelection = 0;
+				}
+			}
+			std::string drawnText = _LineContents[i]._Contents;
+			Pnt2s offset = Pnt2s(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset);
+			TheGraphics->drawText(offset,drawnText.substr(0, StartSelection), getFont(), ForeColor, getOpacity());//draw before selection text
+			TheGraphics->drawRect(offset+Pnt2s(TheGraphics->getTextBounds(drawnText.substr(0, StartSelection), getFont()).x(), 0), //draw selection rect
+				TheGraphics->getTextBounds(drawnText.substr(0, EndSelection), getFont())+offset,
+				getSelectionBoxColor(), getOpacity());
+			TheGraphics->drawText(offset+Pnt2s(TheGraphics->getTextBounds(drawnText.substr(0, StartSelection), getFont()).x(), 0), //draw selected text
+				drawnText.substr(StartSelection, EndSelection-StartSelection), getFont(), getSelectionTextColor(), getOpacity());
+			TheGraphics->drawText(offset+Pnt2s(TheGraphics->getTextBounds(drawnText.substr(0, EndSelection), getFont()).x(), 0), //draw after selection text
+				drawnText.substr(EndSelection, drawnText.size()-EndSelection), getFont(), ForeColor, getOpacity());
+		}
+
+		//draw Caret
+		if(((getCaretPosition() > _LineContents[i]._StartPosition && getCaretPosition() <= _LineContents[i]._EndPosition )||( getCaretPosition() == 0 && i == 0)) && _TextSelectionStart >= _TextSelectionEnd &&
+			 _CurrentCaretBlinkElps <= 0.5*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate() &&
+			 getFocused())
+		{
+			Pnt2s TempTopLeft, TempBottomRight;
+			getFont()->getBounds(_LineContents[i]._Contents.substr(0, getCaretPosition()-_LineContents[i]._StartPosition), TempTopLeft, TempBottomRight);
+			TheGraphics->drawLine(Pnt2s(_LineContents[i]._LeftHorizontalOffset+TempBottomRight.x(), _LineContents[i]._VerticalOffset),
+				Pnt2s(_LineContents[i]._LeftHorizontalOffset+TempBottomRight.x(), _LineContents[i]._VerticalOffset+TempBottomRight.y()),
+				.5, ForeColor, getOpacity());
+		}
+	}
 }
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
+void TextArea::update(const UpdateEvent& e)
+{
+   _CurrentCaretBlinkElps += e.getElapsedTime();
+   if(_CurrentCaretBlinkElps > LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
+   {
+	   _CurrentCaretBlinkElps -= osgfloor<Time>(_CurrentCaretBlinkElps/LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
+   }
+}
+
+void TextArea::focusGained(const FocusEvent& e)
+{
+	if( getParentFrame() != NullFC &&
+		getParentFrame()->getDrawingSurface() != NullFC &&
+		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+    {
+		getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(this);
+	}
+	TextComponent::focusGained(e);
+}
+
+void TextArea::focusLost(const FocusEvent& e)
+{
+	if( getParentFrame() != NullFC &&
+		getParentFrame()->getDrawingSurface() != NullFC &&
+		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+    {
+		getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+	}
+	TextComponent::focusLost(e);
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -86,12 +186,14 @@ void TextArea::drawInternal(const GraphicsPtr TheGraphics) const
 /*----------------------- constructors & destructors ----------------------*/
 
 TextArea::TextArea(void) :
-    Inherited()
+    Inherited(),
+		_CurrentCaretBlinkElps(0.0)
 {
 }
 
 TextArea::TextArea(const TextArea &source) :
-    Inherited(source)
+    Inherited(source),
+		_CurrentCaretBlinkElps(0.0)
 {
 }
 
@@ -103,7 +205,222 @@ TextArea::~TextArea(void)
 
 void TextArea::changed(BitVector whichField, UInt32 origin)
 {
-    Inherited::changed(whichField, origin);
+ 	while( _LineContents.size()>0)
+	{
+		_LineContents.pop_back();
+	}
+	Pnt2s TopLeft, BottomRight, TempPos;
+	Pnt2s TempTopLeft, TempBottomRight, FullTextSize;
+	getInsideBorderBounds(TopLeft, BottomRight);
+	std::string temptext;
+	Int32 XPosition = 0;
+	Int32 YPosition = 0;
+
+	//take care of tabs
+	temptext = getText();
+	for(Int32 i = 0; i < getText().size() ; i++)
+	{
+		if(temptext[i] == '\t')
+		{
+			temptext.erase(i);
+			for(Int32 j = 0; j < getTabSize(); j++)
+			{
+				temptext.insert(i, " ");
+				i++;
+			}
+		}
+	}
+	//Set the contents of the lines (assuming letter by letter go down right now (which is wrong))
+	_LineContents.push_back(TextLine());
+	_LineContents[0]._StartPosition = 0;
+	for(Int32 i = 0; i < getText().size(); ++i)
+	{
+
+		while(temptext[i] == ' ')
+		{
+			i++;
+		}
+		getFont()->getBounds(getText().substr(XPosition, i-XPosition+1), TempTopLeft, TempBottomRight);
+		if(temptext[i] == '\n')
+		{
+			XPosition = i;
+			_LineContents[YPosition]._EndPosition = i;
+			_LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
+			_LineContents.push_back(TextLine());
+			++YPosition;
+			_LineContents[YPosition]._StartPosition = i;
+
+		}
+		if(TempBottomRight.x() > BottomRight.x())
+		{
+			XPosition = i;
+			_LineContents[YPosition]._EndPosition = i;
+			_LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
+			_LineContents.push_back(TextLine());
+			++YPosition;
+			_LineContents[YPosition]._StartPosition = i;
+
+		}
+	}
+	_LineContents[YPosition]._EndPosition = temptext.size();
+	_LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
+	
+	//calculate offsets
+	//begin with first line
+	getFont()->getBounds(_LineContents[0]._Contents, TempTopLeft, TempBottomRight);
+	FullTextSize = Pnt2s(TempBottomRight.x(), _LineContents.size()*TempBottomRight.y());
+	TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, FullTextSize, (Real32)0.0, (Real32)0.0);//eventually the alignments will be get horz/vert al
+	_LineContents[0]._LeftHorizontalOffset = TempPos.x();
+	_LineContents[0]._VerticalOffset = TempPos.y();
+	for(Int32 i = 1; i < _LineContents.size(); i++)
+	{						
+		getFont()->getBounds(_LineContents[i]._Contents, TempTopLeft, TempBottomRight);
+		FullTextSize = Pnt2s(TempBottomRight.x(), _LineContents.size()*TempBottomRight.y());
+		TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, FullTextSize, (Real32)0.0, (Real32)0.0);//eventually the alignments will be get horz/vert al
+		_LineContents[i]._LeftHorizontalOffset = TempPos.x();
+		_LineContents[i]._VerticalOffset = TempPos.y()+TempBottomRight.y()*i;
+	}
+	Inherited::changed(whichField, origin);
+}
+
+void TextArea::keyTyped(const KeyEvent& e)//broken
+{
+	if(e.getKey() == e.KEY_ENTER)
+	{
+		beginEditCP(TextAreaPtr(this), TextArea::TextFieldMask | TextArea::CaretPositionFieldMask);
+			setText(getText().insert(getCaretPosition(),"\n"));
+			setCaretPosition(getCaretPosition()+1);
+		endEditCP(TextAreaPtr(this), TextArea::TextFieldMask | TextArea::CaretPositionFieldMask);
+
+	}
+	if(e.getKey() == e.KEY_UP || e.getKey() == e.KEY_KEYPAD_UP)
+	{		
+		Int32 OriginalPosition = getCaretPosition();
+		Int32 LineSelector = 0;
+		for(Int32 i = 0; i < _LineContents.size(); i++)
+		{
+			if(getCaretPosition() <= _LineContents[i]._EndPosition && getCaretPosition() > _LineContents[i]._StartPosition)
+			{
+				LineSelector = i;
+				break;
+			}
+		}
+		if(LineSelector > 0)
+		{
+			//if(getCaretPosition()-_LineContents[LineSelector]._StartPosition <= _LineContents[LineSelector-1]._Contents.size())
+			//{
+			//setCaretPosition(getCaretPosition()-_LineContents[LineSelector-1]._Contents.size());//TODO: Switch to size, not position
+			Pnt2s TempTopLeft, TempBottomRight;
+			getFont()->getBounds(_LineContents[LineSelector]._Contents.substr(0, getCaretPosition()-_LineContents[LineSelector]._StartPosition),TempTopLeft, TempBottomRight);
+			Int32 temp = findTextPosition(Pnt2s(_LineContents[LineSelector]._LeftHorizontalOffset+TempBottomRight.x(), _LineContents[LineSelector-1]._VerticalOffset));
+		
+			setCaretPosition(findTextPosition(Pnt2s(_LineContents[LineSelector]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[LineSelector-1]._VerticalOffset)));
+		
+			//}
+			//else
+			//{
+			//	setCaretPosition(_LineContents[LineSelector-1]._EndPosition);
+			//}
+		}
+		if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&&getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC 
+			&& getParentFrame()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+		{
+			if(OriginalPosition == _TextSelectionEnd && OriginalPosition != _TextSelectionStart)
+			{
+				_TextSelectionEnd = getCaretPosition();
+			}
+			else
+			{
+				_TextSelectionStart = getCaretPosition();
+			}
+		}
+		else
+		{
+			_TextSelectionStart = getCaretPosition();
+			_TextSelectionEnd = getCaretPosition();
+		}
+	}
+	if(e.getKey() == e.KEY_DOWN || e.getKey() == e.KEY_KEYPAD_DOWN)
+	{
+		Int32 OriginalPosition = getCaretPosition();
+		Int32 LineSelector = _LineContents.size();
+		for(Int32 i = 0; i < _LineContents.size(); i++)
+		{
+			if(getCaretPosition() <= _LineContents[i]._EndPosition && getCaretPosition() > _LineContents[i]._StartPosition)
+			{
+				LineSelector = i;
+				break;
+			}
+		}
+		if(LineSelector < _LineContents.size()-1)
+		{
+		/*	if(getCaretPosition()-_LineContents[LineSelector]._StartPosition <= _LineContents[LineSelector+1]._Contents.size())
+			{*/
+			Pnt2s TempTopLeft, TempBottomRight;
+			getFont()->getBounds(_LineContents[LineSelector]._Contents.substr(0,getCaretPosition()-_LineContents[LineSelector]._StartPosition),TempTopLeft, TempBottomRight);
+			setCaretPosition(findTextPosition(Pnt2s(_LineContents[LineSelector]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[LineSelector+1]._VerticalOffset)));
+			//}
+			//else
+			//{
+			//	setCaretPosition(_LineContents[LineSelector+1]._EndPosition);
+			//}
+		}
+		if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&&getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC 
+			&& getParentFrame()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+		{
+			if(OriginalPosition == _TextSelectionEnd)
+			{
+				_TextSelectionEnd = getCaretPosition();
+			}
+			else
+			{
+				_TextSelectionStart = getCaretPosition();
+			}
+		}
+		else
+		{
+			_TextSelectionStart = getCaretPosition();
+			_TextSelectionEnd = getCaretPosition();
+		}
+	}
+	TextComponent::keyTyped(e);
+}
+
+Int32 TextArea::findTextPosition(osg::Pnt2s Input)
+{
+	Int32 output = 0;
+	Int32 row = 0;
+	Int32 column = 0;
+	Pnt2s TempTopLeft,  TempBottomRight, TempTopLeft1,  TempBottomRight1;
+	Pnt2s offset;
+	//getFont()->getBounds(_LineContents[_LineContents.size()-1]._Contents, TempTopLeft, TempBottomRight);
+	//find row it belongs in
+	for(Int32 i = 0; i < _LineContents.size(); ++i)
+	{
+		getFont()->getBounds(_LineContents[i]._Contents, TempTopLeft, TempBottomRight);
+		offset = Pnt2s(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset);
+		if(Input.y() >= offset.y())
+		{
+			row = i;
+		}
+	}
+	//find column it belongs in
+	offset = Pnt2s(_LineContents[row]._LeftHorizontalOffset, _LineContents[row]._VerticalOffset);
+	for(Int32 i = 1; i < _LineContents[row]._Contents.size(); ++i)
+	{
+		getFont()->getBounds(_LineContents[row]._Contents.substr(0, i), TempTopLeft, TempBottomRight);
+		getFont()->getBounds(_LineContents[row]._Contents.substr(0, i-1), TempTopLeft1, TempBottomRight1);
+		if(Input.x()> (TempBottomRight.x()-TempBottomRight1.x())/2.0+.5+TempBottomRight1.x()+offset.x())
+		{
+			column = i;
+		}
+	}
+	for(Int32 i = 0; i < row; ++i)
+	{
+		output+=_LineContents[i]._Contents.size();
+	}
+	output+=column;
+	return output;
 }
 
 void TextArea::dump(      UInt32    , 
@@ -138,4 +455,3 @@ namespace
 #endif
 
 OSG_END_NAMESPACE
-

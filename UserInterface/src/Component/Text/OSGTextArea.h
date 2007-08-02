@@ -44,7 +44,12 @@
 
 #include <OpenSG/OSGConfig.h>
 
+
 #include "OSGTextAreaBase.h"
+#include <vector>
+#include <string>
+#include <OpenSG/Input/OSGWindowEventProducer.h>
+#include <OpenSG/Input/OSGUpdateListener.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -52,7 +57,8 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceTextArea for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
+
+class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase, public UpdateListener
 {
   private:
 
@@ -77,6 +83,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+	struct TextLine{
+		Int32 _StartPosition;
+		Int32 _EndPosition;
+		Real32 _VerticalOffset;
+		Real32 _LeftHorizontalOffset;
+		Real32 _RightHorizontalOffset;
+		std::string _Contents;
+	};
+
+	virtual void keyTyped(const KeyEvent& e);
+
+    virtual void update(const UpdateEvent& e);
+	
+	virtual void focusGained(const FocusEvent& e);
+	virtual void focusLost(const FocusEvent& e);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -99,13 +121,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
     /*! \}                                                                 */
     
+	mutable Time _CurrentCaretBlinkElps;
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
     friend class TextAreaBase;
 
+	Int32 findTextPosition(Pnt2s Input);
     static void initMethod(void);
+
+	std::vector<TextLine> _LineContents;
 
     // prohibit default functions (move to 'public' if you need one)
 

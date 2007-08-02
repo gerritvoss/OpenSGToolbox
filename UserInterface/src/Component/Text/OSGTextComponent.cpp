@@ -201,7 +201,7 @@ void TextComponent::keyTyped(const KeyEvent& e)
 			//write at the current caret position
 			e.getKeyChar();
 			beginEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
-			setText(getText().insert(_TextSelectionStart, std::string( 1,e.getKeyChar() )));
+			setText(getText().insert(getCaretPosition(), std::string( 1,e.getKeyChar() )));
 			endEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
 			if(getCaretPosition() <getText().size())
 			{

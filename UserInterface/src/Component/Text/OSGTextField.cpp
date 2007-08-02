@@ -170,7 +170,7 @@ void TextField::mouseClicked(const MouseEvent& e)
 			if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() <= TempPos.x())
 			{
 				Position = 0;
-			}		//if the mouse is to the right of the text, set it to the end
+			}//if the mouse is to the right of the text, set it to the end
 			else if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() >= TempPos.x()+BottomRightText.x())
 			{
 				Position = getText().size();
@@ -320,30 +320,32 @@ void TextField::mouseDragged(const MouseEvent& e)
 				}
 			}
 		}
+		if(getCaretPosition() < OriginalPosition)
+		{
+			if(getCaretPosition() < _TextSelectionStart)
+			{
+				_TextSelectionStart = getCaretPosition();
+			}
+			else
+			{
+				_TextSelectionEnd = getCaretPosition();
+			}
+		}
+		else if(getCaretPosition() > OriginalPosition)
+		{
+			if(getCaretPosition() > _TextSelectionEnd)
+			{
+				_TextSelectionEnd = getCaretPosition();
+			}
+			else
+			{
+				_TextSelectionStart = getCaretPosition();
+			}
+		}
 	}
 	
-	if(getCaretPosition() < OriginalPosition)
-	{
-		if(getCaretPosition() < _TextSelectionStart)
-		{
-			_TextSelectionStart = getCaretPosition();
-		}
-		else
-		{
-			_TextSelectionEnd = getCaretPosition();
-		}
-	}
-	else if(getCaretPosition() > OriginalPosition)
-	{
-		if(getCaretPosition() > _TextSelectionEnd)
-		{
-			_TextSelectionEnd = getCaretPosition();
-		}
-		else
-		{
-			_TextSelectionStart = getCaretPosition();
-		}
-	}
+
+	TextComponent::mouseDragged(e);
 }
 
 

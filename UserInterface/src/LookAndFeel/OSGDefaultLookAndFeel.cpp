@@ -74,6 +74,8 @@
 #include "Graphics/UIDrawObjects/OSGLineUIDrawObject.h"
 #include "Component/OSGUIDrawObjectCanvas.h"
 #include "Component/Text/OSGTextField.h"
+#include "Component/Text/OSGTextArea.h"
+
 
 OSG_BEGIN_NAMESPACE
 
@@ -716,7 +718,55 @@ void DefaultLookAndFeel::init(void)
 
 	TextField::getClassType().setPrototype(DefaultTextField);
 
+/********Text Area********/
+	ColorUIBackgroundPtr DefaultTextAreaBackground = ColorUIBackground::create();
+	beginEditCP(DefaultTextAreaBackground);
+		DefaultTextAreaBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
+	endEditCP(DefaultTextAreaBackground);
 
+	ColorUIBackgroundPtr DefaultDisabledTextAreaBackground = ColorUIBackground::create();
+	beginEditCP(DefaultDisabledTextAreaBackground);
+		DefaultDisabledTextAreaBackground->setColor(Color4f(.8, .8, .8, 1.0));
+	endEditCP(DefaultDisabledTextAreaBackground);
+
+	BevelBorderPtr DefaultTextAreaBorder = BevelBorder::create();
+	beginEditCP(DefaultTextAreaBorder, BevelBorder::RaisedFieldMask);
+		DefaultTextAreaBorder->setRaised(false);
+		DefaultTextAreaBorder->setWidth(2);
+		DefaultTextAreaBorder->setHighlightInner(Color4f(.9, .9, .9, 1.0));
+		DefaultTextAreaBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultTextAreaBorder->setShadowInner(Color4f(0.65, 0.65, 0.65, 1.0));
+		DefaultTextAreaBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
+	endEditCP(DefaultTextAreaBorder, BevelBorder::RaisedFieldMask);
+
+	TextAreaPtr DefaultTextArea = TextArea::create();
+	beginEditCP(DefaultTextArea);
+		//size
+		DefaultTextArea->setMinSize(Vec2s(0, 0));
+		DefaultTextArea->setMaxSize(Vec2s(32767,32767));
+		DefaultTextArea->setPreferredSize(Vec2s(100, 25));
+
+		//font
+		DefaultTextArea->setFont(DefaultFont);
+		DefaultTextArea->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
+		DefaultTextArea->setSelectionTextColor(Color4f(0.0, 0.0, 0.0, 1.0));
+		
+
+		//background
+		DefaultTextArea->setBackground(DefaultTextAreaBackground);
+		DefaultTextArea->setDisabledBackground(DefaultDisabledTextAreaBackground);
+
+		//Border
+		DefaultTextArea->setBorder(DefaultTextAreaBorder);
+		DefaultTextArea->setDisabledBorder(DefaultTextAreaBorder);
+
+		//Color
+		DefaultTextArea->setForegroundColor(Color4f(0.0, 0.0, 0.0, 1.0));
+		DefaultTextArea->setDisabledForegroundColor(Color4f(.1, .1, .1, 1.0));
+
+	endEditCP(DefaultTextArea);
+
+	TextArea::getClassType().setPrototype(DefaultTextArea);
 
 	/*******Borders********/
 	/*******Line Border********/
@@ -837,6 +887,7 @@ void DefaultLookAndFeel::init(void)
 		getPrototypes().addValue(DefaultRadioButton);
 		getPrototypes().addValue(DefaultToggleButton);
 		getPrototypes().addValue(DefaultTextField);
+		getPrototypes().addValue(DefaultTextArea);
 	endEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);
 }
 /*-------------------------------------------------------------------------*\
