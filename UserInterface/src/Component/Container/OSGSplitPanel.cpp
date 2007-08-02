@@ -242,6 +242,10 @@ SplitPanel::SplitPanel(const SplitPanel &source) :
 	_DividerListener (SplitPanelPtr(this)),
 	_DividerDraggedListener (SplitPanelPtr(this))
 {
+	if(getDividerDrawObject() != NullFC)
+	{
+	   getDividerDrawObject()->addMouseListener(&_DividerListener);
+	}
 }
 
 SplitPanel::~SplitPanel(void)

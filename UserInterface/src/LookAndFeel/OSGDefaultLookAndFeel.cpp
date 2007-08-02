@@ -63,6 +63,7 @@
 #include "Component/OSGLabel.h"
 #include "Component/Container/OSGFrame.h"
 #include "Component/Container/OSGPanel.h"
+#include "Component/Container/OSGSplitPanel.h"
 #include "Component/OSGImageComponent.h"
 #include "Util/OSGUIDefines.h"
 #include "Component/OSGCheckboxButton.h"
@@ -340,6 +341,36 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(DefaultPanel);
 	
 	Panel::getClassType().setPrototype(DefaultPanel);
+
+	//************************** SplitPanel *****************************
+	//The only default value set will be the divider
+
+	//Default Divider Background and Border
+	LineBorderPtr DefaultDividerBorder = osg::LineBorder::create();
+	beginEditCP(DefaultDividerBorder, LineBorder::WidthFieldMask | LineBorder::ColorFieldMask);
+		DefaultDividerBorder->setWidth(1);
+		DefaultDividerBorder->setColor(Color4f(0.13, 0.13, 0.13, 1.0));
+	endEditCP(DefaultDividerBorder, LineBorder::WidthFieldMask | LineBorder::ColorFieldMask);
+	ColorUIBackgroundPtr DefaultDividerBackground = ColorUIBackground::create();
+	beginEditCP(DefaultDividerBackground);
+		DefaultDividerBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
+	endEditCP(DefaultDividerBackground);
+
+	//Default Divider
+	UIDrawObjectCanvasPtr DefaultDividerDrawObject = UIDrawObjectCanvas::create();
+	beginEditCP(DefaultDividerDrawObject);
+		DefaultDividerDrawObject->setBorder(DefaultDividerBorder);
+		DefaultDividerDrawObject->setBackground(DefaultDividerBackground);
+	endEditCP(DefaultDividerDrawObject);
+
+	//Default SplitPanel
+	SplitPanelPtr DefaultSplitPanel = SplitPanel::create();
+	beginEditCP(DefaultSplitPanel);
+		DefaultSplitPanel->setDividerDrawObject(DefaultDividerDrawObject);
+		DefaultSplitPanel->setDividerSize(5);
+	endEditCP(DefaultSplitPanel);
+
+	SplitPanel::getClassType().setPrototype(DefaultSplitPanel);
 	
 	//************************** ImageComponent *****************************
 	//Default ImageComponentBorder
@@ -882,6 +913,7 @@ void DefaultLookAndFeel::init(void)
 		getPrototypes().addValue(DefaultLabel);
 		getPrototypes().addValue(DefaultFrame);
 		getPrototypes().addValue(DefaultPanel);
+		getPrototypes().addValue(DefaultSplitPanel);
 		getPrototypes().addValue(DefaultImageComponent);
 		getPrototypes().addValue(DefaultCheckboxButton);
 		getPrototypes().addValue(DefaultRadioButton);
