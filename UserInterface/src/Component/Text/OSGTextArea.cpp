@@ -50,7 +50,7 @@
 
 #include "OSGTextArea.h"
 
-#include "Component/OSGFrame.h"
+#include "Component/Container/OSGFrame.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include <OpenSG/Input/OSGStringUtils.h>
