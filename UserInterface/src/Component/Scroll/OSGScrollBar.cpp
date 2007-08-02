@@ -79,6 +79,8 @@ void Scrollbar::initMethod (void)
 void Scrollbar::drawInternal(const GraphicsPtr Graphics) const
 {
     //TODO:Implement
+	//Draw Min Button
+	//Draw Max Button
 }
 
 void  Scrollbar::produceAdjustmentValueChanged(const AdjustmentEvent& e)

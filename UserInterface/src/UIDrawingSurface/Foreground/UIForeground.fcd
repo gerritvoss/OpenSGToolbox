@@ -17,6 +17,7 @@ A Foreground for rendering a UI on.
 		type="UIDrawingSurfacePtr"
 		cardinality="single"
 		visibility="external"
+		header="UIDrawingSurface/OSGUIDrawingSurfaceFields.h"
 		access="public"
 	>
 	</Field>
@@ -54,6 +55,17 @@ A Foreground for rendering a UI on.
 		defaultValue="HORIZONTAL_CENTER"
 		defaultHeader="Util/OSGUIDefines.h"
 		access="public"
+	>
+	</Field>
+	<Field
+		name="MouseTransformFunctor"
+		type="UIForegroundMouseTransformFunctorPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="UIForegroundMouseTransformFunctor::create()"
+		header="UIDrawingSurface/Foreground/OSGUIForegroundMouseTransformFunctorFields.h"
+		defaultHeader="UIDrawingSurface/Foreground/OSGUIForegroundMouseTransformFunctor.h"
+		access="protected"
 	>
 	</Field>
 </FieldContainer>

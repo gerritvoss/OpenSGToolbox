@@ -64,6 +64,8 @@
 #include <Util/OSGUIDefines.h>            // VerticalAlignment default header
 #include <Util/OSGUIDefines.h>            // HorizontalAlignment default header
 
+#include "UIDrawingSurface/Foreground/OSGUIForegroundMouseTransformFunctor.h"
+
 OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  UIForegroundBase::DrawingSurfaceFieldMask = 
@@ -80,6 +82,9 @@ const OSG::BitVector  UIForegroundBase::VerticalAlignmentFieldMask =
 
 const OSG::BitVector  UIForegroundBase::HorizontalAlignmentFieldMask = 
     (TypeTraits<BitVector>::One << UIForegroundBase::HorizontalAlignmentFieldId);
+
+const OSG::BitVector  UIForegroundBase::MouseTransformFunctorFieldMask = 
+    (TypeTraits<BitVector>::One << UIForegroundBase::MouseTransformFunctorFieldId);
 
 const OSG::BitVector UIForegroundBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -101,6 +106,9 @@ const OSG::BitVector UIForegroundBase::MTInfluenceMask =
     
 */
 /*! \var UInt32          UIForegroundBase::_sfHorizontalAlignment
+    
+*/
+/*! \var UIForegroundMouseTransformFunctorPtr UIForegroundBase::_sfMouseTransformFunctor
     
 */
 
@@ -132,7 +140,12 @@ FieldDescription *UIForegroundBase::_desc[] =
                      "HorizontalAlignment", 
                      HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &UIForegroundBase::getSFHorizontalAlignment)
+                     (FieldAccessMethod) &UIForegroundBase::getSFHorizontalAlignment),
+    new FieldDescription(SFUIForegroundMouseTransformFunctorPtr::getClassType(), 
+                     "MouseTransformFunctor", 
+                     MouseTransformFunctorFieldId, MouseTransformFunctorFieldMask,
+                     false,
+                     (FieldAccessMethod) &UIForegroundBase::getSFMouseTransformFunctor)
 };
 
 
@@ -213,6 +226,7 @@ UIForegroundBase::UIForegroundBase(void) :
     _sfFrameBounds            (), 
     _sfVerticalAlignment      (UInt32(VERTICAL_CENTER)), 
     _sfHorizontalAlignment    (UInt32(HORIZONTAL_CENTER)), 
+    _sfMouseTransformFunctor  (UIForegroundMouseTransformFunctorPtr(UIForegroundMouseTransformFunctor::create())), 
     Inherited() 
 {
 }
@@ -227,6 +241,7 @@ UIForegroundBase::UIForegroundBase(const UIForegroundBase &source) :
     _sfFrameBounds            (source._sfFrameBounds            ), 
     _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
     _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
+    _sfMouseTransformFunctor  (UIForegroundMouseTransformFunctorPtr(UIForegroundMouseTransformFunctor::create())), 
     Inherited                 (source)
 {
 }
@@ -268,6 +283,11 @@ UInt32 UIForegroundBase::getBinSize(const BitVector &whichField)
         returnValue += _sfHorizontalAlignment.getBinSize();
     }
 
+    if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
+    {
+        returnValue += _sfMouseTransformFunctor.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -300,6 +320,11 @@ void UIForegroundBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
     {
         _sfHorizontalAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
+    {
+        _sfMouseTransformFunctor.copyToBin(pMem);
     }
 
 
@@ -335,6 +360,11 @@ void UIForegroundBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfHorizontalAlignment.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
+    {
+        _sfMouseTransformFunctor.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -360,6 +390,9 @@ void UIForegroundBase::executeSyncImpl(      UIForegroundBase *pOther,
     if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
         _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
 
+    if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
+        _sfMouseTransformFunctor.syncWith(pOther->_sfMouseTransformFunctor);
+
 
 }
 #else
@@ -384,6 +417,9 @@ void UIForegroundBase::executeSyncImpl(      UIForegroundBase *pOther,
 
     if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
         _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
+
+    if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
+        _sfMouseTransformFunctor.syncWith(pOther->_sfMouseTransformFunctor);
 
 
 

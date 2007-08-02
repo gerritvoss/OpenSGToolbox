@@ -49,6 +49,8 @@
 
 #include "UIDrawingSurface/OSGUIDrawingSurface.h" // DrawingSurface type
 
+#include "UIDrawingSurface/Foreground/OSGUIForegroundMouseTransformFunctor.h"
+
 #include "OSGUIForeground.h"
 
 OSG_BEGIN_NAMESPACE
@@ -187,11 +189,23 @@ void UIForeground::updateFrameBounds(Viewport * port)
 UIForeground::UIForeground(void) :
     Inherited()
 {
+	if(getMouseTransformFunctor() != NullFC)
+	{
+		beginEditCP(getMouseTransformFunctor(), UIForegroundMouseTransformFunctor::ParentFieldMask);
+			getMouseTransformFunctor()->setParent(UIForegroundPtr(this));
+		endEditCP(getMouseTransformFunctor(), UIForegroundMouseTransformFunctor::ParentFieldMask);
+	}
 }
 
 UIForeground::UIForeground(const UIForeground &source) :
     Inherited(source)
 {
+	if(getMouseTransformFunctor() != NullFC)
+	{
+		beginEditCP(getMouseTransformFunctor(), UIForegroundMouseTransformFunctor::ParentFieldMask);
+			getMouseTransformFunctor()->setParent(UIForegroundPtr(this));
+		endEditCP(getMouseTransformFunctor(), UIForegroundMouseTransformFunctor::ParentFieldMask);
+	}
 }
 
 UIForeground::~UIForeground(void)
@@ -203,6 +217,11 @@ UIForeground::~UIForeground(void)
 void UIForeground::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+	
+	if( (whichField & DrawingSurfaceFieldMask) &&
+		getDrawingSurface() != NullFC)
+    {
+	}
 }
 
 void UIForeground::dump(      UInt32    , 

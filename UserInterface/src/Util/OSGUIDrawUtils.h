@@ -32,8 +32,11 @@ bool OSG_USERINTERFACELIB_DLLMAPPING isContainedBounds(const Pnt2s& Point, const
 bool OSG_USERINTERFACELIB_DLLMAPPING isContainedClipBounds(const Pnt2s& Point, const ComponentPtr Comp);
 
 bool OSG_USERINTERFACELIB_DLLMAPPING isContainedBounds(const Pnt2s& Point, const Pnt2s& TopLeft, const Pnt2s& BottomRight);
-Pnt2s OSG_USERINTERFACELIB_DLLMAPPING WindowToComponent(const Pnt2s& WindowPoint, const ComponentPtr Comp);
-Pnt2s OSG_USERINTERFACELIB_DLLMAPPING ComponentToWindow(const Pnt2s& ComponentPoint, const ComponentPtr Comp);
+//Pnt2s OSG_USERINTERFACELIB_DLLMAPPING WindowToComponent(const Pnt2s& WindowPoint, const ComponentPtr Comp);
+//Pnt2s OSG_USERINTERFACELIB_DLLMAPPING ComponentToWindow(const Pnt2s& ComponentPoint, const ComponentPtr Comp);
+
+Pnt2s OSG_USERINTERFACELIB_DLLMAPPING DrawingSurfaceToComponent(const Pnt2s& DrawingSurfacePoint, const ComponentPtr Comp);
+Pnt2s OSG_USERINTERFACELIB_DLLMAPPING ComponentToDrawingSurface(const Pnt2s& ComponentPoint, const ComponentPtr Comp);
 
 OSG_END_NAMESPACE
 

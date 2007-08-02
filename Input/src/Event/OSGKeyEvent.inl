@@ -21,10 +21,17 @@ UChar8 KeyEvent::getKeyChar(void) const
 }
 
 inline
-KeyEvent::KeyEvent(FieldContainerPtr Source, Time TimeStamp, Key TheKey, UInt32 Modifiers) :
+WindowPtr KeyEvent::getWindow(void) const
+{
+	return _Window;
+}
+
+inline
+KeyEvent::KeyEvent(FieldContainerPtr Source, Time TimeStamp, Key TheKey, UInt32 Modifiers, WindowPtr TheWindow) :
    Event(Source, TimeStamp),
    _Key(TheKey),
-   _Modifiers(Modifiers)
+   _Modifiers(Modifiers),
+   _Window(TheWindow)
 {
 }
 

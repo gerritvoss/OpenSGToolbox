@@ -107,6 +107,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurface : public UIDrawingSurface
 	virtual void keyReleased(const KeyEvent& e);
 	virtual void keyTyped(const KeyEvent& e);
 
+	void addMouseTransformFunctor( UIDrawingSurfaceMouseTransformFunctorPtr Functor);
+	void removeMouseTransformFunctor( UIDrawingSurfaceMouseTransformFunctorPtr Functor);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -137,7 +139,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurface : public UIDrawingSurface
     static void initMethod(void);
 
 	bool _MouseInFrameLastMouse;
-	void checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation);
+	void checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, ViewportPtr TheViewport);
 
     // prohibit default functions (move to 'public' if you need one)
 

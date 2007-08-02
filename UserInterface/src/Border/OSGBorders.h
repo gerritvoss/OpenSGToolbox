@@ -42,3 +42,6 @@
 #include "OSGEtchedBorder.h"
 #include "OSGLineBorder.h"
 #include "OSGMatteBorder.h"
+#include "OSGMultiColorMatteBorder.h"
+#include "OSGShadowBorder.h"
+#include "OSGRoundedCornerLineBorder.h"

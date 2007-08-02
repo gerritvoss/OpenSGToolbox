@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGUIRectangleBase.h"
 #include <OpenSG/OSGAction.h>
@@ -57,6 +58,7 @@ OSG_BEGIN_NAMESPACE
 class OSG_USERINTERFACELIB_DLLMAPPING UIRectangle : public UIRectangleBase
 {
   private:
+    friend class UIRectangleMouseTransformFunctor;
 
     typedef UIRectangleBase Inherited;
 

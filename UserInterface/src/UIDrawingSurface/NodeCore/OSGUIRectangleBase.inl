@@ -49,6 +49,8 @@
 \*****************************************************************************/
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
+#include "UIDrawingSurface/OSGUIDrawingSurface.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -138,6 +140,13 @@ SFPolygonChunkPtr *UIRectangleBase::getSFRectPolygon(void)
     return &_sfRectPolygon;
 }
 
+//! Get the UIRectangle::_sfMouseTransformFunctor field.
+inline
+SFUIRectangleMouseTransformFunctorPtr *UIRectangleBase::getSFMouseTransformFunctor(void)
+{
+    return &_sfMouseTransformFunctor;
+}
+
 
 //! Get the value of the UIRectangle::_sfPoint field.
 inline
@@ -220,7 +229,15 @@ const UIDrawingSurfacePtr &UIRectangleBase::getDrawingSurface(void) const
 inline
 void UIRectangleBase::setDrawingSurface(const UIDrawingSurfacePtr &value)
 {
+	if(getDrawingSurface() != NullFC)
+	{
+		getDrawingSurface()->removeMouseTransformFunctor(getMouseTransformFunctor());
+	}
     _sfDrawingSurface.setValue(value);
+	if(getDrawingSurface() != NullFC)
+	{
+		getDrawingSurface()->addMouseTransformFunctor(getMouseTransformFunctor());
+	}
 }
 
 //! Get the value of the UIRectangle::_sfRectColorMask field.
@@ -263,6 +280,27 @@ inline
 void UIRectangleBase::setRectPolygon(const PolygonChunkPtr &value)
 {
     _sfRectPolygon.setValue(value);
+}
+
+//! Get the value of the UIRectangle::_sfMouseTransformFunctor field.
+inline
+UIRectangleMouseTransformFunctorPtr &UIRectangleBase::getMouseTransformFunctor(void)
+{
+    return _sfMouseTransformFunctor.getValue();
+}
+
+//! Get the value of the UIRectangle::_sfMouseTransformFunctor field.
+inline
+const UIRectangleMouseTransformFunctorPtr &UIRectangleBase::getMouseTransformFunctor(void) const
+{
+    return _sfMouseTransformFunctor.getValue();
+}
+
+//! Set the value of the UIRectangle::_sfMouseTransformFunctor field.
+inline
+void UIRectangleBase::setMouseTransformFunctor(const UIRectangleMouseTransformFunctorPtr &value)
+{
+    _sfMouseTransformFunctor.setValue(value);
 }
 
 

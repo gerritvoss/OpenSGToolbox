@@ -115,7 +115,7 @@ void Container::mouseClicked(const MouseEvent& e)
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
 		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
 			getChildren().getValue(i)->mouseClicked(e);
@@ -131,7 +131,7 @@ void Container::mouseEntered(const MouseEvent& e)
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
 		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
 			getChildren().getValue(i)->mouseDragged(e);
@@ -146,7 +146,7 @@ void Container::mouseExited(const MouseEvent& e)
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
 		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
 			getChildren().getValue(i)->mouseDragged(e);
@@ -157,11 +157,11 @@ void Container::mouseExited(const MouseEvent& e)
 
 void Container::mousePressed(const MouseEvent& e)
 {
-	bool isContained;
+	bool isContained(false);
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
 		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
 			//Give myself temporary focus
@@ -193,7 +193,7 @@ void Container::mouseReleased(const MouseEvent& e)
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
 		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
 			getChildren().getValue(i)->mouseReleased(e);
@@ -210,7 +210,7 @@ void Container::mouseMoved(const MouseEvent& e)
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
 		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
 			getChildren().getValue(i)->mouseMoved(e);
@@ -225,7 +225,7 @@ void Container::mouseDragged(const MouseEvent& e)
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
 		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
 			getChildren().getValue(i)->mouseDragged(e);
@@ -240,12 +240,12 @@ void Container::mouseWheelMoved(const MouseWheelEvent& e)
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
 		isContained = isContainedClipBounds(e.getLocation(), getChildren().getValue(i));
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
     }
 	Component::mouseWheelMoved(e);
 }
 
-void Container::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, ComponentPtr Comp, bool isMouseContained)
+void Container::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, ComponentPtr Comp, bool isMouseContained, ViewportPtr TheViewport)
 {
 	//Check if mouse is inside of the frame
 	if(!isMouseContained)
@@ -253,7 +253,7 @@ void Container::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, 
 		if(Comp->getMouseContained())
 		{
 		    //Mouse has exited the frame
-			MouseEvent ExitedEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation);
+			MouseEvent ExitedEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
 			Comp->mouseExited(ExitedEvent);
 		}
 		Comp->setMouseContained(false);
@@ -263,7 +263,7 @@ void Container::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, 
 		if(!Comp->getMouseContained())
 		{
 			//Mouse has exited the frame
-			MouseEvent EnteredEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation);
+			MouseEvent EnteredEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
 			Comp->mouseEntered(EnteredEvent);
 		}
 		Comp->setMouseContained(true);

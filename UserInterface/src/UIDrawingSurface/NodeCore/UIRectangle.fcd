@@ -67,4 +67,15 @@ A UI Rectangle.
 		defaultValue="NullFC"
 	>
 	</Field>
+	<Field
+		name="MouseTransformFunctor"
+		type="UIRectangleMouseTransformFunctorPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="UIRectangleMouseTransformFunctor::create()"
+		header="UIDrawingSurface/NodeCore/OSGUIRectangleMouseTransformFunctorFields.h"
+		defaultHeader="UIDrawingSurface/NodeCore/OSGUIRectangleMouseTransformFunctor.h"
+		access="protected"
+	>
+	</Field>
 </FieldContainer>

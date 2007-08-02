@@ -149,6 +149,10 @@ int main(int argc, char **argv)
 
 	// Create the Graphics
 	GraphicsPtr graphics = osg::Graphics2D::create();
+	beginEditCP(graphics);
+	graphics->setEnablePolygonAntiAliasing(true);
+	beginEditCP(graphics);
+
 
 	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
@@ -221,10 +225,16 @@ int main(int argc, char **argv)
         sampleFont->setStyle(TextFace::STYLE_PLAIN);
 	endEditCP(sampleFont, Font::SizeFieldMask | Font::FamilyFieldMask | Font::GapFieldMask | Font::GlyphPixelSizeFieldMask | Font::TextureWidthFieldMask | Font::StyleFieldMask);
 
+	ColorUIBackgroundPtr button1Background = ColorUIBackground::create();
+	beginEditCP(button1Background);
+	button1Background->setColor(Color4f(1.0,0.0,0.0,1.0));
+	endEditCP(button1Background);
    beginEditCP(button1, Button::PreferredSizeFieldMask |  Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 		button1->setPreferredSize(Vec2s(100,50));
 		button1->setSize(Vec2s(100,50));
 		button1->setText("Button 1");
+		button1->setBackground(button1Background);
+		button1->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
 		
 		// Set the constraints created above to button
 		// to place the Button within the scene
@@ -291,7 +301,7 @@ int main(int argc, char **argv)
     beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
 		drawingSurface->setRootFrame(MainFrame);
-	    //drawingSurface->setEventProducer(TheWindowEventProducer);
+	    drawingSurface->setEventProducer(TheWindowEventProducer);
     endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
 	
     //Make A 3D Rectangle to draw the UI on

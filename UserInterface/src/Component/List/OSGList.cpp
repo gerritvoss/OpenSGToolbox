@@ -151,7 +151,7 @@ void List::mousePressed(const MouseEvent& e)
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
 		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained);
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
 			//Give myself temporary focus

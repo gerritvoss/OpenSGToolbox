@@ -49,6 +49,7 @@
 
 #include "OSGUIDrawingSurface.h"
 #include "Util/OSGUIDrawUtils.h"
+#include "OSGUIDrawingSurfaceMouseTransformFunctor.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,36 +78,94 @@ void UIDrawingSurface::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void UIDrawingSurface::addMouseTransformFunctor( UIDrawingSurfaceMouseTransformFunctorPtr Functor)
+{
+
+	if(getMouseTransformFunctors().find(Functor) == getMouseTransformFunctors().end())
+	{
+		getMouseTransformFunctors().addValue(Functor);
+	}
+}
+
+void UIDrawingSurface::removeMouseTransformFunctor( UIDrawingSurfaceMouseTransformFunctorPtr Functor)
+{
+	MFUIDrawingSurfaceMouseTransformFunctorPtr::iterator FoundItor = getMouseTransformFunctors().find(Functor);
+	if(FoundItor != getMouseTransformFunctors().end())
+	{
+		getMouseTransformFunctors().erase(FoundItor);
+	}
+}
+
 void UIDrawingSurface::mouseClicked(const MouseEvent& e)
 {
 	if(getRootFrame() != NullFC)
 	{
-		checkMouseEnterExit(e, e.getLocation());
-		if(isContainedClipBounds(e.getLocation(), getRootFrame()))
+		Pnt2s ResultMouseLoc;
+		for(UInt32 i(0) ; i<getMouseTransformFunctors().size(); ++i)
 		{
-			getRootFrame()->mouseClicked(e);
+			if(!getMouseTransformFunctors().getValue(i)->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
+				continue;
+
+			MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
+				ResultMouseLoc,e.getViewport());
+
+			checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent.getLocation(),TransformedMouseEvent.getViewport());
+			if(isContainedClipBounds(TransformedMouseEvent.getLocation(), getRootFrame()))
+			{
+				getRootFrame()->mouseClicked(TransformedMouseEvent);
+			}
 		}
 	}
 }
 
 void UIDrawingSurface::mouseEntered(const MouseEvent& e)
 {
-	checkMouseEnterExit(e, e.getLocation());
+	Pnt2s ResultMouseLoc;
+	for(UInt32 i(0) ; i<getMouseTransformFunctors().size(); ++i)
+	{
+		if(!getMouseTransformFunctors().getValue(i)->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
+			continue;
+
+		MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
+			ResultMouseLoc,e.getViewport());
+
+		checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent.getLocation(),TransformedMouseEvent.getViewport());
+	}
 }
 
 void UIDrawingSurface::mouseExited(const MouseEvent& e)
 {
-	checkMouseEnterExit(e, e.getLocation());
+	Pnt2s ResultMouseLoc;
+	for(UInt32 i(0) ; i<getMouseTransformFunctors().size(); ++i)
+	{
+		if(!getMouseTransformFunctors().getValue(i)->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
+			continue;
+
+		MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
+			ResultMouseLoc,e.getViewport());
+
+		checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent.getLocation(),TransformedMouseEvent.getViewport());
+	}
 }
 
 void UIDrawingSurface::mousePressed(const MouseEvent& e)
 {
 	if(getRootFrame() != NullFC)
 	{
-		checkMouseEnterExit(e, e.getLocation());
-		if(isContainedClipBounds(e.getLocation(), getRootFrame()))
+		Pnt2s ResultMouseLoc;
+		for(UInt32 i(0) ; i<getMouseTransformFunctors().size(); ++i)
 		{
-			getRootFrame()->mousePressed(e);
+			if(!getMouseTransformFunctors().getValue(i)->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
+				continue;
+
+			MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
+				ResultMouseLoc,e.getViewport());
+
+			checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent.getLocation(),TransformedMouseEvent.getViewport());
+			if(isContainedClipBounds(TransformedMouseEvent.getLocation(), getRootFrame()))
+			{
+				getRootFrame()->mousePressed(TransformedMouseEvent);
+			}
 		}
 	}
 }
@@ -115,10 +174,20 @@ void UIDrawingSurface::mouseReleased(const MouseEvent& e)
 {
 	if(getRootFrame() != NullFC)
 	{
-		checkMouseEnterExit(e, e.getLocation());
-		if(isContainedClipBounds(e.getLocation(), getRootFrame()))
+		Pnt2s ResultMouseLoc;
+		for(UInt32 i(0) ; i<getMouseTransformFunctors().size(); ++i)
 		{
-			getRootFrame()->mouseReleased(e);
+			if(!getMouseTransformFunctors().getValue(i)->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
+				continue;
+
+			MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
+				ResultMouseLoc,e.getViewport());
+
+			checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent.getLocation(),TransformedMouseEvent.getViewport());
+			if(isContainedClipBounds(TransformedMouseEvent.getLocation(), getRootFrame()))
+			{
+				getRootFrame()->mouseReleased(TransformedMouseEvent);
+			}
 		}
 	}
 }
@@ -128,10 +197,20 @@ void UIDrawingSurface::mouseMoved(const MouseEvent& e)
 {
 	if(getRootFrame() != NullFC)
 	{
-		checkMouseEnterExit(e, e.getLocation());
-		if(isContainedClipBounds(e.getLocation(), getRootFrame()))
+		Pnt2s ResultMouseLoc;
+		for(UInt32 i(0) ; i<getMouseTransformFunctors().size(); ++i)
 		{
-			getRootFrame()->mouseMoved(e);
+			if(!getMouseTransformFunctors().getValue(i)->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
+				continue;
+
+			MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
+				ResultMouseLoc,e.getViewport());
+
+			checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent.getLocation(),TransformedMouseEvent.getViewport());
+			if(isContainedClipBounds(TransformedMouseEvent.getLocation(), getRootFrame()))
+			{
+				getRootFrame()->mouseMoved(TransformedMouseEvent);
+			}
 		}
 	}
 }
@@ -140,10 +219,20 @@ void UIDrawingSurface::mouseDragged(const MouseEvent& e)
 {
 	if(getRootFrame() != NullFC)
 	{
-		checkMouseEnterExit(e, e.getLocation());
-		if(isContainedClipBounds(e.getLocation(), getRootFrame()))
+		Pnt2s ResultMouseLoc;
+		for(UInt32 i(0) ; i<getMouseTransformFunctors().size(); ++i)
 		{
-			getRootFrame()->mouseDragged(e);
+			if(!getMouseTransformFunctors().getValue(i)->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
+				continue;
+
+			MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
+				ResultMouseLoc,e.getViewport());
+
+			checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent.getLocation(),TransformedMouseEvent.getViewport());
+			if(isContainedClipBounds(TransformedMouseEvent.getLocation(), getRootFrame()))
+			{
+				getRootFrame()->mouseDragged(TransformedMouseEvent);
+			}
 		}
 	}
 }
@@ -152,8 +241,18 @@ void UIDrawingSurface::mouseWheelMoved(const MouseWheelEvent& e)
 {
 	if(getRootFrame() != NullFC)
 	{
-		checkMouseEnterExit(e, e.getLocation());
-	    getRootFrame()->mouseWheelMoved(e);
+		Pnt2s ResultMouseLoc;
+		for(UInt32 i(0) ; i<getMouseTransformFunctors().size(); ++i)
+		{
+			if(!getMouseTransformFunctors().getValue(i)->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
+				continue;
+
+			MouseWheelEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getWheelRotation(), e.getScrollType(),
+				ResultMouseLoc,e.getViewport());
+
+			checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent.getLocation(),TransformedMouseEvent.getViewport());
+			getRootFrame()->mouseWheelMoved(TransformedMouseEvent);
+		}
 	}
 }
 
@@ -181,7 +280,7 @@ void UIDrawingSurface::keyTyped(const KeyEvent& e)
 	}
 }
 
-void UIDrawingSurface::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation)
+void UIDrawingSurface::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, ViewportPtr TheViewport)
 {
 	if(_MouseInFrameLastMouse)
 	{
@@ -190,7 +289,7 @@ void UIDrawingSurface::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLoc
 		{
 			//Mouse has exited the frame
 			_MouseInFrameLastMouse = !_MouseInFrameLastMouse;
-			MouseEvent ExitedEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation);
+			MouseEvent ExitedEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
 			getRootFrame()->mouseExited(ExitedEvent);
 		}
 	}
@@ -201,7 +300,7 @@ void UIDrawingSurface::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLoc
 		{
 			//Mouse has exited the frame
 			_MouseInFrameLastMouse = !_MouseInFrameLastMouse;
-			MouseEvent EnteredEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation);
+			MouseEvent EnteredEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation, TheViewport);
 			getRootFrame()->mouseEntered(EnteredEvent);
 		}
 	}

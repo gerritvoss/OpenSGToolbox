@@ -1330,6 +1330,34 @@
 					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceFields.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctor.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctor.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctor.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctorBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctorBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctorBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctorFields.h"
+					>
+				</File>
 				<Filter
 					Name="Foreground"
 					>
@@ -1359,6 +1387,34 @@
 					</File>
 					<File
 						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctor.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctor.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctor.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctorFields.h"
 						>
 					</File>
 				</Filter>
@@ -1391,6 +1447,34 @@
 					</File>
 					<File
 						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctor.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctor.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctor.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctorFields.h"
 						>
 					</File>
 				</Filter>
@@ -2107,6 +2191,34 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Border\OSGMultiColorMatteBorder.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGMultiColorMatteBorder.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGMultiColorMatteBorder.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGMultiColorMatteBorderBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGMultiColorMatteBorderBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGMultiColorMatteBorderBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGMultiColorMatteBorderFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorder.cpp"
 					>
 				</File>
@@ -2266,6 +2378,14 @@
 			<Filter
 				Name="Util"
 				>
+				<File
+					RelativePath="..\..\src\Util\OSGLineUtils.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Util\OSGLineUtils.h"
+					>
+				</File>
 				<File
 					RelativePath="..\..\src\Util\OSGUIDefines.h"
 					>

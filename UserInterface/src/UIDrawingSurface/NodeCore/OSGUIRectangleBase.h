@@ -73,6 +73,7 @@
 #include "UIDrawingSurface/OSGUIDrawingSurfaceFields.h" // DrawingSurface type
 #include <OpenSG/OSGColorMaskChunkFields.h> // RectColorMask type
 #include <OpenSG/OSGPolygonChunkFields.h> // RectPolygon type
+#include "UIDrawingSurface/NodeCore/OSGUIRectangleMouseTransformFunctorFields.h" // MouseTransformFunctor type
 
 #include "OSGUIRectangleFields.h"
 
@@ -96,13 +97,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleBase : public Drawable
 
     enum
     {
-        PointFieldId          = Inherited::NextFieldId,
-        WidthFieldId          = PointFieldId          + 1,
-        HeightFieldId         = WidthFieldId          + 1,
-        DrawingSurfaceFieldId = HeightFieldId         + 1,
-        RectColorMaskFieldId  = DrawingSurfaceFieldId + 1,
-        RectPolygonFieldId    = RectColorMaskFieldId  + 1,
-        NextFieldId           = RectPolygonFieldId    + 1
+        PointFieldId                 = Inherited::NextFieldId,
+        WidthFieldId                 = PointFieldId                 + 1,
+        HeightFieldId                = WidthFieldId                 + 1,
+        DrawingSurfaceFieldId        = HeightFieldId                + 1,
+        RectColorMaskFieldId         = DrawingSurfaceFieldId        + 1,
+        RectPolygonFieldId           = RectColorMaskFieldId         + 1,
+        MouseTransformFunctorFieldId = RectPolygonFieldId           + 1,
+        NextFieldId                  = MouseTransformFunctorFieldId + 1
     };
 
     static const OSG::BitVector PointFieldMask;
@@ -111,6 +113,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleBase : public Drawable
     static const OSG::BitVector DrawingSurfaceFieldMask;
     static const OSG::BitVector RectColorMaskFieldMask;
     static const OSG::BitVector RectPolygonFieldMask;
+    static const OSG::BitVector MouseTransformFunctorFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -208,6 +211,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleBase : public Drawable
     SFUIDrawingSurfacePtr   _sfDrawingSurface;
     SFColorMaskChunkPtr   _sfRectColorMask;
     SFPolygonChunkPtr   _sfRectPolygon;
+    SFUIRectangleMouseTransformFunctorPtr   _sfMouseTransformFunctor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -231,11 +235,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleBase : public Drawable
 
            SFColorMaskChunkPtr *getSFRectColorMask  (void);
            SFPolygonChunkPtr   *getSFRectPolygon    (void);
+           SFUIRectangleMouseTransformFunctorPtr *getSFMouseTransformFunctor(void);
 
            ColorMaskChunkPtr   &getRectColorMask  (void);
      const ColorMaskChunkPtr   &getRectColorMask  (void) const;
            PolygonChunkPtr     &getRectPolygon    (void);
      const PolygonChunkPtr     &getRectPolygon    (void) const;
+           UIRectangleMouseTransformFunctorPtr &getMouseTransformFunctor(void);
+     const UIRectangleMouseTransformFunctorPtr &getMouseTransformFunctor(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -244,6 +251,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleBase : public Drawable
 
      void setRectColorMask  (const ColorMaskChunkPtr &value);
      void setRectPolygon    (const PolygonChunkPtr &value);
+     void setMouseTransformFunctor(const UIRectangleMouseTransformFunctorPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

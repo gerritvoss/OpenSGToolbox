@@ -119,11 +119,12 @@ bool isContainedClipBounds(const Pnt2s& Point, const ComponentPtr Comp)
 
 	//Point is in screen coordinates
 	//Convert it into component coordinates
-	return isContainedBounds(WindowToComponent(Point,Comp), CompTopLeft, CompBottomRight);
+	return isContainedBounds(DrawingSurfaceToComponent(Point,Comp), CompTopLeft, CompBottomRight);
 }
 
-Pnt2s WindowToComponent(const Pnt2s& WindowPoint, const ComponentPtr Comp)
+/*Pnt2s WindowToComponent(const Pnt2s& WindowPoint, const ComponentPtr Comp)
 {
+	//TODO: Fix
 	Pnt2s Result(WindowPoint);
 	ComponentPtr CompRecurse = Comp;
 	while(CompRecurse != NullFC)
@@ -136,6 +137,32 @@ Pnt2s WindowToComponent(const Pnt2s& WindowPoint, const ComponentPtr Comp)
 }
 
 Pnt2s ComponentToWindow(const Pnt2s& ComponentPoint, const ComponentPtr Comp)
+{
+	//TODO: Fix
+	Pnt2s Result;
+	ComponentPtr CompRecurse = Comp;
+	while(CompRecurse != NullFC)
+	{
+		Result += Vec2s(CompRecurse->getPosition());
+		CompRecurse = CompRecurse->getParentContainer();
+	}
+	return Result;
+}*/
+
+Pnt2s DrawingSurfaceToComponent(const Pnt2s& DrawingSurfacePoint, const ComponentPtr Comp)
+{
+	Pnt2s Result(DrawingSurfacePoint);
+	ComponentPtr CompRecurse = Comp;
+	while(CompRecurse != NullFC)
+	{
+		Result -= Vec2s(CompRecurse->getPosition());
+		CompRecurse = CompRecurse->getParentContainer();
+	}
+
+	return Result;
+}
+
+Pnt2s ComponentToDrawingSurface(const Pnt2s& ComponentPoint, const ComponentPtr Comp)
 {
 	Pnt2s Result;
 	ComponentPtr CompRecurse = Comp;

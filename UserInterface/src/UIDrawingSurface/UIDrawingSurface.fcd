@@ -39,4 +39,13 @@ A UI DrawingSurface.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="MouseTransformFunctors"
+		type="UIDrawingSurfaceMouseTransformFunctorPtr"
+		cardinality="multi"
+		visibility="external"
+		header="UIDrawingSurface/OSGUIDrawingSurfaceMouseTransformFunctorFields.h"
+		access="protected"
+	>
+	</Field>
 </FieldContainer>

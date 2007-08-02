@@ -73,6 +73,9 @@ const OSG::BitVector  UIDrawingSurfaceBase::EventProducerFieldMask =
 const OSG::BitVector  UIDrawingSurfaceBase::GraphicsFieldMask = 
     (TypeTraits<BitVector>::One << UIDrawingSurfaceBase::GraphicsFieldId);
 
+const OSG::BitVector  UIDrawingSurfaceBase::MouseTransformFunctorsFieldMask = 
+    (TypeTraits<BitVector>::One << UIDrawingSurfaceBase::MouseTransformFunctorsFieldId);
+
 const OSG::BitVector UIDrawingSurfaceBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -87,6 +90,9 @@ const OSG::BitVector UIDrawingSurfaceBase::MTInfluenceMask =
     
 */
 /*! \var GraphicsPtr     UIDrawingSurfaceBase::_sfGraphics
+    
+*/
+/*! \var UIDrawingSurfaceMouseTransformFunctorPtr UIDrawingSurfaceBase::_mfMouseTransformFunctors
     
 */
 
@@ -108,7 +114,12 @@ FieldDescription *UIDrawingSurfaceBase::_desc[] =
                      "Graphics", 
                      GraphicsFieldId, GraphicsFieldMask,
                      false,
-                     (FieldAccessMethod) &UIDrawingSurfaceBase::getSFGraphics)
+                     (FieldAccessMethod) &UIDrawingSurfaceBase::getSFGraphics),
+    new FieldDescription(MFUIDrawingSurfaceMouseTransformFunctorPtr::getClassType(), 
+                     "MouseTransformFunctors", 
+                     MouseTransformFunctorsFieldId, MouseTransformFunctorsFieldMask,
+                     false,
+                     (FieldAccessMethod) &UIDrawingSurfaceBase::getMFMouseTransformFunctors)
 };
 
 
@@ -174,6 +185,7 @@ void UIDrawingSurfaceBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfMouseTransformFunctors.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -187,6 +199,7 @@ UIDrawingSurfaceBase::UIDrawingSurfaceBase(void) :
     _sfRootFrame              (), 
     _sfEventProducer          (), 
     _sfGraphics               (), 
+    _mfMouseTransformFunctors (), 
     Inherited() 
 {
 }
@@ -199,6 +212,7 @@ UIDrawingSurfaceBase::UIDrawingSurfaceBase(const UIDrawingSurfaceBase &source) :
     _sfRootFrame              (source._sfRootFrame              ), 
     _sfEventProducer          (source._sfEventProducer          ), 
     _sfGraphics               (source._sfGraphics               ), 
+    _mfMouseTransformFunctors (source._mfMouseTransformFunctors ), 
     Inherited                 (source)
 {
 }
@@ -230,6 +244,11 @@ UInt32 UIDrawingSurfaceBase::getBinSize(const BitVector &whichField)
         returnValue += _sfGraphics.getBinSize();
     }
 
+    if(FieldBits::NoField != (MouseTransformFunctorsFieldMask & whichField))
+    {
+        returnValue += _mfMouseTransformFunctors.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -252,6 +271,11 @@ void UIDrawingSurfaceBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (GraphicsFieldMask & whichField))
     {
         _sfGraphics.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MouseTransformFunctorsFieldMask & whichField))
+    {
+        _mfMouseTransformFunctors.copyToBin(pMem);
     }
 
 
@@ -277,6 +301,11 @@ void UIDrawingSurfaceBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfGraphics.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (MouseTransformFunctorsFieldMask & whichField))
+    {
+        _mfMouseTransformFunctors.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -295,6 +324,9 @@ void UIDrawingSurfaceBase::executeSyncImpl(      UIDrawingSurfaceBase *pOther,
 
     if(FieldBits::NoField != (GraphicsFieldMask & whichField))
         _sfGraphics.syncWith(pOther->_sfGraphics);
+
+    if(FieldBits::NoField != (MouseTransformFunctorsFieldMask & whichField))
+        _mfMouseTransformFunctors.syncWith(pOther->_mfMouseTransformFunctors);
 
 
 }
@@ -316,6 +348,9 @@ void UIDrawingSurfaceBase::executeSyncImpl(      UIDrawingSurfaceBase *pOther,
         _sfGraphics.syncWith(pOther->_sfGraphics);
 
 
+    if(FieldBits::NoField != (MouseTransformFunctorsFieldMask & whichField))
+        _mfMouseTransformFunctors.syncWith(pOther->_mfMouseTransformFunctors, sInfo);
+
 
 }
 
@@ -324,6 +359,9 @@ void UIDrawingSurfaceBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (MouseTransformFunctorsFieldMask & whichField))
+        _mfMouseTransformFunctors.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

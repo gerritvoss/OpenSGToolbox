@@ -56,6 +56,7 @@
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 
 #include "OSGUIRectangle.h"
+#include "UIDrawingSurface/NodeCore/OSGUIRectangleMouseTransformFunctor.h"   // MouseTransformFunctor default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -200,10 +201,22 @@ UIRectangle::UIRectangle(void) :
 UIRectangle::UIRectangle(const UIRectangle &source) :
     Inherited(source)
 {
+	if(getMouseTransformFunctor() != NullFC)
+	{
+		beginEditCP(getMouseTransformFunctor(), UIRectangleMouseTransformFunctor::ParentFieldMask);
+			getMouseTransformFunctor()->setParent(UIRectanglePtr(this));
+		endEditCP(getMouseTransformFunctor(), UIRectangleMouseTransformFunctor::ParentFieldMask);
+	}
 }
 
 UIRectangle::~UIRectangle(void)
 {
+	if(getMouseTransformFunctor() != NullFC)
+	{
+		beginEditCP(getMouseTransformFunctor(), UIRectangleMouseTransformFunctor::ParentFieldMask);
+			getMouseTransformFunctor()->setParent(UIRectanglePtr(this));
+		endEditCP(getMouseTransformFunctor(), UIRectangleMouseTransformFunctor::ParentFieldMask);
+	}
 }
 
 /*----------------------------- class specific ----------------------------*/
@@ -219,6 +232,11 @@ void UIRectangle::changed(BitVector whichField, UInt32 origin)
 		invalidateVolume();
         updateFrameBounds();
     }
+	
+	if( (whichField & DrawingSurfaceFieldMask) &&
+		getDrawingSurface() != NullFC)
+    {
+	}
 }
 
 void UIRectangle::dump(      UInt32    , 

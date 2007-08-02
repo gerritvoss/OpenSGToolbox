@@ -270,6 +270,8 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
 	CursorType _CursorType;
 
 	virtual void setCursor(void) = 0;
+
+	ViewportPtr windowToViewport(const Pnt2s& WindowPoint, Pnt2s& ViewportPoint);
     /*==========================  PRIVATE  ================================*/
   private:
 

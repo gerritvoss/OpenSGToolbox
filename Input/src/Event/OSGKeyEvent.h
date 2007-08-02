@@ -36,6 +36,7 @@
 #include "Event/OSGEvent.h"
 
 #include <OpenSG/OSGBaseTypes.h>
+#include <OpenSG/OSGWindow.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -195,19 +196,21 @@ class OSG_INPUTLIB_DLLMAPPING KeyEvent : public Event
          KEY_Z
       };
 
-   Key getKey(void) const;
-   static UChar8 getUpperLetterKey(Key k, UInt32 Modifier);
-   static UChar8 getLowerLetterKey(Key k, UInt32 Modifier);
-   static UChar8 getNonLetterKey(Key k, UInt32 Modifier);
-   static UChar8 getCharFromKey(Key k, UInt32 Modifier);
-   UInt32 getModifiers(void) const;
-   UChar8 getKeyChar(void) const;
+	Key getKey(void) const;
+	static UChar8 getUpperLetterKey(Key k, UInt32 Modifier);
+	static UChar8 getLowerLetterKey(Key k, UInt32 Modifier);
+	static UChar8 getNonLetterKey(Key k, UInt32 Modifier);
+	static UChar8 getCharFromKey(Key k, UInt32 Modifier);
+	UInt32 getModifiers(void) const;
+	UChar8 getKeyChar(void) const;
 
-   KeyEvent(FieldContainerPtr Source, Time TimeStamp, Key TheKey, UInt32 Modifiers);
+    WindowPtr getWindow(void) const;
+    KeyEvent(FieldContainerPtr Source, Time TimeStamp, Key TheKey, UInt32 Modifiers, WindowPtr TheWindow);
 
   private:
      Key _Key;
      UInt32 _Modifiers;
+     WindowPtr _Window;
 };
 
 OSG_END_NAMESPACE

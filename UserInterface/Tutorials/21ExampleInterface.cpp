@@ -78,6 +78,8 @@ OSG_USING_NAMESPACE
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 
+WindowEventProducerPtr TheWindowEventProducer;
+
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2s Size);
@@ -103,11 +105,17 @@ class TutorialMouseListener : public MouseListener
     }
     virtual void mousePressed(const MouseEvent& e)
     {
-        mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+		if(TheWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+		{
+			mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+		}
     }
     virtual void mouseReleased(const MouseEvent& e)
     {
-        mgr->mouseButtonRelease(e.getButton(), e.getLocation().x(), e.getLocation().y());
+		if(TheWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+		{
+           mgr->mouseButtonRelease(e.getButton(), e.getLocation().x(), e.getLocation().y());
+		}
     }
 };
 
@@ -116,12 +124,18 @@ class TutorialMouseMotionListener : public MouseMotionListener
   public:
     virtual void mouseMoved(const MouseEvent& e)
     {
-        mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+		if(TheWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+		{
+            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+		}
     }
 
     virtual void mouseDragged(const MouseEvent& e)
     {
-        mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+		if(TheWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+		{
+		    mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+		}
     }
 };
 
@@ -133,7 +147,6 @@ int main(int argc, char **argv)
 
     // Set up Window
     WindowPtr MainWindow;
-    WindowEventProducerPtr TheWindowEventProducer;
     createDefaultWindow(Pnt2s(50,50),
                                         Vec2s(550,550),
                                         "OpenSG 21ExampleInterface Window",
@@ -305,17 +318,17 @@ int main(int argc, char **argv)
     beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
 		drawingSurface->setRootFrame(MainFrame);
-	    //drawingSurface->setEventProducer(TheWindowEventProducer);
+	    drawingSurface->setEventProducer(TheWindowEventProducer);
     endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
 	
     //Make A 3D Rectangle to draw the UI on
     UIRectanglePtr UIRectCore = UIRectangle::create();
-    beginEditCP(UIRectCore, UIRectangle::PointFieldMask | UIRectangle::DrawingSurfaceFieldMask);
+    beginEditCP(UIRectCore, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask | UIRectangle::DrawingSurfaceFieldMask);
         UIRectCore->setPoint(Pnt3f(-310.0,-310.0,370.0));
         UIRectCore->setWidth(620);
         UIRectCore->setHeight(620);
         UIRectCore->setDrawingSurface(drawingSurface);
-	endEditCP(UIRectCore, UIRectangle::PointFieldMask | UIRectangle::DrawingSurfaceFieldMask);
+	endEditCP(UIRectCore, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask | UIRectangle::DrawingSurfaceFieldMask);
 	
     NodePtr UIRectNode = osg::Node::create();
     beginEditCP(UIRectNode, Node::CoreFieldMask);
@@ -469,10 +482,12 @@ ComponentPtr createleftPanelRadioTextPanel(void)
 		rbutton3->setText("Option 3");
 	endEditCP(rbutton3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
 
-	RadioButtonGroup buttonGroup;
-	buttonGroup.addButton(rbutton1);
-	buttonGroup.addButton(rbutton2);
-	buttonGroup.addButton(rbutton3);
+
+	//TODO: Fix this memory leak!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	RadioButtonGroup *buttonGroup = new RadioButtonGroup();
+	buttonGroup->addButton(rbutton1);
+	buttonGroup->addButton(rbutton2);
+	buttonGroup->addButton(rbutton3);
 
 
 	// Create TextField area

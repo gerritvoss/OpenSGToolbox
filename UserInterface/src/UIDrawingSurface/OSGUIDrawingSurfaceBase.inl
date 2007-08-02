@@ -117,6 +117,13 @@ SFGraphicsPtr *UIDrawingSurfaceBase::getSFGraphics(void)
     return &_sfGraphics;
 }
 
+//! Get the UIDrawingSurface::_mfMouseTransformFunctors field.
+inline
+MFUIDrawingSurfaceMouseTransformFunctorPtr *UIDrawingSurfaceBase::getMFMouseTransformFunctors(void)
+{
+    return &_mfMouseTransformFunctors;
+}
+
 
 //! Get the value of the UIDrawingSurface::_sfRootFrame field.
 inline
@@ -181,6 +188,27 @@ void UIDrawingSurfaceBase::setGraphics(const GraphicsPtr &value)
     _sfGraphics.setValue(value);
 }
 
+
+//! Get the value of the \a index element the UIDrawingSurface::_mfMouseTransformFunctors field.
+inline
+UIDrawingSurfaceMouseTransformFunctorPtr &UIDrawingSurfaceBase::getMouseTransformFunctors(const UInt32 index)
+{
+    return _mfMouseTransformFunctors[index];
+}
+
+//! Get the UIDrawingSurface::_mfMouseTransformFunctors field.
+inline
+MFUIDrawingSurfaceMouseTransformFunctorPtr &UIDrawingSurfaceBase::getMouseTransformFunctors(void)
+{
+    return _mfMouseTransformFunctors;
+}
+
+//! Get the UIDrawingSurface::_mfMouseTransformFunctors field.
+inline
+const MFUIDrawingSurfaceMouseTransformFunctorPtr &UIDrawingSurfaceBase::getMouseTransformFunctors(void) const
+{
+    return _mfMouseTransformFunctors;
+}
 
 OSG_END_NAMESPACE
 

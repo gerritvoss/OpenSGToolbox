@@ -57,7 +57,15 @@ Int16 MouseEvent::getYOnScreen(void) const
 }
 
 inline
-MouseEvent::MouseEvent(FieldContainerPtr Source, Time TimeStamp, MouseButton Button, UInt16 ClickCount, Pnt2s Location) : Event(Source, TimeStamp), _Button(Button), _ClickCount(ClickCount), _Location(Location)
+ViewportPtr MouseEvent::getViewport(void) const
+{
+	return _Viewport;
+}
+
+inline
+MouseEvent::MouseEvent(FieldContainerPtr Source, Time TimeStamp, MouseButton Button, UInt16 ClickCount, Pnt2s Location, ViewportPtr TheViewport) 
+: Event(Source, TimeStamp), _Button(Button), _ClickCount(ClickCount), _Location(Location),
+   _Viewport(TheViewport)
 {}
 
     

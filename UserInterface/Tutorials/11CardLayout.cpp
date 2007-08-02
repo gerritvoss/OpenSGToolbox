@@ -334,13 +334,13 @@ int main(int argc, char **argv)
 	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();
 
-	beginEditCP(foreground, UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 	    foreground->setDrawingSurface(drawingSurface);
 		foreground->setFramePositionOffset(Vec2s(0,0));
 		foreground->setFrameBounds(Vec2f(0.5,0.5));
 	   //Set the Event Producer for the DrawingSurface
 	   //This is needed in order to get Mouse/Keyboard/etc Input to the UI DrawingSurface
-    endEditCP  (foreground, UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
     // create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;

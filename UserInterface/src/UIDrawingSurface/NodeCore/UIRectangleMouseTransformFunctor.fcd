@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="UIRectangleMouseTransformFunctor"
+	parent="UIDrawingSurfaceMouseTransformFunctor"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI UIRectangleMouseTransformFunctor.
+	<Field
+		name="Parent"
+		type="UIRectanglePtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="UIDrawingSurface/NodeCore/OSGUIRectangleFields.h"
+		access="protected"
+	>
+	</Field>
+</FieldContainer>

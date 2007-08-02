@@ -166,12 +166,12 @@ void TextField::mouseClicked(const MouseEvent& e)
 
 			//set caret position to proper place
 			//if the mouse is to the left of the text, set it to the begining.
-			Pnt2s temp = WindowToComponent(e.getLocation(), TextFieldPtr(this));
-			if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() <= TempPos.x())
+			Pnt2s temp = DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this));
+			if(DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x() <= TempPos.x())
 			{
 				Position = 0;
 			}//if the mouse is to the right of the text, set it to the end
-			else if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() >= TempPos.x()+BottomRightText.x())
+			else if(DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x() >= TempPos.x()+BottomRightText.x())
 			{
 				Position = getText().size();
 			}
@@ -181,8 +181,8 @@ void TextField::mouseClicked(const MouseEvent& e)
 				{		
 					getFont()->getBounds(getText().substr(0, i), TopLeftText, BottomRightText);
 					getFont()->getBounds(getText().substr(0, i+1), TopLeftText1, BottomRightText1);
-					if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x()>BottomRightText.x()
-					   && WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
+					if(DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x()>BottomRightText.x()
+					   && DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
 					{
 						Position = i;
 						break;
@@ -235,12 +235,12 @@ void TextField::mousePressed(const MouseEvent& e)
 	{
 		//set caret position to proper place
 		//if the mouse is to the left of the text, set it to the begining.
-		Pnt2s temp = WindowToComponent(e.getLocation(), TextFieldPtr(this));
-		if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() <= TempPos.x())
+		Pnt2s temp = DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this));
+		if(DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x() <= TempPos.x())
 		{
 			setCaretPosition(0);
 		}		//if the mouse is to the right of the text, set it to the end
-		else if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() >= TempPos.x()+BottomRightText.x())
+		else if(DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x() >= TempPos.x()+BottomRightText.x())
 		{
 			setCaretPosition(getText().size());
 		}
@@ -250,10 +250,10 @@ void TextField::mousePressed(const MouseEvent& e)
 			{		
 				getFont()->getBounds(getText().substr(0, i), TopLeftText, BottomRightText);
 				getFont()->getBounds(getText().substr(0, i+1), TopLeftText1, BottomRightText1);
-				if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x()>BottomRightText.x()
-				   && WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
+				if(DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x()>BottomRightText.x()
+				   && DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
 				{
-					if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() <= (BottomRightText1.x()-BottomRightText.x())/2.0+0.5 + BottomRightText.x())
+					if(DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x() <= (BottomRightText1.x()-BottomRightText.x())/2.0+0.5 + BottomRightText.x())
 					{
 						setCaretPosition(i);
 						break;
@@ -286,12 +286,12 @@ void TextField::mouseDragged(const MouseEvent& e)
 	{
 		//set caret position to proper place
 		//if the mouse is to the left of the text, set it to the begining.
-		Pnt2s temp = WindowToComponent(e.getLocation(), TextFieldPtr(this));
-		if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() <= TempPos.x())
+		Pnt2s temp = DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this));
+		if(DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x() <= TempPos.x())
 		{
 			setCaretPosition(0);
 		}		//if the mouse is to the right of the text, set it to the end
-		else if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() >= TempPos.x()+BottomRightText.x())
+		else if(DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x() >= TempPos.x()+BottomRightText.x())
 		{
 			setCaretPosition(getText().size());
 		}
@@ -302,10 +302,10 @@ void TextField::mouseDragged(const MouseEvent& e)
 			{		
 				getFont()->getBounds(getText().substr(0, i), TopLeftText, BottomRightText);
 				getFont()->getBounds(getText().substr(0, i+1), TopLeftText1, BottomRightText1);
-				if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x()>BottomRightText.x()
-				   && WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
+				if(DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x()>BottomRightText.x()
+				   && DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
 				{
-					if(WindowToComponent(e.getLocation(), TextFieldPtr(this)).x() < (BottomRightText1.x()-BottomRightText.x())/2.0 + BottomRightText.x())
+					if(DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x() < (BottomRightText1.x()-BottomRightText.x())/2.0 + BottomRightText.x())
 					{
 
 						setCaretPosition(i);

@@ -49,6 +49,8 @@
 \*****************************************************************************/
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
+#include "UIDrawingSurface/OSGUIDrawingSurface.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -131,6 +133,13 @@ SFUInt32 *UIForegroundBase::getSFHorizontalAlignment(void)
     return &_sfHorizontalAlignment;
 }
 
+//! Get the UIForeground::_sfMouseTransformFunctor field.
+inline
+SFUIForegroundMouseTransformFunctorPtr *UIForegroundBase::getSFMouseTransformFunctor(void)
+{
+    return &_sfMouseTransformFunctor;
+}
+
 
 //! Get the value of the UIForeground::_sfDrawingSurface field.
 inline
@@ -150,7 +159,15 @@ const UIDrawingSurfacePtr &UIForegroundBase::getDrawingSurface(void) const
 inline
 void UIForegroundBase::setDrawingSurface(const UIDrawingSurfacePtr &value)
 {
+	if(getDrawingSurface() != NullFC)
+	{
+		getDrawingSurface()->removeMouseTransformFunctor(getMouseTransformFunctor());
+	}
     _sfDrawingSurface.setValue(value);
+	if(getDrawingSurface() != NullFC)
+	{
+		getDrawingSurface()->addMouseTransformFunctor(getMouseTransformFunctor());
+	}
 }
 
 //! Get the value of the UIForeground::_sfFramePositionOffset field.
@@ -235,6 +252,27 @@ inline
 void UIForegroundBase::setHorizontalAlignment(const UInt32 &value)
 {
     _sfHorizontalAlignment.setValue(value);
+}
+
+//! Get the value of the UIForeground::_sfMouseTransformFunctor field.
+inline
+UIForegroundMouseTransformFunctorPtr &UIForegroundBase::getMouseTransformFunctor(void)
+{
+    return _sfMouseTransformFunctor.getValue();
+}
+
+//! Get the value of the UIForeground::_sfMouseTransformFunctor field.
+inline
+const UIForegroundMouseTransformFunctorPtr &UIForegroundBase::getMouseTransformFunctor(void) const
+{
+    return _sfMouseTransformFunctor.getValue();
+}
+
+//! Set the value of the UIForeground::_sfMouseTransformFunctor field.
+inline
+void UIForegroundBase::setMouseTransformFunctor(const UIForegroundMouseTransformFunctorPtr &value)
+{
+    _sfMouseTransformFunctor.setValue(value);
 }
 
 

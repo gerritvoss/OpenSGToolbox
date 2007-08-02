@@ -36,6 +36,7 @@
 #include "Event/OSGEvent.h"
 
 #include <OpenSG/OSGVector.h>
+#include <OpenSG/OSGViewport.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,12 +56,14 @@ class OSG_INPUTLIB_DLLMAPPING MouseEvent : public Event
     Int16 getXOnScreen(void) const;
     Int16 getY(void) const;
     Int16 getYOnScreen(void) const;
+    ViewportPtr getViewport(void) const;
     
-    MouseEvent(FieldContainerPtr Source, Time TimeStamp, MouseButton Button, UInt16 ClickCount, Pnt2s Location);
+    MouseEvent(FieldContainerPtr Source, Time TimeStamp, MouseButton Button, UInt16 ClickCount, Pnt2s Location, ViewportPtr TheViewport);
   private:
     MouseButton _Button;
     UInt16      _ClickCount;
     Pnt2s       _Location;
+    ViewportPtr _Viewport;
     
 };
 

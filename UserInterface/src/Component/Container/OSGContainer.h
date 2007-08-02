@@ -114,7 +114,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
     /*! \}                                                                 */
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
 
-	void checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, ComponentPtr Comp, bool isMouseContained);
+	void checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, ComponentPtr Comp, bool isMouseContained, ViewportPtr TheViewport);
     bool isPointInComponent(const Pnt2s& Point, const ComponentPtr Comp);
     
     /*==========================  PRIVATE  ================================*/

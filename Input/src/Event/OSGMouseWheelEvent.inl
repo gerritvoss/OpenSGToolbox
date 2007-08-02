@@ -42,11 +42,18 @@ Pnt2s MouseWheelEvent::getLocation(void) const
 }
 
 inline
-MouseWheelEvent::MouseWheelEvent(FieldContainerPtr Source, Time TimeStamp, Int32 WheelRotation, ScrollType TheScrollType, Pnt2s Location)
+ViewportPtr MouseWheelEvent::getViewport(void) const
+{
+	return _Viewport;
+}
+
+inline
+MouseWheelEvent::MouseWheelEvent(FieldContainerPtr Source, Time TimeStamp, Int32 WheelRotation, ScrollType TheScrollType, Pnt2s Location, ViewportPtr TheViewport)
 : Event(Source, TimeStamp),
 _WheelRotation(WheelRotation),
 _ScrollType(TheScrollType),
-_Location(Location)
+_Location(Location),
+   _Viewport(TheViewport)
 {}
 
 OSG_END_NAMESPACE

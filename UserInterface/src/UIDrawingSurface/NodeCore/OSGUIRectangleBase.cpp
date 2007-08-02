@@ -61,6 +61,7 @@
 #include "OSGUIRectangleBase.h"
 #include "OSGUIRectangle.h"
 
+#include "UIDrawingSurface/NodeCore/OSGUIRectangleMouseTransformFunctor.h"   // MouseTransformFunctor default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -81,6 +82,9 @@ const OSG::BitVector  UIRectangleBase::RectColorMaskFieldMask =
 
 const OSG::BitVector  UIRectangleBase::RectPolygonFieldMask = 
     (TypeTraits<BitVector>::One << UIRectangleBase::RectPolygonFieldId);
+
+const OSG::BitVector  UIRectangleBase::MouseTransformFunctorFieldMask = 
+    (TypeTraits<BitVector>::One << UIRectangleBase::MouseTransformFunctorFieldId);
 
 const OSG::BitVector UIRectangleBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -105,6 +109,9 @@ const OSG::BitVector UIRectangleBase::MTInfluenceMask =
     
 */
 /*! \var PolygonChunkPtr UIRectangleBase::_sfRectPolygon
+    
+*/
+/*! \var UIRectangleMouseTransformFunctorPtr UIRectangleBase::_sfMouseTransformFunctor
     
 */
 
@@ -141,7 +148,12 @@ FieldDescription *UIRectangleBase::_desc[] =
                      "RectPolygon", 
                      RectPolygonFieldId, RectPolygonFieldMask,
                      true,
-                     (FieldAccessMethod) &UIRectangleBase::getSFRectPolygon)
+                     (FieldAccessMethod) &UIRectangleBase::getSFRectPolygon),
+    new FieldDescription(SFUIRectangleMouseTransformFunctorPtr::getClassType(), 
+                     "MouseTransformFunctor", 
+                     MouseTransformFunctorFieldId, MouseTransformFunctorFieldMask,
+                     false,
+                     (FieldAccessMethod) &UIRectangleBase::getSFMouseTransformFunctor)
 };
 
 
@@ -223,6 +235,7 @@ UIRectangleBase::UIRectangleBase(void) :
     _sfDrawingSurface         (UIDrawingSurfacePtr(NullFC)), 
     _sfRectColorMask          (ColorMaskChunkPtr(NullFC)), 
     _sfRectPolygon            (PolygonChunkPtr(NullFC)), 
+    _sfMouseTransformFunctor  (UIRectangleMouseTransformFunctorPtr(UIRectangleMouseTransformFunctor::create())), 
     Inherited() 
 {
 }
@@ -238,6 +251,7 @@ UIRectangleBase::UIRectangleBase(const UIRectangleBase &source) :
     _sfDrawingSurface         (source._sfDrawingSurface         ), 
     _sfRectColorMask          (source._sfRectColorMask          ), 
     _sfRectPolygon            (source._sfRectPolygon            ), 
+    _sfMouseTransformFunctor  (UIRectangleMouseTransformFunctorPtr(UIRectangleMouseTransformFunctor::create())), 
     Inherited                 (source)
 {
 }
@@ -284,6 +298,11 @@ UInt32 UIRectangleBase::getBinSize(const BitVector &whichField)
         returnValue += _sfRectPolygon.getBinSize();
     }
 
+    if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
+    {
+        returnValue += _sfMouseTransformFunctor.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -321,6 +340,11 @@ void UIRectangleBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (RectPolygonFieldMask & whichField))
     {
         _sfRectPolygon.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
+    {
+        _sfMouseTransformFunctor.copyToBin(pMem);
     }
 
 
@@ -361,6 +385,11 @@ void UIRectangleBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfRectPolygon.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
+    {
+        _sfMouseTransformFunctor.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -389,6 +418,9 @@ void UIRectangleBase::executeSyncImpl(      UIRectangleBase *pOther,
     if(FieldBits::NoField != (RectPolygonFieldMask & whichField))
         _sfRectPolygon.syncWith(pOther->_sfRectPolygon);
 
+    if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
+        _sfMouseTransformFunctor.syncWith(pOther->_sfMouseTransformFunctor);
+
 
 }
 #else
@@ -416,6 +448,9 @@ void UIRectangleBase::executeSyncImpl(      UIRectangleBase *pOther,
 
     if(FieldBits::NoField != (RectPolygonFieldMask & whichField))
         _sfRectPolygon.syncWith(pOther->_sfRectPolygon);
+
+    if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
+        _sfMouseTransformFunctor.syncWith(pOther->_sfMouseTransformFunctor);
 
 
 

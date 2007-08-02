@@ -72,6 +72,7 @@
 #include <OpenSG/OSGVec2fFields.h> // FrameBounds type
 #include <OpenSG/OSGUInt32Fields.h> // VerticalAlignment type
 #include <OpenSG/OSGUInt32Fields.h> // HorizontalAlignment type
+#include "UIDrawingSurface/Foreground/OSGUIForegroundMouseTransformFunctorFields.h" // MouseTransformFunctor type
 
 #include "OSGUIForegroundFields.h"
 
@@ -95,12 +96,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIForegroundBase : public Foreground
 
     enum
     {
-        DrawingSurfaceFieldId      = Inherited::NextFieldId,
-        FramePositionOffsetFieldId = DrawingSurfaceFieldId      + 1,
-        FrameBoundsFieldId         = FramePositionOffsetFieldId + 1,
-        VerticalAlignmentFieldId   = FrameBoundsFieldId         + 1,
-        HorizontalAlignmentFieldId = VerticalAlignmentFieldId   + 1,
-        NextFieldId                = HorizontalAlignmentFieldId + 1
+        DrawingSurfaceFieldId        = Inherited::NextFieldId,
+        FramePositionOffsetFieldId   = DrawingSurfaceFieldId        + 1,
+        FrameBoundsFieldId           = FramePositionOffsetFieldId   + 1,
+        VerticalAlignmentFieldId     = FrameBoundsFieldId           + 1,
+        HorizontalAlignmentFieldId   = VerticalAlignmentFieldId     + 1,
+        MouseTransformFunctorFieldId = HorizontalAlignmentFieldId   + 1,
+        NextFieldId                  = MouseTransformFunctorFieldId + 1
     };
 
     static const OSG::BitVector DrawingSurfaceFieldMask;
@@ -108,6 +110,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIForegroundBase : public Foreground
     static const OSG::BitVector FrameBoundsFieldMask;
     static const OSG::BitVector VerticalAlignmentFieldMask;
     static const OSG::BitVector HorizontalAlignmentFieldMask;
+    static const OSG::BitVector MouseTransformFunctorFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -208,6 +211,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIForegroundBase : public Foreground
     SFVec2f             _sfFrameBounds;
     SFUInt32            _sfVerticalAlignment;
     SFUInt32            _sfHorizontalAlignment;
+    SFUIForegroundMouseTransformFunctorPtr   _sfMouseTransformFunctor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -223,6 +227,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIForegroundBase : public Foreground
     /*! \{                                                                 */
 
     virtual ~UIForegroundBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFUIForegroundMouseTransformFunctorPtr *getSFMouseTransformFunctor(void);
+
+           UIForegroundMouseTransformFunctorPtr &getMouseTransformFunctor(void);
+     const UIForegroundMouseTransformFunctorPtr &getMouseTransformFunctor(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setMouseTransformFunctor(const UIForegroundMouseTransformFunctorPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
