@@ -185,21 +185,21 @@ int main(int argc, char **argv)
 		singleButton->setText("Single Selection");
 		singleButton->setPreferredSize( Vec2s(160, 50) );
 	endEditCP(singleButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
-	SingleSelection singleButtonListener;
+		SingleSelection singleButtonListener;
 		singleButton->addButtonSelectedListener(&singleButtonListener);
 	
 	beginEditCP(singleIntervalButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
 		singleIntervalButton->setText("Single Interval Selection");
 		singleIntervalButton->setPreferredSize( Vec2s(160, 50) );
 	endEditCP(singleIntervalButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
-	SingleIntervalSelection singleIntervalButtonListener;
+		SingleIntervalSelection singleIntervalButtonListener;
 		singleIntervalButton->addButtonSelectedListener(&singleIntervalButtonListener);
 	
 	beginEditCP(multipleIntervalButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
 		multipleIntervalButton->setText("Multiple Interval Selection");
 		multipleIntervalButton->setPreferredSize( Vec2s(160, 50) );
 	endEditCP(multipleIntervalButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
-	MultipleIntervalSelection multipleIntervalButtonListener;
+		MultipleIntervalSelection multipleIntervalButtonListener;
 		multipleIntervalButton->addButtonSelectedListener(&multipleIntervalButtonListener);
 
 

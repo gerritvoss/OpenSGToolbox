@@ -436,8 +436,8 @@ void WindowsLookAndFeel::init(void)
 
 	LineUIDrawObjectPtr CheckboxLine1 = LineUIDrawObject::create();
 	beginEditCP(CheckboxLine1);
-		CheckboxLine1->setTopLeft(Pnt2s(3,6));
-		CheckboxLine1->setBottomRight(Pnt2s(6,9));
+		CheckboxLine1->setTopLeft(Pnt2s(2,6));
+		CheckboxLine1->setBottomRight(Pnt2s(5,9));
 		CheckboxLine1->setColor(Color4f(.129, .631, .129, 1.0));
 		CheckboxLine1->setOpacity(1.0);
 		CheckboxLine1->setWidth(1);
@@ -445,7 +445,7 @@ void WindowsLookAndFeel::init(void)
 
 	LineUIDrawObjectPtr CheckboxLine2 = LineUIDrawObject::create();
 	beginEditCP(CheckboxLine2);
-		CheckboxLine2->setTopLeft(Pnt2s(6,8));
+		CheckboxLine2->setTopLeft(Pnt2s(5,9));
 		CheckboxLine2->setBottomRight(Pnt2s(10,4));
 		CheckboxLine2->setColor(Color4f(.129, .631, .129, 1.0));
 		CheckboxLine2->setOpacity(1.0);
