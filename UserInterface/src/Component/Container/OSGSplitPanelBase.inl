@@ -178,7 +178,10 @@ const ComponentPtr &SplitPanelBase::getMinComponent(void) const
 inline
 void SplitPanelBase::setMinComponent(const ComponentPtr &value)
 {
+	if (_sfMinComponent.getValue() != NullFC)
+		getChildren().erase(getChildren().find(_sfMinComponent.getValue()));
     _sfMinComponent.setValue(value);
+	getChildren().addValue(value);
 }
 
 //! Get the value of the SplitPanel::_sfMaxComponent field.
@@ -199,7 +202,10 @@ const ComponentPtr &SplitPanelBase::getMaxComponent(void) const
 inline
 void SplitPanelBase::setMaxComponent(const ComponentPtr &value)
 {
+	if (_sfMaxComponent.getValue() != NullFC)
+		getChildren().erase(getChildren().find(_sfMaxComponent.getValue()));
     _sfMaxComponent.setValue(value);
+	getChildren().addValue(value);
 }
 
 //! Get the value of the SplitPanel::_sfDividerSize field.
@@ -304,7 +310,7 @@ const UIDrawObjectCanvasPtr &SplitPanelBase::getDividerDrawObject(void) const
 inline
 void SplitPanelBase::setDividerDrawObject(const UIDrawObjectCanvasPtr &value)
 {
-    _sfDividerDrawObject.setValue(value);
+	_sfDividerDrawObject.setValue(value);
 }
 
 //! Get the value of the SplitPanel::_sfExpandable field.

@@ -186,7 +186,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanelBase : public Container
      void setDividerPosition( const Real32 &value );
      void setMinDividerPosition( const Real32 &value );
      void setMaxDividerPosition( const Real32 &value );
-     void setDividerDrawObject( const UIDrawObjectCanvasPtr &value );
+     virtual void setDividerDrawObject( const UIDrawObjectCanvasPtr &value );
      void setExpandable     ( const bool &value );
      void setAlignment      ( const UInt32 &value );
 

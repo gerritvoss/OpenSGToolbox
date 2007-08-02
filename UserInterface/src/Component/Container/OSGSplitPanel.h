@@ -46,6 +46,8 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGSplitPanelBase.h"
+#include <OpenSG/Input/OSGMouseListener.h>
+#include <OpenSG/Input/OSGMouseMotionListener.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -53,7 +55,7 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceSplitPanel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING SplitPanel : public SplitPanelBase
+class OSG_USERINTERFACELIB_DLLMAPPING SplitPanel : public SplitPanelBase	
 {
   private:
 
@@ -62,6 +64,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanel : public SplitPanelBase
     /*==========================  PUBLIC  =================================*/
   public:
 
+	virtual void setDividerDrawObject( const UIDrawObjectCanvasPtr &value );
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -86,6 +89,42 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanel : public SplitPanelBase
     // Variables should all be in SplitPanelBase.
 
     virtual void updateLayout(void);
+
+	class DividerListener : public MouseListener
+	{
+	public :
+		DividerListener(SplitPanelPtr ptr);
+		virtual void mouseClicked(const MouseEvent& e);
+		virtual void mouseEntered(const MouseEvent& e);
+		virtual void mouseExited(const MouseEvent& e);
+		virtual void mousePressed(const MouseEvent& e);
+		virtual void mouseReleased(const MouseEvent& e);
+	protected :
+		SplitPanelPtr _SplitPanel;
+	};
+
+	friend DividerListener;
+
+	DividerListener _DividerListener;
+	class DividerDraggedListener : public MouseMotionListener, public MouseListener
+	{
+	public :
+		DividerDraggedListener(SplitPanelPtr ptr);
+		virtual void mouseMoved(const MouseEvent& e);
+		virtual void mouseDragged(const MouseEvent& e);
+		
+		virtual void mouseClicked(const MouseEvent& e);
+		virtual void mouseEntered(const MouseEvent& e);
+		virtual void mouseExited(const MouseEvent& e);
+		virtual void mousePressed(const MouseEvent& e);
+		virtual void mouseReleased(const MouseEvent& e);
+	protected :
+		SplitPanelPtr _SplitPanel;
+	};
+
+	friend DividerDraggedListener;
+
+	DividerDraggedListener _DividerDraggedListener;
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */

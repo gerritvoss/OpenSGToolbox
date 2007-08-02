@@ -367,7 +367,8 @@ void Component::produceMouseDragged(const MouseEvent& e)
 
 void Component::produceMouseClicked(const MouseEvent& e)
 {
-   for(MouseListenerSetConstItor SetItor(_MouseListeners.begin()) ; SetItor != _MouseListeners.end() ; ++SetItor)
+	MouseListenerSet ListenerSet(_MouseListeners);
+   for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->mouseClicked(e);
    }
@@ -375,7 +376,8 @@ void Component::produceMouseClicked(const MouseEvent& e)
 
 void Component::produceMouseEntered(const MouseEvent& e)
 {
-   for(MouseListenerSetConstItor SetItor(_MouseListeners.begin()) ; SetItor != _MouseListeners.end() ; ++SetItor)
+	MouseListenerSet ListenerSet(_MouseListeners);
+   for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->mouseEntered(e);
    }
@@ -383,7 +385,8 @@ void Component::produceMouseEntered(const MouseEvent& e)
 
 void Component::produceMouseExited(const MouseEvent& e)
 {
-   for(MouseListenerSetConstItor SetItor(_MouseListeners.begin()) ; SetItor != _MouseListeners.end() ; ++SetItor)
+	MouseListenerSet ListenerSet(_MouseListeners);
+   for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->mouseExited(e);
    }
@@ -391,7 +394,8 @@ void Component::produceMouseExited(const MouseEvent& e)
 
 void Component::produceMousePressed(const MouseEvent& e)
 {
-   for(MouseListenerSetConstItor SetItor(_MouseListeners.begin()) ; SetItor != _MouseListeners.end() ; ++SetItor)
+	MouseListenerSet ListenerSet(_MouseListeners);
+   for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->mousePressed(e);
    }
@@ -399,7 +403,8 @@ void Component::produceMousePressed(const MouseEvent& e)
 
 void Component::produceMouseReleased(const MouseEvent& e)
 {
-   for(MouseListenerSetConstItor SetItor(_MouseListeners.begin()) ; SetItor != _MouseListeners.end() ; ++SetItor)
+	MouseListenerSet ListenerSet(_MouseListeners);
+   for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->mouseReleased(e);
    }
