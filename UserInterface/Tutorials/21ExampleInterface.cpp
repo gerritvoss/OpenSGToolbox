@@ -62,8 +62,13 @@
 #include <OpenSG/UserInterface/OSGCompoundUIBackground.h>
 #include <OpenSG/UserInterface/OSGLabel.h>
 #include <OpenSG/UserInterface/OSGCheckboxButton.h>
+#include <OpenSG/UserInterface/OSGRadioButton.h>
+#include <OpenSG/UserInterface/OSGRadioButtonGroup.h>
 
 
+
+
+#include <OpenSG/UserInterface/OSGWindowsLookAndFeel.h>
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
 // with OSG::, but that would be a bit tedious for this example
@@ -79,7 +84,7 @@ void reshape(Vec2s Size);
 // Create functions create Component Panels to make 
 // code easier to read
 ComponentPtr createleftPanelButtonPanel(void);
-ComponentPtr createleftPanelTextPanel(void);
+ComponentPtr createleftPanelRadioPanel(void);
 ComponentPtr createrightPanelButtonPanel(void);
 ComponentPtr createrightPanelCheckPanel(void);
 
@@ -161,6 +166,7 @@ int main(int argc, char **argv)
 	GraphicsPtr graphics = osg::Graphics2D::create();
 
 	// Initialize the LookAndFeelManager to enable default settings
+	LookAndFeelManager::the()->setLookAndFeel(WindowsLookAndFeel::create() );
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
 		
@@ -187,6 +193,7 @@ int main(int argc, char **argv)
 	LineBorderPtr panelBorder0 = osg::LineBorder::create();
 	EmptyBorderPtr panel1Border = osg::EmptyBorder::create();
 	EmptyBorderPtr panel2Border = osg::EmptyBorder::create();
+	EmptyBorderPtr emptyBorder = osg::EmptyBorder::create();
 	
 	beginEditCP(panelBorder0, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
 		panelBorder0->setColor( Color4f(0.0,0.0,0.0,1.0) );
@@ -220,12 +227,13 @@ int main(int argc, char **argv)
 		leftPanelLabel1Font->setSize(50);
 	endEditCP(leftPanelLabel1Font, Font::SizeFieldMask);
 
-	beginEditCP(leftPanelLabel1, Component::BackgroundFieldMask | Label::FontFieldMask | Label::TextFieldMask | Component::PreferredSizeFieldMask);
+	beginEditCP(leftPanelLabel1, Component::BorderFieldMask | Component::BackgroundFieldMask | Label::FontFieldMask | Label::TextFieldMask | Component::PreferredSizeFieldMask);
+		leftPanelLabel1->setBorder(emptyBorder);
 		leftPanelLabel1->setBackground(greyBackground);
 		leftPanelLabel1->setFont(leftPanelLabel1Font);
 		leftPanelLabel1->setText("Sample Label");
 		leftPanelLabel1->setPreferredSize( Vec2s(300, 100) );
-	endEditCP(leftPanelLabel1, Component::BackgroundFieldMask | Label::FontFieldMask | Label::TextFieldMask | Component::PreferredSizeFieldMask);
+	endEditCP(leftPanelLabel1, Component::BorderFieldMask | Component::BackgroundFieldMask | Label::FontFieldMask | Label::TextFieldMask | Component::PreferredSizeFieldMask);
 
 	
 
@@ -264,7 +272,7 @@ int main(int argc, char **argv)
 		leftPanel->setPreferredSize( Vec2s(400, 500) );
 		leftPanel->getChildren().addValue(leftPanelLabel1);
 		leftPanel->getChildren().addValue(createleftPanelButtonPanel());
-		leftPanel->getChildren().addValue(createleftPanelTextPanel());
+		leftPanel->getChildren().addValue(createleftPanelRadioPanel());
 		leftPanel->setLayout(leftPanelLayout);
 		leftPanel->setBackground(greyBackground);
 		leftPanel->setBorder(panel1Border);
@@ -431,26 +439,80 @@ ComponentPtr createleftPanelButtonPanel(void)
 
 
 
-ComponentPtr createleftPanelTextPanel(void)
+ComponentPtr createleftPanelRadioPanel(void)
 {
 
-	// Create and edit the Panel Text areas
+	// Create the RadioButton group
+	RadioButtonPtr rbutton1 = osg::RadioButton::create();
+	RadioButtonPtr rbutton2 = osg::RadioButton::create();
+	RadioButtonPtr rbutton3 = osg::RadioButton::create();
 
-	// Create and edit Panel layout
-	FlowLayoutPtr leftPanelTextPanelLayout = osg::FlowLayout::create();
-	/*beginEditCP(leftPanelTextPanelLayout, GridLayout::RowsFieldMask | GridLayout::ColumnsFieldMask);
-		leftPanelTextPanelLayout->setRows(2);
-		leftPanelTextPanelLayout->setColumns(1);
-	endEditCP(leftPanelTextPanelLayout, GridLayout::RowsFieldMask | GridLayout::ColumnsFieldMask);
-	*/
-	ButtonPtr test1 = osg::Button::create();
-	ButtonPtr test2 = osg::Button::create();
+	beginEditCP(rbutton1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
+		rbutton1->setVerticalAlignment(VERTICAL_CENTER);
+		rbutton1->setHorizontalAlignment(HORIZONTAL_LEFT);
+		rbutton1->setPreferredSize(Vec2s(100, 40));
+		rbutton1->setText("Option 1");
+	endEditCP(rbutton1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+
+	beginEditCP(rbutton2,Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+		rbutton2->setVerticalAlignment(VERTICAL_CENTER);
+		rbutton2->setHorizontalAlignment(HORIZONTAL_LEFT);
+		rbutton2->setPreferredSize(Vec2s(100, 40));
+		rbutton2->setText("Option 2");
+	endEditCP(rbutton2, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+
+	beginEditCP(rbutton3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+		rbutton3->setVerticalAlignment(VERTICAL_CENTER);
+		rbutton3->setHorizontalAlignment(HORIZONTAL_LEFT);
+		rbutton3->setPreferredSize(Vec2s(100, 40));
+		rbutton3->setText("Option 3");
+	endEditCP(rbutton3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+
+	RadioButtonGroup buttonGroup;
+	buttonGroup.addButton(rbutton1);
+	buttonGroup.addButton(rbutton2);
+	buttonGroup.addButton(rbutton3);
+
+
+	// Create TextField area
 	
 	// Create an edit Panel Background
-	ColorUIBackgroundPtr leftPanelTextPanelBackground = osg::ColorUIBackground::create();
-	beginEditCP(leftPanelTextPanelBackground, ColorUIBackground::ColorFieldMask);
-		leftPanelTextPanelBackground->setColor( Color4f(0.93,0.93,0.93,1.0) );
-	endEditCP(leftPanelTextPanelBackground, ColorUIBackground::ColorFieldMask);
+	ColorUIBackgroundPtr leftPanelRadioPanelBackground = osg::ColorUIBackground::create();
+	beginEditCP(leftPanelRadioPanelBackground, ColorUIBackground::ColorFieldMask);
+		leftPanelRadioPanelBackground->setColor( Color4f(0.93,0.93,0.93,1.0) );
+	endEditCP(leftPanelRadioPanelBackground, ColorUIBackground::ColorFieldMask);
+
+	// Create and edit Panel layouts
+	FlowLayoutPtr leftPanelRadioPanelLayout = osg::FlowLayout::create();
+	FlowLayoutPtr leftPanelRadioPanelRadioPanelLayout = osg::FlowLayout::create();
+	FlowLayoutPtr leftPanelRadioPanelTextPanelLayout = osg::FlowLayout::create();
+	beginEditCP(leftPanelRadioPanelLayout, FlowLayout::MinorAxisAlignmentFieldMask);
+		leftPanelRadioPanelLayout->setMinorAxisAlignment(AXIS_MIN_ALIGNMENT);
+	beginEditCP(leftPanelRadioPanelLayout, FlowLayout::MinorAxisAlignmentFieldMask);
+
+	// Create two Panels for this Panel
+	PanelPtr leftPanelRadioPanelRadioPanel = osg::Panel::create();
+	PanelPtr leftPanelRadioPanelTextPanel = osg::Panel::create();
+
+	// Create some Borders
+	EmptyBorderPtr leftPanelRadioPanelRadioPanelBorder = osg::EmptyBorder::create();
+
+	beginEditCP(leftPanelRadioPanelRadioPanel, Component::BorderFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask | Container::LayoutFieldMask | Container::ChildrenFieldMask);
+		leftPanelRadioPanelRadioPanel->setBorder(leftPanelRadioPanelRadioPanelBorder);
+		leftPanelRadioPanelRadioPanel->setPreferredSize( Vec2s(125, 200) );
+		leftPanelRadioPanelRadioPanel->setBackground(leftPanelRadioPanelBackground);
+		leftPanelRadioPanelRadioPanel->setLayout(leftPanelRadioPanelRadioPanelLayout);
+		leftPanelRadioPanelRadioPanel->getChildren().addValue(rbutton1);
+		leftPanelRadioPanelRadioPanel->getChildren().addValue(rbutton2);
+		leftPanelRadioPanelRadioPanel->getChildren().addValue(rbutton3);
+	endEditCP(leftPanelRadioPanelRadioPanel, Component::BorderFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask | Container::LayoutFieldMask | Container::ChildrenFieldMask);
+
+	/*beginEditCP(leftPanelRadioPanelLayout, GridLayout::RowsFieldMask | GridLayout::ColumnsFieldMask);
+		leftPanelRadioPanelLayout->setRows(2);
+		leftPanelRadioPanelLayout->setColumns(1);
+	endEditCP(leftPanelRadioPanelLayout, GridLayout::RowsFieldMask | GridLayout::ColumnsFieldMask);
+	*/
+
 
 	// Create Panel Border
 	LineBorderPtr panelBorder1 = osg::LineBorder::create();
@@ -460,17 +522,17 @@ ComponentPtr createleftPanelTextPanel(void)
 	endEditCP(panelBorder1, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
 
 	// Create and edit Panel
-	PanelPtr leftPanelTextPanel = osg::Panel::create();
-	beginEditCP(leftPanelTextPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
-		leftPanelTextPanel->setPreferredSize( Vec2s(180, 500) );
-		leftPanelTextPanel->getChildren().addValue(test1);
-		leftPanelTextPanel->getChildren().addValue(test2);
-		leftPanelTextPanel->setLayout(leftPanelTextPanelLayout);
-		leftPanelTextPanel->setBackground(leftPanelTextPanelBackground);
-		leftPanelTextPanel->setBorder(panelBorder1);
-	endEditCP(leftPanelTextPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+	PanelPtr leftPanelRadioPanel = osg::Panel::create();
+	beginEditCP(leftPanelRadioPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+		leftPanelRadioPanel->setPreferredSize( Vec2s(180, 500) );
+		leftPanelRadioPanel->getChildren().addValue(leftPanelRadioPanelRadioPanel);
+		leftPanelRadioPanel->getChildren().addValue(leftPanelRadioPanelTextPanel);
+		leftPanelRadioPanel->setLayout(leftPanelRadioPanelLayout);
+		leftPanelRadioPanel->setBackground(leftPanelRadioPanelBackground);
+		leftPanelRadioPanel->setBorder(panelBorder1);
+	endEditCP(leftPanelRadioPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
 
-	return leftPanelTextPanel;
+	return leftPanelRadioPanel;
 }
 
 ComponentPtr createrightPanelButtonPanel(void)

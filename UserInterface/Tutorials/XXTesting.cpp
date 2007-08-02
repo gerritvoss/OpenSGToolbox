@@ -1,16 +1,10 @@
-// OpenSG Tutorial Example: Hello World
+// OpenSG Tutorial Example: Creating a complex Layout
 //
-// Minimalistic OpenSG program
+// This tutorial gives an example of creating a complex Scene
+// Layout with multiple Buttons, Borders, and Panels
 // 
-// This is the shortest useful OpenSG program 
-// (if you remove all the comments ;)
-//
-// It shows how to use OpenSG together with GLUT to create a little
-// interactive scene viewer.
-//
+// Includes: Containers, Layouts, Borders, and Backgrounds
 
-// GLUT is used for window handling
-#include <OpenSG/OSGGLUT.h>
 
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
@@ -18,33 +12,48 @@
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
 
-// The GLUT-OpenSG connection class
-#include <OpenSG/OSGGLUTWindow.h>
-
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
 
+
 // the general scene file loading handler
 #include <OpenSG/OSGSceneFileHandler.h>
 
+//Input
+#include <OpenSG/Input/OSGWindowUtils.h>
 
 //UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGLabel.h>
-#include <OpenSG/UserInterface/OSGPanel.h>
+#include <OpenSG/UserInterface/OSGLineBorder.h>
+#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include <OpenSG/UserInterface/OSGWindowsLookAndFeel.h>
+
+
+// Include relevant header files
 #include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
 #include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
-#include <OpenSG/UserInterface/OSGGradientUIBackground.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-
-#include <OpenSG/UserInterface/OSGImageComponent.h>
+#include <OpenSG/UserInterface/OSGBoxLayout.h>
+#include <OpenSG/UserInterface/OSGFlowLayout.h>
+#include <OpenSG/UserInterface/OSGContainer.h>
+#include <OpenSG/UserInterface/OSGPanel.h>
+#include <OpenSG/UserInterface/OSGFrame.h>
+#include <OpenSG/UserInterface/OSGLineBorder.h>
+#include <OpenSG/UserInterface/OSGEmptyBorder.h>
+#include <OpenSG/UserInterface/OSGEtchedBorder.h>
 #include <OpenSG/UserInterface/OSGUIDefines.h>
+#include <OpenSG/UserInterface/OSGColorUIBackground.h>
+#include <OpenSG/UserInterface/OSGGradientUIBackground.h>
+#include <OpenSG/UserInterface/OSGCompoundUIBackground.h>
+#include <OpenSG/UserInterface/OSGRadioButton.h>
+#include <OpenSG/UserInterface/OSGRadioButtonGroup.h>
+#include <OpenSG/UserInterface/OSGCheckboxButton.h>
+#include <OpenSG/UserInterface/OSGTextField.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -55,29 +64,32 @@ OSG_USING_NAMESPACE
 SimpleSceneManager *mgr;
 
 // forward declaration so we can have the interesting stuff upfront
-int setupGLUT( int *argc, char *argv[] );
 void display(void);
+void reshape(Vec2s Size);
 
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
 {
-    // OSG init
+     // OSG init
     osgInit(argc,argv);
+    
+    // Set up Window
+	WindowPtr MainWindow;
+    WindowEventProducerPtr TheWindowEventProducer;
+    createDefaultWindow(Pnt2s(50,50),
+                                        Vec2s(1100,900),
+                                        "OpenSG 12ComplexLayout Window",
+                                        MainWindow,
+                                        TheWindowEventProducer);
+    
+    TheWindowEventProducer->setDisplayCallback(display);
+    TheWindowEventProducer->setReshapeCallback(reshape);
 
 
-    // GLUT init
-    int winid = setupGLUT(&argc, argv);
-
-    // the connection between GLUT and OpenSG
-    GLUTWindowPtr gwin= GLUTWindow::create();
-    gwin->setId(winid);
-    gwin->init();
-
-
-    //Make Torus Node
+    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-    //Make Main Scene Node
+    // Make Main Scene Node
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
     {
@@ -88,113 +100,306 @@ int main(int argc, char **argv)
     }
     endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	//Create the Graphics
+	// Create the Graphics
 	GraphicsPtr graphics = osg::Graphics2D::create();
 
-	//Init the LookAndFeel
+	// Initialize the LookAndFeelManager to enable default 
+	// settings for the Button
+	LookAndFeelManager::the()->setLookAndFeel(WindowsLookAndFeel::create());
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
-	//Create A Button Component
-	ButtonPtr button = osg::Button::create();
-	AbsoluteLayoutConstraintsPtr buttonLayoutConstraints = osg::AbsoluteLayoutConstraints::create();
-    beginEditCP(buttonLayoutConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
-		buttonLayoutConstraints->setPosition( Pnt2s(0,0) );
-    endEditCP  (buttonLayoutConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
-
-	//Create Gradient Background
-	GradientUIBackgroundPtr gradientUIBackground = osg::GradientUIBackground::create();
-    beginEditCP(gradientUIBackground);
-		gradientUIBackground->setAlignment(VERTICAL_ALIGNMENT);
-		gradientUIBackground->setColorStart(Color4f(0.0,1.0,1.0,1.0));
-		gradientUIBackground->setColorEnd(Color4f(1.0,0.0,0.0,1.0));
-    endEditCP(gradientUIBackground);
-
-
-    beginEditCP(button, Button::TextFieldMask);
-		button->setText("Button 1");
-		button->setConstraints(buttonLayoutConstraints);
-		button->setBackground(gradientUIBackground);
-    endEditCP  (button, Button::TextFieldMask);
 	
-	//Create A Label Component
-	LabelPtr label = osg::Label::create();
-	AbsoluteLayoutConstraintsPtr labelLayoutConstraints = osg::AbsoluteLayoutConstraints::create();
-    beginEditCP(labelLayoutConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
-		labelLayoutConstraints->setPosition( Pnt2s(0,100) );
-    endEditCP  (labelLayoutConstraints, AbsoluteLayoutConstraints::PositionFieldMask);
+	/******************************************************
+			
+			Create some Backgrounds
 
-	beginEditCP(label, Label::TextFieldMask | Label::ConstraintsFieldMask);
-		label->setText("Label 1");
-		label->setConstraints(labelLayoutConstraints);
-    endEditCP  (label, Label::TextFieldMask | Label::ConstraintsFieldMask);
+	******************************************************/
+	ColorUIBackgroundPtr button1Color = osg::ColorUIBackground::create();
+	GradientUIBackgroundPtr button1Gradient = osg::GradientUIBackground::create();
+	CompoundUIBackgroundPtr button1Compound = osg::CompoundUIBackground::create();
+
+	beginEditCP(button1Color, ColorUIBackground::ColorFieldMask);
+		button1Color->setColor( Color4f(0.0, 0.0, 0.0, 1.0) );
+	endEditCP(button1Color, ColorUIBackground::ColorFieldMask);
+	
+	beginEditCP(button1Gradient);
+		button1Gradient->setColorStart( Color4f(1.0, 0.0, 1.0, 0.8) );
+		button1Gradient->setColorEnd( Color4f(0.0, 0.0, 1.0, 0.3) );
+		button1Gradient->setAlignment(HORIZONTAL_ALIGNMENT);
+	endEditCP(button1Gradient);
+	
+	beginEditCP(button1Compound);
+		button1Compound->getBackgrounds().addValue(button1Color);
+		button1Compound->getBackgrounds().addValue(button1Gradient);
+	endEditCP(button1Compound);
+
+	/******************************************************
+			
+			Create some Borders
+
+	******************************************************/
+	EmptyBorderPtr button1Border = osg::EmptyBorder::create();
+
+
+	/******************************************************
+			
+				Creates some Button components
+
+	******************************************************/
+
+	ButtonPtr button1 = osg::Button::create();
+	ButtonPtr button2 = osg::Button::create();
+	ButtonPtr button3 = osg::Button::create();
+	ButtonPtr button4 = osg::Button::create();
+	ButtonPtr button5 = osg::Button::create();
+	ButtonPtr button6 = osg::Button::create();
+	CheckboxButtonPtr button7 = osg::CheckboxButton::create();
+	CheckboxButtonPtr button8 = osg::CheckboxButton::create();
+	CheckboxButtonPtr button9 = osg::CheckboxButton::create();
+	CheckboxButtonPtr button10 = osg::CheckboxButton::create();
+	CheckboxButtonPtr button11 = osg::CheckboxButton::create();
+
+
+	beginEditCP(button1, Component::PreferredSizeFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
+		button1->setPreferredSize( Vec2s(800, 50) );
+		button1->setBackground(button1Compound);
+		button1->setBorder(button1Border);
+		button1->setText("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+	endEditCP(button1, Component::PreferredSizeFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
+
+	beginEditCP(button2, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+
+	endEditCP(button2, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+	
+	beginEditCP(button3, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+
+	endEditCP(button3, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+
+	beginEditCP(button4, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+
+		button4->setText("OK");
+	endEditCP(button4, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+
+	beginEditCP(button5, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+
+		button5->setText("Cancel");
+	endEditCP(button5, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+
+	beginEditCP(button6, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+
+		button6->setText("sup all?");
+	endEditCP(button6, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+
+	beginEditCP(button7, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+
+	endEditCP(button7, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+
+	beginEditCP(button8, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+
+	endEditCP(button8, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+
+	beginEditCP(button9, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+	endEditCP(button9, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+
+	beginEditCP(button10, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+
+	endEditCP(button10, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+
+	beginEditCP(button11, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+
+	endEditCP(button11, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+
+	//RADIO BUTTON STUFF
+	RadioButtonPtr rbutton1 = osg::RadioButton::create();
+	RadioButtonPtr rbutton2 = osg::RadioButton::create();
+	RadioButtonPtr rbutton3 = osg::RadioButton::create();
+
+	beginEditCP(rbutton1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
+		rbutton1->setVerticalAlignment(VERTICAL_CENTER);
+		rbutton1->setHorizontalAlignment(HORIZONTAL_LEFT);
+		rbutton1->setText("Option 1");
+	endEditCP(rbutton1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+
+	beginEditCP(rbutton2,Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+		rbutton2->setVerticalAlignment(VERTICAL_CENTER);
+		rbutton2->setHorizontalAlignment(HORIZONTAL_LEFT);
+		rbutton2->setText("Option 2");
+	endEditCP(rbutton2, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+
+	beginEditCP(rbutton3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+		rbutton3->setVerticalAlignment(VERTICAL_CENTER);
+		rbutton3->setHorizontalAlignment(HORIZONTAL_LEFT);
+		rbutton3->setText("Option 3");
+	endEditCP(rbutton3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+
+	RadioButtonGroup buttonGroup;
+	buttonGroup.addButton(rbutton1);
+	buttonGroup.addButton(rbutton2);
+	buttonGroup.addButton(rbutton3);
+
 
 	
-	//Create Image Component
-	ImageComponentPtr imageComponent = osg::ImageComponent::create();
-	imageComponent->setImage("Data/Checker.jpg");
-	beginEditCP(imageComponent, ImageComponent::ScaleFieldMask | ImageComponent::PreferredSizeFieldMask);
-		imageComponent->setPreferredSize(Vec2s(10,10));
-		imageComponent->setScale(SCALE_NONE);
-    endEditCP  (imageComponent, ImageComponent::ScaleFieldMask | ImageComponent::PreferredSizeFieldMask);
+	/******************************************************
 
-	//Create The Main Frame
+			Create some Layouts
+
+	******************************************************/
+	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
+	BoxLayoutPtr panel1Layout = osg::BoxLayout::create();
+	BoxLayoutPtr panel2Layout = osg::BoxLayout::create();
+	BoxLayoutPtr panel3Layout = osg::BoxLayout::create();
+	BoxLayoutPtr panel4Layout = osg::BoxLayout::create();
+	BoxLayoutPtr panel5Layout = osg::BoxLayout::create();
+	BoxLayoutPtr panel6Layout = osg::BoxLayout::create();
+
+	beginEditCP(panel1Layout, BoxLayout::AlignmentFieldMask);
+		panel1Layout->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(panel1Layout, BoxLayout::AlignmentFieldMask);
+
+	beginEditCP(panel2Layout, BoxLayout::AlignmentFieldMask);
+		panel2Layout->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(panel2Layout, BoxLayout::AlignmentFieldMask);
+
+	beginEditCP(panel3Layout, BoxLayout::AlignmentFieldMask);
+		panel3Layout->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(panel3Layout, BoxLayout::AlignmentFieldMask);
+
+	beginEditCP(panel4Layout, BoxLayout::AlignmentFieldMask);
+		panel4Layout->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(panel4Layout, BoxLayout::AlignmentFieldMask);
+
+	beginEditCP(panel5Layout, BoxLayout::AlignmentFieldMask);
+		panel5Layout->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(panel5Layout, BoxLayout::AlignmentFieldMask);
+
+	beginEditCP(panel6Layout, BoxLayout::AlignmentFieldMask);
+		panel6Layout->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(panel6Layout, BoxLayout::AlignmentFieldMask);
+
+	beginEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+		MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
+		MainFrameLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
+	endEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+
+
+
+	/******************************************************
+
+		Create MainFrame and some Panels
+
+
+	******************************************************/
 	FramePtr MainFrame = osg::Frame::create();
-	LayoutPtr MainFrameLayout = osg::AbsoluteLayout::create();
-   beginEditCP(MainFrame, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
-      MainFrame->getChildren().addValue(imageComponent);
-      //MainFrame->getChildren().addValue(button);
-      //MainFrame->getChildren().addValue(label);
-      MainFrame->setLayout(MainFrameLayout);
-   endEditCP  (MainFrame, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
+	PanelPtr panel1 = osg::Panel::create();
+	PanelPtr panel2 = osg::Panel::create();
+	PanelPtr panel3 = osg::Panel::create();
+	PanelPtr panel4 = osg::Panel::create();
+	PanelPtr panel5 = osg::Panel::create();
+	PanelPtr panel6 = osg::Panel::create();
+	TextFieldPtr textField = osg::TextField::create();
+
+	//Create a TExtfield for lulz
+	beginEditCP(textField);	/*
+		textField->setPreferredSize( Vec2s(125, 100) );*/
+		textField->setText("Lol!!");	
+		textField->setSelectionStart(1);
+		textField->setSelectionEnd(4);
+
+	endEditCP(textField);
+
+	
+	// Edit Panel1, Panel2
+	beginEditCP(panel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+		panel1->setPreferredSize( Vec2s(400, 400) );
+		panel1->getChildren().addValue(button2);
+		panel1->getChildren().addValue(panel3);
+		panel1->getChildren().addValue(panel4);
+		panel1->setLayout(panel1Layout);
+	endEditCP(panel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+
+	beginEditCP(panel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+		panel2->setPreferredSize( Vec2s(400, 400) );
+		panel2->getChildren().addValue(button3);
+		panel2->getChildren().addValue(textField);
+		panel2->getChildren().addValue(panel6);
+		panel2->setLayout(panel2Layout);
+	endEditCP(panel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+	
+	beginEditCP(panel3, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+		panel3->getChildren().addValue(button4);
+		panel3->getChildren().addValue(button5);
+		panel3->setLayout(panel3Layout);
+		panel3->setPreferredSize( Vec2s(125, 130) );
+	endEditCP(panel3, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+	
+	beginEditCP(panel4, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+		panel4->getChildren().addValue(rbutton1);
+		panel4->getChildren().addValue(rbutton2);
+		panel4->getChildren().addValue(rbutton3);
+		panel4->setLayout(panel4Layout);
+		panel4->setPreferredSize( Vec2s(125, 130) );
+	endEditCP(panel4, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+		
+	/*beginEditCP(panel5, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+		panel5->getChildren().addValue(button8);
+		panel5->getChildren().addValue(button9);
+		panel5->setLayout(panel5Layout);
+		panel5->setPreferredSize( Vec2s(125, 130) );
+	endEditCP(panel5, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+		*/
+	beginEditCP(panel6, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+		panel6->getChildren().addValue(button10);
+		panel6->getChildren().addValue(button11);
+		panel6->setLayout(panel6Layout);
+		panel6->setPreferredSize( Vec2s(125, 130) );
+	endEditCP(panel6, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+
+
+	// Edit MainFrame
+	beginEditCP(MainFrame, Frame::BorderFieldMask | Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+	   MainFrame->getChildren().addValue(button1);
+	   MainFrame->getChildren().addValue(panel1);
+	   MainFrame->getChildren().addValue(panel2);
+	   MainFrame->setLayout(MainFrameLayout);
+	endEditCP  (MainFrame, Frame::BorderFieldMask | Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
 	//Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
 	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
 		drawingSurface->setRootFrame(MainFrame);
-	    //drawingSurface->setEventProducer(TheWindowEventProducer);
+	    drawingSurface->setEventProducer(TheWindowEventProducer);
     endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
-	
 	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();
 
 	beginEditCP(foreground, UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 	    foreground->setDrawingSurface(drawingSurface);
 		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.5,0.5));
+		foreground->setFrameBounds(Vec2f(1.0,1.0));
 	   //Set the Event Producer for the DrawingSurface
 	   //This is needed in order to get Mouse/Keyboard/etc Input to the UI DrawingSurface
     endEditCP  (foreground, UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-	
+
+
     // create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // tell the manager what to manage
-    mgr->setWindow(gwin );
+    mgr->setWindow(MainWindow );
     mgr->setRoot  (scene);
 
-	//Add the UI Foreground Object to the Scene
+	// Add the UI Foreground Object to the Scene
 	ViewportPtr viewport = mgr->getWindow()->getPort(0);
     beginEditCP(viewport, Viewport::ForegroundsFieldMask);
 		viewport->getForegrounds().addValue(foreground);
     beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-
     // show the whole scene
     mgr->showAll();
 
-    // GLUT main loop
-    glutMainLoop();
+    openWindow(TheWindowEventProducer);
 
     return 0;
-}
-
-//
-// GLUT callback functions
-//
-
-void idle(void)
-{
-   glutPostRedisplay();
 }
 
 // redraw the window
@@ -204,58 +409,7 @@ void display(void)
 }
 
 // react to size changes
-void reshape(int w, int h)
+void reshape(Vec2s Size)
 {
-    mgr->resize(w, h);
-    glutPostRedisplay();
-}
-
-// react to mouse button presses
-void mouse(int button, int state, int x, int y)
-{
-    if (state)
-        mgr->mouseButtonRelease(button, x, y);
-    else
-        mgr->mouseButtonPress(button, x, y);
-        
-    glutPostRedisplay();
-}
-
-// react to mouse motions with pressed buttons
-void motion(int x, int y)
-{
-    mgr->mouseMove(x, y);
-    glutPostRedisplay();
-}
-
-// react to keys
-void keyboard(unsigned char k, int x, int y)
-{
-    switch(k)
-    {
-        case 27:        
-        {
-            OSG::osgExit();
-            exit(0);
-        }
-        break;
-    }
-}
-
-// setup the GLUT library which handles the windows for us
-int setupGLUT(int *argc, char *argv[])
-{
-    glutInit(argc, argv);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
-    
-    int winid = glutCreateWindow("OpenSG UserInterface Button");
-    
-    glutReshapeFunc(reshape);
-    glutDisplayFunc(display);
-    glutMouseFunc(mouse);
-    glutMotionFunc(motion);
-    glutKeyboardFunc(keyboard);
-    glutIdleFunc(idle);
-
-    return winid;
+    mgr->resize(Size.x(), Size.y());
 }

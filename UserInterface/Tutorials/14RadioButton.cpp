@@ -96,8 +96,14 @@ int main(int argc, char **argv)
 
 	/******************************************************
 			
-				Creates some Radio Button components and edit
-				them
+			Creates some RadioButton components 
+			and edit them.  The RadioButton class
+			inherits from the Button class.
+
+			Advanced options for RadioButton can
+			be found in the DefaultLookAndFeel.cpp
+			file found in OSGUserInterface/Source Files/
+			LookAndFeel.
 
 	******************************************************/
 	RadioButtonPtr button1 = osg::RadioButton::create();
@@ -109,21 +115,21 @@ int main(int argc, char **argv)
 		button1->setHorizontalAlignment(HORIZONTAL_LEFT);
 		button1->setPreferredSize(Vec2s(100, 50));
 		button1->setText("Option 1");
-	endEditCP(button1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+	endEditCP(button1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
 
-	beginEditCP(button2,Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+	beginEditCP(button2,Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
 		button2->setVerticalAlignment(VERTICAL_CENTER);
 		button2->setHorizontalAlignment(HORIZONTAL_LEFT);
 		button2->setPreferredSize(Vec2s(100, 50));
 		button2->setText("Option 2");
-	endEditCP(button2, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+	endEditCP(button2, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
 
-	beginEditCP(button3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+	beginEditCP(button3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
 		button3->setVerticalAlignment(VERTICAL_CENTER);
 		button3->setHorizontalAlignment(HORIZONTAL_LEFT);
 		button3->setPreferredSize(Vec2s(100, 50));
 		button3->setText("Option 3");
-	endEditCP(button3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+	endEditCP(button3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
 
 	/***************************************************
 					
@@ -144,38 +150,20 @@ int main(int argc, char **argv)
 
 	/******************************************************
 
-		Radio Buttons are special toggle buttons.  When they are
-		selected, any radio button in the same group is deselected,
-		so there can only be one option selected.
+		Radio Buttons are special toggle buttons.  When 
+		they are selected, any radio button in the same 
+		group is deselected, so there can only be one 
+		option selected.
 
 
 	******************************************************/
 	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
-	// Determine whether the Layout is Horizontal (HORIZONTAL_ALIGNMENT) or
-	// Vertical (VERTICAL_ALIGNMENT) and determine gap size, and determine
-	// alignment along Horizontal and Vertical axis 
-	beginEditCP(MainFrameLayout);
-		// Determine the Horizontal and Vertical gaps between objects.
-		// These gaps are absolute, and measured in pixels.
-		MainFrameLayout->setHorizontalGap(0);
-		MainFrameLayout->setVerticalGap(3);
-		// Determine whether layout is arranged Vertically (VERTICAL_ALIGNMENT)
-		// or Horizontally (HORIZONTAL_ALIGNMENT)
+
+	beginEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
 		MainFrameLayout->setAlignment(VERTICAL_ALIGNMENT);
-		// MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
-
-		// The options for the following two functions are:
-		// AXIS_MAX_ALIGNMENT, AXIS_CENTER_ALIGNMENT, and
-		// AXIS_MIN_ALIGNMENT.
-
-		// Determine alignment of entire layout; MAX puts it to the bottom (for vertical
-		// overall layout) or right (horizontal overall layout), CENTER centers it, and
-		// MIN does the opposite of MAX
 		MainFrameLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-
-		// Determine alignment of Components within Layout
 		MainFrameLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-	endEditCP(MainFrameLayout);
+	endEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
 	
  	// Create The Main Frame
 	// Create Background to be used with the Main Frame

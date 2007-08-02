@@ -54,9 +54,10 @@ void reshape(Vec2s Size);
 
 
 
-// Create tabPanel and one of the Buttons up front so 
+// Create tabPanel and some of the Buttons up front so 
 //that the ActionListeners can reference them
 TabPanelPtr tabPanel;
+ButtonPtr buttonA;
 ButtonPtr buttonB;
 // Create ActionListeners so that a Tab can be added
 // and removed
@@ -88,10 +89,16 @@ public:
 
 		endEditCP(tabPanel, TabPanel::TabsFieldMask);
 		
-		// Change the text on the Tab
+		// Change the text on the Tabs
+
+		beginEditCP(buttonA, Button::TextFieldMask);
+			buttonA->setText("Remove Tab7 under Tab2!");
+		endEditCP(buttonA, Button::TextFieldMask);
+
 		beginEditCP(buttonB, Button::TextFieldMask);
 			buttonB->setText("Remove Tab7");
 		endEditCP(buttonB, Button::TextFieldMask);
+
 		
 		}
 
@@ -118,7 +125,12 @@ public:
 			tabPanel->removeTab(6);
 		endEditCP(tabPanel, TabPanel::TabsFieldMask);
 
-		// Change the text on the Tab
+		
+		beginEditCP(buttonA, Button::TextFieldMask);
+			buttonA->setText("Add another Tab");
+		endEditCP(buttonA, Button::TextFieldMask);
+
+		// Change the text on the Tabs
 		beginEditCP(buttonB, Button::TextFieldMask);
 			buttonB->setText("Add a Tab under Tab1!");
 		endEditCP(buttonB, Button::TextFieldMask);
@@ -180,7 +192,7 @@ int main(int argc, char **argv)
 	ButtonPtr button4 = osg::Button::create();
 	ButtonPtr button5 = osg::Button::create();
 	ButtonPtr button6 = osg::Button::create();
-	ButtonPtr buttonA = osg::Button::create();
+	buttonA = osg::Button::create();
 	buttonB = osg::Button::create();
 	ButtonPtr buttonC = osg::Button::create();
 	ButtonPtr buttonD = osg::Button::create();

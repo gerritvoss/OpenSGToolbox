@@ -428,7 +428,7 @@ void DefaultLookAndFeel::init(void)
 		CheckboxLine2->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
 		CheckboxLine2->setOpacity(1.0);
 		CheckboxLine2->setWidth(4);
-	endEditCP(CheckboxLine1);
+	endEditCP(CheckboxLine2);
 
 	beginEditCP(defaultCheckboxDrawObject);
 	   defaultCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
@@ -603,7 +603,7 @@ void DefaultLookAndFeel::init(void)
 		DefaultRadioButton->setMaxSize(Vec2s(32767,32767));
 		DefaultRadioButton->setPreferredSize(Vec2s(100, 100));
 
-		//draw objecs
+		//draw objects
 		DefaultRadioButton->setDrawObject(defaultRadioDrawObject);
 		DefaultRadioButton->setSelectedDrawObject(defaultSelectedRadioDrawObject);
 		DefaultRadioButton->setActiveDrawObject(defaultActiveRadioDrawObject);
