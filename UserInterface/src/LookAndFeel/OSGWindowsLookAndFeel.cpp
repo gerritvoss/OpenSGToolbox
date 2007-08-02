@@ -564,7 +564,7 @@ void WindowsLookAndFeel::init(void)
 		RadioSelected->setStartAngleRad(0);
 		RadioSelected->setEndAngleRad(6.28318531);
 		RadioSelected->setCenterColor(Color4f(0.220,0.725,0.208,1.0));
-		RadioSelected->setOuterColor(Color4f(0.220,0.725,0.208,1.0));
+		RadioSelected->setOuterColor(Color4f(0.220,0.725,0.208,0.4));
 		RadioSelected->setOpacity(1.0);
 		RadioSelected->setCenter(Pnt2s(0,0));
 	endEditCP(RadioSelected);

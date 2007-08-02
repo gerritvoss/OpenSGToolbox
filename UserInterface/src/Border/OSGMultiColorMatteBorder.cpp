@@ -81,18 +81,49 @@ void MultiColorMatteBorder::draw(const GraphicsPtr g, const Int16 x, const Int16
 	//x, y is upper left point
 	
 	//Top
-	//g->drawQuad(Pnt2s(x,y), Pnt2s(x+Width,
-	//	y+getTopWidth()),
-	//	getTopLineLeftColor(),
-	//	getTopLineLeftColor(),
-	//	getTopLineRightColor(),
-	//	getTopLineRightColor(),
-	//	Opacity);
+	g->drawQuad(
+		Pnt2s(x+getLeftWidth(),y),
+		Pnt2s(x+Width, y),
+		Pnt2s(x+Width, y+getTopWidth()),
+		Pnt2s(x+getLeftWidth(), y+getTopWidth()),
+		getTopLineLeftColor(),
+		getTopLineRightColor(),
+		getTopLineRightColor(),
+		getTopLineLeftColor(),
+		Opacity);
 	//Left
-	//g->drawQuad(Pnt2s(x,y+getTopWidth()), Pnt2s(x+getLeftWidth(), y+getTopWidth()+Height-getBottomWidth()), getLeftColor(), Opacity);
+	g->drawQuad(
+		Pnt2s(x,y),
+		Pnt2s(x+getRightWidth(), y),
+		Pnt2s(x+getRightWidth(), y+Height-getBottomWidth()),
+		Pnt2s(x, y+Height-getBottomWidth()),
+		getLeftLineTopColor(),
+		getLeftLineTopColor(),
+		getLeftLineBottomColor(),
+		getLeftLineBottomColor(),
+		Opacity);
 	//Right
-	//g->drawQuad(Pnt2s(x+Width-getRightWidth(), y+getTopWidth()), Pnt2s(x+Width, y+getTopWidth()+Height-getBottomWidth()), getRightColor(), Opacity);
+	g->drawQuad(
+		Pnt2s(x+Width-getRightWidth(),y+getTopWidth()),
+		Pnt2s(x+Width, y+getTopWidth()),
+		Pnt2s(x+Width, y+Height),
+		Pnt2s(x+Width-getRightWidth(), y+Height),
+		getRightLineTopColor(),
+		getRightLineTopColor(),
+		getRightLineBottomColor(),
+		getRightLineBottomColor(),
+		Opacity);
 	//Bottom
+	g->drawQuad(
+		Pnt2s(x,y+Height-getBottomWidth()),
+		Pnt2s(x+Width-getRightWidth(), y+Height-getBottomWidth()),
+		Pnt2s(x+Width-getRightWidth(), y+Height),
+		Pnt2s(x, y+Height),
+		getBottomLineLeftColor(),
+		getBottomLineRightColor(),
+		getBottomLineRightColor(),
+		getBottomLineLeftColor(),
+		Opacity);
 	//g->drawQuad(Pnt2s(x, y+Height-getBottomWidth()), Pnt2s(x+Width, y+Height), getBottomColor(), Opacity);
 
 }
