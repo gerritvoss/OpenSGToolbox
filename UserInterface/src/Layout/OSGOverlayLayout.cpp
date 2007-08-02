@@ -83,7 +83,7 @@ void OverlayLayout::updateLayout(const MFComponentPtr Components,const Component
 
 	int maxX = 0;
 	int maxY = 0;
-	for(int i = 0; i < Components.size(); i++){
+	for(UInt32 i = 0; i < Components.size(); i++){
 		beginEditCP(Components.getValue(i), Component::SizeFieldMask);
 		   Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
 		endEditCP(Components.getValue(i), Component::SizeFieldMask);
@@ -93,7 +93,7 @@ void OverlayLayout::updateLayout(const MFComponentPtr Components,const Component
 			maxY = Components.getValue(i)->getSize().y();
 	}
 	//overlay layout simply draws all the components on top of each other, with the reference point for all the components being the same
-	for(int i = 0; i <Components.size(); i++){
+	for(UInt32 i = 0; i <Components.size(); i++){
 		//Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
 		beginEditCP(Components.getValue(i), Component::PositionFieldMask);
 		Components.getValue(i)->setPosition(borderTopLeft + 

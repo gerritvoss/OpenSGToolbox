@@ -49,7 +49,7 @@
 \*****************************************************************************/
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -138,11 +138,18 @@ SFUInt16 *DiscUIDrawObjectBase::getSFSubDivisions(void)
     return &_sfSubDivisions;
 }
 
-//! Get the DiscUIDrawObject::_sfColor field.
+//! Get the DiscUIDrawObject::_sfCenterColor field.
 inline
-SFColor4f *DiscUIDrawObjectBase::getSFColor(void)
+SFColor4f *DiscUIDrawObjectBase::getSFCenterColor(void)
 {
-    return &_sfColor;
+    return &_sfCenterColor;
+}
+
+//! Get the DiscUIDrawObject::_sfOuterColor field.
+inline
+SFColor4f *DiscUIDrawObjectBase::getSFOuterColor(void)
+{
+    return &_sfOuterColor;
 }
 
 //! Get the DiscUIDrawObject::_sfOpacity field.
@@ -279,25 +286,46 @@ void DiscUIDrawObjectBase::setSubDivisions(const UInt16 &value)
     _sfSubDivisions.setValue(value);
 }
 
-//! Get the value of the DiscUIDrawObject::_sfColor field.
+//! Get the value of the DiscUIDrawObject::_sfCenterColor field.
 inline
-Color4f &DiscUIDrawObjectBase::getColor(void)
+Color4f &DiscUIDrawObjectBase::getCenterColor(void)
 {
-    return _sfColor.getValue();
+    return _sfCenterColor.getValue();
 }
 
-//! Get the value of the DiscUIDrawObject::_sfColor field.
+//! Get the value of the DiscUIDrawObject::_sfCenterColor field.
 inline
-const Color4f &DiscUIDrawObjectBase::getColor(void) const
+const Color4f &DiscUIDrawObjectBase::getCenterColor(void) const
 {
-    return _sfColor.getValue();
+    return _sfCenterColor.getValue();
 }
 
-//! Set the value of the DiscUIDrawObject::_sfColor field.
+//! Set the value of the DiscUIDrawObject::_sfCenterColor field.
 inline
-void DiscUIDrawObjectBase::setColor(const Color4f &value)
+void DiscUIDrawObjectBase::setCenterColor(const Color4f &value)
 {
-    _sfColor.setValue(value);
+    _sfCenterColor.setValue(value);
+}
+
+//! Get the value of the DiscUIDrawObject::_sfOuterColor field.
+inline
+Color4f &DiscUIDrawObjectBase::getOuterColor(void)
+{
+    return _sfOuterColor.getValue();
+}
+
+//! Get the value of the DiscUIDrawObject::_sfOuterColor field.
+inline
+const Color4f &DiscUIDrawObjectBase::getOuterColor(void) const
+{
+    return _sfOuterColor.getValue();
+}
+
+//! Set the value of the DiscUIDrawObject::_sfOuterColor field.
+inline
+void DiscUIDrawObjectBase::setOuterColor(const Color4f &value)
+{
+    _sfOuterColor.setValue(value);
 }
 
 //! Get the value of the DiscUIDrawObject::_sfOpacity field.

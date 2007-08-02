@@ -515,7 +515,8 @@ void DefaultLookAndFeel::init(void)
 		RadioBackground->setSubDivisions(10);
 		RadioBackground->setStartAngleRad(0);
 		RadioBackground->setEndAngleRad(6.28318531);
-		RadioBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+		RadioBackground->setCenterColor(Color4f(1.0,1.0,1.0,1.0));
+		RadioBackground->setOuterColor(Color4f(1.0,1.0,1.0,1.0));
 		RadioBackground->setOpacity(1.0);
 		RadioBackground->setCenter(Pnt2s(0,0));
 	endEditCP(RadioBackground);
@@ -540,7 +541,8 @@ void DefaultLookAndFeel::init(void)
 		RadioSelected->setSubDivisions(20);
 		RadioSelected->setStartAngleRad(0);
 		RadioSelected->setEndAngleRad(6.28318531);
-		RadioSelected->setColor(Color4f(0.0,0.0,0.0,1.0));
+		RadioSelected->setCenterColor(Color4f(0.0,0.0,0.0,1.0));
+		RadioSelected->setOuterColor(Color4f(0.0,0.0,0.0,1.0));
 		RadioSelected->setOpacity(1.0);
 		RadioSelected->setCenter(Pnt2s(0,0));
 	endEditCP(RadioSelected);

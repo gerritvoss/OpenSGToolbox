@@ -162,7 +162,7 @@ void TextField::mouseClicked(const MouseEvent& e)
 			Pnt2s CurrentPosition;
 			getFont()->getBounds(getText(), TopLeftText, BottomRightText);
 			getInsideBorderBounds(TopLeft, BottomRight);
-			TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText, getVerticalAlignment(), 0.0);
+			TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText-TopLeftText, getVerticalAlignment(), 0.0);
 
 			//set caret position to proper place
 			//if the mouse is to the left of the text, set it to the begining.
@@ -230,7 +230,7 @@ void TextField::mousePressed(const MouseEvent& e)
 	Pnt2s CurrentPosition;
 	getFont()->getBounds(getText(), TopLeftText, BottomRightText);
     getInsideBorderBounds(TopLeft, BottomRight);
-    TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText, getVerticalAlignment(), 0.0);
+    TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText-TopLeftText, getVerticalAlignment(), 0.0);
 	if(e.getButton() == e.BUTTON1)
 	{
 		//set caret position to proper place
@@ -281,7 +281,7 @@ void TextField::mouseDragged(const MouseEvent& e)
 	Int32 OriginalPosition = getCaretPosition();
 	getFont()->getBounds(getText(), TopLeftText, BottomRightText);
     getInsideBorderBounds(TopLeft, BottomRight);
-    TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText, getVerticalAlignment(), 0.0);
+    TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText-TopLeftText, getVerticalAlignment(), 0.0);
 	if(e.getButton() == e.BUTTON1)
 	{
 		//set caret position to proper place

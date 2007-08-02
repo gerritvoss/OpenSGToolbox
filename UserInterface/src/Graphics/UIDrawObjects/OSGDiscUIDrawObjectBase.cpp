@@ -57,7 +57,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 #include "OSGDiscUIDrawObjectBase.h"
 #include "OSGDiscUIDrawObject.h"
 
@@ -82,8 +82,11 @@ const OSG::BitVector  DiscUIDrawObjectBase::EndAngleRadFieldMask =
 const OSG::BitVector  DiscUIDrawObjectBase::SubDivisionsFieldMask = 
     (TypeTraits<BitVector>::One << DiscUIDrawObjectBase::SubDivisionsFieldId);
 
-const OSG::BitVector  DiscUIDrawObjectBase::ColorFieldMask = 
-    (TypeTraits<BitVector>::One << DiscUIDrawObjectBase::ColorFieldId);
+const OSG::BitVector  DiscUIDrawObjectBase::CenterColorFieldMask = 
+    (TypeTraits<BitVector>::One << DiscUIDrawObjectBase::CenterColorFieldId);
+
+const OSG::BitVector  DiscUIDrawObjectBase::OuterColorFieldMask = 
+    (TypeTraits<BitVector>::One << DiscUIDrawObjectBase::OuterColorFieldId);
 
 const OSG::BitVector  DiscUIDrawObjectBase::OpacityFieldMask = 
     (TypeTraits<BitVector>::One << DiscUIDrawObjectBase::OpacityFieldId);
@@ -113,7 +116,10 @@ const OSG::BitVector DiscUIDrawObjectBase::MTInfluenceMask =
 /*! \var UInt16          DiscUIDrawObjectBase::_sfSubDivisions
     
 */
-/*! \var Color4f         DiscUIDrawObjectBase::_sfColor
+/*! \var Color4f         DiscUIDrawObjectBase::_sfCenterColor
+    
+*/
+/*! \var Color4f         DiscUIDrawObjectBase::_sfOuterColor
     
 */
 /*! \var Real32          DiscUIDrawObjectBase::_sfOpacity
@@ -155,10 +161,15 @@ FieldDescription *DiscUIDrawObjectBase::_desc[] =
                      false,
                      (FieldAccessMethod) &DiscUIDrawObjectBase::getSFSubDivisions),
     new FieldDescription(SFColor4f::getClassType(), 
-                     "Color", 
-                     ColorFieldId, ColorFieldMask,
+                     "CenterColor", 
+                     CenterColorFieldId, CenterColorFieldMask,
                      false,
-                     (FieldAccessMethod) &DiscUIDrawObjectBase::getSFColor),
+                     (FieldAccessMethod) &DiscUIDrawObjectBase::getSFCenterColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "OuterColor", 
+                     OuterColorFieldId, OuterColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &DiscUIDrawObjectBase::getSFOuterColor),
     new FieldDescription(SFReal32::getClassType(), 
                      "Opacity", 
                      OpacityFieldId, OpacityFieldMask,
@@ -245,7 +256,8 @@ DiscUIDrawObjectBase::DiscUIDrawObjectBase(void) :
     _sfStartAngleRad          (Real32(0.0)), 
     _sfEndAngleRad            (Real32(6.283185307)), 
     _sfSubDivisions           (UInt16(24)), 
-    _sfColor                  (Color4f(1.0,1.0,1.0,1.0)), 
+    _sfCenterColor            (Color4f(1.0,1.0,1.0,1.0)), 
+    _sfOuterColor             (Color4f(1.0,1.0,1.0,1.0)), 
     _sfOpacity                (Real32(1.0)), 
     Inherited() 
 {
@@ -262,7 +274,8 @@ DiscUIDrawObjectBase::DiscUIDrawObjectBase(const DiscUIDrawObjectBase &source) :
     _sfStartAngleRad          (source._sfStartAngleRad          ), 
     _sfEndAngleRad            (source._sfEndAngleRad            ), 
     _sfSubDivisions           (source._sfSubDivisions           ), 
-    _sfColor                  (source._sfColor                  ), 
+    _sfCenterColor            (source._sfCenterColor            ), 
+    _sfOuterColor             (source._sfOuterColor             ), 
     _sfOpacity                (source._sfOpacity                ), 
     Inherited                 (source)
 {
@@ -310,9 +323,14 @@ UInt32 DiscUIDrawObjectBase::getBinSize(const BitVector &whichField)
         returnValue += _sfSubDivisions.getBinSize();
     }
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    if(FieldBits::NoField != (CenterColorFieldMask & whichField))
     {
-        returnValue += _sfColor.getBinSize();
+        returnValue += _sfCenterColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (OuterColorFieldMask & whichField))
+    {
+        returnValue += _sfOuterColor.getBinSize();
     }
 
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
@@ -359,9 +377,14 @@ void DiscUIDrawObjectBase::copyToBin(      BinaryDataHandler &pMem,
         _sfSubDivisions.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    if(FieldBits::NoField != (CenterColorFieldMask & whichField))
     {
-        _sfColor.copyToBin(pMem);
+        _sfCenterColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OuterColorFieldMask & whichField))
+    {
+        _sfOuterColor.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
@@ -407,9 +430,14 @@ void DiscUIDrawObjectBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfSubDivisions.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    if(FieldBits::NoField != (CenterColorFieldMask & whichField))
     {
-        _sfColor.copyFromBin(pMem);
+        _sfCenterColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OuterColorFieldMask & whichField))
+    {
+        _sfOuterColor.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
@@ -445,8 +473,11 @@ void DiscUIDrawObjectBase::executeSyncImpl(      DiscUIDrawObjectBase *pOther,
     if(FieldBits::NoField != (SubDivisionsFieldMask & whichField))
         _sfSubDivisions.syncWith(pOther->_sfSubDivisions);
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
+    if(FieldBits::NoField != (CenterColorFieldMask & whichField))
+        _sfCenterColor.syncWith(pOther->_sfCenterColor);
+
+    if(FieldBits::NoField != (OuterColorFieldMask & whichField))
+        _sfOuterColor.syncWith(pOther->_sfOuterColor);
 
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
         _sfOpacity.syncWith(pOther->_sfOpacity);
@@ -479,8 +510,11 @@ void DiscUIDrawObjectBase::executeSyncImpl(      DiscUIDrawObjectBase *pOther,
     if(FieldBits::NoField != (SubDivisionsFieldMask & whichField))
         _sfSubDivisions.syncWith(pOther->_sfSubDivisions);
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
+    if(FieldBits::NoField != (CenterColorFieldMask & whichField))
+        _sfCenterColor.syncWith(pOther->_sfCenterColor);
+
+    if(FieldBits::NoField != (OuterColorFieldMask & whichField))
+        _sfOuterColor.syncWith(pOther->_sfOuterColor);
 
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
         _sfOpacity.syncWith(pOther->_sfOpacity);

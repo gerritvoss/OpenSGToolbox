@@ -92,7 +92,7 @@ void Canvas::drawInternal(const GraphicsPtr TheGraphics) const
 
    //TheGraphics->drawLine(Pnt2s( 50,50), Pnt2s(150,150),5.0, Color4f(1.0,0.0,0.0,1.0),1.0);
    
-   TheGraphics->drawDisc(Pnt2s(100,100), 50,50, 0.0, 3.14159, 24, Color4f(0.0,0.0,1.0,1.0),1.0);
+   TheGraphics->drawDisc(Pnt2s(100,100), 50,50, 0.0, 3.14159, 24, Color4f(0.0,0.0,1.0,1.0), Color4f(0.0,0.0,1.0,1.0),1.0);
    TheGraphics->drawArc(Pnt2s(100,100), 50,50, 0.0, 3.14159,3.0, 24, Color4f(1.0,1.0,1.0,1.0),1.0);
    //TheGraphics->drawText(Pnt2s(10,150), std::string("Eat my shorts foo!"), TheFont, Color4f(1.0,0.0,0.0,1.0), 1.0);
 }

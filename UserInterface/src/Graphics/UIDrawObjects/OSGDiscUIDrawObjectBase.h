@@ -73,7 +73,8 @@
 #include <OpenSG/OSGReal32Fields.h> // StartAngleRad type
 #include <OpenSG/OSGReal32Fields.h> // EndAngleRad type
 #include <OpenSG/OSGUInt16Fields.h> // SubDivisions type
-#include <OpenSG/OSGColor4fFields.h> // Color type
+#include <OpenSG/OSGColor4fFields.h> // CenterColor type
+#include <OpenSG/OSGColor4fFields.h> // OuterColor type
 #include <OpenSG/OSGReal32Fields.h> // Opacity type
 
 #include "OSGDiscUIDrawObjectFields.h"
@@ -104,8 +105,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING DiscUIDrawObjectBase : public UIDrawObject
         StartAngleRadFieldId = HeightFieldId        + 1,
         EndAngleRadFieldId   = StartAngleRadFieldId + 1,
         SubDivisionsFieldId  = EndAngleRadFieldId   + 1,
-        ColorFieldId         = SubDivisionsFieldId  + 1,
-        OpacityFieldId       = ColorFieldId         + 1,
+        CenterColorFieldId   = SubDivisionsFieldId  + 1,
+        OuterColorFieldId    = CenterColorFieldId   + 1,
+        OpacityFieldId       = OuterColorFieldId    + 1,
         NextFieldId          = OpacityFieldId       + 1
     };
 
@@ -115,7 +117,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DiscUIDrawObjectBase : public UIDrawObject
     static const OSG::BitVector StartAngleRadFieldMask;
     static const OSG::BitVector EndAngleRadFieldMask;
     static const OSG::BitVector SubDivisionsFieldMask;
-    static const OSG::BitVector ColorFieldMask;
+    static const OSG::BitVector CenterColorFieldMask;
+    static const OSG::BitVector OuterColorFieldMask;
     static const OSG::BitVector OpacityFieldMask;
 
 
@@ -149,7 +152,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DiscUIDrawObjectBase : public UIDrawObject
            SFReal32            *getSFStartAngleRad  (void);
            SFReal32            *getSFEndAngleRad    (void);
            SFUInt16            *getSFSubDivisions   (void);
-           SFColor4f           *getSFColor          (void);
+           SFColor4f           *getSFCenterColor    (void);
+           SFColor4f           *getSFOuterColor     (void);
            SFReal32            *getSFOpacity        (void);
 
            Pnt2s               &getCenter         (void);
@@ -164,8 +168,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING DiscUIDrawObjectBase : public UIDrawObject
      const Real32              &getEndAngleRad    (void) const;
            UInt16              &getSubDivisions   (void);
      const UInt16              &getSubDivisions   (void) const;
-           Color4f             &getColor          (void);
-     const Color4f             &getColor          (void) const;
+           Color4f             &getCenterColor    (void);
+     const Color4f             &getCenterColor    (void) const;
+           Color4f             &getOuterColor     (void);
+     const Color4f             &getOuterColor     (void) const;
            Real32              &getOpacity        (void);
      const Real32              &getOpacity        (void) const;
 
@@ -180,7 +186,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DiscUIDrawObjectBase : public UIDrawObject
      void setStartAngleRad  ( const Real32 &value );
      void setEndAngleRad    ( const Real32 &value );
      void setSubDivisions   ( const UInt16 &value );
-     void setColor          ( const Color4f &value );
+     void setCenterColor    ( const Color4f &value );
+     void setOuterColor     ( const Color4f &value );
      void setOpacity        ( const Real32 &value );
 
     /*! \}                                                                 */
@@ -230,7 +237,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DiscUIDrawObjectBase : public UIDrawObject
     SFReal32            _sfStartAngleRad;
     SFReal32            _sfEndAngleRad;
     SFUInt16            _sfSubDivisions;
-    SFColor4f           _sfColor;
+    SFColor4f           _sfCenterColor;
+    SFColor4f           _sfOuterColor;
     SFReal32            _sfOpacity;
 
     /*! \}                                                                 */

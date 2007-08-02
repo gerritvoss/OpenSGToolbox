@@ -320,14 +320,14 @@ void Graphics2D::drawPolygon(const MFPnt2s Verticies, const Color4f& Color, cons
 	}
 }
 
-void Graphics2D::drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& Color, const Real32& Opacity) const
+void Graphics2D::drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& CenterColor, const Color4f& OuterColor, const Real32& Opacity) const
 {
 	Real32 angleNow = StartAngleRad;
 	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(static_cast<Real32>(SubDivisions));
 	if(EndAngleRad-StartAngleRad > 2*3.1415926535)
 		angleDiff = 2*3.1415926535/static_cast<Real32>(SubDivisions);
-   Real32 Alpha(Color.alpha() * Opacity * getOpacity());
-	if(Alpha < 1.0)
+    if(CenterColor.alpha() < 1.0 ||
+       OuterColor.alpha() < 1.0)
 	{
 		//Setup the blending equations properly
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -335,8 +335,9 @@ void Graphics2D::drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& 
 	}
 	
 	glBegin(GL_TRIANGLE_FAN);
-      glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
-		glVertex2sv(Center.getValues());
+      glColor4f(CenterColor.red(), CenterColor.green(), CenterColor.blue(), CenterColor.alpha() * Opacity * getOpacity() );
+      glVertex2sv(Center.getValues());
+      glColor4f(OuterColor.red(), OuterColor.green(), OuterColor.blue(), OuterColor.alpha() * Opacity * getOpacity() );
       for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
       {
 			glVertex2f(static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(Height)*osgsin(angleNow));
@@ -344,10 +345,11 @@ void Graphics2D::drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& 
 		}
 	glEnd();
 
-		if(Alpha < 1.0)
-	{
-		glDisable(GL_BLEND);
-	}
+    if(CenterColor.alpha() < 1.0 ||
+       OuterColor.alpha() < 1.0)
+    {
+        glDisable(GL_BLEND);
+    }
 }
 
 void Graphics2D::drawArc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const Real32& LineWidth, const UInt16& SubDivisions, const Color4f& Color, const Real32& Opacity) const

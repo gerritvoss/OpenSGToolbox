@@ -67,7 +67,16 @@ A UI DiscDrawObject.
 	>
 	</Field>
 	<Field
-		name="Color"
+		name="CenterColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0,1.0,1.0,1.0"
+	>
+	</Field>
+	<Field
+		name="OuterColor"
 		type="Color4f"
 		cardinality="single"
 		visibility="external"
