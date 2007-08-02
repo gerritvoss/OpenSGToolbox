@@ -76,6 +76,7 @@
 #include "Graphics/UIDrawObjects/OSGLineUIDrawObject.h"
 #include "Component/OSGUIDrawObjectCanvas.h"
 #include "Component/Text/OSGTextField.h"
+#include "Component/Text/OSGTextArea.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -748,6 +749,55 @@ void WindowsLookAndFeel::init(void)
 
 	TextField::getClassType().setPrototype(WindowsTextField);
 
+	/********Text Area********/
+	ColorUIBackgroundPtr WindowsTextAreaBackground = ColorUIBackground::create();
+	beginEditCP(WindowsTextAreaBackground);
+		WindowsTextAreaBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
+	endEditCP(WindowsTextAreaBackground);
+
+	ColorUIBackgroundPtr WindowsDisabledTextAreaBackground = ColorUIBackground::create();
+	beginEditCP(WindowsDisabledTextAreaBackground);
+		WindowsDisabledTextAreaBackground->setColor(Color4f(.8, .8, .8, 1.0));
+	endEditCP(WindowsDisabledTextAreaBackground);
+
+	BevelBorderPtr WindowsTextAreaBorder = BevelBorder::create();
+	beginEditCP(WindowsTextAreaBorder, BevelBorder::RaisedFieldMask);
+		WindowsTextAreaBorder->setRaised(false);
+		WindowsTextAreaBorder->setWidth(2);
+		WindowsTextAreaBorder->setHighlightInner(Color4f(.9, .9, .9, 1.0));
+		WindowsTextAreaBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		WindowsTextAreaBorder->setShadowInner(Color4f(0.65, 0.65, 0.65, 1.0));
+		WindowsTextAreaBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
+	endEditCP(WindowsTextAreaBorder, BevelBorder::RaisedFieldMask);
+
+	TextAreaPtr WindowsTextArea = TextArea::create();
+	beginEditCP(WindowsTextArea);
+		//size
+		WindowsTextArea->setMinSize(Vec2s(0, 0));
+		WindowsTextArea->setMaxSize(Vec2s(32767,32767));
+		WindowsTextArea->setPreferredSize(Vec2s(100, 25));
+
+		//font
+		WindowsTextArea->setFont(WindowsFont);
+		WindowsTextArea->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
+		WindowsTextArea->setSelectionTextColor(Color4f(0.0, 0.0, 0.0, 1.0));
+		
+
+		//background
+		WindowsTextArea->setBackground(WindowsTextAreaBackground);
+		WindowsTextArea->setDisabledBackground(WindowsDisabledTextAreaBackground);
+
+		//Border
+		WindowsTextArea->setBorder(WindowsTextAreaBorder);
+		WindowsTextArea->setDisabledBorder(WindowsTextAreaBorder);
+
+		//Color
+		WindowsTextArea->setForegroundColor(Color4f(0.0, 0.0, 0.0, 1.0));
+		WindowsTextArea->setDisabledForegroundColor(Color4f(.1, .1, .1, 1.0));
+
+	endEditCP(WindowsTextArea);
+
+	TextArea::getClassType().setPrototype(WindowsTextArea);
 
 
 	/*******Borders********/
