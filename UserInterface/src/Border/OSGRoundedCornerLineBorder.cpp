@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGRoundedCornerLineBorder.h"
+#include "Graphics/OSGGraphics2d.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,13 +79,23 @@ void RoundedCornerLineBorder::initMethod (void)
 
 void RoundedCornerLineBorder::draw(const GraphicsPtr g, const Int16 x, const Int16 y , const UInt16 Width, const UInt16 Height, const Real32 Opacity) const
 {
-	//TODO:Implement
+	//draw corners
+	g->drawComplexDisc(Pnt2s(x+getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius(), 3.14159265, 4.71238898, 10, getColor(), getColor(), Opacity);
+	g->drawComplexDisc(Pnt2s(x+getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius(), 1.57079633, 3.14159265, 10, getColor(), getColor(), Opacity);
+	g->drawComplexDisc(Pnt2s(x+Width-getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius(), 0, 1.57079633, 10, getColor(), getColor(), Opacity);
+	g->drawComplexDisc(Pnt2s(x+Width-getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius(), 4.71238898,6.28318531, 10, getColor(), getColor(), Opacity);
 
+	//draw sides
+	g->drawRect(Pnt2s(x, y+getCornerRadius()), Pnt2s(x+getWidth(), y+Height-getCornerRadius()), getColor(), Opacity);
+	g->drawRect(Pnt2s(x+getCornerRadius(), y), Pnt2s(x+Width-getCornerRadius(), y+getWidth()), getColor(), Opacity);
+	g->drawRect(Pnt2s(x+Width-getWidth(), y+getCornerRadius()), Pnt2s(x+Width, y+Height-getCornerRadius()), getColor(), Opacity);
+	g->drawRect(Pnt2s(x+getCornerRadius(), y+Height-getWidth()), Pnt2s(x+Width-getCornerRadius(), y+Height), getColor(), Opacity);
 }
 
 void RoundedCornerLineBorder::getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& Bottom) const
 {
 	//TODO:Implement
+	Left=Right=Top=Bottom = getWidth(); //wrong, but what else are you supposed to do?
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

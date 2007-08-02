@@ -53,6 +53,7 @@
 #include "Border/OSGBevelBorder.h"
 #include "Border/OSGMatteBorder.h"
 #include "Border/OSGCompoundBorder.h"
+#include "Border/OSGRoundedCornerLineBorder.h"
 #include "Background/OSGColorUIBackground.h"
 #include "Background/OSGEmptyUIBackground.h"
 #include "Background/OSGCompoundUIBackground.h"
@@ -869,6 +870,16 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(DefaultCompoundBorder);
 
 	CompoundBorder::getClassType().setPrototype(DefaultCompoundBorder);
+
+	/********Rounded Corner Line Border********/
+	RoundedCornerLineBorderPtr DefaultRoundedCornerLineBorder = RoundedCornerLineBorder::create();
+	beginEditCP(DefaultRoundedCornerLineBorder);
+		DefaultRoundedCornerLineBorder->setCornerRadius(8);
+		DefaultRoundedCornerLineBorder->setWidth(2);
+		DefaultRoundedCornerLineBorder->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
+	endEditCP(DefaultRoundedCornerLineBorder);
+
+	RoundedCornerLineBorder::getClassType().setPrototype(DefaultRoundedCornerLineBorder);
 
 	/*********Backgounds***********/
 	/*********Color Background**********/

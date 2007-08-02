@@ -351,6 +351,35 @@ void Graphics2D::drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& 
         glDisable(GL_BLEND);
     }
 }
+void Graphics2D::drawComplexDisc(const Pnt2s& Center, const Int16& InnerRadius, const Int16& OuterRadius, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& CenterColor, const Color4f& OuterColor, const Real32& Opacity) const
+{	
+	Real32 angleNow = StartAngleRad;
+	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(static_cast<Real32>(SubDivisions));
+	if(EndAngleRad-StartAngleRad > 2*3.1415926535)
+		angleDiff = 2*3.1415926535/static_cast<Real32>(SubDivisions);
+	if(CenterColor.alpha() < 1.0 ||
+       OuterColor.alpha() < 1.0)
+	{
+		//Setup the blending equations properly
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+	}
+	glBegin(GL_QUAD_STRIP);
+    for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
+	{
+		glColor4f(OuterColor.red(), OuterColor.green(), OuterColor.blue(), OuterColor.alpha());
+		glVertex2f(static_cast<Real32>(Center.x()) + static_cast<Real32>(OuterRadius)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(OuterRadius)*osgsin(angleNow));
+		glColor4f(CenterColor.red(), CenterColor.green(), CenterColor.blue(), CenterColor.alpha());
+		glVertex2f(static_cast<Real32>(Center.x()) + static_cast<Real32>(InnerRadius)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(InnerRadius)*osgsin(angleNow));
+		angleNow += angleDiff;
+	}
+	glEnd();
+	if(CenterColor.alpha() < 1.0 ||
+       OuterColor.alpha() < 1.0)
+    {
+        glDisable(GL_BLEND);
+    }
+}
 
 void Graphics2D::drawArc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const Real32& LineWidth, const UInt16& SubDivisions, const Color4f& Color, const Real32& Opacity) const
 {
