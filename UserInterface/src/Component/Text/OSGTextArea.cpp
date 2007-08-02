@@ -429,7 +429,7 @@ void TextArea::mouseClicked(const MouseEvent& e)
 		{
 
 			//set caret position to proper place
-			Position = findTextPosition(WindowToComponent(e.getLocation(), TextAreaPtr(this)));
+			Position = findTextPosition(DrawingSurfaceToComponent(e.getLocation(), TextAreaPtr(this)));
 			if(isPunctuationChar(getText()[Position]))
 			{
 				EndWord = Position + 1;
@@ -471,7 +471,7 @@ void TextArea::mousePressed(const MouseEvent& e)
 	{
 		//set caret position to proper place
 		beginEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
-			setCaretPosition( findTextPosition(WindowToComponent(e.getLocation(), TextAreaPtr(this))));
+			setCaretPosition( findTextPosition(DrawingSurfaceToComponent(e.getLocation(), TextAreaPtr(this))));
 		endEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
 
 		_TextSelectionEnd = getCaretPosition();
@@ -487,7 +487,7 @@ void TextArea::mouseDragged(const MouseEvent& e)
 		//set caret position to proper place
 		
 		beginEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
-			setCaretPosition( findTextPosition(WindowToComponent(e.getLocation(), TextAreaPtr(this))));
+			setCaretPosition( findTextPosition(DrawingSurfaceToComponent(e.getLocation(), TextAreaPtr(this))));
 		endEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
 		if(getCaretPosition() < OriginalPosition)
 		{

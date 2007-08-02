@@ -347,7 +347,7 @@ void SplitPanel::DividerDraggedListener::mouseDragged(const MouseEvent& e)
 
 	if(e.getButton() == e.BUTTON1)
 	{
-		Pnt2s temp = WindowToComponent(e.getLocation(), _SplitPanel);
+		Pnt2s temp = DrawingSurfaceToComponent(e.getLocation(), _SplitPanel);
 		beginEditCP(_SplitPanel, DividerPositionFieldMask);
 			if (_SplitPanel->getDividerPosition() <= 1.0)
 			{
