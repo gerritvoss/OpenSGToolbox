@@ -122,12 +122,12 @@ void TextArea::drawInternal(const GraphicsPtr TheGraphics) const
 			std::string drawnText = _LineContents[i]._Contents;
 			Pnt2s offset = Pnt2s(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset);
 			TheGraphics->drawText(offset,drawnText.substr(0, StartSelection), getFont(), ForeColor, getOpacity());//draw before selection text
-			TheGraphics->drawRect(offset+Pnt2s(TheGraphics->getTextBounds(drawnText.substr(0, StartSelection), getFont()).x(), 0), //draw selection rect
-				TheGraphics->getTextBounds(drawnText.substr(0, EndSelection), getFont())+offset,
+			TheGraphics->drawRect(offset+Vec2s(TheGraphics->getTextBounds(drawnText.substr(0, StartSelection), getFont()).x(), 0), //draw selection rect
+				TheGraphics->getTextBounds(drawnText.substr(0, EndSelection), getFont())+Vec2s(offset),
 				getSelectionBoxColor(), getOpacity());
-			TheGraphics->drawText(offset+Pnt2s(TheGraphics->getTextBounds(drawnText.substr(0, StartSelection), getFont()).x(), 0), //draw selected text
+			TheGraphics->drawText(offset+Vec2s(TheGraphics->getTextBounds(drawnText.substr(0, StartSelection), getFont()).x(), 0), //draw selected text
 				drawnText.substr(StartSelection, EndSelection-StartSelection), getFont(), getSelectionTextColor(), getOpacity());
-			TheGraphics->drawText(offset+Pnt2s(TheGraphics->getTextBounds(drawnText.substr(0, EndSelection), getFont()).x(), 0), //draw after selection text
+			TheGraphics->drawText(offset+Vec2s(TheGraphics->getTextBounds(drawnText.substr(0, EndSelection), getFont()).x(), 0), //draw after selection text
 				drawnText.substr(EndSelection, drawnText.size()-EndSelection), getFont(), ForeColor, getOpacity());
 		}
 
@@ -210,7 +210,8 @@ void TextArea::changed(BitVector whichField, UInt32 origin)
 		_LineContents.pop_back();
 	}
 	Pnt2s TopLeft, BottomRight, TempPos;
-	Pnt2s TempTopLeft, TempBottomRight, FullTextSize;
+	Pnt2s TempTopLeft, TempBottomRight;
+	Vec2s FullTextSize;
 	getInsideBorderBounds(TopLeft, BottomRight);
 	std::string temptext;
 	Int32 XPosition = 0;
@@ -309,14 +310,14 @@ void TextArea::changed(BitVector whichField, UInt32 origin)
 	//calculate offsets
 	//begin with first line
 	getFont()->getBounds(_LineContents[0]._Contents, TempTopLeft, TempBottomRight);
-	FullTextSize = Pnt2s(TempBottomRight.x(), _LineContents.size()*TempBottomRight.y());
+	FullTextSize.setValues(TempBottomRight.x(), _LineContents.size()*TempBottomRight.y());
 	TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, FullTextSize, (Real32)0.0, (Real32)0.0);//eventually the alignments will be get horz/vert al
 	_LineContents[0]._LeftHorizontalOffset = TempPos.x();
 	_LineContents[0]._VerticalOffset = TempPos.y();
 	for(Int32 i = 1; i < _LineContents.size(); i++)
 	{						
 		getFont()->getBounds(_LineContents[i]._Contents, TempTopLeft, TempBottomRight);
-		FullTextSize = Pnt2s(TempBottomRight.x(), _LineContents.size()*TempBottomRight.y());
+		FullTextSize.setValues(TempBottomRight.x(), _LineContents.size()*TempBottomRight.y());
 		TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, FullTextSize, (Real32)0.0, (Real32)0.0);//eventually the alignments will be get horz/vert al
 		_LineContents[i]._LeftHorizontalOffset = TempPos.x();
 		_LineContents[i]._VerticalOffset = TempPos.y()+TempBottomRight.y()*i;

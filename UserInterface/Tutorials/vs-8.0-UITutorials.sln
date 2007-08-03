@@ -108,8 +108,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XXTesting", "XXTesting.vcpr
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "16TextField", "16TextField.vcproj", "{B9976D79-B504-4BA2-A90F-12C54DD18DE5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "21ExampleInterface", "21ExampleInterface.vcproj", "{F2ACA83B-BA52-4CB1-B776-6D916BBB143F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "22TextArea", "22TextArea.vcproj", "{F09E1E04-1987-4CC6-90F5-C853E325EEC5}"
 	ProjectSection(ProjectDependencies) = postProject
