@@ -61,6 +61,7 @@
 #include <OpenSG/UserInterface/OSGUIDefines.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
 #include <OpenSG/UserInterface/OSGGradientUIBackground.h>
+#include <OpenSG/UserInterface/OSGEmptyUIBackground.h>
 #include <OpenSG/UserInterface/OSGCompoundUIBackground.h>
 #include <OpenSG/UserInterface/OSGLabel.h>
 #include <OpenSG/UserInterface/OSGCheckboxButton.h>
@@ -417,7 +418,7 @@ int main(int argc, char **argv)
 		leftPanelLabel1->setBorder(emptyBorder);
 		leftPanelLabel1->setBackground(greyBackground);
 		leftPanelLabel1->setFont(leftPanelLabel1Font);
-		leftPanelLabel1->setText("Sample Label");
+		leftPanelLabel1->setText("OSG gui");
 		leftPanelLabel1->setPreferredSize( Vec2s(300, 100) );
 	endEditCP(leftPanelLabel1, Component::BorderFieldMask | Component::BackgroundFieldMask | Label::FontFieldMask | Label::TextFieldMask | Component::PreferredSizeFieldMask);
 
@@ -567,32 +568,32 @@ ComponentPtr createleftPanelButtonPanel(void)
 	ButtonPtr leftPanelButton6 = osg::Button::create();
 
 	beginEditCP(leftPanelButton1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
-		leftPanelButton1->setText("button1");
+		leftPanelButton1->setText("This");
 		leftPanelButton1->setPreferredSize( Vec2s(100,50) );
 	endEditCP(leftPanelButton1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 	
 	beginEditCP(leftPanelButton2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
-		leftPanelButton2->setText("button2");
+		leftPanelButton2->setText("is");
 		leftPanelButton2->setPreferredSize( Vec2s(100,50) );
 	endEditCP(leftPanelButton2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 
 	beginEditCP(leftPanelButton3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
-		leftPanelButton3->setText("button3");
+		leftPanelButton3->setText("an");
 		leftPanelButton3->setPreferredSize( Vec2s(100,50) );
 	endEditCP(leftPanelButton3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 
 	beginEditCP(leftPanelButton4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
-		leftPanelButton4->setText("button4");
+		leftPanelButton4->setText("example");
 		leftPanelButton4->setPreferredSize( Vec2s(100,50) );
 	endEditCP(leftPanelButton4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 
 	beginEditCP(leftPanelButton5, Button::TextFieldMask, Component::PreferredSizeFieldMask);
-		leftPanelButton5->setText("button5");
+		leftPanelButton5->setText("user");
 		leftPanelButton5->setPreferredSize( Vec2s(100,50) );
 	endEditCP(leftPanelButton5, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 	
 	beginEditCP(leftPanelButton6, Button::TextFieldMask, Component::PreferredSizeFieldMask);
-		leftPanelButton6->setText("button6");
+		leftPanelButton6->setText("interface.");
 		leftPanelButton6->setPreferredSize( Vec2s(100,50) );
 	endEditCP(leftPanelButton6, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 	
@@ -691,6 +692,17 @@ ComponentPtr createleftPanelRadioTextPanel(void)
 		leftPanelTextArea->setPreferredSize( Vec2s(125, 200) );
 	endEditCP(leftPanelTextArea, Component::PreferredSizeFieldMask);
 
+	// Create Panel and its Background/Border to label TextField
+	LabelPtr leftPanelTextFieldLabel = osg::Label::create();
+	EmptyUIBackgroundPtr leftPanelTextFieldLabelBackground = osg::EmptyUIBackground::create();
+	EmptyBorderPtr leftPanelTextFieldLabelBorder = osg::EmptyBorder::create();
+	beginEditCP(leftPanelTextFieldLabel, Component::PreferredSizeFieldMask | Component::BorderFieldMask | Component::BackgroundFieldMask | Label::TextFieldMask);
+		leftPanelTextFieldLabel->setPreferredSize( Vec2s(100, 25) );
+		leftPanelTextFieldLabel->setBorder(leftPanelTextFieldLabelBorder);
+		leftPanelTextFieldLabel->setBackground(leftPanelTextFieldLabelBackground);
+		leftPanelTextFieldLabel->setText("Text Field");
+	endEditCP(leftPanelTextFieldLabel, Component::PreferredSizeFieldMask | Component::BorderFieldMask |  Component::BackgroundFieldMask | Label::TextFieldMask);
+
 	// Create TextField
 	TextFieldPtr leftPanelTextField = osg::TextField::create();
 	beginEditCP(leftPanelTextField, Component::PreferredSizeFieldMask);
@@ -722,20 +734,13 @@ ComponentPtr createleftPanelRadioTextPanel(void)
 	beginEditCP(leftPanelRadioTextPanelRadioPanel, Component::BorderFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask | Container::LayoutFieldMask | Container::ChildrenFieldMask);
 		leftPanelRadioTextPanelRadioPanel->setBorder(leftPanelRadioTextPanelRadioPanelBorder);
 		leftPanelRadioTextPanelRadioPanel->setPreferredSize( Vec2s(125, 200) );
-		leftPanelRadioTextPanelRadioPanel->setBackground(leftPanelRadioTextPanelBackground);
 		leftPanelRadioTextPanelRadioPanel->setLayout(leftPanelRadioTextPanelRadioPanelLayout);
+		leftPanelRadioTextPanelRadioPanel->setBackground(leftPanelRadioTextPanelBackground);
 		leftPanelRadioTextPanelRadioPanel->getChildren().addValue(rbutton1);
 		leftPanelRadioTextPanelRadioPanel->getChildren().addValue(rbutton2);
 		leftPanelRadioTextPanelRadioPanel->getChildren().addValue(rbutton3);
 		leftPanelRadioTextPanelRadioPanel->getChildren().addValue(rbutton4);
 	endEditCP(leftPanelRadioTextPanelRadioPanel, Component::BorderFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask | Container::LayoutFieldMask | Container::ChildrenFieldMask);
-
-	/*beginEditCP(leftPanelRadioTextPanelLayout, GridLayout::RowsFieldMask | GridLayout::ColumnsFieldMask);
-		leftPanelRadioTextPanelLayout->setRows(2);
-		leftPanelRadioTextPanelLayout->setColumns(1);
-	endEditCP(leftPanelRadioTextPanelLayout, GridLayout::RowsFieldMask | GridLayout::ColumnsFieldMask);
-	*/
-
 
 	// Create Panel Border
 	LineBorderPtr panelBorder1 = osg::LineBorder::create();
@@ -749,8 +754,9 @@ ComponentPtr createleftPanelRadioTextPanel(void)
 	beginEditCP(leftPanelRadioTextPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
 		leftPanelRadioTextPanel->setPreferredSize( Vec2s(180, 500) );
 		leftPanelRadioTextPanel->getChildren().addValue(leftPanelRadioTextPanelRadioPanel);
-		leftPanelRadioTextPanel->getChildren().addValue(leftPanelTextField);
 		leftPanelRadioTextPanel->getChildren().addValue(leftPanelTextArea);
+		leftPanelRadioTextPanel->getChildren().addValue(leftPanelTextFieldLabel);
+		leftPanelRadioTextPanel->getChildren().addValue(leftPanelTextField);
 		leftPanelRadioTextPanel->setLayout(leftPanelRadioTextPanelLayout);
 		leftPanelRadioTextPanel->setBackground(leftPanelRadioTextPanelBackground);
 		leftPanelRadioTextPanel->setBorder(panelBorder1);
@@ -767,22 +773,22 @@ ComponentPtr createrightPanelButtonPanel(void)
 	ToggleButtonPtr rightPanelButton4 = osg::ToggleButton::create();
 
 	beginEditCP(rightPanelButton1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
-		rightPanelButton1->setText("r button1");
+		rightPanelButton1->setText("These");
 		rightPanelButton1->setPreferredSize( Vec2s(100,50) );
 	endEditCP(rightPanelButton1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 	
 	beginEditCP(rightPanelButton2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
-		rightPanelButton2->setText("r button2");
+		rightPanelButton2->setText("are");
 		rightPanelButton2->setPreferredSize( Vec2s(100,50) );
 	endEditCP(rightPanelButton2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 
 	beginEditCP(rightPanelButton3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
-		rightPanelButton3->setText("r button3");
+		rightPanelButton3->setText("toggle");
 		rightPanelButton3->setPreferredSize( Vec2s(100,50) );
 	endEditCP(rightPanelButton3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 
 	beginEditCP(rightPanelButton4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
-		rightPanelButton4->setText("r button4");
+		rightPanelButton4->setText("buttons");
 		rightPanelButton4->setPreferredSize( Vec2s(100,50) );
 	endEditCP(rightPanelButton4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 
@@ -1027,7 +1033,7 @@ void create3DObjects(void)
 
 	
 	// On Torus	
-	mat.setTranslate(0.0,100.0,0.0);
+	mat.setTranslate(0.0,100.0,-200.0);
 	TransformPtr TorusTranCore = Transform::create();
 	beginEditCP(TorusTranCore, Transform::MatrixFieldMask);
 	    TorusTranCore->setMatrix(mat);
@@ -1040,7 +1046,7 @@ void create3DObjects(void)
 	endEditCP(torus, Node::CoreFieldMask | Node::ChildrenFieldMask);
 	
 	// On Sphere
-	mat.setTranslate(100.0,0.0,0.0);
+	mat.setTranslate(250.0,0.0,0.0);
 
 	TransformPtr SphereTranCore = Transform::create();
 	beginEditCP(SphereTranCore, Transform::MatrixFieldMask);
@@ -1054,7 +1060,7 @@ void create3DObjects(void)
 	endEditCP(sphere, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
 	// On Cone
-	mat.setTranslate(100.0,0.0,0.0);
+	mat.setTranslate(0.0,0.0,-250.0);
 
 	TransformPtr ConeTranCore = Transform::create();
 	beginEditCP(ConeTranCore, Transform::MatrixFieldMask);
@@ -1068,7 +1074,7 @@ void create3DObjects(void)
 	endEditCP(cone, Node::CoreFieldMask | Node::ChildrenFieldMask);
 		
 	// On Box
-	mat.setTranslate(100.0,250.0,0.0);
+	mat.setTranslate(250.0,250.0,0.0);
 
 	TransformPtr BoxTranCore = Transform::create();
 	beginEditCP(BoxTranCore, Transform::MatrixFieldMask);

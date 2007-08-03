@@ -144,7 +144,7 @@ public:
 				scene->subChild(sphere);
 			endEditCP  (scene, Node::ChildrenFieldMask);	
    }
-};
+}; 
 class MakeBox : public ButtonSelectedListener
 {
 public:
