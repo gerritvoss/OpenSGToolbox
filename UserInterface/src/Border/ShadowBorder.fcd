@@ -13,7 +13,16 @@
 >
 UI Shadow Border.
 	<Field
-		name="VerticalOffset"
+		name="TopOffset"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="BottomOffset"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
@@ -22,7 +31,16 @@ UI Shadow Border.
 	>
 	</Field>
 	<Field
-		name="HorizontalOffset"
+		name="LeftOffset"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="RightOffset"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"

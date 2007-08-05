@@ -78,13 +78,57 @@ void ShadowBorder::initMethod (void)
 
 void ShadowBorder::draw(const GraphicsPtr g, const Int16 x, const Int16 y , const UInt16 Width, const UInt16 Height, const Real32 Opacity) const
 {
-	//TODO:Implement
+    //Determine TopLeft and BottomRight of the Shadow
+    Pnt2s ShadowTopLeft,
+          ShadowBottomRight;
+
+    //Top
+    if(getTopOffset() > 0) { ShadowTopLeft[1] = y; }
+    else { ShadowTopLeft[1] = y + getBottomOffset(); }
+    
+    //Bottom
+    if(getBottomOffset() > 0) { ShadowBottomRight[1] = y+Height; }
+    else { ShadowBottomRight[1] = y + Height - getTopOffset(); }
+
+    //Left
+    if(getLeftOffset() > 0) { ShadowTopLeft[0] = x; }
+    else { ShadowTopLeft[0] = x + getRightOffset(); }
+
+    //Right
+    if(getRightOffset() > 0) { ShadowBottomRight[0] = x+Width; }
+    else { ShadowBottomRight[0] = x + Width - getLeftOffset(); }
+
+    //Draw the Shadow
+    //TODO: Add some prettier drawing types for the shadow
+	g->drawRect(ShadowTopLeft, ShadowBottomRight, getColor(), Opacity);
+
+    //Draw the Inside Border
+    getInsideBorder()->draw(g, x+getLeftOffset(), y+getTopOffset(),Width-getRightOffset()-getLeftOffset(),Height-getTopOffset()-getBottomOffset(), Opacity);
 
 }
 
 void ShadowBorder::getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& Bottom) const
 {
-	//TODO:Implement
+    getInsideBorder()->getInsets(Left, Right, Top, Bottom);
+    Left +=getLeftOffset();
+    Right +=getRightOffset();
+    Top +=getTopOffset();
+    Bottom +=getBottomOffset();
+}
+
+void ShadowBorder::activateInternalDrawConstraints(const GraphicsPtr g, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const
+{
+    return getInsideBorder()->activateInternalDrawConstraints(g, x+getLeftOffset(), y+getTopOffset(),Width-getRightOffset()-getLeftOffset(),Height-getTopOffset()-getBottomOffset());
+}
+
+void ShadowBorder::deactivateInternalDrawConstraints(const GraphicsPtr g, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const
+{
+    return getInsideBorder()->deactivateInternalDrawConstraints(g, x+getLeftOffset(), y+getTopOffset(),Width-getRightOffset()-getLeftOffset(),Height-getTopOffset()-getBottomOffset());
+}
+
+bool ShadowBorder::isContained(const Pnt2s& p, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const
+{
+    return getInsideBorder()->isContained(p, x+getLeftOffset(), y+getTopOffset(),Width-getRightOffset()-getLeftOffset(),Height-getTopOffset()-getBottomOffset());
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

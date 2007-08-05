@@ -79,6 +79,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ShadowBorder : public ShadowBorderBase
 
     /*! \}                                                                 */
 	virtual void draw(const GraphicsPtr g, const Int16 x, const Int16 y , const UInt16 Width, const UInt16 Height, const Real32 Opacity) const;
+	virtual void activateInternalDrawConstraints(const GraphicsPtr g, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const;
+	virtual void deactivateInternalDrawConstraints(const GraphicsPtr g, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const;
+	virtual bool isContained(const Pnt2s& p, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const;
 	virtual void getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& Bottom) const;
     /*=========================  PROTECTED  ===============================*/
   protected:

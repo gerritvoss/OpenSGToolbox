@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -96,18 +96,32 @@ ShadowBorderPtr ShadowBorderBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ShadowBorder::_sfVerticalOffset field.
+//! Get the ShadowBorder::_sfTopOffset field.
 inline
-SFUInt32 *ShadowBorderBase::getSFVerticalOffset(void)
+SFUInt32 *ShadowBorderBase::getSFTopOffset(void)
 {
-    return &_sfVerticalOffset;
+    return &_sfTopOffset;
 }
 
-//! Get the ShadowBorder::_sfHorizontalOffset field.
+//! Get the ShadowBorder::_sfBottomOffset field.
 inline
-SFUInt32 *ShadowBorderBase::getSFHorizontalOffset(void)
+SFUInt32 *ShadowBorderBase::getSFBottomOffset(void)
 {
-    return &_sfHorizontalOffset;
+    return &_sfBottomOffset;
+}
+
+//! Get the ShadowBorder::_sfLeftOffset field.
+inline
+SFUInt32 *ShadowBorderBase::getSFLeftOffset(void)
+{
+    return &_sfLeftOffset;
+}
+
+//! Get the ShadowBorder::_sfRightOffset field.
+inline
+SFUInt32 *ShadowBorderBase::getSFRightOffset(void)
+{
+    return &_sfRightOffset;
 }
 
 //! Get the ShadowBorder::_sfColor field.
@@ -125,46 +139,88 @@ SFBorderPtr *ShadowBorderBase::getSFInsideBorder(void)
 }
 
 
-//! Get the value of the ShadowBorder::_sfVerticalOffset field.
+//! Get the value of the ShadowBorder::_sfTopOffset field.
 inline
-UInt32 &ShadowBorderBase::getVerticalOffset(void)
+UInt32 &ShadowBorderBase::getTopOffset(void)
 {
-    return _sfVerticalOffset.getValue();
+    return _sfTopOffset.getValue();
 }
 
-//! Get the value of the ShadowBorder::_sfVerticalOffset field.
+//! Get the value of the ShadowBorder::_sfTopOffset field.
 inline
-const UInt32 &ShadowBorderBase::getVerticalOffset(void) const
+const UInt32 &ShadowBorderBase::getTopOffset(void) const
 {
-    return _sfVerticalOffset.getValue();
+    return _sfTopOffset.getValue();
 }
 
-//! Set the value of the ShadowBorder::_sfVerticalOffset field.
+//! Set the value of the ShadowBorder::_sfTopOffset field.
 inline
-void ShadowBorderBase::setVerticalOffset(const UInt32 &value)
+void ShadowBorderBase::setTopOffset(const UInt32 &value)
 {
-    _sfVerticalOffset.setValue(value);
+    _sfTopOffset.setValue(value);
 }
 
-//! Get the value of the ShadowBorder::_sfHorizontalOffset field.
+//! Get the value of the ShadowBorder::_sfBottomOffset field.
 inline
-UInt32 &ShadowBorderBase::getHorizontalOffset(void)
+UInt32 &ShadowBorderBase::getBottomOffset(void)
 {
-    return _sfHorizontalOffset.getValue();
+    return _sfBottomOffset.getValue();
 }
 
-//! Get the value of the ShadowBorder::_sfHorizontalOffset field.
+//! Get the value of the ShadowBorder::_sfBottomOffset field.
 inline
-const UInt32 &ShadowBorderBase::getHorizontalOffset(void) const
+const UInt32 &ShadowBorderBase::getBottomOffset(void) const
 {
-    return _sfHorizontalOffset.getValue();
+    return _sfBottomOffset.getValue();
 }
 
-//! Set the value of the ShadowBorder::_sfHorizontalOffset field.
+//! Set the value of the ShadowBorder::_sfBottomOffset field.
 inline
-void ShadowBorderBase::setHorizontalOffset(const UInt32 &value)
+void ShadowBorderBase::setBottomOffset(const UInt32 &value)
 {
-    _sfHorizontalOffset.setValue(value);
+    _sfBottomOffset.setValue(value);
+}
+
+//! Get the value of the ShadowBorder::_sfLeftOffset field.
+inline
+UInt32 &ShadowBorderBase::getLeftOffset(void)
+{
+    return _sfLeftOffset.getValue();
+}
+
+//! Get the value of the ShadowBorder::_sfLeftOffset field.
+inline
+const UInt32 &ShadowBorderBase::getLeftOffset(void) const
+{
+    return _sfLeftOffset.getValue();
+}
+
+//! Set the value of the ShadowBorder::_sfLeftOffset field.
+inline
+void ShadowBorderBase::setLeftOffset(const UInt32 &value)
+{
+    _sfLeftOffset.setValue(value);
+}
+
+//! Get the value of the ShadowBorder::_sfRightOffset field.
+inline
+UInt32 &ShadowBorderBase::getRightOffset(void)
+{
+    return _sfRightOffset.getValue();
+}
+
+//! Get the value of the ShadowBorder::_sfRightOffset field.
+inline
+const UInt32 &ShadowBorderBase::getRightOffset(void) const
+{
+    return _sfRightOffset.getValue();
+}
+
+//! Set the value of the ShadowBorder::_sfRightOffset field.
+inline
+void ShadowBorderBase::setRightOffset(const UInt32 &value)
+{
+    _sfRightOffset.setValue(value);
 }
 
 //! Get the value of the ShadowBorder::_sfColor field.

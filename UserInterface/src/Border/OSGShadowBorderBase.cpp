@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -64,11 +64,17 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ShadowBorderBase::VerticalOffsetFieldMask = 
-    (TypeTraits<BitVector>::One << ShadowBorderBase::VerticalOffsetFieldId);
+const OSG::BitVector  ShadowBorderBase::TopOffsetFieldMask = 
+    (TypeTraits<BitVector>::One << ShadowBorderBase::TopOffsetFieldId);
 
-const OSG::BitVector  ShadowBorderBase::HorizontalOffsetFieldMask = 
-    (TypeTraits<BitVector>::One << ShadowBorderBase::HorizontalOffsetFieldId);
+const OSG::BitVector  ShadowBorderBase::BottomOffsetFieldMask = 
+    (TypeTraits<BitVector>::One << ShadowBorderBase::BottomOffsetFieldId);
+
+const OSG::BitVector  ShadowBorderBase::LeftOffsetFieldMask = 
+    (TypeTraits<BitVector>::One << ShadowBorderBase::LeftOffsetFieldId);
+
+const OSG::BitVector  ShadowBorderBase::RightOffsetFieldMask = 
+    (TypeTraits<BitVector>::One << ShadowBorderBase::RightOffsetFieldId);
 
 const OSG::BitVector  ShadowBorderBase::ColorFieldMask = 
     (TypeTraits<BitVector>::One << ShadowBorderBase::ColorFieldId);
@@ -83,10 +89,16 @@ const OSG::BitVector ShadowBorderBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var UInt32          ShadowBorderBase::_sfVerticalOffset
+/*! \var UInt32          ShadowBorderBase::_sfTopOffset
     
 */
-/*! \var UInt32          ShadowBorderBase::_sfHorizontalOffset
+/*! \var UInt32          ShadowBorderBase::_sfBottomOffset
+    
+*/
+/*! \var UInt32          ShadowBorderBase::_sfLeftOffset
+    
+*/
+/*! \var UInt32          ShadowBorderBase::_sfRightOffset
     
 */
 /*! \var Color4f         ShadowBorderBase::_sfColor
@@ -101,15 +113,25 @@ const OSG::BitVector ShadowBorderBase::MTInfluenceMask =
 FieldDescription *ShadowBorderBase::_desc[] = 
 {
     new FieldDescription(SFUInt32::getClassType(), 
-                     "VerticalOffset", 
-                     VerticalOffsetFieldId, VerticalOffsetFieldMask,
+                     "TopOffset", 
+                     TopOffsetFieldId, TopOffsetFieldMask,
                      false,
-                     (FieldAccessMethod) &ShadowBorderBase::getSFVerticalOffset),
+                     (FieldAccessMethod) &ShadowBorderBase::getSFTopOffset),
     new FieldDescription(SFUInt32::getClassType(), 
-                     "HorizontalOffset", 
-                     HorizontalOffsetFieldId, HorizontalOffsetFieldMask,
+                     "BottomOffset", 
+                     BottomOffsetFieldId, BottomOffsetFieldMask,
                      false,
-                     (FieldAccessMethod) &ShadowBorderBase::getSFHorizontalOffset),
+                     (FieldAccessMethod) &ShadowBorderBase::getSFBottomOffset),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "LeftOffset", 
+                     LeftOffsetFieldId, LeftOffsetFieldMask,
+                     false,
+                     (FieldAccessMethod) &ShadowBorderBase::getSFLeftOffset),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "RightOffset", 
+                     RightOffsetFieldId, RightOffsetFieldMask,
+                     false,
+                     (FieldAccessMethod) &ShadowBorderBase::getSFRightOffset),
     new FieldDescription(SFColor4f::getClassType(), 
                      "Color", 
                      ColorFieldId, ColorFieldMask,
@@ -195,8 +217,10 @@ void ShadowBorderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ShadowBorderBase::ShadowBorderBase(void) :
-    _sfVerticalOffset         (UInt32(5)), 
-    _sfHorizontalOffset       (UInt32(5)), 
+    _sfTopOffset              (UInt32(0)), 
+    _sfBottomOffset           (UInt32(5)), 
+    _sfLeftOffset             (UInt32(0)), 
+    _sfRightOffset            (UInt32(5)), 
     _sfColor                  (Color4f(0.0,0.0,0.0,1.0)), 
     _sfInsideBorder           (BorderPtr(NullFC)), 
     Inherited() 
@@ -208,8 +232,10 @@ ShadowBorderBase::ShadowBorderBase(void) :
 #endif
 
 ShadowBorderBase::ShadowBorderBase(const ShadowBorderBase &source) :
-    _sfVerticalOffset         (source._sfVerticalOffset         ), 
-    _sfHorizontalOffset       (source._sfHorizontalOffset       ), 
+    _sfTopOffset              (source._sfTopOffset              ), 
+    _sfBottomOffset           (source._sfBottomOffset           ), 
+    _sfLeftOffset             (source._sfLeftOffset             ), 
+    _sfRightOffset            (source._sfRightOffset            ), 
     _sfColor                  (source._sfColor                  ), 
     _sfInsideBorder           (source._sfInsideBorder           ), 
     Inherited                 (source)
@@ -228,14 +254,24 @@ UInt32 ShadowBorderBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (VerticalOffsetFieldMask & whichField))
+    if(FieldBits::NoField != (TopOffsetFieldMask & whichField))
     {
-        returnValue += _sfVerticalOffset.getBinSize();
+        returnValue += _sfTopOffset.getBinSize();
     }
 
-    if(FieldBits::NoField != (HorizontalOffsetFieldMask & whichField))
+    if(FieldBits::NoField != (BottomOffsetFieldMask & whichField))
     {
-        returnValue += _sfHorizontalOffset.getBinSize();
+        returnValue += _sfBottomOffset.getBinSize();
+    }
+
+    if(FieldBits::NoField != (LeftOffsetFieldMask & whichField))
+    {
+        returnValue += _sfLeftOffset.getBinSize();
+    }
+
+    if(FieldBits::NoField != (RightOffsetFieldMask & whichField))
+    {
+        returnValue += _sfRightOffset.getBinSize();
     }
 
     if(FieldBits::NoField != (ColorFieldMask & whichField))
@@ -257,14 +293,24 @@ void ShadowBorderBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (VerticalOffsetFieldMask & whichField))
+    if(FieldBits::NoField != (TopOffsetFieldMask & whichField))
     {
-        _sfVerticalOffset.copyToBin(pMem);
+        _sfTopOffset.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (HorizontalOffsetFieldMask & whichField))
+    if(FieldBits::NoField != (BottomOffsetFieldMask & whichField))
     {
-        _sfHorizontalOffset.copyToBin(pMem);
+        _sfBottomOffset.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LeftOffsetFieldMask & whichField))
+    {
+        _sfLeftOffset.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RightOffsetFieldMask & whichField))
+    {
+        _sfRightOffset.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (ColorFieldMask & whichField))
@@ -285,14 +331,24 @@ void ShadowBorderBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (VerticalOffsetFieldMask & whichField))
+    if(FieldBits::NoField != (TopOffsetFieldMask & whichField))
     {
-        _sfVerticalOffset.copyFromBin(pMem);
+        _sfTopOffset.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (HorizontalOffsetFieldMask & whichField))
+    if(FieldBits::NoField != (BottomOffsetFieldMask & whichField))
     {
-        _sfHorizontalOffset.copyFromBin(pMem);
+        _sfBottomOffset.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (LeftOffsetFieldMask & whichField))
+    {
+        _sfLeftOffset.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RightOffsetFieldMask & whichField))
+    {
+        _sfRightOffset.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (ColorFieldMask & whichField))
@@ -315,11 +371,17 @@ void ShadowBorderBase::executeSyncImpl(      ShadowBorderBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (VerticalOffsetFieldMask & whichField))
-        _sfVerticalOffset.syncWith(pOther->_sfVerticalOffset);
+    if(FieldBits::NoField != (TopOffsetFieldMask & whichField))
+        _sfTopOffset.syncWith(pOther->_sfTopOffset);
 
-    if(FieldBits::NoField != (HorizontalOffsetFieldMask & whichField))
-        _sfHorizontalOffset.syncWith(pOther->_sfHorizontalOffset);
+    if(FieldBits::NoField != (BottomOffsetFieldMask & whichField))
+        _sfBottomOffset.syncWith(pOther->_sfBottomOffset);
+
+    if(FieldBits::NoField != (LeftOffsetFieldMask & whichField))
+        _sfLeftOffset.syncWith(pOther->_sfLeftOffset);
+
+    if(FieldBits::NoField != (RightOffsetFieldMask & whichField))
+        _sfRightOffset.syncWith(pOther->_sfRightOffset);
 
     if(FieldBits::NoField != (ColorFieldMask & whichField))
         _sfColor.syncWith(pOther->_sfColor);
@@ -337,11 +399,17 @@ void ShadowBorderBase::executeSyncImpl(      ShadowBorderBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (VerticalOffsetFieldMask & whichField))
-        _sfVerticalOffset.syncWith(pOther->_sfVerticalOffset);
+    if(FieldBits::NoField != (TopOffsetFieldMask & whichField))
+        _sfTopOffset.syncWith(pOther->_sfTopOffset);
 
-    if(FieldBits::NoField != (HorizontalOffsetFieldMask & whichField))
-        _sfHorizontalOffset.syncWith(pOther->_sfHorizontalOffset);
+    if(FieldBits::NoField != (BottomOffsetFieldMask & whichField))
+        _sfBottomOffset.syncWith(pOther->_sfBottomOffset);
+
+    if(FieldBits::NoField != (LeftOffsetFieldMask & whichField))
+        _sfLeftOffset.syncWith(pOther->_sfLeftOffset);
+
+    if(FieldBits::NoField != (RightOffsetFieldMask & whichField))
+        _sfRightOffset.syncWith(pOther->_sfRightOffset);
 
     if(FieldBits::NoField != (ColorFieldMask & whichField))
         _sfColor.syncWith(pOther->_sfColor);

@@ -108,6 +108,7 @@ int main(int argc, char **argv)
 	MatteBorderPtr matteBorder = osg::MatteBorder::create();
 	EmptyBorderPtr emptyBorder = osg::EmptyBorder::create();
 	RoundedCornerLineBorderPtr roundedCornerLineBorder = osg::RoundedCornerLineBorder::create();
+	ShadowBorderPtr shadowBorder = osg::ShadowBorder::create();
 	
 	// Edit each Border Component and set all attributes
 	
@@ -190,6 +191,18 @@ int main(int argc, char **argv)
 		roundedCornerLineBorder->setCornerRadius(15);
 	endEditCP(roundedCornerLineBorder, RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask);
 
+    
+	// The ShadowBorder
+    beginEditCP(shadowBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask | ShadowBorder::RightOffsetFieldMask | ShadowBorder::ColorFieldMask | ShadowBorder::InsideBorderFieldMask );
+		shadowBorder->setTopOffset(0);
+		shadowBorder->setBottomOffset(5);
+		shadowBorder->setLeftOffset(0);
+		shadowBorder->setRightOffset(5);
+		shadowBorder->setInsideBorder(lineBorder);
+		shadowBorder->setColor(Color4f(0.0, 0.0, 0.0, 0.5));
+	endEditCP(shadowBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask | ShadowBorder::RightOffsetFieldMask | ShadowBorder::ColorFieldMask | ShadowBorder::InsideBorderFieldMask );
+
+
 
 	
 	/******************************************************
@@ -209,6 +222,7 @@ int main(int argc, char **argv)
 	ButtonPtr lineButton = osg::Button::create();
 	ButtonPtr matteButton = osg::Button::create();
 	ButtonPtr roundedCornerLineButton = osg::Button::create();
+	ButtonPtr shadowButton = osg::Button::create();
 	
 	// Edit each Button Component and assign its Border via the
 	// setBorder function.  Note that setActiveBorder assigns the
@@ -264,6 +278,14 @@ int main(int argc, char **argv)
 		roundedCornerLineButton->setActiveBorder(roundedCornerLineBorder);
 	endEditCP  (roundedCornerLineButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 
+	beginEditCP(shadowButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+		shadowButton->setPreferredSize(Vec2s(100,50));
+		shadowButton->setText("Shadow Border");
+		shadowButton->setBorder(shadowBorder);
+		shadowButton->setActiveBorder(shadowBorder);
+        shadowButton->setActiveBackground(NullFC);
+	endEditCP  (roundedCornerLineButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+
 
 	
 	// Create The Main Frame
@@ -282,6 +304,7 @@ int main(int argc, char **argv)
 	   MainFrame->getChildren().addValue(lineButton);
 	   MainFrame->getChildren().addValue(matteButton);
 	   MainFrame->getChildren().addValue(roundedCornerLineButton);
+	   MainFrame->getChildren().addValue(shadowButton);
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask| Frame::BackgroundFieldMask);

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,8 +67,10 @@
 
 #include "OSGBorder.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // VerticalOffset type
-#include <OpenSG/OSGUInt32Fields.h> // HorizontalOffset type
+#include <OpenSG/OSGUInt32Fields.h> // TopOffset type
+#include <OpenSG/OSGUInt32Fields.h> // BottomOffset type
+#include <OpenSG/OSGUInt32Fields.h> // LeftOffset type
+#include <OpenSG/OSGUInt32Fields.h> // RightOffset type
 #include <OpenSG/OSGColor4fFields.h> // Color type
 #include "OSGBorder.h" // InsideBorder type
 
@@ -94,15 +96,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING ShadowBorderBase : public Border
 
     enum
     {
-        VerticalOffsetFieldId   = Inherited::NextFieldId,
-        HorizontalOffsetFieldId = VerticalOffsetFieldId   + 1,
-        ColorFieldId            = HorizontalOffsetFieldId + 1,
-        InsideBorderFieldId     = ColorFieldId            + 1,
-        NextFieldId             = InsideBorderFieldId     + 1
+        TopOffsetFieldId    = Inherited::NextFieldId,
+        BottomOffsetFieldId = TopOffsetFieldId    + 1,
+        LeftOffsetFieldId   = BottomOffsetFieldId + 1,
+        RightOffsetFieldId  = LeftOffsetFieldId   + 1,
+        ColorFieldId        = RightOffsetFieldId  + 1,
+        InsideBorderFieldId = ColorFieldId        + 1,
+        NextFieldId         = InsideBorderFieldId + 1
     };
 
-    static const OSG::BitVector VerticalOffsetFieldMask;
-    static const OSG::BitVector HorizontalOffsetFieldMask;
+    static const OSG::BitVector TopOffsetFieldMask;
+    static const OSG::BitVector BottomOffsetFieldMask;
+    static const OSG::BitVector LeftOffsetFieldMask;
+    static const OSG::BitVector RightOffsetFieldMask;
     static const OSG::BitVector ColorFieldMask;
     static const OSG::BitVector InsideBorderFieldMask;
 
@@ -131,15 +137,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING ShadowBorderBase : public Border
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *getSFVerticalOffset (void);
-           SFUInt32            *getSFHorizontalOffset(void);
+           SFUInt32            *getSFTopOffset      (void);
+           SFUInt32            *getSFBottomOffset   (void);
+           SFUInt32            *getSFLeftOffset     (void);
+           SFUInt32            *getSFRightOffset    (void);
            SFColor4f           *getSFColor          (void);
            SFBorderPtr         *getSFInsideBorder   (void);
 
-           UInt32              &getVerticalOffset (void);
-     const UInt32              &getVerticalOffset (void) const;
-           UInt32              &getHorizontalOffset(void);
-     const UInt32              &getHorizontalOffset(void) const;
+           UInt32              &getTopOffset      (void);
+     const UInt32              &getTopOffset      (void) const;
+           UInt32              &getBottomOffset   (void);
+     const UInt32              &getBottomOffset   (void) const;
+           UInt32              &getLeftOffset     (void);
+     const UInt32              &getLeftOffset     (void) const;
+           UInt32              &getRightOffset    (void);
+     const UInt32              &getRightOffset    (void) const;
            Color4f             &getColor          (void);
      const Color4f             &getColor          (void) const;
            BorderPtr           &getInsideBorder   (void);
@@ -150,8 +162,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ShadowBorderBase : public Border
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setVerticalOffset ( const UInt32 &value );
-     void setHorizontalOffset( const UInt32 &value );
+     void setTopOffset      ( const UInt32 &value );
+     void setBottomOffset   ( const UInt32 &value );
+     void setLeftOffset     ( const UInt32 &value );
+     void setRightOffset    ( const UInt32 &value );
      void setColor          ( const Color4f &value );
      void setInsideBorder   ( const BorderPtr &value );
 
@@ -196,8 +210,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ShadowBorderBase : public Border
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfVerticalOffset;
-    SFUInt32            _sfHorizontalOffset;
+    SFUInt32            _sfTopOffset;
+    SFUInt32            _sfBottomOffset;
+    SFUInt32            _sfLeftOffset;
+    SFUInt32            _sfRightOffset;
     SFColor4f           _sfColor;
     SFBorderPtr         _sfInsideBorder;
 
