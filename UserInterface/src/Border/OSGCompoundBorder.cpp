@@ -94,6 +94,31 @@ void CompoundBorder::getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& B
 	Bottom = BottomIn+BottomIn2;
 	Top = UpperIn+UpperIn2;
 }
+
+void CompoundBorder::activateInternalDrawConstraints(const GraphicsPtr g, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const
+{
+    //getOuterBorder()->activateInternalDrawConstraints(g,x,y,Width,Height);
+	UInt16 LeftIn, RightIn, BottomIn, UpperIn;
+	getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
+    getInnerBorder()->activateInternalDrawConstraints(g,x+LeftIn, y+UpperIn, Width-LeftIn-RightIn, Height-UpperIn-BottomIn);
+}
+
+void CompoundBorder::deactivateInternalDrawConstraints(const GraphicsPtr g, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const
+{
+	UInt16 LeftIn, RightIn, BottomIn, UpperIn;
+	getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
+    getInnerBorder()->deactivateInternalDrawConstraints(g,x+LeftIn, y+UpperIn, Width-LeftIn-RightIn, Height-UpperIn-BottomIn);
+    //getOuterBorder()->deactivateInternalDrawConstraints(g);
+}
+
+bool CompoundBorder::isContained(const Pnt2s& p, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const
+{
+	UInt16 LeftIn, RightIn, BottomIn, UpperIn;
+	getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
+    return (getInnerBorder()->isContained(p,x+LeftIn, y+UpperIn, Width-LeftIn-RightIn, Height-UpperIn-BottomIn) ||
+            getOuterBorder()->isContained(p,x,y,Width,Height));
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

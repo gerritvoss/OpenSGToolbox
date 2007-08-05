@@ -90,6 +90,18 @@ BorderPtr Component::getDrawnBorder(void) const
     }
 }
 
+UIBackgroundPtr Component::getDrawnBackground(void) const
+{
+	if(getEnabled())
+	{
+        return getBackground();
+    }
+    else
+    {
+        return getDisabledBackground();
+    }
+}
+
 bool Component::isContained(const Pnt2s& p, bool TestAgainstClipBounds) const
 {
     Pnt2s PointInCompSpace(DrawingSurfaceToComponent(p,ComponentPtr(this)));
@@ -224,25 +236,30 @@ void Component::draw(const GraphicsPtr TheGraphics) const
 		return;
 	}
 
-	if(getEnabled())
-	{
-		//Draw My Border
-		drawBorder(TheGraphics, getBorder());
+	//Draw My Border
+    BorderPtr DrawnBorder = getDrawnBorder();
+	drawBorder(TheGraphics, DrawnBorder);
 
-		//Draw My Background
-		drawBackground(TheGraphics, getBackground());
-	}
-	else
-	{
-		//Draw My Border
-		drawBorder(TheGraphics, getDisabledBorder());
+    //Activate Border Drawing Constrants
+    if(DrawnBorder != NullFC)
+    {
+        DrawnBorder->activateInternalDrawConstraints(TheGraphics,0,0,getSize().x(),getSize().y());
+    }
 
-		//Draw My Background
-		drawBackground(TheGraphics, getDisabledBackground());
-	}
+    
+	//Draw My Background
+	drawBackground(TheGraphics, getDrawnBackground());
 
     //Draw Internal
     drawInternal(TheGraphics);
+    
+    //Deactivate Border Drawing Constrants
+    if(DrawnBorder != NullFC)
+    {
+        DrawnBorder->deactivateInternalDrawConstraints(TheGraphics,0,0,getSize().x(),getSize().y());
+    }
+
+    //Undo the Translation to Component Space
     glTranslatef(-getPosition().x(), -getPosition().y(), 0);
     
     //Set Clipping to initial settings

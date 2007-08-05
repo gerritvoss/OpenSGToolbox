@@ -43,6 +43,9 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+
+#include <OpenSG/OSGColorMaskChunk.h>
+#include <OpenSG/OSGStencilChunk.h>
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGRoundedCornerLineBorderBase.h"
@@ -79,6 +82,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING RoundedCornerLineBorder : public RoundedCo
 
     /*! \}                                                                 */
 	virtual void draw(const GraphicsPtr g, const Int16 x, const Int16 y , const UInt16 Width, const UInt16 Height, const Real32 Opacity) const;
+	virtual void activateInternalDrawConstraints(const GraphicsPtr g, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const;
+	virtual void deactivateInternalDrawConstraints(const GraphicsPtr g, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const;
+	virtual bool isContained(const Pnt2s& p, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const;
 	virtual void getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& Bottom) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -100,6 +106,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING RoundedCornerLineBorder : public RoundedCo
     virtual ~RoundedCornerLineBorder(void); 
 
     /*! \}                                                                 */
+
+    static ColorMaskChunkPtr getColorMask(void);
+    static StencilChunkPtr getStenciledAreaSetup(void);
+    static StencilChunkPtr getStenciledAreaCleanup(void);
+    static StencilChunkPtr getStenciledAreaTest(void);
+
+    static ColorMaskChunkPtr _ColorMask;
+    static StencilChunkPtr _StenciledAreaSetup;
+    static StencilChunkPtr _StenciledAreaCleanup;
+    static StencilChunkPtr _StenciledAreaTest;
     
     /*==========================  PRIVATE  ================================*/
   private:

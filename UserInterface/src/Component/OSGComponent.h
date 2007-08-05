@@ -166,7 +166,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 	virtual void drawInternal(const GraphicsPtr Graphics) const = 0;
 	
     virtual bool giveFocus(ComponentPtr NewFocusedComponent, bool Temporary= false);
-    BorderPtr getDrawnBorder(void) const;
+    virtual BorderPtr getDrawnBorder(void) const;
+    virtual UIBackgroundPtr getDrawnBackground(void) const;
     
     /*==========================  PRIVATE  ================================*/
   private:

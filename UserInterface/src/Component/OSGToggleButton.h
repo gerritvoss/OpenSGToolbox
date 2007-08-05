@@ -100,7 +100,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
     virtual ~ToggleButton(void); 
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr TheGraphics) const;
     
 	typedef std::set<ButtonSelectedListenerPtr> ButtonSelectedListenerSet;
     typedef ButtonSelectedListenerSet::iterator ButtonSelectedListenerSetItor;
@@ -109,6 +108,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
     ButtonSelectedListenerSet       _ButtonSelectedListeners;
     void produceButtonSelected(const ButtonSelectedEvent& e);
     void produceButtonDeselected(const ButtonSelectedEvent& e);
+    
+    virtual BorderPtr getDrawnBorder(void) const;
+    virtual UIBackgroundPtr getDrawnBackground(void) const;
     /*==========================  PRIVATE  ================================*/
   private:
 

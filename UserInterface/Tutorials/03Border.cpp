@@ -35,15 +35,10 @@
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include <OpenSG/UserInterface/OSGColorUIBackground.h>
 
 // Include Border header files
-#include <OpenSG/UserInterface/OSGMatteBorder.h>
-#include <OpenSG/UserInterface/OSGCompoundBorder.h>
-#include <OpenSG/UserInterface/OSGLineBorder.h>
-#include <OpenSG/UserInterface/OSGBevelBorder.h>
-#include <OpenSG/UserInterface/OSGEtchedBorder.h>
-#include <OpenSG/UserInterface/OSGEmptyBorder.h>
-#include <OpenSG/UserInterface/OSGColorUIBackground.h>
+#include <OpenSG/UserInterface/OSGBorders.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -112,6 +107,7 @@ int main(int argc, char **argv)
 	LineBorderPtr lineBorder = osg::LineBorder::create();
 	MatteBorderPtr matteBorder = osg::MatteBorder::create();
 	EmptyBorderPtr emptyBorder = osg::EmptyBorder::create();
+	RoundedCornerLineBorderPtr roundedCornerLineBorder = osg::RoundedCornerLineBorder::create();
 	
 	// Edit each Border Component and set all attributes
 	
@@ -187,6 +183,13 @@ int main(int argc, char **argv)
 		matteBorder->setColor(Color4f(1.0, .5, .5, 1.0));
 	endEditCP(matteBorder, MatteBorder::LeftWidthFieldMask | MatteBorder::RightWidthFieldMask | MatteBorder::BottomWidthFieldMask | MatteBorder::TopWidthFieldMask | MatteBorder::ColorFieldMask);
 
+	// The RoundedCornerLineBorder
+    beginEditCP(roundedCornerLineBorder, RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask );
+		roundedCornerLineBorder->setWidth(2);
+		roundedCornerLineBorder->setColor(Color4f(1.0, 0.5, 0.5, 1.0));
+		roundedCornerLineBorder->setCornerRadius(15);
+	endEditCP(roundedCornerLineBorder, RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask);
+
 
 	
 	/******************************************************
@@ -205,6 +208,7 @@ int main(int argc, char **argv)
 	ButtonPtr etchedButton = osg::Button::create();
 	ButtonPtr lineButton = osg::Button::create();
 	ButtonPtr matteButton = osg::Button::create();
+	ButtonPtr roundedCornerLineButton = osg::Button::create();
 	
 	// Edit each Button Component and assign its Border via the
 	// setBorder function.  Note that setActiveBorder assigns the
@@ -253,6 +257,13 @@ int main(int argc, char **argv)
 		// default Border for Buttons, a "pressed" BevelBorder
 	endEditCP  (matteButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 
+	beginEditCP(roundedCornerLineButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+		roundedCornerLineButton->setPreferredSize(Vec2s(100,50));
+		roundedCornerLineButton->setText("Rounded Border");
+		roundedCornerLineButton->setBorder(roundedCornerLineBorder);
+		roundedCornerLineButton->setActiveBorder(roundedCornerLineBorder);
+	endEditCP  (roundedCornerLineButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+
 
 	
 	// Create The Main Frame
@@ -270,6 +281,7 @@ int main(int argc, char **argv)
 	   MainFrame->getChildren().addValue(emptyButton);
 	   MainFrame->getChildren().addValue(lineButton);
 	   MainFrame->getChildren().addValue(matteButton);
+	   MainFrame->getChildren().addValue(roundedCornerLineButton);
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask| Frame::BackgroundFieldMask);

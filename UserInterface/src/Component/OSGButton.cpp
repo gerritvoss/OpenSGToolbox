@@ -73,61 +73,41 @@ void Button::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Button::draw(const GraphicsPtr Graphics) const
+BorderPtr Button::getDrawnBorder(void) const
 {
-	if (!getVisible())
-		return;
-
-    //Translate to my position
-    glTranslatef(getPosition().x(), getPosition().y(), 0);
-
-	if(!setupClipping(Graphics))
-	{
-		//Translate to my position
-		glTranslatef(-getPosition().x(), -getPosition().y(), 0);
-		return;
-	}
-
 	if(getActive())
 	{
-		//Draw My Border
-		drawBorder(Graphics, getActiveBorder());
-
-		//Draw My Background
-		drawBackground(Graphics, getActiveBackground());
+		return getActiveBorder();
 	}
 	else
 	{
-		if(getEnabled())
-		{
-			//Draw My Border
-			drawBorder(Graphics, getBorder());
+	    if(getEnabled())
+	    {
+            return getBorder();
+        }
+        else
+        {
+            return getDisabledBorder();
+        }
+    }
+}
 
-			//Draw My Background
-			drawBackground(Graphics, getBackground());
-		}
-		else
-		{
-			//Draw My Border
-			drawBorder(Graphics, getDisabledBorder());
-
-			//Draw My Background
-			drawBackground(Graphics, getDisabledBackground());
-		}
+UIBackgroundPtr Button::getDrawnBackground(void) const
+{
+	if(getActive())
+	{
+		return getActiveBackground();
 	}
-
-    //Draw Internal
-    drawInternal(Graphics);
-    glTranslatef(-getPosition().x(), -getPosition().y(), 0);
-    
-    //Set Clipping to initial settings
-    if(getClipping())
-    {
-		//TODO:Fix
-        //if(!WasClippPlane0Enabled){glDisable(GL_CLIP_PLANE0);}
-        //if(!WasClippPlane1Enabled){glDisable(GL_CLIP_PLANE1);}
-        //if(!WasClippPlane2Enabled){glDisable(GL_CLIP_PLANE2);}
-        //if(!WasClippPlane3Enabled){glDisable(GL_CLIP_PLANE3);}
+	else
+	{
+	    if(getEnabled())
+	    {
+            return getBackground();
+        }
+        else
+        {
+            return getDisabledBackground();
+        }
     }
 }
 
