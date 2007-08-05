@@ -150,7 +150,7 @@ void List::mousePressed(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
+        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{

@@ -301,7 +301,7 @@ void TabPanel::mouseEntered(const MouseEvent& e)
 	bool isContained;
     for(UInt32 i(0) ; i<getTabs().size() ; ++i)
     {
-		isContained = isPointInComponent(e.getLocation(), getTabs().getValue(i));
+        isContained = getTabs().getValue(i)->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
@@ -309,7 +309,7 @@ void TabPanel::mouseEntered(const MouseEvent& e)
 		}
     }
 
-	isContained = isPointInComponent(e.getLocation(), getTabContents().getValue(getActiveTab()));
+    isContained = getTabContents().getValue(getActiveTab())->isContained(e.getLocation(), true);
 	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained,e.getViewport());
 	if(isContained)
 	{
@@ -324,7 +324,7 @@ void TabPanel::mouseExited(const MouseEvent& e)
 	bool isContained;
     for(UInt32 i(0) ; i<getTabs().size() ; ++i)
     {
-		isContained = isPointInComponent(e.getLocation(), getTabs().getValue(i));
+        isContained = getTabs().getValue(i)->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
@@ -332,7 +332,7 @@ void TabPanel::mouseExited(const MouseEvent& e)
 		}
     }
 
-	isContained = isPointInComponent(e.getLocation(), getTabContents().getValue(getActiveTab()));
+    isContained = getTabContents().getValue(getActiveTab())->isContained(e.getLocation(), true);
 	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained,e.getViewport());
 	if(isContained)
 	{
@@ -347,7 +347,7 @@ void TabPanel::mousePressed(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(getTabs().size()-1) ; i>=0 ; --i)
     {   // going backwards through through elements, so only top button is pressed
-		isContained = isPointInComponent(e.getLocation(), getTabs().getValue(i));
+        isContained = getTabs().getValue(i)->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
@@ -373,7 +373,7 @@ void TabPanel::mousePressed(const MouseEvent& e)
 	}
 
 	// now do it for the content tab
-	isContained = isPointInComponent(e.getLocation(), getTabContents().getValue(getActiveTab()));
+    isContained = getTabContents().getValue(getActiveTab())->isContained(e.getLocation(), true);
 	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained,e.getViewport());
 	if(isContained)
 	{
@@ -401,7 +401,7 @@ void TabPanel::mouseReleased(const MouseEvent& e)
 	bool isContained;
     for(UInt32 i(0) ; i<getTabs().size() ; ++i)
     {
-		isContained = isContainedClipBounds(e.getLocation(), getTabs().getValue(i));
+        isContained = getTabs().getValue(i)->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
@@ -409,7 +409,7 @@ void TabPanel::mouseReleased(const MouseEvent& e)
 		}
     }
 
-	isContained = isContainedClipBounds(e.getLocation(), getTabContents().getValue(getActiveTab()));
+    isContained = getTabContents().getValue(getActiveTab())->isContained(e.getLocation(), true);
 	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained,e.getViewport());
 	if(isContained)
 	{
@@ -425,7 +425,7 @@ void TabPanel::mouseMoved(const MouseEvent& e)
 	bool isContained;
     for(UInt32 i(0) ; i<getTabs().size() ; ++i)
     {
-		isContained = isContainedClipBounds(e.getLocation(), getTabs().getValue(i));
+        isContained = getTabs().getValue(i)->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
@@ -433,7 +433,7 @@ void TabPanel::mouseMoved(const MouseEvent& e)
 		}
     }
 
-	isContained = isContainedClipBounds(e.getLocation(), getTabContents().getValue(getActiveTab()));
+    isContained = getTabContents().getValue(getActiveTab())->isContained(e.getLocation(), true);
 	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained,e.getViewport());
 	if(isContained)
 	{
@@ -448,7 +448,7 @@ void TabPanel::mouseDragged(const MouseEvent& e)
 	bool isContained;
     for(UInt32 i(0) ; i<getTabs().size() ; ++i)
     {
-		isContained = isContainedClipBounds(e.getLocation(), getTabs().getValue(i));
+        isContained = getTabs().getValue(i)->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
@@ -456,7 +456,7 @@ void TabPanel::mouseDragged(const MouseEvent& e)
 		}
     }
 
-	isContained = isContainedClipBounds(e.getLocation(), getTabContents().getValue(getActiveTab()));
+    isContained = getTabContents().getValue(getActiveTab())->isContained(e.getLocation(), true);
 	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained,e.getViewport());
 	if(isContained)
 	{
@@ -471,11 +471,11 @@ void TabPanel::mouseWheelMoved(const MouseWheelEvent& e)
 	bool isContained;
     for(UInt32 i(0) ; i<getTabs().size() ; ++i)
     {
-		isContained = isContainedClipBounds(e.getLocation(), getTabs().getValue(i));
+        isContained = getTabs().getValue(i)->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained,e.getViewport());
     }
 
-	isContained = isContainedClipBounds(e.getLocation(), getTabContents().getValue(getActiveTab()));
+    isContained = getTabContents().getValue(getActiveTab())->isContained(e.getLocation(), true);
 	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained,e.getViewport());
 
 	Component::mouseWheelMoved(e);

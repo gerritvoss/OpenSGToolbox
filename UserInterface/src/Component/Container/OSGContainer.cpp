@@ -114,7 +114,7 @@ void Container::mouseClicked(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
+        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
@@ -130,7 +130,7 @@ void Container::mouseEntered(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
+        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
@@ -145,7 +145,7 @@ void Container::mouseExited(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
+        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
@@ -160,7 +160,7 @@ void Container::mousePressed(const MouseEvent& e)
 	bool isContained(false);
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
+        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
@@ -192,7 +192,7 @@ void Container::mouseReleased(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
+        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
@@ -209,7 +209,7 @@ void Container::mouseMoved(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
+        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
@@ -224,7 +224,7 @@ void Container::mouseDragged(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-		isContained = isPointInComponent(e.getLocation(), getChildren().getValue(i));
+        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
@@ -239,7 +239,7 @@ void Container::mouseWheelMoved(const MouseWheelEvent& e)
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-		isContained = isContainedClipBounds(e.getLocation(), getChildren().getValue(i));
+        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
     }
 	Component::mouseWheelMoved(e);
@@ -270,12 +270,6 @@ void Container::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, 
 	}
 }
 
-bool Container::isPointInComponent(const Pnt2s& Point, const ComponentPtr Comp)
-{
-	//Pnt2s borderTopLeft, BorderBottomRight;
-	//getInsideInsetsBounds(borderTopLeft, BorderBottomRight);
-	return isContainedClipBounds(Point, Comp);
-}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

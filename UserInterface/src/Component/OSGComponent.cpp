@@ -78,6 +78,44 @@ void Component::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+BorderPtr Component::getDrawnBorder(void) const
+{
+	if(getEnabled())
+	{
+        return getBorder();
+    }
+    else
+    {
+        return getDisabledBorder();
+    }
+}
+
+bool Component::isContained(const Pnt2s& p, bool TestAgainstClipBounds) const
+{
+    Pnt2s PointInCompSpace(DrawingSurfaceToComponent(p,ComponentPtr(this)));
+    BorderPtr DrawnBorder(getDrawnBorder());
+    Pnt2s TopLeft, BottomRight;
+    if(TestAgainstClipBounds && getClipping())
+    {
+        TopLeft = getClipTopLeft();
+        BottomRight = getClipBottomRight();
+    }
+    else
+    {
+        TopLeft.setValues(0,0);
+        BottomRight = Pnt2s(getSize());
+    }
+    
+    if(DrawnBorder == NullFC)
+    {
+        return isContainedBounds(PointInCompSpace, TopLeft, BottomRight);
+    }
+    else
+    {
+        return isContainedBounds(PointInCompSpace, TopLeft, BottomRight) && 
+            DrawnBorder->isContained(PointInCompSpace,0,0,getSize().x(),getSize().y());
+    }
+}
 
 void Component::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 {

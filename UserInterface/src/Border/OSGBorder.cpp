@@ -73,7 +73,20 @@ void Border::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+void Border::activateInternalDrawConstraints(const GraphicsPtr g, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const
+{
+}
 
+void Border::deactivateInternalDrawConstraints(const GraphicsPtr g) const
+{
+}
+
+bool Border::isContained(const Pnt2s& p, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const
+{
+    return (p.x() >= x && p.x() <= x+Width &&
+            p.y() >= y && p.y() <= y+Height);
+}
+	
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

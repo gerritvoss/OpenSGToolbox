@@ -136,6 +136,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 	bool getMouseContained(void);
 
     virtual bool takeFocus(bool Temporary = false);
+    
+    virtual bool isContained(const Pnt2s& p, bool TestAgainstClipBounds = true) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -164,6 +166,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 	virtual void drawInternal(const GraphicsPtr Graphics) const = 0;
 	
     virtual bool giveFocus(ComponentPtr NewFocusedComponent, bool Temporary= false);
+    BorderPtr getDrawnBorder(void) const;
     
     /*==========================  PRIVATE  ================================*/
   private:
