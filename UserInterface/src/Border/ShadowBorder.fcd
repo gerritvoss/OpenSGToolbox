@@ -49,7 +49,16 @@ UI Shadow Border.
 	>
 	</Field>
 	<Field
-		name="Color"
+		name="InternalColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0,0.0,0.0,1.0"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="EdgeColor"
 		type="Color4f"
 		cardinality="single"
 		visibility="external"
@@ -64,6 +73,24 @@ UI Shadow Border.
 		visibility="external"
 		defaultValue="NullFC"
 		header="OSGBorder.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="CornerRadius"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="3"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="InternalToEdgeColorLength"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="3"
 		access="public"
 	>
 	</Field>

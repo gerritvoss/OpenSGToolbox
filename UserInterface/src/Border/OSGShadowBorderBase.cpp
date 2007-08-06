@@ -76,11 +76,20 @@ const OSG::BitVector  ShadowBorderBase::LeftOffsetFieldMask =
 const OSG::BitVector  ShadowBorderBase::RightOffsetFieldMask = 
     (TypeTraits<BitVector>::One << ShadowBorderBase::RightOffsetFieldId);
 
-const OSG::BitVector  ShadowBorderBase::ColorFieldMask = 
-    (TypeTraits<BitVector>::One << ShadowBorderBase::ColorFieldId);
+const OSG::BitVector  ShadowBorderBase::InternalColorFieldMask = 
+    (TypeTraits<BitVector>::One << ShadowBorderBase::InternalColorFieldId);
+
+const OSG::BitVector  ShadowBorderBase::EdgeColorFieldMask = 
+    (TypeTraits<BitVector>::One << ShadowBorderBase::EdgeColorFieldId);
 
 const OSG::BitVector  ShadowBorderBase::InsideBorderFieldMask = 
     (TypeTraits<BitVector>::One << ShadowBorderBase::InsideBorderFieldId);
+
+const OSG::BitVector  ShadowBorderBase::CornerRadiusFieldMask = 
+    (TypeTraits<BitVector>::One << ShadowBorderBase::CornerRadiusFieldId);
+
+const OSG::BitVector  ShadowBorderBase::InternalToEdgeColorLengthFieldMask = 
+    (TypeTraits<BitVector>::One << ShadowBorderBase::InternalToEdgeColorLengthFieldId);
 
 const OSG::BitVector ShadowBorderBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -101,10 +110,19 @@ const OSG::BitVector ShadowBorderBase::MTInfluenceMask =
 /*! \var UInt32          ShadowBorderBase::_sfRightOffset
     
 */
-/*! \var Color4f         ShadowBorderBase::_sfColor
+/*! \var Color4f         ShadowBorderBase::_sfInternalColor
+    
+*/
+/*! \var Color4f         ShadowBorderBase::_sfEdgeColor
     
 */
 /*! \var BorderPtr       ShadowBorderBase::_sfInsideBorder
+    
+*/
+/*! \var UInt32          ShadowBorderBase::_sfCornerRadius
+    
+*/
+/*! \var UInt32          ShadowBorderBase::_sfInternalToEdgeColorLength
     
 */
 
@@ -133,15 +151,30 @@ FieldDescription *ShadowBorderBase::_desc[] =
                      false,
                      (FieldAccessMethod) &ShadowBorderBase::getSFRightOffset),
     new FieldDescription(SFColor4f::getClassType(), 
-                     "Color", 
-                     ColorFieldId, ColorFieldMask,
+                     "InternalColor", 
+                     InternalColorFieldId, InternalColorFieldMask,
                      false,
-                     (FieldAccessMethod) &ShadowBorderBase::getSFColor),
+                     (FieldAccessMethod) &ShadowBorderBase::getSFInternalColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "EdgeColor", 
+                     EdgeColorFieldId, EdgeColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &ShadowBorderBase::getSFEdgeColor),
     new FieldDescription(SFBorderPtr::getClassType(), 
                      "InsideBorder", 
                      InsideBorderFieldId, InsideBorderFieldMask,
                      false,
-                     (FieldAccessMethod) &ShadowBorderBase::getSFInsideBorder)
+                     (FieldAccessMethod) &ShadowBorderBase::getSFInsideBorder),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "CornerRadius", 
+                     CornerRadiusFieldId, CornerRadiusFieldMask,
+                     false,
+                     (FieldAccessMethod) &ShadowBorderBase::getSFCornerRadius),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "InternalToEdgeColorLength", 
+                     InternalToEdgeColorLengthFieldId, InternalToEdgeColorLengthFieldMask,
+                     false,
+                     (FieldAccessMethod) &ShadowBorderBase::getSFInternalToEdgeColorLength)
 };
 
 
@@ -221,8 +254,11 @@ ShadowBorderBase::ShadowBorderBase(void) :
     _sfBottomOffset           (UInt32(5)), 
     _sfLeftOffset             (UInt32(0)), 
     _sfRightOffset            (UInt32(5)), 
-    _sfColor                  (Color4f(0.0,0.0,0.0,1.0)), 
+    _sfInternalColor          (Color4f(0.0,0.0,0.0,1.0)), 
+    _sfEdgeColor              (Color4f(0.0,0.0,0.0,1.0)), 
     _sfInsideBorder           (BorderPtr(NullFC)), 
+    _sfCornerRadius           (UInt32(3)), 
+    _sfInternalToEdgeColorLength(UInt32(3)), 
     Inherited() 
 {
 }
@@ -236,8 +272,11 @@ ShadowBorderBase::ShadowBorderBase(const ShadowBorderBase &source) :
     _sfBottomOffset           (source._sfBottomOffset           ), 
     _sfLeftOffset             (source._sfLeftOffset             ), 
     _sfRightOffset            (source._sfRightOffset            ), 
-    _sfColor                  (source._sfColor                  ), 
+    _sfInternalColor          (source._sfInternalColor          ), 
+    _sfEdgeColor              (source._sfEdgeColor              ), 
     _sfInsideBorder           (source._sfInsideBorder           ), 
+    _sfCornerRadius           (source._sfCornerRadius           ), 
+    _sfInternalToEdgeColorLength(source._sfInternalToEdgeColorLength), 
     Inherited                 (source)
 {
 }
@@ -274,14 +313,29 @@ UInt32 ShadowBorderBase::getBinSize(const BitVector &whichField)
         returnValue += _sfRightOffset.getBinSize();
     }
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    if(FieldBits::NoField != (InternalColorFieldMask & whichField))
     {
-        returnValue += _sfColor.getBinSize();
+        returnValue += _sfInternalColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (EdgeColorFieldMask & whichField))
+    {
+        returnValue += _sfEdgeColor.getBinSize();
     }
 
     if(FieldBits::NoField != (InsideBorderFieldMask & whichField))
     {
         returnValue += _sfInsideBorder.getBinSize();
+    }
+
+    if(FieldBits::NoField != (CornerRadiusFieldMask & whichField))
+    {
+        returnValue += _sfCornerRadius.getBinSize();
+    }
+
+    if(FieldBits::NoField != (InternalToEdgeColorLengthFieldMask & whichField))
+    {
+        returnValue += _sfInternalToEdgeColorLength.getBinSize();
     }
 
 
@@ -313,14 +367,29 @@ void ShadowBorderBase::copyToBin(      BinaryDataHandler &pMem,
         _sfRightOffset.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    if(FieldBits::NoField != (InternalColorFieldMask & whichField))
     {
-        _sfColor.copyToBin(pMem);
+        _sfInternalColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EdgeColorFieldMask & whichField))
+    {
+        _sfEdgeColor.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (InsideBorderFieldMask & whichField))
     {
         _sfInsideBorder.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CornerRadiusFieldMask & whichField))
+    {
+        _sfCornerRadius.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InternalToEdgeColorLengthFieldMask & whichField))
+    {
+        _sfInternalToEdgeColorLength.copyToBin(pMem);
     }
 
 
@@ -351,14 +420,29 @@ void ShadowBorderBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfRightOffset.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    if(FieldBits::NoField != (InternalColorFieldMask & whichField))
     {
-        _sfColor.copyFromBin(pMem);
+        _sfInternalColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EdgeColorFieldMask & whichField))
+    {
+        _sfEdgeColor.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (InsideBorderFieldMask & whichField))
     {
         _sfInsideBorder.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CornerRadiusFieldMask & whichField))
+    {
+        _sfCornerRadius.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InternalToEdgeColorLengthFieldMask & whichField))
+    {
+        _sfInternalToEdgeColorLength.copyFromBin(pMem);
     }
 
 
@@ -383,11 +467,20 @@ void ShadowBorderBase::executeSyncImpl(      ShadowBorderBase *pOther,
     if(FieldBits::NoField != (RightOffsetFieldMask & whichField))
         _sfRightOffset.syncWith(pOther->_sfRightOffset);
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
+    if(FieldBits::NoField != (InternalColorFieldMask & whichField))
+        _sfInternalColor.syncWith(pOther->_sfInternalColor);
+
+    if(FieldBits::NoField != (EdgeColorFieldMask & whichField))
+        _sfEdgeColor.syncWith(pOther->_sfEdgeColor);
 
     if(FieldBits::NoField != (InsideBorderFieldMask & whichField))
         _sfInsideBorder.syncWith(pOther->_sfInsideBorder);
+
+    if(FieldBits::NoField != (CornerRadiusFieldMask & whichField))
+        _sfCornerRadius.syncWith(pOther->_sfCornerRadius);
+
+    if(FieldBits::NoField != (InternalToEdgeColorLengthFieldMask & whichField))
+        _sfInternalToEdgeColorLength.syncWith(pOther->_sfInternalToEdgeColorLength);
 
 
 }
@@ -411,11 +504,20 @@ void ShadowBorderBase::executeSyncImpl(      ShadowBorderBase *pOther,
     if(FieldBits::NoField != (RightOffsetFieldMask & whichField))
         _sfRightOffset.syncWith(pOther->_sfRightOffset);
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
+    if(FieldBits::NoField != (InternalColorFieldMask & whichField))
+        _sfInternalColor.syncWith(pOther->_sfInternalColor);
+
+    if(FieldBits::NoField != (EdgeColorFieldMask & whichField))
+        _sfEdgeColor.syncWith(pOther->_sfEdgeColor);
 
     if(FieldBits::NoField != (InsideBorderFieldMask & whichField))
         _sfInsideBorder.syncWith(pOther->_sfInsideBorder);
+
+    if(FieldBits::NoField != (CornerRadiusFieldMask & whichField))
+        _sfCornerRadius.syncWith(pOther->_sfCornerRadius);
+
+    if(FieldBits::NoField != (InternalToEdgeColorLengthFieldMask & whichField))
+        _sfInternalToEdgeColorLength.syncWith(pOther->_sfInternalToEdgeColorLength);
 
 
 

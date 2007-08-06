@@ -124,11 +124,18 @@ SFUInt32 *ShadowBorderBase::getSFRightOffset(void)
     return &_sfRightOffset;
 }
 
-//! Get the ShadowBorder::_sfColor field.
+//! Get the ShadowBorder::_sfInternalColor field.
 inline
-SFColor4f *ShadowBorderBase::getSFColor(void)
+SFColor4f *ShadowBorderBase::getSFInternalColor(void)
 {
-    return &_sfColor;
+    return &_sfInternalColor;
+}
+
+//! Get the ShadowBorder::_sfEdgeColor field.
+inline
+SFColor4f *ShadowBorderBase::getSFEdgeColor(void)
+{
+    return &_sfEdgeColor;
 }
 
 //! Get the ShadowBorder::_sfInsideBorder field.
@@ -136,6 +143,20 @@ inline
 SFBorderPtr *ShadowBorderBase::getSFInsideBorder(void)
 {
     return &_sfInsideBorder;
+}
+
+//! Get the ShadowBorder::_sfCornerRadius field.
+inline
+SFUInt32 *ShadowBorderBase::getSFCornerRadius(void)
+{
+    return &_sfCornerRadius;
+}
+
+//! Get the ShadowBorder::_sfInternalToEdgeColorLength field.
+inline
+SFUInt32 *ShadowBorderBase::getSFInternalToEdgeColorLength(void)
+{
+    return &_sfInternalToEdgeColorLength;
 }
 
 
@@ -223,25 +244,46 @@ void ShadowBorderBase::setRightOffset(const UInt32 &value)
     _sfRightOffset.setValue(value);
 }
 
-//! Get the value of the ShadowBorder::_sfColor field.
+//! Get the value of the ShadowBorder::_sfInternalColor field.
 inline
-Color4f &ShadowBorderBase::getColor(void)
+Color4f &ShadowBorderBase::getInternalColor(void)
 {
-    return _sfColor.getValue();
+    return _sfInternalColor.getValue();
 }
 
-//! Get the value of the ShadowBorder::_sfColor field.
+//! Get the value of the ShadowBorder::_sfInternalColor field.
 inline
-const Color4f &ShadowBorderBase::getColor(void) const
+const Color4f &ShadowBorderBase::getInternalColor(void) const
 {
-    return _sfColor.getValue();
+    return _sfInternalColor.getValue();
 }
 
-//! Set the value of the ShadowBorder::_sfColor field.
+//! Set the value of the ShadowBorder::_sfInternalColor field.
 inline
-void ShadowBorderBase::setColor(const Color4f &value)
+void ShadowBorderBase::setInternalColor(const Color4f &value)
 {
-    _sfColor.setValue(value);
+    _sfInternalColor.setValue(value);
+}
+
+//! Get the value of the ShadowBorder::_sfEdgeColor field.
+inline
+Color4f &ShadowBorderBase::getEdgeColor(void)
+{
+    return _sfEdgeColor.getValue();
+}
+
+//! Get the value of the ShadowBorder::_sfEdgeColor field.
+inline
+const Color4f &ShadowBorderBase::getEdgeColor(void) const
+{
+    return _sfEdgeColor.getValue();
+}
+
+//! Set the value of the ShadowBorder::_sfEdgeColor field.
+inline
+void ShadowBorderBase::setEdgeColor(const Color4f &value)
+{
+    _sfEdgeColor.setValue(value);
 }
 
 //! Get the value of the ShadowBorder::_sfInsideBorder field.
@@ -263,6 +305,48 @@ inline
 void ShadowBorderBase::setInsideBorder(const BorderPtr &value)
 {
     _sfInsideBorder.setValue(value);
+}
+
+//! Get the value of the ShadowBorder::_sfCornerRadius field.
+inline
+UInt32 &ShadowBorderBase::getCornerRadius(void)
+{
+    return _sfCornerRadius.getValue();
+}
+
+//! Get the value of the ShadowBorder::_sfCornerRadius field.
+inline
+const UInt32 &ShadowBorderBase::getCornerRadius(void) const
+{
+    return _sfCornerRadius.getValue();
+}
+
+//! Set the value of the ShadowBorder::_sfCornerRadius field.
+inline
+void ShadowBorderBase::setCornerRadius(const UInt32 &value)
+{
+    _sfCornerRadius.setValue(value);
+}
+
+//! Get the value of the ShadowBorder::_sfInternalToEdgeColorLength field.
+inline
+UInt32 &ShadowBorderBase::getInternalToEdgeColorLength(void)
+{
+    return _sfInternalToEdgeColorLength.getValue();
+}
+
+//! Get the value of the ShadowBorder::_sfInternalToEdgeColorLength field.
+inline
+const UInt32 &ShadowBorderBase::getInternalToEdgeColorLength(void) const
+{
+    return _sfInternalToEdgeColorLength.getValue();
+}
+
+//! Set the value of the ShadowBorder::_sfInternalToEdgeColorLength field.
+inline
+void ShadowBorderBase::setInternalToEdgeColorLength(const UInt32 &value)
+{
+    _sfInternalToEdgeColorLength.setValue(value);
 }
 
 

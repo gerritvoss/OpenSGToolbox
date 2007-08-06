@@ -71,8 +71,11 @@
 #include <OpenSG/OSGUInt32Fields.h> // BottomOffset type
 #include <OpenSG/OSGUInt32Fields.h> // LeftOffset type
 #include <OpenSG/OSGUInt32Fields.h> // RightOffset type
-#include <OpenSG/OSGColor4fFields.h> // Color type
+#include <OpenSG/OSGColor4fFields.h> // InternalColor type
+#include <OpenSG/OSGColor4fFields.h> // EdgeColor type
 #include "OSGBorder.h" // InsideBorder type
+#include <OpenSG/OSGUInt32Fields.h> // CornerRadius type
+#include <OpenSG/OSGUInt32Fields.h> // InternalToEdgeColorLength type
 
 #include "OSGShadowBorderFields.h"
 
@@ -96,21 +99,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING ShadowBorderBase : public Border
 
     enum
     {
-        TopOffsetFieldId    = Inherited::NextFieldId,
-        BottomOffsetFieldId = TopOffsetFieldId    + 1,
-        LeftOffsetFieldId   = BottomOffsetFieldId + 1,
-        RightOffsetFieldId  = LeftOffsetFieldId   + 1,
-        ColorFieldId        = RightOffsetFieldId  + 1,
-        InsideBorderFieldId = ColorFieldId        + 1,
-        NextFieldId         = InsideBorderFieldId + 1
+        TopOffsetFieldId                 = Inherited::NextFieldId,
+        BottomOffsetFieldId              = TopOffsetFieldId                 + 1,
+        LeftOffsetFieldId                = BottomOffsetFieldId              + 1,
+        RightOffsetFieldId               = LeftOffsetFieldId                + 1,
+        InternalColorFieldId             = RightOffsetFieldId               + 1,
+        EdgeColorFieldId                 = InternalColorFieldId             + 1,
+        InsideBorderFieldId              = EdgeColorFieldId                 + 1,
+        CornerRadiusFieldId              = InsideBorderFieldId              + 1,
+        InternalToEdgeColorLengthFieldId = CornerRadiusFieldId              + 1,
+        NextFieldId                      = InternalToEdgeColorLengthFieldId + 1
     };
 
     static const OSG::BitVector TopOffsetFieldMask;
     static const OSG::BitVector BottomOffsetFieldMask;
     static const OSG::BitVector LeftOffsetFieldMask;
     static const OSG::BitVector RightOffsetFieldMask;
-    static const OSG::BitVector ColorFieldMask;
+    static const OSG::BitVector InternalColorFieldMask;
+    static const OSG::BitVector EdgeColorFieldMask;
     static const OSG::BitVector InsideBorderFieldMask;
+    static const OSG::BitVector CornerRadiusFieldMask;
+    static const OSG::BitVector InternalToEdgeColorLengthFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -141,8 +150,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ShadowBorderBase : public Border
            SFUInt32            *getSFBottomOffset   (void);
            SFUInt32            *getSFLeftOffset     (void);
            SFUInt32            *getSFRightOffset    (void);
-           SFColor4f           *getSFColor          (void);
+           SFColor4f           *getSFInternalColor  (void);
+           SFColor4f           *getSFEdgeColor      (void);
            SFBorderPtr         *getSFInsideBorder   (void);
+           SFUInt32            *getSFCornerRadius   (void);
+           SFUInt32            *getSFInternalToEdgeColorLength(void);
 
            UInt32              &getTopOffset      (void);
      const UInt32              &getTopOffset      (void) const;
@@ -152,10 +164,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING ShadowBorderBase : public Border
      const UInt32              &getLeftOffset     (void) const;
            UInt32              &getRightOffset    (void);
      const UInt32              &getRightOffset    (void) const;
-           Color4f             &getColor          (void);
-     const Color4f             &getColor          (void) const;
+           Color4f             &getInternalColor  (void);
+     const Color4f             &getInternalColor  (void) const;
+           Color4f             &getEdgeColor      (void);
+     const Color4f             &getEdgeColor      (void) const;
            BorderPtr           &getInsideBorder   (void);
      const BorderPtr           &getInsideBorder   (void) const;
+           UInt32              &getCornerRadius   (void);
+     const UInt32              &getCornerRadius   (void) const;
+           UInt32              &getInternalToEdgeColorLength(void);
+     const UInt32              &getInternalToEdgeColorLength(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -166,8 +184,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ShadowBorderBase : public Border
      void setBottomOffset   ( const UInt32 &value );
      void setLeftOffset     ( const UInt32 &value );
      void setRightOffset    ( const UInt32 &value );
-     void setColor          ( const Color4f &value );
+     void setInternalColor  ( const Color4f &value );
+     void setEdgeColor      ( const Color4f &value );
      void setInsideBorder   ( const BorderPtr &value );
+     void setCornerRadius   ( const UInt32 &value );
+     void setInternalToEdgeColorLength( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -214,8 +235,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ShadowBorderBase : public Border
     SFUInt32            _sfBottomOffset;
     SFUInt32            _sfLeftOffset;
     SFUInt32            _sfRightOffset;
-    SFColor4f           _sfColor;
+    SFColor4f           _sfInternalColor;
+    SFColor4f           _sfEdgeColor;
     SFBorderPtr         _sfInsideBorder;
+    SFUInt32            _sfCornerRadius;
+    SFUInt32            _sfInternalToEdgeColorLength;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

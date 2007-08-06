@@ -193,14 +193,17 @@ int main(int argc, char **argv)
 
     
 	// The ShadowBorder
-    beginEditCP(shadowBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask | ShadowBorder::RightOffsetFieldMask | ShadowBorder::ColorFieldMask | ShadowBorder::InsideBorderFieldMask );
+    beginEditCP(shadowBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask | ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask| ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | ShadowBorder::CornerRadiusFieldMask | ShadowBorder::InternalToEdgeColorLengthFieldMask );
 		shadowBorder->setTopOffset(0);
 		shadowBorder->setBottomOffset(5);
 		shadowBorder->setLeftOffset(0);
 		shadowBorder->setRightOffset(5);
-		shadowBorder->setInsideBorder(lineBorder);
-		shadowBorder->setColor(Color4f(0.0, 0.0, 0.0, 0.5));
-	endEditCP(shadowBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask | ShadowBorder::RightOffsetFieldMask | ShadowBorder::ColorFieldMask | ShadowBorder::InsideBorderFieldMask );
+		shadowBorder->setInsideBorder(roundedCornerLineBorder);
+		shadowBorder->setCornerRadius(15);
+		shadowBorder->setInternalColor(Color4f(0.0, 0.0, 0.0, 0.5));
+		shadowBorder->setEdgeColor(Color4f(0.0, 0.0, 0.0, 0.0));
+		shadowBorder->setInternalToEdgeColorLength(5);
+	endEditCP(shadowBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask | ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask| ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | ShadowBorder::CornerRadiusFieldMask | ShadowBorder::InternalToEdgeColorLengthFieldMask );
 
 
 
