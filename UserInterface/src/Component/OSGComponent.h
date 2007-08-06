@@ -58,6 +58,8 @@
 #include "Event/OSGFocusListener.h"
 #include "Event/OSGComponentListener.h"
 
+#include "Component/Misc/OSGToolTipFields.h"
+
 OSG_BEGIN_NAMESPACE
 
 class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
@@ -138,6 +140,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     virtual bool takeFocus(bool Temporary = false);
     
     virtual bool isContained(const Pnt2s& p, bool TestAgainstClipBounds = true) const;
+
+    //Returns the tooltip location in this component's coordinate system
+    virtual Pnt2s getToolTipLocation(MouseEvent e);
+    virtual ToolTipPtr createToolTip(void);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 

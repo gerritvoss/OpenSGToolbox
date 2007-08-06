@@ -198,8 +198,8 @@ A UI Component Interface.
 	>
 	</Field>
 	<Field
-		name="ForegroundMaterial"
-		type="MaterialPtr"
+		name="ToolTipText"
+		type="std::string"
 		cardinality="single"
 		visibility="external"
 		access="public"

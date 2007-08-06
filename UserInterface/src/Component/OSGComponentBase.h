@@ -2,7 +2,9 @@
  *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
@@ -85,7 +87,7 @@
 #include "Border/OSGBorder.h" // FocusedBorder type
 #include "Background/OSGUIBackground.h" // FocusedBackground type
 #include <OpenSG/OSGColor4fFields.h> // FocusedForegroundColor type
-#include <OpenSG/OSGMaterialFields.h> // ForegroundMaterial type
+#include <OpenSG/OSGStringFields.h> // ToolTipText type
 #include <OpenSG/OSGReal32Fields.h> // Opacity type
 #include "Component/Container/OSGContainerFields.h" // ParentContainer type
 #include "Component/Container/OSGFrameFields.h" // ParentFrame type
@@ -135,8 +137,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
         FocusedBorderFieldId           = FocusableFieldId               + 1,
         FocusedBackgroundFieldId       = FocusedBorderFieldId           + 1,
         FocusedForegroundColorFieldId  = FocusedBackgroundFieldId       + 1,
-        ForegroundMaterialFieldId      = FocusedForegroundColorFieldId  + 1,
-        OpacityFieldId                 = ForegroundMaterialFieldId      + 1,
+        ToolTipTextFieldId             = FocusedForegroundColorFieldId  + 1,
+        OpacityFieldId                 = ToolTipTextFieldId             + 1,
         ParentContainerFieldId         = OpacityFieldId                 + 1,
         ParentFrameFieldId             = ParentContainerFieldId         + 1,
         ClippingFieldId                = ParentFrameFieldId             + 1,
@@ -165,7 +167,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     static const OSG::BitVector FocusedBorderFieldMask;
     static const OSG::BitVector FocusedBackgroundFieldMask;
     static const OSG::BitVector FocusedForegroundColorFieldMask;
-    static const OSG::BitVector ForegroundMaterialFieldMask;
+    static const OSG::BitVector ToolTipTextFieldMask;
     static const OSG::BitVector OpacityFieldMask;
     static const OSG::BitVector ParentContainerFieldMask;
     static const OSG::BitVector ParentFrameFieldMask;
@@ -216,7 +218,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual       SFBorderPtr         *getSFFocusedBorder  (void);
     virtual       SFUIBackgroundPtr   *getSFFocusedBackground(void);
     virtual       SFColor4f           *getSFFocusedForegroundColor(void);
-    virtual       SFMaterialPtr       *getSFForegroundMaterial(void);
+    virtual       SFString            *getSFToolTipText    (void);
     virtual       SFReal32            *getSFOpacity        (void);
     virtual       SFContainerPtr      *getSFParentContainer(void);
     virtual       SFFramePtr          *getSFParentFrame    (void);
@@ -261,8 +263,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual const UIBackgroundPtr     &getFocusedBackground(void) const;
     virtual       Color4f             &getFocusedForegroundColor(void);
     virtual const Color4f             &getFocusedForegroundColor(void) const;
-    virtual       MaterialPtr         &getForegroundMaterial(void);
-    virtual const MaterialPtr         &getForegroundMaterial(void) const;
+    virtual       std::string         &getToolTipText    (void);
+    virtual const std::string         &getToolTipText    (void) const;
     virtual       Real32              &getOpacity        (void);
     virtual const Real32              &getOpacity        (void) const;
     virtual       ContainerPtr        &getParentContainer(void);
@@ -298,7 +300,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual void setFocusedBorder  ( const BorderPtr &value );
     virtual void setFocusedBackground( const UIBackgroundPtr &value );
     virtual void setFocusedForegroundColor( const Color4f &value );
-    virtual void setForegroundMaterial( const MaterialPtr &value );
+    virtual void setToolTipText    ( const std::string &value );
     virtual void setOpacity        ( const Real32 &value );
     virtual void setParentContainer( const ContainerPtr &value );
     virtual void setParentFrame    ( const FramePtr &value );
@@ -351,7 +353,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     SFBorderPtr         _sfFocusedBorder;
     SFUIBackgroundPtr   _sfFocusedBackground;
     SFColor4f           _sfFocusedForegroundColor;
-    SFMaterialPtr       _sfForegroundMaterial;
+    SFString            _sfToolTipText;
     SFReal32            _sfOpacity;
     SFContainerPtr      _sfParentContainer;
     SFFramePtr          _sfParentFrame;

@@ -127,8 +127,8 @@ const OSG::BitVector  ComponentBase::FocusedBackgroundFieldMask =
 const OSG::BitVector  ComponentBase::FocusedForegroundColorFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::FocusedForegroundColorFieldId);
 
-const OSG::BitVector  ComponentBase::ForegroundMaterialFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::ForegroundMaterialFieldId);
+const OSG::BitVector  ComponentBase::ToolTipTextFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::ToolTipTextFieldId);
 
 const OSG::BitVector  ComponentBase::OpacityFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::OpacityFieldId);
@@ -215,7 +215,7 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
 /*! \var Color4f         ComponentBase::_sfFocusedForegroundColor
     
 */
-/*! \var MaterialPtr     ComponentBase::_sfForegroundMaterial
+/*! \var std::string     ComponentBase::_sfToolTipText
     
 */
 /*! \var Real32          ComponentBase::_sfOpacity
@@ -343,11 +343,11 @@ FieldDescription *ComponentBase::_desc[] =
                      FocusedForegroundColorFieldId, FocusedForegroundColorFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFFocusedForegroundColor),
-    new FieldDescription(SFMaterialPtr::getClassType(), 
-                     "ForegroundMaterial", 
-                     ForegroundMaterialFieldId, ForegroundMaterialFieldMask,
+    new FieldDescription(SFString::getClassType(), 
+                     "ToolTipText", 
+                     ToolTipTextFieldId, ToolTipTextFieldMask,
                      false,
-                     (FieldAccessMethod) &ComponentBase::getSFForegroundMaterial),
+                     (FieldAccessMethod) &ComponentBase::getSFToolTipText),
     new FieldDescription(SFReal32::getClassType(), 
                      "Opacity", 
                      OpacityFieldId, OpacityFieldMask,
@@ -460,7 +460,7 @@ ComponentBase::ComponentBase(void) :
     _sfFocusedBorder          (), 
     _sfFocusedBackground      (), 
     _sfFocusedForegroundColor (), 
-    _sfForegroundMaterial     (), 
+    _sfToolTipText            (), 
     _sfOpacity                (Real32(1.0)), 
     _sfParentContainer        (ContainerPtr(NullFC)), 
     _sfParentFrame            (FramePtr(NullFC)), 
@@ -496,7 +496,7 @@ ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfFocusedBorder          (source._sfFocusedBorder          ), 
     _sfFocusedBackground      (source._sfFocusedBackground      ), 
     _sfFocusedForegroundColor (source._sfFocusedForegroundColor ), 
-    _sfForegroundMaterial     (source._sfForegroundMaterial     ), 
+    _sfToolTipText            (source._sfToolTipText            ), 
     _sfOpacity                (source._sfOpacity                ), 
     _sfParentContainer        (source._sfParentContainer        ), 
     _sfParentFrame            (source._sfParentFrame            ), 
@@ -623,9 +623,9 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfFocusedForegroundColor.getBinSize();
     }
 
-    if(FieldBits::NoField != (ForegroundMaterialFieldMask & whichField))
+    if(FieldBits::NoField != (ToolTipTextFieldMask & whichField))
     {
-        returnValue += _sfForegroundMaterial.getBinSize();
+        returnValue += _sfToolTipText.getBinSize();
     }
 
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
@@ -767,9 +767,9 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
         _sfFocusedForegroundColor.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ForegroundMaterialFieldMask & whichField))
+    if(FieldBits::NoField != (ToolTipTextFieldMask & whichField))
     {
-        _sfForegroundMaterial.copyToBin(pMem);
+        _sfToolTipText.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
@@ -910,9 +910,9 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfFocusedForegroundColor.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ForegroundMaterialFieldMask & whichField))
+    if(FieldBits::NoField != (ToolTipTextFieldMask & whichField))
     {
-        _sfForegroundMaterial.copyFromBin(pMem);
+        _sfToolTipText.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
@@ -1013,8 +1013,8 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (FocusedForegroundColorFieldMask & whichField))
         _sfFocusedForegroundColor.syncWith(pOther->_sfFocusedForegroundColor);
 
-    if(FieldBits::NoField != (ForegroundMaterialFieldMask & whichField))
-        _sfForegroundMaterial.syncWith(pOther->_sfForegroundMaterial);
+    if(FieldBits::NoField != (ToolTipTextFieldMask & whichField))
+        _sfToolTipText.syncWith(pOther->_sfToolTipText);
 
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
         _sfOpacity.syncWith(pOther->_sfOpacity);
@@ -1104,8 +1104,8 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (FocusedForegroundColorFieldMask & whichField))
         _sfFocusedForegroundColor.syncWith(pOther->_sfFocusedForegroundColor);
 
-    if(FieldBits::NoField != (ForegroundMaterialFieldMask & whichField))
-        _sfForegroundMaterial.syncWith(pOther->_sfForegroundMaterial);
+    if(FieldBits::NoField != (ToolTipTextFieldMask & whichField))
+        _sfToolTipText.syncWith(pOther->_sfToolTipText);
 
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
         _sfOpacity.syncWith(pOther->_sfOpacity);
@@ -1264,9 +1264,9 @@ SFColor4f *ComponentBase::getSFFocusedForegroundColor(void)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-SFMaterialPtr *ComponentBase::getSFForegroundMaterial(void)
+SFString *ComponentBase::getSFToolTipText(void)
 {
-    return &_sfForegroundMaterial;
+    return &_sfToolTipText;
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
@@ -1679,21 +1679,21 @@ void ComponentBase::setFocusedForegroundColor(const Color4f &value)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-MaterialPtr &ComponentBase::getForegroundMaterial(void)
+std::string &ComponentBase::getToolTipText(void)
 {
-    return _sfForegroundMaterial.getValue();
+    return _sfToolTipText.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-const MaterialPtr &ComponentBase::getForegroundMaterial(void) const
+const std::string &ComponentBase::getToolTipText(void) const
 {
-    return _sfForegroundMaterial.getValue();
+    return _sfToolTipText.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setForegroundMaterial(const MaterialPtr &value)
+void ComponentBase::setToolTipText(const std::string &value)
 {
-    _sfForegroundMaterial.setValue(value);
+    _sfToolTipText.setValue(value);
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING

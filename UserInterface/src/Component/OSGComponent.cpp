@@ -49,6 +49,7 @@
 #include "OSGComponent.h"
 #include "Component/Container/OSGContainer.h"
 #include "Component/Container/OSGFrame.h"
+#include "Component/Misc/OSGToolTip.h"
 #include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
@@ -127,6 +128,18 @@ bool Component::isContained(const Pnt2s& p, bool TestAgainstClipBounds) const
         return isContainedBounds(PointInCompSpace, TopLeft, BottomRight) && 
             DrawnBorder->isContained(PointInCompSpace,0,0,getSize().x(),getSize().y());
     }
+}
+
+Pnt2s Component::getToolTipLocation(MouseEvent e)
+{
+    //TODO:Implement
+    return Pnt2s(0,0);
+}
+
+ToolTipPtr Component::createToolTip(void)
+{
+    //TODO:Implement
+    return ToolTip::create();
 }
 
 void Component::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
