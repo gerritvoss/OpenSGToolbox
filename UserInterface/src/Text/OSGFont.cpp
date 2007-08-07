@@ -84,7 +84,7 @@ void Font::initText(void)
 
    // Create the font
    TextTXFParam param;
-   param.size = getSize();
+   param.size = getGlyphPixelSize();
    param.gap = getGap();
    param.textureWidth = getTextureWidth();
    _face = TextTXFFace::create(getFamily(), static_cast<TextFace::Style>(getStyle()), param);
