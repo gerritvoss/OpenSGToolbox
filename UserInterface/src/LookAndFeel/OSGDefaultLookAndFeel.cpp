@@ -47,19 +47,8 @@
 
 #include "OSGDefaultLookAndFeel.h"
 #include "Text/OSGFont.h"
-#include "Border/OSGLineBorder.h"
-#include "Border/OSGEmptyBorder.h"
-#include "Border/OSGEtchedBorder.h"
-#include "Border/OSGBevelBorder.h"
-#include "Border/OSGMatteBorder.h"
-#include "Border/OSGCompoundBorder.h"
-#include "Border/OSGRoundedCornerLineBorder.h"
-#include "Background/OSGColorUIBackground.h"
-#include "Background/OSGEmptyUIBackground.h"
-#include "Background/OSGCompoundUIBackground.h"
-#include "Background/OSGGradientUIBackground.h"
-#include "Background/OSGMaterialUIBackground.h"
-#include "Background/OSGTextureUIBackground.h"
+#include "Border/OSGBorders.h"
+#include "Background/OSGUIBackgrounds.h"
 #include "Component/OSGButton.h"
 #include "Component/OSGLabel.h"
 #include "Component/Container/OSGFrame.h"
@@ -77,6 +66,7 @@
 #include "Component/OSGUIDrawObjectCanvas.h"
 #include "Component/Text/OSGTextField.h"
 #include "Component/Text/OSGTextArea.h"
+#include "Component/Misc/OSGToolTip.h"
 
 
 OSG_BEGIN_NAMESPACE
@@ -111,6 +101,10 @@ Real32 DefaultLookAndFeel::getTextCaretRate(void) const
 	return _TextCaretRate;
 }
 
+Real32 DefaultLookAndFeel::getToolTipPopupTime(void) const
+{
+	return _ToolTipPopupTime;
+}
 void DefaultLookAndFeel::init(void)
 {
 	//Default Font
@@ -750,7 +744,7 @@ void DefaultLookAndFeel::init(void)
 
 	TextField::getClassType().setPrototype(DefaultTextField);
 
-/********Text Area********/
+    /********Text Area********/
 	ColorUIBackgroundPtr DefaultTextAreaBackground = ColorUIBackground::create();
 	beginEditCP(DefaultTextAreaBackground);
 		DefaultTextAreaBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
@@ -800,6 +794,65 @@ void DefaultLookAndFeel::init(void)
 
 	TextArea::getClassType().setPrototype(DefaultTextArea);
 
+	//************************** ToolTip*****************************
+	//Default ToolTipBorder
+	LineBorderPtr DefaultToolTipLineBorder = LineBorder::create();
+	beginEditCP(DefaultToolTipLineBorder);
+		DefaultToolTipLineBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultToolTipLineBorder->setWidth(1);
+	endEditCP(DefaultToolTipLineBorder);
+    
+	ShadowBorderPtr DefaultToolTipBorder = osg::ShadowBorder::create();
+    beginEditCP(DefaultToolTipBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask | ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask| ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | ShadowBorder::CornerRadiusFieldMask | ShadowBorder::InternalToEdgeColorLengthFieldMask );
+		DefaultToolTipBorder->setTopOffset(0);
+		DefaultToolTipBorder->setBottomOffset(2);
+		DefaultToolTipBorder->setLeftOffset(0);
+		DefaultToolTipBorder->setRightOffset(2);
+		DefaultToolTipBorder->setInsideBorder(DefaultToolTipLineBorder);
+		DefaultToolTipBorder->setCornerRadius(3);
+		DefaultToolTipBorder->setInternalColor(Color4f(0.0, 0.0, 0.0, 0.5));
+		DefaultToolTipBorder->setEdgeColor(Color4f(0.0, 0.0, 0.0, 0.0));
+		DefaultToolTipBorder->setInternalToEdgeColorLength(2);
+	endEditCP(DefaultToolTipBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask | ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask| ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | ShadowBorder::CornerRadiusFieldMask | ShadowBorder::InternalToEdgeColorLengthFieldMask );
+
+	//Default ToolTipBackground
+	ColorUIBackgroundPtr DefaultToolTipBackground = ColorUIBackground::create();
+	beginEditCP(DefaultToolTipBackground);
+		DefaultToolTipBackground->setColor(Color4f(1.0,1.0,0.9,1.0));
+	endEditCP(DefaultToolTipBackground);
+
+	//Default ToolTip
+	ToolTipPtr DefaultToolTip = ToolTip::create();
+	beginEditCP(DefaultToolTip);
+		DefaultToolTip->setEnabled(true);
+		DefaultToolTip->setVisible(true);
+		
+		DefaultToolTip->setConstraints(NullFC);
+		//Sizes
+		DefaultToolTip->setMinSize(Vec2s(0,0));
+		DefaultToolTip->setMaxSize(Vec2s(32767,32767)); //2^15
+		DefaultToolTip->setPreferredSize(Vec2s(100,50));
+
+		//Border
+		DefaultToolTip->setBorder(DefaultToolTipBorder);
+		
+		//Background
+		DefaultToolTip->setBackground(DefaultToolTipBackground);
+
+		//Foreground
+		DefaultToolTip->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
+		
+		//Opacity
+		DefaultToolTip->setOpacity(1.0);
+
+		//Text
+		DefaultToolTip->setText("");
+		DefaultToolTip->setFont(DefaultFont);
+        DefaultToolTip->setVerticalAlignment(0.5);
+        DefaultToolTip->setHorizontalAlignment(0.0);
+	endEditCP(DefaultToolTip);
+	
+    ToolTip::getClassType().setPrototype(DefaultToolTip);
 	/*******Borders********/
 	/*******Line Border********/
 
@@ -931,6 +984,7 @@ void DefaultLookAndFeel::init(void)
 		getPrototypes().addValue(DefaultToggleButton);
 		getPrototypes().addValue(DefaultTextField);
 		getPrototypes().addValue(DefaultTextArea);
+		getPrototypes().addValue(DefaultToolTip);
 	endEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);
 }
 /*-------------------------------------------------------------------------*\
@@ -941,14 +995,16 @@ void DefaultLookAndFeel::init(void)
 
 DefaultLookAndFeel::DefaultLookAndFeel(void) :
     Inherited(),
-		_TextCaretRate(1.0)
+		_TextCaretRate(1.0),
+		_ToolTipPopupTime(1.5)
 {
 
 }
 
 DefaultLookAndFeel::DefaultLookAndFeel(const DefaultLookAndFeel &source) :
     Inherited(source),
-		_TextCaretRate(source._TextCaretRate)
+		_TextCaretRate(source._TextCaretRate),
+		_ToolTipPopupTime(source._ToolTipPopupTime)
 {
 }
 

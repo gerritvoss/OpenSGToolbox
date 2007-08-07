@@ -158,6 +158,24 @@ bool Component::getMouseContained(void)
 	return _MouseInComponentLastMouse;
 }
 
+inline
+Component::ComponentUpdater::ComponentUpdater(ComponentPtr TheComponent) :
+    _Component(TheComponent)
+{
+}
+
+inline
+Component::ActivateToolTipListener::ActivateToolTipListener(ComponentPtr TheComponent) :
+    _Component(TheComponent)
+{
+}
+
+inline
+Component::DeactivateToolTipListener::DeactivateToolTipListener(ComponentPtr TheComponent) :
+    _Component(TheComponent)
+{
+}
+
 OSG_END_NAMESPACE
 
 #define OSGCOMPONENT_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

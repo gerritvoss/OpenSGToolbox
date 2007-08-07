@@ -61,13 +61,14 @@
 #include "OSGToolTipBase.h"
 #include "OSGToolTip.h"
 
-#include <Util/OSGUIDefines.h>            // VerticalAlignment default header
-#include <Util/OSGUIDefines.h>            // HorizontalAlignment default header
 
 OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  ToolTipBase::FontFieldMask = 
     (TypeTraits<BitVector>::One << ToolTipBase::FontFieldId);
+
+const OSG::BitVector  ToolTipBase::TippedComponentFieldMask = 
+    (TypeTraits<BitVector>::One << ToolTipBase::TippedComponentFieldId);
 
 const OSG::BitVector  ToolTipBase::TextFieldMask = 
     (TypeTraits<BitVector>::One << ToolTipBase::TextFieldId);
@@ -88,13 +89,16 @@ const OSG::BitVector ToolTipBase::MTInfluenceMask =
 /*! \var FontPtr         ToolTipBase::_sfFont
     
 */
+/*! \var ComponentPtr    ToolTipBase::_sfTippedComponent
+    
+*/
 /*! \var std::string     ToolTipBase::_sfText
     
 */
-/*! \var UInt32          ToolTipBase::_sfVerticalAlignment
+/*! \var Real32          ToolTipBase::_sfVerticalAlignment
     
 */
-/*! \var UInt32          ToolTipBase::_sfHorizontalAlignment
+/*! \var Real32          ToolTipBase::_sfHorizontalAlignment
     
 */
 
@@ -107,17 +111,22 @@ FieldDescription *ToolTipBase::_desc[] =
                      FontFieldId, FontFieldMask,
                      false,
                      (FieldAccessMethod) &ToolTipBase::getSFFont),
+    new FieldDescription(SFComponentPtr::getClassType(), 
+                     "TippedComponent", 
+                     TippedComponentFieldId, TippedComponentFieldMask,
+                     false,
+                     (FieldAccessMethod) &ToolTipBase::getSFTippedComponent),
     new FieldDescription(SFString::getClassType(), 
                      "Text", 
                      TextFieldId, TextFieldMask,
                      false,
                      (FieldAccessMethod) &ToolTipBase::getSFText),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "VerticalAlignment", 
                      VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
                      false,
                      (FieldAccessMethod) &ToolTipBase::getSFVerticalAlignment),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "HorizontalAlignment", 
                      HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
                      false,
@@ -198,9 +207,10 @@ void ToolTipBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 ToolTipBase::ToolTipBase(void) :
     _sfFont                   (), 
+    _sfTippedComponent        (ComponentPtr(NullFC)), 
     _sfText                   (), 
-    _sfVerticalAlignment      (UInt32(VERTICAL_CENTER)), 
-    _sfHorizontalAlignment    (UInt32(HORIZONTAL_CENTER)), 
+    _sfVerticalAlignment      (Real32(0.5)), 
+    _sfHorizontalAlignment    (Real32(0.0)), 
     Inherited() 
 {
 }
@@ -211,6 +221,7 @@ ToolTipBase::ToolTipBase(void) :
 
 ToolTipBase::ToolTipBase(const ToolTipBase &source) :
     _sfFont                   (source._sfFont                   ), 
+    _sfTippedComponent        (source._sfTippedComponent        ), 
     _sfText                   (source._sfText                   ), 
     _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
     _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
@@ -233,6 +244,11 @@ UInt32 ToolTipBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (FontFieldMask & whichField))
     {
         returnValue += _sfFont.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TippedComponentFieldMask & whichField))
+    {
+        returnValue += _sfTippedComponent.getBinSize();
     }
 
     if(FieldBits::NoField != (TextFieldMask & whichField))
@@ -264,6 +280,11 @@ void ToolTipBase::copyToBin(      BinaryDataHandler &pMem,
         _sfFont.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (TippedComponentFieldMask & whichField))
+    {
+        _sfTippedComponent.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (TextFieldMask & whichField))
     {
         _sfText.copyToBin(pMem);
@@ -290,6 +311,11 @@ void ToolTipBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (FontFieldMask & whichField))
     {
         _sfFont.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TippedComponentFieldMask & whichField))
+    {
+        _sfTippedComponent.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (TextFieldMask & whichField))
@@ -320,6 +346,9 @@ void ToolTipBase::executeSyncImpl(      ToolTipBase *pOther,
     if(FieldBits::NoField != (FontFieldMask & whichField))
         _sfFont.syncWith(pOther->_sfFont);
 
+    if(FieldBits::NoField != (TippedComponentFieldMask & whichField))
+        _sfTippedComponent.syncWith(pOther->_sfTippedComponent);
+
     if(FieldBits::NoField != (TextFieldMask & whichField))
         _sfText.syncWith(pOther->_sfText);
 
@@ -341,6 +370,9 @@ void ToolTipBase::executeSyncImpl(      ToolTipBase *pOther,
 
     if(FieldBits::NoField != (FontFieldMask & whichField))
         _sfFont.syncWith(pOther->_sfFont);
+
+    if(FieldBits::NoField != (TippedComponentFieldMask & whichField))
+        _sfTippedComponent.syncWith(pOther->_sfTippedComponent);
 
     if(FieldBits::NoField != (TextFieldMask & whichField))
         _sfText.syncWith(pOther->_sfText);

@@ -78,22 +78,13 @@ void UIDrawingSurface::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void UIDrawingSurface::addMouseTransformFunctor( UIDrawingSurfaceMouseTransformFunctorPtr Functor)
+Pnt2s UIDrawingSurface::getMousePosition(void) const
 {
-
-	if(getMouseTransformFunctors().find(Functor) == getMouseTransformFunctors().end())
-	{
-		getMouseTransformFunctors().addValue(Functor);
-	}
-}
-
-void UIDrawingSurface::removeMouseTransformFunctor( UIDrawingSurfaceMouseTransformFunctorPtr Functor)
-{
-	MFUIDrawingSurfaceMouseTransformFunctorPtr::iterator FoundItor = getMouseTransformFunctors().find(Functor);
-	if(FoundItor != getMouseTransformFunctors().end())
-	{
-		getMouseTransformFunctors().erase(FoundItor);
-	}
+    Pnt2s ViewportPoint(0,0);
+    ViewportPtr TheViewport( getEventProducer()->windowToViewport(getEventProducer()->getMousePosition(),ViewportPoint) );
+    Pnt2s Result(0,0);
+    getMouseTransformFunctor()->viewportToRenderingSurface( ViewportPoint,TheViewport, Result);
+    return Result;
 }
 
 void UIDrawingSurface::mouseClicked(const MouseEvent& e)
@@ -101,31 +92,25 @@ void UIDrawingSurface::mouseClicked(const MouseEvent& e)
 	if(getRootFrame() != NullFC)
 	{
 		Pnt2s ResultMouseLoc;
-		for(UInt32 i(0) ; i<getMouseTransformFunctors().size(); ++i)
-		{
-			if(!getMouseTransformFunctors().getValue(i)->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
-				continue;
+		if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
+        {
+		    MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
+			    ResultMouseLoc,e.getViewport());
 
-			MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
-				ResultMouseLoc,e.getViewport());
-
-			checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent.getLocation(),TransformedMouseEvent.getViewport());
-			if(isContainedClipBounds(TransformedMouseEvent.getLocation(), getRootFrame()))
-			{
-				getRootFrame()->mouseClicked(TransformedMouseEvent);
-			}
-		}
+		    checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent.getLocation(),TransformedMouseEvent.getViewport());
+		    if(isContainedClipBounds(TransformedMouseEvent.getLocation(), getRootFrame()))
+		    {
+			    getRootFrame()->mouseClicked(TransformedMouseEvent);
+		    }
+        }
 	}
 }
 
 void UIDrawingSurface::mouseEntered(const MouseEvent& e)
 {
 	Pnt2s ResultMouseLoc;
-	for(UInt32 i(0) ; i<getMouseTransformFunctors().size(); ++i)
-	{
-		if(!getMouseTransformFunctors().getValue(i)->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
-			continue;
-
+	if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
+    {
 		MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
 			ResultMouseLoc,e.getViewport());
 
@@ -136,11 +121,8 @@ void UIDrawingSurface::mouseEntered(const MouseEvent& e)
 void UIDrawingSurface::mouseExited(const MouseEvent& e)
 {
 	Pnt2s ResultMouseLoc;
-	for(UInt32 i(0) ; i<getMouseTransformFunctors().size(); ++i)
-	{
-		if(!getMouseTransformFunctors().getValue(i)->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
-			continue;
-
+	if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
+    {
 		MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
 			ResultMouseLoc,e.getViewport());
 
@@ -153,11 +135,8 @@ void UIDrawingSurface::mousePressed(const MouseEvent& e)
 	if(getRootFrame() != NullFC)
 	{
 		Pnt2s ResultMouseLoc;
-		for(UInt32 i(0) ; i<getMouseTransformFunctors().size(); ++i)
-		{
-			if(!getMouseTransformFunctors().getValue(i)->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
-				continue;
-
+		if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
+        {
 			MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
 				ResultMouseLoc,e.getViewport());
 
@@ -175,11 +154,8 @@ void UIDrawingSurface::mouseReleased(const MouseEvent& e)
 	if(getRootFrame() != NullFC)
 	{
 		Pnt2s ResultMouseLoc;
-		for(UInt32 i(0) ; i<getMouseTransformFunctors().size(); ++i)
-		{
-			if(!getMouseTransformFunctors().getValue(i)->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
-				continue;
-
+		if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
+        {
 			MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
 				ResultMouseLoc,e.getViewport());
 
@@ -198,11 +174,8 @@ void UIDrawingSurface::mouseMoved(const MouseEvent& e)
 	if(getRootFrame() != NullFC)
 	{
 		Pnt2s ResultMouseLoc;
-		for(UInt32 i(0) ; i<getMouseTransformFunctors().size(); ++i)
-		{
-			if(!getMouseTransformFunctors().getValue(i)->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
-				continue;
-
+		if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
+        {
 			MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
 				ResultMouseLoc,e.getViewport());
 
@@ -220,11 +193,8 @@ void UIDrawingSurface::mouseDragged(const MouseEvent& e)
 	if(getRootFrame() != NullFC)
 	{
 		Pnt2s ResultMouseLoc;
-		for(UInt32 i(0) ; i<getMouseTransformFunctors().size(); ++i)
-		{
-			if(!getMouseTransformFunctors().getValue(i)->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
-				continue;
-
+		if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
+        {
 			MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
 				ResultMouseLoc,e.getViewport());
 
@@ -242,11 +212,8 @@ void UIDrawingSurface::mouseWheelMoved(const MouseWheelEvent& e)
 	if(getRootFrame() != NullFC)
 	{
 		Pnt2s ResultMouseLoc;
-		for(UInt32 i(0) ; i<getMouseTransformFunctors().size(); ++i)
-		{
-			if(!getMouseTransformFunctors().getValue(i)->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
-				continue;
-
+		if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
+        {
 			MouseWheelEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getWheelRotation(), e.getScrollType(),
 				ResultMouseLoc,e.getViewport());
 

@@ -210,6 +210,9 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     virtual bool attachWindow(WindowPtr Win);
 
 	virtual UInt32 getKeyModifiers(void) const = 0;
+    
+	virtual Pnt2s getMousePosition(void) const = 0;
+	ViewportPtr windowToViewport(const Pnt2s& WindowPoint, Pnt2s& ViewportPoint);
 
 	virtual std::string getClipboard(void) const = 0;
 
@@ -270,8 +273,6 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
 	CursorType _CursorType;
 
 	virtual void setCursor(void) = 0;
-
-	ViewportPtr windowToViewport(const Pnt2s& WindowPoint, Pnt2s& ViewportPoint);
     /*==========================  PRIVATE  ================================*/
   private:
 

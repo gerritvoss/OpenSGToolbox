@@ -70,6 +70,7 @@
 #include "Component/OSGComponentFields.h" // FocusedComponent type
 #include "UIDrawingSurface/OSGUIDrawingSurfaceFields.h" // DrawingSurface type
 #include "Component/Menu/OSGPopupMenuFields.h" // ActivePopupMenu type
+#include "Component/Misc/OSGToolTipFields.h" // ActiveToolTip type
 
 #include "OSGFrameFields.h"
 
@@ -96,12 +97,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
         FocusedComponentFieldId = Inherited::NextFieldId,
         DrawingSurfaceFieldId   = FocusedComponentFieldId + 1,
         ActivePopupMenuFieldId  = DrawingSurfaceFieldId   + 1,
-        NextFieldId             = ActivePopupMenuFieldId  + 1
+        ActiveToolTipFieldId    = ActivePopupMenuFieldId  + 1,
+        NextFieldId             = ActiveToolTipFieldId    + 1
     };
 
     static const OSG::BitVector FocusedComponentFieldMask;
     static const OSG::BitVector DrawingSurfaceFieldMask;
     static const OSG::BitVector ActivePopupMenuFieldMask;
+    static const OSG::BitVector ActiveToolTipFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -131,6 +134,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
            SFComponentPtr      *getSFFocusedComponent(void);
            SFUIDrawingSurfacePtr *getSFDrawingSurface (void);
            SFPopupMenuPtr      *getSFActivePopupMenu(void);
+           SFToolTipPtr        *getSFActiveToolTip  (void);
 
            ComponentPtr        &getFocusedComponent(void);
      const ComponentPtr        &getFocusedComponent(void) const;
@@ -138,6 +142,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
      const UIDrawingSurfacePtr &getDrawingSurface (void) const;
            PopupMenuPtr        &getActivePopupMenu(void);
      const PopupMenuPtr        &getActivePopupMenu(void) const;
+           ToolTipPtr          &getActiveToolTip  (void);
+     const ToolTipPtr          &getActiveToolTip  (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -147,6 +153,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
      void setFocusedComponent( const ComponentPtr &value );
      void setDrawingSurface ( const UIDrawingSurfacePtr &value );
      void setActivePopupMenu( const PopupMenuPtr &value );
+     void setActiveToolTip  ( const ToolTipPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -192,6 +199,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     SFComponentPtr      _sfFocusedComponent;
     SFUIDrawingSurfacePtr   _sfDrawingSurface;
     SFPopupMenuPtr      _sfActivePopupMenu;
+    SFToolTipPtr        _sfActiveToolTip;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

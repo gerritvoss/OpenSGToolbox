@@ -117,11 +117,11 @@ SFGraphicsPtr *UIDrawingSurfaceBase::getSFGraphics(void)
     return &_sfGraphics;
 }
 
-//! Get the UIDrawingSurface::_mfMouseTransformFunctors field.
+//! Get the UIDrawingSurface::_sfMouseTransformFunctor field.
 inline
-MFUIDrawingSurfaceMouseTransformFunctorPtr *UIDrawingSurfaceBase::getMFMouseTransformFunctors(void)
+SFUIDrawingSurfaceMouseTransformFunctorPtr *UIDrawingSurfaceBase::getSFMouseTransformFunctor(void)
 {
-    return &_mfMouseTransformFunctors;
+    return &_sfMouseTransformFunctor;
 }
 
 
@@ -188,27 +188,27 @@ void UIDrawingSurfaceBase::setGraphics(const GraphicsPtr &value)
     _sfGraphics.setValue(value);
 }
 
-
-//! Get the value of the \a index element the UIDrawingSurface::_mfMouseTransformFunctors field.
+//! Get the value of the UIDrawingSurface::_sfMouseTransformFunctor field.
 inline
-UIDrawingSurfaceMouseTransformFunctorPtr &UIDrawingSurfaceBase::getMouseTransformFunctors(const UInt32 index)
+UIDrawingSurfaceMouseTransformFunctorPtr &UIDrawingSurfaceBase::getMouseTransformFunctor(void)
 {
-    return _mfMouseTransformFunctors[index];
+    return _sfMouseTransformFunctor.getValue();
 }
 
-//! Get the UIDrawingSurface::_mfMouseTransformFunctors field.
+//! Get the value of the UIDrawingSurface::_sfMouseTransformFunctor field.
 inline
-MFUIDrawingSurfaceMouseTransformFunctorPtr &UIDrawingSurfaceBase::getMouseTransformFunctors(void)
+const UIDrawingSurfaceMouseTransformFunctorPtr &UIDrawingSurfaceBase::getMouseTransformFunctor(void) const
 {
-    return _mfMouseTransformFunctors;
+    return _sfMouseTransformFunctor.getValue();
 }
 
-//! Get the UIDrawingSurface::_mfMouseTransformFunctors field.
+//! Set the value of the UIDrawingSurface::_sfMouseTransformFunctor field.
 inline
-const MFUIDrawingSurfaceMouseTransformFunctorPtr &UIDrawingSurfaceBase::getMouseTransformFunctors(void) const
+void UIDrawingSurfaceBase::setMouseTransformFunctor(const UIDrawingSurfaceMouseTransformFunctorPtr &value)
 {
-    return _mfMouseTransformFunctors;
+    _sfMouseTransformFunctor.setValue(value);
 }
+
 
 OSG_END_NAMESPACE
 

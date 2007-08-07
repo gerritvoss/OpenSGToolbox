@@ -161,6 +161,12 @@ void GLUTWindowEventProducer::setCursor(void)
 	//TODO:Implement
 }
 
+Pnt2s GLUTWindowEventProducer::getMousePosition(void) const
+{
+	//TODO:Implement
+	return Pnt2s(0,0);
+}
+
 UInt32 GLUTWindowEventProducer::getKeyModifiers(void) const
 {
 	//TODO:Implement

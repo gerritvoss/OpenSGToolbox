@@ -70,7 +70,7 @@
 #include "Component/Container/OSGFrame.h" // RootFrame type
 #include <OpenSG/Input/OSGWindowEventProducer.h> // EventProducer type
 #include "Graphics/OSGGraphics.h" // Graphics type
-#include "UIDrawingSurface/OSGUIDrawingSurfaceMouseTransformFunctorFields.h" // MouseTransformFunctors type
+#include "UIDrawingSurface/OSGUIDrawingSurfaceMouseTransformFunctorFields.h" // MouseTransformFunctor type
 
 #include "OSGUIDrawingSurfaceFields.h"
 
@@ -94,17 +94,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurfaceBase : public FieldContain
 
     enum
     {
-        RootFrameFieldId              = Inherited::NextFieldId,
-        EventProducerFieldId          = RootFrameFieldId              + 1,
-        GraphicsFieldId               = EventProducerFieldId          + 1,
-        MouseTransformFunctorsFieldId = GraphicsFieldId               + 1,
-        NextFieldId                   = MouseTransformFunctorsFieldId + 1
+        RootFrameFieldId             = Inherited::NextFieldId,
+        EventProducerFieldId         = RootFrameFieldId             + 1,
+        GraphicsFieldId              = EventProducerFieldId         + 1,
+        MouseTransformFunctorFieldId = GraphicsFieldId              + 1,
+        NextFieldId                  = MouseTransformFunctorFieldId + 1
     };
 
     static const OSG::BitVector RootFrameFieldMask;
     static const OSG::BitVector EventProducerFieldMask;
     static const OSG::BitVector GraphicsFieldMask;
-    static const OSG::BitVector MouseTransformFunctorsFieldMask;
+    static const OSG::BitVector MouseTransformFunctorFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -134,6 +134,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurfaceBase : public FieldContain
            SFFramePtr          *getSFRootFrame      (void);
            SFWindowEventProducerPtr *getSFEventProducer  (void);
            SFGraphicsPtr       *getSFGraphics       (void);
+           SFUIDrawingSurfaceMouseTransformFunctorPtr *getSFMouseTransformFunctor(void);
 
            FramePtr            &getRootFrame      (void);
      const FramePtr            &getRootFrame      (void) const;
@@ -141,6 +142,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurfaceBase : public FieldContain
      const WindowEventProducerPtr &getEventProducer  (void) const;
            GraphicsPtr         &getGraphics       (void);
      const GraphicsPtr         &getGraphics       (void) const;
+           UIDrawingSurfaceMouseTransformFunctorPtr &getMouseTransformFunctor(void);
+     const UIDrawingSurfaceMouseTransformFunctorPtr &getMouseTransformFunctor(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -150,6 +153,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurfaceBase : public FieldContain
      void setRootFrame      ( const FramePtr &value );
      void setEventProducer  ( const WindowEventProducerPtr &value );
      void setGraphics       ( const GraphicsPtr &value );
+     void setMouseTransformFunctor( const UIDrawingSurfaceMouseTransformFunctorPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -195,7 +199,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurfaceBase : public FieldContain
     SFFramePtr          _sfRootFrame;
     SFWindowEventProducerPtr   _sfEventProducer;
     SFGraphicsPtr       _sfGraphics;
-    MFUIDrawingSurfaceMouseTransformFunctorPtr   _mfMouseTransformFunctors;
+    SFUIDrawingSurfaceMouseTransformFunctorPtr   _sfMouseTransformFunctor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -211,23 +215,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurfaceBase : public FieldContain
     /*! \{                                                                 */
 
     virtual ~UIDrawingSurfaceBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           MFUIDrawingSurfaceMouseTransformFunctorPtr *getMFMouseTransformFunctors(void);
-
-           UIDrawingSurfaceMouseTransformFunctorPtr &getMouseTransformFunctors(UInt32 index);
-           MFUIDrawingSurfaceMouseTransformFunctorPtr &getMouseTransformFunctors(void);
-     const MFUIDrawingSurfaceMouseTransformFunctorPtr &getMouseTransformFunctors(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

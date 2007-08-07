@@ -648,37 +648,41 @@ ComponentPtr createleftPanelRadioTextPanel(void)
 	RadioButtonPtr rbutton3 = osg::RadioButton::create();
 	RadioButtonPtr rbutton4 = osg::RadioButton::create();
 
-	beginEditCP(rbutton1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
+	beginEditCP(rbutton1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
 		rbutton1->setVerticalAlignment(VERTICAL_CENTER);
 		rbutton1->setHorizontalAlignment(HORIZONTAL_LEFT);
 		rbutton1->setPreferredSize(Vec2s(100, 40));
 		rbutton1->setText("Black Text");
-	endEditCP(rbutton1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
-		rbutton1->addButtonSelectedListener(&rbutton1Listener);
+        rbutton1->setToolTipText("Set TextArea text black");
+	endEditCP(rbutton1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
+	rbutton1->addButtonSelectedListener(&rbutton1Listener);
 
-	beginEditCP(rbutton2,Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+	beginEditCP(rbutton2,Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
 		rbutton2->setVerticalAlignment(VERTICAL_CENTER);
 		rbutton2->setHorizontalAlignment(HORIZONTAL_LEFT);
 		rbutton2->setPreferredSize(Vec2s(100, 40));
 		rbutton2->setText("Red Text");
-	endEditCP(rbutton2, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
-		rbutton2->addButtonSelectedListener(&rbutton2Listener);
+        rbutton2->setToolTipText("Set TextArea text red");
+	endEditCP(rbutton2, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
+	rbutton2->addButtonSelectedListener(&rbutton2Listener);
 
-	beginEditCP(rbutton3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+	beginEditCP(rbutton3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
 		rbutton3->setVerticalAlignment(VERTICAL_CENTER);
 		rbutton3->setHorizontalAlignment(HORIZONTAL_LEFT);
 		rbutton3->setPreferredSize(Vec2s(100, 40));
 		rbutton3->setText("Green Text");
-	endEditCP(rbutton3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
-		rbutton3->addButtonSelectedListener(&rbutton3Listener);
+        rbutton3->setToolTipText("Set TextArea text green");
+	endEditCP(rbutton3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
+	rbutton3->addButtonSelectedListener(&rbutton3Listener);
 
-	beginEditCP(rbutton4, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
+	beginEditCP(rbutton4, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
 		rbutton4->setVerticalAlignment(VERTICAL_CENTER);
 		rbutton4->setHorizontalAlignment(HORIZONTAL_LEFT);
 		rbutton4->setPreferredSize(Vec2s(100, 40));
 		rbutton4->setText("Blue Text");
-	endEditCP(rbutton4, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask);
-		rbutton4->addButtonSelectedListener(&rbutton4Listener);
+        rbutton4->setToolTipText("Set TextArea text blue");
+	endEditCP(rbutton4, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
+	rbutton4->addButtonSelectedListener(&rbutton4Listener);
 
 	buttonGroup.addButton(rbutton1);
 	buttonGroup.addButton(rbutton2);

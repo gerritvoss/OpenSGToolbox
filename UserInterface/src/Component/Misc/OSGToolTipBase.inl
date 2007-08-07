@@ -103,6 +103,13 @@ SFFontPtr *ToolTipBase::getSFFont(void)
     return &_sfFont;
 }
 
+//! Get the ToolTip::_sfTippedComponent field.
+inline
+SFComponentPtr *ToolTipBase::getSFTippedComponent(void)
+{
+    return &_sfTippedComponent;
+}
+
 //! Get the ToolTip::_sfText field.
 inline
 SFString *ToolTipBase::getSFText(void)
@@ -112,14 +119,14 @@ SFString *ToolTipBase::getSFText(void)
 
 //! Get the ToolTip::_sfVerticalAlignment field.
 inline
-SFUInt32 *ToolTipBase::getSFVerticalAlignment(void)
+SFReal32 *ToolTipBase::getSFVerticalAlignment(void)
 {
     return &_sfVerticalAlignment;
 }
 
 //! Get the ToolTip::_sfHorizontalAlignment field.
 inline
-SFUInt32 *ToolTipBase::getSFHorizontalAlignment(void)
+SFReal32 *ToolTipBase::getSFHorizontalAlignment(void)
 {
     return &_sfHorizontalAlignment;
 }
@@ -146,6 +153,27 @@ void ToolTipBase::setFont(const FontPtr &value)
     _sfFont.setValue(value);
 }
 
+//! Get the value of the ToolTip::_sfTippedComponent field.
+inline
+ComponentPtr &ToolTipBase::getTippedComponent(void)
+{
+    return _sfTippedComponent.getValue();
+}
+
+//! Get the value of the ToolTip::_sfTippedComponent field.
+inline
+const ComponentPtr &ToolTipBase::getTippedComponent(void) const
+{
+    return _sfTippedComponent.getValue();
+}
+
+//! Set the value of the ToolTip::_sfTippedComponent field.
+inline
+void ToolTipBase::setTippedComponent(const ComponentPtr &value)
+{
+    _sfTippedComponent.setValue(value);
+}
+
 //! Get the value of the ToolTip::_sfText field.
 inline
 std::string &ToolTipBase::getText(void)
@@ -169,42 +197,42 @@ void ToolTipBase::setText(const std::string &value)
 
 //! Get the value of the ToolTip::_sfVerticalAlignment field.
 inline
-UInt32 &ToolTipBase::getVerticalAlignment(void)
+Real32 &ToolTipBase::getVerticalAlignment(void)
 {
     return _sfVerticalAlignment.getValue();
 }
 
 //! Get the value of the ToolTip::_sfVerticalAlignment field.
 inline
-const UInt32 &ToolTipBase::getVerticalAlignment(void) const
+const Real32 &ToolTipBase::getVerticalAlignment(void) const
 {
     return _sfVerticalAlignment.getValue();
 }
 
 //! Set the value of the ToolTip::_sfVerticalAlignment field.
 inline
-void ToolTipBase::setVerticalAlignment(const UInt32 &value)
+void ToolTipBase::setVerticalAlignment(const Real32 &value)
 {
     _sfVerticalAlignment.setValue(value);
 }
 
 //! Get the value of the ToolTip::_sfHorizontalAlignment field.
 inline
-UInt32 &ToolTipBase::getHorizontalAlignment(void)
+Real32 &ToolTipBase::getHorizontalAlignment(void)
 {
     return _sfHorizontalAlignment.getValue();
 }
 
 //! Get the value of the ToolTip::_sfHorizontalAlignment field.
 inline
-const UInt32 &ToolTipBase::getHorizontalAlignment(void) const
+const Real32 &ToolTipBase::getHorizontalAlignment(void) const
 {
     return _sfHorizontalAlignment.getValue();
 }
 
 //! Set the value of the ToolTip::_sfHorizontalAlignment field.
 inline
-void ToolTipBase::setHorizontalAlignment(const UInt32 &value)
+void ToolTipBase::setHorizontalAlignment(const Real32 &value)
 {
     _sfHorizontalAlignment.setValue(value);
 }

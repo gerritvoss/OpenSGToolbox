@@ -164,9 +164,22 @@ Pnt2s DrawingSurfaceToComponent(const Pnt2s& DrawingSurfacePoint, const Componen
 
 Pnt2s ComponentToDrawingSurface(const Pnt2s& ComponentPoint, const ComponentPtr Comp)
 {
-	Pnt2s Result;
+	Pnt2s Result(ComponentPoint);
 	ComponentPtr CompRecurse = Comp;
 	while(CompRecurse != NullFC)
+	{
+		Result += Vec2s(CompRecurse->getPosition());
+		CompRecurse = CompRecurse->getParentContainer();
+	}
+	return Result;
+}
+
+Pnt2s ComponentToFrame(const Pnt2s& ComponentPoint, const ComponentPtr Comp)
+{
+	Pnt2s Result(ComponentPoint);
+	ComponentPtr CompRecurse = Comp;
+	while(CompRecurse != NullFC &&
+          CompRecurse != Comp->getParentFrame())
 	{
 		Result += Vec2s(CompRecurse->getPosition());
 		CompRecurse = CompRecurse->getParentContainer();

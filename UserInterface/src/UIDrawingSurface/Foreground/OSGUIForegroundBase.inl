@@ -159,14 +159,10 @@ const UIDrawingSurfacePtr &UIForegroundBase::getDrawingSurface(void) const
 inline
 void UIForegroundBase::setDrawingSurface(const UIDrawingSurfacePtr &value)
 {
-	if(getDrawingSurface() != NullFC)
-	{
-		getDrawingSurface()->removeMouseTransformFunctor(getMouseTransformFunctor());
-	}
     _sfDrawingSurface.setValue(value);
 	if(getDrawingSurface() != NullFC)
 	{
-		getDrawingSurface()->addMouseTransformFunctor(getMouseTransformFunctor());
+        getDrawingSurface()->setMouseTransformFunctor(getMouseTransformFunctor());
 	}
 }
 

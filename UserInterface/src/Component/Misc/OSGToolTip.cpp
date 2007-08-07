@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGToolTip.h"
+#include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -76,9 +77,32 @@ void ToolTip::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ToolTip::drawInternal(const GraphicsPtr Graphics) const
+void ToolTip::drawInternal(const GraphicsPtr TheGraphics) const
 {
-    //TODO:Implement
+   Pnt2s TopLeft, BottomRight;
+   getInsideBorderBounds(TopLeft, BottomRight);
+
+   TheGraphics->drawText(
+       calculateAlignment(TopLeft, BottomRight-TopLeft, TheGraphics->getTextBounds(getText(), getFont()), getVerticalAlignment(), getHorizontalAlignment())
+       , getText(), getFont(), getForegroundColor(), getOpacity());
+}
+
+Vec2s ToolTip::calculatePreferredSize(void) const
+{
+    if(getFont() == NullFC)
+    {
+        return getPreferredSize();
+    }
+
+    UInt16 Top(0),Bottom(0),Left(0),Right(0);
+    if(getDrawnBorder() != NullFC)
+    {
+        getDrawnBorder()->getInsets(Left, Right, Top, Bottom);
+    }
+
+    Pnt2s TextTopLeft, TextBottomRight;
+    getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+    return TextBottomRight - TextTopLeft + Vec2s(Left+Right+2, Top+Bottom+2);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -106,6 +130,14 @@ ToolTip::~ToolTip(void)
 void ToolTip::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & TextFieldMask)
+    {
+        beginEditCP(ToolTipPtr(this), PreferredSizeFieldMask | SizeFieldMask);
+            setPreferredSize(calculatePreferredSize());
+            setSize(getPreferredSize());
+        endEditCP(ToolTipPtr(this), PreferredSizeFieldMask | SizeFieldMask);
+    }
 }
 
 void ToolTip::dump(      UInt32    , 

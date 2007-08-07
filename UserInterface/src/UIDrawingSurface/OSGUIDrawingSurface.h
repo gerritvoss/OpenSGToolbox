@@ -107,8 +107,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurface : public UIDrawingSurface
 	virtual void keyReleased(const KeyEvent& e);
 	virtual void keyTyped(const KeyEvent& e);
 
-	void addMouseTransformFunctor( UIDrawingSurfaceMouseTransformFunctorPtr Functor);
-	void removeMouseTransformFunctor( UIDrawingSurfaceMouseTransformFunctorPtr Functor);
+    virtual Pnt2s getMousePosition(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

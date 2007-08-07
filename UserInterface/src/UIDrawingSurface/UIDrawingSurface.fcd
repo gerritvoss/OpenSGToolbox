@@ -40,12 +40,12 @@ A UI DrawingSurface.
 	>
 	</Field>
 	<Field
-		name="MouseTransformFunctors"
+		name="MouseTransformFunctor"
 		type="UIDrawingSurfaceMouseTransformFunctorPtr"
-		cardinality="multi"
+		cardinality="single"
 		visibility="external"
 		header="UIDrawingSurface/OSGUIDrawingSurfaceMouseTransformFunctorFields.h"
-		access="protected"
+		access="public"
 	>
 	</Field>
 </FieldContainer>

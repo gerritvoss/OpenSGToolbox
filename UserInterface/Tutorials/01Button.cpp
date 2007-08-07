@@ -139,32 +139,36 @@ int main(int argc, char **argv)
 	endEditCP(sampleFont, Font::SizeFieldMask);
 
 
-	beginEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::ForegroundColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
+    beginEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::ForegroundColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::ToolTipTextFieldMask);
 			// The following 4 function calls are not specific to Button, 
 			// but can be used with any Component
 
 			// Determine the Minimum and Maximum size that the Component can ever have
 			// due to various Layouts (some change the size of the Components within
 			// the Layouts)
-		button1->setMinSize( Vec2s (50, 25) );
-		button1->setMaxSize( Vec2s (200, 100) );
+		    button1->setMinSize( Vec2s (50, 25) );
+		    button1->setMaxSize( Vec2s (200, 100) );
 			// Determine the PreferredSize for the Component
-		button1->setPreferredSize( Vec2s (100, 50) );
+		    button1->setPreferredSize( Vec2s (100, 50) );
 			// Determine the Font color for the Component (only
 			// relevant if Component has text)
-		button1->setForegroundColor( Color4f(1.0, 0.0, 0.0, 1.0) );
-		// The following functions are specific to Button
+		    button1->setForegroundColor( Color4f(1.0, 0.0, 0.0, 1.0) );
+		    // The following functions are specific to Button
 			// Determine the visible Text (Text must fit within Button Size
 			// or extra Text will not display)
-		button1->setText("Button 1");
-		button1->setFont(sampleFont);
+		    button1->setText("Button 1");
+		    button1->setFont(sampleFont);
 			// Determine the VerticalAlignment of the Text- VERTICAL_CENTER, 
 			// or VERTICAL_TOP, VERTICAL_BOTTOM
-		button1->setVerticalAlignment(VERTICAL_TOP);
+		    button1->setVerticalAlignment(VERTICAL_TOP);
 			// Determine the HorizontalAlignment of the Text- HORIZONTAL_CENTER,
 			// HORIZONTAL_LEFT, HORIZONTAL_RIGHT
-		button1->setHorizontalAlignment(HORIZONTAL_RIGHT);
-		endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::ForegroundColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
+		    button1->setHorizontalAlignment(HORIZONTAL_RIGHT);
+
+       
+            //Set the Text to be shown as a ToolTip
+            button1->setToolTipText("Button 1 ToolTip");
+		endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::ForegroundColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::ToolTipTextFieldMask);
 	
 	// Create an ActionListener and assign it to button1
 	// This is defined above, and wil
@@ -187,11 +191,13 @@ int main(int argc, char **argv)
 	******************************************************/
 	ToggleButtonPtr toggleButton1 = osg::ToggleButton::create();
 	
-	beginEditCP(toggleButton1, ToggleButton::SelectedFieldMask | Button::TextFieldMask);
+	beginEditCP(toggleButton1, ToggleButton::SelectedFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
 		// Determine if the ToggleButton appears pressed (TRUE) or released (FALSE)
 		toggleButton1->setSelected(FALSE);
 		toggleButton1->setText("ToggleMe");
-	endEditCP(toggleButton1, ToggleButton::SelectedFieldMask | Button::TextFieldMask);
+        //Set the Text to be shown as a ToolTip
+        toggleButton1->setToolTipText("Toggle Button ToolTip");
+	endEditCP(toggleButton1, ToggleButton::SelectedFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
 
 
 	// Create Background to be used with the MainFrame

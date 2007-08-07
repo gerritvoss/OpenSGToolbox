@@ -42,4 +42,14 @@ A UI Frame.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="ActiveToolTip"
+		type="ToolTipPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/Misc/OSGToolTipFields.h"
+		defaultValue="NullFC"
+	>
+	</Field>
 </FieldContainer>

@@ -47,6 +47,7 @@
 
 #include "OSGFrame.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
+#include "Component/Misc/OSGToolTip.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -155,6 +156,17 @@ const FramePtr &Frame::getParentFrame(void) const
     }
 }
 
+void Frame::drawInternal(const GraphicsPtr TheGraphics) const
+{
+    Inherited::drawInternal(TheGraphics);
+        
+    //If I have an active tooltip then draw it
+    if(getActiveToolTip() != NullFC)
+    {
+        getActiveToolTip()->draw(TheGraphics);
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -180,6 +192,12 @@ Frame::~Frame(void)
 void Frame::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+    
+    if( (whichField & ActiveToolTipFieldMask) &&
+        getActiveToolTip() != NullFC)
+    {
+        getActiveToolTip()->updateClipBounds();
+    }
 }
 
 void Frame::dump(      UInt32    , 

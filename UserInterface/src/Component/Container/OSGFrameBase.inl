@@ -117,6 +117,13 @@ SFPopupMenuPtr *FrameBase::getSFActivePopupMenu(void)
     return &_sfActivePopupMenu;
 }
 
+//! Get the Frame::_sfActiveToolTip field.
+inline
+SFToolTipPtr *FrameBase::getSFActiveToolTip(void)
+{
+    return &_sfActiveToolTip;
+}
+
 
 //! Get the value of the Frame::_sfFocusedComponent field.
 inline
@@ -179,6 +186,27 @@ inline
 void FrameBase::setActivePopupMenu(const PopupMenuPtr &value)
 {
     _sfActivePopupMenu.setValue(value);
+}
+
+//! Get the value of the Frame::_sfActiveToolTip field.
+inline
+ToolTipPtr &FrameBase::getActiveToolTip(void)
+{
+    return _sfActiveToolTip.getValue();
+}
+
+//! Get the value of the Frame::_sfActiveToolTip field.
+inline
+const ToolTipPtr &FrameBase::getActiveToolTip(void) const
+{
+    return _sfActiveToolTip.getValue();
+}
+
+//! Set the value of the Frame::_sfActiveToolTip field.
+inline
+void FrameBase::setActiveToolTip(const ToolTipPtr &value)
+{
+    _sfActiveToolTip.setValue(value);
 }
 
 

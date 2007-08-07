@@ -73,6 +73,9 @@ const OSG::BitVector  FrameBase::DrawingSurfaceFieldMask =
 const OSG::BitVector  FrameBase::ActivePopupMenuFieldMask = 
     (TypeTraits<BitVector>::One << FrameBase::ActivePopupMenuFieldId);
 
+const OSG::BitVector  FrameBase::ActiveToolTipFieldMask = 
+    (TypeTraits<BitVector>::One << FrameBase::ActiveToolTipFieldId);
+
 const OSG::BitVector FrameBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -87,6 +90,9 @@ const OSG::BitVector FrameBase::MTInfluenceMask =
     
 */
 /*! \var PopupMenuPtr    FrameBase::_sfActivePopupMenu
+    
+*/
+/*! \var ToolTipPtr      FrameBase::_sfActiveToolTip
     
 */
 
@@ -108,7 +114,12 @@ FieldDescription *FrameBase::_desc[] =
                      "ActivePopupMenu", 
                      ActivePopupMenuFieldId, ActivePopupMenuFieldMask,
                      true,
-                     (FieldAccessMethod) &FrameBase::getSFActivePopupMenu)
+                     (FieldAccessMethod) &FrameBase::getSFActivePopupMenu),
+    new FieldDescription(SFToolTipPtr::getClassType(), 
+                     "ActiveToolTip", 
+                     ActiveToolTipFieldId, ActiveToolTipFieldMask,
+                     false,
+                     (FieldAccessMethod) &FrameBase::getSFActiveToolTip)
 };
 
 
@@ -187,6 +198,7 @@ FrameBase::FrameBase(void) :
     _sfFocusedComponent       (ComponentPtr(NullFC)), 
     _sfDrawingSurface         (UIDrawingSurfacePtr(NullFC)), 
     _sfActivePopupMenu        (PopupMenuPtr(NullFC)), 
+    _sfActiveToolTip          (ToolTipPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -199,6 +211,7 @@ FrameBase::FrameBase(const FrameBase &source) :
     _sfFocusedComponent       (source._sfFocusedComponent       ), 
     _sfDrawingSurface         (source._sfDrawingSurface         ), 
     _sfActivePopupMenu        (source._sfActivePopupMenu        ), 
+    _sfActiveToolTip          (source._sfActiveToolTip          ), 
     Inherited                 (source)
 {
 }
@@ -230,6 +243,11 @@ UInt32 FrameBase::getBinSize(const BitVector &whichField)
         returnValue += _sfActivePopupMenu.getBinSize();
     }
 
+    if(FieldBits::NoField != (ActiveToolTipFieldMask & whichField))
+    {
+        returnValue += _sfActiveToolTip.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -252,6 +270,11 @@ void FrameBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ActivePopupMenuFieldMask & whichField))
     {
         _sfActivePopupMenu.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ActiveToolTipFieldMask & whichField))
+    {
+        _sfActiveToolTip.copyToBin(pMem);
     }
 
 
@@ -277,6 +300,11 @@ void FrameBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfActivePopupMenu.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ActiveToolTipFieldMask & whichField))
+    {
+        _sfActiveToolTip.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -296,6 +324,9 @@ void FrameBase::executeSyncImpl(      FrameBase *pOther,
     if(FieldBits::NoField != (ActivePopupMenuFieldMask & whichField))
         _sfActivePopupMenu.syncWith(pOther->_sfActivePopupMenu);
 
+    if(FieldBits::NoField != (ActiveToolTipFieldMask & whichField))
+        _sfActiveToolTip.syncWith(pOther->_sfActiveToolTip);
+
 
 }
 #else
@@ -314,6 +345,9 @@ void FrameBase::executeSyncImpl(      FrameBase *pOther,
 
     if(FieldBits::NoField != (ActivePopupMenuFieldMask & whichField))
         _sfActivePopupMenu.syncWith(pOther->_sfActivePopupMenu);
+
+    if(FieldBits::NoField != (ActiveToolTipFieldMask & whichField))
+        _sfActiveToolTip.syncWith(pOther->_sfActiveToolTip);
 
 
 

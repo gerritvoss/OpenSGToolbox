@@ -229,14 +229,10 @@ const UIDrawingSurfacePtr &UIRectangleBase::getDrawingSurface(void) const
 inline
 void UIRectangleBase::setDrawingSurface(const UIDrawingSurfacePtr &value)
 {
-	if(getDrawingSurface() != NullFC)
-	{
-		getDrawingSurface()->removeMouseTransformFunctor(getMouseTransformFunctor());
-	}
     _sfDrawingSurface.setValue(value);
 	if(getDrawingSurface() != NullFC)
 	{
-		getDrawingSurface()->addMouseTransformFunctor(getMouseTransformFunctor());
+		getDrawingSurface()->setMouseTransformFunctor(getMouseTransformFunctor());
 	}
 }
 

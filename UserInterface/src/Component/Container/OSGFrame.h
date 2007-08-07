@@ -102,6 +102,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
 
     virtual ~Frame(void); 
 
+	virtual void drawInternal(const GraphicsPtr TheGraphics) const;
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/

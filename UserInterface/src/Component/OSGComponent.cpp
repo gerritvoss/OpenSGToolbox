@@ -49,8 +49,11 @@
 #include "OSGComponent.h"
 #include "Component/Container/OSGContainer.h"
 #include "Component/Container/OSGFrame.h"
+#include "UIDrawingSurface/OSGUIDrawingSurface.h"
+#include "UIDrawingSurface/OSGUIDrawingSurfaceMouseTransformFunctor.h"
 #include "Component/Misc/OSGToolTip.h"
 #include "Util/OSGUIDrawUtils.h"
+#include "LookAndFeel/OSGLookAndFeelManager.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -130,15 +133,14 @@ bool Component::isContained(const Pnt2s& p, bool TestAgainstClipBounds) const
     }
 }
 
-Pnt2s Component::getToolTipLocation(MouseEvent e)
+Pnt2s Component::getToolTipLocation(Pnt2s MousePosition)
 {
     //TODO:Implement
-    return Pnt2s(0,0);
+    return DrawingSurfaceToComponent(MousePosition,ComponentPtr(this)) + Vec2s(5,20);
 }
 
 ToolTipPtr Component::createToolTip(void)
 {
-    //TODO:Implement
     return ToolTip::create();
 }
 
@@ -196,10 +198,10 @@ bool Component::setupClipping(const GraphicsPtr Graphics) const
 {
     //Get Clipping initial settings
     //bool WasClippingEnabled = glIsEnabled(GL_SCISSOR_TEST);
-    bool WasClippPlane0Enabled = glIsEnabled(GL_CLIP_PLANE0);
-    bool WasClippPlane1Enabled = glIsEnabled(GL_CLIP_PLANE1);
-    bool WasClippPlane2Enabled = glIsEnabled(GL_CLIP_PLANE2);
-    bool WasClippPlane3Enabled = glIsEnabled(GL_CLIP_PLANE3);
+    GLboolean WasClippPlane0Enabled = glIsEnabled(GL_CLIP_PLANE0);
+    GLboolean WasClippPlane1Enabled = glIsEnabled(GL_CLIP_PLANE1);
+    GLboolean WasClippPlane2Enabled = glIsEnabled(GL_CLIP_PLANE2);
+    GLboolean WasClippPlane3Enabled = glIsEnabled(GL_CLIP_PLANE3);
     if(getClipping())
     {
         //glClipPlane
@@ -271,6 +273,7 @@ void Component::draw(const GraphicsPtr TheGraphics) const
     {
         DrawnBorder->deactivateInternalDrawConstraints(TheGraphics,0,0,getSize().x(),getSize().y());
     }
+
 
     //Undo the Translation to Component Space
     glTranslatef(-getPosition().x(), -getPosition().y(), 0);
@@ -628,13 +631,21 @@ bool Component::takeFocus(bool Temporary)
 
 Component::Component(void) :
     Inherited(),
-		_MouseInComponentLastMouse(false)
+		_MouseInComponentLastMouse(false),
+        _TimeSinceMouseEntered(0.0),
+        _ComponentUpdater(ComponentPtr(this)),
+        _ActivateToolTipListener(ComponentPtr(this)),
+        _DeactivateToolTipListener(ComponentPtr(this))
 {
 }
 
 Component::Component(const Component &source) :
     Inherited(source),
-		_MouseInComponentLastMouse(false)
+		_MouseInComponentLastMouse(false),
+        _TimeSinceMouseEntered(0.0),
+        _ComponentUpdater(ComponentPtr(this)),
+        _ActivateToolTipListener(ComponentPtr(this)),
+        _DeactivateToolTipListener(ComponentPtr(this))
 {
 }
 
@@ -701,6 +712,18 @@ void Component::changed(BitVector whichField, UInt32 origin)
             produceComponentHidden( ComponentEvent(ComponentPtr(this),getSystemTime(),ComponentEvent::COMPONENT_HIDDEN, ComponentPtr(this)) );    
         }
      }
+    
+    if( (whichField & ToolTipTextFieldMask))
+    {
+        if(getToolTipText().compare(std::string("")) != 0)
+        {
+            addMouseListener(&_ActivateToolTipListener);
+        }
+        else
+        {
+            removeMouseListener(&_ActivateToolTipListener);
+        }
+    }
 }
 
 void Component::updateContainerLayout(void)
@@ -717,6 +740,126 @@ void Component::dump(      UInt32    ,
     SLOG << "Dump Component NI" << std::endl;
 }
 
+
+void Component::ComponentUpdater::update(const UpdateEvent& e)
+{
+    _Component->_TimeSinceMouseEntered += e.getElapsedTime();
+    if(_Component->_TimeSinceMouseEntered >= LookAndFeelManager::the()->getLookAndFeel()->getToolTipPopupTime() &&
+        _Component->getParentFrame() != NullFC &&
+        _Component->getParentFrame()->getActiveToolTip() == NullFC)
+    {
+        ToolTipPtr TheToolTip = _Component->createToolTip();
+        beginEditCP(TheToolTip, ToolTip::TippedComponentFieldMask | ToolTip::PositionFieldMask | ToolTip::TextFieldMask);
+            TheToolTip->setTippedComponent(_Component);
+            if(_Component->getParentFrame() != NullFC &&
+               _Component->getParentFrame()->getDrawingSurface() != NullFC)
+            {
+                TheToolTip->setPosition(ComponentToFrame(_Component->getToolTipLocation(
+                    _Component->getParentFrame()->getDrawingSurface()->getMousePosition()), _Component));
+            }
+            else
+            {
+                TheToolTip->setPosition(ComponentToFrame(_Component->getToolTipLocation(Pnt2s(0,0)),_Component));
+            }
+            TheToolTip->setText(_Component->getToolTipText());
+        endEditCP(TheToolTip, ToolTip::TippedComponentFieldMask | ToolTip::PositionFieldMask | ToolTip::TextFieldMask);
+
+        if(_Component->getParentFrame() != NullFC)
+        {
+            beginEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
+                _Component->getParentFrame()->setActiveToolTip(TheToolTip);
+            endEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
+        }
+        
+        _Component->addMouseListener(&(_Component->_DeactivateToolTipListener));
+    }
+}
+
+void Component::ActivateToolTipListener::mouseClicked(const MouseEvent& e)
+{
+}
+
+void Component::ActivateToolTipListener::mouseEntered(const MouseEvent& e)
+{
+    _Component->_TimeSinceMouseEntered = 0.0f;
+	if( _Component->getParentFrame() != NullFC &&
+		_Component->getParentFrame()->getDrawingSurface() != NullFC &&
+		_Component->getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+    {
+		_Component->getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&(_Component->_ComponentUpdater));
+	}
+}
+
+void Component::ActivateToolTipListener::mouseExited(const MouseEvent& e)
+{
+    if( _Component->getParentFrame() != NullFC &&
+		_Component->getParentFrame()->getDrawingSurface() != NullFC &&
+		_Component->getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+    {
+		_Component->getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&(_Component->_ComponentUpdater));
+	}
+}
+
+void Component::ActivateToolTipListener::mousePressed(const MouseEvent& e)
+{
+}
+
+void Component::ActivateToolTipListener::mouseReleased(const MouseEvent& e)
+{
+}
+
+void Component::DeactivateToolTipListener::mouseClicked(const MouseEvent& e)
+{
+    _Component->_TimeSinceMouseEntered = 0.0f;
+    if(_Component->getParentFrame() != NullFC)
+    {
+        beginEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
+                _Component->getParentFrame()->setActiveToolTip(NullFC);
+        endEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
+    }
+    _Component->removeMouseListener(this);
+}
+
+void Component::DeactivateToolTipListener::mouseEntered(const MouseEvent& e)
+{
+}
+
+void Component::DeactivateToolTipListener::mouseExited(const MouseEvent& e)
+{
+    _Component->_TimeSinceMouseEntered = 0.0f;
+    if(_Component->getParentFrame() != NullFC)
+    {
+        beginEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
+                _Component->getParentFrame()->setActiveToolTip(NullFC);
+        endEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
+    }
+    _Component->removeMouseListener(this);
+
+}
+
+void Component::DeactivateToolTipListener::mousePressed(const MouseEvent& e)
+{
+    _Component->_TimeSinceMouseEntered = 0.0f;
+    if(_Component->getParentFrame() != NullFC)
+    {
+        beginEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
+                _Component->getParentFrame()->setActiveToolTip(NullFC);
+        endEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
+    }
+    _Component->removeMouseListener(this);
+}
+
+void Component::DeactivateToolTipListener::mouseReleased(const MouseEvent& e)
+{
+    _Component->_TimeSinceMouseEntered = 0.0f;
+    if(_Component->getParentFrame() != NullFC)
+    {
+        beginEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
+                _Component->getParentFrame()->setActiveToolTip(NullFC);
+        endEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
+    }
+    _Component->removeMouseListener(this);
+}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

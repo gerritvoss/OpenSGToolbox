@@ -176,6 +176,23 @@ void Win32WindowEventProducer::setCursor(void)
 	SetCursor(LoadCursor(NULL, c));
 }
 
+Pnt2s Win32WindowEventProducer::getMousePosition(void) const
+{
+    DWORD MousePos = GetMessagePos();
+	LPPOINT ClientPoint = new POINT;
+	ClientPoint->x = LOWORD(MousePos);
+	ClientPoint->y = HIWORD(MousePos);
+
+    Pnt2s Result(0,0);
+    if(ScreenToClient(WIN32Window::Ptr::dcast(getWindow())->getHwnd(), ClientPoint))
+	{
+        Result.setValues(ClientPoint->x, ClientPoint->y);
+    }
+    delete ClientPoint;
+	return Result;
+
+}
+
 UInt32 Win32WindowEventProducer::getKeyModifiers(void) const
 {
    UInt32 Modifiers = 0;
@@ -605,6 +622,7 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd2, UINT uMsg,
 				else
 				{
 				}
+                delete ClientPoint;
 			}
             break;
 

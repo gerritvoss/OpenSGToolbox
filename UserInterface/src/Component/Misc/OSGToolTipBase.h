@@ -68,9 +68,10 @@
 #include "Component/OSGComponent.h" // Parent
 
 #include "Text/OSGFont.h" // Font type
+#include "Component/OSGComponentFields.h" // TippedComponent type
 #include <OpenSG/OSGStringFields.h> // Text type
-#include <OpenSG/OSGUInt32Fields.h> // VerticalAlignment type
-#include <OpenSG/OSGUInt32Fields.h> // HorizontalAlignment type
+#include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
+#include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
 
 #include "OSGToolTipFields.h"
 
@@ -95,13 +96,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
     enum
     {
         FontFieldId                = Inherited::NextFieldId,
-        TextFieldId                = FontFieldId                + 1,
+        TippedComponentFieldId     = FontFieldId                + 1,
+        TextFieldId                = TippedComponentFieldId     + 1,
         VerticalAlignmentFieldId   = TextFieldId                + 1,
         HorizontalAlignmentFieldId = VerticalAlignmentFieldId   + 1,
         NextFieldId                = HorizontalAlignmentFieldId + 1
     };
 
     static const OSG::BitVector FontFieldMask;
+    static const OSG::BitVector TippedComponentFieldMask;
     static const OSG::BitVector TextFieldMask;
     static const OSG::BitVector VerticalAlignmentFieldMask;
     static const OSG::BitVector HorizontalAlignmentFieldMask;
@@ -132,18 +135,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
     /*! \{                                                                 */
 
            SFFontPtr           *getSFFont           (void);
+           SFComponentPtr      *getSFTippedComponent(void);
            SFString            *getSFText           (void);
-           SFUInt32            *getSFVerticalAlignment(void);
-           SFUInt32            *getSFHorizontalAlignment(void);
+           SFReal32            *getSFVerticalAlignment(void);
+           SFReal32            *getSFHorizontalAlignment(void);
 
            FontPtr             &getFont           (void);
      const FontPtr             &getFont           (void) const;
+           ComponentPtr        &getTippedComponent(void);
+     const ComponentPtr        &getTippedComponent(void) const;
            std::string         &getText           (void);
      const std::string         &getText           (void) const;
-           UInt32              &getVerticalAlignment(void);
-     const UInt32              &getVerticalAlignment(void) const;
-           UInt32              &getHorizontalAlignment(void);
-     const UInt32              &getHorizontalAlignment(void) const;
+           Real32              &getVerticalAlignment(void);
+     const Real32              &getVerticalAlignment(void) const;
+           Real32              &getHorizontalAlignment(void);
+     const Real32              &getHorizontalAlignment(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -151,9 +157,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
     /*! \{                                                                 */
 
      void setFont           ( const FontPtr &value );
+     void setTippedComponent( const ComponentPtr &value );
      void setText           ( const std::string &value );
-     void setVerticalAlignment( const UInt32 &value );
-     void setHorizontalAlignment( const UInt32 &value );
+     void setVerticalAlignment( const Real32 &value );
+     void setHorizontalAlignment( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -197,9 +204,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
     /*! \{                                                                 */
 
     SFFontPtr           _sfFont;
+    SFComponentPtr      _sfTippedComponent;
     SFString            _sfText;
-    SFUInt32            _sfVerticalAlignment;
-    SFUInt32            _sfHorizontalAlignment;
+    SFReal32            _sfVerticalAlignment;
+    SFReal32            _sfHorizontalAlignment;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

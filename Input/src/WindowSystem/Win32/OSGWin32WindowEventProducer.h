@@ -128,6 +128,7 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
     virtual bool getFullscreen(void) const;
 	
 	virtual UInt32 getKeyModifiers(void) const;
+	virtual Pnt2s getMousePosition(void) const;
 
 	virtual std::string getClipboard(void) const;
 

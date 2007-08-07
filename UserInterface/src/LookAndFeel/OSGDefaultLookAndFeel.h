@@ -77,6 +77,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultLookAndFeel : public DefaultLookAnd
 	
 	virtual void init(void);
 	virtual Real32 getTextCaretRate(void) const;
+	virtual Real32 getToolTipPopupTime(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -107,6 +108,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultLookAndFeel : public DefaultLookAnd
     static void initMethod(void);
 
 	Real32 _TextCaretRate;
+	Real32 _ToolTipPopupTime;
 
     // prohibit default functions (move to 'public' if you need one)
 

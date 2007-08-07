@@ -52,6 +52,7 @@
 #include <OpenSG/Input/OSGMouseListener.h>
 #include <OpenSG/Input/OSGMouseWheelListener.h>
 #include <OpenSG/Input/OSGMouseMotionListener.h>
+#include <OpenSG/Input/OSGUpdateListener.h>
 
 #include <set>
 
@@ -142,7 +143,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     virtual bool isContained(const Pnt2s& p, bool TestAgainstClipBounds = true) const;
 
     //Returns the tooltip location in this component's coordinate system
-    virtual Pnt2s getToolTipLocation(MouseEvent e);
+    virtual Pnt2s getToolTipLocation(Pnt2s MousePosition);
     virtual ToolTipPtr createToolTip(void);
 
     /*=========================  PROTECTED  ===============================*/
@@ -175,6 +176,51 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     virtual bool giveFocus(ComponentPtr NewFocusedComponent, bool Temporary= false);
     virtual BorderPtr getDrawnBorder(void) const;
     virtual UIBackgroundPtr getDrawnBackground(void) const;
+
+    class ComponentUpdater : public UpdateListener
+    {
+    public:
+        ComponentUpdater(ComponentPtr TheComponent);
+
+        virtual void update(const UpdateEvent& e);
+    private:
+        ComponentPtr _Component;
+    };
+
+    class DeactivateToolTipListener : public MouseListener
+    {
+    public:
+        DeactivateToolTipListener(ComponentPtr TheComponent);
+
+        virtual void mouseClicked(const MouseEvent& e);
+        virtual void mouseEntered(const MouseEvent& e);
+        virtual void mouseExited(const MouseEvent& e);
+        virtual void mousePressed(const MouseEvent& e);
+        virtual void mouseReleased(const MouseEvent& e);
+    private:
+        ComponentPtr _Component;
+    };
+
+    class ActivateToolTipListener : public MouseListener
+    {
+    public:
+        ActivateToolTipListener(ComponentPtr TheComponent);
+
+        virtual void mouseClicked(const MouseEvent& e);
+        virtual void mouseEntered(const MouseEvent& e);
+        virtual void mouseExited(const MouseEvent& e);
+        virtual void mousePressed(const MouseEvent& e);
+        virtual void mouseReleased(const MouseEvent& e);
+    private:
+        ComponentPtr _Component;
+    };
+    
+    friend class ComponentUpdater;
+
+    Real32 _TimeSinceMouseEntered;
+    ComponentUpdater _ComponentUpdater;
+    ActivateToolTipListener _ActivateToolTipListener;
+    DeactivateToolTipListener _DeactivateToolTipListener;
     
     /*==========================  PRIVATE  ================================*/
   private:

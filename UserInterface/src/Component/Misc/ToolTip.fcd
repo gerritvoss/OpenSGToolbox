@@ -22,6 +22,16 @@ A UI Tooltip.
 	>
 	</Field>
 	<Field
+		name="TippedComponent"
+		type="ComponentPtr"
+		cardinality="single"
+		visibility="external"
+		header="Component/OSGComponentFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+	</Field>
+	<Field
 		name="Text"
 		type="std::string"
 		cardinality="single"
@@ -31,21 +41,19 @@ A UI Tooltip.
 	</Field>
 	<Field
 		name="VerticalAlignment"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="VERTICAL_CENTER"
-		defaultHeader="Util/OSGUIDefines.h"
+		defaultValue="0.5"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="HorizontalAlignment"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="HORIZONTAL_CENTER"
-		defaultHeader="Util/OSGUIDefines.h"
+		defaultValue="0.0"
 		access="public"
 	>
 	</Field>

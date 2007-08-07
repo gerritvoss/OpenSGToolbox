@@ -49,18 +49,8 @@
 
 #include "OSGWindowsLookAndFeel.h"
 #include "Text/OSGFont.h"
-#include "Border/OSGLineBorder.h"
-#include "Border/OSGEmptyBorder.h"
-#include "Border/OSGEtchedBorder.h"
-#include "Border/OSGBevelBorder.h"
-#include "Border/OSGMatteBorder.h"
-#include "Border/OSGCompoundBorder.h"
-#include "Background/OSGColorUIBackground.h"
-#include "Background/OSGEmptyUIBackground.h"
-#include "Background/OSGCompoundUIBackground.h"
-#include "Background/OSGGradientUIBackground.h"
-#include "Background/OSGMaterialUIBackground.h"
-#include "Background/OSGTextureUIBackground.h"
+#include "Border/OSGBorders.h"
+#include "Background/OSGUIBackgrounds.h"
 #include "Component/OSGButton.h"
 #include "Component/OSGLabel.h"
 #include "Component/Container/OSGFrame.h"
@@ -77,6 +67,7 @@
 #include "Component/OSGUIDrawObjectCanvas.h"
 #include "Component/Text/OSGTextField.h"
 #include "Component/Text/OSGTextArea.h"
+#include "Component/Misc/OSGToolTip.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -109,6 +100,13 @@ Real32 WindowsLookAndFeel::getTextCaretRate(void) const
 {
 	return _TextCaretRate;
 }
+
+
+Real32 WindowsLookAndFeel::getToolTipPopupTime(void) const
+{
+	return _ToolTipPopupTime;
+}
+
 
 void WindowsLookAndFeel::init(void)
 {
@@ -799,6 +797,65 @@ void WindowsLookAndFeel::init(void)
 
 	TextArea::getClassType().setPrototype(WindowsTextArea);
 
+	//************************** ToolTip*****************************
+	//Default ToolTipBorder
+	LineBorderPtr WindowsToolTipLineBorder = LineBorder::create();
+	beginEditCP(WindowsToolTipLineBorder);
+		WindowsToolTipLineBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsToolTipLineBorder->setWidth(1);
+	endEditCP(WindowsToolTipLineBorder);
+    
+	ShadowBorderPtr WindowsToolTipBorder = osg::ShadowBorder::create();
+    beginEditCP(WindowsToolTipBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask | ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask| ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | ShadowBorder::CornerRadiusFieldMask | ShadowBorder::InternalToEdgeColorLengthFieldMask );
+		WindowsToolTipBorder->setTopOffset(0);
+		WindowsToolTipBorder->setBottomOffset(2);
+		WindowsToolTipBorder->setLeftOffset(0);
+		WindowsToolTipBorder->setRightOffset(2);
+		WindowsToolTipBorder->setInsideBorder(WindowsToolTipLineBorder);
+		WindowsToolTipBorder->setCornerRadius(3);
+		WindowsToolTipBorder->setInternalColor(Color4f(0.0, 0.0, 0.0, 0.5));
+		WindowsToolTipBorder->setEdgeColor(Color4f(0.0, 0.0, 0.0, 0.0));
+		WindowsToolTipBorder->setInternalToEdgeColorLength(2);
+	endEditCP(WindowsToolTipBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask | ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask| ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | ShadowBorder::CornerRadiusFieldMask | ShadowBorder::InternalToEdgeColorLengthFieldMask );
+
+	//Default ToolTipBackground
+	ColorUIBackgroundPtr WindowsToolTipBackground = ColorUIBackground::create();
+	beginEditCP(WindowsToolTipBackground);
+		WindowsToolTipBackground->setColor(Color4f(1.0,1.0,0.9,1.0));
+	endEditCP(WindowsToolTipBackground);
+
+	//Default ToolTip
+	ToolTipPtr WindowsToolTip = ToolTip::create();
+	beginEditCP(WindowsToolTip);
+		WindowsToolTip->setEnabled(true);
+		WindowsToolTip->setVisible(true);
+		
+		WindowsToolTip->setConstraints(NullFC);
+		//Sizes
+		WindowsToolTip->setMinSize(Vec2s(0,0));
+		WindowsToolTip->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsToolTip->setPreferredSize(Vec2s(100,50));
+
+		//Border
+		WindowsToolTip->setBorder(WindowsToolTipBorder);
+		
+		//Background
+		WindowsToolTip->setBackground(WindowsToolTipBackground);
+
+		//Foreground
+		WindowsToolTip->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
+		
+		//Opacity
+		WindowsToolTip->setOpacity(1.0);
+
+		//Text
+		WindowsToolTip->setText("");
+		WindowsToolTip->setFont(WindowsFont);
+        WindowsToolTip->setVerticalAlignment(0.5);
+        WindowsToolTip->setHorizontalAlignment(0.0);
+	endEditCP(WindowsToolTip);
+	
+    ToolTip::getClassType().setPrototype(WindowsToolTip);
 
 	/*******Borders********/
 	/*******Line Border********/
@@ -919,6 +976,7 @@ void WindowsLookAndFeel::init(void)
 		getPrototypes().addValue(WindowsRadioButton);
 		getPrototypes().addValue(WindowsToggleButton);
 		getPrototypes().addValue(WindowsTextField);
+		getPrototypes().addValue(WindowsToolTip);
 	endEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);
 
 
@@ -935,13 +993,15 @@ void WindowsLookAndFeel::init(void)
 
 WindowsLookAndFeel::WindowsLookAndFeel(void) :
     Inherited(),
-		_TextCaretRate(1.0)
+		_TextCaretRate(1.0),
+		_ToolTipPopupTime(1.5)
 {
 }
 
 WindowsLookAndFeel::WindowsLookAndFeel(const WindowsLookAndFeel &source) :
     Inherited(source),
-		_TextCaretRate(source._TextCaretRate)
+		_TextCaretRate(source._TextCaretRate),
+		_ToolTipPopupTime(source._ToolTipPopupTime)
 {
 }
 
