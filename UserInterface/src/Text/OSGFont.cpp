@@ -97,14 +97,12 @@ void Font::initText(void)
       beginEditCP(getTexture());
       {
             ImagePtr image = _face->getTexture();
-		//	image->setPixelFormat(Image::OSG_A_PF);
             getTexture()->setImage(image);
             getTexture()->setWrapS(GL_CLAMP);
             getTexture()->setWrapT(GL_CLAMP);
-            getTexture()->setMinFilter(GL_NEAREST);
-            getTexture()->setMagFilter(GL_NEAREST);
+            getTexture()->setMinFilter(GL_LINEAR);
+            getTexture()->setMagFilter(GL_LINEAR);
             getTexture()->setEnvMode(GL_MODULATE);
-            //getTexture()->setEnvMode(GL_BLEND);
       }
       endEditCP(getTexture());
    }
