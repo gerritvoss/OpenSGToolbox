@@ -35,7 +35,7 @@
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGColorUIBackground.h>
+#include <OpenSG/UserInterface/OSGUIBackgrounds.h>
 
 // Include Border header files
 #include <OpenSG/UserInterface/OSGBorders.h>
@@ -107,6 +107,7 @@ int main(int argc, char **argv)
 	LineBorderPtr lineBorder = osg::LineBorder::create();
 	MatteBorderPtr matteBorder = osg::MatteBorder::create();
 	EmptyBorderPtr emptyBorder = osg::EmptyBorder::create();
+	MultiColorMatteBorderPtr multiColorMatteBorder = osg::MultiColorMatteBorder::create();
 	RoundedCornerLineBorderPtr roundedCornerLineBorder = osg::RoundedCornerLineBorder::create();
 	ShadowBorderPtr shadowBorder = osg::ShadowBorder::create();
 	
@@ -184,13 +185,29 @@ int main(int argc, char **argv)
 		matteBorder->setColor(Color4f(1.0, .5, .5, 1.0));
 	endEditCP(matteBorder, MatteBorder::LeftWidthFieldMask | MatteBorder::RightWidthFieldMask | MatteBorder::BottomWidthFieldMask | MatteBorder::TopWidthFieldMask | MatteBorder::ColorFieldMask);
 
+	// The MatteBorder creates a Border with dimensions
+	beginEditCP(multiColorMatteBorder);
+		// Determine the four Edge Widths
+		multiColorMatteBorder->setLeftWidth(10);
+		multiColorMatteBorder->setLeftLineTopColor(Color4f(1.0,0.0,0.0,1.0));
+		multiColorMatteBorder->setLeftLineBottomColor(Color4f(1.0,1.0,1.0,1.0));
+		multiColorMatteBorder->setRightWidth(10);
+		multiColorMatteBorder->setRightLineTopColor(Color4f(0.0,1.0,0.0,1.0));
+		multiColorMatteBorder->setRightLineBottomColor(Color4f(0.0,0.0,1.0,1.0));
+		multiColorMatteBorder->setBottomWidth(10);
+		multiColorMatteBorder->setBottomLineLeftColor(Color4f(1.0,1.0,1.0,1.0));
+		multiColorMatteBorder->setBottomLineRightColor(Color4f(0.0,0.0,1.0,1.0));
+		multiColorMatteBorder->setTopWidth(10);
+		multiColorMatteBorder->setTopLineLeftColor(Color4f(1.0,0.0,0.0,1.0));
+		multiColorMatteBorder->setTopLineRightColor(Color4f(0.0,1.0,0.0,1.0));
+	endEditCP(multiColorMatteBorder);
+	
 	// The RoundedCornerLineBorder
     beginEditCP(roundedCornerLineBorder, RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask );
 		roundedCornerLineBorder->setWidth(2);
 		roundedCornerLineBorder->setColor(Color4f(1.0, 0.5, 0.5, 1.0));
 		roundedCornerLineBorder->setCornerRadius(15);
 	endEditCP(roundedCornerLineBorder, RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask);
-
     
 	// The ShadowBorder
     beginEditCP(shadowBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask | ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask| ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | ShadowBorder::CornerRadiusFieldMask | ShadowBorder::InternalToEdgeColorLengthFieldMask );
@@ -224,6 +241,7 @@ int main(int argc, char **argv)
 	ButtonPtr etchedButton = osg::Button::create();
 	ButtonPtr lineButton = osg::Button::create();
 	ButtonPtr matteButton = osg::Button::create();
+	ButtonPtr multiColorMatteButton = osg::Button::create();
 	ButtonPtr roundedCornerLineButton = osg::Button::create();
 	ButtonPtr shadowButton = osg::Button::create();
 	
@@ -273,6 +291,13 @@ int main(int argc, char **argv)
 		// Note that when matteButton is pressed, the Border will revert to the 
 		// default Border for Buttons, a "pressed" BevelBorder
 	endEditCP  (matteButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+	
+	beginEditCP(multiColorMatteButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+		multiColorMatteButton->setPreferredSize(Vec2s(100,50));
+		multiColorMatteButton->setText("Multi-Color Matte Border");
+		multiColorMatteButton->setBorder(multiColorMatteBorder);
+		multiColorMatteButton->setActiveBorder(multiColorMatteBorder);
+	endEditCP  (multiColorMatteButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 
 	beginEditCP(roundedCornerLineButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 		roundedCornerLineButton->setPreferredSize(Vec2s(100,50));
@@ -306,6 +331,7 @@ int main(int argc, char **argv)
 	   MainFrame->getChildren().addValue(emptyButton);
 	   MainFrame->getChildren().addValue(lineButton);
 	   MainFrame->getChildren().addValue(matteButton);
+	   MainFrame->getChildren().addValue(multiColorMatteButton);
 	   MainFrame->getChildren().addValue(roundedCornerLineButton);
 	   MainFrame->getChildren().addValue(shadowButton);
 	   MainFrame->setLayout(MainFrameLayout);
