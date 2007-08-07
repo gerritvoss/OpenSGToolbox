@@ -96,22 +96,26 @@ LRESULT Win32WindowEventProducer::staticWndProc(HWND hwnd2, UINT uMsg,
                HDC           hDC;
                int iPixelFormat;
 
-               memset(&pfd, 0, sizeof(pfd));
-               pfd.nSize = sizeof(pfd);
-               pfd.nVersion = 1;
-               pfd.dwFlags = 
-                     PFD_DRAW_TO_WINDOW | 
-                     PFD_SUPPORT_OPENGL | 
-                     PFD_DOUBLEBUFFER;
-               pfd.iPixelType = PFD_TYPE_RGBA;
-               pfd.iLayerType = PFD_MAIN_PLANE;
-               pfd.cDepthBits = 16;            
+                ZeroMemory( &pfd, sizeof( pfd ) );
+                pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+                pfd.nVersion = 1;
+                pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL |
+                      PFD_DOUBLEBUFFER;
+                pfd.iPixelType = PFD_TYPE_RGBA;
+                pfd.cColorBits = 32;
+                pfd.cDepthBits = 32;
+                pfd.iLayerType = PFD_MAIN_PLANE;
+                pfd.cStencilBits = 8;
+                
 
                // init the OSG window  
                hDC = GetDC(hwnd2);
 
                iPixelFormat = ChoosePixelFormat(hDC, &pfd);
-               SetPixelFormat(hDC, iPixelFormat, &pfd);    
+               if (! SetPixelFormat(hDC, iPixelFormat, &pfd) )
+               {
+                   FWARNING(("Failed to set Pixel Format."));
+               }
                
                break;
             }
