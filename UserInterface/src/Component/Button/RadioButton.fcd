@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="CheckboxButton"
+	name="RadioButton"
 	parent="ToggleButton"
 	library="UserInterface"
 	pointerfieldtypes="both"
@@ -11,13 +11,13 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
-A UI Checkbox Button.
+A UI Radio Button.
 	<Field
 		name="DrawObject"
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
-		header="OSGUIDrawObjectCanvas.h"
+		header="Component/OSGUIDrawObjectCanvas.h"
 		access="public"
 	>
 	</Field>
@@ -26,7 +26,7 @@ A UI Checkbox Button.
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
-		header="OSGUIDrawObjectCanvas.h"
+		header="Component/OSGUIDrawObjectCanvas.h"
 		access="public"
 	>
 	</Field>
@@ -35,7 +35,7 @@ A UI Checkbox Button.
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
-		header="OSGUIDrawObjectCanvas.h"
+		header="Component/OSGUIDrawObjectCanvas.h"
 		access="public"
 	>
 	</Field>
@@ -44,7 +44,7 @@ A UI Checkbox Button.
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
-		header="OSGUIDrawObjectCanvas.h"
+		header="Component/OSGUIDrawObjectCanvas.h"
 		access="public"
 	>
 	</Field>

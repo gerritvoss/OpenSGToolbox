@@ -17,8 +17,9 @@ A UI Menu.
 		type="ToggleButtonPtr"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGToggleButtonFields.h"
+		header="Component/Button/OSGToggleButtonFields.h"
 		access="public"
+		defaultValue="NullFC"
 	>
 	</Field>
 	<Field

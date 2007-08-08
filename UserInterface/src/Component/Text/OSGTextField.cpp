@@ -112,18 +112,26 @@ void TextField::drawInternal(const GraphicsPtr TheGraphics) const
 	  }
 	  else
 	  {
+          //Draw Text Befor the Selection
 		  TheGraphics->drawText(TempPos, getText().substr(0, _TextSelectionStart), getFont(), ForeColor, getOpacity());
+
 		  //Draw Selection
-		  TheGraphics->drawQuad(TempPos + Vec2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionStart), getFont()).x(), 0),
+          Pnt2s TextTopLeft, TextBottomRight;
+          getFont()->getBounds(getText().substr(0, _TextSelectionStart), TextTopLeft, TextBottomRight);
+
+		  TheGraphics->drawQuad(TempPos + Vec2s(TextBottomRight.x(),0),
 			 TempPos + Vec2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionEnd), getFont()).x(), 0),
 			 TempPos + Vec2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionEnd), getFont())),
-			 TempPos + Vec2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionStart), getFont())),
-			  getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(), getOpacity()); 
-		  TheGraphics->drawText(TempPos + Vec2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionStart), getFont()).x(), 0), 
+			 TempPos + Vec2s(TextBottomRight),
+			  getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(), getOpacity());
+
+          //Draw Selected Text
+		  TheGraphics->drawText(TempPos + Vec2s(TextBottomRight.x(), 0), 
 			  getText().substr(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart), getFont(), getSelectionTextColor(), getOpacity());
 
-		  //draw end text
-		  TheGraphics->drawText(TempPos + Vec2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionEnd), getFont()).x(), 0),
+		  //Eraw Text After selection
+          getFont()->getBounds(getText().substr(0, _TextSelectionEnd), TextTopLeft, TextBottomRight);
+		  TheGraphics->drawText(TempPos + Vec2s(TextBottomRight.x(), 0),
 			  getText().substr(_TextSelectionEnd, getText().size()-_TextSelectionEnd), getFont(), ForeColor, getOpacity());
 	   }
    }

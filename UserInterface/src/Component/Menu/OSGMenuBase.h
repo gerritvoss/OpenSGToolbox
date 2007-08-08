@@ -67,7 +67,7 @@
 
 #include "OSGMenuItem.h" // Parent
 
-#include "Component/OSGToggleButtonFields.h" // Button type
+#include "Component/Button/OSGToggleButtonFields.h" // Button type
 #include "Component/Menu/OSGPopupMenuFields.h" // InternalPopupMenu type
 #include <OpenSG/OSGReal32Fields.h> // SubMenuDelay type
 #include <OpenSG/OSGBoolFields.h> // Selected type

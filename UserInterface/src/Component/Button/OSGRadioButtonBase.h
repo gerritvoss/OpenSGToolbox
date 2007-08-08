@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Button
+ **     class RadioButton
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGBUTTONBASE_H_
-#define _OSGBUTTONBASE_H_
+#ifndef _OSGRADIOBUTTONBASE_H_
+#define _OSGRADIOBUTTONBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,58 +65,46 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGComponent.h" // Parent
+#include "OSGToggleButton.h" // Parent
 
-#include "Text/OSGFont.h" // Font type
-#include <OpenSG/OSGStringFields.h> // Text type
-#include <OpenSG/OSGBoolFields.h> // Active type
-#include "Border/OSGBorder.h" // ActiveBorder type
-#include "Background/OSGUIBackground.h" // ActiveBackground type
-#include <OpenSG/OSGColor4fFields.h> // ActiveForegroundColor type
-#include <OpenSG/OSGUInt32Fields.h> // VerticalAlignment type
-#include <OpenSG/OSGUInt32Fields.h> // HorizontalAlignment type
+#include "Component/OSGUIDrawObjectCanvas.h" // DrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // SelectedDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // ActiveDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // ActiveSelectedDrawObject type
 
-#include "OSGButtonFields.h"
+#include "OSGRadioButtonFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Button;
+class RadioButton;
 class BinaryDataHandler;
 
-//! \brief Button Base Class.
+//! \brief RadioButton Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
+class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
 {
   private:
 
-    typedef Component    Inherited;
+    typedef ToggleButton    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ButtonPtr  Ptr;
+    typedef RadioButtonPtr  Ptr;
 
     enum
     {
-        FontFieldId                  = Inherited::NextFieldId,
-        TextFieldId                  = FontFieldId                  + 1,
-        ActiveFieldId                = TextFieldId                  + 1,
-        ActiveBorderFieldId          = ActiveFieldId                + 1,
-        ActiveBackgroundFieldId      = ActiveBorderFieldId          + 1,
-        ActiveForegroundColorFieldId = ActiveBackgroundFieldId      + 1,
-        VerticalAlignmentFieldId     = ActiveForegroundColorFieldId + 1,
-        HorizontalAlignmentFieldId   = VerticalAlignmentFieldId     + 1,
-        NextFieldId                  = HorizontalAlignmentFieldId   + 1
+        DrawObjectFieldId              = Inherited::NextFieldId,
+        SelectedDrawObjectFieldId       = DrawObjectFieldId              + 1,
+        ActiveDrawObjectFieldId        = SelectedDrawObjectFieldId       + 1,
+        ActiveSelectedDrawObjectFieldId = ActiveDrawObjectFieldId        + 1,
+        NextFieldId                    = ActiveSelectedDrawObjectFieldId + 1
     };
 
-    static const OSG::BitVector FontFieldMask;
-    static const OSG::BitVector TextFieldMask;
-    static const OSG::BitVector ActiveFieldMask;
-    static const OSG::BitVector ActiveBorderFieldMask;
-    static const OSG::BitVector ActiveBackgroundFieldMask;
-    static const OSG::BitVector ActiveForegroundColorFieldMask;
-    static const OSG::BitVector VerticalAlignmentFieldMask;
-    static const OSG::BitVector HorizontalAlignmentFieldMask;
+    static const OSG::BitVector DrawObjectFieldMask;
+    static const OSG::BitVector SelectedDrawObjectFieldMask;
+    static const OSG::BitVector ActiveDrawObjectFieldMask;
+    static const OSG::BitVector ActiveSelectedDrawObjectFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -143,45 +131,29 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFFontPtr           *getSFFont           (void);
-           SFString            *getSFText           (void);
-           SFBool              *getSFActive         (void);
-           SFBorderPtr         *getSFActiveBorder   (void);
-           SFUIBackgroundPtr   *getSFActiveBackground(void);
-           SFColor4f           *getSFActiveForegroundColor(void);
-           SFUInt32            *getSFVerticalAlignment(void);
-           SFUInt32            *getSFHorizontalAlignment(void);
+           SFUIDrawObjectCanvasPtr *getSFDrawObject     (void);
+           SFUIDrawObjectCanvasPtr *getSFSelectedDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFActiveDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFActiveSelectedDrawObject(void);
 
-           FontPtr             &getFont           (void);
-     const FontPtr             &getFont           (void) const;
-           std::string         &getText           (void);
-     const std::string         &getText           (void) const;
-           bool                &getActive         (void);
-     const bool                &getActive         (void) const;
-           BorderPtr           &getActiveBorder   (void);
-     const BorderPtr           &getActiveBorder   (void) const;
-           UIBackgroundPtr     &getActiveBackground(void);
-     const UIBackgroundPtr     &getActiveBackground(void) const;
-           Color4f             &getActiveForegroundColor(void);
-     const Color4f             &getActiveForegroundColor(void) const;
-           UInt32              &getVerticalAlignment(void);
-     const UInt32              &getVerticalAlignment(void) const;
-           UInt32              &getHorizontalAlignment(void);
-     const UInt32              &getHorizontalAlignment(void) const;
+           UIDrawObjectCanvasPtr &getDrawObject     (void);
+     const UIDrawObjectCanvasPtr &getDrawObject     (void) const;
+           UIDrawObjectCanvasPtr &getSelectedDrawObject(void);
+     const UIDrawObjectCanvasPtr &getSelectedDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getActiveDrawObject(void);
+     const UIDrawObjectCanvasPtr &getActiveDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getActiveSelectedDrawObject(void);
+     const UIDrawObjectCanvasPtr &getActiveSelectedDrawObject(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setFont           ( const FontPtr &value );
-     void setText           ( const std::string &value );
-     void setActive         ( const bool &value );
-     void setActiveBorder   ( const BorderPtr &value );
-     void setActiveBackground( const UIBackgroundPtr &value );
-     void setActiveForegroundColor( const Color4f &value );
-     void setVerticalAlignment( const UInt32 &value );
-     void setHorizontalAlignment( const UInt32 &value );
+     void setDrawObject     ( const UIDrawObjectCanvasPtr &value );
+     void setSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setActiveDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setActiveSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -205,8 +177,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ButtonPtr      create          (void); 
-    static  ButtonPtr      createEmpty     (void); 
+    static  RadioButtonPtr      create          (void); 
+    static  RadioButtonPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -224,29 +196,25 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFFontPtr           _sfFont;
-    SFString            _sfText;
-    SFBool              _sfActive;
-    SFBorderPtr         _sfActiveBorder;
-    SFUIBackgroundPtr   _sfActiveBackground;
-    SFColor4f           _sfActiveForegroundColor;
-    SFUInt32            _sfVerticalAlignment;
-    SFUInt32            _sfHorizontalAlignment;
+    SFUIDrawObjectCanvasPtr   _sfDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfSelectedDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfActiveDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfActiveSelectedDrawObject;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ButtonBase(void);
-    ButtonBase(const ButtonBase &source);
+    RadioButtonBase(void);
+    RadioButtonBase(const RadioButtonBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ButtonBase(void); 
+    virtual ~RadioButtonBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -254,13 +222,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ButtonBase *pOther,
+    void executeSyncImpl(      RadioButtonBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      ButtonBase *pOther,
+    void executeSyncImpl(      RadioButtonBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -290,7 +258,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ButtonBase &source);
+    void operator =(const RadioButtonBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -298,17 +266,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
 //---------------------------------------------------------------------------
 
 
-typedef ButtonBase *ButtonBaseP;
+typedef RadioButtonBase *RadioButtonBaseP;
 
-typedef osgIF<ButtonBase::isNodeCore,
-              CoredNodePtr<Button>,
+typedef osgIF<RadioButtonBase::isNodeCore,
+              CoredNodePtr<RadioButton>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ButtonNodePtr;
+              >::_IRet RadioButtonNodePtr;
 
-typedef RefPtr<ButtonPtr> ButtonRefPtr;
+typedef RefPtr<RadioButtonPtr> RadioButtonRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGBUTTONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGRADIOBUTTONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGBUTTONBASE_H_ */
+#endif /* _OSGRADIOBUTTONBASE_H_ */

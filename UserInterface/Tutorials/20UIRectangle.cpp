@@ -150,7 +150,7 @@ int main(int argc, char **argv)
 	// Create the Graphics
 	GraphicsPtr graphics = osg::Graphics2D::create();
 	beginEditCP(graphics);
-	    graphics->setEnablePolygonAntiAliasing(true);
+	    graphics->setEnablePolygonAntiAliasing(false);
 	beginEditCP(graphics);
 
 

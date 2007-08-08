@@ -35,7 +35,7 @@
 
 #include <OpenSG/Input/OSGEvent.h>
 
-#include "Component/OSGButtonFields.h"
+#include "Component/Button/OSGButtonFields.h"
 
 OSG_BEGIN_NAMESPACE
 

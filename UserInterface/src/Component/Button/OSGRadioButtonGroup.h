@@ -34,7 +34,7 @@
 #include "OSGUserInterfaceDef.h"
 
 #include <vector>
-#include "Component/OSGRadioButtonFields.h"
+#include "OSGRadioButtonFields.h"
 #include "Event/OSGButtonSelectedListener.h"
 
 OSG_BEGIN_NAMESPACE

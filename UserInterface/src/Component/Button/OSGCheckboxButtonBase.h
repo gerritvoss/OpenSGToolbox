@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class RadioButton
+ **     class CheckboxButton
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGRADIOBUTTONBASE_H_
-#define _OSGRADIOBUTTONBASE_H_
+#ifndef _OSGCHECKBOXBUTTONBASE_H_
+#define _OSGCHECKBOXBUTTONBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -67,21 +67,21 @@
 
 #include "OSGToggleButton.h" // Parent
 
-#include "OSGUIDrawObjectCanvas.h" // DrawObject type
-#include "OSGUIDrawObjectCanvas.h" // SelectedDrawObject type
-#include "OSGUIDrawObjectCanvas.h" // ActiveDrawObject type
-#include "OSGUIDrawObjectCanvas.h" // ActiveSelectedDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // DrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // SelectedDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // ActiveDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // ActiveSelectedDrawObject type
 
-#include "OSGRadioButtonFields.h"
+#include "OSGCheckboxButtonFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class RadioButton;
+class CheckboxButton;
 class BinaryDataHandler;
 
-//! \brief RadioButton Base Class.
+//! \brief CheckboxButton Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
+class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
 {
   private:
 
@@ -90,7 +90,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef RadioButtonPtr  Ptr;
+    typedef CheckboxButtonPtr  Ptr;
 
     enum
     {
@@ -177,8 +177,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  RadioButtonPtr      create          (void); 
-    static  RadioButtonPtr      createEmpty     (void); 
+    static  CheckboxButtonPtr      create          (void); 
+    static  CheckboxButtonPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -206,15 +206,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    RadioButtonBase(void);
-    RadioButtonBase(const RadioButtonBase &source);
+    CheckboxButtonBase(void);
+    CheckboxButtonBase(const CheckboxButtonBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~RadioButtonBase(void); 
+    virtual ~CheckboxButtonBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -222,13 +222,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      RadioButtonBase *pOther,
+    void executeSyncImpl(      CheckboxButtonBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      RadioButtonBase *pOther,
+    void executeSyncImpl(      CheckboxButtonBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -258,7 +258,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const RadioButtonBase &source);
+    void operator =(const CheckboxButtonBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -266,17 +266,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
 //---------------------------------------------------------------------------
 
 
-typedef RadioButtonBase *RadioButtonBaseP;
+typedef CheckboxButtonBase *CheckboxButtonBaseP;
 
-typedef osgIF<RadioButtonBase::isNodeCore,
-              CoredNodePtr<RadioButton>,
+typedef osgIF<CheckboxButtonBase::isNodeCore,
+              CoredNodePtr<CheckboxButton>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet RadioButtonNodePtr;
+              >::_IRet CheckboxButtonNodePtr;
 
-typedef RefPtr<RadioButtonPtr> RadioButtonRefPtr;
+typedef RefPtr<CheckboxButtonPtr> CheckboxButtonRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGRADIOBUTTONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGCHECKBOXBUTTONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGRADIOBUTTONBASE_H_ */
+#endif /* _OSGCHECKBOXBUTTONBASE_H_ */

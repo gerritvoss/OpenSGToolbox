@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class CheckboxButton
+ **     class Button
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGCHECKBOXBUTTONBASE_H_
-#define _OSGCHECKBOXBUTTONBASE_H_
+#ifndef _OSGBUTTONBASE_H_
+#define _OSGBUTTONBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,46 +65,58 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGToggleButton.h" // Parent
+#include "Component/OSGComponent.h" // Parent
 
-#include "OSGUIDrawObjectCanvas.h" // DrawObject type
-#include "OSGUIDrawObjectCanvas.h" // SelectedDrawObject type
-#include "OSGUIDrawObjectCanvas.h" // ActiveDrawObject type
-#include "OSGUIDrawObjectCanvas.h" // ActiveSelectedDrawObject type
+#include "Text/OSGFont.h" // Font type
+#include <OpenSG/OSGStringFields.h> // Text type
+#include <OpenSG/OSGBoolFields.h> // Active type
+#include "Border/OSGBorder.h" // ActiveBorder type
+#include "Background/OSGUIBackground.h" // ActiveBackground type
+#include <OpenSG/OSGColor4fFields.h> // ActiveForegroundColor type
+#include <OpenSG/OSGUInt32Fields.h> // VerticalAlignment type
+#include <OpenSG/OSGUInt32Fields.h> // HorizontalAlignment type
 
-#include "OSGCheckboxButtonFields.h"
+#include "OSGButtonFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class CheckboxButton;
+class Button;
 class BinaryDataHandler;
 
-//! \brief CheckboxButton Base Class.
+//! \brief Button Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
+class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
 {
   private:
 
-    typedef ToggleButton    Inherited;
+    typedef Component    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef CheckboxButtonPtr  Ptr;
+    typedef ButtonPtr  Ptr;
 
     enum
     {
-        DrawObjectFieldId              = Inherited::NextFieldId,
-        SelectedDrawObjectFieldId       = DrawObjectFieldId              + 1,
-        ActiveDrawObjectFieldId        = SelectedDrawObjectFieldId       + 1,
-        ActiveSelectedDrawObjectFieldId = ActiveDrawObjectFieldId        + 1,
-        NextFieldId                    = ActiveSelectedDrawObjectFieldId + 1
+        FontFieldId                  = Inherited::NextFieldId,
+        TextFieldId                  = FontFieldId                  + 1,
+        ActiveFieldId                = TextFieldId                  + 1,
+        ActiveBorderFieldId          = ActiveFieldId                + 1,
+        ActiveBackgroundFieldId      = ActiveBorderFieldId          + 1,
+        ActiveForegroundColorFieldId = ActiveBackgroundFieldId      + 1,
+        VerticalAlignmentFieldId     = ActiveForegroundColorFieldId + 1,
+        HorizontalAlignmentFieldId   = VerticalAlignmentFieldId     + 1,
+        NextFieldId                  = HorizontalAlignmentFieldId   + 1
     };
 
-    static const OSG::BitVector DrawObjectFieldMask;
-    static const OSG::BitVector SelectedDrawObjectFieldMask;
-    static const OSG::BitVector ActiveDrawObjectFieldMask;
-    static const OSG::BitVector ActiveSelectedDrawObjectFieldMask;
+    static const OSG::BitVector FontFieldMask;
+    static const OSG::BitVector TextFieldMask;
+    static const OSG::BitVector ActiveFieldMask;
+    static const OSG::BitVector ActiveBorderFieldMask;
+    static const OSG::BitVector ActiveBackgroundFieldMask;
+    static const OSG::BitVector ActiveForegroundColorFieldMask;
+    static const OSG::BitVector VerticalAlignmentFieldMask;
+    static const OSG::BitVector HorizontalAlignmentFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -131,29 +143,45 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUIDrawObjectCanvasPtr *getSFDrawObject     (void);
-           SFUIDrawObjectCanvasPtr *getSFSelectedDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFActiveDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFActiveSelectedDrawObject(void);
+           SFFontPtr           *getSFFont           (void);
+           SFString            *getSFText           (void);
+           SFBool              *getSFActive         (void);
+           SFBorderPtr         *getSFActiveBorder   (void);
+           SFUIBackgroundPtr   *getSFActiveBackground(void);
+           SFColor4f           *getSFActiveForegroundColor(void);
+           SFUInt32            *getSFVerticalAlignment(void);
+           SFUInt32            *getSFHorizontalAlignment(void);
 
-           UIDrawObjectCanvasPtr &getDrawObject     (void);
-     const UIDrawObjectCanvasPtr &getDrawObject     (void) const;
-           UIDrawObjectCanvasPtr &getSelectedDrawObject(void);
-     const UIDrawObjectCanvasPtr &getSelectedDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getActiveDrawObject(void);
-     const UIDrawObjectCanvasPtr &getActiveDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getActiveSelectedDrawObject(void);
-     const UIDrawObjectCanvasPtr &getActiveSelectedDrawObject(void) const;
+           FontPtr             &getFont           (void);
+     const FontPtr             &getFont           (void) const;
+           std::string         &getText           (void);
+     const std::string         &getText           (void) const;
+           bool                &getActive         (void);
+     const bool                &getActive         (void) const;
+           BorderPtr           &getActiveBorder   (void);
+     const BorderPtr           &getActiveBorder   (void) const;
+           UIBackgroundPtr     &getActiveBackground(void);
+     const UIBackgroundPtr     &getActiveBackground(void) const;
+           Color4f             &getActiveForegroundColor(void);
+     const Color4f             &getActiveForegroundColor(void) const;
+           UInt32              &getVerticalAlignment(void);
+     const UInt32              &getVerticalAlignment(void) const;
+           UInt32              &getHorizontalAlignment(void);
+     const UInt32              &getHorizontalAlignment(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setDrawObject     ( const UIDrawObjectCanvasPtr &value );
-     void setSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setActiveDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setActiveSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setFont           ( const FontPtr &value );
+     void setText           ( const std::string &value );
+     void setActive         ( const bool &value );
+     void setActiveBorder   ( const BorderPtr &value );
+     void setActiveBackground( const UIBackgroundPtr &value );
+     void setActiveForegroundColor( const Color4f &value );
+     void setVerticalAlignment( const UInt32 &value );
+     void setHorizontalAlignment( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -177,8 +205,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  CheckboxButtonPtr      create          (void); 
-    static  CheckboxButtonPtr      createEmpty     (void); 
+    static  ButtonPtr      create          (void); 
+    static  ButtonPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -196,25 +224,29 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUIDrawObjectCanvasPtr   _sfDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfSelectedDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfActiveDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfActiveSelectedDrawObject;
+    SFFontPtr           _sfFont;
+    SFString            _sfText;
+    SFBool              _sfActive;
+    SFBorderPtr         _sfActiveBorder;
+    SFUIBackgroundPtr   _sfActiveBackground;
+    SFColor4f           _sfActiveForegroundColor;
+    SFUInt32            _sfVerticalAlignment;
+    SFUInt32            _sfHorizontalAlignment;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    CheckboxButtonBase(void);
-    CheckboxButtonBase(const CheckboxButtonBase &source);
+    ButtonBase(void);
+    ButtonBase(const ButtonBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~CheckboxButtonBase(void); 
+    virtual ~ButtonBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -222,13 +254,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      CheckboxButtonBase *pOther,
+    void executeSyncImpl(      ButtonBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      CheckboxButtonBase *pOther,
+    void executeSyncImpl(      ButtonBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -258,7 +290,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const CheckboxButtonBase &source);
+    void operator =(const ButtonBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -266,17 +298,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
 //---------------------------------------------------------------------------
 
 
-typedef CheckboxButtonBase *CheckboxButtonBaseP;
+typedef ButtonBase *ButtonBaseP;
 
-typedef osgIF<CheckboxButtonBase::isNodeCore,
-              CoredNodePtr<CheckboxButton>,
+typedef osgIF<ButtonBase::isNodeCore,
+              CoredNodePtr<Button>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet CheckboxButtonNodePtr;
+              >::_IRet ButtonNodePtr;
 
-typedef RefPtr<CheckboxButtonPtr> CheckboxButtonRefPtr;
+typedef RefPtr<ButtonPtr> ButtonRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGCHECKBOXBUTTONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGBUTTONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGCHECKBOXBUTTONBASE_H_ */
+#endif /* _OSGBUTTONBASE_H_ */
