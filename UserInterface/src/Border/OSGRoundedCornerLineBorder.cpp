@@ -48,7 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGRoundedCornerLineBorder.h"
-#include "Graphics/OSGGraphics2d.h"
+#include "Graphics/OSGGraphics2D.h"
 
 OSG_BEGIN_NAMESPACE
 

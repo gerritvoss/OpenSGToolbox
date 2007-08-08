@@ -98,7 +98,7 @@ ButtonPtr ButtonBase::createEmpty(void)
 
 //! Get the Button::_sfFont field.
 inline
-SFFontPtr *ButtonBase::getSFFont(void)
+SFUIFontPtr *ButtonBase::getSFFont(void)
 {
     return &_sfFont;
 }
@@ -155,21 +155,21 @@ SFUInt32 *ButtonBase::getSFHorizontalAlignment(void)
 
 //! Get the value of the Button::_sfFont field.
 inline
-FontPtr &ButtonBase::getFont(void)
+UIFontPtr &ButtonBase::getFont(void)
 {
     return _sfFont.getValue();
 }
 
 //! Get the value of the Button::_sfFont field.
 inline
-const FontPtr &ButtonBase::getFont(void) const
+const UIFontPtr &ButtonBase::getFont(void) const
 {
     return _sfFont.getValue();
 }
 
 //! Set the value of the Button::_sfFont field.
 inline
-void ButtonBase::setFont(const FontPtr &value)
+void ButtonBase::setFont(const UIFontPtr &value)
 {
     _sfFont.setValue(value);
 }

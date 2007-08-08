@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -98,7 +98,7 @@ const OSG::BitVector TextComponentBase::MTInfluenceMask =
 /*! \var UInt32          TextComponentBase::_sfCaretPosition
     
 */
-/*! \var FontPtr         TextComponentBase::_sfFont
+/*! \var UIFontPtr       TextComponentBase::_sfFont
     
 */
 /*! \var Color4f         TextComponentBase::_sfSelectionBoxColor
@@ -127,7 +127,7 @@ FieldDescription *TextComponentBase::_desc[] =
                      CaretPositionFieldId, CaretPositionFieldMask,
                      true,
                      (FieldAccessMethod) &TextComponentBase::getSFCaretPosition),
-    new FieldDescription(SFFontPtr::getClassType(), 
+    new FieldDescription(SFUIFontPtr::getClassType(), 
                      "Font", 
                      FontFieldId, FontFieldMask,
                      false,

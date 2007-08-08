@@ -103,7 +103,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanel : public SplitPanelBase
 		SplitPanelPtr _SplitPanel;
 	};
 
-	friend DividerListener;
+	friend class DividerListener;
 
 	DividerListener _DividerListener;
 	class DividerDraggedListener : public MouseMotionListener, public MouseListener
@@ -122,7 +122,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanel : public SplitPanelBase
 		SplitPanelPtr _SplitPanel;
 	};
 
-	friend DividerDraggedListener;
+	friend class DividerDraggedListener;
 
 	DividerDraggedListener _DividerDraggedListener;
 

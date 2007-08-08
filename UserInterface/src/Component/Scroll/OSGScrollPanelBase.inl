@@ -103,32 +103,32 @@ SFPnt2s *ScrollPanelBase::getSFScrollPosition(void)
     return &_sfScrollPosition;
 }
 
-//! Get the ScrollPanel::_sfVerticalScrollbar field.
+//! Get the ScrollPanel::_sfVerticalScrollBar field.
 inline
-SFScrollbarPtr *ScrollPanelBase::getSFVerticalScrollbar(void)
+SFScrollBarPtr *ScrollPanelBase::getSFVerticalScrollBar(void)
 {
-    return &_sfVerticalScrollbar;
+    return &_sfVerticalScrollBar;
 }
 
-//! Get the ScrollPanel::_sfHorizontalScrollbar field.
+//! Get the ScrollPanel::_sfHorizontalScrollBar field.
 inline
-SFScrollbarPtr *ScrollPanelBase::getSFHorizontalScrollbar(void)
+SFScrollBarPtr *ScrollPanelBase::getSFHorizontalScrollBar(void)
 {
-    return &_sfHorizontalScrollbar;
+    return &_sfHorizontalScrollBar;
 }
 
-//! Get the ScrollPanel::_sfVerticalScrollbarDisplayPolicy field.
+//! Get the ScrollPanel::_sfVerticalScrollBarDisplayPolicy field.
 inline
-SFUInt32 *ScrollPanelBase::getSFVerticalScrollbarDisplayPolicy(void)
+SFUInt32 *ScrollPanelBase::getSFVerticalScrollBarDisplayPolicy(void)
 {
-    return &_sfVerticalScrollbarDisplayPolicy;
+    return &_sfVerticalScrollBarDisplayPolicy;
 }
 
-//! Get the ScrollPanel::_sfHorizontalScrollbarDisplayPolicy field.
+//! Get the ScrollPanel::_sfHorizontalScrollBarDisplayPolicy field.
 inline
-SFUInt32 *ScrollPanelBase::getSFHorizontalScrollbarDisplayPolicy(void)
+SFUInt32 *ScrollPanelBase::getSFHorizontalScrollBarDisplayPolicy(void)
 {
-    return &_sfHorizontalScrollbarDisplayPolicy;
+    return &_sfHorizontalScrollBarDisplayPolicy;
 }
 
 
@@ -153,88 +153,88 @@ void ScrollPanelBase::setScrollPosition(const Pnt2s &value)
     _sfScrollPosition.setValue(value);
 }
 
-//! Get the value of the ScrollPanel::_sfVerticalScrollbar field.
+//! Get the value of the ScrollPanel::_sfVerticalScrollBar field.
 inline
-ScrollbarPtr &ScrollPanelBase::getVerticalScrollbar(void)
+ScrollBarPtr &ScrollPanelBase::getVerticalScrollBar(void)
 {
-    return _sfVerticalScrollbar.getValue();
+    return _sfVerticalScrollBar.getValue();
 }
 
-//! Get the value of the ScrollPanel::_sfVerticalScrollbar field.
+//! Get the value of the ScrollPanel::_sfVerticalScrollBar field.
 inline
-const ScrollbarPtr &ScrollPanelBase::getVerticalScrollbar(void) const
+const ScrollBarPtr &ScrollPanelBase::getVerticalScrollBar(void) const
 {
-    return _sfVerticalScrollbar.getValue();
+    return _sfVerticalScrollBar.getValue();
 }
 
-//! Set the value of the ScrollPanel::_sfVerticalScrollbar field.
+//! Set the value of the ScrollPanel::_sfVerticalScrollBar field.
 inline
-void ScrollPanelBase::setVerticalScrollbar(const ScrollbarPtr &value)
+void ScrollPanelBase::setVerticalScrollBar(const ScrollBarPtr &value)
 {
-    _sfVerticalScrollbar.setValue(value);
+    _sfVerticalScrollBar.setValue(value);
 }
 
-//! Get the value of the ScrollPanel::_sfHorizontalScrollbar field.
+//! Get the value of the ScrollPanel::_sfHorizontalScrollBar field.
 inline
-ScrollbarPtr &ScrollPanelBase::getHorizontalScrollbar(void)
+ScrollBarPtr &ScrollPanelBase::getHorizontalScrollBar(void)
 {
-    return _sfHorizontalScrollbar.getValue();
+    return _sfHorizontalScrollBar.getValue();
 }
 
-//! Get the value of the ScrollPanel::_sfHorizontalScrollbar field.
+//! Get the value of the ScrollPanel::_sfHorizontalScrollBar field.
 inline
-const ScrollbarPtr &ScrollPanelBase::getHorizontalScrollbar(void) const
+const ScrollBarPtr &ScrollPanelBase::getHorizontalScrollBar(void) const
 {
-    return _sfHorizontalScrollbar.getValue();
+    return _sfHorizontalScrollBar.getValue();
 }
 
-//! Set the value of the ScrollPanel::_sfHorizontalScrollbar field.
+//! Set the value of the ScrollPanel::_sfHorizontalScrollBar field.
 inline
-void ScrollPanelBase::setHorizontalScrollbar(const ScrollbarPtr &value)
+void ScrollPanelBase::setHorizontalScrollBar(const ScrollBarPtr &value)
 {
-    _sfHorizontalScrollbar.setValue(value);
+    _sfHorizontalScrollBar.setValue(value);
 }
 
-//! Get the value of the ScrollPanel::_sfVerticalScrollbarDisplayPolicy field.
+//! Get the value of the ScrollPanel::_sfVerticalScrollBarDisplayPolicy field.
 inline
-UInt32 &ScrollPanelBase::getVerticalScrollbarDisplayPolicy(void)
+UInt32 &ScrollPanelBase::getVerticalScrollBarDisplayPolicy(void)
 {
-    return _sfVerticalScrollbarDisplayPolicy.getValue();
+    return _sfVerticalScrollBarDisplayPolicy.getValue();
 }
 
-//! Get the value of the ScrollPanel::_sfVerticalScrollbarDisplayPolicy field.
+//! Get the value of the ScrollPanel::_sfVerticalScrollBarDisplayPolicy field.
 inline
-const UInt32 &ScrollPanelBase::getVerticalScrollbarDisplayPolicy(void) const
+const UInt32 &ScrollPanelBase::getVerticalScrollBarDisplayPolicy(void) const
 {
-    return _sfVerticalScrollbarDisplayPolicy.getValue();
+    return _sfVerticalScrollBarDisplayPolicy.getValue();
 }
 
-//! Set the value of the ScrollPanel::_sfVerticalScrollbarDisplayPolicy field.
+//! Set the value of the ScrollPanel::_sfVerticalScrollBarDisplayPolicy field.
 inline
-void ScrollPanelBase::setVerticalScrollbarDisplayPolicy(const UInt32 &value)
+void ScrollPanelBase::setVerticalScrollBarDisplayPolicy(const UInt32 &value)
 {
-    _sfVerticalScrollbarDisplayPolicy.setValue(value);
+    _sfVerticalScrollBarDisplayPolicy.setValue(value);
 }
 
-//! Get the value of the ScrollPanel::_sfHorizontalScrollbarDisplayPolicy field.
+//! Get the value of the ScrollPanel::_sfHorizontalScrollBarDisplayPolicy field.
 inline
-UInt32 &ScrollPanelBase::getHorizontalScrollbarDisplayPolicy(void)
+UInt32 &ScrollPanelBase::getHorizontalScrollBarDisplayPolicy(void)
 {
-    return _sfHorizontalScrollbarDisplayPolicy.getValue();
+    return _sfHorizontalScrollBarDisplayPolicy.getValue();
 }
 
-//! Get the value of the ScrollPanel::_sfHorizontalScrollbarDisplayPolicy field.
+//! Get the value of the ScrollPanel::_sfHorizontalScrollBarDisplayPolicy field.
 inline
-const UInt32 &ScrollPanelBase::getHorizontalScrollbarDisplayPolicy(void) const
+const UInt32 &ScrollPanelBase::getHorizontalScrollBarDisplayPolicy(void) const
 {
-    return _sfHorizontalScrollbarDisplayPolicy.getValue();
+    return _sfHorizontalScrollBarDisplayPolicy.getValue();
 }
 
-//! Set the value of the ScrollPanel::_sfHorizontalScrollbarDisplayPolicy field.
+//! Set the value of the ScrollPanel::_sfHorizontalScrollBarDisplayPolicy field.
 inline
-void ScrollPanelBase::setHorizontalScrollbarDisplayPolicy(const UInt32 &value)
+void ScrollPanelBase::setHorizontalScrollBarDisplayPolicy(const UInt32 &value)
 {
-    _sfHorizontalScrollbarDisplayPolicy.setValue(value);
+    _sfHorizontalScrollBarDisplayPolicy.setValue(value);
 }
 
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,7 +57,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 #include "OSGTextUIDrawObjectBase.h"
 #include "OSGTextUIDrawObject.h"
 
@@ -92,7 +92,7 @@ const OSG::BitVector TextUIDrawObjectBase::MTInfluenceMask =
 /*! \var std::string     TextUIDrawObjectBase::_sfText
     
 */
-/*! \var FontPtr         TextUIDrawObjectBase::_sfFont
+/*! \var UIFontPtr       TextUIDrawObjectBase::_sfFont
     
 */
 /*! \var Color4f         TextUIDrawObjectBase::_sfColor
@@ -116,7 +116,7 @@ FieldDescription *TextUIDrawObjectBase::_desc[] =
                      TextFieldId, TextFieldMask,
                      false,
                      (FieldAccessMethod) &TextUIDrawObjectBase::getSFText),
-    new FieldDescription(SFFontPtr::getClassType(), 
+    new FieldDescription(SFUIFontPtr::getClassType(), 
                      "Font", 
                      FontFieldId, FontFieldMask,
                      false,

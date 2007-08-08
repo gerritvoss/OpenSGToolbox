@@ -46,7 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGDefaultLookAndFeel.h"
-#include "Text/OSGFont.h"
+#include "Text/OSGUIFont.h"
 #include "Border/OSGBorders.h"
 #include "Background/OSGUIBackgrounds.h"
 #include "Component/Button/OSGButton.h"
@@ -108,7 +108,7 @@ Real32 DefaultLookAndFeel::getToolTipPopupTime(void) const
 void DefaultLookAndFeel::init(void)
 {
 	//Default Font
-	FontPtr DefaultFont = Font::create();
+	UIFontPtr DefaultFont = UIFont::create();
 	beginEditCP(DefaultFont);
 		DefaultFont->setFamily("SANS");
 		DefaultFont->setGap(1);

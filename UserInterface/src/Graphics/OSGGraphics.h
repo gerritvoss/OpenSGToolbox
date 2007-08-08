@@ -48,9 +48,10 @@
 
 #include <OpenSG/OSGMFVecTypes.h>
 #include <OpenSG/OSGDrawAction.h>
+#include <OpenSG/OSGMaterial.h>
 
 #include "OSGGraphicsBase.h"
-#include "Text/OSGFont.h"
+#include "Text/OSGUIFont.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -109,9 +110,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics : public GraphicsBase
 
 	virtual void drawRaisedBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color, const Int16& Width, const Real32& Opacity) const = 0;
 	
-	virtual void drawText(const Pnt2s& Position, const std::string& Text, const FontPtr TheFont, const Color4f& Color, const Real32& Opacity) const = 0;
-    virtual Vec2s getTextBounds(const std::string& Text, const FontPtr TheFont) const = 0;
-
+	virtual void drawText(const Pnt2s& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const = 0;
+   
 	virtual void preDraw() = 0;
 	virtual void postDraw() = 0;
 

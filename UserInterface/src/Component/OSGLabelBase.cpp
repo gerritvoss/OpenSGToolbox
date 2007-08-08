@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -85,7 +85,7 @@ const OSG::BitVector LabelBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var FontPtr         LabelBase::_sfFont
+/*! \var UIFontPtr       LabelBase::_sfFont
     
 */
 /*! \var std::string     LabelBase::_sfText
@@ -102,7 +102,7 @@ const OSG::BitVector LabelBase::MTInfluenceMask =
 
 FieldDescription *LabelBase::_desc[] = 
 {
-    new FieldDescription(SFFontPtr::getClassType(), 
+    new FieldDescription(SFUIFontPtr::getClassType(), 
                      "Font", 
                      FontFieldId, FontFieldMask,
                      false,

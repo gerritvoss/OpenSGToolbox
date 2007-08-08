@@ -46,7 +46,6 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGCanvas.h"
-#include "Text/OSGFont.h"
 
 OSG_BEGIN_NAMESPACE
 

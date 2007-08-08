@@ -42,7 +42,7 @@
 #include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
-#include <OpenSG/UserInterface/OSGFont.h>
+#include <OpenSG/UserInterface/OSGUIFont.h>
 
 // Include AbsoluteLayout and AbsoluteLayoutConstraints header files
 #include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
@@ -215,15 +215,15 @@ int main(int argc, char **argv)
 	******************************************************/
 
 	// Create a simple Font to be used with the Button
-	FontPtr sampleFont = osg::Font::create();
-    beginEditCP(sampleFont, Font::SizeFieldMask | Font::FamilyFieldMask | Font::GapFieldMask | Font::GlyphPixelSizeFieldMask | Font::TextureWidthFieldMask | Font::StyleFieldMask);
+	UIFontPtr sampleFont = osg::UIFont::create();
+    beginEditCP(sampleFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::GapFieldMask | UIFont::GlyphPixelSizeFieldMask | UIFont::TextureWidthFieldMask | UIFont::StyleFieldMask);
 		sampleFont->setFamily("SANS");
 		sampleFont->setGap(1);
 		sampleFont->setGlyphPixelSize(46);
 		sampleFont->setSize(16);
 		//sampleFont->setTextureWidth(0);
         sampleFont->setStyle(TextFace::STYLE_PLAIN);
-	endEditCP(sampleFont, Font::SizeFieldMask | Font::FamilyFieldMask | Font::GapFieldMask | Font::GlyphPixelSizeFieldMask | Font::TextureWidthFieldMask | Font::StyleFieldMask);
+	endEditCP(sampleFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::GapFieldMask | UIFont::GlyphPixelSizeFieldMask | UIFont::TextureWidthFieldMask | UIFont::StyleFieldMask);
 
 	ColorUIBackgroundPtr button1Background = ColorUIBackground::create();
 	beginEditCP(button1Background);

@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGScrollbar.h"
+#include "OSGScrollBar.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::Scrollbar
-A UI Scrollbar. 	
+/*! \class osg::ScrollBar
+A UI ScrollBar. 	
 */
 
 /***************************************************************************\
@@ -67,7 +67,7 @@ A UI Scrollbar.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Scrollbar::initMethod (void)
+void ScrollBar::initMethod (void)
 {
 }
 
@@ -76,14 +76,14 @@ void Scrollbar::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Scrollbar::drawInternal(const GraphicsPtr Graphics) const
+void ScrollBar::drawInternal(const GraphicsPtr Graphics) const
 {
     //TODO:Implement
 	//Draw Min Button
 	//Draw Max Button
 }
 
-void  Scrollbar::produceAdjustmentValueChanged(const AdjustmentEvent& e)
+void  ScrollBar::produceAdjustmentValueChanged(const AdjustmentEvent& e)
 {
    for(AdjustmentListenerSetConstItor SetItor(_AdjustmentListeners.begin()) ; SetItor != _AdjustmentListeners.end() ; ++SetItor)
    {
@@ -97,34 +97,34 @@ void  Scrollbar::produceAdjustmentValueChanged(const AdjustmentEvent& e)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-Scrollbar::Scrollbar(void) :
+ScrollBar::ScrollBar(void) :
     Inherited(),
         _Model(NULL)
 {
 }
 
-Scrollbar::Scrollbar(const Scrollbar &source) :
+ScrollBar::ScrollBar(const ScrollBar &source) :
     Inherited(source),
         _Model(source._Model)
 
 {
 }
 
-Scrollbar::~Scrollbar(void)
+ScrollBar::~ScrollBar(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void Scrollbar::changed(BitVector whichField, UInt32 origin)
+void ScrollBar::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void Scrollbar::dump(      UInt32    , 
+void ScrollBar::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump Scrollbar NI" << std::endl;
+    SLOG << "Dump ScrollBar NI" << std::endl;
 }
 
 
@@ -142,10 +142,10 @@ void Scrollbar::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSCROLLBARBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSCROLLBARBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGScrollBarBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGScrollBarBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGSCROLLBARFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGScrollBarFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

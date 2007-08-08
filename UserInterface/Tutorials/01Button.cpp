@@ -41,7 +41,7 @@
 #include <OpenSG/UserInterface/OSGToggleButton.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGFont.h>
+#include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
 
 // Activate the OpenSG namespace
@@ -133,10 +133,10 @@ int main(int argc, char **argv)
 	// Create a Button component
 	ButtonPtr button1 = osg::Button::create();
 	// Create a simple Font to be used with the Button
-	FontPtr sampleFont = osg::Font::create();
-    beginEditCP(sampleFont, Font::SizeFieldMask);
+	UIFontPtr sampleFont = osg::UIFont::create();
+    beginEditCP(sampleFont, UIFont::SizeFieldMask);
 		sampleFont->setSize(16);
-	endEditCP(sampleFont, Font::SizeFieldMask);
+	endEditCP(sampleFont, UIFont::SizeFieldMask);
 
 
     beginEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::ForegroundColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::ToolTipTextFieldMask);
@@ -193,7 +193,7 @@ int main(int argc, char **argv)
 	
 	beginEditCP(toggleButton1, ToggleButton::SelectedFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
 		// Determine if the ToggleButton appears pressed (TRUE) or released (FALSE)
-		toggleButton1->setSelected(FALSE);
+		toggleButton1->setSelected(false);
 		toggleButton1->setText("ToggleMe");
         //Set the Text to be shown as a ToolTip
         toggleButton1->setToolTipText("Toggle Button ToolTip");

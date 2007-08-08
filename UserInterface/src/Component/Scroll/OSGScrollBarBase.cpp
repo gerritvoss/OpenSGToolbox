@@ -45,176 +45,176 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Scrollbar!
+ **     class ScrollBar!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILESCROLLBARINST
+#define OSG_COMPILEScrollBarINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGScrollbarBase.h"
-#include "OSGScrollbar.h"
+#include "OSGScrollBarBase.h"
+#include "OSGScrollBar.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ScrollbarBase::OrientationFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollbarBase::OrientationFieldId);
+const OSG::BitVector  ScrollBarBase::OrientationFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollBarBase::OrientationFieldId);
 
-const OSG::BitVector  ScrollbarBase::UnitIncrementFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollbarBase::UnitIncrementFieldId);
+const OSG::BitVector  ScrollBarBase::UnitIncrementFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollBarBase::UnitIncrementFieldId);
 
-const OSG::BitVector  ScrollbarBase::BlockIncrementFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollbarBase::BlockIncrementFieldId);
+const OSG::BitVector  ScrollBarBase::BlockIncrementFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollBarBase::BlockIncrementFieldId);
 
-const OSG::BitVector  ScrollbarBase::MinButtonFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollbarBase::MinButtonFieldId);
+const OSG::BitVector  ScrollBarBase::MinButtonFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollBarBase::MinButtonFieldId);
 
-const OSG::BitVector  ScrollbarBase::MaxButtonFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollbarBase::MaxButtonFieldId);
+const OSG::BitVector  ScrollBarBase::MaxButtonFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollBarBase::MaxButtonFieldId);
 
-const OSG::BitVector  ScrollbarBase::ScrollbarFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollbarBase::ScrollbarFieldId);
+const OSG::BitVector  ScrollBarBase::ScrollBarFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollBarBase::ScrollBarFieldId);
 
-const OSG::BitVector  ScrollbarBase::ScrollFieldFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollbarBase::ScrollFieldFieldId);
+const OSG::BitVector  ScrollBarBase::ScrollFieldFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollBarBase::ScrollFieldFieldId);
 
-const OSG::BitVector ScrollbarBase::MTInfluenceMask = 
+const OSG::BitVector ScrollBarBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var UInt32          ScrollbarBase::_sfOrientation
+/*! \var UInt32          ScrollBarBase::_sfOrientation
     
 */
-/*! \var UInt32          ScrollbarBase::_sfUnitIncrement
+/*! \var UInt32          ScrollBarBase::_sfUnitIncrement
     
 */
-/*! \var UInt32          ScrollbarBase::_sfBlockIncrement
+/*! \var UInt32          ScrollBarBase::_sfBlockIncrement
     
 */
-/*! \var ButtonPtr       ScrollbarBase::_sfMinButton
+/*! \var ButtonPtr       ScrollBarBase::_sfMinButton
     
 */
-/*! \var ButtonPtr       ScrollbarBase::_sfMaxButton
+/*! \var ButtonPtr       ScrollBarBase::_sfMaxButton
     
 */
-/*! \var UIDrawObjectCanvasPtr ScrollbarBase::_sfScrollbar
+/*! \var UIDrawObjectCanvasPtr ScrollBarBase::_sfScrollBar
     
 */
-/*! \var UIDrawObjectCanvasPtr ScrollbarBase::_sfScrollField
+/*! \var UIDrawObjectCanvasPtr ScrollBarBase::_sfScrollField
     
 */
 
-//! Scrollbar description
+//! ScrollBar description
 
-FieldDescription *ScrollbarBase::_desc[] = 
+FieldDescription *ScrollBarBase::_desc[] = 
 {
     new FieldDescription(SFUInt32::getClassType(), 
                      "Orientation", 
                      OrientationFieldId, OrientationFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollbarBase::getSFOrientation),
+                     (FieldAccessMethod) &ScrollBarBase::getSFOrientation),
     new FieldDescription(SFUInt32::getClassType(), 
                      "UnitIncrement", 
                      UnitIncrementFieldId, UnitIncrementFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollbarBase::getSFUnitIncrement),
+                     (FieldAccessMethod) &ScrollBarBase::getSFUnitIncrement),
     new FieldDescription(SFUInt32::getClassType(), 
                      "BlockIncrement", 
                      BlockIncrementFieldId, BlockIncrementFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollbarBase::getSFBlockIncrement),
+                     (FieldAccessMethod) &ScrollBarBase::getSFBlockIncrement),
     new FieldDescription(SFButtonPtr::getClassType(), 
                      "MinButton", 
                      MinButtonFieldId, MinButtonFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollbarBase::getSFMinButton),
+                     (FieldAccessMethod) &ScrollBarBase::getSFMinButton),
     new FieldDescription(SFButtonPtr::getClassType(), 
                      "MaxButton", 
                      MaxButtonFieldId, MaxButtonFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollbarBase::getSFMaxButton),
+                     (FieldAccessMethod) &ScrollBarBase::getSFMaxButton),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "Scrollbar", 
-                     ScrollbarFieldId, ScrollbarFieldMask,
+                     "ScrollBar", 
+                     ScrollBarFieldId, ScrollBarFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollbarBase::getSFScrollbar),
+                     (FieldAccessMethod) &ScrollBarBase::getSFScrollBar),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
                      "ScrollField", 
                      ScrollFieldFieldId, ScrollFieldFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollbarBase::getSFScrollField)
+                     (FieldAccessMethod) &ScrollBarBase::getSFScrollField)
 };
 
 
-FieldContainerType ScrollbarBase::_type(
-    "Scrollbar",
+FieldContainerType ScrollBarBase::_type(
+    "ScrollBar",
     "Container",
     NULL,
-    (PrototypeCreateF) &ScrollbarBase::createEmpty,
-    Scrollbar::initMethod,
+    (PrototypeCreateF) &ScrollBarBase::createEmpty,
+    ScrollBar::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(ScrollbarBase, ScrollbarPtr)
+//OSG_FIELD_CONTAINER_DEF(ScrollBarBase, ScrollBarPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ScrollbarBase::getType(void) 
+FieldContainerType &ScrollBarBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &ScrollbarBase::getType(void) const 
+const FieldContainerType &ScrollBarBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr ScrollbarBase::shallowCopy(void) const 
+FieldContainerPtr ScrollBarBase::shallowCopy(void) const 
 { 
-    ScrollbarPtr returnValue; 
+    ScrollBarPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const Scrollbar *>(this)); 
+    newPtr(returnValue, dynamic_cast<const ScrollBar *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 ScrollbarBase::getContainerSize(void) const 
+UInt32 ScrollBarBase::getContainerSize(void) const 
 { 
-    return sizeof(Scrollbar); 
+    return sizeof(ScrollBar); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void ScrollbarBase::executeSync(      FieldContainer &other,
+void ScrollBarBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((ScrollbarBase *) &other, whichField);
+    this->executeSyncImpl((ScrollBarBase *) &other, whichField);
 }
 #else
-void ScrollbarBase::executeSync(      FieldContainer &other,
+void ScrollBarBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((ScrollbarBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((ScrollBarBase *) &other, whichField, sInfo);
 }
-void ScrollbarBase::execBeginEdit(const BitVector &whichField, 
+void ScrollBarBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void ScrollbarBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void ScrollBarBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -227,13 +227,13 @@ void ScrollbarBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-ScrollbarBase::ScrollbarBase(void) :
+ScrollBarBase::ScrollBarBase(void) :
     _sfOrientation            (UInt32(VERTICAL_ALIGNMENT)), 
     _sfUnitIncrement          (UInt32(1)), 
     _sfBlockIncrement         (UInt32(2)), 
     _sfMinButton              (ButtonPtr(NullFC)), 
     _sfMaxButton              (ButtonPtr(NullFC)), 
-    _sfScrollbar              (UIDrawObjectCanvasPtr(NullFC)), 
+    _sfScrollBar              (UIDrawObjectCanvasPtr(NullFC)), 
     _sfScrollField            (UIDrawObjectCanvasPtr(NullFC)), 
     Inherited() 
 {
@@ -243,13 +243,13 @@ ScrollbarBase::ScrollbarBase(void) :
 #pragma warning (default : 383)
 #endif
 
-ScrollbarBase::ScrollbarBase(const ScrollbarBase &source) :
+ScrollBarBase::ScrollBarBase(const ScrollBarBase &source) :
     _sfOrientation            (source._sfOrientation            ), 
     _sfUnitIncrement          (source._sfUnitIncrement          ), 
     _sfBlockIncrement         (source._sfBlockIncrement         ), 
     _sfMinButton              (source._sfMinButton              ), 
     _sfMaxButton              (source._sfMaxButton              ), 
-    _sfScrollbar              (source._sfScrollbar              ), 
+    _sfScrollBar              (source._sfScrollBar              ), 
     _sfScrollField            (source._sfScrollField            ), 
     Inherited                 (source)
 {
@@ -257,13 +257,13 @@ ScrollbarBase::ScrollbarBase(const ScrollbarBase &source) :
 
 /*-------------------------- destructors ----------------------------------*/
 
-ScrollbarBase::~ScrollbarBase(void)
+ScrollBarBase::~ScrollBarBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ScrollbarBase::getBinSize(const BitVector &whichField)
+UInt32 ScrollBarBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -292,9 +292,9 @@ UInt32 ScrollbarBase::getBinSize(const BitVector &whichField)
         returnValue += _sfMaxButton.getBinSize();
     }
 
-    if(FieldBits::NoField != (ScrollbarFieldMask & whichField))
+    if(FieldBits::NoField != (ScrollBarFieldMask & whichField))
     {
-        returnValue += _sfScrollbar.getBinSize();
+        returnValue += _sfScrollBar.getBinSize();
     }
 
     if(FieldBits::NoField != (ScrollFieldFieldMask & whichField))
@@ -306,7 +306,7 @@ UInt32 ScrollbarBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void ScrollbarBase::copyToBin(      BinaryDataHandler &pMem,
+void ScrollBarBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
@@ -336,9 +336,9 @@ void ScrollbarBase::copyToBin(      BinaryDataHandler &pMem,
         _sfMaxButton.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ScrollbarFieldMask & whichField))
+    if(FieldBits::NoField != (ScrollBarFieldMask & whichField))
     {
-        _sfScrollbar.copyToBin(pMem);
+        _sfScrollBar.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (ScrollFieldFieldMask & whichField))
@@ -349,7 +349,7 @@ void ScrollbarBase::copyToBin(      BinaryDataHandler &pMem,
 
 }
 
-void ScrollbarBase::copyFromBin(      BinaryDataHandler &pMem,
+void ScrollBarBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
@@ -379,9 +379,9 @@ void ScrollbarBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfMaxButton.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ScrollbarFieldMask & whichField))
+    if(FieldBits::NoField != (ScrollBarFieldMask & whichField))
     {
-        _sfScrollbar.copyFromBin(pMem);
+        _sfScrollBar.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (ScrollFieldFieldMask & whichField))
@@ -393,7 +393,7 @@ void ScrollbarBase::copyFromBin(      BinaryDataHandler &pMem,
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void ScrollbarBase::executeSyncImpl(      ScrollbarBase *pOther,
+void ScrollBarBase::executeSyncImpl(      ScrollBarBase *pOther,
                                         const BitVector         &whichField)
 {
 
@@ -414,8 +414,8 @@ void ScrollbarBase::executeSyncImpl(      ScrollbarBase *pOther,
     if(FieldBits::NoField != (MaxButtonFieldMask & whichField))
         _sfMaxButton.syncWith(pOther->_sfMaxButton);
 
-    if(FieldBits::NoField != (ScrollbarFieldMask & whichField))
-        _sfScrollbar.syncWith(pOther->_sfScrollbar);
+    if(FieldBits::NoField != (ScrollBarFieldMask & whichField))
+        _sfScrollBar.syncWith(pOther->_sfScrollBar);
 
     if(FieldBits::NoField != (ScrollFieldFieldMask & whichField))
         _sfScrollField.syncWith(pOther->_sfScrollField);
@@ -423,7 +423,7 @@ void ScrollbarBase::executeSyncImpl(      ScrollbarBase *pOther,
 
 }
 #else
-void ScrollbarBase::executeSyncImpl(      ScrollbarBase *pOther,
+void ScrollBarBase::executeSyncImpl(      ScrollBarBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
@@ -445,8 +445,8 @@ void ScrollbarBase::executeSyncImpl(      ScrollbarBase *pOther,
     if(FieldBits::NoField != (MaxButtonFieldMask & whichField))
         _sfMaxButton.syncWith(pOther->_sfMaxButton);
 
-    if(FieldBits::NoField != (ScrollbarFieldMask & whichField))
-        _sfScrollbar.syncWith(pOther->_sfScrollbar);
+    if(FieldBits::NoField != (ScrollBarFieldMask & whichField))
+        _sfScrollBar.syncWith(pOther->_sfScrollBar);
 
     if(FieldBits::NoField != (ScrollFieldFieldMask & whichField))
         _sfScrollField.syncWith(pOther->_sfScrollField);
@@ -455,7 +455,7 @@ void ScrollbarBase::executeSyncImpl(      ScrollbarBase *pOther,
 
 }
 
-void ScrollbarBase::execBeginEditImpl (const BitVector &whichField, 
+void ScrollBarBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -474,11 +474,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ScrollbarPtr>::_type("ScrollbarPtr", "ContainerPtr");
+DataType FieldDataTraits<ScrollBarPtr>::_type("ScrollBarPtr", "ContainerPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ScrollbarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ScrollbarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(ScrollBarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(ScrollBarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -495,10 +495,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(ScrollbarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGSCROLLBARBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSCROLLBARBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGScrollBarBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGScrollBarBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGSCROLLBARFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGScrollBarFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -70,7 +70,7 @@
 #include <OpenSG/OSGStringFields.h> // Text type
 #include <OpenSG/OSGBoolFields.h> // Editable type
 #include <OpenSG/OSGUInt32Fields.h> // CaretPosition type
-#include "Text/OSGFont.h" // Font type
+#include "Text/OSGUIFont.h" // Font type
 #include <OpenSG/OSGColor4fFields.h> // SelectionBoxColor type
 #include <OpenSG/OSGColor4fFields.h> // SelectionTextColor type
 
@@ -140,7 +140,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
            SFString            *getSFText           (void);
            SFBool              *getSFEditable       (void);
            SFUInt32            *getSFCaretPosition  (void);
-           SFFontPtr           *getSFFont           (void);
+           SFUIFontPtr         *getSFFont           (void);
            SFColor4f           *getSFSelectionBoxColor(void);
            SFColor4f           *getSFSelectionTextColor(void);
 
@@ -150,8 +150,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
      const bool                &getEditable       (void) const;
            UInt32              &getCaretPosition  (void);
      const UInt32              &getCaretPosition  (void) const;
-           FontPtr             &getFont           (void);
-     const FontPtr             &getFont           (void) const;
+           UIFontPtr           &getFont           (void);
+     const UIFontPtr           &getFont           (void) const;
            Color4f             &getSelectionBoxColor(void);
      const Color4f             &getSelectionBoxColor(void) const;
            Color4f             &getSelectionTextColor(void);
@@ -165,7 +165,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
      void setText           ( const std::string &value );
      void setEditable       ( const bool &value );
      void setCaretPosition  ( const UInt32 &value );
-     void setFont           ( const FontPtr &value );
+     void setFont           ( const UIFontPtr &value );
      void setSelectionBoxColor( const Color4f &value );
      void setSelectionTextColor( const Color4f &value );
 
@@ -197,7 +197,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
     SFString            _sfText;
     SFBool              _sfEditable;
     SFUInt32            _sfCaretPosition;
-    SFFontPtr           _sfFont;
+    SFUIFontPtr         _sfFont;
     SFColor4f           _sfSelectionBoxColor;
     SFColor4f           _sfSelectionTextColor;
 

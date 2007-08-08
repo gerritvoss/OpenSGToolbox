@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class TextComponent!
+ **     class UIFont!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,192 +55,246 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &TextComponentBase::getClassType(void)
+OSG::FieldContainerType &UIFontBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 TextComponentBase::getClassTypeId(void) 
+OSG::UInt32 UIFontBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
+//! create a new instance of the class
+inline
+UIFontPtr UIFontBase::create(void) 
+{
+    UIFontPtr fc; 
+
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = UIFontPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    
+    return fc; 
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+inline
+UIFontPtr UIFontBase::createEmpty(void) 
+{ 
+    UIFontPtr returnValue; 
+    
+    newPtr(returnValue); 
+
+    return returnValue; 
+}
+
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the TextComponent::_sfText field.
+//! Get the UIFont::_sfFamily field.
 inline
-SFString *TextComponentBase::getSFText(void)
+SFString *UIFontBase::getSFFamily(void)
 {
-    return &_sfText;
+    return &_sfFamily;
 }
 
-//! Get the TextComponent::_sfEditable field.
+//! Get the UIFont::_sfGlyphPixelSize field.
 inline
-SFBool *TextComponentBase::getSFEditable(void)
+SFUInt32 *UIFontBase::getSFGlyphPixelSize(void)
 {
-    return &_sfEditable;
+    return &_sfGlyphPixelSize;
 }
 
-//! Get the TextComponent::_sfCaretPosition field.
+//! Get the UIFont::_sfSize field.
 inline
-SFUInt32 *TextComponentBase::getSFCaretPosition(void)
+SFUInt32 *UIFontBase::getSFSize(void)
 {
-    return &_sfCaretPosition;
+    return &_sfSize;
 }
 
-//! Get the TextComponent::_sfFont field.
+//! Get the UIFont::_sfGap field.
 inline
-SFUIFontPtr *TextComponentBase::getSFFont(void)
+SFUInt32 *UIFontBase::getSFGap(void)
 {
-    return &_sfFont;
+    return &_sfGap;
 }
 
-//! Get the TextComponent::_sfSelectionBoxColor field.
+//! Get the UIFont::_sfTextureWidth field.
 inline
-SFColor4f *TextComponentBase::getSFSelectionBoxColor(void)
+SFUInt32 *UIFontBase::getSFTextureWidth(void)
 {
-    return &_sfSelectionBoxColor;
+    return &_sfTextureWidth;
 }
 
-//! Get the TextComponent::_sfSelectionTextColor field.
+//! Get the UIFont::_sfStyle field.
 inline
-SFColor4f *TextComponentBase::getSFSelectionTextColor(void)
+SFUInt32 *UIFontBase::getSFStyle(void)
 {
-    return &_sfSelectionTextColor;
+    return &_sfStyle;
+}
+
+//! Get the UIFont::_sfTexture field.
+inline
+SFTextureChunkPtr *UIFontBase::getSFTexture(void)
+{
+    return &_sfTexture;
 }
 
 
-//! Get the value of the TextComponent::_sfText field.
+//! Get the value of the UIFont::_sfFamily field.
 inline
-std::string &TextComponentBase::getText(void)
+std::string &UIFontBase::getFamily(void)
 {
-    return _sfText.getValue();
+    return _sfFamily.getValue();
 }
 
-//! Get the value of the TextComponent::_sfText field.
+//! Get the value of the UIFont::_sfFamily field.
 inline
-const std::string &TextComponentBase::getText(void) const
+const std::string &UIFontBase::getFamily(void) const
 {
-    return _sfText.getValue();
+    return _sfFamily.getValue();
 }
 
-//! Set the value of the TextComponent::_sfText field.
+//! Set the value of the UIFont::_sfFamily field.
 inline
-void TextComponentBase::setText(const std::string &value)
+void UIFontBase::setFamily(const std::string &value)
 {
-    _sfText.setValue(value);
+    _sfFamily.setValue(value);
 }
 
-//! Get the value of the TextComponent::_sfEditable field.
+//! Get the value of the UIFont::_sfGlyphPixelSize field.
 inline
-bool &TextComponentBase::getEditable(void)
+UInt32 &UIFontBase::getGlyphPixelSize(void)
 {
-    return _sfEditable.getValue();
+    return _sfGlyphPixelSize.getValue();
 }
 
-//! Get the value of the TextComponent::_sfEditable field.
+//! Get the value of the UIFont::_sfGlyphPixelSize field.
 inline
-const bool &TextComponentBase::getEditable(void) const
+const UInt32 &UIFontBase::getGlyphPixelSize(void) const
 {
-    return _sfEditable.getValue();
+    return _sfGlyphPixelSize.getValue();
 }
 
-//! Set the value of the TextComponent::_sfEditable field.
+//! Set the value of the UIFont::_sfGlyphPixelSize field.
 inline
-void TextComponentBase::setEditable(const bool &value)
+void UIFontBase::setGlyphPixelSize(const UInt32 &value)
 {
-    _sfEditable.setValue(value);
+    _sfGlyphPixelSize.setValue(value);
 }
 
-//! Get the value of the TextComponent::_sfCaretPosition field.
+//! Get the value of the UIFont::_sfSize field.
 inline
-UInt32 &TextComponentBase::getCaretPosition(void)
+UInt32 &UIFontBase::getSize(void)
 {
-    return _sfCaretPosition.getValue();
+    return _sfSize.getValue();
 }
 
-//! Get the value of the TextComponent::_sfCaretPosition field.
+//! Get the value of the UIFont::_sfSize field.
 inline
-const UInt32 &TextComponentBase::getCaretPosition(void) const
+const UInt32 &UIFontBase::getSize(void) const
 {
-    return _sfCaretPosition.getValue();
+    return _sfSize.getValue();
 }
 
-//! Set the value of the TextComponent::_sfCaretPosition field.
+//! Set the value of the UIFont::_sfSize field.
 inline
-void TextComponentBase::setCaretPosition(const UInt32 &value)
+void UIFontBase::setSize(const UInt32 &value)
 {
-    _sfCaretPosition.setValue(value);
+    _sfSize.setValue(value);
 }
 
-//! Get the value of the TextComponent::_sfFont field.
+//! Get the value of the UIFont::_sfGap field.
 inline
-UIFontPtr &TextComponentBase::getFont(void)
+UInt32 &UIFontBase::getGap(void)
 {
-    return _sfFont.getValue();
+    return _sfGap.getValue();
 }
 
-//! Get the value of the TextComponent::_sfFont field.
+//! Get the value of the UIFont::_sfGap field.
 inline
-const UIFontPtr &TextComponentBase::getFont(void) const
+const UInt32 &UIFontBase::getGap(void) const
 {
-    return _sfFont.getValue();
+    return _sfGap.getValue();
 }
 
-//! Set the value of the TextComponent::_sfFont field.
+//! Set the value of the UIFont::_sfGap field.
 inline
-void TextComponentBase::setFont(const UIFontPtr &value)
+void UIFontBase::setGap(const UInt32 &value)
 {
-    _sfFont.setValue(value);
+    _sfGap.setValue(value);
 }
 
-//! Get the value of the TextComponent::_sfSelectionBoxColor field.
+//! Get the value of the UIFont::_sfTextureWidth field.
 inline
-Color4f &TextComponentBase::getSelectionBoxColor(void)
+UInt32 &UIFontBase::getTextureWidth(void)
 {
-    return _sfSelectionBoxColor.getValue();
+    return _sfTextureWidth.getValue();
 }
 
-//! Get the value of the TextComponent::_sfSelectionBoxColor field.
+//! Get the value of the UIFont::_sfTextureWidth field.
 inline
-const Color4f &TextComponentBase::getSelectionBoxColor(void) const
+const UInt32 &UIFontBase::getTextureWidth(void) const
 {
-    return _sfSelectionBoxColor.getValue();
+    return _sfTextureWidth.getValue();
 }
 
-//! Set the value of the TextComponent::_sfSelectionBoxColor field.
+//! Set the value of the UIFont::_sfTextureWidth field.
 inline
-void TextComponentBase::setSelectionBoxColor(const Color4f &value)
+void UIFontBase::setTextureWidth(const UInt32 &value)
 {
-    _sfSelectionBoxColor.setValue(value);
+    _sfTextureWidth.setValue(value);
 }
 
-//! Get the value of the TextComponent::_sfSelectionTextColor field.
+//! Get the value of the UIFont::_sfStyle field.
 inline
-Color4f &TextComponentBase::getSelectionTextColor(void)
+UInt32 &UIFontBase::getStyle(void)
 {
-    return _sfSelectionTextColor.getValue();
+    return _sfStyle.getValue();
 }
 
-//! Get the value of the TextComponent::_sfSelectionTextColor field.
+//! Get the value of the UIFont::_sfStyle field.
 inline
-const Color4f &TextComponentBase::getSelectionTextColor(void) const
+const UInt32 &UIFontBase::getStyle(void) const
 {
-    return _sfSelectionTextColor.getValue();
+    return _sfStyle.getValue();
 }
 
-//! Set the value of the TextComponent::_sfSelectionTextColor field.
+//! Set the value of the UIFont::_sfStyle field.
 inline
-void TextComponentBase::setSelectionTextColor(const Color4f &value)
+void UIFontBase::setStyle(const UInt32 &value)
 {
-    _sfSelectionTextColor.setValue(value);
+    _sfStyle.setValue(value);
+}
+
+//! Get the value of the UIFont::_sfTexture field.
+inline
+TextureChunkPtr &UIFontBase::getTexture(void)
+{
+    return _sfTexture.getValue();
+}
+
+//! Get the value of the UIFont::_sfTexture field.
+inline
+const TextureChunkPtr &UIFontBase::getTexture(void) const
+{
+    return _sfTexture.getValue();
+}
+
+//! Set the value of the UIFont::_sfTexture field.
+inline
+void UIFontBase::setTexture(const TextureChunkPtr &value)
+{
+    _sfTexture.setValue(value);
 }
 
 
 OSG_END_NAMESPACE
 
-#define OSGTEXTCOMPONENTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGUIFONTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

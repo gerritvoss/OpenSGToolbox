@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -49,7 +49,7 @@
 \*****************************************************************************/
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -112,7 +112,7 @@ SFString *TextUIDrawObjectBase::getSFText(void)
 
 //! Get the TextUIDrawObject::_sfFont field.
 inline
-SFFontPtr *TextUIDrawObjectBase::getSFFont(void)
+SFUIFontPtr *TextUIDrawObjectBase::getSFFont(void)
 {
     return &_sfFont;
 }
@@ -176,21 +176,21 @@ void TextUIDrawObjectBase::setText(const std::string &value)
 
 //! Get the value of the TextUIDrawObject::_sfFont field.
 inline
-FontPtr &TextUIDrawObjectBase::getFont(void)
+UIFontPtr &TextUIDrawObjectBase::getFont(void)
 {
     return _sfFont.getValue();
 }
 
 //! Get the value of the TextUIDrawObject::_sfFont field.
 inline
-const FontPtr &TextUIDrawObjectBase::getFont(void) const
+const UIFontPtr &TextUIDrawObjectBase::getFont(void) const
 {
     return _sfFont.getValue();
 }
 
 //! Set the value of the TextUIDrawObject::_sfFont field.
 inline
-void TextUIDrawObjectBase::setFont(const FontPtr &value)
+void TextUIDrawObjectBase::setFont(const UIFontPtr &value)
 {
     _sfFont.setValue(value);
 }

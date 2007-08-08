@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGTEXTCOMPONENTFIELDS_H_
-#define _OSGTEXTCOMPONENTFIELDS_H_
+#ifndef _OSGUIFONTFIELDS_H_
+#define _OSGUIFONTFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "Component/OSGComponent.h"
+#include <OpenSG/OSGFieldContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
-class TextComponent;
+class UIFont;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! TextComponentPtr
+//! UIFontPtr
 
-typedef FCPtr<ComponentPtr, TextComponent> TextComponentPtr;
+typedef FCPtr<FieldContainerPtr, UIFont> UIFontPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<ComponentPtr, TextComponent> TextComponentPtr;
 #endif
 
 template <>
-struct FieldDataTraits<TextComponentPtr> : 
-    public FieldTraitsRecurseMapper<TextComponentPtr, true>
+struct FieldDataTraits<UIFontPtr> : 
+    public FieldTraitsRecurseMapper<UIFontPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<TextComponentPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFTextComponentPtr"; }
-    static const char *getMName(void) { return "MFTextComponentPtr"; }
+    static const char *getSName(void) { return "SFUIFontPtr"; }
+    static const char *getMName(void) { return "MFUIFontPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<TextComponentPtr, true>
+/*! \class  FieldTraitsRecurseMapper<UIFontPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<TextComponentPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldSingle */
 
-typedef SField<TextComponentPtr> SFTextComponentPtr;
+typedef SField<UIFontPtr> SFUIFontPtr;
 #endif
 
-#ifndef OSG_COMPILETEXTCOMPONENTINST
-OSG_DLLEXPORT_DECL1(SField, TextComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEUIFONTINST
+OSG_DLLEXPORT_DECL1(SField, UIFontPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<TextComponentPtr> MFTextComponentPtr;
+typedef MField<UIFontPtr> MFUIFontPtr;
 #endif
 
-#ifndef OSG_COMPILETEXTCOMPONENTINST
-OSG_DLLEXPORT_DECL1(MField, TextComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEUIFONTINST
+OSG_DLLEXPORT_DECL1(MField, UIFontPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGTEXTCOMPONENTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGUIFONTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGTEXTCOMPONENTFIELDS_H_ */
+#endif /* _OSGUIFONTFIELDS_H_ */

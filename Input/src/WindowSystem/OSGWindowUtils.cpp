@@ -19,6 +19,7 @@
 #ifdef OSG_WITH_GLUT
 #include <OpenSG/OSGGLUTWindow.h>
 #include <OpenSG/OSGGLUT.h>
+#include "WindowSystem/GLUT/OSGGLUTWindowEventProducer.h"
 #endif
 
 //#include <OpenSG/OSGQTWindow.h>
@@ -63,6 +64,7 @@ void createWindow(FieldContainerType WindowType,
 #ifdef OSG_WITH_GLUT
    else if(WindowType == GLUTWindow::getClassType())
    {
+	   WindowEventProducerFactory::the()->registerProducer(&GLUTWindow::getClassType(), &GLUTWindowEventProducer::getClassType());
       ResultWindow = GLUTWindow::create();
    }
 #endif
@@ -159,7 +161,8 @@ void createDefaultWindow(const Pnt2s& ScreenPosition,
 #elif defined(WIN32)
    createWindow(WIN32Window::getClassType(), ScreenPosition, Size, WindowName, ResultWindow, ResultWindowEventProducer);
 #elif defined(__linux)
-   createWindow(XWindow::getClassType(), ScreenPosition, Size, WindowName, ResultWindow, ResultWindowEventProducer);
+   //createWindow(XWindow::getClassType(), ScreenPosition, Size, WindowName, ResultWindow, ResultWindowEventProducer);
+   createWindow(GLUTWindow::getClassType(), ScreenPosition, Size, WindowName, ResultWindow, ResultWindowEventProducer);
 #endif
 }
 

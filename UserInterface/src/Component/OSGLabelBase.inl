@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -98,7 +98,7 @@ LabelPtr LabelBase::createEmpty(void)
 
 //! Get the Label::_sfFont field.
 inline
-SFFontPtr *LabelBase::getSFFont(void)
+SFUIFontPtr *LabelBase::getSFFont(void)
 {
     return &_sfFont;
 }
@@ -127,21 +127,21 @@ SFUInt32 *LabelBase::getSFHorizontalAlignment(void)
 
 //! Get the value of the Label::_sfFont field.
 inline
-FontPtr &LabelBase::getFont(void)
+UIFontPtr &LabelBase::getFont(void)
 {
     return _sfFont.getValue();
 }
 
 //! Get the value of the Label::_sfFont field.
 inline
-const FontPtr &LabelBase::getFont(void) const
+const UIFontPtr &LabelBase::getFont(void) const
 {
     return _sfFont.getValue();
 }
 
 //! Set the value of the Label::_sfFont field.
 inline
-void LabelBase::setFont(const FontPtr &value)
+void LabelBase::setFont(const UIFontPtr &value)
 {
     _sfFont.setValue(value);
 }

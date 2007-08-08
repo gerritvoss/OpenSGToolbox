@@ -92,7 +92,7 @@ void TextField::drawInternal(const GraphicsPtr TheGraphics) const
    Pnt2s TopLeft, BottomRight;
    Pnt2s TempPos;
    getInsideBorderBounds(TopLeft, BottomRight);
-   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, TheGraphics->getTextBounds(getText(), getFont()), getVerticalAlignment(), 0.0);
+   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, getFont()->getBounds(getText()), getVerticalAlignment(), 0.0);
   //Foreground Color
   Color4f ForeColor;
   if(getEnabled())
@@ -120,8 +120,8 @@ void TextField::drawInternal(const GraphicsPtr TheGraphics) const
           getFont()->getBounds(getText().substr(0, _TextSelectionStart), TextTopLeft, TextBottomRight);
 
 		  TheGraphics->drawQuad(TempPos + Vec2s(TextBottomRight.x(),0),
-			 TempPos + Vec2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionEnd), getFont()).x(), 0),
-			 TempPos + Vec2s(TheGraphics->getTextBounds(getText().substr(0, _TextSelectionEnd), getFont())),
+			 TempPos + Vec2s(getFont()->getBounds(getText().substr(0, _TextSelectionEnd)).x(), 0),
+			 TempPos + Vec2s(getFont()->getBounds(getText().substr(0, _TextSelectionEnd))),
 			 TempPos + Vec2s(TextBottomRight),
 			  getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(), getOpacity());
 
@@ -139,8 +139,8 @@ void TextField::drawInternal(const GraphicsPtr TheGraphics) const
    if(getFocused() && _CurrentCaretBlinkElps <= 0.5*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
    {
    		  //Draw the caret
-		  TheGraphics->drawLine(TempPos+Vec2s(TheGraphics->getTextBounds(getText().substr(0, getCaretPosition()), getFont()).x(), 0),
-	      TempPos + Vec2s(TheGraphics->getTextBounds(getText().substr(0, getCaretPosition()), getFont()).x(),  TheGraphics->getTextBounds(getText(), getFont()).y()), 
+		  TheGraphics->drawLine(TempPos+Vec2s(getFont()->getBounds(getText().substr(0, getCaretPosition())).x(), 0),
+	      TempPos + Vec2s(getFont()->getBounds(getText().substr(0, getCaretPosition())).x(),  getFont()->getBounds(getText()).y()), 
 	      .5, ForeColor, 1.0);
    }
 }

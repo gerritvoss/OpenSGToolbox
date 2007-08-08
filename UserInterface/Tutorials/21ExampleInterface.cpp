@@ -44,7 +44,7 @@
 #include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
-#include <OpenSG/UserInterface/OSGFont.h>
+#include <OpenSG/UserInterface/OSGUIFont.h>
 
 // Include relevant header files
 #include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
@@ -408,11 +408,11 @@ int main(int argc, char **argv)
 
 	******************************************************/
 	LabelPtr leftPanelLabel1 = osg::Label::create();
-	FontPtr leftPanelLabel1Font = osg::Font::create();
+	UIFontPtr leftPanelLabel1Font = osg::UIFont::create();
 
-	beginEditCP(leftPanelLabel1Font, Font::SizeFieldMask);
+	beginEditCP(leftPanelLabel1Font, UIFont::SizeFieldMask);
 		leftPanelLabel1Font->setSize(50);
-	endEditCP(leftPanelLabel1Font, Font::SizeFieldMask);
+	endEditCP(leftPanelLabel1Font, UIFont::SizeFieldMask);
 
 	beginEditCP(leftPanelLabel1, Component::BorderFieldMask | Component::BackgroundFieldMask | Label::FontFieldMask | Label::TextFieldMask | Component::PreferredSizeFieldMask);
 		leftPanelLabel1->setBorder(emptyBorder);
@@ -1014,7 +1014,7 @@ void create3DObjects(void)
 {
 	// Make Object Nodes
     NodePtr torusGeo = makeTorus(90, 270, 16, 16);
-	NodePtr coneGeo = makeCone(150, 50, 16, TRUE, TRUE);
+	NodePtr coneGeo = makeCone(150, 50, 16, true, true);
 	NodePtr sphereGeo = makeSphere(4, 100);
 	NodePtr boxGeo = makeBox(100, 100, 100, 1, 1, 1);
 

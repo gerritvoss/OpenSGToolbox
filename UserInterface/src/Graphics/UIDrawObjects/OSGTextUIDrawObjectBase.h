@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -69,7 +69,7 @@
 
 #include <OpenSG/OSGVec2sFields.h> // Position type
 #include <OpenSG/OSGStringFields.h> // Text type
-#include "Text/OSGFont.h" // Font type
+#include "Text/OSGUIFont.h" // Font type
 #include <OpenSG/OSGColor4fFields.h> // Color type
 #include <OpenSG/OSGReal32Fields.h> // Opacity type
 
@@ -136,7 +136,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextUIDrawObjectBase : public UIDrawObject
 
            SFPnt2s             *getSFPosition       (void);
            SFString            *getSFText           (void);
-           SFFontPtr           *getSFFont           (void);
+           SFUIFontPtr         *getSFFont           (void);
            SFColor4f           *getSFColor          (void);
            SFReal32            *getSFOpacity        (void);
 
@@ -144,8 +144,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextUIDrawObjectBase : public UIDrawObject
      const Pnt2s               &getPosition       (void) const;
            std::string         &getText           (void);
      const std::string         &getText           (void) const;
-           FontPtr             &getFont           (void);
-     const FontPtr             &getFont           (void) const;
+           UIFontPtr           &getFont           (void);
+     const UIFontPtr           &getFont           (void) const;
            Color4f             &getColor          (void);
      const Color4f             &getColor          (void) const;
            Real32              &getOpacity        (void);
@@ -158,7 +158,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextUIDrawObjectBase : public UIDrawObject
 
      void setPosition       ( const Pnt2s &value );
      void setText           ( const std::string &value );
-     void setFont           ( const FontPtr &value );
+     void setFont           ( const UIFontPtr &value );
      void setColor          ( const Color4f &value );
      void setOpacity        ( const Real32 &value );
 
@@ -205,7 +205,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextUIDrawObjectBase : public UIDrawObject
 
     SFPnt2s             _sfPosition;
     SFString            _sfText;
-    SFFontPtr           _sfFont;
+    SFUIFontPtr         _sfFont;
     SFColor4f           _sfColor;
     SFReal32            _sfOpacity;
 

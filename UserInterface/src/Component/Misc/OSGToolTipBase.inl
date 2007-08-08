@@ -98,7 +98,7 @@ ToolTipPtr ToolTipBase::createEmpty(void)
 
 //! Get the ToolTip::_sfFont field.
 inline
-SFFontPtr *ToolTipBase::getSFFont(void)
+SFUIFontPtr *ToolTipBase::getSFFont(void)
 {
     return &_sfFont;
 }
@@ -134,21 +134,21 @@ SFReal32 *ToolTipBase::getSFHorizontalAlignment(void)
 
 //! Get the value of the ToolTip::_sfFont field.
 inline
-FontPtr &ToolTipBase::getFont(void)
+UIFontPtr &ToolTipBase::getFont(void)
 {
     return _sfFont.getValue();
 }
 
 //! Get the value of the ToolTip::_sfFont field.
 inline
-const FontPtr &ToolTipBase::getFont(void) const
+const UIFontPtr &ToolTipBase::getFont(void) const
 {
     return _sfFont.getValue();
 }
 
 //! Set the value of the ToolTip::_sfFont field.
 inline
-void ToolTipBase::setFont(const FontPtr &value)
+void ToolTipBase::setFont(const UIFontPtr &value)
 {
     _sfFont.setValue(value);
 }

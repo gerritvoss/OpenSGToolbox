@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Label
+ **     class UIFont
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGLABELBASE_H_
-#define _OSGLABELBASE_H_
+#ifndef _OSGUIFONTBASE_H_
+#define _OSGUIFONTBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,46 +65,55 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/OSGComponent.h" // Parent
+#include <OpenSG/OSGFieldContainer.h> // Parent
 
-#include "Text/OSGUIFont.h" // Font type
-#include <OpenSG/OSGStringFields.h> // Text type
-#include <OpenSG/OSGUInt32Fields.h> // VerticalAlignment type
-#include <OpenSG/OSGUInt32Fields.h> // HorizontalAlignment type
+#include <OpenSG/OSGStringFields.h> // Family type
+#include <OpenSG/OSGUInt32Fields.h> // GlyphPixelSize type
+#include <OpenSG/OSGUInt32Fields.h> // Size type
+#include <OpenSG/OSGUInt32Fields.h> // Gap type
+#include <OpenSG/OSGUInt32Fields.h> // TextureWidth type
+#include <OpenSG/OSGUInt32Fields.h> // Style type
+#include <OpenSG/OSGTextureChunkFields.h> // Texture type
 
-#include "OSGLabelFields.h"
+#include "OSGUIFontFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Label;
+class UIFont;
 class BinaryDataHandler;
 
-//! \brief Label Base Class.
+//! \brief UIFont Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public Component
+class OSG_USERINTERFACELIB_DLLMAPPING UIFontBase : public FieldContainer
 {
   private:
 
-    typedef Component    Inherited;
+    typedef FieldContainer    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef LabelPtr  Ptr;
+    typedef UIFontPtr  Ptr;
 
     enum
     {
-        FontFieldId                = Inherited::NextFieldId,
-        TextFieldId                = FontFieldId                + 1,
-        VerticalAlignmentFieldId   = TextFieldId                + 1,
-        HorizontalAlignmentFieldId = VerticalAlignmentFieldId   + 1,
-        NextFieldId                = HorizontalAlignmentFieldId + 1
+        FamilyFieldId         = Inherited::NextFieldId,
+        GlyphPixelSizeFieldId = FamilyFieldId         + 1,
+        SizeFieldId           = GlyphPixelSizeFieldId + 1,
+        GapFieldId            = SizeFieldId           + 1,
+        TextureWidthFieldId   = GapFieldId            + 1,
+        StyleFieldId          = TextureWidthFieldId   + 1,
+        TextureFieldId        = StyleFieldId          + 1,
+        NextFieldId           = TextureFieldId        + 1
     };
 
-    static const OSG::BitVector FontFieldMask;
-    static const OSG::BitVector TextFieldMask;
-    static const OSG::BitVector VerticalAlignmentFieldMask;
-    static const OSG::BitVector HorizontalAlignmentFieldMask;
+    static const OSG::BitVector FamilyFieldMask;
+    static const OSG::BitVector GlyphPixelSizeFieldMask;
+    static const OSG::BitVector SizeFieldMask;
+    static const OSG::BitVector GapFieldMask;
+    static const OSG::BitVector TextureWidthFieldMask;
+    static const OSG::BitVector StyleFieldMask;
+    static const OSG::BitVector TextureFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -131,29 +140,41 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public Component
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUIFontPtr         *getSFFont           (void);
-           SFString            *getSFText           (void);
-           SFUInt32            *getSFVerticalAlignment(void);
-           SFUInt32            *getSFHorizontalAlignment(void);
+           SFString            *getSFFamily         (void);
+           SFUInt32            *getSFGlyphPixelSize (void);
+           SFUInt32            *getSFSize           (void);
+           SFUInt32            *getSFGap            (void);
+           SFUInt32            *getSFTextureWidth   (void);
+           SFUInt32            *getSFStyle          (void);
+           SFTextureChunkPtr   *getSFTexture        (void);
 
-           UIFontPtr           &getFont           (void);
-     const UIFontPtr           &getFont           (void) const;
-           std::string         &getText           (void);
-     const std::string         &getText           (void) const;
-           UInt32              &getVerticalAlignment(void);
-     const UInt32              &getVerticalAlignment(void) const;
-           UInt32              &getHorizontalAlignment(void);
-     const UInt32              &getHorizontalAlignment(void) const;
+           std::string         &getFamily         (void);
+     const std::string         &getFamily         (void) const;
+           UInt32              &getGlyphPixelSize (void);
+     const UInt32              &getGlyphPixelSize (void) const;
+           UInt32              &getSize           (void);
+     const UInt32              &getSize           (void) const;
+           UInt32              &getGap            (void);
+     const UInt32              &getGap            (void) const;
+           UInt32              &getTextureWidth   (void);
+     const UInt32              &getTextureWidth   (void) const;
+           UInt32              &getStyle          (void);
+     const UInt32              &getStyle          (void) const;
+           TextureChunkPtr     &getTexture        (void);
+     const TextureChunkPtr     &getTexture        (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setFont           ( const UIFontPtr &value );
-     void setText           ( const std::string &value );
-     void setVerticalAlignment( const UInt32 &value );
-     void setHorizontalAlignment( const UInt32 &value );
+     void setFamily         ( const std::string &value );
+     void setGlyphPixelSize ( const UInt32 &value );
+     void setSize           ( const UInt32 &value );
+     void setGap            ( const UInt32 &value );
+     void setTextureWidth   ( const UInt32 &value );
+     void setStyle          ( const UInt32 &value );
+     void setTexture        ( const TextureChunkPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -177,8 +198,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public Component
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  LabelPtr      create          (void); 
-    static  LabelPtr      createEmpty     (void); 
+    static  UIFontPtr      create          (void); 
+    static  UIFontPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -196,25 +217,28 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public Component
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUIFontPtr         _sfFont;
-    SFString            _sfText;
-    SFUInt32            _sfVerticalAlignment;
-    SFUInt32            _sfHorizontalAlignment;
+    SFString            _sfFamily;
+    SFUInt32            _sfGlyphPixelSize;
+    SFUInt32            _sfSize;
+    SFUInt32            _sfGap;
+    SFUInt32            _sfTextureWidth;
+    SFUInt32            _sfStyle;
+    SFTextureChunkPtr   _sfTexture;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    LabelBase(void);
-    LabelBase(const LabelBase &source);
+    UIFontBase(void);
+    UIFontBase(const UIFontBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~LabelBase(void); 
+    virtual ~UIFontBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -222,13 +246,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public Component
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      LabelBase *pOther,
+    void executeSyncImpl(      UIFontBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      LabelBase *pOther,
+    void executeSyncImpl(      UIFontBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -258,7 +282,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public Component
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const LabelBase &source);
+    void operator =(const UIFontBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -266,17 +290,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public Component
 //---------------------------------------------------------------------------
 
 
-typedef LabelBase *LabelBaseP;
+typedef UIFontBase *UIFontBaseP;
 
-typedef osgIF<LabelBase::isNodeCore,
-              CoredNodePtr<Label>,
+typedef osgIF<UIFontBase::isNodeCore,
+              CoredNodePtr<UIFont>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet LabelNodePtr;
+              >::_IRet UIFontNodePtr;
 
-typedef RefPtr<LabelPtr> LabelRefPtr;
+typedef RefPtr<UIFontPtr> UIFontRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGLABELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGUIFONTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGLABELBASE_H_ */
+#endif /* _OSGUIFONTBASE_H_ */

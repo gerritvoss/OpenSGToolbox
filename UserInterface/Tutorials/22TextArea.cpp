@@ -40,7 +40,7 @@
 #include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGFont.h>
+#include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGTextArea.h>
 
 // Activate the OpenSG namespace
@@ -98,10 +98,10 @@ int main(int argc, char **argv)
 	TextAreaPtr textArea = osg::TextArea::create();
 
 	// Create a simple Font to be used with the textArea
-	FontPtr sampleFont = osg::Font::create();
-    beginEditCP(sampleFont, Font::SizeFieldMask | Font::FamilyFieldMask | Font::GapFieldMask | Font::GlyphPixelSizeFieldMask | Font::TextureWidthFieldMask | Font::StyleFieldMask);
+	UIFontPtr sampleFont = osg::UIFont::create();
+    beginEditCP(sampleFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::GapFieldMask | UIFont::GlyphPixelSizeFieldMask | UIFont::TextureWidthFieldMask | UIFont::StyleFieldMask);
 		sampleFont->setSize(16);
-	endEditCP(sampleFont, Font::SizeFieldMask | Font::FamilyFieldMask | Font::GapFieldMask | Font::GlyphPixelSizeFieldMask | Font::TextureWidthFieldMask | Font::StyleFieldMask);
+	endEditCP(sampleFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::GapFieldMask | UIFont::GlyphPixelSizeFieldMask | UIFont::TextureWidthFieldMask | UIFont::StyleFieldMask);
 
 	/******************************************************
 

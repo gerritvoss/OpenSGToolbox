@@ -84,7 +84,9 @@ void Label::drawInternal(const GraphicsPtr TheGraphics) const
    {
       //Calculate Alignment
       Pnt2s AlignedPosition;
-      Vec2s TextBounds( TheGraphics->getTextBounds(getText(), getFont()));
+      Pnt2s TextTopLeft, TextBottomRight;
+      getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+      Vec2s TextBounds( TextBottomRight - TextTopLeft);
       if(getVerticalAlignment() == VERTICAL_TOP)
       {
          //VerticalTop

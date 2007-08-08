@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGFONT_H_
-#define _OSGFONT_H_
+#ifndef _OSGScrollBar_H_
+#define _OSGScrollBar_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,20 +45,21 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGFontBase.h"
-
-#include <OpenSG/OSGTextTXFFace.h>
-#include <OpenSG/OSGTextLayoutParam.h>
-#include <OpenSG/OSGTextLayoutResult.h>
-#include <OpenSG/OSGTextTXFGlyph.h>
+#include "OSGScrollBarBase.h"
+#include "OSGBoundedRangeModel.h"
+#include "Event/OSGAdjustmentListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING Font : public FontBase
+/*! \brief ScrollBar class. See \ref 
+           PageUserInterfaceScrollBar for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 {
   private:
 
-    typedef FontBase Inherited;
+    typedef ScrollBarBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -79,54 +80,86 @@ class OSG_USERINTERFACELIB_DLLMAPPING Font : public FontBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    void layout(const std::string &utf8Text, const TextLayoutParam &param, TextLayoutResult &result);
-    const TextTXFGlyph& getTXFGlyph(TextGlyph::Index glyphIndex);
 
-	void getBounds(const std::string& Text, Pnt2s& TopLeft, Pnt2s& BottomRight);
+    void setModel(BoundedRangeModel* Model);
+    BoundedRangeModel* getModel(void) const;
+    
+    void addAdjustmentListener(AdjustmentListenerPtr Listener);
+    void removeAdjustmentListener(AdjustmentListenerPtr Listener);
+
+    UInt32 getExtent(void) const;
+    
+    UInt32 getMaximum(void) const;
+    
+    UInt32 getMinimum(void) const;
+    
+    UInt32 getValue(void) const;
+    
+    bool getValueIsAdjusting(void) const;
+    
+    void setExtent(UInt32 newExtent);
+    
+    void setMaximum(UInt32 newMaximum);
+    
+    void setMinimum(UInt32 newMinimum);
+    
+    void setRangeProperties(UInt32 value, UInt32 extent, UInt32 min, UInt32 max, bool adjusting);
+    
+    void setValue(UInt32 newValue);
+    
+    void setValueIsAdjusting(bool Value);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in FontBase.
+    // Variables should all be in ScrollBarBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Font(void);
-    Font(const Font &source);
+    ScrollBar(void);
+    ScrollBar(const ScrollBar &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Font(void); 
+    virtual ~ScrollBar(void); 
 
     /*! \}                                                                 */
     
+	virtual void drawInternal(const GraphicsPtr Graphics) const;
+
+	typedef std::set<AdjustmentListenerPtr> AdjustmentListenerSet;
+    typedef AdjustmentListenerSet::iterator AdjustmentListenerSetItor;
+    typedef AdjustmentListenerSet::const_iterator AdjustmentListenerSetConstItor;
+	
+    AdjustmentListenerSet       _AdjustmentListeners;
+    void produceAdjustmentValueChanged(const AdjustmentEvent& e);
+
+    BoundedRangeModel* _Model;
     /*==========================  PRIVATE  ================================*/
   private:
 
-    TextTXFFace* _face;
-    void Font::initText(void);
-    
     friend class FieldContainer;
-    friend class FontBase;
+    friend class ScrollBarBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Font &source);
+    void operator =(const ScrollBar &source);
 };
 
-typedef Font *FontP;
+typedef ScrollBar *ScrollBarP;
 
 OSG_END_NAMESPACE
 
-#include "OSGFontBase.inl"
-#include "OSGFont.inl"
+#include "OSGScrollBarBase.inl"
+#include "OSGScrollBar.inl"
 
-#define OSGFONT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGScrollBar_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGFONT_H_ */
+#endif /* _OSGScrollBar_H_ */

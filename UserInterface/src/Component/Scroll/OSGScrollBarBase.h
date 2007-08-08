@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Scrollbar
+ **     class ScrollBar
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGSCROLLBARBASE_H_
-#define _OSGSCROLLBARBASE_H_
+#ifndef _OSGScrollBarBASE_H_
+#define _OSGScrollBarBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -70,21 +70,21 @@
 #include "Util/OSGUIDefines.h" // Orientation type
 #include <OpenSG/OSGUInt32Fields.h> // UnitIncrement type
 #include <OpenSG/OSGUInt32Fields.h> // BlockIncrement type
-#include "Component/OSGButton.h" // MinButton type
-#include "Component/OSGButton.h" // MaxButton type
-#include "Component/OSGUIDrawObjectCanvas.h" // Scrollbar type
+#include "Component/Button/OSGButton.h" // MinButton type
+#include "Component/Button/OSGButton.h" // MaxButton type
+#include "Component/OSGUIDrawObjectCanvas.h" // ScrollBar type
 #include "Component/OSGUIDrawObjectCanvas.h" // ScrollField type
 
-#include "OSGScrollbarFields.h"
+#include "OSGScrollBarFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Scrollbar;
+class ScrollBar;
 class BinaryDataHandler;
 
-//! \brief Scrollbar Base Class.
+//! \brief ScrollBar Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ScrollbarBase : public Container
+class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
 {
   private:
 
@@ -93,7 +93,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollbarBase : public Container
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ScrollbarPtr  Ptr;
+    typedef ScrollBarPtr  Ptr;
 
     enum
     {
@@ -102,8 +102,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollbarBase : public Container
         BlockIncrementFieldId = UnitIncrementFieldId  + 1,
         MinButtonFieldId      = BlockIncrementFieldId + 1,
         MaxButtonFieldId      = MinButtonFieldId      + 1,
-        ScrollbarFieldId      = MaxButtonFieldId      + 1,
-        ScrollFieldFieldId    = ScrollbarFieldId      + 1,
+        ScrollBarFieldId      = MaxButtonFieldId      + 1,
+        ScrollFieldFieldId    = ScrollBarFieldId      + 1,
         NextFieldId           = ScrollFieldFieldId    + 1
     };
 
@@ -112,7 +112,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollbarBase : public Container
     static const OSG::BitVector BlockIncrementFieldMask;
     static const OSG::BitVector MinButtonFieldMask;
     static const OSG::BitVector MaxButtonFieldMask;
-    static const OSG::BitVector ScrollbarFieldMask;
+    static const OSG::BitVector ScrollBarFieldMask;
     static const OSG::BitVector ScrollFieldFieldMask;
 
 
@@ -145,7 +145,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollbarBase : public Container
            SFUInt32            *getSFBlockIncrement (void);
            SFButtonPtr         *getSFMinButton      (void);
            SFButtonPtr         *getSFMaxButton      (void);
-           SFUIDrawObjectCanvasPtr *getSFScrollbar      (void);
+           SFUIDrawObjectCanvasPtr *getSFScrollBar      (void);
            SFUIDrawObjectCanvasPtr *getSFScrollField    (void);
 
            UInt32              &getOrientation    (void);
@@ -158,8 +158,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollbarBase : public Container
      const ButtonPtr           &getMinButton      (void) const;
            ButtonPtr           &getMaxButton      (void);
      const ButtonPtr           &getMaxButton      (void) const;
-           UIDrawObjectCanvasPtr &getScrollbar      (void);
-     const UIDrawObjectCanvasPtr &getScrollbar      (void) const;
+           UIDrawObjectCanvasPtr &getScrollBar      (void);
+     const UIDrawObjectCanvasPtr &getScrollBar      (void) const;
            UIDrawObjectCanvasPtr &getScrollField    (void);
      const UIDrawObjectCanvasPtr &getScrollField    (void) const;
 
@@ -173,7 +173,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollbarBase : public Container
      void setBlockIncrement ( const UInt32 &value );
      void setMinButton      ( const ButtonPtr &value );
      void setMaxButton      ( const ButtonPtr &value );
-     void setScrollbar      ( const UIDrawObjectCanvasPtr &value );
+     void setScrollBar      ( const UIDrawObjectCanvasPtr &value );
      void setScrollField    ( const UIDrawObjectCanvasPtr &value );
 
     /*! \}                                                                 */
@@ -198,8 +198,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollbarBase : public Container
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ScrollbarPtr      create          (void); 
-    static  ScrollbarPtr      createEmpty     (void); 
+    static  ScrollBarPtr      create          (void); 
+    static  ScrollBarPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -222,7 +222,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollbarBase : public Container
     SFUInt32            _sfBlockIncrement;
     SFButtonPtr         _sfMinButton;
     SFButtonPtr         _sfMaxButton;
-    SFUIDrawObjectCanvasPtr   _sfScrollbar;
+    SFUIDrawObjectCanvasPtr   _sfScrollBar;
     SFUIDrawObjectCanvasPtr   _sfScrollField;
 
     /*! \}                                                                 */
@@ -230,15 +230,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollbarBase : public Container
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ScrollbarBase(void);
-    ScrollbarBase(const ScrollbarBase &source);
+    ScrollBarBase(void);
+    ScrollBarBase(const ScrollBarBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ScrollbarBase(void); 
+    virtual ~ScrollBarBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -246,13 +246,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollbarBase : public Container
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ScrollbarBase *pOther,
+    void executeSyncImpl(      ScrollBarBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      ScrollbarBase *pOther,
+    void executeSyncImpl(      ScrollBarBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -282,7 +282,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollbarBase : public Container
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ScrollbarBase &source);
+    void operator =(const ScrollBarBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -290,17 +290,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollbarBase : public Container
 //---------------------------------------------------------------------------
 
 
-typedef ScrollbarBase *ScrollbarBaseP;
+typedef ScrollBarBase *ScrollBarBaseP;
 
-typedef osgIF<ScrollbarBase::isNodeCore,
-              CoredNodePtr<Scrollbar>,
+typedef osgIF<ScrollBarBase::isNodeCore,
+              CoredNodePtr<ScrollBar>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ScrollbarNodePtr;
+              >::_IRet ScrollBarNodePtr;
 
-typedef RefPtr<ScrollbarPtr> ScrollbarRefPtr;
+typedef RefPtr<ScrollBarPtr> ScrollBarRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGSCROLLBARBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGScrollBarBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGSCROLLBARBASE_H_ */
+#endif /* _OSGScrollBarBASE_H_ */

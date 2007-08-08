@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,7 +67,7 @@
 
 #include "Component/OSGComponent.h" // Parent
 
-#include "Text/OSGFont.h" // Font type
+#include "Text/OSGUIFont.h" // Font type
 #include <OpenSG/OSGStringFields.h> // Text type
 #include <OpenSG/OSGUInt32Fields.h> // AcceleratorModifiers type
 #include <OpenSG/OSGUInt32Fields.h> // AcceleratorKey type
@@ -134,14 +134,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFFontPtr           *getSFFont           (void);
+           SFUIFontPtr         *getSFFont           (void);
            SFString            *getSFText           (void);
            SFUInt32            *getSFAcceleratorModifiers(void);
            SFUInt32            *getSFAcceleratorKey (void);
            SFBool              *getSFArmed          (void);
 
-           FontPtr             &getFont           (void);
-     const FontPtr             &getFont           (void) const;
+           UIFontPtr           &getFont           (void);
+     const UIFontPtr           &getFont           (void) const;
            std::string         &getText           (void);
      const std::string         &getText           (void) const;
            UInt32              &getAcceleratorModifiers(void);
@@ -156,7 +156,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setFont           ( const FontPtr &value );
+     void setFont           ( const UIFontPtr &value );
      void setText           ( const std::string &value );
      void setAcceleratorModifiers( const UInt32 &value );
      void setAcceleratorKey ( const UInt32 &value );
@@ -203,7 +203,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFFontPtr           _sfFont;
+    SFUIFontPtr         _sfFont;
     SFString            _sfText;
     SFUInt32            _sfAcceleratorModifiers;
     SFUInt32            _sfAcceleratorKey;

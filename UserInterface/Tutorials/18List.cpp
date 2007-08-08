@@ -72,11 +72,11 @@ public:
 	{
 
 		beginEditCP(singleIntervalButton, ToggleButton::SelectedFieldMask);
-			singleIntervalButton->setSelected(FALSE);
+			singleIntervalButton->setSelected(false);
 		endEditCP(singleIntervalButton, ToggleButton::SelectedFieldMask);
 
 		beginEditCP(multipleIntervalButton, ToggleButton::SelectedFieldMask);
-			multipleIntervalButton->setSelected(FALSE);
+			multipleIntervalButton->setSelected(false);
 		endEditCP(multipleIntervalButton, ToggleButton::SelectedFieldMask);
 
 		SelectionModel.setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
@@ -95,11 +95,11 @@ public:
    virtual void buttonSelected(const ButtonSelectedEvent& e)
 	{
 		beginEditCP(singleButton, ToggleButton::SelectedFieldMask);
-			singleButton->setSelected(FALSE);
+			singleButton->setSelected(false);
 		endEditCP(singleButton, ToggleButton::SelectedFieldMask);
 
 		beginEditCP(multipleIntervalButton, ToggleButton::SelectedFieldMask);
-			multipleIntervalButton->setSelected(FALSE);
+			multipleIntervalButton->setSelected(false);
 		endEditCP(multipleIntervalButton, ToggleButton::SelectedFieldMask);
 
 		SelectionModel.setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
@@ -118,11 +118,11 @@ public:
    virtual void buttonSelected(const ButtonSelectedEvent& e)
 	{	
 		beginEditCP(singleButton, ToggleButton::SelectedFieldMask);
-			singleButton->setSelected(FALSE);
+			singleButton->setSelected(false);
 		endEditCP(singleButton, ToggleButton::SelectedFieldMask);
 
 		beginEditCP(singleIntervalButton, ToggleButton::SelectedFieldMask);
-			singleIntervalButton->setSelected(FALSE);
+			singleIntervalButton->setSelected(false);
 		endEditCP(singleIntervalButton, ToggleButton::SelectedFieldMask);
 
 		SelectionModel.setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);

@@ -14,10 +14,10 @@
 A UI MenuItem.
 	<Field
 		name="Font"
-		type="FontPtr"
+		type="UIFontPtr"
 		cardinality="single"
 		visibility="external"
-		header="Text/OSGFont.h"
+		header="Text/OSGUIFont.h"
 		access="public"
 	>
 	</Field>

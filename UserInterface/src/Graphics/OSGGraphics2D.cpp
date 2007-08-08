@@ -523,7 +523,7 @@ void Graphics2D::drawRaisedBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight,
 	}
 }
 
-void Graphics2D::drawText(const Pnt2s& Position, const std::string& Text, const FontPtr TheFont, const Color4f& Color, const Real32& Opacity) const
+void Graphics2D::drawText(const Pnt2s& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const
 {
    TextLayoutParam layoutParam;
    layoutParam.spacing = 1.1;
@@ -555,19 +555,7 @@ void Graphics2D::drawText(const Pnt2s& Position, const std::string& Text, const 
    glPopAttrib();
 }
 
-Vec2s Graphics2D::getTextBounds(const std::string& Text, const FontPtr TheFont) const
-{
-   TextLayoutParam layoutParam;
-   layoutParam.spacing = 1.1;
-   layoutParam.majorAlignment = TextLayoutParam::ALIGN_BEGIN;
-   layoutParam.minorAlignment = TextLayoutParam::ALIGN_BEGIN;
- 
-   TextLayoutResult layoutResult;
-   TheFont->layout(Text, layoutParam, layoutResult);
-   return Vec2s(layoutResult.textBounds.x()*TheFont->getSize(),layoutResult.textBounds.y()*TheFont->getSize());
-}
-
-void Graphics2D::drawCharacters( const TextLayoutResult& layoutResult, const FontPtr TheFont) const
+void Graphics2D::drawCharacters( const TextLayoutResult& layoutResult, const UIFontPtr TheFont) const
 {
     glBegin(GL_QUADS);
 

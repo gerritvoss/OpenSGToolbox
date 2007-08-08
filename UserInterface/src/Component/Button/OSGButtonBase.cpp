@@ -126,7 +126,7 @@ const OSG::BitVector ButtonBase::MTInfluenceMask =
 
 FieldDescription *ButtonBase::_desc[] = 
 {
-    new FieldDescription(SFFontPtr::getClassType(), 
+    new FieldDescription(SFUIFontPtr::getClassType(), 
                      "Font", 
                      FontFieldId, FontFieldMask,
                      false,

@@ -86,7 +86,7 @@ const OSG::BitVector ToolTipBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var FontPtr         ToolTipBase::_sfFont
+/*! \var UIFontPtr       ToolTipBase::_sfFont
     
 */
 /*! \var ComponentPtr    ToolTipBase::_sfTippedComponent
@@ -106,7 +106,7 @@ const OSG::BitVector ToolTipBase::MTInfluenceMask =
 
 FieldDescription *ToolTipBase::_desc[] = 
 {
-    new FieldDescription(SFFontPtr::getClassType(), 
+    new FieldDescription(SFUIFontPtr::getClassType(), 
                      "Font", 
                      FontFieldId, FontFieldMask,
                      false,

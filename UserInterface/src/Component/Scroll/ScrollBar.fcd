@@ -1,78 +1,83 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="Font"
-	parent="FieldContainer"
+	name="ScrollBar"
+	parent="Container"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
-	parentsystemcomponent="true"
+	parentsystemcomponent="false"
 	decoratable="false"
 	useLocalIncludes="true"
 >
-UI Font.
+A UI ScrollBar.
 	<Field
-		name="Family"
-		type="std::string"
-		cardinality="single"
-		visibility="external"
-		defaultValue="SANS"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="GlyphPixelSize"
+		name="Orientation"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="46"
 		access="public"
+		header="Util/OSGUIDefines.h"
+		defaultValue="VERTICAL_ALIGNMENT"
 	>
 	</Field>
 	<Field
-		name="Size"
+		name="UnitIncrement"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="12"
 		access="public"
-	>
-	</Field>
-	<Field
-		name="Gap"
-		type="UInt32"
-		cardinality="single"
-		visibility="external"
 		defaultValue="1"
-		access="public"
 	>
 	</Field>
 	<Field
-		name="TextureWidth"
+		name="BlockIncrement"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="0"
 		access="public"
+		defaultValue="2"
 	>
 	</Field>
 	<Field
-		name="Style"
-		type="UInt32"
+		name="MinButton"
+		type="ButtonPtr"
 		cardinality="single"
 		visibility="external"
-		defaultValue="TextFace::STYLE_PLAIN"
-		defaultHeader="OpenSG/OSGTextFace.h"
 		access="public"
+		header="Component/OSGButton.h"
+		defaultValue="NullFC"
 	>
 	</Field>
 	<Field
-		name="Texture"
-		type="TextureChunkPtr"
+		name="MaxButton"
+		type="ButtonPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
+		header="Component/OSGButton.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="ScrollBar"
+		type="UIDrawObjectCanvasPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/OSGUIDrawObjectCanvas.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="ScrollField"
+		type="UIDrawObjectCanvasPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/OSGUIDrawObjectCanvas.h"
+		defaultValue="NullFC"
 	>
 	</Field>
 </FieldContainer>

@@ -22,43 +22,43 @@ A UI ScrollPanel
 	>
 	</Field>
 	<Field
-		name="VerticalScrollbar"
-		type="ScrollbarPtr"
+		name="VerticalScrollBar"
+		type="ScrollBarPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Scroll/OSGScrollbar.h"
+		header="Component/Scroll/OSGScrollBar.h"
 		defaultValue="NullFC"
 	>
 	</Field>
 	<Field
-		name="HorizontalScrollbar"
-		type="ScrollbarPtr"
+		name="HorizontalScrollBar"
+		type="ScrollBarPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Scroll/OSGScrollbar.h"
+		header="Component/Scroll/OSGScrollBar.h"
 		defaultValue="NullFC"
 	>
 	</Field>
 	<Field
-		name="VerticalScrollbarDisplayPolicy"
+		name="VerticalScrollBarDisplayPolicy"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
 		access="public"
 		defaultHeader="Component/Scroll/OSGScrollPanel.h"
-		defaultValue="ScrollPanel::SCROLLBAR_AS_NEEDED"
+		defaultValue="ScrollPanel::ScrollBar_AS_NEEDED"
 	>
 	</Field>
 	<Field
-		name="HorizontalScrollbarDisplayPolicy"
+		name="HorizontalScrollBarDisplayPolicy"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
 		access="public"
 		defaultHeader="Component/Scroll/OSGScrollPanel.h"
-		defaultValue="ScrollPanel::SCROLLBAR_AS_NEEDED"
+		defaultValue="ScrollPanel::ScrollBar_AS_NEEDED"
 	>
 	</Field>
 </FieldContainer>

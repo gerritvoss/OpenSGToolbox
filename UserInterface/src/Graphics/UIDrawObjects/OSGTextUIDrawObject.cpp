@@ -84,15 +84,10 @@ void TextUIDrawObject::draw(const GraphicsPtr Graphics) const
 
 void TextUIDrawObject::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 {
-   TextLayoutParam layoutParam;
-   layoutParam.spacing = 1.1;
-   layoutParam.majorAlignment = TextLayoutParam::ALIGN_BEGIN;
-   layoutParam.minorAlignment = TextLayoutParam::ALIGN_BEGIN;
- 
-   TextLayoutResult layoutResult;
-   getFont()->layout(getText(), layoutParam, layoutResult);
+   Pnt2s TextTopLeft, TextBottomRight;
+   getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
    TopLeft = getPosition();
-   BottomRight = getPosition()+Vec2s(layoutResult.textBounds.x()*getFont()->getSize(),layoutResult.textBounds.y()*getFont()->getSize());
+   BottomRight = TopLeft + (TextBottomRight - TextTopLeft);
 }
 
 /*-------------------------------------------------------------------------*\

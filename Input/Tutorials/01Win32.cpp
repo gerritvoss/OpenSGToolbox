@@ -166,7 +166,6 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
     
     WindowPtr MainWindow;
-    WindowPtr ;
     createWindow(WIN32Window::getClassType(),
                                         Pnt2s(50,50),
                                         Vec2s(250,250),

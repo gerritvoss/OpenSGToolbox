@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -86,7 +86,7 @@ const OSG::BitVector MenuItemBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var FontPtr         MenuItemBase::_sfFont
+/*! \var UIFontPtr       MenuItemBase::_sfFont
     
 */
 /*! \var std::string     MenuItemBase::_sfText
@@ -106,7 +106,7 @@ const OSG::BitVector MenuItemBase::MTInfluenceMask =
 
 FieldDescription *MenuItemBase::_desc[] = 
 {
-    new FieldDescription(SFFontPtr::getClassType(), 
+    new FieldDescription(SFUIFontPtr::getClassType(), 
                      "Font", 
                      FontFieldId, FontFieldMask,
                      false,

@@ -61,7 +61,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanel : public ScrollPanelBase
 
     /*==========================  PUBLIC  =================================*/
   public:
-      enum ScrollbarDisplayPolicy{SCROLLBAR_AS_NEEDED=0,SCROLLBAR_AS_ALWAYS,SCROLLBAR_AS_NEVER};
+      enum ScrollBarDisplayPolicy{ScrollBar_AS_NEEDED=0,ScrollBar_AS_ALWAYS,ScrollBar_AS_NEVER};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

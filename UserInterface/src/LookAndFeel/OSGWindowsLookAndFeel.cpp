@@ -48,7 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGWindowsLookAndFeel.h"
-#include "Text/OSGFont.h"
+#include "Text/OSGUIFont.h"
 #include "Border/OSGBorders.h"
 #include "Background/OSGUIBackgrounds.h"
 #include "Component/Button/OSGButton.h"
@@ -119,7 +119,7 @@ void WindowsLookAndFeel::init(void)
 
 
 	//Windows Font
-	FontPtr WindowsFont = Font::create();
+	UIFontPtr WindowsFont = UIFont::create();
 	beginEditCP(WindowsFont);
 		WindowsFont->setFamily("Tahoma");
 		WindowsFont->setGap(1);

@@ -68,10 +68,10 @@
 #include "Component/Container/OSGContainer.h" // Parent
 
 #include <OpenSG/OSGVec2sFields.h> // ScrollPosition type
-#include "Component/Scroll/OSGScrollbar.h" // VerticalScrollbar type
-#include "Component/Scroll/OSGScrollbar.h" // HorizontalScrollbar type
-#include <OpenSG/OSGUInt32Fields.h> // VerticalScrollbarDisplayPolicy type
-#include <OpenSG/OSGUInt32Fields.h> // HorizontalScrollbarDisplayPolicy type
+#include "Component/Scroll/OSGScrollBar.h" // VerticalScrollBar type
+#include "Component/Scroll/OSGScrollBar.h" // HorizontalScrollBar type
+#include <OpenSG/OSGUInt32Fields.h> // VerticalScrollBarDisplayPolicy type
+#include <OpenSG/OSGUInt32Fields.h> // HorizontalScrollBarDisplayPolicy type
 
 #include "OSGScrollPanelFields.h"
 
@@ -96,18 +96,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     enum
     {
         ScrollPositionFieldId                   = Inherited::NextFieldId,
-        VerticalScrollbarFieldId                = ScrollPositionFieldId                   + 1,
-        HorizontalScrollbarFieldId              = VerticalScrollbarFieldId                + 1,
-        VerticalScrollbarDisplayPolicyFieldId   = HorizontalScrollbarFieldId              + 1,
-        HorizontalScrollbarDisplayPolicyFieldId = VerticalScrollbarDisplayPolicyFieldId   + 1,
-        NextFieldId                             = HorizontalScrollbarDisplayPolicyFieldId + 1
+        VerticalScrollBarFieldId                = ScrollPositionFieldId                   + 1,
+        HorizontalScrollBarFieldId              = VerticalScrollBarFieldId                + 1,
+        VerticalScrollBarDisplayPolicyFieldId   = HorizontalScrollBarFieldId              + 1,
+        HorizontalScrollBarDisplayPolicyFieldId = VerticalScrollBarDisplayPolicyFieldId   + 1,
+        NextFieldId                             = HorizontalScrollBarDisplayPolicyFieldId + 1
     };
 
     static const OSG::BitVector ScrollPositionFieldMask;
-    static const OSG::BitVector VerticalScrollbarFieldMask;
-    static const OSG::BitVector HorizontalScrollbarFieldMask;
-    static const OSG::BitVector VerticalScrollbarDisplayPolicyFieldMask;
-    static const OSG::BitVector HorizontalScrollbarDisplayPolicyFieldMask;
+    static const OSG::BitVector VerticalScrollBarFieldMask;
+    static const OSG::BitVector HorizontalScrollBarFieldMask;
+    static const OSG::BitVector VerticalScrollBarDisplayPolicyFieldMask;
+    static const OSG::BitVector HorizontalScrollBarDisplayPolicyFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -135,21 +135,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     /*! \{                                                                 */
 
            SFPnt2s             *getSFScrollPosition (void);
-           SFScrollbarPtr      *getSFVerticalScrollbar(void);
-           SFScrollbarPtr      *getSFHorizontalScrollbar(void);
-           SFUInt32            *getSFVerticalScrollbarDisplayPolicy(void);
-           SFUInt32            *getSFHorizontalScrollbarDisplayPolicy(void);
+           SFScrollBarPtr      *getSFVerticalScrollBar(void);
+           SFScrollBarPtr      *getSFHorizontalScrollBar(void);
+           SFUInt32            *getSFVerticalScrollBarDisplayPolicy(void);
+           SFUInt32            *getSFHorizontalScrollBarDisplayPolicy(void);
 
            Pnt2s               &getScrollPosition (void);
      const Pnt2s               &getScrollPosition (void) const;
-           ScrollbarPtr        &getVerticalScrollbar(void);
-     const ScrollbarPtr        &getVerticalScrollbar(void) const;
-           ScrollbarPtr        &getHorizontalScrollbar(void);
-     const ScrollbarPtr        &getHorizontalScrollbar(void) const;
-           UInt32              &getVerticalScrollbarDisplayPolicy(void);
-     const UInt32              &getVerticalScrollbarDisplayPolicy(void) const;
-           UInt32              &getHorizontalScrollbarDisplayPolicy(void);
-     const UInt32              &getHorizontalScrollbarDisplayPolicy(void) const;
+           ScrollBarPtr        &getVerticalScrollBar(void);
+     const ScrollBarPtr        &getVerticalScrollBar(void) const;
+           ScrollBarPtr        &getHorizontalScrollBar(void);
+     const ScrollBarPtr        &getHorizontalScrollBar(void) const;
+           UInt32              &getVerticalScrollBarDisplayPolicy(void);
+     const UInt32              &getVerticalScrollBarDisplayPolicy(void) const;
+           UInt32              &getHorizontalScrollBarDisplayPolicy(void);
+     const UInt32              &getHorizontalScrollBarDisplayPolicy(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -157,10 +157,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     /*! \{                                                                 */
 
      void setScrollPosition ( const Pnt2s &value );
-     void setVerticalScrollbar( const ScrollbarPtr &value );
-     void setHorizontalScrollbar( const ScrollbarPtr &value );
-     void setVerticalScrollbarDisplayPolicy( const UInt32 &value );
-     void setHorizontalScrollbarDisplayPolicy( const UInt32 &value );
+     void setVerticalScrollBar( const ScrollBarPtr &value );
+     void setHorizontalScrollBar( const ScrollBarPtr &value );
+     void setVerticalScrollBarDisplayPolicy( const UInt32 &value );
+     void setHorizontalScrollBarDisplayPolicy( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -204,10 +204,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     /*! \{                                                                 */
 
     SFPnt2s             _sfScrollPosition;
-    SFScrollbarPtr      _sfVerticalScrollbar;
-    SFScrollbarPtr      _sfHorizontalScrollbar;
-    SFUInt32            _sfVerticalScrollbarDisplayPolicy;
-    SFUInt32            _sfHorizontalScrollbarDisplayPolicy;
+    SFScrollBarPtr      _sfVerticalScrollBar;
+    SFScrollBarPtr      _sfHorizontalScrollBar;
+    SFUInt32            _sfVerticalScrollBarDisplayPolicy;
+    SFUInt32            _sfHorizontalScrollBarDisplayPolicy;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

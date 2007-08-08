@@ -40,7 +40,7 @@
 #include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGFont.h>
+#include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGCheckboxButton.h>
 #include <OpenSG/UserInterface/OSGRadioButton.h>
 
@@ -107,10 +107,10 @@ int main(int argc, char **argv)
 	// Create a Checkbox Button component
 	CheckboxButtonPtr checkboxButton = osg::CheckboxButton::create();
 	// Create a simple Font to be used with the Button
-	FontPtr sampleFont = osg::Font::create();
-	beginEditCP(sampleFont, Font::SizeFieldMask);
+	UIFontPtr sampleFont = osg::UIFont::create();
+	beginEditCP(sampleFont, UIFont::SizeFieldMask);
 		sampleFont->setSize(12);
-	endEditCP(sampleFont, Font::SizeFieldMask);
+	endEditCP(sampleFont, UIFont::SizeFieldMask);
 
 	/******************************************************
 

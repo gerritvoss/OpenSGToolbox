@@ -82,8 +82,10 @@ void ToolTip::drawInternal(const GraphicsPtr TheGraphics) const
    Pnt2s TopLeft, BottomRight;
    getInsideBorderBounds(TopLeft, BottomRight);
 
+   Pnt2s TextTopLeft, TextBottomRight;
+   getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
    TheGraphics->drawText(
-       calculateAlignment(TopLeft, BottomRight-TopLeft, TheGraphics->getTextBounds(getText(), getFont()), getVerticalAlignment(), getHorizontalAlignment())
+       calculateAlignment(TopLeft, BottomRight-TopLeft, (TextBottomRight-TextTopLeft), getVerticalAlignment(), getHorizontalAlignment())
        , getText(), getFont(), getForegroundColor(), getOpacity());
 }
 

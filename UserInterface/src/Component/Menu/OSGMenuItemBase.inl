@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -98,7 +98,7 @@ MenuItemPtr MenuItemBase::createEmpty(void)
 
 //! Get the MenuItem::_sfFont field.
 inline
-SFFontPtr *MenuItemBase::getSFFont(void)
+SFUIFontPtr *MenuItemBase::getSFFont(void)
 {
     return &_sfFont;
 }
@@ -134,21 +134,21 @@ SFBool *MenuItemBase::getSFArmed(void)
 
 //! Get the value of the MenuItem::_sfFont field.
 inline
-FontPtr &MenuItemBase::getFont(void)
+UIFontPtr &MenuItemBase::getFont(void)
 {
     return _sfFont.getValue();
 }
 
 //! Get the value of the MenuItem::_sfFont field.
 inline
-const FontPtr &MenuItemBase::getFont(void) const
+const UIFontPtr &MenuItemBase::getFont(void) const
 {
     return _sfFont.getValue();
 }
 
 //! Set the value of the MenuItem::_sfFont field.
 inline
-void MenuItemBase::setFont(const FontPtr &value)
+void MenuItemBase::setFont(const UIFontPtr &value)
 {
     _sfFont.setValue(value);
 }

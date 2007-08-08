@@ -131,7 +131,7 @@ void GLUTWindowEventProducer::GLUTWindowEventProducerSpecialUpFunction(int key, 
 
 void GLUTWindowEventProducer::GLUTWindowEventProducerIdleFunction(void)
 {
-   _GLUTWindowToProducerMap[glutGetWindow()];
+   _GLUTWindowToProducerMap[glutGetWindow()]->glutIdle();
 }
 
 void GLUTWindowEventProducer::GLUTWindowEventProducerMenuStatusFunction(int status, int x, int y)
@@ -165,6 +165,53 @@ Pnt2s GLUTWindowEventProducer::getMousePosition(void) const
 {
 	//TODO:Implement
 	return Pnt2s(0,0);
+}
+
+void GLUTWindowEventProducer::glutIdle(void)
+{
+   //Updating
+   Time Now(getSystemTime());
+   Time ElapsedTime(Now - getLastUpdateTime());
+   if(ElapsedTime > 0.0 && ElapsedTime < 10.0)
+   {
+	   produceUpdate(ElapsedTime);
+   }
+   beginEditCP(GLUTWindowEventProducerPtr(this), LastUpdateTimeFieldMask);
+	   setLastUpdateTime(Now);
+   endEditCP(GLUTWindowEventProducerPtr(this), LastUpdateTimeFieldMask);
+   _DisplayCallbackFunc();
+}
+
+void GLUTWindowEventProducer::glutMouse(Int32 Button, Int32 State, Pnt2s MousePos)
+{
+   MouseEvent::MouseButton OSGButton;
+   switch(Button)
+   {
+   case  GLUT_LEFT_BUTTON:
+      OSGButton = MouseEvent::BUTTON1;
+      break;
+   case  GLUT_MIDDLE_BUTTON:
+      OSGButton = MouseEvent::BUTTON2;
+      break;
+   case   GLUT_RIGHT_BUTTON:
+      OSGButton = MouseEvent::BUTTON3;
+      break;
+   default:
+      break;
+   }
+
+   switch(State)
+   {
+   case GLUT_UP:
+      produceMouseReleased(OSGButton, MousePos);
+      //produceMouseClicked(OSGButton, MousePos);
+      break;
+   case GLUT_DOWN:
+      produceMousePressed(OSGButton, MousePos);
+      break;
+   default:
+      break;
+   }
 }
 
 UInt32 GLUTWindowEventProducer::getKeyModifiers(void) const
@@ -711,6 +758,7 @@ bool GLUTWindowEventProducer::attachWindow(WindowPtr Win)
       glutMotionFunc(GLUTWindowEventProducerMotionFunction);
       glutPassiveMotionFunc(GLUTWindowEventProducerPassiveMotionFunction);
       glutEntryFunc(GLUTWindowEventProducerEntryFunction);
+      glutIdleFunc(GLUTWindowEventProducerIdleFunction);
       
       return true;
    }

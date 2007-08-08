@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Scrollbar!
+ **     class ScrollBar!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &ScrollbarBase::getClassType(void)
+OSG::FieldContainerType &ScrollBarBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ScrollbarBase::getClassTypeId(void) 
+OSG::UInt32 ScrollBarBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-ScrollbarPtr ScrollbarBase::create(void) 
+ScrollBarPtr ScrollBarBase::create(void) 
 {
-    ScrollbarPtr fc; 
+    ScrollBarPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = ScrollbarPtr::dcast(
+        fc = ScrollBarPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ ScrollbarPtr ScrollbarBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-ScrollbarPtr ScrollbarBase::createEmpty(void) 
+ScrollBarPtr ScrollBarBase::createEmpty(void) 
 { 
-    ScrollbarPtr returnValue; 
+    ScrollBarPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,199 +96,199 @@ ScrollbarPtr ScrollbarBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Scrollbar::_sfOrientation field.
+//! Get the ScrollBar::_sfOrientation field.
 inline
-SFUInt32 *ScrollbarBase::getSFOrientation(void)
+SFUInt32 *ScrollBarBase::getSFOrientation(void)
 {
     return &_sfOrientation;
 }
 
-//! Get the Scrollbar::_sfUnitIncrement field.
+//! Get the ScrollBar::_sfUnitIncrement field.
 inline
-SFUInt32 *ScrollbarBase::getSFUnitIncrement(void)
+SFUInt32 *ScrollBarBase::getSFUnitIncrement(void)
 {
     return &_sfUnitIncrement;
 }
 
-//! Get the Scrollbar::_sfBlockIncrement field.
+//! Get the ScrollBar::_sfBlockIncrement field.
 inline
-SFUInt32 *ScrollbarBase::getSFBlockIncrement(void)
+SFUInt32 *ScrollBarBase::getSFBlockIncrement(void)
 {
     return &_sfBlockIncrement;
 }
 
-//! Get the Scrollbar::_sfMinButton field.
+//! Get the ScrollBar::_sfMinButton field.
 inline
-SFButtonPtr *ScrollbarBase::getSFMinButton(void)
+SFButtonPtr *ScrollBarBase::getSFMinButton(void)
 {
     return &_sfMinButton;
 }
 
-//! Get the Scrollbar::_sfMaxButton field.
+//! Get the ScrollBar::_sfMaxButton field.
 inline
-SFButtonPtr *ScrollbarBase::getSFMaxButton(void)
+SFButtonPtr *ScrollBarBase::getSFMaxButton(void)
 {
     return &_sfMaxButton;
 }
 
-//! Get the Scrollbar::_sfScrollbar field.
+//! Get the ScrollBar::_sfScrollBar field.
 inline
-SFUIDrawObjectCanvasPtr *ScrollbarBase::getSFScrollbar(void)
+SFUIDrawObjectCanvasPtr *ScrollBarBase::getSFScrollBar(void)
 {
-    return &_sfScrollbar;
+    return &_sfScrollBar;
 }
 
-//! Get the Scrollbar::_sfScrollField field.
+//! Get the ScrollBar::_sfScrollField field.
 inline
-SFUIDrawObjectCanvasPtr *ScrollbarBase::getSFScrollField(void)
+SFUIDrawObjectCanvasPtr *ScrollBarBase::getSFScrollField(void)
 {
     return &_sfScrollField;
 }
 
 
-//! Get the value of the Scrollbar::_sfOrientation field.
+//! Get the value of the ScrollBar::_sfOrientation field.
 inline
-UInt32 &ScrollbarBase::getOrientation(void)
+UInt32 &ScrollBarBase::getOrientation(void)
 {
     return _sfOrientation.getValue();
 }
 
-//! Get the value of the Scrollbar::_sfOrientation field.
+//! Get the value of the ScrollBar::_sfOrientation field.
 inline
-const UInt32 &ScrollbarBase::getOrientation(void) const
+const UInt32 &ScrollBarBase::getOrientation(void) const
 {
     return _sfOrientation.getValue();
 }
 
-//! Set the value of the Scrollbar::_sfOrientation field.
+//! Set the value of the ScrollBar::_sfOrientation field.
 inline
-void ScrollbarBase::setOrientation(const UInt32 &value)
+void ScrollBarBase::setOrientation(const UInt32 &value)
 {
     _sfOrientation.setValue(value);
 }
 
-//! Get the value of the Scrollbar::_sfUnitIncrement field.
+//! Get the value of the ScrollBar::_sfUnitIncrement field.
 inline
-UInt32 &ScrollbarBase::getUnitIncrement(void)
+UInt32 &ScrollBarBase::getUnitIncrement(void)
 {
     return _sfUnitIncrement.getValue();
 }
 
-//! Get the value of the Scrollbar::_sfUnitIncrement field.
+//! Get the value of the ScrollBar::_sfUnitIncrement field.
 inline
-const UInt32 &ScrollbarBase::getUnitIncrement(void) const
+const UInt32 &ScrollBarBase::getUnitIncrement(void) const
 {
     return _sfUnitIncrement.getValue();
 }
 
-//! Set the value of the Scrollbar::_sfUnitIncrement field.
+//! Set the value of the ScrollBar::_sfUnitIncrement field.
 inline
-void ScrollbarBase::setUnitIncrement(const UInt32 &value)
+void ScrollBarBase::setUnitIncrement(const UInt32 &value)
 {
     _sfUnitIncrement.setValue(value);
 }
 
-//! Get the value of the Scrollbar::_sfBlockIncrement field.
+//! Get the value of the ScrollBar::_sfBlockIncrement field.
 inline
-UInt32 &ScrollbarBase::getBlockIncrement(void)
+UInt32 &ScrollBarBase::getBlockIncrement(void)
 {
     return _sfBlockIncrement.getValue();
 }
 
-//! Get the value of the Scrollbar::_sfBlockIncrement field.
+//! Get the value of the ScrollBar::_sfBlockIncrement field.
 inline
-const UInt32 &ScrollbarBase::getBlockIncrement(void) const
+const UInt32 &ScrollBarBase::getBlockIncrement(void) const
 {
     return _sfBlockIncrement.getValue();
 }
 
-//! Set the value of the Scrollbar::_sfBlockIncrement field.
+//! Set the value of the ScrollBar::_sfBlockIncrement field.
 inline
-void ScrollbarBase::setBlockIncrement(const UInt32 &value)
+void ScrollBarBase::setBlockIncrement(const UInt32 &value)
 {
     _sfBlockIncrement.setValue(value);
 }
 
-//! Get the value of the Scrollbar::_sfMinButton field.
+//! Get the value of the ScrollBar::_sfMinButton field.
 inline
-ButtonPtr &ScrollbarBase::getMinButton(void)
+ButtonPtr &ScrollBarBase::getMinButton(void)
 {
     return _sfMinButton.getValue();
 }
 
-//! Get the value of the Scrollbar::_sfMinButton field.
+//! Get the value of the ScrollBar::_sfMinButton field.
 inline
-const ButtonPtr &ScrollbarBase::getMinButton(void) const
+const ButtonPtr &ScrollBarBase::getMinButton(void) const
 {
     return _sfMinButton.getValue();
 }
 
-//! Set the value of the Scrollbar::_sfMinButton field.
+//! Set the value of the ScrollBar::_sfMinButton field.
 inline
-void ScrollbarBase::setMinButton(const ButtonPtr &value)
+void ScrollBarBase::setMinButton(const ButtonPtr &value)
 {
     _sfMinButton.setValue(value);
 }
 
-//! Get the value of the Scrollbar::_sfMaxButton field.
+//! Get the value of the ScrollBar::_sfMaxButton field.
 inline
-ButtonPtr &ScrollbarBase::getMaxButton(void)
+ButtonPtr &ScrollBarBase::getMaxButton(void)
 {
     return _sfMaxButton.getValue();
 }
 
-//! Get the value of the Scrollbar::_sfMaxButton field.
+//! Get the value of the ScrollBar::_sfMaxButton field.
 inline
-const ButtonPtr &ScrollbarBase::getMaxButton(void) const
+const ButtonPtr &ScrollBarBase::getMaxButton(void) const
 {
     return _sfMaxButton.getValue();
 }
 
-//! Set the value of the Scrollbar::_sfMaxButton field.
+//! Set the value of the ScrollBar::_sfMaxButton field.
 inline
-void ScrollbarBase::setMaxButton(const ButtonPtr &value)
+void ScrollBarBase::setMaxButton(const ButtonPtr &value)
 {
     _sfMaxButton.setValue(value);
 }
 
-//! Get the value of the Scrollbar::_sfScrollbar field.
+//! Get the value of the ScrollBar::_sfScrollBar field.
 inline
-UIDrawObjectCanvasPtr &ScrollbarBase::getScrollbar(void)
+UIDrawObjectCanvasPtr &ScrollBarBase::getScrollBar(void)
 {
-    return _sfScrollbar.getValue();
+    return _sfScrollBar.getValue();
 }
 
-//! Get the value of the Scrollbar::_sfScrollbar field.
+//! Get the value of the ScrollBar::_sfScrollBar field.
 inline
-const UIDrawObjectCanvasPtr &ScrollbarBase::getScrollbar(void) const
+const UIDrawObjectCanvasPtr &ScrollBarBase::getScrollBar(void) const
 {
-    return _sfScrollbar.getValue();
+    return _sfScrollBar.getValue();
 }
 
-//! Set the value of the Scrollbar::_sfScrollbar field.
+//! Set the value of the ScrollBar::_sfScrollBar field.
 inline
-void ScrollbarBase::setScrollbar(const UIDrawObjectCanvasPtr &value)
+void ScrollBarBase::setScrollBar(const UIDrawObjectCanvasPtr &value)
 {
-    _sfScrollbar.setValue(value);
+    _sfScrollBar.setValue(value);
 }
 
-//! Get the value of the Scrollbar::_sfScrollField field.
+//! Get the value of the ScrollBar::_sfScrollField field.
 inline
-UIDrawObjectCanvasPtr &ScrollbarBase::getScrollField(void)
-{
-    return _sfScrollField.getValue();
-}
-
-//! Get the value of the Scrollbar::_sfScrollField field.
-inline
-const UIDrawObjectCanvasPtr &ScrollbarBase::getScrollField(void) const
+UIDrawObjectCanvasPtr &ScrollBarBase::getScrollField(void)
 {
     return _sfScrollField.getValue();
 }
 
-//! Set the value of the Scrollbar::_sfScrollField field.
+//! Get the value of the ScrollBar::_sfScrollField field.
 inline
-void ScrollbarBase::setScrollField(const UIDrawObjectCanvasPtr &value)
+const UIDrawObjectCanvasPtr &ScrollBarBase::getScrollField(void) const
+{
+    return _sfScrollField.getValue();
+}
+
+//! Set the value of the ScrollBar::_sfScrollField field.
+inline
+void ScrollBarBase::setScrollField(const UIDrawObjectCanvasPtr &value)
 {
     _sfScrollField.setValue(value);
 }
@@ -296,5 +296,5 @@ void ScrollbarBase::setScrollField(const UIDrawObjectCanvasPtr &value)
 
 OSG_END_NAMESPACE
 
-#define OSGSCROLLBARBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGScrollBarBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

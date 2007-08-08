@@ -87,6 +87,7 @@ class OSG_INPUTLIB_DLLMAPPING GLUTWindowEventProducer : public GLUTWindowEventPr
     void glutMotion(Pnt2s MousePos);
     void glutPassiveMotion(Pnt2s MousePos);
     void glutEntry(Int32 State);
+    void glutIdle(void);
 
     static KeyEvent::Key determineKey(UChar8 key);
     static KeyEvent::Key determineSpecialKey(UChar8 key);

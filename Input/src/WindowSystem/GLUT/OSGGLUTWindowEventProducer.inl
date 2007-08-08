@@ -81,39 +81,6 @@ void GLUTWindowEventProducer::glutSpecial(UChar8 key,Pnt2s MousePos)
 }
 
 inline
-void GLUTWindowEventProducer::glutMouse(Int32 Button, Int32 State, Pnt2s MousePos)
-{
-   MouseEvent::MouseButton OSGButton;
-   switch(Button)
-   {
-   case  GLUT_LEFT_BUTTON:
-      OSGButton = MouseEvent::BUTTON1;
-      break;
-   case  GLUT_MIDDLE_BUTTON:
-      OSGButton = MouseEvent::BUTTON2;
-      break;
-   case   GLUT_RIGHT_BUTTON:
-      OSGButton = MouseEvent::BUTTON3;
-      break;
-   default:
-      break;
-   }
-
-   switch(State)
-   {
-   case GLUT_UP:
-      produceMouseReleased(OSGButton, MousePos);
-      //produceMouseClicked(OSGButton, MousePos);
-      break;
-   case GLUT_DOWN:
-      produceMousePressed(OSGButton, MousePos);
-      break;
-   default:
-      break;
-   }
-}
-
-inline
 void GLUTWindowEventProducer::glutMotion(Pnt2s MousePos)
 {
 }

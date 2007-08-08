@@ -122,12 +122,12 @@ void TextArea::drawInternal(const GraphicsPtr TheGraphics) const
 			std::string drawnText = _LineContents[i]._Contents;
 			Pnt2s offset = Pnt2s(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset);
 			TheGraphics->drawText(offset,drawnText.substr(0, StartSelection), getFont(), ForeColor, getOpacity());//draw before selection text
-			TheGraphics->drawRect(offset+Vec2s(TheGraphics->getTextBounds(drawnText.substr(0, StartSelection), getFont()).x(), 0), //draw selection rect
-				TheGraphics->getTextBounds(drawnText.substr(0, EndSelection), getFont())+Vec2s(offset),
+			TheGraphics->drawRect(offset+Vec2s(getFont()->getBounds(drawnText.substr(0, StartSelection)).x(), 0), //draw selection rect
+				getFont()->getBounds(drawnText.substr(0, EndSelection))+Vec2s(offset),
 				getSelectionBoxColor(), getOpacity());
-			TheGraphics->drawText(offset+Vec2s(TheGraphics->getTextBounds(drawnText.substr(0, StartSelection), getFont()).x(), 0), //draw selected text
+			TheGraphics->drawText(offset+Vec2s(getFont()->getBounds(drawnText.substr(0, StartSelection)).x(), 0), //draw selected text
 				drawnText.substr(StartSelection, EndSelection-StartSelection), getFont(), getSelectionTextColor(), getOpacity());
-			TheGraphics->drawText(offset+Vec2s(TheGraphics->getTextBounds(drawnText.substr(0, EndSelection), getFont()).x(), 0), //draw after selection text
+			TheGraphics->drawText(offset+Vec2s(getFont()->getBounds(drawnText.substr(0, EndSelection)).x(), 0), //draw after selection text
 				drawnText.substr(EndSelection, drawnText.size()-EndSelection), getFont(), ForeColor, getOpacity());
 		}
 

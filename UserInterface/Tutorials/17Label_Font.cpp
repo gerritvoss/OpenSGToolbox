@@ -35,7 +35,7 @@
 
 // Include Label and Font headerfiles
 #include <OpenSG/UserInterface/OSGLabel.h>
-#include <OpenSG/UserInterface/OSGFont.h>
+#include <OpenSG/UserInterface/OSGUIFont.h>
 
 
 // Activate the OpenSG namespace
@@ -129,7 +129,7 @@ int main(int argc, char **argv)
 
 
 	******************************************************/
-	FontPtr labelFont = Font::create();
+	UIFontPtr labelFont = UIFont::create();
 	beginEditCP(labelFont);
 		// Determines Font Family (as determined above)	Note:
 		// a default setting is included if the Font 

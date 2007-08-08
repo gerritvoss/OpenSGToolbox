@@ -85,12 +85,16 @@ void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
 	Int32 yAdj = 0;
 	getInsideBorderBounds(TopLeft, BottomRight);
 
+   Pnt2s TextTopLeft, TextBottomRight;
+   getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+   Vec2s TextBounds( TextBottomRight - TextTopLeft);
+   
    if(getActive()){
 	   if(getSelected()){
 		   getActiveSelectedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
 
-		   if(TheGraphics->getTextBounds(getText(), getFont()).x()>0){
-			totalWidth =	3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
+		   if(TextBounds.x()>0){
+			totalWidth =	3*drawObjectSize.x()+TextBounds.x();
 		   }
 		   else{
 			   totalWidth= drawObjectSize.x();
@@ -103,8 +107,8 @@ void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
 	   else
 	   {
 		   getActiveDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-		   if(TheGraphics->getTextBounds(getText(), getFont()).x()>0){
-			totalWidth =	3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
+		   if(TextBounds.x()>0){
+			totalWidth =	3*drawObjectSize.x()+TextBounds.x();
 		   }
 		   else{
 			   totalWidth= drawObjectSize.x();
@@ -116,8 +120,8 @@ void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
    }
    else if(getSelected()){
 	   getSelectedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-	   if(TheGraphics->getTextBounds(getText(), getFont()).x()>0){
-			totalWidth =	3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
+	   if(TextBounds.x()>0){
+			totalWidth =	3*drawObjectSize.x()+TextBounds.x();
 	   }
 	   else{
 		   totalWidth= drawObjectSize.x();
@@ -128,8 +132,8 @@ void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
   }
    else{
 	   getDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-	   if(TheGraphics->getTextBounds(getText(), getFont()).x()>0){
-			totalWidth =	3*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
+	   if(TextBounds.x()>0){
+			totalWidth =	3*drawObjectSize.x()+TextBounds.x();
 	   }
 	   else{
 		   totalWidth= drawObjectSize.x();
@@ -137,8 +141,8 @@ void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
    	    getDrawObject()->setPosition(TempPos);
 		getDrawObject()->draw(TheGraphics);
    }
-   if(drawObjectSize.y()> TheGraphics->getTextBounds(getText(), getFont()).y())
-	   yAdj = (drawObjectSize.y()-TheGraphics->getTextBounds(getText(), getFont()).y())/2.0;
+   if(drawObjectSize.y()> TextBounds.y())
+	   yAdj = (drawObjectSize.y()-TextBounds.y())/2.0;
    TheGraphics->drawText(Pnt2s(TempPos.x()+drawObjectSize.x()+5, TempPos.y()+yAdj),   getText(), getFont(), getForegroundColor(), getOpacity());
 
 }

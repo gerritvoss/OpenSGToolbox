@@ -67,7 +67,7 @@
 
 #include "Component/OSGComponent.h" // Parent
 
-#include "Text/OSGFont.h" // Font type
+#include "Text/OSGUIFont.h" // Font type
 #include <OpenSG/OSGStringFields.h> // Text type
 #include <OpenSG/OSGBoolFields.h> // Active type
 #include "Border/OSGBorder.h" // ActiveBorder type
@@ -143,7 +143,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFFontPtr           *getSFFont           (void);
+           SFUIFontPtr           *getSFFont           (void);
            SFString            *getSFText           (void);
            SFBool              *getSFActive         (void);
            SFBorderPtr         *getSFActiveBorder   (void);
@@ -152,8 +152,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
            SFUInt32            *getSFVerticalAlignment(void);
            SFUInt32            *getSFHorizontalAlignment(void);
 
-           FontPtr             &getFont           (void);
-     const FontPtr             &getFont           (void) const;
+           UIFontPtr             &getFont           (void);
+     const UIFontPtr             &getFont           (void) const;
            std::string         &getText           (void);
      const std::string         &getText           (void) const;
            bool                &getActive         (void);
@@ -174,7 +174,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setFont           ( const FontPtr &value );
+     void setFont           ( const UIFontPtr &value );
      void setText           ( const std::string &value );
      void setActive         ( const bool &value );
      void setActiveBorder   ( const BorderPtr &value );
@@ -224,7 +224,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFFontPtr           _sfFont;
+    SFUIFontPtr           _sfFont;
     SFString            _sfText;
     SFBool              _sfActive;
     SFBorderPtr         _sfActiveBorder;

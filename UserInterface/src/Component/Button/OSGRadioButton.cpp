@@ -85,11 +85,15 @@ void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
 	Real32 yAdj = 0;
 	getInsideBorderBounds(TopLeft, BottomRight);
 
+   Pnt2s TextTopLeft, TextBottomRight;
+   getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+   Vec2s TextBounds( TextBottomRight - TextTopLeft);
+   
    if(getActive()){
 	   if(getSelected()){
 		   getActiveSelectedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-		   if(TheGraphics->getTextBounds(getText(), getFont()).x()>0){
-			totalWidth =	5*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
+		   if(TextBounds.x()>0){
+			totalWidth =	5*drawObjectSize.x()+TextBounds.x();
 		   }
 		   else{
 			   totalWidth= drawObjectSize.x();
@@ -102,8 +106,8 @@ void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
 	   else
 	   {
 		   getActiveDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-		   if(TheGraphics->getTextBounds(getText(), getFont()).x()>0){
-			totalWidth =	5*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
+		   if(TextBounds.x()>0){
+			totalWidth =	5*drawObjectSize.x()+TextBounds.x();
 		   }
 		   else{
 			   totalWidth= drawObjectSize.x();
@@ -115,8 +119,8 @@ void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
    }
    else if(getSelected()){
 	   getSelectedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-   	   if(TheGraphics->getTextBounds(getText(), getFont()).x()>0){
-		totalWidth =	5*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
+   	   if(TextBounds.x()>0){
+		totalWidth =	5*drawObjectSize.x()+TextBounds.x();
 	   }
 	   else{
 		   totalWidth= drawObjectSize.x();
@@ -128,8 +132,8 @@ void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
   }
    else{
 		getDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-	   if(TheGraphics->getTextBounds(getText(), getFont()).x()>0){
-		totalWidth =	5*drawObjectSize.x()+TheGraphics->getTextBounds(getText(), getFont()).x();
+	   if(TextBounds.x()>0){
+		totalWidth =	5*drawObjectSize.x()+TextBounds.x();
 	   }
 	   else{
 		   totalWidth= drawObjectSize.x();

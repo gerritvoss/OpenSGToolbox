@@ -67,7 +67,7 @@
 
 #include "Component/OSGComponent.h" // Parent
 
-#include "Text/OSGFont.h" // Font type
+#include "Text/OSGUIFont.h" // Font type
 #include "Component/OSGComponentFields.h" // TippedComponent type
 #include <OpenSG/OSGStringFields.h> // Text type
 #include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
@@ -134,14 +134,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFFontPtr           *getSFFont           (void);
+           SFUIFontPtr         *getSFFont           (void);
            SFComponentPtr      *getSFTippedComponent(void);
            SFString            *getSFText           (void);
            SFReal32            *getSFVerticalAlignment(void);
            SFReal32            *getSFHorizontalAlignment(void);
 
-           FontPtr             &getFont           (void);
-     const FontPtr             &getFont           (void) const;
+           UIFontPtr           &getFont           (void);
+     const UIFontPtr           &getFont           (void) const;
            ComponentPtr        &getTippedComponent(void);
      const ComponentPtr        &getTippedComponent(void) const;
            std::string         &getText           (void);
@@ -156,7 +156,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setFont           ( const FontPtr &value );
+     void setFont           ( const UIFontPtr &value );
      void setTippedComponent( const ComponentPtr &value );
      void setText           ( const std::string &value );
      void setVerticalAlignment( const Real32 &value );
@@ -203,7 +203,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFFontPtr           _sfFont;
+    SFUIFontPtr         _sfFont;
     SFComponentPtr      _sfTippedComponent;
     SFString            _sfText;
     SFReal32            _sfVerticalAlignment;

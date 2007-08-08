@@ -148,12 +148,11 @@ const FramePtr &Frame::getParentFrame(void) const
 {
     if(Component::getParentFrame() == NullFC)
     {
-        return FramePtr(this);
+		  beginEditCP(FramePtr(this), Component::ParentFrameFieldMask);
+		  const_cast<Frame*>(this)->setParentFrame(FramePtr(this));
+		  endEditCP(FramePtr(this), Component::ParentFrameFieldMask);
     }
-    else
-    {
-        return Component::getParentFrame();
-    }
+    return Component::getParentFrame();
 }
 
 void Frame::drawInternal(const GraphicsPtr TheGraphics) const
