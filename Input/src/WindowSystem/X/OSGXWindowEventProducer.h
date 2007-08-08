@@ -73,9 +73,55 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
+    virtual void dump(      UInt32     uiIndent, 
+                      const BitVector  bvFlags ) const;
 
+    //Set the Window Position
+    virtual void setPosition(Pnt2s Pos);
+    //Set the Window Position
+    virtual Pnt2s getPosition(void) const;
+
+    //Set the Window size
+    virtual void setSize(Vec2us Size);
+
+    //Get the Window size
+    virtual Vec2s getSize(void) const;
+
+    //Focused
+    //Set the Window Focus
+    virtual void setFocused(bool Focused);
+
+    //Get the Window Focus
+    virtual bool getFocused(void) const;
+
+    //Visible / Iconify / Normal
+    //Set the Window Visible
+    virtual void setVisible(bool Visible);
+
+    //Get the Window Visible
+    virtual bool getVisible(void) const;
+
+    //Set the Window Iconify
+    virtual void setIconify(bool Iconify);
+
+    //Get the Window Iconify
+    virtual bool getIconify(void) const;
+
+    //Fullscreen
+    virtual void setFullscreen(bool Fullscreen);
+
+    //Get the Window Fullscreen
+    virtual bool getFullscreen(void) const;
+    
+	 virtual UInt32 getKeyModifiers(void) const;
+    
+	 virtual Pnt2s getMousePosition(void) const;
+    
+	 virtual std::string getClipboard(void) const;
+
+	 virtual void putClipboard(const std::string Value);
+    
+    void handleEvents(void);
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -96,6 +142,7 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
 
     virtual ~XWindowEventProducer(void); 
 
+	 virtual void setCursor(void);
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/

@@ -49,6 +49,7 @@
 
 #include "OSGXWindowEventProducer.h"
 
+#include <OpenSG/OSGXWindow.h>
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -76,10 +77,184 @@ void XWindowEventProducer::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void XWindowEventProducer::setPosition(Pnt2s Pos)
+{
+    //TODO:Implement
+}
+
+Pnt2s XWindowEventProducer::getPosition(void) const
+{
+   //TODO:Implement
+   return Pnt2s(0,0);
+}
+
+void XWindowEventProducer::setSize(Vec2us Size)
+{
+   //TODO:Implement
+}
+
+Vec2s XWindowEventProducer::getSize(void) const
+{
+   //TODO:Implement
+   return Vec2s(0,0);
+}
+
+void XWindowEventProducer::setFocused(bool Focused)
+{
+   //TODO:Implement
+}
+
+bool XWindowEventProducer::getFocused(void) const
+{
+   //TODO:Implement
+   return false;
+}
+
+void XWindowEventProducer::setVisible(bool Visible)
+{
+   //TODO:Implement
+}
+
+bool XWindowEventProducer::getVisible(void) const
+{
+   //TODO:Implement
+   return false;
+}
+
+void XWindowEventProducer::setIconify(bool Iconify)
+{
+   //TODO:Implement
+}
+
+bool XWindowEventProducer::getIconify(void) const
+{
+   //TODO:Implement
+   return false;
+}
+
+void XWindowEventProducer::setFullscreen(bool Fullscreen)
+{
+   //TODO:Implement
+}
+
+bool XWindowEventProducer::getFullscreen(void) const
+{
+   //TODO:Implement
+   return false;
+}
+
+UInt32 XWindowEventProducer::getKeyModifiers(void) const
+{
+   //TODO:Implement
+   return 0;
+}
+
+Pnt2s XWindowEventProducer::getMousePosition(void) const
+{
+   //TODO:Implement
+   return Pnt2s(0,0);
+}
+
+std::string XWindowEventProducer::getClipboard(void) const
+{
+   //TODO:Implement
+   return std::string("");
+}
+
+void XWindowEventProducer::putClipboard(const std::string Value)
+{
+   //TODO:Implement
+}
+
+void XWindowEventProducer::handleEvents(void)
+{
+   XEvent event;
+   do
+   {
+      XNextEvent(XWindow::Ptr::dcast(getWindow())->getDisplay(), &event);
+      switch (event.type) 
+      {
+         case KeyPress:
+            break;
+
+         case ButtonPress:
+            {
+               MouseEvent::MouseButton OSGButton;
+               switch(event.xbutton.button)
+               {
+               case  1:
+                  OSGButton = MouseEvent::BUTTON1;
+                  break;
+               case  2:
+                  OSGButton = MouseEvent::BUTTON2;
+                  break;
+               case   3:
+                  OSGButton = MouseEvent::BUTTON3;
+                  break;
+               case   4:
+                  OSGButton = MouseEvent::BUTTON4;
+                  break;
+               case   5:
+                  OSGButton = MouseEvent::BUTTON5;
+                  break;
+               default:
+                  break;
+               }
+               produceMousePressed(OSGButton, Pnt2s(event.xbutton.x, event.xbutton.y));
+               break;
+            }
+
+         case ButtonRelease:
+            {
+                  MouseEvent::MouseButton OSGButton;
+                  switch(event.xbutton.button)
+                  {
+                  case  1:
+                     OSGButton = MouseEvent::BUTTON1;
+                     break;
+                  case  2:
+                     OSGButton = MouseEvent::BUTTON2;
+                     break;
+                  case   3:
+                     OSGButton = MouseEvent::BUTTON3;
+                     break;
+                  case   4:
+                     OSGButton = MouseEvent::BUTTON4;
+                     break;
+                  case   5:
+                     OSGButton = MouseEvent::BUTTON5;
+                     break;
+                  default:
+                     break;
+                  }
+                  produceMouseReleased(OSGButton, Pnt2s(event.xbutton.x, event.xbutton.y));
+                  break;
+            }
+         case ConfigureNotify:
+            if ( ! getWindow()->isResizePending() )
+            {
+               getWindow()->resize( event.xconfigure.width,
+                            event.xconfigure.height );
+               _ReshapeCallbackFunc(Vec2s(event.xconfigure.width, event.xconfigure.height));
+               _DisplayCallbackFunc();
+            }
+            break;
+         case Expose:
+            _DisplayCallbackFunc();
+            break;
+      }
+   }  
+   while ( XPending(XWindow::Ptr::dcast(getWindow())->getDisplay()) );
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void XWindowEventProducer::setCursor(void)
+{
+   //TODO:Implement
+}
 /*----------------------- constructors & destructors ----------------------*/
 
 XWindowEventProducer::XWindowEventProducer(void) :

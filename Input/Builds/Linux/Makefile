@@ -22,6 +22,8 @@ OBJECTS = OSGEventDispatchThread.o \
 	OSGGLUTWindowEventProducerBase.o \
 	OSGWin32WindowEventProducer.o \
 	OSGWin32WindowEventProducerBase.o \
+	OSGXWindowEventProducer.o \
+	OSGXWindowEventProducerBase.o \
 	OSGMouseWheelEventProducer.o \
 	OSGMouseMotionEventProducer.o \
 	OSGMouseEventProducer.o \
