@@ -2443,31 +2443,31 @@
 				Name="Text"
 				>
 				<File
-					RelativePath="..\..\src\Text\OSGFont.cpp"
+					RelativePath="..\..\src\Text\OSGUIFont.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Text\OSGFont.h"
+					RelativePath="..\..\src\Text\OSGUIFont.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Text\OSGFont.inl"
+					RelativePath="..\..\src\Text\OSGUIFont.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Text\OSGFontBase.cpp"
+					RelativePath="..\..\src\Text\OSGUIFontBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Text\OSGFontBase.h"
+					RelativePath="..\..\src\Text\OSGUIFontBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Text\OSGFontBase.inl"
+					RelativePath="..\..\src\Text\OSGUIFontBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Text\OSGFontFields.h"
+					RelativePath="..\..\src\Text\OSGUIFontFields.h"
 					>
 				</File>
 			</Filter>

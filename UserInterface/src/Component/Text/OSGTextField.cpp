@@ -404,13 +404,15 @@ void TextField::focusLost(const FocusEvent& e)
 
 TextField::TextField(void) :
     Inherited(),
-		_CurrentCaretBlinkElps(0.0)
+		_CurrentCaretBlinkElps(0.0)//,
+		//_CaretUpdateListener(TextFieldPtr(this))
 {
 }
 
 TextField::TextField(const TextField &source) :
     Inherited(source),
-		_CurrentCaretBlinkElps(0.0)
+		_CurrentCaretBlinkElps(0.0)//,
+		//_CaretUpdateListener(TextFieldPtr(this))
 {
 }
 
