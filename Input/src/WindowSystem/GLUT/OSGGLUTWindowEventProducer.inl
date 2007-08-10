@@ -83,6 +83,7 @@ void GLUTWindowEventProducer::glutSpecial(UChar8 key,Pnt2s MousePos)
 inline
 void GLUTWindowEventProducer::glutMotion(Pnt2s MousePos)
 {
+    produceMouseDragged(MouseEvent::NO_BUTTON,MousePos);
 }
 
 inline

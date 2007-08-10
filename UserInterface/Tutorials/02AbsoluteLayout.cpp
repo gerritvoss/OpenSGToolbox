@@ -27,6 +27,7 @@
 
 //Input
 #include <OpenSG/Input/OSGWindowUtils.h>
+#include <OpenSG/Input/OSGWindowAdapter.h>
 
 //UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
@@ -47,11 +48,26 @@ OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
+bool ExitApp = false;
 
 // forward declaration so we can have the interesting stuff upfront
 int setupGLUT( int *argc, char *argv[] );
 void display(void);
 void reshape(Vec2s Size);
+
+class TutorialWindowListener : public WindowAdapter
+{
+public:
+    virtual void windowClosing(const WindowEvent& e)
+    {
+        ExitApp = true;
+    }
+
+    virtual void windowClosed(const WindowEvent& e)
+    {
+        ExitApp = true;
+    }
+};
 
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
@@ -60,16 +76,15 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowPtr MainWindow;
-    WindowEventProducerPtr TheWindowEventProducer;
-    createDefaultWindow(Pnt2s(50,50),
-                                        Vec2s(550,550),
-                                        "OpenSG 02AbsoluteLayout Window",
-                                        MainWindow,
-                                        TheWindowEventProducer);
+    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
     
     TheWindowEventProducer->setDisplayCallback(display);
     TheWindowEventProducer->setReshapeCallback(reshape);
+
+    //Add Window Listener
+    TutorialWindowListener TheTutorialWindowListener;
+    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
 
     // Make Torus Node (creates Torus in background of scene)
@@ -240,8 +255,17 @@ int main(int argc, char **argv)
     // show the whole scene
     mgr->showAll();
 
-    // main loop
-    openWindow(TheWindowEventProducer);
+    TheWindowEventProducer->openWindow(Pnt2s(50,50),
+                                        Vec2s(550,550),
+                                        "OpenSG 02AbsoluteLayout Window");
+
+    //Main Event Loop
+    while(!ExitApp)
+    {
+        TheWindowEventProducer->update();
+        TheWindowEventProducer->draw();
+    }
+    osgExit();
 
     return 0;
 }
@@ -258,53 +282,3 @@ void reshape(Vec2s Size)
 {
     mgr->resize(Size.x(), Size.y());
 }
-
-// react to mouse button presses
-/*void mouse(int button, int state, int x, int y)
-{
-    if (state)
-        mgr->mouseButtonRelease(button, x, y);
-    else
-        mgr->mouseButtonPress(button, x, y);
-        
-    glutPostRedisplay();
-}
-
-// react to mouse motions with pressed buttons
-void motion(int x, int y)
-{
-    mgr->mouseMove(x, y);
-    glutPostRedisplay();
-}
-
-// react to keys
-void keyboard(unsigned char k, int x, int y)
-{
-    switch(k)
-    {
-        case 27:        
-        {
-            OSG::osgExit();
-            exit(0);
-        }
-        break;
-    }
-}
-
-// setup the GLUT library which handles the windows for us
-int setupGLUT(int *argc, char *argv[])
-{
-    glutInit(argc, argv);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
-    
-    int winid = glutCreateWindow("OpenSG UserInterface Button");
-    
-    glutReshapeFunc(reshape);
-    glutDisplayFunc(display);
-    glutMouseFunc(mouse);
-    glutMotionFunc(motion);
-    glutKeyboardFunc(keyboard);
-    glutIdleFunc(idle);
-
-    return winid;
-}*/

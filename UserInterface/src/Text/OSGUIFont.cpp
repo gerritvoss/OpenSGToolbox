@@ -102,7 +102,7 @@ void UIFont::initText(void)
             getTexture()->setImage(image);
             getTexture()->setWrapS(GL_CLAMP);
             getTexture()->setWrapT(GL_CLAMP);
-            getTexture()->setMinFilter(GL_LINEAR_MIPMAP_LINEAR);
+            getTexture()->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
             getTexture()->setMagFilter(GL_LINEAR);
             getTexture()->setEnvMode(GL_MODULATE);
       }

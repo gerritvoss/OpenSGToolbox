@@ -48,6 +48,7 @@
 #include <map>
 
 #include "OSGGLUTWindowEventProducerBase.h"
+#include <OpenSG/OSGGLUTWindow.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -92,6 +93,7 @@ class OSG_INPUTLIB_DLLMAPPING GLUTWindowEventProducer : public GLUTWindowEventPr
     static KeyEvent::Key determineKey(UChar8 key);
     static KeyEvent::Key determineSpecialKey(UChar8 key);
 
+    static void WindowEventLoopThread(void* args);
     /*==========================  PUBLIC  =================================*/
   public:
 
@@ -111,7 +113,6 @@ class OSG_INPUTLIB_DLLMAPPING GLUTWindowEventProducer : public GLUTWindowEventPr
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    
     //Set the Window Position
     virtual void setPosition(Pnt2s Pos);
 
@@ -150,7 +151,7 @@ class OSG_INPUTLIB_DLLMAPPING GLUTWindowEventProducer : public GLUTWindowEventPr
     //Get the Window Fullscreen
     virtual bool getFullscreen(void) const;
     
-    virtual bool attachWindow(WindowPtr Win);
+    virtual bool attachWindow(void);
 
 	virtual UInt32 getKeyModifiers(void) const;
 	virtual Pnt2s getMousePosition(void) const;
@@ -159,6 +160,14 @@ class OSG_INPUTLIB_DLLMAPPING GLUTWindowEventProducer : public GLUTWindowEventPr
 
 	virtual void putClipboard(const std::string Value);
 
+    virtual void openWindow(const Pnt2s& ScreenPosition,
+                       const Vec2s& Size,
+                       const std::string& WindowName);
+    
+    virtual void closeWindow(void);
+    
+    virtual void draw(void);
+    virtual void update(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -181,6 +190,24 @@ class OSG_INPUTLIB_DLLMAPPING GLUTWindowEventProducer : public GLUTWindowEventPr
     /*! \}                                                                 */
     
 	virtual void setCursor(void);
+    virtual WindowPtr createWindow(void);
+    
+    struct WindowEventLoopThreadArguments
+    {
+        WindowEventLoopThreadArguments(const Pnt2s& ScreenPosition,
+                       const Vec2s& Size,
+                       const std::string& WindowName,
+                       GLUTWindowPtr TheWindow,
+                       GLUTWindowEventProducerPtr TheEventProducer,
+                       Barrier *syncBarrier);
+
+        Pnt2s _ScreenPosition;
+        Vec2s _Size;
+        std::string _WindowName;
+        GLUTWindowPtr _Window;
+        GLUTWindowEventProducerPtr _EventProducer;
+        Barrier *_SyncBarrier;
+    };
     /*==========================  PRIVATE  ================================*/
   private:
 

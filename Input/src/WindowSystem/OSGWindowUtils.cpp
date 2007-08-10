@@ -30,7 +30,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-#if defined(__linux)
+/*#if defined(__linux)
 int wait_for_map_notify(Display *, XEvent *event, char *arg)
 {
     return( event->type == MapNotify && event->xmap.window == (::Window)arg );
@@ -60,8 +60,6 @@ void createWindow(FieldContainerType WindowType,
 #elif defined(WIN32)
    if(WindowType == WIN32Window::getClassType())
    {
-    // Create Windows
-    ResultWindow = WIN32Window::create();
    }
 #elif defined(__linux)
    if(WindowType == XWindow::getClassType())
@@ -74,8 +72,6 @@ void createWindow(FieldContainerType WindowType,
 #ifdef OSG_WITH_GLUT
    else if(WindowType == GLUTWindow::getClassType())
    {
-	   WindowEventProducerFactory::the()->registerProducer(&GLUTWindow::getClassType(), &GLUTWindowEventProducer::getClassType());
-      ResultWindow = GLUTWindow::create();
    }
 #endif
    else
@@ -95,47 +91,6 @@ void createWindow(FieldContainerType WindowType,
    }
 
 #if defined(__APPLE__)
-#elif defined(WIN32)
-   if(WindowType == WIN32Window::getClassType())
-   {
-      WNDCLASS  wndClass;
-      HWND           hwnd;
-
-      // Win32 Init
-      memset(&wndClass, 0, sizeof(wndClass));
-      wndClass.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
-      wndClass.lpfnWndProc = Win32WindowEventProducer::staticWndProc;
-      wndClass.hInstance = GetModuleHandle(NULL);
-      // doesn't compile?!? wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-      wndClass.lpszClassName = WindowName.c_str();
-      if (!RegisterClass(&wndClass)) 
-      {
-         return;
-      }
-
-
-      // Create a Window
-      hwnd = CreateWindow( WindowName.c_str(), WindowName.c_str(),
-                     WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
-                     ScreenPosition.x(), 
-                     ScreenPosition.y(), 
-                     Size.x(), 
-                     Size.y(),
-                     NULL, 
-                     NULL, 
-                     GetModuleHandle(NULL), 
-                     0 );
-
-      //Attach Window
-      beginEditCP(WIN32Window::Ptr::dcast(ResultWindow), WIN32Window::HwndFieldMask);
-         WIN32Window::Ptr::dcast(ResultWindow)->setHwnd(hwnd);
-      endEditCP(WIN32Window::Ptr::dcast(ResultWindow), WIN32Window::HwndFieldMask);
-
-      ResultWindowEventProducer->attachWindow(ResultWindow);
-            
-      ResultWindow->init();
-      ResultWindow->deactivate();
-   }
 #elif defined(__linux)
     if(WindowType == XWindow::getClassType())
     {
@@ -215,24 +170,6 @@ void createWindow(FieldContainerType WindowType,
         
     }
 #endif
-#ifdef OSG_WITH_GLUT
-   else if(WindowType == GLUTWindow::getClassType())
-   {
-      int argc(1);
-      char **argv = new char*[1];
-      (*argv)= "Bla";
-      glutInit(&argc, argv);
-      glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
-       
-      Int32 winid = glutCreateWindow(WindowName.c_str());
-      glutPositionWindow(ScreenPosition.x(), ScreenPosition.y());
-      glutReshapeWindow(Size.x(), Size.y());
-
-      GLUTWindow::Ptr::dcast(ResultWindow)->setId(winid);
-      ResultWindowEventProducer->attachWindow(ResultWindow);
-      
-   }
-#endif
 }
 
 void createDefaultWindow(const Pnt2s& ScreenPosition,
@@ -248,24 +185,49 @@ void createDefaultWindow(const Pnt2s& ScreenPosition,
 #elif defined(__linux)
    createWindow(XWindow::getClassType(), ScreenPosition, Size, WindowName, ResultWindow, ResultWindowEventProducer);
 #endif
-}
+}*/
 
-void openWindow(WindowEventProducerPtr TheWindowEventProducer)
+WindowEventProducerPtr createDefaultWindowEventProducer(void)
 {
 #if defined(__APPLE__)
+    return NullFC;
 #elif defined(WIN32)
-	if(TheWindowEventProducer->getWindow()->getType() == WIN32Window::getClassType())
-	{
-		ShowWindow( WIN32Window::Ptr::dcast(TheWindowEventProducer->getWindow())->getHwnd(), SW_SHOWNORMAL );
-		SetActiveWindow( WIN32Window::Ptr::dcast(TheWindowEventProducer->getWindow())->getHwnd() );
-		
-        MSG           msg;
-		// main loop 
-		while ( GetMessage(&msg, NULL, 0, 0) )
-		{
-			DispatchMessage(&msg);
-		}
-	}
+    return Win32WindowEventProducer::create();
+#elif defined(__linux)
+    return XWindowEventProducer::create();
+#endif
+}
+
+WindowEventProducerPtr OSG_INPUTLIB_DLLMAPPING createWindowEventProducer(const FieldContainerType WindowType)
+{
+#if defined(__APPLE__)
+    if(WindowType == CarbonWindow::getClassType())
+    {
+        return CarbonWindowEventProducer::create();
+    }
+#elif defined(WIN32)
+    if(WindowType == WIN32Window::getClassType())
+    {
+        return Win32WindowEventProducer::create();
+    }
+#elif defined(__linux)
+    if(WindowType == XWindow::getClassType())
+    {
+        return XWindowEventProducer::create();
+    }
+#endif
+#if defined(OSG_WITH_GLUT)
+    else if(WindowType == GLUTWindow::getClassType())
+    {
+        return GLUTWindowEventProducer::create();
+    }
+#endif
+    return NullFC;
+}
+
+/*void openWindow(WindowEventProducerPtr TheWindowEventProducer)
+{
+#if defined(__APPLE__)
 #elif defined(__linux)
    if(TheWindowEventProducer->getWindow()->getType() == XWindow::getClassType())
    {
@@ -283,22 +245,6 @@ void openWindow(WindowEventProducerPtr TheWindowEventProducer)
         }
    }
 #endif
-
-#if defined OSG_WITH_GLUT
-   else if(TheWindowEventProducer->getWindow()->getType() == GLUTWindow::getClassType())
-   {
-      TheWindowEventProducer->getWindow()->init();
-
-      //Get the GLUT window ID
-      Int32 winid = GLUTWindow::Ptr::dcast(TheWindowEventProducer->getWindow())->getId();
-
-      //Set the current window to this one
-      glutSetWindow(winid);
-
-      // GLUT main loop
-      glutMainLoop();
-   }
-#endif
-}
+}*/
 
 OSG_END_NAMESPACE

@@ -7,8 +7,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01Win32", "01Win32.vcproj",
 	ProjectSection(ProjectDependencies) = postProject
 		{77623743-1948-4AC4-8227-7FF6072BD16F} = {77623743-1948-4AC4-8227-7FF6072BD16F}
 	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{77623743-1948-4AC4-8227-7FF6072BD16F} = {77623743-1948-4AC4-8227-7FF6072BD16F}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02GLUT", "02GLUT.vcproj", "{D3723E7B-717E-4E11-9548-77565177B477}"
+	ProjectSection(ProjectDependencies) = postProject
+		{77623743-1948-4AC4-8227-7FF6072BD16F} = {77623743-1948-4AC4-8227-7FF6072BD16F}
+	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
@@ -17,6 +23,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02GLUT", "02GLUT.vcproj", "
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03DefaultWindow", "03DefaultWindow.vcproj", "{D53A80EF-C636-4DC3-92FC-58852DF46F1A}"
 	ProjectSection(ProjectDependencies) = postProject
+		{77623743-1948-4AC4-8227-7FF6072BD16F} = {77623743-1948-4AC4-8227-7FF6072BD16F}
 	EndProjectSection
 EndProject
 Global

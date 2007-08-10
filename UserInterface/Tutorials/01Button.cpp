@@ -33,6 +33,8 @@
 //Input
 #include <OpenSG/Input/OSGWindowUtils.h>
 
+#include <OpenSG/Input/OSGWindowAdapter.h>
+
 //UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
@@ -52,6 +54,8 @@ OSG_USING_NAMESPACE
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 
+bool ExitApp = false;
+
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2s Size);
@@ -66,7 +70,7 @@ public:
    {
        if(e.getKey() == KeyEvent::KEY_ESCAPE)
        {
-           exit(0);
+           ExitApp = true;
        }
    }
 
@@ -78,6 +82,21 @@ public:
    {
    }
 };
+
+class TutorialWindowListener : public WindowAdapter
+{
+public:
+    virtual void windowClosing(const WindowEvent& e)
+    {
+        ExitApp = true;
+    }
+
+    virtual void windowClosed(const WindowEvent& e)
+    {
+        ExitApp = true;
+    }
+};
+
 // Create an ActionListener to display text
 // in the Console Window when the Button is
 // pressed
@@ -98,16 +117,15 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowPtr MainWindow;
-    WindowEventProducerPtr TheWindowEventProducer;
-    createDefaultWindow(Pnt2s(50,50),
-                                        Vec2s(550,550),
-                                        "OpenSG 01Button Window",
-                                        MainWindow,
-                                        TheWindowEventProducer);
+    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
     
     TheWindowEventProducer->setDisplayCallback(display);
     TheWindowEventProducer->setReshapeCallback(reshape);
+
+    //Add Window Listener
+    TutorialWindowListener TheTutorialWindowListener;
+    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
@@ -254,7 +272,16 @@ int main(int argc, char **argv)
     // show the whole scene
     mgr->showAll();
 
-    openWindow(TheWindowEventProducer);
+    TheWindowEventProducer->openWindow(Pnt2s(50,50),
+                                        Vec2s(550,550),
+                                        "OpenSG 01Button Window");
+
+    while(!ExitApp)
+    {
+        TheWindowEventProducer->update();
+        TheWindowEventProducer->draw();
+    }
+    osgExit();
 
     return 0;
 }

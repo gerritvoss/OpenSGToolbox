@@ -15,9 +15,6 @@
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
 
-// The WIN32-OpenSG connection class
-#include <OpenSG/OSGWIN32Window.h>
-
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
 #include <OpenSG/OSGNode.h>
@@ -40,6 +37,8 @@ SimpleSceneManager *mgr;
 
 WindowEventProducerPtr TheWindowEventProducer;
 
+bool ExitMainLoop = false;
+
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2s Size);
@@ -51,7 +50,20 @@ class TutorialMouseWheelListener : public MouseWheelListener
   
     virtual void mouseWheelMoved(const MouseWheelEvent& e)
     {
-       std::cout << "MouseWheel " << e.getScrollAmount() << std::endl;
+       std::cout << "Mouse Wheel Moved " << e.getScrollAmount() << std::endl;
+    }
+};
+
+class TutorialMouseMotionListener : public osg::MouseMotionListener
+{
+    virtual void mouseMoved(const MouseEvent& e)
+    {
+        std::cout << "Mouse Move: " << e.getLocation().x() << ", " << e.getLocation().y() << std::endl;
+    }
+
+    virtual void mouseDragged(const MouseEvent& e)
+    {
+        std::cout << "Mouse Drag Button " << e.getButton() << ": " << e.getLocation().x() << ", " << e.getLocation().y() << std::endl;    
     }
 };
 
@@ -62,23 +74,23 @@ class TutorialMouseListener : public osg::MouseListener
   
     virtual void mouseClicked(const MouseEvent& e)
     {
-       std::cout << "mouseClicked" << std::endl;
+        std::cout << "Button " << e.getButton() << " Clicked" << std::endl;
     }
     virtual void mouseEntered(const MouseEvent& e)
     {
-       std::cout << "mouseEntered" << std::endl;
+        std::cout << "Mouse Entered" << std::endl;
     }
     virtual void mouseExited(const MouseEvent& e)
     {
-       std::cout << "mouseExited" << std::endl;
+        std::cout << "Mouse Exited" << std::endl;
     }
     virtual void mousePressed(const MouseEvent& e)
     {
-       std::cout << "mousePressed" << std::endl;
+        std::cout << "Button " << e.getButton() << " Pressed" << std::endl;
     }
     virtual void mouseReleased(const MouseEvent& e)
     {
-       std::cout << "mouseReleased" << std::endl;
+        std::cout << "Button " << e.getButton() << " Released" << std::endl;
     }
 };
 
@@ -89,20 +101,53 @@ public:
 
    virtual void keyPressed(const KeyEvent& e)
     {
-       std::cout << e.getKeyChar() << std::endl;
-       switch(e.getKey()){
-         case KeyEvent::KEY_ESCAPE:
-            exit(0);
-            break;
-         default:
-            break;
-       }
+        std::cout << "Key: " << e.getKey() << " with char value: " << e.getKeyChar()<< " Pressed" << std::endl;
+        switch(e.getKey()){
+            case KeyEvent::KEY_ESCAPE:
+                TheWindowEventProducer->closeWindow();
+                break;
+            case KeyEvent::KEY_P:
+                TheWindowEventProducer->setPosition(Pnt2s(500,500));
+                break;
+            case KeyEvent::KEY_R:
+                TheWindowEventProducer->setSize(Vec2us(300,300));
+                break;
+            case KeyEvent::KEY_F:
+                TheWindowEventProducer->setFullscreen(true);
+                break;
+            case KeyEvent::KEY_G:
+                TheWindowEventProducer->setFullscreen(false);
+                break;
+            case KeyEvent::KEY_S:
+                TheWindowEventProducer->setVisible(true);
+                break;
+            case KeyEvent::KEY_H:
+                TheWindowEventProducer->setVisible(false);
+                break;
+            case KeyEvent::KEY_I:
+                TheWindowEventProducer->setIconify(true);
+                break;
+            case KeyEvent::KEY_D:
+                TheWindowEventProducer->setIconify(false);
+                break;
+                 
+            case KeyEvent::KEY_K:
+                TheWindowEventProducer->setFocused(true);
+                break;
+            case KeyEvent::KEY_L:
+                TheWindowEventProducer->setFocused(false);
+                break;
+            default:
+                break;
+        }
     }
-   virtual void keyReleased(const KeyEvent& e)
+    virtual void keyReleased(const KeyEvent& e)
     {
+        std::cout << "Key: " << e.getKey() << " with char value: " << e.getKeyChar() << " Released" << std::endl;
     }
-   virtual void keyTyped(const KeyEvent& e)
+    virtual void keyTyped(const KeyEvent& e)
     {
+        std::cout << "Key: " << e.getKey() << " with char value: " << e.getKeyChar() << " Typed" << std::endl;
     }
 };
 
@@ -113,48 +158,48 @@ class TutorialWindowListener : public WindowListener
   
     virtual void windowOpened(const WindowEvent& e)
     {
-       std::cout << "windowOpened" << std::endl;
+       std::cout << "Window Opened" << std::endl;
     }
 
     virtual void windowClosing(const WindowEvent& e)
     {
-       osgExit();
-       std::cout << "windowClosing" << std::endl;
+       std::cout << "Window Closing" << std::endl;
     }
 
     virtual void windowClosed(const WindowEvent& e)
     {
-       std::cout << "windowClosed" << std::endl;
+       std::cout << "Window Closed" << std::endl;
+       ExitMainLoop = true;
     }
 
     virtual void windowIconified(const WindowEvent& e)
     {
-       std::cout << "windowIconified" << std::endl;
+       std::cout << "Window Iconified" << std::endl;
     }
 
     virtual void windowDeiconified(const WindowEvent& e)
     {
-       std::cout << "windowDeiconified" << std::endl;
+       std::cout << "Window Deiconified" << std::endl;
     }
 
     virtual void windowActivated(const WindowEvent& e)
     {
-       std::cout << "windowActivated" << std::endl;
+       std::cout << "Window Activated" << std::endl;
     }
 
     virtual void windowDeactivated(const WindowEvent& e)
     {
-       std::cout << "windowDeactivated" << std::endl;
+       std::cout << "Window Deactivated" << std::endl;
     }
 
     virtual void windowEntered(const WindowEvent& e)
     {
-       std::cout << "windowEntered" << std::endl;
+       std::cout << "Window Entered" << std::endl;
     }
 
     virtual void windowExited(const WindowEvent& e)
     {
-       std::cout << "windowExited" << std::endl;
+       std::cout << "Window Exited" << std::endl;
     }
 
 };
@@ -165,25 +210,28 @@ int main(int argc, char **argv)
     // OSG init
     osgInit(argc,argv);
     
-    WindowPtr MainWindow;
-    WindowPtr ;
-    createDefaultWindow(Pnt2s(50,50),
-                        Vec2s(250,250),
-                        "Default Window",
-                        MainWindow,
-                        TheWindowEventProducer);
+    TheWindowEventProducer = createDefaultWindowEventProducer();
+    TheWindowEventProducer->initWindow();
     
     TheWindowEventProducer->setDisplayCallback(display);
     TheWindowEventProducer->setReshapeCallback(reshape);
 
     //Attach Mouse Listener
-    TheWindowEventProducer->addMouseListener(new TutorialMouseListener());
+    TutorialMouseListener TheTutorialMouseListener;
+    TheWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
     //Attach Mouse Wheel Listener
-    TheWindowEventProducer->addMouseWheelListener(new TutorialMouseWheelListener());
+    TutorialMouseWheelListener TheTutorialMouseWheelListener;
+    TheWindowEventProducer->addMouseWheelListener(&TheTutorialMouseWheelListener);
     //Attach Key Listener
-    TheWindowEventProducer->addKeyListener(new TutorialKeyListener());
+    TutorialKeyListener TheTutorialKeyListener;
+    TheWindowEventProducer->addKeyListener(&TheTutorialKeyListener);
     //Attach Window Listener
-    TheWindowEventProducer->addWindowListener(new TutorialWindowListener());
+    TutorialWindowListener TheTutorialWindowListener;
+    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    //Attach MouseMotion Listener
+    TutorialMouseMotionListener TheTutorialMouseMotionListener;
+    TheWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
+    
 
     // create the scene
     NodePtr scene = makeTorus(.5, 2, 16, 16);
@@ -192,14 +240,23 @@ int main(int argc, char **argv)
     mgr = new SimpleSceneManager;
 
     // tell the manager what to manage
-    mgr->setWindow(MainWindow );
+    mgr->setWindow(TheWindowEventProducer->getWindow() );
     mgr->setRoot  (scene);
 
     // show the whole scene
     mgr->showAll();
 
-    openWindow(TheWindowEventProducer);
+    TheWindowEventProducer->openWindow(Pnt2s(50,50),
+                        Vec2s(250,250),
+                        "Default Window");
 
+    while(!ExitMainLoop)
+    {
+        TheWindowEventProducer->update();
+        TheWindowEventProducer->draw();
+    }
+
+    osgExit();
     return 0;
 }
 
@@ -218,4 +275,5 @@ void reshape(Vec2s Size)
 {
     mgr->resize(Size.x(), Size.y());
 }
+
 

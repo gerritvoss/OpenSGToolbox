@@ -12,7 +12,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-void OSG_INPUTLIB_DLLMAPPING createWindow(const FieldContainerType WindowType, 
+/*void OSG_INPUTLIB_DLLMAPPING createWindow(const FieldContainerType WindowType, 
                        const Pnt2s& ScreenPosition,
                        const Vec2s& Size,
                        const std::string& WindowName,
@@ -23,9 +23,13 @@ void OSG_INPUTLIB_DLLMAPPING createDefaultWindow(const Pnt2s& ScreenPosition,
                        const Vec2s& Size,
                        const std::string& WindowName,
                        WindowPtr& ResultWindow,
-                       WindowEventProducerPtr& ResultWindowEventProducer);
+                       WindowEventProducerPtr& ResultWindowEventProducer);*/
 
-void OSG_INPUTLIB_DLLMAPPING openWindow(WindowEventProducerPtr TheWindowEventProducer);
+WindowEventProducerPtr OSG_INPUTLIB_DLLMAPPING createDefaultWindowEventProducer(void);
+
+WindowEventProducerPtr OSG_INPUTLIB_DLLMAPPING createWindowEventProducer(const FieldContainerType WindowType);
+
+//void OSG_INPUTLIB_DLLMAPPING openWindow(WindowEventProducerPtr TheWindowEventProducer);
 
 OSG_END_NAMESPACE
 

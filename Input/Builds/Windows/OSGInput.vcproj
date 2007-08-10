@@ -1,207 +1,145 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="OSGInput"
 	ProjectGUID="{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
 	RootNamespace="OSGAnimation"
-	Keyword="Win32Proj"
-	>
+	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
-			Name="Win32"
-		/>
+			Name="Win32"/>
 	</Platforms>
-	<ToolFiles>
-	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-				Description="Installing Includes"
-				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Input&#x0D;&#x0A;"
-				Outputs="include"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
+			CharacterSet="0">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="0"
 				AdditionalIncludeDirectories="&quot;$(OPENSG)\..\include&quot;;..\..\src"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0500;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEINPUTLIB"
-				StringPooling="true"
-				MinimalRebuild="true"
+				StringPooling="TRUE"
+				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				BufferSecurityCheck="false"
-				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="true"
+				BufferSecurityCheck="FALSE"
+				EnableFunctionLevelLinking="TRUE"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(OutDir)/"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"
 				DisableSpecificWarnings="4244;4251;4275;4290;4231;4267;4996"
-				ForcedIncludeFiles="WinSock2.h;windows.h"
-			/>
+				ForcedIncludeFiles="WinSock2.h;windows.h"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool"
+				Description="Installing Includes"
+				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Input
+"
+				Outputs="include"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGWindowGLUTD.lib OSGWindowWIN32D.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib User32.lib gdi32.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="&quot;$(OPENSG)&quot;"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="&quot;$(TargetDir)\$(ProjectName)D.pdb&quot;"
 				SubSystem="1"
 				ImportLibrary="&quot;$(TargetDir)\$(ProjectName)D.lib&quot;"
-				TargetMachine="1"
-			/>
+				TargetMachine="1"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCManifestTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCFxCopTool"
-			/>
+				Name="VCResourceCompilerTool"/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
+				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
+				Name="VCXMLDataGeneratorTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Input&#x0D;&#x0A;"
-				Outputs="include"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
+			CharacterSet="0">
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="&quot;$(OPENSG)\..\include&quot;;..\..\src"
 				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0500;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEINPUTLIB"
-				StringPooling="true"
-				MinimalRebuild="false"
+				StringPooling="TRUE"
+				MinimalRebuild="FALSE"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="false"
-				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="true"
+				BufferSecurityCheck="FALSE"
+				EnableFunctionLevelLinking="TRUE"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(IntDir)/"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="0"
 				DisableSpecificWarnings="4244;4251;4275;4290;4231;4267;4996"
-				ForcedIncludeFiles="WinSock2.h;windows.h"
-			/>
+				ForcedIncludeFiles="WinSock2.h;windows.h"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool"
+				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Input
+"
+				Outputs="include"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGWindowGLUT.lib OSGWindowWIN32.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib User32.lib gdi32.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="&quot;$(OPENSG)&quot;"
-				IgnoreAllDefaultLibraries="false"
-				GenerateDebugInformation="false"
+				IgnoreAllDefaultLibraries="FALSE"
+				GenerateDebugInformation="FALSE"
 				ProgramDatabaseFile=""
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				ImportLibrary="&quot;$(TargetDir)\$(ProjectName).lib&quot;"
-				TargetMachine="1"
-			/>
+				TargetMachine="1"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCManifestTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCFxCopTool"
-			/>
+				Name="VCResourceCompilerTool"/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
+				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
+				Name="VCXMLDataGeneratorTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -209,326 +147,260 @@
 	<Files>
 		<Filter
 			Name="Source Files"
-			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
-			>
+			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl">
 			<File
-				RelativePath="..\..\src\OSGInputDef.h"
-				>
+				RelativePath="..\..\src\OSGInputDef.h">
 			</File>
 			<File
-				RelativePath="..\..\src\OSGInputSettings.cpp"
-				>
+				RelativePath="..\..\src\OSGInputSettings.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\OSGInputSettings.h"
-				>
+				RelativePath="..\..\src\OSGInputSettings.h">
 			</File>
 			<File
-				RelativePath="..\..\src\OSGInputSettings.inl"
-				>
+				RelativePath="..\..\src\OSGInputSettings.inl">
 			</File>
 			<Filter
-				Name="Event"
-				>
+				Name="Event">
 				<File
-					RelativePath="..\..\src\Event\OSGEvent.h"
-					>
+					RelativePath="..\..\src\Event\OSGEvent.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGEvent.inl"
-					>
+					RelativePath="..\..\src\Event\OSGEvent.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGEventListener.h"
-					>
+					RelativePath="..\..\src\Event\OSGEventListener.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGEventProducer.h"
-					>
+					RelativePath="..\..\src\Event\OSGEventProducer.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGEventProducer.inl"
-					>
+					RelativePath="..\..\src\Event\OSGEventProducer.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGKeyEvent.cpp"
-					>
+					RelativePath="..\..\src\Event\OSGKeyAdapter.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGKeyEvent.h"
-					>
+					RelativePath="..\..\src\Event\OSGKeyAdapter.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGKeyEvent.inl"
-					>
+					RelativePath="..\..\src\Event\OSGKeyEvent.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGKeyEventProducer.cpp"
-					>
+					RelativePath="..\..\src\Event\OSGKeyEvent.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGKeyEventProducer.h"
-					>
+					RelativePath="..\..\src\Event\OSGKeyEvent.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGKeyEventProducer.inl"
-					>
+					RelativePath="..\..\src\Event\OSGKeyEventProducer.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGKeyListener.h"
-					>
+					RelativePath="..\..\src\Event\OSGKeyEventProducer.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMouseEvent.h"
-					>
+					RelativePath="..\..\src\Event\OSGKeyEventProducer.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMouseEvent.inl"
-					>
+					RelativePath="..\..\src\Event\OSGKeyListener.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMouseEventProducer.cpp"
-					>
+					RelativePath="..\..\src\Event\OSGMouseAdapter.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMouseEventProducer.h"
-					>
+					RelativePath="..\..\src\Event\OSGMouseAdapter.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMouseEventProducer.inl"
-					>
+					RelativePath="..\..\src\Event\OSGMouseEvent.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMouseListener.h"
-					>
+					RelativePath="..\..\src\Event\OSGMouseEvent.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMouseMotionEventProducer.cpp"
-					>
+					RelativePath="..\..\src\Event\OSGMouseEventProducer.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMouseMotionEventProducer.h"
-					>
+					RelativePath="..\..\src\Event\OSGMouseEventProducer.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMouseMotionEventProducer.inl"
-					>
+					RelativePath="..\..\src\Event\OSGMouseEventProducer.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMouseMotionListener.h"
-					>
+					RelativePath="..\..\src\Event\OSGMouseListener.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMouseWheelEvent.h"
-					>
+					RelativePath="..\..\src\Event\OSGMouseMotionAdapter.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMouseWheelEvent.inl"
-					>
+					RelativePath="..\..\src\Event\OSGMouseMotionAdapter.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMouseWheelEventProducer.cpp"
-					>
+					RelativePath="..\..\src\Event\OSGMouseMotionEventProducer.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMouseWheelEventProducer.h"
-					>
+					RelativePath="..\..\src\Event\OSGMouseMotionEventProducer.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMouseWheelEventProducer.inl"
-					>
+					RelativePath="..\..\src\Event\OSGMouseMotionEventProducer.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMouseWheelListener.h"
-					>
+					RelativePath="..\..\src\Event\OSGMouseMotionListener.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGUpdateEvent.h"
-					>
+					RelativePath="..\..\src\Event\OSGMouseWheelEvent.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGUpdateEvent.inl"
-					>
+					RelativePath="..\..\src\Event\OSGMouseWheelEvent.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGUpdateListener.h"
-					>
+					RelativePath="..\..\src\Event\OSGMouseWheelEventProducer.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGWindowEvent.h"
-					>
+					RelativePath="..\..\src\Event\OSGMouseWheelEventProducer.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGWindowEvent.inl"
-					>
+					RelativePath="..\..\src\Event\OSGMouseWheelEventProducer.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGWindowListener.h"
-					>
+					RelativePath="..\..\src\Event\OSGMouseWheelListener.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGUpdateEvent.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGUpdateEvent.inl">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGUpdateListener.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGWindowAdapter.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGWindowAdapter.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGWindowEvent.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGWindowEvent.inl">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGWindowListener.h">
 				</File>
 			</Filter>
 			<Filter
-				Name="WindowSystem"
-				>
+				Name="WindowSystem">
 				<File
-					RelativePath="..\..\src\WindowSystem\OSGEventDispatchThread.cpp"
-					>
+					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducer.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\WindowSystem\OSGEventDispatchThread.h"
-					>
+					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducer.h">
 				</File>
 				<File
-					RelativePath="..\..\src\WindowSystem\OSGEventDispatchThread.inl"
-					>
+					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducer.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducer.cpp"
-					>
+					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducerBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducer.h"
-					>
+					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducerBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducer.inl"
-					>
+					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducerBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducerBase.cpp"
-					>
+					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducerFactory.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducerBase.h"
-					>
+					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducerFactory.h">
 				</File>
 				<File
-					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducerBase.inl"
-					>
+					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducerFactory.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducerFactory.cpp"
-					>
+					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducerFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducerFactory.h"
-					>
+					RelativePath="..\..\src\WindowSystem\OSGWindowUtils.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducerFactory.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\WindowSystem\OSGWindowEventProducerFields.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\WindowSystem\OSGWindowUtils.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\WindowSystem\OSGWindowUtils.h"
-					>
+					RelativePath="..\..\src\WindowSystem\OSGWindowUtils.h">
 				</File>
 				<Filter
-					Name="GLUT"
-					>
+					Name="GLUT">
 					<File
-						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducer.cpp"
-						>
+						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducer.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducer.h"
-						>
+						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducer.h">
 					</File>
 					<File
-						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducer.inl"
-						>
+						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducer.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducerBase.cpp"
-						>
+						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducerBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducerBase.h"
-						>
+						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducerBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducerBase.inl"
-						>
+						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducerBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducerFields.h"
-						>
+						RelativePath="..\..\src\WindowSystem\Glut\OSGGLUTWindowEventProducerFields.h">
 					</File>
 				</Filter>
 				<Filter
-					Name="Win32"
-					>
+					Name="Win32">
 					<File
-						RelativePath="..\..\src\WindowSystem\Win32\OSGWin32WindowEventProducer.cpp"
-						>
+						RelativePath="..\..\src\WindowSystem\Win32\OSGWin32WindowEventProducer.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\WindowSystem\Win32\OSGWin32WindowEventProducer.h"
-						>
+						RelativePath="..\..\src\WindowSystem\Win32\OSGWin32WindowEventProducer.h">
 					</File>
 					<File
-						RelativePath="..\..\src\WindowSystem\Win32\OSGWin32WindowEventProducer.inl"
-						>
+						RelativePath="..\..\src\WindowSystem\Win32\OSGWin32WindowEventProducer.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\WindowSystem\Win32\OSGWin32WindowEventProducerBase.cpp"
-						>
+						RelativePath="..\..\src\WindowSystem\Win32\OSGWin32WindowEventProducerBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\WindowSystem\Win32\OSGWin32WindowEventProducerBase.h"
-						>
+						RelativePath="..\..\src\WindowSystem\Win32\OSGWin32WindowEventProducerBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\WindowSystem\Win32\OSGWin32WindowEventProducerBase.inl"
-						>
+						RelativePath="..\..\src\WindowSystem\Win32\OSGWin32WindowEventProducerBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\WindowSystem\Win32\OSGWin32WindowEventProducerFields.h"
-						>
+						RelativePath="..\..\src\WindowSystem\Win32\OSGWin32WindowEventProducerFields.h">
 					</File>
 				</Filter>
 				<Filter
-					Name="X"
-					>
+					Name="X">
 				</Filter>
 				<Filter
-					Name="QT"
-					>
+					Name="QT">
 				</Filter>
 				<Filter
-					Name="QT4"
-					>
+					Name="QT4">
 				</Filter>
 				<Filter
-					Name="CoreGL"
-					>
+					Name="CoreGL">
 				</Filter>
 				<Filter
-					Name="Carbon"
-					>
+					Name="Carbon">
 				</Filter>
 				<Filter
-					Name="Cocoa"
-					>
+					Name="Cocoa">
 				</Filter>
 			</Filter>
 			<Filter
-				Name="Utils"
-				>
+				Name="Utils">
 				<File
-					RelativePath="..\..\src\Utils\OSGStringUtils.cpp"
-					>
+					RelativePath="..\..\src\Utils\OSGStringUtils.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Utils\OSGStringUtils.h"
-					>
+					RelativePath="..\..\src\Utils\OSGStringUtils.h">
 				</File>
 			</Filter>
 		</Filter>

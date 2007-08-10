@@ -24,6 +24,7 @@
 
 //Input
 #include <OpenSG/Input/OSGWindowUtils.h>
+#include <OpenSG/Input/OSGWindowAdapter.h>
 
 //UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
@@ -50,10 +51,25 @@ OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
+bool ExitApp = false;
 
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2s Size);
+
+class TutorialWindowListener : public WindowAdapter
+{
+public:
+    virtual void windowClosing(const WindowEvent& e)
+    {
+        ExitApp = true;
+    }
+
+    virtual void windowClosed(const WindowEvent& e)
+    {
+        ExitApp = true;
+    }
+};
 
 
 
@@ -142,16 +158,15 @@ int main(int argc, char **argv)
     // OSG init
     osgInit(argc,argv);
 
-    WindowPtr MainWindow;
-    WindowEventProducerPtr TheWindowEventProducer;
-    createDefaultWindow(Pnt2s(50,50),
-                                        Vec2s(900,900),
-                                        "OpenSG 18List Window",
-                                        MainWindow,
-                                        TheWindowEventProducer);
+    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
     
     TheWindowEventProducer->setDisplayCallback(display);
     TheWindowEventProducer->setReshapeCallback(reshape);
+
+    //Add Window Listener
+    TutorialWindowListener TheTutorialWindowListener;
+    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
 
     // Make Torus Node (creates Torus in background of scene)
@@ -356,7 +371,17 @@ int main(int argc, char **argv)
     // show the whole scene
     mgr->showAll();
 
-    openWindow(TheWindowEventProducer);
+    TheWindowEventProducer->openWindow(Pnt2s(50,50),
+                                        Vec2s(900,900),
+                                        "OpenSG 18List Window");
+
+    //Main Event Loop
+    while(!ExitApp)
+    {
+        TheWindowEventProducer->update();
+        TheWindowEventProducer->draw();
+    }
+    osgExit();
 
     return 0;
 }

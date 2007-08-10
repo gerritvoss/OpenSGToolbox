@@ -44,9 +44,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGGLUTWindow.h>
 #include <OpenSG/OSGGLUT.h>
-#include <OpenSG/OSGGLUTWindow.h>
 
 #include "OSGGLUTWindowEventProducer.h"
 #include "WindowSystem/OSGWindowEventProducerFactory.h"
@@ -69,6 +67,102 @@ GLUTWindowEventProducer::GLUTWindowToProducerMap GLUTWindowEventProducer::_GLUTW
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
+void GLUTWindowEventProducer::WindowEventLoopThread(void* args)
+{
+    WindowEventLoopThreadArguments* Arguments(static_cast<WindowEventLoopThreadArguments*>(args));
+    Arguments->_SyncBarrier->addRef();
+
+    int argc(1);
+    char **argv = new char*[1];
+    (*argv)= "Bla";
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
+
+    Int32 winid = glutCreateWindow(Arguments->_WindowName.c_str());
+    glutPositionWindow(Arguments->_ScreenPosition.x(), Arguments->_ScreenPosition.y());
+    glutReshapeWindow(Arguments->_Size.x(), Arguments->_Size.y());
+
+    GLUTWindow::Ptr::dcast(Arguments->_EventProducer->getWindow())->setId(winid);
+    Arguments->_EventProducer->attachWindow();
+
+    Arguments->_EventProducer->getWindow()->init();
+
+    //Set the current window to this one
+    glutSetWindow(GLUTWindow::Ptr::dcast(Arguments->_EventProducer->getWindow())->getId());
+
+    Arguments->_SyncBarrier->enter(2);
+    Arguments->_SyncBarrier->subRef();
+
+    //Delete my arguments, to avoid memory leak
+    delete args;
+
+    // GLUT main loop
+    glutMainLoop();
+}
+
+void GLUTWindowEventProducer::draw(void)
+{
+    glutSetWindow(GLUTWindow::Ptr::dcast(getWindow())->getId());
+    glutPostRedisplay();
+}
+
+void GLUTWindowEventProducer::update(void)
+{
+   //Updating
+   Time Now(getSystemTime());
+   Time ElapsedTime(Now - getLastUpdateTime());
+   if(ElapsedTime > 0.0 && ElapsedTime < 10.0)
+   {
+	   produceUpdate(ElapsedTime);
+   }
+   beginEditCP(GLUTWindowEventProducerPtr(this), LastUpdateTimeFieldMask);
+	   setLastUpdateTime(Now);
+   endEditCP(GLUTWindowEventProducerPtr(this), LastUpdateTimeFieldMask);
+}
+
+WindowPtr GLUTWindowEventProducer::createWindow(void)
+{
+    return GLUTWindow::create();
+}
+
+void GLUTWindowEventProducer::openWindow(const Pnt2s& ScreenPosition,
+                    const Vec2s& Size,
+                    const std::string& WindowName)
+{
+    if(_WindowEventLoopThread == NULL)
+    {
+        std::string ThreadName = WindowName + " Event Loop";
+        _WindowEventLoopThread = dynamic_cast<Thread *>(ThreadManager::the()->getThread(ThreadName.c_str()));
+    }
+    else
+    {
+    }
+
+    Barrier* syncBarrier = Barrier::get(NULL);
+    syncBarrier->addRef();
+    WindowEventLoopThreadArguments* Arguments = new WindowEventLoopThreadArguments( 
+                    ScreenPosition,
+                    Size,
+                    WindowName,
+                    GLUTWindow::Ptr::dcast(getWindow()),
+                    GLUTWindowEventProducerPtr(this),
+                    syncBarrier);
+    
+    //ChangeList::setReadWriteDefault();
+    _WindowEventLoopThread->runFunction(WindowEventLoopThread, 0, Arguments);
+    
+    //Wait for glut to be fully initialized in the seperate thread
+    syncBarrier->enter(2);
+    syncBarrier->subRef();
+}
+
+void GLUTWindowEventProducer::closeWindow(void)
+{
+    if(getWindow() != NullFC)
+    {
+        glutDestroyWindow(GLUTWindow::Ptr::dcast(getWindow())->getId());
+    }
+}
 
 void GLUTWindowEventProducer::GLUTWindowEventProducerDisplayFunction(void)
 {
@@ -170,7 +264,7 @@ Pnt2s GLUTWindowEventProducer::getMousePosition(void) const
 void GLUTWindowEventProducer::glutIdle(void)
 {
    //Updating
-   Time Now(getSystemTime());
+   /*Time Now(getSystemTime());
    Time ElapsedTime(Now - getLastUpdateTime());
    if(ElapsedTime > 0.0 && ElapsedTime < 10.0)
    {
@@ -178,8 +272,7 @@ void GLUTWindowEventProducer::glutIdle(void)
    }
    beginEditCP(GLUTWindowEventProducerPtr(this), LastUpdateTimeFieldMask);
 	   setLastUpdateTime(Now);
-   endEditCP(GLUTWindowEventProducerPtr(this), LastUpdateTimeFieldMask);
-   _DisplayCallbackFunc();
+   endEditCP(GLUTWindowEventProducerPtr(this), LastUpdateTimeFieldMask);*/
 }
 
 void GLUTWindowEventProducer::glutMouse(Int32 Button, Int32 State, Pnt2s MousePos)
@@ -732,40 +825,32 @@ bool GLUTWindowEventProducer::getFullscreen(void) const
    return false;
 }
 
-bool GLUTWindowEventProducer::attachWindow(WindowPtr Win)
+bool GLUTWindowEventProducer::attachWindow(void)
 {
-   if( WindowEventProducer::attachWindow(Win) )
-   {
-      if(_GLUTWindowToProducerMap.find(GLUTWindow::Ptr::dcast(getWindow())->getId()) != _GLUTWindowToProducerMap.end())
-      {
-         return false;
-      }
-      
-      _GLUTWindowToProducerMap[GLUTWindow::Ptr::dcast(getWindow())->getId()] = GLUTWindowEventProducerPtr(this);
-      
-      //Set the correct GLUT Window
-      glutSetWindow( GLUTWindow::Ptr::dcast(getWindow())->getId() );
-      
-      glutDisplayFunc(GLUTWindowEventProducerDisplayFunction);
-      glutReshapeFunc(GLUTWindowEventProducerReshapeFunction);
+    if(_GLUTWindowToProducerMap.find(GLUTWindow::Ptr::dcast(getWindow())->getId()) != _GLUTWindowToProducerMap.end())
+    {
+        return false;
+    }
 
-      //Set the Input Callback Functions
-      glutKeyboardFunc(GLUTWindowEventProducerKeyboardFunction);
-      glutKeyboardUpFunc(GLUTWindowEventProducerKeyboardUpFunction);
-      glutSpecialFunc(GLUTWindowEventProducerSpecialFunction);
-      glutSpecialUpFunc(GLUTWindowEventProducerSpecialUpFunction);
-      glutMouseFunc(GLUTWindowEventProducerMouseFunction);
-      glutMotionFunc(GLUTWindowEventProducerMotionFunction);
-      glutPassiveMotionFunc(GLUTWindowEventProducerPassiveMotionFunction);
-      glutEntryFunc(GLUTWindowEventProducerEntryFunction);
-      glutIdleFunc(GLUTWindowEventProducerIdleFunction);
-      
-      return true;
-   }
-   else
-   {
-      return false;
-   }
+    _GLUTWindowToProducerMap[GLUTWindow::Ptr::dcast(getWindow())->getId()] = GLUTWindowEventProducerPtr(this);
+
+    //Set the correct GLUT Window
+    glutSetWindow( GLUTWindow::Ptr::dcast(getWindow())->getId() );
+
+    glutDisplayFunc(GLUTWindowEventProducerDisplayFunction);
+    glutReshapeFunc(GLUTWindowEventProducerReshapeFunction);
+
+    //Set the Input Callback Functions
+    glutKeyboardFunc(GLUTWindowEventProducerKeyboardFunction);
+    glutKeyboardUpFunc(GLUTWindowEventProducerKeyboardUpFunction);
+    glutSpecialFunc(GLUTWindowEventProducerSpecialFunction);
+    glutSpecialUpFunc(GLUTWindowEventProducerSpecialUpFunction);
+    glutMouseFunc(GLUTWindowEventProducerMouseFunction);
+    glutMotionFunc(GLUTWindowEventProducerMotionFunction);
+    glutPassiveMotionFunc(GLUTWindowEventProducerPassiveMotionFunction);
+    glutEntryFunc(GLUTWindowEventProducerEntryFunction);
+
+    return true;
 }
 
 /*-------------------------------------------------------------------------*\
@@ -789,6 +874,22 @@ GLUTWindowEventProducer::~GLUTWindowEventProducer(void)
 }
 
 /*----------------------------- class specific ----------------------------*/
+
+GLUTWindowEventProducer::WindowEventLoopThreadArguments::WindowEventLoopThreadArguments(
+                       const Pnt2s& ScreenPosition,
+                       const Vec2s& Size,
+                       const std::string& WindowName,
+                       GLUTWindowPtr TheWindow,
+                       GLUTWindowEventProducerPtr TheEventProducer,
+                       Barrier *syncBarrier) :
+        _ScreenPosition(ScreenPosition),
+        _Size(Size),
+        _WindowName(WindowName),
+        _Window(TheWindow),
+        _EventProducer(TheEventProducer),
+        _SyncBarrier(syncBarrier)
+{
+}
 
 void GLUTWindowEventProducer::changed(BitVector whichField, UInt32 origin)
 {

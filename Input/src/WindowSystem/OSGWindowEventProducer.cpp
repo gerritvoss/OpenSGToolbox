@@ -77,6 +77,15 @@ void WindowEventProducer::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+WindowPtr WindowEventProducer::initWindow(void)
+{
+    beginEditCP(WindowEventProducerPtr(this), WindowEventProducer::WindowFieldMask);
+        setWindow(createWindow());
+    endEditCP(WindowEventProducerPtr(this), WindowEventProducer::WindowFieldMask);
+
+    return getWindow();
+}
+
 void WindowEventProducer::setDisplayCallback(DisplayCallbackFunc Callback)
 {
    _DisplayCallbackFunc = Callback;
@@ -87,20 +96,6 @@ void WindowEventProducer::setReshapeCallback(ReshapeCallbackFunc Callback)
    _ReshapeCallbackFunc = Callback;
 }
 
-bool WindowEventProducer::attachWindow(WindowPtr Win)
-{
-   if(getWindow() == NullFC)
-   {
-      beginEditCP(WindowEventProducerPtr(this), WindowEventProducer::WindowFieldMask);
-         setWindow(Win);
-      endEditCP(WindowEventProducerPtr(this), WindowEventProducer::WindowFieldMask);
-      return true;
-   }
-   else
-   {
-      return false;
-   }
-}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -108,7 +103,7 @@ bool WindowEventProducer::attachWindow(WindowPtr Win)
 /*----------------------- constructors & destructors ----------------------*/
 
 WindowEventProducer::WindowEventProducer(void) :
-    Inherited(), _EventDispatchThread(NULL),
+    Inherited(), _WindowEventLoopThread(NULL),
        _DisplayCallbackFunc(NULL),
        _ReshapeCallbackFunc(NULL),
 	   _CursorType(CURSOR_POINTER)
@@ -137,7 +132,7 @@ WindowEventProducer::WindowEventProducer(void) :
 }
 
 WindowEventProducer::WindowEventProducer(const WindowEventProducer &source) :
-    Inherited(source), _EventDispatchThread(source._EventDispatchThread),
+    Inherited(source), _WindowEventLoopThread(NULL),
        _DisplayCallbackFunc(source._DisplayCallbackFunc),
        _ReshapeCallbackFunc(source._ReshapeCallbackFunc),
 	   _CursorType(source._CursorType)
@@ -167,10 +162,11 @@ WindowEventProducer::WindowEventProducer(const WindowEventProducer &source) :
 
 WindowEventProducer::~WindowEventProducer(void)
 {
-   if(_EventDispatchThread != NULL)
+   if(_WindowEventLoopThread != NULL)
    {
-      _EventDispatchThread->setEventDispatchThreadFinish();
-      Thread::join(_EventDispatchThread);
+       //_WindowEventLoopThread->setEventDispatchThreadFinish();
+       //Close the Window
+       Thread::join(_WindowEventLoopThread);
    }
 }
 
@@ -179,51 +175,12 @@ WindowEventProducer::~WindowEventProducer(void)
 void WindowEventProducer::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
-
-    if(whichField & WindowFieldMask)
-    {
-       initEventDispatchThread();
-    }
 }
 
 void WindowEventProducer::dump(      UInt32    , 
                          const BitVector ) const
 {
     SLOG << "Dump WindowEventProducer NI" << std::endl;
-}
-
-void WindowEventProducer::initEventDispatchThread(void)
-{
-   //If my EventDispatchThread has not been created yet
-   if(_EventDispatchThread == NULL)
-   {
-      //Create the thread
-      _EventDispatchThread = dynamic_cast<EventDispatchThread *>(ThreadManager::the()->getThread("WindowEventProducer", "OSGEventDispatchThread"));
-   }
-   else
-   {
-      _EventDispatchThread->setEventDispatchThreadFinish();
-      Thread::join(_EventDispatchThread);
-   }
-   
-   if(getWindow() == NullFC)
-   {
-      _EventDispatchThread = NULL;
-      return;
-   }
-
-   //Start the EventDispatchThread
-   //Run it on with the MainAspect id
-   _EventDispatchThread->run(0);
-}
-
-void WindowEventProducer::exitEventDispatchThread(void)
-{
-   if(_EventDispatchThread != NULL)
-   {
-      _EventDispatchThread->setEventDispatchThreadFinish();
-      Thread::join(_EventDispatchThread);
-   }
 }
 
 ViewportPtr WindowEventProducer::windowToViewport(const Pnt2s& WindowPoint, Pnt2s& ViewportPoint)

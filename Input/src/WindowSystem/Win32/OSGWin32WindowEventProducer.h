@@ -50,6 +50,7 @@
 #include <map>
 
 #include "OSGWin32WindowEventProducerBase.h"
+#include <OpenSG/OSGWin32Window.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -62,15 +63,18 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
     
     static WIN32HWNDToProducerMap _WIN32HWNDToProducerMap;
     
-    LRESULT WndProc(HWND hwnd2, UINT uMsg,
+    LRESULT WndProc(HWND hwnd, UINT uMsg,
                            WPARAM wParam, LPARAM lParam);
+
+    static void WindowEventLoopThread(void* args);
     
     static KeyEvent::Key determineKey(WPARAM key);
     /*==========================  PUBLIC  =================================*/
   public:
-    static LRESULT CALLBACK staticWndProc(HWND hwnd2, UINT uMsg,
+
+    static LRESULT CALLBACK staticWndProc(HWND hwnd, UINT uMsg,
                            WPARAM wParam, LPARAM lParam);
-    virtual bool attachWindow(WindowPtr Win);
+    virtual bool attachWindow(void);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -134,6 +138,14 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
 
 	virtual void putClipboard(const std::string Value);
 
+    virtual void openWindow(const Pnt2s& ScreenPosition,
+                       const Vec2s& Size,
+                       const std::string& WindowName);
+    
+    virtual void closeWindow(void);
+    
+    virtual void draw(void);
+    virtual void update(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -156,6 +168,27 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
     /*! \}                                                                 */
     
 	virtual void setCursor(void);
+    
+    virtual WindowPtr createWindow(void);
+    struct WindowEventLoopThreadArguments
+    {
+        WindowEventLoopThreadArguments(const Pnt2s& ScreenPosition,
+                       const Vec2s& Size,
+                       const std::string& WindowName,
+                       WIN32WindowPtr TheWindow,
+                       Win32WindowEventProducerPtr TheEventProducer);
+
+        Pnt2s _ScreenPosition;
+        Vec2s _Size;
+        std::string _WindowName;
+        WIN32WindowPtr _Window;
+        Win32WindowEventProducerPtr _EventProducer;
+    };
+
+    bool _MouseOverWindow;
+
+    static const UINT WIN32_DRAW_MESSAGE = WM_USER + 1;
+    static const UINT WIN32_UPDATE_MESSAGE = WM_USER + 2;
     /*==========================  PRIVATE  ================================*/
   private:
 

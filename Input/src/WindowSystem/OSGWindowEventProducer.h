@@ -48,6 +48,7 @@
 #include <set>
 #include <vector>
 #include <map>
+#include <OpenSG/OSGThread.h>
 
 #include "OSGWindowEventProducerBase.h"
 
@@ -58,8 +59,6 @@
 #include "Event/OSGWindowListener.h"
 #include "Event/OSGKeyListener.h"
 #include "Event/OSGUpdateListener.h"
-
-#include "OSGEventDispatchThread.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -115,7 +114,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     ButtonClickCountMap _ButtonClickCountMap;
     ButtonClickMap _ButtonClickMap;
 
-    EventDispatchThread* _EventDispatchThread;
+    Thread* _WindowEventLoopThread;
 
     typedef void (*DisplayCallbackFunc)(void);
     typedef void (*ReshapeCallbackFunc)(Vec2s);
@@ -195,28 +194,34 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     //Get the Window Fullscreen
     virtual bool getFullscreen(void) const = 0;
 
-    
-    void initEventDispatchThread(void);
-    
-    void exitEventDispatchThread(void);
-
     //Set Display Callback Function
     virtual void setDisplayCallback(DisplayCallbackFunc Callback);
 
     //Set Reshape Callback Function
     virtual void setReshapeCallback(ReshapeCallbackFunc Callback);
 
-    
-    virtual bool attachWindow(WindowPtr Win);
+    virtual void draw(void) = 0;
+    virtual void update(void) = 0;
+
+    virtual bool attachWindow(void) = 0;
 
 	virtual UInt32 getKeyModifiers(void) const = 0;
     
 	virtual Pnt2s getMousePosition(void) const = 0;
+
 	ViewportPtr windowToViewport(const Pnt2s& WindowPoint, Pnt2s& ViewportPoint);
 
 	virtual std::string getClipboard(void) const = 0;
 
 	virtual void putClipboard(const std::string Value) = 0;
+
+    virtual WindowPtr initWindow(void);
+
+    virtual void openWindow(const Pnt2s& ScreenPosition,
+                       const Vec2s& Size,
+                       const std::string& WindowName) = 0;
+    
+    virtual void closeWindow(void) = 0;
 
 	CursorType getCursorType(void) const;
 	void setCursorType(CursorType Type); 
@@ -273,6 +278,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
 	CursorType _CursorType;
 
 	virtual void setCursor(void) = 0;
+    virtual WindowPtr createWindow(void) = 0;
     /*==========================  PRIVATE  ================================*/
   private:
 

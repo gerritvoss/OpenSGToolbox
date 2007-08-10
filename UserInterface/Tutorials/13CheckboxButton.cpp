@@ -19,6 +19,7 @@
 
 // The GLUT-OpenSG connection class
 #include <OpenSG/OSGGLUTWindow.h>
+#include <OpenSG/Input/OSGWindowAdapter.h>
 
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
@@ -51,6 +52,21 @@ OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
+bool ExitApp = false;
+
+class TutorialWindowListener : public WindowAdapter
+{
+public:
+    virtual void windowClosing(const WindowEvent& e)
+    {
+        ExitApp = true;
+    }
+
+    virtual void windowClosed(const WindowEvent& e)
+    {
+        ExitApp = true;
+    }
+};
 
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -62,16 +78,15 @@ int main(int argc, char **argv)
     // OSG init
     osgInit(argc,argv);
     
-    WindowPtr MainWindow;
-    WindowEventProducerPtr TheWindowEventProducer;
-    createDefaultWindow(Pnt2s(50,50),
-                                        Vec2s(550,550),
-                                        "OpenSG 13CheckboxButton Window",
-                                        MainWindow,
-                                        TheWindowEventProducer);
+    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
     
     TheWindowEventProducer->setDisplayCallback(display);
     TheWindowEventProducer->setReshapeCallback(reshape);
+
+    //Add Window Listener
+    TutorialWindowListener TheTutorialWindowListener;
+    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
     //Attach Mouse Listener
     //TheWindowEventProducer->addMouseListener(new TutorialMouseListener());
@@ -195,7 +210,17 @@ int main(int argc, char **argv)
     // show the whole scene
     mgr->showAll();
 
-    openWindow(TheWindowEventProducer);
+    TheWindowEventProducer->openWindow(Pnt2s(50,50),
+                                        Vec2s(550,550),
+                                        "OpenSG 13CheckboxButton Window");
+
+    //Main Event Loop
+    while(!ExitApp)
+    {
+        TheWindowEventProducer->update();
+        TheWindowEventProducer->draw();
+    }
+    osgExit();
 
     return 0;
 }

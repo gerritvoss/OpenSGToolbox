@@ -49,7 +49,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <windows.h>
-#include <OpenSG/OSGWin32Window.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,13 +76,73 @@ void Win32WindowEventProducer::initMethod (void)
 	WindowEventProducerFactory::the()->registerProducer(&WIN32Window::getClassType(), &Win32WindowEventProducer::getClassType());
 }
 
+void Win32WindowEventProducer::WindowEventLoopThread(void* args)
+{
+    WindowEventLoopThreadArguments* Arguments(static_cast<WindowEventLoopThreadArguments*>(args));
 
-LRESULT Win32WindowEventProducer::staticWndProc(HWND hwnd2, UINT uMsg,
+    //Create the Win32 Window
+    WNDCLASS  wndClass;
+    HWND           hwnd;
+
+    // Win32 Init
+    memset(&wndClass, 0, sizeof(wndClass));
+    wndClass.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
+    wndClass.lpfnWndProc = Win32WindowEventProducer::staticWndProc;
+    wndClass.hInstance = GetModuleHandle(NULL);
+    // doesn't compile?!? wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+    wndClass.lpszClassName = Arguments->_WindowName.c_str();
+    if (!RegisterClass(&wndClass)) 
+    {
+        return;
+    }
+
+
+    // Create a Window
+    hwnd = CreateWindow( Arguments->_WindowName.c_str(), Arguments->_WindowName.c_str(),
+                    WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
+                    Arguments->_ScreenPosition.x(), 
+                    Arguments->_ScreenPosition.y(), 
+                    Arguments->_Size.x(), 
+                    Arguments->_Size.y(),
+                    NULL, 
+                    NULL, 
+                    GetModuleHandle(NULL), 
+                    0 );
+
+    //Attach Window
+    beginEditCP(Arguments->_Window, WIN32Window::HwndFieldMask);
+        Arguments->_Window->setHwnd(hwnd);
+    endEditCP(Arguments->_Window, WIN32Window::HwndFieldMask);
+
+    Arguments->_EventProducer->attachWindow();
+        
+    Arguments->_Window->init();
+    Arguments->_Window->deactivate();
+
+    
+    //Open the Window and enter the main event loop
+	ShowWindow( hwnd, SW_SHOWNORMAL );
+	SetActiveWindow( hwnd );
+	
+    MSG msg;
+	// main loop 
+    while ( GetMessage(&msg, NULL, 0, 0) > 0 )
+    {
+        DispatchMessage(&msg);
+        WaitMessage();
+    }
+    Arguments->_EventProducer->produceWindowClosed();
+    
+    //Delete my arguments, to avoid memory leak
+    delete args;
+}
+
+LRESULT Win32WindowEventProducer::staticWndProc(HWND hwnd, UINT uMsg,
                          WPARAM wParam, LPARAM lParam)
 {
-   if(_WIN32HWNDToProducerMap.find(hwnd2) != _WIN32HWNDToProducerMap.end())
+   if(_WIN32HWNDToProducerMap.find(hwnd) != _WIN32HWNDToProducerMap.end())
    {
-      return _WIN32HWNDToProducerMap[hwnd2]->WndProc(hwnd2, uMsg,
+      return _WIN32HWNDToProducerMap[hwnd]->WndProc(hwnd, uMsg,
                            wParam, lParam);
    }
    else
@@ -109,7 +168,7 @@ LRESULT Win32WindowEventProducer::staticWndProc(HWND hwnd2, UINT uMsg,
                 
 
                // init the OSG window  
-               hDC = GetDC(hwnd2);
+               hDC = GetDC(hwnd);
 
                iPixelFormat = ChoosePixelFormat(hDC, &pfd);
                if (! SetPixelFormat(hDC, iPixelFormat, &pfd) )
@@ -120,7 +179,7 @@ LRESULT Win32WindowEventProducer::staticWndProc(HWND hwnd2, UINT uMsg,
                break;
             }
          default:
-            return DefWindowProc(hwnd2, uMsg, wParam, lParam);
+            return DefWindowProc(hwnd, uMsg, wParam, lParam);
             break;
       }
    }
@@ -570,26 +629,58 @@ KeyEvent::Key Win32WindowEventProducer::determineKey(WPARAM key)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool Win32WindowEventProducer::attachWindow(WindowPtr Win)
+void Win32WindowEventProducer::draw(void)
 {
-   if( WindowEventProducer::attachWindow(Win) )
-   {
-      if(_WIN32HWNDToProducerMap.find(WIN32Window::Ptr::dcast(getWindow())->getHwnd()) != _WIN32HWNDToProducerMap.end())
-      {
-         return false;
-      }
-      
-      _WIN32HWNDToProducerMap[WIN32Window::Ptr::dcast(getWindow())->getHwnd()] = Win32WindowEventProducerPtr(this);
-      
-      return true;
-   }
-   else
-   {
-      return false;
-   }
+    SendMessage(WIN32Window::Ptr::dcast(getWindow())->getHwnd(),WIN32_DRAW_MESSAGE,0,0);
 }
 
-LRESULT Win32WindowEventProducer::WndProc(HWND hwnd2, UINT uMsg,
+void Win32WindowEventProducer::update(void)
+{
+    SendMessage(WIN32Window::Ptr::dcast(getWindow())->getHwnd(),WIN32_UPDATE_MESSAGE,0,0);
+}
+
+WindowPtr Win32WindowEventProducer::createWindow(void)
+{
+    // Create OSGWin32Window
+    return WIN32Window::create();
+}
+
+void Win32WindowEventProducer::openWindow(const Pnt2s& ScreenPosition,
+                    const Vec2s& Size,
+                    const std::string& WindowName)
+{
+    if(_WindowEventLoopThread == NULL)
+    {
+        std::string ThreadName = WindowName + " Event Loop";
+        _WindowEventLoopThread = dynamic_cast<Thread *>(ThreadManager::the()->getThread(ThreadName.c_str()));
+    }
+    else
+    {
+    }
+    WindowEventLoopThreadArguments* Arguments = new WindowEventLoopThreadArguments(  
+                    ScreenPosition,
+                    Size,
+                    WindowName,
+                    WIN32Window::Ptr::dcast(getWindow()),
+                    Win32WindowEventProducerPtr(this)  );
+    
+    //ChangeList::setReadWriteDefault();
+    _WindowEventLoopThread->runFunction(WindowEventLoopThread, 0, static_cast<void*>(Arguments));
+}
+
+bool Win32WindowEventProducer::attachWindow(void)
+{
+    if(_WIN32HWNDToProducerMap.find(WIN32Window::Ptr::dcast(getWindow())->getHwnd()) != _WIN32HWNDToProducerMap.end())
+    {
+        return false;
+    }
+    
+    _WIN32HWNDToProducerMap[WIN32Window::Ptr::dcast(getWindow())->getHwnd()] = Win32WindowEventProducerPtr(this);
+    
+    return true;
+}
+
+LRESULT Win32WindowEventProducer::WndProc(HWND hwnd, UINT uMsg,
                      WPARAM wParam, LPARAM lParam)
 {
     switch(uMsg)
@@ -619,7 +710,7 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd2, UINT uMsg,
 				LPPOINT ClientPoint = new POINT;
 				ClientPoint->x = LOWORD(lParam);
 				ClientPoint->y = HIWORD(lParam);
-				if(ScreenToClient(hwnd2, ClientPoint))
+				if(ScreenToClient(hwnd, ClientPoint))
 				{
 					produceMouseWheelMoved(static_cast<short>(HIWORD(wParam))/WHEEL_DELTA, Pnt2s(ClientPoint->x,ClientPoint->y));
 				}
@@ -631,20 +722,52 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd2, UINT uMsg,
             break;
 
         case WM_MOUSEMOVE:
-			if(wParam & MK_LBUTTON)
-			{
-				produceMouseDragged(MouseEvent::BUTTON1,Pnt2s(LOWORD(lParam), HIWORD(lParam)));
-			}
-			else if(wParam & MK_MBUTTON)
-			{
-				produceMouseDragged(MouseEvent::BUTTON1,Pnt2s(LOWORD(lParam), HIWORD(lParam)));
-			}
-			else if(wParam & MK_RBUTTON)
-			{
-				produceMouseDragged(MouseEvent::BUTTON1,Pnt2s(LOWORD(lParam), HIWORD(lParam)));
-			}
-			produceMouseMoved(Pnt2s(LOWORD(lParam), HIWORD(lParam)));
-            break;
+            {
+			    if(wParam & MK_LBUTTON)
+			    {
+				    produceMouseDragged(MouseEvent::BUTTON1,Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+			    }
+			    else if(wParam & MK_MBUTTON)
+			    {
+				    produceMouseDragged(MouseEvent::BUTTON2,Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+			    }
+			    else if(wParam & MK_RBUTTON)
+			    {
+				    produceMouseDragged(MouseEvent::BUTTON3,Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+			    }
+			    produceMouseMoved(Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+                
+                /*POINT point;
+                RECT rect;
+
+                GetCursorPos(&point);
+                GetWindowRect(hwnd, &rect);
+
+                if(PtInRect(&rect, point))
+                {
+                    if(hwnd != GetCapture())
+                    {
+                        SetCapture(hwnd);
+                    }
+                    if(!_MouseOverWindow)
+                    {
+                        _MouseOverWindow = true;
+                        produceWindowEntered();
+                    }
+                }
+                else
+                {
+                    ReleaseCapture();
+                    // Calling ReleaseCapture in Win95 also causes WM_CAPTURECHANGED
+                    // to be sent.  Be sure to account for that.
+                    if(_MouseOverWindow)
+                    {
+                        _MouseOverWindow = false;
+                        produceWindowExited();
+                    }
+                }*/
+                break;
+            }
                                     
         case WM_KEYDOWN:
             produceKeyPressed(determineKey(wParam),getKeyModifiers());
@@ -657,26 +780,27 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd2, UINT uMsg,
             getWindow()->resize( LOWORD(lParam), HIWORD( lParam ) );
             _ReshapeCallbackFunc(Vec2s(LOWORD(lParam), HIWORD( lParam )));
             break;
-                                    
-        case WM_PAINT:
-			{
-				//Updating
-				Time Now(getSystemTime());
-				Time ElapsedTime(Now - getLastUpdateTime());
-				if(ElapsedTime > 0.0 && ElapsedTime < 10.0)
-				{
-					produceUpdate(ElapsedTime);
-				}
-				beginEditCP(Win32WindowEventProducerPtr(this), LastUpdateTimeFieldMask);
-				   setLastUpdateTime(Now);
-				endEditCP(Win32WindowEventProducerPtr(this), LastUpdateTimeFieldMask);
-			}
-            _DisplayCallbackFunc();
-            break;
 
         case WM_CLOSE:
             produceWindowClosing();
-            return DefWindowProc(hwnd2,uMsg,wParam,lParam);
+            return DefWindowProc(hwnd,uMsg,wParam,lParam);
+            break;
+            
+        case WIN32_DRAW_MESSAGE:
+            _DisplayCallbackFunc();
+            break;
+
+        case WIN32_UPDATE_MESSAGE:
+            {
+                //Updating
+                Time Now(getSystemTime());
+                Time ElapsedTime(Now - getLastUpdateTime());
+                if(ElapsedTime > 0.0 && ElapsedTime < 10.0)
+                {
+	                produceUpdate(ElapsedTime);
+                }
+                setLastUpdateTime(Now);
+            }
             break;
 
         case WM_ACTIVATE:
@@ -688,7 +812,7 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd2, UINT uMsg,
             {
                produceWindowDeactivated();
             }
-            return DefWindowProc(hwnd2,uMsg,wParam,lParam);
+            return DefWindowProc(hwnd,uMsg,wParam,lParam);
             break;
         case WM_SYSCOMMAND:
            if (wParam == SC_MINIMIZE)
@@ -705,7 +829,7 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd2, UINT uMsg,
             {
                produceWindowOpened();
             }
-            return DefWindowProc(hwnd2,uMsg,wParam,lParam);
+            return DefWindowProc(hwnd,uMsg,wParam,lParam);
             break;
 
         case WM_DESTROY:
@@ -714,9 +838,9 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd2, UINT uMsg,
 
 		case WM_SETCURSOR:
 			setCursor();
-            return DefWindowProc(hwnd2, uMsg, wParam, lParam);
+            return DefWindowProc(hwnd, uMsg, wParam, lParam);
         default:
-            return DefWindowProc(hwnd2, uMsg, wParam, lParam);
+            return DefWindowProc(hwnd, uMsg, wParam, lParam);
 			break;
     }
     return 0;
@@ -724,69 +848,122 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd2, UINT uMsg,
 //Set the Window Position
 void Win32WindowEventProducer::setPosition(Pnt2s Pos)
 {
+    SetWindowPos(WIN32Window::Ptr::dcast(getWindow())->getHwnd(),HWND_NOTOPMOST, Pos.x(), Pos.y(), 0,0,
+         SWP_NOSIZE | SWP_NOZORDER);
 }
 
 //Set the Window Position
 Pnt2s Win32WindowEventProducer::getPosition(void) const
 {
-   return Pnt2s();
+    RECT r;
+    GetWindowRect(WIN32Window::Ptr::dcast(getWindow())->getHwnd(), &r);
+    return Pnt2s(r.left, r.top);
 }
 
 //Set the Window size
 void Win32WindowEventProducer::setSize(Vec2us Size)
 {
+    SetWindowPos(WIN32Window::Ptr::dcast(getWindow())->getHwnd(),HWND_NOTOPMOST, 0, 0, Size.x(),Size.y(),
+         SWP_NOMOVE | SWP_NOZORDER);
 }
 
 //Get the Window size
 Vec2s Win32WindowEventProducer::getSize(void) const
 {
-   return Vec2s();
+    RECT r;
+    GetWindowRect(WIN32Window::Ptr::dcast(getWindow())->getHwnd(), &r);
+    return Vec2s(r.right-r.left, r.bottom-r.top);
 }
 
 //Focused
 //Set the Window Focus
 void Win32WindowEventProducer::setFocused(bool Focused)
 {
+    if(Focused)
+    {
+        SetFocus(WIN32Window::Ptr::dcast(getWindow())->getHwnd());
+    }
+    else
+    {
+        SetFocus(NULL);
+    }
+    
 }
 
 //Get the Window Focus
 bool Win32WindowEventProducer::getFocused(void) const
 {
-   return false;
+   return GetForegroundWindow() == WIN32Window::Ptr::dcast(getWindow())->getHwnd();
 }
 
 //Visible / Iconify / Normal
 //Set the Window Visible
 void Win32WindowEventProducer::setVisible(bool Visible)
 {
+    if(Visible)
+    {
+        ShowWindow(WIN32Window::Ptr::dcast(getWindow())->getHwnd(),SW_SHOW);
+    }
+    else
+    {
+        ShowWindow(WIN32Window::Ptr::dcast(getWindow())->getHwnd(),SW_HIDE);
+    }
 }
 
 //Get the Window Visible
 bool Win32WindowEventProducer::getVisible(void) const
 {
-   return false;
+   return IsWindowVisible(WIN32Window::Ptr::dcast(getWindow())->getHwnd());
 }
 
 //Set the Window Iconify
 void Win32WindowEventProducer::setIconify(bool Iconify)
 {
+    if(Iconify)
+    {
+        ShowWindow(WIN32Window::Ptr::dcast(getWindow())->getHwnd(),SW_MINIMIZE);
+    }
+    else
+    {
+        ShowWindow(WIN32Window::Ptr::dcast(getWindow())->getHwnd(),SW_SHOWNORMAL);
+    }
 }
 
 //Get the Window Iconify
 bool Win32WindowEventProducer::getIconify(void) const
 {
-   return false;
+   return IsIconic(WIN32Window::Ptr::dcast(getWindow())->getHwnd());
 }
 
 //Fullscreen
 void Win32WindowEventProducer::setFullscreen(bool Fullscreen)
 {
+    //TODO: find a better way to do this
+    if(Fullscreen)
+    {
+        SetWindowPos(WIN32Window::Ptr::dcast(getWindow())->getHwnd(),HWND_NOTOPMOST, 0, 0, GetSystemMetrics(SM_CXFULLSCREEN),GetSystemMetrics(SM_CYFULLSCREEN),
+            SWP_NOZORDER);
+    }
+    else
+    {
+        SetWindowPos(WIN32Window::Ptr::dcast(getWindow())->getHwnd(),HWND_NOTOPMOST, 0, 0, 300,300,
+            SWP_NOZORDER);
+    }
 }
 
 //Get the Window Fullscreen
 bool Win32WindowEventProducer::getFullscreen(void) const
 {
+    //TODO: find a better way to do this
    return false;
+}
+
+void Win32WindowEventProducer::closeWindow(void)
+{
+    if(getWindow() != NullFC)
+    {
+        DestroyWindow(WIN32Window::Ptr::dcast(getWindow())->getHwnd());
+    }
 }
 
 /*-------------------------------------------------------------------------*\
@@ -796,12 +973,14 @@ bool Win32WindowEventProducer::getFullscreen(void) const
 /*----------------------- constructors & destructors ----------------------*/
 
 Win32WindowEventProducer::Win32WindowEventProducer(void) :
-    Inherited()
+    Inherited(),
+        _MouseOverWindow(false)
 {
 }
 
 Win32WindowEventProducer::Win32WindowEventProducer(const Win32WindowEventProducer &source) :
-    Inherited(source)
+    Inherited(source),
+        _MouseOverWindow(false)
 {
 }
 
@@ -810,6 +989,20 @@ Win32WindowEventProducer::~Win32WindowEventProducer(void)
 }
 
 /*----------------------------- class specific ----------------------------*/
+
+Win32WindowEventProducer::WindowEventLoopThreadArguments::WindowEventLoopThreadArguments(
+                       const Pnt2s& ScreenPosition,
+                       const Vec2s& Size,
+                       const std::string& WindowName,
+                       WIN32WindowPtr TheWindow,
+                       Win32WindowEventProducerPtr TheEventProducer) :
+        _ScreenPosition(ScreenPosition),
+        _Size(Size),
+        _WindowName(WindowName),
+        _Window(TheWindow),
+        _EventProducer(TheEventProducer)
+{
+}
 
 void Win32WindowEventProducer::changed(BitVector whichField, UInt32 origin)
 {
