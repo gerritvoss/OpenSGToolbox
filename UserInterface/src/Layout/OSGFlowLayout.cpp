@@ -100,19 +100,17 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 	Pnt2s borderTopLeft, borderBottomRight;
 	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
 	Vec2s borderSize(borderBottomRight-borderTopLeft);
-	Int64 totalMajorAxis(borderSize[AxisIndex]-borderTopLeft[AxisIndex]);
+	Int64 totalMajorAxis(borderSize[AxisIndex]);
 	UInt32 cumMajorAxis(0);
 	UInt32 maxMinorAxis(0);
 	UInt32 cumMinorAxis(0);
 	UInt32 prevComponent(0);
 	Int64 offsetMajorAxis(0);
 	Int64 offsetMinorAxis(0);
-	Int64 offsetX=0;
-	Int64 offsetY=0;
+	Int64 offsetX(borderTopLeft.x());
+	Int64 offsetY(borderTopLeft.y());
 	bool firstOne = true;
 
-	offsetX += borderTopLeft.x();
-	offsetY += borderTopLeft.y();
 	for(UInt32 i=0 ; i<Components.size(); ++i)
 	{
 		// set the component to its preferred size
@@ -197,7 +195,7 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 				offsetMajorAxis = 0;
 			} else if (getMajorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
 			{
-				offsetMajorAxis = totalMajorAxis/2 - (cumMajorAxis+numGaps*gap[AxisIndex])/2;
+				offsetMajorAxis = (totalMajorAxis - (cumMajorAxis+numGaps*gap[AxisIndex]))/2;
 			} else 
 			{
 				offsetMajorAxis = totalMajorAxis - (cumMajorAxis+numGaps*gap[AxisIndex]);
