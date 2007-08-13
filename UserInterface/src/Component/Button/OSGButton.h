@@ -48,26 +48,14 @@
 #include "OSGButtonBase.h"
 #include "Util/OSGUIDefines.h"
 #include "Event/OSGActionListener.h"
-#include <OpenSG/Input/OSGMouseListener.h>
+#include <OpenSG/Input/OSGMouseAdapter.h>
 
 OSG_BEGIN_NAMESPACE
 
 class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
 {
   private:
-	  class ButtonMouseListener : public MouseListener
-	  {
-	  private:
-		  ButtonPtr _Button;
-		  friend class Button;
-		  ButtonMouseListener(ButtonPtr TheButton);
-	  public:
-		virtual void mouseClicked(const MouseEvent& e);
-		virtual void mouseEntered(const MouseEvent& e);
-		virtual void mouseExited(const MouseEvent& e);
-		virtual void mousePressed(const MouseEvent& e);
-		virtual void mouseReleased(const MouseEvent& e);
-	  };
+
     typedef ButtonBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
@@ -117,9 +105,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
 
     virtual ~Button(void); 
 
+    virtual void actionPreformed(const ActionEvent& e);
+
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
+    virtual Color4f getDrawnTextColor(void) const;
     virtual BorderPtr getDrawnBorder(void) const;
     virtual UIBackgroundPtr getDrawnBackground(void) const;
+    
+	class ButtonArmedListener : public MouseAdapter
+	{
+	public :
+		ButtonArmedListener(ButtonPtr TheButton);
+		
+		virtual void mouseReleased(const MouseEvent& e);
+	protected :
+		ButtonPtr _Button;
+	};
+
+	friend class ButtonArmedListener;
+
+	ButtonArmedListener _ButtonArmedListener;
+    bool _Armed;
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/
@@ -140,7 +146,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     typedef ActionListenerSet::const_iterator ActionListenerSetConstItor;
 	
     ActionListenerSet       _ActionListeners;
-	ButtonMouseListener _ButtonMouseListener;
 	
     virtual void produceActionPerformed(const ActionEvent& e);
 };

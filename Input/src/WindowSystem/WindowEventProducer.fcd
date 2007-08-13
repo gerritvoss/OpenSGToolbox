@@ -37,4 +37,13 @@ WindowEventProducer is the base class for all Window specific Event producers. I
 		defaultValue="-1.0"
 	>
 	</Field>
+	<Field
+		name="Icon"
+		type="ImagePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NullFC"
+	>
+	</Field>
 </FieldContainer>

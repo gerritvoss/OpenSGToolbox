@@ -78,88 +78,109 @@ void RadioButton::initMethod (void)
 void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
 {
 	Pnt2s TopLeft, BottomRight;
-	Pnt2s drawObjectTopLeft;
 	Vec2s drawObjectSize;
 	Pnt2s TempPos;
-	Int32 totalWidth;
-	Real32 yAdj = 0;
+
+    Pnt2s InnerComponentsPosition(0,0);
+    Vec2s InnerComponentsSize(0,0);
+
+    UInt32 DrawnComponentToTextGap(2);
+
 	getInsideBorderBounds(TopLeft, BottomRight);
 
-   Pnt2s TextTopLeft, TextBottomRight;
-   getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
-   Vec2s TextBounds( TextBottomRight - TextTopLeft);
+    Pnt2s TextTopLeft, TextBottomRight;
+    getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+    Vec2s TextBounds( TextBottomRight - TextTopLeft);
+	if(TextBounds.x()>0)
+    {
+	    InnerComponentsSize[0] += TextBounds.x();
+	}
    
-   if(getActive()){
-	   if(getSelected()){
-		   getActiveSelectedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-		   if(TextBounds.x()>0){
-			totalWidth =	5*drawObjectSize.x()+TextBounds.x();
-		   }
-		   else{
-			   totalWidth= drawObjectSize.x();
-		   }
-		   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
-		   getActiveSelectedDrawObject()->setPosition(Pnt2s(TempPos.x()+2*drawObjectSize.x(), TempPos.y()));
-		   getActiveSelectedDrawObject()->draw(TheGraphics);
+    UIDrawObjectCanvasPtr DrawnDrawObject = getDrawnDrawObject();
+    if(DrawnDrawObject != NullFC)
+    {
+	    Pnt2s drawObjectTopLeft;
+	    Pnt2s drawObjectBottomRight;
+        DrawnDrawObject->getDrawObjectBounds(drawObjectTopLeft, drawObjectBottomRight);
+        drawObjectSize = drawObjectBottomRight-drawObjectTopLeft;
+		
+        InnerComponentsSize[0] += drawObjectSize.x() + DrawnComponentToTextGap;
+	    
+	}
+    else
+    {
+        drawObjectSize.setValues(0,0);
+    }
+    InnerComponentsSize[1] = osgMax(drawObjectSize.y(), TextBounds.y());
+    InnerComponentsPosition = calculateAlignment(TopLeft, BottomRight-TopLeft, InnerComponentsSize, getVerticalAlignment(), getHorizontalAlignment());
+    
+    if(DrawnDrawObject != NullFC)
+    {
+        DrawnDrawObject->setPosition( calculateAlignment(InnerComponentsPosition, InnerComponentsSize,drawObjectSize,0.5,0.0 ) );
+	    DrawnDrawObject->draw(TheGraphics);
+    }
 
-	   }
-	   else
-	   {
-		   getActiveDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-		   if(TextBounds.x()>0){
-			totalWidth =	5*drawObjectSize.x()+TextBounds.x();
-		   }
-		   else{
-			   totalWidth= drawObjectSize.x();
-		   }
-		   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
-		   getActiveDrawObject()->setPosition(Pnt2s(TempPos.x()+2*drawObjectSize.x(), TempPos.y()));
-		   getActiveDrawObject()->draw(TheGraphics);
-	   }
-   }
-   else if(getSelected()){
-	   getSelectedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-   	   if(TextBounds.x()>0){
-		totalWidth =	5*drawObjectSize.x()+TextBounds.x();
-	   }
-	   else{
-		   totalWidth= drawObjectSize.x();
-	   }
-
-	   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
-	   getSelectedDrawObject()->setPosition(Pnt2s(TempPos.x()+2*drawObjectSize.x(), TempPos.y()));
-	   getSelectedDrawObject()->draw(TheGraphics);
-  }
-   else{
-		getDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-	   if(TextBounds.x()>0){
-		totalWidth =	5*drawObjectSize.x()+TextBounds.x();
-	   }
-	   else{
-		   totalWidth= drawObjectSize.x();
-	   }
-		TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
-	   getDrawObject()->setPosition(Pnt2s(TempPos.x()+2*drawObjectSize.x(), TempPos.y()));
-		getDrawObject()->draw(TheGraphics);
-   }
-  // if(drawObjectSize.y()> TheGraphics->getTextBounds(getText(), getFont()).y())
-	   yAdj = drawObjectSize.y()/*+(TheGraphics->getTextBounds(getText(), getFont()).x())/2.0*/;
-   TheGraphics->drawText(Pnt2s(TempPos.x()+5*drawObjectSize.x(), TempPos.y()-yAdj),   getText(), getFont(), getForegroundColor(), getOpacity());
+    TheGraphics->drawText(calculateAlignment(InnerComponentsPosition + Vec2s(drawObjectSize.x()+ DrawnComponentToTextGap,0), InnerComponentsSize-Vec2s(drawObjectSize.x()+ DrawnComponentToTextGap,0),TextBounds,0.5,0.0 )
+        ,   getText(), getFont(), getDrawnTextColor(), getOpacity());
 
 }
-void RadioButton::mouseReleased(const MouseEvent& e)
+
+UIDrawObjectCanvasPtr RadioButton::getDrawnDrawObject(void) const
 {
-	if(e.getButton()==MouseEvent::BUTTON1){
-		if(getActive()){
-			beginEditCP(RadioButtonPtr(this), RadioButton::SelectedFieldMask);
-				setSelected(true);
-			endEditCP(RadioButtonPtr(this), RadioButton::SelectedFieldMask);
-		}
-		beginEditCP(RadioButtonPtr(this), RadioButton::ActiveFieldMask);
-			setActive(false);
-		endEditCP(RadioButtonPtr(this), RadioButton::ActiveFieldMask);
-	}
-	Component::mouseReleased(e);
+    if(getEnabled())
+    {
+        if(getActive())
+        {
+            if(getSelected())
+            {
+                return getActiveDrawObject();
+            }
+            else
+            {
+                return getActiveSelectedDrawObject();
+            }
+        }
+        else if(_MouseInComponentLastMouse)
+        {
+            if(getSelected())
+            {
+                return getRolloverSelectedDrawObject();
+            }
+            else
+            {
+                return getRolloverDrawObject();
+            }
+        }
+        else
+        {
+            if(getSelected())
+            {
+                return getSelectedDrawObject();
+            }
+            else
+            {
+                return getDrawObject();
+            }
+        }
+    }
+    else
+    {
+        if(getSelected())
+        {
+            return getDisabledSelectedDrawObject();
+        }
+        else
+        {
+            return getDisabledDrawObject();
+        }
+    }
+}
+
+void RadioButton::actionPreformed(const ActionEvent& e)
+{
+    beginEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
+	    setSelected(true);
+    endEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

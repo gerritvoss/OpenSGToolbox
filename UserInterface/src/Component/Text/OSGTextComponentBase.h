@@ -73,6 +73,11 @@
 #include "Text/OSGUIFont.h" // Font type
 #include <OpenSG/OSGColor4fFields.h> // SelectionBoxColor type
 #include <OpenSG/OSGColor4fFields.h> // SelectionTextColor type
+#include <OpenSG/OSGColor4fFields.h> // ActiveTextColor type
+#include <OpenSG/OSGColor4fFields.h> // FocusedTextColor type
+#include <OpenSG/OSGColor4fFields.h> // RolloverTextColor type
+#include <OpenSG/OSGColor4fFields.h> // DisabledTextColor type
+#include <OpenSG/OSGColor4fFields.h> // TextColor type
 
 #include "OSGTextComponentFields.h"
 
@@ -102,7 +107,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
         FontFieldId               = CaretPositionFieldId      + 1,
         SelectionBoxColorFieldId  = FontFieldId               + 1,
         SelectionTextColorFieldId = SelectionBoxColorFieldId  + 1,
-        NextFieldId               = SelectionTextColorFieldId + 1
+        ActiveTextColorFieldId    = SelectionTextColorFieldId + 1,
+        FocusedTextColorFieldId   = ActiveTextColorFieldId    + 1,
+        RolloverTextColorFieldId  = FocusedTextColorFieldId   + 1,
+        DisabledTextColorFieldId  = RolloverTextColorFieldId  + 1,
+        TextColorFieldId          = DisabledTextColorFieldId  + 1,
+        NextFieldId               = TextColorFieldId          + 1
     };
 
     static const OSG::BitVector TextFieldMask;
@@ -111,6 +121,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
     static const OSG::BitVector FontFieldMask;
     static const OSG::BitVector SelectionBoxColorFieldMask;
     static const OSG::BitVector SelectionTextColorFieldMask;
+    static const OSG::BitVector ActiveTextColorFieldMask;
+    static const OSG::BitVector FocusedTextColorFieldMask;
+    static const OSG::BitVector RolloverTextColorFieldMask;
+    static const OSG::BitVector DisabledTextColorFieldMask;
+    static const OSG::BitVector TextColorFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -143,6 +158,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
            SFUIFontPtr         *getSFFont           (void);
            SFColor4f           *getSFSelectionBoxColor(void);
            SFColor4f           *getSFSelectionTextColor(void);
+           SFColor4f           *getSFActiveTextColor(void);
+           SFColor4f           *getSFFocusedTextColor(void);
+           SFColor4f           *getSFRolloverTextColor(void);
+           SFColor4f           *getSFDisabledTextColor(void);
+           SFColor4f           *getSFTextColor      (void);
 
            std::string         &getText           (void);
      const std::string         &getText           (void) const;
@@ -156,6 +176,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
      const Color4f             &getSelectionBoxColor(void) const;
            Color4f             &getSelectionTextColor(void);
      const Color4f             &getSelectionTextColor(void) const;
+           Color4f             &getActiveTextColor(void);
+     const Color4f             &getActiveTextColor(void) const;
+           Color4f             &getFocusedTextColor(void);
+     const Color4f             &getFocusedTextColor(void) const;
+           Color4f             &getRolloverTextColor(void);
+     const Color4f             &getRolloverTextColor(void) const;
+           Color4f             &getDisabledTextColor(void);
+     const Color4f             &getDisabledTextColor(void) const;
+           Color4f             &getTextColor      (void);
+     const Color4f             &getTextColor      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -168,6 +198,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
      void setFont           ( const UIFontPtr &value );
      void setSelectionBoxColor( const Color4f &value );
      void setSelectionTextColor( const Color4f &value );
+     void setActiveTextColor( const Color4f &value );
+     void setFocusedTextColor( const Color4f &value );
+     void setRolloverTextColor( const Color4f &value );
+     void setDisabledTextColor( const Color4f &value );
+     void setTextColor      ( const Color4f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -200,6 +235,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
     SFUIFontPtr         _sfFont;
     SFColor4f           _sfSelectionBoxColor;
     SFColor4f           _sfSelectionTextColor;
+    SFColor4f           _sfActiveTextColor;
+    SFColor4f           _sfFocusedTextColor;
+    SFColor4f           _sfRolloverTextColor;
+    SFColor4f           _sfDisabledTextColor;
+    SFColor4f           _sfTextColor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

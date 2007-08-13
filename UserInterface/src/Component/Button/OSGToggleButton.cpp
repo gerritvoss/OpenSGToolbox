@@ -172,31 +172,12 @@ void ToggleButton::dump(      UInt32    ,
     SLOG << "Dump ToggleButton NI" << std::endl;
 }
 
-void ToggleButton::mouseReleased(const MouseEvent& e)
+void ToggleButton::actionPreformed(const ActionEvent& e)
 {
-	if(e.getButton()==MouseEvent::BUTTON1){
-		if(getActive()){
-			if(getSelected())
-			{
-				beginEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
-					setSelected(false);
-				endEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
-			}
-			else
-			{
-				beginEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
-					setSelected(true);
-				endEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
-			}
-		}
-		beginEditCP(ToggleButtonPtr(this), ToggleButton::ActiveFieldMask);
-			setActive(false);
-		endEditCP(ToggleButtonPtr(this), ToggleButton::ActiveFieldMask);
-	}
-	Component::mouseReleased(e);
+    beginEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
+	    setSelected(!getSelected());
+    endEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
 }
-
-
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

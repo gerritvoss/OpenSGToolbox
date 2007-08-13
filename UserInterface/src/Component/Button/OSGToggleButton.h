@@ -76,7 +76,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
 
     /*! \}                                                                 */
 
-	virtual void mouseReleased(const MouseEvent& e);
     void addButtonSelectedListener(ButtonSelectedListenerPtr Listener);
     void removeButtonSelectedListener(ButtonSelectedListenerPtr Listener);
 
@@ -101,6 +100,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
 
     /*! \}                                                                 */
     
+    virtual void actionPreformed(const ActionEvent& e);
+
 	typedef std::set<ButtonSelectedListenerPtr> ButtonSelectedListenerSet;
     typedef ButtonSelectedListenerSet::iterator ButtonSelectedListenerSetItor;
     typedef ButtonSelectedListenerSet::const_iterator ButtonSelectedListenerSetConstItor;

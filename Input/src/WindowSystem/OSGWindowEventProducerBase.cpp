@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -73,6 +73,9 @@ const OSG::BitVector  WindowEventProducerBase::EnabledFieldMask =
 const OSG::BitVector  WindowEventProducerBase::LastUpdateTimeFieldMask = 
     (TypeTraits<BitVector>::One << WindowEventProducerBase::LastUpdateTimeFieldId);
 
+const OSG::BitVector  WindowEventProducerBase::IconFieldMask = 
+    (TypeTraits<BitVector>::One << WindowEventProducerBase::IconFieldId);
+
 const OSG::BitVector WindowEventProducerBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -87,6 +90,9 @@ const OSG::BitVector WindowEventProducerBase::MTInfluenceMask =
     
 */
 /*! \var Time            WindowEventProducerBase::_sfLastUpdateTime
+    
+*/
+/*! \var ImagePtr        WindowEventProducerBase::_sfIcon
     
 */
 
@@ -108,7 +114,12 @@ FieldDescription *WindowEventProducerBase::_desc[] =
                      "LastUpdateTime", 
                      LastUpdateTimeFieldId, LastUpdateTimeFieldMask,
                      false,
-                     (FieldAccessMethod) &WindowEventProducerBase::getSFLastUpdateTime)
+                     (FieldAccessMethod) &WindowEventProducerBase::getSFLastUpdateTime),
+    new FieldDescription(SFImagePtr::getClassType(), 
+                     "Icon", 
+                     IconFieldId, IconFieldMask,
+                     false,
+                     (FieldAccessMethod) &WindowEventProducerBase::getSFIcon)
 };
 
 
@@ -178,6 +189,7 @@ WindowEventProducerBase::WindowEventProducerBase(void) :
     _sfWindow                 (), 
     _sfEnabled                (), 
     _sfLastUpdateTime         (Time(-1.0)), 
+    _sfIcon                   (ImagePtr(NullFC)), 
     Inherited() 
 {
 }
@@ -190,6 +202,7 @@ WindowEventProducerBase::WindowEventProducerBase(const WindowEventProducerBase &
     _sfWindow                 (source._sfWindow                 ), 
     _sfEnabled                (source._sfEnabled                ), 
     _sfLastUpdateTime         (source._sfLastUpdateTime         ), 
+    _sfIcon                   (source._sfIcon                   ), 
     Inherited                 (source)
 {
 }
@@ -221,6 +234,11 @@ UInt32 WindowEventProducerBase::getBinSize(const BitVector &whichField)
         returnValue += _sfLastUpdateTime.getBinSize();
     }
 
+    if(FieldBits::NoField != (IconFieldMask & whichField))
+    {
+        returnValue += _sfIcon.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -243,6 +261,11 @@ void WindowEventProducerBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (LastUpdateTimeFieldMask & whichField))
     {
         _sfLastUpdateTime.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (IconFieldMask & whichField))
+    {
+        _sfIcon.copyToBin(pMem);
     }
 
 
@@ -268,6 +291,11 @@ void WindowEventProducerBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfLastUpdateTime.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (IconFieldMask & whichField))
+    {
+        _sfIcon.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -287,6 +315,9 @@ void WindowEventProducerBase::executeSyncImpl(      WindowEventProducerBase *pOt
     if(FieldBits::NoField != (LastUpdateTimeFieldMask & whichField))
         _sfLastUpdateTime.syncWith(pOther->_sfLastUpdateTime);
 
+    if(FieldBits::NoField != (IconFieldMask & whichField))
+        _sfIcon.syncWith(pOther->_sfIcon);
+
 
 }
 #else
@@ -305,6 +336,9 @@ void WindowEventProducerBase::executeSyncImpl(      WindowEventProducerBase *pOt
 
     if(FieldBits::NoField != (LastUpdateTimeFieldMask & whichField))
         _sfLastUpdateTime.syncWith(pOther->_sfLastUpdateTime);
+
+    if(FieldBits::NoField != (IconFieldMask & whichField))
+        _sfIcon.syncWith(pOther->_sfIcon);
 
 
 

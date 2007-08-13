@@ -61,8 +61,6 @@
 #include "OSGButtonBase.h"
 #include "OSGButton.h"
 
-#include <Util/OSGUIDefines.h>            // VerticalAlignment default header
-#include <Util/OSGUIDefines.h>            // HorizontalAlignment default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -81,8 +79,20 @@ const OSG::BitVector  ButtonBase::ActiveBorderFieldMask =
 const OSG::BitVector  ButtonBase::ActiveBackgroundFieldMask = 
     (TypeTraits<BitVector>::One << ButtonBase::ActiveBackgroundFieldId);
 
-const OSG::BitVector  ButtonBase::ActiveForegroundColorFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::ActiveForegroundColorFieldId);
+const OSG::BitVector  ButtonBase::ActiveTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::ActiveTextColorFieldId);
+
+const OSG::BitVector  ButtonBase::FocusedTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::FocusedTextColorFieldId);
+
+const OSG::BitVector  ButtonBase::RolloverTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::RolloverTextColorFieldId);
+
+const OSG::BitVector  ButtonBase::DisabledTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::DisabledTextColorFieldId);
+
+const OSG::BitVector  ButtonBase::TextColorFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::TextColorFieldId);
 
 const OSG::BitVector  ButtonBase::VerticalAlignmentFieldMask = 
     (TypeTraits<BitVector>::One << ButtonBase::VerticalAlignmentFieldId);
@@ -97,7 +107,7 @@ const OSG::BitVector ButtonBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var FontPtr         ButtonBase::_sfFont
+/*! \var UIFontPtr       ButtonBase::_sfFont
     
 */
 /*! \var std::string     ButtonBase::_sfText
@@ -112,13 +122,25 @@ const OSG::BitVector ButtonBase::MTInfluenceMask =
 /*! \var UIBackgroundPtr ButtonBase::_sfActiveBackground
     
 */
-/*! \var Color4f         ButtonBase::_sfActiveForegroundColor
+/*! \var Color4f         ButtonBase::_sfActiveTextColor
     
 */
-/*! \var UInt32          ButtonBase::_sfVerticalAlignment
+/*! \var Color4f         ButtonBase::_sfFocusedTextColor
     
 */
-/*! \var UInt32          ButtonBase::_sfHorizontalAlignment
+/*! \var Color4f         ButtonBase::_sfRolloverTextColor
+    
+*/
+/*! \var Color4f         ButtonBase::_sfDisabledTextColor
+    
+*/
+/*! \var Color4f         ButtonBase::_sfTextColor
+    
+*/
+/*! \var Real32          ButtonBase::_sfVerticalAlignment
+    
+*/
+/*! \var Real32          ButtonBase::_sfHorizontalAlignment
     
 */
 
@@ -152,16 +174,36 @@ FieldDescription *ButtonBase::_desc[] =
                      false,
                      (FieldAccessMethod) &ButtonBase::getSFActiveBackground),
     new FieldDescription(SFColor4f::getClassType(), 
-                     "ActiveForegroundColor", 
-                     ActiveForegroundColorFieldId, ActiveForegroundColorFieldMask,
+                     "ActiveTextColor", 
+                     ActiveTextColorFieldId, ActiveTextColorFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFActiveForegroundColor),
-    new FieldDescription(SFUInt32::getClassType(), 
+                     (FieldAccessMethod) &ButtonBase::getSFActiveTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "FocusedTextColor", 
+                     FocusedTextColorFieldId, FocusedTextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFFocusedTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "RolloverTextColor", 
+                     RolloverTextColorFieldId, RolloverTextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFRolloverTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "DisabledTextColor", 
+                     DisabledTextColorFieldId, DisabledTextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFDisabledTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "TextColor", 
+                     TextColorFieldId, TextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFTextColor),
+    new FieldDescription(SFReal32::getClassType(), 
                      "VerticalAlignment", 
                      VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
                      false,
                      (FieldAccessMethod) &ButtonBase::getSFVerticalAlignment),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "HorizontalAlignment", 
                      HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
                      false,
@@ -244,11 +286,15 @@ ButtonBase::ButtonBase(void) :
     _sfFont                   (), 
     _sfText                   (), 
     _sfActive                 (bool(false)), 
-    _sfActiveBorder           (), 
-    _sfActiveBackground       (), 
-    _sfActiveForegroundColor  (), 
-    _sfVerticalAlignment      (UInt32(VERTICAL_CENTER)), 
-    _sfHorizontalAlignment    (UInt32(HORIZONTAL_CENTER)), 
+    _sfActiveBorder           (BorderPtr(NullFC)), 
+    _sfActiveBackground       (UIBackgroundPtr(NullFC)), 
+    _sfActiveTextColor        (), 
+    _sfFocusedTextColor       (), 
+    _sfRolloverTextColor      (), 
+    _sfDisabledTextColor      (), 
+    _sfTextColor              (), 
+    _sfVerticalAlignment      (Real32(0.5)), 
+    _sfHorizontalAlignment    (Real32(0.5)), 
     Inherited() 
 {
 }
@@ -263,7 +309,11 @@ ButtonBase::ButtonBase(const ButtonBase &source) :
     _sfActive                 (source._sfActive                 ), 
     _sfActiveBorder           (source._sfActiveBorder           ), 
     _sfActiveBackground       (source._sfActiveBackground       ), 
-    _sfActiveForegroundColor  (source._sfActiveForegroundColor  ), 
+    _sfActiveTextColor        (source._sfActiveTextColor        ), 
+    _sfFocusedTextColor       (source._sfFocusedTextColor       ), 
+    _sfRolloverTextColor      (source._sfRolloverTextColor      ), 
+    _sfDisabledTextColor      (source._sfDisabledTextColor      ), 
+    _sfTextColor              (source._sfTextColor              ), 
     _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
     _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
     Inherited                 (source)
@@ -307,9 +357,29 @@ UInt32 ButtonBase::getBinSize(const BitVector &whichField)
         returnValue += _sfActiveBackground.getBinSize();
     }
 
-    if(FieldBits::NoField != (ActiveForegroundColorFieldMask & whichField))
+    if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
     {
-        returnValue += _sfActiveForegroundColor.getBinSize();
+        returnValue += _sfActiveTextColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+    {
+        returnValue += _sfFocusedTextColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+    {
+        returnValue += _sfRolloverTextColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+    {
+        returnValue += _sfDisabledTextColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+    {
+        returnValue += _sfTextColor.getBinSize();
     }
 
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
@@ -356,9 +426,29 @@ void ButtonBase::copyToBin(      BinaryDataHandler &pMem,
         _sfActiveBackground.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ActiveForegroundColorFieldMask & whichField))
+    if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
     {
-        _sfActiveForegroundColor.copyToBin(pMem);
+        _sfActiveTextColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+    {
+        _sfFocusedTextColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+    {
+        _sfRolloverTextColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+    {
+        _sfDisabledTextColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+    {
+        _sfTextColor.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
@@ -404,9 +494,29 @@ void ButtonBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfActiveBackground.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ActiveForegroundColorFieldMask & whichField))
+    if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
     {
-        _sfActiveForegroundColor.copyFromBin(pMem);
+        _sfActiveTextColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+    {
+        _sfFocusedTextColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+    {
+        _sfRolloverTextColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+    {
+        _sfDisabledTextColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+    {
+        _sfTextColor.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
@@ -444,8 +554,20 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
     if(FieldBits::NoField != (ActiveBackgroundFieldMask & whichField))
         _sfActiveBackground.syncWith(pOther->_sfActiveBackground);
 
-    if(FieldBits::NoField != (ActiveForegroundColorFieldMask & whichField))
-        _sfActiveForegroundColor.syncWith(pOther->_sfActiveForegroundColor);
+    if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
+        _sfActiveTextColor.syncWith(pOther->_sfActiveTextColor);
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+        _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+        _sfRolloverTextColor.syncWith(pOther->_sfRolloverTextColor);
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+        _sfDisabledTextColor.syncWith(pOther->_sfDisabledTextColor);
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+        _sfTextColor.syncWith(pOther->_sfTextColor);
 
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
         _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
@@ -478,8 +600,20 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
     if(FieldBits::NoField != (ActiveBackgroundFieldMask & whichField))
         _sfActiveBackground.syncWith(pOther->_sfActiveBackground);
 
-    if(FieldBits::NoField != (ActiveForegroundColorFieldMask & whichField))
-        _sfActiveForegroundColor.syncWith(pOther->_sfActiveForegroundColor);
+    if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
+        _sfActiveTextColor.syncWith(pOther->_sfActiveTextColor);
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+        _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+        _sfRolloverTextColor.syncWith(pOther->_sfRolloverTextColor);
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+        _sfDisabledTextColor.syncWith(pOther->_sfDisabledTextColor);
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+        _sfTextColor.syncWith(pOther->_sfTextColor);
 
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
         _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);

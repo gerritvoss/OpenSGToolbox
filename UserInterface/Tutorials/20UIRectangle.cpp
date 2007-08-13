@@ -250,7 +250,7 @@ int main(int argc, char **argv)
 		button1->setSize(Vec2s(100,50));
 		button1->setText("Button 1");
 		button1->setBackground(button1Background);
-		button1->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
+		button1->setTextColor(Color4f(0.0,0.0,0.0,1.0));
 		
 		// Set the constraints created above to button
 		// to place the Button within the scene

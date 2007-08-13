@@ -115,6 +115,7 @@ A UI Component Interface.
 		type="BorderPtr"
 		cardinality="single"
 		visibility="external"
+		defaultValue="NullFC"
 		header="Border/OSGBorder.h"
 		access="public"
 	>
@@ -124,15 +125,8 @@ A UI Component Interface.
 		type="UIBackgroundPtr"
 		cardinality="single"
 		visibility="external"
+		defaultValue="NullFC"
 		header="Background/OSGUIBackground.h"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="ForegroundColor"
-		type="Color4f"
-		cardinality="single"
-		visibility="external"
 		access="public"
 	>
 	</Field>
@@ -141,6 +135,7 @@ A UI Component Interface.
 		type="BorderPtr"
 		cardinality="single"
 		visibility="external"
+		defaultValue="NullFC"
 		header="Border/OSGBorder.h"
 		access="public"
 	>
@@ -150,15 +145,8 @@ A UI Component Interface.
 		type="UIBackgroundPtr"
 		cardinality="single"
 		visibility="external"
+		defaultValue="NullFC"
 		header="Background/OSGUIBackground.h"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="DisabledForegroundColor"
-		type="Color4f"
-		cardinality="single"
-		visibility="external"
 		access="public"
 	>
 	</Field>
@@ -176,6 +164,7 @@ A UI Component Interface.
 		type="BorderPtr"
 		cardinality="single"
 		visibility="external"
+		defaultValue="NullFC"
 		header="Border/OSGBorder.h"
 		access="public"
 	>
@@ -185,15 +174,28 @@ A UI Component Interface.
 		type="UIBackgroundPtr"
 		cardinality="single"
 		visibility="external"
+		defaultValue="NullFC"
 		header="Background/OSGUIBackground.h"
 		access="public"
 	>
 	</Field>
 	<Field
-		name="FocusedForegroundColor"
-		type="Color4f"
+		name="RolloverBorder"
+		type="BorderPtr"
 		cardinality="single"
 		visibility="external"
+		defaultValue="NullFC"
+		header="Border/OSGBorder.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="RolloverBackground"
+		type="UIBackgroundPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Background/OSGUIBackground.h"
 		access="public"
 	>
 	</Field>

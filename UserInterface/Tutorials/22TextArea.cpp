@@ -132,12 +132,12 @@ int main(int argc, char **argv)
 	******************************************************/
 
 	beginEditCP(textArea, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
-		| Component::ForegroundColorFieldMask | TextComponent::FontFieldMask 
+		| TextComponent::TextColorFieldMask | TextComponent::FontFieldMask 
 		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
 			// Determine initial size of textArea
 		textArea->setPreferredSize( Vec2s (100, 50) );
 			// Determine the Font color for the Field
-		textArea->setForegroundColor( Color4f(0.0, 0.0, 0.0, 1.0) );
+		textArea->setTextColor( Color4f(0.0, 0.0, 0.0, 1.0) );
 			// Determine the Box Color and the Selection Color
 		textArea->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
 		textArea->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
@@ -155,7 +155,7 @@ int main(int argc, char **argv)
 			// textArea in this case
 		//textArea->setVerticalAlignment(.3);
 	endEditCP(textArea, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
-		| Component::ForegroundColorFieldMask| TextComponent::FontFieldMask 
+		| TextComponent::TextColorFieldMask| TextComponent::FontFieldMask 
 		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
 		
 	

@@ -76,6 +76,18 @@ const OSG::BitVector  CheckboxButtonBase::ActiveDrawObjectFieldMask =
 const OSG::BitVector  CheckboxButtonBase::ActiveSelectedDrawObjectFieldMask = 
     (TypeTraits<BitVector>::One << CheckboxButtonBase::ActiveSelectedDrawObjectFieldId);
 
+const OSG::BitVector  CheckboxButtonBase::RolloverDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << CheckboxButtonBase::RolloverDrawObjectFieldId);
+
+const OSG::BitVector  CheckboxButtonBase::RolloverSelectedDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << CheckboxButtonBase::RolloverSelectedDrawObjectFieldId);
+
+const OSG::BitVector  CheckboxButtonBase::DisabledDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << CheckboxButtonBase::DisabledDrawObjectFieldId);
+
+const OSG::BitVector  CheckboxButtonBase::DisabledSelectedDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << CheckboxButtonBase::DisabledSelectedDrawObjectFieldId);
+
 const OSG::BitVector CheckboxButtonBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -93,6 +105,18 @@ const OSG::BitVector CheckboxButtonBase::MTInfluenceMask =
     
 */
 /*! \var UIDrawObjectCanvasPtr CheckboxButtonBase::_sfActiveSelectedDrawObject
+    
+*/
+/*! \var UIDrawObjectCanvasPtr CheckboxButtonBase::_sfRolloverDrawObject
+    
+*/
+/*! \var UIDrawObjectCanvasPtr CheckboxButtonBase::_sfRolloverSelectedDrawObject
+    
+*/
+/*! \var UIDrawObjectCanvasPtr CheckboxButtonBase::_sfDisabledDrawObject
+    
+*/
+/*! \var UIDrawObjectCanvasPtr CheckboxButtonBase::_sfDisabledSelectedDrawObject
     
 */
 
@@ -119,7 +143,27 @@ FieldDescription *CheckboxButtonBase::_desc[] =
                      "ActiveSelectedDrawObject", 
                      ActiveSelectedDrawObjectFieldId, ActiveSelectedDrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &CheckboxButtonBase::getSFActiveSelectedDrawObject)
+                     (FieldAccessMethod) &CheckboxButtonBase::getSFActiveSelectedDrawObject),
+    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
+                     "RolloverDrawObject", 
+                     RolloverDrawObjectFieldId, RolloverDrawObjectFieldMask,
+                     false,
+                     (FieldAccessMethod) &CheckboxButtonBase::getSFRolloverDrawObject),
+    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
+                     "RolloverSelectedDrawObject", 
+                     RolloverSelectedDrawObjectFieldId, RolloverSelectedDrawObjectFieldMask,
+                     false,
+                     (FieldAccessMethod) &CheckboxButtonBase::getSFRolloverSelectedDrawObject),
+    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
+                     "DisabledDrawObject", 
+                     DisabledDrawObjectFieldId, DisabledDrawObjectFieldMask,
+                     false,
+                     (FieldAccessMethod) &CheckboxButtonBase::getSFDisabledDrawObject),
+    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
+                     "DisabledSelectedDrawObject", 
+                     DisabledSelectedDrawObjectFieldId, DisabledSelectedDrawObjectFieldMask,
+                     false,
+                     (FieldAccessMethod) &CheckboxButtonBase::getSFDisabledSelectedDrawObject)
 };
 
 
@@ -196,9 +240,13 @@ void CheckboxButtonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 CheckboxButtonBase::CheckboxButtonBase(void) :
     _sfDrawObject             (), 
-    _sfSelectedDrawObject      (), 
+    _sfSelectedDrawObject     (), 
     _sfActiveDrawObject       (), 
     _sfActiveSelectedDrawObject(), 
+    _sfRolloverDrawObject     (), 
+    _sfRolloverSelectedDrawObject(), 
+    _sfDisabledDrawObject     (), 
+    _sfDisabledSelectedDrawObject(), 
     Inherited() 
 {
 }
@@ -209,9 +257,13 @@ CheckboxButtonBase::CheckboxButtonBase(void) :
 
 CheckboxButtonBase::CheckboxButtonBase(const CheckboxButtonBase &source) :
     _sfDrawObject             (source._sfDrawObject             ), 
-    _sfSelectedDrawObject      (source._sfSelectedDrawObject      ), 
+    _sfSelectedDrawObject     (source._sfSelectedDrawObject     ), 
     _sfActiveDrawObject       (source._sfActiveDrawObject       ), 
     _sfActiveSelectedDrawObject(source._sfActiveSelectedDrawObject), 
+    _sfRolloverDrawObject     (source._sfRolloverDrawObject     ), 
+    _sfRolloverSelectedDrawObject(source._sfRolloverSelectedDrawObject), 
+    _sfDisabledDrawObject     (source._sfDisabledDrawObject     ), 
+    _sfDisabledSelectedDrawObject(source._sfDisabledSelectedDrawObject), 
     Inherited                 (source)
 {
 }
@@ -248,6 +300,26 @@ UInt32 CheckboxButtonBase::getBinSize(const BitVector &whichField)
         returnValue += _sfActiveSelectedDrawObject.getBinSize();
     }
 
+    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
+    {
+        returnValue += _sfRolloverDrawObject.getBinSize();
+    }
+
+    if(FieldBits::NoField != (RolloverSelectedDrawObjectFieldMask & whichField))
+    {
+        returnValue += _sfRolloverSelectedDrawObject.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
+    {
+        returnValue += _sfDisabledDrawObject.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DisabledSelectedDrawObjectFieldMask & whichField))
+    {
+        returnValue += _sfDisabledSelectedDrawObject.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -275,6 +347,26 @@ void CheckboxButtonBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ActiveSelectedDrawObjectFieldMask & whichField))
     {
         _sfActiveSelectedDrawObject.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
+    {
+        _sfRolloverDrawObject.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverSelectedDrawObjectFieldMask & whichField))
+    {
+        _sfRolloverSelectedDrawObject.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
+    {
+        _sfDisabledDrawObject.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledSelectedDrawObjectFieldMask & whichField))
+    {
+        _sfDisabledSelectedDrawObject.copyToBin(pMem);
     }
 
 
@@ -305,6 +397,26 @@ void CheckboxButtonBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfActiveSelectedDrawObject.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
+    {
+        _sfRolloverDrawObject.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverSelectedDrawObjectFieldMask & whichField))
+    {
+        _sfRolloverSelectedDrawObject.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
+    {
+        _sfDisabledDrawObject.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledSelectedDrawObjectFieldMask & whichField))
+    {
+        _sfDisabledSelectedDrawObject.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -327,6 +439,18 @@ void CheckboxButtonBase::executeSyncImpl(      CheckboxButtonBase *pOther,
     if(FieldBits::NoField != (ActiveSelectedDrawObjectFieldMask & whichField))
         _sfActiveSelectedDrawObject.syncWith(pOther->_sfActiveSelectedDrawObject);
 
+    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
+        _sfRolloverDrawObject.syncWith(pOther->_sfRolloverDrawObject);
+
+    if(FieldBits::NoField != (RolloverSelectedDrawObjectFieldMask & whichField))
+        _sfRolloverSelectedDrawObject.syncWith(pOther->_sfRolloverSelectedDrawObject);
+
+    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
+        _sfDisabledDrawObject.syncWith(pOther->_sfDisabledDrawObject);
+
+    if(FieldBits::NoField != (DisabledSelectedDrawObjectFieldMask & whichField))
+        _sfDisabledSelectedDrawObject.syncWith(pOther->_sfDisabledSelectedDrawObject);
+
 
 }
 #else
@@ -348,6 +472,18 @@ void CheckboxButtonBase::executeSyncImpl(      CheckboxButtonBase *pOther,
 
     if(FieldBits::NoField != (ActiveSelectedDrawObjectFieldMask & whichField))
         _sfActiveSelectedDrawObject.syncWith(pOther->_sfActiveSelectedDrawObject);
+
+    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
+        _sfRolloverDrawObject.syncWith(pOther->_sfRolloverDrawObject);
+
+    if(FieldBits::NoField != (RolloverSelectedDrawObjectFieldMask & whichField))
+        _sfRolloverSelectedDrawObject.syncWith(pOther->_sfRolloverSelectedDrawObject);
+
+    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
+        _sfDisabledDrawObject.syncWith(pOther->_sfDisabledDrawObject);
+
+    if(FieldBits::NoField != (DisabledSelectedDrawObjectFieldMask & whichField))
+        _sfDisabledSelectedDrawObject.syncWith(pOther->_sfDisabledSelectedDrawObject);
 
 
 

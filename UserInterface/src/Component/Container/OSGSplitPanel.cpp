@@ -311,8 +311,8 @@ void SplitPanel::DividerListener::mousePressed(const MouseEvent& e)
 	{
 		if(_SplitPanel->getParentFrame() != NullFC)
 		{
-			_SplitPanel->getParentFrame()->addMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
-			_SplitPanel->getParentFrame()->addMouseListener(&(_SplitPanel->_DividerDraggedListener));
+			_SplitPanel->getParentFrame()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
+            _SplitPanel->getParentFrame()->getDrawingSurface()->getEventProducer()->addMouseListener(&(_SplitPanel->_DividerDraggedListener));
 		}
 	}
 }
@@ -333,11 +333,11 @@ void SplitPanel::DividerDraggedListener::mouseEntered(const MouseEvent& e)
 }
 void SplitPanel::DividerDraggedListener::mouseExited(const MouseEvent& e)
 {
-	if(_SplitPanel->getParentFrame() != NullFC)
-	{
-		_SplitPanel->getParentFrame()->removeMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
-		_SplitPanel->getParentFrame()->removeMouseListener(&(_SplitPanel->_DividerDraggedListener));
-	}
+	//if(_SplitPanel->getParentFrame() != NullFC)
+	//{
+	//	_SplitPanel->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
+	//	_SplitPanel->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_SplitPanel->_DividerDraggedListener));
+	//}
 }
 void SplitPanel::DividerDraggedListener::mousePressed(const MouseEvent& e)
 {
@@ -346,8 +346,8 @@ void SplitPanel::DividerDraggedListener::mouseReleased(const MouseEvent& e)
 {
 	if(_SplitPanel->getParentFrame() != NullFC)
 	{
-		_SplitPanel->getParentFrame()->removeMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
-		_SplitPanel->getParentFrame()->removeMouseListener(&(_SplitPanel->_DividerDraggedListener));
+		_SplitPanel->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
+		_SplitPanel->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_SplitPanel->_DividerDraggedListener));
 	}
 }
 void SplitPanel::DividerDraggedListener::mouseMoved(const MouseEvent& e)
@@ -360,7 +360,7 @@ void SplitPanel::DividerDraggedListener::mouseDragged(const MouseEvent& e)
 
 	if(e.getButton() == e.BUTTON1)
 	{
-		Pnt2s temp = DrawingSurfaceToComponent(e.getLocation(), _SplitPanel);
+		Pnt2s temp = ViewportToComponent(e.getLocation(), _SplitPanel, e.getViewport());
 		beginEditCP(_SplitPanel, DividerPositionFieldMask);
 			if (_SplitPanel->getDividerPosition() <= 1.0)
 			{

@@ -131,23 +131,51 @@ SFUIBackgroundPtr *ButtonBase::getSFActiveBackground(void)
     return &_sfActiveBackground;
 }
 
-//! Get the Button::_sfActiveForegroundColor field.
+//! Get the Button::_sfActiveTextColor field.
 inline
-SFColor4f *ButtonBase::getSFActiveForegroundColor(void)
+SFColor4f *ButtonBase::getSFActiveTextColor(void)
 {
-    return &_sfActiveForegroundColor;
+    return &_sfActiveTextColor;
+}
+
+//! Get the Button::_sfFocusedTextColor field.
+inline
+SFColor4f *ButtonBase::getSFFocusedTextColor(void)
+{
+    return &_sfFocusedTextColor;
+}
+
+//! Get the Button::_sfRolloverTextColor field.
+inline
+SFColor4f *ButtonBase::getSFRolloverTextColor(void)
+{
+    return &_sfRolloverTextColor;
+}
+
+//! Get the Button::_sfDisabledTextColor field.
+inline
+SFColor4f *ButtonBase::getSFDisabledTextColor(void)
+{
+    return &_sfDisabledTextColor;
+}
+
+//! Get the Button::_sfTextColor field.
+inline
+SFColor4f *ButtonBase::getSFTextColor(void)
+{
+    return &_sfTextColor;
 }
 
 //! Get the Button::_sfVerticalAlignment field.
 inline
-SFUInt32 *ButtonBase::getSFVerticalAlignment(void)
+SFReal32 *ButtonBase::getSFVerticalAlignment(void)
 {
     return &_sfVerticalAlignment;
 }
 
 //! Get the Button::_sfHorizontalAlignment field.
 inline
-SFUInt32 *ButtonBase::getSFHorizontalAlignment(void)
+SFReal32 *ButtonBase::getSFHorizontalAlignment(void)
 {
     return &_sfHorizontalAlignment;
 }
@@ -258,65 +286,149 @@ void ButtonBase::setActiveBackground(const UIBackgroundPtr &value)
     _sfActiveBackground.setValue(value);
 }
 
-//! Get the value of the Button::_sfActiveForegroundColor field.
+//! Get the value of the Button::_sfActiveTextColor field.
 inline
-Color4f &ButtonBase::getActiveForegroundColor(void)
+Color4f &ButtonBase::getActiveTextColor(void)
 {
-    return _sfActiveForegroundColor.getValue();
+    return _sfActiveTextColor.getValue();
 }
 
-//! Get the value of the Button::_sfActiveForegroundColor field.
+//! Get the value of the Button::_sfActiveTextColor field.
 inline
-const Color4f &ButtonBase::getActiveForegroundColor(void) const
+const Color4f &ButtonBase::getActiveTextColor(void) const
 {
-    return _sfActiveForegroundColor.getValue();
+    return _sfActiveTextColor.getValue();
 }
 
-//! Set the value of the Button::_sfActiveForegroundColor field.
+//! Set the value of the Button::_sfActiveTextColor field.
 inline
-void ButtonBase::setActiveForegroundColor(const Color4f &value)
+void ButtonBase::setActiveTextColor(const Color4f &value)
 {
-    _sfActiveForegroundColor.setValue(value);
+    _sfActiveTextColor.setValue(value);
+}
+
+//! Get the value of the Button::_sfFocusedTextColor field.
+inline
+Color4f &ButtonBase::getFocusedTextColor(void)
+{
+    return _sfFocusedTextColor.getValue();
+}
+
+//! Get the value of the Button::_sfFocusedTextColor field.
+inline
+const Color4f &ButtonBase::getFocusedTextColor(void) const
+{
+    return _sfFocusedTextColor.getValue();
+}
+
+//! Set the value of the Button::_sfFocusedTextColor field.
+inline
+void ButtonBase::setFocusedTextColor(const Color4f &value)
+{
+    _sfFocusedTextColor.setValue(value);
+}
+
+//! Get the value of the Button::_sfRolloverTextColor field.
+inline
+Color4f &ButtonBase::getRolloverTextColor(void)
+{
+    return _sfRolloverTextColor.getValue();
+}
+
+//! Get the value of the Button::_sfRolloverTextColor field.
+inline
+const Color4f &ButtonBase::getRolloverTextColor(void) const
+{
+    return _sfRolloverTextColor.getValue();
+}
+
+//! Set the value of the Button::_sfRolloverTextColor field.
+inline
+void ButtonBase::setRolloverTextColor(const Color4f &value)
+{
+    _sfRolloverTextColor.setValue(value);
+}
+
+//! Get the value of the Button::_sfDisabledTextColor field.
+inline
+Color4f &ButtonBase::getDisabledTextColor(void)
+{
+    return _sfDisabledTextColor.getValue();
+}
+
+//! Get the value of the Button::_sfDisabledTextColor field.
+inline
+const Color4f &ButtonBase::getDisabledTextColor(void) const
+{
+    return _sfDisabledTextColor.getValue();
+}
+
+//! Set the value of the Button::_sfDisabledTextColor field.
+inline
+void ButtonBase::setDisabledTextColor(const Color4f &value)
+{
+    _sfDisabledTextColor.setValue(value);
+}
+
+//! Get the value of the Button::_sfTextColor field.
+inline
+Color4f &ButtonBase::getTextColor(void)
+{
+    return _sfTextColor.getValue();
+}
+
+//! Get the value of the Button::_sfTextColor field.
+inline
+const Color4f &ButtonBase::getTextColor(void) const
+{
+    return _sfTextColor.getValue();
+}
+
+//! Set the value of the Button::_sfTextColor field.
+inline
+void ButtonBase::setTextColor(const Color4f &value)
+{
+    _sfTextColor.setValue(value);
 }
 
 //! Get the value of the Button::_sfVerticalAlignment field.
 inline
-UInt32 &ButtonBase::getVerticalAlignment(void)
+Real32 &ButtonBase::getVerticalAlignment(void)
 {
     return _sfVerticalAlignment.getValue();
 }
 
 //! Get the value of the Button::_sfVerticalAlignment field.
 inline
-const UInt32 &ButtonBase::getVerticalAlignment(void) const
+const Real32 &ButtonBase::getVerticalAlignment(void) const
 {
     return _sfVerticalAlignment.getValue();
 }
 
 //! Set the value of the Button::_sfVerticalAlignment field.
 inline
-void ButtonBase::setVerticalAlignment(const UInt32 &value)
+void ButtonBase::setVerticalAlignment(const Real32 &value)
 {
     _sfVerticalAlignment.setValue(value);
 }
 
 //! Get the value of the Button::_sfHorizontalAlignment field.
 inline
-UInt32 &ButtonBase::getHorizontalAlignment(void)
+Real32 &ButtonBase::getHorizontalAlignment(void)
 {
     return _sfHorizontalAlignment.getValue();
 }
 
 //! Get the value of the Button::_sfHorizontalAlignment field.
 inline
-const UInt32 &ButtonBase::getHorizontalAlignment(void) const
+const Real32 &ButtonBase::getHorizontalAlignment(void) const
 {
     return _sfHorizontalAlignment.getValue();
 }
 
 //! Set the value of the Button::_sfHorizontalAlignment field.
 inline
-void ButtonBase::setHorizontalAlignment(const UInt32 &value)
+void ButtonBase::setHorizontalAlignment(const Real32 &value)
 {
     _sfHorizontalAlignment.setValue(value);
 }

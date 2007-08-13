@@ -208,9 +208,10 @@ public:
 
    virtual void buttonSelected(const ButtonSelectedEvent& e)
 	{
-		beginEditCP(leftPanelTextArea, TextArea::ForegroundColorFieldMask);
-			leftPanelTextArea->setForegroundColor( Color4f( 0.0, 0.0 , 0.0, 1.0) );
-		endEditCP(leftPanelTextArea, TextArea::ForegroundColorFieldMask);
+		beginEditCP(leftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
+			leftPanelTextArea->setTextColor( Color4f( 0.0, 0.0 , 0.0, 1.0) );
+			leftPanelTextArea->setRolloverTextColor( Color4f( 0.0, 0.0 , 0.0, 1.0) );
+		endEditCP(leftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
    }
 
    virtual void buttonDeselected(const ButtonSelectedEvent& e)
@@ -225,9 +226,10 @@ public:
    virtual void buttonSelected(const ButtonSelectedEvent& e)
 	{
 
-		beginEditCP(leftPanelTextArea, TextArea::ForegroundColorFieldMask);
-			leftPanelTextArea->setForegroundColor( Color4f( 1.0, 0.0 , 0.0, 1.0) );
-		endEditCP(leftPanelTextArea, TextArea::ForegroundColorFieldMask);
+		beginEditCP(leftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
+			leftPanelTextArea->setTextColor( Color4f( 1.0, 0.0 , 0.0, 1.0) );
+			leftPanelTextArea->setRolloverTextColor( Color4f( 1.0, 0.0 , 0.0, 1.0) );
+		endEditCP(leftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
 	
 	}
 
@@ -243,9 +245,10 @@ public:
    virtual void buttonSelected(const ButtonSelectedEvent& e)
 	{
 
-		beginEditCP(leftPanelTextArea, TextArea::ForegroundColorFieldMask);
-			leftPanelTextArea->setForegroundColor( Color4f( 0.0, 0.0 , 1.0, 1.0) );
-		endEditCP(leftPanelTextArea, TextArea::ForegroundColorFieldMask);
+		beginEditCP(leftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
+			leftPanelTextArea->setTextColor( Color4f( 0.0, 0.0 , 1.0, 1.0) );
+			leftPanelTextArea->setRolloverTextColor( Color4f( 0.0, 0.0 , 1.0, 1.0) );
+		endEditCP(leftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
 	
 	}
 
@@ -261,9 +264,10 @@ public:
    virtual void buttonSelected(const ButtonSelectedEvent& e)
 	{
 
-		beginEditCP(leftPanelTextArea, TextArea::ForegroundColorFieldMask);
-			leftPanelTextArea->setForegroundColor( Color4f( 0.0, 1.0 , 0.0, 1.0) );
-		endEditCP(leftPanelTextArea, TextArea::ForegroundColorFieldMask);
+		beginEditCP(leftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
+			leftPanelTextArea->setTextColor( Color4f( 0.0, 1.0 , 0.0, 1.0) );
+			leftPanelTextArea->setRolloverTextColor( Color4f( 0.0, 1.0 , 0.0, 1.0) );
+		endEditCP(leftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
 	
 	}
 
@@ -578,12 +582,13 @@ ComponentPtr createleftPanelButtonPanel(void)
 	// Create Label for this Panel
 	LabelPtr leftPanelButtonPanelLabel = osg::Label::create();
 
-	beginEditCP(leftPanelButtonPanelLabel, Component::ForegroundColorFieldMask | Component::BackgroundFieldMask | Component::PreferredSizeFieldMask | Label::TextFieldMask);
-		leftPanelButtonPanelLabel->setForegroundColor( Color4f(1.0,1.0,1.0,1.0));
+	beginEditCP(leftPanelButtonPanelLabel, Label::TextColorFieldMask | Component::BackgroundFieldMask | Component::PreferredSizeFieldMask | Label::TextFieldMask);
+		leftPanelButtonPanelLabel->setTextColor( Color4f(1.0,1.0,1.0,1.0));
+		leftPanelButtonPanelLabel->setRolloverTextColor( Color4f(1.0,1.0,1.0,1.0));
 		leftPanelButtonPanelLabel->setBackground(createComplexBackground());
 		leftPanelButtonPanelLabel->setPreferredSize( Vec2s(100, 50) );
 		leftPanelButtonPanelLabel->setText("Various Options");
-	endEditCP(leftPanelButtonPanelLabel, Component::ForegroundColorFieldMask | Component::BackgroundFieldMask | Component::PreferredSizeFieldMask | 		Label::TextFieldMask);
+	endEditCP(leftPanelButtonPanelLabel, Label::TextColorFieldMask | Component::BackgroundFieldMask | Component::PreferredSizeFieldMask | 		Label::TextFieldMask);
 
 	// Create and edit the Panel buttons
 	ButtonPtr leftPanelButton1 = osg::Button::create();
@@ -675,8 +680,8 @@ ComponentPtr createleftPanelRadioTextPanel(void)
 	RadioButtonPtr rbutton4 = osg::RadioButton::create();
 
 	beginEditCP(rbutton1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
-		rbutton1->setVerticalAlignment(VERTICAL_CENTER);
-		rbutton1->setHorizontalAlignment(HORIZONTAL_LEFT);
+		rbutton1->setVerticalAlignment(0.5);
+		rbutton1->setHorizontalAlignment(0.0);
 		rbutton1->setPreferredSize(Vec2s(100, 40));
 		rbutton1->setText("Black Text");
         rbutton1->setToolTipText("Set TextArea text black");
@@ -684,8 +689,8 @@ ComponentPtr createleftPanelRadioTextPanel(void)
 	rbutton1->addButtonSelectedListener(&rbutton1Listener);
 
 	beginEditCP(rbutton2,Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
-		rbutton2->setVerticalAlignment(VERTICAL_CENTER);
-		rbutton2->setHorizontalAlignment(HORIZONTAL_LEFT);
+		rbutton2->setVerticalAlignment(0.5);
+		rbutton2->setHorizontalAlignment(0.0);
 		rbutton2->setPreferredSize(Vec2s(100, 40));
 		rbutton2->setText("Red Text");
         rbutton2->setToolTipText("Set TextArea text red");
@@ -693,8 +698,8 @@ ComponentPtr createleftPanelRadioTextPanel(void)
 	rbutton2->addButtonSelectedListener(&rbutton2Listener);
 
 	beginEditCP(rbutton3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
-		rbutton3->setVerticalAlignment(VERTICAL_CENTER);
-		rbutton3->setHorizontalAlignment(HORIZONTAL_LEFT);
+		rbutton3->setVerticalAlignment(0.5);
+		rbutton3->setHorizontalAlignment(0.0);
 		rbutton3->setPreferredSize(Vec2s(100, 40));
 		rbutton3->setText("Green Text");
         rbutton3->setToolTipText("Set TextArea text green");
@@ -702,8 +707,8 @@ ComponentPtr createleftPanelRadioTextPanel(void)
 	rbutton3->addButtonSelectedListener(&rbutton3Listener);
 
 	beginEditCP(rbutton4, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::SizeFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
-		rbutton4->setVerticalAlignment(VERTICAL_CENTER);
-		rbutton4->setHorizontalAlignment(HORIZONTAL_LEFT);
+		rbutton4->setVerticalAlignment(0.5);
+		rbutton4->setHorizontalAlignment(0.0);
 		rbutton4->setPreferredSize(Vec2s(100, 40));
 		rbutton4->setText("Blue Text");
         rbutton4->setToolTipText("Set TextArea text blue");
@@ -869,7 +874,7 @@ ComponentPtr createrightPanelCheckPanel(void)
 	beginEditCP(rightPanelCheck1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 		rightPanelCheck1->setText("Show Torus");
 		rightPanelCheck1->setPreferredSize( Vec2s(125,50) );
-		rightPanelCheck1->setHorizontalAlignment(HORIZONTAL_LEFT);
+		rightPanelCheck1->setHorizontalAlignment(0.0);
 	endEditCP(rightPanelCheck1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 		// Add Listener
 		rightPanelCheck1->addButtonSelectedListener(&rightPanelCheck1Listener);
@@ -877,7 +882,7 @@ ComponentPtr createrightPanelCheckPanel(void)
 	beginEditCP(rightPanelCheck2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 		rightPanelCheck2->setText("Show Box");
 		rightPanelCheck2->setPreferredSize( Vec2s(125,50) );
-		rightPanelCheck2->setHorizontalAlignment(HORIZONTAL_LEFT);
+		rightPanelCheck2->setHorizontalAlignment(0.0);
 	endEditCP(rightPanelCheck2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 		// Add Listener
 		rightPanelCheck2->addButtonSelectedListener(&rightPanelCheck2Listener);
@@ -885,7 +890,7 @@ ComponentPtr createrightPanelCheckPanel(void)
 	beginEditCP(rightPanelCheck3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 		rightPanelCheck3->setText("Show Sphere");
 		rightPanelCheck3->setPreferredSize( Vec2s(125,50) );
-		rightPanelCheck3->setHorizontalAlignment(HORIZONTAL_LEFT);
+		rightPanelCheck3->setHorizontalAlignment(0.0);
 	endEditCP(rightPanelCheck3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 		// Add Listener
 		rightPanelCheck3->addButtonSelectedListener(&rightPanelCheck3Listener);
@@ -893,7 +898,7 @@ ComponentPtr createrightPanelCheckPanel(void)
 	beginEditCP(rightPanelCheck4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 		rightPanelCheck4->setText("Show Cone");
 		rightPanelCheck4->setPreferredSize( Vec2s(125,50) );
-		rightPanelCheck4->setHorizontalAlignment(HORIZONTAL_LEFT);
+		rightPanelCheck4->setHorizontalAlignment(0.0);
 	endEditCP(rightPanelCheck4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 		// Add Listener
 		rightPanelCheck4->addButtonSelectedListener(&rightPanelCheck4Listener);
@@ -908,6 +913,7 @@ ComponentPtr createrightPanelCheckPanel(void)
 	BoxLayoutPtr rightPanelCheckPanelLayout = osg::BoxLayout::create();
 	beginEditCP(rightPanelCheckPanelLayout, BoxLayout::AlignmentFieldMask);
 		rightPanelCheckPanelLayout->setAlignment(VERTICAL_ALIGNMENT);
+		rightPanelCheckPanelLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
 	endEditCP(rightPanelCheckPanelLayout, BoxLayout::AlignmentFieldMask);
 
 	// Create Panel Border

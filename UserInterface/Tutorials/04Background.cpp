@@ -215,14 +215,6 @@ int main(int argc, char **argv)
 	beginEditCP(textureBackground, TextureUIBackground::TextureFieldMask);
 		textureBackground->setTexture(BackgroundTextureChunk);
 	endEditCP(textureBackground, TextureUIBackground::TextureFieldMask);
-
-
-	// Create and define simple line border to be used on Buttons
-	LineBorderPtr lineBorder = osg::LineBorder::create();
-	beginEditCP(lineBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
-		lineBorder->setColor( Color4f(0.0, 0.0, 0.0, 1.0) );
-		lineBorder->setWidth( 1 );
-	endEditCP(lineBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
 	
 	/******************************************************
 
@@ -243,42 +235,56 @@ int main(int argc, char **argv)
 	beginEditCP(buttonColor, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
 		buttonColor->setText("Color Background");
 		buttonColor->setBackground(colorBackground);
-		buttonColor->setBorder(lineBorder);
+		buttonColor->setActiveBackground(colorBackground);
+		buttonColor->setRolloverBackground(colorBackground);
+		buttonColor->setPreferredSize(Vec2s(150,50));
     endEditCP(buttonColor, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
 
 	beginEditCP(buttonCompound, Button::TextFieldMask | Component::BackgroundFieldMask | Component::PreferredSizeFieldMask |Component::BorderFieldMask);
 		buttonCompound->setText("Compound Background");
 		buttonCompound->setBackground(compoundBackground);
+		buttonCompound->setActiveBackground(compoundBackground);
+		buttonCompound->setRolloverBackground(compoundBackground);
 		buttonCompound->setPreferredSize(Vec2s(150,50));
-		buttonCompound->setBorder(lineBorder);
 		endEditCP(buttonCompound, Button::TextFieldMask | Component::BackgroundFieldMask | Component::PreferredSizeFieldMask |Component::BorderFieldMask);
 
 	beginEditCP(buttonEmpty, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
 		buttonEmpty->setText("Empty Background");
 		buttonEmpty->setBackground(emptyBackground);
-		buttonEmpty->setBorder(lineBorder);
+		buttonEmpty->setActiveBackground(emptyBackground);
+		buttonEmpty->setRolloverBackground(emptyBackground);
+		buttonEmpty->setPreferredSize(Vec2s(150,50));
 	endEditCP(buttonEmpty, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
 
 	beginEditCP(buttonGradient, Button::TextFieldMask | Component::BackgroundFieldMask | Component::PreferredSizeFieldMask |Component::BorderFieldMask);
 		buttonGradient->setText("Gradient Background");
 		buttonGradient->setBackground(gradientBackground);
+		buttonGradient->setActiveBackground(gradientBackground);
+		buttonGradient->setRolloverBackground(gradientBackground);
 		buttonGradient->setPreferredSize(Vec2s(150,50));
-		buttonGradient->setBorder(lineBorder);
     endEditCP(buttonGradient, Button::TextFieldMask | Component::BackgroundFieldMask | Component::PreferredSizeFieldMask |Component::BorderFieldMask);
 	
-	beginEditCP(buttonMaterial, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask | Component::ForegroundColorFieldMask);
+	beginEditCP(buttonMaterial, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask | Button::TextColorFieldMask);
 		buttonMaterial->setText("Material Background");
 		buttonMaterial->setBackground(materialBackground);
-		buttonMaterial->setBorder(lineBorder);
-		buttonMaterial->setForegroundColor( Color4f(1.0,1.0,1.0,1.0) );
-		endEditCP(buttonMaterial, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask | Component::ForegroundColorFieldMask);
+		buttonMaterial->setActiveBackground(materialBackground);
+		buttonMaterial->setRolloverBackground(materialBackground);
+		buttonMaterial->setPreferredSize(Vec2s(150,50));
+		buttonMaterial->setTextColor( Color4f(1.0,1.0,1.0,1.0) );
+		buttonMaterial->setRolloverTextColor( Color4f(1.0,1.0,1.0,1.0) );
+		buttonMaterial->setActiveTextColor( Color4f(1.0,1.0,1.0,1.0) );
+		endEditCP(buttonMaterial, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask | Button::TextColorFieldMask);
 
-	beginEditCP(buttonTexture, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask | Component::ForegroundColorFieldMask);
+	beginEditCP(buttonTexture, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask | Button::TextColorFieldMask);
 		buttonTexture->setText("Texture Background");
 		buttonTexture->setBackground(textureBackground);
-		buttonTexture->setBorder(lineBorder);
-		buttonTexture->setForegroundColor( Color4f(0.0,0.0,0.0,1.0) );
-	endEditCP(buttonTexture, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask | Component::ForegroundColorFieldMask);
+		buttonTexture->setActiveBackground(textureBackground);
+		buttonTexture->setRolloverBackground(textureBackground);
+		buttonTexture->setPreferredSize(Vec2s(150,50));
+		buttonTexture->setTextColor( Color4f(0.5,0.5,0.5,1.0) );
+		buttonTexture->setRolloverTextColor( Color4f(0.5,0.5,0.5,1.0) );
+		buttonTexture->setActiveTextColor( Color4f(0.5,0.5,0.5,1.0) );
+	endEditCP(buttonTexture, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask | Button::TextColorFieldMask);
 
 
 

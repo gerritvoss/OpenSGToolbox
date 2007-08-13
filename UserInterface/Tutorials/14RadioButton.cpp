@@ -126,22 +126,22 @@ int main(int argc, char **argv)
 	RadioButtonPtr button3 = osg::RadioButton::create();
 
 	beginEditCP(button1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
-		button1->setVerticalAlignment(VERTICAL_CENTER);
-		button1->setHorizontalAlignment(HORIZONTAL_LEFT);
+		button1->setVerticalAlignment(0.5);
+		button1->setHorizontalAlignment(0.0);
 		button1->setPreferredSize(Vec2s(100, 50));
 		button1->setText("Option 1");
 	endEditCP(button1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
 
 	beginEditCP(button2,Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
-		button2->setVerticalAlignment(VERTICAL_CENTER);
-		button2->setHorizontalAlignment(HORIZONTAL_LEFT);
+		button2->setVerticalAlignment(0.5);
+		button2->setHorizontalAlignment(0.0);
 		button2->setPreferredSize(Vec2s(100, 50));
 		button2->setText("Option 2");
 	endEditCP(button2, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
 
 	beginEditCP(button3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
-		button3->setVerticalAlignment(VERTICAL_CENTER);
-		button3->setHorizontalAlignment(HORIZONTAL_LEFT);
+		button3->setVerticalAlignment(0.5);
+		button3->setHorizontalAlignment(0.0);
 		button3->setPreferredSize(Vec2s(100, 50));
 		button3->setText("Option 3");
 	endEditCP(button3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);

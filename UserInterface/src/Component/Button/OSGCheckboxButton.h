@@ -95,6 +95,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButton : public CheckboxButtonBase
 
     /*! \}                                                                 */
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
+    virtual UIDrawObjectCanvasPtr getDrawnDrawObject(void) const;
     
     /*==========================  PRIVATE  ================================*/
   private:

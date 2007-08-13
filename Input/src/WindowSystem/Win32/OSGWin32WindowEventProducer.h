@@ -127,6 +127,24 @@ class OSG_INPUTLIB_DLLMAPPING Win32WindowEventProducer : public Win32WindowEvent
 
     //Fullscreen
     virtual void setFullscreen(bool Fullscreen);
+    
+    //Set the text on the Title bar of the window
+    virtual void setTitle(const std::string& TitleText);
+
+    //Get the text of the Title bar of the window
+    virtual std::string& getTitle(void);
+
+    //Set the window to allow or not allow Resizing
+    virtual void setRisizable(bool IsResizable);
+
+    //Get whether or not the window allows resizing
+    virtual bool getRisizable(void);
+
+    //Set the window to draw or not draw it's border
+    virtual void setDrawBorder(bool DrawBorder);
+
+    //Get wether or not the window is drawing a border
+    virtual bool getDrawBorder(void);
 
     //Get the Window Fullscreen
     virtual bool getFullscreen(void) const;

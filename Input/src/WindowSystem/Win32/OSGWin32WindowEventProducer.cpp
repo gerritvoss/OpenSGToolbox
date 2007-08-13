@@ -687,21 +687,27 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd, UINT uMsg,
     {       
         case WM_LBUTTONDOWN:
             produceMousePressed(MouseEvent::BUTTON1, Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+            SetCapture(hwnd);
             break;
         case WM_MBUTTONDOWN:
             produceMousePressed(MouseEvent::BUTTON2, Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+            SetCapture(hwnd);
             break;
         case WM_RBUTTONDOWN:
             produceMousePressed(MouseEvent::BUTTON3, Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+            SetCapture(hwnd);
             break;   
         case WM_LBUTTONUP:
             produceMouseReleased(MouseEvent::BUTTON1, Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+            ReleaseCapture();
             break;              
         case WM_MBUTTONUP:
             produceMouseReleased(MouseEvent::BUTTON2, Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+            ReleaseCapture();
             break;
         case WM_RBUTTONUP:
             produceMouseReleased(MouseEvent::BUTTON3, Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+            ReleaseCapture();
             break;
         case WM_MOUSEWHEEL:
 			{
@@ -955,7 +961,7 @@ void Win32WindowEventProducer::setFullscreen(bool Fullscreen)
 bool Win32WindowEventProducer::getFullscreen(void) const
 {
     //TODO: find a better way to do this
-   return false;
+    return false;
 }
 
 void Win32WindowEventProducer::closeWindow(void)
@@ -964,6 +970,46 @@ void Win32WindowEventProducer::closeWindow(void)
     {
         DestroyWindow(WIN32Window::Ptr::dcast(getWindow())->getHwnd());
     }
+}
+
+void Win32WindowEventProducer::setTitle(const std::string& TitleText)
+{
+    SetWindowText(WIN32Window::Ptr::dcast(getWindow())->getHwnd(), TitleText.c_str());
+}
+
+std::string& Win32WindowEventProducer::getTitle(void)
+{
+    int TextLength = GetWindowTextLength(WIN32Window::Ptr::dcast(getWindow())->getHwnd());
+    PTSTR Text = (PSTR) VirtualAlloc((LPVOID) NULL, 
+                    (DWORD) (TextLength + 1), MEM_COMMIT, 
+                    PAGE_READWRITE);
+
+    GetWindowText(WIN32Window::Ptr::dcast(getWindow())->getHwnd(), Text, 
+                    TextLength + 1);
+    
+    return std::string(Text);
+}
+
+void Win32WindowEventProducer::setRisizable(bool IsResizable)
+{
+    //TODO:Implement
+}
+
+bool Win32WindowEventProducer::getRisizable(void)
+{
+    //TODO:Implement
+    return true;
+}
+
+void Win32WindowEventProducer::setDrawBorder(bool DrawBorder)
+{
+    //TODO:Implement
+}
+
+bool Win32WindowEventProducer::getDrawBorder(void)
+{
+    //TODO:Implement
+    return true;
 }
 
 /*-------------------------------------------------------------------------*\

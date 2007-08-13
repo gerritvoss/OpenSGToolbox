@@ -43,9 +43,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define OSG_COMPILEUSERINTERFACELIB
+
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include "OSGArcUIDrawObject.h"
+
+#include "OSGMultiColoredQuadUIDrawObject.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -53,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::ArcUIDrawObject
-A UI ArcUIDrawObject. 	
+/*! \class osg::MultiColoredQuadUIDrawObject
+A UI MultiColoredQuadUIDrawObject. 	
 */
 
 /***************************************************************************\
@@ -65,7 +67,7 @@ A UI ArcUIDrawObject.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ArcUIDrawObject::initMethod (void)
+void MultiColoredQuadUIDrawObject::initMethod (void)
 {
 }
 
@@ -74,48 +76,54 @@ void ArcUIDrawObject::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ArcUIDrawObject::draw(const GraphicsPtr Graphics) const
+void MultiColoredQuadUIDrawObject::draw(const GraphicsPtr Graphics) const
 {
-	Graphics->drawArc(getCenter(),getWidth(),getHeight(), getStartAngleRad(), getEndAngleRad(), getLineWidth(), getSubDivisions(), getColor(),getOpacity());
+	Graphics->drawQuad(getPoint1(),getPoint2(),getPoint3(),getPoint4(),
+                       getColor1(), getColor2(), getColor3(), getColor4(),
+                       getOpacity());
 }
 
-void ArcUIDrawObject::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+void MultiColoredQuadUIDrawObject::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 {
-	TopLeft = Pnt2s(getCenter().x()-getWidth(), getCenter().y()-getHeight());
-	BottomRight = Pnt2s(getCenter().x()+getWidth(), getCenter().y()+getHeight());
+   TopLeft.setValues(
+       osgMin(osgMin(osgMin(getPoint1().x(), getPoint2().x()),getPoint3().x()),getPoint4().x()),
+       osgMin(osgMin(osgMin(getPoint1().y(), getPoint2().y()),getPoint3().y()),getPoint4().y()));
+   
+   BottomRight.setValues(
+       osgMax(osgMax(osgMax(getPoint1().x(), getPoint2().x()),getPoint3().x()),getPoint4().x()),
+       osgMax(osgMax(osgMax(getPoint1().y(), getPoint2().y()),getPoint3().y()),getPoint4().y()));
 }
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-ArcUIDrawObject::ArcUIDrawObject(void) :
+MultiColoredQuadUIDrawObject::MultiColoredQuadUIDrawObject(void) :
     Inherited()
 {
 }
 
-ArcUIDrawObject::ArcUIDrawObject(const ArcUIDrawObject &source) :
+MultiColoredQuadUIDrawObject::MultiColoredQuadUIDrawObject(const MultiColoredQuadUIDrawObject &source) :
     Inherited(source)
 {
 }
 
-ArcUIDrawObject::~ArcUIDrawObject(void)
+MultiColoredQuadUIDrawObject::~MultiColoredQuadUIDrawObject(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void ArcUIDrawObject::changed(BitVector whichField, UInt32 origin)
+void MultiColoredQuadUIDrawObject::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void ArcUIDrawObject::dump(      UInt32    , 
+void MultiColoredQuadUIDrawObject::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump ArcUIDrawObject NI" << std::endl;
+    SLOG << "Dump MultiColoredQuadUIDrawObject NI" << std::endl;
 }
 
 
@@ -133,10 +141,10 @@ void ArcUIDrawObject::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGARCUIDRAWOBJECTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGARCUIDRAWOBJECTBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGMULTICOLOREDQUADUIDRAWOBJECTBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGMULTICOLOREDQUADUIDRAWOBJECTBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGARCUIDRAWOBJECTFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGMULTICOLOREDQUADUIDRAWOBJECTFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

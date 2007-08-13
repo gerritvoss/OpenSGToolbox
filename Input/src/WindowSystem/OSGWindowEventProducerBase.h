@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -70,6 +70,7 @@
 #include <OpenSG/OSGWindowFields.h> // Window type
 #include <OpenSG/OSGBoolFields.h> // Enabled type
 #include <OpenSG/OSGTimeFields.h> // LastUpdateTime type
+#include <OpenSG/OSGImageFields.h> // Icon type
 
 #include "OSGWindowEventProducerFields.h"
 
@@ -96,12 +97,14 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
         WindowFieldId         = Inherited::NextFieldId,
         EnabledFieldId        = WindowFieldId         + 1,
         LastUpdateTimeFieldId = EnabledFieldId        + 1,
-        NextFieldId           = LastUpdateTimeFieldId + 1
+        IconFieldId           = LastUpdateTimeFieldId + 1,
+        NextFieldId           = IconFieldId           + 1
     };
 
     static const OSG::BitVector WindowFieldMask;
     static const OSG::BitVector EnabledFieldMask;
     static const OSG::BitVector LastUpdateTimeFieldMask;
+    static const OSG::BitVector IconFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -131,6 +134,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
            SFWindowPtr         *getSFWindow         (void);
            SFBool              *getSFEnabled        (void);
            SFTime              *getSFLastUpdateTime (void);
+           SFImagePtr          *getSFIcon           (void);
 
            WindowPtr           &getWindow         (void);
      const WindowPtr           &getWindow         (void) const;
@@ -138,6 +142,8 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
      const bool                &getEnabled        (void) const;
            Time                &getLastUpdateTime (void);
      const Time                &getLastUpdateTime (void) const;
+           ImagePtr            &getIcon           (void);
+     const ImagePtr            &getIcon           (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -147,6 +153,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
      void setWindow         ( const WindowPtr &value );
      void setEnabled        ( const bool &value );
      void setLastUpdateTime ( const Time &value );
+     void setIcon           ( const ImagePtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +183,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
     SFWindowPtr         _sfWindow;
     SFBool              _sfEnabled;
     SFTime              _sfLastUpdateTime;
+    SFImagePtr          _sfIcon;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

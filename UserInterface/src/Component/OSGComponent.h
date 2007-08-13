@@ -222,6 +222,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     ActivateToolTipListener _ActivateToolTipListener;
     DeactivateToolTipListener _DeactivateToolTipListener;
     
+	bool _MouseInComponentLastMouse;
     /*==========================  PRIVATE  ================================*/
   private:
 
@@ -293,7 +294,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     void produceComponentEnabled(const ComponentEvent& e);
     void produceComponentDisabled(const ComponentEvent& e);
 	
-	bool _MouseInComponentLastMouse;
 };
 
 typedef Component *ComponentP;

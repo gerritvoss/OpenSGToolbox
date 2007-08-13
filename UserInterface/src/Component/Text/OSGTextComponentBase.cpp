@@ -82,6 +82,21 @@ const OSG::BitVector  TextComponentBase::SelectionBoxColorFieldMask =
 const OSG::BitVector  TextComponentBase::SelectionTextColorFieldMask = 
     (TypeTraits<BitVector>::One << TextComponentBase::SelectionTextColorFieldId);
 
+const OSG::BitVector  TextComponentBase::ActiveTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << TextComponentBase::ActiveTextColorFieldId);
+
+const OSG::BitVector  TextComponentBase::FocusedTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << TextComponentBase::FocusedTextColorFieldId);
+
+const OSG::BitVector  TextComponentBase::RolloverTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << TextComponentBase::RolloverTextColorFieldId);
+
+const OSG::BitVector  TextComponentBase::DisabledTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << TextComponentBase::DisabledTextColorFieldId);
+
+const OSG::BitVector  TextComponentBase::TextColorFieldMask = 
+    (TypeTraits<BitVector>::One << TextComponentBase::TextColorFieldId);
+
 const OSG::BitVector TextComponentBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -105,6 +120,21 @@ const OSG::BitVector TextComponentBase::MTInfluenceMask =
     
 */
 /*! \var Color4f         TextComponentBase::_sfSelectionTextColor
+    
+*/
+/*! \var Color4f         TextComponentBase::_sfActiveTextColor
+    
+*/
+/*! \var Color4f         TextComponentBase::_sfFocusedTextColor
+    
+*/
+/*! \var Color4f         TextComponentBase::_sfRolloverTextColor
+    
+*/
+/*! \var Color4f         TextComponentBase::_sfDisabledTextColor
+    
+*/
+/*! \var Color4f         TextComponentBase::_sfTextColor
     
 */
 
@@ -141,7 +171,32 @@ FieldDescription *TextComponentBase::_desc[] =
                      "SelectionTextColor", 
                      SelectionTextColorFieldId, SelectionTextColorFieldMask,
                      false,
-                     (FieldAccessMethod) &TextComponentBase::getSFSelectionTextColor)
+                     (FieldAccessMethod) &TextComponentBase::getSFSelectionTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "ActiveTextColor", 
+                     ActiveTextColorFieldId, ActiveTextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &TextComponentBase::getSFActiveTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "FocusedTextColor", 
+                     FocusedTextColorFieldId, FocusedTextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &TextComponentBase::getSFFocusedTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "RolloverTextColor", 
+                     RolloverTextColorFieldId, RolloverTextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &TextComponentBase::getSFRolloverTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "DisabledTextColor", 
+                     DisabledTextColorFieldId, DisabledTextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &TextComponentBase::getSFDisabledTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "TextColor", 
+                     TextColorFieldId, TextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &TextComponentBase::getSFTextColor)
 };
 
 
@@ -214,6 +269,11 @@ TextComponentBase::TextComponentBase(void) :
     _sfFont                   (), 
     _sfSelectionBoxColor      (Color4f(0.0,0.0,1.0,1.0)), 
     _sfSelectionTextColor     (Color4f(1.0,1.0,1.0,1.0)), 
+    _sfActiveTextColor        (), 
+    _sfFocusedTextColor       (), 
+    _sfRolloverTextColor      (), 
+    _sfDisabledTextColor      (), 
+    _sfTextColor              (), 
     Inherited() 
 {
 }
@@ -229,6 +289,11 @@ TextComponentBase::TextComponentBase(const TextComponentBase &source) :
     _sfFont                   (source._sfFont                   ), 
     _sfSelectionBoxColor      (source._sfSelectionBoxColor      ), 
     _sfSelectionTextColor     (source._sfSelectionTextColor     ), 
+    _sfActiveTextColor        (source._sfActiveTextColor        ), 
+    _sfFocusedTextColor       (source._sfFocusedTextColor       ), 
+    _sfRolloverTextColor      (source._sfRolloverTextColor      ), 
+    _sfDisabledTextColor      (source._sfDisabledTextColor      ), 
+    _sfTextColor              (source._sfTextColor              ), 
     Inherited                 (source)
 {
 }
@@ -275,6 +340,31 @@ UInt32 TextComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfSelectionTextColor.getBinSize();
     }
 
+    if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
+    {
+        returnValue += _sfActiveTextColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+    {
+        returnValue += _sfFocusedTextColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+    {
+        returnValue += _sfRolloverTextColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+    {
+        returnValue += _sfDisabledTextColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+    {
+        returnValue += _sfTextColor.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -312,6 +402,31 @@ void TextComponentBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (SelectionTextColorFieldMask & whichField))
     {
         _sfSelectionTextColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
+    {
+        _sfActiveTextColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+    {
+        _sfFocusedTextColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+    {
+        _sfRolloverTextColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+    {
+        _sfDisabledTextColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+    {
+        _sfTextColor.copyToBin(pMem);
     }
 
 
@@ -352,6 +467,31 @@ void TextComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfSelectionTextColor.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
+    {
+        _sfActiveTextColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+    {
+        _sfFocusedTextColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+    {
+        _sfRolloverTextColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+    {
+        _sfDisabledTextColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+    {
+        _sfTextColor.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -380,6 +520,21 @@ void TextComponentBase::executeSyncImpl(      TextComponentBase *pOther,
     if(FieldBits::NoField != (SelectionTextColorFieldMask & whichField))
         _sfSelectionTextColor.syncWith(pOther->_sfSelectionTextColor);
 
+    if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
+        _sfActiveTextColor.syncWith(pOther->_sfActiveTextColor);
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+        _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+        _sfRolloverTextColor.syncWith(pOther->_sfRolloverTextColor);
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+        _sfDisabledTextColor.syncWith(pOther->_sfDisabledTextColor);
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+        _sfTextColor.syncWith(pOther->_sfTextColor);
+
 
 }
 #else
@@ -407,6 +562,21 @@ void TextComponentBase::executeSyncImpl(      TextComponentBase *pOther,
 
     if(FieldBits::NoField != (SelectionTextColorFieldMask & whichField))
         _sfSelectionTextColor.syncWith(pOther->_sfSelectionTextColor);
+
+    if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
+        _sfActiveTextColor.syncWith(pOther->_sfActiveTextColor);
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+        _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+        _sfRolloverTextColor.syncWith(pOther->_sfRolloverTextColor);
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+        _sfDisabledTextColor.syncWith(pOther->_sfDisabledTextColor);
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+        _sfTextColor.syncWith(pOther->_sfTextColor);
 
 
 

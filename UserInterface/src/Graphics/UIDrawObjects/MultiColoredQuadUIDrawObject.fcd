@@ -1,108 +1,96 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="TextComponent"
-	parent="Component"
+	name="MultiColoredQuadUIDrawObject"
+	parent="UIDrawObject"
 	library="UserInterface"
 	pointerfieldtypes="both"
-	structure="abstract"
+	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
 	decoratable="false"
 	useLocalIncludes="true"
 >
-A UI Button.
+A UI MultiColoredQuadUIDrawObject.
 	<Field
-		name="Text"
-		type="std::string"
+		name="Point1"
+		type="Pnt2s"
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0,0"
 	>
 	</Field>
 	<Field
-		name="Editable"
-		type="bool"
+		name="Point2"
+		type="Pnt2s"
 		cardinality="single"
 		visibility="external"
-		defaultValue="true"
 		access="public"
+		defaultValue="0,1"
 	>
 	</Field>
 	<Field
-		name="CaretPosition"
-		type="UInt32"
-		cardinality="single"
-		visibility="internal"
-		defaultValue="0"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="Font"
-		type="UIFontPtr"
+		name="Point3"
+		type="Pnt2s"
 		cardinality="single"
 		visibility="external"
-		header="Text/OSGUIFont.h"
 		access="public"
+		defaultValue="1,1"
 	>
 	</Field>
 	<Field
-		name="SelectionBoxColor"
+		name="Point4"
+		type="Pnt2s"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1,0"
+	>
+	</Field>
+	<Field
+		name="Color1"
 		type="Color4f"
 		cardinality="single"
 		visibility="external"
-		defaultValue="0.0,0.0,1.0,1.0"
 		access="public"
-	>
-	</Field>
-	<Field
-		name="SelectionTextColor"
-		type="Color4f"
-		cardinality="single"
-		visibility="external"
 		defaultValue="1.0,1.0,1.0,1.0"
-		access="public"
 	>
 	</Field>
 	<Field
-		name="ActiveTextColor"
+		name="Color2"
 		type="Color4f"
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="1.0,1.0,1.0,1.0"
 	>
 	</Field>
 	<Field
-		name="FocusedTextColor"
+		name="Color3"
 		type="Color4f"
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="1.0,1.0,1.0,1.0"
 	>
 	</Field>
 	<Field
-		name="RolloverTextColor"
+		name="Color4"
 		type="Color4f"
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="1.0,1.0,1.0,1.0"
 	>
 	</Field>
 	<Field
-		name="DisabledTextColor"
-		type="Color4f"
+		name="Opacity"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		access="public"
-	>
-	</Field>
-	<Field
-		name="TextColor"
-		type="Color4f"
-		cardinality="single"
-		visibility="external"
-		access="public"
+		defaultValue="1.0"
 	>
 	</Field>
 </FieldContainer>

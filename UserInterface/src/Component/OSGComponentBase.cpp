@@ -103,17 +103,11 @@ const OSG::BitVector  ComponentBase::BorderFieldMask =
 const OSG::BitVector  ComponentBase::BackgroundFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::BackgroundFieldId);
 
-const OSG::BitVector  ComponentBase::ForegroundColorFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::ForegroundColorFieldId);
-
 const OSG::BitVector  ComponentBase::DisabledBorderFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::DisabledBorderFieldId);
 
 const OSG::BitVector  ComponentBase::DisabledBackgroundFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::DisabledBackgroundFieldId);
-
-const OSG::BitVector  ComponentBase::DisabledForegroundColorFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::DisabledForegroundColorFieldId);
 
 const OSG::BitVector  ComponentBase::FocusableFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::FocusableFieldId);
@@ -124,8 +118,11 @@ const OSG::BitVector  ComponentBase::FocusedBorderFieldMask =
 const OSG::BitVector  ComponentBase::FocusedBackgroundFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::FocusedBackgroundFieldId);
 
-const OSG::BitVector  ComponentBase::FocusedForegroundColorFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::FocusedForegroundColorFieldId);
+const OSG::BitVector  ComponentBase::RolloverBorderFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::RolloverBorderFieldId);
+
+const OSG::BitVector  ComponentBase::RolloverBackgroundFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::RolloverBackgroundFieldId);
 
 const OSG::BitVector  ComponentBase::ToolTipTextFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::ToolTipTextFieldId);
@@ -191,16 +188,10 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
 /*! \var UIBackgroundPtr ComponentBase::_sfBackground
     
 */
-/*! \var Color4f         ComponentBase::_sfForegroundColor
-    
-*/
 /*! \var BorderPtr       ComponentBase::_sfDisabledBorder
     
 */
 /*! \var UIBackgroundPtr ComponentBase::_sfDisabledBackground
-    
-*/
-/*! \var Color4f         ComponentBase::_sfDisabledForegroundColor
     
 */
 /*! \var bool            ComponentBase::_sfFocusable
@@ -212,7 +203,10 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
 /*! \var UIBackgroundPtr ComponentBase::_sfFocusedBackground
     
 */
-/*! \var Color4f         ComponentBase::_sfFocusedForegroundColor
+/*! \var BorderPtr       ComponentBase::_sfRolloverBorder
+    
+*/
+/*! \var UIBackgroundPtr ComponentBase::_sfRolloverBackground
     
 */
 /*! \var std::string     ComponentBase::_sfToolTipText
@@ -303,11 +297,6 @@ FieldDescription *ComponentBase::_desc[] =
                      BackgroundFieldId, BackgroundFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFBackground),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "ForegroundColor", 
-                     ForegroundColorFieldId, ForegroundColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &ComponentBase::getSFForegroundColor),
     new FieldDescription(SFBorderPtr::getClassType(), 
                      "DisabledBorder", 
                      DisabledBorderFieldId, DisabledBorderFieldMask,
@@ -318,11 +307,6 @@ FieldDescription *ComponentBase::_desc[] =
                      DisabledBackgroundFieldId, DisabledBackgroundFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFDisabledBackground),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "DisabledForegroundColor", 
-                     DisabledForegroundColorFieldId, DisabledForegroundColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &ComponentBase::getSFDisabledForegroundColor),
     new FieldDescription(SFBool::getClassType(), 
                      "Focusable", 
                      FocusableFieldId, FocusableFieldMask,
@@ -338,11 +322,16 @@ FieldDescription *ComponentBase::_desc[] =
                      FocusedBackgroundFieldId, FocusedBackgroundFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFFocusedBackground),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "FocusedForegroundColor", 
-                     FocusedForegroundColorFieldId, FocusedForegroundColorFieldMask,
+    new FieldDescription(SFBorderPtr::getClassType(), 
+                     "RolloverBorder", 
+                     RolloverBorderFieldId, RolloverBorderFieldMask,
                      false,
-                     (FieldAccessMethod) &ComponentBase::getSFFocusedForegroundColor),
+                     (FieldAccessMethod) &ComponentBase::getSFRolloverBorder),
+    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+                     "RolloverBackground", 
+                     RolloverBackgroundFieldId, RolloverBackgroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComponentBase::getSFRolloverBackground),
     new FieldDescription(SFString::getClassType(), 
                      "ToolTipText", 
                      ToolTipTextFieldId, ToolTipTextFieldMask,
@@ -450,16 +439,15 @@ ComponentBase::ComponentBase(void) :
     _sfEnabled                (bool(true)), 
     _sfFocused                (bool(false)), 
     _sfConstraints            (), 
-    _sfBorder                 (), 
-    _sfBackground             (), 
-    _sfForegroundColor        (), 
-    _sfDisabledBorder         (), 
-    _sfDisabledBackground     (), 
-    _sfDisabledForegroundColor(), 
+    _sfBorder                 (NullFC), 
+    _sfBackground             (NullFC), 
+    _sfDisabledBorder         (NullFC), 
+    _sfDisabledBackground     (NullFC), 
     _sfFocusable              (bool(true)), 
-    _sfFocusedBorder          (), 
-    _sfFocusedBackground      (), 
-    _sfFocusedForegroundColor (), 
+    _sfFocusedBorder          (NullFC), 
+    _sfFocusedBackground      (NullFC), 
+    _sfRolloverBorder         (NullFC), 
+    _sfRolloverBackground     (NullFC), 
     _sfToolTipText            (), 
     _sfOpacity                (Real32(1.0)), 
     _sfParentContainer        (ContainerPtr(NullFC)), 
@@ -488,14 +476,13 @@ ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfConstraints            (source._sfConstraints            ), 
     _sfBorder                 (source._sfBorder                 ), 
     _sfBackground             (source._sfBackground             ), 
-    _sfForegroundColor        (source._sfForegroundColor        ), 
     _sfDisabledBorder         (source._sfDisabledBorder         ), 
     _sfDisabledBackground     (source._sfDisabledBackground     ), 
-    _sfDisabledForegroundColor(source._sfDisabledForegroundColor), 
     _sfFocusable              (source._sfFocusable              ), 
     _sfFocusedBorder          (source._sfFocusedBorder          ), 
     _sfFocusedBackground      (source._sfFocusedBackground      ), 
-    _sfFocusedForegroundColor (source._sfFocusedForegroundColor ), 
+    _sfRolloverBorder         (source._sfRolloverBorder         ), 
+    _sfRolloverBackground     (source._sfRolloverBackground     ), 
     _sfToolTipText            (source._sfToolTipText            ), 
     _sfOpacity                (source._sfOpacity                ), 
     _sfParentContainer        (source._sfParentContainer        ), 
@@ -583,11 +570,6 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfBackground.getBinSize();
     }
 
-    if(FieldBits::NoField != (ForegroundColorFieldMask & whichField))
-    {
-        returnValue += _sfForegroundColor.getBinSize();
-    }
-
     if(FieldBits::NoField != (DisabledBorderFieldMask & whichField))
     {
         returnValue += _sfDisabledBorder.getBinSize();
@@ -596,11 +578,6 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
     {
         returnValue += _sfDisabledBackground.getBinSize();
-    }
-
-    if(FieldBits::NoField != (DisabledForegroundColorFieldMask & whichField))
-    {
-        returnValue += _sfDisabledForegroundColor.getBinSize();
     }
 
     if(FieldBits::NoField != (FocusableFieldMask & whichField))
@@ -618,9 +595,14 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfFocusedBackground.getBinSize();
     }
 
-    if(FieldBits::NoField != (FocusedForegroundColorFieldMask & whichField))
+    if(FieldBits::NoField != (RolloverBorderFieldMask & whichField))
     {
-        returnValue += _sfFocusedForegroundColor.getBinSize();
+        returnValue += _sfRolloverBorder.getBinSize();
+    }
+
+    if(FieldBits::NoField != (RolloverBackgroundFieldMask & whichField))
+    {
+        returnValue += _sfRolloverBackground.getBinSize();
     }
 
     if(FieldBits::NoField != (ToolTipTextFieldMask & whichField))
@@ -727,11 +709,6 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
         _sfBackground.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ForegroundColorFieldMask & whichField))
-    {
-        _sfForegroundColor.copyToBin(pMem);
-    }
-
     if(FieldBits::NoField != (DisabledBorderFieldMask & whichField))
     {
         _sfDisabledBorder.copyToBin(pMem);
@@ -740,11 +717,6 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
     {
         _sfDisabledBackground.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (DisabledForegroundColorFieldMask & whichField))
-    {
-        _sfDisabledForegroundColor.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (FocusableFieldMask & whichField))
@@ -762,9 +734,14 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
         _sfFocusedBackground.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (FocusedForegroundColorFieldMask & whichField))
+    if(FieldBits::NoField != (RolloverBorderFieldMask & whichField))
     {
-        _sfFocusedForegroundColor.copyToBin(pMem);
+        _sfRolloverBorder.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverBackgroundFieldMask & whichField))
+    {
+        _sfRolloverBackground.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (ToolTipTextFieldMask & whichField))
@@ -870,11 +847,6 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfBackground.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ForegroundColorFieldMask & whichField))
-    {
-        _sfForegroundColor.copyFromBin(pMem);
-    }
-
     if(FieldBits::NoField != (DisabledBorderFieldMask & whichField))
     {
         _sfDisabledBorder.copyFromBin(pMem);
@@ -883,11 +855,6 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
     {
         _sfDisabledBackground.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (DisabledForegroundColorFieldMask & whichField))
-    {
-        _sfDisabledForegroundColor.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (FocusableFieldMask & whichField))
@@ -905,9 +872,14 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfFocusedBackground.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (FocusedForegroundColorFieldMask & whichField))
+    if(FieldBits::NoField != (RolloverBorderFieldMask & whichField))
     {
-        _sfFocusedForegroundColor.copyFromBin(pMem);
+        _sfRolloverBorder.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverBackgroundFieldMask & whichField))
+    {
+        _sfRolloverBackground.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (ToolTipTextFieldMask & whichField))
@@ -989,17 +961,11 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (BackgroundFieldMask & whichField))
         _sfBackground.syncWith(pOther->_sfBackground);
 
-    if(FieldBits::NoField != (ForegroundColorFieldMask & whichField))
-        _sfForegroundColor.syncWith(pOther->_sfForegroundColor);
-
     if(FieldBits::NoField != (DisabledBorderFieldMask & whichField))
         _sfDisabledBorder.syncWith(pOther->_sfDisabledBorder);
 
     if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
         _sfDisabledBackground.syncWith(pOther->_sfDisabledBackground);
-
-    if(FieldBits::NoField != (DisabledForegroundColorFieldMask & whichField))
-        _sfDisabledForegroundColor.syncWith(pOther->_sfDisabledForegroundColor);
 
     if(FieldBits::NoField != (FocusableFieldMask & whichField))
         _sfFocusable.syncWith(pOther->_sfFocusable);
@@ -1010,8 +976,11 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
         _sfFocusedBackground.syncWith(pOther->_sfFocusedBackground);
 
-    if(FieldBits::NoField != (FocusedForegroundColorFieldMask & whichField))
-        _sfFocusedForegroundColor.syncWith(pOther->_sfFocusedForegroundColor);
+    if(FieldBits::NoField != (RolloverBorderFieldMask & whichField))
+        _sfRolloverBorder.syncWith(pOther->_sfRolloverBorder);
+
+    if(FieldBits::NoField != (RolloverBackgroundFieldMask & whichField))
+        _sfRolloverBackground.syncWith(pOther->_sfRolloverBackground);
 
     if(FieldBits::NoField != (ToolTipTextFieldMask & whichField))
         _sfToolTipText.syncWith(pOther->_sfToolTipText);
@@ -1080,17 +1049,11 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (BackgroundFieldMask & whichField))
         _sfBackground.syncWith(pOther->_sfBackground);
 
-    if(FieldBits::NoField != (ForegroundColorFieldMask & whichField))
-        _sfForegroundColor.syncWith(pOther->_sfForegroundColor);
-
     if(FieldBits::NoField != (DisabledBorderFieldMask & whichField))
         _sfDisabledBorder.syncWith(pOther->_sfDisabledBorder);
 
     if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
         _sfDisabledBackground.syncWith(pOther->_sfDisabledBackground);
-
-    if(FieldBits::NoField != (DisabledForegroundColorFieldMask & whichField))
-        _sfDisabledForegroundColor.syncWith(pOther->_sfDisabledForegroundColor);
 
     if(FieldBits::NoField != (FocusableFieldMask & whichField))
         _sfFocusable.syncWith(pOther->_sfFocusable);
@@ -1101,8 +1064,11 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
         _sfFocusedBackground.syncWith(pOther->_sfFocusedBackground);
 
-    if(FieldBits::NoField != (FocusedForegroundColorFieldMask & whichField))
-        _sfFocusedForegroundColor.syncWith(pOther->_sfFocusedForegroundColor);
+    if(FieldBits::NoField != (RolloverBorderFieldMask & whichField))
+        _sfRolloverBorder.syncWith(pOther->_sfRolloverBorder);
+
+    if(FieldBits::NoField != (RolloverBackgroundFieldMask & whichField))
+        _sfRolloverBackground.syncWith(pOther->_sfRolloverBackground);
 
     if(FieldBits::NoField != (ToolTipTextFieldMask & whichField))
         _sfToolTipText.syncWith(pOther->_sfToolTipText);
@@ -1216,12 +1182,6 @@ SFUIBackgroundPtr *ComponentBase::getSFBackground(void)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-SFColor4f *ComponentBase::getSFForegroundColor(void)
-{
-    return &_sfForegroundColor;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
 SFBorderPtr *ComponentBase::getSFDisabledBorder(void)
 {
     return &_sfDisabledBorder;
@@ -1231,12 +1191,6 @@ OSG_USERINTERFACELIB_DLLMAPPING
 SFUIBackgroundPtr *ComponentBase::getSFDisabledBackground(void)
 {
     return &_sfDisabledBackground;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFColor4f *ComponentBase::getSFDisabledForegroundColor(void)
-{
-    return &_sfDisabledForegroundColor;
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
@@ -1258,9 +1212,15 @@ SFUIBackgroundPtr *ComponentBase::getSFFocusedBackground(void)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-SFColor4f *ComponentBase::getSFFocusedForegroundColor(void)
+SFBorderPtr *ComponentBase::getSFRolloverBorder(void)
 {
-    return &_sfFocusedForegroundColor;
+    return &_sfRolloverBorder;
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+SFUIBackgroundPtr *ComponentBase::getSFRolloverBackground(void)
+{
+    return &_sfRolloverBackground;
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
@@ -1535,24 +1495,6 @@ void ComponentBase::setBackground(const UIBackgroundPtr &value)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-Color4f &ComponentBase::getForegroundColor(void)
-{
-    return _sfForegroundColor.getValue();
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const Color4f &ComponentBase::getForegroundColor(void) const
-{
-    return _sfForegroundColor.getValue();
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setForegroundColor(const Color4f &value)
-{
-    _sfForegroundColor.setValue(value);
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
 BorderPtr &ComponentBase::getDisabledBorder(void)
 {
     return _sfDisabledBorder.getValue();
@@ -1586,24 +1528,6 @@ OSG_USERINTERFACELIB_DLLMAPPING
 void ComponentBase::setDisabledBackground(const UIBackgroundPtr &value)
 {
     _sfDisabledBackground.setValue(value);
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-Color4f &ComponentBase::getDisabledForegroundColor(void)
-{
-    return _sfDisabledForegroundColor.getValue();
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const Color4f &ComponentBase::getDisabledForegroundColor(void) const
-{
-    return _sfDisabledForegroundColor.getValue();
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setDisabledForegroundColor(const Color4f &value)
-{
-    _sfDisabledForegroundColor.setValue(value);
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
@@ -1661,21 +1585,39 @@ void ComponentBase::setFocusedBackground(const UIBackgroundPtr &value)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-Color4f &ComponentBase::getFocusedForegroundColor(void)
+BorderPtr &ComponentBase::getRolloverBorder(void)
 {
-    return _sfFocusedForegroundColor.getValue();
+    return _sfRolloverBorder.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-const Color4f &ComponentBase::getFocusedForegroundColor(void) const
+const BorderPtr &ComponentBase::getRolloverBorder(void) const
 {
-    return _sfFocusedForegroundColor.getValue();
+    return _sfRolloverBorder.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setFocusedForegroundColor(const Color4f &value)
+void ComponentBase::setRolloverBorder(const BorderPtr &value)
 {
-    _sfFocusedForegroundColor.setValue(value);
+    _sfRolloverBorder.setValue(value);
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+UIBackgroundPtr &ComponentBase::getRolloverBackground(void)
+{
+    return _sfRolloverBackground.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+const UIBackgroundPtr &ComponentBase::getRolloverBackground(void) const
+{
+    return _sfRolloverBackground.getValue();
+}
+
+OSG_USERINTERFACELIB_DLLMAPPING
+void ComponentBase::setRolloverBackground(const UIBackgroundPtr &value)
+{
+    _sfRolloverBackground.setValue(value);
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING

@@ -178,26 +178,31 @@ void DefaultLookAndFeel::init(void)
 
 		//Border
 		DefaultButton->setBorder(DefaultButtonBorder);
+		DefaultButton->setRolloverBorder(DefaultButtonBorder);
+		DefaultButton->setFocusedBorder(DefaultButtonBorder);
 		DefaultButton->setDisabledBorder(DefaultDisabledButtonBorder);
 		DefaultButton->setActiveBorder(DefaultActiveButtonBorder);
 		
 		//Background
 		DefaultButton->setBackground(DefaultButtonBackground);
+		DefaultButton->setRolloverBackground(DefaultButtonBackground);
+		DefaultButton->setFocusedBackground(DefaultButtonBackground);
 		DefaultButton->setDisabledBackground(DefaultDisabledButtonBackground);
 		DefaultButton->setActiveBackground(DefaultButtonBackground);
 
-		//Foreground
-		DefaultButton->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
-		DefaultButton->setDisabledForegroundColor(Color4f(0.4,0.4,0.4,1.0));
-		
 		//Opacity
 		DefaultButton->setOpacity(1.0);
 
 		//Text
 		DefaultButton->setText("");
 		DefaultButton->setFont(DefaultFont);
-		DefaultButton->setVerticalAlignment(VERTICAL_CENTER);
-		DefaultButton->setHorizontalAlignment(HORIZONTAL_CENTER);
+		DefaultButton->setVerticalAlignment(0.5);
+		DefaultButton->setHorizontalAlignment(0.5);
+		DefaultButton->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultButton->setActiveTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultButton->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
 	endEditCP(DefaultButton);
 
 	Button::getClassType().setPrototype(DefaultButton);
@@ -233,9 +238,6 @@ void DefaultLookAndFeel::init(void)
 		
 		//Background
 		DefaultLabel->setBackground(DefaultLabelBackground);
-
-		//Foreground
-		DefaultLabel->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
 		
 		//Opacity
 		DefaultLabel->setOpacity(1.0);
@@ -243,6 +245,10 @@ void DefaultLookAndFeel::init(void)
 		//Text
 		DefaultLabel->setText("");
 		DefaultLabel->setFont(DefaultFont);
+		DefaultLabel->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultLabel->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultLabel->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultLabel->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
 	endEditCP(DefaultLabel);
 	
     Label::getClassType().setPrototype(DefaultLabel);
@@ -277,9 +283,6 @@ void DefaultLookAndFeel::init(void)
 		
 		//Background
 		DefaultFrame->setBackground(DefaultFrameBackground);
-
-		//Foreground
-		DefaultFrame->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
 		
 		//Opacity
 		DefaultFrame->setOpacity(1.0);
@@ -327,9 +330,6 @@ void DefaultLookAndFeel::init(void)
 		
 		//Background
 		DefaultPanel->setBackground(DefaultPanelBackground);
-
-		//Foreground
-		DefaultPanel->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
 		
 		//Opacity
 		DefaultPanel->setOpacity(1.0);
@@ -392,17 +392,14 @@ void DefaultLookAndFeel::init(void)
 		
 		//Background
 		DefaultImageComponent->setBackground(DefaultImageComponentBackground);
-
-		//Foreground
-		DefaultImageComponent->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
 		
 		//Opacity
 		DefaultImageComponent->setOpacity(1.0);
 
 		//Image Alignment
 		DefaultImageComponent->setScale(SCALE_NONE);
-		DefaultImageComponent->setVerticalAlignment(VERTICAL_CENTER);
-		DefaultImageComponent->setHorizontalAlignment(HORIZONTAL_CENTER);
+		DefaultImageComponent->setVerticalAlignment(0.5);
+		DefaultImageComponent->setHorizontalAlignment(0.5);
 	endEditCP(DefaultImageComponent);
 	
 	ImageComponent::getClassType().setPrototype(DefaultImageComponent);
@@ -502,9 +499,15 @@ void DefaultLookAndFeel::init(void)
 		DefaultCheckboxButton->setPreferredSize(Vec2s(100,50));
 		DefaultCheckboxButton->setSize(Vec2s(0,0));
 		DefaultCheckboxButton->setDrawObject(defaultCheckboxDrawObject);
+
+        //Draw Objects
 		DefaultCheckboxButton->setSelectedDrawObject(defaultSelectedCheckboxDrawObject);
 		DefaultCheckboxButton->setActiveDrawObject(defaultActiveCheckboxDrawObject);
 		DefaultCheckboxButton->setActiveSelectedDrawObject(defaultActiveSelectedCheckboxDrawObject);
+		DefaultCheckboxButton->setRolloverDrawObject(defaultCheckboxDrawObject);
+		DefaultCheckboxButton->setRolloverSelectedDrawObject(defaultSelectedCheckboxDrawObject);
+		DefaultCheckboxButton->setDisabledDrawObject(defaultCheckboxDrawObject);
+		DefaultCheckboxButton->setDisabledSelectedDrawObject(defaultSelectedCheckboxDrawObject);
 
 		//Border
 		DefaultCheckboxButton->setBorder(DefaultCheckboxButtonBorder);
@@ -513,10 +516,6 @@ void DefaultLookAndFeel::init(void)
 		//Background
 		DefaultCheckboxButton->setBackground(DefaultCheckboxButtonBackground);
 		DefaultCheckboxButton->setActiveBackground(DefaultCheckboxButtonBackground);
-
-		//Foreground
-		DefaultCheckboxButton->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
-
 		
 		//Opacity
 		DefaultCheckboxButton->setOpacity(1.0);
@@ -524,8 +523,13 @@ void DefaultLookAndFeel::init(void)
 		//Text
 		DefaultCheckboxButton->setText("");
 		DefaultCheckboxButton->setFont(DefaultFont);
-		DefaultCheckboxButton->setVerticalAlignment(VERTICAL_CENTER);
-		DefaultCheckboxButton->setHorizontalAlignment(HORIZONTAL_CENTER);
+		DefaultCheckboxButton->setVerticalAlignment(0.5);
+		DefaultCheckboxButton->setHorizontalAlignment(0.5);
+		DefaultCheckboxButton->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultCheckboxButton->setActiveTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultCheckboxButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultCheckboxButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultCheckboxButton->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
 	endEditCP(DefaultCheckboxButton);
 
 	CheckboxButton::getClassType().setPrototype(DefaultCheckboxButton);
@@ -537,6 +541,7 @@ void DefaultLookAndFeel::init(void)
 	UIDrawObjectCanvasPtr defaultActiveSelectedRadioDrawObject = UIDrawObjectCanvas::create();
 
 	DiscUIDrawObjectPtr RadioBackground = DiscUIDrawObject::create();
+    Pnt2s DefaultRadioCenter(10,10);
 	beginEditCP(RadioBackground);
 		RadioBackground->setWidth(10);
 		RadioBackground->setHeight(10);
@@ -546,7 +551,7 @@ void DefaultLookAndFeel::init(void)
 		RadioBackground->setCenterColor(Color4f(1.0,1.0,1.0,1.0));
 		RadioBackground->setOuterColor(Color4f(1.0,1.0,1.0,1.0));
 		RadioBackground->setOpacity(1.0);
-		RadioBackground->setCenter(Pnt2s(0,0));
+		RadioBackground->setCenter(DefaultRadioCenter);
 	endEditCP(RadioBackground);
 
 	ArcUIDrawObjectPtr RadioBackgroundBorder = ArcUIDrawObject::create();
@@ -559,7 +564,7 @@ void DefaultLookAndFeel::init(void)
 		RadioBackgroundBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
 		RadioBackgroundBorder->setOpacity(1.0);
 		RadioBackgroundBorder->setLineWidth(1);
-		RadioBackgroundBorder->setCenter(Pnt2s(0,0));
+		RadioBackgroundBorder->setCenter(DefaultRadioCenter);
 	endEditCP(RadioBackgroundBorder);
 
 	DiscUIDrawObjectPtr RadioSelected = DiscUIDrawObject::create();
@@ -572,7 +577,7 @@ void DefaultLookAndFeel::init(void)
 		RadioSelected->setCenterColor(Color4f(0.0,0.0,0.0,1.0));
 		RadioSelected->setOuterColor(Color4f(0.0,0.0,0.0,1.0));
 		RadioSelected->setOpacity(1.0);
-		RadioSelected->setCenter(Pnt2s(0,0));
+		RadioSelected->setCenter(DefaultRadioCenter);
 	endEditCP(RadioSelected);
 
 	ArcUIDrawObjectPtr RadioActiveBorder = ArcUIDrawObject::create();
@@ -584,7 +589,7 @@ void DefaultLookAndFeel::init(void)
 		RadioActiveBorder->setEndAngleRad(6.28318531);
 		RadioActiveBorder->setColor(Color4f(0.0,0.0,1.0,1.0));
 		RadioActiveBorder->setOpacity(1.0);
-		RadioActiveBorder->setCenter(Pnt2s(0,0));
+		RadioActiveBorder->setCenter(DefaultRadioCenter);
 	endEditCP(RadioActiveBorder);
 
 	beginEditCP(defaultRadioDrawObject);
@@ -634,6 +639,10 @@ void DefaultLookAndFeel::init(void)
 		DefaultRadioButton->setSelectedDrawObject(defaultSelectedRadioDrawObject);
 		DefaultRadioButton->setActiveDrawObject(defaultActiveRadioDrawObject);
 		DefaultRadioButton->setActiveSelectedDrawObject(defaultActiveSelectedRadioDrawObject);
+		DefaultRadioButton->setRolloverDrawObject(defaultRadioDrawObject);
+		DefaultRadioButton->setRolloverSelectedDrawObject(defaultSelectedRadioDrawObject);
+		DefaultRadioButton->setDisabledDrawObject(defaultRadioDrawObject);
+		DefaultRadioButton->setDisabledSelectedDrawObject(defaultSelectedRadioDrawObject);
 
 		//borders
 		DefaultRadioButton->setBorder(DefaultRadioButtonBorder);
@@ -643,8 +652,7 @@ void DefaultLookAndFeel::init(void)
 		DefaultRadioButton->setBackground(DefaultRadioButtonBackground);
 		DefaultRadioButton->setActiveBackground(DefaultRadioButtonBackground);
 
-		//colors
-		DefaultRadioButton->setForegroundColor(Color4f(0.0,0.0, 0.0, 1.0));
+		//Opacity
 		DefaultRadioButton->setOpacity(1.0);
 
 		//text
@@ -652,8 +660,13 @@ void DefaultLookAndFeel::init(void)
 		DefaultRadioButton->setFont(DefaultFont);
 
 		//alignment
-		DefaultRadioButton->setVerticalAlignment(VERTICAL_CENTER);
-		DefaultRadioButton->setHorizontalAlignment(HORIZONTAL_CENTER);
+		DefaultRadioButton->setVerticalAlignment(0.5);
+		DefaultRadioButton->setHorizontalAlignment(0.5);
+		DefaultRadioButton->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultRadioButton->setActiveTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultRadioButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultRadioButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultRadioButton->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
 	endEditCP(DefaultRadioButton);
 	
 	RadioButton::getClassType().setPrototype(DefaultRadioButton);
@@ -680,10 +693,6 @@ void DefaultLookAndFeel::init(void)
 		DefaultToggleButton->setBackground(DefaultButtonBackground);
 		DefaultToggleButton->setDisabledBackground(DefaultDisabledButtonBackground);
 		DefaultToggleButton->setActiveBackground(DefaultButtonBackground);
-
-		//Foreground
-		DefaultToggleButton->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
-		DefaultToggleButton->setDisabledForegroundColor(Color4f(0.4,0.4,0.4,1.0));
 		
 		//Opacity
 		DefaultToggleButton->setOpacity(1.0);
@@ -691,8 +700,13 @@ void DefaultLookAndFeel::init(void)
 		//Text
 		DefaultToggleButton->setText("");
 		DefaultToggleButton->setFont(DefaultFont);
-		DefaultToggleButton->setVerticalAlignment(VERTICAL_CENTER);
-		DefaultToggleButton->setHorizontalAlignment(HORIZONTAL_CENTER);
+		DefaultToggleButton->setVerticalAlignment(0.5);
+		DefaultToggleButton->setHorizontalAlignment(0.5);
+		DefaultToggleButton->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultToggleButton->setActiveTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultToggleButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultToggleButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultToggleButton->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
 	endEditCP(DefaultToggleButton);
 
 	ToggleButton::getClassType().setPrototype(DefaultToggleButton);
@@ -727,6 +741,10 @@ void DefaultLookAndFeel::init(void)
 
 		//font
 		DefaultTextField->setFont(DefaultFont);
+		DefaultTextField->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultTextField->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultTextField->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultTextField->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
 
 		//background
 		DefaultTextField->setBackground(DefaultTextFieldBackground);
@@ -735,10 +753,6 @@ void DefaultLookAndFeel::init(void)
 		//Border
 		DefaultTextField->setBorder(DefaultTextFieldBorder);
 		DefaultTextField->setDisabledBorder(DefaultTextFieldBorder);
-
-		//Color
-		DefaultTextField->setForegroundColor(Color4f(0.0, 0.0, 0.0, 1.0));
-		DefaultTextField->setDisabledForegroundColor(Color4f(.1, .1, .1, 1.0));
 
 	endEditCP(DefaultTextField);
 
@@ -776,6 +790,10 @@ void DefaultLookAndFeel::init(void)
 		DefaultTextArea->setFont(DefaultFont);
 		DefaultTextArea->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
 		DefaultTextArea->setSelectionTextColor(Color4f(0.0, 0.0, 0.0, 1.0));
+		DefaultTextArea->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultTextArea->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultTextArea->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultTextArea->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
 		
 
 		//background
@@ -785,10 +803,6 @@ void DefaultLookAndFeel::init(void)
 		//Border
 		DefaultTextArea->setBorder(DefaultTextAreaBorder);
 		DefaultTextArea->setDisabledBorder(DefaultTextAreaBorder);
-
-		//Color
-		DefaultTextArea->setForegroundColor(Color4f(0.0, 0.0, 0.0, 1.0));
-		DefaultTextArea->setDisabledForegroundColor(Color4f(.1, .1, .1, 1.0));
 
 	endEditCP(DefaultTextArea);
 
@@ -838,9 +852,6 @@ void DefaultLookAndFeel::init(void)
 		
 		//Background
 		DefaultToolTip->setBackground(DefaultToolTipBackground);
-
-		//Foreground
-		DefaultToolTip->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
 		
 		//Opacity
 		DefaultToolTip->setOpacity(1.0);
@@ -850,6 +861,7 @@ void DefaultLookAndFeel::init(void)
 		DefaultToolTip->setFont(DefaultFont);
         DefaultToolTip->setVerticalAlignment(0.5);
         DefaultToolTip->setHorizontalAlignment(0.0);
+		DefaultToolTip->setTextColor(Color4f(0.0,0.0,0.0,1.0));
 	endEditCP(DefaultToolTip);
 	
     ToolTip::getClassType().setPrototype(DefaultToolTip);

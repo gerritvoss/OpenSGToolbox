@@ -48,4 +48,40 @@ A UI Radio Button.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="RolloverDrawObject"
+		type="UIDrawObjectCanvasPtr"
+		cardinality="single"
+		visibility="external"
+		header="Component/OSGUIDrawObjectCanvas.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="RolloverSelectedDrawObject"
+		type="UIDrawObjectCanvasPtr"
+		cardinality="single"
+		visibility="external"
+		header="Component/OSGUIDrawObjectCanvas.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="DisabledDrawObject"
+		type="UIDrawObjectCanvasPtr"
+		cardinality="single"
+		visibility="external"
+		header="Component/OSGUIDrawObjectCanvas.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="DisabledSelectedDrawObject"
+		type="UIDrawObjectCanvasPtr"
+		cardinality="single"
+		visibility="external"
+		header="Component/OSGUIDrawObjectCanvas.h"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

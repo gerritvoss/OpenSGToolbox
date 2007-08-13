@@ -269,6 +269,7 @@ int main(int argc, char **argv)
 		bevelButton->setText("Bevel Border");
 		bevelButton->setBorder(bevelBorder);
 		bevelButton->setActiveBorder(bevelBorder);
+		bevelButton->setRolloverBorder(bevelBorder);
 	endEditCP  (bevelButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 	
 	beginEditCP(compoundButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
@@ -276,6 +277,7 @@ int main(int argc, char **argv)
 		compoundButton->setText("Compound Border");
 		compoundButton->setBorder(compoundBorder);
 		compoundButton->setActiveBorder(compoundBorder);
+		compoundButton->setRolloverBorder(compoundBorder);
 	endEditCP  (compoundButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 
 	beginEditCP(emptyButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
@@ -283,6 +285,7 @@ int main(int argc, char **argv)
 		emptyButton->setText("Empty Border");
 		emptyButton->setBorder(emptyBorder);
 		emptyButton->setActiveBorder(emptyBorder);
+		emptyButton->setRolloverBorder(emptyBorder);
 	endEditCP  (emptyButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 	
 	beginEditCP(etchedButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
@@ -290,6 +293,7 @@ int main(int argc, char **argv)
 		etchedButton->setText("Etched Border");
 		etchedButton->setBorder(etchedBorder);
 		etchedButton->setActiveBorder(etchedBorder);
+		etchedButton->setRolloverBorder(etchedBorder);
 	endEditCP  (etchedButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 
 	beginEditCP(lineButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
@@ -297,12 +301,14 @@ int main(int argc, char **argv)
 		lineButton->setText("Line Border");
 		lineButton->setBorder(lineBorder);
 		lineButton->setActiveBorder(lineBorder);
+		lineButton->setRolloverBorder(lineBorder);
 	endEditCP  (lineButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 
 	beginEditCP(matteButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 		matteButton->setPreferredSize(Vec2s(100,50));
 		matteButton->setText("Matte Border");
 		matteButton->setBorder(matteBorder);
+		matteButton->setRolloverBorder(matteBorder);
 		// Note that when matteButton is pressed, the Border will revert to the 
 		// default Border for Buttons, a "pressed" BevelBorder
 	endEditCP  (matteButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
@@ -312,6 +318,7 @@ int main(int argc, char **argv)
 		multiColorMatteButton->setText("Multi-Color Matte Border");
 		multiColorMatteButton->setBorder(multiColorMatteBorder);
 		multiColorMatteButton->setActiveBorder(multiColorMatteBorder);
+		multiColorMatteButton->setRolloverBorder(multiColorMatteBorder);
 	endEditCP  (multiColorMatteButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 
 	beginEditCP(roundedCornerLineButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
@@ -319,6 +326,7 @@ int main(int argc, char **argv)
 		roundedCornerLineButton->setText("Rounded Border");
 		roundedCornerLineButton->setBorder(roundedCornerLineBorder);
 		roundedCornerLineButton->setActiveBorder(roundedCornerLineBorder);
+		roundedCornerLineButton->setRolloverBorder(roundedCornerLineBorder);
 	endEditCP  (roundedCornerLineButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 
 	beginEditCP(shadowButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
@@ -326,7 +334,7 @@ int main(int argc, char **argv)
 		shadowButton->setText("Shadow Border");
 		shadowButton->setBorder(shadowBorder);
 		shadowButton->setActiveBorder(shadowBorder);
-        shadowButton->setActiveBackground(NullFC);
+		shadowButton->setRolloverBorder(shadowBorder);
 	endEditCP  (roundedCornerLineButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
 
 

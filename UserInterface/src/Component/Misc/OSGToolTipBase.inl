@@ -131,6 +131,13 @@ SFReal32 *ToolTipBase::getSFHorizontalAlignment(void)
     return &_sfHorizontalAlignment;
 }
 
+//! Get the ToolTip::_sfTextColor field.
+inline
+SFColor4f *ToolTipBase::getSFTextColor(void)
+{
+    return &_sfTextColor;
+}
+
 
 //! Get the value of the ToolTip::_sfFont field.
 inline
@@ -235,6 +242,27 @@ inline
 void ToolTipBase::setHorizontalAlignment(const Real32 &value)
 {
     _sfHorizontalAlignment.setValue(value);
+}
+
+//! Get the value of the ToolTip::_sfTextColor field.
+inline
+Color4f &ToolTipBase::getTextColor(void)
+{
+    return _sfTextColor.getValue();
+}
+
+//! Get the value of the ToolTip::_sfTextColor field.
+inline
+const Color4f &ToolTipBase::getTextColor(void) const
+{
+    return _sfTextColor.getValue();
+}
+
+//! Set the value of the ToolTip::_sfTextColor field.
+inline
+void ToolTipBase::setTextColor(const Color4f &value)
+{
+    _sfTextColor.setValue(value);
 }
 
 

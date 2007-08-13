@@ -1,6 +1,10 @@
 #include "OSGUIDrawUtils.h"
 #include "OSGUIDefines.h"
 
+#include "Component/Container/OSGFrame.h"
+#include "UIDrawingSurface/OSGUIDrawingSurface.h"
+#include "UIDrawingSurface/OSGUIDrawingSurfaceMouseTransformFunctor.h"
+
 
 OSG_BEGIN_NAMESPACE
 
@@ -34,7 +38,7 @@ Pnt2s calculateAlignment(const Pnt2s& Position1, const Vec2s& Size1, const Vec2s
 	return AlignedPosition;
 }
 
-Pnt2s calculateAlignment(const Pnt2s& Position1, const Vec2s& Size1, const Vec2s& Size2, const UInt32& VAlign, const UInt32& HAlign)
+/*Pnt2s calculateAlignment(const Pnt2s& Position1, const Vec2s& Size1, const Vec2s& Size2, const UInt32& VAlign, const UInt32& HAlign)
 {
 	Pnt2s AlignedPosition;
 
@@ -75,7 +79,7 @@ Pnt2s calculateAlignment(const Pnt2s& Position1, const Vec2s& Size1, const Vec2s
 	}
 
 	return AlignedPosition;
-}
+}*/
 
 void quadIntersection(const Pnt2s& Quad1TopLeft, const Pnt2s& Quad1BottomRight,
                       const Pnt2s& Quad2TopLeft, const Pnt2s& Quad2BottomRight,
@@ -122,32 +126,32 @@ bool isContainedClipBounds(const Pnt2s& Point, const ComponentPtr Comp)
 	return isContainedBounds(DrawingSurfaceToComponent(Point,Comp), CompTopLeft, CompBottomRight);
 }
 
-/*Pnt2s WindowToComponent(const Pnt2s& WindowPoint, const ComponentPtr Comp)
+Pnt2s ViewportToDrawingSurface(const Pnt2s& ViewportPoint, const UIDrawingSurfacePtr DrawingSurface, const ViewportPtr TheViewport)
 {
-	//TODO: Fix
-	Pnt2s Result(WindowPoint);
-	ComponentPtr CompRecurse = Comp;
-	while(CompRecurse != NullFC)
-	{
-		Result -= Vec2s(CompRecurse->getPosition());
-		CompRecurse = CompRecurse->getParentContainer();
-	}
+    //Get Window to Drawing Surface
+    Pnt2s DrawingSurfacePoint;
+    DrawingSurface->getMouseTransformFunctor()->viewportToRenderingSurface(ViewportPoint,TheViewport,DrawingSurfacePoint);
 
-	return Result;
+    //Then get DrawingSurface to component
+    return DrawingSurfacePoint;
 }
 
-Pnt2s ComponentToWindow(const Pnt2s& ComponentPoint, const ComponentPtr Comp)
+Pnt2s DrawingSurfaceToViewport(const Pnt2s& DrawingSurfacePoint, const UIDrawingSurfacePtr DrawingSurface, const ViewportPtr TheViewport)
 {
-	//TODO: Fix
-	Pnt2s Result;
-	ComponentPtr CompRecurse = Comp;
-	while(CompRecurse != NullFC)
-	{
-		Result += Vec2s(CompRecurse->getPosition());
-		CompRecurse = CompRecurse->getParentContainer();
-	}
-	return Result;
-}*/
+    //TODO:Implement
+    return Pnt2s(0,0);
+}
+
+Pnt2s ViewportToComponent(const Pnt2s& ViewportPoint, const ComponentPtr Comp, const ViewportPtr TheViewport)
+{
+    //Then get Viewport to component
+    return DrawingSurfaceToComponent(ViewportToDrawingSurface(ViewportPoint, Comp->getParentFrame()->getDrawingSurface(), TheViewport), Comp);
+}
+
+Pnt2s ComponentToViewport(const Pnt2s& ComponentPoint, const ComponentPtr Comp, const ViewportPtr TheViewport)
+{
+    return DrawingSurfaceToViewport(ComponentToDrawingSurface(ComponentPoint, Comp), Comp->getParentFrame()->getDrawingSurface(), TheViewport);
+}
 
 Pnt2s DrawingSurfaceToComponent(const Pnt2s& DrawingSurfacePoint, const ComponentPtr Comp)
 {

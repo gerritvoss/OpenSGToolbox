@@ -157,7 +157,7 @@ int main(int argc, char **argv)
 	endEditCP(sampleFont, UIFont::SizeFieldMask);
 
 
-    beginEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::ForegroundColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::ToolTipTextFieldMask);
+    beginEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Button::TextColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::ToolTipTextFieldMask);
 			// The following 4 function calls are not specific to Button, 
 			// but can be used with any Component
 
@@ -168,25 +168,27 @@ int main(int argc, char **argv)
 		    button1->setMaxSize( Vec2s (200, 100) );
 			// Determine the PreferredSize for the Component
 		    button1->setPreferredSize( Vec2s (100, 50) );
-			// Determine the Font color for the Component (only
-			// relevant if Component has text)
-		    button1->setForegroundColor( Color4f(1.0, 0.0, 0.0, 1.0) );
 		    // The following functions are specific to Button
 			// Determine the visible Text (Text must fit within Button Size
 			// or extra Text will not display)
 		    button1->setText("Button 1");
 		    button1->setFont(sampleFont);
+			// Determine the Font color for the Component (only
+			// relevant if Component has text)
+		    button1->setTextColor( Color4f(1.0, 0.0, 0.0, 1.0) );
+		    button1->setRolloverTextColor( Color4f(1.0, 0.0, 0.0, 1.0) );
+		    button1->setActiveTextColor( Color4f(1.0, 0.0, 0.0, 1.0) );
 			// Determine the VerticalAlignment of the Text- VERTICAL_CENTER, 
 			// or VERTICAL_TOP, VERTICAL_BOTTOM
-		    button1->setVerticalAlignment(VERTICAL_TOP);
+		    button1->setVerticalAlignment(0.0);
 			// Determine the HorizontalAlignment of the Text- HORIZONTAL_CENTER,
 			// HORIZONTAL_LEFT, HORIZONTAL_RIGHT
-		    button1->setHorizontalAlignment(HORIZONTAL_RIGHT);
+		    button1->setHorizontalAlignment(1.0);
 
        
             //Set the Text to be shown as a ToolTip
             button1->setToolTipText("Button 1 ToolTip");
-		endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::ForegroundColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::ToolTipTextFieldMask);
+		endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Button::TextColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::ToolTipTextFieldMask);
 	
 	// Create an ActionListener and assign it to button1
 	// This is defined above, and wil

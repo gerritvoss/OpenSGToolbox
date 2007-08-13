@@ -81,8 +81,8 @@ void DiscUIDrawObject::draw(const GraphicsPtr Graphics) const
 
 void DiscUIDrawObject::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 {
-	TopLeft = Pnt2s(getCenter().x()-getWidth()/2, getCenter().y()-getHeight()/2);
-	BottomRight = Pnt2s(getCenter().x()+getWidth()/2, getCenter().y()+getHeight()/2);
+	TopLeft = Pnt2s(getCenter().x()-getWidth(), getCenter().y()-getHeight());
+	BottomRight = Pnt2s(getCenter().x()+getWidth(), getCenter().y()+getHeight());
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

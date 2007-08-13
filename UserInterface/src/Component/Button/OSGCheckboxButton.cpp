@@ -78,75 +78,103 @@ void CheckboxButton::initMethod (void)
 void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
 {
 	Pnt2s TopLeft, BottomRight;
-	Pnt2s drawObjectTopLeft;
 	Vec2s drawObjectSize;
 	Pnt2s TempPos;
-	Int32 totalWidth;
-	Int32 yAdj = 0;
+
+    Pnt2s InnerComponentsPosition(0,0);
+    Vec2s InnerComponentsSize(0,0);
+
+    UInt32 DrawnComponentToTextGap(2);
+
 	getInsideBorderBounds(TopLeft, BottomRight);
 
-   Pnt2s TextTopLeft, TextBottomRight;
-   getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
-   Vec2s TextBounds( TextBottomRight - TextTopLeft);
+    Pnt2s TextTopLeft, TextBottomRight;
+    getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+    Vec2s TextBounds( TextBottomRight - TextTopLeft);
+	if(TextBounds.x()>0)
+    {
+	    InnerComponentsSize[0] += TextBounds.x();
+	}
    
-   if(getActive()){
-	   if(getSelected()){
-		   getActiveSelectedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
+    UIDrawObjectCanvasPtr DrawnDrawObject = getDrawnDrawObject();
+    if(DrawnDrawObject != NullFC)
+    {
+	    Pnt2s drawObjectTopLeft;
+	    Pnt2s drawObjectBottomRight;
+        DrawnDrawObject->getDrawObjectBounds(drawObjectTopLeft, drawObjectBottomRight);
+        drawObjectSize = drawObjectBottomRight-drawObjectTopLeft;
+		
+        InnerComponentsSize[0] += drawObjectSize.x() + DrawnComponentToTextGap;
+	    
+	}
+    else
+    {
+        drawObjectSize.setValues(0,0);
+    }
+    InnerComponentsSize[1] = osgMax(drawObjectSize.y(), TextBounds.y());
+    InnerComponentsPosition = calculateAlignment(TopLeft, BottomRight-TopLeft, InnerComponentsSize, getVerticalAlignment(), getHorizontalAlignment());
+    
+    if(DrawnDrawObject != NullFC)
+    {
+        DrawnDrawObject->setPosition( calculateAlignment(InnerComponentsPosition, InnerComponentsSize,drawObjectSize,0.5,0.0 ) );
+	    DrawnDrawObject->draw(TheGraphics);
+    }
 
-		   if(TextBounds.x()>0){
-			totalWidth =	3*drawObjectSize.x()+TextBounds.x();
-		   }
-		   else{
-			   totalWidth= drawObjectSize.x();
-		   }
-		   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
-		   getActiveSelectedDrawObject()->setPosition(TempPos);
-		   getActiveSelectedDrawObject()->draw(TheGraphics);
-
-	   }
-	   else
-	   {
-		   getActiveDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-		   if(TextBounds.x()>0){
-			totalWidth =	3*drawObjectSize.x()+TextBounds.x();
-		   }
-		   else{
-			   totalWidth= drawObjectSize.x();
-		   }
-		   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
-		   getActiveDrawObject()->setPosition(TempPos);
-		   getActiveDrawObject()->draw(TheGraphics);
-	   }
-   }
-   else if(getSelected()){
-	   getSelectedDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-	   if(TextBounds.x()>0){
-			totalWidth =	3*drawObjectSize.x()+TextBounds.x();
-	   }
-	   else{
-		   totalWidth= drawObjectSize.x();
-	   }
-	   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
-	   getSelectedDrawObject()->setPosition(TempPos);
- 	   getSelectedDrawObject()->draw(TheGraphics);
-  }
-   else{
-	   getDrawObject()->getDrawObjectBounds(drawObjectTopLeft, drawObjectSize);
-	   if(TextBounds.x()>0){
-			totalWidth =	3*drawObjectSize.x()+TextBounds.x();
-	   }
-	   else{
-		   totalWidth= drawObjectSize.x();
-	   }		TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, Vec2s(totalWidth, drawObjectSize.y()), getVerticalAlignment(), getHorizontalAlignment());
-   	    getDrawObject()->setPosition(TempPos);
-		getDrawObject()->draw(TheGraphics);
-   }
-   if(drawObjectSize.y()> TextBounds.y())
-	   yAdj = (drawObjectSize.y()-TextBounds.y())/2.0;
-   TheGraphics->drawText(Pnt2s(TempPos.x()+drawObjectSize.x()+5, TempPos.y()+yAdj),   getText(), getFont(), getForegroundColor(), getOpacity());
+    TheGraphics->drawText(calculateAlignment(InnerComponentsPosition + Vec2s(drawObjectSize.x()+ DrawnComponentToTextGap,0), InnerComponentsSize-Vec2s(drawObjectSize.x()+ DrawnComponentToTextGap,0),TextBounds,0.5,0.0 )
+        ,   getText(), getFont(), getDrawnTextColor(), getOpacity());
 
 }
 
+UIDrawObjectCanvasPtr CheckboxButton::getDrawnDrawObject(void) const
+{
+    if(getEnabled())
+    {
+        if(getActive())
+        {
+            if(getSelected())
+            {
+                return getActiveDrawObject();
+            }
+            else
+            {
+                return getActiveSelectedDrawObject();
+            }
+        }
+        else if(_MouseInComponentLastMouse)
+        {
+            if(getSelected())
+            {
+                return getRolloverSelectedDrawObject();
+            }
+            else
+            {
+                return getRolloverDrawObject();
+            }
+        }
+        else
+        {
+            if(getSelected())
+            {
+                return getSelectedDrawObject();
+            }
+            else
+            {
+                return getDrawObject();
+            }
+        }
+    }
+    else
+    {
+        if(getSelected())
+        {
+            return getDisabledSelectedDrawObject();
+        }
+        else
+        {
+            return getDisabledDrawObject();
+        }
+    }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

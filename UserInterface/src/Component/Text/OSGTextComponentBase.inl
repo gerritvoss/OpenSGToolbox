@@ -112,6 +112,41 @@ SFColor4f *TextComponentBase::getSFSelectionTextColor(void)
     return &_sfSelectionTextColor;
 }
 
+//! Get the TextComponent::_sfActiveTextColor field.
+inline
+SFColor4f *TextComponentBase::getSFActiveTextColor(void)
+{
+    return &_sfActiveTextColor;
+}
+
+//! Get the TextComponent::_sfFocusedTextColor field.
+inline
+SFColor4f *TextComponentBase::getSFFocusedTextColor(void)
+{
+    return &_sfFocusedTextColor;
+}
+
+//! Get the TextComponent::_sfRolloverTextColor field.
+inline
+SFColor4f *TextComponentBase::getSFRolloverTextColor(void)
+{
+    return &_sfRolloverTextColor;
+}
+
+//! Get the TextComponent::_sfDisabledTextColor field.
+inline
+SFColor4f *TextComponentBase::getSFDisabledTextColor(void)
+{
+    return &_sfDisabledTextColor;
+}
+
+//! Get the TextComponent::_sfTextColor field.
+inline
+SFColor4f *TextComponentBase::getSFTextColor(void)
+{
+    return &_sfTextColor;
+}
+
 
 //! Get the value of the TextComponent::_sfText field.
 inline
@@ -237,6 +272,111 @@ inline
 void TextComponentBase::setSelectionTextColor(const Color4f &value)
 {
     _sfSelectionTextColor.setValue(value);
+}
+
+//! Get the value of the TextComponent::_sfActiveTextColor field.
+inline
+Color4f &TextComponentBase::getActiveTextColor(void)
+{
+    return _sfActiveTextColor.getValue();
+}
+
+//! Get the value of the TextComponent::_sfActiveTextColor field.
+inline
+const Color4f &TextComponentBase::getActiveTextColor(void) const
+{
+    return _sfActiveTextColor.getValue();
+}
+
+//! Set the value of the TextComponent::_sfActiveTextColor field.
+inline
+void TextComponentBase::setActiveTextColor(const Color4f &value)
+{
+    _sfActiveTextColor.setValue(value);
+}
+
+//! Get the value of the TextComponent::_sfFocusedTextColor field.
+inline
+Color4f &TextComponentBase::getFocusedTextColor(void)
+{
+    return _sfFocusedTextColor.getValue();
+}
+
+//! Get the value of the TextComponent::_sfFocusedTextColor field.
+inline
+const Color4f &TextComponentBase::getFocusedTextColor(void) const
+{
+    return _sfFocusedTextColor.getValue();
+}
+
+//! Set the value of the TextComponent::_sfFocusedTextColor field.
+inline
+void TextComponentBase::setFocusedTextColor(const Color4f &value)
+{
+    _sfFocusedTextColor.setValue(value);
+}
+
+//! Get the value of the TextComponent::_sfRolloverTextColor field.
+inline
+Color4f &TextComponentBase::getRolloverTextColor(void)
+{
+    return _sfRolloverTextColor.getValue();
+}
+
+//! Get the value of the TextComponent::_sfRolloverTextColor field.
+inline
+const Color4f &TextComponentBase::getRolloverTextColor(void) const
+{
+    return _sfRolloverTextColor.getValue();
+}
+
+//! Set the value of the TextComponent::_sfRolloverTextColor field.
+inline
+void TextComponentBase::setRolloverTextColor(const Color4f &value)
+{
+    _sfRolloverTextColor.setValue(value);
+}
+
+//! Get the value of the TextComponent::_sfDisabledTextColor field.
+inline
+Color4f &TextComponentBase::getDisabledTextColor(void)
+{
+    return _sfDisabledTextColor.getValue();
+}
+
+//! Get the value of the TextComponent::_sfDisabledTextColor field.
+inline
+const Color4f &TextComponentBase::getDisabledTextColor(void) const
+{
+    return _sfDisabledTextColor.getValue();
+}
+
+//! Set the value of the TextComponent::_sfDisabledTextColor field.
+inline
+void TextComponentBase::setDisabledTextColor(const Color4f &value)
+{
+    _sfDisabledTextColor.setValue(value);
+}
+
+//! Get the value of the TextComponent::_sfTextColor field.
+inline
+Color4f &TextComponentBase::getTextColor(void)
+{
+    return _sfTextColor.getValue();
+}
+
+//! Get the value of the TextComponent::_sfTextColor field.
+inline
+const Color4f &TextComponentBase::getTextColor(void) const
+{
+    return _sfTextColor.getValue();
+}
+
+//! Set the value of the TextComponent::_sfTextColor field.
+inline
+void TextComponentBase::setTextColor(const Color4f &value)
+{
+    _sfTextColor.setValue(value);
 }
 
 

@@ -43,6 +43,7 @@ A UI Button.
 		type="BorderPtr"
 		cardinality="single"
 		visibility="external"
+		defaultValue="NullFC"
 		header="Border/OSGBorder.h"
 		access="public"
 	>
@@ -52,12 +53,45 @@ A UI Button.
 		type="UIBackgroundPtr"
 		cardinality="single"
 		visibility="external"
+		defaultValue="NullFC"
 		header="Background/OSGUIBackground.h"
 		access="public"
 	>
 	</Field>
 	<Field
-		name="ActiveForegroundColor"
+		name="ActiveTextColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="FocusedTextColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="RolloverTextColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="DisabledTextColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="TextColor"
 		type="Color4f"
 		cardinality="single"
 		visibility="external"
@@ -66,21 +100,19 @@ A UI Button.
 	</Field>
 	<Field
 		name="VerticalAlignment"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="VERTICAL_CENTER"
-		defaultHeader="Util/OSGUIDefines.h"
+		defaultValue="0.5"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="HorizontalAlignment"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="HORIZONTAL_CENTER"
-		defaultHeader="Util/OSGUIDefines.h"
+		defaultValue="0.5"
 		access="public"
 	>
 	</Field>

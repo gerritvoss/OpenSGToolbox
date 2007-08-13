@@ -8,6 +8,7 @@
 #include "OSGUserInterfaceDef.h"
 #include <OpenSG/OSGVector.h>
 #include "Component/OSGComponent.h"
+#include "UIDrawingSurface/OSGUIDrawingSurface.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -15,7 +16,7 @@ void OSG_USERINTERFACELIB_DLLMAPPING convertTopLeftToCenteredLine(const Pnt2s& P
 void OSG_USERINTERFACELIB_DLLMAPPING convertTopRightToCenteredLine(const Pnt2s& Point1, const Pnt2s& Point2, const UInt16 Width,Pnt2s& ResultPoint1, Pnt2s& ResultPoint2);
 
 Pnt2s OSG_USERINTERFACELIB_DLLMAPPING calculateAlignment(const Pnt2s& Position1, const Vec2s& Size1, const Vec2s& Size2, const Real32& VAlign, const Real32& HAlign);
-Pnt2s OSG_USERINTERFACELIB_DLLMAPPING calculateAlignment(const Pnt2s& Position1, const Vec2s& Size1, const Vec2s& Size2, const UInt32& VAlign, const UInt32& HAlign);
+//Pnt2s OSG_USERINTERFACELIB_DLLMAPPING calculateAlignment(const Pnt2s& Position1, const Vec2s& Size1, const Vec2s& Size2, const UInt32& VAlign, const UInt32& HAlign);
 
 void OSG_USERINTERFACELIB_DLLMAPPING quadIntersection(const Pnt2s& Quad1TopLeft, const Pnt2s& Quad1BottomRight,
                                                       const Pnt2s& Quad2TopLeft, const Pnt2s& Quad2BottomRight,
@@ -36,6 +37,10 @@ bool OSG_USERINTERFACELIB_DLLMAPPING isContainedBounds(const Pnt2s& Point, const
 //Pnt2s OSG_USERINTERFACELIB_DLLMAPPING ComponentToWindow(const Pnt2s& ComponentPoint, const ComponentPtr Comp);
 
 Pnt2s OSG_USERINTERFACELIB_DLLMAPPING DrawingSurfaceToComponent(const Pnt2s& DrawingSurfacePoint, const ComponentPtr Comp);
+Pnt2s OSG_USERINTERFACELIB_DLLMAPPING ViewportToComponent(const Pnt2s& ViewportPoint, const ComponentPtr Comp, const ViewportPtr TheViewport);
+Pnt2s OSG_USERINTERFACELIB_DLLMAPPING ComponentToViewport(const Pnt2s& ComponentPoint, const ComponentPtr Comp, const ViewportPtr TheViewport);
+Pnt2s OSG_USERINTERFACELIB_DLLMAPPING ViewportToDrawingSurface(const Pnt2s& ViewportPoint, const UIDrawingSurfacePtr DrawingSurface, const ViewportPtr TheViewport);
+Pnt2s OSG_USERINTERFACELIB_DLLMAPPING DrawingSurfaceToViewport(const Pnt2s& DrawingSurfacePoint, const UIDrawingSurfacePtr DrawingSurface, const ViewportPtr TheViewport);
 Pnt2s OSG_USERINTERFACELIB_DLLMAPPING ComponentToDrawingSurface(const Pnt2s& ComponentPoint, const ComponentPtr Comp);
 Pnt2s OSG_USERINTERFACELIB_DLLMAPPING ComponentToFrame(const Pnt2s& ComponentPoint, const ComponentPtr Comp);
 

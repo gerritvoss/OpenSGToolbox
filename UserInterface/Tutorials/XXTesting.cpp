@@ -208,9 +208,9 @@ public:
 
    virtual void buttonSelected(const ButtonSelectedEvent& e)
 	{
-		beginEditCP(leftPanelTextArea, TextArea::ForegroundColorFieldMask);
-			leftPanelTextArea->setForegroundColor( Color4f( 0.0, 0.0 , 0.0, 1.0) );
-		endEditCP(leftPanelTextArea, TextArea::ForegroundColorFieldMask);
+		beginEditCP(leftPanelTextArea, TextArea::TextColorFieldMask);
+			leftPanelTextArea->setTextColor( Color4f( 0.0, 0.0 , 0.0, 1.0) );
+		endEditCP(leftPanelTextArea, TextArea::TextColorFieldMask);
    }
 
    virtual void buttonDeselected(const ButtonSelectedEvent& e)
@@ -225,9 +225,9 @@ public:
    virtual void buttonSelected(const ButtonSelectedEvent& e)
 	{
 
-		beginEditCP(leftPanelTextArea, TextArea::ForegroundColorFieldMask);
-			leftPanelTextArea->setForegroundColor( Color4f( 1.0, 0.0 , 0.0, 1.0) );
-		endEditCP(leftPanelTextArea, TextArea::ForegroundColorFieldMask);
+		beginEditCP(leftPanelTextArea, TextArea::TextColorFieldMask);
+			leftPanelTextArea->setTextColor( Color4f( 1.0, 0.0 , 0.0, 1.0) );
+		endEditCP(leftPanelTextArea, TextArea::TextColorFieldMask);
 	
 	}
 
@@ -243,9 +243,9 @@ public:
    virtual void buttonSelected(const ButtonSelectedEvent& e)
 	{
 
-		beginEditCP(leftPanelTextArea, TextArea::ForegroundColorFieldMask);
-			leftPanelTextArea->setForegroundColor( Color4f( 0.0, 0.0 , 1.0, 1.0) );
-		endEditCP(leftPanelTextArea, TextArea::ForegroundColorFieldMask);
+		beginEditCP(leftPanelTextArea, TextArea::TextColorFieldMask);
+			leftPanelTextArea->setTextColor( Color4f( 0.0, 0.0 , 1.0, 1.0) );
+		endEditCP(leftPanelTextArea, TextArea::TextColorFieldMask);
 	
 	}
 
@@ -261,9 +261,9 @@ public:
    virtual void buttonSelected(const ButtonSelectedEvent& e)
 	{
 
-		beginEditCP(leftPanelTextArea, TextArea::ForegroundColorFieldMask);
-			leftPanelTextArea->setForegroundColor( Color4f( 0.0, 1.0 , 0.0, 1.0) );
-		endEditCP(leftPanelTextArea, TextArea::ForegroundColorFieldMask);
+		beginEditCP(leftPanelTextArea, TextArea::TextColorFieldMask);
+			leftPanelTextArea->setTextColor( Color4f( 0.0, 1.0 , 0.0, 1.0) );
+		endEditCP(leftPanelTextArea, TextArea::TextColorFieldMask);
 	
 	}
 
@@ -577,12 +577,12 @@ ComponentPtr createleftPanelButtonPanel(void)
 	// Create Label for this Panel
 	LabelPtr leftPanelButtonPanelLabel = osg::Label::create();
 
-	beginEditCP(leftPanelButtonPanelLabel, Component::ForegroundColorFieldMask | Component::BackgroundFieldMask | Component::PreferredSizeFieldMask | Label::TextFieldMask);
-		leftPanelButtonPanelLabel->setForegroundColor( Color4f(1.0,1.0,1.0,1.0));
+	beginEditCP(leftPanelButtonPanelLabel, Label::TextColorFieldMask | Component::BackgroundFieldMask | Component::PreferredSizeFieldMask | Label::TextFieldMask);
+		leftPanelButtonPanelLabel->setTextColor( Color4f(1.0,1.0,1.0,1.0));
 		leftPanelButtonPanelLabel->setBackground(createComplexBackground());
 		leftPanelButtonPanelLabel->setPreferredSize( Vec2s(100, 50) );
 		leftPanelButtonPanelLabel->setText("Various Options");
-	endEditCP(leftPanelButtonPanelLabel, Component::ForegroundColorFieldMask | Component::BackgroundFieldMask | Component::PreferredSizeFieldMask | 		Label::TextFieldMask);
+	endEditCP(leftPanelButtonPanelLabel, Label::TextColorFieldMask | Component::BackgroundFieldMask | Component::PreferredSizeFieldMask | 		Label::TextFieldMask);
 
 	// Create and edit the Panel buttons
 	ButtonPtr leftPanelButton1 = osg::Button::create();

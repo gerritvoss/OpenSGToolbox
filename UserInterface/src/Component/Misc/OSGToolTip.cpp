@@ -86,7 +86,7 @@ void ToolTip::drawInternal(const GraphicsPtr TheGraphics) const
    getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
    TheGraphics->drawText(
        calculateAlignment(TopLeft, BottomRight-TopLeft, (TextBottomRight-TextTopLeft), getVerticalAlignment(), getHorizontalAlignment())
-       , getText(), getFont(), getForegroundColor(), getOpacity());
+       , getText(), getFont(), getTextColor(), getOpacity());
 }
 
 Vec2s ToolTip::calculatePreferredSize(void) const

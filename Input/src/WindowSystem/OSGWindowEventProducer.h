@@ -194,11 +194,30 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     //Get the Window Fullscreen
     virtual bool getFullscreen(void) const = 0;
 
+    //Set the text on the Title bar of the window
+    virtual void setTitle(const std::string& TitleText) = 0;
+
+    //Get the text of the Title bar of the window
+    virtual std::string& getTitle(void) = 0;
+
+    //Set the window to allow or not allow Resizing
+    virtual void setRisizable(bool IsResizable) = 0;
+
+    //Get whether or not the window allows resizing
+    virtual bool getRisizable(void) = 0;
+
+    //Set the window to draw or not draw it's border
+    virtual void setDrawBorder(bool DrawBorder) = 0;
+
+    //Get wether or not the window is drawing a border
+    virtual bool getDrawBorder(void) = 0;
+
     //Set Display Callback Function
     virtual void setDisplayCallback(DisplayCallbackFunc Callback);
 
     //Set Reshape Callback Function
     virtual void setReshapeCallback(ReshapeCallbackFunc Callback);
+
 
     virtual void draw(void) = 0;
     virtual void update(void) = 0;

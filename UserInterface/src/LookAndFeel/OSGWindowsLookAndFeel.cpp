@@ -58,9 +58,11 @@
 #include "Component/OSGLabel.h"
 #include "Component/Container/OSGFrame.h"
 #include "Component/Container/OSGPanel.h"
+#include "Component/Container/OSGSplitPanel.h"
 #include "Component/OSGImageComponent.h"
 #include "Util/OSGUIDefines.h"
 #include "Graphics/UIDrawObjects/OSGRectUIDrawObject.h"
+#include "Graphics/UIDrawObjects/OSGMultiColoredQuadUIDrawObject.h"
 #include "Graphics/UIDrawObjects/OSGArcUIDrawObject.h"
 #include "Graphics/UIDrawObjects/OSGDiscUIDrawObject.h"
 #include "Graphics/UIDrawObjects/OSGLineUIDrawObject.h"
@@ -129,46 +131,58 @@ void WindowsLookAndFeel::init(void)
 		WindowsFont->setStyle(TextFace::STYLE_PLAIN);
 	endEditCP(WindowsFont);
 
+    Color4f WindowsDisabledTextColor(0.63,0.63,0.57,1.0);
+
 	//Windows ButtonBorder
-	LineBorderPtr WindowsButtonBorder = LineBorder::create();
-	LineBorderPtr WindowsButtonBorderBlue = LineBorder::create();
-	MatteBorderPtr WindowsButtonBorderMatte = MatteBorder::create();
-	CompoundBorderPtr WindowsButtonBorderCompound1 = CompoundBorder::create();
-	CompoundBorderPtr WindowsButtonBorderCompound2 = CompoundBorder::create();
-	beginEditCP(WindowsButtonBorderBlue);
-		WindowsButtonBorderBlue->setColor( Color4f(0.0, 0.235, 0.455 ,1.0) );
-		WindowsButtonBorderBlue->setWidth(1);
-	endEditCP(WindowsButtonBorderBlue);
-	//beginEditCP(WindowsButtonBorderMatte);
-	//	WindowsMatteBorder->setRightWidth(2);
-	//	WindowsMatteBorder->setLeftWidth(2);
-	//	WindowsMatteBorder->setTopWidth(2);
-	//	WindowsMatteBorder->setBottomWidth(2);
-	//	WindowsMatteBorder->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
-	//beginEditCP(WindowsButtonBorderMatte);
+	RoundedCornerLineBorderPtr WindowsButtonBorder = RoundedCornerLineBorder::create();
+	beginEditCP(WindowsButtonBorder);
+		WindowsButtonBorder->setColor( Color4f(0.0, 0.235, 0.455 ,1.0) );
+		WindowsButtonBorder->setWidth(1);
+        WindowsButtonBorder->setCornerRadius(3);
+	endEditCP(WindowsButtonBorder);
 
-	//Windows Disabled ButtonBorder
-	BevelBorderPtr WindowsDisabledButtonBorder = BevelBorder::create();
-	beginEditCP(WindowsDisabledButtonBorder);
-		WindowsDisabledButtonBorder->setRaised(true);
-		WindowsDisabledButtonBorder->setWidth(2);
-		WindowsDisabledButtonBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
-		WindowsDisabledButtonBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));/*
-		WindowsButtonBorder->setShadowInner(Color4f(0.85, 0.85, 0.85, 1.0));
-		WindowsButtonBorder->setShadowOuter(Color4f(0.65, 0.65, 0.65, 1.0));*/
-	endEditCP(WindowsDisabledButtonBorder);
-
-
-	//Windows active button border
-	BevelBorderPtr WindowsActiveButtonBorder = BevelBorder::create();
+	//Windows Active button border
+    RoundedCornerLineBorderPtr WindowsActiveButtonBorder = RoundedCornerLineBorder::create();
 	beginEditCP(WindowsActiveButtonBorder);
-		WindowsActiveButtonBorder->setRaised(false);
-		WindowsActiveButtonBorder->setWidth(2);
-		WindowsActiveButtonBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
-		WindowsActiveButtonBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
-		WindowsActiveButtonBorder->setShadowInner(Color4f(0.65, 0.65, 0.65, 1.0));
-		WindowsActiveButtonBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
+		WindowsActiveButtonBorder->setColor( Color4f(0.0, 0.235, 0.455 ,1.0) );
+		WindowsActiveButtonBorder->setWidth(1);
+        WindowsActiveButtonBorder->setCornerRadius(3);
 	endEditCP(WindowsActiveButtonBorder);
+    
+
+	//Windows Rollover button border
+    RoundedCornerLineBorderPtr WindowsRolloverInsideButtonBorder = RoundedCornerLineBorder::create();
+	beginEditCP(WindowsRolloverInsideButtonBorder);
+		WindowsRolloverInsideButtonBorder->setColor( Color4f(0.98, 0.79, 0.42 ,1.0) );
+		WindowsRolloverInsideButtonBorder->setWidth(2);
+        WindowsRolloverInsideButtonBorder->setCornerRadius(1);
+	endEditCP(WindowsRolloverInsideButtonBorder);
+
+	CompoundBorderPtr WindowsRolloverButtonBorder = CompoundBorder::create();
+	beginEditCP(WindowsRolloverButtonBorder);
+        WindowsRolloverButtonBorder->setInnerBorder(WindowsRolloverInsideButtonBorder);
+        WindowsRolloverButtonBorder->setOuterBorder(WindowsButtonBorder);
+	endEditCP(WindowsRolloverButtonBorder);
+    
+	//Windows Disabled button border
+    RoundedCornerLineBorderPtr WindowsDisabledInsideButtonBorder = RoundedCornerLineBorder::create();
+	beginEditCP(WindowsDisabledInsideButtonBorder);
+		WindowsDisabledInsideButtonBorder->setColor( Color4f(0.79, 0.78, 0.73 ,1.0) );
+		WindowsDisabledInsideButtonBorder->setWidth(1);
+        WindowsDisabledInsideButtonBorder->setCornerRadius(3);
+	endEditCP(WindowsDisabledInsideButtonBorder);
+    RoundedCornerLineBorderPtr WindowsDisabledOutsideButtonBorder = RoundedCornerLineBorder::create();
+	beginEditCP(WindowsDisabledOutsideButtonBorder);
+		WindowsDisabledOutsideButtonBorder->setColor( Color4f(0.93, 0.91, 0.85 ,1.0) );
+		WindowsDisabledOutsideButtonBorder->setWidth(1);
+        WindowsDisabledOutsideButtonBorder->setCornerRadius(1);
+	endEditCP(WindowsDisabledOutsideButtonBorder);
+
+	CompoundBorderPtr WindowsDisabledButtonBorder = CompoundBorder::create();
+	beginEditCP(WindowsDisabledButtonBorder);
+        WindowsDisabledButtonBorder->setInnerBorder(WindowsDisabledInsideButtonBorder);
+        WindowsDisabledButtonBorder->setOuterBorder(WindowsDisabledOutsideButtonBorder);
+	endEditCP(WindowsDisabledButtonBorder);
 
 	//Windows ButtonBackground
 	GradientUIBackgroundPtr WindowsButtonBackground = GradientUIBackground::create();
@@ -181,8 +195,24 @@ void WindowsLookAndFeel::init(void)
 	//Windows Disabled ButtonBackground
 	ColorUIBackgroundPtr WindowsDisabledButtonBackground = ColorUIBackground::create();
 	beginEditCP(WindowsDisabledButtonBackground);
-		WindowsDisabledButtonBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+		WindowsDisabledButtonBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
 	endEditCP(WindowsDisabledButtonBackground);
+    
+	//Windows Active ButtonBackground
+	GradientUIBackgroundPtr WindowsActiveButtonBackground = GradientUIBackground::create();
+	beginEditCP(WindowsActiveButtonBackground);
+		WindowsActiveButtonBackground->setColorStart(Color4f(.90, .89, .87, 1.0));
+		WindowsActiveButtonBackground->setColorEnd(Color4f(.89, .89, .85, 1.0));
+		WindowsActiveButtonBackground->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(WindowsActiveButtonBackground);
+    
+	//Windows Rollover ButtonBackground
+	GradientUIBackgroundPtr WindowsRolloverButtonBackground = GradientUIBackground::create();
+	beginEditCP(WindowsRolloverButtonBackground);
+		WindowsRolloverButtonBackground->setColorStart(Color4f(.99, .99, .98, 1.0));
+		WindowsRolloverButtonBackground->setColorEnd(Color4f(.93, .92, .90, 1.0));
+		WindowsRolloverButtonBackground->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(WindowsRolloverButtonBackground);
 
 	//Windows Button
 	ButtonPtr WindowsButton = Button::create();
@@ -194,21 +224,21 @@ void WindowsLookAndFeel::init(void)
 		//Sizes
 		WindowsButton->setMinSize(Vec2s(0,0));
 		WindowsButton->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsButton->setPreferredSize(Vec2s(68,16));
+		WindowsButton->setPreferredSize(Vec2s(75,23));
 
 		//Border
-		WindowsButton->setBorder(WindowsButtonBorderBlue);
+		WindowsButton->setBorder(WindowsButtonBorder);
+		WindowsButton->setRolloverBorder(WindowsRolloverButtonBorder);
+		WindowsButton->setFocusedBorder(WindowsButtonBorder);
 		WindowsButton->setDisabledBorder(WindowsDisabledButtonBorder);
 		WindowsButton->setActiveBorder(WindowsActiveButtonBorder);
 		
 		//Background
 		WindowsButton->setBackground(WindowsButtonBackground);
+		WindowsButton->setRolloverBackground(WindowsRolloverButtonBackground);
+		WindowsButton->setFocusedBackground(WindowsButtonBackground);
 		WindowsButton->setDisabledBackground(WindowsDisabledButtonBackground);
-		WindowsButton->setActiveBackground(WindowsButtonBackground);
-
-		//Foreground
-		WindowsButton->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
-		WindowsButton->setDisabledForegroundColor(Color4f(0.4,0.4,0.4,1.0));
+		WindowsButton->setActiveBackground(WindowsActiveButtonBackground);
 		
 		//Opacity
 		WindowsButton->setOpacity(1.0);
@@ -216,8 +246,13 @@ void WindowsLookAndFeel::init(void)
 		//Text
 		WindowsButton->setText("");
 		WindowsButton->setFont(WindowsFont);
-		WindowsButton->setVerticalAlignment(VERTICAL_CENTER);
-		WindowsButton->setHorizontalAlignment(HORIZONTAL_CENTER);
+		WindowsButton->setVerticalAlignment(0.5);
+		WindowsButton->setHorizontalAlignment(0.5);
+		WindowsButton->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsButton->setActiveTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsButton->setDisabledTextColor(WindowsDisabledTextColor);
 	endEditCP(WindowsButton);
 
 	Button::getClassType().setPrototype(WindowsButton);
@@ -246,16 +281,13 @@ void WindowsLookAndFeel::init(void)
 		//Sizes
 		WindowsLabel->setMinSize(Vec2s(0,0));
 		WindowsLabel->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsLabel->setPreferredSize(Vec2s(100,50));
+		WindowsLabel->setPreferredSize(Vec2s(75,23));
 
 		//Border
 		WindowsLabel->setBorder(WindowsLabelBorder);
 		
 		//Background
 		WindowsLabel->setBackground(WindowsLabelBackground);
-
-		//Foreground
-		WindowsLabel->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
 		
 		//Opacity
 		WindowsLabel->setOpacity(1.0);
@@ -263,6 +295,10 @@ void WindowsLookAndFeel::init(void)
 		//Text
 		WindowsLabel->setText("");
 		WindowsLabel->setFont(WindowsFont);
+		WindowsLabel->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsLabel->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsLabel->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsLabel->setDisabledTextColor(WindowsDisabledTextColor);
 	endEditCP(WindowsLabel);
 	
     Label::getClassType().setPrototype(WindowsLabel);
@@ -301,9 +337,6 @@ void WindowsLookAndFeel::init(void)
 		
 		//Background
 		WindowsFrame->setBackground(WindowsFrameBackground);
-
-		//Foreground
-		WindowsFrame->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
 		
 		//Opacity
 		WindowsFrame->setOpacity(1.0);
@@ -351,9 +384,6 @@ void WindowsLookAndFeel::init(void)
 		
 		//Background
 		WindowsPanel->setBackground(WindowsPanelBackground);
-
-		//Foreground
-		WindowsPanel->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
 		
 		//Opacity
 		WindowsPanel->setOpacity(1.0);
@@ -361,6 +391,30 @@ void WindowsLookAndFeel::init(void)
 	
 	Panel::getClassType().setPrototype(WindowsPanel);
 	
+	//************************** SplitPanel *****************************
+	//The only default value set will be the divider
+
+	//Windows Divider Background and Border
+	ColorUIBackgroundPtr WindowsDividerBackground = ColorUIBackground::create();
+	beginEditCP(WindowsDividerBackground);
+		WindowsDividerBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
+	endEditCP(WindowsDividerBackground);
+
+	//Windows Divider
+	UIDrawObjectCanvasPtr WindowsDividerDrawObject = UIDrawObjectCanvas::create();
+	beginEditCP(WindowsDividerDrawObject);
+		WindowsDividerDrawObject->setBackground(WindowsDividerBackground);
+	endEditCP(WindowsDividerDrawObject);
+
+	//Windows SplitPanel
+	SplitPanelPtr WindowsSplitPanel = SplitPanel::create();
+	beginEditCP(WindowsSplitPanel);
+		WindowsSplitPanel->setDividerDrawObject(WindowsDividerDrawObject);
+		WindowsSplitPanel->setDividerSize(5);
+	endEditCP(WindowsSplitPanel);
+
+	SplitPanel::getClassType().setPrototype(WindowsSplitPanel);
+
 	//************************** ImageComponent *****************************
 	//Windows ImageComponentBorder
 	EmptyBorderPtr WindowsImageComponentBorder = EmptyBorder::create();
@@ -386,17 +440,14 @@ void WindowsLookAndFeel::init(void)
 		
 		//Background
 		WindowsImageComponent->setBackground(WindowsImageComponentBackground);
-
-		//Foreground
-		WindowsImageComponent->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
 		
 		//Opacity
 		WindowsImageComponent->setOpacity(1.0);
 
 		//Image Alignment
 		WindowsImageComponent->setScale(SCALE_NONE);
-		WindowsImageComponent->setVerticalAlignment(VERTICAL_CENTER);
-		WindowsImageComponent->setHorizontalAlignment(HORIZONTAL_CENTER);
+		WindowsImageComponent->setVerticalAlignment(0.5);
+		WindowsImageComponent->setHorizontalAlignment(0.5);
 	endEditCP(WindowsImageComponent);
 	
 	ImageComponent::getClassType().setPrototype(WindowsImageComponent);
@@ -407,15 +458,26 @@ void WindowsLookAndFeel::init(void)
 	UIDrawObjectCanvasPtr WindowsSelectedCheckboxDrawObject = UIDrawObjectCanvas::create();
 	UIDrawObjectCanvasPtr WindowsActiveCheckboxDrawObject = UIDrawObjectCanvas::create();
 	UIDrawObjectCanvasPtr WindowsActiveSelectedCheckboxDrawObject = UIDrawObjectCanvas::create();
+	UIDrawObjectCanvasPtr WindowsRolloverCheckboxDrawObject = UIDrawObjectCanvas::create();
+	UIDrawObjectCanvasPtr WindowsRolloverSelectedCheckboxDrawObject = UIDrawObjectCanvas::create();
+	UIDrawObjectCanvasPtr WindowsDisabledCheckboxDrawObject = UIDrawObjectCanvas::create();
+	UIDrawObjectCanvasPtr WindowsDisabledSelectedCheckboxDrawObject = UIDrawObjectCanvas::create();
 
-	RectUIDrawObjectPtr CheckboxBackground = RectUIDrawObject::create();
+    //Normal Background
+	MultiColoredQuadUIDrawObjectPtr CheckboxBackground = MultiColoredQuadUIDrawObject::create();
 	beginEditCP(CheckboxBackground);
-		CheckboxBackground->setTopLeft(Pnt2s(1,1));
-		CheckboxBackground->setBottomRight(Pnt2s(12,12));
-		CheckboxBackground->setColor(Color4f(.945,.945,.937,1.0));
+        CheckboxBackground->setPoint1(Pnt2s(1,1));
+        CheckboxBackground->setPoint2(Pnt2s(12,1));
+        CheckboxBackground->setPoint3(Pnt2s(12,12));
+        CheckboxBackground->setPoint4(Pnt2s(1,12));
+		CheckboxBackground->setColor1(Color4f(.86,.86,.84,1.0));
+		CheckboxBackground->setColor2(Color4f(.95,.95,.94,1.0));
+		CheckboxBackground->setColor3(Color4f(1.0,1.0,1.0,1.0));
+		CheckboxBackground->setColor4(Color4f(.95,.95,.94,1.0));
 		CheckboxBackground->setOpacity(1.0);
 	endEditCP(CheckboxBackground);
 
+    //Normal Border
 	RectUIDrawObjectPtr CheckboxBackgroundBorder = RectUIDrawObject::create();
 	beginEditCP(CheckboxBackgroundBorder);
 		CheckboxBackgroundBorder->setTopLeft(Pnt2s(0,0));
@@ -424,63 +486,183 @@ void WindowsLookAndFeel::init(void)
 		CheckboxBackgroundBorder->setOpacity(1.0);
 	endEditCP(CheckboxBackgroundBorder);
 
-	RectUIDrawObjectPtr CheckboxActiveBackground = RectUIDrawObject::create();
+    //Active Background
+	MultiColoredQuadUIDrawObjectPtr CheckboxActiveBackground = MultiColoredQuadUIDrawObject::create();
 	beginEditCP(CheckboxActiveBackground);
-		CheckboxActiveBackground->setTopLeft(Pnt2s(1,1));
-		CheckboxActiveBackground->setBottomRight(Pnt2s(12, 12));
-		CheckboxActiveBackground->setColor(Color4f(.859,.855,.800,1.0));
+        CheckboxActiveBackground->setPoint1(Pnt2s(1,1));
+        CheckboxActiveBackground->setPoint2(Pnt2s(12,1));
+        CheckboxActiveBackground->setPoint3(Pnt2s(12,12));
+        CheckboxActiveBackground->setPoint4(Pnt2s(1,12));
+		CheckboxActiveBackground->setColor1(Color4f(.69,.69,.65,1.0));
+		CheckboxActiveBackground->setColor2(Color4f(.95,.94,.87,1.0));
+		CheckboxActiveBackground->setColor3(Color4f(1.0,1.0,1.0,1.0));
+		CheckboxActiveBackground->setColor4(Color4f(.84,.84,.78,1.0));
 		CheckboxActiveBackground->setOpacity(1.0);
 	endEditCP(CheckboxActiveBackground);
+    
+    //Disabled Background
+	RectUIDrawObjectPtr CheckboxDisabledBackground = RectUIDrawObject::create();
+	beginEditCP(CheckboxDisabledBackground);
+		CheckboxDisabledBackground->setTopLeft(Pnt2s(1,1));
+		CheckboxDisabledBackground->setBottomRight(Pnt2s(12,12));
+		CheckboxDisabledBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+		CheckboxDisabledBackground->setOpacity(1.0);
+	endEditCP(CheckboxDisabledBackground);
 
-	LineUIDrawObjectPtr CheckboxLine1 = LineUIDrawObject::create();
-	beginEditCP(CheckboxLine1);
-		CheckboxLine1->setTopLeft(Pnt2s(2,6));
-		CheckboxLine1->setBottomRight(Pnt2s(5,9));
-		CheckboxLine1->setColor(Color4f(.129, .631, .129, 1.0));
-		CheckboxLine1->setOpacity(1.0);
-		CheckboxLine1->setWidth(1);
-	endEditCP(CheckboxLine1);
+    //Disabled Border
+	RectUIDrawObjectPtr CheckboxDisabledBackgroundBorder = RectUIDrawObject::create();
+	beginEditCP(CheckboxDisabledBackgroundBorder);
+		CheckboxDisabledBackgroundBorder->setTopLeft(Pnt2s(0,0));
+		CheckboxDisabledBackgroundBorder->setBottomRight(Pnt2s(13,13));
+		CheckboxDisabledBackgroundBorder->setColor(Color4f(.79,.78,.73,1.0));
+		CheckboxDisabledBackgroundBorder->setOpacity(1.0);
+	endEditCP(CheckboxDisabledBackgroundBorder);
 
-	LineUIDrawObjectPtr CheckboxLine2 = LineUIDrawObject::create();
-	beginEditCP(CheckboxLine2);
-		CheckboxLine2->setTopLeft(Pnt2s(5,9));
-		CheckboxLine2->setBottomRight(Pnt2s(10,4));
-		CheckboxLine2->setColor(Color4f(.129, .631, .129, 1.0));
-		CheckboxLine2->setOpacity(1.0);
-		CheckboxLine2->setWidth(1);
-	endEditCP(CheckboxLine2);
+    //The Checkmark
+    Color4f CheckmarkColor(0.13,0.63,0.13,1.0);
+	MultiColoredQuadUIDrawObjectPtr CheckboxCheckQuad1 = MultiColoredQuadUIDrawObject::create();
+	beginEditCP(CheckboxCheckQuad1);
+        CheckboxCheckQuad1->setPoint1(Pnt2s(3,4));
+        CheckboxCheckQuad1->setPoint2(Pnt2s(6,7));
+        CheckboxCheckQuad1->setPoint3(Pnt2s(6,10));
+        CheckboxCheckQuad1->setPoint4(Pnt2s(3,7));
+		CheckboxCheckQuad1->setColor1(CheckmarkColor);
+		CheckboxCheckQuad1->setColor2(CheckmarkColor);
+		CheckboxCheckQuad1->setColor3(CheckmarkColor);
+		CheckboxCheckQuad1->setColor4(CheckmarkColor);
+		CheckboxCheckQuad1->setOpacity(1.0);
+	endEditCP(CheckboxCheckQuad1);
 
+	MultiColoredQuadUIDrawObjectPtr CheckboxCheckQuad2 = MultiColoredQuadUIDrawObject::create();
+	beginEditCP(CheckboxCheckQuad2);
+        CheckboxCheckQuad2->setPoint1(Pnt2s(6,7));
+        CheckboxCheckQuad2->setPoint2(Pnt2s(10,3));
+        CheckboxCheckQuad2->setPoint3(Pnt2s(10,6));
+        CheckboxCheckQuad2->setPoint4(Pnt2s(6,10));
+		CheckboxCheckQuad2->setColor1(CheckmarkColor);
+		CheckboxCheckQuad2->setColor2(CheckmarkColor);
+		CheckboxCheckQuad2->setColor3(CheckmarkColor);
+		CheckboxCheckQuad2->setColor4(CheckmarkColor);
+		CheckboxCheckQuad2->setOpacity(1.0);
+	endEditCP(CheckboxCheckQuad2);
+    
+    //The Disabled Checkmark
+    Color4f CheckmarkDisabledColor(0.79,0.78,0.73,1.0);
+	MultiColoredQuadUIDrawObjectPtr CheckboxDisabledCheckQuad1 = MultiColoredQuadUIDrawObject::create();
+	beginEditCP(CheckboxDisabledCheckQuad1);
+        CheckboxDisabledCheckQuad1->setPoint1(Pnt2s(3,4));
+        CheckboxDisabledCheckQuad1->setPoint2(Pnt2s(6,7));
+        CheckboxDisabledCheckQuad1->setPoint3(Pnt2s(6,10));
+        CheckboxDisabledCheckQuad1->setPoint4(Pnt2s(3,7));
+		CheckboxDisabledCheckQuad1->setColor1(CheckmarkDisabledColor);
+		CheckboxDisabledCheckQuad1->setColor2(CheckmarkDisabledColor);
+		CheckboxDisabledCheckQuad1->setColor3(CheckmarkDisabledColor);
+		CheckboxDisabledCheckQuad1->setColor4(CheckmarkDisabledColor);
+		CheckboxDisabledCheckQuad1->setOpacity(1.0);
+	endEditCP(CheckboxDisabledCheckQuad1);
+
+	MultiColoredQuadUIDrawObjectPtr CheckboxDisabledCheckQuad2 = MultiColoredQuadUIDrawObject::create();
+	beginEditCP(CheckboxDisabledCheckQuad2);
+        CheckboxDisabledCheckQuad2->setPoint1(Pnt2s(6,7));
+        CheckboxDisabledCheckQuad2->setPoint2(Pnt2s(10,3));
+        CheckboxDisabledCheckQuad2->setPoint3(Pnt2s(10,6));
+        CheckboxDisabledCheckQuad2->setPoint4(Pnt2s(6,10));
+		CheckboxDisabledCheckQuad2->setColor1(CheckmarkDisabledColor);
+		CheckboxDisabledCheckQuad2->setColor2(CheckmarkDisabledColor);
+		CheckboxDisabledCheckQuad2->setColor3(CheckmarkDisabledColor);
+		CheckboxDisabledCheckQuad2->setColor4(CheckmarkDisabledColor);
+		CheckboxDisabledCheckQuad2->setOpacity(1.0);
+	endEditCP(CheckboxDisabledCheckQuad2);
+
+    //Normal
 	beginEditCP(WindowsCheckboxDrawObject);
 	   WindowsCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
 	   WindowsCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
 	endEditCP(WindowsCheckboxDrawObject);
 
+    //Normal Selected
 	beginEditCP(WindowsSelectedCheckboxDrawObject);
 		WindowsSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
 		WindowsSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
-		WindowsSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine1);
-		WindowsSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine2);
+		WindowsSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxCheckQuad1);
+		WindowsSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxCheckQuad2);
 	endEditCP(WindowsSelectedCheckboxDrawObject);
 
+    //Active Selected
 	beginEditCP(WindowsActiveSelectedCheckboxDrawObject);
-		WindowsActiveSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
+	 	WindowsActiveSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
 		WindowsActiveSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
 		WindowsActiveSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxActiveBackground);
-		WindowsActiveSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine1);
-		WindowsActiveSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine2);
 	endEditCP(WindowsActiveSelectedCheckboxDrawObject);
 
+    //Active Non-selected
 	beginEditCP(WindowsActiveCheckboxDrawObject);
-	 	WindowsActiveCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
+		WindowsActiveCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
 		WindowsActiveCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
 		WindowsActiveCheckboxDrawObject->getDrawObjects().addValue(CheckboxActiveBackground);
+		WindowsActiveCheckboxDrawObject->getDrawObjects().addValue(CheckboxCheckQuad1);
+		WindowsActiveCheckboxDrawObject->getDrawObjects().addValue(CheckboxCheckQuad2);
 	endEditCP(WindowsActiveCheckboxDrawObject);
 
+
+    //Rollover Border
+	MultiColoredQuadUIDrawObjectPtr RolloverCheckboxBorder = MultiColoredQuadUIDrawObject::create();
+	beginEditCP(RolloverCheckboxBorder);
+        RolloverCheckboxBorder->setPoint1(Pnt2s(1,1));
+        RolloverCheckboxBorder->setPoint2(Pnt2s(12,1));
+        RolloverCheckboxBorder->setPoint3(Pnt2s(12,12));
+        RolloverCheckboxBorder->setPoint4(Pnt2s(1,12));
+		RolloverCheckboxBorder->setColor1(Color4f(1.0,.94,.81,1.0));
+		RolloverCheckboxBorder->setColor2(Color4f(.98,.78,.39,1.0));
+		RolloverCheckboxBorder->setColor3(Color4f(0.97,0.70,0.19,1.0));
+		RolloverCheckboxBorder->setColor4(Color4f(.98,.78,.39,1.0));
+		RolloverCheckboxBorder->setOpacity(1.0);
+	endEditCP(RolloverCheckboxBorder);
+
+	RectUIDrawObjectPtr RolloverCheckboxBackground = RectUIDrawObject::create();
+	beginEditCP(RolloverCheckboxBackground);
+		RolloverCheckboxBackground->setTopLeft(Pnt2s(3,3));
+		RolloverCheckboxBackground->setBottomRight(Pnt2s(10,10));
+		RolloverCheckboxBackground->setColor(Color4f(0.91,.91,.89,1.0));
+		RolloverCheckboxBackground->setOpacity(1.0);
+	endEditCP(RolloverCheckboxBackground);
+
+    //Rollover Selected
+	beginEditCP(WindowsRolloverSelectedCheckboxDrawObject);
+		WindowsRolloverSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
+		WindowsRolloverSelectedCheckboxDrawObject->getDrawObjects().addValue(RolloverCheckboxBorder);
+		WindowsRolloverSelectedCheckboxDrawObject->getDrawObjects().addValue(RolloverCheckboxBackground);
+		WindowsRolloverSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxCheckQuad1);
+		WindowsRolloverSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxCheckQuad2);
+	endEditCP(WindowsRolloverSelectedCheckboxDrawObject);
+
+    //Rollover Non-selected
+	beginEditCP(WindowsRolloverCheckboxDrawObject);
+		WindowsRolloverCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
+		WindowsRolloverCheckboxDrawObject->getDrawObjects().addValue(RolloverCheckboxBorder);
+		WindowsRolloverCheckboxDrawObject->getDrawObjects().addValue(RolloverCheckboxBackground);
+	endEditCP(WindowsRolloverCheckboxDrawObject);
+
+    //Disabled Selected
+	beginEditCP(WindowsDisabledSelectedCheckboxDrawObject);
+		WindowsDisabledSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxDisabledBackgroundBorder);
+		WindowsDisabledSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxDisabledBackground);
+		WindowsDisabledSelectedCheckboxDrawObject->getDrawObjects().addValue(RolloverCheckboxBackground);
+		WindowsDisabledSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxDisabledCheckQuad1);
+		WindowsDisabledSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxDisabledCheckQuad2);
+	endEditCP(WindowsDisabledSelectedCheckboxDrawObject);
+
+    //Disabled Non-selected
+	beginEditCP(WindowsDisabledCheckboxDrawObject);
+		WindowsDisabledCheckboxDrawObject->getDrawObjects().addValue(CheckboxDisabledBackgroundBorder);
+		WindowsDisabledCheckboxDrawObject->getDrawObjects().addValue(CheckboxDisabledBackground);
+	endEditCP(WindowsDisabledCheckboxDrawObject);
+
+    //Border
 	EmptyBorderPtr WindowsCheckboxButtonBorder = EmptyBorder::create();
 
-
+    //Background
 	EmptyUIBackgroundPtr WindowsCheckboxButtonBackground = EmptyUIBackground::create();
-
 
 	CheckboxButtonPtr WindowsCheckboxButton = CheckboxButton::create();
 	beginEditCP(WindowsCheckboxButton);
@@ -491,24 +673,32 @@ void WindowsLookAndFeel::init(void)
 		//Sizes
 		WindowsCheckboxButton->setMinSize(Vec2s(0,0));
 		WindowsCheckboxButton->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsCheckboxButton->setPreferredSize(Vec2s(100,50));
+		WindowsCheckboxButton->setPreferredSize(Vec2s(75,23));
 		WindowsCheckboxButton->setSize(Vec2s(0,0));
+
+        //Draw Objects
 		WindowsCheckboxButton->setDrawObject(WindowsCheckboxDrawObject);
 		WindowsCheckboxButton->setSelectedDrawObject(WindowsSelectedCheckboxDrawObject);
 		WindowsCheckboxButton->setActiveDrawObject(WindowsActiveCheckboxDrawObject);
 		WindowsCheckboxButton->setActiveSelectedDrawObject(WindowsActiveSelectedCheckboxDrawObject);
+		WindowsCheckboxButton->setRolloverDrawObject(WindowsRolloverCheckboxDrawObject);
+		WindowsCheckboxButton->setRolloverSelectedDrawObject(WindowsRolloverSelectedCheckboxDrawObject);
+		WindowsCheckboxButton->setDisabledDrawObject(WindowsDisabledCheckboxDrawObject);
+		WindowsCheckboxButton->setDisabledSelectedDrawObject(WindowsDisabledSelectedCheckboxDrawObject);
 
 		//Border
 		WindowsCheckboxButton->setBorder(WindowsCheckboxButtonBorder);
+		WindowsCheckboxButton->setRolloverBorder(WindowsCheckboxButtonBorder);
+		WindowsCheckboxButton->setFocusedBorder(WindowsCheckboxButtonBorder);
+		WindowsCheckboxButton->setDisabledBorder(WindowsCheckboxButtonBorder);
 		WindowsCheckboxButton->setActiveBorder(WindowsCheckboxButtonBorder);
 		
 		//Background
 		WindowsCheckboxButton->setBackground(WindowsCheckboxButtonBackground);
+		WindowsCheckboxButton->setRolloverBackground(WindowsCheckboxButtonBackground);
+		WindowsCheckboxButton->setFocusedBackground(WindowsCheckboxButtonBackground);
+		WindowsCheckboxButton->setDisabledBackground(WindowsCheckboxButtonBackground);
 		WindowsCheckboxButton->setActiveBackground(WindowsCheckboxButtonBackground);
-
-		//Foreground
-		WindowsCheckboxButton->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
-
 		
 		//Opacity
 		WindowsCheckboxButton->setOpacity(1.0);
@@ -516,8 +706,13 @@ void WindowsLookAndFeel::init(void)
 		//Text
 		WindowsCheckboxButton->setText("");
 		WindowsCheckboxButton->setFont(WindowsFont);
-		WindowsCheckboxButton->setVerticalAlignment(VERTICAL_CENTER);
-		WindowsCheckboxButton->setHorizontalAlignment(HORIZONTAL_CENTER);
+		WindowsCheckboxButton->setVerticalAlignment(0.5);
+		WindowsCheckboxButton->setHorizontalAlignment(0.5);
+		WindowsCheckboxButton->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsCheckboxButton->setActiveTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsCheckboxButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsCheckboxButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsCheckboxButton->setDisabledTextColor(WindowsDisabledTextColor);
 	endEditCP(WindowsCheckboxButton);
 
 	CheckboxButton::getClassType().setPrototype(WindowsCheckboxButton);
@@ -527,7 +722,12 @@ void WindowsLookAndFeel::init(void)
 	UIDrawObjectCanvasPtr WindowsSelectedRadioDrawObject = UIDrawObjectCanvas::create();
 	UIDrawObjectCanvasPtr WindowsActiveRadioDrawObject = UIDrawObjectCanvas::create();
 	UIDrawObjectCanvasPtr WindowsActiveSelectedRadioDrawObject = UIDrawObjectCanvas::create();
+	UIDrawObjectCanvasPtr WindowsRolloverRadioDrawObject = UIDrawObjectCanvas::create();
+	UIDrawObjectCanvasPtr WindowsRolloverSelectedRadioDrawObject = UIDrawObjectCanvas::create();
+	UIDrawObjectCanvasPtr WindowsDisabledRadioDrawObject = UIDrawObjectCanvas::create();
+	UIDrawObjectCanvasPtr WindowsDisabledSelectedRadioDrawObject = UIDrawObjectCanvas::create();
 
+    Pnt2s RadioUIDrawObjectsCenter(6,6);
 	DiscUIDrawObjectPtr RadioBackground = DiscUIDrawObject::create();
 	beginEditCP(RadioBackground);
 		RadioBackground->setWidth(6);
@@ -538,7 +738,7 @@ void WindowsLookAndFeel::init(void)
 		RadioBackground->setCenterColor(Color4f(.945,.945,.937,1.0));
 		RadioBackground->setOuterColor(Color4f(.945,.945,.937,1.0));
 		RadioBackground->setOpacity(1.0);
-		RadioBackground->setCenter(Pnt2s(0,0));
+		RadioBackground->setCenter(RadioUIDrawObjectsCenter);
 	endEditCP(RadioBackground);
 
 	ArcUIDrawObjectPtr RadioBackgroundBorder = ArcUIDrawObject::create();
@@ -551,7 +751,7 @@ void WindowsLookAndFeel::init(void)
 		RadioBackgroundBorder->setColor(Color4f(0.137,0.337,0.510,1.0));
 		RadioBackgroundBorder->setOpacity(0.90);
 		RadioBackgroundBorder->setLineWidth(1);
-		RadioBackgroundBorder->setCenter(Pnt2s(0,0));
+		RadioBackgroundBorder->setCenter(RadioUIDrawObjectsCenter);
 	endEditCP(RadioBackgroundBorder);
 
 	DiscUIDrawObjectPtr RadioSelected = DiscUIDrawObject::create();
@@ -562,38 +762,77 @@ void WindowsLookAndFeel::init(void)
 		RadioSelected->setStartAngleRad(0);
 		RadioSelected->setEndAngleRad(6.28318531);
 		RadioSelected->setCenterColor(Color4f(0.220,0.725,0.208,1.0));
-		RadioSelected->setOuterColor(Color4f(0.220,0.725,0.208,0.4));
+		RadioSelected->setOuterColor(Color4f(0.220,0.725,0.208,0.6));
 		RadioSelected->setOpacity(1.0);
-		RadioSelected->setCenter(Pnt2s(0,0));
+		RadioSelected->setCenter(RadioUIDrawObjectsCenter);
 	endEditCP(RadioSelected);
 
-	DiscUIDrawObjectPtr RadioSelectedBackground = DiscUIDrawObject::create();
-	beginEditCP(RadioSelectedBackground);
-		RadioSelectedBackground->setWidth(6);
-		RadioSelectedBackground->setHeight(6);
-		RadioSelectedBackground->setSubDivisions(30);
-		RadioSelectedBackground->setStartAngleRad(0);
-		RadioSelectedBackground->setEndAngleRad(6.28318531);
-		RadioSelectedBackground->setCenterColor(Color4f(.804,.800,.753,1.0));
-		RadioSelectedBackground->setOuterColor(Color4f(.804,.800,.753,1.0));
-		RadioSelectedBackground->setOpacity(1.0);
-		RadioSelectedBackground->setCenter(Pnt2s(0,0));
-	endEditCP(RadioSelectedBackground);
+	DiscUIDrawObjectPtr RadioActiveBackground = DiscUIDrawObject::create();
+	beginEditCP(RadioActiveBackground);
+		RadioActiveBackground->setWidth(6);
+		RadioActiveBackground->setHeight(6);
+		RadioActiveBackground->setSubDivisions(30);
+		RadioActiveBackground->setStartAngleRad(0);
+		RadioActiveBackground->setEndAngleRad(6.28318531);
+		RadioActiveBackground->setCenterColor(Color4f(.804,.800,.753,1.0));
+		RadioActiveBackground->setOuterColor(Color4f(.804,.800,.753,1.0));
+		RadioActiveBackground->setOpacity(1.0);
+		RadioActiveBackground->setCenter(RadioUIDrawObjectsCenter);
+	endEditCP(RadioActiveBackground);
+    
+    //Disabled Draw Objects
+	DiscUIDrawObjectPtr RadioDisabledBackground = DiscUIDrawObject::create();
+	beginEditCP(RadioDisabledBackground);
+		RadioDisabledBackground->setWidth(6);
+		RadioDisabledBackground->setHeight(6);
+		RadioDisabledBackground->setSubDivisions(30);
+		RadioDisabledBackground->setStartAngleRad(0);
+		RadioDisabledBackground->setEndAngleRad(6.28318531);
+		RadioDisabledBackground->setCenterColor(Color4f(.98,.97,.97,1.0));
+		RadioDisabledBackground->setOuterColor(Color4f(.98,.97,.97,1.0));
+		RadioDisabledBackground->setOpacity(1.0);
+		RadioDisabledBackground->setCenter(RadioUIDrawObjectsCenter);
+	endEditCP(RadioDisabledBackground);
+
+	ArcUIDrawObjectPtr RadioDisabledBackgroundBorder = ArcUIDrawObject::create();
+	beginEditCP(RadioDisabledBackgroundBorder);
+		RadioDisabledBackgroundBorder->setWidth(6);
+		RadioDisabledBackgroundBorder->setHeight(6);
+		RadioDisabledBackgroundBorder->setSubDivisions(25);
+		RadioDisabledBackgroundBorder->setStartAngleRad(0);
+		RadioDisabledBackgroundBorder->setEndAngleRad(6.28318531);
+		RadioDisabledBackgroundBorder->setColor(Color4f(0.75,0.75,0.71,1.0));
+		RadioDisabledBackgroundBorder->setOpacity(0.90);
+		RadioDisabledBackgroundBorder->setLineWidth(1);
+		RadioDisabledBackgroundBorder->setCenter(RadioUIDrawObjectsCenter);
+	endEditCP(RadioDisabledBackgroundBorder);
+    
+	DiscUIDrawObjectPtr RadioDisabledSelected = DiscUIDrawObject::create();
+	beginEditCP(RadioDisabledSelected);
+		RadioDisabledSelected->setWidth(3);
+		RadioDisabledSelected->setHeight(3);
+		RadioDisabledSelected->setSubDivisions(15);
+		RadioDisabledSelected->setStartAngleRad(0);
+		RadioDisabledSelected->setEndAngleRad(6.28318531);
+		RadioDisabledSelected->setCenterColor(Color4f(0.75,0.75,0.71,1.0));
+		RadioDisabledSelected->setOuterColor(Color4f(0.75,0.75,0.71,0.6));
+		RadioDisabledSelected->setOpacity(1.0);
+		RadioDisabledSelected->setCenter(RadioUIDrawObjectsCenter);
+	endEditCP(RadioSelected);
 
 	// Yellow highlight border for whenever there is a hover listener
-
-	//ArcUIDrawObjectPtr RadioActiveBorder = ArcUIDrawObject::create();
-	//beginEditCP(RadioActiveBorder);
-	//	RadioActiveBorder->setWidth(4);
-	//	RadioActiveBorder->setHeight(4);
-	//	RadioActiveBorder->setSubDivisions(25);
-	//	RadioActiveBorder->setStartAngleRad(0);
-	//	RadioActiveBorder->setEndAngleRad(6.28318531);
-	//	RadioActiveBorder->setColor(Color4f(.980,.753,.306,1.0));
-	//	RadioActiveBorder->setOpacity(.85);
-	//	RadioActiveBorder->setCenter(Pnt2s(0,0));
-	//	RadioActiveBorder->setLineWidth(2);
-	//endEditCP(RadioActiveBorder);
+	ArcUIDrawObjectPtr RadioRolloverBorder = ArcUIDrawObject::create();
+	beginEditCP(RadioRolloverBorder);
+		RadioRolloverBorder->setWidth(5);
+		RadioRolloverBorder->setHeight(5);
+		RadioRolloverBorder->setSubDivisions(25);
+		RadioRolloverBorder->setStartAngleRad(0);
+		RadioRolloverBorder->setEndAngleRad(6.28318531);
+		RadioRolloverBorder->setColor(Color4f(.980,.753,.306,1.0));
+		RadioRolloverBorder->setOpacity(.85);
+		RadioRolloverBorder->setCenter(RadioUIDrawObjectsCenter);
+		RadioRolloverBorder->setLineWidth(2);
+	endEditCP(RadioRolloverBorder);
 
 	beginEditCP(WindowsRadioDrawObject);
 		WindowsRadioDrawObject->getDrawObjects().addValue(RadioBackground);
@@ -607,15 +846,43 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsSelectedRadioDrawObject);
 
 	beginEditCP(WindowsActiveRadioDrawObject);
-		WindowsActiveRadioDrawObject->getDrawObjects().addValue(RadioSelectedBackground);
+		WindowsActiveRadioDrawObject->getDrawObjects().addValue(RadioActiveBackground);
 		WindowsActiveRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
+		WindowsActiveRadioDrawObject->getDrawObjects().addValue(RadioSelected);
 	endEditCP(WindowsActiveRadioDrawObject);
 
 	beginEditCP(WindowsActiveSelectedRadioDrawObject);
-		WindowsActiveSelectedRadioDrawObject->getDrawObjects().addValue(RadioSelectedBackground);
+		WindowsActiveSelectedRadioDrawObject->getDrawObjects().addValue(RadioActiveBackground);
 		WindowsActiveSelectedRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
-		WindowsActiveSelectedRadioDrawObject->getDrawObjects().addValue(RadioSelected);
 	endEditCP(WindowsActiveSelectedRadioDrawObject);
+    
+    //Rollover Not Selected
+	beginEditCP(WindowsRolloverRadioDrawObject);
+		WindowsRolloverRadioDrawObject->getDrawObjects().addValue(RadioBackground);
+		WindowsRolloverRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
+		WindowsRolloverRadioDrawObject->getDrawObjects().addValue(RadioRolloverBorder);
+	endEditCP(WindowsRolloverRadioDrawObject);
+
+    //Rollover Selected
+	beginEditCP(WindowsRolloverSelectedRadioDrawObject);
+		WindowsRolloverSelectedRadioDrawObject->getDrawObjects().addValue(RadioBackground);
+		WindowsRolloverSelectedRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
+		WindowsRolloverSelectedRadioDrawObject->getDrawObjects().addValue(RadioRolloverBorder);
+		WindowsRolloverSelectedRadioDrawObject->getDrawObjects().addValue(RadioSelected);
+	endEditCP(WindowsRolloverSelectedRadioDrawObject);
+    
+    //Disabled Not Selected
+	beginEditCP(WindowsDisabledRadioDrawObject);
+		WindowsDisabledRadioDrawObject->getDrawObjects().addValue(RadioDisabledBackground);
+		WindowsDisabledRadioDrawObject->getDrawObjects().addValue(RadioDisabledBackgroundBorder);
+	endEditCP(WindowsDisabledRadioDrawObject);
+
+    //Disabled Selected
+	beginEditCP(WindowsDisabledSelectedRadioDrawObject);
+		WindowsDisabledSelectedRadioDrawObject->getDrawObjects().addValue(RadioDisabledBackground);
+		WindowsDisabledSelectedRadioDrawObject->getDrawObjects().addValue(RadioDisabledBackgroundBorder);
+		WindowsDisabledSelectedRadioDrawObject->getDrawObjects().addValue(RadioDisabledSelected);
+	endEditCP(WindowsDisabledSelectedRadioDrawObject);
 		
 	EmptyBorderPtr WindowsRadioButtonBorder = EmptyBorder::create();
 	EmptyUIBackgroundPtr WindowsRadioButtonBackground = EmptyUIBackground::create();
@@ -630,24 +897,33 @@ void WindowsLookAndFeel::init(void)
 		//sizes
 		WindowsRadioButton->setMinSize(Vec2s(0, 0));
 		WindowsRadioButton->setMaxSize(Vec2s(32767,32767));
-		WindowsRadioButton->setPreferredSize(Vec2s(100, 35));
+		WindowsRadioButton->setPreferredSize(Vec2s(75,23));
 
 		//draw objects
 		WindowsRadioButton->setDrawObject(WindowsRadioDrawObject);
 		WindowsRadioButton->setSelectedDrawObject(WindowsSelectedRadioDrawObject);
 		WindowsRadioButton->setActiveDrawObject(WindowsActiveRadioDrawObject);
 		WindowsRadioButton->setActiveSelectedDrawObject(WindowsActiveSelectedRadioDrawObject);
+		WindowsRadioButton->setRolloverDrawObject(WindowsRolloverRadioDrawObject);
+		WindowsRadioButton->setRolloverSelectedDrawObject(WindowsRolloverSelectedRadioDrawObject);
+		WindowsRadioButton->setDisabledDrawObject(WindowsDisabledRadioDrawObject);
+		WindowsRadioButton->setDisabledSelectedDrawObject(WindowsDisabledSelectedRadioDrawObject);
 
-		//borders
+		//Border
 		WindowsRadioButton->setBorder(WindowsRadioButtonBorder);
+		WindowsRadioButton->setRolloverBorder(WindowsRadioButtonBorder);
+		WindowsRadioButton->setFocusedBorder(WindowsRadioButtonBorder);
+		WindowsRadioButton->setDisabledBorder(WindowsRadioButtonBorder);
 		WindowsRadioButton->setActiveBorder(WindowsRadioButtonBorder);
-
-		//backgrounds
+		
+		//Background
 		WindowsRadioButton->setBackground(WindowsRadioButtonBackground);
+		WindowsRadioButton->setRolloverBackground(WindowsRadioButtonBackground);
+		WindowsRadioButton->setFocusedBackground(WindowsRadioButtonBackground);
+		WindowsRadioButton->setDisabledBackground(WindowsRadioButtonBackground);
 		WindowsRadioButton->setActiveBackground(WindowsRadioButtonBackground);
 
-		//colors
-		WindowsRadioButton->setForegroundColor(Color4f(0.0,0.0, 0.0, 1.0));
+        //Opacity
 		WindowsRadioButton->setOpacity(1.0);
 
 		//text
@@ -655,8 +931,13 @@ void WindowsLookAndFeel::init(void)
 		WindowsRadioButton->setFont(WindowsFont);
 
 		//alignment
-		WindowsRadioButton->setVerticalAlignment(VERTICAL_CENTER);
-		WindowsRadioButton->setHorizontalAlignment(HORIZONTAL_CENTER);
+		WindowsRadioButton->setVerticalAlignment(0.5);
+		WindowsRadioButton->setHorizontalAlignment(0.5);
+		WindowsRadioButton->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsRadioButton->setActiveTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsRadioButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsRadioButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsRadioButton->setDisabledTextColor(WindowsDisabledTextColor);
 	endEditCP(WindowsRadioButton);
 	
 	RadioButton::getClassType().setPrototype(WindowsRadioButton);
@@ -672,21 +953,21 @@ void WindowsLookAndFeel::init(void)
 		//Sizes
 		WindowsToggleButton->setMinSize(Vec2s(0,0));
 		WindowsToggleButton->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsToggleButton->setPreferredSize(Vec2s(100,50));
+		WindowsToggleButton->setPreferredSize(Vec2s(75,23));
 
 		//Border
 		WindowsToggleButton->setBorder(WindowsButtonBorder);
+		WindowsToggleButton->setRolloverBorder(WindowsRolloverButtonBorder);
+		WindowsToggleButton->setFocusedBorder(WindowsButtonBorder);
 		WindowsToggleButton->setDisabledBorder(WindowsDisabledButtonBorder);
 		WindowsToggleButton->setActiveBorder(WindowsActiveButtonBorder);
 		
 		//Background
 		WindowsToggleButton->setBackground(WindowsButtonBackground);
+		WindowsToggleButton->setRolloverBackground(WindowsRolloverButtonBackground);
+		WindowsToggleButton->setFocusedBackground(WindowsButtonBackground);
 		WindowsToggleButton->setDisabledBackground(WindowsDisabledButtonBackground);
-		WindowsToggleButton->setActiveBackground(WindowsButtonBackground);
-
-		//Foreground
-		WindowsToggleButton->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
-		WindowsToggleButton->setDisabledForegroundColor(Color4f(0.4,0.4,0.4,1.0));
+		WindowsToggleButton->setActiveBackground(WindowsActiveButtonBackground);
 		
 		//Opacity
 		WindowsToggleButton->setOpacity(1.0);
@@ -694,8 +975,13 @@ void WindowsLookAndFeel::init(void)
 		//Text
 		WindowsToggleButton->setText("");
 		WindowsToggleButton->setFont(WindowsFont);
-		WindowsToggleButton->setVerticalAlignment(VERTICAL_CENTER);
-		WindowsToggleButton->setHorizontalAlignment(HORIZONTAL_CENTER);
+		WindowsToggleButton->setVerticalAlignment(0.5);
+		WindowsToggleButton->setHorizontalAlignment(0.5);
+		WindowsToggleButton->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsToggleButton->setActiveTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsToggleButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsToggleButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsToggleButton->setDisabledTextColor(WindowsDisabledTextColor);
 	endEditCP(WindowsToggleButton);
 
 	ToggleButton::getClassType().setPrototype(WindowsToggleButton);
@@ -723,13 +1009,18 @@ void WindowsLookAndFeel::init(void)
 		//size
 		WindowsTextField->setMinSize(Vec2s(0, 0));
 		WindowsTextField->setMaxSize(Vec2s(32767,32767));
-		WindowsTextField->setPreferredSize(Vec2s(100, 22));
+		WindowsTextField->setPreferredSize(Vec2s(75,23));
 
 		//font
 		WindowsTextField->setFont(WindowsFont);
 		
 		WindowsTextField->setSelectionBoxColor(Color4f(.682, .769, .910, 1.0));
 		WindowsTextField->setSelectionTextColor(Color4f(0.0, 0.0, 0.0, 1.0));
+		WindowsTextField->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsTextField->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsTextField->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsTextField->setDisabledTextColor(WindowsDisabledTextColor);
+        WindowsTextField->setVerticalAlignment(0.5);
 
 		//background
 		WindowsTextField->setBackground(WindowsTextFieldBackground);
@@ -738,10 +1029,6 @@ void WindowsLookAndFeel::init(void)
 		//Border
 		WindowsTextField->setBorder(WindowsTextFieldBorder);
 		WindowsTextField->setDisabledBorder(WindowsTextFieldBorder);
-
-		//Color
-		WindowsTextField->setForegroundColor(Color4f(0.0, 0.0, 0.0, 1.0));
-		WindowsTextField->setDisabledForegroundColor(Color4f(.1, .1, .1, 1.0));
 
 	endEditCP(WindowsTextField);
 
@@ -758,15 +1045,11 @@ void WindowsLookAndFeel::init(void)
 		WindowsDisabledTextAreaBackground->setColor(Color4f(.8, .8, .8, 1.0));
 	endEditCP(WindowsDisabledTextAreaBackground);
 
-	BevelBorderPtr WindowsTextAreaBorder = BevelBorder::create();
-	beginEditCP(WindowsTextAreaBorder, BevelBorder::RaisedFieldMask);
-		WindowsTextAreaBorder->setRaised(false);
-		WindowsTextAreaBorder->setWidth(2);
-		WindowsTextAreaBorder->setHighlightInner(Color4f(.9, .9, .9, 1.0));
-		WindowsTextAreaBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
-		WindowsTextAreaBorder->setShadowInner(Color4f(0.65, 0.65, 0.65, 1.0));
-		WindowsTextAreaBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
-	endEditCP(WindowsTextAreaBorder, BevelBorder::RaisedFieldMask);
+	LineBorderPtr WindowsTextAreaBorder = LineBorder::create();
+	beginEditCP(WindowsTextAreaBorder);
+		WindowsTextAreaBorder->setWidth(1);
+		WindowsTextAreaBorder->setColor( Color4f(.498,.616,.725,1.0) );
+	endEditCP(WindowsTextAreaBorder);
 
 	TextAreaPtr WindowsTextArea = TextArea::create();
 	beginEditCP(WindowsTextArea);
@@ -777,8 +1060,12 @@ void WindowsLookAndFeel::init(void)
 
 		//font
 		WindowsTextArea->setFont(WindowsFont);
-		WindowsTextArea->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
+		WindowsTextArea->setSelectionBoxColor(Color4f(.682, .769, .910, 1.0));
 		WindowsTextArea->setSelectionTextColor(Color4f(0.0, 0.0, 0.0, 1.0));
+		WindowsTextArea->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsTextArea->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsTextArea->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsTextArea->setDisabledTextColor(WindowsDisabledTextColor);
 		
 
 		//background
@@ -788,10 +1075,6 @@ void WindowsLookAndFeel::init(void)
 		//Border
 		WindowsTextArea->setBorder(WindowsTextAreaBorder);
 		WindowsTextArea->setDisabledBorder(WindowsTextAreaBorder);
-
-		//Color
-		WindowsTextArea->setForegroundColor(Color4f(0.0, 0.0, 0.0, 1.0));
-		WindowsTextArea->setDisabledForegroundColor(Color4f(.1, .1, .1, 1.0));
 
 	endEditCP(WindowsTextArea);
 
@@ -804,6 +1087,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsToolTipLineBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsToolTipLineBorder->setWidth(1);
 	endEditCP(WindowsToolTipLineBorder);
+    
     
 	ShadowBorderPtr WindowsToolTipBorder = osg::ShadowBorder::create();
     beginEditCP(WindowsToolTipBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask | ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask| ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | ShadowBorder::CornerRadiusFieldMask | ShadowBorder::InternalToEdgeColorLengthFieldMask );
@@ -818,10 +1102,11 @@ void WindowsLookAndFeel::init(void)
 		WindowsToolTipBorder->setInternalToEdgeColorLength(2);
 	endEditCP(WindowsToolTipBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask | ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask| ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | ShadowBorder::CornerRadiusFieldMask | ShadowBorder::InternalToEdgeColorLengthFieldMask );
 
+    
 	//Default ToolTipBackground
 	ColorUIBackgroundPtr WindowsToolTipBackground = ColorUIBackground::create();
 	beginEditCP(WindowsToolTipBackground);
-		WindowsToolTipBackground->setColor(Color4f(1.0,1.0,0.9,1.0));
+		WindowsToolTipBackground->setColor(Color4f(1.0,1.0,0.88,1.0));
 	endEditCP(WindowsToolTipBackground);
 
 	//Default ToolTip
@@ -834,16 +1119,13 @@ void WindowsLookAndFeel::init(void)
 		//Sizes
 		WindowsToolTip->setMinSize(Vec2s(0,0));
 		WindowsToolTip->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsToolTip->setPreferredSize(Vec2s(100,50));
+		WindowsToolTip->setPreferredSize(Vec2s(75,23));
 
 		//Border
 		WindowsToolTip->setBorder(WindowsToolTipBorder);
 		
 		//Background
 		WindowsToolTip->setBackground(WindowsToolTipBackground);
-
-		//Foreground
-		WindowsToolTip->setForegroundColor(Color4f(0.0,0.0,0.0,1.0));
 		
 		//Opacity
 		WindowsToolTip->setOpacity(1.0);
@@ -852,7 +1134,8 @@ void WindowsLookAndFeel::init(void)
 		WindowsToolTip->setText("");
 		WindowsToolTip->setFont(WindowsFont);
         WindowsToolTip->setVerticalAlignment(0.5);
-        WindowsToolTip->setHorizontalAlignment(0.0);
+        WindowsToolTip->setHorizontalAlignment(0.5);
+		WindowsToolTip->setTextColor(Color4f(0.0,0.0,0.0,1.0));
 	endEditCP(WindowsToolTip);
 	
     ToolTip::getClassType().setPrototype(WindowsToolTip);
@@ -971,6 +1254,7 @@ void WindowsLookAndFeel::init(void)
 		getPrototypes().addValue(WindowsLabel);
 		getPrototypes().addValue(WindowsFrame);
 		getPrototypes().addValue(WindowsPanel);
+		getPrototypes().addValue(WindowsSplitPanel);
 		getPrototypes().addValue(WindowsImageComponent);
 		getPrototypes().addValue(WindowsCheckboxButton);
 		getPrototypes().addValue(WindowsRadioButton);

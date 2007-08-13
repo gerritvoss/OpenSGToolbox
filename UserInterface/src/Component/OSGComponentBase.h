@@ -79,14 +79,13 @@
 #include "Layout/OSGLayoutConstraints.h" // Constraints type
 #include "Border/OSGBorder.h" // Border type
 #include "Background/OSGUIBackground.h" // Background type
-#include <OpenSG/OSGColor4fFields.h> // ForegroundColor type
 #include "Border/OSGBorder.h" // DisabledBorder type
 #include "Background/OSGUIBackground.h" // DisabledBackground type
-#include <OpenSG/OSGColor4fFields.h> // DisabledForegroundColor type
 #include <OpenSG/OSGBoolFields.h> // Focusable type
 #include "Border/OSGBorder.h" // FocusedBorder type
 #include "Background/OSGUIBackground.h" // FocusedBackground type
-#include <OpenSG/OSGColor4fFields.h> // FocusedForegroundColor type
+#include "Border/OSGBorder.h" // RolloverBorder type
+#include "Background/OSGUIBackground.h" // RolloverBackground type
 #include <OpenSG/OSGStringFields.h> // ToolTipText type
 #include <OpenSG/OSGReal32Fields.h> // Opacity type
 #include "Component/Container/OSGContainerFields.h" // ParentContainer type
@@ -116,34 +115,33 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
 
     enum
     {
-        PositionFieldId                = Inherited::NextFieldId,
-        ClipTopLeftFieldId             = PositionFieldId                + 1,
-        ClipBottomRightFieldId         = ClipTopLeftFieldId             + 1,
-        MinSizeFieldId                 = ClipBottomRightFieldId         + 1,
-        MaxSizeFieldId                 = MinSizeFieldId                 + 1,
-        PreferredSizeFieldId           = MaxSizeFieldId                 + 1,
-        SizeFieldId                    = PreferredSizeFieldId           + 1,
-        VisibleFieldId                 = SizeFieldId                    + 1,
-        EnabledFieldId                 = VisibleFieldId                 + 1,
-        FocusedFieldId                 = EnabledFieldId                 + 1,
-        ConstraintsFieldId             = FocusedFieldId                 + 1,
-        BorderFieldId                  = ConstraintsFieldId             + 1,
-        BackgroundFieldId              = BorderFieldId                  + 1,
-        ForegroundColorFieldId         = BackgroundFieldId              + 1,
-        DisabledBorderFieldId          = ForegroundColorFieldId         + 1,
-        DisabledBackgroundFieldId      = DisabledBorderFieldId          + 1,
-        DisabledForegroundColorFieldId = DisabledBackgroundFieldId      + 1,
-        FocusableFieldId               = DisabledForegroundColorFieldId + 1,
-        FocusedBorderFieldId           = FocusableFieldId               + 1,
-        FocusedBackgroundFieldId       = FocusedBorderFieldId           + 1,
-        FocusedForegroundColorFieldId  = FocusedBackgroundFieldId       + 1,
-        ToolTipTextFieldId             = FocusedForegroundColorFieldId  + 1,
-        OpacityFieldId                 = ToolTipTextFieldId             + 1,
-        ParentContainerFieldId         = OpacityFieldId                 + 1,
-        ParentFrameFieldId             = ParentContainerFieldId         + 1,
-        ClippingFieldId                = ParentFrameFieldId             + 1,
-        PopupMenuFieldId               = ClippingFieldId                + 1,
-        NextFieldId                    = PopupMenuFieldId               + 1
+        PositionFieldId           = Inherited::NextFieldId,
+        ClipTopLeftFieldId        = PositionFieldId           + 1,
+        ClipBottomRightFieldId    = ClipTopLeftFieldId        + 1,
+        MinSizeFieldId            = ClipBottomRightFieldId    + 1,
+        MaxSizeFieldId            = MinSizeFieldId            + 1,
+        PreferredSizeFieldId      = MaxSizeFieldId            + 1,
+        SizeFieldId               = PreferredSizeFieldId      + 1,
+        VisibleFieldId            = SizeFieldId               + 1,
+        EnabledFieldId            = VisibleFieldId            + 1,
+        FocusedFieldId            = EnabledFieldId            + 1,
+        ConstraintsFieldId        = FocusedFieldId            + 1,
+        BorderFieldId             = ConstraintsFieldId        + 1,
+        BackgroundFieldId         = BorderFieldId             + 1,
+        DisabledBorderFieldId     = BackgroundFieldId         + 1,
+        DisabledBackgroundFieldId = DisabledBorderFieldId     + 1,
+        FocusableFieldId          = DisabledBackgroundFieldId + 1,
+        FocusedBorderFieldId      = FocusableFieldId          + 1,
+        FocusedBackgroundFieldId  = FocusedBorderFieldId      + 1,
+        RolloverBorderFieldId     = FocusedBackgroundFieldId  + 1,
+        RolloverBackgroundFieldId = RolloverBorderFieldId     + 1,
+        ToolTipTextFieldId        = RolloverBackgroundFieldId + 1,
+        OpacityFieldId            = ToolTipTextFieldId        + 1,
+        ParentContainerFieldId    = OpacityFieldId            + 1,
+        ParentFrameFieldId        = ParentContainerFieldId    + 1,
+        ClippingFieldId           = ParentFrameFieldId        + 1,
+        PopupMenuFieldId          = ClippingFieldId           + 1,
+        NextFieldId               = PopupMenuFieldId          + 1
     };
 
     static const OSG::BitVector PositionFieldMask;
@@ -159,14 +157,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     static const OSG::BitVector ConstraintsFieldMask;
     static const OSG::BitVector BorderFieldMask;
     static const OSG::BitVector BackgroundFieldMask;
-    static const OSG::BitVector ForegroundColorFieldMask;
     static const OSG::BitVector DisabledBorderFieldMask;
     static const OSG::BitVector DisabledBackgroundFieldMask;
-    static const OSG::BitVector DisabledForegroundColorFieldMask;
     static const OSG::BitVector FocusableFieldMask;
     static const OSG::BitVector FocusedBorderFieldMask;
     static const OSG::BitVector FocusedBackgroundFieldMask;
-    static const OSG::BitVector FocusedForegroundColorFieldMask;
+    static const OSG::BitVector RolloverBorderFieldMask;
+    static const OSG::BitVector RolloverBackgroundFieldMask;
     static const OSG::BitVector ToolTipTextFieldMask;
     static const OSG::BitVector OpacityFieldMask;
     static const OSG::BitVector ParentContainerFieldMask;
@@ -210,14 +207,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual       SFLayoutConstraintsPtr *getSFConstraints    (void);
     virtual       SFBorderPtr         *getSFBorder         (void);
     virtual       SFUIBackgroundPtr   *getSFBackground     (void);
-    virtual       SFColor4f           *getSFForegroundColor(void);
     virtual       SFBorderPtr         *getSFDisabledBorder (void);
     virtual       SFUIBackgroundPtr   *getSFDisabledBackground(void);
-    virtual       SFColor4f           *getSFDisabledForegroundColor(void);
     virtual       SFBool              *getSFFocusable      (void);
     virtual       SFBorderPtr         *getSFFocusedBorder  (void);
     virtual       SFUIBackgroundPtr   *getSFFocusedBackground(void);
-    virtual       SFColor4f           *getSFFocusedForegroundColor(void);
+    virtual       SFBorderPtr         *getSFRolloverBorder (void);
+    virtual       SFUIBackgroundPtr   *getSFRolloverBackground(void);
     virtual       SFString            *getSFToolTipText    (void);
     virtual       SFReal32            *getSFOpacity        (void);
     virtual       SFContainerPtr      *getSFParentContainer(void);
@@ -247,22 +243,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual const BorderPtr           &getBorder         (void) const;
     virtual       UIBackgroundPtr     &getBackground     (void);
     virtual const UIBackgroundPtr     &getBackground     (void) const;
-    virtual       Color4f             &getForegroundColor(void);
-    virtual const Color4f             &getForegroundColor(void) const;
     virtual       BorderPtr           &getDisabledBorder (void);
     virtual const BorderPtr           &getDisabledBorder (void) const;
     virtual       UIBackgroundPtr     &getDisabledBackground(void);
     virtual const UIBackgroundPtr     &getDisabledBackground(void) const;
-    virtual       Color4f             &getDisabledForegroundColor(void);
-    virtual const Color4f             &getDisabledForegroundColor(void) const;
     virtual       bool                &getFocusable      (void);
     virtual const bool                &getFocusable      (void) const;
     virtual       BorderPtr           &getFocusedBorder  (void);
     virtual const BorderPtr           &getFocusedBorder  (void) const;
     virtual       UIBackgroundPtr     &getFocusedBackground(void);
     virtual const UIBackgroundPtr     &getFocusedBackground(void) const;
-    virtual       Color4f             &getFocusedForegroundColor(void);
-    virtual const Color4f             &getFocusedForegroundColor(void) const;
+    virtual       BorderPtr           &getRolloverBorder (void);
+    virtual const BorderPtr           &getRolloverBorder (void) const;
+    virtual       UIBackgroundPtr     &getRolloverBackground(void);
+    virtual const UIBackgroundPtr     &getRolloverBackground(void) const;
     virtual       std::string         &getToolTipText    (void);
     virtual const std::string         &getToolTipText    (void) const;
     virtual       Real32              &getOpacity        (void);
@@ -292,14 +286,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual void setConstraints    ( const LayoutConstraintsPtr &value );
     virtual void setBorder         ( const BorderPtr &value );
     virtual void setBackground     ( const UIBackgroundPtr &value );
-    virtual void setForegroundColor( const Color4f &value );
     virtual void setDisabledBorder ( const BorderPtr &value );
     virtual void setDisabledBackground( const UIBackgroundPtr &value );
-    virtual void setDisabledForegroundColor( const Color4f &value );
     virtual void setFocusable      ( const bool &value );
     virtual void setFocusedBorder  ( const BorderPtr &value );
     virtual void setFocusedBackground( const UIBackgroundPtr &value );
-    virtual void setFocusedForegroundColor( const Color4f &value );
+    virtual void setRolloverBorder ( const BorderPtr &value );
+    virtual void setRolloverBackground( const UIBackgroundPtr &value );
     virtual void setToolTipText    ( const std::string &value );
     virtual void setOpacity        ( const Real32 &value );
     virtual void setParentContainer( const ContainerPtr &value );
@@ -345,14 +338,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     SFLayoutConstraintsPtr   _sfConstraints;
     SFBorderPtr         _sfBorder;
     SFUIBackgroundPtr   _sfBackground;
-    SFColor4f           _sfForegroundColor;
     SFBorderPtr         _sfDisabledBorder;
     SFUIBackgroundPtr   _sfDisabledBackground;
-    SFColor4f           _sfDisabledForegroundColor;
     SFBool              _sfFocusable;
     SFBorderPtr         _sfFocusedBorder;
     SFUIBackgroundPtr   _sfFocusedBackground;
-    SFColor4f           _sfFocusedForegroundColor;
+    SFBorderPtr         _sfRolloverBorder;
+    SFUIBackgroundPtr   _sfRolloverBackground;
     SFString            _sfToolTipText;
     SFReal32            _sfOpacity;
     SFContainerPtr      _sfParentContainer;

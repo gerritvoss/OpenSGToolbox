@@ -1,12 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -93,6 +91,13 @@ SFTime *WindowEventProducerBase::getSFLastUpdateTime(void)
     return &_sfLastUpdateTime;
 }
 
+//! Get the WindowEventProducer::_sfIcon field.
+inline
+SFImagePtr *WindowEventProducerBase::getSFIcon(void)
+{
+    return &_sfIcon;
+}
+
 
 //! Get the value of the WindowEventProducer::_sfWindow field.
 inline
@@ -155,6 +160,27 @@ inline
 void WindowEventProducerBase::setLastUpdateTime(const Time &value)
 {
     _sfLastUpdateTime.setValue(value);
+}
+
+//! Get the value of the WindowEventProducer::_sfIcon field.
+inline
+ImagePtr &WindowEventProducerBase::getIcon(void)
+{
+    return _sfIcon.getValue();
+}
+
+//! Get the value of the WindowEventProducer::_sfIcon field.
+inline
+const ImagePtr &WindowEventProducerBase::getIcon(void) const
+{
+    return _sfIcon.getValue();
+}
+
+//! Set the value of the WindowEventProducer::_sfIcon field.
+inline
+void WindowEventProducerBase::setIcon(const ImagePtr &value)
+{
+    _sfIcon.setValue(value);
 }
 
 

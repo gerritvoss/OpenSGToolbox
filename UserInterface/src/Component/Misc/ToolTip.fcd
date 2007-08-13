@@ -57,4 +57,12 @@ A UI Tooltip.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="TextColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

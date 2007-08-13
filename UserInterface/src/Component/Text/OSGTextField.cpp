@@ -89,60 +89,53 @@ void TextField::initMethod (void)
 
 void TextField::drawInternal(const GraphicsPtr TheGraphics) const
 {
-   Pnt2s TopLeft, BottomRight;
-   Pnt2s TempPos;
-   getInsideBorderBounds(TopLeft, BottomRight);
-   TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, getFont()->getBounds(getText()), getVerticalAlignment(), 0.0);
-  //Foreground Color
-  Color4f ForeColor;
-  if(getEnabled())
-  {
-	  ForeColor = getForegroundColor();
-  }
-  else
-  {
-	  ForeColor = getDisabledForegroundColor();
-  }
-  if(getText() != "" && getFont() != NullFC)
-   {
+    Pnt2s TopLeft, BottomRight;
+    Pnt2s TempPos;
+    getInsideBorderBounds(TopLeft, BottomRight);
+    TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, getFont()->getBounds(getText()), getVerticalAlignment(), 0.0);
+    
+    //Text Color
+    Color4f TextColor = getDrawnTextColor();
+    if(getText() != "" && getFont() != NullFC)
+    {
 
-	  if(_TextSelectionStart >= _TextSelectionEnd)
-	  {
-	      TheGraphics->drawText(TempPos, getText(), getFont(), ForeColor, getOpacity());
-	  }
-	  else
-	  {
-          //Draw Text Befor the Selection
-		  TheGraphics->drawText(TempPos, getText().substr(0, _TextSelectionStart), getFont(), ForeColor, getOpacity());
+	    if(_TextSelectionStart >= _TextSelectionEnd)
+	    {
+	        TheGraphics->drawText(TempPos, getText(), getFont(), TextColor, getOpacity());
+	    }
+	    else
+	    {
+            //Draw Text Befor the Selection
+		    TheGraphics->drawText(TempPos, getText().substr(0, _TextSelectionStart), getFont(), TextColor, getOpacity());
 
-		  //Draw Selection
-          Pnt2s TextTopLeft, TextBottomRight;
-          getFont()->getBounds(getText().substr(0, _TextSelectionStart), TextTopLeft, TextBottomRight);
+		    //Draw Selection
+            Pnt2s TextTopLeft, TextBottomRight;
+            getFont()->getBounds(getText().substr(0, _TextSelectionStart), TextTopLeft, TextBottomRight);
 
-		  TheGraphics->drawQuad(TempPos + Vec2s(TextBottomRight.x(),0),
-			 TempPos + Vec2s(getFont()->getBounds(getText().substr(0, _TextSelectionEnd)).x(), 0),
-			 TempPos + Vec2s(getFont()->getBounds(getText().substr(0, _TextSelectionEnd))),
-			 TempPos + Vec2s(TextBottomRight),
-			  getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(), getOpacity());
+		    TheGraphics->drawQuad(TempPos + Vec2s(TextBottomRight.x(),0),
+			    TempPos + Vec2s(getFont()->getBounds(getText().substr(0, _TextSelectionEnd)).x(), 0),
+			    TempPos + Vec2s(getFont()->getBounds(getText().substr(0, _TextSelectionEnd))),
+			    TempPos + Vec2s(TextBottomRight),
+			    getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(), getOpacity());
 
-          //Draw Selected Text
-		  TheGraphics->drawText(TempPos + Vec2s(TextBottomRight.x(), 0), 
-			  getText().substr(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart), getFont(), getSelectionTextColor(), getOpacity());
+            //Draw Selected Text
+		    TheGraphics->drawText(TempPos + Vec2s(TextBottomRight.x(), 0), 
+			    getText().substr(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart), getFont(), getSelectionTextColor(), getOpacity());
 
-		  //Eraw Text After selection
-          getFont()->getBounds(getText().substr(0, _TextSelectionEnd), TextTopLeft, TextBottomRight);
-		  TheGraphics->drawText(TempPos + Vec2s(TextBottomRight.x(), 0),
-			  getText().substr(_TextSelectionEnd, getText().size()-_TextSelectionEnd), getFont(), ForeColor, getOpacity());
-	   }
-   }
+		    //Eraw Text After selection
+            getFont()->getBounds(getText().substr(0, _TextSelectionEnd), TextTopLeft, TextBottomRight);
+		    TheGraphics->drawText(TempPos + Vec2s(TextBottomRight.x(), 0),
+			    getText().substr(_TextSelectionEnd, getText().size()-_TextSelectionEnd), getFont(), TextColor, getOpacity());
+	    }
+    }
 
-   if(getFocused() && _CurrentCaretBlinkElps <= 0.5*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
-   {
-   		  //Draw the caret
-		  TheGraphics->drawLine(TempPos+Vec2s(getFont()->getBounds(getText().substr(0, getCaretPosition())).x(), 0),
-	      TempPos + Vec2s(getFont()->getBounds(getText().substr(0, getCaretPosition())).x(),  getFont()->getBounds(getText()).y()), 
-	      .5, ForeColor, 1.0);
-   }
+    if(getFocused() && _CurrentCaretBlinkElps <= 0.5*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
+    {
+   		    //Draw the caret
+		    TheGraphics->drawLine(TempPos+Vec2s(getFont()->getBounds(getText().substr(0, getCaretPosition())).x(), 0),
+	        TempPos + Vec2s(getFont()->getBounds(getText().substr(0, getCaretPosition())).x(),  getFont()->getBounds(getText()).y()), 
+	        .5, TextColor, 1.0);
+    }
 }
 void TextField::keyTyped(const KeyEvent& e)
 {

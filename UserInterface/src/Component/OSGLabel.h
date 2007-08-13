@@ -96,6 +96,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Label : public LabelBase
 
     /*! \}                                                                 */
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
+    virtual Color4f getDrawnTextColor(void) const;
     
     /*==========================  PRIVATE  ================================*/
   private:

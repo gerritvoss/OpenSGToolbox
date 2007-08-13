@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class CheckboxButton
+ **     class MultiColoredQuadUIDrawObject
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGCHECKBOXBUTTONBASE_H_
-#define _OSGCHECKBOXBUTTONBASE_H_
+#ifndef _OSGMULTICOLOREDQUADUIDRAWOBJECTBASE_H_
+#define _OSGMULTICOLOREDQUADUIDRAWOBJECTBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,58 +65,58 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGToggleButton.h" // Parent
+#include "OSGUIDrawObject.h" // Parent
 
-#include "Component/OSGUIDrawObjectCanvas.h" // DrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // SelectedDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // ActiveDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // ActiveSelectedDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // RolloverDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // RolloverSelectedDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // DisabledDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // DisabledSelectedDrawObject type
+#include <OpenSG/OSGVec2sFields.h> // Point1 type
+#include <OpenSG/OSGColor4fFields.h> // Color1 type
+#include <OpenSG/OSGColor4fFields.h> // Color2 type
+#include <OpenSG/OSGColor4fFields.h> // Color3 type
+#include <OpenSG/OSGColor4fFields.h> // Color4 type
+#include <OpenSG/OSGReal32Fields.h> // Opacity type
 
-#include "OSGCheckboxButtonFields.h"
+#include "OSGMultiColoredQuadUIDrawObjectFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class CheckboxButton;
+class MultiColoredQuadUIDrawObject;
 class BinaryDataHandler;
 
-//! \brief CheckboxButton Base Class.
+//! \brief MultiColoredQuadUIDrawObject Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
+class OSG_USERINTERFACELIB_DLLMAPPING MultiColoredQuadUIDrawObjectBase : public UIDrawObject
 {
   private:
 
-    typedef ToggleButton    Inherited;
+    typedef UIDrawObject    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef CheckboxButtonPtr  Ptr;
+    typedef MultiColoredQuadUIDrawObjectPtr  Ptr;
 
     enum
     {
-        DrawObjectFieldId                 = Inherited::NextFieldId,
-        SelectedDrawObjectFieldId         = DrawObjectFieldId                 + 1,
-        ActiveDrawObjectFieldId           = SelectedDrawObjectFieldId         + 1,
-        ActiveSelectedDrawObjectFieldId   = ActiveDrawObjectFieldId           + 1,
-        RolloverDrawObjectFieldId         = ActiveSelectedDrawObjectFieldId   + 1,
-        RolloverSelectedDrawObjectFieldId = RolloverDrawObjectFieldId         + 1,
-        DisabledDrawObjectFieldId         = RolloverSelectedDrawObjectFieldId + 1,
-        DisabledSelectedDrawObjectFieldId = DisabledDrawObjectFieldId         + 1,
-        NextFieldId                       = DisabledSelectedDrawObjectFieldId + 1
+        Point1FieldId  = Inherited::NextFieldId,
+        Point2FieldId  = Point1FieldId  + 1,
+        Point3FieldId  = Point2FieldId  + 1,
+        Point4FieldId  = Point3FieldId  + 1,
+        Color1FieldId  = Point4FieldId  + 1,
+        Color2FieldId  = Color1FieldId  + 1,
+        Color3FieldId  = Color2FieldId  + 1,
+        Color4FieldId  = Color3FieldId  + 1,
+        OpacityFieldId = Color4FieldId  + 1,
+        NextFieldId    = OpacityFieldId + 1
     };
 
-    static const OSG::BitVector DrawObjectFieldMask;
-    static const OSG::BitVector SelectedDrawObjectFieldMask;
-    static const OSG::BitVector ActiveDrawObjectFieldMask;
-    static const OSG::BitVector ActiveSelectedDrawObjectFieldMask;
-    static const OSG::BitVector RolloverDrawObjectFieldMask;
-    static const OSG::BitVector RolloverSelectedDrawObjectFieldMask;
-    static const OSG::BitVector DisabledDrawObjectFieldMask;
-    static const OSG::BitVector DisabledSelectedDrawObjectFieldMask;
+    static const OSG::BitVector Point1FieldMask;
+    static const OSG::BitVector Point2FieldMask;
+    static const OSG::BitVector Point3FieldMask;
+    static const OSG::BitVector Point4FieldMask;
+    static const OSG::BitVector Color1FieldMask;
+    static const OSG::BitVector Color2FieldMask;
+    static const OSG::BitVector Color3FieldMask;
+    static const OSG::BitVector Color4FieldMask;
+    static const OSG::BitVector OpacityFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -143,45 +143,49 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUIDrawObjectCanvasPtr *getSFDrawObject     (void);
-           SFUIDrawObjectCanvasPtr *getSFSelectedDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFActiveDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFActiveSelectedDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFRolloverDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFRolloverSelectedDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFDisabledDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFDisabledSelectedDrawObject(void);
+           SFPnt2s             *getSFPoint1         (void);
+           SFPnt2s             *getSFPoint2         (void);
+           SFPnt2s             *getSFPoint3         (void);
+           SFPnt2s             *getSFPoint4         (void);
+           SFColor4f           *getSFColor1         (void);
+           SFColor4f           *getSFColor2         (void);
+           SFColor4f           *getSFColor3         (void);
+           SFColor4f           *getSFColor4         (void);
+           SFReal32            *getSFOpacity        (void);
 
-           UIDrawObjectCanvasPtr &getDrawObject     (void);
-     const UIDrawObjectCanvasPtr &getDrawObject     (void) const;
-           UIDrawObjectCanvasPtr &getSelectedDrawObject(void);
-     const UIDrawObjectCanvasPtr &getSelectedDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getActiveDrawObject(void);
-     const UIDrawObjectCanvasPtr &getActiveDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getActiveSelectedDrawObject(void);
-     const UIDrawObjectCanvasPtr &getActiveSelectedDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getRolloverDrawObject(void);
-     const UIDrawObjectCanvasPtr &getRolloverDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getRolloverSelectedDrawObject(void);
-     const UIDrawObjectCanvasPtr &getRolloverSelectedDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getDisabledDrawObject(void);
-     const UIDrawObjectCanvasPtr &getDisabledDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getDisabledSelectedDrawObject(void);
-     const UIDrawObjectCanvasPtr &getDisabledSelectedDrawObject(void) const;
+           Pnt2s               &getPoint1         (void);
+     const Pnt2s               &getPoint1         (void) const;
+           Pnt2s               &getPoint2         (void);
+     const Pnt2s               &getPoint2         (void) const;
+           Pnt2s               &getPoint3         (void);
+     const Pnt2s               &getPoint3         (void) const;
+           Pnt2s               &getPoint4         (void);
+     const Pnt2s               &getPoint4         (void) const;
+           Color4f             &getColor1         (void);
+     const Color4f             &getColor1         (void) const;
+           Color4f             &getColor2         (void);
+     const Color4f             &getColor2         (void) const;
+           Color4f             &getColor3         (void);
+     const Color4f             &getColor3         (void) const;
+           Color4f             &getColor4         (void);
+     const Color4f             &getColor4         (void) const;
+           Real32              &getOpacity        (void);
+     const Real32              &getOpacity        (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setDrawObject     ( const UIDrawObjectCanvasPtr &value );
-     void setSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setActiveDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setActiveSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setRolloverDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setRolloverSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setDisabledDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setDisabledSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setPoint1         ( const Pnt2s &value );
+     void setPoint2         ( const Pnt2s &value );
+     void setPoint3         ( const Pnt2s &value );
+     void setPoint4         ( const Pnt2s &value );
+     void setColor1         ( const Color4f &value );
+     void setColor2         ( const Color4f &value );
+     void setColor3         ( const Color4f &value );
+     void setColor4         ( const Color4f &value );
+     void setOpacity        ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -205,8 +209,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  CheckboxButtonPtr      create          (void); 
-    static  CheckboxButtonPtr      createEmpty     (void); 
+    static  MultiColoredQuadUIDrawObjectPtr      create          (void); 
+    static  MultiColoredQuadUIDrawObjectPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -224,29 +228,30 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUIDrawObjectCanvasPtr   _sfDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfSelectedDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfActiveDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfActiveSelectedDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfRolloverDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfRolloverSelectedDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfDisabledDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfDisabledSelectedDrawObject;
+    SFPnt2s             _sfPoint1;
+    SFPnt2s             _sfPoint2;
+    SFPnt2s             _sfPoint3;
+    SFPnt2s             _sfPoint4;
+    SFColor4f           _sfColor1;
+    SFColor4f           _sfColor2;
+    SFColor4f           _sfColor3;
+    SFColor4f           _sfColor4;
+    SFReal32            _sfOpacity;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    CheckboxButtonBase(void);
-    CheckboxButtonBase(const CheckboxButtonBase &source);
+    MultiColoredQuadUIDrawObjectBase(void);
+    MultiColoredQuadUIDrawObjectBase(const MultiColoredQuadUIDrawObjectBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~CheckboxButtonBase(void); 
+    virtual ~MultiColoredQuadUIDrawObjectBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -254,13 +259,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      CheckboxButtonBase *pOther,
+    void executeSyncImpl(      MultiColoredQuadUIDrawObjectBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      CheckboxButtonBase *pOther,
+    void executeSyncImpl(      MultiColoredQuadUIDrawObjectBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -290,7 +295,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const CheckboxButtonBase &source);
+    void operator =(const MultiColoredQuadUIDrawObjectBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -298,17 +303,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
 //---------------------------------------------------------------------------
 
 
-typedef CheckboxButtonBase *CheckboxButtonBaseP;
+typedef MultiColoredQuadUIDrawObjectBase *MultiColoredQuadUIDrawObjectBaseP;
 
-typedef osgIF<CheckboxButtonBase::isNodeCore,
-              CoredNodePtr<CheckboxButton>,
+typedef osgIF<MultiColoredQuadUIDrawObjectBase::isNodeCore,
+              CoredNodePtr<MultiColoredQuadUIDrawObject>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet CheckboxButtonNodePtr;
+              >::_IRet MultiColoredQuadUIDrawObjectNodePtr;
 
-typedef RefPtr<CheckboxButtonPtr> CheckboxButtonRefPtr;
+typedef RefPtr<MultiColoredQuadUIDrawObjectPtr> MultiColoredQuadUIDrawObjectRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGCHECKBOXBUTTONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGMULTICOLOREDQUADUIDRAWOBJECTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGCHECKBOXBUTTONBASE_H_ */
+#endif /* _OSGMULTICOLOREDQUADUIDRAWOBJECTBASE_H_ */

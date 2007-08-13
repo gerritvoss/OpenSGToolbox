@@ -87,6 +87,28 @@ void  TextComponent::produceTextValueChanged(const TextEvent& e)
    }
 }
 
+Color4f TextComponent::getDrawnTextColor(void) const
+{
+    if(getEnabled())
+    {
+        //if(getFocused())
+        //{
+        //    return getFocusedTextColor();
+        //}
+        if(_MouseInComponentLastMouse)
+        {
+            return getRolloverTextColor();
+        }
+        else
+        {
+            return getTextColor();
+        }
+    }
+    else
+    {
+        return getDisabledTextColor();
+    }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

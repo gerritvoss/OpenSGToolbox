@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGLabel.h"
+#include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -86,41 +87,35 @@ void Label::drawInternal(const GraphicsPtr TheGraphics) const
       Pnt2s AlignedPosition;
       Pnt2s TextTopLeft, TextBottomRight;
       getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
-      Vec2s TextBounds( TextBottomRight - TextTopLeft);
-      if(getVerticalAlignment() == VERTICAL_TOP)
-      {
-         //VerticalTop
-         AlignedPosition[1] = TopLeft[1];
-      }
-      else if(getVerticalAlignment() == VERTICAL_BOTTOM)
-      {
-         //VerticalBottom
-         AlignedPosition[1] = BottomRight[1]-TextBounds[1];
-      }
-      else if(getVerticalAlignment() == VERTICAL_CENTER)
-      {
-         //VerticalCenter
-         AlignedPosition[1] = TopLeft[1]+0.5*(BottomRight[1]-TopLeft[1]-TextBounds[1]);
-      }
 
-      if(getHorizontalAlignment() == HORIZONTAL_LEFT)
-      {
-         //HorizontalLeft
-         AlignedPosition[0] = TopLeft[0];
-      }
-      else if(getHorizontalAlignment() == HORIZONTAL_RIGHT)
-      {
-         //HorizontalRight
-         AlignedPosition[0] = BottomRight[0]-TextBounds[0];
-      }
-      else if(getHorizontalAlignment() == HORIZONTAL_CENTER)
-      {
-         //HorizontalCenter
-         AlignedPosition[0] = TopLeft[0]+0.5*(BottomRight[0]-TopLeft[0]-TextBounds[0]);
-      }
+      AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),getVerticalAlignment(), getHorizontalAlignment());
 
-      TheGraphics->drawText(AlignedPosition, getText(), getFont(), getForegroundColor(), getOpacity());
+	  //Draw the Text
+      TheGraphics->drawText(AlignedPosition, getText(), getFont(), getDrawnTextColor(), getOpacity());
    }
+}
+
+Color4f Label::getDrawnTextColor(void) const
+{
+    if(getEnabled())
+    {
+        //if(getFocused())
+        //{
+        //    return getFocusedTextColor();
+        //}
+        if(_MouseInComponentLastMouse)
+        {
+            return getRolloverTextColor();
+        }
+        else
+        {
+            return getTextColor();
+        }
+    }
+    else
+    {
+        return getDisabledTextColor();
+    }
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

@@ -825,6 +825,43 @@ bool GLUTWindowEventProducer::getFullscreen(void) const
    return false;
 }
 
+void GLUTWindowEventProducer::setTitle(const std::string& TitleText)
+{
+    //Set the correct GLUT Window
+    glutSetWindow( GLUTWindow::Ptr::dcast(getWindow())->getId() );
+
+    //Set the window Title
+    glutSetWindowTitle(TitleText.c_str());
+}
+
+std::string& GLUTWindowEventProducer::getTitle(void)
+{
+    //TODO:Implement
+    return std::string("");
+}
+
+void GLUTWindowEventProducer::setRisizable(bool IsResizable)
+{
+    //TODO:Implement
+}
+
+bool GLUTWindowEventProducer::getRisizable(void)
+{
+    //TODO:Implement
+    return true;
+}
+
+void GLUTWindowEventProducer::setDrawBorder(bool DrawBorder)
+{
+    //TODO:Implement
+}
+
+bool GLUTWindowEventProducer::getDrawBorder(void)
+{
+    //TODO:Implement
+    return true;
+}
+
 bool GLUTWindowEventProducer::attachWindow(void)
 {
     if(_GLUTWindowToProducerMap.find(GLUTWindow::Ptr::dcast(getWindow())->getId()) != _GLUTWindowToProducerMap.end())

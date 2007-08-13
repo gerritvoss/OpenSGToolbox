@@ -72,9 +72,13 @@
 #include <OpenSG/OSGBoolFields.h> // Active type
 #include "Border/OSGBorder.h" // ActiveBorder type
 #include "Background/OSGUIBackground.h" // ActiveBackground type
-#include <OpenSG/OSGColor4fFields.h> // ActiveForegroundColor type
-#include <OpenSG/OSGUInt32Fields.h> // VerticalAlignment type
-#include <OpenSG/OSGUInt32Fields.h> // HorizontalAlignment type
+#include <OpenSG/OSGColor4fFields.h> // ActiveTextColor type
+#include <OpenSG/OSGColor4fFields.h> // FocusedTextColor type
+#include <OpenSG/OSGColor4fFields.h> // RolloverTextColor type
+#include <OpenSG/OSGColor4fFields.h> // DisabledTextColor type
+#include <OpenSG/OSGColor4fFields.h> // TextColor type
+#include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
+#include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
 
 #include "OSGButtonFields.h"
 
@@ -98,15 +102,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
 
     enum
     {
-        FontFieldId                  = Inherited::NextFieldId,
-        TextFieldId                  = FontFieldId                  + 1,
-        ActiveFieldId                = TextFieldId                  + 1,
-        ActiveBorderFieldId          = ActiveFieldId                + 1,
-        ActiveBackgroundFieldId      = ActiveBorderFieldId          + 1,
-        ActiveForegroundColorFieldId = ActiveBackgroundFieldId      + 1,
-        VerticalAlignmentFieldId     = ActiveForegroundColorFieldId + 1,
-        HorizontalAlignmentFieldId   = VerticalAlignmentFieldId     + 1,
-        NextFieldId                  = HorizontalAlignmentFieldId   + 1
+        FontFieldId                = Inherited::NextFieldId,
+        TextFieldId                = FontFieldId                + 1,
+        ActiveFieldId              = TextFieldId                + 1,
+        ActiveBorderFieldId        = ActiveFieldId              + 1,
+        ActiveBackgroundFieldId    = ActiveBorderFieldId        + 1,
+        ActiveTextColorFieldId     = ActiveBackgroundFieldId    + 1,
+        FocusedTextColorFieldId    = ActiveTextColorFieldId     + 1,
+        RolloverTextColorFieldId   = FocusedTextColorFieldId    + 1,
+        DisabledTextColorFieldId   = RolloverTextColorFieldId   + 1,
+        TextColorFieldId           = DisabledTextColorFieldId   + 1,
+        VerticalAlignmentFieldId   = TextColorFieldId           + 1,
+        HorizontalAlignmentFieldId = VerticalAlignmentFieldId   + 1,
+        NextFieldId                = HorizontalAlignmentFieldId + 1
     };
 
     static const OSG::BitVector FontFieldMask;
@@ -114,7 +122,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     static const OSG::BitVector ActiveFieldMask;
     static const OSG::BitVector ActiveBorderFieldMask;
     static const OSG::BitVector ActiveBackgroundFieldMask;
-    static const OSG::BitVector ActiveForegroundColorFieldMask;
+    static const OSG::BitVector ActiveTextColorFieldMask;
+    static const OSG::BitVector FocusedTextColorFieldMask;
+    static const OSG::BitVector RolloverTextColorFieldMask;
+    static const OSG::BitVector DisabledTextColorFieldMask;
+    static const OSG::BitVector TextColorFieldMask;
     static const OSG::BitVector VerticalAlignmentFieldMask;
     static const OSG::BitVector HorizontalAlignmentFieldMask;
 
@@ -143,17 +155,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUIFontPtr           *getSFFont           (void);
+           SFUIFontPtr         *getSFFont           (void);
            SFString            *getSFText           (void);
            SFBool              *getSFActive         (void);
            SFBorderPtr         *getSFActiveBorder   (void);
            SFUIBackgroundPtr   *getSFActiveBackground(void);
-           SFColor4f           *getSFActiveForegroundColor(void);
-           SFUInt32            *getSFVerticalAlignment(void);
-           SFUInt32            *getSFHorizontalAlignment(void);
+           SFColor4f           *getSFActiveTextColor(void);
+           SFColor4f           *getSFFocusedTextColor(void);
+           SFColor4f           *getSFRolloverTextColor(void);
+           SFColor4f           *getSFDisabledTextColor(void);
+           SFColor4f           *getSFTextColor      (void);
+           SFReal32            *getSFVerticalAlignment(void);
+           SFReal32            *getSFHorizontalAlignment(void);
 
-           UIFontPtr             &getFont           (void);
-     const UIFontPtr             &getFont           (void) const;
+           UIFontPtr           &getFont           (void);
+     const UIFontPtr           &getFont           (void) const;
            std::string         &getText           (void);
      const std::string         &getText           (void) const;
            bool                &getActive         (void);
@@ -162,12 +178,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
      const BorderPtr           &getActiveBorder   (void) const;
            UIBackgroundPtr     &getActiveBackground(void);
      const UIBackgroundPtr     &getActiveBackground(void) const;
-           Color4f             &getActiveForegroundColor(void);
-     const Color4f             &getActiveForegroundColor(void) const;
-           UInt32              &getVerticalAlignment(void);
-     const UInt32              &getVerticalAlignment(void) const;
-           UInt32              &getHorizontalAlignment(void);
-     const UInt32              &getHorizontalAlignment(void) const;
+           Color4f             &getActiveTextColor(void);
+     const Color4f             &getActiveTextColor(void) const;
+           Color4f             &getFocusedTextColor(void);
+     const Color4f             &getFocusedTextColor(void) const;
+           Color4f             &getRolloverTextColor(void);
+     const Color4f             &getRolloverTextColor(void) const;
+           Color4f             &getDisabledTextColor(void);
+     const Color4f             &getDisabledTextColor(void) const;
+           Color4f             &getTextColor      (void);
+     const Color4f             &getTextColor      (void) const;
+           Real32              &getVerticalAlignment(void);
+     const Real32              &getVerticalAlignment(void) const;
+           Real32              &getHorizontalAlignment(void);
+     const Real32              &getHorizontalAlignment(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -179,9 +203,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
      void setActive         ( const bool &value );
      void setActiveBorder   ( const BorderPtr &value );
      void setActiveBackground( const UIBackgroundPtr &value );
-     void setActiveForegroundColor( const Color4f &value );
-     void setVerticalAlignment( const UInt32 &value );
-     void setHorizontalAlignment( const UInt32 &value );
+     void setActiveTextColor( const Color4f &value );
+     void setFocusedTextColor( const Color4f &value );
+     void setRolloverTextColor( const Color4f &value );
+     void setDisabledTextColor( const Color4f &value );
+     void setTextColor      ( const Color4f &value );
+     void setVerticalAlignment( const Real32 &value );
+     void setHorizontalAlignment( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -224,14 +252,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUIFontPtr           _sfFont;
+    SFUIFontPtr         _sfFont;
     SFString            _sfText;
     SFBool              _sfActive;
     SFBorderPtr         _sfActiveBorder;
     SFUIBackgroundPtr   _sfActiveBackground;
-    SFColor4f           _sfActiveForegroundColor;
-    SFUInt32            _sfVerticalAlignment;
-    SFUInt32            _sfHorizontalAlignment;
+    SFColor4f           _sfActiveTextColor;
+    SFColor4f           _sfFocusedTextColor;
+    SFColor4f           _sfRolloverTextColor;
+    SFColor4f           _sfDisabledTextColor;
+    SFColor4f           _sfTextColor;
+    SFReal32            _sfVerticalAlignment;
+    SFReal32            _sfHorizontalAlignment;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

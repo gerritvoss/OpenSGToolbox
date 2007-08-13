@@ -124,6 +124,34 @@ SFUIDrawObjectCanvasPtr *RadioButtonBase::getSFActiveSelectedDrawObject(void)
     return &_sfActiveSelectedDrawObject;
 }
 
+//! Get the RadioButton::_sfRolloverDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *RadioButtonBase::getSFRolloverDrawObject(void)
+{
+    return &_sfRolloverDrawObject;
+}
+
+//! Get the RadioButton::_sfRolloverSelectedDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *RadioButtonBase::getSFRolloverSelectedDrawObject(void)
+{
+    return &_sfRolloverSelectedDrawObject;
+}
+
+//! Get the RadioButton::_sfDisabledDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *RadioButtonBase::getSFDisabledDrawObject(void)
+{
+    return &_sfDisabledDrawObject;
+}
+
+//! Get the RadioButton::_sfDisabledSelectedDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *RadioButtonBase::getSFDisabledSelectedDrawObject(void)
+{
+    return &_sfDisabledSelectedDrawObject;
+}
+
 
 //! Get the value of the RadioButton::_sfDrawObject field.
 inline
@@ -207,6 +235,90 @@ inline
 void RadioButtonBase::setActiveSelectedDrawObject(const UIDrawObjectCanvasPtr &value)
 {
     _sfActiveSelectedDrawObject.setValue(value);
+}
+
+//! Get the value of the RadioButton::_sfRolloverDrawObject field.
+inline
+UIDrawObjectCanvasPtr &RadioButtonBase::getRolloverDrawObject(void)
+{
+    return _sfRolloverDrawObject.getValue();
+}
+
+//! Get the value of the RadioButton::_sfRolloverDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &RadioButtonBase::getRolloverDrawObject(void) const
+{
+    return _sfRolloverDrawObject.getValue();
+}
+
+//! Set the value of the RadioButton::_sfRolloverDrawObject field.
+inline
+void RadioButtonBase::setRolloverDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfRolloverDrawObject.setValue(value);
+}
+
+//! Get the value of the RadioButton::_sfRolloverSelectedDrawObject field.
+inline
+UIDrawObjectCanvasPtr &RadioButtonBase::getRolloverSelectedDrawObject(void)
+{
+    return _sfRolloverSelectedDrawObject.getValue();
+}
+
+//! Get the value of the RadioButton::_sfRolloverSelectedDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &RadioButtonBase::getRolloverSelectedDrawObject(void) const
+{
+    return _sfRolloverSelectedDrawObject.getValue();
+}
+
+//! Set the value of the RadioButton::_sfRolloverSelectedDrawObject field.
+inline
+void RadioButtonBase::setRolloverSelectedDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfRolloverSelectedDrawObject.setValue(value);
+}
+
+//! Get the value of the RadioButton::_sfDisabledDrawObject field.
+inline
+UIDrawObjectCanvasPtr &RadioButtonBase::getDisabledDrawObject(void)
+{
+    return _sfDisabledDrawObject.getValue();
+}
+
+//! Get the value of the RadioButton::_sfDisabledDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &RadioButtonBase::getDisabledDrawObject(void) const
+{
+    return _sfDisabledDrawObject.getValue();
+}
+
+//! Set the value of the RadioButton::_sfDisabledDrawObject field.
+inline
+void RadioButtonBase::setDisabledDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfDisabledDrawObject.setValue(value);
+}
+
+//! Get the value of the RadioButton::_sfDisabledSelectedDrawObject field.
+inline
+UIDrawObjectCanvasPtr &RadioButtonBase::getDisabledSelectedDrawObject(void)
+{
+    return _sfDisabledSelectedDrawObject.getValue();
+}
+
+//! Get the value of the RadioButton::_sfDisabledSelectedDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &RadioButtonBase::getDisabledSelectedDrawObject(void) const
+{
+    return _sfDisabledSelectedDrawObject.getValue();
+}
+
+//! Set the value of the RadioButton::_sfDisabledSelectedDrawObject field.
+inline
+void RadioButtonBase::setDisabledSelectedDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfDisabledSelectedDrawObject.setValue(value);
 }
 
 

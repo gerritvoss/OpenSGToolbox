@@ -72,6 +72,7 @@
 #include <OpenSG/OSGStringFields.h> // Text type
 #include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
 #include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
+#include <OpenSG/OSGColor4fFields.h> // TextColor type
 
 #include "OSGToolTipFields.h"
 
@@ -100,7 +101,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
         TextFieldId                = TippedComponentFieldId     + 1,
         VerticalAlignmentFieldId   = TextFieldId                + 1,
         HorizontalAlignmentFieldId = VerticalAlignmentFieldId   + 1,
-        NextFieldId                = HorizontalAlignmentFieldId + 1
+        TextColorFieldId           = HorizontalAlignmentFieldId + 1,
+        NextFieldId                = TextColorFieldId           + 1
     };
 
     static const OSG::BitVector FontFieldMask;
@@ -108,6 +110,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
     static const OSG::BitVector TextFieldMask;
     static const OSG::BitVector VerticalAlignmentFieldMask;
     static const OSG::BitVector HorizontalAlignmentFieldMask;
+    static const OSG::BitVector TextColorFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -139,6 +142,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
            SFString            *getSFText           (void);
            SFReal32            *getSFVerticalAlignment(void);
            SFReal32            *getSFHorizontalAlignment(void);
+           SFColor4f           *getSFTextColor      (void);
 
            UIFontPtr           &getFont           (void);
      const UIFontPtr           &getFont           (void) const;
@@ -150,6 +154,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
      const Real32              &getVerticalAlignment(void) const;
            Real32              &getHorizontalAlignment(void);
      const Real32              &getHorizontalAlignment(void) const;
+           Color4f             &getTextColor      (void);
+     const Color4f             &getTextColor      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -161,6 +167,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
      void setText           ( const std::string &value );
      void setVerticalAlignment( const Real32 &value );
      void setHorizontalAlignment( const Real32 &value );
+     void setTextColor      ( const Color4f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -208,6 +215,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
     SFString            _sfText;
     SFReal32            _sfVerticalAlignment;
     SFReal32            _sfHorizontalAlignment;
+    SFColor4f           _sfTextColor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

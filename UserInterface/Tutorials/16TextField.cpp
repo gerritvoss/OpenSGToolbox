@@ -132,12 +132,12 @@ int main(int argc, char **argv)
 	******************************************************/
 
 	beginEditCP(textField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
-		| Component::ForegroundColorFieldMask | TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask 
+		| TextComponent::TextColorFieldMask | TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask 
 		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
 			// Determine initial size of TextField
 		textField->setPreferredSize( Vec2s (100, 50) );
 			// Determine the Font color for the Field
-		textField->setForegroundColor( Color4f(0.0, 0.0, 0.0, 1.0) );
+		textField->setTextColor( Color4f(0.0, 0.0, 0.0, 1.0) );
 			// Determine the Box Color and the Selection Color
 		textField->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
 		textField->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
@@ -154,37 +154,15 @@ int main(int argc, char **argv)
 			// TextField in this case
 		textField->setVerticalAlignment(.3);
 	endEditCP(textField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
-		| Component::ForegroundColorFieldMask| TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask
+		| TextComponent::TextColorFieldMask| TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask
 		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
 		
 	// Create a TextField component
 	TextFieldPtr textField2 = osg::TextField::create();
-	beginEditCP(textField2, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
-		| Component::ForegroundColorFieldMask | TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask 
-		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
-		textField2->setPreferredSize( Vec2s (100, 50) );
-			// Determine the Font color for the Field
-		textField2->setForegroundColor( Color4f(0.0, 0.0, 0.0, 1.0) );
-			// Determine the Box Color and the Selection Color
-		textField2->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
-		textField2->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
-			// Determine the font and initial text
+	beginEditCP(textField2, TextComponent::TextFieldMask);
+			//Set the initial text
 		textField2->setText("");
-		textField2->setFont(sampleFont);
-			// Set the area that is to be selected at first 
-		textField2->setSelectionStart(2);
-		textField2->setSelectionEnd(3);
-			// Set the initial alignment of the Text
-			// from the top (top of the Text will be
-			// 30% of the way down from the top of the
-			// TextField
-		textField2->setVerticalAlignment(.3);
-	endEditCP(textField2, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
-		| Component::ForegroundColorFieldMask| TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask
-		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
-//	TextActionListener button1AL;
-	
-//	textField->addActionListener( &button1AL);
+	endEditCP(textField2, TextComponent::TextFieldMask);
 
 
 	// Create The Main Frame

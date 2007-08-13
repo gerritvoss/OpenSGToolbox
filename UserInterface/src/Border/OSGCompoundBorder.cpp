@@ -77,11 +77,10 @@ void CompoundBorder::initMethod (void)
 void CompoundBorder::draw(const GraphicsPtr g, const Int16 x, const Int16 y , const UInt16 Width, const UInt16 Height, const Real32 Opacity) const
 {
 	UInt16 LeftIn, RightIn, BottomIn, UpperIn;
-
-	getOuterBorder()->draw(g, x, y, Width, Height, Opacity);
-	getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
+    getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
 	getInnerBorder()->draw(g, x+LeftIn, y+UpperIn, Width-LeftIn-RightIn, Height-UpperIn-BottomIn, Opacity);
 	
+	getOuterBorder()->draw(g, x, y, Width, Height, Opacity);
 }
 
 void CompoundBorder::getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& Bottom) const

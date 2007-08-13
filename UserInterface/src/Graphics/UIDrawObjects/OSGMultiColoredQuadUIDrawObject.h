@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGRADIOBUTTON_H_
-#define _OSGRADIOBUTTON_H_
+#ifndef _OSGMULTICOLOREDQUADUIDRAWOBJECT_H_
+#define _OSGMULTICOLOREDQUADUIDRAWOBJECT_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,15 +45,19 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGRadioButtonBase.h"
+#include "OSGMultiColoredQuadUIDrawObjectBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING RadioButton : public RadioButtonBase
+/*! \brief MultiColoredQuadUIDrawObject class. See \ref 
+           PageUserInterfaceMultiColoredQuadUIDrawObject for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING MultiColoredQuadUIDrawObject : public MultiColoredQuadUIDrawObjectBase
 {
   private:
 
-    typedef RadioButtonBase Inherited;
+    typedef MultiColoredQuadUIDrawObjectBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -72,54 +76,51 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButton : public RadioButtonBase
 
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
+	virtual void draw(const GraphicsPtr Graphics) const;
+    virtual void getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
 
     /*! \}                                                                 */
-
-	/*=========================  PROTECTED  ===============================*/
+    /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in RadioButtonBase.
+    // Variables should all be in MultiColoredQuadUIDrawObjectBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    RadioButton(void);
-    RadioButton(const RadioButton &source);
+    MultiColoredQuadUIDrawObject(void);
+    MultiColoredQuadUIDrawObject(const MultiColoredQuadUIDrawObject &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~RadioButton(void); 
+    virtual ~MultiColoredQuadUIDrawObject(void); 
 
     /*! \}                                                                 */
-    virtual void actionPreformed(const ActionEvent& e);
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
-    virtual UIDrawObjectCanvasPtr getDrawnDrawObject(void) const;
-
     
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class RadioButtonBase;
+    friend class MultiColoredQuadUIDrawObjectBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const RadioButton &source);
+    void operator =(const MultiColoredQuadUIDrawObject &source);
 };
 
-typedef RadioButton *RadioButtonP;
+typedef MultiColoredQuadUIDrawObject *MultiColoredQuadUIDrawObjectP;
 
 OSG_END_NAMESPACE
 
-#include "OSGRadioButtonBase.inl"
-#include "OSGRadioButton.inl"
+#include "OSGMultiColoredQuadUIDrawObjectBase.inl"
+#include "OSGMultiColoredQuadUIDrawObject.inl"
 
-#define OSGRADIOBUTTON_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGMULTICOLOREDQUADUIDRAWOBJECT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGRADIOBUTTON_H_ */
+#endif /* _OSGMULTICOLOREDQUADUIDRAWOBJECT_H_ */

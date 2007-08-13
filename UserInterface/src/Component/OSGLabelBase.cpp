@@ -61,8 +61,6 @@
 #include "OSGLabelBase.h"
 #include "OSGLabel.h"
 
-#include <Util/OSGUIDefines.h>            // VerticalAlignment default header
-#include <Util/OSGUIDefines.h>            // HorizontalAlignment default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,6 +76,21 @@ const OSG::BitVector  LabelBase::VerticalAlignmentFieldMask =
 const OSG::BitVector  LabelBase::HorizontalAlignmentFieldMask = 
     (TypeTraits<BitVector>::One << LabelBase::HorizontalAlignmentFieldId);
 
+const OSG::BitVector  LabelBase::ActiveTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << LabelBase::ActiveTextColorFieldId);
+
+const OSG::BitVector  LabelBase::FocusedTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << LabelBase::FocusedTextColorFieldId);
+
+const OSG::BitVector  LabelBase::RolloverTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << LabelBase::RolloverTextColorFieldId);
+
+const OSG::BitVector  LabelBase::DisabledTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << LabelBase::DisabledTextColorFieldId);
+
+const OSG::BitVector  LabelBase::TextColorFieldMask = 
+    (TypeTraits<BitVector>::One << LabelBase::TextColorFieldId);
+
 const OSG::BitVector LabelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -91,10 +104,25 @@ const OSG::BitVector LabelBase::MTInfluenceMask =
 /*! \var std::string     LabelBase::_sfText
     
 */
-/*! \var UInt32          LabelBase::_sfVerticalAlignment
+/*! \var Real32          LabelBase::_sfVerticalAlignment
     
 */
-/*! \var UInt32          LabelBase::_sfHorizontalAlignment
+/*! \var Real32          LabelBase::_sfHorizontalAlignment
+    
+*/
+/*! \var Color4f         LabelBase::_sfActiveTextColor
+    
+*/
+/*! \var Color4f         LabelBase::_sfFocusedTextColor
+    
+*/
+/*! \var Color4f         LabelBase::_sfRolloverTextColor
+    
+*/
+/*! \var Color4f         LabelBase::_sfDisabledTextColor
+    
+*/
+/*! \var Color4f         LabelBase::_sfTextColor
     
 */
 
@@ -112,16 +140,41 @@ FieldDescription *LabelBase::_desc[] =
                      TextFieldId, TextFieldMask,
                      false,
                      (FieldAccessMethod) &LabelBase::getSFText),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "VerticalAlignment", 
                      VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
                      false,
                      (FieldAccessMethod) &LabelBase::getSFVerticalAlignment),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "HorizontalAlignment", 
                      HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &LabelBase::getSFHorizontalAlignment)
+                     (FieldAccessMethod) &LabelBase::getSFHorizontalAlignment),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "ActiveTextColor", 
+                     ActiveTextColorFieldId, ActiveTextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &LabelBase::getSFActiveTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "FocusedTextColor", 
+                     FocusedTextColorFieldId, FocusedTextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &LabelBase::getSFFocusedTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "RolloverTextColor", 
+                     RolloverTextColorFieldId, RolloverTextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &LabelBase::getSFRolloverTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "DisabledTextColor", 
+                     DisabledTextColorFieldId, DisabledTextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &LabelBase::getSFDisabledTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "TextColor", 
+                     TextColorFieldId, TextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &LabelBase::getSFTextColor)
 };
 
 
@@ -199,8 +252,13 @@ void LabelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 LabelBase::LabelBase(void) :
     _sfFont                   (), 
     _sfText                   (), 
-    _sfVerticalAlignment      (UInt32(VERTICAL_CENTER)), 
-    _sfHorizontalAlignment    (UInt32(HORIZONTAL_CENTER)), 
+    _sfVerticalAlignment      (Real32(0.5)), 
+    _sfHorizontalAlignment    (Real32(0.5)), 
+    _sfActiveTextColor        (), 
+    _sfFocusedTextColor       (), 
+    _sfRolloverTextColor      (), 
+    _sfDisabledTextColor      (), 
+    _sfTextColor              (), 
     Inherited() 
 {
 }
@@ -214,6 +272,11 @@ LabelBase::LabelBase(const LabelBase &source) :
     _sfText                   (source._sfText                   ), 
     _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
     _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
+    _sfActiveTextColor        (source._sfActiveTextColor        ), 
+    _sfFocusedTextColor       (source._sfFocusedTextColor       ), 
+    _sfRolloverTextColor      (source._sfRolloverTextColor      ), 
+    _sfDisabledTextColor      (source._sfDisabledTextColor      ), 
+    _sfTextColor              (source._sfTextColor              ), 
     Inherited                 (source)
 {
 }
@@ -250,6 +313,31 @@ UInt32 LabelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfHorizontalAlignment.getBinSize();
     }
 
+    if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
+    {
+        returnValue += _sfActiveTextColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+    {
+        returnValue += _sfFocusedTextColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+    {
+        returnValue += _sfRolloverTextColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+    {
+        returnValue += _sfDisabledTextColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+    {
+        returnValue += _sfTextColor.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -277,6 +365,31 @@ void LabelBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
     {
         _sfHorizontalAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
+    {
+        _sfActiveTextColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+    {
+        _sfFocusedTextColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+    {
+        _sfRolloverTextColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+    {
+        _sfDisabledTextColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+    {
+        _sfTextColor.copyToBin(pMem);
     }
 
 
@@ -307,6 +420,31 @@ void LabelBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfHorizontalAlignment.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
+    {
+        _sfActiveTextColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+    {
+        _sfFocusedTextColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+    {
+        _sfRolloverTextColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+    {
+        _sfDisabledTextColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+    {
+        _sfTextColor.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -329,6 +467,21 @@ void LabelBase::executeSyncImpl(      LabelBase *pOther,
     if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
         _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
 
+    if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
+        _sfActiveTextColor.syncWith(pOther->_sfActiveTextColor);
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+        _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+        _sfRolloverTextColor.syncWith(pOther->_sfRolloverTextColor);
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+        _sfDisabledTextColor.syncWith(pOther->_sfDisabledTextColor);
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+        _sfTextColor.syncWith(pOther->_sfTextColor);
+
 
 }
 #else
@@ -350,6 +503,21 @@ void LabelBase::executeSyncImpl(      LabelBase *pOther,
 
     if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
         _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
+
+    if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
+        _sfActiveTextColor.syncWith(pOther->_sfActiveTextColor);
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+        _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+        _sfRolloverTextColor.syncWith(pOther->_sfRolloverTextColor);
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+        _sfDisabledTextColor.syncWith(pOther->_sfDisabledTextColor);
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+        _sfTextColor.syncWith(pOther->_sfTextColor);
 
 
 

@@ -124,6 +124,34 @@ SFUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFActiveSelectedDrawObject(void)
     return &_sfActiveSelectedDrawObject;
 }
 
+//! Get the CheckboxButton::_sfRolloverDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFRolloverDrawObject(void)
+{
+    return &_sfRolloverDrawObject;
+}
+
+//! Get the CheckboxButton::_sfRolloverSelectedDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFRolloverSelectedDrawObject(void)
+{
+    return &_sfRolloverSelectedDrawObject;
+}
+
+//! Get the CheckboxButton::_sfDisabledDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFDisabledDrawObject(void)
+{
+    return &_sfDisabledDrawObject;
+}
+
+//! Get the CheckboxButton::_sfDisabledSelectedDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFDisabledSelectedDrawObject(void)
+{
+    return &_sfDisabledSelectedDrawObject;
+}
+
 
 //! Get the value of the CheckboxButton::_sfDrawObject field.
 inline
@@ -207,6 +235,90 @@ inline
 void CheckboxButtonBase::setActiveSelectedDrawObject(const UIDrawObjectCanvasPtr &value)
 {
     _sfActiveSelectedDrawObject.setValue(value);
+}
+
+//! Get the value of the CheckboxButton::_sfRolloverDrawObject field.
+inline
+UIDrawObjectCanvasPtr &CheckboxButtonBase::getRolloverDrawObject(void)
+{
+    return _sfRolloverDrawObject.getValue();
+}
+
+//! Get the value of the CheckboxButton::_sfRolloverDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &CheckboxButtonBase::getRolloverDrawObject(void) const
+{
+    return _sfRolloverDrawObject.getValue();
+}
+
+//! Set the value of the CheckboxButton::_sfRolloverDrawObject field.
+inline
+void CheckboxButtonBase::setRolloverDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfRolloverDrawObject.setValue(value);
+}
+
+//! Get the value of the CheckboxButton::_sfRolloverSelectedDrawObject field.
+inline
+UIDrawObjectCanvasPtr &CheckboxButtonBase::getRolloverSelectedDrawObject(void)
+{
+    return _sfRolloverSelectedDrawObject.getValue();
+}
+
+//! Get the value of the CheckboxButton::_sfRolloverSelectedDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &CheckboxButtonBase::getRolloverSelectedDrawObject(void) const
+{
+    return _sfRolloverSelectedDrawObject.getValue();
+}
+
+//! Set the value of the CheckboxButton::_sfRolloverSelectedDrawObject field.
+inline
+void CheckboxButtonBase::setRolloverSelectedDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfRolloverSelectedDrawObject.setValue(value);
+}
+
+//! Get the value of the CheckboxButton::_sfDisabledDrawObject field.
+inline
+UIDrawObjectCanvasPtr &CheckboxButtonBase::getDisabledDrawObject(void)
+{
+    return _sfDisabledDrawObject.getValue();
+}
+
+//! Get the value of the CheckboxButton::_sfDisabledDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &CheckboxButtonBase::getDisabledDrawObject(void) const
+{
+    return _sfDisabledDrawObject.getValue();
+}
+
+//! Set the value of the CheckboxButton::_sfDisabledDrawObject field.
+inline
+void CheckboxButtonBase::setDisabledDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfDisabledDrawObject.setValue(value);
+}
+
+//! Get the value of the CheckboxButton::_sfDisabledSelectedDrawObject field.
+inline
+UIDrawObjectCanvasPtr &CheckboxButtonBase::getDisabledSelectedDrawObject(void)
+{
+    return _sfDisabledSelectedDrawObject.getValue();
+}
+
+//! Get the value of the CheckboxButton::_sfDisabledSelectedDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &CheckboxButtonBase::getDisabledSelectedDrawObject(void) const
+{
+    return _sfDisabledSelectedDrawObject.getValue();
+}
+
+//! Set the value of the CheckboxButton::_sfDisabledSelectedDrawObject field.
+inline
+void CheckboxButtonBase::setDisabledSelectedDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfDisabledSelectedDrawObject.setValue(value);
 }
 
 

@@ -46,6 +46,10 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGButton.h"
+#include "Util/OSGUIDrawUtils.h"
+#include "Component/Container/OSGFrame.h"
+#include "UIDrawingSurface/OSGUIDrawingSurface.h"
+#include <OpenSG/Input/OSGWindowEventProducer.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -75,42 +79,84 @@ void Button::initMethod (void)
 
 BorderPtr Button::getDrawnBorder(void) const
 {
-	if(getActive())
-	{
-		return getActiveBorder();
-	}
-	else
-	{
-	    if(getEnabled())
-	    {
-            return getBorder();
+    if(getEnabled())
+    {
+        //if(getFocused())
+        //{
+        //    return getFocusedTextColor();
+        //}
+        if(getActive())
+        {
+            return getActiveBorder();
+        }
+        else if(_MouseInComponentLastMouse)
+        {
+            return getRolloverBorder();
         }
         else
         {
-            return getDisabledBorder();
+            return getBorder();
         }
+    }
+    else
+    {
+        return getDisabledBorder();
     }
 }
 
 UIBackgroundPtr Button::getDrawnBackground(void) const
 {
-	if(getActive())
-	{
-		return getActiveBackground();
-	}
-	else
-	{
-	    if(getEnabled())
-	    {
-            return getBackground();
+    if(getEnabled())
+    {
+        //if(getFocused())
+        //{
+        //    return getFocusedTextColor();
+        //}
+        if(getActive())
+        {
+            return getActiveBackground();
+        }
+        else if(_MouseInComponentLastMouse)
+        {
+            return getRolloverBackground();
         }
         else
         {
-            return getDisabledBackground();
+            return getBackground();
         }
+    }
+    else
+    {
+        return getDisabledBackground();
     }
 }
 
+Color4f Button::getDrawnTextColor(void) const
+{
+    if(getEnabled())
+    {
+        //if(getFocused())
+        //{
+        //    return getFocusedTextColor();
+        //}
+        if(getActive())
+        {
+            return getActiveTextColor();
+        }
+        else if(_MouseInComponentLastMouse)
+        {
+            return getRolloverTextColor();
+        }
+        else
+        {
+            return getTextColor();
+        }
+    }
+    else
+    {
+        return getDisabledTextColor();
+    }
+}
 void Button::drawInternal(const GraphicsPtr TheGraphics) const
 {
    Pnt2s TopLeft, BottomRight;
@@ -122,51 +168,16 @@ void Button::drawInternal(const GraphicsPtr TheGraphics) const
       Pnt2s AlignedPosition;
       Pnt2s TextTopLeft, TextBottomRight;
       getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
-      Vec2s TextBounds( TextBottomRight - TextTopLeft);
-      if(getVerticalAlignment() == VERTICAL_TOP)
-      {
-         //VerticalTop
-         AlignedPosition[1] = TopLeft[1];
-      }
-      else if(getVerticalAlignment() == VERTICAL_BOTTOM)
-      {
-         //VerticalBottom
-         AlignedPosition[1] = BottomRight[1]-TextBounds[1];
-      }
-      else if(getVerticalAlignment() == VERTICAL_CENTER)
-      {
-         //VerticalCenter
-         AlignedPosition[1] = TopLeft[1]+0.5*(BottomRight[1]-TopLeft[1]-TextBounds[1]);
-      }
 
-      if(getHorizontalAlignment() == HORIZONTAL_LEFT)
-      {
-         //HorizontalLeft
-         AlignedPosition[0] = TopLeft[0];
-      }
-      else if(getHorizontalAlignment() == HORIZONTAL_RIGHT)
-      {
-         //HorizontalRight
-         AlignedPosition[0] = BottomRight[0]-TextBounds[0];
-      }
-      else if(getHorizontalAlignment() == HORIZONTAL_CENTER)
-      {
-         //HorizontalCenter
-         AlignedPosition[0] = TopLeft[0]+0.5*(BottomRight[0]-TopLeft[0]-TextBounds[0]);
-      }
+      AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),getVerticalAlignment(), getHorizontalAlignment());
 
-	  //Foreground Color
-	  Color4f ForeColor;
-	  if(getEnabled())
-	  {
-		  ForeColor = getForegroundColor();
-	  }
-	  else
-	  {
-		  ForeColor = getDisabledForegroundColor();
-	  }
-      TheGraphics->drawText(AlignedPosition, getText(), getFont(), ForeColor, getOpacity());
+	  //Draw the Text
+      TheGraphics->drawText(AlignedPosition, getText(), getFont(), getDrawnTextColor(), getOpacity());
    }
+}
+
+void Button::actionPreformed(const ActionEvent& e)
+{
 }
 
 void Button::mouseClicked(const MouseEvent& e)
@@ -176,23 +187,24 @@ void Button::mouseClicked(const MouseEvent& e)
 
 void Button::mouseEntered(const MouseEvent& e)
 {
+	if(_Armed)
+	{
+	    beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+		    ButtonPtr(this)->setActive(true);
+	    endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+	}
 
 	Component::mouseEntered(e);
 }
 
 void Button::mouseExited(const MouseEvent& e)
 {
-	/*if(getActive())
+	if(_Armed)
 	{
-		if(getParentFrame() != NullFC &&
-				   getParentFrame()->getDrawingSurface() != NullFC &&
-				   getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
-				{
-	            }
-	}*/
-	beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
-		ButtonPtr(this)->setActive(false);
-	endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+	    beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+		    ButtonPtr(this)->setActive(false);
+	    endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+	}
 
 	Component::mouseExited(e);
 }
@@ -203,31 +215,38 @@ void Button::mousePressed(const MouseEvent& e)
 		beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
 			ButtonPtr(this)->setActive(true);
 		endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+        _Armed = true;
+        
+		if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&& getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+		{
+            getParentFrame()->getDrawingSurface()->getEventProducer()->addMouseListener(&_ButtonArmedListener);
+        }
 	}
 	Component::mousePressed(e);
 }
 
 void Button::mouseReleased(const MouseEvent& e)
 {	
-	if(getActive())
+	if(e.getButton() == MouseEvent::BUTTON1 && _Armed)
 	{
-	   produceActionPerformed(ActionEvent(ButtonPtr(this), e.getTimeStamp()));
-	}
-	if(e.getButton() == MouseEvent::BUTTON1){
 		beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
 			ButtonPtr(this)->setActive(false);
 		endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+	   produceActionPerformed(ActionEvent(ButtonPtr(this), e.getTimeStamp()));
+       _Armed = false;
 	}
 	Component::mouseReleased(e);
 }
 
 void Button::produceActionPerformed(const ActionEvent& e)
 {
-   for(ActionListenerSetConstItor SetItor(_ActionListeners.begin()) ; SetItor != _ActionListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->actionPerformed(e);
-   }
+    actionPreformed(e);
+    for(ActionListenerSetConstItor SetItor(_ActionListeners.begin()) ; SetItor != _ActionListeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->actionPerformed(e);
+    }
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -236,13 +255,15 @@ void Button::produceActionPerformed(const ActionEvent& e)
 
 Button::Button(void) :
     Inherited(),
-		_ButtonMouseListener(ButtonPtr(this))
+		_ButtonArmedListener(ButtonPtr(this)),
+        _Armed(false)
 {
 }
 
 Button::Button(const Button &source) :
     Inherited(source),
-		_ButtonMouseListener(ButtonPtr(this))
+		_ButtonArmedListener(ButtonPtr(this)),
+        _Armed(false)
 {
 }
 
@@ -264,35 +285,25 @@ void Button::dump(      UInt32    ,
 }
 
 
-Button::ButtonMouseListener::ButtonMouseListener(ButtonPtr TheButton) :
+Button::ButtonArmedListener::ButtonArmedListener(ButtonPtr TheButton) :
 _Button(TheButton)
 {
 }
 
-void Button::ButtonMouseListener::mouseClicked(const MouseEvent& e)
-{
-}
-
-void Button::ButtonMouseListener::mouseEntered(const MouseEvent& e)
-{
-}
-
-void Button::ButtonMouseListener::mouseExited(const MouseEvent& e)
-{
-}
-
-void Button::ButtonMouseListener::mousePressed(const MouseEvent& e)
-{
-}
-
-void Button::ButtonMouseListener::mouseReleased(const MouseEvent& e)
+void Button::ButtonArmedListener::mouseReleased(const MouseEvent& e)
 {
 	if(e.getButton() == MouseEvent::BUTTON1)
 	{
-		beginEditCP(_Button, Button::ActiveFieldMask);
-	        _Button->setActive(false);
-		endEditCP(_Button, Button::ActiveFieldMask);
+		Pnt2s MousePos = ViewportToDrawingSurface(e.getLocation(), _Button->getParentFrame()->getDrawingSurface(), e.getViewport());
+        //If the Mouse is not within the button
+        if(!_Button->isContained(MousePos))
+        {
+            //Then Disarm the button
+            _Button->_Armed = false;
+        }
+
 		//Remove myself from the listener
+        _Button->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
 	}
 }
 
