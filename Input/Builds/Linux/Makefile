@@ -13,8 +13,7 @@ VPATH = $(srcdir)/:$(srcdir)/WindowSystem:$(srcdir)/WindowSystem/GLUT:$(srcdir)/
 
 EXTRA_CCFLAGS = -I$(srcdir)
 
-OBJECTS = OSGEventDispatchThread.o \
-	OSGWindowEventProducer.o \
+OBJECTS = OSGWindowEventProducer.o \
 	OSGWindowEventProducerBase.o \
 	OSGWindowUtils.o \
 	OSGWindowEventProducerFactory.o \
@@ -26,7 +25,11 @@ OBJECTS = OSGEventDispatchThread.o \
 	OSGXWindowEventProducerBase.o \
 	OSGMouseWheelEventProducer.o \
 	OSGMouseMotionEventProducer.o \
+	OSGWindowAdapter.o \
 	OSGMouseEventProducer.o \
+	OSGKeyAdapter.o \
+	OSGMouseMotionAdapter.o \
+	OSGMouseAdapter.o \
 	OSGKeyEvent.o \
 	OSGKeyEventProducer.o \
 	OSGStringUtils.o \

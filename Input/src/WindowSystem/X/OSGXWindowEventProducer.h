@@ -45,6 +45,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGXWindowEventProducerBase.h"
+#include <OpenSG/OSGXWindow.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -58,6 +59,11 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
 
     typedef XWindowEventProducerBase Inherited;
 
+    static void WindowEventLoopThread(void* args);
+    static int wait_for_map_notify(Display *, XEvent *event, char *arg);
+    static KeyEvent::Key determineKey(const KeySym& XKeySym);
+    
+    static UInt32 determineKeyModifiers(const unsigned int state);
     /*==========================  PUBLIC  =================================*/
   public:
 
@@ -112,6 +118,24 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
 
     //Get the Window Fullscreen
     virtual bool getFullscreen(void) const;
+
+    //Set the text on the Title bar of the window
+    virtual void setTitle(const std::string& TitleText);
+
+    //Get the text of the Title bar of the window
+    virtual std::string getTitle(void);
+
+    //Set the window to allow or not allow Resizing
+    virtual void setRisizable(bool IsResizable);
+
+    //Get whether or not the window allows resizing
+    virtual bool getRisizable(void);
+
+    //Set the window to draw or not draw it's border
+    virtual void setDrawBorder(bool DrawBorder);
+
+    //Get wether or not the window is drawing a border
+    virtual bool getDrawBorder(void);
     
 	 virtual UInt32 getKeyModifiers(void) const;
     
@@ -121,7 +145,18 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
 
 	 virtual void putClipboard(const std::string Value);
     
-    void handleEvents(void);
+    void handleEvent(XEvent& Event);
+    
+    virtual bool attachWindow(void);
+
+    virtual void openWindow(const Pnt2s& ScreenPosition,
+                       const Vec2s& Size,
+                       const std::string& WindowName);
+    
+    virtual void closeWindow(void);
+    
+    virtual void draw(void);
+    virtual void update(void);
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -143,6 +178,27 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
     virtual ~XWindowEventProducer(void); 
 
 	 virtual void setCursor(void);
+    
+    virtual WindowPtr createWindow(void);
+    
+    struct WindowEventLoopThreadArguments
+    {
+        WindowEventLoopThreadArguments(const Pnt2s& ScreenPosition,
+                       const Vec2s& Size,
+                       const std::string& WindowName,
+                       XWindowPtr TheWindow,
+                       XWindowEventProducerPtr TheEventProducer);
+
+        Pnt2s _ScreenPosition;
+        Vec2s _Size;
+        std::string _WindowName;
+        XWindowPtr _Window;
+        XWindowEventProducerPtr _EventProducer;
+    };
+    
+    unsigned int _LastKeyboardMouseButtonMask;
+    Pnt2s _LastMousePosition;
+    bool _IsDrawPending;
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/

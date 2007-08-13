@@ -206,6 +206,7 @@ UChar8 KeyEvent::getNonLetterKey(Key k, UInt32 Modifier)
    case KEY_NUMBER_SIGN:
       return '#';
    case KEY_PLUS:
+   case KEY_ADD:
       return '+';
    case KEY_QUOTE:
       return '"';

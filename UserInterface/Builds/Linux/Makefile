@@ -167,10 +167,12 @@ OBJECTS = OSGShadowBorder.o \
 	OSGGraphics2D.o \
 	OSGGraphicsBase.o \
 	OSGDiscUIDrawObjectBase.o \
+	OSGMultiColoredQuadUIDrawObjectBase.o \
 	OSGPolygonUIDrawObjectBase.o \
 	OSGRectUIDrawObjectBase.o \
 	OSGArcUIDrawObject.o \
 	OSGArcUIDrawObjectBase.o \
+	OSGMultiColoredQuadUIDrawObject.o \
 	OSGDiscUIDrawObject.o \
 	OSGLineUIDrawObjectBase.o \
 	OSGRectUIDrawObject.o \

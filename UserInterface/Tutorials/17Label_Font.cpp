@@ -188,11 +188,11 @@ int main(int argc, char **argv)
 	
 
 	// SecondEditCP for Component settings
-	beginEditCP(label1, Component::PreferredSizeFieldMask | Component::ForegroundColorFieldMask);
+	beginEditCP(label1, Component::PreferredSizeFieldMask | Label::TextColorFieldMask);
 		label1->setPreferredSize( Vec2s(200, 50) );
 		// Determine the Color the Font displays at
-		label1->setForegroundColor( Color4f(0.1, 0.1, 0.1, 1.0) );
-	endEditCP(label1, Component::PreferredSizeFieldMask | Component::ForegroundColorFieldMask);
+		label1->setTextColor( Color4f(0.1, 0.1, 0.1, 1.0) );
+	endEditCP(label1, Component::PreferredSizeFieldMask | Label::TextColorFieldMask);
 
 
 	

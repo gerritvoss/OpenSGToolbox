@@ -98,13 +98,13 @@ void WindowsLookAndFeel::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Real32 WindowsLookAndFeel::getTextCaretRate(void) const
+Time WindowsLookAndFeel::getTextCaretRate(void) const
 {
 	return _TextCaretRate;
 }
 
 
-Real32 WindowsLookAndFeel::getToolTipPopupTime(void) const
+Time WindowsLookAndFeel::getToolTipPopupTime(void) const
 {
 	return _ToolTipPopupTime;
 }

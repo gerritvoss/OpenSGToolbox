@@ -147,7 +147,8 @@ void TextArea::update(const UpdateEvent& e)
    _CurrentCaretBlinkElps += e.getElapsedTime();
    if(_CurrentCaretBlinkElps > LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
    {
-	   _CurrentCaretBlinkElps -= osgfloor<Time>(_CurrentCaretBlinkElps/LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
+       Int32 Div = _CurrentCaretBlinkElps/LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
+	   _CurrentCaretBlinkElps -= static_cast<osg::Time>(Div)*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
    }
 }
 

@@ -7,6 +7,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+void WindowEventProducer::draw(void)
+{
+   _DisplayCallbackFunc();
+}
+
+inline
 WindowEventProducer::CursorType WindowEventProducer::getCursorType(void) const
 {
 	return _CursorType;
@@ -16,6 +22,7 @@ inline
 void WindowEventProducer::setCursorType(CursorType Type)
 {
 	_CursorType = Type;
+    setCursor();
 }
 
 inline

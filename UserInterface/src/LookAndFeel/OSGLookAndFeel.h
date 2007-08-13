@@ -77,8 +77,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeel : public LookAndFeelBase
 
 	virtual void init(void) = 0;
 
-	virtual Real32 getTextCaretRate(void) const = 0;
-	virtual Real32 getToolTipPopupTime(void) const = 0;
+	virtual Time getTextCaretRate(void) const = 0;
+	virtual Time getToolTipPopupTime(void) const = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

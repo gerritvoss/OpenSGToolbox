@@ -96,12 +96,12 @@ void DefaultLookAndFeel::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Real32 DefaultLookAndFeel::getTextCaretRate(void) const
+Time DefaultLookAndFeel::getTextCaretRate(void) const
 {
 	return _TextCaretRate;
 }
 
-Real32 DefaultLookAndFeel::getToolTipPopupTime(void) const
+Time DefaultLookAndFeel::getToolTipPopupTime(void) const
 {
 	return _ToolTipPopupTime;
 }

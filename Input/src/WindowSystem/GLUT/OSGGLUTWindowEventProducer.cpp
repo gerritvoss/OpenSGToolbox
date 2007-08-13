@@ -93,11 +93,14 @@ void GLUTWindowEventProducer::WindowEventLoopThread(void* args)
     Arguments->_SyncBarrier->enter(2);
     Arguments->_SyncBarrier->subRef();
 
-    //Delete my arguments, to avoid memory leak
-    delete args;
-
     // GLUT main loop
     glutMainLoop();
+    
+    //Send the Closed event
+    Arguments->_EventProducer->produceWindowClosed();
+    
+    //Delete my arguments, to avoid memory leak
+    delete Arguments;
 }
 
 void GLUTWindowEventProducer::draw(void)
@@ -834,7 +837,7 @@ void GLUTWindowEventProducer::setTitle(const std::string& TitleText)
     glutSetWindowTitle(TitleText.c_str());
 }
 
-std::string& GLUTWindowEventProducer::getTitle(void)
+std::string GLUTWindowEventProducer::getTitle(void)
 {
     //TODO:Implement
     return std::string("");

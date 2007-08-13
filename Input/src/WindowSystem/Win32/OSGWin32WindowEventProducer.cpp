@@ -72,8 +72,6 @@ Win32WindowEventProducer::WIN32HWNDToProducerMap Win32WindowEventProducer::_WIN3
 
 void Win32WindowEventProducer::initMethod (void)
 {
-	//Register this WindowEventProducer As the WIN32Window WindowEventProducer with the factory
-	WindowEventProducerFactory::the()->registerProducer(&WIN32Window::getClassType(), &Win32WindowEventProducer::getClassType());
 }
 
 void Win32WindowEventProducer::WindowEventLoopThread(void* args)
@@ -134,7 +132,7 @@ void Win32WindowEventProducer::WindowEventLoopThread(void* args)
     Arguments->_EventProducer->produceWindowClosed();
     
     //Delete my arguments, to avoid memory leak
-    delete args;
+    delete Arguments;
 }
 
 LRESULT Win32WindowEventProducer::staticWndProc(HWND hwnd, UINT uMsg,
@@ -733,11 +731,11 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd, UINT uMsg,
 			    {
 				    produceMouseDragged(MouseEvent::BUTTON1,Pnt2s(LOWORD(lParam), HIWORD(lParam)));
 			    }
-			    else if(wParam & MK_MBUTTON)
+			    if(wParam & MK_MBUTTON)
 			    {
 				    produceMouseDragged(MouseEvent::BUTTON2,Pnt2s(LOWORD(lParam), HIWORD(lParam)));
 			    }
-			    else if(wParam & MK_RBUTTON)
+			    if(wParam & MK_RBUTTON)
 			    {
 				    produceMouseDragged(MouseEvent::BUTTON3,Pnt2s(LOWORD(lParam), HIWORD(lParam)));
 			    }
@@ -839,6 +837,7 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd, UINT uMsg,
             break;
 
         case WM_DESTROY:
+            produceWindowClosing();
             PostQuitMessage(0);
             break;
 
@@ -977,7 +976,7 @@ void Win32WindowEventProducer::setTitle(const std::string& TitleText)
     SetWindowText(WIN32Window::Ptr::dcast(getWindow())->getHwnd(), TitleText.c_str());
 }
 
-std::string& Win32WindowEventProducer::getTitle(void)
+std::string Win32WindowEventProducer::getTitle(void)
 {
     int TextLength = GetWindowTextLength(WIN32Window::Ptr::dcast(getWindow())->getHwnd());
     PTSTR Text = (PSTR) VirtualAlloc((LPVOID) NULL, 

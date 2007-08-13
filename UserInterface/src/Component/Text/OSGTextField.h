@@ -129,7 +129,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase, public U
 	
     virtual void produceActionPerformed(const ActionEvent& e);
 	
-	mutable Time _CurrentCaretBlinkElps;
+	Time _CurrentCaretBlinkElps;
 
 	/*class CaretUpdateListener : public UpdateListener
 	{

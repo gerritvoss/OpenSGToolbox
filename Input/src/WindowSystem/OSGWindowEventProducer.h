@@ -198,7 +198,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     virtual void setTitle(const std::string& TitleText) = 0;
 
     //Get the text of the Title bar of the window
-    virtual std::string& getTitle(void) = 0;
+    virtual std::string getTitle(void) = 0;
 
     //Set the window to allow or not allow Resizing
     virtual void setRisizable(bool IsResizable) = 0;

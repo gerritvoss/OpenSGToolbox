@@ -77,8 +77,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING WindowsLookAndFeel : public WindowsLookAnd
                       const BitVector  bvFlags  = 0) const;
 
 	virtual void init(void);
-	virtual Real32 getTextCaretRate(void) const;
-	virtual Real32 getToolTipPopupTime(void) const;
+	virtual Time getTextCaretRate(void) const;
+	virtual Time getToolTipPopupTime(void) const;
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
