@@ -3,6 +3,11 @@ import sys
 import glob
 import shutil
 
+def convertPathToOutput(Path):
+   if os.name == "posix":
+      return Path
+   else:
+      return '"' + Path + '"'
 
 def main():
    if len(sys.argv) != 2:
@@ -12,12 +17,12 @@ def main():
    GenFCsPyDir = os.path.split(sys.argv[0])[0]
    if os.name == "posix":
       FcdCompilePath = os.path.join(GenFCsPyDir, "../External/fcdCompile/Linux/fcdCompile")
-   elif os.name == "nt":
-      FcdCompilePath = os.path.join(GenFCsPyDir, "../External/fcdCompile/Windows/fcdCompile.exe")
+   else:
+      FcdCompilePath = os.path.join(GenFCsPyDir, "..\\External\\fcdCompile\\Windows\\fcdCompile.exe")
       
    print "Using fcdCompile to Generate Code..."
    
-   os.system(FcdCompilePath + " -b -f " + sys.argv[1])
+   os.system(FcdCompilePath + " -b -f " + convertPathToOutput(sys.argv[1]))
    
    BaseHeaderFile = "OSG" + os.path.splitext(os.path.split(sys.argv[1])[1])[0] + "Base.h"
    BaseInlineFile = "OSG" + os.path.splitext(os.path.split(sys.argv[1])[1])[0] + "Base.inl"
@@ -57,13 +62,13 @@ def main():
    if os.name == "posix":
       SedPath = "sed"
    elif os.name == "nt":
-      SedPath = os.path.join(GenFCsPyDir, "../External/GnuWin32/bin/sed.exe")
+      SedPath = os.path.join(GenFCsPyDir, "..\\External\\GnuWin32\\bin\\sed.exe")
       
    SedScriptPath = os.path.join(GenFCsPyDir, "CleanUpFC.sed")
    
-   os.system(SedPath + " -f " + SedScriptPath + " " + os.path.join(os.path.split(sys.argv[1])[0],BaseHeaderFile) + " > " + os.path.join(os.path.split(sys.argv[1])[0],BaseHeaderFile) + ".temp")
-   os.system(SedPath + " -f " + SedScriptPath + " " + os.path.join(os.path.split(sys.argv[1])[0],HeaderFile) + " > " + os.path.join(os.path.split(sys.argv[1])[0],HeaderFile) + ".temp")
-   os.system(SedPath + " -f " + SedScriptPath + " " + os.path.join(os.path.split(sys.argv[1])[0],FieldsFile) + " > " + os.path.join(os.path.split(sys.argv[1])[0],FieldsFile) + ".temp")
+   os.system(SedPath + " -f " + SedScriptPath + " " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],BaseHeaderFile)) + " > " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],BaseHeaderFile) + ".temp"))
+   os.system(SedPath + " -f " + SedScriptPath + " " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile)) + " > " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile) + ".temp"))
+   os.system(SedPath + " -f " + SedScriptPath + " " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],FieldsFile)) + " > " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],FieldsFile) + ".temp"))
    
    shutil.move(os.path.join(os.path.split(sys.argv[1])[0],BaseHeaderFile) + ".temp", os.path.join(os.path.split(sys.argv[1])[0],BaseHeaderFile))
    shutil.move(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile) + ".temp", os.path.join(os.path.split(sys.argv[1])[0],HeaderFile))
@@ -72,14 +77,14 @@ def main():
    #Cleanup License
    SedLicenseScriptPath = os.path.join(GenFCsPyDir, "CleanUpUILicense.sed")
    
-   os.system(SedPath + " -f " + SedLicenseScriptPath + " " + os.path.join(os.path.split(sys.argv[1])[0],BaseHeaderFile) + " > " + os.path.join(os.path.split(sys.argv[1])[0],BaseHeaderFile) + ".temp")
-   os.system(SedPath + " -f " + SedLicenseScriptPath + " " + os.path.join(os.path.split(sys.argv[1])[0],BaseInlineFile) + " > " + os.path.join(os.path.split(sys.argv[1])[0],BaseInlineFile) + ".temp")
-   os.system(SedPath + " -f " + SedLicenseScriptPath + " " + os.path.join(os.path.split(sys.argv[1])[0],FieldsFile) + " > " + os.path.join(os.path.split(sys.argv[1])[0],FieldsFile) + ".temp")
-   os.system(SedPath + " -f " + SedLicenseScriptPath + " " + os.path.join(os.path.split(sys.argv[1])[0],BaseCodeFile) + " > " + os.path.join(os.path.split(sys.argv[1])[0],BaseCodeFile) + ".temp")
+   os.system(SedPath + " -f " + SedLicenseScriptPath + " " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],BaseHeaderFile)) + " > " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],BaseHeaderFile) + ".temp"))
+   os.system(SedPath + " -f " + SedLicenseScriptPath + " " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],BaseInlineFile)) + " > " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],BaseInlineFile) + ".temp"))
+   os.system(SedPath + " -f " + SedLicenseScriptPath + " " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],FieldsFile)) + " > " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],FieldsFile) + ".temp"))
+   os.system(SedPath + " -f " + SedLicenseScriptPath + " " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],BaseCodeFile)) + " > " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],BaseCodeFile) + ".temp"))
    
-   os.system(SedPath + " -f " + SedLicenseScriptPath + " " + os.path.join(os.path.split(sys.argv[1])[0],HeaderFile) + " > " + os.path.join(os.path.split(sys.argv[1])[0],HeaderFile) + ".temp")
-   os.system(SedPath + " -f " + SedLicenseScriptPath + " " + os.path.join(os.path.split(sys.argv[1])[0],InlineFile) + " > " + os.path.join(os.path.split(sys.argv[1])[0],InlineFile) + ".temp")
-   os.system(SedPath + " -f " + SedLicenseScriptPath + " " + os.path.join(os.path.split(sys.argv[1])[0],CodeFile) + " > " + os.path.join(os.path.split(sys.argv[1])[0],CodeFile) + ".temp")
+   os.system(SedPath + " -f " + SedLicenseScriptPath + " " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile)) + " > " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile) + ".temp"))
+   os.system(SedPath + " -f " + SedLicenseScriptPath + " " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],InlineFile)) + " > " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],InlineFile) + ".temp"))
+   os.system(SedPath + " -f " + SedLicenseScriptPath + " " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],CodeFile)) + " > " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],CodeFile) + ".temp"))
    
    shutil.move(os.path.join(os.path.split(sys.argv[1])[0],BaseHeaderFile) + ".temp", os.path.join(os.path.split(sys.argv[1])[0],BaseHeaderFile))
    shutil.move(os.path.join(os.path.split(sys.argv[1])[0],BaseInlineFile) + ".temp", os.path.join(os.path.split(sys.argv[1])[0],BaseInlineFile))
@@ -89,6 +94,13 @@ def main():
    shutil.move(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile) + ".temp", os.path.join(os.path.split(sys.argv[1])[0],HeaderFile))
    shutil.move(os.path.join(os.path.split(sys.argv[1])[0],InlineFile) + ".temp", os.path.join(os.path.split(sys.argv[1])[0],InlineFile))
    shutil.move(os.path.join(os.path.split(sys.argv[1])[0],CodeFile) + ".temp", os.path.join(os.path.split(sys.argv[1])[0],CodeFile))
+
+   #Add Header Includes
+   SedAddHeaderIncludePath = os.path.join(GenFCsPyDir, "AddHeaderInclude.sed")
+
+   os.system(SedPath + " -f " + SedAddHeaderIncludePath + " " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile)) + " > " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile) + ".temp"))
+
+   shutil.move(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile) + ".temp", os.path.join(os.path.split(sys.argv[1])[0],HeaderFile))
    
    print "Done"
 
