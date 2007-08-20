@@ -57,7 +57,7 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceTextField for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase, public UpdateListener
+class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
 
 {
   private:
@@ -89,7 +89,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase, public U
 	virtual void mouseClicked(const MouseEvent& e);
 	virtual void mousePressed(const MouseEvent& e);
 	virtual void mouseDragged(const MouseEvent& e);
-    virtual void update(const UpdateEvent& e);
 	
 	virtual void focusGained(const FocusEvent& e);
 	virtual void focusLost(const FocusEvent& e);
@@ -131,7 +130,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase, public U
 	
 	Time _CurrentCaretBlinkElps;
 
-	/*class CaretUpdateListener : public UpdateListener
+	class CaretUpdateListener : public UpdateListener
 	{
 	public:
 		CaretUpdateListener(TextFieldPtr TheTextField);
@@ -139,7 +138,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase, public U
 	private:
 		TextFieldPtr _TextField;
 	};
-	CaretUpdateListener _CaretUpdateListener;*/
+
+	friend class CarentUpdateListener;
+
+	CaretUpdateListener _CaretUpdateListener;
     /*==========================  PRIVATE  ================================*/
   private:
 

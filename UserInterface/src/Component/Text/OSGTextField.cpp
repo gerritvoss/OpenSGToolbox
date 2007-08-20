@@ -358,23 +358,13 @@ void TextField::produceActionPerformed(const ActionEvent& e)
    }
 }
 
-void TextField::update(const UpdateEvent& e)
-{
-   _CurrentCaretBlinkElps += e.getElapsedTime();
-   if(_CurrentCaretBlinkElps > LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
-   {
-       Int32 Div = _CurrentCaretBlinkElps/LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
-	   _CurrentCaretBlinkElps -= static_cast<osg::Time>(Div)*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
-   }
-}
-
 void TextField::focusGained(const FocusEvent& e)
 {
 	if( getParentFrame() != NullFC &&
 		getParentFrame()->getDrawingSurface() != NullFC &&
 		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
     {
-		getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(this);
+		getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_CaretUpdateListener);
 	}
 	TextComponent::focusGained(e);
 }
@@ -385,7 +375,7 @@ void TextField::focusLost(const FocusEvent& e)
 		getParentFrame()->getDrawingSurface() != NullFC &&
 		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
     {
-		getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+		getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_CaretUpdateListener);
 	}
 	TextComponent::focusLost(e);
 }
@@ -398,15 +388,15 @@ void TextField::focusLost(const FocusEvent& e)
 
 TextField::TextField(void) :
     Inherited(),
-		_CurrentCaretBlinkElps(0.0)//,
-		//_CaretUpdateListener(TextFieldPtr(this))
+		_CurrentCaretBlinkElps(0.0),
+	    _CaretUpdateListener(TextFieldPtr(this))
 {
 }
 
 TextField::TextField(const TextField &source) :
     Inherited(source),
-		_CurrentCaretBlinkElps(0.0)//,
-		//_CaretUpdateListener(TextFieldPtr(this))
+		_CurrentCaretBlinkElps(0.0),
+		_CaretUpdateListener(TextFieldPtr(this))
 {
 }
 
@@ -416,6 +406,15 @@ TextField::~TextField(void)
 
 
 /*----------------------------- class specific ----------------------------*/
+void TextField::CaretUpdateListener::update(const UpdateEvent& e)
+{
+   _TextField->_CurrentCaretBlinkElps += e.getElapsedTime();
+   if(_TextField->_CurrentCaretBlinkElps > LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
+   {
+       Int32 Div = _TextField->_CurrentCaretBlinkElps/LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
+	   _TextField->_CurrentCaretBlinkElps -= static_cast<osg::Time>(Div)*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
+   }
+}
 
 void TextField::changed(BitVector whichField, UInt32 origin)
 {

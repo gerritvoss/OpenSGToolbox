@@ -58,7 +58,7 @@ OSG_BEGIN_NAMESPACE
 */
 
 
-class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase, public UpdateListener
+class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
 {
   private:
 
@@ -96,8 +96,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase, public Upd
 	virtual void mouseClicked(const MouseEvent& e);
 	virtual void mousePressed(const MouseEvent& e);
 	virtual void mouseDragged(const MouseEvent& e);
-
-    virtual void update(const UpdateEvent& e);
 	
 	virtual void focusGained(const FocusEvent& e);
 	virtual void focusLost(const FocusEvent& e);
@@ -125,6 +123,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase, public Upd
     /*! \}                                                                 */
     
 	mutable Time _CurrentCaretBlinkElps;
+
+	class CaretUpdateListener : public UpdateListener
+	{
+	public:
+		CaretUpdateListener(TextAreaPtr TheTextArea);
+        virtual void update(const UpdateEvent& e);
+	private:
+		TextAreaPtr _TextArea;
+	};
+
+	friend class CarentUpdateListener;
+
+	CaretUpdateListener _CaretUpdateListener;
     /*==========================  PRIVATE  ================================*/
   private:
 
