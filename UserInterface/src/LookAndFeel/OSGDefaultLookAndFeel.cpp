@@ -69,6 +69,9 @@
 #include "Component/Text/OSGTextArea.h"
 #include "Component/Misc/OSGToolTip.h"
 
+#include "Component/Menu/OSGMenuItem.h"
+#include "Component/Menu/OSGPopupMenu.h"
+
 
 OSG_BEGIN_NAMESPACE
 
@@ -914,6 +917,113 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(DefaultToolTip);
 	
     ToolTip::getClassType().setPrototype(DefaultToolTip);
+    
+	//************************** MenuItem*****************************
+	//Default MenuItemBorder
+	LineBorderPtr DefaultMenuItemBorder = LineBorder::create();
+	beginEditCP(DefaultMenuItemBorder);
+		DefaultMenuItemBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultMenuItemBorder->setWidth(1);
+	endEditCP(DefaultMenuItemBorder);
+
+	//Default MenuItemBackground
+	ColorUIBackgroundPtr DefaultMenuItemBackground = ColorUIBackground::create();
+	beginEditCP(DefaultMenuItemBackground);
+		DefaultMenuItemBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+	endEditCP(DefaultMenuItemBackground);
+	
+	//Default MenuItemBorder
+	EmptyBorderPtr DefaultMenuItemArmedBorder = EmptyBorder::create();
+
+	//Default MenuItemBackground
+	ColorUIBackgroundPtr DefaultMenuItemArmedBackground = ColorUIBackground::create();
+	beginEditCP(DefaultMenuItemArmedBackground);
+		DefaultMenuItemArmedBackground->setColor(Color4f(0.3,0.3,1.0,1.0));
+	endEditCP(DefaultMenuItemArmedBackground);
+
+	//Default MenuItem
+	MenuItemPtr DefaultMenuItem = MenuItem::create();
+	beginEditCP(DefaultMenuItem);
+		DefaultMenuItem->setEnabled(true);
+		DefaultMenuItem->setVisible(true);
+		
+		DefaultMenuItem->setConstraints(NullFC);
+		//Sizes
+		DefaultMenuItem->setMinSize(Vec2s(0,0));
+		DefaultMenuItem->setMaxSize(Vec2s(32767,32767)); //2^15
+		DefaultMenuItem->setPreferredSize(Vec2s(100,35));
+
+		//Border
+		DefaultMenuItem->setBorder(DefaultMenuItemBorder);
+		
+		//Background
+		DefaultMenuItem->setBackground(DefaultMenuItemBackground);
+		
+		//Opacity
+		DefaultMenuItem->setOpacity(1.0);
+
+        //Accelerators
+        DefaultMenuItem->setAcceleratorModifiers(0);
+        DefaultMenuItem->setAcceleratorKey(0);
+
+        //Armed
+        DefaultMenuItem->setArmed(false);
+        DefaultMenuItem->setArmedBorder(DefaultMenuItemArmedBorder);
+        DefaultMenuItem->setArmedBackground(DefaultMenuItemArmedBackground);
+        
+		//Text
+		DefaultMenuItem->setText("");
+		DefaultMenuItem->setFont(DefaultFont);
+		DefaultMenuItem->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultMenuItem->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultMenuItem->setArmedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultMenuItem->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultMenuItem->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
+	endEditCP(DefaultMenuItem);
+	
+    MenuItem::getClassType().setPrototype(DefaultMenuItem);
+    
+	//************************** PopupMenu*****************************
+	//Default PopupMenuBorder
+	LineBorderPtr DefaultPopupMenuBorder = LineBorder::create();
+	beginEditCP(DefaultPopupMenuBorder);
+		DefaultPopupMenuBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultPopupMenuBorder->setWidth(1);
+	endEditCP(DefaultPopupMenuBorder);
+
+	//Default PopupMenuBackground
+	ColorUIBackgroundPtr DefaultPopupMenuBackground = ColorUIBackground::create();
+	beginEditCP(DefaultPopupMenuBackground);
+		DefaultPopupMenuBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+	endEditCP(DefaultPopupMenuBackground);
+
+	//Default PopupMenu
+	PopupMenuPtr DefaultPopupMenu = PopupMenu::create();
+	beginEditCP(DefaultPopupMenu);
+		DefaultPopupMenu->setEnabled(true);
+		DefaultPopupMenu->setVisible(false);
+		
+		DefaultPopupMenu->setConstraints(NullFC);
+		//Sizes
+		DefaultPopupMenu->setMinSize(Vec2s(0,0));
+		DefaultPopupMenu->setMaxSize(Vec2s(32767,32767)); //2^15
+		DefaultPopupMenu->setPreferredSize(Vec2s(100,50));
+
+		//Border
+		DefaultPopupMenu->setBorder(DefaultPopupMenuBorder);
+		
+		//Background
+		DefaultPopupMenu->setBackground(DefaultPopupMenuBackground);
+		
+		//Opacity
+		DefaultPopupMenu->setOpacity(1.0);
+
+        //SubMenu delay in seconds
+        DefaultPopupMenu->setSubMenuDelay(0.25);
+	endEditCP(DefaultPopupMenu);
+	
+    PopupMenu::getClassType().setPrototype(DefaultPopupMenu);
+    
 	/*******Borders********/
 	/*******Line Border********/
 
@@ -1047,6 +1157,8 @@ void DefaultLookAndFeel::init(void)
 		getPrototypes().addValue(DefaultPasswordField);
 		getPrototypes().addValue(DefaultTextArea);
 		getPrototypes().addValue(DefaultToolTip);
+		getPrototypes().addValue(DefaultMenuItem);
+		getPrototypes().addValue(DefaultPopupMenu);
 	endEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);
 }
 /*-------------------------------------------------------------------------*\

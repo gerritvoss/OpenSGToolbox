@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -131,6 +131,55 @@ SFBool *MenuItemBase::getSFArmed(void)
     return &_sfArmed;
 }
 
+//! Get the MenuItem::_sfArmedBorder field.
+inline
+SFBorderPtr *MenuItemBase::getSFArmedBorder(void)
+{
+    return &_sfArmedBorder;
+}
+
+//! Get the MenuItem::_sfArmedBackground field.
+inline
+SFUIBackgroundPtr *MenuItemBase::getSFArmedBackground(void)
+{
+    return &_sfArmedBackground;
+}
+
+//! Get the MenuItem::_sfArmedTextColor field.
+inline
+SFColor4f *MenuItemBase::getSFArmedTextColor(void)
+{
+    return &_sfArmedTextColor;
+}
+
+//! Get the MenuItem::_sfFocusedTextColor field.
+inline
+SFColor4f *MenuItemBase::getSFFocusedTextColor(void)
+{
+    return &_sfFocusedTextColor;
+}
+
+//! Get the MenuItem::_sfRolloverTextColor field.
+inline
+SFColor4f *MenuItemBase::getSFRolloverTextColor(void)
+{
+    return &_sfRolloverTextColor;
+}
+
+//! Get the MenuItem::_sfDisabledTextColor field.
+inline
+SFColor4f *MenuItemBase::getSFDisabledTextColor(void)
+{
+    return &_sfDisabledTextColor;
+}
+
+//! Get the MenuItem::_sfTextColor field.
+inline
+SFColor4f *MenuItemBase::getSFTextColor(void)
+{
+    return &_sfTextColor;
+}
+
 
 //! Get the value of the MenuItem::_sfFont field.
 inline
@@ -235,6 +284,153 @@ inline
 void MenuItemBase::setArmed(const bool &value)
 {
     _sfArmed.setValue(value);
+}
+
+//! Get the value of the MenuItem::_sfArmedBorder field.
+inline
+BorderPtr &MenuItemBase::getArmedBorder(void)
+{
+    return _sfArmedBorder.getValue();
+}
+
+//! Get the value of the MenuItem::_sfArmedBorder field.
+inline
+const BorderPtr &MenuItemBase::getArmedBorder(void) const
+{
+    return _sfArmedBorder.getValue();
+}
+
+//! Set the value of the MenuItem::_sfArmedBorder field.
+inline
+void MenuItemBase::setArmedBorder(const BorderPtr &value)
+{
+    _sfArmedBorder.setValue(value);
+}
+
+//! Get the value of the MenuItem::_sfArmedBackground field.
+inline
+UIBackgroundPtr &MenuItemBase::getArmedBackground(void)
+{
+    return _sfArmedBackground.getValue();
+}
+
+//! Get the value of the MenuItem::_sfArmedBackground field.
+inline
+const UIBackgroundPtr &MenuItemBase::getArmedBackground(void) const
+{
+    return _sfArmedBackground.getValue();
+}
+
+//! Set the value of the MenuItem::_sfArmedBackground field.
+inline
+void MenuItemBase::setArmedBackground(const UIBackgroundPtr &value)
+{
+    _sfArmedBackground.setValue(value);
+}
+
+//! Get the value of the MenuItem::_sfArmedTextColor field.
+inline
+Color4f &MenuItemBase::getArmedTextColor(void)
+{
+    return _sfArmedTextColor.getValue();
+}
+
+//! Get the value of the MenuItem::_sfArmedTextColor field.
+inline
+const Color4f &MenuItemBase::getArmedTextColor(void) const
+{
+    return _sfArmedTextColor.getValue();
+}
+
+//! Set the value of the MenuItem::_sfArmedTextColor field.
+inline
+void MenuItemBase::setArmedTextColor(const Color4f &value)
+{
+    _sfArmedTextColor.setValue(value);
+}
+
+//! Get the value of the MenuItem::_sfFocusedTextColor field.
+inline
+Color4f &MenuItemBase::getFocusedTextColor(void)
+{
+    return _sfFocusedTextColor.getValue();
+}
+
+//! Get the value of the MenuItem::_sfFocusedTextColor field.
+inline
+const Color4f &MenuItemBase::getFocusedTextColor(void) const
+{
+    return _sfFocusedTextColor.getValue();
+}
+
+//! Set the value of the MenuItem::_sfFocusedTextColor field.
+inline
+void MenuItemBase::setFocusedTextColor(const Color4f &value)
+{
+    _sfFocusedTextColor.setValue(value);
+}
+
+//! Get the value of the MenuItem::_sfRolloverTextColor field.
+inline
+Color4f &MenuItemBase::getRolloverTextColor(void)
+{
+    return _sfRolloverTextColor.getValue();
+}
+
+//! Get the value of the MenuItem::_sfRolloverTextColor field.
+inline
+const Color4f &MenuItemBase::getRolloverTextColor(void) const
+{
+    return _sfRolloverTextColor.getValue();
+}
+
+//! Set the value of the MenuItem::_sfRolloverTextColor field.
+inline
+void MenuItemBase::setRolloverTextColor(const Color4f &value)
+{
+    _sfRolloverTextColor.setValue(value);
+}
+
+//! Get the value of the MenuItem::_sfDisabledTextColor field.
+inline
+Color4f &MenuItemBase::getDisabledTextColor(void)
+{
+    return _sfDisabledTextColor.getValue();
+}
+
+//! Get the value of the MenuItem::_sfDisabledTextColor field.
+inline
+const Color4f &MenuItemBase::getDisabledTextColor(void) const
+{
+    return _sfDisabledTextColor.getValue();
+}
+
+//! Set the value of the MenuItem::_sfDisabledTextColor field.
+inline
+void MenuItemBase::setDisabledTextColor(const Color4f &value)
+{
+    _sfDisabledTextColor.setValue(value);
+}
+
+//! Get the value of the MenuItem::_sfTextColor field.
+inline
+Color4f &MenuItemBase::getTextColor(void)
+{
+    return _sfTextColor.getValue();
+}
+
+//! Get the value of the MenuItem::_sfTextColor field.
+inline
+const Color4f &MenuItemBase::getTextColor(void) const
+{
+    return _sfTextColor.getValue();
+}
+
+//! Set the value of the MenuItem::_sfTextColor field.
+inline
+void MenuItemBase::setTextColor(const Color4f &value)
+{
+    _sfTextColor.setValue(value);
 }
 
 

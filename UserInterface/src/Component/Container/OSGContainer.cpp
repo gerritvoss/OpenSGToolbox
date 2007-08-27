@@ -100,14 +100,10 @@ void Container::setAllInsets(UInt32 inset)
 void Container::drawInternal(const GraphicsPtr TheGraphics) const
 {
     //Render all of my Child Components
-	Pnt2s borderTopLeft, BorderBottomRight;
-	//getInsideInsetsBounds(borderTopLeft, BorderBottomRight);
-    //glTranslatef(borderTopLeft.x(), borderTopLeft.y(), 0);
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
         getChildren().getValue(i)->draw(TheGraphics);
     }
-    //glTranslatef(-borderTopLeft.x(), -borderTopLeft.y(), 0);
 }
 void Container::mouseClicked(const MouseEvent& e)
 {

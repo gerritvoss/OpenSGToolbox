@@ -55,5 +55,65 @@ A UI MenuItem.
 		defaultValue="false"
 		access="public"
 	>
+    </Field>
+    <Field
+          name="ArmedBorder"
+          type="BorderPtr"
+          cardinality="single"
+          visibility="external"
+          defaultValue="NullFC"
+          header="Border/OSGBorder.h"
+          access="public"
+          >
+    </Field>
+    <Field
+          name="ArmedBackground"
+          type="UIBackgroundPtr"
+          cardinality="single"
+          visibility="external"
+          defaultValue="NullFC"
+          header="Background/OSGUIBackground.h"
+          access="public"
+          >
+	</Field>
+    <Field
+          name="ArmedTextColor"
+          type="Color4f"
+          cardinality="single"
+          visibility="external"
+          access="public"
+          >
+    </Field>
+    <Field
+          name="FocusedTextColor"
+          type="Color4f"
+          cardinality="single"
+          visibility="external"
+          access="public"
+          >
+    </Field>
+    <Field
+          name="RolloverTextColor"
+          type="Color4f"
+          cardinality="single"
+          visibility="external"
+          access="public"
+          >
+    </Field>
+    <Field
+          name="DisabledTextColor"
+          type="Color4f"
+          cardinality="single"
+          visibility="external"
+          access="public"
+          >
+    </Field>
+    <Field
+          name="TextColor"
+          type="Color4f"
+          cardinality="single"
+          visibility="external"
+          access="public"
+          >
 	</Field>
 </FieldContainer>

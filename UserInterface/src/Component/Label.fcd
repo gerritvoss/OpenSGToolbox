@@ -48,14 +48,6 @@ A UI Label.
 	>
 	</Field>
 	<Field
-		name="ActiveTextColor"
-		type="Color4f"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
 		name="FocusedTextColor"
 		type="Color4f"
 		cardinality="single"

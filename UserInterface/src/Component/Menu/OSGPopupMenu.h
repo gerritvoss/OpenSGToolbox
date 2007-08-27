@@ -46,6 +46,7 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGPopupMenuBase.h"
+#include "OSGMenuItemFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,6 +78,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
+    void addItem(MenuItemPtr Item);
+    void addItem(MenuItemPtr Item, const UInt32& Index);
+    void removeItem(MenuItemPtr Item);
+    void removeItem(const UInt32& Index);
+    MenuItemPtr getItem(const UInt32& Index);
+    UInt32 getNumItems(void) const;
+    
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -96,10 +104,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
     /*! \{                                                                 */
 
     virtual ~PopupMenu(void); 
-
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
     /*! \}                                                                 */
     
+    virtual void updateLayout(void);
     /*==========================  PRIVATE  ================================*/
   private:
 

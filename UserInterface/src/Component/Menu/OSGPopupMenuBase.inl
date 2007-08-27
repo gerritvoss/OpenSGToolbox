@@ -96,13 +96,6 @@ PopupMenuPtr PopupMenuBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the PopupMenu::_mfItems field.
-inline
-MFMenuItemPtr *PopupMenuBase::getMFItems(void)
-{
-    return &_mfItems;
-}
-
 //! Get the PopupMenu::_sfSubMenuDelay field.
 inline
 SFReal32 *PopupMenuBase::getSFSubMenuDelay(void)
@@ -160,27 +153,6 @@ void PopupMenuBase::setInvoker(const ComponentPtr &value)
     _sfInvoker.setValue(value);
 }
 
-
-//! Get the value of the \a index element the PopupMenu::_mfItems field.
-inline
-MenuItemPtr &PopupMenuBase::getItems(const UInt32 index)
-{
-    return _mfItems[index];
-}
-
-//! Get the PopupMenu::_mfItems field.
-inline
-MFMenuItemPtr &PopupMenuBase::getItems(void)
-{
-    return _mfItems;
-}
-
-//! Get the PopupMenu::_mfItems field.
-inline
-const MFMenuItemPtr &PopupMenuBase::getItems(void) const
-{
-    return _mfItems;
-}
 
 OSG_END_NAMESPACE
 

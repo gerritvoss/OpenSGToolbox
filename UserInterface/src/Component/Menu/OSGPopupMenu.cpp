@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGPopupMenu.h"
+#include "Component/Container/OSGContainer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -70,15 +71,93 @@ A UI Menu.
 void PopupMenu::initMethod (void)
 {
 }
-
-void PopupMenu::drawInternal(const GraphicsPtr TheGraphics) const
-{
-}
-
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
+void PopupMenu::updateLayout(void)
+{
+	//Determine the Max Preferred Width of my MenuItems
+	UInt16 MaxWidth(0);
+	UInt16 TotalHeight(0);
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        if(MaxWidth < getChildren().getValue(i)->getPreferredSize().x())
+        {
+            MaxWidth = getChildren().getValue(i)->getPreferredSize().x();
+	    }
+	    TotalHeight += getChildren().getValue(i)->getPreferredSize().y();
+	}
+
+    //Set My preferred Size
+	Pnt2s TopLeft, BottomRight;
+	Pnt2s InsetsTopLeft, InsetsBottomRight;
+	getBounds(TopLeft, BottomRight);
+	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+
+	Vec2s InsetSize( (BottomRight-TopLeft) - (InsetsBottomRight-InsetsTopLeft) );
+    beginEditCP(PopupMenuPtr(this), PreferredSizeFieldMask);
+        setPreferredSize(Vec2s(MaxWidth+InsetSize.x(), TotalHeight+InsetSize.y()));
+        //Sneakily set my size
+        setSize(getPreferredSize());
+    endEditCP(PopupMenuPtr(this), PreferredSizeFieldMask);
+    
+	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+	
+	//Now position and size the Items
+	UInt16 TopOffset(InsetsTopLeft.y());
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        beginEditCP(getChildren().getValue(i), SizeFieldMask | PositionFieldMask);
+            getChildren().getValue(i)->setSize(Vec2s(MaxWidth, getChildren().getValue(i)->getPreferredSize().y()));
+            getChildren().getValue(i)->setPosition(Pnt2s(InsetsTopLeft.x(), TopOffset));
+        endEditCP(getChildren().getValue(i), SizeFieldMask | PositionFieldMask);
+
+        TopOffset += getChildren().getValue(i)->getPreferredSize().y();
+    }
+}
+
+void PopupMenu::addItem(MenuItemPtr Item)
+{
+    beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
+        getChildren().push_back(Item);
+    endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
+}
+
+void PopupMenu::addItem(MenuItemPtr Item, const UInt32& Index)
+{
+    if(Index < getChildren().size())
+    {
+        MFComponentPtr::iterator Itor;
+        for(UInt32 i(0) ; i<Index ; ++i){++Itor;}
+        beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
+            getChildren().insert(Itor, Item);
+        endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
+    }
+}
+
+void PopupMenu::removeItem(MenuItemPtr Item)
+{
+    MFComponentPtr::iterator FindResult = getChildren().find(Item);
+    if(FindResult != getChildren().end())
+    {
+        beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
+            getChildren().erase(FindResult);
+        endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
+    }
+}
+
+void PopupMenu::removeItem(const UInt32& Index)
+{
+    if(Index < getChildren().size())
+    {
+        MFComponentPtr::iterator Itor;
+        for(UInt32 i(0) ; i<Index ; ++i){++Itor;}
+        beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
+            getChildren().erase(Itor);
+        endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
+    }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -79,6 +79,27 @@ const OSG::BitVector  MenuItemBase::AcceleratorKeyFieldMask =
 const OSG::BitVector  MenuItemBase::ArmedFieldMask = 
     (TypeTraits<BitVector>::One << MenuItemBase::ArmedFieldId);
 
+const OSG::BitVector  MenuItemBase::ArmedBorderFieldMask = 
+    (TypeTraits<BitVector>::One << MenuItemBase::ArmedBorderFieldId);
+
+const OSG::BitVector  MenuItemBase::ArmedBackgroundFieldMask = 
+    (TypeTraits<BitVector>::One << MenuItemBase::ArmedBackgroundFieldId);
+
+const OSG::BitVector  MenuItemBase::ArmedTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << MenuItemBase::ArmedTextColorFieldId);
+
+const OSG::BitVector  MenuItemBase::FocusedTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << MenuItemBase::FocusedTextColorFieldId);
+
+const OSG::BitVector  MenuItemBase::RolloverTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << MenuItemBase::RolloverTextColorFieldId);
+
+const OSG::BitVector  MenuItemBase::DisabledTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << MenuItemBase::DisabledTextColorFieldId);
+
+const OSG::BitVector  MenuItemBase::TextColorFieldMask = 
+    (TypeTraits<BitVector>::One << MenuItemBase::TextColorFieldId);
+
 const OSG::BitVector MenuItemBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -99,6 +120,27 @@ const OSG::BitVector MenuItemBase::MTInfluenceMask =
     
 */
 /*! \var bool            MenuItemBase::_sfArmed
+    
+*/
+/*! \var BorderPtr       MenuItemBase::_sfArmedBorder
+    
+*/
+/*! \var UIBackgroundPtr MenuItemBase::_sfArmedBackground
+    
+*/
+/*! \var Color4f         MenuItemBase::_sfArmedTextColor
+    
+*/
+/*! \var Color4f         MenuItemBase::_sfFocusedTextColor
+    
+*/
+/*! \var Color4f         MenuItemBase::_sfRolloverTextColor
+    
+*/
+/*! \var Color4f         MenuItemBase::_sfDisabledTextColor
+    
+*/
+/*! \var Color4f         MenuItemBase::_sfTextColor
     
 */
 
@@ -130,7 +172,42 @@ FieldDescription *MenuItemBase::_desc[] =
                      "Armed", 
                      ArmedFieldId, ArmedFieldMask,
                      false,
-                     (FieldAccessMethod) &MenuItemBase::getSFArmed)
+                     (FieldAccessMethod) &MenuItemBase::getSFArmed),
+    new FieldDescription(SFBorderPtr::getClassType(), 
+                     "ArmedBorder", 
+                     ArmedBorderFieldId, ArmedBorderFieldMask,
+                     false,
+                     (FieldAccessMethod) &MenuItemBase::getSFArmedBorder),
+    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+                     "ArmedBackground", 
+                     ArmedBackgroundFieldId, ArmedBackgroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &MenuItemBase::getSFArmedBackground),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "ArmedTextColor", 
+                     ArmedTextColorFieldId, ArmedTextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &MenuItemBase::getSFArmedTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "FocusedTextColor", 
+                     FocusedTextColorFieldId, FocusedTextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &MenuItemBase::getSFFocusedTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "RolloverTextColor", 
+                     RolloverTextColorFieldId, RolloverTextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &MenuItemBase::getSFRolloverTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "DisabledTextColor", 
+                     DisabledTextColorFieldId, DisabledTextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &MenuItemBase::getSFDisabledTextColor),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "TextColor", 
+                     TextColorFieldId, TextColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &MenuItemBase::getSFTextColor)
 };
 
 
@@ -211,6 +288,13 @@ MenuItemBase::MenuItemBase(void) :
     _sfAcceleratorModifiers   (UInt32(0)), 
     _sfAcceleratorKey         (UInt32(0)), 
     _sfArmed                  (bool(false)), 
+    _sfArmedBorder            (BorderPtr(NullFC)), 
+    _sfArmedBackground        (UIBackgroundPtr(NullFC)), 
+    _sfArmedTextColor         (), 
+    _sfFocusedTextColor       (), 
+    _sfRolloverTextColor      (), 
+    _sfDisabledTextColor      (), 
+    _sfTextColor              (), 
     Inherited() 
 {
 }
@@ -225,6 +309,13 @@ MenuItemBase::MenuItemBase(const MenuItemBase &source) :
     _sfAcceleratorModifiers   (source._sfAcceleratorModifiers   ), 
     _sfAcceleratorKey         (source._sfAcceleratorKey         ), 
     _sfArmed                  (source._sfArmed                  ), 
+    _sfArmedBorder            (source._sfArmedBorder            ), 
+    _sfArmedBackground        (source._sfArmedBackground        ), 
+    _sfArmedTextColor         (source._sfArmedTextColor         ), 
+    _sfFocusedTextColor       (source._sfFocusedTextColor       ), 
+    _sfRolloverTextColor      (source._sfRolloverTextColor      ), 
+    _sfDisabledTextColor      (source._sfDisabledTextColor      ), 
+    _sfTextColor              (source._sfTextColor              ), 
     Inherited                 (source)
 {
 }
@@ -266,6 +357,41 @@ UInt32 MenuItemBase::getBinSize(const BitVector &whichField)
         returnValue += _sfArmed.getBinSize();
     }
 
+    if(FieldBits::NoField != (ArmedBorderFieldMask & whichField))
+    {
+        returnValue += _sfArmedBorder.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ArmedBackgroundFieldMask & whichField))
+    {
+        returnValue += _sfArmedBackground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ArmedTextColorFieldMask & whichField))
+    {
+        returnValue += _sfArmedTextColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+    {
+        returnValue += _sfFocusedTextColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+    {
+        returnValue += _sfRolloverTextColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+    {
+        returnValue += _sfDisabledTextColor.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+    {
+        returnValue += _sfTextColor.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -298,6 +424,41 @@ void MenuItemBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ArmedFieldMask & whichField))
     {
         _sfArmed.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ArmedBorderFieldMask & whichField))
+    {
+        _sfArmedBorder.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ArmedBackgroundFieldMask & whichField))
+    {
+        _sfArmedBackground.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ArmedTextColorFieldMask & whichField))
+    {
+        _sfArmedTextColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+    {
+        _sfFocusedTextColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+    {
+        _sfRolloverTextColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+    {
+        _sfDisabledTextColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+    {
+        _sfTextColor.copyToBin(pMem);
     }
 
 
@@ -333,6 +494,41 @@ void MenuItemBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfArmed.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ArmedBorderFieldMask & whichField))
+    {
+        _sfArmedBorder.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ArmedBackgroundFieldMask & whichField))
+    {
+        _sfArmedBackground.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ArmedTextColorFieldMask & whichField))
+    {
+        _sfArmedTextColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+    {
+        _sfFocusedTextColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+    {
+        _sfRolloverTextColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+    {
+        _sfDisabledTextColor.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+    {
+        _sfTextColor.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -358,6 +554,27 @@ void MenuItemBase::executeSyncImpl(      MenuItemBase *pOther,
     if(FieldBits::NoField != (ArmedFieldMask & whichField))
         _sfArmed.syncWith(pOther->_sfArmed);
 
+    if(FieldBits::NoField != (ArmedBorderFieldMask & whichField))
+        _sfArmedBorder.syncWith(pOther->_sfArmedBorder);
+
+    if(FieldBits::NoField != (ArmedBackgroundFieldMask & whichField))
+        _sfArmedBackground.syncWith(pOther->_sfArmedBackground);
+
+    if(FieldBits::NoField != (ArmedTextColorFieldMask & whichField))
+        _sfArmedTextColor.syncWith(pOther->_sfArmedTextColor);
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+        _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+        _sfRolloverTextColor.syncWith(pOther->_sfRolloverTextColor);
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+        _sfDisabledTextColor.syncWith(pOther->_sfDisabledTextColor);
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+        _sfTextColor.syncWith(pOther->_sfTextColor);
+
 
 }
 #else
@@ -382,6 +599,27 @@ void MenuItemBase::executeSyncImpl(      MenuItemBase *pOther,
 
     if(FieldBits::NoField != (ArmedFieldMask & whichField))
         _sfArmed.syncWith(pOther->_sfArmed);
+
+    if(FieldBits::NoField != (ArmedBorderFieldMask & whichField))
+        _sfArmedBorder.syncWith(pOther->_sfArmedBorder);
+
+    if(FieldBits::NoField != (ArmedBackgroundFieldMask & whichField))
+        _sfArmedBackground.syncWith(pOther->_sfArmedBackground);
+
+    if(FieldBits::NoField != (ArmedTextColorFieldMask & whichField))
+        _sfArmedTextColor.syncWith(pOther->_sfArmedTextColor);
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+        _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);
+
+    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
+        _sfRolloverTextColor.syncWith(pOther->_sfRolloverTextColor);
+
+    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
+        _sfDisabledTextColor.syncWith(pOther->_sfDisabledTextColor);
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+        _sfTextColor.syncWith(pOther->_sfTextColor);
 
 
 

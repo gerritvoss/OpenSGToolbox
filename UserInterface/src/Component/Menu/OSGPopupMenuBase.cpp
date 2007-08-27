@@ -64,9 +64,6 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  PopupMenuBase::ItemsFieldMask = 
-    (TypeTraits<BitVector>::One << PopupMenuBase::ItemsFieldId);
-
 const OSG::BitVector  PopupMenuBase::SubMenuDelayFieldMask = 
     (TypeTraits<BitVector>::One << PopupMenuBase::SubMenuDelayFieldId);
 
@@ -80,9 +77,6 @@ const OSG::BitVector PopupMenuBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var MenuItemPtr     PopupMenuBase::_mfItems
-    
-*/
 /*! \var Real32          PopupMenuBase::_sfSubMenuDelay
     
 */
@@ -94,11 +88,6 @@ const OSG::BitVector PopupMenuBase::MTInfluenceMask =
 
 FieldDescription *PopupMenuBase::_desc[] = 
 {
-    new FieldDescription(MFMenuItemPtr::getClassType(), 
-                     "Items", 
-                     ItemsFieldId, ItemsFieldMask,
-                     false,
-                     (FieldAccessMethod) &PopupMenuBase::getMFItems),
     new FieldDescription(SFReal32::getClassType(), 
                      "SubMenuDelay", 
                      SubMenuDelayFieldId, SubMenuDelayFieldMask,
@@ -114,7 +103,7 @@ FieldDescription *PopupMenuBase::_desc[] =
 
 FieldContainerType PopupMenuBase::_type(
     "PopupMenu",
-    "Component",
+    "Container",
     NULL,
     (PrototypeCreateF) &PopupMenuBase::createEmpty,
     PopupMenu::initMethod,
@@ -174,7 +163,6 @@ void PopupMenuBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
-    _mfItems.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -185,7 +173,6 @@ void PopupMenuBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 PopupMenuBase::PopupMenuBase(void) :
-    _mfItems                  (), 
     _sfSubMenuDelay           (Real32(0.5)), 
     _sfInvoker                (ComponentPtr(NullFC)), 
     Inherited() 
@@ -197,7 +184,6 @@ PopupMenuBase::PopupMenuBase(void) :
 #endif
 
 PopupMenuBase::PopupMenuBase(const PopupMenuBase &source) :
-    _mfItems                  (source._mfItems                  ), 
     _sfSubMenuDelay           (source._sfSubMenuDelay           ), 
     _sfInvoker                (source._sfInvoker                ), 
     Inherited                 (source)
@@ -215,11 +201,6 @@ PopupMenuBase::~PopupMenuBase(void)
 UInt32 PopupMenuBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
-
-    if(FieldBits::NoField != (ItemsFieldMask & whichField))
-    {
-        returnValue += _mfItems.getBinSize();
-    }
 
     if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
     {
@@ -240,11 +221,6 @@ void PopupMenuBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ItemsFieldMask & whichField))
-    {
-        _mfItems.copyToBin(pMem);
-    }
-
     if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
     {
         _sfSubMenuDelay.copyToBin(pMem);
@@ -262,11 +238,6 @@ void PopupMenuBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
-
-    if(FieldBits::NoField != (ItemsFieldMask & whichField))
-    {
-        _mfItems.copyFromBin(pMem);
-    }
 
     if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
     {
@@ -287,9 +258,6 @@ void PopupMenuBase::executeSyncImpl(      PopupMenuBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
-
-    if(FieldBits::NoField != (ItemsFieldMask & whichField))
-        _mfItems.syncWith(pOther->_mfItems);
 
     if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
         _sfSubMenuDelay.syncWith(pOther->_sfSubMenuDelay);
@@ -314,9 +282,6 @@ void PopupMenuBase::executeSyncImpl(      PopupMenuBase *pOther,
         _sfInvoker.syncWith(pOther->_sfInvoker);
 
 
-    if(FieldBits::NoField != (ItemsFieldMask & whichField))
-        _mfItems.syncWith(pOther->_mfItems, sInfo);
-
 
 }
 
@@ -325,9 +290,6 @@ void PopupMenuBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
-
-    if(FieldBits::NoField != (ItemsFieldMask & whichField))
-        _mfItems.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif
@@ -342,7 +304,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<PopupMenuPtr>::_type("PopupMenuPtr", "ComponentPtr");
+DataType FieldDataTraits<PopupMenuPtr>::_type("PopupMenuPtr", "ContainerPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(PopupMenuPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);

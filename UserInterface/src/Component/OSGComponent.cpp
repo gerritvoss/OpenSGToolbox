@@ -54,6 +54,7 @@
 #include "Component/Misc/OSGToolTip.h"
 #include "Util/OSGUIDrawUtils.h"
 #include "LookAndFeel/OSGLookAndFeelManager.h"
+#include "Component/Menu/OSGPopupMenu.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -363,6 +364,21 @@ void Component::mouseExited(const MouseEvent& e)
 void Component::mousePressed(const MouseEvent& e)
 {
 	produceMousePressed(e);
+
+	if(e.getButton() == MouseEvent::BUTTON3
+	&& getPopupMenu() != NullFC
+	&& getParentFrame() != NullFC)
+	{
+	    beginEditCP(getPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
+	       getPopupMenu()->setInvoker(ComponentPtr(this));
+	       getPopupMenu()->setVisible(true);
+	       getPopupMenu()->setPosition(DrawingSurfaceToComponent(e.getLocation(),getParentFrame()));
+	    endEditCP(getPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
+	    
+        beginEditCP(getParentFrame(), Frame::ActivePopupMenuFieldMask);
+            getParentFrame()->setActivePopupMenu(getPopupMenu());
+        endEditCP(getParentFrame(), Frame::ActivePopupMenuFieldMask);
+	}
 }
 
 void Component::mouseReleased(const MouseEvent& e)

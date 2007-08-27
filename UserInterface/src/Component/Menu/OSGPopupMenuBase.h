@@ -65,9 +65,8 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/OSGComponent.h" // Parent
+#include "Component/Container/OSGContainer.h" // Parent
 
-#include "Component/Menu/OSGMenuItem.h" // Items type
 #include <OpenSG/OSGReal32Fields.h> // SubMenuDelay type
 #include "Component/OSGComponentFields.h" // Invoker type
 
@@ -80,11 +79,11 @@ class BinaryDataHandler;
 
 //! \brief PopupMenu Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Component
+class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Container
 {
   private:
 
-    typedef Component    Inherited;
+    typedef Container    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -93,13 +92,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Component
 
     enum
     {
-        ItemsFieldId        = Inherited::NextFieldId,
-        SubMenuDelayFieldId = ItemsFieldId        + 1,
+        SubMenuDelayFieldId = Inherited::NextFieldId,
         InvokerFieldId      = SubMenuDelayFieldId + 1,
         NextFieldId         = InvokerFieldId      + 1
     };
 
-    static const OSG::BitVector ItemsFieldMask;
     static const OSG::BitVector SubMenuDelayFieldMask;
     static const OSG::BitVector InvokerFieldMask;
 
@@ -128,7 +125,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Component
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFMenuItemPtr       *getMFItems          (void);
            SFReal32            *getSFSubMenuDelay   (void);
            SFComponentPtr      *getSFInvoker        (void);
 
@@ -136,9 +132,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Component
      const Real32              &getSubMenuDelay   (void) const;
            ComponentPtr        &getInvoker        (void);
      const ComponentPtr        &getInvoker        (void) const;
-           MenuItemPtr         &getItems          (const UInt32 index);
-           MFMenuItemPtr       &getItems          (void);
-     const MFMenuItemPtr       &getItems          (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -189,7 +182,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Component
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFMenuItemPtr       _mfItems;
     SFReal32            _sfSubMenuDelay;
     SFComponentPtr      _sfInvoker;
 

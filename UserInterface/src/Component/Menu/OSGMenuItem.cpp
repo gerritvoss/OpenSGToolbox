@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGMenuItem.h"
+#include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,8 +79,104 @@ void MenuItem::initMethod (void)
 
 void MenuItem::drawInternal(const GraphicsPtr TheGraphics) const
 {
+   Pnt2s TopLeft, BottomRight;
+   getInsideBorderBounds(TopLeft, BottomRight);
+
+   //If I have Text Then Draw it
+   if(getText() != "" && getFont() != NullFC)
+   {
+      //Calculate Alignment
+      Pnt2s AlignedPosition;
+      Pnt2s TextTopLeft, TextBottomRight;
+      getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+
+      AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),0.5, 0.0);
+
+	  //Draw the Text
+      TheGraphics->drawText(AlignedPosition, getText(), getFont(), getDrawnTextColor(), getOpacity());
+   }
 }
 
+Color4f MenuItem::getDrawnTextColor(void) const
+{
+    if(getEnabled())
+    {
+        //if(getFocused())
+        //{
+        //    return getFocusedTextColor();
+        //}
+        if(getArmed())
+        {
+            return getArmedTextColor();
+        }
+        if(_MouseInComponentLastMouse)
+        {
+            return getRolloverTextColor();
+        }
+        else
+        {
+            return getTextColor();
+        }
+    }
+    else
+    {
+        return getDisabledTextColor();
+    }
+}
+
+BorderPtr MenuItem::getDrawnBorder(void) const
+{
+    if(getEnabled())
+    {
+        //if(getFocused())
+        //{
+        //    return getFocusedTextColor();
+        //}
+        if(getArmed())
+        {
+            return getArmedBorder();
+        }
+        else if(_MouseInComponentLastMouse)
+        {
+            return getRolloverBorder();
+        }
+        else
+        {
+            return getBorder();
+        }
+    }
+    else
+    {
+        return getDisabledBorder();
+    }
+}
+
+UIBackgroundPtr MenuItem::getDrawnBackground(void) const
+{
+    if(getEnabled())
+    {
+        //if(getFocused())
+        //{
+        //    return getFocusedTextColor();
+        //}
+        if(getArmed())
+        {
+            return getArmedBackground();
+        }
+        else if(_MouseInComponentLastMouse)
+        {
+            return getRolloverBackground();
+        }
+        else
+        {
+            return getBackground();
+        }
+    }
+    else
+    {
+        return getDisabledBackground();
+    }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

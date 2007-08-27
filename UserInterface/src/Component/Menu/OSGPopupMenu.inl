@@ -1,3 +1,4 @@
+
 /*---------------------------------------------------------------------------*\
  *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
@@ -39,8 +40,21 @@
 //---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGMenuItem.h"
 
 OSG_BEGIN_NAMESPACE
+
+inline
+MenuItemPtr PopupMenu::getItem(const UInt32& Index)
+{
+    return MenuItem::Ptr::dcast(getChildren().getValue(Index));
+}
+
+inline
+UInt32 PopupMenu::getNumItems(void) const
+{
+    return getChildren().size();
+}
 
 OSG_END_NAMESPACE
 

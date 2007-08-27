@@ -98,6 +98,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
     virtual ~MenuItem(void); 
 
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
+	virtual Color4f getDrawnTextColor(void) const;
+    virtual BorderPtr getDrawnBorder(void) const;
+    virtual UIBackgroundPtr getDrawnBackground(void) const;
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/

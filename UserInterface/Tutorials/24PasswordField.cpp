@@ -132,7 +132,8 @@ int main(int argc, char **argv)
 	******************************************************/
 
 	beginEditCP(ThePasswordField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
-		| TextComponent::TextFieldMask | TextComponent::TextColorFieldMask | TextComponent::FontFieldMask | PasswordField::VerticalAlignmentFieldMask 
+		| TextComponent::TextFieldMask | TextComponent::TextColorFieldMask | TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask 
+        | PasswordField::EchoCharFieldMask
 		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
 			// Determine initial size of PasswordField
 		ThePasswordField->setPreferredSize( Vec2s (100, 50) );
@@ -143,6 +144,7 @@ int main(int argc, char **argv)
 		ThePasswordField->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
 			// Determine the font and initial text
 		ThePasswordField->setText("What");
+		ThePasswordField->setEchoChar("#");
 		ThePasswordField->setFont(sampleFont);
 			// Determine the area that is to be selected at first 
 			// so the selection would be "a" in this case

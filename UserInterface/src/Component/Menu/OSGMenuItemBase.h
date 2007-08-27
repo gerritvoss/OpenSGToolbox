@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -72,6 +72,13 @@
 #include <OpenSG/OSGUInt32Fields.h> // AcceleratorModifiers type
 #include <OpenSG/OSGUInt32Fields.h> // AcceleratorKey type
 #include <OpenSG/OSGBoolFields.h> // Armed type
+#include "Border/OSGBorder.h" // ArmedBorder type
+#include "Background/OSGUIBackground.h" // ArmedBackground type
+#include <OpenSG/OSGColor4fFields.h> // ArmedTextColor type
+#include <OpenSG/OSGColor4fFields.h> // FocusedTextColor type
+#include <OpenSG/OSGColor4fFields.h> // RolloverTextColor type
+#include <OpenSG/OSGColor4fFields.h> // DisabledTextColor type
+#include <OpenSG/OSGColor4fFields.h> // TextColor type
 
 #include "OSGMenuItemFields.h"
 
@@ -100,7 +107,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
         AcceleratorModifiersFieldId = TextFieldId                 + 1,
         AcceleratorKeyFieldId       = AcceleratorModifiersFieldId + 1,
         ArmedFieldId                = AcceleratorKeyFieldId       + 1,
-        NextFieldId                 = ArmedFieldId                + 1
+        ArmedBorderFieldId          = ArmedFieldId                + 1,
+        ArmedBackgroundFieldId      = ArmedBorderFieldId          + 1,
+        ArmedTextColorFieldId       = ArmedBackgroundFieldId      + 1,
+        FocusedTextColorFieldId     = ArmedTextColorFieldId       + 1,
+        RolloverTextColorFieldId    = FocusedTextColorFieldId     + 1,
+        DisabledTextColorFieldId    = RolloverTextColorFieldId    + 1,
+        TextColorFieldId            = DisabledTextColorFieldId    + 1,
+        NextFieldId                 = TextColorFieldId            + 1
     };
 
     static const OSG::BitVector FontFieldMask;
@@ -108,6 +122,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
     static const OSG::BitVector AcceleratorModifiersFieldMask;
     static const OSG::BitVector AcceleratorKeyFieldMask;
     static const OSG::BitVector ArmedFieldMask;
+    static const OSG::BitVector ArmedBorderFieldMask;
+    static const OSG::BitVector ArmedBackgroundFieldMask;
+    static const OSG::BitVector ArmedTextColorFieldMask;
+    static const OSG::BitVector FocusedTextColorFieldMask;
+    static const OSG::BitVector RolloverTextColorFieldMask;
+    static const OSG::BitVector DisabledTextColorFieldMask;
+    static const OSG::BitVector TextColorFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -139,6 +160,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
            SFUInt32            *getSFAcceleratorModifiers(void);
            SFUInt32            *getSFAcceleratorKey (void);
            SFBool              *getSFArmed          (void);
+           SFBorderPtr         *getSFArmedBorder    (void);
+           SFUIBackgroundPtr   *getSFArmedBackground(void);
+           SFColor4f           *getSFArmedTextColor (void);
+           SFColor4f           *getSFFocusedTextColor(void);
+           SFColor4f           *getSFRolloverTextColor(void);
+           SFColor4f           *getSFDisabledTextColor(void);
+           SFColor4f           *getSFTextColor      (void);
 
            UIFontPtr           &getFont           (void);
      const UIFontPtr           &getFont           (void) const;
@@ -150,6 +178,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
      const UInt32              &getAcceleratorKey (void) const;
            bool                &getArmed          (void);
      const bool                &getArmed          (void) const;
+           BorderPtr           &getArmedBorder    (void);
+     const BorderPtr           &getArmedBorder    (void) const;
+           UIBackgroundPtr     &getArmedBackground(void);
+     const UIBackgroundPtr     &getArmedBackground(void) const;
+           Color4f             &getArmedTextColor (void);
+     const Color4f             &getArmedTextColor (void) const;
+           Color4f             &getFocusedTextColor(void);
+     const Color4f             &getFocusedTextColor(void) const;
+           Color4f             &getRolloverTextColor(void);
+     const Color4f             &getRolloverTextColor(void) const;
+           Color4f             &getDisabledTextColor(void);
+     const Color4f             &getDisabledTextColor(void) const;
+           Color4f             &getTextColor      (void);
+     const Color4f             &getTextColor      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -161,6 +203,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
      void setAcceleratorModifiers( const UInt32 &value );
      void setAcceleratorKey ( const UInt32 &value );
      void setArmed          ( const bool &value );
+     void setArmedBorder    ( const BorderPtr &value );
+     void setArmedBackground( const UIBackgroundPtr &value );
+     void setArmedTextColor ( const Color4f &value );
+     void setFocusedTextColor( const Color4f &value );
+     void setRolloverTextColor( const Color4f &value );
+     void setDisabledTextColor( const Color4f &value );
+     void setTextColor      ( const Color4f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -208,6 +257,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
     SFUInt32            _sfAcceleratorModifiers;
     SFUInt32            _sfAcceleratorKey;
     SFBool              _sfArmed;
+    SFBorderPtr         _sfArmedBorder;
+    SFUIBackgroundPtr   _sfArmedBackground;
+    SFColor4f           _sfArmedTextColor;
+    SFColor4f           _sfFocusedTextColor;
+    SFColor4f           _sfRolloverTextColor;
+    SFColor4f           _sfDisabledTextColor;
+    SFColor4f           _sfTextColor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
