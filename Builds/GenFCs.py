@@ -96,11 +96,11 @@ def main():
    shutil.move(os.path.join(os.path.split(sys.argv[1])[0],CodeFile) + ".temp", os.path.join(os.path.split(sys.argv[1])[0],CodeFile))
 
    #Add Header Includes
-   SedAddHeaderIncludePath = os.path.join(GenFCsPyDir, "AddHeaderInclude.sed")
+   #SedAddHeaderIncludePath = os.path.join(GenFCsPyDir, "AddHeaderInclude.sed")
 
-   os.system(SedPath + " -f " + SedAddHeaderIncludePath + " " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile)) + " > " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile) + ".temp"))
+   #os.system(SedPath + " -f " + SedAddHeaderIncludePath + " " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile)) + " > " + convertPathToOutput(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile) + ".temp"))
 
-   shutil.move(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile) + ".temp", os.path.join(os.path.split(sys.argv[1])[0],HeaderFile))
+   #shutil.move(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile) + ".temp", os.path.join(os.path.split(sys.argv[1])[0],HeaderFile))
    
    print "Done"
 

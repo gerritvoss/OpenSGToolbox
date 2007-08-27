@@ -138,7 +138,9 @@ OBJECTS = OSGShadowBorder.o \
 	OSGList.o \
 	OSGDefaultListCellGenerator.o \
 	OSGTextComponent.o \
+	OSGPasswordField.o \
 	OSGTextComponentBase.o \
+	OSGPasswordFieldBase.o \
 	OSGTextArea.o \
 	OSGTextAreaBase.o \
 	OSGTextField.o \

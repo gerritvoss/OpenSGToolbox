@@ -187,16 +187,21 @@ void XWindowEventProducer::WindowEventLoopThread(void* args)
   
     while ( event.type != DestroyNotify ) 
     {
-        do
+        while ( XPending(XWindow::Ptr::dcast(EventProducer->getWindow())->getDisplay()) )
         {
             XNextEvent(XWindow::Ptr::dcast(EventProducer->getWindow())->getDisplay(), &event);
             EventProducer->handleEvent(event);
         }  
-        while ( XPending(XWindow::Ptr::dcast(EventProducer->getWindow())->getDisplay()) );
+        
         if(EventProducer->_IsDrawPending)
         {
             EventProducer->_DisplayCallbackFunc();
             EventProducer->_IsDrawPending = false;
+        }
+        else
+        {
+            //Block untill next event or draw event
+            //yeild controll
         }
     }
     

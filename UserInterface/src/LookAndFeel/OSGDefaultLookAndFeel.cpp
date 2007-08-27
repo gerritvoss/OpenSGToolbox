@@ -65,6 +65,7 @@
 #include "Graphics/UIDrawObjects/OSGLineUIDrawObject.h"
 #include "Component/OSGUIDrawObjectCanvas.h"
 #include "Component/Text/OSGTextField.h"
+#include "Component/Text/OSGPasswordField.h"
 #include "Component/Text/OSGTextArea.h"
 #include "Component/Misc/OSGToolTip.h"
 
@@ -757,6 +758,54 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(DefaultTextField);
 
 	TextField::getClassType().setPrototype(DefaultTextField);
+    
+	/********Password Field********/
+	ColorUIBackgroundPtr DefaultPasswordFieldBackground = ColorUIBackground::create();
+	beginEditCP(DefaultPasswordFieldBackground);
+		DefaultPasswordFieldBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
+	endEditCP(DefaultPasswordFieldBackground);
+
+	ColorUIBackgroundPtr DefaultDisabledPasswordFieldBackground = ColorUIBackground::create();
+	beginEditCP(DefaultDisabledPasswordFieldBackground);
+		DefaultDisabledPasswordFieldBackground->setColor(Color4f(.8, .8, .8, 1.0));
+	endEditCP(DefaultDisabledPasswordFieldBackground);
+
+	BevelBorderPtr DefaultPasswordFieldBorder = BevelBorder::create();
+	beginEditCP(DefaultPasswordFieldBorder);
+		DefaultPasswordFieldBorder->setRaised(false);
+		DefaultPasswordFieldBorder->setWidth(2);
+		DefaultPasswordFieldBorder->setHighlightInner(Color4f(.9, .9, .9, 1.0));
+		DefaultPasswordFieldBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultPasswordFieldBorder->setShadowInner(Color4f(0.65, 0.65, 0.65, 1.0));
+		DefaultPasswordFieldBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
+	endEditCP(DefaultPasswordFieldBorder);
+
+	PasswordFieldPtr DefaultPasswordField = PasswordField::create();
+	beginEditCP(DefaultPasswordField);
+		//size
+		DefaultPasswordField->setMinSize(Vec2s(0, 0));
+		DefaultPasswordField->setMaxSize(Vec2s(32767,32767));
+		DefaultPasswordField->setPreferredSize(Vec2s(100, 25));
+		DefaultPasswordField->setEchoChar("*");
+
+		//font
+		DefaultPasswordField->setFont(DefaultFont);
+		DefaultPasswordField->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultPasswordField->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultPasswordField->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultPasswordField->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
+
+		//background
+		DefaultPasswordField->setBackground(DefaultPasswordFieldBackground);
+		DefaultPasswordField->setDisabledBackground(DefaultDisabledPasswordFieldBackground);
+
+		//Border
+		DefaultPasswordField->setBorder(DefaultPasswordFieldBorder);
+		DefaultPasswordField->setDisabledBorder(DefaultPasswordFieldBorder);
+
+	endEditCP(DefaultPasswordField);
+
+	PasswordField::getClassType().setPrototype(DefaultPasswordField);
 
     /********Text Area********/
 	ColorUIBackgroundPtr DefaultTextAreaBackground = ColorUIBackground::create();
@@ -995,6 +1044,7 @@ void DefaultLookAndFeel::init(void)
 		getPrototypes().addValue(DefaultRadioButton);
 		getPrototypes().addValue(DefaultToggleButton);
 		getPrototypes().addValue(DefaultTextField);
+		getPrototypes().addValue(DefaultPasswordField);
 		getPrototypes().addValue(DefaultTextArea);
 		getPrototypes().addValue(DefaultToolTip);
 	endEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);

@@ -68,6 +68,7 @@
 #include "Graphics/UIDrawObjects/OSGLineUIDrawObject.h"
 #include "Component/OSGUIDrawObjectCanvas.h"
 #include "Component/Text/OSGTextField.h"
+#include "Component/Text/OSGPasswordField.h"
 #include "Component/Text/OSGTextArea.h"
 #include "Component/Misc/OSGToolTip.h"
 
@@ -1033,6 +1034,55 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsTextField);
 
 	TextField::getClassType().setPrototype(WindowsTextField);
+    
+    
+	/********Password Field********/
+	ColorUIBackgroundPtr WindowsPasswordFieldBackground = ColorUIBackground::create();
+	beginEditCP(WindowsPasswordFieldBackground);
+		WindowsPasswordFieldBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
+	endEditCP(WindowsPasswordFieldBackground);
+
+	ColorUIBackgroundPtr WindowsDisabledPasswordFieldBackground = ColorUIBackground::create();
+	beginEditCP(WindowsDisabledPasswordFieldBackground);
+		WindowsDisabledPasswordFieldBackground->setColor(Color4f(.8, .8, .8, 1.0));
+	endEditCP(WindowsDisabledPasswordFieldBackground);
+
+	LineBorderPtr WindowsPasswordFieldBorder = LineBorder::create();
+	beginEditCP(WindowsPasswordFieldBorder);
+		WindowsPasswordFieldBorder->setWidth(1);
+		WindowsPasswordFieldBorder->setColor( Color4f(.498,.616,.725,1.0) );
+	endEditCP(WindowsPasswordFieldBorder);
+
+
+	PasswordFieldPtr WindowsPasswordField = PasswordField::create();
+	beginEditCP(WindowsPasswordField);
+		//size
+		WindowsPasswordField->setMinSize(Vec2s(0, 0));
+		WindowsPasswordField->setMaxSize(Vec2s(32767,32767));
+		WindowsPasswordField->setPreferredSize(Vec2s(75,23));
+
+		//font
+		WindowsPasswordField->setFont(WindowsFont);
+		
+		WindowsPasswordField->setSelectionBoxColor(Color4f(.682, .769, .910, 1.0));
+		WindowsPasswordField->setSelectionTextColor(Color4f(0.0, 0.0, 0.0, 1.0));
+		WindowsPasswordField->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsPasswordField->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsPasswordField->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsPasswordField->setDisabledTextColor(WindowsDisabledTextColor);
+        WindowsPasswordField->setVerticalAlignment(0.5);
+
+		//background
+		WindowsPasswordField->setBackground(WindowsPasswordFieldBackground);
+		WindowsPasswordField->setDisabledBackground(WindowsDisabledPasswordFieldBackground);
+
+		//Border
+		WindowsPasswordField->setBorder(WindowsPasswordFieldBorder);
+		WindowsPasswordField->setDisabledBorder(WindowsPasswordFieldBorder);
+
+	endEditCP(WindowsPasswordField);
+
+	PasswordField::getClassType().setPrototype(WindowsPasswordField);
 
 	/********Text Area********/
 	ColorUIBackgroundPtr WindowsTextAreaBackground = ColorUIBackground::create();
@@ -1260,6 +1310,7 @@ void WindowsLookAndFeel::init(void)
 		getPrototypes().addValue(WindowsRadioButton);
 		getPrototypes().addValue(WindowsToggleButton);
 		getPrototypes().addValue(WindowsTextField);
+		getPrototypes().addValue(WindowsPasswordField);
 		getPrototypes().addValue(WindowsToolTip);
 	endEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);
 
