@@ -46,6 +46,7 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGMenuItemBase.h"
+#include "Event/OSGActionListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,6 +78,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
+    virtual void mouseReleased(const MouseEvent& e);
+    
+    virtual void mouseEntered(const MouseEvent& e);
+    virtual void mouseExited(const MouseEvent& e);
+    
+    void addActionListener(ActionListenerPtr Listener);
+    void removeActionListener(ActionListenerPtr Listener);
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -101,6 +109,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
 	virtual Color4f getDrawnTextColor(void) const;
     virtual BorderPtr getDrawnBorder(void) const;
     virtual UIBackgroundPtr getDrawnBackground(void) const;
+    
+    virtual void actionPreformed(const ActionEvent& e);
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/
@@ -114,6 +124,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const MenuItem &source);
+    
+	typedef std::set<ActionListenerPtr> ActionListenerSet;
+    typedef ActionListenerSet::iterator ActionListenerSetItor;
+    typedef ActionListenerSet::const_iterator ActionListenerSetConstItor;
+	
+    ActionListenerSet       _ActionListeners;
+	
+    virtual void produceActionPerformed(const ActionEvent& e);
 };
 
 typedef MenuItem *MenuItemP;

@@ -920,11 +920,7 @@ void DefaultLookAndFeel::init(void)
     
 	//************************** MenuItem*****************************
 	//Default MenuItemBorder
-	LineBorderPtr DefaultMenuItemBorder = LineBorder::create();
-	beginEditCP(DefaultMenuItemBorder);
-		DefaultMenuItemBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
-		DefaultMenuItemBorder->setWidth(1);
-	endEditCP(DefaultMenuItemBorder);
+	EmptyBorderPtr DefaultMenuItemBorder = EmptyBorder::create();
 
 	//Default MenuItemBackground
 	ColorUIBackgroundPtr DefaultMenuItemBackground = ColorUIBackground::create();

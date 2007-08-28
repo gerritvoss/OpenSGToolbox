@@ -128,10 +128,6 @@ void Container::mouseEntered(const MouseEvent& e)
     {
         isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
-		if(isContained)
-		{
-			getChildren().getValue(i)->mouseDragged(e);
-		}
     }
 	Component::mouseEntered(e);
 }
@@ -143,10 +139,6 @@ void Container::mouseExited(const MouseEvent& e)
     {
         isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
-		if(isContained)
-		{
-			getChildren().getValue(i)->mouseDragged(e);
-		}
     }
 	Component::mouseExited(e);
 }

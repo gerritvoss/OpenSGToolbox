@@ -79,6 +79,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
 	virtual void keyPressed(const KeyEvent& e);
 	virtual void keyReleased(const KeyEvent& e);
 	virtual void keyTyped(const KeyEvent& e);
+	
+	//Mouse Events
+    virtual void mouseClicked(const MouseEvent& e);
+    virtual void mouseEntered(const MouseEvent& e);
+    virtual void mouseExited(const MouseEvent& e);
+    virtual void mousePressed(const MouseEvent& e);
+    virtual void mouseReleased(const MouseEvent& e);
+
+	//Mouse Motion Events
+    virtual void mouseMoved(const MouseEvent& e);
+    virtual void mouseDragged(const MouseEvent& e);
+
+	//Mouse Wheel Events
+    virtual void mouseWheelMoved(const MouseWheelEvent& e);
 
     virtual       FramePtr            &getParentFrame    (void);
     virtual const FramePtr            &getParentFrame    (void) const;

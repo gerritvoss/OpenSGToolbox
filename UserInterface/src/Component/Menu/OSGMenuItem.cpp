@@ -177,6 +177,47 @@ UIBackgroundPtr MenuItem::getDrawnBackground(void) const
         return getDisabledBackground();
     }
 }
+
+void MenuItem::actionPreformed(const ActionEvent& e)
+{
+}
+
+void MenuItem::mouseReleased(const MouseEvent& e)
+{
+    if(getArmed())
+    {
+	   produceActionPerformed(ActionEvent(MenuItemPtr(this), e.getTimeStamp()));
+    }
+    
+    Component::mouseReleased(e);
+}
+
+void MenuItem::mouseEntered(const MouseEvent& e)
+{
+    beginEditCP(MenuItemPtr(this), MenuItem::ArmedFieldMask);
+        setArmed(true);
+    endEditCP(MenuItemPtr(this), MenuItem::ArmedFieldMask);
+    
+    Component::mouseEntered(e);
+}
+
+void MenuItem::mouseExited(const MouseEvent& e)
+{
+    beginEditCP(MenuItemPtr(this), MenuItem::ArmedFieldMask);
+        setArmed(false);
+    endEditCP(MenuItemPtr(this), MenuItem::ArmedFieldMask);
+    
+    Component::mouseExited(e);
+}
+
+void MenuItem::produceActionPerformed(const ActionEvent& e)
+{
+    actionPreformed(e);
+    for(ActionListenerSetConstItor SetItor(_ActionListeners.begin()) ; SetItor != _ActionListeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->actionPerformed(e);
+    }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

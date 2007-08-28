@@ -48,6 +48,7 @@
 #include "OSGFrame.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include "Component/Misc/OSGToolTip.h"
+#include "Component/Menu/OSGPopupMenu.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -164,8 +165,169 @@ void Frame::drawInternal(const GraphicsPtr TheGraphics) const
     {
         getActiveToolTip()->draw(TheGraphics);
     }
+    
+    //If I have an active popupMenu then draw it
+    if(getActivePopupMenu() != NullFC)
+    {
+        getActivePopupMenu()->draw(TheGraphics);
+    }
 }
 
+void Frame::mouseClicked(const MouseEvent& e)
+{
+    if(getActivePopupMenu() != NullFC)
+    {
+        bool isContained = getActivePopupMenu()->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getActivePopupMenu(),isContained,e.getViewport());
+		if(isContained)
+		{
+			getActivePopupMenu()->mouseClicked(e);
+            Component::mouseClicked(e);
+		}
+		else
+		{
+            Container::mouseClicked(e);
+		}
+    }
+    else
+    {
+        Container::mouseClicked(e);
+    }
+}
+
+void Frame::mouseEntered(const MouseEvent& e)
+{
+    if(getActivePopupMenu() != NullFC)
+    {
+        bool isContained = getActivePopupMenu()->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getActivePopupMenu(),isContained,e.getViewport());
+		if(isContained)
+		{
+            Component::mouseEntered(e);
+		}
+		else
+		{
+            Container::mouseEntered(e);
+		}
+    }
+    else
+    {
+        Container::mouseEntered(e);
+    }
+}
+
+void Frame::mouseExited(const MouseEvent& e)
+{
+    if(getActivePopupMenu() != NullFC)
+    {
+        bool isContained = getActivePopupMenu()->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getActivePopupMenu(),isContained,e.getViewport());
+		if(isContained)
+		{
+            Component::mouseExited(e);
+		}
+		else
+		{
+            Container::mouseExited(e);
+		}
+    }
+    else
+    {
+        Container::mouseExited(e);
+    }
+}
+
+void Frame::mousePressed(const MouseEvent& e)
+{
+    if(getActivePopupMenu() != NullFC)
+    {
+        bool isContained = getActivePopupMenu()->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getActivePopupMenu(),isContained,e.getViewport());
+		if(isContained)
+		{
+			getActivePopupMenu()->mousePressed(e);
+            Component::mousePressed(e);
+		}
+		else
+		{
+            Container::mousePressed(e);
+		}
+    }
+    else
+    {
+        Container::mousePressed(e);
+    }
+}
+
+void Frame::mouseReleased(const MouseEvent& e)
+{
+    if(getActivePopupMenu() != NullFC)
+    {
+        bool isContained = getActivePopupMenu()->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getActivePopupMenu(),isContained,e.getViewport());
+		if(isContained)
+		{
+			getActivePopupMenu()->mouseReleased(e);
+            Component::mouseReleased(e);
+		}
+		else
+		{
+            Container::mouseReleased(e);
+		}
+    }
+    else
+    {
+        Container::mouseReleased(e);
+    }
+}
+
+
+void Frame::mouseMoved(const MouseEvent& e)
+{
+    if(getActivePopupMenu() != NullFC)
+    {
+        bool isContained = getActivePopupMenu()->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getActivePopupMenu(),isContained,e.getViewport());
+		if(isContained)
+		{
+			getActivePopupMenu()->mouseMoved(e);
+            Component::mouseMoved(e);
+		}
+		else
+		{
+            Container::mouseMoved(e);
+		}
+    }
+    else
+    {
+        Container::mouseMoved(e);
+    }
+}
+
+void Frame::mouseDragged(const MouseEvent& e)
+{
+    if(getActivePopupMenu() != NullFC)
+    {
+        bool isContained = getActivePopupMenu()->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getActivePopupMenu(),isContained,e.getViewport());
+		if(isContained)
+		{
+			getActivePopupMenu()->mouseDragged(e);
+		}
+    }
+    Container::mouseDragged(e);
+}
+
+
+void Frame::mouseWheelMoved(const MouseWheelEvent& e)
+{
+    if(getActivePopupMenu() != NullFC)
+    {
+        bool isContained = getActivePopupMenu()->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getActivePopupMenu(),isContained,e.getViewport());
+    }
+    Container::mouseWheelMoved(e);
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -196,6 +358,14 @@ void Frame::changed(BitVector whichField, UInt32 origin)
         getActiveToolTip() != NullFC)
     {
         getActiveToolTip()->updateClipBounds();
+    }
+    
+    if( (whichField & ActivePopupMenuFieldMask) &&
+        getActivePopupMenu() != NullFC)
+    {
+        beginEditCP(getActivePopupMenu(), PopupMenu::ParentContainerFieldMask);
+            getActivePopupMenu()->setParentContainer(ContainerPtr(this));
+        endEditCP(getActivePopupMenu(), PopupMenu::ParentContainerFieldMask);
     }
 }
 

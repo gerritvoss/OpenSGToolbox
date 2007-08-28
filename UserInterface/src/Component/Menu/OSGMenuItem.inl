@@ -42,6 +42,22 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+void MenuItem::addActionListener(ActionListenerPtr Listener)
+{
+   _ActionListeners.insert(Listener);
+}
+
+inline
+void MenuItem::removeActionListener(ActionListenerPtr Listener)
+{
+   ActionListenerSetItor EraseIter(_ActionListeners.find(Listener));
+   if(EraseIter != _ActionListeners.end())
+   {
+      _ActionListeners.erase(EraseIter);
+   }
+}
+
 OSG_END_NAMESPACE
 
 #define OSGMENUITEM_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
