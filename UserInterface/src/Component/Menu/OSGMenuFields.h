@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGMenuItemFields.h"
+#include "OSGLabelMenuItemFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class Menu;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! MenuPtr
 
-typedef FCPtr<MenuItemPtr, Menu> MenuPtr;
+typedef FCPtr<LabelMenuItemPtr, Menu> MenuPtr;
 
 #endif
 

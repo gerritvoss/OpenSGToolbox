@@ -68,6 +68,7 @@
 #include "OSGMenuItem.h" // Parent
 
 #include "Component/OSGUIDrawObjectCanvas.h" // DrawObject type
+#include <OpenSG/OSGColor4fFields.h> // Color type
 
 #include "OSGSeperatorMenuItemFields.h"
 
@@ -92,10 +93,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING SeperatorMenuItemBase : public MenuItem
     enum
     {
         DrawObjectFieldId = Inherited::NextFieldId,
-        NextFieldId       = DrawObjectFieldId + 1
+        ColorFieldId      = DrawObjectFieldId + 1,
+        NextFieldId       = ColorFieldId      + 1
     };
 
     static const OSG::BitVector DrawObjectFieldMask;
+    static const OSG::BitVector ColorFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -123,9 +126,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING SeperatorMenuItemBase : public MenuItem
     /*! \{                                                                 */
 
            SFUIDrawObjectCanvasPtr *getSFDrawObject     (void);
+           SFColor4f           *getSFColor          (void);
 
            UIDrawObjectCanvasPtr &getDrawObject     (void);
      const UIDrawObjectCanvasPtr &getDrawObject     (void) const;
+           Color4f             &getColor          (void);
+     const Color4f             &getColor          (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -133,6 +139,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SeperatorMenuItemBase : public MenuItem
     /*! \{                                                                 */
 
      void setDrawObject     ( const UIDrawObjectCanvasPtr &value );
+     void setColor          ( const Color4f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +183,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SeperatorMenuItemBase : public MenuItem
     /*! \{                                                                 */
 
     SFUIDrawObjectCanvasPtr   _sfDrawObject;
+    SFColor4f           _sfColor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

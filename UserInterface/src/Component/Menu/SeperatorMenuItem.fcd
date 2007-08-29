@@ -22,4 +22,13 @@ A UI Seperator MenuItem
 		access="public"
 	>
 	</Field>
+	<Field
+		name="Color"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1.0,1.0,1.0,1.0"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

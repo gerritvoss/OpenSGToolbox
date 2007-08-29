@@ -48,7 +48,6 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGMenuItem.h"
-#include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -57,7 +56,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class osg::MenuItem
-A UI MenuItem. 	
+A UI MenuItem. 
 */
 
 /***************************************************************************\
@@ -77,147 +76,6 @@ void MenuItem::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void MenuItem::drawInternal(const GraphicsPtr TheGraphics) const
-{
-   Pnt2s TopLeft, BottomRight;
-   getInsideBorderBounds(TopLeft, BottomRight);
-
-   //If I have Text Then Draw it
-   if(getText() != "" && getFont() != NullFC)
-   {
-      //Calculate Alignment
-      Pnt2s AlignedPosition;
-      Pnt2s TextTopLeft, TextBottomRight;
-      getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
-
-      AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),0.5, 0.0);
-
-	  //Draw the Text
-      TheGraphics->drawText(AlignedPosition, getText(), getFont(), getDrawnTextColor(), getOpacity());
-   }
-}
-
-Color4f MenuItem::getDrawnTextColor(void) const
-{
-    if(getEnabled())
-    {
-        //if(getFocused())
-        //{
-        //    return getFocusedTextColor();
-        //}
-        if(getArmed())
-        {
-            return getArmedTextColor();
-        }
-        if(_MouseInComponentLastMouse)
-        {
-            return getRolloverTextColor();
-        }
-        else
-        {
-            return getTextColor();
-        }
-    }
-    else
-    {
-        return getDisabledTextColor();
-    }
-}
-
-BorderPtr MenuItem::getDrawnBorder(void) const
-{
-    if(getEnabled())
-    {
-        //if(getFocused())
-        //{
-        //    return getFocusedTextColor();
-        //}
-        if(getArmed())
-        {
-            return getArmedBorder();
-        }
-        else if(_MouseInComponentLastMouse)
-        {
-            return getRolloverBorder();
-        }
-        else
-        {
-            return getBorder();
-        }
-    }
-    else
-    {
-        return getDisabledBorder();
-    }
-}
-
-UIBackgroundPtr MenuItem::getDrawnBackground(void) const
-{
-    if(getEnabled())
-    {
-        //if(getFocused())
-        //{
-        //    return getFocusedTextColor();
-        //}
-        if(getArmed())
-        {
-            return getArmedBackground();
-        }
-        else if(_MouseInComponentLastMouse)
-        {
-            return getRolloverBackground();
-        }
-        else
-        {
-            return getBackground();
-        }
-    }
-    else
-    {
-        return getDisabledBackground();
-    }
-}
-
-void MenuItem::actionPreformed(const ActionEvent& e)
-{
-}
-
-void MenuItem::mouseReleased(const MouseEvent& e)
-{
-    if(getArmed())
-    {
-	   produceActionPerformed(ActionEvent(MenuItemPtr(this), e.getTimeStamp()));
-    }
-    
-    Component::mouseReleased(e);
-}
-
-void MenuItem::mouseEntered(const MouseEvent& e)
-{
-    beginEditCP(MenuItemPtr(this), MenuItem::ArmedFieldMask);
-        setArmed(true);
-    endEditCP(MenuItemPtr(this), MenuItem::ArmedFieldMask);
-    
-    Component::mouseEntered(e);
-}
-
-void MenuItem::mouseExited(const MouseEvent& e)
-{
-    beginEditCP(MenuItemPtr(this), MenuItem::ArmedFieldMask);
-        setArmed(false);
-    endEditCP(MenuItemPtr(this), MenuItem::ArmedFieldMask);
-    
-    Component::mouseExited(e);
-}
-
-void MenuItem::produceActionPerformed(const ActionEvent& e)
-{
-    actionPreformed(e);
-    for(ActionListenerSetConstItor SetItor(_ActionListeners.begin()) ; SetItor != _ActionListeners.end() ; ++SetItor)
-    {
-	    (*SetItor)->actionPerformed(e);
-    }
-}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

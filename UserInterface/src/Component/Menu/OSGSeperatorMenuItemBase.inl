@@ -103,6 +103,13 @@ SFUIDrawObjectCanvasPtr *SeperatorMenuItemBase::getSFDrawObject(void)
     return &_sfDrawObject;
 }
 
+//! Get the SeperatorMenuItem::_sfColor field.
+inline
+SFColor4f *SeperatorMenuItemBase::getSFColor(void)
+{
+    return &_sfColor;
+}
+
 
 //! Get the value of the SeperatorMenuItem::_sfDrawObject field.
 inline
@@ -123,6 +130,27 @@ inline
 void SeperatorMenuItemBase::setDrawObject(const UIDrawObjectCanvasPtr &value)
 {
     _sfDrawObject.setValue(value);
+}
+
+//! Get the value of the SeperatorMenuItem::_sfColor field.
+inline
+Color4f &SeperatorMenuItemBase::getColor(void)
+{
+    return _sfColor.getValue();
+}
+
+//! Get the value of the SeperatorMenuItem::_sfColor field.
+inline
+const Color4f &SeperatorMenuItemBase::getColor(void) const
+{
+    return _sfColor.getValue();
+}
+
+//! Set the value of the SeperatorMenuItem::_sfColor field.
+inline
+void SeperatorMenuItemBase::setColor(const Color4f &value)
+{
+    _sfColor.setValue(value);
 }
 
 

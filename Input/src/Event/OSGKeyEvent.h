@@ -203,6 +203,8 @@ class OSG_INPUTLIB_DLLMAPPING KeyEvent : public Event
 	static UChar8 getLowerLetterKey(Key k, UInt32 Modifier);
 	static UChar8 getNonLetterKey(Key k, UInt32 Modifier);
 	static UChar8 getCharFromKey(Key k, UInt32 Modifier);
+    static std::string getStringFromKey(Key k, UInt32 Modifier);
+    static std::string getStringFromNonDisplayedKey(Key k, UInt32 Modifier);
 	UInt32 getModifiers(void) const;
 	UChar8 getKeyChar(void) const;
 

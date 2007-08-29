@@ -328,6 +328,20 @@ void Frame::mouseWheelMoved(const MouseWheelEvent& e)
     }
     Container::mouseWheelMoved(e);
 }
+
+void Frame::destroyPopupMenu(void)
+{
+    if(getActivePopupMenu() != NullFC)
+    {
+        beginEditCP(FramePtr(this), ActivePopupMenuFieldMask);
+            setActivePopupMenu(NullFC);
+        endEditCP(FramePtr(this), ActivePopupMenuFieldMask);
+
+	    //Remove the listener
+        getDrawingSurface()->getEventProducer()->removeMouseListener(&_PopupMenuInteractionListener);
+        getDrawingSurface()->getEventProducer()->removeKeyListener(&_PopupMenuInteractionListener);
+    }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -335,12 +349,14 @@ void Frame::mouseWheelMoved(const MouseWheelEvent& e)
 /*----------------------- constructors & destructors ----------------------*/
 
 Frame::Frame(void) :
-    Inherited()
+    Inherited(),
+    _PopupMenuInteractionListener(FramePtr(this))
 {
 }
 
 Frame::Frame(const Frame &source) :
-    Inherited(source)
+    Inherited(source),
+    _PopupMenuInteractionListener(FramePtr(this))
 {
 }
 
@@ -363,9 +379,13 @@ void Frame::changed(BitVector whichField, UInt32 origin)
     if( (whichField & ActivePopupMenuFieldMask) &&
         getActivePopupMenu() != NullFC)
     {
-        beginEditCP(getActivePopupMenu(), PopupMenu::ParentContainerFieldMask);
+        beginEditCP(getActivePopupMenu(), PopupMenu::ParentContainerFieldMask | PopupMenu::ParentFrameFieldMask);
             getActivePopupMenu()->setParentContainer(ContainerPtr(this));
-        endEditCP(getActivePopupMenu(), PopupMenu::ParentContainerFieldMask);
+            getActivePopupMenu()->setParentFrame(FramePtr(this));
+        endEditCP(getActivePopupMenu(), PopupMenu::ParentContainerFieldMask | PopupMenu::ParentFrameFieldMask);
+        
+        getDrawingSurface()->getEventProducer()->addMouseListener(&_PopupMenuInteractionListener);
+        getDrawingSurface()->getEventProducer()->addKeyListener(&_PopupMenuInteractionListener);
     }
 }
 
@@ -375,6 +395,22 @@ void Frame::dump(      UInt32    ,
     SLOG << "Dump Frame NI" << std::endl;
 }
 
+void Frame::PopupMenuInteractionListener::mousePressed(const MouseEvent& e)
+{
+    if(e.getButton() == MouseEvent::BUTTON1 && 
+        !_Frame->getActivePopupMenu()->isContained(e.getLocation(), true))
+    {
+        _Frame->destroyPopupMenu();
+    }
+}
+
+void Frame::PopupMenuInteractionListener::keyPressed(const KeyEvent& e)
+{
+    if(e.getKey() == KeyEvent::KEY_ESCAPE)
+    {
+        _Frame->destroyPopupMenu();
+    }
+}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

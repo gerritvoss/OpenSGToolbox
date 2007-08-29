@@ -117,6 +117,21 @@ void PopupMenu::updateLayout(void)
     }
 }
 
+void PopupMenu::updateClipBounds(void)
+{
+	Pnt2s TopLeft, BottomRight;
+	
+    //Treat myself as having no Parent
+	getBounds(TopLeft, BottomRight);
+
+	//The Clip Bounds calculated are in my Parent Containers coordinate space
+	//Translate these bounds into my own coordinate space
+	beginEditCP(ComponentPtr(this), Component::ClipTopLeftFieldMask | Component::ClipBottomRightFieldMask);
+		setClipTopLeft(TopLeft);
+		setClipBottomRight(BottomRight);
+	endEditCP(ComponentPtr(this), Component::ClipTopLeftFieldMask | Component::ClipBottomRightFieldMask);
+}
+
 void PopupMenu::addItem(MenuItemPtr Item)
 {
     beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);

@@ -85,6 +85,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
     MenuItemPtr getItem(const UInt32& Index);
     UInt32 getNumItems(void) const;
     
+	virtual void updateClipBounds(void);
+    
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:

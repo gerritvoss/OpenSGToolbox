@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGSEPERATORMENUITEM_H_
-#define _OSGSEPERATORMENUITEM_H_
+#ifndef _OSGLABELMENUITEM_H_
+#define _OSGLABELMENUITEM_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,19 +45,20 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGSeperatorMenuItemBase.h"
+#include "OSGLabelMenuItemBase.h"
+#include "Event/OSGActionListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief SeperatorMenuItem class. See \ref 
-           PageUserInterfaceSeperatorMenuItem for a description.
+/*! \brief LabelMenuItem class. See \ref 
+           PageUserInterfaceLabelMenuItem for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING SeperatorMenuItem : public SeperatorMenuItemBase
+class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItem : public LabelMenuItemBase
 {
   private:
 
-    typedef SeperatorMenuItemBase Inherited;
+    typedef LabelMenuItemBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -77,50 +78,70 @@ class OSG_USERINTERFACELIB_DLLMAPPING SeperatorMenuItem : public SeperatorMenuIt
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
+    virtual void mouseReleased(const MouseEvent& e);
+    
+    virtual void mouseEntered(const MouseEvent& e);
+    virtual void mouseExited(const MouseEvent& e);
+    
+    void addActionListener(ActionListenerPtr Listener);
+    void removeActionListener(ActionListenerPtr Listener);
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in SeperatorMenuItemBase.
+    // Variables should all be in LabelMenuItemBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    SeperatorMenuItem(void);
-    SeperatorMenuItem(const SeperatorMenuItem &source);
+    LabelMenuItem(void);
+    LabelMenuItem(const LabelMenuItem &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SeperatorMenuItem(void); 
+    virtual ~LabelMenuItem(void); 
 
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
-
+	virtual Color4f getDrawnTextColor(void) const;
+    virtual BorderPtr getDrawnBorder(void) const;
+    virtual UIBackgroundPtr getDrawnBackground(void) const;
+    
+    virtual void actionPreformed(const ActionEvent& e);
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class SeperatorMenuItemBase;
+    friend class LabelMenuItemBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const SeperatorMenuItem &source);
+    void operator =(const LabelMenuItem &source);
+    
+    
+	typedef std::set<ActionListenerPtr> ActionListenerSet;
+    typedef ActionListenerSet::iterator ActionListenerSetItor;
+    typedef ActionListenerSet::const_iterator ActionListenerSetConstItor;
+	
+    ActionListenerSet       _ActionListeners;
+	
+    virtual void produceActionPerformed(const ActionEvent& e);
 };
 
-typedef SeperatorMenuItem *SeperatorMenuItemP;
+typedef LabelMenuItem *LabelMenuItemP;
 
 OSG_END_NAMESPACE
 
-#include "OSGSeperatorMenuItemBase.inl"
-#include "OSGSeperatorMenuItem.inl"
+#include "OSGLabelMenuItemBase.inl"
+#include "OSGLabelMenuItem.inl"
 
-#define OSGSEPERATORMENUITEM_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGLABELMENUITEM_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGSEPERATORMENUITEM_H_ */
+#endif /* _OSGLABELMENUITEM_H_ */

@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGSeperatorMenuItem.h"
+#include "OSGLabelMenuItem.h"
 #include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
@@ -56,8 +56,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::SeperatorMenuItem
-A UI Seperator MenuItem 	
+/*! \class osg::LabelMenuItem
+A UI LabelMenuItem. 	
 */
 
 /***************************************************************************\
@@ -68,7 +68,7 @@ A UI Seperator MenuItem
  *                           Class methods                                 *
 \***************************************************************************/
 
-void SeperatorMenuItem::initMethod (void)
+void LabelMenuItem::initMethod (void)
 {
 }
 
@@ -77,51 +77,192 @@ void SeperatorMenuItem::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void SeperatorMenuItem::drawInternal(const GraphicsPtr Graphics) const
+void LabelMenuItem::drawInternal(const GraphicsPtr TheGraphics) const
 {
    Pnt2s TopLeft, BottomRight;
    getInsideBorderBounds(TopLeft, BottomRight);
-   
-    //Calculate Alignment
-    Pnt2s AlignedPosition;
-    Pnt2s LineTopLeft(0,0), LineBottomRight(1,1);
 
-    AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (LineBottomRight - LineTopLeft),0.5, 0.0);
+   //If I have Text Then Draw it
+   if(getText() != "" && getFont() != NullFC)
+   {
+      //Calculate Alignment
+      Pnt2s AlignedPosition;
+      Pnt2s TextTopLeft, TextBottomRight;
+      getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
 
-    Graphics->drawRect(AlignedPosition, AlignedPosition + Vec2s(BottomRight.x() - TopLeft.x(),1), getColor(), getOpacity());
+      AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),0.5, 0.0);
+
+	  //Draw the Text
+      TheGraphics->drawText(AlignedPosition, getText(), getFont(), getDrawnTextColor(), getOpacity());
+
+      //Draw the Accelerator Text
+      if(getAcceleratorText().compare("") != 0)
+      {
+          Pnt2s AcceleratorTextTopLeft, AcceleratorTextBottomRight;
+          getFont()->getBounds(getAcceleratorText(), AcceleratorTextTopLeft, AcceleratorTextBottomRight);
+          Pnt2s AcceleratorAlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (AcceleratorTextBottomRight - AcceleratorTextTopLeft),0.5, 1.0);
+
+          TheGraphics->drawText(AcceleratorAlignedPosition, getAcceleratorText(), getFont(), getDrawnTextColor(), getOpacity());
+      }
+   }
 }
 
+Color4f LabelMenuItem::getDrawnTextColor(void) const
+{
+    if(getEnabled())
+    {
+        //if(getFocused())
+        //{
+        //    return getFocusedTextColor();
+        //}
+        if(getArmed())
+        {
+            return getArmedTextColor();
+        }
+        if(_MouseInComponentLastMouse)
+        {
+            return getRolloverTextColor();
+        }
+        else
+        {
+            return getTextColor();
+        }
+    }
+    else
+    {
+        return getDisabledTextColor();
+    }
+}
+
+BorderPtr LabelMenuItem::getDrawnBorder(void) const
+{
+    if(getEnabled())
+    {
+        //if(getFocused())
+        //{
+        //    return getFocusedTextColor();
+        //}
+        if(getArmed())
+        {
+            return getArmedBorder();
+        }
+        else if(_MouseInComponentLastMouse)
+        {
+            return getRolloverBorder();
+        }
+        else
+        {
+            return getBorder();
+        }
+    }
+    else
+    {
+        return getDisabledBorder();
+    }
+}
+
+UIBackgroundPtr LabelMenuItem::getDrawnBackground(void) const
+{
+    if(getEnabled())
+    {
+        //if(getFocused())
+        //{
+        //    return getFocusedTextColor();
+        //}
+        if(getArmed())
+        {
+            return getArmedBackground();
+        }
+        else if(_MouseInComponentLastMouse)
+        {
+            return getRolloverBackground();
+        }
+        else
+        {
+            return getBackground();
+        }
+    }
+    else
+    {
+        return getDisabledBackground();
+    }
+}
+
+void LabelMenuItem::actionPreformed(const ActionEvent& e)
+{
+}
+
+void LabelMenuItem::mouseReleased(const MouseEvent& e)
+{
+    if(getArmed() && getEnabled())
+    {
+	   produceActionPerformed(ActionEvent(MenuItemPtr(this), e.getTimeStamp()));
+       getParentFrame()->destroyPopupMenu();
+       beginEditCP(MenuItemPtr(this), ArmedFieldMask);
+          setArmed(false);
+       endEditCP(MenuItemPtr(this), ArmedFieldMask);
+    }
+    
+    MenuItem::mouseReleased(e);
+}
+
+void LabelMenuItem::mouseEntered(const MouseEvent& e)
+{
+    beginEditCP(MenuItemPtr(this), ArmedFieldMask);
+        setArmed(true);
+    endEditCP(MenuItemPtr(this), ArmedFieldMask);
+    
+    MenuItem::mouseEntered(e);
+}
+
+void LabelMenuItem::mouseExited(const MouseEvent& e)
+{
+    beginEditCP(MenuItemPtr(this), ArmedFieldMask);
+        setArmed(false);
+    endEditCP(MenuItemPtr(this), ArmedFieldMask);
+    
+    MenuItem::mouseExited(e);
+}
+
+void LabelMenuItem::produceActionPerformed(const ActionEvent& e)
+{
+    actionPreformed(e);
+    for(ActionListenerSetConstItor SetItor(_ActionListeners.begin()) ; SetItor != _ActionListeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->actionPerformed(e);
+    }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-SeperatorMenuItem::SeperatorMenuItem(void) :
+LabelMenuItem::LabelMenuItem(void) :
     Inherited()
 {
 }
 
-SeperatorMenuItem::SeperatorMenuItem(const SeperatorMenuItem &source) :
+LabelMenuItem::LabelMenuItem(const LabelMenuItem &source) :
     Inherited(source)
 {
 }
 
-SeperatorMenuItem::~SeperatorMenuItem(void)
+LabelMenuItem::~LabelMenuItem(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void SeperatorMenuItem::changed(BitVector whichField, UInt32 origin)
+void LabelMenuItem::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void SeperatorMenuItem::dump(      UInt32    , 
+void LabelMenuItem::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump SeperatorMenuItem NI" << std::endl;
+    SLOG << "Dump LabelMenuItem NI" << std::endl;
 }
 
 
@@ -139,10 +280,10 @@ void SeperatorMenuItem::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSEPERATORMENUITEMBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSEPERATORMENUITEMBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGLABELMENUITEMBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGLABELMENUITEMBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGSEPERATORMENUITEMFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGLABELMENUITEMFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

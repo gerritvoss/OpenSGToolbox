@@ -79,6 +79,9 @@ const OSG::BitVector  MenuBase::SelectedFieldMask =
 const OSG::BitVector  MenuBase::TopLevelMenuFieldMask = 
     (TypeTraits<BitVector>::One << MenuBase::TopLevelMenuFieldId);
 
+const OSG::BitVector  MenuBase::ExpandDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << MenuBase::ExpandDrawObjectFieldId);
+
 const OSG::BitVector MenuBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -99,6 +102,9 @@ const OSG::BitVector MenuBase::MTInfluenceMask =
     
 */
 /*! \var bool            MenuBase::_sfTopLevelMenu
+    
+*/
+/*! \var UIDrawObjectCanvasPtr MenuBase::_sfExpandDrawObject
     
 */
 
@@ -130,13 +136,18 @@ FieldDescription *MenuBase::_desc[] =
                      "TopLevelMenu", 
                      TopLevelMenuFieldId, TopLevelMenuFieldMask,
                      false,
-                     (FieldAccessMethod) &MenuBase::getSFTopLevelMenu)
+                     (FieldAccessMethod) &MenuBase::getSFTopLevelMenu),
+    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
+                     "ExpandDrawObject", 
+                     ExpandDrawObjectFieldId, ExpandDrawObjectFieldMask,
+                     false,
+                     (FieldAccessMethod) &MenuBase::getSFExpandDrawObject)
 };
 
 
 FieldContainerType MenuBase::_type(
     "Menu",
-    "MenuItem",
+    "LabelMenuItem",
     NULL,
     (PrototypeCreateF) &MenuBase::createEmpty,
     Menu::initMethod,
@@ -207,11 +218,12 @@ void MenuBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 MenuBase::MenuBase(void) :
-    _sfButton                 (), 
+    _sfButton                 (ToggleButtonPtr(NullFC)), 
     _mfInternalPopupMenu      (), 
     _sfSubMenuDelay           (Real32(0.5)), 
     _sfSelected               (bool(false)), 
     _sfTopLevelMenu           (bool(false)), 
+    _sfExpandDrawObject       (), 
     Inherited() 
 {
 }
@@ -226,6 +238,7 @@ MenuBase::MenuBase(const MenuBase &source) :
     _sfSubMenuDelay           (source._sfSubMenuDelay           ), 
     _sfSelected               (source._sfSelected               ), 
     _sfTopLevelMenu           (source._sfTopLevelMenu           ), 
+    _sfExpandDrawObject       (source._sfExpandDrawObject       ), 
     Inherited                 (source)
 {
 }
@@ -267,6 +280,11 @@ UInt32 MenuBase::getBinSize(const BitVector &whichField)
         returnValue += _sfTopLevelMenu.getBinSize();
     }
 
+    if(FieldBits::NoField != (ExpandDrawObjectFieldMask & whichField))
+    {
+        returnValue += _sfExpandDrawObject.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -299,6 +317,11 @@ void MenuBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (TopLevelMenuFieldMask & whichField))
     {
         _sfTopLevelMenu.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ExpandDrawObjectFieldMask & whichField))
+    {
+        _sfExpandDrawObject.copyToBin(pMem);
     }
 
 
@@ -334,6 +357,11 @@ void MenuBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfTopLevelMenu.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ExpandDrawObjectFieldMask & whichField))
+    {
+        _sfExpandDrawObject.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -359,6 +387,9 @@ void MenuBase::executeSyncImpl(      MenuBase *pOther,
     if(FieldBits::NoField != (TopLevelMenuFieldMask & whichField))
         _sfTopLevelMenu.syncWith(pOther->_sfTopLevelMenu);
 
+    if(FieldBits::NoField != (ExpandDrawObjectFieldMask & whichField))
+        _sfExpandDrawObject.syncWith(pOther->_sfExpandDrawObject);
+
 
 }
 #else
@@ -380,6 +411,9 @@ void MenuBase::executeSyncImpl(      MenuBase *pOther,
 
     if(FieldBits::NoField != (TopLevelMenuFieldMask & whichField))
         _sfTopLevelMenu.syncWith(pOther->_sfTopLevelMenu);
+
+    if(FieldBits::NoField != (ExpandDrawObjectFieldMask & whichField))
+        _sfExpandDrawObject.syncWith(pOther->_sfExpandDrawObject);
 
 
     if(FieldBits::NoField != (InternalPopupMenuFieldMask & whichField))
@@ -410,7 +444,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<MenuPtr>::_type("MenuPtr", "MenuItemPtr");
+DataType FieldDataTraits<MenuPtr>::_type("MenuPtr", "LabelMenuItemPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(MenuPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);

@@ -45,8 +45,10 @@
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
-#include <OpenSG/UserInterface/OSGPopupMenu.h>
+//#include <OpenSG/UserInterface/OSGPopupMenu.h>
+//#include <OpenSG/UserInterface/OSGLabelMenuItem.h>
 #include <OpenSG/UserInterface/OSGMenuItem.h>
+//#include <OpenSG/UserInterface/OSGSeperatorMenuItem.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -62,29 +64,6 @@ bool ExitApp = false;
 void display(void);
 void reshape(Vec2s Size);
 
-// Create a class to allow for the use of the Escape
-// key to exit
-class TutorialKeyListener : public KeyListener
-{
-public:
-
-   virtual void keyPressed(const KeyEvent& e)
-   {
-       if(e.getKey() == KeyEvent::KEY_ESCAPE)
-       {
-           ExitApp = true;
-       }
-   }
-
-   virtual void keyReleased(const KeyEvent& e)
-   {
-   }
-
-   virtual void keyTyped(const KeyEvent& e)
-   {
-   }
-};
-
 class TutorialWindowListener : public WindowAdapter
 {
 public:
@@ -97,19 +76,6 @@ public:
     {
         ExitApp = true;
     }
-};
-
-// Create an ActionListener to display text
-// in the Console Window when the Button is
-// pressed
-class Button1ActionListener : public ActionListener
-{
-public:
-
-   virtual void actionPerformed(const ActionEvent& e)
-	{
-		std::cout << "Button 1 Action" << std::endl;
-	}
 };
 
 // Initialize WIN32 & OpenSG and set up the scene
@@ -151,33 +117,39 @@ int main(int argc, char **argv)
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
     //Create a Popup Menu
-    MenuItemPtr Item1 = MenuItem::create();
-    MenuItemPtr Item2 = MenuItem::create();
-    MenuItemPtr Item3 = MenuItem::create();
-    MenuItemPtr Item4 = MenuItem::create();
+    /*LabelMenuItemPtr Item1 = LabelMenuItem::create();
+    LabelMenuItemPtr Item2 = LabelMenuItem::create();
+    LabelMenuItemPtr Item3 = LabelMenuItem::create();
+    SeperatorMenuItemPtr Seperator1 = SeperatorMenuItem::create();
+    LabelMenuItemPtr Item4 = LabelMenuItem::create();
     
-    beginEditCP(Item1, MenuItem::TextFieldMask);
+    beginEditCP(Item1, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask);
         Item1->setText("Menu Item 1");
-    endEditCP(Item1, MenuItem::TextFieldMask);
+        Item1->setAcceleratorKey(KeyEvent::KEY_F9);
+    endEditCP(Item1, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask);
     
-    beginEditCP(Item2, MenuItem::TextFieldMask);
+    beginEditCP(Item2, LabelMenuItem::TextFieldMask);
         Item2->setText("Menu Item 2");
-    endEditCP(Item2, MenuItem::TextFieldMask);
+    endEditCP(Item2, LabelMenuItem::TextFieldMask);
     
-    beginEditCP(Item3, MenuItem::TextFieldMask);
+    beginEditCP(Item3, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask);
         Item3->setText("Menu Item 3");
-    endEditCP(Item3, MenuItem::TextFieldMask);
+        Item3->setAcceleratorKey(KeyEvent::KEY_G);
+        Item3->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL | KeyEvent::KEY_MODIFIER_SHIFT);
+    endEditCP(Item3, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask);
     
-    beginEditCP(Item4, MenuItem::TextFieldMask);
+    beginEditCP(Item4, LabelMenuItem::TextFieldMask | LabelMenuItem::EnabledFieldMask);
         Item4->setText("Menu Item 4");
-    endEditCP(Item4, MenuItem::TextFieldMask);
+        Item4->setEnabled(false);
+    endEditCP(Item4, LabelMenuItem::TextFieldMask | LabelMenuItem::EnabledFieldMask);*/
     
     
-    PopupMenuPtr Button1PopupMenu = PopupMenu::create();
-    Button1PopupMenu->addItem(Item1);
+    //PopupMenuPtr Button1PopupMenu = PopupMenu::create();
+    /*Button1PopupMenu->addItem(Item1);
     Button1PopupMenu->addItem(Item2);
     Button1PopupMenu->addItem(Item3);
-    Button1PopupMenu->addItem(Item4);
+    Button1PopupMenu->addItem(Seperator1);
+    Button1PopupMenu->addItem(Item4);*/
     
 	// Create a Button component
 	ButtonPtr button1 = osg::Button::create();
@@ -189,14 +161,9 @@ int main(int argc, char **argv)
 
 
     beginEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::PopupMenuFieldMask | Button::TextColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::ToolTipTextFieldMask);
-		    button1->setText("Button 1");
-            button1->setPopupMenu(Button1PopupMenu);
-		endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::PopupMenuFieldMask | Button::TextColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::ToolTipTextFieldMask);
-	
-	// Create an ActionListener and assign it to button1
-	// This is defined above, and wil
-	Button1ActionListener button1AL;
-	button1->addActionListener( &button1AL);
+		button1->setText("Button 1");
+        //button1->setPopupMenu(Button1PopupMenu);
+    endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::PopupMenuFieldMask | Button::TextColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::ToolTipTextFieldMask);
 
 	/******************************************************
 
@@ -237,9 +204,6 @@ int main(int argc, char **argv)
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
-
-    TutorialKeyListener TheKeyListener;
-    MainFrame->addKeyListener(&TheKeyListener);
 
 	//Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();

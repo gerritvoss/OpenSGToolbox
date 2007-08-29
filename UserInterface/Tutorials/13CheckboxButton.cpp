@@ -153,10 +153,10 @@ int main(int argc, char **argv)
 		//button1->setFont(sampleFont);
 			// Determine the VerticalAlignment of the Text- VERTICAL_CENTER, 
 			// or VERTICAL_TOP, VERTICAL_BOTTOM
-		checkboxButton->setVerticalAlignment(VERTICAL_CENTER);
+		checkboxButton->setVerticalAlignment(0.5);
 			// Determine the HorizontalAlignment of the Text- HORIZONTAL_CENTER,
 			// HORIZONTAL_LEFT, HORIZONTAL_RIGHT
-		checkboxButton->setHorizontalAlignment(HORIZONTAL_CENTER);
+		checkboxButton->setHorizontalAlignment(0.5);
 		checkboxButton->setSelected(true);
 			// You can also change the way that the checkbox button looks by assigning
 			// different draw objects using the setDrawObject, setCheckedDrawObject, setActiveDrawObject,

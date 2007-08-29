@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  SeperatorMenuItemBase::DrawObjectFieldMask = 
     (TypeTraits<BitVector>::One << SeperatorMenuItemBase::DrawObjectFieldId);
 
+const OSG::BitVector  SeperatorMenuItemBase::ColorFieldMask = 
+    (TypeTraits<BitVector>::One << SeperatorMenuItemBase::ColorFieldId);
+
 const OSG::BitVector SeperatorMenuItemBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +78,9 @@ const OSG::BitVector SeperatorMenuItemBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var UIDrawObjectCanvasPtr SeperatorMenuItemBase::_sfDrawObject
+    
+*/
+/*! \var Color4f         SeperatorMenuItemBase::_sfColor
     
 */
 
@@ -86,7 +92,12 @@ FieldDescription *SeperatorMenuItemBase::_desc[] =
                      "DrawObject", 
                      DrawObjectFieldId, DrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &SeperatorMenuItemBase::getSFDrawObject)
+                     (FieldAccessMethod) &SeperatorMenuItemBase::getSFDrawObject),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "Color", 
+                     ColorFieldId, ColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &SeperatorMenuItemBase::getSFColor)
 };
 
 
@@ -163,6 +174,7 @@ void SeperatorMenuItemBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 SeperatorMenuItemBase::SeperatorMenuItemBase(void) :
     _sfDrawObject             (UIDrawObjectCanvasPtr(NullFC)), 
+    _sfColor                  (Color4f(1.0,1.0,1.0,1.0)), 
     Inherited() 
 {
 }
@@ -173,6 +185,7 @@ SeperatorMenuItemBase::SeperatorMenuItemBase(void) :
 
 SeperatorMenuItemBase::SeperatorMenuItemBase(const SeperatorMenuItemBase &source) :
     _sfDrawObject             (source._sfDrawObject             ), 
+    _sfColor                  (source._sfColor                  ), 
     Inherited                 (source)
 {
 }
@@ -194,6 +207,11 @@ UInt32 SeperatorMenuItemBase::getBinSize(const BitVector &whichField)
         returnValue += _sfDrawObject.getBinSize();
     }
 
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    {
+        returnValue += _sfColor.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -206,6 +224,11 @@ void SeperatorMenuItemBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
     {
         _sfDrawObject.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    {
+        _sfColor.copyToBin(pMem);
     }
 
 
@@ -221,6 +244,11 @@ void SeperatorMenuItemBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfDrawObject.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    {
+        _sfColor.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -234,6 +262,9 @@ void SeperatorMenuItemBase::executeSyncImpl(      SeperatorMenuItemBase *pOther,
     if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
         _sfDrawObject.syncWith(pOther->_sfDrawObject);
 
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+        _sfColor.syncWith(pOther->_sfColor);
+
 
 }
 #else
@@ -246,6 +277,9 @@ void SeperatorMenuItemBase::executeSyncImpl(      SeperatorMenuItemBase *pOther,
 
     if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
         _sfDrawObject.syncWith(pOther->_sfDrawObject);
+
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+        _sfColor.syncWith(pOther->_sfColor);
 
 
 

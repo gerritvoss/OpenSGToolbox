@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Menu
+ **     class LabelMenuItem
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGMENUBASE_H_
-#define _OSGMENUBASE_H_
+#ifndef _OSGLABELMENUITEMBASE_H_
+#define _OSGLABELMENUITEMBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,52 +65,73 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGLabelMenuItem.h" // Parent
+#include "OSGMenuItem.h" // Parent
 
-#include "Component/Button/OSGToggleButtonFields.h" // Button type
-#include "Component/Menu/OSGPopupMenuFields.h" // InternalPopupMenu type
-#include <OpenSG/OSGReal32Fields.h> // SubMenuDelay type
-#include <OpenSG/OSGBoolFields.h> // Selected type
-#include <OpenSG/OSGBoolFields.h> // TopLevelMenu type
-#include "Component/OSGUIDrawObjectCanvas.h" // ExpandDrawObject type
+#include "Text/OSGUIFont.h" // Font type
+#include <OpenSG/OSGStringFields.h> // Text type
+#include <OpenSG/OSGUInt32Fields.h> // AcceleratorModifiers type
+#include <OpenSG/OSGUInt32Fields.h> // AcceleratorKey type
+#include <OpenSG/OSGBoolFields.h> // Armed type
+#include "Border/OSGBorder.h" // ArmedBorder type
+#include "Background/OSGUIBackground.h" // ArmedBackground type
+#include <OpenSG/OSGColor4fFields.h> // ArmedTextColor type
+#include <OpenSG/OSGColor4fFields.h> // FocusedTextColor type
+#include <OpenSG/OSGColor4fFields.h> // RolloverTextColor type
+#include <OpenSG/OSGColor4fFields.h> // DisabledTextColor type
+#include <OpenSG/OSGColor4fFields.h> // TextColor type
+#include <OpenSG/OSGStringFields.h> // AcceleratorText type
 
-#include "OSGMenuFields.h"
+#include "OSGLabelMenuItemFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Menu;
+class LabelMenuItem;
 class BinaryDataHandler;
 
-//! \brief Menu Base Class.
+//! \brief LabelMenuItem Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public LabelMenuItem
+class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItemBase : public MenuItem
 {
   private:
 
-    typedef LabelMenuItem    Inherited;
+    typedef MenuItem    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef MenuPtr  Ptr;
+    typedef LabelMenuItemPtr  Ptr;
 
     enum
     {
-        ButtonFieldId            = Inherited::NextFieldId,
-        InternalPopupMenuFieldId = ButtonFieldId            + 1,
-        SubMenuDelayFieldId      = InternalPopupMenuFieldId + 1,
-        SelectedFieldId          = SubMenuDelayFieldId      + 1,
-        TopLevelMenuFieldId      = SelectedFieldId          + 1,
-        ExpandDrawObjectFieldId  = TopLevelMenuFieldId      + 1,
-        NextFieldId              = ExpandDrawObjectFieldId  + 1
+        FontFieldId                 = Inherited::NextFieldId,
+        TextFieldId                 = FontFieldId                 + 1,
+        AcceleratorModifiersFieldId = TextFieldId                 + 1,
+        AcceleratorKeyFieldId       = AcceleratorModifiersFieldId + 1,
+        ArmedFieldId                = AcceleratorKeyFieldId       + 1,
+        ArmedBorderFieldId          = ArmedFieldId                + 1,
+        ArmedBackgroundFieldId      = ArmedBorderFieldId          + 1,
+        ArmedTextColorFieldId       = ArmedBackgroundFieldId      + 1,
+        FocusedTextColorFieldId     = ArmedTextColorFieldId       + 1,
+        RolloverTextColorFieldId    = FocusedTextColorFieldId     + 1,
+        DisabledTextColorFieldId    = RolloverTextColorFieldId    + 1,
+        TextColorFieldId            = DisabledTextColorFieldId    + 1,
+        AcceleratorTextFieldId      = TextColorFieldId            + 1,
+        NextFieldId                 = AcceleratorTextFieldId      + 1
     };
 
-    static const OSG::BitVector ButtonFieldMask;
-    static const OSG::BitVector InternalPopupMenuFieldMask;
-    static const OSG::BitVector SubMenuDelayFieldMask;
-    static const OSG::BitVector SelectedFieldMask;
-    static const OSG::BitVector TopLevelMenuFieldMask;
-    static const OSG::BitVector ExpandDrawObjectFieldMask;
+    static const OSG::BitVector FontFieldMask;
+    static const OSG::BitVector TextFieldMask;
+    static const OSG::BitVector AcceleratorModifiersFieldMask;
+    static const OSG::BitVector AcceleratorKeyFieldMask;
+    static const OSG::BitVector ArmedFieldMask;
+    static const OSG::BitVector ArmedBorderFieldMask;
+    static const OSG::BitVector ArmedBackgroundFieldMask;
+    static const OSG::BitVector ArmedTextColorFieldMask;
+    static const OSG::BitVector FocusedTextColorFieldMask;
+    static const OSG::BitVector RolloverTextColorFieldMask;
+    static const OSG::BitVector DisabledTextColorFieldMask;
+    static const OSG::BitVector TextColorFieldMask;
+    static const OSG::BitVector AcceleratorTextFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -137,33 +158,61 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public LabelMenuItem
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFToggleButtonPtr   *getSFButton         (void);
-           SFReal32            *getSFSubMenuDelay   (void);
-           SFBool              *getSFSelected       (void);
-           SFBool              *getSFTopLevelMenu   (void);
-           SFUIDrawObjectCanvasPtr *getSFExpandDrawObject(void);
+           SFUIFontPtr         *getSFFont           (void);
+           SFString            *getSFText           (void);
+           SFUInt32            *getSFAcceleratorModifiers(void);
+           SFUInt32            *getSFAcceleratorKey (void);
+           SFBool              *getSFArmed          (void);
+           SFBorderPtr         *getSFArmedBorder    (void);
+           SFUIBackgroundPtr   *getSFArmedBackground(void);
+           SFColor4f           *getSFArmedTextColor (void);
+           SFColor4f           *getSFFocusedTextColor(void);
+           SFColor4f           *getSFRolloverTextColor(void);
+           SFColor4f           *getSFDisabledTextColor(void);
+           SFColor4f           *getSFTextColor      (void);
 
-           ToggleButtonPtr     &getButton         (void);
-     const ToggleButtonPtr     &getButton         (void) const;
-           Real32              &getSubMenuDelay   (void);
-     const Real32              &getSubMenuDelay   (void) const;
-           bool                &getSelected       (void);
-     const bool                &getSelected       (void) const;
-           bool                &getTopLevelMenu   (void);
-     const bool                &getTopLevelMenu   (void) const;
-           UIDrawObjectCanvasPtr &getExpandDrawObject(void);
-     const UIDrawObjectCanvasPtr &getExpandDrawObject(void) const;
+           UIFontPtr           &getFont           (void);
+     const UIFontPtr           &getFont           (void) const;
+           std::string         &getText           (void);
+     const std::string         &getText           (void) const;
+           UInt32              &getAcceleratorModifiers(void);
+     const UInt32              &getAcceleratorModifiers(void) const;
+           UInt32              &getAcceleratorKey (void);
+     const UInt32              &getAcceleratorKey (void) const;
+           bool                &getArmed          (void);
+     const bool                &getArmed          (void) const;
+           BorderPtr           &getArmedBorder    (void);
+     const BorderPtr           &getArmedBorder    (void) const;
+           UIBackgroundPtr     &getArmedBackground(void);
+     const UIBackgroundPtr     &getArmedBackground(void) const;
+           Color4f             &getArmedTextColor (void);
+     const Color4f             &getArmedTextColor (void) const;
+           Color4f             &getFocusedTextColor(void);
+     const Color4f             &getFocusedTextColor(void) const;
+           Color4f             &getRolloverTextColor(void);
+     const Color4f             &getRolloverTextColor(void) const;
+           Color4f             &getDisabledTextColor(void);
+     const Color4f             &getDisabledTextColor(void) const;
+           Color4f             &getTextColor      (void);
+     const Color4f             &getTextColor      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setButton         ( const ToggleButtonPtr &value );
-     void setSubMenuDelay   ( const Real32 &value );
-     void setSelected       ( const bool &value );
-     void setTopLevelMenu   ( const bool &value );
-     void setExpandDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setFont           ( const UIFontPtr &value );
+     void setText           ( const std::string &value );
+     void setAcceleratorModifiers( const UInt32 &value );
+     void setAcceleratorKey ( const UInt32 &value );
+     void setArmed          ( const bool &value );
+     void setArmedBorder    ( const BorderPtr &value );
+     void setArmedBackground( const UIBackgroundPtr &value );
+     void setArmedTextColor ( const Color4f &value );
+     void setFocusedTextColor( const Color4f &value );
+     void setRolloverTextColor( const Color4f &value );
+     void setDisabledTextColor( const Color4f &value );
+     void setTextColor      ( const Color4f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -187,8 +236,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public LabelMenuItem
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  MenuPtr      create          (void); 
-    static  MenuPtr      createEmpty     (void); 
+    static  LabelMenuItemPtr      create          (void); 
+    static  LabelMenuItemPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -206,44 +255,51 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public LabelMenuItem
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFToggleButtonPtr   _sfButton;
-    MFPopupMenuPtr      _mfInternalPopupMenu;
-    SFReal32            _sfSubMenuDelay;
-    SFBool              _sfSelected;
-    SFBool              _sfTopLevelMenu;
-    SFUIDrawObjectCanvasPtr   _sfExpandDrawObject;
+    SFUIFontPtr         _sfFont;
+    SFString            _sfText;
+    SFUInt32            _sfAcceleratorModifiers;
+    SFUInt32            _sfAcceleratorKey;
+    SFBool              _sfArmed;
+    SFBorderPtr         _sfArmedBorder;
+    SFUIBackgroundPtr   _sfArmedBackground;
+    SFColor4f           _sfArmedTextColor;
+    SFColor4f           _sfFocusedTextColor;
+    SFColor4f           _sfRolloverTextColor;
+    SFColor4f           _sfDisabledTextColor;
+    SFColor4f           _sfTextColor;
+    SFString            _sfAcceleratorText;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    MenuBase(void);
-    MenuBase(const MenuBase &source);
+    LabelMenuItemBase(void);
+    LabelMenuItemBase(const LabelMenuItemBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MenuBase(void); 
+    virtual ~LabelMenuItemBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFPopupMenuPtr      *getMFInternalPopupMenu(void);
+           SFString            *getSFAcceleratorText(void);
 
-           PopupMenuPtr        &getInternalPopupMenu(UInt32 index);
-           MFPopupMenuPtr      &getInternalPopupMenu(void);
-     const MFPopupMenuPtr      &getInternalPopupMenu(void) const;
+           std::string         &getAcceleratorText(void);
+     const std::string         &getAcceleratorText(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setAcceleratorText(const std::string &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -251,13 +307,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public LabelMenuItem
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      MenuBase *pOther,
+    void executeSyncImpl(      LabelMenuItemBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      MenuBase *pOther,
+    void executeSyncImpl(      LabelMenuItemBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -287,7 +343,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public LabelMenuItem
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const MenuBase &source);
+    void operator =(const LabelMenuItemBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -295,17 +351,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public LabelMenuItem
 //---------------------------------------------------------------------------
 
 
-typedef MenuBase *MenuBaseP;
+typedef LabelMenuItemBase *LabelMenuItemBaseP;
 
-typedef osgIF<MenuBase::isNodeCore,
-              CoredNodePtr<Menu>,
+typedef osgIF<LabelMenuItemBase::isNodeCore,
+              CoredNodePtr<LabelMenuItem>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet MenuNodePtr;
+              >::_IRet LabelMenuItemNodePtr;
 
-typedef RefPtr<MenuPtr> MenuRefPtr;
+typedef RefPtr<LabelMenuItemPtr> LabelMenuItemRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGMENUBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGLABELMENUITEMBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGMENUBASE_H_ */
+#endif /* _OSGLABELMENUITEMBASE_H_ */

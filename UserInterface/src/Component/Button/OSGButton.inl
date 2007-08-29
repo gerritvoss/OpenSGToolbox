@@ -43,6 +43,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+Button::ButtonArmedListener::ButtonArmedListener(ButtonPtr TheButton) :
+_Button(TheButton)
+{
+}
+
+inline
 void Button::addActionListener(ActionListenerPtr Listener)
 {
    _ActionListeners.insert(Listener);

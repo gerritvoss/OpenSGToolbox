@@ -46,6 +46,8 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGFrameBase.h"
+#include <OpenSG/Input/OSGMouseAdapter.h>
+#include <OpenSG/Input/OSGKeyAdapter.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -97,6 +99,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
     virtual       FramePtr            &getParentFrame    (void);
     virtual const FramePtr            &getParentFrame    (void) const;
 
+    void destroyPopupMenu(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -119,6 +122,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
 	virtual void drawInternal(const GraphicsPtr TheGraphics) const;
     /*! \}                                                                 */
     
+	class PopupMenuInteractionListener : public MouseAdapter, public KeyAdapter
+	{
+	public :
+		PopupMenuInteractionListener(FramePtr TheFrame);
+		
+		virtual void mousePressed(const MouseEvent& e);
+		virtual void keyPressed(const KeyEvent& e);
+	protected :
+		FramePtr _Frame;
+	};
+
+	friend class PopupMenuInteractionListener;
+
+	PopupMenuInteractionListener _PopupMenuInteractionListener;
     /*==========================  PRIVATE  ================================*/
   private:
 

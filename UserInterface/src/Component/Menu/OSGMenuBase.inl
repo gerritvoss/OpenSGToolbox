@@ -131,6 +131,13 @@ SFBool *MenuBase::getSFTopLevelMenu(void)
     return &_sfTopLevelMenu;
 }
 
+//! Get the Menu::_sfExpandDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *MenuBase::getSFExpandDrawObject(void)
+{
+    return &_sfExpandDrawObject;
+}
+
 
 //! Get the value of the Menu::_sfButton field.
 inline
@@ -214,6 +221,27 @@ inline
 void MenuBase::setTopLevelMenu(const bool &value)
 {
     _sfTopLevelMenu.setValue(value);
+}
+
+//! Get the value of the Menu::_sfExpandDrawObject field.
+inline
+UIDrawObjectCanvasPtr &MenuBase::getExpandDrawObject(void)
+{
+    return _sfExpandDrawObject.getValue();
+}
+
+//! Get the value of the Menu::_sfExpandDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &MenuBase::getExpandDrawObject(void) const
+{
+    return _sfExpandDrawObject.getValue();
+}
+
+//! Set the value of the Menu::_sfExpandDrawObject field.
+inline
+void MenuBase::setExpandDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfExpandDrawObject.setValue(value);
 }
 
 

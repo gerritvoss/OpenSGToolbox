@@ -1,4 +1,4 @@
-echo OFF
+echo off
 
 ::Make the include directories
 mkdir %1\include
@@ -23,5 +23,4 @@ del %1\include\OpenSG\%2\%%G
 move %1\include\OpenSG\%2\%%G.temp %1\include\OpenSG\%2\%%G
 )
 
-echo ON
 

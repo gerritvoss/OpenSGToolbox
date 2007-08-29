@@ -3,6 +3,210 @@
 
 OSG_BEGIN_NAMESPACE
 
+std::string KeyEvent::getStringFromKey(Key k, UInt32 Modifier)
+{
+    UChar8 ResultChar = getCharFromKey(k,Modifier);
+    if(ResultChar != 0)
+    {
+        std::string Result("");
+        Result += ResultChar;
+        return Result;
+    }
+    else
+    {
+        return getStringFromNonDisplayedKey(k,Modifier);
+    }
+}
+
+std::string KeyEvent::getStringFromNonDisplayedKey(Key k, UInt32 Modifier)
+{
+    std::string Result("");
+
+    switch(k)
+    {
+    case KEY_CANCEL:
+        Result = "Cancel";
+        break;
+    case KEY_CAPS_LOCK:
+        Result = "Capital Lock";
+        break;
+    case KEY_CLEAR:
+        Result = "Clear";
+        break;
+    case KEY_CONTROL:
+        Result = "Control";
+        break;
+    case KEY_COPY:
+        Result = "Copy";
+        break;
+    case KEY_CUT:
+        Result = "Cut";
+        break;
+    case KEY_DELETE:
+        Result = "Delete";
+        break;
+    case KEY_DOWN:
+        Result = "Down";
+        break;
+    case KEY_END:
+        Result = "End";
+        break;
+    case KEY_ENTER:
+        Result = "Enter";
+        break;
+    case KEY_ESCAPE:
+        Result = "Escape";
+        break;
+
+    case KEY_F1:
+        Result = "F1";
+        break;
+    case KEY_F2:
+        Result = "F2";
+        break;
+    case KEY_F3:
+        Result = "F3";
+        break;
+    case KEY_F4:
+        Result = "F4";
+        break;
+    case KEY_F5:
+        Result = "F5";
+        break;
+    case KEY_F6:
+        Result = "F6";
+        break;
+    case KEY_F7:
+        Result = "F7";
+        break;
+    case KEY_F8:
+        Result = "F8";
+        break;
+    case KEY_F9:
+        Result = "F9";
+        break;
+    case KEY_F10:
+        Result = "F10";
+        break;
+    case KEY_F11:
+        Result = "F11";
+        break;
+    case KEY_F12:
+        Result = "F12";
+        break;
+    case KEY_F13:
+        Result = "F13";
+        break;
+    case KEY_F14:
+        Result = "F14";
+        break;
+    case KEY_F15:
+        Result = "F15";
+        break;
+    case KEY_F16:
+        Result = "F16";
+        break;
+    case KEY_F17:
+        Result = "F17";
+        break;
+    case KEY_F18:
+        Result = "F18";
+        break;
+    case KEY_F19:
+        Result = "F19";
+        break;
+    case KEY_F20:
+        Result = "F20";
+        break;
+    case KEY_F21:
+        Result = "F21";
+        break;
+    case KEY_F22:
+        Result = "F22";
+        break;
+    case KEY_F23:
+        Result = "F23";
+        break;
+    case KEY_F24:
+        Result = "F24";
+        break;
+        
+    case KEY_FIND:
+        Result = "Find";
+        break;
+    case KEY_HELP:
+        Result = "Help";
+        break;
+    case KEY_HOME:
+        Result = "Home";
+        break;
+    case KEY_INSERT:
+        Result = "Insert";
+        break;
+    case KEY_KEYPAD_UP:
+        Result = "Keypad Up";
+        break;
+    case KEY_KEYPAD_DOWN:
+        Result = "Keypad Down";
+        break;
+    case KEY_KEYPAD_LEFT:
+        Result = "Keypad Left";
+        break;
+    case KEY_KEYPAD_RIGHT:
+        Result = "Keypad Right";
+        break;
+    case KEY_LEFT:
+        Result = "Left";
+        break;
+    case KEY_MENU:
+        Result = "Menu";
+        break;
+    case KEY_META:
+        Result = "Meta";
+        break;
+    case KEY_NUM_LOCK:
+        Result = "Number Lock";
+        break;
+    case KEY_PAGE_DOWN:
+        Result = "Page Down";
+        break;
+    case KEY_PAGE_UP:
+        Result = "Page Up";
+        break;
+    case KEY_PASTE:
+        Result = "Paste";
+        break;
+    case KEY_PAUSE:
+        Result = "Pause";
+        break;
+    case KEY_PRINTSCREEN:
+        Result = "Print Screen";
+        break;
+    case KEY_RIGHT:
+        Result = "Right";
+        break;
+    case KEY_SCROLL_LOCK:
+        Result = "Scroll Lock";
+        break;
+    case KEY_SHIFT:
+        Result = "Shift";
+        break;
+    case KEY_STOP:
+        Result = "Stop";
+        break;
+    case KEY_UNDO:
+        Result = "Undo";
+        break;
+    case KEY_UP:
+        Result = "Up";
+        break;
+
+    default:
+        break;
+    }
+    return Result;
+}
+
 UChar8 KeyEvent::getCharFromKey(Key k, UInt32 Modifier)
 {
    if( ((Modifier & KEY_MODIFIER_SHIFT) != KEY_MODIFIER_SHIFT) ^
@@ -273,7 +477,7 @@ UChar8 KeyEvent::getNonLetterKey(Key k, UInt32 Modifier)
          case KEY_SEMICOLON:
             return ';';
          default:
-            return NULL;
+            return 0;
          }
       }
       else
@@ -324,7 +528,7 @@ UChar8 KeyEvent::getNonLetterKey(Key k, UInt32 Modifier)
          case KEY_SEMICOLON:
             return ':';
          default:
-            return NULL;
+            return 0;
          }
       }
    }

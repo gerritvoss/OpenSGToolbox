@@ -182,8 +182,8 @@ int main(int argc, char **argv)
 	beginEditCP(label1, Label::FontFieldMask | Label::TextFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask);
 		label1->setFont(labelFont);
 		label1->setText("Sample Label");
-		label1->setVerticalAlignment(VERTICAL_CENTER);
-		label1->setHorizontalAlignment(HORIZONTAL_RIGHT);
+		label1->setVerticalAlignment(0.5);
+		label1->setHorizontalAlignment(1.0);
 	endEditCP(label1, Label::FontFieldMask | Label::TextFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask);
 	
 

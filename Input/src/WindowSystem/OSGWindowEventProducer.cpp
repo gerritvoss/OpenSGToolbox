@@ -340,7 +340,8 @@ void WindowEventProducer::produceMouseDragged(const MouseEvent::MouseButton& But
 void WindowEventProducer::produceKeyPressed(const KeyEvent::Key& TheKey, const UInt32& Modifiers)
 {
    KeyEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), TheKey, Modifiers, getWindow() );
-   for(KeyListenerSetConstItor SetItor(_KeyListeners.begin()) ; SetItor != _KeyListeners.end() ; ++SetItor)
+   KeyListenerSet ListenerSet(_KeyListeners);
+   for(KeyListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->keyPressed(TheEvent);
    }

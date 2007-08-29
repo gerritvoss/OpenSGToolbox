@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="Menu"
-	parent="MenuItem"
+	parent="LabelMenuItem"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -55,6 +55,15 @@ A UI Menu.
 		cardinality="single"
 		visibility="external"
 		defaultValue="false"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ExpandDrawObject"
+		type="UIDrawObjectCanvasPtr"
+		cardinality="single"
+		visibility="external"
+		header="Component/OSGUIDrawObjectCanvas.h"
 		access="public"
 	>
 	</Field>

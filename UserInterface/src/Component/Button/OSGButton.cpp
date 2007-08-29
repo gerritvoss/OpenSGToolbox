@@ -284,12 +284,6 @@ void Button::dump(      UInt32    ,
     SLOG << "Dump Button NI" << std::endl;
 }
 
-
-Button::ButtonArmedListener::ButtonArmedListener(ButtonPtr TheButton) :
-_Button(TheButton)
-{
-}
-
 void Button::ButtonArmedListener::mouseReleased(const MouseEvent& e)
 {
 	if(e.getButton() == MouseEvent::BUTTON1)

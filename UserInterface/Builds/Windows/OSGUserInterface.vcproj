@@ -417,6 +417,27 @@
 				<Filter
 					Name="Text">
 					<File
+						RelativePath="..\..\src\Component\Text\OSGPasswordField.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Text\OSGPasswordField.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Text\OSGPasswordField.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Text\OSGPasswordFieldBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Text\OSGPasswordFieldBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Text\OSGPasswordFieldBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Text\OSGPasswordFieldFields.h">
+					</File>
+					<File
 						RelativePath="..\..\src\Component\Text\OSGTextArea.cpp">
 					</File>
 					<File
@@ -482,6 +503,27 @@
 				</Filter>
 				<Filter
 					Name="Menu">
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItem.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItem.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItem.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItemBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItemBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItemBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItemFields.h">
+					</File>
 					<File
 						RelativePath="..\..\src\Component\Menu\OSGMenu.cpp">
 					</File>
