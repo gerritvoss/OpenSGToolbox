@@ -111,6 +111,11 @@ Time WindowsLookAndFeel::getToolTipPopupTime(void) const
 }
 
 
+Time WindowsLookAndFeel::getSubMenuPopupTime(void) const
+{
+	return _SubMenuPopupTime;
+}
+
 void WindowsLookAndFeel::init(void)
 {
 
@@ -1329,14 +1334,16 @@ void WindowsLookAndFeel::init(void)
 WindowsLookAndFeel::WindowsLookAndFeel(void) :
     Inherited(),
 		_TextCaretRate(1.0),
-		_ToolTipPopupTime(1.5)
+		_ToolTipPopupTime(1.5),
+		_SubMenuPopupTime(0.25)
 {
 }
 
 WindowsLookAndFeel::WindowsLookAndFeel(const WindowsLookAndFeel &source) :
     Inherited(source),
 		_TextCaretRate(source._TextCaretRate),
-		_ToolTipPopupTime(source._ToolTipPopupTime)
+		_ToolTipPopupTime(source._ToolTipPopupTime),
+		_SubMenuPopupTime(source._SubMenuPopupTime)
 {
 }
 

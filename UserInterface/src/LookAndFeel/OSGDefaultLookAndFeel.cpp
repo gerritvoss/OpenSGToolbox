@@ -70,6 +70,7 @@
 #include "Component/Misc/OSGToolTip.h"
 
 #include "Component/Menu/OSGLabelMenuItem.h"
+#include "Component/Menu/OSGMenu.h"
 #include "Component/Menu/OSGSeperatorMenuItem.h"
 #include "Component/Menu/OSGPopupMenu.h"
 
@@ -110,6 +111,12 @@ Time DefaultLookAndFeel::getToolTipPopupTime(void) const
 {
 	return _ToolTipPopupTime;
 }
+
+Time DefaultLookAndFeel::getSubMenuPopupTime(void) const
+{
+	return _SubMenuPopupTime;
+}
+
 void DefaultLookAndFeel::init(void)
 {
 	//Default Font
@@ -997,7 +1004,7 @@ void DefaultLookAndFeel::init(void)
 		//Sizes
 		DefaultSeperatorMenuItem->setMinSize(Vec2s(0,0));
 		DefaultSeperatorMenuItem->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultSeperatorMenuItem->setPreferredSize(Vec2s(100,25));
+		DefaultSeperatorMenuItem->setPreferredSize(Vec2s(100,10));
 
 		//Border
 		DefaultSeperatorMenuItem->setBorder(DefaultSeperatorMenuItemBorder);
@@ -1015,6 +1022,66 @@ void DefaultLookAndFeel::init(void)
 	
     SeperatorMenuItem::getClassType().setPrototype(DefaultSeperatorMenuItem);
     
+	//************************** Menu*****************************
+	//Default MenuBorder
+	EmptyBorderPtr DefaultMenuBorder = EmptyBorder::create();
+
+	//Default MenuBackground
+	ColorUIBackgroundPtr DefaultMenuBackground = ColorUIBackground::create();
+	beginEditCP(DefaultMenuBackground);
+		DefaultMenuBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+	endEditCP(DefaultMenuBackground);
+	
+	//Default MenuBorder
+	EmptyBorderPtr DefaultMenuArmedBorder = EmptyBorder::create();
+
+	//Default MenuBackground
+	ColorUIBackgroundPtr DefaultMenuArmedBackground = ColorUIBackground::create();
+	beginEditCP(DefaultMenuArmedBackground);
+		DefaultMenuArmedBackground->setColor(Color4f(0.3,0.3,1.0,1.0));
+	endEditCP(DefaultMenuArmedBackground);
+
+	//Default Menu
+	MenuPtr DefaultMenu = Menu::create();
+	beginEditCP(DefaultMenu);
+		DefaultMenu->setEnabled(true);
+		DefaultMenu->setVisible(true);
+		
+		DefaultMenu->setConstraints(NullFC);
+		//Sizes
+		DefaultMenu->setMinSize(Vec2s(0,0));
+		DefaultMenu->setMaxSize(Vec2s(32767,32767)); //2^15
+		DefaultMenu->setPreferredSize(Vec2s(100,25));
+
+		//Border
+		DefaultMenu->setBorder(DefaultMenuBorder);
+		
+		//Background
+		DefaultMenu->setBackground(DefaultMenuBackground);
+		
+		//Opacity
+		DefaultMenu->setOpacity(1.0);
+
+        //Accelerators
+        DefaultMenu->setAcceleratorModifiers(0);
+        DefaultMenu->setAcceleratorKey(0);
+
+        //Armed
+        DefaultMenu->setArmed(false);
+        DefaultMenu->setArmedBorder(DefaultMenuArmedBorder);
+        DefaultMenu->setArmedBackground(DefaultMenuArmedBackground);
+        
+		//Text
+		DefaultMenu->setText("");
+		DefaultMenu->setFont(DefaultFont);
+		DefaultMenu->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultMenu->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultMenu->setArmedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultMenu->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultMenu->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
+	endEditCP(DefaultMenu);
+	
+    Menu::getClassType().setPrototype(DefaultMenu);
     
 	//************************** PopupMenu*****************************
 	//Default PopupMenuBorder
@@ -1205,6 +1272,7 @@ void DefaultLookAndFeel::init(void)
 		getPrototypes().addValue(DefaultToolTip);
 		getPrototypes().addValue(DefaultLabelMenuItem);
 		getPrototypes().addValue(DefaultSeperatorMenuItem);
+		getPrototypes().addValue(DefaultMenu);
 		getPrototypes().addValue(DefaultPopupMenu);
 	endEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);
 }
@@ -1217,7 +1285,8 @@ void DefaultLookAndFeel::init(void)
 DefaultLookAndFeel::DefaultLookAndFeel(void) :
     Inherited(),
 		_TextCaretRate(1.0),
-		_ToolTipPopupTime(1.5)
+		_ToolTipPopupTime(1.5),
+		_SubMenuPopupTime(0.25)
 {
 
 }
@@ -1225,7 +1294,8 @@ DefaultLookAndFeel::DefaultLookAndFeel(void) :
 DefaultLookAndFeel::DefaultLookAndFeel(const DefaultLookAndFeel &source) :
     Inherited(source),
 		_TextCaretRate(source._TextCaretRate),
-		_ToolTipPopupTime(source._ToolTipPopupTime)
+		_ToolTipPopupTime(source._ToolTipPopupTime),
+		_SubMenuPopupTime(source._SubMenuPopupTime)
 {
 }
 

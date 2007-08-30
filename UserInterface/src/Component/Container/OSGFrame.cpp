@@ -397,7 +397,7 @@ void Frame::dump(      UInt32    ,
 
 void Frame::PopupMenuInteractionListener::mousePressed(const MouseEvent& e)
 {
-    if(e.getButton() == MouseEvent::BUTTON1 && 
+    if((e.getButton() == MouseEvent::BUTTON1 || e.getButton() == MouseEvent::BUTTON3) &&
         !_Frame->getActivePopupMenu()->isContained(e.getLocation(), true))
     {
         _Frame->destroyPopupMenu();

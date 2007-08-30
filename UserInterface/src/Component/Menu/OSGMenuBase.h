@@ -207,7 +207,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public LabelMenuItem
     /*! \{                                                                 */
 
     SFToggleButtonPtr   _sfButton;
-    MFPopupMenuPtr      _mfInternalPopupMenu;
+    SFPopupMenuPtr      _sfInternalPopupMenu;
     SFReal32            _sfSubMenuDelay;
     SFBool              _sfSelected;
     SFBool              _sfTopLevelMenu;
@@ -233,17 +233,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public LabelMenuItem
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFPopupMenuPtr      *getMFInternalPopupMenu(void);
+           SFPopupMenuPtr      *getSFInternalPopupMenu(void);
 
-           PopupMenuPtr        &getInternalPopupMenu(UInt32 index);
-           MFPopupMenuPtr      &getInternalPopupMenu(void);
-     const MFPopupMenuPtr      &getInternalPopupMenu(void) const;
+           PopupMenuPtr        &getInternalPopupMenu(void);
+     const PopupMenuPtr        &getInternalPopupMenu(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setInternalPopupMenu(const PopupMenuPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

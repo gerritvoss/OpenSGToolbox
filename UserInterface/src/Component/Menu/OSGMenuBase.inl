@@ -103,11 +103,11 @@ SFToggleButtonPtr *MenuBase::getSFButton(void)
     return &_sfButton;
 }
 
-//! Get the Menu::_mfInternalPopupMenu field.
+//! Get the Menu::_sfInternalPopupMenu field.
 inline
-MFPopupMenuPtr *MenuBase::getMFInternalPopupMenu(void)
+SFPopupMenuPtr *MenuBase::getSFInternalPopupMenu(void)
 {
-    return &_mfInternalPopupMenu;
+    return &_sfInternalPopupMenu;
 }
 
 //! Get the Menu::_sfSubMenuDelay field.
@@ -158,6 +158,27 @@ inline
 void MenuBase::setButton(const ToggleButtonPtr &value)
 {
     _sfButton.setValue(value);
+}
+
+//! Get the value of the Menu::_sfInternalPopupMenu field.
+inline
+PopupMenuPtr &MenuBase::getInternalPopupMenu(void)
+{
+    return _sfInternalPopupMenu.getValue();
+}
+
+//! Get the value of the Menu::_sfInternalPopupMenu field.
+inline
+const PopupMenuPtr &MenuBase::getInternalPopupMenu(void) const
+{
+    return _sfInternalPopupMenu.getValue();
+}
+
+//! Set the value of the Menu::_sfInternalPopupMenu field.
+inline
+void MenuBase::setInternalPopupMenu(const PopupMenuPtr &value)
+{
+    _sfInternalPopupMenu.setValue(value);
 }
 
 //! Get the value of the Menu::_sfSubMenuDelay field.
@@ -244,27 +265,6 @@ void MenuBase::setExpandDrawObject(const UIDrawObjectCanvasPtr &value)
     _sfExpandDrawObject.setValue(value);
 }
 
-
-//! Get the value of the \a index element the Menu::_mfInternalPopupMenu field.
-inline
-PopupMenuPtr &MenuBase::getInternalPopupMenu(const UInt32 index)
-{
-    return _mfInternalPopupMenu[index];
-}
-
-//! Get the Menu::_mfInternalPopupMenu field.
-inline
-MFPopupMenuPtr &MenuBase::getInternalPopupMenu(void)
-{
-    return _mfInternalPopupMenu;
-}
-
-//! Get the Menu::_mfInternalPopupMenu field.
-inline
-const MFPopupMenuPtr &MenuBase::getInternalPopupMenu(void) const
-{
-    return _mfInternalPopupMenu;
-}
 
 OSG_END_NAMESPACE
 

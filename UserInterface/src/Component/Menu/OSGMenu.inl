@@ -39,8 +39,64 @@
 //---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGPopupMenu.h"
 
 OSG_BEGIN_NAMESPACE
+
+inline
+void Menu::addItem(MenuItemPtr Item)
+{
+    getInternalPopupMenu()->addItem(Item);
+}
+
+inline
+void Menu::addItem(MenuItemPtr Item, const UInt32& Index)
+{
+    getInternalPopupMenu()->addItem(Item, Index);
+}
+
+inline
+void Menu::removeItem(MenuItemPtr Item)
+{
+    getInternalPopupMenu()->removeItem(Item);
+}
+
+inline
+void Menu::removeItem(const UInt32& Index)
+{
+    getInternalPopupMenu()->removeItem(Index);
+}
+
+inline
+MenuItemPtr Menu::getItem(const UInt32& Index)
+{
+    return getInternalPopupMenu()->getItem(Index);
+}
+
+inline
+UInt32 Menu::getNumItems(void) const
+{
+    return getInternalPopupMenu()->getNumItems();
+}
+
+inline
+bool Menu::getPopupVisible(void) const
+{
+    return getInternalPopupMenu()->getVisible();
+}
+
+inline
+Menu::PopupUpdateListener::PopupUpdateListener(MenuPtr TheMenu) :
+									_Menu(TheMenu),
+									_PopupElps(0.0)
+{
+}
+
+inline
+void Menu::PopupUpdateListener::reset(void)
+{
+    _PopupElps = 0.0;
+}
 
 OSG_END_NAMESPACE
 

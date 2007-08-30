@@ -25,7 +25,7 @@ A UI Menu.
 	<Field
 		name="InternalPopupMenu"
 		type="PopupMenuPtr"
-		cardinality="multi"
+		cardinality="single"
 		visibility="external"
 		header="Component/Menu/OSGPopupMenuFields.h"
 		access="protected"

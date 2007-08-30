@@ -48,6 +48,11 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGMenu.h"
+#include "LookAndFeel/OSGLookAndFeelManager.h"
+#include "Component/Container/OSGFrame.h"
+#include "UIDrawingSurface/OSGUIDrawingSurface.h"
+#include <OpenSG/Input/OSGWindowEventProducer.h>
+#include "OSGPopupMenu.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -76,6 +81,37 @@ void Menu::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void Menu::drawInternal(const GraphicsPtr Graphics) const
+{
+    LabelMenuItem::drawInternal(Graphics);
+
+    //If my popup Menu is visible then tell it to draw
+    if(getInternalPopupMenu()->getVisible())
+    {
+        getInternalPopupMenu()->draw(Graphics);
+    }
+}
+
+void Menu::mouseEntered(const MouseEvent& e)
+{
+    getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_PopupUpdateListener);
+    LabelMenuItem::mouseEntered(e);
+}
+
+void Menu::mouseReleased(const MouseEvent& e)
+{
+    Component::mouseReleased(e);
+}
+
+void Menu::setPopupVisible(bool Visible)
+{
+    //Set the Submenu's position to the correct place
+    //Make the Submenu visible
+    beginEditCP(getInternalPopupMenu(), PopupMenu::VisibleFieldMask | PopupMenu::PositionFieldMask);
+        getInternalPopupMenu()->setVisible(Visible);
+        getInternalPopupMenu()->setPosition(Pnt2s(getSize().x(),0));
+    endEditCP(getInternalPopupMenu(), PopupMenu::VisibleFieldMask | PopupMenu::PositionFieldMask);
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -83,13 +119,19 @@ void Menu::initMethod (void)
 /*----------------------- constructors & destructors ----------------------*/
 
 Menu::Menu(void) :
-    Inherited()
+    Inherited(),
+    _PopupUpdateListener(MenuPtr(this))
 {
+    setInternalPopupMenu(PopupMenu::create());
+    getInternalPopupMenu()->setVisible(false);
 }
 
 Menu::Menu(const Menu &source) :
-    Inherited(source)
+    Inherited(source),
+    _PopupUpdateListener(MenuPtr(this))
 {
+    setInternalPopupMenu(PopupMenu::create());
+    getInternalPopupMenu()->setVisible(false);
 }
 
 Menu::~Menu(void)
@@ -101,6 +143,27 @@ Menu::~Menu(void)
 void Menu::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & ParentFrameFieldMask)
+    {
+        beginEditCP(getInternalPopupMenu(), ParentFrameFieldMask);
+            getInternalPopupMenu()->setParentFrame(getParentFrame());
+        endEditCP(getInternalPopupMenu(), ParentFrameFieldMask);
+    }
+    
+    if(whichField & ArmedFieldMask &&
+       !getArmed()
+       )
+    {
+        setPopupVisible(false);
+        if(getParentFrame() != NullFC &&
+        getParentFrame()->getDrawingSurface() != NullFC &&
+        getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+        {
+            getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_PopupUpdateListener);
+        }
+    }
+
 }
 
 void Menu::dump(      UInt32    , 
@@ -110,6 +173,17 @@ void Menu::dump(      UInt32    ,
 }
 
 
+void Menu::PopupUpdateListener::update(const UpdateEvent& e)
+{
+    _PopupElps += e.getElapsedTime();
+    if(_PopupElps > LookAndFeelManager::the()->getLookAndFeel()->getSubMenuPopupTime())
+    {
+        //Tell the menu to popup the submenu
+        _Menu->setPopupVisible(true);
+        //Remove myself from the update
+		_Menu->getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+    }
+}
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
 

@@ -46,6 +46,7 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGMenuBase.h"
+#include <OpenSG/Input/OSGUpdateListener.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,11 +78,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING Menu : public MenuBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-	//void addMenuItem(MenuItemPtr item);
-	//void removeMenuItem(MenuItemPtr item);
-	//void removeMenuItem(UInt32 index);
-	//void insertMenuItem(UInt32 index, MenuItemPtr item);
+    void addItem(MenuItemPtr Item);
+    void addItem(MenuItemPtr Item, const UInt32& Index);
+    void removeItem(MenuItemPtr Item);
+    void removeItem(const UInt32& Index);
+    MenuItemPtr getItem(const UInt32& Index);
+    UInt32 getNumItems(void) const;
 
+    virtual void mouseEntered(const MouseEvent& e);
+    virtual void mouseReleased(const MouseEvent& e);
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -103,7 +108,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING Menu : public MenuBase
     virtual ~Menu(void); 
 
     /*! \}                                                                 */
+
+	virtual void drawInternal(const GraphicsPtr Graphics) const;
+	
+    void setPopupVisible(bool Visible);
     
+    bool getPopupVisible(void) const;
+    
+	class PopupUpdateListener : public UpdateListener
+	{
+	public:
+		PopupUpdateListener(MenuPtr TheMenu);
+        virtual void update(const UpdateEvent& e);
+        void reset(void);
+	private:
+		MenuPtr _Menu;
+	    Time _PopupElps;
+	};
+
+	friend class PopupUpdateListener;
+
+	PopupUpdateListener _PopupUpdateListener;
     /*==========================  PRIVATE  ================================*/
   private:
 

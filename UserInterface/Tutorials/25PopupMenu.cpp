@@ -45,10 +45,10 @@
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
-//#include <OpenSG/UserInterface/OSGPopupMenu.h>
-//#include <OpenSG/UserInterface/OSGLabelMenuItem.h>
-#include <OpenSG/UserInterface/OSGMenuItem.h>
-//#include <OpenSG/UserInterface/OSGSeperatorMenuItem.h>
+#include <OpenSG/UserInterface/OSGPopupMenu.h>
+#include <OpenSG/UserInterface/OSGMenu.h>
+#include <OpenSG/UserInterface/OSGLabelMenuItem.h>
+#include <OpenSG/UserInterface/OSGSeperatorMenuItem.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -117,11 +117,15 @@ int main(int argc, char **argv)
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
     //Create a Popup Menu
-    /*LabelMenuItemPtr Item1 = LabelMenuItem::create();
+    LabelMenuItemPtr Item1 = LabelMenuItem::create();
     LabelMenuItemPtr Item2 = LabelMenuItem::create();
     LabelMenuItemPtr Item3 = LabelMenuItem::create();
     SeperatorMenuItemPtr Seperator1 = SeperatorMenuItem::create();
     LabelMenuItemPtr Item4 = LabelMenuItem::create();
+    MenuPtr Item5 = Menu::create();
+    LabelMenuItemPtr SubItem1 = LabelMenuItem::create();
+    LabelMenuItemPtr SubItem2 = LabelMenuItem::create();
+    LabelMenuItemPtr SubItem3 = LabelMenuItem::create();
     
     beginEditCP(Item1, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask);
         Item1->setText("Menu Item 1");
@@ -141,15 +145,33 @@ int main(int argc, char **argv)
     beginEditCP(Item4, LabelMenuItem::TextFieldMask | LabelMenuItem::EnabledFieldMask);
         Item4->setText("Menu Item 4");
         Item4->setEnabled(false);
-    endEditCP(Item4, LabelMenuItem::TextFieldMask | LabelMenuItem::EnabledFieldMask);*/
+    endEditCP(Item4, LabelMenuItem::TextFieldMask | LabelMenuItem::EnabledFieldMask);
     
     
-    //PopupMenuPtr Button1PopupMenu = PopupMenu::create();
-    /*Button1PopupMenu->addItem(Item1);
+    beginEditCP(SubItem1, LabelMenuItem::TextFieldMask);
+        SubItem1->setText("SubMenu Item 1");
+    endEditCP(SubItem1, LabelMenuItem::TextFieldMask);
+    beginEditCP(SubItem2, LabelMenuItem::TextFieldMask);
+        SubItem2->setText("SubMenu Item 2");
+    endEditCP(SubItem2, LabelMenuItem::TextFieldMask);
+    beginEditCP(SubItem3, LabelMenuItem::TextFieldMask);
+        SubItem3->setText("SubMenu Item 3");
+    endEditCP(SubItem3, LabelMenuItem::TextFieldMask);
+    
+    beginEditCP(Item5, LabelMenuItem::TextFieldMask);
+        Item5->setText("Sub Menu");
+    endEditCP(Item5, LabelMenuItem::TextFieldMask);
+    Item5->addItem(SubItem1);
+    Item5->addItem(SubItem2);
+    Item5->addItem(SubItem3);
+    
+    PopupMenuPtr Button1PopupMenu = PopupMenu::create();
+    Button1PopupMenu->addItem(Item1);
     Button1PopupMenu->addItem(Item2);
     Button1PopupMenu->addItem(Item3);
     Button1PopupMenu->addItem(Seperator1);
-    Button1PopupMenu->addItem(Item4);*/
+    Button1PopupMenu->addItem(Item5);
+    Button1PopupMenu->addItem(Item4);
     
 	// Create a Button component
 	ButtonPtr button1 = osg::Button::create();
@@ -162,7 +184,7 @@ int main(int argc, char **argv)
 
     beginEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::PopupMenuFieldMask | Button::TextColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::ToolTipTextFieldMask);
 		button1->setText("Button 1");
-        //button1->setPopupMenu(Button1PopupMenu);
+        button1->setPopupMenu(Button1PopupMenu);
     endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::PopupMenuFieldMask | Button::TextColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::ToolTipTextFieldMask);
 
 	/******************************************************
