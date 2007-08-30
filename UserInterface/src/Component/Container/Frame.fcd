@@ -33,12 +33,11 @@ A UI Frame.
 	>
 	</Field>
 	<Field
-		name="ActivePopupMenu"
+		name="ActivePopupMenus"
 		type="PopupMenuPtr"
-		cardinality="single"
+		cardinality="multi"
 		visibility="internal"
 		header="Component/Menu/OSGPopupMenuFields.h"
-		defaultValue="NullFC"
 		access="public"
 	>
 	</Field>

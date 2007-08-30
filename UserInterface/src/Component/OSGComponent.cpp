@@ -375,9 +375,9 @@ void Component::mousePressed(const MouseEvent& e)
 	       getPopupMenu()->setPosition(DrawingSurfaceToComponent(e.getLocation(),getParentFrame()));
 	    endEditCP(getPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
 	    
-        beginEditCP(getParentFrame(), Frame::ActivePopupMenuFieldMask);
-            getParentFrame()->setActivePopupMenu(getPopupMenu());
-        endEditCP(getParentFrame(), Frame::ActivePopupMenuFieldMask);
+        beginEditCP(getParentFrame(), Frame::ActivePopupMenusFieldMask);
+            getParentFrame()->getActivePopupMenus().addValue(getPopupMenu());
+        endEditCP(getParentFrame(), Frame::ActivePopupMenusFieldMask);
 	}
 }
 

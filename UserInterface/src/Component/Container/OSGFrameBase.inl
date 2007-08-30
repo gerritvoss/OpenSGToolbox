@@ -110,11 +110,11 @@ SFUIDrawingSurfacePtr *FrameBase::getSFDrawingSurface(void)
     return &_sfDrawingSurface;
 }
 
-//! Get the Frame::_sfActivePopupMenu field.
+//! Get the Frame::_mfActivePopupMenus field.
 inline
-SFPopupMenuPtr *FrameBase::getSFActivePopupMenu(void)
+MFPopupMenuPtr *FrameBase::getMFActivePopupMenus(void)
 {
-    return &_sfActivePopupMenu;
+    return &_mfActivePopupMenus;
 }
 
 //! Get the Frame::_sfActiveToolTip field.
@@ -167,27 +167,6 @@ void FrameBase::setDrawingSurface(const UIDrawingSurfacePtr &value)
     _sfDrawingSurface.setValue(value);
 }
 
-//! Get the value of the Frame::_sfActivePopupMenu field.
-inline
-PopupMenuPtr &FrameBase::getActivePopupMenu(void)
-{
-    return _sfActivePopupMenu.getValue();
-}
-
-//! Get the value of the Frame::_sfActivePopupMenu field.
-inline
-const PopupMenuPtr &FrameBase::getActivePopupMenu(void) const
-{
-    return _sfActivePopupMenu.getValue();
-}
-
-//! Set the value of the Frame::_sfActivePopupMenu field.
-inline
-void FrameBase::setActivePopupMenu(const PopupMenuPtr &value)
-{
-    _sfActivePopupMenu.setValue(value);
-}
-
 //! Get the value of the Frame::_sfActiveToolTip field.
 inline
 ToolTipPtr &FrameBase::getActiveToolTip(void)
@@ -209,6 +188,27 @@ void FrameBase::setActiveToolTip(const ToolTipPtr &value)
     _sfActiveToolTip.setValue(value);
 }
 
+
+//! Get the value of the \a index element the Frame::_mfActivePopupMenus field.
+inline
+PopupMenuPtr &FrameBase::getActivePopupMenus(const UInt32 index)
+{
+    return _mfActivePopupMenus[index];
+}
+
+//! Get the Frame::_mfActivePopupMenus field.
+inline
+MFPopupMenuPtr &FrameBase::getActivePopupMenus(void)
+{
+    return _mfActivePopupMenus;
+}
+
+//! Get the Frame::_mfActivePopupMenus field.
+inline
+const MFPopupMenuPtr &FrameBase::getActivePopupMenus(void) const
+{
+    return _mfActivePopupMenus;
+}
 
 OSG_END_NAMESPACE
 

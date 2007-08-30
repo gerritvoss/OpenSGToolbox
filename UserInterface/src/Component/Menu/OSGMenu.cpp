@@ -84,18 +84,25 @@ void Menu::initMethod (void)
 void Menu::drawInternal(const GraphicsPtr Graphics) const
 {
     LabelMenuItem::drawInternal(Graphics);
-
-    //If my popup Menu is visible then tell it to draw
-    if(getInternalPopupMenu()->getVisible())
-    {
-        getInternalPopupMenu()->draw(Graphics);
-    }
 }
 
 void Menu::mouseEntered(const MouseEvent& e)
 {
     getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_PopupUpdateListener);
     LabelMenuItem::mouseEntered(e);
+}
+
+void Menu::mouseExited(const MouseEvent& e)
+{
+    /*if(getInternalPopupMenu()->isContained(e.getLocation(), true))
+    {
+        MenuItem::mouseExited(e);
+    }
+    else
+    {
+        LabelMenuItem::mouseExited(e);
+    }*/
+    MenuItem::mouseExited(e);
 }
 
 void Menu::mouseReleased(const MouseEvent& e)
@@ -109,7 +116,7 @@ void Menu::setPopupVisible(bool Visible)
     //Make the Submenu visible
     beginEditCP(getInternalPopupMenu(), PopupMenu::VisibleFieldMask | PopupMenu::PositionFieldMask);
         getInternalPopupMenu()->setVisible(Visible);
-        getInternalPopupMenu()->setPosition(Pnt2s(getSize().x(),0));
+        getInternalPopupMenu()->setPosition(getPosition() + Vec2s(getSize().x(),0));
     endEditCP(getInternalPopupMenu(), PopupMenu::VisibleFieldMask | PopupMenu::PositionFieldMask);
 }
 /*-------------------------------------------------------------------------*\
