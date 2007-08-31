@@ -53,6 +53,7 @@
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include "OSGPopupMenu.h"
+#include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -116,8 +117,18 @@ void Menu::setPopupVisible(bool Visible)
     //Make the Submenu visible
     beginEditCP(getInternalPopupMenu(), PopupMenu::VisibleFieldMask | PopupMenu::PositionFieldMask);
         getInternalPopupMenu()->setVisible(Visible);
-        getInternalPopupMenu()->setPosition(getPosition() + Vec2s(getSize().x(),0));
+        getInternalPopupMenu()->setPosition(ComponentToFrame(Pnt2s(0,0),MenuPtr(this)) + Vec2s(getSize().x(),0));
     endEditCP(getInternalPopupMenu(), PopupMenu::VisibleFieldMask | PopupMenu::PositionFieldMask);
+
+    if(Visible)
+    {
+        beginEditCP(getParentFrame(), Frame::ActivePopupMenusFieldMask);
+            getParentFrame()->getActivePopupMenus().addValue(getInternalPopupMenu());
+        endEditCP(getParentFrame(), Frame::ActivePopupMenusFieldMask);
+    }
+    else
+    {
+    }
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -129,8 +140,8 @@ Menu::Menu(void) :
     Inherited(),
     _PopupUpdateListener(MenuPtr(this))
 {
-    setInternalPopupMenu(PopupMenu::create());
-    getInternalPopupMenu()->setVisible(false);
+    //setInternalPopupMenu(PopupMenu::create());
+    //getInternalPopupMenu()->setVisible(false);
 }
 
 Menu::Menu(const Menu &source) :
