@@ -71,6 +71,9 @@ void MenuItem::initMethod (void)
 {
 }
 
+void MenuItem::drawInternal(const GraphicsPtr Graphics) const
+{
+}
 
 /***************************************************************************\
  *                           Instance methods                              *

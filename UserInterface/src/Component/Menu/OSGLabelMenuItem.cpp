@@ -115,9 +115,9 @@ Color4f LabelMenuItem::getDrawnTextColor(void) const
         //{
         //    return getFocusedTextColor();
         //}
-        if(getArmed())
+        if(getSelected())
         {
-            return getArmedTextColor();
+            return getSelectedTextColor();
         }
         if(_MouseInComponentLastMouse)
         {
@@ -142,9 +142,9 @@ BorderPtr LabelMenuItem::getDrawnBorder(void) const
         //{
         //    return getFocusedTextColor();
         //}
-        if(getArmed())
+        if(getSelected())
         {
-            return getArmedBorder();
+            return getSelectedBorder();
         }
         else if(_MouseInComponentLastMouse)
         {
@@ -169,9 +169,9 @@ UIBackgroundPtr LabelMenuItem::getDrawnBackground(void) const
         //{
         //    return getFocusedTextColor();
         //}
-        if(getArmed())
+        if(getSelected())
         {
-            return getArmedBackground();
+            return getSelectedBackground();
         }
         else if(_MouseInComponentLastMouse)
         {
@@ -194,35 +194,35 @@ void LabelMenuItem::actionPreformed(const ActionEvent& e)
 
 void LabelMenuItem::mouseReleased(const MouseEvent& e)
 {
-    if(getArmed() && getEnabled())
+    if(getSelected() && getEnabled())
     {
 	   produceActionPerformed(ActionEvent(MenuItemPtr(this), e.getTimeStamp()));
        getParentFrame()->destroyPopupMenu();
-       beginEditCP(MenuItemPtr(this), ArmedFieldMask);
-          setArmed(false);
-       endEditCP(MenuItemPtr(this), ArmedFieldMask);
+       beginEditCP(MenuItemPtr(this), SelectedFieldMask);
+          setSelected(false);
+       endEditCP(MenuItemPtr(this), SelectedFieldMask);
     }
     
     MenuItem::mouseReleased(e);
 }
 
-void LabelMenuItem::mouseEntered(const MouseEvent& e)
+/*void LabelMenuItem::mouseEntered(const MouseEvent& e)
 {
-    beginEditCP(MenuItemPtr(this), ArmedFieldMask);
-        setArmed(true);
-    endEditCP(MenuItemPtr(this), ArmedFieldMask);
+    beginEditCP(MenuItemPtr(this), SelectedFieldMask);
+        setSelected(true);
+    endEditCP(MenuItemPtr(this), SelectedFieldMask);
     
     MenuItem::mouseEntered(e);
 }
 
 void LabelMenuItem::mouseExited(const MouseEvent& e)
 {
-    beginEditCP(MenuItemPtr(this), ArmedFieldMask);
-        setArmed(false);
-    endEditCP(MenuItemPtr(this), ArmedFieldMask);
+    beginEditCP(MenuItemPtr(this), SelectedFieldMask);
+        setSelected(false);
+    endEditCP(MenuItemPtr(this), SelectedFieldMask);
     
     MenuItem::mouseExited(e);
-}
+}*/
 
 void LabelMenuItem::produceActionPerformed(const ActionEvent& e)
 {

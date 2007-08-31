@@ -937,13 +937,13 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(DefaultLabelMenuItemBackground);
 	
 	//Default LabelMenuItemBorder
-	EmptyBorderPtr DefaultLabelMenuItemArmedBorder = EmptyBorder::create();
+	EmptyBorderPtr DefaultLabelMenuItemSelectedBorder = EmptyBorder::create();
 
 	//Default LabelMenuItemBackground
-	ColorUIBackgroundPtr DefaultLabelMenuItemArmedBackground = ColorUIBackground::create();
-	beginEditCP(DefaultLabelMenuItemArmedBackground);
-		DefaultLabelMenuItemArmedBackground->setColor(Color4f(0.3,0.3,1.0,1.0));
-	endEditCP(DefaultLabelMenuItemArmedBackground);
+	ColorUIBackgroundPtr DefaultLabelMenuItemSelectedBackground = ColorUIBackground::create();
+	beginEditCP(DefaultLabelMenuItemSelectedBackground);
+		DefaultLabelMenuItemSelectedBackground->setColor(Color4f(0.3,0.3,1.0,1.0));
+	endEditCP(DefaultLabelMenuItemSelectedBackground);
 
 	//Default LabelMenuItem
 	LabelMenuItemPtr DefaultLabelMenuItem = LabelMenuItem::create();
@@ -970,17 +970,17 @@ void DefaultLookAndFeel::init(void)
         DefaultLabelMenuItem->setAcceleratorModifiers(0);
         DefaultLabelMenuItem->setAcceleratorKey(0);
 
-        //Armed
-        DefaultLabelMenuItem->setArmed(false);
-        DefaultLabelMenuItem->setArmedBorder(DefaultLabelMenuItemArmedBorder);
-        DefaultLabelMenuItem->setArmedBackground(DefaultLabelMenuItemArmedBackground);
+        //Selected
+        DefaultLabelMenuItem->setSelected(false);
+        DefaultLabelMenuItem->setSelectedBorder(DefaultLabelMenuItemSelectedBorder);
+        DefaultLabelMenuItem->setSelectedBackground(DefaultLabelMenuItemSelectedBackground);
         
 		//Text
 		DefaultLabelMenuItem->setText("");
 		DefaultLabelMenuItem->setFont(DefaultFont);
 		DefaultLabelMenuItem->setTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultLabelMenuItem->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
-		DefaultLabelMenuItem->setArmedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultLabelMenuItem->setSelectedTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultLabelMenuItem->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultLabelMenuItem->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
 	endEditCP(DefaultLabelMenuItem);
@@ -1033,13 +1033,13 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(DefaultMenuBackground);
 	
 	//Default MenuBorder
-	EmptyBorderPtr DefaultMenuArmedBorder = EmptyBorder::create();
+	EmptyBorderPtr DefaultMenuSelectedBorder = EmptyBorder::create();
 
 	//Default MenuBackground
-	ColorUIBackgroundPtr DefaultMenuArmedBackground = ColorUIBackground::create();
-	beginEditCP(DefaultMenuArmedBackground);
-		DefaultMenuArmedBackground->setColor(Color4f(0.3,0.3,1.0,1.0));
-	endEditCP(DefaultMenuArmedBackground);
+	ColorUIBackgroundPtr DefaultMenuSelectedBackground = ColorUIBackground::create();
+	beginEditCP(DefaultMenuSelectedBackground);
+		DefaultMenuSelectedBackground->setColor(Color4f(0.3,0.3,1.0,1.0));
+	endEditCP(DefaultMenuSelectedBackground);
 
 	//Default Menu
 	MenuPtr DefaultMenu = Menu::create();
@@ -1066,17 +1066,17 @@ void DefaultLookAndFeel::init(void)
         DefaultMenu->setAcceleratorModifiers(0);
         DefaultMenu->setAcceleratorKey(0);
 
-        //Armed
-        DefaultMenu->setArmed(false);
-        DefaultMenu->setArmedBorder(DefaultMenuArmedBorder);
-        DefaultMenu->setArmedBackground(DefaultMenuArmedBackground);
+        //Selected
+        DefaultMenu->setSelected(false);
+        DefaultMenu->setSelectedBorder(DefaultMenuSelectedBorder);
+        DefaultMenu->setSelectedBackground(DefaultMenuSelectedBackground);
         
 		//Text
 		DefaultMenu->setText("");
 		DefaultMenu->setFont(DefaultFont);
 		DefaultMenu->setTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultMenu->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
-		DefaultMenu->setArmedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultMenu->setSelectedTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultMenu->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultMenu->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
 	endEditCP(DefaultMenu);

@@ -117,13 +117,6 @@ SFReal32 *MenuBase::getSFSubMenuDelay(void)
     return &_sfSubMenuDelay;
 }
 
-//! Get the Menu::_sfSelected field.
-inline
-SFBool *MenuBase::getSFSelected(void)
-{
-    return &_sfSelected;
-}
-
 //! Get the Menu::_sfTopLevelMenu field.
 inline
 SFBool *MenuBase::getSFTopLevelMenu(void)
@@ -200,27 +193,6 @@ inline
 void MenuBase::setSubMenuDelay(const Real32 &value)
 {
     _sfSubMenuDelay.setValue(value);
-}
-
-//! Get the value of the Menu::_sfSelected field.
-inline
-bool &MenuBase::getSelected(void)
-{
-    return _sfSelected.getValue();
-}
-
-//! Get the value of the Menu::_sfSelected field.
-inline
-const bool &MenuBase::getSelected(void) const
-{
-    return _sfSelected.getValue();
-}
-
-//! Set the value of the Menu::_sfSelected field.
-inline
-void MenuBase::setSelected(const bool &value)
-{
-    _sfSelected.setValue(value);
 }
 
 //! Get the value of the Menu::_sfTopLevelMenu field.

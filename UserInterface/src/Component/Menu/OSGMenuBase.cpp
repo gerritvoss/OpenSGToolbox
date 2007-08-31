@@ -73,9 +73,6 @@ const OSG::BitVector  MenuBase::InternalPopupMenuFieldMask =
 const OSG::BitVector  MenuBase::SubMenuDelayFieldMask = 
     (TypeTraits<BitVector>::One << MenuBase::SubMenuDelayFieldId);
 
-const OSG::BitVector  MenuBase::SelectedFieldMask = 
-    (TypeTraits<BitVector>::One << MenuBase::SelectedFieldId);
-
 const OSG::BitVector  MenuBase::TopLevelMenuFieldMask = 
     (TypeTraits<BitVector>::One << MenuBase::TopLevelMenuFieldId);
 
@@ -96,9 +93,6 @@ const OSG::BitVector MenuBase::MTInfluenceMask =
     
 */
 /*! \var Real32          MenuBase::_sfSubMenuDelay
-    
-*/
-/*! \var bool            MenuBase::_sfSelected
     
 */
 /*! \var bool            MenuBase::_sfTopLevelMenu
@@ -127,11 +121,6 @@ FieldDescription *MenuBase::_desc[] =
                      SubMenuDelayFieldId, SubMenuDelayFieldMask,
                      false,
                      (FieldAccessMethod) &MenuBase::getSFSubMenuDelay),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Selected", 
-                     SelectedFieldId, SelectedFieldMask,
-                     false,
-                     (FieldAccessMethod) &MenuBase::getSFSelected),
     new FieldDescription(SFBool::getClassType(), 
                      "TopLevelMenu", 
                      TopLevelMenuFieldId, TopLevelMenuFieldMask,
@@ -220,7 +209,6 @@ MenuBase::MenuBase(void) :
     _sfButton                 (ToggleButtonPtr(NullFC)), 
     _sfInternalPopupMenu      (), 
     _sfSubMenuDelay           (Real32(0.5)), 
-    _sfSelected               (bool(false)), 
     _sfTopLevelMenu           (bool(false)), 
     _sfExpandDrawObject       (), 
     Inherited() 
@@ -235,7 +223,6 @@ MenuBase::MenuBase(const MenuBase &source) :
     _sfButton                 (source._sfButton                 ), 
     _sfInternalPopupMenu      (source._sfInternalPopupMenu      ), 
     _sfSubMenuDelay           (source._sfSubMenuDelay           ), 
-    _sfSelected               (source._sfSelected               ), 
     _sfTopLevelMenu           (source._sfTopLevelMenu           ), 
     _sfExpandDrawObject       (source._sfExpandDrawObject       ), 
     Inherited                 (source)
@@ -267,11 +254,6 @@ UInt32 MenuBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
     {
         returnValue += _sfSubMenuDelay.getBinSize();
-    }
-
-    if(FieldBits::NoField != (SelectedFieldMask & whichField))
-    {
-        returnValue += _sfSelected.getBinSize();
     }
 
     if(FieldBits::NoField != (TopLevelMenuFieldMask & whichField))
@@ -308,11 +290,6 @@ void MenuBase::copyToBin(      BinaryDataHandler &pMem,
         _sfSubMenuDelay.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SelectedFieldMask & whichField))
-    {
-        _sfSelected.copyToBin(pMem);
-    }
-
     if(FieldBits::NoField != (TopLevelMenuFieldMask & whichField))
     {
         _sfTopLevelMenu.copyToBin(pMem);
@@ -346,11 +323,6 @@ void MenuBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfSubMenuDelay.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SelectedFieldMask & whichField))
-    {
-        _sfSelected.copyFromBin(pMem);
-    }
-
     if(FieldBits::NoField != (TopLevelMenuFieldMask & whichField))
     {
         _sfTopLevelMenu.copyFromBin(pMem);
@@ -380,9 +352,6 @@ void MenuBase::executeSyncImpl(      MenuBase *pOther,
     if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
         _sfSubMenuDelay.syncWith(pOther->_sfSubMenuDelay);
 
-    if(FieldBits::NoField != (SelectedFieldMask & whichField))
-        _sfSelected.syncWith(pOther->_sfSelected);
-
     if(FieldBits::NoField != (TopLevelMenuFieldMask & whichField))
         _sfTopLevelMenu.syncWith(pOther->_sfTopLevelMenu);
 
@@ -407,9 +376,6 @@ void MenuBase::executeSyncImpl(      MenuBase *pOther,
 
     if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
         _sfSubMenuDelay.syncWith(pOther->_sfSubMenuDelay);
-
-    if(FieldBits::NoField != (SelectedFieldMask & whichField))
-        _sfSelected.syncWith(pOther->_sfSelected);
 
     if(FieldBits::NoField != (TopLevelMenuFieldMask & whichField))
         _sfTopLevelMenu.syncWith(pOther->_sfTopLevelMenu);

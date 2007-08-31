@@ -67,9 +67,63 @@ OSG::UInt32 MenuItemBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! create a new instance of the class
+inline
+MenuItemPtr MenuItemBase::create(void) 
+{
+    MenuItemPtr fc; 
+
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = MenuItemPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    
+    return fc; 
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+inline
+MenuItemPtr MenuItemBase::createEmpty(void) 
+{ 
+    MenuItemPtr returnValue; 
+    
+    newPtr(returnValue); 
+
+    return returnValue; 
+}
+
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the MenuItem::_sfSelected field.
+inline
+SFBool *MenuItemBase::getSFSelected(void)
+{
+    return &_sfSelected;
+}
+
+
+//! Get the value of the MenuItem::_sfSelected field.
+inline
+bool &MenuItemBase::getSelected(void)
+{
+    return _sfSelected.getValue();
+}
+
+//! Get the value of the MenuItem::_sfSelected field.
+inline
+const bool &MenuItemBase::getSelected(void) const
+{
+    return _sfSelected.getValue();
+}
+
+//! Set the value of the MenuItem::_sfSelected field.
+inline
+void MenuItemBase::setSelected(const bool &value)
+{
+    _sfSelected.setValue(value);
+}
 
 
 OSG_END_NAMESPACE

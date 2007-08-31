@@ -173,128 +173,6 @@ void Frame::drawInternal(const GraphicsPtr TheGraphics) const
     }
 }
 
-void Frame::mouseClicked(const MouseEvent& e)
-{
-    for(UInt32 i(0) ; i<getActivePopupMenus().size() ; ++i)
-    {
-        bool isContained = getActivePopupMenus().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getActivePopupMenus().getValue(i),isContained,e.getViewport());
-		if(isContained)
-		{
-			getActivePopupMenus().getValue(i)->mouseClicked(e);
-            Component::mouseClicked(e);
-            return;
-		}
-    }
-    Container::mouseClicked(e);
-}
-
-void Frame::mouseEntered(const MouseEvent& e)
-{
-    for(UInt32 i(0) ; i<getActivePopupMenus().size() ; ++i)
-    {
-        bool isContained = getActivePopupMenus().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getActivePopupMenus().getValue(i),isContained,e.getViewport());
-		if(isContained)
-		{
-            Component::mouseEntered(e);
-            return;
-		}
-    }
-    Container::mouseEntered(e);
-}
-
-void Frame::mouseExited(const MouseEvent& e)
-{
-    for(UInt32 i(0) ; i<getActivePopupMenus().size() ; ++i)
-    {
-        bool isContained = getActivePopupMenus().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getActivePopupMenus().getValue(i),isContained,e.getViewport());
-		if(isContained)
-		{
-            Component::mouseExited(e);
-            return;
-		}
-    }
-    Container::mouseExited(e);
-}
-
-void Frame::mousePressed(const MouseEvent& e)
-{
-    for(UInt32 i(0) ; i<getActivePopupMenus().size() ; ++i)
-    {
-        bool isContained = getActivePopupMenus().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getActivePopupMenus().getValue(i),isContained,e.getViewport());
-		if(isContained)
-		{
-			getActivePopupMenus().getValue(i)->mousePressed(e);
-            Component::mousePressed(e);
-            return;
-		}
-    }
-    Container::mousePressed(e);
-}
-
-void Frame::mouseReleased(const MouseEvent& e)
-{
-    for(UInt32 i(0) ; i<getActivePopupMenus().size() ; ++i)
-    {
-        bool isContained = getActivePopupMenus().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getActivePopupMenus().getValue(i),isContained,e.getViewport());
-		if(isContained)
-		{
-			getActivePopupMenus().getValue(i)->mouseReleased(e);
-            Component::mouseReleased(e);
-            return;
-		}
-    }
-    Container::mouseReleased(e);
-}
-
-
-void Frame::mouseMoved(const MouseEvent& e)
-{
-    for(UInt32 i(0) ; i<getActivePopupMenus().size() ; ++i)
-    {
-        bool isContained = getActivePopupMenus().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getActivePopupMenus().getValue(i),isContained,e.getViewport());
-		if(isContained)
-		{
-			getActivePopupMenus().getValue(i)->mouseMoved(e);
-            Component::mouseMoved(e);
-            return;
-		}
-    }
-    Container::mouseMoved(e);
-}
-
-void Frame::mouseDragged(const MouseEvent& e)
-{
-    for(UInt32 i(0) ; i<getActivePopupMenus().size() ; ++i)
-    {
-        bool isContained = getActivePopupMenus().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getActivePopupMenus().getValue(i),isContained,e.getViewport());
-		if(isContained)
-		{
-			getActivePopupMenus().getValue(i)->mouseDragged(e);
-            Component::mouseDragged(e);
-            return;
-		}
-    }
-    Container::mouseDragged(e);
-}
-
-
-void Frame::mouseWheelMoved(const MouseWheelEvent& e)
-{
-    for(UInt32 i(0) ; i<getActivePopupMenus().size() ; ++i)
-    {
-        bool isContained = getActivePopupMenus().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getActivePopupMenus().getValue(i),isContained,e.getViewport());
-    }
-    Container::mouseWheelMoved(e);
-}
-
 void Frame::destroyPopupMenu(void)
 {
     if(getActivePopupMenus().size() > 0)
@@ -305,6 +183,7 @@ void Frame::destroyPopupMenu(void)
 
 	    //Remove the listener
         getDrawingSurface()->getEventProducer()->removeMouseListener(&_PopupMenuInteractionListener);
+        getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&_PopupMenuInteractionListener);
         getDrawingSurface()->getEventProducer()->removeKeyListener(&_PopupMenuInteractionListener);
     }
 }
@@ -354,6 +233,7 @@ void Frame::changed(BitVector whichField, UInt32 origin)
         }
         
         getDrawingSurface()->getEventProducer()->addMouseListener(&_PopupMenuInteractionListener);
+        getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_PopupMenuInteractionListener);
         getDrawingSurface()->getEventProducer()->addKeyListener(&_PopupMenuInteractionListener);
     }
 }
@@ -364,16 +244,76 @@ void Frame::dump(      UInt32    ,
     SLOG << "Dump Frame NI" << std::endl;
 }
 
-void Frame::PopupMenuInteractionListener::mousePressed(const MouseEvent& e)
+void Frame::PopupMenuInteractionListener::mouseClicked(const MouseEvent& e)
 {
-    for(UInt32 i(0) ; i<_Frame->getActivePopupMenus().size() ; ++i)
+    for(Int32 i(_Frame->getActivePopupMenus().size()-1) ; i>=0 ; --i)
     {
-        if( _Frame->getActivePopupMenus().getValue(i)->isContained(e.getLocation(), true) )
+        bool isContained = _Frame->getActivePopupMenus().getValue(i)->isContained(e.getLocation(), true);
+		_Frame->checkMouseEnterExit(e,e.getLocation(),_Frame->getActivePopupMenus().getValue(i),isContained,e.getViewport());
+		if(isContained)
         {
+			_Frame->getActivePopupMenus().getValue(i)->mouseClicked(e);
             return;
         }
     }
     _Frame->destroyPopupMenu();
+}
+
+void Frame::PopupMenuInteractionListener::mousePressed(const MouseEvent& e)
+{
+    for(Int32 i(_Frame->getActivePopupMenus().size()-1) ; i>=0 ; --i)
+    {
+        bool isContained = _Frame->getActivePopupMenus().getValue(i)->isContained(e.getLocation(), true);
+		_Frame->checkMouseEnterExit(e,e.getLocation(),_Frame->getActivePopupMenus().getValue(i),isContained,e.getViewport());
+		if(isContained)
+        {
+			_Frame->getActivePopupMenus().getValue(i)->mousePressed(e);
+            return;
+        }
+    }
+    _Frame->destroyPopupMenu();
+}
+
+void Frame::PopupMenuInteractionListener::mouseReleased(const MouseEvent& e)
+{
+    for(Int32 i(_Frame->getActivePopupMenus().size()-1) ; i>=0 ; --i)
+    {
+        bool isContained = _Frame->getActivePopupMenus().getValue(i)->isContained(e.getLocation(), true);
+		_Frame->checkMouseEnterExit(e,e.getLocation(),_Frame->getActivePopupMenus().getValue(i),isContained,e.getViewport());
+		if(isContained)
+		{
+			_Frame->getActivePopupMenus().getValue(i)->mouseReleased(e);
+            return;
+		}
+    }
+}
+
+void Frame::PopupMenuInteractionListener::mouseMoved(const MouseEvent& e)
+{
+    for(Int32 i(_Frame->getActivePopupMenus().size()-1) ; i>=0 ; --i)
+    {
+        bool isContained = _Frame->getActivePopupMenus().getValue(i)->isContained(e.getLocation(), true);
+		_Frame->checkMouseEnterExit(e,e.getLocation(),_Frame->getActivePopupMenus().getValue(i),isContained,e.getViewport());
+		if(isContained)
+		{
+			_Frame->getActivePopupMenus().getValue(i)->mouseMoved(e);
+            return;
+		}
+    }
+}
+
+void Frame::PopupMenuInteractionListener::mouseDragged(const MouseEvent& e)
+{
+    for(Int32 i(_Frame->getActivePopupMenus().size()-1) ; i>=0 ; --i)
+    {
+        bool isContained = _Frame->getActivePopupMenus().getValue(i)->isContained(e.getLocation(), true);
+		_Frame->checkMouseEnterExit(e,e.getLocation(),_Frame->getActivePopupMenus().getValue(i),isContained,e.getViewport());
+		if(isContained)
+		{
+			_Frame->getActivePopupMenus().getValue(i)->mouseDragged(e);
+            return;
+		}
+    }
 }
 
 void Frame::PopupMenuInteractionListener::keyPressed(const KeyEvent& e)

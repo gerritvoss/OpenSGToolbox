@@ -96,6 +96,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
 
     virtual ~MenuItem(void); 
 
+	virtual void drawInternal(const GraphicsPtr Graphics) const;
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/

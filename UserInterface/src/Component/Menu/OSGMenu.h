@@ -85,8 +85,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Menu : public MenuBase
     MenuItemPtr getItem(const UInt32& Index);
     UInt32 getNumItems(void) const;
 
-    virtual void mouseEntered(const MouseEvent& e);
-    virtual void mouseExited(const MouseEvent& e);
+    //virtual void mouseEntered(const MouseEvent& e);
+    //virtual void mouseExited(const MouseEvent& e);
     virtual void mouseReleased(const MouseEvent& e);
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/

@@ -47,17 +47,8 @@ A UI LabelMenuItem.
 		access="public"
 	>
 	</Field>
-	<Field
-		name="Armed"
-		type="bool"
-		cardinality="single"
-		visibility="external"
-		defaultValue="false"
-		access="public"
-	>
-    </Field>
     <Field
-          name="ArmedBorder"
+          name="SelectedBorder"
           type="BorderPtr"
           cardinality="single"
           visibility="external"
@@ -67,7 +58,7 @@ A UI LabelMenuItem.
           >
     </Field>
     <Field
-          name="ArmedBackground"
+          name="SelectedBackground"
           type="UIBackgroundPtr"
           cardinality="single"
           visibility="external"
@@ -77,7 +68,7 @@ A UI LabelMenuItem.
           >
 	</Field>
     <Field
-          name="ArmedTextColor"
+          name="SelectedTextColor"
           type="Color4f"
           cardinality="single"
           visibility="external"

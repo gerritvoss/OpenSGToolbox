@@ -71,10 +71,9 @@
 #include <OpenSG/OSGStringFields.h> // Text type
 #include <OpenSG/OSGUInt32Fields.h> // AcceleratorModifiers type
 #include <OpenSG/OSGUInt32Fields.h> // AcceleratorKey type
-#include <OpenSG/OSGBoolFields.h> // Armed type
-#include "Border/OSGBorder.h" // ArmedBorder type
-#include "Background/OSGUIBackground.h" // ArmedBackground type
-#include <OpenSG/OSGColor4fFields.h> // ArmedTextColor type
+#include "Border/OSGBorder.h" // SelectedBorder type
+#include "Background/OSGUIBackground.h" // SelectedBackground type
+#include <OpenSG/OSGColor4fFields.h> // SelectedTextColor type
 #include <OpenSG/OSGColor4fFields.h> // FocusedTextColor type
 #include <OpenSG/OSGColor4fFields.h> // RolloverTextColor type
 #include <OpenSG/OSGColor4fFields.h> // DisabledTextColor type
@@ -107,11 +106,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItemBase : public MenuItem
         TextFieldId                 = FontFieldId                 + 1,
         AcceleratorModifiersFieldId = TextFieldId                 + 1,
         AcceleratorKeyFieldId       = AcceleratorModifiersFieldId + 1,
-        ArmedFieldId                = AcceleratorKeyFieldId       + 1,
-        ArmedBorderFieldId          = ArmedFieldId                + 1,
-        ArmedBackgroundFieldId      = ArmedBorderFieldId          + 1,
-        ArmedTextColorFieldId       = ArmedBackgroundFieldId      + 1,
-        FocusedTextColorFieldId     = ArmedTextColorFieldId       + 1,
+        SelectedBorderFieldId       = AcceleratorKeyFieldId       + 1,
+        SelectedBackgroundFieldId   = SelectedBorderFieldId       + 1,
+        SelectedTextColorFieldId    = SelectedBackgroundFieldId   + 1,
+        FocusedTextColorFieldId     = SelectedTextColorFieldId    + 1,
         RolloverTextColorFieldId    = FocusedTextColorFieldId     + 1,
         DisabledTextColorFieldId    = RolloverTextColorFieldId    + 1,
         TextColorFieldId            = DisabledTextColorFieldId    + 1,
@@ -123,10 +121,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItemBase : public MenuItem
     static const OSG::BitVector TextFieldMask;
     static const OSG::BitVector AcceleratorModifiersFieldMask;
     static const OSG::BitVector AcceleratorKeyFieldMask;
-    static const OSG::BitVector ArmedFieldMask;
-    static const OSG::BitVector ArmedBorderFieldMask;
-    static const OSG::BitVector ArmedBackgroundFieldMask;
-    static const OSG::BitVector ArmedTextColorFieldMask;
+    static const OSG::BitVector SelectedBorderFieldMask;
+    static const OSG::BitVector SelectedBackgroundFieldMask;
+    static const OSG::BitVector SelectedTextColorFieldMask;
     static const OSG::BitVector FocusedTextColorFieldMask;
     static const OSG::BitVector RolloverTextColorFieldMask;
     static const OSG::BitVector DisabledTextColorFieldMask;
@@ -162,10 +159,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItemBase : public MenuItem
            SFString            *getSFText           (void);
            SFUInt32            *getSFAcceleratorModifiers(void);
            SFUInt32            *getSFAcceleratorKey (void);
-           SFBool              *getSFArmed          (void);
-           SFBorderPtr         *getSFArmedBorder    (void);
-           SFUIBackgroundPtr   *getSFArmedBackground(void);
-           SFColor4f           *getSFArmedTextColor (void);
+           SFBorderPtr         *getSFSelectedBorder (void);
+           SFUIBackgroundPtr   *getSFSelectedBackground(void);
+           SFColor4f           *getSFSelectedTextColor(void);
            SFColor4f           *getSFFocusedTextColor(void);
            SFColor4f           *getSFRolloverTextColor(void);
            SFColor4f           *getSFDisabledTextColor(void);
@@ -179,14 +175,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItemBase : public MenuItem
      const UInt32              &getAcceleratorModifiers(void) const;
            UInt32              &getAcceleratorKey (void);
      const UInt32              &getAcceleratorKey (void) const;
-           bool                &getArmed          (void);
-     const bool                &getArmed          (void) const;
-           BorderPtr           &getArmedBorder    (void);
-     const BorderPtr           &getArmedBorder    (void) const;
-           UIBackgroundPtr     &getArmedBackground(void);
-     const UIBackgroundPtr     &getArmedBackground(void) const;
-           Color4f             &getArmedTextColor (void);
-     const Color4f             &getArmedTextColor (void) const;
+           BorderPtr           &getSelectedBorder (void);
+     const BorderPtr           &getSelectedBorder (void) const;
+           UIBackgroundPtr     &getSelectedBackground(void);
+     const UIBackgroundPtr     &getSelectedBackground(void) const;
+           Color4f             &getSelectedTextColor(void);
+     const Color4f             &getSelectedTextColor(void) const;
            Color4f             &getFocusedTextColor(void);
      const Color4f             &getFocusedTextColor(void) const;
            Color4f             &getRolloverTextColor(void);
@@ -205,10 +199,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItemBase : public MenuItem
      void setText           ( const std::string &value );
      void setAcceleratorModifiers( const UInt32 &value );
      void setAcceleratorKey ( const UInt32 &value );
-     void setArmed          ( const bool &value );
-     void setArmedBorder    ( const BorderPtr &value );
-     void setArmedBackground( const UIBackgroundPtr &value );
-     void setArmedTextColor ( const Color4f &value );
+     void setSelectedBorder ( const BorderPtr &value );
+     void setSelectedBackground( const UIBackgroundPtr &value );
+     void setSelectedTextColor( const Color4f &value );
      void setFocusedTextColor( const Color4f &value );
      void setRolloverTextColor( const Color4f &value );
      void setDisabledTextColor( const Color4f &value );
@@ -259,10 +252,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItemBase : public MenuItem
     SFString            _sfText;
     SFUInt32            _sfAcceleratorModifiers;
     SFUInt32            _sfAcceleratorKey;
-    SFBool              _sfArmed;
-    SFBorderPtr         _sfArmedBorder;
-    SFUIBackgroundPtr   _sfArmedBackground;
-    SFColor4f           _sfArmedTextColor;
+    SFBorderPtr         _sfSelectedBorder;
+    SFUIBackgroundPtr   _sfSelectedBackground;
+    SFColor4f           _sfSelectedTextColor;
     SFColor4f           _sfFocusedTextColor;
     SFColor4f           _sfRolloverTextColor;
     SFColor4f           _sfDisabledTextColor;

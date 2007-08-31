@@ -87,24 +87,29 @@ void Menu::drawInternal(const GraphicsPtr Graphics) const
     LabelMenuItem::drawInternal(Graphics);
 }
 
-void Menu::mouseEntered(const MouseEvent& e)
+/*void Menu::mouseEntered(const MouseEvent& e)
 {
-    getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_PopupUpdateListener);
+    if(!getSelected())
+    {
+        _PopupUpdateListener.reset();
+        getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_PopupUpdateListener);
+    }
     LabelMenuItem::mouseEntered(e);
 }
 
 void Menu::mouseExited(const MouseEvent& e)
 {
-    /*if(getInternalPopupMenu()->isContained(e.getLocation(), true))
+    //if(getInternalPopupMenu()->isContained(e.getLocation(), true))
+    if(!getParentContainer()->isContained(e.getLocation(), true))
     {
         MenuItem::mouseExited(e);
     }
     else
     {
         LabelMenuItem::mouseExited(e);
-    }*/
+    }
     MenuItem::mouseExited(e);
-}
+}*/
 
 void Menu::mouseReleased(const MouseEvent& e)
 {
@@ -169,16 +174,28 @@ void Menu::changed(BitVector whichField, UInt32 origin)
         endEditCP(getInternalPopupMenu(), ParentFrameFieldMask);
     }
     
-    if(whichField & ArmedFieldMask &&
-       !getArmed()
-       )
+    if(whichField & SelectedFieldMask)
     {
-        setPopupVisible(false);
-        if(getParentFrame() != NullFC &&
-        getParentFrame()->getDrawingSurface() != NullFC &&
-        getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+        if(getSelected())
         {
-            getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_PopupUpdateListener);
+            setPopupVisible(false);
+            if(getParentFrame() != NullFC &&
+            getParentFrame()->getDrawingSurface() != NullFC &&
+            getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+            {
+                _PopupUpdateListener.reset();
+                getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_PopupUpdateListener);
+            }
+        }
+        else
+        {
+            setPopupVisible(false);
+            if(getParentFrame() != NullFC &&
+            getParentFrame()->getDrawingSurface() != NullFC &&
+            getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+            {
+                getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_PopupUpdateListener);
+            }
         }
     }
 

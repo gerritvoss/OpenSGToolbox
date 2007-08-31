@@ -1,9 +1,10 @@
-
 /*---------------------------------------------------------------------------*\
  *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
+ *                                                                           *
+ *                         www.vrac.iastate.edu                              *
  *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
@@ -39,29 +40,66 @@
 //  Includes
 //---------------------------------------------------------------------------
 
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEUSERINTERFACELIB
+
 #include <OpenSG/OSGConfig.h>
-#include "OSGMenuItem.h"
+
+#include "OSGDefaultSingleSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-inline
-MenuItemPtr PopupMenu::getItem(const UInt32& Index)
+void DefaultSingleSelectionModel::addChangeListener(ChangeListenerPtr Listener)
 {
-    return MenuItem::Ptr::dcast(getChildren().getValue(Index));
+   _ChangeListeners.insert(Listener);
 }
 
-inline
-UInt32 PopupMenu::getNumItems(void) const
+void DefaultSingleSelectionModel::removeChangeListener(ChangeListenerPtr Listener)
 {
-    return getChildren().size();
+   ChangeListenerSetItor EraseIter(_ChangeListeners.find(Listener));
+   if(EraseIter != _ChangeListeners.end())
+   {
+      _ChangeListeners.erase(EraseIter);
+   }
 }
 
-inline
-PopupMenu::MenuSelectionListener::MenuSelectionListener(PopupMenuPtr ThePopupMenu) :
-									_PopupMenu(ThePopupMenu)
+
+void DefaultSingleSelectionModel::clearSelection(void)
 {
+    if(_SelectedIndex != -1)
+    {
+        _SelectedIndex = -1;
+        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+    }
+}
+
+Int32 DefaultSingleSelectionModel::getSelectedIndex(void)
+{
+    return _SelectedIndex;
+}
+
+bool DefaultSingleSelectionModel::isSelected(void)
+{
+    return _SelectedIndex != -1;
+}
+
+void DefaultSingleSelectionModel::setSelectedIndex(Int32 index)
+{
+    if(_SelectedIndex != index)
+    {
+        _SelectedIndex = index;
+        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+    }
+}
+
+void DefaultSingleSelectionModel::produceStateChanged(const ChangeEvent& e)
+{
+   for(ChangeListenerSetConstItor SetItor(_ChangeListeners.begin()) ; SetItor != _ChangeListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->stateChanged(e);
+   }
 }
 OSG_END_NAMESPACE
-
-#define OSGPOPUPMENU_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

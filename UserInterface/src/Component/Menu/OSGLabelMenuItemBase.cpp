@@ -76,17 +76,14 @@ const OSG::BitVector  LabelMenuItemBase::AcceleratorModifiersFieldMask =
 const OSG::BitVector  LabelMenuItemBase::AcceleratorKeyFieldMask = 
     (TypeTraits<BitVector>::One << LabelMenuItemBase::AcceleratorKeyFieldId);
 
-const OSG::BitVector  LabelMenuItemBase::ArmedFieldMask = 
-    (TypeTraits<BitVector>::One << LabelMenuItemBase::ArmedFieldId);
+const OSG::BitVector  LabelMenuItemBase::SelectedBorderFieldMask = 
+    (TypeTraits<BitVector>::One << LabelMenuItemBase::SelectedBorderFieldId);
 
-const OSG::BitVector  LabelMenuItemBase::ArmedBorderFieldMask = 
-    (TypeTraits<BitVector>::One << LabelMenuItemBase::ArmedBorderFieldId);
+const OSG::BitVector  LabelMenuItemBase::SelectedBackgroundFieldMask = 
+    (TypeTraits<BitVector>::One << LabelMenuItemBase::SelectedBackgroundFieldId);
 
-const OSG::BitVector  LabelMenuItemBase::ArmedBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << LabelMenuItemBase::ArmedBackgroundFieldId);
-
-const OSG::BitVector  LabelMenuItemBase::ArmedTextColorFieldMask = 
-    (TypeTraits<BitVector>::One << LabelMenuItemBase::ArmedTextColorFieldId);
+const OSG::BitVector  LabelMenuItemBase::SelectedTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << LabelMenuItemBase::SelectedTextColorFieldId);
 
 const OSG::BitVector  LabelMenuItemBase::FocusedTextColorFieldMask = 
     (TypeTraits<BitVector>::One << LabelMenuItemBase::FocusedTextColorFieldId);
@@ -122,16 +119,13 @@ const OSG::BitVector LabelMenuItemBase::MTInfluenceMask =
 /*! \var UInt32          LabelMenuItemBase::_sfAcceleratorKey
     
 */
-/*! \var bool            LabelMenuItemBase::_sfArmed
+/*! \var BorderPtr       LabelMenuItemBase::_sfSelectedBorder
     
 */
-/*! \var BorderPtr       LabelMenuItemBase::_sfArmedBorder
+/*! \var UIBackgroundPtr LabelMenuItemBase::_sfSelectedBackground
     
 */
-/*! \var UIBackgroundPtr LabelMenuItemBase::_sfArmedBackground
-    
-*/
-/*! \var Color4f         LabelMenuItemBase::_sfArmedTextColor
+/*! \var Color4f         LabelMenuItemBase::_sfSelectedTextColor
     
 */
 /*! \var Color4f         LabelMenuItemBase::_sfFocusedTextColor
@@ -174,26 +168,21 @@ FieldDescription *LabelMenuItemBase::_desc[] =
                      AcceleratorKeyFieldId, AcceleratorKeyFieldMask,
                      false,
                      (FieldAccessMethod) &LabelMenuItemBase::getSFAcceleratorKey),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Armed", 
-                     ArmedFieldId, ArmedFieldMask,
-                     false,
-                     (FieldAccessMethod) &LabelMenuItemBase::getSFArmed),
     new FieldDescription(SFBorderPtr::getClassType(), 
-                     "ArmedBorder", 
-                     ArmedBorderFieldId, ArmedBorderFieldMask,
+                     "SelectedBorder", 
+                     SelectedBorderFieldId, SelectedBorderFieldMask,
                      false,
-                     (FieldAccessMethod) &LabelMenuItemBase::getSFArmedBorder),
+                     (FieldAccessMethod) &LabelMenuItemBase::getSFSelectedBorder),
     new FieldDescription(SFUIBackgroundPtr::getClassType(), 
-                     "ArmedBackground", 
-                     ArmedBackgroundFieldId, ArmedBackgroundFieldMask,
+                     "SelectedBackground", 
+                     SelectedBackgroundFieldId, SelectedBackgroundFieldMask,
                      false,
-                     (FieldAccessMethod) &LabelMenuItemBase::getSFArmedBackground),
+                     (FieldAccessMethod) &LabelMenuItemBase::getSFSelectedBackground),
     new FieldDescription(SFColor4f::getClassType(), 
-                     "ArmedTextColor", 
-                     ArmedTextColorFieldId, ArmedTextColorFieldMask,
+                     "SelectedTextColor", 
+                     SelectedTextColorFieldId, SelectedTextColorFieldMask,
                      false,
-                     (FieldAccessMethod) &LabelMenuItemBase::getSFArmedTextColor),
+                     (FieldAccessMethod) &LabelMenuItemBase::getSFSelectedTextColor),
     new FieldDescription(SFColor4f::getClassType(), 
                      "FocusedTextColor", 
                      FocusedTextColorFieldId, FocusedTextColorFieldMask,
@@ -298,10 +287,9 @@ LabelMenuItemBase::LabelMenuItemBase(void) :
     _sfText                   (), 
     _sfAcceleratorModifiers   (UInt32(0)), 
     _sfAcceleratorKey         (UInt32(0)), 
-    _sfArmed                  (bool(false)), 
-    _sfArmedBorder            (BorderPtr(NullFC)), 
-    _sfArmedBackground        (UIBackgroundPtr(NullFC)), 
-    _sfArmedTextColor         (), 
+    _sfSelectedBorder         (BorderPtr(NullFC)), 
+    _sfSelectedBackground     (UIBackgroundPtr(NullFC)), 
+    _sfSelectedTextColor      (), 
     _sfFocusedTextColor       (), 
     _sfRolloverTextColor      (), 
     _sfDisabledTextColor      (), 
@@ -320,10 +308,9 @@ LabelMenuItemBase::LabelMenuItemBase(const LabelMenuItemBase &source) :
     _sfText                   (source._sfText                   ), 
     _sfAcceleratorModifiers   (source._sfAcceleratorModifiers   ), 
     _sfAcceleratorKey         (source._sfAcceleratorKey         ), 
-    _sfArmed                  (source._sfArmed                  ), 
-    _sfArmedBorder            (source._sfArmedBorder            ), 
-    _sfArmedBackground        (source._sfArmedBackground        ), 
-    _sfArmedTextColor         (source._sfArmedTextColor         ), 
+    _sfSelectedBorder         (source._sfSelectedBorder         ), 
+    _sfSelectedBackground     (source._sfSelectedBackground     ), 
+    _sfSelectedTextColor      (source._sfSelectedTextColor      ), 
     _sfFocusedTextColor       (source._sfFocusedTextColor       ), 
     _sfRolloverTextColor      (source._sfRolloverTextColor      ), 
     _sfDisabledTextColor      (source._sfDisabledTextColor      ), 
@@ -365,24 +352,19 @@ UInt32 LabelMenuItemBase::getBinSize(const BitVector &whichField)
         returnValue += _sfAcceleratorKey.getBinSize();
     }
 
-    if(FieldBits::NoField != (ArmedFieldMask & whichField))
+    if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
     {
-        returnValue += _sfArmed.getBinSize();
+        returnValue += _sfSelectedBorder.getBinSize();
     }
 
-    if(FieldBits::NoField != (ArmedBorderFieldMask & whichField))
+    if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
     {
-        returnValue += _sfArmedBorder.getBinSize();
+        returnValue += _sfSelectedBackground.getBinSize();
     }
 
-    if(FieldBits::NoField != (ArmedBackgroundFieldMask & whichField))
+    if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
     {
-        returnValue += _sfArmedBackground.getBinSize();
-    }
-
-    if(FieldBits::NoField != (ArmedTextColorFieldMask & whichField))
-    {
-        returnValue += _sfArmedTextColor.getBinSize();
+        returnValue += _sfSelectedTextColor.getBinSize();
     }
 
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
@@ -439,24 +421,19 @@ void LabelMenuItemBase::copyToBin(      BinaryDataHandler &pMem,
         _sfAcceleratorKey.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ArmedFieldMask & whichField))
+    if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
     {
-        _sfArmed.copyToBin(pMem);
+        _sfSelectedBorder.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ArmedBorderFieldMask & whichField))
+    if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
     {
-        _sfArmedBorder.copyToBin(pMem);
+        _sfSelectedBackground.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ArmedBackgroundFieldMask & whichField))
+    if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
     {
-        _sfArmedBackground.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (ArmedTextColorFieldMask & whichField))
-    {
-        _sfArmedTextColor.copyToBin(pMem);
+        _sfSelectedTextColor.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
@@ -512,24 +489,19 @@ void LabelMenuItemBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfAcceleratorKey.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ArmedFieldMask & whichField))
+    if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
     {
-        _sfArmed.copyFromBin(pMem);
+        _sfSelectedBorder.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ArmedBorderFieldMask & whichField))
+    if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
     {
-        _sfArmedBorder.copyFromBin(pMem);
+        _sfSelectedBackground.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ArmedBackgroundFieldMask & whichField))
+    if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
     {
-        _sfArmedBackground.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (ArmedTextColorFieldMask & whichField))
-    {
-        _sfArmedTextColor.copyFromBin(pMem);
+        _sfSelectedTextColor.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
@@ -579,17 +551,14 @@ void LabelMenuItemBase::executeSyncImpl(      LabelMenuItemBase *pOther,
     if(FieldBits::NoField != (AcceleratorKeyFieldMask & whichField))
         _sfAcceleratorKey.syncWith(pOther->_sfAcceleratorKey);
 
-    if(FieldBits::NoField != (ArmedFieldMask & whichField))
-        _sfArmed.syncWith(pOther->_sfArmed);
+    if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
+        _sfSelectedBorder.syncWith(pOther->_sfSelectedBorder);
 
-    if(FieldBits::NoField != (ArmedBorderFieldMask & whichField))
-        _sfArmedBorder.syncWith(pOther->_sfArmedBorder);
+    if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
+        _sfSelectedBackground.syncWith(pOther->_sfSelectedBackground);
 
-    if(FieldBits::NoField != (ArmedBackgroundFieldMask & whichField))
-        _sfArmedBackground.syncWith(pOther->_sfArmedBackground);
-
-    if(FieldBits::NoField != (ArmedTextColorFieldMask & whichField))
-        _sfArmedTextColor.syncWith(pOther->_sfArmedTextColor);
+    if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
+        _sfSelectedTextColor.syncWith(pOther->_sfSelectedTextColor);
 
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
         _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);
@@ -628,17 +597,14 @@ void LabelMenuItemBase::executeSyncImpl(      LabelMenuItemBase *pOther,
     if(FieldBits::NoField != (AcceleratorKeyFieldMask & whichField))
         _sfAcceleratorKey.syncWith(pOther->_sfAcceleratorKey);
 
-    if(FieldBits::NoField != (ArmedFieldMask & whichField))
-        _sfArmed.syncWith(pOther->_sfArmed);
+    if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
+        _sfSelectedBorder.syncWith(pOther->_sfSelectedBorder);
 
-    if(FieldBits::NoField != (ArmedBorderFieldMask & whichField))
-        _sfArmedBorder.syncWith(pOther->_sfArmedBorder);
+    if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
+        _sfSelectedBackground.syncWith(pOther->_sfSelectedBackground);
 
-    if(FieldBits::NoField != (ArmedBackgroundFieldMask & whichField))
-        _sfArmedBackground.syncWith(pOther->_sfArmedBackground);
-
-    if(FieldBits::NoField != (ArmedTextColorFieldMask & whichField))
-        _sfArmedTextColor.syncWith(pOther->_sfArmedTextColor);
+    if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
+        _sfSelectedTextColor.syncWith(pOther->_sfSelectedTextColor);
 
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
         _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);

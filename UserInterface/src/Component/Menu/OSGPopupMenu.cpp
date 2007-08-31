@@ -49,6 +49,7 @@
 
 #include "OSGPopupMenu.h"
 #include "Component/Container/OSGContainer.h"
+#include "OSGDefaultSingleSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -173,6 +174,36 @@ void PopupMenu::removeItem(const UInt32& Index)
         endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
     }
 }
+void PopupMenu::mouseMoved(const MouseEvent& e)
+{
+    UInt32 i(0);
+    while (i<getChildren().size())
+    {
+        if(getChildren().getValue(i)->isContained(e.getLocation(), true))
+        {
+            _SelectionModel->setSelectedIndex(i);
+            break;
+        }
+        ++i;
+    }
+    Container::mouseMoved(e);
+}
+
+void PopupMenu::mouseDragged(const MouseEvent& e)
+{
+    UInt32 i(0);
+    while (i<getChildren().size())
+    {
+        if(getChildren().getValue(i)->isContained(e.getLocation(), true))
+        {
+            _SelectionModel->setSelectedIndex(i);
+            break;
+        }
+        ++i;
+    }
+    Container::mouseDragged(e);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -180,17 +211,24 @@ void PopupMenu::removeItem(const UInt32& Index)
 /*----------------------- constructors & destructors ----------------------*/
 
 PopupMenu::PopupMenu(void) :
-    Inherited()
+    Inherited(),
+    _MenuSelectionListener(PopupMenuPtr(this))
 {
+    _SelectionModel = new DefaultSingleSelectionModel();
+    _SelectionModel->addChangeListener(&_MenuSelectionListener);
 }
 
 PopupMenu::PopupMenu(const PopupMenu &source) :
-    Inherited(source)
+    Inherited(source),
+    _MenuSelectionListener(PopupMenuPtr(this))
 {
+    _SelectionModel = new DefaultSingleSelectionModel();
+    _SelectionModel->addChangeListener(&_MenuSelectionListener);
 }
 
 PopupMenu::~PopupMenu(void)
 {
+    delete _SelectionModel;
 }
 
 /*----------------------------- class specific ----------------------------*/
@@ -206,6 +244,26 @@ void PopupMenu::dump(      UInt32    ,
     SLOG << "Dump PopupMenu NI" << std::endl;
 }
 
+void PopupMenu::MenuSelectionListener::stateChanged(const ChangeEvent& e)
+{
+    for(UInt32 i(0) ; i<_PopupMenu->getChildren().size() ; ++i)
+    {
+        if(i == _PopupMenu->_SelectionModel->getSelectedIndex() &&
+           !MenuItem::Ptr::dcast(_PopupMenu->getChildren().getValue(i))->getSelected())
+        {
+            beginEditCP(_PopupMenu->getChildren().getValue(i), MenuItem::SelectedFieldMask);
+                MenuItem::Ptr::dcast(_PopupMenu->getChildren().getValue(i))->setSelected(true);
+            endEditCP(_PopupMenu->getChildren().getValue(i), MenuItem::SelectedFieldMask);
+        }
+        if(i != _PopupMenu->_SelectionModel->getSelectedIndex() &&
+           MenuItem::Ptr::dcast(_PopupMenu->getChildren().getValue(i))->getSelected())
+        {
+            beginEditCP(_PopupMenu->getChildren().getValue(i), MenuItem::SelectedFieldMask);
+                MenuItem::Ptr::dcast(_PopupMenu->getChildren().getValue(i))->setSelected(false);
+            endEditCP(_PopupMenu->getChildren().getValue(i), MenuItem::SelectedFieldMask);
+        }
+    }
+}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

@@ -36,119 +36,77 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGPOPUPMENU_H_
-#define _OSGPOPUPMENU_H_
+#ifndef _OSG_UI_DEFAULT_SINGLE_SELECTION_MODEL_H_
+#define _OSG_UI_DEFAULT_SINGLE_SELECTION_MODEL_H_
+
 #ifdef __sgi
 #pragma once
 #endif
-
+ 
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
-
-#include "OSGPopupMenuBase.h"
-#include "OSGMenuItemFields.h"
 #include "OSGSingleSelectionModel.h"
-#include "Event/OSGChangeListener.h"
+#include <set>
 
 OSG_BEGIN_NAMESPACE
-
-/*! \brief PopupMenu class. See \ref 
-           PageUserInterfacePopupMenu for a description.
-*/
-
-class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
+	 
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultSingleSelectionModel : public SingleSelectionModel
 {
-  private:
-
-    typedef PopupMenuBase Inherited;
-
-    /*==========================  PUBLIC  =================================*/
-  public:
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
-    /*! \{                                                                 */
-
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
-
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
-
-    void addItem(MenuItemPtr Item);
-    void addItem(MenuItemPtr Item, const UInt32& Index);
-    void removeItem(MenuItemPtr Item);
-    void removeItem(const UInt32& Index);
-    MenuItemPtr getItem(const UInt32& Index);
-    UInt32 getNumItems(void) const;
+private:
+protected:
+	typedef std::set<ChangeListenerPtr> ChangeListenerSet;
+    typedef ChangeListenerSet::iterator ChangeListenerSetItor;
+    typedef ChangeListenerSet::const_iterator ChangeListenerSetConstItor;
+	
+    ChangeListenerSet       _ChangeListeners;
     
-	virtual void updateClipBounds(void);
+    virtual void produceStateChanged(const ChangeEvent& e);
     
-	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEvent& e);
-    virtual void mouseDragged(const MouseEvent& e);
-    /*! \}                                                                 */
-    /*=========================  PROTECTED  ===============================*/
-  protected:
-
-    // Variables should all be in PopupMenuBase.
-
+    Int32 _SelectedIndex;
+public:
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    PopupMenu(void);
-    PopupMenu(const PopupMenu &source);
+    DefaultSingleSelectionModel(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PopupMenu(void); 
+    virtual ~DefaultSingleSelectionModel(void); 
+
     /*! \}                                                                 */
+
+    /*=========================  PROTECTED  ===============================*/
+
+    //Adds listener as a listener to changes in the model.
+    virtual void addChangeListener(ChangeListenerPtr listener);
+
+    //Clears the selection (to -1).
+    virtual void clearSelection(void);
     
-    virtual void updateLayout(void);
+    //Returns the model's selection.
+    virtual Int32 getSelectedIndex(void);
     
-	class MenuSelectionListener : public ChangeListener
-	{
-	public:
-		MenuSelectionListener(PopupMenuPtr ThePopupMenu);
-        void stateChanged(const ChangeEvent& e);
-	private:
-		PopupMenuPtr _PopupMenu;
-	};
-
-	friend class MenuSelectionListener;
-
-	MenuSelectionListener _MenuSelectionListener;
-    /*==========================  PRIVATE  ================================*/
-  private:
-
-    friend class FieldContainer;
-    friend class PopupMenuBase;
-
-    static void initMethod(void);
-
-    // prohibit default functions (move to 'public' if you need one)
-
-    void operator =(const PopupMenu &source);
+    //Returns true if the selection model currently has a selected value.
+    virtual bool isSelected(void);
     
-    SingleSelectionModelPtr _SelectionModel;
+    //Removes listener as a listener to changes in the model.
+    virtual void removeChangeListener(ChangeListenerPtr listener);
+    
+    //Sets the model's selected index to index.
+    virtual void setSelectedIndex(Int32 index);
+   
 };
 
-typedef PopupMenu *PopupMenuP;
+typedef DefaultSingleSelectionModel* DefaultSingleSelectionModelPtr;
 
 OSG_END_NAMESPACE
 
-#include "OSGPopupMenuBase.inl"
-#include "OSGPopupMenu.inl"
+#include "OSGDefaultSingleSelectionModel.inl"
 
-#define OSGPOPUPMENU_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#endif /* _OSG_UI_DEFAULT_SINGLE_SELECTION_MODEL_H_ */
 
-#endif /* _OSGPOPUPMENU_H_ */
+

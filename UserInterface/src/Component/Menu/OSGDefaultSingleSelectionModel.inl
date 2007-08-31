@@ -1,4 +1,3 @@
-
 /*---------------------------------------------------------------------------*\
  *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
@@ -40,28 +39,19 @@
 //---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGMenuItem.h"
 
 OSG_BEGIN_NAMESPACE
 
 inline
-MenuItemPtr PopupMenu::getItem(const UInt32& Index)
+DefaultSingleSelectionModel::DefaultSingleSelectionModel() : _SelectedIndex(-1)
 {
-    return MenuItem::Ptr::dcast(getChildren().getValue(Index));
 }
 
 inline
-UInt32 PopupMenu::getNumItems(void) const
+DefaultSingleSelectionModel::~DefaultSingleSelectionModel(void)
 {
-    return getChildren().size();
 }
 
-inline
-PopupMenu::MenuSelectionListener::MenuSelectionListener(PopupMenuPtr ThePopupMenu) :
-									_PopupMenu(ThePopupMenu)
-{
-}
 OSG_END_NAMESPACE
 
-#define OSGPOPUPMENU_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

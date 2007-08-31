@@ -67,6 +67,7 @@
 
 #include "Component/OSGComponent.h" // Parent
 
+#include <OpenSG/OSGBoolFields.h> // Selected type
 
 #include "OSGMenuItemFields.h"
 
@@ -87,6 +88,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
   public:
 
     typedef MenuItemPtr  Ptr;
+
+    enum
+    {
+        SelectedFieldId = Inherited::NextFieldId,
+        NextFieldId     = SelectedFieldId + 1
+    };
+
+    static const OSG::BitVector SelectedFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -110,6 +119,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFBool              *getSFSelected       (void);
+
+           bool                &getSelected       (void);
+     const bool                &getSelected       (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setSelected       ( const bool &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -126,9 +152,32 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
 
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Construction                               */
+    /*! \{                                                                 */
+
+    static  MenuItemPtr      create          (void); 
+    static  MenuItemPtr      createEmpty     (void); 
+
+    /*! \}                                                                 */
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Copy                                   */
+    /*! \{                                                                 */
+
+    virtual FieldContainerPtr     shallowCopy     (void) const; 
+
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFBool              _sfSelected;
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -180,6 +229,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

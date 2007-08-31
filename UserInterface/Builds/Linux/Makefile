@@ -111,6 +111,7 @@ OBJECTS = OSGShadowBorder.o \
 	OSGMenuBase.o \
 	OSGMenuItemBase.o \
 	OSGPopupMenu.o \
+	OSGDefaultSingleSelectionModel.o \
 	OSGLabelMenuItem.o \
 	OSGMenuItem.o \
 	OSGLabelMenuItemBase.o \

@@ -70,7 +70,6 @@
 #include "Component/Button/OSGToggleButtonFields.h" // Button type
 #include "Component/Menu/OSGPopupMenuFields.h" // InternalPopupMenu type
 #include <OpenSG/OSGReal32Fields.h> // SubMenuDelay type
-#include <OpenSG/OSGBoolFields.h> // Selected type
 #include <OpenSG/OSGBoolFields.h> // TopLevelMenu type
 #include "Component/OSGUIDrawObjectCanvas.h" // ExpandDrawObject type
 
@@ -99,8 +98,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public LabelMenuItem
         ButtonFieldId            = Inherited::NextFieldId,
         InternalPopupMenuFieldId = ButtonFieldId            + 1,
         SubMenuDelayFieldId      = InternalPopupMenuFieldId + 1,
-        SelectedFieldId          = SubMenuDelayFieldId      + 1,
-        TopLevelMenuFieldId      = SelectedFieldId          + 1,
+        TopLevelMenuFieldId      = SubMenuDelayFieldId      + 1,
         ExpandDrawObjectFieldId  = TopLevelMenuFieldId      + 1,
         NextFieldId              = ExpandDrawObjectFieldId  + 1
     };
@@ -108,7 +106,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public LabelMenuItem
     static const OSG::BitVector ButtonFieldMask;
     static const OSG::BitVector InternalPopupMenuFieldMask;
     static const OSG::BitVector SubMenuDelayFieldMask;
-    static const OSG::BitVector SelectedFieldMask;
     static const OSG::BitVector TopLevelMenuFieldMask;
     static const OSG::BitVector ExpandDrawObjectFieldMask;
 
@@ -139,7 +136,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public LabelMenuItem
 
            SFToggleButtonPtr   *getSFButton         (void);
            SFReal32            *getSFSubMenuDelay   (void);
-           SFBool              *getSFSelected       (void);
            SFBool              *getSFTopLevelMenu   (void);
            SFUIDrawObjectCanvasPtr *getSFExpandDrawObject(void);
 
@@ -147,8 +143,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public LabelMenuItem
      const ToggleButtonPtr     &getButton         (void) const;
            Real32              &getSubMenuDelay   (void);
      const Real32              &getSubMenuDelay   (void) const;
-           bool                &getSelected       (void);
-     const bool                &getSelected       (void) const;
            bool                &getTopLevelMenu   (void);
      const bool                &getTopLevelMenu   (void) const;
            UIDrawObjectCanvasPtr &getExpandDrawObject(void);
@@ -161,7 +155,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public LabelMenuItem
 
      void setButton         ( const ToggleButtonPtr &value );
      void setSubMenuDelay   ( const Real32 &value );
-     void setSelected       ( const bool &value );
      void setTopLevelMenu   ( const bool &value );
      void setExpandDrawObject( const UIDrawObjectCanvasPtr &value );
 
@@ -209,7 +202,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public LabelMenuItem
     SFToggleButtonPtr   _sfButton;
     SFPopupMenuPtr      _sfInternalPopupMenu;
     SFReal32            _sfSubMenuDelay;
-    SFBool              _sfSelected;
     SFBool              _sfTopLevelMenu;
     SFUIDrawObjectCanvasPtr   _sfExpandDrawObject;
 

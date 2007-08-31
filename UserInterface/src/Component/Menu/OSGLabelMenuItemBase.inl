@@ -124,32 +124,25 @@ SFUInt32 *LabelMenuItemBase::getSFAcceleratorKey(void)
     return &_sfAcceleratorKey;
 }
 
-//! Get the LabelMenuItem::_sfArmed field.
+//! Get the LabelMenuItem::_sfSelectedBorder field.
 inline
-SFBool *LabelMenuItemBase::getSFArmed(void)
+SFBorderPtr *LabelMenuItemBase::getSFSelectedBorder(void)
 {
-    return &_sfArmed;
+    return &_sfSelectedBorder;
 }
 
-//! Get the LabelMenuItem::_sfArmedBorder field.
+//! Get the LabelMenuItem::_sfSelectedBackground field.
 inline
-SFBorderPtr *LabelMenuItemBase::getSFArmedBorder(void)
+SFUIBackgroundPtr *LabelMenuItemBase::getSFSelectedBackground(void)
 {
-    return &_sfArmedBorder;
+    return &_sfSelectedBackground;
 }
 
-//! Get the LabelMenuItem::_sfArmedBackground field.
+//! Get the LabelMenuItem::_sfSelectedTextColor field.
 inline
-SFUIBackgroundPtr *LabelMenuItemBase::getSFArmedBackground(void)
+SFColor4f *LabelMenuItemBase::getSFSelectedTextColor(void)
 {
-    return &_sfArmedBackground;
-}
-
-//! Get the LabelMenuItem::_sfArmedTextColor field.
-inline
-SFColor4f *LabelMenuItemBase::getSFArmedTextColor(void)
-{
-    return &_sfArmedTextColor;
+    return &_sfSelectedTextColor;
 }
 
 //! Get the LabelMenuItem::_sfFocusedTextColor field.
@@ -272,88 +265,67 @@ void LabelMenuItemBase::setAcceleratorKey(const UInt32 &value)
     _sfAcceleratorKey.setValue(value);
 }
 
-//! Get the value of the LabelMenuItem::_sfArmed field.
+//! Get the value of the LabelMenuItem::_sfSelectedBorder field.
 inline
-bool &LabelMenuItemBase::getArmed(void)
+BorderPtr &LabelMenuItemBase::getSelectedBorder(void)
 {
-    return _sfArmed.getValue();
+    return _sfSelectedBorder.getValue();
 }
 
-//! Get the value of the LabelMenuItem::_sfArmed field.
+//! Get the value of the LabelMenuItem::_sfSelectedBorder field.
 inline
-const bool &LabelMenuItemBase::getArmed(void) const
+const BorderPtr &LabelMenuItemBase::getSelectedBorder(void) const
 {
-    return _sfArmed.getValue();
+    return _sfSelectedBorder.getValue();
 }
 
-//! Set the value of the LabelMenuItem::_sfArmed field.
+//! Set the value of the LabelMenuItem::_sfSelectedBorder field.
 inline
-void LabelMenuItemBase::setArmed(const bool &value)
+void LabelMenuItemBase::setSelectedBorder(const BorderPtr &value)
 {
-    _sfArmed.setValue(value);
+    _sfSelectedBorder.setValue(value);
 }
 
-//! Get the value of the LabelMenuItem::_sfArmedBorder field.
+//! Get the value of the LabelMenuItem::_sfSelectedBackground field.
 inline
-BorderPtr &LabelMenuItemBase::getArmedBorder(void)
+UIBackgroundPtr &LabelMenuItemBase::getSelectedBackground(void)
 {
-    return _sfArmedBorder.getValue();
+    return _sfSelectedBackground.getValue();
 }
 
-//! Get the value of the LabelMenuItem::_sfArmedBorder field.
+//! Get the value of the LabelMenuItem::_sfSelectedBackground field.
 inline
-const BorderPtr &LabelMenuItemBase::getArmedBorder(void) const
+const UIBackgroundPtr &LabelMenuItemBase::getSelectedBackground(void) const
 {
-    return _sfArmedBorder.getValue();
+    return _sfSelectedBackground.getValue();
 }
 
-//! Set the value of the LabelMenuItem::_sfArmedBorder field.
+//! Set the value of the LabelMenuItem::_sfSelectedBackground field.
 inline
-void LabelMenuItemBase::setArmedBorder(const BorderPtr &value)
+void LabelMenuItemBase::setSelectedBackground(const UIBackgroundPtr &value)
 {
-    _sfArmedBorder.setValue(value);
+    _sfSelectedBackground.setValue(value);
 }
 
-//! Get the value of the LabelMenuItem::_sfArmedBackground field.
+//! Get the value of the LabelMenuItem::_sfSelectedTextColor field.
 inline
-UIBackgroundPtr &LabelMenuItemBase::getArmedBackground(void)
+Color4f &LabelMenuItemBase::getSelectedTextColor(void)
 {
-    return _sfArmedBackground.getValue();
+    return _sfSelectedTextColor.getValue();
 }
 
-//! Get the value of the LabelMenuItem::_sfArmedBackground field.
+//! Get the value of the LabelMenuItem::_sfSelectedTextColor field.
 inline
-const UIBackgroundPtr &LabelMenuItemBase::getArmedBackground(void) const
+const Color4f &LabelMenuItemBase::getSelectedTextColor(void) const
 {
-    return _sfArmedBackground.getValue();
+    return _sfSelectedTextColor.getValue();
 }
 
-//! Set the value of the LabelMenuItem::_sfArmedBackground field.
+//! Set the value of the LabelMenuItem::_sfSelectedTextColor field.
 inline
-void LabelMenuItemBase::setArmedBackground(const UIBackgroundPtr &value)
+void LabelMenuItemBase::setSelectedTextColor(const Color4f &value)
 {
-    _sfArmedBackground.setValue(value);
-}
-
-//! Get the value of the LabelMenuItem::_sfArmedTextColor field.
-inline
-Color4f &LabelMenuItemBase::getArmedTextColor(void)
-{
-    return _sfArmedTextColor.getValue();
-}
-
-//! Get the value of the LabelMenuItem::_sfArmedTextColor field.
-inline
-const Color4f &LabelMenuItemBase::getArmedTextColor(void) const
-{
-    return _sfArmedTextColor.getValue();
-}
-
-//! Set the value of the LabelMenuItem::_sfArmedTextColor field.
-inline
-void LabelMenuItemBase::setArmedTextColor(const Color4f &value)
-{
-    _sfArmedTextColor.setValue(value);
+    _sfSelectedTextColor.setValue(value);
 }
 
 //! Get the value of the LabelMenuItem::_sfFocusedTextColor field.

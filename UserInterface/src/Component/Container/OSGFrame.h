@@ -47,6 +47,7 @@
 
 #include "OSGFrameBase.h"
 #include <OpenSG/Input/OSGMouseAdapter.h>
+#include <OpenSG/Input/OSGMouseMotionAdapter.h>
 #include <OpenSG/Input/OSGKeyAdapter.h>
 
 OSG_BEGIN_NAMESPACE
@@ -81,20 +82,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
 	virtual void keyPressed(const KeyEvent& e);
 	virtual void keyReleased(const KeyEvent& e);
 	virtual void keyTyped(const KeyEvent& e);
-	
-	//Mouse Events
-    virtual void mouseClicked(const MouseEvent& e);
-    virtual void mouseEntered(const MouseEvent& e);
-    virtual void mouseExited(const MouseEvent& e);
-    virtual void mousePressed(const MouseEvent& e);
-    virtual void mouseReleased(const MouseEvent& e);
-
-	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEvent& e);
-    virtual void mouseDragged(const MouseEvent& e);
-
-	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEvent& e);
 
     virtual       FramePtr            &getParentFrame    (void);
     virtual const FramePtr            &getParentFrame    (void) const;
@@ -122,13 +109,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
 	virtual void drawInternal(const GraphicsPtr TheGraphics) const;
     /*! \}                                                                 */
     
-	class PopupMenuInteractionListener : public MouseAdapter, public KeyAdapter
+	class PopupMenuInteractionListener : public MouseAdapter, public MouseMotionAdapter, public KeyAdapter
 	{
 	public :
 		PopupMenuInteractionListener(FramePtr TheFrame);
 		
+        virtual void mouseClicked(const MouseEvent& e);
 		virtual void mousePressed(const MouseEvent& e);
+        virtual void mouseReleased(const MouseEvent& e);
 		virtual void keyPressed(const KeyEvent& e);
+		virtual void mouseMoved(const MouseEvent& e);
+        virtual void mouseDragged(const MouseEvent& e);
 	protected :
 		FramePtr _Frame;
 	};
