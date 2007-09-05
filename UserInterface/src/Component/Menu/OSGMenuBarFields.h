@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGFRAMEFIELDS_H_
-#define _OSGFRAMEFIELDS_H_
+#ifndef _OSGMENUBARFIELDS_H_
+#define _OSGMENUBARFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGContainerFields.h"
+#include "Component/Container/OSGContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Frame;
+class MenuBar;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! FramePtr
+//! MenuBarPtr
 
-typedef FCPtr<ContainerPtr, Frame> FramePtr;
+typedef FCPtr<ContainerPtr, MenuBar> MenuBarPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<ContainerPtr, Frame> FramePtr;
 #endif
 
 template <>
-struct FieldDataTraits<FramePtr> : 
-    public FieldTraitsRecurseMapper<FramePtr, true>
+struct FieldDataTraits<MenuBarPtr> : 
+    public FieldTraitsRecurseMapper<MenuBarPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<FramePtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFFramePtr"; }
-    static const char *getMName(void) { return "MFFramePtr"; }
+    static const char *getSName(void) { return "SFMenuBarPtr"; }
+    static const char *getMName(void) { return "MFMenuBarPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<FramePtr, true>
+/*! \class  FieldTraitsRecurseMapper<MenuBarPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<FramePtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldSingle */
 
-typedef SField<FramePtr> SFFramePtr;
+typedef SField<MenuBarPtr> SFMenuBarPtr;
 #endif
 
-#ifndef OSG_COMPILEFRAMEINST
-OSG_DLLEXPORT_DECL1(SField, FramePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEMENUBARINST
+OSG_DLLEXPORT_DECL1(SField, MenuBarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<FramePtr> MFFramePtr;
+typedef MField<MenuBarPtr> MFMenuBarPtr;
 #endif
 
-#ifndef OSG_COMPILEFRAMEINST
-OSG_DLLEXPORT_DECL1(MField, FramePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEMENUBARINST
+OSG_DLLEXPORT_DECL1(MField, MenuBarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGFRAMEFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGMENUBARFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGFRAMEFIELDS_H_ */
+#endif /* _OSGMENUBARFIELDS_H_ */

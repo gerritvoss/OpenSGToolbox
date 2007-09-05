@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Frame
+ **     class MenuBar
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGFRAMEBASE_H_
-#define _OSGFRAMEBASE_H_
+#ifndef _OSGMENUBARBASE_H_
+#define _OSGMENUBARBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,24 +65,20 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGContainer.h" // Parent
+#include "Component/Container/OSGContainer.h" // Parent
 
-#include "Component/OSGComponentFields.h" // FocusedComponent type
-#include "UIDrawingSurface/OSGUIDrawingSurfaceFields.h" // DrawingSurface type
-#include "Component/Menu/OSGPopupMenuFields.h" // ActivePopupMenus type
-#include "Component/Misc/OSGToolTipFields.h" // ActiveToolTip type
-#include <OpenSG/OSGBoolFields.h> // LockInput type
+#include <OpenSG/OSGReal32Fields.h> // MenuDelay type
 
-#include "OSGFrameFields.h"
+#include "OSGMenuBarFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Frame;
+class MenuBar;
 class BinaryDataHandler;
 
-//! \brief Frame Base Class.
+//! \brief MenuBar Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
+class OSG_USERINTERFACELIB_DLLMAPPING MenuBarBase : public Container
 {
   private:
 
@@ -91,23 +87,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef FramePtr  Ptr;
+    typedef MenuBarPtr  Ptr;
 
     enum
     {
-        FocusedComponentFieldId = Inherited::NextFieldId,
-        DrawingSurfaceFieldId   = FocusedComponentFieldId + 1,
-        ActivePopupMenusFieldId = DrawingSurfaceFieldId   + 1,
-        ActiveToolTipFieldId    = ActivePopupMenusFieldId + 1,
-        LockInputFieldId        = ActiveToolTipFieldId    + 1,
-        NextFieldId             = LockInputFieldId        + 1
+        MenuDelayFieldId = Inherited::NextFieldId,
+        NextFieldId      = MenuDelayFieldId + 1
     };
 
-    static const OSG::BitVector FocusedComponentFieldMask;
-    static const OSG::BitVector DrawingSurfaceFieldMask;
-    static const OSG::BitVector ActivePopupMenusFieldMask;
-    static const OSG::BitVector ActiveToolTipFieldMask;
-    static const OSG::BitVector LockInputFieldMask;
+    static const OSG::BitVector MenuDelayFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -134,33 +122,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFComponentPtr      *getSFFocusedComponent(void);
-           SFUIDrawingSurfacePtr *getSFDrawingSurface (void);
-           MFPopupMenuPtr      *getMFActivePopupMenus(void);
-           SFToolTipPtr        *getSFActiveToolTip  (void);
-           SFBool              *getSFLockInput      (void);
+           SFReal32            *getSFMenuDelay      (void);
 
-           ComponentPtr        &getFocusedComponent(void);
-     const ComponentPtr        &getFocusedComponent(void) const;
-           UIDrawingSurfacePtr &getDrawingSurface (void);
-     const UIDrawingSurfacePtr &getDrawingSurface (void) const;
-           ToolTipPtr          &getActiveToolTip  (void);
-     const ToolTipPtr          &getActiveToolTip  (void) const;
-           bool                &getLockInput      (void);
-     const bool                &getLockInput      (void) const;
-           PopupMenuPtr        &getActivePopupMenus(const UInt32 index);
-           MFPopupMenuPtr      &getActivePopupMenus(void);
-     const MFPopupMenuPtr      &getActivePopupMenus(void) const;
+           Real32              &getMenuDelay      (void);
+     const Real32              &getMenuDelay      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setFocusedComponent( const ComponentPtr &value );
-     void setDrawingSurface ( const UIDrawingSurfacePtr &value );
-     void setActiveToolTip  ( const ToolTipPtr &value );
-     void setLockInput      ( const bool &value );
+     void setMenuDelay      ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -184,8 +156,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  FramePtr      create          (void); 
-    static  FramePtr      createEmpty     (void); 
+    static  MenuBarPtr      create          (void); 
+    static  MenuBarPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -203,26 +175,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFComponentPtr      _sfFocusedComponent;
-    SFUIDrawingSurfacePtr   _sfDrawingSurface;
-    MFPopupMenuPtr      _mfActivePopupMenus;
-    SFToolTipPtr        _sfActiveToolTip;
-    SFBool              _sfLockInput;
+    SFReal32            _sfMenuDelay;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    FrameBase(void);
-    FrameBase(const FrameBase &source);
+    MenuBarBase(void);
+    MenuBarBase(const MenuBarBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~FrameBase(void); 
+    virtual ~MenuBarBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -230,13 +198,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      FrameBase *pOther,
+    void executeSyncImpl(      MenuBarBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      FrameBase *pOther,
+    void executeSyncImpl(      MenuBarBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -266,7 +234,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const FrameBase &source);
+    void operator =(const MenuBarBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -274,17 +242,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
 //---------------------------------------------------------------------------
 
 
-typedef FrameBase *FrameBaseP;
+typedef MenuBarBase *MenuBarBaseP;
 
-typedef osgIF<FrameBase::isNodeCore,
-              CoredNodePtr<Frame>,
+typedef osgIF<MenuBarBase::isNodeCore,
+              CoredNodePtr<MenuBar>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet FrameNodePtr;
+              >::_IRet MenuBarNodePtr;
 
-typedef RefPtr<FramePtr> FrameRefPtr;
+typedef RefPtr<MenuBarPtr> MenuBarRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGFRAMEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGMENUBARBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGFRAMEBASE_H_ */
+#endif /* _OSGMENUBARBASE_H_ */

@@ -87,30 +87,6 @@ void Menu::drawInternal(const GraphicsPtr Graphics) const
     LabelMenuItem::drawInternal(Graphics);
 }
 
-/*void Menu::mouseEntered(const MouseEvent& e)
-{
-    if(!getSelected())
-    {
-        _PopupUpdateListener.reset();
-        getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_PopupUpdateListener);
-    }
-    LabelMenuItem::mouseEntered(e);
-}
-
-void Menu::mouseExited(const MouseEvent& e)
-{
-    //if(getInternalPopupMenu()->isContained(e.getLocation(), true))
-    if(!getParentContainer()->isContained(e.getLocation(), true))
-    {
-        MenuItem::mouseExited(e);
-    }
-    else
-    {
-        LabelMenuItem::mouseExited(e);
-    }
-    MenuItem::mouseExited(e);
-}*/
-
 void Menu::mouseReleased(const MouseEvent& e)
 {
     Component::mouseReleased(e);
@@ -122,7 +98,14 @@ void Menu::setPopupVisible(bool Visible)
     //Make the Submenu visible
     beginEditCP(getInternalPopupMenu(), PopupMenu::VisibleFieldMask | PopupMenu::PositionFieldMask);
         getInternalPopupMenu()->setVisible(Visible);
-        getInternalPopupMenu()->setPosition(ComponentToFrame(Pnt2s(0,0),MenuPtr(this)) + Vec2s(getSize().x(),0));
+        if(getTopLevelMenu())
+        {
+            getInternalPopupMenu()->setPosition(ComponentToFrame(Pnt2s(0,0),MenuPtr(this)) + Vec2s(0,getSize().y()));        
+        }
+        else
+        {
+            getInternalPopupMenu()->setPosition(ComponentToFrame(Pnt2s(0,0),MenuPtr(this)) + Vec2s(getSize().x(),0));
+        }
     endEditCP(getInternalPopupMenu(), PopupMenu::VisibleFieldMask | PopupMenu::PositionFieldMask);
 
     if(Visible)

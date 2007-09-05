@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="MenuBar"
+	parent="Container"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI MenuBar.
+	<Field
+		name="MenuDelay"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.5"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

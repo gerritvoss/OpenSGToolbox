@@ -138,6 +138,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "25PopupMenu", "25PopupMenu.
 		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "26MenuBar", "26MenuBar.vcproj", "{77623743-1948-4AC4-8227-7FF6072BD16F}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -252,6 +256,10 @@ Global
 		{B9976D79-B504-4BA2-A90F-12C54DD18DE5}.Debug.Build.0 = Debug|Win32
 		{B9976D79-B504-4BA2-A90F-12C54DD18DE5}.Release.ActiveCfg = Release|Win32
 		{B9976D79-B504-4BA2-A90F-12C54DD18DE5}.Release.Build.0 = Release|Win32
+		{77623743-1948-4AC4-8227-7FF6072BD16F}.Debug.ActiveCfg = Debug|Win32
+		{77623743-1948-4AC4-8227-7FF6072BD16F}.Debug.Build.0 = Debug|Win32
+		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release.ActiveCfg = Release|Win32
+		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release.Build.0 = Release|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Debug.ActiveCfg = Debug|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Debug.Build.0 = Debug|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release.ActiveCfg = Release|Win32

@@ -504,6 +504,15 @@
 				<Filter
 					Name="Menu">
 					<File
+						RelativePath="..\..\src\Component\Menu\OSGDefaultSingleSelectionModel.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGDefaultSingleSelectionModel.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGDefaultSingleSelectionModel.inl">
+					</File>
+					<File
 						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItem.cpp">
 					</File>
 					<File
@@ -532,6 +541,27 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Component\Menu\OSGMenu.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGMenuBar.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGMenuBar.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGMenuBar.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGMenuBarBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGMenuBarBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGMenuBarBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGMenuBarFields.h">
 					</File>
 					<File
 						RelativePath="..\..\src\Component\Menu\OSGMenuBase.cpp">
@@ -607,6 +637,9 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItemFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGSingleSelectionModel.h">
 					</File>
 				</Filter>
 				<Filter

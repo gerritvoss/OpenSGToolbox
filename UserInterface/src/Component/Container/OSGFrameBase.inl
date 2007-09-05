@@ -124,6 +124,13 @@ SFToolTipPtr *FrameBase::getSFActiveToolTip(void)
     return &_sfActiveToolTip;
 }
 
+//! Get the Frame::_sfLockInput field.
+inline
+SFBool *FrameBase::getSFLockInput(void)
+{
+    return &_sfLockInput;
+}
+
 
 //! Get the value of the Frame::_sfFocusedComponent field.
 inline
@@ -186,6 +193,27 @@ inline
 void FrameBase::setActiveToolTip(const ToolTipPtr &value)
 {
     _sfActiveToolTip.setValue(value);
+}
+
+//! Get the value of the Frame::_sfLockInput field.
+inline
+bool &FrameBase::getLockInput(void)
+{
+    return _sfLockInput.getValue();
+}
+
+//! Get the value of the Frame::_sfLockInput field.
+inline
+const bool &FrameBase::getLockInput(void) const
+{
+    return _sfLockInput.getValue();
+}
+
+//! Set the value of the Frame::_sfLockInput field.
+inline
+void FrameBase::setLockInput(const bool &value)
+{
+    _sfLockInput.setValue(value);
 }
 
 

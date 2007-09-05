@@ -36,27 +36,28 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGFRAME_H_
-#define _OSGFRAME_H_
+#ifndef _OSGMENUBAR_H_
+#define _OSGMENUBAR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGFrameBase.h"
-#include <OpenSG/Input/OSGMouseAdapter.h>
-#include <OpenSG/Input/OSGMouseMotionAdapter.h>
-#include <OpenSG/Input/OSGKeyAdapter.h>
+#include "OSGMenuBarBase.h"
+#include "OSGMenu.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
+/*! \brief MenuBar class. See \ref 
+           PageUserInterfaceMenuBar for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING MenuBar : public MenuBarBase
 {
   private:
 
-    typedef FrameBase Inherited;
+    typedef MenuBarBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -76,91 +77,74 @@ class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-    /*! \}                                                                 */
-	
-	//Key Events
-	virtual void keyPressed(const KeyEvent& e);
-	virtual void keyReleased(const KeyEvent& e);
-	virtual void keyTyped(const KeyEvent& e);
-
-	//Mouse Events
-    virtual void mouseClicked(const MouseEvent& e);
-    virtual void mouseEntered(const MouseEvent& e);
-    virtual void mouseExited(const MouseEvent& e);
-    virtual void mousePressed(const MouseEvent& e);
-    virtual void mouseReleased(const MouseEvent& e);
-
+    void addMenu(MenuPtr Menu);
+    void addMenu(MenuPtr Menu, const UInt32& Index);
+    void removeMenu(MenuPtr Menu);
+    void removeMenu(const UInt32& Index);
+    MenuPtr getMenu(const UInt32& Index);
+    UInt32 getNumMenus(void) const;
+    
 	//Mouse Motion Events
     virtual void mouseMoved(const MouseEvent& e);
     virtual void mouseDragged(const MouseEvent& e);
-
-	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEvent& e);
-
-    virtual       FramePtr            &getParentFrame    (void);
-    virtual const FramePtr            &getParentFrame    (void) const;
-
-    void destroyPopupMenu(void);
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in FrameBase.
+    // Variables should all be in MenuBarBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Frame(void);
-    Frame(const Frame &source);
+    MenuBar(void);
+    MenuBar(const MenuBar &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Frame(void); 
+    virtual ~MenuBar(void); 
 
-	virtual void drawInternal(const GraphicsPtr TheGraphics) const;
-    /*! \}                                                                 */
+    virtual void updateLayout(void);
     
-	class PopupMenuInteractionListener : public MouseAdapter, public MouseMotionAdapter, public KeyAdapter
+	class MenuSelectionListener : public ChangeListener
 	{
-	public :
-		PopupMenuInteractionListener(FramePtr TheFrame);
-		
-        virtual void mouseClicked(const MouseEvent& e);
-		virtual void mousePressed(const MouseEvent& e);
-        virtual void mouseReleased(const MouseEvent& e);
-		virtual void keyPressed(const KeyEvent& e);
-		virtual void mouseMoved(const MouseEvent& e);
-        virtual void mouseDragged(const MouseEvent& e);
-	protected :
-		FramePtr _Frame;
+	public:
+		MenuSelectionListener(MenuBarPtr ThePopupMenu);
+        void stateChanged(const ChangeEvent& e);
+	private:
+		MenuBarPtr _MenuBar;
 	};
 
-	friend class PopupMenuInteractionListener;
+	friend class MenuSelectionListener;
 
-	PopupMenuInteractionListener _PopupMenuInteractionListener;
+	MenuSelectionListener _MenuSelectionListener;
+    /*! \}                                                                 */
+    
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class FrameBase;
+    friend class MenuBarBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Frame &source);
+    void operator =(const MenuBar &source);
+    
+    SingleSelectionModelPtr _SelectionModel;
 };
 
-typedef Frame *FrameP;
+typedef MenuBar *MenuBarP;
 
 OSG_END_NAMESPACE
 
-#include "OSGFrameBase.inl"
-#include "OSGFrame.inl"
+#include "OSGMenuBarBase.inl"
+#include "OSGMenuBar.inl"
 
-#define OSGFRAME_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGMENUBAR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGFRAME_H_ */
+#endif /* _OSGMENUBAR_H_ */

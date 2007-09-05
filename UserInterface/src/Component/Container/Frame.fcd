@@ -51,4 +51,13 @@ A UI Frame.
 		defaultValue="NullFC"
 	>
 	</Field>
+	<Field
+		name="LockInput"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="false"
+	>
+	</Field>
 </FieldContainer>

@@ -73,6 +73,7 @@
 #include "Component/Menu/OSGMenu.h"
 #include "Component/Menu/OSGSeperatorMenuItem.h"
 #include "Component/Menu/OSGPopupMenu.h"
+#include "Component/Menu/OSGMenuBar.h"
 
 
 OSG_BEGIN_NAMESPACE
@@ -1132,10 +1133,51 @@ void DefaultLookAndFeel::init(void)
 		DefaultPopupMenu->setOpacity(1.0);
 
         //SubMenu delay in seconds
-        DefaultPopupMenu->setSubMenuDelay(0.25);
+        DefaultPopupMenu->setSubMenuDelay(getSubMenuPopupTime());
 	endEditCP(DefaultPopupMenu);
 	
     PopupMenu::getClassType().setPrototype(DefaultPopupMenu);
+    
+	//************************** MenuBar*****************************
+	//Default MenuBarBorder
+	LineBorderPtr DefaultMenuBarBorder = LineBorder::create();
+	beginEditCP(DefaultMenuBarBorder);
+		DefaultMenuBarBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultMenuBarBorder->setWidth(1);
+	endEditCP(DefaultMenuBarBorder);
+
+	//Default MenuBarBackground
+	ColorUIBackgroundPtr DefaultMenuBarBackground = ColorUIBackground::create();
+	beginEditCP(DefaultMenuBarBackground);
+		DefaultMenuBarBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
+	endEditCP(DefaultMenuBarBackground);
+
+	//Default MenuBar
+	MenuBarPtr DefaultMenuBar = MenuBar::create();
+	beginEditCP(DefaultMenuBar);
+		DefaultMenuBar->setEnabled(true);
+		DefaultMenuBar->setVisible(true);
+		
+		DefaultMenuBar->setConstraints(NullFC);
+		//Sizes
+		DefaultMenuBar->setMinSize(Vec2s(0,0));
+		DefaultMenuBar->setMaxSize(Vec2s(32767,32767)); //2^15
+		DefaultMenuBar->setPreferredSize(Vec2s(100,50));
+
+		//Border
+		DefaultMenuBar->setBorder(DefaultMenuBarBorder);
+		
+		//Background
+		DefaultMenuBar->setBackground(DefaultMenuBarBackground);
+		
+		//Opacity
+		DefaultMenuBar->setOpacity(1.0);
+
+        //SubMenu delay in seconds
+        DefaultMenuBar->setMenuDelay(getSubMenuPopupTime());
+	endEditCP(DefaultMenuBar);
+	
+    MenuBar::getClassType().setPrototype(DefaultMenuBar);
     
 	/*******Borders********/
 	/*******Line Border********/
@@ -1274,6 +1316,7 @@ void DefaultLookAndFeel::init(void)
 		getPrototypes().addValue(DefaultSeperatorMenuItem);
 		getPrototypes().addValue(DefaultMenu);
 		getPrototypes().addValue(DefaultPopupMenu);
+		getPrototypes().addValue(DefaultMenuBar);
 	endEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);
 }
 /*-------------------------------------------------------------------------*\

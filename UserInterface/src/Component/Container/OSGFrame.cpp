@@ -79,59 +79,133 @@ void Frame::initMethod (void)
 
 void Frame::keyPressed(const KeyEvent& e)
 {
-	//Send Key event to Component that has Focus
-	//If there is not Focused Component then do nothing
-	if(getFocusedComponent() != NullFC &&
-	   getFocusedComponent() != ComponentPtr(this))
-	{
-		getFocusedComponent()->keyPressed(e);
-		ContainerPtr ParentContainer(getFocusedComponent()->getParentContainer());
-		while(ParentContainer != NullFC &&
-			ParentContainer != ContainerPtr(this))
-		{
-			ParentContainer->keyPressed(e);
-			ParentContainer = Container::Ptr::dcast(ParentContainer->getParentContainer());
-		}
-	}
-    Component::keyPressed(e);
+    if(!getLockInput())
+    {
+	    //Send Key event to Component that has Focus
+	    //If there is not Focused Component then do nothing
+	    if(getFocusedComponent() != NullFC &&
+	    getFocusedComponent() != ComponentPtr(this))
+	    {
+		    getFocusedComponent()->keyPressed(e);
+		    ContainerPtr ParentContainer(getFocusedComponent()->getParentContainer());
+		    while(ParentContainer != NullFC &&
+			    ParentContainer != ContainerPtr(this))
+		    {
+			    ParentContainer->keyPressed(e);
+			    ParentContainer = Container::Ptr::dcast(ParentContainer->getParentContainer());
+		    }
+	    }
+        Component::keyPressed(e);
+    }
 }
 
 void Frame::keyReleased(const KeyEvent& e)
 {
-	//Send Key event to Component that has Focus
-	//If there is not Focused Component then do nothing
-	if(getFocusedComponent() != NullFC &&
-	   getFocusedComponent() != ComponentPtr(this))
-	{
-		getFocusedComponent()->keyReleased(e);
-		ContainerPtr ParentContainer(getFocusedComponent()->getParentContainer());
-		while(ParentContainer != NullFC &&
-			ParentContainer != ContainerPtr(this))
-		{
-			ParentContainer->keyReleased(e);
-			ParentContainer = Container::Ptr::dcast(ParentContainer->getParentContainer());
-		}
-	}
-    Component::keyReleased(e);
+    if(!getLockInput())
+    {
+	    //Send Key event to Component that has Focus
+	    //If there is not Focused Component then do nothing
+	    if(getFocusedComponent() != NullFC &&
+	    getFocusedComponent() != ComponentPtr(this))
+	    {
+		    getFocusedComponent()->keyReleased(e);
+		    ContainerPtr ParentContainer(getFocusedComponent()->getParentContainer());
+		    while(ParentContainer != NullFC &&
+			    ParentContainer != ContainerPtr(this))
+		    {
+			    ParentContainer->keyReleased(e);
+			    ParentContainer = Container::Ptr::dcast(ParentContainer->getParentContainer());
+		    }
+	    }
+        Component::keyReleased(e);
+    }
 }
 
 void Frame::keyTyped(const KeyEvent& e)
 {
-	//Send Key event to Component that has Focus
-	//If there is not Focused Component then do nothing
-	if(getFocusedComponent() != NullFC &&
-	   getFocusedComponent() != ComponentPtr(this))
-	{
-		getFocusedComponent()->keyTyped(e);
-		ContainerPtr ParentContainer(getFocusedComponent()->getParentContainer());
-		while(ParentContainer != NullFC &&
-			ParentContainer != ContainerPtr(this))
-		{
-			ParentContainer->keyTyped(e);
-			ParentContainer = Container::Ptr::dcast(ParentContainer->getParentContainer());
-		}
-	}
-    Component::keyTyped(e);
+    if(!getLockInput())
+    {
+	    //Send Key event to Component that has Focus
+	    //If there is not Focused Component then do nothing
+	    if(getFocusedComponent() != NullFC &&
+	    getFocusedComponent() != ComponentPtr(this))
+	    {
+		    getFocusedComponent()->keyTyped(e);
+		    ContainerPtr ParentContainer(getFocusedComponent()->getParentContainer());
+		    while(ParentContainer != NullFC &&
+			    ParentContainer != ContainerPtr(this))
+		    {
+			    ParentContainer->keyTyped(e);
+			    ParentContainer = Container::Ptr::dcast(ParentContainer->getParentContainer());
+		    }
+	    }
+        Component::keyTyped(e);
+    }
+}
+
+void Frame::mouseClicked(const MouseEvent& e)
+{
+    if(!getLockInput())
+    {
+        Container::mouseClicked(e);
+    }
+}
+
+void Frame::mouseEntered(const MouseEvent& e)
+{
+    if(!getLockInput())
+    {
+        Container::mouseEntered(e);
+    }
+}
+
+void Frame::mouseExited(const MouseEvent& e)
+{
+    if(!getLockInput())
+    {
+        Container::mouseExited(e);
+    }
+}
+
+void Frame::mousePressed(const MouseEvent& e)
+{
+    if(!getLockInput())
+    {
+        Container::mousePressed(e);
+    }
+}
+
+void Frame::mouseReleased(const MouseEvent& e)
+{
+    if(!getLockInput())
+    {
+        Container::mouseReleased(e);
+    }
+}
+
+
+void Frame::mouseMoved(const MouseEvent& e)
+{
+    if(!getLockInput())
+    {
+        Container::mouseMoved(e);
+    }
+}
+
+void Frame::mouseDragged(const MouseEvent& e)
+{
+    if(!getLockInput())
+    {
+        Container::mouseDragged(e);
+    }
+}
+
+void Frame::mouseWheelMoved(const MouseWheelEvent& e)
+{
+    if(!getLockInput())
+    {
+        Container::mouseWheelMoved(e);
+    }
 }
 
 FramePtr &Frame::getParentFrame(void)
@@ -177,9 +251,10 @@ void Frame::destroyPopupMenu(void)
 {
     if(getActivePopupMenus().size() > 0)
     {
-        beginEditCP(FramePtr(this), ActivePopupMenusFieldMask);
+        beginEditCP(FramePtr(this), ActivePopupMenusFieldMask | LockInputFieldMask);
             getActivePopupMenus().clear();
-        endEditCP(FramePtr(this), ActivePopupMenusFieldMask);
+            setLockInput(false);
+        endEditCP(FramePtr(this), ActivePopupMenusFieldMask | LockInputFieldMask);
 
 	    //Remove the listener
         getDrawingSurface()->getEventProducer()->removeMouseListener(&_PopupMenuInteractionListener);
@@ -235,6 +310,9 @@ void Frame::changed(BitVector whichField, UInt32 origin)
         getDrawingSurface()->getEventProducer()->addMouseListener(&_PopupMenuInteractionListener);
         getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_PopupMenuInteractionListener);
         getDrawingSurface()->getEventProducer()->addKeyListener(&_PopupMenuInteractionListener);
+        beginEditCP(FramePtr(this), LockInputFieldMask);
+            setLockInput(true);
+        endEditCP(FramePtr(this), LockInputFieldMask);
     }
 }
 
