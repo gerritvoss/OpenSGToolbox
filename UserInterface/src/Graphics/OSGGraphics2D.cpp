@@ -523,6 +523,22 @@ void Graphics2D::drawRaisedBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight,
 	}
 }
 
+void Graphics2D::drawTextUnderline(const Pnt2s& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const
+{
+    Pnt2s TextTopLeft, TextBottomRight;
+    TheFont->getBounds(Text, TextTopLeft, TextBottomRight);
+    
+    Pnt2s CharacterTopLeft, CharacterBottomRight;
+    TheFont->getBounds("A", CharacterTopLeft, CharacterBottomRight);
+    
+    //Line Start Point
+    Pnt2s LineStart(Position.x() + TextTopLeft.x(), Position.y() + CharacterBottomRight.y() + 3);
+    //Line End Point
+    Pnt2s LineEnd(LineStart + Vec2s(TextBottomRight.x()-TextTopLeft.x(),1));
+
+    drawRect(LineStart, LineEnd, Color, Opacity);
+}
+
 void Graphics2D::drawText(const Pnt2s& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const
 {
    TextLayoutParam layoutParam;

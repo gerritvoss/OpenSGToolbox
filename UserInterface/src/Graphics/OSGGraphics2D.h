@@ -113,6 +113,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics2D : public Graphics2DBase
 	virtual void drawRaisedBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color, const Int16& Width, const Real32& Opacity) const;
 	
 	virtual void drawText(const Pnt2s& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const;
+	virtual void drawTextUnderline(const Pnt2s& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const;
    
     /*=========================  PROTECTED  ===============================*/
   protected:

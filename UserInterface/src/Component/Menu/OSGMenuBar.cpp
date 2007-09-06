@@ -50,6 +50,9 @@
 #include "OSGMenuBar.h"
 #include "OSGDefaultSingleSelectionModel.h"
 
+#include "Component/Container/OSGFrame.h"
+#include "UIDrawingSurface/OSGUIDrawingSurface.h"
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -133,6 +136,7 @@ void MenuBar::addMenu(MenuPtr Menu)
     beginEditCP(Menu, Menu::TopLevelMenuFieldMask);
         Menu->setTopLevelMenu(true);
     endEditCP(Menu, Menu::TopLevelMenuFieldMask);
+    Menu->getInternalPopupMenu()->addPopupMenuListener(&_MenuSelectionListener);
 }
 
 void MenuBar::addMenu(MenuPtr Menu, const UInt32& Index)
@@ -147,6 +151,7 @@ void MenuBar::addMenu(MenuPtr Menu, const UInt32& Index)
         beginEditCP(Menu, Menu::TopLevelMenuFieldMask);
             Menu->setTopLevelMenu(true);
         endEditCP(Menu, Menu::TopLevelMenuFieldMask);
+        Menu->getInternalPopupMenu()->addPopupMenuListener(&_MenuSelectionListener);
     }
 }
 
@@ -161,6 +166,7 @@ void MenuBar::removeMenu(MenuPtr Menu)
         beginEditCP(Menu, Menu::TopLevelMenuFieldMask);
             Menu->setTopLevelMenu(false);
         endEditCP(Menu, Menu::TopLevelMenuFieldMask);
+        Menu->getInternalPopupMenu()->removePopupMenuListener(&_MenuSelectionListener);
     }
 }
 
@@ -177,24 +183,11 @@ void MenuBar::removeMenu(const UInt32& Index)
         beginEditCP((*Itor), Menu::TopLevelMenuFieldMask);
             Menu::Ptr::dcast( (*Itor) )->setTopLevelMenu(false);
         endEditCP((*Itor), Menu::TopLevelMenuFieldMask);
+        Menu::Ptr::dcast( (*Itor) )->getInternalPopupMenu()->removePopupMenuListener(&_MenuSelectionListener);
     }
-}
-void MenuBar::mouseMoved(const MouseEvent& e)
-{
-    UInt32 i(0);
-    while (i<getChildren().size())
-    {
-        if(getChildren().getValue(i)->isContained(e.getLocation(), true))
-        {
-            _SelectionModel->setSelectedIndex(i);
-            break;
-        }
-        ++i;
-    }
-    Container::mouseMoved(e);
 }
 
-void MenuBar::mouseDragged(const MouseEvent& e)
+void MenuBar::mousePressed(const MouseEvent& e)
 {
     UInt32 i(0);
     while (i<getChildren().size())
@@ -202,12 +195,14 @@ void MenuBar::mouseDragged(const MouseEvent& e)
         if(getChildren().getValue(i)->isContained(e.getLocation(), true))
         {
             _SelectionModel->setSelectedIndex(i);
+            getParentFrame()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MenuSelectionListener);
             break;
         }
         ++i;
     }
-    Container::mouseDragged(e);
+    Container::mousePressed(e);
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -267,6 +262,50 @@ void MenuBar::MenuSelectionListener::stateChanged(const ChangeEvent& e)
             endEditCP(_MenuBar->getChildren().getValue(i), Menu::SelectedFieldMask);
         }
     }
+}
+
+void MenuBar::MenuSelectionListener::mouseMoved(const MouseEvent& e)
+{
+    UInt32 i(0);
+    while (i<_MenuBar->getChildren().size())
+    {
+        if(_MenuBar->getChildren().getValue(i)->isContained(e.getLocation(), true))
+        {
+            _MenuBar->_SelectionModel->setSelectedIndex(i);
+            break;
+        }
+        ++i;
+    }
+}
+
+void MenuBar::MenuSelectionListener::mouseDragged(const MouseEvent& e)
+{
+    UInt32 i(0);
+    while (i<_MenuBar->getChildren().size())
+    {
+        if(_MenuBar->getChildren().getValue(i)->isContained(e.getLocation(), true))
+        {
+            _MenuBar->_SelectionModel->setSelectedIndex(i);
+            break;
+        }
+        ++i;
+    }
+}
+
+void MenuBar::MenuSelectionListener::popupMenuCanceled(const PopupMenuEvent& e)
+{
+    _MenuBar->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+    _MenuBar->_SelectionModel->clearSelection();
+}
+
+void MenuBar::MenuSelectionListener::popupMenuWillBecomeInvisible(const PopupMenuEvent& e)
+{
+    //Do Nothing
+}
+
+void MenuBar::MenuSelectionListener::popupMenuWillBecomeVisible(const PopupMenuEvent& e)
+{
+    //Do Nothing
 }
 
 /*------------------------------------------------------------------------*/

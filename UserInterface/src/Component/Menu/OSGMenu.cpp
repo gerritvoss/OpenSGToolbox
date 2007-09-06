@@ -118,6 +118,25 @@ void Menu::setPopupVisible(bool Visible)
     {
     }
 }
+
+/*void Menu::mouseEntered(const MouseEvent& e)
+{
+    beginEditCP(MenuItemPtr(this), SelectedFieldMask);
+        setSelected(true);
+    endEditCP(MenuItemPtr(this), SelectedFieldMask);
+    
+    MenuItem::mouseEntered(e);
+}
+
+void Menu::mouseExited(const MouseEvent& e)
+{
+    beginEditCP(MenuItemPtr(this), SelectedFieldMask);
+        setSelected(false);
+    endEditCP(MenuItemPtr(this), SelectedFieldMask);
+    
+    MenuItem::mouseExited(e);
+}*/
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

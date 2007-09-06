@@ -141,6 +141,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
 	friend class PopupMenuInteractionListener;
 
 	PopupMenuInteractionListener _PopupMenuInteractionListener;
+	
+    virtual void getMenuBarBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+    virtual void getContentPaneBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
     /*==========================  PRIVATE  ================================*/
   private:
 

@@ -61,6 +61,8 @@
 #include "OSGLabelMenuItemBase.h"
 #include "OSGLabelMenuItem.h"
 
+#include <OpenSG/Input/OSGKeyEvent.h>     // AcceleratorKey default header
+#include <OpenSG/Input/OSGKeyEvent.h>     // MnemonicKey default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -75,6 +77,9 @@ const OSG::BitVector  LabelMenuItemBase::AcceleratorModifiersFieldMask =
 
 const OSG::BitVector  LabelMenuItemBase::AcceleratorKeyFieldMask = 
     (TypeTraits<BitVector>::One << LabelMenuItemBase::AcceleratorKeyFieldId);
+
+const OSG::BitVector  LabelMenuItemBase::MnemonicKeyFieldMask = 
+    (TypeTraits<BitVector>::One << LabelMenuItemBase::MnemonicKeyFieldId);
 
 const OSG::BitVector  LabelMenuItemBase::SelectedBorderFieldMask = 
     (TypeTraits<BitVector>::One << LabelMenuItemBase::SelectedBorderFieldId);
@@ -100,6 +105,9 @@ const OSG::BitVector  LabelMenuItemBase::TextColorFieldMask =
 const OSG::BitVector  LabelMenuItemBase::AcceleratorTextFieldMask = 
     (TypeTraits<BitVector>::One << LabelMenuItemBase::AcceleratorTextFieldId);
 
+const OSG::BitVector  LabelMenuItemBase::MnemonicTextPositionFieldMask = 
+    (TypeTraits<BitVector>::One << LabelMenuItemBase::MnemonicTextPositionFieldId);
+
 const OSG::BitVector LabelMenuItemBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -117,6 +125,9 @@ const OSG::BitVector LabelMenuItemBase::MTInfluenceMask =
     
 */
 /*! \var UInt32          LabelMenuItemBase::_sfAcceleratorKey
+    
+*/
+/*! \var UInt32          LabelMenuItemBase::_sfMnemonicKey
     
 */
 /*! \var BorderPtr       LabelMenuItemBase::_sfSelectedBorder
@@ -141,6 +152,9 @@ const OSG::BitVector LabelMenuItemBase::MTInfluenceMask =
     
 */
 /*! \var std::string     LabelMenuItemBase::_sfAcceleratorText
+    
+*/
+/*! \var Int32           LabelMenuItemBase::_sfMnemonicTextPosition
     
 */
 
@@ -168,6 +182,11 @@ FieldDescription *LabelMenuItemBase::_desc[] =
                      AcceleratorKeyFieldId, AcceleratorKeyFieldMask,
                      false,
                      (FieldAccessMethod) &LabelMenuItemBase::getSFAcceleratorKey),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "MnemonicKey", 
+                     MnemonicKeyFieldId, MnemonicKeyFieldMask,
+                     false,
+                     (FieldAccessMethod) &LabelMenuItemBase::getSFMnemonicKey),
     new FieldDescription(SFBorderPtr::getClassType(), 
                      "SelectedBorder", 
                      SelectedBorderFieldId, SelectedBorderFieldMask,
@@ -207,7 +226,12 @@ FieldDescription *LabelMenuItemBase::_desc[] =
                      "AcceleratorText", 
                      AcceleratorTextFieldId, AcceleratorTextFieldMask,
                      false,
-                     (FieldAccessMethod) &LabelMenuItemBase::getSFAcceleratorText)
+                     (FieldAccessMethod) &LabelMenuItemBase::getSFAcceleratorText),
+    new FieldDescription(SFInt32::getClassType(), 
+                     "MnemonicTextPosition", 
+                     MnemonicTextPositionFieldId, MnemonicTextPositionFieldMask,
+                     false,
+                     (FieldAccessMethod) &LabelMenuItemBase::getSFMnemonicTextPosition)
 };
 
 
@@ -286,7 +310,8 @@ LabelMenuItemBase::LabelMenuItemBase(void) :
     _sfFont                   (), 
     _sfText                   (), 
     _sfAcceleratorModifiers   (UInt32(0)), 
-    _sfAcceleratorKey         (UInt32(0)), 
+    _sfAcceleratorKey         (UInt32(KeyEvent::KEY_NONE)), 
+    _sfMnemonicKey            (UInt32(KeyEvent::KEY_NONE)), 
     _sfSelectedBorder         (BorderPtr(NullFC)), 
     _sfSelectedBackground     (UIBackgroundPtr(NullFC)), 
     _sfSelectedTextColor      (), 
@@ -295,6 +320,7 @@ LabelMenuItemBase::LabelMenuItemBase(void) :
     _sfDisabledTextColor      (), 
     _sfTextColor              (), 
     _sfAcceleratorText        (), 
+    _sfMnemonicTextPosition   (Int32(-1)), 
     Inherited() 
 {
 }
@@ -308,6 +334,7 @@ LabelMenuItemBase::LabelMenuItemBase(const LabelMenuItemBase &source) :
     _sfText                   (source._sfText                   ), 
     _sfAcceleratorModifiers   (source._sfAcceleratorModifiers   ), 
     _sfAcceleratorKey         (source._sfAcceleratorKey         ), 
+    _sfMnemonicKey            (source._sfMnemonicKey            ), 
     _sfSelectedBorder         (source._sfSelectedBorder         ), 
     _sfSelectedBackground     (source._sfSelectedBackground     ), 
     _sfSelectedTextColor      (source._sfSelectedTextColor      ), 
@@ -316,6 +343,7 @@ LabelMenuItemBase::LabelMenuItemBase(const LabelMenuItemBase &source) :
     _sfDisabledTextColor      (source._sfDisabledTextColor      ), 
     _sfTextColor              (source._sfTextColor              ), 
     _sfAcceleratorText        (source._sfAcceleratorText        ), 
+    _sfMnemonicTextPosition   (source._sfMnemonicTextPosition   ), 
     Inherited                 (source)
 {
 }
@@ -350,6 +378,11 @@ UInt32 LabelMenuItemBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (AcceleratorKeyFieldMask & whichField))
     {
         returnValue += _sfAcceleratorKey.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MnemonicKeyFieldMask & whichField))
+    {
+        returnValue += _sfMnemonicKey.getBinSize();
     }
 
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
@@ -392,6 +425,11 @@ UInt32 LabelMenuItemBase::getBinSize(const BitVector &whichField)
         returnValue += _sfAcceleratorText.getBinSize();
     }
 
+    if(FieldBits::NoField != (MnemonicTextPositionFieldMask & whichField))
+    {
+        returnValue += _sfMnemonicTextPosition.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -419,6 +457,11 @@ void LabelMenuItemBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (AcceleratorKeyFieldMask & whichField))
     {
         _sfAcceleratorKey.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MnemonicKeyFieldMask & whichField))
+    {
+        _sfMnemonicKey.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
@@ -461,6 +504,11 @@ void LabelMenuItemBase::copyToBin(      BinaryDataHandler &pMem,
         _sfAcceleratorText.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (MnemonicTextPositionFieldMask & whichField))
+    {
+        _sfMnemonicTextPosition.copyToBin(pMem);
+    }
+
 
 }
 
@@ -487,6 +535,11 @@ void LabelMenuItemBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (AcceleratorKeyFieldMask & whichField))
     {
         _sfAcceleratorKey.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MnemonicKeyFieldMask & whichField))
+    {
+        _sfMnemonicKey.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
@@ -529,6 +582,11 @@ void LabelMenuItemBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfAcceleratorText.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (MnemonicTextPositionFieldMask & whichField))
+    {
+        _sfMnemonicTextPosition.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -550,6 +608,9 @@ void LabelMenuItemBase::executeSyncImpl(      LabelMenuItemBase *pOther,
 
     if(FieldBits::NoField != (AcceleratorKeyFieldMask & whichField))
         _sfAcceleratorKey.syncWith(pOther->_sfAcceleratorKey);
+
+    if(FieldBits::NoField != (MnemonicKeyFieldMask & whichField))
+        _sfMnemonicKey.syncWith(pOther->_sfMnemonicKey);
 
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
         _sfSelectedBorder.syncWith(pOther->_sfSelectedBorder);
@@ -574,6 +635,9 @@ void LabelMenuItemBase::executeSyncImpl(      LabelMenuItemBase *pOther,
 
     if(FieldBits::NoField != (AcceleratorTextFieldMask & whichField))
         _sfAcceleratorText.syncWith(pOther->_sfAcceleratorText);
+
+    if(FieldBits::NoField != (MnemonicTextPositionFieldMask & whichField))
+        _sfMnemonicTextPosition.syncWith(pOther->_sfMnemonicTextPosition);
 
 
 }
@@ -597,6 +661,9 @@ void LabelMenuItemBase::executeSyncImpl(      LabelMenuItemBase *pOther,
     if(FieldBits::NoField != (AcceleratorKeyFieldMask & whichField))
         _sfAcceleratorKey.syncWith(pOther->_sfAcceleratorKey);
 
+    if(FieldBits::NoField != (MnemonicKeyFieldMask & whichField))
+        _sfMnemonicKey.syncWith(pOther->_sfMnemonicKey);
+
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
         _sfSelectedBorder.syncWith(pOther->_sfSelectedBorder);
 
@@ -620,6 +687,9 @@ void LabelMenuItemBase::executeSyncImpl(      LabelMenuItemBase *pOther,
 
     if(FieldBits::NoField != (AcceleratorTextFieldMask & whichField))
         _sfAcceleratorText.syncWith(pOther->_sfAcceleratorText);
+
+    if(FieldBits::NoField != (MnemonicTextPositionFieldMask & whichField))
+        _sfMnemonicTextPosition.syncWith(pOther->_sfMnemonicTextPosition);
 
 
 

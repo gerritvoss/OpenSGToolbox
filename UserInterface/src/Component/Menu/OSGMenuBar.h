@@ -43,9 +43,12 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGMenuBarBase.h"
 #include "OSGMenu.h"
+
+#include "Event/OSGPopupMenuListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -84,9 +87,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBar : public MenuBarBase
     MenuPtr getMenu(const UInt32& Index);
     UInt32 getNumMenus(void) const;
     
-	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEvent& e);
-    virtual void mouseDragged(const MouseEvent& e);
+    virtual void mousePressed(const MouseEvent& e);
+    
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -109,11 +111,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBar : public MenuBarBase
 
     virtual void updateLayout(void);
     
-	class MenuSelectionListener : public ChangeListener
+	class MenuSelectionListener : public ChangeListener, public MouseMotionListener, public PopupMenuListener
 	{
 	public:
 		MenuSelectionListener(MenuBarPtr ThePopupMenu);
-        void stateChanged(const ChangeEvent& e);
+        virtual void stateChanged(const ChangeEvent& e);
+        virtual void mouseMoved(const MouseEvent& e);
+        virtual void mouseDragged(const MouseEvent& e);
+        virtual void popupMenuCanceled(const PopupMenuEvent& e);
+        virtual void popupMenuWillBecomeInvisible(const PopupMenuEvent& e);
+        virtual void popupMenuWillBecomeVisible(const PopupMenuEvent& e);
 	private:
 		MenuBarPtr _MenuBar;
 	};

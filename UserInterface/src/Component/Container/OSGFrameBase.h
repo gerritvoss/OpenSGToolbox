@@ -72,6 +72,7 @@
 #include "Component/Menu/OSGPopupMenuFields.h" // ActivePopupMenus type
 #include "Component/Misc/OSGToolTipFields.h" // ActiveToolTip type
 #include <OpenSG/OSGBoolFields.h> // LockInput type
+#include "Component/Menu/OSGMenuBarFields.h" // MenuBar type
 
 #include "OSGFrameFields.h"
 
@@ -100,7 +101,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
         ActivePopupMenusFieldId = DrawingSurfaceFieldId   + 1,
         ActiveToolTipFieldId    = ActivePopupMenusFieldId + 1,
         LockInputFieldId        = ActiveToolTipFieldId    + 1,
-        NextFieldId             = LockInputFieldId        + 1
+        MenuBarFieldId          = LockInputFieldId        + 1,
+        NextFieldId             = MenuBarFieldId          + 1
     };
 
     static const OSG::BitVector FocusedComponentFieldMask;
@@ -108,6 +110,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     static const OSG::BitVector ActivePopupMenusFieldMask;
     static const OSG::BitVector ActiveToolTipFieldMask;
     static const OSG::BitVector LockInputFieldMask;
+    static const OSG::BitVector MenuBarFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -139,6 +142,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
            MFPopupMenuPtr      *getMFActivePopupMenus(void);
            SFToolTipPtr        *getSFActiveToolTip  (void);
            SFBool              *getSFLockInput      (void);
+           SFMenuBarPtr        *getSFMenuBar        (void);
 
            ComponentPtr        &getFocusedComponent(void);
      const ComponentPtr        &getFocusedComponent(void) const;
@@ -148,6 +152,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
      const ToolTipPtr          &getActiveToolTip  (void) const;
            bool                &getLockInput      (void);
      const bool                &getLockInput      (void) const;
+           MenuBarPtr          &getMenuBar        (void);
+     const MenuBarPtr          &getMenuBar        (void) const;
            PopupMenuPtr        &getActivePopupMenus(const UInt32 index);
            MFPopupMenuPtr      &getActivePopupMenus(void);
      const MFPopupMenuPtr      &getActivePopupMenus(void) const;
@@ -161,6 +167,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
      void setDrawingSurface ( const UIDrawingSurfacePtr &value );
      void setActiveToolTip  ( const ToolTipPtr &value );
      void setLockInput      ( const bool &value );
+     void setMenuBar        ( const MenuBarPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -208,6 +215,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FrameBase : public Container
     MFPopupMenuPtr      _mfActivePopupMenus;
     SFToolTipPtr        _sfActiveToolTip;
     SFBool              _sfLockInput;
+    SFMenuBarPtr        _sfMenuBar;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

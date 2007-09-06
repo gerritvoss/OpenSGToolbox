@@ -49,6 +49,7 @@
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include "Component/Misc/OSGToolTip.h"
 #include "Component/Menu/OSGPopupMenu.h"
+#include "Component/Menu/OSGMenuBar.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -251,6 +252,11 @@ void Frame::destroyPopupMenu(void)
 {
     if(getActivePopupMenus().size() > 0)
     {
+        for(UInt32 i(0) ; i<getActivePopupMenus().size() ; ++i)
+        {
+            getActivePopupMenus().getValue(i)->cancel();
+        }
+        
         beginEditCP(FramePtr(this), ActivePopupMenusFieldMask | LockInputFieldMask);
             getActivePopupMenus().clear();
             setLockInput(false);
@@ -262,6 +268,45 @@ void Frame::destroyPopupMenu(void)
         getDrawingSurface()->getEventProducer()->removeKeyListener(&_PopupMenuInteractionListener);
     }
 }
+
+void Frame::getMenuBarBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+{
+    //Get Insets Bounds
+    Pnt2s InsetsTopLeft, InsetsBottomRight;
+    getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+
+    TopLeft = InsetsTopLeft;
+    if(getMenuBar() == NullFC)
+    {
+        BottomRight = TopLeft;
+    }
+    else
+    {
+        Pnt2s MenuBarTopLeft, MenuBarBottomRight;
+        getMenuBar()->getBounds(MenuBarTopLeft, MenuBarBottomRight);
+        BottomRight = TopLeft + Vec2s((InsetsBottomRight.x() - InsetsTopLeft.x()), (MenuBarBottomRight.y() - MenuBarTopLeft.y()));
+    }
+}
+
+void Frame::getContentPaneBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+{
+    //Get Insets Bounds
+    Pnt2s InsetsTopLeft, InsetsBottomRight;
+    getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+
+    BottomRight = InsetsBottomRight;
+    if(getMenuBar() == NullFC)
+    {
+        TopLeft = InsetsTopLeft;
+    }
+    else
+    {
+        Pnt2s MenuBarTopLeft, MenuBarBottomRight;
+        getMenuBar()->getBounds(MenuBarTopLeft, MenuBarBottomRight);
+        TopLeft = InsetsTopLeft + Vec2s(0, (MenuBarBottomRight.y() - MenuBarTopLeft.y()));
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

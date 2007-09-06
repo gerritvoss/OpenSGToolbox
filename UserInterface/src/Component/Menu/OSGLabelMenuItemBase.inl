@@ -124,6 +124,13 @@ SFUInt32 *LabelMenuItemBase::getSFAcceleratorKey(void)
     return &_sfAcceleratorKey;
 }
 
+//! Get the LabelMenuItem::_sfMnemonicKey field.
+inline
+SFUInt32 *LabelMenuItemBase::getSFMnemonicKey(void)
+{
+    return &_sfMnemonicKey;
+}
+
 //! Get the LabelMenuItem::_sfSelectedBorder field.
 inline
 SFBorderPtr *LabelMenuItemBase::getSFSelectedBorder(void)
@@ -178,6 +185,13 @@ inline
 SFString *LabelMenuItemBase::getSFAcceleratorText(void)
 {
     return &_sfAcceleratorText;
+}
+
+//! Get the LabelMenuItem::_sfMnemonicTextPosition field.
+inline
+SFInt32 *LabelMenuItemBase::getSFMnemonicTextPosition(void)
+{
+    return &_sfMnemonicTextPosition;
 }
 
 
@@ -263,6 +277,27 @@ inline
 void LabelMenuItemBase::setAcceleratorKey(const UInt32 &value)
 {
     _sfAcceleratorKey.setValue(value);
+}
+
+//! Get the value of the LabelMenuItem::_sfMnemonicKey field.
+inline
+UInt32 &LabelMenuItemBase::getMnemonicKey(void)
+{
+    return _sfMnemonicKey.getValue();
+}
+
+//! Get the value of the LabelMenuItem::_sfMnemonicKey field.
+inline
+const UInt32 &LabelMenuItemBase::getMnemonicKey(void) const
+{
+    return _sfMnemonicKey.getValue();
+}
+
+//! Set the value of the LabelMenuItem::_sfMnemonicKey field.
+inline
+void LabelMenuItemBase::setMnemonicKey(const UInt32 &value)
+{
+    _sfMnemonicKey.setValue(value);
 }
 
 //! Get the value of the LabelMenuItem::_sfSelectedBorder field.
@@ -431,6 +466,27 @@ inline
 void LabelMenuItemBase::setAcceleratorText(const std::string &value)
 {
     _sfAcceleratorText.setValue(value);
+}
+
+//! Get the value of the LabelMenuItem::_sfMnemonicTextPosition field.
+inline
+Int32 &LabelMenuItemBase::getMnemonicTextPosition(void)
+{
+    return _sfMnemonicTextPosition.getValue();
+}
+
+//! Get the value of the LabelMenuItem::_sfMnemonicTextPosition field.
+inline
+const Int32 &LabelMenuItemBase::getMnemonicTextPosition(void) const
+{
+    return _sfMnemonicTextPosition.getValue();
+}
+
+//! Set the value of the LabelMenuItem::_sfMnemonicTextPosition field.
+inline
+void LabelMenuItemBase::setMnemonicTextPosition(const Int32 &value)
+{
+    _sfMnemonicTextPosition.setValue(value);
 }
 
 

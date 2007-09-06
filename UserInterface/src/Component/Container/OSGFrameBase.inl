@@ -131,6 +131,13 @@ SFBool *FrameBase::getSFLockInput(void)
     return &_sfLockInput;
 }
 
+//! Get the Frame::_sfMenuBar field.
+inline
+SFMenuBarPtr *FrameBase::getSFMenuBar(void)
+{
+    return &_sfMenuBar;
+}
+
 
 //! Get the value of the Frame::_sfFocusedComponent field.
 inline
@@ -214,6 +221,27 @@ inline
 void FrameBase::setLockInput(const bool &value)
 {
     _sfLockInput.setValue(value);
+}
+
+//! Get the value of the Frame::_sfMenuBar field.
+inline
+MenuBarPtr &FrameBase::getMenuBar(void)
+{
+    return _sfMenuBar.getValue();
+}
+
+//! Get the value of the Frame::_sfMenuBar field.
+inline
+const MenuBarPtr &FrameBase::getMenuBar(void) const
+{
+    return _sfMenuBar.getValue();
+}
+
+//! Set the value of the Frame::_sfMenuBar field.
+inline
+void FrameBase::setMenuBar(const MenuBarPtr &value)
+{
+    _sfMenuBar.setValue(value);
 }
 
 

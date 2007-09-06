@@ -95,6 +95,12 @@ void LabelMenuItem::drawInternal(const GraphicsPtr TheGraphics) const
 	  //Draw the Text
       TheGraphics->drawText(AlignedPosition, getText(), getFont(), getDrawnTextColor(), getOpacity());
 
+      //Draw the Mnemonic Underline
+      if(getMnemonicTextPosition() != -1)
+      {
+          TheGraphics->drawTextUnderline(TopLeft, getText().substr(getMnemonicTextPosition(),1), getFont(), getDrawnTextColor(), getOpacity());
+      }
+      
       //Draw the Accelerator Text
       if(getAcceleratorText().compare("") != 0)
       {
@@ -104,6 +110,7 @@ void LabelMenuItem::drawInternal(const GraphicsPtr TheGraphics) const
 
           TheGraphics->drawText(AcceleratorAlignedPosition, getAcceleratorText(), getFont(), getDrawnTextColor(), getOpacity());
       }
+
    }
 }
 
@@ -206,24 +213,6 @@ void LabelMenuItem::mouseReleased(const MouseEvent& e)
     MenuItem::mouseReleased(e);
 }
 
-/*void LabelMenuItem::mouseEntered(const MouseEvent& e)
-{
-    beginEditCP(MenuItemPtr(this), SelectedFieldMask);
-        setSelected(true);
-    endEditCP(MenuItemPtr(this), SelectedFieldMask);
-    
-    MenuItem::mouseEntered(e);
-}
-
-void LabelMenuItem::mouseExited(const MouseEvent& e)
-{
-    beginEditCP(MenuItemPtr(this), SelectedFieldMask);
-        setSelected(false);
-    endEditCP(MenuItemPtr(this), SelectedFieldMask);
-    
-    MenuItem::mouseExited(e);
-}*/
-
 void LabelMenuItem::produceActionPerformed(const ActionEvent& e)
 {
     actionPreformed(e);
@@ -257,6 +246,81 @@ LabelMenuItem::~LabelMenuItem(void)
 void LabelMenuItem::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & AcceleratorKeyFieldMask ||
+       whichField & AcceleratorModifiersFieldMask)
+    {
+        std::string AcceleratorText("");
+        if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        {
+            AcceleratorText += KeyEvent::getStringFromKey(KeyEvent::KEY_CONTROL, 0) + "+";
+        }
+        if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_ALT)
+        {
+            AcceleratorText += KeyEvent::getStringFromKey(KeyEvent::KEY_ALT, 0) + "+";
+        }
+        if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+        {
+            AcceleratorText += KeyEvent::getStringFromKey(KeyEvent::KEY_SHIFT, 0) + "+";
+        }
+        AcceleratorText += KeyEvent::getStringFromKey(static_cast<KeyEvent::Key>(getAcceleratorKey()), KeyEvent::KEY_MODIFIER_CAPS_LOCK);
+
+        //Set my preferred size
+        Pnt2s TextTopLeft, TextBottomRight;
+        getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+        Pnt2s AcceleratorTextTopLeft, AcceleratorTextBottomRight;
+        getFont()->getBounds(AcceleratorText, AcceleratorTextTopLeft, AcceleratorTextBottomRight);
+        
+        beginEditCP(LabelMenuItemPtr(this), AcceleratorTextFieldMask | PreferredSizeFieldMask);
+            setAcceleratorText(AcceleratorText);
+            setPreferredSize(Vec2s((TextBottomRight.x() - TextTopLeft.x()) + (AcceleratorTextBottomRight.x() - AcceleratorTextTopLeft.x()) + 50, getPreferredSize().y()));
+        endEditCP(LabelMenuItemPtr(this), AcceleratorTextFieldMask | PreferredSizeFieldMask);
+    }
+    if(whichField & TextFieldMask ||
+       whichField & MnemonicKeyFieldMask)
+    {
+        Int32 Pos(-1);
+        if(getMnemonicKey() != KeyEvent::KEY_NONE &&
+           getText() != "")
+        {
+            //Get the Character representation of the key
+            UChar8 MnemonicCharLower(KeyEvent::getCharFromKey(static_cast<KeyEvent::Key>(getMnemonicKey()),0));
+            UChar8 MnemonicCharUpper(KeyEvent::getCharFromKey(static_cast<KeyEvent::Key>(getMnemonicKey()),KeyEvent::KEY_MODIFIER_CAPS_LOCK));
+            
+            //Find the first occurance of this character in the text case-insensitive
+            std::string::size_type MnemonicCharLowerPos;
+            std::string::size_type MnemonicCharUpperPos;
+            MnemonicCharLowerPos = getText().find_first_of(MnemonicCharLower);
+            MnemonicCharUpperPos = getText().find_first_of(MnemonicCharUpper);
+
+            if(MnemonicCharLowerPos == std::string::npos)
+            {
+                if(MnemonicCharUpperPos == std::string::npos)
+                {
+                    Pos = -1;
+                }
+                else
+                {
+                    Pos = MnemonicCharUpperPos;
+                }
+            }
+            else
+            {
+                if(MnemonicCharUpperPos == std::string::npos)
+                {
+                    Pos = MnemonicCharLowerPos;
+                }
+                else
+                {
+                    Pos = osgMin(MnemonicCharLowerPos, MnemonicCharUpperPos);
+                }
+            }
+        }
+        
+        beginEditCP(LabelMenuItemPtr(this), MnemonicTextPositionFieldMask);
+            setMnemonicTextPosition(Pos);
+        endEditCP(LabelMenuItemPtr(this), MnemonicTextPositionFieldMask);
+    }
 }
 
 void LabelMenuItem::dump(      UInt32    , 

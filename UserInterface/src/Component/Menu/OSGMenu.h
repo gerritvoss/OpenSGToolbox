@@ -59,6 +59,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Menu : public MenuBase
   private:
 
     typedef MenuBase Inherited;
+    friend class MenuBar;
 
     /*==========================  PUBLIC  =================================*/
   public:

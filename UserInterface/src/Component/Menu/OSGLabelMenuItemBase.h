@@ -71,6 +71,7 @@
 #include <OpenSG/OSGStringFields.h> // Text type
 #include <OpenSG/OSGUInt32Fields.h> // AcceleratorModifiers type
 #include <OpenSG/OSGUInt32Fields.h> // AcceleratorKey type
+#include <OpenSG/OSGUInt32Fields.h> // MnemonicKey type
 #include "Border/OSGBorder.h" // SelectedBorder type
 #include "Background/OSGUIBackground.h" // SelectedBackground type
 #include <OpenSG/OSGColor4fFields.h> // SelectedTextColor type
@@ -79,6 +80,7 @@
 #include <OpenSG/OSGColor4fFields.h> // DisabledTextColor type
 #include <OpenSG/OSGColor4fFields.h> // TextColor type
 #include <OpenSG/OSGStringFields.h> // AcceleratorText type
+#include <OpenSG/OSGInt32Fields.h> // MnemonicTextPosition type
 
 #include "OSGLabelMenuItemFields.h"
 
@@ -106,7 +108,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItemBase : public MenuItem
         TextFieldId                 = FontFieldId                 + 1,
         AcceleratorModifiersFieldId = TextFieldId                 + 1,
         AcceleratorKeyFieldId       = AcceleratorModifiersFieldId + 1,
-        SelectedBorderFieldId       = AcceleratorKeyFieldId       + 1,
+        MnemonicKeyFieldId          = AcceleratorKeyFieldId       + 1,
+        SelectedBorderFieldId       = MnemonicKeyFieldId          + 1,
         SelectedBackgroundFieldId   = SelectedBorderFieldId       + 1,
         SelectedTextColorFieldId    = SelectedBackgroundFieldId   + 1,
         FocusedTextColorFieldId     = SelectedTextColorFieldId    + 1,
@@ -114,13 +117,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItemBase : public MenuItem
         DisabledTextColorFieldId    = RolloverTextColorFieldId    + 1,
         TextColorFieldId            = DisabledTextColorFieldId    + 1,
         AcceleratorTextFieldId      = TextColorFieldId            + 1,
-        NextFieldId                 = AcceleratorTextFieldId      + 1
+        MnemonicTextPositionFieldId = AcceleratorTextFieldId      + 1,
+        NextFieldId                 = MnemonicTextPositionFieldId + 1
     };
 
     static const OSG::BitVector FontFieldMask;
     static const OSG::BitVector TextFieldMask;
     static const OSG::BitVector AcceleratorModifiersFieldMask;
     static const OSG::BitVector AcceleratorKeyFieldMask;
+    static const OSG::BitVector MnemonicKeyFieldMask;
     static const OSG::BitVector SelectedBorderFieldMask;
     static const OSG::BitVector SelectedBackgroundFieldMask;
     static const OSG::BitVector SelectedTextColorFieldMask;
@@ -129,6 +134,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItemBase : public MenuItem
     static const OSG::BitVector DisabledTextColorFieldMask;
     static const OSG::BitVector TextColorFieldMask;
     static const OSG::BitVector AcceleratorTextFieldMask;
+    static const OSG::BitVector MnemonicTextPositionFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -159,6 +165,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItemBase : public MenuItem
            SFString            *getSFText           (void);
            SFUInt32            *getSFAcceleratorModifiers(void);
            SFUInt32            *getSFAcceleratorKey (void);
+           SFUInt32            *getSFMnemonicKey    (void);
            SFBorderPtr         *getSFSelectedBorder (void);
            SFUIBackgroundPtr   *getSFSelectedBackground(void);
            SFColor4f           *getSFSelectedTextColor(void);
@@ -175,6 +182,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItemBase : public MenuItem
      const UInt32              &getAcceleratorModifiers(void) const;
            UInt32              &getAcceleratorKey (void);
      const UInt32              &getAcceleratorKey (void) const;
+           UInt32              &getMnemonicKey    (void);
+     const UInt32              &getMnemonicKey    (void) const;
            BorderPtr           &getSelectedBorder (void);
      const BorderPtr           &getSelectedBorder (void) const;
            UIBackgroundPtr     &getSelectedBackground(void);
@@ -199,6 +208,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItemBase : public MenuItem
      void setText           ( const std::string &value );
      void setAcceleratorModifiers( const UInt32 &value );
      void setAcceleratorKey ( const UInt32 &value );
+     void setMnemonicKey    ( const UInt32 &value );
      void setSelectedBorder ( const BorderPtr &value );
      void setSelectedBackground( const UIBackgroundPtr &value );
      void setSelectedTextColor( const Color4f &value );
@@ -252,6 +262,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItemBase : public MenuItem
     SFString            _sfText;
     SFUInt32            _sfAcceleratorModifiers;
     SFUInt32            _sfAcceleratorKey;
+    SFUInt32            _sfMnemonicKey;
     SFBorderPtr         _sfSelectedBorder;
     SFUIBackgroundPtr   _sfSelectedBackground;
     SFColor4f           _sfSelectedTextColor;
@@ -260,6 +271,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItemBase : public MenuItem
     SFColor4f           _sfDisabledTextColor;
     SFColor4f           _sfTextColor;
     SFString            _sfAcceleratorText;
+    SFInt32             _sfMnemonicTextPosition;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -282,9 +294,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItemBase : public MenuItem
     /*! \{                                                                 */
 
            SFString            *getSFAcceleratorText(void);
+           SFInt32             *getSFMnemonicTextPosition(void);
 
            std::string         &getAcceleratorText(void);
      const std::string         &getAcceleratorText(void) const;
+           Int32               &getMnemonicTextPosition(void);
+     const Int32               &getMnemonicTextPosition(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -292,6 +307,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItemBase : public MenuItem
     /*! \{                                                                 */
 
      void setAcceleratorText(const std::string &value);
+     void setMnemonicTextPosition(const Int32 &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

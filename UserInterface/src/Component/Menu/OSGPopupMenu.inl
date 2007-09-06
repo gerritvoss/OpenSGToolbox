@@ -57,6 +57,12 @@ UInt32 PopupMenu::getNumItems(void) const
 }
 
 inline
+void PopupMenu::addPopupMenuListener(PopupMenuListenerPtr Listener)
+{
+   _PopupMenuListeners.insert(Listener);
+}
+
+inline
 PopupMenu::MenuSelectionListener::MenuSelectionListener(PopupMenuPtr ThePopupMenu) :
 									_PopupMenu(ThePopupMenu)
 {

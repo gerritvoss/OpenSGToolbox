@@ -49,6 +49,7 @@
 #include "OSGMenuItemFields.h"
 #include "OSGSingleSelectionModel.h"
 #include "Event/OSGChangeListener.h"
+#include "Event/OSGPopupMenuListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -92,6 +93,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
 	//Mouse Motion Events
     virtual void mouseMoved(const MouseEvent& e);
     virtual void mouseDragged(const MouseEvent& e);
+    
+    void addPopupMenuListener(PopupMenuListenerPtr Listener);
+    void removePopupMenuListener(PopupMenuListenerPtr Listener);
+
+    void cancel(void);
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -127,6 +133,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
 	friend class MenuSelectionListener;
 
 	MenuSelectionListener _MenuSelectionListener;
+	
+	typedef std::set<PopupMenuListenerPtr> PopupMenuListenerSet;
+    typedef PopupMenuListenerSet::iterator PopupMenuListenerSetItor;
+    typedef PopupMenuListenerSet::const_iterator PopupMenuListenerSetConstItor;
+	
+    PopupMenuListenerSet       _PopupMenuListeners;
+    void producePopupMenuWillBecomeVisible(const PopupMenuEvent& e);
+    void producePopupMenuWillBecomeInvisible(const PopupMenuEvent& e);
+    void producePopupMenuCanceled(const PopupMenuEvent& e);
     /*==========================  PRIVATE  ================================*/
   private:
 

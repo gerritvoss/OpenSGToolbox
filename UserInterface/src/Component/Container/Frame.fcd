@@ -59,5 +59,15 @@ A UI Frame.
 		access="public"
 		defaultValue="false"
 	>
+    </Field>
+    <Field
+          name="MenuBar"
+          type="MenuBarPtr"
+          cardinality="single"
+          visibility="external"
+          access="public"
+          defaultValue="NullFC"
+		  header="Component/Menu/OSGMenuBarFields.h"
+          >
 	</Field>
 </FieldContainer>

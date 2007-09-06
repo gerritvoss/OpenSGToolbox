@@ -79,6 +79,9 @@ const OSG::BitVector  FrameBase::ActiveToolTipFieldMask =
 const OSG::BitVector  FrameBase::LockInputFieldMask = 
     (TypeTraits<BitVector>::One << FrameBase::LockInputFieldId);
 
+const OSG::BitVector  FrameBase::MenuBarFieldMask = 
+    (TypeTraits<BitVector>::One << FrameBase::MenuBarFieldId);
+
 const OSG::BitVector FrameBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -99,6 +102,9 @@ const OSG::BitVector FrameBase::MTInfluenceMask =
     
 */
 /*! \var bool            FrameBase::_sfLockInput
+    
+*/
+/*! \var MenuBarPtr      FrameBase::_sfMenuBar
     
 */
 
@@ -130,7 +136,12 @@ FieldDescription *FrameBase::_desc[] =
                      "LockInput", 
                      LockInputFieldId, LockInputFieldMask,
                      false,
-                     (FieldAccessMethod) &FrameBase::getSFLockInput)
+                     (FieldAccessMethod) &FrameBase::getSFLockInput),
+    new FieldDescription(SFMenuBarPtr::getClassType(), 
+                     "MenuBar", 
+                     MenuBarFieldId, MenuBarFieldMask,
+                     false,
+                     (FieldAccessMethod) &FrameBase::getSFMenuBar)
 };
 
 
@@ -212,6 +223,7 @@ FrameBase::FrameBase(void) :
     _mfActivePopupMenus       (), 
     _sfActiveToolTip          (ToolTipPtr(NullFC)), 
     _sfLockInput              (bool(false)), 
+    _sfMenuBar                (MenuBarPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -226,6 +238,7 @@ FrameBase::FrameBase(const FrameBase &source) :
     _mfActivePopupMenus       (source._mfActivePopupMenus       ), 
     _sfActiveToolTip          (source._sfActiveToolTip          ), 
     _sfLockInput              (source._sfLockInput              ), 
+    _sfMenuBar                (source._sfMenuBar                ), 
     Inherited                 (source)
 {
 }
@@ -267,6 +280,11 @@ UInt32 FrameBase::getBinSize(const BitVector &whichField)
         returnValue += _sfLockInput.getBinSize();
     }
 
+    if(FieldBits::NoField != (MenuBarFieldMask & whichField))
+    {
+        returnValue += _sfMenuBar.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -299,6 +317,11 @@ void FrameBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (LockInputFieldMask & whichField))
     {
         _sfLockInput.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MenuBarFieldMask & whichField))
+    {
+        _sfMenuBar.copyToBin(pMem);
     }
 
 
@@ -334,6 +357,11 @@ void FrameBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfLockInput.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (MenuBarFieldMask & whichField))
+    {
+        _sfMenuBar.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -359,6 +387,9 @@ void FrameBase::executeSyncImpl(      FrameBase *pOther,
     if(FieldBits::NoField != (LockInputFieldMask & whichField))
         _sfLockInput.syncWith(pOther->_sfLockInput);
 
+    if(FieldBits::NoField != (MenuBarFieldMask & whichField))
+        _sfMenuBar.syncWith(pOther->_sfMenuBar);
+
 
 }
 #else
@@ -380,6 +411,9 @@ void FrameBase::executeSyncImpl(      FrameBase *pOther,
 
     if(FieldBits::NoField != (LockInputFieldMask & whichField))
         _sfLockInput.syncWith(pOther->_sfLockInput);
+
+    if(FieldBits::NoField != (MenuBarFieldMask & whichField))
+        _sfMenuBar.syncWith(pOther->_sfMenuBar);
 
 
     if(FieldBits::NoField != (ActivePopupMenusFieldMask & whichField))

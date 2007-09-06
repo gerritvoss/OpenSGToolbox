@@ -204,6 +204,27 @@ void PopupMenu::mouseDragged(const MouseEvent& e)
     Container::mouseDragged(e);
 }
 
+void PopupMenu::removePopupMenuListener(PopupMenuListenerPtr Listener)
+{
+   PopupMenuListenerSetItor EraseIter(_PopupMenuListeners.find(Listener));
+   if(EraseIter != _PopupMenuListeners.end())
+   {
+      _PopupMenuListeners.erase(EraseIter);
+   }
+}
+
+void PopupMenu::cancel(void)
+{
+    if(getVisible())
+    {
+        beginEditCP(PopupMenuPtr(this), VisibleFieldMask);
+            setVisible(false);
+        endEditCP(PopupMenuPtr(this), VisibleFieldMask);
+        _SelectionModel->clearSelection();
+        producePopupMenuCanceled(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -231,11 +252,49 @@ PopupMenu::~PopupMenu(void)
     delete _SelectionModel;
 }
 
+void  PopupMenu::producePopupMenuWillBecomeVisible(const PopupMenuEvent& e)
+{
+	PopupMenuListenerSet ListenerSet(_PopupMenuListeners);
+    for(PopupMenuListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->popupMenuWillBecomeVisible(e);
+    }
+}
+
+void  PopupMenu::producePopupMenuWillBecomeInvisible(const PopupMenuEvent& e)
+{
+	PopupMenuListenerSet ListenerSet(_PopupMenuListeners);
+    for(PopupMenuListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->popupMenuWillBecomeInvisible(e);
+    }
+}
+
+void  PopupMenu::producePopupMenuCanceled(const PopupMenuEvent& e)
+{
+	PopupMenuListenerSet ListenerSet(_PopupMenuListeners);
+    for(PopupMenuListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->popupMenuCanceled(e);
+    }
+}
 /*----------------------------- class specific ----------------------------*/
 
 void PopupMenu::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & VisibleFieldMask)
+    {
+        if(getVisible())
+        {
+            producePopupMenuWillBecomeVisible(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
+        }
+        else
+        {
+            producePopupMenuWillBecomeInvisible(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
+        }
+    }
 }
 
 void PopupMenu::dump(      UInt32    , 
