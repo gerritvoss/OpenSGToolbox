@@ -80,6 +80,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING WindowsLookAndFeel : public WindowsLookAnd
 	virtual Time getTextCaretRate(void) const;
 	virtual Time getToolTipPopupTime(void) const;
 	virtual Time getSubMenuPopupTime(void) const;
+    virtual Time getKeyAcceleratorMenuFlashTime(void) const;
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -113,6 +114,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING WindowsLookAndFeel : public WindowsLookAnd
 	Real32 _TextCaretRate;
 	Real32 _ToolTipPopupTime;
 	Real32 _SubMenuPopupTime;
+	Real32 _KeyAcceleratorMenuFlashTime;
 
     // prohibit default functions (move to 'public' if you need one)
 

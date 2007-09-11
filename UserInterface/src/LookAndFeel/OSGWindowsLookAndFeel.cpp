@@ -116,6 +116,10 @@ Time WindowsLookAndFeel::getSubMenuPopupTime(void) const
 	return _SubMenuPopupTime;
 }
 
+Time WindowsLookAndFeel::getKeyAcceleratorMenuFlashTime(void) const
+{
+	return _KeyAcceleratorMenuFlashTime;
+}
 void WindowsLookAndFeel::init(void)
 {
 
@@ -1335,7 +1339,8 @@ WindowsLookAndFeel::WindowsLookAndFeel(void) :
     Inherited(),
 		_TextCaretRate(1.0),
 		_ToolTipPopupTime(1.5),
-		_SubMenuPopupTime(0.25)
+		_SubMenuPopupTime(0.25),
+        _KeyAcceleratorMenuFlashTime(0.15)
 {
 }
 
@@ -1343,7 +1348,8 @@ WindowsLookAndFeel::WindowsLookAndFeel(const WindowsLookAndFeel &source) :
     Inherited(source),
 		_TextCaretRate(source._TextCaretRate),
 		_ToolTipPopupTime(source._ToolTipPopupTime),
-		_SubMenuPopupTime(source._SubMenuPopupTime)
+		_SubMenuPopupTime(source._SubMenuPopupTime),
+        _KeyAcceleratorMenuFlashTime(source._KeyAcceleratorMenuFlashTime)
 {
 }
 

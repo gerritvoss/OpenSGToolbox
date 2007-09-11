@@ -49,6 +49,8 @@
 
 #include "OSGLabelMenuItem.h"
 #include "Util/OSGUIDrawUtils.h"
+#include "LookAndFeel/OSGLookAndFeelManager.h"
+#include "Component/Menu/OSGMenu.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -122,7 +124,7 @@ Color4f LabelMenuItem::getDrawnTextColor(void) const
         //{
         //    return getFocusedTextColor();
         //}
-        if(getSelected())
+        if(getSelected() || _DrawAsThoughSelected)
         {
             return getSelectedTextColor();
         }
@@ -149,7 +151,7 @@ BorderPtr LabelMenuItem::getDrawnBorder(void) const
         //{
         //    return getFocusedTextColor();
         //}
-        if(getSelected())
+        if(getSelected() || _DrawAsThoughSelected)
         {
             return getSelectedBorder();
         }
@@ -176,7 +178,7 @@ UIBackgroundPtr LabelMenuItem::getDrawnBackground(void) const
         //{
         //    return getFocusedTextColor();
         //}
-        if(getSelected())
+        if(getSelected() || _DrawAsThoughSelected)
         {
             return getSelectedBackground();
         }
@@ -221,6 +223,21 @@ void LabelMenuItem::produceActionPerformed(const ActionEvent& e)
 	    (*SetItor)->actionPerformed(e);
     }
 }
+
+MenuPtr LabelMenuItem::getTopLevelMenu(void) const
+{
+    MenuPtr c(getParentMenu());
+    while(c != NullFC)
+    {
+        if(c->getTopLevelMenu())
+        {
+            return c;
+        }
+        c = c->getParentMenu();
+    }
+    return NullFC;
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -228,12 +245,18 @@ void LabelMenuItem::produceActionPerformed(const ActionEvent& e)
 /*----------------------- constructors & destructors ----------------------*/
 
 LabelMenuItem::LabelMenuItem(void) :
-    Inherited()
+    Inherited(),
+    _LabelMenuItemKeyAcceleratorListener(LabelMenuItemPtr(this)),
+    _KeyAcceleratorMenuFlashUpdateListener(LabelMenuItemPtr(this)),
+    _DrawAsThoughSelected(false)
 {
 }
 
 LabelMenuItem::LabelMenuItem(const LabelMenuItem &source) :
-    Inherited(source)
+    Inherited(source),
+    _LabelMenuItemKeyAcceleratorListener(LabelMenuItemPtr(this)),
+    _KeyAcceleratorMenuFlashUpdateListener(LabelMenuItemPtr(this)),
+    _DrawAsThoughSelected(false)
 {
 }
 
@@ -246,6 +269,22 @@ LabelMenuItem::~LabelMenuItem(void)
 void LabelMenuItem::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if((whichField & ParentFrameFieldMask) &&
+        getParentFrame() != NullFC &&
+        getEnabled() && 
+        getAcceleratorKey() != KeyEvent::KEY_NONE
+        )
+    {
+        getParentFrame()->addKeyAccelerator(static_cast<KeyEvent::Key>(getAcceleratorKey()), getAcceleratorModifiers(), &_LabelMenuItemKeyAcceleratorListener);
+    }
+    if((whichField & EnabledFieldMask) &&
+        getParentFrame() != NullFC &&
+        !getEnabled() && 
+        getAcceleratorKey() != KeyEvent::KEY_NONE)
+    {
+        getParentFrame()->removeKeyAccelerator(static_cast<KeyEvent::Key>(getAcceleratorKey()), getAcceleratorModifiers());
+    }
 
     if(whichField & AcceleratorKeyFieldMask ||
        whichField & AcceleratorModifiersFieldMask)
@@ -329,7 +368,33 @@ void LabelMenuItem::dump(      UInt32    ,
     SLOG << "Dump LabelMenuItem NI" << std::endl;
 }
 
+void LabelMenuItem::LabelMenuItemKeyAcceleratorListener::acceleratorTyped(const KeyAcceleratorEvent& e)
+{
+    //Set TopLevelMenu
+    MenuPtr TopMenu(_LabelMenuItem->getTopLevelMenu());
+    if(TopMenu != NullFC)
+    {
+        TopMenu->setDrawAsThoughSelected(true);
 
+        _LabelMenuItem->_KeyAcceleratorMenuFlashUpdateListener.reset();
+        _LabelMenuItem->getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&(_LabelMenuItem->_KeyAcceleratorMenuFlashUpdateListener));
+    }
+    _LabelMenuItem->produceActionPerformed(ActionEvent(_LabelMenuItem, e.getTimeStamp()));
+}
+
+void LabelMenuItem::KeyAcceleratorMenuFlashUpdateListener::update(const UpdateEvent& e)
+{
+    _FlashElps += e.getElapsedTime();
+    if(_FlashElps > LookAndFeelManager::the()->getLookAndFeel()->getKeyAcceleratorMenuFlashTime())
+    {
+        MenuPtr TopMenu(_LabelMenuItem->getTopLevelMenu());
+        if(TopMenu != NullFC)
+        {
+            TopMenu->setDrawAsThoughSelected(false);
+        }
+		_LabelMenuItem->getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+    }
+}
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
 

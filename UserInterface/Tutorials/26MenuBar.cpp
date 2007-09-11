@@ -40,8 +40,7 @@
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGBorderLayout.h>
-#include <OpenSG/UserInterface/OSGBorderLayoutConstraints.h>
+#include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
@@ -195,18 +194,9 @@ int main(int argc, char **argv)
     endEditCP(EditMenu, LabelMenuItem::TextFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
 
     MenuBarPtr MainMenuBar = MenuBar::create();
-    
-	BorderLayoutConstraintsPtr MainMenuBarLayoutConstraints = osg::BorderLayoutConstraints::create();
-
-	beginEditCP(MainMenuBarLayoutConstraints, BorderLayoutConstraints::RegionFieldMask);
-		MainMenuBarLayoutConstraints->setRegion(BorderLayoutConstraints::BORDER_NORTH);
-	endEditCP(MainMenuBarLayoutConstraints, BorderLayoutConstraints::RegionFieldMask);
 
     MainMenuBar->addMenu(FileMenu);
     MainMenuBar->addMenu(EditMenu);
-    beginEditCP(MainMenuBar, MenuBar::ConstraintsFieldMask);
-        MainMenuBar->setConstraints(MainMenuBarLayoutConstraints);
-    endEditCP(MainMenuBar, MenuBar::ConstraintsFieldMask);
 
     
 	// Create a Button component
@@ -217,15 +207,8 @@ int main(int argc, char **argv)
 		sampleFont->setSize(16);
 	endEditCP(sampleFont, UIFont::SizeFieldMask);
 
-	BorderLayoutConstraintsPtr button1LayoutConstraints = osg::BorderLayoutConstraints::create();
-
-	beginEditCP(button1LayoutConstraints, BorderLayoutConstraints::RegionFieldMask);
-		button1LayoutConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
-	endEditCP(button1LayoutConstraints, BorderLayoutConstraints::RegionFieldMask);
-
     beginEditCP(button1, Button::TextFieldMask | Button::ConstraintsFieldMask);
 		button1->setText("Button 1");
-        button1->setConstraints(button1LayoutConstraints);
     endEditCP(button1, Button::TextFieldMask | Button::ConstraintsFieldMask);
 
 
@@ -237,15 +220,15 @@ int main(int argc, char **argv)
 
 	// Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
-	LayoutPtr MainFrameLayout = osg::BorderLayout::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
+	LayoutPtr MainFrameLayout = osg::FlowLayout::create();
+	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask | Frame::MenuBarFieldMask);
 	   // Assign the Button to the MainFrame so it will be displayed
 	   // when the view is rendered.
-	   MainFrame->getChildren().addValue(MainMenuBar);
 	   MainFrame->getChildren().addValue(button1);
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
+       MainFrame->setMenuBar(MainMenuBar);
+	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask | Frame::MenuBarFieldMask);
 
 	//Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
@@ -260,7 +243,7 @@ int main(int argc, char **argv)
 	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 	    foreground->setDrawingSurface(drawingSurface);
 		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.5,0.5));
+		foreground->setFrameBounds(Vec2f(1.0,1.0));
 	   //Set the Event Producer for the DrawingSurface
 	   //This is needed in order to get Mouse/Keyboard/etc Input to the UI DrawingSurface
     endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask |UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);

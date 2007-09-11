@@ -103,6 +103,13 @@ SFBool *MenuItemBase::getSFSelected(void)
     return &_sfSelected;
 }
 
+//! Get the MenuItem::_sfParentMenu field.
+inline
+SFMenuPtr *MenuItemBase::getSFParentMenu(void)
+{
+    return &_sfParentMenu;
+}
+
 
 //! Get the value of the MenuItem::_sfSelected field.
 inline
@@ -123,6 +130,27 @@ inline
 void MenuItemBase::setSelected(const bool &value)
 {
     _sfSelected.setValue(value);
+}
+
+//! Get the value of the MenuItem::_sfParentMenu field.
+inline
+MenuPtr &MenuItemBase::getParentMenu(void)
+{
+    return _sfParentMenu.getValue();
+}
+
+//! Get the value of the MenuItem::_sfParentMenu field.
+inline
+const MenuPtr &MenuItemBase::getParentMenu(void) const
+{
+    return _sfParentMenu.getValue();
+}
+
+//! Set the value of the MenuItem::_sfParentMenu field.
+inline
+void MenuItemBase::setParentMenu(const MenuPtr &value)
+{
+    _sfParentMenu.setValue(value);
 }
 
 

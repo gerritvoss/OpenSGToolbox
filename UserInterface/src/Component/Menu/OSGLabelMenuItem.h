@@ -47,6 +47,8 @@
 
 #include "OSGLabelMenuItemBase.h"
 #include "Event/OSGActionListener.h"
+#include "Event/OSGKeyAcceleratorListener.h"
+#include "Component/Menu/OSGMenuFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -82,6 +84,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItem : public LabelMenuItemBase
     
     void addActionListener(ActionListenerPtr Listener);
     void removeActionListener(ActionListenerPtr Listener);
+    void setDrawAsThoughSelected(bool Selected);
+    bool getDrawAsThoughSelected(void) const;
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -108,6 +112,37 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItem : public LabelMenuItemBase
     virtual UIBackgroundPtr getDrawnBackground(void) const;
     
     virtual void actionPreformed(const ActionEvent& e);
+    
+	class LabelMenuItemKeyAcceleratorListener : public KeyAcceleratorListener
+	{
+	public:
+		LabelMenuItemKeyAcceleratorListener(LabelMenuItemPtr TheLabelMenuItem);
+        virtual void acceleratorTyped(const KeyAcceleratorEvent& e);
+	private:
+		LabelMenuItemPtr _LabelMenuItem;
+	};
+
+	friend class LabelMenuItemKeyAcceleratorListener;
+
+	LabelMenuItemKeyAcceleratorListener _LabelMenuItemKeyAcceleratorListener;
+    
+	class KeyAcceleratorMenuFlashUpdateListener : public UpdateListener
+	{
+	public:
+		KeyAcceleratorMenuFlashUpdateListener(LabelMenuItemPtr TheLabelMenuItem);
+        virtual void update(const UpdateEvent& e);
+        void reset(void);
+	private:
+		LabelMenuItemPtr _LabelMenuItem;
+	    Time _FlashElps;
+	};
+
+	friend class KeyAcceleratorMenuFlashUpdateListener;
+
+	KeyAcceleratorMenuFlashUpdateListener _KeyAcceleratorMenuFlashUpdateListener;
+
+    MenuPtr getTopLevelMenu(void) const;
+    bool _DrawAsThoughSelected;
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/

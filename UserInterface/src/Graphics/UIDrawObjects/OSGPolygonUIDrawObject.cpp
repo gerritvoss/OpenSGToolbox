@@ -84,7 +84,7 @@ void PolygonUIDrawObject::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 	if(getVerticies().size() > 0)
 	{
 		TopLeft = getVerticies().getValue(0);
-		Pnt2s BottomRight = TopLeft;
+		BottomRight = TopLeft;
 		//Determine Top Left And Bottom Right
 		for(UInt32 i(0) ; i<getVerticies().size(); ++i)
 		{

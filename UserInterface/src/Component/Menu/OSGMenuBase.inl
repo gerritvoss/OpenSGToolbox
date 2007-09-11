@@ -131,6 +131,13 @@ SFUIDrawObjectCanvasPtr *MenuBase::getSFExpandDrawObject(void)
     return &_sfExpandDrawObject;
 }
 
+//! Get the Menu::_mfMenuItems field.
+inline
+MFMenuItemPtr *MenuBase::getMFMenuItems(void)
+{
+    return &_mfMenuItems;
+}
+
 
 //! Get the value of the Menu::_sfButton field.
 inline
@@ -237,6 +244,27 @@ void MenuBase::setExpandDrawObject(const UIDrawObjectCanvasPtr &value)
     _sfExpandDrawObject.setValue(value);
 }
 
+
+//! Get the value of the \a index element the Menu::_mfMenuItems field.
+inline
+MenuItemPtr &MenuBase::getMenuItems(const UInt32 index)
+{
+    return _mfMenuItems[index];
+}
+
+//! Get the Menu::_mfMenuItems field.
+inline
+MFMenuItemPtr &MenuBase::getMenuItems(void)
+{
+    return _mfMenuItems;
+}
+
+//! Get the Menu::_mfMenuItems field.
+inline
+const MFMenuItemPtr &MenuBase::getMenuItems(void) const
+{
+    return _mfMenuItems;
+}
 
 OSG_END_NAMESPACE
 

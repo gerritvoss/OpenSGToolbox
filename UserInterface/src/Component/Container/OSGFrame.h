@@ -50,6 +50,10 @@
 #include <OpenSG/Input/OSGMouseMotionAdapter.h>
 #include <OpenSG/Input/OSGKeyAdapter.h>
 
+#include "Event/OSGKeyAcceleratorListener.h"
+
+#include <map>
+
 OSG_BEGIN_NAMESPACE
 
 class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
@@ -101,6 +105,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
     virtual const FramePtr            &getParentFrame    (void) const;
 
     void destroyPopupMenu(void);
+    
+    virtual void updateLayout(void);
+    virtual void getInsideInsetsBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+    virtual void getMenuBarBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+    virtual void getContentPaneBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+
+    void addKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers, KeyAcceleratorListenerPtr Listener);
+    void removeKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -141,9 +153,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
 	friend class PopupMenuInteractionListener;
 
 	PopupMenuInteractionListener _PopupMenuInteractionListener;
+
+    typedef std::map<UInt64, KeyAcceleratorListenerPtr> KeyAcceleratorMap;
+    typedef KeyAcceleratorMap::iterator KeyAcceleratorMapItor;
+    KeyAcceleratorMap _KeyAcceleratorMap;
 	
-    virtual void getMenuBarBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
-    virtual void getContentPaneBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
     /*==========================  PRIVATE  ================================*/
   private:
 

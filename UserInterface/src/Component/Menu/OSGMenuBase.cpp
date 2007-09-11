@@ -79,6 +79,9 @@ const OSG::BitVector  MenuBase::TopLevelMenuFieldMask =
 const OSG::BitVector  MenuBase::ExpandDrawObjectFieldMask = 
     (TypeTraits<BitVector>::One << MenuBase::ExpandDrawObjectFieldId);
 
+const OSG::BitVector  MenuBase::MenuItemsFieldMask = 
+    (TypeTraits<BitVector>::One << MenuBase::MenuItemsFieldId);
+
 const OSG::BitVector MenuBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -99,6 +102,9 @@ const OSG::BitVector MenuBase::MTInfluenceMask =
     
 */
 /*! \var UIDrawObjectCanvasPtr MenuBase::_sfExpandDrawObject
+    
+*/
+/*! \var MenuItemPtr     MenuBase::_mfMenuItems
     
 */
 
@@ -130,7 +136,12 @@ FieldDescription *MenuBase::_desc[] =
                      "ExpandDrawObject", 
                      ExpandDrawObjectFieldId, ExpandDrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &MenuBase::getSFExpandDrawObject)
+                     (FieldAccessMethod) &MenuBase::getSFExpandDrawObject),
+    new FieldDescription(MFMenuItemPtr::getClassType(), 
+                     "MenuItems", 
+                     MenuItemsFieldId, MenuItemsFieldMask,
+                     false,
+                     (FieldAccessMethod) &MenuBase::getMFMenuItems)
 };
 
 
@@ -196,6 +207,7 @@ void MenuBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfMenuItems.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -211,6 +223,7 @@ MenuBase::MenuBase(void) :
     _sfSubMenuDelay           (Real32(0.5)), 
     _sfTopLevelMenu           (bool(false)), 
     _sfExpandDrawObject       (), 
+    _mfMenuItems              (), 
     Inherited() 
 {
 }
@@ -225,6 +238,7 @@ MenuBase::MenuBase(const MenuBase &source) :
     _sfSubMenuDelay           (source._sfSubMenuDelay           ), 
     _sfTopLevelMenu           (source._sfTopLevelMenu           ), 
     _sfExpandDrawObject       (source._sfExpandDrawObject       ), 
+    _mfMenuItems              (source._mfMenuItems              ), 
     Inherited                 (source)
 {
 }
@@ -266,6 +280,11 @@ UInt32 MenuBase::getBinSize(const BitVector &whichField)
         returnValue += _sfExpandDrawObject.getBinSize();
     }
 
+    if(FieldBits::NoField != (MenuItemsFieldMask & whichField))
+    {
+        returnValue += _mfMenuItems.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -298,6 +317,11 @@ void MenuBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ExpandDrawObjectFieldMask & whichField))
     {
         _sfExpandDrawObject.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MenuItemsFieldMask & whichField))
+    {
+        _mfMenuItems.copyToBin(pMem);
     }
 
 
@@ -333,6 +357,11 @@ void MenuBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfExpandDrawObject.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (MenuItemsFieldMask & whichField))
+    {
+        _mfMenuItems.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -357,6 +386,9 @@ void MenuBase::executeSyncImpl(      MenuBase *pOther,
 
     if(FieldBits::NoField != (ExpandDrawObjectFieldMask & whichField))
         _sfExpandDrawObject.syncWith(pOther->_sfExpandDrawObject);
+
+    if(FieldBits::NoField != (MenuItemsFieldMask & whichField))
+        _mfMenuItems.syncWith(pOther->_mfMenuItems);
 
 
 }
@@ -384,6 +416,9 @@ void MenuBase::executeSyncImpl(      MenuBase *pOther,
         _sfExpandDrawObject.syncWith(pOther->_sfExpandDrawObject);
 
 
+    if(FieldBits::NoField != (MenuItemsFieldMask & whichField))
+        _mfMenuItems.syncWith(pOther->_mfMenuItems, sInfo);
+
 
 }
 
@@ -392,6 +427,9 @@ void MenuBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (MenuItemsFieldMask & whichField))
+        _mfMenuItems.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

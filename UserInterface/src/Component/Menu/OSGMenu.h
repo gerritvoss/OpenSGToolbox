@@ -89,6 +89,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Menu : public MenuBase
     //virtual void mouseEntered(const MouseEvent& e);
     //virtual void mouseExited(const MouseEvent& e);
     virtual void mouseReleased(const MouseEvent& e);
+
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -131,6 +132,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Menu : public MenuBase
 	friend class PopupUpdateListener;
 
 	PopupUpdateListener _PopupUpdateListener;
+
     /*==========================  PRIVATE  ================================*/
   private:
 

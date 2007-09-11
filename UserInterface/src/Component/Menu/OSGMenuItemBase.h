@@ -68,6 +68,7 @@
 #include "Component/OSGComponent.h" // Parent
 
 #include <OpenSG/OSGBoolFields.h> // Selected type
+#include "Component/Menu/OSGMenuFields.h" // ParentMenu type
 
 #include "OSGMenuItemFields.h"
 
@@ -91,11 +92,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
 
     enum
     {
-        SelectedFieldId = Inherited::NextFieldId,
-        NextFieldId     = SelectedFieldId + 1
+        SelectedFieldId   = Inherited::NextFieldId,
+        ParentMenuFieldId = SelectedFieldId   + 1,
+        NextFieldId       = ParentMenuFieldId + 1
     };
 
     static const OSG::BitVector SelectedFieldMask;
+    static const OSG::BitVector ParentMenuFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -123,9 +126,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
     /*! \{                                                                 */
 
            SFBool              *getSFSelected       (void);
+           SFMenuPtr           *getSFParentMenu     (void);
 
            bool                &getSelected       (void);
      const bool                &getSelected       (void) const;
+           MenuPtr             &getParentMenu     (void);
+     const MenuPtr             &getParentMenu     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -133,6 +139,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
     /*! \{                                                                 */
 
      void setSelected       ( const bool &value );
+     void setParentMenu     ( const MenuPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +183,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
     /*! \{                                                                 */
 
     SFBool              _sfSelected;
+    SFMenuPtr           _sfParentMenu;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

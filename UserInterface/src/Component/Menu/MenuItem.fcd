@@ -21,4 +21,14 @@
           access="public"
           >
     </Field>
+    <Field
+          name="ParentMenu"
+          type="MenuPtr"
+          cardinality="single"
+          visibility="external"
+          defaultValue="NullFC"
+		    header="Component/Menu/OSGMenuFields.h"
+          access="public"
+          >
+    </Field>
 </FieldContainer>

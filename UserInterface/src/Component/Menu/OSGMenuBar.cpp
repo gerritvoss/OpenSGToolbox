@@ -52,6 +52,7 @@
 
 #include "Component/Container/OSGFrame.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
+#include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -103,15 +104,14 @@ void MenuBar::updateLayout(void)
 	Vec2s InsetSize( (BottomRight-TopLeft) - (InsetsBottomRight-InsetsTopLeft) );
 
     Vec2s NewSize( TotalWidth+InsetSize.x(), MaxHeight+InsetSize.y());
-    /*if(getPreferredSize() != NewSize ||
-       getSize() != NewSize)
+    if(getPreferredSize() != NewSize)
     {
         beginEditCP(MenuBarPtr(this), PreferredSizeFieldMask);
             setPreferredSize(NewSize);
             //Sneakily set my size
-            setSize(NewSize);
+            //setSize(NewSize);
         endEditCP(MenuBarPtr(this), PreferredSizeFieldMask);
-    }*/
+    }
     
 	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 	
@@ -126,6 +126,61 @@ void MenuBar::updateLayout(void)
 
         LeftOffset += getChildren().getValue(i)->getPreferredSize().x();
     }
+}
+
+void MenuBar::updateClipBounds(void)
+{
+	Pnt2s TopLeft, BottomRight;
+	if(getParentContainer() == NullFC)
+	{
+		//If I have no parent container use my bounds
+		getBounds(TopLeft, BottomRight);
+	}
+	else
+	{
+		//Get the intersection of:
+		     //My Bounds
+		     //My Parent Containers Clip Bounds
+		     //My Parent Containers Inset Bounds
+        Pnt2s MyTopLeft,MyBottomRight;
+        getBounds(MyTopLeft,MyBottomRight);
+
+		//Update my Parent Container's Clip Bounds
+		//Container::Ptr::dcast(getParentContainer())->updateClipBounds();
+
+		//Get Parent Container's Clip Bounds
+		Pnt2s ContainerClipTopLeft, ContainerClipBottomRight;
+		Frame::Ptr::dcast(getParentContainer())->getMenuBarBounds(ContainerClipTopLeft,ContainerClipBottomRight);
+		
+        //Parent Container's Clip Bounds are in the Parent Container's Coordinate space
+        //We need to convert them to this Components Coordinate space
+        ContainerClipTopLeft -= Vec2s(getPosition());
+		ContainerClipBottomRight -= Vec2s(getPosition());
+
+		//Get Parent Container's MenuBar Bounds
+		Pnt2s ContainerInsetTopLeft, ContainerInsetBottomRight;
+		Frame::Ptr::dcast(getParentContainer())->getMenuBarBounds(ContainerInsetTopLeft, ContainerInsetBottomRight);
+		
+        //Parent Container's Inset Bounds are in the Parent Container's Coordinate space
+        //We need to convert them to this Components Coordinate space
+        ContainerInsetTopLeft -= Vec2s(getPosition());
+		ContainerInsetBottomRight -= Vec2s(getPosition());
+
+		//Get the intersection of my bounds with my parent containers clip bounds
+		quadIntersection(MyTopLeft,MyBottomRight,
+			ContainerClipTopLeft,ContainerClipBottomRight,
+			TopLeft, BottomRight);
+
+		quadIntersection(TopLeft,BottomRight,
+			ContainerInsetTopLeft,ContainerInsetBottomRight,
+			TopLeft, BottomRight);
+	}
+	//The Clip Bounds calculated are in my Parent Containers coordinate space
+	//Translate these bounds into my own coordinate space
+	beginEditCP(ComponentPtr(this), Component::ClipTopLeftFieldMask | Component::ClipBottomRightFieldMask);
+		setClipTopLeft(TopLeft);
+		setClipBottomRight(BottomRight);
+	endEditCP(ComponentPtr(this), Component::ClipTopLeftFieldMask | Component::ClipBottomRightFieldMask);
 }
 
 void MenuBar::addMenu(MenuPtr Menu)
@@ -235,6 +290,11 @@ MenuBar::~MenuBar(void)
 void MenuBar::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if((whichField & ParentFrameFieldMask) && getParentFrame() != NullFC)
+    {
+        getParentFrame()->addKeyListener(&_MenuSelectionListener);
+    }
 }
 
 void MenuBar::dump(      UInt32    , 
@@ -306,6 +366,26 @@ void MenuBar::MenuSelectionListener::popupMenuWillBecomeInvisible(const PopupMen
 void MenuBar::MenuSelectionListener::popupMenuWillBecomeVisible(const PopupMenuEvent& e)
 {
     //Do Nothing
+}
+
+void MenuBar::MenuSelectionListener::keyTyped(const KeyEvent& e)
+{
+    //UInt32 RelevantModifiers = (e.getModifiers() & KeyEvent::KEY_MODIFIER_ALT) |
+    //                           (e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL) |
+    //                           (e.getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT) |
+    //                           (e.getModifiers() & KeyEvent::KEY_MODIFIER_META);
+
+    if(e.getModifiers() & KeyEvent::KEY_MODIFIER_ALT)
+    {
+        for(UInt32 i(0) ; i<_MenuBar->getChildren().size() ; ++i)
+        {
+            if(_MenuBar->getChildren().getValue(i)->getClassType() == LabelMenuItem::getClassType() &&
+                LabelMenuItem::Ptr::dcast(_MenuBar->getChildren().getValue(i))->getMnemonicKey() == e.getKey() )
+            {
+                std::cout << e.getKeyChar() << std::endl;
+            }
+        }
+    }
 }
 
 /*------------------------------------------------------------------------*/

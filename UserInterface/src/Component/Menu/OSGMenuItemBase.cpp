@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  MenuItemBase::SelectedFieldMask = 
     (TypeTraits<BitVector>::One << MenuItemBase::SelectedFieldId);
 
+const OSG::BitVector  MenuItemBase::ParentMenuFieldMask = 
+    (TypeTraits<BitVector>::One << MenuItemBase::ParentMenuFieldId);
+
 const OSG::BitVector MenuItemBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +78,9 @@ const OSG::BitVector MenuItemBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var bool            MenuItemBase::_sfSelected
+    
+*/
+/*! \var MenuPtr         MenuItemBase::_sfParentMenu
     
 */
 
@@ -86,7 +92,12 @@ FieldDescription *MenuItemBase::_desc[] =
                      "Selected", 
                      SelectedFieldId, SelectedFieldMask,
                      false,
-                     (FieldAccessMethod) &MenuItemBase::getSFSelected)
+                     (FieldAccessMethod) &MenuItemBase::getSFSelected),
+    new FieldDescription(SFMenuPtr::getClassType(), 
+                     "ParentMenu", 
+                     ParentMenuFieldId, ParentMenuFieldMask,
+                     false,
+                     (FieldAccessMethod) &MenuItemBase::getSFParentMenu)
 };
 
 
@@ -163,6 +174,7 @@ void MenuItemBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 MenuItemBase::MenuItemBase(void) :
     _sfSelected               (bool(false)), 
+    _sfParentMenu             (MenuPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -173,6 +185,7 @@ MenuItemBase::MenuItemBase(void) :
 
 MenuItemBase::MenuItemBase(const MenuItemBase &source) :
     _sfSelected               (source._sfSelected               ), 
+    _sfParentMenu             (source._sfParentMenu             ), 
     Inherited                 (source)
 {
 }
@@ -194,6 +207,11 @@ UInt32 MenuItemBase::getBinSize(const BitVector &whichField)
         returnValue += _sfSelected.getBinSize();
     }
 
+    if(FieldBits::NoField != (ParentMenuFieldMask & whichField))
+    {
+        returnValue += _sfParentMenu.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -206,6 +224,11 @@ void MenuItemBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (SelectedFieldMask & whichField))
     {
         _sfSelected.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ParentMenuFieldMask & whichField))
+    {
+        _sfParentMenu.copyToBin(pMem);
     }
 
 
@@ -221,6 +244,11 @@ void MenuItemBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfSelected.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ParentMenuFieldMask & whichField))
+    {
+        _sfParentMenu.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -234,6 +262,9 @@ void MenuItemBase::executeSyncImpl(      MenuItemBase *pOther,
     if(FieldBits::NoField != (SelectedFieldMask & whichField))
         _sfSelected.syncWith(pOther->_sfSelected);
 
+    if(FieldBits::NoField != (ParentMenuFieldMask & whichField))
+        _sfParentMenu.syncWith(pOther->_sfParentMenu);
+
 
 }
 #else
@@ -246,6 +277,9 @@ void MenuItemBase::executeSyncImpl(      MenuItemBase *pOther,
 
     if(FieldBits::NoField != (SelectedFieldMask & whichField))
         _sfSelected.syncWith(pOther->_sfSelected);
+
+    if(FieldBits::NoField != (ParentMenuFieldMask & whichField))
+        _sfParentMenu.syncWith(pOther->_sfParentMenu);
 
 
 

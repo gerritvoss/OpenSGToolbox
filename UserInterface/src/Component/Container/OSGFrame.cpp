@@ -82,6 +82,16 @@ void Frame::keyPressed(const KeyEvent& e)
 {
     if(!getLockInput())
     {
+        //Check for Accelerator Keys
+        UInt32 RelevantModifiers = (e.getModifiers() & KeyEvent::KEY_MODIFIER_ALT) |
+                                   (e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL) |
+                                   (e.getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT) |
+                                   (e.getModifiers() & KeyEvent::KEY_MODIFIER_META);
+        KeyAcceleratorMapItor MapItor = _KeyAcceleratorMap.find(KeyEvent::getHashable(e.getKey(), RelevantModifiers));
+        if(MapItor != _KeyAcceleratorMap.end())
+        {
+            (*MapItor).second->acceleratorTyped(KeyAcceleratorEvent(FramePtr(this), e.getTimeStamp(), e.getKey(), e.getModifiers(), e.getWindow()));
+        }
 	    //Send Key event to Component that has Focus
 	    //If there is not Focused Component then do nothing
 	    if(getFocusedComponent() != NullFC &&
@@ -148,6 +158,18 @@ void Frame::mouseClicked(const MouseEvent& e)
 {
     if(!getLockInput())
     {
+        if(getMenuBar() != NullFC)
+        {
+	        bool isContained;
+            isContained = getMenuBar()->isContained(e.getLocation(), true);
+		    checkMouseEnterExit(e,e.getLocation(),getMenuBar(),isContained,e.getViewport());
+		    if(isContained)
+		    {
+			    getMenuBar()->mouseClicked(e);
+                Component::mouseClicked(e);
+			    return;
+		    }
+        }
         Container::mouseClicked(e);
     }
 }
@@ -156,6 +178,12 @@ void Frame::mouseEntered(const MouseEvent& e)
 {
     if(!getLockInput())
     {
+        if(getMenuBar() != NullFC)
+        {
+	        bool isContained;
+            isContained = getMenuBar()->isContained(e.getLocation(), true);
+		    checkMouseEnterExit(e,e.getLocation(),getMenuBar(),isContained,e.getViewport());
+        }
         Container::mouseEntered(e);
     }
 }
@@ -164,6 +192,12 @@ void Frame::mouseExited(const MouseEvent& e)
 {
     if(!getLockInput())
     {
+        if(getMenuBar() != NullFC)
+        {
+	        bool isContained;
+            isContained = getMenuBar()->isContained(e.getLocation(), true);
+		    checkMouseEnterExit(e,e.getLocation(),getMenuBar(),isContained,e.getViewport());
+        }
         Container::mouseExited(e);
     }
 }
@@ -172,6 +206,18 @@ void Frame::mousePressed(const MouseEvent& e)
 {
     if(!getLockInput())
     {
+        if(getMenuBar() != NullFC)
+        {
+	        bool isContained;
+            isContained = getMenuBar()->isContained(e.getLocation(), true);
+		    checkMouseEnterExit(e,e.getLocation(),getMenuBar(),isContained,e.getViewport());
+		    if(isContained)
+		    {
+			    getMenuBar()->mousePressed(e);
+                Component::mousePressed(e);
+			    return;
+		    }
+        }
         Container::mousePressed(e);
     }
 }
@@ -180,6 +226,18 @@ void Frame::mouseReleased(const MouseEvent& e)
 {
     if(!getLockInput())
     {
+        if(getMenuBar() != NullFC)
+        {
+	        bool isContained;
+            isContained = getMenuBar()->isContained(e.getLocation(), true);
+		    checkMouseEnterExit(e,e.getLocation(),getMenuBar(),isContained,e.getViewport());
+		    if(isContained)
+		    {
+			    getMenuBar()->mouseReleased(e);
+                Component::mouseReleased(e);
+			    return;
+		    }
+        }
         Container::mouseReleased(e);
     }
 }
@@ -189,6 +247,18 @@ void Frame::mouseMoved(const MouseEvent& e)
 {
     if(!getLockInput())
     {
+        if(getMenuBar() != NullFC)
+        {
+	        bool isContained;
+            isContained = getMenuBar()->isContained(e.getLocation(), true);
+		    checkMouseEnterExit(e,e.getLocation(),getMenuBar(),isContained,e.getViewport());
+		    if(isContained)
+		    {
+			    getMenuBar()->mouseMoved(e);
+                Component::mouseMoved(e);
+			    return;
+		    }
+        }
         Container::mouseMoved(e);
     }
 }
@@ -197,6 +267,18 @@ void Frame::mouseDragged(const MouseEvent& e)
 {
     if(!getLockInput())
     {
+        if(getMenuBar() != NullFC)
+        {
+	        bool isContained;
+            isContained = getMenuBar()->isContained(e.getLocation(), true);
+		    checkMouseEnterExit(e,e.getLocation(),getMenuBar(),isContained,e.getViewport());
+		    if(isContained)
+		    {
+			    getMenuBar()->mouseDragged(e);
+                Component::mouseDragged(e);
+			    return;
+		    }
+        }
         Container::mouseDragged(e);
     }
 }
@@ -246,6 +328,12 @@ void Frame::drawInternal(const GraphicsPtr TheGraphics) const
     {
         getActivePopupMenus().getValue(i)->draw(TheGraphics);
     }
+
+    //If I have a MenuBar then Draw it
+    if(getMenuBar() != NullFC)
+    {
+        getMenuBar()->draw(TheGraphics);
+    }
 }
 
 void Frame::destroyPopupMenu(void)
@@ -273,7 +361,7 @@ void Frame::getMenuBarBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 {
     //Get Insets Bounds
     Pnt2s InsetsTopLeft, InsetsBottomRight;
-    getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+    Container::getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 
     TopLeft = InsetsTopLeft;
     if(getMenuBar() == NullFC)
@@ -292,7 +380,7 @@ void Frame::getContentPaneBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 {
     //Get Insets Bounds
     Pnt2s InsetsTopLeft, InsetsBottomRight;
-    getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+    Container::getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 
     BottomRight = InsetsBottomRight;
     if(getMenuBar() == NullFC)
@@ -305,6 +393,38 @@ void Frame::getContentPaneBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
         getMenuBar()->getBounds(MenuBarTopLeft, MenuBarBottomRight);
         TopLeft = InsetsTopLeft + Vec2s(0, (MenuBarBottomRight.y() - MenuBarTopLeft.y()));
     }
+}
+
+void Frame::getInsideInsetsBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+{
+    getContentPaneBounds(TopLeft, BottomRight);
+}
+
+void Frame::updateLayout(void)
+{
+    //If I have a MenuBar Update it's layout
+    if(getMenuBar() != NullFC)
+    {
+        Pnt2s MenuTopLeft, MenuBottomRight;
+        getMenuBar()->updateLayout();
+        getMenuBarBounds(MenuTopLeft, MenuBottomRight);
+        beginEditCP(getMenuBar(), MenuBar::PositionFieldMask | MenuBar::SizeFieldMask);
+        getMenuBar()->setPosition(Pnt2s(0,0));
+        getMenuBar()->setSize(Vec2s( MenuBottomRight.x() - MenuTopLeft.x(), getMenuBar()->getPreferredSize().y()));
+        endEditCP(getMenuBar(), MenuBar::PositionFieldMask | MenuBar::SizeFieldMask);
+    }
+
+    Container::updateLayout();
+}
+
+void Frame::addKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers, KeyAcceleratorListenerPtr Listener)
+{
+    _KeyAcceleratorMap[KeyEvent::getHashable(TheKey, Modifiers)] = Listener;
+}
+
+void Frame::removeKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers)
+{
+    _KeyAcceleratorMap.erase(KeyEvent::getHashable(TheKey, Modifiers));
 }
 
 /*-------------------------------------------------------------------------*\
@@ -358,6 +478,13 @@ void Frame::changed(BitVector whichField, UInt32 origin)
         beginEditCP(FramePtr(this), LockInputFieldMask);
             setLockInput(true);
         endEditCP(FramePtr(this), LockInputFieldMask);
+    }
+    if( (whichField & MenuBarFieldMask) && getMenuBar() != NullFC)
+    {
+        beginEditCP(getMenuBar(), ParentContainerFieldMask | ParentFrameFieldMask);
+            getMenuBar()->setParentContainer(ContainerPtr(this));
+            getMenuBar()->setParentFrame(getParentFrame());
+        endEditCP(getMenuBar(), ParentContainerFieldMask | ParentFrameFieldMask);
     }
 }
 

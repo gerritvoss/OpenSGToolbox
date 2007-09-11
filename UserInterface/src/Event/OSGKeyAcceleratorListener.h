@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dkabala@vrac.iastate.edu                                       *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -12,7 +12,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 2.                               *
+ * by the Free Software Foundation, version 3.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -24,57 +24,31 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSGKEYACCELERATORLISTENER_H_
+#define _OSGKEYACCELERATORLISTENER_H_
+#ifdef __sgi
+#pragma once
+#endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPopupMenu.h"
+#include "OSGUserInterfaceDef.h"
+
+#include <OpenSG/Input/OSGEventListener.h>
+#include "OSGKeyAcceleratorEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-inline
-MenuItemPtr Menu::getItem(const UInt32& Index)
+class OSG_USERINTERFACELIB_DLLMAPPING KeyAcceleratorListener : public EventListener
 {
-    return getInternalPopupMenu()->getItem(Index);
-}
+   /*=========================  PUBLIC  ===============================*/
+public:
 
-inline
-UInt32 Menu::getNumItems(void) const
-{
-    return getInternalPopupMenu()->getNumItems();
-}
+   virtual void acceleratorTyped(const KeyAcceleratorEvent& e) = 0;
+};
 
-inline
-bool Menu::getPopupVisible(void) const
-{
-    return getInternalPopupMenu()->getVisible();
-}
-
-inline
-Menu::PopupUpdateListener::PopupUpdateListener(MenuPtr TheMenu) :
-									_Menu(TheMenu),
-									_PopupElps(0.0)
-{
-}
-
-inline
-void Menu::PopupUpdateListener::reset(void)
-{
-    _PopupElps = 0.0;
-}
+typedef KeyAcceleratorListener* KeyAcceleratorListenerPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGMENU_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-
+#endif /* _OSGKEYACCELERATORLISTENER_H_ */

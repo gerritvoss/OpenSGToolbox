@@ -57,6 +57,38 @@ void LabelMenuItem::removeActionListener(ActionListenerPtr Listener)
       _ActionListeners.erase(EraseIter);
    }
 }
+
+inline
+LabelMenuItem::LabelMenuItemKeyAcceleratorListener::LabelMenuItemKeyAcceleratorListener(LabelMenuItemPtr TheLabelMenuItem) :
+									_LabelMenuItem(TheLabelMenuItem)
+{
+}
+
+inline
+LabelMenuItem::KeyAcceleratorMenuFlashUpdateListener::KeyAcceleratorMenuFlashUpdateListener(LabelMenuItemPtr TheLabelMenuItem) :
+									_LabelMenuItem(TheLabelMenuItem),
+									_FlashElps(0.0)
+{
+}
+
+inline
+void LabelMenuItem::KeyAcceleratorMenuFlashUpdateListener::reset(void)
+{
+    _FlashElps = 0.0;
+}
+
+
+inline
+void LabelMenuItem::setDrawAsThoughSelected(bool Selected)
+{
+    _DrawAsThoughSelected = Selected;
+}
+
+inline
+bool LabelMenuItem::getDrawAsThoughSelected(void) const
+{
+    return _DrawAsThoughSelected;
+}
 OSG_END_NAMESPACE
 
 #define OSGLABELMENUITEM_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

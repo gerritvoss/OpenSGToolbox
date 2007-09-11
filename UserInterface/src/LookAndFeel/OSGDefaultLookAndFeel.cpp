@@ -60,6 +60,7 @@
 #include "Component/OSGImageComponent.h"
 #include "Util/OSGUIDefines.h"
 #include "Graphics/UIDrawObjects/OSGRectUIDrawObject.h"
+#include "Graphics/UIDrawObjects/OSGPolygonUIDrawObject.h"
 #include "Graphics/UIDrawObjects/OSGArcUIDrawObject.h"
 #include "Graphics/UIDrawObjects/OSGDiscUIDrawObject.h"
 #include "Graphics/UIDrawObjects/OSGLineUIDrawObject.h"
@@ -116,6 +117,11 @@ Time DefaultLookAndFeel::getToolTipPopupTime(void) const
 Time DefaultLookAndFeel::getSubMenuPopupTime(void) const
 {
 	return _SubMenuPopupTime;
+}
+
+Time DefaultLookAndFeel::getKeyAcceleratorMenuFlashTime(void) const
+{
+	return _KeyAcceleratorMenuFlashTime;
 }
 
 void DefaultLookAndFeel::init(void)
@@ -1042,6 +1048,22 @@ void DefaultLookAndFeel::init(void)
 		DefaultMenuSelectedBackground->setColor(Color4f(0.3,0.3,1.0,1.0));
 	endEditCP(DefaultMenuSelectedBackground);
 
+    
+    //Expanding Draw Object
+	PolygonUIDrawObjectPtr MenuExpandablePolygon = PolygonUIDrawObject::create();
+	beginEditCP(MenuExpandablePolygon);
+		MenuExpandablePolygon->setColor(Color4f(0.0,0.0,0.0,1.0));
+		MenuExpandablePolygon->setOpacity(1.0);
+        MenuExpandablePolygon->getVerticies().addValue(Pnt2s(0,0));
+        MenuExpandablePolygon->getVerticies().addValue(Pnt2s(0,7));
+        MenuExpandablePolygon->getVerticies().addValue(Pnt2s(4,4));
+	endEditCP(MenuExpandablePolygon);
+
+	UIDrawObjectCanvasPtr defaultMenuDrawObject = UIDrawObjectCanvas::create();
+	beginEditCP(defaultMenuDrawObject);
+	   defaultMenuDrawObject->getDrawObjects().addValue(MenuExpandablePolygon);
+	endEditCP(defaultMenuDrawObject);
+
 	//Default Menu
 	MenuPtr DefaultMenu = Menu::create();
 	beginEditCP(DefaultMenu);
@@ -1080,6 +1102,9 @@ void DefaultLookAndFeel::init(void)
 		DefaultMenu->setSelectedTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultMenu->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultMenu->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
+
+        //Expanding Draw Object
+        DefaultMenu->setExpandDrawObject(defaultMenuDrawObject);
 	endEditCP(DefaultMenu);
 	
     Menu::getClassType().setPrototype(DefaultMenu);
@@ -1140,11 +1165,7 @@ void DefaultLookAndFeel::init(void)
     
 	//************************** MenuBar*****************************
 	//Default MenuBarBorder
-	LineBorderPtr DefaultMenuBarBorder = LineBorder::create();
-	beginEditCP(DefaultMenuBarBorder);
-		DefaultMenuBarBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
-		DefaultMenuBarBorder->setWidth(1);
-	endEditCP(DefaultMenuBarBorder);
+	EmptyBorderPtr DefaultMenuBarBorder = EmptyBorder::create();
 
 	//Default MenuBarBackground
 	ColorUIBackgroundPtr DefaultMenuBarBackground = ColorUIBackground::create();
@@ -1329,7 +1350,8 @@ DefaultLookAndFeel::DefaultLookAndFeel(void) :
     Inherited(),
 		_TextCaretRate(1.0),
 		_ToolTipPopupTime(1.5),
-		_SubMenuPopupTime(0.25)
+		_SubMenuPopupTime(0.25),
+        _KeyAcceleratorMenuFlashTime(0.15)
 {
 
 }
@@ -1338,7 +1360,8 @@ DefaultLookAndFeel::DefaultLookAndFeel(const DefaultLookAndFeel &source) :
     Inherited(source),
 		_TextCaretRate(source._TextCaretRate),
 		_ToolTipPopupTime(source._ToolTipPopupTime),
-		_SubMenuPopupTime(source._SubMenuPopupTime)
+		_SubMenuPopupTime(source._SubMenuPopupTime),
+        _KeyAcceleratorMenuFlashTime(source._KeyAcceleratorMenuFlashTime)
 {
 }
 

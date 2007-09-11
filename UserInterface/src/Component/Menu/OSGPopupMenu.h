@@ -98,6 +98,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
     void removePopupMenuListener(PopupMenuListenerPtr Listener);
 
     void cancel(void);
+
+    void clearSelection(void);
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:

@@ -2152,6 +2152,15 @@
 					RelativePath="..\..\src\Event\OSGFocusListener.h">
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGKeyAcceleratorEvent.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGKeyAcceleratorEvent.inl">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGKeyAcceleratorListener.h">
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGMenuEvent.h">
 				</File>
 				<File

@@ -58,4 +58,13 @@ A UI Menu.
 		access="public"
 	>
 	</Field>
+    <Field
+          name="MenuItems"
+          type="MenuItemPtr"
+          cardinality="multi"
+          visibility="external"
+		    header="Component/Menu/OSGMenuItemFields.h"
+          access="protected"
+          >
+    </Field>
 </FieldContainer>

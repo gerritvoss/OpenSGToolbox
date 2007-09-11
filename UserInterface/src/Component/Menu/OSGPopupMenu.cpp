@@ -144,7 +144,7 @@ void PopupMenu::addItem(MenuItemPtr Item, const UInt32& Index)
 {
     if(Index < getChildren().size())
     {
-        MFComponentPtr::iterator Itor;
+        MFComponentPtr::iterator Itor(getChildren().begin());
         for(UInt32 i(0) ; i<Index ; ++i){++Itor;}
         beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
             getChildren().insert(Itor, Item);
@@ -167,7 +167,7 @@ void PopupMenu::removeItem(const UInt32& Index)
 {
     if(Index < getChildren().size())
     {
-        MFComponentPtr::iterator Itor;
+        MFComponentPtr::iterator Itor(getChildren().begin());
         for(UInt32 i(0) ; i<Index ; ++i){++Itor;}
         beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
             getChildren().erase(Itor);
@@ -223,6 +223,11 @@ void PopupMenu::cancel(void)
         _SelectionModel->clearSelection();
         producePopupMenuCanceled(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
     }
+}
+
+void PopupMenu::clearSelection(void)
+{
+    _SelectionModel->clearSelection();
 }
 
 /*-------------------------------------------------------------------------*\

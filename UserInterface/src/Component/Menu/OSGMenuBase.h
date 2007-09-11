@@ -72,6 +72,7 @@
 #include <OpenSG/OSGReal32Fields.h> // SubMenuDelay type
 #include <OpenSG/OSGBoolFields.h> // TopLevelMenu type
 #include "Component/OSGUIDrawObjectCanvas.h" // ExpandDrawObject type
+#include "Component/Menu/OSGMenuItemFields.h" // MenuItems type
 
 #include "OSGMenuFields.h"
 
@@ -100,7 +101,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public LabelMenuItem
         SubMenuDelayFieldId      = InternalPopupMenuFieldId + 1,
         TopLevelMenuFieldId      = SubMenuDelayFieldId      + 1,
         ExpandDrawObjectFieldId  = TopLevelMenuFieldId      + 1,
-        NextFieldId              = ExpandDrawObjectFieldId  + 1
+        MenuItemsFieldId         = ExpandDrawObjectFieldId  + 1,
+        NextFieldId              = MenuItemsFieldId         + 1
     };
 
     static const OSG::BitVector ButtonFieldMask;
@@ -108,6 +110,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public LabelMenuItem
     static const OSG::BitVector SubMenuDelayFieldMask;
     static const OSG::BitVector TopLevelMenuFieldMask;
     static const OSG::BitVector ExpandDrawObjectFieldMask;
+    static const OSG::BitVector MenuItemsFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -204,6 +207,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public LabelMenuItem
     SFReal32            _sfSubMenuDelay;
     SFBool              _sfTopLevelMenu;
     SFUIDrawObjectCanvasPtr   _sfExpandDrawObject;
+    MFMenuItemPtr       _mfMenuItems;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -226,9 +230,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBase : public LabelMenuItem
     /*! \{                                                                 */
 
            SFPopupMenuPtr      *getSFInternalPopupMenu(void);
+           MFMenuItemPtr       *getMFMenuItems      (void);
 
            PopupMenuPtr        &getInternalPopupMenu(void);
      const PopupMenuPtr        &getInternalPopupMenu(void) const;
+           MenuItemPtr         &getMenuItems      (UInt32 index);
+           MFMenuItemPtr       &getMenuItems      (void);
+     const MFMenuItemPtr       &getMenuItems      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

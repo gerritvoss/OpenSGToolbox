@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dkabala@vrac.iastate.edu                                       *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -12,7 +12,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 2.                               *
+ * by the Free Software Foundation, version 3.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -24,57 +24,42 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
-
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSGKEYACCELERATOREVENT_H_
+#define _OSGKEYACCELERATOREVENT_H_
+#ifdef __sgi
+#pragma once
+#endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPopupMenu.h"
+#include "OSGUserInterfaceDef.h"
+
+#include <OpenSG/Input/OSGEvent.h>
+#include <OpenSG/Input/OSGKeyEvent.h>
 
 OSG_BEGIN_NAMESPACE
 
-inline
-MenuItemPtr Menu::getItem(const UInt32& Index)
+class OSG_USERINTERFACELIB_DLLMAPPING KeyAcceleratorEvent : public Event
 {
-    return getInternalPopupMenu()->getItem(Index);
-}
+/*=========================  PUBLIC  ===============================*/
+public:
+    enum EventType{KEYACCELERATOR_TRIGGERED=0};
 
-inline
-UInt32 Menu::getNumItems(void) const
-{
-    return getInternalPopupMenu()->getNumItems();
-}
+    EventType getEvent(void) const;
+	UInt32 getModifiers(void) const;
+    KeyEvent::Key getKey(void) const;
+    WindowPtr getWindow(void) const;
 
-inline
-bool Menu::getPopupVisible(void) const
-{
-    return getInternalPopupMenu()->getVisible();
-}
-
-inline
-Menu::PopupUpdateListener::PopupUpdateListener(MenuPtr TheMenu) :
-									_Menu(TheMenu),
-									_PopupElps(0.0)
-{
-}
-
-inline
-void Menu::PopupUpdateListener::reset(void)
-{
-    _PopupElps = 0.0;
-}
+    KeyAcceleratorEvent(FieldContainerPtr Source, Time TimeStamp, KeyEvent::Key TheKey, UInt32 Modifiers, WindowPtr TheWindow, EventType TheEvent = KEYACCELERATOR_TRIGGERED);
+private:
+    EventType _Event;
+    
+    KeyEvent::Key _Key;
+    UInt32 _Modifiers;
+    WindowPtr _Window;
+};
 
 OSG_END_NAMESPACE
 
-#define OSGMENU_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+#include "OSGKeyAcceleratorEvent.inl"
 
+#endif /* _OSGKEYACCELERATOREVENT_H_ */

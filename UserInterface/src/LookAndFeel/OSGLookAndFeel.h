@@ -80,6 +80,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeel : public LookAndFeelBase
 	virtual Time getTextCaretRate(void) const = 0;
 	virtual Time getToolTipPopupTime(void) const = 0;
 	virtual Time getSubMenuPopupTime(void) const = 0;
+    virtual Time getKeyAcceleratorMenuFlashTime(void) const = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

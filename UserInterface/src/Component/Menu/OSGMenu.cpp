@@ -85,6 +85,11 @@ void Menu::initMethod (void)
 void Menu::drawInternal(const GraphicsPtr Graphics) const
 {
     LabelMenuItem::drawInternal(Graphics);
+
+    if(getExpandDrawObject() != NullFC && !getTopLevelMenu())
+    {
+        getExpandDrawObject()->draw(Graphics);
+    }
 }
 
 void Menu::mouseReleased(const MouseEvent& e)
@@ -94,49 +99,95 @@ void Menu::mouseReleased(const MouseEvent& e)
 
 void Menu::setPopupVisible(bool Visible)
 {
-    //Set the Submenu's position to the correct place
-    //Make the Submenu visible
-    beginEditCP(getInternalPopupMenu(), PopupMenu::VisibleFieldMask | PopupMenu::PositionFieldMask);
+    beginEditCP(getInternalPopupMenu(), PopupMenu::VisibleFieldMask);
         getInternalPopupMenu()->setVisible(Visible);
-        if(getTopLevelMenu())
-        {
-            getInternalPopupMenu()->setPosition(ComponentToFrame(Pnt2s(0,0),MenuPtr(this)) + Vec2s(0,getSize().y()));        
-        }
-        else
-        {
-            getInternalPopupMenu()->setPosition(ComponentToFrame(Pnt2s(0,0),MenuPtr(this)) + Vec2s(getSize().x(),0));
-        }
-    endEditCP(getInternalPopupMenu(), PopupMenu::VisibleFieldMask | PopupMenu::PositionFieldMask);
-
+    endEditCP(getInternalPopupMenu(), PopupMenu::VisibleFieldMask);
     if(Visible)
-    {
+    { 
+        //Set the Submenu's position to the correct place
+        //Make the Submenu visible
+        beginEditCP(getInternalPopupMenu(), PopupMenu::PositionFieldMask);
+            if(getTopLevelMenu())
+            {
+                getInternalPopupMenu()->setPosition(ComponentToFrame(Pnt2s(0,0),MenuPtr(this)) + Vec2s(0,getSize().y()));        
+            }
+            else
+            {
+                getInternalPopupMenu()->setPosition(ComponentToFrame(Pnt2s(0,0),MenuPtr(this)) + Vec2s(getSize().x(),0));
+            }
+        endEditCP(getInternalPopupMenu(), PopupMenu::PositionFieldMask);
         beginEditCP(getParentFrame(), Frame::ActivePopupMenusFieldMask);
             getParentFrame()->getActivePopupMenus().addValue(getInternalPopupMenu());
         endEditCP(getParentFrame(), Frame::ActivePopupMenusFieldMask);
     }
     else
     {
+        getInternalPopupMenu()->clearSelection();
     }
 }
 
-/*void Menu::mouseEntered(const MouseEvent& e)
+void Menu::addItem(MenuItemPtr Item)
 {
-    beginEditCP(MenuItemPtr(this), SelectedFieldMask);
-        setSelected(true);
-    endEditCP(MenuItemPtr(this), SelectedFieldMask);
-    
-    MenuItem::mouseEntered(e);
+    getInternalPopupMenu()->addItem(Item);
+    beginEditCP(MenuPtr(this), MenuItemsFieldMask);
+        getMenuItems().push_back(Item);
+    endEditCP(MenuPtr(this), MenuItemsFieldMask);
+    beginEditCP(Item, MenuItem::ParentMenuFieldMask | ParentFrameFieldMask);
+        Item->setParentMenu(MenuPtr(this));
+        Item->setParentFrame(getParentFrame());
+    endEditCP(Item, MenuItem::ParentMenuFieldMask | ParentFrameFieldMask);
 }
 
-void Menu::mouseExited(const MouseEvent& e)
+void Menu::addItem(MenuItemPtr Item, const UInt32& Index)
 {
-    beginEditCP(MenuItemPtr(this), SelectedFieldMask);
-        setSelected(false);
-    endEditCP(MenuItemPtr(this), SelectedFieldMask);
+    getInternalPopupMenu()->addItem(Item, Index);
     
-    MenuItem::mouseExited(e);
-}*/
+    MFMenuItemPtr::iterator Itor(getMenuItems().begin());
+    for(UInt32 i(0) ; i<Index ; ++i){++Itor;}
+    beginEditCP(MenuPtr(this), MenuItemsFieldMask);
+        getMenuItems().insert(Itor, Item);
+    endEditCP(MenuPtr(this), MenuItemsFieldMask);
 
+    beginEditCP(Item, MenuItem::ParentMenuFieldMask | ParentFrameFieldMask);
+        Item->setParentMenu(MenuPtr(this));
+        Item->setParentFrame(getParentFrame());
+    endEditCP(Item, MenuItem::ParentMenuFieldMask | ParentFrameFieldMask);
+}
+
+void Menu::removeItem(MenuItemPtr Item)
+{
+    getInternalPopupMenu()->removeItem(Item);
+
+    beginEditCP(Item, MenuItem::ParentMenuFieldMask | ParentFrameFieldMask);
+        Item->setParentMenu(NullFC);
+        Item->setParentFrame(NullFC);
+    endEditCP(Item, MenuItem::ParentMenuFieldMask | ParentFrameFieldMask);
+    
+    MFMenuItemPtr::iterator FindResult = getMenuItems().find(Item);
+    if(FindResult != getMenuItems().end())
+    {
+        beginEditCP(MenuPtr(this), MenuItemsFieldMask);
+            getMenuItems().erase(FindResult);
+        endEditCP(MenuPtr(this), MenuItemsFieldMask);
+    }
+}
+
+void Menu::removeItem(const UInt32& Index)
+{
+    MFMenuItemPtr::iterator Itor(getMenuItems().begin());
+    for(UInt32 i(0) ; i<Index ; ++i){++Itor;}
+    beginEditCP((*Itor), MenuItem::ParentMenuFieldMask | ParentFrameFieldMask);
+        (*Itor)->setParentMenu(NullFC);
+        (*Itor)->setParentFrame(NullFC);
+    endEditCP((*Itor), MenuItem::ParentMenuFieldMask | ParentFrameFieldMask);
+
+    beginEditCP(MenuPtr(this), MenuItemsFieldMask);
+        getMenuItems().erase(Itor);
+    endEditCP(MenuPtr(this), MenuItemsFieldMask);
+
+
+    getInternalPopupMenu()->removeItem(Index);
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -174,6 +225,13 @@ void Menu::changed(BitVector whichField, UInt32 origin)
         beginEditCP(getInternalPopupMenu(), ParentFrameFieldMask);
             getInternalPopupMenu()->setParentFrame(getParentFrame());
         endEditCP(getInternalPopupMenu(), ParentFrameFieldMask);
+
+        for(UInt32 i(0) ; i<getMenuItems().size() ; ++i)
+        {
+            beginEditCP(getMenuItems().getValue(i), ParentFrameFieldMask);
+                getMenuItems().getValue(i)->setParentFrame(getParentFrame());
+            endEditCP(getMenuItems().getValue(i), ParentFrameFieldMask);
+        }
     }
     
     if(whichField & SelectedFieldMask)
@@ -199,6 +257,22 @@ void Menu::changed(BitVector whichField, UInt32 origin)
                 getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_PopupUpdateListener);
             }
         }
+    }
+
+    if(whichField & SizeFieldMask)
+    {
+        //Calculate Alignment
+        Pnt2s TopLeft, BottomRight;
+        getInsideBorderBounds(TopLeft, BottomRight);
+        Pnt2s ExpandTopLeft, ExpandBottomRight;
+        getExpandDrawObject()->getBounds(ExpandTopLeft, ExpandBottomRight);
+
+        Pnt2s AlignedPosition;
+        AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (ExpandBottomRight - ExpandTopLeft),0.5, 1.0);
+
+        beginEditCP(getExpandDrawObject(), PositionFieldMask);
+            getExpandDrawObject()->setPosition(AlignedPosition);
+        endEditCP(getExpandDrawObject(), PositionFieldMask);
     }
 
 }
