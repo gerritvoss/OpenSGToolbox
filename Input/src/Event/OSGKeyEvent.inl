@@ -35,4 +35,10 @@ KeyEvent::KeyEvent(FieldContainerPtr Source, Time TimeStamp, Key TheKey, UInt32 
 {
 }
 
+inline
+UInt64 KeyEvent::ModifiedKey::getHashable(void) const
+{
+    return (static_cast<UInt64>(_Modifiers) << 32) | (static_cast<UInt64>(_Key));
+}
+
 OSG_END_NAMESPACE

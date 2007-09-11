@@ -18,6 +18,11 @@ std::string KeyEvent::getStringFromKey(Key k, UInt32 Modifier)
     }
 }
 
+UInt64 KeyEvent::getHashable(Key TheKey, UInt32 Modifiers)
+{
+    return (static_cast<UInt64>(Modifiers) << 32) | (static_cast<UInt64>(TheKey));
+}
+
 std::string KeyEvent::getStringFromNonDisplayedKey(Key k, UInt32 Modifier)
 {
     std::string Result("");

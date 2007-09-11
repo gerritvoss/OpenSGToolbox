@@ -450,7 +450,8 @@ void WindowEventProducer::produceWindowExited(void)
 void WindowEventProducer::produceUpdate(const Time& ElapsedTime)
 {
    UpdateEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), ElapsedTime );
-   for(UpdateListenerSetConstItor SetItor(_UpdateListeners.begin()) ; SetItor != _UpdateListeners.end() ; ++SetItor)
+   UpdateListenerSet UpdateSet(_UpdateListeners);
+   for(UpdateListenerSetConstItor SetItor(UpdateSet.begin()) ; SetItor != UpdateSet.end() ; ++SetItor)
    {
       (*SetItor)->update(TheEvent);
    }

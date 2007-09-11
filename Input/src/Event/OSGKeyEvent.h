@@ -198,7 +198,17 @@ class OSG_INPUTLIB_DLLMAPPING KeyEvent : public Event
          KEY_Z
       };
 
+    struct ModifiedKey
+    {
+    public:
+        Key _Key;
+        UInt32 _Modifiers;
+
+        UInt64 getHashable(void) const;
+    };
+
 	Key getKey(void) const;
+    static UInt64 getHashable(Key TheKey, UInt32 Modifiers);
 	static UChar8 getUpperLetterKey(Key k, UInt32 Modifier);
 	static UChar8 getLowerLetterKey(Key k, UInt32 Modifier);
 	static UChar8 getNonLetterKey(Key k, UInt32 Modifier);
