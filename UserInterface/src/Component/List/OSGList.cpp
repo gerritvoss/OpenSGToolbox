@@ -197,7 +197,11 @@ void List::mousePressed(const MouseEvent& e)
 void List::keyTyped(const KeyEvent& e)
 {
 	bool noFocus = true;
-	if (e.getKey() == KeyEvent::KEY_UP || e.getKey() == KeyEvent::KEY_DOWN || e.getKey() == KeyEvent::KEY_ENTER)
+	if (e.getKey() == KeyEvent::KEY_UP || 
+        e.getKey() == KeyEvent::KEY_DOWN || 
+        e.getKey() == KeyEvent::KEY_RIGHT || 
+        e.getKey() == KeyEvent::KEY_LEFT || 
+        e.getKey() == KeyEvent::KEY_ENTER)
 	{
 		for(Int32 i(getChildren().size()-1) ; i>=0 && noFocus; --i)
 		{
@@ -205,51 +209,57 @@ void List::keyTyped(const KeyEvent& e)
 			{
 				noFocus = false; // this exits the loop
 				UInt32 index(0);
-				switch (e.getKey())
-				{
-					case KeyEvent::KEY_UP:
-					case KeyEvent::KEY_DOWN:
-						if (e.getKey() == KeyEvent::KEY_DOWN)
-							index = (i+1) % getChildren().size();
-						else
-							index = (i-1+getChildren().size()) % getChildren().size();
+                bool UpdateSelectionIndex(false);
+			    if ( (getCellLayout() == VERTICAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_UP) ||
+                    (getCellLayout() == HORIZONTAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_LEFT))
+			    {
+                    index = (i-1+getChildren().size()) % getChildren().size();
+                    UpdateSelectionIndex = true;
+			    }
+			    else if ((getCellLayout() == VERTICAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_DOWN) ||
+                    (getCellLayout() == HORIZONTAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_RIGHT))
+			    {
+                    index = (i+1) % getChildren().size();
+                    UpdateSelectionIndex = true;
+			    }
+                else if(e.getKey() == KeyEvent::KEY_ENTER)
+                {
+					if (e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+					{
+						getSelectionModel()->removeSelectionInterval(i,i);// this toggles the interval
+					}
+					else
+					{
+						getSelectionModel()->setSelectionInterval(i, i);
+					}
+                }
 
-						getChildren().getValue(index)->takeFocus();
-						getSelectionModel()->setLeadSelectionIndex(index);
-						if (e.getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
-						{
-							getSelectionModel()->setSelectionInterval(getSelectionModel()->getAnchorSelectionIndex(), index);
-						}
-						else
-						{
-							getSelectionModel()->setAnchorSelectionIndex(index);
-						}
-						break;
-					
-					case KeyEvent::KEY_ENTER: 
-						if (e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
-						{
-							getSelectionModel()->removeSelectionInterval(i,i);// this toggles the interval
-						}
-						else
-						{
-							getSelectionModel()->setSelectionInterval(i, i);
-						}
-						break;
-					default:
-						break;
-				}
+                if(UpdateSelectionIndex)
+                {
+					getChildren().getValue(index)->takeFocus();
+					getSelectionModel()->setLeadSelectionIndex(index);
+					if (e.getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+					{
+						getSelectionModel()->setSelectionInterval(getSelectionModel()->getAnchorSelectionIndex(), index);
+					}
+					else
+					{
+						getSelectionModel()->setAnchorSelectionIndex(index);
+					}
+                }
 			}
 		}	
 		if (noFocus)
 		{
 			UInt32 index(0);
-			if (e.getKey() == KeyEvent::KEY_UP)
+			if ( (getCellLayout() == VERTICAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_UP) ||
+                (getCellLayout() == HORIZONTAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_LEFT))
 			{
 				index = getChildren().size() - 1;
 				getChildren().getValue(getChildren().size() - 1)->takeFocus();
 			}
-			else if (e.getKey() == KeyEvent::KEY_DOWN)
+			else if ((getCellLayout() == VERTICAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_DOWN) ||
+                (getCellLayout() == HORIZONTAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_RIGHT))
 			{
 				getChildren().getValue(0)->takeFocus();
 			}
@@ -351,10 +361,24 @@ void List::updateLayout(void)
 		{
 			beginEditCP(getChildren().getValue(i), PositionFieldMask | SizeFieldMask);
 			   getChildren().getValue(i)->setPosition(Position);
-			   getChildren().getValue(i)->setSize( Vec2s(getSize().x(), getChildren().getValue(i)->getPreferredSize().y()) );
+               if(getCellLayout() == VERTICAL_ALIGNMENT)
+               {
+			      getChildren().getValue(i)->setSize( Vec2s(getSize().x(), getChildren().getValue(i)->getPreferredSize().y()) );
+               }
+               else
+               {
+                  getChildren().getValue(i)->setSize( Vec2s(getChildren().getValue(i)->getPreferredSize().x(), getSize().y()) );
+               }
 			endEditCP(getChildren().getValue(i), PositionFieldMask | SizeFieldMask);
 
-			Position[1] += getChildren().getValue(i)->getSize()[1];
+            if(getCellLayout() == VERTICAL_ALIGNMENT)
+            {
+			    Position[1] += getChildren().getValue(i)->getSize()[1];
+            }
+            else
+            {
+			    Position[0] += getChildren().getValue(i)->getSize()[0];
+            }
 		}
 	}
 }

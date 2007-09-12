@@ -176,28 +176,28 @@ void Frame::mouseClicked(const MouseEvent& e)
 
 void Frame::mouseEntered(const MouseEvent& e)
 {
+    if(getMenuBar() != NullFC)
+    {
+	    bool isContained;
+        isContained = getMenuBar()->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getMenuBar(),isContained,e.getViewport());
+    }
     if(!getLockInput())
     {
-        if(getMenuBar() != NullFC)
-        {
-	        bool isContained;
-            isContained = getMenuBar()->isContained(e.getLocation(), true);
-		    checkMouseEnterExit(e,e.getLocation(),getMenuBar(),isContained,e.getViewport());
-        }
         Container::mouseEntered(e);
     }
 }
 
 void Frame::mouseExited(const MouseEvent& e)
 {
+    if(getMenuBar() != NullFC)
+    {
+	    bool isContained;
+        isContained = getMenuBar()->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getMenuBar(),isContained,e.getViewport());
+    }
     if(!getLockInput())
     {
-        if(getMenuBar() != NullFC)
-        {
-	        bool isContained;
-            isContained = getMenuBar()->isContained(e.getLocation(), true);
-		    checkMouseEnterExit(e,e.getLocation(),getMenuBar(),isContained,e.getViewport());
-        }
         Container::mouseExited(e);
     }
 }
@@ -245,40 +245,40 @@ void Frame::mouseReleased(const MouseEvent& e)
 
 void Frame::mouseMoved(const MouseEvent& e)
 {
+    if(getMenuBar() != NullFC)
+    {
+	    bool isContained;
+        isContained = getMenuBar()->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getMenuBar(),isContained,e.getViewport());
+		if(isContained)
+		{
+			getMenuBar()->mouseMoved(e);
+            Component::mouseMoved(e);
+			return;
+		}
+    }
     if(!getLockInput())
     {
-        if(getMenuBar() != NullFC)
-        {
-	        bool isContained;
-            isContained = getMenuBar()->isContained(e.getLocation(), true);
-		    checkMouseEnterExit(e,e.getLocation(),getMenuBar(),isContained,e.getViewport());
-		    if(isContained)
-		    {
-			    getMenuBar()->mouseMoved(e);
-                Component::mouseMoved(e);
-			    return;
-		    }
-        }
         Container::mouseMoved(e);
     }
 }
 
 void Frame::mouseDragged(const MouseEvent& e)
 {
+    if(getMenuBar() != NullFC)
+    {
+	    bool isContained;
+        isContained = getMenuBar()->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getMenuBar(),isContained,e.getViewport());
+		if(isContained)
+		{
+			getMenuBar()->mouseDragged(e);
+            Component::mouseDragged(e);
+			return;
+		}
+    }
     if(!getLockInput())
     {
-        if(getMenuBar() != NullFC)
-        {
-	        bool isContained;
-            isContained = getMenuBar()->isContained(e.getLocation(), true);
-		    checkMouseEnterExit(e,e.getLocation(),getMenuBar(),isContained,e.getViewport());
-		    if(isContained)
-		    {
-			    getMenuBar()->mouseDragged(e);
-                Component::mouseDragged(e);
-			    return;
-		    }
-        }
         Container::mouseDragged(e);
     }
 }

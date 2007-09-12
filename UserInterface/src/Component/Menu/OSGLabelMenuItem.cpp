@@ -100,7 +100,7 @@ void LabelMenuItem::drawInternal(const GraphicsPtr TheGraphics) const
       //Draw the Mnemonic Underline
       if(getMnemonicTextPosition() != -1)
       {
-          TheGraphics->drawTextUnderline(TopLeft, getText().substr(getMnemonicTextPosition(),1), getFont(), getDrawnTextColor(), getOpacity());
+          TheGraphics->drawTextUnderline(AlignedPosition, getText().substr(getMnemonicTextPosition(),1), getFont(), getDrawnTextColor(), getOpacity());
       }
       
       //Draw the Accelerator Text

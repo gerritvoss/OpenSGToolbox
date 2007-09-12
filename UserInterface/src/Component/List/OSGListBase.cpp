@@ -61,7 +61,7 @@
 #include "OSGListBase.h"
 #include "OSGList.h"
 
-#include <Util/OSGUIDefines.h>            // CellLayout default header
+#include "Util/OSGUIDefines.h"            // CellLayout default header
 
 OSG_BEGIN_NAMESPACE
 

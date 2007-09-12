@@ -66,12 +66,18 @@
 #include "Graphics/UIDrawObjects/OSGArcUIDrawObject.h"
 #include "Graphics/UIDrawObjects/OSGDiscUIDrawObject.h"
 #include "Graphics/UIDrawObjects/OSGLineUIDrawObject.h"
+#include "Graphics/UIDrawObjects/OSGPolygonUIDrawObject.h"
 #include "Component/OSGUIDrawObjectCanvas.h"
 #include "Component/Text/OSGTextField.h"
 #include "Component/Text/OSGPasswordField.h"
 #include "Component/Text/OSGTextArea.h"
 #include "Component/Misc/OSGToolTip.h"
 
+#include "Component/Menu/OSGLabelMenuItem.h"
+#include "Component/Menu/OSGMenu.h"
+#include "Component/Menu/OSGSeperatorMenuItem.h"
+#include "Component/Menu/OSGPopupMenu.h"
+#include "Component/Menu/OSGMenuBar.h"
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -1199,6 +1205,277 @@ void WindowsLookAndFeel::init(void)
 	
     ToolTip::getClassType().setPrototype(WindowsToolTip);
 
+	//************************** LabelMenuItem*****************************
+	//Windows LabelMenuItemBorder
+	EmptyBorderPtr WindowsLabelMenuItemBorder = EmptyBorder::create();
+
+	//Windows LabelMenuItemBackground
+	ColorUIBackgroundPtr WindowsLabelMenuItemBackground = ColorUIBackground::create();
+	beginEditCP(WindowsLabelMenuItemBackground);
+		WindowsLabelMenuItemBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+	endEditCP(WindowsLabelMenuItemBackground);
+	
+	//Windows LabelMenuItemBorder
+	EmptyBorderPtr WindowsLabelMenuItemSelectedBorder = EmptyBorder::create();
+
+	//Windows LabelMenuItemBackground
+	ColorUIBackgroundPtr WindowsLabelMenuItemSelectedBackground = ColorUIBackground::create();
+	beginEditCP(WindowsLabelMenuItemSelectedBackground);
+		WindowsLabelMenuItemSelectedBackground->setColor(Color4f(0.19,0.42,0.77,1.0));
+	endEditCP(WindowsLabelMenuItemSelectedBackground);
+
+	//Windows LabelMenuItem
+	LabelMenuItemPtr WindowsLabelMenuItem = LabelMenuItem::create();
+	beginEditCP(WindowsLabelMenuItem);
+		WindowsLabelMenuItem->setEnabled(true);
+		WindowsLabelMenuItem->setVisible(true);
+		
+		WindowsLabelMenuItem->setConstraints(NullFC);
+		//Sizes
+		WindowsLabelMenuItem->setMinSize(Vec2s(0,0));
+		WindowsLabelMenuItem->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsLabelMenuItem->setPreferredSize(Vec2s(100,17));
+
+		//Border
+		WindowsLabelMenuItem->setBorder(WindowsLabelMenuItemBorder);
+		
+		//Background
+		WindowsLabelMenuItem->setBackground(WindowsLabelMenuItemBackground);
+		
+		//Opacity
+		WindowsLabelMenuItem->setOpacity(1.0);
+
+        //Accelerators
+        WindowsLabelMenuItem->setAcceleratorModifiers(0);
+        WindowsLabelMenuItem->setAcceleratorKey(KeyEvent::KEY_NONE);
+
+        //Selected
+        WindowsLabelMenuItem->setSelected(false);
+        WindowsLabelMenuItem->setSelectedBorder(WindowsLabelMenuItemSelectedBorder);
+        WindowsLabelMenuItem->setSelectedBackground(WindowsLabelMenuItemSelectedBackground);
+        
+		//Text
+		WindowsLabelMenuItem->setText("");
+		WindowsLabelMenuItem->setFont(WindowsFont);
+		WindowsLabelMenuItem->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsLabelMenuItem->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsLabelMenuItem->setSelectedTextColor(Color4f(1.0,1.0,1.0,1.0));
+		WindowsLabelMenuItem->setRolloverTextColor(Color4f(1.0,1.0,1.0,1.0));
+		WindowsLabelMenuItem->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
+	endEditCP(WindowsLabelMenuItem);
+	
+    LabelMenuItem::getClassType().setPrototype(WindowsLabelMenuItem);
+    
+	//************************** SeperatorMenuItem*****************************
+	//Windows SeperatorMenuItemBorder
+	EmptyBorderPtr WindowsSeperatorMenuItemBorder = EmptyBorder::create();
+
+	//Windows SeperatorMenuItemBackground
+	EmptyUIBackgroundPtr WindowsSeperatorMenuItemBackground = EmptyUIBackground::create();
+
+	//Windows SeperatorMenuItem
+	SeperatorMenuItemPtr WindowsSeperatorMenuItem = SeperatorMenuItem::create();
+	beginEditCP(WindowsSeperatorMenuItem);
+		WindowsSeperatorMenuItem->setEnabled(true);
+		WindowsSeperatorMenuItem->setVisible(true);
+		
+		WindowsSeperatorMenuItem->setConstraints(NullFC);
+		//Sizes
+		WindowsSeperatorMenuItem->setMinSize(Vec2s(0,0));
+		WindowsSeperatorMenuItem->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsSeperatorMenuItem->setPreferredSize(Vec2s(100,7));
+
+		//Border
+		WindowsSeperatorMenuItem->setBorder(WindowsSeperatorMenuItemBorder);
+		
+		//Background
+		WindowsSeperatorMenuItem->setBackground(WindowsSeperatorMenuItemBackground);
+		
+		//Opacity
+		WindowsSeperatorMenuItem->setOpacity(1.0);
+
+        //Seperator Color
+        WindowsSeperatorMenuItem->setColor(Color4f(0.67,0.66,0.6,1.0));
+
+	endEditCP(WindowsSeperatorMenuItem);
+	
+    SeperatorMenuItem::getClassType().setPrototype(WindowsSeperatorMenuItem);
+    
+	//************************** Menu*****************************
+	//Windows MenuBorder
+	EmptyBorderPtr WindowsMenuBorder = EmptyBorder::create();
+
+	//Windows MenuBackground
+	ColorUIBackgroundPtr WindowsMenuBackground = ColorUIBackground::create();
+	beginEditCP(WindowsMenuBackground);
+		WindowsMenuBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+	endEditCP(WindowsMenuBackground);
+	
+	//Windows MenuBorder
+	EmptyBorderPtr WindowsMenuSelectedBorder = EmptyBorder::create();
+
+	//Windows MenuBackground
+	ColorUIBackgroundPtr WindowsMenuSelectedBackground = ColorUIBackground::create();
+	beginEditCP(WindowsMenuSelectedBackground);
+		WindowsMenuSelectedBackground->setColor(Color4f(0.19,0.42,0.77,1.0));
+	endEditCP(WindowsMenuSelectedBackground);
+
+    
+    //Expanding Draw Object
+	PolygonUIDrawObjectPtr MenuExpandablePolygon = PolygonUIDrawObject::create();
+	beginEditCP(MenuExpandablePolygon);
+		MenuExpandablePolygon->setColor(Color4f(0.0,0.0,0.0,1.0));
+		MenuExpandablePolygon->setOpacity(1.0);
+        MenuExpandablePolygon->getVerticies().addValue(Pnt2s(0,0));
+        MenuExpandablePolygon->getVerticies().addValue(Pnt2s(0,7));
+        MenuExpandablePolygon->getVerticies().addValue(Pnt2s(4,4));
+	endEditCP(MenuExpandablePolygon);
+
+	UIDrawObjectCanvasPtr defaultMenuDrawObject = UIDrawObjectCanvas::create();
+	beginEditCP(defaultMenuDrawObject);
+	   defaultMenuDrawObject->getDrawObjects().addValue(MenuExpandablePolygon);
+	endEditCP(defaultMenuDrawObject);
+
+	//Windows Menu
+	MenuPtr WindowsMenu = Menu::create();
+	beginEditCP(WindowsMenu);
+		WindowsMenu->setEnabled(true);
+		WindowsMenu->setVisible(true);
+		
+		WindowsMenu->setConstraints(NullFC);
+		//Sizes
+		WindowsMenu->setMinSize(Vec2s(0,0));
+		WindowsMenu->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsMenu->setPreferredSize(Vec2s(100,17));
+
+		//Border
+		WindowsMenu->setBorder(WindowsMenuBorder);
+		
+		//Background
+		WindowsMenu->setBackground(WindowsMenuBackground);
+		
+		//Opacity
+		WindowsMenu->setOpacity(1.0);
+
+        //Accelerators
+        WindowsMenu->setAcceleratorModifiers(0);
+        WindowsMenu->setAcceleratorKey(KeyEvent::KEY_NONE);
+
+        //Selected
+        WindowsMenu->setSelected(false);
+        WindowsMenu->setSelectedBorder(WindowsMenuSelectedBorder);
+        WindowsMenu->setRolloverBorder(WindowsMenuSelectedBorder);
+        WindowsMenu->setSelectedBackground(WindowsMenuSelectedBackground);
+        WindowsMenu->setRolloverBackground(WindowsMenuSelectedBackground);
+        
+		//Text
+		WindowsMenu->setText("");
+		WindowsMenu->setFont(WindowsFont);
+		WindowsMenu->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsMenu->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		WindowsMenu->setSelectedTextColor(Color4f(1.0,1.0,1.0,1.0));
+		WindowsMenu->setRolloverTextColor(Color4f(1.0,1.0,1.0,1.0));
+		WindowsMenu->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
+
+        //Expanding Draw Object
+        WindowsMenu->setExpandDrawObject(defaultMenuDrawObject);
+	endEditCP(WindowsMenu);
+	
+    Menu::getClassType().setPrototype(WindowsMenu);
+    
+	//************************** PopupMenu*****************************
+	//Windows PopupMenuBorder
+	LineBorderPtr WindowsPopupMenuLineBorder = LineBorder::create();
+	beginEditCP(WindowsPopupMenuLineBorder);
+		WindowsPopupMenuLineBorder->setColor(Color4f(0.67,0.66,0.60,1.0));
+		WindowsPopupMenuLineBorder->setWidth(1);
+	endEditCP(WindowsPopupMenuLineBorder);
+
+	ShadowBorderPtr WindowsPopupMenuBorder = osg::ShadowBorder::create();
+    beginEditCP(WindowsPopupMenuBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask | ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask| ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | ShadowBorder::CornerRadiusFieldMask | ShadowBorder::InternalToEdgeColorLengthFieldMask );
+		WindowsPopupMenuBorder->setTopOffset(0);
+		WindowsPopupMenuBorder->setBottomOffset(4);
+		WindowsPopupMenuBorder->setLeftOffset(0);
+		WindowsPopupMenuBorder->setRightOffset(4);
+		WindowsPopupMenuBorder->setInsideBorder(WindowsPopupMenuLineBorder);
+		WindowsPopupMenuBorder->setCornerRadius(3);
+		WindowsPopupMenuBorder->setInternalColor(Color4f(0.36, 0.36, 0.36, 0.5));
+		WindowsPopupMenuBorder->setEdgeColor(Color4f(0.36, 0.36, 0.36, 0.0));
+		WindowsPopupMenuBorder->setInternalToEdgeColorLength(3);
+	endEditCP(WindowsPopupMenuBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask | ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask| ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | ShadowBorder::CornerRadiusFieldMask | ShadowBorder::InternalToEdgeColorLengthFieldMask );
+
+	//Windows PopupMenuBackground
+	ColorUIBackgroundPtr WindowsPopupMenuBackground = ColorUIBackground::create();
+	beginEditCP(WindowsPopupMenuBackground);
+		WindowsPopupMenuBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+	endEditCP(WindowsPopupMenuBackground);
+
+	//Windows PopupMenu
+	PopupMenuPtr WindowsPopupMenu = PopupMenu::create();
+	beginEditCP(WindowsPopupMenu);
+		WindowsPopupMenu->setEnabled(true);
+		WindowsPopupMenu->setVisible(false);
+		
+		WindowsPopupMenu->setConstraints(NullFC);
+		//Sizes
+		WindowsPopupMenu->setMinSize(Vec2s(0,0));
+		WindowsPopupMenu->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsPopupMenu->setPreferredSize(Vec2s(100,50));
+
+		//Border
+		WindowsPopupMenu->setBorder(WindowsPopupMenuBorder);
+		
+		//Background
+		WindowsPopupMenu->setBackground(WindowsPopupMenuBackground);
+		
+		//Opacity
+		WindowsPopupMenu->setOpacity(1.0);
+
+        //SubMenu delay in seconds
+        WindowsPopupMenu->setSubMenuDelay(getSubMenuPopupTime());
+
+        //Insets
+        WindowsPopupMenu->setAllInsets(2);
+	endEditCP(WindowsPopupMenu);
+	
+    PopupMenu::getClassType().setPrototype(WindowsPopupMenu);
+    
+	//************************** MenuBar*****************************
+	//Windows MenuBarBorder
+	EmptyBorderPtr WindowsMenuBarBorder = EmptyBorder::create();
+
+	//Windows MenuBarBackground
+	ColorUIBackgroundPtr WindowsMenuBarBackground = ColorUIBackground::create();
+	beginEditCP(WindowsMenuBarBackground);
+		WindowsMenuBarBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
+	endEditCP(WindowsMenuBarBackground);
+
+	//Windows MenuBar
+	MenuBarPtr WindowsMenuBar = MenuBar::create();
+	beginEditCP(WindowsMenuBar);
+		WindowsMenuBar->setEnabled(true);
+		WindowsMenuBar->setVisible(true);
+		
+		WindowsMenuBar->setConstraints(NullFC);
+		//Sizes
+		WindowsMenuBar->setMinSize(Vec2s(0,0));
+		WindowsMenuBar->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsMenuBar->setPreferredSize(Vec2s(100,50));
+
+		//Border
+		WindowsMenuBar->setBorder(WindowsMenuBarBorder);
+		
+		//Background
+		WindowsMenuBar->setBackground(WindowsMenuBarBackground);
+		
+		//Opacity
+		WindowsMenuBar->setOpacity(1.0);
+
+        //SubMenu delay in seconds
+        WindowsMenuBar->setMenuDelay(getSubMenuPopupTime());
+	endEditCP(WindowsMenuBar);
+	
+    MenuBar::getClassType().setPrototype(WindowsMenuBar);
 	/*******Borders********/
 	/*******Line Border********/
 
@@ -1321,6 +1598,11 @@ void WindowsLookAndFeel::init(void)
 		getPrototypes().addValue(WindowsTextField);
 		getPrototypes().addValue(WindowsPasswordField);
 		getPrototypes().addValue(WindowsToolTip);
+		getPrototypes().addValue(WindowsLabelMenuItem);
+		getPrototypes().addValue(WindowsSeperatorMenuItem);
+		getPrototypes().addValue(WindowsMenu);
+		getPrototypes().addValue(WindowsPopupMenu);
+		getPrototypes().addValue(WindowsMenuBar);
 	endEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);
 
 

@@ -49,6 +49,7 @@
 #include "Event/OSGFocusListener.h"
 #include "OSGListDataListener.h"
 #include "OSGListSelectionListener.h"
+#include "Util/OSGUIDefines.h"
 
 OSG_BEGIN_NAMESPACE
 

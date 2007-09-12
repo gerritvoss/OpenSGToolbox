@@ -532,7 +532,7 @@ void Graphics2D::drawTextUnderline(const Pnt2s& Position, const std::string& Tex
     TheFont->getBounds("A", CharacterTopLeft, CharacterBottomRight);
     
     //Line Start Point
-    Pnt2s LineStart(Position.x() + TextTopLeft.x(), Position.y() + CharacterBottomRight.y() + 3);
+    Pnt2s LineStart(Position.x() + TextTopLeft.x(), Position.y() + CharacterBottomRight.y()-1);
     //Line End Point
     Pnt2s LineEnd(LineStart + Vec2s(TextBottomRight.x()-TextTopLeft.x(),1));
 
