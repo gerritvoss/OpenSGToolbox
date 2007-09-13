@@ -51,8 +51,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGScrollBarBASE_H_
-#define _OSGScrollBarBASE_H_
+#ifndef _OSGSCROLLBARBASE_H_
+#define _OSGSCROLLBARBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -72,7 +72,7 @@
 #include <OpenSG/OSGUInt32Fields.h> // BlockIncrement type
 #include "Component/Button/OSGButton.h" // MinButton type
 #include "Component/Button/OSGButton.h" // MaxButton type
-#include "Component/OSGUIDrawObjectCanvas.h" // ScrollBar type
+#include "Component/Button/OSGButton.h" // ScrollBar type
 #include "Component/OSGUIDrawObjectCanvas.h" // ScrollField type
 
 #include "OSGScrollBarFields.h"
@@ -145,7 +145,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
            SFUInt32            *getSFBlockIncrement (void);
            SFButtonPtr         *getSFMinButton      (void);
            SFButtonPtr         *getSFMaxButton      (void);
-           SFUIDrawObjectCanvasPtr *getSFScrollBar      (void);
+           SFButtonPtr         *getSFScrollBar      (void);
            SFUIDrawObjectCanvasPtr *getSFScrollField    (void);
 
            UInt32              &getOrientation    (void);
@@ -158,8 +158,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
      const ButtonPtr           &getMinButton      (void) const;
            ButtonPtr           &getMaxButton      (void);
      const ButtonPtr           &getMaxButton      (void) const;
-           UIDrawObjectCanvasPtr &getScrollBar      (void);
-     const UIDrawObjectCanvasPtr &getScrollBar      (void) const;
+           ButtonPtr           &getScrollBar      (void);
+     const ButtonPtr           &getScrollBar      (void) const;
            UIDrawObjectCanvasPtr &getScrollField    (void);
      const UIDrawObjectCanvasPtr &getScrollField    (void) const;
 
@@ -173,7 +173,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
      void setBlockIncrement ( const UInt32 &value );
      void setMinButton      ( const ButtonPtr &value );
      void setMaxButton      ( const ButtonPtr &value );
-     void setScrollBar      ( const UIDrawObjectCanvasPtr &value );
+     void setScrollBar      ( const ButtonPtr &value );
      void setScrollField    ( const UIDrawObjectCanvasPtr &value );
 
     /*! \}                                                                 */
@@ -222,7 +222,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
     SFUInt32            _sfBlockIncrement;
     SFButtonPtr         _sfMinButton;
     SFButtonPtr         _sfMaxButton;
-    SFUIDrawObjectCanvasPtr   _sfScrollBar;
+    SFButtonPtr         _sfScrollBar;
     SFUIDrawObjectCanvasPtr   _sfScrollField;
 
     /*! \}                                                                 */
@@ -301,6 +301,6 @@ typedef RefPtr<ScrollBarPtr> ScrollBarRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGScrollBarBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGSCROLLBARBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGScrollBarBASE_H_ */
+#endif /* _OSGSCROLLBARBASE_H_ */

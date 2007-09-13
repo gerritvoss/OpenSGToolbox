@@ -180,6 +180,20 @@ SFReal32 *ButtonBase::getSFHorizontalAlignment(void)
     return &_sfHorizontalAlignment;
 }
 
+//! Get the Button::_sfEnableActionOnMouseDownTime field.
+inline
+SFBool *ButtonBase::getSFEnableActionOnMouseDownTime(void)
+{
+    return &_sfEnableActionOnMouseDownTime;
+}
+
+//! Get the Button::_sfActionOnMouseDownRate field.
+inline
+SFTime *ButtonBase::getSFActionOnMouseDownRate(void)
+{
+    return &_sfActionOnMouseDownRate;
+}
+
 
 //! Get the value of the Button::_sfFont field.
 inline
@@ -431,6 +445,48 @@ inline
 void ButtonBase::setHorizontalAlignment(const Real32 &value)
 {
     _sfHorizontalAlignment.setValue(value);
+}
+
+//! Get the value of the Button::_sfEnableActionOnMouseDownTime field.
+inline
+bool &ButtonBase::getEnableActionOnMouseDownTime(void)
+{
+    return _sfEnableActionOnMouseDownTime.getValue();
+}
+
+//! Get the value of the Button::_sfEnableActionOnMouseDownTime field.
+inline
+const bool &ButtonBase::getEnableActionOnMouseDownTime(void) const
+{
+    return _sfEnableActionOnMouseDownTime.getValue();
+}
+
+//! Set the value of the Button::_sfEnableActionOnMouseDownTime field.
+inline
+void ButtonBase::setEnableActionOnMouseDownTime(const bool &value)
+{
+    _sfEnableActionOnMouseDownTime.setValue(value);
+}
+
+//! Get the value of the Button::_sfActionOnMouseDownRate field.
+inline
+Time &ButtonBase::getActionOnMouseDownRate(void)
+{
+    return _sfActionOnMouseDownRate.getValue();
+}
+
+//! Get the value of the Button::_sfActionOnMouseDownRate field.
+inline
+const Time &ButtonBase::getActionOnMouseDownRate(void) const
+{
+    return _sfActionOnMouseDownRate.getValue();
+}
+
+//! Set the value of the Button::_sfActionOnMouseDownRate field.
+inline
+void ButtonBase::setActionOnMouseDownRate(const Time &value)
+{
+    _sfActionOnMouseDownRate.setValue(value);
 }
 
 

@@ -60,13 +60,13 @@ public:
     virtual UInt32 getExtent(void) const = 0;
     
     //Returns the model's maximum.
-    virtual UInt32 getMaximum(void) const = 0;
+    virtual Int32 getMaximum(void) const = 0;
     
     //Returns the minimum acceptable value.
-    virtual UInt32 getMinimum(void) const = 0;
+    virtual Int32 getMinimum(void) const = 0;
     
     //Returns the model's current value.
-    virtual UInt32 getValue(void) const = 0;
+    virtual Int32 getValue(void) const = 0;
     
     //Returns true if the current changes to the value property are part of a series of changes.
     virtual bool getValueIsAdjusting(void) const = 0;
@@ -75,16 +75,16 @@ public:
     virtual void setExtent(UInt32 newExtent) = 0;
     
     //Sets the model's maximum to newMaximum.
-    virtual void setMaximum(UInt32 newMaximum) = 0;
+    virtual void setMaximum(Int32 newMaximum) = 0;
     
     //Sets the model's minimum to newMinimum.
-    virtual void setMinimum(UInt32 newMinimum) = 0;
+    virtual void setMinimum(Int32 newMinimum) = 0;
     
     //This method sets all of the model's data with a single method call.
-    virtual void setRangeProperties(UInt32 value, UInt32 extent, UInt32 min, UInt32 max, bool adjusting) = 0;
+    virtual void setRangeProperties(Int32 value, UInt32 extent, Int32 min, Int32 max, bool adjusting) = 0;
     
     //Sets the model's current value to newValue if newValue satisfies the model's constraints.
-    virtual void setValue(UInt32 newValue) = 0;
+    virtual void setValue(Int32 newValue) = 0;
     
     //This attribute indicates that any upcoming changes to the value of the model should be considered a single event
     virtual void setValueIsAdjusting(bool b) = 0;

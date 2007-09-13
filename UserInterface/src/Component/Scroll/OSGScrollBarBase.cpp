@@ -51,7 +51,7 @@
 \*****************************************************************************/
 
 
-#define OSG_COMPILEScrollBarINST
+#define OSG_COMPILESCROLLBARINST
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -107,7 +107,7 @@ const OSG::BitVector ScrollBarBase::MTInfluenceMask =
 /*! \var ButtonPtr       ScrollBarBase::_sfMaxButton
     
 */
-/*! \var UIDrawObjectCanvasPtr ScrollBarBase::_sfScrollBar
+/*! \var ButtonPtr       ScrollBarBase::_sfScrollBar
     
 */
 /*! \var UIDrawObjectCanvasPtr ScrollBarBase::_sfScrollField
@@ -143,7 +143,7 @@ FieldDescription *ScrollBarBase::_desc[] =
                      MaxButtonFieldId, MaxButtonFieldMask,
                      false,
                      (FieldAccessMethod) &ScrollBarBase::getSFMaxButton),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
+    new FieldDescription(SFButtonPtr::getClassType(), 
                      "ScrollBar", 
                      ScrollBarFieldId, ScrollBarFieldMask,
                      false,
@@ -233,7 +233,7 @@ ScrollBarBase::ScrollBarBase(void) :
     _sfBlockIncrement         (UInt32(2)), 
     _sfMinButton              (ButtonPtr(NullFC)), 
     _sfMaxButton              (ButtonPtr(NullFC)), 
-    _sfScrollBar              (UIDrawObjectCanvasPtr(NullFC)), 
+    _sfScrollBar              (ButtonPtr(NullFC)), 
     _sfScrollField            (UIDrawObjectCanvasPtr(NullFC)), 
     Inherited() 
 {
@@ -495,10 +495,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(ScrollBarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGScrollBarBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGScrollBarBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGSCROLLBARBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGSCROLLBARBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGScrollBarFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGSCROLLBARFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

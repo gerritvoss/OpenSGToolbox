@@ -76,6 +76,8 @@
 #include "Component/Menu/OSGPopupMenu.h"
 #include "Component/Menu/OSGMenuBar.h"
 
+#include "Component/Scroll/OSGScrollBar.h"
+
 
 OSG_BEGIN_NAMESPACE
 
@@ -155,8 +157,8 @@ void DefaultLookAndFeel::init(void)
 		DefaultDisabledButtonBorder->setWidth(2);
 		DefaultDisabledButtonBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
 		DefaultDisabledButtonBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
-		DefaultButtonBorder->setShadowInner(Color4f(0.85, 0.85, 0.85, 1.0));
-		DefaultButtonBorder->setShadowOuter(Color4f(0.65, 0.65, 0.65, 1.0));
+		DefaultDisabledButtonBorder->setShadowInner(Color4f(0.85, 0.85, 0.85, 1.0));
+		DefaultDisabledButtonBorder->setShadowOuter(Color4f(0.65, 0.65, 0.65, 1.0));
 	endEditCP(DefaultDisabledButtonBorder);
 
 
@@ -1200,6 +1202,199 @@ void DefaultLookAndFeel::init(void)
 	
     MenuBar::getClassType().setPrototype(DefaultMenuBar);
     
+	//************************** ScrollBar*****************************
+	//Default ScrollBarBorder
+	EmptyBorderPtr DefaultScrollBarBorder = EmptyBorder::create();
+
+	//Default ScrollBarBackground
+	EmptyUIBackgroundPtr DefaultScrollBarBackground = EmptyUIBackground::create();
+
+
+    //Min Button
+	ButtonPtr DefaultScrollBarMinButton = Button::create();
+    beginEditCP(DefaultScrollBarMinButton, Button::PreferredSizeFieldMask | Button::EnableActionOnMouseDownTimeFieldMask | Button::ActionOnMouseDownRateFieldMask);
+        DefaultScrollBarMinButton->setPreferredSize(Vec2s(20,20));
+        DefaultScrollBarMinButton->setEnableActionOnMouseDownTime(true);
+        DefaultScrollBarMinButton->setActionOnMouseDownRate(0.1);
+    endEditCP(DefaultScrollBarMinButton, Button::PreferredSizeFieldMask | Button::EnableActionOnMouseDownTimeFieldMask | Button::ActionOnMouseDownRateFieldMask);
+
+    //Max Button
+	ButtonPtr DefaultScrollBarMaxButton = Button::create();
+    beginEditCP(DefaultScrollBarMaxButton, Button::PreferredSizeFieldMask | Button::EnableActionOnMouseDownTimeFieldMask | Button::ActionOnMouseDownRateFieldMask);
+        DefaultScrollBarMaxButton->setPreferredSize(Vec2s(20,20));
+        DefaultScrollBarMaxButton->setEnableActionOnMouseDownTime(true);
+        DefaultScrollBarMaxButton->setActionOnMouseDownRate(0.1);
+    endEditCP(DefaultScrollBarMaxButton, Button::PreferredSizeFieldMask | Button::EnableActionOnMouseDownTimeFieldMask | Button::ActionOnMouseDownRateFieldMask);
+
+    //Scroll Field
+	//Scroll Field Border
+	BevelBorderPtr DefaultScrollFieldBorder = BevelBorder::create();
+	beginEditCP(DefaultScrollFieldBorder);
+		DefaultScrollFieldBorder->setRaised(true);
+		DefaultScrollFieldBorder->setWidth(1);
+		DefaultScrollFieldBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultScrollFieldBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultScrollFieldBorder->setShadowInner(Color4f(0.65, 0.65, 0.65, 1.0));
+		DefaultScrollFieldBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
+	endEditCP(DefaultScrollFieldBorder);
+
+	//Scroll Field Disabled Border
+	BevelBorderPtr DefaultDisabledScrollFieldBorder = BevelBorder::create();
+	beginEditCP(DefaultDisabledScrollFieldBorder);
+		DefaultDisabledScrollFieldBorder->setRaised(true);
+		DefaultDisabledScrollFieldBorder->setWidth(1);
+		DefaultDisabledScrollFieldBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultDisabledScrollFieldBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultDisabledScrollFieldBorder->setShadowInner(Color4f(0.85, 0.85, 0.85, 1.0));
+		DefaultDisabledScrollFieldBorder->setShadowOuter(Color4f(0.65, 0.65, 0.65, 1.0));
+	endEditCP(DefaultDisabledButtonBorder);
+
+	//Scroll Field Background
+	ColorUIBackgroundPtr DefaultScrollFieldBackground = ColorUIBackground::create();
+	beginEditCP(DefaultScrollFieldBackground);
+		DefaultScrollFieldBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
+	endEditCP(DefaultScrollFieldBackground);
+	
+	//Scroll Field Disabled Background
+	ColorUIBackgroundPtr DefaultDisabledScrollFieldBackground = ColorUIBackground::create();
+	beginEditCP(DefaultDisabledScrollFieldBackground);
+		DefaultDisabledScrollFieldBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+	endEditCP(DefaultDisabledScrollFieldBackground);
+
+	UIDrawObjectCanvasPtr DefaultScrollFieldDrawObject = UIDrawObjectCanvas::create();
+	beginEditCP(DefaultScrollFieldDrawObject);
+		DefaultScrollFieldDrawObject->setBorder(DefaultScrollFieldBorder);
+		DefaultScrollFieldDrawObject->setRolloverBorder(DefaultScrollFieldBorder);
+		DefaultScrollFieldDrawObject->setFocusedBorder(DefaultScrollFieldBorder);
+		DefaultScrollFieldDrawObject->setDisabledBorder(DefaultDisabledScrollFieldBorder);
+        
+		DefaultScrollFieldDrawObject->setBackground(DefaultScrollFieldBackground);
+		DefaultScrollFieldDrawObject->setRolloverBackground(DefaultScrollFieldBackground);
+		DefaultScrollFieldDrawObject->setFocusedBackground(DefaultScrollFieldBackground);
+		DefaultScrollFieldDrawObject->setDisabledBackground(DefaultDisabledScrollFieldBackground);
+	endEditCP(DefaultScrollFieldDrawObject);
+
+    //Scroll Bar
+	//Scroll Bar Border
+	BevelBorderPtr DefaultScrollBarDrawObjectBorder = BevelBorder::create();
+	beginEditCP(DefaultScrollBarDrawObjectBorder);
+		DefaultScrollBarDrawObjectBorder->setRaised(true);
+		DefaultScrollBarDrawObjectBorder->setWidth(2);
+		DefaultScrollBarDrawObjectBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultScrollBarDrawObjectBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultScrollBarDrawObjectBorder->setShadowInner(Color4f(0.65, 0.65, 0.65, 1.0));
+		DefaultScrollBarDrawObjectBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
+	endEditCP(DefaultScrollBarDrawObjectBorder);
+
+	//Scroll Bar Disabled Border
+	BevelBorderPtr DefaultDisabledScrollBarDrawObjectBorder = BevelBorder::create();
+	beginEditCP(DefaultDisabledScrollBarDrawObjectBorder);
+		DefaultDisabledScrollBarDrawObjectBorder->setRaised(true);
+		DefaultDisabledScrollBarDrawObjectBorder->setWidth(2);
+		DefaultDisabledScrollBarDrawObjectBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultDisabledScrollBarDrawObjectBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultDisabledScrollBarDrawObjectBorder->setShadowInner(Color4f(0.85, 0.85, 0.85, 1.0));
+		DefaultDisabledScrollBarDrawObjectBorder->setShadowOuter(Color4f(0.65, 0.65, 0.65, 1.0));
+	endEditCP(DefaultDisabledButtonBorder);
+
+
+	//Scroll Bar Rollover border
+	BevelBorderPtr DefaultRolloverScrollBarDrawObjectBorder = BevelBorder::create();
+	beginEditCP(DefaultRolloverScrollBarDrawObjectBorder);
+		DefaultRolloverScrollBarDrawObjectBorder->setRaised(true);
+		DefaultRolloverScrollBarDrawObjectBorder->setWidth(2);
+		DefaultRolloverScrollBarDrawObjectBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultRolloverScrollBarDrawObjectBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultRolloverScrollBarDrawObjectBorder->setShadowInner(Color4f(0.65, 0.65, 0.65, 1.0));
+		DefaultRolloverScrollBarDrawObjectBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
+	endEditCP(DefaultRolloverScrollBarDrawObjectBorder);
+    
+	//Scroll Bar Rollover border
+	BevelBorderPtr DefaultActiveScrollBarDrawObjectBorder = BevelBorder::create();
+	beginEditCP(DefaultActiveScrollBarDrawObjectBorder);
+		DefaultActiveScrollBarDrawObjectBorder->setRaised(false);
+		DefaultActiveScrollBarDrawObjectBorder->setWidth(2);
+		DefaultActiveScrollBarDrawObjectBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultActiveScrollBarDrawObjectBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultActiveScrollBarDrawObjectBorder->setShadowInner(Color4f(0.65, 0.65, 0.65, 1.0));
+		DefaultActiveScrollBarDrawObjectBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
+	endEditCP(DefaultRolloverScrollBarDrawObjectBorder);
+
+	//Scroll Bar Background
+	ColorUIBackgroundPtr DefaultScrollBarDrawObjectBackground = ColorUIBackground::create();
+	beginEditCP(DefaultScrollBarDrawObjectBackground);
+		DefaultScrollBarDrawObjectBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
+	endEditCP(DefaultScrollBarDrawObjectBackground);
+	
+	//Scroll Bar Disabled Background
+	ColorUIBackgroundPtr DefaultDisabledScrollBarDrawObjectBackground = ColorUIBackground::create();
+	beginEditCP(DefaultDisabledScrollBarDrawObjectBackground);
+		DefaultDisabledScrollBarDrawObjectBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+	endEditCP(DefaultDisabledScrollBarDrawObjectBackground);
+
+	//Scroll Bar Rollover Background
+	ColorUIBackgroundPtr DefaultRolloverScrollBarDrawObjectBackground = ColorUIBackground::create();
+	beginEditCP(DefaultRolloverScrollBarDrawObjectBackground);
+		DefaultRolloverScrollBarDrawObjectBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+	endEditCP(DefaultRolloverScrollBarDrawObjectBackground);
+
+	ButtonPtr DefaultScrollBarDrawObject = Button::create();
+	beginEditCP(DefaultScrollBarDrawObject);
+		DefaultScrollBarDrawObject->setBorder(DefaultScrollBarDrawObjectBorder);
+		DefaultScrollBarDrawObject->setRolloverBorder(DefaultRolloverScrollBarDrawObjectBorder);
+		DefaultScrollBarDrawObject->setFocusedBorder(DefaultScrollBarDrawObjectBorder);
+		DefaultScrollBarDrawObject->setDisabledBorder(DefaultDisabledScrollBarDrawObjectBorder);
+		DefaultScrollBarDrawObject->setActiveBorder(DefaultActiveScrollBarDrawObjectBorder);
+        
+		DefaultScrollBarDrawObject->setBackground(DefaultScrollBarDrawObjectBackground);
+		DefaultScrollBarDrawObject->setRolloverBackground(DefaultRolloverScrollBarDrawObjectBackground);
+		DefaultScrollBarDrawObject->setFocusedBackground(DefaultScrollBarDrawObjectBackground);
+		DefaultScrollBarDrawObject->setDisabledBackground(DefaultDisabledScrollBarDrawObjectBackground);
+		DefaultScrollBarDrawObject->setActiveBackground(DefaultScrollBarDrawObjectBackground);
+	endEditCP(DefaultScrollBarDrawObject);
+
+	//Default ScrollBar
+	ScrollBarPtr DefaultScrollBar = ScrollBar::create();
+	beginEditCP(DefaultScrollBar);
+		DefaultScrollBar->setEnabled(true);
+		DefaultScrollBar->setVisible(true);
+		
+		DefaultScrollBar->setConstraints(NullFC);
+		//Sizes
+		DefaultScrollBar->setMinSize(Vec2s(0,0));
+		DefaultScrollBar->setMaxSize(Vec2s(32767,32767)); //2^15
+		DefaultScrollBar->setPreferredSize(Vec2s(20,100));
+
+		//Border
+		DefaultScrollBar->setBorder(DefaultScrollBarBorder);
+		DefaultScrollBar->setRolloverBorder(DefaultScrollBarBorder);
+		DefaultScrollBar->setFocusedBorder(DefaultScrollBarBorder);
+		DefaultScrollBar->setDisabledBorder(DefaultScrollBarBorder);
+		
+		//Background
+		DefaultScrollBar->setBackground(DefaultScrollBarBackground);
+		DefaultScrollBar->setRolloverBackground(DefaultScrollBarBackground);
+		DefaultScrollBar->setFocusedBackground(DefaultScrollBarBackground);
+		DefaultScrollBar->setDisabledBackground(DefaultScrollBarBackground);
+		
+		//Opacity
+		DefaultScrollBar->setOpacity(1.0);
+
+        //Min Button
+        DefaultScrollBar->setMinButton(DefaultScrollBarMinButton);
+
+        //Max Button
+        DefaultScrollBar->setMaxButton(DefaultScrollBarMaxButton);
+
+        //Scroll Field
+        DefaultScrollBar->setScrollField(DefaultScrollFieldDrawObject);
+
+        //Scroll Bar
+        DefaultScrollBar->setScrollBar(DefaultScrollBarDrawObject);
+	endEditCP(DefaultScrollBar);
+	
+    ScrollBar::getClassType().setPrototype(DefaultScrollBar);
+
 	/*******Borders********/
 	/*******Line Border********/
 
@@ -1338,6 +1533,7 @@ void DefaultLookAndFeel::init(void)
 		getPrototypes().addValue(DefaultMenu);
 		getPrototypes().addValue(DefaultPopupMenu);
 		getPrototypes().addValue(DefaultMenuBar);
+		getPrototypes().addValue(DefaultScrollBar);
 	endEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);
 }
 /*-------------------------------------------------------------------------*\

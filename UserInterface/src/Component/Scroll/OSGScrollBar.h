@@ -49,6 +49,10 @@
 #include "OSGBoundedRangeModel.h"
 #include "Event/OSGAdjustmentListener.h"
 
+#include "Event/OSGChangeListener.h"
+#include "Event/OSGActionListener.h"
+#include <OpenSG/Input/OSGMouseMotionAdapter.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief ScrollBar class. See \ref 
@@ -81,6 +85,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 
     /*! \}                                                                 */
 
+    virtual void updateLayout(void);
+
     void setModel(BoundedRangeModel* Model);
     BoundedRangeModel* getModel(void) const;
     
@@ -89,26 +95,31 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 
     UInt32 getExtent(void) const;
     
-    UInt32 getMaximum(void) const;
+    Int32 getMaximum(void) const;
     
-    UInt32 getMinimum(void) const;
+    Int32 getMinimum(void) const;
     
-    UInt32 getValue(void) const;
+    Int32 getValue(void) const;
     
     bool getValueIsAdjusting(void) const;
     
     void setExtent(UInt32 newExtent);
     
-    void setMaximum(UInt32 newMaximum);
+    void setMaximum(Int32 newMaximum);
     
-    void setMinimum(UInt32 newMinimum);
+    void setMinimum(Int32 newMinimum);
     
-    void setRangeProperties(UInt32 value, UInt32 extent, UInt32 min, UInt32 max, bool adjusting);
+    void setRangeProperties(Int32 value, UInt32 extent, Int32 min, Int32 max, bool adjusting);
     
-    void setValue(UInt32 newValue);
+    void setValue(Int32 newValue);
     
     void setValueIsAdjusting(bool Value);
 
+    void scrollUnit(const Int32 Units);
+    void scrollBlock(const Int32 Blocks);
+    
+	//Mouse Wheel Events
+    virtual void mouseWheelMoved(const MouseWheelEvent& e);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -129,8 +140,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
     virtual ~ScrollBar(void); 
 
     /*! \}                                                                 */
-    
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
 
 	typedef std::set<AdjustmentListenerPtr> AdjustmentListenerSet;
     typedef AdjustmentListenerSet::iterator AdjustmentListenerSetItor;
@@ -140,6 +149,84 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
     void produceAdjustmentValueChanged(const AdjustmentEvent& e);
 
     BoundedRangeModel* _Model;
+
+    void updateScrollBarLayout(void);
+    
+	class BoundedRangeModelChangeListener : public ChangeListener
+	{
+	public:
+		BoundedRangeModelChangeListener(ScrollBarPtr TheScrollBar);
+        virtual void stateChanged(const ChangeEvent& e);
+	private:
+		ScrollBarPtr _ScrollBar;
+	};
+
+	friend class BoundedRangeModelChangeListener;
+
+	BoundedRangeModelChangeListener _BoundedRangeModelChangeListener;
+
+
+	class MinButtonActionListener : public ActionListener
+	{
+	public:
+		MinButtonActionListener(ScrollBarPtr TheScrollBar);
+        virtual void actionPerformed(const ActionEvent& e);
+	private:
+		ScrollBarPtr _ScrollBar;
+	};
+
+	friend class MinButtonActionListener;
+
+	MinButtonActionListener _MinButtonActionListener;
+
+	class MaxButtonActionListener : public ActionListener
+	{
+	public:
+		MaxButtonActionListener(ScrollBarPtr TheScrollBar);
+        virtual void actionPerformed(const ActionEvent& e);
+	private:
+		ScrollBarPtr _ScrollBar;
+	};
+
+	friend class MaxButtonActionListener;
+
+	MaxButtonActionListener _MaxButtonActionListener;
+    
+	class ScrollBarListener : public MouseAdapter
+	{
+	public :
+		ScrollBarListener(ScrollBarPtr TheScrollBar);
+		virtual void mousePressed(const MouseEvent& e);
+	protected :
+		ScrollBarPtr _ScrollBar;
+	};
+
+	friend class ScrollBarListener;
+
+	ScrollBarListener _ScrollBarListener;
+
+	class ScrollBarDraggedListener : public MouseAdapter, public MouseMotionAdapter
+	{
+	public :
+		ScrollBarDraggedListener(ScrollBarPtr TheScrollBar);
+		virtual void mouseReleased(const MouseEvent& e);
+        
+		virtual void mouseDragged(const MouseEvent& e);
+
+        void setInitialMousePosition(const Pnt2s& Pos);
+        void setInitialScrollBarPosition(const Pnt2s& Pos);
+	protected :
+		ScrollBarPtr _ScrollBar;
+        Pnt2s _InitialMousePosition;
+        Pnt2s _InitialScrollBarPosition;
+	};
+
+	friend class ScrollBarDraggedListener;
+
+	ScrollBarDraggedListener _ScrollBarDraggedListener;
+
+    void setMajorAxisScrollBarPosition(const Int16& Pos);
+    
     /*==========================  PRIVATE  ================================*/
   private:
 

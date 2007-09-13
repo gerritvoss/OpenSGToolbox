@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGScrollBarFIELDS_H_
-#define _OSGScrollBarFIELDS_H_
+#ifndef _OSGSCROLLBARFIELDS_H_
+#define _OSGSCROLLBARFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -110,7 +110,7 @@ struct FieldDataTraits<ScrollBarPtr> :
 typedef SField<ScrollBarPtr> SFScrollBarPtr;
 #endif
 
-#ifndef OSG_COMPILEScrollBarINST
+#ifndef OSG_COMPILESCROLLBARINST
 OSG_DLLEXPORT_DECL1(SField, ScrollBarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
@@ -120,12 +120,12 @@ OSG_DLLEXPORT_DECL1(SField, ScrollBarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 typedef MField<ScrollBarPtr> MFScrollBarPtr;
 #endif
 
-#ifndef OSG_COMPILEScrollBarINST
+#ifndef OSG_COMPILESCROLLBARINST
 OSG_DLLEXPORT_DECL1(MField, ScrollBarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGScrollBarFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGSCROLLBARFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGScrollBarFIELDS_H_ */
+#endif /* _OSGSCROLLBARFIELDS_H_ */

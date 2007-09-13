@@ -79,6 +79,8 @@
 #include <OpenSG/OSGColor4fFields.h> // TextColor type
 #include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
 #include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
+#include <OpenSG/OSGBoolFields.h> // EnableActionOnMouseDownTime type
+#include <OpenSG/OSGTimeFields.h> // ActionOnMouseDownRate type
 
 #include "OSGButtonFields.h"
 
@@ -102,19 +104,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
 
     enum
     {
-        FontFieldId                = Inherited::NextFieldId,
-        TextFieldId                = FontFieldId                + 1,
-        ActiveFieldId              = TextFieldId                + 1,
-        ActiveBorderFieldId        = ActiveFieldId              + 1,
-        ActiveBackgroundFieldId    = ActiveBorderFieldId        + 1,
-        ActiveTextColorFieldId     = ActiveBackgroundFieldId    + 1,
-        FocusedTextColorFieldId    = ActiveTextColorFieldId     + 1,
-        RolloverTextColorFieldId   = FocusedTextColorFieldId    + 1,
-        DisabledTextColorFieldId   = RolloverTextColorFieldId   + 1,
-        TextColorFieldId           = DisabledTextColorFieldId   + 1,
-        VerticalAlignmentFieldId   = TextColorFieldId           + 1,
-        HorizontalAlignmentFieldId = VerticalAlignmentFieldId   + 1,
-        NextFieldId                = HorizontalAlignmentFieldId + 1
+        FontFieldId                        = Inherited::NextFieldId,
+        TextFieldId                        = FontFieldId                        + 1,
+        ActiveFieldId                      = TextFieldId                        + 1,
+        ActiveBorderFieldId                = ActiveFieldId                      + 1,
+        ActiveBackgroundFieldId            = ActiveBorderFieldId                + 1,
+        ActiveTextColorFieldId             = ActiveBackgroundFieldId            + 1,
+        FocusedTextColorFieldId            = ActiveTextColorFieldId             + 1,
+        RolloverTextColorFieldId           = FocusedTextColorFieldId            + 1,
+        DisabledTextColorFieldId           = RolloverTextColorFieldId           + 1,
+        TextColorFieldId                   = DisabledTextColorFieldId           + 1,
+        VerticalAlignmentFieldId           = TextColorFieldId                   + 1,
+        HorizontalAlignmentFieldId         = VerticalAlignmentFieldId           + 1,
+        EnableActionOnMouseDownTimeFieldId = HorizontalAlignmentFieldId         + 1,
+        ActionOnMouseDownRateFieldId       = EnableActionOnMouseDownTimeFieldId + 1,
+        NextFieldId                        = ActionOnMouseDownRateFieldId       + 1
     };
 
     static const OSG::BitVector FontFieldMask;
@@ -129,6 +133,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     static const OSG::BitVector TextColorFieldMask;
     static const OSG::BitVector VerticalAlignmentFieldMask;
     static const OSG::BitVector HorizontalAlignmentFieldMask;
+    static const OSG::BitVector EnableActionOnMouseDownTimeFieldMask;
+    static const OSG::BitVector ActionOnMouseDownRateFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -167,6 +173,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
            SFColor4f           *getSFTextColor      (void);
            SFReal32            *getSFVerticalAlignment(void);
            SFReal32            *getSFHorizontalAlignment(void);
+           SFBool              *getSFEnableActionOnMouseDownTime(void);
+           SFTime              *getSFActionOnMouseDownRate(void);
 
            UIFontPtr           &getFont           (void);
      const UIFontPtr           &getFont           (void) const;
@@ -192,6 +200,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
      const Real32              &getVerticalAlignment(void) const;
            Real32              &getHorizontalAlignment(void);
      const Real32              &getHorizontalAlignment(void) const;
+           bool                &getEnableActionOnMouseDownTime(void);
+     const bool                &getEnableActionOnMouseDownTime(void) const;
+           Time                &getActionOnMouseDownRate(void);
+     const Time                &getActionOnMouseDownRate(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -210,6 +222,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
      void setTextColor      ( const Color4f &value );
      void setVerticalAlignment( const Real32 &value );
      void setHorizontalAlignment( const Real32 &value );
+     void setEnableActionOnMouseDownTime( const bool &value );
+     void setActionOnMouseDownRate( const Time &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -264,6 +278,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     SFColor4f           _sfTextColor;
     SFReal32            _sfVerticalAlignment;
     SFReal32            _sfHorizontalAlignment;
+    SFBool              _sfEnableActionOnMouseDownTime;
+    SFTime              _sfActionOnMouseDownRate;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

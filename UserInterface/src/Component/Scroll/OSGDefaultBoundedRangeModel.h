@@ -57,9 +57,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultBoundedRangeModel : public BoundedR
 private:
 protected:
     UInt32 _Extent;
-    UInt32 _Maximum;
-    UInt32 _Minimum;
-    UInt32 _Value;
+    Int32 _Maximum;
+    Int32 _Minimum;
+    Int32 _Value;
     bool _ValueIsAdjusting;
 
     
@@ -74,13 +74,13 @@ public:
     virtual UInt32 getExtent(void) const;
     
     //Returns the model's maximum.
-    virtual UInt32 getMaximum(void) const;
+    virtual Int32 getMaximum(void) const;
     
     //Returns the minimum acceptable value.
-    virtual UInt32 getMinimum(void) const;
+    virtual Int32 getMinimum(void) const;
     
     //Returns the model's current value.
-    virtual UInt32 getValue(void) const;
+    virtual Int32 getValue(void) const;
     
     //Returns true if the current changes to the value property are part of a series of changes.
     virtual bool getValueIsAdjusting(void) const;
@@ -89,16 +89,16 @@ public:
     virtual void setExtent(UInt32 newExtent);
     
     //Sets the model's maximum to newMaximum.
-    virtual void setMaximum(UInt32 newMaximum);
+    virtual void setMaximum(Int32 newMaximum);
     
     //Sets the model's minimum to newMinimum.
-    virtual void setMinimum(UInt32 newMinimum);
+    virtual void setMinimum(Int32 newMinimum);
     
     //This method sets all of the model's data with a single method call.
-    virtual void setRangeProperties(UInt32 value, UInt32 extent, UInt32 min, UInt32 max, bool adjusting);
+    virtual void setRangeProperties(Int32 value, UInt32 extent, Int32 min, Int32 max, bool adjusting);
     
     //Sets the model's current value to newValue if newValue satisfies the model's constraints.
-    virtual void setValue(UInt32 newValue);
+    virtual void setValue(Int32 newValue);
     
     //This attribute indicates that any upcoming changes to the value of the model should be considered a single event
     virtual void setValueIsAdjusting(bool b);

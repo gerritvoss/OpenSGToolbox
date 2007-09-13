@@ -43,9 +43,9 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void ScrollBar::setModel(BoundedRangeModel* Model)
+void ScrollBar::setValue(Int32 newValue)
 {
-    _Model = Model;
+    _Model->setValue(newValue);
 }
 
 inline
@@ -73,19 +73,19 @@ UInt32 ScrollBar::getExtent(void) const
 }
 
 inline
-UInt32 ScrollBar::getMaximum(void) const
+Int32 ScrollBar::getMaximum(void) const
 {
     return _Model->getMaximum();
 }
 
 inline
-UInt32 ScrollBar::getMinimum(void) const
+Int32 ScrollBar::getMinimum(void) const
 {
     return _Model->getMinimum();
 }
 
 inline
-UInt32 ScrollBar::getValue(void) const
+Int32 ScrollBar::getValue(void) const
 {
     return _Model->getValue();
 }
@@ -97,27 +97,21 @@ void ScrollBar::setExtent(UInt32 newExtent)
 }
 
 inline
-void ScrollBar::setMaximum(UInt32 newMaximum)
+void ScrollBar::setMaximum(Int32 newMaximum)
 {
     _Model->setMaximum(newMaximum);
 }
 
 inline
-void ScrollBar::setMinimum(UInt32 newMinimum)
+void ScrollBar::setMinimum(Int32 newMinimum)
 {
     _Model->setMinimum(newMinimum);
 }
 
 inline
-void ScrollBar::setRangeProperties(UInt32 value, UInt32 extent, UInt32 min, UInt32 max, bool adjusting)
+void ScrollBar::setRangeProperties(Int32 value, UInt32 extent, Int32 min, Int32 max, bool adjusting)
 {
     _Model->setRangeProperties(value, extent, min, max, adjusting);
-}
-
-inline
-void ScrollBar::setValue(UInt32 newValue)
-{
-    _Model->setValue(newValue);
 }
 
 inline
@@ -134,6 +128,48 @@ void ScrollBar::removeAdjustmentListener(AdjustmentListenerPtr Listener)
    {
       _AdjustmentListeners.erase(EraseIter);
    }
+}
+
+inline
+ScrollBar::BoundedRangeModelChangeListener::BoundedRangeModelChangeListener(ScrollBarPtr TheScrollBar) :
+   _ScrollBar(TheScrollBar)
+{
+}
+
+inline
+ScrollBar::MinButtonActionListener::MinButtonActionListener(ScrollBarPtr TheScrollBar) :
+   _ScrollBar(TheScrollBar)
+{
+}
+
+inline
+ScrollBar::MaxButtonActionListener::MaxButtonActionListener(ScrollBarPtr TheScrollBar) :
+   _ScrollBar(TheScrollBar)
+{
+}
+
+inline
+ScrollBar::ScrollBarListener::ScrollBarListener(ScrollBarPtr TheScrollBar) :
+   _ScrollBar(TheScrollBar)
+{
+}
+
+inline
+ScrollBar::ScrollBarDraggedListener::ScrollBarDraggedListener(ScrollBarPtr TheScrollBar) :
+   _ScrollBar(TheScrollBar)
+{
+}
+
+inline
+void ScrollBar::ScrollBarDraggedListener::setInitialMousePosition(const Pnt2s& Pos)
+{
+    _InitialMousePosition = Pos;
+}
+
+inline
+void ScrollBar::ScrollBarDraggedListener::setInitialScrollBarPosition(const Pnt2s& Pos)
+{
+    _InitialScrollBarPosition = Pos;
 }
 
 OSG_END_NAMESPACE

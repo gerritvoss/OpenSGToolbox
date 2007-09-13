@@ -285,6 +285,7 @@ int main(int argc, char **argv)
 	beginEditCP(list);
 		list->setPreferredSize( Vec2s (200, 300) );
 		list->setBackground(mainBackground);
+        list->setCellLayout(VERTICAL_ALIGNMENT);
 	endEditCP(list);
 	// Assign the Model, CellGenerator, and SelectionModel
 	// to the List

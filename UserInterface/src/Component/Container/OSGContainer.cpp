@@ -229,6 +229,10 @@ void Container::mouseWheelMoved(const MouseWheelEvent& e)
     {
         isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+		if(isContained)
+		{
+			getChildren().getValue(i)->mouseWheelMoved(e);
+        }
     }
 	Component::mouseWheelMoved(e);
 }

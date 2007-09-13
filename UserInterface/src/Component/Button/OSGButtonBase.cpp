@@ -100,6 +100,12 @@ const OSG::BitVector  ButtonBase::VerticalAlignmentFieldMask =
 const OSG::BitVector  ButtonBase::HorizontalAlignmentFieldMask = 
     (TypeTraits<BitVector>::One << ButtonBase::HorizontalAlignmentFieldId);
 
+const OSG::BitVector  ButtonBase::EnableActionOnMouseDownTimeFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::EnableActionOnMouseDownTimeFieldId);
+
+const OSG::BitVector  ButtonBase::ActionOnMouseDownRateFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::ActionOnMouseDownRateFieldId);
+
 const OSG::BitVector ButtonBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -141,6 +147,12 @@ const OSG::BitVector ButtonBase::MTInfluenceMask =
     
 */
 /*! \var Real32          ButtonBase::_sfHorizontalAlignment
+    
+*/
+/*! \var bool            ButtonBase::_sfEnableActionOnMouseDownTime
+    
+*/
+/*! \var Time            ButtonBase::_sfActionOnMouseDownRate
     
 */
 
@@ -207,7 +219,17 @@ FieldDescription *ButtonBase::_desc[] =
                      "HorizontalAlignment", 
                      HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFHorizontalAlignment)
+                     (FieldAccessMethod) &ButtonBase::getSFHorizontalAlignment),
+    new FieldDescription(SFBool::getClassType(), 
+                     "EnableActionOnMouseDownTime", 
+                     EnableActionOnMouseDownTimeFieldId, EnableActionOnMouseDownTimeFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFEnableActionOnMouseDownTime),
+    new FieldDescription(SFTime::getClassType(), 
+                     "ActionOnMouseDownRate", 
+                     ActionOnMouseDownRateFieldId, ActionOnMouseDownRateFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFActionOnMouseDownRate)
 };
 
 
@@ -295,6 +317,8 @@ ButtonBase::ButtonBase(void) :
     _sfTextColor              (), 
     _sfVerticalAlignment      (Real32(0.5)), 
     _sfHorizontalAlignment    (Real32(0.5)), 
+    _sfEnableActionOnMouseDownTime(bool(false)), 
+    _sfActionOnMouseDownRate  (Time(0.1)), 
     Inherited() 
 {
 }
@@ -316,6 +340,8 @@ ButtonBase::ButtonBase(const ButtonBase &source) :
     _sfTextColor              (source._sfTextColor              ), 
     _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
     _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
+    _sfEnableActionOnMouseDownTime(source._sfEnableActionOnMouseDownTime), 
+    _sfActionOnMouseDownRate  (source._sfActionOnMouseDownRate  ), 
     Inherited                 (source)
 {
 }
@@ -392,6 +418,16 @@ UInt32 ButtonBase::getBinSize(const BitVector &whichField)
         returnValue += _sfHorizontalAlignment.getBinSize();
     }
 
+    if(FieldBits::NoField != (EnableActionOnMouseDownTimeFieldMask & whichField))
+    {
+        returnValue += _sfEnableActionOnMouseDownTime.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ActionOnMouseDownRateFieldMask & whichField))
+    {
+        returnValue += _sfActionOnMouseDownRate.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -459,6 +495,16 @@ void ButtonBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
     {
         _sfHorizontalAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EnableActionOnMouseDownTimeFieldMask & whichField))
+    {
+        _sfEnableActionOnMouseDownTime.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ActionOnMouseDownRateFieldMask & whichField))
+    {
+        _sfActionOnMouseDownRate.copyToBin(pMem);
     }
 
 
@@ -529,6 +575,16 @@ void ButtonBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfHorizontalAlignment.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (EnableActionOnMouseDownTimeFieldMask & whichField))
+    {
+        _sfEnableActionOnMouseDownTime.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ActionOnMouseDownRateFieldMask & whichField))
+    {
+        _sfActionOnMouseDownRate.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -575,6 +631,12 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
     if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
         _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
 
+    if(FieldBits::NoField != (EnableActionOnMouseDownTimeFieldMask & whichField))
+        _sfEnableActionOnMouseDownTime.syncWith(pOther->_sfEnableActionOnMouseDownTime);
+
+    if(FieldBits::NoField != (ActionOnMouseDownRateFieldMask & whichField))
+        _sfActionOnMouseDownRate.syncWith(pOther->_sfActionOnMouseDownRate);
+
 
 }
 #else
@@ -620,6 +682,12 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
 
     if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
         _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
+
+    if(FieldBits::NoField != (EnableActionOnMouseDownTimeFieldMask & whichField))
+        _sfEnableActionOnMouseDownTime.syncWith(pOther->_sfEnableActionOnMouseDownTime);
+
+    if(FieldBits::NoField != (ActionOnMouseDownRateFieldMask & whichField))
+        _sfActionOnMouseDownRate.syncWith(pOther->_sfActionOnMouseDownRate);
 
 
 

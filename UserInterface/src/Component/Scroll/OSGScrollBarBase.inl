@@ -133,7 +133,7 @@ SFButtonPtr *ScrollBarBase::getSFMaxButton(void)
 
 //! Get the ScrollBar::_sfScrollBar field.
 inline
-SFUIDrawObjectCanvasPtr *ScrollBarBase::getSFScrollBar(void)
+SFButtonPtr *ScrollBarBase::getSFScrollBar(void)
 {
     return &_sfScrollBar;
 }
@@ -253,21 +253,21 @@ void ScrollBarBase::setMaxButton(const ButtonPtr &value)
 
 //! Get the value of the ScrollBar::_sfScrollBar field.
 inline
-UIDrawObjectCanvasPtr &ScrollBarBase::getScrollBar(void)
+ButtonPtr &ScrollBarBase::getScrollBar(void)
 {
     return _sfScrollBar.getValue();
 }
 
 //! Get the value of the ScrollBar::_sfScrollBar field.
 inline
-const UIDrawObjectCanvasPtr &ScrollBarBase::getScrollBar(void) const
+const ButtonPtr &ScrollBarBase::getScrollBar(void) const
 {
     return _sfScrollBar.getValue();
 }
 
 //! Set the value of the ScrollBar::_sfScrollBar field.
 inline
-void ScrollBarBase::setScrollBar(const UIDrawObjectCanvasPtr &value)
+void ScrollBarBase::setScrollBar(const ButtonPtr &value)
 {
     _sfScrollBar.setValue(value);
 }
@@ -296,5 +296,5 @@ void ScrollBarBase::setScrollField(const UIDrawObjectCanvasPtr &value)
 
 OSG_END_NAMESPACE
 
-#define OSGScrollBarBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGSCROLLBARBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

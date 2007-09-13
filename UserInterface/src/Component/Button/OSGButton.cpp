@@ -220,6 +220,11 @@ void Button::mousePressed(const MouseEvent& e)
 		if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&& getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
 		{
             getParentFrame()->getDrawingSurface()->getEventProducer()->addMouseListener(&_ButtonArmedListener);
+            if(getEnableActionOnMouseDownTime())
+            {
+                _ButtonArmedListener.reset();
+                getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_ButtonArmedListener);
+            }
         }
 	}
 	Component::mousePressed(e);
@@ -298,9 +303,25 @@ void Button::ButtonArmedListener::mouseReleased(const MouseEvent& e)
 
 		//Remove myself from the listener
         _Button->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
+        if(_Button->getEnableActionOnMouseDownTime())
+        {
+            _Button->getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+        }
 	}
 }
 
+void Button::ButtonArmedListener::update(const UpdateEvent& e)
+{
+    if(_Button->isContained(_Button->getParentFrame()->getDrawingSurface()->getMousePosition()))
+    {
+        _ActionFireElps += e.getElapsedTime();
+    }
+    if(_ActionFireElps >= _Button->getActionOnMouseDownRate())
+    {
+        _Button->produceActionPerformed(ActionEvent(_Button, e.getTimeStamp()));
+        _ActionFireElps -= osgfloor<Time>(_ActionFireElps/_Button->getActionOnMouseDownRate()) * _Button->getActionOnMouseDownRate();
+    }
+}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

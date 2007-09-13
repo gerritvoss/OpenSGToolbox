@@ -49,19 +49,19 @@ UInt32 DefaultBoundedRangeModel::getExtent(void) const
 }
 
 inline
-UInt32 DefaultBoundedRangeModel::getMaximum(void) const
+Int32 DefaultBoundedRangeModel::getMaximum(void) const
 {
     return _Maximum;
 }
 
 inline
-UInt32 DefaultBoundedRangeModel::getMinimum(void) const
+Int32 DefaultBoundedRangeModel::getMinimum(void) const
 {
     return _Minimum;
 }
 
 inline
-UInt32 DefaultBoundedRangeModel::getValue(void) const
+Int32 DefaultBoundedRangeModel::getValue(void) const
 {
     return _Value;
 }
@@ -70,46 +70,6 @@ inline
 bool DefaultBoundedRangeModel::getValueIsAdjusting(void) const
 {
     return _ValueIsAdjusting;
-}
-
-inline
-void DefaultBoundedRangeModel::setExtent(UInt32 newExtent)
-{
-    _Extent= newExtent;
-}
-
-inline
-void DefaultBoundedRangeModel::setMaximum(UInt32 newMaximum)
-{
-    _Maximum= newMaximum;
-}
-
-inline
-void DefaultBoundedRangeModel::setMinimum(UInt32 newMinimum)
-{
-    _Minimum= newMinimum;
-}
-
-inline
-void DefaultBoundedRangeModel::setRangeProperties(UInt32 value, UInt32 extent, UInt32 min, UInt32 max, bool adjusting)
-{
-    _Extent= extent;
-    _Maximum= max;
-    _Minimum= min;
-    _Value= value;
-    _ValueIsAdjusting = adjusting;
-}
-
-inline
-void DefaultBoundedRangeModel::setValue(UInt32 newValue)
-{
-    _Value= newValue;
-}
-
-inline
-void DefaultBoundedRangeModel::setValueIsAdjusting(bool b)
-{
-    _ValueIsAdjusting = b;
 }
 
 inline

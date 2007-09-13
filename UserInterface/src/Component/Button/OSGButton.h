@@ -49,6 +49,7 @@
 #include "Util/OSGUIDefines.h"
 #include "Event/OSGActionListener.h"
 #include <OpenSG/Input/OSGMouseAdapter.h>
+#include <OpenSG/Input/OSGUpdateListener.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -112,20 +113,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     virtual BorderPtr getDrawnBorder(void) const;
     virtual UIBackgroundPtr getDrawnBackground(void) const;
     
-	class ButtonArmedListener : public MouseAdapter
+	class ButtonArmedListener : public MouseAdapter,public UpdateListener
 	{
 	public :
 		ButtonArmedListener(ButtonPtr TheButton);
 		
 		virtual void mouseReleased(const MouseEvent& e);
+        virtual void update(const UpdateEvent& e);
+        void reset(void);
 	protected :
 		ButtonPtr _Button;
+	    Time _ActionFireElps;
 	};
 
 	friend class ButtonArmedListener;
 
 	ButtonArmedListener _ButtonArmedListener;
     bool _Armed;
+    
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/

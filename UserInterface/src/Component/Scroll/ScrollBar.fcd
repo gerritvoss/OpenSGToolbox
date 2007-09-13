@@ -46,7 +46,7 @@ A UI ScrollBar.
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/OSGButton.h"
+		header="Component/Button/OSGButton.h"
 		defaultValue="NullFC"
 	>
 	</Field>
@@ -56,17 +56,17 @@ A UI ScrollBar.
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/OSGButton.h"
+		header="Component/Button/OSGButton.h"
 		defaultValue="NullFC"
 	>
 	</Field>
 	<Field
 		name="ScrollBar"
-		type="UIDrawObjectCanvasPtr"
+		type="ButtonPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/OSGUIDrawObjectCanvas.h"
+		header="Component/Button/OSGButton.h"
 		defaultValue="NullFC"
 	>
 	</Field>
