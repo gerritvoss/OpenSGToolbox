@@ -41,7 +41,7 @@ void InputSettings::setMultipleClickMouseDriftAllowance(const Real32 Allowance)
 
 inline
 InputSettings::InputSettings(void) 
-: _UnitsPerMouseScrollClick(5),
+: _UnitsPerMouseScrollClick(1),
 _MultipleClickRate(0.25),
 _MultipleClickMouseDriftAllowance(2.0)
 {
