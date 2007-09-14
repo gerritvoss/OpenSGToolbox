@@ -2,9 +2,11 @@
 #include "OSGUIDefines.h"
 
 #include "Component/Container/OSGFrame.h"
+#include "Component/OSGRotatedComponent.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include "UIDrawingSurface/OSGUIDrawingSurfaceMouseTransformFunctor.h"
 
+#include <deque>
 
 OSG_BEGIN_NAMESPACE
 
@@ -155,12 +157,32 @@ Pnt2s ComponentToViewport(const Pnt2s& ComponentPoint, const ComponentPtr Comp, 
 
 Pnt2s DrawingSurfaceToComponent(const Pnt2s& DrawingSurfacePoint, const ComponentPtr Comp)
 {
+    std::deque<ComponentPtr> PathToComponent;
 	Pnt2s Result(DrawingSurfacePoint);
 	ComponentPtr CompRecurse = Comp;
 	while(CompRecurse != NullFC)
 	{
-		Result -= Vec2s(CompRecurse->getPosition());
+		PathToComponent.push_front(CompRecurse);
 		CompRecurse = CompRecurse->getParentContainer();
+	}
+
+    bool WasPrevComponentRotated(false);
+	for(UInt32 i(0) ; i<PathToComponent.size() ; ++i)
+	{
+        if(WasPrevComponentRotated)
+        {
+	        WasPrevComponentRotated = false;
+		    Result = RotatedComponent::Ptr::dcast(PathToComponent[i-1])->getLocalToInternalComponent(Result);
+        }
+	    if(PathToComponent[i]->getType() == RotatedComponent::getClassType())
+	    {
+	        WasPrevComponentRotated = true;
+		    Result -= Vec2s(PathToComponent[i]->getPosition());
+	    }
+	    else
+	    {
+		    Result -= Vec2s(PathToComponent[i]->getPosition());
+		}
 	}
 
 	return Result;

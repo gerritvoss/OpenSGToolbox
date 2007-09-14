@@ -103,6 +103,13 @@ SFReal32 *RotatedComponentBase::getSFAngle(void)
     return &_sfAngle;
 }
 
+//! Get the RotatedComponent::_sfInternalComponent field.
+inline
+SFComponentPtr *RotatedComponentBase::getSFInternalComponent(void)
+{
+    return &_sfInternalComponent;
+}
+
 
 //! Get the value of the RotatedComponent::_sfAngle field.
 inline
@@ -123,6 +130,27 @@ inline
 void RotatedComponentBase::setAngle(const Real32 &value)
 {
     _sfAngle.setValue(value);
+}
+
+//! Get the value of the RotatedComponent::_sfInternalComponent field.
+inline
+ComponentPtr &RotatedComponentBase::getInternalComponent(void)
+{
+    return _sfInternalComponent.getValue();
+}
+
+//! Get the value of the RotatedComponent::_sfInternalComponent field.
+inline
+const ComponentPtr &RotatedComponentBase::getInternalComponent(void) const
+{
+    return _sfInternalComponent.getValue();
+}
+
+//! Set the value of the RotatedComponent::_sfInternalComponent field.
+inline
+void RotatedComponentBase::setInternalComponent(const ComponentPtr &value)
+{
+    _sfInternalComponent.setValue(value);
 }
 
 

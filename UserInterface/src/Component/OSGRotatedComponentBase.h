@@ -68,6 +68,7 @@
 #include "Component/Container/OSGContainer.h" // Parent
 
 #include <OpenSG/OSGReal32Fields.h> // Angle type
+#include "Component/OSGComponentFields.h" // InternalComponent type
 
 #include "OSGRotatedComponentFields.h"
 
@@ -91,11 +92,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
 
     enum
     {
-        AngleFieldId = Inherited::NextFieldId,
-        NextFieldId  = AngleFieldId + 1
+        AngleFieldId             = Inherited::NextFieldId,
+        InternalComponentFieldId = AngleFieldId             + 1,
+        NextFieldId              = InternalComponentFieldId + 1
     };
 
     static const OSG::BitVector AngleFieldMask;
+    static const OSG::BitVector InternalComponentFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -123,9 +126,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
     /*! \{                                                                 */
 
            SFReal32            *getSFAngle          (void);
+           SFComponentPtr      *getSFInternalComponent(void);
 
            Real32              &getAngle          (void);
      const Real32              &getAngle          (void) const;
+           ComponentPtr        &getInternalComponent(void);
+     const ComponentPtr        &getInternalComponent(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -133,6 +139,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
     /*! \{                                                                 */
 
      void setAngle          ( const Real32 &value );
+     void setInternalComponent( const ComponentPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +183,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
     /*! \{                                                                 */
 
     SFReal32            _sfAngle;
+    SFComponentPtr      _sfInternalComponent;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -20,5 +20,16 @@ A UI Rotated Component.
 		defaultValue="0.0"
 		access="public"
 	>
+    Angle To Rotate the internal Component In Radians
+	</Field>
+	<Field
+		name="InternalComponent"
+		type="ComponentPtr"
+		cardinality="single"
+		visibility="external"
+		header="Component/OSGComponentFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
 	</Field>
 </FieldContainer>

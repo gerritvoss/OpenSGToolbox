@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  RotatedComponentBase::AngleFieldMask = 
     (TypeTraits<BitVector>::One << RotatedComponentBase::AngleFieldId);
 
+const OSG::BitVector  RotatedComponentBase::InternalComponentFieldMask = 
+    (TypeTraits<BitVector>::One << RotatedComponentBase::InternalComponentFieldId);
+
 const OSG::BitVector RotatedComponentBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +78,9 @@ const OSG::BitVector RotatedComponentBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var Real32          RotatedComponentBase::_sfAngle
+    Angle To Rotate the internal Component In Radians
+*/
+/*! \var ComponentPtr    RotatedComponentBase::_sfInternalComponent
     
 */
 
@@ -86,7 +92,12 @@ FieldDescription *RotatedComponentBase::_desc[] =
                      "Angle", 
                      AngleFieldId, AngleFieldMask,
                      false,
-                     (FieldAccessMethod) &RotatedComponentBase::getSFAngle)
+                     (FieldAccessMethod) &RotatedComponentBase::getSFAngle),
+    new FieldDescription(SFComponentPtr::getClassType(), 
+                     "InternalComponent", 
+                     InternalComponentFieldId, InternalComponentFieldMask,
+                     false,
+                     (FieldAccessMethod) &RotatedComponentBase::getSFInternalComponent)
 };
 
 
@@ -163,6 +174,7 @@ void RotatedComponentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 RotatedComponentBase::RotatedComponentBase(void) :
     _sfAngle                  (Real32(0.0)), 
+    _sfInternalComponent      (ComponentPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -173,6 +185,7 @@ RotatedComponentBase::RotatedComponentBase(void) :
 
 RotatedComponentBase::RotatedComponentBase(const RotatedComponentBase &source) :
     _sfAngle                  (source._sfAngle                  ), 
+    _sfInternalComponent      (source._sfInternalComponent      ), 
     Inherited                 (source)
 {
 }
@@ -194,6 +207,11 @@ UInt32 RotatedComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfAngle.getBinSize();
     }
 
+    if(FieldBits::NoField != (InternalComponentFieldMask & whichField))
+    {
+        returnValue += _sfInternalComponent.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -206,6 +224,11 @@ void RotatedComponentBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (AngleFieldMask & whichField))
     {
         _sfAngle.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InternalComponentFieldMask & whichField))
+    {
+        _sfInternalComponent.copyToBin(pMem);
     }
 
 
@@ -221,6 +244,11 @@ void RotatedComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfAngle.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (InternalComponentFieldMask & whichField))
+    {
+        _sfInternalComponent.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -234,6 +262,9 @@ void RotatedComponentBase::executeSyncImpl(      RotatedComponentBase *pOther,
     if(FieldBits::NoField != (AngleFieldMask & whichField))
         _sfAngle.syncWith(pOther->_sfAngle);
 
+    if(FieldBits::NoField != (InternalComponentFieldMask & whichField))
+        _sfInternalComponent.syncWith(pOther->_sfInternalComponent);
+
 
 }
 #else
@@ -246,6 +277,9 @@ void RotatedComponentBase::executeSyncImpl(      RotatedComponentBase *pOther,
 
     if(FieldBits::NoField != (AngleFieldMask & whichField))
         _sfAngle.syncWith(pOther->_sfAngle);
+
+    if(FieldBits::NoField != (InternalComponentFieldMask & whichField))
+        _sfInternalComponent.syncWith(pOther->_sfInternalComponent);
 
 
 

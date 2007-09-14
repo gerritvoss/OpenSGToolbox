@@ -76,6 +76,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponent : public RotatedComponent
 
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
+                      
+    virtual void updateLayout(void);
+    
+	//Mouse Events
+    virtual void mouseClicked(const MouseEvent& e);
+    virtual void mouseEntered(const MouseEvent& e);
+    virtual void mouseExited(const MouseEvent& e);
+    virtual void mousePressed(const MouseEvent& e);
+    virtual void mouseReleased(const MouseEvent& e);
+
+	//Mouse Motion Events
+    virtual void mouseMoved(const MouseEvent& e);
+    virtual void mouseDragged(const MouseEvent& e);
+
+	//Mouse Wheel Events
+    virtual void mouseWheelMoved(const MouseWheelEvent& e);
+
+    Pnt2s getLocalToInternalComponent(const Pnt2s& LocalPoint) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/

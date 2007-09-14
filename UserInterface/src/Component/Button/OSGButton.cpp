@@ -319,7 +319,7 @@ void Button::ButtonArmedListener::update(const UpdateEvent& e)
     if(_ActionFireElps >= _Button->getActionOnMouseDownRate())
     {
         _Button->produceActionPerformed(ActionEvent(_Button, e.getTimeStamp()));
-        _ActionFireElps -= osgfloor<Time>(_ActionFireElps/_Button->getActionOnMouseDownRate()) * _Button->getActionOnMouseDownRate();
+        _ActionFireElps -= static_cast<Int32>(_ActionFireElps/_Button->getActionOnMouseDownRate()) * _Button->getActionOnMouseDownRate();
     }
 }
 

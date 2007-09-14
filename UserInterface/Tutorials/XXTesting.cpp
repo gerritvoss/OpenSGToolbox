@@ -1030,7 +1030,7 @@ void create3DObjects(void)
 {
 	// Make Object Nodes
     NodePtr torusGeo = makeTorus(90, 270, 16, 16);
-	NodePtr coneGeo = makeCone(150, 50, 16, TRUE, TRUE);
+	NodePtr coneGeo = makeCone(150, 50, 16, true, true);
 	NodePtr sphereGeo = makeSphere(4, 100);
 	NodePtr boxGeo = makeBox(100, 100, 100, 1, 1, 1);
 

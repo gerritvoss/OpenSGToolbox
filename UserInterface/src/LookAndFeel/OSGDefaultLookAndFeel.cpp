@@ -78,6 +78,8 @@
 
 #include "Component/Scroll/OSGScrollBar.h"
 
+#include "Component/OSGRotatedComponent.h"
+
 
 OSG_BEGIN_NAMESPACE
 
@@ -1395,6 +1397,45 @@ void DefaultLookAndFeel::init(void)
 	
     ScrollBar::getClassType().setPrototype(DefaultScrollBar);
 
+	//************************** RotatedComponent*****************************
+	//Default RotatedComponentBorder
+	LineBorderPtr DefaultRotatedComponentBorder = LineBorder::create();
+	beginEditCP(DefaultRotatedComponentBorder);
+		DefaultRotatedComponentBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultRotatedComponentBorder->setWidth(1);
+	endEditCP(DefaultRotatedComponentBorder);
+
+	//Default RotatedComponentBackground
+	ColorUIBackgroundPtr DefaultRotatedComponentBackground = ColorUIBackground::create();
+	beginEditCP(DefaultRotatedComponentBackground);
+		DefaultRotatedComponentBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+	endEditCP(DefaultRotatedComponentBackground);
+
+	//Default RotatedComponent
+	RotatedComponentPtr DefaultRotatedComponent = RotatedComponent::create();
+	beginEditCP(DefaultRotatedComponent);
+		DefaultRotatedComponent->setEnabled(true);
+		DefaultRotatedComponent->setVisible(true);
+		
+		DefaultRotatedComponent->setConstraints(NullFC);
+		//Sizes
+		DefaultRotatedComponent->setMinSize(Vec2s(0,0));
+		DefaultRotatedComponent->setMaxSize(Vec2s(32767,32767)); //2^15
+		DefaultRotatedComponent->setPreferredSize(Vec2s(100,100));
+
+		//Border
+		DefaultRotatedComponent->setBorder(DefaultRotatedComponentBorder);
+		
+		//Background
+		DefaultRotatedComponent->setBackground(DefaultRotatedComponentBackground);
+		
+		//Opacity
+		DefaultRotatedComponent->setOpacity(1.0);
+
+		DefaultRotatedComponent->setInternalComponent(NullFC);
+	endEditCP(DefaultRotatedComponent);
+	
+    RotatedComponent::getClassType().setPrototype(DefaultRotatedComponent);
 	/*******Borders********/
 	/*******Line Border********/
 
@@ -1534,6 +1575,7 @@ void DefaultLookAndFeel::init(void)
 		getPrototypes().addValue(DefaultPopupMenu);
 		getPrototypes().addValue(DefaultMenuBar);
 		getPrototypes().addValue(DefaultScrollBar);
+		getPrototypes().addValue(DefaultRotatedComponent);
 	endEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);
 }
 /*-------------------------------------------------------------------------*\
