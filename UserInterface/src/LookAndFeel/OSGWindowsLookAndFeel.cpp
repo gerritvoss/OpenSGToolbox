@@ -78,6 +78,8 @@
 #include "Component/Menu/OSGSeperatorMenuItem.h"
 #include "Component/Menu/OSGPopupMenu.h"
 #include "Component/Menu/OSGMenuBar.h"
+
+#include "Component/OSGRotatedComponent.h"
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -269,6 +271,8 @@ void WindowsLookAndFeel::init(void)
 		WindowsButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsButton->setDisabledTextColor(WindowsDisabledTextColor);
+        
+        WindowsButton->setActiveOffset(Vec2s(2,2));
 	endEditCP(WindowsButton);
 
 	Button::getClassType().setPrototype(WindowsButton);
@@ -693,14 +697,14 @@ void WindowsLookAndFeel::init(void)
 		WindowsCheckboxButton->setSize(Vec2s(0,0));
 
         //Draw Objects
-		WindowsCheckboxButton->setDrawObject(WindowsCheckboxDrawObject);
-		WindowsCheckboxButton->setSelectedDrawObject(WindowsSelectedCheckboxDrawObject);
-		WindowsCheckboxButton->setActiveDrawObject(WindowsActiveCheckboxDrawObject);
-		WindowsCheckboxButton->setActiveSelectedDrawObject(WindowsActiveSelectedCheckboxDrawObject);
-		WindowsCheckboxButton->setRolloverDrawObject(WindowsRolloverCheckboxDrawObject);
-		WindowsCheckboxButton->setRolloverSelectedDrawObject(WindowsRolloverSelectedCheckboxDrawObject);
-		WindowsCheckboxButton->setDisabledDrawObject(WindowsDisabledCheckboxDrawObject);
-		WindowsCheckboxButton->setDisabledSelectedDrawObject(WindowsDisabledSelectedCheckboxDrawObject);
+		WindowsCheckboxButton->setCheckboxDrawObject(WindowsCheckboxDrawObject);
+		WindowsCheckboxButton->setSelectedCheckboxDrawObject(WindowsSelectedCheckboxDrawObject);
+		WindowsCheckboxButton->setActiveCheckboxDrawObject(WindowsActiveCheckboxDrawObject);
+		WindowsCheckboxButton->setActiveSelectedCheckboxDrawObject(WindowsActiveSelectedCheckboxDrawObject);
+		WindowsCheckboxButton->setRolloverCheckboxDrawObject(WindowsRolloverCheckboxDrawObject);
+		WindowsCheckboxButton->setRolloverSelectedCheckboxDrawObject(WindowsRolloverSelectedCheckboxDrawObject);
+		WindowsCheckboxButton->setDisabledCheckboxDrawObject(WindowsDisabledCheckboxDrawObject);
+		WindowsCheckboxButton->setDisabledSelectedCheckboxDrawObject(WindowsDisabledSelectedCheckboxDrawObject);
 
 		//Border
 		WindowsCheckboxButton->setBorder(WindowsCheckboxButtonBorder);
@@ -729,6 +733,8 @@ void WindowsLookAndFeel::init(void)
 		WindowsCheckboxButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsCheckboxButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsCheckboxButton->setDisabledTextColor(WindowsDisabledTextColor);
+        
+        WindowsCheckboxButton->setActiveOffset(Vec2s(0,0));
 	endEditCP(WindowsCheckboxButton);
 
 	CheckboxButton::getClassType().setPrototype(WindowsCheckboxButton);
@@ -916,14 +922,14 @@ void WindowsLookAndFeel::init(void)
 		WindowsRadioButton->setPreferredSize(Vec2s(75,23));
 
 		//draw objects
-		WindowsRadioButton->setDrawObject(WindowsRadioDrawObject);
-		WindowsRadioButton->setSelectedDrawObject(WindowsSelectedRadioDrawObject);
-		WindowsRadioButton->setActiveDrawObject(WindowsActiveRadioDrawObject);
-		WindowsRadioButton->setActiveSelectedDrawObject(WindowsActiveSelectedRadioDrawObject);
-		WindowsRadioButton->setRolloverDrawObject(WindowsRolloverRadioDrawObject);
-		WindowsRadioButton->setRolloverSelectedDrawObject(WindowsRolloverSelectedRadioDrawObject);
-		WindowsRadioButton->setDisabledDrawObject(WindowsDisabledRadioDrawObject);
-		WindowsRadioButton->setDisabledSelectedDrawObject(WindowsDisabledSelectedRadioDrawObject);
+		WindowsRadioButton->setRadioDrawObject(WindowsRadioDrawObject);
+		WindowsRadioButton->setSelectedRadioDrawObject(WindowsSelectedRadioDrawObject);
+		WindowsRadioButton->setActiveRadioDrawObject(WindowsActiveRadioDrawObject);
+		WindowsRadioButton->setActiveSelectedRadioDrawObject(WindowsActiveSelectedRadioDrawObject);
+		WindowsRadioButton->setRolloverRadioDrawObject(WindowsRolloverRadioDrawObject);
+		WindowsRadioButton->setRolloverSelectedRadioDrawObject(WindowsRolloverSelectedRadioDrawObject);
+		WindowsRadioButton->setDisabledRadioDrawObject(WindowsDisabledRadioDrawObject);
+		WindowsRadioButton->setDisabledSelectedRadioDrawObject(WindowsDisabledSelectedRadioDrawObject);
 
 		//Border
 		WindowsRadioButton->setBorder(WindowsRadioButtonBorder);
@@ -954,6 +960,8 @@ void WindowsLookAndFeel::init(void)
 		WindowsRadioButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsRadioButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsRadioButton->setDisabledTextColor(WindowsDisabledTextColor);
+
+        WindowsRadioButton->setActiveOffset(Vec2s(0,0));
 	endEditCP(WindowsRadioButton);
 	
 	RadioButton::getClassType().setPrototype(WindowsRadioButton);
@@ -998,6 +1006,8 @@ void WindowsLookAndFeel::init(void)
 		WindowsToggleButton->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsToggleButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsToggleButton->setDisabledTextColor(WindowsDisabledTextColor);
+        
+        WindowsToggleButton->setActiveOffset(Vec2s(2,2));
 	endEditCP(WindowsToggleButton);
 
 	ToggleButton::getClassType().setPrototype(WindowsToggleButton);
@@ -1476,6 +1486,41 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsMenuBar);
 	
     MenuBar::getClassType().setPrototype(WindowsMenuBar);
+    
+	//************************** RotatedComponent*****************************
+	//Windows RotatedComponentBorder
+	EmptyBorderPtr WindowsRotatedComponentBorder = EmptyBorder::create();
+
+	//Windows RotatedComponentBackground
+	EmptyUIBackgroundPtr WindowsRotatedComponentBackground = EmptyUIBackground::create();
+
+	//Windows RotatedComponent
+	RotatedComponentPtr WindowsRotatedComponent = RotatedComponent::create();
+	beginEditCP(WindowsRotatedComponent);
+		WindowsRotatedComponent->setEnabled(true);
+		WindowsRotatedComponent->setVisible(true);
+		
+		WindowsRotatedComponent->setConstraints(NullFC);
+		//Sizes
+		WindowsRotatedComponent->setMinSize(Vec2s(0,0));
+		WindowsRotatedComponent->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsRotatedComponent->setPreferredSize(Vec2s(100,100));
+
+		//Border
+		WindowsRotatedComponent->setBorder(WindowsRotatedComponentBorder);
+		
+		//Background
+		WindowsRotatedComponent->setBackground(WindowsRotatedComponentBackground);
+		
+		//Opacity
+		WindowsRotatedComponent->setOpacity(1.0);
+
+		WindowsRotatedComponent->setInternalComponent(NullFC);
+
+        WindowsRotatedComponent->setResizePolicy(RotatedComponent::RESIZE_TO_MIN);
+	endEditCP(WindowsRotatedComponent);
+	
+    RotatedComponent::getClassType().setPrototype(WindowsRotatedComponent);
 	/*******Borders********/
 	/*******Line Border********/
 
@@ -1603,6 +1648,7 @@ void WindowsLookAndFeel::init(void)
 		getPrototypes().addValue(WindowsMenu);
 		getPrototypes().addValue(WindowsPopupMenu);
 		getPrototypes().addValue(WindowsMenuBar);
+		getPrototypes().addValue(WindowsRotatedComponent);
 	endEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);
 
 

@@ -64,29 +64,29 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  RadioButtonBase::DrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << RadioButtonBase::DrawObjectFieldId);
+const OSG::BitVector  RadioButtonBase::RadioDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << RadioButtonBase::RadioDrawObjectFieldId);
 
-const OSG::BitVector  RadioButtonBase::SelectedDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << RadioButtonBase::SelectedDrawObjectFieldId);
+const OSG::BitVector  RadioButtonBase::SelectedRadioDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << RadioButtonBase::SelectedRadioDrawObjectFieldId);
 
-const OSG::BitVector  RadioButtonBase::ActiveDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << RadioButtonBase::ActiveDrawObjectFieldId);
+const OSG::BitVector  RadioButtonBase::ActiveRadioDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << RadioButtonBase::ActiveRadioDrawObjectFieldId);
 
-const OSG::BitVector  RadioButtonBase::ActiveSelectedDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << RadioButtonBase::ActiveSelectedDrawObjectFieldId);
+const OSG::BitVector  RadioButtonBase::ActiveSelectedRadioDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << RadioButtonBase::ActiveSelectedRadioDrawObjectFieldId);
 
-const OSG::BitVector  RadioButtonBase::RolloverDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << RadioButtonBase::RolloverDrawObjectFieldId);
+const OSG::BitVector  RadioButtonBase::RolloverRadioDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << RadioButtonBase::RolloverRadioDrawObjectFieldId);
 
-const OSG::BitVector  RadioButtonBase::RolloverSelectedDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << RadioButtonBase::RolloverSelectedDrawObjectFieldId);
+const OSG::BitVector  RadioButtonBase::RolloverSelectedRadioDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << RadioButtonBase::RolloverSelectedRadioDrawObjectFieldId);
 
-const OSG::BitVector  RadioButtonBase::DisabledDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << RadioButtonBase::DisabledDrawObjectFieldId);
+const OSG::BitVector  RadioButtonBase::DisabledRadioDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << RadioButtonBase::DisabledRadioDrawObjectFieldId);
 
-const OSG::BitVector  RadioButtonBase::DisabledSelectedDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << RadioButtonBase::DisabledSelectedDrawObjectFieldId);
+const OSG::BitVector  RadioButtonBase::DisabledSelectedRadioDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << RadioButtonBase::DisabledSelectedRadioDrawObjectFieldId);
 
 const OSG::BitVector RadioButtonBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -95,28 +95,28 @@ const OSG::BitVector RadioButtonBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfDrawObject
+/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfRadioDrawObject
     
 */
-/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfSelectedDrawObject
+/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfSelectedRadioDrawObject
     
 */
-/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfActiveDrawObject
+/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfActiveRadioDrawObject
     
 */
-/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfActiveSelectedDrawObject
+/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfActiveSelectedRadioDrawObject
     
 */
-/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfRolloverDrawObject
+/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfRolloverRadioDrawObject
     
 */
-/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfRolloverSelectedDrawObject
+/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfRolloverSelectedRadioDrawObject
     
 */
-/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfDisabledDrawObject
+/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfDisabledRadioDrawObject
     
 */
-/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfDisabledSelectedDrawObject
+/*! \var UIDrawObjectCanvasPtr RadioButtonBase::_sfDisabledSelectedRadioDrawObject
     
 */
 
@@ -125,45 +125,45 @@ const OSG::BitVector RadioButtonBase::MTInfluenceMask =
 FieldDescription *RadioButtonBase::_desc[] = 
 {
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "DrawObject", 
-                     DrawObjectFieldId, DrawObjectFieldMask,
+                     "RadioDrawObject", 
+                     RadioDrawObjectFieldId, RadioDrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &RadioButtonBase::getSFDrawObject),
+                     (FieldAccessMethod) &RadioButtonBase::getSFRadioDrawObject),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "SelectedDrawObject", 
-                     SelectedDrawObjectFieldId, SelectedDrawObjectFieldMask,
+                     "SelectedRadioDrawObject", 
+                     SelectedRadioDrawObjectFieldId, SelectedRadioDrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &RadioButtonBase::getSFSelectedDrawObject),
+                     (FieldAccessMethod) &RadioButtonBase::getSFSelectedRadioDrawObject),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "ActiveDrawObject", 
-                     ActiveDrawObjectFieldId, ActiveDrawObjectFieldMask,
+                     "ActiveRadioDrawObject", 
+                     ActiveRadioDrawObjectFieldId, ActiveRadioDrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &RadioButtonBase::getSFActiveDrawObject),
+                     (FieldAccessMethod) &RadioButtonBase::getSFActiveRadioDrawObject),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "ActiveSelectedDrawObject", 
-                     ActiveSelectedDrawObjectFieldId, ActiveSelectedDrawObjectFieldMask,
+                     "ActiveSelectedRadioDrawObject", 
+                     ActiveSelectedRadioDrawObjectFieldId, ActiveSelectedRadioDrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &RadioButtonBase::getSFActiveSelectedDrawObject),
+                     (FieldAccessMethod) &RadioButtonBase::getSFActiveSelectedRadioDrawObject),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "RolloverDrawObject", 
-                     RolloverDrawObjectFieldId, RolloverDrawObjectFieldMask,
+                     "RolloverRadioDrawObject", 
+                     RolloverRadioDrawObjectFieldId, RolloverRadioDrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &RadioButtonBase::getSFRolloverDrawObject),
+                     (FieldAccessMethod) &RadioButtonBase::getSFRolloverRadioDrawObject),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "RolloverSelectedDrawObject", 
-                     RolloverSelectedDrawObjectFieldId, RolloverSelectedDrawObjectFieldMask,
+                     "RolloverSelectedRadioDrawObject", 
+                     RolloverSelectedRadioDrawObjectFieldId, RolloverSelectedRadioDrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &RadioButtonBase::getSFRolloverSelectedDrawObject),
+                     (FieldAccessMethod) &RadioButtonBase::getSFRolloverSelectedRadioDrawObject),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "DisabledDrawObject", 
-                     DisabledDrawObjectFieldId, DisabledDrawObjectFieldMask,
+                     "DisabledRadioDrawObject", 
+                     DisabledRadioDrawObjectFieldId, DisabledRadioDrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &RadioButtonBase::getSFDisabledDrawObject),
+                     (FieldAccessMethod) &RadioButtonBase::getSFDisabledRadioDrawObject),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "DisabledSelectedDrawObject", 
-                     DisabledSelectedDrawObjectFieldId, DisabledSelectedDrawObjectFieldMask,
+                     "DisabledSelectedRadioDrawObject", 
+                     DisabledSelectedRadioDrawObjectFieldId, DisabledSelectedRadioDrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &RadioButtonBase::getSFDisabledSelectedDrawObject)
+                     (FieldAccessMethod) &RadioButtonBase::getSFDisabledSelectedRadioDrawObject)
 };
 
 
@@ -239,14 +239,14 @@ void RadioButtonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 RadioButtonBase::RadioButtonBase(void) :
-    _sfDrawObject             (), 
-    _sfSelectedDrawObject     (), 
-    _sfActiveDrawObject       (), 
-    _sfActiveSelectedDrawObject(), 
-    _sfRolloverDrawObject     (), 
-    _sfRolloverSelectedDrawObject(), 
-    _sfDisabledDrawObject     (), 
-    _sfDisabledSelectedDrawObject(), 
+    _sfRadioDrawObject        (), 
+    _sfSelectedRadioDrawObject(), 
+    _sfActiveRadioDrawObject  (), 
+    _sfActiveSelectedRadioDrawObject(), 
+    _sfRolloverRadioDrawObject(), 
+    _sfRolloverSelectedRadioDrawObject(), 
+    _sfDisabledRadioDrawObject(), 
+    _sfDisabledSelectedRadioDrawObject(), 
     Inherited() 
 {
 }
@@ -256,14 +256,14 @@ RadioButtonBase::RadioButtonBase(void) :
 #endif
 
 RadioButtonBase::RadioButtonBase(const RadioButtonBase &source) :
-    _sfDrawObject             (source._sfDrawObject             ), 
-    _sfSelectedDrawObject     (source._sfSelectedDrawObject     ), 
-    _sfActiveDrawObject       (source._sfActiveDrawObject       ), 
-    _sfActiveSelectedDrawObject(source._sfActiveSelectedDrawObject), 
-    _sfRolloverDrawObject     (source._sfRolloverDrawObject     ), 
-    _sfRolloverSelectedDrawObject(source._sfRolloverSelectedDrawObject), 
-    _sfDisabledDrawObject     (source._sfDisabledDrawObject     ), 
-    _sfDisabledSelectedDrawObject(source._sfDisabledSelectedDrawObject), 
+    _sfRadioDrawObject        (source._sfRadioDrawObject        ), 
+    _sfSelectedRadioDrawObject(source._sfSelectedRadioDrawObject), 
+    _sfActiveRadioDrawObject  (source._sfActiveRadioDrawObject  ), 
+    _sfActiveSelectedRadioDrawObject(source._sfActiveSelectedRadioDrawObject), 
+    _sfRolloverRadioDrawObject(source._sfRolloverRadioDrawObject), 
+    _sfRolloverSelectedRadioDrawObject(source._sfRolloverSelectedRadioDrawObject), 
+    _sfDisabledRadioDrawObject(source._sfDisabledRadioDrawObject), 
+    _sfDisabledSelectedRadioDrawObject(source._sfDisabledSelectedRadioDrawObject), 
     Inherited                 (source)
 {
 }
@@ -280,44 +280,44 @@ UInt32 RadioButtonBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (RadioDrawObjectFieldMask & whichField))
     {
-        returnValue += _sfDrawObject.getBinSize();
+        returnValue += _sfRadioDrawObject.getBinSize();
     }
 
-    if(FieldBits::NoField != (SelectedDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (SelectedRadioDrawObjectFieldMask & whichField))
     {
-        returnValue += _sfSelectedDrawObject.getBinSize();
+        returnValue += _sfSelectedRadioDrawObject.getBinSize();
     }
 
-    if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (ActiveRadioDrawObjectFieldMask & whichField))
     {
-        returnValue += _sfActiveDrawObject.getBinSize();
+        returnValue += _sfActiveRadioDrawObject.getBinSize();
     }
 
-    if(FieldBits::NoField != (ActiveSelectedDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (ActiveSelectedRadioDrawObjectFieldMask & whichField))
     {
-        returnValue += _sfActiveSelectedDrawObject.getBinSize();
+        returnValue += _sfActiveSelectedRadioDrawObject.getBinSize();
     }
 
-    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (RolloverRadioDrawObjectFieldMask & whichField))
     {
-        returnValue += _sfRolloverDrawObject.getBinSize();
+        returnValue += _sfRolloverRadioDrawObject.getBinSize();
     }
 
-    if(FieldBits::NoField != (RolloverSelectedDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (RolloverSelectedRadioDrawObjectFieldMask & whichField))
     {
-        returnValue += _sfRolloverSelectedDrawObject.getBinSize();
+        returnValue += _sfRolloverSelectedRadioDrawObject.getBinSize();
     }
 
-    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (DisabledRadioDrawObjectFieldMask & whichField))
     {
-        returnValue += _sfDisabledDrawObject.getBinSize();
+        returnValue += _sfDisabledRadioDrawObject.getBinSize();
     }
 
-    if(FieldBits::NoField != (DisabledSelectedDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (DisabledSelectedRadioDrawObjectFieldMask & whichField))
     {
-        returnValue += _sfDisabledSelectedDrawObject.getBinSize();
+        returnValue += _sfDisabledSelectedRadioDrawObject.getBinSize();
     }
 
 
@@ -329,44 +329,44 @@ void RadioButtonBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (RadioDrawObjectFieldMask & whichField))
     {
-        _sfDrawObject.copyToBin(pMem);
+        _sfRadioDrawObject.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SelectedDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (SelectedRadioDrawObjectFieldMask & whichField))
     {
-        _sfSelectedDrawObject.copyToBin(pMem);
+        _sfSelectedRadioDrawObject.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (ActiveRadioDrawObjectFieldMask & whichField))
     {
-        _sfActiveDrawObject.copyToBin(pMem);
+        _sfActiveRadioDrawObject.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ActiveSelectedDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (ActiveSelectedRadioDrawObjectFieldMask & whichField))
     {
-        _sfActiveSelectedDrawObject.copyToBin(pMem);
+        _sfActiveSelectedRadioDrawObject.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (RolloverRadioDrawObjectFieldMask & whichField))
     {
-        _sfRolloverDrawObject.copyToBin(pMem);
+        _sfRolloverRadioDrawObject.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (RolloverSelectedDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (RolloverSelectedRadioDrawObjectFieldMask & whichField))
     {
-        _sfRolloverSelectedDrawObject.copyToBin(pMem);
+        _sfRolloverSelectedRadioDrawObject.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (DisabledRadioDrawObjectFieldMask & whichField))
     {
-        _sfDisabledDrawObject.copyToBin(pMem);
+        _sfDisabledRadioDrawObject.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (DisabledSelectedDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (DisabledSelectedRadioDrawObjectFieldMask & whichField))
     {
-        _sfDisabledSelectedDrawObject.copyToBin(pMem);
+        _sfDisabledSelectedRadioDrawObject.copyToBin(pMem);
     }
 
 
@@ -377,44 +377,44 @@ void RadioButtonBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (RadioDrawObjectFieldMask & whichField))
     {
-        _sfDrawObject.copyFromBin(pMem);
+        _sfRadioDrawObject.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SelectedDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (SelectedRadioDrawObjectFieldMask & whichField))
     {
-        _sfSelectedDrawObject.copyFromBin(pMem);
+        _sfSelectedRadioDrawObject.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (ActiveRadioDrawObjectFieldMask & whichField))
     {
-        _sfActiveDrawObject.copyFromBin(pMem);
+        _sfActiveRadioDrawObject.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ActiveSelectedDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (ActiveSelectedRadioDrawObjectFieldMask & whichField))
     {
-        _sfActiveSelectedDrawObject.copyFromBin(pMem);
+        _sfActiveSelectedRadioDrawObject.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (RolloverRadioDrawObjectFieldMask & whichField))
     {
-        _sfRolloverDrawObject.copyFromBin(pMem);
+        _sfRolloverRadioDrawObject.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (RolloverSelectedDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (RolloverSelectedRadioDrawObjectFieldMask & whichField))
     {
-        _sfRolloverSelectedDrawObject.copyFromBin(pMem);
+        _sfRolloverSelectedRadioDrawObject.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (DisabledRadioDrawObjectFieldMask & whichField))
     {
-        _sfDisabledDrawObject.copyFromBin(pMem);
+        _sfDisabledRadioDrawObject.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (DisabledSelectedDrawObjectFieldMask & whichField))
+    if(FieldBits::NoField != (DisabledSelectedRadioDrawObjectFieldMask & whichField))
     {
-        _sfDisabledSelectedDrawObject.copyFromBin(pMem);
+        _sfDisabledSelectedRadioDrawObject.copyFromBin(pMem);
     }
 
 
@@ -427,29 +427,29 @@ void RadioButtonBase::executeSyncImpl(      RadioButtonBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
-        _sfDrawObject.syncWith(pOther->_sfDrawObject);
+    if(FieldBits::NoField != (RadioDrawObjectFieldMask & whichField))
+        _sfRadioDrawObject.syncWith(pOther->_sfRadioDrawObject);
 
-    if(FieldBits::NoField != (SelectedDrawObjectFieldMask & whichField))
-        _sfSelectedDrawObject.syncWith(pOther->_sfSelectedDrawObject);
+    if(FieldBits::NoField != (SelectedRadioDrawObjectFieldMask & whichField))
+        _sfSelectedRadioDrawObject.syncWith(pOther->_sfSelectedRadioDrawObject);
 
-    if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
-        _sfActiveDrawObject.syncWith(pOther->_sfActiveDrawObject);
+    if(FieldBits::NoField != (ActiveRadioDrawObjectFieldMask & whichField))
+        _sfActiveRadioDrawObject.syncWith(pOther->_sfActiveRadioDrawObject);
 
-    if(FieldBits::NoField != (ActiveSelectedDrawObjectFieldMask & whichField))
-        _sfActiveSelectedDrawObject.syncWith(pOther->_sfActiveSelectedDrawObject);
+    if(FieldBits::NoField != (ActiveSelectedRadioDrawObjectFieldMask & whichField))
+        _sfActiveSelectedRadioDrawObject.syncWith(pOther->_sfActiveSelectedRadioDrawObject);
 
-    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
-        _sfRolloverDrawObject.syncWith(pOther->_sfRolloverDrawObject);
+    if(FieldBits::NoField != (RolloverRadioDrawObjectFieldMask & whichField))
+        _sfRolloverRadioDrawObject.syncWith(pOther->_sfRolloverRadioDrawObject);
 
-    if(FieldBits::NoField != (RolloverSelectedDrawObjectFieldMask & whichField))
-        _sfRolloverSelectedDrawObject.syncWith(pOther->_sfRolloverSelectedDrawObject);
+    if(FieldBits::NoField != (RolloverSelectedRadioDrawObjectFieldMask & whichField))
+        _sfRolloverSelectedRadioDrawObject.syncWith(pOther->_sfRolloverSelectedRadioDrawObject);
 
-    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
-        _sfDisabledDrawObject.syncWith(pOther->_sfDisabledDrawObject);
+    if(FieldBits::NoField != (DisabledRadioDrawObjectFieldMask & whichField))
+        _sfDisabledRadioDrawObject.syncWith(pOther->_sfDisabledRadioDrawObject);
 
-    if(FieldBits::NoField != (DisabledSelectedDrawObjectFieldMask & whichField))
-        _sfDisabledSelectedDrawObject.syncWith(pOther->_sfDisabledSelectedDrawObject);
+    if(FieldBits::NoField != (DisabledSelectedRadioDrawObjectFieldMask & whichField))
+        _sfDisabledSelectedRadioDrawObject.syncWith(pOther->_sfDisabledSelectedRadioDrawObject);
 
 
 }
@@ -461,29 +461,29 @@ void RadioButtonBase::executeSyncImpl(      RadioButtonBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
-        _sfDrawObject.syncWith(pOther->_sfDrawObject);
+    if(FieldBits::NoField != (RadioDrawObjectFieldMask & whichField))
+        _sfRadioDrawObject.syncWith(pOther->_sfRadioDrawObject);
 
-    if(FieldBits::NoField != (SelectedDrawObjectFieldMask & whichField))
-        _sfSelectedDrawObject.syncWith(pOther->_sfSelectedDrawObject);
+    if(FieldBits::NoField != (SelectedRadioDrawObjectFieldMask & whichField))
+        _sfSelectedRadioDrawObject.syncWith(pOther->_sfSelectedRadioDrawObject);
 
-    if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
-        _sfActiveDrawObject.syncWith(pOther->_sfActiveDrawObject);
+    if(FieldBits::NoField != (ActiveRadioDrawObjectFieldMask & whichField))
+        _sfActiveRadioDrawObject.syncWith(pOther->_sfActiveRadioDrawObject);
 
-    if(FieldBits::NoField != (ActiveSelectedDrawObjectFieldMask & whichField))
-        _sfActiveSelectedDrawObject.syncWith(pOther->_sfActiveSelectedDrawObject);
+    if(FieldBits::NoField != (ActiveSelectedRadioDrawObjectFieldMask & whichField))
+        _sfActiveSelectedRadioDrawObject.syncWith(pOther->_sfActiveSelectedRadioDrawObject);
 
-    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
-        _sfRolloverDrawObject.syncWith(pOther->_sfRolloverDrawObject);
+    if(FieldBits::NoField != (RolloverRadioDrawObjectFieldMask & whichField))
+        _sfRolloverRadioDrawObject.syncWith(pOther->_sfRolloverRadioDrawObject);
 
-    if(FieldBits::NoField != (RolloverSelectedDrawObjectFieldMask & whichField))
-        _sfRolloverSelectedDrawObject.syncWith(pOther->_sfRolloverSelectedDrawObject);
+    if(FieldBits::NoField != (RolloverSelectedRadioDrawObjectFieldMask & whichField))
+        _sfRolloverSelectedRadioDrawObject.syncWith(pOther->_sfRolloverSelectedRadioDrawObject);
 
-    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
-        _sfDisabledDrawObject.syncWith(pOther->_sfDisabledDrawObject);
+    if(FieldBits::NoField != (DisabledRadioDrawObjectFieldMask & whichField))
+        _sfDisabledRadioDrawObject.syncWith(pOther->_sfDisabledRadioDrawObject);
 
-    if(FieldBits::NoField != (DisabledSelectedDrawObjectFieldMask & whichField))
-        _sfDisabledSelectedDrawObject.syncWith(pOther->_sfDisabledSelectedDrawObject);
+    if(FieldBits::NoField != (DisabledSelectedRadioDrawObjectFieldMask & whichField))
+        _sfDisabledSelectedRadioDrawObject.syncWith(pOther->_sfDisabledSelectedRadioDrawObject);
 
 
 

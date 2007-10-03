@@ -41,7 +41,7 @@ A UI ScrollBar.
 	>
 	</Field>
 	<Field
-		name="MinButton"
+		name="VerticalMinButton"
 		type="ButtonPtr"
 		cardinality="single"
 		visibility="external"
@@ -51,7 +51,7 @@ A UI ScrollBar.
 	>
 	</Field>
 	<Field
-		name="MaxButton"
+		name="VerticalMaxButton"
 		type="ButtonPtr"
 		cardinality="single"
 		visibility="external"
@@ -61,7 +61,7 @@ A UI ScrollBar.
 	>
 	</Field>
 	<Field
-		name="ScrollBar"
+		name="VerticalScrollBar"
 		type="ButtonPtr"
 		cardinality="single"
 		visibility="external"
@@ -71,12 +71,52 @@ A UI ScrollBar.
 	>
 	</Field>
 	<Field
-		name="ScrollField"
-		type="UIDrawObjectCanvasPtr"
+		name="VerticalScrollField"
+		type="ButtonPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/OSGUIDrawObjectCanvas.h"
+		header="Component/Button/OSGButton.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="HorizontalMinButton"
+		type="ButtonPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/Button/OSGButton.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="HorizontalMaxButton"
+		type="ButtonPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/Button/OSGButton.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="HorizontalScrollBar"
+		type="ButtonPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/Button/OSGButton.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="HorizontalScrollField"
+		type="ButtonPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/Button/OSGButton.h"
 		defaultValue="NullFC"
 	>
 	</Field>

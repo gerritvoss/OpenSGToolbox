@@ -110,6 +110,13 @@ SFComponentPtr *RotatedComponentBase::getSFInternalComponent(void)
     return &_sfInternalComponent;
 }
 
+//! Get the RotatedComponent::_sfResizePolicy field.
+inline
+SFUInt32 *RotatedComponentBase::getSFResizePolicy(void)
+{
+    return &_sfResizePolicy;
+}
+
 
 //! Get the value of the RotatedComponent::_sfAngle field.
 inline
@@ -151,6 +158,27 @@ inline
 void RotatedComponentBase::setInternalComponent(const ComponentPtr &value)
 {
     _sfInternalComponent.setValue(value);
+}
+
+//! Get the value of the RotatedComponent::_sfResizePolicy field.
+inline
+UInt32 &RotatedComponentBase::getResizePolicy(void)
+{
+    return _sfResizePolicy.getValue();
+}
+
+//! Get the value of the RotatedComponent::_sfResizePolicy field.
+inline
+const UInt32 &RotatedComponentBase::getResizePolicy(void) const
+{
+    return _sfResizePolicy.getValue();
+}
+
+//! Set the value of the RotatedComponent::_sfResizePolicy field.
+inline
+void RotatedComponentBase::setResizePolicy(const UInt32 &value)
+{
+    _sfResizePolicy.setValue(value);
 }
 
 

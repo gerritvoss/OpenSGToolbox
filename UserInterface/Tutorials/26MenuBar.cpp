@@ -266,7 +266,7 @@ int main(int argc, char **argv)
 
     TheWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(550,550),
-                                        "OpenSG 25PopupMenu Window");
+                                        "OpenSG 26MenuBar Window");
 
     while(!ExitApp)
     {

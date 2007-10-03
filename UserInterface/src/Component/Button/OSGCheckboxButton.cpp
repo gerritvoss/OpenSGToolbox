@@ -116,8 +116,10 @@ void CheckboxButton::drawInternal(const GraphicsPtr TheGraphics) const
     
     if(DrawnDrawObject != NullFC)
     {
-        DrawnDrawObject->setPosition( calculateAlignment(InnerComponentsPosition, InnerComponentsSize,drawObjectSize,0.5,0.0 ) );
-	    DrawnDrawObject->draw(TheGraphics);
+        beginEditCP(DrawnDrawObject, PositionFieldMask);
+            DrawnDrawObject->setPosition( calculateAlignment(InnerComponentsPosition, InnerComponentsSize,drawObjectSize,0.5,0.0 ) );
+        endEditCP(DrawnDrawObject, PositionFieldMask);
+        DrawnDrawObject->draw(TheGraphics);
     }
 
     TheGraphics->drawText(calculateAlignment(InnerComponentsPosition + Vec2s(drawObjectSize.x()+ DrawnComponentToTextGap,0), InnerComponentsSize-Vec2s(drawObjectSize.x()+ DrawnComponentToTextGap,0),TextBounds,0.5,0.0 )
@@ -133,33 +135,33 @@ UIDrawObjectCanvasPtr CheckboxButton::getDrawnDrawObject(void) const
         {
             if(getSelected())
             {
-                return getActiveDrawObject();
+                return getActiveCheckboxDrawObject();
             }
             else
             {
-                return getActiveSelectedDrawObject();
+                return getActiveSelectedCheckboxDrawObject();
             }
         }
         else if(_MouseInComponentLastMouse)
         {
             if(getSelected())
             {
-                return getRolloverSelectedDrawObject();
+                return getRolloverSelectedCheckboxDrawObject();
             }
             else
             {
-                return getRolloverDrawObject();
+                return getRolloverCheckboxDrawObject();
             }
         }
         else
         {
             if(getSelected())
             {
-                return getSelectedDrawObject();
+                return getSelectedCheckboxDrawObject();
             }
             else
             {
-                return getDrawObject();
+                return getCheckboxDrawObject();
             }
         }
     }
@@ -167,11 +169,11 @@ UIDrawObjectCanvasPtr CheckboxButton::getDrawnDrawObject(void) const
     {
         if(getSelected())
         {
-            return getDisabledSelectedDrawObject();
+            return getDisabledSelectedCheckboxDrawObject();
         }
         else
         {
-            return getDisabledDrawObject();
+            return getDisabledCheckboxDrawObject();
         }
     }
 }

@@ -161,6 +161,12 @@ ScrollBar::ScrollBarDraggedListener::ScrollBarDraggedListener(ScrollBarPtr TheSc
 }
 
 inline
+ScrollBar::ScrollFieldListener::ScrollFieldListener(ScrollBarPtr TheScrollBar) :
+   _ScrollBar(TheScrollBar)
+{
+}
+
+inline
 void ScrollBar::ScrollBarDraggedListener::setInitialMousePosition(const Pnt2s& Pos)
 {
     _InitialMousePosition = Pos;
@@ -171,6 +177,7 @@ void ScrollBar::ScrollBarDraggedListener::setInitialScrollBarPosition(const Pnt2
 {
     _InitialScrollBarPosition = Pos;
 }
+
 
 OSG_END_NAMESPACE
 

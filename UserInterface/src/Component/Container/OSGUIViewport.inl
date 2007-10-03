@@ -43,18 +43,22 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-ScrollPanel::ViewportChangeListener::ViewportChangeListener(ScrollPanelPtr TheScrollPanel) :
-   _ScrollPanel(TheScrollPanel)
+void UIViewport::addChangeListener(ChangeListenerPtr Listener)
 {
+   _ChangeListeners.insert(Listener);
 }
 
 inline
-ScrollPanel::ViewportRangeModelChangeListener::ViewportRangeModelChangeListener(ScrollPanelPtr TheScrollPanel) :
-   _ScrollPanel(TheScrollPanel)
+void UIViewport::removeChangeListener(ChangeListenerPtr Listener)
 {
+   ChangeListenerSetItor EraseIter(_ChangeListeners.find(Listener));
+   if(EraseIter != _ChangeListeners.end())
+   {
+      _ChangeListeners.erase(EraseIter);
+   }
 }
 
 OSG_END_NAMESPACE
 
-#define OSGSCROLLPANEL_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+#define OSGUIVIEWPORT_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

@@ -44,6 +44,8 @@
 #include <OpenSG/UserInterface/OSGAbstractListModel.h>
 #include <OpenSG/UserInterface/OSGDefaultListCellGenerator.h>
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
+
+#include <OpenSG/UserInterface/OSGScrollPanel.h>
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
 // with OSG::, but that would be a bit tedious for this example
@@ -265,6 +267,33 @@ int main(int argc, char **argv)
 	SFString StrField6;
 	StrField6.setValue("Purple");
 	Model.pushBack(&StrField6);
+	SFString StrField7;
+	StrField7.setValue("Black");
+	Model.pushBack(&StrField7);
+	SFString StrField8;
+	StrField8.setValue("White");
+	Model.pushBack(&StrField8);
+	SFString StrField9;
+	StrField9.setValue("Brown");
+	Model.pushBack(&StrField9);
+	SFString StrField10;
+	StrField10.setValue("Gray");
+	Model.pushBack(&StrField10);
+	SFString StrField11;
+	StrField11.setValue("Cyan");
+	Model.pushBack(&StrField11);
+	SFString StrField12;
+	StrField12.setValue("Magenta");
+	Model.pushBack(&StrField12);
+	SFString StrField13;
+	StrField13.setValue("Purple");
+	Model.pushBack(&StrField13);
+	SFString StrField14;
+	StrField14.setValue("Purple");
+	Model.pushBack(&StrField14);
+	SFString StrField15;
+	StrField15.setValue("Purple");
+	Model.pushBack(&StrField15);
 
 
 	// Create ListCellRenderer and ListSelectionModel
@@ -286,6 +315,7 @@ int main(int argc, char **argv)
 		list->setPreferredSize( Vec2s (200, 300) );
 		list->setBackground(mainBackground);
         list->setCellLayout(VERTICAL_ALIGNMENT);
+        //list->setCellLayout(HORIZONTAL_ALIGNMENT);
 	endEditCP(list);
 	// Assign the Model, CellGenerator, and SelectionModel
 	// to the List
@@ -315,6 +345,14 @@ int main(int argc, char **argv)
 	//SelectionModel.setMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
 	//SelectionModel.setMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
 
+    //ScrollPanel
+    ScrollPanelPtr TheScrollPanel = ScrollPanel::create();
+    beginEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+	    TheScrollPanel->setPreferredSize(Vec2s(200,300));
+        TheScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        //TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+    endEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+    TheScrollPanel->setViewComponent(list);
 
 	// Create MainFramelayout
 	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
@@ -332,7 +370,7 @@ int main(int argc, char **argv)
 	   MainFrame->getChildren().addValue(singleButton);
 	   MainFrame->getChildren().addValue(singleIntervalButton);
 	   MainFrame->getChildren().addValue(multipleIntervalButton);
-	   MainFrame->getChildren().addValue(list);
+	   MainFrame->getChildren().addValue(TheScrollPanel);
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);

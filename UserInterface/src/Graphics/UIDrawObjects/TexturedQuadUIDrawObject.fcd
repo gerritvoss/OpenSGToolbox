@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="RadioButton"
-	parent="ToggleButton"
+	name="TexturedQuadUIDrawObject"
+	parent="UIDrawObject"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -11,77 +11,95 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
-A UI Radio Button.
+A UI TexturedQuadUIDrawObject.
 	<Field
-		name="RadioDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		name="Point1"
+		type="Pnt2s"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGUIDrawObjectCanvas.h"
 		access="public"
+		defaultValue="0,0"
 	>
 	</Field>
 	<Field
-		name="SelectedRadioDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		name="Point2"
+		type="Pnt2s"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGUIDrawObjectCanvas.h"
 		access="public"
+		defaultValue="0,1"
 	>
 	</Field>
 	<Field
-		name="ActiveRadioDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		name="Point3"
+		type="Pnt2s"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGUIDrawObjectCanvas.h"
 		access="public"
+		defaultValue="1,1"
 	>
 	</Field>
 	<Field
-		name="ActiveSelectedRadioDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		name="Point4"
+		type="Pnt2s"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGUIDrawObjectCanvas.h"
 		access="public"
+		defaultValue="1,0"
 	>
 	</Field>
 	<Field
-		name="RolloverRadioDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		name="TexCoord1"
+		type="Vec2f"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGUIDrawObjectCanvas.h"
 		access="public"
+		defaultValue="0.0,0.0"
 	>
 	</Field>
 	<Field
-		name="RolloverSelectedRadioDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		name="TexCoord2"
+		type="Vec2f"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGUIDrawObjectCanvas.h"
 		access="public"
+		defaultValue="0.0,1.0"
 	>
 	</Field>
 	<Field
-		name="DisabledRadioDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		name="TexCoord3"
+		type="Vec2f"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGUIDrawObjectCanvas.h"
 		access="public"
+		defaultValue="1.0,1.0"
 	>
 	</Field>
 	<Field
-		name="DisabledSelectedRadioDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		name="TexCoord4"
+		type="Vec2f"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGUIDrawObjectCanvas.h"
 		access="public"
+		defaultValue="1.0,0.0"
+	>
+	</Field>
+	<Field
+		name="Texture"
+		type="TextureChunkPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="Opacity"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0"
 	>
 	</Field>
 </FieldContainer>

@@ -106,6 +106,24 @@ const OSG::BitVector  ButtonBase::EnableActionOnMouseDownTimeFieldMask =
 const OSG::BitVector  ButtonBase::ActionOnMouseDownRateFieldMask = 
     (TypeTraits<BitVector>::One << ButtonBase::ActionOnMouseDownRateFieldId);
 
+const OSG::BitVector  ButtonBase::ActiveOffsetFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::ActiveOffsetFieldId);
+
+const OSG::BitVector  ButtonBase::DrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::DrawObjectFieldId);
+
+const OSG::BitVector  ButtonBase::ActiveDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::ActiveDrawObjectFieldId);
+
+const OSG::BitVector  ButtonBase::FocusedDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::FocusedDrawObjectFieldId);
+
+const OSG::BitVector  ButtonBase::RolloverDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::RolloverDrawObjectFieldId);
+
+const OSG::BitVector  ButtonBase::DisabledDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << ButtonBase::DisabledDrawObjectFieldId);
+
 const OSG::BitVector ButtonBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -153,6 +171,24 @@ const OSG::BitVector ButtonBase::MTInfluenceMask =
     
 */
 /*! \var Time            ButtonBase::_sfActionOnMouseDownRate
+    
+*/
+/*! \var Vec2s           ButtonBase::_sfActiveOffset
+    
+*/
+/*! \var UIDrawObjectCanvasPtr ButtonBase::_sfDrawObject
+    
+*/
+/*! \var UIDrawObjectCanvasPtr ButtonBase::_sfActiveDrawObject
+    
+*/
+/*! \var UIDrawObjectCanvasPtr ButtonBase::_sfFocusedDrawObject
+    
+*/
+/*! \var UIDrawObjectCanvasPtr ButtonBase::_sfRolloverDrawObject
+    
+*/
+/*! \var UIDrawObjectCanvasPtr ButtonBase::_sfDisabledDrawObject
     
 */
 
@@ -229,7 +265,37 @@ FieldDescription *ButtonBase::_desc[] =
                      "ActionOnMouseDownRate", 
                      ActionOnMouseDownRateFieldId, ActionOnMouseDownRateFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFActionOnMouseDownRate)
+                     (FieldAccessMethod) &ButtonBase::getSFActionOnMouseDownRate),
+    new FieldDescription(SFVec2s::getClassType(), 
+                     "ActiveOffset", 
+                     ActiveOffsetFieldId, ActiveOffsetFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFActiveOffset),
+    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
+                     "DrawObject", 
+                     DrawObjectFieldId, DrawObjectFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFDrawObject),
+    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
+                     "ActiveDrawObject", 
+                     ActiveDrawObjectFieldId, ActiveDrawObjectFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFActiveDrawObject),
+    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
+                     "FocusedDrawObject", 
+                     FocusedDrawObjectFieldId, FocusedDrawObjectFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFFocusedDrawObject),
+    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
+                     "RolloverDrawObject", 
+                     RolloverDrawObjectFieldId, RolloverDrawObjectFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFRolloverDrawObject),
+    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
+                     "DisabledDrawObject", 
+                     DisabledDrawObjectFieldId, DisabledDrawObjectFieldMask,
+                     false,
+                     (FieldAccessMethod) &ButtonBase::getSFDisabledDrawObject)
 };
 
 
@@ -319,6 +385,12 @@ ButtonBase::ButtonBase(void) :
     _sfHorizontalAlignment    (Real32(0.5)), 
     _sfEnableActionOnMouseDownTime(bool(false)), 
     _sfActionOnMouseDownRate  (Time(0.1)), 
+    _sfActiveOffset           (Vec2s(0,0)), 
+    _sfDrawObject             (UIDrawObjectCanvasPtr(NullFC)), 
+    _sfActiveDrawObject       (UIDrawObjectCanvasPtr(NullFC)), 
+    _sfFocusedDrawObject      (UIDrawObjectCanvasPtr(NullFC)), 
+    _sfRolloverDrawObject     (UIDrawObjectCanvasPtr(NullFC)), 
+    _sfDisabledDrawObject     (UIDrawObjectCanvasPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -342,6 +414,12 @@ ButtonBase::ButtonBase(const ButtonBase &source) :
     _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
     _sfEnableActionOnMouseDownTime(source._sfEnableActionOnMouseDownTime), 
     _sfActionOnMouseDownRate  (source._sfActionOnMouseDownRate  ), 
+    _sfActiveOffset           (source._sfActiveOffset           ), 
+    _sfDrawObject             (source._sfDrawObject             ), 
+    _sfActiveDrawObject       (source._sfActiveDrawObject       ), 
+    _sfFocusedDrawObject      (source._sfFocusedDrawObject      ), 
+    _sfRolloverDrawObject     (source._sfRolloverDrawObject     ), 
+    _sfDisabledDrawObject     (source._sfDisabledDrawObject     ), 
     Inherited                 (source)
 {
 }
@@ -428,6 +506,36 @@ UInt32 ButtonBase::getBinSize(const BitVector &whichField)
         returnValue += _sfActionOnMouseDownRate.getBinSize();
     }
 
+    if(FieldBits::NoField != (ActiveOffsetFieldMask & whichField))
+    {
+        returnValue += _sfActiveOffset.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
+    {
+        returnValue += _sfDrawObject.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
+    {
+        returnValue += _sfActiveDrawObject.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FocusedDrawObjectFieldMask & whichField))
+    {
+        returnValue += _sfFocusedDrawObject.getBinSize();
+    }
+
+    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
+    {
+        returnValue += _sfRolloverDrawObject.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
+    {
+        returnValue += _sfDisabledDrawObject.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -505,6 +613,36 @@ void ButtonBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ActionOnMouseDownRateFieldMask & whichField))
     {
         _sfActionOnMouseDownRate.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ActiveOffsetFieldMask & whichField))
+    {
+        _sfActiveOffset.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
+    {
+        _sfDrawObject.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
+    {
+        _sfActiveDrawObject.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedDrawObjectFieldMask & whichField))
+    {
+        _sfFocusedDrawObject.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
+    {
+        _sfRolloverDrawObject.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
+    {
+        _sfDisabledDrawObject.copyToBin(pMem);
     }
 
 
@@ -585,6 +723,36 @@ void ButtonBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfActionOnMouseDownRate.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ActiveOffsetFieldMask & whichField))
+    {
+        _sfActiveOffset.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
+    {
+        _sfDrawObject.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
+    {
+        _sfActiveDrawObject.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedDrawObjectFieldMask & whichField))
+    {
+        _sfFocusedDrawObject.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
+    {
+        _sfRolloverDrawObject.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
+    {
+        _sfDisabledDrawObject.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -637,6 +805,24 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
     if(FieldBits::NoField != (ActionOnMouseDownRateFieldMask & whichField))
         _sfActionOnMouseDownRate.syncWith(pOther->_sfActionOnMouseDownRate);
 
+    if(FieldBits::NoField != (ActiveOffsetFieldMask & whichField))
+        _sfActiveOffset.syncWith(pOther->_sfActiveOffset);
+
+    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
+        _sfDrawObject.syncWith(pOther->_sfDrawObject);
+
+    if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
+        _sfActiveDrawObject.syncWith(pOther->_sfActiveDrawObject);
+
+    if(FieldBits::NoField != (FocusedDrawObjectFieldMask & whichField))
+        _sfFocusedDrawObject.syncWith(pOther->_sfFocusedDrawObject);
+
+    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
+        _sfRolloverDrawObject.syncWith(pOther->_sfRolloverDrawObject);
+
+    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
+        _sfDisabledDrawObject.syncWith(pOther->_sfDisabledDrawObject);
+
 
 }
 #else
@@ -688,6 +874,24 @@ void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
 
     if(FieldBits::NoField != (ActionOnMouseDownRateFieldMask & whichField))
         _sfActionOnMouseDownRate.syncWith(pOther->_sfActionOnMouseDownRate);
+
+    if(FieldBits::NoField != (ActiveOffsetFieldMask & whichField))
+        _sfActiveOffset.syncWith(pOther->_sfActiveOffset);
+
+    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
+        _sfDrawObject.syncWith(pOther->_sfDrawObject);
+
+    if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
+        _sfActiveDrawObject.syncWith(pOther->_sfActiveDrawObject);
+
+    if(FieldBits::NoField != (FocusedDrawObjectFieldMask & whichField))
+        _sfFocusedDrawObject.syncWith(pOther->_sfFocusedDrawObject);
+
+    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
+        _sfRolloverDrawObject.syncWith(pOther->_sfRolloverDrawObject);
+
+    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
+        _sfDisabledDrawObject.syncWith(pOther->_sfDisabledDrawObject);
 
 
 

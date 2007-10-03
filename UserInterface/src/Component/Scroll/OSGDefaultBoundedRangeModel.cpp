@@ -70,42 +70,70 @@ A DefaultChangeModel.
 
 void DefaultBoundedRangeModel::setExtent(UInt32 newExtent)
 {
+    bool isStateChange(_Extent != newExtent);
     _Extent= newExtent;
-    produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+    if(isStateChange)
+    {
+        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+    }
 }
 
 void DefaultBoundedRangeModel::setMaximum(Int32 newMaximum)
 {
+    bool isStateChange(_Maximum != newMaximum);
     _Maximum= newMaximum;
-    produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+    if(isStateChange)
+    {
+        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+    }
 }
 
 void DefaultBoundedRangeModel::setMinimum(Int32 newMinimum)
 {
+    bool isStateChange(_Minimum != newMinimum);
     _Minimum= newMinimum;
-    produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+    if(isStateChange)
+    {
+        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+    }
 }
 
 void DefaultBoundedRangeModel::setRangeProperties(Int32 value, UInt32 extent, Int32 min, Int32 max, bool adjusting)
 {
+    bool isStateChange(_Extent != extent ||
+                       _Maximum != max ||
+                       _Minimum != min ||
+                       _Value != value ||
+                       _ValueIsAdjusting != adjusting);
     _Extent= extent;
     _Maximum= max;
     _Minimum= min;
     _Value= value;
     _ValueIsAdjusting = adjusting;
-    produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+    if(isStateChange)
+    {
+        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+    }
 }
 
 void DefaultBoundedRangeModel::setValue(Int32 newValue)
 {
+    bool isStateChange(_Value != newValue);
     _Value= newValue;
-    produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+    if(isStateChange)
+    {
+        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+    }
 }
 
 void DefaultBoundedRangeModel::setValueIsAdjusting(bool b)
 {
+    bool isStateChange(_ValueIsAdjusting != b);
     _ValueIsAdjusting = b;
-    produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+    if(isStateChange)
+    {
+        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+    }
 }
 /***************************************************************************\
  *                           Instance methods                              *

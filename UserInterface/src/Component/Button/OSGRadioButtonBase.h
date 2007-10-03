@@ -67,14 +67,14 @@
 
 #include "OSGToggleButton.h" // Parent
 
-#include "Component/OSGUIDrawObjectCanvas.h" // DrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // SelectedDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // ActiveDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // ActiveSelectedDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // RolloverDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // RolloverSelectedDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // DisabledDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // DisabledSelectedDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // RadioDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // SelectedRadioDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // ActiveRadioDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // ActiveSelectedRadioDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // RolloverRadioDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // RolloverSelectedRadioDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // DisabledRadioDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // DisabledSelectedRadioDrawObject type
 
 #include "OSGRadioButtonFields.h"
 
@@ -98,25 +98,25 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
 
     enum
     {
-        DrawObjectFieldId                 = Inherited::NextFieldId,
-        SelectedDrawObjectFieldId         = DrawObjectFieldId                 + 1,
-        ActiveDrawObjectFieldId           = SelectedDrawObjectFieldId         + 1,
-        ActiveSelectedDrawObjectFieldId   = ActiveDrawObjectFieldId           + 1,
-        RolloverDrawObjectFieldId         = ActiveSelectedDrawObjectFieldId   + 1,
-        RolloverSelectedDrawObjectFieldId = RolloverDrawObjectFieldId         + 1,
-        DisabledDrawObjectFieldId         = RolloverSelectedDrawObjectFieldId + 1,
-        DisabledSelectedDrawObjectFieldId = DisabledDrawObjectFieldId         + 1,
-        NextFieldId                       = DisabledSelectedDrawObjectFieldId + 1
+        RadioDrawObjectFieldId                 = Inherited::NextFieldId,
+        SelectedRadioDrawObjectFieldId         = RadioDrawObjectFieldId                 + 1,
+        ActiveRadioDrawObjectFieldId           = SelectedRadioDrawObjectFieldId         + 1,
+        ActiveSelectedRadioDrawObjectFieldId   = ActiveRadioDrawObjectFieldId           + 1,
+        RolloverRadioDrawObjectFieldId         = ActiveSelectedRadioDrawObjectFieldId   + 1,
+        RolloverSelectedRadioDrawObjectFieldId = RolloverRadioDrawObjectFieldId         + 1,
+        DisabledRadioDrawObjectFieldId         = RolloverSelectedRadioDrawObjectFieldId + 1,
+        DisabledSelectedRadioDrawObjectFieldId = DisabledRadioDrawObjectFieldId         + 1,
+        NextFieldId                            = DisabledSelectedRadioDrawObjectFieldId + 1
     };
 
-    static const OSG::BitVector DrawObjectFieldMask;
-    static const OSG::BitVector SelectedDrawObjectFieldMask;
-    static const OSG::BitVector ActiveDrawObjectFieldMask;
-    static const OSG::BitVector ActiveSelectedDrawObjectFieldMask;
-    static const OSG::BitVector RolloverDrawObjectFieldMask;
-    static const OSG::BitVector RolloverSelectedDrawObjectFieldMask;
-    static const OSG::BitVector DisabledDrawObjectFieldMask;
-    static const OSG::BitVector DisabledSelectedDrawObjectFieldMask;
+    static const OSG::BitVector RadioDrawObjectFieldMask;
+    static const OSG::BitVector SelectedRadioDrawObjectFieldMask;
+    static const OSG::BitVector ActiveRadioDrawObjectFieldMask;
+    static const OSG::BitVector ActiveSelectedRadioDrawObjectFieldMask;
+    static const OSG::BitVector RolloverRadioDrawObjectFieldMask;
+    static const OSG::BitVector RolloverSelectedRadioDrawObjectFieldMask;
+    static const OSG::BitVector DisabledRadioDrawObjectFieldMask;
+    static const OSG::BitVector DisabledSelectedRadioDrawObjectFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -143,45 +143,45 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUIDrawObjectCanvasPtr *getSFDrawObject     (void);
-           SFUIDrawObjectCanvasPtr *getSFSelectedDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFActiveDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFActiveSelectedDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFRolloverDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFRolloverSelectedDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFDisabledDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFDisabledSelectedDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFRadioDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFSelectedRadioDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFActiveRadioDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFActiveSelectedRadioDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFRolloverRadioDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFRolloverSelectedRadioDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFDisabledRadioDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFDisabledSelectedRadioDrawObject(void);
 
-           UIDrawObjectCanvasPtr &getDrawObject     (void);
-     const UIDrawObjectCanvasPtr &getDrawObject     (void) const;
-           UIDrawObjectCanvasPtr &getSelectedDrawObject(void);
-     const UIDrawObjectCanvasPtr &getSelectedDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getActiveDrawObject(void);
-     const UIDrawObjectCanvasPtr &getActiveDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getActiveSelectedDrawObject(void);
-     const UIDrawObjectCanvasPtr &getActiveSelectedDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getRolloverDrawObject(void);
-     const UIDrawObjectCanvasPtr &getRolloverDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getRolloverSelectedDrawObject(void);
-     const UIDrawObjectCanvasPtr &getRolloverSelectedDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getDisabledDrawObject(void);
-     const UIDrawObjectCanvasPtr &getDisabledDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getDisabledSelectedDrawObject(void);
-     const UIDrawObjectCanvasPtr &getDisabledSelectedDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getRadioDrawObject(void);
+     const UIDrawObjectCanvasPtr &getRadioDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getSelectedRadioDrawObject(void);
+     const UIDrawObjectCanvasPtr &getSelectedRadioDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getActiveRadioDrawObject(void);
+     const UIDrawObjectCanvasPtr &getActiveRadioDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getActiveSelectedRadioDrawObject(void);
+     const UIDrawObjectCanvasPtr &getActiveSelectedRadioDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getRolloverRadioDrawObject(void);
+     const UIDrawObjectCanvasPtr &getRolloverRadioDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getRolloverSelectedRadioDrawObject(void);
+     const UIDrawObjectCanvasPtr &getRolloverSelectedRadioDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getDisabledRadioDrawObject(void);
+     const UIDrawObjectCanvasPtr &getDisabledRadioDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getDisabledSelectedRadioDrawObject(void);
+     const UIDrawObjectCanvasPtr &getDisabledSelectedRadioDrawObject(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setDrawObject     ( const UIDrawObjectCanvasPtr &value );
-     void setSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setActiveDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setActiveSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setRolloverDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setRolloverSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setDisabledDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setDisabledSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setRadioDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setSelectedRadioDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setActiveRadioDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setActiveSelectedRadioDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setRolloverRadioDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setRolloverSelectedRadioDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setDisabledRadioDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setDisabledSelectedRadioDrawObject( const UIDrawObjectCanvasPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -224,14 +224,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUIDrawObjectCanvasPtr   _sfDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfSelectedDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfActiveDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfActiveSelectedDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfRolloverDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfRolloverSelectedDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfDisabledDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfDisabledSelectedDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfRadioDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfSelectedRadioDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfActiveRadioDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfActiveSelectedRadioDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfRolloverRadioDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfRolloverSelectedRadioDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfDisabledRadioDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfDisabledSelectedRadioDrawObject;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

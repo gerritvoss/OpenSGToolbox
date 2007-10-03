@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGSCROLLPANEL_H_
-#define _OSGSCROLLPANEL_H_
+#ifndef _OSGTEXTUREDQUADUIDRAWOBJECT_H_
+#define _OSGTEXTUREDQUADUIDRAWOBJECT_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,27 +45,22 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "Event/OSGChangeListener.h"
-#include "Event/OSGAdjustmentListener.h"
-#include "OSGScrollPanelBase.h"
-#include "OSGDefaultBoundedRangeModel.h"
+#include "OSGTexturedQuadUIDrawObjectBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ScrollPanel class. See \ref 
-           PageUserInterfaceScrollPanel for a description.
+/*! \brief TexturedQuadUIDrawObject class. See \ref 
+           PageUserInterfaceTexturedQuadUIDrawObject for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanel : public ScrollPanelBase
+class OSG_USERINTERFACELIB_DLLMAPPING TexturedQuadUIDrawObject : public TexturedQuadUIDrawObjectBase
 {
   private:
 
-    typedef ScrollPanelBase Inherited;
+    typedef TexturedQuadUIDrawObjectBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
-      enum ScrollBarDisplayPolicy{SCROLLBAR_AS_NEEDED=0,SCROLLBAR_AS_ALWAYS,SCROLLBAR_AS_NEVER};
-      enum ResizePolicy{NO_RESIZE=0,RESIZE_TO_VIEW};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -81,86 +76,51 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanel : public ScrollPanelBase
 
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
+	virtual void draw(const GraphicsPtr Graphics) const;
+    virtual void getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
 
     /*! \}                                                                 */
-    
-    virtual void updateLayout(void);
-
-    void setViewComponent(ComponentPtr TheComponent);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in ScrollPanelBase.
+    // Variables should all be in TexturedQuadUIDrawObjectBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    ScrollPanel(void);
-    ScrollPanel(const ScrollPanel &source);
+    TexturedQuadUIDrawObject(void);
+    TexturedQuadUIDrawObject(const TexturedQuadUIDrawObject &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ScrollPanel(void); 
+    virtual ~TexturedQuadUIDrawObject(void); 
 
     /*! \}                                                                 */
     
-    //Range Model for the UIViewport
-    DefaultBoundedRangeModel _ViewportVerticalRangeModel;
-    DefaultBoundedRangeModel _ViewportHorizontalRangeModel;
-    
-    //Listener for getting change updates of the UIViewport
-	class ViewportChangeListener : public ChangeListener
-	{
-	public:
-		ViewportChangeListener(ScrollPanelPtr TheScrollPanel);
-        virtual void stateChanged(const ChangeEvent& e);
-	private:
-		ScrollPanelPtr _ScrollPanel;
-	};
-
-	friend class ViewportChangeListener;
-
-	ViewportChangeListener _ViewportChangeListener;
-    
-    //Listener for getting change updates of the UIViewport Range Model
-	class ViewportRangeModelChangeListener : public ChangeListener
-	{
-	public:
-		ViewportRangeModelChangeListener(ScrollPanelPtr TheScrollPanel);
-        virtual void stateChanged(const ChangeEvent& e);
-	private:
-		ScrollPanelPtr _ScrollPanel;
-	};
-
-	friend class ViewportRangeModelChangeListener;
-
-	ViewportRangeModelChangeListener _ViewportRangeModelChangeListener;
-
-    void updateRangeModels(void);
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class ScrollPanelBase;
+    friend class TexturedQuadUIDrawObjectBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const ScrollPanel &source);
+    void operator =(const TexturedQuadUIDrawObject &source);
 };
 
-typedef ScrollPanel *ScrollPanelP;
+typedef TexturedQuadUIDrawObject *TexturedQuadUIDrawObjectP;
 
 OSG_END_NAMESPACE
 
-#include "OSGScrollPanelBase.inl"
-#include "OSGScrollPanel.inl"
+#include "OSGTexturedQuadUIDrawObjectBase.inl"
+#include "OSGTexturedQuadUIDrawObject.inl"
 
-#define OSGSCROLLPANEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGTEXTUREDQUADUIDRAWOBJECT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGSCROLLPANEL_H_ */
+#endif /* _OSGTEXTUREDQUADUIDRAWOBJECT_H_ */

@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGRotatedComponent.h"
+#include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -279,17 +280,70 @@ void RotatedComponent::changed(BitVector whichField, UInt32 origin)
                 getChildren().push_back(getInternalComponent());
             }
         endEditCP(RotatedComponentPtr(this), ChildrenFieldMask);
+    }
         
+    if((whichField & InternalComponentFieldMask) ||
+       (whichField & AngleFieldMask) || 
+       (whichField & ResizePolicyFieldMask))
+    {
         if(getInternalComponent() != NullFC)
         {
-            //Calculate Preferred Size
-            //Get the Internal Components Center
-            Pnt2s ComponentCenter(static_cast<Real32>(getInternalComponent()->getSize().x())/2.0, static_cast<Real32>(getInternalComponent()->getSize().y())/2.0);
-            //Get the distance from the Center to one of the TopLeft Corner
-            Int16 Length = 2*ComponentCenter.dist(Pnt2s(0,0));
-            beginEditCP(RotatedComponentPtr(this), PreferredSizeFieldMask);
-                setPreferredSize(Vec2s(Length,Length));
-            endEditCP(RotatedComponentPtr(this), PreferredSizeFieldMask);
+            Vec2s Size;
+            switch (static_cast<ResizePolicy>(getResizePolicy()))
+            {
+            case RESIZE_TO_MIN:
+                {
+                    //Treat TopLeft as 0,0
+                    //Get the Rotated Bounds of the Internal Component
+                    Pnt2s p1,p2,p3,p4;
+
+                    Pnt2s ComponentCenter(static_cast<Real32>(getInternalComponent()->getSize().x())/2.0, static_cast<Real32>(getInternalComponent()->getSize().y())/2.0);
+
+                    p1 = -ComponentCenter;
+                    p2.setValues(ComponentCenter.x(),-ComponentCenter.y());
+                    p3 = ComponentCenter;
+                    p4.setValues(-ComponentCenter.x(),ComponentCenter.y());
+
+                    //Rotate them
+                    p1 = Rotate(p1, -getAngle());
+                    p2 = Rotate(p2, -getAngle());
+                    p3 = Rotate(p3, -getAngle());
+                    p4 = Rotate(p4, -getAngle());
+
+                    //Get their min and max
+                    Pnt2s Min(osgMin(osgMin(osgMin(p1.x(),p2.x()),p3.x()),p4.x()),
+                              osgMin(osgMin(osgMin(p1.y(),p2.y()),p3.y()),p4.y()));
+                    Pnt2s Max(osgMax(osgMax(osgMax(p1.x(),p2.x()),p3.x()),p4.x()),
+                              osgMax(osgMax(osgMax(p1.y(),p2.y()),p3.y()),p4.y()));
+                    
+	                Pnt2s BorderTopLeft, BorderBottomRight;
+	                getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
+	                Pnt2s TopLeft, BottomRight;
+	                getBounds(TopLeft, BottomRight);
+                    
+                    beginEditCP(RotatedComponentPtr(this), PreferredSizeFieldMask);
+                        setPreferredSize(Vec2s(Max.x() - Min.x() + (BorderTopLeft.x() - TopLeft.x()) + (BottomRight.x() - BorderBottomRight.x()),
+                                               Max.y() - Min.y() + (BorderTopLeft.y() - TopLeft.y()) + (BottomRight.y() - BorderBottomRight.y())));
+                    endEditCP(RotatedComponentPtr(this), PreferredSizeFieldMask);
+                    break;
+                }
+            case RESIZE_TO_MAX:
+                {
+                    //Get the Internal Components Center
+                    Pnt2s ComponentCenter(static_cast<Real32>(getInternalComponent()->getSize().x())/2.0, static_cast<Real32>(getInternalComponent()->getSize().y())/2.0);
+                    //Get the distance from the Center to one of the TopLeft Corner
+                    Int16 Length = 2*ComponentCenter.dist(Pnt2s(0,0));
+                    
+                    beginEditCP(RotatedComponentPtr(this), PreferredSizeFieldMask);
+                        setPreferredSize(Vec2s(Length,Length));
+                    endEditCP(RotatedComponentPtr(this), PreferredSizeFieldMask);
+                    break;
+                }
+            case NO_RESIZING:
+            default:
+                break;
+            }
+            getInternalComponent()->updateClipBounds();
         }
     }
 }

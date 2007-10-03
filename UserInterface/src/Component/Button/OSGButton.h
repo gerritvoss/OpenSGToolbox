@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGTextureChunk.h>
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGButtonBase.h"
@@ -87,6 +88,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
 
     void addActionListener(ActionListenerPtr Listener);
     void removeActionListener(ActionListenerPtr Listener);
+
+    void addMousePressedActionListener(ActionListenerPtr Listener);
+    void removeMousePressedActionListener(ActionListenerPtr Listener);
+
+    void setTexture(TextureChunkPtr TheTexture);
+    void setActiveTexture(TextureChunkPtr TheTexture);
+    void setFocusedTexture(TextureChunkPtr TheTexture);
+    void setRolloverTexture(TextureChunkPtr TheTexture);
+    void setDisabledTexture(TextureChunkPtr TheTexture);
+
+    void setImage(ImagePtr TheImage);
+    void setActiveImage(ImagePtr TheImage);
+    void setFocusedImage(ImagePtr TheImage);
+    void setRolloverImage(ImagePtr TheImage);
+    void setDisabledImage(ImagePtr TheImage);
+    
+    void setImage(const std::string& Path);
+    void setActiveImage(const std::string& Path);
+    void setFocusedImage(const std::string& Path);
+    void setRolloverImage(const std::string& Path);
+    void setDisabledImage(const std::string& Path);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -107,11 +129,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     virtual ~Button(void); 
 
     virtual void actionPreformed(const ActionEvent& e);
+    virtual void mousePressedActionPreformed(const ActionEvent& e);
 
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
     virtual Color4f getDrawnTextColor(void) const;
     virtual BorderPtr getDrawnBorder(void) const;
     virtual UIBackgroundPtr getDrawnBackground(void) const;
+    virtual UIDrawObjectCanvasPtr getDrawnDrawObject(void) const;
     
 	class ButtonArmedListener : public MouseAdapter,public UpdateListener
 	{
@@ -131,6 +155,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
 	ButtonArmedListener _ButtonArmedListener;
     bool _Armed;
     
+    static UIDrawObjectCanvasPtr createTexturedDrawObjectCanvas(TextureChunkPtr TheTexture);
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/
@@ -151,8 +176,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     typedef ActionListenerSet::const_iterator ActionListenerSetConstItor;
 	
     ActionListenerSet       _ActionListeners;
+    ActionListenerSet       _MousePressedActionListeners;
 	
     virtual void produceActionPerformed(const ActionEvent& e);
+    virtual void produceMousePressedActionPerformed(const ActionEvent& e);
 };
 
 typedef Button *ButtonP;

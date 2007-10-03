@@ -39,8 +39,11 @@
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 
 
+#include <OpenSG/UserInterface/OSGScrollPanel.h>
 #include <OpenSG/UserInterface/OSGScrollBar.h>
 #include <OpenSG/UserInterface/OSGDefaultBoundedRangeModel.h>
+#include <OpenSG/UserInterface/OSGUIViewport.h>
+#include <OpenSG/UserInterface/OSGButton.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -109,7 +112,30 @@ int main(int argc, char **argv)
 	// settings for the Button
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
+    //UIViewport
+    ButtonPtr Button1 = Button::create();
+    beginEditCP(Button1, Button::PreferredSizeFieldMask | Button::TextFieldMask);
+	    Button1->setPreferredSize(Vec2s(200,200));
+	    Button1->setText("Button 1");
+    endEditCP(Button1, Button::PreferredSizeFieldMask | Button::TextFieldMask);
 
+    UIViewportPtr TheUIViewport = UIViewport::create();
+
+    beginEditCP(TheUIViewport, UIViewport::ViewComponentFieldMask | UIViewport::ViewPositionFieldMask | UIViewport::PreferredSizeFieldMask);
+        TheUIViewport->setViewComponent(Button1);
+        TheUIViewport->setViewPosition(Pnt2s(150,150));
+	    TheUIViewport->setPreferredSize(Vec2s(100,100));
+    endEditCP(TheUIViewport, UIViewport::ViewComponentFieldMask | UIViewport::ViewPositionFieldMask | UIViewport::PreferredSizeFieldMask);
+
+    //ScrollPanel
+    ScrollPanelPtr TheScrollPanel = ScrollPanel::create();
+    beginEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+	    TheScrollPanel->setPreferredSize(Vec2s(100,100));
+        TheScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+    endEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+    TheScrollPanel->setViewComponent(Button1);
+
+    //ScrollBar
     ScrollBarPtr TheScrollBar = ScrollBar::create();
     DefaultBoundedRangeModel TheBoundedRangeModel;
     TheBoundedRangeModel.setMinimum(0);
@@ -142,6 +168,7 @@ int main(int argc, char **argv)
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 	   MainFrame->getChildren().addValue(TheScrollBarH);
 	   MainFrame->getChildren().addValue(TheScrollBar);
+	   MainFrame->getChildren().addValue(TheScrollPanel);
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
     endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
@@ -183,7 +210,7 @@ int main(int argc, char **argv)
 
     TheWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(550,550),
-                                        "OpenSG 02AbsoluteLayout Window");
+                                        "OpenSG 27ScrollPanel Window");
 
     //Main Event Loop
     while(!ExitApp)

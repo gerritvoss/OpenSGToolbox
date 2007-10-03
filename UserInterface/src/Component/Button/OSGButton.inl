@@ -64,6 +64,22 @@ void Button::removeActionListener(ActionListenerPtr Listener)
    }
 }
 
+inline
+void Button::addMousePressedActionListener(ActionListenerPtr Listener)
+{
+   _MousePressedActionListeners.insert(Listener);
+}
+
+inline
+void Button::removeMousePressedActionListener(ActionListenerPtr Listener)
+{
+   ActionListenerSetItor EraseIter(_MousePressedActionListeners.find(Listener));
+   if(EraseIter != _MousePressedActionListeners.end())
+   {
+      _MousePressedActionListeners.erase(EraseIter);
+   }
+}
+
 
 inline
 void Button::ButtonArmedListener::reset(void)

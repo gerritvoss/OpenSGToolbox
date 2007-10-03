@@ -50,6 +50,9 @@
 #include "Component/Container/OSGFrame.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
+#include <OpenSG/OSGImageFileHandler.h>
+
+#include "Graphics/UIDrawObjects/OSGTexturedQuadUIDrawObject.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -73,6 +76,36 @@ void Button::initMethod (void)
 {
 }
 
+UIDrawObjectCanvasPtr Button::createTexturedDrawObjectCanvas(TextureChunkPtr TheTexture)
+{
+    UIDrawObjectCanvasPtr DrawObjectCanvas = UIDrawObjectCanvas::create();
+    TexturedQuadUIDrawObjectPtr TextureDrawObject = TexturedQuadUIDrawObject::create();
+
+    Vec2s ImageSize;
+    ImageSize.setValues(TheTexture->getImage()->getWidth(), TheTexture->getImage()->getHeight());
+    
+    beginEditCP(TextureDrawObject);
+        TextureDrawObject->setPoint1(Pnt2s(0,0));
+        TextureDrawObject->setPoint2(Pnt2s(ImageSize.x(),0));
+        TextureDrawObject->setPoint3(Pnt2s(ImageSize.x(),ImageSize.y()));
+        TextureDrawObject->setPoint4(Pnt2s(0,ImageSize.y()));
+        
+        TextureDrawObject->setTexCoord1(Vec2f(0.0,1.0));
+        TextureDrawObject->setTexCoord2(Vec2f(1.0,1.0));
+        TextureDrawObject->setTexCoord3(Vec2f(1.0,0.0));
+        TextureDrawObject->setTexCoord4(Vec2f(0.0,0.0));
+
+        TextureDrawObject->setTexture(TheTexture);
+
+        TextureDrawObject->setOpacity(1.0);
+    endEditCP(TextureDrawObject);
+    
+    beginEditCP(DrawObjectCanvas, UIDrawObjectCanvas::DrawObjectsFieldMask);
+        DrawObjectCanvas->getDrawObjects().push_back(TextureDrawObject);
+    endEditCP(DrawObjectCanvas, UIDrawObjectCanvas::DrawObjectsFieldMask);
+
+    return DrawObjectCanvas;
+}
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
@@ -157,10 +190,64 @@ Color4f Button::getDrawnTextColor(void) const
         return getDisabledTextColor();
     }
 }
+
+UIDrawObjectCanvasPtr Button::getDrawnDrawObject(void) const
+{
+    if(getEnabled())
+    {
+        //if(getFocused())
+        //{
+        //    return getFocusedDrawObject();
+        //}
+        if(getActive())
+        {
+            return getActiveDrawObject();
+        }
+        else if(_MouseInComponentLastMouse)
+        {
+            return getRolloverDrawObject();
+        }
+        else
+        {
+            return getDrawObject();
+        }
+    }
+    else
+    {
+        return getDisabledDrawObject();
+    }
+}
 void Button::drawInternal(const GraphicsPtr TheGraphics) const
 {
    Pnt2s TopLeft, BottomRight;
    getInsideBorderBounds(TopLeft, BottomRight);
+   
+   //If I have a DrawObject then Draw it
+   UIDrawObjectCanvasPtr DrawnDrawObject = getDrawnDrawObject();
+   if(DrawnDrawObject != NullFC)
+   {
+      //Calculate Alignment
+      Pnt2s AlignedPosition;
+      Pnt2s DrawObjectTopLeft, DrawObjectBottomRight;
+      DrawnDrawObject->getBounds(DrawObjectTopLeft, DrawObjectBottomRight);
+
+      AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (DrawObjectBottomRight - DrawObjectTopLeft),getVerticalAlignment(), getHorizontalAlignment());
+
+      //If active then translate the Text by the Active Offset
+      if(getActive())
+      {
+          AlignedPosition = AlignedPosition + getActiveOffset();
+      }
+
+	  //Draw the DrawnDrawObject
+        beginEditCP(DrawnDrawObject, PositionFieldMask);
+            DrawnDrawObject->setPosition( AlignedPosition );
+        endEditCP(DrawnDrawObject, PositionFieldMask);
+
+        DrawnDrawObject->draw(TheGraphics);
+
+   }
+
    //If I have Text Then Draw it
    if(getText() != "" && getFont() != NullFC)
    {
@@ -171,12 +258,23 @@ void Button::drawInternal(const GraphicsPtr TheGraphics) const
 
       AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),getVerticalAlignment(), getHorizontalAlignment());
 
+      //If active then translate the Text by the Active Offset
+      if(getActive())
+      {
+          AlignedPosition = AlignedPosition + getActiveOffset();
+      }
+
 	  //Draw the Text
       TheGraphics->drawText(AlignedPosition, getText(), getFont(), getDrawnTextColor(), getOpacity());
    }
+
 }
 
 void Button::actionPreformed(const ActionEvent& e)
+{
+}
+
+void Button::mousePressedActionPreformed(const ActionEvent& e)
 {
 }
 
@@ -222,6 +320,7 @@ void Button::mousePressed(const MouseEvent& e)
             getParentFrame()->getDrawingSurface()->getEventProducer()->addMouseListener(&_ButtonArmedListener);
             if(getEnableActionOnMouseDownTime())
             {
+                produceMousePressedActionPerformed(ActionEvent(ButtonPtr(this), e.getTimeStamp()));
                 _ButtonArmedListener.reset();
                 getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_ButtonArmedListener);
             }
@@ -250,6 +349,247 @@ void Button::produceActionPerformed(const ActionEvent& e)
     {
 	    (*SetItor)->actionPerformed(e);
     }
+}
+
+void Button::produceMousePressedActionPerformed(const ActionEvent& e)
+{
+    mousePressedActionPreformed(e);
+    for(ActionListenerSetConstItor SetItor(_MousePressedActionListeners.begin()) ; SetItor != _MousePressedActionListeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->actionPerformed(e);
+    }
+}
+
+void Button::setTexture(TextureChunkPtr TheTexture)
+{
+    UIDrawObjectCanvasPtr DrawObjectCanvas;
+    if(TheTexture == NullFC)
+    {
+        DrawObjectCanvas = NullFC;
+    }
+    else
+    {
+        DrawObjectCanvas = createTexturedDrawObjectCanvas(TheTexture);
+    }
+
+    beginEditCP(ButtonPtr(this), DrawObjectFieldMask);
+        setDrawObject(DrawObjectCanvas);
+    endEditCP(ButtonPtr(this), DrawObjectFieldMask);
+
+}
+
+void Button::setActiveTexture(TextureChunkPtr TheTexture)
+{
+    UIDrawObjectCanvasPtr DrawObjectCanvas;
+    if(TheTexture == NullFC)
+    {
+        DrawObjectCanvas = NullFC;
+    }
+    else
+    {
+        DrawObjectCanvas = createTexturedDrawObjectCanvas(TheTexture);
+    }
+
+    beginEditCP(ButtonPtr(this), ActiveDrawObjectFieldMask);
+        setActiveDrawObject(DrawObjectCanvas);
+    endEditCP(ButtonPtr(this), ActiveDrawObjectFieldMask);
+}
+
+void Button::setFocusedTexture(TextureChunkPtr TheTexture)
+{
+    UIDrawObjectCanvasPtr DrawObjectCanvas;
+    if(TheTexture == NullFC)
+    {
+        DrawObjectCanvas = NullFC;
+    }
+    else
+    {
+        DrawObjectCanvas = createTexturedDrawObjectCanvas(TheTexture);
+    }
+
+    beginEditCP(ButtonPtr(this), FocusedDrawObjectFieldMask);
+        setFocusedDrawObject(DrawObjectCanvas);
+    endEditCP(ButtonPtr(this), FocusedDrawObjectFieldMask);
+}
+
+void Button::setRolloverTexture(TextureChunkPtr TheTexture)
+{
+    UIDrawObjectCanvasPtr DrawObjectCanvas;
+    if(TheTexture == NullFC)
+    {
+        DrawObjectCanvas = NullFC;
+    }
+    else
+    {
+        DrawObjectCanvas = createTexturedDrawObjectCanvas(TheTexture);
+    }
+
+    beginEditCP(ButtonPtr(this), RolloverDrawObjectFieldMask);
+        setRolloverDrawObject(DrawObjectCanvas);
+    endEditCP(ButtonPtr(this), RolloverDrawObjectFieldMask);
+}
+
+void Button::setDisabledTexture(TextureChunkPtr TheTexture)
+{
+    UIDrawObjectCanvasPtr DrawObjectCanvas;
+    if(TheTexture == NullFC)
+    {
+        DrawObjectCanvas = NullFC;
+    }
+    else
+    {
+        DrawObjectCanvas = createTexturedDrawObjectCanvas(TheTexture);
+    }
+
+    beginEditCP(ButtonPtr(this), DisabledDrawObjectFieldMask);
+        setDisabledDrawObject(DrawObjectCanvas);
+    endEditCP(ButtonPtr(this), DisabledDrawObjectFieldMask);
+}
+
+void Button::setImage(ImagePtr TheImage)
+{
+    TextureChunkPtr TextureChunk;
+    if(TheImage == NullFC)
+    {
+        TextureChunk = NullFC;
+    }
+    else
+    {
+        TextureChunk = TextureChunk::create();
+        beginEditCP(TextureChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::EnvModeFieldMask);
+            TextureChunk->setImage(TheImage);
+            TextureChunk->setWrapS(GL_CLAMP);
+            TextureChunk->setWrapT(GL_CLAMP);
+            TextureChunk->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
+            TextureChunk->setMagFilter(GL_LINEAR);
+            TextureChunk->setEnvMode(GL_MODULATE);
+        endEditCP(TextureChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::EnvModeFieldMask);
+    }
+
+    setTexture(TextureChunk);
+}
+
+void Button::setActiveImage(ImagePtr TheImage)
+{
+    TextureChunkPtr TextureChunk;
+    if(TheImage == NullFC)
+    {
+        TextureChunk = NullFC;
+    }
+    else
+    {
+        TextureChunk = TextureChunk::create();
+        beginEditCP(TextureChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::EnvModeFieldMask);
+            TextureChunk->setImage(TheImage);
+            TextureChunk->setWrapS(GL_CLAMP);
+            TextureChunk->setWrapT(GL_CLAMP);
+            TextureChunk->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
+            TextureChunk->setMagFilter(GL_LINEAR);
+            TextureChunk->setEnvMode(GL_MODULATE);
+        endEditCP(TextureChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::EnvModeFieldMask);
+    }
+
+    setActiveTexture(TextureChunk);
+}
+
+void Button::setFocusedImage(ImagePtr TheImage)
+{
+    TextureChunkPtr TextureChunk;
+    if(TheImage == NullFC)
+    {
+        TextureChunk = NullFC;
+    }
+    else
+    {
+        TextureChunk = TextureChunk::create();
+        beginEditCP(TextureChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::EnvModeFieldMask);
+            TextureChunk->setImage(TheImage);
+            TextureChunk->setWrapS(GL_CLAMP);
+            TextureChunk->setWrapT(GL_CLAMP);
+            TextureChunk->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
+            TextureChunk->setMagFilter(GL_LINEAR);
+            TextureChunk->setEnvMode(GL_MODULATE);
+        endEditCP(TextureChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::EnvModeFieldMask);
+    }
+
+    setFocusedTexture(TextureChunk);
+}
+
+void Button::setRolloverImage(ImagePtr TheImage)
+{
+    TextureChunkPtr TextureChunk;
+    if(TheImage == NullFC)
+    {
+        TextureChunk = NullFC;
+    }
+    else
+    {
+        TextureChunk = TextureChunk::create();
+        beginEditCP(TextureChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::EnvModeFieldMask);
+            TextureChunk->setImage(TheImage);
+            TextureChunk->setWrapS(GL_CLAMP);
+            TextureChunk->setWrapT(GL_CLAMP);
+            TextureChunk->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
+            TextureChunk->setMagFilter(GL_LINEAR);
+            TextureChunk->setEnvMode(GL_MODULATE);
+        endEditCP(TextureChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::EnvModeFieldMask);
+    }
+
+    setRolloverTexture(TextureChunk);
+}
+
+void Button::setDisabledImage(ImagePtr TheImage)
+{
+    TextureChunkPtr TextureChunk;
+    if(TheImage == NullFC)
+    {
+        TextureChunk = NullFC;
+    }
+    else
+    {
+        TextureChunk = TextureChunk::create();
+        beginEditCP(TextureChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::EnvModeFieldMask);
+            TextureChunk->setImage(TheImage);
+            TextureChunk->setWrapS(GL_CLAMP);
+            TextureChunk->setWrapT(GL_CLAMP);
+            TextureChunk->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
+            TextureChunk->setMagFilter(GL_LINEAR);
+            TextureChunk->setEnvMode(GL_MODULATE);
+        endEditCP(TextureChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::EnvModeFieldMask);
+    }
+
+    setDisabledTexture(TextureChunk);
+}
+
+
+void Button::setImage(const std::string& Path)
+{
+    ImagePtr LoadedImage = ImageFileHandler::the().read(Path.c_str());
+    setImage(LoadedImage);
+}
+
+void Button::setActiveImage(const std::string& Path)
+{
+    ImagePtr LoadedImage = ImageFileHandler::the().read(Path.c_str());
+    setActiveImage(LoadedImage);
+}
+
+void Button::setFocusedImage(const std::string& Path)
+{
+    ImagePtr LoadedImage = ImageFileHandler::the().read(Path.c_str());
+    setFocusedImage(LoadedImage);
+}
+
+void Button::setRolloverImage(const std::string& Path)
+{
+    ImagePtr LoadedImage = ImageFileHandler::the().read(Path.c_str());
+    setRolloverImage(LoadedImage);
+}
+
+void Button::setDisabledImage(const std::string& Path)
+{
+    ImagePtr LoadedImage = ImageFileHandler::the().read(Path.c_str());
+    setDisabledImage(LoadedImage);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -318,7 +658,7 @@ void Button::ButtonArmedListener::update(const UpdateEvent& e)
     }
     if(_ActionFireElps >= _Button->getActionOnMouseDownRate())
     {
-        _Button->produceActionPerformed(ActionEvent(_Button, e.getTimeStamp()));
+        _Button->produceMousePressedActionPerformed(ActionEvent(_Button, e.getTimeStamp()));
         _ActionFireElps -= static_cast<Int32>(_ActionFireElps/_Button->getActionOnMouseDownRate()) * _Button->getActionOnMouseDownRate();
     }
 }

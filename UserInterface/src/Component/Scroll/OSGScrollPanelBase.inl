@@ -96,11 +96,11 @@ ScrollPanelPtr ScrollPanelBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ScrollPanel::_sfScrollPosition field.
+//! Get the ScrollPanel::_sfView field.
 inline
-SFPnt2s *ScrollPanelBase::getSFScrollPosition(void)
+SFUIViewportPtr *ScrollPanelBase::getSFView(void)
 {
-    return &_sfScrollPosition;
+    return &_sfView;
 }
 
 //! Get the ScrollPanel::_sfVerticalScrollBar field.
@@ -131,26 +131,40 @@ SFUInt32 *ScrollPanelBase::getSFHorizontalScrollBarDisplayPolicy(void)
     return &_sfHorizontalScrollBarDisplayPolicy;
 }
 
-
-//! Get the value of the ScrollPanel::_sfScrollPosition field.
+//! Get the ScrollPanel::_sfVerticalResizePolicy field.
 inline
-Pnt2s &ScrollPanelBase::getScrollPosition(void)
+SFUInt32 *ScrollPanelBase::getSFVerticalResizePolicy(void)
 {
-    return _sfScrollPosition.getValue();
+    return &_sfVerticalResizePolicy;
 }
 
-//! Get the value of the ScrollPanel::_sfScrollPosition field.
+//! Get the ScrollPanel::_sfHorizontalResizePolicy field.
 inline
-const Pnt2s &ScrollPanelBase::getScrollPosition(void) const
+SFUInt32 *ScrollPanelBase::getSFHorizontalResizePolicy(void)
 {
-    return _sfScrollPosition.getValue();
+    return &_sfHorizontalResizePolicy;
 }
 
-//! Set the value of the ScrollPanel::_sfScrollPosition field.
+
+//! Get the value of the ScrollPanel::_sfView field.
 inline
-void ScrollPanelBase::setScrollPosition(const Pnt2s &value)
+UIViewportPtr &ScrollPanelBase::getView(void)
 {
-    _sfScrollPosition.setValue(value);
+    return _sfView.getValue();
+}
+
+//! Get the value of the ScrollPanel::_sfView field.
+inline
+const UIViewportPtr &ScrollPanelBase::getView(void) const
+{
+    return _sfView.getValue();
+}
+
+//! Set the value of the ScrollPanel::_sfView field.
+inline
+void ScrollPanelBase::setView(const UIViewportPtr &value)
+{
+    _sfView.setValue(value);
 }
 
 //! Get the value of the ScrollPanel::_sfVerticalScrollBar field.
@@ -235,6 +249,48 @@ inline
 void ScrollPanelBase::setHorizontalScrollBarDisplayPolicy(const UInt32 &value)
 {
     _sfHorizontalScrollBarDisplayPolicy.setValue(value);
+}
+
+//! Get the value of the ScrollPanel::_sfVerticalResizePolicy field.
+inline
+UInt32 &ScrollPanelBase::getVerticalResizePolicy(void)
+{
+    return _sfVerticalResizePolicy.getValue();
+}
+
+//! Get the value of the ScrollPanel::_sfVerticalResizePolicy field.
+inline
+const UInt32 &ScrollPanelBase::getVerticalResizePolicy(void) const
+{
+    return _sfVerticalResizePolicy.getValue();
+}
+
+//! Set the value of the ScrollPanel::_sfVerticalResizePolicy field.
+inline
+void ScrollPanelBase::setVerticalResizePolicy(const UInt32 &value)
+{
+    _sfVerticalResizePolicy.setValue(value);
+}
+
+//! Get the value of the ScrollPanel::_sfHorizontalResizePolicy field.
+inline
+UInt32 &ScrollPanelBase::getHorizontalResizePolicy(void)
+{
+    return _sfHorizontalResizePolicy.getValue();
+}
+
+//! Get the value of the ScrollPanel::_sfHorizontalResizePolicy field.
+inline
+const UInt32 &ScrollPanelBase::getHorizontalResizePolicy(void) const
+{
+    return _sfHorizontalResizePolicy.getValue();
+}
+
+//! Set the value of the ScrollPanel::_sfHorizontalResizePolicy field.
+inline
+void ScrollPanelBase::setHorizontalResizePolicy(const UInt32 &value)
+{
+    _sfHorizontalResizePolicy.setValue(value);
 }
 
 

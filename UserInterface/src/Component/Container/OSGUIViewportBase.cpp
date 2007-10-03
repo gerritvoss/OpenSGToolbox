@@ -45,133 +45,132 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class RotatedComponent!
+ **     class UIViewport!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEROTATEDCOMPONENTINST
+#define OSG_COMPILEUIVIEWPORTINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGRotatedComponentBase.h"
-#include "OSGRotatedComponent.h"
+#include "OSGUIViewportBase.h"
+#include "OSGUIViewport.h"
 
-#include "Component/OSGRotatedComponent.h"          // ResizePolicy default header
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  RotatedComponentBase::AngleFieldMask = 
-    (TypeTraits<BitVector>::One << RotatedComponentBase::AngleFieldId);
+const OSG::BitVector  UIViewportBase::ViewPositionFieldMask = 
+    (TypeTraits<BitVector>::One << UIViewportBase::ViewPositionFieldId);
 
-const OSG::BitVector  RotatedComponentBase::InternalComponentFieldMask = 
-    (TypeTraits<BitVector>::One << RotatedComponentBase::InternalComponentFieldId);
+const OSG::BitVector  UIViewportBase::ViewComponentFieldMask = 
+    (TypeTraits<BitVector>::One << UIViewportBase::ViewComponentFieldId);
 
-const OSG::BitVector  RotatedComponentBase::ResizePolicyFieldMask = 
-    (TypeTraits<BitVector>::One << RotatedComponentBase::ResizePolicyFieldId);
+const OSG::BitVector  UIViewportBase::ViewSizeFieldMask = 
+    (TypeTraits<BitVector>::One << UIViewportBase::ViewSizeFieldId);
 
-const OSG::BitVector RotatedComponentBase::MTInfluenceMask = 
+const OSG::BitVector UIViewportBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var Real32          RotatedComponentBase::_sfAngle
-    Angle To Rotate the internal Component CCW In Radians
-*/
-/*! \var ComponentPtr    RotatedComponentBase::_sfInternalComponent
+/*! \var Pnt2s           UIViewportBase::_sfViewPosition
     
 */
-/*! \var UInt32          RotatedComponentBase::_sfResizePolicy
+/*! \var ComponentPtr    UIViewportBase::_sfViewComponent
+    
+*/
+/*! \var Vec2s           UIViewportBase::_sfViewSize
     
 */
 
-//! RotatedComponent description
+//! UIViewport description
 
-FieldDescription *RotatedComponentBase::_desc[] = 
+FieldDescription *UIViewportBase::_desc[] = 
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Angle", 
-                     AngleFieldId, AngleFieldMask,
+    new FieldDescription(SFPnt2s::getClassType(), 
+                     "ViewPosition", 
+                     ViewPositionFieldId, ViewPositionFieldMask,
                      false,
-                     (FieldAccessMethod) &RotatedComponentBase::getSFAngle),
+                     (FieldAccessMethod) &UIViewportBase::getSFViewPosition),
     new FieldDescription(SFComponentPtr::getClassType(), 
-                     "InternalComponent", 
-                     InternalComponentFieldId, InternalComponentFieldMask,
+                     "ViewComponent", 
+                     ViewComponentFieldId, ViewComponentFieldMask,
                      false,
-                     (FieldAccessMethod) &RotatedComponentBase::getSFInternalComponent),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "ResizePolicy", 
-                     ResizePolicyFieldId, ResizePolicyFieldMask,
+                     (FieldAccessMethod) &UIViewportBase::getSFViewComponent),
+    new FieldDescription(SFVec2s::getClassType(), 
+                     "ViewSize", 
+                     ViewSizeFieldId, ViewSizeFieldMask,
                      false,
-                     (FieldAccessMethod) &RotatedComponentBase::getSFResizePolicy)
+                     (FieldAccessMethod) &UIViewportBase::getSFViewSize)
 };
 
 
-FieldContainerType RotatedComponentBase::_type(
-    "RotatedComponent",
+FieldContainerType UIViewportBase::_type(
+    "UIViewport",
     "Container",
     NULL,
-    (PrototypeCreateF) &RotatedComponentBase::createEmpty,
-    RotatedComponent::initMethod,
+    (PrototypeCreateF) &UIViewportBase::createEmpty,
+    UIViewport::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(RotatedComponentBase, RotatedComponentPtr)
+//OSG_FIELD_CONTAINER_DEF(UIViewportBase, UIViewportPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &RotatedComponentBase::getType(void) 
+FieldContainerType &UIViewportBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &RotatedComponentBase::getType(void) const 
+const FieldContainerType &UIViewportBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr RotatedComponentBase::shallowCopy(void) const 
+FieldContainerPtr UIViewportBase::shallowCopy(void) const 
 { 
-    RotatedComponentPtr returnValue; 
+    UIViewportPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const RotatedComponent *>(this)); 
+    newPtr(returnValue, dynamic_cast<const UIViewport *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 RotatedComponentBase::getContainerSize(void) const 
+UInt32 UIViewportBase::getContainerSize(void) const 
 { 
-    return sizeof(RotatedComponent); 
+    return sizeof(UIViewport); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void RotatedComponentBase::executeSync(      FieldContainer &other,
+void UIViewportBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((RotatedComponentBase *) &other, whichField);
+    this->executeSyncImpl((UIViewportBase *) &other, whichField);
 }
 #else
-void RotatedComponentBase::executeSync(      FieldContainer &other,
+void UIViewportBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((RotatedComponentBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((UIViewportBase *) &other, whichField, sInfo);
 }
-void RotatedComponentBase::execBeginEdit(const BitVector &whichField, 
+void UIViewportBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void RotatedComponentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void UIViewportBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -184,10 +183,10 @@ void RotatedComponentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-RotatedComponentBase::RotatedComponentBase(void) :
-    _sfAngle                  (Real32(0.0)), 
-    _sfInternalComponent      (ComponentPtr(NullFC)), 
-    _sfResizePolicy           (UInt32(RotatedComponent::RESIZE_TO_MIN)), 
+UIViewportBase::UIViewportBase(void) :
+    _sfViewPosition           (Pnt2s(0,0)), 
+    _sfViewComponent          (ComponentPtr(NullFC)), 
+    _sfViewSize               (Vec2s(-1,-1)), 
     Inherited() 
 {
 }
@@ -196,131 +195,131 @@ RotatedComponentBase::RotatedComponentBase(void) :
 #pragma warning (default : 383)
 #endif
 
-RotatedComponentBase::RotatedComponentBase(const RotatedComponentBase &source) :
-    _sfAngle                  (source._sfAngle                  ), 
-    _sfInternalComponent      (source._sfInternalComponent      ), 
-    _sfResizePolicy           (source._sfResizePolicy           ), 
+UIViewportBase::UIViewportBase(const UIViewportBase &source) :
+    _sfViewPosition           (source._sfViewPosition           ), 
+    _sfViewComponent          (source._sfViewComponent          ), 
+    _sfViewSize               (source._sfViewSize               ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-RotatedComponentBase::~RotatedComponentBase(void)
+UIViewportBase::~UIViewportBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 RotatedComponentBase::getBinSize(const BitVector &whichField)
+UInt32 UIViewportBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (AngleFieldMask & whichField))
+    if(FieldBits::NoField != (ViewPositionFieldMask & whichField))
     {
-        returnValue += _sfAngle.getBinSize();
+        returnValue += _sfViewPosition.getBinSize();
     }
 
-    if(FieldBits::NoField != (InternalComponentFieldMask & whichField))
+    if(FieldBits::NoField != (ViewComponentFieldMask & whichField))
     {
-        returnValue += _sfInternalComponent.getBinSize();
+        returnValue += _sfViewComponent.getBinSize();
     }
 
-    if(FieldBits::NoField != (ResizePolicyFieldMask & whichField))
+    if(FieldBits::NoField != (ViewSizeFieldMask & whichField))
     {
-        returnValue += _sfResizePolicy.getBinSize();
+        returnValue += _sfViewSize.getBinSize();
     }
 
 
     return returnValue;
 }
 
-void RotatedComponentBase::copyToBin(      BinaryDataHandler &pMem,
+void UIViewportBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (AngleFieldMask & whichField))
+    if(FieldBits::NoField != (ViewPositionFieldMask & whichField))
     {
-        _sfAngle.copyToBin(pMem);
+        _sfViewPosition.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (InternalComponentFieldMask & whichField))
+    if(FieldBits::NoField != (ViewComponentFieldMask & whichField))
     {
-        _sfInternalComponent.copyToBin(pMem);
+        _sfViewComponent.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ResizePolicyFieldMask & whichField))
+    if(FieldBits::NoField != (ViewSizeFieldMask & whichField))
     {
-        _sfResizePolicy.copyToBin(pMem);
+        _sfViewSize.copyToBin(pMem);
     }
 
 
 }
 
-void RotatedComponentBase::copyFromBin(      BinaryDataHandler &pMem,
+void UIViewportBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (AngleFieldMask & whichField))
+    if(FieldBits::NoField != (ViewPositionFieldMask & whichField))
     {
-        _sfAngle.copyFromBin(pMem);
+        _sfViewPosition.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (InternalComponentFieldMask & whichField))
+    if(FieldBits::NoField != (ViewComponentFieldMask & whichField))
     {
-        _sfInternalComponent.copyFromBin(pMem);
+        _sfViewComponent.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ResizePolicyFieldMask & whichField))
+    if(FieldBits::NoField != (ViewSizeFieldMask & whichField))
     {
-        _sfResizePolicy.copyFromBin(pMem);
+        _sfViewSize.copyFromBin(pMem);
     }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void RotatedComponentBase::executeSyncImpl(      RotatedComponentBase *pOther,
+void UIViewportBase::executeSyncImpl(      UIViewportBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (AngleFieldMask & whichField))
-        _sfAngle.syncWith(pOther->_sfAngle);
+    if(FieldBits::NoField != (ViewPositionFieldMask & whichField))
+        _sfViewPosition.syncWith(pOther->_sfViewPosition);
 
-    if(FieldBits::NoField != (InternalComponentFieldMask & whichField))
-        _sfInternalComponent.syncWith(pOther->_sfInternalComponent);
+    if(FieldBits::NoField != (ViewComponentFieldMask & whichField))
+        _sfViewComponent.syncWith(pOther->_sfViewComponent);
 
-    if(FieldBits::NoField != (ResizePolicyFieldMask & whichField))
-        _sfResizePolicy.syncWith(pOther->_sfResizePolicy);
+    if(FieldBits::NoField != (ViewSizeFieldMask & whichField))
+        _sfViewSize.syncWith(pOther->_sfViewSize);
 
 
 }
 #else
-void RotatedComponentBase::executeSyncImpl(      RotatedComponentBase *pOther,
+void UIViewportBase::executeSyncImpl(      UIViewportBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (AngleFieldMask & whichField))
-        _sfAngle.syncWith(pOther->_sfAngle);
+    if(FieldBits::NoField != (ViewPositionFieldMask & whichField))
+        _sfViewPosition.syncWith(pOther->_sfViewPosition);
 
-    if(FieldBits::NoField != (InternalComponentFieldMask & whichField))
-        _sfInternalComponent.syncWith(pOther->_sfInternalComponent);
+    if(FieldBits::NoField != (ViewComponentFieldMask & whichField))
+        _sfViewComponent.syncWith(pOther->_sfViewComponent);
 
-    if(FieldBits::NoField != (ResizePolicyFieldMask & whichField))
-        _sfResizePolicy.syncWith(pOther->_sfResizePolicy);
+    if(FieldBits::NoField != (ViewSizeFieldMask & whichField))
+        _sfViewSize.syncWith(pOther->_sfViewSize);
 
 
 
 }
 
-void RotatedComponentBase::execBeginEditImpl (const BitVector &whichField, 
+void UIViewportBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -339,11 +338,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<RotatedComponentPtr>::_type("RotatedComponentPtr", "ContainerPtr");
+DataType FieldDataTraits<UIViewportPtr>::_type("UIViewportPtr", "ContainerPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(RotatedComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(RotatedComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(UIViewportPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(UIViewportPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -360,10 +359,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(RotatedComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPI
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGROTATEDCOMPONENTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGROTATEDCOMPONENTBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGUIVIEWPORTBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGUIVIEWPORTBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGROTATEDCOMPONENTFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGUIVIEWPORTFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="RotatedComponent"
+	name="UIViewport"
 	parent="Container"
 	library="UserInterface"
 	pointerfieldtypes="both"
@@ -11,35 +11,33 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
-A UI Rotated Component.
+A UI UIViewport
 	<Field
-		name="Angle"
-		type="Real32"
+		name="ViewPosition"
+		type="Pnt2s"
 		cardinality="single"
 		visibility="external"
-		defaultValue="0.0"
 		access="public"
+		defaultValue="0,0"
 	>
-    Angle To Rotate the internal Component CCW In Radians
 	</Field>
 	<Field
-		name="InternalComponent"
+		name="ViewComponent"
 		type="ComponentPtr"
 		cardinality="single"
 		visibility="external"
+		access="public"
 		header="Component/OSGComponentFields.h"
 		defaultValue="NullFC"
-		access="public"
 	>
 	</Field>
 	<Field
-		name="ResizePolicy"
-		type="UInt32"
+		name="ViewSize"
+		type="Vec2s"
 		cardinality="single"
 		visibility="external"
-		defaultValue="RotatedComponent::RESIZE_TO_MIN"
-		defaultHeader="Component/OSGRotatedComponent.h"
 		access="public"
+		defaultValue="-1,-1"
 	>
 	</Field>
 </FieldContainer>

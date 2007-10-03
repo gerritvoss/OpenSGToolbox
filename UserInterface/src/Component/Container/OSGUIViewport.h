@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGSCROLLPANEL_H_
-#define _OSGSCROLLPANEL_H_
+#ifndef _OSGUIVIEWPORT_H_
+#define _OSGUIVIEWPORT_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,27 +45,24 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
+#include "OSGUIViewportBase.h"
 #include "Event/OSGChangeListener.h"
-#include "Event/OSGAdjustmentListener.h"
-#include "OSGScrollPanelBase.h"
-#include "OSGDefaultBoundedRangeModel.h"
+#include <set>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ScrollPanel class. See \ref 
-           PageUserInterfaceScrollPanel for a description.
+/*! \brief UIViewport class. See \ref 
+           PageUserInterfaceUIViewport for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanel : public ScrollPanelBase
+class OSG_USERINTERFACELIB_DLLMAPPING UIViewport : public UIViewportBase
 {
   private:
 
-    typedef ScrollPanelBase Inherited;
+    typedef UIViewportBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
-      enum ScrollBarDisplayPolicy{SCROLLBAR_AS_NEEDED=0,SCROLLBAR_AS_ALWAYS,SCROLLBAR_AS_NEVER};
-      enum ResizePolicy{NO_RESIZE=0,RESIZE_TO_VIEW};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -83,84 +80,58 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanel : public ScrollPanelBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    
     virtual void updateLayout(void);
 
-    void setViewComponent(ComponentPtr TheComponent);
+	void addChangeListener(ChangeListenerPtr Listener);
+	void removeChangeListener(ChangeListenerPtr Listener);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in ScrollPanelBase.
+    // Variables should all be in UIViewportBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    ScrollPanel(void);
-    ScrollPanel(const ScrollPanel &source);
+    UIViewport(void);
+    UIViewport(const UIViewport &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ScrollPanel(void); 
+    virtual ~UIViewport(void); 
 
     /*! \}                                                                 */
     
-    //Range Model for the UIViewport
-    DefaultBoundedRangeModel _ViewportVerticalRangeModel;
-    DefaultBoundedRangeModel _ViewportHorizontalRangeModel;
-    
-    //Listener for getting change updates of the UIViewport
-	class ViewportChangeListener : public ChangeListener
-	{
-	public:
-		ViewportChangeListener(ScrollPanelPtr TheScrollPanel);
-        virtual void stateChanged(const ChangeEvent& e);
-	private:
-		ScrollPanelPtr _ScrollPanel;
-	};
+	typedef std::set<ChangeListenerPtr> ChangeListenerSet;
+    typedef ChangeListenerSet::iterator ChangeListenerSetItor;
+    typedef ChangeListenerSet::const_iterator ChangeListenerSetConstItor;
+	
+    ChangeListenerSet       _ChangeListeners;
+    void produceStateChanged(const ChangeEvent& e);
 
-	friend class ViewportChangeListener;
-
-	ViewportChangeListener _ViewportChangeListener;
-    
-    //Listener for getting change updates of the UIViewport Range Model
-	class ViewportRangeModelChangeListener : public ChangeListener
-	{
-	public:
-		ViewportRangeModelChangeListener(ScrollPanelPtr TheScrollPanel);
-        virtual void stateChanged(const ChangeEvent& e);
-	private:
-		ScrollPanelPtr _ScrollPanel;
-	};
-
-	friend class ViewportRangeModelChangeListener;
-
-	ViewportRangeModelChangeListener _ViewportRangeModelChangeListener;
-
-    void updateRangeModels(void);
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class ScrollPanelBase;
+    friend class UIViewportBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const ScrollPanel &source);
+    void operator =(const UIViewport &source);
 };
 
-typedef ScrollPanel *ScrollPanelP;
+typedef UIViewport *UIViewportP;
 
 OSG_END_NAMESPACE
 
-#include "OSGScrollPanelBase.inl"
-#include "OSGScrollPanel.inl"
+#include "OSGUIViewportBase.inl"
+#include "OSGUIViewport.inl"
 
-#define OSGSCROLLPANEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGUIVIEWPORT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGSCROLLPANEL_H_ */
+#endif /* _OSGUIVIEWPORT_H_ */

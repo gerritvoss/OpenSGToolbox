@@ -63,11 +63,13 @@
 
 #include <Component/Scroll/OSGScrollPanel.h>   // VerticalScrollBarDisplayPolicy default header
 #include <Component/Scroll/OSGScrollPanel.h>   // HorizontalScrollBarDisplayPolicy default header
+#include <Component/Scroll/OSGScrollPanel.h>   // VerticalResizePolicy default header
+#include <Component/Scroll/OSGScrollPanel.h>   // HorizontalResizePolicy default header
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ScrollPanelBase::ScrollPositionFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollPanelBase::ScrollPositionFieldId);
+const OSG::BitVector  ScrollPanelBase::ViewFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollPanelBase::ViewFieldId);
 
 const OSG::BitVector  ScrollPanelBase::VerticalScrollBarFieldMask = 
     (TypeTraits<BitVector>::One << ScrollPanelBase::VerticalScrollBarFieldId);
@@ -81,6 +83,12 @@ const OSG::BitVector  ScrollPanelBase::VerticalScrollBarDisplayPolicyFieldMask =
 const OSG::BitVector  ScrollPanelBase::HorizontalScrollBarDisplayPolicyFieldMask = 
     (TypeTraits<BitVector>::One << ScrollPanelBase::HorizontalScrollBarDisplayPolicyFieldId);
 
+const OSG::BitVector  ScrollPanelBase::VerticalResizePolicyFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollPanelBase::VerticalResizePolicyFieldId);
+
+const OSG::BitVector  ScrollPanelBase::HorizontalResizePolicyFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollPanelBase::HorizontalResizePolicyFieldId);
+
 const OSG::BitVector ScrollPanelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -88,7 +96,7 @@ const OSG::BitVector ScrollPanelBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Pnt2s           ScrollPanelBase::_sfScrollPosition
+/*! \var UIViewportPtr   ScrollPanelBase::_sfView
     
 */
 /*! \var ScrollBarPtr    ScrollPanelBase::_sfVerticalScrollBar
@@ -103,16 +111,22 @@ const OSG::BitVector ScrollPanelBase::MTInfluenceMask =
 /*! \var UInt32          ScrollPanelBase::_sfHorizontalScrollBarDisplayPolicy
     
 */
+/*! \var UInt32          ScrollPanelBase::_sfVerticalResizePolicy
+    
+*/
+/*! \var UInt32          ScrollPanelBase::_sfHorizontalResizePolicy
+    
+*/
 
 //! ScrollPanel description
 
 FieldDescription *ScrollPanelBase::_desc[] = 
 {
-    new FieldDescription(SFPnt2s::getClassType(), 
-                     "ScrollPosition", 
-                     ScrollPositionFieldId, ScrollPositionFieldMask,
+    new FieldDescription(SFUIViewportPtr::getClassType(), 
+                     "View", 
+                     ViewFieldId, ViewFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollPanelBase::getSFScrollPosition),
+                     (FieldAccessMethod) &ScrollPanelBase::getSFView),
     new FieldDescription(SFScrollBarPtr::getClassType(), 
                      "VerticalScrollBar", 
                      VerticalScrollBarFieldId, VerticalScrollBarFieldMask,
@@ -132,7 +146,17 @@ FieldDescription *ScrollPanelBase::_desc[] =
                      "HorizontalScrollBarDisplayPolicy", 
                      HorizontalScrollBarDisplayPolicyFieldId, HorizontalScrollBarDisplayPolicyFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollPanelBase::getSFHorizontalScrollBarDisplayPolicy)
+                     (FieldAccessMethod) &ScrollPanelBase::getSFHorizontalScrollBarDisplayPolicy),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "VerticalResizePolicy", 
+                     VerticalResizePolicyFieldId, VerticalResizePolicyFieldMask,
+                     false,
+                     (FieldAccessMethod) &ScrollPanelBase::getSFVerticalResizePolicy),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "HorizontalResizePolicy", 
+                     HorizontalResizePolicyFieldId, HorizontalResizePolicyFieldMask,
+                     false,
+                     (FieldAccessMethod) &ScrollPanelBase::getSFHorizontalResizePolicy)
 };
 
 
@@ -208,11 +232,13 @@ void ScrollPanelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ScrollPanelBase::ScrollPanelBase(void) :
-    _sfScrollPosition         (Pnt2s(0,0)), 
+    _sfView                   (UIViewportPtr(NullFC)), 
     _sfVerticalScrollBar      (ScrollBarPtr(NullFC)), 
     _sfHorizontalScrollBar    (ScrollBarPtr(NullFC)), 
-    _sfVerticalScrollBarDisplayPolicy(UInt32(ScrollPanel::ScrollBar_AS_NEEDED)), 
-    _sfHorizontalScrollBarDisplayPolicy(UInt32(ScrollPanel::ScrollBar_AS_NEEDED)), 
+    _sfVerticalScrollBarDisplayPolicy(UInt32(ScrollPanel::SCROLLBAR_AS_NEEDED)), 
+    _sfHorizontalScrollBarDisplayPolicy(UInt32(ScrollPanel::SCROLLBAR_AS_NEEDED)), 
+    _sfVerticalResizePolicy   (UInt32(ScrollPanel::NO_RESIZE)), 
+    _sfHorizontalResizePolicy (UInt32(ScrollPanel::NO_RESIZE)), 
     Inherited() 
 {
 }
@@ -222,11 +248,13 @@ ScrollPanelBase::ScrollPanelBase(void) :
 #endif
 
 ScrollPanelBase::ScrollPanelBase(const ScrollPanelBase &source) :
-    _sfScrollPosition         (source._sfScrollPosition         ), 
+    _sfView                   (source._sfView                   ), 
     _sfVerticalScrollBar      (source._sfVerticalScrollBar      ), 
     _sfHorizontalScrollBar    (source._sfHorizontalScrollBar    ), 
     _sfVerticalScrollBarDisplayPolicy(source._sfVerticalScrollBarDisplayPolicy), 
     _sfHorizontalScrollBarDisplayPolicy(source._sfHorizontalScrollBarDisplayPolicy), 
+    _sfVerticalResizePolicy   (source._sfVerticalResizePolicy   ), 
+    _sfHorizontalResizePolicy (source._sfHorizontalResizePolicy ), 
     Inherited                 (source)
 {
 }
@@ -243,9 +271,9 @@ UInt32 ScrollPanelBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (ScrollPositionFieldMask & whichField))
+    if(FieldBits::NoField != (ViewFieldMask & whichField))
     {
-        returnValue += _sfScrollPosition.getBinSize();
+        returnValue += _sfView.getBinSize();
     }
 
     if(FieldBits::NoField != (VerticalScrollBarFieldMask & whichField))
@@ -268,6 +296,16 @@ UInt32 ScrollPanelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfHorizontalScrollBarDisplayPolicy.getBinSize();
     }
 
+    if(FieldBits::NoField != (VerticalResizePolicyFieldMask & whichField))
+    {
+        returnValue += _sfVerticalResizePolicy.getBinSize();
+    }
+
+    if(FieldBits::NoField != (HorizontalResizePolicyFieldMask & whichField))
+    {
+        returnValue += _sfHorizontalResizePolicy.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -277,9 +315,9 @@ void ScrollPanelBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ScrollPositionFieldMask & whichField))
+    if(FieldBits::NoField != (ViewFieldMask & whichField))
     {
-        _sfScrollPosition.copyToBin(pMem);
+        _sfView.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (VerticalScrollBarFieldMask & whichField))
@@ -302,6 +340,16 @@ void ScrollPanelBase::copyToBin(      BinaryDataHandler &pMem,
         _sfHorizontalScrollBarDisplayPolicy.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (VerticalResizePolicyFieldMask & whichField))
+    {
+        _sfVerticalResizePolicy.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HorizontalResizePolicyFieldMask & whichField))
+    {
+        _sfHorizontalResizePolicy.copyToBin(pMem);
+    }
+
 
 }
 
@@ -310,9 +358,9 @@ void ScrollPanelBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ScrollPositionFieldMask & whichField))
+    if(FieldBits::NoField != (ViewFieldMask & whichField))
     {
-        _sfScrollPosition.copyFromBin(pMem);
+        _sfView.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (VerticalScrollBarFieldMask & whichField))
@@ -335,6 +383,16 @@ void ScrollPanelBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfHorizontalScrollBarDisplayPolicy.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (VerticalResizePolicyFieldMask & whichField))
+    {
+        _sfVerticalResizePolicy.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HorizontalResizePolicyFieldMask & whichField))
+    {
+        _sfHorizontalResizePolicy.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -345,8 +403,8 @@ void ScrollPanelBase::executeSyncImpl(      ScrollPanelBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (ScrollPositionFieldMask & whichField))
-        _sfScrollPosition.syncWith(pOther->_sfScrollPosition);
+    if(FieldBits::NoField != (ViewFieldMask & whichField))
+        _sfView.syncWith(pOther->_sfView);
 
     if(FieldBits::NoField != (VerticalScrollBarFieldMask & whichField))
         _sfVerticalScrollBar.syncWith(pOther->_sfVerticalScrollBar);
@@ -359,6 +417,12 @@ void ScrollPanelBase::executeSyncImpl(      ScrollPanelBase *pOther,
 
     if(FieldBits::NoField != (HorizontalScrollBarDisplayPolicyFieldMask & whichField))
         _sfHorizontalScrollBarDisplayPolicy.syncWith(pOther->_sfHorizontalScrollBarDisplayPolicy);
+
+    if(FieldBits::NoField != (VerticalResizePolicyFieldMask & whichField))
+        _sfVerticalResizePolicy.syncWith(pOther->_sfVerticalResizePolicy);
+
+    if(FieldBits::NoField != (HorizontalResizePolicyFieldMask & whichField))
+        _sfHorizontalResizePolicy.syncWith(pOther->_sfHorizontalResizePolicy);
 
 
 }
@@ -370,8 +434,8 @@ void ScrollPanelBase::executeSyncImpl(      ScrollPanelBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (ScrollPositionFieldMask & whichField))
-        _sfScrollPosition.syncWith(pOther->_sfScrollPosition);
+    if(FieldBits::NoField != (ViewFieldMask & whichField))
+        _sfView.syncWith(pOther->_sfView);
 
     if(FieldBits::NoField != (VerticalScrollBarFieldMask & whichField))
         _sfVerticalScrollBar.syncWith(pOther->_sfVerticalScrollBar);
@@ -384,6 +448,12 @@ void ScrollPanelBase::executeSyncImpl(      ScrollPanelBase *pOther,
 
     if(FieldBits::NoField != (HorizontalScrollBarDisplayPolicyFieldMask & whichField))
         _sfHorizontalScrollBarDisplayPolicy.syncWith(pOther->_sfHorizontalScrollBarDisplayPolicy);
+
+    if(FieldBits::NoField != (VerticalResizePolicyFieldMask & whichField))
+        _sfVerticalResizePolicy.syncWith(pOther->_sfVerticalResizePolicy);
+
+    if(FieldBits::NoField != (HorizontalResizePolicyFieldMask & whichField))
+        _sfHorizontalResizePolicy.syncWith(pOther->_sfHorizontalResizePolicy);
 
 
 

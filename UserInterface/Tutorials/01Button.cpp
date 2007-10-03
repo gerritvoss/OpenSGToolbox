@@ -46,6 +46,9 @@
 #include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
 
+#include <OpenSG/UserInterface/OSGPolygonUIDrawObject.h>
+#include <OpenSG/UserInterface/OSGUIDrawObjectCanvas.h>
+
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
 // with OSG::, but that would be a bit tedious for this example
@@ -219,6 +222,14 @@ int main(int argc, char **argv)
         toggleButton1->setToolTipText("Toggle Button ToolTip");
 	endEditCP(toggleButton1, ToggleButton::SelectedFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
 
+    //Button with Image
+	ButtonPtr DrawObjectButton = osg::Button::create();
+
+    DrawObjectButton->setImage(std::string("Data/ComponentTransform.png"));
+    DrawObjectButton->setActiveImage(std::string("Data/ComponentTransform.png"));
+    DrawObjectButton->setFocusedImage(std::string("Data/ComponentTransform.png"));
+    DrawObjectButton->setRolloverImage(std::string("Data/ComponentTransform.png"));
+    DrawObjectButton->setDisabledImage(std::string("Data/ComponentTransform.png"));
 
 	// Create Background to be used with the MainFrame
 	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
@@ -233,6 +244,7 @@ int main(int argc, char **argv)
 	   // when the view is rendered.
 	   MainFrame->getChildren().addValue(button1);
 	   MainFrame->getChildren().addValue(toggleButton1);
+	   MainFrame->getChildren().addValue(DrawObjectButton);
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);

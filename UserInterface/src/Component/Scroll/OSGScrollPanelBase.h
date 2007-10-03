@@ -67,11 +67,13 @@
 
 #include "Component/Container/OSGContainer.h" // Parent
 
-#include <OpenSG/OSGVec2sFields.h> // ScrollPosition type
+#include "Component/Container/OSGUIViewport.h" // View type
 #include "Component/Scroll/OSGScrollBar.h" // VerticalScrollBar type
 #include "Component/Scroll/OSGScrollBar.h" // HorizontalScrollBar type
 #include <OpenSG/OSGUInt32Fields.h> // VerticalScrollBarDisplayPolicy type
 #include <OpenSG/OSGUInt32Fields.h> // HorizontalScrollBarDisplayPolicy type
+#include <OpenSG/OSGUInt32Fields.h> // VerticalResizePolicy type
+#include <OpenSG/OSGUInt32Fields.h> // HorizontalResizePolicy type
 
 #include "OSGScrollPanelFields.h"
 
@@ -95,19 +97,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
 
     enum
     {
-        ScrollPositionFieldId                   = Inherited::NextFieldId,
-        VerticalScrollBarFieldId                = ScrollPositionFieldId                   + 1,
+        ViewFieldId                             = Inherited::NextFieldId,
+        VerticalScrollBarFieldId                = ViewFieldId                             + 1,
         HorizontalScrollBarFieldId              = VerticalScrollBarFieldId                + 1,
         VerticalScrollBarDisplayPolicyFieldId   = HorizontalScrollBarFieldId              + 1,
         HorizontalScrollBarDisplayPolicyFieldId = VerticalScrollBarDisplayPolicyFieldId   + 1,
-        NextFieldId                             = HorizontalScrollBarDisplayPolicyFieldId + 1
+        VerticalResizePolicyFieldId             = HorizontalScrollBarDisplayPolicyFieldId + 1,
+        HorizontalResizePolicyFieldId           = VerticalResizePolicyFieldId             + 1,
+        NextFieldId                             = HorizontalResizePolicyFieldId           + 1
     };
 
-    static const OSG::BitVector ScrollPositionFieldMask;
+    static const OSG::BitVector ViewFieldMask;
     static const OSG::BitVector VerticalScrollBarFieldMask;
     static const OSG::BitVector HorizontalScrollBarFieldMask;
     static const OSG::BitVector VerticalScrollBarDisplayPolicyFieldMask;
     static const OSG::BitVector HorizontalScrollBarDisplayPolicyFieldMask;
+    static const OSG::BitVector VerticalResizePolicyFieldMask;
+    static const OSG::BitVector HorizontalResizePolicyFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -134,14 +140,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPnt2s             *getSFScrollPosition (void);
            SFScrollBarPtr      *getSFVerticalScrollBar(void);
            SFScrollBarPtr      *getSFHorizontalScrollBar(void);
            SFUInt32            *getSFVerticalScrollBarDisplayPolicy(void);
            SFUInt32            *getSFHorizontalScrollBarDisplayPolicy(void);
+           SFUInt32            *getSFVerticalResizePolicy(void);
+           SFUInt32            *getSFHorizontalResizePolicy(void);
 
-           Pnt2s               &getScrollPosition (void);
-     const Pnt2s               &getScrollPosition (void) const;
            ScrollBarPtr        &getVerticalScrollBar(void);
      const ScrollBarPtr        &getVerticalScrollBar(void) const;
            ScrollBarPtr        &getHorizontalScrollBar(void);
@@ -150,17 +155,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
      const UInt32              &getVerticalScrollBarDisplayPolicy(void) const;
            UInt32              &getHorizontalScrollBarDisplayPolicy(void);
      const UInt32              &getHorizontalScrollBarDisplayPolicy(void) const;
+           UInt32              &getVerticalResizePolicy(void);
+     const UInt32              &getVerticalResizePolicy(void) const;
+           UInt32              &getHorizontalResizePolicy(void);
+     const UInt32              &getHorizontalResizePolicy(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setScrollPosition ( const Pnt2s &value );
      void setVerticalScrollBar( const ScrollBarPtr &value );
      void setHorizontalScrollBar( const ScrollBarPtr &value );
      void setVerticalScrollBarDisplayPolicy( const UInt32 &value );
      void setHorizontalScrollBarDisplayPolicy( const UInt32 &value );
+     void setVerticalResizePolicy( const UInt32 &value );
+     void setHorizontalResizePolicy( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -203,11 +213,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt2s             _sfScrollPosition;
+    SFUIViewportPtr     _sfView;
     SFScrollBarPtr      _sfVerticalScrollBar;
     SFScrollBarPtr      _sfHorizontalScrollBar;
     SFUInt32            _sfVerticalScrollBarDisplayPolicy;
     SFUInt32            _sfHorizontalScrollBarDisplayPolicy;
+    SFUInt32            _sfVerticalResizePolicy;
+    SFUInt32            _sfHorizontalResizePolicy;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -223,6 +235,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanelBase : public Container
     /*! \{                                                                 */
 
     virtual ~ScrollPanelBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFUIViewportPtr     *getSFView           (void);
+
+           UIViewportPtr       &getView           (void);
+     const UIViewportPtr       &getView           (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setView           (const UIViewportPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

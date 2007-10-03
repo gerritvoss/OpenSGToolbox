@@ -13,7 +13,7 @@
 >
 A UI Checkbox Button.
 	<Field
-		name="DrawObject"
+		name="CheckboxDrawObject"
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
@@ -22,7 +22,7 @@ A UI Checkbox Button.
 	>
 	</Field>
 	<Field
-		name="SelectedDrawObject"
+		name="SelectedCheckboxDrawObject"
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
@@ -31,7 +31,7 @@ A UI Checkbox Button.
 	>
 	</Field>
 	<Field
-		name="ActiveDrawObject"
+		name="ActiveCheckboxDrawObject"
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
@@ -40,7 +40,7 @@ A UI Checkbox Button.
 	>
 	</Field>
 	<Field
-		name="ActiveSelectedDrawObject"
+		name="ActiveSelectedCheckboxDrawObject"
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
@@ -49,7 +49,7 @@ A UI Checkbox Button.
 	>
 	</Field>
 	<Field
-		name="RolloverDrawObject"
+		name="RolloverCheckboxDrawObject"
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
@@ -58,7 +58,7 @@ A UI Checkbox Button.
 	>
 	</Field>
 	<Field
-		name="RolloverSelectedDrawObject"
+		name="RolloverSelectedCheckboxDrawObject"
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
@@ -67,7 +67,7 @@ A UI Checkbox Button.
 	>
 	</Field>
 	<Field
-		name="DisabledDrawObject"
+		name="DisabledCheckboxDrawObject"
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
@@ -76,7 +76,7 @@ A UI Checkbox Button.
 	>
 	</Field>
 	<Field
-		name="DisabledSelectedDrawObject"
+		name="DisabledSelectedCheckboxDrawObject"
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"

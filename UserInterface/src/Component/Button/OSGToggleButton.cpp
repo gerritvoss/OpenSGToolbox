@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGToggleButton.h"
+#include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -94,6 +95,30 @@ ToggleButton::~ToggleButton(void)
 {
 }
 
+void ToggleButton::drawInternal(const GraphicsPtr TheGraphics) const
+{
+   Pnt2s TopLeft, BottomRight;
+   getInsideBorderBounds(TopLeft, BottomRight);
+   //If I have Text Then Draw it
+   if(getText() != "" && getFont() != NullFC)
+   {
+      //Calculate Alignment
+      Pnt2s AlignedPosition;
+      Pnt2s TextTopLeft, TextBottomRight;
+      getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+
+      AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),getVerticalAlignment(), getHorizontalAlignment());
+
+      //If active then translate the Text by the Active Offset
+      if(getSelected() || getActive())
+      {
+          AlignedPosition = AlignedPosition + getActiveOffset();
+      }
+
+	  //Draw the Text
+      TheGraphics->drawText(AlignedPosition, getText(), getFont(), getDrawnTextColor(), getOpacity());
+   }
+}
 
 BorderPtr ToggleButton::getDrawnBorder(void) const
 {

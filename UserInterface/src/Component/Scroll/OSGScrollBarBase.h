@@ -70,10 +70,14 @@
 #include "Util/OSGUIDefines.h" // Orientation type
 #include <OpenSG/OSGUInt32Fields.h> // UnitIncrement type
 #include <OpenSG/OSGUInt32Fields.h> // BlockIncrement type
-#include "Component/Button/OSGButton.h" // MinButton type
-#include "Component/Button/OSGButton.h" // MaxButton type
-#include "Component/Button/OSGButton.h" // ScrollBar type
-#include "Component/OSGUIDrawObjectCanvas.h" // ScrollField type
+#include "Component/Button/OSGButton.h" // VerticalMinButton type
+#include "Component/Button/OSGButton.h" // VerticalMaxButton type
+#include "Component/Button/OSGButton.h" // VerticalScrollBar type
+#include "Component/Button/OSGButton.h" // VerticalScrollField type
+#include "Component/Button/OSGButton.h" // HorizontalMinButton type
+#include "Component/Button/OSGButton.h" // HorizontalMaxButton type
+#include "Component/Button/OSGButton.h" // HorizontalScrollBar type
+#include "Component/Button/OSGButton.h" // HorizontalScrollField type
 
 #include "OSGScrollBarFields.h"
 
@@ -97,23 +101,31 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
 
     enum
     {
-        OrientationFieldId    = Inherited::NextFieldId,
-        UnitIncrementFieldId  = OrientationFieldId    + 1,
-        BlockIncrementFieldId = UnitIncrementFieldId  + 1,
-        MinButtonFieldId      = BlockIncrementFieldId + 1,
-        MaxButtonFieldId      = MinButtonFieldId      + 1,
-        ScrollBarFieldId      = MaxButtonFieldId      + 1,
-        ScrollFieldFieldId    = ScrollBarFieldId      + 1,
-        NextFieldId           = ScrollFieldFieldId    + 1
+        OrientationFieldId           = Inherited::NextFieldId,
+        UnitIncrementFieldId         = OrientationFieldId           + 1,
+        BlockIncrementFieldId        = UnitIncrementFieldId         + 1,
+        VerticalMinButtonFieldId     = BlockIncrementFieldId        + 1,
+        VerticalMaxButtonFieldId     = VerticalMinButtonFieldId     + 1,
+        VerticalScrollBarFieldId     = VerticalMaxButtonFieldId     + 1,
+        VerticalScrollFieldFieldId   = VerticalScrollBarFieldId     + 1,
+        HorizontalMinButtonFieldId   = VerticalScrollFieldFieldId   + 1,
+        HorizontalMaxButtonFieldId   = HorizontalMinButtonFieldId   + 1,
+        HorizontalScrollBarFieldId   = HorizontalMaxButtonFieldId   + 1,
+        HorizontalScrollFieldFieldId = HorizontalScrollBarFieldId   + 1,
+        NextFieldId                  = HorizontalScrollFieldFieldId + 1
     };
 
     static const OSG::BitVector OrientationFieldMask;
     static const OSG::BitVector UnitIncrementFieldMask;
     static const OSG::BitVector BlockIncrementFieldMask;
-    static const OSG::BitVector MinButtonFieldMask;
-    static const OSG::BitVector MaxButtonFieldMask;
-    static const OSG::BitVector ScrollBarFieldMask;
-    static const OSG::BitVector ScrollFieldFieldMask;
+    static const OSG::BitVector VerticalMinButtonFieldMask;
+    static const OSG::BitVector VerticalMaxButtonFieldMask;
+    static const OSG::BitVector VerticalScrollBarFieldMask;
+    static const OSG::BitVector VerticalScrollFieldFieldMask;
+    static const OSG::BitVector HorizontalMinButtonFieldMask;
+    static const OSG::BitVector HorizontalMaxButtonFieldMask;
+    static const OSG::BitVector HorizontalScrollBarFieldMask;
+    static const OSG::BitVector HorizontalScrollFieldFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -143,10 +155,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
            SFUInt32            *getSFOrientation    (void);
            SFUInt32            *getSFUnitIncrement  (void);
            SFUInt32            *getSFBlockIncrement (void);
-           SFButtonPtr         *getSFMinButton      (void);
-           SFButtonPtr         *getSFMaxButton      (void);
-           SFButtonPtr         *getSFScrollBar      (void);
-           SFUIDrawObjectCanvasPtr *getSFScrollField    (void);
+           SFButtonPtr         *getSFVerticalMinButton(void);
+           SFButtonPtr         *getSFVerticalMaxButton(void);
+           SFButtonPtr         *getSFVerticalScrollBar(void);
+           SFButtonPtr         *getSFVerticalScrollField(void);
+           SFButtonPtr         *getSFHorizontalMinButton(void);
+           SFButtonPtr         *getSFHorizontalMaxButton(void);
+           SFButtonPtr         *getSFHorizontalScrollBar(void);
+           SFButtonPtr         *getSFHorizontalScrollField(void);
 
            UInt32              &getOrientation    (void);
      const UInt32              &getOrientation    (void) const;
@@ -154,14 +170,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
      const UInt32              &getUnitIncrement  (void) const;
            UInt32              &getBlockIncrement (void);
      const UInt32              &getBlockIncrement (void) const;
-           ButtonPtr           &getMinButton      (void);
-     const ButtonPtr           &getMinButton      (void) const;
-           ButtonPtr           &getMaxButton      (void);
-     const ButtonPtr           &getMaxButton      (void) const;
-           ButtonPtr           &getScrollBar      (void);
-     const ButtonPtr           &getScrollBar      (void) const;
-           UIDrawObjectCanvasPtr &getScrollField    (void);
-     const UIDrawObjectCanvasPtr &getScrollField    (void) const;
+           ButtonPtr           &getVerticalMinButton(void);
+     const ButtonPtr           &getVerticalMinButton(void) const;
+           ButtonPtr           &getVerticalMaxButton(void);
+     const ButtonPtr           &getVerticalMaxButton(void) const;
+           ButtonPtr           &getVerticalScrollBar(void);
+     const ButtonPtr           &getVerticalScrollBar(void) const;
+           ButtonPtr           &getVerticalScrollField(void);
+     const ButtonPtr           &getVerticalScrollField(void) const;
+           ButtonPtr           &getHorizontalMinButton(void);
+     const ButtonPtr           &getHorizontalMinButton(void) const;
+           ButtonPtr           &getHorizontalMaxButton(void);
+     const ButtonPtr           &getHorizontalMaxButton(void) const;
+           ButtonPtr           &getHorizontalScrollBar(void);
+     const ButtonPtr           &getHorizontalScrollBar(void) const;
+           ButtonPtr           &getHorizontalScrollField(void);
+     const ButtonPtr           &getHorizontalScrollField(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -171,10 +195,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
      void setOrientation    ( const UInt32 &value );
      void setUnitIncrement  ( const UInt32 &value );
      void setBlockIncrement ( const UInt32 &value );
-     void setMinButton      ( const ButtonPtr &value );
-     void setMaxButton      ( const ButtonPtr &value );
-     void setScrollBar      ( const ButtonPtr &value );
-     void setScrollField    ( const UIDrawObjectCanvasPtr &value );
+     void setVerticalMinButton( const ButtonPtr &value );
+     void setVerticalMaxButton( const ButtonPtr &value );
+     void setVerticalScrollBar( const ButtonPtr &value );
+     void setVerticalScrollField( const ButtonPtr &value );
+     void setHorizontalMinButton( const ButtonPtr &value );
+     void setHorizontalMaxButton( const ButtonPtr &value );
+     void setHorizontalScrollBar( const ButtonPtr &value );
+     void setHorizontalScrollField( const ButtonPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -220,10 +248,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
     SFUInt32            _sfOrientation;
     SFUInt32            _sfUnitIncrement;
     SFUInt32            _sfBlockIncrement;
-    SFButtonPtr         _sfMinButton;
-    SFButtonPtr         _sfMaxButton;
-    SFButtonPtr         _sfScrollBar;
-    SFUIDrawObjectCanvasPtr   _sfScrollField;
+    SFButtonPtr         _sfVerticalMinButton;
+    SFButtonPtr         _sfVerticalMaxButton;
+    SFButtonPtr         _sfVerticalScrollBar;
+    SFButtonPtr         _sfVerticalScrollField;
+    SFButtonPtr         _sfHorizontalMinButton;
+    SFButtonPtr         _sfHorizontalMaxButton;
+    SFButtonPtr         _sfHorizontalScrollBar;
+    SFButtonPtr         _sfHorizontalScrollField;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

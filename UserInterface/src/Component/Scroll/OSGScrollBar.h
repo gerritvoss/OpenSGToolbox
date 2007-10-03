@@ -52,6 +52,7 @@
 #include "Event/OSGChangeListener.h"
 #include "Event/OSGActionListener.h"
 #include <OpenSG/Input/OSGMouseMotionAdapter.h>
+#include <OpenSG/Input/OSGMouseAdapter.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -120,6 +121,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
     
 	//Mouse Wheel Events
     virtual void mouseWheelMoved(const MouseWheelEvent& e);
+
+    ButtonPtr getMinButton(void);
+    ButtonPtr getMaxButton(void);
+    ButtonPtr getScrollField(void);
+    ButtonPtr getScrollBar(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -152,6 +158,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 
     void updateScrollBarLayout(void);
     
+
+    //Listener for getting change updates of the BoundedRangeModel
 	class BoundedRangeModelChangeListener : public ChangeListener
 	{
 	public:
@@ -166,6 +174,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 	BoundedRangeModelChangeListener _BoundedRangeModelChangeListener;
 
 
+    //Min Button Action Listener
 	class MinButtonActionListener : public ActionListener
 	{
 	public:
@@ -179,6 +188,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 
 	MinButtonActionListener _MinButtonActionListener;
 
+    //Max Button Action Listener
 	class MaxButtonActionListener : public ActionListener
 	{
 	public:
@@ -192,6 +202,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 
 	MaxButtonActionListener _MaxButtonActionListener;
     
+    //ScrollBar mouse pressed Listener
 	class ScrollBarListener : public MouseAdapter
 	{
 	public :
@@ -205,6 +216,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 
 	ScrollBarListener _ScrollBarListener;
 
+    //ScrollBar Dragging Listener
 	class ScrollBarDraggedListener : public MouseAdapter, public MouseMotionAdapter
 	{
 	public :
@@ -224,6 +236,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 	friend class ScrollBarDraggedListener;
 
 	ScrollBarDraggedListener _ScrollBarDraggedListener;
+    
+    //ScrollField Mouse Listener
+	class ScrollFieldListener : public ActionListener
+	{
+	public :
+		ScrollFieldListener(ScrollBarPtr TheScrollBar);
+        virtual void actionPerformed(const ActionEvent& e);
+	protected :
+		ScrollBarPtr _ScrollBar;
+	};
+
+	friend class ScrollFieldListener;
+
+	ScrollFieldListener _ScrollFieldListener;
 
     void setMajorAxisScrollBarPosition(const Int16& Pos);
     

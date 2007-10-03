@@ -81,6 +81,12 @@
 #include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
 #include <OpenSG/OSGBoolFields.h> // EnableActionOnMouseDownTime type
 #include <OpenSG/OSGTimeFields.h> // ActionOnMouseDownRate type
+#include <OpenSG/OSGVec2sFields.h> // ActiveOffset type
+#include "Component/OSGUIDrawObjectCanvas.h" // DrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // ActiveDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // FocusedDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // RolloverDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // DisabledDrawObject type
 
 #include "OSGButtonFields.h"
 
@@ -118,7 +124,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
         HorizontalAlignmentFieldId         = VerticalAlignmentFieldId           + 1,
         EnableActionOnMouseDownTimeFieldId = HorizontalAlignmentFieldId         + 1,
         ActionOnMouseDownRateFieldId       = EnableActionOnMouseDownTimeFieldId + 1,
-        NextFieldId                        = ActionOnMouseDownRateFieldId       + 1
+        ActiveOffsetFieldId                = ActionOnMouseDownRateFieldId       + 1,
+        DrawObjectFieldId                  = ActiveOffsetFieldId                + 1,
+        ActiveDrawObjectFieldId            = DrawObjectFieldId                  + 1,
+        FocusedDrawObjectFieldId           = ActiveDrawObjectFieldId            + 1,
+        RolloverDrawObjectFieldId          = FocusedDrawObjectFieldId           + 1,
+        DisabledDrawObjectFieldId          = RolloverDrawObjectFieldId          + 1,
+        NextFieldId                        = DisabledDrawObjectFieldId          + 1
     };
 
     static const OSG::BitVector FontFieldMask;
@@ -135,6 +147,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     static const OSG::BitVector HorizontalAlignmentFieldMask;
     static const OSG::BitVector EnableActionOnMouseDownTimeFieldMask;
     static const OSG::BitVector ActionOnMouseDownRateFieldMask;
+    static const OSG::BitVector ActiveOffsetFieldMask;
+    static const OSG::BitVector DrawObjectFieldMask;
+    static const OSG::BitVector ActiveDrawObjectFieldMask;
+    static const OSG::BitVector FocusedDrawObjectFieldMask;
+    static const OSG::BitVector RolloverDrawObjectFieldMask;
+    static const OSG::BitVector DisabledDrawObjectFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -175,6 +193,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
            SFReal32            *getSFHorizontalAlignment(void);
            SFBool              *getSFEnableActionOnMouseDownTime(void);
            SFTime              *getSFActionOnMouseDownRate(void);
+           SFVec2s             *getSFActiveOffset   (void);
+           SFUIDrawObjectCanvasPtr *getSFDrawObject     (void);
+           SFUIDrawObjectCanvasPtr *getSFActiveDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFFocusedDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFRolloverDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFDisabledDrawObject(void);
 
            UIFontPtr           &getFont           (void);
      const UIFontPtr           &getFont           (void) const;
@@ -204,6 +228,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
      const bool                &getEnableActionOnMouseDownTime(void) const;
            Time                &getActionOnMouseDownRate(void);
      const Time                &getActionOnMouseDownRate(void) const;
+           Vec2s               &getActiveOffset   (void);
+     const Vec2s               &getActiveOffset   (void) const;
+           UIDrawObjectCanvasPtr &getDrawObject     (void);
+     const UIDrawObjectCanvasPtr &getDrawObject     (void) const;
+           UIDrawObjectCanvasPtr &getActiveDrawObject(void);
+     const UIDrawObjectCanvasPtr &getActiveDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getFocusedDrawObject(void);
+     const UIDrawObjectCanvasPtr &getFocusedDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getRolloverDrawObject(void);
+     const UIDrawObjectCanvasPtr &getRolloverDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getDisabledDrawObject(void);
+     const UIDrawObjectCanvasPtr &getDisabledDrawObject(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -224,6 +260,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
      void setHorizontalAlignment( const Real32 &value );
      void setEnableActionOnMouseDownTime( const bool &value );
      void setActionOnMouseDownRate( const Time &value );
+     void setActiveOffset   ( const Vec2s &value );
+     void setDrawObject     ( const UIDrawObjectCanvasPtr &value );
+     void setActiveDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setFocusedDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setRolloverDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setDisabledDrawObject( const UIDrawObjectCanvasPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -280,6 +322,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     SFReal32            _sfHorizontalAlignment;
     SFBool              _sfEnableActionOnMouseDownTime;
     SFTime              _sfActionOnMouseDownRate;
+    SFVec2s             _sfActiveOffset;
+    SFUIDrawObjectCanvasPtr   _sfDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfActiveDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfFocusedDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfRolloverDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfDisabledDrawObject;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

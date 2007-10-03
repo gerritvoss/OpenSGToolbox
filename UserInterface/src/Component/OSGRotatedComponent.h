@@ -61,6 +61,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponent : public RotatedComponent
 
     /*==========================  PUBLIC  =================================*/
   public:
+    enum ResizePolicy {NO_RESIZING = 0 , RESIZE_TO_MIN, RESIZE_TO_MAX};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

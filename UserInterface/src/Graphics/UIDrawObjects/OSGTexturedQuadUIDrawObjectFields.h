@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGROTATEDCOMPONENTFIELDS_H_
-#define _OSGROTATEDCOMPONENTFIELDS_H_
+#ifndef _OSGTEXTUREDQUADUIDRAWOBJECTFIELDS_H_
+#define _OSGTEXTUREDQUADUIDRAWOBJECTFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "Component/Container/OSGContainerFields.h"
+#include "OSGUIDrawObjectFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class RotatedComponent;
+class TexturedQuadUIDrawObject;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! RotatedComponentPtr
+//! TexturedQuadUIDrawObjectPtr
 
-typedef FCPtr<ContainerPtr, RotatedComponent> RotatedComponentPtr;
+typedef FCPtr<UIDrawObjectPtr, TexturedQuadUIDrawObject> TexturedQuadUIDrawObjectPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<ContainerPtr, RotatedComponent> RotatedComponentPtr;
 #endif
 
 template <>
-struct FieldDataTraits<RotatedComponentPtr> : 
-    public FieldTraitsRecurseMapper<RotatedComponentPtr, true>
+struct FieldDataTraits<TexturedQuadUIDrawObjectPtr> : 
+    public FieldTraitsRecurseMapper<TexturedQuadUIDrawObjectPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<RotatedComponentPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFRotatedComponentPtr"; }
-    static const char *getMName(void) { return "MFRotatedComponentPtr"; }
+    static const char *getSName(void) { return "SFTexturedQuadUIDrawObjectPtr"; }
+    static const char *getMName(void) { return "MFTexturedQuadUIDrawObjectPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<RotatedComponentPtr, true>
+/*! \class  FieldTraitsRecurseMapper<TexturedQuadUIDrawObjectPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<RotatedComponentPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldSingle */
 
-typedef SField<RotatedComponentPtr> SFRotatedComponentPtr;
+typedef SField<TexturedQuadUIDrawObjectPtr> SFTexturedQuadUIDrawObjectPtr;
 #endif
 
-#ifndef OSG_COMPILEROTATEDCOMPONENTINST
-OSG_DLLEXPORT_DECL1(SField, RotatedComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILETEXTUREDQUADUIDRAWOBJECTINST
+OSG_DLLEXPORT_DECL1(SField, TexturedQuadUIDrawObjectPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<RotatedComponentPtr> MFRotatedComponentPtr;
+typedef MField<TexturedQuadUIDrawObjectPtr> MFTexturedQuadUIDrawObjectPtr;
 #endif
 
-#ifndef OSG_COMPILEROTATEDCOMPONENTINST
-OSG_DLLEXPORT_DECL1(MField, RotatedComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILETEXTUREDQUADUIDRAWOBJECTINST
+OSG_DLLEXPORT_DECL1(MField, TexturedQuadUIDrawObjectPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGROTATEDCOMPONENTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGTEXTUREDQUADUIDRAWOBJECTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGROTATEDCOMPONENTFIELDS_H_ */
+#endif /* _OSGTEXTUREDQUADUIDRAWOBJECTFIELDS_H_ */

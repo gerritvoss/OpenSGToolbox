@@ -749,6 +749,27 @@
 					<File
 						RelativePath="..\..\src\Component\Container\OSGTabPanelFields.h">
 					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGUIViewport.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGUIViewport.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGUIViewport.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGUIViewportBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGUIViewportBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGUIViewportBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Container\OSGUIViewportFields.h">
+					</File>
 				</Filter>
 				<Filter
 					Name="Misc">
@@ -1063,6 +1084,27 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTextUIDrawObjectFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObject.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObject.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObject.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObjectBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObjectBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObjectBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObjectFields.h">
 					</File>
 					<File
 						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGUIDrawObject.cpp">

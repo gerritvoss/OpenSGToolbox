@@ -166,29 +166,26 @@ int main(int argc, char **argv)
 
 	******************************************************/
 
-   beginEditCP(button1, Button::PreferredSizeFieldMask |  Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
+   beginEditCP(button1, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 		button1->setPreferredSize(Vec2s(100,50));
-		button1->setSize(Vec2s(100,50));
 		button1->setText("Button 1");
 		
 		// Set the constraints created above to button
 		// to place the Button within the scene
 		button1->setConstraints(buttonConstraints1);
-	endEditCP(button1, Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
+	endEditCP(button1, Button::PreferredSizeFieldMask |Button::TextFieldMask | Button::ConstraintsFieldMask);
 
-    beginEditCP(button2, Button::PreferredSizeFieldMask |  Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
+    beginEditCP(button2, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 		button2->setPreferredSize(Vec2s(100,50));
-		button2->setSize(Vec2s(100,50));
 		button2->setText("Button 2");
 		
 		// Set the constraints created above to button2
 		// to place the Button within the scene
 		button2->setConstraints(buttonConstraints2);
-    endEditCP  (button2, Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
+    endEditCP  (button2, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 
-    beginEditCP(button3,  Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::ConstraintsFieldMask);
+    beginEditCP(button3,  Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 		button3->setPreferredSize(Vec2s(100,50));
-		button3->setSize(Vec2s(100,50));
 		button3->setText("Button 3");
 		
 		// Set the constraints created above to button3

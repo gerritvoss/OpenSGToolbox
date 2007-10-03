@@ -67,14 +67,14 @@
 
 #include "OSGToggleButton.h" // Parent
 
-#include "Component/OSGUIDrawObjectCanvas.h" // DrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // SelectedDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // ActiveDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // ActiveSelectedDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // RolloverDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // RolloverSelectedDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // DisabledDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // DisabledSelectedDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // CheckboxDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // SelectedCheckboxDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // ActiveCheckboxDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // ActiveSelectedCheckboxDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // RolloverCheckboxDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // RolloverSelectedCheckboxDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // DisabledCheckboxDrawObject type
+#include "Component/OSGUIDrawObjectCanvas.h" // DisabledSelectedCheckboxDrawObject type
 
 #include "OSGCheckboxButtonFields.h"
 
@@ -98,25 +98,25 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
 
     enum
     {
-        DrawObjectFieldId                 = Inherited::NextFieldId,
-        SelectedDrawObjectFieldId         = DrawObjectFieldId                 + 1,
-        ActiveDrawObjectFieldId           = SelectedDrawObjectFieldId         + 1,
-        ActiveSelectedDrawObjectFieldId   = ActiveDrawObjectFieldId           + 1,
-        RolloverDrawObjectFieldId         = ActiveSelectedDrawObjectFieldId   + 1,
-        RolloverSelectedDrawObjectFieldId = RolloverDrawObjectFieldId         + 1,
-        DisabledDrawObjectFieldId         = RolloverSelectedDrawObjectFieldId + 1,
-        DisabledSelectedDrawObjectFieldId = DisabledDrawObjectFieldId         + 1,
-        NextFieldId                       = DisabledSelectedDrawObjectFieldId + 1
+        CheckboxDrawObjectFieldId                 = Inherited::NextFieldId,
+        SelectedCheckboxDrawObjectFieldId         = CheckboxDrawObjectFieldId                 + 1,
+        ActiveCheckboxDrawObjectFieldId           = SelectedCheckboxDrawObjectFieldId         + 1,
+        ActiveSelectedCheckboxDrawObjectFieldId   = ActiveCheckboxDrawObjectFieldId           + 1,
+        RolloverCheckboxDrawObjectFieldId         = ActiveSelectedCheckboxDrawObjectFieldId   + 1,
+        RolloverSelectedCheckboxDrawObjectFieldId = RolloverCheckboxDrawObjectFieldId         + 1,
+        DisabledCheckboxDrawObjectFieldId         = RolloverSelectedCheckboxDrawObjectFieldId + 1,
+        DisabledSelectedCheckboxDrawObjectFieldId = DisabledCheckboxDrawObjectFieldId         + 1,
+        NextFieldId                               = DisabledSelectedCheckboxDrawObjectFieldId + 1
     };
 
-    static const OSG::BitVector DrawObjectFieldMask;
-    static const OSG::BitVector SelectedDrawObjectFieldMask;
-    static const OSG::BitVector ActiveDrawObjectFieldMask;
-    static const OSG::BitVector ActiveSelectedDrawObjectFieldMask;
-    static const OSG::BitVector RolloverDrawObjectFieldMask;
-    static const OSG::BitVector RolloverSelectedDrawObjectFieldMask;
-    static const OSG::BitVector DisabledDrawObjectFieldMask;
-    static const OSG::BitVector DisabledSelectedDrawObjectFieldMask;
+    static const OSG::BitVector CheckboxDrawObjectFieldMask;
+    static const OSG::BitVector SelectedCheckboxDrawObjectFieldMask;
+    static const OSG::BitVector ActiveCheckboxDrawObjectFieldMask;
+    static const OSG::BitVector ActiveSelectedCheckboxDrawObjectFieldMask;
+    static const OSG::BitVector RolloverCheckboxDrawObjectFieldMask;
+    static const OSG::BitVector RolloverSelectedCheckboxDrawObjectFieldMask;
+    static const OSG::BitVector DisabledCheckboxDrawObjectFieldMask;
+    static const OSG::BitVector DisabledSelectedCheckboxDrawObjectFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -143,45 +143,45 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUIDrawObjectCanvasPtr *getSFDrawObject     (void);
-           SFUIDrawObjectCanvasPtr *getSFSelectedDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFActiveDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFActiveSelectedDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFRolloverDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFRolloverSelectedDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFDisabledDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFDisabledSelectedDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFCheckboxDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFSelectedCheckboxDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFActiveCheckboxDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFActiveSelectedCheckboxDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFRolloverCheckboxDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFRolloverSelectedCheckboxDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFDisabledCheckboxDrawObject(void);
+           SFUIDrawObjectCanvasPtr *getSFDisabledSelectedCheckboxDrawObject(void);
 
-           UIDrawObjectCanvasPtr &getDrawObject     (void);
-     const UIDrawObjectCanvasPtr &getDrawObject     (void) const;
-           UIDrawObjectCanvasPtr &getSelectedDrawObject(void);
-     const UIDrawObjectCanvasPtr &getSelectedDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getActiveDrawObject(void);
-     const UIDrawObjectCanvasPtr &getActiveDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getActiveSelectedDrawObject(void);
-     const UIDrawObjectCanvasPtr &getActiveSelectedDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getRolloverDrawObject(void);
-     const UIDrawObjectCanvasPtr &getRolloverDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getRolloverSelectedDrawObject(void);
-     const UIDrawObjectCanvasPtr &getRolloverSelectedDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getDisabledDrawObject(void);
-     const UIDrawObjectCanvasPtr &getDisabledDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getDisabledSelectedDrawObject(void);
-     const UIDrawObjectCanvasPtr &getDisabledSelectedDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getCheckboxDrawObject(void);
+     const UIDrawObjectCanvasPtr &getCheckboxDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getSelectedCheckboxDrawObject(void);
+     const UIDrawObjectCanvasPtr &getSelectedCheckboxDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getActiveCheckboxDrawObject(void);
+     const UIDrawObjectCanvasPtr &getActiveCheckboxDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getActiveSelectedCheckboxDrawObject(void);
+     const UIDrawObjectCanvasPtr &getActiveSelectedCheckboxDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getRolloverCheckboxDrawObject(void);
+     const UIDrawObjectCanvasPtr &getRolloverCheckboxDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getRolloverSelectedCheckboxDrawObject(void);
+     const UIDrawObjectCanvasPtr &getRolloverSelectedCheckboxDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getDisabledCheckboxDrawObject(void);
+     const UIDrawObjectCanvasPtr &getDisabledCheckboxDrawObject(void) const;
+           UIDrawObjectCanvasPtr &getDisabledSelectedCheckboxDrawObject(void);
+     const UIDrawObjectCanvasPtr &getDisabledSelectedCheckboxDrawObject(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setDrawObject     ( const UIDrawObjectCanvasPtr &value );
-     void setSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setActiveDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setActiveSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setRolloverDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setRolloverSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setDisabledDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setDisabledSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setCheckboxDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setSelectedCheckboxDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setActiveCheckboxDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setActiveSelectedCheckboxDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setRolloverCheckboxDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setRolloverSelectedCheckboxDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setDisabledCheckboxDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setDisabledSelectedCheckboxDrawObject( const UIDrawObjectCanvasPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -224,14 +224,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUIDrawObjectCanvasPtr   _sfDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfSelectedDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfActiveDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfActiveSelectedDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfRolloverDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfRolloverSelectedDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfDisabledDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfDisabledSelectedDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfCheckboxDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfSelectedCheckboxDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfActiveCheckboxDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfActiveSelectedCheckboxDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfRolloverCheckboxDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfRolloverSelectedCheckboxDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfDisabledCheckboxDrawObject;
+    SFUIDrawObjectCanvasPtr   _sfDisabledSelectedCheckboxDrawObject;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

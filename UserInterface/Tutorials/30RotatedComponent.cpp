@@ -208,10 +208,11 @@ int main(int argc, char **argv)
     
     RotatedComponentPtr TheRotatedComponent = RotatedComponent::create();
     Real32 PI(3.14159);
-    beginEditCP(TheRotatedComponent, RotatedComponent::AngleFieldMask | RotatedComponent::InternalComponentFieldMask);
+    beginEditCP(TheRotatedComponent, RotatedComponent::AngleFieldMask | RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask);
 		    TheRotatedComponent->setAngle(PI/4);
             TheRotatedComponent->setInternalComponent(button1);
-    endEditCP(TheRotatedComponent, RotatedComponent::AngleFieldMask | RotatedComponent::InternalComponentFieldMask);
+            TheRotatedComponent->setResizePolicy(RotatedComponent::RESIZE_TO_MIN);
+    endEditCP(TheRotatedComponent, RotatedComponent::AngleFieldMask | RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask);
     
 	
 	ToggleButtonPtr RotateControlButton = osg::ToggleButton::create();
@@ -283,7 +284,7 @@ int main(int argc, char **argv)
 
     TheWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(550,550),
-                                        "OpenSG 01Button Window");
+                                        "OpenSG 30RotatedComponent Window");
 
     while(!ExitApp)
     {

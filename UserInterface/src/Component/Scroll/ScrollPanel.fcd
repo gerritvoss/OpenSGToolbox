@@ -13,12 +13,13 @@
 >
 A UI ScrollPanel
 	<Field
-		name="ScrollPosition"
-		type="Pnt2s"
+		name="View"
+		type="UIViewportPtr"
 		cardinality="single"
 		visibility="external"
-		access="public"
-		defaultValue="0,0"
+		access="protected"
+		header="Component/Container/OSGUIViewport.h"
+		defaultValue="NullFC"
 	>
 	</Field>
 	<Field
@@ -48,7 +49,7 @@ A UI ScrollPanel
 		visibility="external"
 		access="public"
 		defaultHeader="Component/Scroll/OSGScrollPanel.h"
-		defaultValue="ScrollPanel::ScrollBar_AS_NEEDED"
+		defaultValue="ScrollPanel::SCROLLBAR_AS_NEEDED"
 	>
 	</Field>
 	<Field
@@ -58,7 +59,27 @@ A UI ScrollPanel
 		visibility="external"
 		access="public"
 		defaultHeader="Component/Scroll/OSGScrollPanel.h"
-		defaultValue="ScrollPanel::ScrollBar_AS_NEEDED"
+		defaultValue="ScrollPanel::SCROLLBAR_AS_NEEDED"
+	>
+	</Field>
+	<Field
+		name="VerticalResizePolicy"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultHeader="Component/Scroll/OSGScrollPanel.h"
+		defaultValue="ScrollPanel::NO_RESIZE"
+	>
+	</Field>
+	<Field
+		name="HorizontalResizePolicy"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultHeader="Component/Scroll/OSGScrollPanel.h"
+		defaultValue="ScrollPanel::NO_RESIZE"
 	>
 	</Field>
 </FieldContainer>

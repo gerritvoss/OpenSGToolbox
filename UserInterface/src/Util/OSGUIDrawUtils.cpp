@@ -213,4 +213,10 @@ Pnt2s ComponentToFrame(const Pnt2s& ComponentPoint, const ComponentPtr Comp)
 	return Result;
 }
 
+Pnt2s OSG_USERINTERFACELIB_DLLMAPPING Rotate(const Pnt2s& Point, const Real32& Angle)
+{
+    return Pnt2s(Point.x()*osgcos(Angle) - Point.y()*osgsin(Angle), Point.x()*osgsin(Angle) + Point.y()*osgcos(Angle));
+}
+
+
 OSG_END_NAMESPACE

@@ -43,6 +43,7 @@ Pnt2s OSG_USERINTERFACELIB_DLLMAPPING ViewportToDrawingSurface(const Pnt2s& View
 Pnt2s OSG_USERINTERFACELIB_DLLMAPPING DrawingSurfaceToViewport(const Pnt2s& DrawingSurfacePoint, const UIDrawingSurfacePtr DrawingSurface, const ViewportPtr TheViewport);
 Pnt2s OSG_USERINTERFACELIB_DLLMAPPING ComponentToDrawingSurface(const Pnt2s& ComponentPoint, const ComponentPtr Comp);
 Pnt2s OSG_USERINTERFACELIB_DLLMAPPING ComponentToFrame(const Pnt2s& ComponentPoint, const ComponentPtr Comp);
+Pnt2s OSG_USERINTERFACELIB_DLLMAPPING Rotate(const Pnt2s& Point, const Real32& Angle);
 
 OSG_END_NAMESPACE
 

@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class RotatedComponent
+ **     class UIViewport
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGROTATEDCOMPONENTBASE_H_
-#define _OSGROTATEDCOMPONENTBASE_H_
+#ifndef _OSGUIVIEWPORTBASE_H_
+#define _OSGUIVIEWPORTBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,22 +65,21 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "OSGContainer.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // Angle type
-#include "Component/OSGComponentFields.h" // InternalComponent type
-#include <OpenSG/OSGUInt32Fields.h> // ResizePolicy type
+#include "Component/OSGComponentFields.h" // ViewComponent type
+#include <OpenSG/OSGVec2sFields.h> // ViewSize type
 
-#include "OSGRotatedComponentFields.h"
+#include "OSGUIViewportFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class RotatedComponent;
+class UIViewport;
 class BinaryDataHandler;
 
-//! \brief RotatedComponent Base Class.
+//! \brief UIViewport Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
+class OSG_USERINTERFACELIB_DLLMAPPING UIViewportBase : public Container
 {
   private:
 
@@ -89,19 +88,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef RotatedComponentPtr  Ptr;
+    typedef UIViewportPtr  Ptr;
 
     enum
     {
-        AngleFieldId             = Inherited::NextFieldId,
-        InternalComponentFieldId = AngleFieldId             + 1,
-        ResizePolicyFieldId      = InternalComponentFieldId + 1,
-        NextFieldId              = ResizePolicyFieldId      + 1
+        ViewPositionFieldId  = Inherited::NextFieldId,
+        ViewComponentFieldId = ViewPositionFieldId  + 1,
+        ViewSizeFieldId      = ViewComponentFieldId + 1,
+        NextFieldId          = ViewSizeFieldId      + 1
     };
 
-    static const OSG::BitVector AngleFieldMask;
-    static const OSG::BitVector InternalComponentFieldMask;
-    static const OSG::BitVector ResizePolicyFieldMask;
+    static const OSG::BitVector ViewPositionFieldMask;
+    static const OSG::BitVector ViewComponentFieldMask;
+    static const OSG::BitVector ViewSizeFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -128,25 +127,25 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFAngle          (void);
-           SFComponentPtr      *getSFInternalComponent(void);
-           SFUInt32            *getSFResizePolicy   (void);
+           SFPnt2s             *getSFViewPosition   (void);
+           SFComponentPtr      *getSFViewComponent  (void);
+           SFVec2s             *getSFViewSize       (void);
 
-           Real32              &getAngle          (void);
-     const Real32              &getAngle          (void) const;
-           ComponentPtr        &getInternalComponent(void);
-     const ComponentPtr        &getInternalComponent(void) const;
-           UInt32              &getResizePolicy   (void);
-     const UInt32              &getResizePolicy   (void) const;
+           Pnt2s               &getViewPosition   (void);
+     const Pnt2s               &getViewPosition   (void) const;
+           ComponentPtr        &getViewComponent  (void);
+     const ComponentPtr        &getViewComponent  (void) const;
+           Vec2s               &getViewSize       (void);
+     const Vec2s               &getViewSize       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setAngle          ( const Real32 &value );
-     void setInternalComponent( const ComponentPtr &value );
-     void setResizePolicy   ( const UInt32 &value );
+     void setViewPosition   ( const Pnt2s &value );
+     void setViewComponent  ( const ComponentPtr &value );
+     void setViewSize       ( const Vec2s &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -170,8 +169,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  RotatedComponentPtr      create          (void); 
-    static  RotatedComponentPtr      createEmpty     (void); 
+    static  UIViewportPtr      create          (void); 
+    static  UIViewportPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -189,24 +188,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfAngle;
-    SFComponentPtr      _sfInternalComponent;
-    SFUInt32            _sfResizePolicy;
+    SFPnt2s             _sfViewPosition;
+    SFComponentPtr      _sfViewComponent;
+    SFVec2s             _sfViewSize;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    RotatedComponentBase(void);
-    RotatedComponentBase(const RotatedComponentBase &source);
+    UIViewportBase(void);
+    UIViewportBase(const UIViewportBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~RotatedComponentBase(void); 
+    virtual ~UIViewportBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -214,13 +213,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      RotatedComponentBase *pOther,
+    void executeSyncImpl(      UIViewportBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      RotatedComponentBase *pOther,
+    void executeSyncImpl(      UIViewportBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -250,7 +249,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const RotatedComponentBase &source);
+    void operator =(const UIViewportBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -258,17 +257,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
 //---------------------------------------------------------------------------
 
 
-typedef RotatedComponentBase *RotatedComponentBaseP;
+typedef UIViewportBase *UIViewportBaseP;
 
-typedef osgIF<RotatedComponentBase::isNodeCore,
-              CoredNodePtr<RotatedComponent>,
+typedef osgIF<UIViewportBase::isNodeCore,
+              CoredNodePtr<UIViewport>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet RotatedComponentNodePtr;
+              >::_IRet UIViewportNodePtr;
 
-typedef RefPtr<RotatedComponentPtr> RotatedComponentRefPtr;
+typedef RefPtr<UIViewportPtr> UIViewportRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGROTATEDCOMPONENTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGUIVIEWPORTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGROTATEDCOMPONENTBASE_H_ */
+#endif /* _OSGUIVIEWPORTBASE_H_ */

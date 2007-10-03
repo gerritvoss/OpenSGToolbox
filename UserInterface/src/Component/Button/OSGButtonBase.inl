@@ -194,6 +194,48 @@ SFTime *ButtonBase::getSFActionOnMouseDownRate(void)
     return &_sfActionOnMouseDownRate;
 }
 
+//! Get the Button::_sfActiveOffset field.
+inline
+SFVec2s *ButtonBase::getSFActiveOffset(void)
+{
+    return &_sfActiveOffset;
+}
+
+//! Get the Button::_sfDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *ButtonBase::getSFDrawObject(void)
+{
+    return &_sfDrawObject;
+}
+
+//! Get the Button::_sfActiveDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *ButtonBase::getSFActiveDrawObject(void)
+{
+    return &_sfActiveDrawObject;
+}
+
+//! Get the Button::_sfFocusedDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *ButtonBase::getSFFocusedDrawObject(void)
+{
+    return &_sfFocusedDrawObject;
+}
+
+//! Get the Button::_sfRolloverDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *ButtonBase::getSFRolloverDrawObject(void)
+{
+    return &_sfRolloverDrawObject;
+}
+
+//! Get the Button::_sfDisabledDrawObject field.
+inline
+SFUIDrawObjectCanvasPtr *ButtonBase::getSFDisabledDrawObject(void)
+{
+    return &_sfDisabledDrawObject;
+}
+
 
 //! Get the value of the Button::_sfFont field.
 inline
@@ -487,6 +529,132 @@ inline
 void ButtonBase::setActionOnMouseDownRate(const Time &value)
 {
     _sfActionOnMouseDownRate.setValue(value);
+}
+
+//! Get the value of the Button::_sfActiveOffset field.
+inline
+Vec2s &ButtonBase::getActiveOffset(void)
+{
+    return _sfActiveOffset.getValue();
+}
+
+//! Get the value of the Button::_sfActiveOffset field.
+inline
+const Vec2s &ButtonBase::getActiveOffset(void) const
+{
+    return _sfActiveOffset.getValue();
+}
+
+//! Set the value of the Button::_sfActiveOffset field.
+inline
+void ButtonBase::setActiveOffset(const Vec2s &value)
+{
+    _sfActiveOffset.setValue(value);
+}
+
+//! Get the value of the Button::_sfDrawObject field.
+inline
+UIDrawObjectCanvasPtr &ButtonBase::getDrawObject(void)
+{
+    return _sfDrawObject.getValue();
+}
+
+//! Get the value of the Button::_sfDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &ButtonBase::getDrawObject(void) const
+{
+    return _sfDrawObject.getValue();
+}
+
+//! Set the value of the Button::_sfDrawObject field.
+inline
+void ButtonBase::setDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfDrawObject.setValue(value);
+}
+
+//! Get the value of the Button::_sfActiveDrawObject field.
+inline
+UIDrawObjectCanvasPtr &ButtonBase::getActiveDrawObject(void)
+{
+    return _sfActiveDrawObject.getValue();
+}
+
+//! Get the value of the Button::_sfActiveDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &ButtonBase::getActiveDrawObject(void) const
+{
+    return _sfActiveDrawObject.getValue();
+}
+
+//! Set the value of the Button::_sfActiveDrawObject field.
+inline
+void ButtonBase::setActiveDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfActiveDrawObject.setValue(value);
+}
+
+//! Get the value of the Button::_sfFocusedDrawObject field.
+inline
+UIDrawObjectCanvasPtr &ButtonBase::getFocusedDrawObject(void)
+{
+    return _sfFocusedDrawObject.getValue();
+}
+
+//! Get the value of the Button::_sfFocusedDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &ButtonBase::getFocusedDrawObject(void) const
+{
+    return _sfFocusedDrawObject.getValue();
+}
+
+//! Set the value of the Button::_sfFocusedDrawObject field.
+inline
+void ButtonBase::setFocusedDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfFocusedDrawObject.setValue(value);
+}
+
+//! Get the value of the Button::_sfRolloverDrawObject field.
+inline
+UIDrawObjectCanvasPtr &ButtonBase::getRolloverDrawObject(void)
+{
+    return _sfRolloverDrawObject.getValue();
+}
+
+//! Get the value of the Button::_sfRolloverDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &ButtonBase::getRolloverDrawObject(void) const
+{
+    return _sfRolloverDrawObject.getValue();
+}
+
+//! Set the value of the Button::_sfRolloverDrawObject field.
+inline
+void ButtonBase::setRolloverDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfRolloverDrawObject.setValue(value);
+}
+
+//! Get the value of the Button::_sfDisabledDrawObject field.
+inline
+UIDrawObjectCanvasPtr &ButtonBase::getDisabledDrawObject(void)
+{
+    return _sfDisabledDrawObject.getValue();
+}
+
+//! Get the value of the Button::_sfDisabledDrawObject field.
+inline
+const UIDrawObjectCanvasPtr &ButtonBase::getDisabledDrawObject(void) const
+{
+    return _sfDisabledDrawObject.getValue();
+}
+
+//! Set the value of the Button::_sfDisabledDrawObject field.
+inline
+void ButtonBase::setDisabledDrawObject(const UIDrawObjectCanvasPtr &value)
+{
+    _sfDisabledDrawObject.setValue(value);
 }
 
 

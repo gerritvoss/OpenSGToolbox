@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGROTATEDCOMPONENTFIELDS_H_
-#define _OSGROTATEDCOMPONENTFIELDS_H_
+#ifndef _OSGUIVIEWPORTFIELDS_H_
+#define _OSGUIVIEWPORTFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "Component/Container/OSGContainerFields.h"
+#include "OSGContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class RotatedComponent;
+class UIViewport;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! RotatedComponentPtr
+//! UIViewportPtr
 
-typedef FCPtr<ContainerPtr, RotatedComponent> RotatedComponentPtr;
+typedef FCPtr<ContainerPtr, UIViewport> UIViewportPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<ContainerPtr, RotatedComponent> RotatedComponentPtr;
 #endif
 
 template <>
-struct FieldDataTraits<RotatedComponentPtr> : 
-    public FieldTraitsRecurseMapper<RotatedComponentPtr, true>
+struct FieldDataTraits<UIViewportPtr> : 
+    public FieldTraitsRecurseMapper<UIViewportPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<RotatedComponentPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFRotatedComponentPtr"; }
-    static const char *getMName(void) { return "MFRotatedComponentPtr"; }
+    static const char *getSName(void) { return "SFUIViewportPtr"; }
+    static const char *getMName(void) { return "MFUIViewportPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<RotatedComponentPtr, true>
+/*! \class  FieldTraitsRecurseMapper<UIViewportPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<RotatedComponentPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldSingle */
 
-typedef SField<RotatedComponentPtr> SFRotatedComponentPtr;
+typedef SField<UIViewportPtr> SFUIViewportPtr;
 #endif
 
-#ifndef OSG_COMPILEROTATEDCOMPONENTINST
-OSG_DLLEXPORT_DECL1(SField, RotatedComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEUIVIEWPORTINST
+OSG_DLLEXPORT_DECL1(SField, UIViewportPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<RotatedComponentPtr> MFRotatedComponentPtr;
+typedef MField<UIViewportPtr> MFUIViewportPtr;
 #endif
 
-#ifndef OSG_COMPILEROTATEDCOMPONENTINST
-OSG_DLLEXPORT_DECL1(MField, RotatedComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEUIVIEWPORTINST
+OSG_DLLEXPORT_DECL1(MField, UIViewportPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGROTATEDCOMPONENTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGUIVIEWPORTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGROTATEDCOMPONENTFIELDS_H_ */
+#endif /* _OSGUIVIEWPORTFIELDS_H_ */

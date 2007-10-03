@@ -190,7 +190,7 @@ void Graphics2D::drawQuad(const Pnt2s& p1, const Pnt2s& p2, const Pnt2s& p3, con
 						const Real32& Opacity) const
 {
 	Real32 Alpha( Opacity * getOpacity());
-	if(Alpha < 1.0 || Texture->isTransparent())
+	if(Alpha < 1.0 || Texture->getImage()->hasAlphaChannel())
 	{
 		//Setup the Blending equations properly
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -219,7 +219,7 @@ void Graphics2D::drawQuad(const Pnt2s& p1, const Pnt2s& p2, const Pnt2s& p3, con
 		Texture->deactivate(getDrawAction());
 	}
 
-	if(Alpha < 1.0 || Texture->isTransparent())
+	if(Alpha < 1.0 || Texture->getImage()->hasAlphaChannel())
 	{
 		glDisable(GL_BLEND);
 	}

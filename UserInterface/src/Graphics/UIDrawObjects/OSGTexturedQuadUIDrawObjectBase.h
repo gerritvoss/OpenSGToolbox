@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class RotatedComponent
+ **     class TexturedQuadUIDrawObject
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGROTATEDCOMPONENTBASE_H_
-#define _OSGROTATEDCOMPONENTBASE_H_
+#ifndef _OSGTEXTUREDQUADUIDRAWOBJECTBASE_H_
+#define _OSGTEXTUREDQUADUIDRAWOBJECTBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,43 +65,60 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "OSGUIDrawObject.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // Angle type
-#include "Component/OSGComponentFields.h" // InternalComponent type
-#include <OpenSG/OSGUInt32Fields.h> // ResizePolicy type
+#include <OpenSG/OSGVec2fFields.h> // TexCoord1 type
+#include <OpenSG/OSGVec2fFields.h> // TexCoord2 type
+#include <OpenSG/OSGVec2fFields.h> // TexCoord3 type
+#include <OpenSG/OSGVec2fFields.h> // TexCoord4 type
+#include <OpenSG/OSGTextureChunkFields.h> // Texture type
+#include <OpenSG/OSGReal32Fields.h> // Opacity type
 
-#include "OSGRotatedComponentFields.h"
+#include "OSGTexturedQuadUIDrawObjectFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class RotatedComponent;
+class TexturedQuadUIDrawObject;
 class BinaryDataHandler;
 
-//! \brief RotatedComponent Base Class.
+//! \brief TexturedQuadUIDrawObject Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
+class OSG_USERINTERFACELIB_DLLMAPPING TexturedQuadUIDrawObjectBase : public UIDrawObject
 {
   private:
 
-    typedef Container    Inherited;
+    typedef UIDrawObject    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef RotatedComponentPtr  Ptr;
+    typedef TexturedQuadUIDrawObjectPtr  Ptr;
 
     enum
     {
-        AngleFieldId             = Inherited::NextFieldId,
-        InternalComponentFieldId = AngleFieldId             + 1,
-        ResizePolicyFieldId      = InternalComponentFieldId + 1,
-        NextFieldId              = ResizePolicyFieldId      + 1
+        Point1FieldId    = Inherited::NextFieldId,
+        Point2FieldId    = Point1FieldId    + 1,
+        Point3FieldId    = Point2FieldId    + 1,
+        Point4FieldId    = Point3FieldId    + 1,
+        TexCoord1FieldId = Point4FieldId    + 1,
+        TexCoord2FieldId = TexCoord1FieldId + 1,
+        TexCoord3FieldId = TexCoord2FieldId + 1,
+        TexCoord4FieldId = TexCoord3FieldId + 1,
+        TextureFieldId   = TexCoord4FieldId + 1,
+        OpacityFieldId   = TextureFieldId   + 1,
+        NextFieldId      = OpacityFieldId   + 1
     };
 
-    static const OSG::BitVector AngleFieldMask;
-    static const OSG::BitVector InternalComponentFieldMask;
-    static const OSG::BitVector ResizePolicyFieldMask;
+    static const OSG::BitVector Point1FieldMask;
+    static const OSG::BitVector Point2FieldMask;
+    static const OSG::BitVector Point3FieldMask;
+    static const OSG::BitVector Point4FieldMask;
+    static const OSG::BitVector TexCoord1FieldMask;
+    static const OSG::BitVector TexCoord2FieldMask;
+    static const OSG::BitVector TexCoord3FieldMask;
+    static const OSG::BitVector TexCoord4FieldMask;
+    static const OSG::BitVector TextureFieldMask;
+    static const OSG::BitVector OpacityFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -128,25 +145,53 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFAngle          (void);
-           SFComponentPtr      *getSFInternalComponent(void);
-           SFUInt32            *getSFResizePolicy   (void);
+           SFPnt2s             *getSFPoint1         (void);
+           SFPnt2s             *getSFPoint2         (void);
+           SFPnt2s             *getSFPoint3         (void);
+           SFPnt2s             *getSFPoint4         (void);
+           SFVec2f             *getSFTexCoord1      (void);
+           SFVec2f             *getSFTexCoord2      (void);
+           SFVec2f             *getSFTexCoord3      (void);
+           SFVec2f             *getSFTexCoord4      (void);
+           SFTextureChunkPtr   *getSFTexture        (void);
+           SFReal32            *getSFOpacity        (void);
 
-           Real32              &getAngle          (void);
-     const Real32              &getAngle          (void) const;
-           ComponentPtr        &getInternalComponent(void);
-     const ComponentPtr        &getInternalComponent(void) const;
-           UInt32              &getResizePolicy   (void);
-     const UInt32              &getResizePolicy   (void) const;
+           Pnt2s               &getPoint1         (void);
+     const Pnt2s               &getPoint1         (void) const;
+           Pnt2s               &getPoint2         (void);
+     const Pnt2s               &getPoint2         (void) const;
+           Pnt2s               &getPoint3         (void);
+     const Pnt2s               &getPoint3         (void) const;
+           Pnt2s               &getPoint4         (void);
+     const Pnt2s               &getPoint4         (void) const;
+           Vec2f               &getTexCoord1      (void);
+     const Vec2f               &getTexCoord1      (void) const;
+           Vec2f               &getTexCoord2      (void);
+     const Vec2f               &getTexCoord2      (void) const;
+           Vec2f               &getTexCoord3      (void);
+     const Vec2f               &getTexCoord3      (void) const;
+           Vec2f               &getTexCoord4      (void);
+     const Vec2f               &getTexCoord4      (void) const;
+           TextureChunkPtr     &getTexture        (void);
+     const TextureChunkPtr     &getTexture        (void) const;
+           Real32              &getOpacity        (void);
+     const Real32              &getOpacity        (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setAngle          ( const Real32 &value );
-     void setInternalComponent( const ComponentPtr &value );
-     void setResizePolicy   ( const UInt32 &value );
+     void setPoint1         ( const Pnt2s &value );
+     void setPoint2         ( const Pnt2s &value );
+     void setPoint3         ( const Pnt2s &value );
+     void setPoint4         ( const Pnt2s &value );
+     void setTexCoord1      ( const Vec2f &value );
+     void setTexCoord2      ( const Vec2f &value );
+     void setTexCoord3      ( const Vec2f &value );
+     void setTexCoord4      ( const Vec2f &value );
+     void setTexture        ( const TextureChunkPtr &value );
+     void setOpacity        ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -170,8 +215,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  RotatedComponentPtr      create          (void); 
-    static  RotatedComponentPtr      createEmpty     (void); 
+    static  TexturedQuadUIDrawObjectPtr      create          (void); 
+    static  TexturedQuadUIDrawObjectPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -189,24 +234,31 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfAngle;
-    SFComponentPtr      _sfInternalComponent;
-    SFUInt32            _sfResizePolicy;
+    SFPnt2s             _sfPoint1;
+    SFPnt2s             _sfPoint2;
+    SFPnt2s             _sfPoint3;
+    SFPnt2s             _sfPoint4;
+    SFVec2f             _sfTexCoord1;
+    SFVec2f             _sfTexCoord2;
+    SFVec2f             _sfTexCoord3;
+    SFVec2f             _sfTexCoord4;
+    SFTextureChunkPtr   _sfTexture;
+    SFReal32            _sfOpacity;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    RotatedComponentBase(void);
-    RotatedComponentBase(const RotatedComponentBase &source);
+    TexturedQuadUIDrawObjectBase(void);
+    TexturedQuadUIDrawObjectBase(const TexturedQuadUIDrawObjectBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~RotatedComponentBase(void); 
+    virtual ~TexturedQuadUIDrawObjectBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -214,13 +266,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      RotatedComponentBase *pOther,
+    void executeSyncImpl(      TexturedQuadUIDrawObjectBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      RotatedComponentBase *pOther,
+    void executeSyncImpl(      TexturedQuadUIDrawObjectBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -250,7 +302,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const RotatedComponentBase &source);
+    void operator =(const TexturedQuadUIDrawObjectBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -258,17 +310,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
 //---------------------------------------------------------------------------
 
 
-typedef RotatedComponentBase *RotatedComponentBaseP;
+typedef TexturedQuadUIDrawObjectBase *TexturedQuadUIDrawObjectBaseP;
 
-typedef osgIF<RotatedComponentBase::isNodeCore,
-              CoredNodePtr<RotatedComponent>,
+typedef osgIF<TexturedQuadUIDrawObjectBase::isNodeCore,
+              CoredNodePtr<TexturedQuadUIDrawObject>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet RotatedComponentNodePtr;
+              >::_IRet TexturedQuadUIDrawObjectNodePtr;
 
-typedef RefPtr<RotatedComponentPtr> RotatedComponentRefPtr;
+typedef RefPtr<TexturedQuadUIDrawObjectPtr> TexturedQuadUIDrawObjectRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGROTATEDCOMPONENTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGTEXTUREDQUADUIDRAWOBJECTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGROTATEDCOMPONENTBASE_H_ */
+#endif /* _OSGTEXTUREDQUADUIDRAWOBJECTBASE_H_ */

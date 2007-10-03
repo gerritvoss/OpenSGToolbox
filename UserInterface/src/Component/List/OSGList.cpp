@@ -94,9 +94,9 @@ void List::updateItem(const UInt32& index)
 	getChildren().getValue(index)->setFocused(PrevComponent->getFocused());
 	getChildren().getValue(index)->setPosition(PrevComponent->getPosition());
 	getChildren().getValue(index)->setSize(PrevComponent->getSize());
-	getChildren().getValue(index)->updateClipBounds();
 	getChildren().getValue(index)->setParentContainer(PrevComponent->getParentContainer());
 	getChildren().getValue(index)->setParentFrame(PrevComponent->getParentFrame());
+	getChildren().getValue(index)->updateClipBounds();
 }
 
 void List::selectionChanged(const ListSelectionEvent& e)
@@ -413,6 +413,21 @@ List::~List(void)
 void List::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if((whichField & ChildrenFieldMask) &&
+        getChildren().size() > 0)
+    {
+        beginEditCP(ListPtr(this), PreferredSizeFieldMask);
+            if(getCellLayout() == VERTICAL_ALIGNMENT)
+            {
+                setPreferredSize(Vec2s(getChildren().front()->getSize().x(), getChildren().front()->getSize().y()*getChildren().size()));
+            }
+            else
+            {
+                setPreferredSize(Vec2s(getChildren().front()->getSize().x()*getChildren().size(), getChildren().front()->getSize().y()));
+            }
+        endEditCP(ListPtr(this), PreferredSizeFieldMask);
+    }
 }
 
 void List::dump(      UInt32    , 

@@ -72,10 +72,181 @@ void ScrollPanel::initMethod (void)
 }
 
 
+void ScrollPanel::setViewComponent(ComponentPtr TheComponent)
+{
+    if(getView() == NullFC)
+    {
+        UIViewportPtr NewView  = UIViewport::create();
+        
+        beginEditCP(NewView, UIViewport::ViewComponentFieldMask);
+            NewView->setViewComponent(TheComponent);
+        endEditCP(NewView, UIViewport::ViewComponentFieldMask);
+        beginEditCP(ScrollPanelPtr(this), ScrollPanel::ViewFieldMask);
+            setView(NewView);
+        endEditCP(ScrollPanelPtr(this), ScrollPanel::ViewFieldMask);
+    }
+    else
+    {
+        beginEditCP(getView(), UIViewport::ViewComponentFieldMask);
+            getView()->setViewComponent(TheComponent);
+        endEditCP(getView(), UIViewport::ViewComponentFieldMask);
+    }
+    getView()->addChangeListener(&_ViewportChangeListener);
+
+    updateRangeModels();
+}
+
+void ScrollPanel::updateRangeModels(void)
+{
+    getView()->removeChangeListener(&_ViewportChangeListener);
+    
+    _ViewportVerticalRangeModel.setRangeProperties(
+        getView()->getViewPosition().y(),
+        getView()->getSize().y(),
+        0,
+        getView()->getViewComponent()->getSize().y(),
+        false);
+    
+    _ViewportHorizontalRangeModel.setRangeProperties(
+        getView()->getViewPosition().x(),
+        getView()->getSize().x(),
+        0,
+        getView()->getViewComponent()->getSize().x(),
+        false);
+
+    beginEditCP(getVerticalScrollBar(), ScrollBar::BlockIncrementFieldMask);
+        getVerticalScrollBar()->setBlockIncrement(_ViewportVerticalRangeModel.getExtent());
+    endEditCP(getVerticalScrollBar(), ScrollBar::BlockIncrementFieldMask);
+    
+    beginEditCP(getHorizontalScrollBar(), ScrollBar::BlockIncrementFieldMask);
+        getHorizontalScrollBar()->setBlockIncrement(_ViewportHorizontalRangeModel.getExtent());
+    endEditCP(getHorizontalScrollBar(), ScrollBar::BlockIncrementFieldMask);
+    
+    getView()->addChangeListener(&_ViewportChangeListener);
+}
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
+void ScrollPanel::updateLayout(void)
+{
+    bool VerticalScrollbarShown;
+    //Determine if Vertical Scrollbar is shown
+    if(getVerticalScrollBarDisplayPolicy() == SCROLLBAR_AS_ALWAYS ||
+       (getVerticalScrollBarDisplayPolicy() == SCROLLBAR_AS_NEEDED &&
+       _ViewportVerticalRangeModel.getExtent() < (_ViewportVerticalRangeModel.getMaximum() - _ViewportVerticalRangeModel.getMinimum()) ))
+    {
+        VerticalScrollbarShown = true;
+        beginEditCP(getVerticalScrollBar(), ScrollBar::VisibleFieldMask);
+            getVerticalScrollBar()->setVisible(true);
+        endEditCP(getVerticalScrollBar(), ScrollBar::VisibleFieldMask);
+    }
+    else
+    {
+        VerticalScrollbarShown = false;
+        beginEditCP(getVerticalScrollBar(), ScrollBar::VisibleFieldMask);
+            getVerticalScrollBar()->setVisible(false);
+        endEditCP(getVerticalScrollBar(), ScrollBar::VisibleFieldMask);
+    }
+
+    bool HorizontalScrollbarShown;
+    //Determine if Horizontal Scrollbar is shown
+    if(getHorizontalScrollBarDisplayPolicy() == SCROLLBAR_AS_ALWAYS ||
+       (getHorizontalScrollBarDisplayPolicy() == SCROLLBAR_AS_NEEDED &&
+       _ViewportHorizontalRangeModel.getExtent() < (_ViewportHorizontalRangeModel.getMaximum() - _ViewportHorizontalRangeModel.getMinimum()) ))
+    {
+        HorizontalScrollbarShown = true;
+        beginEditCP(getHorizontalScrollBar(), ScrollBar::VisibleFieldMask);
+            getHorizontalScrollBar()->setVisible(true);
+        endEditCP(getHorizontalScrollBar(), ScrollBar::VisibleFieldMask);
+    }
+    else
+    {
+        HorizontalScrollbarShown = false;
+        beginEditCP(getHorizontalScrollBar(), ScrollBar::VisibleFieldMask);
+            getHorizontalScrollBar()->setVisible(false);
+        endEditCP(getHorizontalScrollBar(), ScrollBar::VisibleFieldMask);
+    }
+
+	Pnt2s TopLeft, BottomRight;
+	getInsideInsetsBounds(TopLeft, BottomRight);
+
+    Vec2s ViewportSize(BottomRight - TopLeft);
+
+    //Set the ScrollBar Position and Sizes
+    if(VerticalScrollbarShown && HorizontalScrollbarShown)
+    {
+        //Vertical
+        beginEditCP(getVerticalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
+            getVerticalScrollBar()->setSize(Vec2s(getVerticalScrollBar()->getPreferredSize().x(), (BottomRight.y() - TopLeft.y() - getHorizontalScrollBar()->getPreferredSize().y()) ));
+            getVerticalScrollBar()->setPosition(Pnt2s(BottomRight.x() - getVerticalScrollBar()->getSize().x(), TopLeft.y()));
+        endEditCP(getVerticalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
+
+        //Horizontal
+        beginEditCP(getHorizontalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
+            getHorizontalScrollBar()->setSize(Vec2s((BottomRight.x() - TopLeft.x() - getVerticalScrollBar()->getPreferredSize().x()), getHorizontalScrollBar()->getPreferredSize().y()) );
+            getHorizontalScrollBar()->setPosition(Pnt2s(TopLeft.x(), BottomRight.y() - getHorizontalScrollBar()->getSize().y()));
+        endEditCP(getHorizontalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
+
+        ViewportSize = ViewportSize - Vec2s(getVerticalScrollBar()->getSize().x(), getHorizontalScrollBar()->getSize().y());
+    }
+    else if(VerticalScrollbarShown)
+    {
+        beginEditCP(getVerticalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
+            getVerticalScrollBar()->setSize(Vec2s(getVerticalScrollBar()->getPreferredSize().x(), (BottomRight.y() - TopLeft.y()) ));
+            getVerticalScrollBar()->setPosition(BottomRight-getVerticalScrollBar()->getSize());
+        endEditCP(getVerticalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
+        ViewportSize = ViewportSize - Vec2s(getVerticalScrollBar()->getSize().x(), 0);
+    }
+    else if(HorizontalScrollbarShown)
+    {
+        beginEditCP(getHorizontalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
+            getHorizontalScrollBar()->setSize(Vec2s((BottomRight.x() - TopLeft.x()), getHorizontalScrollBar()->getPreferredSize().y()) );
+            getHorizontalScrollBar()->setPosition(BottomRight-getHorizontalScrollBar()->getSize());
+        endEditCP(getHorizontalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
+        ViewportSize = ViewportSize - Vec2s(0, getHorizontalScrollBar()->getSize().y());
+    }
+
+    //Set the Viewports position and size
+    if(getView() != NullFC)
+    {
+        beginEditCP(getView(), UIViewport::SizeFieldMask | UIViewport::PositionFieldMask);
+            getView()->setPosition(Pnt2s(0,0));
+            getView()->setSize(ViewportSize);
+        endEditCP(getView(), UIViewport::SizeFieldMask | UIViewport::PositionFieldMask);
+    }
+    
+
+    //Update my Size if nessicary
+    if(getVerticalResizePolicy() == RESIZE_TO_VIEW ||
+        getHorizontalResizePolicy() == RESIZE_TO_VIEW)
+    {
+        Vec2s Size(getPreferredSize());
+        if(getVerticalResizePolicy() == RESIZE_TO_VIEW)
+        {
+            Size[1] = getView()->getViewComponent()->getSize()[1];
+            if(HorizontalScrollbarShown)
+            {
+               Size[1] += getHorizontalScrollBar()->getSize()[1];
+            }
+        }
+        if(getHorizontalResizePolicy() == RESIZE_TO_VIEW)
+        {
+            Size[0] = getView()->getViewComponent()->getSize()[0];
+            if(VerticalScrollbarShown)
+            {
+               Size[0] += getVerticalScrollBar()->getSize()[0];
+            }
+        }
+        if(Size != getPreferredSize())
+        {
+            beginEditCP(ScrollPanelPtr(this), PreferredSizeFieldMask);
+                setPreferredSize(Size);
+            endEditCP(ScrollPanelPtr(this), PreferredSizeFieldMask);
+        }
+    }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -83,17 +254,40 @@ void ScrollPanel::initMethod (void)
 /*----------------------- constructors & destructors ----------------------*/
 
 ScrollPanel::ScrollPanel(void) :
-    Inherited()
+    Inherited(),
+    _ViewportChangeListener(ScrollPanelPtr(this)),
+    _ViewportRangeModelChangeListener(ScrollPanelPtr(this))
 {
+    _ViewportVerticalRangeModel.addChangeListener(&_ViewportRangeModelChangeListener);
+    _ViewportHorizontalRangeModel.addChangeListener(&_ViewportRangeModelChangeListener);
 }
 
 ScrollPanel::ScrollPanel(const ScrollPanel &source) :
-    Inherited(source)
+    Inherited(source),
+    _ViewportChangeListener(ScrollPanelPtr(this)),
+    _ViewportRangeModelChangeListener(ScrollPanelPtr(this))
 {
+    _ViewportVerticalRangeModel.addChangeListener(&_ViewportRangeModelChangeListener);
+    _ViewportHorizontalRangeModel.addChangeListener(&_ViewportRangeModelChangeListener);
+    
+    if(getVerticalScrollBar() != NullFC &&
+        getHorizontalScrollBar() != NullFC)
+    {
+        beginEditCP(ScrollPanelPtr(this), VerticalScrollBarFieldMask | 
+            HorizontalScrollBarFieldMask);
+
+        setVerticalScrollBar(ScrollBar::Ptr::dcast(getVerticalScrollBar()->shallowCopy()));
+        setHorizontalScrollBar(ScrollBar::Ptr::dcast(getHorizontalScrollBar()->shallowCopy()));
+        
+        endEditCP(ScrollPanelPtr(this), VerticalScrollBarFieldMask | 
+            HorizontalScrollBarFieldMask);
+    }
 }
 
 ScrollPanel::~ScrollPanel(void)
 {
+    _ViewportVerticalRangeModel.removeChangeListener(&_ViewportRangeModelChangeListener);
+    _ViewportHorizontalRangeModel.removeChangeListener(&_ViewportRangeModelChangeListener);
 }
 
 /*----------------------------- class specific ----------------------------*/
@@ -101,6 +295,38 @@ ScrollPanel::~ScrollPanel(void)
 void ScrollPanel::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if((whichField & ViewFieldMask)
+        && getView() != NullFC)
+    {
+        updateRangeModels();
+    }
+    if((whichField & VerticalScrollBarFieldMask) ||
+        (whichField & HorizontalScrollBarFieldMask) ||
+        (whichField & ViewFieldMask))
+    {
+        beginEditCP(ScrollPanelPtr(this), ChildrenFieldMask);
+            getChildren().clear();
+            if(getView() != NullFC){getChildren().push_back(getView());}
+            if(getVerticalScrollBar() != NullFC){getChildren().push_back(getVerticalScrollBar());}
+            if(getHorizontalScrollBar() != NullFC)
+            {
+                getChildren().push_back(getHorizontalScrollBar());
+            }
+        endEditCP(ScrollPanelPtr(this), ChildrenFieldMask);
+    }
+
+    if((whichField & VerticalScrollBarFieldMask) &&
+        getVerticalScrollBar() != NullFC)
+    {
+        getVerticalScrollBar()->setModel(&_ViewportVerticalRangeModel);
+    }
+    
+    if((whichField & HorizontalScrollBarFieldMask) &&
+        getHorizontalScrollBar() != NullFC)
+    {
+        getHorizontalScrollBar()->setModel(&_ViewportHorizontalRangeModel);
+    }
 }
 
 void ScrollPanel::dump(      UInt32    , 
@@ -109,6 +335,21 @@ void ScrollPanel::dump(      UInt32    ,
     SLOG << "Dump ScrollPanel NI" << std::endl;
 }
 
+
+void ScrollPanel::ViewportChangeListener::stateChanged(const ChangeEvent& e)
+{
+    _ScrollPanel->updateRangeModels();
+}
+
+void ScrollPanel::ViewportRangeModelChangeListener::stateChanged(const ChangeEvent& e)
+{
+    beginEditCP(_ScrollPanel->getView(), UIViewport::ViewPositionFieldMask);
+        _ScrollPanel->getView()->setViewPosition(
+            Pnt2s(_ScrollPanel->_ViewportHorizontalRangeModel.getValue(), _ScrollPanel->_ViewportVerticalRangeModel.getValue()) );
+    endEditCP(_ScrollPanel->getView(), UIViewport::ViewPositionFieldMask);
+
+    _ScrollPanel->updateLayout();
+}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

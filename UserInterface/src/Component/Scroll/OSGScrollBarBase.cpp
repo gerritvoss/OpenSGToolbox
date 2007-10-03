@@ -73,17 +73,29 @@ const OSG::BitVector  ScrollBarBase::UnitIncrementFieldMask =
 const OSG::BitVector  ScrollBarBase::BlockIncrementFieldMask = 
     (TypeTraits<BitVector>::One << ScrollBarBase::BlockIncrementFieldId);
 
-const OSG::BitVector  ScrollBarBase::MinButtonFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollBarBase::MinButtonFieldId);
+const OSG::BitVector  ScrollBarBase::VerticalMinButtonFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollBarBase::VerticalMinButtonFieldId);
 
-const OSG::BitVector  ScrollBarBase::MaxButtonFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollBarBase::MaxButtonFieldId);
+const OSG::BitVector  ScrollBarBase::VerticalMaxButtonFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollBarBase::VerticalMaxButtonFieldId);
 
-const OSG::BitVector  ScrollBarBase::ScrollBarFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollBarBase::ScrollBarFieldId);
+const OSG::BitVector  ScrollBarBase::VerticalScrollBarFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollBarBase::VerticalScrollBarFieldId);
 
-const OSG::BitVector  ScrollBarBase::ScrollFieldFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollBarBase::ScrollFieldFieldId);
+const OSG::BitVector  ScrollBarBase::VerticalScrollFieldFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollBarBase::VerticalScrollFieldFieldId);
+
+const OSG::BitVector  ScrollBarBase::HorizontalMinButtonFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollBarBase::HorizontalMinButtonFieldId);
+
+const OSG::BitVector  ScrollBarBase::HorizontalMaxButtonFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollBarBase::HorizontalMaxButtonFieldId);
+
+const OSG::BitVector  ScrollBarBase::HorizontalScrollBarFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollBarBase::HorizontalScrollBarFieldId);
+
+const OSG::BitVector  ScrollBarBase::HorizontalScrollFieldFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollBarBase::HorizontalScrollFieldFieldId);
 
 const OSG::BitVector ScrollBarBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -101,16 +113,28 @@ const OSG::BitVector ScrollBarBase::MTInfluenceMask =
 /*! \var UInt32          ScrollBarBase::_sfBlockIncrement
     
 */
-/*! \var ButtonPtr       ScrollBarBase::_sfMinButton
+/*! \var ButtonPtr       ScrollBarBase::_sfVerticalMinButton
     
 */
-/*! \var ButtonPtr       ScrollBarBase::_sfMaxButton
+/*! \var ButtonPtr       ScrollBarBase::_sfVerticalMaxButton
     
 */
-/*! \var ButtonPtr       ScrollBarBase::_sfScrollBar
+/*! \var ButtonPtr       ScrollBarBase::_sfVerticalScrollBar
     
 */
-/*! \var UIDrawObjectCanvasPtr ScrollBarBase::_sfScrollField
+/*! \var ButtonPtr       ScrollBarBase::_sfVerticalScrollField
+    
+*/
+/*! \var ButtonPtr       ScrollBarBase::_sfHorizontalMinButton
+    
+*/
+/*! \var ButtonPtr       ScrollBarBase::_sfHorizontalMaxButton
+    
+*/
+/*! \var ButtonPtr       ScrollBarBase::_sfHorizontalScrollBar
+    
+*/
+/*! \var ButtonPtr       ScrollBarBase::_sfHorizontalScrollField
     
 */
 
@@ -134,25 +158,45 @@ FieldDescription *ScrollBarBase::_desc[] =
                      false,
                      (FieldAccessMethod) &ScrollBarBase::getSFBlockIncrement),
     new FieldDescription(SFButtonPtr::getClassType(), 
-                     "MinButton", 
-                     MinButtonFieldId, MinButtonFieldMask,
+                     "VerticalMinButton", 
+                     VerticalMinButtonFieldId, VerticalMinButtonFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollBarBase::getSFMinButton),
+                     (FieldAccessMethod) &ScrollBarBase::getSFVerticalMinButton),
     new FieldDescription(SFButtonPtr::getClassType(), 
-                     "MaxButton", 
-                     MaxButtonFieldId, MaxButtonFieldMask,
+                     "VerticalMaxButton", 
+                     VerticalMaxButtonFieldId, VerticalMaxButtonFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollBarBase::getSFMaxButton),
+                     (FieldAccessMethod) &ScrollBarBase::getSFVerticalMaxButton),
     new FieldDescription(SFButtonPtr::getClassType(), 
-                     "ScrollBar", 
-                     ScrollBarFieldId, ScrollBarFieldMask,
+                     "VerticalScrollBar", 
+                     VerticalScrollBarFieldId, VerticalScrollBarFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollBarBase::getSFScrollBar),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "ScrollField", 
-                     ScrollFieldFieldId, ScrollFieldFieldMask,
+                     (FieldAccessMethod) &ScrollBarBase::getSFVerticalScrollBar),
+    new FieldDescription(SFButtonPtr::getClassType(), 
+                     "VerticalScrollField", 
+                     VerticalScrollFieldFieldId, VerticalScrollFieldFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollBarBase::getSFScrollField)
+                     (FieldAccessMethod) &ScrollBarBase::getSFVerticalScrollField),
+    new FieldDescription(SFButtonPtr::getClassType(), 
+                     "HorizontalMinButton", 
+                     HorizontalMinButtonFieldId, HorizontalMinButtonFieldMask,
+                     false,
+                     (FieldAccessMethod) &ScrollBarBase::getSFHorizontalMinButton),
+    new FieldDescription(SFButtonPtr::getClassType(), 
+                     "HorizontalMaxButton", 
+                     HorizontalMaxButtonFieldId, HorizontalMaxButtonFieldMask,
+                     false,
+                     (FieldAccessMethod) &ScrollBarBase::getSFHorizontalMaxButton),
+    new FieldDescription(SFButtonPtr::getClassType(), 
+                     "HorizontalScrollBar", 
+                     HorizontalScrollBarFieldId, HorizontalScrollBarFieldMask,
+                     false,
+                     (FieldAccessMethod) &ScrollBarBase::getSFHorizontalScrollBar),
+    new FieldDescription(SFButtonPtr::getClassType(), 
+                     "HorizontalScrollField", 
+                     HorizontalScrollFieldFieldId, HorizontalScrollFieldFieldMask,
+                     false,
+                     (FieldAccessMethod) &ScrollBarBase::getSFHorizontalScrollField)
 };
 
 
@@ -231,10 +275,14 @@ ScrollBarBase::ScrollBarBase(void) :
     _sfOrientation            (UInt32(VERTICAL_ALIGNMENT)), 
     _sfUnitIncrement          (UInt32(1)), 
     _sfBlockIncrement         (UInt32(2)), 
-    _sfMinButton              (ButtonPtr(NullFC)), 
-    _sfMaxButton              (ButtonPtr(NullFC)), 
-    _sfScrollBar              (ButtonPtr(NullFC)), 
-    _sfScrollField            (UIDrawObjectCanvasPtr(NullFC)), 
+    _sfVerticalMinButton      (ButtonPtr(NullFC)), 
+    _sfVerticalMaxButton      (ButtonPtr(NullFC)), 
+    _sfVerticalScrollBar      (ButtonPtr(NullFC)), 
+    _sfVerticalScrollField    (ButtonPtr(NullFC)), 
+    _sfHorizontalMinButton    (ButtonPtr(NullFC)), 
+    _sfHorizontalMaxButton    (ButtonPtr(NullFC)), 
+    _sfHorizontalScrollBar    (ButtonPtr(NullFC)), 
+    _sfHorizontalScrollField  (ButtonPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -247,10 +295,14 @@ ScrollBarBase::ScrollBarBase(const ScrollBarBase &source) :
     _sfOrientation            (source._sfOrientation            ), 
     _sfUnitIncrement          (source._sfUnitIncrement          ), 
     _sfBlockIncrement         (source._sfBlockIncrement         ), 
-    _sfMinButton              (source._sfMinButton              ), 
-    _sfMaxButton              (source._sfMaxButton              ), 
-    _sfScrollBar              (source._sfScrollBar              ), 
-    _sfScrollField            (source._sfScrollField            ), 
+    _sfVerticalMinButton      (source._sfVerticalMinButton      ), 
+    _sfVerticalMaxButton      (source._sfVerticalMaxButton      ), 
+    _sfVerticalScrollBar      (source._sfVerticalScrollBar      ), 
+    _sfVerticalScrollField    (source._sfVerticalScrollField    ), 
+    _sfHorizontalMinButton    (source._sfHorizontalMinButton    ), 
+    _sfHorizontalMaxButton    (source._sfHorizontalMaxButton    ), 
+    _sfHorizontalScrollBar    (source._sfHorizontalScrollBar    ), 
+    _sfHorizontalScrollField  (source._sfHorizontalScrollField  ), 
     Inherited                 (source)
 {
 }
@@ -282,24 +334,44 @@ UInt32 ScrollBarBase::getBinSize(const BitVector &whichField)
         returnValue += _sfBlockIncrement.getBinSize();
     }
 
-    if(FieldBits::NoField != (MinButtonFieldMask & whichField))
+    if(FieldBits::NoField != (VerticalMinButtonFieldMask & whichField))
     {
-        returnValue += _sfMinButton.getBinSize();
+        returnValue += _sfVerticalMinButton.getBinSize();
     }
 
-    if(FieldBits::NoField != (MaxButtonFieldMask & whichField))
+    if(FieldBits::NoField != (VerticalMaxButtonFieldMask & whichField))
     {
-        returnValue += _sfMaxButton.getBinSize();
+        returnValue += _sfVerticalMaxButton.getBinSize();
     }
 
-    if(FieldBits::NoField != (ScrollBarFieldMask & whichField))
+    if(FieldBits::NoField != (VerticalScrollBarFieldMask & whichField))
     {
-        returnValue += _sfScrollBar.getBinSize();
+        returnValue += _sfVerticalScrollBar.getBinSize();
     }
 
-    if(FieldBits::NoField != (ScrollFieldFieldMask & whichField))
+    if(FieldBits::NoField != (VerticalScrollFieldFieldMask & whichField))
     {
-        returnValue += _sfScrollField.getBinSize();
+        returnValue += _sfVerticalScrollField.getBinSize();
+    }
+
+    if(FieldBits::NoField != (HorizontalMinButtonFieldMask & whichField))
+    {
+        returnValue += _sfHorizontalMinButton.getBinSize();
+    }
+
+    if(FieldBits::NoField != (HorizontalMaxButtonFieldMask & whichField))
+    {
+        returnValue += _sfHorizontalMaxButton.getBinSize();
+    }
+
+    if(FieldBits::NoField != (HorizontalScrollBarFieldMask & whichField))
+    {
+        returnValue += _sfHorizontalScrollBar.getBinSize();
+    }
+
+    if(FieldBits::NoField != (HorizontalScrollFieldFieldMask & whichField))
+    {
+        returnValue += _sfHorizontalScrollField.getBinSize();
     }
 
 
@@ -326,24 +398,44 @@ void ScrollBarBase::copyToBin(      BinaryDataHandler &pMem,
         _sfBlockIncrement.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (MinButtonFieldMask & whichField))
+    if(FieldBits::NoField != (VerticalMinButtonFieldMask & whichField))
     {
-        _sfMinButton.copyToBin(pMem);
+        _sfVerticalMinButton.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (MaxButtonFieldMask & whichField))
+    if(FieldBits::NoField != (VerticalMaxButtonFieldMask & whichField))
     {
-        _sfMaxButton.copyToBin(pMem);
+        _sfVerticalMaxButton.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ScrollBarFieldMask & whichField))
+    if(FieldBits::NoField != (VerticalScrollBarFieldMask & whichField))
     {
-        _sfScrollBar.copyToBin(pMem);
+        _sfVerticalScrollBar.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ScrollFieldFieldMask & whichField))
+    if(FieldBits::NoField != (VerticalScrollFieldFieldMask & whichField))
     {
-        _sfScrollField.copyToBin(pMem);
+        _sfVerticalScrollField.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HorizontalMinButtonFieldMask & whichField))
+    {
+        _sfHorizontalMinButton.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HorizontalMaxButtonFieldMask & whichField))
+    {
+        _sfHorizontalMaxButton.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HorizontalScrollBarFieldMask & whichField))
+    {
+        _sfHorizontalScrollBar.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HorizontalScrollFieldFieldMask & whichField))
+    {
+        _sfHorizontalScrollField.copyToBin(pMem);
     }
 
 
@@ -369,24 +461,44 @@ void ScrollBarBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfBlockIncrement.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (MinButtonFieldMask & whichField))
+    if(FieldBits::NoField != (VerticalMinButtonFieldMask & whichField))
     {
-        _sfMinButton.copyFromBin(pMem);
+        _sfVerticalMinButton.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (MaxButtonFieldMask & whichField))
+    if(FieldBits::NoField != (VerticalMaxButtonFieldMask & whichField))
     {
-        _sfMaxButton.copyFromBin(pMem);
+        _sfVerticalMaxButton.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ScrollBarFieldMask & whichField))
+    if(FieldBits::NoField != (VerticalScrollBarFieldMask & whichField))
     {
-        _sfScrollBar.copyFromBin(pMem);
+        _sfVerticalScrollBar.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ScrollFieldFieldMask & whichField))
+    if(FieldBits::NoField != (VerticalScrollFieldFieldMask & whichField))
     {
-        _sfScrollField.copyFromBin(pMem);
+        _sfVerticalScrollField.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HorizontalMinButtonFieldMask & whichField))
+    {
+        _sfHorizontalMinButton.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HorizontalMaxButtonFieldMask & whichField))
+    {
+        _sfHorizontalMaxButton.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HorizontalScrollBarFieldMask & whichField))
+    {
+        _sfHorizontalScrollBar.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (HorizontalScrollFieldFieldMask & whichField))
+    {
+        _sfHorizontalScrollField.copyFromBin(pMem);
     }
 
 
@@ -408,17 +520,29 @@ void ScrollBarBase::executeSyncImpl(      ScrollBarBase *pOther,
     if(FieldBits::NoField != (BlockIncrementFieldMask & whichField))
         _sfBlockIncrement.syncWith(pOther->_sfBlockIncrement);
 
-    if(FieldBits::NoField != (MinButtonFieldMask & whichField))
-        _sfMinButton.syncWith(pOther->_sfMinButton);
+    if(FieldBits::NoField != (VerticalMinButtonFieldMask & whichField))
+        _sfVerticalMinButton.syncWith(pOther->_sfVerticalMinButton);
 
-    if(FieldBits::NoField != (MaxButtonFieldMask & whichField))
-        _sfMaxButton.syncWith(pOther->_sfMaxButton);
+    if(FieldBits::NoField != (VerticalMaxButtonFieldMask & whichField))
+        _sfVerticalMaxButton.syncWith(pOther->_sfVerticalMaxButton);
 
-    if(FieldBits::NoField != (ScrollBarFieldMask & whichField))
-        _sfScrollBar.syncWith(pOther->_sfScrollBar);
+    if(FieldBits::NoField != (VerticalScrollBarFieldMask & whichField))
+        _sfVerticalScrollBar.syncWith(pOther->_sfVerticalScrollBar);
 
-    if(FieldBits::NoField != (ScrollFieldFieldMask & whichField))
-        _sfScrollField.syncWith(pOther->_sfScrollField);
+    if(FieldBits::NoField != (VerticalScrollFieldFieldMask & whichField))
+        _sfVerticalScrollField.syncWith(pOther->_sfVerticalScrollField);
+
+    if(FieldBits::NoField != (HorizontalMinButtonFieldMask & whichField))
+        _sfHorizontalMinButton.syncWith(pOther->_sfHorizontalMinButton);
+
+    if(FieldBits::NoField != (HorizontalMaxButtonFieldMask & whichField))
+        _sfHorizontalMaxButton.syncWith(pOther->_sfHorizontalMaxButton);
+
+    if(FieldBits::NoField != (HorizontalScrollBarFieldMask & whichField))
+        _sfHorizontalScrollBar.syncWith(pOther->_sfHorizontalScrollBar);
+
+    if(FieldBits::NoField != (HorizontalScrollFieldFieldMask & whichField))
+        _sfHorizontalScrollField.syncWith(pOther->_sfHorizontalScrollField);
 
 
 }
@@ -439,17 +563,29 @@ void ScrollBarBase::executeSyncImpl(      ScrollBarBase *pOther,
     if(FieldBits::NoField != (BlockIncrementFieldMask & whichField))
         _sfBlockIncrement.syncWith(pOther->_sfBlockIncrement);
 
-    if(FieldBits::NoField != (MinButtonFieldMask & whichField))
-        _sfMinButton.syncWith(pOther->_sfMinButton);
+    if(FieldBits::NoField != (VerticalMinButtonFieldMask & whichField))
+        _sfVerticalMinButton.syncWith(pOther->_sfVerticalMinButton);
 
-    if(FieldBits::NoField != (MaxButtonFieldMask & whichField))
-        _sfMaxButton.syncWith(pOther->_sfMaxButton);
+    if(FieldBits::NoField != (VerticalMaxButtonFieldMask & whichField))
+        _sfVerticalMaxButton.syncWith(pOther->_sfVerticalMaxButton);
 
-    if(FieldBits::NoField != (ScrollBarFieldMask & whichField))
-        _sfScrollBar.syncWith(pOther->_sfScrollBar);
+    if(FieldBits::NoField != (VerticalScrollBarFieldMask & whichField))
+        _sfVerticalScrollBar.syncWith(pOther->_sfVerticalScrollBar);
 
-    if(FieldBits::NoField != (ScrollFieldFieldMask & whichField))
-        _sfScrollField.syncWith(pOther->_sfScrollField);
+    if(FieldBits::NoField != (VerticalScrollFieldFieldMask & whichField))
+        _sfVerticalScrollField.syncWith(pOther->_sfVerticalScrollField);
+
+    if(FieldBits::NoField != (HorizontalMinButtonFieldMask & whichField))
+        _sfHorizontalMinButton.syncWith(pOther->_sfHorizontalMinButton);
+
+    if(FieldBits::NoField != (HorizontalMaxButtonFieldMask & whichField))
+        _sfHorizontalMaxButton.syncWith(pOther->_sfHorizontalMaxButton);
+
+    if(FieldBits::NoField != (HorizontalScrollBarFieldMask & whichField))
+        _sfHorizontalScrollBar.syncWith(pOther->_sfHorizontalScrollBar);
+
+    if(FieldBits::NoField != (HorizontalScrollFieldFieldMask & whichField))
+        _sfHorizontalScrollField.syncWith(pOther->_sfHorizontalScrollField);
 
 
 

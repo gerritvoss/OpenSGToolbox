@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -44,88 +42,147 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
+ **     Do not change this file, changes should be done in the derived      **
+ **     class UIViewport!
+ **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
-
-#ifndef _OSGROTATEDCOMPONENTFIELDS_H_
-#define _OSGROTATEDCOMPONENTFIELDS_H_
-#ifdef __sgi
-#pragma once
-#endif
-
 #include <OpenSG/OSGConfig.h>
-
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
-
-#include "Component/Container/OSGContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class RotatedComponent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! RotatedComponentPtr
-
-typedef FCPtr<ContainerPtr, RotatedComponent> RotatedComponentPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
- */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
-template <>
-struct FieldDataTraits<RotatedComponentPtr> : 
-    public FieldTraitsRecurseMapper<RotatedComponentPtr, true>
+//! access the type of the class
+inline
+OSG::FieldContainerType &UIViewportBase::getClassType(void)
 {
-    static DataType             _type;                       
+    return _type; 
+} 
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+//! access the numerical type of the class
+inline
+OSG::UInt32 UIViewportBase::getClassTypeId(void) 
+{
+    return _type.getId(); 
+} 
 
-    static DataType   &getType (void) { return _type;        }
+//! create a new instance of the class
+inline
+UIViewportPtr UIViewportBase::create(void) 
+{
+    UIViewportPtr fc; 
 
-    static const char *getSName(void) { return "SFRotatedComponentPtr"; }
-    static const char *getMName(void) { return "MFRotatedComponentPtr"; }
-};
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = UIViewportPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    
+    return fc; 
+}
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<RotatedComponentPtr, true>
-    \hideinhierarchy
- */
-#endif
+//! create an empty new instance of the class, do not copy the prototype
+inline
+UIViewportPtr UIViewportBase::createEmpty(void) 
+{ 
+    UIViewportPtr returnValue; 
+    
+    newPtr(returnValue); 
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+    return returnValue; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+/*------------------------------ get -----------------------------------*/
 
-typedef SField<RotatedComponentPtr> SFRotatedComponentPtr;
-#endif
+//! Get the UIViewport::_sfViewPosition field.
+inline
+SFPnt2s *UIViewportBase::getSFViewPosition(void)
+{
+    return &_sfViewPosition;
+}
 
-#ifndef OSG_COMPILEROTATEDCOMPONENTINST
-OSG_DLLEXPORT_DECL1(SField, RotatedComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+//! Get the UIViewport::_sfViewComponent field.
+inline
+SFComponentPtr *UIViewportBase::getSFViewComponent(void)
+{
+    return &_sfViewComponent;
+}
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
+//! Get the UIViewport::_sfViewSize field.
+inline
+SFVec2s *UIViewportBase::getSFViewSize(void)
+{
+    return &_sfViewSize;
+}
 
-typedef MField<RotatedComponentPtr> MFRotatedComponentPtr;
-#endif
 
-#ifndef OSG_COMPILEROTATEDCOMPONENTINST
-OSG_DLLEXPORT_DECL1(MField, RotatedComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+//! Get the value of the UIViewport::_sfViewPosition field.
+inline
+Pnt2s &UIViewportBase::getViewPosition(void)
+{
+    return _sfViewPosition.getValue();
+}
+
+//! Get the value of the UIViewport::_sfViewPosition field.
+inline
+const Pnt2s &UIViewportBase::getViewPosition(void) const
+{
+    return _sfViewPosition.getValue();
+}
+
+//! Set the value of the UIViewport::_sfViewPosition field.
+inline
+void UIViewportBase::setViewPosition(const Pnt2s &value)
+{
+    _sfViewPosition.setValue(value);
+}
+
+//! Get the value of the UIViewport::_sfViewComponent field.
+inline
+ComponentPtr &UIViewportBase::getViewComponent(void)
+{
+    return _sfViewComponent.getValue();
+}
+
+//! Get the value of the UIViewport::_sfViewComponent field.
+inline
+const ComponentPtr &UIViewportBase::getViewComponent(void) const
+{
+    return _sfViewComponent.getValue();
+}
+
+//! Set the value of the UIViewport::_sfViewComponent field.
+inline
+void UIViewportBase::setViewComponent(const ComponentPtr &value)
+{
+    _sfViewComponent.setValue(value);
+}
+
+//! Get the value of the UIViewport::_sfViewSize field.
+inline
+Vec2s &UIViewportBase::getViewSize(void)
+{
+    return _sfViewSize.getValue();
+}
+
+//! Get the value of the UIViewport::_sfViewSize field.
+inline
+const Vec2s &UIViewportBase::getViewSize(void) const
+{
+    return _sfViewSize.getValue();
+}
+
+//! Set the value of the UIViewport::_sfViewSize field.
+inline
+void UIViewportBase::setViewSize(const Vec2s &value)
+{
+    _sfViewSize.setValue(value);
+}
+
 
 OSG_END_NAMESPACE
 
-#define OSGROTATEDCOMPONENTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGUIVIEWPORTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 
-#endif /* _OSGROTATEDCOMPONENTFIELDS_H_ */

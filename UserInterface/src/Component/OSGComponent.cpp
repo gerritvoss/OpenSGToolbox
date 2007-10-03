@@ -56,6 +56,8 @@
 #include "LookAndFeel/OSGLookAndFeelManager.h"
 #include "Component/Menu/OSGPopupMenu.h"
 
+#include "Component/OSGRotatedComponent.h"
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -294,7 +296,8 @@ void Component::draw(const GraphicsPtr TheGraphics) const
 void Component::updateClipBounds(void)
 {
 	Pnt2s TopLeft, BottomRight;
-	if(getParentContainer() == NullFC)
+	if(getParentContainer() == NullFC ||
+        getParentContainer()->getType() == RotatedComponent::getClassType())
 	{
 		//If I have no parent container use my bounds
 		getBounds(TopLeft, BottomRight);

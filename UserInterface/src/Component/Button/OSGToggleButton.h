@@ -110,6 +110,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
     void produceButtonSelected(const ButtonSelectedEvent& e);
     void produceButtonDeselected(const ButtonSelectedEvent& e);
     
+	virtual void drawInternal(const GraphicsPtr Graphics) const;
     virtual BorderPtr getDrawnBorder(void) const;
     virtual UIBackgroundPtr getDrawnBackground(void) const;
     /*==========================  PRIVATE  ================================*/

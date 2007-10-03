@@ -43,10 +43,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define OSG_COMPILEUSERINTERFACELIB
+
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include "OSGRadioButton.h"
-#include "Util/OSGUIDrawUtils.h"
+
+#include "OSGTexturedQuadUIDrawObject.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -54,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::RadioButton
-A UI Radio Button. 
+/*! \class osg::TexturedQuadUIDrawObject
+A UI TexturedQuadUIDrawObject. 	
 */
 
 /***************************************************************************\
@@ -66,7 +67,7 @@ A UI Radio Button.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void RadioButton::initMethod (void)
+void TexturedQuadUIDrawObject::initMethod (void)
 {
 }
 
@@ -75,114 +76,23 @@ void RadioButton::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
+void TexturedQuadUIDrawObject::draw(const GraphicsPtr Graphics) const
 {
-	Pnt2s TopLeft, BottomRight;
-	Vec2s drawObjectSize;
-	Pnt2s TempPos;
+	Graphics->drawQuad(getPoint1(),getPoint2(),getPoint3(),getPoint4(),
+                       getTexCoord1(), getTexCoord2(), getTexCoord3(), getTexCoord4(),
+                       getTexture(),
+                       getOpacity());
+}
 
-    Pnt2s InnerComponentsPosition(0,0);
-    Vec2s InnerComponentsSize(0,0);
-
-    UInt32 DrawnComponentToTextGap(2);
-
-	getInsideBorderBounds(TopLeft, BottomRight);
-
-    Pnt2s TextTopLeft, TextBottomRight;
-    getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
-    Vec2s TextBounds( TextBottomRight - TextTopLeft);
-	if(TextBounds.x()>0)
-    {
-	    InnerComponentsSize[0] += TextBounds.x();
-	}
+void TexturedQuadUIDrawObject::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+{
+   TopLeft.setValues(
+       osgMin(osgMin(osgMin(getPoint1().x(), getPoint2().x()),getPoint3().x()),getPoint4().x()),
+       osgMin(osgMin(osgMin(getPoint1().y(), getPoint2().y()),getPoint3().y()),getPoint4().y()));
    
-    UIDrawObjectCanvasPtr DrawnDrawObject = getDrawnDrawObject();
-    if(DrawnDrawObject != NullFC)
-    {
-	    Pnt2s drawObjectTopLeft;
-	    Pnt2s drawObjectBottomRight;
-        DrawnDrawObject->getDrawObjectBounds(drawObjectTopLeft, drawObjectBottomRight);
-        drawObjectSize = drawObjectBottomRight-drawObjectTopLeft;
-		
-        InnerComponentsSize[0] += drawObjectSize.x() + DrawnComponentToTextGap;
-	    
-	}
-    else
-    {
-        drawObjectSize.setValues(0,0);
-    }
-    InnerComponentsSize[1] = osgMax(drawObjectSize.y(), TextBounds.y());
-    InnerComponentsPosition = calculateAlignment(TopLeft, BottomRight-TopLeft, InnerComponentsSize, getVerticalAlignment(), getHorizontalAlignment());
-    
-    if(DrawnDrawObject != NullFC)
-    {
-        beginEditCP(DrawnDrawObject, PositionFieldMask);
-            DrawnDrawObject->setPosition( calculateAlignment(InnerComponentsPosition, InnerComponentsSize,drawObjectSize,0.5,0.0 ) );
-	    endEditCP(DrawnDrawObject, PositionFieldMask);
-        DrawnDrawObject->draw(TheGraphics);
-    }
-
-    TheGraphics->drawText(calculateAlignment(InnerComponentsPosition + Vec2s(drawObjectSize.x()+ DrawnComponentToTextGap,0), InnerComponentsSize-Vec2s(drawObjectSize.x()+ DrawnComponentToTextGap,0),TextBounds,0.5,0.0 )
-        ,   getText(), getFont(), getDrawnTextColor(), getOpacity());
-
-}
-
-UIDrawObjectCanvasPtr RadioButton::getDrawnDrawObject(void) const
-{
-    if(getEnabled())
-    {
-        if(getActive())
-        {
-            if(getSelected())
-            {
-                return getActiveRadioDrawObject();
-            }
-            else
-            {
-                return getActiveSelectedRadioDrawObject();
-            }
-        }
-        else if(_MouseInComponentLastMouse)
-        {
-            if(getSelected())
-            {
-                return getRolloverSelectedRadioDrawObject();
-            }
-            else
-            {
-                return getRolloverRadioDrawObject();
-            }
-        }
-        else
-        {
-            if(getSelected())
-            {
-                return getSelectedRadioDrawObject();
-            }
-            else
-            {
-                return getRadioDrawObject();
-            }
-        }
-    }
-    else
-    {
-        if(getSelected())
-        {
-            return getDisabledSelectedRadioDrawObject();
-        }
-        else
-        {
-            return getDisabledRadioDrawObject();
-        }
-    }
-}
-
-void RadioButton::actionPreformed(const ActionEvent& e)
-{
-    beginEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
-	    setSelected(true);
-    endEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
+   BottomRight.setValues(
+       osgMax(osgMax(osgMax(getPoint1().x(), getPoint2().x()),getPoint3().x()),getPoint4().x()),
+       osgMax(osgMax(osgMax(getPoint1().y(), getPoint2().y()),getPoint3().y()),getPoint4().y()));
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -190,32 +100,31 @@ void RadioButton::actionPreformed(const ActionEvent& e)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-RadioButton::RadioButton(void) :
+TexturedQuadUIDrawObject::TexturedQuadUIDrawObject(void) :
     Inherited()
 {
 }
 
-RadioButton::RadioButton(const RadioButton &source) :
+TexturedQuadUIDrawObject::TexturedQuadUIDrawObject(const TexturedQuadUIDrawObject &source) :
     Inherited(source)
 {
 }
 
-RadioButton::~RadioButton(void)
+TexturedQuadUIDrawObject::~TexturedQuadUIDrawObject(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void RadioButton::changed(BitVector whichField, UInt32 origin)
+void TexturedQuadUIDrawObject::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
-	
 }
 
-void RadioButton::dump(      UInt32    , 
+void TexturedQuadUIDrawObject::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump RadioButton NI" << std::endl;
+    SLOG << "Dump TexturedQuadUIDrawObject NI" << std::endl;
 }
 
 
@@ -233,10 +142,10 @@ void RadioButton::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGRADIOBUTTONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGRADIOBUTTONBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGTEXTUREDQUADUIDRAWOBJECTBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGTEXTUREDQUADUIDRAWOBJECTBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGRADIOBUTTONFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGTEXTUREDQUADUIDRAWOBJECTFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

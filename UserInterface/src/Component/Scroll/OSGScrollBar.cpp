@@ -283,6 +283,55 @@ void ScrollBar::mouseWheelMoved(const MouseWheelEvent& e)
     }
     Container::mouseWheelMoved(e);
 }
+
+ButtonPtr ScrollBar::getMinButton(void)
+{
+    if(getOrientation() == VERTICAL_ALIGNMENT)
+    {
+        return getVerticalMinButton();
+    }
+    else
+    {
+        return getHorizontalMinButton();
+    }
+}
+
+ButtonPtr ScrollBar::getMaxButton(void)
+{
+    if(getOrientation() == VERTICAL_ALIGNMENT)
+    {
+        return getVerticalMaxButton();
+    }
+    else
+    {
+        return getHorizontalMaxButton();
+    }
+}
+
+ButtonPtr ScrollBar::getScrollField(void)
+{
+    if(getOrientation() == VERTICAL_ALIGNMENT)
+    {
+        return getVerticalScrollField();
+    }
+    else
+    {
+        return getHorizontalScrollField();
+    }
+}
+
+ButtonPtr ScrollBar::getScrollBar(void)
+{
+    if(getOrientation() == VERTICAL_ALIGNMENT)
+    {
+        return getVerticalScrollBar();
+    }
+    else
+    {
+        return getHorizontalScrollBar();
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -296,7 +345,8 @@ ScrollBar::ScrollBar(void) :
         _MinButtonActionListener(ScrollBarPtr(this)),
         _MaxButtonActionListener(ScrollBarPtr(this)),
         _ScrollBarListener(ScrollBarPtr(this)),
-        _ScrollBarDraggedListener(ScrollBarPtr(this))
+        _ScrollBarDraggedListener(ScrollBarPtr(this)),
+        _ScrollFieldListener(ScrollBarPtr(this))
 {
 }
 
@@ -307,28 +357,50 @@ ScrollBar::ScrollBar(const ScrollBar &source) :
         _MinButtonActionListener(ScrollBarPtr(this)),
         _MaxButtonActionListener(ScrollBarPtr(this)),
         _ScrollBarListener(ScrollBarPtr(this)),
-        _ScrollBarDraggedListener(ScrollBarPtr(this))
+        _ScrollBarDraggedListener(ScrollBarPtr(this)),
+        _ScrollFieldListener(ScrollBarPtr(this))
 
 {
-    if(getMinButton() != NullFC &&
-        getMaxButton() != NullFC &&
-        getScrollBar() != NullFC &&
-        getScrollField() != NullFC)
+    if(getVerticalMinButton() != NullFC &&
+        getVerticalMaxButton() != NullFC &&
+        getVerticalScrollBar() != NullFC &&
+        getVerticalScrollField() != NullFC)
     {
-        beginEditCP(ScrollBarPtr(this), MinButtonFieldMask | 
-            MaxButtonFieldMask |
-            ScrollBarFieldMask |
-            ScrollFieldFieldMask);
+        beginEditCP(ScrollBarPtr(this), VerticalMinButtonFieldMask | 
+            VerticalMaxButtonFieldMask |
+            VerticalScrollBarFieldMask |
+            VerticalScrollFieldFieldMask);
 
-        setMinButton(Button::Ptr::dcast(getMinButton()->shallowCopy()));
-        setMaxButton(Button::Ptr::dcast(getMaxButton()->shallowCopy()));
-        setScrollBar(Button::Ptr::dcast(getScrollBar()->shallowCopy()));
-        setScrollField(UIDrawObjectCanvas::Ptr::dcast(getScrollField()->shallowCopy()));
+        setVerticalMinButton(Button::Ptr::dcast(getVerticalMinButton()->shallowCopy()));
+        setVerticalMaxButton(Button::Ptr::dcast(getVerticalMaxButton()->shallowCopy()));
+        setVerticalScrollBar(Button::Ptr::dcast(getVerticalScrollBar()->shallowCopy()));
+        setVerticalScrollField(Button::Ptr::dcast(getVerticalScrollField()->shallowCopy()));
         
-        endEditCP(ScrollBarPtr(this), MinButtonFieldMask | 
-            MaxButtonFieldMask |
-            ScrollBarFieldMask |
-            ScrollFieldFieldMask);
+        endEditCP(ScrollBarPtr(this), VerticalMinButtonFieldMask | 
+            VerticalMaxButtonFieldMask |
+            VerticalScrollBarFieldMask |
+            VerticalScrollFieldFieldMask);
+    }
+    
+    if(getHorizontalMinButton() != NullFC &&
+        getHorizontalMaxButton() != NullFC &&
+        getHorizontalScrollBar() != NullFC &&
+        getHorizontalScrollField() != NullFC)
+    {
+        beginEditCP(ScrollBarPtr(this), HorizontalMinButtonFieldMask | 
+            HorizontalMaxButtonFieldMask |
+            HorizontalScrollBarFieldMask |
+            HorizontalScrollFieldFieldMask);
+
+        setHorizontalMinButton(Button::Ptr::dcast(getHorizontalMinButton()->shallowCopy()));
+        setHorizontalMaxButton(Button::Ptr::dcast(getHorizontalMaxButton()->shallowCopy()));
+        setHorizontalScrollBar(Button::Ptr::dcast(getHorizontalScrollBar()->shallowCopy()));
+        setHorizontalScrollField(Button::Ptr::dcast(getHorizontalScrollField()->shallowCopy()));
+        
+        endEditCP(ScrollBarPtr(this), HorizontalMinButtonFieldMask | 
+            HorizontalMaxButtonFieldMask |
+            HorizontalScrollBarFieldMask |
+            HorizontalScrollFieldFieldMask);
     }
 }
 
@@ -342,36 +414,81 @@ void ScrollBar::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-    if( (whichField & MinButtonFieldMask) ||
-        (whichField & MaxButtonFieldMask) ||
-        (whichField & ScrollBarFieldMask) ||
-        (whichField & ScrollFieldFieldMask) )
+    if( (whichField & VerticalMinButtonFieldMask) ||
+        (whichField & VerticalMaxButtonFieldMask) ||
+        (whichField & VerticalScrollBarFieldMask) ||
+        (whichField & VerticalScrollFieldFieldMask)||
+        (whichField & HorizontalMinButtonFieldMask) ||
+        (whichField & HorizontalMaxButtonFieldMask) ||
+        (whichField & HorizontalScrollBarFieldMask) ||
+        (whichField & HorizontalScrollFieldFieldMask) ||
+        (whichField & OrientationFieldMask) )
     {
         beginEditCP(ScrollBarPtr(this), ChildrenFieldMask);
             getChildren().clear();
-            if(getScrollField() != NullFC) {getChildren().push_back(getScrollField());}
-            if(getScrollBar() != NullFC) {getChildren().push_back(getScrollBar());}
-            if(getMinButton() != NullFC) {getChildren().push_back(getMinButton());}
-            if(getMaxButton() != NullFC) {getChildren().push_back(getMaxButton());}
+            if(getOrientation() == VERTICAL_ALIGNMENT)
+            {
+                if(getVerticalScrollField() != NullFC) {getChildren().push_back(getVerticalScrollField());}
+                if(getVerticalScrollBar() != NullFC) {getChildren().push_back(getVerticalScrollBar());}
+                if(getVerticalMinButton() != NullFC) {getChildren().push_back(getVerticalMinButton());}
+                if(getVerticalMaxButton() != NullFC) {getChildren().push_back(getVerticalMaxButton());}
+            }
+            else
+            {
+                if(getHorizontalScrollField() != NullFC) {getChildren().push_back(getHorizontalScrollField());}
+                if(getHorizontalScrollBar() != NullFC) {getChildren().push_back(getHorizontalScrollBar());}
+                if(getHorizontalMinButton() != NullFC) {getChildren().push_back(getHorizontalMinButton());}
+                if(getHorizontalMaxButton() != NullFC) {getChildren().push_back(getHorizontalMaxButton());}
+            }
         endEditCP(ScrollBarPtr(this), ChildrenFieldMask);
     }
 
-    if((whichField & MinButtonFieldMask) &&
-        getMinButton() != NullFC)
+    if((whichField & VerticalMinButtonFieldMask) &&
+        getVerticalMinButton() != NullFC)
     {
-        getMinButton()->addActionListener(&_MinButtonActionListener);
+        getVerticalMinButton()->addMousePressedActionListener(&_MinButtonActionListener);
     }
 
-    if((whichField & MaxButtonFieldMask) &&
-        getMaxButton() != NullFC)
+    if((whichField & VerticalMaxButtonFieldMask) &&
+        getVerticalMaxButton() != NullFC)
     {
-        getMaxButton()->addActionListener(&_MaxButtonActionListener);
+        getVerticalMaxButton()->addMousePressedActionListener(&_MaxButtonActionListener);
     }
     
-    if((whichField & ScrollBarFieldMask) &&
-        getScrollBar() != NullFC)
+    if((whichField & VerticalScrollBarFieldMask) &&
+        getVerticalScrollBar() != NullFC)
     {
-        getScrollBar()->addMouseListener(&_ScrollBarListener);
+        getVerticalScrollBar()->addMouseListener(&_ScrollBarListener);
+    }
+    
+    if((whichField & VerticalScrollFieldFieldMask) &&
+        getVerticalScrollField() != NullFC)
+    {
+        getVerticalScrollField()->addMousePressedActionListener(&_ScrollFieldListener);
+    }
+    
+    if((whichField & HorizontalMinButtonFieldMask) &&
+        getHorizontalMinButton() != NullFC)
+    {
+        getHorizontalMinButton()->addMousePressedActionListener(&_MinButtonActionListener);
+    }
+
+    if((whichField & HorizontalMaxButtonFieldMask) &&
+        getHorizontalMaxButton() != NullFC)
+    {
+        getHorizontalMaxButton()->addMousePressedActionListener(&_MaxButtonActionListener);
+    }
+    
+    if((whichField & HorizontalScrollBarFieldMask) &&
+        getHorizontalScrollBar() != NullFC)
+    {
+        getHorizontalScrollBar()->addMouseListener(&_ScrollBarListener);
+    }
+    
+    if((whichField & HorizontalScrollFieldFieldMask) &&
+        getHorizontalScrollField() != NullFC)
+    {
+        getHorizontalScrollField()->addMousePressedActionListener(&_ScrollFieldListener);
     }
 }
 
@@ -427,6 +544,28 @@ void ScrollBar::ScrollBarDraggedListener::mouseDragged(const MouseEvent& e)
     _ScrollBar->setMajorAxisScrollBarPosition(
         _InitialScrollBarPosition[AxisIndex] + (ComponentMousePosition[AxisIndex] - _InitialMousePosition[AxisIndex]));
     //std::cout << "Diff "<< _InitialMousePosition[AxisIndex] - ComponentMousePosition[AxisIndex] << std::endl;
+}
+
+
+void ScrollBar::ScrollFieldListener::actionPerformed(const ActionEvent& e)
+{
+	UInt32 AxisIndex(0);
+    if(_ScrollBar->getOrientation() == HORIZONTAL_ALIGNMENT ) AxisIndex = 0;
+    else  AxisIndex = 1;
+
+    Pnt2s ComponentMousePosition(DrawingSurfaceToComponent(_ScrollBar->getParentFrame()->getDrawingSurface()->getMousePosition(), _ScrollBar));
+    //Is Mouse Major axis on the min or max side of the scroll bar
+    if(ComponentMousePosition[AxisIndex] < _ScrollBar->getScrollBar()->getPosition()[AxisIndex])
+    {
+        //Move the Bounded range model one block in the Min direction
+        _ScrollBar->scrollBlock(-1);
+    }
+    else if(ComponentMousePosition[AxisIndex] > 
+        (_ScrollBar->getScrollBar()->getPosition()[AxisIndex] + _ScrollBar->getScrollBar()->getSize()[AxisIndex]))
+    {
+        //Move the Bounded range model one block in the Max direction
+        _ScrollBar->scrollBlock(1);
+    }
 }
 
 /*------------------------------------------------------------------------*/
