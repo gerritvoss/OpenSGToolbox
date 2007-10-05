@@ -79,7 +79,7 @@
 #include "Component/Scroll/OSGScrollBar.h"
 #include "Component/Scroll/OSGScrollPanel.h"
 
-#include "Component/OSGRotatedComponent.h"S
+#include "Component/OSGRotatedComponent.h"
 #include "Component/Container/OSGUIViewport.h"
 
 

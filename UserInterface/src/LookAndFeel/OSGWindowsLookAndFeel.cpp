@@ -80,6 +80,10 @@
 #include "Component/Menu/OSGMenuBar.h"
 
 #include "Component/OSGRotatedComponent.h"
+
+#include "Component/Scroll/OSGScrollBar.h"
+#include "Component/Scroll/OSGScrollPanel.h"
+#include "Component/Container/OSGUIViewport.h"
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -1487,6 +1491,1065 @@ void WindowsLookAndFeel::init(void)
 	
     MenuBar::getClassType().setPrototype(WindowsMenuBar);
     
+	//************************** ScrollBar*****************************
+	//Windows ScrollBarBorder
+	EmptyBorderPtr WindowsScrollBarBorder = EmptyBorder::create();
+
+	//Windows ScrollBarBackground
+	EmptyUIBackgroundPtr WindowsScrollBarBackground = EmptyUIBackground::create();
+
+	RoundedCornerLineBorderPtr WindowsWhiteCorneredBorder = RoundedCornerLineBorder::create();
+	beginEditCP(WindowsWhiteCorneredBorder);
+		WindowsWhiteCorneredBorder->setWidth(1);
+		WindowsWhiteCorneredBorder->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
+		WindowsWhiteCorneredBorder->setCornerRadius(2);
+	endEditCP(WindowsWhiteCorneredBorder);
+
+	RoundedCornerLineBorderPtr WindowsBlueCorneredBorder = RoundedCornerLineBorder::create();
+	beginEditCP(WindowsBlueCorneredBorder);
+		WindowsBlueCorneredBorder->setWidth(1);
+		WindowsBlueCorneredBorder->setColor(Color4f(0.49, 0.62, 0.83, 1.0));
+		WindowsBlueCorneredBorder->setCornerRadius(2);
+	endEditCP(WindowsBlueCorneredBorder);
+
+	RoundedCornerLineBorderPtr WindowsLightBlueCorneredBorder = RoundedCornerLineBorder::create();
+	beginEditCP(WindowsLightBlueCorneredBorder);
+		WindowsLightBlueCorneredBorder->setWidth(1);
+		WindowsLightBlueCorneredBorder->setColor(Color4f(0.73, 0.80, 0.96, 1.0));
+		WindowsLightBlueCorneredBorder->setCornerRadius(2);
+	endEditCP(WindowsLightBlueCorneredBorder);
+
+    //Vertical Min Draw Object
+	PolygonUIDrawObjectPtr WindowsScrollBarVerticalMinButtonDrawObject1 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsScrollBarVerticalMinButtonDrawObject1);
+		WindowsScrollBarVerticalMinButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
+		WindowsScrollBarVerticalMinButtonDrawObject1->setOpacity(1.0);
+        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().addValue(Pnt2s(1,4));
+        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().addValue(Pnt2s(5,0));
+        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().addValue(Pnt2s(5,2));
+        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().addValue(Pnt2s(2,5));
+	endEditCP(WindowsScrollBarVerticalMinButtonDrawObject1);
+	PolygonUIDrawObjectPtr WindowsScrollBarVerticalMinButtonDrawObject2 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsScrollBarVerticalMinButtonDrawObject2);
+		WindowsScrollBarVerticalMinButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
+		WindowsScrollBarVerticalMinButtonDrawObject2->setOpacity(1.0);
+        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().addValue(Pnt2s(5,0));
+        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().addValue(Pnt2s(9,4));
+        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().addValue(Pnt2s(8,5));
+        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().addValue(Pnt2s(5,2));
+	endEditCP(WindowsScrollBarVerticalMinButtonDrawObject2);
+
+	UIDrawObjectCanvasPtr WindowsScrollBarVerticalMinButtonCanvas = UIDrawObjectCanvas::create();
+	beginEditCP(WindowsScrollBarVerticalMinButtonCanvas);
+	   WindowsScrollBarVerticalMinButtonCanvas->getDrawObjects().addValue(WindowsScrollBarVerticalMinButtonDrawObject1);
+	   WindowsScrollBarVerticalMinButtonCanvas->getDrawObjects().addValue(WindowsScrollBarVerticalMinButtonDrawObject2);
+	endEditCP(WindowsScrollBarVerticalMinButtonCanvas);
+
+    //Vertical Min Button
+	CompoundBorderPtr WindowsScrollBarButtonOuterBorder = CompoundBorder::create();
+	beginEditCP(WindowsScrollBarButtonOuterBorder);
+		WindowsScrollBarButtonOuterBorder->setInnerBorder(WindowsWhiteCorneredBorder);
+		WindowsScrollBarButtonOuterBorder->setOuterBorder(WindowsBlueCorneredBorder);
+	endEditCP(WindowsScrollBarButtonOuterBorder);
+    
+	CompoundBorderPtr WindowsScrollBarButtonBorder = CompoundBorder::create();
+	beginEditCP(WindowsScrollBarButtonBorder);
+		WindowsScrollBarButtonBorder->setInnerBorder(WindowsLightBlueCorneredBorder);
+		WindowsScrollBarButtonBorder->setOuterBorder(WindowsScrollBarButtonOuterBorder);
+	endEditCP(WindowsScrollBarButtonBorder);
+
+    ColorUIBackgroundPtr WindowsScrollBarButtonBackground = ColorUIBackground::create();
+	beginEditCP(WindowsScrollBarButtonBackground);
+		WindowsScrollBarButtonBackground->setColor(Color4f(0.76,0.84,0.99,1.0));
+	endEditCP(WindowsScrollBarButtonBackground);
+
+    ColorUIBackgroundPtr WindowsScrollBarRolloverButtonBackground = ColorUIBackground::create();
+	beginEditCP(WindowsScrollBarRolloverButtonBackground);
+		WindowsScrollBarRolloverButtonBackground->setColor(Color4f(0.82,0.92,1.0,1.0));
+	endEditCP(WindowsScrollBarRolloverButtonBackground);
+    
+    ColorUIBackgroundPtr WindowsScrollBarDisabledButtonBackground = ColorUIBackground::create();
+	beginEditCP(WindowsScrollBarDisabledButtonBackground);
+		WindowsScrollBarDisabledButtonBackground->setColor(Color4f(0.93,0.93,0.90,1.0));
+	endEditCP(WindowsScrollBarDisabledButtonBackground);
+    
+    ColorUIBackgroundPtr WindowsScrollBarActiveButtonBackground = ColorUIBackground::create();
+	beginEditCP(WindowsScrollBarActiveButtonBackground);
+		WindowsScrollBarActiveButtonBackground->setColor(Color4f(0.55,0.63,0.94,1.0));
+	endEditCP(WindowsScrollBarActiveButtonBackground);
+
+	ButtonPtr WindowsScrollBarVerticalMinButton = Button::create();
+    beginEditCP(WindowsScrollBarVerticalMinButton);
+        WindowsScrollBarVerticalMinButton->setPreferredSize(Vec2s(17,17));
+        WindowsScrollBarVerticalMinButton->setEnableActionOnMouseDownTime(true);
+        WindowsScrollBarVerticalMinButton->setActionOnMouseDownRate(0.1);
+
+        WindowsScrollBarVerticalMinButton->setDrawObject(WindowsScrollBarVerticalMinButtonCanvas);
+        WindowsScrollBarVerticalMinButton->setActiveDrawObject(WindowsScrollBarVerticalMinButtonCanvas);
+        WindowsScrollBarVerticalMinButton->setFocusedDrawObject(WindowsScrollBarVerticalMinButtonCanvas);
+        WindowsScrollBarVerticalMinButton->setRolloverDrawObject(WindowsScrollBarVerticalMinButtonCanvas);
+        WindowsScrollBarVerticalMinButton->setDisabledDrawObject(WindowsScrollBarVerticalMinButtonCanvas);
+
+        WindowsScrollBarVerticalMinButton->setBorder(WindowsScrollBarButtonBorder);
+        WindowsScrollBarVerticalMinButton->setActiveBorder(WindowsScrollBarButtonBorder);
+        WindowsScrollBarVerticalMinButton->setDisabledBorder(WindowsScrollBarButtonBorder);
+        WindowsScrollBarVerticalMinButton->setFocusedBorder(WindowsScrollBarButtonBorder);
+        WindowsScrollBarVerticalMinButton->setRolloverBorder(WindowsScrollBarButtonBorder);
+        
+        WindowsScrollBarVerticalMinButton->setBackground(WindowsScrollBarButtonBackground);
+        WindowsScrollBarVerticalMinButton->setActiveBackground(WindowsScrollBarActiveButtonBackground);
+        WindowsScrollBarVerticalMinButton->setDisabledBackground(WindowsScrollBarDisabledButtonBackground);
+        WindowsScrollBarVerticalMinButton->setFocusedBackground(WindowsScrollBarButtonBackground);
+        WindowsScrollBarVerticalMinButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
+
+        WindowsScrollBarVerticalMinButton->setActiveOffset(Vec2s(0,0));
+    endEditCP(WindowsScrollBarVerticalMinButton);
+
+    //Vertical Max Draw Object
+	PolygonUIDrawObjectPtr WindowsScrollBarVerticalMaxButtonDrawObject1 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsScrollBarVerticalMaxButtonDrawObject1);
+		WindowsScrollBarVerticalMaxButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
+		WindowsScrollBarVerticalMaxButtonDrawObject1->setOpacity(1.0);
+        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().addValue(Pnt2s(2,0));
+        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().addValue(Pnt2s(5,3));
+        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().addValue(Pnt2s(5,5));
+        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().addValue(Pnt2s(1,1));
+	endEditCP(WindowsScrollBarVerticalMaxButtonDrawObject1);
+	PolygonUIDrawObjectPtr WindowsScrollBarVerticalMaxButtonDrawObject2 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsScrollBarVerticalMaxButtonDrawObject2);
+		WindowsScrollBarVerticalMaxButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
+		WindowsScrollBarVerticalMaxButtonDrawObject2->setOpacity(1.0);
+        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().addValue(Pnt2s(5,3));
+        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().addValue(Pnt2s(8,0));
+        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().addValue(Pnt2s(9,1));
+        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().addValue(Pnt2s(5,5));
+	endEditCP(WindowsScrollBarVerticalMaxButtonDrawObject2);
+
+	UIDrawObjectCanvasPtr WindowsScrollBarVerticalMaxButtonCanvas = UIDrawObjectCanvas::create();
+	beginEditCP(WindowsScrollBarVerticalMaxButtonCanvas);
+	   WindowsScrollBarVerticalMaxButtonCanvas->getDrawObjects().addValue(WindowsScrollBarVerticalMaxButtonDrawObject1);
+	   WindowsScrollBarVerticalMaxButtonCanvas->getDrawObjects().addValue(WindowsScrollBarVerticalMaxButtonDrawObject2);
+	endEditCP(WindowsScrollBarVerticalMaxButtonCanvas);
+    //Vertical Max Button
+	ButtonPtr WindowsScrollBarVerticalMaxButton = Button::create();
+    beginEditCP(WindowsScrollBarVerticalMaxButton);
+        WindowsScrollBarVerticalMaxButton->setPreferredSize(Vec2s(17,17));
+        WindowsScrollBarVerticalMaxButton->setEnableActionOnMouseDownTime(true);
+        WindowsScrollBarVerticalMaxButton->setActionOnMouseDownRate(0.1);
+        
+        WindowsScrollBarVerticalMaxButton->setDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
+        WindowsScrollBarVerticalMaxButton->setActiveDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
+        WindowsScrollBarVerticalMaxButton->setFocusedDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
+        WindowsScrollBarVerticalMaxButton->setRolloverDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
+        WindowsScrollBarVerticalMaxButton->setDisabledDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
+        
+        WindowsScrollBarVerticalMaxButton->setBorder(WindowsScrollBarButtonBorder);
+        WindowsScrollBarVerticalMaxButton->setActiveBorder(WindowsScrollBarButtonBorder);
+        WindowsScrollBarVerticalMaxButton->setDisabledBorder(WindowsScrollBarButtonBorder);
+        WindowsScrollBarVerticalMaxButton->setFocusedBorder(WindowsScrollBarButtonBorder);
+        WindowsScrollBarVerticalMaxButton->setRolloverBorder(WindowsScrollBarButtonBorder);
+        
+        WindowsScrollBarVerticalMaxButton->setBackground(WindowsScrollBarButtonBackground);
+        WindowsScrollBarVerticalMaxButton->setActiveBackground(WindowsScrollBarActiveButtonBackground);
+        WindowsScrollBarVerticalMaxButton->setDisabledBackground(WindowsScrollBarDisabledButtonBackground);
+        WindowsScrollBarVerticalMaxButton->setFocusedBackground(WindowsScrollBarButtonBackground);
+        WindowsScrollBarVerticalMaxButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
+
+        WindowsScrollBarVerticalMaxButton->setActiveOffset(Vec2s(0,0));
+    endEditCP(WindowsScrollBarVerticalMaxButton);
+
+    //Horizontal Min Draw Object
+	PolygonUIDrawObjectPtr WindowsScrollBarHorizontalMinButtonDrawObject1 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsScrollBarHorizontalMinButtonDrawObject1);
+		WindowsScrollBarHorizontalMinButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
+		WindowsScrollBarHorizontalMinButtonDrawObject1->setOpacity(1.0);
+        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().addValue(Pnt2s(0,4));
+        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().addValue(Pnt2s(4,0));
+        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().addValue(Pnt2s(5,1));
+        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().addValue(Pnt2s(2,4));
+	endEditCP(WindowsScrollBarHorizontalMinButtonDrawObject1);
+	PolygonUIDrawObjectPtr WindowsScrollBarHorizontalMinButtonDrawObject2 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsScrollBarHorizontalMinButtonDrawObject2);
+		WindowsScrollBarHorizontalMinButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
+		WindowsScrollBarHorizontalMinButtonDrawObject2->setOpacity(1.0);
+        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().addValue(Pnt2s(0,4));
+        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().addValue(Pnt2s(2,4));
+        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().addValue(Pnt2s(5,7));
+        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().addValue(Pnt2s(4,8));
+	endEditCP(WindowsScrollBarHorizontalMinButtonDrawObject2);
+    
+	UIDrawObjectCanvasPtr WindowsScrollBarHorizontalMinButtonCanvas = UIDrawObjectCanvas::create();
+	beginEditCP(WindowsScrollBarHorizontalMinButtonCanvas);
+	   WindowsScrollBarHorizontalMinButtonCanvas->getDrawObjects().addValue(WindowsScrollBarHorizontalMinButtonDrawObject1);
+	   WindowsScrollBarHorizontalMinButtonCanvas->getDrawObjects().addValue(WindowsScrollBarHorizontalMinButtonDrawObject2);
+	endEditCP(WindowsScrollBarHorizontalMinButtonCanvas);
+
+    //Horizontal Min Button
+	ButtonPtr WindowsScrollBarHorizontalMinButton = Button::create();
+    beginEditCP(WindowsScrollBarHorizontalMinButton);
+        WindowsScrollBarHorizontalMinButton->setPreferredSize(Vec2s(17,17));
+        WindowsScrollBarHorizontalMinButton->setEnableActionOnMouseDownTime(true);
+        WindowsScrollBarHorizontalMinButton->setActionOnMouseDownRate(0.1);
+
+        WindowsScrollBarHorizontalMinButton->setDrawObject(WindowsScrollBarHorizontalMinButtonCanvas);
+        WindowsScrollBarHorizontalMinButton->setActiveDrawObject(WindowsScrollBarHorizontalMinButtonCanvas);
+        WindowsScrollBarHorizontalMinButton->setFocusedDrawObject(WindowsScrollBarHorizontalMinButtonCanvas);
+        WindowsScrollBarHorizontalMinButton->setRolloverDrawObject(WindowsScrollBarHorizontalMinButtonCanvas);
+        WindowsScrollBarHorizontalMinButton->setDisabledDrawObject(WindowsScrollBarHorizontalMinButtonCanvas);
+        
+        WindowsScrollBarHorizontalMinButton->setBorder(WindowsScrollBarButtonBorder);
+        WindowsScrollBarHorizontalMinButton->setActiveBorder(WindowsScrollBarButtonBorder);
+        WindowsScrollBarHorizontalMinButton->setDisabledBorder(WindowsScrollBarButtonBorder);
+        WindowsScrollBarHorizontalMinButton->setFocusedBorder(WindowsScrollBarButtonBorder);
+        WindowsScrollBarHorizontalMinButton->setRolloverBorder(WindowsScrollBarButtonBorder);
+        
+        WindowsScrollBarHorizontalMinButton->setBackground(WindowsScrollBarButtonBackground);
+        WindowsScrollBarHorizontalMinButton->setActiveBackground(WindowsScrollBarActiveButtonBackground);
+        WindowsScrollBarHorizontalMinButton->setDisabledBackground(WindowsScrollBarDisabledButtonBackground);
+        WindowsScrollBarHorizontalMinButton->setFocusedBackground(WindowsScrollBarButtonBackground);
+        WindowsScrollBarHorizontalMinButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
+
+        WindowsScrollBarHorizontalMinButton->setActiveOffset(Vec2s(0,0));
+    endEditCP(WindowsScrollBarHorizontalMinButton);
+
+    //Horizontal Max Draw Object
+	PolygonUIDrawObjectPtr WindowsScrollBarHorizontalMaxButtonDrawObject1 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsScrollBarHorizontalMaxButtonDrawObject1);
+		WindowsScrollBarHorizontalMaxButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
+		WindowsScrollBarHorizontalMaxButtonDrawObject1->setOpacity(1.0);
+        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().addValue(Pnt2s(0,1));
+        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().addValue(Pnt2s(1,0));
+        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().addValue(Pnt2s(5,4));
+        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().addValue(Pnt2s(3,4));
+	endEditCP(WindowsScrollBarHorizontalMaxButtonDrawObject1);
+	PolygonUIDrawObjectPtr WindowsScrollBarHorizontalMaxButtonDrawObject2 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsScrollBarHorizontalMaxButtonDrawObject2);
+		WindowsScrollBarHorizontalMaxButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
+		WindowsScrollBarHorizontalMaxButtonDrawObject2->setOpacity(1.0);
+        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().addValue(Pnt2s(3,4));
+        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().addValue(Pnt2s(5,4));
+        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().addValue(Pnt2s(1,8));
+        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().addValue(Pnt2s(0,7));
+	endEditCP(WindowsScrollBarHorizontalMaxButtonDrawObject2);
+    
+	UIDrawObjectCanvasPtr WindowsScrollBarHorizontalMaxButtonCanvas = UIDrawObjectCanvas::create();
+	beginEditCP(WindowsScrollBarHorizontalMaxButtonCanvas);
+	   WindowsScrollBarHorizontalMaxButtonCanvas->getDrawObjects().addValue(WindowsScrollBarHorizontalMaxButtonDrawObject1);
+	   WindowsScrollBarHorizontalMaxButtonCanvas->getDrawObjects().addValue(WindowsScrollBarHorizontalMaxButtonDrawObject2);
+	endEditCP(WindowsScrollBarHorizontalMaxButtonCanvas);
+    //Horizontal Max Button
+	ButtonPtr WindowsScrollBarHorizontalMaxButton = Button::create();
+    beginEditCP(WindowsScrollBarHorizontalMaxButton);
+        WindowsScrollBarHorizontalMaxButton->setPreferredSize(Vec2s(17,17));
+        WindowsScrollBarHorizontalMaxButton->setEnableActionOnMouseDownTime(true);
+        WindowsScrollBarHorizontalMaxButton->setActionOnMouseDownRate(0.1);
+        
+        WindowsScrollBarHorizontalMaxButton->setDrawObject(WindowsScrollBarHorizontalMaxButtonCanvas);
+        WindowsScrollBarHorizontalMaxButton->setActiveDrawObject(WindowsScrollBarHorizontalMaxButtonCanvas);
+        WindowsScrollBarHorizontalMaxButton->setFocusedDrawObject(WindowsScrollBarHorizontalMaxButtonCanvas);
+        WindowsScrollBarHorizontalMaxButton->setRolloverDrawObject(WindowsScrollBarHorizontalMaxButtonCanvas);
+        WindowsScrollBarHorizontalMaxButton->setDisabledDrawObject(WindowsScrollBarHorizontalMaxButtonCanvas);
+
+        WindowsScrollBarHorizontalMaxButton->setBorder(WindowsScrollBarButtonBorder);
+        WindowsScrollBarHorizontalMaxButton->setActiveBorder(WindowsScrollBarButtonBorder);
+        WindowsScrollBarHorizontalMaxButton->setDisabledBorder(WindowsScrollBarButtonBorder);
+        WindowsScrollBarHorizontalMaxButton->setFocusedBorder(WindowsScrollBarButtonBorder);
+        WindowsScrollBarHorizontalMaxButton->setRolloverBorder(WindowsScrollBarButtonBorder);
+        
+        WindowsScrollBarHorizontalMaxButton->setBackground(WindowsScrollBarButtonBackground);
+        WindowsScrollBarHorizontalMaxButton->setActiveBackground(WindowsScrollBarActiveButtonBackground);
+        WindowsScrollBarHorizontalMaxButton->setDisabledBackground(WindowsScrollBarDisabledButtonBackground);
+        WindowsScrollBarHorizontalMaxButton->setFocusedBackground(WindowsScrollBarButtonBackground);
+        WindowsScrollBarHorizontalMaxButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
+
+        WindowsScrollBarHorizontalMaxButton->setActiveOffset(Vec2s(0,0));
+    endEditCP(WindowsScrollBarHorizontalMaxButton);
+
+    //Vertical Scroll Field
+	//Vertical Scroll Field Border
+	MatteBorderPtr WindowsVerticalScrollFieldBorder = MatteBorder::create();
+	beginEditCP(WindowsVerticalScrollFieldBorder);
+		WindowsVerticalScrollFieldBorder->setLeftWidth(1);
+		WindowsVerticalScrollFieldBorder->setRightWidth(1);
+		WindowsVerticalScrollFieldBorder->setTopWidth(0);
+		WindowsVerticalScrollFieldBorder->setBottomWidth(0);
+		WindowsVerticalScrollFieldBorder->setColor(Color4f(0.93, 0.93, 0.9, 1.0));
+	endEditCP(WindowsVerticalScrollFieldBorder);
+
+	//Vertical Scroll Field Disabled Border
+	BevelBorderPtr WindowsVerticalDisabledScrollFieldBorder = BevelBorder::create();
+	beginEditCP(WindowsVerticalDisabledScrollFieldBorder);
+		WindowsVerticalDisabledScrollFieldBorder->setRaised(true);
+		WindowsVerticalDisabledScrollFieldBorder->setWidth(1);
+		WindowsVerticalDisabledScrollFieldBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
+		WindowsVerticalDisabledScrollFieldBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		WindowsVerticalDisabledScrollFieldBorder->setShadowInner(Color4f(0.85, 0.85, 0.85, 1.0));
+		WindowsVerticalDisabledScrollFieldBorder->setShadowOuter(Color4f(0.65, 0.65, 0.65, 1.0));
+	endEditCP(WindowsVerticalDisabledScrollFieldBorder);
+
+	//Vertical Scroll Field Background
+	GradientUIBackgroundPtr WindowsVerticalScrollFieldBackground = GradientUIBackground::create();
+	beginEditCP(WindowsVerticalScrollFieldBackground);
+		WindowsVerticalScrollFieldBackground->setColorStart(Color4f(0.95,0.95,0.93,1.0));
+		WindowsVerticalScrollFieldBackground->setColorEnd(Color4f(1.0,1.0,0.98,1.0));
+		WindowsVerticalScrollFieldBackground->setAlignment(HORIZONTAL_ALIGNMENT);
+	endEditCP(WindowsVerticalScrollFieldBackground);
+	
+	//Vertical Scroll Field Disabled Background
+	ColorUIBackgroundPtr WindowsVerticalDisabledScrollFieldBackground = ColorUIBackground::create();
+	beginEditCP(WindowsVerticalDisabledScrollFieldBackground);
+		WindowsVerticalDisabledScrollFieldBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+	endEditCP(WindowsVerticalDisabledScrollFieldBackground);
+
+	ButtonPtr WindowsVerticalScrollFieldButton = Button::create();
+    beginEditCP(WindowsVerticalScrollFieldButton, Button::PreferredSizeFieldMask | Button::EnableActionOnMouseDownTimeFieldMask | Button::ActionOnMouseDownRateFieldMask);
+        WindowsVerticalScrollFieldButton->setPreferredSize(Vec2s(17,17));
+        WindowsVerticalScrollFieldButton->setEnableActionOnMouseDownTime(true);
+        WindowsVerticalScrollFieldButton->setActionOnMouseDownRate(0.2);
+        
+		WindowsVerticalScrollFieldButton->setBorder(WindowsVerticalScrollFieldBorder);
+		WindowsVerticalScrollFieldButton->setActiveBorder(WindowsVerticalScrollFieldBorder);
+		WindowsVerticalScrollFieldButton->setRolloverBorder(WindowsVerticalScrollFieldBorder);
+		WindowsVerticalScrollFieldButton->setFocusedBorder(WindowsVerticalScrollFieldBorder);
+		WindowsVerticalScrollFieldButton->setDisabledBorder(WindowsVerticalDisabledScrollFieldBorder);
+        
+		WindowsVerticalScrollFieldButton->setBackground(WindowsVerticalScrollFieldBackground);
+		WindowsVerticalScrollFieldButton->setActiveBackground(WindowsVerticalScrollFieldBackground);
+		WindowsVerticalScrollFieldButton->setRolloverBackground(WindowsVerticalScrollFieldBackground);
+		WindowsVerticalScrollFieldButton->setFocusedBackground(WindowsVerticalScrollFieldBackground);
+		WindowsVerticalScrollFieldButton->setDisabledBackground(WindowsVerticalDisabledScrollFieldBackground);
+    endEditCP(WindowsVerticalScrollFieldButton, Button::PreferredSizeFieldMask | Button::EnableActionOnMouseDownTimeFieldMask | Button::ActionOnMouseDownRateFieldMask);
+
+    //Vertical Scroll Bar
+	//Vertical Scroll Bar Border
+
+	CompoundBorderPtr WindowsVerticalScrollBarDrawObjectOuterBorder = CompoundBorder::create();
+	beginEditCP(WindowsVerticalScrollBarDrawObjectOuterBorder);
+		WindowsVerticalScrollBarDrawObjectOuterBorder->setInnerBorder(WindowsWhiteCorneredBorder);
+		WindowsVerticalScrollBarDrawObjectOuterBorder->setOuterBorder(WindowsBlueCorneredBorder);
+	endEditCP(WindowsVerticalScrollBarDrawObjectOuterBorder);
+    
+	CompoundBorderPtr WindowsVerticalScrollBarDrawObjectBorder = CompoundBorder::create();
+	beginEditCP(WindowsVerticalScrollBarDrawObjectBorder);
+		WindowsVerticalScrollBarDrawObjectBorder->setInnerBorder(WindowsLightBlueCorneredBorder);
+		WindowsVerticalScrollBarDrawObjectBorder->setOuterBorder(WindowsVerticalScrollBarDrawObjectOuterBorder);
+	endEditCP(WindowsVerticalScrollBarDrawObjectBorder);
+
+	//Vertical Scroll Bar Disabled Border
+	BevelBorderPtr WindowsDisabledVerticalScrollBarDrawObjectBorder = BevelBorder::create();
+	beginEditCP(WindowsDisabledVerticalScrollBarDrawObjectBorder);
+		WindowsDisabledVerticalScrollBarDrawObjectBorder->setRaised(true);
+		WindowsDisabledVerticalScrollBarDrawObjectBorder->setWidth(2);
+		WindowsDisabledVerticalScrollBarDrawObjectBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
+		WindowsDisabledVerticalScrollBarDrawObjectBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		WindowsDisabledVerticalScrollBarDrawObjectBorder->setShadowInner(Color4f(0.85, 0.85, 0.85, 1.0));
+		WindowsDisabledVerticalScrollBarDrawObjectBorder->setShadowOuter(Color4f(0.65, 0.65, 0.65, 1.0));
+	endEditCP(WindowsDisabledVerticalScrollBarDrawObjectBorder);
+
+	//Vertical Scroll Bar Background
+	GradientUIBackgroundPtr WindowsVerticalScrollBarDrawObjectBackground = GradientUIBackground::create();
+	beginEditCP(WindowsVerticalScrollBarDrawObjectBackground);
+		WindowsVerticalScrollBarDrawObjectBackground->setColorStart(Color4f(0.79,0.85,0.99,1.0));
+		WindowsVerticalScrollBarDrawObjectBackground->setColorEnd(Color4f(0.73,0.8,0.98,1.0));
+		WindowsVerticalScrollBarDrawObjectBackground->setAlignment(HORIZONTAL_ALIGNMENT);
+	endEditCP(WindowsVerticalScrollBarDrawObjectBackground);
+	
+	//Vertical Scroll Bar Disabled Background
+	ColorUIBackgroundPtr WindowsDisabledVerticalScrollBarDrawObjectBackground = ColorUIBackground::create();
+	beginEditCP(WindowsDisabledVerticalScrollBarDrawObjectBackground);
+		WindowsDisabledVerticalScrollBarDrawObjectBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+	endEditCP(WindowsDisabledVerticalScrollBarDrawObjectBackground);
+
+	//Vertical Scroll Bar Rollover Background
+	GradientUIBackgroundPtr WindowsRolloverVerticalScrollBarDrawObjectBackground = GradientUIBackground::create();
+	beginEditCP(WindowsRolloverVerticalScrollBarDrawObjectBackground);
+		WindowsRolloverVerticalScrollBarDrawObjectBackground->setColorStart(Color4f(0.84,0.91,1.0,1.0));
+		WindowsRolloverVerticalScrollBarDrawObjectBackground->setColorEnd(Color4f(0.80,0.88,1.0,1.0));
+		WindowsRolloverVerticalScrollBarDrawObjectBackground->setAlignment(HORIZONTAL_ALIGNMENT);
+	endEditCP(WindowsRolloverVerticalScrollBarDrawObjectBackground);
+
+	//Vertical Scroll Bar Active Background
+	GradientUIBackgroundPtr WindowsActiveVerticalScrollBarDrawObjectBackground = GradientUIBackground::create();
+	beginEditCP(WindowsActiveVerticalScrollBarDrawObjectBackground);
+		WindowsActiveVerticalScrollBarDrawObjectBackground->setColorStart(Color4f(0.84,0.91,1.0,1.0));
+		WindowsActiveVerticalScrollBarDrawObjectBackground->setColorEnd(Color4f(0.80,0.88,1.0,1.0));
+		WindowsActiveVerticalScrollBarDrawObjectBackground->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(WindowsActiveVerticalScrollBarDrawObjectBackground);
+
+    //Vertical Scroll Bar Center Ridges
+    RectUIDrawObjectPtr VerticalWhiteRidge1 = RectUIDrawObject::create();
+	beginEditCP(VerticalWhiteRidge1);
+       VerticalWhiteRidge1->setTopLeft(Pnt2s(0,0));
+       VerticalWhiteRidge1->setBottomRight(Pnt2s(6,1));
+       VerticalWhiteRidge1->setColor(Color4f(0.93,0.96,1.0,1.0));
+	endEditCP(VerticalWhiteRidge1);
+
+    RectUIDrawObjectPtr VerticalWhiteRidge2 = RectUIDrawObject::create();
+	beginEditCP(VerticalWhiteRidge2);
+       VerticalWhiteRidge2->setTopLeft(Pnt2s(0,2));
+       VerticalWhiteRidge2->setBottomRight(Pnt2s(6,3));
+       VerticalWhiteRidge2->setColor(Color4f(0.93,0.96,1.0,1.0));
+	endEditCP(VerticalWhiteRidge2);
+    
+    RectUIDrawObjectPtr VerticalWhiteRidge3 = RectUIDrawObject::create();
+	beginEditCP(VerticalWhiteRidge3);
+       VerticalWhiteRidge3->setTopLeft(Pnt2s(0,4));
+       VerticalWhiteRidge3->setBottomRight(Pnt2s(6,5));
+       VerticalWhiteRidge3->setColor(Color4f(0.93,0.96,1.0,1.0));
+	endEditCP(VerticalWhiteRidge3);
+
+    RectUIDrawObjectPtr VerticalWhiteRidge4 = RectUIDrawObject::create();
+	beginEditCP(VerticalWhiteRidge4);
+       VerticalWhiteRidge4->setTopLeft(Pnt2s(0,6));
+       VerticalWhiteRidge4->setBottomRight(Pnt2s(6,7));
+       VerticalWhiteRidge4->setColor(Color4f(0.93,0.96,1.0,1.0));
+	endEditCP(VerticalWhiteRidge4);
+    
+    RectUIDrawObjectPtr VerticalBlueRidge1 = RectUIDrawObject::create();
+	beginEditCP(VerticalBlueRidge1);
+       VerticalBlueRidge1->setTopLeft(Pnt2s(1,1));
+       VerticalBlueRidge1->setBottomRight(Pnt2s(7,2));
+       VerticalBlueRidge1->setColor(Color4f(0.55,0.69,0.97,1.0));
+	endEditCP(VerticalBlueRidge1);
+
+    RectUIDrawObjectPtr VerticalBlueRidge2 = RectUIDrawObject::create();
+	beginEditCP(VerticalBlueRidge2);
+       VerticalBlueRidge2->setTopLeft(Pnt2s(1,3));
+       VerticalBlueRidge2->setBottomRight(Pnt2s(7,4));
+       VerticalBlueRidge2->setColor(Color4f(0.55,0.69,0.97,1.0));
+	endEditCP(VerticalBlueRidge2);
+    
+    RectUIDrawObjectPtr VerticalBlueRidge3 = RectUIDrawObject::create();
+	beginEditCP(VerticalBlueRidge3);
+       VerticalBlueRidge3->setTopLeft(Pnt2s(1,5));
+       VerticalBlueRidge3->setBottomRight(Pnt2s(7,6));
+       VerticalBlueRidge3->setColor(Color4f(0.55,0.69,0.97,1.0));
+	endEditCP(VerticalBlueRidge3);
+
+    RectUIDrawObjectPtr VerticalBlueRidge4 = RectUIDrawObject::create();
+	beginEditCP(VerticalBlueRidge4);
+       VerticalBlueRidge4->setTopLeft(Pnt2s(1,7));
+       VerticalBlueRidge4->setBottomRight(Pnt2s(7,8));
+       VerticalBlueRidge4->setColor(Color4f(0.55,0.69,0.97,1.0));
+	endEditCP(VerticalBlueRidge4);
+
+    UIDrawObjectCanvasPtr WindowsVerticalScrollBarRidges = UIDrawObjectCanvas::create();
+	beginEditCP(WindowsVerticalScrollBarRidges);
+        WindowsVerticalScrollBarRidges->getDrawObjects().push_back(VerticalWhiteRidge1);
+        WindowsVerticalScrollBarRidges->getDrawObjects().push_back(VerticalBlueRidge1);
+        WindowsVerticalScrollBarRidges->getDrawObjects().push_back(VerticalWhiteRidge2);
+        WindowsVerticalScrollBarRidges->getDrawObjects().push_back(VerticalBlueRidge2);
+        WindowsVerticalScrollBarRidges->getDrawObjects().push_back(VerticalWhiteRidge3);
+        WindowsVerticalScrollBarRidges->getDrawObjects().push_back(VerticalBlueRidge3);
+        WindowsVerticalScrollBarRidges->getDrawObjects().push_back(VerticalWhiteRidge4);
+        WindowsVerticalScrollBarRidges->getDrawObjects().push_back(VerticalBlueRidge4);
+	endEditCP(WindowsVerticalScrollBarRidges);
+    
+    //Vertical Active Scroll Bar Center Ridges
+    RectUIDrawObjectPtr VerticalActiveWhiteRidge1 = RectUIDrawObject::create();
+	beginEditCP(VerticalActiveWhiteRidge1);
+       VerticalActiveWhiteRidge1->setTopLeft(Pnt2s(0,0));
+       VerticalActiveWhiteRidge1->setBottomRight(Pnt2s(6,1));
+       VerticalActiveWhiteRidge1->setColor(Color4f(0.81,0.87,0.99,1.0));
+	endEditCP(VerticalActiveWhiteRidge1);
+
+    RectUIDrawObjectPtr VerticalActiveWhiteRidge2 = RectUIDrawObject::create();
+	beginEditCP(VerticalActiveWhiteRidge2);
+       VerticalActiveWhiteRidge2->setTopLeft(Pnt2s(0,2));
+       VerticalActiveWhiteRidge2->setBottomRight(Pnt2s(6,3));
+       VerticalActiveWhiteRidge2->setColor(Color4f(0.81,0.87,0.99,1.0));
+	endEditCP(VerticalActiveWhiteRidge2);
+    
+    RectUIDrawObjectPtr VerticalActiveWhiteRidge3 = RectUIDrawObject::create();
+	beginEditCP(VerticalActiveWhiteRidge3);
+       VerticalActiveWhiteRidge3->setTopLeft(Pnt2s(0,4));
+       VerticalActiveWhiteRidge3->setBottomRight(Pnt2s(6,5));
+       VerticalActiveWhiteRidge3->setColor(Color4f(0.81,0.87,0.99,1.0));
+	endEditCP(VerticalActiveWhiteRidge3);
+
+    RectUIDrawObjectPtr VerticalActiveWhiteRidge4 = RectUIDrawObject::create();
+	beginEditCP(VerticalActiveWhiteRidge4);
+       VerticalActiveWhiteRidge4->setTopLeft(Pnt2s(0,6));
+       VerticalActiveWhiteRidge4->setBottomRight(Pnt2s(6,7));
+       VerticalActiveWhiteRidge4->setColor(Color4f(0.81,0.87,0.99,1.0));
+	endEditCP(VerticalActiveWhiteRidge4);
+    
+    RectUIDrawObjectPtr VerticalActiveBlueRidge1 = RectUIDrawObject::create();
+	beginEditCP(VerticalActiveBlueRidge1);
+       VerticalActiveBlueRidge1->setTopLeft(Pnt2s(1,1));
+       VerticalActiveBlueRidge1->setBottomRight(Pnt2s(7,2));
+       VerticalActiveBlueRidge1->setColor(Color4f(0.51,0.62,0.85,1.0));
+	endEditCP(VerticalActiveBlueRidge1);
+
+    RectUIDrawObjectPtr VerticalActiveBlueRidge2 = RectUIDrawObject::create();
+	beginEditCP(VerticalActiveBlueRidge2);
+       VerticalActiveBlueRidge2->setTopLeft(Pnt2s(1,3));
+       VerticalActiveBlueRidge2->setBottomRight(Pnt2s(7,4));
+       VerticalActiveBlueRidge2->setColor(Color4f(0.51,0.62,0.85,1.0));
+	endEditCP(VerticalActiveBlueRidge2);
+    
+    RectUIDrawObjectPtr VerticalActiveBlueRidge3 = RectUIDrawObject::create();
+	beginEditCP(VerticalActiveBlueRidge3);
+       VerticalActiveBlueRidge3->setTopLeft(Pnt2s(1,5));
+       VerticalActiveBlueRidge3->setBottomRight(Pnt2s(7,6));
+       VerticalActiveBlueRidge3->setColor(Color4f(0.51,0.62,0.85,1.0));
+	endEditCP(VerticalActiveBlueRidge3);
+
+    RectUIDrawObjectPtr VerticalActiveBlueRidge4 = RectUIDrawObject::create();
+	beginEditCP(VerticalActiveBlueRidge4);
+       VerticalActiveBlueRidge4->setTopLeft(Pnt2s(1,7));
+       VerticalActiveBlueRidge4->setBottomRight(Pnt2s(7,8));
+       VerticalActiveBlueRidge4->setColor(Color4f(0.51,0.62,0.85,1.0));
+	endEditCP(VerticalActiveBlueRidge4);
+
+    UIDrawObjectCanvasPtr WindowsVerticalActiveScrollBarRidges = UIDrawObjectCanvas::create();
+	beginEditCP(WindowsVerticalActiveScrollBarRidges);
+        WindowsVerticalActiveScrollBarRidges->getDrawObjects().push_back(VerticalActiveWhiteRidge1);
+        WindowsVerticalActiveScrollBarRidges->getDrawObjects().push_back(VerticalActiveBlueRidge1);
+        WindowsVerticalActiveScrollBarRidges->getDrawObjects().push_back(VerticalActiveWhiteRidge2);
+        WindowsVerticalActiveScrollBarRidges->getDrawObjects().push_back(VerticalActiveBlueRidge2);
+        WindowsVerticalActiveScrollBarRidges->getDrawObjects().push_back(VerticalActiveWhiteRidge3);
+        WindowsVerticalActiveScrollBarRidges->getDrawObjects().push_back(VerticalActiveBlueRidge3);
+        WindowsVerticalActiveScrollBarRidges->getDrawObjects().push_back(VerticalActiveWhiteRidge4);
+        WindowsVerticalActiveScrollBarRidges->getDrawObjects().push_back(VerticalActiveBlueRidge4);
+	endEditCP(WindowsVerticalActiveScrollBarRidges);
+    
+    //Vertical Rollover Scroll Bar Center Ridges
+    RectUIDrawObjectPtr VerticalRolloverWhiteRidge1 = RectUIDrawObject::create();
+	beginEditCP(VerticalRolloverWhiteRidge1);
+       VerticalRolloverWhiteRidge1->setTopLeft(Pnt2s(0,0));
+       VerticalRolloverWhiteRidge1->setBottomRight(Pnt2s(6,1));
+       VerticalRolloverWhiteRidge1->setColor(Color4f(0.99,0.99,1.0,1.0));
+	endEditCP(VerticalRolloverWhiteRidge1);
+
+    RectUIDrawObjectPtr VerticalRolloverWhiteRidge2 = RectUIDrawObject::create();
+	beginEditCP(VerticalRolloverWhiteRidge2);
+       VerticalRolloverWhiteRidge2->setTopLeft(Pnt2s(0,2));
+       VerticalRolloverWhiteRidge2->setBottomRight(Pnt2s(6,3));
+       VerticalRolloverWhiteRidge2->setColor(Color4f(0.99,0.99,1.0,1.0));
+	endEditCP(VerticalRolloverWhiteRidge2);
+    
+    RectUIDrawObjectPtr VerticalRolloverWhiteRidge3 = RectUIDrawObject::create();
+	beginEditCP(VerticalRolloverWhiteRidge3);
+       VerticalRolloverWhiteRidge3->setTopLeft(Pnt2s(0,4));
+       VerticalRolloverWhiteRidge3->setBottomRight(Pnt2s(6,5));
+       VerticalRolloverWhiteRidge3->setColor(Color4f(0.99,0.99,1.0,1.0));
+	endEditCP(VerticalRolloverWhiteRidge3);
+
+    RectUIDrawObjectPtr VerticalRolloverWhiteRidge4 = RectUIDrawObject::create();
+	beginEditCP(VerticalRolloverWhiteRidge4);
+       VerticalRolloverWhiteRidge4->setTopLeft(Pnt2s(0,6));
+       VerticalRolloverWhiteRidge4->setBottomRight(Pnt2s(6,7));
+       VerticalRolloverWhiteRidge4->setColor(Color4f(0.99,0.99,1.0,1.0));
+	endEditCP(VerticalRolloverWhiteRidge4);
+    
+    RectUIDrawObjectPtr VerticalRolloverBlueRidge1 = RectUIDrawObject::create();
+	beginEditCP(VerticalRolloverBlueRidge1);
+       VerticalRolloverBlueRidge1->setTopLeft(Pnt2s(1,1));
+       VerticalRolloverBlueRidge1->setBottomRight(Pnt2s(7,2));
+       VerticalRolloverBlueRidge1->setColor(Color4f(0.61,0.77,1.0,1.0));
+	endEditCP(VerticalRolloverBlueRidge1);
+
+    RectUIDrawObjectPtr VerticalRolloverBlueRidge2 = RectUIDrawObject::create();
+	beginEditCP(VerticalRolloverBlueRidge2);
+       VerticalRolloverBlueRidge2->setTopLeft(Pnt2s(1,3));
+       VerticalRolloverBlueRidge2->setBottomRight(Pnt2s(7,4));
+       VerticalRolloverBlueRidge2->setColor(Color4f(0.61,0.77,1.0,1.0));
+	endEditCP(VerticalRolloverBlueRidge2);
+    
+    RectUIDrawObjectPtr VerticalRolloverBlueRidge3 = RectUIDrawObject::create();
+	beginEditCP(VerticalRolloverBlueRidge3);
+       VerticalRolloverBlueRidge3->setTopLeft(Pnt2s(1,5));
+       VerticalRolloverBlueRidge3->setBottomRight(Pnt2s(7,6));
+       VerticalRolloverBlueRidge3->setColor(Color4f(0.61,0.77,1.0,1.0));
+	endEditCP(VerticalRolloverBlueRidge3);
+
+    RectUIDrawObjectPtr VerticalRolloverBlueRidge4 = RectUIDrawObject::create();
+	beginEditCP(VerticalRolloverBlueRidge4);
+       VerticalRolloverBlueRidge4->setTopLeft(Pnt2s(1,7));
+       VerticalRolloverBlueRidge4->setBottomRight(Pnt2s(7,8));
+       VerticalRolloverBlueRidge4->setColor(Color4f(0.61,0.77,1.0,1.0));
+	endEditCP(VerticalRolloverBlueRidge4);
+
+    UIDrawObjectCanvasPtr WindowsVerticalRolloverScrollBarRidges = UIDrawObjectCanvas::create();
+	beginEditCP(WindowsVerticalRolloverScrollBarRidges);
+        WindowsVerticalRolloverScrollBarRidges->getDrawObjects().push_back(VerticalRolloverWhiteRidge1);
+        WindowsVerticalRolloverScrollBarRidges->getDrawObjects().push_back(VerticalRolloverBlueRidge1);
+        WindowsVerticalRolloverScrollBarRidges->getDrawObjects().push_back(VerticalRolloverWhiteRidge2);
+        WindowsVerticalRolloverScrollBarRidges->getDrawObjects().push_back(VerticalRolloverBlueRidge2);
+        WindowsVerticalRolloverScrollBarRidges->getDrawObjects().push_back(VerticalRolloverWhiteRidge3);
+        WindowsVerticalRolloverScrollBarRidges->getDrawObjects().push_back(VerticalRolloverBlueRidge3);
+        WindowsVerticalRolloverScrollBarRidges->getDrawObjects().push_back(VerticalRolloverWhiteRidge4);
+        WindowsVerticalRolloverScrollBarRidges->getDrawObjects().push_back(VerticalRolloverBlueRidge4);
+	endEditCP(WindowsVerticalRolloverScrollBarRidges);
+
+	ButtonPtr WindowsVerticalScrollBarDrawObject = Button::create();
+	beginEditCP(WindowsVerticalScrollBarDrawObject);
+		WindowsVerticalScrollBarDrawObject->setBorder(WindowsVerticalScrollBarDrawObjectBorder);
+		WindowsVerticalScrollBarDrawObject->setRolloverBorder(WindowsVerticalScrollBarDrawObjectBorder);
+		WindowsVerticalScrollBarDrawObject->setFocusedBorder(WindowsVerticalScrollBarDrawObjectBorder);
+		WindowsVerticalScrollBarDrawObject->setDisabledBorder(WindowsDisabledVerticalScrollBarDrawObjectBorder);
+		WindowsVerticalScrollBarDrawObject->setActiveBorder(WindowsVerticalScrollBarDrawObjectBorder);
+        
+		WindowsVerticalScrollBarDrawObject->setBackground(WindowsVerticalScrollBarDrawObjectBackground);
+		WindowsVerticalScrollBarDrawObject->setRolloverBackground(WindowsRolloverVerticalScrollBarDrawObjectBackground);
+		WindowsVerticalScrollBarDrawObject->setFocusedBackground(WindowsVerticalScrollBarDrawObjectBackground);
+		WindowsVerticalScrollBarDrawObject->setDisabledBackground(WindowsDisabledVerticalScrollBarDrawObjectBackground);
+		WindowsVerticalScrollBarDrawObject->setActiveBackground(WindowsActiveVerticalScrollBarDrawObjectBackground);
+
+        WindowsVerticalScrollBarDrawObject->setVerticalAlignment(0.5);
+        WindowsVerticalScrollBarDrawObject->setHorizontalAlignment(0.5);
+        WindowsVerticalScrollBarDrawObject->setActiveOffset(Vec2s(0,0));
+
+        WindowsVerticalScrollBarDrawObject->setDrawObject(WindowsVerticalScrollBarRidges);
+        WindowsVerticalScrollBarDrawObject->setActiveDrawObject(WindowsVerticalActiveScrollBarRidges);
+        WindowsVerticalScrollBarDrawObject->setFocusedDrawObject(WindowsVerticalScrollBarRidges);
+        WindowsVerticalScrollBarDrawObject->setRolloverDrawObject(WindowsVerticalRolloverScrollBarRidges);
+        WindowsVerticalScrollBarDrawObject->setDisabledDrawObject(WindowsVerticalScrollBarRidges);
+	endEditCP(WindowsVerticalScrollBarDrawObject);
+
+    //Horizontal Scroll Field
+	//Horizontal Scroll Field Border
+	MatteBorderPtr WindowsHorizontalScrollFieldBorder = MatteBorder::create();
+	beginEditCP(WindowsHorizontalScrollFieldBorder);
+		WindowsHorizontalScrollFieldBorder->setLeftWidth(0);
+		WindowsHorizontalScrollFieldBorder->setRightWidth(0);
+		WindowsHorizontalScrollFieldBorder->setTopWidth(1);
+		WindowsHorizontalScrollFieldBorder->setBottomWidth(1);
+		WindowsHorizontalScrollFieldBorder->setColor(Color4f(0.93, 0.93, 0.9, 1.0));
+	endEditCP(WindowsHorizontalScrollFieldBorder);
+
+	//Horizontal Scroll Field Disabled Border
+	BevelBorderPtr WindowsHorizontalDisabledScrollFieldBorder = BevelBorder::create();
+	beginEditCP(WindowsHorizontalDisabledScrollFieldBorder);
+		WindowsHorizontalDisabledScrollFieldBorder->setRaised(true);
+		WindowsHorizontalDisabledScrollFieldBorder->setWidth(1);
+		WindowsHorizontalDisabledScrollFieldBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
+		WindowsHorizontalDisabledScrollFieldBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		WindowsHorizontalDisabledScrollFieldBorder->setShadowInner(Color4f(0.85, 0.85, 0.85, 1.0));
+		WindowsHorizontalDisabledScrollFieldBorder->setShadowOuter(Color4f(0.65, 0.65, 0.65, 1.0));
+	endEditCP(WindowsHorizontalDisabledScrollFieldBorder);
+
+	//Horizontal Scroll Field Background
+	GradientUIBackgroundPtr WindowsHorizontalScrollFieldBackground = GradientUIBackground::create();
+	beginEditCP(WindowsHorizontalScrollFieldBackground);
+		WindowsHorizontalScrollFieldBackground->setColorStart(Color4f(0.95,0.95,0.93,1.0));
+		WindowsHorizontalScrollFieldBackground->setColorEnd(Color4f(1.0,1.0,0.98,1.0));
+		WindowsHorizontalScrollFieldBackground->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(WindowsHorizontalScrollFieldBackground);
+	
+	//Horizontal Scroll Field Disabled Background
+	ColorUIBackgroundPtr WindowsHorizontalDisabledScrollFieldBackground = ColorUIBackground::create();
+	beginEditCP(WindowsHorizontalDisabledScrollFieldBackground);
+		WindowsHorizontalDisabledScrollFieldBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+	endEditCP(WindowsHorizontalDisabledScrollFieldBackground);
+
+	ButtonPtr WindowsHorizontalScrollFieldButton = Button::create();
+    beginEditCP(WindowsHorizontalScrollFieldButton, Button::PreferredSizeFieldMask | Button::EnableActionOnMouseDownTimeFieldMask | Button::ActionOnMouseDownRateFieldMask);
+        WindowsHorizontalScrollFieldButton->setPreferredSize(Vec2s(17,17));
+        WindowsHorizontalScrollFieldButton->setEnableActionOnMouseDownTime(true);
+        WindowsHorizontalScrollFieldButton->setActionOnMouseDownRate(0.2);
+        
+		WindowsHorizontalScrollFieldButton->setBorder(WindowsHorizontalScrollFieldBorder);
+		WindowsHorizontalScrollFieldButton->setActiveBorder(WindowsHorizontalScrollFieldBorder);
+		WindowsHorizontalScrollFieldButton->setRolloverBorder(WindowsHorizontalScrollFieldBorder);
+		WindowsHorizontalScrollFieldButton->setFocusedBorder(WindowsHorizontalScrollFieldBorder);
+		WindowsHorizontalScrollFieldButton->setDisabledBorder(WindowsHorizontalDisabledScrollFieldBorder);
+        
+		WindowsHorizontalScrollFieldButton->setBackground(WindowsHorizontalScrollFieldBackground);
+		WindowsHorizontalScrollFieldButton->setActiveBackground(WindowsHorizontalScrollFieldBackground);
+		WindowsHorizontalScrollFieldButton->setRolloverBackground(WindowsHorizontalScrollFieldBackground);
+		WindowsHorizontalScrollFieldButton->setFocusedBackground(WindowsHorizontalScrollFieldBackground);
+		WindowsHorizontalScrollFieldButton->setDisabledBackground(WindowsHorizontalDisabledScrollFieldBackground);
+    endEditCP(WindowsHorizontalScrollFieldButton, Button::PreferredSizeFieldMask | Button::EnableActionOnMouseDownTimeFieldMask | Button::ActionOnMouseDownRateFieldMask);
+
+    //Horizontal Scroll Bar
+	//Horizontal Scroll Bar Border
+	CompoundBorderPtr WindowsHorizontalScrollBarDrawObjectBorder = CompoundBorder::create();
+	beginEditCP(WindowsHorizontalScrollBarDrawObjectBorder);
+		WindowsHorizontalScrollBarDrawObjectBorder->setInnerBorder(WindowsWhiteCorneredBorder);
+		WindowsHorizontalScrollBarDrawObjectBorder->setOuterBorder(WindowsBlueCorneredBorder);
+	endEditCP(WindowsHorizontalScrollBarDrawObjectBorder);
+
+	//Horizontal Scroll Bar Disabled Border
+	BevelBorderPtr WindowsDisabledHorizontalScrollBarDrawObjectBorder = BevelBorder::create();
+	beginEditCP(WindowsDisabledHorizontalScrollBarDrawObjectBorder);
+		WindowsDisabledHorizontalScrollBarDrawObjectBorder->setRaised(true);
+		WindowsDisabledHorizontalScrollBarDrawObjectBorder->setWidth(2);
+		WindowsDisabledHorizontalScrollBarDrawObjectBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
+		WindowsDisabledHorizontalScrollBarDrawObjectBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		WindowsDisabledHorizontalScrollBarDrawObjectBorder->setShadowInner(Color4f(0.85, 0.85, 0.85, 1.0));
+		WindowsDisabledHorizontalScrollBarDrawObjectBorder->setShadowOuter(Color4f(0.65, 0.65, 0.65, 1.0));
+	endEditCP(WindowsDisabledHorizontalScrollBarDrawObjectBorder);
+
+	//Horizontal Scroll Bar Background
+	GradientUIBackgroundPtr WindowsHorizontalScrollBarDrawObjectBackground = GradientUIBackground::create();
+	beginEditCP(WindowsHorizontalScrollBarDrawObjectBackground);
+		WindowsHorizontalScrollBarDrawObjectBackground->setColorStart(Color4f(0.79,0.85,0.99,1.0));
+		WindowsHorizontalScrollBarDrawObjectBackground->setColorEnd(Color4f(0.73,0.8,0.98,1.0));
+		WindowsHorizontalScrollBarDrawObjectBackground->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(WindowsHorizontalScrollBarDrawObjectBackground);
+	
+	//Horizontal Scroll Bar Disabled Background
+	ColorUIBackgroundPtr WindowsDisabledHorizontalScrollBarDrawObjectBackground = ColorUIBackground::create();
+	beginEditCP(WindowsDisabledHorizontalScrollBarDrawObjectBackground);
+		WindowsDisabledHorizontalScrollBarDrawObjectBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+	endEditCP(WindowsDisabledHorizontalScrollBarDrawObjectBackground);
+
+	//Horizontal Scroll Bar Rollover Background
+	GradientUIBackgroundPtr WindowsRolloverHorizontalScrollBarDrawObjectBackground = GradientUIBackground::create();
+	beginEditCP(WindowsRolloverHorizontalScrollBarDrawObjectBackground);
+		WindowsRolloverHorizontalScrollBarDrawObjectBackground->setColorStart(Color4f(0.84,0.91,1.0,1.0));
+		WindowsRolloverHorizontalScrollBarDrawObjectBackground->setColorEnd(Color4f(0.80,0.88,1.0,1.0));
+		WindowsRolloverHorizontalScrollBarDrawObjectBackground->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(WindowsRolloverHorizontalScrollBarDrawObjectBackground);
+
+	//Horizontal Scroll Bar Active Background
+	GradientUIBackgroundPtr WindowsActiveHorizontalScrollBarDrawObjectBackground = GradientUIBackground::create();
+	beginEditCP(WindowsActiveHorizontalScrollBarDrawObjectBackground);
+		WindowsActiveHorizontalScrollBarDrawObjectBackground->setColorStart(Color4f(0.84,0.91,1.0,1.0));
+		WindowsActiveHorizontalScrollBarDrawObjectBackground->setColorEnd(Color4f(0.80,0.88,1.0,1.0));
+		WindowsActiveHorizontalScrollBarDrawObjectBackground->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(WindowsActiveHorizontalScrollBarDrawObjectBackground);
+
+    //Horizontal Scroll Bar Center Ridges
+    RectUIDrawObjectPtr HorizontalWhiteRidge1 = RectUIDrawObject::create();
+	beginEditCP(HorizontalWhiteRidge1);
+       HorizontalWhiteRidge1->setTopLeft(Pnt2s(0,0));
+       HorizontalWhiteRidge1->setBottomRight(Pnt2s(1,6));
+       HorizontalWhiteRidge1->setColor(Color4f(0.93,0.96,1.0,1.0));
+	endEditCP(HorizontalWhiteRidge1);
+
+    RectUIDrawObjectPtr HorizontalWhiteRidge2 = RectUIDrawObject::create();
+	beginEditCP(HorizontalWhiteRidge2);
+       HorizontalWhiteRidge2->setTopLeft(Pnt2s(2,0));
+       HorizontalWhiteRidge2->setBottomRight(Pnt2s(3,6));
+       HorizontalWhiteRidge2->setColor(Color4f(0.93,0.96,1.0,1.0));
+	endEditCP(HorizontalWhiteRidge2);
+    
+    RectUIDrawObjectPtr HorizontalWhiteRidge3 = RectUIDrawObject::create();
+	beginEditCP(HorizontalWhiteRidge3);
+       HorizontalWhiteRidge3->setTopLeft(Pnt2s(4,0));
+       HorizontalWhiteRidge3->setBottomRight(Pnt2s(5,6));
+       HorizontalWhiteRidge3->setColor(Color4f(0.93,0.96,1.0,1.0));
+	endEditCP(HorizontalWhiteRidge3);
+
+    RectUIDrawObjectPtr HorizontalWhiteRidge4 = RectUIDrawObject::create();
+	beginEditCP(HorizontalWhiteRidge4);
+       HorizontalWhiteRidge4->setTopLeft(Pnt2s(6,0));
+       HorizontalWhiteRidge4->setBottomRight(Pnt2s(7,6));
+       HorizontalWhiteRidge4->setColor(Color4f(0.93,0.96,1.0,1.0));
+	endEditCP(HorizontalWhiteRidge4);
+    
+    RectUIDrawObjectPtr HorizontalBlueRidge1 = RectUIDrawObject::create();
+	beginEditCP(HorizontalBlueRidge1);
+       HorizontalBlueRidge1->setTopLeft(Pnt2s(1,1));
+       HorizontalBlueRidge1->setBottomRight(Pnt2s(2,7));
+       HorizontalBlueRidge1->setColor(Color4f(0.55,0.69,0.97,1.0));
+	endEditCP(HorizontalBlueRidge1);
+
+    RectUIDrawObjectPtr HorizontalBlueRidge2 = RectUIDrawObject::create();
+	beginEditCP(HorizontalBlueRidge2);
+       HorizontalBlueRidge2->setTopLeft(Pnt2s(3,1));
+       HorizontalBlueRidge2->setBottomRight(Pnt2s(4,7));
+       HorizontalBlueRidge2->setColor(Color4f(0.55,0.69,0.97,1.0));
+	endEditCP(HorizontalBlueRidge2);
+    
+    RectUIDrawObjectPtr HorizontalBlueRidge3 = RectUIDrawObject::create();
+	beginEditCP(HorizontalBlueRidge3);
+       HorizontalBlueRidge3->setTopLeft(Pnt2s(5,1));
+       HorizontalBlueRidge3->setBottomRight(Pnt2s(6,7));
+       HorizontalBlueRidge3->setColor(Color4f(0.55,0.69,0.97,1.0));
+	endEditCP(HorizontalBlueRidge3);
+
+    RectUIDrawObjectPtr HorizontalBlueRidge4 = RectUIDrawObject::create();
+	beginEditCP(HorizontalBlueRidge4);
+       HorizontalBlueRidge4->setTopLeft(Pnt2s(7,1));
+       HorizontalBlueRidge4->setBottomRight(Pnt2s(8,7));
+       HorizontalBlueRidge4->setColor(Color4f(0.55,0.69,0.97,1.0));
+	endEditCP(HorizontalBlueRidge4);
+
+    UIDrawObjectCanvasPtr WindowsHorizontalScrollBarRidges = UIDrawObjectCanvas::create();
+	beginEditCP(WindowsHorizontalScrollBarRidges);
+        WindowsHorizontalScrollBarRidges->getDrawObjects().push_back(HorizontalWhiteRidge1);
+        WindowsHorizontalScrollBarRidges->getDrawObjects().push_back(HorizontalBlueRidge1);
+        WindowsHorizontalScrollBarRidges->getDrawObjects().push_back(HorizontalWhiteRidge2);
+        WindowsHorizontalScrollBarRidges->getDrawObjects().push_back(HorizontalBlueRidge2);
+        WindowsHorizontalScrollBarRidges->getDrawObjects().push_back(HorizontalWhiteRidge3);
+        WindowsHorizontalScrollBarRidges->getDrawObjects().push_back(HorizontalBlueRidge3);
+        WindowsHorizontalScrollBarRidges->getDrawObjects().push_back(HorizontalWhiteRidge4);
+        WindowsHorizontalScrollBarRidges->getDrawObjects().push_back(HorizontalBlueRidge4);
+	endEditCP(WindowsHorizontalScrollBarRidges);
+    
+    //Horizontal Active Scroll Bar Center Ridges
+    RectUIDrawObjectPtr HorizontalActiveWhiteRidge1 = RectUIDrawObject::create();
+	beginEditCP(HorizontalActiveWhiteRidge1);
+       HorizontalActiveWhiteRidge1->setTopLeft(Pnt2s(0,0));
+       HorizontalActiveWhiteRidge1->setBottomRight(Pnt2s(1,6));
+       HorizontalActiveWhiteRidge1->setColor(Color4f(0.81,0.87,0.99,1.0));
+	endEditCP(HorizontalActiveWhiteRidge1);
+
+    RectUIDrawObjectPtr HorizontalActiveWhiteRidge2 = RectUIDrawObject::create();
+	beginEditCP(HorizontalActiveWhiteRidge2);
+       HorizontalActiveWhiteRidge2->setTopLeft(Pnt2s(2,0));
+       HorizontalActiveWhiteRidge2->setBottomRight(Pnt2s(3,6));
+       HorizontalActiveWhiteRidge2->setColor(Color4f(0.81,0.87,0.99,1.0));
+	endEditCP(HorizontalActiveWhiteRidge2);
+    
+    RectUIDrawObjectPtr HorizontalActiveWhiteRidge3 = RectUIDrawObject::create();
+	beginEditCP(HorizontalActiveWhiteRidge3);
+       HorizontalActiveWhiteRidge3->setTopLeft(Pnt2s(4,0));
+       HorizontalActiveWhiteRidge3->setBottomRight(Pnt2s(5,6));
+       HorizontalActiveWhiteRidge3->setColor(Color4f(0.81,0.87,0.99,1.0));
+	endEditCP(HorizontalActiveWhiteRidge3);
+
+    RectUIDrawObjectPtr HorizontalActiveWhiteRidge4 = RectUIDrawObject::create();
+	beginEditCP(HorizontalActiveWhiteRidge4);
+       HorizontalActiveWhiteRidge4->setTopLeft(Pnt2s(6,0));
+       HorizontalActiveWhiteRidge4->setBottomRight(Pnt2s(7,6));
+       HorizontalActiveWhiteRidge4->setColor(Color4f(0.81,0.87,0.99,1.0));
+	endEditCP(HorizontalActiveWhiteRidge4);
+    
+    RectUIDrawObjectPtr HorizontalActiveBlueRidge1 = RectUIDrawObject::create();
+	beginEditCP(HorizontalActiveBlueRidge1);
+       HorizontalActiveBlueRidge1->setTopLeft(Pnt2s(1,1));
+       HorizontalActiveBlueRidge1->setBottomRight(Pnt2s(2,7));
+       HorizontalActiveBlueRidge1->setColor(Color4f(0.51,0.62,0.85,1.0));
+	endEditCP(HorizontalActiveBlueRidge1);
+
+    RectUIDrawObjectPtr HorizontalActiveBlueRidge2 = RectUIDrawObject::create();
+	beginEditCP(HorizontalActiveBlueRidge2);
+       HorizontalActiveBlueRidge2->setTopLeft(Pnt2s(3,1));
+       HorizontalActiveBlueRidge2->setBottomRight(Pnt2s(4,7));
+       HorizontalActiveBlueRidge2->setColor(Color4f(0.51,0.62,0.85,1.0));
+	endEditCP(HorizontalActiveBlueRidge2);
+    
+    RectUIDrawObjectPtr HorizontalActiveBlueRidge3 = RectUIDrawObject::create();
+	beginEditCP(HorizontalActiveBlueRidge3);
+       HorizontalActiveBlueRidge3->setTopLeft(Pnt2s(5,1));
+       HorizontalActiveBlueRidge3->setBottomRight(Pnt2s(6,7));
+       HorizontalActiveBlueRidge3->setColor(Color4f(0.51,0.62,0.85,1.0));
+	endEditCP(HorizontalActiveBlueRidge3);
+
+    RectUIDrawObjectPtr HorizontalActiveBlueRidge4 = RectUIDrawObject::create();
+	beginEditCP(HorizontalActiveBlueRidge4);
+       HorizontalActiveBlueRidge4->setTopLeft(Pnt2s(7,1));
+       HorizontalActiveBlueRidge4->setBottomRight(Pnt2s(8,7));
+       HorizontalActiveBlueRidge4->setColor(Color4f(0.51,0.62,0.85,1.0));
+	endEditCP(HorizontalActiveBlueRidge4);
+
+    UIDrawObjectCanvasPtr WindowsHorizontalActiveScrollBarRidges = UIDrawObjectCanvas::create();
+	beginEditCP(WindowsHorizontalActiveScrollBarRidges);
+        WindowsHorizontalActiveScrollBarRidges->getDrawObjects().push_back(HorizontalActiveWhiteRidge1);
+        WindowsHorizontalActiveScrollBarRidges->getDrawObjects().push_back(HorizontalActiveBlueRidge1);
+        WindowsHorizontalActiveScrollBarRidges->getDrawObjects().push_back(HorizontalActiveWhiteRidge2);
+        WindowsHorizontalActiveScrollBarRidges->getDrawObjects().push_back(HorizontalActiveBlueRidge2);
+        WindowsHorizontalActiveScrollBarRidges->getDrawObjects().push_back(HorizontalActiveWhiteRidge3);
+        WindowsHorizontalActiveScrollBarRidges->getDrawObjects().push_back(HorizontalActiveBlueRidge3);
+        WindowsHorizontalActiveScrollBarRidges->getDrawObjects().push_back(HorizontalActiveWhiteRidge4);
+        WindowsHorizontalActiveScrollBarRidges->getDrawObjects().push_back(HorizontalActiveBlueRidge4);
+	endEditCP(WindowsHorizontalActiveScrollBarRidges);
+    
+    //Horizontal Rollover Scroll Bar Center Ridges
+    RectUIDrawObjectPtr HorizontalRolloverWhiteRidge1 = RectUIDrawObject::create();
+	beginEditCP(HorizontalRolloverWhiteRidge1);
+       HorizontalRolloverWhiteRidge1->setTopLeft(Pnt2s(0,0));
+       HorizontalRolloverWhiteRidge1->setBottomRight(Pnt2s(1,6));
+       HorizontalRolloverWhiteRidge1->setColor(Color4f(0.99,0.99,1.0,1.0));
+	endEditCP(HorizontalRolloverWhiteRidge1);
+
+    RectUIDrawObjectPtr HorizontalRolloverWhiteRidge2 = RectUIDrawObject::create();
+	beginEditCP(HorizontalRolloverWhiteRidge2);
+       HorizontalRolloverWhiteRidge2->setTopLeft(Pnt2s(2,0));
+       HorizontalRolloverWhiteRidge2->setBottomRight(Pnt2s(3,6));
+       HorizontalRolloverWhiteRidge2->setColor(Color4f(0.99,0.99,1.0,1.0));
+	endEditCP(HorizontalRolloverWhiteRidge2);
+    
+    RectUIDrawObjectPtr HorizontalRolloverWhiteRidge3 = RectUIDrawObject::create();
+	beginEditCP(HorizontalRolloverWhiteRidge3);
+       HorizontalRolloverWhiteRidge3->setTopLeft(Pnt2s(4,0));
+       HorizontalRolloverWhiteRidge3->setBottomRight(Pnt2s(5,6));
+       HorizontalRolloverWhiteRidge3->setColor(Color4f(0.99,0.99,1.0,1.0));
+	endEditCP(HorizontalRolloverWhiteRidge3);
+
+    RectUIDrawObjectPtr HorizontalRolloverWhiteRidge4 = RectUIDrawObject::create();
+	beginEditCP(HorizontalRolloverWhiteRidge4);
+       HorizontalRolloverWhiteRidge4->setTopLeft(Pnt2s(6,0));
+       HorizontalRolloverWhiteRidge4->setBottomRight(Pnt2s(7,6));
+       HorizontalRolloverWhiteRidge4->setColor(Color4f(0.99,0.99,1.0,1.0));
+	endEditCP(HorizontalRolloverWhiteRidge4);
+    
+    RectUIDrawObjectPtr HorizontalRolloverBlueRidge1 = RectUIDrawObject::create();
+	beginEditCP(HorizontalRolloverBlueRidge1);
+       HorizontalRolloverBlueRidge1->setTopLeft(Pnt2s(1,1));
+       HorizontalRolloverBlueRidge1->setBottomRight(Pnt2s(2,7));
+       HorizontalRolloverBlueRidge1->setColor(Color4f(0.61,0.77,1.0,1.0));
+	endEditCP(HorizontalRolloverBlueRidge1);
+
+    RectUIDrawObjectPtr HorizontalRolloverBlueRidge2 = RectUIDrawObject::create();
+	beginEditCP(HorizontalRolloverBlueRidge2);
+       HorizontalRolloverBlueRidge2->setTopLeft(Pnt2s(3,1));
+       HorizontalRolloverBlueRidge2->setBottomRight(Pnt2s(4,7));
+       HorizontalRolloverBlueRidge2->setColor(Color4f(0.61,0.77,1.0,1.0));
+	endEditCP(HorizontalRolloverBlueRidge2);
+    
+    RectUIDrawObjectPtr HorizontalRolloverBlueRidge3 = RectUIDrawObject::create();
+	beginEditCP(HorizontalRolloverBlueRidge3);
+       HorizontalRolloverBlueRidge3->setTopLeft(Pnt2s(5,1));
+       HorizontalRolloverBlueRidge3->setBottomRight(Pnt2s(6,7));
+       HorizontalRolloverBlueRidge3->setColor(Color4f(0.61,0.77,1.0,1.0));
+	endEditCP(HorizontalRolloverBlueRidge3);
+
+    RectUIDrawObjectPtr HorizontalRolloverBlueRidge4 = RectUIDrawObject::create();
+	beginEditCP(HorizontalRolloverBlueRidge4);
+       HorizontalRolloverBlueRidge4->setTopLeft(Pnt2s(7,1));
+       HorizontalRolloverBlueRidge4->setBottomRight(Pnt2s(8,7));
+       HorizontalRolloverBlueRidge4->setColor(Color4f(0.61,0.77,1.0,1.0));
+	endEditCP(HorizontalRolloverBlueRidge4);
+
+    UIDrawObjectCanvasPtr WindowsHorizontalRolloverScrollBarRidges = UIDrawObjectCanvas::create();
+	beginEditCP(WindowsHorizontalRolloverScrollBarRidges);
+        WindowsHorizontalRolloverScrollBarRidges->getDrawObjects().push_back(HorizontalRolloverWhiteRidge1);
+        WindowsHorizontalRolloverScrollBarRidges->getDrawObjects().push_back(HorizontalRolloverBlueRidge1);
+        WindowsHorizontalRolloverScrollBarRidges->getDrawObjects().push_back(HorizontalRolloverWhiteRidge2);
+        WindowsHorizontalRolloverScrollBarRidges->getDrawObjects().push_back(HorizontalRolloverBlueRidge2);
+        WindowsHorizontalRolloverScrollBarRidges->getDrawObjects().push_back(HorizontalRolloverWhiteRidge3);
+        WindowsHorizontalRolloverScrollBarRidges->getDrawObjects().push_back(HorizontalRolloverBlueRidge3);
+        WindowsHorizontalRolloverScrollBarRidges->getDrawObjects().push_back(HorizontalRolloverWhiteRidge4);
+        WindowsHorizontalRolloverScrollBarRidges->getDrawObjects().push_back(HorizontalRolloverBlueRidge4);
+	endEditCP(WindowsHorizontalRolloverScrollBarRidges);
+
+	ButtonPtr WindowsHorizontalScrollBarDrawObject = Button::create();
+	beginEditCP(WindowsHorizontalScrollBarDrawObject);
+		WindowsHorizontalScrollBarDrawObject->setBorder(WindowsHorizontalScrollBarDrawObjectBorder);
+		WindowsHorizontalScrollBarDrawObject->setRolloverBorder(WindowsHorizontalScrollBarDrawObjectBorder);
+		WindowsHorizontalScrollBarDrawObject->setFocusedBorder(WindowsHorizontalScrollBarDrawObjectBorder);
+		WindowsHorizontalScrollBarDrawObject->setDisabledBorder(WindowsDisabledHorizontalScrollBarDrawObjectBorder);
+		WindowsHorizontalScrollBarDrawObject->setActiveBorder(WindowsHorizontalScrollBarDrawObjectBorder);
+        
+		WindowsHorizontalScrollBarDrawObject->setBackground(WindowsHorizontalScrollBarDrawObjectBackground);
+		WindowsHorizontalScrollBarDrawObject->setRolloverBackground(WindowsRolloverHorizontalScrollBarDrawObjectBackground);
+		WindowsHorizontalScrollBarDrawObject->setFocusedBackground(WindowsHorizontalScrollBarDrawObjectBackground);
+		WindowsHorizontalScrollBarDrawObject->setDisabledBackground(WindowsDisabledHorizontalScrollBarDrawObjectBackground);
+		WindowsHorizontalScrollBarDrawObject->setActiveBackground(WindowsActiveHorizontalScrollBarDrawObjectBackground);
+        
+        WindowsHorizontalScrollBarDrawObject->setVerticalAlignment(0.5);
+        WindowsHorizontalScrollBarDrawObject->setHorizontalAlignment(0.5);
+        WindowsHorizontalScrollBarDrawObject->setActiveOffset(Vec2s(0,0));
+
+        WindowsHorizontalScrollBarDrawObject->setDrawObject(WindowsHorizontalScrollBarRidges);
+        WindowsHorizontalScrollBarDrawObject->setActiveDrawObject(WindowsHorizontalActiveScrollBarRidges);
+        WindowsHorizontalScrollBarDrawObject->setFocusedDrawObject(WindowsHorizontalScrollBarRidges);
+        WindowsHorizontalScrollBarDrawObject->setRolloverDrawObject(WindowsHorizontalRolloverScrollBarRidges);
+        WindowsHorizontalScrollBarDrawObject->setDisabledDrawObject(WindowsHorizontalScrollBarRidges);
+	endEditCP(WindowsHorizontalScrollBarDrawObject);
+
+	//Windows ScrollBar
+	ScrollBarPtr WindowsScrollBar = ScrollBar::create();
+	beginEditCP(WindowsScrollBar);
+		WindowsScrollBar->setEnabled(true);
+		WindowsScrollBar->setVisible(true);
+		
+		WindowsScrollBar->setConstraints(NullFC);
+		//Sizes
+		WindowsScrollBar->setMinSize(Vec2s(0,0));
+		WindowsScrollBar->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsScrollBar->setPreferredSize(Vec2s(17,100));
+
+		//Border
+		WindowsScrollBar->setBorder(WindowsScrollBarBorder);
+		WindowsScrollBar->setRolloverBorder(WindowsScrollBarBorder);
+		WindowsScrollBar->setFocusedBorder(WindowsScrollBarBorder);
+		WindowsScrollBar->setDisabledBorder(WindowsScrollBarBorder);
+		
+		//Background
+		WindowsScrollBar->setBackground(WindowsScrollBarBackground);
+		WindowsScrollBar->setRolloverBackground(WindowsScrollBarBackground);
+		WindowsScrollBar->setFocusedBackground(WindowsScrollBarBackground);
+		WindowsScrollBar->setDisabledBackground(WindowsScrollBarBackground);
+		
+		//Opacity
+		WindowsScrollBar->setOpacity(1.0);
+
+        //Min Button
+        WindowsScrollBar->setVerticalMinButton(WindowsScrollBarVerticalMinButton);
+        WindowsScrollBar->setHorizontalMinButton(WindowsScrollBarHorizontalMinButton);
+
+        //Max Button
+        WindowsScrollBar->setVerticalMaxButton(WindowsScrollBarVerticalMaxButton);
+        WindowsScrollBar->setHorizontalMaxButton(WindowsScrollBarHorizontalMaxButton);
+
+        //Scroll Field
+        WindowsScrollBar->setVerticalScrollField(WindowsVerticalScrollFieldButton);
+        WindowsScrollBar->setHorizontalScrollField(WindowsHorizontalScrollFieldButton);
+
+        //Scroll Bar
+        WindowsScrollBar->setVerticalScrollBar(WindowsVerticalScrollBarDrawObject);
+        WindowsScrollBar->setHorizontalScrollBar(WindowsHorizontalScrollBarDrawObject);
+	endEditCP(WindowsScrollBar);
+	
+    ScrollBar::getClassType().setPrototype(WindowsScrollBar);
+
+	//************************** ScrollPanel*****************************
+	//Windows ScrollPanelBorder
+	EmptyBorderPtr WindowsScrollPanelBorder = EmptyBorder::create();
+
+	//Windows ScrollPanelBackground
+	EmptyUIBackgroundPtr WindowsScrollPanelBackground = EmptyUIBackground::create();
+    
+	//Vertical ScrollBar
+	ScrollBarPtr WindowsScrollPanelVerticalScrollBar = ScrollBar::create();
+    beginEditCP(WindowsScrollPanelVerticalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
+		WindowsScrollPanelVerticalScrollBar->setPreferredSize(Vec2s(17,100));
+        WindowsScrollPanelVerticalScrollBar->setOrientation(VERTICAL_ALIGNMENT);
+    beginEditCP(WindowsScrollPanelVerticalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
+
+	//Horizontal ScrollBar
+	ScrollBarPtr WindowsScrollPanelHorizontalScrollBar = ScrollBar::create();
+    beginEditCP(WindowsScrollPanelHorizontalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
+		WindowsScrollPanelHorizontalScrollBar->setPreferredSize(Vec2s(100,17));
+        WindowsScrollPanelHorizontalScrollBar->setOrientation(HORIZONTAL_ALIGNMENT);
+    beginEditCP(WindowsScrollPanelHorizontalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
+
+
+	//Windows ScrollPanel
+	ScrollPanelPtr WindowsScrollPanel = ScrollPanel::create();
+	beginEditCP(WindowsScrollPanel);
+		WindowsScrollPanel->setEnabled(true);
+		WindowsScrollPanel->setVisible(true);
+		
+		WindowsScrollPanel->setConstraints(NullFC);
+		//Sizes
+		WindowsScrollPanel->setMinSize(Vec2s(0,0));
+		WindowsScrollPanel->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsScrollPanel->setPreferredSize(Vec2s(100,100));
+
+		//Border
+		WindowsScrollPanel->setBorder(WindowsScrollPanelBorder);
+		WindowsScrollPanel->setRolloverBorder(WindowsScrollPanelBorder);
+		WindowsScrollPanel->setFocusedBorder(WindowsScrollPanelBorder);
+		WindowsScrollPanel->setDisabledBorder(WindowsScrollPanelBorder);
+		
+		//Background
+		WindowsScrollPanel->setBackground(WindowsScrollPanelBackground);
+		WindowsScrollPanel->setRolloverBackground(WindowsScrollPanelBackground);
+		WindowsScrollPanel->setFocusedBackground(WindowsScrollPanelBackground);
+		WindowsScrollPanel->setDisabledBackground(WindowsScrollPanelBackground);
+		
+		//Opacity
+		WindowsScrollPanel->setOpacity(1.0);
+
+        //Vertical Scroll Bar
+        WindowsScrollPanel->setVerticalScrollBarDisplayPolicy(ScrollPanel::SCROLLBAR_AS_NEEDED);
+        WindowsScrollPanel->setVerticalScrollBar(WindowsScrollPanelVerticalScrollBar);
+
+        //Horizontal Scroll Bar
+        WindowsScrollPanel->setHorizontalScrollBarDisplayPolicy(ScrollPanel::SCROLLBAR_AS_NEEDED);
+        WindowsScrollPanel->setHorizontalScrollBar(WindowsScrollPanelHorizontalScrollBar);
+	endEditCP(WindowsScrollPanel);
+	
+    ScrollPanel::getClassType().setPrototype(WindowsScrollPanel);
+
 	//************************** RotatedComponent*****************************
 	//Windows RotatedComponentBorder
 	EmptyBorderPtr WindowsRotatedComponentBorder = EmptyBorder::create();
@@ -1649,6 +2712,8 @@ void WindowsLookAndFeel::init(void)
 		getPrototypes().addValue(WindowsPopupMenu);
 		getPrototypes().addValue(WindowsMenuBar);
 		getPrototypes().addValue(WindowsRotatedComponent);
+		getPrototypes().addValue(WindowsScrollBar);
+		getPrototypes().addValue(WindowsScrollPanel);
 	endEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);
 
 

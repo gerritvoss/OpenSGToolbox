@@ -78,7 +78,7 @@ void UIDrawObjectCanvas::getDrawObjectBounds(Pnt2s& TopLeft, Pnt2s& BottomRight)
 		//Determine Top Left And Bottom Right
 		for(UInt32 i(0) ; i<getDrawObjects().size(); ++i)
 		{
-			getDrawObjects().getValue(0)->getBounds(TempTopLeft, TempBottomRight);
+			getDrawObjects().getValue(i)->getBounds(TempTopLeft, TempBottomRight);
 		    TopLeft.setValues( osgMin(TopLeft.x(), TempTopLeft.x()),
 				               osgMin(TopLeft.y(), TempTopLeft.y()) );
 
@@ -130,12 +130,11 @@ void UIDrawObjectCanvas::changed(BitVector whichField, UInt32 origin)
 	
 	if( (whichField & DrawObjectsFieldMask) )
     {
-		Pnt2s Pos;
-		Vec2s Size;
-		getDrawObjectBounds(Pos,Size);
+		Pnt2s TopLeft, BottomRight;
+		getDrawObjectBounds(TopLeft, BottomRight);
 		beginEditCP(UIDrawObjectCanvasPtr(this), SizeFieldMask|PositionFieldMask);
-			setPosition(Pos);
-			setSize(Size);
+			setPosition(TopLeft);
+			setSize(BottomRight - TopLeft);
 		endEditCP(UIDrawObjectCanvasPtr(this), SizeFieldMask|PositionFieldMask);
     }
 }
