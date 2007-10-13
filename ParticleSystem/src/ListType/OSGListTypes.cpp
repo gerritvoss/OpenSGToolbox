@@ -4,7 +4,6 @@
 // This define is only set in this source file. It switches the
 // Windows-specific declarations in the header for compiling the Field, 
 // not for using it.
-#define OSG_COMPILEPARTICLESYSTEMLIB
 #define OSG_COMPILEPARTICLESYSTEMINST
 
 #include "OSGParticleSystemDef.h"

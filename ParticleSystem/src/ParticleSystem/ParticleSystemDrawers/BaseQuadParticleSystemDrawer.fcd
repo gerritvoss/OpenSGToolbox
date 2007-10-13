@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="BaseQuadParticleSystemDrawer"
+	parent="ParticleSystemDrawer"
+	library="ParticleSystem"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="QuadSizeScaling"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1.0,1.0"
+		access="public"
+	>
+	This value is used to scale the size of the particle and apply that size to the quad for that particle.
+	</Field>
+	<Field
+		name="UseImageSizeRatio"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="false"
+		access="public"
+	>
+   If true the aspect ratio of the Image of the first TextureChunk is used to scale the width and length of the quads.
+	</Field>
+</FieldContainer>

@@ -6,6 +6,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XXTesting", "XXTesting.vcpr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGParticleSystem", "..\Builds\Windows\OSGParticleSystem.vcproj", "{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}"
 	ProjectSection(ProjectDependencies) = postProject
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393} = {61151B1E-8A6D-465E-8C71-7E1578BA2393}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Builds\Windows\OSGInput.vcproj", "{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
+	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
 Global
@@ -22,6 +27,10 @@ Global
 		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}.Debug.Build.0 = Debug|Win32
 		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}.Release.ActiveCfg = Release|Win32
 		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}.Release.Build.0 = Release|Win32
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Debug.ActiveCfg = Debug|Win32
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Debug.Build.0 = Debug|Win32
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Release.ActiveCfg = Release|Win32
+		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

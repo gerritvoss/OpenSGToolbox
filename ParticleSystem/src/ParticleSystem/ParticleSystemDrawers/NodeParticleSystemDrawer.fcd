@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="NodeParticleSystemDrawer"
+	parent="ParticleSystemDrawer"
+	library="ParticleSystem"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="PrototypeNode"
+		type="NodePtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		access="public"
+	>
+	PrototypeNode is the node that clones are made of for each particle.
+	</Field>
+	<Field
+		name="SizeScaling"
+		type="Vec3f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1.0,1.0,1.0"
+		access="public"
+	>
+	This value is used to scale the size of the particle and apply that size to the transformation of the node for that particle.
+	</Field>
+	<Field
+		name="Nodes"
+		type="NodePtr"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+	>
+   Internal list of the Nodes.
+	</Field>
+</FieldContainer>

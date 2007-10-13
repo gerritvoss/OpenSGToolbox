@@ -3,7 +3,7 @@
 <FieldContainer
 	name="ParticleSystem"
 	parent="AttachmentContainer"
-	library="UserInterface"
+	library="ParticleSystem"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
@@ -150,4 +150,35 @@
         Hint to tell the system whether particles are expected to change position or
         not. Is used to speed up sorting.
 	</Field>
+	<Field
+		name="Generators"
+		type="ParticleGeneratorPtr"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+		header="ParticleSystem/ParticleGenerators/OSGParticleGenerator.h"
+	>
+   List of Particle Generators.
+	</Field>
+	<Field
+		name="Effectors"
+		type="ParticleEffectorPtr"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+		header="ParticleSystem/ParticleEffectors/OSGParticleEffector.h"
+	>
+   List of Particle Effectors.  These are applied on a per particle basis.
+	</Field>
+	<Field
+		name="SystemEffectors"
+		type="ParticleSystemEffectorPtr"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+		header="ParticleSystem/ParticleSystemEffectors/OSGParticleSystemEffector.h"
+	>
+   List of Particle System Effectors.  These are applied to the entire system of particles and can allow for particle-to-particle interaction.
+	</Field>
+   
 </FieldContainer>

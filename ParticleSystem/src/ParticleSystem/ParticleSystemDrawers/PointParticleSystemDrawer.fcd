@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="PointParticleSystemDrawer"
+	parent="ParticleSystemDrawer"
+	library="ParticleSystem"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="PointSizeScaling"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1.0"
+		access="public"
+	>
+	This value is used to scale the size of the particle and apply that size as the OpenGL point size.
+	</Field>
+</FieldContainer>
