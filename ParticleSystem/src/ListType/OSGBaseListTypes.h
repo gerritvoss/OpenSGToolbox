@@ -5,7 +5,7 @@
 #pragma once
 #endif
 
-#include "VSEConfig.h"
+#include "OSGParticleSystemDef.h"
 
 #include <list>
 #include <OpenSG/OSGBaseTypes.h>

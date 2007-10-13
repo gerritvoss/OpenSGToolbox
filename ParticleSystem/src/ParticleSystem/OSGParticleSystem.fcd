@@ -2,112 +2,67 @@
 
 <FieldContainer
 	name="ParticleSystem"
-	parent="MaterialDrawable"
+	parent="AttachmentContainer"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
 >
 	<Field
-		name="drawMode"
-		type="UInt32"
-		cardinality="single"
-		visibility="external"
-		defaultValue="0"
-		access="public"
-	>
-	The particle mode, see osg::Particles::modeE for options.
-	</Field>
-	<Field
-		name="useNormalAsObjectSpaceRotation"
-		type="bool"
-		cardinality="single"
-		visibility="external"
-		defaultValue="false"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="quadWidth"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		defaultValue="1.0"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="quadHeight"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		defaultValue="1.0"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="drawOrder"
-		type="UInt32"
-		cardinality="single"
-		visibility="external"
-		defaultValue="0"
-		access="public"
-	>
-        Define an optional sorting on the particles, see osg::Particles::DrawOrderE
-        for variants. Default is unordered.
-	</Field>
-	<Field
-		name="positions"
+		name="Positions"
 		type="Pnt3fList"
 		cardinality="single"
 		visibility="external"
 		access="protected"
-      header="OSGSFBaseListTypes.h"
+		header="ListType/OSGListTypes.h"
 	>
         The positions of the particles. This is the primary defining
         information for a particle.
 	</Field>
 	<Field
-		name="secPositions"
+		name="SecPositions"
 		type="Pnt3fList"
 		cardinality="single"
 		visibility="external"
 		access="protected"
-      header="OSGSFBaseListTypes.h"
+		header="ListType/OSGListTypes.h"
 	>
         The secondary position of the particle. This information is only used
         by a few rendering modes, e.g. the streak mode. Usually it represents
         the particle's last position.
 	</Field>
 	<Field
-		name="normals"
+		name="Normals"
 		type="Vec3fList"
 		cardinality="single"
 		visibility="external"
 		access="protected"
-      header="OSGSFBaseListTypes.h"
+		header="ListType/OSGListTypes.h"
 	>
         Most particles will be automatically aligned to the view
         direction. If normals are set they will be used to define the
         direction the particles are facing.
 	</Field>
 	<Field
-		name="colors"
+		name="Colors"
 		type="Color4fList"
 		cardinality="single"
 		visibility="external"
 		access="protected"
-      header="OSGSFBaseListTypes.h"
+		header="ListType/OSGListTypes.h"
 	>
 	The particle colors (optional).
 	</Field>
 	<Field
-		name="sizes"
+		name="Sizes"
 		type="Vec3fList"
 		cardinality="single"
 		visibility="external"
 		access="protected"
-      header="OSGSFBaseListTypes.h"
+		header="ListType/OSGListTypes.h"
 	>
         The particle sizes. If not set (1,1,1) will be used, if only one entry
         is set, it will be used for all particles. If the number of sizes if
@@ -116,33 +71,33 @@
         are ignored.
 	</Field>
 	<Field
-		name="lifespan"
+		name="Lifespans"
 		type="Real32List"
 		cardinality="single"
 		visibility="external"
 		access="protected"
-      header="OSGSFBaseListTypes.h"
+		header="ListType/OSGListTypes.h"
 	>
         The particle lifespan. If set to less than 0, then the particle is considered eternal.
 	</Field>
 	<Field
-		name="age"
+		name="Ages"
 		type="Real32List"
 		cardinality="single"
 		visibility="external"
 		access="protected"
-      header="OSGSFBaseListTypes.h"
+		header="ListType/OSGListTypes.h"
 	>
         The particle age.
 	</Field>
    
 	<Field
-		name="velocities"
+		name="Velocities"
 		type="Vec3fList"
 		cardinality="single"
 		visibility="external"
 		access="protected"
-      header="OSGSFBaseListTypes.h"
+		header="ListType/OSGListTypes.h"
 	>
         The particle velocities. If not set (0,0,0) will be used, if only one entry
         is set, it will be used for all particles. If the number of velocities is
@@ -150,24 +105,24 @@
         If no velocities are present, then the position will not be updated regarding velocity.
 	</Field>
 	<Field
-		name="secVelocities"
+		name="SecVelocities"
 		type="Vec3fList"
 		cardinality="single"
 		visibility="external"
 		access="protected"
-      header="OSGSFBaseListTypes.h"
+		header="ListType/OSGListTypes.h"
 	>
         The particle secVelocities. This is the velocity of the particle last update.  This is used
         for the VelocityDirQuads draw mode.
 	</Field>
    
 	<Field
-		name="accelerations"
+		name="Accelerations"
 		type="Vec3fList"
 		cardinality="single"
 		visibility="external"
 		access="protected"
-      header="OSGSFBaseListTypes.h"
+		header="ListType/OSGListTypes.h"
 	>
         The particle accelerations If not set (0,0,0) will be used, if only one entry
         is set, it will be used for all particles. If the number of accelerations is
@@ -175,17 +130,17 @@
         If no accelerations are present, then the position will not be updated regarding acceleration.
 	</Field>
 	<Field
-		name="properties"
+		name="Properties"
 		type="UInt64List"
 		cardinality="single"
 		visibility="external"
 		access="protected"
-      header="OSGSFBaseListTypes.h"
+		header="ListType/OSGListTypes.h"
 	>
 	</Field>
    
 	<Field
-		name="dynamic"
+		name="Dynamic"
 		type="bool"
 		cardinality="single"
 		visibility="external"

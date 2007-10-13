@@ -13,10 +13,10 @@ VPATH = $(srcdir)/:
 
 EXTRA_CCFLAGS = -I$(srcdir)
 
-OBJECTS = OSGParticleSystemBase.o \
-	OSGParticleSystemIterator.o \
+OBJECTS = OSGListTypeInst.o \
 	OSGParticleSystem.o \
-	OSGListTypeInst.o
+	OSGParticleSystemBase.o \
+	OSGParticleSystemIterator.o
         
         
 include $(commondir)/CommonMake.mk
