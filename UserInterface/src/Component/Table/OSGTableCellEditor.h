@@ -36,60 +36,35 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGABSTRACTLISTMODEL_H_
-#define _OSGABSTRACTLISTMODEL_H_
+#ifndef _OSG_UI_TABLE_CELL_EDITOR_H_
+#define _OSG_UI_TABLE_CELL_EDITOR_H_
+
 #ifdef __sgi
 #pragma once
 #endif
-
+ 
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
+#include "Component/OSGComponent.h"
+#include "OSGTable.h"
 
-#include "OSGListModel.h"
-#include <set>
+#include <OpenSG/OSGField.h>
 
 OSG_BEGIN_NAMESPACE
-
-/*! \brief AbstractListModel class. See \ref 
-           PageUserInterfaceAbstractListModel for a description.
-*/
-
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractListModel : public ListModel
+	 
+class OSG_USERINTERFACELIB_DLLMAPPING TableCellEditor
 {
-    /*==========================  PUBLIC  =================================*/
-  public:
-	virtual UInt32 getSize(void);
-	virtual Field* getElementAt(UInt32 index);
+private:
+protected:
+public:
+	virtual ComponentPtr getTableCellEditorComponent(TablePtr table, Field* value, bool isSelected, UInt32 row, UInt32 column) = 0;
 
-	virtual void addListDataListener(ListDataListenerPtr l);
-	virtual void removeListDataListener(ListDataListenerPtr l);
-	void pushBack(Field* f);
-	void popBack(void);
-
-    AbstractListModel(void);
-    virtual ~AbstractListModel(void); 
-  protected:
-	std::vector<Field*> _FieldList;
-
-    /*==========================  PRIVATE  ================================*/
-  private:
-	typedef std::set<ListDataListenerPtr> ListDataListenerList;
-	typedef ListDataListenerList::iterator ListDataListenerListIter;
-	ListDataListenerList _DataListeners;
-
-	void produceListDataContentsChanged(void);
-	void produceListDataIntervalAdded(UInt32 index0, UInt32 index1);
-	void produceListDataIntervalRemoved(UInt32 index0, UInt32 index1);
-
-    void operator =(const AbstractListModel &source);
 };
 
-typedef AbstractListModel *AbstractListModelPtr;
+typedef TableCellEditor* TableCellEditorPtr;
 
 OSG_END_NAMESPACE
 
-#include "OSGAbstractListModel.inl"
+#endif /* _OSG_UI_TABLE_CELL_EDITOR_H_ */
 
-#define OSGABSTRACTLISTMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGABSTRACTLISTMODEL_H_ */

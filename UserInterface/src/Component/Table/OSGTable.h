@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGABSTRACTLISTMODEL_H_
-#define _OSGABSTRACTLISTMODEL_H_
+#ifndef _OSGTABLE_H_
+#define _OSGTABLE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,51 +45,20 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGListModel.h"
-#include <set>
-
 OSG_BEGIN_NAMESPACE
 
-/*! \brief AbstractListModel class. See \ref 
-           PageUserInterfaceAbstractListModel for a description.
-*/
+class TableModel;
+class TableCellRenderer;
+class TableCellEditor;
+class ListSelectionModel;
 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractListModel : public ListModel
+class OSG_USERINTERFACELIB_DLLMAPPING Table
 {
-    /*==========================  PUBLIC  =================================*/
-  public:
-	virtual UInt32 getSize(void);
-	virtual Field* getElementAt(UInt32 index);
-
-	virtual void addListDataListener(ListDataListenerPtr l);
-	virtual void removeListDataListener(ListDataListenerPtr l);
-	void pushBack(Field* f);
-	void popBack(void);
-
-    AbstractListModel(void);
-    virtual ~AbstractListModel(void); 
-  protected:
-	std::vector<Field*> _FieldList;
-
-    /*==========================  PRIVATE  ================================*/
-  private:
-	typedef std::set<ListDataListenerPtr> ListDataListenerList;
-	typedef ListDataListenerList::iterator ListDataListenerListIter;
-	ListDataListenerList _DataListeners;
-
-	void produceListDataContentsChanged(void);
-	void produceListDataIntervalAdded(UInt32 index0, UInt32 index1);
-	void produceListDataIntervalRemoved(UInt32 index0, UInt32 index1);
-
-    void operator =(const AbstractListModel &source);
 };
 
-typedef AbstractListModel *AbstractListModelPtr;
+typedef Table *TableP;
+typedef TableColumn *TablePtr;
 
 OSG_END_NAMESPACE
 
-#include "OSGAbstractListModel.inl"
-
-#define OSGABSTRACTLISTMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
-#endif /* _OSGABSTRACTLISTMODEL_H_ */
+#endif /* _OSGTABLE_H_ */

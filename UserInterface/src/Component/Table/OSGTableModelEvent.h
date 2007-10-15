@@ -36,60 +36,62 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGABSTRACTLISTMODEL_H_
-#define _OSGABSTRACTLISTMODEL_H_
+#ifndef _OSG_UI_TABLE_MODEL_EVENT_H_
+#define _OSG_UI_TABLE_MODEL_EVENT_H_
+
 #ifdef __sgi
 #pragma once
 #endif
-
+ 
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGListModel.h"
-#include <set>
+#include <OpenSG/Input/OSGEvent.h>
+#include "OSGTableModel.h"
 
 OSG_BEGIN_NAMESPACE
-
-/*! \brief AbstractListModel class. See \ref 
-           PageUserInterfaceAbstractListModel for a description.
-*/
-
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractListModel : public ListModel
+	 
+class OSG_USERINTERFACELIB_DLLMAPPING TableModelEvent : public Event
 {
-    /*==========================  PUBLIC  =================================*/
-  public:
-	virtual UInt32 getSize(void);
-	virtual Field* getElementAt(UInt32 index);
+private:
+protected:
+    UInt32 _FirstColumn,
+           _LastColumn,
+           _FirstRow,
+           _LastRow;
 
-	virtual void addListDataListener(ListDataListenerPtr l);
-	virtual void removeListDataListener(ListDataListenerPtr l);
-	void pushBack(Field* f);
-	void popBack(void);
+    UInt32 _EventType;
 
-    AbstractListModel(void);
-    virtual ~AbstractListModel(void); 
-  protected:
-	std::vector<Field*> _FieldList;
+    TableModelPtr _Model;
+    
+public:
+    enum EventType {CONTENTS_CHANGED, INTERVAL_ADDED, INTERVAL_REMOVED, HEADER_ROW_CHANGED};
 
-    /*==========================  PRIVATE  ================================*/
-  private:
-	typedef std::set<ListDataListenerPtr> ListDataListenerList;
-	typedef ListDataListenerList::iterator ListDataListenerListIter;
-	ListDataListenerList _DataListeners;
+    //Returns the first column that changed
+    const UInt32& getFirstColumn(void) const;
+    
+    //Returns the first column that changed
+    const UInt32& getLastColumn(void) const;
 
-	void produceListDataContentsChanged(void);
-	void produceListDataIntervalAdded(UInt32 index0, UInt32 index1);
-	void produceListDataIntervalRemoved(UInt32 index0, UInt32 index1);
+    //Returns the first row that changed.
+    const UInt32& getFirstRow(void) const;
 
-    void operator =(const AbstractListModel &source);
+    //Returns the last row that changed.
+    const UInt32& getLastRow(void) const;
+
+    //Returns the type of event - one of: INSERT, UPDATE and DELETE.
+    const UInt32& getEventType(void) const;
+    
+    //The Model that the Event originated from
+    TableModelPtr& getModel(void);
+
+    //Constructor
+    TableModelEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow, EventType Type, TableModelPtr Model);
 };
-
-typedef AbstractListModel *AbstractListModelPtr;
 
 OSG_END_NAMESPACE
 
-#include "OSGAbstractListModel.inl"
+#include "OSGTableModelEvent.inl"
 
-#define OSGABSTRACTLISTMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#endif /* _OSG_UI_TABLE_MODEL_EVENT_H_ */
 
-#endif /* _OSGABSTRACTLISTMODEL_H_ */

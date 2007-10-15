@@ -36,60 +36,56 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGABSTRACTLISTMODEL_H_
-#define _OSGABSTRACTLISTMODEL_H_
+#ifndef _OSG_UI_ABSTRACT_TABLE_MODEL_H_
+#define _OSG_UI_ABSTRACT_TABLE_MODEL_H_
+
 #ifdef __sgi
 #pragma once
 #endif
-
+ 
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGListModel.h"
+#include "OSGTableModel.h"
 #include <set>
 
 OSG_BEGIN_NAMESPACE
-
-/*! \brief AbstractListModel class. See \ref 
-           PageUserInterfaceAbstractListModel for a description.
-*/
-
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractListModel : public ListModel
+	 
+class OSG_USERINTERFACELIB_DLLMAPPING AbstractTableModel : public TableModel
 {
-    /*==========================  PUBLIC  =================================*/
-  public:
-	virtual UInt32 getSize(void);
-	virtual Field* getElementAt(UInt32 index);
+protected:
+	typedef std::set<TableModelListenerPtr> TableModelListenerSet;
+    typedef TableModelListenerSet::iterator TableModelListenerSetItor;
+    typedef TableModelListenerSet::const_iterator TableModelListenerSetConstItor;
+	TableModelListenerSet _ModelListeners;
 
-	virtual void addListDataListener(ListDataListenerPtr l);
-	virtual void removeListDataListener(ListDataListenerPtr l);
-	void pushBack(Field* f);
-	void popBack(void);
+	void produceContentsHeaderRowChanged(UInt32 FirstColumn, UInt32 LastColumn);
+	void produceContentsChanged(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow);
+	void produceIntervalAdded(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow);
+	void produceIntervalRemoved(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow);
+    
+public:
 
-    AbstractListModel(void);
-    virtual ~AbstractListModel(void); 
-  protected:
-	std::vector<Field*> _FieldList;
-
-    /*==========================  PRIVATE  ================================*/
-  private:
-	typedef std::set<ListDataListenerPtr> ListDataListenerList;
-	typedef ListDataListenerList::iterator ListDataListenerListIter;
-	ListDataListenerList _DataListeners;
-
-	void produceListDataContentsChanged(void);
-	void produceListDataIntervalAdded(UInt32 index0, UInt32 index1);
-	void produceListDataIntervalRemoved(UInt32 index0, UInt32 index1);
-
-    void operator =(const AbstractListModel &source);
+    //Adds a listener to the list that is notified each time a change to the data model occurs.
+    virtual void addTableModelListener(TableModelListenerPtr l);
+    
+    //Removes a listener from the list that is notified each time a change to the data model occurs.
+    virtual void removeTableModelListener(TableModelListenerPtr l);
+    
+    //Returns the name of the column at columnIndex.
+    virtual std::string getColumnName(UInt32 columnIndex) const;
+    
+    //Returns true if the cell at rowIndex and columnIndex is editable.
+    virtual bool isCellEditable(UInt32 rowIndex, UInt32 columnIndex) const;
+    
+    //Sets the value in the cell at columnIndex and rowIndex to aValue.
+    virtual void setValueAt(Field* aValue, UInt32 rowIndex, UInt32 columnIndex);
+    
 };
-
-typedef AbstractListModel *AbstractListModelPtr;
 
 OSG_END_NAMESPACE
 
-#include "OSGAbstractListModel.inl"
+#include "OSGAbstractTableModel.inl"
 
-#define OSGABSTRACTLISTMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#endif /* _OSG_UI_ABSTRACT_TABLE_MODEL_H_ */
 
-#endif /* _OSGABSTRACTLISTMODEL_H_ */

@@ -6,7 +6,7 @@ LIB_INCLUDE_DIR_NAME = UserInterface
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Border:$(srcdir)/Background:$(srcdir)/Event:$(srcdir)/Layout:$(srcdir)/Util:$(srcdir)/Component:$(srcdir)/Component/Button:$(srcdir)/Component/Menu:$(srcdir)/Component/Scroll:$(srcdir)/Component/Misc:$(srcdir)/Component/Container:$(srcdir)/Component/List:$(srcdir)/Component/Text:$(srcdir)/LookAndFeel:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Text:
+VPATH = $(srcdir)/:$(srcdir)/Border:$(srcdir)/Background:$(srcdir)/Event:$(srcdir)/Layout:$(srcdir)/Util:$(srcdir)/Component:$(srcdir)/Component/Button:$(srcdir)/Component/Menu:$(srcdir)/Component/Table:$(srcdir)/Component/Scroll:$(srcdir)/Component/Misc:$(srcdir)/Component/Container:$(srcdir)/Component/List:$(srcdir)/Component/Text:$(srcdir)/LookAndFeel:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Text:
 
 
 #.SUFFIX = .o .o
@@ -120,6 +120,9 @@ OBJECTS = OSGShadowBorder.o \
 	OSGMenu.o \
 	OSGSeperatorMenuItemBase.o \
 	OSGPopupMenuBase.o \
+	OSGAbstractTableModel.o \
+	OSGTableColumn.o \
+	OSGTableColumnBase.o \
 	OSGScrollBarBase.o \
 	OSGScrollBar.o \
 	OSGScrollPanel.o \
@@ -128,6 +131,7 @@ OBJECTS = OSGShadowBorder.o \
 	OSGToolTip.o \
 	OSGToolTipBase.o \
 	OSGFrameBase.o \
+	OSGUIViewportBase.o \
 	OSGContainer.o \
 	OSGTabPanel.o \
 	OSGTabPanelBase.o \
@@ -137,6 +141,7 @@ OBJECTS = OSGShadowBorder.o \
 	OSGPanel.o \
 	OSGContainerBase.o \
 	OSGFrame.o \
+	OSGUIViewport.o \
 	OSGListBase.o \
 	OSGAbstractListModel.o \
 	OSGDefaultListSelectionModel.o \
@@ -180,7 +185,9 @@ OBJECTS = OSGShadowBorder.o \
 	OSGArcUIDrawObject.o \
 	OSGArcUIDrawObjectBase.o \
 	OSGMultiColoredQuadUIDrawObject.o \
+	OSGTexturedQuadUIDrawObject.o \
 	OSGDiscUIDrawObject.o \
+	OSGTexturedQuadUIDrawObjectBase.o \
 	OSGLineUIDrawObjectBase.o \
 	OSGRectUIDrawObject.o \
 	OSGTextUIDrawObjectBase.o \
