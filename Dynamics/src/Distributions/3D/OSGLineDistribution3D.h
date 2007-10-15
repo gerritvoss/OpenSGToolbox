@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -45,8 +45,21 @@
 #include "OSGDynamicsDef.h"
 
 #include "OSGLineDistribution3DBase.h"
+#include <OpenSG/OSGVecFieldDataType.h>
 
 OSG_BEGIN_NAMESPACE
+
+#define OSG_LINE3D_DIST_IORETURNPARAMETERS (1, \
+    (\
+      ("RandomPoint", FieldDataTraits<Pnt3f>::getType()) \
+    ))
+
+#define OSG_LINE3D_DIST_IOINPUTPARAMETERS (3, \
+    (\
+      ("Bla1", FieldDataTraits<Pnt3f>::getType()), \
+      ("Bla2", FieldDataTraits<Pnt2f>::getType()), \
+      ("Bla3", FieldDataTraits<Real32>::getType()) \
+    ))
 
 class OSG_DYNAMICSLIB_DLLMAPPING LineDistribution3D : public LineDistribution3DBase
 {
@@ -56,6 +69,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING LineDistribution3D : public LineDistribution3DB
 
     /*==========================  PUBLIC  =================================*/
   public:
+    typedef FunctionIOData<Pnt3f> Output1DataType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -73,7 +87,11 @@ class OSG_DYNAMICSLIB_DLLMAPPING LineDistribution3D : public LineDistribution3DB
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual Pnt3f generate(void);
+    Pnt3f generate(void);
+    virtual FunctionIOTypeVector getReturnTypes(void) const;
+    virtual FunctionIOTypeVector getParameterTypes(void) const;
+    virtual FunctionIOParameterVector evaluate(FunctionIOParameterVector& InputParameters);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 

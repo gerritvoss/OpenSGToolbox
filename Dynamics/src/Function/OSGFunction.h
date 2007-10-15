@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -47,16 +47,113 @@
 
 #include "OSGFunctionBase.h"
 
+#include <exception>
+
+#include <boost/shared_ptr.hpp>
+#include <boost/preprocessor/array/elem.hpp>
+#include <boost/preprocessor/tuple/elem.hpp>
+
+#define OSG_FUNC_IOPARAMETER_NAME(index, parameterArray) BOOST_PP_TUPLE_ELEM(2,0,BOOST_PP_ARRAY_ELEM(index, parameterArray))
+#define OSG_FUNC_IOPARAMETER_TYPE(index, parameterArray) BOOST_PP_TUPLE_ELEM(2,1,BOOST_PP_ARRAY_ELEM(index, parameterArray))
+
+#define OSG_FUNC_INST_FUNCTIONIOTYPE(index, parameterArray) FunctionIOType(OSG_FUNC_IOPARAMETER_NAME(index,parameterArray), &OSG_FUNC_IOPARAMETER_TYPE(index,parameterArray))
+
 OSG_BEGIN_NAMESPACE
+
+class OSG_DYNAMICSLIB_DLLMAPPING FunctionException : public std::exception
+{
+};
+
+class OSG_DYNAMICSLIB_DLLMAPPING FunctionInputException : public FunctionException
+{
+    virtual const char* what() const throw();
+};
+
+class OSG_DYNAMICSLIB_DLLMAPPING FunctionBadTypeException : public FunctionException
+{
+    virtual const char* what() const throw();
+};
 
 class OSG_DYNAMICSLIB_DLLMAPPING Function : public FunctionBase
 {
   private:
-
     typedef FunctionBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
+    struct FunctionIOType{
+        std::string _IOParameterName;
+        DataType* _Type;
+        FunctionIOType(const std::string& name, DataType* type) :
+           _IOParameterName(name),
+           _Type(type)
+        {
+        }
+    };
+
+    class FunctionIODataBase
+    {
+      public:
+        virtual DataType* getType(void) const = 0;
+    };
+
+    template<class RawTypeT>
+    class FunctionIOData : public FunctionIODataBase
+    {
+      public:
+        typedef RawTypeT RawType;
+
+      protected:
+        typedef FunctionIODataBase Inherited;
+        RawType _Data;
+
+      public:
+
+        FunctionIOData(RawTypeT data) : _Data(data)
+        {
+        }
+
+        virtual DataType* getType(void) const
+        {
+            return &FieldDataTraits<RawTypeT>::getType();
+        }
+
+        static FunctionIOData<RawTypeT>* dcast(FunctionIODataBase* Value)
+        {
+            return dynamic_cast< FunctionIOData<RawTypeT>* >(Value);
+        }
+
+        static const FunctionIOData<RawTypeT>* dcast(const FunctionIODataBase* Value)
+        {
+            return dynamic_cast< const FunctionIOData<RawTypeT>* >(Value);
+        }
+
+        const RawType& getData(void) const
+        {
+            return _Data;
+        }
+    };
+
+    class FunctionIOParameter
+    {
+      protected:
+        std::string _IOParameterName;
+        boost::shared_ptr<FunctionIODataBase> _DataPtr;
+      public:
+        FunctionIOParameter(const std::string& name, FunctionIODataBase* data) :
+           _IOParameterName(name),
+           _DataPtr(data)
+        {
+        }
+
+        const FunctionIODataBase* getDataPtr(void) const
+        {
+            return _DataPtr.get();
+        }
+
+    };
+    typedef std::vector<FunctionIOType> FunctionIOTypeVector;
+    typedef std::vector<FunctionIOParameter> FunctionIOParameterVector;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -75,6 +172,11 @@ class OSG_DYNAMICSLIB_DLLMAPPING Function : public FunctionBase
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
+    virtual FunctionIOTypeVector getReturnTypes(void) const = 0;
+    virtual FunctionIOTypeVector getParameterTypes(void) const = 0;
+
+    virtual FunctionIOParameterVector evaluate(FunctionIOParameterVector& InputParameters) = 0;
   protected:
 
     // Variables should all be in FunctionBase.
@@ -100,6 +202,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING Function : public FunctionBase
 
     friend class FieldContainer;
     friend class FunctionBase;
+    friend class FunctionFactory;
 
     static void initMethod(void);
 

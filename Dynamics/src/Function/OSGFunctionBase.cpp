@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -72,7 +72,7 @@ const OSG::BitVector FunctionBase::MTInfluenceMask =
 
 FieldContainerType FunctionBase::_type(
     "Function",
-    "FieldContainer",
+    "AttachmentContainer",
     NULL,
     NULL, 
     Function::initMethod,
@@ -218,7 +218,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<FunctionPtr>::_type("FunctionPtr", "FieldContainerPtr");
+DataType FieldDataTraits<FunctionPtr>::_type("FunctionPtr", "AttachmentContainerPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(FunctionPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);

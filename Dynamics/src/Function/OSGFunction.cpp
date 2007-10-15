@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -73,6 +73,20 @@ void Function::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  exceptions                                                                 -
+\*-------------------------------------------------------------------------*/
+
+const char* FunctionInputException::what() const throw()
+{
+    return "FunctionInputException";
+}
+
+const char* FunctionBadTypeException::what() const throw()
+{
+    return "FunctionBadTypeException";
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

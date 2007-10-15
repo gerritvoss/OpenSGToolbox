@@ -73,6 +73,12 @@ int main(int argc, char **argv)
       TheDistribution->setPoint2(Pnt3f(10.0,0.0,0.0));
     endEditCP(TheDistribution);
 
+    LineDistribution3D::Output1DataType::RawType ReturnValue;
+    ReturnValue = 
+        LineDistribution3D::Output1DataType::dcast(
+        TheDistribution->evaluate(LineDistribution3D::FunctionIOParameterVector()).front().getDataPtr()
+        )->getData();
+
 
     //Use the Distribution to generate Positions
     GeoPositionsPtr ParticlePositions = GeoPositions3f::create();

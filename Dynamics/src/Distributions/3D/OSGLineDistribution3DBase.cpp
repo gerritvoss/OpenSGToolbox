@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -103,7 +103,7 @@ FieldDescription *LineDistribution3DBase::_desc[] =
 
 FieldContainerType LineDistribution3DBase::_type(
     "LineDistribution3D",
-    "Distribution3D",
+    "Function",
     NULL,
     (PrototypeCreateF) &LineDistribution3DBase::createEmpty,
     LineDistribution3D::initMethod,
@@ -304,7 +304,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<LineDistribution3DPtr>::_type("LineDistribution3DPtr", "Distribution3DPtr");
+DataType FieldDataTraits<LineDistribution3DPtr>::_type("LineDistribution3DPtr", "FunctionPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(LineDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);

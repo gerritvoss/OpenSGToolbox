@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGLineDistribution3D.h"
+#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -74,10 +75,40 @@ void LineDistribution3D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+LineDistribution3D::FunctionIOTypeVector LineDistribution3D::getReturnTypes(void) const
+{
+    FunctionIOTypeVector OutputTypes;
+    OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_LINE3D_DIST_IORETURNPARAMETERS));
+    return OutputTypes;
+}
+
+LineDistribution3D::FunctionIOTypeVector LineDistribution3D::getParameterTypes(void) const
+{
+    FunctionIOTypeVector InputTypes;
+    InputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_LINE3D_DIST_IOINPUTPARAMETERS));
+    InputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(1,OSG_LINE3D_DIST_IOINPUTPARAMETERS));
+    InputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(2,OSG_LINE3D_DIST_IOINPUTPARAMETERS));
+    return InputTypes;
+}
+
 Pnt3f LineDistribution3D::generate(void)
 {
-   return Pnt3f(getPoint1() + osgrand()*(getPoint2() - getPoint1()));
+    return Pnt3f(getPoint1() + RandomPoolManager::getRandomReal32(0.0,1.0)*(getPoint2() - getPoint1()));
 }
+
+LineDistribution3D::FunctionIOParameterVector LineDistribution3D::evaluate(FunctionIOParameterVector& InputParameters)
+{
+    //The Input Paremeters must be the correct number
+    if(InputParameters.size() != 0)
+    {
+        throw FunctionInputException();
+    }
+    FunctionIOParameterVector ResultVector;
+    ResultVector.reserve(1);
+    ResultVector.push_back(FunctionIOParameter("ResultPoint", new Output1DataType(generate())));
+    return ResultVector;
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
