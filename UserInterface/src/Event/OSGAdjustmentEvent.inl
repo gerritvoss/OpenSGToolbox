@@ -3,7 +3,13 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-AdjustmentEvent::EventType AdjustmentEvent::getEvent(void) const
+const EventType &AdjustmentEvent::getClassType(void)
+{
+    return _Type;
+}
+
+inline
+AdjustmentEvent::EventEnum AdjustmentEvent::getEvent(void) const
 {
     return _Event;
 }
@@ -21,7 +27,7 @@ bool AdjustmentEvent::getValueIsAdjusting(void) const
 }
 
 inline
-AdjustmentEvent:: AdjustmentEvent(FieldContainerPtr Source, Time TimeStamp, EventType TheEvent, UInt32 Value, bool ValueIsAdjusting) :
+AdjustmentEvent:: AdjustmentEvent(FieldContainerPtr Source, Time TimeStamp, EventEnum TheEvent, UInt32 Value, bool ValueIsAdjusting) :
    Event(Source, TimeStamp),
        _Event(TheEvent),
        _Value(Value),

@@ -53,11 +53,19 @@ class OSG_INPUTLIB_DLLMAPPING MouseWheelEvent : public Event
     ViewportPtr getViewport(void) const;
     
     MouseWheelEvent(FieldContainerPtr Source, Time TimeStamp, Int32 WheelRotation, ScrollType TheScrollType, Pnt2s Location, ViewportPtr TheViewport);
-  private:
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
+    
+  protected:
     ScrollType _ScrollType;
     Int32      _WheelRotation;
     Pnt2s       _Location;
     ViewportPtr _Viewport;
+    
+  private:
+     static EventType _Type;
     
 };
 

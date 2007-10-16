@@ -23,15 +23,22 @@ OBJECTS = OSGWindowEventProducer.o \
 	OSGWin32WindowEventProducerBase.o \
 	OSGXWindowEventProducer.o \
 	OSGXWindowEventProducerBase.o \
+	OSGWindowEvent.o \
 	OSGMouseWheelEventProducer.o \
 	OSGMouseMotionEventProducer.o \
 	OSGWindowAdapter.o \
+	OSGFieldChangeEvent.o \
+	OSGMouseEvent.o \
 	OSGMouseEventProducer.o \
+	OSGEventFactory.o \
 	OSGKeyAdapter.o \
 	OSGMouseMotionAdapter.o \
+	OSGUpdateEvent.o \
 	OSGMouseAdapter.o \
 	OSGKeyEvent.o \
 	OSGKeyEventProducer.o \
+	OSGMouseWheelEvent.o \
+	OSGEventType.o \
 	OSGStringUtils.o \
 	OSGInputSettings.o
         

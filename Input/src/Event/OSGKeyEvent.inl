@@ -3,6 +3,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+const EventType &KeyEvent::getClassType(void)
+{
+    return _Type;
+}
+
+inline
 KeyEvent::Key KeyEvent::getKey(void) const
 {
    return _Key;

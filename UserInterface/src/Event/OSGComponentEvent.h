@@ -43,15 +43,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentEvent : public Event
 {
 /*=========================  PUBLIC  ===============================*/
 public:
-    enum EventType{COMPONENT_HIDDEN=0, COMPONENT_VISIBLE, COMPONENT_MOVED, COMPONENT_RESIZED, COMPONENT_ENABLED, COMPONENT_DISABLED};
+    enum EventEnum{COMPONENT_HIDDEN=0, COMPONENT_VISIBLE, COMPONENT_MOVED, COMPONENT_RESIZED, COMPONENT_ENABLED, COMPONENT_DISABLED};
 
-    EventType getEvent(void) const;
+    EventEnum getEvent(void) const;
     ComponentPtr getOriginator(void) const;
 
-    ComponentEvent(FieldContainerPtr Source, Time TimeStamp, EventType TheEvent, ComponentPtr Originator);
-private:
-    EventType _Event;
+    ComponentEvent(FieldContainerPtr Source, Time TimeStamp, EventEnum TheEvent, ComponentPtr Originator);
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
+protected:
+    EventEnum _Event;
     ComponentPtr _Originator;
+  private:
+     static EventType _Type;
 };
 
 OSG_END_NAMESPACE

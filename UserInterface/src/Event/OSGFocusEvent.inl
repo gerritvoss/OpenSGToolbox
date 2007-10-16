@@ -2,8 +2,15 @@
 
 OSG_BEGIN_NAMESPACE
 
+
 inline
-FocusEvent::EventType FocusEvent::getEvent(void) const
+const EventType &FocusEvent::getClassType(void)
+{
+    return _Type;
+}
+
+inline
+FocusEvent::EventEnum FocusEvent::getEvent(void) const
 {
     return _Event;
 }
@@ -21,7 +28,7 @@ ComponentPtr FocusEvent::getOpposite(void) const
 }
 
 inline
-FocusEvent::FocusEvent(FieldContainerPtr Source, Time TimeStamp, EventType TheEvent, bool Temporary, ComponentPtr Opposite) :
+FocusEvent::FocusEvent(FieldContainerPtr Source, Time TimeStamp, EventEnum TheEvent, bool Temporary, ComponentPtr Opposite) :
    Event(Source, TimeStamp),
        _Event(TheEvent),
     _Temporary(Temporary),

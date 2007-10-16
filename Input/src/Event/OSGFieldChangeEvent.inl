@@ -3,6 +3,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+const EventType &FieldChangeEvent::getClassType(void)
+{
+    return _Type;
+}
+
+inline
 Field* FieldChangeEvent::getField(void) const
 {
 	return _Field;

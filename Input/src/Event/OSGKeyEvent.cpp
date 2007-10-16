@@ -3,6 +3,13 @@
 
 OSG_BEGIN_NAMESPACE
 
+EventType KeyEvent::_Type("KeyEvent", "EventType");
+
+const EventType &KeyEvent::getType(void) const
+{
+    return _Type;
+}
+
 std::string KeyEvent::getStringFromKey(Key k, UInt32 Modifier)
 {
     UChar8 ResultChar = getCharFromKey(k,Modifier);

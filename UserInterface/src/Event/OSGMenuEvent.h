@@ -44,7 +44,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuEvent : public Event
 /*=========================  PUBLIC  ===============================*/
 public:
     MenuEvent(FieldContainerPtr Source, Time TimeStamp);
-private:
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
+    
+  private:
+     static EventType _Type;
 };
 
 OSG_END_NAMESPACE

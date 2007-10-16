@@ -44,7 +44,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuEvent : public Event
 /*=========================  PUBLIC  ===============================*/
 public:
     PopupMenuEvent(FieldContainerPtr Source, Time TimeStamp);
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
 private:
+     static EventType _Type;
 };
 
 OSG_END_NAMESPACE

@@ -43,15 +43,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonSelectedEvent : public Event
 {
 /*=========================  PUBLIC  ===============================*/
 public:
-    enum EventType{BUTTONSELECTED=0, BUTTONDESELECTED=1};
+    enum EventEnum{BUTTONSELECTED=0, BUTTONDESELECTED=1};
 
-    EventType getEvent(void) const;
+    EventEnum getEvent(void) const;
     ButtonPtr getButton(void) const;
 
-    ButtonSelectedEvent(FieldContainerPtr Source, Time TimeStamp, EventType TheEvent, ButtonPtr Button);
-private:
-    EventType _Event;
+    ButtonSelectedEvent(FieldContainerPtr Source, Time TimeStamp, EventEnum TheEvent, ButtonPtr Button);
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
+protected:
+    EventEnum _Event;
     ButtonPtr _Button;
+  private:
+     static EventType _Type;
 };
 
 OSG_END_NAMESPACE

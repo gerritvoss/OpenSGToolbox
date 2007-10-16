@@ -36,6 +36,7 @@
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGBaseTypes.h>
+#include "OSGEventType.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -45,6 +46,8 @@ class OSG_INPUTLIB_DLLMAPPING Event
   public:
     FieldContainerPtr getSource(void) const;
     Time getTimeStamp(void) const;
+    
+    virtual const EventType &getType(void) const = 0;
     
   protected:
     Event(FieldContainerPtr Source, Time TimeStamp);

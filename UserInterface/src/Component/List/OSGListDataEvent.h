@@ -42,23 +42,29 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListDataEvent : public Event
 {
     /*=========================  PUBLIC  ===============================*/
   public:
-      enum EventType {CONTENTS_CHANGED, INTERVAL_ADDED, INTERVAL_REMOVED};
+      enum EventEnum {CONTENTS_CHANGED, INTERVAL_ADDED, INTERVAL_REMOVED};
 
       //Returns the lower index of the range.
       UInt32 	getIndex0(void) const;
       //Returns the upper index of the range.
       UInt32 	getIndex1(void) const;
       //Returns the event type.
-      EventType 	getType(void) const;
+      EventEnum 	getEventEnum(void) const;
       //Returns the event type.
       ListModelPtr 	getModel(void) const;
     
-    ListDataEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 Index0, UInt32 Index1, EventType Type, ListModelPtr Model);
-  private:
+    ListDataEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 Index0, UInt32 Index1, EventEnum Type, ListModelPtr Model);
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
+  protected:
      UInt32 _Index0;
      UInt32 _Index1;
-     EventType _Type;
+     EventEnum _EventEnum;
 	 ListModelPtr _Model;
+  private:
+     static EventType _Type;
     
 };
 

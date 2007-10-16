@@ -1,7 +1,7 @@
 # trivial makefile for OpenSG tutorials
 
 # use debug or opt libs?
-LIBTYPE ?= dbg
+LIBTYPE ?= opt
 OSGUSERINTERFACEROOT ?= ../../Builds/Linux
 
 ifeq ($(LIBTYPE),dbg)
@@ -131,7 +131,7 @@ else
 CC = $(shell $(OSGCONFIG) --compiler) 
 endif
 
-CCFLAGS = $(shell $(OSGCONFIG) --cflags --$(LIBTYPE) Base System $(ADDLIB) GLUT) -I$(OSGUSERINTERFACEROOT)/include
+CCFLAGS = $(shell $(OSGCONFIG) --cflags --$(LIBTYPE) Base System $(ADDLIB) GLUT) -I$(OSGUSERINTERFACEROOT)/include -I../../External/Boost
 
 LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB) GLUT) -L$(OSGUSERINTERFACEROOT)/lib -lOSGUserInterface$(DGB_OPT_EXT) -lOSGInput$(DGB_OPT_EXT)
 
@@ -160,6 +160,7 @@ clean:
 	rm -f *.pdb
 	rm -f *.ilk
 	rm -f *.idb
+	rm -f $(PROGS)
 
 Clean: clean
 	rm -f $(PROGS) 

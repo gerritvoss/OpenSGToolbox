@@ -3,6 +3,13 @@
 
 OSG_BEGIN_NAMESPACE
 
+
+inline
+const EventType &TableModelEvent::getClassType(void)
+{
+    return _Type;
+}
+
 inline
 const UInt32& TableModelEvent::getFirstColumn(void) const
 {
@@ -40,7 +47,7 @@ TableModelPtr& TableModelEvent::getModel(void)
 }
 
 inline
-TableModelEvent::TableModelEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow, EventType Type, TableModelPtr Model) :
+TableModelEvent::TableModelEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow, EventEnum Type, TableModelPtr Model) :
     Event(Source, TimeStamp),
     _FirstColumn(FirstColumn),
     _LastColumn(LastColumn),

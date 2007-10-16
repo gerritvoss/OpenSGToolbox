@@ -47,13 +47,12 @@
 #include "OSGUserInterfaceDef.h"
 #include "Component/OSGComponent.h"
 #include "OSGTable.h"
-#include "Editors/OSGAbstractCellEditor.h"
 
 #include <OpenSG/OSGField.h>
 
 OSG_BEGIN_NAMESPACE
 	 
-class OSG_USERINTERFACELIB_DLLMAPPING TableCellEditor : public AbstractCellEditor
+class OSG_USERINTERFACELIB_DLLMAPPING TableCellEditor
 {
 private:
 protected:

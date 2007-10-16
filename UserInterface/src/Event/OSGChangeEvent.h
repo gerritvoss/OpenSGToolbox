@@ -41,13 +41,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING ChangeEvent : public Event
 {
 /*=========================  PUBLIC  ===============================*/
 public:
-    enum EventType{STATE_CHANGED=0};
+    enum EventEnum{STATE_CHANGED=0};
 
-    EventType getEvent(void) const;
+    EventEnum getEvent(void) const;
 
-    ChangeEvent(FieldContainerPtr Source, Time TimeStamp, EventType TheEvent);
-private:
-    EventType _Event;
+    ChangeEvent(FieldContainerPtr Source, Time TimeStamp, EventEnum TheEvent);
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
+protected:
+    EventEnum _Event;
+  private:
+     static EventType _Type;
 };
 
 OSG_END_NAMESPACE

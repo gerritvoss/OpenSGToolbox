@@ -179,7 +179,7 @@ int main(int argc, char **argv)
 	        // given to the Font does not exist; try putting
 	        // random characterssgjs in for setFamily.  
 	        TheFont->setFamily(family[i]);
-	        TheFont->setSize(25);
+	        TheFont->setSize(16);
 	        TheFont->setStyle(TextFace::STYLE_PLAIN);
         endEditCP(TheFont);
         FontMap[family[i]] = TheFont;

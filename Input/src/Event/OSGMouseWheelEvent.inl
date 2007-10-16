@@ -5,6 +5,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+const EventType &MouseWheelEvent::getClassType(void)
+{
+    return _Type;
+}
+
+inline
 Int32 MouseWheelEvent::getWheelRotation(void) const
 {
    return _WheelRotation;

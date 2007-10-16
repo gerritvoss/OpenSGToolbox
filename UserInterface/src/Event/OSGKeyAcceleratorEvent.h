@@ -42,20 +42,26 @@ class OSG_USERINTERFACELIB_DLLMAPPING KeyAcceleratorEvent : public Event
 {
 /*=========================  PUBLIC  ===============================*/
 public:
-    enum EventType{KEYACCELERATOR_TRIGGERED=0};
+    enum EventEnum{KEYACCELERATOR_TRIGGERED=0};
 
-    EventType getEvent(void) const;
+    EventEnum getEvent(void) const;
 	UInt32 getModifiers(void) const;
     KeyEvent::Key getKey(void) const;
     WindowPtr getWindow(void) const;
 
-    KeyAcceleratorEvent(FieldContainerPtr Source, Time TimeStamp, KeyEvent::Key TheKey, UInt32 Modifiers, WindowPtr TheWindow, EventType TheEvent = KEYACCELERATOR_TRIGGERED);
-private:
-    EventType _Event;
+    KeyAcceleratorEvent(FieldContainerPtr Source, Time TimeStamp, KeyEvent::Key TheKey, UInt32 Modifiers, WindowPtr TheWindow, EventEnum TheEvent = KEYACCELERATOR_TRIGGERED);
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
+protected:
+    EventEnum _Event;
     
     KeyEvent::Key _Key;
     UInt32 _Modifiers;
     WindowPtr _Window;
+  private:
+     static EventType _Type;
 };
 
 OSG_END_NAMESPACE

@@ -3,6 +3,13 @@
 
 OSG_BEGIN_NAMESPACE
 
+
+inline
+const EventType &MouseEvent::getClassType(void)
+{
+    return _Type;
+}
+
 inline
 MouseEvent::MouseButton MouseEvent::getButton(void) const
 {

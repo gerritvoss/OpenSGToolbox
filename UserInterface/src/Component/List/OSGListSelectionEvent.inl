@@ -4,6 +4,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+const EventType &ListSelectionEvent::getClassType(void)
+{
+    return _Type;
+}
+
+inline
 UInt32 	ListSelectionEvent::getFirstIndex() const
 {
    return _FirstIndex;

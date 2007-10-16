@@ -49,10 +49,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListSelectionEvent : public Event
    bool 	getValueIsAdjusting() const;
     
     ListSelectionEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 FirstIndex, UInt32 LastIndex, bool ValueIsAdjusting);
-  private:
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
+  protected:
      UInt32 _FirstIndex;
      UInt32 _LastIndex;
      bool _ValueIsAdjusting;
+  private:
+     static EventType _Type;
     
 };
 

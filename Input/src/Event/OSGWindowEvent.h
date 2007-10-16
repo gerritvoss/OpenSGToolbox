@@ -47,8 +47,16 @@ class OSG_INPUTLIB_DLLMAPPING WindowEvent : public Event
     WindowPtr getWindow(void) const;
     
     WindowEvent(FieldContainerPtr Source, Time TimeStamp, WindowPtr TheWindow);
-  private:
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
+    
+  protected:
     WindowPtr _Window;
+  
+  private:
+     static EventType _Type;
     
 };
 

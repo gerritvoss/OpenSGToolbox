@@ -3,7 +3,13 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-ButtonSelectedEvent::EventType ButtonSelectedEvent::getEvent(void) const
+const EventType &ButtonSelectedEvent::getClassType(void)
+{
+    return _Type;
+}
+
+inline
+ButtonSelectedEvent::EventEnum ButtonSelectedEvent::getEvent(void) const
 {
     return _Event;
 }
@@ -15,7 +21,7 @@ ButtonPtr ButtonSelectedEvent::getButton(void) const
 }
 
 inline
-ButtonSelectedEvent::ButtonSelectedEvent(FieldContainerPtr Source, Time TimeStamp, EventType TheEvent, ButtonPtr Button) :
+ButtonSelectedEvent::ButtonSelectedEvent(FieldContainerPtr Source, Time TimeStamp, EventEnum TheEvent, ButtonPtr Button) :
    Event(Source, TimeStamp),
        _Event(TheEvent),
     _Button(Button)

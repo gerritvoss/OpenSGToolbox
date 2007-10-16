@@ -220,11 +220,18 @@ class OSG_INPUTLIB_DLLMAPPING KeyEvent : public Event
 
     WindowPtr getWindow(void) const;
     KeyEvent(FieldContainerPtr Source, Time TimeStamp, Key TheKey, UInt32 Modifiers, WindowPtr TheWindow);
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
 
-  private:
+  protected:
      Key _Key;
      UInt32 _Modifiers;
      WindowPtr _Window;
+     
+  private:
+     static EventType _Type;
 };
 
 OSG_END_NAMESPACE

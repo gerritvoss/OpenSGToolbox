@@ -5,10 +5,13 @@
 #include "Border/OSGEmptyBorder.h"
 #include "Component/Text/OSGTextField.h"
 
+#include <OpenSG/Input/OSGMouseEvent.h>
+
 OSG_BEGIN_NAMESPACE
 
 ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table, Field* value, bool isSelected, UInt32 row, UInt32 column)
 {
+    _Value = value;
 	if(value == NULL){
 		return NullFC;
 	}
@@ -54,32 +57,41 @@ ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table,
 
 void DefaultTableCellEditor::cancelCellEditing(void)
 {
-    //TODO: Implement
     AbstractCellEditor::cancelCellEditing();
 }
 
 Field* DefaultTableCellEditor::getCellEditorValue(void) const
 {
-    //TODO: Implement
-    return NULL;
+    return _Value;
 }
 
 bool DefaultTableCellEditor::isCellEditable(const Event& anEvent) const
 {
-    //TODO: Implement
-    return AbstractCellEditor::isCellEditable(anEvent);
+    if(anEvent.getType() != MouseEvent::getClassType() ||
+       (anEvent.getType() == MouseEvent::getClassType() &&
+        dynamic_cast<const MouseEvent&>(anEvent).getClickCount() >= _ClickCountToStart))
+    {
+        return AbstractCellEditor::isCellEditable(anEvent);
+    }
+    else
+    {
+        return false;
+    }
 }
 
 bool DefaultTableCellEditor::shouldSelectCell(const Event& anEvent) const
 {
-    //TODO: Implement
     return AbstractCellEditor::shouldSelectCell(anEvent);
 }
 
 bool DefaultTableCellEditor::stopCellEditing(void)
 {
-    //TODO: Implement
     return AbstractCellEditor::stopCellEditing();
+}
+
+void DefaultTableCellEditor::actionPerformed(const ActionEvent& e)
+{
+    stopCellEditing();
 }
 
 OSG_END_NAMESPACE

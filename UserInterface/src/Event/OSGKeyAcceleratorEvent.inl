@@ -3,13 +3,19 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-KeyAcceleratorEvent::EventType KeyAcceleratorEvent::getEvent(void) const
+const EventType &KeyAcceleratorEvent::getClassType(void)
+{
+    return _Type;
+}
+
+inline
+KeyAcceleratorEvent::EventEnum KeyAcceleratorEvent::getEvent(void) const
 {
     return _Event;
 }
 
 inline
-KeyAcceleratorEvent::KeyAcceleratorEvent(FieldContainerPtr Source, Time TimeStamp, KeyEvent::Key TheKey, UInt32 Modifiers, WindowPtr TheWindow, EventType TheEvent) :
+KeyAcceleratorEvent::KeyAcceleratorEvent(FieldContainerPtr Source, Time TimeStamp, KeyEvent::Key TheKey, UInt32 Modifiers, WindowPtr TheWindow, EventEnum TheEvent) :
    Event(Source, TimeStamp),
    _Key(TheKey),
    _Modifiers(Modifiers),

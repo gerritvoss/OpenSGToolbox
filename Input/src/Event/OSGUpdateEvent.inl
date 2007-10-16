@@ -3,6 +3,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+const EventType &UpdateEvent::getClassType(void)
+{
+    return _Type;
+}
+
+inline
 Time UpdateEvent::getElapsedTime(void) const
 {
 	return _Elps;

@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+    name="TableColumn"
+	parent="Container"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI Table Header.
+	<Field
+		name="Table"
+		type="TablePtr"
+		cardinality="single"
+        visibility="external"
+        header="Component/Table/OSGTableFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+    </Field>
+    <Field
+          name="ReorderingAllowed"
+          type="bool"
+          cardinality="single"
+          visibility="external"
+          defaultValue="true"
+          access="public"
+          >
+    </Field>
+    <Field
+          name="DefaultMarginDrawObject"
+          type="UIDrawObjectCanvasPtr"
+          cardinality="single"
+          visibility="external"
+          header="Component/OSGUIDrawObjectCanvas.h"
+          defaultValue="NullFC"
+          access="public"
+          >
+    </Field>
+    <Field
+          name="Margins"
+          type="UIDrawObjectCanvasPtr"
+          cardinality="multi"
+          visibility="external"
+          header="Component/OSGUIDrawObjectCanvas.h"
+          access="protected"
+          >
+    </Field>
+    <Field
+          name="ColumnHeaders"
+          type="ComponentPtr"
+          cardinality="multi"
+          visibility="external"
+          header="Component/OSGComponent.h"
+          access="protected"
+          >
+	</Field>
+</FieldContainer>

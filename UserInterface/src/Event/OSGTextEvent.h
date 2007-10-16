@@ -43,13 +43,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextEvent : public Event
 {
 /*=========================  PUBLIC  ===============================*/
 public:
-    enum EventType{TEXT_CHANGED=0};
+    enum EventEnum{TEXT_CHANGED=0};
 
-    EventType getEvent(void) const;
+    EventEnum getEvent(void) const;
 
-    TextEvent(FieldContainerPtr Source, Time TimeStamp, EventType TheEvent);
-private:
-    EventType _Event;
+    TextEvent(FieldContainerPtr Source, Time TimeStamp, EventEnum TheEvent);
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
+protected:
+    EventEnum _Event;
+  private:
+     static EventType _Type;
 };
 
 OSG_END_NAMESPACE

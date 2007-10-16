@@ -49,9 +49,16 @@ class OSG_INPUTLIB_DLLMAPPING FieldChangeEvent : public Event
     FieldDescription* getFieldDescription(void) const;
     
     FieldChangeEvent(FieldContainerPtr Source, Time TimeStamp, Field* TheField, FieldDescription* TheDescription);
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
+    
+  protected:
+     Field* _Field;
+     FieldDescription* _FieldDescription;
   private:
-    Field* _Field;
-    FieldDescription* _FieldDescription;
+     static EventType _Type;
     
 };
 

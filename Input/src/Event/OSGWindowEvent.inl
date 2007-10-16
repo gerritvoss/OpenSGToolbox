@@ -3,6 +3,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+const EventType &WindowEvent::getClassType(void)
+{
+    return _Type;
+}
+
+inline
 WindowPtr WindowEvent::getWindow(void) const
 {
 	return _Window;

@@ -43,17 +43,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING FocusEvent : public Event
 {
 /*=========================  PUBLIC  ===============================*/
 public:
-    enum EventType{FOCUS_GAINED=0, FOCUS_LOST=1};
+    enum EventEnum{FOCUS_GAINED=0, FOCUS_LOST=1};
 
-    EventType getEvent(void) const;
+    EventEnum getEvent(void) const;
     bool getTemporary(void) const;
     ComponentPtr getOpposite(void) const;
 
-    FocusEvent(FieldContainerPtr Source, Time TimeStamp, EventType TheEvent, bool Temporary, ComponentPtr Opposite);
-private:
-    EventType _Event;
+    FocusEvent(FieldContainerPtr Source, Time TimeStamp, EventEnum TheEvent, bool Temporary, ComponentPtr Opposite);
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
+protected:
+    EventEnum _Event;
     bool _Temporary;
     ComponentPtr _Opposite;
+  private:
+     static EventType _Type;
 };
 
 OSG_END_NAMESPACE

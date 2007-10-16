@@ -49,14 +49,17 @@
 #include "Editors/OSGAbstractCellEditor.h"
 #include "OSGTableCellEditor.h"
 
+#include "Event/OSGActionListener.h"
+
 OSG_BEGIN_NAMESPACE
 	 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellEditor : public AbstractCellEditor, public TableCellEditor
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellEditor : public AbstractCellEditor, public TableCellEditor, public ActionListener
 {
 private:
 protected:
     UInt32 _ClickCountToStart;
     ComponentPtr _EditingComponent;
+    Field* _Value;
 public:
     
 	virtual ComponentPtr getTableCellEditorComponent(TablePtr table, Field* value, bool isSelected, UInt32 row, UInt32 column);
@@ -84,6 +87,8 @@ public:
 
     //Specifies the number of clicks needed to start editing.
     void setClickCountToStart(const UInt32& count);
+    
+    virtual void actionPerformed(const ActionEvent& e);
 };
 
 typedef DefaultTableCellEditor* DefaultTableCellEditorPtr;

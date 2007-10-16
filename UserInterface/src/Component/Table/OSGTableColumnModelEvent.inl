@@ -4,6 +4,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+const EventType &TableColumnModelEvent::getClassType(void)
+{
+    return _Type;
+}
+
+inline
 const UInt32& TableColumnModelEvent::getFromIndex(void) const
 {
     return _FromIndex;
@@ -28,7 +34,7 @@ TableColumnModelPtr& TableColumnModelEvent::getModel(void)
 }
 
 inline
-TableColumnModelEvent::TableColumnModelEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 FromIndex, UInt32 ToIndex, EventType Type, TableColumnModelPtr Model) :
+TableColumnModelEvent::TableColumnModelEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 FromIndex, UInt32 ToIndex, EventEnum Type, TableColumnModelPtr Model) :
     Event(Source, TimeStamp),
     _FromIndex(FromIndex),
     _ToIndex(ToIndex),

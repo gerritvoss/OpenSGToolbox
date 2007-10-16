@@ -4,6 +4,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+const EventType &ListDataEvent::getClassType(void)
+{
+    return _Type;
+}
+
+inline
 UInt32 	ListDataEvent::getIndex0(void) const
 {
    return _Index0;
@@ -16,9 +22,9 @@ UInt32 	ListDataEvent::getIndex1(void) const
 }
 
 inline
-ListDataEvent::EventType 	ListDataEvent::getType(void) const
+ListDataEvent::EventEnum 	ListDataEvent::getEventEnum(void) const
 {
-   return _Type;
+   return _EventEnum;
 }
 
 inline
@@ -28,11 +34,11 @@ ListModelPtr ListDataEvent::getModel(void) const
 }
 
 inline
-ListDataEvent::ListDataEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 Index0, UInt32 Index1, EventType Type, ListModelPtr Model)
+ListDataEvent::ListDataEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 Index0, UInt32 Index1, EventEnum Type, ListModelPtr Model)
  : Event(Source, TimeStamp),
    _Index0(Index0),
    _Index1(Index1),
-   _Type(Type),
+   _EventEnum(Type),
    _Model(Model)
 {
 }

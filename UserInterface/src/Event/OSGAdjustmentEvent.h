@@ -41,17 +41,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING AdjustmentEvent : public Event
 {
 /*=========================  PUBLIC  ===============================*/
 public:
-    enum EventType{ADJUSTMENT_VALUE_CHANGED=0, BLOCK_DECREMENT, BLOCK_INCREMENT, UNIT_DECREMENT, UNIT_INCREMENT, TRACK};
+    enum EventEnum{ADJUSTMENT_VALUE_CHANGED=0, BLOCK_DECREMENT, BLOCK_INCREMENT, UNIT_DECREMENT, UNIT_INCREMENT, TRACK};
 
-    EventType getEvent(void) const;
+    EventEnum getEvent(void) const;
     UInt32 getValue(void) const;
     bool getValueIsAdjusting(void) const;
 
-    AdjustmentEvent(FieldContainerPtr Source, Time TimeStamp, EventType TheEvent, UInt32 Value, bool ValueIsAdjusting);
-private:
-    EventType _Event;
+    AdjustmentEvent(FieldContainerPtr Source, Time TimeStamp, EventEnum TheEvent, UInt32 Value, bool ValueIsAdjusting);
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
+protected:
+    EventEnum _Event;
     UInt32 _Value;
     bool _ValueIsAdjusting;
+  private:
+     static EventType _Type;
 };
 
 OSG_END_NAMESPACE

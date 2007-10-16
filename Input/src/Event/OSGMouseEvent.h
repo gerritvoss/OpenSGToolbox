@@ -59,11 +59,19 @@ class OSG_INPUTLIB_DLLMAPPING MouseEvent : public Event
     ViewportPtr getViewport(void) const;
     
     MouseEvent(FieldContainerPtr Source, Time TimeStamp, MouseButton Button, UInt16 ClickCount, Pnt2s Location, ViewportPtr TheViewport);
-  private:
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
+    
+  protected:
     MouseButton _Button;
     UInt16      _ClickCount;
     Pnt2s       _Location;
     ViewportPtr _Viewport;
+    
+  private:
+     static EventType _Type;
     
 };
 

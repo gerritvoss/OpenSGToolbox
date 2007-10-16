@@ -3,13 +3,19 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-TextEvent::EventType TextEvent::getEvent(void) const
+const EventType &TextEvent::getClassType(void)
+{
+    return _Type;
+}
+
+inline
+TextEvent::EventEnum TextEvent::getEvent(void) const
 {
     return _Event;
 }
 
 inline
-TextEvent:: TextEvent(FieldContainerPtr Source, Time TimeStamp, EventType TheEvent) :
+TextEvent:: TextEvent(FieldContainerPtr Source, Time TimeStamp, EventEnum TheEvent) :
    Event(Source, TimeStamp),
        _Event(TheEvent)
 {

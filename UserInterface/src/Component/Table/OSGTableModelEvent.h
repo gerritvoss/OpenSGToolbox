@@ -53,7 +53,8 @@ OSG_BEGIN_NAMESPACE
 	 
 class OSG_USERINTERFACELIB_DLLMAPPING TableModelEvent : public Event
 {
-private:
+  private:
+     static EventType _Type;
 protected:
     UInt32 _FirstColumn,
            _LastColumn,
@@ -65,7 +66,7 @@ protected:
     TableModelPtr _Model;
     
 public:
-    enum EventType {CONTENTS_CHANGED, INTERVAL_ADDED, INTERVAL_REMOVED, HEADER_ROW_CHANGED};
+    enum EventEnum {CONTENTS_CHANGED, INTERVAL_ADDED, INTERVAL_REMOVED, HEADER_ROW_CHANGED};
 
     //Returns the first column that changed
     const UInt32& getFirstColumn(void) const;
@@ -86,7 +87,11 @@ public:
     TableModelPtr& getModel(void);
 
     //Constructor
-    TableModelEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow, EventType Type, TableModelPtr Model);
+    TableModelEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow, EventEnum Type, TableModelPtr Model);
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
 };
 
 OSG_END_NAMESPACE

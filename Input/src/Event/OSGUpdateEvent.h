@@ -45,8 +45,16 @@ class OSG_INPUTLIB_DLLMAPPING UpdateEvent : public Event
     Time getElapsedTime(void) const;
     
     UpdateEvent(FieldContainerPtr Source, Time TimeStamp, Time Elps);
-  private:
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
+    
+  protected:
     Time _Elps;
+  
+  private:
+     static EventType _Type;
     
 };
 

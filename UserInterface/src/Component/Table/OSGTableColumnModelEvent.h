@@ -54,6 +54,8 @@ OSG_BEGIN_NAMESPACE
 class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModelEvent : public Event
 {
 private:
+     static EventType _Type;
+
 protected:
     UInt32 _FromIndex,
            _ToIndex;
@@ -63,7 +65,7 @@ protected:
     TableColumnModelPtr _Model;
     
 public:
-    enum EventType {COLUMN_MOVED, COLUMN_ADDED, COLUMN_REMOVED};
+    enum EventEnum {COLUMN_MOVED, COLUMN_ADDED, COLUMN_REMOVED};
 
     //The index of the column from where it was moved or removed
     const UInt32& getFromIndex(void) const;
@@ -78,7 +80,11 @@ public:
     TableColumnModelPtr& getModel(void);
 
     //Constructor
-    TableColumnModelEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 FromIndex, UInt32 ToIndex, EventType Type, TableColumnModelPtr Model);
+    TableColumnModelEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 FromIndex, UInt32 ToIndex, EventEnum Type, TableColumnModelPtr Model);
+    
+    virtual const EventType &getType(void) const;
+    
+    static const EventType &getClassType(void);
 };
 
 OSG_END_NAMESPACE
