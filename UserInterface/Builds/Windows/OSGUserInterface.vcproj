@@ -21,7 +21,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="&quot;$(OPENSG)\..\include&quot;;..\..\src;..\..\..\Builds\Windows\include"
+				AdditionalIncludeDirectories="..\..\..\External\Boost;&quot;$(OPENSG)\..\include&quot;;..\..\src;..\..\..\Builds\Windows\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEUSERINTERFACELIB"
 				StringPooling="TRUE"
 				MinimalRebuild="TRUE"
@@ -85,7 +85,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;$(OPENSG)\..\include&quot;;..\..\src;..\..\..\Builds\Windows\include"
+				AdditionalIncludeDirectories="..\..\..\External\Boost;&quot;$(OPENSG)\..\include&quot;;..\..\src;..\..\..\Builds\Windows\include"
 				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEUSERINTERFACELIB"
 				StringPooling="TRUE"
 				MinimalRebuild="FALSE"
@@ -889,6 +889,88 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Component\Button\OSGToggleButtonFields.h">
+					</File>
+				</Filter>
+				<Filter
+					Name="Table"
+					Filter="">
+					<File
+						RelativePath="..\..\src\Component\Table\OSGAbstractTableModel.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGAbstractTableModel.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGAbstractTableModel.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGDefaultTableCellEditor.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGDefaultTableCellEditor.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGDefaultTableCellEditor.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGDefaultTableColumnModel.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGDefaultTableColumnModel.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTable.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableCellEditor.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableCellRenderer.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableColumn.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableColumn.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableColumn.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableColumnBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableColumnBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableColumnBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableColumnFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableColumnModel.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableColumnModelEvent.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableColumnModelEvent.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableColumnModelListener.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableModel.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableModelEvent.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableModelEvent.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableModelListener.h">
 					</File>
 				</Filter>
 			</Filter>
@@ -2228,6 +2310,22 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGTextListener.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="Editors"
+				Filter="">
+				<File
+					RelativePath="..\..\src\Editors\OSGAbstractCellEditor.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\Editors\OSGAbstractCellEditor.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Editors\OSGCellEditor.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Editors\OSGCellEditorListener.h">
 				</File>
 			</Filter>
 		</Filter>

@@ -327,7 +327,7 @@ void List::setModel(ListModel* Model)
 }
 
 
-void List::setSelectionModel(ListSelectionModel* SelectionModel)
+void List::setSelectionModel(ListSelectionModelPtr SelectionModel)
 {
 	if(_SelectionModel != NULL)
 	{
@@ -392,7 +392,7 @@ List::List(void) :
     Inherited(),
 		_Model(NULL),
 		_CellGenerator(NULL),
-		_SelectionModel(NULL)
+		_SelectionModel()
 {
 }
 

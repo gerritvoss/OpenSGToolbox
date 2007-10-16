@@ -36,61 +36,87 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGABSTRACTLISTMODEL_H_
-#define _OSGABSTRACTLISTMODEL_H_
+#ifndef _OSG_UI_TABLE_COLUMN_MODEL_H_
+#define _OSG_UI_TABLE_COLUMN_MODEL_H_
+
 #ifdef __sgi
 #pragma once
 #endif
-
+ 
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
-
-#include "OSGListModel.h"
-#include <set>
+#include <OpenSG/OSGField.h>
+#include "OSGTableColumn.h"
+#include "Component/List/OSGListSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
-
-/*! \brief AbstractListModel class. See \ref 
-           PageUserInterfaceAbstractListModel for a description.
-*/
-
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractListModel : public ListModel
+class TableColumnModelListener;
+typedef TableColumnModelListener* TableColumnModelListenerPtr;
+	 
+class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModel
 {
-    /*==========================  PUBLIC  =================================*/
-  public:
-	virtual UInt32 getSize(void);
-	virtual Field* getElementAt(UInt32 index);
+private:
+protected:
+public:
+    //Adds a listener for table column model events.
+    virtual void addColumnModelListener(TableColumnModelListenerPtr l) = 0;
 
-	virtual void addListDataListener(ListDataListenerPtr l);
-	virtual void removeListDataListener(ListDataListenerPtr l);
-	void pushBack(Field* f);
-	void popBack(void);
+    //Removes a listener for table column model events.
+    virtual void removeColumnModelListener(TableColumnModelListenerPtr l) = 0;
 
-    AbstractListModel(void);
-    virtual ~AbstractListModel(void); 
-  protected:
-	std::vector<Field*> _FieldList;
+    //Appends aColumn to the end of the tableColumns array.
+    virtual void addColumn(const TableColumnPtr aColumn) = 0;
 
-    /*==========================  PRIVATE  ================================*/
-  private:
-	typedef std::set<ListDataListenerPtr> ListDataListenerSet;
-	typedef ListDataListenerSet::iterator ListDataListenerSetIter;
-	typedef ListDataListenerSet::const_iterator ListDataListenerSetConstIter;
-	ListDataListenerSet _DataListeners;
+    //Returns the TableColumn object for the column at columnIndex.
+    virtual TableColumnPtr getColumn(const UInt32& columnIndex) const = 0;
 
-	void produceListDataContentsChanged(void);
-	void produceListDataIntervalAdded(UInt32 index0, UInt32 index1);
-	void produceListDataIntervalRemoved(UInt32 index0, UInt32 index1);
+    //Returns the number of columns in the model.
+    virtual UInt32 getColumnCount(void) const = 0;
 
-    void operator =(const AbstractListModel &source);
+    //Returns the index of the column that lies on the horizontal point, xPosition; or -1 if it lies outside the any of the column's bounds.
+    virtual Int32 getColumnIndexAtX(UInt32 xPosition) const = 0;
+
+    //Returns the width between the cells in each column.
+    virtual UInt32 getColumnMargin(void) const = 0;
+
+    //Returns an Enumeration of all the columns in the model.
+    virtual std::vector<TableColumnPtr> getColumns(void) const = 0;
+
+    //Returns true if columns may be selected.
+    virtual bool getColumnSelectionAllowed(void) const = 0;
+
+    //Returns the number of selected columns.
+    virtual UInt32 getSelectedColumnCount(void) const = 0;
+
+    //Returns an array of indicies of all selected columns.
+    virtual std::vector<UInt32> getSelectedColumns(void) const = 0;
+
+    //Returns the current selection model.
+    virtual ListSelectionModelPtr getSelectionModel(void) const = 0;
+
+    //Returns the total width of all the columns.
+    virtual UInt32 getTotalColumnWidth(void) const = 0;
+
+    //Moves the column and its header at columnIndex to newIndex.
+    virtual void moveColumn(const UInt32& columnIndex, const UInt32& newIndex) = 0;
+
+    //Deletes the TableColumn column from the tableColumns array.
+    virtual void removeColumn(TableColumnPtr column) = 0;
+
+    //Sets the TableColumn's column margin to newMargin.
+    virtual void setColumnMargin(const UInt32& newMargin) = 0;
+
+    //Sets whether the columns in this model may be selected.
+    virtual void setColumnSelectionAllowed(const bool& flag) = 0;
+
+    //Sets the selection model.
+    virtual void setSelectionModel(ListSelectionModelPtr newModel) = 0;
+
 };
 
-typedef AbstractListModel *AbstractListModelPtr;
+typedef TableColumnModel* TableColumnModelPtr;
 
 OSG_END_NAMESPACE
 
-#include "OSGAbstractListModel.inl"
+#endif /* _OSG_UI_TABLE_COLUMN_MODEL_H_ */
 
-#define OSGABSTRACTLISTMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
-#endif /* _OSGABSTRACTLISTMODEL_H_ */

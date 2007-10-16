@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dkabala@vrac.iastate.edu                                       *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -12,7 +12,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 2.                               *
+ * by the Free Software Foundation, version 3.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -24,54 +24,35 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSG_UI_CELL_EDITOR_LISTENER_H_
+#define _OSG_UI_CELL_EDITOR_LISTENER_H_
+#ifdef __sgi
+#pragma once
+#endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
-#include "OSGListModel.h"
-#include "OSGListCellGenerator.h"
-#include "OSGListSelectionModel.h"
+#include "Event/OSGChangeEvent.h"
+
+#include <OpenSG/Input/OSGEventListener.h>
 
 OSG_BEGIN_NAMESPACE
 
-
-inline
-void List::setCellGenerator(ListCellGenerator* CellGenerator)
+class OSG_USERINTERFACELIB_DLLMAPPING CellEditorListener : public EventListener
 {
-   _CellGenerator = CellGenerator;
-}
+    /*=========================  PUBLIC  ===============================*/
+  public:
+    //This tells the listeners the editor has canceled editing
+    virtual void editingCanceled(const ChangeEvent& e) = 0;
 
-inline
-ListModel* List::getModel(void) const
-{
-   return _Model;
-}
+    //This tells the listeners the editor has ended editing
+    virtual void editingStopped(const ChangeEvent& e) = 0;
+};
 
-inline
-ListCellGenerator* List::getCellGenerator(void) const
-{
-   return _CellGenerator;
-}
-
-inline
-ListSelectionModelPtr List::getSelectionModel(void) const
-{
-   return _SelectionModel;
-}
+typedef CellEditorListener* CellEditorListenerPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGLIST_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-
+#endif /* _OSG_UI_CELL_EDITOR_LISTENER_H_ */

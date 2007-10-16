@@ -26,6 +26,7 @@
 
 // UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
+#include <OpenSG/UserInterface/OSGUIBackgrounds.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
@@ -38,6 +39,18 @@
 #include <OpenSG/UserInterface/OSGLabel.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
 
+// List header files
+#include <OpenSG/UserInterface/OSGList.h>
+#include <OpenSG/UserInterface/OSGAbstractListModel.h>
+#include <OpenSG/UserInterface/OSGDefaultListCellGenerator.h>
+#include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
+#include <OpenSG/UserInterface/OSGListCellGenerator.h>
+#include <OpenSG/UserInterface/OSGListModel.h>
+
+#include <OpenSG/UserInterface/OSGScrollPanel.h>
+
+#include <map>
+
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -47,6 +60,7 @@ OSG_USING_NAMESPACE
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 bool ExitApp = false;
+std::map<std::string, UIFontPtr> FontMap;
 
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -66,7 +80,46 @@ public:
     }
 };
 
+class FontListCellGenerator : public DefaultListCellGenerator
+{
+    /*==========================  PUBLIC  =================================*/
+  public:
+    virtual ComponentPtr getListCellGeneratorComponent(ListPtr list, Field* value, UInt32 index, bool isSelected, bool cellHasFocus)
+    {
+        LabelPtr TheLabel = Label::Ptr::dcast(
+            DefaultListCellGenerator::getListCellGeneratorComponent(
+            list, value, index, isSelected, cellHasFocus)
+            );
+        //Set the font for the label
+		std::string FontFamilyString;
+		if(value->getType() == SFString::getClassType())
+		{
+			FontFamilyString = dynamic_cast<SFString*>(value)->getValue();
+		}
+		else
+		{
+            FontFamilyString = "Times New Roman";
+		}
 
+        std::map<std::string, UIFontPtr>::iterator FontMapItor = FontMap.find(FontFamilyString);
+        if(FontMapItor != FontMap.end())
+        {
+            beginEditCP(TheLabel, Label::FontFieldMask);
+                TheLabel->setFont((*FontMapItor).second);
+            endEditCP(TheLabel, Label::FontFieldMask);
+        }
+
+        return TheLabel;
+    }
+
+    FontListCellGenerator(void)
+    {
+    }
+
+    virtual ~FontListCellGenerator(void)
+    {
+    }
+};
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
 {
@@ -116,9 +169,20 @@ int main(int argc, char **argv)
 	std::vector<std::string> family;
 	TextFaceFactory::the().getFontFamilies(family);
 	// Display all Fonts available
-	for (int i =0; i<family.size(); ++i)
+	for (unsigned int i =0; i<family.size(); ++i)
 	{
-		std::cout << family[i] << std::endl;
+        //Create the Font
+        UIFontPtr TheFont = UIFont::create();
+        beginEditCP(TheFont);
+	        // Determines Font Family (as determined above)	Note:
+	        // a default setting is included if the Font 
+	        // given to the Font does not exist; try putting
+	        // random characterssgjs in for setFamily.  
+	        TheFont->setFamily(family[i]);
+	        TheFont->setSize(25);
+	        TheFont->setStyle(TextFace::STYLE_PLAIN);
+        endEditCP(TheFont);
+        FontMap[family[i]] = TheFont;
 	}
 	// Set default Font to Times New Roman if Wide
 	// Latin is not included on your machine.  
@@ -196,6 +260,107 @@ int main(int argc, char **argv)
 
 
 	
+	/******************************************************
+
+			Create ListModel.  This is where you set
+			the values for the List.
+
+			After creating an AbstractListModel,
+			do the following to make a list.
+			
+			First, create SFStrings and use the 
+			.setValue("VALUE") function to set their
+			values.  Then, use the .pushBack(&SFStringName)
+			to add them to the List.
+
+			Next, create the CellGenerator and ListSelectionModel
+			defaults.
+
+			Finally, actually create the List.  Set
+			its Model, CellGenerator, and SelectionModel
+			as shown below.  Finally, choose the
+			type of display for the List (choices outlined
+			below).
+
+			
+
+	******************************************************/
+	// Create ListModel Component to add things to
+	AbstractListModel Model;
+
+	std::vector<std::string> FontFamilies;
+	TextFaceFactory::the().getFontFamilies(FontFamilies);
+	// Display all Fonts available
+	SFString* StrField;
+    std::map<std::string, UIFontPtr>::iterator FontMapItor;
+	for (FontMapItor = FontMap.begin(); FontMapItor != FontMap.end() ; ++FontMapItor)
+	{
+	    // Add values to it
+        StrField = new SFString;
+	    StrField->setValue((*FontMapItor).first);
+	    Model.pushBack(StrField);
+	}
+
+	// Create ListCellRenderer and ListSelectionModel
+	// (should always be default).
+	// Note that the DefaultListSelectionModel was
+	// created at the top of this file before
+	// the ActionListeners
+	FontListCellGenerator CellGenerator;
+	//DefaultListSelectionModel SelectionModel;
+
+	// Create Background to be used with the Main Frame
+	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
+	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+	// Create ListPtr
+	ListPtr list = List::create();
+	beginEditCP(list);
+		list->setPreferredSize( Vec2s (200, 300) );
+		list->setBackground(mainBackground);
+        list->setCellLayout(VERTICAL_ALIGNMENT);
+        //list->setCellLayout(HORIZONTAL_ALIGNMENT);
+	endEditCP(list);
+	// Assign the Model, CellGenerator, and SelectionModel
+	// to the List
+	list->setModel(&Model);
+	list->setCellGenerator(&CellGenerator);
+    ListSelectionModelPtr  SelectionModel(new DefaultListSelectionModel);
+    SelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
+	list->setSelectionModel(SelectionModel);
+
+
+	/******************************************************
+
+			Determine the SelectionModel
+			-SINGLE_SELECTION lets you select ONE item
+				via a single mouse click
+			-SINGLE_INTERVAL_SELECTION lets you select
+				one interval via mouse and SHIFT key
+			-MULTIPLE_INTERVAL_SELECTION lets you select
+				via mouse, and SHIFT and CONTRL keys
+
+			Note: this tutorial is currently set up
+			to allow for this to be changed via Buttons
+			with ActionListeners attached to them so
+			this code is commented out
+
+	******************************************************/
+
+	//SelectionModel.setMode(DefaultListSelectionModel::SINGLE_SELECTION);
+	//SelectionModel.setMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
+	//SelectionModel.setMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
+
+    //ScrollPanel
+    ScrollPanelPtr TheScrollPanel = ScrollPanel::create();
+    beginEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+	    TheScrollPanel->setPreferredSize(Vec2s(200,300));
+        TheScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        //TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+    endEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+    TheScrollPanel->setViewComponent(list);
+
 	// Create The Main Frame
 	// Create Background to be used with the Main Frame
 	FramePtr MainFrame = osg::Frame::create();
@@ -203,6 +368,7 @@ int main(int argc, char **argv)
 
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask);
 	   MainFrame->getChildren().addValue(label1);
+	   MainFrame->getChildren().addValue(TheScrollPanel);
 	   MainFrame->setLayout(MainFrameLayout);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask);
 

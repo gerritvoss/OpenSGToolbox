@@ -77,7 +77,7 @@ public:
 
 // Declare the SelectionModel up front to allow for
 // the ActionListeners
-DefaultListSelectionModel SelectionModel;
+ListSelectionModelPtr SelectionModel(new DefaultListSelectionModel());
 ToggleButtonPtr singleButton;
 ToggleButtonPtr singleIntervalButton;
 ToggleButtonPtr multipleIntervalButton;
@@ -97,7 +97,7 @@ public:
 			multipleIntervalButton->setSelected(false);
 		endEditCP(multipleIntervalButton, ToggleButton::SelectedFieldMask);
 
-		SelectionModel.setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
+		SelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
 		
 	}
       virtual void buttonDeselected(const ButtonSelectedEvent& e)
@@ -120,7 +120,7 @@ public:
 			multipleIntervalButton->setSelected(false);
 		endEditCP(multipleIntervalButton, ToggleButton::SelectedFieldMask);
 
-		SelectionModel.setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
+		SelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
 	}
 
    virtual void buttonDeselected(const ButtonSelectedEvent& e)
@@ -143,7 +143,7 @@ public:
 			singleIntervalButton->setSelected(false);
 		endEditCP(singleIntervalButton, ToggleButton::SelectedFieldMask);
 
-		SelectionModel.setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
+		SelectionModel->setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
 	}
 
    virtual void buttonDeselected(const ButtonSelectedEvent& e)
@@ -321,7 +321,7 @@ int main(int argc, char **argv)
 	// to the List
 	list->setModel(&Model);
 	list->setCellGenerator(&CellGenerator);
-	list->setSelectionModel(&SelectionModel);
+	list->setSelectionModel(SelectionModel);
 
 
 	/******************************************************

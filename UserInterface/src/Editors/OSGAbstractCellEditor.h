@@ -4,6 +4,8 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -34,44 +36,58 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSG_UI_ABSTRACT_CELL_EDITOR_H_
+#define _OSG_UI_ABSTRACT_CELL_EDITOR_H_
 
+#ifdef __sgi
+#pragma once
+#endif
+ 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
-#include "OSGListModel.h"
-#include "OSGListCellGenerator.h"
-#include "OSGListSelectionModel.h"
+#include "OSGCellEditor.h"
+#include <set>
 
 OSG_BEGIN_NAMESPACE
-
-
-inline
-void List::setCellGenerator(ListCellGenerator* CellGenerator)
+	 
+class OSG_USERINTERFACELIB_DLLMAPPING AbstractCellEditor : public CellEditor
 {
-   _CellGenerator = CellGenerator;
-}
+private:
+protected:
+	typedef std::set<CellEditorListenerPtr> CellEditorListenerSet;
+    typedef CellEditorListenerSet::iterator CellEditorListenerSetItor;
+    typedef CellEditorListenerSet::const_iterator CellEditorListenerSetConstItor;
+	CellEditorListenerSet _CellEditorListeners;
 
-inline
-ListModel* List::getModel(void) const
-{
-   return _Model;
-}
+    
+	void produceEditingCanceled(void);
+	void produceEditingStopped(void);
+public:
+    //Adds a listener to the list that's notified when the editor stops, or cancels editing.
+    virtual void addCellEditorListener(CellEditorListenerPtr l);
 
-inline
-ListCellGenerator* List::getCellGenerator(void) const
-{
-   return _CellGenerator;
-}
+    //Removes a listener from the list that's notified
+    virtual void removeCellEditorListener(CellEditorListenerPtr l);
 
-inline
-ListSelectionModelPtr List::getSelectionModel(void) const
-{
-   return _SelectionModel;
-}
+    //Tells the editor to cancel editing and not accept any partially edited value.
+    virtual void cancelCellEditing(void);
+
+    //Asks the editor if it can start editing using anEvent.
+    virtual bool isCellEditable(const Event& anEvent) const;
+
+    //Returns true if the editing cell should be selected, false otherwise.
+    virtual bool shouldSelectCell(const Event& anEvent) const;
+
+    //Tells the editor to stop editing and accept any partially edited value as the value of the editor.
+    virtual bool stopCellEditing(void);
+
+};
+
+typedef AbstractCellEditor* AbstractCellEditorPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGLIST_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+#endif /* _OSG_UI_ABSTRACT_CELL_EDITOR_H_ */
+
 

@@ -57,7 +57,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table
 };
 
 typedef Table *TableP;
-typedef TableColumn *TablePtr;
+typedef Table *TablePtr;
 
 OSG_END_NAMESPACE
 

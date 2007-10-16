@@ -47,8 +47,8 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGAbstractListModel.h"
-#include "OSGListDataListener.h"
+#include "OSGAbstractCellEditor.h"
+#include "OSGCellEditorListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -72,39 +72,59 @@ A AbstractListModel.
  *                           Instance methods                              *
 \***************************************************************************/
 
-UInt32 AbstractListModel::getSize(void)
+void AbstractCellEditor::cancelCellEditing(void)
 {
-	return _FieldList.size();
+    produceEditingCanceled();
 }
 
-Field* AbstractListModel::getElementAt(UInt32 index)
+bool AbstractCellEditor::isCellEditable(const Event& anEvent) const
 {
-   return _FieldList[index];
+    return true;
 }
 
-
-void AbstractListModel::addListDataListener(ListDataListenerPtr l)
+bool AbstractCellEditor::shouldSelectCell(const Event& anEvent) const
 {
-    _DataListeners.insert(l);
+    return true;
 }
 
-void AbstractListModel::removeListDataListener(ListDataListenerPtr l)
+bool AbstractCellEditor::stopCellEditing(void)
 {
-   ListDataListenerSetIter EraseIter(_DataListeners.find(l));
-   if(EraseIter != _DataListeners.end())
+    produceEditingStopped();
+    return true;
+}
+
+void AbstractCellEditor::addCellEditorListener(CellEditorListenerPtr l)
+{
+   _CellEditorListeners.insert(l);
+}
+
+void AbstractCellEditor::removeCellEditorListener(CellEditorListenerPtr l)
+{
+   CellEditorListenerSetItor EraseIter(_CellEditorListeners.find(l));
+   if(EraseIter != _CellEditorListeners.end())
    {
-      _DataListeners.erase(EraseIter);
+      _CellEditorListeners.erase(EraseIter);
    }
 }
- 
-void AbstractListModel::pushBack(Field* f){
-	_FieldList.push_back(f);
-	produceListDataIntervalAdded(_FieldList.size()-1,_FieldList.size());
+
+void AbstractCellEditor::produceEditingCanceled(void)
+{
+   ChangeEvent TheEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED);
+   CellEditorListenerSet CellEditorListenerSet(_CellEditorListeners);
+   for(CellEditorListenerSetConstItor SetItor(CellEditorListenerSet.begin()) ; SetItor != CellEditorListenerSet.end() ; ++SetItor)
+   {
+      (*SetItor)->editingCanceled(TheEvent);
+   }
 }
 
-void AbstractListModel::popBack(void){
-	_FieldList.pop_back();
-	produceListDataIntervalRemoved(_FieldList.size(),_FieldList.size());
+void AbstractCellEditor::produceEditingStopped(void)
+{
+   ChangeEvent TheEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED);
+   CellEditorListenerSet CellEditorListenerSet(_CellEditorListeners);
+   for(CellEditorListenerSetConstItor SetItor(CellEditorListenerSet.begin()) ; SetItor != CellEditorListenerSet.end() ; ++SetItor)
+   {
+      (*SetItor)->editingStopped(TheEvent);
+   }
 }
 
 /*-------------------------------------------------------------------------*\
@@ -113,46 +133,7 @@ void AbstractListModel::popBack(void){
 
 /*----------------------- constructors & destructors ----------------------*/
 
-AbstractListModel::AbstractListModel(void)
-{
-}
-
-AbstractListModel::~AbstractListModel(void)
-{
-}
-
-
 /*----------------------------- class specific ----------------------------*/
-
-void AbstractListModel::produceListDataContentsChanged(void)
-{
-	ListDataEvent e(NullFC, getSystemTime(), 0, _FieldList.size()-1, ListDataEvent::CONTENTS_CHANGED, this);
-   ListDataListenerSet DataListenerSet(_DataListeners);
-   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-   {
-		(*SetItor)->contentsChanged(e);
-   }
-}
-
-void AbstractListModel::produceListDataIntervalAdded(UInt32 index0, UInt32 index1)
-{
-	ListDataEvent e(NullFC, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_ADDED, this);
-   ListDataListenerSet DataListenerSet(_DataListeners);
-   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-   {
-		(*SetItor)->intervalAdded(e);
-   }
-}
-
-void AbstractListModel::produceListDataIntervalRemoved(UInt32 index0, UInt32 index1)
-{
-	ListDataEvent e(NullFC, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_REMOVED, this);
-   ListDataListenerSet DataListenerSet(_DataListeners);
-   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-   {
-		(*SetItor)->intervalRemoved(e);
-   }
-}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

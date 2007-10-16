@@ -48,6 +48,8 @@
 #include "OSGListSelectionListener.h"
 #include <OpenSG/OSGFieldContainerPtr.h>
 
+#include <boost/shared_ptr.hpp>
+
 OSG_BEGIN_NAMESPACE
 	 
 class OSG_USERINTERFACELIB_DLLMAPPING ListSelectionModel
@@ -58,68 +60,68 @@ public:
    enum ListSelectionMode {MULTIPLE_INTERVAL_SELECTION, SINGLE_INTERVAL_SELECTION, SINGLE_SELECTION};
 
    //Add a listener to the list that's notified each time a change to the selection occurs.
-   virtual void 	addListSelectionListener(ListSelectionListenerPtr x) = 0;
+   virtual void addListSelectionListener(ListSelectionListenerPtr x) = 0;
 
    //Change the selection to be the set union of the current selection and the indices between index0 and index1 inclusive.
-   virtual void 	addSelectionInterval(UInt32 index0, UInt32 index1) = 0;
+   virtual void addSelectionInterval(UInt32 index0, UInt32 index1) = 0;
    
    //Change the selection to the empty set.
-   virtual void 	clearSelection(void) = 0;
+   virtual void clearSelection(void) = 0;
    
    //Return the first index argument from the most recent call to setSelectionInterval(), addSelectionInterval() or removeSelectionInterval().
-   virtual UInt32 	getAnchorSelectionIndex(void) const = 0;
+   virtual UInt32 getAnchorSelectionIndex(void) const = 0;
    
    //Return the second index argument from the most recent call to setSelectionInterval(), addSelectionInterval() or removeSelectionInterval().
-   virtual UInt32 	getLeadSelectionIndex(void) const = 0;
+   virtual UInt32 getLeadSelectionIndex(void) const = 0;
    
    //Returns the last selected index or -1 if the selection is empty.
-   virtual UInt32 	getMaxSelectionIndex(void) const = 0;
+   virtual UInt32 getMaxSelectionIndex(void) const = 0;
    
    //Returns the first selected index or -1 if the selection is empty.
-   virtual UInt32 	getMinSelectionIndex(void) const = 0;
+   virtual UInt32 getMinSelectionIndex(void) const = 0;
    
    //Returns the current selection mode.
-   virtual UInt32 	getSelectionMode(void) const = 0;
+   virtual UInt32 getSelectionMode(void) const = 0;
    
    //Returns true if the value is undergoing a series of changes.
-   virtual bool 	getValueIsAdjusting(void) const = 0;
+   virtual bool getValueIsAdjusting(void) const = 0;
    
    //Insert length indices beginning before/after index.
-   virtual void 	insertIndexInterval(UInt32 index, UInt32 length, bool before) = 0;
+   virtual void insertIndexInterval(UInt32 index, UInt32 length, bool before) = 0;
    
    //Returns true if the specified index is selected.
-   virtual bool 	isSelectedIndex(UInt32 index) const = 0;
+   virtual bool isSelectedIndex(UInt32 index) const = 0;
    
    //Returns true if no indices are selected.
-   virtual bool 	isSelectionEmpty(void) const = 0;
+   virtual bool isSelectionEmpty(void) const = 0;
    
    //Remove the indices in the interval index0,index1 (inclusive) from the selection model.
-   virtual void 	removeIndexInterval(UInt32 index0, UInt32 index1) = 0;
+   virtual void removeIndexInterval(UInt32 index0, UInt32 index1) = 0;
    
    //Remove a listener from the list that's notified each time a change to the selection occurs.
-   virtual void 	removeListSelectionListener(ListSelectionListenerPtr x) = 0;
+   virtual void removeListSelectionListener(ListSelectionListenerPtr x) = 0;
    
    //Change the selection to be the set difference of the current selection and the indices between index0 and index1 inclusive.
-   virtual void 	removeSelectionInterval(UInt32 index0, UInt32 index1) = 0;
+   virtual void removeSelectionInterval(UInt32 index0, UInt32 index1) = 0;
    
    //Set the anchor selection index.
-   virtual void 	setAnchorSelectionIndex(UInt32 index) = 0;
+   virtual void setAnchorSelectionIndex(UInt32 index) = 0;
    
    //Set the lead selection index.
-   virtual void 	setLeadSelectionIndex(UInt32 index) = 0;
+   virtual void setLeadSelectionIndex(UInt32 index) = 0;
    
    //Change the selection to be between index0 and index1 inclusive.
-   virtual void 	setSelectionInterval(UInt32 index0, UInt32 index1) = 0;
+   virtual void setSelectionInterval(UInt32 index0, UInt32 index1) = 0;
    
    //Set the selection mode.
-   virtual void 	setSelectionMode(UInt32 selectionMode) = 0;
+   virtual void setSelectionMode(UInt32 selectionMode) = 0;
    
    //This property is true if upcoming changes to the value of the model should be considered a single event.
-   virtual void 	setValueIsAdjusting(bool valueIsAdjusting) = 0;
+   virtual void setValueIsAdjusting(bool valueIsAdjusting) = 0;
    
 };
 
-typedef ListSelectionModel* ListSelectionModelPtr;
+typedef boost::shared_ptr<ListSelectionModel> ListSelectionModelPtr;
 
 OSG_END_NAMESPACE
 

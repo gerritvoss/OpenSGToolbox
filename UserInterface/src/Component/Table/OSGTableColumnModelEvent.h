@@ -4,6 +4,8 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -34,44 +36,54 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSG_UI_TABLE_COLUMN_MODEL_EVENT_H_
+#define _OSG_UI_TABLE_COLUMN_MODEL_EVENT_H_
 
+#ifdef __sgi
+#pragma once
+#endif
+ 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
-#include "OSGListModel.h"
-#include "OSGListCellGenerator.h"
-#include "OSGListSelectionModel.h"
+#include <OpenSG/Input/OSGEvent.h>
+#include "OSGTableColumnModel.h"
 
 OSG_BEGIN_NAMESPACE
-
-
-inline
-void List::setCellGenerator(ListCellGenerator* CellGenerator)
+	 
+class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModelEvent : public Event
 {
-   _CellGenerator = CellGenerator;
-}
+private:
+protected:
+    UInt32 _FromIndex,
+           _ToIndex;
 
-inline
-ListModel* List::getModel(void) const
-{
-   return _Model;
-}
+    UInt32 _EventType;
 
-inline
-ListCellGenerator* List::getCellGenerator(void) const
-{
-   return _CellGenerator;
-}
+    TableColumnModelPtr _Model;
+    
+public:
+    enum EventType {COLUMN_MOVED, COLUMN_ADDED, COLUMN_REMOVED};
 
-inline
-ListSelectionModelPtr List::getSelectionModel(void) const
-{
-   return _SelectionModel;
-}
+    //The index of the column from where it was moved or removed
+    const UInt32& getFromIndex(void) const;
+    
+    //The index of the column to where it was moved or added from
+    const UInt32& getToIndex(void) const;
+
+    //Returns the type of event - one of: INSERT, UPDATE and DELETE.
+    const UInt32& getEventType(void) const;
+    
+    //The Model that the Event originated from
+    TableColumnModelPtr& getModel(void);
+
+    //Constructor
+    TableColumnModelEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 FromIndex, UInt32 ToIndex, EventType Type, TableColumnModelPtr Model);
+};
 
 OSG_END_NAMESPACE
 
-#define OSGLIST_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+#include "OSGTableColumnModelEvent.inl"
+
+#endif /* _OSG_UI_TABLE_COLUMN_MODEL_EVENT_H_ */
 

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact: dkabala@vrac.iastate.edu                                       *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -12,7 +12,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 2.                               *
+ * by the Free Software Foundation, version 3.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -24,54 +24,47 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSG_UI_TABLE_COLUMN_MODEL_LISTENER_H_
+#define _OSG_UI_TABLE_COLUMN_MODEL_LISTENER_H_
+#ifdef __sgi
+#pragma once
+#endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
-#include "OSGListModel.h"
-#include "OSGListCellGenerator.h"
-#include "OSGListSelectionModel.h"
+#include "OSGTableColumnModelEvent.h"
+#include "Event/OSGChangeEvent.h"
+#include "Component/List/OSGListSelectionEvent.h"
+
+#include <OpenSG/Input/OSGEventListener.h>
 
 OSG_BEGIN_NAMESPACE
 
-
-inline
-void List::setCellGenerator(ListCellGenerator* CellGenerator)
+class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModelListener : public EventListener
 {
-   _CellGenerator = CellGenerator;
-}
+    /*=========================  PUBLIC  ===============================*/
+  public:
 
-inline
-ListModel* List::getModel(void) const
-{
-   return _Model;
-}
+    //Tells listeners that a column was added to the model.
+    virtual void columnAdded(const TableColumnModelEvent& e) = 0;
 
-inline
-ListCellGenerator* List::getCellGenerator(void) const
-{
-   return _CellGenerator;
-}
+    //Tells listeners that a column was moved due to a margin change.
+    virtual void columnMarginChanged(const ChangeEvent& e) = 0;
 
-inline
-ListSelectionModelPtr List::getSelectionModel(void) const
-{
-   return _SelectionModel;
-}
+    //Tells listeners that a column was repositioned.
+    virtual void columnMoved(const TableColumnModelEvent& e) = 0;
+
+    //Tells listeners that a column was removed from the model.
+    virtual void columnRemoved(const TableColumnModelEvent& e) = 0;
+
+    //Tells listeners that the selection model of the TableColumnModel changed.
+    virtual void columnSelectionChanged(const ListSelectionEvent& e) = 0;
+};
+
+typedef TableColumnModelListener* TableColumnModelListenerPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGLIST_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-
+#endif /* _OSG_UI_TABLE_COLUMN_MODEL_LISTENER_H_ */

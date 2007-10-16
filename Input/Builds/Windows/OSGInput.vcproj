@@ -178,6 +178,18 @@
 					RelativePath="..\..\src\Event\OSGEventProducer.inl">
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGFieldChangeEvent.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGFieldChangeEvent.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGFieldChangeEvent.inl">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGFieldChangeListener.h">
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGKeyAdapter.cpp">
 				</File>
 				<File

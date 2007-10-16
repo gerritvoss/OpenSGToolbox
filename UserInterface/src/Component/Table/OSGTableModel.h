@@ -64,13 +64,13 @@ public:
     virtual void removeTableModelListener(TableModelListenerPtr l) = 0;
     
     //Returns the number of columns in the model.
-    virtual UInt32 getColumnCount() const = 0;
+    virtual UInt32 getColumnCount(void) const = 0;
     
     //Returns the name of the column at columnIndex.
     virtual std::string getColumnName(UInt32 columnIndex) const = 0;
     
     //Returns the number of rows in the model.
-    virtual UInt32 getRowCount() const = 0;
+    virtual UInt32 getRowCount(void) const = 0;
     
     //Returns the value for the cell at columnIndex and rowIndex.
     virtual Field* getValueAt(UInt32 rowIndex, UInt32 columnIndex) const = 0;

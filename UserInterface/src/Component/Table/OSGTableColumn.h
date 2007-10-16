@@ -52,6 +52,7 @@
 #include <OpenSG/OSGField.h>
 
 #include <OpenSG/Input/OSGFieldChangeListener.h>
+#include <OpenSG/Input/OSGFieldChangeEvent.h>
 
 OSG_BEGIN_NAMESPACE
 

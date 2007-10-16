@@ -45,6 +45,8 @@
 #include <OpenSG/UserInterface/OSGUIViewport.h>
 #include <OpenSG/UserInterface/OSGButton.h>
 
+#include <OpenSG/UserInterface/OSGWindowsLookAndFeel.h>
+
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
 // with OSG::, but that would be a bit tedious for this example
@@ -110,6 +112,7 @@ int main(int argc, char **argv)
 
 	// Initialize the LookAndFeelManager to enable default 
 	// settings for the Button
+	LookAndFeelManager::the()->setLookAndFeel(WindowsLookAndFeel::create());
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
     //UIViewport
