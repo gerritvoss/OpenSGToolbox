@@ -93,15 +93,16 @@ void TableColumn::produceFieldChanged(Field* TheField, FieldDescription* TheDesc
 
 TableColumn::TableColumn(void) :
     Inherited(),
-    _TableCellEditor(NULL),
-    _TableCellRenderer(NULL),
-    _HeaderCellRenderer(NULL),
     _HeaderValue(NULL)
 {
 }
 
 TableColumn::TableColumn(const TableColumn &source) :
-    Inherited(source)
+    Inherited(source),
+    _TableCellEditor(source._TableCellEditor),
+    _TableCellRenderer(source._TableCellRenderer),
+    _HeaderCellRenderer(source._HeaderCellRenderer),
+    _HeaderValue(source._HeaderValue)
 {
 }
 

@@ -69,6 +69,7 @@
 
 #include "Component/Table/OSGTableFields.h" // Table type
 #include <OpenSG/OSGBoolFields.h> // ReorderingAllowed type
+#include <OpenSG/OSGBoolFields.h> // ResizingAllowed type
 #include "Component/OSGUIDrawObjectCanvas.h" // DefaultMarginDrawObject type
 #include "Component/OSGUIDrawObjectCanvas.h" // Margins type
 #include "Component/OSGComponent.h" // ColumnHeaders type
@@ -97,7 +98,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeaderBase : public Container
     {
         TableFieldId                   = Inherited::NextFieldId,
         ReorderingAllowedFieldId       = TableFieldId                   + 1,
-        DefaultMarginDrawObjectFieldId = ReorderingAllowedFieldId       + 1,
+        ResizingAllowedFieldId         = ReorderingAllowedFieldId       + 1,
+        DefaultMarginDrawObjectFieldId = ResizingAllowedFieldId         + 1,
         MarginsFieldId                 = DefaultMarginDrawObjectFieldId + 1,
         ColumnHeadersFieldId           = MarginsFieldId                 + 1,
         NextFieldId                    = ColumnHeadersFieldId           + 1
@@ -105,6 +107,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeaderBase : public Container
 
     static const OSG::BitVector TableFieldMask;
     static const OSG::BitVector ReorderingAllowedFieldMask;
+    static const OSG::BitVector ResizingAllowedFieldMask;
     static const OSG::BitVector DefaultMarginDrawObjectFieldMask;
     static const OSG::BitVector MarginsFieldMask;
     static const OSG::BitVector ColumnHeadersFieldMask;
@@ -136,12 +139,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeaderBase : public Container
 
            SFTablePtr          *getSFTable          (void);
            SFBool              *getSFReorderingAllowed(void);
+           SFBool              *getSFResizingAllowed(void);
            SFUIDrawObjectCanvasPtr *getSFDefaultMarginDrawObject(void);
 
            TablePtr            &getTable          (void);
      const TablePtr            &getTable          (void) const;
            bool                &getReorderingAllowed(void);
      const bool                &getReorderingAllowed(void) const;
+           bool                &getResizingAllowed(void);
+     const bool                &getResizingAllowed(void) const;
            UIDrawObjectCanvasPtr &getDefaultMarginDrawObject(void);
      const UIDrawObjectCanvasPtr &getDefaultMarginDrawObject(void) const;
 
@@ -152,6 +158,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeaderBase : public Container
 
      void setTable          ( const TablePtr &value );
      void setReorderingAllowed( const bool &value );
+     void setResizingAllowed( const bool &value );
      void setDefaultMarginDrawObject( const UIDrawObjectCanvasPtr &value );
 
     /*! \}                                                                 */
@@ -197,6 +204,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeaderBase : public Container
 
     SFTablePtr          _sfTable;
     SFBool              _sfReorderingAllowed;
+    SFBool              _sfResizingAllowed;
     SFUIDrawObjectCanvasPtr   _sfDefaultMarginDrawObject;
     MFUIDrawObjectCanvasPtr   _mfMargins;
     MFComponentPtr      _mfColumnHeaders;

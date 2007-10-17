@@ -91,25 +91,25 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumn : public TableColumnBase
     void removeFieldChangeListener(FieldChangeListenerPtr Listener);
     
     //Returns the TableCellEditor used by the JTable to edit values for this column.
-    TableCellEditor* getCellEditor(void) const;
+    TableCellEditorPtr getCellEditor(void) const;
     
     //Returns the TableCellRenderer used by the JTable to draw values for this column.
-    TableCellRenderer* getCellRenderer(void) const;
+    TableCellRendererPtr getCellRenderer(void) const;
     
     //Returns the TableCellRenderer used to draw the header of the TableColumn.
-    TableCellRenderer* getHeaderRenderer(void) const;
+    TableCellRendererPtr getHeaderRenderer(void) const;
     
     //Returns the Object used as the value for the header renderer.
     Field* getHeaderValue(void) const;
     
     //Sets the editor to used by when a cell in this column is edited.
-    void setCellEditor(TableCellEditor* cellEditor);
+    void setCellEditor(TableCellEditorPtr cellEditor);
     
     //Sets the TableCellRenderer used by JTable to draw individual values for this column.
-    void setCellRenderer(TableCellRenderer* cellRenderer);
+    void setCellRenderer(TableCellRendererPtr cellRenderer);
     
     //Sets the TableCellRenderer used to draw the TableColumn's header to headerRenderer.
-    void setHeaderRenderer(TableCellRenderer* headerRenderer);
+    void setHeaderRenderer(TableCellRendererPtr headerRenderer);
     
     //Sets the Object whose string representation will be used as the value for the headerRenderer.
     void setHeaderValue(Field* headerValue);
@@ -134,9 +134,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumn : public TableColumnBase
 
     /*! \}                                                                 */
     
-    TableCellEditor* _TableCellEditor;
-    TableCellRenderer* _TableCellRenderer;
-    TableCellRenderer* _HeaderCellRenderer;
+    TableCellEditorPtr _TableCellEditor;
+    TableCellRendererPtr _TableCellRenderer;
+    TableCellRendererPtr _HeaderCellRenderer;
 
     Field* _HeaderValue;
     

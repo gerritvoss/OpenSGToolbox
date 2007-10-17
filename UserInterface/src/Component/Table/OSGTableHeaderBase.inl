@@ -110,6 +110,13 @@ SFBool *TableHeaderBase::getSFReorderingAllowed(void)
     return &_sfReorderingAllowed;
 }
 
+//! Get the TableHeader::_sfResizingAllowed field.
+inline
+SFBool *TableHeaderBase::getSFResizingAllowed(void)
+{
+    return &_sfResizingAllowed;
+}
+
 //! Get the TableHeader::_sfDefaultMarginDrawObject field.
 inline
 SFUIDrawObjectCanvasPtr *TableHeaderBase::getSFDefaultMarginDrawObject(void)
@@ -172,6 +179,27 @@ inline
 void TableHeaderBase::setReorderingAllowed(const bool &value)
 {
     _sfReorderingAllowed.setValue(value);
+}
+
+//! Get the value of the TableHeader::_sfResizingAllowed field.
+inline
+bool &TableHeaderBase::getResizingAllowed(void)
+{
+    return _sfResizingAllowed.getValue();
+}
+
+//! Get the value of the TableHeader::_sfResizingAllowed field.
+inline
+const bool &TableHeaderBase::getResizingAllowed(void) const
+{
+    return _sfResizingAllowed.getValue();
+}
+
+//! Set the value of the TableHeader::_sfResizingAllowed field.
+inline
+void TableHeaderBase::setResizingAllowed(const bool &value)
+{
+    _sfResizingAllowed.setValue(value);
 }
 
 //! Get the value of the TableHeader::_sfDefaultMarginDrawObject field.

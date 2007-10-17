@@ -39,8 +39,73 @@
 //---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
+
+inline
+TableColumnModelPtr TableHeader::getColumnModel(void) const
+{
+    return _ColumnModel;
+}
+
+inline
+TableCellRendererPtr TableHeader::getDefaultRenderer(void) const
+{
+    return _DefaultTableHeaderRenderer;
+}
+
+inline
+TableColumnPtr TableHeader::getDraggedColumn(void) const
+{
+    return _DraggedColumn;
+}
+
+inline
+Int32 TableHeader::getDraggedDistance(void) const
+{
+    return _DraggedDistance;
+}
+
+inline
+void TableHeader::getHeaderBounds(const UInt32 ColumnIndex, Pnt2s& TopLeft, Pnt2s& BottomRight) const
+{
+    getColumnHeaders()[ColumnIndex]->getBounds(TopLeft, BottomRight);
+}
+
+inline
+TableColumnPtr TableHeader::getResizingColumn(void) const
+{
+    return _ResizingColumn;
+}
+
+inline
+void TableHeader::setDefaultRenderer(TableCellRendererPtr defaultRenderer)
+{
+    _DefaultTableHeaderRenderer = defaultRenderer;
+}
+
+inline
+void TableHeader::setDraggedColumn(TableColumnPtr aColumn)
+{
+    _DraggedColumn = aColumn;
+}
+
+inline
+void TableHeader::setDraggedDistance(const Int32& distance)
+{
+    _DraggedDistance = distance;
+}
+
+inline
+void TableHeader::setResizingColumn(TableColumnPtr aColumn)
+{
+    _ResizingColumn = aColumn;
+}
+
+inline
+TableHeader::ColumnModelListener::ColumnModelListener(TableHeader* TheTableHeader) :
+    _TableHeader(TheTableHeader)
+{
+}
 
 OSG_END_NAMESPACE
 

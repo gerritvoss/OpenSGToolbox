@@ -43,8 +43,12 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
+
+#include "OSGTableColumnModelListener.h"
 
 #include "OSGTableHeaderBase.h"
+#include "OSGTableColumnModel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,6 +81,46 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    
+    virtual void updateLayout(void);
+    
+    //Returns a pointer to the column that point lies in, or -1 if it lies out of bounds.
+    //The point is assumed to be in TableHeader coordinate space
+    TableColumnPtr columnAtPoint(const Pnt2s& point) const;
+    
+    //Returns the TableColumnModel that contains all column information of this table header.
+    TableColumnModelPtr getColumnModel(void) const;
+    
+    //Returns the default renderer used when no headerRenderer is defined by a TableColumn.
+    TableCellRendererPtr getDefaultRenderer(void) const;
+    
+    //Returns the the dragged column, if and only if, a drag is in process, otherwise returns null.
+    TableColumnPtr getDraggedColumn(void) const;
+    
+    //Returns the column's horizontal distance from its original position, if and only if, a drag is in process.
+    Int32 getDraggedDistance(void) const;
+    
+    //Returns the rectangle containing the header tile at column.
+    void getHeaderBounds(const UInt32 ColumnIndex, Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+    
+    //Returns the resizing column.
+    TableColumnPtr getResizingColumn(void) const;
+    
+    //Sets the column model for this table to newModel and registers for listener notifications from the new column model.
+    void setColumnModel(TableColumnModelPtr columnModel);
+    
+    //Sets the default renderer to be used when no headerRenderer is defined by a TableColumn.
+    void setDefaultRenderer(TableCellRendererPtr defaultRenderer);
+    
+    //Sets the header's draggedColumn to aColumn.
+    void setDraggedColumn(TableColumnPtr aColumn);
+    
+    //Sets the header's draggedDistance to distance.
+    void setDraggedDistance(const Int32& distance);
+    
+    //Sets the header's resizingColumn to aColumn.
+    void setResizingColumn(TableColumnPtr aColumn);
+          
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -97,6 +141,46 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
     virtual ~TableHeader(void); 
 
     /*! \}                                                                 */
+    
+    //The TableColumnModel of the table header.
+    TableColumnModelPtr _ColumnModel;
+
+    //The Default Table Header Renderer
+    TableCellRendererPtr _DefaultTableHeaderRenderer;
+    
+    //The index of the column being dragged.
+    TableColumnPtr _DraggedColumn;
+    
+    //The distance from its original position the column has been dragged.
+    Int32 _DraggedDistance;
+    
+    //The index of the column being resized.
+    TableColumnPtr _ResizingColumn;
+
+    //TableColumnModelListener
+	class ColumnModelListener : public TableColumnModelListener
+	{
+	public :
+		ColumnModelListener(TableHeader* TheTableHeader);
+		
+        virtual void columnAdded(const TableColumnModelEvent& e);
+    
+        virtual void columnMarginChanged(const ChangeEvent& e);
+    
+        virtual void columnMoved(const TableColumnModelEvent& e);
+    
+        virtual void columnRemoved(const TableColumnModelEvent& e);
+    
+        virtual void columnSelectionChanged(const ListSelectionEvent& e);
+	protected :
+		TableHeader* _TableHeader;
+	};
+
+	friend class ColumnModelListener;
+
+	TableColumnModelListenerPtr _ColumnModelListener;
+
+	void updateColumnHeadersComponents(void);
     
     /*==========================  PRIVATE  ================================*/
   private:

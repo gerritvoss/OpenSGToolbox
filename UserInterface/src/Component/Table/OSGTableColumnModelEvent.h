@@ -77,7 +77,7 @@ public:
     const UInt32& getEventType(void) const;
     
     //The Model that the Event originated from
-    TableColumnModelPtr& getModel(void);
+    TableColumnModelPtr getModel(void);
 
     //Constructor
     TableColumnModelEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 FromIndex, UInt32 ToIndex, EventEnum Type, TableColumnModelPtr Model);

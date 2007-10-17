@@ -131,11 +131,15 @@ OBJECTS = OSGShadowBorder.o \
 	OSGPopupMenuBase.o \
 	OSGAbstractTableModel.o \
 	OSGTableModelEvent.o \
+	OSGTableBase.o \
+	OSGTableHeaderBase.o \
 	OSGDefaultTableCellRenderer.o \
 	OSGTableColumnModelEvent.o \
 	OSGTableColumn.o \
 	OSGDefaultTableColumnModel.o \
 	OSGTableColumnBase.o \
+	OSGTable.o \
+	OSGTableHeader.o \
 	OSGDefaultTableCellEditor.o \
 	OSGScrollBarBase.o \
 	OSGScrollBar.o \

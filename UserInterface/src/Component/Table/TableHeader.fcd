@@ -32,6 +32,15 @@ A UI Table Header.
           >
     </Field>
     <Field
+          name="ResizingAllowed"
+          type="bool"
+          cardinality="single"
+          visibility="external"
+          defaultValue="true"
+          access="public"
+          >
+    </Field>
+    <Field
           name="DefaultMarginDrawObject"
           type="UIDrawObjectCanvasPtr"
           cardinality="single"

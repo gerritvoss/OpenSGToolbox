@@ -34,11 +34,10 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGTableModelEvent.h"
-
 #include <OpenSG/Input/OSGEventListener.h>
 
 OSG_BEGIN_NAMESPACE
+class TableModelEvent;
 
 class OSG_USERINTERFACELIB_DLLMAPPING TableModelListener : public EventListener
 {

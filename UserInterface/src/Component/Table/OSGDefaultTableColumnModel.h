@@ -50,6 +50,8 @@
 #include "Component/List/OSGListSelectionListener.h"
 #include <set>
 
+#include <boost/shared_ptr.hpp>
+
 OSG_BEGIN_NAMESPACE
 	 
 class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableColumnModel : public TableColumnModel, public ListSelectionListener
@@ -137,6 +139,8 @@ public:
     
     DefaultTableColumnModel(void);
 };
+
+typedef boost::shared_ptr<DefaultTableColumnModel> DefaultTableColumnModelPtr;
 
 OSG_END_NAMESPACE
 

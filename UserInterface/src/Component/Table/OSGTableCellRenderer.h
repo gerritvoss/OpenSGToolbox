@@ -50,6 +50,8 @@
 
 #include <OpenSG/OSGField.h>
 
+#include <boost/shared_ptr.hpp>
+
 OSG_BEGIN_NAMESPACE
 	 
 class OSG_USERINTERFACELIB_DLLMAPPING TableCellRenderer
@@ -61,7 +63,7 @@ public:
 
 };
 
-typedef TableCellRenderer* TableCellRendererPtr;
+typedef boost::shared_ptr<TableCellRenderer> TableCellRendererPtr;
 
 OSG_END_NAMESPACE
 

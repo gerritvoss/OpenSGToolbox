@@ -28,7 +28,7 @@ const UInt32& TableColumnModelEvent::getEventType(void) const
 }
 
 inline
-TableColumnModelPtr& TableColumnModelEvent::getModel(void)
+TableColumnModelPtr TableColumnModelEvent::getModel(void)
 {
     return _Model;
 }

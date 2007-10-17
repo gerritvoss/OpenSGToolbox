@@ -49,6 +49,7 @@
 
 #include "OSGDefaultTableColumnModel.h"
 #include "OSGTableColumnModelListener.h"
+#include "OSGTableColumnModelEvent.h"
 #include "Component/List/OSGListSelectionModel.h"
 #include "Component/List/OSGDefaultListSelectionModel.h"
 
@@ -293,7 +294,7 @@ void DefaultTableColumnModel::removeColumnModelListener(TableColumnModelListener
 
 void DefaultTableColumnModel::produceColumnAdded(const UInt32& ToIndex)
 {
-    TableColumnModelEvent TheEvent(NullFC, getSystemTime(), 0, ToIndex, TableColumnModelEvent::COLUMN_ADDED, this);
+    TableColumnModelEvent TheEvent(NullFC, getSystemTime(), 0, ToIndex, TableColumnModelEvent::COLUMN_ADDED, TableColumnModelPtr(this));
    TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
    for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
@@ -302,7 +303,7 @@ void DefaultTableColumnModel::produceColumnAdded(const UInt32& ToIndex)
 }
 void DefaultTableColumnModel::produceColumnMoved(const UInt32& ToIndex,const UInt32& FromIndex)
 {
-    TableColumnModelEvent TheEvent(NullFC, getSystemTime(), FromIndex, ToIndex, TableColumnModelEvent::COLUMN_MOVED, this);
+    TableColumnModelEvent TheEvent(NullFC, getSystemTime(), FromIndex, ToIndex, TableColumnModelEvent::COLUMN_MOVED, TableColumnModelPtr(this));
    TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
    for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
@@ -312,7 +313,7 @@ void DefaultTableColumnModel::produceColumnMoved(const UInt32& ToIndex,const UIn
 
 void DefaultTableColumnModel::produceColumnRemoved(const UInt32& FromIndex)
 {
-    TableColumnModelEvent TheEvent(NullFC, getSystemTime(), FromIndex, 0, TableColumnModelEvent::COLUMN_REMOVED, this);
+    TableColumnModelEvent TheEvent(NullFC, getSystemTime(), FromIndex, 0, TableColumnModelEvent::COLUMN_REMOVED, TableColumnModelPtr(this));
    TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
    for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {

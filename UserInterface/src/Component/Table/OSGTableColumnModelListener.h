@@ -34,13 +34,16 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGTableColumnModelEvent.h"
 #include "Event/OSGChangeEvent.h"
 #include "Component/List/OSGListSelectionEvent.h"
 
 #include <OpenSG/Input/OSGEventListener.h>
 
+#include <boost/shared_ptr.hpp>
+
 OSG_BEGIN_NAMESPACE
+
+class TableColumnModelEvent;
 
 class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModelListener : public EventListener
 {
@@ -63,7 +66,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModelListener : public EventLis
     virtual void columnSelectionChanged(const ListSelectionEvent& e) = 0;
 };
 
-typedef TableColumnModelListener* TableColumnModelListenerPtr;
+typedef boost::shared_ptr<TableColumnModelListener> TableColumnModelListenerPtr;
 
 OSG_END_NAMESPACE
 

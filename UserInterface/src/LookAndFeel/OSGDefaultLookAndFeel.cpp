@@ -82,6 +82,14 @@
 #include "Component/OSGRotatedComponent.h"
 #include "Component/Container/OSGUIViewport.h"
 
+#include "Component/Table/OSGTableHeader.h"
+#include "Component/Table/OSGTable.h"
+#include "Component/Table/OSGDefaultTableCellRenderer.h"
+#include "Component/Table/OSGDefaultTableColumnModel.h"
+
+#include "Component/List/OSGList.h"
+#include "Component/List/OSGDefaultListSelectionModel.h"
+
 
 OSG_BEGIN_NAMESPACE
 
@@ -1641,9 +1649,15 @@ void DefaultLookAndFeel::init(void)
 
 		//Border
 		DefaultRotatedComponent->setBorder(DefaultRotatedComponentBorder);
+		DefaultRotatedComponent->setRolloverBorder(DefaultRotatedComponentBorder);
+		DefaultRotatedComponent->setFocusedBorder(DefaultRotatedComponentBorder);
+		DefaultRotatedComponent->setDisabledBorder(DefaultRotatedComponentBorder);
 		
 		//Background
 		DefaultRotatedComponent->setBackground(DefaultRotatedComponentBackground);
+		DefaultRotatedComponent->setRolloverBackground(DefaultRotatedComponentBackground);
+		DefaultRotatedComponent->setFocusedBackground(DefaultRotatedComponentBackground);
+		DefaultRotatedComponent->setDisabledBackground(DefaultRotatedComponentBackground);
 		
 		//Opacity
 		DefaultRotatedComponent->setOpacity(1.0);
@@ -1770,6 +1784,140 @@ void DefaultLookAndFeel::init(void)
 
 	TextureUIBackground::getClassType().setPrototype(DefaultTextureBackground);
 
+	
+	//************************** List *****************************
+	//Default RotatedComponentBorder
+	EmptyBorderPtr DefaultListBorder = EmptyBorder::create();
+
+	//Default RotatedComponentBackground
+	EmptyUIBackgroundPtr DefaultListBackground = EmptyUIBackground::create();
+
+	//Default RotatedComponent
+	ListPtr DefaultList = List::create();
+	beginEditCP(DefaultList);
+		DefaultList->setEnabled(true);
+		DefaultList->setVisible(true);
+		
+		DefaultList->setConstraints(NullFC);
+		//Sizes
+		DefaultList->setMinSize(Vec2s(0,0));
+		DefaultList->setMaxSize(Vec2s(32767,32767)); //2^15
+		DefaultList->setPreferredSize(Vec2s(100,100));
+
+		//Border
+		DefaultList->setBorder(DefaultListBorder);
+		DefaultList->setRolloverBorder(DefaultListBorder);
+		DefaultList->setFocusedBorder(DefaultListBorder);
+		DefaultList->setDisabledBorder(DefaultListBorder);
+		
+		//Background
+		DefaultList->setBackground(DefaultListBackground);
+		DefaultList->setRolloverBackground(DefaultListBackground);
+		DefaultList->setFocusedBackground(DefaultListBackground);
+		DefaultList->setDisabledBackground(DefaultListBackground);
+		
+		//Opacity
+		DefaultList->setOpacity(1.0);
+		
+	endEditCP(DefaultRotatedComponent);
+	
+    List::getClassType().setPrototype(DefaultList);
+    
+	
+	//************************** TableHeader *****************************
+	//Default RotatedComponentBorder
+	EmptyBorderPtr DefaultTableHeaderBorder = EmptyBorder::create();
+
+	//Default RotatedComponentBackground
+	EmptyUIBackgroundPtr DefaultTableHeaderBackground = EmptyUIBackground::create();
+
+    //Default TableColumnSelectionModel
+    ListSelectionModelPtr DefaultTableColumnSelectionModel(new DefaultListSelectionModel());
+    
+    //Default TableColumnModel
+    TableColumnModelPtr TheDefaultTableColumnModel(new DefaultTableColumnModel());
+    TheDefaultTableColumnModel->setColumnMargin(1);
+    TheDefaultTableColumnModel->setColumnSelectionAllowed(true);
+    TheDefaultTableColumnModel->setSelectionModel(DefaultTableColumnSelectionModel);
+    
+	//Default RotatedComponent
+	TableHeaderPtr DefaultTableHeader = TableHeader::create();
+	beginEditCP(DefaultTableHeader);
+		DefaultTableHeader->setEnabled(true);
+		DefaultTableHeader->setVisible(true);
+		
+		DefaultTableHeader->setConstraints(NullFC);
+		//Sizes
+		DefaultTableHeader->setMinSize(Vec2s(0,0));
+		DefaultTableHeader->setMaxSize(Vec2s(32767,32767)); //2^15
+		DefaultTableHeader->setPreferredSize(Vec2s(100,100));
+
+		//Border
+		DefaultTableHeader->setBorder(DefaultTableHeaderBorder);
+		DefaultTableHeader->setRolloverBorder(DefaultTableHeaderBorder);
+		DefaultTableHeader->setFocusedBorder(DefaultTableHeaderBorder);
+		DefaultTableHeader->setDisabledBorder(DefaultTableHeaderBorder);
+		
+		//Background
+		DefaultTableHeader->setBackground(DefaultTableHeaderBackground);
+		DefaultTableHeader->setRolloverBackground(DefaultTableHeaderBackground);
+		DefaultTableHeader->setFocusedBackground(DefaultTableHeaderBackground);
+		DefaultTableHeader->setDisabledBackground(DefaultTableHeaderBackground);
+		
+		//Opacity
+		DefaultTableHeader->setOpacity(1.0);
+
+        //Table Values
+		DefaultTableHeader->setTable(NullFC);
+		DefaultTableHeader->setReorderingAllowed(true);
+		DefaultTableHeader->setResizingAllowed(true);
+		DefaultTableHeader->setDefaultMarginDrawObject(NullFC);
+		DefaultTableHeader->setColumnModel(TheDefaultTableColumnModel);
+        DefaultTableHeader->setDefaultRenderer(TableCellRendererPtr(new DefaultTableCellRenderer()));
+		
+	endEditCP(DefaultRotatedComponent);
+	
+    TableHeader::getClassType().setPrototype(DefaultTableHeader);
+    
+	
+	//************************** Table *****************************
+	//Default RotatedComponentBorder
+	EmptyBorderPtr DefaultTableBorder = EmptyBorder::create();
+
+	//Default RotatedComponentBackground
+	EmptyUIBackgroundPtr DefaultTableBackground = EmptyUIBackground::create();
+
+	//Default RotatedComponent
+	TablePtr DefaultTable = Table::create();
+	beginEditCP(DefaultTable);
+		DefaultTable->setEnabled(true);
+		DefaultTable->setVisible(true);
+		
+		DefaultTable->setConstraints(NullFC);
+		//Sizes
+		DefaultTable->setMinSize(Vec2s(0,0));
+		DefaultTable->setMaxSize(Vec2s(32767,32767)); //2^15
+		DefaultTable->setPreferredSize(Vec2s(100,100));
+
+		//Border
+		DefaultTable->setBorder(DefaultTableBorder);
+		DefaultTable->setRolloverBorder(DefaultTableBorder);
+		DefaultTable->setFocusedBorder(DefaultTableBorder);
+		DefaultTable->setDisabledBorder(DefaultTableBorder);
+		
+		//Background
+		DefaultTable->setBackground(DefaultTableBackground);
+		DefaultTable->setRolloverBackground(DefaultTableBackground);
+		DefaultTable->setFocusedBackground(DefaultTableBackground);
+		DefaultTable->setDisabledBackground(DefaultTableBackground);
+		
+		//Opacity
+		DefaultTable->setOpacity(1.0);
+		
+	endEditCP(DefaultRotatedComponent);
+	
+    Table::getClassType().setPrototype(DefaultTable);
+
 	//CompoundBackground and Empty Background don't require prototypes.
 
 
@@ -1796,6 +1944,9 @@ void DefaultLookAndFeel::init(void)
 		getPrototypes().addValue(DefaultScrollPanel);
 		getPrototypes().addValue(DefaultRotatedComponent);
 		getPrototypes().addValue(DefaultUIViewport);
+		getPrototypes().addValue(DefaultList);
+		getPrototypes().addValue(DefaultTableHeader);
+		getPrototypes().addValue(DefaultTable);
 	endEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);
 }
 /*-------------------------------------------------------------------------*\

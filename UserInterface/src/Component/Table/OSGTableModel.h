@@ -47,9 +47,11 @@
 #include "OSGUserInterfaceDef.h"
 #include <OpenSG/OSGField.h>
 
+#include "OSGTableModelListener.h"
+
+#include <boost/shared_ptr.hpp>
+
 OSG_BEGIN_NAMESPACE
-class TableModelListener;
-typedef TableModelListener* TableModelListenerPtr;
 	 
 class OSG_USERINTERFACELIB_DLLMAPPING TableModel
 {
@@ -82,7 +84,7 @@ public:
     virtual void setValueAt(Field* aValue, UInt32 rowIndex, UInt32 columnIndex) = 0;
 };
 
-typedef TableModel* TableModelPtr;
+typedef boost::shared_ptr<TableModel> TableModelPtr;
 
 OSG_END_NAMESPACE
 

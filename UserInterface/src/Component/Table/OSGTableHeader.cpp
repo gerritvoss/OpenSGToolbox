@@ -76,6 +76,91 @@ void TableHeader::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+TableColumnPtr TableHeader::columnAtPoint(const Pnt2s& point) const
+{
+
+    Int32 ColumnIndex = getColumnModel()->getColumnIndexAtX(point.x());
+    if(ColumnIndex == -1)
+    {
+        return NullFC;
+    }
+    else
+    {
+        return getColumnModel()->getColumn(ColumnIndex);
+    }
+}
+
+
+void TableHeader::setColumnModel(TableColumnModelPtr columnModel)
+{
+    if(_ColumnModel.get() != NULL)
+    {
+        _ColumnModel->removeColumnModelListener(_ColumnModelListener);
+    }
+    _ColumnModel = columnModel;
+    updateColumnHeadersComponents();
+    if(_ColumnModel.get() != NULL)
+    {
+        _ColumnModel->addColumnModelListener(_ColumnModelListener);
+    }
+}
+
+void TableHeader::updateColumnHeadersComponents(void)
+{
+
+    std::vector<UInt32> SelectedColumns = _ColumnModel->getSelectedColumns();
+    std::vector<UInt32>::iterator SearchItor;
+    bool isSelected(false);
+    beginEditCP(TableHeaderPtr(this) , ColumnHeadersFieldMask);
+        getColumnHeaders().clear();
+        for(UInt32 i(0) ; i<_ColumnModel->getColumnCount(); ++i)
+        {
+            SearchItor = std::find(SelectedColumns.begin(), SelectedColumns.end(), i);
+            
+            isSelected = (SearchItor != SelectedColumns.end());
+
+            //TODO: Add Column Focusing
+            getColumnHeaders().push_back(
+            _DefaultTableHeaderRenderer->getTableCellRendererComponent(getTable(), _ColumnModel->getColumn(i)->getHeaderValue(), isSelected, false, 0, i)
+            );
+        }
+    endEditCP(TableHeaderPtr(this) , ColumnHeadersFieldMask);
+}
+
+void TableHeader::updateLayout(void)
+{
+	Pnt2s BorderTopLeft, BorderBottomRight;
+	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
+	
+    UInt32 CumulativeWidth(0);
+    UInt32 Height(0);
+    
+    //Use the Model to update the position and sizes of the Headers
+    for(UInt32 i(0) ; i<getColumnHeaders().size() ; ++i)
+    {
+        beginEditCP(getColumnHeaders()[i], PositionFieldMask | SizeFieldMask);
+            getColumnHeaders()[i]->setPosition( Pnt2s(BorderTopLeft.x() + CumulativeWidth, BorderTopLeft.y()) );
+            getColumnHeaders()[i]->setSize( Vec2s(_ColumnModel->getColumn(i)->getWidth(), getColumnHeaders()[i]->getPreferredSize().y()) );
+        endEditCP(getColumnHeaders()[i], PositionFieldMask | SizeFieldMask);
+
+        CumulativeWidth += getColumnHeaders()[i]->getSize().x();
+
+        //Add on the Margin
+        if(i != getColumnHeaders().size()-1)
+        {
+            CumulativeWidth += _ColumnModel->getColumnMargin();
+        }
+    }
+    
+    //Use the Model to update the position and sizes of the Margins
+    //Update My Preferred Size
+	Pnt2s TopLeft, BottomRight;
+	getBounds(TopLeft, BottomRight);
+    beginEditCP(TableHeaderPtr(this), PreferredSizeFieldMask);
+        setPreferredSize(Pnt2s(CumulativeWidth + (BottomRight.x() - TopLeft.x() - BorderTopLeft.x() + BorderBottomRight.x()),
+                               Height + (BottomRight.y() - TopLeft.y() - BorderTopLeft.y() + BorderBottomRight.y())));
+    endEditCP(TableHeaderPtr(this), PreferredSizeFieldMask);
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -83,12 +168,15 @@ void TableHeader::initMethod (void)
 /*----------------------- constructors & destructors ----------------------*/
 
 TableHeader::TableHeader(void) :
-    Inherited()
+    Inherited(),
+    _ColumnModelListener(new ColumnModelListener(this))
 {
 }
 
 TableHeader::TableHeader(const TableHeader &source) :
-    Inherited(source)
+    Inherited(source),
+    _DefaultTableHeaderRenderer(source._DefaultTableHeaderRenderer),
+    _ColumnModelListener(new ColumnModelListener(this))
 {
 }
 
@@ -101,6 +189,23 @@ TableHeader::~TableHeader(void)
 void TableHeader::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & ColumnHeadersFieldMask)
+    {
+        //Update my Children Field
+        beginEditCP(TableHeaderPtr(this) , ChildrenFieldMask);
+            getChildren().clear();
+
+            //Add all of the Header Components
+            for(UInt32 i(0); i<getColumnHeaders().size() ; ++i)
+            {
+                getChildren().push_back(getColumnHeaders()[i]);
+            }
+
+            //TODO: Add all of the Margin Components
+            
+        endEditCP(TableHeaderPtr(this) , ChildrenFieldMask);
+    }
 }
 
 void TableHeader::dump(      UInt32    , 
@@ -109,6 +214,38 @@ void TableHeader::dump(      UInt32    ,
     SLOG << "Dump TableHeader NI" << std::endl;
 }
 
+/*----------------------------- Embeded Classes ---------------------------*/
+
+
+		
+void TableHeader::ColumnModelListener::columnAdded(const TableColumnModelEvent& e)
+{
+    //Update the ComponentPtr vector of the headers
+    _TableHeader->updateColumnHeadersComponents();
+}
+
+void TableHeader::ColumnModelListener::columnMarginChanged(const ChangeEvent& e)
+{
+    //This will require a layout update
+    _TableHeader->updateLayout();
+}
+
+void TableHeader::ColumnModelListener::columnMoved(const TableColumnModelEvent& e)
+{
+    //Update the ComponentPtr vector of the headers
+    _TableHeader->updateColumnHeadersComponents();
+}
+
+void TableHeader::ColumnModelListener::columnRemoved(const TableColumnModelEvent& e)
+{
+    //Update the ComponentPtr vector of the headers
+    _TableHeader->updateColumnHeadersComponents();
+}
+
+void TableHeader::ColumnModelListener::columnSelectionChanged(const ListSelectionEvent& e)
+{
+    //Do nothing
+}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

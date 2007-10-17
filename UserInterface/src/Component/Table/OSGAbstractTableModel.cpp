@@ -49,6 +49,7 @@
 
 #include "OSGAbstractTableModel.h"
 #include "OSGTableModelListener.h"
+#include "OSGTableModelEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -114,7 +115,7 @@ void AbstractTableModel::removeTableModelListener(TableModelListenerPtr l)
 
 void AbstractTableModel::produceContentsHeaderRowChanged(UInt32 FirstColumn, UInt32 LastColumn)
 {
-   TableModelEvent TheEvent(NullFC, getSystemTime(), FirstColumn, LastColumn, 0,0, TableModelEvent::HEADER_ROW_CHANGED, this);
+   TableModelEvent TheEvent(NullFC, getSystemTime(), FirstColumn, LastColumn, 0,0, TableModelEvent::HEADER_ROW_CHANGED, TableModelPtr(this));
    TableModelListenerSet ModelListenerSet(_ModelListeners);
    for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
@@ -124,7 +125,7 @@ void AbstractTableModel::produceContentsHeaderRowChanged(UInt32 FirstColumn, UIn
 
 void AbstractTableModel::produceContentsChanged(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow)
 {
-   TableModelEvent TheEvent(NullFC, getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow, TableModelEvent::CONTENTS_CHANGED, this);
+   TableModelEvent TheEvent(NullFC, getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow, TableModelEvent::CONTENTS_CHANGED, TableModelPtr(this));
    TableModelListenerSet ModelListenerSet(_ModelListeners);
    for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
@@ -134,7 +135,7 @@ void AbstractTableModel::produceContentsChanged(UInt32 FirstColumn, UInt32 LastC
 
 void AbstractTableModel::produceIntervalAdded(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow)
 {
-   TableModelEvent TheEvent(NullFC, getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow, TableModelEvent::INTERVAL_ADDED, this);
+   TableModelEvent TheEvent(NullFC, getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow, TableModelEvent::INTERVAL_ADDED, TableModelPtr(this));
    TableModelListenerSet ModelListenerSet(_ModelListeners);
    for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
@@ -144,7 +145,7 @@ void AbstractTableModel::produceIntervalAdded(UInt32 FirstColumn, UInt32 LastCol
 
 void AbstractTableModel::produceIntervalRemoved(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow)
 {
-   TableModelEvent TheEvent(NullFC, getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow, TableModelEvent::INTERVAL_REMOVED, this);
+   TableModelEvent TheEvent(NullFC, getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow, TableModelEvent::INTERVAL_REMOVED, TableModelPtr(this));
    TableModelListenerSet ModelListenerSet(_ModelListeners);
    for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {

@@ -59,19 +59,19 @@ void TableColumn::removeFieldChangeListener(FieldChangeListenerPtr Listener)
 }
 
 inline
-TableCellEditor* TableColumn::getCellEditor(void) const
+TableCellEditorPtr TableColumn::getCellEditor(void) const
 {
     return _TableCellEditor;
 }
 
 inline
-TableCellRenderer* TableColumn::getCellRenderer(void) const
+TableCellRendererPtr TableColumn::getCellRenderer(void) const
 {
     return _TableCellRenderer;
 }
 
 inline
-TableCellRenderer* TableColumn::getHeaderRenderer(void) const
+TableCellRendererPtr TableColumn::getHeaderRenderer(void) const
 {
     return _HeaderCellRenderer;
 }
@@ -83,19 +83,19 @@ Field* TableColumn::getHeaderValue(void) const
 }
 
 inline
-void TableColumn::setCellEditor(TableCellEditor* cellEditor)
+void TableColumn::setCellEditor(TableCellEditorPtr cellEditor)
 {
     _TableCellEditor = cellEditor;
 }
 
 inline
-void TableColumn::setCellRenderer(TableCellRenderer* cellRenderer)
+void TableColumn::setCellRenderer(TableCellRendererPtr cellRenderer)
 {
     _TableCellRenderer = cellRenderer;
 }
 
 inline
-void TableColumn::setHeaderRenderer(TableCellRenderer* headerRenderer)
+void TableColumn::setHeaderRenderer(TableCellRendererPtr headerRenderer)
 {
     _HeaderCellRenderer = headerRenderer;
 }
