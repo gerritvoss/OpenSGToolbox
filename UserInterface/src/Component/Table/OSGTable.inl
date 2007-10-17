@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -36,88 +34,15 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGTABLE_H_
-#define _OSGTABLE_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGTableBase.h"
-
 OSG_BEGIN_NAMESPACE
-
-/*! \brief Table class. See \ref 
-           PageUserInterfaceTable for a description.
-*/
-
-class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase
-{
-  private:
-
-    typedef TableBase Inherited;
-
-    /*==========================  PUBLIC  =================================*/
-  public:
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
-    /*! \{                                                                 */
-
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
-
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
-
-    /*! \}                                                                 */
-    /*=========================  PROTECTED  ===============================*/
-  protected:
-
-    // Variables should all be in TableBase.
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                  Constructors                                */
-    /*! \{                                                                 */
-
-    Table(void);
-    Table(const Table &source);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Destructors                                */
-    /*! \{                                                                 */
-
-    virtual ~Table(void); 
-
-    /*! \}                                                                 */
-    
-    /*==========================  PRIVATE  ================================*/
-  private:
-
-    friend class FieldContainer;
-    friend class TableBase;
-
-    static void initMethod(void);
-
-    // prohibit default functions (move to 'public' if you need one)
-
-    void operator =(const Table &source);
-};
-
-typedef Table *TableP;
 
 OSG_END_NAMESPACE
 
-#include "OSGTableBase.inl"
-#include "OSGTable.inl"
+#define OSGTABLE_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 
-#define OSGTABLE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
-#endif /* _OSGTABLE_H_ */

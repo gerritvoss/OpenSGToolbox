@@ -36,27 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGTABLE_H_
-#define _OSGTABLE_H_
+#ifndef _OSGTABLEHEADER_H_
+#define _OSGTABLEHEADER_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGTableBase.h"
+#include "OSGTableHeaderBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Table class. See \ref 
-           PageUserInterfaceTable for a description.
+/*! \brief TableHeader class. See \ref 
+           PageUserInterfaceTableHeader for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase
+class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
 {
   private:
 
-    typedef TableBase Inherited;
+    typedef TableHeaderBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -80,21 +80,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in TableBase.
+    // Variables should all be in TableHeaderBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Table(void);
-    Table(const Table &source);
+    TableHeader(void);
+    TableHeader(const TableHeader &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Table(void); 
+    virtual ~TableHeader(void); 
 
     /*! \}                                                                 */
     
@@ -102,22 +102,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase
   private:
 
     friend class FieldContainer;
-    friend class TableBase;
+    friend class TableHeaderBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Table &source);
+    void operator =(const TableHeader &source);
 };
 
-typedef Table *TableP;
+typedef TableHeader *TableHeaderP;
 
 OSG_END_NAMESPACE
 
-#include "OSGTableBase.inl"
-#include "OSGTable.inl"
+#include "OSGTableHeaderBase.inl"
+#include "OSGTableHeader.inl"
 
-#define OSGTABLE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGTABLEHEADER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGTABLE_H_ */
+#endif /* _OSGTABLEHEADER_H_ */

@@ -169,6 +169,12 @@
 					RelativePath="..\..\src\Event\OSGEvent.inl">
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGEventFactory.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGEventFactory.h">
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGEventListener.h">
 				</File>
 				<File
@@ -176,6 +182,15 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGEventProducer.inl">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGEventType.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGEventType.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGEventType.inl">
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGFieldChangeEvent.cpp">
@@ -223,6 +238,9 @@
 					RelativePath="..\..\src\Event\OSGMouseAdapter.h">
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGMouseEvent.cpp">
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGMouseEvent.h">
 				</File>
 				<File
@@ -259,6 +277,9 @@
 					RelativePath="..\..\src\Event\OSGMouseMotionListener.h">
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGMouseWheelEvent.cpp">
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGMouseWheelEvent.h">
 				</File>
 				<File
@@ -277,6 +298,9 @@
 					RelativePath="..\..\src\Event\OSGMouseWheelListener.h">
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGUpdateEvent.cpp">
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGUpdateEvent.h">
 				</File>
 				<File
@@ -290,6 +314,9 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGWindowAdapter.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGWindowEvent.cpp">
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGWindowEvent.h">

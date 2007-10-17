@@ -330,6 +330,9 @@
 						RelativePath="..\..\src\Component\List\OSGListCellGenerator.h">
 					</File>
 					<File
+						RelativePath="..\..\src\Component\List\OSGListDataEvent.cpp">
+					</File>
+					<File
 						RelativePath="..\..\src\Component\List\OSGListDataEvent.h">
 					</File>
 					<File
@@ -343,6 +346,9 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Component\List\OSGListModel.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListSelectionEvent.cpp">
 					</File>
 					<File
 						RelativePath="..\..\src\Component\List\OSGListSelectionEvent.h">
@@ -913,13 +919,37 @@
 						RelativePath="..\..\src\Component\Table\OSGDefaultTableCellEditor.inl">
 					</File>
 					<File
+						RelativePath="..\..\src\Component\Table\OSGDefaultTableCellRenderer.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGDefaultTableCellRenderer.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGDefaultTableCellRenderer.inl">
+					</File>
+					<File
 						RelativePath="..\..\src\Component\Table\OSGDefaultTableColumnModel.cpp">
 					</File>
 					<File
 						RelativePath="..\..\src\Component\Table\OSGDefaultTableColumnModel.h">
 					</File>
 					<File
+						RelativePath="..\..\src\Component\Table\OSGTable.cpp">
+					</File>
+					<File
 						RelativePath="..\..\src\Component\Table\OSGTable.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTable.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableBase.inl">
 					</File>
 					<File
 						RelativePath="..\..\src\Component\Table\OSGTableCellEditor.h">
@@ -952,6 +982,9 @@
 						RelativePath="..\..\src\Component\Table\OSGTableColumnModel.h">
 					</File>
 					<File
+						RelativePath="..\..\src\Component\Table\OSGTableColumnModelEvent.cpp">
+					</File>
+					<File
 						RelativePath="..\..\src\Component\Table\OSGTableColumnModelEvent.h">
 					</File>
 					<File
@@ -961,7 +994,34 @@
 						RelativePath="..\..\src\Component\Table\OSGTableColumnModelListener.h">
 					</File>
 					<File
+						RelativePath="..\..\src\Component\Table\OSGTableFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableHeader.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableHeader.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableHeader.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableHeaderBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableHeaderBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableHeaderBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableHeaderFields.h">
+					</File>
+					<File
 						RelativePath="..\..\src\Component\Table\OSGTableModel.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableModelEvent.cpp">
 					</File>
 					<File
 						RelativePath="..\..\src\Component\Table\OSGTableModelEvent.h">
@@ -2219,6 +2279,9 @@
 			<Filter
 				Name="Event">
 				<File
+					RelativePath="..\..\src\Event\OSGActionEvent.cpp">
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGActionEvent.h">
 				</File>
 				<File
@@ -2226,6 +2289,9 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGActionListener.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGAdjustmentEvent.cpp">
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGAdjustmentEvent.h">
@@ -2237,6 +2303,9 @@
 					RelativePath="..\..\src\Event\OSGAdjustmentListener.h">
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGButtonSelectedEvent.cpp">
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGButtonSelectedEvent.h">
 				</File>
 				<File
@@ -2244,6 +2313,9 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGButtonSelectedListener.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGChangeEvent.cpp">
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGChangeEvent.h">
@@ -2267,6 +2339,9 @@
 					RelativePath="..\..\src\Event\OSGComponentListener.h">
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGFocusEvent.cpp">
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGFocusEvent.h">
 				</File>
 				<File
@@ -2274,6 +2349,9 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGFocusListener.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGKeyAcceleratorEvent.cpp">
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGKeyAcceleratorEvent.h">
@@ -2285,6 +2363,9 @@
 					RelativePath="..\..\src\Event\OSGKeyAcceleratorListener.h">
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGMenuEvent.cpp">
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGMenuEvent.h">
 				</File>
 				<File
@@ -2294,6 +2375,9 @@
 					RelativePath="..\..\src\Event\OSGMenuListener.h">
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGPopupMenuEvent.cpp">
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGPopupMenuEvent.h">
 				</File>
 				<File
@@ -2301,6 +2385,9 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGPopupMenuListener.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGTextEvent.cpp">
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGTextEvent.h">

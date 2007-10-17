@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-    name="TableColumn"
+    name="TableHeader"
 	parent="Container"
 	library="UserInterface"
 	pointerfieldtypes="both"

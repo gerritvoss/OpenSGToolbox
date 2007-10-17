@@ -36,88 +36,103 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGTABLE_H_
-#define _OSGTABLE_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEUSERINTERFACELIB
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGTableBase.h"
+#include "OSGTable.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Table class. See \ref 
-           PageUserInterfaceTable for a description.
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class osg::Table
+A UI Table. 	
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void Table::initMethod (void)
 {
-  private:
+}
 
-    typedef TableBase Inherited;
 
-    /*==========================  PUBLIC  =================================*/
-  public:
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
-    /*! \{                                                                 */
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+/*----------------------- constructors & destructors ----------------------*/
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
+Table::Table(void) :
+    Inherited()
+{
+}
 
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
+Table::Table(const Table &source) :
+    Inherited(source)
+{
+}
 
-    /*! \}                                                                 */
-    /*=========================  PROTECTED  ===============================*/
-  protected:
+Table::~Table(void)
+{
+}
 
-    // Variables should all be in TableBase.
+/*----------------------------- class specific ----------------------------*/
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                  Constructors                                */
-    /*! \{                                                                 */
+void Table::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
 
-    Table(void);
-    Table(const Table &source);
+void Table::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump Table NI" << std::endl;
+}
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Destructors                                */
-    /*! \{                                                                 */
 
-    virtual ~Table(void); 
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
 
-    /*! \}                                                                 */
-    
-    /*==========================  PRIVATE  ================================*/
-  private:
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
 
-    friend class FieldContainer;
-    friend class TableBase;
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
 
-    static void initMethod(void);
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGTABLEBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGTABLEBASE_INLINE_CVSID;
 
-    // prohibit default functions (move to 'public' if you need one)
+    static Char8 cvsid_fields_hpp[] = OSGTABLEFIELDS_HEADER_CVSID;
+}
 
-    void operator =(const Table &source);
-};
-
-typedef Table *TableP;
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
 
 OSG_END_NAMESPACE
 
-#include "OSGTableBase.inl"
-#include "OSGTable.inl"
-
-#define OSGTABLE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
-#endif /* _OSGTABLE_H_ */

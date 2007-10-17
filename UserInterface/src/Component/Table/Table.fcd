@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+    name="Table"
+	parent="Container"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI Table.
+	<Field
+		name="Header"
+		type="TableHeaderPtr"
+		cardinality="single"
+        visibility="external"
+        header="Component/Table/OSGTableHeaderFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+    </Field>
+</FieldContainer>
