@@ -85,7 +85,6 @@
 #include "Component/Table/OSGTableHeader.h"
 #include "Component/Table/OSGTable.h"
 #include "Component/Table/OSGDefaultTableCellRenderer.h"
-#include "Component/Table/OSGDefaultTableColumnModel.h"
 
 #include "Component/List/OSGList.h"
 #include "Component/List/OSGDefaultListSelectionModel.h"
@@ -1830,15 +1829,6 @@ void DefaultLookAndFeel::init(void)
 
 	//Default RotatedComponentBackground
 	EmptyUIBackgroundPtr DefaultTableHeaderBackground = EmptyUIBackground::create();
-
-    //Default TableColumnSelectionModel
-    ListSelectionModelPtr DefaultTableColumnSelectionModel(new DefaultListSelectionModel());
-    
-    //Default TableColumnModel
-    TableColumnModelPtr TheDefaultTableColumnModel(new DefaultTableColumnModel());
-    TheDefaultTableColumnModel->setColumnMargin(1);
-    TheDefaultTableColumnModel->setColumnSelectionAllowed(true);
-    TheDefaultTableColumnModel->setSelectionModel(DefaultTableColumnSelectionModel);
     
 	//Default RotatedComponent
 	TableHeaderPtr DefaultTableHeader = TableHeader::create();
@@ -1872,7 +1862,6 @@ void DefaultLookAndFeel::init(void)
 		DefaultTableHeader->setReorderingAllowed(true);
 		DefaultTableHeader->setResizingAllowed(true);
 		DefaultTableHeader->setDefaultMarginDrawObject(NullFC);
-		DefaultTableHeader->setColumnModel(TheDefaultTableColumnModel);
         DefaultTableHeader->setDefaultRenderer(TableCellRendererPtr(new DefaultTableCellRenderer()));
 		
 	endEditCP(DefaultRotatedComponent);

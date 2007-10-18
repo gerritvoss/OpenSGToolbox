@@ -41,7 +41,7 @@
 #include <OpenSG/UserInterface/OSGTable.h>
 #include <OpenSG/UserInterface/OSGTableHeader.h>
 #include <OpenSG/UserInterface/OSGAbstractListModel.h>
-#include <OpenSG/UserInterface/OSGDefaultListCellGenerator.h>
+#include <OpenSG/UserInterface/OSGDefaultTableColumnModel.h>
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
 
 #include <OpenSG/UserInterface/OSGScrollPanel.h>
@@ -110,12 +110,22 @@ int main(int argc, char **argv)
 	// settings for the Button
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
+    //Default TableColumnSelectionModel
+    ListSelectionModelPtr DefaultTableColumnSelectionModel(new DefaultListSelectionModel());
+    
+    //Default TableColumnModel
+    TableColumnModelPtr TheDefaultTableColumnModel(new DefaultTableColumnModel());
+    TheDefaultTableColumnModel->setColumnMargin(1);
+    TheDefaultTableColumnModel->setColumnSelectionAllowed(true);
+    TheDefaultTableColumnModel->setSelectionModel(DefaultTableColumnSelectionModel);
 
 	// Create TablePtr
 	TableHeaderPtr tableHeader = TableHeader::create();
+    tableHeader->setColumnModel(TheDefaultTableColumnModel);
 	beginEditCP(tableHeader);
 		tableHeader->setPreferredSize( Vec2s (500, 50) );
 	endEditCP(tableHeader);
+
     
     TableColumnPtr ColumnOne = TableColumn::create();
 	SFString StrField1;
@@ -165,11 +175,11 @@ int main(int argc, char **argv)
 
 	// Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 	   // Add things to the MainFrame
 	   MainFrame->getChildren().addValue(tableHeader);
 	   MainFrame->setLayout(MainFrameLayout);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 
 	//Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();

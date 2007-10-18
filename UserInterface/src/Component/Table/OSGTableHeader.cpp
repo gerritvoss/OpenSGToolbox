@@ -125,10 +125,25 @@ void TableHeader::updateColumnHeadersComponents(void)
             );
         }
     endEditCP(TableHeaderPtr(this) , ColumnHeadersFieldMask);
+
+    
+    //beginEditCP(TableHeaderPtr(this) , ChildrenFieldMask);
+        getChildren().clear();
+
+        //Add all of the Header Components
+        for(UInt32 i(0); i<getColumnHeaders().size() ; ++i)
+        {
+            getChildren().push_back(getColumnHeaders()[i]);
+        }
+
+        //TODO: Add all of the Margin Components
+        
+    //endEditCP(TableHeaderPtr(this) , ChildrenFieldMask);
 }
 
 void TableHeader::updateLayout(void)
 {
+    updateColumnHeadersComponents();
 	Pnt2s BorderTopLeft, BorderBottomRight;
 	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
 	
@@ -143,6 +158,7 @@ void TableHeader::updateLayout(void)
             getColumnHeaders()[i]->setSize( Vec2s(_ColumnModel->getColumn(i)->getWidth(), getColumnHeaders()[i]->getPreferredSize().y()) );
         endEditCP(getColumnHeaders()[i], PositionFieldMask | SizeFieldMask);
 
+        Height = osgMax<UInt32>(Height, getColumnHeaders()[i]->getSize().y());
         CumulativeWidth += getColumnHeaders()[i]->getSize().x();
 
         //Add on the Margin
@@ -156,10 +172,15 @@ void TableHeader::updateLayout(void)
     //Update My Preferred Size
 	Pnt2s TopLeft, BottomRight;
 	getBounds(TopLeft, BottomRight);
-    beginEditCP(TableHeaderPtr(this), PreferredSizeFieldMask);
-        setPreferredSize(Pnt2s(CumulativeWidth + (BottomRight.x() - TopLeft.x() - BorderTopLeft.x() + BorderBottomRight.x()),
-                               Height + (BottomRight.y() - TopLeft.y() - BorderTopLeft.y() + BorderBottomRight.y())));
-    endEditCP(TableHeaderPtr(this), PreferredSizeFieldMask);
+
+    Vec2s NewPreferredSize(CumulativeWidth + (BottomRight.x() - TopLeft.x() - BorderTopLeft.x() + BorderBottomRight.x()),
+                               Height + (BottomRight.y() - TopLeft.y() - BorderTopLeft.y() + BorderBottomRight.y()));
+    if(NewPreferredSize != getPreferredSize())
+    {
+        beginEditCP(TableHeaderPtr(this), PreferredSizeFieldMask);
+            setPreferredSize(NewPreferredSize);
+        endEditCP(TableHeaderPtr(this), PreferredSizeFieldMask);
+    }
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -175,37 +196,29 @@ TableHeader::TableHeader(void) :
 
 TableHeader::TableHeader(const TableHeader &source) :
     Inherited(source),
+    _ColumnModel(source._ColumnModel),
     _DefaultTableHeaderRenderer(source._DefaultTableHeaderRenderer),
     _ColumnModelListener(new ColumnModelListener(this))
 {
+    if(_ColumnModel.get() != NULL)
+    {
+        _ColumnModel->addColumnModelListener(_ColumnModelListener);
+    }
 }
 
 TableHeader::~TableHeader(void)
 {
+    if(_ColumnModel.get() != NULL)
+    {
+        _ColumnModel->removeColumnModelListener(_ColumnModelListener);
+    }
 }
 
 /*----------------------------- class specific ----------------------------*/
 
 void TableHeader::changed(BitVector whichField, UInt32 origin)
-{
+{   
     Inherited::changed(whichField, origin);
-
-    if(whichField & ColumnHeadersFieldMask)
-    {
-        //Update my Children Field
-        beginEditCP(TableHeaderPtr(this) , ChildrenFieldMask);
-            getChildren().clear();
-
-            //Add all of the Header Components
-            for(UInt32 i(0); i<getColumnHeaders().size() ; ++i)
-            {
-                getChildren().push_back(getColumnHeaders()[i]);
-            }
-
-            //TODO: Add all of the Margin Components
-            
-        endEditCP(TableHeaderPtr(this) , ChildrenFieldMask);
-    }
 }
 
 void TableHeader::dump(      UInt32    , 
@@ -221,7 +234,7 @@ void TableHeader::dump(      UInt32    ,
 void TableHeader::ColumnModelListener::columnAdded(const TableColumnModelEvent& e)
 {
     //Update the ComponentPtr vector of the headers
-    _TableHeader->updateColumnHeadersComponents();
+    _TableHeader->updateLayout();
 }
 
 void TableHeader::ColumnModelListener::columnMarginChanged(const ChangeEvent& e)
@@ -233,13 +246,13 @@ void TableHeader::ColumnModelListener::columnMarginChanged(const ChangeEvent& e)
 void TableHeader::ColumnModelListener::columnMoved(const TableColumnModelEvent& e)
 {
     //Update the ComponentPtr vector of the headers
-    _TableHeader->updateColumnHeadersComponents();
+    _TableHeader->updateLayout();
 }
 
 void TableHeader::ColumnModelListener::columnRemoved(const TableColumnModelEvent& e)
 {
     //Update the ComponentPtr vector of the headers
-    _TableHeader->updateColumnHeadersComponents();
+    _TableHeader->updateLayout();
 }
 
 void TableHeader::ColumnModelListener::columnSelectionChanged(const ListSelectionEvent& e)
