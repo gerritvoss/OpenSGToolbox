@@ -1,7 +1,7 @@
 # trivial makefile for OpenSG tutorials
 
 # use debug or opt libs?
-LIBTYPE ?= opt
+LIBTYPE ?= dbg
 OSGUSERINTERFACEROOT ?= ../../Builds/Linux
 
 ifeq ($(LIBTYPE),dbg)

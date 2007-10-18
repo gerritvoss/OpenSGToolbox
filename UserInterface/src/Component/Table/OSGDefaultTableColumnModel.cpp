@@ -352,6 +352,13 @@ DefaultTableColumnModel::DefaultTableColumnModel(void) :
     _SelectionModel(),
     _TotalColumnWidth(0)
 {
+    std::cout << "Creating DefaultTableColumnModel " << std::endl;
+}
+
+
+DefaultTableColumnModel::~DefaultTableColumnModel(void)
+{
+    std::cout << "Deleting DefaultTableColumnModel " << getColumnCount() << std::endl;
 }
 /*----------------------------- class specific ----------------------------*/
 

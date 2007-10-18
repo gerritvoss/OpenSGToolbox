@@ -132,6 +132,18 @@ int main(int argc, char **argv)
 	StrField1.setValue("Red");
     ColumnOne->setHeaderValue(&StrField1);
     tableHeader->getColumnModel()->addColumn(ColumnOne);
+    
+    TableColumnPtr ColumnTwo = TableColumn::create();
+	SFString StrField2;
+	StrField2.setValue("Roses");
+    ColumnTwo->setHeaderValue(&StrField2);
+    tableHeader->getColumnModel()->addColumn(ColumnTwo);
+    
+    TableColumnPtr ColumnThree = TableColumn::create();
+	SFString StrField3;
+	StrField3.setValue("Blue");
+    ColumnThree->setHeaderValue(&StrField3);
+    tableHeader->getColumnModel()->addColumn(ColumnThree);
 
 
 	/******************************************************

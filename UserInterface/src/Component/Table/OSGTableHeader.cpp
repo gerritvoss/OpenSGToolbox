@@ -173,8 +173,8 @@ void TableHeader::updateLayout(void)
 	Pnt2s TopLeft, BottomRight;
 	getBounds(TopLeft, BottomRight);
 
-    Vec2s NewPreferredSize(CumulativeWidth + (BottomRight.x() - TopLeft.x() - BorderTopLeft.x() + BorderBottomRight.x()),
-                               Height + (BottomRight.y() - TopLeft.y() - BorderTopLeft.y() + BorderBottomRight.y()));
+    Vec2s NewPreferredSize(CumulativeWidth + (BottomRight.x() - TopLeft.x() - BorderBottomRight.x() + BorderTopLeft.x()),
+                               Height + (BottomRight.y() - TopLeft.y() - BorderBottomRight.y() + BorderTopLeft.y()));
     if(NewPreferredSize != getPreferredSize())
     {
         beginEditCP(TableHeaderPtr(this), PreferredSizeFieldMask);

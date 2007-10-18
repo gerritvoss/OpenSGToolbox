@@ -50,11 +50,11 @@
 #include "Component/List/OSGListSelectionModel.h"
 #include "OSGTableColumnModelListener.h"
 
-#include <boost/shared_ptr.hpp>
+#include "Util/OSGIntrusivePtrImplBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModel
+class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModel : public IntrusivePtrImplBase
 {
 private:
 protected:
@@ -115,7 +115,8 @@ public:
 
 };
 
-typedef boost::shared_ptr<TableColumnModel> TableColumnModelPtr;
+typedef boost::intrusive_ptr<TableColumnModel> TableColumnModelPtr;
+//typedef RefPtr<TableColumnModel> TableColumnModelPtr;
 
 OSG_END_NAMESPACE
 
