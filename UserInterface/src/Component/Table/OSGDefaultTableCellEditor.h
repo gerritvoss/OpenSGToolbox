@@ -51,8 +51,6 @@
 
 #include "Event/OSGActionListener.h"
 
-#include <boost/shared_ptr.hpp>
-
 OSG_BEGIN_NAMESPACE
 	 
 class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellEditor : public AbstractCellEditor, public TableCellEditor, public ActionListener
@@ -93,7 +91,7 @@ public:
     virtual void actionPerformed(const ActionEvent& e);
 };
 
-typedef boost::shared_ptr<DefaultTableCellEditor> DefaultTableCellEditorPtr;
+typedef boost::intrusive_ptr<DefaultTableCellEditor> DefaultTableCellEditorPtr;
 
 OSG_END_NAMESPACE
 

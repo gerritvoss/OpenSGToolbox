@@ -5,7 +5,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGToolboxDef.h"
 
 #include <boost/detail/atomic_count.hpp>
 #include <boost/intrusive_ptr.hpp>
@@ -17,13 +17,13 @@ class IntrusivePtrImplBase;
 OSG_END_NAMESPACE
 
 namespace boost{
-void intrusive_ptr_add_ref(osg::IntrusivePtrImplBase * p);
-void intrusive_ptr_release(osg::IntrusivePtrImplBase * p);
+void OSG_TOOLBOXLIB_DLLMAPPING intrusive_ptr_add_ref(osg::IntrusivePtrImplBase * p);
+void OSG_TOOLBOXLIB_DLLMAPPING intrusive_ptr_release(osg::IntrusivePtrImplBase * p);
 }
 
 OSG_BEGIN_NAMESPACE
 
-class IntrusivePtrImplBase
+class OSG_TOOLBOXLIB_DLLMAPPING IntrusivePtrImplBase
 {
     protected:
         boost::detail::atomic_count _ReferenceCount;

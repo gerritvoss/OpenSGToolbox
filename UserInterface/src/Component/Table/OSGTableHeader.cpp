@@ -46,6 +46,10 @@
 #define OSG_COMPILEUSERINTERFACELIB
 
 #include <OpenSG/OSGConfig.h>
+#include "UIDrawingSurface/OSGUIDrawingSurface.h"
+#include "Component/Container/OSGFrame.h"
+#include <OpenSG/Input/OSGWindowEventProducer.h>
+#include "Util/OSGUIDrawUtils.h"
 
 #include "OSGTableHeader.h"
 
@@ -95,13 +99,13 @@ void TableHeader::setColumnModel(TableColumnModelPtr columnModel)
 {
     if(_ColumnModel.get() != NULL)
     {
-        _ColumnModel->removeColumnModelListener(_ColumnModelListener);
+        _ColumnModel->removeColumnModelListener(&_ColumnModelListener);
     }
     _ColumnModel = columnModel;
     updateColumnHeadersComponents();
     if(_ColumnModel.get() != NULL)
     {
-        _ColumnModel->addColumnModelListener(_ColumnModelListener);
+        _ColumnModel->addColumnModelListener(&_ColumnModelListener);
     }
 }
 
@@ -182,6 +186,69 @@ void TableHeader::updateLayout(void)
         endEditCP(TableHeaderPtr(this), PreferredSizeFieldMask);
     }
 }
+
+void TableHeader::mouseExited(const MouseEvent& e)
+{
+    if(getResizingAllowed())
+    {
+        checkMouseMargins(e);
+    }
+    Inherited::mouseExited(e);
+}
+
+void TableHeader::mousePressed(const MouseEvent& e)
+{
+    if(getResizingAllowed())
+    {
+		Pnt2s MousePosInComponent = ViewportToComponent(e.getLocation(), TableHeaderPtr(this), e.getViewport());
+        UInt32 CumulativeHeaderWidth(0);
+        for(UInt32 i(0) ; i<getColumnHeaders().size() ; ++i)
+        {
+            CumulativeHeaderWidth += getColumnHeaders()[i]->getSize().x();
+            if(MousePosInComponent.x() >= CumulativeHeaderWidth - getResizingCursorDriftAllowance() &&
+               MousePosInComponent.x() <= CumulativeHeaderWidth + _ColumnModel->getColumnMargin() + getResizingCursorDriftAllowance())
+            {
+                getParentFrame()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_MarginDraggedListener));
+                getParentFrame()->getDrawingSurface()->getEventProducer()->addMouseListener(&(_MarginDraggedListener));
+                _ResizingColumn = i;
+                return;
+            }
+            CumulativeHeaderWidth += _ColumnModel->getColumnMargin();
+        }
+    }
+    Inherited::mousePressed(e);
+}
+
+void TableHeader::mouseMoved(const MouseEvent& e)
+{
+    if(getResizingAllowed())
+    {
+        checkMouseMargins(e);
+    }
+    Inherited::mouseMoved(e);
+}
+
+void TableHeader::checkMouseMargins(const MouseEvent& e)
+{
+    if(isContainedClipBounds(e.getLocation(), TableHeaderPtr(this)))
+    {
+		Pnt2s MousePosInComponent = ViewportToComponent(e.getLocation(), TableHeaderPtr(this), e.getViewport());
+        UInt32 CumulativeHeaderWidth(0);
+        for(UInt32 i(0) ; i<getColumnHeaders().size() ; ++i)
+        {
+            CumulativeHeaderWidth += getColumnHeaders()[i]->getSize().x();
+            if(MousePosInComponent.x() >= CumulativeHeaderWidth - getResizingCursorDriftAllowance() &&
+               MousePosInComponent.x() <= CumulativeHeaderWidth + _ColumnModel->getColumnMargin() + getResizingCursorDriftAllowance())
+            {
+                getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_RESIZE_W_TO_E);
+                return;
+            }
+            CumulativeHeaderWidth += _ColumnModel->getColumnMargin();
+        }
+    }
+    getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -190,7 +257,8 @@ void TableHeader::updateLayout(void)
 
 TableHeader::TableHeader(void) :
     Inherited(),
-    _ColumnModelListener(new ColumnModelListener(this))
+    _ColumnModelListener(this),
+    _MarginDraggedListener(this)
 {
 }
 
@@ -198,11 +266,12 @@ TableHeader::TableHeader(const TableHeader &source) :
     Inherited(source),
     _ColumnModel(source._ColumnModel),
     _DefaultTableHeaderRenderer(source._DefaultTableHeaderRenderer),
-    _ColumnModelListener(new ColumnModelListener(this))
+    _ColumnModelListener(this),
+    _MarginDraggedListener(this)
 {
     if(_ColumnModel.get() != NULL)
     {
-        _ColumnModel->addColumnModelListener(_ColumnModelListener);
+        _ColumnModel->addColumnModelListener(&_ColumnModelListener);
     }
 }
 
@@ -210,7 +279,7 @@ TableHeader::~TableHeader(void)
 {
     if(_ColumnModel.get() != NULL)
     {
-        _ColumnModel->removeColumnModelListener(_ColumnModelListener);
+        _ColumnModel->removeColumnModelListener(&_ColumnModelListener);
     }
 }
 
@@ -258,6 +327,66 @@ void TableHeader::ColumnModelListener::columnRemoved(const TableColumnModelEvent
 void TableHeader::ColumnModelListener::columnSelectionChanged(const ListSelectionEvent& e)
 {
     //Do nothing
+}
+
+void TableHeader::MarginDraggedListener::mouseMoved(const MouseEvent& e)
+{
+    //Do nothing
+}
+
+void TableHeader::MarginDraggedListener::mouseDragged(const MouseEvent& e)
+{
+	if(e.getButton() == e.BUTTON1)
+	{
+		Pnt2s MousePosInComponent = ViewportToComponent(e.getLocation(), TableHeaderPtr(_TableHeader), e.getViewport());
+
+
+        Int32 NewWidth(MousePosInComponent.x() - _TableHeader->getColumnHeaders()[_TableHeader->_ResizingColumn]->getPosition().x());
+
+        if(NewWidth <= 0 || NewWidth < _TableHeader->_ColumnModel->getColumn(_TableHeader->_ResizingColumn)->getMinWidth())
+        {
+            NewWidth = _TableHeader->_ColumnModel->getColumn(_TableHeader->_ResizingColumn)->getMinWidth();
+        }
+
+        if(NewWidth > _TableHeader->_ColumnModel->getColumn(_TableHeader->_ResizingColumn)->getMaxWidth())
+        {
+            NewWidth = _TableHeader->_ColumnModel->getColumn(_TableHeader->_ResizingColumn)->getMaxWidth();
+        }
+        
+		//Get the new desired center for this margin
+	    _TableHeader->_ColumnModel->getColumn(_TableHeader->_ResizingColumn)->setWidth(NewWidth);
+	    _TableHeader->updateLayout();
+	}
+}
+
+void TableHeader::MarginDraggedListener::mouseClicked(const MouseEvent& e)
+{
+    //Do nothing
+}
+
+void TableHeader::MarginDraggedListener::mouseEntered(const MouseEvent& e)
+{
+    //Do nothing
+}
+
+void TableHeader::MarginDraggedListener::mouseExited(const MouseEvent& e)
+{
+    //Do nothing
+}
+
+void TableHeader::MarginDraggedListener::mousePressed(const MouseEvent& e)
+{
+    //Do nothing
+}
+
+void TableHeader::MarginDraggedListener::mouseReleased(const MouseEvent& e)
+{
+	if(_TableHeader->getParentFrame() != NullFC)
+	{
+        _TableHeader->_ResizingColumn = -1;
+		_TableHeader->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_TableHeader->_MarginDraggedListener));
+		_TableHeader->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_TableHeader->_MarginDraggedListener));
+	}
 }
 
 /*------------------------------------------------------------------------*/

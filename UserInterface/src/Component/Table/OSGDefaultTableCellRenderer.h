@@ -47,8 +47,6 @@
 
 #include "OSGTableCellRenderer.h"
 
-#include <boost/shared_ptr.hpp>
-
 OSG_BEGIN_NAMESPACE
 
 /*! \brief DefaultTableCellRenderer class. See \ref
@@ -82,7 +80,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellRenderer : public TableCel
   private:
 };
 
-typedef boost::shared_ptr<DefaultTableCellRenderer> DefaultTableCellRendererPtr;
+typedef boost::intrusive_ptr<DefaultTableCellRenderer> DefaultTableCellRendererPtr;
 
 OSG_END_NAMESPACE
 

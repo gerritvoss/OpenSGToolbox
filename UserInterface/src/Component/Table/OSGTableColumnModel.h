@@ -50,7 +50,7 @@
 #include "Component/List/OSGListSelectionModel.h"
 #include "OSGTableColumnModelListener.h"
 
-#include "Util/OSGIntrusivePtrImplBase.h"
+#include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -116,7 +116,6 @@ public:
 };
 
 typedef boost::intrusive_ptr<TableColumnModel> TableColumnModelPtr;
-//typedef RefPtr<TableColumnModel> TableColumnModelPtr;
 
 OSG_END_NAMESPACE
 

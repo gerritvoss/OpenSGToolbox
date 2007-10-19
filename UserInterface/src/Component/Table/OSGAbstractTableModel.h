@@ -49,8 +49,6 @@
 #include "OSGTableModel.h"
 #include <set>
 
-#include <boost/shared_ptr.hpp>
-
 OSG_BEGIN_NAMESPACE
 	 
 class OSG_USERINTERFACELIB_DLLMAPPING AbstractTableModel : public TableModel
@@ -85,7 +83,7 @@ public:
     
 };
 
-typedef boost::shared_ptr<AbstractTableModel> AbstractTableModelPtr;
+typedef boost::intrusive_ptr<AbstractTableModel> AbstractTableModelPtr;
 
 OSG_END_NAMESPACE
 

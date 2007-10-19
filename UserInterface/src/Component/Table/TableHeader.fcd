@@ -41,6 +41,15 @@ A UI Table Header.
           >
     </Field>
     <Field
+          name="ResizingCursorDriftAllowance"
+          type="UInt32"
+          cardinality="single"
+          visibility="external"
+          defaultValue="1"
+          access="public"
+          >
+    </Field>
+    <Field
           name="DefaultMarginDrawObject"
           type="UIDrawObjectCanvasPtr"
           cardinality="single"

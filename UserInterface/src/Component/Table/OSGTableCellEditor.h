@@ -50,11 +50,11 @@
 
 #include <OpenSG/OSGField.h>
 
-#include <boost/shared_ptr.hpp>
+#include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
 
 OSG_BEGIN_NAMESPACE
 	 
-class OSG_USERINTERFACELIB_DLLMAPPING TableCellEditor
+class OSG_USERINTERFACELIB_DLLMAPPING TableCellEditor : public IntrusivePtrImplBase
 {
 private:
 protected:
@@ -63,7 +63,7 @@ public:
 
 };
 
-typedef boost::shared_ptr<TableCellEditor> TableCellEditorPtr;
+typedef boost::intrusive_ptr<TableCellEditor> TableCellEditorPtr;
 
 OSG_END_NAMESPACE
 

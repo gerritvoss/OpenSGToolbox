@@ -49,11 +49,11 @@
 
 #include "OSGTableModelListener.h"
 
-#include <boost/shared_ptr.hpp>
+#include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
 
 OSG_BEGIN_NAMESPACE
 	 
-class OSG_USERINTERFACELIB_DLLMAPPING TableModel
+class OSG_USERINTERFACELIB_DLLMAPPING TableModel : public IntrusivePtrImplBase
 {
 private:
 protected:
@@ -84,7 +84,7 @@ public:
     virtual void setValueAt(Field* aValue, UInt32 rowIndex, UInt32 columnIndex) = 0;
 };
 
-typedef boost::shared_ptr<TableModel> TableModelPtr;
+typedef boost::intrusive_ptr<TableModel> TableModelPtr;
 
 OSG_END_NAMESPACE
 

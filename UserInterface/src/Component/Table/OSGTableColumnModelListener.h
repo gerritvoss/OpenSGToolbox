@@ -66,7 +66,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModelListener : public EventLis
     virtual void columnSelectionChanged(const ListSelectionEvent& e) = 0;
 };
 
-typedef boost::shared_ptr<TableColumnModelListener> TableColumnModelListenerPtr;
+typedef TableColumnModelListener* TableColumnModelListenerPtr;
 
 OSG_END_NAMESPACE
 

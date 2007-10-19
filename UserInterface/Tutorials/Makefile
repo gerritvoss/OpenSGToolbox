@@ -133,7 +133,7 @@ endif
 
 CCFLAGS = $(shell $(OSGCONFIG) --cflags --$(LIBTYPE) Base System $(ADDLIB) GLUT) -I$(OSGUSERINTERFACEROOT)/include -I../../External/Boost
 
-LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB) GLUT) -L$(OSGUSERINTERFACEROOT)/lib -lOSGUserInterface$(DGB_OPT_EXT) -lOSGInput$(DGB_OPT_EXT)
+LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB) GLUT) -L$(OSGUSERINTERFACEROOT)/lib -lOSGUserInterface$(DGB_OPT_EXT) -lOSGInput$(DGB_OPT_EXT) -lOSGToolbox$(DGB_OPT_EXT)
 
 
 # all tutorials in this directory

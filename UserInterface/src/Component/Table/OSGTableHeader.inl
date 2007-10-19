@@ -72,7 +72,7 @@ void TableHeader::getHeaderBounds(const UInt32 ColumnIndex, Pnt2s& TopLeft, Pnt2
 }
 
 inline
-TableColumnPtr TableHeader::getResizingColumn(void) const
+Int32 TableHeader::getResizingColumn(void) const
 {
     return _ResizingColumn;
 }
@@ -96,13 +96,19 @@ void TableHeader::setDraggedDistance(const Int32& distance)
 }
 
 inline
-void TableHeader::setResizingColumn(TableColumnPtr aColumn)
+void TableHeader::setResizingColumn(Int32 aColumn)
 {
     _ResizingColumn = aColumn;
 }
 
 inline
 TableHeader::ColumnModelListener::ColumnModelListener(TableHeader* TheTableHeader) :
+    _TableHeader(TheTableHeader)
+{
+}
+
+inline
+TableHeader::MarginDraggedListener::MarginDraggedListener(TableHeader* TheTableHeader) :
     _TableHeader(TheTableHeader)
 {
 }

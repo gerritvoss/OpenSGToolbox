@@ -117,6 +117,13 @@ SFBool *TableHeaderBase::getSFResizingAllowed(void)
     return &_sfResizingAllowed;
 }
 
+//! Get the TableHeader::_sfResizingCursorDriftAllowance field.
+inline
+SFUInt32 *TableHeaderBase::getSFResizingCursorDriftAllowance(void)
+{
+    return &_sfResizingCursorDriftAllowance;
+}
+
 //! Get the TableHeader::_sfDefaultMarginDrawObject field.
 inline
 SFUIDrawObjectCanvasPtr *TableHeaderBase::getSFDefaultMarginDrawObject(void)
@@ -200,6 +207,27 @@ inline
 void TableHeaderBase::setResizingAllowed(const bool &value)
 {
     _sfResizingAllowed.setValue(value);
+}
+
+//! Get the value of the TableHeader::_sfResizingCursorDriftAllowance field.
+inline
+UInt32 &TableHeaderBase::getResizingCursorDriftAllowance(void)
+{
+    return _sfResizingCursorDriftAllowance.getValue();
+}
+
+//! Get the value of the TableHeader::_sfResizingCursorDriftAllowance field.
+inline
+const UInt32 &TableHeaderBase::getResizingCursorDriftAllowance(void) const
+{
+    return _sfResizingCursorDriftAllowance.getValue();
+}
+
+//! Set the value of the TableHeader::_sfResizingCursorDriftAllowance field.
+inline
+void TableHeaderBase::setResizingCursorDriftAllowance(const UInt32 &value)
+{
+    _sfResizingCursorDriftAllowance.setValue(value);
 }
 
 //! Get the value of the TableHeader::_sfDefaultMarginDrawObject field.

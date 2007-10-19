@@ -50,6 +50,9 @@
 #include "OSGTableHeaderBase.h"
 #include "OSGTableColumnModel.h"
 
+#include <OpenSG/Input/OSGMouseListener.h>
+#include <OpenSG/Input/OSGMouseMotionListener.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief TableHeader class. See \ref 
@@ -82,6 +85,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
 
     /*! \}                                                                 */
     
+    virtual void mouseExited(const MouseEvent& e);
+    virtual void mouseMoved(const MouseEvent& e);
+    virtual void mousePressed(const MouseEvent& e);
+    
     virtual void updateLayout(void);
     
     //Returns a pointer to the column that point lies in, or -1 if it lies out of bounds.
@@ -104,7 +111,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
     void getHeaderBounds(const UInt32 ColumnIndex, Pnt2s& TopLeft, Pnt2s& BottomRight) const;
     
     //Returns the resizing column.
-    TableColumnPtr getResizingColumn(void) const;
+    Int32 getResizingColumn(void) const;
     
     //Sets the column model for this table to newModel and registers for listener notifications from the new column model.
     void setColumnModel(TableColumnModelPtr columnModel);
@@ -119,7 +126,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
     void setDraggedDistance(const Int32& distance);
     
     //Sets the header's resizingColumn to aColumn.
-    void setResizingColumn(TableColumnPtr aColumn);
+    void setResizingColumn(Int32 aColumn);
           
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -155,7 +162,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
     Int32 _DraggedDistance;
     
     //The index of the column being resized.
-    TableColumnPtr _ResizingColumn;
+    Int32 _ResizingColumn;
 
     //TableColumnModelListener
 	class ColumnModelListener : public TableColumnModelListener
@@ -178,9 +185,31 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
 
 	friend class ColumnModelListener;
 
-	TableColumnModelListenerPtr _ColumnModelListener;
+	ColumnModelListener _ColumnModelListener;
+	
+	class MarginDraggedListener : public MouseMotionListener, public MouseListener
+	{
+	public :
+		MarginDraggedListener(TableHeader* ptr);
+		virtual void mouseMoved(const MouseEvent& e);
+		virtual void mouseDragged(const MouseEvent& e);
+		
+		virtual void mouseClicked(const MouseEvent& e);
+		virtual void mouseEntered(const MouseEvent& e);
+		virtual void mouseExited(const MouseEvent& e);
+		virtual void mousePressed(const MouseEvent& e);
+		virtual void mouseReleased(const MouseEvent& e);
+	protected :
+		TableHeader* _TableHeader;
+	};
+
+	friend class _MarginDraggedListener;
+
+	MarginDraggedListener _MarginDraggedListener;
 
 	void updateColumnHeadersComponents(void);
+
+	void checkMouseMargins(const MouseEvent& e);
     
     /*==========================  PRIVATE  ================================*/
   private:

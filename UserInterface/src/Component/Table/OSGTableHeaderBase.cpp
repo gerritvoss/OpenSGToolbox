@@ -73,6 +73,9 @@ const OSG::BitVector  TableHeaderBase::ReorderingAllowedFieldMask =
 const OSG::BitVector  TableHeaderBase::ResizingAllowedFieldMask = 
     (TypeTraits<BitVector>::One << TableHeaderBase::ResizingAllowedFieldId);
 
+const OSG::BitVector  TableHeaderBase::ResizingCursorDriftAllowanceFieldMask = 
+    (TypeTraits<BitVector>::One << TableHeaderBase::ResizingCursorDriftAllowanceFieldId);
+
 const OSG::BitVector  TableHeaderBase::DefaultMarginDrawObjectFieldMask = 
     (TypeTraits<BitVector>::One << TableHeaderBase::DefaultMarginDrawObjectFieldId);
 
@@ -96,6 +99,9 @@ const OSG::BitVector TableHeaderBase::MTInfluenceMask =
     
 */
 /*! \var bool            TableHeaderBase::_sfResizingAllowed
+    
+*/
+/*! \var UInt32          TableHeaderBase::_sfResizingCursorDriftAllowance
     
 */
 /*! \var UIDrawObjectCanvasPtr TableHeaderBase::_sfDefaultMarginDrawObject
@@ -127,6 +133,11 @@ FieldDescription *TableHeaderBase::_desc[] =
                      ResizingAllowedFieldId, ResizingAllowedFieldMask,
                      false,
                      (FieldAccessMethod) &TableHeaderBase::getSFResizingAllowed),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "ResizingCursorDriftAllowance", 
+                     ResizingCursorDriftAllowanceFieldId, ResizingCursorDriftAllowanceFieldMask,
+                     false,
+                     (FieldAccessMethod) &TableHeaderBase::getSFResizingCursorDriftAllowance),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
                      "DefaultMarginDrawObject", 
                      DefaultMarginDrawObjectFieldId, DefaultMarginDrawObjectFieldMask,
@@ -222,6 +233,7 @@ TableHeaderBase::TableHeaderBase(void) :
     _sfTable                  (TablePtr(NullFC)), 
     _sfReorderingAllowed      (bool(true)), 
     _sfResizingAllowed        (bool(true)), 
+    _sfResizingCursorDriftAllowance(UInt32(1)), 
     _sfDefaultMarginDrawObject(UIDrawObjectCanvasPtr(NullFC)), 
     _mfMargins                (), 
     _mfColumnHeaders          (), 
@@ -237,6 +249,7 @@ TableHeaderBase::TableHeaderBase(const TableHeaderBase &source) :
     _sfTable                  (source._sfTable                  ), 
     _sfReorderingAllowed      (source._sfReorderingAllowed      ), 
     _sfResizingAllowed        (source._sfResizingAllowed        ), 
+    _sfResizingCursorDriftAllowance(source._sfResizingCursorDriftAllowance), 
     _sfDefaultMarginDrawObject(source._sfDefaultMarginDrawObject), 
     _mfMargins                (source._mfMargins                ), 
     _mfColumnHeaders          (source._mfColumnHeaders          ), 
@@ -269,6 +282,11 @@ UInt32 TableHeaderBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (ResizingAllowedFieldMask & whichField))
     {
         returnValue += _sfResizingAllowed.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ResizingCursorDriftAllowanceFieldMask & whichField))
+    {
+        returnValue += _sfResizingCursorDriftAllowance.getBinSize();
     }
 
     if(FieldBits::NoField != (DefaultMarginDrawObjectFieldMask & whichField))
@@ -310,6 +328,11 @@ void TableHeaderBase::copyToBin(      BinaryDataHandler &pMem,
         _sfResizingAllowed.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (ResizingCursorDriftAllowanceFieldMask & whichField))
+    {
+        _sfResizingCursorDriftAllowance.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (DefaultMarginDrawObjectFieldMask & whichField))
     {
         _sfDefaultMarginDrawObject.copyToBin(pMem);
@@ -348,6 +371,11 @@ void TableHeaderBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfResizingAllowed.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ResizingCursorDriftAllowanceFieldMask & whichField))
+    {
+        _sfResizingCursorDriftAllowance.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (DefaultMarginDrawObjectFieldMask & whichField))
     {
         _sfDefaultMarginDrawObject.copyFromBin(pMem);
@@ -382,6 +410,9 @@ void TableHeaderBase::executeSyncImpl(      TableHeaderBase *pOther,
     if(FieldBits::NoField != (ResizingAllowedFieldMask & whichField))
         _sfResizingAllowed.syncWith(pOther->_sfResizingAllowed);
 
+    if(FieldBits::NoField != (ResizingCursorDriftAllowanceFieldMask & whichField))
+        _sfResizingCursorDriftAllowance.syncWith(pOther->_sfResizingCursorDriftAllowance);
+
     if(FieldBits::NoField != (DefaultMarginDrawObjectFieldMask & whichField))
         _sfDefaultMarginDrawObject.syncWith(pOther->_sfDefaultMarginDrawObject);
 
@@ -409,6 +440,9 @@ void TableHeaderBase::executeSyncImpl(      TableHeaderBase *pOther,
 
     if(FieldBits::NoField != (ResizingAllowedFieldMask & whichField))
         _sfResizingAllowed.syncWith(pOther->_sfResizingAllowed);
+
+    if(FieldBits::NoField != (ResizingCursorDriftAllowanceFieldMask & whichField))
+        _sfResizingCursorDriftAllowance.syncWith(pOther->_sfResizingCursorDriftAllowance);
 
     if(FieldBits::NoField != (DefaultMarginDrawObjectFieldMask & whichField))
         _sfDefaultMarginDrawObject.syncWith(pOther->_sfDefaultMarginDrawObject);

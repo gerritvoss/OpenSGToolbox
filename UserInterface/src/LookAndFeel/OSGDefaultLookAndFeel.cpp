@@ -1863,6 +1863,7 @@ void DefaultLookAndFeel::init(void)
 		DefaultTableHeader->setResizingAllowed(true);
 		DefaultTableHeader->setDefaultMarginDrawObject(NullFC);
         DefaultTableHeader->setDefaultRenderer(TableCellRendererPtr(new DefaultTableCellRenderer()));
+        DefaultTableHeader->setResizingCursorDriftAllowance(1);
 		
 	endEditCP(DefaultRotatedComponent);
 	
