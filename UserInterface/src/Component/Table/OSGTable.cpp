@@ -941,6 +941,12 @@ void Table::changed(BitVector whichField, UInt32 origin)
         endEditCP(getHeader(), TableFieldMask);
         getHeader()->setColumnModel(_ColumnModel);
     }
+
+    if(whichField & RowSelectionAllowedFieldMask)
+    {
+        _RowSelectionModel->clearSelection();
+        _ColumnModel->getSelectionModel()->clearSelection();
+    }
 }
 
 void Table::dump(      UInt32    , 

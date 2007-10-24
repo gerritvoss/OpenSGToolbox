@@ -128,12 +128,11 @@ void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 inde
 				break;
 			case MULTIPLE_INTERVAL_SELECTION:
 				// at this moment, you can only add single intervals, and it is the leading not the anchor index
-				range.StartIndex = range.EndIndex;
-				if (!isSelectedIndex(index1))
-				{
+				//if (!isSelectedIndex(index1))
+				//{
 					_RangeSelectionList.push_back(range);
 					produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), range.StartIndex, range.EndIndex, _ValueIsAdjusting));
-				}
+				//}
 				break;
 			default:
 				break;
@@ -146,7 +145,9 @@ void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 inde
 
 void 	DefaultListSelectionModel::clearSelection(void)
 {
+    updateMinMax();
 	_RangeSelectionList.clear();
+    produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), _MinSelectionIndex, _MaxSelectionIndex, _ValueIsAdjusting));
 }
 
 UInt32 	DefaultListSelectionModel::getAnchorSelectionIndex(void) const

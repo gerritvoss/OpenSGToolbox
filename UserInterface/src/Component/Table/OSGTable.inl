@@ -169,6 +169,8 @@ inline
 void Table::setColumnSelectionAllowed(bool columnSelectionAllowed)
 {
     _ColumnModel->setColumnSelectionAllowed(columnSelectionAllowed);
+    _RowSelectionModel->clearSelection();
+    _ColumnModel->getSelectionModel()->clearSelection();
 }
 
 inline

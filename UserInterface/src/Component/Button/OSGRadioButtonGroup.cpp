@@ -5,6 +5,19 @@ OSG_BEGIN_NAMESPACE
 void RadioButtonGroup::addButton(RadioButtonPtr Button)
 {
 	_Buttons.push_back(Button);
+    if(Button->getSelected())
+    {
+        if(_SelectedButton == NullFC)
+        {
+            _SelectedButton = Button;
+        }
+        else
+        {
+            beginEditCP(Button, RadioButton::SelectedFieldMask);
+                Button->setSelected(false);
+            endEditCP(Button, RadioButton::SelectedFieldMask);
+        }
+    }
 	Button->addButtonSelectedListener(this);
 }
 
@@ -59,13 +72,16 @@ void RadioButtonGroup::setSelected(RadioButtonPtr Button, bool SelectedValue)
 void RadioButtonGroup::buttonSelected(const ButtonSelectedEvent& e)
 {
 	RadioButtonPtr TheButton = RadioButton::Ptr::dcast(e.getSource());
+    RadioButtonPtr PreviousSelected(_SelectedButton);
 	if(_SelectedButton != TheButton)
 	{
-		if(_SelectedButton != NullFC)
+	    _SelectedButton = TheButton;
+		if(PreviousSelected != NullFC)
 		{
-			_SelectedButton->setSelected(false);
+            beginEditCP(PreviousSelected, RadioButton::SelectedFieldMask);
+			    PreviousSelected->setSelected(false);
+            endEditCP(PreviousSelected, RadioButton::SelectedFieldMask);
 		}
-	_SelectedButton = TheButton;
 	}
 }
 

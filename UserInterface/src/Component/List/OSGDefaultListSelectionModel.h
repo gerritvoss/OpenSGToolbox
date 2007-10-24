@@ -132,8 +132,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public ListSel
 	struct IndexRange{  //Inclusive
 		IndexRange(UInt32 start, UInt32 end)
 		{
-			StartIndex = start;
-			EndIndex = end;
+            if(start > end)
+            {
+			    StartIndex = end;
+			    EndIndex = start;
+            }
+            else
+            {
+			    StartIndex = start;
+			    EndIndex = end;
+            }
 		}
 		bool operator== (const IndexRange& right) const
 		{
