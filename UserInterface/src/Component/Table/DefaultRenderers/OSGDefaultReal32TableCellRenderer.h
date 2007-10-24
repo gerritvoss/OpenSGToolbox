@@ -36,58 +36,52 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_ABSTRACT_TABLE_MODEL_H_
-#define _OSG_UI_ABSTRACT_TABLE_MODEL_H_
-
+#ifndef _OSGDEFAULTREAL32TABLECELLRENDERER_H_
+#define _OSGDEFAULTREAL32TABLECELLRENDERER_H_
 #ifdef __sgi
 #pragma once
 #endif
- 
+
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGTableModel.h"
-#include <set>
+#include "Component/Table/OSGTableCellRenderer.h"
 
 OSG_BEGIN_NAMESPACE
-	 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractTableModel : public TableModel
+
+/*! \brief DefaultReal32TableCellRenderer class. See \ref
+           PageUserInterfaceDefaultReal32TableCellRenderer for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultReal32TableCellRenderer : public TableCellRenderer
 {
-protected:
-	typedef std::set<TableModelListenerPtr> TableModelListenerSet;
-    typedef TableModelListenerSet::iterator TableModelListenerSetItor;
-    typedef TableModelListenerSet::const_iterator TableModelListenerSetConstItor;
-	TableModelListenerSet _ModelListeners;
+    /*==========================  PUBLIC  =================================*/
+  public:
+	virtual ComponentPtr getTableCellRendererComponent(TablePtr table, Field* value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column);
 
-	void produceContentsHeaderRowChanged(UInt32 FirstColumn, UInt32 LastColumn);
-	void produceContentsChanged(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow);
-	void produceIntervalAdded(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow);
-	void produceIntervalRemoved(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow);
-    
-public:
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
 
-    //Adds a listener to the list that is notified each time a change to the data model occurs.
-    virtual void addTableModelListener(TableModelListenerPtr l);
+    DefaultReal32TableCellRenderer(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~DefaultReal32TableCellRenderer(void);
+
+    /*! \}                                                                 */
+    /*=========================  PROTECTED  ===============================*/
+  protected:
     
-    //Removes a listener from the list that is notified each time a change to the data model occurs.
-    virtual void removeTableModelListener(TableModelListenerPtr l);
-    
-    //Returns the name of the column at columnIndex.
-    //virtual Field* getColumnValue(UInt32 columnIndex) const;
-    
-    //Returns true if the cell at rowIndex and columnIndex is editable.
-    virtual bool isCellEditable(UInt32 rowIndex, UInt32 columnIndex) const;
-    
-    //Sets the value in the cell at columnIndex and rowIndex to aValue.
-    virtual void setValueAt(Field* aValue, UInt32 rowIndex, UInt32 columnIndex);
-    
+    /*==========================  PRIVATE  ================================*/
+  private:
 };
 
-typedef boost::intrusive_ptr<AbstractTableModel> AbstractTableModelPtr;
+typedef boost::intrusive_ptr<DefaultReal32TableCellRenderer> DefaultReal32TableCellRendererPtr;
 
 OSG_END_NAMESPACE
 
-#include "OSGAbstractTableModel.inl"
-
-#endif /* _OSG_UI_ABSTRACT_TABLE_MODEL_H_ */
-
+#endif /* _OSGDEFAULTREAL32TABLECELLRENDERER_H_ */

@@ -103,6 +103,69 @@ SFTableHeaderPtr *TableBase::getSFHeader(void)
     return &_sfHeader;
 }
 
+//! Get the Table::_mfTable field.
+inline
+MFComponentPtr *TableBase::getMFTable(void)
+{
+    return &_mfTable;
+}
+
+//! Get the Table::_sfAutoCreateColumnsFromModel field.
+inline
+SFBool *TableBase::getSFAutoCreateColumnsFromModel(void)
+{
+    return &_sfAutoCreateColumnsFromModel;
+}
+
+//! Get the Table::_sfAutoResizeMode field.
+inline
+SFUInt32 *TableBase::getSFAutoResizeMode(void)
+{
+    return &_sfAutoResizeMode;
+}
+
+//! Get the Table::_sfRowHeight field.
+inline
+SFUInt32 *TableBase::getSFRowHeight(void)
+{
+    return &_sfRowHeight;
+}
+
+//! Get the Table::_sfRowMargin field.
+inline
+SFUInt32 *TableBase::getSFRowMargin(void)
+{
+    return &_sfRowMargin;
+}
+
+//! Get the Table::_sfRowSelectionAllowed field.
+inline
+SFBool *TableBase::getSFRowSelectionAllowed(void)
+{
+    return &_sfRowSelectionAllowed;
+}
+
+//! Get the Table::_sfShowHorizontalLines field.
+inline
+SFBool *TableBase::getSFShowHorizontalLines(void)
+{
+    return &_sfShowHorizontalLines;
+}
+
+//! Get the Table::_sfShowVerticalLines field.
+inline
+SFBool *TableBase::getSFShowVerticalLines(void)
+{
+    return &_sfShowVerticalLines;
+}
+
+//! Get the Table::_sfGridColor field.
+inline
+SFColor4f *TableBase::getSFGridColor(void)
+{
+    return &_sfGridColor;
+}
+
 
 //! Get the value of the Table::_sfHeader field.
 inline
@@ -125,6 +188,195 @@ void TableBase::setHeader(const TableHeaderPtr &value)
     _sfHeader.setValue(value);
 }
 
+//! Get the value of the Table::_sfAutoCreateColumnsFromModel field.
+inline
+bool &TableBase::getAutoCreateColumnsFromModel(void)
+{
+    return _sfAutoCreateColumnsFromModel.getValue();
+}
+
+//! Get the value of the Table::_sfAutoCreateColumnsFromModel field.
+inline
+const bool &TableBase::getAutoCreateColumnsFromModel(void) const
+{
+    return _sfAutoCreateColumnsFromModel.getValue();
+}
+
+//! Set the value of the Table::_sfAutoCreateColumnsFromModel field.
+inline
+void TableBase::setAutoCreateColumnsFromModel(const bool &value)
+{
+    _sfAutoCreateColumnsFromModel.setValue(value);
+}
+
+//! Get the value of the Table::_sfAutoResizeMode field.
+inline
+UInt32 &TableBase::getAutoResizeMode(void)
+{
+    return _sfAutoResizeMode.getValue();
+}
+
+//! Get the value of the Table::_sfAutoResizeMode field.
+inline
+const UInt32 &TableBase::getAutoResizeMode(void) const
+{
+    return _sfAutoResizeMode.getValue();
+}
+
+//! Set the value of the Table::_sfAutoResizeMode field.
+inline
+void TableBase::setAutoResizeMode(const UInt32 &value)
+{
+    _sfAutoResizeMode.setValue(value);
+}
+
+//! Get the value of the Table::_sfRowHeight field.
+inline
+UInt32 &TableBase::getRowHeight(void)
+{
+    return _sfRowHeight.getValue();
+}
+
+//! Get the value of the Table::_sfRowHeight field.
+inline
+const UInt32 &TableBase::getRowHeight(void) const
+{
+    return _sfRowHeight.getValue();
+}
+
+//! Set the value of the Table::_sfRowHeight field.
+inline
+void TableBase::setRowHeight(const UInt32 &value)
+{
+    _sfRowHeight.setValue(value);
+}
+
+//! Get the value of the Table::_sfRowMargin field.
+inline
+UInt32 &TableBase::getRowMargin(void)
+{
+    return _sfRowMargin.getValue();
+}
+
+//! Get the value of the Table::_sfRowMargin field.
+inline
+const UInt32 &TableBase::getRowMargin(void) const
+{
+    return _sfRowMargin.getValue();
+}
+
+//! Set the value of the Table::_sfRowMargin field.
+inline
+void TableBase::setRowMargin(const UInt32 &value)
+{
+    _sfRowMargin.setValue(value);
+}
+
+//! Get the value of the Table::_sfRowSelectionAllowed field.
+inline
+bool &TableBase::getRowSelectionAllowed(void)
+{
+    return _sfRowSelectionAllowed.getValue();
+}
+
+//! Get the value of the Table::_sfRowSelectionAllowed field.
+inline
+const bool &TableBase::getRowSelectionAllowed(void) const
+{
+    return _sfRowSelectionAllowed.getValue();
+}
+
+//! Set the value of the Table::_sfRowSelectionAllowed field.
+inline
+void TableBase::setRowSelectionAllowed(const bool &value)
+{
+    _sfRowSelectionAllowed.setValue(value);
+}
+
+//! Get the value of the Table::_sfShowHorizontalLines field.
+inline
+bool &TableBase::getShowHorizontalLines(void)
+{
+    return _sfShowHorizontalLines.getValue();
+}
+
+//! Get the value of the Table::_sfShowHorizontalLines field.
+inline
+const bool &TableBase::getShowHorizontalLines(void) const
+{
+    return _sfShowHorizontalLines.getValue();
+}
+
+//! Set the value of the Table::_sfShowHorizontalLines field.
+inline
+void TableBase::setShowHorizontalLines(const bool &value)
+{
+    _sfShowHorizontalLines.setValue(value);
+}
+
+//! Get the value of the Table::_sfShowVerticalLines field.
+inline
+bool &TableBase::getShowVerticalLines(void)
+{
+    return _sfShowVerticalLines.getValue();
+}
+
+//! Get the value of the Table::_sfShowVerticalLines field.
+inline
+const bool &TableBase::getShowVerticalLines(void) const
+{
+    return _sfShowVerticalLines.getValue();
+}
+
+//! Set the value of the Table::_sfShowVerticalLines field.
+inline
+void TableBase::setShowVerticalLines(const bool &value)
+{
+    _sfShowVerticalLines.setValue(value);
+}
+
+//! Get the value of the Table::_sfGridColor field.
+inline
+Color4f &TableBase::getGridColor(void)
+{
+    return _sfGridColor.getValue();
+}
+
+//! Get the value of the Table::_sfGridColor field.
+inline
+const Color4f &TableBase::getGridColor(void) const
+{
+    return _sfGridColor.getValue();
+}
+
+//! Set the value of the Table::_sfGridColor field.
+inline
+void TableBase::setGridColor(const Color4f &value)
+{
+    _sfGridColor.setValue(value);
+}
+
+
+//! Get the value of the \a index element the Table::_mfTable field.
+inline
+ComponentPtr &TableBase::getTable(const UInt32 index)
+{
+    return _mfTable[index];
+}
+
+//! Get the Table::_mfTable field.
+inline
+MFComponentPtr &TableBase::getTable(void)
+{
+    return _mfTable;
+}
+
+//! Get the Table::_mfTable field.
+inline
+const MFComponentPtr &TableBase::getTable(void) const
+{
+    return _mfTable;
+}
 
 OSG_END_NAMESPACE
 

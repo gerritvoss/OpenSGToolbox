@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDEFAULTTABLECELLRENDERER_H_
-#define _OSGDEFAULTTABLECELLRENDERER_H_
+#ifndef _OSGDEFAULTSTRINGTABLECELLRENDERER_H_
+#define _OSGDEFAULTSTRINGTABLECELLRENDERER_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,15 +45,15 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGTableCellRenderer.h"
+#include "Component/Table/OSGTableCellRenderer.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DefaultTableCellRenderer class. See \ref
-           PageUserInterfaceDefaultTableCellRenderer for a description.
+/*! \brief DefaultStringTableCellRenderer class. See \ref
+           PageUserInterfaceDefaultStringTableCellRenderer for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellRenderer : public TableCellRenderer
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultStringTableCellRenderer : public TableCellRenderer
 {
     /*==========================  PUBLIC  =================================*/
   public:
@@ -63,14 +63,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellRenderer : public TableCel
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    DefaultTableCellRenderer(void);
+    DefaultStringTableCellRenderer(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DefaultTableCellRenderer(void);
+    virtual ~DefaultStringTableCellRenderer(void);
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
@@ -80,10 +80,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellRenderer : public TableCel
   private:
 };
 
-typedef boost::intrusive_ptr<DefaultTableCellRenderer> DefaultTableCellRendererPtr;
+typedef boost::intrusive_ptr<DefaultStringTableCellRenderer> DefaultStringTableCellRendererPtr;
 
 OSG_END_NAMESPACE
 
-#include "OSGDefaultTableCellRenderer.inl"
-
-#endif /* _OSGDEFAULTTABLECELLRENDERER_H_ */
+#endif /* _OSGDEFAULTSTRINGTABLECELLRENDERER_H_ */

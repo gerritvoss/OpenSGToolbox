@@ -72,6 +72,10 @@ void DefaultBoundedRangeModel::setExtent(UInt32 newExtent)
 {
     bool isStateChange(_Extent != newExtent);
     _Extent= newExtent;
+    if(_Value + _Extent > _Maximum)
+    {
+        _Value = _Maximum - _Extent;
+    }
     if(isStateChange)
     {
         produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
@@ -82,6 +86,10 @@ void DefaultBoundedRangeModel::setMaximum(Int32 newMaximum)
 {
     bool isStateChange(_Maximum != newMaximum);
     _Maximum= newMaximum;
+    if(_Value + _Extent > _Maximum)
+    {
+        _Value = _Maximum - _Extent;
+    }
     if(isStateChange)
     {
         produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
@@ -92,6 +100,10 @@ void DefaultBoundedRangeModel::setMinimum(Int32 newMinimum)
 {
     bool isStateChange(_Minimum != newMinimum);
     _Minimum= newMinimum;
+    if(_Value < _Minimum)
+    {
+        _Value = _Minimum;
+    }
     if(isStateChange)
     {
         produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
@@ -108,8 +120,20 @@ void DefaultBoundedRangeModel::setRangeProperties(Int32 value, UInt32 extent, In
     _Extent= extent;
     _Maximum= max;
     _Minimum= min;
-    _Value= value;
     _ValueIsAdjusting = adjusting;
+    if(value + _Extent > _Maximum)
+    {
+        _Value = _Maximum - _Extent;
+    }
+    else if(value < _Minimum)
+    {
+        _Value = _Minimum;
+    }
+    else
+    {
+        _Value= value;
+    }
+
     if(isStateChange)
     {
         produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
@@ -119,7 +143,18 @@ void DefaultBoundedRangeModel::setRangeProperties(Int32 value, UInt32 extent, In
 void DefaultBoundedRangeModel::setValue(Int32 newValue)
 {
     bool isStateChange(_Value != newValue);
-    _Value= newValue;
+    if(newValue + _Extent > _Maximum)
+    {
+        _Value = _Maximum - _Extent;
+    }
+    else if(newValue < _Minimum)
+    {
+        _Value = _Minimum;
+    }
+    else
+    {
+        _Value= newValue;
+    }
     if(isStateChange)
     {
         produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));

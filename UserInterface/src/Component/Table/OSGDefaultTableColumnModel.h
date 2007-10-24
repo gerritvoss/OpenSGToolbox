@@ -48,11 +48,13 @@
 
 #include "OSGTableColumnModel.h"
 #include "Component/List/OSGListSelectionListener.h"
+#include <OpenSG/Input/OSGFieldChangeListener.h>
+//#include <OpenSG/Input/OSGKeyListener.h>
 #include <set>
 
 OSG_BEGIN_NAMESPACE
 	 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableColumnModel : public TableColumnModel, public ListSelectionListener
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableColumnModel : public TableColumnModel, public ListSelectionListener, public FieldChangeListener
 {
 protected:
     typedef std::vector<TableColumnPtr> TableColumnVector;
@@ -133,6 +135,8 @@ public:
     
     //A ListSelectionListener that forwards ListSelectionEvents when there is a column selection change
     virtual void selectionChanged(const ListSelectionEvent& e);
+    
+    virtual void fieldChanged(const FieldChangeEvent& e);
 
     
     DefaultTableColumnModel(void);

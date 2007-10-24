@@ -23,6 +23,7 @@
 //Input
 #include <OpenSG/Input/OSGWindowUtils.h>
 #include <OpenSG/Input/OSGWindowAdapter.h>
+#include <OpenSG/Input/OSGMouseAdapter.h>
 
 // UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
@@ -61,6 +62,8 @@ OSG_USING_NAMESPACE
 SimpleSceneManager *mgr;
 bool ExitApp = false;
 std::map<std::string, UIFontPtr> FontMap;
+LabelPtr label1;
+ListPtr list;
 
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -120,6 +123,33 @@ class FontListCellGenerator : public DefaultListCellGenerator
     {
     }
 };
+
+class FontListListener: public MouseAdapter
+{
+  public:
+    virtual void mouseClicked(const MouseEvent& e)
+    {
+        std::string ValueStr("");
+        Field* Value(list->getValueAtPoint(e));
+        if(Value->getType() == SFString::getClassType())
+        {
+            ValueStr = dynamic_cast<SFString*>(Value)->getValue();
+        }
+        std::cout << "Setting Font: " << ValueStr << std::endl;
+
+        //Get the Fond
+        UIFontPtr TheSelectedFont(FontMap[ValueStr]);
+
+        if(TheSelectedFont != NullFC)
+        {
+            //Set the font for the label to use this one
+	        beginEditCP(label1, Label::FontFieldMask);
+		        label1->setFont(TheSelectedFont);
+	        endEditCP(label1, Label::FontFieldMask);
+        }
+    }
+};
+
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
 {
@@ -241,7 +271,7 @@ int main(int argc, char **argv)
 
 	******************************************************/
 
-	LabelPtr label1 = osg::Label::create();
+	label1 = osg::Label::create();
 	// EditCP for Label ONLY settings
 	beginEditCP(label1, Label::FontFieldMask | Label::TextFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask);
 		label1->setFont(labelFont);
@@ -315,7 +345,7 @@ int main(int argc, char **argv)
 		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
 	// Create ListPtr
-	ListPtr list = List::create();
+	list = List::create();
 	beginEditCP(list);
 		list->setPreferredSize( Vec2s (200, 300) );
 		list->setBackground(mainBackground);
@@ -329,6 +359,9 @@ int main(int argc, char **argv)
     ListSelectionModelPtr  SelectionModel(new DefaultListSelectionModel);
     SelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
 	list->setSelectionModel(SelectionModel);
+
+    FontListListener TheFontListListener;
+    list->addMouseListener(&TheFontListListener);
 
 
 	/******************************************************

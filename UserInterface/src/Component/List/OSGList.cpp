@@ -49,6 +49,7 @@
 #include "Component/Container/OSGFrame.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
+#include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -76,6 +77,77 @@ void List::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+ComponentPtr List::getComponentAtPoint(const MouseEvent& e)
+{
+    Pnt2s PointInComponent(ViewportToComponent(e.getLocation(), ListPtr(this), e.getViewport()));
+    UInt16 OrientationAxisIndex;
+    if(getCellLayout() == VERTICAL_ALIGNMENT)
+    {
+        OrientationAxisIndex = 1;
+    }
+    else
+    {
+        OrientationAxisIndex = 0;
+    }
+
+	Pnt2s BorderTopLeft, BorderBottomRight;
+	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
+    
+    UInt32 CumulativeDistance(BorderTopLeft[OrientationAxisIndex]);
+
+    if(PointInComponent[OrientationAxisIndex] <= CumulativeDistance)
+    {
+        return NullFC;
+    }
+
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        CumulativeDistance += getChildren()[i]->getSize()[OrientationAxisIndex];
+        if(PointInComponent[OrientationAxisIndex] <= CumulativeDistance)
+        {
+            return getChildren()[i];
+        }
+    }
+
+    return NullFC;
+}
+
+Field* List::getValueAtPoint(const MouseEvent& e)
+{
+    Pnt2s PointInComponent(ViewportToComponent(e.getLocation(), ListPtr(this), e.getViewport()));
+
+    UInt16 OrientationAxisIndex;
+    if(getCellLayout() == VERTICAL_ALIGNMENT)
+    {
+        OrientationAxisIndex = 1;
+    }
+    else
+    {
+        OrientationAxisIndex = 0;
+    }
+
+	Pnt2s BorderTopLeft, BorderBottomRight;
+	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
+    
+    UInt32 CumulativeDistance(BorderTopLeft[OrientationAxisIndex]);
+
+    if(PointInComponent[OrientationAxisIndex] <= CumulativeDistance)
+    {
+        return NULL;
+    }
+
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        CumulativeDistance += getChildren()[i]->getSize()[OrientationAxisIndex];
+        if(PointInComponent[OrientationAxisIndex] <= CumulativeDistance)
+        {
+            return _Model->getElementAt(i);
+        }
+    }
+
+    return NULL;
+}
 
 void List::updateItem(const UInt32& index)
 {

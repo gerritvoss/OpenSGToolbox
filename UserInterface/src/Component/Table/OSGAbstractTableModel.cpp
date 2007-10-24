@@ -73,7 +73,7 @@ A AbstractListModel.
  *                           Instance methods                              *
 \***************************************************************************/
 
-std::string AbstractTableModel::getColumnName(UInt32 columnIndex) const
+/*std::string AbstractTableModel::getColumnName(UInt32 columnIndex) const
 {
     //Defaults to A, B, C, ..., Y, Z, AA, BB, ...
     UInt32 ColumnMod(columnIndex%24u);
@@ -85,7 +85,7 @@ std::string AbstractTableModel::getColumnName(UInt32 columnIndex) const
     //Now make a string with LetterRepeats number of the Character
     return std::string(LetterRepeats,Letter);
     
-}
+}*/
 
 bool AbstractTableModel::isCellEditable(UInt32 rowIndex, UInt32 columnIndex) const
 {

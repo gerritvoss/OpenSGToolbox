@@ -83,6 +83,7 @@ void DefaultTableColumnModel::addColumn(const TableColumnPtr aColumn)
 {
     _Columns.push_back(aColumn);
     recalcWidthCache();
+    aColumn->addFieldChangeListener(this);
     produceColumnAdded(_Columns.size());
 }
 
@@ -230,8 +231,10 @@ void DefaultTableColumnModel::removeColumn(TableColumnPtr column)
         //Erase
         _Columns.erase(Itor);
         recalcWidthCache();
+        column->removeFieldChangeListener(this);
         produceColumnRemoved(FindIndex);
     }
+    
 }
 
 void DefaultTableColumnModel::setColumnMargin(const UInt32& newMargin)
@@ -276,6 +279,15 @@ void DefaultTableColumnModel::recalcWidthCache(void)
 void DefaultTableColumnModel::selectionChanged(const ListSelectionEvent& e)
 {
     produceColumnSelectionChanged(e);
+}
+
+void DefaultTableColumnModel::fieldChanged(const FieldChangeEvent& e)
+{
+    if(e.getFieldDescription()->getFieldId() == TableColumn::PreferredWidthFieldId ||
+        e.getFieldDescription()->getFieldId() == TableColumn::WidthFieldId)
+    {
+        recalcWidthCache();
+    }
 }
 
 void DefaultTableColumnModel::addColumnModelListener(TableColumnModelListenerPtr l)

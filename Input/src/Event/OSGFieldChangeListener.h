@@ -45,6 +45,7 @@ class OSG_INPUTLIB_DLLMAPPING FieldChangeListener : public EventListener
   public:
   
     virtual void fieldChanged(const FieldChangeEvent& e) = 0;
+    FieldChangeListener(void);
 };
 
 typedef FieldChangeListener* FieldChangeListenerPtr;

@@ -51,6 +51,8 @@
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include "Util/OSGUIDrawUtils.h"
 
+#include "OSGTable.h"
+
 #include "OSGTableHeader.h"
 
 OSG_BEGIN_NAMESPACE
@@ -82,7 +84,6 @@ void TableHeader::initMethod (void)
 
 TableColumnPtr TableHeader::columnAtPoint(const Pnt2s& point) const
 {
-
     Int32 ColumnIndex = getColumnModel()->getColumnIndexAtX(point.x());
     if(ColumnIndex == -1)
     {
@@ -111,6 +112,7 @@ void TableHeader::setColumnModel(TableColumnModelPtr columnModel)
 
 void TableHeader::updateColumnHeadersComponents(void)
 {
+    if(_ColumnModel == NULL) return;
 
     std::vector<UInt32> SelectedColumns = _ColumnModel->getSelectedColumns();
     std::vector<UInt32>::iterator SearchItor;
@@ -131,7 +133,7 @@ void TableHeader::updateColumnHeadersComponents(void)
     endEditCP(TableHeaderPtr(this) , ColumnHeadersFieldMask);
 
     
-    //beginEditCP(TableHeaderPtr(this) , ChildrenFieldMask);
+    beginEditCP(TableHeaderPtr(this) , ChildrenFieldMask);
         getChildren().clear();
 
         //Add all of the Header Components
@@ -142,12 +144,11 @@ void TableHeader::updateColumnHeadersComponents(void)
 
         //TODO: Add all of the Margin Components
         
-    //endEditCP(TableHeaderPtr(this) , ChildrenFieldMask);
+    endEditCP(TableHeaderPtr(this) , ChildrenFieldMask);
 }
 
 void TableHeader::updateLayout(void)
 {
-    updateColumnHeadersComponents();
 	Pnt2s BorderTopLeft, BorderBottomRight;
 	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
 	
@@ -303,7 +304,7 @@ void TableHeader::dump(      UInt32    ,
 void TableHeader::ColumnModelListener::columnAdded(const TableColumnModelEvent& e)
 {
     //Update the ComponentPtr vector of the headers
-    _TableHeader->updateLayout();
+    _TableHeader->updateColumnHeadersComponents();
 }
 
 void TableHeader::ColumnModelListener::columnMarginChanged(const ChangeEvent& e)
@@ -315,18 +316,18 @@ void TableHeader::ColumnModelListener::columnMarginChanged(const ChangeEvent& e)
 void TableHeader::ColumnModelListener::columnMoved(const TableColumnModelEvent& e)
 {
     //Update the ComponentPtr vector of the headers
-    _TableHeader->updateLayout();
+    _TableHeader->updateColumnHeadersComponents();
 }
 
 void TableHeader::ColumnModelListener::columnRemoved(const TableColumnModelEvent& e)
 {
     //Update the ComponentPtr vector of the headers
-    _TableHeader->updateLayout();
+    _TableHeader->updateColumnHeadersComponents();
 }
 
 void TableHeader::ColumnModelListener::columnSelectionChanged(const ListSelectionEvent& e)
 {
-    //Do nothing
+    _TableHeader->updateColumnHeadersComponents();
 }
 
 void TableHeader::MarginDraggedListener::mouseMoved(const MouseEvent& e)
@@ -341,21 +342,24 @@ void TableHeader::MarginDraggedListener::mouseDragged(const MouseEvent& e)
 		Pnt2s MousePosInComponent = ViewportToComponent(e.getLocation(), TableHeaderPtr(_TableHeader), e.getViewport());
 
 
+        TableColumnPtr TheColumn(_TableHeader->_ColumnModel->getColumn(_TableHeader->_ResizingColumn));
         Int32 NewWidth(MousePosInComponent.x() - _TableHeader->getColumnHeaders()[_TableHeader->_ResizingColumn]->getPosition().x());
 
-        if(NewWidth <= 0 || NewWidth < _TableHeader->_ColumnModel->getColumn(_TableHeader->_ResizingColumn)->getMinWidth())
+        if(NewWidth <= 0 || NewWidth < TheColumn->getMinWidth())
         {
-            NewWidth = _TableHeader->_ColumnModel->getColumn(_TableHeader->_ResizingColumn)->getMinWidth();
+            NewWidth = TheColumn->getMinWidth();
         }
 
-        if(NewWidth > _TableHeader->_ColumnModel->getColumn(_TableHeader->_ResizingColumn)->getMaxWidth())
+        if(NewWidth > TheColumn->getMaxWidth())
         {
-            NewWidth = _TableHeader->_ColumnModel->getColumn(_TableHeader->_ResizingColumn)->getMaxWidth();
+            NewWidth = TheColumn->getMaxWidth();
         }
         
 		//Get the new desired center for this margin
-	    _TableHeader->_ColumnModel->getColumn(_TableHeader->_ResizingColumn)->setWidth(NewWidth);
-	    _TableHeader->updateLayout();
+        beginEditCP(TheColumn, TableColumn::WidthFieldMask);
+	        TheColumn->setWidth(NewWidth);
+        endEditCP(TheColumn, TableColumn::WidthFieldMask);
+        _TableHeader->updateLayout();
 	}
 }
 

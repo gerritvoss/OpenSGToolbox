@@ -16,10 +16,91 @@ A UI Table.
 		name="Header"
 		type="TableHeaderPtr"
 		cardinality="single"
-        visibility="external"
-        header="Component/Table/OSGTableHeaderFields.h"
+      visibility="external"
+      header="Component/Table/OSGTableHeaderFields.h"
 		defaultValue="NullFC"
 		access="public"
 	>
-    </Field>
+   </Field>
+	<Field
+		name="Table"
+		type="ComponentPtr"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+		header="Component/OSGComponent.h"
+	>
+	</Field>
+	<Field
+		name="AutoCreateColumnsFromModel"
+		type="bool"
+		cardinality="single"
+      visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+   </Field>
+	<Field
+		name="AutoResizeMode"
+		type="UInt32"
+		cardinality="single"
+      visibility="external"
+		defaultValue="Table::AUTO_RESIZE_SUBSEQUENT_COLUMNS"
+		access="public"
+	>
+   </Field>
+	<Field
+		name="RowHeight"
+		type="UInt32"
+		cardinality="single"
+      visibility="external"
+		defaultValue="50"
+		access="public"
+	>
+   </Field>
+	<Field
+		name="RowMargin"
+		type="UInt32"
+		cardinality="single"
+      visibility="external"
+		defaultValue="1"
+		access="public"
+	>
+   </Field>
+	<Field
+		name="RowSelectionAllowed"
+		type="bool"
+		cardinality="single"
+      visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+   </Field>
+	<Field
+		name="ShowHorizontalLines"
+		type="bool"
+		cardinality="single"
+      visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+   </Field>
+	<Field
+		name="ShowVerticalLines"
+		type="bool"
+		cardinality="single"
+      visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+   </Field>
+	<Field
+		name="GridColor"
+		type="Color4f"
+		cardinality="single"
+      visibility="external"
+		defaultValue="0.0, 0.0, 0.0, 1.0"
+		access="public"
+	>
+   </Field>
 </FieldContainer>

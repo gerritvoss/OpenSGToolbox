@@ -45,12 +45,10 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "Background/OSGColorUIBackground.h"
-#include "Border/OSGLineBorder.h"
-#include "Border/OSGEmptyBorder.h"
+#include "Border/OSGBevelBorder.h"
 #include "Component/OSGLabel.h"
 
-#include "OSGDefaultListCellGenerator.h"
+#include "OSGDefaultTableHeaderCellRenderer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -58,8 +56,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::DefaultListCellGenerator
-A DefaultListCellGenerator. 
+/*! \class osg::DefaultTableHeaderCellRenderer
+A DefaultTableHeaderCellRenderer.
 */
 
 /***************************************************************************\
@@ -74,64 +72,32 @@ A DefaultListCellGenerator.
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-ComponentPtr DefaultListCellGenerator::getListCellGeneratorComponent(ListPtr list, Field* value, UInt32 index, bool isSelected, bool cellHasFocus)
+
+ComponentPtr DefaultTableHeaderCellRenderer::getTableCellRendererComponent(TablePtr table, Field* value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
 {
 	if(value == NULL){
 		return NullFC;
 	}
+	BevelBorderPtr DefaultBorder = BevelBorder::create();
+	beginEditCP(DefaultBorder);
+		DefaultBorder->setRaised(true);
+		DefaultBorder->setWidth(1);
+		DefaultBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		DefaultBorder->setShadowInner(Color4f(0.65, 0.65, 0.65, 1.0));
+		DefaultBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
+	endEditCP(DefaultBorder);
+
 	LabelPtr TheLabel = Label::create();
-	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
+	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask | Label::BorderFieldMask);
 		std::string tempString;
-		if(value->getType() == SFString::getClassType())
-		{
-			tempString = dynamic_cast<SFString*>(value)->getValue();
-		}
-		else
-		{
-			value->getValueByStr(tempString);
-		}
+		tempString = dynamic_cast<SFString*>(value)->getValue();
 		TheLabel->setText(tempString);
 		TheLabel->setPreferredSize(Vec2s(100,30));
-	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
-	ColorUIBackgroundPtr tempBackground;
-	tempBackground = ColorUIBackground::create();
+		TheLabel->setBorder(DefaultBorder);
+	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask | Label::BorderFieldMask);
 
-	beginEditCP(TheLabel, Label::BackgroundFieldMask);
-		TheLabel->setBackground(tempBackground);
-	endEditCP(TheLabel, Label::BackgroundFieldMask);
-
-	beginEditCP(tempBackground, ColorUIBackground::ColorFieldMask);
-		if(isSelected){
-			tempBackground->setColor(Color4f(0.4, 0.4, 1.0, 1.0));
-		}
-		else{
-			tempBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
-		}
-	endEditCP(tempBackground, ColorUIBackground::ColorFieldMask);
-
-	if(cellHasFocus){
-		LineBorderPtr tempBorder;
-
-			tempBorder = LineBorder::create();
-			beginEditCP(TheLabel, Label::BorderFieldMask);
-				TheLabel->setBorder(tempBorder);
-			endEditCP(TheLabel, Label::BorderFieldMask);
-
-		beginEditCP(tempBorder, LineBorder::ColorFieldMask);
-			tempBorder->setColor(Color4f(0.0, 0.0, 1.0, 1.0));
-		endEditCP(tempBorder, LineBorder::ColorFieldMask);
-	}
-	else{
-		EmptyBorderPtr tempBorder;
-
-			tempBorder = EmptyBorder::create();
-			beginEditCP(TheLabel, Label::BorderFieldMask);
-				TheLabel->setBorder(tempBorder);
-			endEditCP(TheLabel, Label::BorderFieldMask);
-	}
 	return Component::Ptr::dcast(TheLabel);
-	
-	
 }
 
 /*-------------------------------------------------------------------------*\
@@ -140,11 +106,11 @@ ComponentPtr DefaultListCellGenerator::getListCellGeneratorComponent(ListPtr lis
 
 /*----------------------- constructors & destructors ----------------------*/
 
-DefaultListCellGenerator::DefaultListCellGenerator(void)
+DefaultTableHeaderCellRenderer::DefaultTableHeaderCellRenderer(void)
 {
 }
 
-DefaultListCellGenerator::~DefaultListCellGenerator(void)
+DefaultTableHeaderCellRenderer::~DefaultTableHeaderCellRenderer(void)
 {
 }
 

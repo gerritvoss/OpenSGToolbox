@@ -50,7 +50,7 @@
 #include "Border/OSGEmptyBorder.h"
 #include "Component/OSGLabel.h"
 
-#include "OSGDefaultTableCellRenderer.h"
+#include "OSGDefaultInt32TableCellRenderer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -58,8 +58,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::DefaultTableCellRenderer
-A DefaultTableCellRenderer.
+/*! \class osg::DefaultInt32TableCellRenderer
+A DefaultInt32TableCellRenderer.
 */
 
 /***************************************************************************\
@@ -75,7 +75,7 @@ A DefaultTableCellRenderer.
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultTableCellRenderer::getTableCellRendererComponent(TablePtr table, Field* value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
+ComponentPtr DefaultInt32TableCellRenderer::getTableCellRendererComponent(TablePtr table, Field* value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
 {
 	if(value == NULL){
 		return NullFC;
@@ -83,14 +83,7 @@ ComponentPtr DefaultTableCellRenderer::getTableCellRendererComponent(TablePtr ta
 	LabelPtr TheLabel = Label::create();
 	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
 		std::string tempString;
-		if(value->getType() == SFString::getClassType())
-		{
-			tempString = dynamic_cast<SFString*>(value)->getValue();
-		}
-		else
-		{
-			value->getValueByStr(tempString);
-		}
+		dynamic_cast<SFInt32*>(value)->getValueByStr(tempString);
 		TheLabel->setText(tempString);
 		TheLabel->setPreferredSize(Vec2s(100,30));
 	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
@@ -141,11 +134,11 @@ ComponentPtr DefaultTableCellRenderer::getTableCellRendererComponent(TablePtr ta
 
 /*----------------------- constructors & destructors ----------------------*/
 
-DefaultTableCellRenderer::DefaultTableCellRenderer(void)
+DefaultInt32TableCellRenderer::DefaultInt32TableCellRenderer(void)
 {
 }
 
-DefaultTableCellRenderer::~DefaultTableCellRenderer(void)
+DefaultInt32TableCellRenderer::~DefaultInt32TableCellRenderer(void)
 {
 }
 

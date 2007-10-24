@@ -67,6 +67,33 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  TableBase::HeaderFieldMask = 
     (TypeTraits<BitVector>::One << TableBase::HeaderFieldId);
 
+const OSG::BitVector  TableBase::TableFieldMask = 
+    (TypeTraits<BitVector>::One << TableBase::TableFieldId);
+
+const OSG::BitVector  TableBase::AutoCreateColumnsFromModelFieldMask = 
+    (TypeTraits<BitVector>::One << TableBase::AutoCreateColumnsFromModelFieldId);
+
+const OSG::BitVector  TableBase::AutoResizeModeFieldMask = 
+    (TypeTraits<BitVector>::One << TableBase::AutoResizeModeFieldId);
+
+const OSG::BitVector  TableBase::RowHeightFieldMask = 
+    (TypeTraits<BitVector>::One << TableBase::RowHeightFieldId);
+
+const OSG::BitVector  TableBase::RowMarginFieldMask = 
+    (TypeTraits<BitVector>::One << TableBase::RowMarginFieldId);
+
+const OSG::BitVector  TableBase::RowSelectionAllowedFieldMask = 
+    (TypeTraits<BitVector>::One << TableBase::RowSelectionAllowedFieldId);
+
+const OSG::BitVector  TableBase::ShowHorizontalLinesFieldMask = 
+    (TypeTraits<BitVector>::One << TableBase::ShowHorizontalLinesFieldId);
+
+const OSG::BitVector  TableBase::ShowVerticalLinesFieldMask = 
+    (TypeTraits<BitVector>::One << TableBase::ShowVerticalLinesFieldId);
+
+const OSG::BitVector  TableBase::GridColorFieldMask = 
+    (TypeTraits<BitVector>::One << TableBase::GridColorFieldId);
+
 const OSG::BitVector TableBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +102,33 @@ const OSG::BitVector TableBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var TableHeaderPtr  TableBase::_sfHeader
+    
+*/
+/*! \var ComponentPtr    TableBase::_mfTable
+    
+*/
+/*! \var bool            TableBase::_sfAutoCreateColumnsFromModel
+    
+*/
+/*! \var UInt32          TableBase::_sfAutoResizeMode
+    
+*/
+/*! \var UInt32          TableBase::_sfRowHeight
+    
+*/
+/*! \var UInt32          TableBase::_sfRowMargin
+    
+*/
+/*! \var bool            TableBase::_sfRowSelectionAllowed
+    
+*/
+/*! \var bool            TableBase::_sfShowHorizontalLines
+    
+*/
+/*! \var bool            TableBase::_sfShowVerticalLines
+    
+*/
+/*! \var Color4f         TableBase::_sfGridColor
     
 */
 
@@ -86,7 +140,52 @@ FieldDescription *TableBase::_desc[] =
                      "Header", 
                      HeaderFieldId, HeaderFieldMask,
                      false,
-                     (FieldAccessMethod) &TableBase::getSFHeader)
+                     (FieldAccessMethod) &TableBase::getSFHeader),
+    new FieldDescription(MFComponentPtr::getClassType(), 
+                     "Table", 
+                     TableFieldId, TableFieldMask,
+                     false,
+                     (FieldAccessMethod) &TableBase::getMFTable),
+    new FieldDescription(SFBool::getClassType(), 
+                     "AutoCreateColumnsFromModel", 
+                     AutoCreateColumnsFromModelFieldId, AutoCreateColumnsFromModelFieldMask,
+                     false,
+                     (FieldAccessMethod) &TableBase::getSFAutoCreateColumnsFromModel),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "AutoResizeMode", 
+                     AutoResizeModeFieldId, AutoResizeModeFieldMask,
+                     false,
+                     (FieldAccessMethod) &TableBase::getSFAutoResizeMode),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "RowHeight", 
+                     RowHeightFieldId, RowHeightFieldMask,
+                     false,
+                     (FieldAccessMethod) &TableBase::getSFRowHeight),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "RowMargin", 
+                     RowMarginFieldId, RowMarginFieldMask,
+                     false,
+                     (FieldAccessMethod) &TableBase::getSFRowMargin),
+    new FieldDescription(SFBool::getClassType(), 
+                     "RowSelectionAllowed", 
+                     RowSelectionAllowedFieldId, RowSelectionAllowedFieldMask,
+                     false,
+                     (FieldAccessMethod) &TableBase::getSFRowSelectionAllowed),
+    new FieldDescription(SFBool::getClassType(), 
+                     "ShowHorizontalLines", 
+                     ShowHorizontalLinesFieldId, ShowHorizontalLinesFieldMask,
+                     false,
+                     (FieldAccessMethod) &TableBase::getSFShowHorizontalLines),
+    new FieldDescription(SFBool::getClassType(), 
+                     "ShowVerticalLines", 
+                     ShowVerticalLinesFieldId, ShowVerticalLinesFieldMask,
+                     false,
+                     (FieldAccessMethod) &TableBase::getSFShowVerticalLines),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "GridColor", 
+                     GridColorFieldId, GridColorFieldMask,
+                     false,
+                     (FieldAccessMethod) &TableBase::getSFGridColor)
 };
 
 
@@ -152,6 +251,7 @@ void TableBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfTable.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -163,6 +263,15 @@ void TableBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 TableBase::TableBase(void) :
     _sfHeader                 (TableHeaderPtr(NullFC)), 
+    _mfTable                  (), 
+    _sfAutoCreateColumnsFromModel(bool(true)), 
+    _sfAutoResizeMode         (UInt32(Table::AUTO_RESIZE_SUBSEQUENT_COLUMNS)), 
+    _sfRowHeight              (UInt32(50)), 
+    _sfRowMargin              (UInt32(1)), 
+    _sfRowSelectionAllowed    (bool(true)), 
+    _sfShowHorizontalLines    (bool(true)), 
+    _sfShowVerticalLines      (bool(true)), 
+    _sfGridColor              (Color4f(0.0, 0.0, 0.0, 1.0)), 
     Inherited() 
 {
 }
@@ -173,6 +282,15 @@ TableBase::TableBase(void) :
 
 TableBase::TableBase(const TableBase &source) :
     _sfHeader                 (source._sfHeader                 ), 
+    _mfTable                  (source._mfTable                  ), 
+    _sfAutoCreateColumnsFromModel(source._sfAutoCreateColumnsFromModel), 
+    _sfAutoResizeMode         (source._sfAutoResizeMode         ), 
+    _sfRowHeight              (source._sfRowHeight              ), 
+    _sfRowMargin              (source._sfRowMargin              ), 
+    _sfRowSelectionAllowed    (source._sfRowSelectionAllowed    ), 
+    _sfShowHorizontalLines    (source._sfShowHorizontalLines    ), 
+    _sfShowVerticalLines      (source._sfShowVerticalLines      ), 
+    _sfGridColor              (source._sfGridColor              ), 
     Inherited                 (source)
 {
 }
@@ -194,6 +312,51 @@ UInt32 TableBase::getBinSize(const BitVector &whichField)
         returnValue += _sfHeader.getBinSize();
     }
 
+    if(FieldBits::NoField != (TableFieldMask & whichField))
+    {
+        returnValue += _mfTable.getBinSize();
+    }
+
+    if(FieldBits::NoField != (AutoCreateColumnsFromModelFieldMask & whichField))
+    {
+        returnValue += _sfAutoCreateColumnsFromModel.getBinSize();
+    }
+
+    if(FieldBits::NoField != (AutoResizeModeFieldMask & whichField))
+    {
+        returnValue += _sfAutoResizeMode.getBinSize();
+    }
+
+    if(FieldBits::NoField != (RowHeightFieldMask & whichField))
+    {
+        returnValue += _sfRowHeight.getBinSize();
+    }
+
+    if(FieldBits::NoField != (RowMarginFieldMask & whichField))
+    {
+        returnValue += _sfRowMargin.getBinSize();
+    }
+
+    if(FieldBits::NoField != (RowSelectionAllowedFieldMask & whichField))
+    {
+        returnValue += _sfRowSelectionAllowed.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ShowHorizontalLinesFieldMask & whichField))
+    {
+        returnValue += _sfShowHorizontalLines.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ShowVerticalLinesFieldMask & whichField))
+    {
+        returnValue += _sfShowVerticalLines.getBinSize();
+    }
+
+    if(FieldBits::NoField != (GridColorFieldMask & whichField))
+    {
+        returnValue += _sfGridColor.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -206,6 +369,51 @@ void TableBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (HeaderFieldMask & whichField))
     {
         _sfHeader.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TableFieldMask & whichField))
+    {
+        _mfTable.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (AutoCreateColumnsFromModelFieldMask & whichField))
+    {
+        _sfAutoCreateColumnsFromModel.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (AutoResizeModeFieldMask & whichField))
+    {
+        _sfAutoResizeMode.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RowHeightFieldMask & whichField))
+    {
+        _sfRowHeight.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RowMarginFieldMask & whichField))
+    {
+        _sfRowMargin.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RowSelectionAllowedFieldMask & whichField))
+    {
+        _sfRowSelectionAllowed.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ShowHorizontalLinesFieldMask & whichField))
+    {
+        _sfShowHorizontalLines.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ShowVerticalLinesFieldMask & whichField))
+    {
+        _sfShowVerticalLines.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (GridColorFieldMask & whichField))
+    {
+        _sfGridColor.copyToBin(pMem);
     }
 
 
@@ -221,6 +429,51 @@ void TableBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfHeader.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (TableFieldMask & whichField))
+    {
+        _mfTable.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (AutoCreateColumnsFromModelFieldMask & whichField))
+    {
+        _sfAutoCreateColumnsFromModel.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (AutoResizeModeFieldMask & whichField))
+    {
+        _sfAutoResizeMode.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RowHeightFieldMask & whichField))
+    {
+        _sfRowHeight.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RowMarginFieldMask & whichField))
+    {
+        _sfRowMargin.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RowSelectionAllowedFieldMask & whichField))
+    {
+        _sfRowSelectionAllowed.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ShowHorizontalLinesFieldMask & whichField))
+    {
+        _sfShowHorizontalLines.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ShowVerticalLinesFieldMask & whichField))
+    {
+        _sfShowVerticalLines.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (GridColorFieldMask & whichField))
+    {
+        _sfGridColor.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -233,6 +486,33 @@ void TableBase::executeSyncImpl(      TableBase *pOther,
 
     if(FieldBits::NoField != (HeaderFieldMask & whichField))
         _sfHeader.syncWith(pOther->_sfHeader);
+
+    if(FieldBits::NoField != (TableFieldMask & whichField))
+        _mfTable.syncWith(pOther->_mfTable);
+
+    if(FieldBits::NoField != (AutoCreateColumnsFromModelFieldMask & whichField))
+        _sfAutoCreateColumnsFromModel.syncWith(pOther->_sfAutoCreateColumnsFromModel);
+
+    if(FieldBits::NoField != (AutoResizeModeFieldMask & whichField))
+        _sfAutoResizeMode.syncWith(pOther->_sfAutoResizeMode);
+
+    if(FieldBits::NoField != (RowHeightFieldMask & whichField))
+        _sfRowHeight.syncWith(pOther->_sfRowHeight);
+
+    if(FieldBits::NoField != (RowMarginFieldMask & whichField))
+        _sfRowMargin.syncWith(pOther->_sfRowMargin);
+
+    if(FieldBits::NoField != (RowSelectionAllowedFieldMask & whichField))
+        _sfRowSelectionAllowed.syncWith(pOther->_sfRowSelectionAllowed);
+
+    if(FieldBits::NoField != (ShowHorizontalLinesFieldMask & whichField))
+        _sfShowHorizontalLines.syncWith(pOther->_sfShowHorizontalLines);
+
+    if(FieldBits::NoField != (ShowVerticalLinesFieldMask & whichField))
+        _sfShowVerticalLines.syncWith(pOther->_sfShowVerticalLines);
+
+    if(FieldBits::NoField != (GridColorFieldMask & whichField))
+        _sfGridColor.syncWith(pOther->_sfGridColor);
 
 
 }
@@ -247,6 +527,33 @@ void TableBase::executeSyncImpl(      TableBase *pOther,
     if(FieldBits::NoField != (HeaderFieldMask & whichField))
         _sfHeader.syncWith(pOther->_sfHeader);
 
+    if(FieldBits::NoField != (AutoCreateColumnsFromModelFieldMask & whichField))
+        _sfAutoCreateColumnsFromModel.syncWith(pOther->_sfAutoCreateColumnsFromModel);
+
+    if(FieldBits::NoField != (AutoResizeModeFieldMask & whichField))
+        _sfAutoResizeMode.syncWith(pOther->_sfAutoResizeMode);
+
+    if(FieldBits::NoField != (RowHeightFieldMask & whichField))
+        _sfRowHeight.syncWith(pOther->_sfRowHeight);
+
+    if(FieldBits::NoField != (RowMarginFieldMask & whichField))
+        _sfRowMargin.syncWith(pOther->_sfRowMargin);
+
+    if(FieldBits::NoField != (RowSelectionAllowedFieldMask & whichField))
+        _sfRowSelectionAllowed.syncWith(pOther->_sfRowSelectionAllowed);
+
+    if(FieldBits::NoField != (ShowHorizontalLinesFieldMask & whichField))
+        _sfShowHorizontalLines.syncWith(pOther->_sfShowHorizontalLines);
+
+    if(FieldBits::NoField != (ShowVerticalLinesFieldMask & whichField))
+        _sfShowVerticalLines.syncWith(pOther->_sfShowVerticalLines);
+
+    if(FieldBits::NoField != (GridColorFieldMask & whichField))
+        _sfGridColor.syncWith(pOther->_sfGridColor);
+
+
+    if(FieldBits::NoField != (TableFieldMask & whichField))
+        _mfTable.syncWith(pOther->_mfTable, sInfo);
 
 
 }
@@ -256,6 +563,9 @@ void TableBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (TableFieldMask & whichField))
+        _mfTable.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

@@ -31,12 +31,4 @@ A UI List.
 		header="Component/OSGComponent.h"
 	>
 	</Field>
-	<Field
-		name="SelectedIndices"
-		type="UInt32"
-		cardinality="multi"
-		visibility="external"
-		access="protected"
-	>
-	</Field>
 </FieldContainer>

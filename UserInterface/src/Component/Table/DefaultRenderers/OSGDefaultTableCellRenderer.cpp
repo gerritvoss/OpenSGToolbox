@@ -43,11 +43,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGUIViewport.h"
+#include "Background/OSGColorUIBackground.h"
+#include "Border/OSGLineBorder.h"
+#include "Border/OSGEmptyBorder.h"
+#include "Component/OSGLabel.h"
+
+#include "OSGDefaultTableCellRenderer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,8 +58,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::UIViewport
-A UI UIViewport 	
+/*! \class osg::DefaultTableCellRenderer
+A DefaultTableCellRenderer.
 */
 
 /***************************************************************************\
@@ -67,127 +70,79 @@ A UI UIViewport
  *                           Class methods                                 *
 \***************************************************************************/
 
-void UIViewport::initMethod (void)
-{
-}
-
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-void UIViewport::updateLayout(void)
+ComponentPtr DefaultTableCellRenderer::getTableCellRendererComponent(TablePtr table, Field* value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
 {
-    if(getViewComponent() != NullFC)
-    {
-        Vec2s Size;
-        if(getViewSize() != Vec2s(-1,-1))
-        {
-            Size = getViewSize();
-        }
-        else
-        {
-            Size = getViewComponent()->getPreferredSize();
-        }
-        
-        beginEditCP(getViewComponent(), Component::SizeFieldMask | Component::PositionFieldMask);
-            getViewComponent()->setSize(Size);
-            getViewComponent()->setPosition(-getViewPosition());
-        endEditCP(getViewComponent(), Component::SizeFieldMask | Component::PositionFieldMask);
-        
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
-    }
+	if(value == NULL){
+		return NullFC;
+	}
+	LabelPtr TheLabel = Label::create();
+	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
+		std::string tempString;
+	    value->getValueByStr(tempString);
+		TheLabel->setText(tempString);
+		TheLabel->setPreferredSize(Vec2s(100,30));
+	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
+	ColorUIBackgroundPtr tempBackground;
+	tempBackground = ColorUIBackground::create();
+
+	beginEditCP(TheLabel, Label::BackgroundFieldMask);
+		TheLabel->setBackground(tempBackground);
+	endEditCP(TheLabel, Label::BackgroundFieldMask);
+
+	beginEditCP(tempBackground, ColorUIBackground::ColorFieldMask);
+		if(isSelected){
+			tempBackground->setColor(Color4f(0.4, 0.4, 1.0, 1.0));
+		}
+		else{
+			tempBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
+		}
+	endEditCP(tempBackground, ColorUIBackground::ColorFieldMask);
+
+	if(hasFocus){
+		LineBorderPtr tempBorder;
+
+			tempBorder = LineBorder::create();
+			beginEditCP(TheLabel, Label::BorderFieldMask);
+				TheLabel->setBorder(tempBorder);
+			endEditCP(TheLabel, Label::BorderFieldMask);
+
+		beginEditCP(tempBorder, LineBorder::ColorFieldMask);
+			tempBorder->setColor(Color4f(0.0, 0.0, 1.0, 1.0));
+		endEditCP(tempBorder, LineBorder::ColorFieldMask);
+	}
+	else{
+		EmptyBorderPtr tempBorder;
+
+			tempBorder = EmptyBorder::create();
+			beginEditCP(TheLabel, Label::BorderFieldMask);
+				TheLabel->setBorder(tempBorder);
+			endEditCP(TheLabel, Label::BorderFieldMask);
+	}
+	return Component::Ptr::dcast(TheLabel);
+	
+	
 }
 
-void UIViewport::produceStateChanged(const ChangeEvent& e)
-{
-    ChangeListenerSet ListenerSet(_ChangeListeners);
-    for(ChangeListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-    {
-	    (*SetItor)->stateChanged(e);
-    }
-}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-UIViewport::UIViewport(void) :
-    Inherited()
+DefaultTableCellRenderer::DefaultTableCellRenderer(void)
 {
 }
 
-UIViewport::UIViewport(const UIViewport &source) :
-    Inherited(source)
-{
-}
-
-UIViewport::~UIViewport(void)
+DefaultTableCellRenderer::~DefaultTableCellRenderer(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
-
-void UIViewport::changed(BitVector whichField, UInt32 origin)
-{
-    Inherited::changed(whichField, origin);
-
-    if(whichField & ViewComponentFieldMask)
-    {
-        beginEditCP(UIViewportPtr(this), ChildrenFieldMask);
-            getChildren().clear();
-            if(getViewComponent() != NullFC)
-            {
-                getChildren().push_back(getViewComponent());
-            }
-        endEditCP(UIViewportPtr(this), ChildrenFieldMask);
-    }
-
-    if((whichField & ViewSizeFieldMask) ||
-        (whichField & ViewPositionFieldMask))
-    {
-        updateLayout();
-    }
-
-    if((whichField & ViewSizeFieldMask) ||
-        (whichField & ViewPositionFieldMask) ||
-        (whichField & SizeFieldMask))
-    {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
-    }
-}
-
-void UIViewport::dump(      UInt32    , 
-                         const BitVector ) const
-{
-    SLOG << "Dump UIViewport NI" << std::endl;
-}
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGUIVIEWPORTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGUIVIEWPORTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGUIVIEWPORTFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

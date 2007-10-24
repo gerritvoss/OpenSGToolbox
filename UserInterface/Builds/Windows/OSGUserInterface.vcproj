@@ -45,7 +45,7 @@
 				Outputs="include"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGInputD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGInputD.lib OSGToolboxD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
@@ -107,7 +107,7 @@
 				Outputs="include"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGInput.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGInput.lib OSGToolbox.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -910,24 +910,6 @@
 						RelativePath="..\..\src\Component\Table\OSGAbstractTableModel.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGDefaultTableCellEditor.cpp">
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Table\OSGDefaultTableCellEditor.h">
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Table\OSGDefaultTableCellEditor.inl">
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Table\OSGDefaultTableCellRenderer.cpp">
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Table\OSGDefaultTableCellRenderer.h">
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Table\OSGDefaultTableCellRenderer.inl">
-					</File>
-					<File
 						RelativePath="..\..\src\Component\Table\OSGDefaultTableColumnModel.cpp">
 					</File>
 					<File
@@ -1032,6 +1014,74 @@
 					<File
 						RelativePath="..\..\src\Component\Table\OSGTableModelListener.h">
 					</File>
+					<Filter
+						Name="DefaultRenderers"
+						Filter="">
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultBoolTableCellRenderer.cpp">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultBoolTableCellRenderer.h">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultGLenumTableCellRenderer.cpp">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultGLenumTableCellRenderer.h">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultInt32TableCellRenderer.cpp">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultInt32TableCellRenderer.h">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultReal32TableCellRenderer.cpp">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultReal32TableCellRenderer.h">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultStringTableCellRenderer.cpp">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultStringTableCellRenderer.h">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableCellRenderer.cpp">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableCellRenderer.h">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableCellRenderers.h">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableHeaderCellRenderer.cpp">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableHeaderCellRenderer.h">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultUInt32TableCellRenderer.cpp">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultUInt32TableCellRenderer.h">
+						</File>
+					</Filter>
+					<Filter
+						Name="DefaultEditors"
+						Filter="">
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultEditors\OSGDefaultTableCellEditor.cpp">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultEditors\OSGDefaultTableCellEditor.h">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\DefaultEditors\OSGDefaultTableCellEditor.inl">
+						</File>
+					</Filter>
 				</Filter>
 			</Filter>
 			<Filter

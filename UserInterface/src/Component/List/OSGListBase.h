@@ -69,7 +69,6 @@
 
 #include <OpenSG/OSGUInt32Fields.h> // CellLayout type
 #include "Component/OSGComponent.h" // List type
-#include <OpenSG/OSGUInt32Fields.h> // SelectedIndices type
 
 #include "OSGListFields.h"
 
@@ -93,15 +92,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
 
     enum
     {
-        CellLayoutFieldId      = Inherited::NextFieldId,
-        ListFieldId            = CellLayoutFieldId      + 1,
-        SelectedIndicesFieldId = ListFieldId            + 1,
-        NextFieldId            = SelectedIndicesFieldId + 1
+        CellLayoutFieldId = Inherited::NextFieldId,
+        ListFieldId       = CellLayoutFieldId + 1,
+        NextFieldId       = ListFieldId       + 1
     };
 
     static const OSG::BitVector CellLayoutFieldMask;
     static const OSG::BitVector ListFieldMask;
-    static const OSG::BitVector SelectedIndicesFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -183,7 +180,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
 
     SFUInt32            _sfCellLayout;
     MFComponentPtr      _mfList;
-    MFUInt32            _mfSelectedIndices;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -206,14 +202,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
     /*! \{                                                                 */
 
            MFComponentPtr      *getMFList           (void);
-           MFUInt32            *getMFSelectedIndices(void);
 
            ComponentPtr        &getList           (UInt32 index);
            MFComponentPtr      &getList           (void);
      const MFComponentPtr      &getList           (void) const;
-           UInt32              &getSelectedIndices(UInt32 index);
-           MFUInt32            &getSelectedIndices(void);
-     const MFUInt32            &getSelectedIndices(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

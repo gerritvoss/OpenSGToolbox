@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_ABSTRACT_TABLE_MODEL_H_
-#define _OSG_UI_ABSTRACT_TABLE_MODEL_H_
+#ifndef _OSG_UI_DEFAULT_TABLE_CELL_EDITOR_H_
+#define _OSG_UI_DEFAULT_TABLE_CELL_EDITOR_H_
 
 #ifdef __sgi
 #pragma once
@@ -46,48 +46,57 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGTableModel.h"
-#include <set>
+#include "Editors/OSGAbstractCellEditor.h"
+#include "Component/Table/OSGTableCellEditor.h"
+
+#include "Event/OSGActionListener.h"
 
 OSG_BEGIN_NAMESPACE
 	 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractTableModel : public TableModel
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellEditor : public AbstractCellEditor, public TableCellEditor, public ActionListener
 {
+private:
 protected:
-	typedef std::set<TableModelListenerPtr> TableModelListenerSet;
-    typedef TableModelListenerSet::iterator TableModelListenerSetItor;
-    typedef TableModelListenerSet::const_iterator TableModelListenerSetConstItor;
-	TableModelListenerSet _ModelListeners;
-
-	void produceContentsHeaderRowChanged(UInt32 FirstColumn, UInt32 LastColumn);
-	void produceContentsChanged(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow);
-	void produceIntervalAdded(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow);
-	void produceIntervalRemoved(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow);
-    
+    UInt32 _ClickCountToStart;
+    ComponentPtr _EditingComponent;
+    Field* _Value;
 public:
+    
+	virtual ComponentPtr getTableCellEditorComponent(TablePtr table, Field* value, bool isSelected, UInt32 row, UInt32 column);
 
-    //Adds a listener to the list that is notified each time a change to the data model occurs.
-    virtual void addTableModelListener(TableModelListenerPtr l);
+    //Tells the editor to cancel editing and not accept any partially edited value.
+    virtual void cancelCellEditing(void);
+
+    //Returns the value contained in the editor.
+    virtual Field* getCellEditorValue(void) const;
+
+    //Asks the editor if it can start editing using anEvent.
+    virtual bool isCellEditable(const Event& anEvent) const;
+
+    //Returns true if the editing cell should be selected, false otherwise.
+    virtual bool shouldSelectCell(const Event& anEvent) const;
+
+    //Tells the editor to stop editing and accept any partially edited value as the value of the editor.
+    virtual bool stopCellEditing(void);
+
+    //Returns the number of clicks needed to start editing.
+    UInt32 getClickCountToStart(void) const;
+
+    //Returns a reference to the editor component.
+    ComponentPtr getComponent(void) const;
+
+    //Specifies the number of clicks needed to start editing.
+    void setClickCountToStart(const UInt32& count);
     
-    //Removes a listener from the list that is notified each time a change to the data model occurs.
-    virtual void removeTableModelListener(TableModelListenerPtr l);
-    
-    //Returns the name of the column at columnIndex.
-    //virtual Field* getColumnValue(UInt32 columnIndex) const;
-    
-    //Returns true if the cell at rowIndex and columnIndex is editable.
-    virtual bool isCellEditable(UInt32 rowIndex, UInt32 columnIndex) const;
-    
-    //Sets the value in the cell at columnIndex and rowIndex to aValue.
-    virtual void setValueAt(Field* aValue, UInt32 rowIndex, UInt32 columnIndex);
-    
+    virtual void actionPerformed(const ActionEvent& e);
 };
 
-typedef boost::intrusive_ptr<AbstractTableModel> AbstractTableModelPtr;
+typedef boost::intrusive_ptr<DefaultTableCellEditor> DefaultTableCellEditorPtr;
 
 OSG_END_NAMESPACE
 
-#include "OSGAbstractTableModel.inl"
+#include "OSGDefaultTableCellEditor.inl"
 
-#endif /* _OSG_UI_ABSTRACT_TABLE_MODEL_H_ */
+#endif /* _OSG_UI_DEFAULT_TABLE_CELL_EDITOR_H_ */
+
 

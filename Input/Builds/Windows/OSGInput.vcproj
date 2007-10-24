@@ -202,6 +202,9 @@
 					RelativePath="..\..\src\Event\OSGFieldChangeEvent.inl">
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGFieldChangeListener.cpp">
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGFieldChangeListener.h">
 				</File>
 				<File

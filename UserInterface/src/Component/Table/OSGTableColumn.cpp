@@ -120,7 +120,8 @@ void TableColumn::changed(BitVector whichField, UInt32 origin)
     //Produce a FieldChanged Event for each Field that was changed
     for(UInt32 i(0) ; i<getType().getNumFieldDescs() ; ++i)
     {
-        if(whichField & getType().getFieldDescription(i)->getFieldMask())
+        if(getType().getFieldDescription(i) != NULL &&
+            whichField & getType().getFieldDescription(i)->getFieldMask())
         {
             produceFieldChanged(getField(i), getType().getFieldDescription(i));
         }

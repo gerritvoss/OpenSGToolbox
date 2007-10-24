@@ -106,6 +106,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
 	
     virtual void mousePressed(const MouseEvent& e);
 	virtual void keyTyped(const KeyEvent& e);
+
+    ComponentPtr getComponentAtPoint(const MouseEvent& e);
+    Field* getValueAtPoint(const MouseEvent& e);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

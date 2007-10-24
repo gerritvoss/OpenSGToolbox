@@ -84,7 +84,7 @@
 
 #include "Component/Table/OSGTableHeader.h"
 #include "Component/Table/OSGTable.h"
-#include "Component/Table/OSGDefaultTableCellRenderer.h"
+#include "Component/Table/DefaultRenderers/OSGDefaultTableCellRenderers.h"
 
 #include "Component/List/OSGList.h"
 #include "Component/List/OSGDefaultListSelectionModel.h"
@@ -265,7 +265,7 @@ void DefaultLookAndFeel::init(void)
 		//Sizes
 		DefaultLabel->setMinSize(Vec2s(0,0));
 		DefaultLabel->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultLabel->setPreferredSize(Vec2s(100,50));
+		DefaultLabel->setPreferredSize(Vec2s(100,30));
 
 		//Border
 		DefaultLabel->setBorder(DefaultLabelBorder);
@@ -567,7 +567,7 @@ void DefaultLookAndFeel::init(void)
 		//Sizes
 		DefaultCheckboxButton->setMinSize(Vec2s(0,0));
 		DefaultCheckboxButton->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultCheckboxButton->setPreferredSize(Vec2s(100,50));
+		DefaultCheckboxButton->setPreferredSize(Vec2s(100,30));
 		DefaultCheckboxButton->setSize(Vec2s(0,0));
 		DefaultCheckboxButton->setDrawObject(defaultCheckboxDrawObject);
 
@@ -706,7 +706,7 @@ void DefaultLookAndFeel::init(void)
 		//sizes
 		DefaultRadioButton->setMinSize(Vec2s(0, 0));
 		DefaultRadioButton->setMaxSize(Vec2s(32767,32767));
-		DefaultRadioButton->setPreferredSize(Vec2s(100, 100));
+		DefaultRadioButton->setPreferredSize(Vec2s(100, 30));
 
 		//draw objects
 		DefaultRadioButton->setRadioDrawObject(defaultRadioDrawObject);
@@ -1862,7 +1862,7 @@ void DefaultLookAndFeel::init(void)
 		DefaultTableHeader->setReorderingAllowed(true);
 		DefaultTableHeader->setResizingAllowed(true);
 		DefaultTableHeader->setDefaultMarginDrawObject(NullFC);
-        DefaultTableHeader->setDefaultRenderer(TableCellRendererPtr(new DefaultTableCellRenderer()));
+        DefaultTableHeader->setDefaultRenderer(TableCellRendererPtr(new DefaultTableHeaderCellRenderer()));
         DefaultTableHeader->setResizingCursorDriftAllowance(1);
 		
 	endEditCP(DefaultRotatedComponent);
@@ -1903,6 +1903,24 @@ void DefaultLookAndFeel::init(void)
 		
 		//Opacity
 		DefaultTable->setOpacity(1.0);
+
+        //Table Properties
+        DefaultTable->setHeader(DefaultTableHeader);
+        DefaultTable->setAutoCreateColumnsFromModel(true);
+        DefaultTable->setAutoResizeMode(Table::AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+        DefaultTable->setRowHeight(50);
+        DefaultTable->setRowMargin(1);
+        DefaultTable->setRowSelectionAllowed(true);
+        DefaultTable->setShowHorizontalLines(true);
+        DefaultTable->setShowVerticalLines(true);
+        DefaultTable->setGridColor(Color4f(0.0,0.0,0.0,1.0));
+
+        DefaultTable->setDefaultRenderer(&SFGLenum::getClassType(), TableCellRendererPtr(new DefaultGLenumTableCellRenderer()));
+        DefaultTable->setDefaultRenderer(&SFString::getClassType(), TableCellRendererPtr(new DefaultStringTableCellRenderer()));
+        DefaultTable->setDefaultRenderer(&SFBool::getClassType(), TableCellRendererPtr(new DefaultBoolTableCellRenderer()));
+        DefaultTable->setDefaultRenderer(&SFInt32::getClassType(), TableCellRendererPtr(new DefaultInt32TableCellRenderer()));
+        DefaultTable->setDefaultRenderer(&SFUInt32::getClassType(), TableCellRendererPtr(new DefaultUInt32TableCellRenderer()));
+        DefaultTable->setDefaultRenderer(&SFReal32::getClassType(), TableCellRendererPtr(new DefaultReal32TableCellRenderer()));
 		
 	endEditCP(DefaultRotatedComponent);
 	

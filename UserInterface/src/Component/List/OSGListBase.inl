@@ -110,13 +110,6 @@ MFComponentPtr *ListBase::getMFList(void)
     return &_mfList;
 }
 
-//! Get the List::_mfSelectedIndices field.
-inline
-MFUInt32 *ListBase::getMFSelectedIndices(void)
-{
-    return &_mfSelectedIndices;
-}
-
 
 //! Get the value of the List::_sfCellLayout field.
 inline
@@ -159,27 +152,6 @@ inline
 const MFComponentPtr &ListBase::getList(void) const
 {
     return _mfList;
-}
-
-//! Get the value of the \a index element the List::_mfSelectedIndices field.
-inline
-UInt32 &ListBase::getSelectedIndices(const UInt32 index)
-{
-    return _mfSelectedIndices[index];
-}
-
-//! Get the List::_mfSelectedIndices field.
-inline
-MFUInt32 &ListBase::getSelectedIndices(void)
-{
-    return _mfSelectedIndices;
-}
-
-//! Get the List::_mfSelectedIndices field.
-inline
-const MFUInt32 &ListBase::getSelectedIndices(void) const
-{
-    return _mfSelectedIndices;
 }
 
 OSG_END_NAMESPACE

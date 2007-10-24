@@ -46,7 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 #include "Component/OSGComponent.h"
-#include "OSGTable.h"
+#include "OSGTableFields.h"
 
 #include <OpenSG/OSGField.h>
 

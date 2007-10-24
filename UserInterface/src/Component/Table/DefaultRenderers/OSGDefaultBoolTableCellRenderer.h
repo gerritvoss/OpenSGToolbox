@@ -36,67 +36,52 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_DEFAULT_TABLE_CELL_EDITOR_H_
-#define _OSG_UI_DEFAULT_TABLE_CELL_EDITOR_H_
-
+#ifndef _OSGDEFAULTBOOLTABLECELLRENDERER_H_
+#define _OSGDEFAULTBOOLTABLECELLRENDERER_H_
 #ifdef __sgi
 #pragma once
 #endif
- 
+
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "Editors/OSGAbstractCellEditor.h"
-#include "OSGTableCellEditor.h"
-
-#include "Event/OSGActionListener.h"
+#include "Component/Table/OSGTableCellRenderer.h"
 
 OSG_BEGIN_NAMESPACE
-	 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellEditor : public AbstractCellEditor, public TableCellEditor, public ActionListener
+
+/*! \brief DefaultBoolTableCellRenderer class. See \ref
+           PageUserInterfaceDefaultBoolTableCellRenderer for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultBoolTableCellRenderer : public TableCellRenderer
 {
-private:
-protected:
-    UInt32 _ClickCountToStart;
-    ComponentPtr _EditingComponent;
-    Field* _Value;
-public:
+    /*==========================  PUBLIC  =================================*/
+  public:
+	virtual ComponentPtr getTableCellRendererComponent(TablePtr table, Field* value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column);
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    DefaultBoolTableCellRenderer(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~DefaultBoolTableCellRenderer(void);
+
+    /*! \}                                                                 */
+    /*=========================  PROTECTED  ===============================*/
+  protected:
     
-	virtual ComponentPtr getTableCellEditorComponent(TablePtr table, Field* value, bool isSelected, UInt32 row, UInt32 column);
-
-    //Tells the editor to cancel editing and not accept any partially edited value.
-    virtual void cancelCellEditing(void);
-
-    //Returns the value contained in the editor.
-    virtual Field* getCellEditorValue(void) const;
-
-    //Asks the editor if it can start editing using anEvent.
-    virtual bool isCellEditable(const Event& anEvent) const;
-
-    //Returns true if the editing cell should be selected, false otherwise.
-    virtual bool shouldSelectCell(const Event& anEvent) const;
-
-    //Tells the editor to stop editing and accept any partially edited value as the value of the editor.
-    virtual bool stopCellEditing(void);
-
-    //Returns the number of clicks needed to start editing.
-    UInt32 getClickCountToStart(void) const;
-
-    //Returns a reference to the editor component.
-    ComponentPtr getComponent(void) const;
-
-    //Specifies the number of clicks needed to start editing.
-    void setClickCountToStart(const UInt32& count);
-    
-    virtual void actionPerformed(const ActionEvent& e);
+    /*==========================  PRIVATE  ================================*/
+  private:
 };
 
-typedef boost::intrusive_ptr<DefaultTableCellEditor> DefaultTableCellEditorPtr;
+typedef boost::intrusive_ptr<DefaultBoolTableCellRenderer> DefaultBoolTableCellRendererPtr;
 
 OSG_END_NAMESPACE
 
-#include "OSGDefaultTableCellEditor.inl"
-
-#endif /* _OSG_UI_DEFAULT_TABLE_CELL_EDITOR_H_ */
-
-
+#endif /* _OSGDEFAULTBOOLTABLECELLRENDERER_H_ */

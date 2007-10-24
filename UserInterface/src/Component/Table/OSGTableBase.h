@@ -68,6 +68,15 @@
 #include "Component/Container/OSGContainer.h" // Parent
 
 #include "Component/Table/OSGTableHeaderFields.h" // Header type
+#include "Component/OSGComponent.h" // Table type
+#include <OpenSG/OSGBoolFields.h> // AutoCreateColumnsFromModel type
+#include <OpenSG/OSGUInt32Fields.h> // AutoResizeMode type
+#include <OpenSG/OSGUInt32Fields.h> // RowHeight type
+#include <OpenSG/OSGUInt32Fields.h> // RowMargin type
+#include <OpenSG/OSGBoolFields.h> // RowSelectionAllowed type
+#include <OpenSG/OSGBoolFields.h> // ShowHorizontalLines type
+#include <OpenSG/OSGBoolFields.h> // ShowVerticalLines type
+#include <OpenSG/OSGColor4fFields.h> // GridColor type
 
 #include "OSGTableFields.h"
 
@@ -91,11 +100,29 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
 
     enum
     {
-        HeaderFieldId = Inherited::NextFieldId,
-        NextFieldId   = HeaderFieldId + 1
+        HeaderFieldId                     = Inherited::NextFieldId,
+        TableFieldId                      = HeaderFieldId                     + 1,
+        AutoCreateColumnsFromModelFieldId = TableFieldId                      + 1,
+        AutoResizeModeFieldId             = AutoCreateColumnsFromModelFieldId + 1,
+        RowHeightFieldId                  = AutoResizeModeFieldId             + 1,
+        RowMarginFieldId                  = RowHeightFieldId                  + 1,
+        RowSelectionAllowedFieldId        = RowMarginFieldId                  + 1,
+        ShowHorizontalLinesFieldId        = RowSelectionAllowedFieldId        + 1,
+        ShowVerticalLinesFieldId          = ShowHorizontalLinesFieldId        + 1,
+        GridColorFieldId                  = ShowVerticalLinesFieldId          + 1,
+        NextFieldId                       = GridColorFieldId                  + 1
     };
 
     static const OSG::BitVector HeaderFieldMask;
+    static const OSG::BitVector TableFieldMask;
+    static const OSG::BitVector AutoCreateColumnsFromModelFieldMask;
+    static const OSG::BitVector AutoResizeModeFieldMask;
+    static const OSG::BitVector RowHeightFieldMask;
+    static const OSG::BitVector RowMarginFieldMask;
+    static const OSG::BitVector RowSelectionAllowedFieldMask;
+    static const OSG::BitVector ShowHorizontalLinesFieldMask;
+    static const OSG::BitVector ShowVerticalLinesFieldMask;
+    static const OSG::BitVector GridColorFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -123,9 +150,33 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
     /*! \{                                                                 */
 
            SFTableHeaderPtr    *getSFHeader         (void);
+           SFBool              *getSFAutoCreateColumnsFromModel(void);
+           SFUInt32            *getSFAutoResizeMode (void);
+           SFUInt32            *getSFRowHeight      (void);
+           SFUInt32            *getSFRowMargin      (void);
+           SFBool              *getSFRowSelectionAllowed(void);
+           SFBool              *getSFShowHorizontalLines(void);
+           SFBool              *getSFShowVerticalLines(void);
+           SFColor4f           *getSFGridColor      (void);
 
            TableHeaderPtr      &getHeader         (void);
      const TableHeaderPtr      &getHeader         (void) const;
+           bool                &getAutoCreateColumnsFromModel(void);
+     const bool                &getAutoCreateColumnsFromModel(void) const;
+           UInt32              &getAutoResizeMode (void);
+     const UInt32              &getAutoResizeMode (void) const;
+           UInt32              &getRowHeight      (void);
+     const UInt32              &getRowHeight      (void) const;
+           UInt32              &getRowMargin      (void);
+     const UInt32              &getRowMargin      (void) const;
+           bool                &getRowSelectionAllowed(void);
+     const bool                &getRowSelectionAllowed(void) const;
+           bool                &getShowHorizontalLines(void);
+     const bool                &getShowHorizontalLines(void) const;
+           bool                &getShowVerticalLines(void);
+     const bool                &getShowVerticalLines(void) const;
+           Color4f             &getGridColor      (void);
+     const Color4f             &getGridColor      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -133,6 +184,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
     /*! \{                                                                 */
 
      void setHeader         ( const TableHeaderPtr &value );
+     void setAutoCreateColumnsFromModel( const bool &value );
+     void setAutoResizeMode ( const UInt32 &value );
+     void setRowHeight      ( const UInt32 &value );
+     void setRowMargin      ( const UInt32 &value );
+     void setRowSelectionAllowed( const bool &value );
+     void setShowHorizontalLines( const bool &value );
+     void setShowVerticalLines( const bool &value );
+     void setGridColor      ( const Color4f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +235,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
     /*! \{                                                                 */
 
     SFTableHeaderPtr    _sfHeader;
+    MFComponentPtr      _mfTable;
+    SFBool              _sfAutoCreateColumnsFromModel;
+    SFUInt32            _sfAutoResizeMode;
+    SFUInt32            _sfRowHeight;
+    SFUInt32            _sfRowMargin;
+    SFBool              _sfRowSelectionAllowed;
+    SFBool              _sfShowHorizontalLines;
+    SFBool              _sfShowVerticalLines;
+    SFColor4f           _sfGridColor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -191,6 +259,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
     /*! \{                                                                 */
 
     virtual ~TableBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           MFComponentPtr      *getMFTable          (void);
+
+           ComponentPtr        &getTable          (UInt32 index);
+           MFComponentPtr      &getTable          (void);
+     const MFComponentPtr      &getTable          (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

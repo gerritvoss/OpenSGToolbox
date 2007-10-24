@@ -53,4 +53,4 @@ typedef KeyListener* KeyListenerPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGEVENT_H_ */
+#endif /* _OSGKEYLISTENER_H_ */

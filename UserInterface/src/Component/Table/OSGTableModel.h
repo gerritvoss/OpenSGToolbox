@@ -69,7 +69,7 @@ public:
     virtual UInt32 getColumnCount(void) const = 0;
     
     //Returns the name of the column at columnIndex.
-    virtual std::string getColumnName(UInt32 columnIndex) const = 0;
+    virtual Field* getColumnValue(UInt32 columnIndex) const = 0;
     
     //Returns the number of rows in the model.
     virtual UInt32 getRowCount(void) const = 0;
@@ -82,6 +82,9 @@ public:
     
     //Sets the value in the cell at columnIndex and rowIndex to aValue.
     virtual void setValueAt(Field* aValue, UInt32 rowIndex, UInt32 columnIndex) = 0;
+
+    //Returns the most specific superclass for all the cell values in the column.
+    virtual const FieldType* getColumnType(const UInt32& columnIndex) = 0;
 };
 
 typedef boost::intrusive_ptr<TableModel> TableModelPtr;
