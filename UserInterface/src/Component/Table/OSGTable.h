@@ -96,7 +96,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
 	virtual void focusGained(const FocusEvent& e);
 	virtual void focusLost(const FocusEvent& e);
     
+	//Mouse Events
+    virtual void mouseClicked(const MouseEvent& e);
     virtual void mousePressed(const MouseEvent& e);
+    virtual void mouseReleased(const MouseEvent& e);
+
+	//Mouse Motion Events
+    virtual void mouseMoved(const MouseEvent& e);
+    virtual void mouseDragged(const MouseEvent& e);
+
+	//Mouse Wheel Events
+    virtual void mouseWheelMoved(const MouseWheelEvent& e);
+    
+	virtual void keyPressed(const KeyEvent& e);
+	virtual void keyReleased(const KeyEvent& e);
 	virtual void keyTyped(const KeyEvent& e);
 
     virtual void updateLayout(void);
@@ -263,6 +276,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     //Returns true if a cell is being edited.
     bool isEditing(void) const;
 
+    
+    bool isSelected(const UInt32& Row, const UInt32& Column) const;
+
     //Returns true if the row at the specified index is selected.
     bool isRowSelected(const UInt32& row) const;
 
@@ -396,7 +412,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
 	void updateTableComponents(void);
 	void createColumnsFromModel(void);
-    void Table::updateItem(const UInt32& index);
+    void updateItem(const UInt32& index);
+    void checkCellEdit(const Event& e, const UInt32& Row, const UInt32& Column);
+    void startEditing(const UInt32& Row, const UInt32& Column);
+    bool getFocusedCell(UInt32& Row, UInt32& Column) const;
+    
+	virtual void produceMouseExitOnComponent(const MouseEvent& e, ComponentPtr Comp);
+	virtual void produceMouseEnterOnComponent(const MouseEvent& e, ComponentPtr Comp);
 
     /*==========================  PRIVATE  ================================*/
   private:

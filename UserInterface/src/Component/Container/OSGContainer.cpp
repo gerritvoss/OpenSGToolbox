@@ -237,6 +237,16 @@ void Container::mouseWheelMoved(const MouseWheelEvent& e)
 	Component::mouseWheelMoved(e);
 }
 
+void Container::produceMouseExitOnComponent(const MouseEvent& e, ComponentPtr Comp)
+{
+	Comp->mouseExited(e);
+}
+
+void Container::produceMouseEnterOnComponent(const MouseEvent& e, ComponentPtr Comp)
+{
+	Comp->mouseEntered(e);
+}
+
 void Container::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, ComponentPtr Comp, bool isMouseContained, ViewportPtr TheViewport)
 {
 	//Check if mouse is inside of the frame
@@ -246,7 +256,7 @@ void Container::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, 
 		{
 		    //Mouse has exited the frame
 			MouseEvent ExitedEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
-			Comp->mouseExited(ExitedEvent);
+			produceMouseExitOnComponent(ExitedEvent, Comp);
 		}
 		Comp->setMouseContained(false);
 	}
@@ -256,7 +266,7 @@ void Container::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, 
 		{
 			//Mouse has exited the frame
 			MouseEvent EnteredEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
-			Comp->mouseEntered(EnteredEvent);
+			produceMouseEnterOnComponent(EnteredEvent, Comp);
 		}
 		Comp->setMouseContained(true);
 	}

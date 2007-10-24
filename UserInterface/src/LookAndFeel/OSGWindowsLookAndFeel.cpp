@@ -84,6 +84,13 @@
 #include "Component/Scroll/OSGScrollBar.h"
 #include "Component/Scroll/OSGScrollPanel.h"
 #include "Component/Container/OSGUIViewport.h"
+
+#include "Component/Table/OSGTableHeader.h"
+#include "Component/Table/OSGTable.h"
+#include "Component/Table/DefaultRenderers/OSGDefaultTableCellRenderers.h"
+
+#include "Component/List/OSGList.h"
+#include "Component/List/OSGDefaultListSelectionModel.h"
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -2550,6 +2557,43 @@ void WindowsLookAndFeel::init(void)
 	
     ScrollPanel::getClassType().setPrototype(WindowsScrollPanel);
 
+	//************************** UIViewport *****************************
+	//Windows UIViewportBorder
+	EmptyBorderPtr WindowsUIViewportBorder = EmptyBorder::create();
+	beginEditCP(WindowsUIViewportBorder);
+		WindowsUIViewportBorder->setLeftWidth(0);
+		WindowsUIViewportBorder->setRightWidth(0);
+		WindowsUIViewportBorder->setTopWidth(0);
+		WindowsUIViewportBorder->setBottomWidth(0);
+	endEditCP(WindowsUIViewportBorder);
+
+	//Windows UIViewportBackground
+	EmptyUIBackgroundPtr WindowsUIViewportBackground = EmptyUIBackground::create();
+
+	//Windows UIViewport
+	UIViewportPtr WindowsUIViewport = UIViewport::create();
+	beginEditCP(WindowsUIViewport);
+		WindowsUIViewport->setEnabled(true);
+		WindowsUIViewport->setVisible(true);
+		
+		WindowsUIViewport->setConstraints(NullFC);
+		//Sizes
+		WindowsUIViewport->setMinSize(Vec2s(0,0));
+		WindowsUIViewport->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsUIViewport->setPreferredSize(Vec2s(100,100));
+
+		//Border
+		WindowsUIViewport->setBorder(WindowsUIViewportBorder);
+		
+		//Background
+		WindowsUIViewport->setBackground(WindowsUIViewportBackground);
+		
+		//Opacity
+		WindowsUIViewport->setOpacity(1.0);
+	endEditCP(WindowsUIViewport);
+	
+	UIViewport::getClassType().setPrototype(WindowsUIViewport);
+	
 	//************************** RotatedComponent*****************************
 	//Windows RotatedComponentBorder
 	EmptyBorderPtr WindowsRotatedComponentBorder = EmptyBorder::create();
@@ -2584,6 +2628,150 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsRotatedComponent);
 	
     RotatedComponent::getClassType().setPrototype(WindowsRotatedComponent);
+
+    
+	//************************** List *****************************
+	//Windows RotatedComponentBorder
+	EmptyBorderPtr WindowsListBorder = EmptyBorder::create();
+
+	//Windows RotatedComponentBackground
+	EmptyUIBackgroundPtr WindowsListBackground = EmptyUIBackground::create();
+
+	//Windows RotatedComponent
+	ListPtr WindowsList = List::create();
+	beginEditCP(WindowsList);
+		WindowsList->setEnabled(true);
+		WindowsList->setVisible(true);
+		
+		WindowsList->setConstraints(NullFC);
+		//Sizes
+		WindowsList->setMinSize(Vec2s(0,0));
+		WindowsList->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsList->setPreferredSize(Vec2s(100,100));
+
+		//Border
+		WindowsList->setBorder(WindowsListBorder);
+		WindowsList->setRolloverBorder(WindowsListBorder);
+		WindowsList->setFocusedBorder(WindowsListBorder);
+		WindowsList->setDisabledBorder(WindowsListBorder);
+		
+		//Background
+		WindowsList->setBackground(WindowsListBackground);
+		WindowsList->setRolloverBackground(WindowsListBackground);
+		WindowsList->setFocusedBackground(WindowsListBackground);
+		WindowsList->setDisabledBackground(WindowsListBackground);
+		
+		//Opacity
+		WindowsList->setOpacity(1.0);
+		
+	endEditCP(WindowsList);
+	
+    List::getClassType().setPrototype(WindowsList);
+    
+	
+	//************************** TableHeader *****************************
+	//Windows RotatedComponentBorder
+	EmptyBorderPtr WindowsTableHeaderBorder = EmptyBorder::create();
+
+	//Windows RotatedComponentBackground
+	EmptyUIBackgroundPtr WindowsTableHeaderBackground = EmptyUIBackground::create();
+    
+	//Windows RotatedComponent
+	TableHeaderPtr WindowsTableHeader = TableHeader::create();
+	beginEditCP(WindowsTableHeader);
+		WindowsTableHeader->setEnabled(true);
+		WindowsTableHeader->setVisible(true);
+		
+		WindowsTableHeader->setConstraints(NullFC);
+		//Sizes
+		WindowsTableHeader->setMinSize(Vec2s(0,0));
+		WindowsTableHeader->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsTableHeader->setPreferredSize(Vec2s(100,100));
+
+		//Border
+		WindowsTableHeader->setBorder(WindowsTableHeaderBorder);
+		WindowsTableHeader->setRolloverBorder(WindowsTableHeaderBorder);
+		WindowsTableHeader->setFocusedBorder(WindowsTableHeaderBorder);
+		WindowsTableHeader->setDisabledBorder(WindowsTableHeaderBorder);
+		
+		//Background
+		WindowsTableHeader->setBackground(WindowsTableHeaderBackground);
+		WindowsTableHeader->setRolloverBackground(WindowsTableHeaderBackground);
+		WindowsTableHeader->setFocusedBackground(WindowsTableHeaderBackground);
+		WindowsTableHeader->setDisabledBackground(WindowsTableHeaderBackground);
+		
+		//Opacity
+		WindowsTableHeader->setOpacity(1.0);
+
+        //Table Values
+		WindowsTableHeader->setTable(NullFC);
+		WindowsTableHeader->setReorderingAllowed(true);
+		WindowsTableHeader->setResizingAllowed(true);
+		WindowsTableHeader->setDefaultMarginDrawObject(NullFC);
+        WindowsTableHeader->setDefaultRenderer(TableCellRendererPtr(new DefaultTableHeaderCellRenderer()));
+        WindowsTableHeader->setResizingCursorDriftAllowance(1);
+		
+	endEditCP(WindowsTableHeader);
+	
+    TableHeader::getClassType().setPrototype(WindowsTableHeader);
+    
+	
+	//************************** Table *****************************
+	//Windows RotatedComponentBorder
+	EmptyBorderPtr WindowsTableBorder = EmptyBorder::create();
+
+	//Windows RotatedComponentBackground
+	EmptyUIBackgroundPtr WindowsTableBackground = EmptyUIBackground::create();
+
+	//Windows RotatedComponent
+	TablePtr WindowsTable = Table::create();
+	beginEditCP(WindowsTable);
+		WindowsTable->setEnabled(true);
+		WindowsTable->setVisible(true);
+		
+		WindowsTable->setConstraints(NullFC);
+		//Sizes
+		WindowsTable->setMinSize(Vec2s(0,0));
+		WindowsTable->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsTable->setPreferredSize(Vec2s(100,100));
+
+		//Border
+		WindowsTable->setBorder(WindowsTableBorder);
+		WindowsTable->setRolloverBorder(WindowsTableBorder);
+		WindowsTable->setFocusedBorder(WindowsTableBorder);
+		WindowsTable->setDisabledBorder(WindowsTableBorder);
+		
+		//Background
+		WindowsTable->setBackground(WindowsTableBackground);
+		WindowsTable->setRolloverBackground(WindowsTableBackground);
+		WindowsTable->setFocusedBackground(WindowsTableBackground);
+		WindowsTable->setDisabledBackground(WindowsTableBackground);
+		
+		//Opacity
+		WindowsTable->setOpacity(1.0);
+
+        //Table Properties
+        WindowsTable->setHeader(WindowsTableHeader);
+        WindowsTable->setAutoCreateColumnsFromModel(true);
+        WindowsTable->setAutoResizeMode(Table::AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+        WindowsTable->setRowHeight(50);
+        WindowsTable->setRowMargin(1);
+        WindowsTable->setRowSelectionAllowed(true);
+        WindowsTable->setShowHorizontalLines(true);
+        WindowsTable->setShowVerticalLines(true);
+        WindowsTable->setGridColor(Color4f(0.0,0.0,0.0,1.0));
+
+        WindowsTable->setDefaultRenderer(&SFGLenum::getClassType(), TableCellRendererPtr(new DefaultGLenumTableCellRenderer()));
+        WindowsTable->setDefaultRenderer(&SFString::getClassType(), TableCellRendererPtr(new DefaultStringTableCellRenderer()));
+        WindowsTable->setDefaultRenderer(&SFBool::getClassType(), TableCellRendererPtr(new DefaultBoolTableCellRenderer()));
+        WindowsTable->setDefaultRenderer(&SFInt32::getClassType(), TableCellRendererPtr(new DefaultInt32TableCellRenderer()));
+        WindowsTable->setDefaultRenderer(&SFUInt32::getClassType(), TableCellRendererPtr(new DefaultUInt32TableCellRenderer()));
+        WindowsTable->setDefaultRenderer(&SFReal32::getClassType(), TableCellRendererPtr(new DefaultReal32TableCellRenderer()));
+		
+	endEditCP(WindowsTable);
+	
+    Table::getClassType().setPrototype(WindowsTable);
+    
 	/*******Borders********/
 	/*******Line Border********/
 
@@ -2714,6 +2902,10 @@ void WindowsLookAndFeel::init(void)
 		getPrototypes().addValue(WindowsRotatedComponent);
 		getPrototypes().addValue(WindowsScrollBar);
 		getPrototypes().addValue(WindowsScrollPanel);
+		getPrototypes().addValue(WindowsUIViewport);
+		getPrototypes().addValue(WindowsList);
+		getPrototypes().addValue(WindowsTableHeader);
+		getPrototypes().addValue(WindowsTable);
 	endEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);
 
 

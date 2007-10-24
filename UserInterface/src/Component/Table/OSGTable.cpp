@@ -84,6 +84,58 @@ void Table::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void Table::startEditing(const UInt32& Row, const UInt32& Column)
+{
+    if(isEditing())
+    {
+        _CellEditor->stopCellEditing();
+        _CellEditor->removeCellEditorListener(this);
+    }
+    
+    _CellEditor = getCellEditor(Row, Column);
+    _EditingColumn = Column;
+    _EditingRow = Row;
+    _EditingComponent = _CellEditor->getTableCellEditorComponent(TablePtr(this), _Model->getValueAt(Row, Column), isSelected(Row, Column), Row, Column);
+
+    _CellEditor->addCellEditorListener(this);
+
+    updateItem(Row*_Model->getColumnCount() + Column);
+}
+
+void Table::checkCellEdit(const Event& e, const UInt32& Row, const UInt32& Column)
+{
+    //If I am not already editing
+    if(isEditing())
+    {
+        //Check if this cell is editable
+        if(_Model->isCellEditable(Row, Column))
+        {
+            //Check if this event will start an edit
+            TableCellEditorPtr Editor(getCellEditor(Row, Column));
+            if(Editor->isCellEditable(e))
+            {
+                //Then start Editing
+                startEditing(Row, Column);
+            }
+        }
+    }
+}
+
+bool Table::getFocusedCell(UInt32& Row, UInt32& Column) const
+{
+    for(Row = 0 ; Row<_Model->getRowCount(); ++Row)
+    {
+        for(Column = 0 ; Column<_Model->getColumnCount(); ++Column)
+        {
+            if(getChildren().getValue(Row*_Model->getColumnCount() + Column)->getFocused())
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 void Table::keyTyped(const KeyEvent& e)
 {
 	bool noFocus = true;
@@ -157,9 +209,134 @@ void Table::keyTyped(const KeyEvent& e)
 			}
 		}
 	}
+
+    UInt32 Row, Column;
+    if(getFocusedCell(Row, Column))
+    {
+	   checkCellEdit(e, Row, Column);
+    }
 	Component::keyTyped(e);
 }
      
+void Table::mouseClicked(const MouseEvent& e)
+{
+	bool isContained;
+    for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
+    {
+        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+		if(isContained)
+		{
+	        checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
+			getChildren().getValue(i)->mouseClicked(e);
+			break;
+		}
+    }
+	Component::mouseClicked(e);
+}
+
+void Table::mouseReleased(const MouseEvent& e)
+{
+	bool isContained;
+    for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
+    {
+        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+		if(isContained)
+		{
+	        checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
+			getChildren().getValue(i)->mouseReleased(e);
+			break;
+		}
+    }
+	Component::mouseReleased(e);
+}
+
+void Table::mouseMoved(const MouseEvent& e)
+{
+	bool isContained;
+    for(Int32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+		if(isContained)
+		{
+	        checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
+			getChildren().getValue(i)->mouseMoved(e);
+		}
+    }
+	Component::mouseMoved(e);
+}
+
+void Table::mouseDragged(const MouseEvent& e)
+{
+	bool isContained;
+    for(Int32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+		if(isContained)
+		{
+	        checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
+			getChildren().getValue(i)->mouseDragged(e);
+		}
+    }
+	Component::mouseDragged(e);
+}
+
+void Table::mouseWheelMoved(const MouseWheelEvent& e)
+{
+	bool isContained;
+    for(Int32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+		if(isContained)
+		{
+	        checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
+			getChildren().getValue(i)->mouseWheelMoved(e);
+        }
+    }
+	Component::mouseWheelMoved(e);
+}
+
+void Table::produceMouseExitOnComponent(const MouseEvent& e, ComponentPtr Comp)
+{
+    UInt32 i(0);
+    while(i<getChildren().size()-1 && getChildren().getValue(i) != Comp)
+    {
+        ++i;
+    }
+    if(i < getChildren().size()-1)
+    {
+	   checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
+    }
+    Inherited::produceMouseExitOnComponent(e,Comp);
+}
+
+void Table::produceMouseEnterOnComponent(const MouseEvent& e, ComponentPtr Comp)
+{
+    UInt32 i(0);
+    while(i<getChildren().size()-1 && getChildren().getValue(i) != Comp)
+    {
+        ++i;
+    }
+    if(i < getChildren().size()-1)
+    {
+	   checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
+    }
+    Inherited::produceMouseEnterOnComponent(e,Comp);
+}
+
+void Table::keyReleased(const KeyEvent& e)
+{
+}
+
+void Table::keyPressed(const KeyEvent& e)
+{
+}
+
+
 void Table::mousePressed(const MouseEvent& e)
 {
 	bool isContained;
@@ -207,6 +384,7 @@ void Table::mousePressed(const MouseEvent& e)
 					}
 				}
 			}
+	        checkCellEdit(e, Row, Column);
 			getChildren().getValue(i)->mousePressed(e);
 			break;
 		}
@@ -224,38 +402,49 @@ void Table::mousePressed(const MouseEvent& e)
 	Component::mousePressed(e);
 }
 
-void Table::updateItem(const UInt32& index)
+bool Table::isSelected(const UInt32& Row, const UInt32& Column) const
 {
-
-    UInt32 Row(index/_ColumnModel->getColumnCount()),
-           Column(index%_ColumnModel->getColumnCount());
-	//Transfer focus, enabled, Listeners
-	ComponentPtr PrevComponent = getChildren().getValue(index);
-    bool isSelected(false);
     if(_ColumnModel->getColumnSelectionAllowed() && getRowSelectionAllowed())
     {
-        isSelected = _ColumnModel->getSelectionModel()->isSelectedIndex(Column) &&
+        return _ColumnModel->getSelectionModel()->isSelectedIndex(Column) &&
             _RowSelectionModel->isSelectedIndex(Row);
     }
     else
     {
-        isSelected = (_ColumnModel->getColumnSelectionAllowed() && 
+        return (_ColumnModel->getColumnSelectionAllowed() &&
                     _ColumnModel->getSelectionModel()->isSelectedIndex(Column))
                     ||
                     (getRowSelectionAllowed() &&
                     _RowSelectionModel->isSelectedIndex(Row));
     }
+}
 
-    Field* CellValue = _Model->getValueAt(Row, Column);
+void Table::updateItem(const UInt32& index)
+{
+    UInt32 Row(index/_ColumnModel->getColumnCount()),
+           Column(index%_ColumnModel->getColumnCount());
 
+	//Transfer focus, enabled, Listeners
+	ComponentPtr PrevComponent = getChildren().getValue(index);
 	getChildren().getValue(index)->removeFocusListener(this);
-	getChildren().setValue(getCellRenderer(Row, Column)->getTableCellRendererComponent(TablePtr(this), CellValue, isSelected, PrevComponent->getFocused(), Row, Column)
-				,index);
-	if(PrevComponent->getFocused())
-	{
-		//getChildren().getValue(index)->takeFocus();
-		getParentFrame()->setFocusedComponent(getChildren().getValue(index));
-	}
+	
+    //Check if this cell is being Edited
+    if(isEditing() && Row == _EditingRow && Column == _EditingColumn)
+    {
+        getChildren().setValue(_EditingComponent, index);
+    }
+    else //Non-Editing Cell
+    {
+        Field* CellValue = _Model->getValueAt(Row, Column);
+    
+        getChildren().setValue(getCellRenderer(Row, Column)->getTableCellRendererComponent(TablePtr(this), CellValue, isSelected(Row, Column), PrevComponent->getFocused(), Row, Column)
+                    ,index);
+    }
+    if(PrevComponent->getFocused())
+    {
+        //getChildren().getValue(index)->takeFocus();
+        getParentFrame()->setFocusedComponent(getChildren().getValue(index));
+    }
 	getChildren().getValue(index)->addFocusListener(this);
 	getChildren().getValue(index)->setFocused(PrevComponent->getFocused());
 	getChildren().getValue(index)->setPosition(PrevComponent->getPosition());
@@ -340,6 +529,7 @@ void Table::drawInternal(const GraphicsPtr TheGraphics) const
 
 void Table::updateLayout(void)
 {
+    if(getChildren().size() == 0){ return; }
 	Pnt2s BorderTopLeft, BorderBottomRight;
 	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
 	
@@ -401,7 +591,6 @@ void Table::updateTableComponents(void)
     {
         return;
     }
-    bool isSelected(false);
     Field* CellValue(NULL);
 
     beginEditCP(TablePtr(this), TableFieldMask);
@@ -410,24 +599,11 @@ void Table::updateTableComponents(void)
     {
         for(UInt32 Column(0) ; Column<_Model->getColumnCount() ; ++Column)
         {
-            if(_ColumnModel->getColumnSelectionAllowed() && getRowSelectionAllowed())
-            {
-                isSelected = _ColumnModel->getSelectionModel()->isSelectedIndex(Column) &&
-                    _RowSelectionModel->isSelectedIndex(Row);
-            }
-            else
-            {
-                isSelected = (_ColumnModel->getColumnSelectionAllowed() && 
-                            _ColumnModel->getSelectionModel()->isSelectedIndex(Column))
-                            ||
-                            (getRowSelectionAllowed() &&
-                            _RowSelectionModel->isSelectedIndex(Row));
-            }
 
             //TODO: Add Focusing
             CellValue = _Model->getValueAt(Row, Column);
             getTable().push_back(
-            getCellRenderer(Row, Column)->getTableCellRendererComponent(TablePtr(this), CellValue, isSelected, false, Row, Column));
+            getCellRenderer(Row, Column)->getTableCellRendererComponent(TablePtr(this), CellValue, isSelected(Row, Column), false, Row, Column));
         }
     }
     endEditCP(TablePtr(this), TableFieldMask);
@@ -914,6 +1090,12 @@ Table::Table(const Table &source) :
 
     if(getHeader() != NullFC)
     {
+        //Set the Table that the Header Points to to NullFC,
+        //Otherwise, if the Header points to this table, there will be an infinite
+        //recursion in the deepClone
+        getHeader()->setTable(NullFC);
+
+        //Clone the Header
         setHeader(TableHeader::Ptr::dcast(deepClone(getHeader())));
         beginEditCP(getHeader(), TableFieldMask);
             getHeader()->setTable(TablePtr(this));

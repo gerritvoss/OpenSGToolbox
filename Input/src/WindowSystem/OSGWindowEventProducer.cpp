@@ -450,15 +450,10 @@ void WindowEventProducer::produceWindowExited(void)
 void WindowEventProducer::produceUpdate(const Time& ElapsedTime)
 {
    UpdateEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), ElapsedTime );
-   UpdateListenerSetConstItor NextItor;
-   for(UpdateListenerSetConstItor SetItor(_UpdateListeners.begin()) ; SetItor != _UpdateListeners.end() ;)
+   UpdateListenerSet ListenerSet(_UpdateListeners);
+   for(UpdateListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
-      //The use of NextItor and SetItor allows for the Listener that is getting the update call
-      //can remove itself from the listener set without invalidating the itorator
-      NextItor = SetItor;
-      ++NextItor;
       (*SetItor)->update(TheEvent);
-      SetItor = NextItor;
    }
 }
 

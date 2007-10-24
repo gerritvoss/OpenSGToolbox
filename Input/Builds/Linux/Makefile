@@ -34,6 +34,7 @@ OBJECTS = OSGWindowEventProducer.o \
 	OSGKeyAdapter.o \
 	OSGMouseMotionAdapter.o \
 	OSGUpdateEvent.o \
+	OSGFieldChangeListener.o \
 	OSGMouseAdapter.o \
 	OSGKeyEvent.o \
 	OSGKeyEventProducer.o \

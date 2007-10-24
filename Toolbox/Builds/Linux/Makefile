@@ -14,6 +14,7 @@ VPATH = $(srcdir)/:$(srcdir)/Util:$(srcdir)/Cameras:
 EXTRA_CCFLAGS = -I$(srcdir)
 
 OBJECTS = OSGIntrusivePtrImplBase.o \
+	OSGGLenumUtils.o \
 	OSGAirplaneCamera.o \
 	OSGMatrixBeaconCameraBase.o \
 	OSGMatrixBeaconCamera.o \

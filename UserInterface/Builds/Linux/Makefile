@@ -6,7 +6,7 @@ LIB_INCLUDE_DIR_NAME = UserInterface
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Border:$(srcdir)/Background:$(srcdir)/Event:$(srcdir)/Layout:$(srcdir)/Util:$(srcdir)/Component:$(srcdir)/Component/Button:$(srcdir)/Component/Menu:$(srcdir)/Component/Table:$(srcdir)/Component/Scroll:$(srcdir)/Component/Misc:$(srcdir)/Component/Container:$(srcdir)/Component/List:$(srcdir)/Component/Text:$(srcdir)/Editors:$(srcdir)/LookAndFeel:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Text:
+VPATH = $(srcdir)/:$(srcdir)/Border:$(srcdir)/Background:$(srcdir)/Event:$(srcdir)/Layout:$(srcdir)/Util:$(srcdir)/Component:$(srcdir)/Component/Button:$(srcdir)/Component/Menu:$(srcdir)/Component/Table:$(srcdir)/Component/Table/DefaultEditors:$(srcdir)/Component/Table/DefaultRenderers:$(srcdir)/Component/Scroll:$(srcdir)/Component/Misc:$(srcdir)/Component/Container:$(srcdir)/Component/List:$(srcdir)/Component/Text:$(srcdir)/Editors:$(srcdir)/LookAndFeel:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Text:
 
 
 #.SUFFIX = .o .o
@@ -133,7 +133,6 @@ OBJECTS = OSGShadowBorder.o \
 	OSGTableModelEvent.o \
 	OSGTableBase.o \
 	OSGTableHeaderBase.o \
-	OSGDefaultTableCellRenderer.o \
 	OSGTableColumnModelEvent.o \
 	OSGTableColumn.o \
 	OSGDefaultTableColumnModel.o \
@@ -141,6 +140,14 @@ OBJECTS = OSGShadowBorder.o \
 	OSGTable.o \
 	OSGTableHeader.o \
 	OSGDefaultTableCellEditor.o \
+	OSGDefaultBoolTableCellRenderer.o \
+	OSGDefaultInt32TableCellRenderer.o \
+	OSGDefaultStringTableCellRenderer.o \
+	OSGDefaultGLenumTableCellRenderer.o \
+	OSGDefaultTableCellRenderer.o \
+	OSGDefaultTableHeaderCellRenderer.o \
+	OSGDefaultReal32TableCellRenderer.o \
+	OSGDefaultUInt32TableCellRenderer.o \
 	OSGScrollBarBase.o \
 	OSGScrollBar.o \
 	OSGScrollPanel.o \

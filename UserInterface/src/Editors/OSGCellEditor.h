@@ -49,10 +49,11 @@
 #include <OpenSG/OSGField.h>
 #include <OpenSG/Input/OSGEvent.h>
 #include "OSGCellEditorListener.h"
+#include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
 
 OSG_BEGIN_NAMESPACE
 	 
-class OSG_USERINTERFACELIB_DLLMAPPING CellEditor
+class OSG_USERINTERFACELIB_DLLMAPPING CellEditor : public IntrusivePtrImplBase
 {
 private:
 protected:
@@ -80,7 +81,7 @@ public:
 
 };
 
-typedef CellEditor* CellEditorPtr;
+typedef boost::intrusive_ptr<CellEditor> CellEditorPtr;
 
 OSG_END_NAMESPACE
 

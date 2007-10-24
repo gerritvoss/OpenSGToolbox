@@ -1818,7 +1818,7 @@ void DefaultLookAndFeel::init(void)
 		//Opacity
 		DefaultList->setOpacity(1.0);
 		
-	endEditCP(DefaultRotatedComponent);
+	endEditCP(DefaultList);
 	
     List::getClassType().setPrototype(DefaultList);
     
@@ -1865,7 +1865,7 @@ void DefaultLookAndFeel::init(void)
         DefaultTableHeader->setDefaultRenderer(TableCellRendererPtr(new DefaultTableHeaderCellRenderer()));
         DefaultTableHeader->setResizingCursorDriftAllowance(1);
 		
-	endEditCP(DefaultRotatedComponent);
+	endEditCP(DefaultTableHeader);
 	
     TableHeader::getClassType().setPrototype(DefaultTableHeader);
     
@@ -1922,7 +1922,7 @@ void DefaultLookAndFeel::init(void)
         DefaultTable->setDefaultRenderer(&SFUInt32::getClassType(), TableCellRendererPtr(new DefaultUInt32TableCellRenderer()));
         DefaultTable->setDefaultRenderer(&SFReal32::getClassType(), TableCellRendererPtr(new DefaultReal32TableCellRenderer()));
 		
-	endEditCP(DefaultRotatedComponent);
+	endEditCP(DefaultTable);
 	
     Table::getClassType().setPrototype(DefaultTable);
 

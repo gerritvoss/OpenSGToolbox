@@ -47,14 +47,14 @@
 #include "OSGUserInterfaceDef.h"
 #include "Component/OSGComponent.h"
 #include "OSGTableFields.h"
+#include "Editors/OSGCellEditor.h"
 
 #include <OpenSG/OSGField.h>
 
-#include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
 
 OSG_BEGIN_NAMESPACE
 	 
-class OSG_USERINTERFACELIB_DLLMAPPING TableCellEditor : public IntrusivePtrImplBase
+class OSG_USERINTERFACELIB_DLLMAPPING TableCellEditor : public CellEditor
 {
 private:
 protected:
