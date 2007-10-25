@@ -149,7 +149,7 @@ bool Table::isColumnSelected(const UInt32& column) const
 inline
 bool Table::isEditing(void) const
 {
-    return _EditingComponent == NullFC;
+    return _EditingComponent != NullFC;
 }
 
 inline

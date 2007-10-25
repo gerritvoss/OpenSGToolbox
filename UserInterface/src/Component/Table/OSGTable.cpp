@@ -57,6 +57,7 @@
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 
 #include "Component/Table/DefaultRenderers/OSGDefaultTableCellRenderer.h"
+#include "Component/Table/DefaultEditors/OSGDefaultTableCellEditor.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -86,10 +87,19 @@ void Table::initMethod (void)
 
 void Table::startEditing(const UInt32& Row, const UInt32& Column)
 {
+    //If the table is already editing
     if(isEditing())
     {
-        _CellEditor->stopCellEditing();
-        _CellEditor->removeCellEditorListener(this);
+        //Check if we are already editing the requested cell
+        if(_EditingRow == Row && _EditingColumn == Column)
+        {
+            return;
+        }
+        else
+        {
+            //If we are not editing the requested cell, stop the previous editing
+            _CellEditor->stopCellEditing();
+        }
     }
     
     _CellEditor = getCellEditor(Row, Column);
@@ -100,23 +110,21 @@ void Table::startEditing(const UInt32& Row, const UInt32& Column)
     _CellEditor->addCellEditorListener(this);
 
     updateItem(Row*_Model->getColumnCount() + Column);
+	_EditingComponent->setFocused(false);
+    _EditingComponent->takeFocus();
 }
 
 void Table::checkCellEdit(const Event& e, const UInt32& Row, const UInt32& Column)
 {
-    //If I am not already editing
-    if(isEditing())
+    //Check if this cell is editable
+    if(_Model->isCellEditable(Row, Column))
     {
-        //Check if this cell is editable
-        if(_Model->isCellEditable(Row, Column))
+        //Check if this event will start an edit
+        TableCellEditorPtr Editor(getCellEditor(Row, Column));
+        if(Editor->isCellEditable(e))
         {
-            //Check if this event will start an edit
-            TableCellEditorPtr Editor(getCellEditor(Row, Column));
-            if(Editor->isCellEditable(e))
-            {
-                //Then start Editing
-                startEditing(Row, Column);
-            }
+            //Then start Editing
+            startEditing(Row, Column);
         }
     }
 }
@@ -227,7 +235,10 @@ void Table::mouseClicked(const MouseEvent& e)
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
-	        checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
+            if(i != getChildren().size()-1)
+            {
+	            checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
+            }
 			getChildren().getValue(i)->mouseClicked(e);
 			break;
 		}
@@ -244,7 +255,10 @@ void Table::mouseReleased(const MouseEvent& e)
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
-	        checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
+            if(i != getChildren().size()-1)
+            {
+	            checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
+            }
 			getChildren().getValue(i)->mouseReleased(e);
 			break;
 		}
@@ -261,7 +275,10 @@ void Table::mouseMoved(const MouseEvent& e)
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
-	        checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
+            if(i != getChildren().size()-1)
+            {
+	            checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
+            }
 			getChildren().getValue(i)->mouseMoved(e);
 		}
     }
@@ -277,7 +294,10 @@ void Table::mouseDragged(const MouseEvent& e)
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
-	        checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
+            if(i != getChildren().size()-1)
+            {
+	            checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
+            }
 			getChildren().getValue(i)->mouseDragged(e);
 		}
     }
@@ -293,7 +313,10 @@ void Table::mouseWheelMoved(const MouseWheelEvent& e)
 		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
 		if(isContained)
 		{
-	        checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
+            if(i != getChildren().size()-1)
+            {
+	            checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
+            }
 			getChildren().getValue(i)->mouseWheelMoved(e);
         }
     }
@@ -806,11 +829,27 @@ bool Table::editCellAt(const UInt32& row, const UInt32& column, const Event& e)
 void Table::editingCanceled(const ChangeEvent& e)
 {
     //TODO:Implement
+    _CellEditor->removeCellEditorListener(this);
+    _CellEditor = NULL;
+    _EditingComponent = NullFC;
+    updateItem(_EditingRow*_Model->getColumnCount() + _EditingColumn);
+    _EditingRow = -1;
+    _EditingColumn = -1;
 }
 
 void Table::editingStopped(const ChangeEvent& e)
 {
     //TODO:Implement
+    _Model->setValueAt(_CellEditor->getCellEditorValue(), _EditingRow, _EditingColumn);
+
+    
+    _CellEditor->removeCellEditorListener(this);
+    _CellEditor = NULL;
+    _EditingComponent = NullFC;
+    updateItem(_EditingRow*_Model->getColumnCount() + _EditingColumn);
+    _EditingRow = -1;
+    _EditingColumn = -1;
+
 }
 
 TableCellEditorPtr Table::getCellEditor(const UInt32& row, const UInt32& column) const
@@ -951,8 +990,11 @@ TableCellEditorPtr Table::getDefaultEditor(const FieldType* columnType) const
     }
     else
     {
-        SWARNING << "No Default Table Cell Editor for type: " << columnType->getCName() << "." << std::endl;
-        return NULL;
+        if(columnType != NULL)
+        {
+            SWARNING << "No Default Table Cell Editor for type: " << columnType->getCName() << "." << std::endl;
+        }
+        return TableCellEditorPtr(new DefaultTableCellEditor(3));
     }
 }
 

@@ -12,3 +12,11 @@ void intrusive_ptr_release(osg::IntrusivePtrImplBase * p)
 }
 
 }
+
+OSG_BEGIN_NAMESPACE
+
+IntrusivePtrImplBase::~IntrusivePtrImplBase(void)
+{
+}
+
+OSG_END_NAMESPACE

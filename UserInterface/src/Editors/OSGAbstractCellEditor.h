@@ -51,7 +51,7 @@
 
 OSG_BEGIN_NAMESPACE
 	 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractCellEditor : public CellEditor
+class OSG_USERINTERFACELIB_DLLMAPPING AbstractCellEditor : virtual public CellEditor
 {
 private:
 protected:

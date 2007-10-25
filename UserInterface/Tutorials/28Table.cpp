@@ -220,7 +220,7 @@ public:
     
     virtual bool isCellEditable(UInt32 rowIndex, UInt32 columnIndex) const
     {
-        return false;
+        return columnIndex == 0;
     }
     
     virtual void setValueAt(Field* aValue, UInt32 rowIndex, UInt32 columnIndex)
@@ -239,26 +239,31 @@ public:
         _ColumnValues.push_back(new SFString("Column Integer"));
         _ColumnValues.push_back(new SFString("Column GLenum"));
         _ColumnValues.push_back(new SFString("Column Boolean"));
+        _ColumnValues.push_back(new SFString("Column Pnt3f"));
         
         _CellValues.push_back(new SFString("A"));
         _CellValues.push_back(new SFInt32(1));
         _CellValues.push_back(new SFGLenum(GL_SRC_ALPHA));
         _CellValues.push_back(new SFBool(true));
+        _CellValues.push_back(new SFPnt3f(Pnt3f(1.0,0.0,0.0)));
         
         _CellValues.push_back(new SFString("B"));
         _CellValues.push_back(new SFInt32(2));
         _CellValues.push_back(new SFGLenum(GL_NICEST));
         _CellValues.push_back(new SFBool(false));
+        _CellValues.push_back(new SFPnt3f(Pnt3f(0.0,1.0,0.0)));
         
         _CellValues.push_back(new SFString("C"));
         _CellValues.push_back(new SFInt32(3));
         _CellValues.push_back(new SFGLenum(GL_CCW));
         _CellValues.push_back(new SFBool(true));
+        _CellValues.push_back(new SFPnt3f(Pnt3f(0.0,0.0,1.0)));
 
         _CellValues.push_back(new SFString("D"));
         _CellValues.push_back(new SFInt32(4));
         _CellValues.push_back(new SFGLenum(GL_CW));
         _CellValues.push_back(new SFBool(false));
+        _CellValues.push_back(new SFPnt3f(Pnt3f(1.0,1.0,1.0)));
     }
 
     ~ExampleTableModel()

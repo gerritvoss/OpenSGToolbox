@@ -11,7 +11,6 @@ OSG_BEGIN_NAMESPACE
 
 ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table, Field* value, bool isSelected, UInt32 row, UInt32 column)
 {
-    _Value = value;
 	if(value == NULL){
 		return NullFC;
 	}
@@ -37,21 +36,26 @@ ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table,
 	endEditCP(TheTextField, TextField::BackgroundFieldMask);
 
 	beginEditCP(tempBackground, ColorUIBackground::ColorFieldMask);
-		if(isSelected){
-			tempBackground->setColor(Color4f(0.4, 0.4, 1.0, 1.0));
-		}
-		else{
+		//if(isSelected){
+		//	tempBackground->setColor(Color4f(0.4, 0.4, 1.0, 1.0));
+		//}
+		//else{
 			tempBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
-		}
+		//}
 	endEditCP(tempBackground, ColorUIBackground::ColorFieldMask);
 
-	EmptyBorderPtr tempBorder;
+	LineBorderPtr tempBorder;
 
-	tempBorder = EmptyBorder::create();
+	tempBorder = LineBorder::create();
+	beginEditCP(tempBorder, LineBorder::ColorFieldMask);
+		tempBorder->setColor(Color4f(0.0, 0.0, 1.0, 1.0));
+	endEditCP(tempBorder, LineBorder::ColorFieldMask);
+
 	beginEditCP(TheTextField, TextField::BorderFieldMask);
 		TheTextField->setBorder(tempBorder);
 	endEditCP(TheTextField, TextField::BorderFieldMask);
 
+    _EditingTextField = TheTextField;
 	return Component::Ptr::dcast(TheTextField);
 }
 
@@ -62,7 +66,8 @@ void DefaultTableCellEditor::cancelCellEditing(void)
 
 Field* DefaultTableCellEditor::getCellEditorValue(void) const
 {
-    return _Value;
+    _Value.setValue(_EditingTextField->getText());
+    return &_Value;
 }
 
 bool DefaultTableCellEditor::isCellEditable(const Event& anEvent) const

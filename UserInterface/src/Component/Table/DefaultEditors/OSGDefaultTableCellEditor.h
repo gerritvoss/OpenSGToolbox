@@ -51,6 +51,8 @@
 
 #include "Event/OSGActionListener.h"
 
+#include "Component/Text/OSGTextField.h"
+
 OSG_BEGIN_NAMESPACE
 	 
 class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellEditor : public AbstractCellEditor, public TableCellEditor, public ActionListener
@@ -58,8 +60,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellEditor : public AbstractCe
 private:
 protected:
     UInt32 _ClickCountToStart;
-    ComponentPtr _EditingComponent;
-    Field* _Value;
+    TextFieldPtr _EditingTextField;
+    mutable SFString _Value;
 public:
     
 	virtual ComponentPtr getTableCellEditorComponent(TablePtr table, Field* value, bool isSelected, UInt32 row, UInt32 column);
@@ -89,6 +91,8 @@ public:
     void setClickCountToStart(const UInt32& count);
     
     virtual void actionPerformed(const ActionEvent& e);
+
+    DefaultTableCellEditor(const UInt32& ClickCountToStart);
 };
 
 typedef boost::intrusive_ptr<DefaultTableCellEditor> DefaultTableCellEditorPtr;
