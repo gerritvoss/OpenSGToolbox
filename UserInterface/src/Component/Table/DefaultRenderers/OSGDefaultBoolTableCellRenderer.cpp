@@ -48,7 +48,7 @@
 #include "Background/OSGColorUIBackground.h"
 #include "Border/OSGLineBorder.h"
 #include "Border/OSGEmptyBorder.h"
-#include "Component/OSGLabel.h"
+#include "Component/Text/OSGLabel.h"
 
 #include "OSGDefaultBoolTableCellRenderer.h"
 

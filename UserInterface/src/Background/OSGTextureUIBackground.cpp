@@ -44,7 +44,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "./Component/OSGImageComponent.h"
+#include <OpenSG/OSGTextureChunk.h>
 #include "Util/OSGUIDefines.h"
 #include "Util/OSGUIDrawUtils.h"
 

@@ -2,7 +2,7 @@
 #include "OSGUIDefines.h"
 
 #include "Component/Container/OSGFrame.h"
-#include "Component/OSGRotatedComponent.h"
+#include "Component/Misc/OSGRotatedComponent.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include "UIDrawingSurface/OSGUIDrawingSurfaceMouseTransformFunctor.h"
 

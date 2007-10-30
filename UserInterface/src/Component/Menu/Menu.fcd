@@ -54,7 +54,7 @@ A UI Menu.
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGUIDrawObjectCanvas.h"
+		header="Component/Misc/OSGUIDrawObjectCanvas.h"
 		access="public"
 	>
 	</Field>

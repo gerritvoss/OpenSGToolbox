@@ -67,14 +67,14 @@
 
 #include "OSGToggleButton.h" // Parent
 
-#include "Component/OSGUIDrawObjectCanvas.h" // RadioDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // SelectedRadioDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // ActiveRadioDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // ActiveSelectedRadioDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // RolloverRadioDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // RolloverSelectedRadioDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // DisabledRadioDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // DisabledSelectedRadioDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // RadioDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // SelectedRadioDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // ActiveRadioDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // ActiveSelectedRadioDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // RolloverRadioDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // RolloverSelectedRadioDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DisabledRadioDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DisabledSelectedRadioDrawObject type
 
 #include "OSGRadioButtonFields.h"
 

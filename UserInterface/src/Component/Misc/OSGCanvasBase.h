@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class UIDrawObjectCanvas
+ **     class Canvas
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGUIDRAWOBJECTCANVASBASE_H_
-#define _OSGUIDRAWOBJECTCANVASBASE_H_
+#ifndef _OSGCANVASBASE_H_
+#define _OSGCANVASBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,20 +65,19 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGComponent.h" // Parent
+#include "Component/OSGComponent.h" // Parent
 
-#include "Graphics/UIDrawObjects/OSGUIDrawObject.h" // DrawObjects type
 
-#include "OSGUIDrawObjectCanvasFields.h"
+#include "OSGCanvasFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class UIDrawObjectCanvas;
+class Canvas;
 class BinaryDataHandler;
 
-//! \brief UIDrawObjectCanvas Base Class.
+//! \brief Canvas Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING UIDrawObjectCanvasBase : public Component
+class OSG_USERINTERFACELIB_DLLMAPPING CanvasBase : public Component
 {
   private:
 
@@ -87,15 +86,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawObjectCanvasBase : public Component
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef UIDrawObjectCanvasPtr  Ptr;
-
-    enum
-    {
-        DrawObjectsFieldId = Inherited::NextFieldId,
-        NextFieldId        = DrawObjectsFieldId + 1
-    };
-
-    static const OSG::BitVector DrawObjectsFieldMask;
+    typedef CanvasPtr  Ptr;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -119,23 +110,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawObjectCanvasBase : public Component
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           MFUIDrawObjectPtr   *getMFDrawObjects    (void);
-
-           UIDrawObjectPtr     &getDrawObjects    (const UInt32 index);
-           MFUIDrawObjectPtr   &getDrawObjects    (void);
-     const MFUIDrawObjectPtr   &getDrawObjects    (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -156,8 +130,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawObjectCanvasBase : public Component
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  UIDrawObjectCanvasPtr      create          (void); 
-    static  UIDrawObjectCanvasPtr      createEmpty     (void); 
+    static  CanvasPtr      create          (void); 
+    static  CanvasPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -172,25 +146,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawObjectCanvasBase : public Component
   protected:
 
     /*---------------------------------------------------------------------*/
-    /*! \name                      Fields                                  */
-    /*! \{                                                                 */
-
-    MFUIDrawObjectPtr   _mfDrawObjects;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    UIDrawObjectCanvasBase(void);
-    UIDrawObjectCanvasBase(const UIDrawObjectCanvasBase &source);
+    CanvasBase(void);
+    CanvasBase(const CanvasBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~UIDrawObjectCanvasBase(void); 
+    virtual ~CanvasBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -198,13 +165,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawObjectCanvasBase : public Component
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      UIDrawObjectCanvasBase *pOther,
+    void executeSyncImpl(      CanvasBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      UIDrawObjectCanvasBase *pOther,
+    void executeSyncImpl(      CanvasBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -229,12 +196,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawObjectCanvasBase : public Component
 
     friend class FieldContainer;
 
-    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const UIDrawObjectCanvasBase &source);
+    void operator =(const CanvasBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -242,17 +208,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawObjectCanvasBase : public Component
 //---------------------------------------------------------------------------
 
 
-typedef UIDrawObjectCanvasBase *UIDrawObjectCanvasBaseP;
+typedef CanvasBase *CanvasBaseP;
 
-typedef osgIF<UIDrawObjectCanvasBase::isNodeCore,
-              CoredNodePtr<UIDrawObjectCanvas>,
+typedef osgIF<CanvasBase::isNodeCore,
+              CoredNodePtr<Canvas>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet UIDrawObjectCanvasNodePtr;
+              >::_IRet CanvasNodePtr;
 
-typedef RefPtr<UIDrawObjectCanvasPtr> UIDrawObjectCanvasRefPtr;
+typedef RefPtr<CanvasPtr> CanvasRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGUIDRAWOBJECTCANVASBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGCANVASBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGUIDRAWOBJECTCANVASBASE_H_ */
+#endif /* _OSGCANVASBASE_H_ */

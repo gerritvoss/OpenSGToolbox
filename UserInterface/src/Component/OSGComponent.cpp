@@ -56,7 +56,7 @@
 #include "LookAndFeel/OSGLookAndFeelManager.h"
 #include "Component/Menu/OSGPopupMenu.h"
 
-#include "Component/OSGRotatedComponent.h"
+#include "Component/Misc/OSGRotatedComponent.h"
 
 OSG_BEGIN_NAMESPACE
 

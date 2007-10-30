@@ -154,27 +154,6 @@
 			<Filter
 				Name="Component">
 				<File
-					RelativePath="..\..\src\Component\OSGCanvas.cpp">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGCanvas.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGCanvas.inl">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGCanvasBase.cpp">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGCanvasBase.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGCanvasBase.inl">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGCanvasFields.h">
-				</File>
-				<File
 					RelativePath="..\..\src\Component\OSGComponent.cpp">
 				</File>
 				<File
@@ -194,90 +173,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Component\OSGComponentFields.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGImageComponent.cpp">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGImageComponent.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGImageComponent.inl">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGImageComponentBase.cpp">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGImageComponentBase.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGImageComponentBase.inl">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGImageComponentFields.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGLabel.cpp">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGLabel.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGLabel.inl">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGLabelBase.cpp">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGLabelBase.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGLabelBase.inl">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGLabelFields.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGRotatedComponent.cpp">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGRotatedComponent.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGRotatedComponent.inl">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGRotatedComponentBase.cpp">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGRotatedComponentBase.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGRotatedComponentBase.inl">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGRotatedComponentFields.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGUIDrawObjectCanvas.cpp">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGUIDrawObjectCanvas.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGUIDrawObjectCanvas.inl">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGUIDrawObjectCanvasBase.cpp">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGUIDrawObjectCanvasBase.h">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGUIDrawObjectCanvasBase.inl">
-				</File>
-				<File
-					RelativePath="..\..\src\Component\OSGUIDrawObjectCanvasFields.h">
 				</File>
 				<Filter
 					Name="List">
@@ -422,6 +317,27 @@
 				</Filter>
 				<Filter
 					Name="Text">
+					<File
+						RelativePath="..\..\src\Component\Text\OSGLabel.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Text\OSGLabel.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Text\OSGLabel.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Text\OSGLabelBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Text\OSGLabelBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Text\OSGLabelBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Text\OSGLabelFields.h">
+					</File>
 					<File
 						RelativePath="..\..\src\Component\Text\OSGPasswordField.cpp">
 					</File>
@@ -780,6 +696,69 @@
 				<Filter
 					Name="Misc">
 					<File
+						RelativePath="..\..\src\Component\Misc\OSGCanvas.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGCanvas.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGCanvas.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGCanvasBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGCanvasBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGCanvasBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGCanvasFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGImageComponent.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGImageComponent.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGImageComponent.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGImageComponentBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGImageComponentBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGImageComponentBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGImageComponentFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGRotatedComponent.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGRotatedComponent.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGRotatedComponent.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGRotatedComponentBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGRotatedComponentBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGRotatedComponentBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGRotatedComponentFields.h">
+					</File>
+					<File
 						RelativePath="..\..\src\Component\Misc\OSGToolTip.cpp">
 					</File>
 					<File
@@ -799,6 +778,27 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Component\Misc\OSGToolTipFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvas.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvas.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvas.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvasBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvasBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvasBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvasFields.h">
 					</File>
 				</Filter>
 				<Filter

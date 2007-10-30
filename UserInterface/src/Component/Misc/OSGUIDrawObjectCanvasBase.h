@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class ImageComponent
+ **     class UIDrawObjectCanvas
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGIMAGECOMPONENTBASE_H_
-#define _OSGIMAGECOMPONENTBASE_H_
+#ifndef _OSGUIDRAWOBJECTCANVASBASE_H_
+#define _OSGUIDRAWOBJECTCANVASBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,24 +65,20 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGComponent.h" // Parent
+#include "Component/OSGComponent.h" // Parent
 
-#include <OpenSG/OSGTextureChunkFields.h> // Texture type
-#include <OpenSG/OSGUInt32Fields.h> // Scale type
-#include <OpenSG/OSGVec2sFields.h> // ScaleAbsoluteSize type
-#include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
-#include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
+#include "Graphics/UIDrawObjects/OSGUIDrawObject.h" // DrawObjects type
 
-#include "OSGImageComponentFields.h"
+#include "OSGUIDrawObjectCanvasFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class ImageComponent;
+class UIDrawObjectCanvas;
 class BinaryDataHandler;
 
-//! \brief ImageComponent Base Class.
+//! \brief UIDrawObjectCanvas Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
+class OSG_USERINTERFACELIB_DLLMAPPING UIDrawObjectCanvasBase : public Component
 {
   private:
 
@@ -91,23 +87,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ImageComponentPtr  Ptr;
+    typedef UIDrawObjectCanvasPtr  Ptr;
 
     enum
     {
-        TextureFieldId             = Inherited::NextFieldId,
-        ScaleFieldId               = TextureFieldId             + 1,
-        ScaleAbsoluteSizeFieldId   = ScaleFieldId               + 1,
-        VerticalAlignmentFieldId   = ScaleAbsoluteSizeFieldId   + 1,
-        HorizontalAlignmentFieldId = VerticalAlignmentFieldId   + 1,
-        NextFieldId                = HorizontalAlignmentFieldId + 1
+        DrawObjectsFieldId = Inherited::NextFieldId,
+        NextFieldId        = DrawObjectsFieldId + 1
     };
 
-    static const OSG::BitVector TextureFieldMask;
-    static const OSG::BitVector ScaleFieldMask;
-    static const OSG::BitVector ScaleAbsoluteSizeFieldMask;
-    static const OSG::BitVector VerticalAlignmentFieldMask;
-    static const OSG::BitVector HorizontalAlignmentFieldMask;
+    static const OSG::BitVector DrawObjectsFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -134,33 +122,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFTextureChunkPtr   *getSFTexture        (void);
-           SFUInt32            *getSFScale          (void);
-           SFVec2s             *getSFScaleAbsoluteSize(void);
-           SFReal32            *getSFVerticalAlignment(void);
-           SFReal32            *getSFHorizontalAlignment(void);
+           MFUIDrawObjectPtr   *getMFDrawObjects    (void);
 
-           TextureChunkPtr     &getTexture        (void);
-     const TextureChunkPtr     &getTexture        (void) const;
-           UInt32              &getScale          (void);
-     const UInt32              &getScale          (void) const;
-           Vec2s               &getScaleAbsoluteSize(void);
-     const Vec2s               &getScaleAbsoluteSize(void) const;
-           Real32              &getVerticalAlignment(void);
-     const Real32              &getVerticalAlignment(void) const;
-           Real32              &getHorizontalAlignment(void);
-     const Real32              &getHorizontalAlignment(void) const;
+           UIDrawObjectPtr     &getDrawObjects    (const UInt32 index);
+           MFUIDrawObjectPtr   &getDrawObjects    (void);
+     const MFUIDrawObjectPtr   &getDrawObjects    (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setTexture        ( const TextureChunkPtr &value );
-     void setScale          ( const UInt32 &value );
-     void setScaleAbsoluteSize( const Vec2s &value );
-     void setVerticalAlignment( const Real32 &value );
-     void setHorizontalAlignment( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -184,8 +156,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ImageComponentPtr      create          (void); 
-    static  ImageComponentPtr      createEmpty     (void); 
+    static  UIDrawObjectCanvasPtr      create          (void); 
+    static  UIDrawObjectCanvasPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -203,26 +175,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFTextureChunkPtr   _sfTexture;
-    SFUInt32            _sfScale;
-    SFVec2s             _sfScaleAbsoluteSize;
-    SFReal32            _sfVerticalAlignment;
-    SFReal32            _sfHorizontalAlignment;
+    MFUIDrawObjectPtr   _mfDrawObjects;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ImageComponentBase(void);
-    ImageComponentBase(const ImageComponentBase &source);
+    UIDrawObjectCanvasBase(void);
+    UIDrawObjectCanvasBase(const UIDrawObjectCanvasBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ImageComponentBase(void); 
+    virtual ~UIDrawObjectCanvasBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -230,13 +198,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ImageComponentBase *pOther,
+    void executeSyncImpl(      UIDrawObjectCanvasBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      ImageComponentBase *pOther,
+    void executeSyncImpl(      UIDrawObjectCanvasBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -266,7 +234,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ImageComponentBase &source);
+    void operator =(const UIDrawObjectCanvasBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -274,17 +242,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
 //---------------------------------------------------------------------------
 
 
-typedef ImageComponentBase *ImageComponentBaseP;
+typedef UIDrawObjectCanvasBase *UIDrawObjectCanvasBaseP;
 
-typedef osgIF<ImageComponentBase::isNodeCore,
-              CoredNodePtr<ImageComponent>,
+typedef osgIF<UIDrawObjectCanvasBase::isNodeCore,
+              CoredNodePtr<UIDrawObjectCanvas>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ImageComponentNodePtr;
+              >::_IRet UIDrawObjectCanvasNodePtr;
 
-typedef RefPtr<ImageComponentPtr> ImageComponentRefPtr;
+typedef RefPtr<UIDrawObjectCanvasPtr> UIDrawObjectCanvasRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGIMAGECOMPONENTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGUIDRAWOBJECTCANVASBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGIMAGECOMPONENTBASE_H_ */
+#endif /* _OSGUIDRAWOBJECTCANVASBASE_H_ */

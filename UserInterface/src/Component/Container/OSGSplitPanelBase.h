@@ -73,7 +73,7 @@
 #include <OpenSG/OSGReal32Fields.h> // DividerPosition type
 #include <OpenSG/OSGReal32Fields.h> // MinDividerPosition type
 #include <OpenSG/OSGReal32Fields.h> // MaxDividerPosition type
-#include "Component/OSGUIDrawObjectCanvas.h" // DividerDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DividerDrawObject type
 #include <OpenSG/OSGBoolFields.h> // Expandable type
 #include <OpenSG/OSGUInt32Fields.h> // Alignment type
 

@@ -71,8 +71,8 @@
 #include <OpenSG/OSGBoolFields.h> // ReorderingAllowed type
 #include <OpenSG/OSGBoolFields.h> // ResizingAllowed type
 #include <OpenSG/OSGUInt32Fields.h> // ResizingCursorDriftAllowance type
-#include "Component/OSGUIDrawObjectCanvas.h" // DefaultMarginDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // Margins type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DefaultMarginDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // Margins type
 #include "Component/OSGComponent.h" // ColumnHeaders type
 
 #include "OSGTableHeaderFields.h"

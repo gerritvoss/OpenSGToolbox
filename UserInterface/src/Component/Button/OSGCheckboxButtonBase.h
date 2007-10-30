@@ -67,14 +67,14 @@
 
 #include "OSGToggleButton.h" // Parent
 
-#include "Component/OSGUIDrawObjectCanvas.h" // CheckboxDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // SelectedCheckboxDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // ActiveCheckboxDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // ActiveSelectedCheckboxDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // RolloverCheckboxDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // RolloverSelectedCheckboxDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // DisabledCheckboxDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // DisabledSelectedCheckboxDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // CheckboxDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // SelectedCheckboxDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // ActiveCheckboxDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // ActiveSelectedCheckboxDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // RolloverCheckboxDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // RolloverSelectedCheckboxDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DisabledCheckboxDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DisabledSelectedCheckboxDrawObject type
 
 #include "OSGCheckboxButtonFields.h"
 

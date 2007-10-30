@@ -46,7 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "Border/OSGBevelBorder.h"
-#include "Component/OSGLabel.h"
+#include "Component/Text/OSGLabel.h"
 
 #include "OSGDefaultTableHeaderCellRenderer.h"
 

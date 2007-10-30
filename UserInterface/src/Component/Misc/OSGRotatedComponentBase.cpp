@@ -61,8 +61,6 @@
 #include "OSGRotatedComponentBase.h"
 #include "OSGRotatedComponent.h"
 
-#include "Component/OSGRotatedComponent.h"          // ResizePolicy default header
-
 OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  RotatedComponentBase::AngleFieldMask = 

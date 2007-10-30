@@ -148,7 +148,7 @@ A UI Button.
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGUIDrawObjectCanvas.h"
+		header="Component/Misc/OSGUIDrawObjectCanvas.h"
 		defaultValue="NullFC"
 	>
 	</Field>
@@ -157,7 +157,7 @@ A UI Button.
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGUIDrawObjectCanvas.h"
+		header="Component/Misc/OSGUIDrawObjectCanvas.h"
 		defaultValue="NullFC"
 	>
 	</Field>
@@ -166,7 +166,7 @@ A UI Button.
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGUIDrawObjectCanvas.h"
+		header="Component/Misc/OSGUIDrawObjectCanvas.h"
 		defaultValue="NullFC"
 	>
 	</Field>
@@ -175,7 +175,7 @@ A UI Button.
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGUIDrawObjectCanvas.h"
+		header="Component/Misc/OSGUIDrawObjectCanvas.h"
 		defaultValue="NullFC"
 	>
 	</Field>
@@ -184,7 +184,7 @@ A UI Button.
 		type="UIDrawObjectCanvasPtr"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGUIDrawObjectCanvas.h"
+		header="Component/Misc/OSGUIDrawObjectCanvas.h"
 		defaultValue="NullFC"
 	>
 	</Field>

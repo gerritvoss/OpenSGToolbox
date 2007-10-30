@@ -71,7 +71,7 @@
 #include "Component/Menu/OSGPopupMenuFields.h" // InternalPopupMenu type
 #include <OpenSG/OSGReal32Fields.h> // SubMenuDelay type
 #include <OpenSG/OSGBoolFields.h> // TopLevelMenu type
-#include "Component/OSGUIDrawObjectCanvas.h" // ExpandDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // ExpandDrawObject type
 #include "Component/Menu/OSGMenuItemFields.h" // MenuItems type
 
 #include "OSGMenuFields.h"

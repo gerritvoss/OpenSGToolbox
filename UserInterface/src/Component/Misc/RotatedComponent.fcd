@@ -38,7 +38,7 @@ A UI Rotated Component.
 		cardinality="single"
 		visibility="external"
 		defaultValue="RotatedComponent::RESIZE_TO_MIN"
-		defaultHeader="Component/OSGRotatedComponent.h"
+		defaultHeader="Component/Misc/OSGRotatedComponent.h"
 		access="public"
 	>
 	</Field>

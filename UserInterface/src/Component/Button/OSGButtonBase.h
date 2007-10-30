@@ -82,11 +82,11 @@
 #include <OpenSG/OSGBoolFields.h> // EnableActionOnMouseDownTime type
 #include <OpenSG/OSGTimeFields.h> // ActionOnMouseDownRate type
 #include <OpenSG/OSGVec2sFields.h> // ActiveOffset type
-#include "Component/OSGUIDrawObjectCanvas.h" // DrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // ActiveDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // FocusedDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // RolloverDrawObject type
-#include "Component/OSGUIDrawObjectCanvas.h" // DisabledDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // ActiveDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // FocusedDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // RolloverDrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DisabledDrawObject type
 
 #include "OSGButtonFields.h"
 

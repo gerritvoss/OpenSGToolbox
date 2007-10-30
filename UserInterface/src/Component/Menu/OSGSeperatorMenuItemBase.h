@@ -67,7 +67,7 @@
 
 #include "OSGMenuItem.h" // Parent
 
-#include "Component/OSGUIDrawObjectCanvas.h" // DrawObject type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DrawObject type
 #include <OpenSG/OSGColor4fFields.h> // Color type
 
 #include "OSGSeperatorMenuItemFields.h"
