@@ -1083,6 +1083,34 @@
 						</File>
 					</Filter>
 				</Filter>
+				<Filter
+					Name="Spinner"
+					Filter="">
+					<File
+						RelativePath="..\..\src\Component\Spinner\OSGAbstractSpinnerModel.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Spinner\OSGAbstractSpinnerModel.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Spinner\OSGListSpinnerModel.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Spinner\OSGListSpinnerModel.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Spinner\OSGListSpinnerModel.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Spinner\OSGNumberSpinnerModel.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Spinner\OSGNumberSpinnerModel.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Spinner\OSGSpinnerModel.h">
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Graphics">

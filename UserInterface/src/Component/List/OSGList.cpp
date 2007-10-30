@@ -113,7 +113,7 @@ ComponentPtr List::getComponentAtPoint(const MouseEvent& e)
     return NullFC;
 }
 
-Field* List::getValueAtPoint(const MouseEvent& e)
+SharedFieldPtr List::getValueAtPoint(const MouseEvent& e)
 {
     Pnt2s PointInComponent(ViewportToComponent(e.getLocation(), ListPtr(this), e.getViewport()));
 
@@ -134,7 +134,7 @@ Field* List::getValueAtPoint(const MouseEvent& e)
 
     if(PointInComponent[OrientationAxisIndex] <= CumulativeDistance)
     {
-        return NULL;
+        return SharedFieldPtr();
     }
 
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
@@ -146,7 +146,7 @@ Field* List::getValueAtPoint(const MouseEvent& e)
         }
     }
 
-    return NULL;
+    return SharedFieldPtr();
 }
 
 void List::updateItem(const UInt32& index)

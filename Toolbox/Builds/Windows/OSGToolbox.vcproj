@@ -187,6 +187,9 @@
 				<File
 					RelativePath="..\..\src\Util\OSGRandomPoolManager.inl">
 				</File>
+				<File
+					RelativePath="..\..\src\Util\OSGSharedFieldPtr.h">
+				</File>
 			</Filter>
 			<Filter
 				Name="Cameras"

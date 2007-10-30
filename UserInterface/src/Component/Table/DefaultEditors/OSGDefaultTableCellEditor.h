@@ -61,16 +61,16 @@ private:
 protected:
     UInt32 _ClickCountToStart;
     TextFieldPtr _EditingTextField;
-    mutable SFString _Value;
+    mutable ::boost::shared_ptr<SFString> _Value;
 public:
     
-	virtual ComponentPtr getTableCellEditorComponent(TablePtr table, Field* value, bool isSelected, UInt32 row, UInt32 column);
+	virtual ComponentPtr getTableCellEditorComponent(TablePtr table, SharedFieldPtr value, bool isSelected, UInt32 row, UInt32 column);
 
     //Tells the editor to cancel editing and not accept any partially edited value.
     virtual void cancelCellEditing(void);
 
     //Returns the value contained in the editor.
-    virtual Field* getCellEditorValue(void) const;
+    virtual SharedFieldPtr getCellEditorValue(void) const;
 
     //Asks the editor if it can start editing using anEvent.
     virtual bool isCellEditable(const Event& anEvent) const;

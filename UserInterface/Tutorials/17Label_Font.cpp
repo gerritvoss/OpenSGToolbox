@@ -87,7 +87,7 @@ class FontListCellGenerator : public DefaultListCellGenerator
 {
     /*==========================  PUBLIC  =================================*/
   public:
-    virtual ComponentPtr getListCellGeneratorComponent(ListPtr list, Field* value, UInt32 index, bool isSelected, bool cellHasFocus)
+    virtual ComponentPtr getListCellGeneratorComponent(ListPtr list, SharedFieldPtr value, UInt32 index, bool isSelected, bool cellHasFocus)
     {
         LabelPtr TheLabel = Label::Ptr::dcast(
             DefaultListCellGenerator::getListCellGeneratorComponent(
@@ -97,7 +97,7 @@ class FontListCellGenerator : public DefaultListCellGenerator
 		std::string FontFamilyString;
 		if(value->getType() == SFString::getClassType())
 		{
-			FontFamilyString = dynamic_cast<SFString*>(value)->getValue();
+			FontFamilyString = dynamic_cast<SFString*>(value.get())->getValue();
 		}
 		else
 		{
@@ -130,10 +130,10 @@ class FontListListener: public MouseAdapter
     virtual void mouseClicked(const MouseEvent& e)
     {
         std::string ValueStr("");
-        Field* Value(list->getValueAtPoint(e));
+        SharedFieldPtr Value(list->getValueAtPoint(e));
         if(Value->getType() == SFString::getClassType())
         {
-            ValueStr = dynamic_cast<SFString*>(Value)->getValue();
+            ValueStr = dynamic_cast<SFString*>(Value.get())->getValue();
         }
         std::cout << "Setting Font: " << ValueStr << std::endl;
 
@@ -321,14 +321,11 @@ int main(int argc, char **argv)
 	std::vector<std::string> FontFamilies;
 	TextFaceFactory::the().getFontFamilies(FontFamilies);
 	// Display all Fonts available
-	SFString* StrField;
     std::map<std::string, UIFontPtr>::iterator FontMapItor;
 	for (FontMapItor = FontMap.begin(); FontMapItor != FontMap.end() ; ++FontMapItor)
 	{
 	    // Add values to it
-        StrField = new SFString;
-	    StrField->setValue((*FontMapItor).first);
-	    Model.pushBack(StrField);
+	    Model.pushBack(SharedFieldPtr(new SFString((*FontMapItor).first)));
 	}
 
 	// Create ListCellRenderer and ListSelectionModel

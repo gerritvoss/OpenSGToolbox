@@ -78,11 +78,11 @@ void ListSpinnerModel::setList(const FieldList& list)
     produceStateChanged();
 }
 
-Field* ListSpinnerModel::getNextValue(void)
+SharedFieldPtr ListSpinnerModel::getNextValue(void)
 {
     if(_CurrentListValue == (--_List.end()))
     {
-        return NULL;
+        return SharedFieldPtr();
     }
     else
     {
@@ -90,11 +90,11 @@ Field* ListSpinnerModel::getNextValue(void)
     }
 }
 
-Field* ListSpinnerModel::getPreviousValue(void)
+SharedFieldPtr ListSpinnerModel::getPreviousValue(void)
 {
     if(_CurrentListValue == _List.begin())
     {
-        return NULL;
+        return SharedFieldPtr();
     }
     else
     {
@@ -102,12 +102,12 @@ Field* ListSpinnerModel::getPreviousValue(void)
     }
 }
 
-Field* ListSpinnerModel::getValue(void)
+SharedFieldPtr ListSpinnerModel::getValue(void)
 {
     return (*_CurrentListValue);
 }
 
-void ListSpinnerModel::setValue(Field* value)
+void ListSpinnerModel::setValue(SharedFieldPtr value)
 {
     FieldListIter SearchIter(std::find(_List.begin(), _List.end(), value));
 

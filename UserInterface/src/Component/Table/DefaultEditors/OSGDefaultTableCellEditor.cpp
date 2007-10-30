@@ -9,7 +9,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table, Field* value, bool isSelected, UInt32 row, UInt32 column)
+ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table, SharedFieldPtr value, bool isSelected, UInt32 row, UInt32 column)
 {
 	if(value == NULL){
 		return NullFC;
@@ -19,7 +19,7 @@ ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table,
 		std::string tempString;
 		if(value->getType() == SFString::getClassType())
 		{
-			tempString = dynamic_cast<SFString*>(value)->getValue();
+			tempString = dynamic_cast<SFString*>(value.get())->getValue();
 		}
 		else
 		{
@@ -64,10 +64,10 @@ void DefaultTableCellEditor::cancelCellEditing(void)
     AbstractCellEditor::cancelCellEditing();
 }
 
-Field* DefaultTableCellEditor::getCellEditorValue(void) const
+SharedFieldPtr DefaultTableCellEditor::getCellEditorValue(void) const
 {
-    _Value.setValue(_EditingTextField->getText());
-    return &_Value;
+    _Value->setValue(_EditingTextField->getText());
+    return SharedFieldPtr(_Value);
 }
 
 bool DefaultTableCellEditor::isCellEditable(const Event& anEvent) const

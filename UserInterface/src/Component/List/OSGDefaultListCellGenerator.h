@@ -57,7 +57,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListCellGenerator : public ListCell
 {
     /*==========================  PUBLIC  =================================*/
   public:
-    virtual ComponentPtr getListCellGeneratorComponent(ListPtr list, Field* value, UInt32 index, bool isSelected, bool cellHasFocus);
+    virtual ComponentPtr getListCellGeneratorComponent(ListPtr list, SharedFieldPtr value, UInt32 index, bool isSelected, bool cellHasFocus);
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */

@@ -47,6 +47,7 @@
 
 #include "OSGListModel.h"
 #include <set>
+#include <vector>
 
 OSG_BEGIN_NAMESPACE
 
@@ -59,17 +60,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractListModel : public ListModel
     /*==========================  PUBLIC  =================================*/
   public:
 	virtual UInt32 getSize(void);
-	virtual Field* getElementAt(UInt32 index);
+	virtual SharedFieldPtr getElementAt(UInt32 index);
 
 	virtual void addListDataListener(ListDataListenerPtr l);
 	virtual void removeListDataListener(ListDataListenerPtr l);
-	void pushBack(Field* f);
+	void pushBack(SharedFieldPtr f);
 	void popBack(void);
 
     AbstractListModel(void);
     virtual ~AbstractListModel(void); 
   protected:
-	std::vector<Field*> _FieldList;
+	std::vector<SharedFieldPtr> _FieldList;
 
     /*==========================  PRIVATE  ================================*/
   private:

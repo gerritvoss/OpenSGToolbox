@@ -46,7 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include <OpenSG/OSGField.h>
+#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
 #include <OpenSG/Input/OSGEvent.h>
 #include "OSGCellEditorListener.h"
 #include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
@@ -68,7 +68,7 @@ public:
     virtual void cancelCellEditing(void) = 0;
 
     //Returns the value contained in the editor.
-    virtual Field* getCellEditorValue(void) const = 0;
+    virtual SharedFieldPtr getCellEditorValue(void) const = 0;
 
     //Asks the editor if it can start editing using anEvent.
     virtual bool isCellEditable(const Event& anEvent) const = 0;

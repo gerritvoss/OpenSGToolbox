@@ -55,20 +55,20 @@ OSG_BEGIN_NAMESPACE
 class OSG_USERINTERFACELIB_DLLMAPPING ListSpinnerModel : public AbstractSpinnerModel
 {
 public:
-    typedef std::list<Field*> FieldList;
+    typedef std::list<SharedFieldPtr> FieldList;
     typedef FieldList::iterator FieldListIter;
     
     //Return the object in the sequence that comes after the object returned by getValue().
-    virtual Field* getNextValue(void);
+    virtual SharedFieldPtr getNextValue(void);
     
     //Return the object in the sequence that comes before the object returned by getValue().
-    virtual Field* getPreviousValue(void);
+    virtual SharedFieldPtr getPreviousValue(void);
     
     //The current element of the sequence.
-    virtual Field* getValue(void);
+    virtual SharedFieldPtr getValue(void);
     
     //Changes current value of the model, typically this value is displayed by the editor part of a Spinner.
-    virtual void setValue(Field* value);
+    virtual void setValue(SharedFieldPtr value);
     
     //Changes the list that defines this sequence and resets the index of the models value to zero.
     void setList(const FieldList& list);

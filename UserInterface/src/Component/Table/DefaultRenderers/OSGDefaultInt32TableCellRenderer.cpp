@@ -75,7 +75,7 @@ A DefaultInt32TableCellRenderer.
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultInt32TableCellRenderer::getTableCellRendererComponent(TablePtr table, Field* value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
+ComponentPtr DefaultInt32TableCellRenderer::getTableCellRendererComponent(TablePtr table, SharedFieldPtr value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
 {
 	if(value == NULL){
 		return NullFC;
@@ -83,7 +83,7 @@ ComponentPtr DefaultInt32TableCellRenderer::getTableCellRendererComponent(TableP
 	LabelPtr TheLabel = Label::create();
 	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
 		std::string tempString;
-		dynamic_cast<SFInt32*>(value)->getValueByStr(tempString);
+		dynamic_cast<SFInt32*>(value.get())->getValueByStr(tempString);
 		TheLabel->setText(tempString);
 		TheLabel->setPreferredSize(Vec2s(100,30));
 	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);

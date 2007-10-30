@@ -48,7 +48,7 @@
 #include "Component/OSGComponent.h"
 #include "OSGList.h"
 
-#include <OpenSG/OSGField.h>
+#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
 
 OSG_BEGIN_NAMESPACE
 	 
@@ -57,7 +57,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListCellGenerator
 private:
 protected:
 public:
-	virtual ComponentPtr getListCellGeneratorComponent(ListPtr list, Field* value, UInt32 index, bool isSelected, bool cellHasFocus) = 0;
+	virtual ComponentPtr getListCellGeneratorComponent(ListPtr list, SharedFieldPtr value, UInt32 index, bool isSelected, bool cellHasFocus) = 0;
 
 };
 

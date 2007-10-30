@@ -77,7 +77,7 @@ UInt32 AbstractListModel::getSize(void)
 	return _FieldList.size();
 }
 
-Field* AbstractListModel::getElementAt(UInt32 index)
+SharedFieldPtr AbstractListModel::getElementAt(UInt32 index)
 {
    return _FieldList[index];
 }
@@ -97,7 +97,7 @@ void AbstractListModel::removeListDataListener(ListDataListenerPtr l)
    }
 }
  
-void AbstractListModel::pushBack(Field* f){
+void AbstractListModel::pushBack(SharedFieldPtr f){
 	_FieldList.push_back(f);
 	produceListDataIntervalAdded(_FieldList.size()-1,_FieldList.size());
 }

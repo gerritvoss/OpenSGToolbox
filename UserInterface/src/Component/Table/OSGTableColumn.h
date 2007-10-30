@@ -100,7 +100,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumn : public TableColumnBase
     TableCellRendererPtr getHeaderRenderer(void) const;
     
     //Returns the Object used as the value for the header renderer.
-    Field* getHeaderValue(void) const;
+    SharedFieldPtr getHeaderValue(void) const;
     
     //Sets the editor to used by when a cell in this column is edited.
     void setCellEditor(TableCellEditorPtr cellEditor);
@@ -112,7 +112,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumn : public TableColumnBase
     void setHeaderRenderer(TableCellRendererPtr headerRenderer);
     
     //Sets the Object whose string representation will be used as the value for the headerRenderer.
-    void setHeaderValue(Field* headerValue);
+    void setHeaderValue(SharedFieldPtr headerValue);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -138,7 +138,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumn : public TableColumnBase
     TableCellRendererPtr _TableCellRenderer;
     TableCellRendererPtr _HeaderCellRenderer;
 
-    Field* _HeaderValue;
+    SharedFieldPtr _HeaderValue;
     
 	typedef std::set<FieldChangeListenerPtr> FieldChangeListenerSet;
     typedef FieldChangeListenerSet::iterator FieldChangeListenerSetItor;

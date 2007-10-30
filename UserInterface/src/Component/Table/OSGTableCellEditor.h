@@ -49,8 +49,6 @@
 #include "OSGTableFields.h"
 #include "Editors/OSGCellEditor.h"
 
-#include <OpenSG/OSGField.h>
-
 
 OSG_BEGIN_NAMESPACE
 	 
@@ -59,7 +57,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableCellEditor : virtual public CellEdito
 private:
 protected:
 public:
-	virtual ComponentPtr getTableCellEditorComponent(TablePtr table, Field* value, bool isSelected, UInt32 row, UInt32 column) = 0;
+	virtual ComponentPtr getTableCellEditorComponent(TablePtr table, SharedFieldPtr value, bool isSelected, UInt32 row, UInt32 column) = 0;
 
 };
 

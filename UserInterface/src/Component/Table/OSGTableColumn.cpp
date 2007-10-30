@@ -93,7 +93,7 @@ void TableColumn::produceFieldChanged(Field* TheField, FieldDescription* TheDesc
 
 TableColumn::TableColumn(void) :
     Inherited(),
-    _HeaderValue(NULL)
+    _HeaderValue()
 {
 }
 

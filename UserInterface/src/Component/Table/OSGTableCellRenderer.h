@@ -48,7 +48,7 @@
 #include "Component/OSGComponent.h"
 #include "OSGTableFields.h"
 
-#include <OpenSG/OSGField.h>
+#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
 
 #include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
 
@@ -59,7 +59,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableCellRenderer : public IntrusivePtrImp
 private:
 protected:
 public:
-	virtual ComponentPtr getTableCellRendererComponent(TablePtr table, Field* value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column) = 0;
+	virtual ComponentPtr getTableCellRendererComponent(TablePtr table, SharedFieldPtr value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column) = 0;
 
 };
 

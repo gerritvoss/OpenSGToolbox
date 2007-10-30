@@ -75,7 +75,7 @@ A DefaultTableCellRenderer.
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultTableCellRenderer::getTableCellRendererComponent(TablePtr table, Field* value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
+ComponentPtr DefaultTableCellRenderer::getTableCellRendererComponent(TablePtr table, SharedFieldPtr value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
 {
 	if(value == NULL){
 		return NullFC;

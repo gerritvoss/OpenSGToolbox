@@ -74,7 +74,7 @@ A DefaultListCellGenerator.
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-ComponentPtr DefaultListCellGenerator::getListCellGeneratorComponent(ListPtr list, Field* value, UInt32 index, bool isSelected, bool cellHasFocus)
+ComponentPtr DefaultListCellGenerator::getListCellGeneratorComponent(ListPtr list, SharedFieldPtr value, UInt32 index, bool isSelected, bool cellHasFocus)
 {
 	if(value == NULL){
 		return NullFC;
@@ -84,7 +84,7 @@ ComponentPtr DefaultListCellGenerator::getListCellGeneratorComponent(ListPtr lis
 		std::string tempString;
 		if(value->getType() == SFString::getClassType())
 		{
-			tempString = dynamic_cast<SFString*>(value)->getValue();
+            tempString = dynamic_cast<SFString*>(value.get())->getValue();
 		}
 		else
 		{

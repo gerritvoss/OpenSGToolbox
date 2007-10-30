@@ -45,7 +45,7 @@
  
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
-#include <OpenSG/OSGField.h>
+#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
 #include "Event/OSGChangeListener.h"
 
 #include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
@@ -65,16 +65,16 @@ public:
     virtual void removeChangeListener(ChangeListenerPtr l) = 0;
     
     //Return the object in the sequence that comes after the object returned by getValue().
-    virtual Field* getNextValue(void) = 0;
+    virtual SharedFieldPtr getNextValue(void) = 0;
     
     //Return the object in the sequence that comes before the object returned by getValue().
-    virtual Field* getPreviousValue(void) = 0;
+    virtual SharedFieldPtr getPreviousValue(void) = 0;
     
     //The current element of the sequence.
-    virtual Field* getValue(void) = 0;
+    virtual SharedFieldPtr getValue(void) = 0;
     
     //Changes current value of the model, typically this value is displayed by the editor part of a Spinner.
-    virtual void setValue(Field* value) = 0;
+    virtual void setValue(SharedFieldPtr value) = 0;
 };
 
 typedef boost::intrusive_ptr<SpinnerModel> SpinnerModelPtr;

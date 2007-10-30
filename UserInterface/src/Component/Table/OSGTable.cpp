@@ -458,7 +458,7 @@ void Table::updateItem(const UInt32& index)
     }
     else //Non-Editing Cell
     {
-        Field* CellValue = _Model->getValueAt(Row, Column);
+        SharedFieldPtr CellValue = _Model->getValueAt(Row, Column);
     
         getChildren().setValue(getCellRenderer(Row, Column)->getTableCellRendererComponent(TablePtr(this), CellValue, isSelected(Row, Column), PrevComponent->getFocused(), Row, Column)
                     ,index);
@@ -614,7 +614,7 @@ void Table::updateTableComponents(void)
     {
         return;
     }
-    Field* CellValue(NULL);
+    SharedFieldPtr CellValue;
 
     beginEditCP(TablePtr(this), TableFieldMask);
     getTable().clear();

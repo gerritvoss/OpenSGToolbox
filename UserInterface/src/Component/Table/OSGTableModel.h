@@ -45,7 +45,7 @@
  
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
-#include <OpenSG/OSGField.h>
+#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
 
 #include "OSGTableModelListener.h"
 
@@ -69,19 +69,19 @@ public:
     virtual UInt32 getColumnCount(void) const = 0;
     
     //Returns the name of the column at columnIndex.
-    virtual Field* getColumnValue(UInt32 columnIndex) const = 0;
+    virtual SharedFieldPtr getColumnValue(UInt32 columnIndex) const = 0;
     
     //Returns the number of rows in the model.
     virtual UInt32 getRowCount(void) const = 0;
     
     //Returns the value for the cell at columnIndex and rowIndex.
-    virtual Field* getValueAt(UInt32 rowIndex, UInt32 columnIndex) const = 0;
+    virtual SharedFieldPtr getValueAt(UInt32 rowIndex, UInt32 columnIndex) const = 0;
     
     //Returns true if the cell at rowIndex and columnIndex is editable.
     virtual bool isCellEditable(UInt32 rowIndex, UInt32 columnIndex) const = 0;
     
     //Sets the value in the cell at columnIndex and rowIndex to aValue.
-    virtual void setValueAt(Field* aValue, UInt32 rowIndex, UInt32 columnIndex) = 0;
+    virtual void setValueAt(SharedFieldPtr aValue, UInt32 rowIndex, UInt32 columnIndex) = 0;
 
     //Returns the most specific superclass for all the cell values in the column.
     virtual const FieldType* getColumnType(const UInt32& columnIndex) = 0;

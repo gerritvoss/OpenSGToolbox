@@ -77,7 +77,7 @@ TableCellRendererPtr TableColumn::getHeaderRenderer(void) const
 }
 
 inline
-Field* TableColumn::getHeaderValue(void) const
+SharedFieldPtr TableColumn::getHeaderValue(void) const
 {
     return _HeaderValue;
 }
@@ -101,7 +101,7 @@ void TableColumn::setHeaderRenderer(TableCellRendererPtr headerRenderer)
 }
 
 inline
-void TableColumn::setHeaderValue(Field* headerValue)
+void TableColumn::setHeaderValue(SharedFieldPtr headerValue)
 {
     _HeaderValue = headerValue;
 }

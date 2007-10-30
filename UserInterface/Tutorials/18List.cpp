@@ -249,51 +249,21 @@ int main(int argc, char **argv)
 	AbstractListModel Model;
 
 	// Add values to it
-	SFString StrField1;
-	StrField1.setValue("Red");
-	Model.pushBack(&StrField1);
-	SFString StrField2;
-	StrField2.setValue("Green");
-	Model.pushBack(&StrField2);
-	SFString StrField3;
-	StrField3.setValue("Blue");
-	Model.pushBack(&StrField3);
-	SFString StrField4;
-	StrField4.setValue("Orange");
-	Model.pushBack(&StrField4);
-	SFString StrField5;
-	StrField5.setValue("Yellow");
-	Model.pushBack(&StrField5);
-	SFString StrField6;
-	StrField6.setValue("Purple");
-	Model.pushBack(&StrField6);
-	SFString StrField7;
-	StrField7.setValue("Black");
-	Model.pushBack(&StrField7);
-	SFString StrField8;
-	StrField8.setValue("White");
-	Model.pushBack(&StrField8);
-	SFString StrField9;
-	StrField9.setValue("Brown");
-	Model.pushBack(&StrField9);
-	SFString StrField10;
-	StrField10.setValue("Gray");
-	Model.pushBack(&StrField10);
-	SFString StrField11;
-	StrField11.setValue("Cyan");
-	Model.pushBack(&StrField11);
-	SFString StrField12;
-	StrField12.setValue("Magenta");
-	Model.pushBack(&StrField12);
-	SFString StrField13;
-	StrField13.setValue("Purple");
-	Model.pushBack(&StrField13);
-	SFString StrField14;
-	StrField14.setValue("Purple");
-	Model.pushBack(&StrField14);
-	SFString StrField15;
-	StrField15.setValue("Purple");
-	Model.pushBack(&StrField15);
+	Model.pushBack(SharedFieldPtr(new SFString("Red")));
+	Model.pushBack(SharedFieldPtr(new SFString("Green")));
+	Model.pushBack(SharedFieldPtr(new SFString("Blue")));
+	Model.pushBack(SharedFieldPtr(new SFString("Orange")));
+	Model.pushBack(SharedFieldPtr(new SFString("Purple")));
+	Model.pushBack(SharedFieldPtr(new SFString("Yellow")));
+	Model.pushBack(SharedFieldPtr(new SFString("White")));
+	Model.pushBack(SharedFieldPtr(new SFString("Black")));
+	Model.pushBack(SharedFieldPtr(new SFString("Gray")));
+	Model.pushBack(SharedFieldPtr(new SFString("Brown")));
+	Model.pushBack(SharedFieldPtr(new SFString("Indigo")));
+	Model.pushBack(SharedFieldPtr(new SFString("Pink")));
+	Model.pushBack(SharedFieldPtr(new SFString("Violet")));
+	Model.pushBack(SharedFieldPtr(new SFString("Mauve")));
+	Model.pushBack(SharedFieldPtr(new SFString("Peach")));
 
 
 	// Create ListCellRenderer and ListSelectionModel

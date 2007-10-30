@@ -42,10 +42,72 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-NumberSpinnerModel::FieldList NumberSpinnerModel::getList(void) const
+template<class NumberTypeT> inline
+SharedFieldPtr NumberSpinnerModel<NumberTypeT>::getNextValue(void)
 {
-    return _List;
+    assert(false && "getNextValue(void) not implemented");
+    return NULL;
+}
+
+template<class NumberTypeT> inline
+SharedFieldPtr NumberSpinnerModel<NumberTypeT>::getPreviousValue(void)
+{
+    assert(false && "getPreviousValue(void) not implemented");
+    return NULL;
+}
+
+template<class NumberTypeT> inline
+SharedFieldPtr NumberSpinnerModel<NumberTypeT>::getValue(void)
+{
+    return _Value;
+}
+
+template<class NumberTypeT> inline
+void NumberSpinnerModel<NumberTypeT>::setValue(SharedFieldPtr value)
+{
+    _Value.setValue(dynamic_cast<SField<NumberTypeT>*>(value.get())->getValue());
+}
+
+template<class NumberTypeT> inline
+NumberTypeT NumberSpinnerModel<NumberTypeT>::getMaximum(void) const
+{
+    return _Maximum;
+}
+
+template<class NumberTypeT> inline
+NumberTypeT NumberSpinnerModel<NumberTypeT>::getMinimum(void) const
+{
+    return _Minimum;
+}
+
+template<class NumberTypeT> inline
+NumberTypeT NumberSpinnerModel<NumberTypeT>::getNumber(void) const
+{
+    return _Value.getValue();
+}
+
+template<class NumberTypeT> inline
+NumberTypeT NumberSpinnerModel<NumberTypeT>::getStepSize(void)
+{
+    return _StepSize;
+}
+
+template<class NumberTypeT> inline
+void NumberSpinnerModel<NumberTypeT>::setMaximum(const NumberTypeT& maximum)
+{
+    _Maximum = maximum;
+}
+
+template<class NumberTypeT> inline
+void NumberSpinnerModel<NumberTypeT>::setMinimum(const NumberTypeT& minimum)
+{
+    _Minimum = minimum;
+}
+
+template<class NumberTypeT> inline
+void NumberSpinnerModel<NumberTypeT>::setStepSize(const NumberTypeT& stepSize)
+{
+    _StepSize = stepSize;
 }
 
 OSG_END_NAMESPACE

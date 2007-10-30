@@ -103,7 +103,7 @@ UInt32 Table::getColumnCount(void) const
 }
 
 inline
-Field* Table::getColumnValue(const UInt32& column) const
+SharedFieldPtr Table::getColumnValue(const UInt32& column) const
 {
     return _Model->getColumnValue(column);
 }
@@ -129,7 +129,7 @@ ListSelectionModelPtr Table::getSelectionModel(void) const
 }
 
 inline
-Field* Table::getValueAt(const UInt32& row, const UInt32& column) const
+SharedFieldPtr Table::getValueAt(const UInt32& row, const UInt32& column) const
 {
     return _Model->getValueAt(row, column);
 }
@@ -269,7 +269,7 @@ void Table::addRowSelectionInterval(const UInt32& index0, const UInt32& index1)
 }
 
 inline
-void Table::setValueAt(Field* aValue, const UInt32& row, const UInt32& column)
+void Table::setValueAt(SharedFieldPtr aValue, const UInt32& row, const UInt32& column)
 {
     _Model->setValueAt(aValue, row, column);
 }

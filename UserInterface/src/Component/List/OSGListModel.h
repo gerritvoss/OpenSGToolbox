@@ -45,7 +45,7 @@
  
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
-#include <OpenSG/OSGField.h>
+#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
 
 OSG_BEGIN_NAMESPACE
 class ListDataListener;
@@ -57,7 +57,7 @@ private:
 protected:
 public:
 	virtual UInt32 getSize(void) = 0;
-	virtual Field* getElementAt(UInt32 index) = 0;
+	virtual SharedFieldPtr getElementAt(UInt32 index) = 0;
 
 	virtual void addListDataListener(ListDataListenerPtr l) = 0;
 	virtual void removeListDataListener(ListDataListenerPtr l) = 0;

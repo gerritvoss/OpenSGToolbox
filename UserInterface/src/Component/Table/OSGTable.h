@@ -208,7 +208,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     TableColumnModelPtr getColumnModel(void) const;
 
     //Returns the name of the column appearing in the view at column position column.
-    Field* getColumnValue(const UInt32& column) const;
+    SharedFieldPtr getColumnValue(const UInt32& column) const;
 
     //Returns true if columns can be selected.
     bool getColumnSelectionAllowed(void) const;
@@ -262,7 +262,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     ListSelectionModelPtr getSelectionModel(void) const;
 
     //Returns the cell value at row and column.
-    Field* getValueAt(const UInt32& row, const UInt32& column) const;
+    SharedFieldPtr getValueAt(const UInt32& row, const UInt32& column) const;
 
     //Returns true if the cell at row and column is editable.
     bool isCellEditable(const UInt32& row, const UInt32& column) const;
@@ -356,7 +356,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     void setShowGrid(bool showGrid);
 
     //Sets the value for the cell in the table model at row and column.
-    void setValueAt(Field* aValue, const UInt32& row, const UInt32& column);
+    void setValueAt(SharedFieldPtr aValue, const UInt32& row, const UInt32& column);
 
 /*=========================  PROTECTED  ===============================*/
   protected:

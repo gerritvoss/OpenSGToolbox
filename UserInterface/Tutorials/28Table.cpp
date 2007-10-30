@@ -195,15 +195,15 @@ public:
 class ExampleTableModel : public AbstractTableModel
 {
 private:
-    std::vector<Field*> _ColumnValues;
-    std::vector<Field*> _CellValues;
+    std::vector<SharedFieldPtr> _ColumnValues;
+    std::vector<SharedFieldPtr> _CellValues;
 public:
     virtual UInt32 getColumnCount(void) const
     {
         return _ColumnValues.size();
     }
     
-    virtual Field* getColumnValue(UInt32 columnIndex) const
+    virtual SharedFieldPtr getColumnValue(UInt32 columnIndex) const
     {
         return _ColumnValues[columnIndex];
     }
@@ -213,7 +213,7 @@ public:
         return _CellValues.size() / _ColumnValues.size();
     }
     
-    virtual Field* getValueAt(UInt32 rowIndex, UInt32 columnIndex) const
+    virtual SharedFieldPtr getValueAt(UInt32 rowIndex, UInt32 columnIndex) const
     {
         return _CellValues[rowIndex*_ColumnValues.size() + columnIndex];
     }
@@ -223,7 +223,7 @@ public:
         return columnIndex == 0;
     }
     
-    virtual void setValueAt(Field* aValue, UInt32 rowIndex, UInt32 columnIndex)
+    virtual void setValueAt(SharedFieldPtr aValue, UInt32 rowIndex, UInt32 columnIndex)
     {
         //Do Notning
     }
@@ -235,48 +235,39 @@ public:
 
     ExampleTableModel()
     {
-        _ColumnValues.push_back(new SFString("Column String"));
-        _ColumnValues.push_back(new SFString("Column Integer"));
-        _ColumnValues.push_back(new SFString("Column GLenum"));
-        _ColumnValues.push_back(new SFString("Column Boolean"));
-        _ColumnValues.push_back(new SFString("Column Pnt3f"));
+        _ColumnValues.push_back(SharedFieldPtr(new SFString("Column String")));
+        _ColumnValues.push_back(SharedFieldPtr(new SFString("Column Integer")));
+        _ColumnValues.push_back(SharedFieldPtr(new SFString("Column GLenum")));
+        _ColumnValues.push_back(SharedFieldPtr(new SFString("Column Boolean")));
+        _ColumnValues.push_back(SharedFieldPtr(new SFString("Column Pnt3f")));
         
-        _CellValues.push_back(new SFString("A"));
-        _CellValues.push_back(new SFInt32(1));
-        _CellValues.push_back(new SFGLenum(GL_SRC_ALPHA));
-        _CellValues.push_back(new SFBool(true));
-        _CellValues.push_back(new SFPnt3f(Pnt3f(1.0,0.0,0.0)));
+        _CellValues.push_back(SharedFieldPtr(new SFString("A")));
+        _CellValues.push_back(SharedFieldPtr(new SFInt32(1)));
+        _CellValues.push_back(SharedFieldPtr(new SFGLenum(GL_SRC_ALPHA)));
+        _CellValues.push_back(SharedFieldPtr(new SFBool(true)));
+        _CellValues.push_back(SharedFieldPtr(new SFPnt3f(Pnt3f(1.0,0.0,0.0))));
         
-        _CellValues.push_back(new SFString("B"));
-        _CellValues.push_back(new SFInt32(2));
-        _CellValues.push_back(new SFGLenum(GL_NICEST));
-        _CellValues.push_back(new SFBool(false));
-        _CellValues.push_back(new SFPnt3f(Pnt3f(0.0,1.0,0.0)));
+        _CellValues.push_back(SharedFieldPtr(new SFString("B")));
+        _CellValues.push_back(SharedFieldPtr(new SFInt32(2)));
+        _CellValues.push_back(SharedFieldPtr(new SFGLenum(GL_NICEST)));
+        _CellValues.push_back(SharedFieldPtr(new SFBool(false)));
+        _CellValues.push_back(SharedFieldPtr(new SFPnt3f(Pnt3f(0.0,1.0,0.0))));
         
-        _CellValues.push_back(new SFString("C"));
-        _CellValues.push_back(new SFInt32(3));
-        _CellValues.push_back(new SFGLenum(GL_CCW));
-        _CellValues.push_back(new SFBool(true));
-        _CellValues.push_back(new SFPnt3f(Pnt3f(0.0,0.0,1.0)));
+        _CellValues.push_back(SharedFieldPtr(new SFString("C")));
+        _CellValues.push_back(SharedFieldPtr(new SFInt32(3)));
+        _CellValues.push_back(SharedFieldPtr(new SFGLenum(GL_CCW)));
+        _CellValues.push_back(SharedFieldPtr(new SFBool(true)));
+        _CellValues.push_back(SharedFieldPtr(new SFPnt3f(Pnt3f(0.0,0.0,1.0))));
 
-        _CellValues.push_back(new SFString("D"));
-        _CellValues.push_back(new SFInt32(4));
-        _CellValues.push_back(new SFGLenum(GL_CW));
-        _CellValues.push_back(new SFBool(false));
-        _CellValues.push_back(new SFPnt3f(Pnt3f(1.0,1.0,1.0)));
+        _CellValues.push_back(SharedFieldPtr(new SFString("D")));
+        _CellValues.push_back(SharedFieldPtr(new SFInt32(4)));
+        _CellValues.push_back(SharedFieldPtr(new SFGLenum(GL_CW)));
+        _CellValues.push_back(SharedFieldPtr(new SFBool(false)));
+        _CellValues.push_back(SharedFieldPtr(new SFPnt3f(Pnt3f(1.0,1.0,1.0))));
     }
 
     ~ExampleTableModel()
     {
-        for(UInt32 i(0) ; i<_ColumnValues.size() ; ++i)
-        {
-            delete _ColumnValues[i];
-        }
-        
-        for(UInt32 i(0) ; i<_CellValues.size() ; ++i)
-        {
-            delete _CellValues[i];
-        }
     }
 };
 

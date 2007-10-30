@@ -52,36 +52,86 @@
 
 OSG_BEGIN_NAMESPACE
 	 
-class OSG_USERINTERFACELIB_DLLMAPPING NumberSpinnerModel : public AbstractSpinnerModel
+template<class NumberTypeT>
+class NumberSpinnerModel : public AbstractSpinnerModel
 {
 public:
-    typedef std::list<Field*> FieldList;
-    typedef FieldList::iterator FieldListIter;
+    typedef NumberTypeT NumberType;
+
+    typedef AbstractSpinnerModel Inherited;
     
     //Return the object in the sequence that comes after the object returned by getValue().
-    virtual Field* getNextValue(void);
+    virtual SharedFieldPtr getNextValue(void);
     
     //Return the object in the sequence that comes before the object returned by getValue().
-    virtual Field* getPreviousValue(void);
+    virtual SharedFieldPtr getPreviousValue(void);
     
     //The current element of the sequence.
-    virtual Field* getValue(void);
+    virtual SharedFieldPtr getValue(void);
     
-    //Changes current value of the model, typically this value is displayed by the editor part of a Spinner.
-    virtual void setValue(Field* value);
+    //Changes current value of the model, typically this value is displayed by the editor part of a Spinner
+    virtual void setValue(SharedFieldPtr value);
     
-    //Changes the list that defines this sequence and resets the index of the models value to zero.
-    void setList(const FieldList& list);
-    
-    //Returns the List that defines the sequence for this model.
-    FieldList getList(void) const;
-    
+    //Returns the last number in the sequence.
+    NumberTypeT getMaximum(void) const;
+
+    //Returns the first number in this sequence.
+    NumberTypeT getMinimum(void) const;
+
+    //Returns the value of the current element of the sequence.
+    NumberTypeT getNumber(void) const;
+
+    //Returns the size of the value change computed by the getNextValue and getPreviousValue methods.
+    NumberTypeT getStepSize(void);
+
+    //Changes the upper bound for numbers in this sequence.
+    void setMaximum(const NumberTypeT& maximum);
+
+    //Changes the lower bound for numbers in this sequence.
+    void setMinimum(const NumberTypeT& minimum);
+
+    //Changes the size of the value change computed by the getNextValue and getPreviousValue methods.
+    void setStepSize(const NumberTypeT& stepSize);
+
 protected:
-    FieldList _List;
-    FieldListIter _CurrentListValue;
+    SField<NumberTypeT> _Value;
+    NumberTypeT _Maximum;
+    NumberTypeT _Minimum;
+    NumberTypeT _StepSize;
 };
 
-typedef boost::intrusive_ptr<NumberSpinnerModel> NumberSpinnerModelPtr;
+typedef NumberSpinnerModel<Int8> Int8SpinnerModel;
+typedef boost::intrusive_ptr<Int8SpinnerModel> Int8SpinnerModelPtr;
+
+typedef NumberSpinnerModel<Int16> Int16SpinnerModel;
+typedef boost::intrusive_ptr<Int16SpinnerModel> Int16SpinnerModelPtr;
+
+typedef NumberSpinnerModel<Int32> Int32SpinnerModel;
+typedef boost::intrusive_ptr<Int32SpinnerModel> Int32SpinnerModelPtr;
+
+typedef NumberSpinnerModel<Int64> Int64SpinnerModel;
+typedef boost::intrusive_ptr<Int64SpinnerModel> Int64SpinnerModelPtr;
+
+typedef NumberSpinnerModel<UInt8> UInt8SpinnerModel;
+typedef boost::intrusive_ptr<UInt8SpinnerModel> UInt8SpinnerModelPtr;
+
+typedef NumberSpinnerModel<UInt16> UInt16SpinnerModel;
+typedef boost::intrusive_ptr<UInt16SpinnerModel> UInt16SpinnerModelPtr;
+
+typedef NumberSpinnerModel<UInt32> UInt32SpinnerModel;
+typedef boost::intrusive_ptr<UInt32SpinnerModel> UInt32SpinnerModelPtr;
+
+typedef NumberSpinnerModel<UInt64> UInt64SpinnerModel;
+typedef boost::intrusive_ptr<UInt64SpinnerModel> UInt64SpinnerModelPtr;
+
+typedef NumberSpinnerModel<Real32> Real32SpinnerModel;
+typedef boost::intrusive_ptr<Real32SpinnerModel> Real32SpinnerModelPtr;
+
+typedef NumberSpinnerModel<Real64> Real64SpinnerModel;
+typedef boost::intrusive_ptr<Real64SpinnerModel> Real64SpinnerModelPtr;
+
+typedef NumberSpinnerModel<Real128> Real128SpinnerModel;
+typedef boost::intrusive_ptr<Real128SpinnerModel> Real128SpinnerModelPtr;
 
 OSG_END_NAMESPACE
 

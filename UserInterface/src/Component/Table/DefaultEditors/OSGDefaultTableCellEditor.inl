@@ -25,7 +25,7 @@ inline
 DefaultTableCellEditor::DefaultTableCellEditor(const UInt32& ClickCountToStart) :
             _ClickCountToStart(ClickCountToStart),
             _EditingTextField(NullFC),
-            _Value("")
+            _Value(new SFString(""))
 {
 }
 

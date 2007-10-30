@@ -73,13 +73,13 @@ public:
     virtual void removeTableModelListener(TableModelListenerPtr l);
     
     //Returns the name of the column at columnIndex.
-    //virtual Field* getColumnValue(UInt32 columnIndex) const;
+    //virtual SharedFieldPtr getColumnValue(UInt32 columnIndex) const;
     
     //Returns true if the cell at rowIndex and columnIndex is editable.
     virtual bool isCellEditable(UInt32 rowIndex, UInt32 columnIndex) const;
     
     //Sets the value in the cell at columnIndex and rowIndex to aValue.
-    virtual void setValueAt(Field* aValue, UInt32 rowIndex, UInt32 columnIndex);
+    virtual void setValueAt(SharedFieldPtr aValue, UInt32 rowIndex, UInt32 columnIndex);
     
 };
 

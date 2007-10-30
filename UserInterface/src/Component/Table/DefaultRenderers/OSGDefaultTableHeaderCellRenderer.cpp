@@ -73,7 +73,7 @@ A DefaultTableHeaderCellRenderer.
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr DefaultTableHeaderCellRenderer::getTableCellRendererComponent(TablePtr table, Field* value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
+ComponentPtr DefaultTableHeaderCellRenderer::getTableCellRendererComponent(TablePtr table, SharedFieldPtr value, bool isSelected, bool hasFocus, UInt32 row, UInt32 column)
 {
 	if(value == NULL){
 		return NullFC;
@@ -91,7 +91,7 @@ ComponentPtr DefaultTableHeaderCellRenderer::getTableCellRendererComponent(Table
 	LabelPtr TheLabel = Label::create();
 	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask | Label::BorderFieldMask);
 		std::string tempString;
-		tempString = dynamic_cast<SFString*>(value)->getValue();
+		tempString = dynamic_cast<SFString*>(value.get())->getValue();
 		TheLabel->setText(tempString);
 		TheLabel->setPreferredSize(Vec2s(100,30));
 		TheLabel->setBorder(DefaultBorder);
