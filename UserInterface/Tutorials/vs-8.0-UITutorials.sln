@@ -1,8 +1,9 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+# Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGUserInterface", "..\Builds\Windows\OSGUserInterface.vcproj", "{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393} = {61151B1E-8A6D-465E-8C71-7E1578BA2393}
+		{82609F8B-FDBB-4A72-B925-A5B4007272B5} = {82609F8B-FDBB-4A72-B925-A5B4007272B5}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Builds\Windows\OSGInput.vcproj", "{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
@@ -122,6 +123,48 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "22TextArea", "22TextArea.vc
 		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\..\Toolbox\Builds\Windows\OSGToolbox.vcproj", "{82609F8B-FDBB-4A72-B925-A5B4007272B5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "23SplitPanel", "23SplitPanel.vcproj", "{133F7124-4AD0-49AD-91D0-7A9710399199}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "24PasswordField", "24PasswordField.vcproj", "{CBF01ECE-0430-4F3E-A40C-03D393074310}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "25PopupMenu", "25PopupMenu.vcproj", "{83B5A964-9E15-4021-A136-EFFC20F0C8EF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "26MenuBar", "26MenuBar.vcproj", "{CDBA5C37-78FA-4D5B-885E-7C456F35A7D4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "27ScrollPanel", "27ScrollPanel.vcproj", "{C208C79A-C2FA-4EEA-94C4-47FB34379C2E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "28Table", "28Table.vcproj", "{312650C2-5174-406D-986C-BB3FBACB06F2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "29Spinner", "29Spinner.vcproj", "{F954AD29-16E0-41CB-A953-CAFA36528E99}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "30RotatedComponent", "30RotatedComponent.vcproj", "{39A99852-4CB1-48CD-B0B3-6D5FF1C90317}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -228,6 +271,42 @@ Global
 		{F09E1E04-1987-4CC6-90F5-C853E325EEC5}.Debug|Win32.Build.0 = Debug|Win32
 		{F09E1E04-1987-4CC6-90F5-C853E325EEC5}.Release|Win32.ActiveCfg = Release|Win32
 		{F09E1E04-1987-4CC6-90F5-C853E325EEC5}.Release|Win32.Build.0 = Release|Win32
+		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Debug|Win32.Build.0 = Debug|Win32
+		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Release|Win32.ActiveCfg = Release|Win32
+		{82609F8B-FDBB-4A72-B925-A5B4007272B5}.Release|Win32.Build.0 = Release|Win32
+		{133F7124-4AD0-49AD-91D0-7A9710399199}.Debug|Win32.ActiveCfg = Debug|Win32
+		{133F7124-4AD0-49AD-91D0-7A9710399199}.Debug|Win32.Build.0 = Debug|Win32
+		{133F7124-4AD0-49AD-91D0-7A9710399199}.Release|Win32.ActiveCfg = Release|Win32
+		{133F7124-4AD0-49AD-91D0-7A9710399199}.Release|Win32.Build.0 = Release|Win32
+		{CBF01ECE-0430-4F3E-A40C-03D393074310}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CBF01ECE-0430-4F3E-A40C-03D393074310}.Debug|Win32.Build.0 = Debug|Win32
+		{CBF01ECE-0430-4F3E-A40C-03D393074310}.Release|Win32.ActiveCfg = Release|Win32
+		{CBF01ECE-0430-4F3E-A40C-03D393074310}.Release|Win32.Build.0 = Release|Win32
+		{83B5A964-9E15-4021-A136-EFFC20F0C8EF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{83B5A964-9E15-4021-A136-EFFC20F0C8EF}.Debug|Win32.Build.0 = Debug|Win32
+		{83B5A964-9E15-4021-A136-EFFC20F0C8EF}.Release|Win32.ActiveCfg = Release|Win32
+		{83B5A964-9E15-4021-A136-EFFC20F0C8EF}.Release|Win32.Build.0 = Release|Win32
+		{CDBA5C37-78FA-4D5B-885E-7C456F35A7D4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CDBA5C37-78FA-4D5B-885E-7C456F35A7D4}.Debug|Win32.Build.0 = Debug|Win32
+		{CDBA5C37-78FA-4D5B-885E-7C456F35A7D4}.Release|Win32.ActiveCfg = Release|Win32
+		{CDBA5C37-78FA-4D5B-885E-7C456F35A7D4}.Release|Win32.Build.0 = Release|Win32
+		{C208C79A-C2FA-4EEA-94C4-47FB34379C2E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C208C79A-C2FA-4EEA-94C4-47FB34379C2E}.Debug|Win32.Build.0 = Debug|Win32
+		{C208C79A-C2FA-4EEA-94C4-47FB34379C2E}.Release|Win32.ActiveCfg = Release|Win32
+		{C208C79A-C2FA-4EEA-94C4-47FB34379C2E}.Release|Win32.Build.0 = Release|Win32
+		{312650C2-5174-406D-986C-BB3FBACB06F2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{312650C2-5174-406D-986C-BB3FBACB06F2}.Debug|Win32.Build.0 = Debug|Win32
+		{312650C2-5174-406D-986C-BB3FBACB06F2}.Release|Win32.ActiveCfg = Release|Win32
+		{312650C2-5174-406D-986C-BB3FBACB06F2}.Release|Win32.Build.0 = Release|Win32
+		{F954AD29-16E0-41CB-A953-CAFA36528E99}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F954AD29-16E0-41CB-A953-CAFA36528E99}.Debug|Win32.Build.0 = Debug|Win32
+		{F954AD29-16E0-41CB-A953-CAFA36528E99}.Release|Win32.ActiveCfg = Release|Win32
+		{F954AD29-16E0-41CB-A953-CAFA36528E99}.Release|Win32.Build.0 = Release|Win32
+		{39A99852-4CB1-48CD-B0B3-6D5FF1C90317}.Debug|Win32.ActiveCfg = Debug|Win32
+		{39A99852-4CB1-48CD-B0B3-6D5FF1C90317}.Debug|Win32.Build.0 = Debug|Win32
+		{39A99852-4CB1-48CD-B0B3-6D5FF1C90317}.Release|Win32.ActiveCfg = Release|Win32
+		{39A99852-4CB1-48CD-B0B3-6D5FF1C90317}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
