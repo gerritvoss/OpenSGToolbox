@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -110,6 +110,20 @@ SFVec3f *DiscDistribution3DBase::getSFNormal(void)
     return &_sfNormal;
 }
 
+//! Get the DiscDistribution3D::_sfTangent field.
+inline
+SFVec3f *DiscDistribution3DBase::getSFTangent(void)
+{
+    return &_sfTangent;
+}
+
+//! Get the DiscDistribution3D::_sfBinormal field.
+inline
+SFVec3f *DiscDistribution3DBase::getSFBinormal(void)
+{
+    return &_sfBinormal;
+}
+
 //! Get the DiscDistribution3D::_sfInnerRadius field.
 inline
 SFReal32 *DiscDistribution3DBase::getSFInnerRadius(void)
@@ -136,6 +150,13 @@ inline
 SFReal32 *DiscDistribution3DBase::getSFMaxTheta(void)
 {
     return &_sfMaxTheta;
+}
+
+//! Get the DiscDistribution3D::_sfSurfaceOrEdge field.
+inline
+SFUInt32 *DiscDistribution3DBase::getSFSurfaceOrEdge(void)
+{
+    return &_sfSurfaceOrEdge;
 }
 
 
@@ -179,6 +200,48 @@ inline
 void DiscDistribution3DBase::setNormal(const Vec3f &value)
 {
     _sfNormal.setValue(value);
+}
+
+//! Get the value of the DiscDistribution3D::_sfTangent field.
+inline
+Vec3f &DiscDistribution3DBase::getTangent(void)
+{
+    return _sfTangent.getValue();
+}
+
+//! Get the value of the DiscDistribution3D::_sfTangent field.
+inline
+const Vec3f &DiscDistribution3DBase::getTangent(void) const
+{
+    return _sfTangent.getValue();
+}
+
+//! Set the value of the DiscDistribution3D::_sfTangent field.
+inline
+void DiscDistribution3DBase::setTangent(const Vec3f &value)
+{
+    _sfTangent.setValue(value);
+}
+
+//! Get the value of the DiscDistribution3D::_sfBinormal field.
+inline
+Vec3f &DiscDistribution3DBase::getBinormal(void)
+{
+    return _sfBinormal.getValue();
+}
+
+//! Get the value of the DiscDistribution3D::_sfBinormal field.
+inline
+const Vec3f &DiscDistribution3DBase::getBinormal(void) const
+{
+    return _sfBinormal.getValue();
+}
+
+//! Set the value of the DiscDistribution3D::_sfBinormal field.
+inline
+void DiscDistribution3DBase::setBinormal(const Vec3f &value)
+{
+    _sfBinormal.setValue(value);
 }
 
 //! Get the value of the DiscDistribution3D::_sfInnerRadius field.
@@ -263,6 +326,27 @@ inline
 void DiscDistribution3DBase::setMaxTheta(const Real32 &value)
 {
     _sfMaxTheta.setValue(value);
+}
+
+//! Get the value of the DiscDistribution3D::_sfSurfaceOrEdge field.
+inline
+UInt32 &DiscDistribution3DBase::getSurfaceOrEdge(void)
+{
+    return _sfSurfaceOrEdge.getValue();
+}
+
+//! Get the value of the DiscDistribution3D::_sfSurfaceOrEdge field.
+inline
+const UInt32 &DiscDistribution3DBase::getSurfaceOrEdge(void) const
+{
+    return _sfSurfaceOrEdge.getValue();
+}
+
+//! Set the value of the DiscDistribution3D::_sfSurfaceOrEdge field.
+inline
+void DiscDistribution3DBase::setSurfaceOrEdge(const UInt32 &value)
+{
+    _sfSurfaceOrEdge.setValue(value);
 }
 
 

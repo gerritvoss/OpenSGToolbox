@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -65,11 +65,12 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGDistribution3D.h" // Parent
+#include "Function/OSGFunction.h" // Parent
 
 #include <OpenSG/OSGPnt3fFields.h> // Point1 type
 #include <OpenSG/OSGPnt3fFields.h> // Point2 type
 #include <OpenSG/OSGPnt3fFields.h> // Point3 type
+#include <OpenSG/OSGUInt32Fields.h> // SurfaceOrEdge type
 
 #include "OSGTriDistribution3DFields.h"
 
@@ -80,11 +81,11 @@ class BinaryDataHandler;
 
 //! \brief TriDistribution3D Base Class.
 
-class OSG_DYNAMICSLIB_DLLMAPPING TriDistribution3DBase : public Distribution3D
+class OSG_DYNAMICSLIB_DLLMAPPING TriDistribution3DBase : public Function
 {
   private:
 
-    typedef Distribution3D    Inherited;
+    typedef Function    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -93,15 +94,17 @@ class OSG_DYNAMICSLIB_DLLMAPPING TriDistribution3DBase : public Distribution3D
 
     enum
     {
-        Point1FieldId = Inherited::NextFieldId,
-        Point2FieldId = Point1FieldId + 1,
-        Point3FieldId = Point2FieldId + 1,
-        NextFieldId   = Point3FieldId + 1
+        Point1FieldId        = Inherited::NextFieldId,
+        Point2FieldId        = Point1FieldId        + 1,
+        Point3FieldId        = Point2FieldId        + 1,
+        SurfaceOrEdgeFieldId = Point3FieldId        + 1,
+        NextFieldId          = SurfaceOrEdgeFieldId + 1
     };
 
     static const OSG::BitVector Point1FieldMask;
     static const OSG::BitVector Point2FieldMask;
     static const OSG::BitVector Point3FieldMask;
+    static const OSG::BitVector SurfaceOrEdgeFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -131,6 +134,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING TriDistribution3DBase : public Distribution3D
            SFPnt3f             *getSFPoint1         (void);
            SFPnt3f             *getSFPoint2         (void);
            SFPnt3f             *getSFPoint3         (void);
+           SFUInt32            *getSFSurfaceOrEdge  (void);
 
            Pnt3f               &getPoint1         (void);
      const Pnt3f               &getPoint1         (void) const;
@@ -138,6 +142,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING TriDistribution3DBase : public Distribution3D
      const Pnt3f               &getPoint2         (void) const;
            Pnt3f               &getPoint3         (void);
      const Pnt3f               &getPoint3         (void) const;
+           UInt32              &getSurfaceOrEdge  (void);
+     const UInt32              &getSurfaceOrEdge  (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -147,6 +153,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING TriDistribution3DBase : public Distribution3D
      void setPoint1         ( const Pnt3f &value );
      void setPoint2         ( const Pnt3f &value );
      void setPoint3         ( const Pnt3f &value );
+     void setSurfaceOrEdge  ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -192,6 +199,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING TriDistribution3DBase : public Distribution3D
     SFPnt3f             _sfPoint1;
     SFPnt3f             _sfPoint2;
     SFPnt3f             _sfPoint3;
+    SFUInt32            _sfSurfaceOrEdge;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGDiscDistribution3D.h"
+#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -74,10 +75,72 @@ void DiscDistribution3D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+DiscDistribution3D::FunctionIOTypeVector DiscDistribution3D::getOutputTypes(FunctionIOParameterVector& InputParameters) const
+{
+    FunctionIOTypeVector OutputTypes;
+    OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_DISC3D_DIST_OUTPUTPARAMETERS));
+    return OutputTypes;
+}
+
+DiscDistribution3D::FunctionIOTypeVector DiscDistribution3D::getInputTypes(FunctionIOParameterVector& InputParameters) const
+{
+    FunctionIOTypeVector InputTypes;
+    return InputTypes;
+}
+
+DiscDistribution3D::FunctionIOParameterVector DiscDistribution3D::evaluate(FunctionIOParameterVector& InputParameters)
+{
+    //The Input Paremeters must be the correct number
+    if(InputParameters.size() != OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_DISC3D_DIST_INPUTPARAMETERS))
+    {
+        throw FunctionInputException();
+    }
+    FunctionIOParameterVector ResultVector;
+    ResultVector.reserve(OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_DISC3D_DIST_OUTPUTPARAMETERS));
+    ResultVector.push_back(OSG_FUNC_INST_FUNCTIONIOPARAMETER(0,OSG_DISC3D_DIST_OUTPUTPARAMETERS, generate()));
+
+    return ResultVector;
+}
+
 Pnt3f DiscDistribution3D::generate(void)
 {
-   //TODO:Implement
-   return Pnt3f(0.0f,0.0f,0.0f);
+    Pnt3f Result;
+
+    switch(getSurfaceOrEdge())
+    {
+    case EDGE:
+        {
+            Real32 OuterCircumference(getOuterRadius() * (getMaxTheta() - getMinTheta()));
+            Real32 InnerCircumference(getInnerRadius() * (getMaxTheta() - getMinTheta()));
+            Real32 Theta( RandomPoolManager::getRandomReal32(getMinTheta(),getMaxTheta()) );
+
+            Real32 PickEdge(RandomPoolManager::getRandomReal32(0.0,1.0));
+            if(PickEdge < InnerCircumference/(OuterCircumference + InnerCircumference))
+            {
+                Result =  getCenter() + getInnerRadius()*osgsin(Theta)*getTangent() + getInnerRadius()*osgcos(Theta)*getBinormal();
+            }
+            else
+            {
+                Result =  getCenter() + getOuterRadius()*osgsin(Theta)*getTangent() + getOuterRadius()*osgcos(Theta)*getBinormal();
+            }
+            break;
+        }
+    case SURFACE:
+    default:
+        {
+            //To get a uniform distribution across the disc get a uniformly distributed allong 0.0 - 1.0
+            //Then Take the square root of that.  This gives a square root distribution from 0.0 - 1.0
+            //This square root distribution is used for the random radius because the area of a disc is 
+            //dependant on the square of the radius, i.e it is a quadratic function
+            Real32 Temp(osgsqrt(RandomPoolManager::getRandomReal32(0.0,1.0)));
+            Real32 Radius(getInnerRadius() + Temp*(getOuterRadius() - getInnerRadius()));
+            Real32 Theta( RandomPoolManager::getRandomReal32(getMinTheta(),getMaxTheta()) );
+            Result = getCenter() + (Radius*osgsin(Theta))*getTangent() + (Radius*osgcos(Theta))*getBinormal();
+            break;
+        }
+    }
+
+    return Result;
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -104,6 +167,29 @@ DiscDistribution3D::~DiscDistribution3D(void)
 void DiscDistribution3D::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & NormalFieldMask)
+    {
+        //Determine the Normal, Tangent, Binormal Vectors
+        getNormal().normalize();
+
+        Vec3f TempVec(getNormal());
+        if(getNormal().x() == 0.0f)
+        {
+            TempVec[0] += osgMax(osgabs(TempVec.y()), osgabs(TempVec.z()));
+        }
+        else
+        {
+            TempVec[1] += osgMax(osgabs(TempVec.x()), osgMax(osgabs(TempVec.y()), osgabs(TempVec.z())));
+        }
+
+        beginEditCP(DiscDistribution3DPtr(this), TangentFieldMask | BinormalFieldMask);
+            setTangent(getNormal().cross(TempVec));
+            getTangent().normalize();
+            setBinormal(getTangent().cross(getNormal()));
+            getBinormal().normalize();
+        endEditCP(DiscDistribution3DPtr(this), TangentFieldMask | BinormalFieldMask);
+    }
 }
 
 void DiscDistribution3D::dump(      UInt32    , 

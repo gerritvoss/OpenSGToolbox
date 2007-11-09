@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -85,6 +85,9 @@ const OSG::BitVector  SphereDistribution3DBase::MinZFieldMask =
 const OSG::BitVector  SphereDistribution3DBase::MaxZFieldMask = 
     (TypeTraits<BitVector>::One << SphereDistribution3DBase::MaxZFieldId);
 
+const OSG::BitVector  SphereDistribution3DBase::SurfaceOrVolumeFieldMask = 
+    (TypeTraits<BitVector>::One << SphereDistribution3DBase::SurfaceOrVolumeFieldId);
+
 const OSG::BitVector SphereDistribution3DBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -111,6 +114,9 @@ const OSG::BitVector SphereDistribution3DBase::MTInfluenceMask =
     
 */
 /*! \var Real32          SphereDistribution3DBase::_sfMaxZ
+    
+*/
+/*! \var UInt32          SphereDistribution3DBase::_sfSurfaceOrVolume
     
 */
 
@@ -152,13 +158,18 @@ FieldDescription *SphereDistribution3DBase::_desc[] =
                      "MaxZ", 
                      MaxZFieldId, MaxZFieldMask,
                      false,
-                     (FieldAccessMethod) &SphereDistribution3DBase::getSFMaxZ)
+                     (FieldAccessMethod) &SphereDistribution3DBase::getSFMaxZ),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "SurfaceOrVolume", 
+                     SurfaceOrVolumeFieldId, SurfaceOrVolumeFieldMask,
+                     false,
+                     (FieldAccessMethod) &SphereDistribution3DBase::getSFSurfaceOrVolume)
 };
 
 
 FieldContainerType SphereDistribution3DBase::_type(
     "SphereDistribution3D",
-    "Distribution3D",
+    "Function",
     NULL,
     (PrototypeCreateF) &SphereDistribution3DBase::createEmpty,
     SphereDistribution3D::initMethod,
@@ -235,6 +246,7 @@ SphereDistribution3DBase::SphereDistribution3DBase(void) :
     _sfMaxTheta               (Real32(6.28319)), 
     _sfMinZ                   (Real32(-1.0)), 
     _sfMaxZ                   (Real32(1.0)), 
+    _sfSurfaceOrVolume        (UInt32(SphereDistribution3D::VOLUME)), 
     Inherited() 
 {
 }
@@ -251,6 +263,7 @@ SphereDistribution3DBase::SphereDistribution3DBase(const SphereDistribution3DBas
     _sfMaxTheta               (source._sfMaxTheta               ), 
     _sfMinZ                   (source._sfMinZ                   ), 
     _sfMaxZ                   (source._sfMaxZ                   ), 
+    _sfSurfaceOrVolume        (source._sfSurfaceOrVolume        ), 
     Inherited                 (source)
 {
 }
@@ -302,6 +315,11 @@ UInt32 SphereDistribution3DBase::getBinSize(const BitVector &whichField)
         returnValue += _sfMaxZ.getBinSize();
     }
 
+    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
+    {
+        returnValue += _sfSurfaceOrVolume.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -344,6 +362,11 @@ void SphereDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (MaxZFieldMask & whichField))
     {
         _sfMaxZ.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
+    {
+        _sfSurfaceOrVolume.copyToBin(pMem);
     }
 
 
@@ -389,6 +412,11 @@ void SphereDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfMaxZ.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
+    {
+        _sfSurfaceOrVolume.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -419,6 +447,9 @@ void SphereDistribution3DBase::executeSyncImpl(      SphereDistribution3DBase *p
 
     if(FieldBits::NoField != (MaxZFieldMask & whichField))
         _sfMaxZ.syncWith(pOther->_sfMaxZ);
+
+    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
+        _sfSurfaceOrVolume.syncWith(pOther->_sfSurfaceOrVolume);
 
 
 }
@@ -451,6 +482,9 @@ void SphereDistribution3DBase::executeSyncImpl(      SphereDistribution3DBase *p
     if(FieldBits::NoField != (MaxZFieldMask & whichField))
         _sfMaxZ.syncWith(pOther->_sfMaxZ);
 
+    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
+        _sfSurfaceOrVolume.syncWith(pOther->_sfSurfaceOrVolume);
+
 
 
 }
@@ -474,7 +508,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<SphereDistribution3DPtr>::_type("SphereDistribution3DPtr", "Distribution3DPtr");
+DataType FieldDataTraits<SphereDistribution3DPtr>::_type("SphereDistribution3DPtr", "FunctionPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(SphereDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);

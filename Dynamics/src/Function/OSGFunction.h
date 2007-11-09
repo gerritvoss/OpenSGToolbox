@@ -53,10 +53,19 @@
 #include <boost/preprocessor/array/elem.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 
-#define OSG_FUNC_IOPARAMETER_NAME(index, parameterArray) BOOST_PP_TUPLE_ELEM(2,0,BOOST_PP_ARRAY_ELEM(index, parameterArray))
-#define OSG_FUNC_IOPARAMETER_TYPE(index, parameterArray) BOOST_PP_TUPLE_ELEM(2,1,BOOST_PP_ARRAY_ELEM(index, parameterArray))
+#define OSG_FUNC_IOPARAMETERARRAY_SIZE(parameterArray) BOOST_PP_ARRAY_SIZE(parameterArray)
 
-#define OSG_FUNC_INST_FUNCTIONIOTYPE(index, parameterArray) FunctionIOType(OSG_FUNC_IOPARAMETER_NAME(index,parameterArray), &OSG_FUNC_IOPARAMETER_TYPE(index,parameterArray))
+#define OSG_FUNC_IOPARAMETER_NAME(index, parameterArray) BOOST_PP_TUPLE_ELEM(2,0,BOOST_PP_ARRAY_ELEM(index, parameterArray))
+
+#define OSG_FUNC_IOPARAMETER_TYPE(index, parameterArray) FieldDataTraits<BOOST_PP_TUPLE_ELEM(2,1,BOOST_PP_ARRAY_ELEM(index, parameterArray))>::getType()
+
+#define OSG_FUNC_IOPARAMETER_DATA(index, parameterArray) osg::Function::FunctionIOData<BOOST_PP_TUPLE_ELEM(2,1,BOOST_PP_ARRAY_ELEM(index, parameterArray))>
+
+#define OSG_FUNC_INST_FUNCTIONIOTYPE(index, parameterArray) osg::Function::FunctionIOType(OSG_FUNC_IOPARAMETER_NAME(index,parameterArray), &OSG_FUNC_IOPARAMETER_TYPE(index,parameterArray))
+
+#define OSG_FUNC_INST_FUNCTIONIOPARAMETER(index, parameterArray, value) osg::Function::FunctionIOParameter(OSG_FUNC_IOPARAMETER_NAME(index, parameterArray), new OSG_FUNC_IOPARAMETER_DATA(index, parameterArray)(value))
+
+#define OSG_FUNC_IOPARAMETER_GET_DATA(index, parameterArray, parameterVector) FunctionIOData<BOOST_PP_TUPLE_ELEM(2,1,BOOST_PP_ARRAY_ELEM(index, parameterArray))>::dcast(parameterVector[index].getDataPtr())->getData()
 
 OSG_BEGIN_NAMESPACE
 
@@ -173,8 +182,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING Function : public FunctionBase
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
 
-    virtual FunctionIOTypeVector getReturnTypes(void) const = 0;
-    virtual FunctionIOTypeVector getParameterTypes(void) const = 0;
+    virtual FunctionIOTypeVector getOutputTypes(FunctionIOParameterVector& InputParameters) const = 0;
+    virtual FunctionIOTypeVector getInputTypes(FunctionIOParameterVector& InputParameters) const = 0;
 
     virtual FunctionIOParameterVector evaluate(FunctionIOParameterVector& InputParameters) = 0;
   protected:

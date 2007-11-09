@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="SphereDistribution3D"
-	parent="Distribution3D"
+	parent="Function"
 	library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -73,6 +73,15 @@ An SphereDistribution3D.
 		visibility="external"
 		defaultValue="1.0"
 		access="public"
+	>
+	</Field>
+	<Field
+		name="SurfaceOrVolume"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="SphereDistribution3D::VOLUME"
 	>
 	</Field>
 </FieldContainer>

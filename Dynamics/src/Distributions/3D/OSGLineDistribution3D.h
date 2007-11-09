@@ -49,17 +49,21 @@
 
 OSG_BEGIN_NAMESPACE
 
-#define OSG_LINE3D_DIST_IORETURNPARAMETERS (1, \
+#define OSG_LINE3D_DIST_OUTPUTPARAMETERS (1, \
     (\
-      ("RandomPoint", FieldDataTraits<Pnt3f>::getType()) \
+      ("RandomPoint", Pnt3f) \
     ))
 
-#define OSG_LINE3D_DIST_IOINPUTPARAMETERS (3, \
+//      ("RandomPoint", FieldDataTraits<Pnt3f>::getType()) \
+
+#define OSG_LINE3D_DIST_INPUTPARAMETERS (0, ())
+
+/*#define OSG_LINE3D_DIST_INPUTPARAMETERS (3, \
     (\
       ("Bla1", FieldDataTraits<Pnt3f>::getType()), \
       ("Bla2", FieldDataTraits<Pnt2f>::getType()), \
       ("Bla3", FieldDataTraits<Real32>::getType()) \
-    ))
+    ))*/
 
 class OSG_DYNAMICSLIB_DLLMAPPING LineDistribution3D : public LineDistribution3DBase
 {
@@ -69,7 +73,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING LineDistribution3D : public LineDistribution3DB
 
     /*==========================  PUBLIC  =================================*/
   public:
-    typedef FunctionIOData<Pnt3f> Output1DataType;
+    typedef FunctionIOData<Pnt3f> Output0DataType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -87,9 +91,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING LineDistribution3D : public LineDistribution3DB
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    Pnt3f generate(void);
-    virtual FunctionIOTypeVector getReturnTypes(void) const;
-    virtual FunctionIOTypeVector getParameterTypes(void) const;
+    virtual FunctionIOTypeVector getOutputTypes(FunctionIOParameterVector& InputParameters) const;
+    virtual FunctionIOTypeVector getInputTypes(FunctionIOParameterVector& InputParameters) const;
     virtual FunctionIOParameterVector evaluate(FunctionIOParameterVector& InputParameters);
 
     /*=========================  PROTECTED  ===============================*/
@@ -113,6 +116,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING LineDistribution3D : public LineDistribution3DB
 
     /*! \}                                                                 */
     
+    Pnt3f generate(void);
     /*==========================  PRIVATE  ================================*/
   private:
 

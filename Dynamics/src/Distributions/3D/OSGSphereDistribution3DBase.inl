@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -143,6 +143,13 @@ inline
 SFReal32 *SphereDistribution3DBase::getSFMaxZ(void)
 {
     return &_sfMaxZ;
+}
+
+//! Get the SphereDistribution3D::_sfSurfaceOrVolume field.
+inline
+SFUInt32 *SphereDistribution3DBase::getSFSurfaceOrVolume(void)
+{
+    return &_sfSurfaceOrVolume;
 }
 
 
@@ -291,6 +298,27 @@ inline
 void SphereDistribution3DBase::setMaxZ(const Real32 &value)
 {
     _sfMaxZ.setValue(value);
+}
+
+//! Get the value of the SphereDistribution3D::_sfSurfaceOrVolume field.
+inline
+UInt32 &SphereDistribution3DBase::getSurfaceOrVolume(void)
+{
+    return _sfSurfaceOrVolume.getValue();
+}
+
+//! Get the value of the SphereDistribution3D::_sfSurfaceOrVolume field.
+inline
+const UInt32 &SphereDistribution3DBase::getSurfaceOrVolume(void) const
+{
+    return _sfSurfaceOrVolume.getValue();
+}
+
+//! Set the value of the SphereDistribution3D::_sfSurfaceOrVolume field.
+inline
+void SphereDistribution3DBase::setSurfaceOrVolume(const UInt32 &value)
+{
+    _sfSurfaceOrVolume.setValue(value);
 }
 
 

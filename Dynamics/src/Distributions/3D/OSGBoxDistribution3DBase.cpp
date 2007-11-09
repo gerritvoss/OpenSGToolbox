@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -61,7 +61,6 @@
 #include "OSGBoxDistribution3DBase.h"
 #include "OSGBoxDistribution3D.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  BoxDistribution3DBase::MinPointFieldMask = 
@@ -69,6 +68,9 @@ const OSG::BitVector  BoxDistribution3DBase::MinPointFieldMask =
 
 const OSG::BitVector  BoxDistribution3DBase::MaxPointFieldMask = 
     (TypeTraits<BitVector>::One << BoxDistribution3DBase::MaxPointFieldId);
+
+const OSG::BitVector  BoxDistribution3DBase::SurfaceOrVolumeFieldMask = 
+    (TypeTraits<BitVector>::One << BoxDistribution3DBase::SurfaceOrVolumeFieldId);
 
 const OSG::BitVector BoxDistribution3DBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -81,6 +83,9 @@ const OSG::BitVector BoxDistribution3DBase::MTInfluenceMask =
     
 */
 /*! \var Pnt3f           BoxDistribution3DBase::_sfMaxPoint
+    
+*/
+/*! \var UInt32          BoxDistribution3DBase::_sfSurfaceOrVolume
     
 */
 
@@ -97,13 +102,18 @@ FieldDescription *BoxDistribution3DBase::_desc[] =
                      "MaxPoint", 
                      MaxPointFieldId, MaxPointFieldMask,
                      false,
-                     (FieldAccessMethod) &BoxDistribution3DBase::getSFMaxPoint)
+                     (FieldAccessMethod) &BoxDistribution3DBase::getSFMaxPoint),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "SurfaceOrVolume", 
+                     SurfaceOrVolumeFieldId, SurfaceOrVolumeFieldMask,
+                     false,
+                     (FieldAccessMethod) &BoxDistribution3DBase::getSFSurfaceOrVolume)
 };
 
 
 FieldContainerType BoxDistribution3DBase::_type(
     "BoxDistribution3D",
-    "Distribution3D",
+    "Function",
     NULL,
     (PrototypeCreateF) &BoxDistribution3DBase::createEmpty,
     BoxDistribution3D::initMethod,
@@ -175,6 +185,7 @@ void BoxDistribution3DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 BoxDistribution3DBase::BoxDistribution3DBase(void) :
     _sfMinPoint               (Pnt3f(0.0,0.0,0.0)), 
     _sfMaxPoint               (Pnt3f(1.0,1.0,1.0)), 
+    _sfSurfaceOrVolume        (UInt32(BoxDistribution3D::VOLUME)), 
     Inherited() 
 {
 }
@@ -186,6 +197,7 @@ BoxDistribution3DBase::BoxDistribution3DBase(void) :
 BoxDistribution3DBase::BoxDistribution3DBase(const BoxDistribution3DBase &source) :
     _sfMinPoint               (source._sfMinPoint               ), 
     _sfMaxPoint               (source._sfMaxPoint               ), 
+    _sfSurfaceOrVolume        (source._sfSurfaceOrVolume        ), 
     Inherited                 (source)
 {
 }
@@ -212,6 +224,11 @@ UInt32 BoxDistribution3DBase::getBinSize(const BitVector &whichField)
         returnValue += _sfMaxPoint.getBinSize();
     }
 
+    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
+    {
+        returnValue += _sfSurfaceOrVolume.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -229,6 +246,11 @@ void BoxDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (MaxPointFieldMask & whichField))
     {
         _sfMaxPoint.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
+    {
+        _sfSurfaceOrVolume.copyToBin(pMem);
     }
 
 
@@ -249,6 +271,11 @@ void BoxDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfMaxPoint.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
+    {
+        _sfSurfaceOrVolume.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -265,6 +292,9 @@ void BoxDistribution3DBase::executeSyncImpl(      BoxDistribution3DBase *pOther,
     if(FieldBits::NoField != (MaxPointFieldMask & whichField))
         _sfMaxPoint.syncWith(pOther->_sfMaxPoint);
 
+    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
+        _sfSurfaceOrVolume.syncWith(pOther->_sfSurfaceOrVolume);
+
 
 }
 #else
@@ -280,6 +310,9 @@ void BoxDistribution3DBase::executeSyncImpl(      BoxDistribution3DBase *pOther,
 
     if(FieldBits::NoField != (MaxPointFieldMask & whichField))
         _sfMaxPoint.syncWith(pOther->_sfMaxPoint);
+
+    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
+        _sfSurfaceOrVolume.syncWith(pOther->_sfSurfaceOrVolume);
 
 
 
@@ -304,7 +337,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<BoxDistribution3DPtr>::_type("BoxDistribution3DPtr", "Distribution3DPtr");
+DataType FieldDataTraits<BoxDistribution3DPtr>::_type("BoxDistribution3DPtr", "FunctionPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(BoxDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);

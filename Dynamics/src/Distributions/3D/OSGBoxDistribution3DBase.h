@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -65,10 +65,11 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGDistribution3D.h" // Parent
+#include "Function/OSGFunction.h" // Parent
 
 #include <OpenSG/OSGPnt3fFields.h> // MinPoint type
 #include <OpenSG/OSGPnt3fFields.h> // MaxPoint type
+#include <OpenSG/OSGUInt32Fields.h> // SurfaceOrVolume type
 
 #include "OSGBoxDistribution3DFields.h"
 
@@ -79,11 +80,11 @@ class BinaryDataHandler;
 
 //! \brief BoxDistribution3D Base Class.
 
-class OSG_DYNAMICSLIB_DLLMAPPING BoxDistribution3DBase : public Distribution3D
+class OSG_DYNAMICSLIB_DLLMAPPING BoxDistribution3DBase : public Function
 {
   private:
 
-    typedef Distribution3D    Inherited;
+    typedef Function    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -92,13 +93,15 @@ class OSG_DYNAMICSLIB_DLLMAPPING BoxDistribution3DBase : public Distribution3D
 
     enum
     {
-        MinPointFieldId = Inherited::NextFieldId,
-        MaxPointFieldId = MinPointFieldId + 1,
-        NextFieldId     = MaxPointFieldId + 1
+        MinPointFieldId        = Inherited::NextFieldId,
+        MaxPointFieldId        = MinPointFieldId        + 1,
+        SurfaceOrVolumeFieldId = MaxPointFieldId        + 1,
+        NextFieldId            = SurfaceOrVolumeFieldId + 1
     };
 
     static const OSG::BitVector MinPointFieldMask;
     static const OSG::BitVector MaxPointFieldMask;
+    static const OSG::BitVector SurfaceOrVolumeFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -127,11 +130,14 @@ class OSG_DYNAMICSLIB_DLLMAPPING BoxDistribution3DBase : public Distribution3D
 
            SFPnt3f             *getSFMinPoint       (void);
            SFPnt3f             *getSFMaxPoint       (void);
+           SFUInt32            *getSFSurfaceOrVolume(void);
 
            Pnt3f               &getMinPoint       (void);
      const Pnt3f               &getMinPoint       (void) const;
            Pnt3f               &getMaxPoint       (void);
      const Pnt3f               &getMaxPoint       (void) const;
+           UInt32              &getSurfaceOrVolume(void);
+     const UInt32              &getSurfaceOrVolume(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -140,6 +146,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING BoxDistribution3DBase : public Distribution3D
 
      void setMinPoint       ( const Pnt3f &value );
      void setMaxPoint       ( const Pnt3f &value );
+     void setSurfaceOrVolume( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -184,6 +191,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING BoxDistribution3DBase : public Distribution3D
 
     SFPnt3f             _sfMinPoint;
     SFPnt3f             _sfMaxPoint;
+    SFUInt32            _sfSurfaceOrVolume;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

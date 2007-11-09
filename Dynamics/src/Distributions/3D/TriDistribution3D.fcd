@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="TriDistribution3D"
-	parent="Distribution3D"
+	parent="Function"
 	library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -37,6 +37,15 @@ An TriDistribution3D.
 		visibility="external"
 		defaultValue="0.0,1.0,0.0"
 		access="public"
+	>
+	</Field>
+	<Field
+		name="SurfaceOrEdge"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="TriDistribution3D::SURFACE"
 	>
 	</Field>
 </FieldContainer>

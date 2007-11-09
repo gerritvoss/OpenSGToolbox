@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGDynamicsDef.h"
 
-#include "OSGDiscDistribution3DFields.h"
+#include "Function/OSGFunctionFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class CylinderDistribution3D;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! CylinderDistribution3DPtr
 
-typedef FCPtr<DiscDistribution3DPtr, CylinderDistribution3D> CylinderDistribution3DPtr;
+typedef FCPtr<FunctionPtr, CylinderDistribution3D> CylinderDistribution3DPtr;
 
 #endif
 

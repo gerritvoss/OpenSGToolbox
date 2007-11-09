@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGTriDistribution3D.h"
+#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -74,10 +75,88 @@ void TriDistribution3D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+TriDistribution3D::FunctionIOTypeVector TriDistribution3D::getOutputTypes(FunctionIOParameterVector& InputParameters) const
+{
+    FunctionIOTypeVector OutputTypes;
+    OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_TRI3D_DIST_OUTPUTPARAMETERS));
+    return OutputTypes;
+}
+
+TriDistribution3D::FunctionIOTypeVector TriDistribution3D::getInputTypes(FunctionIOParameterVector& InputParameters) const
+{
+    FunctionIOTypeVector InputTypes;
+    return InputTypes;
+}
+
+TriDistribution3D::FunctionIOParameterVector TriDistribution3D::evaluate(FunctionIOParameterVector& InputParameters)
+{
+    //The Input Paremeters must be the correct number
+    if(InputParameters.size() != OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_TRI3D_DIST_INPUTPARAMETERS))
+    {
+        throw FunctionInputException();
+    }
+    FunctionIOParameterVector ResultVector;
+    ResultVector.reserve(OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_TRI3D_DIST_OUTPUTPARAMETERS));
+    ResultVector.push_back(OSG_FUNC_INST_FUNCTIONIOPARAMETER(0,OSG_TRI3D_DIST_OUTPUTPARAMETERS, generate()));
+
+    return ResultVector;
+}
+
 Pnt3f TriDistribution3D::generate(void)
 {
-   //TODO:Implement
-   return Pnt3f(0.0f,0.0f,0.0f);
+    Pnt3f Result;
+
+    switch(getSurfaceOrEdge())
+    {
+    case EDGE:
+        {
+            Vec3f Side1(getPoint2() - getPoint1()),
+                  Side2(getPoint3() - getPoint2()),
+                  Side3(getPoint1() - getPoint3());
+
+            Real32 Side1Length(Side1.length()),
+                   Side2Length(Side2.length()),
+                   Side3Length(Side3.length());
+
+            Real32 TotalLength(Side1Length + Side2Length + Side3Length);
+
+            Real32 Rand(RandomPoolManager::getRandomReal32(0.0,1.0));
+
+            Real32 PickEdge(RandomPoolManager::getRandomReal32(0.0,1.0));
+            if(Rand < Side1Length/TotalLength)
+            {
+                Result = getPoint1() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side1;
+            }
+            else if(Rand < (Side1Length+Side2Length)/TotalLength)
+            {
+                Result = getPoint2() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side2;
+            }
+            else
+            {
+                Result = getPoint3() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side3;
+            }
+            break;
+        }
+    case SURFACE:
+    default:
+        {
+            Real32 s(RandomPoolManager::getRandomReal32(0.0,1.0)),
+                   t(RandomPoolManager::getRandomReal32(0.0,1.0));
+
+            while(s+t > 1.0)
+            {
+                s = RandomPoolManager::getRandomReal32(0.0,1.0);
+                t = RandomPoolManager::getRandomReal32(0.0,1.0);
+            }
+
+            Result = getPoint1()
+                   + s*(getPoint2() - getPoint1())
+                   + t*(getPoint3() - getPoint1());
+            break;
+        }
+    }
+
+    return Result;
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

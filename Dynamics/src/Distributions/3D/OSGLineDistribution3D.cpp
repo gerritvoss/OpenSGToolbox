@@ -75,19 +75,16 @@ void LineDistribution3D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-LineDistribution3D::FunctionIOTypeVector LineDistribution3D::getReturnTypes(void) const
+LineDistribution3D::FunctionIOTypeVector LineDistribution3D::getOutputTypes(FunctionIOParameterVector& InputParameters) const
 {
     FunctionIOTypeVector OutputTypes;
-    OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_LINE3D_DIST_IORETURNPARAMETERS));
+    OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_LINE3D_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
-LineDistribution3D::FunctionIOTypeVector LineDistribution3D::getParameterTypes(void) const
+LineDistribution3D::FunctionIOTypeVector LineDistribution3D::getInputTypes(FunctionIOParameterVector& InputParameters) const
 {
     FunctionIOTypeVector InputTypes;
-    InputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_LINE3D_DIST_IOINPUTPARAMETERS));
-    InputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(1,OSG_LINE3D_DIST_IOINPUTPARAMETERS));
-    InputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(2,OSG_LINE3D_DIST_IOINPUTPARAMETERS));
     return InputTypes;
 }
 
@@ -104,8 +101,9 @@ LineDistribution3D::FunctionIOParameterVector LineDistribution3D::evaluate(Funct
         throw FunctionInputException();
     }
     FunctionIOParameterVector ResultVector;
-    ResultVector.reserve(1);
-    ResultVector.push_back(FunctionIOParameter("ResultPoint", new Output1DataType(generate())));
+    ResultVector.reserve(OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_LINE3D_DIST_OUTPUTPARAMETERS));
+    ResultVector.push_back(OSG_FUNC_INST_FUNCTIONIOPARAMETER(0,OSG_LINE3D_DIST_OUTPUTPARAMETERS, generate()));
+
     return ResultVector;
 }
 

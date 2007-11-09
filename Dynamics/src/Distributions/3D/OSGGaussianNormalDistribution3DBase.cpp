@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -158,7 +158,7 @@ FieldDescription *GaussianNormalDistribution3DBase::_desc[] =
 
 FieldContainerType GaussianNormalDistribution3DBase::_type(
     "GaussianNormalDistribution3D",
-    "Distribution3D",
+    "Function",
     NULL,
     (PrototypeCreateF) &GaussianNormalDistribution3DBase::createEmpty,
     GaussianNormalDistribution3D::initMethod,
@@ -474,7 +474,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<GaussianNormalDistribution3DPtr>::_type("GaussianNormalDistribution3DPtr", "Distribution3DPtr");
+DataType FieldDataTraits<GaussianNormalDistribution3DPtr>::_type("GaussianNormalDistribution3DPtr", "FunctionPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(GaussianNormalDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);

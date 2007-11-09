@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -45,8 +45,16 @@
 #include "OSGDynamicsDef.h"
 
 #include "OSGGaussianNormalDistribution3DBase.h"
+#include <OpenSG/OSGVecFieldDataType.h>
 
 OSG_BEGIN_NAMESPACE
+
+#define OSG_GAUSSIANNORMAL_DIST_OUTPUTPARAMETERS (1, \
+    (\
+      ("RandomPoint", Pnt3f) \
+    ))
+
+#define OSG_GAUSSIANNORMAL_DIST_INPUTPARAMETERS (0, ())
 
 class OSG_DYNAMICSLIB_DLLMAPPING GaussianNormalDistribution3D : public GaussianNormalDistribution3DBase
 {
@@ -73,7 +81,9 @@ class OSG_DYNAMICSLIB_DLLMAPPING GaussianNormalDistribution3D : public GaussianN
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual Pnt3f generate(void);
+    virtual FunctionIOTypeVector getOutputTypes(FunctionIOParameterVector& InputParameters) const;
+    virtual FunctionIOTypeVector getInputTypes(FunctionIOParameterVector& InputParameters) const;
+    virtual FunctionIOParameterVector evaluate(FunctionIOParameterVector& InputParameters);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -94,6 +104,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING GaussianNormalDistribution3D : public GaussianN
     virtual ~GaussianNormalDistribution3D(void); 
 
     /*! \}                                                                 */
+    virtual Pnt3f generate(void);
     
     /*==========================  PRIVATE  ================================*/
   private:

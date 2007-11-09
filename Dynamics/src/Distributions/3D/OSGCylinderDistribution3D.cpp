@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGCylinderDistribution3D.h"
+#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -74,11 +75,154 @@ void CylinderDistribution3D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+CylinderDistribution3D::FunctionIOTypeVector CylinderDistribution3D::getOutputTypes(FunctionIOParameterVector& InputParameters) const
+{
+    FunctionIOTypeVector OutputTypes;
+    OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_CYLINDER_DIST_OUTPUTPARAMETERS));
+    return OutputTypes;
+}
+
+CylinderDistribution3D::FunctionIOTypeVector CylinderDistribution3D::getInputTypes(FunctionIOParameterVector& InputParameters) const
+{
+    FunctionIOTypeVector InputTypes;
+    return InputTypes;
+}
+
+CylinderDistribution3D::FunctionIOParameterVector CylinderDistribution3D::evaluate(FunctionIOParameterVector& InputParameters)
+{
+    //The Input Paremeters must be the correct number
+    if(InputParameters.size() != OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_CYLINDER_DIST_INPUTPARAMETERS))
+    {
+        throw FunctionInputException();
+    }
+    FunctionIOParameterVector ResultVector;
+    ResultVector.reserve(OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_CYLINDER_DIST_OUTPUTPARAMETERS));
+    ResultVector.push_back(OSG_FUNC_INST_FUNCTIONIOPARAMETER(0,OSG_CYLINDER_DIST_OUTPUTPARAMETERS, generate()));
+
+    return ResultVector;
+}
+
 Pnt3f CylinderDistribution3D::generate(void)
 {
-   //TODO:Implement
-   return Pnt3f(0.0f,0.0f,0.0f);
+    Pnt3f Result;
+
+    switch(getSurfaceOrVolume())
+    {
+    case SURFACE:
+        {
+            std::vector<Real32> Areas;
+            //Min Cap
+            Areas.push_back(0.5*osgabs(getMaxTheta() - getMinTheta())*(getOuterRadius()*getOuterRadius() - getInnerRadius()*getInnerRadius()));
+            //Max Cap
+            Areas.push_back(Areas.back() + 0.5*osgabs(getMaxTheta() - getMinTheta())*(getOuterRadius()*getOuterRadius() - getInnerRadius()*getInnerRadius()));
+            //Inner Tube
+            Areas.push_back(Areas.back() + getInnerRadius()*osgabs(getMaxTheta() - getMinTheta()) * getHeight());
+            //Outer Tube
+            Areas.push_back(Areas.back() + getOuterRadius()*osgabs(getMaxTheta() - getMinTheta()) * getHeight());
+
+            bool HasTubeSides(osgabs(getMaxTheta() - getMinTheta()) - 6.283185 < -0.000001);
+            if(HasTubeSides)
+            {
+                //MinTheta Tube Side
+                Areas.push_back(Areas.back() + (getOuterRadius() - getInnerRadius()) * getHeight());
+
+                //MaxTheta Tube Side
+                Areas.push_back(Areas.back() + (getOuterRadius() - getInnerRadius()) * getHeight());
+            }
+
+            Real32 PickEdge(RandomPoolManager::getRandomReal32(0.0,1.0));
+            if(PickEdge < Areas[0]/Areas.back())
+            {
+                //Max Cap
+                Real32 Temp(osgsqrt(RandomPoolManager::getRandomReal32(0.0,1.0)));
+                Real32 Radius(getInnerRadius() + Temp*(getOuterRadius() - getInnerRadius()));
+                Real32 Theta( RandomPoolManager::getRandomReal32(getMinTheta(),getMaxTheta()) );
+                Result = getCenter()
+                    + (Radius*osgsin(Theta))*getTangent()
+                    + (Radius*osgcos(Theta))*getBinormal()
+                    + (getHeight()/static_cast<Real32>(2.0))*getNormal();
+            }
+            else if(PickEdge < Areas[1]/Areas.back())
+            {
+                //Min Cap
+                Real32 Temp(osgsqrt(RandomPoolManager::getRandomReal32(0.0,1.0)));
+                Real32 Radius(getInnerRadius() + Temp*(getOuterRadius() - getInnerRadius()));
+                Real32 Theta( RandomPoolManager::getRandomReal32(getMinTheta(),getMaxTheta()) );
+                Result = getCenter()
+                    + (Radius*osgsin(Theta))*getTangent()
+                    + (Radius*osgcos(Theta))*getBinormal()
+                    + (-getHeight()/static_cast<Real32>(2.0))*getNormal();
+            }
+            else if(PickEdge < Areas[2]/Areas.back())
+            {
+                //Inner Tube
+                Real32 Theta( RandomPoolManager::getRandomReal32(getMinTheta(),getMaxTheta()) );
+                Real32 Height(RandomPoolManager::getRandomReal32(-getHeight()/2.0,getHeight()/2.0));
+                Result =  getCenter()
+                    + getInnerRadius()*osgsin(Theta)*getTangent()
+                    + getInnerRadius()*osgcos(Theta)*getBinormal()
+                    + Height*getNormal();
+            }
+            else if(PickEdge < Areas[3]/Areas.back())
+            {
+                //Outer Tube
+                Real32 Theta( RandomPoolManager::getRandomReal32(getMinTheta(),getMaxTheta()) );
+                Real32 Height(RandomPoolManager::getRandomReal32(-getHeight()/2.0,getHeight()/2.0));
+                Result =  getCenter()
+                    + getOuterRadius()*osgsin(Theta)*getTangent()
+                    + getOuterRadius()*osgcos(Theta)*getBinormal()
+                    + Height*getNormal();
+            }
+            else if(HasTubeSides && PickEdge < Areas[4]/Areas.back())
+            {
+                //MinTheta Tube Side
+                Real32 Temp(osgsqrt(RandomPoolManager::getRandomReal32(0.0,1.0)));
+                Real32 Radius(getInnerRadius() + Temp*(getOuterRadius() - getInnerRadius()));
+                Real32 Height(RandomPoolManager::getRandomReal32(-getHeight()/2.0,getHeight()/2.0));
+                Result = getCenter()
+                    + (Radius*osgsin(getMinTheta()))*getTangent()
+                    + (Radius*osgcos(getMinTheta()))*getBinormal()
+                    + Height*getNormal();
+            }
+            else if(HasTubeSides && PickEdge < Areas[5]/Areas.back())
+            {
+                //MaxTheta Tube Side
+                Real32 Temp(osgsqrt(RandomPoolManager::getRandomReal32(0.0,1.0)));
+                Real32 Radius(getInnerRadius() + Temp*(getOuterRadius() - getInnerRadius()));
+                Real32 Height(RandomPoolManager::getRandomReal32(-getHeight()/2.0,getHeight()/2.0));
+                Result = getCenter()
+                    + (Radius*osgsin(getMaxTheta()))*getTangent()
+                    + (Radius*osgcos(getMaxTheta()))*getBinormal()
+                    + Height*getNormal();
+            }
+            else
+            {
+                assert(false && "Should never reach this point");
+            }
+            break;
+        }
+    case VOLUME:
+    default:
+        {
+            //To get a uniform distribution across the disc get a uniformly distributed allong 0.0 - 1.0
+            //Then Take the square root of that.  This gives a square root distribution from 0.0 - 1.0
+            //This square root distribution is used for the random radius because the area of a disc is 
+            //dependant on the square of the radius, i.e it is a quadratic function
+            Real32 Temp(osgsqrt(RandomPoolManager::getRandomReal32(0.0,1.0)));
+            Real32 Radius(getInnerRadius() + Temp*(getOuterRadius() - getInnerRadius()));
+            Real32 Height(RandomPoolManager::getRandomReal32(-getHeight()/2.0,getHeight()/2.0));
+            Real32 Theta( RandomPoolManager::getRandomReal32(getMinTheta(),getMaxTheta()) );
+            Result = getCenter()
+                   + (Radius*osgsin(Theta))*getTangent()
+                   + (Radius*osgcos(Theta))*getBinormal()
+                   + Height*getNormal();
+            break;
+        }
+    }
+
+    return Result;
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -104,6 +248,50 @@ CylinderDistribution3D::~CylinderDistribution3D(void)
 void CylinderDistribution3D::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & NormalFieldMask)
+    {
+        //Determine the Normal, Tangent, Binormal Vectors
+        getNormal().normalize();
+
+        Vec3f TempVec(getNormal());
+        if(getNormal().x() == 0.0f)
+        {
+            TempVec[0] += osgMax(osgabs(TempVec.y()), osgabs(TempVec.z()));
+        }
+        else
+        {
+            TempVec[1] += osgMax(osgabs(TempVec.x()), osgMax(osgabs(TempVec.y()), osgabs(TempVec.z())));
+        }
+
+        beginEditCP(CylinderDistribution3DPtr(this), TangentFieldMask | BinormalFieldMask);
+            setTangent(getNormal().cross(TempVec));
+            getTangent().normalize();
+            setBinormal(getTangent().cross(getNormal()));
+            getBinormal().normalize();
+        endEditCP(CylinderDistribution3DPtr(this), TangentFieldMask | BinormalFieldMask);
+    }
+
+    if((whichField & InnerRadiusFieldMask ||
+       whichField & OuterRadiusFieldMask) &&
+       getInnerRadius() > getOuterRadius())
+    {
+        Real32 Min(osgMin(getInnerRadius(), getOuterRadius()));
+        Real32 Max(osgMax(getInnerRadius(), getOuterRadius()));
+        beginEditCP(CylinderDistribution3DPtr(this), InnerRadiusFieldMask | OuterRadiusFieldMask);
+            setInnerRadius(Min);
+            setOuterRadius(Max);
+        endEditCP(CylinderDistribution3DPtr(this), InnerRadiusFieldMask | OuterRadiusFieldMask);
+    }
+    
+    if((whichField & MinThetaFieldMask ||
+       whichField & MaxThetaFieldMask) &&
+       osgabs(getMaxTheta() - getMinTheta()) - 6.283185 > 0.000001)
+    {
+        beginEditCP(CylinderDistribution3DPtr(this), MaxThetaFieldMask);
+            setMaxTheta(getMinTheta() + 6.283185);
+        endEditCP(CylinderDistribution3DPtr(this), MaxThetaFieldMask);
+    }
 }
 
 void CylinderDistribution3D::dump(      UInt32    , 

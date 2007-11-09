@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -65,14 +65,17 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGDistribution3D.h" // Parent
+#include "Function/OSGFunction.h" // Parent
 
 #include <OpenSG/OSGPnt3fFields.h> // Center type
 #include <OpenSG/OSGVec3fFields.h> // Normal type
+#include <OpenSG/OSGVec3fFields.h> // Tangent type
+#include <OpenSG/OSGVec3fFields.h> // Binormal type
 #include <OpenSG/OSGReal32Fields.h> // InnerRadius type
 #include <OpenSG/OSGReal32Fields.h> // OuterRadius type
 #include <OpenSG/OSGReal32Fields.h> // MinTheta type
 #include <OpenSG/OSGReal32Fields.h> // MaxTheta type
+#include <OpenSG/OSGUInt32Fields.h> // SurfaceOrEdge type
 
 #include "OSGDiscDistribution3DFields.h"
 
@@ -83,11 +86,11 @@ class BinaryDataHandler;
 
 //! \brief DiscDistribution3D Base Class.
 
-class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution3DBase : public Distribution3D
+class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution3DBase : public Function
 {
   private:
 
-    typedef Distribution3D    Inherited;
+    typedef Function    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -96,21 +99,27 @@ class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution3DBase : public Distribution3D
 
     enum
     {
-        CenterFieldId      = Inherited::NextFieldId,
-        NormalFieldId      = CenterFieldId      + 1,
-        InnerRadiusFieldId = NormalFieldId      + 1,
-        OuterRadiusFieldId = InnerRadiusFieldId + 1,
-        MinThetaFieldId    = OuterRadiusFieldId + 1,
-        MaxThetaFieldId    = MinThetaFieldId    + 1,
-        NextFieldId        = MaxThetaFieldId    + 1
+        CenterFieldId        = Inherited::NextFieldId,
+        NormalFieldId        = CenterFieldId        + 1,
+        TangentFieldId       = NormalFieldId        + 1,
+        BinormalFieldId      = TangentFieldId       + 1,
+        InnerRadiusFieldId   = BinormalFieldId      + 1,
+        OuterRadiusFieldId   = InnerRadiusFieldId   + 1,
+        MinThetaFieldId      = OuterRadiusFieldId   + 1,
+        MaxThetaFieldId      = MinThetaFieldId      + 1,
+        SurfaceOrEdgeFieldId = MaxThetaFieldId      + 1,
+        NextFieldId          = SurfaceOrEdgeFieldId + 1
     };
 
     static const OSG::BitVector CenterFieldMask;
     static const OSG::BitVector NormalFieldMask;
+    static const OSG::BitVector TangentFieldMask;
+    static const OSG::BitVector BinormalFieldMask;
     static const OSG::BitVector InnerRadiusFieldMask;
     static const OSG::BitVector OuterRadiusFieldMask;
     static const OSG::BitVector MinThetaFieldMask;
     static const OSG::BitVector MaxThetaFieldMask;
+    static const OSG::BitVector SurfaceOrEdgeFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -143,6 +152,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution3DBase : public Distribution3D
            SFReal32            *getSFOuterRadius    (void);
            SFReal32            *getSFMinTheta       (void);
            SFReal32            *getSFMaxTheta       (void);
+           SFUInt32            *getSFSurfaceOrEdge  (void);
 
            Pnt3f               &getCenter         (void);
      const Pnt3f               &getCenter         (void) const;
@@ -156,6 +166,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution3DBase : public Distribution3D
      const Real32              &getMinTheta       (void) const;
            Real32              &getMaxTheta       (void);
      const Real32              &getMaxTheta       (void) const;
+           UInt32              &getSurfaceOrEdge  (void);
+     const UInt32              &getSurfaceOrEdge  (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -168,6 +180,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution3DBase : public Distribution3D
      void setOuterRadius    ( const Real32 &value );
      void setMinTheta       ( const Real32 &value );
      void setMaxTheta       ( const Real32 &value );
+     void setSurfaceOrEdge  ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -212,10 +225,13 @@ class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution3DBase : public Distribution3D
 
     SFPnt3f             _sfCenter;
     SFVec3f             _sfNormal;
+    SFVec3f             _sfTangent;
+    SFVec3f             _sfBinormal;
     SFReal32            _sfInnerRadius;
     SFReal32            _sfOuterRadius;
     SFReal32            _sfMinTheta;
     SFReal32            _sfMaxTheta;
+    SFUInt32            _sfSurfaceOrEdge;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -231,6 +247,27 @@ class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution3DBase : public Distribution3D
     /*! \{                                                                 */
 
     virtual ~DiscDistribution3DBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFVec3f             *getSFTangent        (void);
+           SFVec3f             *getSFBinormal       (void);
+
+           Vec3f               &getTangent        (void);
+     const Vec3f               &getTangent        (void) const;
+           Vec3f               &getBinormal       (void);
+     const Vec3f               &getBinormal       (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setTangent        (const Vec3f &value);
+     void setBinormal       (const Vec3f &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

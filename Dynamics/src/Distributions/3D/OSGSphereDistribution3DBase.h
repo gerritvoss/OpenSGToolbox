@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGDistribution3D.h" // Parent
+#include "Function/OSGFunction.h" // Parent
 
 #include <OpenSG/OSGPnt3fFields.h> // Center type
 #include <OpenSG/OSGReal32Fields.h> // InnerRadius type
@@ -74,6 +74,7 @@
 #include <OpenSG/OSGReal32Fields.h> // MaxTheta type
 #include <OpenSG/OSGReal32Fields.h> // MinZ type
 #include <OpenSG/OSGReal32Fields.h> // MaxZ type
+#include <OpenSG/OSGUInt32Fields.h> // SurfaceOrVolume type
 
 #include "OSGSphereDistribution3DFields.h"
 
@@ -84,11 +85,11 @@ class BinaryDataHandler;
 
 //! \brief SphereDistribution3D Base Class.
 
-class OSG_DYNAMICSLIB_DLLMAPPING SphereDistribution3DBase : public Distribution3D
+class OSG_DYNAMICSLIB_DLLMAPPING SphereDistribution3DBase : public Function
 {
   private:
 
-    typedef Distribution3D    Inherited;
+    typedef Function    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -97,14 +98,15 @@ class OSG_DYNAMICSLIB_DLLMAPPING SphereDistribution3DBase : public Distribution3
 
     enum
     {
-        CenterFieldId      = Inherited::NextFieldId,
-        InnerRadiusFieldId = CenterFieldId      + 1,
-        OuterRadiusFieldId = InnerRadiusFieldId + 1,
-        MinThetaFieldId    = OuterRadiusFieldId + 1,
-        MaxThetaFieldId    = MinThetaFieldId    + 1,
-        MinZFieldId        = MaxThetaFieldId    + 1,
-        MaxZFieldId        = MinZFieldId        + 1,
-        NextFieldId        = MaxZFieldId        + 1
+        CenterFieldId          = Inherited::NextFieldId,
+        InnerRadiusFieldId     = CenterFieldId          + 1,
+        OuterRadiusFieldId     = InnerRadiusFieldId     + 1,
+        MinThetaFieldId        = OuterRadiusFieldId     + 1,
+        MaxThetaFieldId        = MinThetaFieldId        + 1,
+        MinZFieldId            = MaxThetaFieldId        + 1,
+        MaxZFieldId            = MinZFieldId            + 1,
+        SurfaceOrVolumeFieldId = MaxZFieldId            + 1,
+        NextFieldId            = SurfaceOrVolumeFieldId + 1
     };
 
     static const OSG::BitVector CenterFieldMask;
@@ -114,6 +116,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING SphereDistribution3DBase : public Distribution3
     static const OSG::BitVector MaxThetaFieldMask;
     static const OSG::BitVector MinZFieldMask;
     static const OSG::BitVector MaxZFieldMask;
+    static const OSG::BitVector SurfaceOrVolumeFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -147,6 +150,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING SphereDistribution3DBase : public Distribution3
            SFReal32            *getSFMaxTheta       (void);
            SFReal32            *getSFMinZ           (void);
            SFReal32            *getSFMaxZ           (void);
+           SFUInt32            *getSFSurfaceOrVolume(void);
 
            Pnt3f               &getCenter         (void);
      const Pnt3f               &getCenter         (void) const;
@@ -162,6 +166,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING SphereDistribution3DBase : public Distribution3
      const Real32              &getMinZ           (void) const;
            Real32              &getMaxZ           (void);
      const Real32              &getMaxZ           (void) const;
+           UInt32              &getSurfaceOrVolume(void);
+     const UInt32              &getSurfaceOrVolume(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -175,6 +181,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING SphereDistribution3DBase : public Distribution3
      void setMaxTheta       ( const Real32 &value );
      void setMinZ           ( const Real32 &value );
      void setMaxZ           ( const Real32 &value );
+     void setSurfaceOrVolume( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -224,6 +231,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING SphereDistribution3DBase : public Distribution3
     SFReal32            _sfMaxTheta;
     SFReal32            _sfMinZ;
     SFReal32            _sfMaxZ;
+    SFUInt32            _sfSurfaceOrVolume;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

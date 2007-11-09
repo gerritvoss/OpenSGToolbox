@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -103,6 +103,69 @@ SFReal32 *CylinderDistribution3DBase::getSFHeight(void)
     return &_sfHeight;
 }
 
+//! Get the CylinderDistribution3D::_sfCenter field.
+inline
+SFPnt3f *CylinderDistribution3DBase::getSFCenter(void)
+{
+    return &_sfCenter;
+}
+
+//! Get the CylinderDistribution3D::_sfNormal field.
+inline
+SFVec3f *CylinderDistribution3DBase::getSFNormal(void)
+{
+    return &_sfNormal;
+}
+
+//! Get the CylinderDistribution3D::_sfTangent field.
+inline
+SFVec3f *CylinderDistribution3DBase::getSFTangent(void)
+{
+    return &_sfTangent;
+}
+
+//! Get the CylinderDistribution3D::_sfBinormal field.
+inline
+SFVec3f *CylinderDistribution3DBase::getSFBinormal(void)
+{
+    return &_sfBinormal;
+}
+
+//! Get the CylinderDistribution3D::_sfInnerRadius field.
+inline
+SFReal32 *CylinderDistribution3DBase::getSFInnerRadius(void)
+{
+    return &_sfInnerRadius;
+}
+
+//! Get the CylinderDistribution3D::_sfOuterRadius field.
+inline
+SFReal32 *CylinderDistribution3DBase::getSFOuterRadius(void)
+{
+    return &_sfOuterRadius;
+}
+
+//! Get the CylinderDistribution3D::_sfMinTheta field.
+inline
+SFReal32 *CylinderDistribution3DBase::getSFMinTheta(void)
+{
+    return &_sfMinTheta;
+}
+
+//! Get the CylinderDistribution3D::_sfMaxTheta field.
+inline
+SFReal32 *CylinderDistribution3DBase::getSFMaxTheta(void)
+{
+    return &_sfMaxTheta;
+}
+
+//! Get the CylinderDistribution3D::_sfSurfaceOrVolume field.
+inline
+SFUInt32 *CylinderDistribution3DBase::getSFSurfaceOrVolume(void)
+{
+    return &_sfSurfaceOrVolume;
+}
+
 
 //! Get the value of the CylinderDistribution3D::_sfHeight field.
 inline
@@ -123,6 +186,195 @@ inline
 void CylinderDistribution3DBase::setHeight(const Real32 &value)
 {
     _sfHeight.setValue(value);
+}
+
+//! Get the value of the CylinderDistribution3D::_sfCenter field.
+inline
+Pnt3f &CylinderDistribution3DBase::getCenter(void)
+{
+    return _sfCenter.getValue();
+}
+
+//! Get the value of the CylinderDistribution3D::_sfCenter field.
+inline
+const Pnt3f &CylinderDistribution3DBase::getCenter(void) const
+{
+    return _sfCenter.getValue();
+}
+
+//! Set the value of the CylinderDistribution3D::_sfCenter field.
+inline
+void CylinderDistribution3DBase::setCenter(const Pnt3f &value)
+{
+    _sfCenter.setValue(value);
+}
+
+//! Get the value of the CylinderDistribution3D::_sfNormal field.
+inline
+Vec3f &CylinderDistribution3DBase::getNormal(void)
+{
+    return _sfNormal.getValue();
+}
+
+//! Get the value of the CylinderDistribution3D::_sfNormal field.
+inline
+const Vec3f &CylinderDistribution3DBase::getNormal(void) const
+{
+    return _sfNormal.getValue();
+}
+
+//! Set the value of the CylinderDistribution3D::_sfNormal field.
+inline
+void CylinderDistribution3DBase::setNormal(const Vec3f &value)
+{
+    _sfNormal.setValue(value);
+}
+
+//! Get the value of the CylinderDistribution3D::_sfTangent field.
+inline
+Vec3f &CylinderDistribution3DBase::getTangent(void)
+{
+    return _sfTangent.getValue();
+}
+
+//! Get the value of the CylinderDistribution3D::_sfTangent field.
+inline
+const Vec3f &CylinderDistribution3DBase::getTangent(void) const
+{
+    return _sfTangent.getValue();
+}
+
+//! Set the value of the CylinderDistribution3D::_sfTangent field.
+inline
+void CylinderDistribution3DBase::setTangent(const Vec3f &value)
+{
+    _sfTangent.setValue(value);
+}
+
+//! Get the value of the CylinderDistribution3D::_sfBinormal field.
+inline
+Vec3f &CylinderDistribution3DBase::getBinormal(void)
+{
+    return _sfBinormal.getValue();
+}
+
+//! Get the value of the CylinderDistribution3D::_sfBinormal field.
+inline
+const Vec3f &CylinderDistribution3DBase::getBinormal(void) const
+{
+    return _sfBinormal.getValue();
+}
+
+//! Set the value of the CylinderDistribution3D::_sfBinormal field.
+inline
+void CylinderDistribution3DBase::setBinormal(const Vec3f &value)
+{
+    _sfBinormal.setValue(value);
+}
+
+//! Get the value of the CylinderDistribution3D::_sfInnerRadius field.
+inline
+Real32 &CylinderDistribution3DBase::getInnerRadius(void)
+{
+    return _sfInnerRadius.getValue();
+}
+
+//! Get the value of the CylinderDistribution3D::_sfInnerRadius field.
+inline
+const Real32 &CylinderDistribution3DBase::getInnerRadius(void) const
+{
+    return _sfInnerRadius.getValue();
+}
+
+//! Set the value of the CylinderDistribution3D::_sfInnerRadius field.
+inline
+void CylinderDistribution3DBase::setInnerRadius(const Real32 &value)
+{
+    _sfInnerRadius.setValue(value);
+}
+
+//! Get the value of the CylinderDistribution3D::_sfOuterRadius field.
+inline
+Real32 &CylinderDistribution3DBase::getOuterRadius(void)
+{
+    return _sfOuterRadius.getValue();
+}
+
+//! Get the value of the CylinderDistribution3D::_sfOuterRadius field.
+inline
+const Real32 &CylinderDistribution3DBase::getOuterRadius(void) const
+{
+    return _sfOuterRadius.getValue();
+}
+
+//! Set the value of the CylinderDistribution3D::_sfOuterRadius field.
+inline
+void CylinderDistribution3DBase::setOuterRadius(const Real32 &value)
+{
+    _sfOuterRadius.setValue(value);
+}
+
+//! Get the value of the CylinderDistribution3D::_sfMinTheta field.
+inline
+Real32 &CylinderDistribution3DBase::getMinTheta(void)
+{
+    return _sfMinTheta.getValue();
+}
+
+//! Get the value of the CylinderDistribution3D::_sfMinTheta field.
+inline
+const Real32 &CylinderDistribution3DBase::getMinTheta(void) const
+{
+    return _sfMinTheta.getValue();
+}
+
+//! Set the value of the CylinderDistribution3D::_sfMinTheta field.
+inline
+void CylinderDistribution3DBase::setMinTheta(const Real32 &value)
+{
+    _sfMinTheta.setValue(value);
+}
+
+//! Get the value of the CylinderDistribution3D::_sfMaxTheta field.
+inline
+Real32 &CylinderDistribution3DBase::getMaxTheta(void)
+{
+    return _sfMaxTheta.getValue();
+}
+
+//! Get the value of the CylinderDistribution3D::_sfMaxTheta field.
+inline
+const Real32 &CylinderDistribution3DBase::getMaxTheta(void) const
+{
+    return _sfMaxTheta.getValue();
+}
+
+//! Set the value of the CylinderDistribution3D::_sfMaxTheta field.
+inline
+void CylinderDistribution3DBase::setMaxTheta(const Real32 &value)
+{
+    _sfMaxTheta.setValue(value);
+}
+
+//! Get the value of the CylinderDistribution3D::_sfSurfaceOrVolume field.
+inline
+UInt32 &CylinderDistribution3DBase::getSurfaceOrVolume(void)
+{
+    return _sfSurfaceOrVolume.getValue();
+}
+
+//! Get the value of the CylinderDistribution3D::_sfSurfaceOrVolume field.
+inline
+const UInt32 &CylinderDistribution3DBase::getSurfaceOrVolume(void) const
+{
+    return _sfSurfaceOrVolume.getValue();
+}
+
+//! Set the value of the CylinderDistribution3D::_sfSurfaceOrVolume field.
+inline
+void CylinderDistribution3DBase::setSurfaceOrVolume(const UInt32 &value)
+{
+    _sfSurfaceOrVolume.setValue(value);
 }
 
 

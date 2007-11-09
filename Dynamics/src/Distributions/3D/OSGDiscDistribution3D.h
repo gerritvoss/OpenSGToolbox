@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -45,8 +45,17 @@
 #include "OSGDynamicsDef.h"
 
 #include "OSGDiscDistribution3DBase.h"
+#include <OpenSG/OSGVecFieldDataType.h>
 
 OSG_BEGIN_NAMESPACE
+
+#define OSG_DISC3D_DIST_OUTPUTPARAMETERS (1, \
+    (\
+      ("RandomPoint", Pnt3f) \
+    ))
+
+
+#define OSG_DISC3D_DIST_INPUTPARAMETERS (0, ())
 
 class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution3D : public DiscDistribution3DBase
 {
@@ -56,6 +65,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution3D : public DiscDistribution3DB
 
     /*==========================  PUBLIC  =================================*/
   public:
+    enum SurfaceOrEdge {SURFACE=0, EDGE=1};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -73,7 +83,9 @@ class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution3D : public DiscDistribution3DB
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual Pnt3f generate(void);
+    virtual FunctionIOTypeVector getOutputTypes(FunctionIOParameterVector& InputParameters) const;
+    virtual FunctionIOTypeVector getInputTypes(FunctionIOParameterVector& InputParameters) const;
+    virtual FunctionIOParameterVector evaluate(FunctionIOParameterVector& InputParameters);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -95,6 +107,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution3D : public DiscDistribution3DB
 
     /*! \}                                                                 */
     
+    virtual Pnt3f generate(void);
     /*==========================  PRIVATE  ================================*/
   private:
 

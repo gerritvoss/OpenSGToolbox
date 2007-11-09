@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -110,6 +110,13 @@ SFPnt3f *BoxDistribution3DBase::getSFMaxPoint(void)
     return &_sfMaxPoint;
 }
 
+//! Get the BoxDistribution3D::_sfSurfaceOrVolume field.
+inline
+SFUInt32 *BoxDistribution3DBase::getSFSurfaceOrVolume(void)
+{
+    return &_sfSurfaceOrVolume;
+}
+
 
 //! Get the value of the BoxDistribution3D::_sfMinPoint field.
 inline
@@ -151,6 +158,27 @@ inline
 void BoxDistribution3DBase::setMaxPoint(const Pnt3f &value)
 {
     _sfMaxPoint.setValue(value);
+}
+
+//! Get the value of the BoxDistribution3D::_sfSurfaceOrVolume field.
+inline
+UInt32 &BoxDistribution3DBase::getSurfaceOrVolume(void)
+{
+    return _sfSurfaceOrVolume.getValue();
+}
+
+//! Get the value of the BoxDistribution3D::_sfSurfaceOrVolume field.
+inline
+const UInt32 &BoxDistribution3DBase::getSurfaceOrVolume(void) const
+{
+    return _sfSurfaceOrVolume.getValue();
+}
+
+//! Set the value of the BoxDistribution3D::_sfSurfaceOrVolume field.
+inline
+void BoxDistribution3DBase::setSurfaceOrVolume(const UInt32 &value)
+{
+    _sfSurfaceOrVolume.setValue(value);
 }
 
 

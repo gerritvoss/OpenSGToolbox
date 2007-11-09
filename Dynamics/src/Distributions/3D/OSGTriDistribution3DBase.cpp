@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -73,6 +73,9 @@ const OSG::BitVector  TriDistribution3DBase::Point2FieldMask =
 const OSG::BitVector  TriDistribution3DBase::Point3FieldMask = 
     (TypeTraits<BitVector>::One << TriDistribution3DBase::Point3FieldId);
 
+const OSG::BitVector  TriDistribution3DBase::SurfaceOrEdgeFieldMask = 
+    (TypeTraits<BitVector>::One << TriDistribution3DBase::SurfaceOrEdgeFieldId);
+
 const OSG::BitVector TriDistribution3DBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -87,6 +90,9 @@ const OSG::BitVector TriDistribution3DBase::MTInfluenceMask =
     
 */
 /*! \var Pnt3f           TriDistribution3DBase::_sfPoint3
+    
+*/
+/*! \var UInt32          TriDistribution3DBase::_sfSurfaceOrEdge
     
 */
 
@@ -108,13 +114,18 @@ FieldDescription *TriDistribution3DBase::_desc[] =
                      "Point3", 
                      Point3FieldId, Point3FieldMask,
                      false,
-                     (FieldAccessMethod) &TriDistribution3DBase::getSFPoint3)
+                     (FieldAccessMethod) &TriDistribution3DBase::getSFPoint3),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "SurfaceOrEdge", 
+                     SurfaceOrEdgeFieldId, SurfaceOrEdgeFieldMask,
+                     false,
+                     (FieldAccessMethod) &TriDistribution3DBase::getSFSurfaceOrEdge)
 };
 
 
 FieldContainerType TriDistribution3DBase::_type(
     "TriDistribution3D",
-    "Distribution3D",
+    "Function",
     NULL,
     (PrototypeCreateF) &TriDistribution3DBase::createEmpty,
     TriDistribution3D::initMethod,
@@ -187,6 +198,7 @@ TriDistribution3DBase::TriDistribution3DBase(void) :
     _sfPoint1                 (Pnt3f(0.0,0.0,0.0)), 
     _sfPoint2                 (Pnt3f(1.0,0.0,0.0)), 
     _sfPoint3                 (Pnt3f(0.0,1.0,0.0)), 
+    _sfSurfaceOrEdge          (UInt32(TriDistribution3D::SURFACE)), 
     Inherited() 
 {
 }
@@ -199,6 +211,7 @@ TriDistribution3DBase::TriDistribution3DBase(const TriDistribution3DBase &source
     _sfPoint1                 (source._sfPoint1                 ), 
     _sfPoint2                 (source._sfPoint2                 ), 
     _sfPoint3                 (source._sfPoint3                 ), 
+    _sfSurfaceOrEdge          (source._sfSurfaceOrEdge          ), 
     Inherited                 (source)
 {
 }
@@ -230,6 +243,11 @@ UInt32 TriDistribution3DBase::getBinSize(const BitVector &whichField)
         returnValue += _sfPoint3.getBinSize();
     }
 
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+    {
+        returnValue += _sfSurfaceOrEdge.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -252,6 +270,11 @@ void TriDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (Point3FieldMask & whichField))
     {
         _sfPoint3.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+    {
+        _sfSurfaceOrEdge.copyToBin(pMem);
     }
 
 
@@ -277,6 +300,11 @@ void TriDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfPoint3.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+    {
+        _sfSurfaceOrEdge.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -296,6 +324,9 @@ void TriDistribution3DBase::executeSyncImpl(      TriDistribution3DBase *pOther,
     if(FieldBits::NoField != (Point3FieldMask & whichField))
         _sfPoint3.syncWith(pOther->_sfPoint3);
 
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+        _sfSurfaceOrEdge.syncWith(pOther->_sfSurfaceOrEdge);
+
 
 }
 #else
@@ -314,6 +345,9 @@ void TriDistribution3DBase::executeSyncImpl(      TriDistribution3DBase *pOther,
 
     if(FieldBits::NoField != (Point3FieldMask & whichField))
         _sfPoint3.syncWith(pOther->_sfPoint3);
+
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+        _sfSurfaceOrEdge.syncWith(pOther->_sfSurfaceOrEdge);
 
 
 
@@ -338,7 +372,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TriDistribution3DPtr>::_type("TriDistribution3DPtr", "Distribution3DPtr");
+DataType FieldDataTraits<TriDistribution3DPtr>::_type("TriDistribution3DPtr", "FunctionPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(TriDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);

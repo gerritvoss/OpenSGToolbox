@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,33 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  CylinderDistribution3DBase::HeightFieldMask = 
     (TypeTraits<BitVector>::One << CylinderDistribution3DBase::HeightFieldId);
 
+const OSG::BitVector  CylinderDistribution3DBase::CenterFieldMask = 
+    (TypeTraits<BitVector>::One << CylinderDistribution3DBase::CenterFieldId);
+
+const OSG::BitVector  CylinderDistribution3DBase::NormalFieldMask = 
+    (TypeTraits<BitVector>::One << CylinderDistribution3DBase::NormalFieldId);
+
+const OSG::BitVector  CylinderDistribution3DBase::TangentFieldMask = 
+    (TypeTraits<BitVector>::One << CylinderDistribution3DBase::TangentFieldId);
+
+const OSG::BitVector  CylinderDistribution3DBase::BinormalFieldMask = 
+    (TypeTraits<BitVector>::One << CylinderDistribution3DBase::BinormalFieldId);
+
+const OSG::BitVector  CylinderDistribution3DBase::InnerRadiusFieldMask = 
+    (TypeTraits<BitVector>::One << CylinderDistribution3DBase::InnerRadiusFieldId);
+
+const OSG::BitVector  CylinderDistribution3DBase::OuterRadiusFieldMask = 
+    (TypeTraits<BitVector>::One << CylinderDistribution3DBase::OuterRadiusFieldId);
+
+const OSG::BitVector  CylinderDistribution3DBase::MinThetaFieldMask = 
+    (TypeTraits<BitVector>::One << CylinderDistribution3DBase::MinThetaFieldId);
+
+const OSG::BitVector  CylinderDistribution3DBase::MaxThetaFieldMask = 
+    (TypeTraits<BitVector>::One << CylinderDistribution3DBase::MaxThetaFieldId);
+
+const OSG::BitVector  CylinderDistribution3DBase::SurfaceOrVolumeFieldMask = 
+    (TypeTraits<BitVector>::One << CylinderDistribution3DBase::SurfaceOrVolumeFieldId);
+
 const OSG::BitVector CylinderDistribution3DBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +102,33 @@ const OSG::BitVector CylinderDistribution3DBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var Real32          CylinderDistribution3DBase::_sfHeight
+    
+*/
+/*! \var Pnt3f           CylinderDistribution3DBase::_sfCenter
+    
+*/
+/*! \var Vec3f           CylinderDistribution3DBase::_sfNormal
+    
+*/
+/*! \var Vec3f           CylinderDistribution3DBase::_sfTangent
+    
+*/
+/*! \var Vec3f           CylinderDistribution3DBase::_sfBinormal
+    
+*/
+/*! \var Real32          CylinderDistribution3DBase::_sfInnerRadius
+    
+*/
+/*! \var Real32          CylinderDistribution3DBase::_sfOuterRadius
+    
+*/
+/*! \var Real32          CylinderDistribution3DBase::_sfMinTheta
+    
+*/
+/*! \var Real32          CylinderDistribution3DBase::_sfMaxTheta
+    
+*/
+/*! \var UInt32          CylinderDistribution3DBase::_sfSurfaceOrVolume
     
 */
 
@@ -86,13 +140,58 @@ FieldDescription *CylinderDistribution3DBase::_desc[] =
                      "Height", 
                      HeightFieldId, HeightFieldMask,
                      false,
-                     (FieldAccessMethod) &CylinderDistribution3DBase::getSFHeight)
+                     (FieldAccessMethod) &CylinderDistribution3DBase::getSFHeight),
+    new FieldDescription(SFPnt3f::getClassType(), 
+                     "Center", 
+                     CenterFieldId, CenterFieldMask,
+                     false,
+                     (FieldAccessMethod) &CylinderDistribution3DBase::getSFCenter),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "Normal", 
+                     NormalFieldId, NormalFieldMask,
+                     false,
+                     (FieldAccessMethod) &CylinderDistribution3DBase::getSFNormal),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "Tangent", 
+                     TangentFieldId, TangentFieldMask,
+                     false,
+                     (FieldAccessMethod) &CylinderDistribution3DBase::getSFTangent),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "Binormal", 
+                     BinormalFieldId, BinormalFieldMask,
+                     false,
+                     (FieldAccessMethod) &CylinderDistribution3DBase::getSFBinormal),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "InnerRadius", 
+                     InnerRadiusFieldId, InnerRadiusFieldMask,
+                     false,
+                     (FieldAccessMethod) &CylinderDistribution3DBase::getSFInnerRadius),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "OuterRadius", 
+                     OuterRadiusFieldId, OuterRadiusFieldMask,
+                     false,
+                     (FieldAccessMethod) &CylinderDistribution3DBase::getSFOuterRadius),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "MinTheta", 
+                     MinThetaFieldId, MinThetaFieldMask,
+                     false,
+                     (FieldAccessMethod) &CylinderDistribution3DBase::getSFMinTheta),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "MaxTheta", 
+                     MaxThetaFieldId, MaxThetaFieldMask,
+                     false,
+                     (FieldAccessMethod) &CylinderDistribution3DBase::getSFMaxTheta),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "SurfaceOrVolume", 
+                     SurfaceOrVolumeFieldId, SurfaceOrVolumeFieldMask,
+                     false,
+                     (FieldAccessMethod) &CylinderDistribution3DBase::getSFSurfaceOrVolume)
 };
 
 
 FieldContainerType CylinderDistribution3DBase::_type(
     "CylinderDistribution3D",
-    "DiscDistribution3D",
+    "Function",
     NULL,
     (PrototypeCreateF) &CylinderDistribution3DBase::createEmpty,
     CylinderDistribution3D::initMethod,
@@ -163,6 +262,15 @@ void CylinderDistribution3DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 CylinderDistribution3DBase::CylinderDistribution3DBase(void) :
     _sfHeight                 (Real32(1.0)), 
+    _sfCenter                 (Pnt3f(0.0,0.0,0.0)), 
+    _sfNormal                 (Vec3f(0.0,0.0,1.0)), 
+    _sfTangent                (Vec3f(0.0,1.0,0.0)), 
+    _sfBinormal               (Vec3f(1.0,0.0,0.0)), 
+    _sfInnerRadius            (Real32(0.0)), 
+    _sfOuterRadius            (Real32(1.0)), 
+    _sfMinTheta               (Real32(0.0)), 
+    _sfMaxTheta               (Real32(6.28319)), 
+    _sfSurfaceOrVolume        (UInt32(CylinderDistribution3D::VOLUME)), 
     Inherited() 
 {
 }
@@ -173,6 +281,15 @@ CylinderDistribution3DBase::CylinderDistribution3DBase(void) :
 
 CylinderDistribution3DBase::CylinderDistribution3DBase(const CylinderDistribution3DBase &source) :
     _sfHeight                 (source._sfHeight                 ), 
+    _sfCenter                 (source._sfCenter                 ), 
+    _sfNormal                 (source._sfNormal                 ), 
+    _sfTangent                (source._sfTangent                ), 
+    _sfBinormal               (source._sfBinormal               ), 
+    _sfInnerRadius            (source._sfInnerRadius            ), 
+    _sfOuterRadius            (source._sfOuterRadius            ), 
+    _sfMinTheta               (source._sfMinTheta               ), 
+    _sfMaxTheta               (source._sfMaxTheta               ), 
+    _sfSurfaceOrVolume        (source._sfSurfaceOrVolume        ), 
     Inherited                 (source)
 {
 }
@@ -194,6 +311,51 @@ UInt32 CylinderDistribution3DBase::getBinSize(const BitVector &whichField)
         returnValue += _sfHeight.getBinSize();
     }
 
+    if(FieldBits::NoField != (CenterFieldMask & whichField))
+    {
+        returnValue += _sfCenter.getBinSize();
+    }
+
+    if(FieldBits::NoField != (NormalFieldMask & whichField))
+    {
+        returnValue += _sfNormal.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TangentFieldMask & whichField))
+    {
+        returnValue += _sfTangent.getBinSize();
+    }
+
+    if(FieldBits::NoField != (BinormalFieldMask & whichField))
+    {
+        returnValue += _sfBinormal.getBinSize();
+    }
+
+    if(FieldBits::NoField != (InnerRadiusFieldMask & whichField))
+    {
+        returnValue += _sfInnerRadius.getBinSize();
+    }
+
+    if(FieldBits::NoField != (OuterRadiusFieldMask & whichField))
+    {
+        returnValue += _sfOuterRadius.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MinThetaFieldMask & whichField))
+    {
+        returnValue += _sfMinTheta.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
+    {
+        returnValue += _sfMaxTheta.getBinSize();
+    }
+
+    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
+    {
+        returnValue += _sfSurfaceOrVolume.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -206,6 +368,51 @@ void CylinderDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (HeightFieldMask & whichField))
     {
         _sfHeight.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CenterFieldMask & whichField))
+    {
+        _sfCenter.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (NormalFieldMask & whichField))
+    {
+        _sfNormal.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TangentFieldMask & whichField))
+    {
+        _sfTangent.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BinormalFieldMask & whichField))
+    {
+        _sfBinormal.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InnerRadiusFieldMask & whichField))
+    {
+        _sfInnerRadius.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OuterRadiusFieldMask & whichField))
+    {
+        _sfOuterRadius.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MinThetaFieldMask & whichField))
+    {
+        _sfMinTheta.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
+    {
+        _sfMaxTheta.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
+    {
+        _sfSurfaceOrVolume.copyToBin(pMem);
     }
 
 
@@ -221,6 +428,51 @@ void CylinderDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfHeight.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (CenterFieldMask & whichField))
+    {
+        _sfCenter.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (NormalFieldMask & whichField))
+    {
+        _sfNormal.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TangentFieldMask & whichField))
+    {
+        _sfTangent.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (BinormalFieldMask & whichField))
+    {
+        _sfBinormal.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InnerRadiusFieldMask & whichField))
+    {
+        _sfInnerRadius.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OuterRadiusFieldMask & whichField))
+    {
+        _sfOuterRadius.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MinThetaFieldMask & whichField))
+    {
+        _sfMinTheta.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
+    {
+        _sfMaxTheta.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
+    {
+        _sfSurfaceOrVolume.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -234,6 +486,33 @@ void CylinderDistribution3DBase::executeSyncImpl(      CylinderDistribution3DBas
     if(FieldBits::NoField != (HeightFieldMask & whichField))
         _sfHeight.syncWith(pOther->_sfHeight);
 
+    if(FieldBits::NoField != (CenterFieldMask & whichField))
+        _sfCenter.syncWith(pOther->_sfCenter);
+
+    if(FieldBits::NoField != (NormalFieldMask & whichField))
+        _sfNormal.syncWith(pOther->_sfNormal);
+
+    if(FieldBits::NoField != (TangentFieldMask & whichField))
+        _sfTangent.syncWith(pOther->_sfTangent);
+
+    if(FieldBits::NoField != (BinormalFieldMask & whichField))
+        _sfBinormal.syncWith(pOther->_sfBinormal);
+
+    if(FieldBits::NoField != (InnerRadiusFieldMask & whichField))
+        _sfInnerRadius.syncWith(pOther->_sfInnerRadius);
+
+    if(FieldBits::NoField != (OuterRadiusFieldMask & whichField))
+        _sfOuterRadius.syncWith(pOther->_sfOuterRadius);
+
+    if(FieldBits::NoField != (MinThetaFieldMask & whichField))
+        _sfMinTheta.syncWith(pOther->_sfMinTheta);
+
+    if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
+        _sfMaxTheta.syncWith(pOther->_sfMaxTheta);
+
+    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
+        _sfSurfaceOrVolume.syncWith(pOther->_sfSurfaceOrVolume);
+
 
 }
 #else
@@ -246,6 +525,33 @@ void CylinderDistribution3DBase::executeSyncImpl(      CylinderDistribution3DBas
 
     if(FieldBits::NoField != (HeightFieldMask & whichField))
         _sfHeight.syncWith(pOther->_sfHeight);
+
+    if(FieldBits::NoField != (CenterFieldMask & whichField))
+        _sfCenter.syncWith(pOther->_sfCenter);
+
+    if(FieldBits::NoField != (NormalFieldMask & whichField))
+        _sfNormal.syncWith(pOther->_sfNormal);
+
+    if(FieldBits::NoField != (TangentFieldMask & whichField))
+        _sfTangent.syncWith(pOther->_sfTangent);
+
+    if(FieldBits::NoField != (BinormalFieldMask & whichField))
+        _sfBinormal.syncWith(pOther->_sfBinormal);
+
+    if(FieldBits::NoField != (InnerRadiusFieldMask & whichField))
+        _sfInnerRadius.syncWith(pOther->_sfInnerRadius);
+
+    if(FieldBits::NoField != (OuterRadiusFieldMask & whichField))
+        _sfOuterRadius.syncWith(pOther->_sfOuterRadius);
+
+    if(FieldBits::NoField != (MinThetaFieldMask & whichField))
+        _sfMinTheta.syncWith(pOther->_sfMinTheta);
+
+    if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
+        _sfMaxTheta.syncWith(pOther->_sfMaxTheta);
+
+    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
+        _sfSurfaceOrVolume.syncWith(pOther->_sfSurfaceOrVolume);
 
 
 
@@ -270,7 +576,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<CylinderDistribution3DPtr>::_type("CylinderDistribution3DPtr", "DiscDistribution3DPtr");
+DataType FieldDataTraits<CylinderDistribution3DPtr>::_type("CylinderDistribution3DPtr", "FunctionPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(CylinderDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);

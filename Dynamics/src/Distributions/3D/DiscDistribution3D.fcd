@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="DiscDistribution3D"
-	parent="Distribution3D"
+	parent="Function"
 	library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -28,6 +28,24 @@ An DiscDistribution3D.
 		visibility="external"
 		defaultValue="0.0,0.0,1.0"
 		access="public"
+	>
+	</Field>
+	<Field
+		name="Tangent"
+		type="Vec3f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0,1.0,0.0"
+		access="protected"
+	>
+	</Field>
+	<Field
+		name="Binormal"
+		type="Vec3f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1.0,0.0,0.0"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -64,6 +82,15 @@ An DiscDistribution3D.
 		visibility="external"
 		defaultValue="6.28319"
 		access="public"
+	>
+	</Field>
+	<Field
+		name="SurfaceOrEdge"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="DiscDistribution3D::SURFACE"
 	>
 	</Field>
 </FieldContainer>
