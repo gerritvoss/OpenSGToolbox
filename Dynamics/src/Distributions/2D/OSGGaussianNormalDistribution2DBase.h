@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class GaussianNormaDistribution2D
+ **     class GaussianNormalDistribution2D
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGGAUSSIANNORMADISTRIBUTION2DBASE_H_
-#define _OSGGAUSSIANNORMADISTRIBUTION2DBASE_H_
+#ifndef _OSGGAUSSIANNORMALDISTRIBUTION2DBASE_H_
+#define _OSGGAUSSIANNORMALDISTRIBUTION2DBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,46 +65,43 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGDistribution2D.h" // Parent
+#include "Function/OSGFunction.h" // Parent
 
 #include <OpenSG/OSGPnt2fFields.h> // Mean type
 #include <OpenSG/OSGReal32Fields.h> // StandardDeviationX type
 #include <OpenSG/OSGReal32Fields.h> // StandardDeviationY type
-#include <OpenSG/OSGReal32Fields.h> // XYCorrelation type
 
-#include "OSGGaussianNormaDistribution2DFields.h"
+#include "OSGGaussianNormalDistribution2DFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class GaussianNormaDistribution2D;
+class GaussianNormalDistribution2D;
 class BinaryDataHandler;
 
-//! \brief GaussianNormaDistribution2D Base Class.
+//! \brief GaussianNormalDistribution2D Base Class.
 
-class OSG_DYNAMICSLIB_DLLMAPPING GaussianNormaDistribution2DBase : public Distribution2D
+class OSG_DYNAMICSLIB_DLLMAPPING GaussianNormalDistribution2DBase : public Function
 {
   private:
 
-    typedef Distribution2D    Inherited;
+    typedef Function    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef GaussianNormaDistribution2DPtr  Ptr;
+    typedef GaussianNormalDistribution2DPtr  Ptr;
 
     enum
     {
         MeanFieldId               = Inherited::NextFieldId,
         StandardDeviationXFieldId = MeanFieldId               + 1,
         StandardDeviationYFieldId = StandardDeviationXFieldId + 1,
-        XYCorrelationFieldId      = StandardDeviationYFieldId + 1,
-        NextFieldId               = XYCorrelationFieldId      + 1
+        NextFieldId               = StandardDeviationYFieldId + 1
     };
 
     static const OSG::BitVector MeanFieldMask;
     static const OSG::BitVector StandardDeviationXFieldMask;
     static const OSG::BitVector StandardDeviationYFieldMask;
-    static const OSG::BitVector XYCorrelationFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -134,7 +131,6 @@ class OSG_DYNAMICSLIB_DLLMAPPING GaussianNormaDistribution2DBase : public Distri
            SFPnt2f             *getSFMean           (void);
            SFReal32            *getSFStandardDeviationX(void);
            SFReal32            *getSFStandardDeviationY(void);
-           SFReal32            *getSFXYCorrelation  (void);
 
            Pnt2f               &getMean           (void);
      const Pnt2f               &getMean           (void) const;
@@ -142,8 +138,6 @@ class OSG_DYNAMICSLIB_DLLMAPPING GaussianNormaDistribution2DBase : public Distri
      const Real32              &getStandardDeviationX(void) const;
            Real32              &getStandardDeviationY(void);
      const Real32              &getStandardDeviationY(void) const;
-           Real32              &getXYCorrelation  (void);
-     const Real32              &getXYCorrelation  (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -153,7 +147,6 @@ class OSG_DYNAMICSLIB_DLLMAPPING GaussianNormaDistribution2DBase : public Distri
      void setMean           ( const Pnt2f &value );
      void setStandardDeviationX( const Real32 &value );
      void setStandardDeviationY( const Real32 &value );
-     void setXYCorrelation  ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -177,8 +170,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING GaussianNormaDistribution2DBase : public Distri
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  GaussianNormaDistribution2DPtr      create          (void); 
-    static  GaussianNormaDistribution2DPtr      createEmpty     (void); 
+    static  GaussianNormalDistribution2DPtr      create          (void); 
+    static  GaussianNormalDistribution2DPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -199,22 +192,21 @@ class OSG_DYNAMICSLIB_DLLMAPPING GaussianNormaDistribution2DBase : public Distri
     SFPnt2f             _sfMean;
     SFReal32            _sfStandardDeviationX;
     SFReal32            _sfStandardDeviationY;
-    SFReal32            _sfXYCorrelation;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    GaussianNormaDistribution2DBase(void);
-    GaussianNormaDistribution2DBase(const GaussianNormaDistribution2DBase &source);
+    GaussianNormalDistribution2DBase(void);
+    GaussianNormalDistribution2DBase(const GaussianNormalDistribution2DBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~GaussianNormaDistribution2DBase(void); 
+    virtual ~GaussianNormalDistribution2DBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -222,13 +214,13 @@ class OSG_DYNAMICSLIB_DLLMAPPING GaussianNormaDistribution2DBase : public Distri
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      GaussianNormaDistribution2DBase *pOther,
+    void executeSyncImpl(      GaussianNormalDistribution2DBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      GaussianNormaDistribution2DBase *pOther,
+    void executeSyncImpl(      GaussianNormalDistribution2DBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -258,7 +250,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING GaussianNormaDistribution2DBase : public Distri
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const GaussianNormaDistribution2DBase &source);
+    void operator =(const GaussianNormalDistribution2DBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -266,17 +258,17 @@ class OSG_DYNAMICSLIB_DLLMAPPING GaussianNormaDistribution2DBase : public Distri
 //---------------------------------------------------------------------------
 
 
-typedef GaussianNormaDistribution2DBase *GaussianNormaDistribution2DBaseP;
+typedef GaussianNormalDistribution2DBase *GaussianNormalDistribution2DBaseP;
 
-typedef osgIF<GaussianNormaDistribution2DBase::isNodeCore,
-              CoredNodePtr<GaussianNormaDistribution2D>,
+typedef osgIF<GaussianNormalDistribution2DBase::isNodeCore,
+              CoredNodePtr<GaussianNormalDistribution2D>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet GaussianNormaDistribution2DNodePtr;
+              >::_IRet GaussianNormalDistribution2DNodePtr;
 
-typedef RefPtr<GaussianNormaDistribution2DPtr> GaussianNormaDistribution2DRefPtr;
+typedef RefPtr<GaussianNormalDistribution2DPtr> GaussianNormalDistribution2DRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGGAUSSIANNORMADISTRIBUTION2DBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGGAUSSIANNORMALDISTRIBUTION2DBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGGAUSSIANNORMADISTRIBUTION2DBASE_H_ */
+#endif /* _OSGGAUSSIANNORMALDISTRIBUTION2DBASE_H_ */

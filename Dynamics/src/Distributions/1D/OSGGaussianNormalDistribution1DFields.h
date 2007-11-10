@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGDynamicsDef.h"
 
-#include "OSGDistribution1DFields.h"
+#include "Function/OSGFunctionFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class GaussianNormalDistribution1D;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! GaussianNormalDistribution1DPtr
 
-typedef FCPtr<Distribution1DPtr, GaussianNormalDistribution1D> GaussianNormalDistribution1DPtr;
+typedef FCPtr<FunctionPtr, GaussianNormalDistribution1D> GaussianNormalDistribution1DPtr;
 
 #endif
 

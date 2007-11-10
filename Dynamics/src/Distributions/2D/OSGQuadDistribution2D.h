@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,6 +48,13 @@
 
 OSG_BEGIN_NAMESPACE
 
+#define OSG_QUAD2D_DIST_OUTPUTPARAMETERS (1, \
+    (\
+      ("RandomPoint", Pnt2f) \
+    ))
+
+#define OSG_QUAD2D_DIST_INPUTPARAMETERS (0, ())
+
 class OSG_DYNAMICSLIB_DLLMAPPING QuadDistribution2D : public QuadDistribution2DBase
 {
   private:
@@ -56,6 +63,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING QuadDistribution2D : public QuadDistribution2DB
 
     /*==========================  PUBLIC  =================================*/
   public:
+    enum SurfaceOrEdge {SURFACE=0, EDGE=1};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -73,7 +81,9 @@ class OSG_DYNAMICSLIB_DLLMAPPING QuadDistribution2D : public QuadDistribution2DB
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual Pnt2f generate(void);
+    virtual FunctionIOTypeVector getOutputTypes(FunctionIOParameterVector& InputParameters) const;
+    virtual FunctionIOTypeVector getInputTypes(FunctionIOParameterVector& InputParameters) const;
+    virtual FunctionIOParameterVector evaluate(FunctionIOParameterVector& InputParameters);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -94,6 +104,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING QuadDistribution2D : public QuadDistribution2DB
     virtual ~QuadDistribution2D(void); 
 
     /*! \}                                                                 */
+    virtual Pnt2f generate(void);
     
     /*==========================  PRIVATE  ================================*/
   private:

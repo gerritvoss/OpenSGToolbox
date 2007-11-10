@@ -143,10 +143,10 @@ Pnt3f TriDistribution3D::generate(void)
             Real32 s(RandomPoolManager::getRandomReal32(0.0,1.0)),
                    t(RandomPoolManager::getRandomReal32(0.0,1.0));
 
-            while(s+t > 1.0)
+            if(s+t > 1.0)
             {
-                s = RandomPoolManager::getRandomReal32(0.0,1.0);
-                t = RandomPoolManager::getRandomReal32(0.0,1.0);
+                s = 1.0f - s;
+                t = 1.0f - t;
             }
 
             Result = getPoint1()

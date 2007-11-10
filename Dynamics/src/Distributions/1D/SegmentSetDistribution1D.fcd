@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="SegmentSetDistribution1D"
-	parent="Distribution1D"
+	parent="Function"
 	library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -18,6 +18,14 @@ An SegmentSetDistribution1D.
 		cardinality="multi"
 		visibility="external"
 		access="public"
+	>
+	</Field>
+	<Field
+		name="TotalLength"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="protected"
 	>
 	</Field>
 </FieldContainer>

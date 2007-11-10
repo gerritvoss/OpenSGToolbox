@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDISTRIBUTION2D_H_
-#define _OSGDISTRIBUTION2D_H_
+#ifndef _OSGGAUSSIANNORMALDISTRIBUTION2D_H_
+#define _OSGGAUSSIANNORMALDISTRIBUTION2D_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,15 +45,22 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGDynamicsDef.h"
 
-#include "OSGDistribution2DBase.h"
+#include "OSGGaussianNormalDistribution2DBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_DYNAMICSLIB_DLLMAPPING Distribution2D : public Distribution2DBase
+#define OSG_GAUSSIANNORMAL2D_DIST_OUTPUTPARAMETERS (1, \
+    (\
+      ("RandomPoint", Pnt2f) \
+    ))
+
+#define OSG_GAUSSIANNORMAL2D_DIST_INPUTPARAMETERS (0, ())
+
+class OSG_DYNAMICSLIB_DLLMAPPING GaussianNormalDistribution2D : public GaussianNormalDistribution2DBase
 {
   private:
 
-    typedef Distribution2DBase Inherited;
+    typedef GaussianNormalDistribution2DBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -74,48 +81,51 @@ class OSG_DYNAMICSLIB_DLLMAPPING Distribution2D : public Distribution2DBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual Pnt2f generate(void)=0;
+    virtual FunctionIOTypeVector getOutputTypes(FunctionIOParameterVector& InputParameters) const;
+    virtual FunctionIOTypeVector getInputTypes(FunctionIOParameterVector& InputParameters) const;
+    virtual FunctionIOParameterVector evaluate(FunctionIOParameterVector& InputParameters);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in Distribution2DBase.
+    // Variables should all be in GaussianNormalDistribution2DBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Distribution2D(void);
-    Distribution2D(const Distribution2D &source);
+    GaussianNormalDistribution2D(void);
+    GaussianNormalDistribution2D(const GaussianNormalDistribution2D &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Distribution2D(void); 
+    virtual ~GaussianNormalDistribution2D(void); 
 
     /*! \}                                                                 */
+    virtual Pnt2f generate(void);
     
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class Distribution2DBase;
+    friend class GaussianNormalDistribution2DBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Distribution2D &source);
+    void operator =(const GaussianNormalDistribution2D &source);
 };
 
-typedef Distribution2D *Distribution2DP;
+typedef GaussianNormalDistribution2D *GaussianNormalDistribution2DP;
 
 OSG_END_NAMESPACE
 
-#include "OSGDistribution2DBase.inl"
-#include "OSGDistribution2D.inl"
+#include "OSGGaussianNormalDistribution2DBase.inl"
+#include "OSGGaussianNormalDistribution2D.inl"
 
-#define OSGDISTRIBUTION2D_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGGAUSSIANNORMALDISTRIBUTION2D_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGDISTRIBUTION2D_H_ */
+#endif /* _OSGGAUSSIANNORMALDISTRIBUTION2D_H_ */

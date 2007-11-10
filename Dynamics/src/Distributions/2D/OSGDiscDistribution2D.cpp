@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGDiscDistribution2D.h"
+#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -74,11 +75,74 @@ void DiscDistribution2D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+DiscDistribution2D::FunctionIOTypeVector DiscDistribution2D::getOutputTypes(FunctionIOParameterVector& InputParameters) const
+{
+    FunctionIOTypeVector OutputTypes;
+    OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_DISC2D_DIST_OUTPUTPARAMETERS));
+    return OutputTypes;
+}
+
+DiscDistribution2D::FunctionIOTypeVector DiscDistribution2D::getInputTypes(FunctionIOParameterVector& InputParameters) const
+{
+    FunctionIOTypeVector InputTypes;
+    return InputTypes;
+}
+
+DiscDistribution2D::FunctionIOParameterVector DiscDistribution2D::evaluate(FunctionIOParameterVector& InputParameters)
+{
+    //The Input Paremeters must be the correct number
+    if(InputParameters.size() != OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_DISC2D_DIST_INPUTPARAMETERS))
+    {
+        throw FunctionInputException();
+    }
+    FunctionIOParameterVector ResultVector;
+    ResultVector.reserve(OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_DISC2D_DIST_OUTPUTPARAMETERS));
+    ResultVector.push_back(OSG_FUNC_INST_FUNCTIONIOPARAMETER(0,OSG_DISC2D_DIST_OUTPUTPARAMETERS, generate()));
+
+    return ResultVector;
+}
+
 Pnt2f DiscDistribution2D::generate(void)
 {
-   //TODO:Implement
-   return Pnt2f(0.0f,0.0f);
+    Pnt2f Result;
+
+    switch(getSurfaceOrEdge())
+    {
+    case EDGE:
+        {
+            Real32 OuterCircumference(getMaxRadius() * (getMaxTheta() - getMinTheta()));
+            Real32 InnerCircumference(getMinRadius() * (getMaxTheta() - getMinTheta()));
+            Real32 Theta( RandomPoolManager::getRandomReal32(getMinTheta(),getMaxTheta()) );
+
+            Real32 PickEdge(RandomPoolManager::getRandomReal32(0.0,1.0));
+            if(PickEdge < InnerCircumference/(OuterCircumference + InnerCircumference))
+            {
+                Result =  getCenter() + Vec2f(getMinRadius()*osgcos(Theta), getMinRadius()*osgsin(Theta));
+            }
+            else
+            {
+                Result =  getCenter() + Vec2f(getMaxRadius()*osgcos(Theta), getMaxRadius()*osgsin(Theta));
+            }
+            break;
+        }
+    case SURFACE:
+    default:
+        {
+            //To get a uniform distribution across the disc get a uniformly distributed allong 0.0 - 1.0
+            //Then Take the square root of that.  This gives a square root distribution from 0.0 - 1.0
+            //This square root distribution is used for the random radius because the area of a disc is 
+            //dependant on the square of the radius, i.e it is a quadratic function
+            Real32 Temp(osgsqrt(RandomPoolManager::getRandomReal32(0.0,1.0)));
+            Real32 Radius(getMinRadius() + Temp*(getMaxRadius() - getMinRadius()));
+            Real32 Theta( RandomPoolManager::getRandomReal32(getMinTheta(),getMaxTheta()) );
+            Result = getCenter() + Vec2f(Radius*osgcos(Theta), Radius*osgsin(Theta));
+            break;
+        }
+    }
+
+    return Result;
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

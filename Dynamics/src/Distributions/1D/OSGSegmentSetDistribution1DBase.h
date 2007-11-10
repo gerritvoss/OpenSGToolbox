@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -65,9 +65,10 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGDistribution1D.h" // Parent
+#include "Function/OSGFunction.h" // Parent
 
 #include <OpenSG/OSGVec2fFields.h> // Segment type
+#include <OpenSG/OSGReal32Fields.h> // TotalLength type
 
 #include "OSGSegmentSetDistribution1DFields.h"
 
@@ -78,11 +79,11 @@ class BinaryDataHandler;
 
 //! \brief SegmentSetDistribution1D Base Class.
 
-class OSG_DYNAMICSLIB_DLLMAPPING SegmentSetDistribution1DBase : public Distribution1D
+class OSG_DYNAMICSLIB_DLLMAPPING SegmentSetDistribution1DBase : public Function
 {
   private:
 
-    typedef Distribution1D    Inherited;
+    typedef Function    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -91,11 +92,13 @@ class OSG_DYNAMICSLIB_DLLMAPPING SegmentSetDistribution1DBase : public Distribut
 
     enum
     {
-        SegmentFieldId = Inherited::NextFieldId,
-        NextFieldId    = SegmentFieldId + 1
+        SegmentFieldId     = Inherited::NextFieldId,
+        TotalLengthFieldId = SegmentFieldId     + 1,
+        NextFieldId        = TotalLengthFieldId + 1
     };
 
     static const OSG::BitVector SegmentFieldMask;
+    static const OSG::BitVector TotalLengthFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -176,6 +179,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING SegmentSetDistribution1DBase : public Distribut
     /*! \{                                                                 */
 
     MFVec2f             _mfSegment;
+    SFReal32            _sfTotalLength;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -191,6 +195,23 @@ class OSG_DYNAMICSLIB_DLLMAPPING SegmentSetDistribution1DBase : public Distribut
     /*! \{                                                                 */
 
     virtual ~SegmentSetDistribution1DBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFReal32            *getSFTotalLength    (void);
+
+           Real32              &getTotalLength    (void);
+     const Real32              &getTotalLength    (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setTotalLength    (const Real32 &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

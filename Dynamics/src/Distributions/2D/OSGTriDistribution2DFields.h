@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGDISTRIBUTION2DFIELDS_H_
-#define _OSGDISTRIBUTION2DFIELDS_H_
+#ifndef _OSGTRIDISTRIBUTION2DFIELDS_H_
+#define _OSGTRIDISTRIBUTION2DFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGDynamicsDef.h"
 
-#include "Function/OSGOutputPnt2fFunctionFields.h"
+#include "Function/OSGFunctionFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Distribution2D;
+class TriDistribution2D;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! Distribution2DPtr
+//! TriDistribution2DPtr
 
-typedef FCPtr<OutputPnt2fFunctionPtr, Distribution2D> Distribution2DPtr;
+typedef FCPtr<FunctionPtr, TriDistribution2D> TriDistribution2DPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<OutputPnt2fFunctionPtr, Distribution2D> Distribution2DPtr;
 #endif
 
 template <>
-struct FieldDataTraits<Distribution2DPtr> : 
-    public FieldTraitsRecurseMapper<Distribution2DPtr, true>
+struct FieldDataTraits<TriDistribution2DPtr> : 
+    public FieldTraitsRecurseMapper<TriDistribution2DPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<Distribution2DPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFDistribution2DPtr"; }
-    static const char *getMName(void) { return "MFDistribution2DPtr"; }
+    static const char *getSName(void) { return "SFTriDistribution2DPtr"; }
+    static const char *getMName(void) { return "MFTriDistribution2DPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<Distribution2DPtr, true>
+/*! \class  FieldTraitsRecurseMapper<TriDistribution2DPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<Distribution2DPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpDynamicsFieldSingle */
 
-typedef SField<Distribution2DPtr> SFDistribution2DPtr;
+typedef SField<TriDistribution2DPtr> SFTriDistribution2DPtr;
 #endif
 
-#ifndef OSG_COMPILEDISTRIBUTION2DINST
-OSG_DLLEXPORT_DECL1(SField, Distribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILETRIDISTRIBUTION2DINST
+OSG_DLLEXPORT_DECL1(SField, TriDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpDynamicsFieldMulti */
 
-typedef MField<Distribution2DPtr> MFDistribution2DPtr;
+typedef MField<TriDistribution2DPtr> MFTriDistribution2DPtr;
 #endif
 
-#ifndef OSG_COMPILEDISTRIBUTION2DINST
-OSG_DLLEXPORT_DECL1(MField, Distribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILETRIDISTRIBUTION2DINST
+OSG_DLLEXPORT_DECL1(MField, TriDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGDISTRIBUTION2DFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGTRIDISTRIBUTION2DFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGDISTRIBUTION2DFIELDS_H_ */
+#endif /* _OSGTRIDISTRIBUTION2DFIELDS_H_ */

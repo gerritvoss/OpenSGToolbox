@@ -55,7 +55,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class osg::GaussianNormalDistribution3D
-An GaussianNormaDistribution2D. 	
+An GaussianNormalDistribution2D. 	
 */
 
 /***************************************************************************\
@@ -79,7 +79,7 @@ void GaussianNormalDistribution3D::initMethod (void)
 GaussianNormalDistribution3D::FunctionIOTypeVector GaussianNormalDistribution3D::getOutputTypes(FunctionIOParameterVector& InputParameters) const
 {
     FunctionIOTypeVector OutputTypes;
-    OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_GAUSSIANNORMAL_DIST_OUTPUTPARAMETERS));
+    OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_GAUSSIANNORMAL3D_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
@@ -104,13 +104,13 @@ Pnt3f GaussianNormalDistribution3D::generate(void)
 GaussianNormalDistribution3D::FunctionIOParameterVector GaussianNormalDistribution3D::evaluate(FunctionIOParameterVector& InputParameters)
 {
     //The Input Paremeters must be the correct number
-    if(InputParameters.size() != OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_GAUSSIANNORMAL_DIST_INPUTPARAMETERS))
+    if(InputParameters.size() != OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_GAUSSIANNORMAL3D_DIST_INPUTPARAMETERS))
     {
         throw FunctionInputException();
     }
     FunctionIOParameterVector ResultVector;
-    ResultVector.reserve(OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_GAUSSIANNORMAL_DIST_OUTPUTPARAMETERS));
-    ResultVector.push_back(OSG_FUNC_INST_FUNCTIONIOPARAMETER(0,OSG_GAUSSIANNORMAL_DIST_OUTPUTPARAMETERS, generate()));
+    ResultVector.reserve(OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_GAUSSIANNORMAL3D_DIST_OUTPUTPARAMETERS));
+    ResultVector.push_back(OSG_FUNC_INST_FUNCTIONIOPARAMETER(0,OSG_GAUSSIANNORMAL3D_DIST_OUTPUTPARAMETERS, generate()));
 
     return ResultVector;
 }

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class TriangleDistribution2D!
+ **     class TriDistribution2D!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &TriangleDistribution2DBase::getClassType(void)
+OSG::FieldContainerType &TriDistribution2DBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 TriangleDistribution2DBase::getClassTypeId(void) 
+OSG::UInt32 TriDistribution2DBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-TriangleDistribution2DPtr TriangleDistribution2DBase::create(void) 
+TriDistribution2DPtr TriDistribution2DBase::create(void) 
 {
-    TriangleDistribution2DPtr fc; 
+    TriDistribution2DPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = TriangleDistribution2DPtr::dcast(
+        fc = TriDistribution2DPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ TriangleDistribution2DPtr TriangleDistribution2DBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-TriangleDistribution2DPtr TriangleDistribution2DBase::createEmpty(void) 
+TriDistribution2DPtr TriDistribution2DBase::createEmpty(void) 
 { 
-    TriangleDistribution2DPtr returnValue; 
+    TriDistribution2DPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,93 +96,121 @@ TriangleDistribution2DPtr TriangleDistribution2DBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the TriangleDistribution2D::_sfPoint1 field.
+//! Get the TriDistribution2D::_sfPoint1 field.
 inline
-SFPnt2f *TriangleDistribution2DBase::getSFPoint1(void)
+SFPnt2f *TriDistribution2DBase::getSFPoint1(void)
 {
     return &_sfPoint1;
 }
 
-//! Get the TriangleDistribution2D::_sfPoint2 field.
+//! Get the TriDistribution2D::_sfPoint2 field.
 inline
-SFPnt2f *TriangleDistribution2DBase::getSFPoint2(void)
+SFPnt2f *TriDistribution2DBase::getSFPoint2(void)
 {
     return &_sfPoint2;
 }
 
-//! Get the TriangleDistribution2D::_sfPoint3 field.
+//! Get the TriDistribution2D::_sfPoint3 field.
 inline
-SFPnt2f *TriangleDistribution2DBase::getSFPoint3(void)
+SFPnt2f *TriDistribution2DBase::getSFPoint3(void)
 {
     return &_sfPoint3;
 }
 
-
-//! Get the value of the TriangleDistribution2D::_sfPoint1 field.
+//! Get the TriDistribution2D::_sfSurfaceOrEdge field.
 inline
-Pnt2f &TriangleDistribution2DBase::getPoint1(void)
+SFUInt32 *TriDistribution2DBase::getSFSurfaceOrEdge(void)
+{
+    return &_sfSurfaceOrEdge;
+}
+
+
+//! Get the value of the TriDistribution2D::_sfPoint1 field.
+inline
+Pnt2f &TriDistribution2DBase::getPoint1(void)
 {
     return _sfPoint1.getValue();
 }
 
-//! Get the value of the TriangleDistribution2D::_sfPoint1 field.
+//! Get the value of the TriDistribution2D::_sfPoint1 field.
 inline
-const Pnt2f &TriangleDistribution2DBase::getPoint1(void) const
+const Pnt2f &TriDistribution2DBase::getPoint1(void) const
 {
     return _sfPoint1.getValue();
 }
 
-//! Set the value of the TriangleDistribution2D::_sfPoint1 field.
+//! Set the value of the TriDistribution2D::_sfPoint1 field.
 inline
-void TriangleDistribution2DBase::setPoint1(const Pnt2f &value)
+void TriDistribution2DBase::setPoint1(const Pnt2f &value)
 {
     _sfPoint1.setValue(value);
 }
 
-//! Get the value of the TriangleDistribution2D::_sfPoint2 field.
+//! Get the value of the TriDistribution2D::_sfPoint2 field.
 inline
-Pnt2f &TriangleDistribution2DBase::getPoint2(void)
+Pnt2f &TriDistribution2DBase::getPoint2(void)
 {
     return _sfPoint2.getValue();
 }
 
-//! Get the value of the TriangleDistribution2D::_sfPoint2 field.
+//! Get the value of the TriDistribution2D::_sfPoint2 field.
 inline
-const Pnt2f &TriangleDistribution2DBase::getPoint2(void) const
+const Pnt2f &TriDistribution2DBase::getPoint2(void) const
 {
     return _sfPoint2.getValue();
 }
 
-//! Set the value of the TriangleDistribution2D::_sfPoint2 field.
+//! Set the value of the TriDistribution2D::_sfPoint2 field.
 inline
-void TriangleDistribution2DBase::setPoint2(const Pnt2f &value)
+void TriDistribution2DBase::setPoint2(const Pnt2f &value)
 {
     _sfPoint2.setValue(value);
 }
 
-//! Get the value of the TriangleDistribution2D::_sfPoint3 field.
+//! Get the value of the TriDistribution2D::_sfPoint3 field.
 inline
-Pnt2f &TriangleDistribution2DBase::getPoint3(void)
+Pnt2f &TriDistribution2DBase::getPoint3(void)
 {
     return _sfPoint3.getValue();
 }
 
-//! Get the value of the TriangleDistribution2D::_sfPoint3 field.
+//! Get the value of the TriDistribution2D::_sfPoint3 field.
 inline
-const Pnt2f &TriangleDistribution2DBase::getPoint3(void) const
+const Pnt2f &TriDistribution2DBase::getPoint3(void) const
 {
     return _sfPoint3.getValue();
 }
 
-//! Set the value of the TriangleDistribution2D::_sfPoint3 field.
+//! Set the value of the TriDistribution2D::_sfPoint3 field.
 inline
-void TriangleDistribution2DBase::setPoint3(const Pnt2f &value)
+void TriDistribution2DBase::setPoint3(const Pnt2f &value)
 {
     _sfPoint3.setValue(value);
+}
+
+//! Get the value of the TriDistribution2D::_sfSurfaceOrEdge field.
+inline
+UInt32 &TriDistribution2DBase::getSurfaceOrEdge(void)
+{
+    return _sfSurfaceOrEdge.getValue();
+}
+
+//! Get the value of the TriDistribution2D::_sfSurfaceOrEdge field.
+inline
+const UInt32 &TriDistribution2DBase::getSurfaceOrEdge(void) const
+{
+    return _sfSurfaceOrEdge.getValue();
+}
+
+//! Set the value of the TriDistribution2D::_sfSurfaceOrEdge field.
+inline
+void TriDistribution2DBase::setSurfaceOrEdge(const UInt32 &value)
+{
+    _sfSurfaceOrEdge.setValue(value);
 }
 
 
 OSG_END_NAMESPACE
 
-#define OSGTRIANGLEDISTRIBUTION2DBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGTRIDISTRIBUTION2DBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

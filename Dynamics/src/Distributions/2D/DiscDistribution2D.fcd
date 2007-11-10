@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="DiscDistribution2D"
-	parent="Distribution2D"
+	parent="Function"
 	library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -55,6 +55,15 @@ An DiscDistribution2D.
 		visibility="external"
 		defaultValue="6.28319"
 		access="public"
+	>
+	</Field>
+	<Field
+		name="SurfaceOrEdge"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="DiscDistribution2D::SURFACE"
 	>
 	</Field>
 </FieldContainer>

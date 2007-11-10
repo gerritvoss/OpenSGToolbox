@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGQuadDistribution2D.h"
+#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -74,10 +75,99 @@ void QuadDistribution2D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+QuadDistribution2D::FunctionIOTypeVector QuadDistribution2D::getOutputTypes(FunctionIOParameterVector& InputParameters) const
+{
+    FunctionIOTypeVector OutputTypes;
+    OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_QUAD2D_DIST_OUTPUTPARAMETERS));
+    return OutputTypes;
+}
+
+QuadDistribution2D::FunctionIOTypeVector QuadDistribution2D::getInputTypes(FunctionIOParameterVector& InputParameters) const
+{
+    FunctionIOTypeVector InputTypes;
+    return InputTypes;
+}
+
+QuadDistribution2D::FunctionIOParameterVector QuadDistribution2D::evaluate(FunctionIOParameterVector& InputParameters)
+{
+    //The Input Paremeters must be the correct number
+    if(InputParameters.size() != OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_QUAD2D_DIST_INPUTPARAMETERS))
+    {
+        throw FunctionInputException();
+    }
+    FunctionIOParameterVector ResultVector;
+    ResultVector.reserve(OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_QUAD2D_DIST_OUTPUTPARAMETERS));
+    ResultVector.push_back(OSG_FUNC_INST_FUNCTIONIOPARAMETER(0,OSG_QUAD2D_DIST_OUTPUTPARAMETERS, generate()));
+
+    return ResultVector;
+}
 Pnt2f QuadDistribution2D::generate(void)
 {
-   //TODO:Implement
-   return Pnt2f(0.0f,0.0f);
+    Pnt2f Result;
+
+    switch(getSurfaceOrEdge())
+    {
+    case EDGE:
+        {
+            Vec2f Side1(getPoint2() - getPoint1()),
+                  Side2(getPoint3() - getPoint2()),
+                  Side3(getPoint4() - getPoint3()),
+                  Side4(getPoint1() - getPoint4());
+
+            Real32 Side1Length(Side1.length()),
+                   Side2Length(Side2.length()),
+                   Side3Length(Side3.length()),
+                   Side4Length(Side4.length());
+
+            Real32 TotalLength(Side1Length + Side2Length + Side3Length + Side4Length);
+
+            Real32 Rand(RandomPoolManager::getRandomReal32(0.0,1.0));
+
+            Real32 PickEdge(RandomPoolManager::getRandomReal32(0.0,1.0));
+            if(Rand < Side1Length/TotalLength)
+            {
+                Result = getPoint1() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side1;
+            }
+            else if(Rand < (Side1Length+Side2Length)/TotalLength)
+            {
+                Result = getPoint2() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side2;
+            }
+            else if(Rand < (Side1Length+Side2Length+Side3Length)/TotalLength)
+            {
+                Result = getPoint3() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side3;
+            }
+            else
+            {
+                Result = getPoint4() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side4;
+            }
+            break;
+        }
+    case SURFACE:
+    default:
+        {
+            Real32 s(RandomPoolManager::getRandomReal32(0.0,1.0)),
+                   t(RandomPoolManager::getRandomReal32(0.0,1.0));
+
+            if(s+t > 1.0)
+            {
+                s = 1.0f - s;
+                t = 1.0f - t;
+                Result = getPoint3()
+                    + s*(getPoint2() - getPoint3())
+                    + t*(getPoint4() - getPoint3());
+            }
+            else
+            {
+                Result = getPoint1()
+                    + s*(getPoint2() - getPoint1())
+                    + t*(getPoint4() - getPoint1());
+            }
+
+            break;
+        }
+    }
+
+    return Result;
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

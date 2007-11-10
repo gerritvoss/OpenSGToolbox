@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -131,6 +131,13 @@ SFReal32 *DiscDistribution2DBase::getSFMaxTheta(void)
     return &_sfMaxTheta;
 }
 
+//! Get the DiscDistribution2D::_sfSurfaceOrEdge field.
+inline
+SFUInt32 *DiscDistribution2DBase::getSFSurfaceOrEdge(void)
+{
+    return &_sfSurfaceOrEdge;
+}
+
 
 //! Get the value of the DiscDistribution2D::_sfCenter field.
 inline
@@ -235,6 +242,27 @@ inline
 void DiscDistribution2DBase::setMaxTheta(const Real32 &value)
 {
     _sfMaxTheta.setValue(value);
+}
+
+//! Get the value of the DiscDistribution2D::_sfSurfaceOrEdge field.
+inline
+UInt32 &DiscDistribution2DBase::getSurfaceOrEdge(void)
+{
+    return _sfSurfaceOrEdge.getValue();
+}
+
+//! Get the value of the DiscDistribution2D::_sfSurfaceOrEdge field.
+inline
+const UInt32 &DiscDistribution2DBase::getSurfaceOrEdge(void) const
+{
+    return _sfSurfaceOrEdge.getValue();
+}
+
+//! Set the value of the DiscDistribution2D::_sfSurfaceOrEdge field.
+inline
+void DiscDistribution2DBase::setSurfaceOrEdge(const UInt32 &value)
+{
+    _sfSurfaceOrEdge.setValue(value);
 }
 
 

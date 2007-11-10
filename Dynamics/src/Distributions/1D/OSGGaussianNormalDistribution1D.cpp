@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGGaussianNormalDistribution1D.h"
+#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -74,10 +75,37 @@ void GaussianNormalDistribution1D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+GaussianNormalDistribution1D::FunctionIOTypeVector GaussianNormalDistribution1D::getOutputTypes(FunctionIOParameterVector& InputParameters) const
+{
+    FunctionIOTypeVector OutputTypes;
+    OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_GAUSSIANNORMAL_DIST_OUTPUTPARAMETERS));
+    return OutputTypes;
+}
+
+GaussianNormalDistribution1D::FunctionIOTypeVector GaussianNormalDistribution1D::getInputTypes(FunctionIOParameterVector& InputParameters) const
+{
+    FunctionIOTypeVector InputTypes;
+    return InputTypes;
+}
+
+GaussianNormalDistribution1D::FunctionIOParameterVector GaussianNormalDistribution1D::evaluate(FunctionIOParameterVector& InputParameters)
+{
+    //The Input Paremeters must be the correct number
+    if(InputParameters.size() != OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_GAUSSIANNORMAL_DIST_INPUTPARAMETERS))
+    {
+        throw FunctionInputException();
+    }
+    FunctionIOParameterVector ResultVector;
+    ResultVector.reserve(OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_GAUSSIANNORMAL_DIST_OUTPUTPARAMETERS));
+    ResultVector.push_back(OSG_FUNC_INST_FUNCTIONIOPARAMETER(0,OSG_GAUSSIANNORMAL_DIST_OUTPUTPARAMETERS, generate()));
+
+    return ResultVector;
+}
+
 Real32 GaussianNormalDistribution1D::generate(void)
 {
-   //TODO: Implement
-   return 0.0f;
+    //Use the Box-Muller method for generating normally distributed values
+    return osgsqrt(-2.0f * osglog(1.0f - RandomPoolManager::getRandomReal32(0.0,1.0)))* osgcos(6.283185f * RandomPoolManager::getRandomReal32(0.0,1.0))*getStandardDeviation() + getMean();
 }
 
 /*-------------------------------------------------------------------------*\

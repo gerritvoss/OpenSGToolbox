@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -46,8 +46,17 @@
 #include "OSGDynamicsDef.h"
 
 #include "OSGGaussianNormalDistribution1DBase.h"
+#include <OpenSG/OSGSysFieldDataType.h>
 
 OSG_BEGIN_NAMESPACE
+
+#define OSG_GAUSSIANNORMAL_DIST_OUTPUTPARAMETERS (1, \
+    (\
+      ("RandomValue", Real32) \
+    ))
+
+
+#define OSG_GAUSSIANNORMAL_DIST_INPUTPARAMETERS (0, ())
 
 class OSG_DYNAMICSLIB_DLLMAPPING GaussianNormalDistribution1D : public GaussianNormalDistribution1DBase
 {
@@ -74,7 +83,9 @@ class OSG_DYNAMICSLIB_DLLMAPPING GaussianNormalDistribution1D : public GaussianN
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual Real32 generate(void);
+    virtual FunctionIOTypeVector getOutputTypes(FunctionIOParameterVector& InputParameters) const;
+    virtual FunctionIOTypeVector getInputTypes(FunctionIOParameterVector& InputParameters) const;
+    virtual FunctionIOParameterVector evaluate(FunctionIOParameterVector& InputParameters);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -95,6 +106,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING GaussianNormalDistribution1D : public GaussianN
     virtual ~GaussianNormalDistribution1D(void); 
 
     /*! \}                                                                 */
+    virtual Real32 generate(void);
     
     /*==========================  PRIVATE  ================================*/
   private:

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -76,6 +76,9 @@ const OSG::BitVector  QuadDistribution2DBase::Point3FieldMask =
 const OSG::BitVector  QuadDistribution2DBase::Point4FieldMask = 
     (TypeTraits<BitVector>::One << QuadDistribution2DBase::Point4FieldId);
 
+const OSG::BitVector  QuadDistribution2DBase::SurfaceOrEdgeFieldMask = 
+    (TypeTraits<BitVector>::One << QuadDistribution2DBase::SurfaceOrEdgeFieldId);
+
 const OSG::BitVector QuadDistribution2DBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -93,6 +96,9 @@ const OSG::BitVector QuadDistribution2DBase::MTInfluenceMask =
     
 */
 /*! \var Pnt2f           QuadDistribution2DBase::_sfPoint4
+    
+*/
+/*! \var UInt32          QuadDistribution2DBase::_sfSurfaceOrEdge
     
 */
 
@@ -119,13 +125,18 @@ FieldDescription *QuadDistribution2DBase::_desc[] =
                      "Point4", 
                      Point4FieldId, Point4FieldMask,
                      false,
-                     (FieldAccessMethod) &QuadDistribution2DBase::getSFPoint4)
+                     (FieldAccessMethod) &QuadDistribution2DBase::getSFPoint4),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "SurfaceOrEdge", 
+                     SurfaceOrEdgeFieldId, SurfaceOrEdgeFieldMask,
+                     false,
+                     (FieldAccessMethod) &QuadDistribution2DBase::getSFSurfaceOrEdge)
 };
 
 
 FieldContainerType QuadDistribution2DBase::_type(
     "QuadDistribution2D",
-    "Distribution2D",
+    "Function",
     NULL,
     (PrototypeCreateF) &QuadDistribution2DBase::createEmpty,
     QuadDistribution2D::initMethod,
@@ -199,6 +210,7 @@ QuadDistribution2DBase::QuadDistribution2DBase(void) :
     _sfPoint2                 (Pnt2f(1.0,0.0)), 
     _sfPoint3                 (Pnt2f(1.0,1.0)), 
     _sfPoint4                 (Pnt2f(0.0,1.0)), 
+    _sfSurfaceOrEdge          (UInt32(QuadDistribution2D::SURFACE)), 
     Inherited() 
 {
 }
@@ -212,6 +224,7 @@ QuadDistribution2DBase::QuadDistribution2DBase(const QuadDistribution2DBase &sou
     _sfPoint2                 (source._sfPoint2                 ), 
     _sfPoint3                 (source._sfPoint3                 ), 
     _sfPoint4                 (source._sfPoint4                 ), 
+    _sfSurfaceOrEdge          (source._sfSurfaceOrEdge          ), 
     Inherited                 (source)
 {
 }
@@ -248,6 +261,11 @@ UInt32 QuadDistribution2DBase::getBinSize(const BitVector &whichField)
         returnValue += _sfPoint4.getBinSize();
     }
 
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+    {
+        returnValue += _sfSurfaceOrEdge.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -275,6 +293,11 @@ void QuadDistribution2DBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (Point4FieldMask & whichField))
     {
         _sfPoint4.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+    {
+        _sfSurfaceOrEdge.copyToBin(pMem);
     }
 
 
@@ -305,6 +328,11 @@ void QuadDistribution2DBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfPoint4.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+    {
+        _sfSurfaceOrEdge.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -327,6 +355,9 @@ void QuadDistribution2DBase::executeSyncImpl(      QuadDistribution2DBase *pOthe
     if(FieldBits::NoField != (Point4FieldMask & whichField))
         _sfPoint4.syncWith(pOther->_sfPoint4);
 
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+        _sfSurfaceOrEdge.syncWith(pOther->_sfSurfaceOrEdge);
+
 
 }
 #else
@@ -348,6 +379,9 @@ void QuadDistribution2DBase::executeSyncImpl(      QuadDistribution2DBase *pOthe
 
     if(FieldBits::NoField != (Point4FieldMask & whichField))
         _sfPoint4.syncWith(pOther->_sfPoint4);
+
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+        _sfSurfaceOrEdge.syncWith(pOther->_sfSurfaceOrEdge);
 
 
 
@@ -372,7 +406,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<QuadDistribution2DPtr>::_type("QuadDistribution2DPtr", "Distribution2DPtr");
+DataType FieldDataTraits<QuadDistribution2DPtr>::_type("QuadDistribution2DPtr", "FunctionPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(QuadDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);

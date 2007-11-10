@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -45,132 +45,143 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class TriangleDistribution2D!
+ **     class TriDistribution2D!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILETRIANGLEDISTRIBUTION2DINST
+#define OSG_COMPILETRIDISTRIBUTION2DINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGTriangleDistribution2DBase.h"
-#include "OSGTriangleDistribution2D.h"
+#include "OSGTriDistribution2DBase.h"
+#include "OSGTriDistribution2D.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TriangleDistribution2DBase::Point1FieldMask = 
-    (TypeTraits<BitVector>::One << TriangleDistribution2DBase::Point1FieldId);
+const OSG::BitVector  TriDistribution2DBase::Point1FieldMask = 
+    (TypeTraits<BitVector>::One << TriDistribution2DBase::Point1FieldId);
 
-const OSG::BitVector  TriangleDistribution2DBase::Point2FieldMask = 
-    (TypeTraits<BitVector>::One << TriangleDistribution2DBase::Point2FieldId);
+const OSG::BitVector  TriDistribution2DBase::Point2FieldMask = 
+    (TypeTraits<BitVector>::One << TriDistribution2DBase::Point2FieldId);
 
-const OSG::BitVector  TriangleDistribution2DBase::Point3FieldMask = 
-    (TypeTraits<BitVector>::One << TriangleDistribution2DBase::Point3FieldId);
+const OSG::BitVector  TriDistribution2DBase::Point3FieldMask = 
+    (TypeTraits<BitVector>::One << TriDistribution2DBase::Point3FieldId);
 
-const OSG::BitVector TriangleDistribution2DBase::MTInfluenceMask = 
+const OSG::BitVector  TriDistribution2DBase::SurfaceOrEdgeFieldMask = 
+    (TypeTraits<BitVector>::One << TriDistribution2DBase::SurfaceOrEdgeFieldId);
+
+const OSG::BitVector TriDistribution2DBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var Pnt2f           TriangleDistribution2DBase::_sfPoint1
+/*! \var Pnt2f           TriDistribution2DBase::_sfPoint1
     
 */
-/*! \var Pnt2f           TriangleDistribution2DBase::_sfPoint2
+/*! \var Pnt2f           TriDistribution2DBase::_sfPoint2
     
 */
-/*! \var Pnt2f           TriangleDistribution2DBase::_sfPoint3
+/*! \var Pnt2f           TriDistribution2DBase::_sfPoint3
+    
+*/
+/*! \var UInt32          TriDistribution2DBase::_sfSurfaceOrEdge
     
 */
 
-//! TriangleDistribution2D description
+//! TriDistribution2D description
 
-FieldDescription *TriangleDistribution2DBase::_desc[] = 
+FieldDescription *TriDistribution2DBase::_desc[] = 
 {
     new FieldDescription(SFPnt2f::getClassType(), 
                      "Point1", 
                      Point1FieldId, Point1FieldMask,
                      false,
-                     (FieldAccessMethod) &TriangleDistribution2DBase::getSFPoint1),
+                     (FieldAccessMethod) &TriDistribution2DBase::getSFPoint1),
     new FieldDescription(SFPnt2f::getClassType(), 
                      "Point2", 
                      Point2FieldId, Point2FieldMask,
                      false,
-                     (FieldAccessMethod) &TriangleDistribution2DBase::getSFPoint2),
+                     (FieldAccessMethod) &TriDistribution2DBase::getSFPoint2),
     new FieldDescription(SFPnt2f::getClassType(), 
                      "Point3", 
                      Point3FieldId, Point3FieldMask,
                      false,
-                     (FieldAccessMethod) &TriangleDistribution2DBase::getSFPoint3)
+                     (FieldAccessMethod) &TriDistribution2DBase::getSFPoint3),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "SurfaceOrEdge", 
+                     SurfaceOrEdgeFieldId, SurfaceOrEdgeFieldMask,
+                     false,
+                     (FieldAccessMethod) &TriDistribution2DBase::getSFSurfaceOrEdge)
 };
 
 
-FieldContainerType TriangleDistribution2DBase::_type(
-    "TriangleDistribution2D",
-    "Distribution2D",
+FieldContainerType TriDistribution2DBase::_type(
+    "TriDistribution2D",
+    "Function",
     NULL,
-    (PrototypeCreateF) &TriangleDistribution2DBase::createEmpty,
-    TriangleDistribution2D::initMethod,
+    (PrototypeCreateF) &TriDistribution2DBase::createEmpty,
+    TriDistribution2D::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(TriangleDistribution2DBase, TriangleDistribution2DPtr)
+//OSG_FIELD_CONTAINER_DEF(TriDistribution2DBase, TriDistribution2DPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TriangleDistribution2DBase::getType(void) 
+FieldContainerType &TriDistribution2DBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &TriangleDistribution2DBase::getType(void) const 
+const FieldContainerType &TriDistribution2DBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr TriangleDistribution2DBase::shallowCopy(void) const 
+FieldContainerPtr TriDistribution2DBase::shallowCopy(void) const 
 { 
-    TriangleDistribution2DPtr returnValue; 
+    TriDistribution2DPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const TriangleDistribution2D *>(this)); 
+    newPtr(returnValue, dynamic_cast<const TriDistribution2D *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 TriangleDistribution2DBase::getContainerSize(void) const 
+UInt32 TriDistribution2DBase::getContainerSize(void) const 
 { 
-    return sizeof(TriangleDistribution2D); 
+    return sizeof(TriDistribution2D); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void TriangleDistribution2DBase::executeSync(      FieldContainer &other,
+void TriDistribution2DBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((TriangleDistribution2DBase *) &other, whichField);
+    this->executeSyncImpl((TriDistribution2DBase *) &other, whichField);
 }
 #else
-void TriangleDistribution2DBase::executeSync(      FieldContainer &other,
+void TriDistribution2DBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((TriangleDistribution2DBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((TriDistribution2DBase *) &other, whichField, sInfo);
 }
-void TriangleDistribution2DBase::execBeginEdit(const BitVector &whichField, 
+void TriDistribution2DBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void TriangleDistribution2DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void TriDistribution2DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -183,10 +194,11 @@ void TriangleDistribution2DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-TriangleDistribution2DBase::TriangleDistribution2DBase(void) :
+TriDistribution2DBase::TriDistribution2DBase(void) :
     _sfPoint1                 (Pnt2f(0.0,0.0)), 
     _sfPoint2                 (Pnt2f(1.0,0.0)), 
     _sfPoint3                 (Pnt2f(0.0,1.0)), 
+    _sfSurfaceOrEdge          (UInt32(TriDistribution2D::SURFACE)), 
     Inherited() 
 {
 }
@@ -195,23 +207,24 @@ TriangleDistribution2DBase::TriangleDistribution2DBase(void) :
 #pragma warning (default : 383)
 #endif
 
-TriangleDistribution2DBase::TriangleDistribution2DBase(const TriangleDistribution2DBase &source) :
+TriDistribution2DBase::TriDistribution2DBase(const TriDistribution2DBase &source) :
     _sfPoint1                 (source._sfPoint1                 ), 
     _sfPoint2                 (source._sfPoint2                 ), 
     _sfPoint3                 (source._sfPoint3                 ), 
+    _sfSurfaceOrEdge          (source._sfSurfaceOrEdge          ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-TriangleDistribution2DBase::~TriangleDistribution2DBase(void)
+TriDistribution2DBase::~TriDistribution2DBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TriangleDistribution2DBase::getBinSize(const BitVector &whichField)
+UInt32 TriDistribution2DBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -230,11 +243,16 @@ UInt32 TriangleDistribution2DBase::getBinSize(const BitVector &whichField)
         returnValue += _sfPoint3.getBinSize();
     }
 
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+    {
+        returnValue += _sfSurfaceOrEdge.getBinSize();
+    }
+
 
     return returnValue;
 }
 
-void TriangleDistribution2DBase::copyToBin(      BinaryDataHandler &pMem,
+void TriDistribution2DBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
@@ -254,10 +272,15 @@ void TriangleDistribution2DBase::copyToBin(      BinaryDataHandler &pMem,
         _sfPoint3.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+    {
+        _sfSurfaceOrEdge.copyToBin(pMem);
+    }
+
 
 }
 
-void TriangleDistribution2DBase::copyFromBin(      BinaryDataHandler &pMem,
+void TriDistribution2DBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
@@ -277,11 +300,16 @@ void TriangleDistribution2DBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfPoint3.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+    {
+        _sfSurfaceOrEdge.copyFromBin(pMem);
+    }
+
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void TriangleDistribution2DBase::executeSyncImpl(      TriangleDistribution2DBase *pOther,
+void TriDistribution2DBase::executeSyncImpl(      TriDistribution2DBase *pOther,
                                         const BitVector         &whichField)
 {
 
@@ -296,10 +324,13 @@ void TriangleDistribution2DBase::executeSyncImpl(      TriangleDistribution2DBas
     if(FieldBits::NoField != (Point3FieldMask & whichField))
         _sfPoint3.syncWith(pOther->_sfPoint3);
 
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+        _sfSurfaceOrEdge.syncWith(pOther->_sfSurfaceOrEdge);
+
 
 }
 #else
-void TriangleDistribution2DBase::executeSyncImpl(      TriangleDistribution2DBase *pOther,
+void TriDistribution2DBase::executeSyncImpl(      TriDistribution2DBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
@@ -315,11 +346,14 @@ void TriangleDistribution2DBase::executeSyncImpl(      TriangleDistribution2DBas
     if(FieldBits::NoField != (Point3FieldMask & whichField))
         _sfPoint3.syncWith(pOther->_sfPoint3);
 
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+        _sfSurfaceOrEdge.syncWith(pOther->_sfSurfaceOrEdge);
+
 
 
 }
 
-void TriangleDistribution2DBase::execBeginEditImpl (const BitVector &whichField, 
+void TriDistribution2DBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -338,11 +372,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TriangleDistribution2DPtr>::_type("TriangleDistribution2DPtr", "Distribution2DPtr");
+DataType FieldDataTraits<TriDistribution2DPtr>::_type("TriDistribution2DPtr", "FunctionPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(TriangleDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TriangleDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(TriDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(TriDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -359,10 +393,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(TriangleDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPP
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTRIANGLEDISTRIBUTION2DBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTRIANGLEDISTRIBUTION2DBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGTRIDISTRIBUTION2DBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGTRIDISTRIBUTION2DBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGTRIANGLEDISTRIBUTION2DFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGTRIDISTRIBUTION2DFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

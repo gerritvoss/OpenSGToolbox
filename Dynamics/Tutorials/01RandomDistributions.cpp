@@ -25,6 +25,7 @@
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
 #include <OpenSG/OSGParticles.h>
+#include <OpenSG/OSGSimpleMaterial.h>
 
 #include <OpenSG/OSGGeoPropertyBase.h>
 
@@ -33,6 +34,12 @@
 
 //Dynamics Distributions
 #include <OpenSG/Dynamics/OSGLineDistribution3D.h>
+#include <OpenSG/Dynamics/OSGBoxDistribution3D.h>
+#include <OpenSG/Dynamics/OSGDiscDistribution3D.h>
+#include <OpenSG/Dynamics/OSGCylinderDistribution3D.h>
+#include <OpenSG/Dynamics/OSGSphereDistribution3D.h>
+#include <OpenSG/Dynamics/OSGGaussianNormalDistribution3D.h>
+#include <OpenSG/Dynamics/OSGTriDistribution3D.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -67,26 +74,100 @@ int main(int argc, char **argv)
 
 
     //Make The Distribution
-    LineDistribution3DPtr TheDistribution = LineDistribution3D::create();
-    beginEditCP(TheDistribution);
-      TheDistribution->setPoint1(Pnt3f(-10.0,0.0,0.0));
-      TheDistribution->setPoint2(Pnt3f(10.0,0.0,0.0));
-    endEditCP(TheDistribution);
+    //Line Distribution
+    LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
+    beginEditCP(TheLineDistribution);
+      TheLineDistribution->setPoint1(Pnt3f(-10.0,0.0,0.0));
+      TheLineDistribution->setPoint2(Pnt3f(10.0,0.0,0.0));
+    endEditCP(TheLineDistribution);
+    
+    //Box Distribution
+    BoxDistribution3DPtr TheBoxDistribution = BoxDistribution3D::create();
+    beginEditCP(TheBoxDistribution);
+      TheBoxDistribution->setMinPoint(Pnt3f(-10.0,-10.0,-10.0));
+      TheBoxDistribution->setMaxPoint(Pnt3f(10.0,10.0,10.0));
+      TheBoxDistribution->setSurfaceOrVolume(BoxDistribution3D::SURFACE);
+    endEditCP(TheBoxDistribution);
 
-    LineDistribution3D::Output1DataType::RawType ReturnValue;
-    ReturnValue = 
-        LineDistribution3D::Output1DataType::dcast(
-        TheDistribution->evaluate(LineDistribution3D::FunctionIOParameterVector()).front().getDataPtr()
-        )->getData();
+    //Disc Distribution
+    DiscDistribution3DPtr TheDiscDistribution = DiscDistribution3D::create();
+    beginEditCP(TheDiscDistribution);
+      TheDiscDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheDiscDistribution->setInnerRadius(10.0);
+      TheDiscDistribution->setOuterRadius(20.0);
+      TheDiscDistribution->setMinTheta(0.0);
+      TheDiscDistribution->setMaxTheta(6.283185307);
+      TheDiscDistribution->setNormal(Vec3f(0.0,0.0,1.0));
+      TheDiscDistribution->setSurfaceOrEdge(DiscDistribution3D::SURFACE);
+    endEditCP(TheDiscDistribution);
 
+    //Cylinder Distribution
+    CylinderDistribution3DPtr TheCylinderDistribution = CylinderDistribution3D::create();
+    beginEditCP(TheCylinderDistribution);
+      TheCylinderDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheCylinderDistribution->setInnerRadius(10.0);
+      TheCylinderDistribution->setOuterRadius(20.0);
+      TheCylinderDistribution->setMinTheta(0.0);
+      TheCylinderDistribution->setMaxTheta(3.14159);
+      TheCylinderDistribution->setHeight(40.0);
+      TheCylinderDistribution->setNormal(Vec3f(0.0,0.0,1.0));
+      TheCylinderDistribution->setSurfaceOrVolume(CylinderDistribution3D::SURFACE);
+    endEditCP(TheCylinderDistribution);
+    
+    //Sphere Distribution
+    SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
+    beginEditCP(TheSphereDistribution);
+      TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
+      TheSphereDistribution->setInnerRadius(10.0);
+      TheSphereDistribution->setOuterRadius(20.0);
+      TheSphereDistribution->setMinTheta(0.0);
+      TheSphereDistribution->setMaxTheta(3.14159);
+      TheSphereDistribution->setMinZ(-1.0);
+      TheSphereDistribution->setMaxZ(1.0);
+      TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::SURFACE);
+    endEditCP(TheSphereDistribution);
+    
+    //Tri Distribution
+    TriDistribution3DPtr TheTriDistribution = TriDistribution3D::create();
+    beginEditCP(TheTriDistribution);
+      TheTriDistribution->setPoint1(Pnt3f(0.0,0.0,0.0));
+      TheTriDistribution->setPoint2(Pnt3f(-50.0,1000.0,0.0));
+      TheTriDistribution->setPoint3(Pnt3f(50.0,1000.0,0.0));
+      TheTriDistribution->setPoint3(Pnt3f(50.0,1000.0,0.0));
+      TheTriDistribution->setSurfaceOrEdge(TriDistribution3D::SURFACE);
+    endEditCP(TheTriDistribution);
+
+    //GaussianNormal Distribution
+    GaussianNormalDistribution3DPtr TheGaussianNormalDistribution = GaussianNormalDistribution3D::create();
+    beginEditCP(TheGaussianNormalDistribution);
+      TheGaussianNormalDistribution->setMean(Pnt3f(0.0,0.0,0.0));
+      TheGaussianNormalDistribution->setStandardDeviationX(100.0);
+      TheGaussianNormalDistribution->setStandardDeviationY(200.0);
+      TheGaussianNormalDistribution->setStandardDeviationZ(100.0);
+    endEditCP(TheGaussianNormalDistribution);
+
+    LineDistribution3D::Output0DataType::RawType ReturnValue;
+
+    FunctionPtr TheDistribution = TheTriDistribution;
 
     //Use the Distribution to generate Positions
     GeoPositionsPtr ParticlePositions = GeoPositions3f::create();
-    for(UInt32 i(0) ; i< 20 ; ++i)
+    UInt32 NumParticlesToGenerate(300);
+    for(UInt32 i(0) ; i< NumParticlesToGenerate ; ++i)
     {
-      ParticlePositions->addValue(Vec3f(TheDistribution->generate()));
+        ReturnValue = 
+            LineDistribution3D::Output0DataType::dcast(
+            TheDistribution->evaluate(Function::FunctionIOParameterVector()).front().getDataPtr()
+            )->getData();
+        ParticlePositions->addValue(ReturnValue);
     }
     
+    //Create the particles Material
+    SimpleMaterialPtr ParticleMaterial = SimpleMaterial::create();
+    beginEditCP(ParticleMaterial);
+        ParticleMaterial->setLit(false);
+    endEditCP(ParticleMaterial);
+
     //Create the ParticleCore and set up its properties
     ParticlesPtr ParticlesCore = Particles::create();
     GeoColorsPtr ParticleColors = GeoColors3f::create();
@@ -114,6 +195,8 @@ int main(int argc, char **argv)
       //ParticlesCore->setMode(Particles::Rectangles);
       //ParticlesCore->setMode(Particles::ShaderQuads);
       //ParticlesCore->setMode(Particles::ShaderStrips);
+
+      ParticlesCore->setMaterial(ParticleMaterial);
     endEditCP(ParticlesCore);
 
 
@@ -212,8 +295,10 @@ int setupGLUT(int *argc, char *argv[])
     glutInit(argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
     
-    int winid = glutCreateWindow("OpenSG UserInterface Button");
+    int winid = glutCreateWindow("OpenSG Dynamics Distributions");
     
+    glutPositionWindow(50,50);
+    glutReshapeWindow(800,800);
     glutReshapeFunc(reshape);
     glutDisplayFunc(display);
     glutMouseFunc(mouse);

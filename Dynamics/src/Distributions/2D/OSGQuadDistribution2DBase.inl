@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -124,6 +124,13 @@ SFPnt2f *QuadDistribution2DBase::getSFPoint4(void)
     return &_sfPoint4;
 }
 
+//! Get the QuadDistribution2D::_sfSurfaceOrEdge field.
+inline
+SFUInt32 *QuadDistribution2DBase::getSFSurfaceOrEdge(void)
+{
+    return &_sfSurfaceOrEdge;
+}
+
 
 //! Get the value of the QuadDistribution2D::_sfPoint1 field.
 inline
@@ -207,6 +214,27 @@ inline
 void QuadDistribution2DBase::setPoint4(const Pnt2f &value)
 {
     _sfPoint4.setValue(value);
+}
+
+//! Get the value of the QuadDistribution2D::_sfSurfaceOrEdge field.
+inline
+UInt32 &QuadDistribution2DBase::getSurfaceOrEdge(void)
+{
+    return _sfSurfaceOrEdge.getValue();
+}
+
+//! Get the value of the QuadDistribution2D::_sfSurfaceOrEdge field.
+inline
+const UInt32 &QuadDistribution2DBase::getSurfaceOrEdge(void) const
+{
+    return _sfSurfaceOrEdge.getValue();
+}
+
+//! Set the value of the QuadDistribution2D::_sfSurfaceOrEdge field.
+inline
+void QuadDistribution2DBase::setSurfaceOrEdge(const UInt32 &value)
+{
+    _sfSurfaceOrEdge.setValue(value);
 }
 
 

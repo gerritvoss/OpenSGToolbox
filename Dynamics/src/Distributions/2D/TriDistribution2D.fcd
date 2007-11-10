@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="GaussianNormaDistribution2D"
-	parent="Distribution2D"
+	name="TriDistribution2D"
+	parent="Function"
 	library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -11,9 +11,9 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
-An GaussianNormaDistribution2D.
+An TriangleDistribution2D.
 	<Field
-		name="Mean"
+		name="Point1"
 		type="Pnt2f"
 		cardinality="single"
 		visibility="external"
@@ -22,30 +22,30 @@ An GaussianNormaDistribution2D.
 	>
 	</Field>
 	<Field
-		name="StandardDeviationX"
-		type="Real32"
+		name="Point2"
+		type="Pnt2f"
 		cardinality="single"
 		visibility="external"
-		defaultValue="1.0"
+		defaultValue="1.0,0.0"
 		access="public"
 	>
 	</Field>
 	<Field
-		name="StandardDeviationY"
-		type="Real32"
+		name="Point3"
+		type="Pnt2f"
 		cardinality="single"
 		visibility="external"
-		defaultValue="1.0"
+		defaultValue="0.0,1.0"
 		access="public"
 	>
 	</Field>
 	<Field
-		name="XYCorrelation"
-		type="Real32"
+		name="SurfaceOrEdge"
+		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="0.0"
 		access="public"
+		defaultValue="TriangleDistribution2D::SURFACE"
 	>
 	</Field>
 </FieldContainer>

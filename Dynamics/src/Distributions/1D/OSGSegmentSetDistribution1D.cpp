@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGSegmentSetDistribution1D.h"
+#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -74,10 +75,48 @@ void SegmentSetDistribution1D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+SegmentSetDistribution1D::FunctionIOTypeVector SegmentSetDistribution1D::getOutputTypes(FunctionIOParameterVector& InputParameters) const
+{
+    FunctionIOTypeVector OutputTypes;
+    OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_SEGMENTSET_DIST_OUTPUTPARAMETERS));
+    return OutputTypes;
+}
+
+SegmentSetDistribution1D::FunctionIOTypeVector SegmentSetDistribution1D::getInputTypes(FunctionIOParameterVector& InputParameters) const
+{
+    FunctionIOTypeVector InputTypes;
+    return InputTypes;
+}
+
+SegmentSetDistribution1D::FunctionIOParameterVector SegmentSetDistribution1D::evaluate(FunctionIOParameterVector& InputParameters)
+{
+    //The Input Paremeters must be the correct number
+    if(InputParameters.size() != OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_SEGMENTSET_DIST_INPUTPARAMETERS))
+    {
+        throw FunctionInputException();
+    }
+    FunctionIOParameterVector ResultVector;
+    ResultVector.reserve(OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_SEGMENTSET_DIST_OUTPUTPARAMETERS));
+    ResultVector.push_back(OSG_FUNC_INST_FUNCTIONIOPARAMETER(0,OSG_SEGMENTSET_DIST_OUTPUTPARAMETERS, generate()));
+
+    return ResultVector;
+}
+
 Real32 SegmentSetDistribution1D::generate(void)
 {
-   //TODO: Implement
-   return 0.0f;
+    Real32 PickSegment(RandomPoolManager::getRandomReal32(0.0,1.0));
+    Real32 CumLength(0.0);
+
+    for(UInt32 i(0) ; i< getSegment().size() ; ++i)
+    {
+        CumLength += osgabs(getSegment()[i][1] - getSegment()[i][0]);
+        if(PickSegment < CumLength/getTotalLength())
+        {
+            return RandomPoolManager::getRandomReal32(getSegment()[i][0],getSegment()[i][1]);
+        }
+    }
+
+    return 0.0f;
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -104,6 +143,18 @@ SegmentSetDistribution1D::~SegmentSetDistribution1D(void)
 void SegmentSetDistribution1D::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & SegmentFieldMask)
+    {
+        Real32 TotalLength(0.0);
+        for(UInt32 i(0) ; i< getSegment().size() ; ++i)
+        {
+            TotalLength += osgabs(getSegment()[i][1] - getSegment()[i][0]);
+        }
+        beginEditCP(SegmentSetDistribution1DPtr(this), TotalLengthFieldMask);
+            setTotalLength(TotalLength);
+        endEditCP(SegmentSetDistribution1DPtr(this), TotalLengthFieldMask);
+    }
 }
 
 void SegmentSetDistribution1D::dump(      UInt32    , 

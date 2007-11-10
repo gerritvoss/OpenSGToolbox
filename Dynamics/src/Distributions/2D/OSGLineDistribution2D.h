@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -49,6 +49,13 @@
 
 OSG_BEGIN_NAMESPACE
 
+#define OSG_LINE2D_DIST_OUTPUTPARAMETERS (1, \
+    (\
+      ("RandomPoint", Pnt2f) \
+    ))
+
+#define OSG_LINE2D_DIST_INPUTPARAMETERS (0, ())
+
 class OSG_DYNAMICSLIB_DLLMAPPING LineDistribution2D : public LineDistribution2DBase
 {
   private:
@@ -74,7 +81,9 @@ class OSG_DYNAMICSLIB_DLLMAPPING LineDistribution2D : public LineDistribution2DB
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual Pnt2f generate(void);
+    virtual FunctionIOTypeVector getOutputTypes(FunctionIOParameterVector& InputParameters) const;
+    virtual FunctionIOTypeVector getInputTypes(FunctionIOParameterVector& InputParameters) const;
+    virtual FunctionIOParameterVector evaluate(FunctionIOParameterVector& InputParameters);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -95,6 +104,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING LineDistribution2D : public LineDistribution2DB
     virtual ~LineDistribution2D(void); 
 
     /*! \}                                                                 */
+    virtual Pnt2f generate(void);
     
     /*==========================  PRIVATE  ================================*/
   private:

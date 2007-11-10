@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  SegmentSetDistribution1DBase::SegmentFieldMask = 
     (TypeTraits<BitVector>::One << SegmentSetDistribution1DBase::SegmentFieldId);
 
+const OSG::BitVector  SegmentSetDistribution1DBase::TotalLengthFieldMask = 
+    (TypeTraits<BitVector>::One << SegmentSetDistribution1DBase::TotalLengthFieldId);
+
 const OSG::BitVector SegmentSetDistribution1DBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +78,9 @@ const OSG::BitVector SegmentSetDistribution1DBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var Vec2f           SegmentSetDistribution1DBase::_mfSegment
+    
+*/
+/*! \var Real32          SegmentSetDistribution1DBase::_sfTotalLength
     
 */
 
@@ -86,13 +92,18 @@ FieldDescription *SegmentSetDistribution1DBase::_desc[] =
                      "Segment", 
                      SegmentFieldId, SegmentFieldMask,
                      false,
-                     (FieldAccessMethod) &SegmentSetDistribution1DBase::getMFSegment)
+                     (FieldAccessMethod) &SegmentSetDistribution1DBase::getMFSegment),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "TotalLength", 
+                     TotalLengthFieldId, TotalLengthFieldMask,
+                     false,
+                     (FieldAccessMethod) &SegmentSetDistribution1DBase::getSFTotalLength)
 };
 
 
 FieldContainerType SegmentSetDistribution1DBase::_type(
     "SegmentSetDistribution1D",
-    "Distribution1D",
+    "Function",
     NULL,
     (PrototypeCreateF) &SegmentSetDistribution1DBase::createEmpty,
     SegmentSetDistribution1D::initMethod,
@@ -164,6 +175,7 @@ void SegmentSetDistribution1DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 SegmentSetDistribution1DBase::SegmentSetDistribution1DBase(void) :
     _mfSegment                (), 
+    _sfTotalLength            (), 
     Inherited() 
 {
 }
@@ -174,6 +186,7 @@ SegmentSetDistribution1DBase::SegmentSetDistribution1DBase(void) :
 
 SegmentSetDistribution1DBase::SegmentSetDistribution1DBase(const SegmentSetDistribution1DBase &source) :
     _mfSegment                (source._mfSegment                ), 
+    _sfTotalLength            (source._sfTotalLength            ), 
     Inherited                 (source)
 {
 }
@@ -195,6 +208,11 @@ UInt32 SegmentSetDistribution1DBase::getBinSize(const BitVector &whichField)
         returnValue += _mfSegment.getBinSize();
     }
 
+    if(FieldBits::NoField != (TotalLengthFieldMask & whichField))
+    {
+        returnValue += _sfTotalLength.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -207,6 +225,11 @@ void SegmentSetDistribution1DBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (SegmentFieldMask & whichField))
     {
         _mfSegment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TotalLengthFieldMask & whichField))
+    {
+        _sfTotalLength.copyToBin(pMem);
     }
 
 
@@ -222,6 +245,11 @@ void SegmentSetDistribution1DBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfSegment.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (TotalLengthFieldMask & whichField))
+    {
+        _sfTotalLength.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -235,6 +263,9 @@ void SegmentSetDistribution1DBase::executeSyncImpl(      SegmentSetDistribution1
     if(FieldBits::NoField != (SegmentFieldMask & whichField))
         _mfSegment.syncWith(pOther->_mfSegment);
 
+    if(FieldBits::NoField != (TotalLengthFieldMask & whichField))
+        _sfTotalLength.syncWith(pOther->_sfTotalLength);
+
 
 }
 #else
@@ -244,6 +275,9 @@ void SegmentSetDistribution1DBase::executeSyncImpl(      SegmentSetDistribution1
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (TotalLengthFieldMask & whichField))
+        _sfTotalLength.syncWith(pOther->_sfTotalLength);
 
 
     if(FieldBits::NoField != (SegmentFieldMask & whichField))
@@ -274,7 +308,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<SegmentSetDistribution1DPtr>::_type("SegmentSetDistribution1DPtr", "Distribution1DPtr");
+DataType FieldDataTraits<SegmentSetDistribution1DPtr>::_type("SegmentSetDistribution1DPtr", "FunctionPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(SegmentSetDistribution1DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGDistribution1D.h" // Parent
+#include "Function/OSGFunction.h" // Parent
 
 #include <OpenSG/OSGVec2fFields.h> // Segment type
 
@@ -78,11 +78,11 @@ class BinaryDataHandler;
 
 //! \brief SegmentDistribution1D Base Class.
 
-class OSG_DYNAMICSLIB_DLLMAPPING SegmentDistribution1DBase : public Distribution1D
+class OSG_DYNAMICSLIB_DLLMAPPING SegmentDistribution1DBase : public Function
 {
   private:
 
-    typedef Distribution1D    Inherited;
+    typedef Function    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:

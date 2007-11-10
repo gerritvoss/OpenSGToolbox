@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -65,12 +65,13 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGDistribution2D.h" // Parent
+#include "Function/OSGFunction.h" // Parent
 
 #include <OpenSG/OSGPnt2fFields.h> // Point1 type
 #include <OpenSG/OSGPnt2fFields.h> // Point2 type
 #include <OpenSG/OSGPnt2fFields.h> // Point3 type
 #include <OpenSG/OSGPnt2fFields.h> // Point4 type
+#include <OpenSG/OSGUInt32Fields.h> // SurfaceOrEdge type
 
 #include "OSGQuadDistribution2DFields.h"
 
@@ -81,11 +82,11 @@ class BinaryDataHandler;
 
 //! \brief QuadDistribution2D Base Class.
 
-class OSG_DYNAMICSLIB_DLLMAPPING QuadDistribution2DBase : public Distribution2D
+class OSG_DYNAMICSLIB_DLLMAPPING QuadDistribution2DBase : public Function
 {
   private:
 
-    typedef Distribution2D    Inherited;
+    typedef Function    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -94,17 +95,19 @@ class OSG_DYNAMICSLIB_DLLMAPPING QuadDistribution2DBase : public Distribution2D
 
     enum
     {
-        Point1FieldId = Inherited::NextFieldId,
-        Point2FieldId = Point1FieldId + 1,
-        Point3FieldId = Point2FieldId + 1,
-        Point4FieldId = Point3FieldId + 1,
-        NextFieldId   = Point4FieldId + 1
+        Point1FieldId        = Inherited::NextFieldId,
+        Point2FieldId        = Point1FieldId        + 1,
+        Point3FieldId        = Point2FieldId        + 1,
+        Point4FieldId        = Point3FieldId        + 1,
+        SurfaceOrEdgeFieldId = Point4FieldId        + 1,
+        NextFieldId          = SurfaceOrEdgeFieldId + 1
     };
 
     static const OSG::BitVector Point1FieldMask;
     static const OSG::BitVector Point2FieldMask;
     static const OSG::BitVector Point3FieldMask;
     static const OSG::BitVector Point4FieldMask;
+    static const OSG::BitVector SurfaceOrEdgeFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -135,6 +138,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING QuadDistribution2DBase : public Distribution2D
            SFPnt2f             *getSFPoint2         (void);
            SFPnt2f             *getSFPoint3         (void);
            SFPnt2f             *getSFPoint4         (void);
+           SFUInt32            *getSFSurfaceOrEdge  (void);
 
            Pnt2f               &getPoint1         (void);
      const Pnt2f               &getPoint1         (void) const;
@@ -144,6 +148,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING QuadDistribution2DBase : public Distribution2D
      const Pnt2f               &getPoint3         (void) const;
            Pnt2f               &getPoint4         (void);
      const Pnt2f               &getPoint4         (void) const;
+           UInt32              &getSurfaceOrEdge  (void);
+     const UInt32              &getSurfaceOrEdge  (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -154,6 +160,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING QuadDistribution2DBase : public Distribution2D
      void setPoint2         ( const Pnt2f &value );
      void setPoint3         ( const Pnt2f &value );
      void setPoint4         ( const Pnt2f &value );
+     void setSurfaceOrEdge  ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -200,6 +207,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING QuadDistribution2DBase : public Distribution2D
     SFPnt2f             _sfPoint2;
     SFPnt2f             _sfPoint3;
     SFPnt2f             _sfPoint4;
+    SFUInt32            _sfSurfaceOrEdge;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGSegmentDistribution1D.h"
+#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -74,10 +75,36 @@ void SegmentDistribution1D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+SegmentDistribution1D::FunctionIOTypeVector SegmentDistribution1D::getOutputTypes(FunctionIOParameterVector& InputParameters) const
+{
+    FunctionIOTypeVector OutputTypes;
+    OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_SEGMENT_DIST_OUTPUTPARAMETERS));
+    return OutputTypes;
+}
+
+SegmentDistribution1D::FunctionIOTypeVector SegmentDistribution1D::getInputTypes(FunctionIOParameterVector& InputParameters) const
+{
+    FunctionIOTypeVector InputTypes;
+    return InputTypes;
+}
+
+SegmentDistribution1D::FunctionIOParameterVector SegmentDistribution1D::evaluate(FunctionIOParameterVector& InputParameters)
+{
+    //The Input Paremeters must be the correct number
+    if(InputParameters.size() != OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_SEGMENT_DIST_INPUTPARAMETERS))
+    {
+        throw FunctionInputException();
+    }
+    FunctionIOParameterVector ResultVector;
+    ResultVector.reserve(OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_SEGMENT_DIST_OUTPUTPARAMETERS));
+    ResultVector.push_back(OSG_FUNC_INST_FUNCTIONIOPARAMETER(0,OSG_SEGMENT_DIST_OUTPUTPARAMETERS, generate()));
+
+    return ResultVector;
+}
+
 Real32 SegmentDistribution1D::generate(void)
 {
-   //TODO: Implement
-   return 0.0f;
+   return RandomPoolManager::getRandomReal32(getSegment()[0],getSegment()[1]);
 }
 
 /*-------------------------------------------------------------------------*\

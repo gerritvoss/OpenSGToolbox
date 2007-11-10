@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="LineDistribution2D"
-	parent="Distribution2D"
+	parent="Function"
 	library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"

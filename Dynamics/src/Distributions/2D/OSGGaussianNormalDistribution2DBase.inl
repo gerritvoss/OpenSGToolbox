@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class GaussianNormaDistribution2D!
+ **     class GaussianNormalDistribution2D!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &GaussianNormaDistribution2DBase::getClassType(void)
+OSG::FieldContainerType &GaussianNormalDistribution2DBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 GaussianNormaDistribution2DBase::getClassTypeId(void) 
+OSG::UInt32 GaussianNormalDistribution2DBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-GaussianNormaDistribution2DPtr GaussianNormaDistribution2DBase::create(void) 
+GaussianNormalDistribution2DPtr GaussianNormalDistribution2DBase::create(void) 
 {
-    GaussianNormaDistribution2DPtr fc; 
+    GaussianNormalDistribution2DPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = GaussianNormaDistribution2DPtr::dcast(
+        fc = GaussianNormalDistribution2DPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ GaussianNormaDistribution2DPtr GaussianNormaDistribution2DBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-GaussianNormaDistribution2DPtr GaussianNormaDistribution2DBase::createEmpty(void) 
+GaussianNormalDistribution2DPtr GaussianNormalDistribution2DBase::createEmpty(void) 
 { 
-    GaussianNormaDistribution2DPtr returnValue; 
+    GaussianNormalDistribution2DPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,121 +96,93 @@ GaussianNormaDistribution2DPtr GaussianNormaDistribution2DBase::createEmpty(void
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the GaussianNormaDistribution2D::_sfMean field.
+//! Get the GaussianNormalDistribution2D::_sfMean field.
 inline
-SFPnt2f *GaussianNormaDistribution2DBase::getSFMean(void)
+SFPnt2f *GaussianNormalDistribution2DBase::getSFMean(void)
 {
     return &_sfMean;
 }
 
-//! Get the GaussianNormaDistribution2D::_sfStandardDeviationX field.
+//! Get the GaussianNormalDistribution2D::_sfStandardDeviationX field.
 inline
-SFReal32 *GaussianNormaDistribution2DBase::getSFStandardDeviationX(void)
+SFReal32 *GaussianNormalDistribution2DBase::getSFStandardDeviationX(void)
 {
     return &_sfStandardDeviationX;
 }
 
-//! Get the GaussianNormaDistribution2D::_sfStandardDeviationY field.
+//! Get the GaussianNormalDistribution2D::_sfStandardDeviationY field.
 inline
-SFReal32 *GaussianNormaDistribution2DBase::getSFStandardDeviationY(void)
+SFReal32 *GaussianNormalDistribution2DBase::getSFStandardDeviationY(void)
 {
     return &_sfStandardDeviationY;
 }
 
-//! Get the GaussianNormaDistribution2D::_sfXYCorrelation field.
-inline
-SFReal32 *GaussianNormaDistribution2DBase::getSFXYCorrelation(void)
-{
-    return &_sfXYCorrelation;
-}
 
-
-//! Get the value of the GaussianNormaDistribution2D::_sfMean field.
+//! Get the value of the GaussianNormalDistribution2D::_sfMean field.
 inline
-Pnt2f &GaussianNormaDistribution2DBase::getMean(void)
+Pnt2f &GaussianNormalDistribution2DBase::getMean(void)
 {
     return _sfMean.getValue();
 }
 
-//! Get the value of the GaussianNormaDistribution2D::_sfMean field.
+//! Get the value of the GaussianNormalDistribution2D::_sfMean field.
 inline
-const Pnt2f &GaussianNormaDistribution2DBase::getMean(void) const
+const Pnt2f &GaussianNormalDistribution2DBase::getMean(void) const
 {
     return _sfMean.getValue();
 }
 
-//! Set the value of the GaussianNormaDistribution2D::_sfMean field.
+//! Set the value of the GaussianNormalDistribution2D::_sfMean field.
 inline
-void GaussianNormaDistribution2DBase::setMean(const Pnt2f &value)
+void GaussianNormalDistribution2DBase::setMean(const Pnt2f &value)
 {
     _sfMean.setValue(value);
 }
 
-//! Get the value of the GaussianNormaDistribution2D::_sfStandardDeviationX field.
+//! Get the value of the GaussianNormalDistribution2D::_sfStandardDeviationX field.
 inline
-Real32 &GaussianNormaDistribution2DBase::getStandardDeviationX(void)
+Real32 &GaussianNormalDistribution2DBase::getStandardDeviationX(void)
 {
     return _sfStandardDeviationX.getValue();
 }
 
-//! Get the value of the GaussianNormaDistribution2D::_sfStandardDeviationX field.
+//! Get the value of the GaussianNormalDistribution2D::_sfStandardDeviationX field.
 inline
-const Real32 &GaussianNormaDistribution2DBase::getStandardDeviationX(void) const
+const Real32 &GaussianNormalDistribution2DBase::getStandardDeviationX(void) const
 {
     return _sfStandardDeviationX.getValue();
 }
 
-//! Set the value of the GaussianNormaDistribution2D::_sfStandardDeviationX field.
+//! Set the value of the GaussianNormalDistribution2D::_sfStandardDeviationX field.
 inline
-void GaussianNormaDistribution2DBase::setStandardDeviationX(const Real32 &value)
+void GaussianNormalDistribution2DBase::setStandardDeviationX(const Real32 &value)
 {
     _sfStandardDeviationX.setValue(value);
 }
 
-//! Get the value of the GaussianNormaDistribution2D::_sfStandardDeviationY field.
+//! Get the value of the GaussianNormalDistribution2D::_sfStandardDeviationY field.
 inline
-Real32 &GaussianNormaDistribution2DBase::getStandardDeviationY(void)
+Real32 &GaussianNormalDistribution2DBase::getStandardDeviationY(void)
 {
     return _sfStandardDeviationY.getValue();
 }
 
-//! Get the value of the GaussianNormaDistribution2D::_sfStandardDeviationY field.
+//! Get the value of the GaussianNormalDistribution2D::_sfStandardDeviationY field.
 inline
-const Real32 &GaussianNormaDistribution2DBase::getStandardDeviationY(void) const
+const Real32 &GaussianNormalDistribution2DBase::getStandardDeviationY(void) const
 {
     return _sfStandardDeviationY.getValue();
 }
 
-//! Set the value of the GaussianNormaDistribution2D::_sfStandardDeviationY field.
+//! Set the value of the GaussianNormalDistribution2D::_sfStandardDeviationY field.
 inline
-void GaussianNormaDistribution2DBase::setStandardDeviationY(const Real32 &value)
+void GaussianNormalDistribution2DBase::setStandardDeviationY(const Real32 &value)
 {
     _sfStandardDeviationY.setValue(value);
-}
-
-//! Get the value of the GaussianNormaDistribution2D::_sfXYCorrelation field.
-inline
-Real32 &GaussianNormaDistribution2DBase::getXYCorrelation(void)
-{
-    return _sfXYCorrelation.getValue();
-}
-
-//! Get the value of the GaussianNormaDistribution2D::_sfXYCorrelation field.
-inline
-const Real32 &GaussianNormaDistribution2DBase::getXYCorrelation(void) const
-{
-    return _sfXYCorrelation.getValue();
-}
-
-//! Set the value of the GaussianNormaDistribution2D::_sfXYCorrelation field.
-inline
-void GaussianNormaDistribution2DBase::setXYCorrelation(const Real32 &value)
-{
-    _sfXYCorrelation.setValue(value);
 }
 
 
 OSG_END_NAMESPACE
 
-#define OSGGAUSSIANNORMADISTRIBUTION2DBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGGAUSSIANNORMALDISTRIBUTION2DBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

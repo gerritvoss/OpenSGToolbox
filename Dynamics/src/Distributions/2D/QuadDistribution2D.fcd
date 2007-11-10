@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="QuadDistribution2D"
-	parent="Distribution2D"
+	parent="Function"
 	library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -46,6 +46,15 @@ An QuadDistribution2D.
 		visibility="external"
 		defaultValue="0.0,1.0"
 		access="public"
+	>
+	</Field>
+	<Field
+		name="SurfaceOrEdge"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="QuadDistribution2D::SURFACE"
 	>
 	</Field>
 </FieldContainer>

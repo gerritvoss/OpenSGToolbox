@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class TriangleDistribution2D
+ **     class TriDistribution2D
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGTRIANGLEDISTRIBUTION2DBASE_H_
-#define _OSGTRIANGLEDISTRIBUTION2DBASE_H_
+#ifndef _OSGTRIDISTRIBUTION2DBASE_H_
+#define _OSGTRIDISTRIBUTION2DBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,43 +65,46 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGDistribution2D.h" // Parent
+#include "Function/OSGFunction.h" // Parent
 
 #include <OpenSG/OSGPnt2fFields.h> // Point1 type
 #include <OpenSG/OSGPnt2fFields.h> // Point2 type
 #include <OpenSG/OSGPnt2fFields.h> // Point3 type
+#include <OpenSG/OSGUInt32Fields.h> // SurfaceOrEdge type
 
-#include "OSGTriangleDistribution2DFields.h"
+#include "OSGTriDistribution2DFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class TriangleDistribution2D;
+class TriDistribution2D;
 class BinaryDataHandler;
 
-//! \brief TriangleDistribution2D Base Class.
+//! \brief TriDistribution2D Base Class.
 
-class OSG_DYNAMICSLIB_DLLMAPPING TriangleDistribution2DBase : public Distribution2D
+class OSG_DYNAMICSLIB_DLLMAPPING TriDistribution2DBase : public Function
 {
   private:
 
-    typedef Distribution2D    Inherited;
+    typedef Function    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef TriangleDistribution2DPtr  Ptr;
+    typedef TriDistribution2DPtr  Ptr;
 
     enum
     {
-        Point1FieldId = Inherited::NextFieldId,
-        Point2FieldId = Point1FieldId + 1,
-        Point3FieldId = Point2FieldId + 1,
-        NextFieldId   = Point3FieldId + 1
+        Point1FieldId        = Inherited::NextFieldId,
+        Point2FieldId        = Point1FieldId        + 1,
+        Point3FieldId        = Point2FieldId        + 1,
+        SurfaceOrEdgeFieldId = Point3FieldId        + 1,
+        NextFieldId          = SurfaceOrEdgeFieldId + 1
     };
 
     static const OSG::BitVector Point1FieldMask;
     static const OSG::BitVector Point2FieldMask;
     static const OSG::BitVector Point3FieldMask;
+    static const OSG::BitVector SurfaceOrEdgeFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -131,6 +134,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING TriangleDistribution2DBase : public Distributio
            SFPnt2f             *getSFPoint1         (void);
            SFPnt2f             *getSFPoint2         (void);
            SFPnt2f             *getSFPoint3         (void);
+           SFUInt32            *getSFSurfaceOrEdge  (void);
 
            Pnt2f               &getPoint1         (void);
      const Pnt2f               &getPoint1         (void) const;
@@ -138,6 +142,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING TriangleDistribution2DBase : public Distributio
      const Pnt2f               &getPoint2         (void) const;
            Pnt2f               &getPoint3         (void);
      const Pnt2f               &getPoint3         (void) const;
+           UInt32              &getSurfaceOrEdge  (void);
+     const UInt32              &getSurfaceOrEdge  (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -147,6 +153,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING TriangleDistribution2DBase : public Distributio
      void setPoint1         ( const Pnt2f &value );
      void setPoint2         ( const Pnt2f &value );
      void setPoint3         ( const Pnt2f &value );
+     void setSurfaceOrEdge  ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -170,8 +177,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING TriangleDistribution2DBase : public Distributio
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  TriangleDistribution2DPtr      create          (void); 
-    static  TriangleDistribution2DPtr      createEmpty     (void); 
+    static  TriDistribution2DPtr      create          (void); 
+    static  TriDistribution2DPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -192,21 +199,22 @@ class OSG_DYNAMICSLIB_DLLMAPPING TriangleDistribution2DBase : public Distributio
     SFPnt2f             _sfPoint1;
     SFPnt2f             _sfPoint2;
     SFPnt2f             _sfPoint3;
+    SFUInt32            _sfSurfaceOrEdge;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    TriangleDistribution2DBase(void);
-    TriangleDistribution2DBase(const TriangleDistribution2DBase &source);
+    TriDistribution2DBase(void);
+    TriDistribution2DBase(const TriDistribution2DBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TriangleDistribution2DBase(void); 
+    virtual ~TriDistribution2DBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -214,13 +222,13 @@ class OSG_DYNAMICSLIB_DLLMAPPING TriangleDistribution2DBase : public Distributio
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      TriangleDistribution2DBase *pOther,
+    void executeSyncImpl(      TriDistribution2DBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      TriangleDistribution2DBase *pOther,
+    void executeSyncImpl(      TriDistribution2DBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -250,7 +258,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING TriangleDistribution2DBase : public Distributio
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const TriangleDistribution2DBase &source);
+    void operator =(const TriDistribution2DBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -258,17 +266,17 @@ class OSG_DYNAMICSLIB_DLLMAPPING TriangleDistribution2DBase : public Distributio
 //---------------------------------------------------------------------------
 
 
-typedef TriangleDistribution2DBase *TriangleDistribution2DBaseP;
+typedef TriDistribution2DBase *TriDistribution2DBaseP;
 
-typedef osgIF<TriangleDistribution2DBase::isNodeCore,
-              CoredNodePtr<TriangleDistribution2D>,
+typedef osgIF<TriDistribution2DBase::isNodeCore,
+              CoredNodePtr<TriDistribution2D>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet TriangleDistribution2DNodePtr;
+              >::_IRet TriDistribution2DNodePtr;
 
-typedef RefPtr<TriangleDistribution2DPtr> TriangleDistribution2DRefPtr;
+typedef RefPtr<TriDistribution2DPtr> TriDistribution2DRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGTRIANGLEDISTRIBUTION2DBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGTRIDISTRIBUTION2DBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGTRIANGLEDISTRIBUTION2DBASE_H_ */
+#endif /* _OSGTRIDISTRIBUTION2DBASE_H_ */

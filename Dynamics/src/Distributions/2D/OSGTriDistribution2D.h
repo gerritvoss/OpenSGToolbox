@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,26 +36,34 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGTRIANGLEDISTRIBUTION2D_H_
-#define _OSGTRIANGLEDISTRIBUTION2D_H_
+#ifndef _OSGTRIDISTRIBUTION2D_H_
+#define _OSGTRIDISTRIBUTION2D_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include "OSGDynamicsDef.h"
 
-#include "OSGTriangleDistribution2DBase.h"
+#include "OSGTriDistribution2DBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_DYNAMICSLIB_DLLMAPPING TriangleDistribution2D : public TriangleDistribution2DBase
+#define OSG_TRI2D_DIST_OUTPUTPARAMETERS (1, \
+    (\
+      ("RandomPoint", Pnt2f) \
+    ))
+
+#define OSG_TRI2D_DIST_INPUTPARAMETERS (0, ())
+
+class OSG_DYNAMICSLIB_DLLMAPPING TriDistribution2D : public TriDistribution2DBase
 {
   private:
 
-    typedef TriangleDistribution2DBase Inherited;
+    typedef TriDistribution2DBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
+    enum SurfaceOrEdge {SURFACE=0, EDGE=1};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -73,48 +81,51 @@ class OSG_DYNAMICSLIB_DLLMAPPING TriangleDistribution2D : public TriangleDistrib
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual Pnt2f generate(void);
+    virtual FunctionIOTypeVector getOutputTypes(FunctionIOParameterVector& InputParameters) const;
+    virtual FunctionIOTypeVector getInputTypes(FunctionIOParameterVector& InputParameters) const;
+    virtual FunctionIOParameterVector evaluate(FunctionIOParameterVector& InputParameters);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in TriangleDistribution2DBase.
+    // Variables should all be in TriDistribution2DBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    TriangleDistribution2D(void);
-    TriangleDistribution2D(const TriangleDistribution2D &source);
+    TriDistribution2D(void);
+    TriDistribution2D(const TriDistribution2D &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TriangleDistribution2D(void); 
+    virtual ~TriDistribution2D(void); 
 
     /*! \}                                                                 */
+    virtual Pnt2f generate(void);
     
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class TriangleDistribution2DBase;
+    friend class TriDistribution2DBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const TriangleDistribution2D &source);
+    void operator =(const TriDistribution2D &source);
 };
 
-typedef TriangleDistribution2D *TriangleDistribution2DP;
+typedef TriDistribution2D *TriDistribution2DP;
 
 OSG_END_NAMESPACE
 
-#include "OSGTriangleDistribution2DBase.inl"
-#include "OSGTriangleDistribution2D.inl"
+#include "OSGTriDistribution2DBase.inl"
+#include "OSGTriDistribution2D.inl"
 
-#define OSGTRIANGLEDISTRIBUTION2D_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGTRIDISTRIBUTION2D_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGTRIANGLEDISTRIBUTION2D_H_ */
+#endif /* _OSGTRIDISTRIBUTION2D_H_ */

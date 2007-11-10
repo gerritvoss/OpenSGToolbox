@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -65,13 +65,14 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGDistribution2D.h" // Parent
+#include "Function/OSGFunction.h" // Parent
 
 #include <OpenSG/OSGPnt2fFields.h> // Center type
 #include <OpenSG/OSGReal32Fields.h> // MinRadius type
 #include <OpenSG/OSGReal32Fields.h> // MaxRadius type
 #include <OpenSG/OSGReal32Fields.h> // MinTheta type
 #include <OpenSG/OSGReal32Fields.h> // MaxTheta type
+#include <OpenSG/OSGUInt32Fields.h> // SurfaceOrEdge type
 
 #include "OSGDiscDistribution2DFields.h"
 
@@ -82,11 +83,11 @@ class BinaryDataHandler;
 
 //! \brief DiscDistribution2D Base Class.
 
-class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution2DBase : public Distribution2D
+class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution2DBase : public Function
 {
   private:
 
-    typedef Distribution2D    Inherited;
+    typedef Function    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -95,12 +96,13 @@ class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution2DBase : public Distribution2D
 
     enum
     {
-        CenterFieldId    = Inherited::NextFieldId,
-        MinRadiusFieldId = CenterFieldId    + 1,
-        MaxRadiusFieldId = MinRadiusFieldId + 1,
-        MinThetaFieldId  = MaxRadiusFieldId + 1,
-        MaxThetaFieldId  = MinThetaFieldId  + 1,
-        NextFieldId      = MaxThetaFieldId  + 1
+        CenterFieldId        = Inherited::NextFieldId,
+        MinRadiusFieldId     = CenterFieldId        + 1,
+        MaxRadiusFieldId     = MinRadiusFieldId     + 1,
+        MinThetaFieldId      = MaxRadiusFieldId     + 1,
+        MaxThetaFieldId      = MinThetaFieldId      + 1,
+        SurfaceOrEdgeFieldId = MaxThetaFieldId      + 1,
+        NextFieldId          = SurfaceOrEdgeFieldId + 1
     };
 
     static const OSG::BitVector CenterFieldMask;
@@ -108,6 +110,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution2DBase : public Distribution2D
     static const OSG::BitVector MaxRadiusFieldMask;
     static const OSG::BitVector MinThetaFieldMask;
     static const OSG::BitVector MaxThetaFieldMask;
+    static const OSG::BitVector SurfaceOrEdgeFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -139,6 +142,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution2DBase : public Distribution2D
            SFReal32            *getSFMaxRadius      (void);
            SFReal32            *getSFMinTheta       (void);
            SFReal32            *getSFMaxTheta       (void);
+           SFUInt32            *getSFSurfaceOrEdge  (void);
 
            Pnt2f               &getCenter         (void);
      const Pnt2f               &getCenter         (void) const;
@@ -150,6 +154,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution2DBase : public Distribution2D
      const Real32              &getMinTheta       (void) const;
            Real32              &getMaxTheta       (void);
      const Real32              &getMaxTheta       (void) const;
+           UInt32              &getSurfaceOrEdge  (void);
+     const UInt32              &getSurfaceOrEdge  (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -161,6 +167,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution2DBase : public Distribution2D
      void setMaxRadius      ( const Real32 &value );
      void setMinTheta       ( const Real32 &value );
      void setMaxTheta       ( const Real32 &value );
+     void setSurfaceOrEdge  ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -208,6 +215,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING DiscDistribution2DBase : public Distribution2D
     SFReal32            _sfMaxRadius;
     SFReal32            _sfMinTheta;
     SFReal32            _sfMaxTheta;
+    SFUInt32            _sfSurfaceOrEdge;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

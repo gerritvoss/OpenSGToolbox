@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -92,7 +92,7 @@ FieldDescription *SegmentDistribution1DBase::_desc[] =
 
 FieldContainerType SegmentDistribution1DBase::_type(
     "SegmentDistribution1D",
-    "Distribution1D",
+    "Function",
     NULL,
     (PrototypeCreateF) &SegmentDistribution1DBase::createEmpty,
     SegmentDistribution1D::initMethod,
@@ -270,7 +270,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<SegmentDistribution1DPtr>::_type("SegmentDistribution1DPtr", "Distribution1DPtr");
+DataType FieldDataTraits<SegmentDistribution1DPtr>::_type("SegmentDistribution1DPtr", "FunctionPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(SegmentDistribution1DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);

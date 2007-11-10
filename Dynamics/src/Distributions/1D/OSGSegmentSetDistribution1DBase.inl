@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -103,6 +103,34 @@ MFVec2f *SegmentSetDistribution1DBase::getMFSegment(void)
     return &_mfSegment;
 }
 
+//! Get the SegmentSetDistribution1D::_sfTotalLength field.
+inline
+SFReal32 *SegmentSetDistribution1DBase::getSFTotalLength(void)
+{
+    return &_sfTotalLength;
+}
+
+
+//! Get the value of the SegmentSetDistribution1D::_sfTotalLength field.
+inline
+Real32 &SegmentSetDistribution1DBase::getTotalLength(void)
+{
+    return _sfTotalLength.getValue();
+}
+
+//! Get the value of the SegmentSetDistribution1D::_sfTotalLength field.
+inline
+const Real32 &SegmentSetDistribution1DBase::getTotalLength(void) const
+{
+    return _sfTotalLength.getValue();
+}
+
+//! Set the value of the SegmentSetDistribution1D::_sfTotalLength field.
+inline
+void SegmentSetDistribution1DBase::setTotalLength(const Real32 &value)
+{
+    _sfTotalLength.setValue(value);
+}
 
 
 //! Get the value of the \a index element the SegmentSetDistribution1D::_mfSegment field.

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -79,6 +79,9 @@ const OSG::BitVector  DiscDistribution2DBase::MinThetaFieldMask =
 const OSG::BitVector  DiscDistribution2DBase::MaxThetaFieldMask = 
     (TypeTraits<BitVector>::One << DiscDistribution2DBase::MaxThetaFieldId);
 
+const OSG::BitVector  DiscDistribution2DBase::SurfaceOrEdgeFieldMask = 
+    (TypeTraits<BitVector>::One << DiscDistribution2DBase::SurfaceOrEdgeFieldId);
+
 const OSG::BitVector DiscDistribution2DBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -99,6 +102,9 @@ const OSG::BitVector DiscDistribution2DBase::MTInfluenceMask =
     
 */
 /*! \var Real32          DiscDistribution2DBase::_sfMaxTheta
+    
+*/
+/*! \var UInt32          DiscDistribution2DBase::_sfSurfaceOrEdge
     
 */
 
@@ -130,13 +136,18 @@ FieldDescription *DiscDistribution2DBase::_desc[] =
                      "MaxTheta", 
                      MaxThetaFieldId, MaxThetaFieldMask,
                      false,
-                     (FieldAccessMethod) &DiscDistribution2DBase::getSFMaxTheta)
+                     (FieldAccessMethod) &DiscDistribution2DBase::getSFMaxTheta),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "SurfaceOrEdge", 
+                     SurfaceOrEdgeFieldId, SurfaceOrEdgeFieldMask,
+                     false,
+                     (FieldAccessMethod) &DiscDistribution2DBase::getSFSurfaceOrEdge)
 };
 
 
 FieldContainerType DiscDistribution2DBase::_type(
     "DiscDistribution2D",
-    "Distribution2D",
+    "Function",
     NULL,
     (PrototypeCreateF) &DiscDistribution2DBase::createEmpty,
     DiscDistribution2D::initMethod,
@@ -211,6 +222,7 @@ DiscDistribution2DBase::DiscDistribution2DBase(void) :
     _sfMaxRadius              (Real32(1.0)), 
     _sfMinTheta               (Real32(0.0)), 
     _sfMaxTheta               (Real32(6.28319)), 
+    _sfSurfaceOrEdge          (UInt32(DiscDistribution2D::SURFACE)), 
     Inherited() 
 {
 }
@@ -225,6 +237,7 @@ DiscDistribution2DBase::DiscDistribution2DBase(const DiscDistribution2DBase &sou
     _sfMaxRadius              (source._sfMaxRadius              ), 
     _sfMinTheta               (source._sfMinTheta               ), 
     _sfMaxTheta               (source._sfMaxTheta               ), 
+    _sfSurfaceOrEdge          (source._sfSurfaceOrEdge          ), 
     Inherited                 (source)
 {
 }
@@ -266,6 +279,11 @@ UInt32 DiscDistribution2DBase::getBinSize(const BitVector &whichField)
         returnValue += _sfMaxTheta.getBinSize();
     }
 
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+    {
+        returnValue += _sfSurfaceOrEdge.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -298,6 +316,11 @@ void DiscDistribution2DBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
     {
         _sfMaxTheta.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+    {
+        _sfSurfaceOrEdge.copyToBin(pMem);
     }
 
 
@@ -333,6 +356,11 @@ void DiscDistribution2DBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfMaxTheta.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+    {
+        _sfSurfaceOrEdge.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -357,6 +385,9 @@ void DiscDistribution2DBase::executeSyncImpl(      DiscDistribution2DBase *pOthe
 
     if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
         _sfMaxTheta.syncWith(pOther->_sfMaxTheta);
+
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+        _sfSurfaceOrEdge.syncWith(pOther->_sfSurfaceOrEdge);
 
 
 }
@@ -383,6 +414,9 @@ void DiscDistribution2DBase::executeSyncImpl(      DiscDistribution2DBase *pOthe
     if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
         _sfMaxTheta.syncWith(pOther->_sfMaxTheta);
 
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+        _sfSurfaceOrEdge.syncWith(pOther->_sfSurfaceOrEdge);
+
 
 
 }
@@ -406,7 +440,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DiscDistribution2DPtr>::_type("DiscDistribution2DPtr", "Distribution2DPtr");
+DataType FieldDataTraits<DiscDistribution2DPtr>::_type("DiscDistribution2DPtr", "FunctionPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(DiscDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);

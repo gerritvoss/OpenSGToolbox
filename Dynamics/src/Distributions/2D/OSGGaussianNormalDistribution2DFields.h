@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGGAUSSIANNORMADISTRIBUTION2DFIELDS_H_
-#define _OSGGAUSSIANNORMADISTRIBUTION2DFIELDS_H_
+#ifndef _OSGGAUSSIANNORMALDISTRIBUTION2DFIELDS_H_
+#define _OSGGAUSSIANNORMALDISTRIBUTION2DFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGDynamicsDef.h"
 
-#include "OSGDistribution2DFields.h"
+#include "Function/OSGFunctionFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class GaussianNormaDistribution2D;
+class GaussianNormalDistribution2D;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! GaussianNormaDistribution2DPtr
+//! GaussianNormalDistribution2DPtr
 
-typedef FCPtr<Distribution2DPtr, GaussianNormaDistribution2D> GaussianNormaDistribution2DPtr;
+typedef FCPtr<FunctionPtr, GaussianNormalDistribution2D> GaussianNormalDistribution2DPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<Distribution2DPtr, GaussianNormaDistribution2D> GaussianNormaDistr
 #endif
 
 template <>
-struct FieldDataTraits<GaussianNormaDistribution2DPtr> : 
-    public FieldTraitsRecurseMapper<GaussianNormaDistribution2DPtr, true>
+struct FieldDataTraits<GaussianNormalDistribution2DPtr> : 
+    public FieldTraitsRecurseMapper<GaussianNormalDistribution2DPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<GaussianNormaDistribution2DPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFGaussianNormaDistribution2DPtr"; }
-    static const char *getMName(void) { return "MFGaussianNormaDistribution2DPtr"; }
+    static const char *getSName(void) { return "SFGaussianNormalDistribution2DPtr"; }
+    static const char *getMName(void) { return "MFGaussianNormalDistribution2DPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<GaussianNormaDistribution2DPtr, true>
+/*! \class  FieldTraitsRecurseMapper<GaussianNormalDistribution2DPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<GaussianNormaDistribution2DPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpDynamicsFieldSingle */
 
-typedef SField<GaussianNormaDistribution2DPtr> SFGaussianNormaDistribution2DPtr;
+typedef SField<GaussianNormalDistribution2DPtr> SFGaussianNormalDistribution2DPtr;
 #endif
 
-#ifndef OSG_COMPILEGAUSSIANNORMADISTRIBUTION2DINST
-OSG_DLLEXPORT_DECL1(SField, GaussianNormaDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEGAUSSIANNORMALDISTRIBUTION2DINST
+OSG_DLLEXPORT_DECL1(SField, GaussianNormalDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpDynamicsFieldMulti */
 
-typedef MField<GaussianNormaDistribution2DPtr> MFGaussianNormaDistribution2DPtr;
+typedef MField<GaussianNormalDistribution2DPtr> MFGaussianNormalDistribution2DPtr;
 #endif
 
-#ifndef OSG_COMPILEGAUSSIANNORMADISTRIBUTION2DINST
-OSG_DLLEXPORT_DECL1(MField, GaussianNormaDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEGAUSSIANNORMALDISTRIBUTION2DINST
+OSG_DLLEXPORT_DECL1(MField, GaussianNormalDistribution2DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGGAUSSIANNORMADISTRIBUTION2DFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGGAUSSIANNORMALDISTRIBUTION2DFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGGAUSSIANNORMADISTRIBUTION2DFIELDS_H_ */
+#endif /* _OSGGAUSSIANNORMALDISTRIBUTION2DFIELDS_H_ */

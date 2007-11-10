@@ -48,31 +48,4 @@ An GaussianNormaDistribution2D.
 		access="public"
 	>
 	</Field>
-	<Field
-		name="XYCorrelation"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		defaultValue="0.0"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="XZCorrelation"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		defaultValue="0.0"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="YZCorrelation"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		defaultValue="0.0"
-		access="public"
-	>
-	</Field>
 </FieldContainer>
