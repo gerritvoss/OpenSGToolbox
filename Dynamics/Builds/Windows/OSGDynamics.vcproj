@@ -184,6 +184,52 @@
 				<File
 					RelativePath="..\..\src\Function\OSGFunctionFields.h">
 				</File>
+				<Filter
+					Name="Conversion"
+					Filter="">
+					<File
+						RelativePath="..\..\src\Function\Conversion\OSGDataCombiner.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Function\Conversion\OSGDataCombiner.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Function\Conversion\OSGDataCombiner.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Function\Conversion\OSGDataCombinerBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Function\Conversion\OSGDataCombinerBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Function\Conversion\OSGDataCombinerBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Function\Conversion\OSGDataCombinerFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Function\Conversion\OSGDataSplitter.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Function\Conversion\OSGDataSplitter.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Function\Conversion\OSGDataSplitter.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Function\Conversion\OSGDataSplitterBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Function\Conversion\OSGDataSplitterBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Function\Conversion\OSGDataSplitterBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Function\Conversion\OSGDataSplitterFields.h">
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Distributions"

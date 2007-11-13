@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DataCombiner"
+	parent="Function"
+	library="Dynamics"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A Data Combiner.
+	<Field
+		name="ToType"
+		type="std::string"
+		cardinality="single"
+		visibility="external"
+		defaultValue="Pnt3f"
+		access="public"
+	>
+	</Field>
+</FieldContainer>
