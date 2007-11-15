@@ -23,6 +23,8 @@ OBJECTS = OSGWindowEventProducer.o \
 	OSGWin32WindowEventProducerBase.o \
 	OSGXWindowEventProducer.o \
 	OSGXWindowEventProducerBase.o \
+	OSGCarbonWindowEventProducerBase.o \
+	OSGCarbonWindowEventProducer.o \
 	OSGWindowEvent.o \
 	OSGMouseWheelEventProducer.o \
 	OSGMouseMotionEventProducer.o \

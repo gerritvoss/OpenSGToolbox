@@ -163,10 +163,9 @@ void XWindowEventProducer::WindowEventLoopThread(void* args)
         XWindow::Ptr::dcast(Arguments->_EventProducer->getWindow())->setWindow ( hwin );
     endEditCP(XWindow::Ptr::dcast(Arguments->_EventProducer->getWindow()), XWindow::DisplayFieldMask | XWindow::WindowFieldMask);
     
-    Arguments->_EventProducer->setPosition(Arguments->_ScreenPosition);
-    Arguments->_EventProducer->setSize(Arguments->_Size);
 
     Arguments->_EventProducer->attachWindow();
+    
 
     Arguments->_EventProducer->getWindow()->init();
     
@@ -177,6 +176,9 @@ void XWindowEventProducer::WindowEventLoopThread(void* args)
     Arguments->_EventProducer->produceWindowOpened();
     
     Arguments->_EventProducer->getWindow()->activate();
+    
+    Arguments->_EventProducer->setPosition(Arguments->_ScreenPosition);
+    
     bool stopIt = false;
     XWindowEventProducerPtr EventProducer(Arguments->_EventProducer);
     
