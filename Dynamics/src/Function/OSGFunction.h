@@ -93,22 +93,22 @@ class OSG_DYNAMICSLIB_DLLMAPPING Function : public FunctionBase
     class FunctionIOType{
 	private:
         std::string _IOParameterName;
-        const DataType* _Type;
+        const TypeBase* _Type;
 	public:
-        FunctionIOType(const std::string& name, const DataType* type) :
+        FunctionIOType(const std::string& name, const TypeBase* type) :
            _IOParameterName(name),
            _Type(type)
         {
         }
 
-	    const DataType* getType(void) const;
+	    const TypeBase* getType(void) const;
 		std::string getParameterName(void) const;
     };
 
     class FunctionIODataBase
     {
       public:
-        virtual const DataType* getType(void) const = 0;
+        virtual const TypeBase* getType(void) const = 0;
     };
 
     template<class RawTypeT>
@@ -127,7 +127,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING Function : public FunctionBase
         {
         }
 
-        virtual const DataType* getType(void) const
+        virtual const TypeBase* getType(void) const
         {
             return &FieldDataTraits<RawTypeT>::getType();
         }
@@ -164,7 +164,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING Function : public FunctionBase
         {
         }
 
-        virtual const DataType* getType(void) const
+        virtual const TypeBase* getType(void) const
         {
             return &RawFieldTypeT::getClassType();
         }

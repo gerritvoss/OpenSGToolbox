@@ -43,7 +43,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-const DataType* Function::FunctionIOType::getType(void) const
+const TypeBase* Function::FunctionIOType::getType(void) const
 {
 	return _Type;
 }

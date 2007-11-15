@@ -4,6 +4,8 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -42,91 +44,88 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
- **     Do not change this file, changes should be done in the derived      **
- **     class DataCombiner!
- **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
+
+#ifndef _OSGDATACONVERTERFIELDS_H_
+#define _OSGDATACONVERTERFIELDS_H_
+#ifdef __sgi
+#pragma once
+#endif
+
 #include <OpenSG/OSGConfig.h>
+
+#include <OpenSG/OSGFieldContainerPtr.h>
+#include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGDynamicsDef.h"
+
+#include "Function/OSGFunctionFields.h"
 
 OSG_BEGIN_NAMESPACE
 
+class DataConverter;
 
-//! access the type of the class
-inline
-OSG::FieldContainerType &DataCombinerBase::getClassType(void)
+#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
+//! DataConverterPtr
+
+typedef FCPtr<FunctionPtr, DataConverter> DataConverterPtr;
+
+#endif
+
+#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpDynamicsFieldTraits
+ */
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \hideinhierarchy */
+#endif
+
+template <>
+struct FieldDataTraits<DataConverterPtr> : 
+    public FieldTraitsRecurseMapper<DataConverterPtr, true>
 {
-    return _type; 
-} 
+    static DataType             _type;                       
 
-//! access the numerical type of the class
-inline
-OSG::UInt32 DataCombinerBase::getClassTypeId(void) 
-{
-    return _type.getId(); 
-} 
+    enum                        { StringConvertable = 0x00 };
+    enum                        { bHasParent        = 0x01 };
 
-//! create a new instance of the class
-inline
-DataCombinerPtr DataCombinerBase::create(void) 
-{
-    DataCombinerPtr fc; 
+    static DataType   &getType (void) { return _type;        }
 
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = DataCombinerPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
-}
+    static const char *getSName(void) { return "SFDataConverterPtr"; }
+    static const char *getMName(void) { return "MFDataConverterPtr"; }
+};
 
-//! create an empty new instance of the class, do not copy the prototype
-inline
-DataCombinerPtr DataCombinerBase::createEmpty(void) 
-{ 
-    DataCombinerPtr returnValue; 
-    
-    newPtr(returnValue); 
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \class  FieldTraitsRecurseMapper<DataConverterPtr, true>
+    \hideinhierarchy
+ */
+#endif
 
-    return returnValue; 
-}
+#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
 
-/*------------------------------ get -----------------------------------*/
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldSingle */
 
-//! Get the DataCombiner::_sfToTypeId field.
-inline
-SFUInt32 *DataCombinerBase::getSFToTypeId(void)
-{
-    return &_sfToTypeId;
-}
+typedef SField<DataConverterPtr> SFDataConverterPtr;
+#endif
 
+#ifndef OSG_COMPILEDATACONVERTERINST
+OSG_DLLEXPORT_DECL1(SField, DataConverterPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
+#endif
 
-//! Get the value of the DataCombiner::_sfToTypeId field.
-inline
-UInt32 &DataCombinerBase::getToTypeId(void)
-{
-    return _sfToTypeId.getValue();
-}
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldMulti */
 
-//! Get the value of the DataCombiner::_sfToTypeId field.
-inline
-const UInt32 &DataCombinerBase::getToTypeId(void) const
-{
-    return _sfToTypeId.getValue();
-}
+typedef MField<DataConverterPtr> MFDataConverterPtr;
+#endif
 
-//! Set the value of the DataCombiner::_sfToTypeId field.
-inline
-void DataCombinerBase::setToTypeId(const UInt32 &value)
-{
-    _sfToTypeId.setValue(value);
-}
-
+#ifndef OSG_COMPILEDATACONVERTERINST
+OSG_DLLEXPORT_DECL1(MField, DataConverterPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
+#endif
 
 OSG_END_NAMESPACE
 
-#define OSGDATACOMBINERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGDATACONVERTERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
+#endif /* _OSGDATACONVERTERFIELDS_H_ */

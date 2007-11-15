@@ -1,7 +1,7 @@
 # trivial makefile for OpenSG tutorials
 
 # use debug or opt libs?
-LIBTYPE ?= opt
+LIBTYPE ?= dbg
 OSGDYNAMICSROOT ?= ../../Builds/Linux
 
 ifeq ($(LIBTYPE),dbg)
@@ -133,7 +133,7 @@ endif
 
 CCFLAGS = $(shell $(OSGCONFIG) --cflags --$(LIBTYPE) Base System $(ADDLIB) GLUT) -I$(OSGDYNAMICSROOT)/include
 
-LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB) GLUT) -L$(OSGDYNAMICSROOT)/lib -lOSGDynamics$(DGB_OPT_EXT)
+LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB) GLUT) -L$(OSGDYNAMICSROOT)/lib -lOSGDynamics$(DGB_OPT_EXT) -lOSGToolbox$(DGB_OPT_EXT)
 
 
 # all tutorials in this directory

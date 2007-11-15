@@ -84,67 +84,67 @@ DataCombiner::FunctionIOTypeVector DataCombiner::getOutputTypes(FunctionIOTypeVe
 {
     FunctionIOTypeVector OutputTypes;
 
-	if(getToTypeName().compare( FieldDataTraits<Real32>::getType().getCName() ) == 0)
+	if(*getToType() == FieldDataTraits<Real32>::getType())
 	{
 		//Real32
 		OutputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Real32>::getType()));
 	}
-	else if(getToTypeName().compare( SFReal32::getClassType().getCName()) == 0)
+	else if(*getToType() == SFReal32::getClassType())
 	{
 		//SFReal32
 		OutputTypes.push_back(FunctionIOType(std::string("Value"), &SFReal32::getClassType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Vec2f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Vec2f>::getType())
 	{
 		//Vec2f
 		OutputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Vec2f>::getType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Pnt2f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Pnt2f>::getType())
 	{
 		//Pnt2f
 		OutputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Pnt2f>::getType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Vec3f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Vec3f>::getType())
 	{
 		//Vec3f
 		OutputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Vec3f>::getType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Pnt3f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Pnt3f>::getType())
 	{
 		//Pnt3f
 		OutputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Pnt3f>::getType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Color3f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Color3f>::getType())
 	{
 		//Color3f
 		OutputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Color3f>::getType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Vec4f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Vec4f>::getType())
 	{
 		//Vec4f
 		OutputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Vec4f>::getType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Pnt4f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Pnt4f>::getType())
 	{
 		//Pnt4f
 		OutputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Pnt4f>::getType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Color4f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Color4f>::getType())
 	{
 		//Color4f
 		OutputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Color4f>::getType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Quaternion>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Quaternion>::getType())
 	{
 		//Quaternion
 		OutputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Quaternion>::getType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Matrix>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Matrix>::getType())
 	{
 		//Matrix
 		OutputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Matrix>::getType()));
 	}
-	else if (getToTypeName().compare( MFReal32::getClassType().getCName()) == 0)
+	else if(*getToType() == MFReal32::getClassType())
 	{
 		//MFReal32
 		OutputTypes.push_back(FunctionIOType(std::string("Value"), &MFReal32::getClassType()));
@@ -205,50 +205,50 @@ DataCombiner::FunctionIOTypeVector DataCombiner::getInputTypes(FunctionIOTypeVec
 {
     FunctionIOTypeVector InputTypes;
 	
-	if(getToTypeName().compare( FieldDataTraits<Real32>::getType().getCName() ) == 0)
+	if(*getToType() == FieldDataTraits<Real32>::getType())
 	{
 		//Real32
 		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Real32>::getType()));
 	}
-	else if(getToTypeName().compare( SFReal32::getClassType().getCName()) == 0)
+	else if(*getToType() == SFReal32::getClassType())
 	{
 		//SFReal32
 		InputTypes.push_back(FunctionIOType(std::string("Value"), &FieldDataTraits<Real32>::getType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Vec2f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Vec2f>::getType())
 	{
 		//Vec2f
 		InputTypes.push_back(FunctionIOType(std::string("x"), &FieldDataTraits<Real32>::getType()));
 		InputTypes.push_back(FunctionIOType(std::string("y"), &FieldDataTraits<Real32>::getType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Pnt2f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Pnt2f>::getType())
 	{
 		//Pnt2f
 		InputTypes.push_back(FunctionIOType(std::string("x"), &FieldDataTraits<Real32>::getType()));
 		InputTypes.push_back(FunctionIOType(std::string("y"), &FieldDataTraits<Real32>::getType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Vec3f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Vec3f>::getType())
 	{
 		//Vec3f
 		InputTypes.push_back(FunctionIOType(std::string("x"), &FieldDataTraits<Real32>::getType()));
 		InputTypes.push_back(FunctionIOType(std::string("y"), &FieldDataTraits<Real32>::getType()));
 		InputTypes.push_back(FunctionIOType(std::string("z"), &FieldDataTraits<Real32>::getType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Pnt3f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Pnt3f>::getType())
 	{
 		//Pnt3f
 		InputTypes.push_back(FunctionIOType(std::string("x"), &FieldDataTraits<Real32>::getType()));
 		InputTypes.push_back(FunctionIOType(std::string("y"), &FieldDataTraits<Real32>::getType()));
 		InputTypes.push_back(FunctionIOType(std::string("z"), &FieldDataTraits<Real32>::getType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Color3f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Color3f>::getType())
 	{
 		//Color3f
 		InputTypes.push_back(FunctionIOType(std::string("r"), &FieldDataTraits<Real32>::getType()));
 		InputTypes.push_back(FunctionIOType(std::string("g"), &FieldDataTraits<Real32>::getType()));
 		InputTypes.push_back(FunctionIOType(std::string("b"), &FieldDataTraits<Real32>::getType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Vec4f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Vec4f>::getType())
 	{
 		//Vec4f
 		InputTypes.push_back(FunctionIOType(std::string("x"), &FieldDataTraits<Real32>::getType()));
@@ -256,7 +256,7 @@ DataCombiner::FunctionIOTypeVector DataCombiner::getInputTypes(FunctionIOTypeVec
 		InputTypes.push_back(FunctionIOType(std::string("z"), &FieldDataTraits<Real32>::getType()));
 		InputTypes.push_back(FunctionIOType(std::string("w"), &FieldDataTraits<Real32>::getType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Pnt4f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Pnt4f>::getType())
 	{
 		//Pnt4f
 		InputTypes.push_back(FunctionIOType(std::string("x"), &FieldDataTraits<Real32>::getType()));
@@ -264,7 +264,7 @@ DataCombiner::FunctionIOTypeVector DataCombiner::getInputTypes(FunctionIOTypeVec
 		InputTypes.push_back(FunctionIOType(std::string("z"), &FieldDataTraits<Real32>::getType()));
 		InputTypes.push_back(FunctionIOType(std::string("w"), &FieldDataTraits<Real32>::getType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Color4f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Color4f>::getType())
 	{
 		//Color4f
 		InputTypes.push_back(FunctionIOType(std::string("r"), &FieldDataTraits<Real32>::getType()));
@@ -272,7 +272,7 @@ DataCombiner::FunctionIOTypeVector DataCombiner::getInputTypes(FunctionIOTypeVec
 		InputTypes.push_back(FunctionIOType(std::string("b"), &FieldDataTraits<Real32>::getType()));
 		InputTypes.push_back(FunctionIOType(std::string("a"), &FieldDataTraits<Real32>::getType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Quaternion>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Quaternion>::getType())
 	{
 		//Quaternion
 		InputTypes.push_back(FunctionIOType(std::string("x"), &FieldDataTraits<Real32>::getType()));
@@ -280,7 +280,7 @@ DataCombiner::FunctionIOTypeVector DataCombiner::getInputTypes(FunctionIOTypeVec
 		InputTypes.push_back(FunctionIOType(std::string("z"), &FieldDataTraits<Real32>::getType()));
 		InputTypes.push_back(FunctionIOType(std::string("w"), &FieldDataTraits<Real32>::getType()));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Matrix>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Matrix>::getType())
 	{
 		//Matrix
 		InputTypes.push_back(FunctionIOType(std::string("00"), &FieldDataTraits<Real32>::getType()));
@@ -303,7 +303,7 @@ DataCombiner::FunctionIOTypeVector DataCombiner::getInputTypes(FunctionIOTypeVec
 		InputTypes.push_back(FunctionIOType(std::string("32"), &FieldDataTraits<Real32>::getType()));
 		InputTypes.push_back(FunctionIOType(std::string("33"), &FieldDataTraits<Real32>::getType()));
 	}
-	else if (getToTypeName().compare( MFReal32::getClassType().getCName()) == 0)
+	else if(*getToType() == MFReal32::getClassType())
 	{
 		//MFReal32
 	}
@@ -363,21 +363,21 @@ DataCombiner::FunctionIOParameterVector DataCombiner::evaluate(FunctionIOParamet
 {
     FunctionIOParameterVector ResultVector;
 
-	if(getToTypeName().compare( FieldDataTraits<Real32>::getType().getCName() ) == 0)
+	if(*getToType() == FieldDataTraits<Real32>::getType())
 	{
 		//Real32
 		if(InputParameters.size() != 1){throw FunctionInputException();}
 		ResultVector.push_back(FunctionIOParameter(std::string("Value"),
 			new FunctionIOData<Real32>(dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[0].getDataPtr())->getData())));
 	}
-	else if(getToTypeName().compare( SFReal32::getClassType().getCName()) == 0)
+	else if(*getToType() == SFReal32::getClassType())
 	{
 		//SFReal32
 		if(InputParameters.size() != 1){throw FunctionInputException();}
 		ResultVector.push_back(FunctionIOParameter(std::string("Value"),
 			new FunctionIOFieldData<SFReal32>(SFReal32(dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[0].getDataPtr())->getData()))));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Vec2f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Vec2f>::getType())
 	{
 		//Vec2f
 		if(InputParameters.size() != 2){throw FunctionInputException();}
@@ -387,7 +387,7 @@ DataCombiner::FunctionIOParameterVector DataCombiner::evaluate(FunctionIOParamet
 					 dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[1].getDataPtr())->getData()
 			))));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Pnt2f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Pnt2f>::getType())
 	{
 		//Pnt2f
 		if(InputParameters.size() != 2){throw FunctionInputException();}
@@ -397,7 +397,7 @@ DataCombiner::FunctionIOParameterVector DataCombiner::evaluate(FunctionIOParamet
 					 dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[1].getDataPtr())->getData()
 			))));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Vec3f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Vec3f>::getType())
 	{
 		//Vec3f
 		if(InputParameters.size() != 3){throw FunctionInputException();}
@@ -408,7 +408,7 @@ DataCombiner::FunctionIOParameterVector DataCombiner::evaluate(FunctionIOParamet
 					 dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[2].getDataPtr())->getData()
 			))));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Pnt3f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Pnt3f>::getType())
 	{
 		//Pnt3f
 		if(InputParameters.size() != 3){throw FunctionInputException();}
@@ -419,7 +419,7 @@ DataCombiner::FunctionIOParameterVector DataCombiner::evaluate(FunctionIOParamet
 					 dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[2].getDataPtr())->getData()
 			))));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Color3f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Color3f>::getType())
 	{
 		//Color3f
 		if(InputParameters.size() != 3){throw FunctionInputException();}
@@ -430,7 +430,7 @@ DataCombiner::FunctionIOParameterVector DataCombiner::evaluate(FunctionIOParamet
 					 dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[2].getDataPtr())->getData()
 			))));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Vec4f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Vec4f>::getType())
 	{
 		//Vec4f
 		if(InputParameters.size() != 4){throw FunctionInputException();}
@@ -442,7 +442,7 @@ DataCombiner::FunctionIOParameterVector DataCombiner::evaluate(FunctionIOParamet
 					 dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[3].getDataPtr())->getData()
 			))));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Pnt4f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Pnt4f>::getType())
 	{
 		//Pnt4f
 		if(InputParameters.size() != 4){throw FunctionInputException();}
@@ -454,7 +454,7 @@ DataCombiner::FunctionIOParameterVector DataCombiner::evaluate(FunctionIOParamet
 					 dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[3].getDataPtr())->getData()
 			))));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Color4f>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Color4f>::getType())
 	{
 		//Color4f
 		if(InputParameters.size() != 4){throw FunctionInputException();}
@@ -466,7 +466,7 @@ DataCombiner::FunctionIOParameterVector DataCombiner::evaluate(FunctionIOParamet
 					 dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[3].getDataPtr())->getData()
 			))));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Quaternion>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Quaternion>::getType())
 	{
 		//Quaternion
 		if(InputParameters.size() != 4){throw FunctionInputException();}
@@ -479,7 +479,7 @@ DataCombiner::FunctionIOParameterVector DataCombiner::evaluate(FunctionIOParamet
 		ResultVector.push_back(FunctionIOParameter(std::string("Value"),
 			new FunctionIOData<Quaternion>(q)));
 	}
-	else if(getToTypeName().compare( FieldDataTraits<Matrix>::getType().getCName() ) == 0)
+	else if(*getToType() == FieldDataTraits<Matrix>::getType())
 	{
 		//Matrix
 		if(InputParameters.size() != 16){throw FunctionInputException();}
@@ -506,7 +506,7 @@ DataCombiner::FunctionIOParameterVector DataCombiner::evaluate(FunctionIOParamet
 					 dynamic_cast<const FunctionIOData<Real32>* >(InputParameters[15].getDataPtr())->getData()
 			))));
 	}
-	else if (getToTypeName().compare( MFReal32::getClassType().getCName()) == 0)
+	else if(*getToType() == MFReal32::getClassType())
 	{
 		//MFReal32
 	}
@@ -560,10 +560,6 @@ DataCombiner::FunctionIOParameterVector DataCombiner::evaluate(FunctionIOParamet
 	//MFReal128
 
     return ResultVector;
-}
-
-void DataCombiner::addCombineOutputData(FunctionIOParameterVector& OutputData, const FunctionIOParameterVector& InputParameters)
-{
 }
 
 /*-------------------------------------------------------------------------*\

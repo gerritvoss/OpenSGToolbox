@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class DataCombiner
+ **     class DataConverter
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGDATACOMBINERBASE_H_
-#define _OSGDATACOMBINERBASE_H_
+#ifndef _OSGDATACONVERTERBASE_H_
+#define _OSGDATACONVERTERBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -69,16 +69,16 @@
 
 #include <OpenSG/OSGUInt32Fields.h> // ToTypeId type
 
-#include "OSGDataCombinerFields.h"
+#include "OSGDataConverterFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class DataCombiner;
+class DataConverter;
 class BinaryDataHandler;
 
-//! \brief DataCombiner Base Class.
+//! \brief DataConverter Base Class.
 
-class OSG_DYNAMICSLIB_DLLMAPPING DataCombinerBase : public Function
+class OSG_DYNAMICSLIB_DLLMAPPING DataConverterBase : public Function
 {
   private:
 
@@ -87,7 +87,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataCombinerBase : public Function
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef DataCombinerPtr  Ptr;
+    typedef DataConverterPtr  Ptr;
 
     enum
     {
@@ -156,8 +156,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataCombinerBase : public Function
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  DataCombinerPtr      create          (void); 
-    static  DataCombinerPtr      createEmpty     (void); 
+    static  DataConverterPtr      create          (void); 
+    static  DataConverterPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -182,15 +182,15 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataCombinerBase : public Function
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    DataCombinerBase(void);
-    DataCombinerBase(const DataCombinerBase &source);
+    DataConverterBase(void);
+    DataConverterBase(const DataConverterBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DataCombinerBase(void); 
+    virtual ~DataConverterBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -198,13 +198,13 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataCombinerBase : public Function
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      DataCombinerBase *pOther,
+    void executeSyncImpl(      DataConverterBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      DataCombinerBase *pOther,
+    void executeSyncImpl(      DataConverterBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -234,7 +234,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataCombinerBase : public Function
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const DataCombinerBase &source);
+    void operator =(const DataConverterBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -242,17 +242,17 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataCombinerBase : public Function
 //---------------------------------------------------------------------------
 
 
-typedef DataCombinerBase *DataCombinerBaseP;
+typedef DataConverterBase *DataConverterBaseP;
 
-typedef osgIF<DataCombinerBase::isNodeCore,
-              CoredNodePtr<DataCombiner>,
+typedef osgIF<DataConverterBase::isNodeCore,
+              CoredNodePtr<DataConverter>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet DataCombinerNodePtr;
+              >::_IRet DataConverterNodePtr;
 
-typedef RefPtr<DataCombinerPtr> DataCombinerRefPtr;
+typedef RefPtr<DataConverterPtr> DataConverterRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGDATACOMBINERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGDATACONVERTERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGDATACOMBINERBASE_H_ */
+#endif /* _OSGDATACONVERTERBASE_H_ */

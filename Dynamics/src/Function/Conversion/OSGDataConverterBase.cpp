@@ -45,110 +45,110 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class DataCombiner!
+ **     class DataConverter!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEDATACOMBINERINST
+#define OSG_COMPILEDATACONVERTERINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGDataCombinerBase.h"
-#include "OSGDataCombiner.h"
+#include "OSGDataConverterBase.h"
+#include "OSGDataConverter.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DataCombinerBase::ToTypeIdFieldMask = 
-    (TypeTraits<BitVector>::One << DataCombinerBase::ToTypeIdFieldId);
+const OSG::BitVector  DataConverterBase::ToTypeIdFieldMask = 
+    (TypeTraits<BitVector>::One << DataConverterBase::ToTypeIdFieldId);
 
-const OSG::BitVector DataCombinerBase::MTInfluenceMask = 
+const OSG::BitVector DataConverterBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var UInt32          DataCombinerBase::_sfToTypeId
+/*! \var UInt32          DataConverterBase::_sfToTypeId
     
 */
 
-//! DataCombiner description
+//! DataConverter description
 
-FieldDescription *DataCombinerBase::_desc[] = 
+FieldDescription *DataConverterBase::_desc[] = 
 {
     new FieldDescription(SFUInt32::getClassType(), 
                      "ToTypeId", 
                      ToTypeIdFieldId, ToTypeIdFieldMask,
                      false,
-                     (FieldAccessMethod) &DataCombinerBase::getSFToTypeId)
+                     (FieldAccessMethod) &DataConverterBase::getSFToTypeId)
 };
 
 
-FieldContainerType DataCombinerBase::_type(
-    "DataCombiner",
+FieldContainerType DataConverterBase::_type(
+    "DataConverter",
     "Function",
     NULL,
-    (PrototypeCreateF) &DataCombinerBase::createEmpty,
-    DataCombiner::initMethod,
+    (PrototypeCreateF) &DataConverterBase::createEmpty,
+    DataConverter::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(DataCombinerBase, DataCombinerPtr)
+//OSG_FIELD_CONTAINER_DEF(DataConverterBase, DataConverterPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DataCombinerBase::getType(void) 
+FieldContainerType &DataConverterBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &DataCombinerBase::getType(void) const 
+const FieldContainerType &DataConverterBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr DataCombinerBase::shallowCopy(void) const 
+FieldContainerPtr DataConverterBase::shallowCopy(void) const 
 { 
-    DataCombinerPtr returnValue; 
+    DataConverterPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const DataCombiner *>(this)); 
+    newPtr(returnValue, dynamic_cast<const DataConverter *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 DataCombinerBase::getContainerSize(void) const 
+UInt32 DataConverterBase::getContainerSize(void) const 
 { 
-    return sizeof(DataCombiner); 
+    return sizeof(DataConverter); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void DataCombinerBase::executeSync(      FieldContainer &other,
+void DataConverterBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((DataCombinerBase *) &other, whichField);
+    this->executeSyncImpl((DataConverterBase *) &other, whichField);
 }
 #else
-void DataCombinerBase::executeSync(      FieldContainer &other,
+void DataConverterBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((DataCombinerBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((DataConverterBase *) &other, whichField, sInfo);
 }
-void DataCombinerBase::execBeginEdit(const BitVector &whichField, 
+void DataConverterBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void DataCombinerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void DataConverterBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -161,7 +161,7 @@ void DataCombinerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-DataCombinerBase::DataCombinerBase(void) :
+DataConverterBase::DataConverterBase(void) :
     _sfToTypeId               (UInt32(0)), 
     Inherited() 
 {
@@ -171,7 +171,7 @@ DataCombinerBase::DataCombinerBase(void) :
 #pragma warning (default : 383)
 #endif
 
-DataCombinerBase::DataCombinerBase(const DataCombinerBase &source) :
+DataConverterBase::DataConverterBase(const DataConverterBase &source) :
     _sfToTypeId               (source._sfToTypeId               ), 
     Inherited                 (source)
 {
@@ -179,13 +179,13 @@ DataCombinerBase::DataCombinerBase(const DataCombinerBase &source) :
 
 /*-------------------------- destructors ----------------------------------*/
 
-DataCombinerBase::~DataCombinerBase(void)
+DataConverterBase::~DataConverterBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DataCombinerBase::getBinSize(const BitVector &whichField)
+UInt32 DataConverterBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -198,7 +198,7 @@ UInt32 DataCombinerBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void DataCombinerBase::copyToBin(      BinaryDataHandler &pMem,
+void DataConverterBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
@@ -211,7 +211,7 @@ void DataCombinerBase::copyToBin(      BinaryDataHandler &pMem,
 
 }
 
-void DataCombinerBase::copyFromBin(      BinaryDataHandler &pMem,
+void DataConverterBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
@@ -225,7 +225,7 @@ void DataCombinerBase::copyFromBin(      BinaryDataHandler &pMem,
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void DataCombinerBase::executeSyncImpl(      DataCombinerBase *pOther,
+void DataConverterBase::executeSyncImpl(      DataConverterBase *pOther,
                                         const BitVector         &whichField)
 {
 
@@ -237,7 +237,7 @@ void DataCombinerBase::executeSyncImpl(      DataCombinerBase *pOther,
 
 }
 #else
-void DataCombinerBase::executeSyncImpl(      DataCombinerBase *pOther,
+void DataConverterBase::executeSyncImpl(      DataConverterBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
@@ -251,7 +251,7 @@ void DataCombinerBase::executeSyncImpl(      DataCombinerBase *pOther,
 
 }
 
-void DataCombinerBase::execBeginEditImpl (const BitVector &whichField, 
+void DataConverterBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -270,11 +270,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DataCombinerPtr>::_type("DataCombinerPtr", "FunctionPtr");
+DataType FieldDataTraits<DataConverterPtr>::_type("DataConverterPtr", "FunctionPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(DataCombinerPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DataCombinerPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(DataConverterPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(DataConverterPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -291,10 +291,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(DataCombinerPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDATACOMBINERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDATACOMBINERBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGDATACONVERTERBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGDATACONVERTERBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGDATACOMBINERFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGDATACONVERTERFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

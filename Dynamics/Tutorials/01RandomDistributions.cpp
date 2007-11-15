@@ -43,6 +43,7 @@
 
 #include <OpenSG/Dynamics/OSGDataSplitter.h>
 #include <OpenSG/Dynamics/OSGDataCombiner.h>
+#include <OpenSG/Dynamics/OSGDataConverter.h>
 #include <OpenSG/Dynamics/OSGCompoundFunction.h>
 
 // Activate the OpenSG namespace
@@ -163,28 +164,26 @@ int main(int argc, char **argv)
 
 	//Color3f Compound Function
 	DataSplitterPtr TheDataSplitter = DataSplitter::create();
-	DataCombinerPtr TheColor3fCombiner = DataCombiner::create();
-	beginEditCP(TheColor3fCombiner);
-		TheColor3fCombiner->setToType(&FieldDataTraits<Color3f>::getType());
-	endEditCP(TheColor3fCombiner);
+	DataConverterPtr TheColor3fConverter = DataConverter::create();
+	beginEditCP(TheColor3fConverter);
+		TheColor3fConverter->setToType(&FieldDataTraits<Color3f>::getType());
+	endEditCP(TheColor3fConverter);
 	
 	CompoundFunctionPtr TheColorDistribution = CompoundFunction::create();
 	beginEditCP(TheColorDistribution);
 		TheColorDistribution->getFunctions().push_back(TheInternalColorDistribution);
-		TheColorDistribution->getFunctions().push_back(TheDataSplitter);
-		TheColorDistribution->getFunctions().push_back(TheColor3fCombiner);
+		TheColorDistribution->getFunctions().push_back(TheColor3fConverter);
 	endEditCP(TheColorDistribution);
 	
-	DataCombinerPtr TheVec3fCombiner = DataCombiner::create();
-	beginEditCP(TheVec3fCombiner);
-		TheVec3fCombiner->setToType(&FieldDataTraits<Vec3f>::getType());
-	endEditCP(TheVec3fCombiner);
+	DataConverterPtr TheVec3fConverter = DataConverter::create();
+	beginEditCP(TheVec3fConverter);
+		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
+	endEditCP(TheVec3fConverter);
 	
 	CompoundFunctionPtr TheSizeDistribution = CompoundFunction::create();
 	beginEditCP(TheSizeDistribution);
 		TheSizeDistribution->getFunctions().push_back(TheInternalSizeDistribution);
-		TheSizeDistribution->getFunctions().push_back(TheDataSplitter);
-		TheSizeDistribution->getFunctions().push_back(TheVec3fCombiner);
+		TheSizeDistribution->getFunctions().push_back(TheVec3fConverter);
 	endEditCP(TheSizeDistribution);
 
     //Use the Distribution to generate Positions
@@ -231,25 +230,26 @@ int main(int argc, char **argv)
 	Color3f ColorReturnValue;
 	Vec3f SizeReturnValue;
     beginEditCP(ParticlesCore);
+    Function::FunctionIOParameterVector EmptyParameters;
     for(UInt32 i(0) ; i< NumParticlesToGenerate ; ++i)
     {
         ReturnValue = 
             LineDistribution3D::Output0DataType::dcast(
-            TheDistribution->evaluate(Function::FunctionIOParameterVector()).front().getDataPtr()
+            TheDistribution->evaluate(EmptyParameters).front().getDataPtr()
             )->getData();
         ParticlePositions->addValue(ReturnValue);
 
 		
         ColorReturnValue = 
 			Function::FunctionIOData<Color3f>::dcast(
-            TheColorDistribution->evaluate(Function::FunctionIOParameterVector()).front().getDataPtr()
+            TheColorDistribution->evaluate(EmptyParameters).front().getDataPtr()
             )->getData();
         ParticleColors->addValue(ColorReturnValue);
 
 		
         SizeReturnValue = 
 			Function::FunctionIOData<Vec3f>::dcast(
-            TheSizeDistribution->evaluate(Function::FunctionIOParameterVector()).front().getDataPtr()
+            TheSizeDistribution->evaluate(EmptyParameters).front().getDataPtr()
             )->getData();
         ParticlesCore->getSizes().addValue(SizeReturnValue);
     }

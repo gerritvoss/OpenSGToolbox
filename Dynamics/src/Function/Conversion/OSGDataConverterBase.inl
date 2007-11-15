@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class DataCombiner!
+ **     class DataConverter!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &DataCombinerBase::getClassType(void)
+OSG::FieldContainerType &DataConverterBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DataCombinerBase::getClassTypeId(void) 
+OSG::UInt32 DataConverterBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-DataCombinerPtr DataCombinerBase::create(void) 
+DataConverterPtr DataConverterBase::create(void) 
 {
-    DataCombinerPtr fc; 
+    DataConverterPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = DataCombinerPtr::dcast(
+        fc = DataConverterPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ DataCombinerPtr DataCombinerBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-DataCombinerPtr DataCombinerBase::createEmpty(void) 
+DataConverterPtr DataConverterBase::createEmpty(void) 
 { 
-    DataCombinerPtr returnValue; 
+    DataConverterPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,31 +96,31 @@ DataCombinerPtr DataCombinerBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DataCombiner::_sfToTypeId field.
+//! Get the DataConverter::_sfToTypeId field.
 inline
-SFUInt32 *DataCombinerBase::getSFToTypeId(void)
+SFUInt32 *DataConverterBase::getSFToTypeId(void)
 {
     return &_sfToTypeId;
 }
 
 
-//! Get the value of the DataCombiner::_sfToTypeId field.
+//! Get the value of the DataConverter::_sfToTypeId field.
 inline
-UInt32 &DataCombinerBase::getToTypeId(void)
+UInt32 &DataConverterBase::getToTypeId(void)
 {
     return _sfToTypeId.getValue();
 }
 
-//! Get the value of the DataCombiner::_sfToTypeId field.
+//! Get the value of the DataConverter::_sfToTypeId field.
 inline
-const UInt32 &DataCombinerBase::getToTypeId(void) const
+const UInt32 &DataConverterBase::getToTypeId(void) const
 {
     return _sfToTypeId.getValue();
 }
 
-//! Set the value of the DataCombiner::_sfToTypeId field.
+//! Set the value of the DataConverter::_sfToTypeId field.
 inline
-void DataCombinerBase::setToTypeId(const UInt32 &value)
+void DataConverterBase::setToTypeId(const UInt32 &value)
 {
     _sfToTypeId.setValue(value);
 }
@@ -128,5 +128,5 @@ void DataCombinerBase::setToTypeId(const UInt32 &value)
 
 OSG_END_NAMESPACE
 
-#define OSGDATACOMBINERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGDATACONVERTERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

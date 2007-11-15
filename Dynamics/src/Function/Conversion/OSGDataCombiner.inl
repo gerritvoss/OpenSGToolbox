@@ -39,13 +39,20 @@
 //---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGTypeFactory.h>
 
 OSG_BEGIN_NAMESPACE
 
 inline
-void DataCombiner::setToType(const DataType* type)
+void DataCombiner::setToType(const TypeBase* type)
 {
-	setToTypeName(std::string(type->getCName()));
+	setToTypeId(type->getId());
+}
+
+inline
+const TypeBase* DataCombiner::getToType(void) const
+{
+    return TypeFactory::the()->findType(getToTypeId());
 }
 
 OSG_END_NAMESPACE
