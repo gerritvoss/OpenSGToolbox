@@ -44,7 +44,7 @@ UI Font.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="1"
+		defaultValue="3"
 		access="public"
 	>
 	</Field>
