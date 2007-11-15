@@ -75,14 +75,14 @@ void TriDistribution2D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-TriDistribution2D::FunctionIOTypeVector TriDistribution2D::getOutputTypes(FunctionIOParameterVector& InputParameters) const
+TriDistribution2D::FunctionIOTypeVector TriDistribution2D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
     OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_TRI2D_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
-TriDistribution2D::FunctionIOTypeVector TriDistribution2D::getInputTypes(FunctionIOParameterVector& InputParameters) const
+TriDistribution2D::FunctionIOTypeVector TriDistribution2D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
     return InputTypes;

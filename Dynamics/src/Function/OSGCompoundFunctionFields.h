@@ -4,6 +4,8 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
  *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -42,91 +44,88 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
- **     Do not change this file, changes should be done in the derived      **
- **     class DataCombiner!
- **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
+
+#ifndef _OSGCOMPOUNDFUNCTIONFIELDS_H_
+#define _OSGCOMPOUNDFUNCTIONFIELDS_H_
+#ifdef __sgi
+#pragma once
+#endif
+
 #include <OpenSG/OSGConfig.h>
+
+#include <OpenSG/OSGFieldContainerPtr.h>
+#include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGDynamicsDef.h"
+
+#include "OSGFunctionFields.h"
 
 OSG_BEGIN_NAMESPACE
 
+class CompoundFunction;
 
-//! access the type of the class
-inline
-OSG::FieldContainerType &DataCombinerBase::getClassType(void)
+#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
+//! CompoundFunctionPtr
+
+typedef FCPtr<FunctionPtr, CompoundFunction> CompoundFunctionPtr;
+
+#endif
+
+#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpDynamicsFieldTraits
+ */
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \hideinhierarchy */
+#endif
+
+template <>
+struct FieldDataTraits<CompoundFunctionPtr> : 
+    public FieldTraitsRecurseMapper<CompoundFunctionPtr, true>
 {
-    return _type; 
-} 
+    static DataType             _type;                       
 
-//! access the numerical type of the class
-inline
-OSG::UInt32 DataCombinerBase::getClassTypeId(void) 
-{
-    return _type.getId(); 
-} 
+    enum                        { StringConvertable = 0x00 };
+    enum                        { bHasParent        = 0x01 };
 
-//! create a new instance of the class
-inline
-DataCombinerPtr DataCombinerBase::create(void) 
-{
-    DataCombinerPtr fc; 
+    static DataType   &getType (void) { return _type;        }
 
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = DataCombinerPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
-}
+    static const char *getSName(void) { return "SFCompoundFunctionPtr"; }
+    static const char *getMName(void) { return "MFCompoundFunctionPtr"; }
+};
 
-//! create an empty new instance of the class, do not copy the prototype
-inline
-DataCombinerPtr DataCombinerBase::createEmpty(void) 
-{ 
-    DataCombinerPtr returnValue; 
-    
-    newPtr(returnValue); 
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \class  FieldTraitsRecurseMapper<CompoundFunctionPtr, true>
+    \hideinhierarchy
+ */
+#endif
 
-    return returnValue; 
-}
+#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
 
-/*------------------------------ get -----------------------------------*/
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldSingle */
 
-//! Get the DataCombiner::_sfToTypeName field.
-inline
-SFString *DataCombinerBase::getSFToTypeName(void)
-{
-    return &_sfToTypeName;
-}
+typedef SField<CompoundFunctionPtr> SFCompoundFunctionPtr;
+#endif
 
+#ifndef OSG_COMPILECOMPOUNDFUNCTIONINST
+OSG_DLLEXPORT_DECL1(SField, CompoundFunctionPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
+#endif
 
-//! Get the value of the DataCombiner::_sfToTypeName field.
-inline
-std::string &DataCombinerBase::getToTypeName(void)
-{
-    return _sfToTypeName.getValue();
-}
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpDynamicsFieldMulti */
 
-//! Get the value of the DataCombiner::_sfToTypeName field.
-inline
-const std::string &DataCombinerBase::getToTypeName(void) const
-{
-    return _sfToTypeName.getValue();
-}
+typedef MField<CompoundFunctionPtr> MFCompoundFunctionPtr;
+#endif
 
-//! Set the value of the DataCombiner::_sfToTypeName field.
-inline
-void DataCombinerBase::setToTypeName(const std::string &value)
-{
-    _sfToTypeName.setValue(value);
-}
-
+#ifndef OSG_COMPILECOMPOUNDFUNCTIONINST
+OSG_DLLEXPORT_DECL1(MField, CompoundFunctionPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING)
+#endif
 
 OSG_END_NAMESPACE
 
-#define OSGDATACOMBINERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGCOMPOUNDFUNCTIONFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
+#endif /* _OSGCOMPOUNDFUNCTIONFIELDS_H_ */

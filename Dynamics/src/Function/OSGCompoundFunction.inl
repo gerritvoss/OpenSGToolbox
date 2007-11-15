@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Dynamics                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,19 +42,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-const DataType* Function::FunctionIOType::getType(void) const
-{
-	return _Type;
-}
-
-inline
-std::string Function::FunctionIOType::getParameterName(void) const
-{
-	return _IOParameterName;
-}
-
 OSG_END_NAMESPACE
 
-#define OSGFUNCTION_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+#define OSGCOMPOUNDFUNCTION_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

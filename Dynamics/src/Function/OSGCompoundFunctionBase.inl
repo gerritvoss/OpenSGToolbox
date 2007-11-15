@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class DataCombiner!
+ **     class CompoundFunction!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &DataCombinerBase::getClassType(void)
+OSG::FieldContainerType &CompoundFunctionBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DataCombinerBase::getClassTypeId(void) 
+OSG::UInt32 CompoundFunctionBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-DataCombinerPtr DataCombinerBase::create(void) 
+CompoundFunctionPtr CompoundFunctionBase::create(void) 
 {
-    DataCombinerPtr fc; 
+    CompoundFunctionPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = DataCombinerPtr::dcast(
+        fc = CompoundFunctionPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ DataCombinerPtr DataCombinerBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-DataCombinerPtr DataCombinerBase::createEmpty(void) 
+CompoundFunctionPtr CompoundFunctionBase::createEmpty(void) 
 { 
-    DataCombinerPtr returnValue; 
+    CompoundFunctionPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,37 +96,37 @@ DataCombinerPtr DataCombinerBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DataCombiner::_sfToTypeName field.
+//! Get the CompoundFunction::_mfFunctions field.
 inline
-SFString *DataCombinerBase::getSFToTypeName(void)
+MFFunctionPtr *CompoundFunctionBase::getMFFunctions(void)
 {
-    return &_sfToTypeName;
+    return &_mfFunctions;
 }
 
 
-//! Get the value of the DataCombiner::_sfToTypeName field.
+
+//! Get the value of the \a index element the CompoundFunction::_mfFunctions field.
 inline
-std::string &DataCombinerBase::getToTypeName(void)
+FunctionPtr &CompoundFunctionBase::getFunctions(const UInt32 index)
 {
-    return _sfToTypeName.getValue();
+    return _mfFunctions[index];
 }
 
-//! Get the value of the DataCombiner::_sfToTypeName field.
+//! Get the CompoundFunction::_mfFunctions field.
 inline
-const std::string &DataCombinerBase::getToTypeName(void) const
+MFFunctionPtr &CompoundFunctionBase::getFunctions(void)
 {
-    return _sfToTypeName.getValue();
+    return _mfFunctions;
 }
 
-//! Set the value of the DataCombiner::_sfToTypeName field.
+//! Get the CompoundFunction::_mfFunctions field.
 inline
-void DataCombinerBase::setToTypeName(const std::string &value)
+const MFFunctionPtr &CompoundFunctionBase::getFunctions(void) const
 {
-    _sfToTypeName.setValue(value);
+    return _mfFunctions;
 }
-
 
 OSG_END_NAMESPACE
 
-#define OSGDATACOMBINERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGCOMPOUNDFUNCTIONBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

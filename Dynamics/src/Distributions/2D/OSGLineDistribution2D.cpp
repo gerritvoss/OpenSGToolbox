@@ -75,14 +75,14 @@ void LineDistribution2D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-LineDistribution2D::FunctionIOTypeVector LineDistribution2D::getOutputTypes(FunctionIOParameterVector& InputParameters) const
+LineDistribution2D::FunctionIOTypeVector LineDistribution2D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
     OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_LINE2D_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
-LineDistribution2D::FunctionIOTypeVector LineDistribution2D::getInputTypes(FunctionIOParameterVector& InputParameters) const
+LineDistribution2D::FunctionIOTypeVector LineDistribution2D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
     return InputTypes;

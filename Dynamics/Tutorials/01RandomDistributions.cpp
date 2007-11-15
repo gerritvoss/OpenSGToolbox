@@ -41,6 +41,10 @@
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution3D.h>
 #include <OpenSG/Dynamics/OSGTriDistribution3D.h>
 
+#include <OpenSG/Dynamics/OSGDataSplitter.h>
+#include <OpenSG/Dynamics/OSGDataCombiner.h>
+#include <OpenSG/Dynamics/OSGCompoundFunction.h>
+
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
 // with OSG::, but that would be a bit tedious for this example
@@ -77,9 +81,14 @@ int main(int argc, char **argv)
     //Line Distribution
     LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
     beginEditCP(TheLineDistribution);
-      TheLineDistribution->setPoint1(Pnt3f(-10.0,0.0,0.0));
-      TheLineDistribution->setPoint2(Pnt3f(10.0,0.0,0.0));
+      TheLineDistribution->setPoint1(Pnt3f(1.0,1.0,1.0));
+      TheLineDistribution->setPoint2(Pnt3f(1.0,1.0,0.1));
     endEditCP(TheLineDistribution);
+    LineDistribution3DPtr TheLineDistribution2 = LineDistribution3D::create();
+    beginEditCP(TheLineDistribution2);
+      TheLineDistribution2->setPoint1(Pnt3f(6.0,6.0,6.0));
+      TheLineDistribution2->setPoint2(Pnt3f(2.0,2.0,2.0));
+    endEditCP(TheLineDistribution2);
     
     //Box Distribution
     BoxDistribution3DPtr TheBoxDistribution = BoxDistribution3D::create();
@@ -105,26 +114,26 @@ int main(int argc, char **argv)
     CylinderDistribution3DPtr TheCylinderDistribution = CylinderDistribution3D::create();
     beginEditCP(TheCylinderDistribution);
       TheCylinderDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
-      TheCylinderDistribution->setInnerRadius(10.0);
-      TheCylinderDistribution->setOuterRadius(20.0);
+      TheCylinderDistribution->setInnerRadius(30.0);
+      TheCylinderDistribution->setOuterRadius(100.0);
       TheCylinderDistribution->setMinTheta(0.0);
-      TheCylinderDistribution->setMaxTheta(3.14159);
-      TheCylinderDistribution->setHeight(40.0);
+      TheCylinderDistribution->setMaxTheta(6.283185);
+      TheCylinderDistribution->setHeight(400.0);
       TheCylinderDistribution->setNormal(Vec3f(0.0,0.0,1.0));
-      TheCylinderDistribution->setSurfaceOrVolume(CylinderDistribution3D::SURFACE);
+      TheCylinderDistribution->setSurfaceOrVolume(CylinderDistribution3D::VOLUME);
     endEditCP(TheCylinderDistribution);
     
     //Sphere Distribution
     SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
     beginEditCP(TheSphereDistribution);
       TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
-      TheSphereDistribution->setInnerRadius(10.0);
-      TheSphereDistribution->setOuterRadius(20.0);
+      TheSphereDistribution->setInnerRadius(500.0);
+      TheSphereDistribution->setOuterRadius(5000.0);
       TheSphereDistribution->setMinTheta(0.0);
-      TheSphereDistribution->setMaxTheta(3.14159);
+      TheSphereDistribution->setMaxTheta(6.283185);
       TheSphereDistribution->setMinZ(-1.0);
       TheSphereDistribution->setMaxZ(1.0);
-      TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::SURFACE);
+      TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::VOLUME);
     endEditCP(TheSphereDistribution);
     
     //Tri Distribution
@@ -142,25 +151,45 @@ int main(int argc, char **argv)
     beginEditCP(TheGaussianNormalDistribution);
       TheGaussianNormalDistribution->setMean(Pnt3f(0.0,0.0,0.0));
       TheGaussianNormalDistribution->setStandardDeviationX(100.0);
-      TheGaussianNormalDistribution->setStandardDeviationY(200.0);
+      TheGaussianNormalDistribution->setStandardDeviationY(100.0);
       TheGaussianNormalDistribution->setStandardDeviationZ(100.0);
     endEditCP(TheGaussianNormalDistribution);
 
     LineDistribution3D::Output0DataType::RawType ReturnValue;
 
-    FunctionPtr TheDistribution = TheTriDistribution;
+    FunctionPtr TheDistribution = TheSphereDistribution;
+    FunctionPtr TheInternalColorDistribution = TheLineDistribution;
+    FunctionPtr TheInternalSizeDistribution = TheLineDistribution2;
+
+	//Color3f Compound Function
+	DataSplitterPtr TheDataSplitter = DataSplitter::create();
+	DataCombinerPtr TheColor3fCombiner = DataCombiner::create();
+	beginEditCP(TheColor3fCombiner);
+		TheColor3fCombiner->setToType(&FieldDataTraits<Color3f>::getType());
+	endEditCP(TheColor3fCombiner);
+	
+	CompoundFunctionPtr TheColorDistribution = CompoundFunction::create();
+	beginEditCP(TheColorDistribution);
+		TheColorDistribution->getFunctions().push_back(TheInternalColorDistribution);
+		TheColorDistribution->getFunctions().push_back(TheDataSplitter);
+		TheColorDistribution->getFunctions().push_back(TheColor3fCombiner);
+	endEditCP(TheColorDistribution);
+	
+	DataCombinerPtr TheVec3fCombiner = DataCombiner::create();
+	beginEditCP(TheVec3fCombiner);
+		TheVec3fCombiner->setToType(&FieldDataTraits<Vec3f>::getType());
+	endEditCP(TheVec3fCombiner);
+	
+	CompoundFunctionPtr TheSizeDistribution = CompoundFunction::create();
+	beginEditCP(TheSizeDistribution);
+		TheSizeDistribution->getFunctions().push_back(TheInternalSizeDistribution);
+		TheSizeDistribution->getFunctions().push_back(TheDataSplitter);
+		TheSizeDistribution->getFunctions().push_back(TheVec3fCombiner);
+	endEditCP(TheSizeDistribution);
 
     //Use the Distribution to generate Positions
     GeoPositionsPtr ParticlePositions = GeoPositions3f::create();
-    UInt32 NumParticlesToGenerate(300);
-    for(UInt32 i(0) ; i< NumParticlesToGenerate ; ++i)
-    {
-        ReturnValue = 
-            LineDistribution3D::Output0DataType::dcast(
-            TheDistribution->evaluate(Function::FunctionIOParameterVector()).front().getDataPtr()
-            )->getData();
-        ParticlePositions->addValue(ReturnValue);
-    }
+    GeoColorsPtr ParticleColors = GeoColors3f::create();
     
     //Create the particles Material
     SimpleMaterialPtr ParticleMaterial = SimpleMaterial::create();
@@ -170,7 +199,6 @@ int main(int argc, char **argv)
 
     //Create the ParticleCore and set up its properties
     ParticlesPtr ParticlesCore = Particles::create();
-    GeoColorsPtr ParticleColors = GeoColors3f::create();
     GeoNormalsPtr ParticleNormals = GeoNormals3f::create();
     beginEditCP(ParticlesCore);
       //Positions
@@ -179,16 +207,15 @@ int main(int argc, char **argv)
       ParticlesCore->setSecPositions(ParticlePositions);
       //Color
       ParticlesCore->setColors(ParticleColors);
-      ParticleColors->addValue(Color3f(1.0,0.0,0.0));
       //Normal
       ParticlesCore->setNormals(ParticleNormals);
       ParticleNormals->addValue(Vec3f(0.0,0.0,1.0));
       //Sizes
-      ParticlesCore->getSizes().addValue(Vec3f(4.0,4.0,4.0));
+      //ParticlesCore->getSizes().addValue(Vec3f(2.0,2.0,2.0));
       //Draw Mode
-      ParticlesCore->setMode(Particles::Points);
+      //ParticlesCore->setMode(Particles::Points);
       //ParticlesCore->setMode(Particles::Lines);
-      //ParticlesCore->setMode(Particles::ViewDirQuads);
+      ParticlesCore->setMode(Particles::ViewDirQuads);
       //ParticlesCore->setMode(Particles::ViewerQuads);
       //ParticlesCore->setMode(Particles::Arrows);
       //ParticlesCore->setMode(Particles::ViewerArrows);
@@ -199,6 +226,34 @@ int main(int argc, char **argv)
       ParticlesCore->setMaterial(ParticleMaterial);
     endEditCP(ParticlesCore);
 
+	
+    UInt32 NumParticlesToGenerate(20000);
+	Color3f ColorReturnValue;
+	Vec3f SizeReturnValue;
+    beginEditCP(ParticlesCore);
+    for(UInt32 i(0) ; i< NumParticlesToGenerate ; ++i)
+    {
+        ReturnValue = 
+            LineDistribution3D::Output0DataType::dcast(
+            TheDistribution->evaluate(Function::FunctionIOParameterVector()).front().getDataPtr()
+            )->getData();
+        ParticlePositions->addValue(ReturnValue);
+
+		
+        ColorReturnValue = 
+			Function::FunctionIOData<Color3f>::dcast(
+            TheColorDistribution->evaluate(Function::FunctionIOParameterVector()).front().getDataPtr()
+            )->getData();
+        ParticleColors->addValue(ColorReturnValue);
+
+		
+        SizeReturnValue = 
+			Function::FunctionIOData<Vec3f>::dcast(
+            TheSizeDistribution->evaluate(Function::FunctionIOParameterVector()).front().getDataPtr()
+            )->getData();
+        ParticlesCore->getSizes().addValue(SizeReturnValue);
+    }
+    endEditCP(ParticlesCore);
 
     // Make Particles Node
     NodePtr ParticlesNode = Node::create();
@@ -214,7 +269,7 @@ int main(int argc, char **argv)
         scene->setCore(osg::Group::create());
  
         // add the torus as a child
-        scene->addChild(TorusGeometryNode);
+        //scene->addChild(TorusGeometryNode);
         scene->addChild(ParticlesNode);
     }
     endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);

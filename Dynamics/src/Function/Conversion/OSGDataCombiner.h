@@ -78,9 +78,11 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataCombiner : public DataCombinerBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual FunctionIOTypeVector getOutputTypes(FunctionIOParameterVector& InputParameters) const;
-    virtual FunctionIOTypeVector getInputTypes(FunctionIOParameterVector& InputParameters) const;
+    virtual FunctionIOTypeVector getOutputTypes(FunctionIOTypeVector& InputTypes) const;
+    virtual FunctionIOTypeVector getInputTypes(FunctionIOTypeVector& OutputTypes) const;
     virtual FunctionIOParameterVector evaluate(FunctionIOParameterVector& InputParameters);
+
+	void setToType(const DataType* type);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -101,6 +103,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataCombiner : public DataCombinerBase
     virtual ~DataCombiner(void); 
 
     /*! \}                                                                 */
+
+	void addCombineOutputData(FunctionIOParameterVector& OutputData, const FunctionIOParameterVector& InputParameters);
     
     /*==========================  PRIVATE  ================================*/
   private:

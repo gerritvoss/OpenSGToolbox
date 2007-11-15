@@ -84,8 +84,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING BoxDistribution3D : public BoxDistribution3DBas
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual FunctionIOTypeVector getOutputTypes(FunctionIOParameterVector& InputParameters) const;
-    virtual FunctionIOTypeVector getInputTypes(FunctionIOParameterVector& InputParameters) const;
+    virtual FunctionIOTypeVector getOutputTypes(FunctionIOTypeVector& InputTypes) const;
+    virtual FunctionIOTypeVector getInputTypes(FunctionIOTypeVector& OutputTypes) const;
     virtual FunctionIOParameterVector evaluate(FunctionIOParameterVector& InputParameters);
 
     /*=========================  PROTECTED  ===============================*/

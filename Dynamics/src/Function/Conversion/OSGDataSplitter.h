@@ -78,8 +78,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataSplitter : public DataSplitterBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual FunctionIOTypeVector getOutputTypes(FunctionIOParameterVector& InputParameters) const;
-    virtual FunctionIOTypeVector getInputTypes(FunctionIOParameterVector& InputParameters) const;
+    virtual FunctionIOTypeVector getOutputTypes(FunctionIOTypeVector& InputTypes) const;
+    virtual FunctionIOTypeVector getInputTypes(FunctionIOTypeVector& OutputTypes) const;
     virtual FunctionIOParameterVector evaluate(FunctionIOParameterVector& InputParameters);
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -100,6 +100,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataSplitter : public DataSplitterBase
 
     virtual ~DataSplitter(void); 
 
+	static void addSplitOutputTypes(FunctionIOTypeVector& OutputTypes, const FunctionIOType& InputType);
+	static void addSplitOutputData(FunctionIOParameterVector& OutputData, const FunctionIOParameter& InputParameter);
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/

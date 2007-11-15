@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="DataCombiner"
+	name="CompoundFunction"
 	parent="Function"
 	library="Dynamics"
 	pointerfieldtypes="both"
@@ -11,14 +11,14 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
-A Data Combiner.
+A Compound Function.
 	<Field
-		name="ToTypeName"
-		type="std::string"
-		cardinality="single"
+		name="Functions"
+		type="FunctionPtr"
+		cardinality="multi"
 		visibility="external"
-		defaultValue="Pnt3f"
 		access="public"
+		header="Function/OSGFunctionFields.h"
 	>
 	</Field>
 </FieldContainer>

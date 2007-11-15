@@ -75,14 +75,14 @@ void CylinderDistribution3D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-CylinderDistribution3D::FunctionIOTypeVector CylinderDistribution3D::getOutputTypes(FunctionIOParameterVector& InputParameters) const
+CylinderDistribution3D::FunctionIOTypeVector CylinderDistribution3D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
     OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_CYLINDER_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
-CylinderDistribution3D::FunctionIOTypeVector CylinderDistribution3D::getInputTypes(FunctionIOParameterVector& InputParameters) const
+CylinderDistribution3D::FunctionIOTypeVector CylinderDistribution3D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
     return InputTypes;

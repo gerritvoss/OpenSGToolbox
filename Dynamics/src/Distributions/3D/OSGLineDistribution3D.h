@@ -91,8 +91,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING LineDistribution3D : public LineDistribution3DB
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual FunctionIOTypeVector getOutputTypes(FunctionIOParameterVector& InputParameters) const;
-    virtual FunctionIOTypeVector getInputTypes(FunctionIOParameterVector& InputParameters) const;
+    virtual FunctionIOTypeVector getOutputTypes(FunctionIOTypeVector& InputTypes) const;
+    virtual FunctionIOTypeVector getInputTypes(FunctionIOTypeVector& OutputTypes) const;
     virtual FunctionIOParameterVector evaluate(FunctionIOParameterVector& InputParameters);
 
     /*=========================  PROTECTED  ===============================*/

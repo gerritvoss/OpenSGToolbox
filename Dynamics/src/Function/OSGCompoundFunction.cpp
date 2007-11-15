@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Dynamics                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -43,10 +43,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define OSG_COMPILEDYNAMICSLIB
+
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGSegmentSetDistribution1D.h"
-#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
+#include "OSGCompoundFunction.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -54,19 +55,55 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::SegmentSetDistribution1D
-An SegmentSetDistribution1D. 	
+/*! \class osg::CompoundFunction
+A Compound Function. 	
 */
 
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
 
+CompoundFunction::FunctionIOTypeVector CompoundFunction::getOutputTypes(FunctionIOTypeVector& InputTypes) const
+{
+    FunctionIOTypeVector OutputTypes(InputTypes);
+	for(UInt32 i(0) ; i<getFunctions().size() ; ++i)
+	{
+		OutputTypes = getFunctions().getValue(i)->getOutputTypes(OutputTypes);
+	}
+    return OutputTypes;
+}
+
+CompoundFunction::FunctionIOTypeVector CompoundFunction::getInputTypes(FunctionIOTypeVector& OutputTypes) const
+{
+    FunctionIOTypeVector InputTypes(OutputTypes);
+	for(UInt32 i(0) ; i<getFunctions().size() ; ++i)
+	{
+		InputTypes = getFunctions().getValue(i)->getInputTypes(InputTypes);
+	}
+    return InputTypes;
+}
+
+CompoundFunction::FunctionIOParameterVector CompoundFunction::evaluate(FunctionIOParameterVector& InputParameters)
+{
+    //The Input Paremeters must be the correct number
+    if(InputParameters.size() != 0)
+    {
+        throw FunctionInputException();
+    }
+    FunctionIOParameterVector ResultVector(InputParameters);
+
+	for(UInt32 i(0) ; i<getFunctions().size() ; ++i)
+	{
+		ResultVector = getFunctions().getValue(i)->evaluate(ResultVector);
+	}
+
+    return ResultVector;
+}
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
 
-void SegmentSetDistribution1D::initMethod (void)
+void CompoundFunction::initMethod (void)
 {
 }
 
@@ -75,92 +112,37 @@ void SegmentSetDistribution1D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-SegmentSetDistribution1D::FunctionIOTypeVector SegmentSetDistribution1D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
-{
-    FunctionIOTypeVector OutputTypes;
-    OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_SEGMENTSET_DIST_OUTPUTPARAMETERS));
-    return OutputTypes;
-}
-
-SegmentSetDistribution1D::FunctionIOTypeVector SegmentSetDistribution1D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
-{
-    FunctionIOTypeVector InputTypes;
-    return InputTypes;
-}
-
-SegmentSetDistribution1D::FunctionIOParameterVector SegmentSetDistribution1D::evaluate(FunctionIOParameterVector& InputParameters)
-{
-    //The Input Paremeters must be the correct number
-    if(InputParameters.size() != OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_SEGMENTSET_DIST_INPUTPARAMETERS))
-    {
-        throw FunctionInputException();
-    }
-    FunctionIOParameterVector ResultVector;
-    ResultVector.reserve(OSG_FUNC_IOPARAMETERARRAY_SIZE(OSG_SEGMENTSET_DIST_OUTPUTPARAMETERS));
-    ResultVector.push_back(OSG_FUNC_INST_FUNCTIONIOPARAMETER(0,OSG_SEGMENTSET_DIST_OUTPUTPARAMETERS, generate()));
-
-    return ResultVector;
-}
-
-Real32 SegmentSetDistribution1D::generate(void)
-{
-    Real32 PickSegment(RandomPoolManager::getRandomReal32(0.0,1.0));
-    Real32 CumLength(0.0);
-
-    for(UInt32 i(0) ; i< getSegment().size() ; ++i)
-    {
-        CumLength += osgabs(getSegment()[i][1] - getSegment()[i][0]);
-        if(PickSegment < CumLength/getTotalLength())
-        {
-            return RandomPoolManager::getRandomReal32(getSegment()[i][0],getSegment()[i][1]);
-        }
-    }
-
-    return 0.0f;
-}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-SegmentSetDistribution1D::SegmentSetDistribution1D(void) :
+CompoundFunction::CompoundFunction(void) :
     Inherited()
 {
 }
 
-SegmentSetDistribution1D::SegmentSetDistribution1D(const SegmentSetDistribution1D &source) :
+CompoundFunction::CompoundFunction(const CompoundFunction &source) :
     Inherited(source)
 {
 }
 
-SegmentSetDistribution1D::~SegmentSetDistribution1D(void)
+CompoundFunction::~CompoundFunction(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void SegmentSetDistribution1D::changed(BitVector whichField, UInt32 origin)
+void CompoundFunction::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
-
-    if(whichField & SegmentFieldMask)
-    {
-        Real32 TotalLength(0.0);
-        for(UInt32 i(0) ; i< getSegment().size() ; ++i)
-        {
-            TotalLength += osgabs(getSegment()[i][1] - getSegment()[i][0]);
-        }
-        beginEditCP(SegmentSetDistribution1DPtr(this), TotalLengthFieldMask);
-            setTotalLength(TotalLength);
-        endEditCP(SegmentSetDistribution1DPtr(this), TotalLengthFieldMask);
-    }
 }
 
-void SegmentSetDistribution1D::dump(      UInt32    , 
+void CompoundFunction::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump SegmentSetDistribution1D NI" << std::endl;
+    SLOG << "Dump CompoundFunction NI" << std::endl;
 }
 
 
@@ -178,10 +160,10 @@ void SegmentSetDistribution1D::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSEGMENTSETDISTRIBUTION1DBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSEGMENTSETDISTRIBUTION1DBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGCOMPOUNDFUNCTIONBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGCOMPOUNDFUNCTIONBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGSEGMENTSETDISTRIBUTION1DFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGCOMPOUNDFUNCTIONFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

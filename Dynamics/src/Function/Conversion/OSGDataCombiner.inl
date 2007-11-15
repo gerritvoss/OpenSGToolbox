@@ -42,6 +42,12 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+void DataCombiner::setToType(const DataType* type)
+{
+	setToTypeName(std::string(type->getCName()));
+}
+
 OSG_END_NAMESPACE
 
 #define OSGDATACOMBINER_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

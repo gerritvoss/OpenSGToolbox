@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Dynamics                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGSEGMENTSETDISTRIBUTION1D_H_
-#define _OSGSEGMENTSETDISTRIBUTION1D_H_
+#ifndef _OSGCOMPOUNDFUNCTION_H_
+#define _OSGCOMPOUNDFUNCTION_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,24 +45,19 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGDynamicsDef.h"
 
-#include "OSGSegmentSetDistribution1DBase.h"
-#include <OpenSG/OSGSysFieldDataType.h>
+#include "OSGCompoundFunctionBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-#define OSG_SEGMENTSET_DIST_OUTPUTPARAMETERS (1, \
-    (\
-      ("RandomValue", Real32) \
-    ))
+/*! \brief CompoundFunction class. See \ref 
+           PageDynamicsCompoundFunction for a description.
+*/
 
-
-#define OSG_SEGMENTSET_DIST_INPUTPARAMETERS (0, ())
-
-class OSG_DYNAMICSLIB_DLLMAPPING SegmentSetDistribution1D : public SegmentSetDistribution1DBase
+class OSG_DYNAMICSLIB_DLLMAPPING CompoundFunction : public CompoundFunctionBase
 {
   private:
 
-    typedef SegmentSetDistribution1DBase Inherited;
+    typedef CompoundFunctionBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -89,45 +84,44 @@ class OSG_DYNAMICSLIB_DLLMAPPING SegmentSetDistribution1D : public SegmentSetDis
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in SegmentSetDistribution1DBase.
+    // Variables should all be in CompoundFunctionBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    SegmentSetDistribution1D(void);
-    SegmentSetDistribution1D(const SegmentSetDistribution1D &source);
+    CompoundFunction(void);
+    CompoundFunction(const CompoundFunction &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SegmentSetDistribution1D(void); 
+    virtual ~CompoundFunction(void); 
 
     /*! \}                                                                 */
-    virtual Real32 generate(void);
     
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class SegmentSetDistribution1DBase;
+    friend class CompoundFunctionBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const SegmentSetDistribution1D &source);
+    void operator =(const CompoundFunction &source);
 };
 
-typedef SegmentSetDistribution1D *SegmentSetDistribution1DP;
+typedef CompoundFunction *CompoundFunctionP;
 
 OSG_END_NAMESPACE
 
-#include "OSGSegmentSetDistribution1DBase.inl"
-#include "OSGSegmentSetDistribution1D.inl"
+#include "OSGCompoundFunctionBase.inl"
+#include "OSGCompoundFunction.inl"
 
-#define OSGSEGMENTSETDISTRIBUTION1D_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGCOMPOUNDFUNCTION_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGSEGMENTSETDISTRIBUTION1D_H_ */
+#endif /* _OSGCOMPOUNDFUNCTION_H_ */

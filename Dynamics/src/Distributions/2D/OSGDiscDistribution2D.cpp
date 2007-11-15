@@ -75,14 +75,14 @@ void DiscDistribution2D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-DiscDistribution2D::FunctionIOTypeVector DiscDistribution2D::getOutputTypes(FunctionIOParameterVector& InputParameters) const
+DiscDistribution2D::FunctionIOTypeVector DiscDistribution2D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
     OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_DISC2D_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
-DiscDistribution2D::FunctionIOTypeVector DiscDistribution2D::getInputTypes(FunctionIOParameterVector& InputParameters) const
+DiscDistribution2D::FunctionIOTypeVector DiscDistribution2D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
     return InputTypes;

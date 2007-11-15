@@ -90,20 +90,25 @@ class OSG_DYNAMICSLIB_DLLMAPPING Function : public FunctionBase
 
     /*==========================  PUBLIC  =================================*/
   public:
-    struct FunctionIOType{
+    class FunctionIOType{
+	private:
         std::string _IOParameterName;
-        DataType* _Type;
-        FunctionIOType(const std::string& name, DataType* type) :
+        const DataType* _Type;
+	public:
+        FunctionIOType(const std::string& name, const DataType* type) :
            _IOParameterName(name),
            _Type(type)
         {
         }
+
+	    const DataType* getType(void) const;
+		std::string getParameterName(void) const;
     };
 
     class FunctionIODataBase
     {
       public:
-        virtual DataType* getType(void) const = 0;
+        virtual const DataType* getType(void) const = 0;
     };
 
     template<class RawTypeT>
@@ -122,7 +127,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING Function : public FunctionBase
         {
         }
 
-        virtual DataType* getType(void) const
+        virtual const DataType* getType(void) const
         {
             return &FieldDataTraits<RawTypeT>::getType();
         }
@@ -142,6 +147,43 @@ class OSG_DYNAMICSLIB_DLLMAPPING Function : public FunctionBase
             return _Data;
         }
     };
+	
+    template<class RawFieldTypeT>
+    class FunctionIOFieldData : public FunctionIODataBase
+    {
+      public:
+        typedef RawFieldTypeT RawType;
+
+      protected:
+        typedef FunctionIODataBase Inherited;
+        RawFieldTypeT _Data;
+
+      public:
+
+        FunctionIOFieldData(RawFieldTypeT data) : _Data(data)
+        {
+        }
+
+        virtual const DataType* getType(void) const
+        {
+            return &RawFieldTypeT::getClassType();
+        }
+
+        static FunctionIOFieldData<RawFieldTypeT>* dcast(FunctionIODataBase* Value)
+        {
+            return dynamic_cast< FunctionIOData<RawFieldTypeT>* >(Value);
+        }
+
+        static const FunctionIOFieldData<RawFieldTypeT>* dcast(const FunctionIODataBase* Value)
+        {
+            return dynamic_cast< const FunctionIOData<RawFieldTypeT>* >(Value);
+        }
+
+        const RawFieldTypeT& getData(void) const
+        {
+            return _Data;
+        }
+    };
 
     class FunctionIOParameter
     {
@@ -155,9 +197,20 @@ class OSG_DYNAMICSLIB_DLLMAPPING Function : public FunctionBase
         {
         }
 
+        FunctionIOParameter(const std::string& name, boost::shared_ptr<FunctionIODataBase> ptr) :
+           _IOParameterName(name),
+           _DataPtr(ptr)
+        {
+        }
+
         const FunctionIODataBase* getDataPtr(void) const
         {
             return _DataPtr.get();
+        }
+
+        const boost::shared_ptr<FunctionIODataBase> getPtr(void) const
+        {
+            return _DataPtr;
         }
 
     };
@@ -182,8 +235,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING Function : public FunctionBase
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
 
-    virtual FunctionIOTypeVector getOutputTypes(FunctionIOParameterVector& InputParameters) const = 0;
-    virtual FunctionIOTypeVector getInputTypes(FunctionIOParameterVector& InputParameters) const = 0;
+    virtual FunctionIOTypeVector getOutputTypes(FunctionIOTypeVector& InputTypes) const = 0;
+    virtual FunctionIOTypeVector getInputTypes(FunctionIOTypeVector& OutputTypes) const = 0;
 
     virtual FunctionIOParameterVector evaluate(FunctionIOParameterVector& InputParameters) = 0;
   protected:

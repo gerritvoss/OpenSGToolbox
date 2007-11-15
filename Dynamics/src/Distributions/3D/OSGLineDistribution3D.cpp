@@ -75,14 +75,14 @@ void LineDistribution3D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-LineDistribution3D::FunctionIOTypeVector LineDistribution3D::getOutputTypes(FunctionIOParameterVector& InputParameters) const
+LineDistribution3D::FunctionIOTypeVector LineDistribution3D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
     OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_LINE3D_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
-LineDistribution3D::FunctionIOTypeVector LineDistribution3D::getInputTypes(FunctionIOParameterVector& InputParameters) const
+LineDistribution3D::FunctionIOTypeVector LineDistribution3D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
     return InputTypes;

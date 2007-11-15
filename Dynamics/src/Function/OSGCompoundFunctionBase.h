@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class DataCombiner
+ **     class CompoundFunction
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGDATACOMBINERBASE_H_
-#define _OSGDATACOMBINERBASE_H_
+#ifndef _OSGCOMPOUNDFUNCTIONBASE_H_
+#define _OSGCOMPOUNDFUNCTIONBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,20 +65,20 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Function/OSGFunction.h" // Parent
+#include "OSGFunction.h" // Parent
 
-#include <OpenSG/OSGStringFields.h> // ToTypeName type
+#include "Function/OSGFunctionFields.h" // Functions type
 
-#include "OSGDataCombinerFields.h"
+#include "OSGCompoundFunctionFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class DataCombiner;
+class CompoundFunction;
 class BinaryDataHandler;
 
-//! \brief DataCombiner Base Class.
+//! \brief CompoundFunction Base Class.
 
-class OSG_DYNAMICSLIB_DLLMAPPING DataCombinerBase : public Function
+class OSG_DYNAMICSLIB_DLLMAPPING CompoundFunctionBase : public Function
 {
   private:
 
@@ -87,15 +87,15 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataCombinerBase : public Function
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef DataCombinerPtr  Ptr;
+    typedef CompoundFunctionPtr  Ptr;
 
     enum
     {
-        ToTypeNameFieldId = Inherited::NextFieldId,
-        NextFieldId       = ToTypeNameFieldId + 1
+        FunctionsFieldId = Inherited::NextFieldId,
+        NextFieldId      = FunctionsFieldId + 1
     };
 
-    static const OSG::BitVector ToTypeNameFieldMask;
+    static const OSG::BitVector FunctionsFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -122,17 +122,17 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataCombinerBase : public Function
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFString            *getSFToTypeName     (void);
+           MFFunctionPtr       *getMFFunctions      (void);
 
-           std::string         &getToTypeName     (void);
-     const std::string         &getToTypeName     (void) const;
+           FunctionPtr         &getFunctions      (const UInt32 index);
+           MFFunctionPtr       &getFunctions      (void);
+     const MFFunctionPtr       &getFunctions      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setToTypeName     ( const std::string &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -156,8 +156,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataCombinerBase : public Function
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  DataCombinerPtr      create          (void); 
-    static  DataCombinerPtr      createEmpty     (void); 
+    static  CompoundFunctionPtr      create          (void); 
+    static  CompoundFunctionPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -175,22 +175,22 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataCombinerBase : public Function
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFString            _sfToTypeName;
+    MFFunctionPtr       _mfFunctions;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    DataCombinerBase(void);
-    DataCombinerBase(const DataCombinerBase &source);
+    CompoundFunctionBase(void);
+    CompoundFunctionBase(const CompoundFunctionBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DataCombinerBase(void); 
+    virtual ~CompoundFunctionBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -198,13 +198,13 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataCombinerBase : public Function
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      DataCombinerBase *pOther,
+    void executeSyncImpl(      CompoundFunctionBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      DataCombinerBase *pOther,
+    void executeSyncImpl(      CompoundFunctionBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -234,7 +234,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataCombinerBase : public Function
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const DataCombinerBase &source);
+    void operator =(const CompoundFunctionBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -242,17 +242,17 @@ class OSG_DYNAMICSLIB_DLLMAPPING DataCombinerBase : public Function
 //---------------------------------------------------------------------------
 
 
-typedef DataCombinerBase *DataCombinerBaseP;
+typedef CompoundFunctionBase *CompoundFunctionBaseP;
 
-typedef osgIF<DataCombinerBase::isNodeCore,
-              CoredNodePtr<DataCombiner>,
+typedef osgIF<CompoundFunctionBase::isNodeCore,
+              CoredNodePtr<CompoundFunction>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet DataCombinerNodePtr;
+              >::_IRet CompoundFunctionNodePtr;
 
-typedef RefPtr<DataCombinerPtr> DataCombinerRefPtr;
+typedef RefPtr<CompoundFunctionPtr> CompoundFunctionRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGDATACOMBINERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGCOMPOUNDFUNCTIONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGDATACOMBINERBASE_H_ */
+#endif /* _OSGCOMPOUNDFUNCTIONBASE_H_ */

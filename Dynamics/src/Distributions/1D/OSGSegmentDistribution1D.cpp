@@ -75,14 +75,14 @@ void SegmentDistribution1D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-SegmentDistribution1D::FunctionIOTypeVector SegmentDistribution1D::getOutputTypes(FunctionIOParameterVector& InputParameters) const
+SegmentDistribution1D::FunctionIOTypeVector SegmentDistribution1D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
     OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_SEGMENT_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
-SegmentDistribution1D::FunctionIOTypeVector SegmentDistribution1D::getInputTypes(FunctionIOParameterVector& InputParameters) const
+SegmentDistribution1D::FunctionIOTypeVector SegmentDistribution1D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
     return InputTypes;

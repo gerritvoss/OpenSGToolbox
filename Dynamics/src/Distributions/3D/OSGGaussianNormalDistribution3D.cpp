@@ -76,14 +76,14 @@ void GaussianNormalDistribution3D::initMethod (void)
 \***************************************************************************/
 
 
-GaussianNormalDistribution3D::FunctionIOTypeVector GaussianNormalDistribution3D::getOutputTypes(FunctionIOParameterVector& InputParameters) const
+GaussianNormalDistribution3D::FunctionIOTypeVector GaussianNormalDistribution3D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
     OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_GAUSSIANNORMAL3D_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
-GaussianNormalDistribution3D::FunctionIOTypeVector GaussianNormalDistribution3D::getInputTypes(FunctionIOParameterVector& InputParameters) const
+GaussianNormalDistribution3D::FunctionIOTypeVector GaussianNormalDistribution3D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
     return InputTypes;

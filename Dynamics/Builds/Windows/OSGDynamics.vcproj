@@ -1,145 +1,207 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="OSGDynamics"
 	ProjectGUID="{77623743-1948-4AC4-8227-7FF6072BD16F}"
 	RootNamespace="OSGAnimation"
-	Keyword="Win32Proj">
+	Keyword="Win32Proj"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="2"
-			CharacterSet="0">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="Installing Includes"
+				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Dynamics&#x0D;&#x0A;"
+				Outputs="include"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="0"
 				AdditionalIncludeDirectories="..\..\..\External\Boost;..\..\..\Builds\Windows\include;&quot;$(OPENSG)\..\include&quot;;..\..\src"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEDYNAMICSLIB"
-				StringPooling="TRUE"
-				MinimalRebuild="TRUE"
+				StringPooling="true"
+				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				BufferSecurityCheck="FALSE"
-				EnableFunctionLevelLinking="TRUE"
-				RuntimeTypeInfo="TRUE"
+				BufferSecurityCheck="false"
+				EnableFunctionLevelLinking="true"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(OutDir)/"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
 				DisableSpecificWarnings="4244;4251;4275;4290;4231;4267;4996"
-				ForcedIncludeFiles="WinSock2.h;windows.h"/>
+				ForcedIncludeFiles="WinSock2.h;windows.h"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"
-				Description="Installing Includes"
-				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Dynamics
-"
-				Outputs="include"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(OPENSG)&quot;"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="true"
 				ProgramDatabaseFile="&quot;$(TargetDir)\$(ProjectName)D.pdb&quot;"
 				SubSystem="1"
 				ImportLibrary="&quot;$(TargetDir)\$(ProjectName)D.lib&quot;"
-				TargetMachine="1"/>
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="2"
-			CharacterSet="0">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Dynamics"
+				Outputs="include"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;$(OPENSG)\..\include&quot;;..\..\src"
+				AdditionalIncludeDirectories="..\..\..\External\Boost;..\..\..\Builds\Windows\include;&quot;$(OPENSG)\..\include&quot;;..\..\src"
 				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEDYNAMICSLIB"
-				StringPooling="TRUE"
-				MinimalRebuild="FALSE"
+				StringPooling="true"
+				MinimalRebuild="false"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="FALSE"
-				EnableFunctionLevelLinking="TRUE"
-				RuntimeTypeInfo="TRUE"
+				BufferSecurityCheck="false"
+				EnableFunctionLevelLinking="true"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(IntDir)/"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 				DisableSpecificWarnings="4244;4251;4275;4290;4231;4267;4996"
-				ForcedIncludeFiles="WinSock2.h;windows.h"/>
+				ForcedIncludeFiles="WinSock2.h;windows.h"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"
-				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Input
-"
-				Outputs="include"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGWindowGLUT.lib OSGWindowWIN32.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(OPENSG)&quot;"
-				IgnoreAllDefaultLibraries="FALSE"
-				GenerateDebugInformation="FALSE"
+				IgnoreAllDefaultLibraries="false"
+				GenerateDebugInformation="false"
 				ProgramDatabaseFile=""
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				ImportLibrary="&quot;$(TargetDir)\$(ProjectName).lib&quot;"
-				TargetMachine="1"/>
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -147,418 +209,577 @@
 	<Files>
 		<Filter
 			Name="Source Files"
-			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl">
+			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
+			>
 			<File
-				RelativePath="..\..\src\OSGDynamicsDef.h">
+				RelativePath="..\..\src\OSGDynamicsDef.h"
+				>
 			</File>
 			<Filter
 				Name="Function"
-				Filter="">
+				>
 				<File
-					RelativePath="..\..\src\Function\OSGFunction.cpp">
+					RelativePath="..\..\src\Function\OSGCompoundFunction.cpp"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Function\OSGFunction.h">
+					RelativePath="..\..\src\Function\OSGCompoundFunction.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Function\OSGFunction.inl">
+					RelativePath="..\..\src\Function\OSGCompoundFunction.inl"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Function\OSGFunctionBase.cpp">
+					RelativePath="..\..\src\Function\OSGCompoundFunctionBase.cpp"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Function\OSGFunctionBase.h">
+					RelativePath="..\..\src\Function\OSGCompoundFunctionBase.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Function\OSGFunctionBase.inl">
+					RelativePath="..\..\src\Function\OSGCompoundFunctionBase.inl"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Function\OSGFunctionFactory.cpp">
+					RelativePath="..\..\src\Function\OSGCompoundFunctionFields.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Function\OSGFunctionFactory.h">
+					RelativePath="..\..\src\Function\OSGFunction.cpp"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Function\OSGFunctionFactory.inl">
+					RelativePath="..\..\src\Function\OSGFunction.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Function\OSGFunctionFields.h">
+					RelativePath="..\..\src\Function\OSGFunction.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGFunctionBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGFunctionBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGFunctionBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGFunctionFactory.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGFunctionFactory.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGFunctionFactory.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Function\OSGFunctionFields.h"
+					>
 				</File>
 				<Filter
 					Name="Conversion"
-					Filter="">
+					>
 					<File
-						RelativePath="..\..\src\Function\Conversion\OSGDataCombiner.cpp">
+						RelativePath="..\..\src\Function\Conversion\OSGDataCombiner.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Function\Conversion\OSGDataCombiner.h">
+						RelativePath="..\..\src\Function\Conversion\OSGDataCombiner.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Function\Conversion\OSGDataCombiner.inl">
+						RelativePath="..\..\src\Function\Conversion\OSGDataCombiner.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Function\Conversion\OSGDataCombinerBase.cpp">
+						RelativePath="..\..\src\Function\Conversion\OSGDataCombinerBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Function\Conversion\OSGDataCombinerBase.h">
+						RelativePath="..\..\src\Function\Conversion\OSGDataCombinerBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Function\Conversion\OSGDataCombinerBase.inl">
+						RelativePath="..\..\src\Function\Conversion\OSGDataCombinerBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Function\Conversion\OSGDataCombinerFields.h">
+						RelativePath="..\..\src\Function\Conversion\OSGDataCombinerFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Function\Conversion\OSGDataSplitter.cpp">
+						RelativePath="..\..\src\Function\Conversion\OSGDataSplitter.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Function\Conversion\OSGDataSplitter.h">
+						RelativePath="..\..\src\Function\Conversion\OSGDataSplitter.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Function\Conversion\OSGDataSplitter.inl">
+						RelativePath="..\..\src\Function\Conversion\OSGDataSplitter.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Function\Conversion\OSGDataSplitterBase.cpp">
+						RelativePath="..\..\src\Function\Conversion\OSGDataSplitterBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Function\Conversion\OSGDataSplitterBase.h">
+						RelativePath="..\..\src\Function\Conversion\OSGDataSplitterBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Function\Conversion\OSGDataSplitterBase.inl">
+						RelativePath="..\..\src\Function\Conversion\OSGDataSplitterBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Function\Conversion\OSGDataSplitterFields.h">
+						RelativePath="..\..\src\Function\Conversion\OSGDataSplitterFields.h"
+						>
 					</File>
 				</Filter>
 			</Filter>
 			<Filter
 				Name="Distributions"
-				Filter="">
+				>
 				<Filter
 					Name="1D"
-					Filter="">
+					>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1D.cpp">
+						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1D.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1D.h">
+						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1D.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1D.inl">
+						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1D.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1DBase.cpp">
+						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1DBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1DBase.h">
+						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1DBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1DBase.inl">
+						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1DBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1DFields.h">
+						RelativePath="..\..\src\Distributions\1d\OSGGaussianNormalDistribution1DFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1D.cpp">
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1D.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1D.h">
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1D.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1D.inl">
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1D.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1DBase.cpp">
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1DBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1DBase.h">
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1DBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1DBase.inl">
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1DBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1DFields.h">
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentDistribution1DFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1D.cpp">
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1D.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1D.h">
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1D.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1D.inl">
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1D.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1DBase.cpp">
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1DBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1DBase.h">
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1DBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1DBase.inl">
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1DBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1DFields.h">
+						RelativePath="..\..\src\Distributions\1d\OSGSegmentSetDistribution1DFields.h"
+						>
 					</File>
 				</Filter>
 				<Filter
 					Name="3D"
-					Filter="">
+					>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGBoxDistribution3D.cpp">
+						RelativePath="..\..\src\Distributions\3d\OSGBoxDistribution3D.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGBoxDistribution3D.h">
+						RelativePath="..\..\src\Distributions\3d\OSGBoxDistribution3D.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGBoxDistribution3D.inl">
+						RelativePath="..\..\src\Distributions\3d\OSGBoxDistribution3D.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGBoxDistribution3DBase.cpp">
+						RelativePath="..\..\src\Distributions\3d\OSGBoxDistribution3DBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGBoxDistribution3DBase.h">
+						RelativePath="..\..\src\Distributions\3d\OSGBoxDistribution3DBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGBoxDistribution3DBase.inl">
+						RelativePath="..\..\src\Distributions\3d\OSGBoxDistribution3DBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGBoxDistribution3DFields.h">
+						RelativePath="..\..\src\Distributions\3d\OSGBoxDistribution3DFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGCylinderDistribution3D.cpp">
+						RelativePath="..\..\src\Distributions\3d\OSGCylinderDistribution3D.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGCylinderDistribution3D.h">
+						RelativePath="..\..\src\Distributions\3d\OSGCylinderDistribution3D.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGCylinderDistribution3D.inl">
+						RelativePath="..\..\src\Distributions\3d\OSGCylinderDistribution3D.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGCylinderDistribution3DBase.cpp">
+						RelativePath="..\..\src\Distributions\3d\OSGCylinderDistribution3DBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGCylinderDistribution3DBase.h">
+						RelativePath="..\..\src\Distributions\3d\OSGCylinderDistribution3DBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGCylinderDistribution3DBase.inl">
+						RelativePath="..\..\src\Distributions\3d\OSGCylinderDistribution3DBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGCylinderDistribution3DFields.h">
+						RelativePath="..\..\src\Distributions\3d\OSGCylinderDistribution3DFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGDiscDistribution3D.cpp">
+						RelativePath="..\..\src\Distributions\3d\OSGDiscDistribution3D.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGDiscDistribution3D.h">
+						RelativePath="..\..\src\Distributions\3d\OSGDiscDistribution3D.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGDiscDistribution3D.inl">
+						RelativePath="..\..\src\Distributions\3d\OSGDiscDistribution3D.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGDiscDistribution3DBase.cpp">
+						RelativePath="..\..\src\Distributions\3d\OSGDiscDistribution3DBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGDiscDistribution3DBase.h">
+						RelativePath="..\..\src\Distributions\3d\OSGDiscDistribution3DBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGDiscDistribution3DBase.inl">
+						RelativePath="..\..\src\Distributions\3d\OSGDiscDistribution3DBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGDiscDistribution3DFields.h">
+						RelativePath="..\..\src\Distributions\3d\OSGDiscDistribution3DFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGGaussianNormalDistribution3D.cpp">
+						RelativePath="..\..\src\Distributions\3d\OSGGaussianNormalDistribution3D.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGGaussianNormalDistribution3D.h">
+						RelativePath="..\..\src\Distributions\3d\OSGGaussianNormalDistribution3D.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGGaussianNormalDistribution3D.inl">
+						RelativePath="..\..\src\Distributions\3d\OSGGaussianNormalDistribution3D.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGGaussianNormalDistribution3DBase.cpp">
+						RelativePath="..\..\src\Distributions\3d\OSGGaussianNormalDistribution3DBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGGaussianNormalDistribution3DBase.h">
+						RelativePath="..\..\src\Distributions\3d\OSGGaussianNormalDistribution3DBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGGaussianNormalDistribution3DBase.inl">
+						RelativePath="..\..\src\Distributions\3d\OSGGaussianNormalDistribution3DBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGGaussianNormalDistribution3DFields.h">
+						RelativePath="..\..\src\Distributions\3d\OSGGaussianNormalDistribution3DFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGLineDistribution3D.cpp">
+						RelativePath="..\..\src\Distributions\3d\OSGLineDistribution3D.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGLineDistribution3D.h">
+						RelativePath="..\..\src\Distributions\3d\OSGLineDistribution3D.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGLineDistribution3D.inl">
+						RelativePath="..\..\src\Distributions\3d\OSGLineDistribution3D.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGLineDistribution3DBase.cpp">
+						RelativePath="..\..\src\Distributions\3d\OSGLineDistribution3DBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGLineDistribution3DBase.h">
+						RelativePath="..\..\src\Distributions\3d\OSGLineDistribution3DBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGLineDistribution3DBase.inl">
+						RelativePath="..\..\src\Distributions\3d\OSGLineDistribution3DBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGLineDistribution3DFields.h">
+						RelativePath="..\..\src\Distributions\3d\OSGLineDistribution3DFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGSphereDistribution3D.cpp">
+						RelativePath="..\..\src\Distributions\3d\OSGSphereDistribution3D.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGSphereDistribution3D.h">
+						RelativePath="..\..\src\Distributions\3d\OSGSphereDistribution3D.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGSphereDistribution3D.inl">
+						RelativePath="..\..\src\Distributions\3d\OSGSphereDistribution3D.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGSphereDistribution3DBase.cpp">
+						RelativePath="..\..\src\Distributions\3d\OSGSphereDistribution3DBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGSphereDistribution3DBase.h">
+						RelativePath="..\..\src\Distributions\3d\OSGSphereDistribution3DBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGSphereDistribution3DBase.inl">
+						RelativePath="..\..\src\Distributions\3d\OSGSphereDistribution3DBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGSphereDistribution3DFields.h">
+						RelativePath="..\..\src\Distributions\3d\OSGSphereDistribution3DFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGTriDistribution3D.cpp">
+						RelativePath="..\..\src\Distributions\3d\OSGTriDistribution3D.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGTriDistribution3D.h">
+						RelativePath="..\..\src\Distributions\3d\OSGTriDistribution3D.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGTriDistribution3D.inl">
+						RelativePath="..\..\src\Distributions\3d\OSGTriDistribution3D.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGTriDistribution3DBase.cpp">
+						RelativePath="..\..\src\Distributions\3d\OSGTriDistribution3DBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGTriDistribution3DBase.h">
+						RelativePath="..\..\src\Distributions\3d\OSGTriDistribution3DBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGTriDistribution3DBase.inl">
+						RelativePath="..\..\src\Distributions\3d\OSGTriDistribution3DBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\3d\OSGTriDistribution3DFields.h">
+						RelativePath="..\..\src\Distributions\3d\OSGTriDistribution3DFields.h"
+						>
 					</File>
 				</Filter>
 				<Filter
 					Name="2D"
-					Filter="">
+					>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2D.cpp">
+						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2D.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2D.h">
+						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2D.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2D.inl">
+						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2D.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2DBase.cpp">
+						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2DBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2DBase.h">
+						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2DBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2DBase.inl">
+						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2DBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2DFields.h">
+						RelativePath="..\..\src\Distributions\2d\OSGDiscDistribution2DFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormalDistribution2D.cpp">
+						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormalDistribution2D.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormalDistribution2D.h">
+						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormalDistribution2D.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormalDistribution2D.inl">
+						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormalDistribution2D.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormalDistribution2DBase.cpp">
+						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormalDistribution2DBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormalDistribution2DBase.h">
+						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormalDistribution2DBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormalDistribution2DBase.inl">
+						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormalDistribution2DBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormalDistribution2DFields.h">
+						RelativePath="..\..\src\Distributions\2d\OSGGaussianNormalDistribution2DFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2D.cpp">
+						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2D.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2D.h">
+						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2D.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2D.inl">
+						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2D.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2DBase.cpp">
+						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2DBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2DBase.h">
+						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2DBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2DBase.inl">
+						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2DBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2DFields.h">
+						RelativePath="..\..\src\Distributions\2d\OSGLineDistribution2DFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2D.cpp">
+						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2D.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2D.h">
+						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2D.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2D.inl">
+						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2D.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2DBase.cpp">
+						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2DBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2DBase.h">
+						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2DBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2DBase.inl">
+						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2DBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2DFields.h">
+						RelativePath="..\..\src\Distributions\2d\OSGQuadDistribution2DFields.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGTriDistribution2D.cpp">
+						RelativePath="..\..\src\Distributions\2d\OSGTriDistribution2D.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGTriDistribution2D.h">
+						RelativePath="..\..\src\Distributions\2d\OSGTriDistribution2D.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGTriDistribution2D.inl">
+						RelativePath="..\..\src\Distributions\2d\OSGTriDistribution2D.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGTriDistribution2DBase.cpp">
+						RelativePath="..\..\src\Distributions\2d\OSGTriDistribution2DBase.cpp"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGTriDistribution2DBase.h">
+						RelativePath="..\..\src\Distributions\2d\OSGTriDistribution2DBase.h"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGTriDistribution2DBase.inl">
+						RelativePath="..\..\src\Distributions\2d\OSGTriDistribution2DBase.inl"
+						>
 					</File>
 					<File
-						RelativePath="..\..\src\Distributions\2d\OSGTriDistribution2DFields.h">
+						RelativePath="..\..\src\Distributions\2d\OSGTriDistribution2DFields.h"
+						>
 					</File>
 				</Filter>
 			</Filter>

@@ -75,14 +75,14 @@ void DiscDistribution3D::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-DiscDistribution3D::FunctionIOTypeVector DiscDistribution3D::getOutputTypes(FunctionIOParameterVector& InputParameters) const
+DiscDistribution3D::FunctionIOTypeVector DiscDistribution3D::getOutputTypes(FunctionIOTypeVector& InputTypes) const
 {
     FunctionIOTypeVector OutputTypes;
     OutputTypes.push_back(OSG_FUNC_INST_FUNCTIONIOTYPE(0,OSG_DISC3D_DIST_OUTPUTPARAMETERS));
     return OutputTypes;
 }
 
-DiscDistribution3D::FunctionIOTypeVector DiscDistribution3D::getInputTypes(FunctionIOParameterVector& InputParameters) const
+DiscDistribution3D::FunctionIOTypeVector DiscDistribution3D::getInputTypes(FunctionIOTypeVector& OutputTypes) const
 {
     FunctionIOTypeVector InputTypes;
     return InputTypes;
