@@ -352,7 +352,8 @@ void TextField::mouseDragged(const MouseEvent& e)
 
 void TextField::produceActionPerformed(const ActionEvent& e)
 {
-   for(ActionListenerSetConstItor SetItor(_ActionListeners.begin()) ; SetItor != _ActionListeners.end() ; ++SetItor)
+   ActionListenerSet ListenerSet(_ActionListeners);
+   for(ActionListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
 	   (*SetItor)->actionPerformed(e);
    }

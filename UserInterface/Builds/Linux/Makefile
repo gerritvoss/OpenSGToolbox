@@ -6,7 +6,7 @@ LIB_INCLUDE_DIR_NAME = UserInterface
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Border:$(srcdir)/Background:$(srcdir)/Event:$(srcdir)/Layout:$(srcdir)/Util:$(srcdir)/Component:$(srcdir)/Component/Button:$(srcdir)/Component/Menu:$(srcdir)/Component/Table:$(srcdir)/Component/Table/DefaultEditors:$(srcdir)/Component/Table/DefaultRenderers:$(srcdir)/Component/Scroll:$(srcdir)/Component/Misc:$(srcdir)/Component/Container:$(srcdir)/Component/List:$(srcdir)/Component/Text:$(srcdir)/Editors:$(srcdir)/LookAndFeel:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Text:
+VPATH = $(srcdir)/:$(srcdir)/Border:$(srcdir)/Background:$(srcdir)/Event:$(srcdir)/Layout:$(srcdir)/Util:$(srcdir)/Component:$(srcdir)/Component/Button:$(srcdir)/Component/Spinner:$(srcdir)/Component/Menu:$(srcdir)/Component/Table:$(srcdir)/Component/Table/DefaultEditors:$(srcdir)/Component/Table/DefaultRenderers:$(srcdir)/Component/Scroll:$(srcdir)/Component/Misc:$(srcdir)/Component/Container:$(srcdir)/Component/List:$(srcdir)/Component/Text:$(srcdir)/Editors:$(srcdir)/LookAndFeel:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Text:
 
 
 #.SUFFIX = .o .o
@@ -95,17 +95,7 @@ OBJECTS = OSGShadowBorder.o \
 	OSGBoxLayoutConstraintsBase.o \
 	OSGLineUtils.o \
 	OSGUIDrawUtils.o \
-	OSGLabelBase.o \
-	OSGCanvasBase.o \
-	OSGRotatedComponent.o \
-	OSGUIDrawObjectCanvas.o \
-	OSGLabel.o \
 	OSGComponent.o \
-	OSGRotatedComponentBase.o \
-	OSGUIDrawObjectCanvasBase.o \
-	OSGCanvas.o \
-	OSGImageComponent.o \
-	OSGImageComponentBase.o \
 	OSGComponentBase.o \
 	OSGButtonBase.o \
 	OSGRadioButtonGroup.o \
@@ -116,6 +106,8 @@ OBJECTS = OSGShadowBorder.o \
 	OSGRadioButtonBase.o \
 	OSGRadioButton.o \
 	OSGToggleButtonBase.o \
+	OSGAbstractSpinnerModel.o \
+	OSGListSpinnerModel.o \
 	OSGSeperatorMenuItem.o \
 	OSGMenuBase.o \
 	OSGMenuItemBase.o \
@@ -154,7 +146,15 @@ OBJECTS = OSGShadowBorder.o \
 	OSGScrollPanelBase.o \
 	OSGDefaultBoundedRangeModel.o \
 	OSGToolTip.o \
+	OSGCanvasBase.o \
+	OSGRotatedComponent.o \
+	OSGUIDrawObjectCanvas.o \
+	OSGRotatedComponentBase.o \
+	OSGUIDrawObjectCanvasBase.o \
 	OSGToolTipBase.o \
+	OSGCanvas.o \
+	OSGImageComponent.o \
+	OSGImageComponentBase.o \
 	OSGFrameBase.o \
 	OSGUIViewportBase.o \
 	OSGContainer.o \
@@ -174,12 +174,14 @@ OBJECTS = OSGShadowBorder.o \
 	OSGDefaultListSelectionModel.o \
 	OSGList.o \
 	OSGDefaultListCellGenerator.o \
+	OSGLabelBase.o \
 	OSGTextComponent.o \
 	OSGPasswordField.o \
 	OSGTextComponentBase.o \
 	OSGPasswordFieldBase.o \
 	OSGTextArea.o \
 	OSGTextAreaBase.o \
+	OSGLabel.o \
 	OSGTextField.o \
 	OSGTextFieldBase.o \
 	OSGAbstractCellEditor.o \
