@@ -56,6 +56,8 @@
 
 #include <OpenSG/OSGConfig.h>
 
+#ifdef __linux
+
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGInputDef.h"
@@ -127,5 +129,7 @@ OSG_DLLEXPORT_DECL1(MField, XWindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPPING
 OSG_END_NAMESPACE
 
 #define OSGXWINDOWEVENTPRODUCERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+
+#endif
 
 #endif /* _OSGXWINDOWEVENTPRODUCERFIELDS_H_ */

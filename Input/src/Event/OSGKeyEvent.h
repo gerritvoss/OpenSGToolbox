@@ -142,6 +142,7 @@ class OSG_INPUTLIB_DLLMAPPING KeyEvent : public Event
          KEY_NUMPAD_7,
          KEY_NUMPAD_8,
          KEY_NUMPAD_9,
+         KEY_NUMPAD_EQUALS,
          KEY_OPEN_BRACKET,
          KEY_PAGE_DOWN,
          KEY_PAGE_UP,

@@ -1,9 +1,9 @@
 #include "OSGWindowUtils.h"
 
-#ifdef __APPLE__
-#include <OpenSG/OSGCarbonWindow.h>
-#include <OpenSG/OSGCocoaWindow.h>
-#include <OpenSG/OSGCoreGLWindow.h>
+#ifdef darwin
+//#include <OpenSG/OSGCocoaWindow.h>
+//#include <OpenSG/OSGCoreGLWindow.h>
+#include "WindowSystem/Carbon/OSGCarbonWindowEventProducer.h"
 #endif
 
 #ifdef WIN32
@@ -43,7 +43,7 @@ WindowEventProducerPtr createDefaultWindowEventProducer(void)
 
 WindowEventProducerPtr OSG_INPUTLIB_DLLMAPPING createWindowEventProducer(const FieldContainerType WindowType)
 {
-#if defined(__APPLE__)
+#if defined(darwin)
     if(WindowType == CarbonWindow::getClassType())
     {
         return CarbonWindowEventProducer::create();

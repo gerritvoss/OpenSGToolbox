@@ -479,6 +479,7 @@ UChar8 KeyEvent::getNonLetterKey(Key k, UInt32 Modifier)
          case KEY_BACK_SLASH:
             return '\\';
          case KEY_EQUALS:
+		 case KEY_NUMPAD_EQUALS:
             return '=';
          case KEY_MINUS:
             return '-';

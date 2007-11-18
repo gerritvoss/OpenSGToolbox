@@ -61,6 +61,8 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGInputDef.h"
 
+#ifdef __linux
+
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
@@ -220,5 +222,7 @@ typedef RefPtr<XWindowEventProducerPtr> XWindowEventProducerRefPtr;
 OSG_END_NAMESPACE
 
 #define OSGXWINDOWEVENTPRODUCERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+
+#endif
 
 #endif /* _OSGXWINDOWEVENTPRODUCERBASE_H_ */

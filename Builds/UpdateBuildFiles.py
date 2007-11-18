@@ -269,6 +269,13 @@ def main():
       if os.path.exists( os.path.join(File,"Builds") ) and os.path.exists( os.path.join(File,"src") ):
          print "Makeing Library", os.path.split(File)[1] ,"Linux Build ..."
          makeLinuxMakefile(os.path.join(File,os.path.join("Builds","Linux")),"../../src")
+
+   print "Making Apple Build ..."
+   for File in FileList:
+      if os.path.exists( os.path.join(File,"Builds") ) and os.path.exists( os.path.join(File,"src") ):
+         print "Makeing Library", os.path.split(File)[1] ,"Apple Build ..."
+         makeLinuxMakefile(os.path.join(File,os.path.join("Builds","Apple")),"../../src")
+
    print "Done"
    #raw_input("Type ENTER to close.")
 

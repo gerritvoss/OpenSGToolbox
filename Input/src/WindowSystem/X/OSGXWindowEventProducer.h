@@ -44,6 +44,8 @@
 
 #include <OpenSG/OSGConfig.h>
 
+#ifdef __linux
+
 #include "OSGXWindowEventProducerBase.h"
 #include <OpenSG/OSGXWindow.h>
 
@@ -222,5 +224,7 @@ OSG_END_NAMESPACE
 #include "OSGXWindowEventProducer.inl"
 
 #define OSGXWINDOWEVENTPRODUCER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+
+#endif
 
 #endif /* _OSGXWINDOWEVENTPRODUCER_H_ */

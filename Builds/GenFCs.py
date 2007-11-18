@@ -10,13 +10,18 @@ def convertPathToOutput(Path):
       return '"' + Path + '"'
 
 def main():
+   print "Operating System:", os.name
+   print "System Platform:", sys.platform
    if len(sys.argv) != 2:
       print "Must specify a Field Container Description file(.fcd)."
       sys.exit(1)
       
    GenFCsPyDir = os.path.split(sys.argv[0])[0]
    if os.name == "posix":
-      FcdCompilePath = os.path.join(GenFCsPyDir, "../External/fcdCompile/Linux/fcdCompile")
+      if sys.platform == "darwin":
+         FcdCompilePath = os.path.join(GenFCsPyDir, "../External/fcdCompile/Apple/fcdCompile")
+      else:
+         FcdCompilePath = os.path.join(GenFCsPyDir, "../External/fcdCompile/Linux/fcdCompile")
    else:
       FcdCompilePath = convertPathToOutput(os.path.join(GenFCsPyDir, "..\\External\\fcdCompile\\Windows\\fcdCompile.exe")) 
       

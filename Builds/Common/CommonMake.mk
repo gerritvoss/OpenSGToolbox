@@ -70,16 +70,22 @@ ifeq ($(SYSTEM),IRIX)
         CCOUT := -o 
         LDOUT := -o 
 	LINK  := 
+        SHARED_LIB_EXT := so
+	SHARED_LINK := -shared
 endif
 ifeq ($(SYSTEM),IRIX64)
         CCOUT := -o 
         LDOUT := -o 
 	LINK  := 
+	SHARED_LIB_EXT := so
+	SHARED_LINK := -shared
 endif
 ifeq ($(SYSTEM),Linux)
         CCOUT := -o 
         LDOUT := -o 
 	LINK  := 
+	SHARED_LIB_EXT := so
+	SHARED_LINK := -shared
 endif
 ifeq ($(findstring WIN,$(SYSTEM)),WIN)
         OS := WIN32
@@ -92,11 +98,15 @@ ifeq ($(SYSTEM),HP-UX)
         CCOUT := -o 
         LDOUT := -o 
 	LINK  := 
+	SHARED_LIB_EXT := so
+	SHARED_LINK := -shared
 endif
 ifeq ($(SYSTEM),Darwin)
         CCOUT := -o 
         LDOUT := -o 
-	LINK  := 
+	LINK  :=
+	SHARED_LIB_EXT := dylib
+	SHARED_LINK := -dynamiclib
 endif
 
 # Var settings
@@ -110,7 +120,7 @@ LDFLAGS = $(LINK) `$(OSGCONFIG) --libs --$(LIBTYPE) Base System`
 ifeq ($(LIBTYPE),dbg)
 	DGB_OPT_EXT := D
 endif
-SHARED_LIB_NAME=lib$(LIB_NAME)$(DGB_OPT_EXT).so
+SHARED_LIB_NAME=lib$(LIB_NAME)$(DGB_OPT_EXT).$(SHARED_LIB_EXT)
 
 STATIC_LIB_NAME=lib$(LIB_NAME)$(DGB_OPT_EXT).a
 
@@ -123,7 +133,7 @@ build:	$(SHARED_LIB_NAME) \
 	$(STATIC_LIB_NAME)
 
 $(SHARED_LIB_NAME): $(OBJECTS)
-	$(CC) -shared $(LDOUT) $(SHARED_LIB_NAME) $(OBJECTS) $(LDFLAGS) $(EXTRA_LDFLAGS)
+	$(CC) $(SHARED_LINK) $(LDOUT) $(SHARED_LIB_NAME) $(OBJECTS) $(LDFLAGS) $(EXTRA_LDFLAGS)
         
 $(STATIC_LIB_NAME): $(OBJECTS)
 	ar -ruv $(STATIC_LIB_NAME) $(OBJECTS)

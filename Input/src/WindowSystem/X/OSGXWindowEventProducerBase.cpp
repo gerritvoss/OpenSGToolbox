@@ -50,15 +50,15 @@
  *****************************************************************************
 \*****************************************************************************/
 
-
 #define OSG_COMPILEXWINDOWEVENTPRODUCERINST
+
+#include "OSGXWindowEventProducerBase.h"
+
+#ifdef __linux
 
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
-
-#include "OSGXWindowEventProducerBase.h"
 #include "OSGXWindowEventProducer.h"
 
 
@@ -255,4 +255,6 @@ namespace
 }
 
 OSG_END_NAMESPACE
+
+#endif
 

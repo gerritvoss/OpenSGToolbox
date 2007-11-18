@@ -53,12 +53,13 @@
 
 #define OSG_COMPILEGLUTWINDOWEVENTPRODUCERINST
 
+#include "OSGGLUTWindowEventProducerBase.h"
+
+#ifdef OSG_WITH_GLUT
+
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
-
-#include "OSGGLUTWindowEventProducerBase.h"
 #include "OSGGLUTWindowEventProducer.h"
 
 
@@ -255,4 +256,6 @@ namespace
 }
 
 OSG_END_NAMESPACE
+
+#endif
 

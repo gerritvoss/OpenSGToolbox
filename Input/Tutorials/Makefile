@@ -1,8 +1,7 @@
 # trivial makefile for OpenSG tutorials
 
 # use debug or opt libs?
-LIBTYPE ?= opt
-OSGINPUTROOT ?= ../../Builds/Linux
+LIBTYPE ?= dbg
 
 ifeq ($(LIBTYPE),dbg)
 	DGB_OPT_EXT := D
@@ -91,18 +90,21 @@ ifeq ($(SYSTEM),IRIX)
         LDOUT  := -o 
 	LINK   := 
 	ADDLIB := X
+	SYSTEM_INSTALL_SUBDIR := IRIX
 endif
 ifeq ($(SYSTEM),IRIX64)
         CCOUT  := -o 
         LDOUT  := -o 
 	LINK   := 
 	ADDLIB := X
+	SYSTEM_INSTALL_SUBDIR := IRIX64
 endif
 ifeq ($(SYSTEM),Linux)
         CCOUT  := -o 
         LDOUT  := -o 
 	LINK   := 
 	ADDLIB := X
+	SYSTEM_INSTALL_SUBDIR := Linux
 endif
 ifeq ($(findstring WIN,$(SYSTEM)),WIN)
         OS := WIN32
@@ -116,12 +118,17 @@ ifeq ($(SYSTEM),HP-UX)
         LDOUT  := -o 
 	LINK   := 
 	ADDLIB := X
+	SYSTEM_INSTALL_SUBDIR := HP-UX
 endif
 ifeq ($(SYSTEM),Darwin)
         CCOUT := -o 
         LDOUT := -o 
 	LINK  := 
+	SYSTEM_INSTALL_SUBDIR := Apple
+	EXTRA_LDFLAGS := -framework Carbon -framework AGL -framework Quicktime -lOSGWindowCarbon
 endif
+
+OSGINPUTROOT = ../../Builds/$(SYSTEM_INSTALL_SUBDIR)
 
 # Var settings
 
@@ -133,7 +140,7 @@ endif
 
 CCFLAGS = $(shell $(OSGCONFIG) --cflags --$(LIBTYPE) Base System $(ADDLIB) GLUT) -I$(OSGINPUTROOT)/include
 
-LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB) GLUT) -L$(OSGINPUTROOT)/lib -lOSGInput$(DGB_OPT_EXT)
+LDFLAGS = $(LINK) $(shell $(OSGCONFIG) --libs --$(LIBTYPE) Base System $(ADDLIB) GLUT) -L$(OSGINPUTROOT)/lib -lOSGInput$(DGB_OPT_EXT) $(EXTRA_LDFLAGS)
 
 
 # all tutorials in this directory

@@ -40,15 +40,17 @@
 //  Includes
 //---------------------------------------------------------------------------
 
+#include "OSGXWindowEventProducer.h"
+
+#ifdef __linux
+
 #include <stdlib.h>
 #include <stdio.h>
 
 #define OSG_COMPILEINPUTLIB
 
-#include <OpenSG/OSGConfig.h>
 #include <X11/cursorfont.h>
 
-#include "OSGXWindowEventProducer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -1021,4 +1023,6 @@ namespace
 #endif
 
 OSG_END_NAMESPACE
+
+#endif
 

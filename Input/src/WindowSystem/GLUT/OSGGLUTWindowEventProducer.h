@@ -42,6 +42,8 @@
 #pragma once
 #endif
 
+#ifdef OSG_WITH_GLUT
+
 #include <OpenSG/OSGConfig.h>
 #include "OSGInputDef.h"
 
@@ -247,5 +249,7 @@ OSG_END_NAMESPACE
 #include "OSGGLUTWindowEventProducer.inl"
 
 #define OSGGLUTWINDOWEVENTPRODUCER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+
+#endif
 
 #endif /* _OSGGLUTWINDOWEVENTPRODUCER_H_ */

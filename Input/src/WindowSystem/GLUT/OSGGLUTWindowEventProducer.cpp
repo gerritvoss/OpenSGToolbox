@@ -40,13 +40,15 @@
 //  Includes
 //---------------------------------------------------------------------------
 
+#include "OSGGLUTWindowEventProducer.h"
+
+#ifdef OSG_WITH_GLUT
+
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGGLUT.h>
 
-#include "OSGGLUTWindowEventProducer.h"
 #include "WindowSystem/OSGWindowEventProducerFactory.h"
 
 OSG_BEGIN_NAMESPACE
@@ -968,4 +970,6 @@ namespace
 #endif
 
 OSG_END_NAMESPACE
+
+#endif
 

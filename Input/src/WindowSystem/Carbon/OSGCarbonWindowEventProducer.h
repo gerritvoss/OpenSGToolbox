@@ -73,6 +73,7 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
 	OSStatus internalEventHandler(EventHandlerCallRef nextHandler, EventRef event, void *userData);
 	
 	UInt32 _WindowId;
+	WindowRef _WindowRef;
 	
 	static UInt32 getUndefinedWindowId(void);
 	
@@ -214,6 +215,12 @@ class OSG_INPUTLIB_DLLMAPPING CarbonWindowEventProducer : public CarbonWindowEve
 	
 	virtual void setCursor(void);
     virtual WindowPtr createWindow(void);
+	OSStatus handleMouseEvent(EventHandlerCallRef nextHandler, EventRef event, void *userData);
+	OSStatus handleWindowEvent(EventHandlerCallRef nextHandler, EventRef event, void *userData);
+	OSStatus handleKeyEvent(EventHandlerCallRef nextHandler, EventRef event, void *userData);
+	
+	static KeyEvent::Key determineKey(::UInt32 key);
+	static UInt32 determineKeyModifiers(::UInt32 keyModifiers);
     
     /*==========================  PRIVATE  ================================*/
   private:
