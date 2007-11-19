@@ -109,9 +109,6 @@ int main(int argc, char **argv)
 	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
-	// Create a TextArea component
-	TextAreaPtr textArea = osg::TextArea::create();
-
 	// Create a simple Font to be used with the textArea
 	UIFontPtr sampleFont = osg::UIFont::create();
     beginEditCP(sampleFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::GapFieldMask | UIFont::GlyphPixelSizeFieldMask | UIFont::TextureWidthFieldMask | UIFont::StyleFieldMask);
@@ -121,39 +118,63 @@ int main(int argc, char **argv)
 	/******************************************************
 
 
-		Edit the textArea and determine its 
-		characteristics.  A text field is a component 
+		Create and edit the TextArea and determine its 
+		characteristics.  A TextArea is a component 
 		that allows you to enter text into the box via 
 		keyboard input.  You can select text by	using 
 		your mouse or pressing shift and the left and 
 		right arrow keys.
 
+		The only difference between a TextArea and
+		TextField is that a TextArea can have 
+		multiple lines of text 
+		within it.
 
+		setTextColor(Color4f): Set color of text
+			withing TextArea
+		setSelectionBoxColor(Color4f): Set the color
+			that highlighting around the selected text 
+			appears
+		setSelectionTextColor(Color4f): Set the color
+			the selected text appears
+		setText("TextToBeDisplayed"): Sets initial 
+			text within TextArea
+		setFont(FontName): Sets the font which is
+			used within TextArea
+		setSelectionStart(StartCharacterNumber):
+			Sets the character which the selection
+			 will initially start after
+		 setSelectionEnd(EndCharacterNumber): 
+			Sets the character which the selection
+			will end before
+		setCaretPosition(Location): determine the 
+			location of the Caret within the text
+			Area.  Note that this does not do too
+			much currently because the only way 
+			to cause the TextArea to gain focus is
+			to click within it, causing the 
+			Caret to move
+			
 	******************************************************/
+
+	// Create a TextArea component
+	TextAreaPtr textArea = osg::TextArea::create();
 
 	beginEditCP(textArea, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
 		| TextComponent::TextColorFieldMask | TextComponent::FontFieldMask 
 		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
-			// Determine initial size of textArea
 		textArea->setPreferredSize( Vec2s (100, 50) );
-			// Determine the Font color for the Field
 		textArea->setTextColor( Color4f(0.0, 0.0, 0.0, 1.0) );
-			// Determine the Box Color and the Selection Color
 		textArea->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
 		textArea->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
 			// Determine the font and initial text
 		textArea->setText("What");
 		textArea->setFont(sampleFont);
-			// Determine the area that is to be selected at first 
-			// so the selection would be "a" in this case
-		//textArea->setSelectionStart(2);
-		//textArea->setSelectionEnd(3);
+			// This will select the "a" from above
+		textArea->setSelectionStart(2);
+		textArea->setSelectionEnd(3);
 		textArea->setCaretPosition(2);
-			// Determine the initial alignment of the Text
-			// from the top (top of the Text will be
-			// 30% of the way down from the top of the
-			// textArea in this case
-		//textArea->setVerticalAlignment(.3);
+
 	endEditCP(textArea, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
 		| TextComponent::TextColorFieldMask| TextComponent::FontFieldMask 
 		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);

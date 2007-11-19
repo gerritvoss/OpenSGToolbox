@@ -109,9 +109,6 @@ int main(int argc, char **argv)
 	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
-	// Create a TextField component
-	TextFieldPtr textField = osg::TextField::create();
-
 	// Create a simple Font to be used with the TextField
 	UIFontPtr sampleFont = osg::UIFont::create();
     beginEditCP(sampleFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::GapFieldMask | UIFont::GlyphPixelSizeFieldMask | UIFont::TextureWidthFieldMask | UIFont::StyleFieldMask);
@@ -121,46 +118,65 @@ int main(int argc, char **argv)
 	/******************************************************
 
 
-		Edit the TextField and determine its 
+		Create and edit the TextField and determine its 
 		characteristics.  A text field is a component 
 		that allows you to enter text into the box via 
 		keyboard input.  You can select text by	using 
 		your mouse or pressing shift and the left and 
 		right arrow keys.
 
+		setTextColor(Color4f): Set color of text
+			withing TextField
+		setSelectionBoxColor(Color4f): Set the color
+			that highlighting around the selected text 
+			appears
+		setSelectionTextColor(Color4f): Set the color
+			the selected text appears
+		setText("TextToBeDisplayed"): Sets initial 
+			text within TextField
+		setFont(FontName): Sets the font which is
+			used within TextField
+		setSelectionStart(StartCharacterNumber):
+			Sets the character which the selection
+			 will initially start after
+		 setSelectionEnd(EndCharacterNumber): 
+			Sets the character which the selection
+			will end before
+		setVerticalAlignment(Percent):  Sets how far 
+			down in the box the text starts at.  The
+			percentage is from the top of the text.
+			Mote: be sure to visually verify this, as 
+			due to font size and line size this does
+			not always automatically place it exactly
+			at the percentage point.
 
 	******************************************************/
+
+	// Create a TextField component
+	TextFieldPtr textField = osg::TextField::create();
 
 	beginEditCP(textField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
 		| TextComponent::TextColorFieldMask | TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask 
 		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
-			// Determine initial size of TextField
 		textField->setPreferredSize( Vec2s (100, 50) );
 			// Determine the Font color for the Field
 		textField->setTextColor( Color4f(0.0, 0.0, 0.0, 1.0) );
-			// Determine the Box Color and the Selection Color
 		textField->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
 		textField->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
-			// Determine the font and initial text
 		textField->setText("What");
 		textField->setFont(sampleFont);
-			// Determine the area that is to be selected at first 
-			// so the selection would be "a" in this case
+			// This will select the "a" from above
 		textField->setSelectionStart(2);
 		textField->setSelectionEnd(3);
-			// Determine the initial alignment of the Text
-			// from the top (top of the Text will be
-			// 30% of the way down from the top of the
-			// TextField in this case
-		textField->setVerticalAlignment(.3);
+		textField->setVerticalAlignment(0.5);
 	endEditCP(textField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
 		| TextComponent::TextColorFieldMask| TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask
 		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
 		
-	// Create a TextField component
+	// Create another TextField component
 	TextFieldPtr textField2 = osg::TextField::create();
 	beginEditCP(textField2, TextComponent::TextFieldMask);
-			//Set the initial text
+			//Set  initial text
 		textField2->setText("");
 	endEditCP(textField2, TextComponent::TextFieldMask);
 

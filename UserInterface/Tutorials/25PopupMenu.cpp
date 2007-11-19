@@ -173,41 +173,19 @@ int main(int argc, char **argv)
     Button1PopupMenu->addItem(Item5);
     Button1PopupMenu->addItem(Item4);
     
-	// Create a Button component
+	// Create a Button and Font
+	UIFontPtr button1Font = osg::UIFont::create();
+    beginEditCP(button1Font, UIFont::SizeFieldMask);
+		button1Font->setSize(16);
+	endEditCP(button1Font, UIFont::SizeFieldMask);
+
 	ButtonPtr button1 = osg::Button::create();
-	// Create a simple Font to be used with the Button
-	UIFontPtr sampleFont = osg::UIFont::create();
-    beginEditCP(sampleFont, UIFont::SizeFieldMask);
-		sampleFont->setSize(16);
-	endEditCP(sampleFont, UIFont::SizeFieldMask);
-
-
-    beginEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::PopupMenuFieldMask | Button::TextColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::ToolTipTextFieldMask);
-		button1->setText("Button 1");
+	beginEditCP(button1, Component::PopupMenuFieldMask | Button::TextFieldMask | Component::PreferredSizeFieldMask | Button::FontFieldMask);
+		button1->setText("RightClickMe!");
         button1->setPopupMenu(Button1PopupMenu);
-    endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::PopupMenuFieldMask | Button::TextColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::ToolTipTextFieldMask);
-
-	/******************************************************
-
-
-		Create a ToggleButton and determine its 
-		characteristics.  All characteristics Buttons
-		have are also present in ToggleButton.
-
-		The only difference is that when pressed,
-		ToggleButton remains pressed until pressed 
-		again.
-
-
-
-	******************************************************/
-	ToggleButtonPtr toggleButton1 = osg::ToggleButton::create();
-	
-	beginEditCP(toggleButton1, ToggleButton::SelectedFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
-		// Determine if the ToggleButton appears pressed (TRUE) or released (FALSE)
-		toggleButton1->setSelected(false);
-		toggleButton1->setText("ToggleMe");
-	endEditCP(toggleButton1, ToggleButton::SelectedFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
+		button1->setPreferredSize( Vec2s(200,100) );
+		button1->setFont(button1Font);
+    endEditCP(button1, Component::PopupMenuFieldMask | Button::TextFieldMask| Component::PreferredSizeFieldMask | Button::FontFieldMask);
 
 
 	// Create Background to be used with the MainFrame
@@ -219,10 +197,7 @@ int main(int argc, char **argv)
 	FramePtr MainFrame = osg::Frame::create();
 	LayoutPtr MainFrameLayout = osg::FlowLayout::create();
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
-	   // Assign the Button to the MainFrame so it will be displayed
-	   // when the view is rendered.
 	   MainFrame->getChildren().addValue(button1);
-	   MainFrame->getChildren().addValue(toggleButton1);
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);

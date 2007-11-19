@@ -113,7 +113,7 @@ int main(int argc, char **argv)
 	/******************************************************
 			
 				Creates some Button components
-				and edit their PreferredSizes
+				and change some PreferredSizes
 
 	******************************************************/
 	ButtonPtr button1 = osg::Button::create();
@@ -123,7 +123,6 @@ int main(int argc, char **argv)
 	ButtonPtr button5 = osg::Button::create();
 	ButtonPtr button6 = osg::Button::create();
 
-
 	beginEditCP(button1, Component::PreferredSizeFieldMask);
 		button1->setPreferredSize( Vec2s (200, 50) );
 	endEditCP(button1, Component::PreferredSizeFieldMask);
@@ -132,26 +131,23 @@ int main(int argc, char **argv)
 		button4->setPreferredSize( Vec2s (50, 50) );
 	endEditCP(button4, Component::PreferredSizeFieldMask);
 
-	FlowLayoutPtr flowLayout = osg::FlowLayout::create();
 
+
+	/******************************************************
+			
+				Creates and sets up two Panel 
+				components to place Buttons within
+
+	******************************************************/
+
+	PanelPtr panel1 = osg::Panel::create();
+	PanelPtr panel2 = osg::Panel::create();
+	FlowLayoutPtr flowLayout = osg::FlowLayout::create();
+	
 	beginEditCP(flowLayout);
 		flowLayout->setHorizontalGap(3);
 		flowLayout->setVerticalGap(3);
 	endEditCP(flowLayout);
-
-	// the border layout is the simplest way to make a container completely fill the frame
-	BorderLayoutConstraintsPtr SplitPanelConstraints = osg::BorderLayoutConstraints::create();
-
-	beginEditCP(SplitPanelConstraints);
-		SplitPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
-	endEditCP(SplitPanelConstraints);
-
-	BorderLayoutPtr MainFrameLayout = osg::BorderLayout::create();
-
-	// these are the two panels being added to split panel
-	// each panel will have half of the buttons
-	PanelPtr panel1 = osg::Panel::create();
-	PanelPtr panel2 = osg::Panel::create();
 
 	beginEditCP(panel1, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 		panel1->getChildren().addValue(button1);
@@ -166,56 +162,79 @@ int main(int argc, char **argv)
 		panel2->setLayout(flowLayout);
 	endEditCP(panel2, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 
-	// this is the split panel
+
+	
+	
+	// Creates a BorderLayout and Constraints (this causes SplitPanel to 
+	// automatically fill entire frame)
+	BorderLayoutPtr MainFrameLayout = osg::BorderLayout::create();
+	BorderLayoutConstraintsPtr SplitPanelConstraints = osg::BorderLayoutConstraints::create();
+
+	beginEditCP(SplitPanelConstraints);
+		SplitPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+	endEditCP(SplitPanelConstraints);
+		
+	/******************************************************
+			
+		Creates and sets up SplitPanel
+
+		setMinComponent/setMaxComponent(component): this 
+			is how to add components to the SplitPanel.  
+			Note that if you do not add both an empty 
+			panel will be added automatically.
+		setAlignment(ALIGNMENT): determines the alignment
+			of the split aspect.  Takes a VERTICAL_ALIGNMENT
+			or HORIZONTAL_ALIGNMENT input.  The default is
+			Horizontal with an east/west split. The 
+			minComponent set previously is the west or north
+			component of the panel (depending on the alignment)
+			and the max is the east or west component.
+			The default is horizontal.
+		setDividerPosition("smart" REAL): Determines the initial 
+			location of the divider.  Note that this REAL is
+			a percentage if between 0.0 and 1.0 (inclusive) 
+			and absolute is greater than 1.0.  Also note that
+			when resizing a window with a percentage, the
+			divider will move, but with absolute, it does
+			not until it no longer fits in the panel.
+		setDividerSize(SIZE): determines divider size 
+		setExpandable(TRUE/FALSE): Determines whether
+			divider can be moved by user.  Default is
+			TRUE (is movable) while FALSE removes
+			the users ability to move the divider
+		setMaxDividerPosition("smart" REAL): Set the
+			maximum position for the divider.
+		setMinDividerPosition("smart" REAL): Set the
+			minimum position for the divider.  Note 
+			that for both Max/Min, the "smart" REAL
+			follows same format as in setDividerPosition;
+			it is a percentage if between 0.0 and 1.0 
+			and absolute when > 1.0
+
+
+				
+
+	******************************************************/
+	
 	SplitPanelPtr SplitPanel = osg::SplitPanel::create();
 
 	beginEditCP(SplitPanel);
-		// these constraints put the panel as the center in the border layout
+		// Sets the BorderContraints to it
 		SplitPanel->setConstraints(SplitPanelConstraints);
-
-		// in split panel, never add children, instead use these two sets
-		// they automatically add them as children and they set up which
-		// side of the panel to place each.
 		SplitPanel->setMinComponent(panel1);
 		SplitPanel->setMaxComponent(panel2);
-
-		// the alignment determines whether the panel is split to be
-		// north and south, or east and west. the default is a
-		// horizontal layout, splitting them east and west.
-		// the min component is always the west or north component,
-		// and the max component is always the east or south component,
-		// both of these components were set in the previous two statements
 		//SplitPanel->setAlignment(VERTICAL_ALIGNMENT);
-
-		// next we can set the position and size of the divider. the position
-		// gives the position of the center of the divider. the position can
-		// either be set using a percentage, or and absolute size. this is 
-		// done by using a "smart" real, where if it is between the values of
-		// 0.0 and 1.0, inclusive, then it is viewed as a percentage, whereas
-		// any value higher than 1.0 is viewed as an absolute distance.
-		// note that when resizing as a percentage, the divider moves, but when
-		// resizing as an absolute it will stick to it's spot until it no longer
-		// fits. the default position is .5
 		//SplitPanel->setDividerPosition(.25); // this is a percentage
-		SplitPanel->setDividerPosition(300); // this is an absolute location from the left/top
-		SplitPanel->setDividerSize(5);
-
-		// also, if you want to change the way the divider looks, you can always set a
-		// DrawObjectCanvas in place of the default divider
-		//SplitPanel->setDividerDrawObject(drawObjectName);
-
-		// if you don't want the user moving the divider, then setExpandable to false.
-		// the default is true.
-		//SplitPanel->setExpandable(false);
-
-		// the divider's max and min position can also be set, either as an absolute
-		// or percentage just like setDividerPosition. Mixing absolute and percentage
-		// works when setting maximum and minimum values. keep in mind that if the
-		// components have max and min values, that might also effect the location of
-		// the divider, although the components are always stretched to fill the entire
-		// area of their respective sides of the split panel
+		SplitPanel->setDividerPosition(300); // this is an absolute (300 > 1.0) 
+			//location from the left/top
+		 SplitPanel->setDividerSize(5);
+		// SplitPanel->setExpandable(false);
 		SplitPanel->setMaxDividerPosition(.9);
 		SplitPanel->setMinDividerPosition(220);
+		
+		// also, if you want to change the way the divider looks, you can always set a
+		// DrawObjectCanvas in place of the default divider
+		// SplitPanel->setDividerDrawObject(drawObjectName);
 	endEditCP(SplitPanel);
 	
  	// Create The Main Frame

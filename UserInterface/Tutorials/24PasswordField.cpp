@@ -122,11 +122,15 @@ int main(int argc, char **argv)
 
 
 		Edit the PasswordField and determine its 
-		characteristics.  A text field is a component 
-		that allows you to enter text into the box via 
-		keyboard input.  You can select text by	using 
-		your mouse or pressing shift and the left and 
-		right arrow keys.
+		characteristics.  A PasswordField is a 
+		TextField which allows for text to be
+		entered secretly.
+
+		setEchoCar("CHARACTER"): Sets which
+			character replaces text in the 
+			PasswordField
+            
+		See 16TextField for more information.
 
 
 	******************************************************/
@@ -135,26 +139,19 @@ int main(int argc, char **argv)
 		| TextComponent::TextFieldMask | TextComponent::TextColorFieldMask | TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask 
         | PasswordField::EchoCharFieldMask
 		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
-			// Determine initial size of PasswordField
 		ThePasswordField->setPreferredSize( Vec2s (100, 50) );
-			// Determine the Font color for the Field
 		ThePasswordField->setTextColor( Color4f(0.0, 0.0, 0.0, 1.0) );
-			// Determine the Box Color and the Selection Color
 		ThePasswordField->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
 		ThePasswordField->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
-			// Determine the font and initial text
 		ThePasswordField->setText("What");
+
+			// "What" will be replaced by "####" in the PasswordField
 		ThePasswordField->setEchoChar("#");
+
 		ThePasswordField->setFont(sampleFont);
-			// Determine the area that is to be selected at first 
-			// so the selection would be "a" in this case
 		ThePasswordField->setSelectionStart(2);
 		ThePasswordField->setSelectionEnd(3);
-			// Determine the initial alignment of the Text
-			// from the top (top of the Text will be
-			// 30% of the way down from the top of the
-			// PasswordField in this case
-		ThePasswordField->setVerticalAlignment(.3);
+		ThePasswordField->setVerticalAlignment(.5);
 	endEditCP(ThePasswordField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
 		| TextComponent::TextFieldMask | TextComponent::TextColorFieldMask| TextComponent::FontFieldMask | PasswordField::VerticalAlignmentFieldMask
 		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
