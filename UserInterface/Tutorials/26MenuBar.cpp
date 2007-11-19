@@ -40,6 +40,7 @@
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
+#include <OpenSG/UserInterface/OSGLabel.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
@@ -126,13 +127,39 @@ int main(int argc, char **argv)
 	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    //Create a MenuBar
+	/******************************************************
+			
+			Create  components to add to MenuBar
+			Menus.  Each MenuBar has multiple Menus 
+			which contain multiple MenuItems.
+
+			setAcceleratorKey(KeyEvent::KEY_****): This
+				links the key "****" as a shortcut to 
+				selecting the item it is attached to
+			setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_***):
+				This adds the "***" key as another 
+				requirement to cause the item to be
+				selected.  Things such as "CONTROL" are 
+				likely to be used here
+			Note: these shortcuts will be shown in the list
+				with the LabelMenuItem they are attached too
+			setMnemonicKey(KeyEvent::KEY_****): sets the key
+				"****" to be underlined within the Menu
+				itself
+
+
+	******************************************************/
+
+	// Creates MenuItems as in 25PopupMenu
     LabelMenuItemPtr NewMenuItem = LabelMenuItem::create();
     LabelMenuItemPtr OpenMenuItem = LabelMenuItem::create();
     LabelMenuItemPtr CloseMenuItem = LabelMenuItem::create();
     SeperatorMenuItemPtr FileMenuSeperator1 = SeperatorMenuItem::create();
     LabelMenuItemPtr ExitMenuItem = LabelMenuItem::create();
+    LabelMenuItemPtr UndoMenuItem = LabelMenuItem::create();
+    LabelMenuItemPtr RedoMenuItem = LabelMenuItem::create();
 
+	//Edits MenuItems
     beginEditCP(NewMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
         NewMenuItem->setText("New ...");
         NewMenuItem->setAcceleratorKey(KeyEvent::KEY_N);
@@ -142,9 +169,9 @@ int main(int argc, char **argv)
     
     beginEditCP(OpenMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
         OpenMenuItem->setText("Open ...");
-        OpenMenuItem->setAcceleratorKey(KeyEvent::KEY_O);
+        OpenMenuItem->setAcceleratorKey(KeyEvent::KEY_P);
         OpenMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
-        OpenMenuItem->setMnemonicKey(KeyEvent::KEY_O);
+        OpenMenuItem->setMnemonicKey(KeyEvent::KEY_P);
     endEditCP(OpenMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
     
     beginEditCP(CloseMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
@@ -161,74 +188,104 @@ int main(int argc, char **argv)
         ExitMenuItem->setMnemonicKey(KeyEvent::KEY_Q);
     endEditCP(ExitMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
 
-	// Create an ActionListener and assign it to ExitMenuItem
-	// This is defined above, and wil
-	QuitActionListener QuitAL;
-	ExitMenuItem->addActionListener( &QuitAL);
-    
-    MenuPtr FileMenu = Menu::create();
-    FileMenu->addItem(NewMenuItem);
-    FileMenu->addItem(OpenMenuItem);
-    FileMenu->addItem(CloseMenuItem);
-    FileMenu->addItem(FileMenuSeperator1);
-    FileMenu->addItem(ExitMenuItem);
-    beginEditCP(FileMenu, LabelMenuItem::TextFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
-        FileMenu->setText("File");
-        FileMenu->setMnemonicKey(KeyEvent::KEY_F);
-    endEditCP(FileMenu, LabelMenuItem::TextFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
-    
-    LabelMenuItemPtr UndoMenuItem = LabelMenuItem::create();
     beginEditCP(UndoMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
         UndoMenuItem->setText("Undo");
         UndoMenuItem->setAcceleratorKey(KeyEvent::KEY_Z);
         UndoMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
         UndoMenuItem->setMnemonicKey(KeyEvent::KEY_U);
     endEditCP(UndoMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
+	beginEditCP(RedoMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::MnemonicKeyFieldMask | LabelMenuItem::EnabledFieldMask);
+        RedoMenuItem->setText("Redo");
+        RedoMenuItem->setEnabled(false);
+        RedoMenuItem->setMnemonicKey(KeyEvent::KEY_R);
+    endEditCP(RedoMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::MnemonicKeyFieldMask | LabelMenuItem::EnabledFieldMask);
+	
+	// Create an ActionListener and assign it to ExitMenuItem
+	// This is defined above, and will cause the program to quit
+	// when that MenuItem is selected or Control + Q hit 
+	QuitActionListener QuitAL;
+	ExitMenuItem->addActionListener( &QuitAL);
     
-    MenuPtr EditMenu = Menu::create();
+	/******************************************************
+			
+			Create Menu components to add to MenuBar
+			and adds above components to them.  Note
+			that the same abilities: setAcceleratorKey,
+			setAcceleratorModifiers, and setMnemnoicKey
+			all apply to Menus in addition to MenuItems
 
+	******************************************************/
+    
+	// Create a File menu and adds its MenuItems
+	MenuPtr FileMenu = Menu::create();
+    FileMenu->addItem(NewMenuItem);
+    FileMenu->addItem(OpenMenuItem);
+    FileMenu->addItem(CloseMenuItem);
+    FileMenu->addItem(FileMenuSeperator1);
+    FileMenu->addItem(ExitMenuItem);
+
+	// Labels the File Menu
+    beginEditCP(FileMenu, LabelMenuItem::TextFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
+        FileMenu->setText("File");
+        FileMenu->setMnemonicKey(KeyEvent::KEY_F);
+    endEditCP(FileMenu, LabelMenuItem::TextFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
+    
+	// Creates a Edit menu and adds its MenuItems
+	MenuPtr EditMenu = Menu::create();
     EditMenu->addItem(UndoMenuItem);
+	EditMenu->addItem(RedoMenuItem);
+
+	// Labels the Edit Menu
     beginEditCP(EditMenu, LabelMenuItem::TextFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
         EditMenu->setText("Edit");
         EditMenu->setMnemonicKey(KeyEvent::KEY_E);
     endEditCP(EditMenu, LabelMenuItem::TextFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
+    
+	/******************************************************
+			
+			Create MainMenuBar and adds the Menus
+			created above to it.
 
+			Note: it is added to the MainFrame
+			below
+
+	******************************************************/
     MenuBarPtr MainMenuBar = MenuBar::create();
-
+	// Adds the two Menus to the MainMenuBar
     MainMenuBar->addMenu(FileMenu);
     MainMenuBar->addMenu(EditMenu);
 
     
-	// Create a Button component
-	ButtonPtr button1 = osg::Button::create();
-	// Create a simple Font to be used with the Button
-	UIFontPtr sampleFont = osg::UIFont::create();
-    beginEditCP(sampleFont, UIFont::SizeFieldMask);
-		sampleFont->setSize(16);
-	endEditCP(sampleFont, UIFont::SizeFieldMask);
-
-    beginEditCP(button1, Button::TextFieldMask | Button::ConstraintsFieldMask);
-		button1->setText("Button 1");
-    endEditCP(button1, Button::TextFieldMask | Button::ConstraintsFieldMask);
-
-
-	// Create Background to be used with the MainFrame
-	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-
+	// Create MainFrameBackground
+	ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
+	beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+		MainFrameBackground->setColor( Color4f(0.0, 0.0, 0.0, 0.0) );
+	endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
 	// Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
 	LayoutPtr MainFrameLayout = osg::FlowLayout::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask | Frame::MenuBarFieldMask);
-	   // Assign the Button to the MainFrame so it will be displayed
-	   // when the view is rendered.
-	   MainFrame->getChildren().addValue(button1);
+
+	// Create two labels to add to MainFrame
+	LabelPtr label1 = osg::Label::create();
+	LabelPtr label2 = osg::Label::create();
+	beginEditCP(label1, Label::TextFieldMask | Component::PreferredSizeFieldMask);
+		label1->setText("Look up in the corner!");
+		label1->setPreferredSize( Vec2s(150, 25) );	
+	endEditCP(label1, Label::TextFieldMask | Component::PreferredSizeFieldMask);
+	beginEditCP(label2, Label::TextFieldMask | Component::PreferredSizeFieldMask);
+		label2->setText("Hit Control + O");
+		label2->setPreferredSize( Vec2s(150, 25) );	
+	endEditCP(label2, Label::TextFieldMask | Component::PreferredSizeFieldMask);
+
+	beginEditCP(MainFrame, Frame::LayoutFieldMask | Component::BackgroundFieldMask | Frame::MenuBarFieldMask | Container::ChildrenFieldMask);
 	   MainFrame->setLayout(MainFrameLayout);
-	   MainFrame->setBackground(mainBackground);
+
+	   // Adds MainMenuBar to MainFrame
        MainFrame->setMenuBar(MainMenuBar);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask | Frame::MenuBarFieldMask);
+	   MainFrame->setBackground(MainFrameBackground);
+	   MainFrame->getChildren().addValue(label1);
+	   MainFrame->getChildren().addValue(label2);
+	endEditCP  (MainFrame, Frame::LayoutFieldMask | Component::BackgroundFieldMask | Frame::MenuBarFieldMask | Container::ChildrenFieldMask);
 
 	//Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();

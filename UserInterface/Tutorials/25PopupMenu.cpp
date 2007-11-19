@@ -49,6 +49,7 @@
 #include <OpenSG/UserInterface/OSGMenu.h>
 #include <OpenSG/UserInterface/OSGLabelMenuItem.h>
 #include <OpenSG/UserInterface/OSGSeperatorMenuItem.h>
+#include <OpenSG/UserInterface/OSGColorUIBackground.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -116,20 +117,46 @@ int main(int argc, char **argv)
 	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    //Create a Popup Menu
+	/******************************************************
+			
+			Create Popup Menu Components
+		
+		LabelMenuItem: These are items that are contained
+			within a menu; they are the things you click
+			on to cause something to occur
+		SeperatorMenuItem:  These place a seperator 
+			line between items in a menu
+		Menu: These are sub-menus within another Menu;
+			LabelMenuItems and SeperatorMenuItems
+			are added to a Menu
+
+
+	******************************************************/
+
     LabelMenuItemPtr Item1 = LabelMenuItem::create();
     LabelMenuItemPtr Item2 = LabelMenuItem::create();
     LabelMenuItemPtr Item3 = LabelMenuItem::create();
-    SeperatorMenuItemPtr Seperator1 = SeperatorMenuItem::create();
     LabelMenuItemPtr Item4 = LabelMenuItem::create();
-    MenuPtr Item5 = Menu::create();
     LabelMenuItemPtr SubItem1 = LabelMenuItem::create();
     LabelMenuItemPtr SubItem2 = LabelMenuItem::create();
     LabelMenuItemPtr SubItem3 = LabelMenuItem::create();
+	SeperatorMenuItemPtr Seperator1 = SeperatorMenuItem::create();
+    MenuPtr Item5 = Menu::create();
+
     
+	/******************************************************
+			
+			Edit the LabelMenuItems
+
+			setText("TEXT"): Sets the text on the 
+				item to be TEXT
+			setEnabled(BOOL): sets the menu item
+				to be either enabled or disabled
+
+	******************************************************/
+
     beginEditCP(Item1, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask);
         Item1->setText("Menu Item 1");
-        Item1->setAcceleratorKey(KeyEvent::KEY_F9);
     endEditCP(Item1, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask);
     
     beginEditCP(Item2, LabelMenuItem::TextFieldMask);
@@ -138,33 +165,49 @@ int main(int argc, char **argv)
     
     beginEditCP(Item3, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask);
         Item3->setText("Menu Item 3");
-        Item3->setAcceleratorKey(KeyEvent::KEY_G);
-        Item3->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL | KeyEvent::KEY_MODIFIER_SHIFT);
     endEditCP(Item3, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask);
     
-    beginEditCP(Item4, LabelMenuItem::TextFieldMask | LabelMenuItem::EnabledFieldMask);
+	beginEditCP(Item4, LabelMenuItem::TextFieldMask | LabelMenuItem::EnabledFieldMask);
         Item4->setText("Menu Item 4");
         Item4->setEnabled(false);
     endEditCP(Item4, LabelMenuItem::TextFieldMask | LabelMenuItem::EnabledFieldMask);
     
-    
     beginEditCP(SubItem1, LabelMenuItem::TextFieldMask);
         SubItem1->setText("SubMenu Item 1");
     endEditCP(SubItem1, LabelMenuItem::TextFieldMask);
-    beginEditCP(SubItem2, LabelMenuItem::TextFieldMask);
+    
+	beginEditCP(SubItem2, LabelMenuItem::TextFieldMask);
         SubItem2->setText("SubMenu Item 2");
     endEditCP(SubItem2, LabelMenuItem::TextFieldMask);
-    beginEditCP(SubItem3, LabelMenuItem::TextFieldMask);
+    
+	beginEditCP(SubItem3, LabelMenuItem::TextFieldMask);
         SubItem3->setText("SubMenu Item 3");
     endEditCP(SubItem3, LabelMenuItem::TextFieldMask);
     
     beginEditCP(Item5, LabelMenuItem::TextFieldMask);
         Item5->setText("Sub Menu");
     endEditCP(Item5, LabelMenuItem::TextFieldMask);
+
+	// This adds three LabelMenuItems to the Menu,
+	// creating a submenu.  Note this does not
+	// involve begin/endEditCPs to do
+
     Item5->addItem(SubItem1);
     Item5->addItem(SubItem2);
     Item5->addItem(SubItem3);
     
+	/******************************************************
+			
+			Create the PopupMenu itself
+
+			Items are added in the order in which
+			they will be displayed (top to bottom)
+			via addItem(ITEM_TO_BE_ADDED)
+
+			The PopupMenu is attached to bbutton1
+			below using setPopupMenu(MENU_NAME)
+
+	******************************************************/
     PopupMenuPtr Button1PopupMenu = PopupMenu::create();
     Button1PopupMenu->addItem(Item1);
     Button1PopupMenu->addItem(Item2);
@@ -182,6 +225,8 @@ int main(int argc, char **argv)
 	ButtonPtr button1 = osg::Button::create();
 	beginEditCP(button1, Component::PopupMenuFieldMask | Button::TextFieldMask | Component::PreferredSizeFieldMask | Button::FontFieldMask);
 		button1->setText("RightClickMe!");
+		// Add the PopupMenu to button1 so that when right clicked,
+		// the PopupMenu will appear
         button1->setPopupMenu(Button1PopupMenu);
 		button1->setPreferredSize( Vec2s(200,100) );
 		button1->setFont(button1Font);
