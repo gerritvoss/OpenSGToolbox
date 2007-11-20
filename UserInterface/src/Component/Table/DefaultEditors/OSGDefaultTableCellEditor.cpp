@@ -60,6 +60,7 @@ ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table,
 
     _EditingTextField = TheTextField;
     _EditingTextField->addActionListener(this);
+    _EditingTextField->addFocusListener(this);
 	return Component::Ptr::dcast(TheTextField);
 }
 
@@ -68,6 +69,7 @@ void DefaultTableCellEditor::cancelCellEditing(void)
     if(_EditingTextField != NullFC)
     {
         _EditingTextField->removeActionListener(this);
+        _EditingTextField->removeFocusListener(this);
     }
     AbstractCellEditor::cancelCellEditing();
     _EditingTextField = NullFC;
@@ -81,7 +83,7 @@ SharedFieldPtr DefaultTableCellEditor::getCellEditorValue(void) const
 
 bool DefaultTableCellEditor::isCellEditable(const Event& anEvent) const
 {
-    if(anEvent.getType() != MouseEvent::getClassType() ||
+    if(/*anEvent.getType() != MouseEvent::getClassType() ||*/
        (anEvent.getType() == MouseEvent::getClassType() &&
         dynamic_cast<const MouseEvent&>(anEvent).getClickCount() >= _ClickCountToStart))
     {
@@ -103,6 +105,7 @@ bool DefaultTableCellEditor::stopCellEditing(void)
     if(_EditingTextField != NullFC)
     {
         _EditingTextField->removeActionListener(this);
+        _EditingTextField->removeFocusListener(this);
     }
     bool Return =  AbstractCellEditor::stopCellEditing();
     _EditingTextField = NullFC;
@@ -110,6 +113,16 @@ bool DefaultTableCellEditor::stopCellEditing(void)
 }
 
 void DefaultTableCellEditor::actionPerformed(const ActionEvent& e)
+{
+    stopCellEditing();
+}
+
+void DefaultTableCellEditor::focusGained(const FocusEvent& e)
+{
+	//Do nothing
+}
+
+void DefaultTableCellEditor::focusLost(const FocusEvent& e)
 {
     stopCellEditing();
 }
