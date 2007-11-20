@@ -418,6 +418,13 @@ TextField::TextField(const TextField &source) :
 
 TextField::~TextField(void)
 {
+	if( getParentFrame() != NullFC &&
+		getParentFrame()->getDrawingSurface() != NullFC &&
+		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC && 
+		isContained(getParentFrame()->getDrawingSurface()->getEventProducer()->getMousePosition(), true) )
+    {
+		getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
+	}
 }
 
 

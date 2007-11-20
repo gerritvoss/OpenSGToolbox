@@ -95,6 +95,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponent : public TextComponentBase
 	virtual void keyPressed(const KeyEvent& e);
 	virtual void keyReleased(const KeyEvent& e);
 	virtual void keyTyped(const KeyEvent& e);
+	
+	virtual void focusLost(const FocusEvent& e);
 
     /*=========================  PROTECTED  ===============================*/
   protected:

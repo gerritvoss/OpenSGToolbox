@@ -51,12 +51,13 @@
 
 #include "Event/OSGActionListener.h"
 #include "Event/OSGFocusListener.h"
+#include <OpenSG/Input/OSGKeyAdapter.h>
 
 #include "Component/Text/OSGTextField.h"
 
 OSG_BEGIN_NAMESPACE
 	 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellEditor : public AbstractCellEditor, public TableCellEditor, public ActionListener, public FocusListener
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellEditor : public AbstractCellEditor, public TableCellEditor, public ActionListener, public FocusListener, public KeyAdapter
 {
 private:
 protected:
@@ -94,6 +95,7 @@ public:
     virtual void actionPerformed(const ActionEvent& e);
     virtual void focusGained(const FocusEvent& e);
     virtual void focusLost(const FocusEvent& e);
+    virtual void keyPressed(const KeyEvent& e);
 
     DefaultTableCellEditor(const UInt32& ClickCountToStart);
 };

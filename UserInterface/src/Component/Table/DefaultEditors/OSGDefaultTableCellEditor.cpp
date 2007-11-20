@@ -61,6 +61,7 @@ ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table,
     _EditingTextField = TheTextField;
     _EditingTextField->addActionListener(this);
     _EditingTextField->addFocusListener(this);
+    _EditingTextField->addKeyListener(this);
 	return Component::Ptr::dcast(TheTextField);
 }
 
@@ -70,6 +71,7 @@ void DefaultTableCellEditor::cancelCellEditing(void)
     {
         _EditingTextField->removeActionListener(this);
         _EditingTextField->removeFocusListener(this);
+        _EditingTextField->removeKeyListener(this);
     }
     AbstractCellEditor::cancelCellEditing();
     _EditingTextField = NullFC;
@@ -106,6 +108,7 @@ bool DefaultTableCellEditor::stopCellEditing(void)
     {
         _EditingTextField->removeActionListener(this);
         _EditingTextField->removeFocusListener(this);
+        _EditingTextField->removeKeyListener(this);
     }
     bool Return =  AbstractCellEditor::stopCellEditing();
     _EditingTextField = NullFC;
@@ -125,6 +128,15 @@ void DefaultTableCellEditor::focusGained(const FocusEvent& e)
 void DefaultTableCellEditor::focusLost(const FocusEvent& e)
 {
     stopCellEditing();
+}
+
+void DefaultTableCellEditor::keyPressed(const KeyEvent& e)
+{
+	if(e.getKey() == KeyEvent::KEY_ESCAPE ||
+		e.getKey() == KeyEvent::KEY_CANCEL)
+	{
+		cancelCellEditing();
+	}
 }
 
 OSG_END_NAMESPACE

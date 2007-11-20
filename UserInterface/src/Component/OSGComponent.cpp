@@ -502,7 +502,8 @@ void Component::produceMouseReleased(const MouseEvent& e)
 
 void Component::produceKeyPressed(const KeyEvent& e)
 {
-   for(KeyListenerSetConstItor SetItor(_KeyListeners.begin()) ; SetItor != _KeyListeners.end() ; ++SetItor)
+	KeyListenerSet ListenerSet(_KeyListeners);
+   for(KeyListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->keyPressed(e);
    }

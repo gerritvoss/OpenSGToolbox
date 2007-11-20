@@ -121,7 +121,7 @@ void DefaultBoundedRangeModel::setRangeProperties(Int32 value, UInt32 extent, In
     _Maximum= max;
     _Minimum= min;
     _ValueIsAdjusting = adjusting;
-    if(value + _Extent > _Maximum)
+    if(value + _Extent > _Maximum && _Extent < _Maximum - _Minimum)
     {
         _Value = _Maximum - _Extent;
     }

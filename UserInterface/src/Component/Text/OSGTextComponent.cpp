@@ -109,6 +109,20 @@ Color4f TextComponent::getDrawnTextColor(void) const
         return getDisabledTextColor();
     }
 }
+
+
+void TextComponent::focusLost(const FocusEvent& e)
+{
+	if( getParentFrame() != NullFC &&
+		getParentFrame()->getDrawingSurface() != NullFC &&
+		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC && 
+		isContained(getParentFrame()->getDrawingSurface()->getEventProducer()->getMousePosition(), true))
+    {
+		getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
+	}
+	TextComponentBase::focusLost(e);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -194,12 +208,12 @@ std::string TextComponent::getSelectedText(void) const
 
 void TextComponent::keyPressed(const KeyEvent& e)
 {
-
+	TextComponentBase::keyPressed(e);
 }
 
 void TextComponent::keyReleased(const KeyEvent& e)
 {
-
+	TextComponentBase::keyReleased(e);
 }
 
 void TextComponent::keyTyped(const KeyEvent& e)
@@ -353,6 +367,7 @@ void TextComponent::keyTyped(const KeyEvent& e)
 			_TextSelectionEnd = _TextSelectionStart;
 		}
 	}
+	TextComponentBase::keyTyped(e);
 }
 void TextComponent::mouseEntered(const MouseEvent& e)
 {
