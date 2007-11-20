@@ -130,24 +130,24 @@ int main(int argc, char **argv)
 		multiple lines of text 
 		within it.
 
-		setTextColor(Color4f): Set color of text
+		-setTextColor(Color4f): Set color of text
 			withing TextArea
-		setSelectionBoxColor(Color4f): Set the color
+		-setSelectionBoxColor(Color4f): Set the color
 			that highlighting around the selected text 
 			appears
-		setSelectionTextColor(Color4f): Set the color
+		-setSelectionTextColor(Color4f): Set the color
 			the selected text appears
-		setText("TextToBeDisplayed"): Sets initial 
+		-setText("TextToBeDisplayed"): Sets initial 
 			text within TextArea
-		setFont(FontName): Sets the font which is
+		-setFont(FontName): Sets the font which is
 			used within TextArea
-		setSelectionStart(StartCharacterNumber):
+		-setSelectionStart(StartCharacterNumber):
 			Sets the character which the selection
 			 will initially start after
-		 setSelectionEnd(EndCharacterNumber): 
+		-setSelectionEnd(EndCharacterNumber): 
 			Sets the character which the selection
 			will end before
-		setCaretPosition(Location): determine the 
+		-setCaretPosition(Location): determine the 
 			location of the Caret within the text
 			Area.  Note that this does not do too
 			much currently because the only way 

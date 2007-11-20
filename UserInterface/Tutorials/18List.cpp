@@ -267,7 +267,7 @@ int main(int argc, char **argv)
 
 
 	// Create ListCellRenderer and ListSelectionModel
-	// (should always be default).
+	// (normally will be default).
 	// Note that the DefaultListSelectionModel was
 	// created at the top of this file before
 	// the ActionListeners

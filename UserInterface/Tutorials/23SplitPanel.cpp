@@ -178,11 +178,11 @@ int main(int argc, char **argv)
 			
 		Creates and sets up SplitPanel
 
-		setMinComponent/setMaxComponent(component): this 
+		-setMinComponent/setMaxComponent(component): this 
 			is how to add components to the SplitPanel.  
 			Note that if you do not add both an empty 
 			panel will be added automatically.
-		setAlignment(ALIGNMENT): determines the alignment
+		-setAlignment(ALIGNMENT): determines the alignment
 			of the split aspect.  Takes a VERTICAL_ALIGNMENT
 			or HORIZONTAL_ALIGNMENT input.  The default is
 			Horizontal with an east/west split. The 
@@ -190,21 +190,21 @@ int main(int argc, char **argv)
 			component of the panel (depending on the alignment)
 			and the max is the east or west component.
 			The default is horizontal.
-		setDividerPosition("smart" REAL): Determines the initial 
+		-setDividerPosition("smart" REAL): Determines the initial 
 			location of the divider.  Note that this REAL is
 			a percentage if between 0.0 and 1.0 (inclusive) 
 			and absolute is greater than 1.0.  Also note that
 			when resizing a window with a percentage, the
 			divider will move, but with absolute, it does
 			not until it no longer fits in the panel.
-		setDividerSize(SIZE): determines divider size 
-		setExpandable(TRUE/FALSE): Determines whether
+		-setDividerSize(SIZE): determines divider size 
+		-setExpandable(TRUE/FALSE): Determines whether
 			divider can be moved by user.  Default is
 			TRUE (is movable) while FALSE removes
 			the users ability to move the divider
-		setMaxDividerPosition("smart" REAL): Set the
+		-setMaxDividerPosition("smart" REAL): Set the
 			maximum position for the divider.
-		setMinDividerPosition("smart" REAL): Set the
+		-setMinDividerPosition("smart" REAL): Set the
 			minimum position for the divider.  Note 
 			that for both Max/Min, the "smart" REAL
 			follows same format as in setDividerPosition;

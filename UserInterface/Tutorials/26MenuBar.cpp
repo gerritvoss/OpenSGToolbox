@@ -45,6 +45,7 @@
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
+#include <OpenSG/UserInterface/OSGEmptyUIBackground.h>
 #include <OpenSG/UserInterface/OSGMenu.h>
 #include <OpenSG/UserInterface/OSGLabelMenuItem.h>
 #include <OpenSG/UserInterface/OSGSeperatorMenuItem.h>
@@ -127,23 +128,24 @@ int main(int argc, char **argv)
 	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
+	
 	/******************************************************
 			
 			Create  components to add to MenuBar
 			Menus.  Each MenuBar has multiple Menus 
 			which contain multiple MenuItems.
 
-			setAcceleratorKey(KeyEvent::KEY_****): This
+			-setAcceleratorKey(KeyEvent::KEY_****): This
 				links the key "****" as a shortcut to 
 				selecting the item it is attached to
-			setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_***):
+			-setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_***):
 				This adds the "***" key as another 
 				requirement to cause the item to be
 				selected.  Things such as "CONTROL" are 
 				likely to be used here
 			Note: these shortcuts will be shown in the list
 				with the LabelMenuItem they are attached too
-			setMnemonicKey(KeyEvent::KEY_****): sets the key
+			-setMnemonicKey(KeyEvent::KEY_****): sets the key
 				"****" to be underlined within the Menu
 				itself
 
@@ -246,15 +248,45 @@ int main(int argc, char **argv)
 			Create MainMenuBar and adds the Menus
 			created above to it.
 
+			Also creates several Backgrounds
+			to improve MenuBar overall look.
+			Both the MenuBar and Menu can have
+			Backgrounds; the set up currently
+			is to have EmptyBackgrounds in 
+			each Menu allowing a single
+			overall MenuBar Background which
+			is given to the MenuBar itself.
+
+			This can be easily changed by adding
+			different Backgrounds to the 
+			File and Edit Menus.
+
 			Note: it is added to the MainFrame
-			below
+			below.
 
 	******************************************************/
+	// Creates two Backgrounds
+	EmptyUIBackgroundPtr emptyBackground = osg::EmptyUIBackground::create();
+	ColorUIBackgroundPtr colorBackground = osg::ColorUIBackground::create();
+
+
     MenuBarPtr MainMenuBar = MenuBar::create();
 	// Adds the two Menus to the MainMenuBar
     MainMenuBar->addMenu(FileMenu);
     MainMenuBar->addMenu(EditMenu);
 
+	// Adds Backgrounds to Menus and MenuBar
+	beginEditCP(FileMenu, Container::BackgroundFieldMask);
+		FileMenu->setBackground(emptyBackground);
+	beginEditCP(FileMenu, Container::BackgroundFieldMask);
+
+	beginEditCP(EditMenu, Container::BackgroundFieldMask);
+		EditMenu->setBackground(emptyBackground);
+	beginEditCP(EditMenu, Container::BackgroundFieldMask);
+
+	beginEditCP(MainMenuBar, Container::BackgroundFieldMask);
+		MainMenuBar->setBackground(colorBackground);
+	beginEditCP(MainMenuBar, Container::BackgroundFieldMask);
     
 	// Create MainFrameBackground
 	ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
@@ -279,7 +311,6 @@ int main(int argc, char **argv)
 
 	beginEditCP(MainFrame, Frame::LayoutFieldMask | Component::BackgroundFieldMask | Frame::MenuBarFieldMask | Container::ChildrenFieldMask);
 	   MainFrame->setLayout(MainFrameLayout);
-
 	   // Adds MainMenuBar to MainFrame
        MainFrame->setMenuBar(MainMenuBar);
 	   MainFrame->setBackground(MainFrameBackground);

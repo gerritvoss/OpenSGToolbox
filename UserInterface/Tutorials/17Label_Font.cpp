@@ -83,6 +83,15 @@ public:
     }
 };
 
+	/******************************************************
+
+			Creates a class to generate a list
+			of all available Fonts on your 
+			computer.
+
+
+	******************************************************/
+
 class FontListCellGenerator : public DefaultListCellGenerator
 {
     /*==========================  PUBLIC  =================================*/
@@ -124,6 +133,9 @@ class FontListCellGenerator : public DefaultListCellGenerator
     }
 };
 
+// Setup a listener to change the label's font
+// when a different item in the list is
+// selected
 class FontListListener: public MouseAdapter
 {
   public:
@@ -135,14 +147,15 @@ class FontListListener: public MouseAdapter
         {
             ValueStr = dynamic_cast<SFString*>(Value.get())->getValue();
         }
+		// Output selected font
         std::cout << "Setting Font: " << ValueStr << std::endl;
 
-        //Get the Fond
+        // Get the Font and create new FontPtr
         UIFontPtr TheSelectedFont(FontMap[ValueStr]);
 
         if(TheSelectedFont != NullFC)
         {
-            //Set the font for the label to use this one
+            // Set the font for label1 to be selected font
 	        beginEditCP(label1, Label::FontFieldMask);
 		        label1->setFont(TheSelectedFont);
 	        endEditCP(label1, Label::FontFieldMask);
@@ -192,7 +205,7 @@ int main(int argc, char **argv)
 	/******************************************************
 
 			Determine which Fonts your computer can
-			use as a Font
+			use as a Font and makes a list 
 
 
 	******************************************************/
@@ -204,14 +217,13 @@ int main(int argc, char **argv)
         //Create the Font
         UIFontPtr TheFont = UIFont::create();
         beginEditCP(TheFont);
-	        // Determines Font Family (as determined above)	Note:
+	        // Determines Font Family (as done above)	Note:
 	        // a default setting is included if the Font 
 	        // given to the Font does not exist; try putting
-	        // random characterssgjs in for setFamily.  
+	        // random characters into setFamily.  
 	        TheFont->setFamily(family[i]);
 	        TheFont->setSize(16);
 	        TheFont->setStyle(TextFace::STYLE_PLAIN);
-	        TheFont->setGap(3);
         endEditCP(TheFont);
         FontMap[family[i]] = TheFont;
 	}
@@ -244,7 +256,7 @@ int main(int argc, char **argv)
 		// Determines Font Family (as determined above)	Note:
 		// a default setting is included if the Font 
 		// given to the Font does not exist; try putting
-		// random characterssgjs in for setFamily.  
+		// random characters in for setFamily.  
 		labelFont->setFamily(buttonFontFamily);
 		labelFont->setSize(25);
 		labelFont->setStyle(TextFace::STYLE_PLAIN);
@@ -261,62 +273,54 @@ int main(int argc, char **argv)
 		-setFont(FONT_NAME) assigns a Font to the Label
 		-setText("TEXT") displays TEXT on the Label (or
 			whatever else is in the parenthesis
+		-setTextColor(Color4f) sets the color of the 
+			text
 		-setVerticalAlignment(ALIGNMENT) determines the 
 			alignment of the text on the Vertical Axis.
 			Arguments are: VERTICAL_TOP, VERTICAL_CENTER,
-			and VERTICAL_BOTTOM
+			and VERTICAL_BOTTOM or a Float between 0.0
+			and 1.0.  Note: higher (and lower) values are 
+			allowed, but will cause the text to not be 
+			completely displayed.
 		-setHorizontalAlignment(ALIGNMENT) determines the
 			alignment of the text on the Horizontal Axis.
 			Arguments are: HORIZONTAL_CENTER, HORIZONTAL_LEFT, 
-			and HORIZONTAL_RIGHT
+			and HORIZONTAL_RIGHT or a Float between 0.0
+			and 1.0.  Note: higher (and lower) values are 
+			allowed, but will cause the text to not be 
+			completely displayed.
 
 	******************************************************/
 
 	label1 = osg::Label::create();
 	// EditCP for Label ONLY settings
-	beginEditCP(label1, Label::FontFieldMask | Label::TextFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask);
+	beginEditCP(label1, Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask);
 		label1->setFont(labelFont);
 		label1->setText("Sample Label");
+		label1->setTextColor( Color4f(0.1, 0.1, 0.1, 1.0) );
 		label1->setVerticalAlignment(0.5);
-		label1->setHorizontalAlignment(1.0);
-	endEditCP(label1, Label::FontFieldMask | Label::TextFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask);
+		label1->setHorizontalAlignment(0.5);
+		label1->setPreferredSize( Vec2s(200, 50) );
+	endEditCP(label1, Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask);
 	
 
-	// SecondEditCP for Component settings
-	beginEditCP(label1, Component::PreferredSizeFieldMask | Label::TextColorFieldMask);
-		label1->setPreferredSize( Vec2s(200, 50) );
-		// Determine the Color the Font displays at
-		label1->setTextColor( Color4f(0.1, 0.1, 0.1, 1.0) );
-	endEditCP(label1, Component::PreferredSizeFieldMask | Label::TextColorFieldMask);
 
 
 	
 	/******************************************************
 
-			Create ListModel.  This is where you set
-			the values for the List.
+			The following creates a list of all
+			the fonts available on your machine.
 
-			After creating an AbstractListModel,
-			do the following to make a list.
-			
-			First, create SFStrings and use the 
-			.setValue("VALUE") function to set their
-			values.  Then, use the .pushBack(&SFStringName)
-			to add them to the List.
+			For more information about Lists, see
+			18List.
 
-			Next, create the CellGenerator and ListSelectionModel
-			defaults.
-
-			Finally, actually create the List.  Set
-			its Model, CellGenerator, and SelectionModel
-			as shown below.  Finally, choose the
-			type of display for the List (choices outlined
-			below).
-
+			For more information about ScrollBars 
+			and ScrollPanels, see 27ScrollPanel.
 			
 
 	******************************************************/
-	// Create ListModel Component to add things to
+	// Create ListModel Component
 	AbstractListModel Model;
 
 	std::vector<std::string> FontFamilies;
@@ -325,63 +329,32 @@ int main(int argc, char **argv)
     std::map<std::string, UIFontPtr>::iterator FontMapItor;
 	for (FontMapItor = FontMap.begin(); FontMapItor != FontMap.end() ; ++FontMapItor)
 	{
-	    // Add values to it
+	    // Add all available Fonts to it
 	    Model.pushBack(SharedFieldPtr(new SFString((*FontMapItor).first)));
 	}
 
-	// Create ListCellRenderer and ListSelectionModel
-	// (should always be default).
-	// Note that the DefaultListSelectionModel was
-	// created at the top of this file before
-	// the ActionListeners
+	// Creates CellGenerator
 	FontListCellGenerator CellGenerator;
-	//DefaultListSelectionModel SelectionModel;
 
-	// Create Background to be used with the Main Frame
-	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+
 	// Create ListPtr
 	list = List::create();
-	beginEditCP(list);
+	beginEditCP(list, Component::PreferredSizeFieldMask | List::CellLayoutFieldMask);
 		list->setPreferredSize( Vec2s (200, 300) );
-		list->setBackground(mainBackground);
         list->setCellLayout(VERTICAL_ALIGNMENT);
-        //list->setCellLayout(HORIZONTAL_ALIGNMENT);
-	endEditCP(list);
+	endEditCP(list, Component::PreferredSizeFieldMask | List::CellLayoutFieldMask);
 	// Assign the Model, CellGenerator, and SelectionModel
 	// to the List
 	list->setModel(&Model);
+	// Assigns the CellGenerator created above
 	list->setCellGenerator(&CellGenerator);
+	// Creates and assigns a SelectionMode
     ListSelectionModelPtr  SelectionModel(new DefaultListSelectionModel);
     SelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
 	list->setSelectionModel(SelectionModel);
 
     FontListListener TheFontListListener;
     list->addMouseListener(&TheFontListListener);
-
-
-	/******************************************************
-
-			Determine the SelectionModel
-			-SINGLE_SELECTION lets you select ONE item
-				via a single mouse click
-			-SINGLE_INTERVAL_SELECTION lets you select
-				one interval via mouse and SHIFT key
-			-MULTIPLE_INTERVAL_SELECTION lets you select
-				via mouse, and SHIFT and CONTRL keys
-
-			Note: this tutorial is currently set up
-			to allow for this to be changed via Buttons
-			with ActionListeners attached to them so
-			this code is commented out
-
-	******************************************************/
-
-	//SelectionModel.setMode(DefaultListSelectionModel::SINGLE_SELECTION);
-	//SelectionModel.setMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
-	//SelectionModel.setMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
 
     //ScrollPanel
     ScrollPanelPtr TheScrollPanel = ScrollPanel::create();
@@ -394,6 +367,10 @@ int main(int argc, char **argv)
 
 	// Create The Main Frame
 	// Create Background to be used with the Main Frame
+	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
+	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
 	FramePtr MainFrame = osg::Frame::create();
 	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
 

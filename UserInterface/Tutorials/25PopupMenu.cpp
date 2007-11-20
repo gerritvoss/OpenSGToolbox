@@ -121,12 +121,12 @@ int main(int argc, char **argv)
 			
 			Create Popup Menu Components
 		
-		LabelMenuItem: These are items that are contained
+		-LabelMenuItem: These are items that are contained
 			within a menu; they are the things you click
 			on to cause something to occur
-		SeperatorMenuItem:  These place a seperator 
+		-SeperatorMenuItem:  These place a seperator 
 			line between items in a menu
-		Menu: These are sub-menus within another Menu;
+		-Menu: These are sub-menus within another Menu;
 			LabelMenuItems and SeperatorMenuItems
 			are added to a Menu
 
@@ -148,9 +148,9 @@ int main(int argc, char **argv)
 			
 			Edit the LabelMenuItems
 
-			setText("TEXT"): Sets the text on the 
+			-setText("TEXT"): Sets the text on the 
 				item to be TEXT
-			setEnabled(BOOL): sets the menu item
+			-setEnabled(Boolean): sets the menu item
 				to be either enabled or disabled
 
 	******************************************************/
@@ -205,7 +205,7 @@ int main(int argc, char **argv)
 			via addItem(ITEM_TO_BE_ADDED)
 
 			The PopupMenu is attached to bbutton1
-			below using setPopupMenu(MENU_NAME)
+			below using setPopupMenu(POPUP_MENU_NAME)
 
 	******************************************************/
     PopupMenuPtr Button1PopupMenu = PopupMenu::create();

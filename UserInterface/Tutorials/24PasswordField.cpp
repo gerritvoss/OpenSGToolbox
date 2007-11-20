@@ -126,7 +126,7 @@ int main(int argc, char **argv)
 		TextField which allows for text to be
 		entered secretly.
 
-		setEchoCar("CHARACTER"): Sets which
+		-setEchoCar("CHARACTER"): Sets which
 			character replaces text in the 
 			PasswordField
             

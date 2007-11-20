@@ -64,7 +64,13 @@ TablePtr table;
 CheckboxButtonPtr CellSelectionButton;
 CheckboxButtonPtr RowSelectionButton;
 CheckboxButtonPtr ColumnSelectionButton;
-//Button Selected Listeners
+	/******************************************************
+
+		Create ActionListeners to dynamically
+		change the Table selection characteristics
+		while running the program.
+
+	******************************************************/
 class SingleSelectionListener : public ButtonSelectedListener
 {
 public:
@@ -237,6 +243,12 @@ public:
     {
         return NULL;
     }
+
+	/******************************************************
+
+		Create the Table itself.
+
+	******************************************************/
 
     ExampleTableModel()
     {
@@ -546,3 +558,4 @@ PanelPtr createSelectionOptionPanel(void)
     endEditCP(ThePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask| Panel::PreferredSizeFieldMask);
     return ThePanel;
 }
+ 
