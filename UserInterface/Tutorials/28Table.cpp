@@ -225,7 +225,12 @@ public:
     
     virtual void setValueAt(SharedFieldPtr aValue, UInt32 rowIndex, UInt32 columnIndex)
     {
-        //Do Notning
+        if(columnIndex == 0 && aValue->getType() == SFString::getClassType())
+        {
+            std::string TempString;
+            aValue->getValueByStr(TempString);
+            dynamic_cast<SFString*>(_CellValues[rowIndex*getColumnCount() + columnIndex].get())->setValue(dynamic_cast<SFString*>(aValue.get())->getValue());
+        }
     }
 
     virtual const FieldType* getColumnType(const UInt32& columnIndex)

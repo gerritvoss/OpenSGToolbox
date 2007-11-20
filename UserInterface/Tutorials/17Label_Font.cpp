@@ -211,6 +211,7 @@ int main(int argc, char **argv)
 	        TheFont->setFamily(family[i]);
 	        TheFont->setSize(16);
 	        TheFont->setStyle(TextFace::STYLE_PLAIN);
+	        TheFont->setGap(3);
         endEditCP(TheFont);
         FontMap[family[i]] = TheFont;
 	}
