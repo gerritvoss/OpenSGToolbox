@@ -62,6 +62,36 @@
 
 OSG_BEGIN_NAMESPACE
 
+class OSG_INPUTLIB_DLLMAPPING WindowVisualFormat{
+public:
+	UInt8 _PixelSize;
+	UInt8 _RedSize;
+	UInt8 _GreenSize;
+	UInt8 _BlueSize;
+	UInt8 _AlphaSize;
+	
+	UInt8 _DepthBufferSize;
+	UInt8 _StencilBufferSize;
+	
+	UInt8 _AccumRedSize;
+	UInt8 _AccumGreenSize;
+	UInt8 _AccumBlueSize;
+	UInt8 _AccumAlphaSize;
+
+	UInt8 _AuxiliaryBufferCount;
+
+	bool _DoubleBuffer;
+	bool _Stereo;
+
+	bool _RGBA;
+	bool _ColorIndex;
+
+	bool _Multisample;
+	UInt8 _SampleBuffers;
+
+	bool _SuperSample;
+};
+
 class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBase
 {
   protected:
@@ -266,6 +296,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     /*! \}                                                                 */
     
     void updateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2s& Location);
+    void validateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2s& Location);
 
     void produceMouseClicked(const MouseEvent::MouseButton& Button, const Pnt2s& Location);
     void produceMouseEntered(const Pnt2s& Location);

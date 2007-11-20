@@ -257,12 +257,14 @@ void WindowEventProducer::produceMouseExited(const Pnt2s& Location)
 void WindowEventProducer::produceMousePressed(const MouseEvent::MouseButton& Button, const Pnt2s& Location)
 {
 	_ButtonClickMap[Button] = Location;
+	TimeStamp t(getSystemTime());
+	validateClickCount(Button, t, Location);
    Pnt2s ViewportLocation;
    ViewportPtr ResultViewport;
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
    {
-	   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
+	   MouseEvent TheEvent( WindowEventProducerPtr(this), t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
 	   MouseListenerSet ListenerSet(_MouseListeners);
        for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
        {
@@ -273,12 +275,14 @@ void WindowEventProducer::produceMousePressed(const MouseEvent::MouseButton& But
 
 void WindowEventProducer::produceMouseReleased(const MouseEvent::MouseButton& Button, const Pnt2s& Location)
 {
+	TimeStamp t(getSystemTime());
+	validateClickCount(Button, t, Location);
    Pnt2s ViewportLocation;
    ViewportPtr ResultViewport;
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
    {
-	   MouseEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
+	   MouseEvent TheEvent( WindowEventProducerPtr(this), t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
 	   MouseListenerSet ListenerSet(_MouseListeners);
        for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
        {
@@ -458,11 +462,10 @@ void WindowEventProducer::produceUpdate(const Time& ElapsedTime)
 }
 
 
-void WindowEventProducer::updateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2s& Location)
+void WindowEventProducer::validateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2s& Location)
 {
    //Get the vector of Clicks for this Button
    ClickVector& TheClickVector( _ButtonClickCountMap[Button] );
-
    //If the vector not empty
    if(TheClickVector.size() > 0) 
    {
@@ -475,8 +478,14 @@ void WindowEventProducer::updateClickCount(const MouseEvent::MouseButton& Button
          TheClickVector.clear();
       }
    }
+}
+
+void WindowEventProducer::updateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2s& Location)
+{
+   validateClickCount(Button, TimeStamp, Location);
+
    //Put the Click on the back of the vector
-   TheClickVector.push_back( Click(TimeStamp, Location) );
+   _ButtonClickCountMap[Button].push_back( Click(TimeStamp, Location) );
 }
 
 OSG_END_NAMESPACE
