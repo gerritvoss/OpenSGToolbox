@@ -596,14 +596,18 @@ bool Component::giveFocus(ComponentPtr NewFocusedComponent, bool Temporary)
     {
         return false;
     }
-    else
+    else if(ComponentPtr(this) == NewFocusedComponent)
     {
+		return true;
+    }
+	else
+	{
         beginEditCP(ComponentPtr(this), FocusedFieldMask);
            setFocused(false);
         endEditCP(ComponentPtr(this), FocusedFieldMask);
         focusLost(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_LOST,Temporary, NewFocusedComponent));
 		return true;
-    }
+	}
 }
 
 bool Component::takeFocus(bool Temporary)

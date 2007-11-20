@@ -832,6 +832,8 @@ void DefaultLookAndFeel::init(void)
 		DefaultTextField->setBorder(DefaultTextFieldBorder);
 		DefaultTextField->setDisabledBorder(DefaultTextFieldBorder);
 
+		DefaultTextField->setHorizontalAlignment(0.0);
+		DefaultTextField->setVerticalAlignment(0.5);
 	endEditCP(DefaultTextField);
 
 	TextField::getClassType().setPrototype(DefaultTextField);

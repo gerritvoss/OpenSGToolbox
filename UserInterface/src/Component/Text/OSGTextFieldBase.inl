@@ -96,6 +96,13 @@ TextFieldPtr TextFieldBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the TextField::_sfHorizontalAlignment field.
+inline
+SFReal32 *TextFieldBase::getSFHorizontalAlignment(void)
+{
+    return &_sfHorizontalAlignment;
+}
+
 //! Get the TextField::_sfVerticalAlignment field.
 inline
 SFReal32 *TextFieldBase::getSFVerticalAlignment(void)
@@ -103,6 +110,27 @@ SFReal32 *TextFieldBase::getSFVerticalAlignment(void)
     return &_sfVerticalAlignment;
 }
 
+
+//! Get the value of the TextField::_sfHorizontalAlignment field.
+inline
+Real32 &TextFieldBase::getHorizontalAlignment(void)
+{
+    return _sfHorizontalAlignment.getValue();
+}
+
+//! Get the value of the TextField::_sfHorizontalAlignment field.
+inline
+const Real32 &TextFieldBase::getHorizontalAlignment(void) const
+{
+    return _sfHorizontalAlignment.getValue();
+}
+
+//! Set the value of the TextField::_sfHorizontalAlignment field.
+inline
+void TextFieldBase::setHorizontalAlignment(const Real32 &value)
+{
+    _sfHorizontalAlignment.setValue(value);
+}
 
 //! Get the value of the TextField::_sfVerticalAlignment field.
 inline

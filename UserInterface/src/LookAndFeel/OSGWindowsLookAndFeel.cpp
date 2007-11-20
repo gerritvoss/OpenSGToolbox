@@ -1067,6 +1067,8 @@ void WindowsLookAndFeel::init(void)
 		WindowsTextField->setBorder(WindowsTextFieldBorder);
 		WindowsTextField->setDisabledBorder(WindowsTextFieldBorder);
 
+		WindowsTextField->setHorizontalAlignment(0.0);
+		WindowsTextField->setVerticalAlignment(0.5);
 	endEditCP(WindowsTextField);
 
 	TextField::getClassType().setPrototype(WindowsTextField);

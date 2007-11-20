@@ -77,8 +77,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING PasswordField : public PasswordFieldBase
                       const BitVector  bvFlags  = 0) const;
 
 	virtual void mouseClicked(const MouseEvent& e);
-	virtual void mousePressed(const MouseEvent& e);
-	virtual void mouseDragged(const MouseEvent& e);
+
+	virtual std::string getDrawnText(void) const;
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -101,7 +101,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING PasswordField : public PasswordFieldBase
 
     /*! \}                                                                 */
     
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
     /*==========================  PRIVATE  ================================*/
   private:
 

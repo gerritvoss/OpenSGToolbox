@@ -96,6 +96,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
     void addActionListener(ActionListenerPtr Listener);
     void removeActionListener(ActionListenerPtr Listener);
 
+	virtual std::string getDrawnText(void) const;
+
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -119,6 +121,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
     /*! \}                                                                 */
     
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
+	void calculateTextBounds(const UInt32 StartIndex, const UInt32 EndIndex, Pnt2s& TopLeft, Pnt2s& BottomRight);
 
 	typedef std::set<ActionListenerPtr> ActionListenerSet;
     typedef ActionListenerSet::iterator ActionListenerSetItor;

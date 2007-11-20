@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="PasswordField"
-	parent="TextField"
+	name="TextField"
+	parent="TextComponent"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -12,6 +12,15 @@
 	useLocalIncludes="true"
 >
 A UI Password Field
+	<Field
+		name="HorizontalAlignment"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0"
+		access="public"
+	>
+	</Field>
 	<Field
 		name="VerticalAlignment"
 		type="Real32"

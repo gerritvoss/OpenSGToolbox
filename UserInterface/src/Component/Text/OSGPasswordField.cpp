@@ -84,55 +84,9 @@ void PasswordField::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void PasswordField::drawInternal(const GraphicsPtr TheGraphics) const
+std::string PasswordField::getDrawnText(void) const
 {
-    Pnt2s TopLeft, BottomRight;
-    Pnt2s TempPos;
-    getInsideBorderBounds(TopLeft, BottomRight);
-    TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, getFont()->getBounds(getEcho()), getVerticalAlignment(), 0.0);
-    
-    //Text Color
-    Color4f TextColor = getDrawnTextColor();
-    if(getEcho() != "" && getFont() != NullFC)
-    {
-
-	    if(_TextSelectionStart >= _TextSelectionEnd)
-	    {
-	        TheGraphics->drawText(TempPos, getEcho(), getFont(), TextColor, getOpacity());
-	    }
-	    else
-	    {
-            //Draw Text Befor the Selection
-		    TheGraphics->drawText(TempPos, getEcho().substr(0, _TextSelectionStart), getFont(), TextColor, getOpacity());
-
-		    //Draw Selection
-            Pnt2s TextTopLeft, TextBottomRight;
-            getFont()->getBounds(getEcho().substr(0, _TextSelectionStart), TextTopLeft, TextBottomRight);
-
-		    TheGraphics->drawQuad(TempPos + Vec2s(TextBottomRight.x(),0),
-			    TempPos + Vec2s(getFont()->getBounds(getEcho().substr(0, _TextSelectionEnd)).x(), 0),
-			    TempPos + Vec2s(getFont()->getBounds(getEcho().substr(0, _TextSelectionEnd))),
-			    TempPos + Vec2s(TextBottomRight),
-			    getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(), getOpacity());
-
-            //Draw Selected Text
-		    TheGraphics->drawText(TempPos + Vec2s(TextBottomRight.x(), 0), 
-			    getEcho().substr(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart), getFont(), getSelectionTextColor(), getOpacity());
-
-		    //Eraw Text After selection
-            getFont()->getBounds(getEcho().substr(0, _TextSelectionEnd), TextTopLeft, TextBottomRight);
-		    TheGraphics->drawText(TempPos + Vec2s(TextBottomRight.x(), 0),
-			    getEcho().substr(_TextSelectionEnd, getEcho().size()-_TextSelectionEnd), getFont(), TextColor, getOpacity());
-	    }
-    }
-
-    if(getFocused() && _CurrentCaretBlinkElps <= 0.5*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
-    {
-   		    //Draw the caret
-		    TheGraphics->drawLine(TempPos+Vec2s(getFont()->getBounds(getEcho().substr(0, getCaretPosition())).x(), 0),
-	        TempPos + Vec2s(getFont()->getBounds(getEcho().substr(0, getCaretPosition())).x(),  getFont()->getBounds(getEcho()).y()), 
-	        .5, TextColor, 1.0);
-    }
+	return getEcho();
 }
 
 void PasswordField::mouseClicked(const MouseEvent& e)
@@ -142,140 +96,12 @@ void PasswordField::mouseClicked(const MouseEvent& e)
 
 		if(e.getClickCount() == 2)
 		{
-			_TextSelectionStart = 0;
-			_TextSelectionEnd = getText().size();
+			selectAll();
 			setCaretPosition(getText().size());
 		}
 	}
 	TextComponent::mouseClicked(e);
 
-}
-
-
-void PasswordField::mousePressed(const MouseEvent& e)
-{
-	Pnt2s TopLeftText, BottomRightText, TempPos;
-	Pnt2s TopLeftText1, BottomRightText1;
-	Pnt2s TopLeft, BottomRight;
-	Pnt2s CurrentPosition;
-	getFont()->getBounds(getEcho(), TopLeftText, BottomRightText);
-    getInsideBorderBounds(TopLeft, BottomRight);
-    TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText-TopLeftText, getVerticalAlignment(), 0.0);
-	if(e.getButton() == e.BUTTON1)
-	{
-		//set caret position to proper place
-		//if the mouse is to the left of the text, set it to the begining.
-		Pnt2s temp = DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this));
-		if(DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x() <= TempPos.x())
-		{
-			setCaretPosition(0);
-		}		//if the mouse is to the right of the text, set it to the end
-		else if(DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x() >= TempPos.x()+BottomRightText.x())
-		{
-			setCaretPosition(getEcho().size());
-		}
-		else
-		{
-			for(UInt32 i = 0; i <getEcho().size(); i++)
-			{		
-				getFont()->getBounds(getEcho().substr(0, i), TopLeftText, BottomRightText);
-				getFont()->getBounds(getEcho().substr(0, i+1), TopLeftText1, BottomRightText1);
-				if(DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x()>BottomRightText.x()
-				   && DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
-				{
-					if(DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x() <= (BottomRightText1.x()-BottomRightText.x())/2.0+0.5 + BottomRightText.x())
-					{
-						setCaretPosition(i);
-						break;
-					}
-					else
-					{
-						setCaretPosition(i+1);
-						break;
-					}
-				}
-			}
-		}
-
-		_TextSelectionEnd = getCaretPosition();
-		_TextSelectionStart = getCaretPosition();
-	}
-	TextComponent::mousePressed(e);
-}
-void PasswordField::mouseDragged(const MouseEvent& e)
-{
-	Pnt2s TopLeftText, BottomRightText, TempPos;
-	Pnt2s TopLeftText1, BottomRightText1;
-	Pnt2s TopLeft, BottomRight;
-	Pnt2s CurrentPosition;
-	Int32 OriginalPosition = getCaretPosition();
-	getFont()->getBounds(getEcho(), TopLeftText, BottomRightText);
-    getInsideBorderBounds(TopLeft, BottomRight);
-    TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText-TopLeftText, getVerticalAlignment(), 0.0);
-	if(e.getButton() == e.BUTTON1)
-	{
-		//set caret position to proper place
-		//if the mouse is to the left of the text, set it to the begining.
-		Pnt2s temp = DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this));
-		if(DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x() <= TempPos.x())
-		{
-			setCaretPosition(0);
-		}		//if the mouse is to the right of the text, set it to the end
-		else if(DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x() >= TempPos.x()+BottomRightText.x())
-		{
-			setCaretPosition(getEcho().size());
-		}
-		else
-		{
-			//check letter by letter for the mouse's position
-			for(UInt32 i = 0; i <getEcho().size(); i++)
-			{		
-				getFont()->getBounds(getEcho().substr(0, i), TopLeftText, BottomRightText);
-				getFont()->getBounds(getEcho().substr(0, i+1), TopLeftText1, BottomRightText1);
-				if(DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x()>BottomRightText.x()
-				   && DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
-				{
-					if(DrawingSurfaceToComponent(e.getLocation(), TextFieldPtr(this)).x() < (BottomRightText1.x()-BottomRightText.x())/2.0 + BottomRightText.x())
-					{
-
-						setCaretPosition(i);
-						break;
-					}
-					else
-					{
-
-						setCaretPosition(i+1);
-						break;
-					}
-				}
-			}
-		}
-		if(getCaretPosition() < OriginalPosition)
-		{
-			if(getCaretPosition() < _TextSelectionStart)
-			{
-				_TextSelectionStart = getCaretPosition();
-			}
-			else
-			{
-				_TextSelectionEnd = getCaretPosition();
-			}
-		}
-		else if(getCaretPosition() > OriginalPosition)
-		{
-			if(getCaretPosition() > _TextSelectionEnd)
-			{
-				_TextSelectionEnd = getCaretPosition();
-			}
-			else
-			{
-				_TextSelectionStart = getCaretPosition();
-			}
-		}
-	}
-	
-
-	TextComponent::mouseDragged(e);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

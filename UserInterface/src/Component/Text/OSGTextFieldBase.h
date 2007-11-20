@@ -67,6 +67,7 @@
 
 #include "OSGTextComponent.h" // Parent
 
+#include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
 #include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
 
 #include "OSGTextFieldFields.h"
@@ -91,10 +92,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public TextComponent
 
     enum
     {
-        VerticalAlignmentFieldId = Inherited::NextFieldId,
-        NextFieldId              = VerticalAlignmentFieldId + 1
+        HorizontalAlignmentFieldId = Inherited::NextFieldId,
+        VerticalAlignmentFieldId   = HorizontalAlignmentFieldId + 1,
+        NextFieldId                = VerticalAlignmentFieldId   + 1
     };
 
+    static const OSG::BitVector HorizontalAlignmentFieldMask;
     static const OSG::BitVector VerticalAlignmentFieldMask;
 
 
@@ -122,8 +125,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public TextComponent
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+           SFReal32            *getSFHorizontalAlignment(void);
            SFReal32            *getSFVerticalAlignment(void);
 
+           Real32              &getHorizontalAlignment(void);
+     const Real32              &getHorizontalAlignment(void) const;
            Real32              &getVerticalAlignment(void);
      const Real32              &getVerticalAlignment(void) const;
 
@@ -132,6 +138,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public TextComponent
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setHorizontalAlignment( const Real32 &value );
      void setVerticalAlignment( const Real32 &value );
 
     /*! \}                                                                 */
@@ -175,6 +182,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public TextComponent
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
+    SFReal32            _sfHorizontalAlignment;
     SFReal32            _sfVerticalAlignment;
 
     /*! \}                                                                 */

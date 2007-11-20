@@ -64,6 +64,9 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  TextFieldBase::HorizontalAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << TextFieldBase::HorizontalAlignmentFieldId);
+
 const OSG::BitVector  TextFieldBase::VerticalAlignmentFieldMask = 
     (TypeTraits<BitVector>::One << TextFieldBase::VerticalAlignmentFieldId);
 
@@ -74,6 +77,9 @@ const OSG::BitVector TextFieldBase::MTInfluenceMask =
 
 // Field descriptions
 
+/*! \var Real32          TextFieldBase::_sfHorizontalAlignment
+    
+*/
 /*! \var Real32          TextFieldBase::_sfVerticalAlignment
     
 */
@@ -82,6 +88,11 @@ const OSG::BitVector TextFieldBase::MTInfluenceMask =
 
 FieldDescription *TextFieldBase::_desc[] = 
 {
+    new FieldDescription(SFReal32::getClassType(), 
+                     "HorizontalAlignment", 
+                     HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &TextFieldBase::getSFHorizontalAlignment),
     new FieldDescription(SFReal32::getClassType(), 
                      "VerticalAlignment", 
                      VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
@@ -162,6 +173,7 @@ void TextFieldBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 TextFieldBase::TextFieldBase(void) :
+    _sfHorizontalAlignment    (Real32(0.0)), 
     _sfVerticalAlignment      (Real32(0.5)), 
     Inherited() 
 {
@@ -172,6 +184,7 @@ TextFieldBase::TextFieldBase(void) :
 #endif
 
 TextFieldBase::TextFieldBase(const TextFieldBase &source) :
+    _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
     _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
     Inherited                 (source)
 {
@@ -189,6 +202,11 @@ UInt32 TextFieldBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfHorizontalAlignment.getBinSize();
+    }
+
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
     {
         returnValue += _sfVerticalAlignment.getBinSize();
@@ -203,6 +221,11 @@ void TextFieldBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+    {
+        _sfHorizontalAlignment.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
     {
         _sfVerticalAlignment.copyToBin(pMem);
@@ -215,6 +238,11 @@ void TextFieldBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+    {
+        _sfHorizontalAlignment.copyFromBin(pMem);
+    }
 
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
     {
@@ -231,6 +259,9 @@ void TextFieldBase::executeSyncImpl(      TextFieldBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
+
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
         _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
 
@@ -243,6 +274,9 @@ void TextFieldBase::executeSyncImpl(      TextFieldBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
 
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
         _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);

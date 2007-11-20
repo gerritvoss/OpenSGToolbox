@@ -15,7 +15,7 @@ ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table,
 		return NullFC;
 	}
 	TextFieldPtr TheTextField = TextField::create();
-	beginEditCP(TheTextField, TextField::TextFieldMask | TextField::PreferredSizeFieldMask);
+	beginEditCP(TheTextField, TextField::TextFieldMask | TextField::PreferredSizeFieldMask | TextField::HorizontalAlignmentFieldMask | TextField::CaretPositionFieldMask);
 		std::string tempString;
 		if(value->getType() == SFString::getClassType())
 		{
@@ -27,7 +27,10 @@ ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table,
 		}
 		TheTextField->setText(tempString);
 		TheTextField->setPreferredSize(Vec2s(100,30));
-	endEditCP(TheTextField, TextField::TextFieldMask | TextField::PreferredSizeFieldMask);
+		TheTextField->setHorizontalAlignment(0.5);
+		TheTextField->selectAll();
+		TheTextField->setCaretPosition(TheTextField->getText().size());
+	endEditCP(TheTextField, TextField::TextFieldMask | TextField::PreferredSizeFieldMask | TextField::HorizontalAlignmentFieldMask | TextField::CaretPositionFieldMask);
 	ColorUIBackgroundPtr tempBackground;
 	tempBackground = ColorUIBackground::create();
 
