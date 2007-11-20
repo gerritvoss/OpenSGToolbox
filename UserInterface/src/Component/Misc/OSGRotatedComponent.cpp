@@ -344,6 +344,16 @@ void RotatedComponent::changed(BitVector whichField, UInt32 origin)
                 break;
             }
             getInternalComponent()->updateClipBounds();
+
+			//Check the Mouse
+			if( getParentFrame() != NullFC &&
+				getParentFrame()->getDrawingSurface() != NullFC &&
+				getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+			{
+				Pnt2s MouseLoc(getParentFrame()->getDrawingSurface()->getEventProducer()->getMousePosition());
+				MouseEvent e(NullFC,getSystemTime(),MouseEvent::NO_BUTTON,0,MouseLoc, NullFC);
+				checkMouseEnterExit(e,e.getLocation(),getInternalComponent(),getInternalComponent()->isContained(MouseLoc, true),e.getViewport());
+			}
         }
     }
 }
