@@ -809,26 +809,22 @@ void Table::columnSelectionChanged(const ListSelectionEvent& e)
     }
 }
 
-void Table::createDefaultColumnsFromModel(void)
-{
-    //TODO:Implement
-}
-
 bool Table::editCellAt(const UInt32& row, const UInt32& column)
 {
     //TODO:Implement
+    startEditing(row, column);
     return true;
 }
 
 bool Table::editCellAt(const UInt32& row, const UInt32& column, const Event& e)
 {
     //TODO:Implement
+    checkCellEdit(e, row, column);
     return true;
 }
 
 void Table::editingCanceled(const ChangeEvent& e)
 {
-    //TODO:Implement
     _CellEditor->removeCellEditorListener(this);
     _CellEditor = NULL;
     _EditingComponent = NullFC;
@@ -839,7 +835,6 @@ void Table::editingCanceled(const ChangeEvent& e)
 
 void Table::editingStopped(const ChangeEvent& e)
 {
-    //TODO:Implement
     _Model->setValueAt(_CellEditor->getCellEditorValue(), _EditingRow, _EditingColumn);
 
     
@@ -903,11 +898,6 @@ std::vector<UInt32> Table::getSelectedRows(void) const
     {
         return std::vector<UInt32>();
     }
-}
-
-void Table::removeEditor(void)
-{
-    //TODO:Implement
 }
 
 Int32 Table::rowAtPoint(const Pnt2s& point)

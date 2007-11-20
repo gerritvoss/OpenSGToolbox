@@ -159,12 +159,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     //Invoked when the selection model of the TableColumnModel is changed.
     virtual void columnSelectionChanged(const ListSelectionEvent& e);
 
-    //Returns the default column model object, which is a DefaultTableColumnModel.
-    //protected  TableColumnModel createDefaultColumnModel(void);
-
-    //Creates default columns for the table from the data model using the getColumnCount method defined in the TableModel interface.
-    void createDefaultColumnsFromModel(void);
-
     //Returns the default table model object, which is a DefaultTableModel.
     //protected  TableModelPtr createDefaultDataModel(void);
 
@@ -290,9 +284,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
 
     //Deselects the columns from index0 to index1, inclusive.
     void removeColumnSelectionInterval(const UInt32& index0, const UInt32& index1);
-
-    //Discards the editor object and frees the real estate it used for cell rendering.
-    void removeEditor(void);
 
     //Deselects the rows from index0 to index1, inclusive.
     void removeRowSelectionInterval(const UInt32& index0, const UInt32& index1);

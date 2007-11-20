@@ -153,7 +153,7 @@ void WindowsLookAndFeel::init(void)
 	UIFontPtr WindowsFont = UIFont::create();
 	beginEditCP(WindowsFont);
 		WindowsFont->setFamily("Tahoma");
-		WindowsFont->setGap(1);
+		WindowsFont->setGap(3);
 		WindowsFont->setGlyphPixelSize(46);
 		WindowsFont->setSize(14);
 		WindowsFont->setTextureWidth(0);

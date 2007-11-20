@@ -59,12 +59,18 @@ ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table,
 	endEditCP(TheTextField, TextField::BorderFieldMask);
 
     _EditingTextField = TheTextField;
+    _EditingTextField->addActionListener(this);
 	return Component::Ptr::dcast(TheTextField);
 }
 
 void DefaultTableCellEditor::cancelCellEditing(void)
 {
+    if(_EditingTextField != NullFC)
+    {
+        _EditingTextField->removeActionListener(this);
+    }
     AbstractCellEditor::cancelCellEditing();
+    _EditingTextField = NullFC;
 }
 
 SharedFieldPtr DefaultTableCellEditor::getCellEditorValue(void) const
@@ -94,7 +100,13 @@ bool DefaultTableCellEditor::shouldSelectCell(const Event& anEvent) const
 
 bool DefaultTableCellEditor::stopCellEditing(void)
 {
-    return AbstractCellEditor::stopCellEditing();
+    if(_EditingTextField != NullFC)
+    {
+        _EditingTextField->removeActionListener(this);
+    }
+    bool Return =  AbstractCellEditor::stopCellEditing();
+    _EditingTextField = NullFC;
+    return Return;
 }
 
 void DefaultTableCellEditor::actionPerformed(const ActionEvent& e)
