@@ -37,6 +37,7 @@
 #include <OpenSG/UserInterface/OSGUIBackgrounds.h>
 
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
+#include <OpenSG/UserInterface/OSGPanel.h>
 
 
 #include <OpenSG/UserInterface/OSGScrollPanel.h>
@@ -60,6 +61,7 @@ bool ExitApp = false;
 int setupGLUT( int *argc, char *argv[] );
 void display(void);
 void reshape(Vec2s Size);
+PanelPtr createPanelWithButtons(void);
 
 class TutorialWindowListener : public WindowAdapter
 {
@@ -115,40 +117,132 @@ int main(int argc, char **argv)
 	LookAndFeelManager::the()->setLookAndFeel(WindowsLookAndFeel::create());
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    //UIViewport
-    ButtonPtr Button1 = Button::create();
-    beginEditCP(Button1, Button::PreferredSizeFieldMask | Button::TextFieldMask);
-	    Button1->setPreferredSize(Vec2s(200,200));
-	    Button1->setText("Button 1");
-    endEditCP(Button1, Button::PreferredSizeFieldMask | Button::TextFieldMask);
+	/******************************************************
+			
+			Create a Panel containing Buttons to
+			add to ScrollPanel using a function
+			(at bottom of this file)
+ 
+	******************************************************/	
+	PanelPtr testing = createPanelWithButtons();
+ 
 
+	/******************************************************
+			
+			Create a UIViewport to use with the
+			ScrollPanel.  This allows you to 
+
+ 
+	******************************************************/	
     UIViewportPtr TheUIViewport = UIViewport::create();
 
     beginEditCP(TheUIViewport, UIViewport::ViewComponentFieldMask | UIViewport::ViewPositionFieldMask | UIViewport::PreferredSizeFieldMask);
-        TheUIViewport->setViewComponent(Button1);
+        TheUIViewport->setViewComponent(testing);
         TheUIViewport->setViewPosition(Pnt2s(150,150));
 	    TheUIViewport->setPreferredSize(Vec2s(100,100));
     endEditCP(TheUIViewport, UIViewport::ViewComponentFieldMask | UIViewport::ViewPositionFieldMask | UIViewport::PreferredSizeFieldMask);
 
-    //ScrollPanel
+   	/******************************************************
+			
+			Create the ScrollPanel itself.
+			-setHorizontalResizePolicy(ScrollPanel::
+				enum) takes NO_RESIZE or RESIZE_TO_VIEW
+				arguments.  This determines if the
+				ScrollPanel will automatically
+				resize itself to allow for the size
+				of its components; otherwise it will
+				add a Scrollbar.  Note that in 
+				the Horitontal Direction it is
+				resized (no Scrollbar) but in the
+				Vertical Direction a ScrollBar is 
+				added.  Default is NO_RESIZE.
+			-setVerticalResizePolicy(): same as
+				HorizontalResizePolicy except in
+				the Vertial Direction
+
+			-setViewcomponent(COMPONENT): sets which
+				Component will be added into
+				the ScrollPanel.  Note that this
+				must be the same as the UIViewport
+				created above and does not require
+				a begin/endEditCP
+ 
+	******************************************************/	
     ScrollPanelPtr TheScrollPanel = ScrollPanel::create();
     beginEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-	    TheScrollPanel->setPreferredSize(Vec2s(100,100));
+	    TheScrollPanel->setPreferredSize(Vec2s(100,150));
         TheScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        //TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+		TheScrollPanel->setEnabled(false);
     endEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-    TheScrollPanel->setViewComponent(Button1);
+    TheScrollPanel->setViewComponent(testing);
 
-    //ScrollBar
-    ScrollBarPtr TheScrollBar = ScrollBar::create();
+
+   	/******************************************************
+			
+			Create two ScrollBars.
+
+			First, create a DefaultBoundedRangeModel.
+			This determines some characteristics of 
+			the Scrollbar.  Note that you can link
+			several ScollBars to the same 
+			DefaultBoundedRangeModel; this will
+			cause them to move at the same time.
+			-.setMinimum(Int): Determines a numeric
+				value for the beginning of the 
+				ScrollBar.  Note that the visible
+				size will be set separately.
+			-.setMaximum(Int): Determines a numeric
+				value for the end of the 
+				ScrollBar. 
+			-.setValue(Int):  This determines the 
+				initial location of the Bar on the
+				ScrollBar.  This is determined from
+				the Min/Max
+			-.setExtent(Int): This determines the size
+				of the Bar on the ScrollBar as a 
+				fraction of the total size (which is 
+				determined by the Min/Max values)
+
+			Second, create the ScrollBar itself.
+			This has several characterstics applied 
+			to it.
+
+			-setOrientation(ORIENTATION): Determines
+				which orientation the ScrollBar will
+				be.  Arguments are: VERTICAL_ALIGNMENT
+				and HORIZONTAL_ALIGNMENT
+			-setUnitIncrement(Int):
+			-setBlockIncrement(Int): This determines
+				how many units the ScrollBar moves 
+				when the "non-scroller" is clicked.
+				This references the Min/Max values
+				above as well (so if the Min/Max
+				range was 0 to 100, and this was 
+				100, then each click would move the
+				scoller to the opposite end).  It 
+				would also be impossible to directly
+				click the scroller to a middle location.
+
+
+
+	******************************************************/	
+   
+	// Create the DefaultBoundedRangeModel and 
+	// set its values
     DefaultBoundedRangeModel TheBoundedRangeModel;
     TheBoundedRangeModel.setMinimum(0);
     TheBoundedRangeModel.setMaximum(100);
     TheBoundedRangeModel.setValue(10);
     TheBoundedRangeModel.setExtent(20);
 
+	ScrollBarPtr TheScrollBar = ScrollBar::create();
     beginEditCP(TheScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
         TheScrollBar->setOrientation(VERTICAL_ALIGNMENT);
         TheScrollBar->setPreferredSize(Vec2s(20,200));
+		TheScrollBar->setEnabled(false);
+		TheScrollBar->setUnitIncrement(10);
+		TheScrollBar->setBlockIncrement(100);
     endEditCP(TheScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
     TheScrollBar->setModel(&TheBoundedRangeModel);
 
@@ -158,6 +252,20 @@ int main(int argc, char **argv)
         TheScrollBarH->setPreferredSize(Vec2s(400,20));
     endEditCP(TheScrollBarH, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
     TheScrollBarH->setModel(&TheBoundedRangeModel);
+	
+   	
+	// Creates another DefaultBoundedRangeModel to use 
+	// for separating the two ScrollBars from each other.
+	
+	/*
+	DefaultBoundedRangeModel TheBoundedRangeModel2;
+    TheBoundedRangeModel2.setMinimum(0);
+    TheBoundedRangeModel2.setMaximum(100);
+    TheBoundedRangeModel2.setValue(10);
+    TheBoundedRangeModel2.setExtent(20);
+    TheScrollBarH->setModel(&TheBoundedRangeModel2);
+	*/
+
 
 	// Create The Main Frame
 	// Create Background to be used with the Main Frame
@@ -237,4 +345,49 @@ void display(void)
 void reshape(Vec2s Size)
 {
     mgr->resize(Size.x(), Size.y());
+}
+
+PanelPtr createPanelWithButtons(void)
+{
+   ButtonPtr Button1 = Button::create();
+	ButtonPtr Button2 = Button::create();
+	ButtonPtr Button3 = Button::create();
+	ButtonPtr Button4 = Button::create();
+	ButtonPtr Button5 = Button::create();
+	ButtonPtr Button6 = Button::create();
+    beginEditCP(Button1, Button::PreferredSizeFieldMask | Button::TextFieldMask);
+	    Button1->setText("This");
+    endEditCP(Button1, Button::PreferredSizeFieldMask | Button::TextFieldMask);
+	beginEditCP(Button2, Button::PreferredSizeFieldMask | Button::TextFieldMask);
+	    Button2->setText("is");
+    endEditCP(Button2, Button::PreferredSizeFieldMask | Button::TextFieldMask);
+	beginEditCP(Button3, Button::PreferredSizeFieldMask | Button::TextFieldMask);
+	    Button3->setText("a");
+    endEditCP(Button3, Button::PreferredSizeFieldMask | Button::TextFieldMask);
+	beginEditCP(Button4, Button::PreferredSizeFieldMask | Button::TextFieldMask);
+	    Button4->setText("sample");
+    endEditCP(Button4, Button::PreferredSizeFieldMask | Button::TextFieldMask);
+    beginEditCP(Button5, Button::PreferredSizeFieldMask | Button::TextFieldMask);
+	    Button5->setText("Scroll");
+    endEditCP(Button5, Button::PreferredSizeFieldMask | Button::TextFieldMask);
+	beginEditCP(Button6, Button::PreferredSizeFieldMask | Button::TextFieldMask);
+	    Button6->setText("Panel!");
+    endEditCP(Button6, Button::PreferredSizeFieldMask | Button::TextFieldMask);
+
+	// Create Panel to add Buttons to which will be inserted into 
+	// the ScrollPanel itself
+	PanelPtr ScrollPanelInsertPanel = osg::Panel::create();
+	FlowLayoutPtr ScrollPanelInsertPanelLayout = osg::FlowLayout::create();
+	beginEditCP(ScrollPanelInsertPanel);
+		ScrollPanelInsertPanel->setPreferredSize( Vec2s(100, 250 ) );
+		ScrollPanelInsertPanel->getChildren().addValue(Button1);
+		ScrollPanelInsertPanel->getChildren().addValue(Button2);
+		ScrollPanelInsertPanel->getChildren().addValue(Button3);
+		ScrollPanelInsertPanel->getChildren().addValue(Button4);
+		ScrollPanelInsertPanel->getChildren().addValue(Button5);
+		ScrollPanelInsertPanel->getChildren().addValue(Button6);
+		ScrollPanelInsertPanel->setLayout(ScrollPanelInsertPanelLayout);
+	endEditCP(ScrollPanelInsertPanel);
+
+	return ScrollPanelInsertPanel;
 }
