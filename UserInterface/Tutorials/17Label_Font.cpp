@@ -87,10 +87,18 @@ public:
 
 	/******************************************************
 
-			Creates a class to generate a list
-			of all available Fonts on your 
-			computer.
+			Creates a ListCellGenerator class to 
+			create Labels for the List which contain
+			the Font name in that particular Font.
 
+			This creates the DefaultListCell (a 
+			Label with Text equal to the name
+			of the Font) and then changes that
+			Label's Font to be the Font contained
+			within the Label.
+
+
+			cellgenerator craetes the components within the actual list itself; in this case they are labels
 
 	******************************************************/
 
@@ -100,11 +108,15 @@ class FontListCellGenerator : public DefaultListCellGenerator
   public:
     virtual ComponentPtr getListCellGeneratorComponent(ListPtr list, SharedFieldPtr value, UInt32 index, bool isSelected, bool cellHasFocus)
     {
+		// Create using the DefaultListCellGenerator 
+		// a Label [its default] with Text equal to the
+		// 
         LabelPtr TheLabel = Label::Ptr::dcast(
             DefaultListCellGenerator::getListCellGeneratorComponent(
             list, value, index, isSelected, cellHasFocus)
             );
-        //Set the font for the label
+
+        
 		std::string FontFamilyString;
 		if(value->getType() == SFString::getClassType())
 		{
@@ -114,7 +126,8 @@ class FontListCellGenerator : public DefaultListCellGenerator
 		{
             FontFamilyString = "Times New Roman";
 		}
-
+		
+		//Set the Font for the Label
         std::map<std::string, UIFontPtr>::iterator FontMapItor = FontMap.find(FontFamilyString);
         if(FontMapItor != FontMap.end())
         {
@@ -333,6 +346,7 @@ int main(int argc, char **argv)
 
 	std::vector<std::string> FontFamilies;
 	TextFaceFactory::the().getFontFamilies(FontFamilies);
+
 	// Display all Fonts available
     std::map<std::string, UIFontPtr>::iterator FontMapItor;
 	for (FontMapItor = FontMap.begin(); FontMapItor != FontMap.end() ; ++FontMapItor)
@@ -341,7 +355,7 @@ int main(int argc, char **argv)
 	    Model.pushBack(SharedFieldPtr(new SFString((*FontMapItor).first)));
 	}
 
-	// Creates CellGenerator
+	// Creates CellGenerator 
 	FontListCellGenerator CellGenerator;
 
 
