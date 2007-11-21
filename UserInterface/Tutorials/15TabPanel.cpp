@@ -78,7 +78,7 @@ ButtonPtr buttonB;
 // Create ActionListeners so that a Tab can be added
 // and removed
 class addTab : public ActionListener
-{
+{ 
 public:
 
    virtual void actionPerformed(const ActionEvent& e)

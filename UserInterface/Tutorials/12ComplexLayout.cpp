@@ -31,6 +31,7 @@
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
+#include <OpenSG/UserInterface/OSGLabel.h>
 #include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 
@@ -126,9 +127,9 @@ int main(int argc, char **argv)
 	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
 	ColorUIBackgroundPtr panelBackground = osg::ColorUIBackground::create();
 	ColorUIBackgroundPtr panelSmallBackground = osg::ColorUIBackground::create();
-	ColorUIBackgroundPtr button1Color = osg::ColorUIBackground::create();
-	GradientUIBackgroundPtr button1Gradient = osg::GradientUIBackground::create();
-	CompoundUIBackgroundPtr button1Compound = osg::CompoundUIBackground::create();
+	ColorUIBackgroundPtr label1Color = osg::ColorUIBackground::create();
+	GradientUIBackgroundPtr label1Gradient = osg::GradientUIBackground::create();
+	CompoundUIBackgroundPtr label1Compound = osg::CompoundUIBackground::create();
 	
 	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
 		mainBackground->setColor(Color4f(0,0,1.0,0.5));
@@ -142,20 +143,20 @@ int main(int argc, char **argv)
 		panelSmallBackground->setColor(Color4f(0.0,0.5,0.7,1.0));
 	endEditCP(panelSmallBackground, ColorUIBackground::ColorFieldMask);
 	
-	beginEditCP(button1Color, ColorUIBackground::ColorFieldMask);
-		button1Color->setColor( Color4f(0.0, 0.0, 0.0, 1.0) );
-	endEditCP(button1Color, ColorUIBackground::ColorFieldMask);
+	beginEditCP(label1Color, ColorUIBackground::ColorFieldMask);
+		label1Color->setColor( Color4f(0.0, 0.0, 0.0, 1.0) );
+	endEditCP(label1Color, ColorUIBackground::ColorFieldMask);
 	
-	beginEditCP(button1Gradient);
-		button1Gradient->setColorStart( Color4f(1.0, 0.0, 1.0, 0.8) );
-		button1Gradient->setColorEnd( Color4f(0.0, 0.0, 1.0, 0.3) );
-		button1Gradient->setAlignment(HORIZONTAL_ALIGNMENT);
-	endEditCP(button1Gradient);
+	beginEditCP(label1Gradient);
+		label1Gradient->setColorStart( Color4f(1.0, 0.0, 1.0, 0.8) );
+		label1Gradient->setColorEnd( Color4f(0.0, 0.0, 1.0, 0.3) );
+		label1Gradient->setAlignment(HORIZONTAL_ALIGNMENT);
+	endEditCP(label1Gradient);
 	
-	beginEditCP(button1Compound);
-		button1Compound->getBackgrounds().addValue(button1Color);
-		button1Compound->getBackgrounds().addValue(button1Gradient);
-	endEditCP(button1Compound);
+	beginEditCP(label1Compound);
+		label1Compound->getBackgrounds().addValue(label1Color);
+		label1Compound->getBackgrounds().addValue(label1Gradient);
+	endEditCP(label1Compound);
 
 	/******************************************************
 			
@@ -163,7 +164,7 @@ int main(int argc, char **argv)
 
 	******************************************************/
 	EtchedBorderPtr panelBorder = osg::EtchedBorder::create();
-	EmptyBorderPtr button1Border = osg::EmptyBorder::create();
+	EmptyBorderPtr label1Border = osg::EmptyBorder::create();
 	beginEditCP(panelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
 		panelBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
 		panelBorder->setShadow(Color4f(0.8, 0.8, 0.8, 1.0));
@@ -176,6 +177,7 @@ int main(int argc, char **argv)
 
 	******************************************************/
 
+	LabelPtr label1 = osg::Label::create();
 	ButtonPtr button1 = osg::Button::create();
 	ButtonPtr button2 = osg::Button::create();
 	ButtonPtr button3 = osg::Button::create();
@@ -189,11 +191,17 @@ int main(int argc, char **argv)
 	ButtonPtr button11 = osg::Button::create();
 
 
-	beginEditCP(button1, Component::PreferredSizeFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
+	beginEditCP(label1, Component::PreferredSizeFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
+		label1->setPreferredSize( Vec2s(800, 50) );
+		label1->setBackground(label1Compound);
+		label1->setBorder(label1Border);
+	endEditCP(label1, Component::PreferredSizeFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
+
+	beginEditCP(button1, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
 		button1->setPreferredSize( Vec2s(800, 50) );
-		button1->setBackground(button1Compound);
-		button1->setBorder(button1Border);
-	endEditCP(button1, Component::PreferredSizeFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
+		button1->setMaxSize( Vec2s(50, 50) );
+		button1->setText("Resize the Window to Show Diificulties with Using Just One Layout");
+	endEditCP(button1, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
 
 	beginEditCP(button2, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
 		button2->setPreferredSize( Vec2s(50, 50) );
@@ -361,6 +369,7 @@ int main(int argc, char **argv)
 	// Edit MainFrame
 	beginEditCP(MainFrame, Frame::BorderFieldMask | Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 	   MainFrame->setBorder(panelBorder);
+	   MainFrame->getChildren().addValue(label1);
 	   MainFrame->getChildren().addValue(button1);
 	   MainFrame->getChildren().addValue(panel1);
 	   MainFrame->getChildren().addValue(panel2);

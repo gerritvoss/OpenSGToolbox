@@ -121,23 +121,25 @@ int main(int argc, char **argv)
 			
 			Create a Panel containing Buttons to
 			add to ScrollPanel using a function
-			(at bottom of this file)
+			(located at bottom of this file)
  
 	******************************************************/	
-	PanelPtr testing = createPanelWithButtons();
+	PanelPtr viewablePanel = createPanelWithButtons();
  
 
 	/******************************************************
 			
 			Create a UIViewport to use with the
-			ScrollPanel.  This allows you to 
+			ScrollPanel.  This sets up a secondary
+			viewport inside the ScrollPanel.  Without
+			this, 
 
  
 	******************************************************/	
     UIViewportPtr TheUIViewport = UIViewport::create();
 
     beginEditCP(TheUIViewport, UIViewport::ViewComponentFieldMask | UIViewport::ViewPositionFieldMask | UIViewport::PreferredSizeFieldMask);
-        TheUIViewport->setViewComponent(testing);
+        TheUIViewport->setViewComponent(viewablePanel);
         TheUIViewport->setViewPosition(Pnt2s(150,150));
 	    TheUIViewport->setPreferredSize(Vec2s(100,100));
     endEditCP(TheUIViewport, UIViewport::ViewComponentFieldMask | UIViewport::ViewPositionFieldMask | UIViewport::PreferredSizeFieldMask);
@@ -175,7 +177,7 @@ int main(int argc, char **argv)
         //TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
 		TheScrollPanel->setEnabled(false);
     endEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-    TheScrollPanel->setViewComponent(testing);
+    TheScrollPanel->setViewComponent(viewablePanel);
 
 
    	/******************************************************
@@ -231,12 +233,13 @@ int main(int argc, char **argv)
 	// Create the DefaultBoundedRangeModel and 
 	// set its values
     DefaultBoundedRangeModel TheBoundedRangeModel;
-    TheBoundedRangeModel.setMinimum(0);
+    TheBoundedRangeModel.setMinimum(10);
     TheBoundedRangeModel.setMaximum(100);
     TheBoundedRangeModel.setValue(10);
     TheBoundedRangeModel.setExtent(20);
 
 	ScrollBarPtr TheScrollBar = ScrollBar::create();
+	//TheScrollPanel->getHorizontalScrollBar()
     beginEditCP(TheScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
         TheScrollBar->setOrientation(VERTICAL_ALIGNMENT);
         TheScrollBar->setPreferredSize(Vec2s(20,200));
@@ -256,6 +259,8 @@ int main(int argc, char **argv)
    	
 	// Creates another DefaultBoundedRangeModel to use 
 	// for separating the two ScrollBars from each other.
+	// Make sure to comment out the addition of the 
+	// previous setModel above.
 	
 	/*
 	DefaultBoundedRangeModel TheBoundedRangeModel2;

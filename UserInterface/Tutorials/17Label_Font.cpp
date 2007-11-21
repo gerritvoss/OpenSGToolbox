@@ -32,6 +32,7 @@
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
+#include <OpenSG/UserInterface/OSGGradientUIBackground.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGUIDefines.h>
 #include <OpenSG/OSGTextFaceFactory.h>
@@ -62,6 +63,7 @@ OSG_USING_NAMESPACE
 SimpleSceneManager *mgr;
 bool ExitApp = false;
 std::map<std::string, UIFontPtr> FontMap;
+// Declare upfront so they can be referenced
 LabelPtr label1;
 ListPtr list;
 
@@ -205,7 +207,8 @@ int main(int argc, char **argv)
 	/******************************************************
 
 			Determine which Fonts your computer can
-			use as a Font and makes a list 
+			use as a Font and makes an array
+			containing them
 
 
 	******************************************************/
@@ -291,17 +294,22 @@ int main(int argc, char **argv)
 			completely displayed.
 
 	******************************************************/
-
+	GradientUIBackgroundPtr label1Background = osg::GradientUIBackground::create();
+	beginEditCP(label1Background, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask);
+		label1Background->setColorStart( Color4f(1.0, 0.0, 0.0, 1.0) );
+		label1Background->setColorEnd( Color4f(0.0, 0.0, 1.0, 1.0) );
+	endEditCP(label1Background, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask);
 	label1 = osg::Label::create();
-	// EditCP for Label ONLY settings
-	beginEditCP(label1, Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask);
+	beginEditCP(label1, Component::BackgroundFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask);
+		label1->setBackground(label1Background);
 		label1->setFont(labelFont);
-		label1->setText("Sample Label");
-		label1->setTextColor( Color4f(0.1, 0.1, 0.1, 1.0) );
+		label1->setText("Change My Font!");
+		label1->setTextColor( Color4f(1.0, 1.0, 1.0, 1.0) );
+		//label1->setActiveTextColor( Color4f(1.0, 1.0, 1.0, 1.0) );
 		label1->setVerticalAlignment(0.5);
 		label1->setHorizontalAlignment(0.5);
 		label1->setPreferredSize( Vec2s(200, 50) );
-	endEditCP(label1, Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask);
+	endEditCP(label1, Component::BackgroundFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask);
 	
 
 

@@ -60,6 +60,8 @@ void reshape(Vec2s Size);
 PanelPtr createSelectionModePanel(void);
 PanelPtr createSelectionOptionPanel(void);
 RadioButtonGroup SelectionButtonGroup;
+// Declare the Table so it can
+// be referenced by ActionListeners
 TablePtr table;
 CheckboxButtonPtr CellSelectionButton;
 CheckboxButtonPtr RowSelectionButton;
@@ -201,9 +203,13 @@ public:
 class ExampleTableModel : public AbstractTableModel
 {
 private:
+	// Creates two vectors to store column/cell values in
     std::vector<SharedFieldPtr> _ColumnValues;
     std::vector<SharedFieldPtr> _CellValues;
 public:
+
+	// Creates some functions to do what the Table requires to be done
+	// and which are needed for a non-basic table
     virtual UInt32 getColumnCount(void) const
     {
         return _ColumnValues.size();
@@ -226,11 +232,13 @@ public:
     
     virtual bool isCellEditable(UInt32 rowIndex, UInt32 columnIndex) const
     {
+		// Only returns true if the column is 0; means cell is editable, otherwise, returns false and cell is not editable
         return columnIndex == 0;
     }
     
     virtual void setValueAt(SharedFieldPtr aValue, UInt32 rowIndex, UInt32 columnIndex)
     {
+		// 
         if(columnIndex == 0 && aValue->getType() == SFString::getClassType())
         {
             std::string TempString;
@@ -246,12 +254,13 @@ public:
 
 	/******************************************************
 
-		Create the Table itself.
+		Create the Table values
 
 	******************************************************/
 
     ExampleTableModel()
     {
+		// Creates the lists within column/cell values and adds data (1d representation of 2d array basically)
         _ColumnValues.push_back(SharedFieldPtr(new SFString("Column String")));
         _ColumnValues.push_back(SharedFieldPtr(new SFString("Column Integer")));
         _ColumnValues.push_back(SharedFieldPtr(new SFString("Column GLenum")));
@@ -334,11 +343,16 @@ int main(int argc, char **argv)
 	endEditCP(table, Table::PreferredSizeFieldMask);
     table->updateLayout();
 
-    //ScrollPanel
+	/******************************************************
+
+		Create a ScrollPanel to display the Table
+		within (see 27ScrollPanel for more 
+		information).
+
+	******************************************************/
     ScrollPanelPtr TheScrollPanel = ScrollPanel::create();
     beginEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
 	    TheScrollPanel->setPreferredSize(Vec2s(402,200));
-        //TheScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     endEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
     TheScrollPanel->setViewComponent(table);
