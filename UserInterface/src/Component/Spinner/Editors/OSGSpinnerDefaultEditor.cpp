@@ -47,7 +47,8 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGListSpinnerModel.h"
+#include "OSGSpinnerDefaultEditor.h"
+#include "Component/Spinner/OSGSpinner.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,8 +56,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::ListSpinnerModel
-A ListSpinnerModel.
+/*! \class osg::SpinnerDefaultEditor
+A UI SpinnerDefaultEditor. 	
 */
 
 /***************************************************************************\
@@ -67,84 +68,47 @@ A ListSpinnerModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
+void SpinnerDefaultEditor::initMethod (void)
+{
+}
+
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ListSpinnerModel::setList(const FieldList& list)
+void SpinnerDefaultEditor::updateLayout(void)
 {
-    _List = list;
-    _CurrentListValue = _List.begin();
-    produceStateChanged();
-}
-
-SharedFieldPtr ListSpinnerModel::getNextValue(void)
-{
-    if(_CurrentListValue == (--_List.end()))
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-        return SharedFieldPtr();
-    }
-    else
-    {
-        return (*_CurrentListValue);
+        beginEditCP(getChildren()[i], PositionFieldMask | SizeFieldMask);
+            getChildren()[i]->setPosition(Pnt2s(0,0));
+            getChildren()[i]->setSize(getSize());
+        endEditCP(getChildren()[i], PositionFieldMask | SizeFieldMask);
     }
 }
 
-SharedFieldPtr ListSpinnerModel::getPreviousValue(void)
+void SpinnerDefaultEditor::commitEdit(void)
 {
-    if(_CurrentListValue == _List.begin())
+    getSpinner()->getModel()->setValue(getTextField()->getText());
+}
+
+void SpinnerDefaultEditor::dismiss(SpinnerPtr spinner)
+{
+    if(getSpinner() != NullFC)
     {
-        return SharedFieldPtr();
-    }
-    else
-    {
-        return (*_CurrentListValue);
+        getSpinner()->removeChangeListener(this);
     }
 }
 
-SharedFieldPtr ListSpinnerModel::getValue(void)
+void SpinnerDefaultEditor::stateChanged(const ChangeEvent& e)
 {
-    return (*_CurrentListValue);
-}
-
-void ListSpinnerModel::setValue(SharedFieldPtr value)
-{
-    FieldListIter SearchIter(std::find(_List.begin(), _List.end(), value));
-
-    if(SearchIter != _List.end())
-    {
-        _CurrentListValue = SearchIter;
-        produceStateChanged();
-    }
-    else
-    {
-        throw IllegalArgumentException();
-    }
-
-}
-
-void ListSpinnerModel::setValue(const std::string& value)
-{
-    for(FieldListIter SearchIter(_List.begin()) ; SearchIter!=_List.end() ; ++SearchIter)
-    {
-        std::string FieldString;
-        (*SearchIter)->getValueByStr(FieldString);
-        if(FieldString.compare(value) == 0)
-        {
-            break;
-        }
-    }
-
-    if(SearchIter != _List.end())
-    {
-        _CurrentListValue = SearchIter;
-        produceStateChanged();
-    }
-    else
-    {
-        throw IllegalArgumentException();
-    }
-
+    //Update the Value of the TextField
+    beginEditCP(getTextField(), TextField::TextFieldMask);
+        std::string NewValue;
+        getSpinner()->getModel()->getValue()->getValueByStr(NewValue);
+        getTextField()->setText(NewValue);
+    endEditCP(getTextField(), TextField::TextFieldMask);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -153,7 +117,56 @@ void ListSpinnerModel::setValue(const std::string& value)
 
 /*----------------------- constructors & destructors ----------------------*/
 
+SpinnerDefaultEditor::SpinnerDefaultEditor(void) :
+    Inherited()
+{
+}
+
+SpinnerDefaultEditor::SpinnerDefaultEditor(const SpinnerDefaultEditor &source) :
+    Inherited(source)
+{
+}
+
+SpinnerDefaultEditor::~SpinnerDefaultEditor(void)
+{
+}
+
 /*----------------------------- class specific ----------------------------*/
+
+void SpinnerDefaultEditor::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+
+    if(whichField & SpinnerFieldMask && getSpinner() != NullFC)
+    {
+        getSpinner()->addChangeListener(this);
+        
+        //Update the Value of the TextField
+        beginEditCP(getTextField(), TextField::TextFieldMask);
+            std::string NewValue;
+            getSpinner()->getModel()->getValue()->getValueByStr(NewValue);
+            getTextField()->setText(NewValue);
+        endEditCP(getTextField(), TextField::TextFieldMask);
+    }
+
+    if(whichField & TextFieldFieldMask)
+    {
+        beginEditCP(SpinnerDefaultEditorPtr(this), ChildrenFieldMask);
+            getChildren().clear();
+            if(getTextField() != NullFC)
+            {
+                getChildren().push_back(getTextField());
+            }
+        endEditCP(SpinnerDefaultEditorPtr(this), ChildrenFieldMask);
+    }
+}
+
+void SpinnerDefaultEditor::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump SpinnerDefaultEditor NI" << std::endl;
+}
+
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
@@ -165,6 +178,15 @@ void ListSpinnerModel::setValue(const std::string& value)
 #ifdef OSG_LINUX_ICC
 #pragma warning( disable : 177 )
 #endif
+
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGSPINNERDEFAULTEDITORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGSPINNERDEFAULTEDITORBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGSPINNERDEFAULTEDITORFIELDS_HEADER_CVSID;
+}
 
 #ifdef __sgi
 #pragma reset woff 1174

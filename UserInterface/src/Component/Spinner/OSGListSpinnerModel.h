@@ -69,6 +69,9 @@ public:
     
     //Changes current value of the model, typically this value is displayed by the editor part of a Spinner.
     virtual void setValue(SharedFieldPtr value);
+
+    //Changes current value of the model, typically this value is displayed by the editor part of a Spinner.
+    virtual void setValue(const std::string& value);
     
     //Changes the list that defines this sequence and resets the index of the models value to zero.
     void setList(const FieldList& list);

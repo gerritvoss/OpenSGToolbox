@@ -43,7 +43,7 @@
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGUIBackgrounds.h>
 
-//#include <OpenSG/UserInterface/OSGSpinner.h>
+#include <OpenSG/UserInterface/OSGSpinner.h>
 #include <OpenSG/UserInterface/OSGNumberSpinnerModel.h>
 
 // Activate the OpenSG namespace
@@ -142,8 +142,11 @@ int main(int argc, char **argv)
     TheModel->setMaximum(100);
     TheModel->setMinimum(-100);
     TheModel->setStepSize(2);
-    SField<Int32> TempField(0);
-    TheModel->setValue(&TempField);
+    TheModel->setValue(SharedFieldPtr(new SFInt32(0)));
+
+    //Create the Spinner
+    SpinnerPtr TheSpinner = Spinner::create();
+    TheSpinner->setModel(TheModel);
 
 	// Create Background to be used with the MainFrame
 	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
@@ -158,6 +161,7 @@ int main(int argc, char **argv)
 	   // when the view is rendered.
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
+       MainFrame->getChildren().push_back(TheSpinner);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
 
     TutorialKeyListener TheKeyListener;
@@ -199,7 +203,7 @@ int main(int argc, char **argv)
 
     TheWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(550,550),
-                                        "OpenSG 01Button Window");
+                                        "OpenSG 29Spinner Window");
 
     while(!ExitApp)
     {

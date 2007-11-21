@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="SpinnerDefaultEditor"
+	parent="Panel"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI SpinnerDefaultEditor.
+	<Field
+		name="TextField"
+		type="TextFieldPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/Text/OSGTextField.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="Spinner"
+		type="SpinnerPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/Spinner/OSGSpinnerFields.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+</FieldContainer>

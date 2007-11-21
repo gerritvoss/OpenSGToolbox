@@ -49,9 +49,10 @@
 #include "OSGAbstractSpinnerModel.h"
 
 #include <list>
+#include <exception>
 
 OSG_BEGIN_NAMESPACE
-	 
+
 template<class NumberTypeT>
 class NumberSpinnerModel : public AbstractSpinnerModel
 {
@@ -59,6 +60,9 @@ public:
     typedef NumberTypeT NumberType;
 
     typedef AbstractSpinnerModel Inherited;
+
+    NumberSpinnerModel(void);
+    NumberSpinnerModel(const NumberType& value);
     
     //Return the object in the sequence that comes after the object returned by getValue().
     virtual SharedFieldPtr getNextValue(void);
@@ -72,32 +76,34 @@ public:
     //Changes current value of the model, typically this value is displayed by the editor part of a Spinner
     virtual void setValue(SharedFieldPtr value);
     
+    virtual void setValue(const std::string& value);
+    
     //Returns the last number in the sequence.
-    NumberTypeT getMaximum(void) const;
+    NumberType getMaximum(void) const;
 
     //Returns the first number in this sequence.
-    NumberTypeT getMinimum(void) const;
+    NumberType getMinimum(void) const;
 
     //Returns the value of the current element of the sequence.
-    NumberTypeT getNumber(void) const;
+    NumberType getNumber(void) const;
 
     //Returns the size of the value change computed by the getNextValue and getPreviousValue methods.
-    NumberTypeT getStepSize(void);
+    NumberType getStepSize(void);
 
     //Changes the upper bound for numbers in this sequence.
-    void setMaximum(const NumberTypeT& maximum);
+    void setMaximum(const NumberType& maximum);
 
     //Changes the lower bound for numbers in this sequence.
-    void setMinimum(const NumberTypeT& minimum);
+    void setMinimum(const NumberType& minimum);
 
     //Changes the size of the value change computed by the getNextValue and getPreviousValue methods.
-    void setStepSize(const NumberTypeT& stepSize);
+    void setStepSize(const NumberType& stepSize);
 
 protected:
-    SField<NumberTypeT> _Value;
-    NumberTypeT _Maximum;
-    NumberTypeT _Minimum;
-    NumberTypeT _StepSize;
+    SharedFieldPtr _Value;
+    NumberType _Maximum;
+    NumberType _Minimum;
+    NumberType _StepSize;
 };
 
 typedef NumberSpinnerModel<Int8> Int8SpinnerModel;

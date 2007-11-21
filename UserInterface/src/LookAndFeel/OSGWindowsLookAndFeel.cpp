@@ -91,6 +91,9 @@
 
 #include "Component/List/OSGList.h"
 #include "Component/List/OSGDefaultListSelectionModel.h"
+
+#include "Component/Spinner/OSGSpinner.h"
+#include "Component/Spinner/Editors/OSGSpinnerDefaultEditor.h"
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -142,7 +145,114 @@ Time WindowsLookAndFeel::getKeyAcceleratorMenuFlashTime(void) const
 void WindowsLookAndFeel::init(void)
 {
 
+	/*******Borders********/
+	/*******Line Border********/
 
+	LineBorderPtr WindowsLineBorder = LineBorder::create();
+	beginEditCP(WindowsLineBorder);
+		WindowsLineBorder->setWidth(1);
+		WindowsLineBorder->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
+	endEditCP(WindowsLineBorder);
+
+	LineBorder::getClassType().setPrototype(WindowsLineBorder);
+
+	/********Etched Border********/
+
+	EtchedBorderPtr WindowsEtchedBorder = EtchedBorder::create();
+	beginEditCP(WindowsEtchedBorder);
+		WindowsEtchedBorder->setWidth(2);
+		WindowsEtchedBorder->setRaised(true);
+		WindowsEtchedBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
+		WindowsEtchedBorder->setShadow(Color4f(0.65, 0.65, 0.65, 1.0));
+	endEditCP(WindowsEtchedBorder);
+
+	EtchedBorder::getClassType().setPrototype(WindowsEtchedBorder);
+	
+	/********Empty Border*********/
+	EmptyBorderPtr WindowsEmptyBorder = EmptyBorder::create();
+	beginEditCP(WindowsEmptyBorder);
+		WindowsEmptyBorder->setTopWidth(0);
+		WindowsEmptyBorder->setBottomWidth(0);
+		WindowsEmptyBorder->setRightWidth(0);
+		WindowsEmptyBorder->setLeftWidth(0);
+	endEditCP(WindowsEmptyBorder);
+
+	EmptyBorder::getClassType().setPrototype(WindowsEmptyBorder);
+
+
+	/********Bevel Border**********/
+
+	BevelBorderPtr WindowsBevelBorder = BevelBorder::create();
+	beginEditCP(WindowsBevelBorder);
+		WindowsBevelBorder->setRaised(true);
+		WindowsBevelBorder->setWidth(2);
+		WindowsBevelBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
+		WindowsBevelBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		WindowsBevelBorder->setShadowInner(Color4f(0.65, 0.65, 0.65, 1.0));
+		WindowsBevelBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
+	endEditCP(WindowsBevelBorder);
+
+	BevelBorder::getClassType().setPrototype(WindowsBevelBorder);
+
+	/********Matte Border**********/
+
+	MatteBorderPtr WindowsMatteBorder = MatteBorder::create();
+	beginEditCP(WindowsMatteBorder);
+		WindowsMatteBorder->setRightWidth(1);
+		WindowsMatteBorder->setLeftWidth(1);
+		WindowsMatteBorder->setTopWidth(1);
+		WindowsMatteBorder->setBottomWidth(1);
+		WindowsMatteBorder->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
+	endEditCP(WindowsMatteBorder);
+
+	MatteBorder::getClassType().setPrototype(WindowsMatteBorder);
+
+	/********Compound Border********/
+	CompoundBorderPtr WindowsCompoundBorder = CompoundBorder::create();
+	beginEditCP(WindowsCompoundBorder);
+		WindowsCompoundBorder->setInnerBorder(NullFC);
+		WindowsCompoundBorder->setOuterBorder(NullFC);
+	endEditCP(WindowsCompoundBorder);
+
+	CompoundBorder::getClassType().setPrototype(WindowsCompoundBorder);
+
+	/*********Backgounds***********/
+	/*********Empty Background**********/
+	EmptyUIBackgroundPtr WindowsEmptyBackground = EmptyUIBackground::create();
+
+	/*********Color Background**********/
+	ColorUIBackgroundPtr WindowsColorBackground = ColorUIBackground::create();
+	beginEditCP(WindowsColorBackground);
+		WindowsColorBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
+	endEditCP(WindowsColorBackground);
+
+	ColorUIBackground::getClassType().setPrototype(WindowsColorBackground);
+	
+	/**********Gradient Background***********/
+	GradientUIBackgroundPtr WindowsGradientBackground = GradientUIBackground::create();
+	beginEditCP(WindowsGradientBackground);
+		WindowsGradientBackground->setColorStart(Color4f(1.0, 1.0, 1.0, 1.0));
+		WindowsGradientBackground->setColorEnd(Color4f(1.0, 1.0, 1.0, 1.0));
+		WindowsGradientBackground->setAlignment(HORIZONTAL_ALIGNMENT);
+	endEditCP(WindowsGradientBackground);
+
+	GradientUIBackground::getClassType().setPrototype(WindowsGradientBackground);
+
+	/**********Material Background***********/
+	MaterialUIBackgroundPtr WindowsMaterialBackground = MaterialUIBackground::create();
+	beginEditCP(WindowsMaterialBackground);
+		WindowsMaterialBackground->setMaterial(NullFC);
+	endEditCP(WindowsMaterialBackground);
+
+	MaterialUIBackground::getClassType().setPrototype(WindowsMaterialBackground);
+
+	/*********Texture Background********/
+	TextureUIBackgroundPtr WindowsTextureBackground = TextureUIBackground::create();
+	beginEditCP(WindowsTextureBackground);
+		WindowsTextureBackground->setTexture(NullFC);
+	endEditCP(WindowsTextureBackground);
+
+	TextureUIBackground::getClassType().setPrototype(WindowsTextureBackground);
 
 
 
@@ -2670,7 +2780,196 @@ void WindowsLookAndFeel::init(void)
 	
     List::getClassType().setPrototype(WindowsList);
     
+	//************************** Spinner *****************************
+
+    //Spinner Next Draw Object
+	PolygonUIDrawObjectPtr WindowsSpinnerNextButtonDrawObject1 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsSpinnerNextButtonDrawObject1);
+		WindowsSpinnerNextButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
+		WindowsSpinnerNextButtonDrawObject1->setOpacity(1.0);
+        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2s(1,4));
+        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2s(5,0));
+        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2s(5,2));
+        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2s(2,5));
+	endEditCP(WindowsSpinnerNextButtonDrawObject1);
+	PolygonUIDrawObjectPtr WindowsSpinnerNextButtonDrawObject2 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsSpinnerNextButtonDrawObject2);
+		WindowsSpinnerNextButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
+		WindowsSpinnerNextButtonDrawObject2->setOpacity(1.0);
+        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2s(5,0));
+        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2s(9,4));
+        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2s(8,5));
+        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2s(5,2));
+	endEditCP(WindowsSpinnerNextButtonDrawObject2);
+    
+	UIDrawObjectCanvasPtr WindowsSpinnerNextButtonCanvas = UIDrawObjectCanvas::create();
+	beginEditCP(WindowsSpinnerNextButtonCanvas);
+	   WindowsSpinnerNextButtonCanvas->getDrawObjects().addValue(WindowsSpinnerNextButtonDrawObject1);
+	   WindowsSpinnerNextButtonCanvas->getDrawObjects().addValue(WindowsSpinnerNextButtonDrawObject2);
+	endEditCP(WindowsSpinnerNextButtonCanvas);
+
+    ButtonPtr WindowsSpinnerNextButton = Button::create();
+    beginEditCP(WindowsSpinnerNextButton);
+        WindowsSpinnerNextButton->setPreferredSize(Vec2s(17,17));
+        WindowsSpinnerNextButton->setEnableActionOnMouseDownTime(true);
+        WindowsSpinnerNextButton->setActionOnMouseDownRate(0.2);
+        
+		//Border
+		WindowsSpinnerNextButton->setBorder(WindowsScrollBarButtonBorder);
+		WindowsSpinnerNextButton->setRolloverBorder(WindowsScrollBarButtonBorder);
+		WindowsSpinnerNextButton->setFocusedBorder(WindowsScrollBarButtonBorder);
+		WindowsSpinnerNextButton->setDisabledBorder(WindowsScrollBarButtonBorder);
+
+		//Background
+        WindowsSpinnerNextButton->setBackground(WindowsScrollBarButtonBackground);
+        WindowsSpinnerNextButton->setActiveBackground(WindowsScrollBarActiveButtonBackground);
+        WindowsSpinnerNextButton->setDisabledBackground(WindowsScrollBarDisabledButtonBackground);
+        WindowsSpinnerNextButton->setFocusedBackground(WindowsScrollBarButtonBackground);
+        WindowsSpinnerNextButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
+
+        WindowsSpinnerNextButton->setActiveOffset(Vec2s(0,0));
+        WindowsSpinnerNextButton->setDrawObject(WindowsSpinnerNextButtonCanvas);
+        WindowsSpinnerNextButton->setActiveDrawObject(WindowsSpinnerNextButtonCanvas);
+        WindowsSpinnerNextButton->setFocusedDrawObject(WindowsSpinnerNextButtonCanvas);
+        WindowsSpinnerNextButton->setRolloverDrawObject(WindowsSpinnerNextButtonCanvas);
+        WindowsSpinnerNextButton->setDisabledDrawObject(WindowsSpinnerNextButtonCanvas);
+    beginEditCP(WindowsSpinnerNextButton);
+
+    //Spinner Previous Draw Object
+	PolygonUIDrawObjectPtr WindowsSpinnerPreviousButtonDrawObject1 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsSpinnerPreviousButtonDrawObject1);
+		WindowsSpinnerPreviousButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
+		WindowsSpinnerPreviousButtonDrawObject1->setOpacity(1.0);
+        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2s(2,0));
+        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2s(5,3));
+        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2s(5,5));
+        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2s(1,1));
+	endEditCP(WindowsSpinnerPreviousButtonDrawObject1);
+	PolygonUIDrawObjectPtr WindowsSpinnerPreviousButtonDrawObject2 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsSpinnerPreviousButtonDrawObject2);
+		WindowsSpinnerPreviousButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
+		WindowsSpinnerPreviousButtonDrawObject2->setOpacity(1.0);
+        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2s(5,3));
+        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2s(8,0));
+        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2s(9,1));
+        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2s(5,5));
+	endEditCP(WindowsSpinnerPreviousButtonDrawObject2);
+    
+	UIDrawObjectCanvasPtr WindowsSpinnerPreviousButtonCanvas = UIDrawObjectCanvas::create();
+	beginEditCP(WindowsSpinnerPreviousButtonCanvas);
+	   WindowsSpinnerPreviousButtonCanvas->getDrawObjects().addValue(WindowsSpinnerPreviousButtonDrawObject1);
+	   WindowsSpinnerPreviousButtonCanvas->getDrawObjects().addValue(WindowsSpinnerPreviousButtonDrawObject2);
+	endEditCP(WindowsSpinnerPreviousButtonCanvas);
+    ButtonPtr WindowsSpinnerPreviousButton = Button::create();
+    beginEditCP(WindowsSpinnerPreviousButton);
+        WindowsSpinnerPreviousButton->setPreferredSize(Vec2s(17,17));
+        WindowsSpinnerPreviousButton->setEnableActionOnMouseDownTime(true);
+        WindowsSpinnerPreviousButton->setActionOnMouseDownRate(0.2);
+		//Border
+		WindowsSpinnerPreviousButton->setBorder(WindowsScrollBarButtonBorder);
+		WindowsSpinnerPreviousButton->setRolloverBorder(WindowsScrollBarButtonBorder);
+		WindowsSpinnerPreviousButton->setFocusedBorder(WindowsScrollBarButtonBorder);
+		WindowsSpinnerPreviousButton->setDisabledBorder(WindowsScrollBarButtonBorder);
+
+		//Background
+        WindowsSpinnerPreviousButton->setBackground(WindowsScrollBarButtonBackground);
+        WindowsSpinnerPreviousButton->setActiveBackground(WindowsScrollBarActiveButtonBackground);
+        WindowsSpinnerPreviousButton->setDisabledBackground(WindowsScrollBarDisabledButtonBackground);
+        WindowsSpinnerPreviousButton->setFocusedBackground(WindowsScrollBarButtonBackground);
+        WindowsSpinnerPreviousButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
+
+        WindowsSpinnerPreviousButton->setActiveOffset(Vec2s(0,0));
+
+        WindowsSpinnerPreviousButton->setDrawObject(WindowsSpinnerPreviousButtonCanvas);
+        WindowsSpinnerPreviousButton->setActiveDrawObject(WindowsSpinnerPreviousButtonCanvas);
+        WindowsSpinnerPreviousButton->setFocusedDrawObject(WindowsSpinnerPreviousButtonCanvas);
+        WindowsSpinnerPreviousButton->setRolloverDrawObject(WindowsSpinnerPreviousButtonCanvas);
+        WindowsSpinnerPreviousButton->setDisabledDrawObject(WindowsSpinnerPreviousButtonCanvas);
+    beginEditCP(WindowsSpinnerPreviousButton);
+
+	//Windows SpinnerBorder
+	EmptyBorderPtr WindowsSpinnerBorder = EmptyBorder::create();
+
+	//Windows SpinnerBackground
+	EmptyUIBackgroundPtr WindowsSpinnerBackground = EmptyUIBackground::create();
+
+    SpinnerPtr WindowsSpinner = Spinner::create();
+    beginEditCP(WindowsSpinner);
+		WindowsSpinner->setConstraints(NullFC);
+		//Sizes
+		WindowsSpinner->setMinSize(Vec2s(0,0));
+		WindowsSpinner->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsSpinner->setPreferredSize(Vec2s(50,23));
+
+		//Border
+		WindowsSpinner->setBorder(WindowsTextFieldBorder);
+		WindowsSpinner->setRolloverBorder(WindowsTextFieldBorder);
+		WindowsSpinner->setFocusedBorder(WindowsTextFieldBorder);
+		WindowsSpinner->setDisabledBorder(WindowsTextFieldBorder);
+		
+		//Background
+		WindowsSpinner->setBackground(WindowsTextFieldBackground);
+		WindowsSpinner->setRolloverBackground(WindowsTextFieldBackground);
+		WindowsSpinner->setFocusedBackground(WindowsTextFieldBackground);
+		WindowsSpinner->setDisabledBackground(WindowsDisabledTextFieldBackground);
+		
+		//Opacity
+		WindowsSpinner->setOpacity(1.0);
+
+        //Spinner
+        WindowsSpinner->setNextButton(WindowsSpinnerNextButton);
+        WindowsSpinner->setPreviousButton(WindowsSpinnerPreviousButton);
+    endEditCP(WindowsSpinner);
+    
+    Spinner::getClassType().setPrototype(WindowsSpinner);
 	
+	//************************** SpinnerDefaultEditor *****************************
+	//Windows SpinnerDefaultEditor TextField
+	TextFieldPtr WindowsSpinnerDefaultEditorTextField = TextField::create();
+    beginEditCP(WindowsSpinnerDefaultEditorTextField, TextField::HorizontalAlignmentFieldMask);
+        WindowsSpinnerDefaultEditorTextField->setHorizontalAlignment(1.0);
+        
+		//Border
+		WindowsSpinnerDefaultEditorTextField->setBorder(WindowsEmptyBorder);
+		WindowsSpinnerDefaultEditorTextField->setRolloverBorder(WindowsEmptyBorder);
+		WindowsSpinnerDefaultEditorTextField->setFocusedBorder(WindowsEmptyBorder);
+		WindowsSpinnerDefaultEditorTextField->setDisabledBorder(WindowsEmptyBorder);
+		
+		//Background
+		WindowsSpinnerDefaultEditorTextField->setBackground(WindowsEmptyBackground);
+		WindowsSpinnerDefaultEditorTextField->setRolloverBackground(WindowsEmptyBackground);
+		WindowsSpinnerDefaultEditorTextField->setFocusedBackground(WindowsEmptyBackground);
+		WindowsSpinnerDefaultEditorTextField->setDisabledBackground(WindowsEmptyBackground);
+    endEditCP(WindowsSpinnerDefaultEditorTextField, TextField::HorizontalAlignmentFieldMask);
+
+    SpinnerDefaultEditorPtr WindowsSpinnerDefaultEditor = SpinnerDefaultEditor::create();
+    beginEditCP(WindowsSpinnerDefaultEditor);
+		WindowsSpinnerDefaultEditor->setConstraints(NullFC);
+		//Sizes
+		WindowsSpinnerDefaultEditor->setMinSize(Vec2s(0,0));
+		WindowsSpinnerDefaultEditor->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsSpinnerDefaultEditor->setPreferredSize(Vec2s(200,100));
+
+		//Border
+		WindowsSpinnerDefaultEditor->setBorder(WindowsEmptyBorder);
+		WindowsSpinnerDefaultEditor->setRolloverBorder(WindowsEmptyBorder);
+		WindowsSpinnerDefaultEditor->setFocusedBorder(WindowsEmptyBorder);
+		WindowsSpinnerDefaultEditor->setDisabledBorder(WindowsEmptyBorder);
+		
+		//Background
+		WindowsSpinnerDefaultEditor->setBackground(WindowsEmptyBackground);
+		WindowsSpinnerDefaultEditor->setRolloverBackground(WindowsEmptyBackground);
+		WindowsSpinnerDefaultEditor->setFocusedBackground(WindowsEmptyBackground);
+		WindowsSpinnerDefaultEditor->setDisabledBackground(WindowsEmptyBackground);
+		
+		//Opacity
+		WindowsSpinnerDefaultEditor->setOpacity(1.0);
+
+        //WindowsSpinnerDefaultEditor
+        WindowsSpinnerDefaultEditor->setTextField(WindowsSpinnerDefaultEditorTextField);
+    endEditCP(WindowsSpinnerDefaultEditor);
+
+    SpinnerDefaultEditor::getClassType().setPrototype(WindowsSpinnerDefaultEditor);
 	//************************** TableHeader *****************************
 	//Windows RotatedComponentBorder
 	EmptyBorderPtr WindowsTableHeaderBorder = EmptyBorder::create();
@@ -2774,111 +3073,6 @@ void WindowsLookAndFeel::init(void)
 	
     Table::getClassType().setPrototype(WindowsTable);
     
-	/*******Borders********/
-	/*******Line Border********/
-
-	LineBorderPtr WindowsLineBorder = LineBorder::create();
-	beginEditCP(WindowsLineBorder);
-		WindowsLineBorder->setWidth(1);
-		WindowsLineBorder->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
-	endEditCP(WindowsLineBorder);
-
-	LineBorder::getClassType().setPrototype(WindowsLineBorder);
-
-	/********Etched Border********/
-
-	EtchedBorderPtr WindowsEtchedBorder = EtchedBorder::create();
-	beginEditCP(WindowsEtchedBorder);
-		WindowsEtchedBorder->setWidth(2);
-		WindowsEtchedBorder->setRaised(true);
-		WindowsEtchedBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
-		WindowsEtchedBorder->setShadow(Color4f(0.65, 0.65, 0.65, 1.0));
-	endEditCP(WindowsEtchedBorder);
-
-	EtchedBorder::getClassType().setPrototype(WindowsEtchedBorder);
-	
-	/********Empty Border*********/
-	EmptyBorderPtr WindowsEmptyBorder = EmptyBorder::create();
-	beginEditCP(WindowsEmptyBorder);
-		WindowsEmptyBorder->setTopWidth(0);
-		WindowsEmptyBorder->setBottomWidth(0);
-		WindowsEmptyBorder->setRightWidth(0);
-		WindowsEmptyBorder->setLeftWidth(0);
-	endEditCP(WindowsEmptyBorder);
-
-	EmptyBorder::getClassType().setPrototype(WindowsEmptyBorder);
-
-
-	/********Bevel Border**********/
-
-	BevelBorderPtr WindowsBevelBorder = BevelBorder::create();
-	beginEditCP(WindowsBevelBorder);
-		WindowsBevelBorder->setRaised(true);
-		WindowsBevelBorder->setWidth(2);
-		WindowsBevelBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
-		WindowsBevelBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
-		WindowsBevelBorder->setShadowInner(Color4f(0.65, 0.65, 0.65, 1.0));
-		WindowsBevelBorder->setShadowOuter(Color4f(0.45, 0.45, 0.45, 1.0));
-	endEditCP(WindowsBevelBorder);
-
-	BevelBorder::getClassType().setPrototype(WindowsBevelBorder);
-
-	/********Matte Border**********/
-
-	MatteBorderPtr WindowsMatteBorder = MatteBorder::create();
-	beginEditCP(WindowsMatteBorder);
-		WindowsMatteBorder->setRightWidth(1);
-		WindowsMatteBorder->setLeftWidth(1);
-		WindowsMatteBorder->setTopWidth(1);
-		WindowsMatteBorder->setBottomWidth(1);
-		WindowsMatteBorder->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
-	endEditCP(WindowsMatteBorder);
-
-	MatteBorder::getClassType().setPrototype(WindowsMatteBorder);
-
-	/********Compound Border********/
-	CompoundBorderPtr WindowsCompoundBorder = CompoundBorder::create();
-	beginEditCP(WindowsCompoundBorder);
-		WindowsCompoundBorder->setInnerBorder(NullFC);
-		WindowsCompoundBorder->setOuterBorder(NullFC);
-	endEditCP(WindowsCompoundBorder);
-
-	CompoundBorder::getClassType().setPrototype(WindowsCompoundBorder);
-
-	/*********Backgounds***********/
-	/*********Color Background**********/
-	ColorUIBackgroundPtr WindowsColorBackground = ColorUIBackground::create();
-	beginEditCP(WindowsColorBackground);
-		WindowsColorBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
-	endEditCP(WindowsColorBackground);
-
-	ColorUIBackground::getClassType().setPrototype(WindowsColorBackground);
-	
-	/**********Gradient Background***********/
-	GradientUIBackgroundPtr WindowsGradientBackground = GradientUIBackground::create();
-	beginEditCP(WindowsGradientBackground);
-		WindowsGradientBackground->setColorStart(Color4f(1.0, 1.0, 1.0, 1.0));
-		WindowsGradientBackground->setColorEnd(Color4f(1.0, 1.0, 1.0, 1.0));
-		WindowsGradientBackground->setAlignment(HORIZONTAL_ALIGNMENT);
-	endEditCP(WindowsGradientBackground);
-
-	GradientUIBackground::getClassType().setPrototype(WindowsGradientBackground);
-
-	/**********Material Background***********/
-	MaterialUIBackgroundPtr WindowsMaterialBackground = MaterialUIBackground::create();
-	beginEditCP(WindowsMaterialBackground);
-		WindowsMaterialBackground->setMaterial(NullFC);
-	endEditCP(WindowsMaterialBackground);
-
-	MaterialUIBackground::getClassType().setPrototype(WindowsMaterialBackground);
-
-	/*********Texture Background********/
-	TextureUIBackgroundPtr WindowsTextureBackground = TextureUIBackground::create();
-	beginEditCP(WindowsTextureBackground);
-		WindowsTextureBackground->setTexture(NullFC);
-	endEditCP(WindowsTextureBackground);
-
-	TextureUIBackground::getClassType().setPrototype(WindowsTextureBackground);
 
 	//CompoundBackground and Empty Background don't require prototypes.
 
@@ -2908,6 +3102,7 @@ void WindowsLookAndFeel::init(void)
 		getPrototypes().addValue(WindowsList);
 		getPrototypes().addValue(WindowsTableHeader);
 		getPrototypes().addValue(WindowsTable);
+		getPrototypes().addValue(WindowsSpinner);
 	endEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);
 
 

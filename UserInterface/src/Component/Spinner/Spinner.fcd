@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="Spinner"
+	parent="Container"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI Spinner.
+	<Field
+		name="NextButton"
+		type="ButtonPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/Button/OSGButton.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="PreviousButton"
+		type="ButtonPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/Button/OSGButton.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="Editor"
+		type="ComponentPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/OSGComponentFields.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="Orientation"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Util/OSGUIDefines.h"
+		defaultValue="VERTICAL_ALIGNMENT"
+	>
+	</Field>
+</FieldContainer>

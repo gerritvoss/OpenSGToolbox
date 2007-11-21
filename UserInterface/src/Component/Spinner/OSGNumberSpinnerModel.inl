@@ -43,17 +43,43 @@
 OSG_BEGIN_NAMESPACE
 
 template<class NumberTypeT> inline
+NumberSpinnerModel<NumberTypeT>::NumberSpinnerModel(void) :
+  _Value(new SField<NumberType>(0))
+{
+}
+
+template<class NumberTypeT> inline
+NumberSpinnerModel<NumberTypeT>::NumberSpinnerModel(const NumberType& value) :
+  _Value(new SField<NumberType>(value))
+{
+}
+
+template<class NumberTypeT> inline
 SharedFieldPtr NumberSpinnerModel<NumberTypeT>::getNextValue(void)
 {
-    assert(false && "getNextValue(void) not implemented");
-    return NULL;
+    //Check if we would go past the Maximum
+    if(dynamic_cast< SField<NumberType>* >(_Value.get())->getValue() + _StepSize > _Maximum)
+    {
+        return SharedFieldPtr();
+    }
+    else
+    {
+        return SharedFieldPtr(new SField<NumberType>(dynamic_cast< SField<NumberType>* >(_Value.get())->getValue() + _StepSize));
+    }
 }
 
 template<class NumberTypeT> inline
 SharedFieldPtr NumberSpinnerModel<NumberTypeT>::getPreviousValue(void)
 {
-    assert(false && "getPreviousValue(void) not implemented");
-    return NULL;
+    //Check if we would go past the Minimum
+    if(dynamic_cast< SField<NumberType>* >(_Value.get())->getValue() - _StepSize < _Minimum)
+    {
+        return SharedFieldPtr();
+    }
+    else
+    {
+        return SharedFieldPtr(new SField<NumberType>(dynamic_cast< SField<NumberType>* >(_Value.get())->getValue() - _StepSize));
+    }
 }
 
 template<class NumberTypeT> inline
@@ -65,7 +91,34 @@ SharedFieldPtr NumberSpinnerModel<NumberTypeT>::getValue(void)
 template<class NumberTypeT> inline
 void NumberSpinnerModel<NumberTypeT>::setValue(SharedFieldPtr value)
 {
-    _Value.setValue(dynamic_cast<SField<NumberTypeT>*>(value.get())->getValue());
+    //If the Value is outside of the Range
+    NumberType RawValue(dynamic_cast<SField<NumberTypeT>*>(value.get())->getValue());
+    if(RawValue < _Minimum || RawValue > _Maximum)
+    {
+        throw IllegalArgumentException();
+    }
+
+    dynamic_cast<SField<NumberTypeT>*>(_Value.get())->setValue(RawValue);
+    
+    produceStateChanged();
+}
+
+template<class NumberTypeT> inline
+void NumberSpinnerModel<NumberTypeT>::setValue(const std::string& value)
+{
+    SharedFieldPtr NewFieldValue(new SField<NumberType>());
+    NewFieldValue->pushValueByStr(value.c_str());
+
+    //If the Value is outside of the Range
+    NumberType RawValue(dynamic_cast<SField<NumberTypeT>*>(NewFieldValue.get())->getValue());
+    if(RawValue < _Minimum || RawValue > _Maximum)
+    {
+        throw IllegalArgumentException();
+    }
+
+    _Value = NewFieldValue;
+    
+    produceStateChanged();
 }
 
 template<class NumberTypeT> inline

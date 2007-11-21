@@ -285,8 +285,8 @@ void TextField::calculateTextBounds(const UInt32 StartIndex, const UInt32 EndInd
     Pnt2s AlignmentOffset = calculateAlignment(ComponentTopLeft, ComponentBottomRight-ComponentTopLeft, getFont()->getBounds(getDrawnText()), getVerticalAlignment(), getHorizontalAlignment());
 
 	getFont()->getBounds(getDrawnText().substr(StartIndex, EndIndex), TopLeft, BottomRight);
-	TopLeft = TopLeft + AlignmentOffset;
-	BottomRight = BottomRight + AlignmentOffset;
+	TopLeft = TopLeft + Vec2s(AlignmentOffset);
+	BottomRight = BottomRight + Vec2s(AlignmentOffset);
 }
 
 void TextField::mouseDragged(const MouseEvent& e)

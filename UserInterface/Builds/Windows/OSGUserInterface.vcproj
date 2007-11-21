@@ -1,207 +1,145 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="OSGUserInterface"
 	ProjectGUID="{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}"
 	RootNamespace="OSGAnimation"
-	Keyword="Win32Proj"
-	>
+	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
-			Name="Win32"
-		/>
+			Name="Win32"/>
 	</Platforms>
-	<ToolFiles>
-	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-				Description="Installing Includes"
-				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; UserInterface&#x0D;&#x0A;"
-				Outputs="include"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
+			CharacterSet="0">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="0"
 				AdditionalIncludeDirectories="..\..\..\External\Boost;&quot;$(OPENSG)\..\include&quot;;..\..\src;..\..\..\Builds\Windows\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEUSERINTERFACELIB"
-				StringPooling="true"
-				MinimalRebuild="true"
+				StringPooling="TRUE"
+				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				BufferSecurityCheck="false"
-				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="true"
+				BufferSecurityCheck="FALSE"
+				EnableFunctionLevelLinking="TRUE"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(OutDir)/"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"
 				DisableSpecificWarnings="4244;4251;4275;4290;4231;4267;4996"
-				ForcedIncludeFiles="WinSock2.h;windows.h"
-			/>
+				ForcedIncludeFiles="WinSock2.h;windows.h"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool"
+				Description="Installing Includes"
+				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; UserInterface
+"
+				Outputs="include"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGInputD.lib OSGToolboxD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="&quot;$(TargetDir)\$(ProjectName)D.pdb&quot;"
 				SubSystem="1"
 				ImportLibrary="&quot;$(TargetDir)\$(ProjectName)D.lib&quot;"
-				TargetMachine="1"
-			/>
+				TargetMachine="1"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCManifestTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCFxCopTool"
-			/>
+				Name="VCResourceCompilerTool"/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
+				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
+				Name="VCXMLDataGeneratorTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; UserInterface&#x0D;&#x0A;"
-				Outputs="include"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
+			CharacterSet="0">
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\..\External\Boost;&quot;$(OPENSG)\..\include&quot;;..\..\src;..\..\..\Builds\Windows\include"
 				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEUSERINTERFACELIB"
-				StringPooling="true"
-				MinimalRebuild="false"
+				StringPooling="TRUE"
+				MinimalRebuild="FALSE"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="false"
-				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="true"
+				BufferSecurityCheck="FALSE"
+				EnableFunctionLevelLinking="TRUE"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(IntDir)/"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="0"
 				DisableSpecificWarnings="4244;4251;4275;4290;4231;4267;4996"
-				ForcedIncludeFiles="WinSock2.h;windows.h"
-			/>
+				ForcedIncludeFiles="WinSock2.h;windows.h"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool"
+				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; UserInterface
+"
+				Outputs="include"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGInput.lib OSGToolbox.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;"
-				IgnoreAllDefaultLibraries="false"
-				GenerateDebugInformation="false"
+				IgnoreAllDefaultLibraries="FALSE"
+				GenerateDebugInformation="FALSE"
 				ProgramDatabaseFile=""
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				ImportLibrary="&quot;$(TargetDir)\$(ProjectName).lib&quot;"
-				TargetMachine="1"
-			/>
+				TargetMachine="1"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCManifestTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCFxCopTool"
-			/>
+				Name="VCResourceCompilerTool"/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
+				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
+				Name="VCXMLDataGeneratorTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -209,3126 +147,2391 @@
 	<Files>
 		<Filter
 			Name="Source Files"
-			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
-			>
+			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl">
 			<File
-				RelativePath="..\..\src\OSGUserInterfaceDef.h"
-				>
+				RelativePath="..\..\src\OSGUserInterfaceDef.h">
 			</File>
 			<Filter
-				Name="Component"
-				>
+				Name="Component">
 				<File
-					RelativePath="..\..\src\Component\OSGComponent.cpp"
-					>
+					RelativePath="..\..\src\Component\OSGComponent.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Component\OSGComponent.h"
-					>
+					RelativePath="..\..\src\Component\OSGComponent.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Component\OSGComponent.inl"
-					>
+					RelativePath="..\..\src\Component\OSGComponent.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Component\OSGComponentBase.cpp"
-					>
+					RelativePath="..\..\src\Component\OSGComponentBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Component\OSGComponentBase.h"
-					>
+					RelativePath="..\..\src\Component\OSGComponentBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Component\OSGComponentBase.inl"
-					>
+					RelativePath="..\..\src\Component\OSGComponentBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Component\OSGComponentFields.h"
-					>
+					RelativePath="..\..\src\Component\OSGComponentFields.h">
 				</File>
 				<Filter
-					Name="List"
-					>
+					Name="List">
 					<File
-						RelativePath="..\..\src\Component\List\OSGAbstractListModel.cpp"
-						>
+						RelativePath="..\..\src\Component\List\OSGAbstractListModel.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGAbstractListModel.h"
-						>
+						RelativePath="..\..\src\Component\List\OSGAbstractListModel.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGAbstractListModel.inl"
-						>
+						RelativePath="..\..\src\Component\List\OSGAbstractListModel.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListCellGenerator.cpp"
-						>
+						RelativePath="..\..\src\Component\List\OSGDefaultListCellGenerator.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListCellGenerator.h"
-						>
+						RelativePath="..\..\src\Component\List\OSGDefaultListCellGenerator.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListCellGenerator.inl"
-						>
+						RelativePath="..\..\src\Component\List\OSGDefaultListCellGenerator.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModel.cpp"
-						>
+						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModel.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModel.h"
-						>
+						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModel.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModel.inl"
-						>
+						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModel.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGList.cpp"
-						>
+						RelativePath="..\..\src\Component\List\OSGList.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGList.h"
-						>
+						RelativePath="..\..\src\Component\List\OSGList.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGList.inl"
-						>
+						RelativePath="..\..\src\Component\List\OSGList.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGListBase.cpp"
-						>
+						RelativePath="..\..\src\Component\List\OSGListBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGListBase.h"
-						>
+						RelativePath="..\..\src\Component\List\OSGListBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGListBase.inl"
-						>
+						RelativePath="..\..\src\Component\List\OSGListBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGListCellGenerator.h"
-						>
+						RelativePath="..\..\src\Component\List\OSGListCellGenerator.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGListDataEvent.cpp"
-						>
+						RelativePath="..\..\src\Component\List\OSGListDataEvent.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGListDataEvent.h"
-						>
+						RelativePath="..\..\src\Component\List\OSGListDataEvent.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGListDataEvent.inl"
-						>
+						RelativePath="..\..\src\Component\List\OSGListDataEvent.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGListDataListener.h"
-						>
+						RelativePath="..\..\src\Component\List\OSGListDataListener.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGListFields.h"
-						>
+						RelativePath="..\..\src\Component\List\OSGListFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGListModel.h"
-						>
+						RelativePath="..\..\src\Component\List\OSGListModel.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGListSelectionEvent.cpp"
-						>
+						RelativePath="..\..\src\Component\List\OSGListSelectionEvent.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGListSelectionEvent.h"
-						>
+						RelativePath="..\..\src\Component\List\OSGListSelectionEvent.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGListSelectionEvent.inl"
-						>
+						RelativePath="..\..\src\Component\List\OSGListSelectionEvent.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGListSelectionListener.h"
-						>
+						RelativePath="..\..\src\Component\List\OSGListSelectionListener.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGListSelectionModel.h"
-						>
+						RelativePath="..\..\src\Component\List\OSGListSelectionModel.h">
 					</File>
 				</Filter>
 				<Filter
-					Name="Scroll"
-					>
+					Name="Scroll">
 					<File
-						RelativePath="..\..\src\Component\Scroll\OSGBoundedRangeModel.h"
-						>
+						RelativePath="..\..\src\Component\Scroll\OSGBoundedRangeModel.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Scroll\OSGDefaultBoundedRangeModel.cpp"
-						>
+						RelativePath="..\..\src\Component\Scroll\OSGDefaultBoundedRangeModel.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Scroll\OSGDefaultBoundedRangeModel.h"
-						>
+						RelativePath="..\..\src\Component\Scroll\OSGDefaultBoundedRangeModel.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Scroll\OSGDefaultBoundedRangeModel.inl"
-						>
+						RelativePath="..\..\src\Component\Scroll\OSGDefaultBoundedRangeModel.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Scroll\OSGScrollBar.cpp"
-						>
+						RelativePath="..\..\src\Component\Scroll\OSGScrollBar.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Scroll\OSGScrollbar.h"
-						>
+						RelativePath="..\..\src\Component\Scroll\OSGScrollbar.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Scroll\OSGScrollBar.inl"
-						>
+						RelativePath="..\..\src\Component\Scroll\OSGScrollBar.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Scroll\OSGScrollBarBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Scroll\OSGScrollBarBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Scroll\OSGScrollbarBase.h"
-						>
+						RelativePath="..\..\src\Component\Scroll\OSGScrollbarBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Scroll\OSGScrollBarBase.inl"
-						>
+						RelativePath="..\..\src\Component\Scroll\OSGScrollBarBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Scroll\OSGScrollbarFields.h"
-						>
+						RelativePath="..\..\src\Component\Scroll\OSGScrollbarFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Scroll\OSGScrollPanel.cpp"
-						>
+						RelativePath="..\..\src\Component\Scroll\OSGScrollPanel.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Scroll\OSGScrollPanel.h"
-						>
+						RelativePath="..\..\src\Component\Scroll\OSGScrollPanel.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Scroll\OSGScrollPanel.inl"
-						>
+						RelativePath="..\..\src\Component\Scroll\OSGScrollPanel.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Scroll\OSGScrollPanelBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Scroll\OSGScrollPanelBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Scroll\OSGScrollPanelBase.h"
-						>
+						RelativePath="..\..\src\Component\Scroll\OSGScrollPanelBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Scroll\OSGScrollPanelBase.inl"
-						>
+						RelativePath="..\..\src\Component\Scroll\OSGScrollPanelBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Scroll\OSGScrollPanelFields.h"
-						>
+						RelativePath="..\..\src\Component\Scroll\OSGScrollPanelFields.h">
 					</File>
 				</Filter>
 				<Filter
-					Name="Text"
-					>
+					Name="Text">
 					<File
-						RelativePath="..\..\src\Component\Text\OSGLabel.cpp"
-						>
+						RelativePath="..\..\src\Component\Text\OSGLabel.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGLabel.h"
-						>
+						RelativePath="..\..\src\Component\Text\OSGLabel.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGLabel.inl"
-						>
+						RelativePath="..\..\src\Component\Text\OSGLabel.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGLabelBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Text\OSGLabelBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGLabelBase.h"
-						>
+						RelativePath="..\..\src\Component\Text\OSGLabelBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGLabelBase.inl"
-						>
+						RelativePath="..\..\src\Component\Text\OSGLabelBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGLabelFields.h"
-						>
+						RelativePath="..\..\src\Component\Text\OSGLabelFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGPasswordField.cpp"
-						>
+						RelativePath="..\..\src\Component\Text\OSGPasswordField.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGPasswordField.h"
-						>
+						RelativePath="..\..\src\Component\Text\OSGPasswordField.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGPasswordField.inl"
-						>
+						RelativePath="..\..\src\Component\Text\OSGPasswordField.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGPasswordFieldBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Text\OSGPasswordFieldBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGPasswordFieldBase.h"
-						>
+						RelativePath="..\..\src\Component\Text\OSGPasswordFieldBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGPasswordFieldBase.inl"
-						>
+						RelativePath="..\..\src\Component\Text\OSGPasswordFieldBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGPasswordFieldFields.h"
-						>
+						RelativePath="..\..\src\Component\Text\OSGPasswordFieldFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextArea.cpp"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextArea.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextArea.h"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextArea.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextArea.inl"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextArea.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextAreaBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextAreaBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextAreaBase.h"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextAreaBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextAreaBase.inl"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextAreaBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextAreaFields.h"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextAreaFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextComponent.cpp"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextComponent.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextComponent.h"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextComponent.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextComponent.inl"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextComponent.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextComponentBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextComponentBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextComponentBase.h"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextComponentBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextComponentBase.inl"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextComponentBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextComponentFields.h"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextComponentFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextField.cpp"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextField.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextField.h"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextField.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextField.inl"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextField.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextFieldBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextFieldBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextFieldBase.h"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextFieldBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextFieldBase.inl"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextFieldBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Text\OSGTextFieldFields.h"
-						>
+						RelativePath="..\..\src\Component\Text\OSGTextFieldFields.h">
 					</File>
 				</Filter>
 				<Filter
-					Name="Menu"
-					>
+					Name="Menu">
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGDefaultSingleSelectionModel.cpp"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGDefaultSingleSelectionModel.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGDefaultSingleSelectionModel.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGDefaultSingleSelectionModel.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGDefaultSingleSelectionModel.inl"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGDefaultSingleSelectionModel.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItem.cpp"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItem.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItem.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItem.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItem.inl"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItem.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItemBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItemBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItemBase.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItemBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItemBase.inl"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItemBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItemFields.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItemFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenu.cpp"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenu.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenu.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenu.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenu.inl"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenu.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenuBar.cpp"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenuBar.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenuBar.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenuBar.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenuBar.inl"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenuBar.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenuBarBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenuBarBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenuBarBase.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenuBarBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenuBarBase.inl"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenuBarBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenuBarFields.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenuBarFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenuBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenuBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenuBase.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenuBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenuBase.inl"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenuBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenuFields.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenuFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenuItem.cpp"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenuItem.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenuItem.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenuItem.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenuItem.inl"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenuItem.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenuItemBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenuItemBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenuItemBase.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenuItemBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenuItemBase.inl"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenuItemBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGMenuItemFields.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGMenuItemFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGPopupMenu.cpp"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGPopupMenu.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGPopupMenu.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGPopupMenu.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGPopupMenu.inl"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGPopupMenu.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGPopupMenuBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGPopupMenuBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGPopupMenuBase.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGPopupMenuBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGPopupMenuBase.inl"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGPopupMenuBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGPopupMenuFields.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGPopupMenuFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItem.cpp"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItem.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItem.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItem.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItem.inl"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItem.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItemBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItemBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItemBase.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItemBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItemBase.inl"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItemBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItemFields.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItemFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGSingleSelectionModel.h"
-						>
+						RelativePath="..\..\src\Component\Menu\OSGSingleSelectionModel.h">
 					</File>
 				</Filter>
 				<Filter
-					Name="Container"
-					>
+					Name="Container">
 					<File
-						RelativePath="..\..\src\Component\Container\OSGContainer.cpp"
-						>
+						RelativePath="..\..\src\Component\Container\OSGContainer.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGContainer.h"
-						>
+						RelativePath="..\..\src\Component\Container\OSGContainer.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGContainer.inl"
-						>
+						RelativePath="..\..\src\Component\Container\OSGContainer.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGContainerBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Container\OSGContainerBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGContainerBase.h"
-						>
+						RelativePath="..\..\src\Component\Container\OSGContainerBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGContainerBase.inl"
-						>
+						RelativePath="..\..\src\Component\Container\OSGContainerBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGContainerFields.h"
-						>
+						RelativePath="..\..\src\Component\Container\OSGContainerFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGFrame.cpp"
-						>
+						RelativePath="..\..\src\Component\Container\OSGFrame.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGFrame.h"
-						>
+						RelativePath="..\..\src\Component\Container\OSGFrame.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGFrame.inl"
-						>
+						RelativePath="..\..\src\Component\Container\OSGFrame.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGFrameBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Container\OSGFrameBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGFrameBase.h"
-						>
+						RelativePath="..\..\src\Component\Container\OSGFrameBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGFrameBase.inl"
-						>
+						RelativePath="..\..\src\Component\Container\OSGFrameBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGFrameFields.h"
-						>
+						RelativePath="..\..\src\Component\Container\OSGFrameFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGPanel.cpp"
-						>
+						RelativePath="..\..\src\Component\Container\OSGPanel.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGPanel.h"
-						>
+						RelativePath="..\..\src\Component\Container\OSGPanel.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGPanel.inl"
-						>
+						RelativePath="..\..\src\Component\Container\OSGPanel.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGPanelBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Container\OSGPanelBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGPanelBase.h"
-						>
+						RelativePath="..\..\src\Component\Container\OSGPanelBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGPanelBase.inl"
-						>
+						RelativePath="..\..\src\Component\Container\OSGPanelBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGPanelFields.h"
-						>
+						RelativePath="..\..\src\Component\Container\OSGPanelFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGSplitPanel.cpp"
-						>
+						RelativePath="..\..\src\Component\Container\OSGSplitPanel.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGSplitPanel.h"
-						>
+						RelativePath="..\..\src\Component\Container\OSGSplitPanel.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGSplitPanel.inl"
-						>
+						RelativePath="..\..\src\Component\Container\OSGSplitPanel.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGSplitPanelBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Container\OSGSplitPanelBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGSplitPanelBase.h"
-						>
+						RelativePath="..\..\src\Component\Container\OSGSplitPanelBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGSplitPanelBase.inl"
-						>
+						RelativePath="..\..\src\Component\Container\OSGSplitPanelBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGSplitPanelFields.h"
-						>
+						RelativePath="..\..\src\Component\Container\OSGSplitPanelFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGTabPanel.cpp"
-						>
+						RelativePath="..\..\src\Component\Container\OSGTabPanel.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGTabPanel.h"
-						>
+						RelativePath="..\..\src\Component\Container\OSGTabPanel.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGTabPanel.inl"
-						>
+						RelativePath="..\..\src\Component\Container\OSGTabPanel.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGTabPanelBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Container\OSGTabPanelBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGTabPanelBase.h"
-						>
+						RelativePath="..\..\src\Component\Container\OSGTabPanelBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGTabPanelBase.inl"
-						>
+						RelativePath="..\..\src\Component\Container\OSGTabPanelBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGTabPanelFields.h"
-						>
+						RelativePath="..\..\src\Component\Container\OSGTabPanelFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGUIViewport.cpp"
-						>
+						RelativePath="..\..\src\Component\Container\OSGUIViewport.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGUIViewport.h"
-						>
+						RelativePath="..\..\src\Component\Container\OSGUIViewport.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGUIViewport.inl"
-						>
+						RelativePath="..\..\src\Component\Container\OSGUIViewport.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGUIViewportBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Container\OSGUIViewportBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGUIViewportBase.h"
-						>
+						RelativePath="..\..\src\Component\Container\OSGUIViewportBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGUIViewportBase.inl"
-						>
+						RelativePath="..\..\src\Component\Container\OSGUIViewportBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGUIViewportFields.h"
-						>
+						RelativePath="..\..\src\Component\Container\OSGUIViewportFields.h">
 					</File>
 				</Filter>
 				<Filter
-					Name="Misc"
-					>
+					Name="Misc">
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGCanvas.cpp"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGCanvas.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGCanvas.h"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGCanvas.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGCanvas.inl"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGCanvas.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGCanvasBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGCanvasBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGCanvasBase.h"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGCanvasBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGCanvasBase.inl"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGCanvasBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGCanvasFields.h"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGCanvasFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGImageComponent.cpp"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGImageComponent.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGImageComponent.h"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGImageComponent.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGImageComponent.inl"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGImageComponent.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGImageComponentBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGImageComponentBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGImageComponentBase.h"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGImageComponentBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGImageComponentBase.inl"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGImageComponentBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGImageComponentFields.h"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGImageComponentFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGRotatedComponent.cpp"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGRotatedComponent.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGRotatedComponent.h"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGRotatedComponent.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGRotatedComponent.inl"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGRotatedComponent.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGRotatedComponentBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGRotatedComponentBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGRotatedComponentBase.h"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGRotatedComponentBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGRotatedComponentBase.inl"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGRotatedComponentBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGRotatedComponentFields.h"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGRotatedComponentFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGToolTip.cpp"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGToolTip.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGToolTip.h"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGToolTip.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGToolTip.inl"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGToolTip.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGToolTipBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGToolTipBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGToolTipBase.h"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGToolTipBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGToolTipBase.inl"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGToolTipBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGToolTipFields.h"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGToolTipFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvas.cpp"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvas.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvas.h"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvas.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvas.inl"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvas.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvasBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvasBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvasBase.h"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvasBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvasBase.inl"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvasBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvasFields.h"
-						>
+						RelativePath="..\..\src\Component\Misc\OSGUIDrawObjectCanvasFields.h">
 					</File>
 				</Filter>
 				<Filter
-					Name="Button"
-					>
+					Name="Button">
 					<File
-						RelativePath="..\..\src\Component\Button\OSGButton.cpp"
-						>
+						RelativePath="..\..\src\Component\Button\OSGButton.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGButton.h"
-						>
+						RelativePath="..\..\src\Component\Button\OSGButton.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGButton.inl"
-						>
+						RelativePath="..\..\src\Component\Button\OSGButton.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGButtonBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Button\OSGButtonBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGButtonBase.h"
-						>
+						RelativePath="..\..\src\Component\Button\OSGButtonBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGButtonBase.inl"
-						>
+						RelativePath="..\..\src\Component\Button\OSGButtonBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGButtonFields.h"
-						>
+						RelativePath="..\..\src\Component\Button\OSGButtonFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGCheckboxButton.cpp"
-						>
+						RelativePath="..\..\src\Component\Button\OSGCheckboxButton.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGCheckboxButton.h"
-						>
+						RelativePath="..\..\src\Component\Button\OSGCheckboxButton.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGCheckboxButton.inl"
-						>
+						RelativePath="..\..\src\Component\Button\OSGCheckboxButton.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGCheckboxButtonBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Button\OSGCheckboxButtonBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGCheckboxButtonBase.h"
-						>
+						RelativePath="..\..\src\Component\Button\OSGCheckboxButtonBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGCheckboxButtonBase.inl"
-						>
+						RelativePath="..\..\src\Component\Button\OSGCheckboxButtonBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGCheckboxButtonFields.h"
-						>
+						RelativePath="..\..\src\Component\Button\OSGCheckboxButtonFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGRadioButton.cpp"
-						>
+						RelativePath="..\..\src\Component\Button\OSGRadioButton.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGRadioButton.h"
-						>
+						RelativePath="..\..\src\Component\Button\OSGRadioButton.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGRadioButton.inl"
-						>
+						RelativePath="..\..\src\Component\Button\OSGRadioButton.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGRadioButtonBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Button\OSGRadioButtonBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGRadioButtonBase.h"
-						>
+						RelativePath="..\..\src\Component\Button\OSGRadioButtonBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGRadioButtonBase.inl"
-						>
+						RelativePath="..\..\src\Component\Button\OSGRadioButtonBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGRadioButtonFields.h"
-						>
+						RelativePath="..\..\src\Component\Button\OSGRadioButtonFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGRadioButtonGroup.cpp"
-						>
+						RelativePath="..\..\src\Component\Button\OSGRadioButtonGroup.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGRadioButtonGroup.h"
-						>
+						RelativePath="..\..\src\Component\Button\OSGRadioButtonGroup.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGRadioButtonGroup.inl"
-						>
+						RelativePath="..\..\src\Component\Button\OSGRadioButtonGroup.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGToggleButton.cpp"
-						>
+						RelativePath="..\..\src\Component\Button\OSGToggleButton.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGToggleButton.h"
-						>
+						RelativePath="..\..\src\Component\Button\OSGToggleButton.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGToggleButton.inl"
-						>
+						RelativePath="..\..\src\Component\Button\OSGToggleButton.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGToggleButtonBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Button\OSGToggleButtonBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGToggleButtonBase.h"
-						>
+						RelativePath="..\..\src\Component\Button\OSGToggleButtonBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGToggleButtonBase.inl"
-						>
+						RelativePath="..\..\src\Component\Button\OSGToggleButtonBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Button\OSGToggleButtonFields.h"
-						>
+						RelativePath="..\..\src\Component\Button\OSGToggleButtonFields.h">
 					</File>
 				</Filter>
 				<Filter
-					Name="Table"
-					>
+					Name="Table">
 					<File
-						RelativePath="..\..\src\Component\Table\OSGAbstractTableModel.cpp"
-						>
+						RelativePath="..\..\src\Component\Table\OSGAbstractTableModel.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGAbstractTableModel.h"
-						>
+						RelativePath="..\..\src\Component\Table\OSGAbstractTableModel.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGAbstractTableModel.inl"
-						>
+						RelativePath="..\..\src\Component\Table\OSGAbstractTableModel.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGDefaultTableColumnModel.cpp"
-						>
+						RelativePath="..\..\src\Component\Table\OSGDefaultTableColumnModel.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGDefaultTableColumnModel.h"
-						>
+						RelativePath="..\..\src\Component\Table\OSGDefaultTableColumnModel.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTable.cpp"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTable.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTable.h"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTable.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTable.inl"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTable.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableBase.h"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableBase.inl"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableCellEditor.h"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableCellEditor.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableCellRenderer.h"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableCellRenderer.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableColumn.cpp"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableColumn.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableColumn.h"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableColumn.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableColumn.inl"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableColumn.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableColumnBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableColumnBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableColumnBase.h"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableColumnBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableColumnBase.inl"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableColumnBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableColumnFields.h"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableColumnFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableColumnModel.h"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableColumnModel.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableColumnModelEvent.cpp"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableColumnModelEvent.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableColumnModelEvent.h"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableColumnModelEvent.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableColumnModelEvent.inl"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableColumnModelEvent.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableColumnModelListener.h"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableColumnModelListener.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableFields.h"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableHeader.cpp"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableHeader.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableHeader.h"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableHeader.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableHeader.inl"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableHeader.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableHeaderBase.cpp"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableHeaderBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableHeaderBase.h"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableHeaderBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableHeaderBase.inl"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableHeaderBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableHeaderFields.h"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableHeaderFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableModel.h"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableModel.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableModelEvent.cpp"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableModelEvent.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableModelEvent.h"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableModelEvent.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableModelEvent.inl"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableModelEvent.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableModelListener.h"
-						>
+						RelativePath="..\..\src\Component\Table\OSGTableModelListener.h">
 					</File>
 					<Filter
-						Name="DefaultRenderers"
-						>
+						Name="DefaultRenderers">
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultBoolTableCellRenderer.cpp"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultBoolTableCellRenderer.cpp">
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultBoolTableCellRenderer.h"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultBoolTableCellRenderer.h">
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultGLenumTableCellRenderer.cpp"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultGLenumTableCellRenderer.cpp">
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultGLenumTableCellRenderer.h"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultGLenumTableCellRenderer.h">
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultInt32TableCellRenderer.cpp"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultInt32TableCellRenderer.cpp">
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultInt32TableCellRenderer.h"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultInt32TableCellRenderer.h">
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultReal32TableCellRenderer.cpp"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultReal32TableCellRenderer.cpp">
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultReal32TableCellRenderer.h"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultReal32TableCellRenderer.h">
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultStringTableCellRenderer.cpp"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultStringTableCellRenderer.cpp">
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultStringTableCellRenderer.h"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultStringTableCellRenderer.h">
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableCellRenderer.cpp"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableCellRenderer.cpp">
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableCellRenderer.h"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableCellRenderer.h">
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableCellRenderers.h"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableCellRenderers.h">
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableHeaderCellRenderer.cpp"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableHeaderCellRenderer.cpp">
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableHeaderCellRenderer.h"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultTableHeaderCellRenderer.h">
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultUInt32TableCellRenderer.cpp"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultUInt32TableCellRenderer.cpp">
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultUInt32TableCellRenderer.h"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultRenderers\OSGDefaultUInt32TableCellRenderer.h">
 						</File>
 					</Filter>
 					<Filter
-						Name="DefaultEditors"
-						>
+						Name="DefaultEditors">
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultEditors\OSGDefaultTableCellEditor.cpp"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultEditors\OSGDefaultTableCellEditor.cpp">
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultEditors\OSGDefaultTableCellEditor.h"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultEditors\OSGDefaultTableCellEditor.h">
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultEditors\OSGDefaultTableCellEditor.inl"
-							>
+							RelativePath="..\..\src\Component\Table\DefaultEditors\OSGDefaultTableCellEditor.inl">
 						</File>
 					</Filter>
 				</Filter>
 				<Filter
-					Name="Spinner"
-					>
+					Name="Spinner">
 					<File
-						RelativePath="..\..\src\Component\Spinner\OSGAbstractSpinnerModel.cpp"
-						>
+						RelativePath="..\..\src\Component\Spinner\OSGAbstractSpinnerModel.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Spinner\OSGAbstractSpinnerModel.h"
-						>
+						RelativePath="..\..\src\Component\Spinner\OSGAbstractSpinnerModel.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Spinner\OSGListSpinnerModel.cpp"
-						>
+						RelativePath="..\..\src\Component\Spinner\OSGListSpinnerModel.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Spinner\OSGListSpinnerModel.h"
-						>
+						RelativePath="..\..\src\Component\Spinner\OSGListSpinnerModel.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Spinner\OSGListSpinnerModel.inl"
-						>
+						RelativePath="..\..\src\Component\Spinner\OSGListSpinnerModel.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Spinner\OSGNumberSpinnerModel.h"
-						>
+						RelativePath="..\..\src\Component\Spinner\OSGNumberSpinnerModel.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Spinner\OSGNumberSpinnerModel.inl"
-						>
+						RelativePath="..\..\src\Component\Spinner\OSGNumberSpinnerModel.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Spinner\OSGSpinnerModel.h"
-						>
+						RelativePath="..\..\src\Component\Spinner\OSGSpinner.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Spinner\OSGSpinner.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Spinner\OSGSpinner.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Spinner\OSGSpinnerBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Spinner\OSGSpinnerBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Spinner\OSGSpinnerBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Spinner\OSGSpinnerFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Spinner\OSGSpinnerModel.h">
+					</File>
+					<Filter
+						Name="Editors"
+						Filter="">
+						<File
+							RelativePath="..\..\src\Component\Spinner\Editors\OSGSpinnerDefaultEditor.cpp">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Spinner\Editors\OSGSpinnerDefaultEditor.h">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Spinner\Editors\OSGSpinnerDefaultEditor.inl">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Spinner\Editors\OSGSpinnerDefaultEditorBase.cpp">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Spinner\Editors\OSGSpinnerDefaultEditorBase.h">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Spinner\Editors\OSGSpinnerDefaultEditorBase.inl">
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Spinner\Editors\OSGSpinnerDefaultEditorFields.h">
+						</File>
+					</Filter>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Graphics">
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphics.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphics.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphics.inl">
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphics2D.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphics2D.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphics2D.inl">
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphics2DBase.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphics2DBase.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphics2DBase.inl">
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphics2DFields.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphicsBase.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphicsBase.h">
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphicsBase.inl">
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphicsFields.h">
+				</File>
+				<Filter
+					Name="UIDrawObjects">
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGArcUIDrawObject.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGArcUIDrawObject.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGArcUIDrawObject.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGArcUIDrawObjectBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGArcUIDrawObjectBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGArcUIDrawObjectBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGArcUIDrawObjectFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGDiscUIDrawObject.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGDiscUIDrawObject.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGDiscUIDrawObject.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGDiscUIDrawObjectBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGDiscUIDrawObjectBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGDiscUIDrawObjectBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGDiscUIDrawObjectFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGLineUIDrawObject.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGLineUIDrawObject.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGLineUIDrawObject.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGLineUIDrawObjectBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGLineUIDrawObjectBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGLineUIDrawObjectBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGLineUIDrawObjectFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGMultiColoredQuadUIDrawObject.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGMultiColoredQuadUIDrawObject.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGMultiColoredQuadUIDrawObject.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGMultiColoredQuadUIDrawObjectBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGMultiColoredQuadUIDrawObjectBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGMultiColoredQuadUIDrawObjectBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGMultiColoredQuadUIDrawObjectFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGPolygonUIDrawObject.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGPolygonUIDrawObject.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGPolygonUIDrawObject.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGPolygonUIDrawObjectBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGPolygonUIDrawObjectBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGPolygonUIDrawObjectBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGPolygonUIDrawObjectFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGRectUIDrawObject.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGRectUIDrawObject.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGRectUIDrawObject.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGRectUIDrawObjectBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGRectUIDrawObjectBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGRectUIDrawObjectBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGRectUIDrawObjectFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTextUIDrawObject.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTextUIDrawObject.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTextUIDrawObject.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTextUIDrawObjectBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTextUIDrawObjectBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTextUIDrawObjectBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTextUIDrawObjectFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObject.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObject.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObject.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObjectBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObjectBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObjectBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObjectFields.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGUIDrawObject.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGUIDrawObject.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGUIDrawObject.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGUIDrawObjectBase.cpp">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGUIDrawObjectBase.h">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGUIDrawObjectBase.inl">
+					</File>
+					<File
+						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGUIDrawObjectFields.h">
 					</File>
 				</Filter>
 			</Filter>
 			<Filter
-				Name="Graphics"
-				>
+				Name="UIDrawingSurface">
 				<File
-					RelativePath="..\..\src\Graphics\OSGGraphics.cpp"
-					>
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurface.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Graphics\OSGGraphics.h"
-					>
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurface.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Graphics\OSGGraphics.inl"
-					>
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurface.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Graphics\OSGGraphics2D.cpp"
-					>
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Graphics\OSGGraphics2D.h"
-					>
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Graphics\OSGGraphics2D.inl"
-					>
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Graphics\OSGGraphics2DBase.cpp"
-					>
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Graphics\OSGGraphics2DBase.h"
-					>
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctor.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Graphics\OSGGraphics2DBase.inl"
-					>
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctor.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Graphics\OSGGraphics2DFields.h"
-					>
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctor.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Graphics\OSGGraphicsBase.cpp"
-					>
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctorBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Graphics\OSGGraphicsBase.h"
-					>
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctorBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Graphics\OSGGraphicsBase.inl"
-					>
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctorBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Graphics\OSGGraphicsFields.h"
-					>
+					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctorFields.h">
 				</File>
 				<Filter
-					Name="UIDrawObjects"
-					>
+					Name="Foreground">
 					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGArcUIDrawObject.cpp"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForeground.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGArcUIDrawObject.h"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForeground.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGArcUIDrawObject.inl"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForeground.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGArcUIDrawObjectBase.cpp"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGArcUIDrawObjectBase.h"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGArcUIDrawObjectBase.inl"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGArcUIDrawObjectFields.h"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGDiscUIDrawObject.cpp"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctor.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGDiscUIDrawObject.h"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctor.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGDiscUIDrawObject.inl"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctor.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGDiscUIDrawObjectBase.cpp"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctorBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGDiscUIDrawObjectBase.h"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctorBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGDiscUIDrawObjectBase.inl"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctorBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGDiscUIDrawObjectFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGLineUIDrawObject.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGLineUIDrawObject.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGLineUIDrawObject.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGLineUIDrawObjectBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGLineUIDrawObjectBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGLineUIDrawObjectBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGLineUIDrawObjectFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGMultiColoredQuadUIDrawObject.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGMultiColoredQuadUIDrawObject.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGMultiColoredQuadUIDrawObject.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGMultiColoredQuadUIDrawObjectBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGMultiColoredQuadUIDrawObjectBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGMultiColoredQuadUIDrawObjectBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGMultiColoredQuadUIDrawObjectFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGPolygonUIDrawObject.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGPolygonUIDrawObject.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGPolygonUIDrawObject.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGPolygonUIDrawObjectBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGPolygonUIDrawObjectBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGPolygonUIDrawObjectBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGPolygonUIDrawObjectFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGRectUIDrawObject.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGRectUIDrawObject.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGRectUIDrawObject.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGRectUIDrawObjectBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGRectUIDrawObjectBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGRectUIDrawObjectBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGRectUIDrawObjectFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTextUIDrawObject.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTextUIDrawObject.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTextUIDrawObject.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTextUIDrawObjectBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTextUIDrawObjectBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTextUIDrawObjectBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTextUIDrawObjectFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObject.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObject.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObject.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObjectBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObjectBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObjectBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGTexturedQuadUIDrawObjectFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGUIDrawObject.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGUIDrawObject.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGUIDrawObject.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGUIDrawObjectBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGUIDrawObjectBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGUIDrawObjectBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Graphics\UIDrawObjects\OSGUIDrawObjectFields.h"
-						>
-					</File>
-				</Filter>
-			</Filter>
-			<Filter
-				Name="UIDrawingSurface"
-				>
-				<File
-					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurface.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurface.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurface.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceFields.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctor.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctor.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctor.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctorBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctorBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctorBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\UIDrawingSurface\OSGUIDrawingSurfaceMouseTransformFunctorFields.h"
-					>
-				</File>
-				<Filter
-					Name="Foreground"
-					>
-					<File
-						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForeground.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForeground.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForeground.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctor.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctor.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctor.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctorBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctorBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctorBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctorFields.h"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\Foreground\OSGUIForegroundMouseTransformFunctorFields.h">
 					</File>
 				</Filter>
 				<Filter
-					Name="NodeCore"
-					>
+					Name="NodeCore">
 					<File
-						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangle.cpp"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangle.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangle.h"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangle.h">
 					</File>
 					<File
-						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangle.inl"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangle.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleBase.cpp"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleBase.h"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleBase.inl"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleFields.h"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleFields.h">
 					</File>
 					<File
-						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctor.cpp"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctor.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctor.h"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctor.h">
 					</File>
 					<File
-						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctor.inl"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctor.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctorBase.cpp"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctorBase.cpp">
 					</File>
 					<File
-						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctorBase.h"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctorBase.h">
 					</File>
 					<File
-						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctorBase.inl"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctorBase.inl">
 					</File>
 					<File
-						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctorFields.h"
-						>
+						RelativePath="..\..\src\UIDrawingSurface\NodeCore\OSGUIRectangleMouseTransformFunctorFields.h">
 					</File>
 				</Filter>
 			</Filter>
 			<Filter
-				Name="Layout"
-				>
+				Name="Layout">
 				<File
-					RelativePath="..\..\src\Layout\OSGAbsoluteLayout.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGAbsoluteLayout.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGAbsoluteLayout.h"
-					>
+					RelativePath="..\..\src\Layout\OSGAbsoluteLayout.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGAbsoluteLayout.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGAbsoluteLayout.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutBase.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutBase.h"
-					>
+					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutBase.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutConstraints.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutConstraints.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutConstraints.h"
-					>
+					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutConstraints.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutConstraints.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutConstraints.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutConstraintsBase.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutConstraintsBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutConstraintsBase.h"
-					>
+					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutConstraintsBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutConstraintsBase.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutConstraintsBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutConstraintsFields.h"
-					>
+					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutConstraintsFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutFields.h"
-					>
+					RelativePath="..\..\src\Layout\OSGAbsoluteLayoutFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBorderLayout.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGBorderLayout.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBorderLayout.h"
-					>
+					RelativePath="..\..\src\Layout\OSGBorderLayout.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBorderLayout.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGBorderLayout.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBorderLayoutBase.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGBorderLayoutBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBorderLayoutBase.h"
-					>
+					RelativePath="..\..\src\Layout\OSGBorderLayoutBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBorderLayoutBase.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGBorderLayoutBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBorderLayoutConstraints.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGBorderLayoutConstraints.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBorderLayoutConstraints.h"
-					>
+					RelativePath="..\..\src\Layout\OSGBorderLayoutConstraints.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBorderLayoutConstraints.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGBorderLayoutConstraints.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBorderLayoutConstraintsBase.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGBorderLayoutConstraintsBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBorderLayoutConstraintsBase.h"
-					>
+					RelativePath="..\..\src\Layout\OSGBorderLayoutConstraintsBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBorderLayoutConstraintsBase.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGBorderLayoutConstraintsBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBorderLayoutConstraintsFields.h"
-					>
+					RelativePath="..\..\src\Layout\OSGBorderLayoutConstraintsFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBorderLayoutFields.h"
-					>
+					RelativePath="..\..\src\Layout\OSGBorderLayoutFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBoxLayout.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGBoxLayout.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBoxLayout.h"
-					>
+					RelativePath="..\..\src\Layout\OSGBoxLayout.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBoxLayout.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGBoxLayout.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBoxLayoutBase.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGBoxLayoutBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBoxLayoutBase.h"
-					>
+					RelativePath="..\..\src\Layout\OSGBoxLayoutBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBoxLayoutBase.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGBoxLayoutBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBoxLayoutConstraints.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGBoxLayoutConstraints.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBoxLayoutConstraints.h"
-					>
+					RelativePath="..\..\src\Layout\OSGBoxLayoutConstraints.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBoxLayoutConstraints.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGBoxLayoutConstraints.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBoxLayoutConstraintsBase.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGBoxLayoutConstraintsBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBoxLayoutConstraintsBase.h"
-					>
+					RelativePath="..\..\src\Layout\OSGBoxLayoutConstraintsBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBoxLayoutConstraintsBase.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGBoxLayoutConstraintsBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBoxLayoutConstraintsFields.h"
-					>
+					RelativePath="..\..\src\Layout\OSGBoxLayoutConstraintsFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGBoxLayoutFields.h"
-					>
+					RelativePath="..\..\src\Layout\OSGBoxLayoutFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGCardLayout.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGCardLayout.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGCardLayout.h"
-					>
+					RelativePath="..\..\src\Layout\OSGCardLayout.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGCardLayout.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGCardLayout.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGCardLayoutBase.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGCardLayoutBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGCardLayoutBase.h"
-					>
+					RelativePath="..\..\src\Layout\OSGCardLayoutBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGCardLayoutBase.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGCardLayoutBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGCardLayoutConstraints.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGCardLayoutConstraints.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGCardLayoutConstraints.h"
-					>
+					RelativePath="..\..\src\Layout\OSGCardLayoutConstraints.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGCardLayoutConstraints.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGCardLayoutConstraints.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGCardLayoutConstraintsBase.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGCardLayoutConstraintsBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGCardLayoutConstraintsBase.h"
-					>
+					RelativePath="..\..\src\Layout\OSGCardLayoutConstraintsBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGCardLayoutConstraintsBase.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGCardLayoutConstraintsBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGCardLayoutConstraintsFields.h"
-					>
+					RelativePath="..\..\src\Layout\OSGCardLayoutConstraintsFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGCardLayoutFields.h"
-					>
+					RelativePath="..\..\src\Layout\OSGCardLayoutFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGFlowLayout.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGFlowLayout.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGFlowLayout.h"
-					>
+					RelativePath="..\..\src\Layout\OSGFlowLayout.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGFlowLayout.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGFlowLayout.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGFlowLayoutBase.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGFlowLayoutBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGFlowLayoutBase.h"
-					>
+					RelativePath="..\..\src\Layout\OSGFlowLayoutBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGFlowLayoutBase.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGFlowLayoutBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGFlowLayoutConstraints.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGFlowLayoutConstraints.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGFlowLayoutConstraints.h"
-					>
+					RelativePath="..\..\src\Layout\OSGFlowLayoutConstraints.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGFlowLayoutConstraints.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGFlowLayoutConstraints.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGFlowLayoutConstraintsBase.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGFlowLayoutConstraintsBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGFlowLayoutConstraintsBase.h"
-					>
+					RelativePath="..\..\src\Layout\OSGFlowLayoutConstraintsBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGFlowLayoutConstraintsBase.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGFlowLayoutConstraintsBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGFlowLayoutConstraintsFields.h"
-					>
+					RelativePath="..\..\src\Layout\OSGFlowLayoutConstraintsFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGFlowLayoutFields.h"
-					>
+					RelativePath="..\..\src\Layout\OSGFlowLayoutFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridBagLayout.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGGridBagLayout.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridBagLayout.h"
-					>
+					RelativePath="..\..\src\Layout\OSGGridBagLayout.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridBagLayout.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGGridBagLayout.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridBagLayoutBase.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridBagLayoutBase.h"
-					>
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridBagLayoutBase.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraints.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraints.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraints.h"
-					>
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraints.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraints.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraints.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraintsBase.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraintsBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraintsBase.h"
-					>
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraintsBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraintsBase.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraintsBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraintsFields.h"
-					>
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutConstraintsFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridBagLayoutFields.h"
-					>
+					RelativePath="..\..\src\Layout\OSGGridBagLayoutFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridLayout.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGGridLayout.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridLayout.h"
-					>
+					RelativePath="..\..\src\Layout\OSGGridLayout.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridLayout.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGGridLayout.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridLayoutBase.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGGridLayoutBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridLayoutBase.h"
-					>
+					RelativePath="..\..\src\Layout\OSGGridLayoutBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridLayoutBase.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGGridLayoutBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridLayoutConstraints.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGGridLayoutConstraints.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridLayoutConstraints.h"
-					>
+					RelativePath="..\..\src\Layout\OSGGridLayoutConstraints.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridLayoutConstraints.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGGridLayoutConstraints.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridLayoutConstraintsBase.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGGridLayoutConstraintsBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridLayoutConstraintsBase.h"
-					>
+					RelativePath="..\..\src\Layout\OSGGridLayoutConstraintsBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridLayoutConstraintsBase.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGGridLayoutConstraintsBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridLayoutConstraintsFields.h"
-					>
+					RelativePath="..\..\src\Layout\OSGGridLayoutConstraintsFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGGridLayoutFields.h"
-					>
+					RelativePath="..\..\src\Layout\OSGGridLayoutFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGLayout.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGLayout.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGLayout.h"
-					>
+					RelativePath="..\..\src\Layout\OSGLayout.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGLayout.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGLayout.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGLayoutBase.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGLayoutBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGLayoutBase.h"
-					>
+					RelativePath="..\..\src\Layout\OSGLayoutBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGLayoutBase.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGLayoutBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGLayoutConstraints.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGLayoutConstraints.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGLayoutConstraints.h"
-					>
+					RelativePath="..\..\src\Layout\OSGLayoutConstraints.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGLayoutConstraints.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGLayoutConstraints.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGLayoutConstraintsBase.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGLayoutConstraintsBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGLayoutConstraintsBase.h"
-					>
+					RelativePath="..\..\src\Layout\OSGLayoutConstraintsBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGLayoutConstraintsBase.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGLayoutConstraintsBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGLayoutConstraintsFields.h"
-					>
+					RelativePath="..\..\src\Layout\OSGLayoutConstraintsFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGLayoutFields.h"
-					>
+					RelativePath="..\..\src\Layout\OSGLayoutFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGOverlayLayout.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGOverlayLayout.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGOverlayLayout.h"
-					>
+					RelativePath="..\..\src\Layout\OSGOverlayLayout.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGOverlayLayout.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGOverlayLayout.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGOverlayLayoutBase.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGOverlayLayoutBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGOverlayLayoutBase.h"
-					>
+					RelativePath="..\..\src\Layout\OSGOverlayLayoutBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGOverlayLayoutBase.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGOverlayLayoutBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGOverlayLayoutConstraints.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGOverlayLayoutConstraints.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGOverlayLayoutConstraints.h"
-					>
+					RelativePath="..\..\src\Layout\OSGOverlayLayoutConstraints.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGOverlayLayoutConstraints.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGOverlayLayoutConstraints.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGOverlayLayoutConstraintsBase.cpp"
-					>
+					RelativePath="..\..\src\Layout\OSGOverlayLayoutConstraintsBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGOverlayLayoutConstraintsBase.h"
-					>
+					RelativePath="..\..\src\Layout\OSGOverlayLayoutConstraintsBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGOverlayLayoutConstraintsBase.inl"
-					>
+					RelativePath="..\..\src\Layout\OSGOverlayLayoutConstraintsBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGOverlayLayoutConstraintsFields.h"
-					>
+					RelativePath="..\..\src\Layout\OSGOverlayLayoutConstraintsFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Layout\OSGOverlayLayoutFields.h"
-					>
+					RelativePath="..\..\src\Layout\OSGOverlayLayoutFields.h">
 				</File>
 			</Filter>
 			<Filter
-				Name="Border"
-				>
+				Name="Border">
 				<File
-					RelativePath="..\..\src\Border\OSGBevelBorder.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGBevelBorder.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGBevelBorder.h"
-					>
+					RelativePath="..\..\src\Border\OSGBevelBorder.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGBevelBorder.inl"
-					>
+					RelativePath="..\..\src\Border\OSGBevelBorder.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGBevelBorderBase.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGBevelBorderBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGBevelBorderBase.h"
-					>
+					RelativePath="..\..\src\Border\OSGBevelBorderBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGBevelBorderBase.inl"
-					>
+					RelativePath="..\..\src\Border\OSGBevelBorderBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGBevelBorderFields.h"
-					>
+					RelativePath="..\..\src\Border\OSGBevelBorderFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGBorder.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGBorder.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGBorder.h"
-					>
+					RelativePath="..\..\src\Border\OSGBorder.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGBorder.inl"
-					>
+					RelativePath="..\..\src\Border\OSGBorder.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGBorderBase.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGBorderBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGBorderBase.h"
-					>
+					RelativePath="..\..\src\Border\OSGBorderBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGBorderBase.inl"
-					>
+					RelativePath="..\..\src\Border\OSGBorderBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGBorderFields.h"
-					>
+					RelativePath="..\..\src\Border\OSGBorderFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGBorders.h"
-					>
+					RelativePath="..\..\src\Border\OSGBorders.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGCompoundBorder.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGCompoundBorder.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGCompoundBorder.h"
-					>
+					RelativePath="..\..\src\Border\OSGCompoundBorder.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGCompoundBorder.inl"
-					>
+					RelativePath="..\..\src\Border\OSGCompoundBorder.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGCompoundBorderBase.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGCompoundBorderBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGCompoundBorderBase.h"
-					>
+					RelativePath="..\..\src\Border\OSGCompoundBorderBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGCompoundBorderBase.inl"
-					>
+					RelativePath="..\..\src\Border\OSGCompoundBorderBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGCompoundBorderFields.h"
-					>
+					RelativePath="..\..\src\Border\OSGCompoundBorderFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGEmptyBorder.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGEmptyBorder.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGEmptyBorder.h"
-					>
+					RelativePath="..\..\src\Border\OSGEmptyBorder.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGEmptyBorder.inl"
-					>
+					RelativePath="..\..\src\Border\OSGEmptyBorder.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGEmptyBorderBase.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGEmptyBorderBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGEmptyBorderBase.h"
-					>
+					RelativePath="..\..\src\Border\OSGEmptyBorderBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGEmptyBorderBase.inl"
-					>
+					RelativePath="..\..\src\Border\OSGEmptyBorderBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGEmptyBorderFields.h"
-					>
+					RelativePath="..\..\src\Border\OSGEmptyBorderFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGEtchedBorder.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGEtchedBorder.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGEtchedBorder.h"
-					>
+					RelativePath="..\..\src\Border\OSGEtchedBorder.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGEtchedBorder.inl"
-					>
+					RelativePath="..\..\src\Border\OSGEtchedBorder.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGEtchedBorderBase.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGEtchedBorderBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGEtchedBorderBase.h"
-					>
+					RelativePath="..\..\src\Border\OSGEtchedBorderBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGEtchedBorderBase.inl"
-					>
+					RelativePath="..\..\src\Border\OSGEtchedBorderBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGEtchedBorderFields.h"
-					>
+					RelativePath="..\..\src\Border\OSGEtchedBorderFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGLineBorder.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGLineBorder.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGLineBorder.h"
-					>
+					RelativePath="..\..\src\Border\OSGLineBorder.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGLineBorder.inl"
-					>
+					RelativePath="..\..\src\Border\OSGLineBorder.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGLineBorderBase.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGLineBorderBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGLineBorderBase.h"
-					>
+					RelativePath="..\..\src\Border\OSGLineBorderBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGLineBorderBase.inl"
-					>
+					RelativePath="..\..\src\Border\OSGLineBorderBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGLineBorderFields.h"
-					>
+					RelativePath="..\..\src\Border\OSGLineBorderFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGMatteBorder.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGMatteBorder.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGMatteBorder.h"
-					>
+					RelativePath="..\..\src\Border\OSGMatteBorder.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGMatteBorder.inl"
-					>
+					RelativePath="..\..\src\Border\OSGMatteBorder.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGMatteBorderBase.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGMatteBorderBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGMatteBorderBase.h"
-					>
+					RelativePath="..\..\src\Border\OSGMatteBorderBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGMatteBorderBase.inl"
-					>
+					RelativePath="..\..\src\Border\OSGMatteBorderBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGMatteBorderFields.h"
-					>
+					RelativePath="..\..\src\Border\OSGMatteBorderFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGMultiColorMatteBorder.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGMultiColorMatteBorder.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGMultiColorMatteBorder.h"
-					>
+					RelativePath="..\..\src\Border\OSGMultiColorMatteBorder.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGMultiColorMatteBorder.inl"
-					>
+					RelativePath="..\..\src\Border\OSGMultiColorMatteBorder.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGMultiColorMatteBorderBase.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGMultiColorMatteBorderBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGMultiColorMatteBorderBase.h"
-					>
+					RelativePath="..\..\src\Border\OSGMultiColorMatteBorderBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGMultiColorMatteBorderBase.inl"
-					>
+					RelativePath="..\..\src\Border\OSGMultiColorMatteBorderBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGMultiColorMatteBorderFields.h"
-					>
+					RelativePath="..\..\src\Border\OSGMultiColorMatteBorderFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorder.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorder.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorder.h"
-					>
+					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorder.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorder.inl"
-					>
+					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorder.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorderBase.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorderBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorderBase.h"
-					>
+					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorderBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorderBase.inl"
-					>
+					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorderBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorderFields.h"
-					>
+					RelativePath="..\..\src\Border\OSGRoundedCornerLineBorderFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGShadowBorder.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGShadowBorder.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGShadowBorder.h"
-					>
+					RelativePath="..\..\src\Border\OSGShadowBorder.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGShadowBorder.inl"
-					>
+					RelativePath="..\..\src\Border\OSGShadowBorder.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGShadowBorderBase.cpp"
-					>
+					RelativePath="..\..\src\Border\OSGShadowBorderBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGShadowBorderBase.h"
-					>
+					RelativePath="..\..\src\Border\OSGShadowBorderBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGShadowBorderBase.inl"
-					>
+					RelativePath="..\..\src\Border\OSGShadowBorderBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Border\OSGShadowBorderFields.h"
-					>
+					RelativePath="..\..\src\Border\OSGShadowBorderFields.h">
 				</File>
 			</Filter>
 			<Filter
-				Name="LookAndFeel"
-				>
+				Name="LookAndFeel">
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGDefaultLookAndFeel.cpp"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGDefaultLookAndFeel.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGDefaultLookAndFeel.h"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGDefaultLookAndFeel.h">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGDefaultLookAndFeel.inl"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGDefaultLookAndFeel.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGDefaultLookAndFeelBase.cpp"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGDefaultLookAndFeelBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGDefaultLookAndFeelBase.h"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGDefaultLookAndFeelBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGDefaultLookAndFeelBase.inl"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGDefaultLookAndFeelBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGDefaultLookAndFeelFields.h"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGDefaultLookAndFeelFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeel.cpp"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeel.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeel.h"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeel.h">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeel.inl"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeel.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeelBase.cpp"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeelBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeelBase.h"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeelBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeelBase.inl"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeelBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeelFields.h"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeelFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeelManager.cpp"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeelManager.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeelManager.h"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeelManager.h">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeelManager.inl"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGLookAndFeelManager.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGWindowsLookAndFeel.cpp"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGWindowsLookAndFeel.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGWindowsLookAndFeel.h"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGWindowsLookAndFeel.h">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGWindowsLookAndFeel.inl"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGWindowsLookAndFeel.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGWindowsLookAndFeelBase.cpp"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGWindowsLookAndFeelBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGWindowsLookAndFeelBase.h"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGWindowsLookAndFeelBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGWindowsLookAndFeelBase.inl"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGWindowsLookAndFeelBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\LookAndFeel\OSGWindowsLookAndFeelFields.h"
-					>
+					RelativePath="..\..\src\LookAndFeel\OSGWindowsLookAndFeelFields.h">
 				</File>
 			</Filter>
 			<Filter
-				Name="Util"
-				>
+				Name="Util">
 				<File
-					RelativePath="..\..\src\Util\OSGLineUtils.cpp"
-					>
+					RelativePath="..\..\src\Util\OSGLineUtils.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGLineUtils.h"
-					>
+					RelativePath="..\..\src\Util\OSGLineUtils.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGUIDefines.h"
-					>
+					RelativePath="..\..\src\Util\OSGUIDefines.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGUIDefines.inl"
-					>
+					RelativePath="..\..\src\Util\OSGUIDefines.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGUIDrawUtils.cpp"
-					>
+					RelativePath="..\..\src\Util\OSGUIDrawUtils.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGUIDrawUtils.h"
-					>
+					RelativePath="..\..\src\Util\OSGUIDrawUtils.h">
 				</File>
 			</Filter>
 			<Filter
-				Name="Text"
-				>
+				Name="Text">
 				<File
-					RelativePath="..\..\src\Text\OSGUIFont.cpp"
-					>
+					RelativePath="..\..\src\Text\OSGUIFont.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Text\OSGUIFont.h"
-					>
+					RelativePath="..\..\src\Text\OSGUIFont.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Text\OSGUIFont.inl"
-					>
+					RelativePath="..\..\src\Text\OSGUIFont.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Text\OSGUIFontBase.cpp"
-					>
+					RelativePath="..\..\src\Text\OSGUIFontBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Text\OSGUIFontBase.h"
-					>
+					RelativePath="..\..\src\Text\OSGUIFontBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Text\OSGUIFontBase.inl"
-					>
+					RelativePath="..\..\src\Text\OSGUIFontBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Text\OSGUIFontFields.h"
-					>
+					RelativePath="..\..\src\Text\OSGUIFontFields.h">
 				</File>
 			</Filter>
 			<Filter
-				Name="Background"
-				>
+				Name="Background">
 				<File
-					RelativePath="..\..\src\Background\OSGColorUIBackground.cpp"
-					>
+					RelativePath="..\..\src\Background\OSGColorUIBackground.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGColorUIBackground.h"
-					>
+					RelativePath="..\..\src\Background\OSGColorUIBackground.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGColorUIBackground.inl"
-					>
+					RelativePath="..\..\src\Background\OSGColorUIBackground.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGColorUIBackgroundBase.cpp"
-					>
+					RelativePath="..\..\src\Background\OSGColorUIBackgroundBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGColorUIBackgroundBase.h"
-					>
+					RelativePath="..\..\src\Background\OSGColorUIBackgroundBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGColorUIBackgroundBase.inl"
-					>
+					RelativePath="..\..\src\Background\OSGColorUIBackgroundBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGColorUIBackgroundFields.h"
-					>
+					RelativePath="..\..\src\Background\OSGColorUIBackgroundFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGCompoundUIBackground.cpp"
-					>
+					RelativePath="..\..\src\Background\OSGCompoundUIBackground.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGCompoundUIBackground.h"
-					>
+					RelativePath="..\..\src\Background\OSGCompoundUIBackground.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGCompoundUIBackground.inl"
-					>
+					RelativePath="..\..\src\Background\OSGCompoundUIBackground.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGCompoundUIBackgroundBase.cpp"
-					>
+					RelativePath="..\..\src\Background\OSGCompoundUIBackgroundBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGCompoundUIBackgroundBase.h"
-					>
+					RelativePath="..\..\src\Background\OSGCompoundUIBackgroundBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGCompoundUIBackgroundBase.inl"
-					>
+					RelativePath="..\..\src\Background\OSGCompoundUIBackgroundBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGCompoundUIBackgroundFields.h"
-					>
+					RelativePath="..\..\src\Background\OSGCompoundUIBackgroundFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGEmptyUIBackground.cpp"
-					>
+					RelativePath="..\..\src\Background\OSGEmptyUIBackground.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGEmptyUIBackground.h"
-					>
+					RelativePath="..\..\src\Background\OSGEmptyUIBackground.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGEmptyUIBackground.inl"
-					>
+					RelativePath="..\..\src\Background\OSGEmptyUIBackground.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGEmptyUIBackgroundBase.cpp"
-					>
+					RelativePath="..\..\src\Background\OSGEmptyUIBackgroundBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGEmptyUIBackgroundBase.h"
-					>
+					RelativePath="..\..\src\Background\OSGEmptyUIBackgroundBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGEmptyUIBackgroundBase.inl"
-					>
+					RelativePath="..\..\src\Background\OSGEmptyUIBackgroundBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGEmptyUIBackgroundFields.h"
-					>
+					RelativePath="..\..\src\Background\OSGEmptyUIBackgroundFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGGradientUIBackground.cpp"
-					>
+					RelativePath="..\..\src\Background\OSGGradientUIBackground.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGGradientUIBackground.h"
-					>
+					RelativePath="..\..\src\Background\OSGGradientUIBackground.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGGradientUIBackground.inl"
-					>
+					RelativePath="..\..\src\Background\OSGGradientUIBackground.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGGradientUIBackgroundBase.cpp"
-					>
+					RelativePath="..\..\src\Background\OSGGradientUIBackgroundBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGGradientUIBackgroundBase.h"
-					>
+					RelativePath="..\..\src\Background\OSGGradientUIBackgroundBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGGradientUIBackgroundBase.inl"
-					>
+					RelativePath="..\..\src\Background\OSGGradientUIBackgroundBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGGradientUIBackgroundFields.h"
-					>
+					RelativePath="..\..\src\Background\OSGGradientUIBackgroundFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGMaterialUIBackground.cpp"
-					>
+					RelativePath="..\..\src\Background\OSGMaterialUIBackground.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGMaterialUIBackground.h"
-					>
+					RelativePath="..\..\src\Background\OSGMaterialUIBackground.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGMaterialUIBackground.inl"
-					>
+					RelativePath="..\..\src\Background\OSGMaterialUIBackground.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGMaterialUIBackgroundBase.cpp"
-					>
+					RelativePath="..\..\src\Background\OSGMaterialUIBackgroundBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGMaterialUIBackgroundBase.h"
-					>
+					RelativePath="..\..\src\Background\OSGMaterialUIBackgroundBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGMaterialUIBackgroundBase.inl"
-					>
+					RelativePath="..\..\src\Background\OSGMaterialUIBackgroundBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGMaterialUIBackgroundFields.h"
-					>
+					RelativePath="..\..\src\Background\OSGMaterialUIBackgroundFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGTextureUIBackground.cpp"
-					>
+					RelativePath="..\..\src\Background\OSGTextureUIBackground.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGTextureUIBackground.h"
-					>
+					RelativePath="..\..\src\Background\OSGTextureUIBackground.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGTextureUIBackground.inl"
-					>
+					RelativePath="..\..\src\Background\OSGTextureUIBackground.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGTextureUIBackgroundBase.cpp"
-					>
+					RelativePath="..\..\src\Background\OSGTextureUIBackgroundBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGTextureUIBackgroundBase.h"
-					>
+					RelativePath="..\..\src\Background\OSGTextureUIBackgroundBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGTextureUIBackgroundBase.inl"
-					>
+					RelativePath="..\..\src\Background\OSGTextureUIBackgroundBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGTextureUIBackgroundFields.h"
-					>
+					RelativePath="..\..\src\Background\OSGTextureUIBackgroundFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGUIBackground.cpp"
-					>
+					RelativePath="..\..\src\Background\OSGUIBackground.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGUIBackground.h"
-					>
+					RelativePath="..\..\src\Background\OSGUIBackground.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGUIBackground.inl"
-					>
+					RelativePath="..\..\src\Background\OSGUIBackground.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGUIBackgroundBase.cpp"
-					>
+					RelativePath="..\..\src\Background\OSGUIBackgroundBase.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGUIBackgroundBase.h"
-					>
+					RelativePath="..\..\src\Background\OSGUIBackgroundBase.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGUIBackgroundBase.inl"
-					>
+					RelativePath="..\..\src\Background\OSGUIBackgroundBase.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGUIBackgroundFields.h"
-					>
+					RelativePath="..\..\src\Background\OSGUIBackgroundFields.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Background\OSGUIBackgrounds.h"
-					>
+					RelativePath="..\..\src\Background\OSGUIBackgrounds.h">
 				</File>
 			</Filter>
 			<Filter
-				Name="Event"
-				>
+				Name="Event">
 				<File
-					RelativePath="..\..\src\Event\OSGActionEvent.cpp"
-					>
+					RelativePath="..\..\src\Event\OSGActionEvent.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGActionEvent.h"
-					>
+					RelativePath="..\..\src\Event\OSGActionEvent.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGActionEvent.inl"
-					>
+					RelativePath="..\..\src\Event\OSGActionEvent.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGActionListener.h"
-					>
+					RelativePath="..\..\src\Event\OSGActionListener.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGAdjustmentEvent.cpp"
-					>
+					RelativePath="..\..\src\Event\OSGAdjustmentEvent.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGAdjustmentEvent.h"
-					>
+					RelativePath="..\..\src\Event\OSGAdjustmentEvent.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGAdjustmentEvent.inl"
-					>
+					RelativePath="..\..\src\Event\OSGAdjustmentEvent.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGAdjustmentListener.h"
-					>
+					RelativePath="..\..\src\Event\OSGAdjustmentListener.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGButtonSelectedEvent.cpp"
-					>
+					RelativePath="..\..\src\Event\OSGButtonSelectedEvent.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGButtonSelectedEvent.h"
-					>
+					RelativePath="..\..\src\Event\OSGButtonSelectedEvent.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGButtonSelectedEvent.inl"
-					>
+					RelativePath="..\..\src\Event\OSGButtonSelectedEvent.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGButtonSelectedListener.h"
-					>
+					RelativePath="..\..\src\Event\OSGButtonSelectedListener.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGChangeEvent.cpp"
-					>
+					RelativePath="..\..\src\Event\OSGChangeEvent.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGChangeEvent.h"
-					>
+					RelativePath="..\..\src\Event\OSGChangeEvent.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGChangeEvent.inl"
-					>
+					RelativePath="..\..\src\Event\OSGChangeEvent.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGChangeListener.h"
-					>
+					RelativePath="..\..\src\Event\OSGChangeListener.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGComponentEvent.cpp"
-					>
+					RelativePath="..\..\src\Event\OSGComponentEvent.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGComponentEvent.h"
-					>
+					RelativePath="..\..\src\Event\OSGComponentEvent.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGComponentEvent.inl"
-					>
+					RelativePath="..\..\src\Event\OSGComponentEvent.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGComponentListener.h"
-					>
+					RelativePath="..\..\src\Event\OSGComponentListener.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGFocusEvent.cpp"
-					>
+					RelativePath="..\..\src\Event\OSGFocusEvent.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGFocusEvent.h"
-					>
+					RelativePath="..\..\src\Event\OSGFocusEvent.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGFocusEvent.inl"
-					>
+					RelativePath="..\..\src\Event\OSGFocusEvent.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGFocusListener.h"
-					>
+					RelativePath="..\..\src\Event\OSGFocusListener.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGKeyAcceleratorEvent.cpp"
-					>
+					RelativePath="..\..\src\Event\OSGKeyAcceleratorEvent.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGKeyAcceleratorEvent.h"
-					>
+					RelativePath="..\..\src\Event\OSGKeyAcceleratorEvent.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGKeyAcceleratorEvent.inl"
-					>
+					RelativePath="..\..\src\Event\OSGKeyAcceleratorEvent.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGKeyAcceleratorListener.h"
-					>
+					RelativePath="..\..\src\Event\OSGKeyAcceleratorListener.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMenuEvent.cpp"
-					>
+					RelativePath="..\..\src\Event\OSGMenuEvent.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMenuEvent.h"
-					>
+					RelativePath="..\..\src\Event\OSGMenuEvent.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMenuEvent.inl"
-					>
+					RelativePath="..\..\src\Event\OSGMenuEvent.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGMenuListener.h"
-					>
+					RelativePath="..\..\src\Event\OSGMenuListener.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGPopupMenuEvent.cpp"
-					>
+					RelativePath="..\..\src\Event\OSGPopupMenuEvent.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGPopupMenuEvent.h"
-					>
+					RelativePath="..\..\src\Event\OSGPopupMenuEvent.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGPopupMenuEvent.inl"
-					>
+					RelativePath="..\..\src\Event\OSGPopupMenuEvent.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGPopupMenuListener.h"
-					>
+					RelativePath="..\..\src\Event\OSGPopupMenuListener.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGTextEvent.cpp"
-					>
+					RelativePath="..\..\src\Event\OSGTextEvent.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGTextEvent.h"
-					>
+					RelativePath="..\..\src\Event\OSGTextEvent.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGTextEvent.inl"
-					>
+					RelativePath="..\..\src\Event\OSGTextEvent.inl">
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGTextListener.h"
-					>
+					RelativePath="..\..\src\Event\OSGTextListener.h">
 				</File>
 			</Filter>
 			<Filter
-				Name="Editors"
-				>
+				Name="Editors">
 				<File
-					RelativePath="..\..\src\Editors\OSGAbstractCellEditor.cpp"
-					>
+					RelativePath="..\..\src\Editors\OSGAbstractCellEditor.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\Editors\OSGAbstractCellEditor.h"
-					>
+					RelativePath="..\..\src\Editors\OSGAbstractCellEditor.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Editors\OSGCellEditor.h"
-					>
+					RelativePath="..\..\src\Editors\OSGCellEditor.h">
 				</File>
 				<File
-					RelativePath="..\..\src\Editors\OSGCellEditorListener.h"
-					>
+					RelativePath="..\..\src\Editors\OSGCellEditorListener.h">
 				</File>
 			</Filter>
 		</Filter>
