@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -124,6 +124,13 @@ SFUInt32 *SpinnerBase::getSFOrientation(void)
     return &_sfOrientation;
 }
 
+//! Get the Spinner::_sfEditorToButtonOffset field.
+inline
+SFUInt32 *SpinnerBase::getSFEditorToButtonOffset(void)
+{
+    return &_sfEditorToButtonOffset;
+}
+
 
 //! Get the value of the Spinner::_sfNextButton field.
 inline
@@ -207,6 +214,27 @@ inline
 void SpinnerBase::setOrientation(const UInt32 &value)
 {
     _sfOrientation.setValue(value);
+}
+
+//! Get the value of the Spinner::_sfEditorToButtonOffset field.
+inline
+UInt32 &SpinnerBase::getEditorToButtonOffset(void)
+{
+    return _sfEditorToButtonOffset.getValue();
+}
+
+//! Get the value of the Spinner::_sfEditorToButtonOffset field.
+inline
+const UInt32 &SpinnerBase::getEditorToButtonOffset(void) const
+{
+    return _sfEditorToButtonOffset.getValue();
+}
+
+//! Set the value of the Spinner::_sfEditorToButtonOffset field.
+inline
+void SpinnerBase::setEditorToButtonOffset(const UInt32 &value)
+{
+    _sfEditorToButtonOffset.setValue(value);
 }
 
 

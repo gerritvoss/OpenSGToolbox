@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Spinner
+ **     class ProgressBar
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGSPINNERBASE_H_
-#define _OSGSPINNERBASE_H_
+#ifndef _OSGPROGRESSBARBASE_H_
+#define _OSGPROGRESSBARBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,49 +65,67 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "Component/OSGComponent.h" // Parent
 
-#include "Component/Button/OSGButton.h" // NextButton type
-#include "Component/Button/OSGButton.h" // PreviousButton type
-#include "Component/OSGComponentFields.h" // Editor type
+#include <OpenSG/OSGBoolFields.h> // Indeterminate type
+#include <OpenSG/OSGReal32Fields.h> // IndeterminateBarMoveRate type
+#include <OpenSG/OSGReal32Fields.h> // IndeterminateBarSize type
+#include <OpenSG/OSGBoolFields.h> // EnableProgressString type
+#include <OpenSG/OSGStringFields.h> // ProgressString type
+#include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
+#include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
+#include "Text/OSGUIFont.h" // Font type
+#include <OpenSG/OSGColor4fFields.h> // TextColor type
 #include "Util/OSGUIDefines.h" // Orientation type
-#include <OpenSG/OSGUInt32Fields.h> // EditorToButtonOffset type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // ProgressBarDrawObject type
 
-#include "OSGSpinnerFields.h"
+#include "OSGProgressBarFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Spinner;
+class ProgressBar;
 class BinaryDataHandler;
 
-//! \brief Spinner Base Class.
+//! \brief ProgressBar Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING SpinnerBase : public Container
+class OSG_USERINTERFACELIB_DLLMAPPING ProgressBarBase : public Component
 {
   private:
 
-    typedef Container    Inherited;
+    typedef Component    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef SpinnerPtr  Ptr;
+    typedef ProgressBarPtr  Ptr;
 
     enum
     {
-        NextButtonFieldId           = Inherited::NextFieldId,
-        PreviousButtonFieldId       = NextButtonFieldId           + 1,
-        EditorFieldId               = PreviousButtonFieldId       + 1,
-        OrientationFieldId          = EditorFieldId               + 1,
-        EditorToButtonOffsetFieldId = OrientationFieldId          + 1,
-        NextFieldId                 = EditorToButtonOffsetFieldId + 1
+        IndeterminateFieldId            = Inherited::NextFieldId,
+        IndeterminateBarMoveRateFieldId = IndeterminateFieldId            + 1,
+        IndeterminateBarSizeFieldId     = IndeterminateBarMoveRateFieldId + 1,
+        EnableProgressStringFieldId     = IndeterminateBarSizeFieldId     + 1,
+        ProgressStringFieldId           = EnableProgressStringFieldId     + 1,
+        VerticalAlignmentFieldId        = ProgressStringFieldId           + 1,
+        HorizontalAlignmentFieldId      = VerticalAlignmentFieldId        + 1,
+        FontFieldId                     = HorizontalAlignmentFieldId      + 1,
+        TextColorFieldId                = FontFieldId                     + 1,
+        OrientationFieldId              = TextColorFieldId                + 1,
+        ProgressBarDrawObjectFieldId    = OrientationFieldId              + 1,
+        NextFieldId                     = ProgressBarDrawObjectFieldId    + 1
     };
 
-    static const OSG::BitVector NextButtonFieldMask;
-    static const OSG::BitVector PreviousButtonFieldMask;
-    static const OSG::BitVector EditorFieldMask;
+    static const OSG::BitVector IndeterminateFieldMask;
+    static const OSG::BitVector IndeterminateBarMoveRateFieldMask;
+    static const OSG::BitVector IndeterminateBarSizeFieldMask;
+    static const OSG::BitVector EnableProgressStringFieldMask;
+    static const OSG::BitVector ProgressStringFieldMask;
+    static const OSG::BitVector VerticalAlignmentFieldMask;
+    static const OSG::BitVector HorizontalAlignmentFieldMask;
+    static const OSG::BitVector FontFieldMask;
+    static const OSG::BitVector TextColorFieldMask;
     static const OSG::BitVector OrientationFieldMask;
-    static const OSG::BitVector EditorToButtonOffsetFieldMask;
+    static const OSG::BitVector ProgressBarDrawObjectFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -134,33 +152,57 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFButtonPtr         *getSFNextButton     (void);
-           SFButtonPtr         *getSFPreviousButton (void);
-           SFComponentPtr      *getSFEditor         (void);
+           SFBool              *getSFIndeterminate  (void);
+           SFReal32            *getSFIndeterminateBarMoveRate(void);
+           SFReal32            *getSFIndeterminateBarSize(void);
+           SFBool              *getSFEnableProgressString(void);
+           SFString            *getSFProgressString (void);
+           SFReal32            *getSFVerticalAlignment(void);
+           SFReal32            *getSFHorizontalAlignment(void);
+           SFUIFontPtr         *getSFFont           (void);
+           SFColor4f           *getSFTextColor      (void);
            SFUInt32            *getSFOrientation    (void);
-           SFUInt32            *getSFEditorToButtonOffset(void);
+           SFUIDrawObjectCanvasPtr *getSFProgressBarDrawObject(void);
 
-           ButtonPtr           &getNextButton     (void);
-     const ButtonPtr           &getNextButton     (void) const;
-           ButtonPtr           &getPreviousButton (void);
-     const ButtonPtr           &getPreviousButton (void) const;
-           ComponentPtr        &getEditor         (void);
-     const ComponentPtr        &getEditor         (void) const;
+           bool                &getIndeterminate  (void);
+     const bool                &getIndeterminate  (void) const;
+           Real32              &getIndeterminateBarMoveRate(void);
+     const Real32              &getIndeterminateBarMoveRate(void) const;
+           Real32              &getIndeterminateBarSize(void);
+     const Real32              &getIndeterminateBarSize(void) const;
+           bool                &getEnableProgressString(void);
+     const bool                &getEnableProgressString(void) const;
+           std::string         &getProgressString (void);
+     const std::string         &getProgressString (void) const;
+           Real32              &getVerticalAlignment(void);
+     const Real32              &getVerticalAlignment(void) const;
+           Real32              &getHorizontalAlignment(void);
+     const Real32              &getHorizontalAlignment(void) const;
+           UIFontPtr           &getFont           (void);
+     const UIFontPtr           &getFont           (void) const;
+           Color4f             &getTextColor      (void);
+     const Color4f             &getTextColor      (void) const;
            UInt32              &getOrientation    (void);
      const UInt32              &getOrientation    (void) const;
-           UInt32              &getEditorToButtonOffset(void);
-     const UInt32              &getEditorToButtonOffset(void) const;
+           UIDrawObjectCanvasPtr &getProgressBarDrawObject(void);
+     const UIDrawObjectCanvasPtr &getProgressBarDrawObject(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setNextButton     ( const ButtonPtr &value );
-     void setPreviousButton ( const ButtonPtr &value );
-     void setEditor         ( const ComponentPtr &value );
+     void setIndeterminate  ( const bool &value );
+     void setIndeterminateBarMoveRate( const Real32 &value );
+     void setIndeterminateBarSize( const Real32 &value );
+     void setEnableProgressString( const bool &value );
+     void setProgressString ( const std::string &value );
+     void setVerticalAlignment( const Real32 &value );
+     void setHorizontalAlignment( const Real32 &value );
+     void setFont           ( const UIFontPtr &value );
+     void setTextColor      ( const Color4f &value );
      void setOrientation    ( const UInt32 &value );
-     void setEditorToButtonOffset( const UInt32 &value );
+     void setProgressBarDrawObject( const UIDrawObjectCanvasPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -184,8 +226,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerBase : public Container
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  SpinnerPtr      create          (void); 
-    static  SpinnerPtr      createEmpty     (void); 
+    static  ProgressBarPtr      create          (void); 
+    static  ProgressBarPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -203,26 +245,32 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFButtonPtr         _sfNextButton;
-    SFButtonPtr         _sfPreviousButton;
-    SFComponentPtr      _sfEditor;
+    SFBool              _sfIndeterminate;
+    SFReal32            _sfIndeterminateBarMoveRate;
+    SFReal32            _sfIndeterminateBarSize;
+    SFBool              _sfEnableProgressString;
+    SFString            _sfProgressString;
+    SFReal32            _sfVerticalAlignment;
+    SFReal32            _sfHorizontalAlignment;
+    SFUIFontPtr         _sfFont;
+    SFColor4f           _sfTextColor;
     SFUInt32            _sfOrientation;
-    SFUInt32            _sfEditorToButtonOffset;
+    SFUIDrawObjectCanvasPtr   _sfProgressBarDrawObject;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    SpinnerBase(void);
-    SpinnerBase(const SpinnerBase &source);
+    ProgressBarBase(void);
+    ProgressBarBase(const ProgressBarBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SpinnerBase(void); 
+    virtual ~ProgressBarBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -230,13 +278,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerBase : public Container
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      SpinnerBase *pOther,
+    void executeSyncImpl(      ProgressBarBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      SpinnerBase *pOther,
+    void executeSyncImpl(      ProgressBarBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -266,7 +314,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerBase : public Container
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const SpinnerBase &source);
+    void operator =(const ProgressBarBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -274,17 +322,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerBase : public Container
 //---------------------------------------------------------------------------
 
 
-typedef SpinnerBase *SpinnerBaseP;
+typedef ProgressBarBase *ProgressBarBaseP;
 
-typedef osgIF<SpinnerBase::isNodeCore,
-              CoredNodePtr<Spinner>,
+typedef osgIF<ProgressBarBase::isNodeCore,
+              CoredNodePtr<ProgressBar>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet SpinnerNodePtr;
+              >::_IRet ProgressBarNodePtr;
 
-typedef RefPtr<SpinnerPtr> SpinnerRefPtr;
+typedef RefPtr<ProgressBarPtr> ProgressBarRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGSPINNERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGPROGRESSBARBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGSPINNERBASE_H_ */
+#endif /* _OSGPROGRESSBARBASE_H_ */

@@ -52,4 +52,13 @@ A UI Spinner.
 		defaultValue="VERTICAL_ALIGNMENT"
 	>
 	</Field>
+	<Field
+		name="EditorToButtonOffset"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1"
+	>
+	</Field>
 </FieldContainer>

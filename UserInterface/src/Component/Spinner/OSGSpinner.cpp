@@ -104,7 +104,7 @@ void Spinner::updateLayout(void)
         if(getEditor() != NullFC)
         {
             beginEditCP(getEditor(), PositionFieldMask | SizeFieldMask);
-                getEditor()->setSize(Vec2s(getSize().x() - getNextButton()->getSize().x(), getSize().y()));
+                getEditor()->setSize(Vec2s(getSize().x() - getNextButton()->getSize().x() - getEditorToButtonOffset(), getSize().y()));
                 getEditor()->setPosition(Pnt2s(0,0));
             endEditCP(getEditor(), PositionFieldMask | SizeFieldMask);
         }
@@ -134,7 +134,7 @@ void Spinner::updateLayout(void)
         if(getEditor() != NullFC)
         {
             beginEditCP(getEditor(), PositionFieldMask | SizeFieldMask);
-                getEditor()->setSize(Vec2s(getSize().x(), getSize().y() - getNextButton()->getSize().y()));
+                getEditor()->setSize(Vec2s(getSize().x(), getSize().y() - getNextButton()->getSize().y() - getEditorToButtonOffset()));
                 getEditor()->setPosition(Pnt2s(0,0));
             endEditCP(getEditor(), PositionFieldMask | SizeFieldMask);
         }

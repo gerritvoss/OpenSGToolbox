@@ -94,6 +94,8 @@
 
 #include "Component/Spinner/OSGSpinner.h"
 #include "Component/Spinner/Editors/OSGSpinnerDefaultEditor.h"
+
+#include "Component/ProgressBar/OSGProgressBar.h"
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -2885,6 +2887,7 @@ void WindowsLookAndFeel::init(void)
         WindowsSpinnerPreviousButton->setFocusedDrawObject(WindowsSpinnerPreviousButtonCanvas);
         WindowsSpinnerPreviousButton->setRolloverDrawObject(WindowsSpinnerPreviousButtonCanvas);
         WindowsSpinnerPreviousButton->setDisabledDrawObject(WindowsSpinnerPreviousButtonCanvas);
+
     beginEditCP(WindowsSpinnerPreviousButton);
 
 	//Windows SpinnerBorder
@@ -2919,6 +2922,7 @@ void WindowsLookAndFeel::init(void)
         //Spinner
         WindowsSpinner->setNextButton(WindowsSpinnerNextButton);
         WindowsSpinner->setPreviousButton(WindowsSpinnerPreviousButton);
+		WindowsSpinner->setEditorToButtonOffset(2);
     endEditCP(WindowsSpinner);
     
     Spinner::getClassType().setPrototype(WindowsSpinner);
@@ -2970,6 +2974,84 @@ void WindowsLookAndFeel::init(void)
     endEditCP(WindowsSpinnerDefaultEditor);
 
     SpinnerDefaultEditor::getClassType().setPrototype(WindowsSpinnerDefaultEditor);
+	
+	//************************** ProgressBar *****************************
+	//Windows ProgressBarBorder
+	RoundedCornerLineBorderPtr WindowsProgressBarBorder = RoundedCornerLineBorder::create();
+	beginEditCP(WindowsProgressBarBorder);
+		WindowsProgressBarBorder->setColor( Color4f(0.0, 0.0, 0.0 ,1.0) );
+		WindowsProgressBarBorder->setWidth(1);
+        WindowsProgressBarBorder->setCornerRadius(5);
+	endEditCP(WindowsProgressBarBorder);
+	
+	//Windows ProgressBarBackground
+	ColorUIBackgroundPtr ProgressBarBackground = ColorUIBackground::create();
+	beginEditCP(ProgressBarBackground);
+		ProgressBarBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
+	endEditCP(ProgressBarBackground);
+	
+	//Windows ProgressBarDrawObjectBackground
+	ColorUIBackgroundPtr ProgressBarDrawObjectBackground = ColorUIBackground::create();
+	beginEditCP(ProgressBarDrawObjectBackground);
+		ProgressBarDrawObjectBackground->setColor(Color4f(0.0, 1.0, 0.0, 1.0));
+	endEditCP(ProgressBarDrawObjectBackground);
+
+	//ProgressBar DrawObjectCanvas
+	UIDrawObjectCanvasPtr WindowsProgressBarCanvas = UIDrawObjectCanvas::create();
+	beginEditCP(WindowsProgressBarCanvas);
+		//Border
+		WindowsProgressBarCanvas->setBorder(WindowsEmptyBorder);
+		WindowsProgressBarCanvas->setRolloverBorder(WindowsEmptyBorder);
+		WindowsProgressBarCanvas->setFocusedBorder(WindowsEmptyBorder);
+		WindowsProgressBarCanvas->setDisabledBorder(WindowsEmptyBorder);
+		
+		//Background
+		WindowsProgressBarCanvas->setBackground(ProgressBarDrawObjectBackground);
+		WindowsProgressBarCanvas->setRolloverBackground(ProgressBarDrawObjectBackground);
+		WindowsProgressBarCanvas->setFocusedBackground(ProgressBarDrawObjectBackground);
+		WindowsProgressBarCanvas->setDisabledBackground(ProgressBarDrawObjectBackground);
+	endEditCP(WindowsProgressBarCanvas);
+
+	//ProgressBar
+    ProgressBarPtr WindowsProgressBar = ProgressBar::create();
+    beginEditCP(WindowsProgressBar);
+		WindowsProgressBar->setConstraints(NullFC);
+		//Sizes
+		WindowsProgressBar->setMinSize(Vec2s(0,0));
+		WindowsProgressBar->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsProgressBar->setPreferredSize(Vec2s(200,27));
+
+		//Border
+		WindowsProgressBar->setBorder(WindowsProgressBarBorder);
+		WindowsProgressBar->setRolloverBorder(WindowsProgressBarBorder);
+		WindowsProgressBar->setFocusedBorder(WindowsProgressBarBorder);
+		WindowsProgressBar->setDisabledBorder(WindowsProgressBarBorder);
+		
+		//Background
+		WindowsProgressBar->setBackground(ProgressBarBackground);
+		WindowsProgressBar->setRolloverBackground(ProgressBarBackground);
+		WindowsProgressBar->setFocusedBackground(ProgressBarBackground);
+		WindowsProgressBar->setDisabledBackground(ProgressBarBackground);
+		
+		//Opacity
+		WindowsProgressBar->setOpacity(1.0);
+
+        //ProgressBar
+        WindowsProgressBar->setOrientation(HORIZONTAL_ALIGNMENT);
+        WindowsProgressBar->setIndeterminate(false);
+        WindowsProgressBar->setIndeterminateBarMoveRate(false);
+        WindowsProgressBar->setIndeterminateBarSize(false);
+        WindowsProgressBar->setEnableProgressString(false);
+		WindowsProgressBar->setProgressString(std::string(""));
+        WindowsProgressBar->setVerticalAlignment(0.5);
+        WindowsProgressBar->setHorizontalAlignment(0.5);
+        WindowsProgressBar->setFont(WindowsFont);
+        WindowsProgressBar->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+        WindowsProgressBar->setProgressBarDrawObject(WindowsProgressBarCanvas);
+    endEditCP(WindowsProgressBar);
+    
+    ProgressBar::getClassType().setPrototype(WindowsProgressBar);
+
 	//************************** TableHeader *****************************
 	//Windows RotatedComponentBorder
 	EmptyBorderPtr WindowsTableHeaderBorder = EmptyBorder::create();

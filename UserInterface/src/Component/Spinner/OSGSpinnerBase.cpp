@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -76,6 +76,9 @@ const OSG::BitVector  SpinnerBase::EditorFieldMask =
 const OSG::BitVector  SpinnerBase::OrientationFieldMask = 
     (TypeTraits<BitVector>::One << SpinnerBase::OrientationFieldId);
 
+const OSG::BitVector  SpinnerBase::EditorToButtonOffsetFieldMask = 
+    (TypeTraits<BitVector>::One << SpinnerBase::EditorToButtonOffsetFieldId);
+
 const OSG::BitVector SpinnerBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -93,6 +96,9 @@ const OSG::BitVector SpinnerBase::MTInfluenceMask =
     
 */
 /*! \var UInt32          SpinnerBase::_sfOrientation
+    
+*/
+/*! \var UInt32          SpinnerBase::_sfEditorToButtonOffset
     
 */
 
@@ -119,7 +125,12 @@ FieldDescription *SpinnerBase::_desc[] =
                      "Orientation", 
                      OrientationFieldId, OrientationFieldMask,
                      false,
-                     (FieldAccessMethod) &SpinnerBase::getSFOrientation)
+                     (FieldAccessMethod) &SpinnerBase::getSFOrientation),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "EditorToButtonOffset", 
+                     EditorToButtonOffsetFieldId, EditorToButtonOffsetFieldMask,
+                     false,
+                     (FieldAccessMethod) &SpinnerBase::getSFEditorToButtonOffset)
 };
 
 
@@ -199,6 +210,7 @@ SpinnerBase::SpinnerBase(void) :
     _sfPreviousButton         (ButtonPtr(NullFC)), 
     _sfEditor                 (ComponentPtr(NullFC)), 
     _sfOrientation            (UInt32(VERTICAL_ALIGNMENT)), 
+    _sfEditorToButtonOffset   (UInt32(1)), 
     Inherited() 
 {
 }
@@ -212,6 +224,7 @@ SpinnerBase::SpinnerBase(const SpinnerBase &source) :
     _sfPreviousButton         (source._sfPreviousButton         ), 
     _sfEditor                 (source._sfEditor                 ), 
     _sfOrientation            (source._sfOrientation            ), 
+    _sfEditorToButtonOffset   (source._sfEditorToButtonOffset   ), 
     Inherited                 (source)
 {
 }
@@ -248,6 +261,11 @@ UInt32 SpinnerBase::getBinSize(const BitVector &whichField)
         returnValue += _sfOrientation.getBinSize();
     }
 
+    if(FieldBits::NoField != (EditorToButtonOffsetFieldMask & whichField))
+    {
+        returnValue += _sfEditorToButtonOffset.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -275,6 +293,11 @@ void SpinnerBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
         _sfOrientation.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EditorToButtonOffsetFieldMask & whichField))
+    {
+        _sfEditorToButtonOffset.copyToBin(pMem);
     }
 
 
@@ -305,6 +328,11 @@ void SpinnerBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfOrientation.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (EditorToButtonOffsetFieldMask & whichField))
+    {
+        _sfEditorToButtonOffset.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -327,6 +355,9 @@ void SpinnerBase::executeSyncImpl(      SpinnerBase *pOther,
     if(FieldBits::NoField != (OrientationFieldMask & whichField))
         _sfOrientation.syncWith(pOther->_sfOrientation);
 
+    if(FieldBits::NoField != (EditorToButtonOffsetFieldMask & whichField))
+        _sfEditorToButtonOffset.syncWith(pOther->_sfEditorToButtonOffset);
+
 
 }
 #else
@@ -348,6 +379,9 @@ void SpinnerBase::executeSyncImpl(      SpinnerBase *pOther,
 
     if(FieldBits::NoField != (OrientationFieldMask & whichField))
         _sfOrientation.syncWith(pOther->_sfOrientation);
+
+    if(FieldBits::NoField != (EditorToButtonOffsetFieldMask & whichField))
+        _sfEditorToButtonOffset.syncWith(pOther->_sfEditorToButtonOffset);
 
 
 

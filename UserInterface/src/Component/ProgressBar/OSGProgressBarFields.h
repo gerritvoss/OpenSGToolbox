@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGSPINNERFIELDS_H_
-#define _OSGSPINNERFIELDS_H_
+#ifndef _OSGPROGRESSBARFIELDS_H_
+#define _OSGPROGRESSBARFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "Component/Container/OSGContainerFields.h"
+#include "Component/OSGComponentFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Spinner;
+class ProgressBar;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! SpinnerPtr
+//! ProgressBarPtr
 
-typedef FCPtr<ContainerPtr, Spinner> SpinnerPtr;
+typedef FCPtr<ComponentPtr, ProgressBar> ProgressBarPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<ContainerPtr, Spinner> SpinnerPtr;
 #endif
 
 template <>
-struct FieldDataTraits<SpinnerPtr> : 
-    public FieldTraitsRecurseMapper<SpinnerPtr, true>
+struct FieldDataTraits<ProgressBarPtr> : 
+    public FieldTraitsRecurseMapper<ProgressBarPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<SpinnerPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFSpinnerPtr"; }
-    static const char *getMName(void) { return "MFSpinnerPtr"; }
+    static const char *getSName(void) { return "SFProgressBarPtr"; }
+    static const char *getMName(void) { return "MFProgressBarPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<SpinnerPtr, true>
+/*! \class  FieldTraitsRecurseMapper<ProgressBarPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<SpinnerPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldSingle */
 
-typedef SField<SpinnerPtr> SFSpinnerPtr;
+typedef SField<ProgressBarPtr> SFProgressBarPtr;
 #endif
 
-#ifndef OSG_COMPILESPINNERINST
-OSG_DLLEXPORT_DECL1(SField, SpinnerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEPROGRESSBARINST
+OSG_DLLEXPORT_DECL1(SField, ProgressBarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<SpinnerPtr> MFSpinnerPtr;
+typedef MField<ProgressBarPtr> MFProgressBarPtr;
 #endif
 
-#ifndef OSG_COMPILESPINNERINST
-OSG_DLLEXPORT_DECL1(MField, SpinnerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEPROGRESSBARINST
+OSG_DLLEXPORT_DECL1(MField, ProgressBarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGSPINNERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGPROGRESSBARFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGSPINNERFIELDS_H_ */
+#endif /* _OSGPROGRESSBARFIELDS_H_ */

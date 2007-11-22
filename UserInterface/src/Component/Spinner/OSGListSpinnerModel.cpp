@@ -125,7 +125,8 @@ void ListSpinnerModel::setValue(SharedFieldPtr value)
 
 void ListSpinnerModel::setValue(const std::string& value)
 {
-    for(FieldListIter SearchIter(_List.begin()) ; SearchIter!=_List.end() ; ++SearchIter)
+	FieldListIter SearchIter;
+    for(SearchIter = _List.begin() ; SearchIter!=_List.end() ; ++SearchIter)
     {
         std::string FieldString;
         (*SearchIter)->getValueByStr(FieldString);
