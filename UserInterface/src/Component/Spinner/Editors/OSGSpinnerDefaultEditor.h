@@ -47,6 +47,7 @@
 
 #include "OSGSpinnerDefaultEditorBase.h"
 #include "Event/OSGChangeListener.h"
+#include "Event/OSGActionListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -116,6 +117,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerDefaultEditor : public SpinnerDefau
 
     /*! \}                                                                 */
     
+    //Min Button Action Listener
+	class EditorTextFieldListener : public ActionListener
+	{
+	public:
+		EditorTextFieldListener(SpinnerDefaultEditorPtr TheSpinnerDefaultEditor);
+        virtual void actionPerformed(const ActionEvent& e);
+	private:
+		SpinnerDefaultEditorPtr _SpinnerDefaultEditor;
+	};
+
+	friend class EditorTextFieldListener;
+
+	EditorTextFieldListener _EditorTextFieldListener;
+
     /*==========================  PRIVATE  ================================*/
   private:
 

@@ -90,7 +90,19 @@ void SpinnerDefaultEditor::updateLayout(void)
 
 void SpinnerDefaultEditor::commitEdit(void)
 {
-    getSpinner()->getModel()->setValue(getTextField()->getText());
+	try
+	{
+		getSpinner()->getModel()->setValue(getTextField()->getText());
+	}
+	catch(IllegalArgumentException& e)
+	{
+		//Reset to the old value
+		beginEditCP(getTextField(), TextField::TextFieldMask);
+			std::string NewValue;
+			getSpinner()->getModel()->getValue()->getValueByStr(NewValue);
+			getTextField()->setText(NewValue);
+		endEditCP(getTextField(), TextField::TextFieldMask);
+	}
 }
 
 void SpinnerDefaultEditor::dismiss(SpinnerPtr spinner)
@@ -118,13 +130,23 @@ void SpinnerDefaultEditor::stateChanged(const ChangeEvent& e)
 /*----------------------- constructors & destructors ----------------------*/
 
 SpinnerDefaultEditor::SpinnerDefaultEditor(void) :
-    Inherited()
+    Inherited(),
+		_EditorTextFieldListener(SpinnerDefaultEditorPtr(this))
 {
 }
 
 SpinnerDefaultEditor::SpinnerDefaultEditor(const SpinnerDefaultEditor &source) :
-    Inherited(source)
+    Inherited(source),
+		_EditorTextFieldListener(SpinnerDefaultEditorPtr(this))
 {
+    if(getTextField() != NullFC)
+    {
+        beginEditCP(SpinnerDefaultEditorPtr(this), TextFieldFieldMask);
+
+        setTextField(TextField::Ptr::dcast(getTextField()->shallowCopy()));
+        
+        endEditCP(SpinnerDefaultEditorPtr(this), TextFieldFieldMask);
+    }
 }
 
 SpinnerDefaultEditor::~SpinnerDefaultEditor(void)
@@ -156,6 +178,7 @@ void SpinnerDefaultEditor::changed(BitVector whichField, UInt32 origin)
             if(getTextField() != NullFC)
             {
                 getChildren().push_back(getTextField());
+				getTextField()->addActionListener(&_EditorTextFieldListener);
             }
         endEditCP(SpinnerDefaultEditorPtr(this), ChildrenFieldMask);
     }
@@ -167,6 +190,10 @@ void SpinnerDefaultEditor::dump(      UInt32    ,
     SLOG << "Dump SpinnerDefaultEditor NI" << std::endl;
 }
 
+void SpinnerDefaultEditor::EditorTextFieldListener::actionPerformed(const ActionEvent& e)
+{
+	_SpinnerDefaultEditor->commitEdit();
+}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

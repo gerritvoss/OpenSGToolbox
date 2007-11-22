@@ -154,6 +154,13 @@ void TextComponent::changed(BitVector whichField, UInt32 origin)
 
 	if((whichField & TextFieldMask))
 	{
+		//Check the Caret Position
+		if(getCaretPosition() > getText().size())
+		{
+			beginEditCP(TextComponentPtr(this), CaretPositionFieldMask);
+				setCaretPosition(getText().size());
+			endEditCP(TextComponentPtr(this), CaretPositionFieldMask);
+		}
 		produceTextValueChanged(TextEvent(TextComponentPtr(this), getTimeStamp(), TextEvent::TEXT_CHANGED));
 	}
 }
@@ -252,10 +259,10 @@ void TextComponent::keyTyped(const KeyEvent& e)
 		if(_TextSelectionEnd > _TextSelectionStart)
 		{
 			//erase the selected portions
+			setCaretPosition(_TextSelectionStart);
 			beginEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
 				setText(getText().erase(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart));
 			endEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
-			setCaretPosition(_TextSelectionStart);
 			_TextSelectionStart = getCaretPosition();
 			_TextSelectionEnd = _TextSelectionStart;
 		}
@@ -263,10 +270,10 @@ void TextComponent::keyTyped(const KeyEvent& e)
 		{	
 
 				//erase at the current caret position
-			beginEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
-				setText(getText().erase(getCaretPosition()-1, 1));
-			endEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
 			setCaretPosition(getCaretPosition()-1);
+			beginEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
+				setText(getText().erase(getCaretPosition(), 1));
+			endEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
 			_TextSelectionStart = getCaretPosition();
 			_TextSelectionEnd = _TextSelectionStart;
 		}
@@ -276,10 +283,10 @@ void TextComponent::keyTyped(const KeyEvent& e)
 		if(_TextSelectionEnd > _TextSelectionStart)
 		{
 			//erase the selected portions
+			setCaretPosition(_TextSelectionStart);
 			beginEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
 				setText(getText().erase(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart));
 			endEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
-			setCaretPosition(_TextSelectionStart);
 			_TextSelectionStart = getCaretPosition();
 			_TextSelectionEnd = _TextSelectionStart;
 		}

@@ -4,6 +4,8 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -38,16 +40,99 @@
 //  Includes
 //---------------------------------------------------------------------------
 
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEUSERINTERFACELIB
+
 #include <OpenSG/OSGConfig.h>
+
+#include "OSGSpinnerListEditor.h"
 
 OSG_BEGIN_NAMESPACE
 
-inline
-SpinnerDefaultEditor::EditorTextFieldListener::EditorTextFieldListener(SpinnerDefaultEditorPtr TheSpinnerDefaultEditor) :
-   _SpinnerDefaultEditor(TheSpinnerDefaultEditor)
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class osg::SpinnerListEditor
+A UI SpinnerListEditor. 
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void SpinnerListEditor::initMethod (void)
 {
 }
-OSG_END_NAMESPACE
 
-#define OSGSPINNERDEFAULTEDITOR_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+SpinnerListEditor::SpinnerListEditor(void) :
+    Inherited()
+{
+}
+
+SpinnerListEditor::SpinnerListEditor(const SpinnerListEditor &source) :
+    Inherited(source)
+{
+}
+
+SpinnerListEditor::~SpinnerListEditor(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void SpinnerListEditor::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void SpinnerListEditor::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump SpinnerListEditor NI" << std::endl;
+}
+
+
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
+
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
+
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
+
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGSPINNERLISTEDITORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGSPINNERLISTEDITORBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGSPINNERLISTEDITORFIELDS_HEADER_CVSID;
+}
+
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
+
+OSG_END_NAMESPACE
 
