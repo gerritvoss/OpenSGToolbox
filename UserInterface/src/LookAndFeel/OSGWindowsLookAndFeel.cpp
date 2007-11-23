@@ -94,6 +94,7 @@
 
 #include "Component/Spinner/OSGSpinner.h"
 #include "Component/Spinner/Editors/OSGSpinnerDefaultEditor.h"
+#include "Component/Spinner/Editors/OSGSpinnerNumberEditor.h"
 
 #include "Component/ProgressBar/OSGProgressBar.h"
 OSG_BEGIN_NAMESPACE
@@ -2975,6 +2976,54 @@ void WindowsLookAndFeel::init(void)
 
     SpinnerDefaultEditor::getClassType().setPrototype(WindowsSpinnerDefaultEditor);
 	
+	//************************** SpinnerNumberEditor *****************************
+	//Windows SpinnerNumberEditor TextField
+	TextFieldPtr WindowsSpinnerNumberEditorTextField = TextField::create();
+    beginEditCP(WindowsSpinnerNumberEditorTextField, TextField::HorizontalAlignmentFieldMask);
+        WindowsSpinnerNumberEditorTextField->setHorizontalAlignment(1.0);
+        
+		//Border
+		WindowsSpinnerNumberEditorTextField->setBorder(WindowsEmptyBorder);
+		WindowsSpinnerNumberEditorTextField->setRolloverBorder(WindowsEmptyBorder);
+		WindowsSpinnerNumberEditorTextField->setFocusedBorder(WindowsEmptyBorder);
+		WindowsSpinnerNumberEditorTextField->setDisabledBorder(WindowsEmptyBorder);
+		
+		//Background
+		WindowsSpinnerNumberEditorTextField->setBackground(WindowsEmptyBackground);
+		WindowsSpinnerNumberEditorTextField->setRolloverBackground(WindowsEmptyBackground);
+		WindowsSpinnerNumberEditorTextField->setFocusedBackground(WindowsEmptyBackground);
+		WindowsSpinnerNumberEditorTextField->setDisabledBackground(WindowsEmptyBackground);
+    endEditCP(WindowsSpinnerNumberEditorTextField, TextField::HorizontalAlignmentFieldMask);
+
+    SpinnerNumberEditorPtr WindowsSpinnerNumberEditor = SpinnerNumberEditor::create();
+    beginEditCP(WindowsSpinnerNumberEditor);
+		WindowsSpinnerNumberEditor->setConstraints(NullFC);
+		//Sizes
+		WindowsSpinnerNumberEditor->setMinSize(Vec2s(0,0));
+		WindowsSpinnerNumberEditor->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsSpinnerNumberEditor->setPreferredSize(Vec2s(200,100));
+
+		//Border
+		WindowsSpinnerNumberEditor->setBorder(WindowsEmptyBorder);
+		WindowsSpinnerNumberEditor->setRolloverBorder(WindowsEmptyBorder);
+		WindowsSpinnerNumberEditor->setFocusedBorder(WindowsEmptyBorder);
+		WindowsSpinnerNumberEditor->setDisabledBorder(WindowsEmptyBorder);
+		
+		//Background
+		WindowsSpinnerNumberEditor->setBackground(WindowsEmptyBackground);
+		WindowsSpinnerNumberEditor->setRolloverBackground(WindowsEmptyBackground);
+		WindowsSpinnerNumberEditor->setFocusedBackground(WindowsEmptyBackground);
+		WindowsSpinnerNumberEditor->setDisabledBackground(WindowsEmptyBackground);
+		
+		//Opacity
+		WindowsSpinnerNumberEditor->setOpacity(1.0);
+
+        //WindowsSpinnerNumberEditor
+        WindowsSpinnerNumberEditor->setTextField(WindowsSpinnerNumberEditorTextField);
+    endEditCP(WindowsSpinnerNumberEditor);
+
+    SpinnerNumberEditor::getClassType().setPrototype(WindowsSpinnerNumberEditor);
+	
 	//************************** ProgressBar *****************************
 	//Windows ProgressBarBorder
 	RoundedCornerLineBorderPtr WindowsProgressBarBorder = RoundedCornerLineBorder::create();
@@ -3184,7 +3233,8 @@ void WindowsLookAndFeel::init(void)
 		getPrototypes().addValue(WindowsList);
 		getPrototypes().addValue(WindowsTableHeader);
 		getPrototypes().addValue(WindowsTable);
-		getPrototypes().addValue(WindowsSpinner);
+		getPrototypes().addValue(WindowsSpinnerDefaultEditor);
+		getPrototypes().addValue(WindowsSpinnerNumberEditor);
 	endEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);
 
 

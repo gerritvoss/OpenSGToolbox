@@ -53,6 +53,8 @@
 
 OSG_BEGIN_NAMESPACE
 
+static std::string getNumberSpinnerModelClassModelName(void);
+
 template<class NumberTypeT>
 class NumberSpinnerModel : public AbstractSpinnerModel
 {
@@ -98,6 +100,9 @@ public:
 
     //Changes the size of the value change computed by the getNextValue and getPreviousValue methods.
     void setStepSize(const NumberType& stepSize);
+
+	virtual std::string getModelName(void) const;
+
 
 protected:
     SharedFieldPtr _Value;

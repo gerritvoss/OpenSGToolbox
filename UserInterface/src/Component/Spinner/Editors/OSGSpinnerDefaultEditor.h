@@ -48,6 +48,8 @@
 #include "OSGSpinnerDefaultEditorBase.h"
 #include "Event/OSGChangeListener.h"
 #include "Event/OSGActionListener.h"
+#include "Event/OSGFocusListener.h"
+#include <OpenSG/Input/OSGKeyAdapter.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -87,6 +89,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerDefaultEditor : public SpinnerDefau
     //Pushes the currently edited value to the SpinnerModel.
     virtual void commitEdit(void);
 
+    //Cancels the current edits and returns the editor to the previous value
+    virtual void cancelEdit(void);
+
     //Disconnect this editor from the specified JSpinner.
     virtual void dismiss(SpinnerPtr spinner);
 
@@ -95,7 +100,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerDefaultEditor : public SpinnerDefau
 
     //This method is called when the spinner's model's state changes.
     virtual void stateChanged(const ChangeEvent& e);
-
+	
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -118,11 +123,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerDefaultEditor : public SpinnerDefau
     /*! \}                                                                 */
     
     //Min Button Action Listener
-	class EditorTextFieldListener : public ActionListener
+	class EditorTextFieldListener : public ActionListener, public FocusListener, public KeyAdapter
 	{
 	public:
 		EditorTextFieldListener(SpinnerDefaultEditorPtr TheSpinnerDefaultEditor);
         virtual void actionPerformed(const ActionEvent& e);
+		virtual void focusGained(const FocusEvent& e);
+		virtual void focusLost(const FocusEvent& e);
+		virtual void keyPressed(const KeyEvent& e);
 	private:
 		SpinnerDefaultEditorPtr _SpinnerDefaultEditor;
 	};

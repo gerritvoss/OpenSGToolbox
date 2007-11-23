@@ -86,6 +86,8 @@ public:
 
     //Changes current value of the model, typically this value is displayed by the editor part of a Spinner.
     virtual void setValue(const std::string& value) = 0;
+	
+	virtual std::string getModelName(void) const = 0;
 };
 
 typedef boost::intrusive_ptr<SpinnerModel> SpinnerModelPtr;

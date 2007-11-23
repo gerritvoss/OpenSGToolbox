@@ -67,9 +67,19 @@ A ListSpinnerModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
+std::string ListSpinnerModel::getClassModelName(void)
+{
+	return std::string("List Spinner Model");
+}
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+
+std::string ListSpinnerModel::getModelName(void) const
+{
+	return getClassModelName();
+}
 
 void ListSpinnerModel::setList(const FieldList& list)
 {

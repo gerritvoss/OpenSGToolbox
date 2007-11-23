@@ -49,7 +49,11 @@
 
 #include "OSGSpinner.h"
 
+#include "Component/Spinner/OSGListSpinnerModel.h"
+#include "Component/Spinner/OSGNumberSpinnerModel.h"
+
 #include "Component/Spinner/Editors/OSGSpinnerDefaultEditor.h"
+#include "Component/Spinner/Editors/OSGSpinnerNumberEditor.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -144,7 +148,19 @@ void Spinner::updateLayout(void)
 ComponentPtr Spinner::createEditor(SpinnerModelPtr model)
 {
     //TODO: Implement
-    SpinnerDefaultEditorPtr TheEditor = SpinnerDefaultEditor::create();
+    SpinnerDefaultEditorPtr TheEditor;
+	if(model->getModelName().compare(ListSpinnerModel::getClassModelName()) == 0)
+	{
+		TheEditor = SpinnerDefaultEditor::create();
+	}
+	else if(model->getModelName().compare(getNumberSpinnerModelClassModelName()) == 0)
+	{
+		TheEditor = SpinnerNumberEditor::create();
+	}
+	else
+	{
+		TheEditor = SpinnerDefaultEditor::create();
+	}
     beginEditCP(TheEditor, SpinnerDefaultEditor::SpinnerFieldMask);
         TheEditor->setSpinner(SpinnerPtr(this));
     endEditCP(TheEditor, SpinnerDefaultEditor::SpinnerFieldMask);

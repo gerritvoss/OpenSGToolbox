@@ -36,63 +36,91 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_LIST_SPINNER_MODEL_H_
-#define _OSG_UI_LIST_SPINNER_MODEL_H_
-
+#ifndef _OSGSPINNERNUMBEREDITOR_H_
+#define _OSGSPINNERNUMBEREDITOR_H_
 #ifdef __sgi
 #pragma once
 #endif
- 
+
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGAbstractSpinnerModel.h"
-
-#include <list>
+#include "OSGSpinnerNumberEditorBase.h"
 
 OSG_BEGIN_NAMESPACE
-	 
-class OSG_USERINTERFACELIB_DLLMAPPING ListSpinnerModel : public AbstractSpinnerModel
+
+/*! \brief SpinnerNumberEditor class. See \ref 
+           PageUserInterfaceSpinnerNumberEditor for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING SpinnerNumberEditor : public SpinnerNumberEditorBase
 {
-public:
-    typedef std::list<SharedFieldPtr> FieldList;
-    typedef FieldList::iterator FieldListIter;
-    
-    //Return the object in the sequence that comes after the object returned by getValue().
-    virtual SharedFieldPtr getNextValue(void);
-    
-    //Return the object in the sequence that comes before the object returned by getValue().
-    virtual SharedFieldPtr getPreviousValue(void);
-    
-    //The current element of the sequence.
-    virtual SharedFieldPtr getValue(void);
-    
-    //Changes current value of the model, typically this value is displayed by the editor part of a Spinner.
-    virtual void setValue(SharedFieldPtr value);
+  private:
 
-    //Changes current value of the model, typically this value is displayed by the editor part of a Spinner.
-    virtual void setValue(const std::string& value);
-    
-    //Changes the list that defines this sequence and resets the index of the models value to zero.
-    void setList(const FieldList& list);
-    
-    //Returns the List that defines the sequence for this model.
-    FieldList getList(void) const;
-	
-	virtual std::string getModelName(void) const;
+    typedef SpinnerNumberEditorBase Inherited;
 
-	static std::string getClassModelName(void);
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+    //Pushes the currently edited value to the SpinnerModel.
+    virtual void commitEdit(void);
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in SpinnerNumberEditorBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    SpinnerNumberEditor(void);
+    SpinnerNumberEditor(const SpinnerNumberEditor &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~SpinnerNumberEditor(void); 
+
+    /*! \}                                                                 */
     
-protected:
-    FieldList _List;
-    FieldListIter _CurrentListValue;
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class SpinnerNumberEditorBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const SpinnerNumberEditor &source);
 };
 
-typedef boost::intrusive_ptr<ListSpinnerModel> ListSpinnerModelPtr;
+typedef SpinnerNumberEditor *SpinnerNumberEditorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGListSpinnerModel.inl"
+#include "OSGSpinnerNumberEditorBase.inl"
+#include "OSGSpinnerNumberEditor.inl"
 
-#endif /* _OSG_UI_LIST_SPINNER_MODEL_H_ */
+#define OSGSPINNERNUMBEREDITOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
+#endif /* _OSGSPINNERNUMBEREDITOR_H_ */

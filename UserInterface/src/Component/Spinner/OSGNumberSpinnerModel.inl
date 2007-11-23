@@ -42,6 +42,18 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+std::string getNumberSpinnerModelClassModelName(void)
+{
+	return std::string("Number Spinner Model");
+}
+
+template<class NumberTypeT> inline
+std::string NumberSpinnerModel<NumberTypeT>::getModelName(void) const
+{
+	return getNumberSpinnerModelClassModelName();
+}
+
 template<class NumberTypeT> inline
 NumberSpinnerModel<NumberTypeT>::NumberSpinnerModel(void) :
   _Value(new SField<NumberType>(0))

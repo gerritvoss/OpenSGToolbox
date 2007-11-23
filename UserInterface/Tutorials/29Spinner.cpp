@@ -68,7 +68,7 @@ public:
 
    virtual void keyPressed(const KeyEvent& e)
    {
-       if(e.getKey() == KeyEvent::KEY_ESCAPE)
+	   if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
            ExitApp = true;
        }
