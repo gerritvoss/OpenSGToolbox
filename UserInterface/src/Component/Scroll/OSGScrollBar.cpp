@@ -157,7 +157,7 @@ void ScrollBar::updateScrollBarLayout(void)
         Vec2s Size;
 
         Position[MajorAxis] = getScrollField()->getPosition()[MajorAxis] + 
-                            (static_cast<Real32>(getValue())/static_cast<Real32>(getMaximum() - getMinimum())) * (getScrollField()->getSize()[MajorAxis]);
+                            (static_cast<Real32>(getValue() - getMinimum())/static_cast<Real32>(getMaximum() - getMinimum())) * (getScrollField()->getSize()[MajorAxis]);
         Position[MinorAxis] = getScrollField()->getPosition()[MinorAxis];
 
         Size[MajorAxis] = (static_cast<Real32>(getExtent())/static_cast<Real32>(getMaximum() - getMinimum())) * (getScrollField()->getSize()[MajorAxis]);
@@ -259,7 +259,7 @@ void ScrollBar::setMajorAxisScrollBarPosition(const Int16& Pos)
     MinorAxis = (MajorAxis+1)%2;
 
     //Calculate the Value Based on the Bar Position
-    Int32 ScrollValue( static_cast<Real32>(Pos - getScrollField()->getPosition()[MajorAxis])/static_cast<Real32>(getScrollField()->getSize()[MajorAxis]) * (getMaximum() - getMinimum()) );
+    Int32 ScrollValue( static_cast<Real32>(Pos - getScrollField()->getPosition()[MajorAxis])/static_cast<Real32>(getScrollField()->getSize()[MajorAxis]) * (getMaximum() - getMinimum()) + getMinimum());
     if(ScrollValue < getMinimum())
     {
         ScrollValue = getMinimum();
