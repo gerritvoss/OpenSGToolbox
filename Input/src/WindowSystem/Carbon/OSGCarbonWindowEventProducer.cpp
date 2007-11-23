@@ -49,6 +49,8 @@
 
 #include "OSGCarbonWindowEventProducer.h"
 
+#ifdef __APPLE__
+
 #include <Quicktime/Movies.h>
 //#include <CarbonEvents.h>
 
@@ -178,11 +180,6 @@ CarbonWindowEventProducer::CarbonWindowToProducerMap CarbonWindowEventProducer::
 
 void CarbonWindowEventProducer::initMethod (void)
 {
-	// A magic method that allows applications to react to events even
-	// when they are not organized in a bundle
-	ProcessSerialNumber psn = { 0, kCurrentProcess };
-	TransformProcessType(&psn, kProcessTransformToForegroundApplication);
-	SetFrontProcess(&psn);
 }
 
 OSStatus CarbonWindowEventProducer::eventHandler(EventHandlerCallRef nextHandler, EventRef event, void *userData)
@@ -212,6 +209,12 @@ UInt32 CarbonWindowEventProducer::getUndefinedWindowId(void)
 
 void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
 {
+	// A magic method that allows applications to react to events even
+	// when they are not organized in a bundle
+	ProcessSerialNumber psn = { 0, kCurrentProcess };
+	TransformProcessType(&psn, kProcessTransformToForegroundApplication);
+	SetFrontProcess(&psn);
+    
     WindowEventLoopThreadArguments* Arguments(static_cast<WindowEventLoopThreadArguments*>(args));
     
     // Carbon init
@@ -254,7 +257,7 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
     InstallWindowEventHandler(window, eventHandlerUPP, GetEventTypeCount(eventList), eventList, &(Arguments->_EventProducer->_WindowId), 0);
 
     // Initialize OpenGL
-    GLint attribs[] = { AGL_RGBA, AGL_DOUBLEBUFFER, AGL_DEPTH_SIZE, 16, AGL_NONE };
+    GLint attribs[] = { AGL_RGBA, AGL_DOUBLEBUFFER, AGL_DEPTH_SIZE, 16, AGL_STENCIL_SIZE, 8, AGL_NONE };
     AGLPixelFormat pixelFormat = aglChoosePixelFormat(0, 0, attribs);
     if (pixelFormat == 0)
         std::cerr << "Cannot choose pixel format" << std::endl;
@@ -279,7 +282,19 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
     ShowWindow(window);
     
     // Main loop ( event dispatching )
-    RunApplicationEventLoop();
+    EventRef theEvent;    
+    EventTargetRef theTarget;    
+    theTarget = GetEventDispatcherTarget(); 
+    while (true)
+    {
+        while  (ReceiveNextEvent(0, NULL,0,true,                             
+                                 &theEvent)== noErr)        
+        {
+            SendEventToEventTarget (theEvent, theTarget);        
+            ReleaseEvent(theEvent);
+        }
+        Arguments->_EventProducer->_DisplayCallbackFunc();
+    }
     
     Arguments->_EventProducer->produceWindowClosed();
     
@@ -293,6 +308,7 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
 
 OSStatus CarbonWindowEventProducer::internalEventHandler(EventHandlerCallRef nextHandler, EventRef event, void *userData)
 {
+    
     ::UInt32 eventClass = GetEventClass(event);
     switch (eventClass)
     {
@@ -325,49 +341,6 @@ OSStatus CarbonWindowEventProducer::handleMouseEvent(EventHandlerCallRef nextHan
     if (err != noErr)
         return err;
 
-    // Get the mouse button
-    EventMouseButton mouseButton;
-    err = GetEventParameter(event, kEventParamMouseButton, typeMouseButton, 0, sizeof(mouseButton), 0, &mouseButton);
-    if (err != noErr)
-        return err;
-		
-	MouseEvent::MouseButton TheMouseButton;
-	switch (mouseButton)
-	{
-	case kEventMouseButtonPrimary: // left button
-		TheMouseButton = MouseEvent::BUTTON1;
-		break;
-	case kEventMouseButtonSecondary: // right button
-		TheMouseButton = MouseEvent::BUTTON3;
-		break;
-	case kEventMouseButtonTertiary: // middle button
-		TheMouseButton = MouseEvent::BUTTON2;
-		break;
-	case 4:
-		TheMouseButton = MouseEvent::BUTTON4;
-		break;
-	case 5:
-		TheMouseButton = MouseEvent::BUTTON5;
-		break;
-	case 6:
-		TheMouseButton = MouseEvent::BUTTON6;
-		break;
-	case 7:
-		TheMouseButton = MouseEvent::BUTTON7;
-		break;
-	case 8:
-		TheMouseButton = MouseEvent::BUTTON8;
-		break;
-	case 9:
-		TheMouseButton = MouseEvent::BUTTON9;
-		break;
-	case 10:
-		TheMouseButton = MouseEvent::BUTTON10;
-		break;
-	default:
-		TheMouseButton = MouseEvent::NO_BUTTON;
-		break;
-	}
 
     // Get the location of the mouse pointer
     Point location;
@@ -383,6 +356,58 @@ OSStatus CarbonWindowEventProducer::handleMouseEvent(EventHandlerCallRef nextHan
 
     // Handle the different kinds of events
     ::UInt32 eventKind = GetEventKind(event);
+    MouseEvent::MouseButton TheMouseButton;
+    switch(eventKind)
+    {
+        case kEventMouseDown:
+        case kEventMouseUp:
+        case kEventMouseDragged:
+        {
+            // Get the mouse button
+            EventMouseButton mouseButton;
+            err = GetEventParameter(event, kEventParamMouseButton, typeMouseButton, 0, sizeof(mouseButton), 0, &mouseButton);
+            if (err != noErr)
+                return err;
+            
+            switch (mouseButton)
+            {
+                case kEventMouseButtonPrimary: // left button
+                    TheMouseButton = MouseEvent::BUTTON1;
+                    break;
+                case kEventMouseButtonSecondary: // right button
+                    TheMouseButton = MouseEvent::BUTTON3;
+                    break;
+                case kEventMouseButtonTertiary: // middle button
+                    TheMouseButton = MouseEvent::BUTTON2;
+                    break;
+                case 4:
+                    TheMouseButton = MouseEvent::BUTTON4;
+                    break;
+                case 5:
+                    TheMouseButton = MouseEvent::BUTTON5;
+                    break;
+                case 6:
+                    TheMouseButton = MouseEvent::BUTTON6;
+                    break;
+                case 7:
+                    TheMouseButton = MouseEvent::BUTTON7;
+                    break;
+                case 8:
+                    TheMouseButton = MouseEvent::BUTTON8;
+                    break;
+                case 9:
+                    TheMouseButton = MouseEvent::BUTTON9;
+                    break;
+                case 10:
+                    TheMouseButton = MouseEvent::BUTTON10;
+                    break;
+                default:
+                    TheMouseButton = MouseEvent::NO_BUTTON;
+                    break;
+            }
+            break;
+        }
+    }
     switch (eventKind)
     {
     // mouse button pressed
@@ -398,7 +423,6 @@ OSStatus CarbonWindowEventProducer::handleMouseEvent(EventHandlerCallRef nextHan
 
 	//Mouse Moved
 	case kEventMouseMoved:
-        std::cerr << "handleMouseEvent kEventMouseMoved" << std::endl;
 		produceMouseMoved(Pnt2s(location.h, location.v));
         break;
 		
@@ -409,7 +433,6 @@ OSStatus CarbonWindowEventProducer::handleMouseEvent(EventHandlerCallRef nextHan
 		
 	// mouse wheel moved
 	case kEventMouseWheelMoved:
-        std::cerr << "handleMouseEvent kEventMouseWheelMoved" << std::endl;
 		{
 			EventMouseWheelAxis axis;
             SInt32 delta;
@@ -564,7 +587,6 @@ UInt32 CarbonWindowEventProducer::determineKeyModifiers(::UInt32 keyModifiers)
 KeyEvent::Key CarbonWindowEventProducer::determineKey(::UInt32 key)
 {
     KeyEvent::Key OSGKey;
-	std::cout << "KeyCode: " << key << std::endl;
 	switch(key)
 	{
 	//Alphabet
@@ -1034,13 +1056,26 @@ bool CarbonWindowEventProducer::getDrawBorder(void)
 void CarbonWindowEventProducer::draw(void)
 {
     //TODO: Implement
-    //SendMessage(WIN32Window::Ptr::dcast(getWindow())->getHwnd(),WIN32_DRAW_MESSAGE,0,0);
+    /*EventRef DrawEvent;
+    if( CreateEvent(NULL,kEventClassWindow, kEventWindowDrawContent,0, 0, &DrawEvent) == noErr )
+    {
+        SetEventParameter(DrawEvent,  kEventParamDirectObject, typeWindowRef, sizeof(_WindowRef), &_WindowRef);
+        SendEventToWindow(DrawEvent, _WindowRef);
+    }*/
 }
 
 void CarbonWindowEventProducer::update(void)
 {
-    //TODO: Implement
-    //SendMessage(WIN32Window::Ptr::dcast(getWindow())->getHwnd(),WIN32_UPDATE_MESSAGE,0,0);
+    //Updating
+    Time Now(getSystemTime());
+    Time ElapsedTime(Now - getLastUpdateTime());
+    if(ElapsedTime > 0.0 && ElapsedTime < 10.0)
+    {
+        produceUpdate(ElapsedTime);
+    }
+    beginEditCP(CarbonWindowEventProducerPtr(this), LastUpdateTimeFieldMask);
+	   setLastUpdateTime(Now);
+    endEditCP(CarbonWindowEventProducerPtr(this), LastUpdateTimeFieldMask);
 }
 
 bool CarbonWindowEventProducer::attachWindow(void)
@@ -1201,4 +1236,6 @@ namespace
 #endif
 
 OSG_END_NAMESPACE
+
+#endif
 

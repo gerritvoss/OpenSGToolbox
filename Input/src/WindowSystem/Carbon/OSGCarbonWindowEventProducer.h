@@ -45,6 +45,8 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGInputDef.h"
 
+#ifdef __APPLE__
+
 #include "OSGCarbonWindowEventProducerBase.h"
 #include <OpenSG/OSGCarbonWindow.h>
 #include <AGL/agl.h>
@@ -243,5 +245,7 @@ OSG_END_NAMESPACE
 #include "OSGCarbonWindowEventProducer.inl"
 
 #define OSGCARBONWINDOWEVENTPRODUCER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+
+#endif
 
 #endif /* _OSGCARBONWINDOWEVENTPRODUCER_H_ */

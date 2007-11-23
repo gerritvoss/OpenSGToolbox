@@ -60,6 +60,8 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGInputDef.h"
 
+#ifdef __APPLE__
+
 #include "WindowSystem/OSGWindowEventProducerFields.h"
 OSG_BEGIN_NAMESPACE
 
@@ -126,5 +128,7 @@ OSG_DLLEXPORT_DECL1(MField, CarbonWindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMA
 OSG_END_NAMESPACE
 
 #define OSGCARBONWINDOWEVENTPRODUCERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+
+#endif
 
 #endif /* _OSGCARBONWINDOWEVENTPRODUCERFIELDS_H_ */

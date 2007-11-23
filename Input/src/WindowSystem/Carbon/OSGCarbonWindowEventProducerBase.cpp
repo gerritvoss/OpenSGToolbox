@@ -61,6 +61,7 @@
 #include "OSGCarbonWindowEventProducerBase.h"
 #include "OSGCarbonWindowEventProducer.h"
 
+#ifdef __APPLE__
 
 OSG_BEGIN_NAMESPACE
 
@@ -255,4 +256,6 @@ namespace
 }
 
 OSG_END_NAMESPACE
+
+#endif
 
