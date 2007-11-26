@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="OSGUserInterface"
 	ProjectGUID="{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}"
 	RootNamespace="OSGAnimation"
@@ -1607,6 +1607,38 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Component\ProgressBar\OSGProgressBarFields.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Slider"
+					>
+					<File
+						RelativePath="..\..\src\Component\Slider\OSGSlider.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Slider\OSGSlider.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Slider\OSGSlider.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Slider\OSGSliderBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Slider\OSGSliderBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Slider\OSGSliderBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Slider\OSGSliderFields.h"
 						>
 					</File>
 				</Filter>

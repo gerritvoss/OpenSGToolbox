@@ -167,6 +167,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "30RotatedComponent", "30Rot
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "31ProgressBar", "31ProgressBar.vcproj", "{C9DE7D84-5604-4775-B0DC-FA235998D142}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "32Slider", "32Slider.vcproj", "{C040CE5B-C820-4A99-B2B4-660CD6165E6B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "50OpenSGTypes", "50OpenSGTypes.vcproj", "{F8E56CE8-D4EE-4D26-B31C-5B82C25AD56C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -313,6 +317,14 @@ Global
 		{C9DE7D84-5604-4775-B0DC-FA235998D142}.Debug|Win32.Build.0 = Debug|Win32
 		{C9DE7D84-5604-4775-B0DC-FA235998D142}.Release|Win32.ActiveCfg = Release|Win32
 		{C9DE7D84-5604-4775-B0DC-FA235998D142}.Release|Win32.Build.0 = Release|Win32
+		{C040CE5B-C820-4A99-B2B4-660CD6165E6B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C040CE5B-C820-4A99-B2B4-660CD6165E6B}.Debug|Win32.Build.0 = Debug|Win32
+		{C040CE5B-C820-4A99-B2B4-660CD6165E6B}.Release|Win32.ActiveCfg = Release|Win32
+		{C040CE5B-C820-4A99-B2B4-660CD6165E6B}.Release|Win32.Build.0 = Release|Win32
+		{F8E56CE8-D4EE-4D26-B31C-5B82C25AD56C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F8E56CE8-D4EE-4D26-B31C-5B82C25AD56C}.Debug|Win32.Build.0 = Debug|Win32
+		{F8E56CE8-D4EE-4D26-B31C-5B82C25AD56C}.Release|Win32.ActiveCfg = Release|Win32
+		{F8E56CE8-D4EE-4D26-B31C-5B82C25AD56C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
