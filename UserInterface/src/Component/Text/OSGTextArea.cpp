@@ -201,123 +201,143 @@ void TextArea::CaretUpdateListener::update(const UpdateEvent& e)
 
 void TextArea::changed(BitVector whichField, UInt32 origin)
 {
- 	while( _LineContents.size()>0)
-	{
-		_LineContents.pop_back();
-	}
-	Pnt2s TopLeft, BottomRight, TempPos;
-	Pnt2s TempTopLeft, TempBottomRight;
-	Vec2s FullTextSize;
-	getInsideBorderBounds(TopLeft, BottomRight);
-	std::string temptext;
-	Int32 XPosition = 0;
-	Int32 YPosition = 0;
-	Int32 Backtrack = 0;
-	bool brokeAtWord = false;
+    if(whichField & TextFieldMask ||
+       whichField & LineWrapFieldMask ||
+       whichField & WrapStyleWordFieldMask ||
+       whichField & TabSizeFieldMask ||
+       whichField & FontFieldMask ||
+       whichField & SizeFieldMask)
+    {
+ 	    while( _LineContents.size()>0)
+	    {
+		    _LineContents.pop_back();
+	    }
+	    Pnt2s TopLeft, BottomRight, TempPos;
+	    Pnt2s TempTopLeft, TempBottomRight;
+	    Vec2s FullTextSize;
+	    getInsideBorderBounds(TopLeft, BottomRight);
+	    std::string temptext;
+	    Int32 XPosition = 0;
+	    Int32 YPosition = 0;
+	    Int32 Backtrack = 0;
+	    bool brokeAtWord = false;
 
-	//take care of tabs
-	temptext = getText();
-	for(Int32 i = 0; i < getText().size() ; i++)
-	{
-		if(temptext[i] == '\t')
-		{
-			temptext.erase(i);
-			for(Int32 j = 0; j < getTabSize(); j++)
-			{
-				temptext.insert(i, " ");
-				i++;
-			}
-		}
-	}
-	//Set the contents of the lines (assuming letter by letter go down right now (which is wrong))
-	_LineContents.push_back(TextLine());
-	_LineContents[0]._StartPosition = 0;
-	for(Int32 i = 0; i < getText().size(); ++i)
-	{
+	    //take care of tabs
+	    temptext = getText();
+	    for(Int32 i = 0; i < getText().size() ; i++)
+	    {
+		    if(temptext[i] == '\t')
+		    {
+			    temptext.erase(i);
+			    for(Int32 j = 0; j < getTabSize(); j++)
+			    {
+				    temptext.insert(i, " ");
+				    i++;
+			    }
+		    }
+	    }
+	    //Set the contents of the lines (assuming letter by letter go down right now (which is wrong))
+	    _LineContents.push_back(TextLine());
+	    _LineContents[0]._StartPosition = 0;
+	    for(Int32 i = 0; i < getText().size(); ++i)
+	    {
 
-		while(temptext[i] == ' ')
-		{
-			i++;
-		}
-		getFont()->getBounds(getText().substr(XPosition, i-XPosition+1), TempTopLeft, TempBottomRight);
-		if(temptext[i] == '\n')
-		{
-			XPosition = i;
-			_LineContents[YPosition]._EndPosition = i;
-			_LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
-			_LineContents.push_back(TextLine());
-			++YPosition;
-			_LineContents[YPosition]._StartPosition = i;
+		    while(temptext[i] == ' ')
+		    {
+			    i++;
+		    }
+		    getFont()->getBounds(getText().substr(XPosition, i-XPosition+1), TempTopLeft, TempBottomRight);
+		    if(temptext[i] == '\n')
+		    {
+			    XPosition = i;
+			    _LineContents[YPosition]._EndPosition = i;
+			    _LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
+			    _LineContents.push_back(TextLine());
+			    ++YPosition;
+			    _LineContents[YPosition]._StartPosition = i;
 
-		}
-		if(TempBottomRight.x() > BottomRight.x())
-		{
-			if(!getWrapStyleWord())
-			{
-				XPosition = i;
-				_LineContents[YPosition]._EndPosition = i;
-				_LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
-				_LineContents.push_back(TextLine());
-				++YPosition;
-				_LineContents[YPosition]._StartPosition = i;
-			}
-			else
-			{
-				Int32 j;
-				brokeAtWord = false; 
-				for(j = i; j > _LineContents[YPosition]._StartPosition; --j)
-				{
-					if(!isWordChar(getText()[j])&& !isPunctuationChar(getText()[j]))
-					{
-						brokeAtWord = true;
-						break;
-					}
-				}
-				if(!brokeAtWord)
-				{
-					XPosition = i;
-					_LineContents[YPosition]._EndPosition = i;
-					_LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
-					_LineContents.push_back(TextLine());
-					++YPosition;
-					_LineContents[YPosition]._StartPosition = i;
-				}
-				else
-				{
-					i = j;		
-					while(temptext[i] == ' ')
-					{
-						i++;
-					}
-					XPosition = i;
-					_LineContents[YPosition]._EndPosition = i;
-					_LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
-					_LineContents.push_back(TextLine());
-					++YPosition;
-					_LineContents[YPosition]._StartPosition = i;
-				}
-			}
+		    }
+		    if(TempBottomRight.x() > BottomRight.x())
+		    {
+			    if(!getWrapStyleWord())
+			    {
+				    XPosition = i;
+				    _LineContents[YPosition]._EndPosition = i;
+				    _LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
+				    _LineContents.push_back(TextLine());
+				    ++YPosition;
+				    _LineContents[YPosition]._StartPosition = i;
+			    }
+			    else
+			    {
+				    Int32 j;
+				    brokeAtWord = false; 
+				    for(j = i; j > _LineContents[YPosition]._StartPosition; --j)
+				    {
+					    if(!isWordChar(getText()[j])&& !isPunctuationChar(getText()[j]))
+					    {
+						    brokeAtWord = true;
+						    break;
+					    }
+				    }
+				    if(!brokeAtWord)
+				    {
+					    XPosition = i;
+					    _LineContents[YPosition]._EndPosition = i;
+					    _LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
+					    _LineContents.push_back(TextLine());
+					    ++YPosition;
+					    _LineContents[YPosition]._StartPosition = i;
+				    }
+				    else
+				    {
+					    i = j;		
+					    while(temptext[i] == ' ')
+					    {
+						    i++;
+					    }
+					    XPosition = i;
+					    _LineContents[YPosition]._EndPosition = i;
+					    _LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
+					    _LineContents.push_back(TextLine());
+					    ++YPosition;
+					    _LineContents[YPosition]._StartPosition = i;
+				    }
+			    }
 
-		}
-	}
-	_LineContents[YPosition]._EndPosition = temptext.size();
-	_LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
-	
-	//calculate offsets
-	//begin with first line
-	getFont()->getBounds(_LineContents[0]._Contents, TempTopLeft, TempBottomRight);
-	FullTextSize.setValues(TempBottomRight.x(), _LineContents.size()*TempBottomRight.y());
-	TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, FullTextSize, (Real32)0.0, (Real32)0.0);//eventually the alignments will be get horz/vert al
-	_LineContents[0]._LeftHorizontalOffset = TempPos.x();
-	_LineContents[0]._VerticalOffset = TempPos.y();
-	for(Int32 i = 1; i < _LineContents.size(); i++)
-	{						
-		getFont()->getBounds(_LineContents[i]._Contents, TempTopLeft, TempBottomRight);
-		FullTextSize.setValues(TempBottomRight.x(), _LineContents.size()*TempBottomRight.y());
-		TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, FullTextSize, (Real32)0.0, (Real32)0.0);//eventually the alignments will be get horz/vert al
-		_LineContents[i]._LeftHorizontalOffset = TempPos.x();
-		_LineContents[i]._VerticalOffset = TempPos.y()+TempBottomRight.y()*i;
-	}
+		    }
+	    }
+	    _LineContents[YPosition]._EndPosition = temptext.size();
+	    _LineContents[YPosition]._Contents = temptext.substr(_LineContents[YPosition]._StartPosition, _LineContents[YPosition]._EndPosition-_LineContents[YPosition]._StartPosition);
+
+	    //calculate offsets
+	    //begin with first line
+	    getFont()->getBounds(_LineContents[0]._Contents, TempTopLeft, TempBottomRight);
+	    FullTextSize.setValues(TempBottomRight.x(), _LineContents.size()*TempBottomRight.y());
+	    TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, FullTextSize, (Real32)0.0, (Real32)0.0);//eventually the alignments will be get horz/vert al
+	    _LineContents[0]._LeftHorizontalOffset = TempPos.x();
+	    _LineContents[0]._VerticalOffset = TempPos.y();
+	    for(Int32 i = 1; i < _LineContents.size(); i++)
+	    {						
+		    getFont()->getBounds(_LineContents[i]._Contents, TempTopLeft, TempBottomRight);
+		    FullTextSize.setValues(TempBottomRight.x(), _LineContents.size()*TempBottomRight.y());
+		    TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, FullTextSize, (Real32)0.0, (Real32)0.0);//eventually the alignments will be get horz/vert al
+		    _LineContents[i]._LeftHorizontalOffset = TempPos.x();
+		    _LineContents[i]._VerticalOffset = TempPos.y()+TempBottomRight.y()*i;
+	    }
+        
+        //Update my PreferredSize based on text
+        Vec2s PreferredSize(getMinSize());
+		getFont()->getBounds(_LineContents.back()._Contents, TempTopLeft, TempBottomRight);
+        PreferredSize[1] = osgMax<UInt32>(getMinSize().y(), _LineContents.back()._VerticalOffset + TempBottomRight.y());
+        if(getSize() != PreferredSize)
+        {
+            beginEditCP(TextAreaPtr(this), PreferredSizeFieldMask);
+                setPreferredSize(PreferredSize);
+            endEditCP(TextAreaPtr(this), PreferredSizeFieldMask);
+        }
+    }
+    
 	Inherited::changed(whichField, origin);
 }
 

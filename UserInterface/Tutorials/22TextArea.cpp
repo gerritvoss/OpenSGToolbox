@@ -44,6 +44,8 @@
 #include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGTextArea.h>
 
+#include <OpenSG/UserInterface/OSGScrollPanel.h>
+
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
 // with OSG::, but that would be a bit tedious for this example
@@ -160,10 +162,11 @@ int main(int argc, char **argv)
 	// Create a TextArea component
 	TextAreaPtr textArea = osg::TextArea::create();
 
-	beginEditCP(textArea, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
+	beginEditCP(textArea, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::MinSizeFieldMask 
 		| TextComponent::TextColorFieldMask | TextComponent::FontFieldMask 
 		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
-		textArea->setPreferredSize( Vec2s (100, 50) );
+		textArea->setPreferredSize( Vec2s (300, 200) );
+		textArea->setMinSize( Vec2s (300, 200) );
 		textArea->setTextColor( Color4f(0.0, 0.0, 0.0, 1.0) );
 		textArea->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
 		textArea->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
@@ -175,17 +178,25 @@ int main(int argc, char **argv)
 		textArea->setSelectionEnd(3);
 		textArea->setCaretPosition(2);
 
-	endEditCP(textArea, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
+	endEditCP(textArea, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::MinSizeFieldMask 
 		| TextComponent::TextColorFieldMask| TextComponent::FontFieldMask 
 		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
 		
+    //ScrollPanel
+    ScrollPanelPtr TheScrollPanel = ScrollPanel::create();
+    beginEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+	    TheScrollPanel->setPreferredSize(Vec2s(200,200));
+        TheScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        //TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+    endEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+    TheScrollPanel->setViewComponent(textArea);
 	
 	// Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
 	LayoutPtr MainFrameLayout = osg::FlowLayout::create();
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 	   // Add textArea to MainFrame
-	   MainFrame->getChildren().addValue(textArea);
+	   MainFrame->getChildren().addValue(TheScrollPanel);
 	   MainFrame->setLayout(MainFrameLayout);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 
@@ -224,7 +235,7 @@ int main(int argc, char **argv)
     mgr->showAll();
 
     TheWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(550,550),
+                                        Vec2s(750,750),
                                         "OpenSG 22TextArea Window");
 
     //Main Event Loop
