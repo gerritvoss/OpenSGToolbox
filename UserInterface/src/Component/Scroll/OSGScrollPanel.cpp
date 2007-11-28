@@ -114,13 +114,19 @@ void ScrollPanel::updateRangeModels(void)
         getView()->getViewComponent()->getSize().x(),
         false);
 
-    beginEditCP(getVerticalScrollBar(), ScrollBar::BlockIncrementFieldMask);
-        getVerticalScrollBar()->setBlockIncrement(_ViewportVerticalRangeModel.getExtent());
-    endEditCP(getVerticalScrollBar(), ScrollBar::BlockIncrementFieldMask);
+    beginEditCP(getVerticalScrollBar(), ScrollBar::BlockIncrementFieldMask | ScrollBar::UnitIncrementFieldMask);
+        //getVerticalScrollBar()->setBlockIncrement(_ViewportVerticalRangeModel.getExtent());
+        getVerticalScrollBar()->setBlockIncrement(getView()->getViewComponent()->getScrollableBlockIncrement(getView()->getViewPosition(), getView()->getViewPosition() + getView()->getSize(), VERTICAL_ALIGNMENT, 1));
+        
+        getVerticalScrollBar()->setUnitIncrement(getView()->getViewComponent()->getScrollableUnitIncrement(getView()->getViewPosition(), getView()->getViewPosition() + getView()->getSize(), VERTICAL_ALIGNMENT, 1));
+    endEditCP(getVerticalScrollBar(), ScrollBar::BlockIncrementFieldMask | ScrollBar::UnitIncrementFieldMask);
     
-    beginEditCP(getHorizontalScrollBar(), ScrollBar::BlockIncrementFieldMask);
-        getHorizontalScrollBar()->setBlockIncrement(_ViewportHorizontalRangeModel.getExtent());
-    endEditCP(getHorizontalScrollBar(), ScrollBar::BlockIncrementFieldMask);
+    beginEditCP(getHorizontalScrollBar(), ScrollBar::BlockIncrementFieldMask | ScrollBar::UnitIncrementFieldMask);
+        //getHorizontalScrollBar()->setBlockIncrement(_ViewportHorizontalRangeModel.getExtent());
+        getHorizontalScrollBar()->setBlockIncrement(getView()->getViewComponent()->getScrollableBlockIncrement(getView()->getViewPosition(), getView()->getViewPosition() + getView()->getSize(), HORIZONTAL_ALIGNMENT, 1));
+        
+        getHorizontalScrollBar()->setUnitIncrement(getView()->getViewComponent()->getScrollableUnitIncrement(getView()->getViewPosition(), getView()->getViewPosition() + getView()->getSize(), HORIZONTAL_ALIGNMENT, 1));
+    endEditCP(getHorizontalScrollBar(), ScrollBar::BlockIncrementFieldMask | ScrollBar::UnitIncrementFieldMask);
     
     getView()->addChangeListener(&_ViewportChangeListener);
 }
@@ -225,7 +231,7 @@ void ScrollPanel::updateLayout(void)
         Vec2s Size(getPreferredSize());
         if(getVerticalResizePolicy() == RESIZE_TO_VIEW)
         {
-            Size[1] = getView()->getViewComponent()->getSize()[1];
+            Size[1] = getView()->getViewComponent()->getPreferredSize()[1];
             if(HorizontalScrollbarShown)
             {
                Size[1] += getHorizontalScrollBar()->getSize()[1];
@@ -233,7 +239,7 @@ void ScrollPanel::updateLayout(void)
         }
         if(getHorizontalResizePolicy() == RESIZE_TO_VIEW)
         {
-            Size[0] = getView()->getViewComponent()->getSize()[0];
+            Size[0] = getView()->getViewComponent()->getPreferredSize()[0];
             if(VerticalScrollbarShown)
             {
                Size[0] += getVerticalScrollBar()->getSize()[0];
@@ -246,6 +252,36 @@ void ScrollPanel::updateLayout(void)
             endEditCP(ScrollPanelPtr(this), PreferredSizeFieldMask);
         }
     }
+}
+
+void ScrollPanel::mouseWheelMoved(const MouseWheelEvent& e)
+{
+    if(getView() != NullFC && getView()->isContained(e.getLocation(), true))
+    {
+        if(e.getScrollType() == MouseWheelEvent::BLOCK_SCROLL)
+        {
+            if(getVerticalScrollBar()->getVisible())
+            {
+                getVerticalScrollBar()->scrollBlock(-e.getScrollAmount());
+            }
+            else if(getHorizontalScrollBar()->getVisible())
+            {
+                getHorizontalScrollBar()->scrollBlock(-e.getScrollAmount());
+            }
+        }
+        else if(e.getScrollType() == MouseWheelEvent::UNIT_SCROLL)
+        {
+            if(getVerticalScrollBar()->getVisible())
+            {
+                getVerticalScrollBar()->scrollUnit(-e.getUnitsToScroll());
+            }
+            else if(getHorizontalScrollBar()->getVisible())
+            {
+                getHorizontalScrollBar()->scrollUnit(-e.getUnitsToScroll());
+            }
+        }
+    }
+    Container::mouseWheelMoved(e);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

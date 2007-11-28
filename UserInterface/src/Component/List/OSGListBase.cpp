@@ -71,6 +71,9 @@ const OSG::BitVector  ListBase::CellLayoutFieldMask =
 const OSG::BitVector  ListBase::ListFieldMask = 
     (TypeTraits<BitVector>::One << ListBase::ListFieldId);
 
+const OSG::BitVector  ListBase::CellMajorAxisLengthFieldMask = 
+    (TypeTraits<BitVector>::One << ListBase::CellMajorAxisLengthFieldId);
+
 const OSG::BitVector ListBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -82,6 +85,9 @@ const OSG::BitVector ListBase::MTInfluenceMask =
     
 */
 /*! \var ComponentPtr    ListBase::_mfList
+    
+*/
+/*! \var UInt32          ListBase::_sfCellMajorAxisLength
     
 */
 
@@ -98,7 +104,12 @@ FieldDescription *ListBase::_desc[] =
                      "List", 
                      ListFieldId, ListFieldMask,
                      false,
-                     (FieldAccessMethod) &ListBase::getMFList)
+                     (FieldAccessMethod) &ListBase::getMFList),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "CellMajorAxisLength", 
+                     CellMajorAxisLengthFieldId, CellMajorAxisLengthFieldMask,
+                     false,
+                     (FieldAccessMethod) &ListBase::getSFCellMajorAxisLength)
 };
 
 
@@ -177,6 +188,7 @@ void ListBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 ListBase::ListBase(void) :
     _sfCellLayout             (UInt32(VERTICAL_ALIGNMENT)), 
     _mfList                   (), 
+    _sfCellMajorAxisLength    (UInt32(50)), 
     Inherited() 
 {
 }
@@ -188,6 +200,7 @@ ListBase::ListBase(void) :
 ListBase::ListBase(const ListBase &source) :
     _sfCellLayout             (source._sfCellLayout             ), 
     _mfList                   (source._mfList                   ), 
+    _sfCellMajorAxisLength    (source._sfCellMajorAxisLength    ), 
     Inherited                 (source)
 {
 }
@@ -214,6 +227,11 @@ UInt32 ListBase::getBinSize(const BitVector &whichField)
         returnValue += _mfList.getBinSize();
     }
 
+    if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
+    {
+        returnValue += _sfCellMajorAxisLength.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -231,6 +249,11 @@ void ListBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ListFieldMask & whichField))
     {
         _mfList.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
+    {
+        _sfCellMajorAxisLength.copyToBin(pMem);
     }
 
 
@@ -251,6 +274,11 @@ void ListBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfList.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
+    {
+        _sfCellMajorAxisLength.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -267,6 +295,9 @@ void ListBase::executeSyncImpl(      ListBase *pOther,
     if(FieldBits::NoField != (ListFieldMask & whichField))
         _mfList.syncWith(pOther->_mfList);
 
+    if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
+        _sfCellMajorAxisLength.syncWith(pOther->_sfCellMajorAxisLength);
+
 
 }
 #else
@@ -279,6 +310,9 @@ void ListBase::executeSyncImpl(      ListBase *pOther,
 
     if(FieldBits::NoField != (CellLayoutFieldMask & whichField))
         _sfCellLayout.syncWith(pOther->_sfCellLayout);
+
+    if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
+        _sfCellMajorAxisLength.syncWith(pOther->_sfCellMajorAxisLength);
 
 
     if(FieldBits::NoField != (ListFieldMask & whichField))

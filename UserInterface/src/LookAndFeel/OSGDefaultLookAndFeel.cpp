@@ -1565,6 +1565,7 @@ void DefaultLookAndFeel::init(void)
         //Scroll Bar
         DefaultScrollBar->setVerticalScrollBar(DefaultScrollBarDrawObject);
         DefaultScrollBar->setHorizontalScrollBar(DefaultScrollBarDrawObject);
+        DefaultScrollBar->setScrollBarMinLength(20);
 	endEditCP(DefaultScrollBar);
 	
     ScrollBar::getClassType().setPrototype(DefaultScrollBar);
@@ -1820,6 +1821,7 @@ void DefaultLookAndFeel::init(void)
 		//Opacity
 		DefaultList->setOpacity(1.0);
 		
+        DefaultList->setCellMajorAxisLength(25);
 	endEditCP(DefaultList);
 	
     List::getClassType().setPrototype(DefaultList);

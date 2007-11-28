@@ -2608,6 +2608,7 @@ void WindowsLookAndFeel::init(void)
         //Scroll Bar
         WindowsScrollBar->setVerticalScrollBar(WindowsVerticalScrollBarDrawObject);
         WindowsScrollBar->setHorizontalScrollBar(WindowsHorizontalScrollBarDrawObject);
+        WindowsScrollBar->setScrollBarMinLength(20);
 	endEditCP(WindowsScrollBar);
 	
     ScrollBar::getClassType().setPrototype(WindowsScrollBar);
@@ -2778,6 +2779,8 @@ void WindowsLookAndFeel::init(void)
 		
 		//Opacity
 		WindowsList->setOpacity(1.0);
+        
+        WindowsList->setCellMajorAxisLength(25);
 		
 	endEditCP(WindowsList);
 	

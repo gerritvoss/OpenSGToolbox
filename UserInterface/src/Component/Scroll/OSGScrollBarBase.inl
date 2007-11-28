@@ -173,6 +173,13 @@ SFButtonPtr *ScrollBarBase::getSFHorizontalScrollField(void)
     return &_sfHorizontalScrollField;
 }
 
+//! Get the ScrollBar::_sfScrollBarMinLength field.
+inline
+SFUInt32 *ScrollBarBase::getSFScrollBarMinLength(void)
+{
+    return &_sfScrollBarMinLength;
+}
+
 
 //! Get the value of the ScrollBar::_sfOrientation field.
 inline
@@ -403,6 +410,27 @@ inline
 void ScrollBarBase::setHorizontalScrollField(const ButtonPtr &value)
 {
     _sfHorizontalScrollField.setValue(value);
+}
+
+//! Get the value of the ScrollBar::_sfScrollBarMinLength field.
+inline
+UInt32 &ScrollBarBase::getScrollBarMinLength(void)
+{
+    return _sfScrollBarMinLength.getValue();
+}
+
+//! Get the value of the ScrollBar::_sfScrollBarMinLength field.
+inline
+const UInt32 &ScrollBarBase::getScrollBarMinLength(void) const
+{
+    return _sfScrollBarMinLength.getValue();
+}
+
+//! Set the value of the ScrollBar::_sfScrollBarMinLength field.
+inline
+void ScrollBarBase::setScrollBarMinLength(const UInt32 &value)
+{
+    _sfScrollBarMinLength.setValue(value);
 }
 
 

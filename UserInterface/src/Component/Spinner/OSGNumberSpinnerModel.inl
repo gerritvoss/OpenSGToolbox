@@ -148,7 +148,7 @@ NumberTypeT NumberSpinnerModel<NumberTypeT>::getMinimum(void) const
 template<class NumberTypeT> inline
 NumberTypeT NumberSpinnerModel<NumberTypeT>::getNumber(void) const
 {
-    return _Value.getValue();
+    return dynamic_cast<SField<NumberTypeT>*>(_Value.get())->getValue();;
 }
 
 template<class NumberTypeT> inline

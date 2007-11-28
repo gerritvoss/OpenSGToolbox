@@ -97,6 +97,9 @@ const OSG::BitVector  ScrollBarBase::HorizontalScrollBarFieldMask =
 const OSG::BitVector  ScrollBarBase::HorizontalScrollFieldFieldMask = 
     (TypeTraits<BitVector>::One << ScrollBarBase::HorizontalScrollFieldFieldId);
 
+const OSG::BitVector  ScrollBarBase::ScrollBarMinLengthFieldMask = 
+    (TypeTraits<BitVector>::One << ScrollBarBase::ScrollBarMinLengthFieldId);
+
 const OSG::BitVector ScrollBarBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -135,6 +138,9 @@ const OSG::BitVector ScrollBarBase::MTInfluenceMask =
     
 */
 /*! \var ButtonPtr       ScrollBarBase::_sfHorizontalScrollField
+    
+*/
+/*! \var UInt32          ScrollBarBase::_sfScrollBarMinLength
     
 */
 
@@ -196,7 +202,12 @@ FieldDescription *ScrollBarBase::_desc[] =
                      "HorizontalScrollField", 
                      HorizontalScrollFieldFieldId, HorizontalScrollFieldFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollBarBase::getSFHorizontalScrollField)
+                     (FieldAccessMethod) &ScrollBarBase::getSFHorizontalScrollField),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "ScrollBarMinLength", 
+                     ScrollBarMinLengthFieldId, ScrollBarMinLengthFieldMask,
+                     false,
+                     (FieldAccessMethod) &ScrollBarBase::getSFScrollBarMinLength)
 };
 
 
@@ -283,6 +294,7 @@ ScrollBarBase::ScrollBarBase(void) :
     _sfHorizontalMaxButton    (ButtonPtr(NullFC)), 
     _sfHorizontalScrollBar    (ButtonPtr(NullFC)), 
     _sfHorizontalScrollField  (ButtonPtr(NullFC)), 
+    _sfScrollBarMinLength     (UInt32(20)), 
     Inherited() 
 {
 }
@@ -303,6 +315,7 @@ ScrollBarBase::ScrollBarBase(const ScrollBarBase &source) :
     _sfHorizontalMaxButton    (source._sfHorizontalMaxButton    ), 
     _sfHorizontalScrollBar    (source._sfHorizontalScrollBar    ), 
     _sfHorizontalScrollField  (source._sfHorizontalScrollField  ), 
+    _sfScrollBarMinLength     (source._sfScrollBarMinLength     ), 
     Inherited                 (source)
 {
 }
@@ -374,6 +387,11 @@ UInt32 ScrollBarBase::getBinSize(const BitVector &whichField)
         returnValue += _sfHorizontalScrollField.getBinSize();
     }
 
+    if(FieldBits::NoField != (ScrollBarMinLengthFieldMask & whichField))
+    {
+        returnValue += _sfScrollBarMinLength.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -436,6 +454,11 @@ void ScrollBarBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (HorizontalScrollFieldFieldMask & whichField))
     {
         _sfHorizontalScrollField.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ScrollBarMinLengthFieldMask & whichField))
+    {
+        _sfScrollBarMinLength.copyToBin(pMem);
     }
 
 
@@ -501,6 +524,11 @@ void ScrollBarBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfHorizontalScrollField.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ScrollBarMinLengthFieldMask & whichField))
+    {
+        _sfScrollBarMinLength.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -544,6 +572,9 @@ void ScrollBarBase::executeSyncImpl(      ScrollBarBase *pOther,
     if(FieldBits::NoField != (HorizontalScrollFieldFieldMask & whichField))
         _sfHorizontalScrollField.syncWith(pOther->_sfHorizontalScrollField);
 
+    if(FieldBits::NoField != (ScrollBarMinLengthFieldMask & whichField))
+        _sfScrollBarMinLength.syncWith(pOther->_sfScrollBarMinLength);
+
 
 }
 #else
@@ -586,6 +617,9 @@ void ScrollBarBase::executeSyncImpl(      ScrollBarBase *pOther,
 
     if(FieldBits::NoField != (HorizontalScrollFieldFieldMask & whichField))
         _sfHorizontalScrollField.syncWith(pOther->_sfHorizontalScrollField);
+
+    if(FieldBits::NoField != (ScrollBarMinLengthFieldMask & whichField))
+        _sfScrollBarMinLength.syncWith(pOther->_sfScrollBarMinLength);
 
 
 

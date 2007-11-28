@@ -358,10 +358,24 @@ void List::contentsChanged(ListDataEvent e)
 		{
 			beginEditCP(getChildren().getValue(i), PositionFieldMask | SizeFieldMask);
 			   getChildren().getValue(i)->setPosition(Position);
-			   getChildren().getValue(i)->setSize( Vec2s(getSize().x(), getChildren().getValue(i)->getPreferredSize().y()) );
+               if(getCellLayout() == VERTICAL_ALIGNMENT)
+               {
+			      getChildren().getValue(i)->setSize( Vec2s(getSize().x(), getCellMajorAxisLength()) );
+               }
+               else
+               {
+                  getChildren().getValue(i)->setSize( Vec2s(getCellMajorAxisLength(), getSize().y()) );
+               }
 			endEditCP(getChildren().getValue(i), PositionFieldMask | SizeFieldMask);
 
-			Position[1] += getChildren().getValue(i)->getSize()[1];
+            if(getCellLayout() == VERTICAL_ALIGNMENT)
+            {
+			    Position[1] += getChildren().getValue(i)->getSize()[1];
+            }
+            else
+            {
+			    Position[0] += getChildren().getValue(i)->getSize()[0];
+            }
 		}
 	}
 }
@@ -435,11 +449,11 @@ void List::updateLayout(void)
 			   getChildren().getValue(i)->setPosition(Position);
                if(getCellLayout() == VERTICAL_ALIGNMENT)
                {
-			      getChildren().getValue(i)->setSize( Vec2s(getSize().x(), getChildren().getValue(i)->getPreferredSize().y()) );
+			      getChildren().getValue(i)->setSize( Vec2s(getSize().x(), getCellMajorAxisLength()) );
                }
                else
                {
-                  getChildren().getValue(i)->setSize( Vec2s(getChildren().getValue(i)->getPreferredSize().x(), getSize().y()) );
+                  getChildren().getValue(i)->setSize( Vec2s(getCellMajorAxisLength(), getSize().y()) );
                }
 			endEditCP(getChildren().getValue(i), PositionFieldMask | SizeFieldMask);
 
@@ -453,6 +467,49 @@ void List::updateLayout(void)
             }
 		}
 	}
+}
+
+Vec2s List::getPreferredScrollableViewportSize(void)
+{
+    return getPreferredSize();
+}
+
+Int32 List::getScrollableBlockIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
+{
+    UInt16 MajorAxis;
+    if(orientation == VERTICAL_ALIGNMENT)
+    {
+        MajorAxis = 1;
+    }
+    else
+    {
+        MajorAxis = 0;
+    }
+    
+    return direction * (VisibleRectBottomRight[MajorAxis] - VisibleRectTopLeft[MajorAxis]);
+}
+
+bool List::getScrollableTracksViewportHeight(void)
+{
+    return getCellLayout() != VERTICAL_ALIGNMENT;
+}
+
+bool List::getScrollableTracksViewportWidth(void)
+{
+    return getCellLayout() == VERTICAL_ALIGNMENT;
+}
+
+Int32 List::getScrollableUnitIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
+{
+    if(orientation == getCellLayout())
+    {
+        return getCellMajorAxisLength();
+    }
+    else
+    {
+        return Container::getScrollableUnitIncrement(VisibleRectTopLeft, VisibleRectBottomRight, orientation, direction);
+    }
+    
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -492,11 +549,11 @@ void List::changed(BitVector whichField, UInt32 origin)
         beginEditCP(ListPtr(this), PreferredSizeFieldMask);
             if(getCellLayout() == VERTICAL_ALIGNMENT)
             {
-                setPreferredSize(Vec2s(getChildren().front()->getSize().x(), getChildren().front()->getSize().y()*getChildren().size()));
+                setPreferredSize(Vec2s(getChildren().front()->getSize().x(), getCellMajorAxisLength()*getChildren().size()));
             }
             else
             {
-                setPreferredSize(Vec2s(getChildren().front()->getSize().x()*getChildren().size(), getChildren().front()->getSize().y()));
+                setPreferredSize(Vec2s(getCellMajorAxisLength()*getChildren().size(), getChildren().front()->getSize().y()));
             }
         endEditCP(ListPtr(this), PreferredSizeFieldMask);
     }

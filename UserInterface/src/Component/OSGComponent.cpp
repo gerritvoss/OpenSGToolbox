@@ -57,6 +57,7 @@
 #include "Component/Menu/OSGPopupMenu.h"
 
 #include "Component/Misc/OSGRotatedComponent.h"
+#include "Util/OSGUIDefines.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -645,6 +646,51 @@ bool Component::takeFocus(bool Temporary)
 		}
 		return true;
     }
+}
+
+Vec2s Component::getPreferredScrollableViewportSize(void)
+{
+    return getPreferredSize();
+}
+
+Int32 Component::getScrollableBlockIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
+{
+    UInt16 MajorAxis;
+    if(orientation == VERTICAL_ALIGNMENT)
+    {
+        MajorAxis = 1;
+    }
+    else
+    {
+        MajorAxis = 0;
+    }
+    
+    return direction * (VisibleRectBottomRight[MajorAxis] - VisibleRectTopLeft[MajorAxis]);
+}
+
+bool Component::getScrollableTracksViewportHeight(void)
+{
+    return false;
+}
+
+bool Component::getScrollableTracksViewportWidth(void)
+{
+    return false;
+}
+
+Int32 Component::getScrollableUnitIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
+{
+    UInt16 MajorAxis;
+    if(orientation == VERTICAL_ALIGNMENT)
+    {
+        MajorAxis = 1;
+    }
+    else
+    {
+        MajorAxis = 0;
+    }
+    
+    return direction * 5;
 }
 
 /*-------------------------------------------------------------------------*\

@@ -110,6 +110,13 @@ MFComponentPtr *ListBase::getMFList(void)
     return &_mfList;
 }
 
+//! Get the List::_sfCellMajorAxisLength field.
+inline
+SFUInt32 *ListBase::getSFCellMajorAxisLength(void)
+{
+    return &_sfCellMajorAxisLength;
+}
+
 
 //! Get the value of the List::_sfCellLayout field.
 inline
@@ -130,6 +137,27 @@ inline
 void ListBase::setCellLayout(const UInt32 &value)
 {
     _sfCellLayout.setValue(value);
+}
+
+//! Get the value of the List::_sfCellMajorAxisLength field.
+inline
+UInt32 &ListBase::getCellMajorAxisLength(void)
+{
+    return _sfCellMajorAxisLength.getValue();
+}
+
+//! Get the value of the List::_sfCellMajorAxisLength field.
+inline
+const UInt32 &ListBase::getCellMajorAxisLength(void) const
+{
+    return _sfCellMajorAxisLength.getValue();
+}
+
+//! Set the value of the List::_sfCellMajorAxisLength field.
+inline
+void ListBase::setCellMajorAxisLength(const UInt32 &value)
+{
+    _sfCellMajorAxisLength.setValue(value);
 }
 
 

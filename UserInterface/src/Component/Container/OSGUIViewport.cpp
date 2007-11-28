@@ -80,15 +80,7 @@ void UIViewport::updateLayout(void)
 {
     if(getViewComponent() != NullFC)
     {
-        Vec2s Size;
-        if(getViewSize() != Vec2s(-1,-1))
-        {
-            Size = getViewSize();
-        }
-        else
-        {
-            Size = getViewComponent()->getPreferredSize();
-        }
+        Vec2s Size(getCorrectedViewSize());
         
         beginEditCP(getViewComponent(), Component::SizeFieldMask | Component::PositionFieldMask);
             getViewComponent()->setSize(Size);
@@ -107,6 +99,19 @@ void UIViewport::produceStateChanged(const ChangeEvent& e)
 	    (*SetItor)->stateChanged(e);
     }
 }
+
+Vec2s UIViewport::getCorrectedViewSize(void) const
+{
+    if(getViewSize() != Vec2s(-1,-1))
+    {
+        return getViewSize();
+    }
+    else
+    {
+        return getViewComponent()->getPreferredSize();
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -155,6 +160,26 @@ void UIViewport::changed(BitVector whichField, UInt32 origin)
         (whichField & SizeFieldMask))
     {
         produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+    }
+    
+    if(whichField & SizeFieldMask &&
+       getViewComponent() != NullFC &&
+       (getViewComponent()->getScrollableTracksViewportHeight() || getViewComponent()->getScrollableTracksViewportWidth()))
+    {
+        Vec2s Size(getViewComponent()->getPreferredSize());
+        
+        if(getViewComponent()->getScrollableTracksViewportHeight())
+        {
+            Size[1] = getSize().y();
+        }
+        
+        if(getViewComponent()->getScrollableTracksViewportWidth())
+        {
+            Size[0] = getSize().x();
+        }
+        beginEditCP(getViewComponent(), Component::SizeFieldMask);
+            getViewComponent()->setSize(Size);
+        endEditCP(getViewComponent(), Component::SizeFieldMask);
     }
 }
 

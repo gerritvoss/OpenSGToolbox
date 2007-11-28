@@ -31,4 +31,13 @@ A UI List.
 		header="Component/OSGComponent.h"
 	>
 	</Field>
+	<Field
+		name="CellMajorAxisLength"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="50"
+	>
+	</Field>
 </FieldContainer>

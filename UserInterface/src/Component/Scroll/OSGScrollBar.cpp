@@ -160,7 +160,7 @@ void ScrollBar::updateScrollBarLayout(void)
                             (static_cast<Real32>(getValue() - getMinimum())/static_cast<Real32>(getMaximum() - getMinimum())) * (getScrollField()->getSize()[MajorAxis]);
         Position[MinorAxis] = getScrollField()->getPosition()[MinorAxis];
 
-        Size[MajorAxis] = (static_cast<Real32>(getExtent())/static_cast<Real32>(getMaximum() - getMinimum())) * (getScrollField()->getSize()[MajorAxis]);
+        Size[MajorAxis] = osgMax<UInt32>( getScrollBarMinLength(),(static_cast<Real32>(getExtent())/static_cast<Real32>(getMaximum() - getMinimum())) * (getScrollField()->getSize()[MajorAxis]));
         Size[MinorAxis] = getScrollField()->getSize()[MinorAxis];
 
         beginEditCP(getScrollBar(), PositionFieldMask | SizeFieldMask);

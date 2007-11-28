@@ -69,6 +69,7 @@
 
 #include <OpenSG/OSGUInt32Fields.h> // CellLayout type
 #include "Component/OSGComponent.h" // List type
+#include <OpenSG/OSGUInt32Fields.h> // CellMajorAxisLength type
 
 #include "OSGListFields.h"
 
@@ -92,13 +93,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
 
     enum
     {
-        CellLayoutFieldId = Inherited::NextFieldId,
-        ListFieldId       = CellLayoutFieldId + 1,
-        NextFieldId       = ListFieldId       + 1
+        CellLayoutFieldId          = Inherited::NextFieldId,
+        ListFieldId                = CellLayoutFieldId          + 1,
+        CellMajorAxisLengthFieldId = ListFieldId                + 1,
+        NextFieldId                = CellMajorAxisLengthFieldId + 1
     };
 
     static const OSG::BitVector CellLayoutFieldMask;
     static const OSG::BitVector ListFieldMask;
+    static const OSG::BitVector CellMajorAxisLengthFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -126,9 +129,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
     /*! \{                                                                 */
 
            SFUInt32            *getSFCellLayout     (void);
+           SFUInt32            *getSFCellMajorAxisLength(void);
 
            UInt32              &getCellLayout     (void);
      const UInt32              &getCellLayout     (void) const;
+           UInt32              &getCellMajorAxisLength(void);
+     const UInt32              &getCellMajorAxisLength(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -136,6 +142,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
     /*! \{                                                                 */
 
      void setCellLayout     ( const UInt32 &value );
+     void setCellMajorAxisLength( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -180,6 +187,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
 
     SFUInt32            _sfCellLayout;
     MFComponentPtr      _mfList;
+    SFUInt32            _sfCellMajorAxisLength;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

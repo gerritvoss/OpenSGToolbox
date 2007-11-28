@@ -120,4 +120,13 @@ A UI ScrollBar.
 		defaultValue="NullFC"
 	>
 	</Field>
+	<Field
+		name="ScrollBarMinLength"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="20"
+	>
+	</Field>
 </FieldContainer>
