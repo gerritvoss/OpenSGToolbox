@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -36,10 +34,15 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#include "OSGColorUIBackground.h"
-#include "OSGCompoundUIBackground.h"
-#include "OSGEmptyUIBackground.h"
-#include "OSGGradientUIBackground.h"
-#include "OSGMaterialUIBackground.h"
-#include "OSGTextureUIBackground.h"
-#include "OSGPatternUIBackground.h"
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <OpenSG/OSGConfig.h>
+
+OSG_BEGIN_NAMESPACE
+
+OSG_END_NAMESPACE
+
+#define OSGSPINNERLISTEDITOR_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+

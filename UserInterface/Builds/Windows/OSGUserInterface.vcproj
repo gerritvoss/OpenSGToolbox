@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="OSGUserInterface"
 	ProjectGUID="{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}"
 	RootNamespace="OSGAnimation"
@@ -3236,6 +3236,34 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Background\OSGMaterialUIBackgroundFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Background\OSGPatternUIBackground.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Background\OSGPatternUIBackground.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Background\OSGPatternUIBackground.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Background\OSGPatternUIBackgroundBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Background\OSGPatternUIBackgroundBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Background\OSGPatternUIBackgroundBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Background\OSGPatternUIBackgroundFields.h"
 					>
 				</File>
 				<File
