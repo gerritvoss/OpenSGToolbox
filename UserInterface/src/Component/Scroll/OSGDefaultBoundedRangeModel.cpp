@@ -72,7 +72,7 @@ void DefaultBoundedRangeModel::setExtent(UInt32 newExtent)
 {
     bool isStateChange(_Extent != newExtent);
     _Extent= newExtent;
-    if(_Value + _Extent > _Maximum)
+    if(_Value + static_cast<Int32>(_Extent) > _Maximum)
     {
         _Value = _Maximum - _Extent;
     }
@@ -86,7 +86,7 @@ void DefaultBoundedRangeModel::setMaximum(Int32 newMaximum)
 {
     bool isStateChange(_Maximum != newMaximum);
     _Maximum= newMaximum;
-    if(_Value + _Extent > _Maximum)
+    if(_Value + static_cast<Int32>(_Extent) > _Maximum)
     {
         _Value = _Maximum - _Extent;
     }
@@ -121,7 +121,7 @@ void DefaultBoundedRangeModel::setRangeProperties(Int32 value, UInt32 extent, In
     _Maximum= max;
     _Minimum= min;
     _ValueIsAdjusting = adjusting;
-    if(value + _Extent > _Maximum && _Extent < _Maximum - _Minimum)
+    if(value + static_cast<Int32>(_Extent) > _Maximum && _Extent < _Maximum - _Minimum)
     {
         _Value = _Maximum - _Extent;
     }
@@ -143,7 +143,7 @@ void DefaultBoundedRangeModel::setRangeProperties(Int32 value, UInt32 extent, In
 void DefaultBoundedRangeModel::setValue(Int32 newValue)
 {
     bool isStateChange(_Value != newValue);
-    if(newValue + _Extent > _Maximum)
+    if(newValue + static_cast<Int32>(_Extent) > _Maximum)
     {
         _Value = _Maximum - _Extent;
     }

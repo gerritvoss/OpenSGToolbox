@@ -45,6 +45,7 @@
 
 #include <OpenSG/UserInterface/OSGSlider.h>
 #include <OpenSG/UserInterface/OSGLabel.h>
+#include <OpenSG/UserInterface/OSGDefaultBoundedRangeModel.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -138,11 +139,21 @@ int main(int argc, char **argv)
 	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
+	// Create the DefaultBoundedRangeModel and 
+	// set its values
+    DefaultBoundedRangeModel TheBoundedRangeModel;
+    TheBoundedRangeModel.setMinimum(10);
+    TheBoundedRangeModel.setMaximum(100);
+    TheBoundedRangeModel.setValue(80);
+    TheBoundedRangeModel.setExtent(2);
+    
 	//Create the slider
 	SliderPtr TheSlider = Slider::create();
-	beginEditCP(TheSlider, Slider::LabelMapFieldMask);
+	beginEditCP(TheSlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask);
 		TheSlider->getLabelMap()[0] = Label::create();
-	endEditCP(TheSlider, Slider::LabelMapFieldMask);
+		TheSlider->setPreferredSize(Vec2s(50, 200));
+	endEditCP(TheSlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask);
+    TheSlider->setModel(&TheBoundedRangeModel);
 
 	// Create Background to be used with the MainFrame
 	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
@@ -158,7 +169,7 @@ int main(int argc, char **argv)
 	   // when the view is rendered.
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
-       //MainFrame->getChildren().push_back(TheSpinner);
+       MainFrame->getChildren().push_back(TheSlider);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
 
     TutorialKeyListener TheKeyListener;

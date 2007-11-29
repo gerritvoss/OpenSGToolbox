@@ -49,6 +49,9 @@
 #include "Component/Scroll/OSGBoundedRangeModel.h"
 #include "Event/OSGChangeListener.h"
 
+#include <OpenSG/Input/OSGMouseAdapter.h>
+#include <OpenSG/Input/OSGMouseMotionAdapter.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief Slider class. See \ref 
@@ -166,8 +169,30 @@ class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
 	friend class BoundedRangeModelChangeListener;
 
 	BoundedRangeModelChangeListener _BoundedRangeModelChangeListener;
+	
+	class KnobDraggedListener : public MouseMotionAdapter, public MouseAdapter
+	{
+	public :
+		KnobDraggedListener(SliderPtr TheSlider);
+		virtual void mouseDragged(const MouseEvent& e);
+		
+		virtual void mousePressed(const MouseEvent& e);
+		virtual void mouseReleased(const MouseEvent& e);
+	protected :
+		SliderPtr _Slider;
+	};
+
+	friend class _KnobDraggedListener;
+
+	KnobDraggedListener _KnobDraggedListener;
 
 	void updateSliderTrack(void);
+
+	UInt32 getTrackLength(void) const;
+	Int32 getTrackMin(void) const;
+	Int32 getTrackMax(void) const;
+
+	UInt32 _TrackInset;
     /*==========================  PRIVATE  ================================*/
   private:
 

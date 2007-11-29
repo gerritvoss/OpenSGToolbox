@@ -151,7 +151,7 @@ protected:
 			FieldTypeListScrollPanelConstraints->setGridY(0);
 			FieldTypeListScrollPanelConstraints->setGridHeight(1);
 			FieldTypeListScrollPanelConstraints->setGridWidth(2);
-			FieldTypeListScrollPanelConstraints->setFill(FILL_NONE);
+			FieldTypeListScrollPanelConstraints->setFill(FILL_HORIZONTAL);
 			FieldTypeListScrollPanelConstraints->setVerticalAlignment(1.0);
 		endEditCP(FieldTypeListScrollPanelConstraints);
 
