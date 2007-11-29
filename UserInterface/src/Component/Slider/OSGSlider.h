@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGSliderBase.h"
 #include "Component/Scroll/OSGBoundedRangeModel.h"
