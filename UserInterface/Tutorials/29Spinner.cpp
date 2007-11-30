@@ -137,13 +137,33 @@ int main(int argc, char **argv)
 	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
 
+	/******************************************************
+			
+			Create a Spinner Model.  This dictates 
+			how the Spinner functions.
+			-setMaximum(int): determines the maximum 
+				value the Spinner will be allowed
+			-setMinimum(int): determines the minimum 
+				value the Spinner will be allowed
+			-setStepSize(int): determines the 
+				incremental step size
+			-setValue(SharedFieldPtr(new SFInt32(START INT)):
+				determines initial starting value
+				of the Spinner
+ 
+	******************************************************/	
     //Create the spinner Model
     Int32SpinnerModelPtr TheModel(new Int32SpinnerModel());
     TheModel->setMaximum(100);
     TheModel->setMinimum(-100);
-    TheModel->setStepSize(2);
+    TheModel->setStepSize(2.2);
     TheModel->setValue(SharedFieldPtr(new SFInt32(0)));
 
+	/******************************************************
+			
+			Create a Spinner.  
+ 
+	******************************************************/	
     //Create the Spinner
     SpinnerPtr TheSpinner = Spinner::create();
     TheSpinner->setModel(TheModel);

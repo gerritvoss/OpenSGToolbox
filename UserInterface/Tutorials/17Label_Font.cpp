@@ -62,8 +62,8 @@ OSG_USING_NAMESPACE
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 bool ExitApp = false;
+// Declare variables upfront 
 std::map<std::string, UIFontPtr> FontMap;
-// Declare upfront so they can be referenced
 LabelPtr label1;
 ListPtr list;
 
@@ -97,8 +97,17 @@ public:
 			Label's Font to be the Font contained
 			within the Label.
 
+			The ListCellGenerator is what is
+			used to create the Component
+			values for the List.  The Default 
+			is to simply create Label components
+			which normally simply contain a text
+			value.  In this case, the
+			DefaultListCellGenerator is 
+			modified slightly to give each
+			Label component the Font which
+			its text will display.
 
-			cellgenerator craetes the components within the actual list itself; in this case they are labels
 
 	******************************************************/
 
@@ -108,30 +117,32 @@ class FontListCellGenerator : public DefaultListCellGenerator
   public:
     virtual ComponentPtr getListCellGeneratorComponent(ListPtr list, SharedFieldPtr value, UInt32 index, bool isSelected, bool cellHasFocus)
     {
-		// Create using the DefaultListCellGenerator 
-		// a Label [its default] with Text equal to the
-		// 
+		// Create using the DefaultListCellGenerator a
+		// Label [its default] with the Font name as its text
+
         LabelPtr TheLabel = Label::Ptr::dcast(
             DefaultListCellGenerator::getListCellGeneratorComponent(
             list, value, index, isSelected, cellHasFocus)
             );
 
-        
 		std::string FontFamilyString;
+		// Converts the Fontname to correct type
 		if(value->getType() == SFString::getClassType())
 		{
 			FontFamilyString = dynamic_cast<SFString*>(value.get())->getValue();
 		}
 		else
 		{
+			// Gives a default value
             FontFamilyString = "Times New Roman";
 		}
 		
-		//Set the Font for the Label
+		// Add the required Font to FontMapItor
         std::map<std::string, UIFontPtr>::iterator FontMapItor = FontMap.find(FontFamilyString);
         if(FontMapItor != FontMap.end())
         {
             beginEditCP(TheLabel, Label::FontFieldMask);
+				// Set the Label's Font to be its correct Font
                 TheLabel->setFont((*FontMapItor).second);
             endEditCP(TheLabel, Label::FontFieldMask);
         }
@@ -220,44 +231,45 @@ int main(int argc, char **argv)
 	/******************************************************
 
 			Determine which Fonts your computer can
-			use as a Font and makes an array
+			use as a Font and makes a vector
 			containing them
-
 
 	******************************************************/
 	std::vector<std::string> family;
 	TextFaceFactory::the().getFontFamilies(family);
-	// Display all Fonts available
+
+	/******************************************************
+
+			Cycle through all available Fonts
+			and add a Font of the type contained
+			in its string name to a map containing
+			both values.
+
+	******************************************************/
 	for (unsigned int i =0; i<family.size(); ++i)
 	{
-        //Create the Font
+        //Create the Fonts
         UIFontPtr TheFont = UIFont::create();
         beginEditCP(TheFont);
-	        // Determines Font Family (as done above)	Note:
-	        // a default setting is included if the Font 
-	        // given to the Font does not exist; try putting
-	        // random characters into setFamily.  
 	        TheFont->setFamily(family[i]);
 	        TheFont->setSize(16);
 	        TheFont->setStyle(TextFace::STYLE_PLAIN);
         endEditCP(TheFont);
+		// Setup the FontMap map to pair the
+		// string Font name with a Font with
+		// that Font
         FontMap[family[i]] = TheFont;
 	}
-	// Set default Font to Times New Roman if Wide
-	// Latin is not included on your machine.  
-	std::string buttonFontFamily("Arial");
-	if (std::find(family.begin(), family.end(), buttonFontFamily) == family.end())
-	{
-		buttonFontFamily = "Times New Roman";
-	}
+
 	
 	/******************************************************
 
 			Create a Font.
+
 			-setFamily(TYPE) determines what format the Font
-				is.  The above For loop displays all the
-				Font options you have on your machine in the
-				console window.
+				is.  All Fonts available on your machine
+				will be displayed when you run this 
+				tutorial in a List.
 			-setSize(SIZE) determines the size of the 
 				Font.
 			-setFont(TextFace::STYLE) determines the 
@@ -269,11 +281,12 @@ int main(int argc, char **argv)
 	******************************************************/
 	UIFontPtr labelFont = UIFont::create();
 	beginEditCP(labelFont);
-		// Determines Font Family (as determined above)	Note:
-		// a default setting is included if the Font 
-		// given to the Font does not exist; try putting
-		// random characters in for setFamily.  
-		labelFont->setFamily(buttonFontFamily);
+		// Note that there is a default Font
+		// in case the Family type is gibberish.
+		// This is only apparent when initially run
+		// (when list is selected, a new Font is assigned)
+		//labelFont->setFamily("Times New Roman");
+		labelFont->setFamily("randomgibberishfontwhichdoesn'texist");
 		labelFont->setSize(25);
 		labelFont->setStyle(TextFace::STYLE_PLAIN);
 	endEditCP(labelFont);
@@ -331,7 +344,8 @@ int main(int argc, char **argv)
 	/******************************************************
 
 			The following creates a list of all
-			the fonts available on your machine.
+			the fonts available on your machine,
+			and adds them to a ScrollPanel.
 
 			For more information about Lists, see
 			18List.
@@ -344,18 +358,15 @@ int main(int argc, char **argv)
 	// Create ListModel Component
 	AbstractListModel Model;
 
-	std::vector<std::string> FontFamilies;
-	TextFaceFactory::the().getFontFamilies(FontFamilies);
-
 	// Display all Fonts available
     std::map<std::string, UIFontPtr>::iterator FontMapItor;
 	for (FontMapItor = FontMap.begin(); FontMapItor != FontMap.end() ; ++FontMapItor)
 	{
-	    // Add all available Fonts to it
+	    // Add the Fonts to the List
 	    Model.pushBack(SharedFieldPtr(new SFString((*FontMapItor).first)));
 	}
 
-	// Creates CellGenerator 
+	// Creates CellGenerator
 	FontListCellGenerator CellGenerator;
 
 
@@ -365,12 +376,8 @@ int main(int argc, char **argv)
 		list->setPreferredSize( Vec2s (200, 300) );
         list->setCellLayout(VERTICAL_ALIGNMENT);
 	endEditCP(list, Component::PreferredSizeFieldMask | List::CellLayoutFieldMask);
-	// Assign the Model, CellGenerator, and SelectionModel
-	// to the List
 	list->setModel(&Model);
-	// Assigns the CellGenerator created above
 	list->setCellGenerator(&CellGenerator);
-	// Creates and assigns a SelectionMode
     ListSelectionModelPtr  SelectionModel(new DefaultListSelectionModel);
     SelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
 	list->setSelectionModel(SelectionModel);

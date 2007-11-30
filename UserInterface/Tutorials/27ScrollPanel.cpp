@@ -132,7 +132,12 @@ int main(int argc, char **argv)
 			Create a UIViewport to use with the
 			ScrollPanel.  This sets up a secondary
 			viewport inside the ScrollPanel.  Without
-			this, 
+			this, the ScrollPanel would not function
+			correctly.
+
+			The Panel created above is added to be
+			viewed in the UIViewport and the size
+			and position are set.
 
  
 	******************************************************/	
@@ -160,7 +165,7 @@ int main(int argc, char **argv)
 				added.  Default is NO_RESIZE.
 			-setVerticalResizePolicy(): same as
 				HorizontalResizePolicy except in
-				the Vertial Direction
+				the Vertical Direction
 
 			-setViewcomponent(COMPONENT): sets which
 				Component will be added into
@@ -177,7 +182,8 @@ int main(int argc, char **argv)
         //TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
 		TheScrollPanel->setEnabled(false);
     endEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-    TheScrollPanel->setViewComponent(viewablePanel);
+    
+	TheScrollPanel->setViewComponent(viewablePanel);
 
 
    	/******************************************************
@@ -200,11 +206,11 @@ int main(int argc, char **argv)
 			-.setValue(Int):  This determines the 
 				initial location of the Bar on the
 				ScrollBar.  This is determined from
-				the Min/Max
+				the Min/Max values.
 			-.setExtent(Int): This determines the size
 				of the Bar on the ScrollBar as a 
 				fraction of the total size (which is 
-				determined by the Min/Max values)
+				determined from the Min/Max values)
 
 			Second, create the ScrollBar itself.
 			This has several characterstics applied 
@@ -214,7 +220,10 @@ int main(int argc, char **argv)
 				which orientation the ScrollBar will
 				be.  Arguments are: VERTICAL_ALIGNMENT
 				and HORIZONTAL_ALIGNMENT
-			-setUnitIncrement(Int):
+			-setUnitIncrement(Int): Determines how
+				much the scoller moves per click
+				on its end arrows.  Relative to the
+				Min/Max values as well.
 			-setBlockIncrement(Int): This determines
 				how many units the ScrollBar moves 
 				when the "non-scroller" is clicked.
@@ -226,7 +235,11 @@ int main(int argc, char **argv)
 				would also be impossible to directly
 				click the scroller to a middle location.
 
-
+			Note that while in this tutorial both
+			ScrollBars use the same BoundedRangeModel
+			(which causes them to be linked), each 
+			ScrollBar individually has these last two 
+			settings uniquely set.
 
 	******************************************************/	
    
