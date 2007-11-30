@@ -148,11 +148,11 @@ int main(int argc, char **argv)
 
 	/***************************************************
 					
-				Create and populate the group of Radio Buttons
-				Defining the group allows you to pick which radio
-				buttons are tied together so that only one can be
-				selected. Note that RadioButtonGroup is not a Field
-				Container, so it is edited differently
+		Create and populate the group of Radio Buttons
+		Defining the group allows you to pick which radio
+		buttons are tied together so that only one can be
+		selected. Note that RadioButtonGroup is not a Field
+		Container, so it is edited differently
 
 
 	******************************************************/

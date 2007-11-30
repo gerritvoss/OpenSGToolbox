@@ -42,6 +42,8 @@
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGUIBackgrounds.h>
+#include <OpenSG/UserInterface/OSGRadioButton.h>
+#include <OpenSG/UserInterface/OSGRadioButtonGroup.h>
 
 #include <OpenSG/UserInterface/OSGSpinner.h>
 #include <OpenSG/UserInterface/OSGNumberSpinnerModel.h>
@@ -56,12 +58,49 @@ SimpleSceneManager *mgr;
 
 bool ExitApp = false;
 
+Int32SpinnerModelPtr TheModel(new Int32SpinnerModel());
+
+
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2s Size);
 
 // Create a class to allow for the use of the Escape
 // key to exit
+
+
+
+class singleIncrementButtonListener : public ButtonSelectedListener
+{
+public:
+
+   virtual void buttonSelected(const ButtonSelectedEvent& e)
+		{		 
+			TheModel->setStepSize(1);
+
+		}
+
+   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   {
+			TheModel->setStepSize(2);
+   }
+};
+class doubleIncrementButtonListener : public ButtonSelectedListener
+{
+public:
+
+   virtual void buttonSelected(const ButtonSelectedEvent& e)
+		{		 
+			TheModel->setStepSize(2);
+		}
+
+   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   {
+			TheModel->setStepSize(1);
+   }
+};
+
+
 class TutorialKeyListener : public KeyListener
 {
 public:
@@ -150,13 +189,17 @@ int main(int argc, char **argv)
 			-setValue(SharedFieldPtr(new SFInt32(START INT)):
 				determines initial starting value
 				of the Spinner
+
+			Note: the StepSize can be changed 
+			dynamically as done in this 
+			Tutorial with ButtonSelectedListeners.
  
 	******************************************************/	
-    //Create the spinner Model
-    Int32SpinnerModelPtr TheModel(new Int32SpinnerModel());
-    TheModel->setMaximum(100);
+    //Create the spinner Model (note created above)
+    //Int32SpinnerModelPtr TheModel(new Int32SpinnerModel());
+	TheModel->setMaximum(100);
     TheModel->setMinimum(-100);
-    TheModel->setStepSize(2.2);
+    TheModel->setStepSize(2);
     TheModel->setValue(SharedFieldPtr(new SFInt32(0)));
 
 	/******************************************************
@@ -167,6 +210,39 @@ int main(int argc, char **argv)
     //Create the Spinner
     SpinnerPtr TheSpinner = Spinner::create();
     TheSpinner->setModel(TheModel);
+
+
+	
+	/******************************************************
+			
+			Create a RadioButtonPanel to allow
+			for certain characteristics of the
+			Spinner to be changed dynamically.
+			See 14RadioButton for more 
+			information.
+ 
+	******************************************************/	
+
+	RadioButtonPtr singleIncrementButton = RadioButton::create();
+	RadioButtonPtr doubleIncrementButton = RadioButton::create();
+	beginEditCP(singleIncrementButton, Button::TextColorFieldMask | Component::PreferredSizeFieldMask);
+		singleIncrementButton->setText("Increment by 1");
+		singleIncrementButton->setPreferredSize( Vec2s(100, 50) );
+	beginEditCP(singleIncrementButton, Button::TextColorFieldMask | Component::PreferredSizeFieldMask);
+	singleIncrementButtonListener singleIncrement;
+	singleIncrementButton->addButtonSelectedListener(&singleIncrement);
+
+	beginEditCP(doubleIncrementButton, Button::TextColorFieldMask | Component::PreferredSizeFieldMask);
+		doubleIncrementButton->setText("Increment by 2");
+		doubleIncrementButton->setPreferredSize( Vec2s(100, 50) );
+		doubleIncrementButton->setSelected(TRUE);
+	beginEditCP(doubleIncrementButton, Button::TextColorFieldMask | Component::PreferredSizeFieldMask);
+	doubleIncrementButtonListener doubleIncrement;
+	doubleIncrementButton->addButtonSelectedListener(&doubleIncrement);
+
+	RadioButtonGroup radioButtonGroup;
+	radioButtonGroup.addButton(singleIncrementButton);
+	radioButtonGroup.addButton(doubleIncrementButton);
 
 	// Create Background to be used with the MainFrame
 	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
@@ -181,11 +257,15 @@ int main(int argc, char **argv)
 	   // when the view is rendered.
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
+	   MainFrame->getChildren().addValue(singleIncrementButton);
+	   MainFrame->getChildren().addValue(doubleIncrementButton);
        MainFrame->getChildren().push_back(TheSpinner);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
 
     TutorialKeyListener TheKeyListener;
     MainFrame->addKeyListener(&TheKeyListener);
+
+
 
 	//Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();

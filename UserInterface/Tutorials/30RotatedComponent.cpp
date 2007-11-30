@@ -43,6 +43,7 @@
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
+#include <OpenSG/UserInterface/OSGPanel.h>
 
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGToggleButton.h>
@@ -62,6 +63,7 @@ bool ExitApp = false;
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2s Size);
+ComponentPtr createPanel(void);
 
 // Create a class to allow for the use of the Escape
 // key to exit
@@ -197,29 +199,50 @@ int main(int argc, char **argv)
 
 	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
-
-	// Create a Button component
-	ButtonPtr button1 = osg::Button::create();
-
-
-    beginEditCP(button1, Button::TextFieldMask);
-		    button1->setText("Button 1");
-    endEditCP(button1, Button::TextFieldMask);
+    
+	/******************************************************
+			
+			Create a RotatedComponentPtr.
+			-setAngle(Angle, in radians): determines
+				the angle the Component initially
+				is rotated
+			-setInternalComponent(ComponentPtr): 
+				determines what the actual 
+				Component to be rotated is
+			-setResizePolicy(RotatedComponent::ENUM):
+				takes NO_RESIZING, RESIZE_TO_MIN, or
+				RESIZE_TO_MAX.
+ 
+	******************************************************/	
     
     RotatedComponentPtr TheRotatedComponent = RotatedComponent::create();
     Real32 PI(3.14159);
     beginEditCP(TheRotatedComponent, RotatedComponent::AngleFieldMask | RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask);
 		    TheRotatedComponent->setAngle(PI/4);
-            TheRotatedComponent->setInternalComponent(button1);
+            TheRotatedComponent->setInternalComponent(createPanel());
             TheRotatedComponent->setResizePolicy(RotatedComponent::RESIZE_TO_MIN);
     endEditCP(TheRotatedComponent, RotatedComponent::AngleFieldMask | RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask);
     
-	
-	ToggleButtonPtr RotateControlButton = osg::ToggleButton::create();
+	/******************************************************
+			
+			Create a ToggleButton which can 
+			be used to start and stop the 
+			Button from rotating.
 
+			Note: due to the way FlowLayout works
+			you will notice that this ToggleButton
+			will move as well.  In cases where
+			a RotatingComponent is used, an 
+			alternate Layout may be preferred
+			to prevent other Components from 
+			moving as well.
+ 
+	******************************************************/	
+	ToggleButtonPtr RotateControlButton = osg::ToggleButton::create();
     beginEditCP(RotateControlButton, Button::TextFieldMask);
         RotateControlButton->setText("Start Rotating");
     endEditCP(RotateControlButton, Button::TextFieldMask);
+
     
     RotateUpdateListener TheRotateUpdateListener(TheRotatedComponent);
     
@@ -261,7 +284,7 @@ int main(int argc, char **argv)
 	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 	    foreground->setDrawingSurface(drawingSurface);
 		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.5,0.5));
+		foreground->setFrameBounds(Vec2f(0.8,0.8));
 	   //Set the Event Producer for the DrawingSurface
 	   //This is needed in order to get Mouse/Keyboard/etc Input to the UI DrawingSurface
     endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask |UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
@@ -310,4 +333,38 @@ void display(void)
 void reshape(Vec2s Size)
 {
     mgr->resize(Size.x(), Size.y());
+}
+
+
+ComponentPtr createPanel(void)
+{
+	// Function to create a panel to be rotated
+	ButtonPtr button1 = osg::Button::create();
+	ButtonPtr button2 = osg::Button::create();
+	ButtonPtr button3 = osg::Button::create();
+	ButtonPtr button4 = osg::Button::create();
+	FlowLayoutPtr panel1Layout = osg::FlowLayout::create();
+	PanelPtr panel1 = osg::Panel::create();
+	beginEditCP(panel1, Container::ChildrenFieldMask | Container::LayoutFieldMask | Component::PreferredSizeFieldMask);
+		panel1->getChildren().addValue(button1);	
+		panel1->getChildren().addValue(button2);
+		panel1->getChildren().addValue(button3);
+		panel1->getChildren().addValue(button4);
+		panel1->setLayout(panel1Layout);
+		panel1->setPreferredSize( Vec2s(100, 220) );
+	endEditCP(panel1, Container::ChildrenFieldMask | Container::LayoutFieldMask | Component::PreferredSizeFieldMask);
+    beginEditCP(button1, Button::TextFieldMask);
+		    button1->setText("This");
+    endEditCP(button1, Button::TextFieldMask);
+	beginEditCP(button2, Button::TextFieldMask);
+		    button2->setText("Can");
+    endEditCP(button2, Button::TextFieldMask);
+    beginEditCP(button3, Button::TextFieldMask);
+		    button3->setText("Be");
+    endEditCP(button3, Button::TextFieldMask);
+    beginEditCP(button4, Button::TextFieldMask);
+		    button4->setText("Rotated!");
+    endEditCP(button4, Button::TextFieldMask);
+    
+	return panel1;
 }
