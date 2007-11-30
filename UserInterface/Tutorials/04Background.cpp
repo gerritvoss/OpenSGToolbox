@@ -45,12 +45,7 @@
 #include <OpenSG/UserInterface/OSGUIDefines.h>
 
 // Include UIBackground header files
-#include <OpenSG/UserInterface/OSGColorUIBackground.h>
-#include <OpenSG/UserInterface/OSGCompoundUIBackground.h>
-#include <OpenSG/UserInterface/OSGEmptyUIBackground.h>
-#include <OpenSG/UserInterface/OSGGradientUIBackground.h>
-#include <OpenSG/UserInterface/OSGMaterialUIBackground.h>
-#include <OpenSG/UserInterface/OSGTextureUIBackground.h>
+#include <OpenSG/UserInterface/OSGUIBackgrounds.h>
 
 #include <OpenSG/OSGChunkMaterial.h>
 #include <OpenSG/OSGMaterialChunk.h>
@@ -149,6 +144,9 @@ int main(int argc, char **argv)
 
 	// Create a TextureUIBackgroundPtr (textureBackground)
 	TextureUIBackgroundPtr textureBackground = osg::TextureUIBackground::create();
+	
+	// Create a PatternUIBackgroundPtr (patternBackground)
+	PatternUIBackgroundPtr patternBackground = osg::PatternUIBackground::create();
 
 	/******************************************************
 
@@ -215,6 +213,26 @@ int main(int argc, char **argv)
 	beginEditCP(textureBackground, TextureUIBackground::TextureFieldMask);
 		textureBackground->setTexture(BackgroundTextureChunk);
 	endEditCP(textureBackground, TextureUIBackground::TextureFieldMask);
+
+	
+   TextureChunkPtr BackgroundPatternChunk = TextureChunk::create();
+   //ImagePtr LoadedImage = ImageFileHandler::the().read("Data/Checker.jpg");	
+   beginEditCP(BackgroundPatternChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask);
+		BackgroundPatternChunk->setImage(LoadedImage);
+		BackgroundPatternChunk->setWrapS(GL_REPEAT);
+		BackgroundPatternChunk->setWrapT(GL_CLAMP_TO_EDGE);
+	endEditCP(BackgroundPatternChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask);
+
+	beginEditCP(patternBackground);
+		patternBackground->setTexture(BackgroundPatternChunk);
+		patternBackground->setPatternSize(Vec2s(50,50));
+		patternBackground->setVerticalAlignment(0.5);
+		patternBackground->setHorizontalAlignment(0.0);
+		patternBackground->setHorizontalRepeat(PatternUIBackground::PATTERN_REPEAT_BY_POINT);
+		patternBackground->setVerticalRepeat(PatternUIBackground::PATTERN_REPEAT_ABSOLUTE);
+		patternBackground->setHorizontalRepeatValue(1.0);
+		patternBackground->setVerticalRepeatValue(2.0);
+	endEditCP(patternBackground);
 	
 	/******************************************************
 
@@ -229,6 +247,7 @@ int main(int argc, char **argv)
 	ButtonPtr buttonGradient = osg::Button::create();	
 	ButtonPtr buttonMaterial = osg::Button::create();
 	ButtonPtr buttonTexture = osg::Button::create();
+	ButtonPtr buttonPattern = osg::Button::create();
 	
 	// Set the visible text, border, and Background for
 	// each of the various Button components
@@ -281,10 +300,21 @@ int main(int argc, char **argv)
 		buttonTexture->setActiveBackground(textureBackground);
 		buttonTexture->setRolloverBackground(textureBackground);
 		buttonTexture->setPreferredSize(Vec2s(150,50));
-		buttonTexture->setTextColor( Color4f(0.5,0.5,0.5,1.0) );
-		buttonTexture->setRolloverTextColor( Color4f(0.5,0.5,0.5,1.0) );
-		buttonTexture->setActiveTextColor( Color4f(0.5,0.5,0.5,1.0) );
+		buttonTexture->setTextColor( Color4f(0.0,1.0,0.0,1.0) );
+		buttonTexture->setRolloverTextColor( Color4f(0.0,1.0,0.0,1.0) );
+		buttonTexture->setActiveTextColor( Color4f(0.0,1.0,0.0,1.0) );
 	endEditCP(buttonTexture, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask | Button::TextColorFieldMask);
+	
+	beginEditCP(buttonPattern, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask | Button::TextColorFieldMask);
+		buttonPattern->setText("Pattern Background");
+		buttonPattern->setBackground(patternBackground);
+		buttonPattern->setActiveBackground(patternBackground);
+		buttonPattern->setRolloverBackground(patternBackground);
+		buttonPattern->setPreferredSize(Vec2s(150,50));
+		buttonPattern->setTextColor( Color4f(0.0,1.0,0.0,1.0) );
+		buttonPattern->setRolloverTextColor( Color4f(0.0,1.0,0.0,1.0) );
+		buttonPattern->setActiveTextColor( Color4f(0.0,1.0,0.0,1.0) );
+	endEditCP(buttonPattern, Button::TextFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask | Button::TextColorFieldMask);
 
 
 
@@ -312,6 +342,7 @@ int main(int argc, char **argv)
 	   MainFrame->getChildren().addValue(buttonGradient);
 	   MainFrame->getChildren().addValue(buttonMaterial);
 	   MainFrame->getChildren().addValue(buttonTexture);
+	   MainFrame->getChildren().addValue(buttonPattern);
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
