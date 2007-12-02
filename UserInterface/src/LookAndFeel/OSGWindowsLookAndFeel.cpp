@@ -3107,22 +3107,50 @@ void WindowsLookAndFeel::init(void)
     ProgressBar::getClassType().setPrototype(WindowsProgressBar);
     
 	//************************** Slider *****************************
+	RoundedCornerLineBorderPtr WindowsSliderKnobButtonRoundedCornerBorder = RoundedCornerLineBorder::create();
+	beginEditCP(WindowsSliderKnobButtonRoundedCornerBorder);
+		WindowsSliderKnobButtonRoundedCornerBorder->setColor( Color4f(0.71, 0.77, 0.80 ,1.0) );
+		WindowsSliderKnobButtonRoundedCornerBorder->setWidth(1);
+        WindowsSliderKnobButtonRoundedCornerBorder->setCornerRadius(3);
+	endEditCP(WindowsSliderKnobButtonRoundedCornerBorder);
+	
+	MatteBorderPtr WindowsSliderKnobButtonMatteBorder = MatteBorder::create();
+	beginEditCP(WindowsSliderKnobButtonMatteBorder);
+		WindowsSliderKnobButtonMatteBorder->setRightWidth(3);
+		WindowsSliderKnobButtonMatteBorder->setLeftWidth(3);
+		WindowsSliderKnobButtonMatteBorder->setTopWidth(0);
+		WindowsSliderKnobButtonMatteBorder->setBottomWidth(0);
+		WindowsSliderKnobButtonMatteBorder->setColor(Color4f(0.28, 0.8, 0.27, 1.0));
+	endEditCP(WindowsSliderKnobButtonMatteBorder);
+	
+	CompoundBorderPtr WindowsSliderKnobButtonBorder = CompoundBorder::create();
+	beginEditCP(WindowsSliderKnobButtonBorder);
+		WindowsSliderKnobButtonBorder->setInnerBorder(WindowsSliderKnobButtonMatteBorder);
+		WindowsSliderKnobButtonBorder->setOuterBorder(WindowsSliderKnobButtonRoundedCornerBorder);
+	endEditCP(WindowsSliderKnobButtonBorder);
+	
+	ColorUIBackgroundPtr WindowsSliderBackground = ColorUIBackground::create();
+	beginEditCP(WindowsSliderBackground);
+		WindowsSliderBackground->setColor(Color4f(0.95, 0.95, 0.94, 1.0));
+	endEditCP(WindowsSliderBackground);
+
     ButtonPtr WindowsSliderKnobButton = Button::create();
     beginEditCP(WindowsSliderKnobButton);
-        WindowsSliderKnobButton->setPreferredSize(Vec2s(17,17));
+        WindowsSliderKnobButton->setPreferredSize(Vec2s(21,11));
         
 		//Border
-		WindowsSliderKnobButton->setBorder(WindowsScrollBarButtonBorder);
-		WindowsSliderKnobButton->setRolloverBorder(WindowsScrollBarButtonBorder);
-		WindowsSliderKnobButton->setFocusedBorder(WindowsScrollBarButtonBorder);
-		WindowsSliderKnobButton->setDisabledBorder(WindowsScrollBarButtonBorder);
+		WindowsSliderKnobButton->setBorder(WindowsSliderKnobButtonBorder);
+        WindowsSliderKnobButton->setActiveBorder(WindowsSliderKnobButtonBorder);
+		WindowsSliderKnobButton->setRolloverBorder(WindowsSliderKnobButtonBorder);
+		WindowsSliderKnobButton->setFocusedBorder(WindowsSliderKnobButtonBorder);
+		WindowsSliderKnobButton->setDisabledBorder(WindowsSliderKnobButtonBorder);
 
 		//Background
-        WindowsSliderKnobButton->setBackground(WindowsScrollBarButtonBackground);
-        WindowsSliderKnobButton->setActiveBackground(WindowsScrollBarActiveButtonBackground);
-        WindowsSliderKnobButton->setDisabledBackground(WindowsScrollBarDisabledButtonBackground);
-        WindowsSliderKnobButton->setFocusedBackground(WindowsScrollBarButtonBackground);
-        WindowsSliderKnobButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
+        WindowsSliderKnobButton->setBackground(WindowsSliderBackground);
+        WindowsSliderKnobButton->setActiveBackground(WindowsSliderBackground);
+        WindowsSliderKnobButton->setDisabledBackground(WindowsSliderBackground);
+        WindowsSliderKnobButton->setFocusedBackground(WindowsSliderBackground);
+        WindowsSliderKnobButton->setRolloverBackground(WindowsSliderBackground);
 
         WindowsSliderKnobButton->setActiveOffset(Vec2s(0,0));
     beginEditCP(WindowsSliderKnobButton);
@@ -3146,13 +3174,17 @@ void WindowsLookAndFeel::init(void)
 	//Windows SliderDrawObjectBackground
 	ColorUIBackgroundPtr SliderTrackDrawObjectBackground = ColorUIBackground::create();
 	beginEditCP(SliderTrackDrawObjectBackground);
-		SliderTrackDrawObjectBackground->setColor(Color4f(0.0, 1.0, 0.0, 1.0));
+		SliderTrackDrawObjectBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 	endEditCP(SliderTrackDrawObjectBackground);
 	
-	LineBorderPtr SliderTrackDrawObjectBorder = LineBorder::create();
+	BevelBorderPtr SliderTrackDrawObjectBorder = BevelBorder::create();
 	beginEditCP(SliderTrackDrawObjectBorder);
+		SliderTrackDrawObjectBorder->setRaised(true);
 		SliderTrackDrawObjectBorder->setWidth(1);
-		SliderTrackDrawObjectBorder->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
+		SliderTrackDrawObjectBorder->setHighlightInner(Color4f(1.0, 1.0, 1.0, 1.0));
+		SliderTrackDrawObjectBorder->setHighlightOuter(Color4f(1.0, 1.0, 1.0, 1.0));
+		SliderTrackDrawObjectBorder->setShadowInner(Color4f(0.85, 0.85, 0.85, 1.0));
+		SliderTrackDrawObjectBorder->setShadowOuter(Color4f(0.65, 0.65, 0.65, 1.0));
 	endEditCP(SliderTrackDrawObjectBorder);
 
 	//Slider DrawObjectCanvas
@@ -3171,6 +3203,23 @@ void WindowsLookAndFeel::init(void)
 		WindowsSliderTrackCanvas->setFocusedBackground(SliderTrackDrawObjectBackground);
 		WindowsSliderTrackCanvas->setDisabledBackground(SliderTrackDrawObjectBackground);
 	endEditCP(WindowsSliderTrackCanvas);
+
+	//Slider Major Tick Marks
+    RectUIDrawObjectPtr WindowsSliderMajorTickMarks = RectUIDrawObject::create();
+	beginEditCP(WindowsSliderMajorTickMarks);
+       WindowsSliderMajorTickMarks->setTopLeft(Pnt2s(0,0));
+       WindowsSliderMajorTickMarks->setBottomRight(Pnt2s(7,1));
+       WindowsSliderMajorTickMarks->setColor(Color4f(0.63,0.63,0.57,1.0));
+	endEditCP(WindowsSliderMajorTickMarks);
+	
+	//Slider Minor Tick Marks
+    RectUIDrawObjectPtr WindowsSliderMinorTickMarks = RectUIDrawObject::create();
+	beginEditCP(WindowsSliderMinorTickMarks);
+       WindowsSliderMinorTickMarks->setTopLeft(Pnt2s(0,0));
+       WindowsSliderMinorTickMarks->setBottomRight(Pnt2s(4,1));
+       WindowsSliderMinorTickMarks->setColor(Color4f(0.63,0.63,0.57,1.0));
+	endEditCP(WindowsSliderMinorTickMarks);
+
 
 	//Slider
     SliderPtr WindowsSlider = Slider::create();
@@ -3211,8 +3260,13 @@ void WindowsLookAndFeel::init(void)
         WindowsSlider->setTrackDrawObject(WindowsSliderTrackCanvas);
         WindowsSlider->setMinTrackDrawObject(NullFC);
         WindowsSlider->setMaxTrackDrawObject(NullFC);
-        //WindowsSlider->setMajorTickDrawObjects();
-        //WindowsSlider->setMinorTickDrawObjects();
+        WindowsSlider->setTrackInset(6);
+        WindowsSlider->setTrackToTickOffset(8);
+
+        WindowsSlider->getMajorTickDrawObjects().clear();
+        WindowsSlider->getMajorTickDrawObjects().push_back(WindowsSliderMajorTickMarks);
+        WindowsSlider->getMinorTickDrawObjects().clear();
+        WindowsSlider->getMinorTickDrawObjects().push_back(WindowsSliderMinorTickMarks);
     endEditCP(WindowsSlider);
     
     Slider::getClassType().setPrototype(WindowsSlider);

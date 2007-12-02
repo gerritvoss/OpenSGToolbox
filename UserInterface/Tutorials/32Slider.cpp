@@ -143,20 +143,20 @@ int main(int argc, char **argv)
 	// set its values
     DefaultBoundedRangeModel TheBoundedRangeModel;
     TheBoundedRangeModel.setMinimum(10);
-    TheBoundedRangeModel.setMaximum(100);
-    TheBoundedRangeModel.setValue(80);
-    TheBoundedRangeModel.setExtent(2);
+    TheBoundedRangeModel.setMaximum(110);
+    TheBoundedRangeModel.setValue(60);
+    TheBoundedRangeModel.setExtent(0);
     
 	//Create the slider
 	SliderPtr TheSlider = Slider::create();
 	beginEditCP(TheSlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask);
 		TheSlider->getLabelMap()[0] = Label::create();
-		TheSlider->setPreferredSize(Vec2s(50, 200));
+		TheSlider->setPreferredSize(Vec2s(50, 300));
 		TheSlider->setSnapToTicks(true);
 		TheSlider->setMajorTickSpacing(10);
 		TheSlider->setMinorTickSpacing(5);
 		TheSlider->setOrientation(VERTICAL_ALIGNMENT);
-		TheSlider->setInverted(true);
+		TheSlider->setInverted(false);
 	endEditCP(TheSlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask);
     TheSlider->setModel(&TheBoundedRangeModel);
 

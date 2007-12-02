@@ -9,6 +9,7 @@
 #include <OpenSG/OSGVector.h>
 #include "Component/OSGComponent.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
+#include "Graphics/UIDrawObjects/OSGUIDrawObjectFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -44,6 +45,8 @@ Pnt2s OSG_USERINTERFACELIB_DLLMAPPING DrawingSurfaceToViewport(const Pnt2s& Draw
 Pnt2s OSG_USERINTERFACELIB_DLLMAPPING ComponentToDrawingSurface(const Pnt2s& ComponentPoint, const ComponentPtr Comp);
 Pnt2s OSG_USERINTERFACELIB_DLLMAPPING ComponentToFrame(const Pnt2s& ComponentPoint, const ComponentPtr Comp);
 Pnt2s OSG_USERINTERFACELIB_DLLMAPPING Rotate(const Pnt2s& Point, const Real32& Angle);
+
+void OSG_USERINTERFACELIB_DLLMAPPING getDrawObjectBounds(MFUIDrawObjectPtr DrawObjects, Pnt2s& TopLeft, Pnt2s& BottomRight);
 
 OSG_END_NAMESPACE
 

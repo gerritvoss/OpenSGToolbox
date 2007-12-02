@@ -5,6 +5,7 @@
 #include "Component/Misc/OSGRotatedComponent.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include "UIDrawingSurface/OSGUIDrawingSurfaceMouseTransformFunctor.h"
+#include "Graphics/UIDrawObjects/OSGUIDrawObject.h"
 
 #include <deque>
 
@@ -213,9 +214,29 @@ Pnt2s ComponentToFrame(const Pnt2s& ComponentPoint, const ComponentPtr Comp)
 	return Result;
 }
 
-Pnt2s OSG_USERINTERFACELIB_DLLMAPPING Rotate(const Pnt2s& Point, const Real32& Angle)
+Pnt2s Rotate(const Pnt2s& Point, const Real32& Angle)
 {
     return Pnt2s(Point.x()*osgcos(Angle) - Point.y()*osgsin(Angle), Point.x()*osgsin(Angle) + Point.y()*osgcos(Angle));
+}
+
+
+void getDrawObjectBounds(MFUIDrawObjectPtr DrawObjects, Pnt2s& TopLeft, Pnt2s& BottomRight)
+{
+	if(DrawObjects.size() > 0)
+	{
+		Pnt2s TempTopLeft, TempBottomRight;
+		DrawObjects.getValue(0)->getBounds(TopLeft, BottomRight);
+		//Determine Top Left And Bottom Right
+		for(UInt32 i(0) ; i<DrawObjects.size(); ++i)
+		{
+			DrawObjects.getValue(i)->getBounds(TempTopLeft, TempBottomRight);
+		    TopLeft.setValues( osgMin(TopLeft.x(), TempTopLeft.x()),
+				               osgMin(TopLeft.y(), TempTopLeft.y()) );
+
+		    BottomRight.setValues(osgMax<UInt16>(BottomRight.x(), TempBottomRight.x()),
+		                          osgMax<UInt16>(BottomRight.y(), TempBottomRight.y()) );
+		}
+	}
 }
 
 

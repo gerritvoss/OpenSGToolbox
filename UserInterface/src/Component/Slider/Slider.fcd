@@ -42,12 +42,28 @@ A UI Spinner.
 	>
 	</Field>
 	<Field
+		name="MajorTickPositions"
+		type="Pnt2s"
+		cardinality="multi"
+		visibility="internal"
+		access="protected"
+	>
+	</Field>
+	<Field
 		name="MinorTickSpacing"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
 		access="public"
 		defaultValue="1"
+	>
+	</Field>
+	<Field
+		name="MinorTickPositions"
+		type="Pnt2s"
+		cardinality="multi"
+		visibility="internal"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -165,6 +181,24 @@ A UI Spinner.
 		visibility="external"
 		header="Graphics/UIDrawObjects/OSGUIDrawObject.h"
 		access="public"
+	>
+	</Field>
+	<Field
+		name="TrackInset"
+		type="Int32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="6"
+	>
+	</Field>
+	<Field
+		name="TrackToTickOffset"
+		type="Int32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="8"
 	>
 	</Field>
 </FieldContainer>

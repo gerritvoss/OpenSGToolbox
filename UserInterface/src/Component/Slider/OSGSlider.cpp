@@ -81,6 +81,57 @@ void Slider::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void Slider::drawInternal(const GraphicsPtr TheGraphics) const
+{
+
+	//Draw the Major Tick Marks
+	if(getDrawMajorTicks())
+	{
+		for(UInt32 i(0) ; i<getMajorTickPositions().size() ; ++i)
+		{
+			glPushMatrix();
+				glTranslatef(getMajorTickPositions()[i].x(), getMajorTickPositions()[i].y(), 0.0f);
+				if(getOrientation() != VERTICAL_ALIGNMENT)
+				{
+					glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
+				}
+
+				//Draw the Draw Objects
+				for(UInt32 j(0) ; j<getMajorTickDrawObjects().size(); ++j)
+				{
+					getMajorTickDrawObjects().getValue(j)->draw(TheGraphics);
+				}
+
+			glPopMatrix();
+		}
+
+	}
+
+	//Draw the Minor Tick Marks
+	if(getDrawMinorTicks())
+	{
+		for(UInt32 i(0) ; i<getMinorTickPositions().size() ; ++i)
+		{
+			glPushMatrix();
+				glTranslatef(getMinorTickPositions()[i].x(), getMinorTickPositions()[i].y(), 0.0f);
+				if(getOrientation() != VERTICAL_ALIGNMENT)
+				{
+					glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
+				}
+
+				//Draw the Draw Objects
+				for(UInt32 j(0) ; j<getMinorTickDrawObjects().size(); ++j)
+				{
+					getMinorTickDrawObjects().getValue(j)->draw(TheGraphics);
+				}
+
+			glPopMatrix();
+		}
+	}
+
+	
+	Inherited::drawInternal(TheGraphics);
+}
 void Slider::updateLayout(void)
 {
 	Pnt2s BorderTopLeft, BorderBottomRight;
@@ -114,14 +165,51 @@ void Slider::updateLayout(void)
 	   endEditCP(getTrackDrawObject(), PositionFieldMask | SizeFieldMask);
 	}
 	
-	//Update the MinTickMarks
-	if(getDrawMinorTicks())
+	//Update the MinorTickMarks
+	if(getDrawMinorTicks() && _Model != NULL)
 	{
+		Pnt2s MinorTickTopLeft, MinorTickBottomRight;
+		getDrawObjectBounds(getMinorTickDrawObjects(), MinorTickTopLeft, MinorTickBottomRight);
+		
+	    Vec2f Alignment;
+
+		beginEditCP(SliderPtr(this), MinorTickPositionsFieldMask);
+			getMinorTickPositions().clear();
+
+			for(UInt32 i(0) ; i< osgabs<Int32>(getMaximum() - getMinimum())/getMinorTickSpacing() ; ++i)
+			{
+				if( (i * getMinorTickSpacing())%getMajorTickSpacing() != 0 )
+				{
+					Alignment[MajorAxis] = static_cast<Real32>(i * getMinorTickSpacing())/static_cast<Real32>(getMaximum() - getMinimum());
+					getMinorTickPositions().push_back(
+						calculateSliderAlignment(getTrackDrawObject()->getPosition(), getTrackDrawObject()->getSize(), (MinorTickBottomRight - MinorTickTopLeft), Alignment.y(), Alignment.x()));
+					getMinorTickPositions().back()[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] + getTrackDrawObject()->getSize()[MinorAxis] + getTrackToTickOffset();
+				}
+			}
+		
+		endEditCP(SliderPtr(this), MinorTickPositionsFieldMask);
 	}
 	
-	//Update the MaxTickMarks
-	if(getDrawMajorTicks())
+	//Update the MajorTickMarks
+	if(getDrawMajorTicks() && _Model != NULL)
 	{
+		Pnt2s MajorTickTopLeft, MajorTickBottomRight;
+		getDrawObjectBounds(getMajorTickDrawObjects(), MajorTickTopLeft, MajorTickBottomRight);
+		
+	    Vec2f Alignment;
+
+		beginEditCP(SliderPtr(this), MajorTickPositionsFieldMask);
+			getMajorTickPositions().clear();
+
+			for(UInt32 i(0) ; i<= osgabs<Int32>(getMaximum() - getMinimum())/getMajorTickSpacing() ; ++i)
+			{
+		        Alignment[MajorAxis] = static_cast<Real32>(i * getMajorTickSpacing())/static_cast<Real32>(getMaximum() - getMinimum());
+				getMajorTickPositions().push_back(
+					calculateSliderAlignment(getTrackDrawObject()->getPosition(), getTrackDrawObject()->getSize(), (MajorTickBottomRight - MajorTickTopLeft), Alignment.y(), Alignment.x()));
+				getMajorTickPositions().back()[MinorAxis] = getTrackDrawObject()->getPosition()[MinorAxis] + getTrackDrawObject()->getSize()[MinorAxis] + getTrackToTickOffset();
+			}
+		
+		endEditCP(SliderPtr(this), MajorTickPositionsFieldMask);
 	}
 
 	//Update the Labels
@@ -159,14 +247,15 @@ void Slider::updateSliderTrack(void)
 	//Update the Knob position
 	if(getKnobButton() != NullFC && _Model != NULL)
 	{
-	   Vec2s Size(getKnobButton()->getPreferredSize());
-	   Size[MajorAxis] = getExtent() + 5;
+	   Vec2s Size;
+	   Size[MinorAxis] = getKnobButton()->getPreferredSize().x();
+	   Size[MajorAxis] = getKnobButton()->getPreferredSize().y();
 	   Pnt2s AlignedPosition;
 	   //Size[MajorAxis] = getSize()[MajorAxis] - 2;
 	   Vec2f Alignment(0.5,0.5);
 	   Alignment[MajorAxis] = static_cast<Real32>(getValue() - getMinimum())/static_cast<Real32>(getMaximum() - getMinimum());
 	   
-       AlignedPosition = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Size, Alignment.y(), Alignment.x());
+       AlignedPosition = calculateSliderAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), getKnobButton()->getPreferredSize(), Alignment.y(), Alignment.x());
 	   
 	   beginEditCP(getKnobButton(), PositionFieldMask | SizeFieldMask);
 	       getKnobButton()->setPosition(AlignedPosition);
@@ -205,17 +294,17 @@ UInt32 Slider::getTrackLength(void) const
 {
     if(getOrientation() == VERTICAL_ALIGNMENT)
     {
-        return getSize().y() - 2 * _TrackInset;
+        return getSize().y() - 2 * getTrackInset();
     }
     else
     {
-        return getSize().x() - 2 * _TrackInset;
+        return getSize().x() - 2 * getTrackInset();
     }
 }
 
 Int32 Slider::getTrackMin(void) const
 {
-    return _TrackInset;
+    return getTrackInset();
 }
 
 Int32 Slider::getTrackMax(void) const
@@ -228,12 +317,53 @@ void Slider::setValue(Int32 n)
     if(getSnapToTicks())
     {
         //Determine the closest tickmark to the value we are trying to set
+
+		Int32 Div, Mod;
+
+		Div = (n-getMinimum())/getMinorTickSpacing();
+		Mod = (n-getMinimum())%getMinorTickSpacing();
+
+		if(Mod <= getMajorTickSpacing()/2)
+		{
+			_Model->setValue(getMinorTickSpacing() * Div + getMinimum());
+		}
+		else
+		{
+			_Model->setValue(getMinorTickSpacing() * (Div + 1) + getMinimum());
+		}
     }
     else
     {
 	   _Model->setValue(n);
     }
     
+}
+
+Pnt2s Slider::calculateSliderAlignment(const Pnt2s& Position1, const Vec2s& Size1, const Vec2s& Size2, const Real32& VAlign, const Real32& HAlign)
+{
+	Vec2s CorrectedSize2(Size2);
+
+	if(getOrientation() != VERTICAL_ALIGNMENT)
+	{
+		CorrectedSize2[0] = Size2.y();
+		CorrectedSize2[1] = Size2.x();
+	}
+
+	if(getInverted())
+	{
+		if(getOrientation() == VERTICAL_ALIGNMENT)
+		{
+			return calculateAlignment(Position1, Size1, CorrectedSize2, (1.0-VAlign), HAlign);
+		}
+		else
+		{
+			return calculateAlignment(Position1, Size1, CorrectedSize2, VAlign, (1.0 - HAlign));
+		}
+	}
+	else
+	{
+		return calculateAlignment(Position1, Size1, CorrectedSize2, VAlign, HAlign);
+	}
 }
 
 /*-------------------------------------------------------------------------*\
@@ -244,17 +374,17 @@ void Slider::setValue(Int32 n)
 
 Slider::Slider(void) :
     Inherited(),
+		_Model(NULL),
         _BoundedRangeModelChangeListener(SliderPtr(this)),
-        _KnobDraggedListener(SliderPtr(this)),
-        _TrackInset(6)
+        _KnobDraggedListener(SliderPtr(this))
 {
 }
 
 Slider::Slider(const Slider &source) :
     Inherited(source),
+		_Model(source._Model),
         _BoundedRangeModelChangeListener(SliderPtr(this)),
-        _KnobDraggedListener(SliderPtr(this)),
-        _TrackInset(6)
+        _KnobDraggedListener(SliderPtr(this))
 {
     if(getKnobButton() != NullFC)
     {
@@ -372,6 +502,11 @@ void Slider::KnobDraggedListener::mouseDragged(const MouseEvent& e)
             MajorAxis = 0;
         }
         MinorAxis = (MajorAxis+1)%2;
+
+		if(_Slider->getInverted())
+		{
+			MousePosInComponent[MajorAxis] = _Slider->getTrackMax() - (MousePosInComponent[MajorAxis] - _Slider->getTrackMin());
+		}
         
         _Slider->setValue( _Slider->getMinimum() + (_Slider->getMaximum() - _Slider->getMinimum()) * (MousePosInComponent[MajorAxis] - _Slider->getTrackMin())/static_cast<Int32>(_Slider->getTrackLength()) );
 	}

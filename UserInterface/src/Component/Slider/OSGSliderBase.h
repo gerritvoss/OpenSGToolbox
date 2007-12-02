@@ -70,7 +70,9 @@
 #include "Component/Button/OSGButton.h" // KnobButton type
 #include "Util/OSGUIDefines.h" // Orientation type
 #include <OpenSG/OSGUInt32Fields.h> // MajorTickSpacing type
+#include <OpenSG/OSGVec2sFields.h> // MajorTickPositions type
 #include <OpenSG/OSGUInt32Fields.h> // MinorTickSpacing type
+#include <OpenSG/OSGVec2sFields.h> // MinorTickPositions type
 #include <OpenSG/OSGBoolFields.h> // SnapToTicks type
 #include <OpenSG/OSGBoolFields.h> // DrawMajorTicks type
 #include <OpenSG/OSGBoolFields.h> // DrawTrack type
@@ -84,6 +86,8 @@
 #include "Component/Misc/OSGUIDrawObjectCanvas.h" // MaxTrackDrawObject type
 #include "Graphics/UIDrawObjects/OSGUIDrawObject.h" // MajorTickDrawObjects type
 #include "Graphics/UIDrawObjects/OSGUIDrawObject.h" // MinorTickDrawObjects type
+#include <OpenSG/OSGInt32Fields.h> // TrackInset type
+#include <OpenSG/OSGInt32Fields.h> // TrackToTickOffset type
 
 #include "OSGSliderFields.h"
 
@@ -110,8 +114,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
         KnobButtonFieldId           = Inherited::NextFieldId,
         OrientationFieldId          = KnobButtonFieldId           + 1,
         MajorTickSpacingFieldId     = OrientationFieldId          + 1,
-        MinorTickSpacingFieldId     = MajorTickSpacingFieldId     + 1,
-        SnapToTicksFieldId          = MinorTickSpacingFieldId     + 1,
+        MajorTickPositionsFieldId   = MajorTickSpacingFieldId     + 1,
+        MinorTickSpacingFieldId     = MajorTickPositionsFieldId   + 1,
+        MinorTickPositionsFieldId   = MinorTickSpacingFieldId     + 1,
+        SnapToTicksFieldId          = MinorTickPositionsFieldId   + 1,
         DrawMajorTicksFieldId       = SnapToTicksFieldId          + 1,
         DrawTrackFieldId            = DrawMajorTicksFieldId       + 1,
         DrawMinorTicksFieldId       = DrawTrackFieldId            + 1,
@@ -124,13 +130,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
         MaxTrackDrawObjectFieldId   = MinTrackDrawObjectFieldId   + 1,
         MajorTickDrawObjectsFieldId = MaxTrackDrawObjectFieldId   + 1,
         MinorTickDrawObjectsFieldId = MajorTickDrawObjectsFieldId + 1,
-        NextFieldId                 = MinorTickDrawObjectsFieldId + 1
+        TrackInsetFieldId           = MinorTickDrawObjectsFieldId + 1,
+        TrackToTickOffsetFieldId    = TrackInsetFieldId           + 1,
+        NextFieldId                 = TrackToTickOffsetFieldId    + 1
     };
 
     static const OSG::BitVector KnobButtonFieldMask;
     static const OSG::BitVector OrientationFieldMask;
     static const OSG::BitVector MajorTickSpacingFieldMask;
+    static const OSG::BitVector MajorTickPositionsFieldMask;
     static const OSG::BitVector MinorTickSpacingFieldMask;
+    static const OSG::BitVector MinorTickPositionsFieldMask;
     static const OSG::BitVector SnapToTicksFieldMask;
     static const OSG::BitVector DrawMajorTicksFieldMask;
     static const OSG::BitVector DrawTrackFieldMask;
@@ -144,6 +154,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
     static const OSG::BitVector MaxTrackDrawObjectFieldMask;
     static const OSG::BitVector MajorTickDrawObjectsFieldMask;
     static const OSG::BitVector MinorTickDrawObjectsFieldMask;
+    static const OSG::BitVector TrackInsetFieldMask;
+    static const OSG::BitVector TrackToTickOffsetFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -187,6 +199,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
            SFUIDrawObjectCanvasPtr *getSFMaxTrackDrawObject(void);
            MFUIDrawObjectPtr   *getMFMajorTickDrawObjects(void);
            MFUIDrawObjectPtr   *getMFMinorTickDrawObjects(void);
+           SFInt32             *getSFTrackInset     (void);
+           SFInt32             *getSFTrackToTickOffset(void);
 
            ButtonPtr           &getKnobButton     (void);
      const ButtonPtr           &getKnobButton     (void) const;
@@ -218,6 +232,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
      const UIDrawObjectCanvasPtr &getMinTrackDrawObject(void) const;
            UIDrawObjectCanvasPtr &getMaxTrackDrawObject(void);
      const UIDrawObjectCanvasPtr &getMaxTrackDrawObject(void) const;
+           Int32               &getTrackInset     (void);
+     const Int32               &getTrackInset     (void) const;
+           Int32               &getTrackToTickOffset(void);
+     const Int32               &getTrackToTickOffset(void) const;
            UIDrawObjectPtr     &getMajorTickDrawObjects(const UInt32 index);
            MFUIDrawObjectPtr   &getMajorTickDrawObjects(void);
      const MFUIDrawObjectPtr   &getMajorTickDrawObjects(void) const;
@@ -245,6 +263,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
      void setTrackDrawObject( const UIDrawObjectCanvasPtr &value );
      void setMinTrackDrawObject( const UIDrawObjectCanvasPtr &value );
      void setMaxTrackDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setTrackInset     ( const Int32 &value );
+     void setTrackToTickOffset( const Int32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -290,7 +310,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
     SFButtonPtr         _sfKnobButton;
     SFUInt32            _sfOrientation;
     SFUInt32            _sfMajorTickSpacing;
+    MFPnt2s             _mfMajorTickPositions;
     SFUInt32            _sfMinorTickSpacing;
+    MFPnt2s             _mfMinorTickPositions;
     SFBool              _sfSnapToTicks;
     SFBool              _sfDrawMajorTicks;
     SFBool              _sfDrawTrack;
@@ -304,6 +326,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
     SFUIDrawObjectCanvasPtr   _sfMaxTrackDrawObject;
     MFUIDrawObjectPtr   _mfMajorTickDrawObjects;
     MFUIDrawObjectPtr   _mfMinorTickDrawObjects;
+    SFInt32             _sfTrackInset;
+    SFInt32             _sfTrackToTickOffset;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -319,6 +343,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
     /*! \{                                                                 */
 
     virtual ~SliderBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           MFPnt2s             *getMFMajorTickPositions(void);
+           MFPnt2s             *getMFMinorTickPositions(void);
+
+           Pnt2s               &getMajorTickPositions(UInt32 index);
+           MFPnt2s             &getMajorTickPositions(void);
+     const MFPnt2s             &getMajorTickPositions(void) const;
+           Pnt2s               &getMinorTickPositions(UInt32 index);
+           MFPnt2s             &getMinorTickPositions(void);
+     const MFPnt2s             &getMinorTickPositions(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

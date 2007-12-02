@@ -73,8 +73,14 @@ const OSG::BitVector  SliderBase::OrientationFieldMask =
 const OSG::BitVector  SliderBase::MajorTickSpacingFieldMask = 
     (TypeTraits<BitVector>::One << SliderBase::MajorTickSpacingFieldId);
 
+const OSG::BitVector  SliderBase::MajorTickPositionsFieldMask = 
+    (TypeTraits<BitVector>::One << SliderBase::MajorTickPositionsFieldId);
+
 const OSG::BitVector  SliderBase::MinorTickSpacingFieldMask = 
     (TypeTraits<BitVector>::One << SliderBase::MinorTickSpacingFieldId);
+
+const OSG::BitVector  SliderBase::MinorTickPositionsFieldMask = 
+    (TypeTraits<BitVector>::One << SliderBase::MinorTickPositionsFieldId);
 
 const OSG::BitVector  SliderBase::SnapToTicksFieldMask = 
     (TypeTraits<BitVector>::One << SliderBase::SnapToTicksFieldId);
@@ -115,6 +121,12 @@ const OSG::BitVector  SliderBase::MajorTickDrawObjectsFieldMask =
 const OSG::BitVector  SliderBase::MinorTickDrawObjectsFieldMask = 
     (TypeTraits<BitVector>::One << SliderBase::MinorTickDrawObjectsFieldId);
 
+const OSG::BitVector  SliderBase::TrackInsetFieldMask = 
+    (TypeTraits<BitVector>::One << SliderBase::TrackInsetFieldId);
+
+const OSG::BitVector  SliderBase::TrackToTickOffsetFieldMask = 
+    (TypeTraits<BitVector>::One << SliderBase::TrackToTickOffsetFieldId);
+
 const OSG::BitVector SliderBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -131,7 +143,13 @@ const OSG::BitVector SliderBase::MTInfluenceMask =
 /*! \var UInt32          SliderBase::_sfMajorTickSpacing
     
 */
+/*! \var Pnt2s           SliderBase::_mfMajorTickPositions
+    
+*/
 /*! \var UInt32          SliderBase::_sfMinorTickSpacing
+    
+*/
+/*! \var Pnt2s           SliderBase::_mfMinorTickPositions
     
 */
 /*! \var bool            SliderBase::_sfSnapToTicks
@@ -173,6 +191,12 @@ const OSG::BitVector SliderBase::MTInfluenceMask =
 /*! \var UIDrawObjectPtr SliderBase::_mfMinorTickDrawObjects
     
 */
+/*! \var Int32           SliderBase::_sfTrackInset
+    
+*/
+/*! \var Int32           SliderBase::_sfTrackToTickOffset
+    
+*/
 
 //! Slider description
 
@@ -193,11 +217,21 @@ FieldDescription *SliderBase::_desc[] =
                      MajorTickSpacingFieldId, MajorTickSpacingFieldMask,
                      false,
                      (FieldAccessMethod) &SliderBase::getSFMajorTickSpacing),
+    new FieldDescription(MFPnt2s::getClassType(), 
+                     "MajorTickPositions", 
+                     MajorTickPositionsFieldId, MajorTickPositionsFieldMask,
+                     true,
+                     (FieldAccessMethod) &SliderBase::getMFMajorTickPositions),
     new FieldDescription(SFUInt32::getClassType(), 
                      "MinorTickSpacing", 
                      MinorTickSpacingFieldId, MinorTickSpacingFieldMask,
                      false,
                      (FieldAccessMethod) &SliderBase::getSFMinorTickSpacing),
+    new FieldDescription(MFPnt2s::getClassType(), 
+                     "MinorTickPositions", 
+                     MinorTickPositionsFieldId, MinorTickPositionsFieldMask,
+                     true,
+                     (FieldAccessMethod) &SliderBase::getMFMinorTickPositions),
     new FieldDescription(SFBool::getClassType(), 
                      "SnapToTicks", 
                      SnapToTicksFieldId, SnapToTicksFieldMask,
@@ -262,7 +296,17 @@ FieldDescription *SliderBase::_desc[] =
                      "MinorTickDrawObjects", 
                      MinorTickDrawObjectsFieldId, MinorTickDrawObjectsFieldMask,
                      false,
-                     (FieldAccessMethod) &SliderBase::getMFMinorTickDrawObjects)
+                     (FieldAccessMethod) &SliderBase::getMFMinorTickDrawObjects),
+    new FieldDescription(SFInt32::getClassType(), 
+                     "TrackInset", 
+                     TrackInsetFieldId, TrackInsetFieldMask,
+                     false,
+                     (FieldAccessMethod) &SliderBase::getSFTrackInset),
+    new FieldDescription(SFInt32::getClassType(), 
+                     "TrackToTickOffset", 
+                     TrackToTickOffsetFieldId, TrackToTickOffsetFieldMask,
+                     false,
+                     (FieldAccessMethod) &SliderBase::getSFTrackToTickOffset)
 };
 
 
@@ -328,6 +372,8 @@ void SliderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfMajorTickPositions.terminateShare(uiAspect, this->getContainerSize());
+    _mfMinorTickPositions.terminateShare(uiAspect, this->getContainerSize());
     _mfMajorTickDrawObjects.terminateShare(uiAspect, this->getContainerSize());
     _mfMinorTickDrawObjects.terminateShare(uiAspect, this->getContainerSize());
 }
@@ -343,7 +389,9 @@ SliderBase::SliderBase(void) :
     _sfKnobButton             (ButtonPtr(NullFC)), 
     _sfOrientation            (UInt32(VERTICAL_ALIGNMENT)), 
     _sfMajorTickSpacing       (UInt32(1)), 
+    _mfMajorTickPositions     (), 
     _sfMinorTickSpacing       (UInt32(1)), 
+    _mfMinorTickPositions     (), 
     _sfSnapToTicks            (bool(false)), 
     _sfDrawMajorTicks         (bool(false)), 
     _sfDrawTrack              (bool(false)), 
@@ -357,6 +405,8 @@ SliderBase::SliderBase(void) :
     _sfMaxTrackDrawObject     (), 
     _mfMajorTickDrawObjects   (), 
     _mfMinorTickDrawObjects   (), 
+    _sfTrackInset             (Int32(6)), 
+    _sfTrackToTickOffset      (Int32(8)), 
     Inherited() 
 {
 }
@@ -369,7 +419,9 @@ SliderBase::SliderBase(const SliderBase &source) :
     _sfKnobButton             (source._sfKnobButton             ), 
     _sfOrientation            (source._sfOrientation            ), 
     _sfMajorTickSpacing       (source._sfMajorTickSpacing       ), 
+    _mfMajorTickPositions     (source._mfMajorTickPositions     ), 
     _sfMinorTickSpacing       (source._sfMinorTickSpacing       ), 
+    _mfMinorTickPositions     (source._mfMinorTickPositions     ), 
     _sfSnapToTicks            (source._sfSnapToTicks            ), 
     _sfDrawMajorTicks         (source._sfDrawMajorTicks         ), 
     _sfDrawTrack              (source._sfDrawTrack              ), 
@@ -383,6 +435,8 @@ SliderBase::SliderBase(const SliderBase &source) :
     _sfMaxTrackDrawObject     (source._sfMaxTrackDrawObject     ), 
     _mfMajorTickDrawObjects   (source._mfMajorTickDrawObjects   ), 
     _mfMinorTickDrawObjects   (source._mfMinorTickDrawObjects   ), 
+    _sfTrackInset             (source._sfTrackInset             ), 
+    _sfTrackToTickOffset      (source._sfTrackToTickOffset      ), 
     Inherited                 (source)
 {
 }
@@ -414,9 +468,19 @@ UInt32 SliderBase::getBinSize(const BitVector &whichField)
         returnValue += _sfMajorTickSpacing.getBinSize();
     }
 
+    if(FieldBits::NoField != (MajorTickPositionsFieldMask & whichField))
+    {
+        returnValue += _mfMajorTickPositions.getBinSize();
+    }
+
     if(FieldBits::NoField != (MinorTickSpacingFieldMask & whichField))
     {
         returnValue += _sfMinorTickSpacing.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MinorTickPositionsFieldMask & whichField))
+    {
+        returnValue += _mfMinorTickPositions.getBinSize();
     }
 
     if(FieldBits::NoField != (SnapToTicksFieldMask & whichField))
@@ -484,6 +548,16 @@ UInt32 SliderBase::getBinSize(const BitVector &whichField)
         returnValue += _mfMinorTickDrawObjects.getBinSize();
     }
 
+    if(FieldBits::NoField != (TrackInsetFieldMask & whichField))
+    {
+        returnValue += _sfTrackInset.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TrackToTickOffsetFieldMask & whichField))
+    {
+        returnValue += _sfTrackToTickOffset.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -508,9 +582,19 @@ void SliderBase::copyToBin(      BinaryDataHandler &pMem,
         _sfMajorTickSpacing.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (MajorTickPositionsFieldMask & whichField))
+    {
+        _mfMajorTickPositions.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (MinorTickSpacingFieldMask & whichField))
     {
         _sfMinorTickSpacing.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MinorTickPositionsFieldMask & whichField))
+    {
+        _mfMinorTickPositions.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (SnapToTicksFieldMask & whichField))
@@ -578,6 +662,16 @@ void SliderBase::copyToBin(      BinaryDataHandler &pMem,
         _mfMinorTickDrawObjects.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (TrackInsetFieldMask & whichField))
+    {
+        _sfTrackInset.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TrackToTickOffsetFieldMask & whichField))
+    {
+        _sfTrackToTickOffset.copyToBin(pMem);
+    }
+
 
 }
 
@@ -601,9 +695,19 @@ void SliderBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfMajorTickSpacing.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (MajorTickPositionsFieldMask & whichField))
+    {
+        _mfMajorTickPositions.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (MinorTickSpacingFieldMask & whichField))
     {
         _sfMinorTickSpacing.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MinorTickPositionsFieldMask & whichField))
+    {
+        _mfMinorTickPositions.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (SnapToTicksFieldMask & whichField))
@@ -671,6 +775,16 @@ void SliderBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfMinorTickDrawObjects.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (TrackInsetFieldMask & whichField))
+    {
+        _sfTrackInset.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TrackToTickOffsetFieldMask & whichField))
+    {
+        _sfTrackToTickOffset.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -690,8 +804,14 @@ void SliderBase::executeSyncImpl(      SliderBase *pOther,
     if(FieldBits::NoField != (MajorTickSpacingFieldMask & whichField))
         _sfMajorTickSpacing.syncWith(pOther->_sfMajorTickSpacing);
 
+    if(FieldBits::NoField != (MajorTickPositionsFieldMask & whichField))
+        _mfMajorTickPositions.syncWith(pOther->_mfMajorTickPositions);
+
     if(FieldBits::NoField != (MinorTickSpacingFieldMask & whichField))
         _sfMinorTickSpacing.syncWith(pOther->_sfMinorTickSpacing);
+
+    if(FieldBits::NoField != (MinorTickPositionsFieldMask & whichField))
+        _mfMinorTickPositions.syncWith(pOther->_mfMinorTickPositions);
 
     if(FieldBits::NoField != (SnapToTicksFieldMask & whichField))
         _sfSnapToTicks.syncWith(pOther->_sfSnapToTicks);
@@ -731,6 +851,12 @@ void SliderBase::executeSyncImpl(      SliderBase *pOther,
 
     if(FieldBits::NoField != (MinorTickDrawObjectsFieldMask & whichField))
         _mfMinorTickDrawObjects.syncWith(pOther->_mfMinorTickDrawObjects);
+
+    if(FieldBits::NoField != (TrackInsetFieldMask & whichField))
+        _sfTrackInset.syncWith(pOther->_sfTrackInset);
+
+    if(FieldBits::NoField != (TrackToTickOffsetFieldMask & whichField))
+        _sfTrackToTickOffset.syncWith(pOther->_sfTrackToTickOffset);
 
 
 }
@@ -787,6 +913,18 @@ void SliderBase::executeSyncImpl(      SliderBase *pOther,
     if(FieldBits::NoField != (MaxTrackDrawObjectFieldMask & whichField))
         _sfMaxTrackDrawObject.syncWith(pOther->_sfMaxTrackDrawObject);
 
+    if(FieldBits::NoField != (TrackInsetFieldMask & whichField))
+        _sfTrackInset.syncWith(pOther->_sfTrackInset);
+
+    if(FieldBits::NoField != (TrackToTickOffsetFieldMask & whichField))
+        _sfTrackToTickOffset.syncWith(pOther->_sfTrackToTickOffset);
+
+
+    if(FieldBits::NoField != (MajorTickPositionsFieldMask & whichField))
+        _mfMajorTickPositions.syncWith(pOther->_mfMajorTickPositions, sInfo);
+
+    if(FieldBits::NoField != (MinorTickPositionsFieldMask & whichField))
+        _mfMinorTickPositions.syncWith(pOther->_mfMinorTickPositions, sInfo);
 
     if(FieldBits::NoField != (MajorTickDrawObjectsFieldMask & whichField))
         _mfMajorTickDrawObjects.syncWith(pOther->_mfMajorTickDrawObjects, sInfo);
@@ -802,6 +940,12 @@ void SliderBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (MajorTickPositionsFieldMask & whichField))
+        _mfMajorTickPositions.beginEdit(uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (MinorTickPositionsFieldMask & whichField))
+        _mfMinorTickPositions.beginEdit(uiAspect, uiContainerSize);
 
     if(FieldBits::NoField != (MajorTickDrawObjectsFieldMask & whichField))
         _mfMajorTickDrawObjects.beginEdit(uiAspect, uiContainerSize);

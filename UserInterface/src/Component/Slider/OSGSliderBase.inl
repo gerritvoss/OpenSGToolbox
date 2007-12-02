@@ -117,11 +117,25 @@ SFUInt32 *SliderBase::getSFMajorTickSpacing(void)
     return &_sfMajorTickSpacing;
 }
 
+//! Get the Slider::_mfMajorTickPositions field.
+inline
+MFPnt2s *SliderBase::getMFMajorTickPositions(void)
+{
+    return &_mfMajorTickPositions;
+}
+
 //! Get the Slider::_sfMinorTickSpacing field.
 inline
 SFUInt32 *SliderBase::getSFMinorTickSpacing(void)
 {
     return &_sfMinorTickSpacing;
+}
+
+//! Get the Slider::_mfMinorTickPositions field.
+inline
+MFPnt2s *SliderBase::getMFMinorTickPositions(void)
+{
+    return &_mfMinorTickPositions;
 }
 
 //! Get the Slider::_sfSnapToTicks field.
@@ -213,6 +227,20 @@ inline
 MFUIDrawObjectPtr *SliderBase::getMFMinorTickDrawObjects(void)
 {
     return &_mfMinorTickDrawObjects;
+}
+
+//! Get the Slider::_sfTrackInset field.
+inline
+SFInt32 *SliderBase::getSFTrackInset(void)
+{
+    return &_sfTrackInset;
+}
+
+//! Get the Slider::_sfTrackToTickOffset field.
+inline
+SFInt32 *SliderBase::getSFTrackToTickOffset(void)
+{
+    return &_sfTrackToTickOffset;
 }
 
 
@@ -531,6 +559,90 @@ void SliderBase::setMaxTrackDrawObject(const UIDrawObjectCanvasPtr &value)
     _sfMaxTrackDrawObject.setValue(value);
 }
 
+//! Get the value of the Slider::_sfTrackInset field.
+inline
+Int32 &SliderBase::getTrackInset(void)
+{
+    return _sfTrackInset.getValue();
+}
+
+//! Get the value of the Slider::_sfTrackInset field.
+inline
+const Int32 &SliderBase::getTrackInset(void) const
+{
+    return _sfTrackInset.getValue();
+}
+
+//! Set the value of the Slider::_sfTrackInset field.
+inline
+void SliderBase::setTrackInset(const Int32 &value)
+{
+    _sfTrackInset.setValue(value);
+}
+
+//! Get the value of the Slider::_sfTrackToTickOffset field.
+inline
+Int32 &SliderBase::getTrackToTickOffset(void)
+{
+    return _sfTrackToTickOffset.getValue();
+}
+
+//! Get the value of the Slider::_sfTrackToTickOffset field.
+inline
+const Int32 &SliderBase::getTrackToTickOffset(void) const
+{
+    return _sfTrackToTickOffset.getValue();
+}
+
+//! Set the value of the Slider::_sfTrackToTickOffset field.
+inline
+void SliderBase::setTrackToTickOffset(const Int32 &value)
+{
+    _sfTrackToTickOffset.setValue(value);
+}
+
+
+//! Get the value of the \a index element the Slider::_mfMajorTickPositions field.
+inline
+Pnt2s &SliderBase::getMajorTickPositions(const UInt32 index)
+{
+    return _mfMajorTickPositions[index];
+}
+
+//! Get the Slider::_mfMajorTickPositions field.
+inline
+MFPnt2s &SliderBase::getMajorTickPositions(void)
+{
+    return _mfMajorTickPositions;
+}
+
+//! Get the Slider::_mfMajorTickPositions field.
+inline
+const MFPnt2s &SliderBase::getMajorTickPositions(void) const
+{
+    return _mfMajorTickPositions;
+}
+
+//! Get the value of the \a index element the Slider::_mfMinorTickPositions field.
+inline
+Pnt2s &SliderBase::getMinorTickPositions(const UInt32 index)
+{
+    return _mfMinorTickPositions[index];
+}
+
+//! Get the Slider::_mfMinorTickPositions field.
+inline
+MFPnt2s &SliderBase::getMinorTickPositions(void)
+{
+    return _mfMinorTickPositions;
+}
+
+//! Get the Slider::_mfMinorTickPositions field.
+inline
+const MFPnt2s &SliderBase::getMinorTickPositions(void) const
+{
+    return _mfMinorTickPositions;
+}
 
 //! Get the value of the \a index element the Slider::_mfMajorTickDrawObjects field.
 inline
