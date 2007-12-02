@@ -149,10 +149,15 @@ int main(int argc, char **argv)
     
 	//Create the slider
 	SliderPtr TheSlider = Slider::create();
-	beginEditCP(TheSlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask);
+	beginEditCP(TheSlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask);
 		TheSlider->getLabelMap()[0] = Label::create();
 		TheSlider->setPreferredSize(Vec2s(50, 200));
-	endEditCP(TheSlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask);
+		TheSlider->setSnapToTicks(true);
+		TheSlider->setMajorTickSpacing(10);
+		TheSlider->setMinorTickSpacing(5);
+		TheSlider->setOrientation(VERTICAL_ALIGNMENT);
+		TheSlider->setInverted(true);
+	endEditCP(TheSlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask);
     TheSlider->setModel(&TheBoundedRangeModel);
 
 	// Create Background to be used with the MainFrame
