@@ -152,11 +152,10 @@ int main(int argc, char **argv)
 	******************************************************/
 	GridBagLayoutPtr MainFrameLayout = osg::GridBagLayout::create();
 
-		
 	beginEditCP(MainFrameLayout, GridBagLayout::ColumnsFieldMask | GridBagLayout::RowsFieldMask);
 		MainFrameLayout->setColumns(3);
 		MainFrameLayout->setRows(3);
-	endEditCP(MainFrameLayout); 
+	endEditCP(MainFrameLayout, GridBagLayout::ColumnsFieldMask | GridBagLayout::RowsFieldMask); 
 
 	
 	/******************************************************
@@ -218,7 +217,11 @@ int main(int argc, char **argv)
 	GridBagLayoutConstraintsPtr button5Constraints = osg::GridBagLayoutConstraints::create();
 	GridBagLayoutConstraintsPtr button6Constraints = osg::GridBagLayoutConstraints::create();
 
-	beginEditCP(button1Constraints);
+	beginEditCP(button1Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask | GridBagLayoutConstraints::GridHeightFieldMask |
+		GridBagLayoutConstraints::GridWidthFieldMask | GridBagLayoutConstraints::FillFieldMask | GridBagLayoutConstraints::WeightXFieldMask | GridBagLayoutConstraints::WeightYFieldMask |
+		GridBagLayoutConstraints::PadBottomFieldMask | GridBagLayoutConstraints::PadLeftFieldMask | GridBagLayoutConstraints::PadRightFieldMask | GridBagLayoutConstraints::PadTopFieldMask |
+		GridBagLayoutConstraints::InternalPadXFieldMask | GridBagLayoutConstraints::InternalPadYFieldMask | GridBagLayoutConstraints::HorizontalAlignmentFieldMask |
+		GridBagLayoutConstraints::VerticalAlignmentFieldMask);
 		button1Constraints->setGridX(0);
 		button1Constraints->setGridY(0);
 		button1Constraints->setGridHeight(2);
@@ -234,32 +237,36 @@ int main(int argc, char **argv)
 		button1Constraints->setInternalPadY(10);
 		button1Constraints->setHorizontalAlignment(0.75);
 		button1Constraints->setVerticalAlignment(0.75);
-	endEditCP(button1Constraints);
+	endEditCP(button1Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask | GridBagLayoutConstraints::GridHeightFieldMask |
+		GridBagLayoutConstraints::GridWidthFieldMask | GridBagLayoutConstraints::FillFieldMask | GridBagLayoutConstraints::WeightXFieldMask | GridBagLayoutConstraints::WeightYFieldMask |
+		GridBagLayoutConstraints::PadBottomFieldMask | GridBagLayoutConstraints::PadLeftFieldMask | GridBagLayoutConstraints::PadRightFieldMask | GridBagLayoutConstraints::PadTopFieldMask |
+		GridBagLayoutConstraints::InternalPadXFieldMask | GridBagLayoutConstraints::InternalPadYFieldMask | GridBagLayoutConstraints::HorizontalAlignmentFieldMask |
+		GridBagLayoutConstraints::VerticalAlignmentFieldMask);
 	
-	beginEditCP(button2Constraints);
+	beginEditCP(button2Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
 		button2Constraints->setGridX(1);
 		button2Constraints->setGridY(1);
-	endEditCP(button2Constraints);
+	endEditCP(button2Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
 	
-	beginEditCP(button3Constraints);
+	beginEditCP(button3Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
 		button3Constraints->setGridX(2);
 		button3Constraints->setGridY(2);
-	endEditCP(button3Constraints);
+	endEditCP(button3Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
 	
-	beginEditCP(button4Constraints);
+	beginEditCP(button4Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
 		button4Constraints->setGridX(2);
 		button4Constraints->setGridY(1);
-	endEditCP(button4Constraints);
+	endEditCP(button4Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
 	
-	beginEditCP(button5Constraints);
+	beginEditCP(button5Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
 		button5Constraints->setGridX(1);
 		button5Constraints->setGridY(2);
-	endEditCP(button5Constraints);
+	endEditCP(button5Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
 	
-	beginEditCP(button6Constraints);
+	beginEditCP(button6Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
 		button6Constraints->setGridX(0);
 		button6Constraints->setGridY(2);
-	endEditCP(button6Constraints);
+	endEditCP(button6Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
 
 
 	

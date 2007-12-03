@@ -154,6 +154,10 @@ int main(int argc, char **argv)
 		selected. Note that RadioButtonGroup is not a Field
 		Container, so it is edited differently
 
+		Radio Buttons are special toggle buttons.  When 
+		they are selected, any radio button in the same 
+		group is deselected, so there can only be one 
+		option selected.
 
 	******************************************************/
 	RadioButtonGroup buttonGroup;
@@ -161,17 +165,6 @@ int main(int argc, char **argv)
 	buttonGroup.addButton(button2);
 	buttonGroup.addButton(button3);
 
-
-
-	/******************************************************
-
-		Radio Buttons are special toggle buttons.  When 
-		they are selected, any radio button in the same 
-		group is deselected, so there can only be one 
-		option selected.
-
-
-	******************************************************/
 	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
 
 	beginEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);

@@ -167,7 +167,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "29Spinner", "29Spinner.vcpr
 		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "31Demo", "31Demo.vcproj", "{21C6EF91-E8D5-41AE-AAC1-E00F354CB5D4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Demo", "Demo.vcproj", "{21C6EF91-E8D5-41AE-AAC1-E00F354CB5D4}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
