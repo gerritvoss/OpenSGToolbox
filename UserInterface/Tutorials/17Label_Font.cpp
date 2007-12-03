@@ -43,6 +43,7 @@
 
 // List header files
 #include <OpenSG/UserInterface/OSGList.h>
+#include <OpenSG/UserInterface/OSGListSelectionListener.h>
 #include <OpenSG/UserInterface/OSGAbstractListModel.h>
 #include <OpenSG/UserInterface/OSGDefaultListCellGenerator.h>
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
@@ -162,31 +163,34 @@ class FontListCellGenerator : public DefaultListCellGenerator
 // Setup a listener to change the label's font
 // when a different item in the list is
 // selected
-class FontListListener: public MouseAdapter
+class FontListListener: public ListSelectionListener
 {
   public:
-    virtual void mouseClicked(const MouseEvent& e)
-    {
-        std::string ValueStr("");
-        SharedFieldPtr Value(list->getValueAtPoint(e));
-        if(Value->getType() == SFString::getClassType())
-        {
-            ValueStr = dynamic_cast<SFString*>(Value.get())->getValue();
-        }
-		// Output selected font
-        std::cout << "Setting Font: " << ValueStr << std::endl;
+    virtual void selectionChanged(const ListSelectionEvent& e)
+	{
+		if(!list->getSelectionModel()->isSelectionEmpty())
+		{
+			std::string ValueStr("");
+			SharedFieldPtr Value(list->getValueAtIndex(list->getSelectionModel()->getAnchorSelectionIndex()));
+			if(Value->getType() == SFString::getClassType())
+			{
+				ValueStr = dynamic_cast<SFString*>(Value.get())->getValue();
+			}
+			// Output selected font
+			std::cout << "Setting Font: " << ValueStr << std::endl;
 
-        // Get the Font and create new FontPtr
-        UIFontPtr TheSelectedFont(FontMap[ValueStr]);
+			// Get the Font and create new FontPtr
+			UIFontPtr TheSelectedFont(FontMap[ValueStr]);
 
-        if(TheSelectedFont != NullFC)
-        {
-            // Set the font for label1 to be selected font
-	        beginEditCP(label1, Label::FontFieldMask);
-		        label1->setFont(TheSelectedFont);
-	        endEditCP(label1, Label::FontFieldMask);
-        }
-    }
+			if(TheSelectedFont != NullFC)
+			{
+				// Set the font for label1 to be selected font
+				beginEditCP(label1, Label::FontFieldMask);
+					label1->setFont(TheSelectedFont);
+				endEditCP(label1, Label::FontFieldMask);
+			}
+		}
+	}
 };
 
 // Initialize GLUT & OpenSG and set up the scene
@@ -383,7 +387,7 @@ int main(int argc, char **argv)
 	list->setSelectionModel(SelectionModel);
 
     FontListListener TheFontListListener;
-    list->addMouseListener(&TheFontListListener);
+	list->getSelectionModel()->addListSelectionListener(&TheFontListListener);
 
     //ScrollPanel
     ScrollPanelPtr TheScrollPanel = ScrollPanel::create();
