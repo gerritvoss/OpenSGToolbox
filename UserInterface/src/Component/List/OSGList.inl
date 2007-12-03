@@ -46,6 +46,31 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+ComponentPtr List::getComponentAtIndex(const UInt32& Index)
+{
+	if(_Model != NULL && Index < _Model->getSize())
+	{
+		return getChildren()[Index];
+	}
+	else
+	{
+		return NullFC;
+	}
+}
+
+inline
+SharedFieldPtr List::getValueAtIndex(const UInt32& Index)
+{
+	if(_Model != NULL && Index < _Model->getSize())
+	{
+		return _Model->getElementAt(Index);
+	}
+	else
+	{
+		return SharedFieldPtr();
+	}
+}
 
 inline
 void List::setCellGenerator(ListCellGenerator* CellGenerator)

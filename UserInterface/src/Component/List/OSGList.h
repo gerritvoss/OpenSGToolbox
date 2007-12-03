@@ -109,6 +109,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
 
     ComponentPtr getComponentAtPoint(const MouseEvent& e);
     SharedFieldPtr getValueAtPoint(const MouseEvent& e);
+    ComponentPtr getComponentAtIndex(const UInt32& Index);
+    SharedFieldPtr getValueAtIndex(const UInt32& Index);
     
     //Scrollable Interface
     //Returns the preferred size of the viewport for a view component.
