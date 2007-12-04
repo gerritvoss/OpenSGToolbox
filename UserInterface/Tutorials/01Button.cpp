@@ -34,7 +34,6 @@
 // Input
 #include <OpenSG/Input/OSGWindowUtils.h>
 
-
 // UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
@@ -298,7 +297,7 @@ int main(int argc, char **argv)
     TutorialKeyListener TheKeyListener;
     MainFrame->addKeyListener(&TheKeyListener);
 
-	//Create the Drawing Surface
+	// Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
 	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
@@ -314,19 +313,19 @@ int main(int argc, char **argv)
 		foreground->setFrameBounds(Vec2f(0.5,0.5));
     endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask |UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
-
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the manager what to manage
-    mgr->setWindow(MainWindow );
-    mgr->setRoot  (scene);
+    mgr->setWindow(MainWindow);
+    mgr->setRoot(scene);
 
 	// Add the UI Foreground Object to the Scene
 	ViewportPtr viewport = mgr->getWindow()->getPort(0);
     beginEditCP(viewport, Viewport::ForegroundsFieldMask);
 		viewport->getForegrounds().addValue(foreground);
     beginEditCP(viewport, Viewport::ForegroundsFieldMask);
+
     // Show the whole scene
     mgr->showAll();
 

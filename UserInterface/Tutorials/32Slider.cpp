@@ -211,7 +211,7 @@ int main(int argc, char **argv)
     TutorialKeyListener TheKeyListener;
     MainFrame->addKeyListener(&TheKeyListener);
 
-	//Create the Drawing Surface
+	// Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
 	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
@@ -225,26 +225,24 @@ int main(int argc, char **argv)
 	    foreground->setDrawingSurface(drawingSurface);
 		foreground->setFramePositionOffset(Vec2s(0,0));
 		foreground->setFrameBounds(Vec2f(0.5,0.5));
-	   //Set the Event Producer for the DrawingSurface
-	   //This is needed in order to get Mouse/Keyboard/etc Input to the UI DrawingSurface
     endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask |UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
 
-    // create the SimpleSceneManager helper
+    // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // tell the manager what to manage
-    mgr->setWindow(MainWindow );
-    mgr->setRoot  (scene);
+    // Tell the manager what to manage
+    mgr->setWindow(MainWindow);
+    mgr->setRoot(scene);
 
 	// Add the UI Foreground Object to the Scene
 	ViewportPtr viewport = mgr->getWindow()->getPort(0);
     beginEditCP(viewport, Viewport::ForegroundsFieldMask);
 		viewport->getForegrounds().addValue(foreground);
     beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-    // show the whole scene
-    mgr->showAll();
 
+    // Show the whole scene
+    mgr->showAll();
     TheWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(750,750),
                                         "OpenSG 32Slider Window");
@@ -259,17 +257,16 @@ int main(int argc, char **argv)
     return 0;
 }
 
-//
-// callback functions
-//
+// Callback functions
 
-// redraw the window
+
+// Redraw the window
 void display(void)
 {
     mgr->redraw();
 }
 
-// react to size changes
+// React to size changes
 void reshape(Vec2s Size)
 {
     mgr->resize(Size.x(), Size.y());

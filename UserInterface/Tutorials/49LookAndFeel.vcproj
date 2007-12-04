@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="Demo"
+	Name="49LookAndFeel"
 	ProjectGUID="{21C6EF91-E8D5-41AE-AAC1-E00F354CB5D4}"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -141,7 +141,7 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl">
 			<File
-				RelativePath=".\Demo.cpp">
+				RelativePath=".\49LookAndFeel.cpp">
 			</File>
 		</Filter>
 	</Files>

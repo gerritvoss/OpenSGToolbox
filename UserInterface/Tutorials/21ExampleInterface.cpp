@@ -25,29 +25,42 @@
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
-#include <OpenSG/OSGTransform.h>
-
-// the general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
-
-//Input
-#include <OpenSG/Input/OSGWindowUtils.h>
-#include <OpenSG/Input/OSGMouseListener.h>
-#include <OpenSG/Input/OSGMouseMotionListener.h>
 #include <OpenSG/Input/OSGWindowAdapter.h>
 
-//UserInterface Headers
+// The general scene file loading handler
+#include <OpenSG/OSGSceneFileHandler.h>
+
+// Input
+#include <OpenSG/Input/OSGWindowUtils.h>
+
+// UserInterface Headers
+#include <OpenSG/UserInterface/OSGUIForeground.h>
+#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
+#include <OpenSG/UserInterface/OSGGraphics2D.h>
+#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+
+// Activate the OpenSG namespace
+OSG_USING_NAMESPACE
+
+// The SimpleSceneManager to manage simple applications
+SimpleSceneManager *mgr;
+
+bool ExitApp = false;
+
+// Forward declaration so we can have the interesting stuff upfront
+void display(void);
+void reshape(Vec2s Size);
+
+
+// 21ExampleInterface Headers
 #include <OpenSG/UserInterface/OSGUIRectangle.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGToggleButton.h>
 #include <OpenSG/UserInterface/OSGLineBorder.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
-
-// Include relevant header files
 #include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
 #include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
 #include <OpenSG/UserInterface/OSGBoxLayout.h>
@@ -60,10 +73,7 @@
 #include <OpenSG/UserInterface/OSGEmptyBorder.h>
 #include <OpenSG/UserInterface/OSGEtchedBorder.h>
 #include <OpenSG/UserInterface/OSGUIDefines.h>
-#include <OpenSG/UserInterface/OSGColorUIBackground.h>
-#include <OpenSG/UserInterface/OSGGradientUIBackground.h>
-#include <OpenSG/UserInterface/OSGEmptyUIBackground.h>
-#include <OpenSG/UserInterface/OSGCompoundUIBackground.h>
+#include <OpenSG/UserInterface/OSGUIBackgrounds.h>
 #include <OpenSG/UserInterface/OSGLabel.h>
 #include <OpenSG/UserInterface/OSGCheckboxButton.h>
 #include <OpenSG/UserInterface/OSGRadioButton.h>
@@ -74,21 +84,8 @@
 
 
 
-#include <OpenSG/UserInterface/OSGWindowsLookAndFeel.h>
-// Activate the OpenSG namespace
-// This is not strictly necessary, you can also prefix all OpenSG symbols
-// with OSG::, but that would be a bit tedious for this example
-OSG_USING_NAMESPACE
-
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-bool ExitApp = false;
-
 WindowEventProducerPtr TheWindowEventProducer;
 
-// forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2s Size);
 
 class TutorialWindowListener : public WindowAdapter
 {
@@ -506,7 +503,7 @@ int main(int argc, char **argv)
 	   MainFrame->setBackground(greyBackground); 
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
-	//Create the Drawing Surface
+	// Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
     beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
@@ -514,7 +511,7 @@ int main(int argc, char **argv)
 	    drawingSurface->setEventProducer(TheWindowEventProducer);
     endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
 	
-    //Make A 3D Rectangle to draw the UI on
+    // Make A 3D Rectangle to draw the UI on
     UIRectanglePtr UIRectCore = UIRectangle::create();
     beginEditCP(UIRectCore, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask | UIRectangle::DrawingSurfaceFieldMask);
 		UIRectCore->setPoint(Pnt3f(-310.0,-310.0,370.0));
@@ -533,14 +530,15 @@ int main(int argc, char **argv)
         scene->addChild(UIRectNode);
     endEditCP  (scene, Node::ChildrenFieldMask);
 
-    // create the SimpleSceneManager helper
+
+	// Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // tell the manager what to manage
-    mgr->setWindow(MainWindow );
-    mgr->setRoot  (scene);
+    // Tell the manager what to manage
+    mgr->setWindow(MainWindow);
+    mgr->setRoot(scene);
 
-    // show the whole scene
+    // Show the whole scene
     mgr->showAll();
 
     // Set up Window
@@ -556,22 +554,6 @@ int main(int argc, char **argv)
     osgExit();
 
     return 0;
-}
-
-//
-// callback functions
-//
-
-// redraw the window
-void display(void)
-{
-    mgr->redraw();
-}
-
-// react to size changes
-void reshape(Vec2s Size)
-{
-    mgr->resize(Size.x(), Size.y());
 }
 
 
@@ -1127,4 +1109,20 @@ void create3DObjects(void)
 	addRefCP(sphere);
 	addRefCP(box);
 	addRefCP(cone);
+}
+
+
+// Callback functions
+
+
+// Redraw the window
+void display(void)
+{
+    mgr->redraw();
+}
+
+// React to size changes
+void reshape(Vec2s Size)
+{
+    mgr->resize(Size.x(), Size.y());
 }

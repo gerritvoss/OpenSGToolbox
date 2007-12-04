@@ -26,33 +26,21 @@
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
-
-// the general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
-
-//Input
-#include <OpenSG/Input/OSGWindowUtils.h>
-
 #include <OpenSG/Input/OSGWindowAdapter.h>
 
-//UserInterface Headers
+// The general scene file loading handler
+#include <OpenSG/OSGSceneFileHandler.h>
+
+// Input
+#include <OpenSG/Input/OSGWindowUtils.h>
+
+// UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGUIFont.h>
-#include <OpenSG/UserInterface/OSGColorUIBackground.h>
-#include <OpenSG/UserInterface/OSGPanel.h>
-
-#include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGToggleButton.h>
-#include <OpenSG/UserInterface/OSGRotatedComponent.h>
-#include <OpenSG/Input/OSGUpdateListener.h>
 
 // Activate the OpenSG namespace
-// This is not strictly necessary, you can also prefix all OpenSG symbols
-// with OSG::, but that would be a bit tedious for this example
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
@@ -60,9 +48,20 @@ SimpleSceneManager *mgr;
 
 bool ExitApp = false;
 
-// forward declaration so we can have the interesting stuff upfront
+// Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2s Size);
+
+// 30RotatedComponent Headers
+#include <OpenSG/UserInterface/OSGFlowLayout.h>
+#include <OpenSG/UserInterface/OSGUIFont.h>
+#include <OpenSG/UserInterface/OSGColorUIBackground.h>
+#include <OpenSG/UserInterface/OSGPanel.h>
+#include <OpenSG/UserInterface/OSGButton.h>
+#include <OpenSG/UserInterface/OSGToggleButton.h>
+#include <OpenSG/UserInterface/OSGRotatedComponent.h>
+#include <OpenSG/Input/OSGUpdateListener.h>
+
 ComponentPtr createPanel(void);
 
 // Create a class to allow for the use of the Escape
@@ -177,7 +176,6 @@ protected:
     WindowEventProducerPtr _WindowEventProducer;
 };
 
-// Initialize WIN32 & OpenSG and set up the scene
 int main(int argc, char **argv)
 {
     // OSG init
@@ -277,8 +275,6 @@ int main(int argc, char **argv)
 	FramePtr MainFrame = osg::Frame::create();
 	LayoutPtr MainFrameLayout = osg::FlowLayout::create();
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
-	   // Assign the Button to the MainFrame so it will be displayed
-	   // when the view is rendered.
 	   MainFrame->getChildren().addValue(TheRotatedComponent);
 	   MainFrame->getChildren().addValue(RotateControlButton);
 	   MainFrame->setLayout(MainFrameLayout);
@@ -288,7 +284,7 @@ int main(int argc, char **argv)
     TutorialKeyListener TheKeyListener;
     MainFrame->addKeyListener(&TheKeyListener);
 
-	//Create the Drawing Surface
+	// Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
 	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
@@ -304,22 +300,21 @@ int main(int argc, char **argv)
 		foreground->setFrameBounds(Vec2f(0.8,0.8));
     endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask |UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
-
-    // create the SimpleSceneManager helper
+    // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // tell the manager what to manage
-    mgr->setWindow(MainWindow );
-    mgr->setRoot  (scene);
+    // Tell the manager what to manage
+    mgr->setWindow(MainWindow);
+    mgr->setRoot(scene);
 
 	// Add the UI Foreground Object to the Scene
 	ViewportPtr viewport = mgr->getWindow()->getPort(0);
     beginEditCP(viewport, Viewport::ForegroundsFieldMask);
 		viewport->getForegrounds().addValue(foreground);
     beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-    // show the whole scene
-    mgr->showAll();
 
+    // Show the whole scene
+    mgr->showAll();
     TheWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(550,550),
                                         "OpenSG 30RotatedComponent Window");
@@ -334,21 +329,6 @@ int main(int argc, char **argv)
     return 0;
 }
 
-//
-// callback functions
-//
-
-// redraw the window
-void display(void)
-{
-    mgr->redraw();
-}
-
-// react to size changes
-void reshape(Vec2s Size)
-{
-    mgr->resize(Size.x(), Size.y());
-}
 
 
 ComponentPtr createPanel(void)
@@ -382,4 +362,18 @@ ComponentPtr createPanel(void)
     endEditCP(button4, Button::TextFieldMask);
     
 	return panel1;
+}
+// Callback functions
+
+
+// Redraw the window
+void display(void)
+{
+    mgr->redraw();
+}
+
+// React to size changes
+void reshape(Vec2s Size)
+{
+    mgr->resize(Size.x(), Size.y());
 }

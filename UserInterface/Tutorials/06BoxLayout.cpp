@@ -7,48 +7,54 @@
 // 
 // Includes: placing multiple buttons using Box Layout
 
+// GLUT is used for window handling
+#include <OpenSG/OSGGLUT.h>
+
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
 
+// The GLUT-OpenSG connection class
+#include <OpenSG/OSGGLUTWindow.h>
+
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
-
-
-// the general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
-
-//Input
-#include <OpenSG/Input/OSGWindowUtils.h>
 #include <OpenSG/Input/OSGWindowAdapter.h>
 
-//UserInterface Headers
+// The general scene file loading handler
+#include <OpenSG/OSGSceneFileHandler.h>
+
+// Input
+#include <OpenSG/Input/OSGWindowUtils.h>
+
+// UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGColorUIBackground.h>
-// Include BoxLayout header file
-#include <OpenSG/UserInterface/OSGBoxLayout.h>
 
 // Activate the OpenSG namespace
-// This is not strictly necessary, you can also prefix all OpenSG symbols
-// with OSG::, but that would be a bit tedious for this example
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
+
 bool ExitApp = false;
 
-// forward declaration so we can have the interesting stuff upfront
+// Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2s Size);
+
+// 06BoxLayout Headers
+#include <OpenSG/UserInterface/OSGButton.h>
+#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include <OpenSG/UserInterface/OSGColorUIBackground.h>
+#include <OpenSG/UserInterface/OSGBoxLayout.h>
 
 class TutorialWindowListener : public WindowAdapter
 {
@@ -64,7 +70,7 @@ public:
     }
 };
 
-// Initialize GLUT & OpenSG and set up the scene
+
 int main(int argc, char **argv)
 {
     // OSG init
@@ -184,7 +190,6 @@ int main(int argc, char **argv)
 	
 	FramePtr MainFrame = osg::Frame::create();
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-	   // Add the buttons to the mainframe so they will be displayed
 	   MainFrame->getChildren().addValue(button1);
 	   MainFrame->getChildren().addValue(button2);
 	   MainFrame->getChildren().addValue(button3);
@@ -194,7 +199,7 @@ int main(int argc, char **argv)
 	   MainFrame->setBackground(mainBackground);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
-	//Create the Drawing Surface
+	// Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
 	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
@@ -209,16 +214,14 @@ int main(int argc, char **argv)
 	    foreground->setDrawingSurface(drawingSurface);
 		foreground->setFramePositionOffset(Vec2s(0,0));
 		foreground->setFrameBounds(Vec2f(0.5,0.5));
-	   //Set the Event Producer for the DrawingSurface
-	   //This is needed in order to get Mouse/Keyboard/etc Input to the UI DrawingSurface
     endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
-    // create the SimpleSceneManager helper
+    // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // tell the manager what to manage
-    mgr->setWindow(MainWindow );
-    mgr->setRoot  (scene);
+    // Tell the manager what to manage
+    mgr->setWindow(MainWindow);
+    mgr->setRoot(scene);
 
 	// Add the UI Foreground Object to the Scene
 	ViewportPtr viewport = mgr->getWindow()->getPort(0);
@@ -226,9 +229,8 @@ int main(int argc, char **argv)
 		viewport->getForegrounds().addValue(foreground);
     beginEditCP(viewport, Viewport::ForegroundsFieldMask);
 
-    // show the whole scene
+    // Show the whole scene
     mgr->showAll();
-
     TheWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(900,900),
                                         "OpenSG 06BoxLayout Window");
@@ -243,14 +245,16 @@ int main(int argc, char **argv)
 
     return 0;
 }
+// Callback functions
 
-// redraw the window
+
+// Redraw the window
 void display(void)
 {
     mgr->redraw();
 }
 
-// react to size changes
+// React to size changes
 void reshape(Vec2s Size)
 {
     mgr->resize(Size.x(), Size.y());

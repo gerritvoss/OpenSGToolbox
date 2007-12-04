@@ -7,8 +7,6 @@
 // Includes: placing multiple buttons and using 
 // AbsoluteLayoutConstraints to locate the buttons.
 
-
-
 // GLUT is used for window handling
 #include <OpenSG/OSGGLUT.h>
 
@@ -33,7 +31,6 @@
 
 // Input
 #include <OpenSG/Input/OSGWindowUtils.h>
-
 
 // UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
@@ -220,7 +217,7 @@ int main(int argc, char **argv)
 	   MainFrame->setBackground(mainBackground);
     endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
-	//Create the Drawing Surface
+	// Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
 	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
@@ -235,16 +232,15 @@ int main(int argc, char **argv)
 	    foreground->setDrawingSurface(drawingSurface);
 		foreground->setFramePositionOffset(Vec2s(0,0));
 		foreground->setFrameBounds(Vec2f(0.5,0.5));
-	   //Set the Event Producer for the DrawingSurface
-	   //This is needed in order to get Mouse/Keyboard/etc Input to the UI DrawingSurface
     endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
-    // create the SimpleSceneManager helper
+
+    // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // tell the manager what to manage
-    mgr->setWindow(MainWindow );
-    mgr->setRoot  (scene);
+    // Tell the manager what to manage
+    mgr->setWindow(MainWindow);
+    mgr->setRoot(scene);
 
 	// Add the UI Foreground Object to the Scene
 	ViewportPtr viewport = mgr->getWindow()->getPort(0);
@@ -252,7 +248,7 @@ int main(int argc, char **argv)
 		viewport->getForegrounds().addValue(foreground);
     beginEditCP(viewport, Viewport::ForegroundsFieldMask);
 
-    // show the whole scene
+    // Show the whole scene
     mgr->showAll();
 
     TheWindowEventProducer->openWindow(Pnt2s(50,50),
@@ -270,14 +266,16 @@ int main(int argc, char **argv)
     return 0;
 }
 
+// Callback functions
 
-// redraw the window
+
+// Redraw the window
 void display(void)
 {
     mgr->redraw();
 }
 
-// react to size changes
+// React to size changes
 void reshape(Vec2s Size)
 {
     mgr->resize(Size.x(), Size.y());
