@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DefaultComboBoxEditor"
+	parent="ComboBoxEditor"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI DefaultComboBoxEditor.
+	<Field
+		name="Editor"
+		type="TextFieldPtr"
+		cardinality="single"
+		visibility="external"
+		header="Component/Text/OSGTextFieldFields.h"
+		access="public"
+	>
+	</Field>
+</FieldContainer>
