@@ -43,6 +43,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+FieldContainerMap Slider::createStandardLabels(UInt32 increment)
+{
+	return createStandardLabels(increment, getMinimum());
+}
+
+inline
 void Slider::addChangeListener(ChangeListenerPtr l)
 {
 	_Model->addChangeListener(l);

@@ -201,4 +201,13 @@ A UI Spinner.
 		defaultValue="8"
 	>
 	</Field>
+	<Field
+		name="TrackToLabelOffset"
+		type="Int32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="16"
+	>
+	</Field>
 </FieldContainer>

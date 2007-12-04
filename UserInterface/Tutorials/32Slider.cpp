@@ -47,6 +47,9 @@
 #include <OpenSG/UserInterface/OSGLabel.h>
 #include <OpenSG/UserInterface/OSGDefaultBoundedRangeModel.h>
 
+#include <OpenSG/UserInterface/OSGScrollBar.h>
+#include <OpenSG/UserInterface/OSGProgressBar.h>
+
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
 // with OSG::, but that would be a bit tedious for this example
@@ -148,17 +151,44 @@ int main(int argc, char **argv)
     TheBoundedRangeModel.setExtent(0);
     
 	//Create the slider
-	SliderPtr TheSlider = Slider::create();
-	beginEditCP(TheSlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask);
-		TheSlider->getLabelMap()[0] = Label::create();
-		TheSlider->setPreferredSize(Vec2s(50, 300));
-		TheSlider->setSnapToTicks(true);
-		TheSlider->setMajorTickSpacing(10);
-		TheSlider->setMinorTickSpacing(5);
-		TheSlider->setOrientation(VERTICAL_ALIGNMENT);
-		TheSlider->setInverted(false);
-	endEditCP(TheSlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask);
-    TheSlider->setModel(&TheBoundedRangeModel);
+	LabelPtr TempLabel;
+	SliderPtr TheSliderVertical = Slider::create();
+	beginEditCP(TheSliderVertical, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
+		TempLabel = Label::Ptr::dcast(TheSliderVertical->getLabelPrototype()->shallowCopy());
+		beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("Min"); endEditCP(TempLabel, Label::TextFieldMask);
+		TheSliderVertical->getLabelMap()[TheBoundedRangeModel.getMinimum()] = TempLabel;
+		
+		TempLabel = Label::Ptr::dcast(TheSliderVertical->getLabelPrototype()->shallowCopy());
+		beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("Low"); endEditCP(TempLabel, Label::TextFieldMask);
+		TheSliderVertical->getLabelMap()[TheBoundedRangeModel.getMinimum() + (TheBoundedRangeModel.getMaximum() - TheBoundedRangeModel.getMinimum())/10] = TempLabel;
+
+		TempLabel = Label::Ptr::dcast(TheSliderVertical->getLabelPrototype()->shallowCopy());
+		beginEditCP(TempLabel, Label::TextFieldMask); TempLabel->setText("Max"); endEditCP(TempLabel, Label::TextFieldMask);
+		TheSliderVertical->getLabelMap()[TheBoundedRangeModel.getMaximum()] = TempLabel;
+
+
+		TheSliderVertical->setPreferredSize(Vec2s(100, 300));
+		TheSliderVertical->setSnapToTicks(true);
+		TheSliderVertical->setMajorTickSpacing(10);
+		TheSliderVertical->setMinorTickSpacing(5);
+		TheSliderVertical->setOrientation(VERTICAL_ALIGNMENT);
+		TheSliderVertical->setInverted(true);
+		TheSliderVertical->setDrawLabels(true);
+	endEditCP(TheSliderVertical, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
+    TheSliderVertical->setModel(&TheBoundedRangeModel);
+	
+	SliderPtr TheSliderHorizontal = Slider::create();
+	beginEditCP(TheSliderHorizontal, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
+		TheSliderHorizontal->setPreferredSize(Vec2s(300, 100));
+		TheSliderHorizontal->setSnapToTicks(false);
+		TheSliderHorizontal->setMajorTickSpacing(10);
+		TheSliderHorizontal->setMinorTickSpacing(5);
+		TheSliderHorizontal->setOrientation(HORIZONTAL_ALIGNMENT);
+		TheSliderHorizontal->setInverted(false);
+		TheSliderHorizontal->setDrawLabels(true);
+	endEditCP(TheSliderHorizontal, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
+    TheSliderHorizontal->setModel(&TheBoundedRangeModel);
+	
 
 	// Create Background to be used with the MainFrame
 	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
@@ -174,7 +204,8 @@ int main(int argc, char **argv)
 	   // when the view is rendered.
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
-       MainFrame->getChildren().push_back(TheSlider);
+       MainFrame->getChildren().push_back(TheSliderVertical);
+       MainFrame->getChildren().push_back(TheSliderHorizontal);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
 
     TutorialKeyListener TheKeyListener;
@@ -215,7 +246,7 @@ int main(int argc, char **argv)
     mgr->showAll();
 
     TheWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(550,550),
+                                        Vec2s(750,750),
                                         "OpenSG 32Slider Window");
 
     while(!ExitApp)

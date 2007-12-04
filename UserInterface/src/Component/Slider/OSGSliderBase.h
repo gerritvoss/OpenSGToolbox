@@ -88,6 +88,7 @@
 #include "Graphics/UIDrawObjects/OSGUIDrawObject.h" // MinorTickDrawObjects type
 #include <OpenSG/OSGInt32Fields.h> // TrackInset type
 #include <OpenSG/OSGInt32Fields.h> // TrackToTickOffset type
+#include <OpenSG/OSGInt32Fields.h> // TrackToLabelOffset type
 
 #include "OSGSliderFields.h"
 
@@ -132,7 +133,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
         MinorTickDrawObjectsFieldId = MajorTickDrawObjectsFieldId + 1,
         TrackInsetFieldId           = MinorTickDrawObjectsFieldId + 1,
         TrackToTickOffsetFieldId    = TrackInsetFieldId           + 1,
-        NextFieldId                 = TrackToTickOffsetFieldId    + 1
+        TrackToLabelOffsetFieldId   = TrackToTickOffsetFieldId    + 1,
+        NextFieldId                 = TrackToLabelOffsetFieldId   + 1
     };
 
     static const OSG::BitVector KnobButtonFieldMask;
@@ -156,6 +158,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
     static const OSG::BitVector MinorTickDrawObjectsFieldMask;
     static const OSG::BitVector TrackInsetFieldMask;
     static const OSG::BitVector TrackToTickOffsetFieldMask;
+    static const OSG::BitVector TrackToLabelOffsetFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -201,6 +204,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
            MFUIDrawObjectPtr   *getMFMinorTickDrawObjects(void);
            SFInt32             *getSFTrackInset     (void);
            SFInt32             *getSFTrackToTickOffset(void);
+           SFInt32             *getSFTrackToLabelOffset(void);
 
            ButtonPtr           &getKnobButton     (void);
      const ButtonPtr           &getKnobButton     (void) const;
@@ -236,6 +240,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
      const Int32               &getTrackInset     (void) const;
            Int32               &getTrackToTickOffset(void);
      const Int32               &getTrackToTickOffset(void) const;
+           Int32               &getTrackToLabelOffset(void);
+     const Int32               &getTrackToLabelOffset(void) const;
            UIDrawObjectPtr     &getMajorTickDrawObjects(const UInt32 index);
            MFUIDrawObjectPtr   &getMajorTickDrawObjects(void);
      const MFUIDrawObjectPtr   &getMajorTickDrawObjects(void) const;
@@ -265,6 +271,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
      void setMaxTrackDrawObject( const UIDrawObjectCanvasPtr &value );
      void setTrackInset     ( const Int32 &value );
      void setTrackToTickOffset( const Int32 &value );
+     void setTrackToLabelOffset( const Int32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -328,6 +335,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
     MFUIDrawObjectPtr   _mfMinorTickDrawObjects;
     SFInt32             _sfTrackInset;
     SFInt32             _sfTrackToTickOffset;
+    SFInt32             _sfTrackToLabelOffset;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

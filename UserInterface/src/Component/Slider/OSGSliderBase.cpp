@@ -127,6 +127,9 @@ const OSG::BitVector  SliderBase::TrackInsetFieldMask =
 const OSG::BitVector  SliderBase::TrackToTickOffsetFieldMask = 
     (TypeTraits<BitVector>::One << SliderBase::TrackToTickOffsetFieldId);
 
+const OSG::BitVector  SliderBase::TrackToLabelOffsetFieldMask = 
+    (TypeTraits<BitVector>::One << SliderBase::TrackToLabelOffsetFieldId);
+
 const OSG::BitVector SliderBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -195,6 +198,9 @@ const OSG::BitVector SliderBase::MTInfluenceMask =
     
 */
 /*! \var Int32           SliderBase::_sfTrackToTickOffset
+    
+*/
+/*! \var Int32           SliderBase::_sfTrackToLabelOffset
     
 */
 
@@ -306,7 +312,12 @@ FieldDescription *SliderBase::_desc[] =
                      "TrackToTickOffset", 
                      TrackToTickOffsetFieldId, TrackToTickOffsetFieldMask,
                      false,
-                     (FieldAccessMethod) &SliderBase::getSFTrackToTickOffset)
+                     (FieldAccessMethod) &SliderBase::getSFTrackToTickOffset),
+    new FieldDescription(SFInt32::getClassType(), 
+                     "TrackToLabelOffset", 
+                     TrackToLabelOffsetFieldId, TrackToLabelOffsetFieldMask,
+                     false,
+                     (FieldAccessMethod) &SliderBase::getSFTrackToLabelOffset)
 };
 
 
@@ -407,6 +418,7 @@ SliderBase::SliderBase(void) :
     _mfMinorTickDrawObjects   (), 
     _sfTrackInset             (Int32(6)), 
     _sfTrackToTickOffset      (Int32(8)), 
+    _sfTrackToLabelOffset     (Int32(16)), 
     Inherited() 
 {
 }
@@ -437,6 +449,7 @@ SliderBase::SliderBase(const SliderBase &source) :
     _mfMinorTickDrawObjects   (source._mfMinorTickDrawObjects   ), 
     _sfTrackInset             (source._sfTrackInset             ), 
     _sfTrackToTickOffset      (source._sfTrackToTickOffset      ), 
+    _sfTrackToLabelOffset     (source._sfTrackToLabelOffset     ), 
     Inherited                 (source)
 {
 }
@@ -558,6 +571,11 @@ UInt32 SliderBase::getBinSize(const BitVector &whichField)
         returnValue += _sfTrackToTickOffset.getBinSize();
     }
 
+    if(FieldBits::NoField != (TrackToLabelOffsetFieldMask & whichField))
+    {
+        returnValue += _sfTrackToLabelOffset.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -670,6 +688,11 @@ void SliderBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (TrackToTickOffsetFieldMask & whichField))
     {
         _sfTrackToTickOffset.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TrackToLabelOffsetFieldMask & whichField))
+    {
+        _sfTrackToLabelOffset.copyToBin(pMem);
     }
 
 
@@ -785,6 +808,11 @@ void SliderBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfTrackToTickOffset.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (TrackToLabelOffsetFieldMask & whichField))
+    {
+        _sfTrackToLabelOffset.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -858,6 +886,9 @@ void SliderBase::executeSyncImpl(      SliderBase *pOther,
     if(FieldBits::NoField != (TrackToTickOffsetFieldMask & whichField))
         _sfTrackToTickOffset.syncWith(pOther->_sfTrackToTickOffset);
 
+    if(FieldBits::NoField != (TrackToLabelOffsetFieldMask & whichField))
+        _sfTrackToLabelOffset.syncWith(pOther->_sfTrackToLabelOffset);
+
 
 }
 #else
@@ -918,6 +949,9 @@ void SliderBase::executeSyncImpl(      SliderBase *pOther,
 
     if(FieldBits::NoField != (TrackToTickOffsetFieldMask & whichField))
         _sfTrackToTickOffset.syncWith(pOther->_sfTrackToTickOffset);
+
+    if(FieldBits::NoField != (TrackToLabelOffsetFieldMask & whichField))
+        _sfTrackToLabelOffset.syncWith(pOther->_sfTrackToLabelOffset);
 
 
     if(FieldBits::NoField != (MajorTickPositionsFieldMask & whichField))

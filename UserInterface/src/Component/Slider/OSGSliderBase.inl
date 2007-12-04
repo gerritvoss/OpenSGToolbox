@@ -243,6 +243,13 @@ SFInt32 *SliderBase::getSFTrackToTickOffset(void)
     return &_sfTrackToTickOffset;
 }
 
+//! Get the Slider::_sfTrackToLabelOffset field.
+inline
+SFInt32 *SliderBase::getSFTrackToLabelOffset(void)
+{
+    return &_sfTrackToLabelOffset;
+}
+
 
 //! Get the value of the Slider::_sfKnobButton field.
 inline
@@ -599,6 +606,27 @@ inline
 void SliderBase::setTrackToTickOffset(const Int32 &value)
 {
     _sfTrackToTickOffset.setValue(value);
+}
+
+//! Get the value of the Slider::_sfTrackToLabelOffset field.
+inline
+Int32 &SliderBase::getTrackToLabelOffset(void)
+{
+    return _sfTrackToLabelOffset.getValue();
+}
+
+//! Get the value of the Slider::_sfTrackToLabelOffset field.
+inline
+const Int32 &SliderBase::getTrackToLabelOffset(void) const
+{
+    return _sfTrackToLabelOffset.getValue();
+}
+
+//! Set the value of the Slider::_sfTrackToLabelOffset field.
+inline
+void SliderBase::setTrackToLabelOffset(const Int32 &value)
+{
+    _sfTrackToLabelOffset.setValue(value);
 }
 
 

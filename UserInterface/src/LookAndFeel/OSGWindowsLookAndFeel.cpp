@@ -445,6 +445,9 @@ void WindowsLookAndFeel::init(void)
 		WindowsLabel->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsLabel->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsLabel->setDisabledTextColor(WindowsDisabledTextColor);
+		
+		WindowsLabel->setVerticalAlignment(0.5);
+		WindowsLabel->setHorizontalAlignment(0.0);
 	endEditCP(WindowsLabel);
 	
     Label::getClassType().setPrototype(WindowsLabel);
@@ -3156,6 +3159,23 @@ void WindowsLookAndFeel::init(void)
     beginEditCP(WindowsSliderKnobButton);
     
     LabelPtr WindowsSliderPrototypeLabel = Label::create();
+	beginEditCP(WindowsSliderPrototypeLabel);
+		//Border
+		WindowsSliderPrototypeLabel->setBorder(WindowsEmptyBorder);
+		WindowsSliderPrototypeLabel->setRolloverBorder(WindowsEmptyBorder);
+		WindowsSliderPrototypeLabel->setFocusedBorder(WindowsEmptyBorder);
+		WindowsSliderPrototypeLabel->setDisabledBorder(WindowsEmptyBorder);
+		
+		//Background
+		WindowsSliderPrototypeLabel->setBackground(WindowsEmptyBackground);
+		WindowsSliderPrototypeLabel->setRolloverBackground(WindowsEmptyBackground);
+		WindowsSliderPrototypeLabel->setFocusedBackground(WindowsEmptyBackground);
+		WindowsSliderPrototypeLabel->setDisabledBackground(WindowsEmptyBackground);
+
+		WindowsSliderPrototypeLabel->setVerticalAlignment(0.5);
+		WindowsSliderPrototypeLabel->setHorizontalAlignment(0.0);
+	endEditCP(WindowsSliderPrototypeLabel);
+
 	//Windows SliderBorder
 	EtchedBorderPtr WindowsSliderBorder = EtchedBorder::create();
 	beginEditCP(WindowsSliderBorder);
@@ -3166,10 +3186,10 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsSliderBorder);
 	
 	//Windows SliderBackground
-	/*ColorUIBackgroundPtr SliderBackground = ColorUIBackground::create();
+	ColorUIBackgroundPtr SliderBackground = ColorUIBackground::create();
 	beginEditCP(SliderBackground);
-		SliderBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
-	endEditCP(SliderBackground);*/
+		SliderBackground->setColor(Color4f(0.93, 0.91, 0.85, 1.0));
+	endEditCP(SliderBackground);
 	
 	//Windows SliderDrawObjectBackground
 	ColorUIBackgroundPtr SliderTrackDrawObjectBackground = ColorUIBackground::create();
@@ -3237,10 +3257,10 @@ void WindowsLookAndFeel::init(void)
 		WindowsSlider->setDisabledBorder(WindowsSliderBorder);
 		
 		//Background
-		WindowsSlider->setBackground(WindowsEmptyBackground);
-		WindowsSlider->setRolloverBackground(WindowsEmptyBackground);
-		WindowsSlider->setFocusedBackground(WindowsEmptyBackground);
-		WindowsSlider->setDisabledBackground(WindowsEmptyBackground);
+		WindowsSlider->setBackground(SliderBackground);
+		WindowsSlider->setRolloverBackground(SliderBackground);
+		WindowsSlider->setFocusedBackground(SliderBackground);
+		WindowsSlider->setDisabledBackground(SliderBackground);
 		
 		//Opacity
 		WindowsSlider->setOpacity(1.0);
@@ -3260,8 +3280,9 @@ void WindowsLookAndFeel::init(void)
         WindowsSlider->setTrackDrawObject(WindowsSliderTrackCanvas);
         WindowsSlider->setMinTrackDrawObject(NullFC);
         WindowsSlider->setMaxTrackDrawObject(NullFC);
-        WindowsSlider->setTrackInset(6);
+        WindowsSlider->setTrackInset(8);
         WindowsSlider->setTrackToTickOffset(8);
+        WindowsSlider->setTrackToLabelOffset(18);
 
         WindowsSlider->getMajorTickDrawObjects().clear();
         WindowsSlider->getMajorTickDrawObjects().push_back(WindowsSliderMajorTickMarks);
