@@ -322,8 +322,7 @@ int main(int argc, char **argv)
 			-setActiveTab(TAB_INDEX)
 				This sets which Tab appears to be selected
 				by the numerical order in which they are 
-				added (in this example, button1 is indexed
-				as 0)
+				added (note the index starts with 0)
 			-insertTab(TAB_OBJECT, NEW_TAB_OBJECT, NEW_TAB_CONTENT)
 				or insertTab(TAB_INDEX, NEW_TAB_OBJECT, NEW_TAB_CONTENT)
 				This lets you insert a Tab anywhere in the
@@ -366,8 +365,15 @@ int main(int argc, char **argv)
 
 	// Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
-	// CardLayout causes the TabPanel to occupy the entire
-	// MainFrame view (useful with TabPanel)
+
+	
+	/******************************************************
+
+			CardLayout causes the TabPanel 
+			to occupy the entire MainFrame 
+			view (useful with TabPanel)
+
+	******************************************************/
 	CardLayoutPtr MainFrameLayout = osg::CardLayout::create();
 
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);

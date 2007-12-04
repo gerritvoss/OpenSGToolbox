@@ -8,52 +8,56 @@
 // AbsoluteLayoutConstraints to locate the buttons.
 
 
+
+// GLUT is used for window handling
+#include <OpenSG/OSGGLUT.h>
+
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
 
+// The GLUT-OpenSG connection class
+#include <OpenSG/OSGGLUTWindow.h>
+
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
-
-
-// the general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
-
-
-//Input
-#include <OpenSG/Input/OSGWindowUtils.h>
 #include <OpenSG/Input/OSGWindowAdapter.h>
 
-//UserInterface Headers
+// The general scene file loading handler
+#include <OpenSG/OSGSceneFileHandler.h>
+
+// Input
+#include <OpenSG/Input/OSGWindowUtils.h>
+
+
+// UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGColorUIBackground.h>
-
-// Include AbsoluteLayout and AbsoluteLayoutConstraints header files
-#include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
-#include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
 
 // Activate the OpenSG namespace
-// This is not strictly necessary, you can also prefix all OpenSG symbols
-// with OSG::, but that would be a bit tedious for this example
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
+
 bool ExitApp = false;
 
-// forward declaration so we can have the interesting stuff upfront
-int setupGLUT( int *argc, char *argv[] );
+// Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2s Size);
+
+// Include AbsoluteLayout and AbsoluteLayoutConstraints header files
+#include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
+#include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
+#include <OpenSG/UserInterface/OSGButton.h>
+#include <OpenSG/UserInterface/OSGColorUIBackground.h>
 
 class TutorialWindowListener : public WindowAdapter
 {
@@ -69,7 +73,6 @@ public:
     }
 };
 
-// Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
 {
     // OSG init

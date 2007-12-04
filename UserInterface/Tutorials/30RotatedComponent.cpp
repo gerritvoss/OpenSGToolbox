@@ -102,6 +102,21 @@ public:
     }
 };
 
+
+	/******************************************************
+			
+			Create a RotatedComponentPtr.
+			-setAngle(Angle, in radians): determines
+				the angle the Component initially
+				is rotated
+			-setInternalComponent(ComponentPtr): 
+				determines what the actual 
+				Component to be rotated is
+			-setResizePolicy(RotatedComponent::ENUM):
+				takes NO_RESIZING, RESIZE_TO_MIN, or
+				RESIZE_TO_MAX.
+ 
+	******************************************************/	
 class RotateUpdateListener : public UpdateListener
 {
 public:
@@ -235,7 +250,9 @@ int main(int argc, char **argv)
 			a RotatingComponent is used, an 
 			alternate Layout may be preferred
 			to prevent other Components from 
-			moving as well.
+			moving as well.  This is 
+			intentionally left this way to 
+			illustrate why this might be the case.
  
 	******************************************************/	
 	ToggleButtonPtr RotateControlButton = osg::ToggleButton::create();
@@ -285,8 +302,6 @@ int main(int argc, char **argv)
 	    foreground->setDrawingSurface(drawingSurface);
 		foreground->setFramePositionOffset(Vec2s(0,0));
 		foreground->setFrameBounds(Vec2f(0.8,0.8));
-	   //Set the Event Producer for the DrawingSurface
-	   //This is needed in order to get Mouse/Keyboard/etc Input to the UI DrawingSurface
     endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask |UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
 

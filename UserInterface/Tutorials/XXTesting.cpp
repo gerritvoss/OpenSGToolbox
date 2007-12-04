@@ -1,11 +1,12 @@
-
-// OpenSG Tutorial Example: Creating a Border
+// OpenSG Tutorial Example: Using the AbsoluteLayout
 //
-// This tutorial explains how to implement the 
-// TabPanel and its characteristics
+// This tutorial explains how to place buttons within a 
+// frame utilizing the Absolute Layout to manage the layout 
+// through the OSG User Interface library.
 // 
-// Includes: TabPanel creation and example TabPanel, as well as 
-// utilizing ActionListeners to add/remove Tabs on mouseclicks
+// Includes: placing multiple buttons and using 
+// AbsoluteLayoutConstraints to locate the buttons.
+
 
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
@@ -19,38 +20,30 @@
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
 
+
 // the general scene file loading handler
 #include <OpenSG/OSGSceneFileHandler.h>
+
 
 //Input
 #include <OpenSG/Input/OSGWindowUtils.h>
 #include <OpenSG/Input/OSGWindowAdapter.h>
-// UserInterface Headers
+
+//UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGBoxLayout.h>
-#include <OpenSG/UserInterface/OSGCardLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGUIDefines.h>
-#include <OpenSG/UserInterface/OSGPanel.h>
-#include <OpenSG/UserInterface/OSGLabel.h>
-#include <OpenSG/UserInterface/OSGToggleButton.h>
-#include <OpenSG/UserInterface/OSGGridBagLayout.h>
-#include <OpenSG/UserInterface/OSGTabPanel.h>
-#include <OpenSG/UserInterface/OSGRadioButton.h>
-#include <OpenSG/UserInterface/OSGRadioButtonGroup.h>
-#include <OpenSG/UserInterface/OSGCheckboxButton.h>
-#include <OpenSG/UserInterface/OSGPasswordField.h>
-#include <OpenSG/UserInterface/OSGTextField.h>
-#include <OpenSG/UserInterface/OSGTextArea.h>
-#include <OpenSG/UserInterface/OSGTextField.h>
-#include <OpenSG/UserInterface/OSGSpinner.h>
-#include <OpenSG/UserInterface/OSGNumberSpinnerModel.h>
-#include <sstream>
 
+// Include AbsoluteLayout and AbsoluteLayoutConstraints header files
+#include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
+#include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
+#include <OpenSG/UserInterface/OSGButton.h>
+#include <OpenSG/UserInterface/OSGColorUIBackground.h>
 
+// Activate the OpenSG namespace
+// This is not strictly necessary, you can also prefix all OpenSG symbols
+// with OSG::, but that would be a bit tedious for this example
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
@@ -58,6 +51,7 @@ SimpleSceneManager *mgr;
 bool ExitApp = false;
 
 // forward declaration so we can have the interesting stuff upfront
+int setupGLUT( int *argc, char *argv[] );
 void display(void);
 void reshape(Vec2s Size);
 
@@ -74,10 +68,6 @@ public:
         ExitApp = true;
     }
 };
-
-
-ComponentPtr createStatePanel(void);
-
 
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
@@ -97,7 +87,7 @@ int main(int argc, char **argv)
     TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
 
-    // Make Torus Node
+    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
     // Make Main Scene Node
@@ -114,187 +104,118 @@ int main(int argc, char **argv)
 	// Create the Graphics
 	GraphicsPtr graphics = osg::Graphics2D::create();
 
-	// Initialize the LookAndFeelManager to enable default settings
+	// Initialize the LookAndFeelManager to enable default 
+	// settings for the Button
 	LookAndFeelManager::the()->getLookAndFeel()->init();
-
 
 
 	/******************************************************
 
-			Create Button Components to be used with 
-			TabPanel and specify their characteristics
+		Create three Button Components (button1, button2,
+		and button3) and their AbsoluteLayoutConstraints.
+
+		AbsoluteLayoutConstraints are used within the 
+		AbsoluteLayout to define where the Components will
+		be placed.  Most other Layouts do not need 
+		Constraints, as they place things within the Layout
+		automatically.
 
 	******************************************************/
-	LabelPtr label1 = osg::Label::create();
-	LabelPtr label2 = osg::Label::create();
-	LabelPtr label3 = osg::Label::create();
-	LabelPtr label4 = osg::Label::create();
-	LabelPtr label5 = osg::Label::create();
-	LabelPtr label6 = osg::Label::create();
-	ButtonPtr buttonA = osg::Button::create();
-	ButtonPtr buttonB = osg::Button::create();
-	ButtonPtr buttonC = osg::Button::create();
-	ButtonPtr buttonD = osg::Button::create();
-	ButtonPtr buttonE = osg::Button::create();
-	ButtonPtr buttonF = osg::Button::create();
 
 	ButtonPtr button1 = osg::Button::create();
 	ButtonPtr button2 = osg::Button::create();
 	ButtonPtr button3 = osg::Button::create();
-	ButtonPtr button4 = osg::Button::create();
-	ButtonPtr button5 = osg::Button::create();
-	ButtonPtr button6 = osg::Button::create();
-
-	beginEditCP(label1, Label::TextFieldMask);
-		label1->setText("State");
-	endEditCP(label1, Label::TextFieldMask);
-	beginEditCP(label2, Label::TextFieldMask);
-		label2->setText("Tab2");
-	endEditCP(label2, Label::TextFieldMask);
-	beginEditCP(label3, Label::TextFieldMask);
-		label3->setText("Tab3");
-	endEditCP(label3, Label::TextFieldMask);
-	beginEditCP(label4, Label::TextFieldMask);
-		label4->setText("Tab4");
-	endEditCP(label4, Label::TextFieldMask);
-	beginEditCP(label5, Label::TextFieldMask);
-		label5->setText("Tab5");
-	endEditCP(label5, Label::TextFieldMask);
-	beginEditCP(label6, Label::TextFieldMask);
-		label6->setText("Tab6");
-	endEditCP(label6, Label::TextFieldMask);
 	
-	beginEditCP(buttonA, Button::TextFieldMask);
-		buttonA->setText("Add another Tab");
-	endEditCP(buttonA, Button::TextFieldMask);
+	AbsoluteLayoutConstraintsPtr buttonConstraints1 = osg::AbsoluteLayoutConstraints::create();
+	AbsoluteLayoutConstraintsPtr buttonConstraints2 = osg::AbsoluteLayoutConstraints::create();
+	AbsoluteLayoutConstraintsPtr buttonConstraints3 = osg::AbsoluteLayoutConstraints::create();
 
-
-	beginEditCP(buttonB, Button::TextFieldMask);
-		buttonB->setText("Add a Tab in Tab1!");
-	endEditCP(buttonB, Button::TextFieldMask);
-
-	beginEditCP(buttonC, Button::TextFieldMask);
-		buttonC->setText("Stuff for Tab3");
-	endEditCP(buttonC, Button::TextFieldMask);
-		
-	beginEditCP(buttonD, Button::TextFieldMask);
-		buttonD->setText("Stuff for Tab5");
-	endEditCP(buttonD, Button::TextFieldMask);	
-
-	beginEditCP(buttonE, Button::TextFieldMask);
-		buttonE->setText("Stuff for Tab6");
-	endEditCP(buttonE, Button::TextFieldMask);
-
-
-		
 	/******************************************************
 
-			Create a Panel to add to the TabPanel
+		Define the AbsoluteLayoutConstraints (where Buttons 
+		are located in the Layout).  setPosition gives you 
+		the location of the Button relative to the Layout
+		manager's upper left hand corner.  Buttons will
+		not display if their AbsoluteLayoutConstraints 
+		place them outside the Frame in which they are to
+		be rendered (the part within the Frame still does
+		display).  Changing the window size shows an 
+		example of this.
+
+	******************************************************/
+  
+   beginEditCP(buttonConstraints1, AbsoluteLayoutConstraints::PositionFieldMask);
+		buttonConstraints1->setPosition( Pnt2s(0,150) );
+   endEditCP(buttonConstraints1, AbsoluteLayoutConstraints::PositionFieldMask);
+
+   beginEditCP(buttonConstraints2, AbsoluteLayoutConstraints::PositionFieldMask);
+		buttonConstraints2->setPosition( Pnt2s(200,200) );
+   endEditCP(buttonConstraints2, AbsoluteLayoutConstraints::PositionFieldMask);
+	
+   // Note that this will cause the button's position to overlap with Button2
+   // when the program is run; the AbsoluteLayoutConstraints will overlap
+   // if the specified coordinates overlap
+   beginEditCP(buttonConstraints3, AbsoluteLayoutConstraints::PositionFieldMask);
+		buttonConstraints3->setPosition( Pnt2s(150,220) );
+   endEditCP(buttonConstraints3, AbsoluteLayoutConstraints::PositionFieldMask);
+
+	/******************************************************
+
+		Edit Button Components and assign Text,
+		PreferredSize, and AbsoluteLayoutConstraints
 
 	******************************************************/
 
-	// Create and edit the Panel buttons
-	ButtonPtr tabPanelButton1 = osg::Button::create();
-	ButtonPtr tabPanelButton2 = osg::Button::create();
-	ButtonPtr tabPanelButton3 = osg::Button::create();
-	ButtonPtr tabPanelButton4 = osg::Button::create();
-	ButtonPtr tabPanelButton5 = osg::Button::create();
-	ButtonPtr tabPanelButton6 = osg::Button::create();
+   beginEditCP(button1, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
+		button1->setPreferredSize(Vec2s(100,50));
+		button1->setText("Button 1");
+		
+		// Set the constraints created above to button
+		// to place the Button within the scene
+		button1->setConstraints(buttonConstraints1);
+	endEditCP(button1, Button::PreferredSizeFieldMask |Button::TextFieldMask | Button::ConstraintsFieldMask);
 
-	// Create and edit Panel layout
-	BoxLayoutPtr TabPanelLayout = osg::BoxLayout::create();
-	beginEditCP(TabPanelLayout, BoxLayout::AlignmentFieldMask);
-		TabPanelLayout->setAlignment(VERTICAL_ALIGNMENT);
-	endEditCP(TabPanelLayout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(button2, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
+		button2->setPreferredSize(Vec2s(100,50));
+		button2->setText("Button 2");
+		
+		// Set the constraints created above to button2
+		// to place the Button within the scene
+		button2->setConstraints(buttonConstraints2);
+    endEditCP  (button2, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 
-	// Create and edit Panel
-	PanelPtr tabPanelPanel = osg::Panel::create();
-	beginEditCP(tabPanelPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-		tabPanelPanel->setPreferredSize( Vec2s(180, 500) );
-		tabPanelPanel->getChildren().addValue(tabPanelButton1);
-		tabPanelPanel->getChildren().addValue(tabPanelButton2);
-		tabPanelPanel->getChildren().addValue(tabPanelButton3);
-		tabPanelPanel->getChildren().addValue(tabPanelButton4);
-		tabPanelPanel->getChildren().addValue(tabPanelButton5);
-		tabPanelPanel->getChildren().addValue(tabPanelButton6);
-		tabPanelPanel->setLayout(TabPanelLayout);
-	endEditCP(tabPanelPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-
-
-	
-	/******************************************************
-
-			Create TabPanel.  TabPanel automatically
-			sizes objects within it to cause the appearance
-			of Tabs.  The following functions are 
-			unique to TabPanel:
-			-addTab(TAB_OBJECT, OBJECT_DISPLAYED_BY_TAB)
-				The first argument is the Component which
-				appears as the Tab while the second
-				is the Component which is the Tab content
-			-removeTab(TAB_OBJECT or TAB_INDEX)
-				This removes a Tab.  Argument can be either
-				TabComponent name (as added by addTab) or
-				the Index Number of the Tab.  Note that
-				the index starts at 0, so the first Tab
-				is #0.  See the ActionListener above
-				for an example of how this is used.
-			-setActiveTab(TAB_INDEX)
-				This sets which Tab appears to be selected
-				by the numerical order in which they are 
-				added (in this example, button1 is indexed
-				as 0)
-			-insertTab(TAB_OBJECT, NEW_TAB_OBJECT, NEW_TAB_CONTENT)
-				or insertTab(TAB_INDEX, NEW_TAB_OBJECT, NEW_TAB_CONTENT)
-				This lets you insert a Tab anywhere in the
-				Tab order.  The first argument can be 
-				either the index you want the new Tab,
-				or the existing Tab you want the
-				new Tab placed before.  The last two
-				arguments are the same as with the
-				addTab function
-			-tabAlignment(ALIGNMENT) uses AXIS_CENTER_ALIGNMENT,
-				AXIS_MAX_ALIGNMENT, and AXIS_MIN_ALIGNMENT
-				to determine how the Tabs are aligned
-			-tabPlacement(LOCATION) uses PLACEMENT_NORTH,
-				PLACEMENT_SOUTH, PLACEMENT_WEST, and 
-				PLACEMENT_EAST to determine where the Tabs
-				are placed
-
-			Note that the TabPanel has a PreferredSize
-			which it displays at and if the Frame is 
-			too small, then the TabPanel will appear
-			distorted.  Also, removeTab is most useful
-			when combined with ActionListeners to allow
-			for interactability. 
-
-	******************************************************/
-	
-	TabPanelPtr tabPanel = osg::TabPanel::create();
-	beginEditCP(tabPanel, Component::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
-		tabPanel->setPreferredSize( Vec2s(350,350) );
-		tabPanel->addTab(button1, buttonA);
-		tabPanel->addTab(button2, buttonB);
-		tabPanel->addTab(button3, buttonC);
-		tabPanel->addTab(button4, tabPanelPanel);
-		tabPanel->addTab(button5, buttonD);
-		tabPanel->addTab(button6, buttonE);
-		tabPanel->setActiveTab(3);
-		tabPanel->setTabAlignment(AXIS_CENTER_ALIGNMENT);
-		tabPanel->setTabPlacement(PLACEMENT_NORTH);
-	endEditCP(tabPanel, Component::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
-
+    beginEditCP(button3,  Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
+		button3->setPreferredSize(Vec2s(100,50));
+		button3->setText("Button 3");
+		
+		// Set the constraints created above to button3
+		// to place the Button within the scene
+		button3->setConstraints(buttonConstraints3);
+    endEditCP  (button3,  Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::ConstraintsFieldMask);
 
 	// Create The Main Frame
+	// Create Background to be used with the Main Frame
+	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
+	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+	
 	FramePtr MainFrame = osg::Frame::create();
-	// CardLayout causes the TabPanel to occupy the entire
-	// MainFrame view (useful with TabPanel)
-	CardLayoutPtr MainFrameLayout = osg::CardLayout::create();
-
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+	LayoutPtr MainFrameLayout = osg::AbsoluteLayout::create();
+	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+	   // Add the buttons to the mainframe so they will be displayed.
+	   // They are displayed in reverse order, so in this case, since button2
+	   // and button3 are in conflict with their locations, button2 will cover 
+	   // button3.  By commenting out their addValue commands and uncommenting 
+	   // the other two, this will be reversed.
+	   MainFrame->getChildren().addValue(button1);
+	   MainFrame->getChildren().addValue(button3);
+	   MainFrame->getChildren().addValue(button2);
+	   // MainFrame->getChildren().addValue(button2);
+	   // MainFrame->getChildren().addValue(button3);
 	   MainFrame->setLayout(MainFrameLayout);
-	   MainFrame->getChildren().addValue(tabPanel);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+	   MainFrame->setBackground(mainBackground);
+    endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
 	//Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
@@ -310,11 +231,11 @@ int main(int argc, char **argv)
 	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 	    foreground->setDrawingSurface(drawingSurface);
 		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.65,0.65));
+		foreground->setFrameBounds(Vec2f(0.5,0.5));
 	   //Set the Event Producer for the DrawingSurface
 	   //This is needed in order to get Mouse/Keyboard/etc Input to the UI DrawingSurface
     endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
- 
+
     // create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
@@ -332,8 +253,8 @@ int main(int argc, char **argv)
     mgr->showAll();
 
     TheWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(900,900),
-                                        "OpenSG 15TabPanel Window");
+                                        Vec2s(550,550),
+                                        "OpenSG 02AbsoluteLayout Window");
 
     //Main Event Loop
     while(!ExitApp)
@@ -346,6 +267,7 @@ int main(int argc, char **argv)
     return 0;
 }
 
+
 // redraw the window
 void display(void)
 {
@@ -357,247 +279,3 @@ void reshape(Vec2s Size)
 {
     mgr->resize(Size.x(), Size.y());
 }
-
-
-ComponentPtr createStatePanel(void)
-{
-	/******************************************************
-
-			Create a Panel and its Layout
-
-	******************************************************/
-
-	GridBagLayoutPtr statePanelLayout = osg::GridBagLayout::create();
-	beginEditCP(statePanelLayout, GridBagLayout::RowsFieldMask | GridBagLayout::ColumnsFieldMask);
-		statePanelLayout->setRows(9);
-		statePanelLayout->setColumns(5);
-	endEditCP(statePanelLayout, GridBagLayout::RowsFieldMask | GridBagLayout::ColumnsFieldMask);
-	PanelPtr statePanel = osg::Panel::create();
-
-
-	/******************************************************
-
-			Create Components to add to Panel
-
-	******************************************************/	
-	/******************************************************
-						Buttons
-	******************************************************/
-	ButtonPtr inactiveButton = osg::Button::create();
-	ButtonPtr activeButton = osg::Button::create();
-	ButtonPtr disabledInactiveButton = osg::Button::create();
-	ButtonPtr disabledActiveButton = osg::Button::create();
-
-	beginEditCP(inactiveButton, Button::ActiveFieldMask | Button::TextFieldMask);
-		inactiveButton->setActive(FALSE);
-		inactiveButton->setText("Inactive");
-	endEditCP(inactiveButton, Button::ActiveFieldMask | Button::TextFieldMask);
-	
-	beginEditCP(activeButton, Button::TextFieldMask);
-		activeButton->setText("Active");
-	endEditCP(activeButton, Button::TextFieldMask);
-
-	beginEditCP(disabledInactiveButton, Button::ActiveFieldMask | Component::EnabledFieldMask | Button::TextFieldMask);
-		disabledInactiveButton->setActive(FALSE);
-		disabledInactiveButton->setEnabled(FALSE);
-		disabledInactiveButton->setText("Disabled/Inactive");
-	endEditCP(disabledInactiveButton, Button::ActiveFieldMask | Component::EnabledFieldMask | Button::TextFieldMask);
-	
-	beginEditCP(disabledActiveButton, Component::EnabledFieldMask | Button::TextFieldMask);
-		disabledActiveButton->setEnabled(FALSE);
-		disabledActiveButton->setText("Disabled");
-	endEditCP(disabledActiveButton, Component::EnabledFieldMask | Button::TextFieldMask);
-	
-	/******************************************************
-						ToggleButtons
-	******************************************************/
-	ToggleButtonPtr nonSelectedToggleButton = osg::ToggleButton::create();
-	ToggleButtonPtr selectedToggleButton = osg::ToggleButton::create();
-	ToggleButtonPtr disabledSelectedToggleButton = osg::ToggleButton::create();
-	ToggleButtonPtr disabledNonselectedToggleButton = osg::ToggleButton::create();
-	
-	beginEditCP(nonSelectedToggleButton,Button::TextFieldMask);
-		nonSelectedToggleButton->setText("NonSelected");
-	endEditCP(nonSelectedToggleButton, Button::TextFieldMask);
-
-	beginEditCP(selectedToggleButton, ToggleButton::SelectedFieldMask | Button::TextFieldMask);
-		selectedToggleButton->setSelected(TRUE);
-		selectedToggleButton->setText("Selected");
-	endEditCP(selectedToggleButton, ToggleButton::SelectedFieldMask | Button::TextFieldMask);
-	
-	beginEditCP(disabledSelectedToggleButton, ToggleButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask);
-		disabledSelectedToggleButton->setSelected(TRUE);
-		disabledSelectedToggleButton->setEnabled(FALSE);
-		disabledSelectedToggleButton->setText("Disabled/Selected");
-	endEditCP(disabledSelectedToggleButton, ToggleButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask);
-	
-	beginEditCP(disabledNonselectedToggleButton, ToggleButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask);
-		disabledNonselectedToggleButton->setSelected(FALSE);
-		disabledNonselectedToggleButton->setEnabled(FALSE);
-		disabledNonselectedToggleButton->setText("Disabled");
-	endEditCP(disabledNonselectedToggleButton, ToggleButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask);
-
-	/******************************************************
-						RadioButtons
-	******************************************************/
-	RadioButtonPtr deselectedRadioButton = osg::RadioButton::create();
-	RadioButtonPtr selectedRadioButton = osg::RadioButton::create();
-	RadioButtonPtr disabledDeselectedRadioButton = osg::RadioButton::create();
-	RadioButtonPtr disabledSelectedRadioButton = osg::RadioButton::create();
-	RadioButtonGroup buttonGroup;
-	buttonGroup.addButton(deselectedRadioButton);
-	buttonGroup.addButton(selectedRadioButton);
-	buttonGroup.addButton(disabledDeselectedRadioButton);
-	buttonGroup.addButton(disabledSelectedRadioButton);
-
-	beginEditCP(deselectedRadioButton, Button::TextFieldMask);
-		deselectedRadioButton->setText("Deselected");
-	endEditCP(deselectedRadioButton, Button::TextFieldMask);
-
-	beginEditCP(selectedRadioButton, RadioButton::SelectedFieldMask | Button::TextFieldMask);
-		selectedRadioButton->setSelected(TRUE);
-		selectedRadioButton->setText("Selected");
-	endEditCP(selectedRadioButton, RadioButton::SelectedFieldMask | Button::TextFieldMask);
-
-	beginEditCP(disabledDeselectedRadioButton, Component::EnabledFieldMask | RadioButton::SelectedFieldMask | Button::TextFieldMask);
-		disabledDeselectedRadioButton->setEnabled(FALSE);
-		disabledDeselectedRadioButton->setSelected(FALSE);
-		disabledDeselectedRadioButton->setText("Disabled");
-	endEditCP(disabledDeselectedRadioButton, Component::EnabledFieldMask | RadioButton::SelectedFieldMask | Button::TextFieldMask);
-	
-	beginEditCP(disabledSelectedRadioButton, Component::EnabledFieldMask | RadioButton::SelectedFieldMask | Button::TextFieldMask);
-		disabledSelectedRadioButton->setEnabled(FALSE);
-		disabledSelectedRadioButton->setSelected(TRUE);
-		disabledSelectedRadioButton->setText("Disabled/Selected");
-	endEditCP(disabledSelectedRadioButton, Component::EnabledFieldMask | RadioButton::SelectedFieldMask | Button::TextFieldMask);
-	
-	
-	/******************************************************
-						CheckboxButtons
-	******************************************************/
-	CheckboxButtonPtr deselectedCheckboxButton = osg::CheckboxButton::create();
-	CheckboxButtonPtr selectedCheckboxButton = osg::CheckboxButton::create();
-	CheckboxButtonPtr disabledDeselectedCheckboxButton = osg::CheckboxButton::create();
-	CheckboxButtonPtr disabledSelectedCheckboxButton = osg::CheckboxButton::create();
-
-	beginEditCP(deselectedCheckboxButton, Button::TextFieldMask);
-		deselectedCheckboxButton->setText("Deselected");
-	endEditCP(deselectedCheckboxButton, Button::TextFieldMask);
-
-	beginEditCP(selectedCheckboxButton, CheckboxButton::SelectedFieldMask | Button::TextFieldMask);
-		selectedCheckboxButton->setSelected(TRUE);
-		selectedCheckboxButton->setText("Selected");
-	endEditCP(selectedCheckboxButton, CheckboxButton::SelectedFieldMask | Button::TextFieldMask);
-
-	beginEditCP(disabledDeselectedCheckboxButton, CheckboxButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask);
-		disabledDeselectedCheckboxButton->setSelected(FALSE);
-		disabledDeselectedCheckboxButton->setEnabled(FALSE);
-		disabledDeselectedCheckboxButton->setText("Disabled");
-	endEditCP(disabledDeselectedCheckboxButton, CheckboxButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask);
-
-	beginEditCP(disabledSelectedCheckboxButton, CheckboxButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask);
-		disabledSelectedCheckboxButton->setSelected(TRUE);
-		disabledSelectedCheckboxButton->setEnabled(FALSE);
-		disabledSelectedCheckboxButton->setText("Disabled/Selected");
-	endEditCP(disabledSelectedCheckboxButton, CheckboxButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask);
-	/******************************************************
-						TextFields
-	******************************************************/
-	TextFieldPtr editableTextField = osg::TextField::create();
-	TextFieldPtr noneditableTextField = osg::TextField::create();
-	TextFieldPtr disabledEditableTextField = osg::TextField::create();
-	TextFieldPtr disabledNoneditableTextField = osg::TextField::create();
-
-	beginEditCP(editableTextField, TextField::TextFieldMask);
-		editableTextField->setText("Editable");
-	endEditCP(editableTextField, TextField::TextFieldMask);
-
-	beginEditCP(noneditableTextField, TextField::EditableFieldMask | TextField::TextFieldMask);
-		noneditableTextField->setEditable(FALSE);
-		noneditableTextField->setText("Noneditable");
-	endEditCP(noneditableTextField, TextField::EditableFieldMask | TextField::TextFieldMask);
-	
-	beginEditCP(disabledEditableTextField, Component::EnabledFieldMask | TextField::TextFieldMask);
-		disabledNoneditableTextField->setEnabled(FALSE);
-		disabledNoneditableTextField->setText("Disabled");
-	endEditCP(disabledEditableTextField, Component::EnabledFieldMask | TextField::TextFieldMask);
-	
-	beginEditCP(disabledNoneditableTextField, TextField::EditableFieldMask | Component::EnabledFieldMask | TextField::TextFieldMask);
-		disabledNoneditableTextField->setEditable(FALSE);
-		disabledNoneditableTextField->setEnabled(FALSE);
-		disabledNoneditableTextField->setText("Disabled/Noneditable");
-	endEditCP(disabledNoneditableTextField, TextField::EditableFieldMask | Component::EnabledFieldMask | TextField::TextFieldMask);
-	/******************************************************
-						TextAreas
-	******************************************************/	
-	TextAreaPtr editableTextArea = osg::TextArea::create();
-	TextAreaPtr noneditableTextArea = osg::TextArea::create();
-	TextAreaPtr disabledEditableTextArea = osg::TextArea::create();
-	TextAreaPtr disabledNoneditableTextArea = osg::TextArea::create();
-
-	beginEditCP(editableTextArea, TextArea::TextFieldMask);
-		editableTextArea->setText("Uneditable");
-	endEditCP(editableTextArea, TextArea::TextFieldMask);
-
-	beginEditCP(noneditableTextArea, TextArea::EditableFieldMask | TextArea::TextFieldMask);
-		noneditableTextArea->setEditable(FALSE);
-		noneditableTextArea->setText("Uneditable");
-	endEditCP(noneditableTextArea, TextArea::EditableFieldMask | TextArea::TextFieldMask);
-	
-	beginEditCP(disabledEditableTextArea, Component::EnabledFieldMask | TextArea::TextFieldMask);
-		disabledEditableTextArea->setEnabled(FALSE);
-		disabledEditableTextArea->setText("Disabled");
-	endEditCP(disabledEditableTextArea, Component::EnabledFieldMask | TextArea::TextFieldMask);
-	
-	beginEditCP(disabledNoneditableTextArea, TextArea::EditableFieldMask | Component::EnabledFieldMask | TextArea::TextFieldMask);
-		disabledNoneditableTextArea->setEditable(FALSE);
-		disabledNoneditableTextArea->setEnabled(FALSE);
-		disabledNoneditableTextArea->setText("Disabled");
-	endEditCP(disabledNoneditableTextArea, TextArea::EditableFieldMask | Component::EnabledFieldMask | TextArea::TextFieldMask);
-
-	/******************************************************
-						PasswordFields
-	******************************************************/	
-	PasswordFieldPtr editablePasswordField = osg::PasswordField::create();
-	PasswordFieldPtr nonEditablePasswordField = osg::PasswordField::create();
-	PasswordFieldPtr disabledInactivePasswordField = osg::PasswordField::create();
-	PasswordFieldPtr disabledActivePasswordField = osg::PasswordField::create(); 
-	
-	beginEditCP(editableTextArea, PasswordField::TextFieldMask);
-		editableTextArea->setText("editable");
-	endEditCP(editableTextArea, PasswordField::TextFieldMask);
-
-	beginEditCP(nonEditablePasswordField, TextArea::EditableFieldMask | PasswordField::TextFieldMask);
-		nonEditablePasswordField->setEditable(FALSE);
-		editableTextArea->setText("editable");
-	endEditCP(nonEditablePasswordField, TextArea::EditableFieldMask | PasswordField::TextFieldMask);
-	
-	beginEditCP(disabledEditableTextArea, Component::EnabledFieldMask | PasswordField::TextFieldMask);
-		disabledEditableTextArea->setEnabled(FALSE);
-		editableTextArea->setText("editable");
-	endEditCP(disabledEditableTextArea, Component::EnabledFieldMask | PasswordField::TextFieldMask);
-	
-	beginEditCP(disabledNoneditableTextArea, TextArea::EditableFieldMask | Component::EnabledFieldMask | PasswordField::TextFieldMask);
-		disabledNoneditableTextArea->setEditable(FALSE);
-		disabledNoneditableTextArea->setEnabled(FALSE);
-		editableTextArea->setText("editable");
-	endEditCP(disabledNoneditableTextArea, TextArea::EditableFieldMask | Component::EnabledFieldMask | PasswordField::TextFieldMask);
-
-	/******************************************************
-						Spinners
-	******************************************************/
-	//SpinnerPtr inactiveSpinner = osg::Spinner::create();
-	//SpinnerPtr activeSpinner = osg::Spinner::create();
-	//SpinnerPtr disabledInactiveSpinner = osg::Spinner::create();
-	//SpinnerPtr disabledActiveSpinner = osg::Spinner::create();
-	//Int32SpinnerModelPtr TheModel(new Int32SpinnerModel());
-
-		
-	beginEditCP(statePanel, Container::ChildrenFieldMask | Container::LayoutFieldMask);
-//		statePanel->getChildren().addValue( );
-		statePanel->setLayout(statePanelLayout);
-	beginEditCP(statePanel, Container::ChildrenFieldMask | Container::LayoutFieldMask);
-
-	return statePanel;
-
-	}

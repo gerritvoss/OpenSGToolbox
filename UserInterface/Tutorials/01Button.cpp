@@ -26,32 +26,22 @@
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
-
-// the general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
-
-//Input
-#include <OpenSG/Input/OSGWindowUtils.h>
-
 #include <OpenSG/Input/OSGWindowAdapter.h>
 
-//UserInterface Headers
+// The general scene file loading handler
+#include <OpenSG/OSGSceneFileHandler.h>
+
+// Input
+#include <OpenSG/Input/OSGWindowUtils.h>
+
+
+// UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGToggleButton.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGUIFont.h>
-#include <OpenSG/UserInterface/OSGColorUIBackground.h>
-
-#include <OpenSG/UserInterface/OSGPolygonUIDrawObject.h>
-#include <OpenSG/UserInterface/OSGUIDrawObjectCanvas.h>
 
 // Activate the OpenSG namespace
-// This is not strictly necessary, you can also prefix all OpenSG symbols
-// with OSG::, but that would be a bit tedious for this example
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
@@ -59,9 +49,18 @@ SimpleSceneManager *mgr;
 
 bool ExitApp = false;
 
-// forward declaration so we can have the interesting stuff upfront
+// Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2s Size);
+
+// 01 Button Headers
+#include <OpenSG/UserInterface/OSGButton.h>
+#include <OpenSG/UserInterface/OSGToggleButton.h>
+#include <OpenSG/UserInterface/OSGUIFont.h>
+#include <OpenSG/UserInterface/OSGColorUIBackground.h>
+#include <OpenSG/UserInterface/OSGFlowLayout.h>
+#include <OpenSG/UserInterface/OSGPolygonUIDrawObject.h>
+#include <OpenSG/UserInterface/OSGUIDrawObjectCanvas.h>
 
 // Create a class to allow for the use of the Escape
 // key to exit
@@ -100,9 +99,14 @@ public:
     }
 };
 
-// Create an ActionListener to display text
-// in the Console Window when the Button is
-// pressed
+	/******************************************************
+
+		 Create an ActionListener to display text
+		 in the Console Window when the Button is
+		 pressed (causing an action).
+
+	******************************************************/
+
 class Button1ActionListener : public ActionListener
 {
 public:
@@ -140,7 +144,7 @@ int main(int argc, char **argv)
     {
         scene->setCore(osg::Group::create());
  
-        // add the torus as a child
+        // Add the torus as a child
         scene->addChild(TorusGeometryNode);
     }
     endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
@@ -150,48 +154,90 @@ int main(int argc, char **argv)
 
 	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
+	/******************************************************
 
-	// Create a Button component
+				 Create an Button component and
+				 a simple Font to be used.
+				 See 17Label_Font for more
+				 information about Fonts
+
+	******************************************************/
 	ButtonPtr button1 = osg::Button::create();
-	// Create a simple Font to be used with the Button
+
 	UIFontPtr sampleFont = osg::UIFont::create();
     beginEditCP(sampleFont, UIFont::SizeFieldMask);
 		sampleFont->setSize(16);
 	endEditCP(sampleFont, UIFont::SizeFieldMask);
 
+	/******************************************************
 
+			Edit the Button's characteristics.
+			Note: the first 4 functions can
+			be used with any Component and 
+			are not Button specific.
+
+			-setMinSize(Vec2s): Determine the 
+				Minimum	Size of the Component.
+				Some Layouts will automatically
+				resize Components; this prevents
+				the Size from going below a
+				certain value.
+			-setMaxSize(Vec2s): Determine the 
+				Maximum Size of the Component.
+			-setPreferredSize(Vec2s): Determine
+				the Preferred Size of the Component.
+				This is what the Component will
+				be displayed at unless changed by
+				another Component.
+			-setToolTipText("Text"): Determine
+				what text is displayed while
+				Mouse is hovering above Component.
+				The word Text will be displayed.
+			
+			Button specific functions:
+			-setText("DesiredText"): Determine 
+				the Button's text.  It will read
+				DesiredText in this case.
+			-setFont(FontName): Determine the 
+				Font to be used on the Button.
+			-setTextColor(Color4f): Determine the
+				Color the text will be.
+			-setRolloverTextColor(Color4f): Determine
+				what the text Color will be when
+				the Mouse Cursor is above the 
+				Button.
+			-setActiveTextColor(Color4f): Determine
+				what the text Color will be when
+				the Button is pressed (Active).
+			-setVerticalAlignment(Float OR Enum):
+				Determine the Vertical Alignment
+				of the text.  The Float value is 
+				in [0.0, 1.0] and the Enums are:
+				VERTICAL_CENTER, VERTICAL_TOP, 
+				or VERTICAL_BOTTOM.
+			-setHorizontalAlignmnet(Float OR Enum):
+				Determine the Horizontal Alignment
+				of the text.  The Float value is 
+				in [0.0, 1.0] and the Enums are:
+				HORIZONTAL_CENTER, HORIZONTAL_LEFT, 
+				or HORIZONTAL_RIGHT.
+
+
+	******************************************************/
     beginEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Button::TextColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::ToolTipTextFieldMask);
-			// The following 4 function calls are not specific to Button, 
-			// but can be used with any Component
-
-			// Determine the Minimum and Maximum size that the Component can ever have
-			// due to various Layouts (some change the size of the Components within
-			// the Layouts)
 		    button1->setMinSize( Vec2s (50, 25) );
 		    button1->setMaxSize( Vec2s (200, 100) );
-			// Determine the PreferredSize for the Component
 		    button1->setPreferredSize( Vec2s (100, 50) );
-		    // The following functions are specific to Button
-			// Determine the visible Text (Text must fit within Button Size
-			// or extra Text will not display)
+            button1->setToolTipText("Button 1 ToolTip");
+
 		    button1->setText("Button 1");
 		    button1->setFont(sampleFont);
-			// Determine the Font color for the Component (only
-			// relevant if Component has text)
 		    button1->setTextColor( Color4f(1.0, 0.0, 0.0, 1.0) );
-		    button1->setRolloverTextColor( Color4f(1.0, 0.0, 0.0, 1.0) );
+		    button1->setRolloverTextColor( Color4f(1.0, 0.0, 1.0, 1.0) );
 		    button1->setActiveTextColor( Color4f(1.0, 0.0, 0.0, 1.0) );
-			// Determine the VerticalAlignment of the Text- VERTICAL_CENTER, 
-			// or VERTICAL_TOP, VERTICAL_BOTTOM
 		    button1->setVerticalAlignment(0.0);
-			// Determine the HorizontalAlignment of the Text- HORIZONTAL_CENTER,
-			// HORIZONTAL_LEFT, HORIZONTAL_RIGHT
 		    button1->setHorizontalAlignment(1.0);
-
-       
-            //Set the Text to be shown as a ToolTip
-            button1->setToolTipText("Button 1 ToolTip");
-		endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Button::TextColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::ToolTipTextFieldMask);
+	endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Button::TextColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::ToolTipTextFieldMask);
 	
 	// Create an ActionListener and assign it to button1
 	// This is defined above, and wil
@@ -266,15 +312,13 @@ int main(int argc, char **argv)
 	    foreground->setDrawingSurface(drawingSurface);
 		foreground->setFramePositionOffset(Vec2s(0,0));
 		foreground->setFrameBounds(Vec2f(0.5,0.5));
-	   //Set the Event Producer for the DrawingSurface
-	   //This is needed in order to get Mouse/Keyboard/etc Input to the UI DrawingSurface
     endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask |UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
 
-    // create the SimpleSceneManager helper
+    // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // tell the manager what to manage
+    // Tell the manager what to manage
     mgr->setWindow(MainWindow );
     mgr->setRoot  (scene);
 
@@ -283,7 +327,7 @@ int main(int argc, char **argv)
     beginEditCP(viewport, Viewport::ForegroundsFieldMask);
 		viewport->getForegrounds().addValue(foreground);
     beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-    // show the whole scene
+    // Show the whole scene
     mgr->showAll();
 
     TheWindowEventProducer->openWindow(Pnt2s(50,50),
@@ -300,17 +344,17 @@ int main(int argc, char **argv)
     return 0;
 }
 
-//
-// callback functions
-//
 
-// redraw the window
+// Callback functions
+
+
+// Redraw the window
 void display(void)
 {
     mgr->redraw();
 }
 
-// react to size changes
+// React to size changes
 void reshape(Vec2s Size)
 {
     mgr->resize(Size.x(), Size.y());

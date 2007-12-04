@@ -259,7 +259,7 @@ int main(int argc, char **argv)
 	   MainFrame->setBackground(mainBackground);
 	   MainFrame->getChildren().addValue(singleIncrementButton);
 	   MainFrame->getChildren().addValue(doubleIncrementButton);
-       MainFrame->getChildren().push_back(TheSpinner);
+       MainFrame->getChildren().addValue(TheSpinner);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
 
     TutorialKeyListener TheKeyListener;
