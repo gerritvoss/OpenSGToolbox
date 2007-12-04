@@ -134,6 +134,7 @@ void Slider::drawInternal(const GraphicsPtr TheGraphics) const
 	
 	Inherited::drawInternal(TheGraphics);
 }
+
 void Slider::updateLayout(void)
 {
 	

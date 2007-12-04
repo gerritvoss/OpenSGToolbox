@@ -77,6 +77,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+	
+    virtual void updateLayout(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
