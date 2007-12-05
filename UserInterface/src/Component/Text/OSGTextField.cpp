@@ -134,7 +134,7 @@ void TextField::drawInternal(const GraphicsPtr TheGraphics) const
 	    }
     }
 
-    if(getFocused() && _CurrentCaretBlinkElps <= 0.5*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
+    if(getEnabled() && getEditable() && getFocused() && _CurrentCaretBlinkElps <= 0.5*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
     {
    		    //Draw the caret
 		    TheGraphics->drawLine(TempPos+Vec2s(getFont()->getBounds(getDrawnText().substr(0, getCaretPosition())).x(), 0),
@@ -144,9 +144,12 @@ void TextField::drawInternal(const GraphicsPtr TheGraphics) const
 }
 void TextField::keyTyped(const KeyEvent& e)
 {
-	if(e.getKey() == e.KEY_ENTER)
+	if(getEnabled())
 	{
-		produceActionPerformed(ActionEvent(TextFieldPtr(this), getTimeStamp()));
+		if(e.getKey() == e.KEY_ENTER)
+		{
+			produceActionPerformed(ActionEvent(TextFieldPtr(this), getTimeStamp()));
+		}
 	}
 
 	TextComponent::keyTyped(e);

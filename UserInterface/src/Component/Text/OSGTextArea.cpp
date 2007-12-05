@@ -125,7 +125,7 @@ void TextArea::drawInternal(const GraphicsPtr TheGraphics) const
 		}
 
 		//draw Caret
-		if(((getCaretPosition() > _LineContents[i]._StartPosition && getCaretPosition() <= _LineContents[i]._EndPosition )||( getCaretPosition() == 0 && i == 0)) && _TextSelectionStart >= _TextSelectionEnd &&
+		if(getEnabled() && getEditable() && ((getCaretPosition() > _LineContents[i]._StartPosition && getCaretPosition() <= _LineContents[i]._EndPosition )||( getCaretPosition() == 0 && i == 0)) && _TextSelectionStart >= _TextSelectionEnd &&
 			 _CurrentCaretBlinkElps <= 0.5*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate() &&
 			 getFocused())
 		{
@@ -330,7 +330,7 @@ void TextArea::changed(BitVector whichField, UInt32 origin)
         Vec2s PreferredSize(getMinSize());
 		getFont()->getBounds(_LineContents.back()._Contents, TempTopLeft, TempBottomRight);
         PreferredSize[1] = osgMax<UInt32>(getMinSize().y(), _LineContents.back()._VerticalOffset + TempBottomRight.y());
-        if(getSize() != PreferredSize)
+        if(getPreferredSize() != PreferredSize)
         {
             beginEditCP(TextAreaPtr(this), PreferredSizeFieldMask);
                 setPreferredSize(PreferredSize);
@@ -343,18 +343,22 @@ void TextArea::changed(BitVector whichField, UInt32 origin)
 
 void TextArea::keyTyped(const KeyEvent& e)//broken
 {
-	if(e.getKey() == e.KEY_ENTER)
+	if(getEnabled() && getEditable())
 	{
-		beginEditCP(TextAreaPtr(this), TextArea::TextFieldMask | TextArea::CaretPositionFieldMask);
-			if(_TextSelectionStart < _TextSelectionEnd)
-			{
-				setText(getText().erase(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart));
-			}
-			setText(getText().insert(getCaretPosition(),"\n"));
-			setCaretPosition(getCaretPosition()+1);
-		endEditCP(TextAreaPtr(this), TextArea::TextFieldMask | TextArea::CaretPositionFieldMask);
+		if(e.getKey() == e.KEY_ENTER)
+		{
+			beginEditCP(TextAreaPtr(this), TextArea::TextFieldMask | TextArea::CaretPositionFieldMask);
+				if(_TextSelectionStart < _TextSelectionEnd)
+				{
+					setText(getText().erase(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart));
+				}
+				setText(getText().insert(getCaretPosition(),"\n"));
+				setCaretPosition(getCaretPosition()+1);
+			endEditCP(TextAreaPtr(this), TextArea::TextFieldMask | TextArea::CaretPositionFieldMask);
 
+		}
 	}
+
 	if(e.getKey() == e.KEY_UP || e.getKey() == e.KEY_KEYPAD_UP)
 	{		
 		Int32 OriginalPosition = getCaretPosition();

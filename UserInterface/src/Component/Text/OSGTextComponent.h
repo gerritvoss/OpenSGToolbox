@@ -129,6 +129,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponent : public TextComponentBase
     void produceTextValueChanged(const TextEvent& e);
     
     virtual Color4f getDrawnTextColor(void) const;
+    virtual UIBackgroundPtr getDrawnBackground(void) const;
     /*==========================  PRIVATE  ================================*/
   private:
 

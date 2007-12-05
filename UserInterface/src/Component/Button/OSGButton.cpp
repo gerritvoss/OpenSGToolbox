@@ -285,11 +285,14 @@ void Button::mouseClicked(const MouseEvent& e)
 
 void Button::mouseEntered(const MouseEvent& e)
 {
-	if(_Armed)
+	if(getEnabled())
 	{
-	    beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
-		    ButtonPtr(this)->setActive(true);
-	    endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+		if(_Armed)
+		{
+			beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+				ButtonPtr(this)->setActive(true);
+			endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+		}
 	}
 
 	Component::mouseEntered(e);
@@ -297,11 +300,14 @@ void Button::mouseEntered(const MouseEvent& e)
 
 void Button::mouseExited(const MouseEvent& e)
 {
-	if(_Armed)
+	if(getEnabled())
 	{
-	    beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
-		    ButtonPtr(this)->setActive(false);
-	    endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+		if(_Armed)
+		{
+			beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+				ButtonPtr(this)->setActive(false);
+			endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+		}
 	}
 
 	Component::mouseExited(e);
@@ -309,35 +315,41 @@ void Button::mouseExited(const MouseEvent& e)
 
 void Button::mousePressed(const MouseEvent& e)
 {
-	if(e.getButton()==MouseEvent::BUTTON1){
-		beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
-			ButtonPtr(this)->setActive(true);
-		endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
-        _Armed = true;
-        
-		if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&& getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
-		{
-            getParentFrame()->getDrawingSurface()->getEventProducer()->addMouseListener(&_ButtonArmedListener);
-            if(getEnableActionOnMouseDownTime())
-            {
-                produceMousePressedActionPerformed(ActionEvent(ButtonPtr(this), e.getTimeStamp()));
-                _ButtonArmedListener.reset();
-                getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_ButtonArmedListener);
-            }
-        }
+	if(getEnabled())
+	{
+		if(e.getButton()==MouseEvent::BUTTON1){
+			beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+				ButtonPtr(this)->setActive(true);
+			endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+			_Armed = true;
+	        
+			if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&& getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+			{
+				getParentFrame()->getDrawingSurface()->getEventProducer()->addMouseListener(&_ButtonArmedListener);
+				if(getEnableActionOnMouseDownTime())
+				{
+					produceMousePressedActionPerformed(ActionEvent(ButtonPtr(this), e.getTimeStamp()));
+					_ButtonArmedListener.reset();
+					getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_ButtonArmedListener);
+				}
+			}
+		}
 	}
 	Component::mousePressed(e);
 }
 
 void Button::mouseReleased(const MouseEvent& e)
 {	
-	if(e.getButton() == MouseEvent::BUTTON1 && _Armed)
+	if(getEnabled())
 	{
-		beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
-			ButtonPtr(this)->setActive(false);
-		endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
-	   produceActionPerformed(ActionEvent(ButtonPtr(this), e.getTimeStamp()));
-       _Armed = false;
+		if(e.getButton() == MouseEvent::BUTTON1 && _Armed)
+		{
+			beginEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+				ButtonPtr(this)->setActive(false);
+			endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
+		   produceActionPerformed(ActionEvent(ButtonPtr(this), e.getTimeStamp()));
+		   _Armed = false;
+		}
 	}
 	Component::mouseReleased(e);
 }
