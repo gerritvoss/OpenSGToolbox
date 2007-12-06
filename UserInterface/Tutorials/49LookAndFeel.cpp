@@ -62,6 +62,11 @@ OSG_USING_NAMESPACE
 SimpleSceneManager *mgr;
 bool ExitApp = false;
 
+RadioButtonGroup DeselectedRadioButtonGroup;
+RadioButtonGroup SelectedRadioButtonGroup;
+RadioButtonGroup DisabledSelectedRadioButtonGroup;
+RadioButtonGroup DisabledDeselectedRadioButtonGroup;
+
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2s Size);
@@ -773,17 +778,13 @@ PanelPtr createStatePanel(void)
 	RadioButtonPtr selectedRadioButton = osg::RadioButton::create();
 	RadioButtonPtr disabledDeselectedRadioButton = osg::RadioButton::create();
 	RadioButtonPtr disabledSelectedRadioButton = osg::RadioButton::create();
-	RadioButtonGroup deselectedRadioButtonGroup;
-	deselectedRadioButtonGroup.addButton(deselectedRadioButton);
+	DeselectedRadioButtonGroup.addButton(deselectedRadioButton);
 
-	RadioButtonGroup selectedRadioButtonGroup;
-	selectedRadioButtonGroup.addButton(selectedRadioButton);
+	SelectedRadioButtonGroup.addButton(selectedRadioButton);
 	
-	RadioButtonGroup disabledDeselectedRadioButtonGroup;
-	disabledDeselectedRadioButtonGroup.addButton(disabledDeselectedRadioButton);
+	DisabledDeselectedRadioButtonGroup.addButton(disabledDeselectedRadioButton);
 	
-	RadioButtonGroup disabledSelectedRadioButtonGroup;
-	disabledSelectedRadioButtonGroup.addButton(disabledSelectedRadioButton);
+	DisabledSelectedRadioButtonGroup.addButton(disabledSelectedRadioButton);
 
 	beginEditCP(deselectedRadioButton, Button::TextFieldMask| Component::ConstraintsFieldMask);
 		deselectedRadioButton->setText("Deselected");

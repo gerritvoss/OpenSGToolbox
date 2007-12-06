@@ -1754,6 +1754,70 @@
 						</File>
 					</Filter>
 				</Filter>
+				<Filter
+					Name="Tree"
+					>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGAbstractTreeModel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGAbstractTreeModel.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeModel.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeModelEvent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeModelEvent.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeModelEvent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeModelListener.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreePath.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreePath.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreePath.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeSelectionEvent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeSelectionEvent.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeSelectionEvent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeSelectionListener.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeSelectionModel.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Graphics"
@@ -1796,6 +1860,34 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Graphics\OSGGraphics2DFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphics3DExtrude.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphics3DExtrude.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphics3DExtrude.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphics3DExtrudeBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphics3DExtrudeBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphics3DExtrudeBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Graphics\OSGGraphics3DExtrudeFields.h"
 					>
 				</File>
 				<File

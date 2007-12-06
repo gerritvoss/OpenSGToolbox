@@ -227,10 +227,10 @@ bool Component::setupClipping(const GraphicsPtr Graphics) const
         //Clip Planes get transformed by the ModelViewMatrix when set
         //So we can rely on the fact that our current coordinate space
         //is relative to the this components position
-        Vec4d LeftPlaneEquation(1.0,0.0,0.0,-ClipTopLeft.x()),
-              RightPlaneEquation(-1.0,0.0,0.0,ClipBottomRight.x()),
-              TopPlaneEquation(0.0,1.0,0.0,-ClipTopLeft.y()),
-              BottomPlaneEquation(0.0,-1.0,0.0,ClipBottomRight.y());
+		Vec4d LeftPlaneEquation(1.0,0.0,0.0,-ClipTopLeft.x()+ Graphics->getClipPlaneOffset()),
+              RightPlaneEquation(-1.0,0.0,0.0,ClipBottomRight.x() + Graphics->getClipPlaneOffset()),
+              TopPlaneEquation(0.0,1.0,0.0,-ClipTopLeft.y() + Graphics->getClipPlaneOffset()),
+              BottomPlaneEquation(0.0,-1.0,0.0,ClipBottomRight.y() + Graphics->getClipPlaneOffset());
         
         glClipPlane(GL_CLIP_PLANE0,LeftPlaneEquation.getValues());
         glClipPlane(GL_CLIP_PLANE1,RightPlaneEquation.getValues());

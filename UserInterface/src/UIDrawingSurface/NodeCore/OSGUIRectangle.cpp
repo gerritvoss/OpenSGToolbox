@@ -94,16 +94,6 @@ void UIRectangle::initMethod (void)
 Action::ResultE UIRectangle::drawPrimitives (DrawActionBase *action)
 {
     glPushMatrix();
-	getRectColorMask()->activate(action);
-	getRectPolygon()->activate(action);
-	glBegin(GL_QUADS);
-	   glVertex3fv(getPoint().getValues());
-	   glVertex3f(getPoint().x(), getPoint().y()+getHeight(), getPoint().z());
-	   glVertex3f(getPoint().x()+getWidth(), getPoint().y()+getHeight(), getPoint().z());
-	   glVertex3f(getPoint().x()+getWidth(), getPoint().y(), getPoint().z());
-	glEnd();
-	getRectPolygon()->deactivate(action);
-	getRectColorMask()->deactivate(action);
 
     glTranslatef(getPoint().x(),getPoint().y()+getHeight(),getPoint().z());
 
@@ -119,6 +109,18 @@ Action::ResultE UIRectangle::drawPrimitives (DrawActionBase *action)
 	//Call the PostDraw on the Graphics
 	getDrawingSurface()->getGraphics()->postDraw();
     glPopMatrix();
+	
+	getRectColorMask()->activate(action);
+	getRectPolygon()->activate(action);
+	glBegin(GL_QUADS);
+	   glVertex3fv(getPoint().getValues());
+	   glVertex3f(getPoint().x(), getPoint().y()+getHeight(), getPoint().z());
+	   glVertex3f(getPoint().x()+getWidth(), getPoint().y()+getHeight(), getPoint().z());
+	   glVertex3f(getPoint().x()+getWidth(), getPoint().y(), getPoint().z());
+	glEnd();
+	getRectPolygon()->deactivate(action);
+	getRectColorMask()->deactivate(action);
+
     return Action::Continue;
 }
 

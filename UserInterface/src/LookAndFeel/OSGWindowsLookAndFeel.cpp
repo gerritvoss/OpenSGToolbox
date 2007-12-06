@@ -2758,7 +2758,7 @@ void WindowsLookAndFeel::init(void)
 	//Windows RotatedComponentBackground
 	EmptyUIBackgroundPtr WindowsListBackground = EmptyUIBackground::create();
 
-	//Windows RotatedComponent
+	//Windows List
 	ListPtr WindowsList = List::create();
 	beginEditCP(WindowsList);
 		WindowsList->setEnabled(true);

@@ -54,11 +54,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics2D : public Graphics2DBase
   private:
 
     typedef Graphics2DBase Inherited;
-	
-	//GLboolean _light;
-	//GLint _fill[2];
-	//GLboolean _depth;
-	//GLboolean _colmat;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -107,14 +102,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics2D : public Graphics2DBase
 	virtual void drawComplexDisc(const Pnt2s& Center, const Int16& InnerRadius, const Int16& OuterRadius, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& CenterColor, const Color4f& OuterColor, const Real32& Opacity) const;
 	
 	virtual void drawArc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const Real32& LineWidth, const UInt16& SubDivisions, const Color4f& Color, const Real32& Opacity) const;
-
-	virtual void drawLoweredBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color, const Int16& Width, const Real32& Opacity) const;//Was inconsistent so, changed color from Color3f to color4f
-
-	virtual void drawRaisedBevel(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color, const Int16& Width, const Real32& Opacity) const;
 	
 	virtual void drawText(const Pnt2s& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const;
 	virtual void drawTextUnderline(const Pnt2s& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const;
    
+	virtual Real32 getClipPlaneOffset(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
