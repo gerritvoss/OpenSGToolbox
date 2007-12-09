@@ -134,7 +134,7 @@ int main(int argc, char **argv)
 	******************************************************/
 
 	beginEditCP(checkboxButton, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask |
-		Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
+		Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask);
 			// The following 4 function calls are not specific to Checkbox Button, 
 			// but can be used with any Component
 
@@ -163,7 +163,7 @@ int main(int argc, char **argv)
 			// and setActiveCheckedDrawObject.
 			// The box is checked when it has been toggled once.  It is active when the mouse is currently clicking on it.
     endEditCP(checkboxButton, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask |
-		Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
+		Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask);
 
 	
 	// Create The Main Frame
@@ -176,11 +176,11 @@ int main(int argc, char **argv)
 
 	// Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
 		drawingSurface->setRootFrame(MainFrame);
 	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();
 

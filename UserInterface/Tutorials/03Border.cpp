@@ -134,7 +134,7 @@ int main(int argc, char **argv)
 	// Edit each Border Component and set all attributes
 	
 	// The BevelBorder causes the Button to appear raised or lowered
-	beginEditCP(bevelBorder, BevelBorder::HighlightInnerFieldMask | BevelBorder::RaisedFieldMask | BevelBorder::HighlightOuterFieldMask);
+	beginEditCP(bevelBorder, BevelBorder::RaisedFieldMask | BevelBorder::WidthFieldMask | BevelBorder::HighlightInnerFieldMask |BevelBorder::HighlightOuterFieldMask | BevelBorder::ShadowInnerFieldMask | BevelBorder::ShadowOuterFieldMask);
 		// Determines whether Button appears raised (true) or indented into screen (false)
 		bevelBorder->setRaised(true);
 		// Determines Width of Border
@@ -148,7 +148,7 @@ int main(int argc, char **argv)
 		bevelBorder->setHighlightOuter(Color4f(0.5, 0.5, 1.0, 1.0));
 		bevelBorder->setShadowInner(Color4f(1.0, 0.5, 1.0, 1.0));
 		bevelBorder->setShadowOuter(Color4f(0.5, 1.0, 1.0, 1.0));
-	endEditCP(bevelBorder);
+	endEditCP(bevelBorder, BevelBorder::RaisedFieldMask | BevelBorder::WidthFieldMask | BevelBorder::HighlightInnerFieldMask |BevelBorder::HighlightOuterFieldMask | BevelBorder::ShadowInnerFieldMask | BevelBorder::ShadowOuterFieldMask);
 
 	// The CompoundBorder takes two Border Components and creates a single Border
 	// out of the two Components.  It is possible to take use a CompoundBorder
@@ -163,14 +163,14 @@ int main(int argc, char **argv)
 	// the Border still is a part of the Component with its 
 	// assigned dimensions (note how this causes the Button
 	// to appear spaced out from the other Buttons)
-	beginEditCP(emptyBorder, EmptyBorder::LeftWidthFieldMask | EmptyBorder::TopWidthFieldMask | EmptyBorder::RightWidthFieldMask | EmptyBorder::BottomWidthFieldMask);
+	beginEditCP(emptyBorder, EmptyBorder::BottomWidthFieldMask | EmptyBorder::LeftWidthFieldMask | EmptyBorder::RightWidthFieldMask | EmptyBorder::TopWidthFieldMask);
 		// Determine the four Edge Widths
 		emptyBorder->setBottomWidth(5);
 		emptyBorder->setLeftWidth(5);
 		emptyBorder->setRightWidth(30);
 		emptyBorder->setTopWidth(30);
-	endEditCP(emptyBorder, EmptyBorder::LeftWidthFieldMask | EmptyBorder::TopWidthFieldMask | EmptyBorder::RightWidthFieldMask | EmptyBorder::BottomWidthFieldMask);
-	
+	endEditCP(emptyBorder, EmptyBorder::BottomWidthFieldMask | EmptyBorder::LeftWidthFieldMask | EmptyBorder::RightWidthFieldMask | EmptyBorder::TopWidthFieldMask);
+
 	// The EtchedBorder causes the Button to appear raised
 	// or indented into the screen similar to the BevelBorder
 	// but in a different style
@@ -206,7 +206,9 @@ int main(int argc, char **argv)
 	endEditCP(matteBorder, MatteBorder::LeftWidthFieldMask | MatteBorder::RightWidthFieldMask | MatteBorder::BottomWidthFieldMask | MatteBorder::TopWidthFieldMask | MatteBorder::ColorFieldMask);
 
 	// The MatteBorder creates a Border with dimensions
-	beginEditCP(multiColorMatteBorder);
+	beginEditCP(multiColorMatteBorder, MultiColorMatteBorder::LeftWidthFieldMask | MultiColorMatteBorder::LeftLineTopColorFieldMask | MultiColorMatteBorder::LeftLineBottomColorFieldMask | MultiColorMatteBorder::RightWidthFieldMask |
+		MultiColorMatteBorder::RightLineTopColorFieldMask | MultiColorMatteBorder::RightLineBottomColorFieldMask | MultiColorMatteBorder::BottomWidthFieldMask | MultiColorMatteBorder::BottomLineLeftColorFieldMask | MultiColorMatteBorder::BottomLineLeftColorFieldMask |
+		MultiColorMatteBorder::TopWidthFieldMask | MultiColorMatteBorder::TopLineLeftColorFieldMask | MultiColorMatteBorder::TopLineRightColorFieldMask);
 		// Determine the four Edge Widths
 		multiColorMatteBorder->setLeftWidth(10);
 		multiColorMatteBorder->setLeftLineTopColor(Color4f(1.0,0.0,0.0,1.0));
@@ -220,7 +222,9 @@ int main(int argc, char **argv)
 		multiColorMatteBorder->setTopWidth(10);
 		multiColorMatteBorder->setTopLineLeftColor(Color4f(1.0,0.0,0.0,1.0));
 		multiColorMatteBorder->setTopLineRightColor(Color4f(0.0,1.0,0.0,1.0));
-	endEditCP(multiColorMatteBorder);
+	endEditCP(multiColorMatteBorder, MultiColorMatteBorder::LeftWidthFieldMask | MultiColorMatteBorder::LeftLineTopColorFieldMask | MultiColorMatteBorder::LeftLineBottomColorFieldMask | MultiColorMatteBorder::RightWidthFieldMask |
+		MultiColorMatteBorder::RightLineTopColorFieldMask | MultiColorMatteBorder::RightLineBottomColorFieldMask | MultiColorMatteBorder::BottomWidthFieldMask | MultiColorMatteBorder::BottomLineLeftColorFieldMask | MultiColorMatteBorder::BottomLineLeftColorFieldMask |
+		MultiColorMatteBorder::TopWidthFieldMask | MultiColorMatteBorder::TopLineLeftColorFieldMask | MultiColorMatteBorder::TopLineRightColorFieldMask);
 	
 	// The RoundedCornerLineBorder
     beginEditCP(roundedCornerLineBorder, RoundedCornerLineBorder::WidthFieldMask | RoundedCornerLineBorder::ColorFieldMask | RoundedCornerLineBorder::CornerRadiusFieldMask );
@@ -269,78 +273,78 @@ int main(int argc, char **argv)
 	// setBorder function.  Note that setActiveBorder assigns the
 	// Border to also be present while the Button is pressed by
 	// clicking on it.
-	beginEditCP(bevelButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+	beginEditCP(bevelButton, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::BorderFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBorderFieldMask);
 		bevelButton->setPreferredSize(Vec2s(100,50));
 		bevelButton->setText("Bevel Border");
 		bevelButton->setBorder(bevelBorder);
 		bevelButton->setActiveBorder(bevelBorder);
 		bevelButton->setRolloverBorder(bevelBorder);
-	endEditCP  (bevelButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+	endEditCP  (bevelButton, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::BorderFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBorderFieldMask);
 	
-	beginEditCP(compoundButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+	beginEditCP(compoundButton, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::BorderFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBorderFieldMask);
 		compoundButton->setPreferredSize(Vec2s(100,50));
 		compoundButton->setText("Compound Border");
 		compoundButton->setBorder(compoundBorder);
 		compoundButton->setActiveBorder(compoundBorder);
 		compoundButton->setRolloverBorder(compoundBorder);
-	endEditCP  (compoundButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+	endEditCP  (compoundButton, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::BorderFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBorderFieldMask);
 
-	beginEditCP(emptyButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+	beginEditCP(emptyButton, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::BorderFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBorderFieldMask);
 		emptyButton->setPreferredSize(Vec2s(100,50));
 		emptyButton->setText("Empty Border");
 		emptyButton->setBorder(emptyBorder);
 		emptyButton->setActiveBorder(emptyBorder);
 		emptyButton->setRolloverBorder(emptyBorder);
-	endEditCP  (emptyButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+	endEditCP  (emptyButton, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::BorderFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBorderFieldMask);
 	
-	beginEditCP(etchedButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+	beginEditCP(etchedButton, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::BorderFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBorderFieldMask);
 		etchedButton->setPreferredSize(Vec2s(100,50));
 		etchedButton->setText("Etched Border");
 		etchedButton->setBorder(etchedBorder);
 		etchedButton->setActiveBorder(etchedBorder);
 		etchedButton->setRolloverBorder(etchedBorder);
-	endEditCP  (etchedButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+	endEditCP  (etchedButton, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::BorderFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBorderFieldMask);
 
-	beginEditCP(lineButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+	beginEditCP(lineButton, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::BorderFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBorderFieldMask);
 		lineButton->setPreferredSize(Vec2s(100,50));
 		lineButton->setText("Line Border");
 		lineButton->setBorder(lineBorder);
 		lineButton->setActiveBorder(lineBorder);
 		lineButton->setRolloverBorder(lineBorder);
-	endEditCP  (lineButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+		endEditCP  (lineButton, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::BorderFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBorderFieldMask);
 
-	beginEditCP(matteButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+	beginEditCP(matteButton, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::BorderFieldMask | Component::RolloverBorderFieldMask);
 		matteButton->setPreferredSize(Vec2s(100,50));
 		matteButton->setText("Matte Border");
 		matteButton->setBorder(matteBorder);
 		matteButton->setRolloverBorder(matteBorder);
 		// Note that when matteButton is pressed, the Border will revert to the 
 		// default Border for Buttons, a "pressed" BevelBorder
-	endEditCP  (matteButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+		endEditCP  (matteButton, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::BorderFieldMask | Component::RolloverBorderFieldMask);
 	
-	beginEditCP(multiColorMatteButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+	beginEditCP(multiColorMatteButton, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::BorderFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBorderFieldMask);
 		multiColorMatteButton->setPreferredSize(Vec2s(100,50));
 		multiColorMatteButton->setText("Multi-Color Matte Border");
 		multiColorMatteButton->setBorder(multiColorMatteBorder);
 		multiColorMatteButton->setActiveBorder(multiColorMatteBorder);
 		multiColorMatteButton->setRolloverBorder(multiColorMatteBorder);
-	endEditCP  (multiColorMatteButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+	endEditCP  (multiColorMatteButton, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::BorderFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBorderFieldMask);
 
-	beginEditCP(roundedCornerLineButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+	beginEditCP(roundedCornerLineButton, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::BorderFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBorderFieldMask);
 		roundedCornerLineButton->setPreferredSize(Vec2s(100,50));
 		roundedCornerLineButton->setText("Rounded Border");
 		roundedCornerLineButton->setBorder(roundedCornerLineBorder);
 		roundedCornerLineButton->setActiveBorder(roundedCornerLineBorder);
 		roundedCornerLineButton->setRolloverBorder(roundedCornerLineBorder);
-	endEditCP  (roundedCornerLineButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+	endEditCP  (roundedCornerLineButton, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::BorderFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBorderFieldMask);
 
-	beginEditCP(shadowButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+	beginEditCP(shadowButton, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::BorderFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBorderFieldMask);
 		shadowButton->setPreferredSize(Vec2s(100,50));
 		shadowButton->setText("Shadow Border");
 		shadowButton->setBorder(shadowBorder);
 		shadowButton->setActiveBorder(shadowBorder);
 		shadowButton->setRolloverBorder(shadowBorder);
-	endEditCP  (roundedCornerLineButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask);
+	endEditCP  (roundedCornerLineButton, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::BorderFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBorderFieldMask);
 
 
 	
@@ -368,11 +372,11 @@ int main(int argc, char **argv)
 
 	// Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
 		drawingSurface->setRootFrame(MainFrame);
 	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 	
 	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();

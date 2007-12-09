@@ -201,11 +201,11 @@ int main(int argc, char **argv)
 
 	// Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
 		drawingSurface->setRootFrame(MainFrame);
 	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();
 

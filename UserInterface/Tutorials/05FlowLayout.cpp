@@ -163,7 +163,7 @@ int main(int argc, char **argv)
 	// Determine whether the Layout is Horizontal (HORIZONTAL_ALIGNMENT) or
 	// Vertical (VERTICAL_ALIGNMENT) and determine gap size, and determine
 	// alignment along Horizontal and Vertical axis 
-	beginEditCP(MainFrameLayout);
+	beginEditCP(MainFrameLayout, FlowLayout::HorizontalGapFieldMask | FlowLayout::VerticalGapFieldMask | FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
 		// Determine the Horizontal and Vertical gaps between objects.
 		// These gaps are absolute, and measured in pixels.
 		MainFrameLayout->setHorizontalGap(3);
@@ -184,7 +184,7 @@ int main(int argc, char **argv)
 
 		// Determine alignment of Components within Layout
 		MainFrameLayout->setMinorAxisAlignment(AXIS_MAX_ALIGNMENT);
-	endEditCP(MainFrameLayout);
+	endEditCP(MainFrameLayout, FlowLayout::HorizontalGapFieldMask | FlowLayout::VerticalGapFieldMask | FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
 	
  	// Create The Main Frame
 	// Create Background to be used with the Main Frame
@@ -210,11 +210,11 @@ int main(int argc, char **argv)
 
 	//Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
 		drawingSurface->setRootFrame(MainFrame);
 	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 	
 	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();

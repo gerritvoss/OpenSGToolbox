@@ -133,29 +133,29 @@ int main(int argc, char **argv)
 	ButtonPtr button5 = osg::Button::create();
 	ButtonPtr button6 = osg::Button::create();
 	
-	beginEditCP(button1);
+	beginEditCP(button1, Button::TextFieldMask);
 		button1->setText("This");
-	endEditCP(button1);
+	endEditCP(button1, Button::TextFieldMask);
 
-	beginEditCP(button2);
+	beginEditCP(button2, Button::TextFieldMask);
 		button2->setText("is a");
-	endEditCP(button2);
+	endEditCP(button2, Button::TextFieldMask);
 
-	beginEditCP(button3);
+	beginEditCP(button3, Button::TextFieldMask);
 		button3->setText("sample");
-	endEditCP(button3);
+	endEditCP(button3, Button::TextFieldMask);
 
-	beginEditCP(button4);
-	button4->setText("two");
-	endEditCP(button4);
+	beginEditCP(button4, Button::TextFieldMask);
+		button4->setText("two");
+	endEditCP(button4, Button::TextFieldMask);
 
-	beginEditCP(button5);
+	beginEditCP(button5, Button::TextFieldMask);
 		button5->setText("panel");
-	endEditCP(button5);
+	endEditCP(button5, Button::TextFieldMask);
 
-	beginEditCP(button6);
+	beginEditCP(button6, Button::TextFieldMask);
 		button6->setText("layout");
-	endEditCP(button6);
+	endEditCP(button6, Button::TextFieldMask);
 
 	
 	/******************************************************
@@ -169,9 +169,9 @@ int main(int argc, char **argv)
 	FlowLayoutPtr panel1Layout = osg::FlowLayout::create();
 	FlowLayoutPtr panel2Layout = osg::FlowLayout::create();
 
-	beginEditCP(panel1Layout);
+	beginEditCP(panel1Layout, FlowLayout::AlignmentFieldMask);
 		panel1Layout->setAlignment(VERTICAL_ALIGNMENT);
-	endEditCP(panel1Layout);
+	endEditCP(panel1Layout, FlowLayout::AlignmentFieldMask);
 
 
 	/******************************************************
@@ -182,9 +182,11 @@ int main(int argc, char **argv)
 	******************************************************/
 	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
 	ColorUIBackgroundPtr panelBackground = osg::ColorUIBackground::create();
+
 	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
 		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+
 	beginEditCP(panelBackground, ColorUIBackground::ColorFieldMask);
 		panelBackground->setColor(Color4f(0.0,0.0,0.0,1.0));
 	endEditCP(panelBackground, ColorUIBackground::ColorFieldMask);
@@ -221,7 +223,7 @@ int main(int argc, char **argv)
 	PanelPtr panel2 = osg::Panel::create();
 	
 	// Edit Panel1, Panel2
-	beginEditCP(panel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+	beginEditCP(panel1, Component::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
 		panel1->setPreferredSize( Vec2s(200, 200) );
 		panel1->getChildren().addValue(button1);
 		panel1->getChildren().addValue(button2);
@@ -229,9 +231,9 @@ int main(int argc, char **argv)
 		panel1->setLayout(panel1Layout);
 		panel1->setBackground(panelBackground);
 		panel1->setBorder(panelBorder);
-	endEditCP(panel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+	endEditCP(panel1, Component::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
 
-	beginEditCP(panel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+	beginEditCP(panel2, Component::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
 		panel2->setPreferredSize( Vec2s(200, 200) );
 		panel2->getChildren().addValue(button4);
 		panel2->getChildren().addValue(button5);
@@ -239,7 +241,7 @@ int main(int argc, char **argv)
 		panel2->setLayout(panel2Layout);
 		panel2->setBackground(panelBackground);
 		panel2->setBorder(panelBorder);
-	endEditCP(panel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+	endEditCP(panel2, Component::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
 
 	// Edit MainFrame
 	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
@@ -252,11 +254,11 @@ int main(int argc, char **argv)
 
 	// Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
 		drawingSurface->setRootFrame(MainFrame);
 	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 	
 	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();

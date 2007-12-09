@@ -166,32 +166,32 @@ int main(int argc, char **argv)
 
 	******************************************************/
 
-   beginEditCP(button1, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
+   beginEditCP(button1, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::ConstraintsFieldMask);
 		button1->setPreferredSize(Vec2s(100,50));
 		button1->setText("Button 1");
 		
 		// Set the constraints created above to button
 		// to place the Button within the scene
 		button1->setConstraints(buttonConstraints1);
-	endEditCP(button1, Button::PreferredSizeFieldMask |Button::TextFieldMask | Button::ConstraintsFieldMask);
+   endEditCP(button1, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::ConstraintsFieldMask);
 
-    beginEditCP(button2, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
+    beginEditCP(button2, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::ConstraintsFieldMask);
 		button2->setPreferredSize(Vec2s(100,50));
 		button2->setText("Button 2");
 		
 		// Set the constraints created above to button2
 		// to place the Button within the scene
 		button2->setConstraints(buttonConstraints2);
-    endEditCP  (button2, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
+    endEditCP  (button2, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::ConstraintsFieldMask);
 
-    beginEditCP(button3,  Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
+    beginEditCP(button3, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::ConstraintsFieldMask);
 		button3->setPreferredSize(Vec2s(100,50));
 		button3->setText("Button 3");
 		
 		// Set the constraints created above to button3
 		// to place the Button within the scene
 		button3->setConstraints(buttonConstraints3);
-    endEditCP  (button3,  Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::ConstraintsFieldMask);
+    endEditCP  (button3, Component::PreferredSizeFieldMask | Button::TextFieldMask | Component::ConstraintsFieldMask);
 
 	// Create The Main Frame
 	// Create Background to be used with the Main Frame
@@ -219,11 +219,11 @@ int main(int argc, char **argv)
 
 	// Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
 		drawingSurface->setRootFrame(MainFrame);
 	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 	
 	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();

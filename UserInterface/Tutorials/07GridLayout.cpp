@@ -171,20 +171,20 @@ int main(int argc, char **argv)
 	// Note that as with Box Layout, unless a setMaxSize
 	// option is specified, the components are resized
 	// to fit the grid "box" they are in
-	beginEditCP(button1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
+	beginEditCP(button1, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask);
 		button1->setPreferredSize( Vec2s(50,50) );
 		button1->setMaxSize( Vec2s(50,50) );
-	endEditCP(button1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
+	endEditCP(button1, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask);
 
-	beginEditCP(button2, Button::PreferredSizeFieldMask);
+	beginEditCP(button2, Component::PreferredSizeFieldMask);
 		 button2->setPreferredSize( Vec2s(200,100) );
-	endEditCP(button2, Button::PreferredSizeFieldMask);
+	endEditCP(button2, Component::PreferredSizeFieldMask);
 		
 	// Note that button3 will be resized to be the same
 	// size as button2, while button will not
-	beginEditCP(button3, Button::PreferredSizeFieldMask);
+	beginEditCP(button3, Component::PreferredSizeFieldMask);
 		 button3->setPreferredSize( Vec2s(50,100) );
-	endEditCP(button3, Button::PreferredSizeFieldMask);
+	endEditCP(button3, Component::PreferredSizeFieldMask);
 
 
  	// Create The Main Frame
@@ -211,11 +211,11 @@ int main(int argc, char **argv)
 
 	// Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
 		drawingSurface->setRootFrame(MainFrame);
 	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 	
 	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();

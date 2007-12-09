@@ -150,16 +150,16 @@ int main(int argc, char **argv)
 		label1Color->setColor( Color4f(0.0, 0.0, 0.0, 1.0) );
 	endEditCP(label1Color, ColorUIBackground::ColorFieldMask);
 	
-	beginEditCP(label1Gradient);
+	beginEditCP(label1Gradient, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
 		label1Gradient->setColorStart( Color4f(1.0, 0.0, 1.0, 0.8) );
 		label1Gradient->setColorEnd( Color4f(0.0, 0.0, 1.0, 0.3) );
 		label1Gradient->setAlignment(HORIZONTAL_ALIGNMENT);
-	endEditCP(label1Gradient);
+	endEditCP(label1Gradient, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
 	
-	beginEditCP(label1Compound);
+	beginEditCP(label1Compound, CompoundUIBackground::BackgroundsFieldMask);
 		label1Compound->getBackgrounds().addValue(label1Color);
 		label1Compound->getBackgrounds().addValue(label1Gradient);
-	endEditCP(label1Compound);
+	endEditCP(label1Compound, CompoundUIBackground::BackgroundsFieldMask);
 
 	/******************************************************
 			
@@ -168,11 +168,11 @@ int main(int argc, char **argv)
 	******************************************************/
 	EtchedBorderPtr panelBorder = osg::EtchedBorder::create();
 	EmptyBorderPtr label1Border = osg::EmptyBorder::create();
-	beginEditCP(panelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+	beginEditCP(panelBorder, EtchedBorder::HighlightFieldMask | EtchedBorder::ShadowFieldMask EtchedBorder::WidthFieldMask);
 		panelBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
 		panelBorder->setShadow(Color4f(0.8, 0.8, 0.8, 1.0));
 		panelBorder->setWidth(6);
-	endEditCP(panelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+	endEditCP(panelBorder, EtchedBorder::HighlightFieldMask | EtchedBorder::ShadowFieldMask EtchedBorder::WidthFieldMask);
 
 	/******************************************************
 			
@@ -316,7 +316,7 @@ int main(int argc, char **argv)
 
 	
 	// Edit Panel1, Panel2
-	beginEditCP(panel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+	beginEditCP(panel1, Component::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
 		panel1->setPreferredSize( Vec2s(400, 400) );
 		panel1->getChildren().addValue(button2);
 		panel1->getChildren().addValue(panel3);
@@ -324,9 +324,9 @@ int main(int argc, char **argv)
 		panel1->setLayout(panel1Layout);
 		panel1->setBackground(panelBackground);
 		panel1->setBorder(panelBorder);
-	endEditCP(panel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+	endEditCP(panel1, Component::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
 
-	beginEditCP(panel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+	beginEditCP(panel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
 		panel2->setPreferredSize( Vec2s(400, 400) );
 		panel2->getChildren().addValue(button3);
 		panel2->getChildren().addValue(panel5);
@@ -334,39 +334,39 @@ int main(int argc, char **argv)
 		panel2->setLayout(panel2Layout);
 		panel2->setBackground(panelBackground);
 		panel2->setBorder(panelBorder);
-	endEditCP(panel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+	endEditCP(panel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
 	
-	beginEditCP(panel3, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+	beginEditCP(panel3, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask);
 		panel3->getChildren().addValue(button4);
 		panel3->getChildren().addValue(button5);
 		panel3->setLayout(panel3Layout);
 		panel3->setPreferredSize( Vec2s(125, 130) );
 		panel3->setBackground(panelSmallBackground);
-	endEditCP(panel3, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+	endEditCP(panel3, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask);
 	
-	beginEditCP(panel4, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+	beginEditCP(panel4, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask);
 		panel4->getChildren().addValue(button6);
 		panel4->getChildren().addValue(button7);
 		panel4->setLayout(panel4Layout);
 		panel4->setPreferredSize( Vec2s(125, 130) );
 		panel4->setBackground(panelSmallBackground);
-	endEditCP(panel4, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+	endEditCP(panel4, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask);
 		
-	beginEditCP(panel5, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+	beginEditCP(panel5, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask);
 		panel5->getChildren().addValue(button8);
 		panel5->getChildren().addValue(button9);
 		panel5->setLayout(panel5Layout);
 		panel5->setPreferredSize( Vec2s(125, 130) );
 		panel5->setBackground(panelSmallBackground);
-	endEditCP(panel5, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+	endEditCP(panel5, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask);
 		
-	beginEditCP(panel6, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+	beginEditCP(panel6, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask);
 		panel6->getChildren().addValue(button10);
 		panel6->getChildren().addValue(button11);
 		panel6->setLayout(panel6Layout);
 		panel6->setPreferredSize( Vec2s(125, 130) );
 		panel6->setBackground(panelSmallBackground);
-	endEditCP(panel6, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+	endEditCP(panel6, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask);
 
 
 	// Edit MainFrame
@@ -382,11 +382,11 @@ int main(int argc, char **argv)
 
 	// Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
 		drawingSurface->setRootFrame(MainFrame);
 	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();
 

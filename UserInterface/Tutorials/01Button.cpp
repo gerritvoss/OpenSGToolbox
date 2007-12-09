@@ -223,7 +223,8 @@ int main(int argc, char **argv)
 
 
 	******************************************************/
-    beginEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Button::TextColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::ToolTipTextFieldMask);
+    beginEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::ToolTipTextFieldMask | Button::TextFieldMask |
+		Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
 		    button1->setMinSize( Vec2s (50, 25) );
 		    button1->setMaxSize( Vec2s (200, 100) );
 		    button1->setPreferredSize( Vec2s (100, 50) );
@@ -236,8 +237,9 @@ int main(int argc, char **argv)
 		    button1->setActiveTextColor( Color4f(1.0, 0.0, 0.0, 1.0) );
 		    button1->setVerticalAlignment(0.0);
 		    button1->setHorizontalAlignment(1.0);
-	endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Button::TextColorFieldMask | Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::ToolTipTextFieldMask);
-	
+	endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::ToolTipTextFieldMask | Button::TextFieldMask |
+		Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
+		    
 	// Create an ActionListener and assign it to button1
 	// This is defined above, and wil
 	Button1ActionListener button1AL;
@@ -263,7 +265,6 @@ int main(int argc, char **argv)
 		// Determine if the ToggleButton appears pressed (TRUE) or released (FALSE)
 		toggleButton1->setSelected(false);
 		toggleButton1->setText("ToggleMe");
-        //Set the Text to be shown as a ToolTip
         toggleButton1->setToolTipText("Toggle Button ToolTip");
 	endEditCP(toggleButton1, ToggleButton::SelectedFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
 
@@ -299,11 +300,11 @@ int main(int argc, char **argv)
 
 	// Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
 		drawingSurface->setRootFrame(MainFrame);
 	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();
 

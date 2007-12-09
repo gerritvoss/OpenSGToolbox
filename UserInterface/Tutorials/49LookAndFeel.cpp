@@ -1,11 +1,15 @@
-
-// OpenSG Tutorial Example: Creating a Border
+// OpenSG Tutorial Example: Creating a Button Component
 //
-// This tutorial explains how to implement the 
-// TabPanel and its characteristics
+// This tutorial explains how to edit the basic features of
+// a Button created in the OSG User Interface library.
 // 
-// Includes: TabPanel creation and example TabPanel, as well as 
-// utilizing ActionListeners to add/remove Tabs on mouseclicks
+// Includes: Button PreferredSize, MaximumSize, MinimumSize, Font,
+// Text,and adding a Button to a Scene.  Also note that clicking
+// the Button causes it to appear pressed
+
+
+// GLUT is used for window handling
+#include <OpenSG/OSGGLUT.h>
 
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
@@ -13,22 +17,41 @@
 // Methods to create simple geometry: boxes, spheres, tori etc.
 #include <OpenSG/OSGSimpleGeometry.h>
 
+// The GLUT-OpenSG connection class
+#include <OpenSG/OSGGLUTWindow.h>
+
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
+#include <OpenSG/Input/OSGWindowAdapter.h>
 
-// the general scene file loading handler
+// The general scene file loading handler
 #include <OpenSG/OSGSceneFileHandler.h>
 
-//Input
+// Input
 #include <OpenSG/Input/OSGWindowUtils.h>
-#include <OpenSG/Input/OSGWindowAdapter.h>
+
 // UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
+#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+
+// Activate the OpenSG namespace
+OSG_USING_NAMESPACE
+
+// The SimpleSceneManager to manage simple applications
+SimpleSceneManager *mgr;
+
+bool ExitApp = false;
+
+// Forward declaration so we can have the interesting stuff upfront
+void display(void);
+void reshape(Vec2s Size);
+
+// 49LookAndFeel Headers
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGBoxLayout.h>
 #include <OpenSG/UserInterface/OSGCardLayout.h>
@@ -55,21 +78,15 @@
 #include <sstream>
 #include <OpenSG/UserInterface/OSGGridLayout.h>
 
-
-OSG_USING_NAMESPACE
-
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-bool ExitApp = false;
-
 RadioButtonGroup DeselectedRadioButtonGroup;
 RadioButtonGroup SelectedRadioButtonGroup;
 RadioButtonGroup DisabledSelectedRadioButtonGroup;
 RadioButtonGroup DisabledDeselectedRadioButtonGroup;
+Int32SpinnerModelPtr inactiveSpinnerModel(new Int32SpinnerModel());
+Int32SpinnerModelPtr activeSpinnerModel(new Int32SpinnerModel());
+Int32SpinnerModelPtr disabledInactiveSpinnerModel(new Int32SpinnerModel());
+Int32SpinnerModelPtr disabledActiveSpinnerModel(new Int32SpinnerModel());
 
-// forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2s Size);
 
 class TutorialWindowListener : public WindowAdapter
 {
@@ -89,7 +106,6 @@ public:
 PanelPtr createStatePanel(void);
 
 
-// Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
 {
     // OSG init
@@ -265,11 +281,11 @@ int main(int argc, char **argv)
 
 	// Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask  | Component::ConstraintsFieldMask);
+	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask  | Component::ConstraintsFieldMask);
 		drawingSurface->setGraphics(graphics);
 		drawingSurface->setRootFrame(MainFrame);
 	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask  | Component::ConstraintsFieldMask);
+    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask  | Component::ConstraintsFieldMask);
 	
 	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();
@@ -746,30 +762,34 @@ PanelPtr createStatePanel(void)
 	ToggleButtonPtr disabledSelectedToggleButton = osg::ToggleButton::create();
 	ToggleButtonPtr disabledNonselectedToggleButton = osg::ToggleButton::create();
 	
-	beginEditCP(nonSelectedToggleButton,Button::TextFieldMask| Component::ConstraintsFieldMask);
+	beginEditCP(nonSelectedToggleButton,Button::TextFieldMask| Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
 		nonSelectedToggleButton->setText("NonSelected");
 		nonSelectedToggleButton->setConstraints(constraint0102);
-	endEditCP(nonSelectedToggleButton, Button::TextFieldMask| Component::ConstraintsFieldMask);
+		nonSelectedToggleButton->setMaxSize( Vec2s(100, 50) );
+	endEditCP(nonSelectedToggleButton, Button::TextFieldMask| Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
 
-	beginEditCP(selectedToggleButton, ToggleButton::SelectedFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
+	beginEditCP(selectedToggleButton, ToggleButton::SelectedFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
 		selectedToggleButton->setSelected(TRUE);
 		selectedToggleButton->setText("Selected");
 		selectedToggleButton->setConstraints(constraint0202);
-	endEditCP(selectedToggleButton, ToggleButton::SelectedFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
+		selectedToggleButton->setMaxSize( Vec2s(100, 50) );
+	endEditCP(selectedToggleButton, ToggleButton::SelectedFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
 	
-	beginEditCP(disabledSelectedToggleButton, ToggleButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
+	beginEditCP(disabledSelectedToggleButton, ToggleButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask | Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
 		disabledSelectedToggleButton->setSelected(TRUE);
 		disabledSelectedToggleButton->setEnabled(FALSE);
 		disabledSelectedToggleButton->setText("Disabled/Selected");
 		disabledSelectedToggleButton->setConstraints(constraint0302);
-	endEditCP(disabledSelectedToggleButton, ToggleButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
+		disabledSelectedToggleButton->setMaxSize( Vec2s(100, 50) );
+	endEditCP(disabledSelectedToggleButton, ToggleButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
 	
-	beginEditCP(disabledNonselectedToggleButton, ToggleButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
+	beginEditCP(disabledNonselectedToggleButton, ToggleButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
 		disabledNonselectedToggleButton->setSelected(FALSE);
 		disabledNonselectedToggleButton->setEnabled(FALSE);
 		disabledNonselectedToggleButton->setText("Disabled");
 		disabledNonselectedToggleButton->setConstraints(constraint0402);
-	endEditCP(disabledNonselectedToggleButton, ToggleButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
+		disabledNonselectedToggleButton->setMaxSize( Vec2s(100, 50) );
+	endEditCP(disabledNonselectedToggleButton, ToggleButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
 
 	/******************************************************
 						RadioButtons
@@ -947,15 +967,48 @@ PanelPtr createStatePanel(void)
 	SpinnerPtr disabledInactiveSpinner = osg::Spinner::create();
 	SpinnerPtr disabledActiveSpinner = osg::Spinner::create();
 
-	Int32SpinnerModelPtr spinnerModel(new Int32SpinnerModel());
-	spinnerModel->setMaximum(10);
-    spinnerModel->setMinimum(-10);
-    spinnerModel->setStepSize(1);
-    spinnerModel->setValue(SharedFieldPtr(new SFInt32(0)));
-    inactiveSpinner->setModel(spinnerModel);
-    activeSpinner->setModel(spinnerModel);
-    disabledInactiveSpinner->setModel(spinnerModel);
-    disabledActiveSpinner->setModel(spinnerModel);
+	inactiveSpinnerModel->setMaximum(10);
+    inactiveSpinnerModel->setMinimum(-10);
+    inactiveSpinnerModel->setStepSize(0);
+    inactiveSpinnerModel->setValue(SharedFieldPtr(new SFInt32(0)));
+	activeSpinnerModel->setMaximum(10);
+    activeSpinnerModel->setMinimum(-10);
+    activeSpinnerModel->setStepSize(1);
+    activeSpinnerModel->setValue(SharedFieldPtr(new SFInt32(0)));
+	disabledInactiveSpinnerModel->setMaximum(10);
+    disabledInactiveSpinnerModel->setMinimum(-10);
+    disabledInactiveSpinnerModel->setStepSize(1);
+    disabledInactiveSpinnerModel->setValue(SharedFieldPtr(new SFInt32(0)));
+	disabledActiveSpinnerModel->setMaximum(10);
+    disabledActiveSpinnerModel->setMinimum(-10);
+    disabledActiveSpinnerModel->setStepSize(1);
+    disabledActiveSpinnerModel->setValue(SharedFieldPtr(new SFInt32(0)));
+    inactiveSpinner->setModel(inactiveSpinnerModel);
+    activeSpinner->setModel(activeSpinnerModel);
+    disabledInactiveSpinner->setModel(disabledInactiveSpinnerModel);
+    disabledActiveSpinner->setModel(disabledActiveSpinnerModel);
+
+	beginEditCP(activeSpinner, Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
+		activeSpinner->setConstraints(constraint0108);
+		activeSpinner->setMaxSize( Vec2s(50,25) );
+	endEditCP(activeSpinner, Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
+
+	beginEditCP(inactiveSpinner, Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
+		inactiveSpinner->setConstraints(constraint0208);
+		inactiveSpinner->setMaxSize( Vec2s(50,25) );
+	endEditCP(inactiveSpinner, Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
+
+	beginEditCP(disabledActiveSpinner, Component::ConstraintsFieldMask, Component::EnabledFieldMask | Component::MaxSizeFieldMask);
+		disabledActiveSpinner->setConstraints(constraint0308);
+		disabledActiveSpinner->setEnabled(FALSE);
+		disabledActiveSpinner->setMaxSize( Vec2s(50,25) );
+	endEditCP(disabledActiveSpinner, Component::ConstraintsFieldMask, Component::EnabledFieldMask | Component::MaxSizeFieldMask);
+
+	beginEditCP(disabledInactiveSpinner, Component::ConstraintsFieldMask, Component::EnabledFieldMask | Component::MaxSizeFieldMask);
+		disabledInactiveSpinner->setConstraints(constraint0408);
+		disabledInactiveSpinner->setEnabled(FALSE);
+		disabledInactiveSpinner->setMaxSize( Vec2s(50,25) );
+	endEditCP(disabledInactiveSpinner, Component::ConstraintsFieldMask, Component::EnabledFieldMask | Component::MaxSizeFieldMask);
 
 	/******************************************************
 						Labels
@@ -1042,8 +1095,11 @@ PanelPtr createStatePanel(void)
 		disabledLabel->setBorder(labelBorder);
 	endEditCP(disabledLabel, Label::TextFieldMask| Component::ConstraintsFieldMask | Component::BackgroundFieldMask);
 
-
 	beginEditCP(statePanel, Container::ChildrenFieldMask | Container::LayoutFieldMask  | Component::PreferredSizeFieldMask);
+		statePanel->getChildren().addValue(inactiveSpinner);
+		statePanel->getChildren().addValue(activeSpinner);
+		statePanel->getChildren().addValue(disabledInactiveSpinner);
+		statePanel->getChildren().addValue(disabledActiveSpinner);
 		statePanel->getChildren().addValue(inactiveButton);
 		statePanel->getChildren().addValue(activeButton);
 		statePanel->getChildren().addValue(disabledInactiveButton);

@@ -320,14 +320,14 @@ int main(int argc, char **argv)
 	button8->addActionListener( &button8Last);
 
 
-	beginEditCP(cardPanel);
+	beginEditCP(cardPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
 		cardPanel->setLayout(cardLayout);
 		cardPanel->getChildren().addValue(button3);
 		cardPanel->getChildren().addValue(button4);
 		cardPanel->getChildren().addValue(button5);
 		cardPanel->getChildren().addValue(button6);
 		cardPanel->setConstraints(cardPanelConstraints);
-	endEditCP(cardPanel);
+	endEditCP(cardPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
 
 
 
@@ -345,11 +345,11 @@ int main(int argc, char **argv)
 
 	// Create the Drawing Surface
 	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 		drawingSurface->setGraphics(graphics);
 		drawingSurface->setRootFrame(MainFrame);
 	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
 	
 	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();
