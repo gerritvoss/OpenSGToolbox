@@ -101,6 +101,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerDefaultEditor : public SpinnerDefau
     //This method is called when the spinner's model's state changes.
     virtual void stateChanged(const ChangeEvent& e);
 	
+	//Set whether or not this Editor is Editable
+	virtual void setEditable(bool Editable);
+
+	//Get whether or not this Editor is Editable
+	virtual bool getEditable(void) const;
+	
     /*=========================  PROTECTED  ===============================*/
   protected:
 

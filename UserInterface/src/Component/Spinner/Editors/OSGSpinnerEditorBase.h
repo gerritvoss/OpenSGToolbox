@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class SpinnerDefaultEditor
+ **     class SpinnerEditor
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGSPINNERDEFAULTEDITORBASE_H_
-#define _OSGSPINNERDEFAULTEDITORBASE_H_
+#ifndef _OSGSPINNEREDITORBASE_H_
+#define _OSGSPINNEREDITORBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,40 +65,28 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGSpinnerEditor.h" // Parent
+#include "Component/Container/OSGPanel.h" // Parent
 
-#include "Component/Text/OSGTextField.h" // TextField type
-#include "Component/Spinner/OSGSpinnerFields.h" // Spinner type
 
-#include "OSGSpinnerDefaultEditorFields.h"
+#include "OSGSpinnerEditorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class SpinnerDefaultEditor;
+class SpinnerEditor;
 class BinaryDataHandler;
 
-//! \brief SpinnerDefaultEditor Base Class.
+//! \brief SpinnerEditor Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING SpinnerDefaultEditorBase : public SpinnerEditor
+class OSG_USERINTERFACELIB_DLLMAPPING SpinnerEditorBase : public Panel
 {
   private:
 
-    typedef SpinnerEditor    Inherited;
+    typedef Panel    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef SpinnerDefaultEditorPtr  Ptr;
-
-    enum
-    {
-        TextFieldFieldId = Inherited::NextFieldId,
-        SpinnerFieldId   = TextFieldFieldId + 1,
-        NextFieldId      = SpinnerFieldId   + 1
-    };
-
-    static const OSG::BitVector TextFieldFieldMask;
-    static const OSG::BitVector SpinnerFieldMask;
+    typedef SpinnerEditorPtr  Ptr;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -122,27 +110,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerDefaultEditorBase : public SpinnerE
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFTextFieldPtr      *getSFTextField      (void);
-           SFSpinnerPtr        *getSFSpinner        (void);
-
-           TextFieldPtr        &getTextField      (void);
-     const TextFieldPtr        &getTextField      (void) const;
-           SpinnerPtr          &getSpinner        (void);
-     const SpinnerPtr          &getSpinner        (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setTextField      ( const TextFieldPtr &value );
-     void setSpinner        ( const SpinnerPtr &value );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -159,46 +126,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerDefaultEditorBase : public SpinnerE
 
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
-
-    static  SpinnerDefaultEditorPtr      create          (void); 
-    static  SpinnerDefaultEditorPtr      createEmpty     (void); 
-
-    /*! \}                                                                 */
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Copy                                   */
-    /*! \{                                                                 */
-
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
-
-    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
     /*---------------------------------------------------------------------*/
-    /*! \name                      Fields                                  */
-    /*! \{                                                                 */
-
-    SFTextFieldPtr      _sfTextField;
-    SFSpinnerPtr        _sfSpinner;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    SpinnerDefaultEditorBase(void);
-    SpinnerDefaultEditorBase(const SpinnerDefaultEditorBase &source);
+    SpinnerEditorBase(void);
+    SpinnerEditorBase(const SpinnerEditorBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SpinnerDefaultEditorBase(void); 
+    virtual ~SpinnerEditorBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -206,13 +149,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerDefaultEditorBase : public SpinnerE
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      SpinnerDefaultEditorBase *pOther,
+    void executeSyncImpl(      SpinnerEditorBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      SpinnerDefaultEditorBase *pOther,
+    void executeSyncImpl(      SpinnerEditorBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -237,12 +180,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerDefaultEditorBase : public SpinnerE
 
     friend class FieldContainer;
 
-    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const SpinnerDefaultEditorBase &source);
+    void operator =(const SpinnerEditorBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -250,17 +192,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerDefaultEditorBase : public SpinnerE
 //---------------------------------------------------------------------------
 
 
-typedef SpinnerDefaultEditorBase *SpinnerDefaultEditorBaseP;
+typedef SpinnerEditorBase *SpinnerEditorBaseP;
 
-typedef osgIF<SpinnerDefaultEditorBase::isNodeCore,
-              CoredNodePtr<SpinnerDefaultEditor>,
+typedef osgIF<SpinnerEditorBase::isNodeCore,
+              CoredNodePtr<SpinnerEditor>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet SpinnerDefaultEditorNodePtr;
+              >::_IRet SpinnerEditorNodePtr;
 
-typedef RefPtr<SpinnerDefaultEditorPtr> SpinnerDefaultEditorRefPtr;
+typedef RefPtr<SpinnerEditorPtr> SpinnerEditorRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGSPINNERDEFAULTEDITORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGSPINNEREDITORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGSPINNERDEFAULTEDITORBASE_H_ */
+#endif /* _OSGSPINNEREDITORBASE_H_ */

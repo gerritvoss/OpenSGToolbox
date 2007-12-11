@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGSPINNER_H_
-#define _OSGSPINNER_H_
+#ifndef _OSGSPINNEREDITOR_H_
+#define _OSGSPINNEREDITOR_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,21 +45,20 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGSpinnerBase.h"
-#include "OSGSpinnerModel.h"
-#include "Event/OSGActionListener.h"
+#include "OSGSpinnerEditorBase.h"
+#include "Component/Spinner/OSGSpinnerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Spinner class. See \ref 
-           PageUserInterfaceSpinner for a description.
+/*! \brief SpinnerEditor class. See \ref 
+           PageUserInterfaceSpinnerEditor for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING Spinner : public SpinnerBase
+class OSG_USERINTERFACELIB_DLLMAPPING SpinnerEditor : public SpinnerEditorBase
 {
   private:
 
-    typedef SpinnerBase Inherited;
+    typedef SpinnerEditorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -79,117 +78,64 @@ class OSG_USERINTERFACELIB_DLLMAPPING Spinner : public SpinnerBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-    virtual void updateLayout(void);
+    /*! \}                                                                 */
+	
+    //Pushes the currently edited value to the SpinnerModel.
+    virtual void commitEdit(void) = 0;
 
-    //Adds a listener to the list that is notified each time a change to the model occurs.
-    void addChangeListener(ChangeListenerPtr l);
+    //Cancels the current edits and returns the editor to the previous value
+    virtual void cancelEdit(void) = 0;
 
-    //Removes a ChangeListener from this spinner.
-    void removeChangeListener(ChangeListenerPtr l);
-    
-    //Commits the currently edited value to the SpinnerModel.
-    void commitEdit(void);
-
-    //Returns the SpinnerModel that defines this spinners sequence of values.
-    SpinnerModelPtr getModel(void) const;
-
-    //Returns the object in the sequence that comes after the object returned by getValue().
-    SharedFieldPtr getNextValue(void);
-
-    //Returns the object in the sequence that comes before the object returned by getValue().
-    SharedFieldPtr getPreviousValue(void);
-
-    //Returns the current value of the model, typically this value is displayed by the editor.
-    SharedFieldPtr getValue(void);
-
-    //Changes the model that represents the value of this spinner.
-    void setModel(SpinnerModelPtr model);
-
-    //Changes current value of the model, typically this value is displayed by the editor.
-    void setValue(SharedFieldPtr value);
+    //Disconnect this editor from the specified JSpinner.
+    virtual void dismiss(SpinnerPtr spinner) = 0;
 
 	//Set whether or not this Editor is Editable
-	//This is only relevent when the Editor is a derived class of SpinnerEditor
-	void setEditable(bool Editable);
+	virtual void setEditable(bool Editable) = 0;
 
 	//Get whether or not this Editor is Editable
-	//This is only relevent when the Editor is a derived class of SpinnerEditor
-	bool getEditable(void) const;
+	virtual bool getEditable(void) const = 0;
 
-/*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in SpinnerBase.
+    // Variables should all be in SpinnerEditorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Spinner(void);
-    Spinner(const Spinner &source);
+    SpinnerEditor(void);
+    SpinnerEditor(const SpinnerEditor &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Spinner(void); 
+    virtual ~SpinnerEditor(void); 
 
     /*! \}                                                                 */
-
-    SpinnerModelPtr _Model;
     
-    //This method is called by the constructors to create the JComponent that displays the current value of the sequence.
-    ComponentPtr createEditor(SpinnerModelPtr model);
-
-    //Next Button Action Listener
-	class NextButtonActionListener : public ActionListener
-	{
-	public:
-		NextButtonActionListener(SpinnerPtr TheSpinner);
-        virtual void actionPerformed(const ActionEvent& e);
-	private:
-		SpinnerPtr _Spinner;
-	};
-
-	friend class NextButtonActionListener;
-
-	NextButtonActionListener _NextButtonActionListener;
-
-    //Previous Button Action Listener
-	class PreviousButtonActionListener : public ActionListener
-	{
-	public:
-		PreviousButtonActionListener(SpinnerPtr TheSpinner);
-        virtual void actionPerformed(const ActionEvent& e);
-	private:
-		SpinnerPtr _Spinner;
-	};
-
-	friend class PreviousButtonActionListener;
-
-	PreviousButtonActionListener _PreviousButtonActionListener;
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class SpinnerBase;
+    friend class SpinnerEditorBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Spinner &source);
+    void operator =(const SpinnerEditor &source);
 };
 
-typedef Spinner *SpinnerP;
+typedef SpinnerEditor *SpinnerEditorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGSpinnerBase.inl"
-#include "OSGSpinner.inl"
+#include "OSGSpinnerEditorBase.inl"
+#include "OSGSpinnerEditor.inl"
 
-#define OSGSPINNER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGSPINNEREDITOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGSPINNER_H_ */
+#endif /* _OSGSPINNEREDITOR_H_ */

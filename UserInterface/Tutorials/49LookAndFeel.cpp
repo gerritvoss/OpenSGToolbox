@@ -997,6 +997,7 @@ PanelPtr createStatePanel(void)
 		inactiveSpinner->setConstraints(constraint0208);
 		inactiveSpinner->setMaxSize( Vec2s(50,25) );
 	endEditCP(inactiveSpinner, Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
+	inactiveSpinner->setEditable(false);
 
 	beginEditCP(disabledActiveSpinner, Component::ConstraintsFieldMask | Component::EnabledFieldMask | Component::MaxSizeFieldMask);
 		disabledActiveSpinner->setConstraints(constraint0308);
@@ -1009,6 +1010,7 @@ PanelPtr createStatePanel(void)
 		disabledInactiveSpinner->setEnabled(false);
 		disabledInactiveSpinner->setMaxSize( Vec2s(50,25) );
 	endEditCP(disabledInactiveSpinner, Component::ConstraintsFieldMask | Component::EnabledFieldMask | Component::MaxSizeFieldMask);
+	disabledInactiveSpinner->setEditable(false);
 
 	/******************************************************
 						Labels

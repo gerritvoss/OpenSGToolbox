@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -44,88 +42,37 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
+ **     Do not change this file, changes should be done in the derived      **
+ **     class SpinnerEditor!
+ **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
-
-#ifndef _OSGSPINNERDEFAULTEDITORFIELDS_H_
-#define _OSGSPINNERDEFAULTEDITORFIELDS_H_
-#ifdef __sgi
-#pragma once
-#endif
-
 #include <OpenSG/OSGConfig.h>
-
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
-
-#include "OSGSpinnerEditorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class SpinnerDefaultEditor;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! SpinnerDefaultEditorPtr
-
-typedef FCPtr<SpinnerEditorPtr, SpinnerDefaultEditor> SpinnerDefaultEditorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
- */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
-template <>
-struct FieldDataTraits<SpinnerDefaultEditorPtr> : 
-    public FieldTraitsRecurseMapper<SpinnerDefaultEditorPtr, true>
+//! access the type of the class
+inline
+OSG::FieldContainerType &SpinnerEditorBase::getClassType(void)
 {
-    static DataType             _type;                       
+    return _type; 
+} 
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
-
-    static DataType   &getType (void) { return _type;        }
-
-    static const char *getSName(void) { return "SFSpinnerDefaultEditorPtr"; }
-    static const char *getMName(void) { return "MFSpinnerDefaultEditorPtr"; }
-};
-
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<SpinnerDefaultEditorPtr, true>
-    \hideinhierarchy
- */
-#endif
-
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+//! access the numerical type of the class
+inline
+OSG::UInt32 SpinnerEditorBase::getClassTypeId(void) 
+{
+    return _type.getId(); 
+} 
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+/*------------------------------ get -----------------------------------*/
 
-typedef SField<SpinnerDefaultEditorPtr> SFSpinnerDefaultEditorPtr;
-#endif
 
-#ifndef OSG_COMPILESPINNERDEFAULTEDITORINST
-OSG_DLLEXPORT_DECL1(SField, SpinnerDefaultEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
-
-typedef MField<SpinnerDefaultEditorPtr> MFSpinnerDefaultEditorPtr;
-#endif
-
-#ifndef OSG_COMPILESPINNERDEFAULTEDITORINST
-OSG_DLLEXPORT_DECL1(MField, SpinnerDefaultEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
 
 OSG_END_NAMESPACE
 
-#define OSGSPINNERDEFAULTEDITORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGSPINNEREDITORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 
-#endif /* _OSGSPINNERDEFAULTEDITORFIELDS_H_ */

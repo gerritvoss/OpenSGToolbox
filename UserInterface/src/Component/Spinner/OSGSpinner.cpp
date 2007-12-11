@@ -52,6 +52,7 @@
 #include "Component/Spinner/OSGListSpinnerModel.h"
 #include "Component/Spinner/OSGNumberSpinnerModel.h"
 
+#include "Component/Spinner/Editors/OSGSpinnerEditor.h"
 #include "Component/Spinner/Editors/OSGSpinnerDefaultEditor.h"
 #include "Component/Spinner/Editors/OSGSpinnerNumberEditor.h"
 
@@ -173,6 +174,26 @@ void Spinner::setModel(SpinnerModelPtr model)
     beginEditCP(SpinnerPtr(this), EditorFieldMask);
         setEditor(createEditor(_Model));
     endEditCP(SpinnerPtr(this), EditorFieldMask);
+}
+
+void Spinner::setEditable(bool Editable)
+{
+	if(getEditor() != NullFC && getEditor()->getType().isDerivedFrom(SpinnerEditor::getClassType()))
+	{
+		SpinnerEditor::Ptr::dcast(getEditor())->setEditable(Editable);
+	}
+}
+
+bool Spinner::getEditable(void) const
+{
+	if(getEditor() != NullFC && getEditor()->getType().isDerivedFrom(SpinnerEditor::getClassType()))
+	{
+		return SpinnerEditor::Ptr::dcast(getEditor())->getEditable();
+	}
+	else
+	{
+		return false;
+	}
 }
 
 /*-------------------------------------------------------------------------*\

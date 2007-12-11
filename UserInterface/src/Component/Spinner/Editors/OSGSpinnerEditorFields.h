@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGSPINNERDEFAULTEDITORFIELDS_H_
-#define _OSGSPINNERDEFAULTEDITORFIELDS_H_
+#ifndef _OSGSPINNEREDITORFIELDS_H_
+#define _OSGSPINNEREDITORFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGSpinnerEditorFields.h"
+#include "Component/Container/OSGPanelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class SpinnerDefaultEditor;
+class SpinnerEditor;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! SpinnerDefaultEditorPtr
+//! SpinnerEditorPtr
 
-typedef FCPtr<SpinnerEditorPtr, SpinnerDefaultEditor> SpinnerDefaultEditorPtr;
+typedef FCPtr<PanelPtr, SpinnerEditor> SpinnerEditorPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<SpinnerEditorPtr, SpinnerDefaultEditor> SpinnerDefaultEditorPtr;
 #endif
 
 template <>
-struct FieldDataTraits<SpinnerDefaultEditorPtr> : 
-    public FieldTraitsRecurseMapper<SpinnerDefaultEditorPtr, true>
+struct FieldDataTraits<SpinnerEditorPtr> : 
+    public FieldTraitsRecurseMapper<SpinnerEditorPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<SpinnerDefaultEditorPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFSpinnerDefaultEditorPtr"; }
-    static const char *getMName(void) { return "MFSpinnerDefaultEditorPtr"; }
+    static const char *getSName(void) { return "SFSpinnerEditorPtr"; }
+    static const char *getMName(void) { return "MFSpinnerEditorPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<SpinnerDefaultEditorPtr, true>
+/*! \class  FieldTraitsRecurseMapper<SpinnerEditorPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<SpinnerDefaultEditorPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldSingle */
 
-typedef SField<SpinnerDefaultEditorPtr> SFSpinnerDefaultEditorPtr;
+typedef SField<SpinnerEditorPtr> SFSpinnerEditorPtr;
 #endif
 
-#ifndef OSG_COMPILESPINNERDEFAULTEDITORINST
-OSG_DLLEXPORT_DECL1(SField, SpinnerDefaultEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILESPINNEREDITORINST
+OSG_DLLEXPORT_DECL1(SField, SpinnerEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<SpinnerDefaultEditorPtr> MFSpinnerDefaultEditorPtr;
+typedef MField<SpinnerEditorPtr> MFSpinnerEditorPtr;
 #endif
 
-#ifndef OSG_COMPILESPINNERDEFAULTEDITORINST
-OSG_DLLEXPORT_DECL1(MField, SpinnerDefaultEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILESPINNEREDITORINST
+OSG_DLLEXPORT_DECL1(MField, SpinnerEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGSPINNERDEFAULTEDITORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGSPINNEREDITORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGSPINNERDEFAULTEDITORFIELDS_H_ */
+#endif /* _OSGSPINNEREDITORFIELDS_H_ */

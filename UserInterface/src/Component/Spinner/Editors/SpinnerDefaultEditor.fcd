@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="SpinnerDefaultEditor"
-	parent="Panel"
+	parent="SpinnerEditor"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"

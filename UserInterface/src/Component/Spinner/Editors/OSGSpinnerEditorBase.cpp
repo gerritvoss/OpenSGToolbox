@@ -45,121 +45,81 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class SpinnerDefaultEditor!
+ **     class SpinnerEditor!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILESPINNERDEFAULTEDITORINST
+#define OSG_COMPILESPINNEREDITORINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGSpinnerDefaultEditorBase.h"
-#include "OSGSpinnerDefaultEditor.h"
+#include "OSGSpinnerEditorBase.h"
+#include "OSGSpinnerEditor.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  SpinnerDefaultEditorBase::TextFieldFieldMask = 
-    (TypeTraits<BitVector>::One << SpinnerDefaultEditorBase::TextFieldFieldId);
-
-const OSG::BitVector  SpinnerDefaultEditorBase::SpinnerFieldMask = 
-    (TypeTraits<BitVector>::One << SpinnerDefaultEditorBase::SpinnerFieldId);
-
-const OSG::BitVector SpinnerDefaultEditorBase::MTInfluenceMask = 
+const OSG::BitVector SpinnerEditorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
-// Field descriptions
 
-/*! \var TextFieldPtr    SpinnerDefaultEditorBase::_sfTextField
-    
-*/
-/*! \var SpinnerPtr      SpinnerDefaultEditorBase::_sfSpinner
-    
-*/
-
-//! SpinnerDefaultEditor description
-
-FieldDescription *SpinnerDefaultEditorBase::_desc[] = 
-{
-    new FieldDescription(SFTextFieldPtr::getClassType(), 
-                     "TextField", 
-                     TextFieldFieldId, TextFieldFieldMask,
-                     false,
-                     (FieldAccessMethod) &SpinnerDefaultEditorBase::getSFTextField),
-    new FieldDescription(SFSpinnerPtr::getClassType(), 
-                     "Spinner", 
-                     SpinnerFieldId, SpinnerFieldMask,
-                     false,
-                     (FieldAccessMethod) &SpinnerDefaultEditorBase::getSFSpinner)
-};
-
-
-FieldContainerType SpinnerDefaultEditorBase::_type(
-    "SpinnerDefaultEditor",
+FieldContainerType SpinnerEditorBase::_type(
     "SpinnerEditor",
+    "Panel",
     NULL,
-    (PrototypeCreateF) &SpinnerDefaultEditorBase::createEmpty,
-    SpinnerDefaultEditor::initMethod,
-    _desc,
-    sizeof(_desc));
+    NULL, 
+    SpinnerEditor::initMethod,
+    NULL,
+    0);
 
-//OSG_FIELD_CONTAINER_DEF(SpinnerDefaultEditorBase, SpinnerDefaultEditorPtr)
+//OSG_FIELD_CONTAINER_DEF(SpinnerEditorBase, SpinnerEditorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &SpinnerDefaultEditorBase::getType(void) 
+FieldContainerType &SpinnerEditorBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &SpinnerDefaultEditorBase::getType(void) const 
+const FieldContainerType &SpinnerEditorBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr SpinnerDefaultEditorBase::shallowCopy(void) const 
+UInt32 SpinnerEditorBase::getContainerSize(void) const 
 { 
-    SpinnerDefaultEditorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const SpinnerDefaultEditor *>(this)); 
-
-    return returnValue; 
-}
-
-UInt32 SpinnerDefaultEditorBase::getContainerSize(void) const 
-{ 
-    return sizeof(SpinnerDefaultEditor); 
+    return sizeof(SpinnerEditor); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void SpinnerDefaultEditorBase::executeSync(      FieldContainer &other,
+void SpinnerEditorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((SpinnerDefaultEditorBase *) &other, whichField);
+    this->executeSyncImpl((SpinnerEditorBase *) &other, whichField);
 }
 #else
-void SpinnerDefaultEditorBase::executeSync(      FieldContainer &other,
+void SpinnerEditorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((SpinnerDefaultEditorBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((SpinnerEditorBase *) &other, whichField, sInfo);
 }
-void SpinnerDefaultEditorBase::execBeginEdit(const BitVector &whichField, 
+void SpinnerEditorBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void SpinnerDefaultEditorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void SpinnerEditorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -172,9 +132,7 @@ void SpinnerDefaultEditorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-SpinnerDefaultEditorBase::SpinnerDefaultEditorBase(void) :
-    _sfTextField              (TextFieldPtr(NullFC)), 
-    _sfSpinner                (SpinnerPtr(NullFC)), 
+SpinnerEditorBase::SpinnerEditorBase(void) :
     Inherited() 
 {
 }
@@ -183,109 +141,65 @@ SpinnerDefaultEditorBase::SpinnerDefaultEditorBase(void) :
 #pragma warning (default : 383)
 #endif
 
-SpinnerDefaultEditorBase::SpinnerDefaultEditorBase(const SpinnerDefaultEditorBase &source) :
-    _sfTextField              (source._sfTextField              ), 
-    _sfSpinner                (source._sfSpinner                ), 
+SpinnerEditorBase::SpinnerEditorBase(const SpinnerEditorBase &source) :
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-SpinnerDefaultEditorBase::~SpinnerDefaultEditorBase(void)
+SpinnerEditorBase::~SpinnerEditorBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 SpinnerDefaultEditorBase::getBinSize(const BitVector &whichField)
+UInt32 SpinnerEditorBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
-
-    if(FieldBits::NoField != (TextFieldFieldMask & whichField))
-    {
-        returnValue += _sfTextField.getBinSize();
-    }
-
-    if(FieldBits::NoField != (SpinnerFieldMask & whichField))
-    {
-        returnValue += _sfSpinner.getBinSize();
-    }
 
 
     return returnValue;
 }
 
-void SpinnerDefaultEditorBase::copyToBin(      BinaryDataHandler &pMem,
+void SpinnerEditorBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (TextFieldFieldMask & whichField))
-    {
-        _sfTextField.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (SpinnerFieldMask & whichField))
-    {
-        _sfSpinner.copyToBin(pMem);
-    }
-
 
 }
 
-void SpinnerDefaultEditorBase::copyFromBin(      BinaryDataHandler &pMem,
+void SpinnerEditorBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
-
-    if(FieldBits::NoField != (TextFieldFieldMask & whichField))
-    {
-        _sfTextField.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (SpinnerFieldMask & whichField))
-    {
-        _sfSpinner.copyFromBin(pMem);
-    }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void SpinnerDefaultEditorBase::executeSyncImpl(      SpinnerDefaultEditorBase *pOther,
+void SpinnerEditorBase::executeSyncImpl(      SpinnerEditorBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (TextFieldFieldMask & whichField))
-        _sfTextField.syncWith(pOther->_sfTextField);
-
-    if(FieldBits::NoField != (SpinnerFieldMask & whichField))
-        _sfSpinner.syncWith(pOther->_sfSpinner);
-
 
 }
 #else
-void SpinnerDefaultEditorBase::executeSyncImpl(      SpinnerDefaultEditorBase *pOther,
+void SpinnerEditorBase::executeSyncImpl(      SpinnerEditorBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (TextFieldFieldMask & whichField))
-        _sfTextField.syncWith(pOther->_sfTextField);
-
-    if(FieldBits::NoField != (SpinnerFieldMask & whichField))
-        _sfSpinner.syncWith(pOther->_sfSpinner);
-
 
 
 }
 
-void SpinnerDefaultEditorBase::execBeginEditImpl (const BitVector &whichField, 
+void SpinnerEditorBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -304,11 +218,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<SpinnerDefaultEditorPtr>::_type("SpinnerDefaultEditorPtr", "SpinnerEditorPtr");
+DataType FieldDataTraits<SpinnerEditorPtr>::_type("SpinnerEditorPtr", "PanelPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(SpinnerDefaultEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(SpinnerDefaultEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(SpinnerEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(SpinnerEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -325,10 +239,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(SpinnerDefaultEditorPtr, OSG_USERINTERFACELIB_DLLTMPLM
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGSPINNERDEFAULTEDITORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSPINNERDEFAULTEDITORBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGSPINNEREDITORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGSPINNEREDITORBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGSPINNERDEFAULTEDITORFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGSPINNEREDITORFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE
