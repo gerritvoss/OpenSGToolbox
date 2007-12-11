@@ -149,7 +149,7 @@ int main(int argc, char **argv)
 
 			// "What" will be replaced by "####" in the PasswordField
 		ThePasswordField->setEchoChar("#");
-		ThePasswordField->setEditable(TRUE);
+		ThePasswordField->setEditable(true);
 		ThePasswordField->setFont(sampleFont);
 		ThePasswordField->setSelectionStart(2);
 		ThePasswordField->setSelectionEnd(3);

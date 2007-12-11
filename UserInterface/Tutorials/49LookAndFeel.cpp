@@ -731,7 +731,7 @@ PanelPtr createStatePanel(void)
 	ButtonPtr disabledActiveButton = osg::Button::create();
 
 	beginEditCP(inactiveButton, Button::ActiveFieldMask | Button::TextFieldMask | Component::ConstraintsFieldMask  | Component::ConstraintsFieldMask);
-		inactiveButton->setActive(FALSE);
+		inactiveButton->setActive(false);
 		inactiveButton->setText("Inactive");
 		inactiveButton->setConstraints(constraint0101);
 	endEditCP(inactiveButton, Button::ActiveFieldMask | Button::TextFieldMask | Component::ConstraintsFieldMask  | Component::ConstraintsFieldMask);
@@ -742,14 +742,14 @@ PanelPtr createStatePanel(void)
 	endEditCP(activeButton, Button::TextFieldMask  | Component::ConstraintsFieldMask);
 
 	beginEditCP(disabledInactiveButton, Button::ActiveFieldMask | Component::EnabledFieldMask | Button::TextFieldMask | Component::ConstraintsFieldMask  | Component::ConstraintsFieldMask);
-		disabledInactiveButton->setActive(FALSE);
-		disabledInactiveButton->setEnabled(FALSE);
+		disabledInactiveButton->setActive(false);
+		disabledInactiveButton->setEnabled(false);
 		disabledInactiveButton->setText("Disabled/Inactive");
 		disabledInactiveButton->setConstraints(constraint0301);
 	endEditCP(disabledInactiveButton, Button::ActiveFieldMask | Component::EnabledFieldMask | Button::TextFieldMask | Component::ConstraintsFieldMask  | Component::ConstraintsFieldMask);
 	
 	beginEditCP(disabledActiveButton, Component::EnabledFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
-		disabledActiveButton->setEnabled(FALSE);
+		disabledActiveButton->setEnabled(false);
 		disabledActiveButton->setText("Disabled");
 		disabledActiveButton->setConstraints(constraint0401);
 	endEditCP(disabledActiveButton, Component::EnabledFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
@@ -769,23 +769,23 @@ PanelPtr createStatePanel(void)
 	endEditCP(nonSelectedToggleButton, Button::TextFieldMask| Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
 
 	beginEditCP(selectedToggleButton, ToggleButton::SelectedFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
-		selectedToggleButton->setSelected(TRUE);
+		selectedToggleButton->setSelected(true);
 		selectedToggleButton->setText("Selected");
 		selectedToggleButton->setConstraints(constraint0202);
 		selectedToggleButton->setMaxSize( Vec2s(100, 50) );
 	endEditCP(selectedToggleButton, ToggleButton::SelectedFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
 	
 	beginEditCP(disabledSelectedToggleButton, ToggleButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask | Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
-		disabledSelectedToggleButton->setSelected(TRUE);
-		disabledSelectedToggleButton->setEnabled(FALSE);
+		disabledSelectedToggleButton->setSelected(true);
+		disabledSelectedToggleButton->setEnabled(false);
 		disabledSelectedToggleButton->setText("Disabled/Selected");
 		disabledSelectedToggleButton->setConstraints(constraint0302);
 		disabledSelectedToggleButton->setMaxSize( Vec2s(100, 50) );
 	endEditCP(disabledSelectedToggleButton, ToggleButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
 	
 	beginEditCP(disabledNonselectedToggleButton, ToggleButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
-		disabledNonselectedToggleButton->setSelected(FALSE);
-		disabledNonselectedToggleButton->setEnabled(FALSE);
+		disabledNonselectedToggleButton->setSelected(false);
+		disabledNonselectedToggleButton->setEnabled(false);
 		disabledNonselectedToggleButton->setText("Disabled");
 		disabledNonselectedToggleButton->setConstraints(constraint0402);
 		disabledNonselectedToggleButton->setMaxSize( Vec2s(100, 50) );
@@ -812,21 +812,21 @@ PanelPtr createStatePanel(void)
 	endEditCP(deselectedRadioButton, Button::TextFieldMask| Component::ConstraintsFieldMask);
 
 	beginEditCP(selectedRadioButton, RadioButton::SelectedFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
-		selectedRadioButton->setSelected(TRUE);
+		selectedRadioButton->setSelected(true);
 		selectedRadioButton->setText("Selected");
 		selectedRadioButton->setConstraints(constraint0203);
 	endEditCP(selectedRadioButton, RadioButton::SelectedFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
 
 	beginEditCP(disabledDeselectedRadioButton, Component::EnabledFieldMask | RadioButton::SelectedFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
-		disabledDeselectedRadioButton->setEnabled(FALSE);
-		disabledDeselectedRadioButton->setSelected(FALSE);
+		disabledDeselectedRadioButton->setEnabled(false);
+		disabledDeselectedRadioButton->setSelected(false);
 		disabledDeselectedRadioButton->setText("Disabled");
 		disabledDeselectedRadioButton->setConstraints(constraint0303);
 	endEditCP(disabledDeselectedRadioButton, Component::EnabledFieldMask | RadioButton::SelectedFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
 	
 	beginEditCP(disabledSelectedRadioButton, Component::EnabledFieldMask | RadioButton::SelectedFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
-		disabledSelectedRadioButton->setEnabled(FALSE);
-		disabledSelectedRadioButton->setSelected(TRUE);
+		disabledSelectedRadioButton->setEnabled(false);
+		disabledSelectedRadioButton->setSelected(true);
 		disabledSelectedRadioButton->setText("Disabled/Selected");
 		disabledSelectedRadioButton->setConstraints(constraint0403);
 	endEditCP(disabledSelectedRadioButton, Component::EnabledFieldMask | RadioButton::SelectedFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
@@ -846,21 +846,21 @@ PanelPtr createStatePanel(void)
 	endEditCP(deselectedCheckboxButton, Button::TextFieldMask| Component::ConstraintsFieldMask);
 
 	beginEditCP(selectedCheckboxButton, CheckboxButton::SelectedFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
-		selectedCheckboxButton->setSelected(TRUE);
+		selectedCheckboxButton->setSelected(true);
 		selectedCheckboxButton->setText("Selected");
 		selectedCheckboxButton->setConstraints(constraint0204);
 	endEditCP(selectedCheckboxButton, CheckboxButton::SelectedFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
 
 	beginEditCP(disabledDeselectedCheckboxButton, CheckboxButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
-		disabledDeselectedCheckboxButton->setSelected(FALSE);
-		disabledDeselectedCheckboxButton->setEnabled(FALSE);
+		disabledDeselectedCheckboxButton->setSelected(false);
+		disabledDeselectedCheckboxButton->setEnabled(false);
 		disabledDeselectedCheckboxButton->setText("Disabled");
 		disabledDeselectedCheckboxButton->setConstraints(constraint0304);
 	endEditCP(disabledDeselectedCheckboxButton, CheckboxButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
 
 	beginEditCP(disabledSelectedCheckboxButton, CheckboxButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
-		disabledSelectedCheckboxButton->setSelected(TRUE);
-		disabledSelectedCheckboxButton->setEnabled(FALSE);
+		disabledSelectedCheckboxButton->setSelected(true);
+		disabledSelectedCheckboxButton->setEnabled(false);
 		disabledSelectedCheckboxButton->setText("Disabled/Selected");
 		disabledSelectedCheckboxButton->setConstraints(constraint0404);
 	endEditCP(disabledSelectedCheckboxButton, CheckboxButton::SelectedFieldMask | Component::EnabledFieldMask | Button::TextFieldMask| Component::ConstraintsFieldMask);
@@ -878,20 +878,20 @@ PanelPtr createStatePanel(void)
 	endEditCP(editableTextField, TextField::TextFieldMask| Component::ConstraintsFieldMask);
 
 	beginEditCP(noneditableTextField, TextField::EditableFieldMask | TextField::TextFieldMask| Component::ConstraintsFieldMask);
-		noneditableTextField->setEditable(FALSE);
+		noneditableTextField->setEditable(false);
 		noneditableTextField->setText("Noneditable");
 		noneditableTextField->setConstraints(constraint0205);
 	endEditCP(noneditableTextField, TextField::EditableFieldMask | TextField::TextFieldMask| Component::ConstraintsFieldMask);
 	
 	beginEditCP(disabledEditableTextField, Component::EnabledFieldMask | TextField::TextFieldMask| Component::ConstraintsFieldMask);
-		disabledEditableTextField->setEnabled(FALSE);
+		disabledEditableTextField->setEnabled(false);
 		disabledEditableTextField->setText("Disabled");
 		disabledEditableTextField->setConstraints(constraint0305);
 	endEditCP(disabledEditableTextField, Component::EnabledFieldMask | TextField::TextFieldMask| Component::ConstraintsFieldMask);
 	
 	beginEditCP(disabledNoneditableTextField, TextField::EditableFieldMask | Component::EnabledFieldMask | TextField::TextFieldMask| Component::ConstraintsFieldMask);
-		disabledNoneditableTextField->setEditable(FALSE);
-		disabledNoneditableTextField->setEnabled(FALSE);
+		disabledNoneditableTextField->setEditable(false);
+		disabledNoneditableTextField->setEnabled(false);
 		disabledNoneditableTextField->setText("Disabled/Noneditable");
 		disabledNoneditableTextField->setConstraints(constraint0405);
 	endEditCP(disabledNoneditableTextField, TextField::EditableFieldMask | Component::EnabledFieldMask | TextField::TextFieldMask| Component::ConstraintsFieldMask);
@@ -909,20 +909,20 @@ PanelPtr createStatePanel(void)
 	endEditCP(editableTextArea, TextArea::TextFieldMask| Component::ConstraintsFieldMask);
 
 	beginEditCP(noneditableTextArea, TextArea::EditableFieldMask | TextArea::TextFieldMask| Component::ConstraintsFieldMask);
-		noneditableTextArea->setEditable(FALSE);
+		noneditableTextArea->setEditable(false);
 		noneditableTextArea->setText("Uneditable");
 		noneditableTextArea->setConstraints(constraint0206);
 	endEditCP(noneditableTextArea, TextArea::EditableFieldMask | TextArea::TextFieldMask| Component::ConstraintsFieldMask);
 	
 	beginEditCP(disabledEditableTextArea, Component::EnabledFieldMask | TextArea::TextFieldMask| Component::ConstraintsFieldMask);
-		disabledEditableTextArea->setEnabled(FALSE);
+		disabledEditableTextArea->setEnabled(false);
 		disabledEditableTextArea->setText("Disabled");
 		disabledEditableTextArea->setConstraints(constraint0306);
 	endEditCP(disabledEditableTextArea, Component::EnabledFieldMask | TextArea::TextFieldMask| Component::ConstraintsFieldMask);
 	
 	beginEditCP(disabledNoneditableTextArea, TextArea::EditableFieldMask | Component::EnabledFieldMask | TextArea::TextFieldMask| Component::ConstraintsFieldMask);
-		disabledNoneditableTextArea->setEditable(FALSE);
-		disabledNoneditableTextArea->setEnabled(FALSE);
+		disabledNoneditableTextArea->setEditable(false);
+		disabledNoneditableTextArea->setEnabled(false);
 		disabledNoneditableTextArea->setText("Disabled");
 		disabledNoneditableTextArea->setConstraints(constraint0406);
 	endEditCP(disabledNoneditableTextArea, TextArea::EditableFieldMask | Component::EnabledFieldMask | TextArea::TextFieldMask| Component::ConstraintsFieldMask);
@@ -941,20 +941,20 @@ PanelPtr createStatePanel(void)
 	endEditCP(editablePasswordField, PasswordField::TextFieldMask| Component::ConstraintsFieldMask);
 
 	beginEditCP(nonEditablePasswordField, TextArea::EditableFieldMask | PasswordField::TextFieldMask| Component::ConstraintsFieldMask);
-		nonEditablePasswordField->setEditable(FALSE);
+		nonEditablePasswordField->setEditable(false);
 		nonEditablePasswordField->setText("editable");
 		nonEditablePasswordField->setConstraints(constraint0207);
 	endEditCP(nonEditablePasswordField, TextArea::EditableFieldMask | PasswordField::TextFieldMask| Component::ConstraintsFieldMask);
 	
 	beginEditCP(disabledInactivePasswordField, Component::EnabledFieldMask | PasswordField::TextFieldMask| Component::ConstraintsFieldMask);
-		disabledInactivePasswordField->setEnabled(FALSE);
+		disabledInactivePasswordField->setEnabled(false);
 		disabledInactivePasswordField->setText("editable");
 		disabledInactivePasswordField->setConstraints(constraint0307);
 	endEditCP(disabledInactivePasswordField, Component::EnabledFieldMask | PasswordField::TextFieldMask| Component::ConstraintsFieldMask);
 	
 	beginEditCP(disabledActivePasswordField, TextArea::EditableFieldMask | Component::EnabledFieldMask | PasswordField::TextFieldMask| Component::ConstraintsFieldMask);
-		disabledActivePasswordField->setEditable(FALSE);
-		disabledActivePasswordField->setEnabled(FALSE);
+		disabledActivePasswordField->setEditable(false);
+		disabledActivePasswordField->setEnabled(false);
 		disabledActivePasswordField->setText("editable");
 		disabledActivePasswordField->setConstraints(constraint0407);
 	endEditCP(disabledActivePasswordField, TextArea::EditableFieldMask | Component::EnabledFieldMask | PasswordField::TextFieldMask| Component::ConstraintsFieldMask);
@@ -1000,13 +1000,13 @@ PanelPtr createStatePanel(void)
 
 	beginEditCP(disabledActiveSpinner, Component::ConstraintsFieldMask, Component::EnabledFieldMask | Component::MaxSizeFieldMask);
 		disabledActiveSpinner->setConstraints(constraint0308);
-		disabledActiveSpinner->setEnabled(FALSE);
+		disabledActiveSpinner->setEnabled(false);
 		disabledActiveSpinner->setMaxSize( Vec2s(50,25) );
 	endEditCP(disabledActiveSpinner, Component::ConstraintsFieldMask, Component::EnabledFieldMask | Component::MaxSizeFieldMask);
 
 	beginEditCP(disabledInactiveSpinner, Component::ConstraintsFieldMask, Component::EnabledFieldMask | Component::MaxSizeFieldMask);
 		disabledInactiveSpinner->setConstraints(constraint0408);
-		disabledInactiveSpinner->setEnabled(FALSE);
+		disabledInactiveSpinner->setEnabled(false);
 		disabledInactiveSpinner->setMaxSize( Vec2s(50,25) );
 	endEditCP(disabledInactiveSpinner, Component::ConstraintsFieldMask, Component::EnabledFieldMask | Component::MaxSizeFieldMask);
 

@@ -168,11 +168,11 @@ int main(int argc, char **argv)
 	******************************************************/
 	EtchedBorderPtr panelBorder = osg::EtchedBorder::create();
 	EmptyBorderPtr label1Border = osg::EmptyBorder::create();
-	beginEditCP(panelBorder, EtchedBorder::HighlightFieldMask | EtchedBorder::ShadowFieldMask EtchedBorder::WidthFieldMask);
+	beginEditCP(panelBorder, EtchedBorder::HighlightFieldMask | EtchedBorder::ShadowFieldMask | EtchedBorder::WidthFieldMask);
 		panelBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
 		panelBorder->setShadow(Color4f(0.8, 0.8, 0.8, 1.0));
 		panelBorder->setWidth(6);
-	endEditCP(panelBorder, EtchedBorder::HighlightFieldMask | EtchedBorder::ShadowFieldMask EtchedBorder::WidthFieldMask);
+	endEditCP(panelBorder, EtchedBorder::HighlightFieldMask | EtchedBorder::ShadowFieldMask | EtchedBorder::WidthFieldMask);
 
 	/******************************************************
 			
