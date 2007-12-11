@@ -6,7 +6,7 @@ LIB_INCLUDE_DIR_NAME = UserInterface
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Border:$(srcdir)/Background:$(srcdir)/Event:$(srcdir)/Layout:$(srcdir)/Util:$(srcdir)/Component:$(srcdir)/Component/Button:$(srcdir)/Component/Spinner:$(srcdir)/Component/Menu:$(srcdir)/Component/Table:$(srcdir)/Component/Table/DefaultEditors:$(srcdir)/Component/Table/DefaultRenderers:$(srcdir)/Component/Scroll:$(srcdir)/Component/Misc:$(srcdir)/Component/Container:$(srcdir)/Component/List:$(srcdir)/Component/Text:$(srcdir)/Editors:$(srcdir)/LookAndFeel:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Text:
+VPATH = $(srcdir)/:$(srcdir)/Border:$(srcdir)/Background:$(srcdir)/Event:$(srcdir)/Layout:$(srcdir)/Util:$(srcdir)/Component:$(srcdir)/Component/Button:$(srcdir)/Component/Spinner:$(srcdir)/Component/Spinner/Editors:$(srcdir)/Component/Menu:$(srcdir)/Component/Table:$(srcdir)/Component/Table/DefaultEditors:$(srcdir)/Component/Table/DefaultRenderers:$(srcdir)/Component/Scroll:$(srcdir)/Component/Slider:$(srcdir)/Component/ComboBox:$(srcdir)/Component/ComboBox/Editors:$(srcdir)/Component/Misc:$(srcdir)/Component/Tree:$(srcdir)/Component/Container:$(srcdir)/Component/List:$(srcdir)/Component/ProgressBar:$(srcdir)/Component/Text:$(srcdir)/Editors:$(srcdir)/LookAndFeel:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Text:
 
 
 #.SUFFIX = .o .o
@@ -40,11 +40,13 @@ OBJECTS = OSGShadowBorder.o \
 	OSGColorUIBackgroundBase.o \
 	OSGTextureUIBackground.o \
 	OSGUIBackgroundBase.o \
+	OSGPatternUIBackgroundBase.o \
 	OSGTextureUIBackgroundBase.o \
 	OSGGradientUIBackground.o \
 	OSGColorUIBackground.o \
 	OSGUIBackground.o \
 	OSGEmptyUIBackground.o \
+	OSGPatternUIBackground.o \
 	OSGCompoundUIBackgroundBase.o \
 	OSGEmptyUIBackgroundBase.o \
 	OSGTextEvent.o \
@@ -106,8 +108,16 @@ OBJECTS = OSGShadowBorder.o \
 	OSGRadioButtonBase.o \
 	OSGRadioButton.o \
 	OSGToggleButtonBase.o \
+	OSGSpinnerBase.o \
 	OSGAbstractSpinnerModel.o \
+	OSGSpinner.o \
 	OSGListSpinnerModel.o \
+	OSGSpinnerNumberEditor.o \
+	OSGSpinnerDefaultEditorBase.o \
+	OSGSpinnerDefaultEditor.o \
+	OSGSpinnerListEditorBase.o \
+	OSGSpinnerNumberEditorBase.o \
+	OSGSpinnerListEditor.o \
 	OSGSeperatorMenuItem.o \
 	OSGMenuBase.o \
 	OSGMenuItemBase.o \
@@ -145,6 +155,16 @@ OBJECTS = OSGShadowBorder.o \
 	OSGScrollPanel.o \
 	OSGScrollPanelBase.o \
 	OSGDefaultBoundedRangeModel.o \
+	OSGSlider.o \
+	OSGSliderBase.o \
+	OSGDefaultComboBoxModel.o \
+	OSGAbstractComboBoxModel.o \
+	OSGComboBoxBase.o \
+	OSGComboBox.o \
+	OSGComboBoxEditorBase.o \
+	OSGComboBoxEditor.o \
+	OSGDefaultComboBoxEditor.o \
+	OSGDefaultComboBoxEditorBase.o \
 	OSGToolTip.o \
 	OSGCanvasBase.o \
 	OSGRotatedComponent.o \
@@ -155,6 +175,10 @@ OBJECTS = OSGShadowBorder.o \
 	OSGCanvas.o \
 	OSGImageComponent.o \
 	OSGImageComponentBase.o \
+	OSGTreeModelEvent.o \
+	OSGAbstractTreeModel.o \
+	OSGTreeSelectionEvent.o \
+	OSGTreePath.o \
 	OSGFrameBase.o \
 	OSGUIViewportBase.o \
 	OSGContainer.o \
@@ -174,6 +198,8 @@ OBJECTS = OSGShadowBorder.o \
 	OSGDefaultListSelectionModel.o \
 	OSGList.o \
 	OSGDefaultListCellGenerator.o \
+	OSGProgressBar.o \
+	OSGProgressBarBase.o \
 	OSGLabelBase.o \
 	OSGTextComponent.o \
 	OSGPasswordField.o \
@@ -204,10 +230,12 @@ OBJECTS = OSGShadowBorder.o \
 	OSGUIRectangleMouseTransformFunctor.o \
 	OSGUIRectangleBase.o \
 	OSGUIRectangle.o \
+	OSGGraphics3DExtrudeBase.o \
 	OSGGraphics2DBase.o \
 	OSGGraphics.o \
 	OSGGraphics2D.o \
 	OSGGraphicsBase.o \
+	OSGGraphics3DExtrude.o \
 	OSGDiscUIDrawObjectBase.o \
 	OSGMultiColoredQuadUIDrawObjectBase.o \
 	OSGPolygonUIDrawObjectBase.o \
