@@ -340,6 +340,15 @@ void Container::changed(BitVector whichField, UInt32 origin)
         updateLayout();
     }
 	
+    if(whichField & EnabledFieldMask)
+    {
+        for(UInt32 i(0) ; i< getChildren().size() ; ++i)
+        {
+            beginEditCP(getChildren()[i], EnabledFieldMask);
+                getChildren()[i]->setEnabled(getEnabled());
+            endEditCP(getChildren()[i], EnabledFieldMask);
+        }
+    }
     Inherited::changed(whichField, origin);
 }
 

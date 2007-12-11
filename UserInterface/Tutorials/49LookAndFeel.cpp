@@ -969,7 +969,7 @@ PanelPtr createStatePanel(void)
 
 	inactiveSpinnerModel->setMaximum(10);
     inactiveSpinnerModel->setMinimum(-10);
-    inactiveSpinnerModel->setStepSize(0);
+    inactiveSpinnerModel->setStepSize(1);
     inactiveSpinnerModel->setValue(SharedFieldPtr(new SFInt32(0)));
 	activeSpinnerModel->setMaximum(10);
     activeSpinnerModel->setMinimum(-10);
@@ -998,17 +998,17 @@ PanelPtr createStatePanel(void)
 		inactiveSpinner->setMaxSize( Vec2s(50,25) );
 	endEditCP(inactiveSpinner, Component::ConstraintsFieldMask | Component::MaxSizeFieldMask);
 
-	beginEditCP(disabledActiveSpinner, Component::ConstraintsFieldMask, Component::EnabledFieldMask | Component::MaxSizeFieldMask);
+	beginEditCP(disabledActiveSpinner, Component::ConstraintsFieldMask | Component::EnabledFieldMask | Component::MaxSizeFieldMask);
 		disabledActiveSpinner->setConstraints(constraint0308);
 		disabledActiveSpinner->setEnabled(false);
 		disabledActiveSpinner->setMaxSize( Vec2s(50,25) );
-	endEditCP(disabledActiveSpinner, Component::ConstraintsFieldMask, Component::EnabledFieldMask | Component::MaxSizeFieldMask);
+	endEditCP(disabledActiveSpinner, Component::ConstraintsFieldMask | Component::EnabledFieldMask | Component::MaxSizeFieldMask);
 
-	beginEditCP(disabledInactiveSpinner, Component::ConstraintsFieldMask, Component::EnabledFieldMask | Component::MaxSizeFieldMask);
+	beginEditCP(disabledInactiveSpinner, Component::ConstraintsFieldMask | Component::EnabledFieldMask | Component::MaxSizeFieldMask);
 		disabledInactiveSpinner->setConstraints(constraint0408);
 		disabledInactiveSpinner->setEnabled(false);
 		disabledInactiveSpinner->setMaxSize( Vec2s(50,25) );
-	endEditCP(disabledInactiveSpinner, Component::ConstraintsFieldMask, Component::EnabledFieldMask | Component::MaxSizeFieldMask);
+	endEditCP(disabledInactiveSpinner, Component::ConstraintsFieldMask | Component::EnabledFieldMask | Component::MaxSizeFieldMask);
 
 	/******************************************************
 						Labels
