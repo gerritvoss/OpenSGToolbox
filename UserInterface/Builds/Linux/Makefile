@@ -112,7 +112,9 @@ OBJECTS = OSGShadowBorder.o \
 	OSGAbstractSpinnerModel.o \
 	OSGSpinner.o \
 	OSGListSpinnerModel.o \
+	OSGSpinnerEditor.o \
 	OSGSpinnerNumberEditor.o \
+	OSGSpinnerEditorBase.o \
 	OSGSpinnerDefaultEditorBase.o \
 	OSGSpinnerDefaultEditor.o \
 	OSGSpinnerListEditorBase.o \
