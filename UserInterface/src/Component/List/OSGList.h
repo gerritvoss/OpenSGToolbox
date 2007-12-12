@@ -51,11 +51,10 @@
 #include "OSGListSelectionListener.h"
 #include "Util/OSGUIDefines.h"
 #include "OSGListSelectionModel.h"
+#include "OSGListModel.h"
+#include "OSGListCellRenderer.h"
 
 OSG_BEGIN_NAMESPACE
-
-class ListModel;
-class ListCellGenerator;
 
 class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelectionListener, public ListDataListener, public FocusListener
 {
@@ -96,12 +95,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
    
     virtual void updateLayout(void);
 
-    void setModel(ListModel* Model);
-    void setCellGenerator(ListCellGenerator* CellGenerator);
+    void setModel(ListModelPtr Model);
+    void setCellRenderer(ListCellRendererPtr CellRenderer);
     void setSelectionModel(ListSelectionModelPtr SelectionModel);
 
-    ListModel* getModel(void) const;
-    ListCellGenerator* getCellGenerator(void) const;
+    ListModelPtr getModel(void) const;
+    ListCellRendererPtr getCellRenderer(void) const;
     ListSelectionModelPtr getSelectionModel(void) const;
 	
     virtual void mousePressed(const MouseEvent& e);
@@ -148,8 +147,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
 
     /*! \}                                                                 */
 
-    ListModel *_Model;
-    ListCellGenerator *_CellGenerator;
+    ListModelPtr _Model;
+    ListCellRendererPtr _CellRenderer;
     ListSelectionModelPtr _SelectionModel;
 
 	void updateItem(const UInt32& index);

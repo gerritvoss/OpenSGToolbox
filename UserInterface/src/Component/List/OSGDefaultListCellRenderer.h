@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDEFAULTLISTCELLGENERATOR_H_
-#define _OSGDEFAULTLISTCELLGENERATOR_H_
+#ifndef _OSGDEFAULTLISTCELLRENDERER_H_
+#define _OSGDEFAULTLISTCELLRENDERER_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,48 +45,48 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGListCellGenerator.h"
+#include "OSGListCellRenderer.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DefaultListCellGenerator class. See \ref 
-           PageUserInterfaceDefaultListCellGenerator for a description.
+/*! \brief DefaultListCellRenderer class. See \ref 
+           PageUserInterfaceDefaultListCellRenderer for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultListCellGenerator : public ListCellGenerator
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultListCellRenderer : public ListCellRenderer
 {
     /*==========================  PUBLIC  =================================*/
   public:
-    virtual ComponentPtr getListCellGeneratorComponent(ListPtr list, SharedFieldPtr value, UInt32 index, bool isSelected, bool cellHasFocus);
+    virtual ComponentPtr getListCellRendererComponent(ListPtr list, SharedFieldPtr value, UInt32 index, bool isSelected, bool cellHasFocus);
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    DefaultListCellGenerator(void);
+    DefaultListCellRenderer(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DefaultListCellGenerator(void); 
+    virtual ~DefaultListCellRenderer(void); 
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in DefaultListCellGeneratorBase.
+    // Variables should all be in DefaultListCellRendererBase.
 
     
     /*==========================  PRIVATE  ================================*/
   private:
 };
 
-typedef DefaultListCellGenerator *DefaultListCellGeneratorP;
+typedef DefaultListCellRenderer *DefaultListCellRendererP;
 
 OSG_END_NAMESPACE
 
-#include "OSGDefaultListCellGenerator.inl"
+#include "OSGDefaultListCellRenderer.inl"
 
-#endif /* _OSGDEFAULTLISTCELLGENERATOR_H_ */
+#endif /* _OSGDEFAULTLISTCELLRENDERER_H_ */

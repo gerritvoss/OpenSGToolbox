@@ -60,6 +60,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractComboBoxModel : public ComboBoxMod
   public:
 	virtual void addListDataListener(ListDataListenerPtr l);
 	virtual void removeListDataListener(ListDataListenerPtr l);
+	
+	virtual void addSelectionListener(ComboBoxSelectionListenerPtr l);
+	virtual void removeSelectionListener(ComboBoxSelectionListenerPtr l);
   protected:
 
     /*==========================  PRIVATE  ================================*/
@@ -72,6 +75,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractComboBoxModel : public ComboBoxMod
 	void produceListDataContentsChanged(void);
 	void produceListDataIntervalAdded(UInt32 index0, UInt32 index1);
 	void produceListDataIntervalRemoved(UInt32 index0, UInt32 index1);
+	
+	typedef std::set<ComboBoxSelectionListenerPtr> ComboBoxSelectionListenerSet;
+	typedef ComboBoxSelectionListenerSet::iterator ComboBoxSelectionListenerSetIter;
+	typedef ComboBoxSelectionListenerSet::const_iterator ComboBoxSelectionListenerSetConstIter;
+	ComboBoxSelectionListenerSet _SelectionListeners;
+
+	void produceSelectionChanged(const Int32& CurrentIndex, const Int32& PreviousIndex);
 };
 
 typedef AbstractComboBoxModel *AbstractComboBoxModelPtr;

@@ -45,8 +45,9 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGAbstractComboBoxModel.h"
+#include "OSGMutableComboBoxModel.h"
 #include <vector>
+#include <set>
 
 OSG_BEGIN_NAMESPACE
 
@@ -54,10 +55,18 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceDefaultComboBoxModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxModel : public AbstractComboBoxModel
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxModel : public MutableComboBoxModel
 {
     /*==========================  PUBLIC  =================================*/
   public:
+	virtual void addListDataListener(ListDataListenerPtr l);
+	
+	virtual void removeListDataListener(ListDataListenerPtr l);
+
+	virtual void addSelectionListener(ComboBoxSelectionListenerPtr l);
+	
+	virtual void removeSelectionListener(ComboBoxSelectionListenerPtr l);
+
 	virtual UInt32 getSize(void);
 
 	virtual SharedFieldPtr getElementAt(UInt32 index);
@@ -66,7 +75,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxModel : public AbstractComb
 	virtual SharedFieldPtr getSelectedItem(void) const;
 
 	//Set the selected item.
-	virtual void setSelectedItem(const UInt32& index);
+	virtual void setSelectedItem(const Int32& index);
+	
+	//Set the selected item.
+	virtual void setSelectedItem(SharedFieldPtr anObject);
+	
+	//Returns the selected item Index
+	virtual Int32 getSelectedItemIndex(void) const;
 
 	//Adds an item at the end of the model.
 	void addElement(SharedFieldPtr anObject);
@@ -86,7 +101,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxModel : public AbstractComb
 	DefaultComboBoxModel();
   protected:
 	std::vector<SharedFieldPtr> _FieldList;
-	UInt32 _SelectedIndex;
+	Int32 _SelectedIndex;
+
+	typedef std::set<ListDataListenerPtr> ListDataListenerSet;
+	typedef ListDataListenerSet::iterator ListDataListenerSetIter;
+	typedef ListDataListenerSet::const_iterator ListDataListenerSetConstIter;
+	ListDataListenerSet _DataListeners;
+
+	void produceListDataContentsChanged(void);
+	void produceListDataIntervalAdded(UInt32 index0, UInt32 index1);
+	void produceListDataIntervalRemoved(UInt32 index0, UInt32 index1);
+
+	typedef std::set<ComboBoxSelectionListenerPtr> ComboBoxSelectionListenerSet;
+	typedef ComboBoxSelectionListenerSet::iterator ComboBoxSelectionListenerSetIter;
+	typedef ComboBoxSelectionListenerSet::const_iterator ComboBoxSelectionListenerSetConstIter;
+	ComboBoxSelectionListenerSet _SelectionListeners;
+
+	void produceSelectionChanged(const Int32& CurrentIndex, const Int32& PreviousIndex);
 
     /*==========================  PRIVATE  ================================*/
   private:

@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_LIST_CELL_GENERATOR_H_
-#define _OSG_UI_LIST_CELL_GENERATOR_H_
+#ifndef _OSG_UI_MUTABLE_COMBOBOX_MODEL_H_
+#define _OSG_UI_MUTABLE_COMBOBOX_MODEL_H_
 
 #ifdef __sgi
 #pragma once
@@ -45,26 +45,34 @@
  
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
-#include "Component/OSGComponent.h"
-#include "OSGList.h"
-
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
+#include "OSGComboBoxModel.h"
 
 OSG_BEGIN_NAMESPACE
 	 
-class OSG_USERINTERFACELIB_DLLMAPPING ListCellGenerator
+class OSG_USERINTERFACELIB_DLLMAPPING MutableComboBoxModel : public ComboBoxModel
 {
 private:
 protected:
 public:
-	virtual ComponentPtr getListCellGeneratorComponent(ListPtr list, SharedFieldPtr value, UInt32 index, bool isSelected, bool cellHasFocus) = 0;
+	//Adds an item at the end of the model.
+	virtual void addElement(SharedFieldPtr obj) = 0;
 
+	//Adds an item at a specific index.
+	virtual void insertElementAt(SharedFieldPtr obj, const UInt32& index) = 0;
+
+	//Removes an item from the model.
+	virtual void removeElement(SharedFieldPtr obj) = 0;
+
+	//Removes an item at a specific index.
+	virtual void removeElementAt(const UInt32& index) = 0;
+
+	//Removes all elements
+	virtual void removeAllElements(void) = 0;
 };
 
-typedef ListCellGenerator* ListCellGeneratorPtr;
+typedef MutableComboBoxModel* MutableComboBoxModelPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSG_UI_LIST_CELL_GENERATOR_H_ */
-
+#endif /* _OSG_UI_MUTABLE_COMBOBOX_MODEL_H_ */
 

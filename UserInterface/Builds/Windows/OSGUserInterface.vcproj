@@ -262,15 +262,15 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListCellGenerator.cpp"
+						RelativePath="..\..\src\Component\List\OSGDefaultListCellRenderer.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListCellGenerator.h"
+						RelativePath="..\..\src\Component\List\OSGDefaultListCellRenderer.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListCellGenerator.inl"
+						RelativePath="..\..\src\Component\List\OSGDefaultListCellRenderer.inl"
 						>
 					</File>
 					<File
@@ -310,7 +310,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Component\List\OSGListCellGenerator.h"
+						RelativePath="..\..\src\Component\List\OSGListCellRenderer.h"
 						>
 					</File>
 					<File
@@ -1549,6 +1549,34 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\src\Component\Spinner\Editors\OSGSpinnerEditor.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Spinner\Editors\OSGSpinnerEditor.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Spinner\Editors\OSGSpinnerEditor.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Spinner\Editors\OSGSpinnerEditorBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Spinner\Editors\OSGSpinnerEditorBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Spinner\Editors\OSGSpinnerEditorBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Spinner\Editors\OSGSpinnerEditorFields.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\src\Component\Spinner\Editors\OSGSpinnerNumberEditor.cpp"
 							>
 						</File>
@@ -1686,11 +1714,31 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\src\Component\ComboBox\OSGComboBoxSelectionEvent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\ComboBox\OSGComboBoxSelectionEvent.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\ComboBox\OSGComboBoxSelectionEvent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\ComboBox\OSGComboBoxSelectionListener.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\Component\ComboBox\OSGDefaultComboBoxModel.cpp"
 						>
 					</File>
 					<File
 						RelativePath="..\..\src\Component\ComboBox\OSGDefaultComboBoxModel.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\ComboBox\OSGMutableComboBoxModel.h"
 						>
 					</File>
 					<Filter
@@ -1795,6 +1843,10 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Component\Tree\OSGTreePath.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeRowMapper.h"
 						>
 					</File>
 					<File

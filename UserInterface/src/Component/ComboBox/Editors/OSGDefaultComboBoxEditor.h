@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGDefaultComboBoxEditorBase.h"
 #include "Event/OSGFocusListener.h"
@@ -96,9 +97,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxEditor : public DefaultComb
 	//Set the item that should be edited.
 	virtual void setItem(SharedFieldPtr anObject);
 	
-   virtual void focusGained(const FocusEvent& e);
+    virtual void focusGained(const FocusEvent& e);
 
-   virtual void focusLost(const FocusEvent& e);
+    virtual void focusLost(const FocusEvent& e);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

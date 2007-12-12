@@ -86,6 +86,21 @@ void AbstractComboBoxModel::removeListDataListener(ListDataListenerPtr l)
    }
 }
 
+void AbstractComboBoxModel::addSelectionListener(ComboBoxSelectionListenerPtr l)
+{
+    _SelectionListeners.insert(l);
+}
+
+void AbstractComboBoxModel::removeSelectionListener(ComboBoxSelectionListenerPtr l)
+{
+   ComboBoxSelectionListenerSetIter EraseIter(_SelectionListeners.find(l));
+   if(EraseIter != _SelectionListeners.end())
+   {
+      _SelectionListeners.erase(EraseIter);
+   }
+}
+
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -122,6 +137,16 @@ void AbstractComboBoxModel::produceListDataIntervalRemoved(UInt32 index0, UInt32
    {
 		(*SetItor)->intervalRemoved(e);
    }
+}
+
+void AbstractComboBoxModel::produceSelectionChanged(const Int32& CurrentIndex, const Int32& PreviousIndex)
+{
+	ComboBoxSelectionEvent e(NullFC, getSystemTime(), CurrentIndex, PreviousIndex);
+	ComboBoxSelectionListenerSet SelectionListenerSet(_SelectionListeners);
+	for(ComboBoxSelectionListenerSetConstIter SetItor(SelectionListenerSet.begin()) ; SetItor != SelectionListenerSet.end() ; ++SetItor)
+	{
+		(*SetItor)->selectionChanged(e);
+	}
 }
 
 /*------------------------------------------------------------------------*/

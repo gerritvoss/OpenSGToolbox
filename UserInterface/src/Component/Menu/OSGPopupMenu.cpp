@@ -89,6 +89,7 @@ void PopupMenu::updateLayout(void)
 	    }
 	    TotalHeight += getChildren().getValue(i)->getPreferredSize().y();
 	}
+	TotalHeight += getChildren().size()-1;
 
     //Set My preferred Size
 	Pnt2s TopLeft, BottomRight;
@@ -114,7 +115,7 @@ void PopupMenu::updateLayout(void)
             getChildren().getValue(i)->setPosition(Pnt2s(InsetsTopLeft.x(), TopOffset));
         endEditCP(getChildren().getValue(i), SizeFieldMask | PositionFieldMask);
 
-        TopOffset += getChildren().getValue(i)->getPreferredSize().y();
+        TopOffset += getChildren().getValue(i)->getPreferredSize().y() +1;
     }
 }
 
@@ -174,33 +175,42 @@ void PopupMenu::removeItem(const UInt32& Index)
         endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
     }
 }
+
+void PopupMenu::removeAllItems(void)
+{
+    beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
+        getChildren().clear();
+    endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
+}
+
 void PopupMenu::mouseMoved(const MouseEvent& e)
 {
     UInt32 i(0);
-    while (i<getChildren().size())
+    while (i<getChildren().size() && !getChildren().getValue(i)->isContained(e.getLocation(), true))
     {
-        if(getChildren().getValue(i)->isContained(e.getLocation(), true))
-        {
-            _SelectionModel->setSelectedIndex(i);
-            break;
-        }
         ++i;
     }
+	
+	if(i<getChildren().size() && _SelectionModel->getSelectedIndex() != i)
+	{
+		_SelectionModel->setSelectedIndex(i);
+	}
+
     Container::mouseMoved(e);
 }
 
 void PopupMenu::mouseDragged(const MouseEvent& e)
 {
     UInt32 i(0);
-    while (i<getChildren().size())
+    while (i<getChildren().size() && !getChildren().getValue(i)->isContained(e.getLocation(), true))
     {
-        if(getChildren().getValue(i)->isContained(e.getLocation(), true))
-        {
-            _SelectionModel->setSelectedIndex(i);
-            break;
-        }
         ++i;
     }
+	
+	if(i<getChildren().size() && _SelectionModel->getSelectedIndex() != i)
+	{
+		_SelectionModel->setSelectedIndex(i);
+	}
     Container::mouseDragged(e);
 }
 
@@ -230,6 +240,17 @@ void PopupMenu::clearSelection(void)
     _SelectionModel->clearSelection();
 }
 
+void PopupMenu::setSelection(const Int32& Index)
+{
+	if(Index >= 0 && Index < getNumItems())
+	{
+		_SelectionModel->setSelectedIndex(Index);
+	}
+	else
+	{
+		clearSelection();
+	}
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

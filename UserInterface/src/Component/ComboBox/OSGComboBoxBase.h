@@ -67,12 +67,11 @@
 
 #include "Component/Container/OSGContainer.h" // Parent
 
-#include "Component/Button/OSGButtonFields.h" // ExpandButton type
+#include "Component/Button/OSGToggleButtonFields.h" // ExpandButton type
 #include "Component/ComboBox/Editors/OSGComboBoxEditorFields.h" // Editor type
-#include "Component/Scroll/OSGScrollPanelFields.h" // DropDownListScrollPanelBar type
-#include "Component/List/OSGListFields.h" // DropDownList type
 #include <OpenSG/OSGBoolFields.h> // Editable type
 #include <OpenSG/OSGUInt32Fields.h> // MaxRowCount type
+#include "Component/Menu/OSGPopupMenuFields.h" // ComboListPopupMenu type
 
 #include "OSGComboBoxFields.h"
 
@@ -96,21 +95,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
 
     enum
     {
-        ExpandButtonFieldId               = Inherited::NextFieldId,
-        EditorFieldId                     = ExpandButtonFieldId               + 1,
-        DropDownListScrollPanelBarFieldId = EditorFieldId                     + 1,
-        DropDownListFieldId               = DropDownListScrollPanelBarFieldId + 1,
-        EditableFieldId                   = DropDownListFieldId               + 1,
-        MaxRowCountFieldId                = EditableFieldId                   + 1,
-        NextFieldId                       = MaxRowCountFieldId                + 1
+        ExpandButtonFieldId         = Inherited::NextFieldId,
+        EditorFieldId               = ExpandButtonFieldId         + 1,
+        RendererSelcetedItemFieldId = EditorFieldId               + 1,
+        EditableFieldId             = RendererSelcetedItemFieldId + 1,
+        MaxRowCountFieldId          = EditableFieldId             + 1,
+        ComboListPopupMenuFieldId   = MaxRowCountFieldId          + 1,
+        NextFieldId                 = ComboListPopupMenuFieldId   + 1
     };
 
     static const OSG::BitVector ExpandButtonFieldMask;
     static const OSG::BitVector EditorFieldMask;
-    static const OSG::BitVector DropDownListScrollPanelBarFieldMask;
-    static const OSG::BitVector DropDownListFieldMask;
+    static const OSG::BitVector RendererSelcetedItemFieldMask;
     static const OSG::BitVector EditableFieldMask;
     static const OSG::BitVector MaxRowCountFieldMask;
+    static const OSG::BitVector ComboListPopupMenuFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -137,21 +136,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFButtonPtr         *getSFExpandButton   (void);
+           SFToggleButtonPtr   *getSFExpandButton   (void);
            SFComboBoxEditorPtr *getSFEditor         (void);
-           SFScrollPanelPtr    *getSFDropDownListScrollPanelBar(void);
-           SFListPtr           *getSFDropDownList   (void);
            SFBool              *getSFEditable       (void);
            SFUInt32            *getSFMaxRowCount    (void);
 
-           ButtonPtr           &getExpandButton   (void);
-     const ButtonPtr           &getExpandButton   (void) const;
+           ToggleButtonPtr     &getExpandButton   (void);
+     const ToggleButtonPtr     &getExpandButton   (void) const;
            ComboBoxEditorPtr   &getEditor         (void);
      const ComboBoxEditorPtr   &getEditor         (void) const;
-           ScrollPanelPtr      &getDropDownListScrollPanelBar(void);
-     const ScrollPanelPtr      &getDropDownListScrollPanelBar(void) const;
-           ListPtr             &getDropDownList   (void);
-     const ListPtr             &getDropDownList   (void) const;
            bool                &getEditable       (void);
      const bool                &getEditable       (void) const;
            UInt32              &getMaxRowCount    (void);
@@ -162,10 +155,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setExpandButton   ( const ButtonPtr &value );
+     void setExpandButton   ( const ToggleButtonPtr &value );
      void setEditor         ( const ComboBoxEditorPtr &value );
-     void setDropDownListScrollPanelBar( const ScrollPanelPtr &value );
-     void setDropDownList   ( const ListPtr &value );
      void setEditable       ( const bool &value );
      void setMaxRowCount    ( const UInt32 &value );
 
@@ -210,12 +201,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFButtonPtr         _sfExpandButton;
+    SFToggleButtonPtr   _sfExpandButton;
     SFComboBoxEditorPtr   _sfEditor;
-    SFScrollPanelPtr    _sfDropDownListScrollPanelBar;
-    SFListPtr           _sfDropDownList;
+    SFComponentPtr      _sfRendererSelcetedItem;
     SFBool              _sfEditable;
     SFUInt32            _sfMaxRowCount;
+    SFPopupMenuPtr      _sfComboListPopupMenu;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -231,6 +222,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
     /*! \{                                                                 */
 
     virtual ~ComboBoxBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFComponentPtr      *getSFRendererSelcetedItem(void);
+           SFPopupMenuPtr      *getSFComboListPopupMenu(void);
+
+           ComponentPtr        &getRendererSelcetedItem(void);
+     const ComponentPtr        &getRendererSelcetedItem(void) const;
+           PopupMenuPtr        &getComboListPopupMenu(void);
+     const PopupMenuPtr        &getComboListPopupMenu(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setRendererSelcetedItem(const ComponentPtr &value);
+     void setComboListPopupMenu(const PopupMenuPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

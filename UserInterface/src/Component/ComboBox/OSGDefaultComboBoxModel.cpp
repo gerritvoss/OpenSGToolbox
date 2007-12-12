@@ -72,6 +72,34 @@ A DefaultComboBoxModel.
  *                           Instance methods                              *
 \***************************************************************************/
 
+void DefaultComboBoxModel::addListDataListener(ListDataListenerPtr l)
+{
+    _DataListeners.insert(l);
+}
+
+void DefaultComboBoxModel::removeListDataListener(ListDataListenerPtr l)
+{
+   ListDataListenerSetIter EraseIter(_DataListeners.find(l));
+   if(EraseIter != _DataListeners.end())
+   {
+      _DataListeners.erase(EraseIter);
+   }
+}
+
+void DefaultComboBoxModel::addSelectionListener(ComboBoxSelectionListenerPtr l)
+{
+    _SelectionListeners.insert(l);
+}
+
+void DefaultComboBoxModel::removeSelectionListener(ComboBoxSelectionListenerPtr l)
+{
+   ComboBoxSelectionListenerSetIter EraseIter(_SelectionListeners.find(l));
+   if(EraseIter != _SelectionListeners.end())
+   {
+      _SelectionListeners.erase(EraseIter);
+   }
+}
+
 UInt32 DefaultComboBoxModel::getSize(void)
 {
 	return _FieldList.size();
@@ -95,9 +123,45 @@ SharedFieldPtr DefaultComboBoxModel::getSelectedItem(void) const
 	}
 }
 
-void DefaultComboBoxModel::setSelectedItem(const UInt32& index)
+Int32 DefaultComboBoxModel::getSelectedItemIndex(void) const
 {
+	return _SelectedIndex;
+}
+
+void DefaultComboBoxModel::setSelectedItem(const Int32& index)
+{
+	Int32 PreviousIndex(_SelectedIndex);
 	_SelectedIndex = index;
+
+	if(_SelectedIndex != PreviousIndex)
+	{
+		produceSelectionChanged(_SelectedIndex, PreviousIndex);
+	}
+}
+
+void DefaultComboBoxModel::setSelectedItem(SharedFieldPtr anObject)
+{
+	Int32 PreviousIndex(_SelectedIndex);
+
+	UInt32 index(0);
+	while(index < _FieldList.size() && _FieldList[index] != anObject)
+	{
+		++index;
+	}
+
+	if(index < _FieldList.size())
+	{
+		_SelectedIndex = index;
+	}
+	else
+	{
+		_SelectedIndex = -1;
+	}
+
+	if(_SelectedIndex != PreviousIndex)
+	{
+		produceSelectionChanged(_SelectedIndex, PreviousIndex);
+	}
 }
 
 void DefaultComboBoxModel::addElement(SharedFieldPtr anObject)
@@ -143,6 +207,47 @@ void DefaultComboBoxModel::removeElementAt(const UInt32& index)
 		for(UInt32 i(0); i<index ; ++i ) ++RemoveItor;
 
 		_FieldList.erase(RemoveItor);
+	}
+}
+
+void DefaultComboBoxModel::produceListDataContentsChanged(void)
+{
+	ListDataEvent e(NullFC, getSystemTime(), 0, getSize()-1, ListDataEvent::CONTENTS_CHANGED, this);
+   ListDataListenerSet DataListenerSet(_DataListeners);
+   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
+   {
+		(*SetItor)->contentsChanged(e);
+   }
+}
+
+void DefaultComboBoxModel::produceListDataIntervalAdded(UInt32 index0, UInt32 index1)
+{
+	ListDataEvent e(NullFC, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_ADDED, this);
+   ListDataListenerSet DataListenerSet(_DataListeners);
+   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
+   {
+		(*SetItor)->intervalAdded(e);
+   }
+}
+
+void DefaultComboBoxModel::produceListDataIntervalRemoved(UInt32 index0, UInt32 index1)
+{
+	ListDataEvent e(NullFC, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_REMOVED, this);
+   ListDataListenerSet DataListenerSet(_DataListeners);
+   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
+   {
+		(*SetItor)->intervalRemoved(e);
+   }
+}
+
+
+void DefaultComboBoxModel::produceSelectionChanged(const Int32& CurrentIndex, const Int32& PreviousIndex)
+{
+	ComboBoxSelectionEvent e(NullFC, getSystemTime(), CurrentIndex, PreviousIndex);
+	ComboBoxSelectionListenerSet SelectionListenerSet(_SelectionListeners);
+	for(ComboBoxSelectionListenerSetConstIter SetItor(SelectionListenerSet.begin()) ; SetItor != SelectionListenerSet.end() ; ++SetItor)
+	{
+		(*SetItor)->selectionChanged(e);
 	}
 }
 /*-------------------------------------------------------------------------*\

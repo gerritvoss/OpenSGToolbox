@@ -173,6 +173,16 @@ void TextComponent::changed(BitVector whichField, UInt32 origin)
 				setCaretPosition(getText().size());
 			endEditCP(TextComponentPtr(this), CaretPositionFieldMask);
 		}
+		
+		if(_TextSelectionStart > getText().size())
+		{
+			_TextSelectionStart = getText().size();
+		}
+		
+		if(_TextSelectionEnd > getText().size())
+		{
+			_TextSelectionEnd = getText().size();
+		}
 		produceTextValueChanged(TextEvent(TextComponentPtr(this), getTimeStamp(), TextEvent::TEXT_CHANGED));
 	}
 }

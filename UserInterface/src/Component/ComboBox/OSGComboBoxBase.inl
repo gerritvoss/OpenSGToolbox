@@ -98,7 +98,7 @@ ComboBoxPtr ComboBoxBase::createEmpty(void)
 
 //! Get the ComboBox::_sfExpandButton field.
 inline
-SFButtonPtr *ComboBoxBase::getSFExpandButton(void)
+SFToggleButtonPtr *ComboBoxBase::getSFExpandButton(void)
 {
     return &_sfExpandButton;
 }
@@ -110,18 +110,11 @@ SFComboBoxEditorPtr *ComboBoxBase::getSFEditor(void)
     return &_sfEditor;
 }
 
-//! Get the ComboBox::_sfDropDownListScrollPanelBar field.
+//! Get the ComboBox::_sfRendererSelcetedItem field.
 inline
-SFScrollPanelPtr *ComboBoxBase::getSFDropDownListScrollPanelBar(void)
+SFComponentPtr *ComboBoxBase::getSFRendererSelcetedItem(void)
 {
-    return &_sfDropDownListScrollPanelBar;
-}
-
-//! Get the ComboBox::_sfDropDownList field.
-inline
-SFListPtr *ComboBoxBase::getSFDropDownList(void)
-{
-    return &_sfDropDownList;
+    return &_sfRendererSelcetedItem;
 }
 
 //! Get the ComboBox::_sfEditable field.
@@ -138,24 +131,31 @@ SFUInt32 *ComboBoxBase::getSFMaxRowCount(void)
     return &_sfMaxRowCount;
 }
 
+//! Get the ComboBox::_sfComboListPopupMenu field.
+inline
+SFPopupMenuPtr *ComboBoxBase::getSFComboListPopupMenu(void)
+{
+    return &_sfComboListPopupMenu;
+}
+
 
 //! Get the value of the ComboBox::_sfExpandButton field.
 inline
-ButtonPtr &ComboBoxBase::getExpandButton(void)
+ToggleButtonPtr &ComboBoxBase::getExpandButton(void)
 {
     return _sfExpandButton.getValue();
 }
 
 //! Get the value of the ComboBox::_sfExpandButton field.
 inline
-const ButtonPtr &ComboBoxBase::getExpandButton(void) const
+const ToggleButtonPtr &ComboBoxBase::getExpandButton(void) const
 {
     return _sfExpandButton.getValue();
 }
 
 //! Set the value of the ComboBox::_sfExpandButton field.
 inline
-void ComboBoxBase::setExpandButton(const ButtonPtr &value)
+void ComboBoxBase::setExpandButton(const ToggleButtonPtr &value)
 {
     _sfExpandButton.setValue(value);
 }
@@ -181,46 +181,25 @@ void ComboBoxBase::setEditor(const ComboBoxEditorPtr &value)
     _sfEditor.setValue(value);
 }
 
-//! Get the value of the ComboBox::_sfDropDownListScrollPanelBar field.
+//! Get the value of the ComboBox::_sfRendererSelcetedItem field.
 inline
-ScrollPanelPtr &ComboBoxBase::getDropDownListScrollPanelBar(void)
+ComponentPtr &ComboBoxBase::getRendererSelcetedItem(void)
 {
-    return _sfDropDownListScrollPanelBar.getValue();
+    return _sfRendererSelcetedItem.getValue();
 }
 
-//! Get the value of the ComboBox::_sfDropDownListScrollPanelBar field.
+//! Get the value of the ComboBox::_sfRendererSelcetedItem field.
 inline
-const ScrollPanelPtr &ComboBoxBase::getDropDownListScrollPanelBar(void) const
+const ComponentPtr &ComboBoxBase::getRendererSelcetedItem(void) const
 {
-    return _sfDropDownListScrollPanelBar.getValue();
+    return _sfRendererSelcetedItem.getValue();
 }
 
-//! Set the value of the ComboBox::_sfDropDownListScrollPanelBar field.
+//! Set the value of the ComboBox::_sfRendererSelcetedItem field.
 inline
-void ComboBoxBase::setDropDownListScrollPanelBar(const ScrollPanelPtr &value)
+void ComboBoxBase::setRendererSelcetedItem(const ComponentPtr &value)
 {
-    _sfDropDownListScrollPanelBar.setValue(value);
-}
-
-//! Get the value of the ComboBox::_sfDropDownList field.
-inline
-ListPtr &ComboBoxBase::getDropDownList(void)
-{
-    return _sfDropDownList.getValue();
-}
-
-//! Get the value of the ComboBox::_sfDropDownList field.
-inline
-const ListPtr &ComboBoxBase::getDropDownList(void) const
-{
-    return _sfDropDownList.getValue();
-}
-
-//! Set the value of the ComboBox::_sfDropDownList field.
-inline
-void ComboBoxBase::setDropDownList(const ListPtr &value)
-{
-    _sfDropDownList.setValue(value);
+    _sfRendererSelcetedItem.setValue(value);
 }
 
 //! Get the value of the ComboBox::_sfEditable field.
@@ -263,6 +242,27 @@ inline
 void ComboBoxBase::setMaxRowCount(const UInt32 &value)
 {
     _sfMaxRowCount.setValue(value);
+}
+
+//! Get the value of the ComboBox::_sfComboListPopupMenu field.
+inline
+PopupMenuPtr &ComboBoxBase::getComboListPopupMenu(void)
+{
+    return _sfComboListPopupMenu.getValue();
+}
+
+//! Get the value of the ComboBox::_sfComboListPopupMenu field.
+inline
+const PopupMenuPtr &ComboBoxBase::getComboListPopupMenu(void) const
+{
+    return _sfComboListPopupMenu.getValue();
+}
+
+//! Set the value of the ComboBox::_sfComboListPopupMenu field.
+inline
+void ComboBoxBase::setComboListPopupMenu(const PopupMenuPtr &value)
+{
+    _sfComboListPopupMenu.setValue(value);
 }
 
 

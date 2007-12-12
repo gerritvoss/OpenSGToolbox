@@ -155,7 +155,7 @@ void List::updateItem(const UInt32& index)
 	ComponentPtr PrevComponent = getChildren().getValue(index);
 	getChildren().getValue(index)->removeFocusListener(this);
 	getChildren().setValue(
-				getCellGenerator()->getListCellGeneratorComponent(ListPtr(this),getModel()->getElementAt(index),index,getSelectionModel()->isSelectedIndex(index),PrevComponent->getFocused())
+				getCellRenderer()->getListCellRendererComponent(ListPtr(this),getModel()->getElementAt(index),index,getSelectionModel()->isSelectedIndex(index),PrevComponent->getFocused())
 				,index);
 	if(PrevComponent->getFocused())
 	{
@@ -392,7 +392,7 @@ void List::intervalRemoved(ListDataEvent e)
 	updateLayout();
 }
 
-void List::setModel(ListModel* Model)
+void List::setModel(ListModelPtr Model)
 {
 	beginEditCP(ListPtr(this), ChildrenFieldMask);
 		getChildren().clear();
@@ -437,7 +437,7 @@ void List::updateLayout(void)
 			beginEditCP(ListPtr(this), ChildrenFieldMask);
 				for(UInt32 i(0) ; i<getModel()->getSize() ; ++i )
 				{
-					getChildren().addValue(getCellGenerator()->getListCellGeneratorComponent(ListPtr(this),getModel()->getElementAt(i),i,getSelectionModel()->isSelectedIndex(i),false));
+					getChildren().addValue(getCellRenderer()->getListCellRendererComponent(ListPtr(this),getModel()->getElementAt(i),i,getSelectionModel()->isSelectedIndex(i),false));
 					getChildren().getValue(i)->addFocusListener(this);
 				}
 			endEditCP(ListPtr(this), ChildrenFieldMask);
@@ -520,7 +520,7 @@ Int32 List::getScrollableUnitIncrement(const Pnt2s& VisibleRectTopLeft, const Pn
 List::List(void) :
     Inherited(),
 		_Model(NULL),
-		_CellGenerator(NULL),
+		_CellRenderer(NULL),
 		_SelectionModel()
 {
 }
@@ -528,7 +528,7 @@ List::List(void) :
 List::List(const List &source) :
     Inherited(source),
 		_Model(source._Model),
-		_CellGenerator(source._CellGenerator),
+		_CellRenderer(source._CellRenderer),
 		_SelectionModel(source._SelectionModel)
 {
 }

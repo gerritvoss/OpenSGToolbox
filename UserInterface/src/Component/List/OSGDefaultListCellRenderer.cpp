@@ -50,7 +50,7 @@
 #include "Border/OSGEmptyBorder.h"
 #include "Component/Text/OSGLabel.h"
 
-#include "OSGDefaultListCellGenerator.h"
+#include "OSGDefaultListCellRenderer.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -58,8 +58,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::DefaultListCellGenerator
-A DefaultListCellGenerator. 
+/*! \class osg::DefaultListCellRenderer
+A DefaultListCellRenderer. 
 */
 
 /***************************************************************************\
@@ -74,7 +74,7 @@ A DefaultListCellGenerator.
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-ComponentPtr DefaultListCellGenerator::getListCellGeneratorComponent(ListPtr list, SharedFieldPtr value, UInt32 index, bool isSelected, bool cellHasFocus)
+ComponentPtr DefaultListCellRenderer::getListCellRendererComponent(ListPtr list, SharedFieldPtr value, UInt32 index, bool isSelected, bool cellHasFocus)
 {
 	if(value == NULL){
 		return NullFC;
@@ -140,11 +140,11 @@ ComponentPtr DefaultListCellGenerator::getListCellGeneratorComponent(ListPtr lis
 
 /*----------------------- constructors & destructors ----------------------*/
 
-DefaultListCellGenerator::DefaultListCellGenerator(void)
+DefaultListCellRenderer::DefaultListCellRenderer(void)
 {
 }
 
-DefaultListCellGenerator::~DefaultListCellGenerator(void)
+DefaultListCellRenderer::~DefaultListCellRenderer(void)
 {
 }
 

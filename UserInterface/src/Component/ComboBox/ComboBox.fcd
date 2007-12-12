@@ -14,11 +14,11 @@
 A UI ComboBox
 	<Field
 		name="ExpandButton"
-		type="ButtonPtr"
+		type="ToggleButtonPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Button/OSGButtonFields.h"
+		header="Component/Button/OSGToggleButtonFields.h"
 		defaultValue="NullFC"
 	>
 	</Field>
@@ -33,22 +33,11 @@ A UI ComboBox
 	>
 	</Field>
 	<Field
-		name="DropDownListScrollPanelBar"
-		type="ScrollPanelPtr"
+		name="RendererSelcetedItem"
+		type="ComponentPtr"
 		cardinality="single"
 		visibility="external"
-		access="public"
-		header="Component/Scroll/OSGScrollPanelFields.h"
-		defaultValue="NullFC"
-	>
-	</Field>
-	<Field
-		name="DropDownList"
-		type="ListPtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
-		header="Component/List/OSGListFields.h"
+		access="protected"
 		defaultValue="NullFC"
 	>
 	</Field>
@@ -68,6 +57,16 @@ A UI ComboBox
 		visibility="external"
 		access="public"
 		defaultValue="5"
+	>
+	</Field>
+	<Field
+		name="ComboListPopupMenu"
+		type="PopupMenuPtr"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		header="Component/Menu/OSGPopupMenuFields.h"
+		defaultValue="NullFC"
 	>
 	</Field>
 </FieldContainer>

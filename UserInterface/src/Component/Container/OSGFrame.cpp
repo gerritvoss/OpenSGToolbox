@@ -506,7 +506,7 @@ void Frame::PopupMenuInteractionListener::mouseClicked(const MouseEvent& e)
             return;
         }
     }
-    _Frame->destroyPopupMenu();
+	//_Frame->destroyPopupMenu();
 }
 
 void Frame::PopupMenuInteractionListener::mousePressed(const MouseEvent& e)

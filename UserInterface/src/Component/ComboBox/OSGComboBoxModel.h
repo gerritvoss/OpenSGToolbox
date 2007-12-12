@@ -46,6 +46,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 #include "Component/List/OSGListModel.h"
+#include "OSGComboBoxSelectionListener.h"
 
 OSG_BEGIN_NAMESPACE
 	 
@@ -57,8 +58,18 @@ public:
 	//Returns the selected item
 	virtual SharedFieldPtr getSelectedItem(void) const = 0;
 
+	//Returns the selected item Index
+	virtual Int32 getSelectedItemIndex(void) const = 0;
+
 	//Set the selected item.
-	virtual void setSelectedItem(const UInt32& index) = 0;
+	virtual void setSelectedItem(const Int32& index) = 0;
+	
+	//Set the selected item.
+	virtual void setSelectedItem(SharedFieldPtr anObject) = 0;
+	
+	virtual void addSelectionListener(ComboBoxSelectionListenerPtr l) = 0;
+
+	virtual void removeSelectionListener(ComboBoxSelectionListenerPtr l) = 0;
 };
 
 typedef ComboBoxModel* ComboBoxModelPtr;

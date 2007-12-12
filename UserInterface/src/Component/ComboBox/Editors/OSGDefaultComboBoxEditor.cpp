@@ -100,8 +100,7 @@ ComponentPtr DefaultComboBoxEditor::getEditorComponent(void)
 
 SharedFieldPtr DefaultComboBoxEditor::getItem(void)
 {
-	//TODO: Implement
-	return SharedFieldPtr();
+	return _EditedItem;
 }
 
 void DefaultComboBoxEditor::selectAll(void)
@@ -115,7 +114,21 @@ void DefaultComboBoxEditor::selectAll(void)
 
 void DefaultComboBoxEditor::setItem(SharedFieldPtr anObject)
 {
-	//TODO: Implement
+	_EditedItem = anObject;
+	
+	//Update the text of the TextField to this new Item
+	std::string TheText;
+	if(_EditedItem->getType() == SFString::getClassType())
+	{
+        TheText = dynamic_cast<SFString*>(_EditedItem.get())->getValue();
+	}
+	else
+	{
+		_EditedItem->getValueByStr(TheText);
+	}
+	beginEditCP(getEditor(), TextField::TextFieldMask);
+		getEditor()->setText(TheText);
+	endEditCP(getEditor(), TextField::TextFieldMask);
 }
 
 void DefaultComboBoxEditor::focusGained(const FocusEvent& e)

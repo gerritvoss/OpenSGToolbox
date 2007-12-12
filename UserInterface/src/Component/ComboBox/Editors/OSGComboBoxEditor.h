@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGComboBoxEditorBase.h"
 #include "Event/OSGActionListener.h"
@@ -119,7 +120,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxEditor : public ComboBoxEditorBase
     virtual ~ComboBoxEditor(void); 
 
     /*! \}                                                                 */
-    
+    SharedFieldPtr _EditedItem;
     /*==========================  PRIVATE  ================================*/
   private:
 

@@ -99,6 +99,33 @@ void ToggleButton::drawInternal(const GraphicsPtr TheGraphics) const
 {
    Pnt2s TopLeft, BottomRight;
    getInsideBorderBounds(TopLeft, BottomRight);
+   
+   //If I have a DrawObject then Draw it
+   UIDrawObjectCanvasPtr DrawnDrawObject = getDrawnDrawObject();
+   if(DrawnDrawObject != NullFC)
+   {
+      //Calculate Alignment
+      Pnt2s AlignedPosition;
+      Pnt2s DrawObjectTopLeft, DrawObjectBottomRight;
+      DrawnDrawObject->getBounds(DrawObjectTopLeft, DrawObjectBottomRight);
+
+      AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (DrawObjectBottomRight - DrawObjectTopLeft),getVerticalAlignment(), getHorizontalAlignment());
+
+      //If active then translate the Text by the Active Offset
+      if(getActive())
+      {
+          AlignedPosition = AlignedPosition + getActiveOffset();
+      }
+
+	  //Draw the DrawnDrawObject
+        beginEditCP(DrawnDrawObject, PositionFieldMask);
+            DrawnDrawObject->setPosition( AlignedPosition );
+        endEditCP(DrawnDrawObject, PositionFieldMask);
+
+        DrawnDrawObject->draw(TheGraphics);
+
+   }
+
    //If I have Text Then Draw it
    if(getText() != "" && getFont() != NullFC)
    {

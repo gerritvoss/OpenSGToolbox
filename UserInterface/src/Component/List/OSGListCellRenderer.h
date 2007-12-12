@@ -4,6 +4,8 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -34,69 +36,35 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSG_UI_LIST_CELL_RENDERER_H_
+#define _OSG_UI_LIST_CELL_RENDERER_H_
 
+#ifdef __sgi
+#pragma once
+#endif
+ 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
+#include "Component/OSGComponent.h"
+#include "OSGListFields.h"
 
-#include "OSGListModel.h"
-#include "OSGListCellRenderer.h"
-#include "OSGListSelectionModel.h"
+#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
 
 OSG_BEGIN_NAMESPACE
-
-inline
-ComponentPtr List::getComponentAtIndex(const UInt32& Index)
+	 
+class OSG_USERINTERFACELIB_DLLMAPPING ListCellRenderer
 {
-	if(_Model != NULL && Index < _Model->getSize())
-	{
-		return getChildren()[Index];
-	}
-	else
-	{
-		return NullFC;
-	}
-}
+private:
+protected:
+public:
+	virtual ComponentPtr getListCellRendererComponent(ListPtr list, SharedFieldPtr value, UInt32 index, bool isSelected, bool cellHasFocus) = 0;
 
-inline
-SharedFieldPtr List::getValueAtIndex(const UInt32& Index)
-{
-	if(_Model != NULL && Index < _Model->getSize())
-	{
-		return _Model->getElementAt(Index);
-	}
-	else
-	{
-		return SharedFieldPtr();
-	}
-}
+};
 
-inline
-void List::setCellRenderer(ListCellRendererPtr CellRenderer)
-{
-   _CellRenderer = CellRenderer;
-}
-
-inline
-ListModelPtr List::getModel(void) const
-{
-   return _Model;
-}
-
-inline
-ListCellRendererPtr List::getCellRenderer(void) const
-{
-   return _CellRenderer;
-}
-
-inline
-ListSelectionModelPtr List::getSelectionModel(void) const
-{
-   return _SelectionModel;
-}
+typedef ListCellRenderer* ListCellRendererPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGLIST_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+#endif /* _OSG_UI_LIST_CELL_RENDERER_H_ */
+
 

@@ -70,17 +70,17 @@ const OSG::BitVector  ComboBoxBase::ExpandButtonFieldMask =
 const OSG::BitVector  ComboBoxBase::EditorFieldMask = 
     (TypeTraits<BitVector>::One << ComboBoxBase::EditorFieldId);
 
-const OSG::BitVector  ComboBoxBase::DropDownListScrollPanelBarFieldMask = 
-    (TypeTraits<BitVector>::One << ComboBoxBase::DropDownListScrollPanelBarFieldId);
-
-const OSG::BitVector  ComboBoxBase::DropDownListFieldMask = 
-    (TypeTraits<BitVector>::One << ComboBoxBase::DropDownListFieldId);
+const OSG::BitVector  ComboBoxBase::RendererSelcetedItemFieldMask = 
+    (TypeTraits<BitVector>::One << ComboBoxBase::RendererSelcetedItemFieldId);
 
 const OSG::BitVector  ComboBoxBase::EditableFieldMask = 
     (TypeTraits<BitVector>::One << ComboBoxBase::EditableFieldId);
 
 const OSG::BitVector  ComboBoxBase::MaxRowCountFieldMask = 
     (TypeTraits<BitVector>::One << ComboBoxBase::MaxRowCountFieldId);
+
+const OSG::BitVector  ComboBoxBase::ComboListPopupMenuFieldMask = 
+    (TypeTraits<BitVector>::One << ComboBoxBase::ComboListPopupMenuFieldId);
 
 const OSG::BitVector ComboBoxBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -89,16 +89,13 @@ const OSG::BitVector ComboBoxBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var ButtonPtr       ComboBoxBase::_sfExpandButton
+/*! \var ToggleButtonPtr ComboBoxBase::_sfExpandButton
     
 */
 /*! \var ComboBoxEditorPtr ComboBoxBase::_sfEditor
     
 */
-/*! \var ScrollPanelPtr  ComboBoxBase::_sfDropDownListScrollPanelBar
-    
-*/
-/*! \var ListPtr         ComboBoxBase::_sfDropDownList
+/*! \var ComponentPtr    ComboBoxBase::_sfRendererSelcetedItem
     
 */
 /*! \var bool            ComboBoxBase::_sfEditable
@@ -107,12 +104,15 @@ const OSG::BitVector ComboBoxBase::MTInfluenceMask =
 /*! \var UInt32          ComboBoxBase::_sfMaxRowCount
     
 */
+/*! \var PopupMenuPtr    ComboBoxBase::_sfComboListPopupMenu
+    
+*/
 
 //! ComboBox description
 
 FieldDescription *ComboBoxBase::_desc[] = 
 {
-    new FieldDescription(SFButtonPtr::getClassType(), 
+    new FieldDescription(SFToggleButtonPtr::getClassType(), 
                      "ExpandButton", 
                      ExpandButtonFieldId, ExpandButtonFieldMask,
                      false,
@@ -122,16 +122,11 @@ FieldDescription *ComboBoxBase::_desc[] =
                      EditorFieldId, EditorFieldMask,
                      false,
                      (FieldAccessMethod) &ComboBoxBase::getSFEditor),
-    new FieldDescription(SFScrollPanelPtr::getClassType(), 
-                     "DropDownListScrollPanelBar", 
-                     DropDownListScrollPanelBarFieldId, DropDownListScrollPanelBarFieldMask,
+    new FieldDescription(SFComponentPtr::getClassType(), 
+                     "RendererSelcetedItem", 
+                     RendererSelcetedItemFieldId, RendererSelcetedItemFieldMask,
                      false,
-                     (FieldAccessMethod) &ComboBoxBase::getSFDropDownListScrollPanelBar),
-    new FieldDescription(SFListPtr::getClassType(), 
-                     "DropDownList", 
-                     DropDownListFieldId, DropDownListFieldMask,
-                     false,
-                     (FieldAccessMethod) &ComboBoxBase::getSFDropDownList),
+                     (FieldAccessMethod) &ComboBoxBase::getSFRendererSelcetedItem),
     new FieldDescription(SFBool::getClassType(), 
                      "Editable", 
                      EditableFieldId, EditableFieldMask,
@@ -141,7 +136,12 @@ FieldDescription *ComboBoxBase::_desc[] =
                      "MaxRowCount", 
                      MaxRowCountFieldId, MaxRowCountFieldMask,
                      false,
-                     (FieldAccessMethod) &ComboBoxBase::getSFMaxRowCount)
+                     (FieldAccessMethod) &ComboBoxBase::getSFMaxRowCount),
+    new FieldDescription(SFPopupMenuPtr::getClassType(), 
+                     "ComboListPopupMenu", 
+                     ComboListPopupMenuFieldId, ComboListPopupMenuFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComboBoxBase::getSFComboListPopupMenu)
 };
 
 
@@ -217,12 +217,12 @@ void ComboBoxBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ComboBoxBase::ComboBoxBase(void) :
-    _sfExpandButton           (ButtonPtr(NullFC)), 
+    _sfExpandButton           (ToggleButtonPtr(NullFC)), 
     _sfEditor                 (ComboBoxEditorPtr(NullFC)), 
-    _sfDropDownListScrollPanelBar(ScrollPanelPtr(NullFC)), 
-    _sfDropDownList           (ListPtr(NullFC)), 
+    _sfRendererSelcetedItem   (ComponentPtr(NullFC)), 
     _sfEditable               (bool(true)), 
     _sfMaxRowCount            (UInt32(5)), 
+    _sfComboListPopupMenu     (PopupMenuPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -234,10 +234,10 @@ ComboBoxBase::ComboBoxBase(void) :
 ComboBoxBase::ComboBoxBase(const ComboBoxBase &source) :
     _sfExpandButton           (source._sfExpandButton           ), 
     _sfEditor                 (source._sfEditor                 ), 
-    _sfDropDownListScrollPanelBar(source._sfDropDownListScrollPanelBar), 
-    _sfDropDownList           (source._sfDropDownList           ), 
+    _sfRendererSelcetedItem   (source._sfRendererSelcetedItem   ), 
     _sfEditable               (source._sfEditable               ), 
     _sfMaxRowCount            (source._sfMaxRowCount            ), 
+    _sfComboListPopupMenu     (source._sfComboListPopupMenu     ), 
     Inherited                 (source)
 {
 }
@@ -264,14 +264,9 @@ UInt32 ComboBoxBase::getBinSize(const BitVector &whichField)
         returnValue += _sfEditor.getBinSize();
     }
 
-    if(FieldBits::NoField != (DropDownListScrollPanelBarFieldMask & whichField))
+    if(FieldBits::NoField != (RendererSelcetedItemFieldMask & whichField))
     {
-        returnValue += _sfDropDownListScrollPanelBar.getBinSize();
-    }
-
-    if(FieldBits::NoField != (DropDownListFieldMask & whichField))
-    {
-        returnValue += _sfDropDownList.getBinSize();
+        returnValue += _sfRendererSelcetedItem.getBinSize();
     }
 
     if(FieldBits::NoField != (EditableFieldMask & whichField))
@@ -282,6 +277,11 @@ UInt32 ComboBoxBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (MaxRowCountFieldMask & whichField))
     {
         returnValue += _sfMaxRowCount.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ComboListPopupMenuFieldMask & whichField))
+    {
+        returnValue += _sfComboListPopupMenu.getBinSize();
     }
 
 
@@ -303,14 +303,9 @@ void ComboBoxBase::copyToBin(      BinaryDataHandler &pMem,
         _sfEditor.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (DropDownListScrollPanelBarFieldMask & whichField))
+    if(FieldBits::NoField != (RendererSelcetedItemFieldMask & whichField))
     {
-        _sfDropDownListScrollPanelBar.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (DropDownListFieldMask & whichField))
-    {
-        _sfDropDownList.copyToBin(pMem);
+        _sfRendererSelcetedItem.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (EditableFieldMask & whichField))
@@ -321,6 +316,11 @@ void ComboBoxBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (MaxRowCountFieldMask & whichField))
     {
         _sfMaxRowCount.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ComboListPopupMenuFieldMask & whichField))
+    {
+        _sfComboListPopupMenu.copyToBin(pMem);
     }
 
 
@@ -341,14 +341,9 @@ void ComboBoxBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfEditor.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (DropDownListScrollPanelBarFieldMask & whichField))
+    if(FieldBits::NoField != (RendererSelcetedItemFieldMask & whichField))
     {
-        _sfDropDownListScrollPanelBar.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (DropDownListFieldMask & whichField))
-    {
-        _sfDropDownList.copyFromBin(pMem);
+        _sfRendererSelcetedItem.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (EditableFieldMask & whichField))
@@ -359,6 +354,11 @@ void ComboBoxBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (MaxRowCountFieldMask & whichField))
     {
         _sfMaxRowCount.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ComboListPopupMenuFieldMask & whichField))
+    {
+        _sfComboListPopupMenu.copyFromBin(pMem);
     }
 
 
@@ -377,17 +377,17 @@ void ComboBoxBase::executeSyncImpl(      ComboBoxBase *pOther,
     if(FieldBits::NoField != (EditorFieldMask & whichField))
         _sfEditor.syncWith(pOther->_sfEditor);
 
-    if(FieldBits::NoField != (DropDownListScrollPanelBarFieldMask & whichField))
-        _sfDropDownListScrollPanelBar.syncWith(pOther->_sfDropDownListScrollPanelBar);
-
-    if(FieldBits::NoField != (DropDownListFieldMask & whichField))
-        _sfDropDownList.syncWith(pOther->_sfDropDownList);
+    if(FieldBits::NoField != (RendererSelcetedItemFieldMask & whichField))
+        _sfRendererSelcetedItem.syncWith(pOther->_sfRendererSelcetedItem);
 
     if(FieldBits::NoField != (EditableFieldMask & whichField))
         _sfEditable.syncWith(pOther->_sfEditable);
 
     if(FieldBits::NoField != (MaxRowCountFieldMask & whichField))
         _sfMaxRowCount.syncWith(pOther->_sfMaxRowCount);
+
+    if(FieldBits::NoField != (ComboListPopupMenuFieldMask & whichField))
+        _sfComboListPopupMenu.syncWith(pOther->_sfComboListPopupMenu);
 
 
 }
@@ -405,17 +405,17 @@ void ComboBoxBase::executeSyncImpl(      ComboBoxBase *pOther,
     if(FieldBits::NoField != (EditorFieldMask & whichField))
         _sfEditor.syncWith(pOther->_sfEditor);
 
-    if(FieldBits::NoField != (DropDownListScrollPanelBarFieldMask & whichField))
-        _sfDropDownListScrollPanelBar.syncWith(pOther->_sfDropDownListScrollPanelBar);
-
-    if(FieldBits::NoField != (DropDownListFieldMask & whichField))
-        _sfDropDownList.syncWith(pOther->_sfDropDownList);
+    if(FieldBits::NoField != (RendererSelcetedItemFieldMask & whichField))
+        _sfRendererSelcetedItem.syncWith(pOther->_sfRendererSelcetedItem);
 
     if(FieldBits::NoField != (EditableFieldMask & whichField))
         _sfEditable.syncWith(pOther->_sfEditable);
 
     if(FieldBits::NoField != (MaxRowCountFieldMask & whichField))
         _sfMaxRowCount.syncWith(pOther->_sfMaxRowCount);
+
+    if(FieldBits::NoField != (ComboListPopupMenuFieldMask & whichField))
+        _sfComboListPopupMenu.syncWith(pOther->_sfComboListPopupMenu);
 
 
 

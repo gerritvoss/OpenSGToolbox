@@ -99,6 +99,9 @@
 #include "Component/ProgressBar/OSGProgressBar.h"
 
 #include "Component/Slider/OSGSlider.h"
+
+#include "Component/ComboBox/OSGComboBox.h"
+#include "Component/ComboBox/Editors/OSGDefaultComboBoxEditor.h"
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -3291,6 +3294,107 @@ void WindowsLookAndFeel::init(void)
     endEditCP(WindowsSlider);
     
     Slider::getClassType().setPrototype(WindowsSlider);
+	
+	//************************** ComboBox *****************************
+
+    //Vertical Max Button
+	ToggleButtonPtr WindowsComboBoxExpandButton = ToggleButton::create();
+    beginEditCP(WindowsComboBoxExpandButton);
+        WindowsComboBoxExpandButton->setPreferredSize(Vec2s(17,17));
+        
+        WindowsComboBoxExpandButton->setDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
+        WindowsComboBoxExpandButton->setActiveDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
+        WindowsComboBoxExpandButton->setFocusedDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
+        WindowsComboBoxExpandButton->setRolloverDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
+        WindowsComboBoxExpandButton->setDisabledDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
+        
+        WindowsComboBoxExpandButton->setBorder(WindowsScrollBarButtonBorder);
+        WindowsComboBoxExpandButton->setActiveBorder(WindowsScrollBarButtonBorder);
+        WindowsComboBoxExpandButton->setDisabledBorder(WindowsScrollBarButtonBorder);
+        WindowsComboBoxExpandButton->setFocusedBorder(WindowsScrollBarButtonBorder);
+        WindowsComboBoxExpandButton->setRolloverBorder(WindowsScrollBarButtonBorder);
+        
+        WindowsComboBoxExpandButton->setBackground(WindowsScrollBarButtonBackground);
+        WindowsComboBoxExpandButton->setActiveBackground(WindowsScrollBarActiveButtonBackground);
+        WindowsComboBoxExpandButton->setDisabledBackground(WindowsScrollBarDisabledButtonBackground);
+        WindowsComboBoxExpandButton->setFocusedBackground(WindowsScrollBarButtonBackground);
+        WindowsComboBoxExpandButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
+
+        WindowsComboBoxExpandButton->setActiveOffset(Vec2s(0,0));
+    endEditCP(WindowsComboBoxExpandButton);
+
+	//Windows ComboBoxBorder
+	EtchedBorderPtr WindowsComboBoxBorder = EtchedBorder::create();
+	beginEditCP(WindowsComboBoxBorder);
+		WindowsComboBoxBorder->setWidth(2);
+		WindowsComboBoxBorder->setRaised(true);
+		WindowsComboBoxBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
+		WindowsComboBoxBorder->setShadow(Color4f(0.65, 0.65, 0.65, 1.0));
+	endEditCP(WindowsComboBoxBorder);
+	
+	//Windows ComboBoxBackground
+	ColorUIBackgroundPtr WindowsComboBoxBackground = ColorUIBackground::create();
+	beginEditCP(WindowsComboBoxBackground);
+		WindowsComboBoxBackground->setColor(Color4f(0.93, 0.91, 0.85, 1.0));
+	endEditCP(WindowsComboBoxBackground);
+
+	//Default ComboBoxEditor
+	//Windows Default ComboBoxEditor TextField
+	TextFieldPtr WindowsDefaultComboBoxTextField = TextField::create();
+    beginEditCP(WindowsDefaultComboBoxTextField);
+        WindowsDefaultComboBoxTextField->setHorizontalAlignment(0.0);
+        
+		//Border
+		WindowsDefaultComboBoxTextField->setBorder(WindowsEmptyBorder);
+		WindowsDefaultComboBoxTextField->setRolloverBorder(WindowsEmptyBorder);
+		WindowsDefaultComboBoxTextField->setFocusedBorder(WindowsEmptyBorder);
+		WindowsDefaultComboBoxTextField->setDisabledBorder(WindowsEmptyBorder);
+		
+		//Background
+		WindowsDefaultComboBoxTextField->setBackground(WindowsEmptyBackground);
+		WindowsDefaultComboBoxTextField->setRolloverBackground(WindowsEmptyBackground);
+		WindowsDefaultComboBoxTextField->setFocusedBackground(WindowsEmptyBackground);
+		WindowsDefaultComboBoxTextField->setDisabledBackground(WindowsEmptyBackground);
+    endEditCP(WindowsDefaultComboBoxTextField);
+
+    DefaultComboBoxEditorPtr WindowsDefaultComboBoxEditor = DefaultComboBoxEditor::create();
+    beginEditCP(WindowsDefaultComboBoxEditor);
+		WindowsDefaultComboBoxEditor->setEditor(WindowsDefaultComboBoxTextField);
+    endEditCP(WindowsDefaultComboBoxEditor);
+	
+
+	//ComboBox
+    ComboBoxPtr WindowsComboBox = ComboBox::create();
+    beginEditCP(WindowsComboBox);
+		WindowsComboBox->setConstraints(NullFC);
+		//Sizes
+		WindowsComboBox->setMinSize(Vec2s(0,0));
+		WindowsComboBox->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsComboBox->setPreferredSize(Vec2s(75,23));
+
+		//Border
+		WindowsComboBox->setBorder(WindowsTextFieldBorder);
+		WindowsComboBox->setRolloverBorder(WindowsTextFieldBorder);
+		WindowsComboBox->setFocusedBorder(WindowsTextFieldBorder);
+		WindowsComboBox->setDisabledBorder(WindowsTextFieldBorder);
+		
+		//Background
+		WindowsComboBox->setBackground(WindowsTextFieldBackground);
+		WindowsComboBox->setRolloverBackground(WindowsTextFieldBackground);
+		WindowsComboBox->setFocusedBackground(WindowsTextFieldBackground);
+		WindowsComboBox->setDisabledBackground(WindowsDisabledTextFieldBackground);
+		
+		//Opacity
+		WindowsComboBox->setOpacity(1.0);
+
+        //ComboBox
+        WindowsComboBox->setExpandButton(WindowsComboBoxExpandButton);
+        WindowsComboBox->setEditor(WindowsDefaultComboBoxEditor);
+        WindowsComboBox->setEditable(true);
+        WindowsComboBox->setMaxRowCount(5);
+    endEditCP(WindowsComboBox);
+    
+    ComboBox::getClassType().setPrototype(WindowsComboBox);
 
 	//************************** TableHeader *****************************
 	//Windows RotatedComponentBorder
@@ -3427,13 +3531,8 @@ void WindowsLookAndFeel::init(void)
 		getPrototypes().addValue(WindowsSpinnerDefaultEditor);
 		getPrototypes().addValue(WindowsSpinnerNumberEditor);
 		getPrototypes().addValue(WindowsSlider);
+		getPrototypes().addValue(WindowsComboBox);
 	endEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);
-
-
-
-
-
-
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

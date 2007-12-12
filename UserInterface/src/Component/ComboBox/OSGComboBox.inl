@@ -39,8 +39,100 @@
 //---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
+#include "Component/Menu/OSGPopupMenu.h"
 OSG_BEGIN_NAMESPACE
+
+inline
+UInt32 ComboBox::getSelectedIndex(void) const
+{
+	return _Model->getSelectedItemIndex();
+}
+
+inline
+SharedFieldPtr ComboBox::getSelectedItem(void) const
+{
+	return _Model->getSelectedItem();
+}
+
+inline
+ComboBoxModelPtr ComboBox::getModel(void) const
+{
+	return _Model;
+}
+
+inline
+SharedFieldPtr ComboBox::getItemAt(const UInt32& index) const
+{
+	return _Model->getElementAt(index);
+}
+
+inline
+UInt32 ComboBox::getItemCount(void) const
+{
+	return _Model->getSize();
+}
+
+inline
+void ComboBox::addActionListener(ActionListenerPtr Listener)
+{
+   _ActionListeners.insert(Listener);
+}
+
+inline
+void ComboBox::setSelectedIndex(const UInt32& anIndex)
+{
+	_Model->setSelectedItem(anIndex);
+}
+
+inline
+void ComboBox::setSelectedItem(SharedFieldPtr anObject)
+{
+	_Model->setSelectedItem(anObject);
+}
+
+inline
+ListCellRendererPtr ComboBox::getRenderer(void) const
+{
+	return _CellRenderer;
+}
+
+inline
+void ComboBox::setRenderer(ListCellRendererPtr aRenderer)
+{
+	_CellRenderer = aRenderer;
+}
+
+inline
+void ComboBox::addPopupMenuListener(PopupMenuListenerPtr Listener)
+{
+	getComboListPopupMenu()->addPopupMenuListener(Listener);
+}
+
+inline
+void ComboBox::removePopupMenuListener(PopupMenuListenerPtr Listener)
+{
+	getComboListPopupMenu()->removePopupMenuListener(Listener);
+}
+
+inline
+bool ComboBox::isPopupVisible(void) const
+{
+	return getComboListPopupMenu()->getVisible();
+}
+
+inline
+void ComboBox::hidePopup(void)
+{
+	getComboListPopupMenu()->clearSelection();
+}
+
+inline
+ComboBox::ExpandButtonSelectedListener::ExpandButtonSelectedListener(ComboBoxPtr TheComboBox) :
+   _ComboBox(TheComboBox)
+{
+}
 
 OSG_END_NAMESPACE
 

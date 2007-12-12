@@ -136,10 +136,28 @@ int main(int argc, char **argv)
 	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
     
-	//Create the slider
+	//Create the DefaultComboBoxModel
+	DefaultComboBoxModel TheComboBoxModel;
+	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Red")));
+	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Green")));
+	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Blue")));
+	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Yellow")));
+	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Orange")));
+	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Violet")));
+
+
+	//Create the ComboBox
 	ComboBoxPtr TheComboBox = ComboBox::create();
-	beginEditCP(TheComboBox);
-	endEditCP(TheComboBox);
+	//beginEditCP(TheComboBox);
+	//endEditCP(TheComboBox);
+	TheComboBox->setModel(&TheComboBoxModel);
+	TheComboBox->setSelectedIndex(0);
+	
+	ComboBoxPtr TheUneditableComboBox = ComboBox::create();
+	beginEditCP(TheUneditableComboBox, ComboBox::EditableFieldMask);
+		TheUneditableComboBox->setEditable(false);
+	endEditCP(TheUneditableComboBox, ComboBox::EditableFieldMask);
+	TheUneditableComboBox->setModel(&TheComboBoxModel);
 	
 
 	// Create Background to be used with the MainFrame
@@ -155,6 +173,7 @@ int main(int argc, char **argv)
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
        MainFrame->getChildren().push_back(TheComboBox);
+       MainFrame->getChildren().push_back(TheUneditableComboBox);
 	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
 
     TutorialKeyListener TheKeyListener;
