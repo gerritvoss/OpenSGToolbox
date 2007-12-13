@@ -78,24 +78,24 @@ int main(int argc, char **argv)
     // OSG init
     osgInit(argc,argv);
     
-    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
+    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
     
-    TheWindowEventProducer->setDisplayCallback(display);
-    TheWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
 
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
     //Attach Mouse Listener
-    //TheWindowEventProducer->addMouseListener(new TutorialMouseListener());
+    //TutorialWindowEventProducer->addMouseListener(new TutorialMouseListener());
     //Attach Mouse Wheel Listener
-    //TheWindowEventProducer->addMouseWheelListener(new TutorialMouseWheelListener());
+    //TutorialWindowEventProducer->addMouseWheelListener(new TutorialMouseWheelListener());
     //Attach Key Listener
-    //TheWindowEventProducer->addKeyListener(new TutorialKeyListener());
+    //TutorialWindowEventProducer->addKeyListener(new TutorialKeyListener());
     //Attach Window Listener
-    //TheWindowEventProducer->addWindowListener(new TutorialWindowListener());
+    //TutorialWindowEventProducer->addWindowListener(new TutorialWindowListener());
 
    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
@@ -107,115 +107,115 @@ int main(int argc, char **argv)
     {
         scene->setCore(osg::Group::create());
  
-        // add the torus as a child
+        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
     }
-    endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	// Create the Graphics
-	GraphicsPtr graphics = osg::Graphics2D::create();
+    // Create the Graphics
+    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
 
-	// Initialize the LookAndFeelManager to enable default settings
-	LookAndFeelManager::the()->getLookAndFeel()->init();
+    // Initialize the LookAndFeelManager to enable default settings
+    LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
-	// Create a Checkbox Button component
-	CheckboxButtonPtr checkboxButton = osg::CheckboxButton::create();
-	// Create a simple Font to be used with the Button
-	UIFontPtr sampleFont = osg::UIFont::create();
-	beginEditCP(sampleFont, UIFont::SizeFieldMask);
-		sampleFont->setSize(12);
-	endEditCP(sampleFont, UIFont::SizeFieldMask);
+    // Create a Checkbox Button component
+    CheckboxButtonPtr checkboxButton = osg::CheckboxButton::create();
+    // Create a simple Font to be used with the Button
+    UIFontPtr sampleFont = osg::UIFont::create();
+    beginEditCP(sampleFont, UIFont::SizeFieldMask);
+        sampleFont->setSize(12);
+    endEditCP(sampleFont, UIFont::SizeFieldMask);
 
-	/******************************************************
+    /******************************************************
 
-		Edit the Checkbox Button and determine its characteristics
+        Edit the Checkbox Button and determine its characteristics
 
-	******************************************************/
+    ******************************************************/
 
-	beginEditCP(checkboxButton, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask |
-		Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask);
-			// The following 4 function calls are not specific to Checkbox Button, 
-			// but can be used with any Component
+    beginEditCP(checkboxButton, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask |
+        Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask);
+            // The following 4 function calls are not specific to Checkbox Button, 
+            // but can be used with any Component
 
-			// Determine the Minimum and Maximum size that the Component can ever have
-			// due to various Layouts (some change the size of the Components within
-			// the Layouts)
-		checkboxButton->setMinSize( Vec2s (50, 25) );
-		checkboxButton->setMaxSize( Vec2s (300, 100) );
-			// Determine the PreferredSize for the Component
-		checkboxButton->setPreferredSize( Vec2s (200, 50) );
-		checkboxButton->setEnabled(true);
-		// The following functions are specific to Button
-			// Determine the visible Text (Text must fit within Button Size
-			// or extra Text will not display)
-		checkboxButton->setText("Checkbox Button");
-		//button1->setFont(sampleFont);
-			// Determine the VerticalAlignment of the Text- VERTICAL_CENTER, 
-			// or VERTICAL_TOP, VERTICAL_BOTTOM
-		checkboxButton->setVerticalAlignment(0.5);
-			// Determine the HorizontalAlignment of the Text- HORIZONTAL_CENTER,
-			// HORIZONTAL_LEFT, HORIZONTAL_RIGHT
-		checkboxButton->setHorizontalAlignment(0.5);
-		checkboxButton->setSelected(true);
-			// You can also change the way that the checkbox button looks by assigning
-			// different draw objects using the setDrawObject, setCheckedDrawObject, setActiveDrawObject,
-			// and setActiveCheckedDrawObject.
-			// The box is checked when it has been toggled once.  It is active when the mouse is currently clicking on it.
+            // Determine the Minimum and Maximum size that the Component can ever have
+            // due to various Layouts (some change the size of the Components within
+            // the Layouts)
+        checkboxButton->setMinSize( Vec2s (50, 25));
+        checkboxButton->setMaxSize( Vec2s (300, 100));
+            // Determine the PreferredSize for the Component
+        checkboxButton->setPreferredSize( Vec2s (200, 50));
+        checkboxButton->setEnabled(true);
+        // The following functions are specific to Button
+            // Determine the visible Text (Text must fit within Button Size
+            // or extra Text will not display)
+        checkboxButton->setText("Checkbox Button");
+        //button1->setFont(sampleFont);
+            // Determine the VerticalAlignment of the Text- VERTICAL_CENTER, 
+            // or VERTICAL_TOP, VERTICAL_BOTTOM
+        checkboxButton->setVerticalAlignment(0.5);
+            // Determine the HorizontalAlignment of the Text- HORIZONTAL_CENTER,
+            // HORIZONTAL_LEFT, HORIZONTAL_RIGHT
+        checkboxButton->setHorizontalAlignment(0.5);
+        checkboxButton->setSelected(true);
+            // You can also change the way that the checkbox button looks by assigning
+            // different draw objects using the setDrawObject, setCheckedDrawObject, setActiveDrawObject,
+            // and setActiveCheckedDrawObject.
+            // The box is checked when it has been toggled once.  It is active when the mouse is currently clicking on it.
     endEditCP(checkboxButton, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask |
-		Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask);
+        Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask);
 
-	
-	// Create The Main Frame
-	FramePtr MainFrame = osg::Frame::create();
-	LayoutPtr MainFrameLayout = osg::AbsoluteLayout::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
-	   MainFrame->getChildren().addValue(checkboxButton);
-	   MainFrame->setLayout(MainFrameLayout);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+    
+    // Create The Main Frame
+    FramePtr MainFrame = osg::Frame::create();
+    LayoutPtr MainFrameLayout = osg::AbsoluteLayout::create();
+    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+       MainFrame->getChildren().addValue(checkboxButton);
+       MainFrame->setLayout(MainFrameLayout);
+    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 
-	// Create the Drawing Surface
-	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-		drawingSurface->setGraphics(graphics);
-		drawingSurface->setRootFrame(MainFrame);
-	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-	// Create the UI Foreground Object
-	UIForegroundPtr foreground = osg::UIForeground::create();
+    // Create the Drawing Surface
+    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setRootFrame(MainFrame);
+        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    // Create the UI Foreground Object
+    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
 
-	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-	    foreground->setDrawingSurface(drawingSurface);
-		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.5,0.5));
-    endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
+        TutorialUIForeground->setFrameBounds(Vec2f(0.5,0.5));
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // Tell the manager what to manage
+    // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
     mgr->setRoot(scene);
 
-	// Add the UI Foreground Object to the Scene
-	ViewportPtr viewport = mgr->getWindow()->getPort(0);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-		viewport->getForegrounds().addValue(foreground);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
+    // Add the UI Foreground Object to the Scene
+    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
-    // Show the whole scene
+    // Show the whole Scene
     mgr->showAll();
 
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
+    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(550,550),
                                         "OpenSG 13CheckboxButton Window");
 
     //Main Event Loop
     while(!ExitApp)
     {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
+        TutorialWindowEventProducer->update();
+        TutorialWindowEventProducer->draw();
     }
     osgExit();
 

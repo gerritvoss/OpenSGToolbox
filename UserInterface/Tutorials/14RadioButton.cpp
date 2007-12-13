@@ -1,5 +1,5 @@
 // OpenSG Tutorial Example: Using the Flow Layout
-//		to place Components 
+//        to place Components 
 //
 // This tutorial explains how to place Buttons within a 
 // frame utilizing the Flow Layout command to 
@@ -78,15 +78,15 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
+    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
     
-    TheWindowEventProducer->setDisplayCallback(display);
-    TheWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
 
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
 
     // Make Torus Node (creates Torus in background of scene)
@@ -98,143 +98,143 @@ int main(int argc, char **argv)
     {
         scene->setCore(osg::Group::create());
  
-        // add the torus as a child
+        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
     }
-    endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	// Create the Graphics
-	GraphicsPtr graphics = osg::Graphics2D::create();
+    // Create the Graphics
+    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
 
-	// Initialize the LookAndFeelManager to enable default 
-	// settings for the Button
-	LookAndFeelManager::the()->getLookAndFeel()->init();
-
-
+    // Initialize the LookAndFeelManager to enable default 
+    // settings for the Button
+    LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
-	/******************************************************
-			
-			Creates some RadioButton components 
-			and edit them.  The RadioButton class
-			inherits from the Button class.
 
-			Advanced options for RadioButton can
-			be found in the DefaultLookAndFeel.cpp
-			file found in OSGUserInterface/Source Files/
-			LookAndFeel.
 
-	******************************************************/
-	RadioButtonPtr button1 = osg::RadioButton::create();
-	RadioButtonPtr button2 = osg::RadioButton::create();
-	RadioButtonPtr button3 = osg::RadioButton::create();
+    /******************************************************
+            
+            Creates some RadioButton components 
+            and edit them.  The RadioButton class
+            inherits from the Button class.
 
-	beginEditCP(button1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
-		button1->setVerticalAlignment(0.5);
-		button1->setHorizontalAlignment(0.0);
-		button1->setPreferredSize(Vec2s(100, 50));
-		button1->setText("Option 1");
-	endEditCP(button1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
+            Advanced options for RadioButton can
+            be found in the DefaultLookAndFeel.cpp
+            file found in OSGUserInterface/Source Files/
+            LookAndFeel.
 
-	beginEditCP(button2,Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
-		button2->setVerticalAlignment(0.5);
-		button2->setHorizontalAlignment(0.0);
-		button2->setPreferredSize(Vec2s(100, 50));
-		button2->setText("Option 2");
-	endEditCP(button2, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
+    ******************************************************/
+    RadioButtonPtr button1 = osg::RadioButton::create();
+    RadioButtonPtr button2 = osg::RadioButton::create();
+    RadioButtonPtr button3 = osg::RadioButton::create();
 
-	beginEditCP(button3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
-		button3->setVerticalAlignment(0.5);
-		button3->setHorizontalAlignment(0.0);
-		button3->setPreferredSize(Vec2s(100, 50));
-		button3->setText("Option 3");
-	endEditCP(button3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
+    beginEditCP(button1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
+        button1->setVerticalAlignment(0.5);
+        button1->setHorizontalAlignment(0.0);
+        button1->setPreferredSize(Vec2s(100, 50));
+        button1->setText("Option 1");
+    endEditCP(button1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
 
-	/***************************************************
-					
-		Create and populate the group of Radio Buttons
-		Defining the group allows you to pick which radio
-		buttons are tied together so that only one can be
-		selected. Note that RadioButtonGroup is not a Field
-		Container, so it is edited differently
+    beginEditCP(button2,Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
+        button2->setVerticalAlignment(0.5);
+        button2->setHorizontalAlignment(0.0);
+        button2->setPreferredSize(Vec2s(100, 50));
+        button2->setText("Option 2");
+    endEditCP(button2, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
 
-		Radio Buttons are special toggle buttons.  When 
-		they are selected, any radio button in the same 
-		group is deselected, so there can only be one 
-		option selected.
+    beginEditCP(button3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
+        button3->setVerticalAlignment(0.5);
+        button3->setHorizontalAlignment(0.0);
+        button3->setPreferredSize(Vec2s(100, 50));
+        button3->setText("Option 3");
+    endEditCP(button3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
 
-	******************************************************/
-	RadioButtonGroup buttonGroup;
-	buttonGroup.addButton(button1);
-	buttonGroup.addButton(button2);
-	buttonGroup.addButton(button3);
+    /***************************************************
+                    
+        Create and populate the group of Radio Buttons
+        Defining the group allows you to pick which radio
+        buttons are tied together so that only one can be
+        selected. Note that RadioButtonGroup is not a Field
+        Container, so it is edited differently
 
-	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
+        Radio Buttons are special toggle buttons.  When 
+        they are selected, any radio button in the same 
+        group is deselected, so there can only be one 
+        option selected.
 
-	beginEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
-		MainFrameLayout->setAlignment(VERTICAL_ALIGNMENT);
-		MainFrameLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-		MainFrameLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-	endEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
-	
- 	// Create The Main Frame
-	// Create Background to be used with the Main Frame
-	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-	
-	FramePtr MainFrame = osg::Frame::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-	   MainFrame->getChildren().addValue(button1);
-	   MainFrame->getChildren().addValue(button2);
-	   MainFrame->getChildren().addValue(button3);
-	   MainFrame->setLayout(MainFrameLayout);
-	   MainFrame->setBackground(mainBackground);
-	   MainFrame->setAllInsets(10);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+    ******************************************************/
+    RadioButtonGroup buttonGroup;
+    buttonGroup.addButton(button1);
+    buttonGroup.addButton(button2);
+    buttonGroup.addButton(button3);
 
-	// Create the Drawing Surface
-	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-		drawingSurface->setGraphics(graphics);
-		drawingSurface->setRootFrame(MainFrame);
-	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-	
-	// Create the UI Foreground Object
-	UIForegroundPtr foreground = osg::UIForeground::create();
+    FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
 
-	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-	    foreground->setDrawingSurface(drawingSurface);
-		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.5,0.5));
-    endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    beginEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+        MainFrameLayout->setAlignment(VERTICAL_ALIGNMENT);
+        MainFrameLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
+        MainFrameLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
+    endEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+    
+     // Create The Main Frame
+    // Create Background to be used with the Main Frame
+    ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
+    beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+        MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+    
+    FramePtr MainFrame = osg::Frame::create();
+    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+       MainFrame->getChildren().addValue(button1);
+       MainFrame->getChildren().addValue(button2);
+       MainFrame->getChildren().addValue(button3);
+       MainFrame->setLayout(MainFrameLayout);
+       MainFrame->setBackground(MainFrameBackground);
+       MainFrame->setAllInsets(10);
+    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+
+    // Create the Drawing Surface
+    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setRootFrame(MainFrame);
+        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    
+    // Create the UI Foreground Object
+    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
+        TutorialUIForeground->setFrameBounds(Vec2f(0.5,0.5));
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // Tell the manager what to manage
+    // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
     mgr->setRoot(scene);
 
-	// Add the UI Foreground Object to the Scene
-	ViewportPtr viewport = mgr->getWindow()->getPort(0);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-		viewport->getForegrounds().addValue(foreground);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
+    // Add the UI Foreground Object to the Scene
+    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
-    // Show the whole scene
+    // Show the whole Scene
     mgr->showAll();
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
+    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(900,900),
                                         "OpenSG 14RadioButton Window");
 
     //Main Event Loop
     while(!ExitApp)
     {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
+        TutorialWindowEventProducer->update();
+        TutorialWindowEventProducer->draw();
     }
     osgExit();
 

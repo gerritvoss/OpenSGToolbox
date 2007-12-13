@@ -94,19 +94,19 @@ class SingleSelection : public ButtonSelectedListener
 public:
 
    virtual void buttonSelected(const ButtonSelectedEvent& e)
-	{
+    {
 
-		beginEditCP(singleIntervalButton, ToggleButton::SelectedFieldMask);
-			singleIntervalButton->setSelected(false);
-		endEditCP(singleIntervalButton, ToggleButton::SelectedFieldMask);
+        beginEditCP(singleIntervalButton, ToggleButton::SelectedFieldMask);
+            singleIntervalButton->setSelected(false);
+        endEditCP(singleIntervalButton, ToggleButton::SelectedFieldMask);
 
-		beginEditCP(multipleIntervalButton, ToggleButton::SelectedFieldMask);
-			multipleIntervalButton->setSelected(false);
-		endEditCP(multipleIntervalButton, ToggleButton::SelectedFieldMask);
+        beginEditCP(multipleIntervalButton, ToggleButton::SelectedFieldMask);
+            multipleIntervalButton->setSelected(false);
+        endEditCP(multipleIntervalButton, ToggleButton::SelectedFieldMask);
 
-		SelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
-		
-	}
+        SelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
+        
+    }
       virtual void buttonDeselected(const ButtonSelectedEvent& e)
    {
    }
@@ -118,17 +118,17 @@ class SingleIntervalSelection : public ButtonSelectedListener
 public:
 
    virtual void buttonSelected(const ButtonSelectedEvent& e)
-	{
-		beginEditCP(singleButton, ToggleButton::SelectedFieldMask);
-			singleButton->setSelected(false);
-		endEditCP(singleButton, ToggleButton::SelectedFieldMask);
+    {
+        beginEditCP(singleButton, ToggleButton::SelectedFieldMask);
+            singleButton->setSelected(false);
+        endEditCP(singleButton, ToggleButton::SelectedFieldMask);
 
-		beginEditCP(multipleIntervalButton, ToggleButton::SelectedFieldMask);
-			multipleIntervalButton->setSelected(false);
-		endEditCP(multipleIntervalButton, ToggleButton::SelectedFieldMask);
+        beginEditCP(multipleIntervalButton, ToggleButton::SelectedFieldMask);
+            multipleIntervalButton->setSelected(false);
+        endEditCP(multipleIntervalButton, ToggleButton::SelectedFieldMask);
 
-		SelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
-	}
+        SelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
+    }
 
    virtual void buttonDeselected(const ButtonSelectedEvent& e)
    {
@@ -141,17 +141,17 @@ class MultipleIntervalSelection : public ButtonSelectedListener
 public:
 
    virtual void buttonSelected(const ButtonSelectedEvent& e)
-	{	
-		beginEditCP(singleButton, ToggleButton::SelectedFieldMask);
-			singleButton->setSelected(false);
-		endEditCP(singleButton, ToggleButton::SelectedFieldMask);
+    {    
+        beginEditCP(singleButton, ToggleButton::SelectedFieldMask);
+            singleButton->setSelected(false);
+        endEditCP(singleButton, ToggleButton::SelectedFieldMask);
 
-		beginEditCP(singleIntervalButton, ToggleButton::SelectedFieldMask);
-			singleIntervalButton->setSelected(false);
-		endEditCP(singleIntervalButton, ToggleButton::SelectedFieldMask);
+        beginEditCP(singleIntervalButton, ToggleButton::SelectedFieldMask);
+            singleIntervalButton->setSelected(false);
+        endEditCP(singleIntervalButton, ToggleButton::SelectedFieldMask);
 
-		SelectionModel->setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
-	}
+        SelectionModel->setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
+    }
 
    virtual void buttonDeselected(const ButtonSelectedEvent& e)
    {
@@ -167,15 +167,15 @@ int main(int argc, char **argv)
     // OSG init
     osgInit(argc,argv);
 
-    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
+    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
     
-    TheWindowEventProducer->setDisplayCallback(display);
-    TheWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
 
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
 
     // Make Torus Node (creates Torus in background of scene)
@@ -187,212 +187,212 @@ int main(int argc, char **argv)
     {
         scene->setCore(osg::Group::create());
  
-        // add the torus as a child
+        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
     }
-    endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	// Create the Graphics
-	GraphicsPtr graphics = osg::Graphics2D::create();
+    // Create the Graphics
+    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
 
-	// Initialize the LookAndFeelManager to enable default 
-	// settings for the Button
-	LookAndFeelManager::the()->getLookAndFeel()->init();
-
-
-	// Create some Buttons to show changing List format
-	singleButton = osg::ToggleButton::create();
-	singleIntervalButton = osg::ToggleButton::create();
-	multipleIntervalButton = osg::ToggleButton::create();
-	// Give them text, change sizes, add ActionListeners
-	beginEditCP(singleButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
-		singleButton->setText("Single Selection");
-		singleButton->setPreferredSize( Vec2s(160, 50) );
-	endEditCP(singleButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
-		SingleSelection singleButtonListener;
-		singleButton->addButtonSelectedListener(&singleButtonListener);
-	
-	beginEditCP(singleIntervalButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
-		singleIntervalButton->setText("Single Interval Selection");
-		singleIntervalButton->setPreferredSize( Vec2s(160, 50) );
-	endEditCP(singleIntervalButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
-		SingleIntervalSelection singleIntervalButtonListener;
-		singleIntervalButton->addButtonSelectedListener(&singleIntervalButtonListener);
-	
-	beginEditCP(multipleIntervalButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
-		multipleIntervalButton->setText("Multiple Interval Selection");
-		multipleIntervalButton->setPreferredSize( Vec2s(160, 50) );
-	endEditCP(multipleIntervalButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
-		MultipleIntervalSelection multipleIntervalButtonListener;
-		multipleIntervalButton->addButtonSelectedListener(&multipleIntervalButtonListener);
+    // Initialize the LookAndFeelManager to enable default 
+    // settings for the Button
+    LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
-	/******************************************************
-
-			Create ListModel.  This is where you set
-			the values for the List.
-
-			After creating an AbstractListModel,
-			do the following to make a list.
-			
-			First, create SFStrings and use the 
-			.setValue("VALUE") function to set their
-			values.  Then, use the .pushBack(&SFStringName)
-			to add them to the List.
-
-			Next, create the CellRenderer and ListSelectionModel
-			defaults.
-
-			Finally, actually create the List.  Set
-			its Model, CellRenderer, and SelectionModel
-			as shown below.  Finally, choose the
-			type of display for the List (choices outlined
-			below).
-
-			
-
-	******************************************************/
-	// Create ListModel Component to add things to
-	AbstractListModel Model;
-
-	// Add values to it
-	Model.pushBack(SharedFieldPtr(new SFString("Red")));
-	Model.pushBack(SharedFieldPtr(new SFString("Green")));
-	Model.pushBack(SharedFieldPtr(new SFString("Blue")));
-	Model.pushBack(SharedFieldPtr(new SFString("Orange")));
-	Model.pushBack(SharedFieldPtr(new SFString("Purple")));
-	Model.pushBack(SharedFieldPtr(new SFString("Yellow")));
-	Model.pushBack(SharedFieldPtr(new SFString("White")));
-	Model.pushBack(SharedFieldPtr(new SFString("Black")));
-	Model.pushBack(SharedFieldPtr(new SFString("Gray")));
-	Model.pushBack(SharedFieldPtr(new SFString("Brown")));
-	Model.pushBack(SharedFieldPtr(new SFString("Indigo")));
-	Model.pushBack(SharedFieldPtr(new SFString("Pink")));
-	Model.pushBack(SharedFieldPtr(new SFString("Violet")));
-	Model.pushBack(SharedFieldPtr(new SFString("Mauve")));
-	Model.pushBack(SharedFieldPtr(new SFString("Peach")));
+    // Create some Buttons to show changing List format
+    singleButton = osg::ToggleButton::create();
+    singleIntervalButton = osg::ToggleButton::create();
+    multipleIntervalButton = osg::ToggleButton::create();
+    // Give them text, change sizes, add ActionListeners
+    beginEditCP(singleButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
+        singleButton->setText("Single Selection");
+        singleButton->setPreferredSize(Vec2s(160, 50));
+    endEditCP(singleButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
+        SingleSelection singleButtonListener;
+        singleButton->addButtonSelectedListener(&singleButtonListener);
+    
+    beginEditCP(singleIntervalButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
+        singleIntervalButton->setText("Single Interval Selection");
+        singleIntervalButton->setPreferredSize(Vec2s(160, 50));
+    endEditCP(singleIntervalButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
+        SingleIntervalSelection singleIntervalButtonListener;
+        singleIntervalButton->addButtonSelectedListener(&singleIntervalButtonListener);
+    
+    beginEditCP(multipleIntervalButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
+        multipleIntervalButton->setText("Multiple Interval Selection");
+        multipleIntervalButton->setPreferredSize(Vec2s(160, 50));
+    endEditCP(multipleIntervalButton, Button::TextFieldMask | Component::PreferredSizeFieldMask);
+        MultipleIntervalSelection multipleIntervalButtonListener;
+        multipleIntervalButton->addButtonSelectedListener(&multipleIntervalButtonListener);
 
 
-	// Create ListCellRenderer and ListSelectionModel
-	// (normally will be default).
-	// Note that the DefaultListSelectionModel was
-	// created at the top of this file before
-	// the ActionListeners
-	DefaultListCellRenderer CellRenderer;
-	//DefaultListSelectionModel SelectionModel;
+    /******************************************************
 
-	// Create Background to be used with the Main Frame
-	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-	// Create ListPtr
-	ListPtr list = List::create();
-	beginEditCP(list);
-		list->setPreferredSize( Vec2s (200, 300) );
-		list->setBackground(mainBackground);
+            Create ListModel.  This is where you set
+            the values for the List.
+
+            After creating an AbstractListModel,
+            do the following to make a list.
+            
+            First, create SFStrings and use the 
+            .setValue("VALUE") function to set their
+            values.  Then, use the .pushBack(&SFStringName)
+            to add them to the List.
+
+            Next, create the CellRenderer and ListSelectionModel
+            defaults.
+
+            Finally, actually create the List.  Set
+            its Model, CellRenderer, and SelectionModel
+            as shown below.  Finally, choose the
+            type of display for the List (choices outlined
+            below).
+
+            
+
+    ******************************************************/
+    // Create ListModel Component to add things to
+    AbstractListModel Model;
+
+    // Add values to it
+    Model.pushBack(SharedFieldPtr(new SFString("Red")));
+    Model.pushBack(SharedFieldPtr(new SFString("Green")));
+    Model.pushBack(SharedFieldPtr(new SFString("Blue")));
+    Model.pushBack(SharedFieldPtr(new SFString("Orange")));
+    Model.pushBack(SharedFieldPtr(new SFString("Purple")));
+    Model.pushBack(SharedFieldPtr(new SFString("Yellow")));
+    Model.pushBack(SharedFieldPtr(new SFString("White")));
+    Model.pushBack(SharedFieldPtr(new SFString("Black")));
+    Model.pushBack(SharedFieldPtr(new SFString("Gray")));
+    Model.pushBack(SharedFieldPtr(new SFString("Brown")));
+    Model.pushBack(SharedFieldPtr(new SFString("Indigo")));
+    Model.pushBack(SharedFieldPtr(new SFString("Pink")));
+    Model.pushBack(SharedFieldPtr(new SFString("Violet")));
+    Model.pushBack(SharedFieldPtr(new SFString("Mauve")));
+    Model.pushBack(SharedFieldPtr(new SFString("Peach")));
+
+
+    // Create ListCellRenderer and ListSelectionModel
+    // (normally will be default).
+    // Note that the DefaultListSelectionModel was
+    // created at the top of this file before
+    // the ActionListeners
+    DefaultListCellRenderer CellRenderer;
+    //DefaultListSelectionModel SelectionModel;
+
+    // Create Background to be used with the Main Frame
+    ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
+    beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+        MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+    // Create ListPtr
+    ListPtr list = List::create();
+    beginEditCP(list);
+        list->setPreferredSize( Vec2s (200, 300));
+        list->setBackground(MainFrameBackground);
         list->setCellLayout(VERTICAL_ALIGNMENT);
         //list->setCellLayout(HORIZONTAL_ALIGNMENT);
-	endEditCP(list);
-	// Assign the Model, CellRenderer, and SelectionModel
-	// to the List
-	list->setModel(&Model);
-	list->setCellRenderer(&CellRenderer);
-	list->setSelectionModel(SelectionModel);
+    endEditCP(list);
+    // Assign the Model, CellRenderer, and SelectionModel
+    // to the List
+    list->setModel(&Model);
+    list->setCellRenderer(&CellRenderer);
+    list->setSelectionModel(SelectionModel);
 
 
-	/******************************************************
+    /******************************************************
 
-			Determine the SelectionModel
-			-SINGLE_SELECTION lets you select ONE item
-				via a single mouse click
-			-SINGLE_INTERVAL_SELECTION lets you select
-				one interval via mouse and SHIFT key
-			-MULTIPLE_INTERVAL_SELECTION lets you select
-				via mouse, and SHIFT and CONTRL keys
+            Determine the SelectionModel
+            -SINGLE_SELECTION lets you select ONE item
+                via a single mouse click
+            -SINGLE_INTERVAL_SELECTION lets you select
+                one interval via mouse and SHIFT key
+            -MULTIPLE_INTERVAL_SELECTION lets you select
+                via mouse, and SHIFT and CONTRL keys
 
-			Note: this tutorial is currently set up
-			to allow for this to be changed via Buttons
-			with ActionListeners attached to them so
-			this code is commented out
+            Note: this tutorial is currently set up
+            to allow for this to be changed via Buttons
+            with ActionListeners attached to them so
+            this code is commented out
 
-	******************************************************/
+    ******************************************************/
 
-	//SelectionModel.setMode(DefaultListSelectionModel::SINGLE_SELECTION);
-	//SelectionModel.setMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
-	//SelectionModel.setMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
+    //SelectionModel.setMode(DefaultListSelectionModel::SINGLE_SELECTION);
+    //SelectionModel.setMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
+    //SelectionModel.setMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
 
     //ScrollPanel
     ScrollPanelPtr TheScrollPanel = ScrollPanel::create();
     beginEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-	    TheScrollPanel->setPreferredSize(Vec2s(200,300));
+        TheScrollPanel->setPreferredSize(Vec2s(200,300));
         TheScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         //TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     endEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
     TheScrollPanel->setViewComponent(list);
 
-	// Create MainFramelayout
-	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
-	beginEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
-		MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
-		MainFrameLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-		MainFrameLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-	endEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
-		
+    // Create MainFramelayout
+    FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
+    beginEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+        MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
+        MainFrameLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
+        MainFrameLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
+    endEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+        
 
-	// Create The Main Frame
-	FramePtr MainFrame = osg::Frame::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-	   MainFrame->getChildren().addValue(singleButton);
-	   MainFrame->getChildren().addValue(singleIntervalButton);
-	   MainFrame->getChildren().addValue(multipleIntervalButton);
-	   MainFrame->getChildren().addValue(TheScrollPanel);
-	   MainFrame->setLayout(MainFrameLayout);
-	   MainFrame->setBackground(mainBackground);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+    // Create The Main Frame
+    FramePtr MainFrame = osg::Frame::create();
+    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+       MainFrame->getChildren().addValue(singleButton);
+       MainFrame->getChildren().addValue(singleIntervalButton);
+       MainFrame->getChildren().addValue(multipleIntervalButton);
+       MainFrame->getChildren().addValue(TheScrollPanel);
+       MainFrame->setLayout(MainFrameLayout);
+       MainFrame->setBackground(MainFrameBackground);
+    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
-	// Create the Drawing Surface
-	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-		drawingSurface->setGraphics(graphics);
-		drawingSurface->setRootFrame(MainFrame);
-	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-	
-	// Create the UI Foreground Object
-	UIForegroundPtr foreground = osg::UIForeground::create();
+    // Create the Drawing Surface
+    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setRootFrame(MainFrame);
+        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    
+    // Create the UI Foreground Object
+    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
 
-	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-	    foreground->setDrawingSurface(drawingSurface);
-		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.7,0.5));
-    endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
+        TutorialUIForeground->setFrameBounds(Vec2f(0.7,0.5));
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // Tell the manager what to manage
+    // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
     mgr->setRoot(scene);
 
-	// Add the UI Foreground Object to the Scene
-	ViewportPtr viewport = mgr->getWindow()->getPort(0);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-		viewport->getForegrounds().addValue(foreground);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
+    // Add the UI Foreground Object to the Scene
+    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
-    // Show the whole scene
+    // Show the whole Scene
     mgr->showAll();
 
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
+    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(900,900),
                                         "OpenSG 18List Window");
 
     //Main Event Loop
     while(!ExitApp)
     {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
+        TutorialWindowEventProducer->update();
+        TutorialWindowEventProducer->draw();
     }
     osgExit();
 

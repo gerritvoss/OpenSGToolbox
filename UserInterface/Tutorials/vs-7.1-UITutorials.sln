@@ -182,6 +182,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "49LookAndFeel", "49LookAndF
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "35Graphics3DExtrude", "35Graphics3DExtrude.vcproj", "{A24FF71F-3266-4447-B2B4-09DC4BC97CA4}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -340,6 +344,10 @@ Global
 		{21C6EF91-E8D5-41AE-AAC1-E00F354CB5D4}.Debug.Build.0 = Debug|Win32
 		{21C6EF91-E8D5-41AE-AAC1-E00F354CB5D4}.Release.ActiveCfg = Release|Win32
 		{21C6EF91-E8D5-41AE-AAC1-E00F354CB5D4}.Release.Build.0 = Release|Win32
+		{A24FF71F-3266-4447-B2B4-09DC4BC97CA4}.Debug.ActiveCfg = Debug|Win32
+		{A24FF71F-3266-4447-B2B4-09DC4BC97CA4}.Debug.Build.0 = Debug|Win32
+		{A24FF71F-3266-4447-B2B4-09DC4BC97CA4}.Release.ActiveCfg = Release|Win32
+		{A24FF71F-3266-4447-B2B4-09DC4BC97CA4}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

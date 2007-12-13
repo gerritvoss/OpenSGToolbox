@@ -98,40 +98,39 @@ public:
     }
 };
 
-	/******************************************************
+    /******************************************************
 
-		 Create an ActionListener to display text
-		 in the Console Window when the Button is
-		 pressed (causing an action).
+         Create an ActionListener to display text
+         in the Console Window when the Button is
+         pressed (causing an action).
 
-	******************************************************/
+    ******************************************************/
 
-class Button1ActionListener : public ActionListener
+class ExampleButtonActionListener : public ActionListener
 {
 public:
 
    virtual void actionPerformed(const ActionEvent& e)
-	{
-		std::cout << "Button 1 Action" << std::endl;
-	}
+    {
+        std::cout << "Button 1 Action" << std::endl;
+    }
 };
 
-// Initialize WIN32 & OpenSG and set up the scene
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
+    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
     
-    TheWindowEventProducer->setDisplayCallback(display);
-    TheWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
 
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
@@ -146,198 +145,203 @@ int main(int argc, char **argv)
         // Add the torus as a child
         scene->addChild(TorusGeometryNode);
     }
-    endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	// Create the Graphics
-	GraphicsPtr graphics = osg::Graphics2D::create();
+    // Create the Graphics
+    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
 
-	// Initialize the LookAndFeelManager to enable default settings
-	LookAndFeelManager::the()->getLookAndFeel()->init();
-	/******************************************************
+    // Initialize the LookAndFeelManager to enable default settings
+    LookAndFeelManager::the()->getLookAndFeel()->init();
+    /******************************************************
 
-				 Create an Button component and
-				 a simple Font to be used.
-				 See 17Label_Font for more
-				 information about Fonts
+                 Create an Button Component and
+                 a simple Font.
+                 See 17Label_Font for more
+                 information about Fonts.
 
-	******************************************************/
-	ButtonPtr button1 = osg::Button::create();
+    ******************************************************/
+    ButtonPtr ExampleButton = osg::Button::create();
 
-	UIFontPtr sampleFont = osg::UIFont::create();
-    beginEditCP(sampleFont, UIFont::SizeFieldMask);
-		sampleFont->setSize(16);
-	endEditCP(sampleFont, UIFont::SizeFieldMask);
+    UIFontPtr ExampleFont = osg::UIFont::create();
+    beginEditCP(ExampleFont, UIFont::SizeFieldMask);
+        ExampleFont->setSize(16);
+    endEditCP(ExampleFont, UIFont::SizeFieldMask);
 
-	/******************************************************
+    /******************************************************
 
-			Edit the Button's characteristics.
-			Note: the first 4 functions can
-			be used with any Component and 
-			are not Button specific.
+            Edit the Button's characteristics.
+            Note: the first 4 functions can
+            be used with any Component and 
+            are not specific to Button.
 
-			-setMinSize(Vec2s): Determine the 
-				Minimum	Size of the Component.
-				Some Layouts will automatically
-				resize Components; this prevents
-				the Size from going below a
-				certain value.
-			-setMaxSize(Vec2s): Determine the 
-				Maximum Size of the Component.
-			-setPreferredSize(Vec2s): Determine
-				the Preferred Size of the Component.
-				This is what the Component will
-				be displayed at unless changed by
-				another Component.
-			-setToolTipText("Text"): Determine
-				what text is displayed while
-				Mouse is hovering above Component.
-				The word Text will be displayed.
-			
-			Button specific functions:
-			-setText("DesiredText"): Determine 
-				the Button's text.  It will read
-				DesiredText in this case.
-			-setFont(FontName): Determine the 
-				Font to be used on the Button.
-			-setTextColor(Color4f): Determine the
-				Color the text will be.
-			-setRolloverTextColor(Color4f): Determine
-				what the text Color will be when
-				the Mouse Cursor is above the 
-				Button.
-			-setActiveTextColor(Color4f): Determine
-				what the text Color will be when
-				the Button is pressed (Active).
-			-setVerticalAlignment(Float OR Enum):
-				Determine the Vertical Alignment
-				of the text.  The Float value is 
-				in [0.0, 1.0] and the Enums are:
-				VERTICAL_CENTER, VERTICAL_TOP, 
-				or VERTICAL_BOTTOM.
-			-setHorizontalAlignmnet(Float OR Enum):
-				Determine the Horizontal Alignment
-				of the text.  The Float value is 
-				in [0.0, 1.0] and the Enums are:
-				HORIZONTAL_CENTER, HORIZONTAL_LEFT, 
-				or HORIZONTAL_RIGHT.
+            -setMinSize(Vec2s): Determine the 
+                Minimum    Size of the Component.
+                Some Layouts will automatically
+                resize Components; this prevents
+                the Size from going below a
+                certain value.
+            -setMaxSize(Vec2s): Determine the 
+                Maximum Size of the Component.
+            -setPreferredSize(Vec2s): Determine
+                the Preferred Size of the Component.
+                This is what the Component will
+                be displayed at unless changed by
+                another Component (such as a 
+                Layout).
+            -setToolTipText("Text"): Determine
+                what text is displayed while
+                Mouse is hovering above Component.
+                The word Text will be displayed
+                in this case.
+            
+            Functions specfic to Button:
+            -setText("DesiredText"): Determine 
+                the Button's text.  It will read
+                DesiredText in this case.
+            -setFont(FontName): Determine the 
+                Font to be used on the Button.
+            -setTextColor(Color4f): Determine the
+                Color for the text.
+            -setRolloverTextColor(Color4f): Determine
+                what the text Color will be when
+                the Mouse Cursor is above the 
+                Button.
+            -setActiveTextColor(Color4f): Determine
+                what the text Color will be when
+                the Button is pressed (denoted by
+                Active).
+            -setVerticalAlignment(Float OR Enum):
+                Determine the Vertical Alignment
+                of the text.  The Float value is 
+                in [0.0, 1.0] and the Enums are:
+                VERTICAL_CENTER, VERTICAL_TOP, 
+                or VERTICAL_BOTTOM.
+            -setHorizontalAlignmnet(Float OR Enum):
+                Determine the Horizontal Alignment
+                of the text.  The Float value is 
+                in [0.0, 1.0] and the Enums are:
+                HORIZONTAL_CENTER, HORIZONTAL_LEFT, 
+                or HORIZONTAL_RIGHT.
 
+    ******************************************************/
+    beginEditCP(ExampleButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
+            ExampleButton->setMinSize(Vec2s(50, 25));
+            ExampleButton->setMaxSize(Vec2s(200, 100));
+            ExampleButton->setPreferredSize(Vec2s(100, 50));
+            ExampleButton->setToolTipText("Button 1 ToolTip");
 
-	******************************************************/
-    beginEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::ToolTipTextFieldMask | Button::TextFieldMask |
-		Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
-		    button1->setMinSize( Vec2s (50, 25) );
-		    button1->setMaxSize( Vec2s (200, 100) );
-		    button1->setPreferredSize( Vec2s (100, 50) );
-            button1->setToolTipText("Button 1 ToolTip");
+            ExampleButton->setText("Button 1");
+            ExampleButton->setFont(ExampleFont);
+            ExampleButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            ExampleButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+            ExampleButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            ExampleButton->setVerticalAlignment(0.0);
+            ExampleButton->setHorizontalAlignment(1.0);
+    endEditCP(ExampleButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
+            
+    // Create an ActionListener and assign it to ExampleButton
+    // This Class is defined above, and will cause the output
+    // window to display "Button 1 Action" when pressed
+    ExampleButtonActionListener TheExampleButtonActionListener;
+    ExampleButton->addActionListener(&TheExampleButtonActionListener);
 
-		    button1->setText("Button 1");
-		    button1->setFont(sampleFont);
-		    button1->setTextColor( Color4f(1.0, 0.0, 0.0, 1.0) );
-		    button1->setRolloverTextColor( Color4f(1.0, 0.0, 1.0, 1.0) );
-		    button1->setActiveTextColor( Color4f(1.0, 0.0, 0.0, 1.0) );
-		    button1->setVerticalAlignment(0.0);
-		    button1->setHorizontalAlignment(1.0);
-	endEditCP(button1, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::ToolTipTextFieldMask | Button::TextFieldMask |
-		Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
-		    
-	// Create an ActionListener and assign it to button1
-	// This is defined above, and wil
-	Button1ActionListener button1AL;
-	button1->addActionListener( &button1AL);
+    /******************************************************
 
-	/******************************************************
+        Create a ToggleButton and determine its 
+        characteristics.  ToggleButton inherits
+        off of Button, so all characteristsics
+        used above can be used with ToggleButtons
+        as well.
 
+        The only difference is that when pressed,
+        ToggleButton remains pressed until pressed 
+        again.
 
-		Create a ToggleButton and determine its 
-		characteristics.  All characteristics Buttons
-		have are also present in ToggleButton.
+        -setSelected(Bool): Determine whether the 
+            ToggleButton is Selected (true) or
+            deselected (false).  
 
-		The only difference is that when pressed,
-		ToggleButton remains pressed until pressed 
-		again.
-
-
-
-	******************************************************/
-	ToggleButtonPtr toggleButton1 = osg::ToggleButton::create();
-	
-	beginEditCP(toggleButton1, ToggleButton::SelectedFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
-		// Determine if the ToggleButton appears pressed (TRUE) or released (FALSE)
-		toggleButton1->setSelected(false);
-		toggleButton1->setText("ToggleMe");
-        toggleButton1->setToolTipText("Toggle Button ToolTip");
-	endEditCP(toggleButton1, ToggleButton::SelectedFieldMask | Button::TextFieldMask | Button::ToolTipTextFieldMask);
+    ******************************************************/
+    ToggleButtonPtr ExampleToggleButton = osg::ToggleButton::create();
+    
+    beginEditCP(ExampleToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::TextFieldMask | ToggleButton::ToolTipTextFieldMask);
+        ExampleToggleButton->setSelected(false);
+        ExampleToggleButton->setText("ToggleMe");
+        ExampleToggleButton->setToolTipText("Toggle Button ToolTip");
+    endEditCP(ExampleToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::TextFieldMask | ToggleButton::ToolTipTextFieldMask);
 
     //Button with Image
-	ButtonPtr DrawObjectButton = osg::Button::create();
+    ButtonPtr ExampleDrawObjectButton = osg::Button::create();
 
-    DrawObjectButton->setImage(std::string("Data/ComponentTransform.png"));
-    DrawObjectButton->setActiveImage(std::string("Data/ComponentTransform.png"));
-    DrawObjectButton->setFocusedImage(std::string("Data/ComponentTransform.png"));
-    DrawObjectButton->setRolloverImage(std::string("Data/ComponentTransform.png"));
-    DrawObjectButton->setDisabledImage(std::string("Data/ComponentTransform.png"));
+    ExampleDrawObjectButton->setImage(std::string("Data/ComponentTransform.png"));
+    ExampleDrawObjectButton->setActiveImage(std::string("Data/ComponentTransform.png"));
+    ExampleDrawObjectButton->setFocusedImage(std::string("Data/ComponentTransform.png"));
+    ExampleDrawObjectButton->setRolloverImage(std::string("Data/ComponentTransform.png"));
+    ExampleDrawObjectButton->setDisabledImage(std::string("Data/ComponentTransform.png"));
 
-	// Create Background to be used with the MainFrame
-	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-	// Create The Main Frame
-	FramePtr MainFrame = osg::Frame::create();
-	LayoutPtr MainFrameLayout = osg::FlowLayout::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
-	   // Assign the Button to the MainFrame so it will be displayed
-	   // when the view is rendered.
-	   MainFrame->getChildren().addValue(button1);
-	   MainFrame->getChildren().addValue(toggleButton1);
-	   MainFrame->getChildren().addValue(DrawObjectButton);
-	   MainFrame->setLayout(MainFrameLayout);
-	   MainFrame->setBackground(mainBackground);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
+    // Create Background to be used with the MainFrame
+    ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
+    beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+        MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+    // Create The Main Frame
+    FramePtr MainFrame = osg::Frame::create();
+    LayoutPtr MainFrameLayout = osg::FlowLayout::create();
+    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+       // Assign the Button to the MainFrame so it will be displayed
+       // when the view is rendered.
+       MainFrame->getChildren().addValue(ExampleButton);
+       MainFrame->getChildren().addValue(ExampleToggleButton);
+       MainFrame->getChildren().addValue(ExampleDrawObjectButton);
+       MainFrame->setLayout(MainFrameLayout);
+       MainFrame->setBackground(MainFrameBackground);
+    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
     TutorialKeyListener TheKeyListener;
     MainFrame->addKeyListener(&TheKeyListener);
 
-	// Create the Drawing Surface
-	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-		drawingSurface->setGraphics(graphics);
-		drawingSurface->setRootFrame(MainFrame);
-	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-	// Create the UI Foreground Object
-	UIForegroundPtr foreground = osg::UIForeground::create();
+    // Create the Drawing Surface
+    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setRootFrame(MainFrame);
+        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    // Create the UI Foreground Object
+    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
 
-	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-	    foreground->setDrawingSurface(drawingSurface);
-		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.5,0.5));
-    endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask |UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
+        TutorialUIForeground->setFrameBounds(Vec2f(0.5,0.5));
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask |UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // Tell the manager what to manage
+    // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
     mgr->setRoot(scene);
 
-	// Add the UI Foreground Object to the Scene
-	ViewportPtr viewport = mgr->getWindow()->getPort(0);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-		viewport->getForegrounds().addValue(foreground);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
+    // Add the UI Foreground Object to the Scene
+    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
-    // Show the whole scene
+    // Show the whole Scene
     mgr->showAll();
 
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
+    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(550,550),
                                         "OpenSG 01Button Window");
 
     while(!ExitApp)
     {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
+        TutorialWindowEventProducer->update();
+        TutorialWindowEventProducer->draw();
     }
     osgExit();
 

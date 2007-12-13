@@ -86,15 +86,15 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
+    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
     
-    TheWindowEventProducer->setDisplayCallback(display);
-    TheWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
 
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
 
     // Make Torus Node (creates Torus in background of scene)
@@ -106,194 +106,195 @@ int main(int argc, char **argv)
     {
         scene->setCore(osg::Group::create());
  
-        // add the torus as a child
+        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
     }
-    endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	// Create the Graphics
-	GraphicsPtr graphics = osg::Graphics2D::create();
+    // Create the Graphics
+    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
 
-	// Initialize the LookAndFeelManager to enable default 
-	// settings for the Button
-	LookAndFeelManager::the()->getLookAndFeel()->init();
-
-
-	/******************************************************
-			
-				Creates some Button components
-				and give them some Text
-
-	******************************************************/
-
-	ButtonPtr button1 = osg::Button::create();
-	ButtonPtr button2 = osg::Button::create();
-	ButtonPtr button3 = osg::Button::create();
-	ButtonPtr button4 = osg::Button::create();
-	ButtonPtr button5 = osg::Button::create();
-	ButtonPtr button6 = osg::Button::create();
-	
-	beginEditCP(button1, Button::TextFieldMask);
-		button1->setText("This");
-	endEditCP(button1, Button::TextFieldMask);
-
-	beginEditCP(button2, Button::TextFieldMask);
-		button2->setText("is a");
-	endEditCP(button2, Button::TextFieldMask);
-
-	beginEditCP(button3, Button::TextFieldMask);
-		button3->setText("sample");
-	endEditCP(button3, Button::TextFieldMask);
-
-	beginEditCP(button4, Button::TextFieldMask);
-		button4->setText("two");
-	endEditCP(button4, Button::TextFieldMask);
-
-	beginEditCP(button5, Button::TextFieldMask);
-		button5->setText("panel");
-	endEditCP(button5, Button::TextFieldMask);
-
-	beginEditCP(button6, Button::TextFieldMask);
-		button6->setText("layout");
-	endEditCP(button6, Button::TextFieldMask);
-
-	
-	/******************************************************
-
-			Create some Flow and Box Layouts to be 
-			used with the Main Frame and the two 
-			Panels
-
-	******************************************************/
-	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
-	FlowLayoutPtr panel1Layout = osg::FlowLayout::create();
-	FlowLayoutPtr panel2Layout = osg::FlowLayout::create();
-
-	beginEditCP(panel1Layout, FlowLayout::AlignmentFieldMask);
-		panel1Layout->setAlignment(VERTICAL_ALIGNMENT);
-	endEditCP(panel1Layout, FlowLayout::AlignmentFieldMask);
+    // Initialize the LookAndFeelManager to enable default 
+    // settings for the Button
+    LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
-	/******************************************************
-			
-			Create two Backgrounds to be used with
-			Panels and MainFrame
+    /******************************************************
+            
+                Creates some Button components
+                and edit their Text.
 
-	******************************************************/
-	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	ColorUIBackgroundPtr panelBackground = osg::ColorUIBackground::create();
+    ******************************************************/
 
-	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+    ButtonPtr ExampleButton1 = osg::Button::create();
+    ButtonPtr ExampleButton2 = osg::Button::create();
+    ButtonPtr ExampleButton3 = osg::Button::create();
+    ButtonPtr ExampleButton4 = osg::Button::create();
+    ButtonPtr ExampleButton5 = osg::Button::create();
+    ButtonPtr ExampleButton6 = osg::Button::create();
+    
+    beginEditCP(ExampleButton1, Button::TextFieldMask);
+        ExampleButton1->setText("This");
+    endEditCP(ExampleButton1, Button::TextFieldMask);
 
-	beginEditCP(panelBackground, ColorUIBackground::ColorFieldMask);
-		panelBackground->setColor(Color4f(0.0,0.0,0.0,1.0));
-	endEditCP(panelBackground, ColorUIBackground::ColorFieldMask);
-	
-	/******************************************************
-			
-			Create a Border to be used with
-			the two Panels
+    beginEditCP(ExampleButton2, Button::TextFieldMask);
+        ExampleButton2->setText("is a");
+    endEditCP(ExampleButton2, Button::TextFieldMask);
 
-	******************************************************/
-	LineBorderPtr panelBorder = osg::LineBorder::create();
-	beginEditCP(panelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
-		panelBorder->setColor( Color4f(0.9, 0.9, 0.9, 1.0) );
-		panelBorder->setWidth(3);
-	endEditCP(panelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+    beginEditCP(ExampleButton3, Button::TextFieldMask);
+        ExampleButton3->setText("sample");
+    endEditCP(ExampleButton3, Button::TextFieldMask);
+
+    beginEditCP(ExampleButton4, Button::TextFieldMask);
+        ExampleButton4->setText("two");
+    endEditCP(ExampleButton4, Button::TextFieldMask);
+
+    beginEditCP(ExampleButton5, Button::TextFieldMask);
+        ExampleButton5->setText("ExamplePanel");
+    endEditCP(ExampleButton5, Button::TextFieldMask);
+
+    beginEditCP(ExampleButton6, Button::TextFieldMask);
+        ExampleButton6->setText("layout");
+    endEditCP(ExampleButton6, Button::TextFieldMask);
+
+    
+    /******************************************************
+
+            Create some Flow and BoxLayouts to be 
+            used with the Main Frame and two 
+            Panels.
+
+    ******************************************************/
+    FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
+    FlowLayoutPtr ExamplePanel1Layout = osg::FlowLayout::create();
+    FlowLayoutPtr ExamplePanel2Layout = osg::FlowLayout::create();
+
+    beginEditCP(ExamplePanel1Layout, FlowLayout::AlignmentFieldMask);
+        ExamplePanel1Layout->setAlignment(VERTICAL_ALIGNMENT);
+    endEditCP(ExamplePanel1Layout, FlowLayout::AlignmentFieldMask);
 
 
-	/******************************************************
+    /******************************************************
+            
+            Create two Backgrounds to be used with
+            Panels and MainFrame.
 
-		Create MainFrame and two Panel Components and
-		edit their characteristics: 
-		-PreferredSize changes their size
-		-getChildren adds Components to the Panel or
-		Frame (you can add Panels or Frames to other
-		Panels and Frames)
-		-setLayout determines the Layout of the Panel/
-		Frame (each Frame and Panel can have its own 
-		Layout, even within another Frame/Panel)
+    ******************************************************/
+    ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
+    ColorUIBackgroundPtr ExamplePanelBackground = osg::ColorUIBackground::create();
+
+    beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+        MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+
+    beginEditCP(ExamplePanelBackground, ColorUIBackground::ColorFieldMask);
+        ExamplePanelBackground->setColor(Color4f(0.0,0.0,0.0,1.0));
+    endEditCP(ExamplePanelBackground, ColorUIBackground::ColorFieldMask);
+    
+    /******************************************************
+            
+            Create a Border to be used with
+            the two Panels.
+
+    ******************************************************/
+    LineBorderPtr ExamplePanelBorder = osg::LineBorder::create();
+    beginEditCP(ExamplePanelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+        ExamplePanelBorder->setColor(Color4f(0.9, 0.9, 0.9, 1.0));
+        ExamplePanelBorder->setWidth(3);
+    endEditCP(ExamplePanelBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
 
 
-	******************************************************/
-	FramePtr MainFrame = osg::Frame::create();
-	PanelPtr panel1 = osg::Panel::create();
-	PanelPtr panel2 = osg::Panel::create();
-	
-	// Edit Panel1, Panel2
-	beginEditCP(panel1, Component::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
-		panel1->setPreferredSize( Vec2s(200, 200) );
-		panel1->getChildren().addValue(button1);
-		panel1->getChildren().addValue(button2);
-		panel1->getChildren().addValue(button3);
-		panel1->setLayout(panel1Layout);
-		panel1->setBackground(panelBackground);
-		panel1->setBorder(panelBorder);
-	endEditCP(panel1, Component::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+    /******************************************************
 
-	beginEditCP(panel2, Component::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
-		panel2->setPreferredSize( Vec2s(200, 200) );
-		panel2->getChildren().addValue(button4);
-		panel2->getChildren().addValue(button5);
-		panel2->getChildren().addValue(button6);
-		panel2->setLayout(panel2Layout);
-		panel2->setBackground(panelBackground);
-		panel2->setBorder(panelBorder);
-	endEditCP(panel2, Component::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+        Create MainFrame and two Panel Components and
+        edit their characteristics.
 
-	// Edit MainFrame
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-	   MainFrame->getChildren().addValue(panel1);
-	   MainFrame->getChildren().addValue(panel2);
-	   MainFrame->setLayout(MainFrameLayout);
-	   MainFrame->setBackground(mainBackground);
+        -setPreferredSize(Vec2s): Determine the 
+			size of the Panel.
+        -getChildren().addValue(ComponentName):
+			Adds a Component to the
+			Container as a Child (meaning it 
+			will be displayed within it).
+        -setLayout(LayoutName): Determines the 
+			Layout of the Container.
+
+    ******************************************************/
+    FramePtr MainFrame = osg::Frame::create();
+    PanelPtr ExamplePanel1 = osg::Panel::create();
+    PanelPtr ExamplePanel2 = osg::Panel::create();
+    
+    // Edit Panel1, Panel2
+    beginEditCP(ExamplePanel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+        ExamplePanel1->setPreferredSize(Vec2s(200, 200));
+        ExamplePanel1->getChildren().addValue(ExampleButton1);
+        ExamplePanel1->getChildren().addValue(ExampleButton2);
+        ExamplePanel1->getChildren().addValue(ExampleButton3);
+        ExamplePanel1->setLayout(ExamplePanel1Layout);
+        ExamplePanel1->setBackground(ExamplePanelBackground);
+        ExamplePanel1->setBorder(ExamplePanelBorder);
+    endEditCP(ExamplePanel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+
+    beginEditCP(ExamplePanel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+        ExamplePanel2->setPreferredSize(Vec2s(200, 200));
+        ExamplePanel2->getChildren().addValue(ExampleButton4);
+        ExamplePanel2->getChildren().addValue(ExampleButton5);
+        ExamplePanel2->getChildren().addValue(ExampleButton6);
+        ExamplePanel2->setLayout(ExamplePanel2Layout);
+        ExamplePanel2->setBackground(ExamplePanelBackground);
+        ExamplePanel2->setBorder(ExamplePanelBorder);
+    endEditCP(ExamplePanel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+
+    // Edit MainFrame
+    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+       MainFrame->getChildren().addValue(ExamplePanel1);
+       MainFrame->getChildren().addValue(ExamplePanel2);
+       MainFrame->setLayout(MainFrameLayout);
+       MainFrame->setBackground(MainFrameBackground);
        MainFrame->setAllInsets(5);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
-	// Create the Drawing Surface
-	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-		drawingSurface->setGraphics(graphics);
-		drawingSurface->setRootFrame(MainFrame);
-	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-	
-	// Create the UI Foreground Object
-	UIForegroundPtr foreground = osg::UIForeground::create();
+    // Create the Drawing Surface
+    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setRootFrame(MainFrame);
+        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    
+    // Create the UI Foreground Object
+    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
 
-	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-	    foreground->setDrawingSurface(drawingSurface);
-		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.5,0.5));
-    endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
+        TutorialUIForeground->setFrameBounds(Vec2f(0.5,0.5));
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // Tell the manager what to manage
+    // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
     mgr->setRoot(scene);
 
-	// Add the UI Foreground Object to the Scene
-	ViewportPtr viewport = mgr->getWindow()->getPort(0);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-		viewport->getForegrounds().addValue(foreground);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
+    // Add the UI Foreground Object to the Scene
+    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
-    // Show the whole scene
+    // Show the whole Scene
     mgr->showAll();
 
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
+    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(900,900),
                                         "OpenSG 10Container Window");
 
     //Main Event Loop
     while(!ExitApp)
     {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
+        TutorialWindowEventProducer->update();
+        TutorialWindowEventProducer->draw();
     }
     osgExit();
 

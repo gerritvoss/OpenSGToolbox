@@ -1,11 +1,11 @@
 // OpenSG Tutorial Example: Using the Overlay Layout
-//		to place Components 
+//        to place Components 
 //
-// This tutorial explains how to place buttons within a 
+// This tutorial explains how to place ExampleButtons within a 
 // frame utilizing the Overlay Layout command to 
 // manage the layout through the OSG User Interface library.
 // 
-// Includes: placing multiple buttons using Overlay Layout
+// Includes: placing multiple ExampleButtons using Overlay Layout
 
 // GLUT is used for window handling
 #include <OpenSG/OSGGLUT.h>
@@ -76,15 +76,15 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
+    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
     
-    TheWindowEventProducer->setDisplayCallback(display);
-    TheWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
 
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
 
     // Make Torus Node (creates Torus in background of scene)
@@ -96,137 +96,140 @@ int main(int argc, char **argv)
     {
         scene->setCore(osg::Group::create());
  
-        // add the torus as a child
+        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
     }
-    endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	// Create the Graphics
-	GraphicsPtr graphics = osg::Graphics2D::create();
+    // Create the Graphics
+    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
 
-	// Initialize the LookAndFeelManager to enable default 
-	// settings for the Buttons
-	LookAndFeelManager::the()->getLookAndFeel()->init();
-
-
-
-	/******************************************************
-			
-				Creates some Button components
-
-	******************************************************/
-	ButtonPtr button1 = osg::Button::create();
-	ButtonPtr button2 = osg::Button::create();
-	ButtonPtr button3 = osg::Button::create();
-	ButtonPtr button4 = osg::Button::create();
-	ButtonPtr button5 = osg::Button::create();
-	ButtonPtr button6 = osg::Button::create();
+    // Initialize the LookAndFeelManager to enable default 
+    // settings for the Buttons
+    LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
-	/******************************************************
 
-		Create Overlay Layout.  This layout simply
-		places all components within it on top of
-		each other.
+    /******************************************************
+            
+                Creates some Button components
 
-		They are placed in reverse order of how they
-		are added to the MainFrame (components added
-		first are rendered last, those added last are
-		rendered first).
-
-
-	******************************************************/
-	OverlayLayoutPtr MainFrameLayout = osg::OverlayLayout::create();
-
-	// Overlay Layout has no options!
-	beginEditCP(MainFrameLayout);
-		// NOTHING : )
-	endEditCP(MainFrameLayout); 
-
-	
-
-	// Edit Buttons to change their sizes
-	// Note that as with Box Layout, unless a setMaxSize
-	// option is specified, the 
-	beginEditCP(button1, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask);
-		button1->setPreferredSize( Vec2s(50,50) );
-		button1->setMaxSize( Vec2s(50,50) );
-	endEditCP(button1, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask);
-
-	beginEditCP(button2, Button::PreferredSizeFieldMask);
-		 button2->setPreferredSize( Vec2s(300,50) );
-	endEditCP(button2, Button::PreferredSizeFieldMask);
-		
-	// Note that button3 will be resized to be the same
-	// size as button2, while button will not
-	beginEditCP(button3, Component::PreferredSizeFieldMask);
-		 button3->setPreferredSize( Vec2s(50,300) );
-	endEditCP(button3, Component::PreferredSizeFieldMask);
+    ******************************************************/
+    ButtonPtr ExampleButton1 = osg::Button::create();
+    ButtonPtr ExampleButton2 = osg::Button::create();
+    ButtonPtr ExampleButton3 = osg::Button::create();
+    ButtonPtr ExampleButton4 = osg::Button::create();
+    ButtonPtr ExampleButton5 = osg::Button::create();
+    ButtonPtr ExampleButton6 = osg::Button::create();
 
 
- 	// Create The Main Frame
+    /******************************************************
 
-	// Create Background to be used with the Main Frame
-	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-	
-	FramePtr MainFrame = osg::Frame::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-	   MainFrame->getChildren().addValue(button1);
-	   MainFrame->getChildren().addValue(button2);
-	   MainFrame->getChildren().addValue(button3);
-	   MainFrame->getChildren().addValue(button4);
-	   MainFrame->getChildren().addValue(button5);
-	   MainFrame->getChildren().addValue(button6);
-	   // Add the Layout to the MainFrame
-	   MainFrame->setLayout(MainFrameLayout);
-	   MainFrame->setBackground(mainBackground);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+        Create OverlayLayout.  This layout simply
+        places all Components within it on top of
+        each other.
 
-	// Create the Drawing Surface
-	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-		drawingSurface->setGraphics(graphics);
-		drawingSurface->setRootFrame(MainFrame);
-	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-	
-	// Create the UI Foreground Object
-	UIForegroundPtr foreground = osg::UIForeground::create();
+        They are placed in reverse order of how they
+        are added to the MainFrame (Components added
+        first are rendered last, those added last are
+        rendered first).
 
-	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-	    foreground->setDrawingSurface(drawingSurface);
-		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.5,0.5));
-    endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+		Note: OverlayLayout has no options which
+		can be set.
+
+
+    ******************************************************/
+
+    OverlayLayoutPtr MainFrameLayout = osg::OverlayLayout::create();
+
+    // OverlayLayout has no options to edit!
+    beginEditCP(MainFrameLayout);
+        // NOTHING : )
+    endEditCP(MainFrameLayout); 
+
+    
+    /******************************************************
+
+            Create and edit some Button Components.
+
+    ******************************************************/
+
+	beginEditCP(ExampleButton1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
+        ExampleButton1->setPreferredSize(Vec2s(50,50));
+        ExampleButton1->setMaxSize(Vec2s(50,50));
+    endEditCP(ExampleButton1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
+
+    beginEditCP(ExampleButton2, Button::PreferredSizeFieldMask);
+         ExampleButton2->setPreferredSize(Vec2s(300,50));
+    endEditCP(ExampleButton2, Button::PreferredSizeFieldMask);
+        
+    beginEditCP(ExampleButton3, Button::PreferredSizeFieldMask);
+         ExampleButton3->setPreferredSize(Vec2s(50,300));
+    endEditCP(ExampleButton3, Button::PreferredSizeFieldMask);
+
+
+    // Create The Main Frame
+    // Create Background to be used with the Main Frame
+    ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
+    beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+        MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+    
+    FramePtr MainFrame = osg::Frame::create();
+    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+       MainFrame->getChildren().addValue(ExampleButton1);
+       MainFrame->getChildren().addValue(ExampleButton2);
+       MainFrame->getChildren().addValue(ExampleButton3);
+       MainFrame->getChildren().addValue(ExampleButton4);
+       MainFrame->getChildren().addValue(ExampleButton5);
+       MainFrame->getChildren().addValue(ExampleButton6);
+       // Add the Layout to the MainFrame
+       MainFrame->setLayout(MainFrameLayout);
+       MainFrame->setBackground(MainFrameBackground);
+    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+
+    // Create the Drawing Surface
+    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setRootFrame(MainFrame);
+        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    
+    // Create the UI Foreground Object
+    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
+        TutorialUIForeground->setFrameBounds(Vec2f(0.5,0.5));
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // Tell the manager what to manage
+    // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
     mgr->setRoot(scene);
 
-	// Add the UI Foreground Object to the Scene
-	ViewportPtr viewport = mgr->getWindow()->getPort(0);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-		viewport->getForegrounds().addValue(foreground);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
+    // Add the UI Foreground Object to the Scene
+    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
-    // Show the whole scene
+    // Show the whole Scene
     mgr->showAll();
 
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
+    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(900,900),
                                         "OpenSG 08OverlayLayout Window");
 
     //Main Event Loop
     while(!ExitApp)
     {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
+        TutorialWindowEventProducer->update();
+        TutorialWindowEventProducer->draw();
     }
     osgExit();
 

@@ -87,15 +87,15 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
+    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
     
-    TheWindowEventProducer->setDisplayCallback(display);
-    TheWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
 
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
@@ -107,32 +107,32 @@ int main(int argc, char **argv)
     {
         scene->setCore(osg::Group::create());
  
-        // add the torus as a child
+        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
     }
-    endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	// Create the Graphics
-	GraphicsPtr graphics = osg::Graphics2D::create();
+    // Create the Graphics
+    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
 
-	// Initialize the LookAndFeelManager to enable default settings
-	LookAndFeelManager::the()->getLookAndFeel()->init();
+    // Initialize the LookAndFeelManager to enable default settings
+    LookAndFeelManager::the()->getLookAndFeel()->init();
 
-	/******************************************************
-			
-			Create Popup Menu Components
-		
-		-LabelMenuItem: These are items that are contained
-			within a menu; they are the things you click
-			on to cause something to occur
-		-SeperatorMenuItem:  These place a seperator 
-			line between items in a menu
-		-Menu: These are sub-menus within another Menu;
-			LabelMenuItems and SeperatorMenuItems
-			are added to a Menu
+    /******************************************************
+            
+            Create Popup Menu Components
+        
+        -LabelMenuItem: These are items that are contained
+            within a menu; they are the things you click
+            on to cause something to occur
+        -SeperatorMenuItem:  These place a seperator 
+            line between items in a menu
+        -Menu: These are sub-menus within another Menu;
+            LabelMenuItems and SeperatorMenuItems
+            are added to a Menu
 
 
-	******************************************************/
+    ******************************************************/
 
     LabelMenuItemPtr Item1 = LabelMenuItem::create();
     LabelMenuItemPtr Item2 = LabelMenuItem::create();
@@ -141,20 +141,20 @@ int main(int argc, char **argv)
     LabelMenuItemPtr SubItem1 = LabelMenuItem::create();
     LabelMenuItemPtr SubItem2 = LabelMenuItem::create();
     LabelMenuItemPtr SubItem3 = LabelMenuItem::create();
-	SeperatorMenuItemPtr Seperator1 = SeperatorMenuItem::create();
+    SeperatorMenuItemPtr Seperator1 = SeperatorMenuItem::create();
     MenuPtr Item5 = Menu::create();
 
     
-	/******************************************************
-			
-			Edit the LabelMenuItems
+    /******************************************************
+            
+            Edit the LabelMenuItems
 
-			-setText("TEXT"): Sets the text on the 
-				item to be TEXT
-			-setEnabled(Boolean): sets the menu item
-				to be either enabled or disabled
+            -setText("TEXT"): Sets the text on the 
+                item to be TEXT
+            -setEnabled(Boolean): sets the menu item
+                to be either enabled or disabled
 
-	******************************************************/
+    ******************************************************/
 
     beginEditCP(Item1, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask);
         Item1->setText("Menu Item 1");
@@ -168,7 +168,7 @@ int main(int argc, char **argv)
         Item3->setText("Menu Item 3");
     endEditCP(Item3, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask);
     
-	beginEditCP(Item4, LabelMenuItem::TextFieldMask | LabelMenuItem::EnabledFieldMask);
+    beginEditCP(Item4, LabelMenuItem::TextFieldMask | LabelMenuItem::EnabledFieldMask);
         Item4->setText("Menu Item 4");
         Item4->setEnabled(false);
     endEditCP(Item4, LabelMenuItem::TextFieldMask | LabelMenuItem::EnabledFieldMask);
@@ -177,11 +177,11 @@ int main(int argc, char **argv)
         SubItem1->setText("SubMenu Item 1");
     endEditCP(SubItem1, LabelMenuItem::TextFieldMask);
     
-	beginEditCP(SubItem2, LabelMenuItem::TextFieldMask);
+    beginEditCP(SubItem2, LabelMenuItem::TextFieldMask);
         SubItem2->setText("SubMenu Item 2");
     endEditCP(SubItem2, LabelMenuItem::TextFieldMask);
     
-	beginEditCP(SubItem3, LabelMenuItem::TextFieldMask);
+    beginEditCP(SubItem3, LabelMenuItem::TextFieldMask);
         SubItem3->setText("SubMenu Item 3");
     endEditCP(SubItem3, LabelMenuItem::TextFieldMask);
     
@@ -189,26 +189,26 @@ int main(int argc, char **argv)
         Item5->setText("Sub Menu");
     endEditCP(Item5, LabelMenuItem::TextFieldMask);
 
-	// This adds three LabelMenuItems to the Menu,
-	// creating a submenu.  Note this does not
-	// involve begin/endEditCPs to do
+    // This adds three LabelMenuItems to the Menu,
+    // creating a submenu.  Note this does not
+    // involve begin/endEditCPs to do
 
     Item5->addItem(SubItem1);
     Item5->addItem(SubItem2);
     Item5->addItem(SubItem3);
     
-	/******************************************************
-			
-			Create the PopupMenu itself
+    /******************************************************
+            
+            Create the PopupMenu itself
 
-			Items are added in the order in which
-			they will be displayed (top to bottom)
-			via addItem(ITEM_TO_BE_ADDED)
+            Items are added in the order in which
+            they will be displayed (top to bottom)
+            via addItem(ITEM_TO_BE_ADDED)
 
-			The PopupMenu is attached to bbutton1
-			below using setPopupMenu(POPUP_MENU_NAME)
+            The PopupMenu is attached to bbutton1
+            below using setPopupMenu(POPUP_MENU_NAME)
 
-	******************************************************/
+    ******************************************************/
     PopupMenuPtr Button1PopupMenu = PopupMenu::create();
     Button1PopupMenu->addItem(Item1);
     Button1PopupMenu->addItem(Item2);
@@ -217,77 +217,77 @@ int main(int argc, char **argv)
     Button1PopupMenu->addItem(Item5);
     Button1PopupMenu->addItem(Item4);
     
-	// Create a Button and Font
-	UIFontPtr button1Font = osg::UIFont::create();
+    // Create a Button and Font
+    UIFontPtr button1Font = osg::UIFont::create();
     beginEditCP(button1Font, UIFont::SizeFieldMask);
-		button1Font->setSize(16);
-	endEditCP(button1Font, UIFont::SizeFieldMask);
+        button1Font->setSize(16);
+    endEditCP(button1Font, UIFont::SizeFieldMask);
 
-	ButtonPtr button1 = osg::Button::create();
-	beginEditCP(button1, Component::PopupMenuFieldMask | Button::TextFieldMask | Component::PreferredSizeFieldMask | Button::FontFieldMask);
-		button1->setText("RightClickMe!");
-		// Add the PopupMenu to button1 so that when right clicked,
-		// the PopupMenu will appear
+    ButtonPtr button1 = osg::Button::create();
+    beginEditCP(button1, Component::PopupMenuFieldMask | Button::TextFieldMask | Component::PreferredSizeFieldMask | Button::FontFieldMask);
+        button1->setText("RightClickMe!");
+        // Add the PopupMenu to button1 so that when right clicked,
+        // the PopupMenu will appear
         button1->setPopupMenu(Button1PopupMenu);
-		button1->setPreferredSize( Vec2s(200,100) );
-		button1->setFont(button1Font);
+        button1->setPreferredSize(Vec2s(200,100));
+        button1->setFont(button1Font);
     endEditCP(button1, Component::PopupMenuFieldMask | Button::TextFieldMask| Component::PreferredSizeFieldMask | Button::FontFieldMask);
 
 
-	// Create Background to be used with the MainFrame
-	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-	// Create The Main Frame
-	FramePtr MainFrame = osg::Frame::create();
-	LayoutPtr MainFrameLayout = osg::FlowLayout::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
-	   MainFrame->getChildren().addValue(button1);
-	   MainFrame->setLayout(MainFrameLayout);
-	   MainFrame->setBackground(mainBackground);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
+    // Create Background to be used with the MainFrame
+    ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
+    beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+        MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+    // Create The Main Frame
+    FramePtr MainFrame = osg::Frame::create();
+    LayoutPtr MainFrameLayout = osg::FlowLayout::create();
+    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
+       MainFrame->getChildren().addValue(button1);
+       MainFrame->setLayout(MainFrameLayout);
+       MainFrame->setBackground(MainFrameBackground);
+    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
 
-	// Create the Drawing Surface
-	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
-		drawingSurface->setGraphics(graphics);
-		drawingSurface->setRootFrame(MainFrame);
-	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
-	// Create the UI Foreground Object
-	UIForegroundPtr foreground = osg::UIForeground::create();
+    // Create the Drawing Surface
+    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setRootFrame(MainFrame);
+        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    // Create the UI Foreground Object
+    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
 
-	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-	    foreground->setDrawingSurface(drawingSurface);
-		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.5,0.5));
-    endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask |UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
+        TutorialUIForeground->setFrameBounds(Vec2f(0.5,0.5));
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask |UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // Tell the manager what to manage
+    // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
     mgr->setRoot(scene);
 
-	// Add the UI Foreground Object to the Scene
-	ViewportPtr viewport = mgr->getWindow()->getPort(0);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-		viewport->getForegrounds().addValue(foreground);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
+    // Add the UI Foreground Object to the Scene
+    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
-    // Show the whole scene
+    // Show the whole Scene
     mgr->showAll();
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
+    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(550,550),
                                         "OpenSG 25PopupMenu Window");
 
     while(!ExitApp)
     {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
+        TutorialWindowEventProducer->update();
+        TutorialWindowEventProducer->draw();
     }
     osgExit();
 

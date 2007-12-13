@@ -78,19 +78,19 @@ TablePtr table;
 CheckboxButtonPtr CellSelectionButton;
 CheckboxButtonPtr RowSelectionButton;
 CheckboxButtonPtr ColumnSelectionButton;
-	/******************************************************
+    /******************************************************
 
-		Create ActionListeners to dynamically
-		change the Table selection characteristics
-		while running the program.
+        Create ActionListeners to dynamically
+        change the Table selection characteristics
+        while running the program.
 
-	******************************************************/
+    ******************************************************/
 class SingleSelectionListener : public ButtonSelectedListener
 {
 public:
 
    virtual void buttonSelected(const ButtonSelectedEvent& e)
-	{
+    {
         table->getColumnModel()->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
         table->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
 
@@ -107,7 +107,7 @@ class SingleIntervalSelectionListener : public ButtonSelectedListener
 public:
 
    virtual void buttonSelected(const ButtonSelectedEvent& e)
-	{
+    {
         table->getColumnModel()->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
         table->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
         beginEditCP(CellSelectionButton, CheckboxButton::EnabledFieldMask);
@@ -123,7 +123,7 @@ class MultipleIntervalSelectionListener : public ButtonSelectedListener
 public:
 
    virtual void buttonSelected(const ButtonSelectedEvent& e)
-	{
+    {
         table->getColumnModel()->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
         table->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
         beginEditCP(CellSelectionButton, CheckboxButton::EnabledFieldMask | CheckboxButton::SelectedFieldMask);
@@ -140,7 +140,7 @@ class RowSelectionListener : public ButtonSelectedListener
 public:
 
    virtual void buttonSelected(const ButtonSelectedEvent& e)
-	{
+    {
         beginEditCP(table, Table::RowSelectionAllowedFieldMask);
             table->setRowSelectionAllowed(true);
         endEditCP(table, Table::RowSelectionAllowedFieldMask);
@@ -159,7 +159,7 @@ class ColumnSelectionListener : public ButtonSelectedListener
 public:
 
    virtual void buttonSelected(const ButtonSelectedEvent& e)
-	{
+    {
         table->setColumnSelectionAllowed(true);
    }
 
@@ -211,13 +211,13 @@ public:
 class ExampleTableModel : public AbstractTableModel
 {
 private:
-	// Creates two vectors to store column/cell values in
+    // Creates two vectors to store column/cell values in
     std::vector<SharedFieldPtr> _ColumnValues;
     std::vector<SharedFieldPtr> _CellValues;
 public:
 
-	// Creates some functions to do what the Table requires to be done
-	// and which are needed for a non-basic table
+    // Creates some functions to do what the Table requires to be done
+    // and which are needed for a non-basic table
     virtual UInt32 getColumnCount(void) const
     {
         return _ColumnValues.size();
@@ -240,13 +240,13 @@ public:
     
     virtual bool isCellEditable(UInt32 rowIndex, UInt32 columnIndex) const
     {
-		// Only returns true if the column is 0; means cell is editable, otherwise, returns false and cell is not editable
+        // Only returns true if the column is 0; means cell is editable, otherwise, returns false and cell is not editable
         return columnIndex == 0;
     }
     
     virtual void setValueAt(SharedFieldPtr aValue, UInt32 rowIndex, UInt32 columnIndex)
     {
-		// 
+        // 
         if(columnIndex == 0 && aValue->getType() == SFString::getClassType())
         {
             std::string TempString;
@@ -260,15 +260,15 @@ public:
         return NULL;
     }
 
-	/******************************************************
+    /******************************************************
 
-		Create the Table values
+        Create the Table values
 
-	******************************************************/
+    ******************************************************/
 
     ExampleTableModel()
     {
-		// Creates the lists within column/cell values and adds data (1d representation of 2d array basically)
+        // Creates the lists within column/cell values and adds data (1d representation of 2d array basically)
         _ColumnValues.push_back(SharedFieldPtr(new SFString("Column String")));
         _ColumnValues.push_back(SharedFieldPtr(new SFString("Column Integer")));
         _ColumnValues.push_back(SharedFieldPtr(new SFString("Column GLenum")));
@@ -311,15 +311,15 @@ int main(int argc, char **argv)
     // OSG init
     osgInit(argc,argv);
 
-    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
+    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
     
-    TheWindowEventProducer->setDisplayCallback(display);
-    TheWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
 
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
 
     // Make Torus Node (creates Torus in background of scene)
@@ -331,36 +331,36 @@ int main(int argc, char **argv)
     {
         scene->setCore(osg::Group::create());
  
-        // add the torus as a child
+        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
     }
-    endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	// Create the Graphics
-	GraphicsPtr graphics = osg::Graphics2D::create();
+    // Create the Graphics
+    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
 
-	// Initialize the LookAndFeelManager to enable default 
-	// settings for the Button
-	LookAndFeelManager::the()->getLookAndFeel()->init();
+    // Initialize the LookAndFeelManager to enable default 
+    // settings for the Button
+    LookAndFeelManager::the()->getLookAndFeel()->init();
 
-	// Create TablePtr
-	table = Table::create();
+    // Create TablePtr
+    table = Table::create();
     table->setModel(TableModelPtr(new ExampleTableModel()));
     beginEditCP(table, Table::PreferredSizeFieldMask);
-		table->setPreferredSize( Vec2s (500, 500) );
-	endEditCP(table, Table::PreferredSizeFieldMask);
+        table->setPreferredSize( Vec2s (500, 500));
+    endEditCP(table, Table::PreferredSizeFieldMask);
     table->updateLayout();
 
-	/******************************************************
+    /******************************************************
 
-		Create a ScrollPanel to display the Table
-		within (see 27ScrollPanel for more 
-		information).
+        Create a ScrollPanel to display the Table
+        within (see 27ScrollPanel for more 
+        information).
 
-	******************************************************/
+    ******************************************************/
     ScrollPanelPtr TheScrollPanel = ScrollPanel::create();
     beginEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-	    TheScrollPanel->setPreferredSize(Vec2s(402,200));
+        TheScrollPanel->setPreferredSize(Vec2s(402,200));
         TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     endEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
     TheScrollPanel->setViewComponent(table);
@@ -371,67 +371,67 @@ int main(int argc, char **argv)
     //Create the Selection Options Panel
     PanelPtr SelectionOptionPanel = createSelectionOptionPanel();
 
-	// Create MainFramelayout
-	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
-	beginEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
-		MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
-		MainFrameLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-		MainFrameLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-	endEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
-		
+    // Create MainFramelayout
+    FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
+    beginEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+        MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
+        MainFrameLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
+        MainFrameLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
+    endEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+        
 
-	// Create The Main Frame
-	FramePtr MainFrame = osg::Frame::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
-	   // Add things to the MainFrame
-	   MainFrame->getChildren().addValue(TheScrollPanel);
-	   MainFrame->getChildren().addValue(SelectionModePanel);
-	   MainFrame->getChildren().addValue(SelectionOptionPanel);
-	   MainFrame->setLayout(MainFrameLayout);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+    // Create The Main Frame
+    FramePtr MainFrame = osg::Frame::create();
+    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+       // Add things to the MainFrame
+       MainFrame->getChildren().addValue(TheScrollPanel);
+       MainFrame->getChildren().addValue(SelectionModePanel);
+       MainFrame->getChildren().addValue(SelectionOptionPanel);
+       MainFrame->setLayout(MainFrameLayout);
+    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 
-	//Create the Drawing Surface
-	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
-		drawingSurface->setGraphics(graphics);
-		drawingSurface->setRootFrame(MainFrame);
-	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
-	
-	// Create the UI Foreground Object
-	UIForegroundPtr foreground = osg::UIForeground::create();
+    //Create the Drawing Surface
+    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setRootFrame(MainFrame);
+        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    
+    // Create the UI Foreground Object
+    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
 
-	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-	    foreground->setDrawingSurface(drawingSurface);
-		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(1.0,1.0));
-    endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
+        TutorialUIForeground->setFrameBounds(Vec2f(1.0,1.0));
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // Tell the manager what to manage
+    // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
     mgr->setRoot(scene);
 
-	// Add the UI Foreground Object to the Scene
-	ViewportPtr viewport = mgr->getWindow()->getPort(0);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-		viewport->getForegrounds().addValue(foreground);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
+    // Add the UI Foreground Object to the Scene
+    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
-    // Show the whole scene
+    // Show the whole Scene
     mgr->showAll();
 
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
+    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(900,900),
                                         "OpenSG 27Table Window");
 
     //Main Event Loop
     while(!ExitApp)
     {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
+        TutorialWindowEventProducer->update();
+        TutorialWindowEventProducer->draw();
     }
     osgExit();
 

@@ -78,15 +78,15 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
+    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
     
-    TheWindowEventProducer->setDisplayCallback(display);
-    TheWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
 
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
@@ -98,140 +98,140 @@ int main(int argc, char **argv)
     {
         scene->setCore(osg::Group::create());
  
-        // add the torus as a child
+        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
     }
-    endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	// Create the Graphics
-	GraphicsPtr graphics = osg::Graphics2D::create();
+    // Create the Graphics
+    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
 
-	// Initialize the LookAndFeelManager to enable default settings
-	LookAndFeelManager::the()->getLookAndFeel()->init();
+    // Initialize the LookAndFeelManager to enable default settings
+    LookAndFeelManager::the()->getLookAndFeel()->init();
 
-	// Create a simple Font to be used with the TextField
-	UIFontPtr sampleFont = osg::UIFont::create();
+    // Create a simple Font to be used with the TextField
+    UIFontPtr sampleFont = osg::UIFont::create();
     beginEditCP(sampleFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::GapFieldMask | UIFont::GlyphPixelSizeFieldMask | UIFont::TextureWidthFieldMask | UIFont::StyleFieldMask);
-		sampleFont->setSize(16);
-	endEditCP(sampleFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::GapFieldMask | UIFont::GlyphPixelSizeFieldMask | UIFont::TextureWidthFieldMask | UIFont::StyleFieldMask);
+        sampleFont->setSize(16);
+    endEditCP(sampleFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::GapFieldMask | UIFont::GlyphPixelSizeFieldMask | UIFont::TextureWidthFieldMask | UIFont::StyleFieldMask);
 
-	/******************************************************
-
-
-		Create and edit the TextField and determine its 
-		characteristics.  A text field is a component 
-		that allows you to enter text into the box via 
-		keyboard input.  You can select text by	using 
-		your mouse or pressing shift and the left and 
-		right arrow keys.
-
-		setTextColor(Color4f): Set color of text
-			withing TextField
-		setSelectionBoxColor(Color4f): Set the color
-			that highlighting around the selected text 
-			appears
-		setSelectionTextColor(Color4f): Set the color
-			the selected text appears
-		setText("TextToBeDisplayed"): Sets initial 
-			text within TextField
-		setFont(FontName): Sets the font which is
-			used within TextField
-		setSelectionStart(StartCharacterNumber):
-			Sets the character which the selection
-			 will initially start after
-		 setSelectionEnd(EndCharacterNumber): 
-			Sets the character which the selection
-			will end before
-		setVerticalAlignment(Percent):  Sets how far 
-			down in the box the text starts at.  The
-			percentage is from the top of the text.
-			Mote: be sure to visually verify this, as 
-			due to font size and line size this does
-			not always automatically place it exactly
-			at the percentage point.
-
-	******************************************************/
-
-	// Create a TextField component
-	TextFieldPtr textField = osg::TextField::create();
-
-	beginEditCP(textField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
-		| TextComponent::TextColorFieldMask | TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask 
-		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
-		textField->setPreferredSize( Vec2s (100, 50) );
-			// Determine the Font color for the Field
-		textField->setTextColor( Color4f(0.0, 0.0, 0.0, 1.0) );
-		textField->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
-		textField->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
-		textField->setText("What");
-		textField->setFont(sampleFont);
-			// This will select the "a" from above
-		textField->setSelectionStart(2);
-		textField->setSelectionEnd(3);
-		textField->setVerticalAlignment(0.5);
-	endEditCP(textField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
-		| TextComponent::TextColorFieldMask| TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask
-		| TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
-		
-	// Create another TextField component
-	TextFieldPtr textField2 = osg::TextField::create();
-	beginEditCP(textField2, TextComponent::TextFieldMask);
-			//Set  initial text
-		textField2->setText("");
-	endEditCP(textField2, TextComponent::TextFieldMask);
+    /******************************************************
 
 
-	// Create The Main Frame
-	FramePtr MainFrame = osg::Frame::create();
-	LayoutPtr MainFrameLayout = osg::FlowLayout::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
-	   // Add TextField to MainFrame
-	   MainFrame->getChildren().addValue(textField);
-	   MainFrame->getChildren().addValue(textField2);
-	   MainFrame->setLayout(MainFrameLayout);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+        Create and edit the TextField and determine its 
+        characteristics.  A text field is a component 
+        that allows you to enter text into the box via 
+        keyboard input.  You can select text by    using 
+        your mouse or pressing shift and the left and 
+        right arrow keys.
 
-	// Create the Drawing Surface
-	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-		drawingSurface->setGraphics(graphics);
-		drawingSurface->setRootFrame(MainFrame);
-	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-	// Create the UI Foreground Object
-	UIForegroundPtr foreground = osg::UIForeground::create();
+        setTextColor(Color4f): Set color of text
+            withing TextField
+        setSelectionBoxColor(Color4f): Set the color
+            that highlighting around the selected text 
+            appears
+        setSelectionTextColor(Color4f): Set the color
+            the selected text appears
+        setText("TextToBeDisplayed"): Sets initial 
+            text within TextField
+        setFont(FontName): Sets the font which is
+            used within TextField
+        setSelectionStart(StartCharacterNumber):
+            Sets the character which the selection
+             will initially start after
+         setSelectionEnd(EndCharacterNumber): 
+            Sets the character which the selection
+            will end before
+        setVerticalAlignment(Percent):  Sets how far 
+            down in the box the text starts at.  The
+            percentage is from the top of the text.
+            Mote: be sure to visually verify this, as 
+            due to font size and line size this does
+            not always automatically place it exactly
+            at the percentage point.
 
-	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-	    foreground->setDrawingSurface(drawingSurface);
-		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.5,0.5));
-    endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    ******************************************************/
+
+    // Create a TextField component
+    TextFieldPtr textField = osg::TextField::create();
+
+    beginEditCP(textField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
+        | TextComponent::TextColorFieldMask | TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask 
+        | TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
+        textField->setPreferredSize( Vec2s (100, 50));
+            // Determine the Font color for the Field
+        textField->setTextColor(Color4f(0.0, 0.0, 0.0, 1.0));
+        textField->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
+        textField->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
+        textField->setText("What");
+        textField->setFont(sampleFont);
+            // This will select the "a" from above
+        textField->setSelectionStart(2);
+        textField->setSelectionEnd(3);
+        textField->setVerticalAlignment(0.5);
+    endEditCP(textField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
+        | TextComponent::TextColorFieldMask| TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask
+        | TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
+        
+    // Create another TextField component
+    TextFieldPtr textField2 = osg::TextField::create();
+    beginEditCP(textField2, TextComponent::TextFieldMask);
+            //Set  initial text
+        textField2->setText("");
+    endEditCP(textField2, TextComponent::TextFieldMask);
+
+
+    // Create The Main Frame
+    FramePtr MainFrame = osg::Frame::create();
+    LayoutPtr MainFrameLayout = osg::FlowLayout::create();
+    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+       // Add TextField to MainFrame
+       MainFrame->getChildren().addValue(textField);
+       MainFrame->getChildren().addValue(textField2);
+       MainFrame->setLayout(MainFrameLayout);
+    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+
+    // Create the Drawing Surface
+    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setRootFrame(MainFrame);
+        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    // Create the UI Foreground Object
+    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
+        TutorialUIForeground->setFrameBounds(Vec2f(0.5,0.5));
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // Tell the manager what to manage
+    // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
     mgr->setRoot(scene);
 
-	// Add the UI Foreground Object to the Scene
-	ViewportPtr viewport = mgr->getWindow()->getPort(0);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-		viewport->getForegrounds().addValue(foreground);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
+    // Add the UI Foreground Object to the Scene
+    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
-    // Show the whole scene
+    // Show the whole Scene
     mgr->showAll();
 
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
+    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(550,550),
                                         "OpenSG 16TextField Window");
 
     //Main Event Loop
     while(!ExitApp)
     {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
+        TutorialWindowEventProducer->update();
+        TutorialWindowEventProducer->draw();
     }
     osgExit();
 

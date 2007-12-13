@@ -73,97 +73,97 @@ public:
     }
 };
 
-	/******************************************************
+    /******************************************************
 
-			Create CardLayout and its container
-			so they can be referenced in the 
-			ActionListeners (this is required
-			when using ActionListeners in this
-			manner)
+            Create CardLayout and its Container
+            so they can be referenced in the 
+            ActionListeners (this is required
+            when using ActionListeners in this
+            manner).
 
-	******************************************************/
-	CardLayoutPtr cardLayout;
-	PanelPtr cardPanel;
+    ******************************************************/
+    CardLayoutPtr ExampleCardLayout;
+    PanelPtr ExampleCardPanel;
 
-	/******************************************************
+    /******************************************************
 
-			Create ActionListeners to use with
-			CardLayout and assign each its action.
+            Create ActionListeners to use with
+            CardLayout and assign each its action.
 
-			EditCP loops with the CardLayout are
-			used in the following manner:
-			CardLayoutName->FUNCTION(CardLayoutContainer)
+            EditCP loops with the CardLayout are
+            used in the following manner:
+            CardLayoutName->FUNCTION(CardLayoutContainer)
 
-	******************************************************/
-class nextCard : public ActionListener
+    ******************************************************/
+class NextCardActionListener : public ActionListener
 {
 public:
 
    virtual void actionPerformed(const ActionEvent& e)
-	{
-		beginEditCP(cardLayout, CardLayout::CardFieldMask);
-			// Displays the next Card in CardLayout
-			cardLayout->next(cardPanel);
-		endEditCP(cardLayout, CardLayout::CardFieldMask);
+    {
+        beginEditCP(ExampleCardLayout, CardLayout::CardFieldMask);
+            // Displays the next Card in CardLayout
+            ExampleCardLayout->next(ExampleCardPanel);
+        endEditCP(ExampleCardLayout, CardLayout::CardFieldMask);
 
 
-	}
+    }
 };
 
-class backCard : public ActionListener
+class BackCardActionListener : public ActionListener
 {
 public:
 
    virtual void actionPerformed(const ActionEvent& e)
-	{
-		beginEditCP(cardLayout, CardLayout::CardFieldMask);
-			cardLayout->previous(cardPanel);
-		endEditCP(cardLayout, CardLayout::CardFieldMask);
-	}
+    {
+        beginEditCP(ExampleCardLayout, CardLayout::CardFieldMask);
+            ExampleCardLayout->previous(ExampleCardPanel);
+        endEditCP(ExampleCardLayout, CardLayout::CardFieldMask);
+    }
 
 };
-class firstCard : public ActionListener
+class FirstCardActionListener : public ActionListener
 {
 public:
 
    virtual void actionPerformed(const ActionEvent& e)
-	{
-		beginEditCP(cardLayout, CardLayout::CardFieldMask);
-			cardLayout->first(cardPanel);
-		endEditCP(cardLayout, CardLayout::CardFieldMask);
+    {
+        beginEditCP(ExampleCardLayout, CardLayout::CardFieldMask);
+            ExampleCardLayout->first(ExampleCardPanel);
+        endEditCP(ExampleCardLayout, CardLayout::CardFieldMask);
 
 
-	}
+    }
 };
-class lastCard : public ActionListener
+class LastCardActionListener : public ActionListener
 {
 public:
 
    virtual void actionPerformed(const ActionEvent& e)
-	{
-		beginEditCP(cardLayout, CardLayout::CardFieldMask);
-			cardLayout->last(cardPanel);
-		endEditCP(cardLayout, CardLayout::CardFieldMask);
+    {
+        beginEditCP(ExampleCardLayout, CardLayout::CardFieldMask);
+            ExampleCardLayout->last(ExampleCardPanel);
+        endEditCP(ExampleCardLayout, CardLayout::CardFieldMask);
 
 
-	}
+    }
 };
-// Initialize GLUT & OpenSG and set up the scene
+
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
+    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
     
-    TheWindowEventProducer->setDisplayCallback(display);
-    TheWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
 
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
 
     // Make Torus Node (creates Torus in background of scene)
@@ -175,216 +175,220 @@ int main(int argc, char **argv)
     {
         scene->setCore(osg::Group::create());
  
-        // add the torus as a child
+        // Add the Torus as a Child
         //scene->addChild(TorusGeometryNode);
     }
-    endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	// Create the Graphics
-	GraphicsPtr graphics = osg::Graphics2D::create();
+    // Create the Graphics
+    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
 
-	// Initialize the LookAndFeelManager to enable default 
-	// settings for the Button
-	LookAndFeelManager::the()->getLookAndFeel()->init();
-	
-	/******************************************************
+    // Initialize the LookAndFeelManager to enable default 
+    // settings for the Button
+    LookAndFeelManager::the()->getLookAndFeel()->init();
+    
+    /******************************************************
 
-			Create some BorderLayouts and 
-			BorderLayoutConstraints to be used 
-			to set up CardLayout
+            Create some BorderLayouts and 
+            BorderLayoutConstraints to be used 
+            to set up CardLayout
 
-	******************************************************/
-	
-	BorderLayoutPtr MainFrameLayout = osg::BorderLayout::create();
-	BorderLayoutConstraintsPtr button1Constraints = osg::BorderLayoutConstraints::create();
-	BorderLayoutConstraintsPtr button2Constraints = osg::BorderLayoutConstraints::create();
-	BorderLayoutConstraintsPtr button7Constraints = osg::BorderLayoutConstraints::create();
-	BorderLayoutConstraintsPtr button8Constraints = osg::BorderLayoutConstraints::create();
-	BorderLayoutConstraintsPtr cardPanelConstraints = osg::BorderLayoutConstraints::create();
-		
-	beginEditCP(button1Constraints, BorderLayoutConstraints::RegionFieldMask);
-		button1Constraints->setRegion(BorderLayoutConstraints::BORDER_EAST);
-	endEditCP(button1Constraints, BorderLayoutConstraints::RegionFieldMask);
+    ******************************************************/
+    
+    BorderLayoutPtr MainFrameLayout = osg::BorderLayout::create();
+    BorderLayoutConstraintsPtr ExampleButton1Constraints = osg::BorderLayoutConstraints::create();
+    BorderLayoutConstraintsPtr ExampleButton2Constraints = osg::BorderLayoutConstraints::create();
+    BorderLayoutConstraintsPtr ExampleButton7Constraints = osg::BorderLayoutConstraints::create();
+    BorderLayoutConstraintsPtr ExampleButton8Constraints = osg::BorderLayoutConstraints::create();
+    BorderLayoutConstraintsPtr ExampleCardPanelConstraints = osg::BorderLayoutConstraints::create();
+        
+    beginEditCP(ExampleButton1Constraints, BorderLayoutConstraints::RegionFieldMask);
+        ExampleButton1Constraints->setRegion(BorderLayoutConstraints::BORDER_EAST);
+    endEditCP(ExampleButton1Constraints, BorderLayoutConstraints::RegionFieldMask);
+            
+    beginEditCP(ExampleButton2Constraints, BorderLayoutConstraints::RegionFieldMask);
+        ExampleButton2Constraints->setRegion(BorderLayoutConstraints::BORDER_WEST);
+    endEditCP(ExampleButton2Constraints, BorderLayoutConstraints::RegionFieldMask);
+            
+    beginEditCP(ExampleButton7Constraints, BorderLayoutConstraints::RegionFieldMask);
+        ExampleButton7Constraints->setRegion(BorderLayoutConstraints::BORDER_NORTH);
+    endEditCP(ExampleButton7Constraints, BorderLayoutConstraints::RegionFieldMask);
+            
+    beginEditCP(ExampleButton8Constraints, BorderLayoutConstraints::RegionFieldMask);
+        ExampleButton8Constraints->setRegion(BorderLayoutConstraints::BORDER_SOUTH);
+    endEditCP(ExampleButton8Constraints, BorderLayoutConstraints::RegionFieldMask);
+            
+    beginEditCP(ExampleCardPanelConstraints, BorderLayoutConstraints::RegionFieldMask);
+        ExampleCardPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+    endEditCP(ExampleCardPanelConstraints, BorderLayoutConstraints::RegionFieldMask);
+
+    /******************************************************
+
+            Create CardLayout.  CardLayout shows 
+            a single Component at a time, meaning
+            it is not exactly practical to use it
+            alone for a Layout.  This tutorial uses
+            the BorderLayout to include a Panel in
+            the Center Region, and within that Panel
+            setting the CardLayout.
+
+            CardLayout has four function calls-
+            next, previous, first, and last.
+
+            ->next(CardName): Causes CardLayout
+				to display the next card.
+			->previous
 			
-	beginEditCP(button2Constraints, BorderLayoutConstraints::RegionFieldMask);
-		button2Constraints->setRegion(BorderLayoutConstraints::BORDER_WEST);
-	endEditCP(button2Constraints, BorderLayoutConstraints::RegionFieldMask);
-			
-	beginEditCP(button7Constraints, BorderLayoutConstraints::RegionFieldMask);
-		button7Constraints->setRegion(BorderLayoutConstraints::BORDER_NORTH);
-	endEditCP(button7Constraints, BorderLayoutConstraints::RegionFieldMask);
-			
-	beginEditCP(button8Constraints, BorderLayoutConstraints::RegionFieldMask);
-		button8Constraints->setRegion(BorderLayoutConstraints::BORDER_SOUTH);
-	endEditCP(button8Constraints, BorderLayoutConstraints::RegionFieldMask);
-			
-	beginEditCP(cardPanelConstraints, BorderLayoutConstraints::RegionFieldMask);
-		cardPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
-	endEditCP(cardPanelConstraints, BorderLayoutConstraints::RegionFieldMask);
-
-	/******************************************************
-
-			Create CardLayout.  CardLayout shows 
-			a single Component at a time, meaning
-			it is not exactly practical to use it
-			alone for a Layout.  This tutorial uses
-			the BorderLayout to include a Panel in
-			the Center Region, and within that Panel
-			setting the CardLayout.
-
-			CardLayout has four function calls-
-			next, previous, first, and last.
-
 			To call these functions, use  the "->" 
-			command.  For example, in an EditCP loop
-			CardLayoutName->FUNCTION(ContainerWithCardLayout)
+            command.  For example, in an EditCP loop
+            CardLayoutName->FUNCTION(ContainerWithCardLayout)
 
-			These are most useful when combined with 
-			ActionListeners, as shown at the top of 
-			the code, to assign actions to the Buttons 
-			or Components to allow the user to cycle
-			through the Card Layout and view different
-			cards.
+            These are most useful when combined with 
+            ActionListeners, as shown at the top of 
+            the code, to assign actions to the Buttons 
+            or Components to allow the user to cycle
+            through the Card Layout and view different
+            ExampleCards.
 
-	******************************************************/
-	
-	cardLayout = osg::CardLayout::create();
-	cardPanel = osg::Panel::create();
+    ******************************************************/
+    
+    ExampleCardLayout = osg::CardLayout::create();
+    ExampleCardPanel = osg::Panel::create();
 
-	/******************************************************
+    /******************************************************
 
-			Create Button Components to be used with 
-			CardLayout and specify their characteristics
+            Create Button Components to be used with 
+            CardLayout and specify their characteristics
 
-	******************************************************/
-	ButtonPtr button1 = osg::Button::create();
-	ButtonPtr button2 = osg::Button::create();
-	ButtonPtr button3 = osg::Button::create();
-	ButtonPtr button4 = osg::Button::create();
-	ButtonPtr button5 = osg::Button::create();
-	ButtonPtr button6 = osg::Button::create();	
-	ButtonPtr button7 = osg::Button::create();
-	ButtonPtr button8 = osg::Button::create();
+    ******************************************************/
+    ButtonPtr ExampleButton1 = osg::Button::create();
+    ButtonPtr ExampleButton2 = osg::Button::create();
+    ButtonPtr ExampleButton3 = osg::Button::create();
+    ButtonPtr ExampleButton4 = osg::Button::create();
+    ButtonPtr ExampleButton5 = osg::Button::create();
+    ButtonPtr ExampleButton6 = osg::Button::create();    
+    ButtonPtr ExampleButton7 = osg::Button::create();
+    ButtonPtr ExampleButton8 = osg::Button::create();
 
-	beginEditCP(button1, Button::TextFieldMask | Component::ConstraintsFieldMask);
-		button1->setText("Next Card");
-		button1->setConstraints(button1Constraints);
-	endEditCP(button1, Button::TextFieldMask | Component::ConstraintsFieldMask);
-	
-	// Add ActionListener
-	nextCard button1Next;
-	button1->addActionListener( &button1Next);
-	
+    beginEditCP(ExampleButton1, Button::TextFieldMask | Button::ConstraintsFieldMask);
+        ExampleButton1->setText("Next Card");
+        ExampleButton1->setConstraints(ExampleButton1Constraints);
+    endEditCP(ExampleButton1, Button::TextFieldMask | Button::ConstraintsFieldMask);
+    
+    // Add ActionListener
+    NextCardActionListener ExampleButton1ActionListener;
+    ExampleButton1->addActionListener( &ExampleButton1ActionListener);
+    
 
-	beginEditCP(button2, Button::TextFieldMask | Component::ConstraintsFieldMask);
-		button2->setText("Previous Card");
-		button2->setConstraints(button2Constraints);
-	endEditCP(button2, Button::TextFieldMask | Component::ConstraintsFieldMask);
+    beginEditCP(ExampleButton2, Button::TextFieldMask | Button::ConstraintsFieldMask);
+        ExampleButton2->setText("Previous Card");
+        ExampleButton2->setConstraints(ExampleButton2Constraints);
+    endEditCP(ExampleButton2, Button::TextFieldMask | Button::ConstraintsFieldMask);
 
-	// Add ActionListener
-	backCard button2Previous;
-	button2->addActionListener( &button2Previous);
+    // Add ActionListener
+    BackCardActionListener ExampleButton2ActionListener;
+    ExampleButton2->addActionListener( &ExampleButton2ActionListener);
 
-	beginEditCP(button3, Button::TextFieldMask);
-		button3->setText("This");
-	endEditCP(button3, Button::TextFieldMask);
+    beginEditCP(ExampleButton3, Button::TextFieldMask);
+        ExampleButton3->setText("This");
+    endEditCP(ExampleButton3, Button::TextFieldMask);
 
-	beginEditCP(button4, Button::TextFieldMask);
-		button4->setText("is");
-	endEditCP(button4, Button::TextFieldMask);
+    beginEditCP(ExampleButton4, Button::TextFieldMask);
+        ExampleButton4->setText("is");
+    endEditCP(ExampleButton4, Button::TextFieldMask);
 
-	beginEditCP(button5, Button::TextFieldMask);
-		button5->setText("Card");
-	endEditCP(button5, Button::TextFieldMask);
-	
-	beginEditCP(button6, Button::TextFieldMask);
-		button6->setText("Layout");
-	endEditCP(button6, Button::TextFieldMask);
+    beginEditCP(ExampleButton5, Button::TextFieldMask);
+        ExampleButton5->setText("Card");
+    endEditCP(ExampleButton5, Button::TextFieldMask);
+    
+    beginEditCP(ExampleButton6, Button::TextFieldMask);
+        ExampleButton6->setText("Layout");
+    endEditCP(ExampleButton6, Button::TextFieldMask);
 
-	beginEditCP(button7, Button::TextFieldMask | Component::ConstraintsFieldMask);
-		button7->setText("First Card");
-		button7->setConstraints(button7Constraints);
-	endEditCP(button7, Button::TextFieldMask | Component::ConstraintsFieldMask);
-		
-	// Add ActionListener
-	firstCard button7First;
-	button7->addActionListener( &button7First);
+    beginEditCP(ExampleButton7, Button::TextFieldMask | Button::ConstraintsFieldMask);
+        ExampleButton7->setText("First Card");
+        ExampleButton7->setConstraints(ExampleButton7Constraints);
+    endEditCP(ExampleButton7, Button::TextFieldMask | Button::ConstraintsFieldMask);
+        
+    // Add ActionListener
+    FirstCardActionListener ExampleButton7ActionListener;
+    ExampleButton7->addActionListener( &ExampleButton7ActionListener);
 
-	beginEditCP(button8, Button::TextFieldMask | Component::ConstraintsFieldMask);
-		button8->setText("Last Card");
-		button8->setConstraints(button8Constraints);
-	endEditCP(button8, Button::TextFieldMask | Component::ConstraintsFieldMask);
-	
-	// Add ActionListener
-	lastCard button8Last;
-	button8->addActionListener( &button8Last);
-
-
-	beginEditCP(cardPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
-		cardPanel->setLayout(cardLayout);
-		cardPanel->getChildren().addValue(button3);
-		cardPanel->getChildren().addValue(button4);
-		cardPanel->getChildren().addValue(button5);
-		cardPanel->getChildren().addValue(button6);
-		cardPanel->setConstraints(cardPanelConstraints);
-	endEditCP(cardPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
+    beginEditCP(ExampleButton8, Button::TextFieldMask | Button::ConstraintsFieldMask);
+        ExampleButton8->setText("Last Card");
+        ExampleButton8->setConstraints(ExampleButton8Constraints);
+    endEditCP(ExampleButton8, Button::TextFieldMask | Button::ConstraintsFieldMask);
+    
+    // Add ActionListener
+    LastCardActionListener ExampleButton8ActionListener;
+    ExampleButton8->addActionListener( &ExampleButton8ActionListener);
 
 
+    beginEditCP(ExampleCardPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
+        ExampleCardPanel->setLayout(ExampleCardLayout);
+        ExampleCardPanel->getChildren().addValue(ExampleButton3);
+        ExampleCardPanel->getChildren().addValue(ExampleButton4);
+        ExampleCardPanel->getChildren().addValue(ExampleButton5);
+        ExampleCardPanel->getChildren().addValue(ExampleButton6);
+        ExampleCardPanel->setConstraints(ExampleCardPanelConstraints);
+    endEditCP(ExampleCardPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
 
 
-	FramePtr MainFrame = osg::Frame::create();
-	// Edit MainFrame
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
-		MainFrame->getChildren().addValue(button1);
-		MainFrame->getChildren().addValue(button2);
-		MainFrame->getChildren().addValue(button7);
-		MainFrame->getChildren().addValue(button8);
-		MainFrame->getChildren().addValue(cardPanel);
-		MainFrame->setLayout(MainFrameLayout);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 
-	// Create the Drawing Surface
-	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-		drawingSurface->setGraphics(graphics);
-		drawingSurface->setRootFrame(MainFrame);
-	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-	
-	// Create the UI Foreground Object
-	UIForegroundPtr foreground = osg::UIForeground::create();
 
-	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-	    foreground->setDrawingSurface(drawingSurface);
-		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.5,0.5));
-    endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    FramePtr MainFrame = osg::Frame::create();
+    // Edit MainFrame
+    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+        MainFrame->getChildren().addValue(ExampleButton1);
+        MainFrame->getChildren().addValue(ExampleButton2);
+        MainFrame->getChildren().addValue(ExampleButton7);
+        MainFrame->getChildren().addValue(ExampleButton8);
+        MainFrame->getChildren().addValue(ExampleCardPanel);
+        MainFrame->setLayout(MainFrameLayout);
+    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+
+    // Create the Drawing Surface
+    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setRootFrame(MainFrame);
+        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    
+    // Create the UI Foreground Object
+    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
+        TutorialUIForeground->setFrameBounds(Vec2f(0.5,0.5));
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // Tell the manager what to manage
+    // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
     mgr->setRoot(scene);
 
-	// Add the UI Foreground Object to the Scene
-	ViewportPtr viewport = mgr->getWindow()->getPort(0);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-		viewport->getForegrounds().addValue(foreground);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
+    // Add the UI Foreground Object to the Scene
+    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
-    // Show the whole scene
+    // Show the whole Scene
     mgr->showAll();
 
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
+    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(900,900),
                                         "OpenSG 11CardLayout Window");
 
     //Main Event Loop
     while(!ExitApp)
     {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
+        TutorialWindowEventProducer->update();
+        TutorialWindowEventProducer->draw();
     }
     osgExit();
 

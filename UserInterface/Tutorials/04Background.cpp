@@ -1,16 +1,16 @@
-// OpenSG Tutorial Example: Creating a Background
+// OpenSG Tutorial Example: Creating a UIBackground
 //
 // This tutorial explains how to implement the 
-// Backgrounds offered by the OSG User Interface 
+// UIBackgrounds offered by the OSG User Interface 
 // library and how to modify their features.
 // 
 // Includes: explanations and examples of how to create
 // and use the six different backgrounds included in the
 // OSG User Interface library.
 //
-// Note that the Active Border and Background are not set, 
+// Note that the Active Border and UIBackground are not set, 
 // meaning that if pressed, the Buttons revert to the default
-// settings for Background and Border.
+// settings for UIBackground and Border.
 
 
 // GLUT is used for window handling
@@ -56,7 +56,7 @@ bool ExitApp = false;
 void display(void);
 void reshape(Vec2s Size);
 
-// 04Background Headers
+// 04UIBackground Headers
 #include <OpenSG/UserInterface/OSGUIBackgrounds.h>
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGLineBorder.h>
@@ -91,15 +91,15 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
+    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
     
-    TheWindowEventProducer->setDisplayCallback(display);
-    TheWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
 
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
 
    // Make Torus Node (creates Torus in background of scene)
@@ -111,288 +111,350 @@ int main(int argc, char **argv)
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
     {
         scene->setCore(osg::Group::create());
-        // add the torus as a child
+        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
     }
-    endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	// Create the Graphics
-	GraphicsPtr graphics = osg::Graphics2D::create();
+    // Create the Graphics
+    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
 
-	// Initialize the LookAndFeelManager to enable default settings
-	LookAndFeelManager::the()->getLookAndFeel()->init();
+    // Initialize the LookAndFeelManager to enable default settings
+    LookAndFeelManager::the()->getLookAndFeel()->init();
 
-	/******************************************************
+    /******************************************************
 
-					Creates 
-   					the 
-					different
-					backgrounds
+            Create the UIBackgrounds.
 
-	******************************************************/
+    ******************************************************/
 
-	// Creates a ColorUIBackgroundPtr (colorBackground)
-	ColorUIBackgroundPtr colorBackground = osg::ColorUIBackground::create();
+    ColorUIBackgroundPtr ExampleColorUIBackground = osg::ColorUIBackground::create();
+    CompoundUIBackgroundPtr ExampleCompoundUIBackground = osg::CompoundUIBackground::create();
+	EmptyUIBackgroundPtr ExampleEmptyUIBackground = osg::EmptyUIBackground::create();
+    GradientUIBackgroundPtr ExampleGradientUIBackground = osg::GradientUIBackground::create();
+    MaterialUIBackgroundPtr ExampleMaterialUIBackground = osg::MaterialUIBackground::create();
+    TextureUIBackgroundPtr ExampleTextureUIBackground = osg::TextureUIBackground::create();
+    PatternUIBackgroundPtr ExamplePatternUIBackground = osg::PatternUIBackground::create();
 
-	// Creates a CompoundUIBackgroundPtr (compoundBackground)
-	CompoundUIBackgroundPtr compoundBackground = osg::CompoundUIBackground::create();
-	
-	// Creates an EmptyUIBackgroundPtr (emptyBackground)
-	EmptyUIBackgroundPtr emptyBackground = osg::EmptyUIBackground::create();
+    /******************************************************
 
-	// Create a GradientUIBackgroundPtr (gradientBackground)
-	GradientUIBackgroundPtr gradientBackground = osg::GradientUIBackground::create();
-	
-	// Create a MaterialUIBackgroundPtr (materialBackground)
-	MaterialUIBackgroundPtr materialBackground = osg::MaterialUIBackground::create();
+        The ColorUIBackground is a simple UIBackground
+		having just a Color to it.
 
-	// Create a TextureUIBackgroundPtr (textureBackground)
-	TextureUIBackgroundPtr textureBackground = osg::TextureUIBackground::create();
-	
-	// Create a PatternUIBackgroundPtr (patternBackground)
-	PatternUIBackgroundPtr patternBackground = osg::PatternUIBackground::create();
+		-setColor(Color4f): Determine the Color of
+			the UIBackground.
 
-	/******************************************************
+    ******************************************************/
 
-				Define the backgrounds
-				Every single option for each background
-				type will be shown and set
-
-	******************************************************/
-
-
-	// Set colorBackground- set color
-	beginEditCP(colorBackground, ColorUIBackground::ColorFieldMask);
-		colorBackground->setColor(Color4f(1.0,0.0,0.0,1.0));
-	endEditCP(colorBackground, ColorUIBackground::ColorFieldMask);
-
-	// Set compoundBackground- use getBackgrounds().addValue(BACKGROUND_TO_BE_ADDED) 
-	// function.  Backgrounds render in order, so in this case textureBackground is
-	// rendered before gradientBackground.
-	beginEditCP(compoundBackground, CompoundUIBackground::BackgroundsFieldMask);
-		compoundBackground->getBackgrounds().addValue(textureBackground);
-		compoundBackground->getBackgrounds().addValue(gradientBackground);
-	endEditCP(compoundBackground, CompoundUIBackground::BackgroundsFieldMask);
-
-	// Set emptyBackground (note that empty background is just that,
-	// a background with no definable attributes
-	beginEditCP(emptyBackground);
-	endEditCP(emptyBackground);
-
-	// Set gradientBackground- Set initial color, end color,
-	// and orientation of gradient
-	beginEditCP(gradientBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
-		 gradientBackground->setColorStart( Color4f(1.0, 0.0, 0.0, 1.0));
-		 gradientBackground->setColorEnd( Color4f(0.0, 0.0, 1.0, 0.5));
-		 // The input into the following call is either
-		 // HORIZONTAL_ALIGNMENT or VERTICAL_ALIGNMENT,
-		 // which orient the gradient in the obvious manner 
-		 gradientBackground->setAlignment(HORIZONTAL_ALIGNMENT);
-	endEditCP(gradientBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
-	
-   // Set materialBackground- Set material
-   ChunkMaterialPtr BackgroundMaterial = ChunkMaterial::create();
-   MaterialChunkPtr BackgroundMaterialChunk = MaterialChunk::create();
-	beginEditCP(BackgroundMaterialChunk);
-      BackgroundMaterialChunk->setAmbient (  Color4f(1.0,0.0,0.0,1.0));
-      BackgroundMaterialChunk->setDiffuse (  Color4f(0.0,1.0,0.0,1.0));
-      BackgroundMaterialChunk->setSpecular(  Color4f(0.0,0.0,1.0,1.0));
-	endEditCP(BackgroundMaterialChunk);
-
-	beginEditCP(BackgroundMaterial, ChunkMaterial::ChunksFieldMask);
-		BackgroundMaterial->addChunk(BackgroundMaterialChunk);
-	endEditCP(BackgroundMaterial, ChunkMaterial::ChunksFieldMask);
-
-	beginEditCP(materialBackground, MaterialUIBackground::MaterialFieldMask);
-		materialBackground->setMaterial(BackgroundMaterial);
-	endEditCP(materialBackground, MaterialUIBackground::MaterialFieldMask);
-
-	// Set textureBackground- set texture
-    TextureChunkPtr BackgroundTextureChunk = TextureChunk::create();
-    ImagePtr LoadedImage = ImageFileHandler::the().read("Data/Checker.jpg");	
-    beginEditCP(BackgroundTextureChunk, TextureChunk::ImageFieldMask);
-		BackgroundTextureChunk->setImage(LoadedImage);
-	endEditCP(BackgroundTextureChunk, TextureChunk::ImageFieldMask);
-
-	beginEditCP(textureBackground, TextureUIBackground::TextureFieldMask);
-		textureBackground->setTexture(BackgroundTextureChunk);
-	endEditCP(textureBackground, TextureUIBackground::TextureFieldMask);
+    beginEditCP(ExampleColorUIBackground, ColorUIBackground::ColorFieldMask);
+        ExampleColorUIBackground->setColor(Color4f(1.0,0.0,0.0,1.0));
+    endEditCP(ExampleColorUIBackground, ColorUIBackground::ColorFieldMask);
 
 	
-   TextureChunkPtr BackgroundPatternChunk = TextureChunk::create();
-   //ImagePtr LoadedImage = ImageFileHandler::the().read("Data/Checker.jpg");	
-   beginEditCP(BackgroundPatternChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask);
-		BackgroundPatternChunk->setImage(LoadedImage);
-		BackgroundPatternChunk->setWrapS(GL_REPEAT);
-		BackgroundPatternChunk->setWrapT(GL_CLAMP_TO_EDGE);
-	endEditCP(BackgroundPatternChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask);
+    /******************************************************
 
-	beginEditCP(patternBackground, PatternUIBackground::TextureFieldMask | PatternUIBackground::PatternSizeFieldMask | PatternUIBackground::VerticalAlignmentFieldMask | PatternUIBackground::HorizontalAlignmentFieldMask | PatternUIBackground::HorizontalRepeatFieldId | 
-		PatternUIBackground::VerticalRepeatFieldMask | PatternUIBackground::HorizontalRepeatValueFieldMask | PatternUIBackground::VerticalRepeatValueFieldMask);
-		patternBackground->setTexture(BackgroundPatternChunk);
-		patternBackground->setPatternSize(Vec2s(50,50));
-		patternBackground->setVerticalAlignment(0.5);
-		patternBackground->setHorizontalAlignment(0.0);
-		patternBackground->setHorizontalRepeat(PatternUIBackground::PATTERN_REPEAT_BY_POINT);
-		patternBackground->setVerticalRepeat(PatternUIBackground::PATTERN_REPEAT_ABSOLUTE);
-		patternBackground->setHorizontalRepeatValue(1.0);
-		patternBackground->setVerticalRepeatValue(2.0);
-	endEditCP(patternBackground, PatternUIBackground::TextureFieldMask | PatternUIBackground::PatternSizeFieldMask | PatternUIBackground::VerticalAlignmentFieldMask | PatternUIBackground::HorizontalAlignmentFieldMask | PatternUIBackground::HorizontalRepeatFieldId | 
-		PatternUIBackground::VerticalRepeatFieldMask | PatternUIBackground::HorizontalRepeatValueFieldMask | PatternUIBackground::VerticalRepeatValueFieldMask);
+            The CompoundUIBackground allows you to 
+			combine multiple Backgrounds into one.
+
+			The Backgrounds are added sequentially;
+			so in this example the 
+			ExampleTextureUIBackground would be added 
+			first, and the ExampleGradientUIBackground
+			rendered on top of it.  
+
+			-getBackgrounds().addValue(BackgroundName):
+				Adds a Background to the 
+				CompoundBackground.
+
+    ******************************************************/
+
+    beginEditCP(ExampleCompoundUIBackground, CompoundUIBackground::BackgroundsFieldMask);
+        ExampleCompoundUIBackground->getBackgrounds().addValue(ExampleTextureUIBackground);
+        ExampleCompoundUIBackground->getBackgrounds().addValue(ExampleGradientUIBackground);
+    endEditCP(ExampleCompoundUIBackground, CompoundUIBackground::BackgroundsFieldMask);
 	
-	/******************************************************
+    /******************************************************
 
-		Create Button components to display each 
-		of the varying backgrounds.  Buttons will 
-		be placed via the Flow layout.
+            The EmptyUIBackground is a Background
+			with no attributes.
 
-	******************************************************/
-	ButtonPtr buttonColor = osg::Button::create();
-	ButtonPtr buttonCompound = osg::Button::create();
-	ButtonPtr buttonEmpty = osg::Button::create();
-	ButtonPtr buttonGradient = osg::Button::create();	
-	ButtonPtr buttonMaterial = osg::Button::create();
-	ButtonPtr buttonTexture = osg::Button::create();
-	ButtonPtr buttonPattern = osg::Button::create();
-	
-	// Set the visible text, border, and Background for
-	// each of the various Button components
-	beginEditCP(buttonColor, Button::TextFieldMask | Component::BackgroundFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBackgroundFieldMask | Component::PreferredSizeFieldMask);
-		buttonColor->setText("Color Background");
-		buttonColor->setBackground(colorBackground);
-		buttonColor->setActiveBackground(colorBackground);
-		buttonColor->setRolloverBackground(colorBackground);
-		buttonColor->setPreferredSize(Vec2s(150,50));
-    endEditCP(buttonColor, Button::TextFieldMask | Component::BackgroundFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBackgroundFieldMask | Component::PreferredSizeFieldMask);
+    ******************************************************/
 
-	beginEditCP(buttonCompound, Button::TextFieldMask | Component::BackgroundFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBackgroundFieldMask | Component::PreferredSizeFieldMask);
-		buttonCompound->setText("Compound Background");
-		buttonCompound->setBackground(compoundBackground);
-		buttonCompound->setActiveBackground(compoundBackground);
-		buttonCompound->setRolloverBackground(compoundBackground);
-		buttonCompound->setPreferredSize(Vec2s(150,50));
-		endEditCP(buttonCompound, Button::TextFieldMask | Component::BackgroundFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBackgroundFieldMask | Component::PreferredSizeFieldMask);
+	beginEditCP(ExampleEmptyUIBackground);
+		// Nothing!
+	endEditCP(ExampleEmptyUIBackground);
 
-	beginEditCP(buttonEmpty, Button::TextFieldMask | Component::BackgroundFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBackgroundFieldMask | Component::PreferredSizeFieldMask);
-		buttonEmpty->setText("Empty Background");
-		buttonEmpty->setBackground(emptyBackground);
-		buttonEmpty->setActiveBackground(emptyBackground);
-		buttonEmpty->setRolloverBackground(emptyBackground);
-		buttonEmpty->setPreferredSize(Vec2s(150,50));
-	endEditCP(buttonEmpty, Button::TextFieldMask | Component::BackgroundFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBackgroundFieldMask | Component::PreferredSizeFieldMask);
+		
+    /******************************************************
 
-	beginEditCP(buttonGradient, Button::TextFieldMask | Component::BackgroundFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBackgroundFieldMask | Component::PreferredSizeFieldMask);
-		buttonGradient->setText("Gradient Background");
-		buttonGradient->setBackground(gradientBackground);
-		buttonGradient->setActiveBackground(gradientBackground);
-		buttonGradient->setRolloverBackground(gradientBackground);
-		buttonGradient->setPreferredSize(Vec2s(150,50));
-    endEditCP(buttonGradient, Button::TextFieldMask | Component::BackgroundFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBackgroundFieldMask | Component::PreferredSizeFieldMask);
-	
-	beginEditCP(buttonMaterial, Button::TextFieldMask | Component::BackgroundFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBackgroundFieldMask | Component::PreferredSizeFieldMask |  Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask);
-		buttonMaterial->setText("Material Background");
-		buttonMaterial->setBackground(materialBackground);
-		buttonMaterial->setActiveBackground(materialBackground);
-		buttonMaterial->setRolloverBackground(materialBackground);
-		buttonMaterial->setPreferredSize(Vec2s(150,50));
-		buttonMaterial->setTextColor( Color4f(1.0,1.0,1.0,1.0) );
-		buttonMaterial->setRolloverTextColor( Color4f(1.0,1.0,1.0,1.0) );
-		buttonMaterial->setActiveTextColor( Color4f(1.0,1.0,1.0,1.0) );
-		endEditCP(buttonMaterial, Button::TextFieldMask | Component::BackgroundFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBackgroundFieldMask | Component::PreferredSizeFieldMask |  Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask);
+            The GradientUIBackground is a Background
+			which displays a gradient of Color.
 
-	beginEditCP(buttonTexture, Button::TextFieldMask | Component::BackgroundFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBackgroundFieldMask | Component::PreferredSizeFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask);
-		buttonTexture->setText("Texture Background");
-		buttonTexture->setBackground(textureBackground);
-		buttonTexture->setActiveBackground(textureBackground);
-		buttonTexture->setRolloverBackground(textureBackground);
-		buttonTexture->setPreferredSize(Vec2s(150,50));
-		buttonTexture->setTextColor( Color4f(0.0,1.0,0.0,1.0) );
-		buttonTexture->setRolloverTextColor( Color4f(0.0,1.0,0.0,1.0) );
-		buttonTexture->setActiveTextColor( Color4f(0.0,1.0,0.0,1.0) );
-	endEditCP(buttonTexture, Button::TextFieldMask | Component::BackgroundFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBackgroundFieldMask | Component::PreferredSizeFieldMask |  Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask);
-	
-	beginEditCP(buttonPattern, Button::TextFieldMask | Component::BackgroundFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBackgroundFieldMask | Component::PreferredSizeFieldMask |  Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask);
-		buttonPattern->setText("Pattern Background");
-		buttonPattern->setBackground(patternBackground);
-		buttonPattern->setActiveBackground(patternBackground);
-		buttonPattern->setRolloverBackground(patternBackground);
-		buttonPattern->setPreferredSize(Vec2s(150,50));
-		buttonPattern->setTextColor( Color4f(0.0,1.0,0.0,1.0) );
-		buttonPattern->setRolloverTextColor( Color4f(0.0,1.0,0.0,1.0) );
-		buttonPattern->setActiveTextColor( Color4f(0.0,1.0,0.0,1.0) );
-	endEditCP(buttonPattern, Button::TextFieldMask | Component::BackgroundFieldMask | Button::ActiveBorderFieldMask | Component::RolloverBackgroundFieldMask | Component::PreferredSizeFieldMask |  Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask);
+			-setColorStart(Color4f): Determines the 
+				starting Color for the gradient.
+			-setColorEnd(Color4f): Determines the
+				ending Color for the gradient.
+			-setAlignmnet(ENUM): Determines the
+				gradient alignment.  Takes 
+				HORIZONTAL_ALIGNMENT or 
+				VERTICAL_ALIGNMENT arguments.
+
+    ******************************************************/
+
+    beginEditCP(ExampleGradientUIBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
+         ExampleGradientUIBackground->setColorStart(Color4f(1.0, 0.0, 0.0, 1.0));
+         ExampleGradientUIBackground->setColorEnd(Color4f(0.0, 0.0, 1.0, 0.5));
+         ExampleGradientUIBackground->setAlignment(HORIZONTAL_ALIGNMENT);
+    endEditCP(ExampleGradientUIBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
+		
+    /******************************************************
+
+            The MaterialUIBackground is a Background
+			which is created using a Material (also
+			created here).
+
+			-setMaterial(MaterialName): Determine
+				which Material will be used to 
+				create the Background.
+
+    ******************************************************/    
+	// Creates Material
+    ChunkMaterialPtr UIBackgroundMaterial = ChunkMaterial::create();
+    MaterialChunkPtr UIBackgroundMaterialChunk = MaterialChunk::create();
+    beginEditCP(UIBackgroundMaterialChunk);
+      UIBackgroundMaterialChunk->setAmbient(Color4f(1.0,0.0,0.0,1.0));
+      UIBackgroundMaterialChunk->setDiffuse(Color4f(0.0,1.0,0.0,1.0));
+      UIBackgroundMaterialChunk->setSpecular(Color4f(0.0,0.0,1.0,1.0));
+    endEditCP(UIBackgroundMaterialChunk);
+
+    beginEditCP(UIBackgroundMaterial, ChunkMaterial::ChunksFieldMask);
+        UIBackgroundMaterial->addChunk(UIBackgroundMaterialChunk);
+    endEditCP(UIBackgroundMaterial, ChunkMaterial::ChunksFieldMask);
+
+	// Edit MaterialUIBackground
+    beginEditCP(ExampleMaterialUIBackground, MaterialUIBackground::MaterialFieldMask);
+        ExampleMaterialUIBackground->setMaterial(UIBackgroundMaterial);
+    endEditCP(ExampleMaterialUIBackground, MaterialUIBackground::MaterialFieldMask);
+		
+    /******************************************************
+
+            The TextureUIBackground is a Background
+			which is created using a Texture (also
+			created here).
+
+			-setTexture(TextureName): Determine
+				which Texture will be used to 
+				create the Background.
+
+    ******************************************************/   
+	// Creates Texture from Image
+    TextureChunkPtr UIBackgroundTextureChunk = TextureChunk::create();
+    ImagePtr LoadedImage = ImageFileHandler::the().read("Data/Checker.jpg");    
+    beginEditCP(UIBackgroundTextureChunk, TextureChunk::ImageFieldMask);
+        UIBackgroundTextureChunk->setImage(LoadedImage);
+    endEditCP(UIBackgroundTextureChunk, TextureChunk::ImageFieldMask);
+
+	// Edit TextureUIBackground
+    beginEditCP(ExampleTextureUIBackground, TextureUIBackground::TextureFieldMask);
+        ExampleTextureUIBackground->setTexture(UIBackgroundTextureChunk);
+    endEditCP(ExampleTextureUIBackground, TextureUIBackground::TextureFieldMask);
+
+    /******************************************************
+
+            The PatternUIBackground is a Background
+			which is created using a Texture (also
+			created here).
+
+			-setTexture(TextureName): Determine
+				which Texture will be used to 
+				create the Background.
+			-setPatternSize(Vec2s):
+			-setVerticalAlignment():
+			-setHorizontalAlignment():
+			-setHorizontalRepeat():
+			-setVerticalRepeat():
+			-setHorizontalRepeatValue():
+			-setVerticalRepeatValue():
+
+    ******************************************************/  
+    
+   TextureChunkPtr UIBackgroundPatternChunk = TextureChunk::create();
+   //ImagePtr LoadedImage = ImageFileHandler::the().read("Data/Checker.jpg");    
+   beginEditCP(UIBackgroundPatternChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask);
+        UIBackgroundPatternChunk->setImage(LoadedImage);
+        UIBackgroundPatternChunk->setWrapS(GL_REPEAT);
+        UIBackgroundPatternChunk->setWrapT(GL_CLAMP_TO_EDGE);
+    endEditCP(UIBackgroundPatternChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask);
+
+   beginEditCP(ExamplePatternUIBackground, PatternUIBackground::TextureFieldMask | PatternUIBackground::PatternSizeFieldMask | PatternUIBackground::VerticalAlignmentFieldMask | PatternUIBackground::HorizontalAlignmentFieldMask | PatternUIBackground::HorizontalRepeatFieldId | 
+        PatternUIBackground::VerticalRepeatFieldMask | PatternUIBackground::HorizontalRepeatValueFieldMask | PatternUIBackground::VerticalRepeatValueFieldMask);
+        ExamplePatternUIBackground->setTexture(UIBackgroundPatternChunk);
+        ExamplePatternUIBackground->setPatternSize(Vec2s(50,50));
+        ExamplePatternUIBackground->setVerticalAlignment(0.5);
+        ExamplePatternUIBackground->setHorizontalAlignment(0.0);
+        ExamplePatternUIBackground->setHorizontalRepeat(PatternUIBackground::PATTERN_REPEAT_BY_POINT);
+        ExamplePatternUIBackground->setVerticalRepeat(PatternUIBackground::PATTERN_REPEAT_ABSOLUTE);
+        ExamplePatternUIBackground->setHorizontalRepeatValue(1.0);
+        ExamplePatternUIBackground->setVerticalRepeatValue(2.0);
+    endEditCP(ExamplePatternUIBackground, PatternUIBackground::TextureFieldMask | PatternUIBackground::PatternSizeFieldMask | PatternUIBackground::VerticalAlignmentFieldMask | PatternUIBackground::HorizontalAlignmentFieldMask | PatternUIBackground::HorizontalRepeatFieldId | 
+        PatternUIBackground::VerticalRepeatFieldMask | PatternUIBackground::HorizontalRepeatValueFieldMask | PatternUIBackground::VerticalRepeatValueFieldMask);
+    
+    /******************************************************
+
+			Create and edit Button Components to
+			display the UIBackgrounds.
+
+    ******************************************************/
+
+    ButtonPtr ExampleColorUIBackgroundButton = osg::Button::create();
+    ButtonPtr ExampleCompoundUIBackgroundButton = osg::Button::create();
+    ButtonPtr ExampleEmptyUIBackgroundButton = osg::Button::create();
+    ButtonPtr ExampleGradientUIBackgroundButton = osg::Button::create();    
+    ButtonPtr ExampleMaterialUIBackgroundButton = osg::Button::create();
+    ButtonPtr ExampleTextureUIBackgroundButton = osg::Button::create();
+    ButtonPtr ExamplePatternUIBackgroundButton = osg::Button::create();
+    
+
+    beginEditCP(ExampleColorUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
+        ExampleColorUIBackgroundButton->setText("Color UIBackground");
+        ExampleColorUIBackgroundButton->setBackground(ExampleColorUIBackground);
+        ExampleColorUIBackgroundButton->setActiveBackground(ExampleColorUIBackground);
+        ExampleColorUIBackgroundButton->setRolloverBackground(ExampleColorUIBackground);
+        ExampleColorUIBackgroundButton->setPreferredSize(Vec2s(150,50));
+    endEditCP(ExampleColorUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
+
+    beginEditCP(ExampleCompoundUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
+        ExampleCompoundUIBackgroundButton->setText("Compound UIBackground");
+        ExampleCompoundUIBackgroundButton->setBackground(ExampleCompoundUIBackground);
+        ExampleCompoundUIBackgroundButton->setActiveBackground(ExampleCompoundUIBackground);
+        ExampleCompoundUIBackgroundButton->setRolloverBackground(ExampleCompoundUIBackground);
+        ExampleCompoundUIBackgroundButton->setPreferredSize(Vec2s(150,50));
+    endEditCP(ExampleCompoundUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
+
+    beginEditCP(ExampleEmptyUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
+        ExampleEmptyUIBackgroundButton->setText("Empty UIBackground");
+        ExampleEmptyUIBackgroundButton->setBackground(ExampleEmptyUIBackground);
+        ExampleEmptyUIBackgroundButton->setActiveBackground(ExampleEmptyUIBackground);
+        ExampleEmptyUIBackgroundButton->setRolloverBackground(ExampleEmptyUIBackground);
+        ExampleEmptyUIBackgroundButton->setPreferredSize(Vec2s(150,50));
+    endEditCP(ExampleEmptyUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
+
+    beginEditCP(ExampleGradientUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
+        ExampleGradientUIBackgroundButton->setText("Gradient UIBackground");
+        ExampleGradientUIBackgroundButton->setBackground(ExampleGradientUIBackground);
+        ExampleGradientUIBackgroundButton->setActiveBackground(ExampleGradientUIBackground);
+        ExampleGradientUIBackgroundButton->setRolloverBackground(ExampleGradientUIBackground);
+        ExampleGradientUIBackgroundButton->setPreferredSize(Vec2s(150,50));
+    endEditCP(ExampleGradientUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
+    
+    beginEditCP(ExampleMaterialUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask |  Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask);
+        ExampleMaterialUIBackgroundButton->setText("Material UIBackground");
+        ExampleMaterialUIBackgroundButton->setBackground(ExampleMaterialUIBackground);
+        ExampleMaterialUIBackgroundButton->setActiveBackground(ExampleMaterialUIBackground);
+        ExampleMaterialUIBackgroundButton->setRolloverBackground(ExampleMaterialUIBackground);
+        ExampleMaterialUIBackgroundButton->setPreferredSize(Vec2s(150,50));
+        ExampleMaterialUIBackgroundButton->setTextColor(Color4f(1.0,1.0,1.0,1.0));
+        ExampleMaterialUIBackgroundButton->setRolloverTextColor(Color4f(1.0,1.0,1.0,1.0));
+        ExampleMaterialUIBackgroundButton->setActiveTextColor(Color4f(1.0,1.0,1.0,1.0));
+    endEditCP(ExampleMaterialUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask |  Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask);
+
+    beginEditCP(ExampleTextureUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask);
+        ExampleTextureUIBackgroundButton->setText("Texture UIBackground");
+        ExampleTextureUIBackgroundButton->setBackground(ExampleTextureUIBackground);
+        ExampleTextureUIBackgroundButton->setActiveBackground(ExampleTextureUIBackground);
+        ExampleTextureUIBackgroundButton->setRolloverBackground(ExampleTextureUIBackground);
+        ExampleTextureUIBackgroundButton->setPreferredSize(Vec2s(150,50));
+        ExampleTextureUIBackgroundButton->setTextColor(Color4f(0.0,1.0,0.0,1.0));
+        ExampleTextureUIBackgroundButton->setRolloverTextColor(Color4f(0.0,1.0,0.0,1.0));
+        ExampleTextureUIBackgroundButton->setActiveTextColor(Color4f(0.0,1.0,0.0,1.0));
+    endEditCP(ExampleTextureUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask |  Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask);
+    
+    beginEditCP(ExamplePatternUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask |  Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask);
+        ExamplePatternUIBackgroundButton->setText("Pattern UIBackground");
+        ExamplePatternUIBackgroundButton->setBackground(ExamplePatternUIBackground);
+        ExamplePatternUIBackgroundButton->setActiveBackground(ExamplePatternUIBackground);
+        ExamplePatternUIBackgroundButton->setRolloverBackground(ExamplePatternUIBackground);
+        ExamplePatternUIBackgroundButton->setPreferredSize(Vec2s(150,50));
+        ExamplePatternUIBackgroundButton->setTextColor(Color4f(0.0,1.0,0.0,1.0));
+        ExamplePatternUIBackgroundButton->setRolloverTextColor(Color4f(0.0,1.0,0.0,1.0));
+        ExamplePatternUIBackgroundButton->setActiveTextColor(Color4f(0.0,1.0,0.0,1.0));
+    endEditCP(ExamplePatternUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask |  Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask);
+
+
+    
+    /******************************************************
+
+			Create a MainFrameBackground.  For almost
+			all Tutorials, this is simply a 
+			ColorUIBackground with a semi-transparent
+			white Background.
+
+    ******************************************************/
+
+	ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
+    beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+        MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
 
 
 
-	// This creates a background for the MainFrame so that 
-	// the button backgrounds are easier to see. The process
-	// is identical, except the background is added to the 
-	// MainFrame instead of a Button.
-	// The background is a semi-transparent white background.
-	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
+    // Create The Main Frame
+    FramePtr MainFrame = osg::Frame::create();
+    LayoutPtr MainFrameLayout = osg::FlowLayout::create();
+    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+       MainFrame->getChildren().addValue(ExampleColorUIBackgroundButton);
+       MainFrame->getChildren().addValue(ExampleCompoundUIBackgroundButton);
+       MainFrame->getChildren().addValue(ExampleEmptyUIBackgroundButton);
+       MainFrame->getChildren().addValue(ExampleGradientUIBackgroundButton);
+       MainFrame->getChildren().addValue(ExampleMaterialUIBackgroundButton);
+       MainFrame->getChildren().addValue(ExampleTextureUIBackgroundButton);
+       MainFrame->getChildren().addValue(ExamplePatternUIBackgroundButton);
+       MainFrame->setLayout(MainFrameLayout);
+       MainFrame->setBackground(MainFrameBackground);
+    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
+    // Create the Drawing Surface
+    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setRootFrame(MainFrame);
+        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    
+    // Create the UI Foreground Object
+    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
 
-
-	// Create The Main Frame
-	FramePtr MainFrame = osg::Frame::create();
-	LayoutPtr MainFrameLayout = osg::FlowLayout::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-	   MainFrame->getChildren().addValue(buttonColor);
-	   MainFrame->getChildren().addValue(buttonCompound);
-	   MainFrame->getChildren().addValue(buttonEmpty);
-	   MainFrame->getChildren().addValue(buttonGradient);
-	   MainFrame->getChildren().addValue(buttonMaterial);
-	   MainFrame->getChildren().addValue(buttonTexture);
-	   MainFrame->getChildren().addValue(buttonPattern);
-	   MainFrame->setLayout(MainFrameLayout);
-	   MainFrame->setBackground(mainBackground);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-
-	// Create the Drawing Surface
-	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-		drawingSurface->setGraphics(graphics);
-		drawingSurface->setRootFrame(MainFrame);
-	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-	
-	// Create the UI Foreground Object
-	UIForegroundPtr foreground = osg::UIForeground::create();
-
-	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-	    foreground->setDrawingSurface(drawingSurface);
-		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.5,0.5));
-    endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
+        TutorialUIForeground->setFrameBounds(Vec2f(0.5,0.5));
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // Tell the manager what to manage
+    // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
     mgr->setRoot(scene);
 
-	// Add the UI Foreground Object to the Scene
-	ViewportPtr viewport = mgr->getWindow()->getPort(0);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-		viewport->getForegrounds().addValue(foreground);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
+    // Add the UI Foreground Object to the Scene
+    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
-    // Show the whole scene
+    // Show the whole Scene
     mgr->showAll();
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
+    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(900,900),
-                                        "OpenSG 04Background Window");
+                                        "OpenSG 04UIBackground Window");
 
     //Main Event Loop
     while(!ExitApp)
     {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
+        TutorialWindowEventProducer->update();
+        TutorialWindowEventProducer->draw();
     }
     osgExit();
 

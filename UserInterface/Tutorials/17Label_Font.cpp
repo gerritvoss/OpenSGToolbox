@@ -100,31 +100,31 @@ public:
     }
 };
 
-	/******************************************************
+    /******************************************************
 
-			Creates a ListCellRenderer class to 
-			create Labels for the List which contain
-			the Font name in that particular Font.
+            Creates a ListCellRenderer class to 
+            create Labels for the List which contain
+            the Font name in that particular Font.
 
-			This creates the DefaultListCell (a 
-			Label with Text equal to the name
-			of the Font) and then changes that
-			Label's Font to be the Font contained
-			within the Label.
+            This creates the DefaultListCell (a 
+            Label with Text equal to the name
+            of the Font) and then changes that
+            Label's Font to be the Font contained
+            within the Label.
 
-			The ListCellRenderer is what is
-			used to create the Component
-			values for the List.  The Default 
-			is to simply create Label components
-			which normally simply contain a text
-			value.  In this case, the
-			DefaultListCellRenderer is 
-			modified slightly to give each
-			Label component the Font which
-			its text will display.
+            The ListCellRenderer is what is
+            used to create the Component
+            values for the List.  The Default 
+            is to simply create Label components
+            which normally simply contain a text
+            value.  In this case, the
+            DefaultListCellRenderer is 
+            modified slightly to give each
+            Label component the Font which
+            its text will display.
 
 
-	******************************************************/
+    ******************************************************/
 
 class FontListCellRenderer : public DefaultListCellRenderer
 {
@@ -132,32 +132,32 @@ class FontListCellRenderer : public DefaultListCellRenderer
   public:
     virtual ComponentPtr getListCellRendererComponent(ListPtr list, SharedFieldPtr value, UInt32 index, bool isSelected, bool cellHasFocus)
     {
-		// Create using the DefaultListCellRenderer a
-		// Label [its default] with the Font name as its text
+        // Create using the DefaultListCellRenderer a
+        // Label [its default] with the Font name as its text
 
         LabelPtr TheLabel = Label::Ptr::dcast(
             DefaultListCellRenderer::getListCellRendererComponent(
             list, value, index, isSelected, cellHasFocus)
             );
 
-		std::string FontFamilyString;
-		// Converts the Fontname to correct type
-		if(value->getType() == SFString::getClassType())
-		{
-			FontFamilyString = dynamic_cast<SFString*>(value.get())->getValue();
-		}
-		else
-		{
-			// Gives a default value
+        std::string FontFamilyString;
+        // Converts the Fontname to correct type
+        if(value->getType() == SFString::getClassType())
+        {
+            FontFamilyString = dynamic_cast<SFString*>(value.get())->getValue();
+        }
+        else
+        {
+            // Gives a default value
             FontFamilyString = "Times New Roman";
-		}
-		
-		// Add the required Font to FontMapItor
+        }
+        
+        // Add the required Font to FontMapItor
         std::map<std::string, UIFontPtr>::iterator FontMapItor = FontMap.find(FontFamilyString);
         if(FontMapItor != FontMap.end())
         {
             beginEditCP(TheLabel, Label::FontFieldMask);
-				// Set the Label's Font to be its correct Font
+                // Set the Label's Font to be its correct Font
                 TheLabel->setFont((*FontMapItor).second);
             endEditCP(TheLabel, Label::FontFieldMask);
         }
@@ -181,30 +181,30 @@ class FontListListener: public ListSelectionListener
 {
   public:
     virtual void selectionChanged(const ListSelectionEvent& e)
-	{
-		if(!list->getSelectionModel()->isSelectionEmpty())
-		{
-			std::string ValueStr("");
-			SharedFieldPtr Value(list->getValueAtIndex(list->getSelectionModel()->getAnchorSelectionIndex()));
-			if(Value->getType() == SFString::getClassType())
-			{
-				ValueStr = dynamic_cast<SFString*>(Value.get())->getValue();
-			}
-			// Output selected font
-			std::cout << "Setting Font: " << ValueStr << std::endl;
+    {
+        if(!list->getSelectionModel()->isSelectionEmpty())
+        {
+            std::string ValueStr("");
+            SharedFieldPtr Value(list->getValueAtIndex(list->getSelectionModel()->getAnchorSelectionIndex()));
+            if(Value->getType() == SFString::getClassType())
+            {
+                ValueStr = dynamic_cast<SFString*>(Value.get())->getValue();
+            }
+            // Output selected font
+            std::cout << "Setting Font: " << ValueStr << std::endl;
 
-			// Get the Font and create new FontPtr
-			UIFontPtr TheSelectedFont(FontMap[ValueStr]);
+            // Get the Font and create new FontPtr
+            UIFontPtr TheSelectedFont(FontMap[ValueStr]);
 
-			if(TheSelectedFont != NullFC)
-			{
-				// Set the font for label1 to be selected font
-				beginEditCP(label1, Label::FontFieldMask);
-					label1->setFont(TheSelectedFont);
-				endEditCP(label1, Label::FontFieldMask);
-			}
-		}
-	}
+            if(TheSelectedFont != NullFC)
+            {
+                // Set the font for label1 to be selected font
+                beginEditCP(label1, Label::FontFieldMask);
+                    label1->setFont(TheSelectedFont);
+                endEditCP(label1, Label::FontFieldMask);
+            }
+        }
+    }
 };
 
 int main(int argc, char **argv)
@@ -213,15 +213,15 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
+    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
     
-    TheWindowEventProducer->setDisplayCallback(display);
-    TheWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
 
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
 
     // Make Torus Node
@@ -233,241 +233,241 @@ int main(int argc, char **argv)
     {
         scene->setCore(osg::Group::create());
  
-        // add the torus as a child
+        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
     }
-    endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	// Create the Graphics
-	GraphicsPtr graphics = osg::Graphics2D::create();
+    // Create the Graphics
+    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
 
-	// Initialize the LookAndFeelManager to enable default settings
-	LookAndFeelManager::the()->getLookAndFeel()->init();
+    // Initialize the LookAndFeelManager to enable default settings
+    LookAndFeelManager::the()->getLookAndFeel()->init();
 
-	
-	/******************************************************
+    
+    /******************************************************
 
-			Determine which Fonts your computer can
-			use as a Font and makes a vector
-			containing them
+            Determine which Fonts your computer can
+            use as a Font and makes a vector
+            containing them
 
-	******************************************************/
-	std::vector<std::string> family;
-	TextFaceFactory::the().getFontFamilies(family);
+    ******************************************************/
+    std::vector<std::string> family;
+    TextFaceFactory::the().getFontFamilies(family);
 
-	/******************************************************
+    /******************************************************
 
-			Cycle through all available Fonts
-			and add a Font of the type contained
-			in its string name to a map containing
-			both values.
+            Cycle through all available Fonts
+            and add a Font of the type contained
+            in its string name to a map containing
+            both values.
 
-	******************************************************/
-	for (unsigned int i =0; i<family.size(); ++i)
-	{
+    ******************************************************/
+    for (unsigned int i =0; i<family.size(); ++i)
+    {
         //Create the Fonts
         UIFontPtr TheFont = UIFont::create();
         beginEditCP(TheFont);
-	        TheFont->setFamily(family[i]);
-	        TheFont->setSize(16);
-	        TheFont->setStyle(TextFace::STYLE_PLAIN);
+            TheFont->setFamily(family[i]);
+            TheFont->setSize(16);
+            TheFont->setStyle(TextFace::STYLE_PLAIN);
         endEditCP(TheFont);
-		// Setup the FontMap map to pair the
-		// string Font name with a Font with
-		// that Font
+        // Setup the FontMap map to pair the
+        // string Font name with a Font with
+        // that Font
         FontMap[family[i]] = TheFont;
-	}
+    }
 
-	
-	/******************************************************
+    
+    /******************************************************
 
-			Create a Font.
+            Create a Font.
 
-			-setFamily(TYPE) determines what format the Font
-				is.  All Fonts available on your machine
-				will be displayed when you run this 
-				tutorial in a List.
-			-setSize(SIZE) determines the size of the 
-				Font.
-			-setFont(TextFace::STYLE) determines the 
-				style the Font is.  Options are: (all 
-				preceeded by "TextFace::" : STYLE_PLAIN,
-				STYLE_BOLD, STYLE_ITALIC,
-
-
-	******************************************************/
-	UIFontPtr labelFont = UIFont::create();
-	beginEditCP(labelFont);
-		// Note that there is a default Font
-		// in case the Family type is gibberish.
-		// This is only apparent when initially run
-		// (when list is selected, a new Font is assigned)
-		//labelFont->setFamily("Times New Roman");
-		labelFont->setFamily("randomgibberishfontwhichdoesn'texist");
-		labelFont->setSize(25);
-		labelFont->setStyle(TextFace::STYLE_PLAIN);
-	endEditCP(labelFont);
-
-	/******************************************************
+            -setFamily(TYPE) determines what format the Font
+                is.  All Fonts available on your machine
+                will be displayed when you run this 
+                tutorial in a List.
+            -setSize(SIZE) determines the size of the 
+                Font.
+            -setFont(TextFace::STYLE) determines the 
+                style the Font is.  Options are: (all 
+                preceeded by "TextFace::" : STYLE_PLAIN,
+                STYLE_BOLD, STYLE_ITALIC,
 
 
-		Create a few Labels and edit their characteristics.
+    ******************************************************/
+    UIFontPtr labelFont = UIFont::create();
+    beginEditCP(labelFont);
+        // Note that there is a default Font
+        // in case the Family type is gibberish.
+        // This is only apparent when initially run
+        // (when list is selected, a new Font is assigned)
+        //labelFont->setFamily("Times New Roman");
+        labelFont->setFamily("randomgibberishfontwhichdoesn'texist");
+        labelFont->setSize(25);
+        labelFont->setStyle(TextFace::STYLE_PLAIN);
+    endEditCP(labelFont);
 
-		Note that all Component characteristics can be 
-		modified as well (Background, PreferredSize, etc).
-
-		-setFont(FONT_NAME) assigns a Font to the Label
-		-setText("TEXT") displays TEXT on the Label (or
-			whatever else is in the parenthesis
-		-setTextColor(Color4f) sets the color of the 
-			text
-		-setVerticalAlignment(ALIGNMENT) determines the 
-			alignment of the text on the Vertical Axis.
-			Arguments are: VERTICAL_TOP, VERTICAL_CENTER,
-			and VERTICAL_BOTTOM or a Float between 0.0
-			and 1.0.  Note: higher (and lower) values are 
-			allowed, but will cause the text to not be 
-			completely displayed.
-		-setHorizontalAlignment(ALIGNMENT) determines the
-			alignment of the text on the Horizontal Axis.
-			Arguments are: HORIZONTAL_CENTER, HORIZONTAL_LEFT, 
-			and HORIZONTAL_RIGHT or a Float between 0.0
-			and 1.0.  Note: higher (and lower) values are 
-			allowed, but will cause the text to not be 
-			completely displayed.
-
-	******************************************************/
-	GradientUIBackgroundPtr label1Background = osg::GradientUIBackground::create();
-	beginEditCP(label1Background, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask);
-		label1Background->setColorStart( Color4f(1.0, 0.0, 0.0, 1.0) );
-		label1Background->setColorEnd( Color4f(0.0, 0.0, 1.0, 1.0) );
-	endEditCP(label1Background, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask);
-	label1 = osg::Label::create();
-	beginEditCP(label1, Component::BackgroundFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask);
-		label1->setBackground(label1Background);
-		label1->setFont(labelFont);
-		label1->setText("Change My Font!");
-		label1->setTextColor( Color4f(1.0, 1.0, 1.0, 1.0) );
-		//label1->setActiveTextColor( Color4f(1.0, 1.0, 1.0, 1.0) );
-		label1->setVerticalAlignment(0.5);
-		label1->setHorizontalAlignment(0.5);
-		label1->setPreferredSize( Vec2s(200, 50) );
-	endEditCP(label1, Component::BackgroundFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask);
-	
+    /******************************************************
 
 
+        Create a few Labels and edit their characteristics.
 
-	
-	/******************************************************
+        Note that all Component characteristics can be 
+        modified as well (Background, PreferredSize, etc).
 
-			The following creates a list of all
-			the fonts available on your machine,
-			and adds them to a ScrollPanel.
+        -setFont(FONT_NAME) assigns a Font to the Label
+        -setText("TEXT") displays TEXT on the Label (or
+            whatever else is in the parenthesis
+        -setTextColor(Color4f) sets the color of the 
+            text
+        -setVerticalAlignment(ALIGNMENT) determines the 
+            alignment of the text on the Vertical Axis.
+            Arguments are: VERTICAL_TOP, VERTICAL_CENTER,
+            and VERTICAL_BOTTOM or a Float between 0.0
+            and 1.0.  Note: higher (and lower) values are 
+            allowed, but will cause the text to not be 
+            completely displayed.
+        -setHorizontalAlignment(ALIGNMENT) determines the
+            alignment of the text on the Horizontal Axis.
+            Arguments are: HORIZONTAL_CENTER, HORIZONTAL_LEFT, 
+            and HORIZONTAL_RIGHT or a Float between 0.0
+            and 1.0.  Note: higher (and lower) values are 
+            allowed, but will cause the text to not be 
+            completely displayed.
 
-			For more information about Lists, see
-			18List.
+    ******************************************************/
+    GradientUIBackgroundPtr label1Background = osg::GradientUIBackground::create();
+    beginEditCP(label1Background, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask);
+        label1Background->setColorStart(Color4f(1.0, 0.0, 0.0, 1.0));
+        label1Background->setColorEnd(Color4f(0.0, 0.0, 1.0, 1.0));
+    endEditCP(label1Background, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask);
+    label1 = osg::Label::create();
+    beginEditCP(label1, Component::BackgroundFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask);
+        label1->setBackground(label1Background);
+        label1->setFont(labelFont);
+        label1->setText("Change My Font!");
+        label1->setTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
+        //label1->setActiveTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
+        label1->setVerticalAlignment(0.5);
+        label1->setHorizontalAlignment(0.5);
+        label1->setPreferredSize(Vec2s(200, 50));
+    endEditCP(label1, Component::BackgroundFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask);
+    
 
-			For more information about ScrollBars 
-			and ScrollPanels, see 27ScrollPanel.
-			
 
-	******************************************************/
-	// Create ListModel Component
-	AbstractListModel Model;
 
-	// Display all Fonts available
+    
+    /******************************************************
+
+            The following creates a list of all
+            the fonts available on your machine,
+            and adds them to a ScrollPanel.
+
+            For more information about Lists, see
+            18List.
+
+            For more information about ScrollBars 
+            and ScrollPanels, see 27ScrollPanel.
+            
+
+    ******************************************************/
+    // Create ListModel Component
+    AbstractListModel Model;
+
+    // Display all Fonts available
     std::map<std::string, UIFontPtr>::iterator FontMapItor;
-	for (FontMapItor = FontMap.begin(); FontMapItor != FontMap.end() ; ++FontMapItor)
-	{
-	    // Add the Fonts to the List
-	    Model.pushBack(SharedFieldPtr(new SFString((*FontMapItor).first)));
-	}
+    for (FontMapItor = FontMap.begin(); FontMapItor != FontMap.end() ; ++FontMapItor)
+    {
+        // Add the Fonts to the List
+        Model.pushBack(SharedFieldPtr(new SFString((*FontMapItor).first)));
+    }
 
-	// Creates CellRenderer
-	FontListCellRenderer CellRenderer;
+    // Creates CellRenderer
+    FontListCellRenderer CellRenderer;
 
 
-	// Create ListPtr
-	list = List::create();
-	beginEditCP(list, Component::PreferredSizeFieldMask | List::CellLayoutFieldMask);
-		list->setPreferredSize( Vec2s (200, 300) );
+    // Create ListPtr
+    list = List::create();
+    beginEditCP(list, Component::PreferredSizeFieldMask | List::CellLayoutFieldMask);
+        list->setPreferredSize( Vec2s (200, 300));
         list->setCellLayout(VERTICAL_ALIGNMENT);
-	endEditCP(list, Component::PreferredSizeFieldMask | List::CellLayoutFieldMask);
-	list->setModel(&Model);
-	list->setCellRenderer(&CellRenderer);
+    endEditCP(list, Component::PreferredSizeFieldMask | List::CellLayoutFieldMask);
+    list->setModel(&Model);
+    list->setCellRenderer(&CellRenderer);
     ListSelectionModelPtr  SelectionModel(new DefaultListSelectionModel);
     SelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
-	list->setSelectionModel(SelectionModel);
+    list->setSelectionModel(SelectionModel);
 
     FontListListener TheFontListListener;
-	list->getSelectionModel()->addListSelectionListener(&TheFontListListener);
+    list->getSelectionModel()->addListSelectionListener(&TheFontListListener);
 
     //ScrollPanel
     ScrollPanelPtr TheScrollPanel = ScrollPanel::create();
     beginEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-	    TheScrollPanel->setPreferredSize(Vec2s(200,300));
+        TheScrollPanel->setPreferredSize(Vec2s(200,300));
         TheScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         //TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     endEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
     TheScrollPanel->setViewComponent(list);
 
-	// Create The Main Frame
-	// Create Background to be used with the Main Frame
-	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-	FramePtr MainFrame = osg::Frame::create();
-	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
+    // Create The Main Frame
+    // Create Background to be used with the Main Frame
+    ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
+    beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+        MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+    FramePtr MainFrame = osg::Frame::create();
+    FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
 
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask);
-	   MainFrame->getChildren().addValue(label1);
-	   MainFrame->getChildren().addValue(TheScrollPanel);
-	   MainFrame->setLayout(MainFrameLayout);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask);
+    beginEditCP(MainFrame, Frame::ChildrenFieldMask);
+       MainFrame->getChildren().addValue(label1);
+       MainFrame->getChildren().addValue(TheScrollPanel);
+       MainFrame->setLayout(MainFrameLayout);
+    endEditCP(MainFrame, Frame::ChildrenFieldMask);
 
-	// Create the Drawing Surface
-	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-		drawingSurface->setGraphics(graphics);
-		drawingSurface->setRootFrame(MainFrame);
-	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-	
-	// Create the UI Foreground Object
-	UIForegroundPtr foreground = osg::UIForeground::create();
+    // Create the Drawing Surface
+    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setRootFrame(MainFrame);
+        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    
+    // Create the UI Foreground Object
+    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
 
-	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-	    foreground->setDrawingSurface(drawingSurface);
-		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.5,0.5));
-    endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
+        TutorialUIForeground->setFrameBounds(Vec2f(0.5,0.5));
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
  
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // Tell the manager what to manage
+    // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
     mgr->setRoot(scene);
 
-	// Add the UI Foreground Object to the Scene
-	ViewportPtr viewport = mgr->getWindow()->getPort(0);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-		viewport->getForegrounds().addValue(foreground);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
+    // Add the UI Foreground Object to the Scene
+    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
-    // Show the whole scene
+    // Show the whole Scene
     mgr->showAll();
 
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
+    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(900,900),
                                         "OpenSG 17Label/Font Window");
 
     //Main Event Loop
     while(!ExitApp)
     {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
+        TutorialWindowEventProducer->update();
+        TutorialWindowEventProducer->draw();
     }
     osgExit();
 

@@ -1,11 +1,11 @@
 // OpenSG Tutorial Example: Using the Flow Layout
-//		to place Components 
+//        to place Components 
 //
 // This tutorial explains how to place Buttons within a 
 // frame utilizing the Flow Layout command to 
 // manage the layout through the OSG User Interface library.
 // 
-// Includes: placing multiple buttons using Flow Layout
+// Includes: placing multiple ExampleButtons using Flow Layout
 
 // GLUT is used for window handling
 #include <OpenSG/OSGGLUT.h>
@@ -77,15 +77,15 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
+    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
     
-    TheWindowEventProducer->setDisplayCallback(display);
-    TheWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
 
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
 
     // Make Torus Node (creates Torus in background of scene)
@@ -97,160 +97,163 @@ int main(int argc, char **argv)
     {
         scene->setCore(osg::Group::create());
  
-        // add the torus as a child
+        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
     }
-    endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	// Create the Graphics
-	GraphicsPtr graphics = osg::Graphics2D::create();
+    // Create the Graphics
+    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
 
-	// Initialize the LookAndFeelManager to enable default 
-	// settings for the Button
-	LookAndFeelManager::the()->getLookAndFeel()->init();
-
-
+    // Initialize the LookAndFeelManager to enable default 
+    // settings for the Button
+    LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
-	/******************************************************
-			
-				Creates some Button components
-				and edit their PreferredSizes
+    /******************************************************
+            
+            Create and edit a few Button Components. 
 
-	******************************************************/
-	ButtonPtr button1 = osg::Button::create();
-	ButtonPtr button2 = osg::Button::create();
-	ButtonPtr button3 = osg::Button::create();
-	ButtonPtr button4 = osg::Button::create();
-	ButtonPtr button5 = osg::Button::create();
-	ButtonPtr button6 = osg::Button::create();
+    ******************************************************/
+    ButtonPtr ExampleButton1 = osg::Button::create();
+    ButtonPtr ExampleButton2 = osg::Button::create();
+    ButtonPtr ExampleButton3 = osg::Button::create();
+    ButtonPtr ExampleButton4 = osg::Button::create();
+    ButtonPtr ExampleButton5 = osg::Button::create();
+    ButtonPtr ExampleButton6 = osg::Button::create();
 
+    beginEditCP(ExampleButton1, Button::PreferredSizeFieldMask);
+        ExampleButton1->setPreferredSize( Vec2s (200, 50));
+    endEditCP(ExampleButton1, Button::PreferredSizeFieldMask);
 
-	beginEditCP(button1, Component::PreferredSizeFieldMask);
-		button1->setPreferredSize( Vec2s (200, 50) );
-	endEditCP(button1, Component::PreferredSizeFieldMask);
+    beginEditCP(ExampleButton4, Button::PreferredSizeFieldMask);
+        ExampleButton4->setPreferredSize( Vec2s (50, 50));
+    endEditCP(ExampleButton4, Button::PreferredSizeFieldMask);
 
-	beginEditCP(button4, Component::PreferredSizeFieldMask);
-		button4->setPreferredSize( Vec2s (50, 50) );
-	endEditCP(button4, Component::PreferredSizeFieldMask);
+    /******************************************************
 
-	/******************************************************
+        Create Flow Layout.  Flow Layout arranges objects
+        automatically within the Frame, so that depending 
+        on Frame size, the objects may appear in a vertical
+        line, horizontal line, or multiple lines.  Objects 
+        fill from the upper left hand corner of the Frame
+        across, then down (when the line becomes full) while
+        arranged Horizontally, or from the upper left hand
+        corner across when arranged Vertically, starting a 
+        new column when necessary.
 
-		Create Flow Layout.  Flow Layout arranges objects
-		automatically within the Frame, so that depending 
-		on Frame size, the objects may appear in a vertical
-		line, horizontal line, or multiple lines.  Objects 
-		fill from the upper left hand corner of the Frame
-		across, then down (when the line becomes full) while
-		arranged Horizontally, or from the upper left hand
-		corner across when arranged Vertically, starting a 
-		new column when necessary.
+        You can experiment with this by changing the window 
+        size, changing the orientation, changing the 
+        PreferredSize of the Buttons, or adding more 
+		Buttons to the view.
 
-		Alignment of the Layout and the alignment of objects 
-		within the Layout can be changed.
-
-		You can experiment with this by changing the window 
-		size, changing the orientation, changing the 
-		PreferredSize of the Buttons as shown in 01Button, 
-		or adding more Buttons to the view.
-
-		Note that if the Frame is too small, the objects will 
-		appear out of the Frame Background.
-
-
-	******************************************************/
-	FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
-	// Determine whether the Layout is Horizontal (HORIZONTAL_ALIGNMENT) or
-	// Vertical (VERTICAL_ALIGNMENT) and determine gap size, and determine
-	// alignment along Horizontal and Vertical axis 
-	beginEditCP(MainFrameLayout, FlowLayout::HorizontalGapFieldMask | FlowLayout::VerticalGapFieldMask | FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
-		// Determine the Horizontal and Vertical gaps between objects.
-		// These gaps are absolute, and measured in pixels.
-		MainFrameLayout->setHorizontalGap(3);
-		MainFrameLayout->setVerticalGap(3);
-		// Determine whether layout is arranged Vertically (VERTICAL_ALIGNMENT)
-		// or Horizontally (HORIZONTAL_ALIGNMENT)
-		MainFrameLayout->setAlignment(VERTICAL_ALIGNMENT);
-		// MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
-
-		// The options for the following two functions are:
-		// AXIS_MAX_ALIGNMENT, AXIS_CENTER_ALIGNMENT, and
-		// AXIS_MIN_ALIGNMENT.
-
-		// Determine alignment of entire layout; MAX puts it to the bottom (for vertical
-		// overall layout) or right (horizontal overall layout), CENTER centers it, and
-		// MIN does the opposite of MAX
-		MainFrameLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-
-		// Determine alignment of Components within Layout
-		MainFrameLayout->setMinorAxisAlignment(AXIS_MAX_ALIGNMENT);
-	endEditCP(MainFrameLayout, FlowLayout::HorizontalGapFieldMask | FlowLayout::VerticalGapFieldMask | FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+        Note that if the Frame is too small or resized
+		too much, the FlowLayout will become slightly
+		distorted.  For Layouts which will often
+		be dynamically changed, FlowLayout is not
+		the best choice.
 	
- 	// Create The Main Frame
-	// Create Background to be used with the Main Frame
-	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-	
-	FramePtr MainFrame = osg::Frame::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-	   // Add the buttons to the mainframe so they will be displayed
-	   MainFrame->getChildren().addValue(button1);
-	   MainFrame->getChildren().addValue(button2);
-	   MainFrame->getChildren().addValue(button3);
-	   MainFrame->getChildren().addValue(button4);
-	   MainFrame->getChildren().addValue(button5);
-	   MainFrame->getChildren().addValue(button6);
-	   // Add the Layout to the MainFrame
-	   MainFrame->setLayout(MainFrameLayout);
-	   MainFrame->setBackground(mainBackground);
-	   MainFrame->setAllInsets(10);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+		-setHorizontalGap(int): Determine the Horizontal
+			gap in pixels between Components in 
+			FlowLayout.
+		-setVerticalGap(int): Determine the Vertical
+			gap in pixels between Components in 
+			FlowLayout.
+		-setAlignment(ENUM): Determine whether the
+			Layout is arranged Vertically or
+			Horizontally.  Takes HORIZONTAL_ALIGNMENT
+			or VERTICAL_ALIGNMENT arguments.
+		-setMajorAxisAlignment(ENUM): Determines
+			the alignment of the entire Layout 
+			within its Container.  See below.
+		-setMinorAxistAlignment(ENUM): Determines
+			the alignment of Components within
+			the Layout.  See below.
 
-	//Create the Drawing Surface
-	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-		drawingSurface->setGraphics(graphics);
-		drawingSurface->setRootFrame(MainFrame);
-	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-	
-	// Create the UI Foreground Object
-	UIForegroundPtr foreground = osg::UIForeground::create();
+		Both of the last two functions take the
+		following arguments: AXIS_MAX_ALIGNMENT, 
+		AXIS_CENTER_ALIGNMENT, and AXIS_MIN_ALIGNMENT.
+		MAX puts it to the bottom/right, CENTER
+		centers it, and MIN puts it to the
+		top/left (for Vertical/Horizontal as
+		set above, respectively).
 
-	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-	    foreground->setDrawingSurface(drawingSurface);
-		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.5,0.5));
-    endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    ******************************************************/
+    FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
+    beginEditCP(MainFrameLayout, FlowLayout::HorizontalGapFieldMask | FlowLayout::VerticalGapFieldMask | FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+        MainFrameLayout->setHorizontalGap(3);
+        MainFrameLayout->setVerticalGap(3);
+        MainFrameLayout->setAlignment(VERTICAL_ALIGNMENT);
+        MainFrameLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
+        MainFrameLayout->setMinorAxisAlignment(AXIS_MAX_ALIGNMENT);
+    endEditCP(MainFrameLayout, FlowLayout::HorizontalGapFieldMask | FlowLayout::VerticalGapFieldMask | FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+    
+    // Create The Main Frame
+    // Create Background to be used with the Main Frame
+    ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
+    beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+        MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+    
+    FramePtr MainFrame = osg::Frame::create();
+    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+       // Add the ExampleButtons to the mainframe so they will be displayed
+       MainFrame->getChildren().addValue(ExampleButton1);
+       MainFrame->getChildren().addValue(ExampleButton2);
+       MainFrame->getChildren().addValue(ExampleButton3);
+       MainFrame->getChildren().addValue(ExampleButton4);
+       MainFrame->getChildren().addValue(ExampleButton5);
+       MainFrame->getChildren().addValue(ExampleButton6);
+       // Add the Layout to the MainFrame
+       MainFrame->setLayout(MainFrameLayout);
+       MainFrame->setBackground(MainFrameBackground);
+	   // Add a 10 pixel "padding" inside the MainFrame
+       MainFrame->setAllInsets(10);
+    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+
+    //Create the Drawing Surface
+    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setRootFrame(MainFrame);
+        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    
+    // Create the UI Foreground Object
+    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
+        TutorialUIForeground->setFrameBounds(Vec2f(0.5,0.5));
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // Tell the manager what to manage
+    // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
     mgr->setRoot(scene);
 
-	// Add the UI Foreground Object to the Scene
-	ViewportPtr viewport = mgr->getWindow()->getPort(0);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-		viewport->getForegrounds().addValue(foreground);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
+    // Add the UI Foreground Object to the Scene
+    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
-    // Show the whole scene
+    // Show the whole Scene
     mgr->showAll();
 
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
+    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(900,900),
                                         "OpenSG 05FlowLayout Window");
 
     //Main Event Loop
     while(!ExitApp)
     {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
+        TutorialWindowEventProducer->update();
+        TutorialWindowEventProducer->draw();
     }
     osgExit();
 
