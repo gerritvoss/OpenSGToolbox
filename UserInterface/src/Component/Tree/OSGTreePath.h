@@ -64,9 +64,11 @@ protected:
 	//Constructs a new TreePath, which is the path identified by parent ending in lastElement.
 	TreePath(TreePath parent, SharedFieldPtr lastElement);
 
+	std::vector<SharedFieldPtr> _Path;
+
 public:
 	//Tests two TreePaths for equality by checking each element of the paths for equality.
-	bool operator=(const TreePath& Right) const;
+	bool operator==(const TreePath& Right) const;
 
 	//Returns the last component of this path.
 	SharedFieldPtr getLastPathComponent(void) const;
@@ -75,10 +77,10 @@ public:
 	TreePath getParentPath(void) const;
 
 	//Returns an ordered array of Objects containing the components of this TreePath.
-	std::vector<SharedFieldPtr> getPath(void);
+	std::vector<SharedFieldPtr> getPath(void) const;
 
 	//Returns the path component at the specified index.
-	SharedFieldPtr getPathComponent(const UInt32& element) const;
+	SharedFieldPtr getPathComponent(const UInt32& Index) const;
 
 	//Returns the number of elements in the path.
 	UInt32 getPathCount(void) const;

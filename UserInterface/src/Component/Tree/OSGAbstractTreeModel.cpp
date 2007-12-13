@@ -74,15 +74,15 @@ A AbstractTreeModel.
 
 void AbstractTreeModel::addTreeModelListener(TreeModelListenerPtr l)
 {
-    _DataListeners.insert(l);
+    _ModelListeners.insert(l);
 }
 
 void AbstractTreeModel::removeTreeModelListener(TreeModelListenerPtr l)
 {
-   TreeModelListenerSetIter EraseIter(_DataListeners.find(l));
-   if(EraseIter != _DataListeners.end())
+   TreeModelListenerSetIter EraseIter(_ModelListeners.find(l));
+   if(EraseIter != _ModelListeners.end())
    {
-      _DataListeners.erase(EraseIter);
+      _ModelListeners.erase(EraseIter);
    }
 }
 
@@ -94,24 +94,44 @@ void AbstractTreeModel::removeTreeModelListener(TreeModelListenerPtr l)
 
 /*----------------------------- class specific ----------------------------*/
 
-void AbstractTreeModel::produceTreeNodesChanged(void)
+void AbstractTreeModel::produceTreeNodesChanged(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children)
 {
-	//TODO: Implement
+   TreeModelEvent TheEvent(NullFC, getSystemTime(), Parent, ChildIndices, Children);
+   TreeModelListenerSet ModelListenerSet(_ModelListeners);
+   for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
+   {
+      (*SetItor)->treeNodesChanged(TheEvent);
+   }
 }
 
-void AbstractTreeModel::produceTreeNodesInserted(void)
+void AbstractTreeModel::produceTreeNodesInserted(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children)
 {
-	//TODO: Implement
+   TreeModelEvent TheEvent(NullFC, getSystemTime(), Parent, ChildIndices, Children);
+   TreeModelListenerSet ModelListenerSet(_ModelListeners);
+   for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
+   {
+      (*SetItor)->treeNodesInserted(TheEvent);
+   }
 }
 
-void AbstractTreeModel::produceTreeNodesRemoved(void)
+void AbstractTreeModel::produceTreeNodesRemoved(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children)
 {
-	//TODO: Implement
+   TreeModelEvent TheEvent(NullFC, getSystemTime(), Parent, ChildIndices, Children);
+   TreeModelListenerSet ModelListenerSet(_ModelListeners);
+   for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
+   {
+      (*SetItor)->treeNodesRemoved(TheEvent);
+   }
 }
 
-void AbstractTreeModel::produceTreeStructureChanged(void)
+void AbstractTreeModel::produceTreeStructureChanged(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children)
 {
-	//TODO: Implement
+   TreeModelEvent TheEvent(NullFC, getSystemTime(), Parent, ChildIndices, Children);
+   TreeModelListenerSet ModelListenerSet(_ModelListeners);
+   for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
+   {
+      (*SetItor)->treeStructureChanged(TheEvent);
+   }
 }
 
 /*------------------------------------------------------------------------*/

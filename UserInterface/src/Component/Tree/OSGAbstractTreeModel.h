@@ -70,12 +70,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModel : public TreeModel
 	typedef std::set<TreeModelListenerPtr> TreeModelListenerSet;
 	typedef TreeModelListenerSet::iterator TreeModelListenerSetIter;
 	typedef TreeModelListenerSet::const_iterator TreeModelListenerSetConstIter;
-	TreeModelListenerSet _DataListeners;
+	TreeModelListenerSet _ModelListeners;
 
-	void produceTreeNodesChanged(void);
-	void produceTreeNodesInserted(void);
-	void produceTreeNodesRemoved(void);
-	void produceTreeStructureChanged(void);
+	void produceTreeNodesChanged(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children);
+	void produceTreeNodesInserted(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children);
+	void produceTreeNodesRemoved(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children);
+	void produceTreeStructureChanged(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children);
 };
 
 typedef AbstractTreeModel *AbstractTreeModelPtr;

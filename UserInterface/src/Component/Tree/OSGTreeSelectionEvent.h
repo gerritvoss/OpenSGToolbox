@@ -72,7 +72,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeSelectionEvent : public Event
     virtual const EventType &getType(void) const;
     
     static const EventType &getClassType(void);
+    
+	TreeSelectionEvent(FieldContainerPtr Source, Time TimeStamp, TreePath Path, bool IsNew, TreePath NewLeadSelectionPath, TreePath OldLeadSelectionPath);
+	
+	TreeSelectionEvent(FieldContainerPtr Source, Time TimeStamp, std::vector<TreePath> Paths, std::vector<bool> IsNew, TreePath NewLeadSelectionPath, TreePath OldLeadSelectionPath);
   protected:
+     TreePath _NewLeadSelectionPath;
+     TreePath _OldLeadSelectionPath;
+     std::vector<TreePath> _Path;
+     std::vector<bool> _IsPathNew;
   private:
      static EventType _Type;
     

@@ -67,50 +67,41 @@ A TreePath.
  *                           Class methods                                 *
 \***************************************************************************/
 
-SharedFieldPtr TreePath::getLastPathComponent(void) const
-{
-	//TODO: Implement
-	return SharedFieldPtr();
-}
-
-TreePath TreePath::getParentPath(void) const
-{
-	//TODO: Implement
-	return TreePath();
-}
-
-std::vector<SharedFieldPtr> TreePath::getPath(void)
-{
-	//TODO: Implement
-	return std::vector<SharedFieldPtr>();
-}
-
-SharedFieldPtr TreePath::getPathComponent(const UInt32& element) const
-{
-	//TODO: Implement
-	return SharedFieldPtr();
-}
-
-UInt32 TreePath::getPathCount(void) const
-{
-	//TODO: Implement
-	return 0;
-}
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
 
 bool TreePath::isDescendant(TreePath aTreePath) const
 {
-	//TODO: Implement
-	return false;
+    UInt32 i(0);
+    while(i<aTreePath._Path.size() && aTreePath._Path[i] != _Path.front() )
+    {
+         ++i;
+    }
+
+    if(i<aTreePath._Path.size() && _Path.size() <= aTreePath._Path.size() - i)
+    {
+        for(UInt32 j(0) ; j<_Path.size() ; ++j)
+        {
+             if(_Path[j] != aTreePath._Path[i+j])
+             {
+                 return false;
+             }
+        }
+        return true;
+    }
+    else
+    {
+	   return false;
+    }
 }
 
 TreePath TreePath::pathByAddingChild(SharedFieldPtr child) const
 {
-	//TODO: Implement
-	return TreePath();
+	std::vector<SharedFieldPtr> Path(_Path);
+	Path.push_back(child);
+	return TreePath(Path);
 }
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -120,35 +111,55 @@ TreePath TreePath::pathByAddingChild(SharedFieldPtr child) const
 
 TreePath::TreePath(SharedFieldPtr singlePath)
 {
-	//TODO: Implement
+	_Path.push_back(singlePath);
 }
 
-TreePath::TreePath(std::vector<SharedFieldPtr> path)
+TreePath::TreePath(std::vector<SharedFieldPtr> path) :
+    _Path(path)
 {
-	//TODO: Implement
 }
 
 TreePath::TreePath(void)
 {
-	//TODO: Implement
 }
 
 TreePath::TreePath(std::vector<SharedFieldPtr> path, const UInt32& length)
 {
-	//TODO: Implement
+    if(path.size() > 0)
+    {
+        _Path = path;
+        _Path.pop_back();
+    }
 }
 
 TreePath::TreePath(TreePath parent, SharedFieldPtr lastElement)
 {
-	//TODO: Implement
+    std::vector<SharedFieldPtr>::iterator LastElementItor = std::find(parent._Path.begin(), parent._Path.end(), lastElement);
+    if(LastElementItor != parent._Path.end())
+    {
+         _Path.insert(_Path.end(), parent._Path.begin(), LastElementItor);
+    }
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-bool TreePath::operator=(const TreePath& Right) const
+bool TreePath::operator==(const TreePath& Right) const
 {
-	//TODO: Implement
-	return false;
+    if(_Path.size() == Right._Path.size())
+    {
+        for(UInt32 i(0) ; i<_Path.size() ; ++i)
+        {
+             if(_Path[i] != Right._Path[i])
+             {
+                 return false;
+             }
+        }
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 /*------------------------------------------------------------------------*/

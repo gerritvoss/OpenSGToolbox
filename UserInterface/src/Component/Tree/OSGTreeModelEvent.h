@@ -76,6 +76,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelEvent : public Event
   protected:
   private:
      static EventType _Type;
+
+     TreePath _Path;
+     std::vector<SharedFieldPtr> _Children;
+     std::vector<UInt32> _ChildIndices;
     
 };
 

@@ -42,6 +42,36 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+SharedFieldPtr TreePath::getLastPathComponent(void) const
+{
+	return _Path.back();
+}
+
+inline
+TreePath TreePath::getParentPath(void) const
+{
+	return TreePath(_Path, _Path.size() - 1);
+}
+
+inline
+std::vector<SharedFieldPtr> TreePath::getPath(void) const
+{
+	return _Path;
+}
+
+inline
+SharedFieldPtr TreePath::getPathComponent(const UInt32& Index) const
+{
+	return _Path[Index];
+}
+
+inline
+UInt32 TreePath::getPathCount(void) const
+{
+	return _Path.size();
+}
+
 OSG_END_NAMESPACE
 
 #define OSGTREEPATH_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
