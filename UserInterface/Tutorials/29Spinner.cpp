@@ -70,14 +70,14 @@ class singleIncrementButtonListener : public ButtonSelectedListener
 public:
 
    virtual void buttonSelected(const ButtonSelectedEvent& e)
-		{		 
-			TheModel->setStepSize(1);
+        {         
+            TheModel->setStepSize(1);
 
-		}
+        }
 
    virtual void buttonDeselected(const ButtonSelectedEvent& e)
    {
-			TheModel->setStepSize(2);
+            TheModel->setStepSize(2);
    }
 };
 class doubleIncrementButtonListener : public ButtonSelectedListener
@@ -85,13 +85,13 @@ class doubleIncrementButtonListener : public ButtonSelectedListener
 public:
 
    virtual void buttonSelected(const ButtonSelectedEvent& e)
-		{		 
-			TheModel->setStepSize(2);
-		}
+        {         
+            TheModel->setStepSize(2);
+        }
 
    virtual void buttonDeselected(const ButtonSelectedEvent& e)
    {
-			TheModel->setStepSize(1);
+            TheModel->setStepSize(1);
    }
 };
 
@@ -102,7 +102,7 @@ public:
 
    virtual void keyPressed(const KeyEvent& e)
    {
-	   if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
            ExitApp = true;
        }
@@ -140,15 +140,15 @@ int main(int argc, char **argv)
     //Temp->setValue(0);
 
     // Set up Window
-    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
+    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
     
-    TheWindowEventProducer->setDisplayCallback(display);
-    TheWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
 
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
@@ -160,148 +160,148 @@ int main(int argc, char **argv)
     {
         scene->setCore(osg::Group::create());
  
-        // add the torus as a child
+        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
     }
-    endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	// Create the Graphics
-	GraphicsPtr graphics = osg::Graphics2D::create();
+    // Create the Graphics
+    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
 
-	// Initialize the LookAndFeelManager to enable default settings
-	LookAndFeelManager::the()->getLookAndFeel()->init();
+    // Initialize the LookAndFeelManager to enable default settings
+    LookAndFeelManager::the()->getLookAndFeel()->init();
 
-	/******************************************************
-			
-			Create a Spinner Model.  This dictates 
-			how the Spinner functions.
-			-setMaximum(int): determines the maximum 
-				value the Spinner will be allowed
-			-setMinimum(int): determines the minimum 
-				value the Spinner will be allowed
-			-setStepSize(int): determines the 
-				incremental step size
-			-setValue(SharedFieldPtr(new SFInt32(START INT)):
-				determines initial starting value
-				of the Spinner
+    /******************************************************
+            
+            Create a Spinner Model.  This dictates 
+            how the Spinner functions.
+            -setMaximum(int): determines the maximum 
+                value the Spinner will be allowed
+            -setMinimum(int): determines the minimum 
+                value the Spinner will be allowed
+            -setStepSize(int): determines the 
+                incremental step size
+            -setValue(SharedFieldPtr(new SFInt32(START INT)):
+                determines initial starting value
+                of the Spinner
 
-			Note: the StepSize can be changed 
-			dynamically as done in this 
-			Tutorial with ButtonSelectedListeners.
+            Note: the StepSize can be changed 
+            dynamically as done in this 
+            Tutorial with ButtonSelectedListeners.
  
-	******************************************************/	
+    ******************************************************/    
     //Create the spinner Model (note created above)
     //Int32SpinnerModelPtr TheModel(new Int32SpinnerModel());
-	TheModel->setMaximum(100);
+    TheModel->setMaximum(100);
     TheModel->setMinimum(-100);
     TheModel->setStepSize(2);
     TheModel->setValue(SharedFieldPtr(new SFInt32(0)));
 
-	/******************************************************
-			
-			Create a Spinner.  
+    /******************************************************
+            
+            Create a Spinner.  
  
-	******************************************************/	
+    ******************************************************/    
     //Create the Spinner
     SpinnerPtr TheSpinner = Spinner::create();
     TheSpinner->setModel(TheModel);
 
 
-	
-	/******************************************************
-			
-			Create a RadioButtonPanel to allow
-			for certain characteristics of the
-			Spinner to be changed dynamically.
-			See 14RadioButton for more 
-			information.
+    
+    /******************************************************
+            
+            Create a RadioButtonPanel to allow
+            for certain characteristics of the
+            Spinner to be changed dynamically.
+            See 14RadioButton for more 
+            information.
  
-	******************************************************/	
+    ******************************************************/    
 
-	RadioButtonPtr singleIncrementButton = RadioButton::create();
-	RadioButtonPtr doubleIncrementButton = RadioButton::create();
-	beginEditCP(singleIncrementButton, Button::TextColorFieldMask | Component::PreferredSizeFieldMask);
-		singleIncrementButton->setText("Increment by 1");
-		singleIncrementButton->setPreferredSize( Vec2s(100, 50) );
-	beginEditCP(singleIncrementButton, Button::TextColorFieldMask | Component::PreferredSizeFieldMask);
-	singleIncrementButtonListener singleIncrement;
-	singleIncrementButton->addButtonSelectedListener(&singleIncrement);
+    RadioButtonPtr singleIncrementButton = RadioButton::create();
+    RadioButtonPtr doubleIncrementButton = RadioButton::create();
+    beginEditCP(singleIncrementButton, Button::TextColorFieldMask | Component::PreferredSizeFieldMask);
+        singleIncrementButton->setText("Increment by 1");
+        singleIncrementButton->setPreferredSize(Vec2s(100, 50));
+    beginEditCP(singleIncrementButton, Button::TextColorFieldMask | Component::PreferredSizeFieldMask);
+    singleIncrementButtonListener singleIncrement;
+    singleIncrementButton->addButtonSelectedListener(&singleIncrement);
 
-	beginEditCP(doubleIncrementButton, Button::TextColorFieldMask | Component::PreferredSizeFieldMask);
-		doubleIncrementButton->setText("Increment by 2");
-		doubleIncrementButton->setPreferredSize( Vec2s(100, 50) );
-		doubleIncrementButton->setSelected(true);
-	beginEditCP(doubleIncrementButton, Button::TextColorFieldMask | Component::PreferredSizeFieldMask);
-	doubleIncrementButtonListener doubleIncrement;
-	doubleIncrementButton->addButtonSelectedListener(&doubleIncrement);
+    beginEditCP(doubleIncrementButton, Button::TextColorFieldMask | Component::PreferredSizeFieldMask);
+        doubleIncrementButton->setText("Increment by 2");
+        doubleIncrementButton->setPreferredSize(Vec2s(100, 50));
+        doubleIncrementButton->setSelected(TRUE);
+    beginEditCP(doubleIncrementButton, Button::TextColorFieldMask | Component::PreferredSizeFieldMask);
+    doubleIncrementButtonListener doubleIncrement;
+    doubleIncrementButton->addButtonSelectedListener(&doubleIncrement);
 
-	RadioButtonGroup radioButtonGroup;
-	radioButtonGroup.addButton(singleIncrementButton);
-	radioButtonGroup.addButton(doubleIncrementButton);
+    RadioButtonGroup radioButtonGroup;
+    radioButtonGroup.addButton(singleIncrementButton);
+    radioButtonGroup.addButton(doubleIncrementButton);
 
-	// Create Background to be used with the MainFrame
-	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-	// Create The Main Frame
-	FramePtr MainFrame = osg::Frame::create();
-	LayoutPtr MainFrameLayout = osg::FlowLayout::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
-	   // Assign the Button to the MainFrame so it will be displayed
-	   // when the view is rendered.
-	   MainFrame->setLayout(MainFrameLayout);
-	   MainFrame->setBackground(mainBackground);
-	   MainFrame->getChildren().addValue(singleIncrementButton);
-	   MainFrame->getChildren().addValue(doubleIncrementButton);
+    // Create Background to be used with the MainFrame
+    ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
+    beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+        MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+    // Create The Main Frame
+    FramePtr MainFrame = osg::Frame::create();
+    LayoutPtr MainFrameLayout = osg::FlowLayout::create();
+    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
+       // Assign the Button to the MainFrame so it will be displayed
+       // when the view is rendered.
+       MainFrame->setLayout(MainFrameLayout);
+       MainFrame->setBackground(MainFrameBackground);
+       MainFrame->getChildren().addValue(singleIncrementButton);
+       MainFrame->getChildren().addValue(doubleIncrementButton);
        MainFrame->getChildren().addValue(TheSpinner);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
+    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
 
     TutorialKeyListener TheKeyListener;
     MainFrame->addKeyListener(&TheKeyListener);
 
 
 
-	// Create the Drawing Surface
-	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
-		drawingSurface->setGraphics(graphics);
-		drawingSurface->setRootFrame(MainFrame);
-	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
-	// Create the UI Foreground Object
-	UIForegroundPtr foreground = osg::UIForeground::create();
+    // Create the Drawing Surface
+    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setRootFrame(MainFrame);
+        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    // Create the UI Foreground Object
+    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
 
-	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-	    foreground->setDrawingSurface(drawingSurface);
-		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.5,0.5));
-    endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask |UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
+        TutorialUIForeground->setFrameBounds(Vec2f(0.5,0.5));
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask |UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // Tell the manager what to manage
+    // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
     mgr->setRoot(scene);
 
-	// Add the UI Foreground Object to the Scene
-	ViewportPtr viewport = mgr->getWindow()->getPort(0);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-		viewport->getForegrounds().addValue(foreground);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
+    // Add the UI Foreground Object to the Scene
+    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
-    // Show the whole scene
+    // Show the whole Scene
     mgr->showAll();
 
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
+    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
                                         Vec2s(550,550),
                                         "OpenSG 29Spinner Window");
 
     while(!ExitApp)
     {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
+        TutorialWindowEventProducer->update();
+        TutorialWindowEventProducer->draw();
     }
     osgExit();
 
