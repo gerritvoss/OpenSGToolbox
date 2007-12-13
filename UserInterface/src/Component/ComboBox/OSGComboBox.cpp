@@ -227,14 +227,41 @@ void ComboBox::removeItemAt(const UInt32& anIndex)
 
 bool ComboBox::selectWithKey(KeyEvent::Key TheKey)
 {
-	//TODO:Implement
 	UInt32 i(1);
 	SharedFieldPtr ModelElement;
-	while(i<_Model->getSize())
+    std::string TheText;
+
+    bool ExitLoop(false);
+	while(i<_Model->getSize()  && !ExitLoop)
 	{
 		//Get The first character of this item
 		ModelElement = _Model->getElementAt((_Model->getSelectedItemIndex() + i) % _Model->getSize());
-		++i;
+
+        if(ModelElement->getType() == SFString::getClassType())
+        {
+            TheText = dynamic_cast<SFString*>(ModelElement.get())->getValue();
+        }
+        else
+        {
+            ModelElement->getValueByStr(TheText);
+        }
+
+        
+		if(TheText.size() > 0 &&
+		   (TheText[0] == KeyEvent::getCharFromKey(TheKey, 0) ||
+		   TheText[0] == KeyEvent::getCharFromKey(TheKey, KeyEvent::KEY_MODIFIER_CAPS_LOCK)))
+		{
+		    ExitLoop = true;
+		}
+		else
+		{
+		    ++i;
+		}
+	}
+
+	if(ExitLoop)
+	{
+	    _Model->setSelectedItem((_Model->getSelectedItemIndex() + i) % _Model->getSize());
 	}
 
 	return false;
@@ -407,6 +434,29 @@ void ComboBox::updateRendererSelcetedItem(void)
 	}
 }
 
+void ComboBox::updateSelectionFromEditor(void)
+{
+    if(getEditable() && getEditor() != NullFC)
+    {
+        SharedFieldPtr EditorItem = getEditor()->getItem();
+
+	    std::string EditorString;
+	    std::string ModelItemString;
+	    bool ExitLoop(false);
+        for(UInt32 i(0) ; i<_Model->getSize() && !ExitLoop ; ++i)
+        {
+            EditorItem->getValueByStr(EditorString);
+            _Model->getElementAt(i)->getValueByStr(ModelItemString);
+            if(EditorString.compare(ModelItemString) == 0)
+            {
+                ExitLoop = true;
+
+                _Model->setSelectedItem(i);
+            }
+        }
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -417,7 +467,8 @@ ComboBox::ComboBox(void) :
     Inherited(),
 		_Model(NULL),
 		_CellRenderer(NULL),
-		_ExpandButtonSelectedListener(ComboBoxPtr(this))
+		_ExpandButtonSelectedListener(ComboBoxPtr(this)),
+		_EditorListener(ComboBoxPtr(this))
 {
 	beginEditCP(ComboBoxPtr(this), ComboListPopupMenuFieldMask);
 		setComboListPopupMenu(PopupMenu::create());
@@ -428,7 +479,8 @@ ComboBox::ComboBox(const ComboBox &source) :
     Inherited(source),
 		_Model(source._Model),
 		_CellRenderer(source._CellRenderer),
-		_ExpandButtonSelectedListener(ComboBoxPtr(this))
+		_ExpandButtonSelectedListener(ComboBoxPtr(this)),
+		_EditorListener(ComboBoxPtr(this))
 {
 	beginEditCP(ComboBoxPtr(this), ComboListPopupMenuFieldMask);
 		setComboListPopupMenu(PopupMenu::create());
@@ -439,6 +491,12 @@ ComboBox::ComboBox(const ComboBox &source) :
         beginEditCP(ComboBoxPtr(this), ExpandButtonFieldMask);
 			setExpandButton(ToggleButton::Ptr::dcast(getExpandButton()->shallowCopy()));
         endEditCP(ComboBoxPtr(this), ExpandButtonFieldMask);
+    }
+    if(getEditor() != NullFC)
+    {
+        beginEditCP(ComboBoxPtr(this), EditorFieldMask);
+			setEditor(ComboBoxEditor::Ptr::dcast(getEditor()->shallowCopy()));
+        endEditCP(ComboBoxPtr(this), EditorFieldMask);
     }
 }
 
@@ -485,6 +543,11 @@ void ComboBox::changed(BitVector whichField, UInt32 origin)
 			}
         endEditCP(ComboBoxPtr(this), ChildrenFieldMask);
     }
+    
+    if( (whichField & EditorFieldMask) && getEditor() != NullFC)
+    {
+        getEditor()->addActionListener(&_EditorListener);
+    }
 }
 
 void ComboBox::dump(      UInt32    , 
@@ -530,6 +593,11 @@ void ComboBox::ExpandButtonSelectedListener::popupMenuWillBecomeVisible(const Po
 			_ComboBox->getExpandButton()->setSelected(true);
 		endEditCP(_ComboBox->getExpandButton(), ToggleButton::SelectedFieldMask);
 	}
+}
+
+void ComboBox::EditorListener::actionPerformed(const ActionEvent& e)
+{
+    _ComboBox->updateSelectionFromEditor();
 }
 
 /*------------------------------------------------------------------------*/

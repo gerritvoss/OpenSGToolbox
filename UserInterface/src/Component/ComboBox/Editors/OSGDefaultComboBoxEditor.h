@@ -46,7 +46,6 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGDefaultComboBoxEditorBase.h"
-#include "Event/OSGFocusListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -54,7 +53,7 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceDefaultComboBoxEditor for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxEditor : public DefaultComboBoxEditorBase, public FocusListener
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxEditor : public DefaultComboBoxEditorBase
 {
   private:
 
@@ -97,9 +96,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxEditor : public DefaultComb
 	//Set the item that should be edited.
 	virtual void setItem(SharedFieldPtr anObject);
 	
-    virtual void focusGained(const FocusEvent& e);
-
-    virtual void focusLost(const FocusEvent& e);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -120,6 +116,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxEditor : public DefaultComb
     virtual ~DefaultComboBoxEditor(void); 
 
     /*! \}                                                                 */
+    //Expand Button Action Listener
+	class TextFieldListener :public FocusListener
+	{
+	public:
+		TextFieldListener(DefaultComboBoxEditorPtr TheDefaultComboBoxEditor);
+        virtual void focusGained(const FocusEvent& e);
+        virtual void focusLost(const FocusEvent& e);
+
+	private:
+		DefaultComboBoxEditorPtr _DefaultComboBoxEditor;
+	};
+
+	friend class TextFieldListener;
+
+	TextFieldListener _TextFieldListener;
     
     /*==========================  PRIVATE  ================================*/
   private:

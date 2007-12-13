@@ -120,7 +120,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxEditor : public ComboBoxEditorBase
     virtual ~ComboBoxEditor(void); 
 
     /*! \}                                                                 */
-    SharedFieldPtr _EditedItem;
     /*==========================  PRIVATE  ================================*/
   private:
 

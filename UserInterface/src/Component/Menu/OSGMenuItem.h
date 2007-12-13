@@ -77,6 +77,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+    virtual void activate(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

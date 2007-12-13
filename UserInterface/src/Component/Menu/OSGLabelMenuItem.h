@@ -86,6 +86,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItem : public LabelMenuItemBase
     void removeActionListener(ActionListenerPtr Listener);
     void setDrawAsThoughSelected(bool Selected);
     bool getDrawAsThoughSelected(void) const;
+    
+    virtual void activate(void);
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:

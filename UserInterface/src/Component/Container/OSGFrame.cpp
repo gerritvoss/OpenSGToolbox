@@ -572,6 +572,19 @@ void Frame::PopupMenuInteractionListener::keyPressed(const KeyEvent& e)
     {
         _Frame->destroyPopupMenu();
     }
+    else if(e.getKey() == KeyEvent::KEY_UP)
+    {
+        _Frame->getActivePopupMenus().front()->setSelection( _Frame->getActivePopupMenus().front()->getSelectionIndex() -1 );
+    }
+    else if(e.getKey() == KeyEvent::KEY_DOWN)
+    {
+        _Frame->getActivePopupMenus().front()->setSelection( _Frame->getActivePopupMenus().front()->getSelectionIndex() +1 );
+    }
+    else if(e.getKey() == KeyEvent::KEY_ENTER && _Frame->getActivePopupMenus().front()->getItem(_Frame->getActivePopupMenus().front()->getSelectionIndex()) != NullFC)
+    {
+        _Frame->getActivePopupMenus().front()->getItem(_Frame->getActivePopupMenus().front()->getSelectionIndex())->activate();
+        _Frame->destroyPopupMenu();
+    }
 }
 
 /*------------------------------------------------------------------------*/

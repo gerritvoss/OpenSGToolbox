@@ -142,9 +142,11 @@ int main(int argc, char **argv)
 	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Red")));
 	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Green")));
 	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Blue")));
+	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Brown")));
 	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Yellow")));
 	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Orange")));
 	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Violet")));
+	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Black")));
 
 
 	//Create the ComboBox

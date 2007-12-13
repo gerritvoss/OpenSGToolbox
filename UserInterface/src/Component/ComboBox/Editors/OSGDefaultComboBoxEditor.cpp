@@ -100,7 +100,7 @@ ComponentPtr DefaultComboBoxEditor::getEditorComponent(void)
 
 SharedFieldPtr DefaultComboBoxEditor::getItem(void)
 {
-	return _EditedItem;
+	return SharedFieldPtr(new SFString(getEditor()->getText()));
 }
 
 void DefaultComboBoxEditor::selectAll(void)
@@ -113,33 +113,20 @@ void DefaultComboBoxEditor::selectAll(void)
 }
 
 void DefaultComboBoxEditor::setItem(SharedFieldPtr anObject)
-{
-	_EditedItem = anObject;
-	
+{	
 	//Update the text of the TextField to this new Item
 	std::string TheText;
-	if(_EditedItem->getType() == SFString::getClassType())
+	if(anObject->getType() == SFString::getClassType())
 	{
-        TheText = dynamic_cast<SFString*>(_EditedItem.get())->getValue();
+        TheText = dynamic_cast<SFString*>(anObject.get())->getValue();
 	}
 	else
 	{
-		_EditedItem->getValueByStr(TheText);
+		anObject->getValueByStr(TheText);
 	}
 	beginEditCP(getEditor(), TextField::TextFieldMask);
 		getEditor()->setText(TheText);
 	endEditCP(getEditor(), TextField::TextFieldMask);
-}
-
-void DefaultComboBoxEditor::focusGained(const FocusEvent& e)
-{
-	//TODO: Implement
-	selectAll();
-}
-
-void DefaultComboBoxEditor::focusLost(const FocusEvent& e)
-{
-	//TODO: Implement
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -148,13 +135,21 @@ void DefaultComboBoxEditor::focusLost(const FocusEvent& e)
 /*----------------------- constructors & destructors ----------------------*/
 
 DefaultComboBoxEditor::DefaultComboBoxEditor(void) :
-    Inherited()
+    Inherited(),
+    _TextFieldListener(DefaultComboBoxEditorPtr(this))
 {
 }
 
 DefaultComboBoxEditor::DefaultComboBoxEditor(const DefaultComboBoxEditor &source) :
-    Inherited(source)
+    Inherited(source),
+    _TextFieldListener(DefaultComboBoxEditorPtr(this))
 {
+    if(getEditor() != NullFC)
+    {
+        beginEditCP(DefaultComboBoxEditorPtr(this), EditorFieldMask);
+			setEditor(TextField::Ptr::dcast(getEditor()->shallowCopy()));
+        endEditCP(DefaultComboBoxEditorPtr(this), EditorFieldMask);
+    }
 }
 
 DefaultComboBoxEditor::~DefaultComboBoxEditor(void)
@@ -169,7 +164,7 @@ void DefaultComboBoxEditor::changed(BitVector whichField, UInt32 origin)
 
 	if((whichField & EditorFieldMask) && getEditor() != NullFC)
 	{
-		getEditor()->addFocusListener(this);
+		getEditor()->addFocusListener(&_TextFieldListener);
 	}
 }
 
@@ -179,6 +174,16 @@ void DefaultComboBoxEditor::dump(      UInt32    ,
     SLOG << "Dump DefaultComboBoxEditor NI" << std::endl;
 }
 
+void DefaultComboBoxEditor::TextFieldListener::focusGained(const FocusEvent& e)
+{
+	//TODO: Implement
+	_DefaultComboBoxEditor->selectAll();
+}
+
+void DefaultComboBoxEditor::TextFieldListener::focusLost(const FocusEvent& e)
+{
+	//TODO: Implement
+}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

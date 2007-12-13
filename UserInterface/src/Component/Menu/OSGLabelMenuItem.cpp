@@ -238,6 +238,10 @@ MenuPtr LabelMenuItem::getTopLevelMenu(void) const
     return NullFC;
 }
 
+void LabelMenuItem::activate(void)
+{
+    produceActionPerformed(ActionEvent(LabelMenuItemPtr(this), getSystemTime()));
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -395,6 +399,8 @@ void LabelMenuItem::KeyAcceleratorMenuFlashUpdateListener::update(const UpdateEv
 		_LabelMenuItem->getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
     }
 }
+
+
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
 

@@ -102,6 +102,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
 
     void clearSelection(void);
     void setSelection(const Int32& Index);
+    Int32 getSelectionIndex(void) const;
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:

@@ -6,7 +6,7 @@ LIB_INCLUDE_DIR_NAME = UserInterface
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Border:$(srcdir)/Background:$(srcdir)/Event:$(srcdir)/Layout:$(srcdir)/Util:$(srcdir)/Component:$(srcdir)/Component/Button:$(srcdir)/Component/Spinner:$(srcdir)/Component/Spinner/Editors:$(srcdir)/Component/Menu:$(srcdir)/Component/Table:$(srcdir)/Component/Table/DefaultEditors:$(srcdir)/Component/Table/DefaultRenderers:$(srcdir)/Component/Scroll:$(srcdir)/Component/Slider:$(srcdir)/Component/ComboBox:$(srcdir)/Component/ComboBox/Editors:$(srcdir)/Component/Misc:$(srcdir)/Component/Tree:$(srcdir)/Component/Container:$(srcdir)/Component/List:$(srcdir)/Component/ProgressBar:$(srcdir)/Component/Text:$(srcdir)/Editors:$(srcdir)/LookAndFeel:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Text:
+VPATH = $(srcdir)/:$(srcdir)/Border:$(srcdir)/Background:$(srcdir)/Event:$(srcdir)/Layout:$(srcdir)/Util:$(srcdir)/Component:$(srcdir)/Component/Button:$(srcdir)/Component/Spinner:$(srcdir)/Component/Spinner/Editors:$(srcdir)/Component/Menu:$(srcdir)/Component/Table:$(srcdir)/Component/Table/DefaultEditors:$(srcdir)/Component/Table/DefaultRenderers:$(srcdir)/Component/Scroll:$(srcdir)/Component/Slider:$(srcdir)/Component/ComboBox:$(srcdir)/Component/ComboBox/Renderers:$(srcdir)/Component/ComboBox/Editors:$(srcdir)/Component/Misc:$(srcdir)/Component/Tree:$(srcdir)/Component/Container:$(srcdir)/Component/List:$(srcdir)/Component/ProgressBar:$(srcdir)/Component/Text:$(srcdir)/Editors:$(srcdir)/LookAndFeel:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Text:
 
 
 #.SUFFIX = .o .o
@@ -159,10 +159,12 @@ OBJECTS = OSGShadowBorder.o \
 	OSGDefaultBoundedRangeModel.o \
 	OSGSlider.o \
 	OSGSliderBase.o \
+	OSGComboBoxSelectionEvent.o \
 	OSGDefaultComboBoxModel.o \
 	OSGAbstractComboBoxModel.o \
 	OSGComboBoxBase.o \
 	OSGComboBox.o \
+	OSGDefaultComboBoxRenderer.o \
 	OSGComboBoxEditorBase.o \
 	OSGComboBoxEditor.o \
 	OSGDefaultComboBoxEditor.o \
@@ -196,10 +198,10 @@ OBJECTS = OSGShadowBorder.o \
 	OSGListBase.o \
 	OSGListDataEvent.o \
 	OSGListSelectionEvent.o \
+	OSGDefaultListCellRenderer.o \
 	OSGAbstractListModel.o \
 	OSGDefaultListSelectionModel.o \
 	OSGList.o \
-	OSGDefaultListCellGenerator.o \
 	OSGProgressBar.o \
 	OSGProgressBarBase.o \
 	OSGLabelBase.o \

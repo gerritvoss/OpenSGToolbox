@@ -230,7 +230,7 @@ int main(int argc, char **argv)
 	beginEditCP(doubleIncrementButton, Button::TextColorFieldMask | Component::PreferredSizeFieldMask);
 		doubleIncrementButton->setText("Increment by 2");
 		doubleIncrementButton->setPreferredSize( Vec2s(100, 50) );
-		doubleIncrementButton->setSelected(TRUE);
+		doubleIncrementButton->setSelected(true);
 	beginEditCP(doubleIncrementButton, Button::TextColorFieldMask | Component::PreferredSizeFieldMask);
 	doubleIncrementButtonListener doubleIncrement;
 	doubleIncrementButton->addButtonSelectedListener(&doubleIncrement);

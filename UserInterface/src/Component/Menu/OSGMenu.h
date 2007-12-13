@@ -90,6 +90,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Menu : public MenuBase
     //virtual void mouseExited(const MouseEvent& e);
     virtual void mouseReleased(const MouseEvent& e);
 
+    virtual void activate(void);
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:

@@ -63,6 +63,12 @@ void PopupMenu::addPopupMenuListener(PopupMenuListenerPtr Listener)
 }
 
 inline
+Int32 PopupMenu::getSelectionIndex(void) const
+{
+    return _SelectionModel->getSelectedIndex();
+}
+
+inline
 PopupMenu::MenuSelectionListener::MenuSelectionListener(PopupMenuPtr ThePopupMenu) :
 									_PopupMenu(ThePopupMenu)
 {

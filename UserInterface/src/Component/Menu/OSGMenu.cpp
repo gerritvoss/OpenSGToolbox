@@ -188,6 +188,11 @@ void Menu::removeItem(const UInt32& Index)
 
     getInternalPopupMenu()->removeItem(Index);
 }
+
+void Menu::activate(void)
+{
+    //Do Nothing
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

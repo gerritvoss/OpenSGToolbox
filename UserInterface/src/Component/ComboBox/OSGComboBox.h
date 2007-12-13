@@ -270,10 +270,26 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	friend class ExpandButtonSelectedListener;
 
 	ExpandButtonSelectedListener _ExpandButtonSelectedListener;
+	
+    //Editor Listener
+	class EditorListener : public ActionListener
+	{
+	public:
+		EditorListener(ComboBoxPtr TheComboBox);
+		
+	    virtual void actionPerformed(const ActionEvent& e);
+	private:
+		ComboBoxPtr _ComboBox;
+	};
+
+	friend class EditorListener;
+
+	EditorListener _EditorListener;
 
 	void updateListFromModel(void);
 	void updateSelectedItemComponent(void);
 	void updateRendererSelcetedItem(void);
+	void updateSelectionFromEditor(void);
 
     /*==========================  PRIVATE  ================================*/
   private:
