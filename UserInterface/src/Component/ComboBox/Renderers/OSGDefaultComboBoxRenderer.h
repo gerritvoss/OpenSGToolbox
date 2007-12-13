@@ -4,6 +4,8 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -34,108 +36,57 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSGDEFAULTCOMBOBOXCELLRENDERER_H_
+#define _OSGDEFAULTCOMBOBOXCELLRENDERER_H_
+#ifdef __sgi
+#pragma once
+#endif
 
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "Component/Menu/OSGPopupMenu.h"
+#include "Component/List/OSGListCellRenderer.h"
+
 OSG_BEGIN_NAMESPACE
 
-inline
-UInt32 ComboBox::getSelectedIndex(void) const
-{
-	return _Model->getSelectedItemIndex();
-}
+/*! \brief DefaultComboBoxRenderer class. See \ref 
+           PageUserInterfaceDefaultComboBoxRenderer for a description.
+*/
 
-inline
-SharedFieldPtr ComboBox::getSelectedItem(void) const
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxRenderer : public ListCellRenderer
 {
-	return _Model->getSelectedItem();
-}
+    /*==========================  PUBLIC  =================================*/
+  public:
+    virtual ComponentPtr getListCellRendererComponent(ListPtr list, SharedFieldPtr value, UInt32 index, bool isSelected, bool cellHasFocus);
 
-inline
-ComboBoxModelPtr ComboBox::getModel(void) const
-{
-	return _Model;
-}
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
 
-inline
-SharedFieldPtr ComboBox::getItemAt(const UInt32& index) const
-{
-	return _Model->getElementAt(index);
-}
+    DefaultComboBoxRenderer(void);
 
-inline
-UInt32 ComboBox::getItemCount(void) const
-{
-	return _Model->getSize();
-}
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
 
-inline
-void ComboBox::addActionListener(ActionListenerPtr Listener)
-{
-   _ActionListeners.insert(Listener);
-}
+    virtual ~DefaultComboBoxRenderer(void); 
 
-inline
-void ComboBox::setSelectedIndex(const UInt32& anIndex)
-{
-	_Model->setSelectedItem(anIndex);
-}
+    /*! \}                                                                 */
+    /*=========================  PROTECTED  ===============================*/
+  protected:
 
-inline
-void ComboBox::setSelectedItem(SharedFieldPtr anObject)
-{
-	_Model->setSelectedItem(anObject);
-}
+    // Variables should all be in DefaultComboBoxRendererBase.
 
-inline
-ListCellRendererPtr ComboBox::getRenderer(void) const
-{
-	return _CellRenderer;
-}
+    
+    /*==========================  PRIVATE  ================================*/
+  private:
+};
 
-inline
-void ComboBox::setRenderer(ListCellRendererPtr aRenderer)
-{
-	_CellRenderer = aRenderer;
-	updateRendererSelcetedItem();
-}
-
-inline
-void ComboBox::addPopupMenuListener(PopupMenuListenerPtr Listener)
-{
-	getComboListPopupMenu()->addPopupMenuListener(Listener);
-}
-
-inline
-void ComboBox::removePopupMenuListener(PopupMenuListenerPtr Listener)
-{
-	getComboListPopupMenu()->removePopupMenuListener(Listener);
-}
-
-inline
-bool ComboBox::isPopupVisible(void) const
-{
-	return getComboListPopupMenu()->getVisible();
-}
-
-inline
-void ComboBox::hidePopup(void)
-{
-	getComboListPopupMenu()->clearSelection();
-}
-
-inline
-ComboBox::ExpandButtonSelectedListener::ExpandButtonSelectedListener(ComboBoxPtr TheComboBox) :
-   _ComboBox(TheComboBox)
-{
-}
+typedef DefaultComboBoxRenderer *DefaultComboBoxRendererP;
 
 OSG_END_NAMESPACE
 
-#define OSGCOMBOBOX_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+#include "OSGDefaultComboBoxRenderer.inl"
 
+#endif /* _OSGDEFAULTCOMBOBOXCELLRENDERER_H_ */

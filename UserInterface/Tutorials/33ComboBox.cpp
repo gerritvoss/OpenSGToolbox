@@ -45,6 +45,7 @@
 
 #include <OpenSG/UserInterface/OSGComboBox.h>
 #include <OpenSG/UserInterface/OSGDefaultComboBoxModel.h>
+#include <OpenSG/UserInterface/OSGDefaultComboBoxRenderer.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -158,6 +159,8 @@ int main(int argc, char **argv)
 		TheUneditableComboBox->setEditable(false);
 	endEditCP(TheUneditableComboBox, ComboBox::EditableFieldMask);
 	TheUneditableComboBox->setModel(&TheComboBoxModel);
+	DefaultComboBoxRenderer TheUneditableComboBoxRenderer;
+	TheUneditableComboBox->setRenderer(&TheUneditableComboBoxRenderer);
 	
 
 	// Create Background to be used with the MainFrame

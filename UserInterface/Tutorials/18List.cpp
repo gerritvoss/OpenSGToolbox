@@ -61,7 +61,7 @@ void reshape(Vec2s Size);
 // List header files
 #include <OpenSG/UserInterface/OSGList.h>
 #include <OpenSG/UserInterface/OSGAbstractListModel.h>
-#include <OpenSG/UserInterface/OSGDefaultListCellGenerator.h>
+#include <OpenSG/UserInterface/OSGDefaultListCellRenderer.h>
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
 
 
@@ -240,11 +240,11 @@ int main(int argc, char **argv)
 			values.  Then, use the .pushBack(&SFStringName)
 			to add them to the List.
 
-			Next, create the CellGenerator and ListSelectionModel
+			Next, create the CellRenderer and ListSelectionModel
 			defaults.
 
 			Finally, actually create the List.  Set
-			its Model, CellGenerator, and SelectionModel
+			its Model, CellRenderer, and SelectionModel
 			as shown below.  Finally, choose the
 			type of display for the List (choices outlined
 			below).
@@ -278,7 +278,7 @@ int main(int argc, char **argv)
 	// Note that the DefaultListSelectionModel was
 	// created at the top of this file before
 	// the ActionListeners
-	DefaultListCellGenerator CellGenerator;
+	DefaultListCellRenderer CellRenderer;
 	//DefaultListSelectionModel SelectionModel;
 
 	// Create Background to be used with the Main Frame
@@ -294,10 +294,10 @@ int main(int argc, char **argv)
         list->setCellLayout(VERTICAL_ALIGNMENT);
         //list->setCellLayout(HORIZONTAL_ALIGNMENT);
 	endEditCP(list);
-	// Assign the Model, CellGenerator, and SelectionModel
+	// Assign the Model, CellRenderer, and SelectionModel
 	// to the List
 	list->setModel(&Model);
-	list->setCellGenerator(&CellGenerator);
+	list->setCellRenderer(&CellRenderer);
 	list->setSelectionModel(SelectionModel);
 
 

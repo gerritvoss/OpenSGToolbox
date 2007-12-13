@@ -4,6 +4,8 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -38,104 +40,84 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include <stdlib.h>
+#include <stdio.h>
 
-#include "Component/Menu/OSGPopupMenu.h"
+#include <OpenSG/OSGConfig.h>
+
+#include "Background/OSGEmptyUIBackground.h"
+#include "Border/OSGEmptyBorder.h"
+#include "Component/Text/OSGLabel.h"
+
+#include "OSGDefaultComboBoxRenderer.h"
+
 OSG_BEGIN_NAMESPACE
 
-inline
-UInt32 ComboBox::getSelectedIndex(void) const
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class osg::DefaultComboBoxRenderer
+A DefaultComboBoxRenderer. 
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+ComponentPtr DefaultComboBoxRenderer::getListCellRendererComponent(ListPtr list, SharedFieldPtr value, UInt32 index, bool isSelected, bool cellHasFocus)
 {
-	return _Model->getSelectedItemIndex();
+	if(value == SharedFieldPtr()){
+		return NullFC;
+	}
+	LabelPtr TheLabel = Label::create();
+	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
+		std::string tempString;
+		if(value->getType() == SFString::getClassType())
+		{
+            tempString = dynamic_cast<SFString*>(value.get())->getValue();
+		}
+		else
+		{
+			value->getValueByStr(tempString);
+		}
+		TheLabel->setText(tempString);
+		TheLabel->setPreferredSize(Vec2s(100,30));
+	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
+
+	beginEditCP(TheLabel, Label::BackgroundFieldMask | Label::BorderFieldMask);
+		TheLabel->setBackground(EmptyUIBackground::create());
+				TheLabel->setBorder(EmptyBorder::create());
+	endEditCP(TheLabel, Label::BackgroundFieldMask | Label::BorderFieldMask);
+
+	return Component::Ptr::dcast(TheLabel);
+	
+	
 }
 
-inline
-SharedFieldPtr ComboBox::getSelectedItem(void) const
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+DefaultComboBoxRenderer::DefaultComboBoxRenderer(void)
 {
-	return _Model->getSelectedItem();
 }
 
-inline
-ComboBoxModelPtr ComboBox::getModel(void) const
+DefaultComboBoxRenderer::~DefaultComboBoxRenderer(void)
 {
-	return _Model;
 }
 
-inline
-SharedFieldPtr ComboBox::getItemAt(const UInt32& index) const
-{
-	return _Model->getElementAt(index);
-}
-
-inline
-UInt32 ComboBox::getItemCount(void) const
-{
-	return _Model->getSize();
-}
-
-inline
-void ComboBox::addActionListener(ActionListenerPtr Listener)
-{
-   _ActionListeners.insert(Listener);
-}
-
-inline
-void ComboBox::setSelectedIndex(const UInt32& anIndex)
-{
-	_Model->setSelectedItem(anIndex);
-}
-
-inline
-void ComboBox::setSelectedItem(SharedFieldPtr anObject)
-{
-	_Model->setSelectedItem(anObject);
-}
-
-inline
-ListCellRendererPtr ComboBox::getRenderer(void) const
-{
-	return _CellRenderer;
-}
-
-inline
-void ComboBox::setRenderer(ListCellRendererPtr aRenderer)
-{
-	_CellRenderer = aRenderer;
-	updateRendererSelcetedItem();
-}
-
-inline
-void ComboBox::addPopupMenuListener(PopupMenuListenerPtr Listener)
-{
-	getComboListPopupMenu()->addPopupMenuListener(Listener);
-}
-
-inline
-void ComboBox::removePopupMenuListener(PopupMenuListenerPtr Listener)
-{
-	getComboListPopupMenu()->removePopupMenuListener(Listener);
-}
-
-inline
-bool ComboBox::isPopupVisible(void) const
-{
-	return getComboListPopupMenu()->getVisible();
-}
-
-inline
-void ComboBox::hidePopup(void)
-{
-	getComboListPopupMenu()->clearSelection();
-}
-
-inline
-ComboBox::ExpandButtonSelectedListener::ExpandButtonSelectedListener(ComboBoxPtr TheComboBox) :
-   _ComboBox(TheComboBox)
-{
-}
+/*----------------------------- class specific ----------------------------*/
 
 OSG_END_NAMESPACE
-
-#define OSGCOMBOBOX_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

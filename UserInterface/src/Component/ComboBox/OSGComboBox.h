@@ -204,6 +204,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	void showPopup(void);
 	
 	virtual void keyTyped(const KeyEvent& e);
+    virtual void mouseClicked(const MouseEvent& e);
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -272,6 +273,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 
 	void updateListFromModel(void);
 	void updateSelectedItemComponent(void);
+	void updateRendererSelcetedItem(void);
 
     /*==========================  PRIVATE  ================================*/
   private:

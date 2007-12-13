@@ -1801,6 +1801,22 @@
 							>
 						</File>
 					</Filter>
+					<Filter
+						Name="Renderer"
+						>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Renderers\OSGDefaultComboBoxRenderer.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Renderers\OSGDefaultComboBoxRenderer.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Renderers\OSGDefaultComboBoxRenderer.inl"
+							>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="Tree"

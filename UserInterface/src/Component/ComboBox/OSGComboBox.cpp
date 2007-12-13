@@ -134,23 +134,28 @@ void ComboBox::actionPerformed(const ActionEvent& e)
 			getEditor()->selectAll();
 			getEditor()->getEditorComponent()->takeFocus();
 		}
+		if(!getEditable() && getRendererSelcetedItem() != NullFC)
+		{
+			getRendererSelcetedItem()->takeFocus();
+		}
 	}
 }
 
 void ComboBox::contentsChanged(ListDataEvent e)
 {
-	//TODO:Implement
 	updateListFromModel();
 }
 
 void ComboBox::intervalAdded(ListDataEvent e)
 {
 	//TODO:Implement
+	updateListFromModel();
 }
 
 void ComboBox::intervalRemoved(ListDataEvent e)
 {
 	//TODO:Implement
+	updateListFromModel();
 }
 
 void ComboBox::selectionChanged(const ComboBoxSelectionEvent& e)
@@ -196,11 +201,6 @@ void ComboBox::insertItemAt(SharedFieldPtr anObject, const UInt32& index)
 	}
 }
 
-void ComboBox::processKeyEvent(KeyEvent e)
-{
-	//TODO:Implement
-}
-
 void ComboBox::removeAllItems(void)
 {
 	if(_Model != NULL && dynamic_cast<MutableComboBoxModelPtr>(_Model))
@@ -228,6 +228,15 @@ void ComboBox::removeItemAt(const UInt32& anIndex)
 bool ComboBox::selectWithKey(KeyEvent::Key TheKey)
 {
 	//TODO:Implement
+	UInt32 i(1);
+	SharedFieldPtr ModelElement;
+	while(i<_Model->getSize())
+	{
+		//Get The first character of this item
+		ModelElement = _Model->getElementAt((_Model->getSelectedItemIndex() + i) % _Model->getSize());
+		++i;
+	}
+
 	return false;
 }
 
@@ -328,6 +337,10 @@ void ComboBox::updateSelectedItemComponent(void)
 	}
 
 	//Update the Selected Item Component
+	if( !getEditable() )
+	{
+		updateRendererSelcetedItem();
+	}
 }
 
 void ComboBox::configurePropertiesFromAction(Action a)
@@ -360,11 +373,40 @@ void ComboBox::keyTyped(const KeyEvent& e)
 			_Model->setSelectedItem(_Model->getSelectedItemIndex() + 1);
 		}
 	}
+	else if(!getEditable() && e.getKeyChar() != 0)
+	{
+		selectWithKey(e.getKey());
+	}
 	else
 	{
 		Inherited::keyTyped(e);
 	}
 }
+
+void ComboBox::mouseClicked(const MouseEvent& e)
+{
+	if(!getEditable() && !getExpandButton()->isContained(e.getLocation(), true))
+	{
+		beginEditCP(getExpandButton(), ToggleButton::SelectedFieldMask);
+			getExpandButton()->setSelected(true);
+		endEditCP(getExpandButton(), ToggleButton::SelectedFieldMask);
+	}
+	else
+	{
+		Inherited::mouseClicked(e);
+	}
+}
+
+void ComboBox::updateRendererSelcetedItem(void)
+{
+	if(!getEditable() && _CellRenderer != NULL)
+	{
+		beginEditCP(ComboBoxPtr(this), RendererSelcetedItemFieldMask);
+			setRendererSelcetedItem(_CellRenderer->getListCellRendererComponent(NullFC, _Model->getSelectedItem(), _Model->getSelectedItemIndex(), true, false));
+		endEditCP(ComboBoxPtr(this), RendererSelcetedItemFieldMask);
+	}
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -409,6 +451,11 @@ ComboBox::~ComboBox(void)
 void ComboBox::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+	if( (whichField & EditableFieldMask))
+	{
+		updateRendererSelcetedItem();
+	}
 
 	if((whichField & ExpandButtonFieldMask) &&
 		getExpandButton() != NullFC)

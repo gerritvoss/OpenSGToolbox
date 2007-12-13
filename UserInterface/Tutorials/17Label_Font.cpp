@@ -68,9 +68,9 @@ void reshape(Vec2s Size);
 #include <OpenSG/UserInterface/OSGList.h>
 #include <OpenSG/UserInterface/OSGListSelectionListener.h>
 #include <OpenSG/UserInterface/OSGAbstractListModel.h>
-#include <OpenSG/UserInterface/OSGDefaultListCellGenerator.h>
+#include <OpenSG/UserInterface/OSGDefaultListCellRenderer.h>
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
-#include <OpenSG/UserInterface/OSGListCellGenerator.h>
+#include <OpenSG/UserInterface/OSGListCellRenderer.h>
 #include <OpenSG/UserInterface/OSGListModel.h>
 
 
@@ -102,7 +102,7 @@ public:
 
 	/******************************************************
 
-			Creates a ListCellGenerator class to 
+			Creates a ListCellRenderer class to 
 			create Labels for the List which contain
 			the Font name in that particular Font.
 
@@ -112,13 +112,13 @@ public:
 			Label's Font to be the Font contained
 			within the Label.
 
-			The ListCellGenerator is what is
+			The ListCellRenderer is what is
 			used to create the Component
 			values for the List.  The Default 
 			is to simply create Label components
 			which normally simply contain a text
 			value.  In this case, the
-			DefaultListCellGenerator is 
+			DefaultListCellRenderer is 
 			modified slightly to give each
 			Label component the Font which
 			its text will display.
@@ -126,17 +126,17 @@ public:
 
 	******************************************************/
 
-class FontListCellGenerator : public DefaultListCellGenerator
+class FontListCellRenderer : public DefaultListCellRenderer
 {
     /*==========================  PUBLIC  =================================*/
   public:
-    virtual ComponentPtr getListCellGeneratorComponent(ListPtr list, SharedFieldPtr value, UInt32 index, bool isSelected, bool cellHasFocus)
+    virtual ComponentPtr getListCellRendererComponent(ListPtr list, SharedFieldPtr value, UInt32 index, bool isSelected, bool cellHasFocus)
     {
-		// Create using the DefaultListCellGenerator a
+		// Create using the DefaultListCellRenderer a
 		// Label [its default] with the Font name as its text
 
         LabelPtr TheLabel = Label::Ptr::dcast(
-            DefaultListCellGenerator::getListCellGeneratorComponent(
+            DefaultListCellRenderer::getListCellRendererComponent(
             list, value, index, isSelected, cellHasFocus)
             );
 
@@ -165,11 +165,11 @@ class FontListCellGenerator : public DefaultListCellGenerator
         return TheLabel;
     }
 
-    FontListCellGenerator(void)
+    FontListCellRenderer(void)
     {
     }
 
-    virtual ~FontListCellGenerator(void)
+    virtual ~FontListCellRenderer(void)
     {
     }
 };
@@ -383,8 +383,8 @@ int main(int argc, char **argv)
 	    Model.pushBack(SharedFieldPtr(new SFString((*FontMapItor).first)));
 	}
 
-	// Creates CellGenerator
-	FontListCellGenerator CellGenerator;
+	// Creates CellRenderer
+	FontListCellRenderer CellRenderer;
 
 
 	// Create ListPtr
@@ -394,7 +394,7 @@ int main(int argc, char **argv)
         list->setCellLayout(VERTICAL_ALIGNMENT);
 	endEditCP(list, Component::PreferredSizeFieldMask | List::CellLayoutFieldMask);
 	list->setModel(&Model);
-	list->setCellGenerator(&CellGenerator);
+	list->setCellRenderer(&CellRenderer);
     ListSelectionModelPtr  SelectionModel(new DefaultListSelectionModel);
     SelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
 	list->setSelectionModel(SelectionModel);
