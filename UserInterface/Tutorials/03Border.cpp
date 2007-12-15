@@ -118,7 +118,7 @@ int main(int argc, char **argv)
         that the LookAndFeelManager automatically
         assigns default settings to Borders.
         Each attribute will be set individually
-        in this    tutorial.
+        in this tutorial.
 
     ******************************************************/
     BevelBorderPtr ExampleBevelBorder = osg::BevelBorder::create();
@@ -177,7 +177,8 @@ int main(int argc, char **argv)
 
 		Note: It is possible to create
 		CompoundBorders using CompoundBorders
-		using CompoundBorders using.. etc. 
+		using CompoundBorders using other 
+		CompoundBorders, etc. 
 
     ******************************************************/
 
@@ -340,8 +341,8 @@ int main(int argc, char **argv)
 			the Border in pixels.
 		-setColor(Color4f): Determine the Color
 			of the Border.
-		-setCornerRadius: Determine the radius
-			of the corner
+		-setCornerRadius(int): Determine the radius
+			of the corner in pixels.
 
     ******************************************************/
 
@@ -374,12 +375,18 @@ int main(int argc, char **argv)
     /******************************************************
 
         Create Button Components to display each 
-        of the varying Borders.  Buttons will 
+        of the different Borders.  Buttons will 
         be placed via the Flow layout.  
+
+		Note that by setting the ActiveBorder
+		and RolloverBorder, the Button will
+		have the same Border even if the Button 
+		is pressed or if the Mouse is hovering 
+		above the Button (Active/Rollover 
+		respectively).
 
     ******************************************************/
 
-    // Create Button components
     ButtonPtr ExampleBevelBorderButton = osg::Button::create();
     ButtonPtr ExampleCompoundBorderButton = osg::Button::create();
     ButtonPtr ExampleEmptyBorderButton = osg::Button::create();
@@ -390,10 +397,6 @@ int main(int argc, char **argv)
     ButtonPtr ExampleoundedCornerLineBorderButton = osg::Button::create();
     ButtonPtr ExampleShadowBorderButton = osg::Button::create();
     
-    // Edit each Button Component and assign its Border via the
-    // setBorder function.  Note that setActiveBorder assigns the
-    // Border to also be present while the Button is pressed by
-    // clicking on it.
     beginEditCP(ExampleBevelBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
         ExampleBevelBorderButton->setPreferredSize(Vec2s(100,50));
         ExampleBevelBorderButton->setText("Bevel Border");
@@ -440,7 +443,8 @@ int main(int argc, char **argv)
         ExampleMatteBorderButton->setBorder(ExampleMatteBorder);
         ExampleMatteBorderButton->setRolloverBorder(ExampleMatteBorder);
         // Note that when ExampleMatteBorderButton is pressed, the Border will revert to the 
-        // default Border for Buttons, a "pressed" BevelBorder
+        // default Border for Buttons, a "pressed" BevelBorder.  This is because no
+		// ActiveBorder is specified.
    endEditCP(ExampleMatteBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::RolloverBorderFieldMask);
     
     beginEditCP(ExampleMultiColorMatteBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);

@@ -189,9 +189,9 @@ int main(int argc, char **argv)
     
     /******************************************************
 
-            Create some BorderLayouts and 
+            Create BorderLayout and some
             BorderLayoutConstraints to be used 
-            to set up CardLayout
+            to set up CardLayout.
 
     ******************************************************/
     
@@ -230,25 +230,36 @@ int main(int argc, char **argv)
             alone for a Layout.  This tutorial uses
             the BorderLayout to include a Panel in
             the Center Region, and within that Panel
-            setting the CardLayout.
+            using a CardLayout.  A single card is 
+			displayed at one time within a 
+			Container using CardLayout.
 
-            CardLayout has four function calls-
+            CardLayout has four functions:
             next, previous, first, and last.
 
-            ->next(CardName): Causes CardLayout
-				to display the next card.
-			->previous
+            ->next(CardContainerName): Causes 
+			    CardLayout to display the next card.
+			->previous(CardContainerName): Causes
+				CardLayout to display the 
+				previous card.
+			->first(CardContainerName): Causes
+				CardLayout to display the
+				first card.
+			->last(CardContainerName): Causes
+				CardLayout to display the
+				last card.
 			
-			To call these functions, use  the "->" 
-            command.  For example, in an EditCP loop
-            CardLayoutName->FUNCTION(ContainerWithCardLayout)
-
             These are most useful when combined with 
             ActionListeners, as shown at the top of 
-            the code, to assign actions to the Buttons 
-            or Components to allow the user to cycle
-            through the Card Layout and view different
-            ExampleCards.
+            this Tutorial, to assign actions to the 
+			Buttons or Components to allow the user 
+			to cycle through the Card Layout and 
+			view different ExampleCards.
+
+			Note that CardContainerName is the name
+			of the Container which is using the
+			CardLayout, while the begin/endEditCP
+			is performed on the CardLayout itself.
 
     ******************************************************/
     
@@ -258,7 +269,7 @@ int main(int argc, char **argv)
     /******************************************************
 
             Create Button Components to be used with 
-            CardLayout and specify their characteristics
+            CardLayout to allow for interactivity.
 
     ******************************************************/
     ButtonPtr ExampleButton1 = osg::Button::create();
@@ -276,18 +287,17 @@ int main(int argc, char **argv)
     endEditCP(ExampleButton1, Button::TextFieldMask | Button::ConstraintsFieldMask);
     
     // Add ActionListener
-    NextCardActionListener ExampleButton1ActionListener;
-    ExampleButton1->addActionListener( &ExampleButton1ActionListener);
+    NextCardActionListener TheNextCardActionListener;
+    ExampleButton1->addActionListener( &TheNextCardActionListener);
     
-
     beginEditCP(ExampleButton2, Button::TextFieldMask | Button::ConstraintsFieldMask);
         ExampleButton2->setText("Previous Card");
         ExampleButton2->setConstraints(ExampleButton2Constraints);
     endEditCP(ExampleButton2, Button::TextFieldMask | Button::ConstraintsFieldMask);
 
     // Add ActionListener
-    BackCardActionListener ExampleButton2ActionListener;
-    ExampleButton2->addActionListener( &ExampleButton2ActionListener);
+    BackCardActionListener TheBackCardActionListener;
+    ExampleButton2->addActionListener( &TheBackCardActionListener);
 
     beginEditCP(ExampleButton3, Button::TextFieldMask);
         ExampleButton3->setText("This");
@@ -311,8 +321,8 @@ int main(int argc, char **argv)
     endEditCP(ExampleButton7, Button::TextFieldMask | Button::ConstraintsFieldMask);
         
     // Add ActionListener
-    FirstCardActionListener ExampleButton7ActionListener;
-    ExampleButton7->addActionListener( &ExampleButton7ActionListener);
+    FirstCardActionListener TheFirstCardActionListener;
+    ExampleButton7->addActionListener( &TheFirstCardActionListener);
 
     beginEditCP(ExampleButton8, Button::TextFieldMask | Button::ConstraintsFieldMask);
         ExampleButton8->setText("Last Card");
@@ -320,8 +330,8 @@ int main(int argc, char **argv)
     endEditCP(ExampleButton8, Button::TextFieldMask | Button::ConstraintsFieldMask);
     
     // Add ActionListener
-    LastCardActionListener ExampleButton8ActionListener;
-    ExampleButton8->addActionListener( &ExampleButton8ActionListener);
+    LastCardActionListener TheLastCardActionListener;
+    ExampleButton8->addActionListener( &TheLastCardActionListener);
 
 
     beginEditCP(ExampleCardPanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);

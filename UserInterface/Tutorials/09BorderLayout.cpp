@@ -161,7 +161,7 @@ int main(int argc, char **argv)
 			Components will appear (based off of their 
 			Constraints).  Takes BORDER_CENTER, 
 			BORDER_NORTH, BORDER_EAST, BORDER_SOUTH, 
-			and BORDER_WEST arguments as the ENUM.
+			and BORDER_WEST arguments.
 
     ******************************************************/
     BorderLayoutConstraintsPtr ExampleButton1Constraints = osg::BorderLayoutConstraints::create();

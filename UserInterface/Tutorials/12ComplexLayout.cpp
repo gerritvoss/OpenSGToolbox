@@ -128,51 +128,51 @@ int main(int argc, char **argv)
 
     ******************************************************/
     ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
-    ColorUIBackgroundPtr panelBackground = osg::ColorUIBackground::create();
-    ColorUIBackgroundPtr panelSmallBackground = osg::ColorUIBackground::create();
-    ColorUIBackgroundPtr label1Color = osg::ColorUIBackground::create();
-    GradientUIBackgroundPtr label1Gradient = osg::GradientUIBackground::create();
-    CompoundUIBackgroundPtr label1Compound = osg::CompoundUIBackground::create();
+    ColorUIBackgroundPtr ExamplePanelBackground = osg::ColorUIBackground::create();
+    ColorUIBackgroundPtr ExampleSmallPanelBackground = osg::ColorUIBackground::create();
+    ColorUIBackgroundPtr ExampleLabel1ColorBackground = osg::ColorUIBackground::create();
+    GradientUIBackgroundPtr ExampleLabel1GradientBackground = osg::GradientUIBackground::create();
+    CompoundUIBackgroundPtr ExampleLabel1CompoundBackground = osg::CompoundUIBackground::create();
     
     beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
         MainFrameBackground->setColor(Color4f(0,0,1.0,0.5));
     endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
 
-    beginEditCP(panelBackground, ColorUIBackground::ColorFieldMask);
-        panelBackground->setColor(Color4f(0.0,0.0,0.0,0.5));
-    endEditCP(panelBackground, ColorUIBackground::ColorFieldMask);
+    beginEditCP(ExamplePanelBackground, ColorUIBackground::ColorFieldMask);
+        ExamplePanelBackground->setColor(Color4f(0.0,0.0,0.0,0.5));
+    endEditCP(ExamplePanelBackground, ColorUIBackground::ColorFieldMask);
 
-    beginEditCP(panelSmallBackground, ColorUIBackground::ColorFieldMask);
-        panelSmallBackground->setColor(Color4f(0.0,0.5,0.7,1.0));
-    endEditCP(panelSmallBackground, ColorUIBackground::ColorFieldMask);
+    beginEditCP(ExampleSmallPanelBackground, ColorUIBackground::ColorFieldMask);
+        ExampleSmallPanelBackground->setColor(Color4f(0.0,0.5,0.7,1.0));
+    endEditCP(ExampleSmallPanelBackground, ColorUIBackground::ColorFieldMask);
     
-    beginEditCP(label1Color, ColorUIBackground::ColorFieldMask);
-        label1Color->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
-    endEditCP(label1Color, ColorUIBackground::ColorFieldMask);
+    beginEditCP(ExampleLabel1ColorBackground, ColorUIBackground::ColorFieldMask);
+        ExampleLabel1ColorBackground->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
+    endEditCP(ExampleLabel1ColorBackground, ColorUIBackground::ColorFieldMask);
     
-    beginEditCP(label1Gradient, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
-        label1Gradient->setColorStart(Color4f(1.0, 0.0, 1.0, 0.8));
-        label1Gradient->setColorEnd(Color4f(0.0, 0.0, 1.0, 0.3));
-        label1Gradient->setAlignment(HORIZONTAL_ALIGNMENT);
-    endEditCP(label1Gradient, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
+    beginEditCP(ExampleLabel1GradientBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
+        ExampleLabel1GradientBackground->setColorStart(Color4f(1.0, 0.0, 1.0, 0.8));
+        ExampleLabel1GradientBackground->setColorEnd(Color4f(0.0, 0.0, 1.0, 0.3));
+        ExampleLabel1GradientBackground->setAlignment(HORIZONTAL_ALIGNMENT);
+    endEditCP(ExampleLabel1GradientBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
     
-    beginEditCP(label1Compound, CompoundUIBackground::BackgroundsFieldMask);
-        label1Compound->getBackgrounds().addValue(label1Color);
-        label1Compound->getBackgrounds().addValue(label1Gradient);
-    endEditCP(label1Compound, CompoundUIBackground::BackgroundsFieldMask);
+    beginEditCP(ExampleLabel1CompoundBackground, CompoundUIBackground::BackgroundsFieldMask);
+        ExampleLabel1CompoundBackground->getBackgrounds().addValue(ExampleLabel1ColorBackground);
+        ExampleLabel1CompoundBackground->getBackgrounds().addValue(ExampleLabel1GradientBackground);
+    endEditCP(ExampleLabel1CompoundBackground, CompoundUIBackground::BackgroundsFieldMask);
 
     /******************************************************
             
             Create some Borders
 
     ******************************************************/
-    EtchedBorderPtr panelBorder = osg::EtchedBorder::create();
-    EmptyBorderPtr label1Border = osg::EmptyBorder::create();
-    beginEditCP(panelBorder, EtchedBorder::HighlightFieldMask | EtchedBorder::ShadowFieldMask | EtchedBorder::WidthFieldMask);
-        panelBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
-        panelBorder->setShadow(Color4f(0.8, 0.8, 0.8, 1.0));
-        panelBorder->setWidth(6);
-    endEditCP(panelBorder, EtchedBorder::HighlightFieldMask | EtchedBorder::ShadowFieldMask | EtchedBorder::WidthFieldMask);
+    EtchedBorderPtr ExamplePanelBorder = osg::EtchedBorder::create();
+    EmptyBorderPtr ExampleLabel1Border = osg::EmptyBorder::create();
+    beginEditCP(ExamplePanelBorder, EtchedBorder::HighlightFieldMask | EtchedBorder::ShadowFieldMask | EtchedBorder::WidthFieldMask);
+        ExamplePanelBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
+        ExamplePanelBorder->setShadow(Color4f(0.8, 0.8, 0.8, 1.0));
+        ExamplePanelBorder->setWidth(6);
+    endEditCP(ExamplePanelBorder, EtchedBorder::HighlightFieldMask | EtchedBorder::ShadowFieldMask | EtchedBorder::WidthFieldMask);
 
     /******************************************************
             
@@ -180,81 +180,81 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
-    LabelPtr label1 = osg::Label::create();
-    ButtonPtr button1 = osg::Button::create();
-    ButtonPtr button2 = osg::Button::create();
-    ButtonPtr button3 = osg::Button::create();
-    ButtonPtr button4 = osg::Button::create();
-    ButtonPtr button5 = osg::Button::create();
-    ButtonPtr button6 = osg::Button::create();
-    ButtonPtr button7 = osg::Button::create();
-    ButtonPtr button8 = osg::Button::create();
-    ButtonPtr button9 = osg::Button::create();
-    ButtonPtr button10 = osg::Button::create();
-    ButtonPtr button11 = osg::Button::create();
+    LabelPtr ExampleLabel1 = osg::Label::create();
+    ButtonPtr ExampleButton1 = osg::Button::create();
+    ButtonPtr ExampleButton2 = osg::Button::create();
+    ButtonPtr ExampleButton3 = osg::Button::create();
+    ButtonPtr ExampleButton4 = osg::Button::create();
+    ButtonPtr ExampleButton5 = osg::Button::create();
+    ButtonPtr ExampleButton6 = osg::Button::create();
+    ButtonPtr ExampleButton7 = osg::Button::create();
+    ButtonPtr ExampleButton8 = osg::Button::create();
+    ButtonPtr ExampleButton9 = osg::Button::create();
+    ButtonPtr ExampleButton10 = osg::Button::create();
+    ButtonPtr ExampleButton11 = osg::Button::create();
 
 
-    beginEditCP(label1, Component::PreferredSizeFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
-        label1->setPreferredSize(Vec2s(800, 50));
-        label1->setBackground(label1Compound);
-        label1->setBorder(label1Border);
-    endEditCP(label1, Component::PreferredSizeFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
+    beginEditCP(ExampleLabel1, Button::PreferredSizeFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
+        ExampleLabel1->setPreferredSize(Vec2s(800, 50));
+        ExampleLabel1->setBackground(ExampleLabel1CompoundBackground);
+        ExampleLabel1->setBorder(ExampleLabel1Border);
+    endEditCP(ExampleLabel1, Button::PreferredSizeFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
 
-    beginEditCP(button1, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
-        button1->setPreferredSize(Vec2s(800, 50));
-        button1->setMaxSize(Vec2s(50, 50));
-        button1->setText("Resize the Window to Show Diificulties with Using Just One Layout");
-    endEditCP(button1, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+    beginEditCP(ExampleButton1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
+        ExampleButton1->setPreferredSize(Vec2s(800, 50));
+        ExampleButton1->setMaxSize(Vec2s(50, 50));
+        ExampleButton1->setText("Resize the Window to Show Diificulties with Using Just One Layout");
+    endEditCP(ExampleButton1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(button2, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
-        button2->setPreferredSize(Vec2s(50, 50));
-        button2->setMaxSize(Vec2s(50, 50));
-    endEditCP(button2, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+    beginEditCP(ExampleButton2, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
+        ExampleButton2->setPreferredSize(Vec2s(50, 50));
+        ExampleButton2->setMaxSize(Vec2s(50, 50));
+    endEditCP(ExampleButton2, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
     
-    beginEditCP(button3, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
-        button3->setPreferredSize(Vec2s(50, 50));
-        button3->setMaxSize(Vec2s(50, 50));
-    endEditCP(button3, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+    beginEditCP(ExampleButton3, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
+        ExampleButton3->setPreferredSize(Vec2s(50, 50));
+        ExampleButton3->setMaxSize(Vec2s(50, 50));
+    endEditCP(ExampleButton3, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(button4, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
-        button4->setPreferredSize(Vec2s(100, 50));
-        button4->setMaxSize(Vec2s(100, 50));
-    endEditCP(button4, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+    beginEditCP(ExampleButton4, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
+        ExampleButton4->setPreferredSize(Vec2s(100, 50));
+        ExampleButton4->setMaxSize(Vec2s(100, 50));
+    endEditCP(ExampleButton4, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(button5, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
-        button5->setPreferredSize(Vec2s(100, 50));
-        button5->setMaxSize(Vec2s(100, 50));
-    endEditCP(button5, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+    beginEditCP(ExampleButton5, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
+        ExampleButton5->setPreferredSize(Vec2s(100, 50));
+        ExampleButton5->setMaxSize(Vec2s(100, 50));
+    endEditCP(ExampleButton5, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(button6, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
-        button6->setPreferredSize(Vec2s(100, 50));
-        button6->setMaxSize(Vec2s(100, 50));
-    endEditCP(button6, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+    beginEditCP(ExampleButton6, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
+        ExampleButton6->setPreferredSize(Vec2s(100, 50));
+        ExampleButton6->setMaxSize(Vec2s(100, 50));
+    endEditCP(ExampleButton6, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(button7, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
-        button7->setPreferredSize(Vec2s(100, 50));
-        button7->setMaxSize(Vec2s(100, 50));
-    endEditCP(button7, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+    beginEditCP(ExampleButton7, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
+        ExampleButton7->setPreferredSize(Vec2s(100, 50));
+        ExampleButton7->setMaxSize(Vec2s(100, 50));
+    endEditCP(ExampleButton7, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(button8, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
-        button8->setPreferredSize(Vec2s(100, 50));
-        button8->setMaxSize(Vec2s(100, 50));
-    endEditCP(button8, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+    beginEditCP(ExampleButton8, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
+        ExampleButton8->setPreferredSize(Vec2s(100, 50));
+        ExampleButton8->setMaxSize(Vec2s(100, 50));
+    endEditCP(ExampleButton8, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(button9, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
-        button9->setPreferredSize(Vec2s(100, 50));
-        button9->setMaxSize(Vec2s(100, 50));
-    endEditCP(button9, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+    beginEditCP(ExampleButton9, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
+        ExampleButton9->setPreferredSize(Vec2s(100, 50));
+        ExampleButton9->setMaxSize(Vec2s(100, 50));
+    endEditCP(ExampleButton9, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(button10, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
-        button10->setPreferredSize(Vec2s(100, 50));
-        button10->setMaxSize(Vec2s(100, 50));
-    endEditCP(button10, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+    beginEditCP(ExampleButton10, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
+        ExampleButton10->setPreferredSize(Vec2s(100, 50));
+        ExampleButton10->setMaxSize(Vec2s(100, 50));
+    endEditCP(ExampleButton10, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(button11, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
-        button11->setPreferredSize(Vec2s(100, 50));
-        button11->setMaxSize(Vec2s(100, 50));
-    endEditCP(button11, Component::PreferredSizeFieldMask | Component::MaxSizeFieldMask | Button::TextFieldMask);
+    beginEditCP(ExampleButton11, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
+        ExampleButton11->setPreferredSize(Vec2s(100, 50));
+        ExampleButton11->setMaxSize(Vec2s(100, 50));
+    endEditCP(ExampleButton11, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
     /******************************************************
 
@@ -262,36 +262,36 @@ int main(int argc, char **argv)
 
     ******************************************************/
     FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
-    BoxLayoutPtr panel1Layout = osg::BoxLayout::create();
-    BoxLayoutPtr panel2Layout = osg::BoxLayout::create();
-    BoxLayoutPtr panel3Layout = osg::BoxLayout::create();
-    BoxLayoutPtr panel4Layout = osg::BoxLayout::create();
-    BoxLayoutPtr panel5Layout = osg::BoxLayout::create();
-    BoxLayoutPtr panel6Layout = osg::BoxLayout::create();
+    BoxLayoutPtr ExamplePanel1Layout = osg::BoxLayout::create();
+    BoxLayoutPtr ExamplePanel2Layout = osg::BoxLayout::create();
+    BoxLayoutPtr ExamplePanel3Layout = osg::BoxLayout::create();
+    BoxLayoutPtr ExamplePanel4Layout = osg::BoxLayout::create();
+    BoxLayoutPtr ExamplePanel5Layout = osg::BoxLayout::create();
+    BoxLayoutPtr ExamplePanel6Layout = osg::BoxLayout::create();
 
-    beginEditCP(panel1Layout, BoxLayout::AlignmentFieldMask);
-        panel1Layout->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(panel1Layout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(ExamplePanel1Layout, BoxLayout::AlignmentFieldMask);
+        ExamplePanel1Layout->setAlignment(VERTICAL_ALIGNMENT);
+    endEditCP(ExamplePanel1Layout, BoxLayout::AlignmentFieldMask);
 
-    beginEditCP(panel2Layout, BoxLayout::AlignmentFieldMask);
-        panel2Layout->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(panel2Layout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(ExamplePanel2Layout, BoxLayout::AlignmentFieldMask);
+        ExamplePanel2Layout->setAlignment(VERTICAL_ALIGNMENT);
+    endEditCP(ExamplePanel2Layout, BoxLayout::AlignmentFieldMask);
 
-    beginEditCP(panel3Layout, BoxLayout::AlignmentFieldMask);
-        panel3Layout->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(panel3Layout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(ExamplePanel3Layout, BoxLayout::AlignmentFieldMask);
+        ExamplePanel3Layout->setAlignment(VERTICAL_ALIGNMENT);
+    endEditCP(ExamplePanel3Layout, BoxLayout::AlignmentFieldMask);
 
-    beginEditCP(panel4Layout, BoxLayout::AlignmentFieldMask);
-        panel4Layout->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(panel4Layout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(ExamplePanel4Layout, BoxLayout::AlignmentFieldMask);
+        ExamplePanel4Layout->setAlignment(VERTICAL_ALIGNMENT);
+    endEditCP(ExamplePanel4Layout, BoxLayout::AlignmentFieldMask);
 
-    beginEditCP(panel5Layout, BoxLayout::AlignmentFieldMask);
-        panel5Layout->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(panel5Layout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(ExamplePanel5Layout, BoxLayout::AlignmentFieldMask);
+        ExamplePanel5Layout->setAlignment(VERTICAL_ALIGNMENT);
+    endEditCP(ExamplePanel5Layout, BoxLayout::AlignmentFieldMask);
 
-    beginEditCP(panel6Layout, BoxLayout::AlignmentFieldMask);
-        panel6Layout->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(panel6Layout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(ExamplePanel6Layout, BoxLayout::AlignmentFieldMask);
+        ExamplePanel6Layout->setAlignment(VERTICAL_ALIGNMENT);
+    endEditCP(ExamplePanel6Layout, BoxLayout::AlignmentFieldMask);
 
     beginEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
         MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
@@ -307,75 +307,75 @@ int main(int argc, char **argv)
 
     ******************************************************/
     FramePtr MainFrame = osg::Frame::create();
-    PanelPtr panel1 = osg::Panel::create();
-    PanelPtr panel2 = osg::Panel::create();
-    PanelPtr panel3 = osg::Panel::create();
-    PanelPtr panel4 = osg::Panel::create();
-    PanelPtr panel5 = osg::Panel::create();
-    PanelPtr panel6 = osg::Panel::create();
+    PanelPtr ExamplePanel1 = osg::Panel::create();
+    PanelPtr ExamplePanel2 = osg::Panel::create();
+    PanelPtr ExamplePanel3 = osg::Panel::create();
+    PanelPtr ExamplePanel4 = osg::Panel::create();
+    PanelPtr ExamplePanel5 = osg::Panel::create();
+    PanelPtr ExamplePanel6 = osg::Panel::create();
 
     
     // Edit Panel1, Panel2
-    beginEditCP(panel1, Component::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
-        panel1->setPreferredSize(Vec2s(400, 400));
-        panel1->getChildren().addValue(button2);
-        panel1->getChildren().addValue(panel3);
-        panel1->getChildren().addValue(panel4);
-        panel1->setLayout(panel1Layout);
-        panel1->setBackground(panelBackground);
-        panel1->setBorder(panelBorder);
-    endEditCP(panel1, Component::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
+    beginEditCP(ExamplePanel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+        ExamplePanel1->setPreferredSize(Vec2s(400, 400));
+        ExamplePanel1->getChildren().addValue(ExampleButton2);
+        ExamplePanel1->getChildren().addValue(ExamplePanel3);
+        ExamplePanel1->getChildren().addValue(ExamplePanel4);
+        ExamplePanel1->setLayout(ExamplePanel1Layout);
+        ExamplePanel1->setBackground(ExamplePanelBackground);
+        ExamplePanel1->setBorder(ExamplePanelBorder);
+    endEditCP(ExamplePanel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
 
-    beginEditCP(panel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
-        panel2->setPreferredSize(Vec2s(400, 400));
-        panel2->getChildren().addValue(button3);
-        panel2->getChildren().addValue(panel5);
-        panel2->getChildren().addValue(panel6);
-        panel2->setLayout(panel2Layout);
-        panel2->setBackground(panelBackground);
-        panel2->setBorder(panelBorder);
-    endEditCP(panel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::BackgroundFieldMask | Component::BorderFieldMask);
+    beginEditCP(ExamplePanel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+        ExamplePanel2->setPreferredSize(Vec2s(400, 400));
+        ExamplePanel2->getChildren().addValue(ExampleButton3);
+        ExamplePanel2->getChildren().addValue(ExamplePanel5);
+        ExamplePanel2->getChildren().addValue(ExamplePanel6);
+        ExamplePanel2->setLayout(ExamplePanel2Layout);
+        ExamplePanel2->setBackground(ExamplePanelBackground);
+        ExamplePanel2->setBorder(ExamplePanelBorder);
+    endEditCP(ExamplePanel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
     
-    beginEditCP(panel3, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask);
-        panel3->getChildren().addValue(button4);
-        panel3->getChildren().addValue(button5);
-        panel3->setLayout(panel3Layout);
-        panel3->setPreferredSize(Vec2s(125, 130));
-        panel3->setBackground(panelSmallBackground);
-    endEditCP(panel3, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask);
+    beginEditCP(ExamplePanel3, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+        ExamplePanel3->getChildren().addValue(ExampleButton4);
+        ExamplePanel3->getChildren().addValue(ExampleButton5);
+        ExamplePanel3->setLayout(ExamplePanel3Layout);
+        ExamplePanel3->setPreferredSize(Vec2s(125, 130));
+        ExamplePanel3->setBackground(ExampleSmallPanelBackground);
+    endEditCP(ExamplePanel3, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
     
-    beginEditCP(panel4, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask);
-        panel4->getChildren().addValue(button6);
-        panel4->getChildren().addValue(button7);
-        panel4->setLayout(panel4Layout);
-        panel4->setPreferredSize(Vec2s(125, 130));
-        panel4->setBackground(panelSmallBackground);
-    endEditCP(panel4, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask);
+    beginEditCP(ExamplePanel4, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+        ExamplePanel4->getChildren().addValue(ExampleButton6);
+        ExamplePanel4->getChildren().addValue(ExampleButton7);
+        ExamplePanel4->setLayout(ExamplePanel4Layout);
+        ExamplePanel4->setPreferredSize(Vec2s(125, 130));
+        ExamplePanel4->setBackground(ExampleSmallPanelBackground);
+    endEditCP(ExamplePanel4, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
         
-    beginEditCP(panel5, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask);
-        panel5->getChildren().addValue(button8);
-        panel5->getChildren().addValue(button9);
-        panel5->setLayout(panel5Layout);
-        panel5->setPreferredSize(Vec2s(125, 130));
-        panel5->setBackground(panelSmallBackground);
-    endEditCP(panel5, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask);
+    beginEditCP(ExamplePanel5, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+        ExamplePanel5->getChildren().addValue(ExampleButton8);
+        ExamplePanel5->getChildren().addValue(ExampleButton9);
+        ExamplePanel5->setLayout(ExamplePanel5Layout);
+        ExamplePanel5->setPreferredSize(Vec2s(125, 130));
+        ExamplePanel5->setBackground(ExampleSmallPanelBackground);
+    endEditCP(ExamplePanel5, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
         
-    beginEditCP(panel6, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask);
-        panel6->getChildren().addValue(button10);
-        panel6->getChildren().addValue(button11);
-        panel6->setLayout(panel6Layout);
-        panel6->setPreferredSize(Vec2s(125, 130));
-        panel6->setBackground(panelSmallBackground);
-    endEditCP(panel6, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundFieldMask);
+    beginEditCP(ExamplePanel6, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
+        ExamplePanel6->getChildren().addValue(ExampleButton10);
+        ExamplePanel6->getChildren().addValue(ExampleButton11);
+        ExamplePanel6->setLayout(ExamplePanel6Layout);
+        ExamplePanel6->setPreferredSize(Vec2s(125, 130));
+        ExamplePanel6->setBackground(ExampleSmallPanelBackground);
+    endEditCP(ExamplePanel6, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundFieldMask);
 
 
     // Edit MainFrame
     beginEditCP(MainFrame, Frame::BorderFieldMask | Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-       MainFrame->setBorder(panelBorder);
-       MainFrame->getChildren().addValue(label1);
-       MainFrame->getChildren().addValue(button1);
-       MainFrame->getChildren().addValue(panel1);
-       MainFrame->getChildren().addValue(panel2);
+       MainFrame->setBorder(ExamplePanelBorder);
+       MainFrame->getChildren().addValue(ExampleLabel1);
+       MainFrame->getChildren().addValue(ExampleButton1);
+       MainFrame->getChildren().addValue(ExamplePanel1);
+       MainFrame->getChildren().addValue(ExamplePanel2);
        MainFrame->setLayout(MainFrameLayout);
        MainFrame->setBackground(MainFrameBackground);
     endEditCP(MainFrame, Frame::BorderFieldMask | Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);

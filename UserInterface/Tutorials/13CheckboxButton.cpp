@@ -119,58 +119,43 @@ int main(int argc, char **argv)
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
-    // Create a Checkbox Button component
-    CheckboxButtonPtr checkboxButton = osg::CheckboxButton::create();
-    // Create a simple Font to be used with the Button
-    UIFontPtr sampleFont = osg::UIFont::create();
-    beginEditCP(sampleFont, UIFont::SizeFieldMask);
-        sampleFont->setSize(12);
-    endEditCP(sampleFont, UIFont::SizeFieldMask);
-
     /******************************************************
 
-        Edit the Checkbox Button and determine its characteristics
+        Create and edit a CheckboxButton.
+
+		Note: the only function call shown 
+		specific to	CheckboxButton is setSelected.
+		In DefaultLookAndFeel, the options 
+		for changing the style of the CheckBox
+		are shown.  CheckboxButton also 
+		inherits off Button so all features
+		of Button may be used.
+
+		-setSelected(bool): Determines if the 
+			CheckboxButton is checked(true) or 
+			not checked(false).
 
     ******************************************************/
-
-    beginEditCP(checkboxButton, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask |
-        Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask);
-            // The following 4 function calls are not specific to Checkbox Button, 
-            // but can be used with any Component
-
-            // Determine the Minimum and Maximum size that the Component can ever have
-            // due to various Layouts (some change the size of the Components within
-            // the Layouts)
-        checkboxButton->setMinSize( Vec2s (50, 25));
-        checkboxButton->setMaxSize( Vec2s (300, 100));
-            // Determine the PreferredSize for the Component
-        checkboxButton->setPreferredSize( Vec2s (200, 50));
-        checkboxButton->setEnabled(true);
-        // The following functions are specific to Button
-            // Determine the visible Text (Text must fit within Button Size
-            // or extra Text will not display)
-        checkboxButton->setText("Checkbox Button");
-        //button1->setFont(sampleFont);
-            // Determine the VerticalAlignment of the Text- VERTICAL_CENTER, 
-            // or VERTICAL_TOP, VERTICAL_BOTTOM
-        checkboxButton->setVerticalAlignment(0.5);
-            // Determine the HorizontalAlignment of the Text- HORIZONTAL_CENTER,
-            // HORIZONTAL_LEFT, HORIZONTAL_RIGHT
-        checkboxButton->setHorizontalAlignment(0.5);
-        checkboxButton->setSelected(true);
-            // You can also change the way that the checkbox button looks by assigning
-            // different draw objects using the setDrawObject, setCheckedDrawObject, setActiveDrawObject,
-            // and setActiveCheckedDrawObject.
-            // The box is checked when it has been toggled once.  It is active when the mouse is currently clicking on it.
-    endEditCP(checkboxButton, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::SizeFieldMask |
-        Button::TextFieldMask | Button::FontFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask);
+    CheckboxButtonPtr ExampleCheckboxButton = osg::CheckboxButton::create();
+    beginEditCP(ExampleCheckboxButton, CheckboxButton::MinSizeFieldMask | CheckboxButton::MaxSizeFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::SizeFieldMask |
+        CheckboxButton::TextFieldMask | CheckboxButton::VerticalAlignmentFieldMask | CheckboxButton::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask);
+        ExampleCheckboxButton->setMinSize( Vec2s (50, 25));
+        ExampleCheckboxButton->setMaxSize( Vec2s (300, 100));
+        ExampleCheckboxButton->setPreferredSize( Vec2s (200, 50));
+        ExampleCheckboxButton->setEnabled(true);
+        ExampleCheckboxButton->setText("Checkbox Button");
+        ExampleCheckboxButton->setVerticalAlignment(0.5);
+        ExampleCheckboxButton->setHorizontalAlignment(0.5);
+        ExampleCheckboxButton->setSelected(true);
+   endEditCP(ExampleCheckboxButton, CheckboxButton::MinSizeFieldMask | CheckboxButton::MaxSizeFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::SizeFieldMask |
+        CheckboxButton::TextFieldMask | CheckboxButton::VerticalAlignmentFieldMask | CheckboxButton::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask);
 
     
     // Create The Main Frame
     FramePtr MainFrame = osg::Frame::create();
     LayoutPtr MainFrameLayout = osg::AbsoluteLayout::create();
     beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
-       MainFrame->getChildren().addValue(checkboxButton);
+       MainFrame->getChildren().addValue(ExampleCheckboxButton);
        MainFrame->setLayout(MainFrameLayout);
     endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 
