@@ -1,7 +1,7 @@
 // OpenSG Tutorial Example: Using the GridBag Layout
 //        to place Components 
 //
-// This tutorial explains how to place buttons within a 
+// This tutorial explains how to place ExampleButtons within a 
 // frame utilizing the GridBag Layout command to 
 // manage the layout through the OSG User Interface library.
 //
@@ -95,7 +95,6 @@ int main(int argc, char **argv)
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
-
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
@@ -117,46 +116,32 @@ int main(int argc, char **argv)
     // settings for the Buttons
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
-
-
     /******************************************************
             
-                Creates some Button components
+               Creates some Button components
 
     ******************************************************/
-    ButtonPtr button1 = osg::Button::create();
-    ButtonPtr button2 = osg::Button::create();
-    ButtonPtr button3 = osg::Button::create();
-    ButtonPtr button4 = osg::Button::create();
-    ButtonPtr button5 = osg::Button::create();
-    ButtonPtr button6 = osg::Button::create();
+    ButtonPtr ExampleButton1 = osg::Button::create();
+    ButtonPtr ExampleButton2 = osg::Button::create();
+    ButtonPtr ExampleButton3 = osg::Button::create();
+    ButtonPtr ExampleButton4 = osg::Button::create();
+    ButtonPtr ExampleButton5 = osg::Button::create();
+    ButtonPtr ExampleButton6 = osg::Button::create();
 
 
     /******************************************************
 
-            Create GridBagLayout
-            -setColumns(NUMBER) determines the number of
-                Columns in the Layout, and then sets the
-                correct number of weights in the MF
-                ColumnWeights and the correct number of
-                widths in the MF ColumnWidths. The default
-                value for the weights sets their sum to 1.0
-                (so they all have equal weight), and it
-                fills ColumnWidths with 0s, which signals
-                to use the weights instead of an absolute
-                height.
-            -setRows(NUMBER) determines the number of Rows
-                in the Layout, then sets its corresponding
-                MFs in the same fashion as its column
-                counterpart.
+            Create and edit GridBagLayout.
 
-            NOTE: If values have already been pushed onto
-                any of the MFs, they will not be
-                overwritten, the remaining spots will be
-                filled. Also, when resetting the values
-                to something lower than the previous 
-                value, then the extra weights and lengths
-                will be removed.
+            -setColumns(int): Determine	the number of
+                Columns in the Layout.  This automatically
+				sets the Column Width weights equal, so
+				that each Column is the same Width 
+				unless otherwise specified (using
+				GridBayLayoutConstraints).
+			-setRows(int): Determines the number of Rows
+                in the Layout.  This also sets the
+				Row Height weights equal as above.
 
     ******************************************************/
     GridBagLayoutPtr MainFrameLayout = osg::GridBagLayout::create();
@@ -169,162 +154,168 @@ int main(int argc, char **argv)
     
     /******************************************************
 
-            Create GridBagLayoutConstraints for each 
-            Button and edit    them.  GridBagLayoutConstraints
-            are very versatile and there are many 
-            options for locating Components.
+            Create and edit GridBagLayoutConstraints.
+			GridBagLayoutConstraints have many 
+			options and can be incredibly
+			versatile.
 
-            -setGridX(X_LOCATION) and setGridY(Y_LOCATION) 
-                determine where the starting Grid space
-                for the Constraints are, keeping in mind
-                that 0,0 is the upper left corner
-            -setGridHeight(HEIGHT) and setGridWidth(WIDTH)
-                determine the number of Grid spaces that
-                the Constraints' Component encompass
-            -setFill(FILL_TYPE) determines the Fill categories.
-                Options are:
-                FILL_BOTH: Stretches both X/Y directions
+            -setGridX(X_LOCATION): Determine X location
+				of Constraint (0,0 is the upper left 
+				hand corner).
+			-setGridY(Y_LOCATION): Determine Y location
+				of Constraint.
+            -setGridHeight(int): Determine how many 
+				Grid spaces the Constraint occupies in
+				the Vertical direction (a single
+				Constraint can cause its Component to
+				fill more than a single Grid space).
+			-setGridWidth(int): Determine how many 
+				Grid spaces the Constraint occupies in
+				the Horizontal direction.
+            -setFill(ENUM): Determines fill options.
+                Arguments are:
+                FILL_BOTH: Stretches both X/Y directions.
                 FILL_HORIZONTAL: Stretches X direction; Y dir
                     remains untouched (so will display whatever
-                    is the PreferredSize Y value)
+                    is the PreferredSize Y value).
                 FILL_VERTICAL: Stretches Y direction; X dir
                     remains untouched (so will display whatever
-                    is the PreferredSize X value)
+                    is the PreferredSize X value).
                 FILL_NONE: Does not stretch either direction,
-                    Component displays at PreferredSize
-            -setWeightX(PERCENT) and setWeightY(PERCENT) 
-                determine the percent of the grid space
-                in each respective direction that the Component
-                occupies.  PERCENT in this case is a float 
-                between 0.0 and 1.0. This is only used if the
-                fill property is set for its direction, i.e.
-                if you use setFill(FILL_VERTICAL), it will stretch
-                by the weightY but not weightX.
-            -setPadBottom/Top/Right/Left(AMOUNT) determines the
-                padding    within the Grid space in each direction 
-                in pixels
-            -setInternalPadX(AMOUNT) and setInternalPadY(AMOUNT)
-                will increase the minimum size that the component
-                is set to. If the component is supposed to be drawn
-                below its minSize + 2*internalPad, then it will
-                be increased until then, unless it is too big to fit
-                into the cell.
-            -setHorizontalAlignment(PERCENT) and 
-                setVerticalAlignment(PERCENT) determine the 
-                alignment in both directions, based on a float 
-                between 0.0 and 1.0, where 0.0 is the same as
-                MIN_ALIGN and 0.5 will center it.
-
-
-
+                    Component displays at PreferredSize.
+            -setWeightX(float): Determine the percent of the
+				Grid place the Constraint takes up in the X
+				direction, assuming a fill property is set in
+				the X direction, i.e. FILL_HORIZONTAL.  Float 
+				values: [0.0,1.0].
+			-setWeightY(float): Determine the percent of the
+				Grid place the Constraint takes up in the Y
+				direction, assuming a fill property is set in
+				the X direction, i.e. FILLY_VERTICAL.  Float 
+				values: [0.0,1.0].
+            -setPadBottom/Top/Right/Left(int): Determine the
+                padding within the Grid space in each 
+				respective direction in pixels.
+            -setInternalPadX(int): Determine the internal
+				padding in the X direction, and resizes
+				Component to fit that size.
+			-setInternalPadY(int): Determine the internal
+				padding in the Y direction, and resizes
+				Component to fit that size.
+            -setHorizontalAlignment(float): Determine 
+				alignment in Horizontal direction.  
+				Float values: [0.0,1.0]  Note: 0.5 will
+				center it.
+			-setVerticalAlignment(float): Determine 
+				alignment in Vertical direction.  
+				Float values: [0.0,1.0]  Note: 0.5 will
+				center it.
 
     ******************************************************/
-    GridBagLayoutConstraintsPtr button1Constraints = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr button2Constraints = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr button3Constraints = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr button4Constraints = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr button5Constraints = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr button6Constraints = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr ExampleButton1Constraints = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr ExampleButton2Constraints = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr ExampleButton3Constraints = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr ExampleButton4Constraints = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr ExampleButton5Constraints = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsPtr ExampleButton6Constraints = osg::GridBagLayoutConstraints::create();
 
-    beginEditCP(button1Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask | GridBagLayoutConstraints::GridHeightFieldMask |
+    beginEditCP(ExampleButton1Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask | GridBagLayoutConstraints::GridHeightFieldMask |
         GridBagLayoutConstraints::GridWidthFieldMask | GridBagLayoutConstraints::FillFieldMask | GridBagLayoutConstraints::WeightXFieldMask | GridBagLayoutConstraints::WeightYFieldMask |
         GridBagLayoutConstraints::PadBottomFieldMask | GridBagLayoutConstraints::PadLeftFieldMask | GridBagLayoutConstraints::PadRightFieldMask | GridBagLayoutConstraints::PadTopFieldMask |
         GridBagLayoutConstraints::InternalPadXFieldMask | GridBagLayoutConstraints::InternalPadYFieldMask | GridBagLayoutConstraints::HorizontalAlignmentFieldMask |
         GridBagLayoutConstraints::VerticalAlignmentFieldMask);
-        button1Constraints->setGridX(0);
-        button1Constraints->setGridY(0);
-        button1Constraints->setGridHeight(2);
-        button1Constraints->setGridWidth(1);
-        button1Constraints->setFill(FILL_HORIZONTAL);
-        button1Constraints->setWeightX(0.5);
-        button1Constraints->setWeightY(0.5);
-        button1Constraints->setPadBottom(0);
-        button1Constraints->setPadLeft(0);
-        button1Constraints->setPadRight(0);
-        button1Constraints->setPadTop(0);
-        button1Constraints->setInternalPadX(10);
-        button1Constraints->setInternalPadY(10);
-        button1Constraints->setHorizontalAlignment(0.75);
-        button1Constraints->setVerticalAlignment(0.75);
-    endEditCP(button1Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask | GridBagLayoutConstraints::GridHeightFieldMask |
+        ExampleButton1Constraints->setGridX(0);
+        ExampleButton1Constraints->setGridY(0);
+        ExampleButton1Constraints->setGridHeight(2);
+        ExampleButton1Constraints->setGridWidth(1);
+        ExampleButton1Constraints->setFill(FILL_HORIZONTAL);
+        ExampleButton1Constraints->setWeightX(0.5);
+        ExampleButton1Constraints->setWeightY(0.5);
+        ExampleButton1Constraints->setPadBottom(0);
+        ExampleButton1Constraints->setPadLeft(0);
+        ExampleButton1Constraints->setPadRight(0);
+        ExampleButton1Constraints->setPadTop(0);
+        ExampleButton1Constraints->setInternalPadX(10);
+        ExampleButton1Constraints->setInternalPadY(10);
+        ExampleButton1Constraints->setHorizontalAlignment(0.75);
+        ExampleButton1Constraints->setVerticalAlignment(0.75);
+    endEditCP(ExampleButton1Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask | GridBagLayoutConstraints::GridHeightFieldMask |
         GridBagLayoutConstraints::GridWidthFieldMask | GridBagLayoutConstraints::FillFieldMask | GridBagLayoutConstraints::WeightXFieldMask | GridBagLayoutConstraints::WeightYFieldMask |
         GridBagLayoutConstraints::PadBottomFieldMask | GridBagLayoutConstraints::PadLeftFieldMask | GridBagLayoutConstraints::PadRightFieldMask | GridBagLayoutConstraints::PadTopFieldMask |
         GridBagLayoutConstraints::InternalPadXFieldMask | GridBagLayoutConstraints::InternalPadYFieldMask | GridBagLayoutConstraints::HorizontalAlignmentFieldMask |
         GridBagLayoutConstraints::VerticalAlignmentFieldMask);
     
-    beginEditCP(button2Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        button2Constraints->setGridX(1);
-        button2Constraints->setGridY(1);
-    endEditCP(button2Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    beginEditCP(ExampleButton2Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        ExampleButton2Constraints->setGridX(1);
+        ExampleButton2Constraints->setGridY(1);
+    endEditCP(ExampleButton2Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
     
-    beginEditCP(button3Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        button3Constraints->setGridX(2);
-        button3Constraints->setGridY(2);
-    endEditCP(button3Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    beginEditCP(ExampleButton3Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        ExampleButton3Constraints->setGridX(2);
+        ExampleButton3Constraints->setGridY(2);
+    endEditCP(ExampleButton3Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
     
-    beginEditCP(button4Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        button4Constraints->setGridX(2);
-        button4Constraints->setGridY(1);
-    endEditCP(button4Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    beginEditCP(ExampleButton4Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        ExampleButton4Constraints->setGridX(2);
+        ExampleButton4Constraints->setGridY(1);
+    endEditCP(ExampleButton4Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
     
-    beginEditCP(button5Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        button5Constraints->setGridX(1);
-        button5Constraints->setGridY(2);
-    endEditCP(button5Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    beginEditCP(ExampleButton5Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        ExampleButton5Constraints->setGridX(1);
+        ExampleButton5Constraints->setGridY(2);
+    endEditCP(ExampleButton5Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
     
-    beginEditCP(button6Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
-        button6Constraints->setGridX(0);
-        button6Constraints->setGridY(2);
-    endEditCP(button6Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+    beginEditCP(ExampleButton6Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
+        ExampleButton6Constraints->setGridX(0);
+        ExampleButton6Constraints->setGridY(2);
+    endEditCP(ExampleButton6Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
 
 
+    beginEditCP(ExampleButton1, Button::TextFieldMask | Button::ConstraintsFieldMask);
+        ExampleButton1->setText("Button1");
+        ExampleButton1->setConstraints(ExampleButton1Constraints);
+    endEditCP(ExampleButton1, Button::TextFieldMask |  Button::ConstraintsFieldMask);
+
+    beginEditCP(ExampleButton2, Button::TextFieldMask | Button::ConstraintsFieldMask);
+        ExampleButton2->setText("Button2");
+        ExampleButton2->setConstraints(ExampleButton2Constraints);
+    endEditCP(ExampleButton2, Button::TextFieldMask |  Button::ConstraintsFieldMask);
+
+    beginEditCP(ExampleButton3, Button::TextFieldMask | Button::ConstraintsFieldMask);
+        ExampleButton3->setText("Button3");
+        ExampleButton3->setConstraints(ExampleButton3Constraints);
+    endEditCP(ExampleButton3, Button::TextFieldMask |  Button::ConstraintsFieldMask);
+
+    beginEditCP(ExampleButton4, Button::TextFieldMask | Button::ConstraintsFieldMask);
+        ExampleButton4->setText("Button4");
+        ExampleButton4->setConstraints(ExampleButton4Constraints);
+    endEditCP(ExampleButton4, Button::TextFieldMask |  Button::ConstraintsFieldMask);
+
+    beginEditCP(ExampleButton5, Button::TextFieldMask | Button::ConstraintsFieldMask);
+        ExampleButton5->setText("Button5");
+        ExampleButton5->setConstraints(ExampleButton5Constraints);
+    endEditCP(ExampleButton5, Button::TextFieldMask |  Button::ConstraintsFieldMask);
     
-    beginEditCP(button1, Button::TextFieldMask | Component::ConstraintsFieldMask);
-        button1->setText("button1");
-        button1->setConstraints(button1Constraints);
-    endEditCP(button1, Button::TextFieldMask |  Component::ConstraintsFieldMask);
-
-    beginEditCP(button2, Button::TextFieldMask | Component::ConstraintsFieldMask);
-        button2->setText("button2");
-        button2->setConstraints(button2Constraints);
-    endEditCP(button2, Button::TextFieldMask |  Component::ConstraintsFieldMask);
-
-    beginEditCP(button3, Button::TextFieldMask | Component::ConstraintsFieldMask);
-        button3->setText("button3");
-        button3->setConstraints(button3Constraints);
-    endEditCP(button3, Button::TextFieldMask |  Component::ConstraintsFieldMask);
-
-    beginEditCP(button4, Button::TextFieldMask | Component::ConstraintsFieldMask);
-        button4->setText("button4");
-        button4->setConstraints(button4Constraints);
-    endEditCP(button4, Button::TextFieldMask |  Component::ConstraintsFieldMask);
-
-    beginEditCP(button5, Button::TextFieldMask | Component::ConstraintsFieldMask);
-        button5->setText("button5");
-        button5->setConstraints(button5Constraints);
-    endEditCP(button5, Button::TextFieldMask |  Component::ConstraintsFieldMask);
-    
-    beginEditCP(button6, Button::TextFieldMask | Component::ConstraintsFieldMask);
-        button6->setText("button6");
-        button6->setConstraints(button6Constraints);
-    endEditCP(button6, Button::TextFieldMask |  Component::ConstraintsFieldMask);
-
-     // Create The Main Frame
+    beginEditCP(ExampleButton6, Button::TextFieldMask | Button::ConstraintsFieldMask);
+        ExampleButton6->setText("Button6");
+        ExampleButton6->setConstraints(ExampleButton6Constraints);
+    endEditCP(ExampleButton6, Button::TextFieldMask |  Button::ConstraintsFieldMask);
 
     // Create Background to be used with the Main Frame
     ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
     beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
         MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
     endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
-    
+
+    // Create MainFrame    
     FramePtr MainFrame = osg::Frame::create();
     beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-       MainFrame->getChildren().addValue(button1);
-       MainFrame->getChildren().addValue(button2);
-       MainFrame->getChildren().addValue(button3);
-       MainFrame->getChildren().addValue(button4);
-       MainFrame->getChildren().addValue(button5);
-       MainFrame->getChildren().addValue(button6);
+       MainFrame->getChildren().addValue(ExampleButton1);
+       MainFrame->getChildren().addValue(ExampleButton2);
+       MainFrame->getChildren().addValue(ExampleButton3);
+       MainFrame->getChildren().addValue(ExampleButton4);
+       MainFrame->getChildren().addValue(ExampleButton5);
+       MainFrame->getChildren().addValue(ExampleButton6);
        // Add the Layout to the MainFrame
        MainFrame->setLayout(MainFrameLayout);
        MainFrame->setBackground(MainFrameBackground);

@@ -59,8 +59,6 @@ void reshape(Vec2s Size);
 #include <OpenSG/UserInterface/OSGPanel.h>
 #include <OpenSG/UserInterface/OSGTabPanel.h>
 
-
-
 class TutorialWindowListener : public WindowAdapter
 {
 public:
@@ -75,88 +73,101 @@ public:
     }
 };
 
+    /******************************************************
 
+            Create TabPanel and some of the Buttons
+			up front so the ActionListeners can 
+			reference them
+            
+    ******************************************************/
 
-// Create tabPanel and some of the Buttons up front so 
-//that the ActionListeners can reference them
-TabPanelPtr tabPanel;
-ButtonPtr buttonA;
-ButtonPtr buttonB;
-// Create ActionListeners so that a Tab can be added
-// and removed
-class addTab : public ActionListener
+TabPanelPtr ExampleTabPanel;
+ButtonPtr ExampleTabContentA;
+ButtonPtr ExampleTabContentB;
+
+    /******************************************************
+                 Create ActionListeners
+    ******************************************************/
+
+class AddTabActionListener : public ActionListener
 { 
 public:
 
    virtual void actionPerformed(const ActionEvent& e)
     {
-        // Create a Tab, and add it (see below for
-        // explanations)
-        ButtonPtr tabButton = Button::create(),
-        tabContents = Button::create();
-        beginEditCP(tabButton, Button::TextFieldMask);
-            tabButton->setText("Tab7");
-        endEditCP(tabButton, Button::TextFieldMask);
+      
+    /******************************************************
+                 
+			Create a Tab and edit texts accordingly.
+            
+    ******************************************************/
 
-        beginEditCP(tabContents, Button::TextFieldMask);
-            tabContents->setText("This is where the new Tab content hangs out");
-        endEditCP(tabContents, Button::TextFieldMask);
+        ButtonPtr AddedTabButton = Button::create(),
+        AddedTabContent = Button::create();
+        beginEditCP(AddedTabButton, Button::TextFieldMask);
+            AddedTabButton->setText("Tab7");
+        endEditCP(AddedTabButton, Button::TextFieldMask);
+
+        beginEditCP(AddedTabContent, Button::TextFieldMask);
+            AddedTabContent->setText("This is where the new Tab content hangs out");
+        endEditCP(AddedTabContent, Button::TextFieldMask);
         
         // Determine if the number of Tabs is 6 and 
         // if so, add a 7th Tab
-        if( tabPanel->getTabs().getSize() == 6) {
+        if( ExampleTabPanel->getTabs().getSize() == 6) 
+		{
+            beginEditCP(ExampleTabPanel, TabPanel::TabsFieldMask);
+                ExampleTabPanel->addTab(AddedTabButton, AddedTabContent);
+            endEditCP(ExampleTabPanel, TabPanel::TabsFieldMask);
         
-        beginEditCP(tabPanel, TabPanel::TabsFieldMask);
-        
-            tabPanel->addTab(tabButton, tabContents);
+			// Change the text on the Tabs
+			beginEditCP(ExampleTabContentA, Button::TextFieldMask);
+				ExampleTabContentA->setText("Remove Tab7 under Tab2!");
+			endEditCP(ExampleTabContentA, Button::TextFieldMask);
 
-        endEditCP(tabPanel, TabPanel::TabsFieldMask);
-        
-        // Change the text on the Tabs
-
-        beginEditCP(buttonA, Button::TextFieldMask);
-            buttonA->setText("Remove Tab7 under Tab2!");
-        endEditCP(buttonA, Button::TextFieldMask);
-
-        beginEditCP(buttonB, Button::TextFieldMask);
-            buttonB->setText("Remove Tab7");
-        endEditCP(buttonB, Button::TextFieldMask);
-
-        
+			beginEditCP(ExampleTabContentB, Button::TextFieldMask);
+				ExampleTabContentB->setText("Remove Tab7");
+			endEditCP(ExampleTabContentB, Button::TextFieldMask);
+	        
         }
 
     }
-   
-
-private:
 
 };
 
-// Creates class to remove a Tab
-class removeTab : public ActionListener
+class RemoveTabActionListener : public ActionListener
 {
 public:
 
    virtual void actionPerformed(const ActionEvent& e)
     {
-        // If the number of Tabs is 7 (one was added)
+ 
+    /******************************************************
+                 
+			Remove the last Tab and change texts
+			accordingly.
+			
+			Note: removeTab()
+			can take either the TabName or index 
+			number
+            
+    ******************************************************/		
+		// If the number of Tabs is 7 (one was added)
         // then remove it
-        if( tabPanel->getTabs().getSize() == 7) {
-        beginEditCP(tabPanel, TabPanel::TabsFieldMask);
-            // Removes the Tab.  This can be done by index number
-            // or by putting the Tab name
-            tabPanel->removeTab(6);
-        endEditCP(tabPanel, TabPanel::TabsFieldMask);
+        if( ExampleTabPanel->getTabs().getSize() == 7) 
+		{
+			beginEditCP(ExampleTabPanel, TabPanel::TabsFieldMask);
+				ExampleTabPanel->removeTab(6);
+			endEditCP(ExampleTabPanel, TabPanel::TabsFieldMask);
+	        
+			beginEditCP(ExampleTabContentA, Button::TextFieldMask);
+				ExampleTabContentA->setText("Add another Tab");
+			endEditCP(ExampleTabContentA, Button::TextFieldMask);
 
-        
-        beginEditCP(buttonA, Button::TextFieldMask);
-            buttonA->setText("Add another Tab");
-        endEditCP(buttonA, Button::TextFieldMask);
-
-        // Change the text on the Tabs
-        beginEditCP(buttonB, Button::TextFieldMask);
-            buttonB->setText("Add a Tab under Tab1!");
-        endEditCP(buttonB, Button::TextFieldMask);
+			// Change the text on the Tabs
+			beginEditCP(ExampleTabContentB, Button::TextFieldMask);
+				ExampleTabContentB->setText("Add a Tab under Tab1!");
+			endEditCP(ExampleTabContentB, Button::TextFieldMask);
 
         }
     }
@@ -178,7 +189,6 @@ int main(int argc, char **argv)
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
-
     // Make Torus Node
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
@@ -199,79 +209,80 @@ int main(int argc, char **argv)
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
-
-
     /******************************************************
 
             Create Button Components to be used with 
-            TabPanel and specify their characteristics
+            TabPanel and specify their characteristics.
+
+			Note: Buttons are used for simplicity,
+			any Component can be used as Tab content
+			or as a Tab.  A Panel with several
+			Buttons within it is also added.
 
     ******************************************************/
-    ButtonPtr button1 = osg::Button::create();
-    ButtonPtr button2 = osg::Button::create();
-    ButtonPtr button3 = osg::Button::create();
-    ButtonPtr button4 = osg::Button::create();
-    ButtonPtr button5 = osg::Button::create();
-    ButtonPtr button6 = osg::Button::create();
-    buttonA = osg::Button::create();
-    buttonB = osg::Button::create();
-    ButtonPtr buttonC = osg::Button::create();
-    ButtonPtr buttonD = osg::Button::create();
-    ButtonPtr buttonE = osg::Button::create();
-    ButtonPtr buttonF = osg::Button::create();
 
+    ButtonPtr ExampleTabButton1 = osg::Button::create();
+    ButtonPtr ExampleTabButton2 = osg::Button::create();
+    ButtonPtr ExampleTabButton3 = osg::Button::create();
+    ButtonPtr ExampleTabButton4 = osg::Button::create();
+    ButtonPtr ExampleTabButton5 = osg::Button::create();
+    ButtonPtr ExampleTabButton6 = osg::Button::create();
+    ExampleTabContentA = osg::Button::create();
+    ExampleTabContentB = osg::Button::create();
+    ButtonPtr ExampleTabContentC = osg::Button::create();
+    ButtonPtr ExampleTabContentD = osg::Button::create();
+    ButtonPtr ExampleTabContentE = osg::Button::create();
+    ButtonPtr ExampleTabContentF = osg::Button::create();
 
-    beginEditCP(button1, Button::TextFieldMask);
-        button1->setText("Tab1");
-    endEditCP(button1, Button::TextFieldMask);
+    beginEditCP(ExampleTabButton1, Button::TextFieldMask);
+        ExampleTabButton1->setText("Tab1");
+    endEditCP(ExampleTabButton1, Button::TextFieldMask);
     
-    beginEditCP(button2, Button::TextFieldMask);
-        button2->setText("Tab2");
-    endEditCP(button2, Button::TextFieldMask);
+    beginEditCP(ExampleTabButton2, Button::TextFieldMask);
+        ExampleTabButton2->setText("Tab2");
+    endEditCP(ExampleTabButton2, Button::TextFieldMask);
         
-    beginEditCP(button3, Button::TextFieldMask);
-        button3->setText("Tab3");
-    endEditCP(button3, Button::TextFieldMask);
+    beginEditCP(ExampleTabButton3, Button::TextFieldMask);
+        ExampleTabButton3->setText("Tab3");
+    endEditCP(ExampleTabButton3, Button::TextFieldMask);
         
-    beginEditCP(button4, Button::TextFieldMask);
-        button4->setText("Tab4");
-    endEditCP(button4, Button::TextFieldMask);
+    beginEditCP(ExampleTabButton4, Button::TextFieldMask);
+        ExampleTabButton4->setText("Tab4");
+    endEditCP(ExampleTabButton4, Button::TextFieldMask);
         
-    beginEditCP(button5, Button::TextFieldMask);
-        button5->setText("Tab5");
-    endEditCP(button5, Button::TextFieldMask);
+    beginEditCP(ExampleTabButton5, Button::TextFieldMask);
+        ExampleTabButton5->setText("Tab5");
+    endEditCP(ExampleTabButton5, Button::TextFieldMask);
         
-    beginEditCP(button6, Button::TextFieldMask);
-        button6->setText("Tab6");
-    endEditCP(button6, Button::TextFieldMask);
+    beginEditCP(ExampleTabButton6, Button::TextFieldMask);
+        ExampleTabButton6->setText("Tab6");
+    endEditCP(ExampleTabButton6, Button::TextFieldMask);
     
-    beginEditCP(buttonA, Button::TextFieldMask);
-        buttonA->setText("Add another Tab");
-    endEditCP(buttonA, Button::TextFieldMask);
-        // Add ActionListener
-        addTab button6Add;
-        buttonA->addActionListener( &button6Add);
+    beginEditCP(ExampleTabContentA, Button::TextFieldMask);
+        ExampleTabContentA->setText("Add another Tab");
+    endEditCP(ExampleTabContentA, Button::TextFieldMask);
+    // Add ActionListener
+    AddTabActionListener TheAddTabActionListener;
+    ExampleTabContentA->addActionListener( &TheAddTabActionListener);
 
-    beginEditCP(buttonB, Button::TextFieldMask);
-        buttonB->setText("Add a Tab in Tab1!");
-    endEditCP(buttonB, Button::TextFieldMask);
-        // Add ActionListener
-        removeTab button6Remove;
-        buttonB->addActionListener( &button6Remove);
+    beginEditCP(ExampleTabContentB, Button::TextFieldMask);
+        ExampleTabContentB->setText("Add a Tab in Tab1!");
+    endEditCP(ExampleTabContentB, Button::TextFieldMask);
+    // Add ActionListener
+    RemoveTabActionListener TheRemoveTabActionListener;
+    ExampleTabContentB->addActionListener( &TheRemoveTabActionListener);
 
-    beginEditCP(buttonC, Button::TextFieldMask);
-        buttonC->setText("Stuff for Tab3");
-    endEditCP(buttonC, Button::TextFieldMask);
+    beginEditCP(ExampleTabContentC, Button::TextFieldMask);
+        ExampleTabContentC->setText("Stuff for Tab3");
+    endEditCP(ExampleTabContentC, Button::TextFieldMask);
         
-    beginEditCP(buttonD, Button::TextFieldMask);
-        buttonD->setText("Stuff for Tab5");
-    endEditCP(buttonD, Button::TextFieldMask);    
+    beginEditCP(ExampleTabContentD, Button::TextFieldMask);
+        ExampleTabContentD->setText("Stuff for Tab5");
+    endEditCP(ExampleTabContentD, Button::TextFieldMask);    
 
-    beginEditCP(buttonE, Button::TextFieldMask);
-        buttonE->setText("Stuff for Tab6");
-    endEditCP(buttonE, Button::TextFieldMask);
-
-
+    beginEditCP(ExampleTabContentE, Button::TextFieldMask);
+        ExampleTabContentE->setText("Stuff for Tab6");
+    endEditCP(ExampleTabContentE, Button::TextFieldMask);
         
     /******************************************************
 
@@ -279,112 +290,142 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
-    // Create and edit the Panel buttons
-    ButtonPtr tabPanelButton1 = osg::Button::create();
-    ButtonPtr tabPanelButton2 = osg::Button::create();
-    ButtonPtr tabPanelButton3 = osg::Button::create();
-    ButtonPtr tabPanelButton4 = osg::Button::create();
-    ButtonPtr tabPanelButton5 = osg::Button::create();
-    ButtonPtr tabPanelButton6 = osg::Button::create();
+    // Create and edit the Panel Buttons
+    ButtonPtr ExampleTabPanelButton1 = osg::Button::create();
+    ButtonPtr ExampleTabPanelButton2 = osg::Button::create();
+    ButtonPtr ExampleTabPanelButton3 = osg::Button::create();
+    ButtonPtr ExampleTabPanelButton4 = osg::Button::create();
+    ButtonPtr ExampleTabPanelButton5 = osg::Button::create();
+    ButtonPtr ExampleTabPanelButton6 = osg::Button::create();
 
-    // Create and edit Panel layout
+	beginEditCP(ExampleTabPanelButton1, Button::TextFieldMask);
+		ExampleTabPanelButton1->setText("This");
+	endEditCP(ExampleTabPanelButton1, Button::TextFieldMask);
+	
+	beginEditCP(ExampleTabPanelButton2, Button::TextFieldMask);
+		ExampleTabPanelButton2->setText("is a");
+	endEditCP(ExampleTabPanelButton2, Button::TextFieldMask);
+	
+	beginEditCP(ExampleTabPanelButton3, Button::TextFieldMask);
+		ExampleTabPanelButton3->setText("sample");
+	endEditCP(ExampleTabPanelButton3, Button::TextFieldMask);
+	
+	beginEditCP(ExampleTabPanelButton4, Button::TextFieldMask);
+		ExampleTabPanelButton4->setText("Panel");
+	endEditCP(ExampleTabPanelButton4, Button::TextFieldMask);
+	
+	beginEditCP(ExampleTabPanelButton5, Button::TextFieldMask);
+		ExampleTabPanelButton5->setText("within");
+	endEditCP(ExampleTabPanelButton5, Button::TextFieldMask);
+	
+	beginEditCP(ExampleTabPanelButton6, Button::TextFieldMask);
+		ExampleTabPanelButton6->setText("TabPanel");
+	endEditCP(ExampleTabPanelButton6, Button::TextFieldMask);
+
+    // Create and edit Panel Layout
     BoxLayoutPtr TabPanelLayout = osg::BoxLayout::create();
     beginEditCP(TabPanelLayout, BoxLayout::AlignmentFieldMask);
         TabPanelLayout->setAlignment(VERTICAL_ALIGNMENT);
     endEditCP(TabPanelLayout, BoxLayout::AlignmentFieldMask);
 
     // Create and edit Panel
-    PanelPtr tabPanelPanel = osg::Panel::create();
-    beginEditCP(tabPanelPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-        tabPanelPanel->setPreferredSize(Vec2s(180, 500));
-        tabPanelPanel->getChildren().addValue(tabPanelButton1);
-        tabPanelPanel->getChildren().addValue(tabPanelButton2);
-        tabPanelPanel->getChildren().addValue(tabPanelButton3);
-        tabPanelPanel->getChildren().addValue(tabPanelButton4);
-        tabPanelPanel->getChildren().addValue(tabPanelButton5);
-        tabPanelPanel->getChildren().addValue(tabPanelButton6);
-        tabPanelPanel->setLayout(TabPanelLayout);
-    endEditCP(tabPanelPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+    PanelPtr ExampleTabPanelPanel = osg::Panel::create();
+    beginEditCP(ExampleTabPanelPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+        ExampleTabPanelPanel->setPreferredSize(Vec2s(180, 500));
+        ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton1);
+        ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton2);
+        ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton3);
+        ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton4);
+        ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton5);
+        ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton6);
+        ExampleTabPanelPanel->setLayout(TabPanelLayout);
+    endEditCP(ExampleTabPanelPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
 
-
-    
     /******************************************************
 
             Create TabPanel.  TabPanel automatically
             sizes objects within it to cause the appearance
             of Tabs.  The following functions are 
             unique to TabPanel:
-            -addTab(TAB_OBJECT, OBJECT_DISPLAYED_BY_TAB)
-                The first argument is the Component which
-                appears as the Tab while the second
-                is the Component which is the Tab content
-            -removeTab(TAB_OBJECT or TAB_INDEX)
-                This removes a Tab.  Argument can be either
-                TabComponent name (as added by addTab) or
-                the Index Number of the Tab.  Note that
-                the index starts at 0, so the first Tab
-                is #0.  See the ActionListener above
-                for an example of how this is used.
-            -setActiveTab(TAB_INDEX)
-                This sets which Tab appears to be selected
-                by the numerical order in which they are 
-                added (note the index starts with 0)
-            -insertTab(TAB_OBJECT, NEW_TAB_OBJECT, NEW_TAB_CONTENT)
-                or insertTab(TAB_INDEX, NEW_TAB_OBJECT, NEW_TAB_CONTENT)
-                This lets you insert a Tab anywhere in the
-                Tab order.  The first argument can be 
-                either the index you want the new Tab,
-                or the existing Tab you want the
-                new Tab placed before.  The last two
-                arguments are the same as with the
-                addTab function
-            -tabAlignment(ALIGNMENT) uses AXIS_CENTER_ALIGNMENT,
+            -addTab(TAB_OBJECT, TAB_CONENT):
+				Determine the Tab and content for a new 
+				Tab.  See below for detailed explanation
+				of arguments.
+            -removeTab(TAB_OBJECT or TAB_INDEX):
+                Remove a Tab based on either the Tab name
+				or the index of the Tab.  See below for 
+				detailed explanation of arguments.
+			 -setActiveTab(TAB_INDEX): Determine which Tab
+				is Active (ie shown) based in index.
+				See below for detailed explanation of 
+				arguments.
+            -insertTab(TAB_OBJECT or TAB_INDEX, NEW_TAB_OBJECT, 
+			    NEW_TAB_CONTENT): Insert a new Tab by
+				either an existing Tab (the Tab will 
+				be inserted before this Tab) or by 
+				its index.
+			-tabAlignment(ENUM):  Determine the alignment
+				of the Tabs.  Takes AXIS_CENTER_ALIGNMENT,
                 AXIS_MAX_ALIGNMENT, and AXIS_MIN_ALIGNMENT
-                to determine how the Tabs are aligned
-            -tabPlacement(LOCATION) uses PLACEMENT_NORTH,
-                PLACEMENT_SOUTH, PLACEMENT_WEST, and 
-                PLACEMENT_EAST to determine where the Tabs
-                are placed
+				arguments.
+		    -tabPlacement(ENUM): Determine location of
+				the Tabs around the Tab content.  Takes
+				PLACEMENT_NORTH, PLACEMENT_SOUTH, 
+				PLACEMENT_WEST, and PLACEMENT_EAST 
+				arguments.
 
-            Note that the TabPanel has a PreferredSize
+			Definition of terms:
+			TAB_OBJECT: This denotes a component which
+				is used as the Tab itself.
+			TAB_INDEX: This denotes the index within
+				the "list" of Tabs.  The first Tab
+				is indexed as 0, and subsequent Tabs
+				are 1, 2, etc.
+			TAB_CONTENT: This denotes the Component
+				which will be displayed within the
+				Tab.
+
+			Note: The TabPanel has a PreferredSize
             which it displays at and if the Frame is 
             too small, then the TabPanel will appear
-            distorted.  Also, removeTab is most useful
-            when combined with ActionListeners to allow
-            for interactability. 
+            distorted.  Also, removeTab/addTab are most 
+			useful when combined with ActionListeners 
+			to allow for interactability with the 
+			TabPanel.  An example of this is shown
+			above, allowing for a Tab to be created/
+			removed by the user.
 
     ******************************************************/
-    tabPanel = osg::TabPanel::create();
-    beginEditCP(tabPanel, Component::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
-        tabPanel->setPreferredSize(Vec2s(350,350));
-        tabPanel->addTab(button1, buttonA);
-        tabPanel->addTab(button2, buttonB);
-        tabPanel->addTab(button3, buttonC);
-        tabPanel->addTab(button4, tabPanelPanel);
-        tabPanel->addTab(button5, buttonD);
-        tabPanel->addTab(button6, buttonE);
-        tabPanel->setActiveTab(3);
-        tabPanel->setTabAlignment(AXIS_CENTER_ALIGNMENT);
-        tabPanel->setTabPlacement(PLACEMENT_SOUTH);
-    endEditCP(tabPanel, Component::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
-
+    ExampleTabPanel = osg::TabPanel::create();
+    beginEditCP(ExampleTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
+        ExampleTabPanel->setPreferredSize(Vec2s(350,350));
+        ExampleTabPanel->addTab(ExampleTabButton1, ExampleTabContentA);
+        ExampleTabPanel->addTab(ExampleTabButton2, ExampleTabContentB);
+        ExampleTabPanel->addTab(ExampleTabButton3, ExampleTabContentC);
+        ExampleTabPanel->addTab(ExampleTabButton4, ExampleTabPanelPanel);
+        ExampleTabPanel->addTab(ExampleTabButton5, ExampleTabContentD);
+        ExampleTabPanel->addTab(ExampleTabButton6, ExampleTabContentE);
+        ExampleTabPanel->setActiveTab(3);
+        ExampleTabPanel->setTabAlignment(AXIS_CENTER_ALIGNMENT);
+        ExampleTabPanel->setTabPlacement(PLACEMENT_SOUTH);
+    endEditCP(ExampleTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
 
     // Create The Main Frame
     FramePtr MainFrame = osg::Frame::create();
 
-    
     /******************************************************
 
-            CardLayout causes the TabPanel 
-            to occupy the entire MainFrame 
-            view (useful with TabPanel)
+            By using CardLayout, the TabPanel  
+			automatically takes up the entire
+			MainFrame (which can be very useful
+			with TabPanel).
 
     ******************************************************/
     CardLayoutPtr MainFrameLayout = osg::CardLayout::create();
 
     beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
        MainFrame->setLayout(MainFrameLayout);
-       MainFrame->getChildren().addValue(tabPanel);
+       MainFrame->getChildren().addValue(ExampleTabPanel);
     endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 
     // Create the Drawing Surface

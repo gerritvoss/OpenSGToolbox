@@ -204,7 +204,7 @@ int main(int argc, char **argv)
 
     /******************************************************
 
-        Edit Button Components and assign Text,
+        Edit Button Components and assign text,
         PreferredSize, and AbsoluteLayoutConstraints
 
     ******************************************************/
@@ -305,7 +305,7 @@ int main(int argc, char **argv)
     // Note that the DefaultListSelectionModel was
     // created at the top of this file before
     // the ActionListeners
-    DefaultListCellRenderer CellRenderer;
+    DefaultListCellRenderer ExampleListCellRenderer;
     //DefaultListSelectionModel SelectionModel;
 
     // Create Background to be used with the Main Frame

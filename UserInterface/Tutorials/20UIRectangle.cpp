@@ -1,12 +1,10 @@
-// OpenSG Tutorial Example: Creating a Button Component
+// OpenSG Tutorial Example: Creating a Border
 //
-// This tutorial explains how to edit the basic features of
-// a Button created in the OSG User Interface library.
+// This tutorial explains how to implement the 
+// TabPanel and its characteristics
 // 
-// Includes: Button PreferredSize, MaximumSize, MinimumSize, Font,
-// Text,and adding a Button to a Scene.  Also note that clicking
-// the Button causes it to appear pressed
-
+// Includes: TabPanel creation and example TabPanel, as well as 
+// utilizing ActionListeners to add/remove Tabs on mouseclicks
 
 // GLUT is used for window handling
 #include <OpenSG/OSGGLUT.h>
@@ -33,6 +31,7 @@
 // Input
 #include <OpenSG/Input/OSGWindowUtils.h>
 
+
 // UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
@@ -51,21 +50,104 @@ bool ExitApp = false;
 void display(void);
 void reshape(Vec2s Size);
 
-
-// 20UIRectangle Headers
+// 15TabPanel Headers
+#include <sstream>
 #include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGLineBorder.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGColorUIBackground.h>
-#include <OpenSG/UserInterface/OSGUIFont.h>
-#include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
-#include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
+#include <OpenSG/UserInterface/OSGBoxLayout.h>
+#include <OpenSG/UserInterface/OSGCardLayout.h>
+#include <OpenSG/UserInterface/OSGUIDefines.h>
+#include <OpenSG/UserInterface/OSGPanel.h>
+#include <OpenSG/UserInterface/OSGTabPanel.h>
 #include <OpenSG/UserInterface/OSGUIRectangle.h>
 
+// Declare some variables/functions up front
+TabPanelPtr ExampleTabPanel;
+ButtonPtr ExampleTabContentA;
+ButtonPtr ExampleTabContentB;
+FramePtr createMainFrame(void);
 
-// Create the WindowEvent 
+    /******************************************************
+                
+				 Create ActionListeners for TabPanel.
+				 Note: This tutorial uses as its 
+				 base 15TabPanel; for commented version
+				 see 15TabPanel.
+
+    ******************************************************/
+
+class AddTabActionListener : public ActionListener
+{ 
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+    {
+      
+        ButtonPtr AddedTabButton = Button::create(),
+        AddedTabContent = Button::create();
+        beginEditCP(AddedTabButton, Button::TextFieldMask);
+            AddedTabButton->setText("Tab7");
+        endEditCP(AddedTabButton, Button::TextFieldMask);
+
+        beginEditCP(AddedTabContent, Button::TextFieldMask);
+            AddedTabContent->setText("This is where the new Tab content hangs out");
+        endEditCP(AddedTabContent, Button::TextFieldMask);
+        
+        if( ExampleTabPanel->getTabs().getSize() == 6) 
+		{
+            beginEditCP(ExampleTabPanel, TabPanel::TabsFieldMask);
+                ExampleTabPanel->addTab(AddedTabButton, AddedTabContent);
+            endEditCP(ExampleTabPanel, TabPanel::TabsFieldMask);
+        
+			// Change the text on the Tabs
+			beginEditCP(ExampleTabContentA, Button::TextFieldMask);
+				ExampleTabContentA->setText("Remove Tab7 under Tab2!");
+			endEditCP(ExampleTabContentA, Button::TextFieldMask);
+
+			beginEditCP(ExampleTabContentB, Button::TextFieldMask);
+				ExampleTabContentB->setText("Remove Tab7");
+			endEditCP(ExampleTabContentB, Button::TextFieldMask);
+	        
+        }
+
+    }
+
+};
+
+class RemoveTabActionListener : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+    {
+
+        if( ExampleTabPanel->getTabs().getSize() == 7) 
+		{
+			beginEditCP(ExampleTabPanel, TabPanel::TabsFieldMask);
+				ExampleTabPanel->removeTab(6);
+			endEditCP(ExampleTabPanel, TabPanel::TabsFieldMask);
+	        
+			beginEditCP(ExampleTabContentA, Button::TextFieldMask);
+				ExampleTabContentA->setText("Add another Tab");
+			endEditCP(ExampleTabContentA, Button::TextFieldMask);
+
+			// Change the text on the Tabs
+			beginEditCP(ExampleTabContentB, Button::TextFieldMask);
+				ExampleTabContentB->setText("Add a Tab under Tab1!");
+			endEditCP(ExampleTabContentB, Button::TextFieldMask);
+
+        }
+    }
+};
+
+    /******************************************************
+
+             Create the WindowEvent.  This allows
+			 for changse to be made to the scene's 
+			 viewing angle.
+
+    ******************************************************/
+
 WindowEventProducerPtr TutorialWindowEventProducer;
-
 
 class TutorialWindowListener : public WindowAdapter
 {
@@ -80,6 +162,14 @@ public:
         ExitApp = true;
     }
 };
+
+    /******************************************************
+
+             Create ActionListeners to let the 
+			 Mouse change viewing angle and move
+			 UIRectangle around.
+
+    ******************************************************/
 
 class TutorialMouseListener : public MouseListener
 {
@@ -141,18 +231,22 @@ int main(int argc, char **argv)
     TutorialWindowEventProducer->setDisplayCallback(display);
     TutorialWindowEventProducer->setReshapeCallback(reshape);
 
-    TutorialMouseListener mouseListener;
-    TutorialMouseMotionListener mouseMotionListener;
-    TutorialWindowEventProducer->addMouseListener(&mouseListener);
-    TutorialWindowEventProducer->addMouseMotionListener(&mouseMotionListener);
+    /******************************************************
 
-    //Add Window Listener
+             Add MouseListeners and WindowListeners 
+			 to the WindowEvent.
+
+    ******************************************************/
+
+    TutorialMouseListener TheTutorialMouseListener;
+    TutorialMouseMotionListener TheTutorialMouseMotionListener;
     TutorialWindowListener TheTutorialWindowListener;
+    TutorialWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
+    TutorialWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(90, 270, 16, 16);
-
 
     // Make Main Scene Node
     NodePtr scene = osg::Node::create();
@@ -167,171 +261,99 @@ int main(int argc, char **argv)
 
     // Create the Graphics
     GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
-    beginEditCP(TutorialGraphics);
-        TutorialGraphics->setEnablePolygonAntiAliasing(false);
-    beginEditCP(TutorialGraphics);
-
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
     /******************************************************
 
-        Create three Button Components (button1, button2,
-        and button3) and their AbsoluteLayoutConstraints.
-
-        AbsoluteLayoutConstraints are used within the 
-        AbsoluteLayout to define where the Components will
-        be placed.  Most other Layouts do not need 
-        Constraints, as they place things within the Layout
-        automatically.
+             The Drawing Surface is created the
+			 same as with previous Tutorials
+			 (however the MainFrame is created
+			 in a function below).
 
     ******************************************************/
 
-    ButtonPtr button1 = osg::Button::create();
-    ButtonPtr button2 = osg::Button::create();
-    ButtonPtr button3 = osg::Button::create();
-    
-    AbsoluteLayoutConstraintsPtr buttonConstraints1 = osg::AbsoluteLayoutConstraints::create();
-    AbsoluteLayoutConstraintsPtr buttonConstraints2 = osg::AbsoluteLayoutConstraints::create();
-    AbsoluteLayoutConstraintsPtr buttonConstraints3 = osg::AbsoluteLayoutConstraints::create();
-
-    /******************************************************
-
-        Define the AbsoluteLayoutConstraints (where Buttons 
-        are located in the Layout).  setPosition gives you 
-        the location of the Button relative to the Layout
-        Manager's upper left hand corner.  Buttons will
-        not display if their AbsoluteLayoutConstraints 
-        place them outside the Frame in which they are to
-        be rendered (the part within the Frame still does
-        display).  Changing the window size shows an 
-        example of this.
-
-    ******************************************************/
-  
-   beginEditCP(buttonConstraints1, AbsoluteLayoutConstraints::PositionFieldMask);
-        buttonConstraints1->setPosition(Pnt2s(0,150));
-   endEditCP(buttonConstraints1, AbsoluteLayoutConstraints::PositionFieldMask);
-
-   beginEditCP(buttonConstraints2, AbsoluteLayoutConstraints::PositionFieldMask);
-        buttonConstraints2->setPosition(Pnt2s(200,200));
-   endEditCP(buttonConstraints2, AbsoluteLayoutConstraints::PositionFieldMask);
-    
-   // Note that this will cause the button's position to overlap with Button2
-   // when the program is run; the AbsoluteLayoutConstraints will overlap
-   // if the specified coordinates overlap
-   beginEditCP(buttonConstraints3, AbsoluteLayoutConstraints::PositionFieldMask);
-        buttonConstraints3->setPosition(Pnt2s(150,220));
-   endEditCP(buttonConstraints3, AbsoluteLayoutConstraints::PositionFieldMask);
-
-    /******************************************************
-
-        Edit Button Components and assign Text,
-        PreferredSize, and AbsoluteLayoutConstraints
-
-    ******************************************************/
-
-    // Create a simple Font to be used with the Button
-    UIFontPtr sampleFont = osg::UIFont::create();
-    beginEditCP(sampleFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::GapFieldMask | UIFont::GlyphPixelSizeFieldMask | UIFont::TextureWidthFieldMask | UIFont::StyleFieldMask);
-        sampleFont->setFamily("SANS");
-        sampleFont->setGap(1);
-        sampleFont->setGlyphPixelSize(46);
-        sampleFont->setSize(16);
-        //sampleFont->setTextureWidth(0);
-        sampleFont->setStyle(TextFace::STYLE_PLAIN);
-    endEditCP(sampleFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::GapFieldMask | UIFont::GlyphPixelSizeFieldMask | UIFont::TextureWidthFieldMask | UIFont::StyleFieldMask);
-
-    ColorUIBackgroundPtr button1Background = ColorUIBackground::create();
-    beginEditCP(button1Background);
-    button1Background->setColor(Color4f(1.0,0.0,0.0,1.0));
-    endEditCP(button1Background);
-   beginEditCP(button1, Button::PreferredSizeFieldMask |  Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
-        button1->setPreferredSize(Vec2s(100,50));
-        button1->setSize(Vec2s(100,50));
-        button1->setText("Button 1");
-        button1->setBackground(button1Background);
-        button1->setTextColor(Color4f(0.0,0.0,0.0,1.0));
-        
-        // Set the constraints created above to button
-        // to place the Button within the scene
-        button1->setConstraints(buttonConstraints1);
-        button1->setFont(sampleFont);
-    endEditCP(button1, Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
-
-    beginEditCP(button2, Button::PreferredSizeFieldMask |  Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
-        button2->setPreferredSize(Vec2s(100,50));
-        button2->setSize(Vec2s(100,50));
-        button2->setText("Button 2");
-        
-        // Set the constraints created above to button2
-        // to place the Button within the scene
-        button2->setConstraints(buttonConstraints2);
-        button2->setFont(sampleFont);
-    endEditCP(button2, Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
-
-    beginEditCP(button3,  Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::ConstraintsFieldMask);
-        button3->setPreferredSize(Vec2s(100,50));
-        button3->setSize(Vec2s(100,50));
-        button3->setText("Button 3");
-        
-        // Set the constraints created above to button3
-        // to place the Button within the scene
-        button3->setConstraints(buttonConstraints3);
-        button3->setFont(sampleFont);
-    endEditCP(button3,  Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::ConstraintsFieldMask);
-
-    // Create The Main Frame
-    // Create Background to be used with the Main Frame
-    ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
-    beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
-        MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
-    
-    LineBorderPtr MainFrameLineBorder = LineBorder::create();
-    beginEditCP(MainFrameLineBorder);
-    MainFrameLineBorder->setColor(Color4f(1.0,0.0,0.0,1.0));
-    MainFrameLineBorder->setWidth(2);
-    endEditCP(MainFrameLineBorder);
-
-    FramePtr MainFrame = osg::Frame::create();
-    LayoutPtr MainFrameLayout = osg::AbsoluteLayout::create();
-    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-       MainFrame->getChildren().addValue(button1);
-       MainFrame->getChildren().addValue(button3);
-       MainFrame->getChildren().addValue(button2);
-       MainFrame->setLayout(MainFrameLayout);
-       MainFrame->setBackground(MainFrameBackground);
-       MainFrame->setBorder(MainFrameLineBorder);
-     
-    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-
-    // Create the Drawing Surface
     UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
     beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setRootFrame(MainFrame);
+        TutorialDrawingSurface->setRootFrame(createMainFrame());
         TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
     endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-    
+  
+	/******************************************************
+
+			Create the 3D UIRectangle.  This allows
+			the DrawingSurface to be rotated relative
+			to the screen, allowing a 3D aspect to
+			the DrawingSurface.  The Surface
+			can still be interacted with, so Buttons,
+			Menus, etc. all will still function
+			normally.
+
+			-setPoint(Pnt3f): Determine the location
+				of the UIRectangle in 3 space.  Keep
+				in mind that (0,0,0) is located 
+				directly 
+			-setWidth(float): Determine the Width
+				of the UIRectangle.  This may 
+				physically appear different depending
+				on where the UIRectangle is placed
+				as above (due to it being located
+				further away, etc).
+			-setHeight(float): Determine the Height
+				of the UIRectangle.  This may 
+				physically appear different depending
+				on where the UIRectangle is placed
+				as above (due to it being located
+				further away, etc).
+			-setDrawingSurface(DrawingSurface):
+				Determine what DrawingSurface is
+				drawn on the UIRectangle.  This 
+				will typically be the main
+				DrawingSurface, however, multiple
+				DrawingSurfaces can be used with
+				multiple UIRectangles.
+
+
+    ******************************************************/   
+
     //Make A 3D Rectangle to draw the UI on
-    UIRectanglePtr UIRectCore = UIRectangle::create();
-    beginEditCP(UIRectCore, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask | UIRectangle::DrawingSurfaceFieldMask);
-        UIRectCore->setPoint(Pnt3f(-250.0,-250.0,370.0));
-        UIRectCore->setWidth(500.0);
-        UIRectCore->setHeight(500.0);
-        UIRectCore->setDrawingSurface(TutorialDrawingSurface);
-    endEditCP(UIRectCore, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask | UIRectangle::DrawingSurfaceFieldMask);
+    UIRectanglePtr ExampleUIRectangle = UIRectangle::create();
+    beginEditCP(ExampleUIRectangle, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask | UIRectangle::DrawingSurfaceFieldMask);
+        ExampleUIRectangle->setPoint(Pnt3f(-250,-250,370));
+        ExampleUIRectangle->setWidth(500.0);
+        ExampleUIRectangle->setHeight(500.0);
+        ExampleUIRectangle->setDrawingSurface(TutorialDrawingSurface);
+    endEditCP(ExampleUIRectangle, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask | UIRectangle::DrawingSurfaceFieldMask);
     
-    NodePtr UIRectNode = osg::Node::create();
-    beginEditCP(UIRectNode, Node::CoreFieldMask);
-        UIRectNode->setCore(UIRectCore);
-    endEditCP(UIRectNode, Node::CoreFieldMask);
+	/******************************************************
+
+			Because the previous Tutorials used a 
+			Viewport to view the scene, which is
+			no longer being used, the UIRectangle 
+			must be added to the scene for it to 
+			be displayed (identical to how the
+			Torus is added).
+
+			First, create a Node, and set its
+			core to be the UIRectangle.  Then,
+			add that to the scene Node which 
+			is created above.  This scene is
+			then set as the Root for the view.
+			It is possible to change this Root
+			to be just the UIRectangle (as
+			commented out below).
+
+    ******************************************************/   	
+    NodePtr ExampleUIRectangleNode = osg::Node::create();
+    beginEditCP(ExampleUIRectangleNode, Node::CoreFieldMask);
+        ExampleUIRectangleNode->setCore(ExampleUIRectangle);
+    endEditCP(ExampleUIRectangleNode, Node::CoreFieldMask);
     
     beginEditCP(scene, Node::ChildrenFieldMask);
-        // add the UIRect as a child
-        scene->addChild(UIRectNode);
+        // Add the UIRect as a child to the scene
+        scene->addChild(ExampleUIRectangleNode);
     endEditCP(scene, Node::ChildrenFieldMask);
 
     // Create the SimpleSceneManager helper
@@ -340,6 +362,7 @@ int main(int argc, char **argv)
     // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
     mgr->setRoot(scene);
+    //mgr->setRoot(ExampleUIRectangleNode);
 
     // Show the whole Scene
     mgr->showAll();
@@ -372,3 +395,166 @@ void reshape(Vec2s Size)
 {
     mgr->resize(Size.x(), Size.y());
 }
+
+FramePtr createMainFrame(void)
+{
+    /******************************************************
+
+            Create Button Components to be used with 
+            TabPanel and specify their characteristics.
+
+			Note: Buttons are used for simplicity,
+			any Component can be used as Tab content
+			or as a Tab.  A Panel with several
+			Buttons within it is also added.
+
+    ******************************************************/
+
+    ButtonPtr ExampleTabButton1 = osg::Button::create();
+    ButtonPtr ExampleTabButton2 = osg::Button::create();
+    ButtonPtr ExampleTabButton3 = osg::Button::create();
+    ButtonPtr ExampleTabButton4 = osg::Button::create();
+    ButtonPtr ExampleTabButton5 = osg::Button::create();
+    ButtonPtr ExampleTabButton6 = osg::Button::create();
+    ExampleTabContentA = osg::Button::create();
+    ExampleTabContentB = osg::Button::create();
+    ButtonPtr ExampleTabContentC = osg::Button::create();
+    ButtonPtr ExampleTabContentD = osg::Button::create();
+    ButtonPtr ExampleTabContentE = osg::Button::create();
+    ButtonPtr ExampleTabContentF = osg::Button::create();
+
+    beginEditCP(ExampleTabButton1, Button::TextFieldMask);
+        ExampleTabButton1->setText("Tab1");
+    endEditCP(ExampleTabButton1, Button::TextFieldMask);
+    
+    beginEditCP(ExampleTabButton2, Button::TextFieldMask);
+        ExampleTabButton2->setText("Tab2");
+    endEditCP(ExampleTabButton2, Button::TextFieldMask);
+        
+    beginEditCP(ExampleTabButton3, Button::TextFieldMask);
+        ExampleTabButton3->setText("To Rotate");
+    endEditCP(ExampleTabButton3, Button::TextFieldMask);
+        
+    beginEditCP(ExampleTabButton4, Button::TextFieldMask);
+        ExampleTabButton4->setText("Tab4");
+    endEditCP(ExampleTabButton4, Button::TextFieldMask);
+        
+    beginEditCP(ExampleTabButton5, Button::TextFieldMask);
+        ExampleTabButton5->setText("To Zoom");
+    endEditCP(ExampleTabButton5, Button::TextFieldMask);
+        
+    beginEditCP(ExampleTabButton6, Button::TextFieldMask);
+        ExampleTabButton6->setText("To Move");
+    endEditCP(ExampleTabButton6, Button::TextFieldMask);
+    
+    beginEditCP(ExampleTabContentA, Button::TextFieldMask);
+        ExampleTabContentA->setText("Add another Tab");
+    endEditCP(ExampleTabContentA, Button::TextFieldMask);
+    // Add ActionListener
+    AddTabActionListener TheAddTabActionListener;
+    ExampleTabContentA->addActionListener( &TheAddTabActionListener);
+
+    beginEditCP(ExampleTabContentB, Button::TextFieldMask);
+        ExampleTabContentB->setText("Add a Tab in Tab1!");
+    endEditCP(ExampleTabContentB, Button::TextFieldMask);
+    // Add ActionListener
+    RemoveTabActionListener TheRemoveTabActionListener;
+    ExampleTabContentB->addActionListener( &TheRemoveTabActionListener);
+
+    beginEditCP(ExampleTabContentC, Button::TextFieldMask);
+        ExampleTabContentC->setText("Enable CapsLock, then rotate scene using left Mouse button!");
+    endEditCP(ExampleTabContentC, Button::TextFieldMask);
+        
+    beginEditCP(ExampleTabContentD, Button::TextFieldMask);
+        ExampleTabContentD->setText("Enable CapsLock, then zoom in and out with right Mouse button and dragging");
+    endEditCP(ExampleTabContentD, Button::TextFieldMask);    
+
+    beginEditCP(ExampleTabContentE, Button::TextFieldMask);
+        ExampleTabContentE->setText("Enable CapsLock, then move using center Mouse button");
+    endEditCP(ExampleTabContentE, Button::TextFieldMask);
+        
+    /******************************************************
+
+            Create a Panel to add to the TabPanel
+
+    ******************************************************/
+
+    // Create and edit the Panel Buttons
+    ButtonPtr ExampleTabPanelButton1 = osg::Button::create();
+    ButtonPtr ExampleTabPanelButton2 = osg::Button::create();
+    ButtonPtr ExampleTabPanelButton3 = osg::Button::create();
+    ButtonPtr ExampleTabPanelButton4 = osg::Button::create();
+    ButtonPtr ExampleTabPanelButton5 = osg::Button::create();
+    ButtonPtr ExampleTabPanelButton6 = osg::Button::create();
+
+	beginEditCP(ExampleTabPanelButton1, Button::TextFieldMask);
+		ExampleTabPanelButton1->setText("This is a");
+	endEditCP(ExampleTabPanelButton1, Button::TextFieldMask);
+	
+	beginEditCP(ExampleTabPanelButton2, Button::TextFieldMask);
+		ExampleTabPanelButton2->setText("sample");
+	endEditCP(ExampleTabPanelButton2, Button::TextFieldMask);
+	
+	beginEditCP(ExampleTabPanelButton3, Button::TextFieldMask);
+		ExampleTabPanelButton3->setText("UIRectangle");
+	endEditCP(ExampleTabPanelButton3, Button::TextFieldMask);
+	
+	beginEditCP(ExampleTabPanelButton4, Button::TextFieldMask);
+		ExampleTabPanelButton4->setText("containing");
+	endEditCP(ExampleTabPanelButton4, Button::TextFieldMask);
+	
+	beginEditCP(ExampleTabPanelButton5, Button::TextFieldMask);
+		ExampleTabPanelButton5->setText("interactive");
+	endEditCP(ExampleTabPanelButton5, Button::TextFieldMask);
+	
+	beginEditCP(ExampleTabPanelButton6, Button::TextFieldMask);
+		ExampleTabPanelButton6->setText("components");
+	endEditCP(ExampleTabPanelButton6, Button::TextFieldMask);
+
+    // Create and edit Panel Layout
+    BoxLayoutPtr TabPanelLayout = osg::BoxLayout::create();
+    beginEditCP(TabPanelLayout, BoxLayout::AlignmentFieldMask);
+        TabPanelLayout->setAlignment(VERTICAL_ALIGNMENT);
+    endEditCP(TabPanelLayout, BoxLayout::AlignmentFieldMask);
+
+    // Create and edit Panel
+    PanelPtr ExampleTabPanelPanel = osg::Panel::create();
+    beginEditCP(ExampleTabPanelPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+        ExampleTabPanelPanel->setPreferredSize(Vec2s(180, 500));
+        ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton1);
+        ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton2);
+        ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton3);
+        ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton4);
+        ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton5);
+        ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton6);
+        ExampleTabPanelPanel->setLayout(TabPanelLayout);
+    endEditCP(ExampleTabPanelPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+
+    ExampleTabPanel = osg::TabPanel::create();
+    beginEditCP(ExampleTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
+        ExampleTabPanel->setPreferredSize(Vec2s(350,350));
+        ExampleTabPanel->addTab(ExampleTabButton1, ExampleTabContentA);
+        ExampleTabPanel->addTab(ExampleTabButton2, ExampleTabContentB);
+        ExampleTabPanel->addTab(ExampleTabButton3, ExampleTabContentC);
+        ExampleTabPanel->addTab(ExampleTabButton4, ExampleTabPanelPanel);
+        ExampleTabPanel->addTab(ExampleTabButton5, ExampleTabContentD);
+        ExampleTabPanel->addTab(ExampleTabButton6, ExampleTabContentE);
+        ExampleTabPanel->setActiveTab(3);
+        ExampleTabPanel->setTabAlignment(AXIS_CENTER_ALIGNMENT);
+        ExampleTabPanel->setTabPlacement(PLACEMENT_SOUTH);
+    endEditCP(ExampleTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
+
+	
+    // Create The Main Frame
+    FramePtr MainFrame = osg::Frame::create();
+
+    CardLayoutPtr MainFrameLayout = osg::CardLayout::create();
+
+    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+       MainFrame->setLayout(MainFrameLayout);
+       MainFrame->getChildren().addValue(ExampleTabPanel);
+    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+
+	return MainFrame;
+}
+

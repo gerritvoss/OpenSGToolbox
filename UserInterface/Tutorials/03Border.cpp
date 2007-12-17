@@ -90,7 +90,6 @@ int main(int argc, char **argv)
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
-
     // Make Torus Node
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 

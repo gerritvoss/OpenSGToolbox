@@ -5,7 +5,7 @@
 // frame utilizing the Flow Layout command to 
 // manage the layout through the OSG User Interface library.
 // 
-// Includes: placing multiple buttons using Flow Layout
+// Includes: placing multiple ExampleRadioButtons using Flow Layout
 
 // GLUT is used for window handling
 #include <OpenSG/OSGGLUT.h>
@@ -88,7 +88,6 @@ int main(int argc, char **argv)
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
-
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
@@ -106,68 +105,69 @@ int main(int argc, char **argv)
     // Create the Graphics
     GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
 
-    // Initialize the LookAndFeelManager to enable default 
-    // settings for the Button
+    // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
-
-
-
 
     /******************************************************
             
-            Creates some RadioButton components 
-            and edit them.  The RadioButton class
+            Creates RadioButton components and
+            edit them.  The RadioButton class
             inherits from the Button class.
-
-            Advanced options for RadioButton can
+       
+	        Radio Buttons are special ToggleButtons.  
+			When they are selected, any RadioButton in 
+			the same group is deselected, so there can
+			only be one option selected.
+        
+		    Advanced options for RadioButton can
             be found in the DefaultLookAndFeel.cpp
             file found in OSGUserInterface/Source Files/
-            LookAndFeel.
+            LookAndFeel (options for changing the
+			RadioButton style, etc).
 
     ******************************************************/
-    RadioButtonPtr button1 = osg::RadioButton::create();
-    RadioButtonPtr button2 = osg::RadioButton::create();
-    RadioButtonPtr button3 = osg::RadioButton::create();
+    RadioButtonPtr ExampleRadioButton1 = osg::RadioButton::create();
+    RadioButtonPtr ExampleRadioButton2 = osg::RadioButton::create();
+    RadioButtonPtr ExampleRadioButton3 = osg::RadioButton::create();
 
-    beginEditCP(button1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
-        button1->setVerticalAlignment(0.5);
-        button1->setHorizontalAlignment(0.0);
-        button1->setPreferredSize(Vec2s(100, 50));
-        button1->setText("Option 1");
-    endEditCP(button1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
+    beginEditCP(ExampleRadioButton1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
+        ExampleRadioButton1->setVerticalAlignment(0.5);
+        ExampleRadioButton1->setHorizontalAlignment(0.0);
+        ExampleRadioButton1->setPreferredSize(Vec2s(100, 50));
+        ExampleRadioButton1->setText("Option 1");
+    endEditCP(ExampleRadioButton1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(button2,Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
-        button2->setVerticalAlignment(0.5);
-        button2->setHorizontalAlignment(0.0);
-        button2->setPreferredSize(Vec2s(100, 50));
-        button2->setText("Option 2");
-    endEditCP(button2, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
+    beginEditCP(ExampleRadioButton2,Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
+        ExampleRadioButton2->setVerticalAlignment(0.5);
+        ExampleRadioButton2->setHorizontalAlignment(0.0);
+        ExampleRadioButton2->setPreferredSize(Vec2s(100, 50));
+        ExampleRadioButton2->setText("Option 2");
+    endEditCP(ExampleRadioButton2, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(button3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
-        button3->setVerticalAlignment(0.5);
-        button3->setHorizontalAlignment(0.0);
-        button3->setPreferredSize(Vec2s(100, 50));
-        button3->setText("Option 3");
-    endEditCP(button3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Component::PreferredSizeFieldMask | Button::TextFieldMask);
+    beginEditCP(ExampleRadioButton3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
+        ExampleRadioButton3->setVerticalAlignment(0.5);
+        ExampleRadioButton3->setHorizontalAlignment(0.0);
+        ExampleRadioButton3->setPreferredSize(Vec2s(100, 50));
+        ExampleRadioButton3->setText("Option 3");
+    endEditCP(ExampleRadioButton3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
 
     /***************************************************
                     
-        Create and populate the group of Radio Buttons
-        Defining the group allows you to pick which radio
-        buttons are tied together so that only one can be
-        selected. Note that RadioButtonGroup is not a Field
-        Container, so it is edited differently
-
-        Radio Buttons are special toggle buttons.  When 
-        they are selected, any radio button in the same 
-        group is deselected, so there can only be one 
-        option selected.
+        Create and populate a group of RadioButtons.
+        Defining the group allows you to pick which 
+		RadioButtons are tied together so that only one 
+		can be selected.
+        
+		Each RadioButtonGroup can only have ONE
+		RadioButton selected at a time, and by 
+		selecting this RadioButton, will deselect
+		all other RadioButtons in the RadioButtonGroup.
 
     ******************************************************/
-    RadioButtonGroup buttonGroup;
-    buttonGroup.addButton(button1);
-    buttonGroup.addButton(button2);
-    buttonGroup.addButton(button3);
+    RadioButtonGroup ExampleRadioButtonGroup;
+    ExampleRadioButtonGroup.addButton(ExampleRadioButton1);
+    ExampleRadioButtonGroup.addButton(ExampleRadioButton2);
+    ExampleRadioButtonGroup.addButton(ExampleRadioButton3);
 
     FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
 
@@ -177,7 +177,7 @@ int main(int argc, char **argv)
         MainFrameLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
     endEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
     
-     // Create The Main Frame
+    // Create The Main Frame
     // Create Background to be used with the Main Frame
     ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
     beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
@@ -186,9 +186,9 @@ int main(int argc, char **argv)
     
     FramePtr MainFrame = osg::Frame::create();
     beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-       MainFrame->getChildren().addValue(button1);
-       MainFrame->getChildren().addValue(button2);
-       MainFrame->getChildren().addValue(button3);
+       MainFrame->getChildren().addValue(ExampleRadioButton1);
+       MainFrame->getChildren().addValue(ExampleRadioButton2);
+       MainFrame->getChildren().addValue(ExampleRadioButton3);
        MainFrame->setLayout(MainFrameLayout);
        MainFrame->setBackground(MainFrameBackground);
        MainFrame->setAllInsets(10);

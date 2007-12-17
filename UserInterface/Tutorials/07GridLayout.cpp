@@ -87,7 +87,6 @@ int main(int argc, char **argv)
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
-
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
@@ -108,11 +107,6 @@ int main(int argc, char **argv)
     // Initialize the LookAndFeelManager to enable default 
     // settings for the Buttons
     LookAndFeelManager::the()->getLookAndFeel()->init();
-
-
-
-
-
 
     /******************************************************
 

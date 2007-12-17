@@ -105,7 +105,6 @@ int main(int argc, char **argv)
    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-
     //Make Main Scene Node
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
@@ -149,7 +148,6 @@ int main(int argc, char **argv)
     beginEditCP(ExampleColorUIBackground, ColorUIBackground::ColorFieldMask);
         ExampleColorUIBackground->setColor(Color4f(1.0,0.0,0.0,1.0));
     endEditCP(ExampleColorUIBackground, ColorUIBackground::ColorFieldMask);
-
 	
     /******************************************************
 
@@ -183,7 +181,6 @@ int main(int argc, char **argv)
 	beginEditCP(ExampleEmptyUIBackground);
 		// Nothing!
 	endEditCP(ExampleEmptyUIBackground);
-
 		
     /******************************************************
 

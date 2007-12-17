@@ -86,7 +86,6 @@ int main(int argc, char **argv)
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
-
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
@@ -107,7 +106,6 @@ int main(int argc, char **argv)
     // Initialize the LookAndFeelManager to enable default 
     // settings for the Button
     LookAndFeelManager::the()->getLookAndFeel()->init();
-
 
     /******************************************************
 
@@ -253,7 +251,6 @@ int main(int argc, char **argv)
         TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
         TutorialUIForeground->setFrameBounds(Vec2f(0.5,0.5));
     endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;

@@ -91,7 +91,6 @@ int main(int argc, char **argv)
    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-
     // Make Main Scene Node
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
@@ -118,67 +117,65 @@ int main(int argc, char **argv)
     /******************************************************
 
 
-        Create and edit the TextField and determine its 
-        characteristics.  A text field is a component 
-        that allows you to enter text into the box via 
-        keyboard input.  You can select text by    using 
-        your mouse or pressing shift and the left and 
-        right arrow keys.
-
-        setTextColor(Color4f): Set color of text
-            withing TextField
-        setSelectionBoxColor(Color4f): Set the color
-            that highlighting around the selected text 
-            appears
-        setSelectionTextColor(Color4f): Set the color
-            the selected text appears
-        setText("TextToBeDisplayed"): Sets initial 
-            text within TextField
-        setFont(FontName): Sets the font which is
-            used within TextField
-        setSelectionStart(StartCharacterNumber):
-            Sets the character which the selection
-             will initially start after
-         setSelectionEnd(EndCharacterNumber): 
-            Sets the character which the selection
-            will end before
-        setVerticalAlignment(Percent):  Sets how far 
-            down in the box the text starts at.  The
-            percentage is from the top of the text.
-            Mote: be sure to visually verify this, as 
-            due to font size and line size this does
-            not always automatically place it exactly
+        Create and edit the TextField.  A TextField is 
+		a Component which allows a single line of text
+		to be displayed.  Text can be entered via the
+		keyboard, and selected with arrow keys or
+		the Mouse.
+		
+        -setTextColor(Color4f): Determine the 
+			Text Color.
+        setSelectionBoxColor(Color4f): Determine
+			the Color of highlighting around
+			selected Text.
+        -setSelectionTextColor(Color4f): Determine
+			the Color of selected Text.
+        -setText("TextToBeDisplayed"): Determine
+		    initial Text within TextField.
+        -setFont(FontName): Determine the Font
+            used within TextField.
+        -setSelectionStart(StartCharacterNumber):
+            Determine the character with which  
+			the selection will initially start.
+        -setSelectionEnd(EndCharacterNumber): 
+            Determine the character which the
+			selection ends before.
+        -setVerticalAlignment(float): Determine 
+			the Vertical alignment of the text.  
+			The float is a percentage is from the 
+			top of the text [0.0-1.0].  Note: be 
+			sure to visually verify this, as due
+            to font size and line size this does
+            not always place it exactly
             at the percentage point.
 
     ******************************************************/
 
     // Create a TextField component
-    TextFieldPtr textField = osg::TextField::create();
+    TextFieldPtr ExampleTextField = osg::TextField::create();
 
-    beginEditCP(textField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
+    beginEditCP(ExampleTextField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
         | TextComponent::TextColorFieldMask | TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask 
         | TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
-        textField->setPreferredSize( Vec2s (100, 50));
-            // Determine the Font color for the Field
-        textField->setTextColor(Color4f(0.0, 0.0, 0.0, 1.0));
-        textField->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
-        textField->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
-        textField->setText("What");
-        textField->setFont(sampleFont);
-            // This will select the "a" from above
-        textField->setSelectionStart(2);
-        textField->setSelectionEnd(3);
-        textField->setVerticalAlignment(0.5);
-    endEditCP(textField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
+        ExampleTextField->setPreferredSize( Vec2s (100, 50));
+        ExampleTextField->setTextColor(Color4f(0.0, 0.0, 0.0, 1.0));
+        ExampleTextField->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
+        ExampleTextField->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
+        ExampleTextField->setText("What");
+        ExampleTextField->setFont(sampleFont);
+        // The next two functions will select the "a" from above
+        ExampleTextField->setSelectionStart(2);
+        ExampleTextField->setSelectionEnd(3);
+        ExampleTextField->setVerticalAlignment(0.5);
+    endEditCP(ExampleTextField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
         | TextComponent::TextColorFieldMask| TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask
         | TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
         
-    // Create another TextField component
-    TextFieldPtr textField2 = osg::TextField::create();
-    beginEditCP(textField2, TextComponent::TextFieldMask);
-            //Set  initial text
-        textField2->setText("");
-    endEditCP(textField2, TextComponent::TextFieldMask);
+    // Create another TextField Component
+    TextFieldPtr ExampleTextField2 = osg::TextField::create();
+    beginEditCP(ExampleTextField2, TextComponent::TextFieldMask);
+        ExampleTextField2->setText("");
+    endEditCP(ExampleTextField2, TextComponent::TextFieldMask);
 
 
     // Create The Main Frame
@@ -186,8 +183,8 @@ int main(int argc, char **argv)
     LayoutPtr MainFrameLayout = osg::FlowLayout::create();
     beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
        // Add TextField to MainFrame
-       MainFrame->getChildren().addValue(textField);
-       MainFrame->getChildren().addValue(textField2);
+       MainFrame->getChildren().addValue(ExampleTextField);
+       MainFrame->getChildren().addValue(ExampleTextField2);
        MainFrame->setLayout(MainFrameLayout);
     endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 
