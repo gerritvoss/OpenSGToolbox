@@ -90,19 +90,14 @@ int main(int argc, char **argv)
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
-   // Make Torus Node (creates Torus in background of scene)
+    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-
-    // Make Main Scene Node
+    // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-    {
         scene->setCore(osg::Group::create());
- 
-        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
-    }
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
@@ -111,71 +106,70 @@ int main(int argc, char **argv)
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    // Create a PasswordField component
-    PasswordFieldPtr ThePasswordField = PasswordField::create();
 
     // Create a simple Font to be used with the PasswordField
-    UIFontPtr sampleFont = osg::UIFont::create();
-    beginEditCP(sampleFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::GapFieldMask | UIFont::GlyphPixelSizeFieldMask | UIFont::TextureWidthFieldMask | UIFont::StyleFieldMask);
-        sampleFont->setSize(16);
-    endEditCP(sampleFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::GapFieldMask | UIFont::GlyphPixelSizeFieldMask | UIFont::TextureWidthFieldMask | UIFont::StyleFieldMask);
+    UIFontPtr ExampleFont = osg::UIFont::create();
+    beginEditCP(ExampleFont, UIFont::SizeFieldMask);
+        ExampleFont->setSize(16);
+    endEditCP(ExampleFont, UIFont::SizeFieldMask);
 
     /******************************************************
 
 
-        Edit the PasswordField and determine its 
-        characteristics.  A PasswordField is a 
-        TextField which allows for text to be
+        Create and edit a PasswordField.
+		
+		A PasswordField is a TextField 
+        which allows for text to be
         entered secretly.
 
-        -setEchoCar("CHARACTER"): Sets which
-            character replaces text in the 
-            PasswordField
+        -setEchoCar("char"): Determine
+			which character replaces text in the 
+            PasswordField.
             
         See 16TextField for more information.
 
-
     ******************************************************/
 
-    beginEditCP(ThePasswordField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
-        | TextComponent::TextFieldMask | TextComponent::TextColorFieldMask | TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask 
+    PasswordFieldPtr ExamplePasswordField = PasswordField::create();
+
+    beginEditCP(ExamplePasswordField, PasswordField::MinSizeFieldMask | PasswordField::MaxSizeFieldMask | PasswordField::PreferredSizeFieldMask 
+        | PasswordField::TextFieldMask | PasswordField::TextColorFieldMask | PasswordField::FontFieldMask | PasswordField::VerticalAlignmentFieldMask 
         | PasswordField::EchoCharFieldMask
-        | TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
-        ThePasswordField->setPreferredSize( Vec2s (100, 50));
-        ThePasswordField->setTextColor(Color4f(0.0, 0.0, 0.0, 1.0));
-        ThePasswordField->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
-        ThePasswordField->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
-        ThePasswordField->setText("What");
-
-            // "What" will be replaced by "####" in the PasswordField
-        ThePasswordField->setEchoChar("#");
-        ThePasswordField->setEditable(true);
-        ThePasswordField->setFont(sampleFont);
-        ThePasswordField->setSelectionStart(2);
-        ThePasswordField->setSelectionEnd(3);
-        ThePasswordField->setVerticalAlignment(.5);
-    endEditCP(ThePasswordField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
-        | TextComponent::TextFieldMask | TextComponent::TextColorFieldMask| TextComponent::FontFieldMask | PasswordField::VerticalAlignmentFieldMask
-        | TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
-
+        | PasswordField::SelectionBoxColorFieldMask | PasswordField::SelectionTextColorFieldMask);
+        ExamplePasswordField->setPreferredSize(Vec2s(100, 50));
+        ExamplePasswordField->setTextColor(Color4f(0.0, 0.0, 0.0, 1.0));
+        ExamplePasswordField->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
+        ExamplePasswordField->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
+        ExamplePasswordField->setText("Text");
+        // "Text" will be replaced by "####" in the PasswordField
+        ExamplePasswordField->setEchoChar("#");
+        ExamplePasswordField->setEditable(true);
+        ExamplePasswordField->setFont(ExampleFont);
+        ExamplePasswordField->setSelectionStart(2);
+        ExamplePasswordField->setSelectionEnd(3);
+        ExamplePasswordField->setVerticalAlignment(.5);
+    endEditCP(ExamplePasswordField, PasswordField::MinSizeFieldMask | PasswordField::MaxSizeFieldMask | PasswordField::PreferredSizeFieldMask 
+        | PasswordField::TextFieldMask | PasswordField::TextColorFieldMask | PasswordField::FontFieldMask | PasswordField::VerticalAlignmentFieldMask 
+        | PasswordField::EchoCharFieldMask
+        | PasswordField::SelectionBoxColorFieldMask | PasswordField::SelectionTextColorFieldMask);
 
     // Create The Main Frame
     FramePtr MainFrame = osg::Frame::create();
     LayoutPtr MainFrameLayout = osg::FlowLayout::create();
     beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
-       // Add PasswordField to MainFrame
-       MainFrame->getChildren().addValue(ThePasswordField);
+       MainFrame->getChildren().addValue(ExamplePasswordField);
        MainFrame->setLayout(MainFrameLayout);
     endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 
     // Create the Drawing Surface
     UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
         TutorialDrawingSurface->setRootFrame(MainFrame);
         TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
-    // Create the UI Foreground Object
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    
+	// Create the UI Foreground Object
     UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
 
     beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
@@ -183,7 +177,6 @@ int main(int argc, char **argv)
         TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
         TutorialUIForeground->setFrameBounds(Vec2f(0.5,0.5));
     endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;

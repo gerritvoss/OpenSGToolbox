@@ -65,7 +65,7 @@ void reshape(Vec2s Size);
 Int32SpinnerModelPtr TheModel(new Int32SpinnerModel());
 
 
-class singleIncrementButtonListener : public ButtonSelectedListener
+class SingleIncrementButtonListener : public ButtonSelectedListener
 {
 public:
 
@@ -80,7 +80,7 @@ public:
             TheModel->setStepSize(2);
    }
 };
-class doubleIncrementButtonListener : public ButtonSelectedListener
+class DoubleIncrementButtonListener : public ButtonSelectedListener
 {
 public:
 
@@ -150,19 +150,14 @@ int main(int argc, char **argv)
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
-   // Make Torus Node (creates Torus in background of scene)
+    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-
-    // Make Main Scene Node
+    // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-    {
         scene->setCore(osg::Group::create());
- 
-        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
-    }
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
@@ -175,22 +170,22 @@ int main(int argc, char **argv)
             
             Create a Spinner Model.  This dictates 
             how the Spinner functions.
-            -setMaximum(int): determines the maximum 
-                value the Spinner will be allowed
-            -setMinimum(int): determines the minimum 
-                value the Spinner will be allowed
-            -setStepSize(int): determines the 
-                incremental step size
-            -setValue(SharedFieldPtr(new SFInt32(START INT)):
-                determines initial starting value
-                of the Spinner
+            -setMaximum(int): Determine the Maximum 
+                value the Spinner can have.
+            -setMinimum(int): Determine the Minimum 
+                value the Spinner can have.
+            -setStepSize(int): Determine the 
+                incremental step size.
+            -setValue(SharedFieldPtr(new SFInt32(int)):
+                Determine initial starting value
+                of the Spinner.
 
             Note: the StepSize can be changed 
             dynamically as done in this 
             Tutorial with ButtonSelectedListeners.
  
     ******************************************************/    
-    //Create the spinner Model (note created above)
+
     //Int32SpinnerModelPtr TheModel(new Int32SpinnerModel());
     TheModel->setMaximum(100);
     TheModel->setMinimum(-100);
@@ -199,14 +194,13 @@ int main(int argc, char **argv)
 
     /******************************************************
             
-            Create a Spinner.  
+            Create a Spinner and and assign it a 
+			Model.
  
     ******************************************************/    
-    //Create the Spinner
-    SpinnerPtr TheSpinner = Spinner::create();
-    TheSpinner->setModel(TheModel);
 
-
+    SpinnerPtr ExampleSpinner = Spinner::create();
+    ExampleSpinner->setModel(TheModel);
     
     /******************************************************
             
@@ -214,48 +208,46 @@ int main(int argc, char **argv)
             for certain characteristics of the
             Spinner to be changed dynamically.
             See 14RadioButton for more 
-            information.
+            information about RadioButtons.
  
     ******************************************************/    
 
-    RadioButtonPtr singleIncrementButton = RadioButton::create();
-    RadioButtonPtr doubleIncrementButton = RadioButton::create();
-    beginEditCP(singleIncrementButton, Button::TextColorFieldMask | Component::PreferredSizeFieldMask);
-        singleIncrementButton->setText("Increment by 1");
-        singleIncrementButton->setPreferredSize(Vec2s(100, 50));
-    beginEditCP(singleIncrementButton, Button::TextColorFieldMask | Component::PreferredSizeFieldMask);
-    singleIncrementButtonListener singleIncrement;
-    singleIncrementButton->addButtonSelectedListener(&singleIncrement);
+    RadioButtonPtr SingleIncrementButton = RadioButton::create();
+    RadioButtonPtr DoubleIncrementButton = RadioButton::create();
+    beginEditCP(SingleIncrementButton, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask);
+        SingleIncrementButton->setText("Increment by 1");
+        SingleIncrementButton->setPreferredSize(Vec2s(100, 50));
+    beginEditCP(SingleIncrementButton, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask);
+    SingleIncrementButtonListener TheSingleIncrementButtonListener;
+    SingleIncrementButton->addButtonSelectedListener(&TheSingleIncrementButtonListener);
 
-    beginEditCP(doubleIncrementButton, Button::TextColorFieldMask | Component::PreferredSizeFieldMask);
-        doubleIncrementButton->setText("Increment by 2");
-        doubleIncrementButton->setPreferredSize(Vec2s(100, 50));
-        doubleIncrementButton->setSelected(TRUE);
-    beginEditCP(doubleIncrementButton, Button::TextColorFieldMask | Component::PreferredSizeFieldMask);
-    doubleIncrementButtonListener doubleIncrement;
-    doubleIncrementButton->addButtonSelectedListener(&doubleIncrement);
+	beginEditCP(DoubleIncrementButton, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
+        DoubleIncrementButton->setText("Increment by 2");
+        DoubleIncrementButton->setPreferredSize(Vec2s(100, 50));
+        DoubleIncrementButton->setSelected(TRUE);
+    beginEditCP(DoubleIncrementButton, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
+    DoubleIncrementButtonListener TheDoubleIncrementButtonListener;
+    DoubleIncrementButton->addButtonSelectedListener(&TheDoubleIncrementButtonListener);
 
-    RadioButtonGroup radioButtonGroup;
-    radioButtonGroup.addButton(singleIncrementButton);
-    radioButtonGroup.addButton(doubleIncrementButton);
+    RadioButtonGroup SelectionRadioButtonGroup;
+    SelectionRadioButtonGroup.addButton(SingleIncrementButton);
+    SelectionRadioButtonGroup.addButton(DoubleIncrementButton);
 
     // Create Background to be used with the MainFrame
     ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
     beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
-        MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+        MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
     endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
     // Create The Main Frame
     FramePtr MainFrame = osg::Frame::create();
     LayoutPtr MainFrameLayout = osg::FlowLayout::create();
-    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
-       // Assign the Button to the MainFrame so it will be displayed
-       // when the view is rendered.
+    beginEditCP(MainFrame, Frame::LayoutFieldMask | Frame::BackgroundFieldMask | Frame::ChildrenFieldMask);
        MainFrame->setLayout(MainFrameLayout);
        MainFrame->setBackground(MainFrameBackground);
-       MainFrame->getChildren().addValue(singleIncrementButton);
-       MainFrame->getChildren().addValue(doubleIncrementButton);
-       MainFrame->getChildren().addValue(TheSpinner);
-    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
+       MainFrame->getChildren().addValue(SingleIncrementButton);
+       MainFrame->getChildren().addValue(DoubleIncrementButton);
+       MainFrame->getChildren().addValue(ExampleSpinner);
+    endEditCP(MainFrame, Frame::LayoutFieldMask | Frame::BackgroundFieldMask | Frame::ChildrenFieldMask);
 
     TutorialKeyListener TheKeyListener;
     MainFrame->addKeyListener(&TheKeyListener);
@@ -264,11 +256,11 @@ int main(int argc, char **argv)
 
     // Create the Drawing Surface
     UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
         TutorialDrawingSurface->setRootFrame(MainFrame);
         TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
     // Create the UI Foreground Object
     UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
 

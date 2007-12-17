@@ -90,22 +90,17 @@ int main(int argc, char **argv)
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-    // Make Main Scene Node
+    // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-    {
         scene->setCore(osg::Group::create());
- 
-        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
-    }
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
     GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
 
-    // Initialize the LookAndFeelManager to enable default 
-    // settings for the Button
+    // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
     /******************************************************
@@ -121,11 +116,11 @@ int main(int argc, char **argv)
     ButtonPtr ExampleButton6 = osg::Button::create();
 
     beginEditCP(ExampleButton1, Button::PreferredSizeFieldMask);
-        ExampleButton1->setPreferredSize( Vec2s (200, 50));
+        ExampleButton1->setPreferredSize(Vec2s(200, 50));
     endEditCP(ExampleButton1, Button::PreferredSizeFieldMask);
 
     beginEditCP(ExampleButton4, Button::PreferredSizeFieldMask);
-        ExampleButton4->setPreferredSize( Vec2s (50, 50));
+        ExampleButton4->setPreferredSize(Vec2s(50, 50));
     endEditCP(ExampleButton4, Button::PreferredSizeFieldMask);
 
     /******************************************************

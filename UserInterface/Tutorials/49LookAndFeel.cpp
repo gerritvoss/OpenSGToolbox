@@ -126,16 +126,12 @@ int main(int argc, char **argv)
     // Make Torus Node
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-    // Make Main Scene Node
+    // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask  | Component::ConstraintsFieldMask);
-    {
+    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
- 
-        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
-    }
-    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask  | Component::ConstraintsFieldMask);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
     GraphicsPtr graphics = osg::Graphics2D::create();

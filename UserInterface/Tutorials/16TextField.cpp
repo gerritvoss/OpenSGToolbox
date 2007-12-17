@@ -88,18 +88,14 @@ int main(int argc, char **argv)
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
-   // Make Torus Node (creates Torus in background of scene)
+    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-    // Make Main Scene Node
+    // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-    {
         scene->setCore(osg::Group::create());
- 
-        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
-    }
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
@@ -157,7 +153,7 @@ int main(int argc, char **argv)
     beginEditCP(ExampleTextField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
         | TextComponent::TextColorFieldMask | TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask 
         | TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
-        ExampleTextField->setPreferredSize( Vec2s (100, 50));
+        ExampleTextField->setPreferredSize(Vec2s(100, 50));
         ExampleTextField->setTextColor(Color4f(0.0, 0.0, 0.0, 1.0));
         ExampleTextField->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
         ExampleTextField->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));

@@ -97,19 +97,14 @@ int main(int argc, char **argv)
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
-   // Make Torus Node (creates Torus in background of scene)
+    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-
-    // Make Main Scene Node
+    // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-    {
         scene->setCore(osg::Group::create());
- 
-        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
-    }
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
@@ -120,30 +115,28 @@ int main(int argc, char **argv)
 
     /******************************************************
             
-            Create Popup Menu Components
+                Create PopupMenu Components
         
         -LabelMenuItem: These are items that are contained
-            within a menu; they are the things you click
+            within a Menu; they are the things you click
             on to cause something to occur
         -SeperatorMenuItem:  These place a seperator 
-            line between items in a menu
+            line between items in a Menu
         -Menu: These are sub-menus within another Menu;
             LabelMenuItems and SeperatorMenuItems
             are added to a Menu
 
-
     ******************************************************/
 
-    LabelMenuItemPtr Item1 = LabelMenuItem::create();
-    LabelMenuItemPtr Item2 = LabelMenuItem::create();
-    LabelMenuItemPtr Item3 = LabelMenuItem::create();
-    LabelMenuItemPtr Item4 = LabelMenuItem::create();
-    LabelMenuItemPtr SubItem1 = LabelMenuItem::create();
-    LabelMenuItemPtr SubItem2 = LabelMenuItem::create();
-    LabelMenuItemPtr SubItem3 = LabelMenuItem::create();
-    SeperatorMenuItemPtr Seperator1 = SeperatorMenuItem::create();
-    MenuPtr Item5 = Menu::create();
-
+    LabelMenuItemPtr MenuItem1 = LabelMenuItem::create();
+    LabelMenuItemPtr MenuItem2 = LabelMenuItem::create();
+    LabelMenuItemPtr MenuItem3 = LabelMenuItem::create();
+    LabelMenuItemPtr MenuItem4 = LabelMenuItem::create();
+    LabelMenuItemPtr SubMenuItem1 = LabelMenuItem::create();
+    LabelMenuItemPtr SubMenuItem2 = LabelMenuItem::create();
+    LabelMenuItemPtr SubMenuItem3 = LabelMenuItem::create();
+    SeperatorMenuItemPtr ExampleSeperator = SeperatorMenuItem::create();
+    MenuPtr ExampleSubMenu = Menu::create();
     
     /******************************************************
             
@@ -156,82 +149,86 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
-    beginEditCP(Item1, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask);
-        Item1->setText("Menu Item 1");
-    endEditCP(Item1, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask);
+    beginEditCP(MenuItem1, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask);
+        MenuItem1->setText("Menu Item 1");
+    endEditCP(MenuItem1, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask);
     
-    beginEditCP(Item2, LabelMenuItem::TextFieldMask);
-        Item2->setText("Menu Item 2");
-    endEditCP(Item2, LabelMenuItem::TextFieldMask);
+    beginEditCP(MenuItem2, LabelMenuItem::TextFieldMask);
+        MenuItem2->setText("Menu Item 2");
+    endEditCP(MenuItem2, LabelMenuItem::TextFieldMask);
     
-    beginEditCP(Item3, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask);
-        Item3->setText("Menu Item 3");
-    endEditCP(Item3, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask);
+    beginEditCP(MenuItem3, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask);
+        MenuItem3->setText("Menu Item 3");
+    endEditCP(MenuItem3, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask);
     
-    beginEditCP(Item4, LabelMenuItem::TextFieldMask | LabelMenuItem::EnabledFieldMask);
-        Item4->setText("Menu Item 4");
-        Item4->setEnabled(false);
-    endEditCP(Item4, LabelMenuItem::TextFieldMask | LabelMenuItem::EnabledFieldMask);
+    beginEditCP(MenuItem4, LabelMenuItem::TextFieldMask | LabelMenuItem::EnabledFieldMask);
+        MenuItem4->setText("Menu Item 4");
+        MenuItem4->setEnabled(false);
+    endEditCP(MenuItem4, LabelMenuItem::TextFieldMask | LabelMenuItem::EnabledFieldMask);
     
-    beginEditCP(SubItem1, LabelMenuItem::TextFieldMask);
-        SubItem1->setText("SubMenu Item 1");
-    endEditCP(SubItem1, LabelMenuItem::TextFieldMask);
+    beginEditCP(SubMenuItem1, LabelMenuItem::TextFieldMask);
+        SubMenuItem1->setText("SubMenu Item 1");
+    endEditCP(SubMenuItem1, LabelMenuItem::TextFieldMask);
     
-    beginEditCP(SubItem2, LabelMenuItem::TextFieldMask);
-        SubItem2->setText("SubMenu Item 2");
-    endEditCP(SubItem2, LabelMenuItem::TextFieldMask);
+    beginEditCP(SubMenuItem2, LabelMenuItem::TextFieldMask);
+        SubMenuItem2->setText("SubMenu Item 2");
+    endEditCP(SubMenuItem2, LabelMenuItem::TextFieldMask);
     
-    beginEditCP(SubItem3, LabelMenuItem::TextFieldMask);
-        SubItem3->setText("SubMenu Item 3");
-    endEditCP(SubItem3, LabelMenuItem::TextFieldMask);
+    beginEditCP(SubMenuItem3, LabelMenuItem::TextFieldMask);
+        SubMenuItem3->setText("SubMenu Item 3");
+    endEditCP(SubMenuItem3, LabelMenuItem::TextFieldMask);
     
-    beginEditCP(Item5, LabelMenuItem::TextFieldMask);
-        Item5->setText("Sub Menu");
-    endEditCP(Item5, LabelMenuItem::TextFieldMask);
+    beginEditCP(ExampleSubMenu, LabelMenuItem::TextFieldMask);
+        ExampleSubMenu->setText("Sub Menu");
+    endEditCP(ExampleSubMenu, LabelMenuItem::TextFieldMask);
 
     // This adds three LabelMenuItems to the Menu,
     // creating a submenu.  Note this does not
     // involve begin/endEditCPs to do
 
-    Item5->addItem(SubItem1);
-    Item5->addItem(SubItem2);
-    Item5->addItem(SubItem3);
+    ExampleSubMenu->addItem(SubMenuItem1);
+    ExampleSubMenu->addItem(SubMenuItem2);
+    ExampleSubMenu->addItem(SubMenuItem3);
     
     /******************************************************
             
-            Create the PopupMenu itself
+            Create the PopupMenu itself.
 
             Items are added in the order in which
             they will be displayed (top to bottom)
-            via addItem(ITEM_TO_BE_ADDED)
+            via addItem(ItemToBeAdded)
 
-            The PopupMenu is attached to bbutton1
-            below using setPopupMenu(POPUP_MENU_NAME)
+            The PopupMenu is attached to a 
+			Button below using 
+			setPopupMenu(PopupMenuName).  
+			
+			Note: PopupMenus can be added to any
+			Component.
 
     ******************************************************/
-    PopupMenuPtr Button1PopupMenu = PopupMenu::create();
-    Button1PopupMenu->addItem(Item1);
-    Button1PopupMenu->addItem(Item2);
-    Button1PopupMenu->addItem(Item3);
-    Button1PopupMenu->addItem(Seperator1);
-    Button1PopupMenu->addItem(Item5);
-    Button1PopupMenu->addItem(Item4);
+    PopupMenuPtr ExamplePopupMenu = PopupMenu::create();
+    ExamplePopupMenu->addItem(MenuItem1);
+    ExamplePopupMenu->addItem(MenuItem2);
+    ExamplePopupMenu->addItem(MenuItem3);
+    ExamplePopupMenu->addItem(ExampleSeperator);
+    ExamplePopupMenu->addItem(ExampleSubMenu);
+    ExamplePopupMenu->addItem(MenuItem4);
     
     // Create a Button and Font
-    UIFontPtr button1Font = osg::UIFont::create();
-    beginEditCP(button1Font, UIFont::SizeFieldMask);
-        button1Font->setSize(16);
-    endEditCP(button1Font, UIFont::SizeFieldMask);
+    UIFontPtr PopupMenuButtonFont = osg::UIFont::create();
+    beginEditCP(PopupMenuButtonFont, UIFont::SizeFieldMask);
+        PopupMenuButtonFont->setSize(16);
+    endEditCP(PopupMenuButtonFont, UIFont::SizeFieldMask);
 
-    ButtonPtr button1 = osg::Button::create();
-    beginEditCP(button1, Component::PopupMenuFieldMask | Button::TextFieldMask | Component::PreferredSizeFieldMask | Button::FontFieldMask);
-        button1->setText("RightClickMe!");
-        // Add the PopupMenu to button1 so that when right clicked,
+    ButtonPtr PopupMenuButton = osg::Button::create();
+    beginEditCP(PopupMenuButton, Button::PopupMenuFieldMask | Button::TextFieldMask | Button::PreferredSizeFieldMask | Button::FontFieldMask);
+        PopupMenuButton->setText("RightClickMe!");
+        // Add the PopupMenu to PopupMenuButton so that when right clicked,
         // the PopupMenu will appear
-        button1->setPopupMenu(Button1PopupMenu);
-        button1->setPreferredSize(Vec2s(200,100));
-        button1->setFont(button1Font);
-    endEditCP(button1, Component::PopupMenuFieldMask | Button::TextFieldMask| Component::PreferredSizeFieldMask | Button::FontFieldMask);
+        PopupMenuButton->setPopupMenu(ExamplePopupMenu);
+        PopupMenuButton->setPreferredSize(Vec2s(200,100));
+        PopupMenuButton->setFont(PopupMenuButtonFont);
+    endEditCP(PopupMenuButton, Button::PopupMenuFieldMask | Button::TextFieldMask| Button::PreferredSizeFieldMask | Button::FontFieldMask);
 
 
     // Create Background to be used with the MainFrame
@@ -243,18 +240,18 @@ int main(int argc, char **argv)
     FramePtr MainFrame = osg::Frame::create();
     LayoutPtr MainFrameLayout = osg::FlowLayout::create();
     beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
-       MainFrame->getChildren().addValue(button1);
+       MainFrame->getChildren().addValue(PopupMenuButton);
        MainFrame->setLayout(MainFrameLayout);
        MainFrame->setBackground(MainFrameBackground);
     endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
 
     // Create the Drawing Surface
     UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
         TutorialDrawingSurface->setRootFrame(MainFrame);
         TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
     // Create the UI Foreground Object
     UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
 
@@ -263,7 +260,6 @@ int main(int argc, char **argv)
         TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
         TutorialUIForeground->setFrameBounds(Vec2f(0.5,0.5));
     endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask |UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;

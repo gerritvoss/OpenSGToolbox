@@ -74,6 +74,15 @@ ButtonPtr ExampleTabContentA;
 ButtonPtr ExampleTabContentB;
 FramePtr createMainFrame(void);
 
+int doSomething(int& a)
+{
+	a = 5;
+}
+
+int A;
+doSomething(A);
+
+
     /******************************************************
                  Create ActionListeners
     ******************************************************/

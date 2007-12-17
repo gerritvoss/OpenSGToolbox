@@ -159,19 +159,14 @@ int main(int argc, char **argv)
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
-   // Make Torus Node (creates Torus in background of scene)
+    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(90, 270, 16, 16);
 
-
-    // Make Main Scene Node
+    // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-    {
         scene->setCore(osg::Group::create());
- 
-        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
-    }
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
@@ -180,7 +175,6 @@ int main(int argc, char **argv)
         TutorialGraphics->setEnablePolygonAntiAliasing(false);
         TutorialGraphics->setExtrudeLength(-40.0);
     beginEditCP(TutorialGraphics);
-
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
@@ -316,7 +310,7 @@ int main(int argc, char **argv)
     // Create ListPtr
     ListPtr list = List::create();
     beginEditCP(list);
-        list->setPreferredSize( Vec2s (200, 300));
+        list->setPreferredSize(Vec2s(200, 300));
         list->setBackground(MainFrameBackground);
         list->setCellLayout(VERTICAL_ALIGNMENT);
         //list->setCellLayout(HORIZONTAL_ALIGNMENT);
@@ -324,7 +318,7 @@ int main(int argc, char **argv)
     // Assign the Model, CellRenderer, and SelectionModel
     // to the List
     list->setModel(&Model);
-    list->setCellRenderer(&CellRenderer);
+    list->setCellRenderer(&ExampleListCellRenderer);
     list->setSelectionModel(SelectionModel);
 
 
@@ -380,11 +374,11 @@ int main(int argc, char **argv)
 
     // Create the Drawing Surface
     UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
         TutorialDrawingSurface->setRootFrame(MainFrame);
         TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
     
     //Make A 3D Rectangle to draw the UI on
     UIRectanglePtr UIRectCore = UIRectangle::create();

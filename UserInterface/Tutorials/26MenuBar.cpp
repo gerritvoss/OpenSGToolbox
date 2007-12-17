@@ -109,19 +109,14 @@ int main(int argc, char **argv)
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
-   // Make Torus Node (creates Torus in background of scene)
+    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-
-    // Make Main Scene Node
+    // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-    {
         scene->setCore(osg::Group::create());
- 
-        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
-    }
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
@@ -130,23 +125,27 @@ int main(int argc, char **argv)
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    
     /******************************************************
             
-            Create  components to add to MenuBar
+            Create Components to add to MenuBar
             Menus.  Each MenuBar has multiple Menus 
             which contain multiple MenuItems.
 
-            -setAcceleratorKey(KeyEvent::KEY_****): This
-                links the key "****" as a shortcut to 
-                selecting the item it is attached to
-            -setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_***):
-                This adds the "***" key as another 
+            -setAcceleratorKey(KeyEvent::KEY_*): This
+                links the key "*" as a shortcut to 
+                selecting the item it is attached to.
+				An example of this would be Q with 
+				Control+Q causing programs to quit.
+            -setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_*):
+                This adds the "*" key as another 
                 requirement to cause the item to be
                 selected.  Things such as "CONTROL" are 
-                likely to be used here
-            Note: these shortcuts will be shown in the list
-                with the LabelMenuItem they are attached too
+                likely to be used here (as mentioned 
+				above, both Control and Q are specified).
+
+            Note: These shortcuts will be shown in the list
+                with the LabelMenuItem they are attached to.
+
             -setMnemonicKey(KeyEvent::KEY_****): sets the key
                 "****" to be underlined within the Menu
                 itself
@@ -158,7 +157,7 @@ int main(int argc, char **argv)
     LabelMenuItemPtr NewMenuItem = LabelMenuItem::create();
     LabelMenuItemPtr OpenMenuItem = LabelMenuItem::create();
     LabelMenuItemPtr CloseMenuItem = LabelMenuItem::create();
-    SeperatorMenuItemPtr FileMenuSeperator1 = SeperatorMenuItem::create();
+    SeperatorMenuItemPtr FileMenuSeperator = SeperatorMenuItem::create();
     LabelMenuItemPtr ExitMenuItem = LabelMenuItem::create();
     LabelMenuItemPtr UndoMenuItem = LabelMenuItem::create();
     LabelMenuItemPtr RedoMenuItem = LabelMenuItem::create();
@@ -207,16 +206,17 @@ int main(int argc, char **argv)
     // Create an ActionListener and assign it to ExitMenuItem
     // This is defined above, and will cause the program to quit
     // when that MenuItem is selected or Control + Q hit 
-    QuitActionListener QuitAL;
-    ExitMenuItem->addActionListener( &QuitAL);
+    QuitActionListener TheQuitActionListener;
+    ExitMenuItem->addActionListener( &TheQuitActionListener);
     
     /******************************************************
             
-            Create Menu components to add to MenuBar
-            and adds above components to them.  Note
-            that the same abilities: setAcceleratorKey,
+            Create Menu Components to add to MenuBar
+            and adds above Components to them.  
+			
+			Note: setAcceleratorKey,
             setAcceleratorModifiers, and setMnemnoicKey
-            all apply to Menus in addition to MenuItems
+            all apply to Menus in addition to MenuItems.
 
     ******************************************************/
     
@@ -225,7 +225,7 @@ int main(int argc, char **argv)
     FileMenu->addItem(NewMenuItem);
     FileMenu->addItem(OpenMenuItem);
     FileMenu->addItem(CloseMenuItem);
-    FileMenu->addItem(FileMenuSeperator1);
+    FileMenu->addItem(FileMenuSeperator);
     FileMenu->addItem(ExitMenuItem);
 
     // Labels the File Menu
@@ -234,7 +234,7 @@ int main(int argc, char **argv)
         FileMenu->setMnemonicKey(KeyEvent::KEY_F);
     endEditCP(FileMenu, LabelMenuItem::TextFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
     
-    // Creates a Edit menu and adds its MenuItems
+    // Creates an Edit menu and adds its MenuItems
     MenuPtr EditMenu = Menu::create();
     EditMenu->addItem(UndoMenuItem);
     EditMenu->addItem(RedoMenuItem);
@@ -263,14 +263,13 @@ int main(int argc, char **argv)
             different Backgrounds to the 
             File and Edit Menus.
 
-            Note: it is added to the MainFrame
-            below.
+            Note: The MenuBar is added to the
+			MainFrame below.
 
     ******************************************************/
     // Creates two Backgrounds
-    EmptyUIBackgroundPtr emptyBackground = osg::EmptyUIBackground::create();
-    ColorUIBackgroundPtr colorBackground = osg::ColorUIBackground::create();
-
+    EmptyUIBackgroundPtr EmptyMenuBarBackground = osg::EmptyUIBackground::create();
+    ColorUIBackgroundPtr ColorMenuBarBackground = osg::ColorUIBackground::create();
 
     MenuBarPtr MainMenuBar = MenuBar::create();
     // Adds the two Menus to the MainMenuBar
@@ -278,55 +277,58 @@ int main(int argc, char **argv)
     MainMenuBar->addMenu(EditMenu);
 
     // Adds Backgrounds to Menus and MenuBar
-    beginEditCP(FileMenu, Container::BackgroundFieldMask);
-        FileMenu->setBackground(emptyBackground);
-    beginEditCP(FileMenu, Container::BackgroundFieldMask);
+    beginEditCP(FileMenu, LabelMenuItem::BackgroundFieldMask);
+        FileMenu->setBackground(EmptyMenuBarBackground);
+    beginEditCP(FileMenu, LabelMenuItem::BackgroundFieldMask);
 
-    beginEditCP(EditMenu, Container::BackgroundFieldMask);
-        EditMenu->setBackground(emptyBackground);
-    beginEditCP(EditMenu, Container::BackgroundFieldMask);
+    beginEditCP(EditMenu, LabelMenuItem::BackgroundFieldMask);
+        EditMenu->setBackground(EmptyMenuBarBackground);
+    beginEditCP(EditMenu, LabelMenuItem::BackgroundFieldMask);
 
-    beginEditCP(MainMenuBar, Container::BackgroundFieldMask);
-        MainMenuBar->setBackground(colorBackground);
-    beginEditCP(MainMenuBar, Container::BackgroundFieldMask);
+    beginEditCP(MainMenuBar, LabelMenuItem::BackgroundFieldMask);
+        MainMenuBar->setBackground(ColorMenuBarBackground);
+    beginEditCP(MainMenuBar, LabelMenuItem::BackgroundFieldMask);
     
     // Create MainFrameBackground
     ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
     beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
         MainFrameBackground->setColor(Color4f(0.0, 0.0, 0.0, 0.0));
     endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+
     // Create The Main Frame
     FramePtr MainFrame = osg::Frame::create();
     LayoutPtr MainFrameLayout = osg::FlowLayout::create();
 
-    // Create two labels to add to MainFrame
-    LabelPtr label1 = osg::Label::create();
-    LabelPtr label2 = osg::Label::create();
-    beginEditCP(label1, Label::TextFieldMask | Component::PreferredSizeFieldMask);
-        label1->setText("Look up in the corner!");
-        label1->setPreferredSize(Vec2s(150, 25));    
-    endEditCP(label1, Label::TextFieldMask | Component::PreferredSizeFieldMask);
-    beginEditCP(label2, Label::TextFieldMask | Component::PreferredSizeFieldMask);
-        label2->setText("Hit Control + O");
-        label2->setPreferredSize(Vec2s(150, 25));    
-    endEditCP(label2, Label::TextFieldMask | Component::PreferredSizeFieldMask);
+    // Create two Labels
+    LabelPtr ExampleLabel1 = osg::Label::create();
+    LabelPtr ExampleLabel2 = osg::Label::create();
 
-    beginEditCP(MainFrame, Frame::LayoutFieldMask | Component::BackgroundFieldMask | Frame::MenuBarFieldMask | Container::ChildrenFieldMask);
+    beginEditCP(ExampleLabel1, Label::TextFieldMask | Label::PreferredSizeFieldMask);
+        ExampleLabel1->setText("Look up in the corner!");
+        ExampleLabel1->setPreferredSize(Vec2s(150, 25));    
+    endEditCP(ExampleLabel1, Label::TextFieldMask | Label::PreferredSizeFieldMask);
+
+    beginEditCP(ExampleLabel2, Label::TextFieldMask | Label::PreferredSizeFieldMask);
+        ExampleLabel2->setText("Hit Control + Z");
+        ExampleLabel2->setPreferredSize(Vec2s(150, 25));    
+    endEditCP(ExampleLabel2, Label::TextFieldMask | Label::PreferredSizeFieldMask);
+
+    beginEditCP(MainFrame, Frame::LayoutFieldMask | Frame::BackgroundFieldMask | Frame::MenuBarFieldMask | Frame::ChildrenFieldMask);
        MainFrame->setLayout(MainFrameLayout);
        // Adds MainMenuBar to MainFrame
        MainFrame->setMenuBar(MainMenuBar);
        MainFrame->setBackground(MainFrameBackground);
-       MainFrame->getChildren().addValue(label1);
-       MainFrame->getChildren().addValue(label2);
-    endEditCP(MainFrame, Frame::LayoutFieldMask | Component::BackgroundFieldMask | Frame::MenuBarFieldMask | Container::ChildrenFieldMask);
+       MainFrame->getChildren().addValue(ExampleLabel1);
+       MainFrame->getChildren().addValue(ExampleLabel2);
+    endEditCP(MainFrame, Frame::LayoutFieldMask | Frame::BackgroundFieldMask | Frame::MenuBarFieldMask | Frame::ChildrenFieldMask);
 
     // Create the Drawing Surface
     UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
         TutorialDrawingSurface->setRootFrame(MainFrame);
         TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
     // Create the UI Foreground Object
     UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
 

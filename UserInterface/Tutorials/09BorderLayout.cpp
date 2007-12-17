@@ -91,26 +91,17 @@ int main(int argc, char **argv)
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-    // Make Main Scene Node
+    // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-    {
         scene->setCore(osg::Group::create());
- 
-        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
-    }
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-
     // Create the Graphics
     GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
 
-    // Initialize the LookAndFeelManager to enable default 
-    // settings for the Buttons
+    // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
-
-
-
 
     /******************************************************
 

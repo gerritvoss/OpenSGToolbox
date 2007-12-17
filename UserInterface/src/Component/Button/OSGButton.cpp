@@ -357,7 +357,8 @@ void Button::mouseReleased(const MouseEvent& e)
 void Button::produceActionPerformed(const ActionEvent& e)
 {
     actionPreformed(e);
-    for(ActionListenerSetConstItor SetItor(_ActionListeners.begin()) ; SetItor != _ActionListeners.end() ; ++SetItor)
+	ActionListenerSet Listeners(_ActionListeners);
+    for(ActionListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->actionPerformed(e);
     }

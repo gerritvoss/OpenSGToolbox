@@ -138,6 +138,9 @@ public:
         }
     }
 };
+    
+RemoveTabActionListener TheRemoveTabActionListener;
+AddTabActionListener TheAddTabActionListener;
 
     /******************************************************
 
@@ -245,18 +248,14 @@ int main(int argc, char **argv)
     TutorialWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
-   // Make Torus Node (creates Torus in background of scene)
+    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(90, 270, 16, 16);
 
-    // Make Main Scene Node
+    // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-    {
         scene->setCore(osg::Group::create());
- 
-        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
-    }
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
@@ -352,7 +351,7 @@ int main(int argc, char **argv)
     endEditCP(ExampleUIRectangleNode, Node::CoreFieldMask);
     
     beginEditCP(scene, Node::ChildrenFieldMask);
-        // Add the UIRect as a child to the scene
+        // Add the UIRectangle as a child to the scene
         scene->addChild(ExampleUIRectangleNode);
     endEditCP(scene, Node::ChildrenFieldMask);
 
@@ -451,14 +450,13 @@ FramePtr createMainFrame(void)
         ExampleTabContentA->setText("Add another Tab");
     endEditCP(ExampleTabContentA, Button::TextFieldMask);
     // Add ActionListener
-    AddTabActionListener TheAddTabActionListener;
     ExampleTabContentA->addActionListener( &TheAddTabActionListener);
 
     beginEditCP(ExampleTabContentB, Button::TextFieldMask);
         ExampleTabContentB->setText("Add a Tab in Tab1!");
     endEditCP(ExampleTabContentB, Button::TextFieldMask);
     // Add ActionListener
-    RemoveTabActionListener TheRemoveTabActionListener;
+
     ExampleTabContentB->addActionListener( &TheRemoveTabActionListener);
 
     beginEditCP(ExampleTabContentC, Button::TextFieldMask);

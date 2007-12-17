@@ -104,16 +104,8 @@ public:
 
     /******************************************************
             
-            Create a RotatedComponentPtr.
-            -setAngle(Angle, in radians): determines
-                the angle the Component initially
-                is rotated
-            -setInternalComponent(ComponentPtr): 
-                determines what the actual 
-                Component to be rotated is
-            -setResizePolicy(RotatedComponent::ENUM):
-                takes NO_RESIZING, RESIZE_TO_MIN, or
-                RESIZE_TO_MAX.
+            Create Listeners to let RotatedComponent
+			rotate
  
     ******************************************************/    
 class RotateUpdateListener : public UpdateListener
@@ -128,8 +120,10 @@ public:
     
     virtual void update(const UpdateEvent& e)
     {
+		// Increment the time
         _Elps += e.getElapsedTime();
         
+		// Change the RotatedComponent Angle
         beginEditCP(_RotatedComponent, RotatedComponent::AngleFieldMask);
             _RotatedComponent->setAngle(_Elps * _RadPerSec);
         endEditCP(_RotatedComponent, RotatedComponent::AngleFieldMask);
@@ -145,6 +139,7 @@ protected:
     Real32 _RadPerSec;
 };
 
+// Create Listener to turn rotating on/off
 class RotateControlListener : public ButtonSelectedListener
 {
 public:
@@ -154,16 +149,20 @@ public:
         _WindowEventProducer(TutorialWindowEventProducer)
     {
     }
-    
+    // Create functions to change text based on whether
+	// Component is rotating or not
     virtual void buttonSelected(const ButtonSelectedEvent& e)
     {
+		// When Selected, get the selected Component (in this case
+		// a ToggleButton) and then change its text accordingly.
         beginEditCP(ToggleButton::Ptr::dcast(e.getSource()), ToggleButton::TextFieldMask);
             ToggleButton::Ptr::dcast(e.getSource())->setText("Stop Rotating");
         endEditCP(ToggleButton::Ptr::dcast(e.getSource()), ToggleButton::TextFieldMask);
         
         _WindowEventProducer->addUpdateListener(_RotateUpdateListener);
     }
-    
+
+    // Change text when deselected
     virtual void buttonDeselected(const ButtonSelectedEvent& e)
     {
         beginEditCP(ToggleButton::Ptr::dcast(e.getSource()), ToggleButton::TextFieldMask);
@@ -192,19 +191,14 @@ int main(int argc, char **argv)
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
-   // Make Torus Node (creates Torus in background of scene)
+    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-
-    // Make Main Scene Node
+    // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-    {
         scene->setCore(osg::Group::create());
- 
-        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
-    }
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
@@ -215,20 +209,21 @@ int main(int argc, char **argv)
     
     /******************************************************
             
-            Create a RotatedComponentPtr.
-            -setAngle(Angle, in radians): determines
+            Create a RotatedComponent.
+            -setAngle(Angle, in radians): Determine
                 the angle the Component initially
-                is rotated
-            -setInternalComponent(ComponentPtr): 
-                determines what the actual 
-                Component to be rotated is
+                is rotated.
+            -setInternalComponent(Component): 
+                Determine what Component will
+				be rotated.
             -setResizePolicy(RotatedComponent::ENUM):
-                takes NO_RESIZING, RESIZE_TO_MIN, or
-                RESIZE_TO_MAX.
+                Takes NO_RESIZING, RESIZE_TO_MIN, or
+                RESIZE_TO_MAX arguments.
  
     ******************************************************/    
     
     RotatedComponentPtr TheRotatedComponent = RotatedComponent::create();
+	// Define PI
     Real32 PI(3.14159);
     beginEditCP(TheRotatedComponent, RotatedComponent::AngleFieldMask | RotatedComponent::InternalComponentFieldMask | RotatedComponent::ResizePolicyFieldMask);
             TheRotatedComponent->setAngle(PI/4);
@@ -245,12 +240,16 @@ int main(int argc, char **argv)
             Note: due to the way FlowLayout works
             you will notice that this ToggleButton
             will move as well.  In cases where
-            a RotatingComponent is used, an 
+            a Rotating Component is used, an 
             alternate Layout may be preferred
             to prevent other Components from 
             moving as well.  This is 
             intentionally left this way to 
             illustrate why this might be the case.
+			A SplitPanel with fixed divider for 
+			example would prevent the ToggleButton
+			from moving, while still allowing the 
+			Panel to move freely.
  
     ******************************************************/    
     ToggleButtonPtr RotateControlButton = osg::ToggleButton::create();
@@ -258,14 +257,13 @@ int main(int argc, char **argv)
         RotateControlButton->setText("Start Rotating");
     endEditCP(RotateControlButton, Button::TextFieldMask);
 
-    
+    // Pass the to-be-rotated Component to the Listener
     RotateUpdateListener TheRotateUpdateListener(TheRotatedComponent);
     
+	// Create a Listener to check whether the Panel should be rotating
     RotateControlListener TheRotateControlListener(&TheRotateUpdateListener, TutorialWindowEventProducer);
     RotateControlButton->addButtonSelectedListener(&TheRotateControlListener);
     
-
-
     // Create Background to be used with the MainFrame
     ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
     beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
@@ -286,11 +284,11 @@ int main(int argc, char **argv)
 
     // Create the Drawing Surface
     UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
         TutorialDrawingSurface->setRootFrame(MainFrame);
         TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
     // Create the UI Foreground Object
     UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
 

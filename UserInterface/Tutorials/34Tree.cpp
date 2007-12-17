@@ -115,20 +115,16 @@ int main(int argc, char **argv)
     TutorialWindowListener TheTutorialWindowListener;
     TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
-   // Make Torus Node (creates Torus in background of scene)
+    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
 
-    // Make Main Scene Node
+    // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-    {
         scene->setCore(osg::Group::create());
- 
-        // add the torus as a child
         scene->addChild(TorusGeometryNode);
-    }
-    endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
 	// Create the Graphics
 	GraphicsPtr graphics = osg::Graphics2D::create();

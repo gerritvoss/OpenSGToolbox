@@ -197,7 +197,7 @@ public:
 };
 
 
-// These classes create Listeners to change Font color
+// These classes create Listeners to change Font Color
 // in the TextArea
 class BlackFont : public ButtonSelectedListener
 {
@@ -353,21 +353,15 @@ int main(int argc, char **argv)
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
-
-
-
     // Make Main Scene Node
     create3DObjects();
     scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        {
-            scene->setCore(osg::Group::create());
-        }
+        scene->setCore(osg::Group::create());
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
     GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
-
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->setLookAndFeel(WindowsLookAndFeel::create());

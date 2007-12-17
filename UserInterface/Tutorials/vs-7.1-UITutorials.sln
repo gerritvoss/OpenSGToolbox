@@ -186,6 +186,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "35Graphics3DExtrude", "35Gr
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "34Tree", "34Tree.vcproj", "{ECC247D1-1830-4A4A-BB7A-9D319FBDB984}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -348,6 +352,10 @@ Global
 		{A24FF71F-3266-4447-B2B4-09DC4BC97CA4}.Debug.Build.0 = Debug|Win32
 		{A24FF71F-3266-4447-B2B4-09DC4BC97CA4}.Release.ActiveCfg = Release|Win32
 		{A24FF71F-3266-4447-B2B4-09DC4BC97CA4}.Release.Build.0 = Release|Win32
+		{ECC247D1-1830-4A4A-BB7A-9D319FBDB984}.Debug.ActiveCfg = Debug|Win32
+		{ECC247D1-1830-4A4A-BB7A-9D319FBDB984}.Debug.Build.0 = Debug|Win32
+		{ECC247D1-1830-4A4A-BB7A-9D319FBDB984}.Release.ActiveCfg = Release|Win32
+		{ECC247D1-1830-4A4A-BB7A-9D319FBDB984}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

@@ -89,19 +89,14 @@ int main(int argc, char **argv)
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
-   // Make Torus Node (creates Torus in background of scene)
+    // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-
-    // Make Main Scene Node
+    // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-    {
         scene->setCore(osg::Group::create());
- 
-        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
-    }
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
@@ -110,11 +105,11 @@ int main(int argc, char **argv)
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    // Create a simple Font to be used with the textArea
-    UIFontPtr sampleFont = osg::UIFont::create();
-    beginEditCP(sampleFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::GapFieldMask | UIFont::GlyphPixelSizeFieldMask | UIFont::TextureWidthFieldMask | UIFont::StyleFieldMask);
-        sampleFont->setSize(16);
-    endEditCP(sampleFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::GapFieldMask | UIFont::GlyphPixelSizeFieldMask | UIFont::TextureWidthFieldMask | UIFont::StyleFieldMask);
+    // Create a simple Font to be used with the ExampleTextArea
+    UIFontPtr ExampleFont = osg::UIFont::create();
+    beginEditCP(ExampleFont, UIFont::SizeFieldMask);
+        ExampleFont->setSize(16);
+    endEditCP(ExampleFont, UIFont::SizeFieldMask);
 
     /******************************************************
 
@@ -131,71 +126,70 @@ int main(int argc, char **argv)
         multiple lines of text 
         within it.
 
-        -setTextColor(Color4f): Set color of text
-            withing TextArea
-        -setSelectionBoxColor(Color4f): Set the color
-            that highlighting around the selected text 
-            appears
-        -setSelectionTextColor(Color4f): Set the color
-            the selected text appears
-        -setText("TextToBeDisplayed"): Sets initial 
-            text within TextArea
-        -setFont(FontName): Sets the font which is
-            used within TextArea
+        -setTextColor(Color4f): Determine color of 
+            text within TextArea.
+        -setSelectionBoxColor(Color4f): Determine the
+			color that highlighting around the 
+			selected text appears.
+        -setSelectionTextColor(Color4f): Determine the 
+            color the selected text appears.
+        -setText("TextToBeDisplayed"): Determine  
+            initial text within TextArea.
+        -setFont(FontName): Determine the Font 
+			used within TextArea
         -setSelectionStart(StartCharacterNumber):
-            Sets the character which the selection
-             will initially start after
+            Determine the character which the 
+            selection will initially start after.
         -setSelectionEnd(EndCharacterNumber): 
-            Sets the character which the selection
-            will end before
-        -setCaretPosition(Location): determine the 
-            location of the Caret within the text
-            Area.  Note that this does not do too
-            much currently because the only way 
+            Determine the character which the 
+            selection will end before.
+        -setCaretPosition(Location): Determine the 
+            location of the Caret within the TextArea.
+			Note: this does not do too much
+            currently because the only way 
             to cause the TextArea to gain focus is
             to click within it, causing the 
-            Caret to move
+            Caret to move.
             
     ******************************************************/
 
     // Create a TextArea component
-    TextAreaPtr textArea = osg::TextArea::create();
+    TextAreaPtr ExampleTextArea = osg::TextArea::create();
 
-    beginEditCP(textArea, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::MinSizeFieldMask 
-        | TextComponent::TextColorFieldMask | TextComponent::FontFieldMask 
-        | TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
-        textArea->setPreferredSize( Vec2s (300, 200));
-        textArea->setMinSize( Vec2s (300, 200));
-        textArea->setTextColor(Color4f(0.0, 0.0, 0.0, 1.0));
-        textArea->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
-        textArea->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
-            // Determine the font and initial text
-        textArea->setText("What");
-        textArea->setFont(sampleFont);
-            // This will select the "a" from above
-        textArea->setSelectionStart(2);
-        textArea->setSelectionEnd(3);
-        textArea->setCaretPosition(2);
-
-    endEditCP(textArea, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask | Component::MinSizeFieldMask 
-        | TextComponent::TextColorFieldMask| TextComponent::FontFieldMask 
-        | TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
+    beginEditCP(ExampleTextArea, TextArea::MinSizeFieldMask | TextArea::MaxSizeFieldMask | TextArea::PreferredSizeFieldMask | TextArea::MinSizeFieldMask 
+        | TextArea::TextColorFieldMask | TextArea::FontFieldMask 
+        | TextArea::SelectionBoxColorFieldMask | TextArea::SelectionTextColorFieldMask);
+        ExampleTextArea->setPreferredSize(Vec2s(300, 200));
+        ExampleTextArea->setMinSize(Vec2s(300, 200));
+        ExampleTextArea->setTextColor(Color4f(0.0, 0.0, 0.0, 1.0));
+        ExampleTextArea->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
+        ExampleTextArea->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
+        // Determine the font and initial text
+        ExampleTextArea->setText("What");
+        ExampleTextArea->setFont(ExampleFont);
+        // This will select the "a" from above
+        ExampleTextArea->setSelectionStart(2);
+        ExampleTextArea->setSelectionEnd(3);
+        ExampleTextArea->setCaretPosition(2);
+    endEditCP(ExampleTextArea, TextArea::MinSizeFieldMask | TextArea::MaxSizeFieldMask | TextArea::PreferredSizeFieldMask | TextArea::MinSizeFieldMask 
+        | TextArea::TextColorFieldMask| TextArea::FontFieldMask 
+        | TextArea::SelectionBoxColorFieldMask | TextArea::SelectionTextColorFieldMask);
         
-    //ScrollPanel
-    ScrollPanelPtr TheScrollPanel = ScrollPanel::create();
-    beginEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-        TheScrollPanel->setPreferredSize(Vec2s(200,200));
-        TheScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-        //TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    endEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-    TheScrollPanel->setViewComponent(textArea);
+    // Create a ScrollPanel
+    ScrollPanelPtr TextAreaScrollPanel = ScrollPanel::create();
+    beginEditCP(TextAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+        TextAreaScrollPanel->setPreferredSize(Vec2s(200,200));
+        TextAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+    endEditCP(TextAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+    // Add the TextArea to the ScrollPanel so it is displayed
+	TextAreaScrollPanel->setViewComponent(ExampleTextArea);
+
     
     // Create The Main Frame
     FramePtr MainFrame = osg::Frame::create();
     LayoutPtr MainFrameLayout = osg::FlowLayout::create();
     beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
-       // Add textArea to MainFrame
-       MainFrame->getChildren().addValue(TheScrollPanel);
+       MainFrame->getChildren().addValue(TextAreaScrollPanel);
        MainFrame->setLayout(MainFrameLayout);
     endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
 

@@ -51,7 +51,6 @@ bool ExitApp = false;
 void display(void);
 void reshape(Vec2s Size);
 
-
 // 23SplitPanel Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
@@ -65,7 +64,6 @@ void reshape(Vec2s Size);
 #include <OpenSG/UserInterface/OSGBorderLayoutConstraints.h>
 #include <OpenSG/UserInterface/OSGPanel.h>
 #include <OpenSG/UserInterface/OSGSplitPanel.h>
-
 
 
 class TutorialWindowListener : public WindowAdapter
@@ -102,107 +100,95 @@ int main(int argc, char **argv)
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-    // Make Main Scene Node
+    // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-    {
         scene->setCore(osg::Group::create());
- 
-        // Add the Torus as a Child
         scene->addChild(TorusGeometryNode);
-    }
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
     GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
 
-    // Initialize the LookAndFeelManager to enable default 
-    // settings for the Button
+    // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
-
-
     /******************************************************
             
-                Creates some Button components
-                and change some PreferredSizes
-
-    ******************************************************/
-    ButtonPtr button1 = osg::Button::create();
-    ButtonPtr button2 = osg::Button::create();
-    ButtonPtr button3 = osg::Button::create();
-    ButtonPtr button4 = osg::Button::create();
-    ButtonPtr button5 = osg::Button::create();
-    ButtonPtr button6 = osg::Button::create();
-
-    beginEditCP(button1, Component::PreferredSizeFieldMask);
-        button1->setPreferredSize( Vec2s (200, 50));
-    endEditCP(button1, Component::PreferredSizeFieldMask);
-
-    beginEditCP(button4, Component::PreferredSizeFieldMask);
-        button4->setPreferredSize( Vec2s (50, 50));
-    endEditCP(button4, Component::PreferredSizeFieldMask);
-
-
-
-    /******************************************************
-            
-                Creates and sets up two Panel 
-                components to place Buttons within
+            Create and edit some Button Components
 
     ******************************************************/
 
-    PanelPtr panel1 = osg::Panel::create();
-    PanelPtr panel2 = osg::Panel::create();
-    FlowLayoutPtr flowLayout = osg::FlowLayout::create();
-    
-    beginEditCP(flowLayout);
-        flowLayout->setHorizontalGap(3);
-        flowLayout->setVerticalGap(3);
-    endEditCP(flowLayout);
+    ButtonPtr ExampleButton1 = osg::Button::create();
+    ButtonPtr ExampleButton2 = osg::Button::create();
+    ButtonPtr ExampleButton3 = osg::Button::create();
+    ButtonPtr ExampleButton4 = osg::Button::create();
+    ButtonPtr ExampleButton5 = osg::Button::create();
+    ButtonPtr ExampleButton6 = osg::Button::create();
 
-    beginEditCP(panel1, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
-        panel1->getChildren().addValue(button1);
-        panel1->getChildren().addValue(button2);
-        panel1->getChildren().addValue(button3);
-        panel1->setLayout(flowLayout);
-    endEditCP(panel1, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
-    beginEditCP(panel2, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
-        panel2->getChildren().addValue(button4);
-        panel2->getChildren().addValue(button5);
-        panel2->getChildren().addValue(button6);
-        panel2->setLayout(flowLayout);
-    endEditCP(panel2, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+    beginEditCP(ExampleButton1, Button::PreferredSizeFieldMask);
+        ExampleButton1->setPreferredSize(Vec2s(200, 50));
+    endEditCP(ExampleButton1, Button::PreferredSizeFieldMask);
 
+    beginEditCP(ExampleButton4, Button::PreferredSizeFieldMask);
+        ExampleButton4->setPreferredSize(Vec2s(50, 50));
+    endEditCP(ExampleButton4, Button::PreferredSizeFieldMask);
 
+    /******************************************************
+            
+                Create two Panels to be used with
+				SplitPanel.
+
+    ******************************************************/
+
+    PanelPtr ExampleSplitPanelPanel1 = osg::Panel::create();
+    PanelPtr ExampleSplitPanelPanel2 = osg::Panel::create();
+    FlowLayoutPtr PanelFlowLayout = osg::FlowLayout::create();
     
-    
-    // Creates a BorderLayout and Constraints (this causes SplitPanel to 
-    // automatically fill entire frame)
+	beginEditCP(PanelFlowLayout, FlowLayout::HorizontalGapFieldMask | FlowLayout::VerticalGapFieldMask);
+        PanelFlowLayout->setHorizontalGap(3);
+        PanelFlowLayout->setVerticalGap(3);
+    endEditCP(PanelFlowLayout, FlowLayout::HorizontalGapFieldMask | FlowLayout::VerticalGapFieldMask);
+
+    beginEditCP(ExampleSplitPanelPanel1, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+        ExampleSplitPanelPanel1->getChildren().addValue(ExampleButton1);
+        ExampleSplitPanelPanel1->getChildren().addValue(ExampleButton2);
+        ExampleSplitPanelPanel1->getChildren().addValue(ExampleButton3);
+        ExampleSplitPanelPanel1->setLayout(PanelFlowLayout);
+    endEditCP(ExampleSplitPanelPanel1, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+    beginEditCP(ExampleSplitPanelPanel2, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+        ExampleSplitPanelPanel2->getChildren().addValue(ExampleButton4);
+        ExampleSplitPanelPanel2->getChildren().addValue(ExampleButton5);
+        ExampleSplitPanelPanel2->getChildren().addValue(ExampleButton6);
+        ExampleSplitPanelPanel2->setLayout(PanelFlowLayout);
+    endEditCP(ExampleSplitPanelPanel2, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+
+    // Creates a BorderLayout and Constraints (causing the SplitPanel  
+    // to automatically fill entire center Frame)
     BorderLayoutPtr MainFrameLayout = osg::BorderLayout::create();
-    BorderLayoutConstraintsPtr SplitPanelConstraints = osg::BorderLayoutConstraints::create();
+    BorderLayoutConstraintsPtr ExampleSplitPanelConstraints = osg::BorderLayoutConstraints::create();
 
-    beginEditCP(SplitPanelConstraints);
-        SplitPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
-    endEditCP(SplitPanelConstraints);
+	beginEditCP(ExampleSplitPanelConstraints, BorderLayoutConstraints::RegionFieldMask);
+        ExampleSplitPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+    endEditCP(ExampleSplitPanelConstraints, BorderLayoutConstraints::RegionFieldMask);
         
     /******************************************************
             
         Creates and sets up SplitPanel
 
-        -setMinComponent/setMaxComponent(component): this 
-            is how to add components to the SplitPanel.  
-            Note that if you do not add both an empty 
-            panel will be added automatically.
-        -setAlignment(ALIGNMENT): determines the alignment
-            of the split aspect.  Takes a VERTICAL_ALIGNMENT
-            or HORIZONTAL_ALIGNMENT input.  The default is
+        -setMinComponent/setMaxComponent(Component):  Add 
+			up to two Components to the SplitPanel.  Note
+			that if you do not add both an empty Panel
+			will be added automatically.
+		-setAlignment(ENUM): Determines the alignment
+            of the split aspect.  The default is
             Horizontal with an east/west split. The 
-            minComponent set previously is the west or north
-            component of the panel (depending on the alignment)
-            and the max is the east or west component.
-            The default is horizontal.
+            minComponent set previously is the west or 
+			north Component of the Panel (depending 
+			on the alignment) and the max is the east
+			or west Component.  Takes VERTICAL_ALIGNMENT
+            and HORIZONTAL_ALIGNMENT arguments.
         -setDividerPosition("smart" REAL): Determines the initial 
             location of the divider.  Note that this REAL is
             a percentage if between 0.0 and 1.0 (inclusive) 
@@ -210,48 +196,46 @@ int main(int argc, char **argv)
             when resizing a window with a percentage, the
             divider will move, but with absolute, it does
             not until it no longer fits in the panel.
-        -setDividerSize(SIZE): determines divider size 
-        -setExpandable(TRUE/FALSE): Determines whether
+        -setDividerSize(SIZE): Determine divider Size
+			in pixels.
+        -setExpandable(bool): Determine whether
             divider can be moved by user.  Default is
             TRUE (is movable) while FALSE removes
-            the users ability to move the divider
-        -setMaxDividerPosition("smart" REAL): Set the
-            maximum position for the divider.
-        -setMinDividerPosition("smart" REAL): Set the
-            minimum position for the divider.  Note 
+            the users ability to move the divider.
+        -setMaxDividerPosition("smart" REAL): Determine
+			the Maximum position for the divider.
+        -setMinDividerPosition("smart" REAL): Determine
+			the Minimum position for the divider.  Note 
             that for both Max/Min, the "smart" REAL
             follows same format as in setDividerPosition;
             it is a percentage if between 0.0 and 1.0 
             and absolute when > 1.0
 
-
-                
-
     ******************************************************/
     
-    SplitPanelPtr SplitPanel = osg::SplitPanel::create();
+    SplitPanelPtr ExampleSplitPanel = osg::SplitPanel::create();
 
-    beginEditCP(SplitPanel);
-        // Sets the BorderContraints to it
-        SplitPanel->setConstraints(SplitPanelConstraints);
-        SplitPanel->setMinComponent(panel1);
-        SplitPanel->setMaxComponent(panel2);
-        //SplitPanel->setAlignment(VERTICAL_ALIGNMENT);
-        //SplitPanel->setDividerPosition(.25); // this is a percentage
-        SplitPanel->setDividerPosition(300); // this is an absolute (300 > 1.0) 
-            //location from the left/top
-         SplitPanel->setDividerSize(5);
-        // SplitPanel->setExpandable(false);
-        SplitPanel->setMaxDividerPosition(.9);
-        SplitPanel->setMinDividerPosition(220);
+	beginEditCP(ExampleSplitPanel, SplitPanel::ConstraintsFieldMask | SplitPanel::MinComponentFieldMask | SplitPanel::MaxComponentFieldMask | SplitPanel::AlignmentFieldMask | SplitPanel::DividerPositionFieldMask | 
+		SplitPanel::DividerSizeFieldMask | SplitPanel::ExpandableFieldMask | SplitPanel::MaxDividerPositionFieldMask | SplitPanel::MinDividerPositionFieldMask);
+        ExampleSplitPanel->setConstraints(ExampleSplitPanelConstraints);
+        ExampleSplitPanel->setMinComponent(ExampleSplitPanelPanel1);
+        ExampleSplitPanel->setMaxComponent(ExampleSplitPanelPanel2);
+        // ExampleSplitPanel->setAlignment(VERTICAL_ALIGNMENT);
+        // ExampleSplitPanel->setDividerPosition(.25); // this is a percentage
+        ExampleSplitPanel->setDividerPosition(300); // this is an absolute (300 > 1.0) 
+        // location from the left/top
+        ExampleSplitPanel->setDividerSize(5);
+        // ExampleSplitPanel->setExpandable(false);
+        ExampleSplitPanel->setMaxDividerPosition(.9);
+        ExampleSplitPanel->setMinDividerPosition(220);
         
         // also, if you want to change the way the divider looks, you can always set a
         // DrawObjectCanvas in place of the default divider
-        // SplitPanel->setDividerDrawObject(drawObjectName);
-    endEditCP(SplitPanel);
+        // ExampleSplitPanel->setDividerDrawObject(drawObjectName);
+    endEditCP(ExampleSplitPanel, SplitPanel::ConstraintsFieldMask | SplitPanel::MinComponentFieldMask | SplitPanel::MaxComponentFieldMask | SplitPanel::AlignmentFieldMask | SplitPanel::DividerPositionFieldMask | 
+		SplitPanel::DividerSizeFieldMask | SplitPanel::ExpandableFieldMask | SplitPanel::MaxDividerPositionFieldMask | SplitPanel::MinDividerPositionFieldMask);
     
-     // Create The Main Frame
-
+    // Create The Main Frame
     // Create Background to be used with the Main Frame
     ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
     beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
@@ -261,7 +245,7 @@ int main(int argc, char **argv)
     FramePtr MainFrame = osg::Frame::create();
     beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
        // Add the buttons to the mainframe so they will be displayed
-       MainFrame->getChildren().addValue(SplitPanel);
+       MainFrame->getChildren().addValue(ExampleSplitPanel);
        MainFrame->setLayout(MainFrameLayout);
        MainFrame->setBackground(MainFrameBackground);
        MainFrame->setAllInsets(5);
