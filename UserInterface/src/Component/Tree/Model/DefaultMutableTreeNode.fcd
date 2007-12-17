@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DefaultMutableTreeNode"
+	parent="MutableTreeNode"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI Default Mutable Tree Node.
+	<Field
+		name="AllowsChildrenInternal"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ChildrenInternal"
+		type="MutableTreeNodePtr"
+		cardinality="multi"
+		visibility="external"
+		header="Component/Tree/Model/OSGMutableTreeNodeFields.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ParentInternal"
+		type="MutableTreeNodePtr"
+		cardinality="single"
+		visibility="external"
+		header="Component/Tree/Model/OSGMutableTreeNodeFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+	</Field>
+</FieldContainer>
