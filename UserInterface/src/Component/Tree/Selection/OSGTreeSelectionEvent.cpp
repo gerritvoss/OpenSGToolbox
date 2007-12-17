@@ -12,7 +12,7 @@ bool TreeSelectionEvent::isAddedPath(const UInt32& index) const
 {
     if(index > 0 && index < _Path.size())
     {
-         _IsPathNew[index];
+         return _IsPathNew[index];
     }
     else
     {

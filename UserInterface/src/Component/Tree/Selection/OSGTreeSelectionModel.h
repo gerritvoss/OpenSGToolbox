@@ -47,7 +47,11 @@
 #include "OSGUserInterfaceDef.h"
 #include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
 
-#include "OSGTreePath.h"
+#include "OSGTreeSelectionListener.h"
+
+#include "Component/Tree/OSGTreePath.h"
+#include "Component/Tree/Selection/OSGTreeRowMapper.h"
+#include "Event/OSGChangeListener.h"
 
 OSG_BEGIN_NAMESPACE
 	 
@@ -58,8 +62,8 @@ protected:
 public:
    enum TreeSelectionMode {CONTIGUOUS_TREE_SELECTION, DISCONTIGUOUS_TREE_SELECTION, SINGLE_TREE_SELECTION};
 
-	//Adds a PropertyChangeListener to the listener list.
-	virtual void addPropertyChangeListener(PropertyChangeListenerPtr listener) = 0;
+	//Adds a ChangeListener to the listener list.
+	virtual void addChangeListener(ChangeListenerPtr listener) = 0;
 
 	//Adds path to the current selection.
 	virtual void addSelectionPath(TreePath path) = 0;
@@ -79,14 +83,14 @@ public:
 	//Returns the lead selection index.
 	virtual UInt32 getLeadSelectionRow(void) const = 0;
 
-	//Returns the largest value obtained from the RowMapper for the current set of selected TreePaths.
+	//Returns the largest value obtained from the TreeRowMapper for the current set of selected TreePaths.
 	virtual UInt32 getMaxSelectionRow(void) const = 0;
 
-	//Returns the smallest value obtained from the RowMapper for the current set of selected TreePaths.
+	//Returns the smallest value obtained from the TreeRowMapper for the current set of selected TreePaths.
 	virtual UInt32 getMinSelectionRow(void) const = 0;
 
-	//Returns the RowMapper instance that is able to map a TreePath to a row.
-	virtual RowMapper getRowMapper(void) const = 0;
+	//Returns the TreeRowMapper instance that is able to map a TreePath to a row.
+	virtual TreeRowMapper getRowMapper(void) const = 0;
 
 	//Returns the number of paths that are selected.
 	virtual UInt32 getSelectionCount(void) const = 0;
@@ -112,8 +116,8 @@ public:
 	//Returns true if the selection is currently empty.
 	virtual bool isSelectionEmpty(void) const = 0;
 
-	//Removes a PropertyChangeListener from the listener list.
-	virtual void removePropertyChangeListener(PropertyChangeListener listener) = 0;
+	//Removes a ChangeListener from the listener list.
+	virtual void removeChangeListener(ChangeListenerPtr listener) = 0;
 
 	//Removes path from the selection.
 	virtual void removeSelectionPath(TreePath path) = 0;
@@ -127,8 +131,8 @@ public:
 	//Updates this object's mapping from TreePaths to rows.
 	virtual void resetRowSelection(void) = 0;
 
-	//Sets the RowMapper instance.
-	virtual void setRowMapper(RowMapper newMapper) = 0;
+	//Sets the TreeRowMapper instance.
+	virtual void setRowMapper(TreeRowMapper newMapper) = 0;
 
 	//Sets the selection model, which must be one of SINGLE_TREE_SELECTION, CONTIGUOUS_TREE_SELECTION or DISCONTIGUOUS_TREE_SELECTION.
 	virtual void setSelectionMode(const UInt32& mode) = 0;

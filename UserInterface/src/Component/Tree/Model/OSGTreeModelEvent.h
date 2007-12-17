@@ -24,8 +24,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OSG_UI_TREE_SELECTION_EVENT_H_
-#define _OSG_UI_TREE_SELECTION_EVENT_H_
+#ifndef _OSG_UI_TREE_MODEL_EVENT_H_
+#define _OSG_UI_TREE_MODEL_EVENT_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -34,60 +34,57 @@
 #include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/Input/OSGEvent.h>
-#include "OSGTreePath.h"
-#include <vector>
+#include "OSGTreeModel.h"
+#include "Component/Tree/OSGTreePath.h"
+#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeSelectionEvent : public Event
+class OSG_USERINTERFACELIB_DLLMAPPING TreeModelEvent : public Event
 {
     /*=========================  PUBLIC  ===============================*/
   public:
 	enum EventEnum {CONTENTS_CHANGED, INTERVAL_ADDED, INTERVAL_REMOVED};
 
-	//Returns a copy of the receiver, but with the source being newSource.
-	//Object cloneWithSource(Object newSource) const;
+	//Returns the values of the child indexes.
+	std::vector<UInt32> getChildIndices(void) const;
 
-	//Returns the current lead path.
-	TreePath getNewLeadSelectionPath(void) const;
+	//Returns the objects that are children of the node identified by getPath at the locations specified by getChildIndices.
+	std::vector<SharedFieldPtr> getChildren(void) const;
 
-	//Returns the path that was previously the lead path.
-	TreePath getOldLeadSelectionPath(void) const;
+	//Convenience method to get the array of objects from the TreePath instance that this event wraps.
+	std::vector<SharedFieldPtr> getPath(void) const;
 
-	//Returns the first path element.
-	TreePath getPath(void) const;
+	//For all events, except treeStructureChanged, returns the parent of the changed nodes.
+	TreePath getTreePath(void) const;
 
-	//Returns the paths that have been added or removed from the selection.
-	std::vector<TreePath> getPaths(void) const;
+	//Used to create an event when the node structure has changed in some way, identifying the path to the root of a modified subtree as an array of Objects.
+	TreeModelEvent(FieldContainerPtr Source, Time TimeStamp, std::vector<SharedFieldPtr> path);
 
-	//Returns true if the first path element has been added to the selection, a return value of false means the first path has been removed from the selection.
-	bool isAddedPath(void) const;
+	//Used to create an event when nodes have been changed, inserted, or removed, identifying the path to the parent of the modified items as an array of Objects.
+	TreeModelEvent(FieldContainerPtr Source, Time TimeStamp, std::vector<SharedFieldPtr> path, std::vector<UInt32> childIndices, std::vector<SharedFieldPtr> children);
 
-	//Returns true if the path identified by index was added to the selection.
-	bool isAddedPath(const UInt32& index) const;
+	//Used to create an event when the node structure has changed in some way, identifying the path to the root of the modified subtree as a TreePath object.
+	TreeModelEvent(FieldContainerPtr Source, Time TimeStamp, TreePath path);
 
-	//Returns true if the path identified by path was added to the selection.
-	bool isAddedPath(const TreePath& path) const;
+	//Used to create an event when nodes have been changed, inserted, or removed, identifying the path to the parent of the modified items as a TreePath object.
+	TreeModelEvent(FieldContainerPtr Source, Time TimeStamp, TreePath path, std::vector<UInt32> childIndices, std::vector<SharedFieldPtr> children);
     
     virtual const EventType &getType(void) const;
     
     static const EventType &getClassType(void);
-    
-	TreeSelectionEvent(FieldContainerPtr Source, Time TimeStamp, TreePath Path, bool IsNew, TreePath NewLeadSelectionPath, TreePath OldLeadSelectionPath);
-	
-	TreeSelectionEvent(FieldContainerPtr Source, Time TimeStamp, std::vector<TreePath> Paths, std::vector<bool> IsNew, TreePath NewLeadSelectionPath, TreePath OldLeadSelectionPath);
   protected:
-     TreePath _NewLeadSelectionPath;
-     TreePath _OldLeadSelectionPath;
-     std::vector<TreePath> _Path;
-     std::vector<bool> _IsPathNew;
   private:
      static EventType _Type;
+
+     TreePath _Path;
+     std::vector<SharedFieldPtr> _Children;
+     std::vector<UInt32> _ChildIndices;
     
 };
 
 OSG_END_NAMESPACE
 
-#include "OSGTreeSelectionEvent.inl"
+#include "OSGTreeModelEvent.inl"
 
-#endif /* _OSG_UI_TREE_SELECTION_EVENT_H_ */
+#endif /* _OSG_UI_TREE_MODEL_EVENT_H_ */

@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGABSTRACTTREEMODEL_H_
-#define _OSGABSTRACTTREEMODEL_H_
+#ifndef _OSGABSTRACTTREESELECTIONMODEL_H_
+#define _OSGABSTRACTTREESELECTIONMODEL_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,43 +45,53 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGTreeModel.h"
+#include "OSGTreeSelectionModel.h"
 #include <set>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief AbstractTreeModel class. See \ref 
-           PageUserInterfaceAbstractTreeModel for a description.
+/*! \brief AbstractTreeSelectionModel class. See \ref 
+           PageUserInterfaceAbstractTreeSelectionModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModel : public TreeModel
+class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeSelectionModel : public TreeSelectionModel
 {
     /*==========================  PUBLIC  =================================*/
   public:
-	//Adds a listener for the TreeModelEvent posted after the tree changes.
-	virtual void addTreeModelListener(TreeModelListenerPtr l);
+	//Adds a listener for the TreeSelectionModelEvent posted after the tree changes.
+	virtual void addTreeSelectionListener(TreeSelectionListenerPtr l);
 
-	//Removes a listener previously added with addTreeModelListener.
-	virtual void removeTreeModelListener(TreeModelListenerPtr l);
+	//Removes a listener previously added with addTreeSelectionListener.
+	virtual void removeTreeSelectionListener(TreeSelectionListenerPtr l);
+	
+	//Adds a ChangeListener to the listener list.
+	virtual void addChangeListener(ChangeListenerPtr listener);
+	
+	//Removes a ChangeListener from the listener list.
+	virtual void removeChangeListener(ChangeListenerPtr listener);
   protected:
 
     /*==========================  PRIVATE  ================================*/
   private:
-	typedef std::set<TreeModelListenerPtr> TreeModelListenerSet;
-	typedef TreeModelListenerSet::iterator TreeModelListenerSetIter;
-	typedef TreeModelListenerSet::const_iterator TreeModelListenerSetConstIter;
-	TreeModelListenerSet _ModelListeners;
+	typedef std::set<TreeSelectionListenerPtr> TreeSelectionListenerSet;
+	typedef TreeSelectionListenerSet::iterator TreeSelectionListenerSetIter;
+	typedef TreeSelectionListenerSet::const_iterator TreeSelectionListenerSetConstIter;
+	TreeSelectionListenerSet _SelectionListeners;
 
-	void produceTreeNodesChanged(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children);
-	void produceTreeNodesInserted(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children);
-	void produceTreeNodesRemoved(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children);
-	void produceTreeStructureChanged(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children);
+	void produceValueChanged(std::vector<TreePath> Paths, std::vector<bool> IsNew, TreePath NewLeadSelectionPath, TreePath OldLeadSelectionPath);
+	
+	typedef std::set<ChangeListenerPtr> ChangeListenerSet;
+	typedef ChangeListenerSet::iterator ChangeListenerSetIter;
+	typedef ChangeListenerSet::const_iterator ChangeListenerSetConstIter;
+	ChangeListenerSet _ChangeListeners;
+	
+	void produceStateChanged(void);
 };
 
-typedef AbstractTreeModel *AbstractTreeModelPtr;
+typedef AbstractTreeSelectionModel *AbstractTreeSelectionModelPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGABSTRACTTREEMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGABSTRACTTREESELECTIONMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGABSTRACTTREEMODEL_H_ */
+#endif /* _OSGABSTRACTTREESELECTIONMODEL_H_ */
