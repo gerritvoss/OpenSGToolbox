@@ -26,29 +26,21 @@
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
-
-// the general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
-
-//Input
-#include <OpenSG/Input/OSGWindowUtils.h>
-
 #include <OpenSG/Input/OSGWindowAdapter.h>
 
-//UserInterface Headers
+// The general scene file loading handler
+#include <OpenSG/OSGSceneFileHandler.h>
+
+// Input
+#include <OpenSG/Input/OSGWindowUtils.h>
+
+// UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGUIBackgrounds.h>
-
-//#include <OpenSG/UserInterface/OSGTree.h>
-//#include <OpenSG/UserInterface/OSGTree.h>
 
 // Activate the OpenSG namespace
-// This is not strictly necessary, you can also prefix all OpenSG symbols
-// with OSG::, but that would be a bit tedious for this example
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
@@ -56,9 +48,18 @@ SimpleSceneManager *mgr;
 
 bool ExitApp = false;
 
-// forward declaration so we can have the interesting stuff upfront
+// Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2s Size);
+
+// 01 Button Headers
+#include <OpenSG/UserInterface/OSGButton.h>
+#include <OpenSG/UserInterface/OSGToggleButton.h>
+#include <OpenSG/UserInterface/OSGUIFont.h>
+#include <OpenSG/UserInterface/OSGColorUIBackground.h>
+#include <OpenSG/UserInterface/OSGFlowLayout.h>
+#include <OpenSG/UserInterface/OSGPolygonUIDrawObject.h>
+#include <OpenSG/UserInterface/OSGUIDrawObjectCanvas.h>
 
 // Create a class to allow for the use of the Escape
 // key to exit
@@ -68,7 +69,7 @@ public:
 
    virtual void keyPressed(const KeyEvent& e)
    {
-	   if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e.getKey() == KeyEvent::KEY_ESCAPE)
        {
            ExitApp = true;
        }
@@ -97,27 +98,42 @@ public:
     }
 };
 
+    /******************************************************
 
-// Initialize WIN32 & OpenSG and set up the scene
+         Create an ActionListener to display text
+         in the Console Window when the Button is
+         pressed (causing an action).
+
+    ******************************************************/
+
+class ExampleButtonActionListener : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+    {
+        std::cout << "Button 1 Action" << std::endl;
+    }
+};
+
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
 
     // Set up Window
-    WindowEventProducerPtr TheWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TheWindowEventProducer->initWindow();
+    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
     
-    TheWindowEventProducer->setDisplayCallback(display);
-    TheWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindowEventProducer->setDisplayCallback(display);
+    TutorialWindowEventProducer->setReshapeCallback(reshape);
 
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
-    TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
-
 
     // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
@@ -126,77 +142,141 @@ int main(int argc, char **argv)
         scene->addChild(TorusGeometryNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
-	// Create the Graphics
-	GraphicsPtr graphics = osg::Graphics2D::create();
+    // Create the Graphics
+    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
 
-	// Initialize the LookAndFeelManager to enable default settings
-	LookAndFeelManager::the()->getLookAndFeel()->init();
+    // Initialize the LookAndFeelManager to enable default settings
+    LookAndFeelManager::the()->getLookAndFeel()->init();
+    /******************************************************
+
+                 Create an Button Component and
+                 a simple Font.
+                 See 17Label_Font for more
+                 information about Fonts.
+
+    ******************************************************/
+    ButtonPtr ExampleButton = osg::Button::create();
+
+    UIFontPtr ExampleFont = osg::UIFont::create();
+    beginEditCP(ExampleFont, UIFont::SizeFieldMask);
+        ExampleFont->setSize(16);
+    endEditCP(ExampleFont, UIFont::SizeFieldMask);
+
+
+    beginEditCP(ExampleButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
+            ExampleButton->setMinSize(Vec2s(50, 25));
+            ExampleButton->setMaxSize(Vec2s(200, 100));
+            ExampleButton->setPreferredSize(Vec2s(100, 50));
+            ExampleButton->setToolTipText("Button 1 ToolTip");
+
+            ExampleButton->setText("Button 1");
+            ExampleButton->setFont(ExampleFont);
+            ExampleButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            ExampleButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
+            ExampleButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
+            ExampleButton->setVerticalAlignment(0.0);
+            ExampleButton->setHorizontalAlignment(1.0);
+    endEditCP(ExampleButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
+        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
+            
+    // Create an ActionListener and assign it to ExampleButton
+    // This Class is defined above, and will cause the output
+    // window to display "Button 1 Action" when pressed
+    ExampleButtonActionListener TheExampleButtonActionListener;
+    ExampleButton->addActionListener(&TheExampleButtonActionListener);
+
+    /******************************************************
+
+        Create a ToggleButton and determine its 
+        characteristics.  ToggleButton inherits
+        off of Button, so all characteristsics
+        used above can be used with ToggleButtons
+        as well.
+
+        The only difference is that when pressed,
+        ToggleButton remains pressed until pressed 
+        again.
+
+        -setSelected(bool): Determine whether the 
+            ToggleButton is Selected (true) or
+            deselected (false).  
+
+    ******************************************************/
+    ToggleButtonPtr ExampleToggleButton = osg::ToggleButton::create();
     
-	
+    beginEditCP(ExampleToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::TextFieldMask | ToggleButton::ToolTipTextFieldMask);
+        ExampleToggleButton->setSelected(false);
+        ExampleToggleButton->setText("ToggleMe");
+        ExampleToggleButton->setToolTipText("Toggle Button ToolTip");
+    endEditCP(ExampleToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::TextFieldMask | ToggleButton::ToolTipTextFieldMask);
 
-	// Create Background to be used with the MainFrame
-	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-
-	// Create The Main Frame
-	FramePtr MainFrame = osg::Frame::create();
-	LayoutPtr MainFrameLayout = osg::FlowLayout::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
-	   MainFrame->setLayout(MainFrameLayout);
-	   MainFrame->setBackground(mainBackground);
-       //MainFrame->getChildren().push_back(TheComboBox);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
+    // Create Background to be used with the MainFrame
+    ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
+    beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+        MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+    // Create The Main Frame
+    FramePtr MainFrame = osg::Frame::create();
+    LayoutPtr MainFrameLayout = osg::FlowLayout::create();
+    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+       MainFrame->getChildren().addValue(ExampleButton);
+       MainFrame->getChildren().addValue(ExampleToggleButton);
+       MainFrame->getChildren().addValue(ExampleDrawObjectButton);
+       MainFrame->setLayout(MainFrameLayout);
+       MainFrame->setBackground(MainFrameBackground);
+    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
     TutorialKeyListener TheKeyListener;
     MainFrame->addKeyListener(&TheKeyListener);
 
-	//Create the Drawing Surface
-	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-		drawingSurface->setGraphics(graphics);
-		drawingSurface->setRootFrame(MainFrame);
-	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
-	// Create the UI Foreground Object
-	UIForegroundPtr foreground = osg::UIForeground::create();
+    // Create the Drawing Surface
+    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setRootFrame(MainFrame);
+        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    // Create the UI Foreground Object
+    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
 
-	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-	    foreground->setDrawingSurface(drawingSurface);
-		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.5,0.5));
-    endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask |UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
+        TutorialUIForeground->setFrameBounds(Vec2f(0.5,0.5));
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask |UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-    // Tell the manager what to manage
+    // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
     mgr->setRoot(scene);
 
-	// Add the UI Foreground Object to the Scene
-	ViewportPtr viewport = mgr->getWindow()->getPort(0);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-		viewport->getForegrounds().addValue(foreground);
-    beginEditCP(viewport, Viewport::ForegroundsFieldMask);
+    // Add the UI Foreground Object to the Scene
+    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
-    // Show the whole scene
+    // Show the whole Scene
     mgr->showAll();
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(750,750),
-                                        "OpenSG 33ComboBox Window");
+
+    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
+                                        Vec2s(550,550),
+                                        "OpenSG 01Button Window");
 
     while(!ExitApp)
     {
-        TheWindowEventProducer->update();
-        TheWindowEventProducer->draw();
+        TutorialWindowEventProducer->update();
+        TutorialWindowEventProducer->draw();
     }
     osgExit();
 
     return 0;
 }
+
+
 // Callback functions
 
 
