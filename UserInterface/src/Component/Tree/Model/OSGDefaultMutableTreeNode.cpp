@@ -183,13 +183,7 @@ void DefaultMutableTreeNode::setParent(MutableTreeNodePtr newParent)
 
 void DefaultMutableTreeNode::setUserObject(SharedFieldPtr object)
 {
-	//TODO:Implement
-}
-
-std::vector<MutableTreeNodePtr> DefaultMutableTreeNode::getPathToRoot(void) const
-{
-	//TODO:Implement
-	return std::vector<MutableTreeNodePtr>();
+	_UserObject = object;
 }
 
 void DefaultMutableTreeNode::add(MutableTreeNodePtr newChild)
@@ -350,8 +344,18 @@ DefaultMutableTreeNodePtr DefaultMutableTreeNode::getNextSibling(void) const
 
 std::vector<MutableTreeNodePtr> DefaultMutableTreeNode::getPath(void) const
 {
-	//TODO:Implement
-	return std::vector<MutableTreeNodePtr>();
+	std::vector<MutableTreeNodePtr> Path;
+
+	MutableTreeNodePtr Node(MutableTreeNodePtr(this));
+	while(Node != NullFC)
+	{
+		Path.push_back(Node);
+		Node = MutableTreeNode::Ptr::dcast(Node->getParent());
+	}
+
+	std::reverse(Path.begin(), Path.end());
+
+	return Path;
 }
 
 DefaultMutableTreeNodePtr DefaultMutableTreeNode::getPreviousLeaf(void) const
@@ -434,14 +438,24 @@ UInt32 DefaultMutableTreeNode::getSiblingCount(void) const
 
 SharedFieldPtr DefaultMutableTreeNode::getUserObject(void) const
 {
-	//TODO:Implement
-	return SharedFieldPtr();
+	return _UserObject;
 }
 
 std::vector<SharedFieldPtr> DefaultMutableTreeNode::getUserObjectPath(void) const
 {
+	std::vector<SharedFieldPtr> UserObjectPath;
+
+	DefaultMutableTreeNodePtr Node(DefaultMutableTreeNodePtr(this));
+	while(Node != NullFC)
+	{
+		UserObjectPath.push_back(Node->getUserObject());
+		Node = DefaultMutableTreeNode::Ptr::dcast(Node->getParent());
+	}
+
+	std::reverse(UserObjectPath.begin(), UserObjectPath.end());
+
 	//TODO:Implement
-	return std::vector<SharedFieldPtr>();
+	return UserObjectPath;
 }
 
 bool DefaultMutableTreeNode::isNodeAncestor(MutableTreeNodePtr anotherNode) const
@@ -490,13 +504,22 @@ bool DefaultMutableTreeNode::isNodeDescendant(DefaultMutableTreeNodePtr anotherN
 
 bool DefaultMutableTreeNode::isNodeRelated(DefaultMutableTreeNodePtr aNode) const
 {
-	//TODO:Implement
-	return false;
+	return getRoot() == aNode->getRoot();
 }
 
 bool DefaultMutableTreeNode::isNodeSibling(MutableTreeNodePtr anotherNode) const
 {
-	//TODO:Implement
+	if(getParentInternal() != NullFC)
+	{
+		for(UInt32 i(0) ; i<DefaultMutableTreeNode::Ptr::dcast(getParentInternal())->getChildrenInternal().size() ; ++i)
+		{
+			if(DefaultMutableTreeNode::Ptr::dcast(getParentInternal())->getChildrenInternal()[i] == anotherNode)
+			{
+				return true;
+			}
+		}
+	}
+
 	return false;
 }
 

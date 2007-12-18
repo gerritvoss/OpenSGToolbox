@@ -242,9 +242,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMut
     virtual ~DefaultMutableTreeNode(void); 
 
     /*! \}                                                                 */
-	
-	//Builds the parents of node up to and including the root node, where the original node is the last element in the returned array.
-	std::vector<MutableTreeNodePtr> getPathToRoot(void) const;
+
+	SharedFieldPtr _UserObject;
     
     /*==========================  PRIVATE  ================================*/
   private:
