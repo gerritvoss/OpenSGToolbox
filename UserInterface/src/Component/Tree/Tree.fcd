@@ -92,4 +92,14 @@ A UI Tree.
 	>
    Number of rows to make visible at one time.
    </Field>
+	<Field
+		name="CellEditor"
+		type="TreeCellEditorPtr"
+		cardinality="single"
+      visibility="external"
+      header="Component/Tree/Editors/OSGTreeCellEditorFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+   </Field>
 </FieldContainer>

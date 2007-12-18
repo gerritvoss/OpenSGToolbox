@@ -48,6 +48,7 @@
 #include <OpenSG/Input/OSGEvent.h>
 #include "OSGCellEditorListener.h"
 #include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
+#include "Component/OSGComponentFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -100,6 +101,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING CellEditor : public CellEditorBase
 
     //Tells the editor to stop editing and accept any partially edited value as the value of the editor.
     virtual bool stopCellEditing(void) = 0;
+    
+    //Get the Editor Component
+    virtual ComponentPtr getCellEditor(SharedFieldPtr Value, bool IsSelected) = 0;
 
     /*=========================  PROTECTED  ===============================*/
   protected:

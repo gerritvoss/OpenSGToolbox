@@ -138,6 +138,11 @@ ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table,
 	return getDefaultStringEditor();
 }
 
+ComponentPtr DefaultTableCellEditor::getCellEditor(SharedFieldPtr Value, bool IsSelected)
+{
+    return getTableCellEditorComponent(NullFC, Value, IsSelected, 0, 0);
+}
+
 void DefaultTableCellEditor::cancelCellEditing(void)
 {
     if(getDefaultStringEditor() != NullFC)

@@ -1862,6 +1862,34 @@
 					Name="Tree"
 					>
 					<File
+						RelativePath="..\..\src\Component\Tree\OSGTree.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTree.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTree.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\Component\Tree\OSGTreePath.cpp"
 						>
 					</File>
@@ -2084,6 +2112,34 @@
 					<Filter
 						Name="Editors"
 						>
+						<File
+							RelativePath="..\..\src\Component\Tree\Editors\OSGTreeCellEditor.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Editors\OSGTreeCellEditor.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Editors\OSGTreeCellEditor.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Editors\OSGTreeCellEditorBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Editors\OSGTreeCellEditorBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Editors\OSGTreeCellEditorBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Editors\OSGTreeCellEditorFields.h"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="Renderers"
