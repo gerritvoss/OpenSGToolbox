@@ -47,7 +47,8 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGTreeNode.h"
+#include "OSGDefaultTreeModel.h"
+#include "OSGTreeModelListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,8 +56,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::TreeNode
-A UI Tree Node. 
+/*! \class osg::DefaultTreeModel
+A DefaultTreeModel. 
 */
 
 /***************************************************************************\
@@ -67,93 +68,104 @@ A UI Tree Node.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void TreeNode::initMethod (void)
-{
-}
-
-
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-std::vector<TreeNodePtr> TreeNode::getChildren(void) const
+SharedFieldPtr DefaultTreeModel::getChild(SharedFieldPtr parent, const UInt32& index) const
 {
-    std::vector<TreeNodePtr> Result;
-    for(UInt32 i(0) ; i<getChildCount() ; ++i)
-    {
-        Result.push_back(getChildAt(i));
-    }
-
-    return Result;
+    return _Root->getNodeFromUserObject(parent)->getChildAt(index)->getUserObject();
 }
 
-TreeNodePtr TreeNode::getNodeFromUserObject(SharedFieldPtr object)
+UInt32 DefaultTreeModel::getChildCount(SharedFieldPtr parent) const
 {
-    if(object == getUserObject())
+    return _Root->getNodeFromUserObject(parent)->getChildCount();
+}
+
+UInt32 DefaultTreeModel::getIndexOfChild(SharedFieldPtr parent, SharedFieldPtr child) const
+{
+    TreeNodePtr ParentNode(_Root->getNodeFromUserObject(parent));
+    return ParentNode->getIndex(ParentNode->getNodeFromUserObject(child));
+}
+
+SharedFieldPtr DefaultTreeModel::getRoot(void) const
+{
+    return _Root->getUserObject();
+}
+
+bool DefaultTreeModel::isLeaf(SharedFieldPtr node) const
+{
+    if(_AskAllowsChilren)
     {
-        return TreeNodePtr(this);
+        return !_Root->getNodeFromUserObject(node)->getAllowsChildren();
     }
     else
     {
-        TreeNodePtr Node;
-        for(UInt32 i(0) ; i<getChildCount() ; ++i)
-        {
-            Node = getChildAt(i)->getNodeFromUserObject(object);
-            if(Node != NullFC)
-            {
-                return Node;
-            }
-        }
+        return _Root->getNodeFromUserObject(node)->getChildCount() == 0;
     }
 }
 
-TreePath TreeNode::getPath(void) const
+void DefaultTreeModel::valueForPathChanged(TreePath path, SharedFieldPtr newValue)
 {
-    std::vector<SharedFieldPtr> Path;
-
-    TreeNodePtr Node(this);
-    while(Node != NullFC)
-    {
-        Path.push_back(Node->getUserObject());
-        Node = Node->getParent();
-    }
-
-    return TreePath(Path);
+    //Do nothing for the default Tree Model
 }
+
+
+
+
+void DefaultTreeModel::insertNodeInto(MutableTreeNodePtr newChild, MutableTreeNodePtr parent, const UInt32& index)
+{
+    parent->insert(newChild, index);
+    //produceTreeStructureChanged();
+}
+
+void DefaultTreeModel::nodeChanged(TreeNodePtr node)
+{
+    //TODO:Implement
+}
+
+void DefaultTreeModel::nodesChanged(TreeNodePtr node, std::vector<UInt32> childIndices)
+{
+    //TODO:Implement
+    //produceTreeNodesChanged();
+}
+
+void DefaultTreeModel::nodeStructureChanged(TreeNodePtr node)
+{
+    //TODO:Implement
+    //produceTreeStructureChanged();
+}
+
+void DefaultTreeModel::nodesWereInserted(TreeNodePtr node, std::vector<UInt32> childIndices)
+{
+    std::vector<SharedFieldPtr> InstertedChildUserObjects;
+
+    for(UInt32 i(0) ; i< childIndices.size() ; ++i)
+    {
+        InstertedChildUserObjects.push_back(node->getChildAt(childIndices[i])->getUserObject());
+    }
+    produceTreeNodesInserted(node->getPath(), childIndices, InstertedChildUserObjects);
+}
+
+void DefaultTreeModel::removeNodeFromParent(MutableTreeNodePtr node)
+{
+    node->removeFromParent();
+    //produceTreeStructureChanged();
+}
+
+void DefaultTreeModel::setRoot(TreeNodePtr root)
+{
+    _Root = root;
+    nodeChanged(_Root);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-TreeNode::TreeNode(void) :
-    Inherited()
-{
-}
-
-TreeNode::TreeNode(const TreeNode &source) :
-    Inherited(source)
-{
-}
-
-TreeNode::~TreeNode(void)
-{
-}
-
 /*----------------------------- class specific ----------------------------*/
-
-void TreeNode::changed(BitVector whichField, UInt32 origin)
-{
-    Inherited::changed(whichField, origin);
-}
-
-void TreeNode::dump(      UInt32    , 
-                         const BitVector ) const
-{
-    SLOG << "Dump TreeNode NI" << std::endl;
-}
-
-
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
 
@@ -164,15 +176,6 @@ void TreeNode::dump(      UInt32    ,
 #ifdef OSG_LINUX_ICC
 #pragma warning( disable : 177 )
 #endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGTREENODEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTREENODEBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTREENODEFIELDS_HEADER_CVSID;
-}
 
 #ifdef __sgi
 #pragma reset woff 1174

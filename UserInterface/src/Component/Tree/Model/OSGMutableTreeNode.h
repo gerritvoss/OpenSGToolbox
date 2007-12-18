@@ -46,7 +46,6 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGMutableTreeNodeBase.h"
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -94,9 +93,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING MutableTreeNode : public MutableTreeNodeBa
 
 	//Sets the parent of the receiver to newParent.
 	virtual void setParent(MutableTreeNodePtr newParent) = 0;
-
-	//Resets the user object of the receiver to object.
-	virtual void setUserObject(SharedFieldPtr object) = 0;
 
     /*=========================  PROTECTED  ===============================*/
   protected:

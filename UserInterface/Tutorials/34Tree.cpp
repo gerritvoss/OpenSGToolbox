@@ -52,14 +52,11 @@ bool ExitApp = false;
 void display(void);
 void reshape(Vec2s Size);
 
-// 01 Button Headers
-#include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGToggleButton.h>
-#include <OpenSG/UserInterface/OSGUIFont.h>
-#include <OpenSG/UserInterface/OSGColorUIBackground.h>
+// 34 Tree Headers
+#include <OpenSG/UserInterface/OSGDefaultTreeModel.h>
+#include <OpenSG/UserInterface/OSGDefaultMutableTreeNode.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGPolygonUIDrawObject.h>
-#include <OpenSG/UserInterface/OSGUIDrawObjectCanvas.h>
+#include <OpenSG/UserInterface/OSGUIBackgrounds.h>
 
 // Create a class to allow for the use of the Escape
 // key to exit
@@ -69,7 +66,7 @@ public:
 
    virtual void keyPressed(const KeyEvent& e)
    {
-       if(e.getKey() == KeyEvent::KEY_ESCAPE)
+       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
            ExitApp = true;
        }
@@ -95,24 +92,6 @@ public:
     virtual void windowClosed(const WindowEvent& e)
     {
         ExitApp = true;
-    }
-};
-
-    /******************************************************
-
-         Create an ActionListener to display text
-         in the Console Window when the Button is
-         pressed (causing an action).
-
-    ******************************************************/
-
-class ExampleButtonActionListener : public ActionListener
-{
-public:
-
-   virtual void actionPerformed(const ActionEvent& e)
-    {
-        std::cout << "Button 1 Action" << std::endl;
     }
 };
 
@@ -147,82 +126,98 @@ int main(int argc, char **argv)
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
-    /******************************************************
 
-                 Create an Button Component and
-                 a simple Font.
-                 See 17Label_Font for more
-                 information about Fonts.
+    DefaultMutableTreeNodePtr ANode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodePtr BNode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodePtr CNode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodePtr DNode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodePtr ENode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodePtr FNode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodePtr GNode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodePtr HNode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodePtr INode = DefaultMutableTreeNode::create() ;
 
-    ******************************************************/
-    ButtonPtr ExampleButton = osg::Button::create();
+    ANode->setUserObject(SharedFieldPtr(new SFString("A")));
+    BNode->setUserObject(SharedFieldPtr(new SFString("B")));
+    CNode->setUserObject(SharedFieldPtr(new SFString("C")));
+    DNode->setUserObject(SharedFieldPtr(new SFString("D")));
+    ENode->setUserObject(SharedFieldPtr(new SFString("E")));
+    FNode->setUserObject(SharedFieldPtr(new SFString("F")));
+    GNode->setUserObject(SharedFieldPtr(new SFString("G")));
+    HNode->setUserObject(SharedFieldPtr(new SFString("H")));
+    INode->setUserObject(SharedFieldPtr(new SFString("I")));
 
-    UIFontPtr ExampleFont = osg::UIFont::create();
-    beginEditCP(ExampleFont, UIFont::SizeFieldMask);
-        ExampleFont->setSize(16);
-    endEditCP(ExampleFont, UIFont::SizeFieldMask);
-
-
-    beginEditCP(ExampleButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
-        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
-            ExampleButton->setMinSize(Vec2s(50, 25));
-            ExampleButton->setMaxSize(Vec2s(200, 100));
-            ExampleButton->setPreferredSize(Vec2s(100, 50));
-            ExampleButton->setToolTipText("Button 1 ToolTip");
-
-            ExampleButton->setText("Button 1");
-            ExampleButton->setFont(ExampleFont);
-            ExampleButton->setTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
-            ExampleButton->setRolloverTextColor(Color4f(1.0, 0.0, 1.0, 1.0));
-            ExampleButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
-            ExampleButton->setVerticalAlignment(0.0);
-            ExampleButton->setHorizontalAlignment(1.0);
-    endEditCP(ExampleButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
-        Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
-            
-    // Create an ActionListener and assign it to ExampleButton
-    // This Class is defined above, and will cause the output
-    // window to display "Button 1 Action" when pressed
-    ExampleButtonActionListener TheExampleButtonActionListener;
-    ExampleButton->addActionListener(&TheExampleButtonActionListener);
-
-    /******************************************************
-
-        Create a ToggleButton and determine its 
-        characteristics.  ToggleButton inherits
-        off of Button, so all characteristsics
-        used above can be used with ToggleButtons
-        as well.
-
-        The only difference is that when pressed,
-        ToggleButton remains pressed until pressed 
-        again.
-
-        -setSelected(bool): Determine whether the 
-            ToggleButton is Selected (true) or
-            deselected (false).  
-
-    ******************************************************/
-    ToggleButtonPtr ExampleToggleButton = osg::ToggleButton::create();
+    //A
+    beginEditCP(ANode, DefaultMutableTreeNode::ChildrenInternalFieldMask);
+        ANode->getChildrenInternal().addValue(BNode);
+        ANode->getChildrenInternal().addValue(CNode);
+    endEditCP(ANode, DefaultMutableTreeNode::ChildrenInternalFieldMask);
     
-    beginEditCP(ExampleToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::TextFieldMask | ToggleButton::ToolTipTextFieldMask);
-        ExampleToggleButton->setSelected(false);
-        ExampleToggleButton->setText("ToggleMe");
-        ExampleToggleButton->setToolTipText("Toggle Button ToolTip");
-    endEditCP(ExampleToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::TextFieldMask | ToggleButton::ToolTipTextFieldMask);
+    //B
+    beginEditCP(ANode, DefaultMutableTreeNode::ChildrenInternalFieldMask);
+        BNode->getChildrenInternal().addValue(DNode);
+        BNode->getChildrenInternal().addValue(ENode);
+    endEditCP(ANode, DefaultMutableTreeNode::ChildrenInternalFieldMask);
+    
+    //C
+    beginEditCP(ANode, DefaultMutableTreeNode::ChildrenInternalFieldMask);
+        CNode->getChildrenInternal().addValue(FNode);
+        CNode->getChildrenInternal().addValue(GNode);
+    endEditCP(ANode, DefaultMutableTreeNode::ChildrenInternalFieldMask);
+    
+    //D
+    beginEditCP(ANode, DefaultMutableTreeNode::ChildrenInternalFieldMask);
+        DNode->getChildrenInternal().addValue(HNode);
+        DNode->getChildrenInternal().addValue(INode);
+    endEditCP(ANode, DefaultMutableTreeNode::ChildrenInternalFieldMask);
+
+    DefaultTreeModel TheTreeModel;
+    TheTreeModel.setRoot(ANode);
+
+    std::string TempString;
+
+    std::vector<DefaultMutableTreeNodePtr> TreePreorderSequence;
+    ANode->preorder(TreePreorderSequence);
+    std::cout << "Preorder Sequence: ";
+    for(UInt32 i(0) ; i<TreePreorderSequence.size() ; ++i)
+    {
+        TreePreorderSequence[i]->getUserObject()->getValueByStr(TempString);
+        std::cout << TempString << ", ";
+    }
+    std::cout << std::endl;
+    
+    std::vector<DefaultMutableTreeNodePtr> TreePostorderSequence;
+    ANode->postorder(TreePostorderSequence);
+    std::cout << "Postorder Sequence: ";
+    for(UInt32 i(0) ; i<TreePostorderSequence.size() ; ++i)
+    {
+        TreePostorderSequence[i]->getUserObject()->getValueByStr(TempString);
+        std::cout << TempString << ", ";
+    }
+    std::cout << std::endl;
+    
+    std::vector<DefaultMutableTreeNodePtr> BreadthFirstSequence;
+    ANode->breadthFirst(BreadthFirstSequence);
+    std::cout << "Breadth First Sequence: ";
+    for(UInt32 i(0) ; i<BreadthFirstSequence.size() ; ++i)
+    {
+        BreadthFirstSequence[i]->getUserObject()->getValueByStr(TempString);
+        std::cout << TempString << ", ";
+    }
+    std::cout << std::endl;
 
     // Create Background to be used with the MainFrame
     ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
     beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
         MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
     endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+
     // Create The Main Frame
     FramePtr MainFrame = osg::Frame::create();
     LayoutPtr MainFrameLayout = osg::FlowLayout::create();
     beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-       MainFrame->getChildren().addValue(ExampleButton);
-       MainFrame->getChildren().addValue(ExampleToggleButton);
-       MainFrame->getChildren().addValue(ExampleDrawObjectButton);
+       // Assign the Button to the MainFrame so it will be displayed
+       // when the view is rendered.
        MainFrame->setLayout(MainFrameLayout);
        MainFrame->setBackground(MainFrameBackground);
     endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);

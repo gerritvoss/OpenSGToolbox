@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -36,52 +34,51 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGABSTRACTTREEMODEL_H_
-#define _OSGABSTRACTTREEMODEL_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
-#include "Component/Tree/Model/OSGTreeModel.h"
-#include <set>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief AbstractTreeModel class. See \ref 
-           PageUserInterfaceAbstractTreeModel for a description.
-*/
-
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModel : public TreeModel
+inline
+void DefaultTreeModel::setAsksAllowsChildren(bool newValue)
 {
-    /*==========================  PUBLIC  =================================*/
-  public:
-	//Adds a listener for the TreeModelEvent posted after the tree changes.
-	virtual void addTreeModelListener(TreeModelListenerPtr l);
+    _AskAllowsChilren = newValue;
+}
 
-	//Removes a listener previously added with addTreeModelListener.
-	virtual void removeTreeModelListener(TreeModelListenerPtr l);
-  protected:
 
-	typedef std::set<TreeModelListenerPtr> TreeModelListenerSet;
-	typedef TreeModelListenerSet::iterator TreeModelListenerSetIter;
-	typedef TreeModelListenerSet::const_iterator TreeModelListenerSetConstIter;
-	TreeModelListenerSet _ModelListeners;
+inline
+void DefaultTreeModel::reload(void)
+{
+    nodeChanged(_Root);
+}
 
-	void produceTreeNodesChanged(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children);
-	void produceTreeNodesInserted(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children);
-	void produceTreeNodesRemoved(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children);
-	void produceTreeStructureChanged(TreePath Parent, std::vector<UInt32> ChildIndices, std::vector<SharedFieldPtr> Children);
-    /*==========================  PRIVATE  ================================*/
-  private:
-};
+inline
+void DefaultTreeModel::reload(TreeNodePtr node)
+{
+    nodeChanged(node);
+}
 
-typedef AbstractTreeModel *AbstractTreeModelPtr;
+inline
+void DefaultTreeModel::nodesWereRemoved(TreeNodePtr node, std::vector<UInt32> childIndices, std::vector<SharedFieldPtr> removedChildren)
+{
+    produceTreeNodesRemoved(node->getPath(), childIndices, removedChildren);
+}
+
+inline
+bool DefaultTreeModel::asksAllowsChildren(void)
+{
+    return _AskAllowsChilren;
+}
+
+inline
+std::vector<MutableTreeNodePtr> DefaultTreeModel::getPathToRoot(TreeNodePtr aNode)
+{
+    return std::vector<MutableTreeNodePtr>();
+}
 
 OSG_END_NAMESPACE
 
-#define OSGABSTRACTTREEMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGABSTRACTTREEMODEL_H_ */

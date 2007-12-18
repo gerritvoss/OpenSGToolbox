@@ -46,6 +46,9 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGTreeNodeBase.h"
+#include "Component/Tree/OSGTreePath.h"
+#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
+#include <vector>
 
 OSG_BEGIN_NAMESPACE
 
@@ -79,8 +82,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeNode : public TreeNodeBase
 
     /*! \}                                                                 */
 	
-	//Returns the children of the receiver as an Enumeration.
-	//virtual Enumeration children(void) const = 0;
+	//Returns the children of the receiver as a Vector.
+    virtual std::vector<TreeNodePtr> getChildren(void) const;
 
 	//Returns true if the receiver allows children.
 	virtual bool getAllowsChildren(void) const = 0;
@@ -100,6 +103,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeNode : public TreeNodeBase
 	//Returns true if the receiver is a leaf.
 	virtual bool isLeaf(void) const = 0;
 
+	//Resets the user object of the receiver to object.
+	virtual void setUserObject(SharedFieldPtr object) = 0;
+    
+	//Returns this node's user object.
+	virtual SharedFieldPtr getUserObject(void) const = 0;
+    
+    //Find the decendent node that uses object as it's UserObject
+    TreeNodePtr getNodeFromUserObject(SharedFieldPtr object);
+
+    //Get the Path from the Root to this node
+    TreePath getPath(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

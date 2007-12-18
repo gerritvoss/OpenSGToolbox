@@ -80,8 +80,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMut
 
     /*! \}                                                                 */
 	
-	//Returns the children of the receiver as an Enumeration.
-	//virtual Enumeration children(void) const;
 
 	//Returns true if the receiver allows children.
 	virtual bool getAllowsChildren(void) const;
@@ -125,10 +123,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMut
 	void add(MutableTreeNodePtr newChild);
 
 	//Creates and returns an enumeration that traverses the subtree rooted at this node in breadth-first order.
-	//Enumeration breadthFirstEnumeration(void);
+    void breadthFirst(std::vector<DefaultMutableTreeNodePtr>& Result)const;
 
 	//Creates and returns an enumeration that traverses the subtree rooted at this node in depth-first order.
-	//Enumeration depthFirstEnumeration(void);
+    void depthFirst(std::vector<DefaultMutableTreeNodePtr>& Result) const;
 
 	//Returns the child in this node's child array that immediately follows aChild, which must be a child of this node.
 	MutableTreeNodePtr getChildAfter(MutableTreeNodePtr aChild) const;
@@ -188,7 +186,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMut
 	UInt32 getSiblingCount(void) const;
 
 	//Returns this node's user object.
-	SharedFieldPtr getUserObject(void) const;
+	virtual SharedFieldPtr getUserObject(void) const;
 
 	//Returns the user object path, from the root, to get to this node.
 	std::vector<SharedFieldPtr> getUserObjectPath(void) const;
@@ -215,10 +213,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMut
 	//Enumeration pathFromAncestorEnumeration(MutableTreeNodePtr ancestor) const;
 
 	//Creates and returns an enumeration that traverses the subtree rooted at this node in postorder.
-	//Enumeration postorderEnumeration(void) const;
+	void postorder(std::vector<DefaultMutableTreeNodePtr>& Result) const;
 
 	//Creates and returns an enumeration that traverses the subtree rooted at this node in preorder.
-	//Enumeration preorderEnumeration(void) const;
+	void preorder(std::vector<DefaultMutableTreeNodePtr>& Result) const;
 
 	//Removes all of this node's children, setting their parents to null.
 	void removeAllChildren(void);

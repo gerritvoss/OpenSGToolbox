@@ -320,8 +320,20 @@ UInt32 DefaultMutableTreeNode::getLevel(void) const
 
 DefaultMutableTreeNodePtr DefaultMutableTreeNode::getNextLeaf(void) const
 {
-	//TODO:Implement
-	return NullFC;
+    DefaultMutableTreeNodePtr ParentNode(this);
+    while(ParentNode->getParentInternal() != NullFC && ParentNode->getNextSibling() == NullFC)
+    {
+        ParentNode = DefaultMutableTreeNode::Ptr::dcast(ParentNode->getParentInternal());
+    }
+
+    if(ParentNode->getParentInternal() != NullFC)
+    {
+        return ParentNode->getNextSibling()->getFirstLeaf();
+    }
+    else
+    {
+	    return NullFC;
+    }
 }
 
 DefaultMutableTreeNodePtr DefaultMutableTreeNode::getNextNode(void) const
@@ -378,14 +390,44 @@ std::vector<MutableTreeNodePtr> DefaultMutableTreeNode::getPath(void) const
 
 DefaultMutableTreeNodePtr DefaultMutableTreeNode::getPreviousLeaf(void) const
 {
-	//TODO:Implement
-	return NullFC;
+    DefaultMutableTreeNodePtr ParentNode(this);
+    while(ParentNode->getParentInternal() != NullFC && ParentNode->getPreviousSibling() == NullFC)
+    {
+        ParentNode = DefaultMutableTreeNode::Ptr::dcast(ParentNode->getParentInternal());
+    }
+
+    if(ParentNode->getParentInternal() != NullFC)
+    {
+        return ParentNode->getPreviousSibling()->getLastLeaf();
+    }
+    else
+    {
+	    return NullFC;
+    }
 }
 
 DefaultMutableTreeNodePtr DefaultMutableTreeNode::getPreviousNode(void) const
 {
-	//TODO:Implement
-	return NullFC;
+    if(getParentInternal() != NullFC)
+    {
+        if(DefaultMutableTreeNode::Ptr::dcast(getParentInternal())->getFirstChild() == DefaultMutableTreeNodePtr(this))
+        {
+            return DefaultMutableTreeNode::Ptr::dcast(getParentInternal());
+        }
+        else
+        {
+            DefaultMutableTreeNodePtr RightMostNode(getPreviousSibling());
+            while(!RightMostNode->isLeaf())
+            {
+                RightMostNode = DefaultMutableTreeNode::Ptr::dcast(RightMostNode->getChildrenInternal().back());
+            }
+            return RightMostNode;
+        }
+    }
+    else
+    {
+	    return NullFC;
+    }
 }
 
 DefaultMutableTreeNodePtr DefaultMutableTreeNode::getPreviousSibling(void) const
@@ -551,6 +593,67 @@ void DefaultMutableTreeNode::removeAllChildren(void)
 		getChildrenInternal().clear();
 	endEditCP(DefaultMutableTreeNodePtr(this), ChildrenInternalFieldMask);
 }
+
+void DefaultMutableTreeNode::depthFirst(std::vector<DefaultMutableTreeNodePtr>& Result) const
+{
+    //Call the postorder traversal
+    postorder(Result);
+}
+
+void DefaultMutableTreeNode::postorder(std::vector<DefaultMutableTreeNodePtr>& Result) const
+{
+    if(!isLeaf())
+    {
+        for(UInt32 i(0) ; i<getChildrenInternal().size() ; ++i)
+        {
+            DefaultMutableTreeNode::Ptr::dcast(getChildrenInternal()[i])->postorder(Result);
+        }
+    }
+
+    //Push Myself on the Vector
+    Result.push_back(DefaultMutableTreeNodePtr(this));
+}
+
+void DefaultMutableTreeNode::preorder(std::vector<DefaultMutableTreeNodePtr>& Result) const
+{
+    //Push Myself on the Vector
+    Result.push_back(DefaultMutableTreeNodePtr(this));
+
+    if(!isLeaf())
+    {
+        for(UInt32 i(0) ; i<getChildrenInternal().size() ; ++i)
+        {
+            DefaultMutableTreeNode::Ptr::dcast(getChildrenInternal()[i])->preorder(Result);
+        }
+    }
+}
+
+void DefaultMutableTreeNode::breadthFirst(std::vector<DefaultMutableTreeNodePtr>& Result) const
+{
+    //Push Myself on the Vector
+    Result.push_back(DefaultMutableTreeNodePtr(this));
+
+    
+    std::vector<TreeNodePtr> CurrentLevelNodes;
+    std::vector<TreeNodePtr> NextLevelNodes(getChildren());
+    while(NextLevelNodes.size() != 0)
+    {
+        for(UInt32 i(0) ; i<NextLevelNodes.size() ; ++i)
+        {
+            Result.push_back(DefaultMutableTreeNode::Ptr::dcast(NextLevelNodes[i]));
+        }
+        
+        CurrentLevelNodes = NextLevelNodes;
+        NextLevelNodes.clear();
+        std::vector<TreeNodePtr> Children;
+        for(UInt32 i(0) ; i<CurrentLevelNodes.size() ; ++i)
+        {
+            Children = CurrentLevelNodes[i]->getChildren();
+            NextLevelNodes.insert(NextLevelNodes.end(), Children.begin(), Children.end());
+        }
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
