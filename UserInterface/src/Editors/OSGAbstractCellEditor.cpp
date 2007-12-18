@@ -48,7 +48,6 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGAbstractCellEditor.h"
-#include "OSGCellEditorListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -56,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::AbstractListModel
-A AbstractListModel. 
+/*! \class osg::AbstractCellEditor
+A UI Abstract Cell Editor. 
 */
 
 /***************************************************************************\
@@ -67,6 +66,11 @@ A AbstractListModel.
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
+
+void AbstractCellEditor::initMethod (void)
+{
+}
+
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -126,14 +130,39 @@ void AbstractCellEditor::produceEditingStopped(void)
       (*SetItor)->editingStopped(TheEvent);
    }
 }
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
+AbstractCellEditor::AbstractCellEditor(void) :
+    Inherited()
+{
+}
+
+AbstractCellEditor::AbstractCellEditor(const AbstractCellEditor &source) :
+    Inherited(source)
+{
+}
+
+AbstractCellEditor::~AbstractCellEditor(void)
+{
+}
+
 /*----------------------------- class specific ----------------------------*/
+
+void AbstractCellEditor::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void AbstractCellEditor::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump AbstractCellEditor NI" << std::endl;
+}
+
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
@@ -145,6 +174,15 @@ void AbstractCellEditor::produceEditingStopped(void)
 #ifdef OSG_LINUX_ICC
 #pragma warning( disable : 177 )
 #endif
+
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGABSTRACTCELLEDITORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGABSTRACTCELLEDITORBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGABSTRACTCELLEDITORFIELDS_HEADER_CVSID;
+}
 
 #ifdef __sgi
 #pragma reset woff 1174

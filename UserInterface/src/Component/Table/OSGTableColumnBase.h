@@ -73,6 +73,7 @@
 #include <OpenSG/OSGUInt32Fields.h> // PreferredWidth type
 #include <OpenSG/OSGUInt32Fields.h> // Width type
 #include <OpenSG/OSGBoolFields.h> // Resizable type
+#include "Component/Table/Editors/OSGTableCellEditorFields.h" // CellEditor type
 
 #include "OSGTableColumnFields.h"
 
@@ -102,7 +103,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer
         PreferredWidthFieldId = ModelIndexFieldId     + 1,
         WidthFieldId          = PreferredWidthFieldId + 1,
         ResizableFieldId      = WidthFieldId          + 1,
-        NextFieldId           = ResizableFieldId      + 1
+        CellEditorFieldId     = ResizableFieldId      + 1,
+        NextFieldId           = CellEditorFieldId     + 1
     };
 
     static const OSG::BitVector MaxWidthFieldMask;
@@ -111,6 +113,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer
     static const OSG::BitVector PreferredWidthFieldMask;
     static const OSG::BitVector WidthFieldMask;
     static const OSG::BitVector ResizableFieldMask;
+    static const OSG::BitVector CellEditorFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -143,6 +146,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer
            SFUInt32            *getSFPreferredWidth (void);
            SFUInt32            *getSFWidth          (void);
            SFBool              *getSFResizable      (void);
+           SFTableCellEditorPtr *getSFCellEditor     (void);
 
            UInt32              &getMaxWidth       (void);
      const UInt32              &getMaxWidth       (void) const;
@@ -156,6 +160,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer
      const UInt32              &getWidth          (void) const;
            bool                &getResizable      (void);
      const bool                &getResizable      (void) const;
+           TableCellEditorPtr  &getCellEditor     (void);
+     const TableCellEditorPtr  &getCellEditor     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -168,6 +174,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer
      void setPreferredWidth ( const UInt32 &value );
      void setWidth          ( const UInt32 &value );
      void setResizable      ( const bool &value );
+     void setCellEditor     ( const TableCellEditorPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -216,6 +223,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer
     SFUInt32            _sfPreferredWidth;
     SFUInt32            _sfWidth;
     SFBool              _sfResizable;
+    SFTableCellEditorPtr   _sfCellEditor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -36,34 +36,48 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_ABSTRACT_CELL_EDITOR_H_
-#define _OSG_UI_ABSTRACT_CELL_EDITOR_H_
-
+#ifndef _OSGABSTRACTCELLEDITOR_H_
+#define _OSGABSTRACTCELLEDITOR_H_
 #ifdef __sgi
 #pragma once
 #endif
- 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGCellEditor.h"
+#include <OpenSG/OSGConfig.h>
+
+#include "OSGAbstractCellEditorBase.h"
 #include <set>
 
 OSG_BEGIN_NAMESPACE
-	 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractCellEditor : virtual public CellEditor
-{
-private:
-protected:
-	typedef std::set<CellEditorListenerPtr> CellEditorListenerSet;
-    typedef CellEditorListenerSet::iterator CellEditorListenerSetItor;
-    typedef CellEditorListenerSet::const_iterator CellEditorListenerSetConstItor;
-	CellEditorListenerSet _CellEditorListeners;
 
-    
-	void produceEditingCanceled(void);
-	void produceEditingStopped(void);
-public:
+/*! \brief AbstractCellEditor class. See \ref 
+           PageUserInterfaceAbstractCellEditor for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING AbstractCellEditor : public AbstractCellEditorBase
+{
+  private:
+
+    typedef AbstractCellEditorBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
     //Adds a listener to the list that's notified when the editor stops, or cancels editing.
     virtual void addCellEditorListener(CellEditorListenerPtr l);
 
@@ -82,12 +96,55 @@ public:
     //Tells the editor to stop editing and accept any partially edited value as the value of the editor.
     virtual bool stopCellEditing(void);
 
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in AbstractCellEditorBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    AbstractCellEditor(void);
+    AbstractCellEditor(const AbstractCellEditor &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~AbstractCellEditor(void); 
+
+    /*! \}                                                                 */
+    
+	typedef std::set<CellEditorListenerPtr> CellEditorListenerSet;
+    typedef CellEditorListenerSet::iterator CellEditorListenerSetItor;
+    typedef CellEditorListenerSet::const_iterator CellEditorListenerSetConstItor;
+	CellEditorListenerSet _CellEditorListeners;
+
+    
+	void produceEditingCanceled(void);
+	void produceEditingStopped(void);
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class AbstractCellEditorBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const AbstractCellEditor &source);
 };
 
-typedef AbstractCellEditor* AbstractCellEditorPtr;
+typedef AbstractCellEditor *AbstractCellEditorP;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSG_UI_ABSTRACT_CELL_EDITOR_H_ */
+#include "OSGAbstractCellEditorBase.inl"
+#include "OSGAbstractCellEditor.inl"
 
+#define OSGABSTRACTCELLEDITOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
+#endif /* _OSGABSTRACTCELLEDITOR_H_ */

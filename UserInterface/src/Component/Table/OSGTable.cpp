@@ -57,7 +57,8 @@
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 
 #include "Component/Table/DefaultRenderers/OSGDefaultTableCellRenderer.h"
-#include "Component/Table/DefaultEditors/OSGDefaultTableCellEditor.h"
+#include "Component/Table/Editors/OSGDefaultTableCellEditor.h"
+#include "Component/Table/Editors/OSGTableCellEditor.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -98,16 +99,18 @@ void Table::startEditing(const UInt32& Row, const UInt32& Column)
         else
         {
             //If we are not editing the requested cell, stop the previous editing
-            _CellEditor->stopCellEditing();
+            Inherited::getCellEditor()->stopCellEditing();
         }
     }
     
-    _CellEditor = getCellEditor(Row, Column);
+    beginEditCP(TablePtr(this), CellEditorFieldMask);
+        setCellEditor(getCellEditor(Row, Column));
+    endEditCP(TablePtr(this), CellEditorFieldMask);
     _EditingColumn = Column;
     _EditingRow = Row;
-    _EditingComponent = _CellEditor->getTableCellEditorComponent(TablePtr(this), _Model->getValueAt(Row, Column), isSelected(Row, Column), Row, Column);
+    _EditingComponent = Inherited::getCellEditor()->getTableCellEditorComponent(TablePtr(this), _Model->getValueAt(Row, Column), isSelected(Row, Column), Row, Column);
 
-    _CellEditor->addCellEditorListener(this);
+    Inherited::getCellEditor()->addCellEditorListener(this);
 
     updateItem(Row*_Model->getColumnCount() + Column);
 	_EditingComponent->setFocused(false);
@@ -825,8 +828,10 @@ bool Table::editCellAt(const UInt32& row, const UInt32& column, const Event& e)
 
 void Table::editingCanceled(const ChangeEvent& e)
 {
-    _CellEditor->removeCellEditorListener(this);
-    _CellEditor = NULL;
+    Inherited::getCellEditor()->removeCellEditorListener(this);
+    beginEditCP(TablePtr(this), CellEditorFieldMask);
+        setCellEditor(NullFC);
+    endEditCP(TablePtr(this), CellEditorFieldMask);
     _EditingComponent = NullFC;
     updateItem(_EditingRow*_Model->getColumnCount() + _EditingColumn);
     _EditingRow = -1;
@@ -835,11 +840,13 @@ void Table::editingCanceled(const ChangeEvent& e)
 
 void Table::editingStopped(const ChangeEvent& e)
 {
-    _Model->setValueAt(_CellEditor->getCellEditorValue(), _EditingRow, _EditingColumn);
+    _Model->setValueAt(Inherited::getCellEditor()->getCellEditorValue(), _EditingRow, _EditingColumn);
 
     
-    _CellEditor->removeCellEditorListener(this);
-    _CellEditor = NULL;
+    Inherited::getCellEditor()->removeCellEditorListener(this);
+    beginEditCP(TablePtr(this), CellEditorFieldMask);
+        setCellEditor(NullFC);
+    endEditCP(TablePtr(this), CellEditorFieldMask);
     _EditingComponent = NullFC;
     updateItem(_EditingRow*_Model->getColumnCount() + _EditingColumn);
     _EditingRow = -1;
@@ -984,7 +991,7 @@ TableCellEditorPtr Table::getDefaultEditor(const FieldType* columnType) const
         {
             SWARNING << "No Default Table Cell Editor for type: " << columnType->getCName() << "." << std::endl;
         }
-        return TableCellEditorPtr(new DefaultTableCellEditor(3));
+        return TableCellEditorPtr(DefaultTableCellEditor::create());
     }
 }
 
@@ -1083,7 +1090,6 @@ void Table::createColumnsFromModel(void)
 
 Table::Table(void) :
     Inherited(),
-    _CellEditor(NULL),
     _EditingColumn(-1),
     _EditingRow(-1),
     _EditingComponent(NullFC)
@@ -1092,7 +1098,6 @@ Table::Table(void) :
 
 Table::Table(const Table &source) :
     Inherited(source),
-    _CellEditor(NULL),
     _EditingColumn(-1),
     _EditingRow(-1),
     _EditingComponent(NullFC),

@@ -42,59 +42,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-void TableColumn::addFieldChangeListener(FieldChangeListenerPtr Listener)
-{
-   _FieldChangeListeners.insert(Listener);
-}
-
-inline
-void TableColumn::removeFieldChangeListener(FieldChangeListenerPtr Listener)
-{
-   FieldChangeListenerSetItor EraseIter(_FieldChangeListeners.find(Listener));
-   if(EraseIter != _FieldChangeListeners.end())
-   {
-      _FieldChangeListeners.erase(EraseIter);
-   }
-}
-
-inline
-TableCellRendererPtr TableColumn::getCellRenderer(void) const
-{
-    return _TableCellRenderer;
-}
-
-inline
-TableCellRendererPtr TableColumn::getHeaderRenderer(void) const
-{
-    return _HeaderCellRenderer;
-}
-
-inline
-SharedFieldPtr TableColumn::getHeaderValue(void) const
-{
-    return _HeaderValue;
-}
-
-inline
-void TableColumn::setCellRenderer(TableCellRendererPtr cellRenderer)
-{
-    _TableCellRenderer = cellRenderer;
-}
-
-inline
-void TableColumn::setHeaderRenderer(TableCellRendererPtr headerRenderer)
-{
-    _HeaderCellRenderer = headerRenderer;
-}
-
-inline
-void TableColumn::setHeaderValue(SharedFieldPtr headerValue)
-{
-    _HeaderValue = headerValue;
-}
-
 OSG_END_NAMESPACE
 
-#define OSGTABLECOLUMN_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+#define OSGCELLEDITOR_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

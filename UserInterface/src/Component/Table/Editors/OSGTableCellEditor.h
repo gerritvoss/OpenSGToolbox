@@ -36,34 +36,28 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGTABLECOLUMN_H_
-#define _OSGTABLECOLUMN_H_
+#ifndef _OSGTABLECELLEDITOR_H_
+#define _OSGTABLECELLEDITOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGTableColumnBase.h"
-
-#include "OSGTableCellRenderer.h"
-#include <OpenSG/OSGField.h>
-
-#include <OpenSG/Input/OSGFieldChangeListener.h>
-#include <OpenSG/Input/OSGFieldChangeEvent.h>
+#include "OSGTableCellEditorBase.h"
+#include "Component/Table/OSGTableFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TableColumn class. See \ref 
-           PageUserInterfaceTableColumn for a description.
+/*! \brief TableCellEditor class. See \ref 
+           PageUserInterfaceTableCellEditor for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableColumn : public TableColumnBase
+class OSG_USERINTERFACELIB_DLLMAPPING TableCellEditor : public TableCellEditorBase
 {
   private:
 
-    typedef TableColumnBase Inherited;
+    typedef TableCellEditorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -84,81 +78,49 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumn : public TableColumnBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    
-    void addFieldChangeListener(FieldChangeListenerPtr Listener);
-    
-    void removeFieldChangeListener(FieldChangeListenerPtr Listener);
-    
-    //Returns the TableCellRenderer used by the JTable to draw values for this column.
-    TableCellRendererPtr getCellRenderer(void) const;
-    
-    //Returns the TableCellRenderer used to draw the header of the TableColumn.
-    TableCellRendererPtr getHeaderRenderer(void) const;
-    
-    //Returns the Object used as the value for the header renderer.
-    SharedFieldPtr getHeaderValue(void) const;
-    
-    //Sets the TableCellRenderer used by JTable to draw individual values for this column.
-    void setCellRenderer(TableCellRendererPtr cellRenderer);
-    
-    //Sets the TableCellRenderer used to draw the TableColumn's header to headerRenderer.
-    void setHeaderRenderer(TableCellRendererPtr headerRenderer);
-    
-    //Sets the Object whose string representation will be used as the value for the headerRenderer.
-    void setHeaderValue(SharedFieldPtr headerValue);
+	virtual ComponentPtr getTableCellEditorComponent(TablePtr table, SharedFieldPtr value, bool isSelected, UInt32 row, UInt32 column) = 0;
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in TableColumnBase.
+    // Variables should all be in TableCellEditorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    TableColumn(void);
-    TableColumn(const TableColumn &source);
+    TableCellEditor(void);
+    TableCellEditor(const TableCellEditor &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TableColumn(void); 
+    virtual ~TableCellEditor(void); 
 
     /*! \}                                                                 */
     
-    TableCellRendererPtr _TableCellRenderer;
-    TableCellRendererPtr _HeaderCellRenderer;
-
-    SharedFieldPtr _HeaderValue;
-    
-	typedef std::set<FieldChangeListenerPtr> FieldChangeListenerSet;
-    typedef FieldChangeListenerSet::iterator FieldChangeListenerSetItor;
-    typedef FieldChangeListenerSet::const_iterator FieldChangeListenerSetConstItor;
-	
-    FieldChangeListenerSet       _FieldChangeListeners;
-    
-    virtual void produceFieldChanged(Field* TheField, FieldDescription* TheDescription);
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class TableColumnBase;
+    friend class TableCellEditorBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const TableColumn &source);
+    void operator =(const TableCellEditor &source);
 };
 
-typedef TableColumn *TableColumnP;
+typedef TableCellEditor *TableCellEditorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGTableColumnBase.inl"
-#include "OSGTableColumn.inl"
+#include "OSGTableCellEditorBase.inl"
+#include "OSGTableCellEditor.inl"
 
-#define OSGTABLECOLUMN_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGTABLECELLEDITOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGTABLECOLUMN_H_ */
+#endif /* _OSGTABLECELLEDITOR_H_ */

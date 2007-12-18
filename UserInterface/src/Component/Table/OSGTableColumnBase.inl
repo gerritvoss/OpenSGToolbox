@@ -138,6 +138,13 @@ SFBool *TableColumnBase::getSFResizable(void)
     return &_sfResizable;
 }
 
+//! Get the TableColumn::_sfCellEditor field.
+inline
+SFTableCellEditorPtr *TableColumnBase::getSFCellEditor(void)
+{
+    return &_sfCellEditor;
+}
+
 
 //! Get the value of the TableColumn::_sfMaxWidth field.
 inline
@@ -263,6 +270,27 @@ inline
 void TableColumnBase::setResizable(const bool &value)
 {
     _sfResizable.setValue(value);
+}
+
+//! Get the value of the TableColumn::_sfCellEditor field.
+inline
+TableCellEditorPtr &TableColumnBase::getCellEditor(void)
+{
+    return _sfCellEditor.getValue();
+}
+
+//! Get the value of the TableColumn::_sfCellEditor field.
+inline
+const TableCellEditorPtr &TableColumnBase::getCellEditor(void) const
+{
+    return _sfCellEditor.getValue();
+}
+
+//! Set the value of the TableColumn::_sfCellEditor field.
+inline
+void TableColumnBase::setCellEditor(const TableCellEditorPtr &value)
+{
+    _sfCellEditor.setValue(value);
 }
 
 

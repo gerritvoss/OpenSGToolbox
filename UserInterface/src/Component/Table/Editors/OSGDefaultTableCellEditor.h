@@ -36,34 +36,30 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGTABLECOLUMN_H_
-#define _OSGTABLECOLUMN_H_
+#ifndef _OSGDEFAULTTABLECELLEDITOR_H_
+#define _OSGDEFAULTTABLECELLEDITOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGTableColumnBase.h"
-
-#include "OSGTableCellRenderer.h"
-#include <OpenSG/OSGField.h>
-
-#include <OpenSG/Input/OSGFieldChangeListener.h>
-#include <OpenSG/Input/OSGFieldChangeEvent.h>
+#include "OSGDefaultTableCellEditorBase.h"
+#include "Event/OSGActionListener.h"
+#include "Event/OSGFocusListener.h"
+#include <OpenSG/Input/OSGKeyAdapter.h>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TableColumn class. See \ref 
-           PageUserInterfaceTableColumn for a description.
+/*! \brief DefaultTableCellEditor class. See \ref 
+           PageUserInterfaceDefaultTableCellEditor for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableColumn : public TableColumnBase
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellEditor : public DefaultTableCellEditorBase
 {
   private:
 
-    typedef TableColumnBase Inherited;
+    typedef DefaultTableCellEditorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -85,80 +81,85 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumn : public TableColumnBase
 
     /*! \}                                                                 */
     
-    void addFieldChangeListener(FieldChangeListenerPtr Listener);
-    
-    void removeFieldChangeListener(FieldChangeListenerPtr Listener);
-    
-    //Returns the TableCellRenderer used by the JTable to draw values for this column.
-    TableCellRendererPtr getCellRenderer(void) const;
-    
-    //Returns the TableCellRenderer used to draw the header of the TableColumn.
-    TableCellRendererPtr getHeaderRenderer(void) const;
-    
-    //Returns the Object used as the value for the header renderer.
-    SharedFieldPtr getHeaderValue(void) const;
-    
-    //Sets the TableCellRenderer used by JTable to draw individual values for this column.
-    void setCellRenderer(TableCellRendererPtr cellRenderer);
-    
-    //Sets the TableCellRenderer used to draw the TableColumn's header to headerRenderer.
-    void setHeaderRenderer(TableCellRendererPtr headerRenderer);
-    
-    //Sets the Object whose string representation will be used as the value for the headerRenderer.
-    void setHeaderValue(SharedFieldPtr headerValue);
+	virtual ComponentPtr getTableCellEditorComponent(TablePtr table, SharedFieldPtr value, bool isSelected, UInt32 row, UInt32 column);
+
+    //Tells the editor to cancel editing and not accept any partially edited value.
+    virtual void cancelCellEditing(void);
+
+    //Returns the value contained in the editor.
+    virtual SharedFieldPtr getCellEditorValue(void) const;
+
+    //Asks the editor if it can start editing using anEvent.
+    virtual bool isCellEditable(const Event& anEvent) const;
+
+    //Returns true if the editing cell should be selected, false otherwise.
+    virtual bool shouldSelectCell(const Event& anEvent) const;
+
+    //Tells the editor to stop editing and accept any partially edited value as the value of the editor.
+    virtual bool stopCellEditing(void);
+
+    //Returns a reference to the editor component.
+    ComponentPtr getComponent(void) const;
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in TableColumnBase.
+    // Variables should all be in DefaultTableCellEditorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    TableColumn(void);
-    TableColumn(const TableColumn &source);
+    DefaultTableCellEditor(void);
+    DefaultTableCellEditor(const DefaultTableCellEditor &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TableColumn(void); 
+    virtual ~DefaultTableCellEditor(void); 
 
     /*! \}                                                                 */
     
-    TableCellRendererPtr _TableCellRenderer;
-    TableCellRendererPtr _HeaderCellRenderer;
+	class DefaultStringEditorListener : public ActionListener,public FocusListener,public KeyAdapter
+	{
+	public :
+		DefaultStringEditorListener(DefaultTableCellEditorPtr TheDefaultTableCellEditor);
+		
+        virtual void actionPerformed(const ActionEvent& e);
+        virtual void focusGained(const FocusEvent& e);
+        virtual void focusLost(const FocusEvent& e);
+        virtual void keyPressed(const KeyEvent& e);
+	protected :
+		DefaultTableCellEditorPtr _DefaultTableCellEditor;
+	};
 
-    SharedFieldPtr _HeaderValue;
+	friend class DefaultStringEditorListener;
+
+	DefaultStringEditorListener _DefaultStringEditorListener;
     
-	typedef std::set<FieldChangeListenerPtr> FieldChangeListenerSet;
-    typedef FieldChangeListenerSet::iterator FieldChangeListenerSetItor;
-    typedef FieldChangeListenerSet::const_iterator FieldChangeListenerSetConstItor;
-	
-    FieldChangeListenerSet       _FieldChangeListeners;
-    
-    virtual void produceFieldChanged(Field* TheField, FieldDescription* TheDescription);
+    mutable ::boost::shared_ptr<SFString> _Value;
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class TableColumnBase;
+    friend class DefaultTableCellEditorBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const TableColumn &source);
+    void operator =(const DefaultTableCellEditor &source);
 };
 
-typedef TableColumn *TableColumnP;
+typedef DefaultTableCellEditor *DefaultTableCellEditorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGTableColumnBase.inl"
-#include "OSGTableColumn.inl"
+#include "OSGDefaultTableCellEditorBase.inl"
+#include "OSGDefaultTableCellEditor.inl"
 
-#define OSGTABLECOLUMN_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGDEFAULTTABLECELLEDITOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGTABLECOLUMN_H_ */
+#endif /* _OSGDEFAULTTABLECELLEDITOR_H_ */

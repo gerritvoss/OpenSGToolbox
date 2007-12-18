@@ -49,12 +49,6 @@ void Table::addColumn(TableColumnPtr aColumn)
 }
 
 inline
-TableCellEditorPtr Table::getCellEditor(void) const
-{
-    return _CellEditor;
-}
-
-inline
 TableColumnModelPtr Table::getColumnModel(void) const
 {
     return _ColumnModel;
@@ -156,12 +150,6 @@ inline
 bool Table::isRowSelected(const UInt32& row) const
 {
     return _RowSelectionModel->isSelectedIndex(row);
-}
-
-inline
-void Table::setCellEditor(TableCellEditorPtr anEditor)
-{
-    _CellEditor = anEditor;
 }
 
 inline

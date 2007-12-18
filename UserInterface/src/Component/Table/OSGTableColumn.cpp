@@ -99,7 +99,6 @@ TableColumn::TableColumn(void) :
 
 TableColumn::TableColumn(const TableColumn &source) :
     Inherited(source),
-    _TableCellEditor(source._TableCellEditor),
     _TableCellRenderer(source._TableCellRenderer),
     _HeaderCellRenderer(source._HeaderCellRenderer),
     _HeaderValue(source._HeaderValue)

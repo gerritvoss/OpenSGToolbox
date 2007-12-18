@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -36,35 +34,15 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_TABLE_CELL_EDITOR_H_
-#define _OSG_UI_TABLE_CELL_EDITOR_H_
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
-#ifdef __sgi
-#pragma once
-#endif
- 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include "Component/OSGComponent.h"
-#include "OSGTableFields.h"
-#include "Editors/OSGCellEditor.h"
-
 
 OSG_BEGIN_NAMESPACE
-	 
-class OSG_USERINTERFACELIB_DLLMAPPING TableCellEditor : virtual public CellEditor
-{
-private:
-protected:
-public:
-	virtual ComponentPtr getTableCellEditorComponent(TablePtr table, SharedFieldPtr value, bool isSelected, UInt32 row, UInt32 column) = 0;
-
-};
-
-typedef boost::intrusive_ptr<TableCellEditor> TableCellEditorPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSG_UI_TABLE_CELL_EDITOR_H_ */
-
+#define OSGABSTRACTCELLEDITOR_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

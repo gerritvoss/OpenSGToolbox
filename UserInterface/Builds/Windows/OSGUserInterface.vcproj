@@ -247,118 +247,6 @@
 					>
 				</File>
 				<Filter
-					Name="List"
-					>
-					<File
-						RelativePath="..\..\src\Component\List\OSGAbstractListModel.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGAbstractListModel.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGAbstractListModel.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListCellRenderer.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListCellRenderer.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListCellRenderer.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModel.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModel.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModel.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGList.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGList.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGList.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGListBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGListBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGListBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGListCellRenderer.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGListDataEvent.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGListDataEvent.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGListDataEvent.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGListDataListener.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGListFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGListModel.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGListSelectionEvent.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGListSelectionEvent.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGListSelectionEvent.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGListSelectionListener.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGListSelectionModel.h"
-						>
-					</File>
-				</Filter>
-				<Filter
 					Name="Scroll"
 					>
 					<File
@@ -765,6 +653,118 @@
 						RelativePath="..\..\src\Component\Menu\OSGSingleSelectionModel.h"
 						>
 					</File>
+					<Filter
+						Name="List"
+						>
+						<File
+							RelativePath="..\..\src\Component\List\OSGAbstractListModel.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGAbstractListModel.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGAbstractListModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGDefaultListCellRenderer.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGDefaultListCellRenderer.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGDefaultListCellRenderer.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModel.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModel.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGList.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGList.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGList.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGListBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGListBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGListBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGListCellRenderer.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGListDataEvent.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGListDataEvent.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGListDataEvent.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGListDataListener.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGListFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGListModel.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGListSelectionEvent.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGListSelectionEvent.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGListSelectionEvent.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGListSelectionListener.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\OSGListSelectionModel.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="Container"
@@ -1258,10 +1258,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Table\OSGTableCellEditor.h"
-						>
-					</File>
-					<File
 						RelativePath="..\..\src\Component\Table\OSGTableCellRenderer.h"
 						>
 					</File>
@@ -1438,18 +1434,62 @@
 						</File>
 					</Filter>
 					<Filter
-						Name="DefaultEditors"
+						Name="Editors"
 						>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultEditors\OSGDefaultTableCellEditor.cpp"
+							RelativePath="..\..\src\Component\Table\Editors\OSGDefaultTableCellEditor.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultEditors\OSGDefaultTableCellEditor.h"
+							RelativePath="..\..\src\Component\Table\Editors\OSGDefaultTableCellEditor.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Table\DefaultEditors\OSGDefaultTableCellEditor.inl"
+							RelativePath="..\..\src\Component\Table\Editors\OSGDefaultTableCellEditor.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Editors\OSGDefaultTableCellEditorBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Editors\OSGDefaultTableCellEditorBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Editors\OSGDefaultTableCellEditorBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Editors\OSGDefaultTableCellEditorFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Editors\OSGTableCellEditor.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Editors\OSGTableCellEditor.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Editors\OSGTableCellEditor.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Editors\OSGTableCellEditorBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Editors\OSGTableCellEditorBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Editors\OSGTableCellEditorBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Table\Editors\OSGTableCellEditorFields.h"
 							>
 						</File>
 					</Filter>
@@ -3939,7 +3979,51 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Editors\OSGAbstractCellEditor.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Editors\OSGAbstractCellEditorBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Editors\OSGAbstractCellEditorBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Editors\OSGAbstractCellEditorBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Editors\OSGAbstractCellEditorFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Editors\OSGCellEditor.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Editors\OSGCellEditor.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Editors\OSGCellEditor.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Editors\OSGCellEditorBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Editors\OSGCellEditorBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Editors\OSGCellEditorBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Editors\OSGCellEditorFields.h"
 					>
 				</File>
 				<File

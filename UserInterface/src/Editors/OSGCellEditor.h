@@ -36,28 +36,50 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_CELL_EDITOR_H_
-#define _OSG_UI_CELL_EDITOR_H_
-
+#ifndef _OSGCELLEDITOR_H_
+#define _OSGCELLEDITOR_H_
 #ifdef __sgi
 #pragma once
 #endif
- 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
+#include <OpenSG/OSGConfig.h>
+
+#include "OSGCellEditorBase.h"
 #include <OpenSG/Input/OSGEvent.h>
 #include "OSGCellEditorListener.h"
-#include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
+#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
 
 OSG_BEGIN_NAMESPACE
-	 
-class OSG_USERINTERFACELIB_DLLMAPPING CellEditor : public IntrusivePtrImplBase
+
+/*! \brief CellEditor class. See \ref 
+           PageUserInterfaceCellEditor for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING CellEditor : public CellEditorBase
 {
-private:
-protected:
-public:
+  private:
+
+    typedef CellEditorBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
     //Adds a listener to the list that's notified when the editor stops, or cancels editing.
     virtual void addCellEditorListener(CellEditorListenerPtr l) = 0;
 
@@ -79,12 +101,47 @@ public:
     //Tells the editor to stop editing and accept any partially edited value as the value of the editor.
     virtual bool stopCellEditing(void) = 0;
 
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in CellEditorBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    CellEditor(void);
+    CellEditor(const CellEditor &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~CellEditor(void); 
+
+    /*! \}                                                                 */
+    
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class CellEditorBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const CellEditor &source);
 };
 
-typedef boost::intrusive_ptr<CellEditor> CellEditorPtr;
+typedef CellEditor *CellEditorP;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSG_UI_CELL_EDITOR_H_ */
+#include "OSGCellEditorBase.inl"
+#include "OSGCellEditor.inl"
 
+#define OSGCELLEDITOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
+#endif /* _OSGCELLEDITOR_H_ */

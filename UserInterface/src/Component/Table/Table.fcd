@@ -103,4 +103,14 @@ A UI Table.
 		access="public"
 	>
    </Field>
+	<Field
+		name="CellEditor"
+		type="TableCellEditorPtr"
+		cardinality="single"
+      visibility="external"
+      header="Component/Table/Editors/OSGTableCellEditorFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+   </Field>
 </FieldContainer>

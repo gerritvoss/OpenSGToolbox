@@ -4,6 +4,8 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -38,63 +40,99 @@
 //  Includes
 //---------------------------------------------------------------------------
 
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEUSERINTERFACELIB
+
 #include <OpenSG/OSGConfig.h>
+
+#include "OSGTableCellEditor.h"
 
 OSG_BEGIN_NAMESPACE
 
-inline
-void TableColumn::addFieldChangeListener(FieldChangeListenerPtr Listener)
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class osg::TableCellEditor
+A UI Table Cell Editor. 
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void TableCellEditor::initMethod (void)
 {
-   _FieldChangeListeners.insert(Listener);
 }
 
-inline
-void TableColumn::removeFieldChangeListener(FieldChangeListenerPtr Listener)
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+TableCellEditor::TableCellEditor(void) :
+    Inherited()
 {
-   FieldChangeListenerSetItor EraseIter(_FieldChangeListeners.find(Listener));
-   if(EraseIter != _FieldChangeListeners.end())
-   {
-      _FieldChangeListeners.erase(EraseIter);
-   }
 }
 
-inline
-TableCellRendererPtr TableColumn::getCellRenderer(void) const
+TableCellEditor::TableCellEditor(const TableCellEditor &source) :
+    Inherited(source)
 {
-    return _TableCellRenderer;
 }
 
-inline
-TableCellRendererPtr TableColumn::getHeaderRenderer(void) const
+TableCellEditor::~TableCellEditor(void)
 {
-    return _HeaderCellRenderer;
 }
 
-inline
-SharedFieldPtr TableColumn::getHeaderValue(void) const
+/*----------------------------- class specific ----------------------------*/
+
+void TableCellEditor::changed(BitVector whichField, UInt32 origin)
 {
-    return _HeaderValue;
+    Inherited::changed(whichField, origin);
 }
 
-inline
-void TableColumn::setCellRenderer(TableCellRendererPtr cellRenderer)
+void TableCellEditor::dump(      UInt32    , 
+                         const BitVector ) const
 {
-    _TableCellRenderer = cellRenderer;
+    SLOG << "Dump TableCellEditor NI" << std::endl;
 }
 
-inline
-void TableColumn::setHeaderRenderer(TableCellRendererPtr headerRenderer)
+
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
+
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
+
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
+
+namespace
 {
-    _HeaderCellRenderer = headerRenderer;
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGTABLECELLEDITORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGTABLECELLEDITORBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGTABLECELLEDITORFIELDS_HEADER_CVSID;
 }
 
-inline
-void TableColumn::setHeaderValue(SharedFieldPtr headerValue)
-{
-    _HeaderValue = headerValue;
-}
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
 
 OSG_END_NAMESPACE
-
-#define OSGTABLECOLUMN_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

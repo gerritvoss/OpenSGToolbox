@@ -94,6 +94,9 @@ const OSG::BitVector  TableBase::ShowVerticalLinesFieldMask =
 const OSG::BitVector  TableBase::GridColorFieldMask = 
     (TypeTraits<BitVector>::One << TableBase::GridColorFieldId);
 
+const OSG::BitVector  TableBase::CellEditorFieldMask = 
+    (TypeTraits<BitVector>::One << TableBase::CellEditorFieldId);
+
 const OSG::BitVector TableBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -129,6 +132,9 @@ const OSG::BitVector TableBase::MTInfluenceMask =
     
 */
 /*! \var Color4f         TableBase::_sfGridColor
+    
+*/
+/*! \var TableCellEditorPtr TableBase::_sfCellEditor
     
 */
 
@@ -185,7 +191,12 @@ FieldDescription *TableBase::_desc[] =
                      "GridColor", 
                      GridColorFieldId, GridColorFieldMask,
                      false,
-                     (FieldAccessMethod) &TableBase::getSFGridColor)
+                     (FieldAccessMethod) &TableBase::getSFGridColor),
+    new FieldDescription(SFTableCellEditorPtr::getClassType(), 
+                     "CellEditor", 
+                     CellEditorFieldId, CellEditorFieldMask,
+                     false,
+                     (FieldAccessMethod) &TableBase::getSFCellEditor)
 };
 
 
@@ -272,6 +283,7 @@ TableBase::TableBase(void) :
     _sfShowHorizontalLines    (bool(true)), 
     _sfShowVerticalLines      (bool(true)), 
     _sfGridColor              (Color4f(0.0, 0.0, 0.0, 1.0)), 
+    _sfCellEditor             (TableCellEditorPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -291,6 +303,7 @@ TableBase::TableBase(const TableBase &source) :
     _sfShowHorizontalLines    (source._sfShowHorizontalLines    ), 
     _sfShowVerticalLines      (source._sfShowVerticalLines      ), 
     _sfGridColor              (source._sfGridColor              ), 
+    _sfCellEditor             (source._sfCellEditor             ), 
     Inherited                 (source)
 {
 }
@@ -357,6 +370,11 @@ UInt32 TableBase::getBinSize(const BitVector &whichField)
         returnValue += _sfGridColor.getBinSize();
     }
 
+    if(FieldBits::NoField != (CellEditorFieldMask & whichField))
+    {
+        returnValue += _sfCellEditor.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -414,6 +432,11 @@ void TableBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (GridColorFieldMask & whichField))
     {
         _sfGridColor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CellEditorFieldMask & whichField))
+    {
+        _sfCellEditor.copyToBin(pMem);
     }
 
 
@@ -474,6 +497,11 @@ void TableBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfGridColor.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (CellEditorFieldMask & whichField))
+    {
+        _sfCellEditor.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -514,6 +542,9 @@ void TableBase::executeSyncImpl(      TableBase *pOther,
     if(FieldBits::NoField != (GridColorFieldMask & whichField))
         _sfGridColor.syncWith(pOther->_sfGridColor);
 
+    if(FieldBits::NoField != (CellEditorFieldMask & whichField))
+        _sfCellEditor.syncWith(pOther->_sfCellEditor);
+
 
 }
 #else
@@ -550,6 +581,9 @@ void TableBase::executeSyncImpl(      TableBase *pOther,
 
     if(FieldBits::NoField != (GridColorFieldMask & whichField))
         _sfGridColor.syncWith(pOther->_sfGridColor);
+
+    if(FieldBits::NoField != (CellEditorFieldMask & whichField))
+        _sfCellEditor.syncWith(pOther->_sfCellEditor);
 
 
     if(FieldBits::NoField != (TableFieldMask & whichField))

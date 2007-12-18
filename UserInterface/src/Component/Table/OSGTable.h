@@ -46,7 +46,6 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGTableBase.h"
-#include "OSGTableCellEditor.h"
 #include "OSGTableColumnModel.h"
 #include "OSGTableModel.h"
 #include "OSGTableColumnModelListener.h"
@@ -180,9 +179,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     //Invoked when editing is finished.
     virtual void editingStopped(const ChangeEvent& e);
 
-    //Returns the cell editor.
-    TableCellEditorPtr getCellEditor(void) const;
-
     //Returns an appropriate editor for the cell specified by row and column.
     TableCellEditorPtr getCellEditor(const UInt32& row, const UInt32& column) const;
 
@@ -294,9 +290,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     //Selects all rows, columns, and cells in the table.
     void selectAll(void);
 
-    //Sets the cellEditor variable.
-    void setCellEditor(TableCellEditorPtr anEditor);
-
     //Sets whether this table allows both a column selection and a row selection to exist simultaneously.
     void setCellSelectionEnabled(bool cellSelectionEnabled);
 
@@ -369,8 +362,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     virtual ~Table(void); 
 
     /*! \}                                                                 */
-    
-    TableCellEditorPtr _CellEditor;
 
     TableColumnModelPtr _ColumnModel;
 

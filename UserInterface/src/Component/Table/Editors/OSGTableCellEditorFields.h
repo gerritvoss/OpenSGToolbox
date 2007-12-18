@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGTABLECOLUMNFIELDS_H_
-#define _OSGTABLECOLUMNFIELDS_H_
+#ifndef _OSGTABLECELLEDITORFIELDS_H_
+#define _OSGTABLECELLEDITORFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerFields.h>
+#include "Editors/OSGAbstractCellEditorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class TableColumn;
+class TableCellEditor;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! TableColumnPtr
+//! TableCellEditorPtr
 
-typedef FCPtr<FieldContainerPtr, TableColumn> TableColumnPtr;
+typedef FCPtr<AbstractCellEditorPtr, TableCellEditor> TableCellEditorPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<FieldContainerPtr, TableColumn> TableColumnPtr;
 #endif
 
 template <>
-struct FieldDataTraits<TableColumnPtr> : 
-    public FieldTraitsRecurseMapper<TableColumnPtr, true>
+struct FieldDataTraits<TableCellEditorPtr> : 
+    public FieldTraitsRecurseMapper<TableCellEditorPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<TableColumnPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFTableColumnPtr"; }
-    static const char *getMName(void) { return "MFTableColumnPtr"; }
+    static const char *getSName(void) { return "SFTableCellEditorPtr"; }
+    static const char *getMName(void) { return "MFTableCellEditorPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<TableColumnPtr, true>
+/*! \class  FieldTraitsRecurseMapper<TableCellEditorPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<TableColumnPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldSingle */
 
-typedef SField<TableColumnPtr> SFTableColumnPtr;
+typedef SField<TableCellEditorPtr> SFTableCellEditorPtr;
 #endif
 
-#ifndef OSG_COMPILETABLECOLUMNINST
-OSG_DLLEXPORT_DECL1(SField, TableColumnPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILETABLECELLEDITORINST
+OSG_DLLEXPORT_DECL1(SField, TableCellEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<TableColumnPtr> MFTableColumnPtr;
+typedef MField<TableCellEditorPtr> MFTableCellEditorPtr;
 #endif
 
-#ifndef OSG_COMPILETABLECOLUMNINST
-OSG_DLLEXPORT_DECL1(MField, TableColumnPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILETABLECELLEDITORINST
+OSG_DLLEXPORT_DECL1(MField, TableCellEditorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGTABLECOLUMNFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGTABLECELLEDITORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGTABLECOLUMNFIELDS_H_ */
+#endif /* _OSGTABLECELLEDITORFIELDS_H_ */
