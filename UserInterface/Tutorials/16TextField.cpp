@@ -164,7 +164,7 @@ int main(int argc, char **argv)
         ExampleTextField->setSelectionEnd(3);
         ExampleTextField->setVerticalAlignment(0.5);
     endEditCP(ExampleTextField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
-        | TextComponent::TextColorFieldMask| TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask
+        | TextComponent::TextColorFieldMask | TextComponent::FontFieldMask | TextField::VerticalAlignmentFieldMask
         | TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
         
     // Create another TextField Component

@@ -130,37 +130,43 @@ Int32 DefaultComboBoxModel::getSelectedItemIndex(void) const
 
 void DefaultComboBoxModel::setSelectedItem(const Int32& index)
 {
-	Int32 PreviousIndex(_SelectedIndex);
-	_SelectedIndex = index;
-
-	if(_SelectedIndex != PreviousIndex)
+	if(getSize() != 0)
 	{
-		produceSelectionChanged(_SelectedIndex, PreviousIndex);
+		Int32 PreviousIndex(_SelectedIndex);
+		_SelectedIndex = index;
+
+		if(_SelectedIndex != PreviousIndex)
+		{
+			produceSelectionChanged(_SelectedIndex, PreviousIndex);
+		}
 	}
 }
 
 void DefaultComboBoxModel::setSelectedItem(SharedFieldPtr anObject)
 {
-	Int32 PreviousIndex(_SelectedIndex);
+	if(getSize() != 0)
+	{
+		Int32 PreviousIndex(_SelectedIndex);
 
-	UInt32 index(0);
-	while(index < _FieldList.size() && _FieldList[index] != anObject)
-	{
-		++index;
-	}
+		UInt32 index(0);
+		while(index < _FieldList.size() && _FieldList[index] != anObject)
+		{
+			++index;
+		}
 
-	if(index < _FieldList.size())
-	{
-		_SelectedIndex = index;
-	}
-	else
-	{
-		_SelectedIndex = -1;
-	}
+		if(index < _FieldList.size())
+		{
+			_SelectedIndex = index;
+		}
+		else
+		{
+			_SelectedIndex = -1;
+		}
 
-	if(_SelectedIndex != PreviousIndex)
-	{
-		produceSelectionChanged(_SelectedIndex, PreviousIndex);
+		if(_SelectedIndex != PreviousIndex)
+		{
+			produceSelectionChanged(_SelectedIndex, PreviousIndex);
+		}
 	}
 }
 

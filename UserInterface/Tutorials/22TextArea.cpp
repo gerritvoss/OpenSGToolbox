@@ -172,7 +172,7 @@ int main(int argc, char **argv)
         ExampleTextArea->setSelectionEnd(3);
         ExampleTextArea->setCaretPosition(2);
     endEditCP(ExampleTextArea, TextArea::MinSizeFieldMask | TextArea::MaxSizeFieldMask | TextArea::PreferredSizeFieldMask | TextArea::MinSizeFieldMask 
-        | TextArea::TextColorFieldMask| TextArea::FontFieldMask 
+        | TextArea::TextColorFieldMask | TextArea::FontFieldMask 
         | TextArea::SelectionBoxColorFieldMask | TextArea::SelectionTextColorFieldMask);
         
     // Create a ScrollPanel

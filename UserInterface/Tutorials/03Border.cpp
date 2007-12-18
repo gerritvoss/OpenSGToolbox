@@ -349,7 +349,7 @@ int main(int argc, char **argv)
     
     // The ShadowBorder
     beginEditCP(ExampleShadowBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask |
-		ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask| ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | 
+		ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask | ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | 
 		ShadowBorder::CornerRadiusFieldMask | ShadowBorder::InternalToEdgeColorLengthFieldMask );
         ExampleShadowBorder->setTopOffset(0);
         ExampleShadowBorder->setBottomOffset(5);
@@ -361,7 +361,7 @@ int main(int argc, char **argv)
         ExampleShadowBorder->setEdgeColor(Color4f(0.0, 0.0, 0.0, 0.0));
         ExampleShadowBorder->setInternalToEdgeColorLength(5);
     endEditCP(ExampleShadowBorder, ShadowBorder::TopOffsetFieldMask | ShadowBorder::BottomOffsetFieldMask | ShadowBorder::LeftOffsetFieldMask |
-		ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask| ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | 
+		ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask | ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | 
 		ShadowBorder::CornerRadiusFieldMask | ShadowBorder::InternalToEdgeColorLengthFieldMask );
 
 
@@ -488,7 +488,7 @@ int main(int argc, char **argv)
        MainFrame->getChildren().addValue(ExampleShadowBorderButton);
        MainFrame->setLayout(MainFrameLayout);
        MainFrame->setBackground(MainFrameBackground);
-    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask| Frame::BackgroundFieldMask);
+    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
     // Create the Drawing Surface
     UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();

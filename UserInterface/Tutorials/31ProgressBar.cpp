@@ -142,7 +142,7 @@ public:
 		if(_ProgressBar->getModel()->getValue() >= (_ProgressBar->getModel()->getMaximum() - _ProgPerSec))
 		{	
 			// Set the ProgressBar to the Maximum value when needed (in case the increment and 
-			// value do not exactly equal the Maximum
+			// value do not exactly equal the Maximum)
 			_ProgressBar->getModel()->setValue(_ProgressBar->getModel()->getMaximum());
 
 			// Change the Controlling ToggleButton accordingly
@@ -323,9 +323,13 @@ int main(int argc, char **argv)
             
 			Edit the ProgressBar.
 			-setEnableProgressString(bool): Determine
-				whether the ProgressBar displays the
-				percent complete.  True displays the 
-				percentage, false does not.
+				whether the ProgressBar displays text.
+				True displays text, false does not.
+				The default text to be displayed is
+				the percentage that the ProgressBar
+				Model is at, otherwise the text shown
+				in the setProgressString() function
+				will be displayed.
 			-setIndeterminate(bool): Determine if
 				the "bar" will be displayed.  True
 				displays the bar, false does not.
@@ -335,30 +339,54 @@ int main(int argc, char **argv)
 				VERTICAL_ALIGNMENT arguments.
 				This orientation is the direction
 				that the "bar" moves.
-
+			-setIndeterminateBarMoveRate(Real32):
+				Determine the rate at which the 
+				bar increments.  Note: for this
+				Tutorial, the ProgressBar is
+				incremented via the UpdateListener
+				above, and this is not used (more
+				useful when tied to some other
+				process).
+			-setIndeterminateBarSize(Real32): 
+				Determine the Size of the bar.
+				As with the BarMoveRate, this is
+				not used in this Tutorial.
+			-setProgressString(string): Determine
+				what text the bar has on it.  If 
+				this is not specified, the
+				ProgressBar will show the percent
+				complete in numerical format.
 
     ******************************************************/    
-    beginEditCP(ExampleProgressBar, ProgressBar::EnableProgressStringFieldMask);
+	beginEditCP(ExampleProgressBar, ProgressBar::EnableProgressStringFieldMask | ProgressBar::IndeterminateFieldMask | ProgressBar::OrientationFieldMask | ProgressBar::ProgressStringFieldMask);
         ExampleProgressBar->setEnableProgressString(true);
-        ExampleProgressBar->setIndeterminate(true);
+        ExampleProgressBar->setIndeterminate(false);
 		ExampleProgressBar->setOrientation(HORIZONTAL_ALIGNMENT);
-        ExampleProgressBar->setIndeterminateBarMoveRate(false);
-        ExampleProgressBar->setIndeterminateBarSize(false);
-        ExampleProgressBar->setEnableProgressString(false);
-		ExampleProgressBar->setProgressString(std::string("asdf"));
-    endEditCP(ExampleProgressBar, ProgressBar::EnableProgressStringFieldMask);
-	
+        // ExampleProgressBar->setIndeterminateBarMoveRate(0.0);
+        // ExampleProgressBar->setIndeterminateBarSize(2.0);
+		// ExampleProgressBar->setProgressString("Loading...");
+    endEditCP(ExampleProgressBar, ProgressBar::EnableProgressStringFieldMask | ProgressBar::IndeterminateFieldMask | ProgressBar::OrientationFieldMask | ProgressBar::ProgressStringFieldMask);
+
+	/******************************************************
+         
+		 Create Listeners and Buttons to 
+		 control ProgressBar
+
+    ******************************************************/    
     ProgressUpdateListener TheProgressUpdateListener(ExampleProgressBar);
 
+	// Create a ToggleButton
 	ProgressControlToggleButton = osg::ToggleButton::create();
     ProgressControlListener TheProgressControlListener(&TheProgressUpdateListener, TutorialWindowEventProducer);
 	ProgressControlToggleButton->addButtonSelectedListener(&TheProgressControlListener);
 
+	// Modify ToggleButton
 	beginEditCP(ProgressControlToggleButton, ToggleButton::TextColorFieldMask | ToggleButton::PreferredSizeFieldMask);
 		ProgressControlToggleButton->setText("Start Incrementing");
 		ProgressControlToggleButton->setPreferredSize(Vec2s(150,50));
 	endEditCP(ProgressControlToggleButton, ToggleButton::TextColorFieldMask | ToggleButton::PreferredSizeFieldMask);
 
+	// Create a "reset" Button
 	ButtonPtr ProgressBarResetButton = osg::Button::create();
 
 	beginEditCP(ProgressBarResetButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
@@ -377,13 +405,13 @@ int main(int argc, char **argv)
     // Create The Main Frame
     FramePtr MainFrame = osg::Frame::create();
     LayoutPtr MainFrameLayout = osg::FlowLayout::create();
-    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
+    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
        MainFrame->setLayout(MainFrameLayout);
        MainFrame->setBackground(MainFrameBackground);
        MainFrame->getChildren().addValue(ExampleProgressBar);
        MainFrame->getChildren().addValue(ProgressControlToggleButton);
        MainFrame->getChildren().addValue(ProgressBarResetButton);
-    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
+    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
     TutorialKeyListener TheKeyListener;
     MainFrame->addKeyListener(&TheKeyListener);

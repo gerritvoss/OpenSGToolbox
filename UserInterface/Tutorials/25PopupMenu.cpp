@@ -228,7 +228,7 @@ int main(int argc, char **argv)
         PopupMenuButton->setPopupMenu(ExamplePopupMenu);
         PopupMenuButton->setPreferredSize(Vec2s(200,100));
         PopupMenuButton->setFont(PopupMenuButtonFont);
-    endEditCP(PopupMenuButton, Button::PopupMenuFieldMask | Button::TextFieldMask| Button::PreferredSizeFieldMask | Button::FontFieldMask);
+    endEditCP(PopupMenuButton, Button::PopupMenuFieldMask | Button::TextFieldMask | Button::PreferredSizeFieldMask | Button::FontFieldMask);
 
 
     // Create Background to be used with the MainFrame

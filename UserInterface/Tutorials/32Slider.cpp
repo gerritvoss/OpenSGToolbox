@@ -194,14 +194,14 @@ int main(int argc, char **argv)
     // Create The Main Frame
     FramePtr MainFrame = osg::Frame::create();
     LayoutPtr MainFrameLayout = osg::FlowLayout::create();
-    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
+    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
        // Assign the Button to the MainFrame so it will be displayed
        // when the view is rendered.
        MainFrame->setLayout(MainFrameLayout);
        MainFrame->setBackground(MainFrameBackground);
        MainFrame->getChildren().push_back(TheSliderVertical);
        MainFrame->getChildren().push_back(TheSliderHorizontal);
-    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
+    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
     TutorialKeyListener TheKeyListener;
     MainFrame->addKeyListener(&TheKeyListener);

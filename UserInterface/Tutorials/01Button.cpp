@@ -211,7 +211,7 @@ int main(int argc, char **argv)
                 in [0.0, 1.0] and the Enums are:
                 VERTICAL_CENTER, VERTICAL_TOP, 
                 or VERTICAL_BOTTOM.
-            -setHorizontalAlignmnet(Float OR Enum):
+            -setHorizontalAlignmnet(Real32 OR Enum):
                 Determine the Horizontal Alignment
                 of the text.  The Float value is 
                 in [0.0, 1.0] and the Enums are:
@@ -254,7 +254,7 @@ int main(int argc, char **argv)
         ToggleButton remains pressed until pressed 
         again.
 
-        -setSelected(Bool): Determine whether the 
+        -setSelected(bool): Determine whether the 
             ToggleButton is Selected (true) or
             deselected (false).  
 

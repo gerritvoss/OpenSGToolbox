@@ -454,7 +454,7 @@ PanelPtr createSelectionModePanel(void)
         SingleSelectionButton->setSelected(true);
         SingleSelectionButton->setPreferredSize(Vec2s(180,30));
         SingleSelectionButton->setHorizontalAlignment(0.0);
-    endEditCP(SingleSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask| RadioButton::SelectedFieldMask | RadioButton::HorizontalAlignmentFieldMask);
+    endEditCP(SingleSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask | RadioButton::HorizontalAlignmentFieldMask);
     SingleSelectionButton->addButtonSelectedListener(&TheSingleSelectionListener);
     
     RadioButtonPtr SingleIntervalSelectionButton = RadioButton::create();
@@ -494,7 +494,7 @@ PanelPtr createSelectionModePanel(void)
         ThePanel->getChildren().push_back(MultipleIntervalSelectionButton);
         ThePanel->setLayout(PanelLayout);
         ThePanel->setPreferredSize(Vec2s(300, 200));
-    endEditCP(ThePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask| Panel::PreferredSizeFieldMask);
+    endEditCP(ThePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask);
     return ThePanel;
 }
 
@@ -513,12 +513,12 @@ PanelPtr createSelectionOptionPanel(void)
 
     //Buttons
     RowSelectionButton = CheckboxButton::create();
-    beginEditCP(RowSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::HorizontalAlignmentFieldMask| CheckboxButton::SelectedFieldMask );
+    beginEditCP(RowSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask );
         RowSelectionButton->setText("Row Selection");
         RowSelectionButton->setPreferredSize(Vec2s(180,30));
         RowSelectionButton->setHorizontalAlignment(0.0);
         RowSelectionButton->setSelected(true);
-    endEditCP(RowSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::HorizontalAlignmentFieldMask| CheckboxButton::SelectedFieldMask );
+    endEditCP(RowSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask );
     RowSelectionButton->addButtonSelectedListener(&TheRowSelectionListener);
 
     ColumnSelectionButton = CheckboxButton::create();
@@ -527,17 +527,17 @@ PanelPtr createSelectionOptionPanel(void)
         ColumnSelectionButton->setPreferredSize(Vec2s(180,30));
         ColumnSelectionButton->setHorizontalAlignment(0.0);
         ColumnSelectionButton->setSelected(true);
-    endEditCP(ColumnSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask| CheckboxButton::SelectedFieldMask | CheckboxButton::HorizontalAlignmentFieldMask);
+    endEditCP(ColumnSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::SelectedFieldMask | CheckboxButton::HorizontalAlignmentFieldMask);
     ColumnSelectionButton->addButtonSelectedListener(&TheColumnSelectionListener);
     
 
     CellSelectionButton = CheckboxButton::create();
-    beginEditCP(CellSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::HorizontalAlignmentFieldMask| CheckboxButton::SelectedFieldMask);
+    beginEditCP(CellSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask);
         CellSelectionButton->setText("Cell Selection");
         CellSelectionButton->setPreferredSize(Vec2s(180,30));
         CellSelectionButton->setHorizontalAlignment(0.0);
         CellSelectionButton->setSelected(false);
-    endEditCP(CellSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::HorizontalAlignmentFieldMask| CheckboxButton::SelectedFieldMask);
+    endEditCP(CellSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask);
     CellSelectionButton->addButtonSelectedListener(&TheCellSelectionListener);
 
     //Box Layout
@@ -557,7 +557,7 @@ PanelPtr createSelectionOptionPanel(void)
         ThePanel->getChildren().push_back(CellSelectionButton);
         ThePanel->setLayout(PanelLayout);
         ThePanel->setPreferredSize(Vec2s(300, 200));
-    endEditCP(ThePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask| Panel::PreferredSizeFieldMask);
+    endEditCP(ThePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask);
     return ThePanel;
 }
  // Callback functions

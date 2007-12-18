@@ -131,34 +131,81 @@ int main(int argc, char **argv)
 
 	// Initialize the LookAndFeelManager to enable default settings
 	LookAndFeelManager::the()->getLookAndFeel()->init();
-    
-	//Create the DefaultComboBoxModel
-	DefaultComboBoxModel TheComboBoxModel;
-	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Red")));
-	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Green")));
-	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Blue")));
-	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Brown")));
-	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Yellow")));
-	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Orange")));
-	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Violet")));
-	TheComboBoxModel.addElement(SharedFieldPtr(new SFString("Black")));
+   
+	/******************************************************
+            
+			Create the DefaultComboBoxModel and
+			add Elements to it (several Colors
+			in this case).  These will be the data
+			values shown in the ComboBox.
 
+    ******************************************************/   
+
+	DefaultComboBoxModel ExampleComboBoxModel;
+	ExampleComboBoxModel.addElement(SharedFieldPtr(new SFString("Red")));
+	ExampleComboBoxModel.addElement(SharedFieldPtr(new SFString("Green")));
+	ExampleComboBoxModel.addElement(SharedFieldPtr(new SFString("Blue")));
+	ExampleComboBoxModel.addElement(SharedFieldPtr(new SFString("Brown")));
+	ExampleComboBoxModel.addElement(SharedFieldPtr(new SFString("Yellow")));
+	ExampleComboBoxModel.addElement(SharedFieldPtr(new SFString("Orange")));
+	ExampleComboBoxModel.addElement(SharedFieldPtr(new SFString("Violet")));
+	ExampleComboBoxModel.addElement(SharedFieldPtr(new SFString("Black")));
+
+	/******************************************************
+            
+			Create an editable ComboBox.  A ComboBox 
+			has a Model just like various other 
+			Components.  
+
+    ******************************************************/   
 
 	//Create the ComboBox
-	ComboBoxPtr TheComboBox = ComboBox::create();
-	//beginEditCP(TheComboBox);
-	//endEditCP(TheComboBox);
-	TheComboBox->setModel(&TheComboBoxModel);
-	TheComboBox->setSelectedIndex(0);
+	ComboBoxPtr ExampleComboBox = ComboBox::create();
+
+	// Set the Model created above to the ComboBox
+    ExampleComboBox->setModel(&ExampleComboBoxModel);
+	// Determine where the ComboBox starts
+	ExampleComboBox->setSelectedIndex(0);
+   
+	/******************************************************
+            
+			Create a non-editable ComboBox.  
+
+			-setEditable(bool): Determine whether
+				the user can type in the ComboBox
+				or if it is uneditable.  In this
+				case, it is set to false.
+			
+			When creating a non-editable ComboBox,
+			a Renderer must also be assigned.  For
+			editable ComboBoxes, the ComboBox
+			automatically shows its text due to the
+			nature of the ComboBox.  However, when
+			uneditable, this aspect of the ComboBox
+			is disabled, and so to display the 
+			selection, a renderer must be created and
+			assigned to the ComboBox.
+
+			Note: as with Sliders and ScrollBars,
+			having the same Model assigned causes
+			the ComboBoxes to be tied together.
+
+    ******************************************************/   
+	// Create another ComboBox
+	ComboBoxPtr ExampleUneditableComboBox = ComboBox::create();
+
+	// Set it to be uneditable
+	beginEditCP(ExampleUneditableComboBox, ComboBox::EditableFieldMask);
+		ExampleUneditableComboBox->setEditable(false);
+	endEditCP(ExampleUneditableComboBox, ComboBox::EditableFieldMask);
 	
-	ComboBoxPtr TheUneditableComboBox = ComboBox::create();
-	beginEditCP(TheUneditableComboBox, ComboBox::EditableFieldMask);
-		TheUneditableComboBox->setEditable(false);
-	endEditCP(TheUneditableComboBox, ComboBox::EditableFieldMask);
-	TheUneditableComboBox->setModel(&TheComboBoxModel);
-	DefaultComboBoxRenderer TheUneditableComboBoxRenderer;
-	TheUneditableComboBox->setRenderer(&TheUneditableComboBoxRenderer);
+	// Add its Model
+	ExampleUneditableComboBox->setModel(&ExampleComboBoxModel);
 	
+	// Create and add a DefaultComboBoxRenderer
+	DefaultComboBoxRenderer ExampleUneditableComboBoxRenderer;
+	ExampleUneditableComboBox->setRenderer(&ExampleUneditableComboBoxRenderer);
+
 
 	// Create Background to be used with the MainFrame
 	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
@@ -169,12 +216,12 @@ int main(int argc, char **argv)
 	// Create The Main Frame
 	FramePtr MainFrame = osg::Frame::create();
 	LayoutPtr MainFrameLayout = osg::FlowLayout::create();
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
+	beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 	   MainFrame->setLayout(MainFrameLayout);
 	   MainFrame->setBackground(mainBackground);
-       MainFrame->getChildren().push_back(TheComboBox);
-       MainFrame->getChildren().push_back(TheUneditableComboBox);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Component::BackgroundFieldMask);
+       MainFrame->getChildren().addValue(ExampleComboBox);
+       MainFrame->getChildren().addValue(ExampleUneditableComboBox);
+	endEditCP  (MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
     TutorialKeyListener TheKeyListener;
     MainFrame->addKeyListener(&TheKeyListener);
