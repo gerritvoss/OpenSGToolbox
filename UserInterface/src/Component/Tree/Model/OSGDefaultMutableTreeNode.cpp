@@ -119,7 +119,7 @@ TreeNodePtr DefaultMutableTreeNode::getParent(void) const
 
 bool DefaultMutableTreeNode::isLeaf(void) const
 {
-	return !getAllowsChildrenInternal();
+	return !getAllowsChildrenInternal() || getChildrenInternal().size() == 0;
 }
 
 void DefaultMutableTreeNode::insert(MutableTreeNodePtr child, const UInt32& index)
@@ -326,7 +326,25 @@ DefaultMutableTreeNodePtr DefaultMutableTreeNode::getNextLeaf(void) const
 
 DefaultMutableTreeNodePtr DefaultMutableTreeNode::getNextNode(void) const
 {
-	//TODO:Implement
+	if(getChildrenInternal().size() != 0)
+	{
+		return DefaultMutableTreeNode::Ptr::dcast(getChildrenInternal().front());
+	}
+	else
+	{
+		DefaultMutableTreeNodePtr ParentNode(DefaultMutableTreeNodePtr(this));
+		DefaultMutableTreeNodePtr NextSibling;
+		while(ParentNode != NullFC)
+		{
+			NextSibling = ParentNode->getNextSibling();
+			if(NextSibling != NullFC)
+			{
+				return NextSibling;
+			}
+			ParentNode = DefaultMutableTreeNode::Ptr::dcast(ParentNode->getParentInternal());
+		}
+	}
+
 	return NullFC;
 }
 
@@ -454,7 +472,6 @@ std::vector<SharedFieldPtr> DefaultMutableTreeNode::getUserObjectPath(void) cons
 
 	std::reverse(UserObjectPath.begin(), UserObjectPath.end());
 
-	//TODO:Implement
 	return UserObjectPath;
 }
 
