@@ -45,132 +45,101 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Label!
+ **     class EditableTextComponent!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILELABELINST
+#define OSG_COMPILEEDITABLETEXTCOMPONENTINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGLabelBase.h"
-#include "OSGLabel.h"
+#include "OSGEditableTextComponentBase.h"
+#include "OSGEditableTextComponent.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  LabelBase::HorizontalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << LabelBase::HorizontalAlignmentFieldId);
+const OSG::BitVector  EditableTextComponentBase::EditableFieldMask = 
+    (TypeTraits<BitVector>::One << EditableTextComponentBase::EditableFieldId);
 
-const OSG::BitVector  LabelBase::VerticalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << LabelBase::VerticalAlignmentFieldId);
-
-const OSG::BitVector  LabelBase::TextSelectableFieldMask = 
-    (TypeTraits<BitVector>::One << LabelBase::TextSelectableFieldId);
-
-const OSG::BitVector LabelBase::MTInfluenceMask = 
+const OSG::BitVector EditableTextComponentBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var Real32          LabelBase::_sfHorizontalAlignment
-    
-*/
-/*! \var Real32          LabelBase::_sfVerticalAlignment
-    
-*/
-/*! \var bool            LabelBase::_sfTextSelectable
+/*! \var bool            EditableTextComponentBase::_sfEditable
     
 */
 
-//! Label description
+//! EditableTextComponent description
 
-FieldDescription *LabelBase::_desc[] = 
+FieldDescription *EditableTextComponentBase::_desc[] = 
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "HorizontalAlignment", 
-                     HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &LabelBase::getSFHorizontalAlignment),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "VerticalAlignment", 
-                     VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &LabelBase::getSFVerticalAlignment),
     new FieldDescription(SFBool::getClassType(), 
-                     "TextSelectable", 
-                     TextSelectableFieldId, TextSelectableFieldMask,
+                     "Editable", 
+                     EditableFieldId, EditableFieldMask,
                      false,
-                     (FieldAccessMethod) &LabelBase::getSFTextSelectable)
+                     (FieldAccessMethod) &EditableTextComponentBase::getSFEditable)
 };
 
 
-FieldContainerType LabelBase::_type(
-    "Label",
+FieldContainerType EditableTextComponentBase::_type(
+    "EditableTextComponent",
     "TextComponent",
     NULL,
-    (PrototypeCreateF) &LabelBase::createEmpty,
-    Label::initMethod,
+    NULL, 
+    EditableTextComponent::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(LabelBase, LabelPtr)
+//OSG_FIELD_CONTAINER_DEF(EditableTextComponentBase, EditableTextComponentPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &LabelBase::getType(void) 
+FieldContainerType &EditableTextComponentBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &LabelBase::getType(void) const 
+const FieldContainerType &EditableTextComponentBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr LabelBase::shallowCopy(void) const 
+UInt32 EditableTextComponentBase::getContainerSize(void) const 
 { 
-    LabelPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const Label *>(this)); 
-
-    return returnValue; 
-}
-
-UInt32 LabelBase::getContainerSize(void) const 
-{ 
-    return sizeof(Label); 
+    return sizeof(EditableTextComponent); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void LabelBase::executeSync(      FieldContainer &other,
+void EditableTextComponentBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((LabelBase *) &other, whichField);
+    this->executeSyncImpl((EditableTextComponentBase *) &other, whichField);
 }
 #else
-void LabelBase::executeSync(      FieldContainer &other,
+void EditableTextComponentBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((LabelBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((EditableTextComponentBase *) &other, whichField, sInfo);
 }
-void LabelBase::execBeginEdit(const BitVector &whichField, 
+void EditableTextComponentBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void LabelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void EditableTextComponentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -183,10 +152,8 @@ void LabelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-LabelBase::LabelBase(void) :
-    _sfHorizontalAlignment    (Real32(0.0)), 
-    _sfVerticalAlignment      (Real32(0.5)), 
-    _sfTextSelectable         (bool(false)), 
+EditableTextComponentBase::EditableTextComponentBase(void) :
+    _sfEditable               (bool(true)), 
     Inherited() 
 {
 }
@@ -195,131 +162,87 @@ LabelBase::LabelBase(void) :
 #pragma warning (default : 383)
 #endif
 
-LabelBase::LabelBase(const LabelBase &source) :
-    _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
-    _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
-    _sfTextSelectable         (source._sfTextSelectable         ), 
+EditableTextComponentBase::EditableTextComponentBase(const EditableTextComponentBase &source) :
+    _sfEditable               (source._sfEditable               ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-LabelBase::~LabelBase(void)
+EditableTextComponentBase::~EditableTextComponentBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 LabelBase::getBinSize(const BitVector &whichField)
+UInt32 EditableTextComponentBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (EditableFieldMask & whichField))
     {
-        returnValue += _sfHorizontalAlignment.getBinSize();
-    }
-
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-    {
-        returnValue += _sfVerticalAlignment.getBinSize();
-    }
-
-    if(FieldBits::NoField != (TextSelectableFieldMask & whichField))
-    {
-        returnValue += _sfTextSelectable.getBinSize();
+        returnValue += _sfEditable.getBinSize();
     }
 
 
     return returnValue;
 }
 
-void LabelBase::copyToBin(      BinaryDataHandler &pMem,
+void EditableTextComponentBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (EditableFieldMask & whichField))
     {
-        _sfHorizontalAlignment.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-    {
-        _sfVerticalAlignment.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TextSelectableFieldMask & whichField))
-    {
-        _sfTextSelectable.copyToBin(pMem);
+        _sfEditable.copyToBin(pMem);
     }
 
 
 }
 
-void LabelBase::copyFromBin(      BinaryDataHandler &pMem,
+void EditableTextComponentBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (EditableFieldMask & whichField))
     {
-        _sfHorizontalAlignment.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-    {
-        _sfVerticalAlignment.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TextSelectableFieldMask & whichField))
-    {
-        _sfTextSelectable.copyFromBin(pMem);
+        _sfEditable.copyFromBin(pMem);
     }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void LabelBase::executeSyncImpl(      LabelBase *pOther,
+void EditableTextComponentBase::executeSyncImpl(      EditableTextComponentBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
-
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
-
-    if(FieldBits::NoField != (TextSelectableFieldMask & whichField))
-        _sfTextSelectable.syncWith(pOther->_sfTextSelectable);
+    if(FieldBits::NoField != (EditableFieldMask & whichField))
+        _sfEditable.syncWith(pOther->_sfEditable);
 
 
 }
 #else
-void LabelBase::executeSyncImpl(      LabelBase *pOther,
+void EditableTextComponentBase::executeSyncImpl(      EditableTextComponentBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
-
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
-
-    if(FieldBits::NoField != (TextSelectableFieldMask & whichField))
-        _sfTextSelectable.syncWith(pOther->_sfTextSelectable);
+    if(FieldBits::NoField != (EditableFieldMask & whichField))
+        _sfEditable.syncWith(pOther->_sfEditable);
 
 
 
 }
 
-void LabelBase::execBeginEditImpl (const BitVector &whichField, 
+void EditableTextComponentBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -338,11 +261,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<LabelPtr>::_type("LabelPtr", "TextComponentPtr");
+DataType FieldDataTraits<EditableTextComponentPtr>::_type("EditableTextComponentPtr", "TextComponentPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(LabelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(LabelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(EditableTextComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(EditableTextComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -359,10 +282,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(LabelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGLABELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLABELBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGEDITABLETEXTCOMPONENTBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGEDITABLETEXTCOMPONENTBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGLABELFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGEDITABLETEXTCOMPONENTFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

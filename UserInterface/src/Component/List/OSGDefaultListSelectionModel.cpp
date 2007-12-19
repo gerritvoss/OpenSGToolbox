@@ -80,6 +80,8 @@ void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 inde
 	IndexRange newRange(index0, index1);
 	if (index0 >= 0 && index1 >= 0)
 	{
+        bool ShouldProduceSelectionChangeEvent(false);
+        ListSelectionEvent TheListSelectionEvent(NullFC, 0, 0, 0, false);
 		switch (_SelectionMode)
 		{
 			case SINGLE_SELECTION:
@@ -89,7 +91,8 @@ void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 inde
 				{   // if it's empty, then you only have to push onto the list
 					_RangeSelectionList.push_back(range);
 					// the only objects changed is in the range itself
-					produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), range.StartIndex, range.EndIndex, _ValueIsAdjusting));
+                    ShouldProduceSelectionChangeEvent = true;
+				    TheListSelectionEvent = ListSelectionEvent(NullFC, getSystemTime(), range.StartIndex, range.EndIndex, _ValueIsAdjusting);
 				}
 				else if (_RangeSelectionList.front() != range) // if the new range is the same as the first one, then nothing has to be done
 				{
@@ -99,7 +102,8 @@ void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 inde
 					//minMax = getMinMaxSelection(minMax, IndexRange(_MinSelectionIndex, _MaxSelectionIndex));
 					_RangeSelectionList.clear();
 					_RangeSelectionList.push_back(range);
-					produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), minMax.StartIndex, minMax.EndIndex, _ValueIsAdjusting));
+                    ShouldProduceSelectionChangeEvent = true;
+				    TheListSelectionEvent = ListSelectionEvent(NullFC, getSystemTime(), minMax.StartIndex, minMax.EndIndex, _ValueIsAdjusting);
 				}
 				break;
 			case SINGLE_INTERVAL_SELECTION:
@@ -113,7 +117,8 @@ void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 inde
 				{
 					// if it is empty, then the new range merely needs to be pushed onto the list
 					_RangeSelectionList.push_back(newRange);
-					produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), newRange.StartIndex, newRange.EndIndex, _ValueIsAdjusting));
+                    ShouldProduceSelectionChangeEvent = true;
+				    TheListSelectionEvent = ListSelectionEvent(NullFC, getSystemTime(), newRange.StartIndex, newRange.EndIndex, _ValueIsAdjusting);
 				}
 				else if (_RangeSelectionList.front() != newRange)
 				{
@@ -123,7 +128,8 @@ void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 inde
 					//minMax = getMinMaxSelection(minMax, IndexRange(_MinSelectionIndex, _MaxSelectionIndex));
 					_RangeSelectionList.clear();
 					_RangeSelectionList.push_back(newRange);
-					produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), minMax.StartIndex, minMax.EndIndex, _ValueIsAdjusting));
+                    ShouldProduceSelectionChangeEvent = true;
+				    TheListSelectionEvent = ListSelectionEvent(NullFC, getSystemTime(), minMax.StartIndex, minMax.EndIndex, _ValueIsAdjusting);
 				}
 				break;
 			case MULTIPLE_INTERVAL_SELECTION:
@@ -131,7 +137,8 @@ void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 inde
 				//if (!isSelectedIndex(index1))
 				//{
 					_RangeSelectionList.push_back(range);
-					produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), range.StartIndex, range.EndIndex, _ValueIsAdjusting));
+                    ShouldProduceSelectionChangeEvent = true;
+				    TheListSelectionEvent = ListSelectionEvent(NullFC, getSystemTime(), range.StartIndex, range.EndIndex, _ValueIsAdjusting);
 				//}
 				break;
 			default:
@@ -140,6 +147,10 @@ void 	DefaultListSelectionModel::addSelectionInterval(UInt32 index0, UInt32 inde
 		// update indices
 		_AnchorSelectionIndex = range.StartIndex;
 		_LeadSelectionIndex = range.EndIndex;
+        if(ShouldProduceSelectionChangeEvent)
+        {
+            produceSelectionChanged(TheListSelectionEvent);
+        }
 	}
 }
 
@@ -245,6 +256,8 @@ void 	DefaultListSelectionModel::removeIndexInterval(UInt32 index0, UInt32 index
 {
 	RangeSelectionListItor ListItor;
 	IndexRange range(index0, index1);
+    bool ShouldProduceSelectionChangeEvent(false);
+    ListSelectionEvent TheListSelectionEvent(NullFC, 0, 0, 0, false);
 	switch (_SelectionMode)
 	{
 		case SINGLE_INTERVAL_SELECTION:
@@ -254,7 +267,8 @@ void 	DefaultListSelectionModel::removeIndexInterval(UInt32 index0, UInt32 index
 			{   // only necessary to do anything if it isn't already empty
 				range = _RangeSelectionList.front();
 				_RangeSelectionList.clear();
-				produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), range.StartIndex, range.EndIndex, _ValueIsAdjusting));
+                ShouldProduceSelectionChangeEvent = true;
+				TheListSelectionEvent = ListSelectionEvent(NullFC, getSystemTime(), range.StartIndex, range.EndIndex, _ValueIsAdjusting);
 			}
 			break;
 		case MULTIPLE_INTERVAL_SELECTION:
@@ -273,7 +287,8 @@ void 	DefaultListSelectionModel::removeIndexInterval(UInt32 index0, UInt32 index
 						_RangeSelectionList.push_back(IndexRange(index1 + 1, (*ListItor).EndIndex));
 						(*ListItor).EndIndex = index1 - 1;
 					}
-					produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), index1, index1, _ValueIsAdjusting));
+                    ShouldProduceSelectionChangeEvent = true;
+					TheListSelectionEvent = ListSelectionEvent(NullFC, getSystemTime(), index1, index1, _ValueIsAdjusting);
 				}
 			}
 			break;
@@ -282,6 +297,10 @@ void 	DefaultListSelectionModel::removeIndexInterval(UInt32 index0, UInt32 index
 	}
 	_AnchorSelectionIndex = index0;
 	_LeadSelectionIndex = index1;
+    if(ShouldProduceSelectionChangeEvent)
+    {
+        produceSelectionChanged(TheListSelectionEvent);
+    }
 }
 
 void 	DefaultListSelectionModel::removeSelectionInterval(UInt32 index0, UInt32 index1)
@@ -377,6 +396,8 @@ void 	DefaultListSelectionModel::setSelectionInterval(UInt32 index0, UInt32 inde
 	IndexRange newRange(index0, index1);
 	if (index0 >= 0 && index1 >= 0) // anchor and lead are initiated to -1
 	{
+        bool ShouldProduceSelectionChangeEvent(false);
+        ListSelectionEvent TheListSelectionEvent(NullFC, 0, 0, 0, false);
 		switch (_SelectionMode)
 		{
 			case SINGLE_SELECTION:
@@ -385,7 +406,8 @@ void 	DefaultListSelectionModel::setSelectionInterval(UInt32 index0, UInt32 inde
 				if (_RangeSelectionList.empty())
 				{
 					_RangeSelectionList.push_back(range);
-					produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), range.StartIndex, range.EndIndex, _ValueIsAdjusting));
+                    ShouldProduceSelectionChangeEvent = true;
+					TheListSelectionEvent = ListSelectionEvent(NullFC, getSystemTime(), range.StartIndex, range.EndIndex, _ValueIsAdjusting);
 				}
 				else if (_RangeSelectionList.front() != range)
 				{
@@ -394,7 +416,8 @@ void 	DefaultListSelectionModel::setSelectionInterval(UInt32 index0, UInt32 inde
 					//minMax = getMinMaxSelection(minMax, IndexRange(_MinSelectionIndex, _MaxSelectionIndex));
 					_RangeSelectionList.clear();
 					_RangeSelectionList.push_back(range);
-					produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), minMax.StartIndex, minMax.EndIndex, _ValueIsAdjusting));
+                    ShouldProduceSelectionChangeEvent = true;
+					TheListSelectionEvent = ListSelectionEvent(NullFC, getSystemTime(), minMax.StartIndex, minMax.EndIndex, _ValueIsAdjusting);
 				}
 				break;
 			case MULTIPLE_INTERVAL_SELECTION:
@@ -409,7 +432,8 @@ void 	DefaultListSelectionModel::setSelectionInterval(UInt32 index0, UInt32 inde
 				if (_RangeSelectionList.empty())
 				{
 					_RangeSelectionList.push_back(newRange);
-					produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), newRange.StartIndex, newRange.EndIndex, _ValueIsAdjusting));
+                    ShouldProduceSelectionChangeEvent = true;
+					TheListSelectionEvent = ListSelectionEvent(NullFC, getSystemTime(), newRange.StartIndex, newRange.EndIndex, _ValueIsAdjusting);
 				}
 				else if (_RangeSelectionList.front() != newRange)
 				{
@@ -420,7 +444,8 @@ void 	DefaultListSelectionModel::setSelectionInterval(UInt32 index0, UInt32 inde
 					minMax = getMinMaxSelection(minMax, IndexRange(_MinSelectionIndex, _MaxSelectionIndex));
 					_RangeSelectionList.clear();
 					_RangeSelectionList.push_back(newRange);
-					produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), minMax.StartIndex, minMax.EndIndex, _ValueIsAdjusting));
+                    ShouldProduceSelectionChangeEvent = true;
+					TheListSelectionEvent = ListSelectionEvent(NullFC, getSystemTime(), minMax.StartIndex, minMax.EndIndex, _ValueIsAdjusting);
 				}
 				break;
 			default:
@@ -429,6 +454,10 @@ void 	DefaultListSelectionModel::setSelectionInterval(UInt32 index0, UInt32 inde
 		// update indices
 		_AnchorSelectionIndex = range.StartIndex;
 		_LeadSelectionIndex = range.EndIndex;
+        if(ShouldProduceSelectionChangeEvent)
+        {
+            produceSelectionChanged(TheListSelectionEvent);
+        }
 	}
 }
 

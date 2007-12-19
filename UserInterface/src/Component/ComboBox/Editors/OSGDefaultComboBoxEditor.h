@@ -46,6 +46,7 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGDefaultComboBoxEditorBase.h"
+#include "Event/OSGFocusListener.h"
 
 OSG_BEGIN_NAMESPACE
 

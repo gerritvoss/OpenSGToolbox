@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Label!
+ **     class EditableTextComponent!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,134 +55,52 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &LabelBase::getClassType(void)
+OSG::FieldContainerType &EditableTextComponentBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 LabelBase::getClassTypeId(void) 
+OSG::UInt32 EditableTextComponentBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
-//! create a new instance of the class
-inline
-LabelPtr LabelBase::create(void) 
-{
-    LabelPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = LabelPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
-}
-
-//! create an empty new instance of the class, do not copy the prototype
-inline
-LabelPtr LabelBase::createEmpty(void) 
-{ 
-    LabelPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
-}
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Label::_sfHorizontalAlignment field.
+//! Get the EditableTextComponent::_sfEditable field.
 inline
-SFReal32 *LabelBase::getSFHorizontalAlignment(void)
+SFBool *EditableTextComponentBase::getSFEditable(void)
 {
-    return &_sfHorizontalAlignment;
-}
-
-//! Get the Label::_sfVerticalAlignment field.
-inline
-SFReal32 *LabelBase::getSFVerticalAlignment(void)
-{
-    return &_sfVerticalAlignment;
-}
-
-//! Get the Label::_sfTextSelectable field.
-inline
-SFBool *LabelBase::getSFTextSelectable(void)
-{
-    return &_sfTextSelectable;
+    return &_sfEditable;
 }
 
 
-//! Get the value of the Label::_sfHorizontalAlignment field.
+//! Get the value of the EditableTextComponent::_sfEditable field.
 inline
-Real32 &LabelBase::getHorizontalAlignment(void)
+bool &EditableTextComponentBase::getEditable(void)
 {
-    return _sfHorizontalAlignment.getValue();
+    return _sfEditable.getValue();
 }
 
-//! Get the value of the Label::_sfHorizontalAlignment field.
+//! Get the value of the EditableTextComponent::_sfEditable field.
 inline
-const Real32 &LabelBase::getHorizontalAlignment(void) const
+const bool &EditableTextComponentBase::getEditable(void) const
 {
-    return _sfHorizontalAlignment.getValue();
+    return _sfEditable.getValue();
 }
 
-//! Set the value of the Label::_sfHorizontalAlignment field.
+//! Set the value of the EditableTextComponent::_sfEditable field.
 inline
-void LabelBase::setHorizontalAlignment(const Real32 &value)
+void EditableTextComponentBase::setEditable(const bool &value)
 {
-    _sfHorizontalAlignment.setValue(value);
-}
-
-//! Get the value of the Label::_sfVerticalAlignment field.
-inline
-Real32 &LabelBase::getVerticalAlignment(void)
-{
-    return _sfVerticalAlignment.getValue();
-}
-
-//! Get the value of the Label::_sfVerticalAlignment field.
-inline
-const Real32 &LabelBase::getVerticalAlignment(void) const
-{
-    return _sfVerticalAlignment.getValue();
-}
-
-//! Set the value of the Label::_sfVerticalAlignment field.
-inline
-void LabelBase::setVerticalAlignment(const Real32 &value)
-{
-    _sfVerticalAlignment.setValue(value);
-}
-
-//! Get the value of the Label::_sfTextSelectable field.
-inline
-bool &LabelBase::getTextSelectable(void)
-{
-    return _sfTextSelectable.getValue();
-}
-
-//! Get the value of the Label::_sfTextSelectable field.
-inline
-const bool &LabelBase::getTextSelectable(void) const
-{
-    return _sfTextSelectable.getValue();
-}
-
-//! Set the value of the Label::_sfTextSelectable field.
-inline
-void LabelBase::setTextSelectable(const bool &value)
-{
-    _sfTextSelectable.setValue(value);
+    _sfEditable.setValue(value);
 }
 
 
 OSG_END_NAMESPACE
 
-#define OSGLABELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGEDITABLETEXTCOMPONENTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

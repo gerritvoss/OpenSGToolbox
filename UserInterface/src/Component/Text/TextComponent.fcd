@@ -21,15 +21,6 @@ A UI Button.
 	>
 	</Field>
 	<Field
-		name="Editable"
-		type="bool"
-		cardinality="single"
-		visibility="external"
-		defaultValue="true"
-		access="public"
-	>
-	</Field>
-	<Field
 		name="CaretPosition"
 		type="UInt32"
 		cardinality="single"

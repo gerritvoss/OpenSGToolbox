@@ -342,7 +342,7 @@ int main(int argc, char **argv)
         ExampleLabelBackground->setColorEnd(Color4f(0.0, 0.0, 1.0, 1.0));
     endEditCP(ExampleLabelBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask);
     ExampleLabel = osg::Label::create();
-    beginEditCP(ExampleLabel, Label::BackgroundFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask | Label::PreferredSizeFieldMask);
+    beginEditCP(ExampleLabel, Label::BackgroundFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask | Label::PreferredSizeFieldMask | Label::TextSelectableFieldMask);
         ExampleLabel->setBackground(ExampleLabelBackground);
         ExampleLabel->setFont(ExampleLabelFont);
         ExampleLabel->setText("Change My Font!");
@@ -351,7 +351,8 @@ int main(int argc, char **argv)
         ExampleLabel->setVerticalAlignment(0.5);
         ExampleLabel->setHorizontalAlignment(0.5);
         ExampleLabel->setPreferredSize(Vec2s(200, 50));
-    endEditCP(ExampleLabel, Label::BackgroundFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask | Label::PreferredSizeFieldMask);
+        ExampleLabel->setTextSelectable(true);
+    endEditCP(ExampleLabel, Label::BackgroundFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask | Label::PreferredSizeFieldMask | Label::TextSelectableFieldMask);
     
     /******************************************************
 

@@ -103,7 +103,7 @@ FieldDescription *TextFieldBase::_desc[] =
 
 FieldContainerType TextFieldBase::_type(
     "TextField",
-    "TextComponent",
+    "EditableTextComponent",
     NULL,
     (PrototypeCreateF) &TextFieldBase::createEmpty,
     TextField::initMethod,
@@ -304,7 +304,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TextFieldPtr>::_type("TextFieldPtr", "TextComponentPtr");
+DataType FieldDataTraits<TextFieldPtr>::_type("TextFieldPtr", "EditableTextComponentPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(TextFieldPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);

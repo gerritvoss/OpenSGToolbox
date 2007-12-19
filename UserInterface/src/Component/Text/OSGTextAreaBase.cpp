@@ -114,7 +114,7 @@ FieldDescription *TextAreaBase::_desc[] =
 
 FieldContainerType TextAreaBase::_type(
     "TextArea",
-    "TextComponent",
+    "EditableTextComponent",
     NULL,
     (PrototypeCreateF) &TextAreaBase::createEmpty,
     TextArea::initMethod,
@@ -338,7 +338,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TextAreaPtr>::_type("TextAreaPtr", "TextComponentPtr");
+DataType FieldDataTraits<TextAreaPtr>::_type("TextAreaPtr", "EditableTextComponentPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(TextAreaPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);

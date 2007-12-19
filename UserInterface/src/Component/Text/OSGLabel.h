@@ -75,6 +75,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING Label : public LabelBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+	virtual void mouseClicked(const MouseEvent& e);
+	virtual void mousePressed(const MouseEvent& e);
+	virtual void mouseDragged(const MouseEvent& e);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -96,7 +99,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Label : public LabelBase
 
     /*! \}                                                                 */
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
-    virtual Color4f getDrawnTextColor(void) const;
+	void calculateTextBounds(const UInt32 StartIndex, const UInt32 EndIndex, Pnt2s& TopLeft, Pnt2s& BottomRight);
     
     /*==========================  PRIVATE  ================================*/
   private:

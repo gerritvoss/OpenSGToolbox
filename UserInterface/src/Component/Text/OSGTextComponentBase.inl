@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -75,13 +75,6 @@ inline
 SFString *TextComponentBase::getSFText(void)
 {
     return &_sfText;
-}
-
-//! Get the TextComponent::_sfEditable field.
-inline
-SFBool *TextComponentBase::getSFEditable(void)
-{
-    return &_sfEditable;
 }
 
 //! Get the TextComponent::_sfCaretPosition field.
@@ -167,27 +160,6 @@ inline
 void TextComponentBase::setText(const std::string &value)
 {
     _sfText.setValue(value);
-}
-
-//! Get the value of the TextComponent::_sfEditable field.
-inline
-bool &TextComponentBase::getEditable(void)
-{
-    return _sfEditable.getValue();
-}
-
-//! Get the value of the TextComponent::_sfEditable field.
-inline
-const bool &TextComponentBase::getEditable(void) const
-{
-    return _sfEditable.getValue();
-}
-
-//! Set the value of the TextComponent::_sfEditable field.
-inline
-void TextComponentBase::setEditable(const bool &value)
-{
-    _sfEditable.setValue(value);
 }
 
 //! Get the value of the TextComponent::_sfCaretPosition field.

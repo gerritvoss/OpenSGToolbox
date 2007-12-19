@@ -451,6 +451,7 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsLabel->setVerticalAlignment(0.5);
 		WindowsLabel->setHorizontalAlignment(0.0);
+		WindowsLabel->setTextSelectable(false);
 	endEditCP(WindowsLabel);
 	
     Label::getClassType().setPrototype(WindowsLabel);

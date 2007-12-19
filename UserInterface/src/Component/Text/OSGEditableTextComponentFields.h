@@ -4,6 +4,8 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -42,147 +44,88 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
- **     Do not change this file, changes should be done in the derived      **
- **     class Label!
- **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
+
+#ifndef _OSGEDITABLETEXTCOMPONENTFIELDS_H_
+#define _OSGEDITABLETEXTCOMPONENTFIELDS_H_
+#ifdef __sgi
+#pragma once
+#endif
+
 #include <OpenSG/OSGConfig.h>
+
+#include <OpenSG/OSGFieldContainerPtr.h>
+#include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGUserInterfaceDef.h"
+
+#include "OSGTextComponentFields.h"
 
 OSG_BEGIN_NAMESPACE
 
+class EditableTextComponent;
 
-//! access the type of the class
-inline
-OSG::FieldContainerType &LabelBase::getClassType(void)
+#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
+//! EditableTextComponentPtr
+
+typedef FCPtr<TextComponentPtr, EditableTextComponent> EditableTextComponentPtr;
+
+#endif
+
+#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpUserInterfaceFieldTraits
+ */
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \hideinhierarchy */
+#endif
+
+template <>
+struct FieldDataTraits<EditableTextComponentPtr> : 
+    public FieldTraitsRecurseMapper<EditableTextComponentPtr, true>
 {
-    return _type; 
-} 
+    static DataType             _type;                       
 
-//! access the numerical type of the class
-inline
-OSG::UInt32 LabelBase::getClassTypeId(void) 
-{
-    return _type.getId(); 
-} 
+    enum                        { StringConvertable = 0x00 };
+    enum                        { bHasParent        = 0x01 };
 
-//! create a new instance of the class
-inline
-LabelPtr LabelBase::create(void) 
-{
-    LabelPtr fc; 
+    static DataType   &getType (void) { return _type;        }
 
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = LabelPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
-}
+    static const char *getSName(void) { return "SFEditableTextComponentPtr"; }
+    static const char *getMName(void) { return "MFEditableTextComponentPtr"; }
+};
 
-//! create an empty new instance of the class, do not copy the prototype
-inline
-LabelPtr LabelBase::createEmpty(void) 
-{ 
-    LabelPtr returnValue; 
-    
-    newPtr(returnValue); 
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \class  FieldTraitsRecurseMapper<EditableTextComponentPtr, true>
+    \hideinhierarchy
+ */
+#endif
 
-    return returnValue; 
-}
+#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
 
-/*------------------------------ get -----------------------------------*/
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpUserInterfaceFieldSingle */
 
-//! Get the Label::_sfHorizontalAlignment field.
-inline
-SFReal32 *LabelBase::getSFHorizontalAlignment(void)
-{
-    return &_sfHorizontalAlignment;
-}
+typedef SField<EditableTextComponentPtr> SFEditableTextComponentPtr;
+#endif
 
-//! Get the Label::_sfVerticalAlignment field.
-inline
-SFReal32 *LabelBase::getSFVerticalAlignment(void)
-{
-    return &_sfVerticalAlignment;
-}
+#ifndef OSG_COMPILEEDITABLETEXTCOMPONENTINST
+OSG_DLLEXPORT_DECL1(SField, EditableTextComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#endif
 
-//! Get the Label::_sfTextSelectable field.
-inline
-SFBool *LabelBase::getSFTextSelectable(void)
-{
-    return &_sfTextSelectable;
-}
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpUserInterfaceFieldMulti */
 
+typedef MField<EditableTextComponentPtr> MFEditableTextComponentPtr;
+#endif
 
-//! Get the value of the Label::_sfHorizontalAlignment field.
-inline
-Real32 &LabelBase::getHorizontalAlignment(void)
-{
-    return _sfHorizontalAlignment.getValue();
-}
-
-//! Get the value of the Label::_sfHorizontalAlignment field.
-inline
-const Real32 &LabelBase::getHorizontalAlignment(void) const
-{
-    return _sfHorizontalAlignment.getValue();
-}
-
-//! Set the value of the Label::_sfHorizontalAlignment field.
-inline
-void LabelBase::setHorizontalAlignment(const Real32 &value)
-{
-    _sfHorizontalAlignment.setValue(value);
-}
-
-//! Get the value of the Label::_sfVerticalAlignment field.
-inline
-Real32 &LabelBase::getVerticalAlignment(void)
-{
-    return _sfVerticalAlignment.getValue();
-}
-
-//! Get the value of the Label::_sfVerticalAlignment field.
-inline
-const Real32 &LabelBase::getVerticalAlignment(void) const
-{
-    return _sfVerticalAlignment.getValue();
-}
-
-//! Set the value of the Label::_sfVerticalAlignment field.
-inline
-void LabelBase::setVerticalAlignment(const Real32 &value)
-{
-    _sfVerticalAlignment.setValue(value);
-}
-
-//! Get the value of the Label::_sfTextSelectable field.
-inline
-bool &LabelBase::getTextSelectable(void)
-{
-    return _sfTextSelectable.getValue();
-}
-
-//! Get the value of the Label::_sfTextSelectable field.
-inline
-const bool &LabelBase::getTextSelectable(void) const
-{
-    return _sfTextSelectable.getValue();
-}
-
-//! Set the value of the Label::_sfTextSelectable field.
-inline
-void LabelBase::setTextSelectable(const bool &value)
-{
-    _sfTextSelectable.setValue(value);
-}
-
+#ifndef OSG_COMPILEEDITABLETEXTCOMPONENTINST
+OSG_DLLEXPORT_DECL1(MField, EditableTextComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#endif
 
 OSG_END_NAMESPACE
 
-#define OSGLABELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+#define OSGEDITABLETEXTCOMPONENTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
+#endif /* _OSGEDITABLETEXTCOMPONENTFIELDS_H_ */

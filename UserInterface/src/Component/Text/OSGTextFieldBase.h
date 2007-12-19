@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGTextComponent.h" // Parent
+#include "OSGEditableTextComponent.h" // Parent
 
 #include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
 #include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
@@ -79,11 +79,11 @@ class BinaryDataHandler;
 
 //! \brief TextField Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public TextComponent
+class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public EditableTextComponent
 {
   private:
 
-    typedef TextComponent    Inherited;
+    typedef EditableTextComponent    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:

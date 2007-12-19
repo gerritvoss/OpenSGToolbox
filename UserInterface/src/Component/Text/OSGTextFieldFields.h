@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGTextComponentFields.h"
+#include "OSGEditableTextComponentFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class TextField;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! TextFieldPtr
 
-typedef FCPtr<TextComponentPtr, TextField> TextFieldPtr;
+typedef FCPtr<EditableTextComponentPtr, TextField> TextFieldPtr;
 
 #endif
 

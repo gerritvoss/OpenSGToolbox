@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,9 +67,6 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  TextComponentBase::TextFieldMask = 
     (TypeTraits<BitVector>::One << TextComponentBase::TextFieldId);
 
-const OSG::BitVector  TextComponentBase::EditableFieldMask = 
-    (TypeTraits<BitVector>::One << TextComponentBase::EditableFieldId);
-
 const OSG::BitVector  TextComponentBase::CaretPositionFieldMask = 
     (TypeTraits<BitVector>::One << TextComponentBase::CaretPositionFieldId);
 
@@ -105,9 +102,6 @@ const OSG::BitVector TextComponentBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var std::string     TextComponentBase::_sfText
-    
-*/
-/*! \var bool            TextComponentBase::_sfEditable
     
 */
 /*! \var UInt32          TextComponentBase::_sfCaretPosition
@@ -147,11 +141,6 @@ FieldDescription *TextComponentBase::_desc[] =
                      TextFieldId, TextFieldMask,
                      false,
                      (FieldAccessMethod) &TextComponentBase::getSFText),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Editable", 
-                     EditableFieldId, EditableFieldMask,
-                     false,
-                     (FieldAccessMethod) &TextComponentBase::getSFEditable),
     new FieldDescription(SFUInt32::getClassType(), 
                      "CaretPosition", 
                      CaretPositionFieldId, CaretPositionFieldMask,
@@ -264,7 +253,6 @@ void TextComponentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 TextComponentBase::TextComponentBase(void) :
     _sfText                   (), 
-    _sfEditable               (bool(true)), 
     _sfCaretPosition          (UInt32(0)), 
     _sfFont                   (), 
     _sfSelectionBoxColor      (Color4f(0.0,0.0,1.0,1.0)), 
@@ -284,7 +272,6 @@ TextComponentBase::TextComponentBase(void) :
 
 TextComponentBase::TextComponentBase(const TextComponentBase &source) :
     _sfText                   (source._sfText                   ), 
-    _sfEditable               (source._sfEditable               ), 
     _sfCaretPosition          (source._sfCaretPosition          ), 
     _sfFont                   (source._sfFont                   ), 
     _sfSelectionBoxColor      (source._sfSelectionBoxColor      ), 
@@ -313,11 +300,6 @@ UInt32 TextComponentBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (TextFieldMask & whichField))
     {
         returnValue += _sfText.getBinSize();
-    }
-
-    if(FieldBits::NoField != (EditableFieldMask & whichField))
-    {
-        returnValue += _sfEditable.getBinSize();
     }
 
     if(FieldBits::NoField != (CaretPositionFieldMask & whichField))
@@ -379,11 +361,6 @@ void TextComponentBase::copyToBin(      BinaryDataHandler &pMem,
         _sfText.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (EditableFieldMask & whichField))
-    {
-        _sfEditable.copyToBin(pMem);
-    }
-
     if(FieldBits::NoField != (CaretPositionFieldMask & whichField))
     {
         _sfCaretPosition.copyToBin(pMem);
@@ -440,11 +417,6 @@ void TextComponentBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (TextFieldMask & whichField))
     {
         _sfText.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (EditableFieldMask & whichField))
-    {
-        _sfEditable.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (CaretPositionFieldMask & whichField))
@@ -505,9 +477,6 @@ void TextComponentBase::executeSyncImpl(      TextComponentBase *pOther,
     if(FieldBits::NoField != (TextFieldMask & whichField))
         _sfText.syncWith(pOther->_sfText);
 
-    if(FieldBits::NoField != (EditableFieldMask & whichField))
-        _sfEditable.syncWith(pOther->_sfEditable);
-
     if(FieldBits::NoField != (CaretPositionFieldMask & whichField))
         _sfCaretPosition.syncWith(pOther->_sfCaretPosition);
 
@@ -547,9 +516,6 @@ void TextComponentBase::executeSyncImpl(      TextComponentBase *pOther,
 
     if(FieldBits::NoField != (TextFieldMask & whichField))
         _sfText.syncWith(pOther->_sfText);
-
-    if(FieldBits::NoField != (EditableFieldMask & whichField))
-        _sfEditable.syncWith(pOther->_sfEditable);
 
     if(FieldBits::NoField != (CaretPositionFieldMask & whichField))
         _sfCaretPosition.syncWith(pOther->_sfCaretPosition);

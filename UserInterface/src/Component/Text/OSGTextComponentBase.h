@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -68,7 +68,6 @@
 #include "Component/OSGComponent.h" // Parent
 
 #include <OpenSG/OSGStringFields.h> // Text type
-#include <OpenSG/OSGBoolFields.h> // Editable type
 #include <OpenSG/OSGUInt32Fields.h> // CaretPosition type
 #include "Text/OSGUIFont.h" // Font type
 #include <OpenSG/OSGColor4fFields.h> // SelectionBoxColor type
@@ -102,8 +101,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
     enum
     {
         TextFieldId               = Inherited::NextFieldId,
-        EditableFieldId           = TextFieldId               + 1,
-        CaretPositionFieldId      = EditableFieldId           + 1,
+        CaretPositionFieldId      = TextFieldId               + 1,
         FontFieldId               = CaretPositionFieldId      + 1,
         SelectionBoxColorFieldId  = FontFieldId               + 1,
         SelectionTextColorFieldId = SelectionBoxColorFieldId  + 1,
@@ -116,7 +114,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
     };
 
     static const OSG::BitVector TextFieldMask;
-    static const OSG::BitVector EditableFieldMask;
     static const OSG::BitVector CaretPositionFieldMask;
     static const OSG::BitVector FontFieldMask;
     static const OSG::BitVector SelectionBoxColorFieldMask;
@@ -153,7 +150,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
     /*! \{                                                                 */
 
            SFString            *getSFText           (void);
-           SFBool              *getSFEditable       (void);
            SFUInt32            *getSFCaretPosition  (void);
            SFUIFontPtr         *getSFFont           (void);
            SFColor4f           *getSFSelectionBoxColor(void);
@@ -166,8 +162,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
 
            std::string         &getText           (void);
      const std::string         &getText           (void) const;
-           bool                &getEditable       (void);
-     const bool                &getEditable       (void) const;
            UInt32              &getCaretPosition  (void);
      const UInt32              &getCaretPosition  (void) const;
            UIFontPtr           &getFont           (void);
@@ -193,7 +187,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
     /*! \{                                                                 */
 
      void setText           ( const std::string &value );
-     void setEditable       ( const bool &value );
      void setCaretPosition  ( const UInt32 &value );
      void setFont           ( const UIFontPtr &value );
      void setSelectionBoxColor( const Color4f &value );
@@ -230,7 +223,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
     /*! \{                                                                 */
 
     SFString            _sfText;
-    SFBool              _sfEditable;
     SFUInt32            _sfCaretPosition;
     SFUIFontPtr         _sfFont;
     SFColor4f           _sfSelectionBoxColor;

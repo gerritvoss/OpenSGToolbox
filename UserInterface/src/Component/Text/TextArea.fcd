@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="TextArea"
-	parent="TextComponent"
+	parent="EditableTextComponent"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"

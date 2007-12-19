@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGTEXTFIELD_H_
-#define _OSGTEXTFIELD_H_
+#ifndef _OSGEDITABLETEXTCOMPONENT_H_
+#define _OSGEDITABLETEXTCOMPONENT_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,24 +45,19 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGTextFieldBase.h"
-#include "Event/OSGActionListener.h"
-#include <OpenSG/Input/OSGWindowEventProducer.h>
-#include <OpenSG/Input/OSGUpdateListener.h>
-
+#include "OSGEditableTextComponentBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TextField class. See \ref 
-           PageUserInterfaceTextField for a description.
+/*! \brief EditableTextComponent class. See \ref 
+           PageUserInterfaceEditableTextComponent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
-
+class OSG_USERINTERFACELIB_DLLMAPPING EditableTextComponent : public EditableTextComponentBase
 {
   private:
 
-    typedef TextFieldBase Inherited;
+    typedef EditableTextComponentBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -82,90 +77,58 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-    /*! \}*/
-
+    /*! \}                                                                 */
+	virtual void mouseEntered(const MouseEvent& e);
+    virtual void mouseExited(const MouseEvent& e);
+	virtual void keyPressed(const KeyEvent& e);
+	virtual void keyReleased(const KeyEvent& e);
 	virtual void keyTyped(const KeyEvent& e);
-
-	virtual void mouseClicked(const MouseEvent& e);
-	virtual void mousePressed(const MouseEvent& e);
-	virtual void mouseDragged(const MouseEvent& e);
 	
-	virtual void focusGained(const FocusEvent& e);
 	virtual void focusLost(const FocusEvent& e);
-
-    void addActionListener(ActionListenerPtr Listener);
-    void removeActionListener(ActionListenerPtr Listener);
-
-	virtual std::string getDrawnText(void) const;
-
 
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in TextFieldBase.
+    // Variables should all be in EditableTextComponentBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    TextField(void);
-    TextField(const TextField &source);
+    EditableTextComponent(void);
+    EditableTextComponent(const EditableTextComponent &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TextField(void); 
+    virtual ~EditableTextComponent(void); 
 
     /*! \}                                                                 */
-    
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
-	void calculateTextBounds(const UInt32 StartIndex, const UInt32 EndIndex, Pnt2s& TopLeft, Pnt2s& BottomRight);
-
-	typedef std::set<ActionListenerPtr> ActionListenerSet;
-    typedef ActionListenerSet::iterator ActionListenerSetItor;
-    typedef ActionListenerSet::const_iterator ActionListenerSetConstItor;
-	
-    ActionListenerSet       _ActionListeners;
-	
-    virtual void produceActionPerformed(const ActionEvent& e);
-	
-	Time _CurrentCaretBlinkElps;
-
-	class CaretUpdateListener : public UpdateListener
-	{
-	public:
-		CaretUpdateListener(TextFieldPtr TheTextField);
-        virtual void update(const UpdateEvent& e);
-	private:
-		TextFieldPtr _TextField;
-	};
-
-	friend class CarentUpdateListener;
-
-	CaretUpdateListener _CaretUpdateListener;
+    virtual UIBackgroundPtr getDrawnBackground(void) const;
+    virtual BorderPtr getDrawnBorder(void) const;
     
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class TextFieldBase;
+    friend class EditableTextComponentBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const TextField &source);
+    void operator =(const EditableTextComponent &source);
 };
 
-typedef TextField *TextFieldP;
+typedef EditableTextComponent *EditableTextComponentP;
 
 OSG_END_NAMESPACE
 
-#include "OSGTextFieldBase.inl"
-#include "OSGTextField.inl"
+#include "OSGEditableTextComponentBase.inl"
+#include "OSGEditableTextComponent.inl"
 
-#define OSGTEXTFIELD_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGEDITABLETEXTCOMPONENT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGTEXTFIELD_H_ */
+#endif /* _OSGEDITABLETEXTCOMPONENT_H_ */

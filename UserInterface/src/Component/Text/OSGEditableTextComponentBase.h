@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Label
+ **     class EditableTextComponent
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGLABELBASE_H_
-#define _OSGLABELBASE_H_
+#ifndef _OSGEDITABLETEXTCOMPONENTBASE_H_
+#define _OSGEDITABLETEXTCOMPONENTBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -67,20 +67,18 @@
 
 #include "OSGTextComponent.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
-#include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
-#include <OpenSG/OSGBoolFields.h> // TextSelectable type
+#include <OpenSG/OSGBoolFields.h> // Editable type
 
-#include "OSGLabelFields.h"
+#include "OSGEditableTextComponentFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Label;
+class EditableTextComponent;
 class BinaryDataHandler;
 
-//! \brief Label Base Class.
+//! \brief EditableTextComponent Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public TextComponent
+class OSG_USERINTERFACELIB_DLLMAPPING EditableTextComponentBase : public TextComponent
 {
   private:
 
@@ -89,19 +87,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public TextComponent
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef LabelPtr  Ptr;
+    typedef EditableTextComponentPtr  Ptr;
 
     enum
     {
-        HorizontalAlignmentFieldId = Inherited::NextFieldId,
-        VerticalAlignmentFieldId   = HorizontalAlignmentFieldId + 1,
-        TextSelectableFieldId      = VerticalAlignmentFieldId   + 1,
-        NextFieldId                = TextSelectableFieldId      + 1
+        EditableFieldId = Inherited::NextFieldId,
+        NextFieldId     = EditableFieldId + 1
     };
 
-    static const OSG::BitVector HorizontalAlignmentFieldMask;
-    static const OSG::BitVector VerticalAlignmentFieldMask;
-    static const OSG::BitVector TextSelectableFieldMask;
+    static const OSG::BitVector EditableFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -128,25 +122,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public TextComponent
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFHorizontalAlignment(void);
-           SFReal32            *getSFVerticalAlignment(void);
-           SFBool              *getSFTextSelectable (void);
+           SFBool              *getSFEditable       (void);
 
-           Real32              &getHorizontalAlignment(void);
-     const Real32              &getHorizontalAlignment(void) const;
-           Real32              &getVerticalAlignment(void);
-     const Real32              &getVerticalAlignment(void) const;
-           bool                &getTextSelectable (void);
-     const bool                &getTextSelectable (void) const;
+           bool                &getEditable       (void);
+     const bool                &getEditable       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setHorizontalAlignment( const Real32 &value );
-     void setVerticalAlignment( const Real32 &value );
-     void setTextSelectable ( const bool &value );
+     void setEditable       ( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -166,22 +152,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public TextComponent
 
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
-
-    static  LabelPtr      create          (void); 
-    static  LabelPtr      createEmpty     (void); 
-
-    /*! \}                                                                 */
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Copy                                   */
-    /*! \{                                                                 */
-
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
-
-    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -189,24 +159,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public TextComponent
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfHorizontalAlignment;
-    SFReal32            _sfVerticalAlignment;
-    SFBool              _sfTextSelectable;
+    SFBool              _sfEditable;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    LabelBase(void);
-    LabelBase(const LabelBase &source);
+    EditableTextComponentBase(void);
+    EditableTextComponentBase(const EditableTextComponentBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~LabelBase(void); 
+    virtual ~EditableTextComponentBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -214,13 +182,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public TextComponent
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      LabelBase *pOther,
+    void executeSyncImpl(      EditableTextComponentBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      LabelBase *pOther,
+    void executeSyncImpl(      EditableTextComponentBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -250,7 +218,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public TextComponent
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const LabelBase &source);
+    void operator =(const EditableTextComponentBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -258,17 +226,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelBase : public TextComponent
 //---------------------------------------------------------------------------
 
 
-typedef LabelBase *LabelBaseP;
+typedef EditableTextComponentBase *EditableTextComponentBaseP;
 
-typedef osgIF<LabelBase::isNodeCore,
-              CoredNodePtr<Label>,
+typedef osgIF<EditableTextComponentBase::isNodeCore,
+              CoredNodePtr<EditableTextComponent>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet LabelNodePtr;
+              >::_IRet EditableTextComponentNodePtr;
 
-typedef RefPtr<LabelPtr> LabelRefPtr;
+typedef RefPtr<EditableTextComponentPtr> EditableTextComponentRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGLABELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGEDITABLETEXTCOMPONENTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGLABELBASE_H_ */
+#endif /* _OSGEDITABLETEXTCOMPONENTBASE_H_ */

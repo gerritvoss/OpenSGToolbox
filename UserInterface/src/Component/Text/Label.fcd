@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="Label"
-	parent="Component"
+	parent="TextComponent"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -13,19 +13,11 @@
 >
 A UI Label.
 	<Field
-		name="Font"
-		type="UIFontPtr"
+		name="HorizontalAlignment"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
-		header="Text/OSGUIFont.h"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="Text"
-		type="std::string"
-		cardinality="single"
-		visibility="external"
+		defaultValue="0.0"
 		access="public"
 	>
 	</Field>
@@ -39,43 +31,11 @@ A UI Label.
 	>
 	</Field>
 	<Field
-		name="HorizontalAlignment"
-		type="Real32"
+		name="TextSelectable"
+		type="bool"
 		cardinality="single"
 		visibility="external"
-		defaultValue="0.5"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="FocusedTextColor"
-		type="Color4f"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="RolloverTextColor"
-		type="Color4f"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="DisabledTextColor"
-		type="Color4f"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="TextColor"
-		type="Color4f"
-		cardinality="single"
-		visibility="external"
+		defaultValue="false"
 		access="public"
 	>
 	</Field>

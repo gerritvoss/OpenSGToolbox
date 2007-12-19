@@ -326,6 +326,34 @@
 					Name="Text"
 					>
 					<File
+						RelativePath="..\..\src\Component\Text\OSGEditableTextComponent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Text\OSGEditableTextComponent.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Text\OSGEditableTextComponent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Text\OSGEditableTextComponentBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Text\OSGEditableTextComponentBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Text\OSGEditableTextComponentBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Text\OSGEditableTextComponentFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\Component\Text\OSGLabel.cpp"
 						>
 					</File>

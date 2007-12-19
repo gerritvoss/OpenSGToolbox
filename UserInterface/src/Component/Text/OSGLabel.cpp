@@ -47,6 +47,7 @@
 
 #include "OSGLabel.h"
 #include "Util/OSGUIDrawUtils.h"
+#include <OpenSG/Input/OSGStringUtils.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,46 +78,268 @@ void Label::initMethod (void)
 
 void Label::drawInternal(const GraphicsPtr TheGraphics) const
 {
-   Pnt2s TopLeft, BottomRight;
-   getInsideBorderBounds(TopLeft, BottomRight);
+    Pnt2s TopLeft, BottomRight;
+    Pnt2s TempPos;
+    getInsideBorderBounds(TopLeft, BottomRight);
+    TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, getFont()->getBounds(getText()), getVerticalAlignment(), getHorizontalAlignment());
+    
+    //Text Color
+    Color4f TextColor = getDrawnTextColor();
+    if(getText() != "" && getFont() != NullFC)
+    {
 
-   //If I have Text Then Draw it
-   if(getText() != "" && getFont() != NullFC)
-   {
-      //Calculate Alignment
-      Pnt2s AlignedPosition;
-      Pnt2s TextTopLeft, TextBottomRight;
-      getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+	    if(_TextSelectionStart >= _TextSelectionEnd)
+	    {
+	        TheGraphics->drawText(TempPos, getText(), getFont(), TextColor, getOpacity());
+	    }
+	    else
+	    {
+            //Draw Text Befor the Selection
+		    TheGraphics->drawText(TempPos, getText().substr(0, _TextSelectionStart), getFont(), TextColor, getOpacity());
 
-      AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),getVerticalAlignment(), getHorizontalAlignment());
+		    //Draw Selection
+            Pnt2s TextTopLeft, TextBottomRight;
+            getFont()->getBounds(getText().substr(0, _TextSelectionStart), TextTopLeft, TextBottomRight);
 
-	  //Draw the Text
-      TheGraphics->drawText(AlignedPosition, getText(), getFont(), getDrawnTextColor(), getOpacity());
-   }
+		    TheGraphics->drawQuad(TempPos + Vec2s(TextBottomRight.x(),0),
+			    TempPos + Vec2s(getFont()->getBounds(getText().substr(0, _TextSelectionEnd)).x(), 0),
+			    TempPos + Vec2s(getFont()->getBounds(getText().substr(0, _TextSelectionEnd))),
+			    TempPos + Vec2s(TextBottomRight),
+			    getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(), getOpacity());
+
+            //Draw Selected Text
+		    TheGraphics->drawText(TempPos + Vec2s(TextBottomRight.x(), 0), 
+			    getText().substr(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart), getFont(), getSelectionTextColor(), getOpacity());
+
+		    //Draw Text After selection
+            getFont()->getBounds(getText().substr(0, _TextSelectionEnd), TextTopLeft, TextBottomRight);
+		    TheGraphics->drawText(TempPos + Vec2s(TextBottomRight.x(), 0),
+			    getText().substr(_TextSelectionEnd, getText().size()-_TextSelectionEnd), getFont(), TextColor, getOpacity());
+	    }
+    }
 }
 
-Color4f Label::getDrawnTextColor(void) const
+void Label::calculateTextBounds(const UInt32 StartIndex, const UInt32 EndIndex, Pnt2s& TopLeft, Pnt2s& BottomRight)
 {
-    if(getEnabled())
-    {
-        //if(getFocused())
-        //{
-        //    return getFocusedTextColor();
-        //}
-        if(_MouseInComponentLastMouse)
-        {
-            return getRolloverTextColor();
-        }
-        else
-        {
-            return getTextColor();
-        }
-    }
-    else
-    {
-        return getDisabledTextColor();
-    }
+    Pnt2s ComponentTopLeft, ComponentBottomRight;
+    getInsideBorderBounds(ComponentTopLeft, ComponentBottomRight);
+
+    Pnt2s AlignmentOffset = calculateAlignment(ComponentTopLeft, ComponentBottomRight-ComponentTopLeft, getFont()->getBounds(getText()), getVerticalAlignment(), getHorizontalAlignment());
+
+	getFont()->getBounds(getText().substr(StartIndex, EndIndex), TopLeft, BottomRight);
+	TopLeft = TopLeft + Vec2s(AlignmentOffset);
+	BottomRight = BottomRight + Vec2s(AlignmentOffset);
 }
+
+void Label::mouseClicked(const MouseEvent& e)
+{	
+    if(getTextSelectable())
+    {
+	    Int32 Position(0);
+	    Int32 BeginWord = 0;
+	    Int32 EndWord = getText().size();
+	    if(e.getButton() == e.BUTTON1)
+	    {
+
+		    if(e.getClickCount() == 2)
+		    {
+			    Pnt2s TopLeftText, BottomRightText, TempPos;
+			    Pnt2s TopLeftText1, BottomRightText1;
+			    Pnt2s TopLeft, BottomRight;
+			    getFont()->getBounds(getText(), TopLeftText, BottomRightText);
+			    getInsideBorderBounds(TopLeft, BottomRight);
+                TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText-TopLeftText, getVerticalAlignment(), getHorizontalAlignment());
+
+			    //set caret position to proper place
+			    //if the mouse is to the left of the text, set it to the begining.
+			    Pnt2s temp = DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this));
+			    if(DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this)).x() <= TempPos.x())
+			    {
+				    Position = 0;
+			    }//if the mouse is to the right of the text, set it to the end
+			    else if(DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this)).x() >= TempPos.x()+BottomRightText.x())
+			    {
+				    Position = getText().size();
+			    }
+			    else
+			    {
+				    for(UInt32 i = 0; i <getText().size(); i++)
+				    {		
+					    calculateTextBounds(0,i, TopLeftText, BottomRightText);
+					    calculateTextBounds(0,i+1, TopLeftText1, BottomRightText1);
+					    if(DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this)).x()>BottomRightText.x()
+					       && DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
+					    {
+						    Position = i;
+						    break;
+					    }
+				    }
+			    }
+			    if(isPunctuationChar(getText()[Position]))
+			    {
+				    EndWord = Position + 1;
+				    BeginWord = Position;
+			    }
+			    else{
+				    for(Int32 i = Position; i < getText().size(); i++)
+				    {
+					    if(!isWordChar(getText()[i]))
+					    {
+						    EndWord = i;
+						    break;
+					    }
+				    }
+				    for(Int32 i = Position; i >= 0; i--)
+				    {
+					    if(!isWordChar(getText()[i]))
+					    {
+						    BeginWord = i + 1;
+						    break;
+					    }
+				    }
+			    }
+			    _TextSelectionEnd = EndWord;
+			    _TextSelectionStart = BeginWord;
+			    setCaretPosition(EndWord);
+		    }
+	    }
+    }
+	Inherited::mouseClicked(e);
+
+}
+
+
+void Label::mousePressed(const MouseEvent& e)
+{
+    if(getTextSelectable())
+    {
+	    Pnt2s TopLeftText, BottomRightText, TempPos;
+	    Pnt2s TopLeftText1, BottomRightText1;
+	    Pnt2s TopLeft, BottomRight;
+	    getFont()->getBounds(getText(), TopLeftText, BottomRightText);
+        getInsideBorderBounds(TopLeft, BottomRight);
+        TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText-TopLeftText, getVerticalAlignment(), getHorizontalAlignment());
+	    if(e.getButton() == e.BUTTON1)
+	    {
+		    //set caret position to proper place
+		    //if the mouse is to the left of the text, set it to the begining.
+		    Pnt2s temp = DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this));
+		    if(DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this)).x() <= TempPos.x())
+		    {
+			    setCaretPosition(0);
+		    }		//if the mouse is to the right of the text, set it to the end
+		    else if(DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this)).x() >= TempPos.x()+BottomRightText.x())
+		    {
+			    setCaretPosition(getText().size());
+		    }
+		    else
+		    {
+			    for(UInt32 i = 0; i <getText().size(); i++)
+			    {		
+				    calculateTextBounds(0,i, TopLeftText, BottomRightText);
+				    calculateTextBounds(0,i+1, TopLeftText1, BottomRightText1);
+				    if(DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this)).x()>BottomRightText.x()
+				       && DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
+				    {
+					    if(DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this)).x() <= (BottomRightText1.x()-BottomRightText.x())/2.0+0.5 + BottomRightText.x())
+					    {
+						    setCaretPosition(i);
+						    break;
+					    }
+					    else
+					    {
+						    setCaretPosition(i+1);
+						    break;
+					    }
+				    }
+			    }
+		    }
+
+		    _TextSelectionEnd = getCaretPosition();
+		    _TextSelectionStart = getCaretPosition();
+	    }
+    }
+	Inherited::mousePressed(e);
+}
+
+void Label::mouseDragged(const MouseEvent& e)
+{
+    if(getTextSelectable())
+    {
+	    Pnt2s TopLeftText, BottomRightText, TempPos;
+	    Pnt2s TopLeftText1, BottomRightText1;
+	    Pnt2s TopLeft, BottomRight;
+	    Int32 OriginalPosition = getCaretPosition();
+	    getFont()->getBounds(getText(), TopLeftText, BottomRightText);
+        getInsideBorderBounds(TopLeft, BottomRight);
+        TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText-TopLeftText, getVerticalAlignment(), getHorizontalAlignment());
+	    if(e.getButton() == e.BUTTON1)
+	    {
+		    //set caret position to proper place
+		    //if the mouse is to the left of the text, set it to the begining.
+		    Pnt2s temp = DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this));
+		    if(DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this)).x() <= TempPos.x())
+		    {
+			    setCaretPosition(0);
+		    }		//if the mouse is to the right of the text, set it to the end
+		    else if(DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this)).x() >= TempPos.x()+BottomRightText.x())
+		    {
+			    setCaretPosition(getText().size());
+		    }
+		    else
+		    {
+			    //check letter by letter for the mouse's position
+			    for(UInt32 i = 0; i <getText().size(); i++)
+			    {		
+				    calculateTextBounds(0,i, TopLeftText, BottomRightText);
+				    calculateTextBounds(0,i+1, TopLeftText1, BottomRightText1);
+				    if(DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this)).x()>BottomRightText.x()
+				       && DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
+				    {
+					    if(DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this)).x() < (BottomRightText1.x()-BottomRightText.x())/2.0 + BottomRightText.x())
+					    {
+
+						    setCaretPosition(i);
+						    break;
+					    }
+					    else
+					    {
+
+						    setCaretPosition(i+1);
+						    break;
+					    }
+				    }
+			    }
+		    }
+		    if(getCaretPosition() < OriginalPosition)
+		    {
+			    if(getCaretPosition() < _TextSelectionStart)
+			    {
+				    _TextSelectionStart = getCaretPosition();
+			    }
+			    else
+			    {
+				    _TextSelectionEnd = getCaretPosition();
+			    }
+		    }
+		    else if(getCaretPosition() > OriginalPosition)
+		    {
+			    if(getCaretPosition() > _TextSelectionEnd)
+			    {
+				    _TextSelectionEnd = getCaretPosition();
+			    }
+			    else
+			    {
+				    _TextSelectionStart = getCaretPosition();
+			    }
+		    }
+	    }
+    }
+	
+
+	Inherited::mouseDragged(e);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

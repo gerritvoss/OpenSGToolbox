@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="TextField"
-	parent="TextComponent"
+	parent="EditableTextComponent"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -11,7 +11,7 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
-A UI Password Field
+A UI Text Field
 	<Field
 		name="HorizontalAlignment"
 		type="Real32"

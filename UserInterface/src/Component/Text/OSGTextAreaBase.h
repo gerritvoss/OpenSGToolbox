@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGTextComponent.h" // Parent
+#include "OSGEditableTextComponent.h" // Parent
 
 #include <OpenSG/OSGBoolFields.h> // LineWrap type
 #include <OpenSG/OSGBoolFields.h> // WrapStyleWord type
@@ -80,11 +80,11 @@ class BinaryDataHandler;
 
 //! \brief TextArea Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TextAreaBase : public TextComponent
+class OSG_USERINTERFACELIB_DLLMAPPING TextAreaBase : public EditableTextComponent
 {
   private:
 
-    typedef TextComponent    Inherited;
+    typedef EditableTextComponent    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:

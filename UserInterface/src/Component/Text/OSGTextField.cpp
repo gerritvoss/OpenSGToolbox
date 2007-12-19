@@ -152,7 +152,7 @@ void TextField::keyTyped(const KeyEvent& e)
 		}
 	}
 
-	TextComponent::keyTyped(e);
+	Inherited::keyTyped(e);
 }
 
 void TextField::mouseClicked(const MouseEvent& e)
@@ -225,7 +225,7 @@ void TextField::mouseClicked(const MouseEvent& e)
 			setCaretPosition(EndWord);
 		}
 	}
-	TextComponent::mouseClicked(e);
+	Inherited::mouseClicked(e);
 
 }
 
@@ -277,7 +277,7 @@ void TextField::mousePressed(const MouseEvent& e)
 		_TextSelectionEnd = getCaretPosition();
 		_TextSelectionStart = getCaretPosition();
 	}
-	TextComponent::mousePressed(e);
+	Inherited::mousePressed(e);
 }
 
 void TextField::calculateTextBounds(const UInt32 StartIndex, const UInt32 EndIndex, Pnt2s& TopLeft, Pnt2s& BottomRight)
@@ -364,7 +364,7 @@ void TextField::mouseDragged(const MouseEvent& e)
 	}
 	
 
-	TextComponent::mouseDragged(e);
+	Inherited::mouseDragged(e);
 }
 
 
@@ -385,7 +385,7 @@ void TextField::focusGained(const FocusEvent& e)
     {
 		getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_CaretUpdateListener);
 	}
-	TextComponent::focusGained(e);
+	Inherited::focusGained(e);
 }
 
 void TextField::focusLost(const FocusEvent& e)
@@ -396,8 +396,9 @@ void TextField::focusLost(const FocusEvent& e)
     {
 		getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_CaretUpdateListener);
 	}
-	TextComponent::focusLost(e);
+	Inherited::focusLost(e);
 }
+
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

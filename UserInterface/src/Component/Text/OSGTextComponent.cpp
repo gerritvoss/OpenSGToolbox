@@ -48,8 +48,6 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGTextComponent.h"
-#include "UIDrawingSurface/OSGUIDrawingSurface.h"
-#include <OpenSG/Input/OSGWindowEventProducer.h>
 
 
 OSG_BEGIN_NAMESPACE
@@ -109,32 +107,6 @@ Color4f TextComponent::getDrawnTextColor(void) const
         return getDisabledTextColor();
     }
 }
-
-UIBackgroundPtr TextComponent::getDrawnBackground(void) const
-{
-	if(getEditable())
-	{
-		return Inherited::getDrawnBackground();
-	}
-	else
-	{
-		return getDisabledBackground();
-	}
-}
-
-
-void TextComponent::focusLost(const FocusEvent& e)
-{
-	if( getParentFrame() != NullFC &&
-		getParentFrame()->getDrawingSurface() != NullFC &&
-		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC && 
-		isContained(getParentFrame()->getDrawingSurface()->getEventProducer()->getMousePosition(), true))
-    {
-		getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
-	}
-	TextComponentBase::focusLost(e);
-}
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -192,15 +164,18 @@ void TextComponent::dump(      UInt32    ,
 {
     SLOG << "Dump TextComponent NI" << std::endl;
 }
+
 void TextComponent::select(const UInt32& index1,
 						const UInt32& index2)
 {
 }
+
 void TextComponent::selectAll(void)
 {
 	_TextSelectionStart = 0;
 	_TextSelectionEnd = getText().size();
 }
+
 void TextComponent::setSelectionStart(const UInt32& index)
 {
 	if(index < getText().size())
@@ -223,6 +198,7 @@ void TextComponent::setSelectionEnd(const UInt32& index)
 		_TextSelectionEnd = getText().size();
 	}
 }
+
 std::string TextComponent::getSelectedText(void) const
 {
 	if(_TextSelectionEnd<getText().size())
@@ -235,194 +211,6 @@ std::string TextComponent::getSelectedText(void) const
 	}
 }
 
-void TextComponent::keyPressed(const KeyEvent& e)
-{
-	Inherited::keyPressed(e);
-}
-
-void TextComponent::keyReleased(const KeyEvent& e)
-{
-	Inherited::keyReleased(e);
-}
-
-void TextComponent::keyTyped(const KeyEvent& e)
-{
-	
-	if(getEnabled() && getEditable())
-	{
-		if(e.getKeyChar()>31 && e.getKeyChar() < 127)
-		{
-			if(_TextSelectionEnd > _TextSelectionStart)
-			{
-				//erase the selected portions and write in their place
-				beginEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
-					setText(getText().erase(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart));
-					setText(getText().insert(_TextSelectionStart, std::string( 1,e.getKeyChar() )));
-				endEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
-				setCaretPosition(_TextSelectionStart+1);
-				_TextSelectionStart = getCaretPosition();
-				_TextSelectionEnd = _TextSelectionStart;
-			}
-			else
-			{
-				//write at the current caret position
-				e.getKeyChar();
-				beginEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
-				setText(getText().insert(getCaretPosition(), std::string( 1,e.getKeyChar() )));
-				endEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
-				if(getCaretPosition() <getText().size())
-				{
-					setCaretPosition(getCaretPosition()+1);
-				}
-				_TextSelectionStart = getCaretPosition();
-				_TextSelectionEnd = _TextSelectionStart;
-			}
-		}
-		if(e.getKey()== e.KEY_BACK_SPACE)
-		{
-			if(_TextSelectionEnd > _TextSelectionStart)
-			{
-				//erase the selected portions
-				setCaretPosition(_TextSelectionStart);
-				beginEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
-					setText(getText().erase(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart));
-				endEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
-				_TextSelectionStart = getCaretPosition();
-				_TextSelectionEnd = _TextSelectionStart;
-			}
-			else if(getCaretPosition() > 0)
-			{	
-
-					//erase at the current caret position
-				setCaretPosition(getCaretPosition()-1);
-				beginEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
-					setText(getText().erase(getCaretPosition(), 1));
-				endEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
-				_TextSelectionStart = getCaretPosition();
-				_TextSelectionEnd = _TextSelectionStart;
-			}
-		}
-		if(e.getKey()== e.KEY_DELETE)
-		{
-			if(_TextSelectionEnd > _TextSelectionStart)
-			{
-				//erase the selected portions
-				setCaretPosition(_TextSelectionStart);
-				beginEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
-					setText(getText().erase(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart));
-				endEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
-				_TextSelectionStart = getCaretPosition();
-				_TextSelectionEnd = _TextSelectionStart;
-			}
-			else if(getText().size()>0)
-			{
-				//erase at the current caret position
-				beginEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
-					setText(getText().erase(getCaretPosition(), 1));
-				endEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
-				_TextSelectionStart = getCaretPosition();
-				_TextSelectionEnd = _TextSelectionStart;
-			}
-		}
-	}
-	
-	if(e.getKey()== e.KEY_RIGHT ||e.getKey()== e.KEY_KEYPAD_RIGHT)
-	{
-		if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&&getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC 
-			&& getParentFrame()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
-		{
-			if(_TextSelectionEnd > _TextSelectionStart && _TextSelectionEnd < getText().size() && getCaretPosition()>_TextSelectionStart)
-			{
-				setCaretPosition(getCaretPosition()+1);
-				_TextSelectionEnd=getCaretPosition();
-			}
-			else if(_TextSelectionEnd >_TextSelectionStart && _TextSelectionEnd <= getText().size()&& getCaretPosition() < getText().size())
-			{
-				setCaretPosition(getCaretPosition()+1);
-				_TextSelectionStart = getCaretPosition();
-			}
-			else if(getCaretPosition()< getText().size() && _TextSelectionEnd <=_TextSelectionStart )
-			{
-				_TextSelectionStart = getCaretPosition();
-				setCaretPosition(getCaretPosition()+1);
-				_TextSelectionEnd = getCaretPosition();
-			}
-		}
-		else if(_TextSelectionEnd > _TextSelectionStart)
-		{
-			//Caret is now the end of the selection
-			setCaretPosition(_TextSelectionEnd);
-			_TextSelectionStart = getCaretPosition();
-		}
-		else if(getCaretPosition() < getText().size())
-		{
-			//increment the caret position
-			setCaretPosition(getCaretPosition()+1);
-			_TextSelectionStart = getCaretPosition();
-			_TextSelectionEnd = getCaretPosition();
-		}
-	}
-	if(e.getKey()== e.KEY_LEFT||e.getKey()== e.KEY_KEYPAD_LEFT)
-	{
-
-		if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&&getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC
-			&& getParentFrame()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
-		{
-			if(_TextSelectionEnd >_TextSelectionStart && _TextSelectionEnd <= getText().size() && getCaretPosition()>_TextSelectionStart && getCaretPosition()>0)
-			{
-				setCaretPosition(getCaretPosition()-1);
-				_TextSelectionEnd=getCaretPosition();
-			}
-			else if(_TextSelectionEnd >_TextSelectionStart && _TextSelectionEnd <= getText().size()&& getCaretPosition()>0)
-			{
-				setCaretPosition(getCaretPosition()-1);
-				_TextSelectionStart = getCaretPosition();
-			}
-			else if(_TextSelectionEnd <=_TextSelectionStart && getCaretPosition()>0 )
-			{
-				_TextSelectionEnd = getCaretPosition();
-				setCaretPosition(getCaretPosition()-1);
-				_TextSelectionStart = getCaretPosition();
-			}
-		}
-		else if(_TextSelectionEnd > _TextSelectionStart)
-		{
-			//Caret is now the start of the selection
-			setCaretPosition(_TextSelectionStart);
-			_TextSelectionEnd = getCaretPosition();
-		}
-		else if(getCaretPosition() > 0)
-		{
-			//decrement the caret position
-			setCaretPosition(getCaretPosition()-1);
-			_TextSelectionStart = getCaretPosition();
-			_TextSelectionEnd = _TextSelectionStart;
-		}
-	}
-	TextComponentBase::keyTyped(e);
-}
-void TextComponent::mouseEntered(const MouseEvent& e)
-{
-	if(getEnabled() && getEditable())
-	{
-		if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&&getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
-		{
-			getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_I_BEAM);
-		}
-	}
-	Component::mouseEntered(e);
-}
-void TextComponent::mouseExited(const MouseEvent& e)
-{
-	if(getEnabled() && getEditable())
-	{
-		if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!= NullFC && getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
-		{
-			getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
-		}
-	}
-	Component::mouseExited(e);
-}
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
 
