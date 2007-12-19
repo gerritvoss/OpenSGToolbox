@@ -161,6 +161,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeLayoutCache : public TreeRowMa
 	//Returns true if the height of each row is a fixed size.
 	virtual bool isFixedRowHeight(void) const;
 
+    //Object responsible for getting the size of a node.
+    //AbstractLayoutCache.NodeDimensions nodeDimensions;
+
+    //True if the root node is displayed, false if its children are the highest visible nodes.
+    bool _RootVisible;
+
+    //Height to use for each row.
+    Int32 _RowHeight;
+
+    //Model providing information.
+    TreeModelPtr _TreeModel;
+
+    //Selection model.
+    TreeSelectionModelPtr _TreeSelectionModel;
+
     /*==========================  PRIVATE  ================================*/
   private:
 };

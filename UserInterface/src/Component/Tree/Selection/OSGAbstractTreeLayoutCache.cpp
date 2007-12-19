@@ -80,8 +80,7 @@ std::vector<UInt32> AbstractTreeLayoutCache::getRowsForPaths(std::vector<TreePat
 
 TreeModelPtr AbstractTreeLayoutCache::getModel(void) const
 {
-	//TODO: Implement
-	return NULL;
+	return _TreeModel;
 }
 
 //AbstractLayoutCache.NodeDimensions AbstractTreeLayoutCache::getNodeDimensions(void) const;
@@ -112,8 +111,7 @@ std::vector<UInt32> AbstractTreeLayoutCache::getRowsForPaths(std::vector<TreePat
 
 TreeSelectionModelPtr AbstractTreeLayoutCache::getSelectionModel(void) const
 {
-	//TODO: Implement
-	return NULL;
+	return _TreeSelectionModel;
 }
 
 bool AbstractTreeLayoutCache::isFixedRowHeight(void) const
@@ -124,20 +122,19 @@ bool AbstractTreeLayoutCache::isFixedRowHeight(void) const
 
 bool AbstractTreeLayoutCache::isRootVisible(void) const
 {
-	//TODO: Implement
-	return false;
+	return _RootVisible;
 }
 
 void AbstractTreeLayoutCache::setModel(TreeModelPtr newModel)
 {
-	//TODO: Implement
+    _TreeModel = newModel;
 }
 
 //void AbstractTreeLayoutCache::setNodeDimensions(AbstractLayoutCache.NodeDimensions nd);
 
 void AbstractTreeLayoutCache::setRootVisible(bool rootVisible)
 {
-	//TODO: Implement
+	_RootVisible = rootVisible;
 }
 
 void AbstractTreeLayoutCache::setRowHeight(const UInt32& rowHeight)
@@ -147,7 +144,7 @@ void AbstractTreeLayoutCache::setRowHeight(const UInt32& rowHeight)
 
 void AbstractTreeLayoutCache::setSelectionModel(TreeSelectionModelPtr newLSM)
 {
-	//TODO: Implement
+	_TreeSelectionModel = newLSM;
 }
 
 void AbstractTreeLayoutCache::getNodeDimensions(Pnt2s& TopLeft, Pnt2s& BottomRight, SharedFieldPtr value, const UInt32& row, const UInt32& depth, bool expanded, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn)
