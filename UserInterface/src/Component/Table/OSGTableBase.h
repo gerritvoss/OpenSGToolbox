@@ -77,7 +77,7 @@
 #include <OpenSG/OSGBoolFields.h> // ShowHorizontalLines type
 #include <OpenSG/OSGBoolFields.h> // ShowVerticalLines type
 #include <OpenSG/OSGColor4fFields.h> // GridColor type
-#include "Component/Table/Editors/OSGTableCellEditorFields.h" // CellEditor type
+#include "Editors/OSGCellEditorFields.h" // CellEditor type
 
 #include "OSGTableFields.h"
 
@@ -161,7 +161,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
            SFBool              *getSFShowHorizontalLines(void);
            SFBool              *getSFShowVerticalLines(void);
            SFColor4f           *getSFGridColor      (void);
-           SFTableCellEditorPtr *getSFCellEditor     (void);
+           SFCellEditorPtr     *getSFCellEditor     (void);
 
            TableHeaderPtr      &getHeader         (void);
      const TableHeaderPtr      &getHeader         (void) const;
@@ -181,8 +181,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
      const bool                &getShowVerticalLines(void) const;
            Color4f             &getGridColor      (void);
      const Color4f             &getGridColor      (void) const;
-           TableCellEditorPtr  &getCellEditor     (void);
-     const TableCellEditorPtr  &getCellEditor     (void) const;
+           CellEditorPtr       &getCellEditor     (void);
+     const CellEditorPtr       &getCellEditor     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -198,7 +198,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
      void setShowHorizontalLines( const bool &value );
      void setShowVerticalLines( const bool &value );
      void setGridColor      ( const Color4f &value );
-     void setCellEditor     ( const TableCellEditorPtr &value );
+     void setCellEditor     ( const CellEditorPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -251,7 +251,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableBase : public Container
     SFBool              _sfShowHorizontalLines;
     SFBool              _sfShowVerticalLines;
     SFColor4f           _sfGridColor;
-    SFTableCellEditorPtr   _sfCellEditor;
+    SFCellEditorPtr     _sfCellEditor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

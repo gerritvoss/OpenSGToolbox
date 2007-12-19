@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDEFAULTTABLECELLEDITOR_H_
-#define _OSGDEFAULTTABLECELLEDITOR_H_
+#ifndef _OSGDEFAULTTREECELLEDITOR_H_
+#define _OSGDEFAULTTREECELLEDITOR_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,22 +45,22 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGDefaultTableCellEditorBase.h"
+#include "OSGDefaultTreeCellEditorBase.h"
 #include "Event/OSGActionListener.h"
 #include "Event/OSGFocusListener.h"
 #include <OpenSG/Input/OSGKeyAdapter.h>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DefaultTableCellEditor class. See \ref 
-           PageUserInterfaceDefaultTableCellEditor for a description.
+/*! \brief DefaultTreeCellEditor class. See \ref 
+           PageUserInterfaceDefaultTreeCellEditor for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellEditor : public DefaultTableCellEditorBase
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeCellEditor : public DefaultTreeCellEditorBase
 {
   private:
 
-    typedef DefaultTableCellEditorBase Inherited;
+    typedef DefaultTreeCellEditorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -81,11 +81,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellEditor : public DefaultTab
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+	virtual ComponentPtr getTreeCellEditorComponent(TreePtr TheTree, SharedFieldPtr Value, bool IsSelected, bool IsExpanded, UInt32 row);
     
-	virtual ComponentPtr getTableCellEditorComponent(TablePtr table, SharedFieldPtr value, bool isSelected, UInt32 row, UInt32 column);
-
     virtual ComponentPtr getCellEditor(SharedFieldPtr Value, bool IsSelected);
-
+    
     //Tells the editor to cancel editing and not accept any partially edited value.
     virtual void cancelCellEditing(void);
 
@@ -107,62 +106,63 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableCellEditor : public DefaultTab
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in DefaultTableCellEditorBase.
+    // Variables should all be in DefaultTreeCellEditorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    DefaultTableCellEditor(void);
-    DefaultTableCellEditor(const DefaultTableCellEditor &source);
+    DefaultTreeCellEditor(void);
+    DefaultTreeCellEditor(const DefaultTreeCellEditor &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DefaultTableCellEditor(void); 
+    virtual ~DefaultTreeCellEditor(void); 
 
     /*! \}                                                                 */
-    
-	class DefaultStringEditorListener : public ActionListener,public FocusListener,public KeyAdapter
+
+	class DefaultTextFieldEditorListener : public ActionListener,public FocusListener,public KeyAdapter
 	{
 	public :
-		DefaultStringEditorListener(DefaultTableCellEditorPtr TheDefaultTableCellEditor);
+		DefaultTextFieldEditorListener(DefaultTreeCellEditorPtr TheDefaultTreeCellEditor);
 		
         virtual void actionPerformed(const ActionEvent& e);
         virtual void focusGained(const FocusEvent& e);
         virtual void focusLost(const FocusEvent& e);
         virtual void keyPressed(const KeyEvent& e);
 	protected :
-		DefaultTableCellEditorPtr _DefaultTableCellEditor;
+		DefaultTreeCellEditorPtr _DefaultTreeCellEditor;
 	};
 
-	friend class DefaultStringEditorListener;
+	friend class DefaultTextFieldEditorListener;
 
-	DefaultStringEditorListener _DefaultStringEditorListener;
+	DefaultTextFieldEditorListener _DefaultTextFieldEditorListener;
+
+    SharedFieldPtr _EditingValue;
     
-    mutable ::boost::shared_ptr<SFString> _Value;
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class DefaultTableCellEditorBase;
+    friend class DefaultTreeCellEditorBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const DefaultTableCellEditor &source);
+    void operator =(const DefaultTreeCellEditor &source);
 };
 
-typedef DefaultTableCellEditor *DefaultTableCellEditorP;
+typedef DefaultTreeCellEditor *DefaultTreeCellEditorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGDefaultTableCellEditorBase.inl"
-#include "OSGDefaultTableCellEditor.inl"
+#include "OSGDefaultTreeCellEditorBase.inl"
+#include "OSGDefaultTreeCellEditor.inl"
 
-#define OSGDEFAULTTABLECELLEDITOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGDEFAULTTREECELLEDITOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGDEFAULTTABLECELLEDITOR_H_ */
+#endif /* _OSGDEFAULTTREECELLEDITOR_H_ */

@@ -108,7 +108,17 @@ void Table::startEditing(const UInt32& Row, const UInt32& Column)
     endEditCP(TablePtr(this), CellEditorFieldMask);
     _EditingColumn = Column;
     _EditingRow = Row;
-    _EditingComponent = Inherited::getCellEditor()->getTableCellEditorComponent(TablePtr(this), _Model->getValueAt(Row, Column), isSelected(Row, Column), Row, Column);
+    
+    if(Inherited::getCellEditor()->getType().isDerivedFrom(TableCellEditor::getClassType()))
+    {
+        _EditingComponent = TableCellEditor::Ptr::dcast(Inherited::getCellEditor())->getTableCellEditorComponent(TablePtr(this), _Model->getValueAt(Row, Column), isSelected(Row, Column), Row, Column);
+    }
+    else
+    {
+        _EditingComponent = Inherited::getCellEditor()->getCellEditor(_Model->getValueAt(Row, Column), isSelected(Row, Column));
+    }
+
+    
 
     Inherited::getCellEditor()->addCellEditorListener(this);
 

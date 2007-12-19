@@ -94,10 +94,10 @@ A UI Tree.
    </Field>
 	<Field
 		name="CellEditor"
-		type="TreeCellEditorPtr"
+		type="CellEditorPtr"
 		cardinality="single"
       visibility="external"
-      header="Component/Tree/Editors/OSGTreeCellEditorFields.h"
+      header="Editors/OSGCellEditorFields.h"
 		defaultValue="NullFC"
 		access="public"
 	>

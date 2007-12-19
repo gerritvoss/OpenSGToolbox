@@ -154,7 +154,7 @@ SFUInt32 *TreeBase::getSFVisibleRowCount(void)
 
 //! Get the Tree::_sfCellEditor field.
 inline
-SFTreeCellEditorPtr *TreeBase::getSFCellEditor(void)
+SFCellEditorPtr *TreeBase::getSFCellEditor(void)
 {
     return &_sfCellEditor;
 }
@@ -330,21 +330,21 @@ void TreeBase::setVisibleRowCount(const UInt32 &value)
 
 //! Get the value of the Tree::_sfCellEditor field.
 inline
-TreeCellEditorPtr &TreeBase::getCellEditor(void)
+CellEditorPtr &TreeBase::getCellEditor(void)
 {
     return _sfCellEditor.getValue();
 }
 
 //! Get the value of the Tree::_sfCellEditor field.
 inline
-const TreeCellEditorPtr &TreeBase::getCellEditor(void) const
+const CellEditorPtr &TreeBase::getCellEditor(void) const
 {
     return _sfCellEditor.getValue();
 }
 
 //! Set the value of the Tree::_sfCellEditor field.
 inline
-void TreeBase::setCellEditor(const TreeCellEditorPtr &value)
+void TreeBase::setCellEditor(const CellEditorPtr &value)
 {
     _sfCellEditor.setValue(value);
 }

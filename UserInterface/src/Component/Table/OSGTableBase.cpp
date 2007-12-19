@@ -134,7 +134,7 @@ const OSG::BitVector TableBase::MTInfluenceMask =
 /*! \var Color4f         TableBase::_sfGridColor
     
 */
-/*! \var TableCellEditorPtr TableBase::_sfCellEditor
+/*! \var CellEditorPtr   TableBase::_sfCellEditor
     
 */
 
@@ -192,7 +192,7 @@ FieldDescription *TableBase::_desc[] =
                      GridColorFieldId, GridColorFieldMask,
                      false,
                      (FieldAccessMethod) &TableBase::getSFGridColor),
-    new FieldDescription(SFTableCellEditorPtr::getClassType(), 
+    new FieldDescription(SFCellEditorPtr::getClassType(), 
                      "CellEditor", 
                      CellEditorFieldId, CellEditorFieldMask,
                      false,
@@ -283,7 +283,7 @@ TableBase::TableBase(void) :
     _sfShowHorizontalLines    (bool(true)), 
     _sfShowVerticalLines      (bool(true)), 
     _sfGridColor              (Color4f(0.0, 0.0, 0.0, 1.0)), 
-    _sfCellEditor             (TableCellEditorPtr(NullFC)), 
+    _sfCellEditor             (CellEditorPtr(NullFC)), 
     Inherited() 
 {
 }

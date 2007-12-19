@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGCellEditorBase.h"
 #include <OpenSG/Input/OSGEvent.h>

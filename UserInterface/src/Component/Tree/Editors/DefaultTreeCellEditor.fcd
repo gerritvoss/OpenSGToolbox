@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DefaultTreeCellEditor"
+	parent="TreeCellEditor"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI Default Tree Cell Editor.
+
+	<Field
+		name="ClickCountToStart"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="3"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="DefaultEditor"
+		type="TextFieldPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Component/Text/OSGTextFieldFields.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="DefaultStringEditor"
+		type="TextFieldPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Component/Text/OSGTextFieldFields.h"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

@@ -168,7 +168,7 @@ SFColor4f *TableBase::getSFGridColor(void)
 
 //! Get the Table::_sfCellEditor field.
 inline
-SFTableCellEditorPtr *TableBase::getSFCellEditor(void)
+SFCellEditorPtr *TableBase::getSFCellEditor(void)
 {
     return &_sfCellEditor;
 }
@@ -365,21 +365,21 @@ void TableBase::setGridColor(const Color4f &value)
 
 //! Get the value of the Table::_sfCellEditor field.
 inline
-TableCellEditorPtr &TableBase::getCellEditor(void)
+CellEditorPtr &TableBase::getCellEditor(void)
 {
     return _sfCellEditor.getValue();
 }
 
 //! Get the value of the Table::_sfCellEditor field.
 inline
-const TableCellEditorPtr &TableBase::getCellEditor(void) const
+const CellEditorPtr &TableBase::getCellEditor(void) const
 {
     return _sfCellEditor.getValue();
 }
 
 //! Set the value of the Table::_sfCellEditor field.
 inline
-void TableBase::setCellEditor(const TableCellEditorPtr &value)
+void TableBase::setCellEditor(const CellEditorPtr &value)
 {
     _sfCellEditor.setValue(value);
 }

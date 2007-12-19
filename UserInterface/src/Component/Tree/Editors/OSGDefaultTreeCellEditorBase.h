@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Tree
+ **     class DefaultTreeCellEditor
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGTREEBASE_H_
-#define _OSGTREEBASE_H_
+#ifndef _OSGDEFAULTTREECELLEDITORBASE_H_
+#define _OSGDEFAULTTREECELLEDITORBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,61 +65,43 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "OSGTreeCellEditor.h" // Parent
 
-#include <OpenSG/OSGBoolFields.h> // Editable type
-#include <OpenSG/OSGBoolFields.h> // InvokesStopCellEditing type
-#include <OpenSG/OSGBoolFields.h> // RootVisible type
-#include <OpenSG/OSGUInt32Fields.h> // RowHeight type
-#include <OpenSG/OSGBoolFields.h> // ScrollsOnExpand type
-#include <OpenSG/OSGBoolFields.h> // ShowsRootHandles type
-#include <OpenSG/OSGUInt32Fields.h> // ToggleClickCount type
-#include <OpenSG/OSGUInt32Fields.h> // VisibleRowCount type
-#include "Editors/OSGCellEditorFields.h" // CellEditor type
+#include <OpenSG/OSGUInt32Fields.h> // ClickCountToStart type
+#include "Component/Text/OSGTextFieldFields.h" // DefaultEditor type
+#include "Component/Text/OSGTextFieldFields.h" // DefaultStringEditor type
 
-#include "OSGTreeFields.h"
+#include "OSGDefaultTreeCellEditorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Tree;
+class DefaultTreeCellEditor;
 class BinaryDataHandler;
 
-//! \brief Tree Base Class.
+//! \brief DefaultTreeCellEditor Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeCellEditorBase : public TreeCellEditor
 {
   private:
 
-    typedef Container    Inherited;
+    typedef TreeCellEditor    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef TreePtr  Ptr;
+    typedef DefaultTreeCellEditorPtr  Ptr;
 
     enum
     {
-        EditableFieldId               = Inherited::NextFieldId,
-        InvokesStopCellEditingFieldId = EditableFieldId               + 1,
-        RootVisibleFieldId            = InvokesStopCellEditingFieldId + 1,
-        RowHeightFieldId              = RootVisibleFieldId            + 1,
-        ScrollsOnExpandFieldId        = RowHeightFieldId              + 1,
-        ShowsRootHandlesFieldId       = ScrollsOnExpandFieldId        + 1,
-        ToggleClickCountFieldId       = ShowsRootHandlesFieldId       + 1,
-        VisibleRowCountFieldId        = ToggleClickCountFieldId       + 1,
-        CellEditorFieldId             = VisibleRowCountFieldId        + 1,
-        NextFieldId                   = CellEditorFieldId             + 1
+        ClickCountToStartFieldId   = Inherited::NextFieldId,
+        DefaultEditorFieldId       = ClickCountToStartFieldId   + 1,
+        DefaultStringEditorFieldId = DefaultEditorFieldId       + 1,
+        NextFieldId                = DefaultStringEditorFieldId + 1
     };
 
-    static const OSG::BitVector EditableFieldMask;
-    static const OSG::BitVector InvokesStopCellEditingFieldMask;
-    static const OSG::BitVector RootVisibleFieldMask;
-    static const OSG::BitVector RowHeightFieldMask;
-    static const OSG::BitVector ScrollsOnExpandFieldMask;
-    static const OSG::BitVector ShowsRootHandlesFieldMask;
-    static const OSG::BitVector ToggleClickCountFieldMask;
-    static const OSG::BitVector VisibleRowCountFieldMask;
-    static const OSG::BitVector CellEditorFieldMask;
+    static const OSG::BitVector ClickCountToStartFieldMask;
+    static const OSG::BitVector DefaultEditorFieldMask;
+    static const OSG::BitVector DefaultStringEditorFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -146,49 +128,25 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFBool              *getSFEditable       (void);
-           SFBool              *getSFInvokesStopCellEditing(void);
-           SFBool              *getSFRootVisible    (void);
-           SFUInt32            *getSFRowHeight      (void);
-           SFBool              *getSFScrollsOnExpand(void);
-           SFBool              *getSFShowsRootHandles(void);
-           SFUInt32            *getSFToggleClickCount(void);
-           SFUInt32            *getSFVisibleRowCount(void);
-           SFCellEditorPtr     *getSFCellEditor     (void);
+           SFUInt32            *getSFClickCountToStart(void);
+           SFTextFieldPtr      *getSFDefaultEditor  (void);
+           SFTextFieldPtr      *getSFDefaultStringEditor(void);
 
-           bool                &getEditable       (void);
-     const bool                &getEditable       (void) const;
-           bool                &getInvokesStopCellEditing(void);
-     const bool                &getInvokesStopCellEditing(void) const;
-           bool                &getRootVisible    (void);
-     const bool                &getRootVisible    (void) const;
-           UInt32              &getRowHeight      (void);
-     const UInt32              &getRowHeight      (void) const;
-           bool                &getScrollsOnExpand(void);
-     const bool                &getScrollsOnExpand(void) const;
-           bool                &getShowsRootHandles(void);
-     const bool                &getShowsRootHandles(void) const;
-           UInt32              &getToggleClickCount(void);
-     const UInt32              &getToggleClickCount(void) const;
-           UInt32              &getVisibleRowCount(void);
-     const UInt32              &getVisibleRowCount(void) const;
-           CellEditorPtr       &getCellEditor     (void);
-     const CellEditorPtr       &getCellEditor     (void) const;
+           UInt32              &getClickCountToStart(void);
+     const UInt32              &getClickCountToStart(void) const;
+           TextFieldPtr        &getDefaultEditor  (void);
+     const TextFieldPtr        &getDefaultEditor  (void) const;
+           TextFieldPtr        &getDefaultStringEditor(void);
+     const TextFieldPtr        &getDefaultStringEditor(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setEditable       ( const bool &value );
-     void setInvokesStopCellEditing( const bool &value );
-     void setRootVisible    ( const bool &value );
-     void setRowHeight      ( const UInt32 &value );
-     void setScrollsOnExpand( const bool &value );
-     void setShowsRootHandles( const bool &value );
-     void setToggleClickCount( const UInt32 &value );
-     void setVisibleRowCount( const UInt32 &value );
-     void setCellEditor     ( const CellEditorPtr &value );
+     void setClickCountToStart( const UInt32 &value );
+     void setDefaultEditor  ( const TextFieldPtr &value );
+     void setDefaultStringEditor( const TextFieldPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -212,8 +170,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  TreePtr      create          (void); 
-    static  TreePtr      createEmpty     (void); 
+    static  DefaultTreeCellEditorPtr      create          (void); 
+    static  DefaultTreeCellEditorPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -231,30 +189,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFBool              _sfEditable;
-    SFBool              _sfInvokesStopCellEditing;
-    SFBool              _sfRootVisible;
-    SFUInt32            _sfRowHeight;
-    SFBool              _sfScrollsOnExpand;
-    SFBool              _sfShowsRootHandles;
-    SFUInt32            _sfToggleClickCount;
-    SFUInt32            _sfVisibleRowCount;
-    SFCellEditorPtr     _sfCellEditor;
+    SFUInt32            _sfClickCountToStart;
+    SFTextFieldPtr      _sfDefaultEditor;
+    SFTextFieldPtr      _sfDefaultStringEditor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    TreeBase(void);
-    TreeBase(const TreeBase &source);
+    DefaultTreeCellEditorBase(void);
+    DefaultTreeCellEditorBase(const DefaultTreeCellEditorBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TreeBase(void); 
+    virtual ~DefaultTreeCellEditorBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -262,13 +214,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      TreeBase *pOther,
+    void executeSyncImpl(      DefaultTreeCellEditorBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      TreeBase *pOther,
+    void executeSyncImpl(      DefaultTreeCellEditorBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -298,7 +250,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const TreeBase &source);
+    void operator =(const DefaultTreeCellEditorBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -306,17 +258,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
 //---------------------------------------------------------------------------
 
 
-typedef TreeBase *TreeBaseP;
+typedef DefaultTreeCellEditorBase *DefaultTreeCellEditorBaseP;
 
-typedef osgIF<TreeBase::isNodeCore,
-              CoredNodePtr<Tree>,
+typedef osgIF<DefaultTreeCellEditorBase::isNodeCore,
+              CoredNodePtr<DefaultTreeCellEditor>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet TreeNodePtr;
+              >::_IRet DefaultTreeCellEditorNodePtr;
 
-typedef RefPtr<TreePtr> TreeRefPtr;
+typedef RefPtr<DefaultTreeCellEditorPtr> DefaultTreeCellEditorRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGTREEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGDEFAULTTREECELLEDITORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGTREEBASE_H_ */
+#endif /* _OSGDEFAULTTREECELLEDITORBASE_H_ */

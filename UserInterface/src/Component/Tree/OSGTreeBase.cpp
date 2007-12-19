@@ -122,7 +122,7 @@ const OSG::BitVector TreeBase::MTInfluenceMask =
 /*! \var UInt32          TreeBase::_sfVisibleRowCount
     Number of rows to make visible at one time.
 */
-/*! \var TreeCellEditorPtr TreeBase::_sfCellEditor
+/*! \var CellEditorPtr   TreeBase::_sfCellEditor
     
 */
 
@@ -170,7 +170,7 @@ FieldDescription *TreeBase::_desc[] =
                      VisibleRowCountFieldId, VisibleRowCountFieldMask,
                      false,
                      (FieldAccessMethod) &TreeBase::getSFVisibleRowCount),
-    new FieldDescription(SFTreeCellEditorPtr::getClassType(), 
+    new FieldDescription(SFCellEditorPtr::getClassType(), 
                      "CellEditor", 
                      CellEditorFieldId, CellEditorFieldMask,
                      false,
@@ -258,7 +258,7 @@ TreeBase::TreeBase(void) :
     _sfShowsRootHandles       (bool(true)), 
     _sfToggleClickCount       (UInt32(2)), 
     _sfVisibleRowCount        (UInt32(10)), 
-    _sfCellEditor             (TreeCellEditorPtr(NullFC)), 
+    _sfCellEditor             (CellEditorPtr(NullFC)), 
     Inherited() 
 {
 }

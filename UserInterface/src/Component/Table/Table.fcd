@@ -105,10 +105,10 @@ A UI Table.
    </Field>
 	<Field
 		name="CellEditor"
-		type="TableCellEditorPtr"
+		type="CellEditorPtr"
 		cardinality="single"
       visibility="external"
-      header="Component/Table/Editors/OSGTableCellEditorFields.h"
+      header="Editors/OSGCellEditorFields.h"
 		defaultValue="NullFC"
 		access="public"
 	>
