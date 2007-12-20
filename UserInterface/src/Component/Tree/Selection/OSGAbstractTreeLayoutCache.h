@@ -63,7 +63,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeLayoutCache : public TreeRowMa
     /*==========================  PUBLIC  =================================*/
   public:
 	//Returns the rows that the TreePath instances in path are being displayed at.
-	virtual std::vector<UInt32> getRowsForPaths(std::vector<TreePath> path);
+	virtual std::vector<UInt32> getRowsForPaths(std::vector<TreePath> paths) const;
 
 	//Returns a rectangle giving the bounds needed to draw path.
 	virtual void getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight, TreePath path, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn) const = 0;
@@ -97,9 +97,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeLayoutCache : public TreeRowMa
 
 	//Returns the height of each row.
 	virtual UInt32 getRowHeight(void) const;
-
-	//Returns the rows that the TreePath instances in path are being displayed at.
-	virtual std::vector<UInt32> getRowsForPaths(std::vector<TreePath> paths) const;
 
 	//Returns the model used to maintain the selection.
 	virtual TreeSelectionModelPtr getSelectionModel(void) const;

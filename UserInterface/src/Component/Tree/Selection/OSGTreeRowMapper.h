@@ -58,7 +58,7 @@ protected:
 public:
 
 	//Returns the rows that the TreePath instances in path are being displayed at.
-	std::vector<UInt32> getRowsForPaths(std::vector<TreePath> path);
+	std::vector<UInt32> getRowsForPaths(std::vector<TreePath> path) const;
  
 };
 

@@ -72,10 +72,14 @@ A AbstractTreeLayoutCache.
  *                           Instance methods                              *
 \***************************************************************************/
 
-std::vector<UInt32> AbstractTreeLayoutCache::getRowsForPaths(std::vector<TreePath> path)
+std::vector<UInt32> AbstractTreeLayoutCache::getRowsForPaths(std::vector<TreePath> paths) const
 {
-	//TODO:Implement
-	return std::vector<UInt32>();
+	std::vector<UInt32> Result;
+	for(UInt32 i(0) ; i<path.size() ; ++i)
+	{
+		Result.push_back(this->getRowForPath(path[i]));
+	}
+	return Result;
 }
 
 TreeModelPtr AbstractTreeLayoutCache::getModel(void) const
@@ -87,8 +91,15 @@ TreeModelPtr AbstractTreeLayoutCache::getModel(void) const
 
 UInt32 AbstractTreeLayoutCache::getPreferredHeight(void) const
 {
-	//TODO: Implement
-	return 0;
+	if(isFixedRowHeight())
+	{
+		return getRowHeight() * getRowCount();
+	}
+	else
+	{
+		//TODO: Implement
+		return 0;
+	}
 }
 
 UInt32 AbstractTreeLayoutCache::getPreferredWidth(Pnt2s& TopLeft, Pnt2s& BottomRight) const
@@ -99,14 +110,7 @@ UInt32 AbstractTreeLayoutCache::getPreferredWidth(Pnt2s& TopLeft, Pnt2s& BottomR
 
 UInt32 AbstractTreeLayoutCache::getRowHeight(void) const
 {
-	//TODO: Implement
-	return 0;
-}
-
-std::vector<UInt32> AbstractTreeLayoutCache::getRowsForPaths(std::vector<TreePath> paths) const
-{
-	//TODO: Implement
-	return std::vector<UInt32>();
+	return _RowHeight;
 }
 
 TreeSelectionModelPtr AbstractTreeLayoutCache::getSelectionModel(void) const
@@ -116,8 +120,7 @@ TreeSelectionModelPtr AbstractTreeLayoutCache::getSelectionModel(void) const
 
 bool AbstractTreeLayoutCache::isFixedRowHeight(void) const
 {
-	//TODO: Implement
-	return false;
+	return _RowHeight > 0;
 }
 
 bool AbstractTreeLayoutCache::isRootVisible(void) const
@@ -139,7 +142,7 @@ void AbstractTreeLayoutCache::setRootVisible(bool rootVisible)
 
 void AbstractTreeLayoutCache::setRowHeight(const UInt32& rowHeight)
 {
-	//TODO: Implement
+	_RowHeight = rowHeight;
 }
 
 void AbstractTreeLayoutCache::setSelectionModel(TreeSelectionModelPtr newLSM)
