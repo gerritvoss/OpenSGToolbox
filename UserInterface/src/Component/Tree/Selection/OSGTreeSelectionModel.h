@@ -90,7 +90,7 @@ public:
 	virtual UInt32 getMinSelectionRow(void) const = 0;
 
 	//Returns the TreeRowMapper instance that is able to map a TreePath to a row.
-	virtual TreeRowMapper getRowMapper(void) const = 0;
+	virtual TreeRowMapperPtr getRowMapper(void) const = 0;
 
 	//Returns the number of paths that are selected.
 	virtual UInt32 getSelectionCount(void) const = 0;
@@ -132,7 +132,7 @@ public:
 	virtual void resetRowSelection(void) = 0;
 
 	//Sets the TreeRowMapper instance.
-	virtual void setRowMapper(TreeRowMapper newMapper) = 0;
+	virtual void setRowMapper(TreeRowMapperPtr newMapper) = 0;
 
 	//Sets the selection model, which must be one of SINGLE_TREE_SELECTION, CONTIGUOUS_TREE_SELECTION or DISCONTIGUOUS_TREE_SELECTION.
 	virtual void setSelectionMode(const UInt32& mode) = 0;

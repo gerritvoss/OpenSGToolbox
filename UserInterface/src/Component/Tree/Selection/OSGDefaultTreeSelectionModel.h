@@ -46,6 +46,9 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGAbstractTreeSelectionModel.h"
+#include "Component/Tree/Selection/OSGTreeRowMapper.h"
+#include <vector>
+#include <list>
 #include <set>
 
 OSG_BEGIN_NAMESPACE
@@ -58,12 +61,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeSelectionModel : public Abstrac
 {
     /*==========================  PUBLIC  =================================*/
   public:
+    DefaultTreeSelectionModel(void);
 
 	//Adds path to the current selection.
 	virtual void addSelectionPath(TreePath path);
 
 	//Adds paths to the current selection.
 	virtual void addSelectionPaths(std::vector<TreePath> paths);
+
+	//Changes the values of _AnchorSelectionIndex, _LeadSelectionIndex, _MaxSelectionIndex, and _MinSelectionIndex to current values of selection.
+	virtual void changeValues(std::vector<TreePath> paths);
 
 	//Empties the current selection.
 	virtual void clearSelection(void);
@@ -81,7 +88,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeSelectionModel : public Abstrac
 	virtual UInt32 getMinSelectionRow(void) const;
 
 	//Returns the TreeRowMapper instance that is able to map a TreePath to a row.
-	virtual TreeRowMapper getRowMapper(void) const;
+	virtual TreeRowMapperPtr getRowMapper(void) const;
 
 	//Returns the number of paths that are selected.
 	virtual UInt32 getSelectionCount(void) const;
@@ -99,7 +106,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeSelectionModel : public Abstrac
 	virtual std::vector<UInt32> getSelectionRows(void) const;
 
 	//Returns true if the path, path, is in the current selection.
-	virtual bool isPathSelected(TreePath path) const;
+	virtual bool isPathSelected(std::vector<TreePath> path) const;
+
+	//Returns true if paths is Contiguous
+	virtual bool arePathsContiguous(const std::vector<TreePath>& paths) const;
+
+	//Returns true if paths1 is Contiguous with paths2
+	virtual bool arePathsContiguous(const std::vector<TreePath>& paths1, const std::vector<TreePath>& paths2) const;
 
 	//Returns true if the row identified by row is selected.
 	virtual bool isRowSelected(const UInt32& row) const;
@@ -114,10 +127,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeSelectionModel : public Abstrac
 	virtual void removeSelectionPaths(std::vector<TreePath> paths);
 
 	//Updates this object's mapping from TreePaths to rows.
-	virtual void resetRowSelection(void);
+	//virtual void resetRowSelection(void);
 
 	//Sets the TreeRowMapper instance.
-	virtual void setRowMapper(TreeRowMapper newMapper);
+	virtual void setRowMapper(TreeRowMapperPtr newMapper);
 
 	//Sets the selection model, which must be one of SINGLE_TREE_SELECTION, CONTIGUOUS_TREE_SELECTION or DISCONTIGUOUS_TREE_SELECTION.
 	virtual void setSelectionMode(const UInt32& mode);
@@ -129,6 +142,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeSelectionModel : public Abstrac
 	virtual void setSelectionPaths(std::vector<TreePath> paths);
 
   protected:
+	  typedef std::vector<TreePath> SelectionVector;
+	  typedef SelectionVector::const_iterator SelectionVectorConstItor;
+	  
+	  SelectionVector _Selection;
+
+	  UInt32	_SelectionMode;
+	  UInt32 	_LeadSelectionIndex;
+	  UInt32 	_MaxSelectionIndex;
+	  UInt32 	_MinSelectionIndex;
+
+	  TreeRowMapperPtr _TreeRowMapper;
+	  TreePathPtr _TreePath;
 
     /*==========================  PRIVATE  ================================*/
   private:

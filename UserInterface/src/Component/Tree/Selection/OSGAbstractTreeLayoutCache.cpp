@@ -75,9 +75,9 @@ A AbstractTreeLayoutCache.
 std::vector<UInt32> AbstractTreeLayoutCache::getRowsForPaths(std::vector<TreePath> paths) const
 {
 	std::vector<UInt32> Result;
-	for(UInt32 i(0) ; i<path.size() ; ++i)
+	for(UInt32 i(0) ; i<paths.size() ; ++i)
 	{
-		Result.push_back(this->getRowForPath(path[i]));
+		Result.push_back(this->getRowForPath(paths[i]));
 	}
 	return Result;
 }
