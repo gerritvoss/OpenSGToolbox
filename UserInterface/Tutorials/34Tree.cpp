@@ -54,6 +54,7 @@ void reshape(Vec2s Size);
 
 // 34 Tree Headers
 #include <OpenSG/UserInterface/OSGDefaultTreeModel.h>
+#include <OpenSG/UserInterface/OSGFixedHeightTreeLayoutCache.h>
 #include <OpenSG/UserInterface/OSGDefaultMutableTreeNode.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGUIBackgrounds.h>
@@ -136,6 +137,7 @@ int main(int argc, char **argv)
     DefaultMutableTreeNodePtr GNode = DefaultMutableTreeNode::create() ;
     DefaultMutableTreeNodePtr HNode = DefaultMutableTreeNode::create() ;
     DefaultMutableTreeNodePtr INode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodePtr JNode = DefaultMutableTreeNode::create() ;
 
     ANode->setUserObject(SharedFieldPtr(new SFString("A")));
     BNode->setUserObject(SharedFieldPtr(new SFString("B")));
@@ -146,33 +148,31 @@ int main(int argc, char **argv)
     GNode->setUserObject(SharedFieldPtr(new SFString("G")));
     HNode->setUserObject(SharedFieldPtr(new SFString("H")));
     INode->setUserObject(SharedFieldPtr(new SFString("I")));
+    JNode->setUserObject(SharedFieldPtr(new SFString("J")));
 
     //A
-    beginEditCP(ANode, DefaultMutableTreeNode::ChildrenInternalFieldMask);
-        ANode->getChildrenInternal().addValue(BNode);
-        ANode->getChildrenInternal().addValue(CNode);
-    endEditCP(ANode, DefaultMutableTreeNode::ChildrenInternalFieldMask);
+    ANode->insert(BNode);
+    ANode->insert(CNode);
     
     //B
-    beginEditCP(ANode, DefaultMutableTreeNode::ChildrenInternalFieldMask);
-        BNode->getChildrenInternal().addValue(DNode);
-        BNode->getChildrenInternal().addValue(ENode);
-    endEditCP(ANode, DefaultMutableTreeNode::ChildrenInternalFieldMask);
+    BNode->insert(DNode);
+    BNode->insert(ENode);
     
     //C
-    beginEditCP(ANode, DefaultMutableTreeNode::ChildrenInternalFieldMask);
-        CNode->getChildrenInternal().addValue(FNode);
-        CNode->getChildrenInternal().addValue(GNode);
-    endEditCP(ANode, DefaultMutableTreeNode::ChildrenInternalFieldMask);
+    CNode->insert(FNode);
+    CNode->insert(GNode);
     
     //D
-    beginEditCP(ANode, DefaultMutableTreeNode::ChildrenInternalFieldMask);
-        DNode->getChildrenInternal().addValue(HNode);
-        DNode->getChildrenInternal().addValue(INode);
-    endEditCP(ANode, DefaultMutableTreeNode::ChildrenInternalFieldMask);
+    DNode->insert(HNode);
+    DNode->insert(INode);
 
+    //Tree Model
     DefaultTreeModel TheTreeModel;
     TheTreeModel.setRoot(ANode);
+
+    //TreeLayout
+    FixedHeightTreeLayoutCache TheTreeLayout;
+    TheTreeLayout.setModel(&TheTreeModel);
 
     std::string TempString;
 
@@ -203,6 +203,47 @@ int main(int argc, char **argv)
     {
         BreadthFirstSequence[i]->getUserObject()->getValueByStr(TempString);
         std::cout << TempString << ", ";
+    }
+    std::cout << std::endl;
+
+    //Layout Expansion
+    TheTreeLayout.setExpanded(ANode->getTreePath(), true);
+    
+    std::cout << "Row Count: " << TheTreeLayout.getRowCount() << std::endl;
+    for(UInt32 i(0) ; i<TheTreeLayout.getRowCount() ; ++i)
+    {
+        TheTreeLayout.getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
+        std::cout << TempString << " ";
+    }
+    std::cout << std::endl;
+    
+    TheTreeModel.insertNodeInto(JNode, ANode, ANode->getChildCount());
+    TheTreeLayout.setExpanded(ANode->getTreePath(), false);
+    TheTreeLayout.setExpanded(ANode->getTreePath(), true);
+
+    std::cout << "Row Count: " << TheTreeLayout.getRowCount() << std::endl;
+    for(UInt32 i(0) ; i<TheTreeLayout.getRowCount() ; ++i)
+    {
+        TheTreeLayout.getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
+        std::cout << TempString << " ";
+    }
+    std::cout << std::endl;
+
+    TheTreeLayout.setExpanded(BNode->getTreePath(), true);
+    std::cout << "Row Count: " << TheTreeLayout.getRowCount() << std::endl;
+    for(UInt32 i(0) ; i<TheTreeLayout.getRowCount() ; ++i)
+    {
+        TheTreeLayout.getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
+        std::cout << TempString << " ";
+    }
+    std::cout << std::endl;
+    
+    TheTreeLayout.setExpanded(DNode->getTreePath(), true);
+    std::cout << "Row Count: " << TheTreeLayout.getRowCount() << std::endl;
+    for(UInt32 i(0) ; i<TheTreeLayout.getRowCount() ; ++i)
+    {
+        TheTreeLayout.getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
+        std::cout << TempString << " ";
     }
     std::cout << std::endl;
 
