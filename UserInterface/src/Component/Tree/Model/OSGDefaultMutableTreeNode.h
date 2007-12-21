@@ -101,6 +101,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMut
 
 	//Adds child to the receiver at index.
 	virtual void insert(MutableTreeNodePtr child, const UInt32& index);
+    
+	//Adds child to the receiver as the last child
+	virtual void insert(MutableTreeNodePtr child);
 
 	//Removes the child at index from the receiver.
 	virtual void remove(const UInt32& index);
@@ -125,8 +128,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMut
 	//Creates and returns an enumeration that traverses the subtree rooted at this node in breadth-first order.
     void breadthFirst(std::vector<DefaultMutableTreeNodePtr>& Result)const;
 
-	//Creates and returns an enumeration that traverses the subtree rooted at this node in depth-first order.
-    void depthFirst(std::vector<DefaultMutableTreeNodePtr>& Result) const;
+	//Creates and returns an enumeration that traverses the subtree rooted at this node in height-first order.
+    void heightFirst(std::vector<DefaultMutableTreeNodePtr>& Result) const;
 
 	//Returns the child in this node's child array that immediately follows aChild, which must be a child of this node.
 	MutableTreeNodePtr getChildAfter(MutableTreeNodePtr aChild) const;
@@ -134,8 +137,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMut
 	//Returns the child in this node's child array that immediately precedes aChild, which must be a child of this node.
 	MutableTreeNodePtr getChildBefore(MutableTreeNodePtr aChild) const;
 
-	//Returns the depth of the tree rooted at this node -- the longest distance from this node to a leaf.
-	UInt32 getDepth(void) const;
+	//Returns the height of the tree rooted at this node -- the longest distance from this node to a leaf.
+	UInt32 getHeight(void) const;
 
 	//Returns this node's first child.
 	MutableTreeNodePtr getFirstChild(void) const;
@@ -152,8 +155,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMut
 	//Returns the total number of leaves that are descendants of this node.
 	UInt32 getLeafCount(void) const;
 
-	//Returns the number of levels above this node -- the distance from the root to this node.
-	UInt32 getLevel(void) const;
+	//Returns the number of depths above this node -- the distance from the root to this node.
+	UInt32 getDepth(void) const;
 
 	//Returns the leaf after this node or null if this node is the last leaf in the tree.
 	DefaultMutableTreeNodePtr getNextLeaf(void) const;
@@ -220,6 +223,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMut
 
 	//Removes all of this node's children, setting their parents to null.
 	void removeAllChildren(void);
+
+    //Get the TreePath for this node
+    TreePath getTreePath(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

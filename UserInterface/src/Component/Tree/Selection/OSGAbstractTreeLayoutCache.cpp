@@ -130,7 +130,25 @@ bool AbstractTreeLayoutCache::isRootVisible(void) const
 
 void AbstractTreeLayoutCache::setModel(TreeModelPtr newModel)
 {
+    if(_TreeModel != NULL)
+    {
+        _TreeModel->removeTreeModelListener(&_ModelListener);
+    }
+
     _TreeModel = newModel;
+    
+    if(_TreeModel != NULL)
+    {
+        _TreeModel->addTreeModelListener(&_ModelListener);
+    }
+    
+    _ExpandedPathSet.clear();
+    _ExpandedPathSet.comp = TreePathPreorderLessThan(_TreeModel);
+
+    _VisiblePathSet.clear();
+    _VisiblePathSet.comp = TreePathPreorderLessThan(_TreeModel);
+
+    _VisiblePathSet.insert(TreePath(_TreeModel->getRoot()));
 }
 
 //void AbstractTreeLayoutCache::setNodeDimensions(AbstractLayoutCache.NodeDimensions nd);
@@ -161,7 +179,99 @@ void AbstractTreeLayoutCache::getNodeDimensions(Pnt2s& TopLeft, Pnt2s& BottomRig
 
 /*----------------------- constructors & destructors ----------------------*/
 
+AbstractTreeLayoutCache::AbstractTreeLayoutCache(void) : _TreeModel(NULL),
+                                                        _TreeSelectionModel(NULL),
+                                                        _ExpandedPathSet(TreePathPreorderLessThan(NULL)),
+                                                        _VisiblePathSet(TreePathPreorderLessThan(NULL)),
+                                                        _ModelListener(this)
+{
+}
+
 /*----------------------------- class specific ----------------------------*/
+
+bool AbstractTreeLayoutCache::TreePathPreorderLessThan::operator()(const TreePath& LeftPath,
+                const TreePath& RightPath) const
+{
+    UInt32 LeftIndex(0), RightIndex(0);
+    UInt32 LeftPathCount(LeftPath.getPathCount()), RightPathCount(RightPath.getPathCount());
+    while(LeftIndex < LeftPathCount &&
+          RightIndex < RightPathCount &&
+          LeftPath.getPathComponent(LeftIndex) == RightPath.getPathComponent(RightIndex))
+    {
+        ++LeftIndex;
+        ++RightIndex;
+    }
+
+    if(LeftIndex == LeftPathCount || RightIndex == RightPathCount)
+    {
+        return LeftPathCount < RightPathCount;
+    }
+    else if(LeftIndex == 0 || RightIndex == 0)
+    {
+        return false;
+    }
+    else
+    {
+        //Get the child indices of these nodes
+        UInt32 LeftChildIndex(_TreeModel->getIndexOfChild(LeftPath.getPathComponent(LeftIndex-1), LeftPath.getPathComponent(LeftIndex))),
+               RightChildIndex(_TreeModel->getIndexOfChild(RightPath.getPathComponent(RightIndex-1), RightPath.getPathComponent(RightIndex)));
+
+        return LeftChildIndex < RightChildIndex;
+    }
+}
+
+AbstractTreeLayoutCache::TreePathPreorderLessThan::TreePathPreorderLessThan(void) :
+_TreeModel(NULL)
+{
+}
+
+AbstractTreeLayoutCache::TreePathPreorderLessThan::TreePathPreorderLessThan(TreeModelPtr Model) :
+_TreeModel(Model)
+{
+}
+
+void AbstractTreeLayoutCache::ModelListener::treeNodesChanged(TreeModelEvent e)
+{
+    //This event inidicates changes that are not structural
+    //So there are no changes to the Layout
+
+    //Do nothing
+}
+
+void AbstractTreeLayoutCache::ModelListener::treeNodesInserted(TreeModelEvent e)
+{
+    //If the Nodes are inserted into a node that is expanded then
+    //they are visible.
+    if(_AbstractTreeLayoutCache->isVisible(e.getPath()) && _AbstractTreeLayoutCache->isExpanded(e.getPath()))
+    {
+        //Add the newly inserted nodes into the visible set
+        _AbstractTreeLayoutCache->setExpanded(e.getPath(), true);
+    }
+}
+
+void AbstractTreeLayoutCache::ModelListener::treeNodesRemoved(TreeModelEvent e)
+{
+    //If the Nodes are remove into a node that is expanded then
+    //they are no longer visible.
+    if(_AbstractTreeLayoutCache->isVisible(e.getPath()) && _AbstractTreeLayoutCache->isExpanded(e.getPath()))
+    {
+        //Add the newly inserted nodes into the visible set
+        _AbstractTreeLayoutCache->setExpanded(e.getPath(), false);
+        _AbstractTreeLayoutCache->setExpanded(e.getPath(), true);
+    }
+}
+
+void AbstractTreeLayoutCache::ModelListener::treeStructureChanged(TreeModelEvent e)
+{
+    //If the node that the changes are rooted at is expanded then
+    //redo the visibility calculations on the parent node
+    if(_AbstractTreeLayoutCache->isVisible(e.getPath()) && _AbstractTreeLayoutCache->isExpanded(e.getPath()))
+    {
+        //Add the newly inserted nodes into the visible set
+        _AbstractTreeLayoutCache->setExpanded(e.getPath(), false);
+        _AbstractTreeLayoutCache->setExpanded(e.getPath(), true);
+    }
+}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

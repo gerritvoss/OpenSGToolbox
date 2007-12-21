@@ -116,7 +116,10 @@ void DefaultTreeModel::valueForPathChanged(TreePath path, SharedFieldPtr newValu
 void DefaultTreeModel::insertNodeInto(MutableTreeNodePtr newChild, MutableTreeNodePtr parent, const UInt32& index)
 {
     parent->insert(newChild, index);
-    //produceTreeStructureChanged();
+
+    std::vector<UInt32> Indices;
+    Indices.push_back(index);
+    nodesWereInserted(parent, Indices);
 }
 
 void DefaultTreeModel::nodeChanged(TreeNodePtr node)

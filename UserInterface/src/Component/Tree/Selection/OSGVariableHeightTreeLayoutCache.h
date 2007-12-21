@@ -60,8 +60,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING VariableHeightTreeLayoutCache : public Abs
 	//Returns a rectangle giving the bounds needed to draw path.
 	virtual void getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight, TreePath path, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn) const;
 
-	//Returns true if the path is expanded, and visible.
-	virtual bool getExpandedState(TreePath path) const const;
+	//Returns true if every node in the path is expanded
+	virtual bool isVisible(const TreePath& path) const const;
 
 	//Returns the path to the node that is closest to x,y.
 	virtual TreePath getPathClosestTo(const UInt32& x, const UInt32& y) const;
@@ -79,25 +79,25 @@ class OSG_USERINTERFACELIB_DLLMAPPING VariableHeightTreeLayoutCache : public Abs
 	virtual UInt32 getRowCount(void) const;
 
 	//Returns the row that the last item identified in path is visible at.
-	virtual UInt32 getRowForPath(TreePath path) const;
+	virtual Int32 getRowForPath(const TreePath& path) const;
 
 	//Returns the number of visible children for row.
-	virtual UInt32 getVisibleChildCount(TreePath path) const;
+	virtual UInt32 getVisibleChildCount(const TreePath& path) const;
 
 	//Returns an Enumerator that increments over the visible paths starting at the passed in location.
-	//virtual Enumeration getVisiblePathsFrom(TreePath path) const;
+	//virtual Enumeration getVisiblePathsFrom(const TreePath& path) const;
 
 	//Instructs the LayoutCache that the bounds for path are invalid, and need to be updated.
-	virtual void invalidatePathBounds(TreePath path);
+	virtual void invalidatePathBounds(const TreePath& path);
 
 	//Informs the TreeState that it needs to recalculate all the sizes it is referencing.
 	virtual void invalidateSizes(void);
 
-	//Returns true if the value identified by row is currently expanded.
-	virtual bool isExpanded(TreePath path) const;
+	//Returns true if the last node in this path is expanded
+	virtual bool isExpanded(const TreePath& path) const;
 
 	//Marks the path path expanded state to isExpanded.
-	virtual void setExpandedState(TreePath path, bool isExpanded);
+	virtual void setExpanded(const TreePath& path, bool isExpanded);
 
 	//Sets the TreeModel that will provide the data.
 	virtual void setModel(TreeModelPtr newModel);
@@ -110,18 +110,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING VariableHeightTreeLayoutCache : public Abs
 
 	//Sets the height of each cell.
 	virtual void setRowHeight(const UInt32& rowHeight);
-
-	//Invoked after a node (or a set of siblings) has changed in some way.
-	virtual void treeNodesChanged(TreeModelEvent e);
-
-	//Invoked after nodes have been inserted into the tree.
-	virtual void treeNodesInserted(TreeModelEvent e);
-
-	//Invoked after nodes have been removed from the tree.
-	virtual void treeNodesRemoved(TreeModelEvent e);
-
-	//Invoked after the tree has drastically changed structure from a given node down.
-	virtual void treeStructureChanged(TreeModelEvent e);
 
 
   protected:

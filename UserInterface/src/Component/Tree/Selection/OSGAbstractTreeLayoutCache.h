@@ -48,9 +48,11 @@
 #include "OSGTreeRowMapper.h"
 #include "Component/Tree/OSGTreePath.h"
 #include "Component/Tree/Model/OSGTreeModel.h"
-#include "Component/Tree/Model/OSGTreeModelEvent.h"
+#include "Component/Tree/Model/OSGTreeModelListener.h"
 #include "Component/Tree/Selection/OSGTreeSelectionModel.h"
 #include <OpenSG/OSGVector.h>
+
+#include <set>
 
 OSG_BEGIN_NAMESPACE
 
@@ -58,18 +60,24 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceAbstractTreeLayoutCache for a description.
 */
 
+class AbstractTreeLayoutCache;
+
+typedef AbstractTreeLayoutCache *AbstractTreeLayoutCachePtr;
+
 class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeLayoutCache : public TreeRowMapper
 {
     /*==========================  PUBLIC  =================================*/
   public:
+    AbstractTreeLayoutCache(void);
+
 	//Returns the rows that the TreePath instances in path are being displayed at.
 	virtual std::vector<UInt32> getRowsForPaths(std::vector<TreePath> paths) const;
 
 	//Returns a rectangle giving the bounds needed to draw path.
 	virtual void getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight, TreePath path, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn) const = 0;
 
-	//Returns true if the path is expanded, and visible.
-	virtual bool getExpandedState(TreePath path) const const = 0;
+	//Returns true if every node in the path is expanded
+	virtual bool isVisible(const TreePath& path) const = 0;
 
 	//Returns the TreeModel that is providing the data.
 	virtual TreeModelPtr getModel(void) const;
@@ -93,7 +101,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeLayoutCache : public TreeRowMa
 	virtual UInt32 getRowCount(void) const = 0;
 
 	//Returns the row that the last item identified in path is visible at.
-	virtual UInt32 getRowForPath(TreePath path) const = 0;
+	virtual Int32 getRowForPath(const TreePath& path) const = 0;
 
 	//Returns the height of each row.
 	virtual UInt32 getRowHeight(void) const;
@@ -102,25 +110,25 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeLayoutCache : public TreeRowMa
 	virtual TreeSelectionModelPtr getSelectionModel(void) const;
 
 	//Returns the number of visible children for row.
-	virtual UInt32 getVisibleChildCount(TreePath path) const = 0;
+	virtual UInt32 getVisibleChildCount(const TreePath& path) const = 0;
 
 	//Returns an Enumerator that increments over the visible paths starting at the passed in location.
-	//virtual Enumeration getVisiblePathsFrom(TreePath path) const = 0;
+	//virtual Enumeration getVisiblePathsFrom(const TreePath& path) const = 0;
 
 	//Instructs the LayoutCache that the bounds for path are invalid, and need to be updated.
-	virtual void invalidatePathBounds(TreePath path) = 0;
+	virtual void invalidatePathBounds(const TreePath& path) = 0;
 
 	//Informs the TreeState that it needs to recalculate all the sizes it is referencing.
 	virtual void invalidateSizes(void) = 0;
 
-	//Returns true if the value identified by row is currently expanded.
-	virtual bool isExpanded(TreePath path) const = 0;
+	//Returns true if the last node in this path is expanded
+	virtual bool isExpanded(const TreePath& path) const = 0;
 
 	//Returns true if the root node of the tree is displayed.
 	virtual bool isRootVisible(void) const;
 
 	//Marks the path path expanded state to isExpanded.
-	virtual void setExpandedState(TreePath path, bool isExpanded) = 0;
+	virtual void setExpanded(const TreePath& path, bool isExpanded) = 0;
 
 	//Sets the TreeModel that will provide the data.
 	virtual void setModel(TreeModelPtr newModel);
@@ -136,19 +144,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeLayoutCache : public TreeRowMa
 
 	//Sets the TreeSelectionModel used to manage the selection to new LSM.
 	virtual void setSelectionModel(TreeSelectionModelPtr newLSM);
-
-	//Invoked after a node (or a set of siblings) has changed in some way.
-	virtual void treeNodesChanged(TreeModelEvent e) = 0;
-
-	//Invoked after nodes have been inserted into the tree.
-	virtual void treeNodesInserted(TreeModelEvent e) = 0;
-
-	//Invoked after nodes have been removed from the tree.
-	virtual void treeNodesRemoved(TreeModelEvent e) = 0;
-
-	//Invoked after the tree has drastically changed structure from a given node down.
-	virtual void treeStructureChanged(TreeModelEvent e) = 0;
-
 
   protected:
 	//Returns, by reference in placeIn, the size needed to represent value.
@@ -173,13 +168,51 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeLayoutCache : public TreeRowMa
     //Selection model.
     TreeSelectionModelPtr _TreeSelectionModel;
 
+
+    struct TreePathPreorderLessThan
+    {
+    protected:
+        TreeModelPtr _TreeModel;
+
+        TreePathPreorderLessThan(void);
+    public:
+        TreePathPreorderLessThan(TreeModelPtr Model);
+
+        bool operator()(const TreePath& LeftPath,
+                        const TreePath& RightPath) const;
+    };
+    
+    typedef std::set<TreePath, TreePathPreorderLessThan> TreePathSet;
+    typedef TreePathSet::iterator TreePathSetItor;
+    typedef TreePathSet::const_iterator TreePathSetConstItor;
+
+    TreePathSet _ExpandedPathSet;
+    TreePathSet _VisiblePathSet;
+    
+	class ModelListener : public TreeModelListener
+	{
+	public :
+		ModelListener(AbstractTreeLayoutCachePtr TheAbstractTreeLayoutCache);
+		
+        virtual void treeNodesChanged(TreeModelEvent e);
+        virtual void treeNodesInserted(TreeModelEvent e);
+        virtual void treeNodesRemoved(TreeModelEvent e);
+        virtual void treeStructureChanged(TreeModelEvent e);
+	protected :
+		AbstractTreeLayoutCachePtr _AbstractTreeLayoutCache;
+	};
+
+	friend class ModelListener;
+
+	ModelListener _ModelListener;
     /*==========================  PRIVATE  ================================*/
   private:
 };
 
-typedef AbstractTreeLayoutCache *AbstractTreeLayoutCachePtr;
 
 OSG_END_NAMESPACE
+
+#include "OSGAbstractTreeLayoutCache.inl"
 
 #define OSGABSTRACTTREELAYOUTCACHE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 

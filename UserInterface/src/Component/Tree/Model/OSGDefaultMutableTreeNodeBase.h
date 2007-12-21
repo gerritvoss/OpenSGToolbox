@@ -125,31 +125,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNodeBase : public Mutabl
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFBool              *getSFAllowsChildrenInternal(void);
-           MFMutableTreeNodePtr *getMFChildrenInternal(void);
-           SFMutableTreeNodePtr *getSFParentInternal (void);
-
-           bool                &getAllowsChildrenInternal(void);
-     const bool                &getAllowsChildrenInternal(void) const;
-           MutableTreeNodePtr  &getParentInternal (void);
-     const MutableTreeNodePtr  &getParentInternal (void) const;
-           MutableTreeNodePtr  &getChildrenInternal(const UInt32 index);
-           MFMutableTreeNodePtr &getChildrenInternal(void);
-     const MFMutableTreeNodePtr &getChildrenInternal(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setAllowsChildrenInternal( const bool &value );
-     void setParentInternal ( const MutableTreeNodePtr &value );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -207,6 +182,31 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNodeBase : public Mutabl
     /*! \{                                                                 */
 
     virtual ~DefaultMutableTreeNodeBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFBool              *getSFAllowsChildrenInternal(void);
+           MFMutableTreeNodePtr *getMFChildrenInternal(void);
+           SFMutableTreeNodePtr *getSFParentInternal (void);
+
+           bool                &getAllowsChildrenInternal(void);
+     const bool                &getAllowsChildrenInternal(void) const;
+           MutableTreeNodePtr  &getParentInternal (void);
+     const MutableTreeNodePtr  &getParentInternal (void) const;
+           MutableTreeNodePtr  &getChildrenInternal(UInt32 index);
+           MFMutableTreeNodePtr &getChildrenInternal(void);
+     const MFMutableTreeNodePtr &getChildrenInternal(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setAllowsChildrenInternal(const bool &value);
+     void setParentInternal (const MutableTreeNodePtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

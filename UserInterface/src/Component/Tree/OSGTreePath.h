@@ -70,6 +70,10 @@ public:
 	//Tests two TreePaths for equality by checking each element of the paths for equality.
 	bool operator==(const TreePath& Right) const;
 
+	bool operator!=(const TreePath& Right) const;
+
+    bool operator<(const TreePath& RightPath) const;
+
 	//Returns the last component of this path.
 	SharedFieldPtr getLastPathComponent(void) const;
 
@@ -84,6 +88,9 @@ public:
 
 	//Returns the number of elements in the path.
 	UInt32 getPathCount(void) const;
+
+    //Returns the Depth of the Last Component in this Path
+    UInt32 getDepth(void) const;
 
 	//Returns true if aTreePath is a descendant of this TreePath.
 	bool isDescendant(TreePath aTreePath) const;

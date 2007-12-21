@@ -77,43 +77,91 @@ void FixedHeightTreeLayoutCache::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight, T
 	//TODO:Implement
 }
 
-bool FixedHeightTreeLayoutCache::getExpandedState(TreePath path) const const
+bool FixedHeightTreeLayoutCache::isVisible(const TreePath& path) const
 {
-	//TODO:Implement
-	return false;
+    return _VisiblePathSet.find(path) != _VisiblePathSet.end();
 }
 
 TreePath FixedHeightTreeLayoutCache::getPathClosestTo(const UInt32& x, const UInt32& y) const
 {
-	//TODO:Implement
-	return TreePath(SharedFieldPtr());
+    //Determine the row
+    UInt32 Row(y/getRowHeight());
+
+    //Get the Path for that row
+	return getPathForRow(Row);
 }
 
 TreePath FixedHeightTreeLayoutCache::getPathForRow(const UInt32& row) const
 {
-	//TODO:Implement
-	return TreePath(SharedFieldPtr());
+    UInt32 RootVisibilityDependantRow(row);
+    if(!isRootVisible())
+    {
+        RootVisibilityDependantRow += 1;
+    }
+
+    UInt32 i(0);
+    TreePathSetConstItor VisiblePathSetItor(_VisiblePathSet.begin());
+    while(i<RootVisibilityDependantRow && VisiblePathSetItor != _VisiblePathSet.end())
+    {
+        ++i;
+        ++VisiblePathSetItor;
+    }
+    if(VisiblePathSetItor != _VisiblePathSet.end())
+    {
+        return (*VisiblePathSetItor);
+    }
+    else
+    {
+        return TreePath(SharedFieldPtr());
+    }
+
 }
 
 UInt32 FixedHeightTreeLayoutCache::getRowCount(void) const
 {
-	//TODO:Implement
-	return 0;
+    if(isRootVisible())
+    {
+        return _VisiblePathSet.size();
+    }
+    else
+    {
+        return _VisiblePathSet.size()-1;
+    }
 }
 
-UInt32 FixedHeightTreeLayoutCache::getRowForPath(TreePath path) const
+Int32 FixedHeightTreeLayoutCache::getRowForPath(const TreePath& path) const
 {
-	//TODO:Implement
-	return 0;
+    UInt32 i(0);
+    TreePathSetConstItor VisiblePathSetItor(_VisiblePathSet.begin());
+    while( VisiblePathSetItor != _VisiblePathSet.end() && path != (*VisiblePathSetItor))
+    {
+        ++i;
+        ++VisiblePathSetItor;
+    }
+
+    if(VisiblePathSetItor != _VisiblePathSet.end())
+    {
+        return i;
+    }
+    else
+    {
+        return -1;
+    }
 }
 
-UInt32 FixedHeightTreeLayoutCache::getVisibleChildCount(TreePath path) const
+UInt32 FixedHeightTreeLayoutCache::getVisibleChildCount(const TreePath& path) const
 {
-	//TODO:Implement
-	return 0;
+    if(isVisible(path))
+    {
+        return _TreeModel->getChildCount(path.getLastPathComponent());
+    }
+    else
+    {
+        return 0;
+    }
 }
 
-void FixedHeightTreeLayoutCache::invalidatePathBounds(TreePath path)
+void FixedHeightTreeLayoutCache::invalidatePathBounds(const TreePath& path)
 {
 	//TODO:Implement
 }
@@ -123,50 +171,84 @@ void FixedHeightTreeLayoutCache::invalidateSizes(void)
 	//TODO:Implement
 }
 
-bool FixedHeightTreeLayoutCache::isExpanded(TreePath path) const
+bool FixedHeightTreeLayoutCache::isExpanded(const TreePath& path) const
 {
-	//TODO:Implement
-	return false;
+	return _ExpandedPathSet.find(path) != _ExpandedPathSet.end();
 }
 
-void FixedHeightTreeLayoutCache::setExpandedState(TreePath path, bool isExpanded)
+void FixedHeightTreeLayoutCache::setExpanded(const TreePath& path, bool isExpanded)
 {
-	//TODO:Implement
+    if(isExpanded)
+    {
+        _ExpandedPathSet.insert(path);
+
+        if(isVisible(path))
+        {
+            //Insert all visible decendents of Path
+            std::vector<TreePath> VisibleDecendants;
+            getVisibleDecendants(path, VisibleDecendants);
+            for(UInt32 i(0) ; i<VisibleDecendants.size() ; ++i)
+            {
+                _VisiblePathSet.insert(VisibleDecendants[i]);
+            }
+        }
+    }
+    else
+    {
+        _ExpandedPathSet.erase(path);
+        
+        if(isVisible(path))
+        {
+            //Remove all visible decendents of Path
+            std::vector<TreePath> VisibleDecendants;
+            getVisibleDecendants(path, VisibleDecendants);
+            for(UInt32 i(0) ; i<VisibleDecendants.size() ; ++i)
+            {
+                _VisiblePathSet.erase(VisibleDecendants[i]);
+            }
+        }
+    }
+}
+
+void FixedHeightTreeLayoutCache::getVisibleDecendants(const TreePath& Path, std::vector<TreePath>& VisibleDecendants) const
+{
+    //Loop through all of the Children of the last node in Path
+    UInt32 NumChildren(_TreeModel->getChildCount(Path.getLastPathComponent()));
+    SharedFieldPtr Child;
+
+    for(UInt32 i(0) ; i<NumChildren ; ++i)
+    {
+        Child = _TreeModel->getChild(Path.getLastPathComponent(), i);
+
+        //Add This child to the Visible Decendants
+        VisibleDecendants.push_back(Path.pathByAddingChild(Child));
+
+        //If this child is expanded then add all of it's visible decendants
+        if(isExpanded(Path.pathByAddingChild(Child)))
+        {
+            getVisibleDecendants(Path.pathByAddingChild(Child), VisibleDecendants);
+        }
+    }
 }
 
 void FixedHeightTreeLayoutCache::setModel(TreeModelPtr newModel)
 {
 	//TODO:Implement
+    AbstractTreeLayoutCache::setModel(newModel);
 }
 
 void FixedHeightTreeLayoutCache::setRootVisible(bool rootVisible)
 {
 	//TODO:Implement
+    AbstractTreeLayoutCache::setRootVisible(rootVisible);
 }
 
 void FixedHeightTreeLayoutCache::setRowHeight(const UInt32& rowHeight)
 {
 	//TODO:Implement
-}
+    AbstractTreeLayoutCache::setRowHeight(rowHeight);
 
-void FixedHeightTreeLayoutCache::treeNodesChanged(TreeModelEvent e)
-{
-	//TODO:Implement
-}
-
-void FixedHeightTreeLayoutCache::treeNodesInserted(TreeModelEvent e)
-{
-	//TODO:Implement
-}
-
-void FixedHeightTreeLayoutCache::treeNodesRemoved(TreeModelEvent e)
-{
-	//TODO:Implement
-}
-
-void FixedHeightTreeLayoutCache::treeStructureChanged(TreeModelEvent e)
-{
-	//TODO:Implement
+    invalidateSizes();
 }
 
 /*-------------------------------------------------------------------------*\

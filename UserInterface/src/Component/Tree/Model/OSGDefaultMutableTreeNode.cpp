@@ -124,7 +124,7 @@ bool DefaultMutableTreeNode::isLeaf(void) const
 
 void DefaultMutableTreeNode::insert(MutableTreeNodePtr child, const UInt32& index)
 {
-	if(index < getChildrenInternal().size())
+	if(index <= getChildrenInternal().size())
 	{
 		MFMutableTreeNodePtr::iterator InsertPos(getChildrenInternal().begin());
 		InsertPos += index;
@@ -234,12 +234,12 @@ MutableTreeNodePtr DefaultMutableTreeNode::getChildBefore(MutableTreeNodePtr aCh
 	}
 }
 
-UInt32 DefaultMutableTreeNode::getDepth(void) const
+UInt32 DefaultMutableTreeNode::getHeight(void) const
 {
 	UInt32 Max(0);
 	for(UInt32 i(0) ; i<getChildrenInternal().size() ; ++i)
 	{
-		Max = osgMax(Max, DefaultMutableTreeNode::Ptr::dcast(getChildrenInternal()[i])->getDepth());
+		Max = osgMax(Max, DefaultMutableTreeNode::Ptr::dcast(getChildrenInternal()[i])->getHeight());
 	}
 	return Max+1;
 }
@@ -305,17 +305,17 @@ UInt32 DefaultMutableTreeNode::getLeafCount(void) const
 	return Count;
 }
 
-UInt32 DefaultMutableTreeNode::getLevel(void) const
+UInt32 DefaultMutableTreeNode::getDepth(void) const
 {
 	TreeNodePtr ParentNode(getParent());
-	UInt32 Level(0);
+	UInt32 Depth(0);
 	while(ParentNode != NullFC)
 	{
 		ParentNode = ParentNode->getParent();
-		++Level;
+		++Depth;
 	}
 
-	return Level;
+	return Depth;
 }
 
 DefaultMutableTreeNodePtr DefaultMutableTreeNode::getNextLeaf(void) const
@@ -594,7 +594,7 @@ void DefaultMutableTreeNode::removeAllChildren(void)
 	endEditCP(DefaultMutableTreeNodePtr(this), ChildrenInternalFieldMask);
 }
 
-void DefaultMutableTreeNode::depthFirst(std::vector<DefaultMutableTreeNodePtr>& Result) const
+void DefaultMutableTreeNode::heightFirst(std::vector<DefaultMutableTreeNodePtr>& Result) const
 {
     //Call the postorder traversal
     postorder(Result);
@@ -634,24 +634,29 @@ void DefaultMutableTreeNode::breadthFirst(std::vector<DefaultMutableTreeNodePtr>
     Result.push_back(DefaultMutableTreeNodePtr(this));
 
     
-    std::vector<TreeNodePtr> CurrentLevelNodes;
-    std::vector<TreeNodePtr> NextLevelNodes(getChildren());
-    while(NextLevelNodes.size() != 0)
+    std::vector<TreeNodePtr> CurrentDepthNodes;
+    std::vector<TreeNodePtr> NextDepthNodes(getChildren());
+    while(NextDepthNodes.size() != 0)
     {
-        for(UInt32 i(0) ; i<NextLevelNodes.size() ; ++i)
+        for(UInt32 i(0) ; i<NextDepthNodes.size() ; ++i)
         {
-            Result.push_back(DefaultMutableTreeNode::Ptr::dcast(NextLevelNodes[i]));
+            Result.push_back(DefaultMutableTreeNode::Ptr::dcast(NextDepthNodes[i]));
         }
         
-        CurrentLevelNodes = NextLevelNodes;
-        NextLevelNodes.clear();
+        CurrentDepthNodes = NextDepthNodes;
+        NextDepthNodes.clear();
         std::vector<TreeNodePtr> Children;
-        for(UInt32 i(0) ; i<CurrentLevelNodes.size() ; ++i)
+        for(UInt32 i(0) ; i<CurrentDepthNodes.size() ; ++i)
         {
-            Children = CurrentLevelNodes[i]->getChildren();
-            NextLevelNodes.insert(NextLevelNodes.end(), Children.begin(), Children.end());
+            Children = CurrentDepthNodes[i]->getChildren();
+            NextDepthNodes.insert(NextDepthNodes.end(), Children.begin(), Children.end());
         }
     }
+}
+
+TreePath DefaultMutableTreeNode::getTreePath(void) const
+{
+    return TreePath(getUserObjectPath());
 }
 
 /*-------------------------------------------------------------------------*\

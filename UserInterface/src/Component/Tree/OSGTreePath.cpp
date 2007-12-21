@@ -162,6 +162,33 @@ bool TreePath::operator==(const TreePath& Right) const
     }
 }
 
+bool TreePath::operator<(const TreePath& RightPath) const
+{
+    if(_Path.size() != RightPath._Path.size())
+    {
+        return _Path.size() < RightPath._Path.size();
+    }
+    else if(_Path.size() == 0)
+    {
+        return false;
+    }
+    else
+    {
+        for(UInt32 i(0) ; i<_Path.size() ; ++i)
+        {
+            if(_Path[i] != RightPath._Path[i])
+            {
+                std::string MyString, RightString;
+                _Path.back()->getValueByStr(MyString);
+                RightPath._Path.back()->getValueByStr(RightString);
+
+                return MyString.compare(RightString) < 0;
+            }
+        }
+        return false;
+    }
+}
+
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
 

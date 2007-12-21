@@ -18,7 +18,7 @@ A UI Default Mutable Tree Node.
 		cardinality="single"
 		visibility="external"
 		defaultValue="true"
-		access="public"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -27,7 +27,7 @@ A UI Default Mutable Tree Node.
 		cardinality="multi"
 		visibility="external"
 		header="Component/Tree/Model/OSGMutableTreeNodeFields.h"
-		access="public"
+		access="protected"
 	>
 	</Field>
 	<Field
@@ -37,7 +37,7 @@ A UI Default Mutable Tree Node.
 		visibility="external"
 		header="Component/Tree/Model/OSGMutableTreeNodeFields.h"
 		defaultValue="NullFC"
-		access="public"
+		access="protected"
 	>
 	</Field>
 </FieldContainer>

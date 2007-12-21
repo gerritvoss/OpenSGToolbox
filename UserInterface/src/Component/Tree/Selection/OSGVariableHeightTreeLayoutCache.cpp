@@ -77,7 +77,7 @@ void VariableHeightTreeLayoutCache::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight
 	//TODO:Implement
 }
 
-bool VariableHeightTreeLayoutCache::getExpandedState(TreePath path) const const
+bool VariableHeightTreeLayoutCache::isVisible(const TreePath& path) const const
 {
 	//TODO: Implement
 	return false;
@@ -113,20 +113,20 @@ UInt32 VariableHeightTreeLayoutCache::getRowCount(void) const
 	return 0;
 }
 
-UInt32 VariableHeightTreeLayoutCache::getRowForPath(TreePath path) const
+Int32 VariableHeightTreeLayoutCache::getRowForPath(const TreePath& path) const
 {
 	//TODO: Implement
 	return 0;
 }
 
-UInt32 VariableHeightTreeLayoutCache::getVisibleChildCount(TreePath path) const
+UInt32 VariableHeightTreeLayoutCache::getVisibleChildCount(const TreePath& path) const
 {
 	//TODO: Implement
 	return 0;
 }
 
 
-void VariableHeightTreeLayoutCache::invalidatePathBounds(TreePath path)
+void VariableHeightTreeLayoutCache::invalidatePathBounds(const TreePath& path)
 {
 	//TODO:Implement
 }
@@ -136,13 +136,13 @@ void VariableHeightTreeLayoutCache::invalidateSizes(void)
 	//TODO:Implement
 }
 
-bool VariableHeightTreeLayoutCache::isExpanded(TreePath path) const
+bool VariableHeightTreeLayoutCache::isExpanded(const TreePath& path) const
 {
 	//TODO: Implement
 	return false;
 }
 
-void VariableHeightTreeLayoutCache::setExpandedState(TreePath path, bool isExpanded)
+void VariableHeightTreeLayoutCache::setExpanded(const TreePath& path, bool isExpanded)
 {
 	//TODO:Implement
 }
@@ -159,26 +159,6 @@ void VariableHeightTreeLayoutCache::setRootVisible(bool rootVisible)
 }
 
 void VariableHeightTreeLayoutCache::setRowHeight(const UInt32& rowHeight)
-{
-	//TODO:Implement
-}
-
-void VariableHeightTreeLayoutCache::treeNodesChanged(TreeModelEvent e)
-{
-	//TODO:Implement
-}
-
-void VariableHeightTreeLayoutCache::treeNodesInserted(TreeModelEvent e)
-{
-	//TODO:Implement
-}
-
-void VariableHeightTreeLayoutCache::treeNodesRemoved(TreeModelEvent e)
-{
-	//TODO:Implement
-}
-
-void VariableHeightTreeLayoutCache::treeStructureChanged(TreeModelEvent e)
 {
 	//TODO:Implement
 }
