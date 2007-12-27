@@ -476,15 +476,45 @@ void Graphics3DExtrude::drawDisc(const Pnt2s& Center, const Int16& Width, const 
 		glEnable(GL_BLEND);
 	}
 	
+	//Front Disc
 	glBegin(GL_TRIANGLE_FAN);
+	  glNormal3f(0.0,0.0,1.0);
       glColor4f(CenterColor.red(), CenterColor.green(), CenterColor.blue(), CenterColor.alpha() * Opacity * getOpacity() );
       glVertex2sv(Center.getValues());
       glColor4f(OuterColor.red(), OuterColor.green(), OuterColor.blue(), OuterColor.alpha() * Opacity * getOpacity() );
       for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
       {
 			glVertex2f(static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(Height)*osgsin(angleNow));
+			angleNow -= angleDiff;
+		}
+	glEnd();
+	
+	//Back Disc
+	angleNow = StartAngleRad;
+	glBegin(GL_TRIANGLE_FAN);
+	  glNormal3f(0.0,0.0,-1.0);
+      glColor4f(CenterColor.red(), CenterColor.green(), CenterColor.blue(), CenterColor.alpha() * Opacity * getOpacity() );
+      glVertex3f(Center.x(), Center.y(), getExtrudeLength());
+      glColor4f(OuterColor.red(), OuterColor.green(), OuterColor.blue(), OuterColor.alpha() * Opacity * getOpacity() );
+      for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
+      {
+			glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(Height)*osgsin(angleNow), getExtrudeLength());
 			angleNow += angleDiff;
 		}
+	glEnd();
+
+	//Outer Hull
+	angleNow = StartAngleRad;
+	glBegin(GL_QUAD_STRIP);
+      glColor4f(OuterColor.red(), OuterColor.green(), OuterColor.blue(), OuterColor.alpha() * Opacity * getOpacity() );
+
+      for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
+      {
+		glNormal3f(osgcos(angleNow),osgsin(angleNow),0.0);
+		glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(Height)*osgsin(angleNow), 0);
+		glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(Height)*osgsin(angleNow), getExtrudeLength());
+		angleNow -= angleDiff;
+	  }
 	glEnd();
 
     if(CenterColor.alpha() < 1.0 ||
