@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="ComponentWidthLayoutSpring"
+	parent="AbstractLayoutSpring"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI ComponentWidth LayoutSpring.
+	<Field
+		name="Component"
+		type="ComponentPtr"
+		cardinality="single"
+      visibility="external"
+		defaultValue="NullFC"
+      header="Component/OSGComponentFields.h"
+		access="public"
+	>
+   </Field>
+</FieldContainer>

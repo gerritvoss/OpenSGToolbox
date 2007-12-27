@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="ScaleLayoutSpring"
+	parent="LayoutSpring"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI Scale LayoutSpring.
+	<Field
+		name="Spring"
+		type="LayoutSpringPtr"
+		cardinality="single"
+      visibility="external"
+		defaultValue="NullFC"
+		header="Layout/Spring/OSGLayoutSpringFields.h"
+		access="public"
+	>
+   </Field>
+	<Field
+		name="Factor"
+		type="Real32"
+		cardinality="single"
+      visibility="external"
+		defaultValue="0.0"
+		access="public"
+	>
+   </Field>
+</FieldContainer>

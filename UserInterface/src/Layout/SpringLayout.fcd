@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="SpringLayout"
+	parent="Layout"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI SpringLayout.
+	<Field
+		name="Constraints"
+		type="SpringLayoutConstraintsPtr"
+		cardinality="multi"
+      visibility="external"
+		header="Layout/OSGSpringLayoutConstraintsFields.h"
+		access="public"
+	>
+   </Field>
+</FieldContainer>

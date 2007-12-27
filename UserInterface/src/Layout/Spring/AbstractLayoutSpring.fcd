@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="AbstractLayoutSpring"
+	parent="LayoutSpring"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI AbstractLayoutSpring.
+	<Field
+		name="Size"
+		type="Int32"
+		cardinality="single"
+      visibility="external"
+		defaultValue="LayoutSpring::VALUE_NOT_SET"
+		defaultHeader="Layout/Spring/OSGLayoutSpring.h"
+		access="public"
+	>
+   </Field>
+</FieldContainer>

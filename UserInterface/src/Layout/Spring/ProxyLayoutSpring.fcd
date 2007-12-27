@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="ProxyLayoutSpring"
+	parent="LayoutSpring"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI Proxy LayoutSpring.
+	<Field
+		name="Edge"
+		type="UInt32"
+		cardinality="single"
+      visibility="external"
+		defaultValue="SpringLayoutConstraints::NO_EDGE"
+      header="Layout/OSGSpringLayoutConstraints.h"
+		access="public"
+	>
+   </Field>
+	<Field
+		name="Component"
+		type="ComponentPtr"
+		cardinality="single"
+      visibility="external"
+		defaultValue="NullFC"
+      header="Component/OSGComponentFields.h"
+		access="public"
+	>
+   </Field>
+	<Field
+		name="Layout"
+		type="SpringLayoutPtr"
+		cardinality="single"
+      visibility="external"
+		defaultValue="NullFC"
+      header="Layout/OSGSpringLayoutFields.h"
+		access="public"
+	>
+   </Field>
+</FieldContainer>

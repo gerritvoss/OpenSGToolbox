@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="NegativeLayoutSpring"
+	parent="LayoutSpring"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI Negative LayoutSpring.
+	<Field
+		name="Spring"
+		type="LayoutSpringPtr"
+		cardinality="single"
+      visibility="external"
+		defaultValue="NullFC"
+		header="Layout/Spring/OSGLayoutSpringFields.h"
+		access="public"
+	>
+   </Field>
+</FieldContainer>

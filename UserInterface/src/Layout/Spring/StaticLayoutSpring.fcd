@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="StaticLayoutSpring"
+	parent="AbstractLayoutSpring"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI Static LayoutSpring.
+	<Field
+		name="Minimum"
+		type="Int32"
+		cardinality="single"
+      visibility="external"
+		defaultValue="LayoutSpring::VALUE_NOT_SET"
+		defaultHeader="Layout/Spring/OSGLayoutSpring.h"
+		access="public"
+	>
+   </Field>
+	<Field
+		name="Maximum"
+		type="Int32"
+		cardinality="single"
+      visibility="external"
+		defaultValue="LayoutSpring::VALUE_NOT_SET"
+		defaultHeader="Layout/Spring/OSGLayoutSpring.h"
+		access="public"
+	>
+   </Field>
+	<Field
+		name="Preferred"
+		type="Int32"
+		cardinality="single"
+      visibility="external"
+		defaultValue="LayoutSpring::VALUE_NOT_SET"
+		defaultHeader="Layout/Spring/OSGLayoutSpring.h"
+		access="public"
+	>
+   </Field>
+</FieldContainer>
