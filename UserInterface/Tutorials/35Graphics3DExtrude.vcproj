@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="35Graphics3DExtrude"
 	ProjectGUID="{A24FF71F-3266-4447-B2B4-09DC4BC97CA4}"
 	Keyword="Win32Proj"
@@ -69,7 +69,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGWindowGLUTD.lib OSGUserInterfaceD.lib OSGInputD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
+				AdditionalDependencies="OSGBaseD.lib  OSGToolboxD.lib OSGSystemD.lib OSGWindowGLUTD.lib OSGUserInterfaceD.lib OSGInputD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
 				OutputFile="$(ProjectName)D.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"

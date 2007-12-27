@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="32Slider"
 	ProjectGUID="{C040CE5B-C820-4A99-B2B4-660CD6165E6B}"
 	RootNamespace="32Slider"

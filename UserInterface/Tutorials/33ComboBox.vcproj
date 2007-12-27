@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="33ComboBox"
 	ProjectGUID="{F56B70AD-0197-4920-B8CE-860733243036}"
 	RootNamespace="32Slider"
