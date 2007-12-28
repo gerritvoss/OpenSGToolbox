@@ -91,6 +91,9 @@ const OSG::BitVector  TreeBase::VisibleRowCountFieldMask =
 const OSG::BitVector  TreeBase::CellEditorFieldMask = 
     (TypeTraits<BitVector>::One << TreeBase::CellEditorFieldId);
 
+const OSG::BitVector  TreeBase::CellGeneratorFieldMask = 
+    (TypeTraits<BitVector>::One << TreeBase::CellGeneratorFieldId);
+
 const OSG::BitVector TreeBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -123,6 +126,9 @@ const OSG::BitVector TreeBase::MTInfluenceMask =
     Number of rows to make visible at one time.
 */
 /*! \var CellEditorPtr   TreeBase::_sfCellEditor
+    
+*/
+/*! \var TreeComponentGeneratorPtr TreeBase::_sfCellGenerator
     
 */
 
@@ -174,7 +180,12 @@ FieldDescription *TreeBase::_desc[] =
                      "CellEditor", 
                      CellEditorFieldId, CellEditorFieldMask,
                      false,
-                     (FieldAccessMethod) &TreeBase::getSFCellEditor)
+                     (FieldAccessMethod) &TreeBase::getSFCellEditor),
+    new FieldDescription(SFTreeComponentGeneratorPtr::getClassType(), 
+                     "CellGenerator", 
+                     CellGeneratorFieldId, CellGeneratorFieldMask,
+                     false,
+                     (FieldAccessMethod) &TreeBase::getSFCellGenerator)
 };
 
 
@@ -259,6 +270,7 @@ TreeBase::TreeBase(void) :
     _sfToggleClickCount       (UInt32(2)), 
     _sfVisibleRowCount        (UInt32(10)), 
     _sfCellEditor             (CellEditorPtr(NullFC)), 
+    _sfCellGenerator          (TreeComponentGeneratorPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -277,6 +289,7 @@ TreeBase::TreeBase(const TreeBase &source) :
     _sfToggleClickCount       (source._sfToggleClickCount       ), 
     _sfVisibleRowCount        (source._sfVisibleRowCount        ), 
     _sfCellEditor             (source._sfCellEditor             ), 
+    _sfCellGenerator          (source._sfCellGenerator          ), 
     Inherited                 (source)
 {
 }
@@ -338,6 +351,11 @@ UInt32 TreeBase::getBinSize(const BitVector &whichField)
         returnValue += _sfCellEditor.getBinSize();
     }
 
+    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
+    {
+        returnValue += _sfCellGenerator.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -390,6 +408,11 @@ void TreeBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (CellEditorFieldMask & whichField))
     {
         _sfCellEditor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
+    {
+        _sfCellGenerator.copyToBin(pMem);
     }
 
 
@@ -445,6 +468,11 @@ void TreeBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfCellEditor.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
+    {
+        _sfCellGenerator.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -482,6 +510,9 @@ void TreeBase::executeSyncImpl(      TreeBase *pOther,
     if(FieldBits::NoField != (CellEditorFieldMask & whichField))
         _sfCellEditor.syncWith(pOther->_sfCellEditor);
 
+    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
+        _sfCellGenerator.syncWith(pOther->_sfCellGenerator);
+
 
 }
 #else
@@ -518,6 +549,9 @@ void TreeBase::executeSyncImpl(      TreeBase *pOther,
 
     if(FieldBits::NoField != (CellEditorFieldMask & whichField))
         _sfCellEditor.syncWith(pOther->_sfCellEditor);
+
+    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
+        _sfCellGenerator.syncWith(pOther->_sfCellGenerator);
 
 
 

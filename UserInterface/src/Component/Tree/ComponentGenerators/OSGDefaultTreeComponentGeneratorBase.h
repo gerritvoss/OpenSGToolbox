@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Tree
+ **     class DefaultTreeComponentGenerator
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGTREEBASE_H_
-#define _OSGTREEBASE_H_
+#ifndef _OSGDEFAULTTREECOMPONENTGENERATORBASE_H_
+#define _OSGDEFAULTTREECOMPONENTGENERATORBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,64 +65,67 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "OSGTreeComponentGenerator.h" // Parent
 
-#include <OpenSG/OSGBoolFields.h> // Editable type
-#include <OpenSG/OSGBoolFields.h> // InvokesStopCellEditing type
-#include <OpenSG/OSGBoolFields.h> // RootVisible type
-#include <OpenSG/OSGUInt32Fields.h> // RowHeight type
-#include <OpenSG/OSGBoolFields.h> // ScrollsOnExpand type
-#include <OpenSG/OSGBoolFields.h> // ShowsRootHandles type
-#include <OpenSG/OSGUInt32Fields.h> // ToggleClickCount type
-#include <OpenSG/OSGUInt32Fields.h> // VisibleRowCount type
-#include "Editors/OSGCellEditorFields.h" // CellEditor type
-#include "ComponentGenerators/OSGTreeComponentGeneratorFields.h" // CellGenerator type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // ExpandedDrawObjectPrototype type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // NotExpandedDrawObjectPrototype type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // LeafDrawObjectPrototype type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // NonLeafDrawObjectPrototype type
+#include "Component/Misc/OSGUIDrawObjectCanvas.h" // ExpandedNonLeafDrawObjectPrototype type
+#include "Component/Text/OSGLabelFields.h" // NodeLabelPrototype type
+#include "Background/OSGUIBackgroundFields.h" // SelectedBackground type
+#include "Background/OSGUIBackgroundFields.h" // NonSelectedBackground type
+#include "Border/OSGBorderFields.h" // SelectedBorder type
+#include <OpenSG/OSGColor4fFields.h> // SelectedTextColor type
+#include <OpenSG/OSGColor4fFields.h> // NonSelectedTextColor type
 
-#include "OSGTreeFields.h"
+#include "OSGDefaultTreeComponentGeneratorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Tree;
+class DefaultTreeComponentGenerator;
 class BinaryDataHandler;
 
-//! \brief Tree Base Class.
+//! \brief DefaultTreeComponentGenerator Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGeneratorBase : public TreeComponentGenerator
 {
   private:
 
-    typedef Container    Inherited;
+    typedef TreeComponentGenerator    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef TreePtr  Ptr;
+    typedef DefaultTreeComponentGeneratorPtr  Ptr;
 
     enum
     {
-        EditableFieldId               = Inherited::NextFieldId,
-        InvokesStopCellEditingFieldId = EditableFieldId               + 1,
-        RootVisibleFieldId            = InvokesStopCellEditingFieldId + 1,
-        RowHeightFieldId              = RootVisibleFieldId            + 1,
-        ScrollsOnExpandFieldId        = RowHeightFieldId              + 1,
-        ShowsRootHandlesFieldId       = ScrollsOnExpandFieldId        + 1,
-        ToggleClickCountFieldId       = ShowsRootHandlesFieldId       + 1,
-        VisibleRowCountFieldId        = ToggleClickCountFieldId       + 1,
-        CellEditorFieldId             = VisibleRowCountFieldId        + 1,
-        CellGeneratorFieldId          = CellEditorFieldId             + 1,
-        NextFieldId                   = CellGeneratorFieldId          + 1
+        ExpandedDrawObjectPrototypeFieldId        = Inherited::NextFieldId,
+        NotExpandedDrawObjectPrototypeFieldId     = ExpandedDrawObjectPrototypeFieldId        + 1,
+        LeafDrawObjectPrototypeFieldId            = NotExpandedDrawObjectPrototypeFieldId     + 1,
+        NonLeafDrawObjectPrototypeFieldId         = LeafDrawObjectPrototypeFieldId            + 1,
+        ExpandedNonLeafDrawObjectPrototypeFieldId = NonLeafDrawObjectPrototypeFieldId         + 1,
+        NodeLabelPrototypeFieldId                 = ExpandedNonLeafDrawObjectPrototypeFieldId + 1,
+        SelectedBackgroundFieldId                 = NodeLabelPrototypeFieldId                 + 1,
+        NonSelectedBackgroundFieldId              = SelectedBackgroundFieldId                 + 1,
+        SelectedBorderFieldId                     = NonSelectedBackgroundFieldId              + 1,
+        SelectedTextColorFieldId                  = SelectedBorderFieldId                     + 1,
+        NonSelectedTextColorFieldId               = SelectedTextColorFieldId                  + 1,
+        NextFieldId                               = NonSelectedTextColorFieldId               + 1
     };
 
-    static const OSG::BitVector EditableFieldMask;
-    static const OSG::BitVector InvokesStopCellEditingFieldMask;
-    static const OSG::BitVector RootVisibleFieldMask;
-    static const OSG::BitVector RowHeightFieldMask;
-    static const OSG::BitVector ScrollsOnExpandFieldMask;
-    static const OSG::BitVector ShowsRootHandlesFieldMask;
-    static const OSG::BitVector ToggleClickCountFieldMask;
-    static const OSG::BitVector VisibleRowCountFieldMask;
-    static const OSG::BitVector CellEditorFieldMask;
-    static const OSG::BitVector CellGeneratorFieldMask;
+    static const OSG::BitVector ExpandedDrawObjectPrototypeFieldMask;
+    static const OSG::BitVector NotExpandedDrawObjectPrototypeFieldMask;
+    static const OSG::BitVector LeafDrawObjectPrototypeFieldMask;
+    static const OSG::BitVector NonLeafDrawObjectPrototypeFieldMask;
+    static const OSG::BitVector ExpandedNonLeafDrawObjectPrototypeFieldMask;
+    static const OSG::BitVector NodeLabelPrototypeFieldMask;
+    static const OSG::BitVector SelectedBackgroundFieldMask;
+    static const OSG::BitVector NonSelectedBackgroundFieldMask;
+    static const OSG::BitVector SelectedBorderFieldMask;
+    static const OSG::BitVector SelectedTextColorFieldMask;
+    static const OSG::BitVector NonSelectedTextColorFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -149,53 +152,57 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFBool              *getSFEditable       (void);
-           SFBool              *getSFInvokesStopCellEditing(void);
-           SFBool              *getSFRootVisible    (void);
-           SFUInt32            *getSFRowHeight      (void);
-           SFBool              *getSFScrollsOnExpand(void);
-           SFBool              *getSFShowsRootHandles(void);
-           SFUInt32            *getSFToggleClickCount(void);
-           SFUInt32            *getSFVisibleRowCount(void);
-           SFCellEditorPtr     *getSFCellEditor     (void);
-           SFTreeComponentGeneratorPtr *getSFCellGenerator  (void);
+           SFUIDrawObjectCanvasPtr *getSFExpandedDrawObjectPrototype(void);
+           SFUIDrawObjectCanvasPtr *getSFNotExpandedDrawObjectPrototype(void);
+           SFUIDrawObjectCanvasPtr *getSFLeafDrawObjectPrototype(void);
+           SFUIDrawObjectCanvasPtr *getSFNonLeafDrawObjectPrototype(void);
+           SFUIDrawObjectCanvasPtr *getSFExpandedNonLeafDrawObjectPrototype(void);
+           SFLabelPtr          *getSFNodeLabelPrototype(void);
+           SFUIBackgroundPtr   *getSFSelectedBackground(void);
+           SFUIBackgroundPtr   *getSFNonSelectedBackground(void);
+           SFBorderPtr         *getSFSelectedBorder (void);
+           SFColor4f           *getSFSelectedTextColor(void);
+           SFColor4f           *getSFNonSelectedTextColor(void);
 
-           bool                &getEditable       (void);
-     const bool                &getEditable       (void) const;
-           bool                &getInvokesStopCellEditing(void);
-     const bool                &getInvokesStopCellEditing(void) const;
-           bool                &getRootVisible    (void);
-     const bool                &getRootVisible    (void) const;
-           UInt32              &getRowHeight      (void);
-     const UInt32              &getRowHeight      (void) const;
-           bool                &getScrollsOnExpand(void);
-     const bool                &getScrollsOnExpand(void) const;
-           bool                &getShowsRootHandles(void);
-     const bool                &getShowsRootHandles(void) const;
-           UInt32              &getToggleClickCount(void);
-     const UInt32              &getToggleClickCount(void) const;
-           UInt32              &getVisibleRowCount(void);
-     const UInt32              &getVisibleRowCount(void) const;
-           CellEditorPtr       &getCellEditor     (void);
-     const CellEditorPtr       &getCellEditor     (void) const;
-           TreeComponentGeneratorPtr &getCellGenerator  (void);
-     const TreeComponentGeneratorPtr &getCellGenerator  (void) const;
+           UIDrawObjectCanvasPtr &getExpandedDrawObjectPrototype(void);
+     const UIDrawObjectCanvasPtr &getExpandedDrawObjectPrototype(void) const;
+           UIDrawObjectCanvasPtr &getNotExpandedDrawObjectPrototype(void);
+     const UIDrawObjectCanvasPtr &getNotExpandedDrawObjectPrototype(void) const;
+           UIDrawObjectCanvasPtr &getLeafDrawObjectPrototype(void);
+     const UIDrawObjectCanvasPtr &getLeafDrawObjectPrototype(void) const;
+           UIDrawObjectCanvasPtr &getNonLeafDrawObjectPrototype(void);
+     const UIDrawObjectCanvasPtr &getNonLeafDrawObjectPrototype(void) const;
+           UIDrawObjectCanvasPtr &getExpandedNonLeafDrawObjectPrototype(void);
+     const UIDrawObjectCanvasPtr &getExpandedNonLeafDrawObjectPrototype(void) const;
+           LabelPtr            &getNodeLabelPrototype(void);
+     const LabelPtr            &getNodeLabelPrototype(void) const;
+           UIBackgroundPtr     &getSelectedBackground(void);
+     const UIBackgroundPtr     &getSelectedBackground(void) const;
+           UIBackgroundPtr     &getNonSelectedBackground(void);
+     const UIBackgroundPtr     &getNonSelectedBackground(void) const;
+           BorderPtr           &getSelectedBorder (void);
+     const BorderPtr           &getSelectedBorder (void) const;
+           Color4f             &getSelectedTextColor(void);
+     const Color4f             &getSelectedTextColor(void) const;
+           Color4f             &getNonSelectedTextColor(void);
+     const Color4f             &getNonSelectedTextColor(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setEditable       ( const bool &value );
-     void setInvokesStopCellEditing( const bool &value );
-     void setRootVisible    ( const bool &value );
-     void setRowHeight      ( const UInt32 &value );
-     void setScrollsOnExpand( const bool &value );
-     void setShowsRootHandles( const bool &value );
-     void setToggleClickCount( const UInt32 &value );
-     void setVisibleRowCount( const UInt32 &value );
-     void setCellEditor     ( const CellEditorPtr &value );
-     void setCellGenerator  ( const TreeComponentGeneratorPtr &value );
+     void setExpandedDrawObjectPrototype( const UIDrawObjectCanvasPtr &value );
+     void setNotExpandedDrawObjectPrototype( const UIDrawObjectCanvasPtr &value );
+     void setLeafDrawObjectPrototype( const UIDrawObjectCanvasPtr &value );
+     void setNonLeafDrawObjectPrototype( const UIDrawObjectCanvasPtr &value );
+     void setExpandedNonLeafDrawObjectPrototype( const UIDrawObjectCanvasPtr &value );
+     void setNodeLabelPrototype( const LabelPtr &value );
+     void setSelectedBackground( const UIBackgroundPtr &value );
+     void setNonSelectedBackground( const UIBackgroundPtr &value );
+     void setSelectedBorder ( const BorderPtr &value );
+     void setSelectedTextColor( const Color4f &value );
+     void setNonSelectedTextColor( const Color4f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -215,22 +222,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
 
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
-
-    static  TreePtr      create          (void); 
-    static  TreePtr      createEmpty     (void); 
-
-    /*! \}                                                                 */
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Copy                                   */
-    /*! \{                                                                 */
-
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
-
-    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -238,31 +229,32 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFBool              _sfEditable;
-    SFBool              _sfInvokesStopCellEditing;
-    SFBool              _sfRootVisible;
-    SFUInt32            _sfRowHeight;
-    SFBool              _sfScrollsOnExpand;
-    SFBool              _sfShowsRootHandles;
-    SFUInt32            _sfToggleClickCount;
-    SFUInt32            _sfVisibleRowCount;
-    SFCellEditorPtr     _sfCellEditor;
-    SFTreeComponentGeneratorPtr   _sfCellGenerator;
+    SFUIDrawObjectCanvasPtr   _sfExpandedDrawObjectPrototype;
+    SFUIDrawObjectCanvasPtr   _sfNotExpandedDrawObjectPrototype;
+    SFUIDrawObjectCanvasPtr   _sfLeafDrawObjectPrototype;
+    SFUIDrawObjectCanvasPtr   _sfNonLeafDrawObjectPrototype;
+    SFUIDrawObjectCanvasPtr   _sfExpandedNonLeafDrawObjectPrototype;
+    SFLabelPtr          _sfNodeLabelPrototype;
+    SFUIBackgroundPtr   _sfSelectedBackground;
+    SFUIBackgroundPtr   _sfNonSelectedBackground;
+    SFBorderPtr         _sfSelectedBorder;
+    SFColor4f           _sfSelectedTextColor;
+    SFColor4f           _sfNonSelectedTextColor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    TreeBase(void);
-    TreeBase(const TreeBase &source);
+    DefaultTreeComponentGeneratorBase(void);
+    DefaultTreeComponentGeneratorBase(const DefaultTreeComponentGeneratorBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TreeBase(void); 
+    virtual ~DefaultTreeComponentGeneratorBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -270,13 +262,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      TreeBase *pOther,
+    void executeSyncImpl(      DefaultTreeComponentGeneratorBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      TreeBase *pOther,
+    void executeSyncImpl(      DefaultTreeComponentGeneratorBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -306,7 +298,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const TreeBase &source);
+    void operator =(const DefaultTreeComponentGeneratorBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -314,17 +306,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
 //---------------------------------------------------------------------------
 
 
-typedef TreeBase *TreeBaseP;
+typedef DefaultTreeComponentGeneratorBase *DefaultTreeComponentGeneratorBaseP;
 
-typedef osgIF<TreeBase::isNodeCore,
-              CoredNodePtr<Tree>,
+typedef osgIF<DefaultTreeComponentGeneratorBase::isNodeCore,
+              CoredNodePtr<DefaultTreeComponentGenerator>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet TreeNodePtr;
+              >::_IRet DefaultTreeComponentGeneratorNodePtr;
 
-typedef RefPtr<TreePtr> TreeRefPtr;
+typedef RefPtr<DefaultTreeComponentGeneratorPtr> DefaultTreeComponentGeneratorRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGTREEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGDEFAULTTREECOMPONENTGENERATORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGTREEBASE_H_ */
+#endif /* _OSGDEFAULTTREECOMPONENTGENERATORBASE_H_ */

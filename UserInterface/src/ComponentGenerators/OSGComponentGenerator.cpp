@@ -36,93 +36,103 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGTREE_H_
-#define _OSGTREE_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEUSERINTERFACELIB
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGTreeBase.h"
-#include "Component/Tree/Model/OSGTreeModel.h"
-#include "Component/Tree/Model/OSGTreeModelListener.h"
-#include "Component/Tree/Selection/OSGTreeSelectionModel.h"
-#include "Component/Tree/Selection/OSGTreeSelectionListener.h"
+#include "OSGComponentGenerator.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Tree class. See \ref 
-           PageUserInterfaceTree for a description.
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class osg::ComponentGenerator
+A UI ComponentGenerator. 
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void ComponentGenerator::initMethod (void)
 {
-  private:
+}
 
-    typedef TreeBase Inherited;
 
-    /*==========================  PUBLIC  =================================*/
-  public:
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
-    /*! \{                                                                 */
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+/*----------------------- constructors & destructors ----------------------*/
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
+ComponentGenerator::ComponentGenerator(void) :
+    Inherited()
+{
+}
 
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
+ComponentGenerator::ComponentGenerator(const ComponentGenerator &source) :
+    Inherited(source)
+{
+}
 
-    /*! \}                                                                 */
-    /*=========================  PROTECTED  ===============================*/
-  protected:
+ComponentGenerator::~ComponentGenerator(void)
+{
+}
 
-    // Variables should all be in TreeBase.
+/*----------------------------- class specific ----------------------------*/
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                  Constructors                                */
-    /*! \{                                                                 */
+void ComponentGenerator::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
 
-    Tree(void);
-    Tree(const Tree &source);
+void ComponentGenerator::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump ComponentGenerator NI" << std::endl;
+}
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Destructors                                */
-    /*! \{                                                                 */
 
-    virtual ~Tree(void); 
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
 
-    /*! \}                                                                 */
-    
-    /*==========================  PRIVATE  ================================*/
-  private:
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
 
-    friend class FieldContainer;
-    friend class TreeBase;
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
 
-    static void initMethod(void);
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGCOMPONENTGENERATORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGCOMPONENTGENERATORBASE_INLINE_CVSID;
 
-    // prohibit default functions (move to 'public' if you need one)
+    static Char8 cvsid_fields_hpp[] = OSGCOMPONENTGENERATORFIELDS_HEADER_CVSID;
+}
 
-    void operator =(const Tree &source);
-};
-
-typedef Tree *TreeP;
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
 
 OSG_END_NAMESPACE
 
-#include "OSGTreeBase.inl"
-#include "OSGTree.inl"
-
-#define OSGTREE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
-#endif /* _OSGTREE_H_ */

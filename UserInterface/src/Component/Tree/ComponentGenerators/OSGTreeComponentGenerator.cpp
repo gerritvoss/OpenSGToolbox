@@ -47,8 +47,9 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGVariableHeightTreeLayoutCache.h"
-#include "OSGTreeSelectionListener.h"
+#include "OSGTreeComponentGenerator.h"
+#include "Component/Tree/OSGTree.h"
+#include "Component/OSGComponent.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -56,8 +57,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::VariableHeightTreeLayoutCache
-A VariableHeightTreeLayoutCache. 
+/*! \class osg::TreeComponentGenerator
+A UI Tree ComponentGenerator. 
 */
 
 /***************************************************************************\
@@ -68,99 +69,25 @@ A VariableHeightTreeLayoutCache.
  *                           Class methods                                 *
 \***************************************************************************/
 
+void TreeComponentGenerator::initMethod (void)
+{
+}
+
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-void VariableHeightTreeLayoutCache::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight, TreePath path, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn) const
+ComponentPtr TreeComponentGenerator::getComponent(ComponentPtr Parent, SharedFieldPtr Value, bool IsSelected, bool HasFocus)
 {
-	//TODO:Implement
-}
-
-bool VariableHeightTreeLayoutCache::isVisible(const TreePath& path) const const
-{
-	//TODO: Implement
-	return false;
-}
-
-TreePath VariableHeightTreeLayoutCache::getPathClosestTo(const UInt32& x, const UInt32& y) const
-{
-	//TODO:Implement
-	return TreePath(SharedFieldPtr());
-}
-
-TreePath VariableHeightTreeLayoutCache::getPathForRow(const UInt32& row) const
-{
-	//TODO:Implement
-	return TreePath(SharedFieldPtr());
-}
-
-UInt32 VariableHeightTreeLayoutCache::getPreferredHeight(void) const
-{
-	//TODO: Implement
-	return 0;
-}
-
-UInt32 VariableHeightTreeLayoutCache::getPreferredWidth(Pnt2s& TopLeft, Pnt2s& BottomRight) const
-{
-	//TODO: Implement
-	return 0;
-}
-
-UInt32 VariableHeightTreeLayoutCache::getRowCount(void) const
-{
-	//TODO: Implement
-	return 0;
-}
-
-Int32 VariableHeightTreeLayoutCache::getRowForPath(const TreePath& path) const
-{
-	//TODO: Implement
-	return 0;
-}
-
-UInt32 VariableHeightTreeLayoutCache::getVisibleChildCount(const TreePath& path) const
-{
-	//TODO: Implement
-	return 0;
-}
-
-
-void VariableHeightTreeLayoutCache::invalidatePathBounds(const TreePath& path)
-{
-	//TODO:Implement
-}
-
-void VariableHeightTreeLayoutCache::invalidateSizes(void)
-{
-	//TODO:Implement
-}
-
-bool VariableHeightTreeLayoutCache::isExpanded(const TreePath& path) const
-{
-	//TODO: Implement
-	return false;
-}
-
-void VariableHeightTreeLayoutCache::setExpanded(const TreePath& path, bool isExpanded)
-{
-	//TODO:Implement
-}
-
-void VariableHeightTreeLayoutCache::setModel(TreeModelPtr newModel)
-{
-	//TODO:Implement
-}
-
-
-void VariableHeightTreeLayoutCache::setRootVisible(bool rootVisible)
-{
-	//TODO:Implement
-}
-
-void VariableHeightTreeLayoutCache::setRowHeight(const UInt32& rowHeight)
-{
-	//TODO:Implement
+    if(Parent->getType().isDerivedFrom(Tree::getClassType()))
+    {
+        return getTreeComponent(Tree::Ptr::dcast(Parent), Value, IsSelected, false, true, 0, HasFocus);
+    }
+    else
+    {
+        return getTreeComponent(NullFC, Value, IsSelected, false, true, 0, HasFocus);
+    }
 }
 
 /*-------------------------------------------------------------------------*\
@@ -169,7 +96,33 @@ void VariableHeightTreeLayoutCache::setRowHeight(const UInt32& rowHeight)
 
 /*----------------------- constructors & destructors ----------------------*/
 
+TreeComponentGenerator::TreeComponentGenerator(void) :
+    Inherited()
+{
+}
+
+TreeComponentGenerator::TreeComponentGenerator(const TreeComponentGenerator &source) :
+    Inherited(source)
+{
+}
+
+TreeComponentGenerator::~TreeComponentGenerator(void)
+{
+}
+
 /*----------------------------- class specific ----------------------------*/
+
+void TreeComponentGenerator::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void TreeComponentGenerator::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump TreeComponentGenerator NI" << std::endl;
+}
+
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
@@ -181,6 +134,15 @@ void VariableHeightTreeLayoutCache::setRowHeight(const UInt32& rowHeight)
 #ifdef OSG_LINUX_ICC
 #pragma warning( disable : 177 )
 #endif
+
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGTREECOMPONENTGENERATORBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGTREECOMPONENTGENERATORBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGTREECOMPONENTGENERATORFIELDS_HEADER_CVSID;
+}
 
 #ifdef __sgi
 #pragma reset woff 1174

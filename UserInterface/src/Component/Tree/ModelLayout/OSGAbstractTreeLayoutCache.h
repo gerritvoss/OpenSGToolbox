@@ -45,7 +45,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGTreeRowMapper.h"
+#include "Component/Tree/OSGTreeRowMapper.h"
 #include "Component/Tree/OSGTreePath.h"
 #include "Component/Tree/Model/OSGTreeModel.h"
 #include "Component/Tree/Model/OSGTreeModelListener.h"

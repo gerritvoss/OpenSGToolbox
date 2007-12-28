@@ -50,7 +50,7 @@
 #include "OSGTreeSelectionListener.h"
 
 #include "Component/Tree/OSGTreePath.h"
-#include "Component/Tree/Selection/OSGTreeRowMapper.h"
+#include "Component/Tree/OSGTreeRowMapper.h"
 #include "Event/OSGChangeListener.h"
 
 OSG_BEGIN_NAMESPACE

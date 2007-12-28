@@ -46,7 +46,7 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGAbstractTreeSelectionModel.h"
-#include "Component/Tree/Selection/OSGTreeRowMapper.h"
+#include "Component/Tree/OSGTreeRowMapper.h"
 #include <vector>
 #include <list>
 #include <set>

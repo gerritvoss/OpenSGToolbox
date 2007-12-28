@@ -67,6 +67,16 @@
 
 #include "OSGLayoutConstraints.h" // Parent
 
+#include "Layout/Spring/OSGLayoutSpringFields.h" // NorthSpring type
+#include "Layout/Spring/OSGLayoutSpringFields.h" // WestSpring type
+#include "Layout/Spring/OSGLayoutSpringFields.h" // EastSpring type
+#include "Layout/Spring/OSGLayoutSpringFields.h" // SouthSpring type
+#include "Layout/Spring/OSGLayoutSpringFields.h" // WidthSpring type
+#include "Layout/Spring/OSGLayoutSpringFields.h" // HeightSpring type
+#include "Layout/Spring/OSGLayoutSpringFields.h" // HorizontalCenterSpring type
+#include "Layout/Spring/OSGLayoutSpringFields.h" // VerticalCenterSpring type
+#include "Layout/Spring/OSGLayoutSpringFields.h" // BaselineSpring type
+#include "Component/OSGComponentFields.h" // Component type
 
 #include "OSGSpringLayoutConstraintsFields.h"
 
@@ -88,6 +98,32 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraintsBase : public Layou
 
     typedef SpringLayoutConstraintsPtr  Ptr;
 
+    enum
+    {
+        NorthSpringFieldId            = Inherited::NextFieldId,
+        WestSpringFieldId             = NorthSpringFieldId            + 1,
+        EastSpringFieldId             = WestSpringFieldId             + 1,
+        SouthSpringFieldId            = EastSpringFieldId             + 1,
+        WidthSpringFieldId            = SouthSpringFieldId            + 1,
+        HeightSpringFieldId           = WidthSpringFieldId            + 1,
+        HorizontalCenterSpringFieldId = HeightSpringFieldId           + 1,
+        VerticalCenterSpringFieldId   = HorizontalCenterSpringFieldId + 1,
+        BaselineSpringFieldId         = VerticalCenterSpringFieldId   + 1,
+        ComponentFieldId              = BaselineSpringFieldId         + 1,
+        NextFieldId                   = ComponentFieldId              + 1
+    };
+
+    static const OSG::BitVector NorthSpringFieldMask;
+    static const OSG::BitVector WestSpringFieldMask;
+    static const OSG::BitVector EastSpringFieldMask;
+    static const OSG::BitVector SouthSpringFieldMask;
+    static const OSG::BitVector WidthSpringFieldMask;
+    static const OSG::BitVector HeightSpringFieldMask;
+    static const OSG::BitVector HorizontalCenterSpringFieldMask;
+    static const OSG::BitVector VerticalCenterSpringFieldMask;
+    static const OSG::BitVector BaselineSpringFieldMask;
+    static const OSG::BitVector ComponentFieldMask;
+
 
     static const OSG::BitVector MTInfluenceMask;
 
@@ -107,6 +143,59 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraintsBase : public Layou
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFLayoutSpringPtr   *getSFNorthSpring    (void);
+           SFLayoutSpringPtr   *getSFWestSpring     (void);
+           SFLayoutSpringPtr   *getSFEastSpring     (void);
+           SFLayoutSpringPtr   *getSFSouthSpring    (void);
+           SFLayoutSpringPtr   *getSFWidthSpring    (void);
+           SFLayoutSpringPtr   *getSFHeightSpring   (void);
+           SFLayoutSpringPtr   *getSFHorizontalCenterSpring(void);
+           SFLayoutSpringPtr   *getSFVerticalCenterSpring(void);
+           SFLayoutSpringPtr   *getSFBaselineSpring (void);
+           SFComponentPtr      *getSFComponent      (void);
+
+           LayoutSpringPtr     &getNorthSpring    (void);
+     const LayoutSpringPtr     &getNorthSpring    (void) const;
+           LayoutSpringPtr     &getWestSpring     (void);
+     const LayoutSpringPtr     &getWestSpring     (void) const;
+           LayoutSpringPtr     &getEastSpring     (void);
+     const LayoutSpringPtr     &getEastSpring     (void) const;
+           LayoutSpringPtr     &getSouthSpring    (void);
+     const LayoutSpringPtr     &getSouthSpring    (void) const;
+           LayoutSpringPtr     &getWidthSpring    (void);
+     const LayoutSpringPtr     &getWidthSpring    (void) const;
+           LayoutSpringPtr     &getHeightSpring   (void);
+     const LayoutSpringPtr     &getHeightSpring   (void) const;
+           LayoutSpringPtr     &getHorizontalCenterSpring(void);
+     const LayoutSpringPtr     &getHorizontalCenterSpring(void) const;
+           LayoutSpringPtr     &getVerticalCenterSpring(void);
+     const LayoutSpringPtr     &getVerticalCenterSpring(void) const;
+           LayoutSpringPtr     &getBaselineSpring (void);
+     const LayoutSpringPtr     &getBaselineSpring (void) const;
+           ComponentPtr        &getComponent      (void);
+     const ComponentPtr        &getComponent      (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setNorthSpring    ( const LayoutSpringPtr &value );
+     void setWestSpring     ( const LayoutSpringPtr &value );
+     void setEastSpring     ( const LayoutSpringPtr &value );
+     void setSouthSpring    ( const LayoutSpringPtr &value );
+     void setWidthSpring    ( const LayoutSpringPtr &value );
+     void setHeightSpring   ( const LayoutSpringPtr &value );
+     void setHorizontalCenterSpring( const LayoutSpringPtr &value );
+     void setVerticalCenterSpring( const LayoutSpringPtr &value );
+     void setBaselineSpring ( const LayoutSpringPtr &value );
+     void setComponent      ( const ComponentPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -145,6 +234,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraintsBase : public Layou
     /*=========================  PROTECTED  ===============================*/
   protected:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFLayoutSpringPtr   _sfNorthSpring;
+    SFLayoutSpringPtr   _sfWestSpring;
+    SFLayoutSpringPtr   _sfEastSpring;
+    SFLayoutSpringPtr   _sfSouthSpring;
+    SFLayoutSpringPtr   _sfWidthSpring;
+    SFLayoutSpringPtr   _sfHeightSpring;
+    SFLayoutSpringPtr   _sfHorizontalCenterSpring;
+    SFLayoutSpringPtr   _sfVerticalCenterSpring;
+    SFLayoutSpringPtr   _sfBaselineSpring;
+    SFComponentPtr      _sfComponent;
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -196,6 +301,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraintsBase : public Layou
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

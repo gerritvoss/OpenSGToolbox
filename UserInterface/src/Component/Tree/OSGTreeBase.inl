@@ -159,6 +159,13 @@ SFCellEditorPtr *TreeBase::getSFCellEditor(void)
     return &_sfCellEditor;
 }
 
+//! Get the Tree::_sfCellGenerator field.
+inline
+SFTreeComponentGeneratorPtr *TreeBase::getSFCellGenerator(void)
+{
+    return &_sfCellGenerator;
+}
+
 
 //! Get the value of the Tree::_sfEditable field.
 inline
@@ -347,6 +354,27 @@ inline
 void TreeBase::setCellEditor(const CellEditorPtr &value)
 {
     _sfCellEditor.setValue(value);
+}
+
+//! Get the value of the Tree::_sfCellGenerator field.
+inline
+TreeComponentGeneratorPtr &TreeBase::getCellGenerator(void)
+{
+    return _sfCellGenerator.getValue();
+}
+
+//! Get the value of the Tree::_sfCellGenerator field.
+inline
+const TreeComponentGeneratorPtr &TreeBase::getCellGenerator(void) const
+{
+    return _sfCellGenerator.getValue();
+}
+
+//! Set the value of the Tree::_sfCellGenerator field.
+inline
+void TreeBase::setCellGenerator(const TreeComponentGeneratorPtr &value)
+{
+    _sfCellGenerator.setValue(value);
 }
 
 

@@ -648,6 +648,11 @@ bool Component::takeFocus(bool Temporary)
     }
 }
 
+Int16 Component::getBaseline(const Int16& x, const Int16& y) const
+{
+    return -1;
+}
+
 Vec2s Component::getPreferredScrollableViewportSize(void)
 {
     return getPreferredSize();

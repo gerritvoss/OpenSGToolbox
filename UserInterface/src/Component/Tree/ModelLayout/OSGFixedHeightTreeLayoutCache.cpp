@@ -48,7 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGFixedHeightTreeLayoutCache.h"
-#include "OSGTreeSelectionListener.h"
+#include "Component/Tree/Selection/OSGTreeSelectionListener.h"
 
 OSG_BEGIN_NAMESPACE
 

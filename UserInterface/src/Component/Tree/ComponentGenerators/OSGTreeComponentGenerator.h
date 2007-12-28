@@ -36,32 +36,32 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGSPRINGLAYOUTCONSTRAINTS_H_
-#define _OSGSPRINGLAYOUTCONSTRAINTS_H_
+#ifndef _OSGTREECOMPONENTGENERATOR_H_
+#define _OSGTREECOMPONENTGENERATOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
-#include "OSGSpringLayoutConstraintsBase.h"
-#include "Layout/Spring/OSGLayoutSpringFields.h"
+#include "OSGTreeComponentGeneratorBase.h"
+#include "Component/Tree/OSGTreeFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief SpringLayoutConstraints class. See \ref 
-           PageUserInterfaceSpringLayoutConstraints for a description.
+/*! \brief TreeComponentGenerator class. See \ref 
+           PageUserInterfaceTreeComponentGenerator for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraints : public SpringLayoutConstraintsBase
+class OSG_USERINTERFACELIB_DLLMAPPING TreeComponentGenerator : public TreeComponentGeneratorBase
 {
   private:
 
-    typedef SpringLayoutConstraintsBase Inherited;
+    typedef TreeComponentGeneratorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
-      enum Edge {NO_EDGE, NORTH_EDGE, Y_EDGE, SOUTH_EDGE, X_EDGE, EAST_EDGE, WEST_EDGE, HORIZONTAL_CENTER_EDGE, VERTICAL_CENTER_EDGE, BASELINE_EDGE, WIDTH_EDGE, HEIGHT_EDGE};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -79,73 +79,28 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraints : public SpringLay
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
-
-    static  SpringLayoutConstraintsPtr create(LayoutSpringPtr XSpring, LayoutSpringPtr YSpring); 
-    static  SpringLayoutConstraintsPtr create(LayoutSpringPtr XSpring, LayoutSpringPtr YSpring, LayoutSpringPtr WidthSpring, LayoutSpringPtr HeightSpring); 
-    static  SpringLayoutConstraintsPtr create(ComponentPtr TheComponent); 
     
-    /*! \}                                                                 */
+	virtual ComponentPtr getTreeComponent(TreePtr Parent, SharedFieldPtr Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus) = 0;
     
-    void setX(LayoutSpringPtr x);
-    LayoutSpringPtr getX(void);
-    
-    void setY(LayoutSpringPtr y);
-    LayoutSpringPtr getY(void);
-    
-    void setWidth(LayoutSpringPtr width);
-    LayoutSpringPtr getWidth(void);
-    
-    void setHeight(LayoutSpringPtr height);
-    LayoutSpringPtr getHeight(void);
-    
-    void setNorth(LayoutSpringPtr north);
-    LayoutSpringPtr getNorth(void);
-    
-    void setEast(LayoutSpringPtr east);
-    LayoutSpringPtr getEast(void);
-    
-    void setSouth(LayoutSpringPtr south);
-    LayoutSpringPtr getSouth(void);
-    
-    void setWest(LayoutSpringPtr west);
-    LayoutSpringPtr getWest(void);
-    
-    void setHorizontalCenter(LayoutSpringPtr horizontalCenter);
-    LayoutSpringPtr getHorizontalCenter(void);
-    
-    void setVerticalCenter(LayoutSpringPtr verticalCenter);
-    LayoutSpringPtr getVerticalCenter(void);
-
-    void setBaseline(LayoutSpringPtr baseline);
-    LayoutSpringPtr getBaseline(void);
-
-    void setConstraint(UInt32 Edge, LayoutSpringPtr s);
-    
-    LayoutSpringPtr getConstraint(UInt32 Edge);
-    
-    void reset(void);
-
+	virtual ComponentPtr getComponent(ComponentPtr Parent, SharedFieldPtr Value, bool IsSelected, bool HasFocus);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in SpringLayoutConstraintsBase.
+    // Variables should all be in TreeComponentGeneratorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    SpringLayoutConstraints(void);
-    SpringLayoutConstraints(const SpringLayoutConstraints &source);
+    TreeComponentGenerator(void);
+    TreeComponentGenerator(const TreeComponentGenerator &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SpringLayoutConstraints(void); 
+    virtual ~TreeComponentGenerator(void); 
 
     /*! \}                                                                 */
     
@@ -153,38 +108,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraints : public SpringLay
   private:
 
     friend class FieldContainer;
-    friend class SpringLayoutConstraintsBase;
+    friend class TreeComponentGeneratorBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const SpringLayoutConstraints &source);
-    
-    LayoutSpringPtr sum(LayoutSpringPtr s1, LayoutSpringPtr s2);
-
-    LayoutSpringPtr difference(LayoutSpringPtr s1, LayoutSpringPtr s2);
-
-    LayoutSpringPtr scale(LayoutSpringPtr s, Real32 factor);
-    
-    Int32 getBaselineFromHeight(const Int32& height) const;
-
-    Int32 getHeightFromBaseLine(const Int32& baseline) const;
-
-    LayoutSpringPtr heightToRelativeBaseline(LayoutSpringPtr s);
-
-    LayoutSpringPtr relativeBaselineToHeight(LayoutSpringPtr s);
-    
-    bool defined(const UInt32 Edge);
+    void operator =(const TreeComponentGenerator &source);
 };
 
-typedef SpringLayoutConstraints *SpringLayoutConstraintsP;
+typedef TreeComponentGenerator *TreeComponentGeneratorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGSpringLayoutConstraintsBase.inl"
-#include "OSGSpringLayoutConstraints.inl"
+#include "OSGTreeComponentGeneratorBase.inl"
+#include "OSGTreeComponentGenerator.inl"
 
-#define OSGSPRINGLAYOUTCONSTRAINTS_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGTREECOMPONENTGENERATOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGSPRINGLAYOUTCONSTRAINTS_H_ */
+#endif /* _OSGTREECOMPONENTGENERATOR_H_ */

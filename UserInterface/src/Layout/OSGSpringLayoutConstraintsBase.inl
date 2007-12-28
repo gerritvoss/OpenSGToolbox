@@ -96,6 +96,286 @@ SpringLayoutConstraintsPtr SpringLayoutConstraintsBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the SpringLayoutConstraints::_sfNorthSpring field.
+inline
+SFLayoutSpringPtr *SpringLayoutConstraintsBase::getSFNorthSpring(void)
+{
+    return &_sfNorthSpring;
+}
+
+//! Get the SpringLayoutConstraints::_sfWestSpring field.
+inline
+SFLayoutSpringPtr *SpringLayoutConstraintsBase::getSFWestSpring(void)
+{
+    return &_sfWestSpring;
+}
+
+//! Get the SpringLayoutConstraints::_sfEastSpring field.
+inline
+SFLayoutSpringPtr *SpringLayoutConstraintsBase::getSFEastSpring(void)
+{
+    return &_sfEastSpring;
+}
+
+//! Get the SpringLayoutConstraints::_sfSouthSpring field.
+inline
+SFLayoutSpringPtr *SpringLayoutConstraintsBase::getSFSouthSpring(void)
+{
+    return &_sfSouthSpring;
+}
+
+//! Get the SpringLayoutConstraints::_sfWidthSpring field.
+inline
+SFLayoutSpringPtr *SpringLayoutConstraintsBase::getSFWidthSpring(void)
+{
+    return &_sfWidthSpring;
+}
+
+//! Get the SpringLayoutConstraints::_sfHeightSpring field.
+inline
+SFLayoutSpringPtr *SpringLayoutConstraintsBase::getSFHeightSpring(void)
+{
+    return &_sfHeightSpring;
+}
+
+//! Get the SpringLayoutConstraints::_sfHorizontalCenterSpring field.
+inline
+SFLayoutSpringPtr *SpringLayoutConstraintsBase::getSFHorizontalCenterSpring(void)
+{
+    return &_sfHorizontalCenterSpring;
+}
+
+//! Get the SpringLayoutConstraints::_sfVerticalCenterSpring field.
+inline
+SFLayoutSpringPtr *SpringLayoutConstraintsBase::getSFVerticalCenterSpring(void)
+{
+    return &_sfVerticalCenterSpring;
+}
+
+//! Get the SpringLayoutConstraints::_sfBaselineSpring field.
+inline
+SFLayoutSpringPtr *SpringLayoutConstraintsBase::getSFBaselineSpring(void)
+{
+    return &_sfBaselineSpring;
+}
+
+//! Get the SpringLayoutConstraints::_sfComponent field.
+inline
+SFComponentPtr *SpringLayoutConstraintsBase::getSFComponent(void)
+{
+    return &_sfComponent;
+}
+
+
+//! Get the value of the SpringLayoutConstraints::_sfNorthSpring field.
+inline
+LayoutSpringPtr &SpringLayoutConstraintsBase::getNorthSpring(void)
+{
+    return _sfNorthSpring.getValue();
+}
+
+//! Get the value of the SpringLayoutConstraints::_sfNorthSpring field.
+inline
+const LayoutSpringPtr &SpringLayoutConstraintsBase::getNorthSpring(void) const
+{
+    return _sfNorthSpring.getValue();
+}
+
+//! Set the value of the SpringLayoutConstraints::_sfNorthSpring field.
+inline
+void SpringLayoutConstraintsBase::setNorthSpring(const LayoutSpringPtr &value)
+{
+    _sfNorthSpring.setValue(value);
+}
+
+//! Get the value of the SpringLayoutConstraints::_sfWestSpring field.
+inline
+LayoutSpringPtr &SpringLayoutConstraintsBase::getWestSpring(void)
+{
+    return _sfWestSpring.getValue();
+}
+
+//! Get the value of the SpringLayoutConstraints::_sfWestSpring field.
+inline
+const LayoutSpringPtr &SpringLayoutConstraintsBase::getWestSpring(void) const
+{
+    return _sfWestSpring.getValue();
+}
+
+//! Set the value of the SpringLayoutConstraints::_sfWestSpring field.
+inline
+void SpringLayoutConstraintsBase::setWestSpring(const LayoutSpringPtr &value)
+{
+    _sfWestSpring.setValue(value);
+}
+
+//! Get the value of the SpringLayoutConstraints::_sfEastSpring field.
+inline
+LayoutSpringPtr &SpringLayoutConstraintsBase::getEastSpring(void)
+{
+    return _sfEastSpring.getValue();
+}
+
+//! Get the value of the SpringLayoutConstraints::_sfEastSpring field.
+inline
+const LayoutSpringPtr &SpringLayoutConstraintsBase::getEastSpring(void) const
+{
+    return _sfEastSpring.getValue();
+}
+
+//! Set the value of the SpringLayoutConstraints::_sfEastSpring field.
+inline
+void SpringLayoutConstraintsBase::setEastSpring(const LayoutSpringPtr &value)
+{
+    _sfEastSpring.setValue(value);
+}
+
+//! Get the value of the SpringLayoutConstraints::_sfSouthSpring field.
+inline
+LayoutSpringPtr &SpringLayoutConstraintsBase::getSouthSpring(void)
+{
+    return _sfSouthSpring.getValue();
+}
+
+//! Get the value of the SpringLayoutConstraints::_sfSouthSpring field.
+inline
+const LayoutSpringPtr &SpringLayoutConstraintsBase::getSouthSpring(void) const
+{
+    return _sfSouthSpring.getValue();
+}
+
+//! Set the value of the SpringLayoutConstraints::_sfSouthSpring field.
+inline
+void SpringLayoutConstraintsBase::setSouthSpring(const LayoutSpringPtr &value)
+{
+    _sfSouthSpring.setValue(value);
+}
+
+//! Get the value of the SpringLayoutConstraints::_sfWidthSpring field.
+inline
+LayoutSpringPtr &SpringLayoutConstraintsBase::getWidthSpring(void)
+{
+    return _sfWidthSpring.getValue();
+}
+
+//! Get the value of the SpringLayoutConstraints::_sfWidthSpring field.
+inline
+const LayoutSpringPtr &SpringLayoutConstraintsBase::getWidthSpring(void) const
+{
+    return _sfWidthSpring.getValue();
+}
+
+//! Set the value of the SpringLayoutConstraints::_sfWidthSpring field.
+inline
+void SpringLayoutConstraintsBase::setWidthSpring(const LayoutSpringPtr &value)
+{
+    _sfWidthSpring.setValue(value);
+}
+
+//! Get the value of the SpringLayoutConstraints::_sfHeightSpring field.
+inline
+LayoutSpringPtr &SpringLayoutConstraintsBase::getHeightSpring(void)
+{
+    return _sfHeightSpring.getValue();
+}
+
+//! Get the value of the SpringLayoutConstraints::_sfHeightSpring field.
+inline
+const LayoutSpringPtr &SpringLayoutConstraintsBase::getHeightSpring(void) const
+{
+    return _sfHeightSpring.getValue();
+}
+
+//! Set the value of the SpringLayoutConstraints::_sfHeightSpring field.
+inline
+void SpringLayoutConstraintsBase::setHeightSpring(const LayoutSpringPtr &value)
+{
+    _sfHeightSpring.setValue(value);
+}
+
+//! Get the value of the SpringLayoutConstraints::_sfHorizontalCenterSpring field.
+inline
+LayoutSpringPtr &SpringLayoutConstraintsBase::getHorizontalCenterSpring(void)
+{
+    return _sfHorizontalCenterSpring.getValue();
+}
+
+//! Get the value of the SpringLayoutConstraints::_sfHorizontalCenterSpring field.
+inline
+const LayoutSpringPtr &SpringLayoutConstraintsBase::getHorizontalCenterSpring(void) const
+{
+    return _sfHorizontalCenterSpring.getValue();
+}
+
+//! Set the value of the SpringLayoutConstraints::_sfHorizontalCenterSpring field.
+inline
+void SpringLayoutConstraintsBase::setHorizontalCenterSpring(const LayoutSpringPtr &value)
+{
+    _sfHorizontalCenterSpring.setValue(value);
+}
+
+//! Get the value of the SpringLayoutConstraints::_sfVerticalCenterSpring field.
+inline
+LayoutSpringPtr &SpringLayoutConstraintsBase::getVerticalCenterSpring(void)
+{
+    return _sfVerticalCenterSpring.getValue();
+}
+
+//! Get the value of the SpringLayoutConstraints::_sfVerticalCenterSpring field.
+inline
+const LayoutSpringPtr &SpringLayoutConstraintsBase::getVerticalCenterSpring(void) const
+{
+    return _sfVerticalCenterSpring.getValue();
+}
+
+//! Set the value of the SpringLayoutConstraints::_sfVerticalCenterSpring field.
+inline
+void SpringLayoutConstraintsBase::setVerticalCenterSpring(const LayoutSpringPtr &value)
+{
+    _sfVerticalCenterSpring.setValue(value);
+}
+
+//! Get the value of the SpringLayoutConstraints::_sfBaselineSpring field.
+inline
+LayoutSpringPtr &SpringLayoutConstraintsBase::getBaselineSpring(void)
+{
+    return _sfBaselineSpring.getValue();
+}
+
+//! Get the value of the SpringLayoutConstraints::_sfBaselineSpring field.
+inline
+const LayoutSpringPtr &SpringLayoutConstraintsBase::getBaselineSpring(void) const
+{
+    return _sfBaselineSpring.getValue();
+}
+
+//! Set the value of the SpringLayoutConstraints::_sfBaselineSpring field.
+inline
+void SpringLayoutConstraintsBase::setBaselineSpring(const LayoutSpringPtr &value)
+{
+    _sfBaselineSpring.setValue(value);
+}
+
+//! Get the value of the SpringLayoutConstraints::_sfComponent field.
+inline
+ComponentPtr &SpringLayoutConstraintsBase::getComponent(void)
+{
+    return _sfComponent.getValue();
+}
+
+//! Get the value of the SpringLayoutConstraints::_sfComponent field.
+inline
+const ComponentPtr &SpringLayoutConstraintsBase::getComponent(void) const
+{
+    return _sfComponent.getValue();
+}
+
+//! Set the value of the SpringLayoutConstraints::_sfComponent field.
+inline
+void SpringLayoutConstraintsBase::setComponent(const ComponentPtr &value)
+{
+    _sfComponent.setValue(value);
+}
 
 
 OSG_END_NAMESPACE

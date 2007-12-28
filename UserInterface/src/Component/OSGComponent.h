@@ -142,6 +142,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     
     virtual bool isContained(const Pnt2s& p, bool TestAgainstClipBounds = true) const;
 
+    virtual Int16 getBaseline(const Int16& x, const Int16& y) const;
+
     //Returns the tooltip location in this component's coordinate system
     virtual Pnt2s getToolTipLocation(Pnt2s MousePosition);
     virtual ToolTipPtr createToolTip(void);

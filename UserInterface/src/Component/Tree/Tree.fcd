@@ -102,4 +102,14 @@ A UI Tree.
 		access="public"
 	>
    </Field>
+	<Field
+		name="CellGenerator"
+		type="TreeComponentGeneratorPtr"
+		cardinality="single"
+      visibility="external"
+      header="ComponentGenerators/OSGTreeComponentGeneratorFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+   </Field>
 </FieldContainer>
