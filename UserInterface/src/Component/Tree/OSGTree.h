@@ -50,6 +50,7 @@
 #include "Component/Tree/Model/OSGTreeModelListener.h"
 #include "Component/Tree/Selection/OSGTreeSelectionModel.h"
 #include "Component/Tree/Selection/OSGTreeSelectionListener.h"
+#include "Component/Tree/ModelLayout/OSGAbstractTreeLayoutCache.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -82,6 +83,271 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    //Adds the paths between index0 and index1, inclusive, to the selection.
+    void addSelectionInterval(const UInt32& index0, const UInt32& index1);
+
+    //Adds the node identified by the specified TreePath to the current selection.
+    void addSelectionPath(TreePath path);
+
+    //Adds each path in the array of paths to the current selection.
+    void addSelectionPaths(std::vector<TreePath> paths);
+
+    //Adds the path at the specified row to the current selection.
+    void addSelectionRow(const UInt32& row);
+
+    //Adds the paths at each of the specified rows to the current selection.
+    void addSelectionRows(std::vector<UInt32> rows);
+
+    //Adds a listener for TreeExpansion events.
+    //void addTreeExpansionListener(TreeExpansionListener tel);
+
+    //Adds a listener for TreeSelection events.
+    //void addTreeSelectionListener(TreeSelectionListener tsl);
+
+    //Adds a listener for TreeWillExpand events.
+    //void addTreeWillExpandListener(TreeWillExpandListener tel);
+
+    //Cancels the current editing session.
+    void cancelEditing(void);
+
+    //Clears the selection.
+    void clearSelection(void);
+
+    //Ensures that the node identified by the specified path is collapsed and viewable.
+    void collapsePath(TreePath path);
+
+    //Ensures that the node in the specified row is collapsed.
+    void collapseRow(const UInt32& row);
+
+    //Called by the renderers to convert the specified value to text.
+    //String convertValueToText(Object value, bool selected, bool expanded, bool leaf, const UInt32& row, bool hasFocus);
+
+    //Ensures that the node identified by the specified path is expanded and viewable.
+    void expandPath(TreePath path);
+
+    //Ensures that the node in the specified row is expanded and viewable.
+    void expandRow(const UInt32& row);
+
+    //Notifies all listeners that have registered interest for notification on this event type.
+    //void fireTreeCollapsed(TreePath path);
+
+    //Notifies all listeners that have registered interest for notification on this event type.
+    //void fireTreeExpanded(TreePath path);
+
+    //Notifies all listeners that have registered interest for notification on this event type.
+    //void fireTreeWillCollapse(TreePath path);
+
+    //Notifies all listeners that have registered interest for notification on this event type.
+    //void fireTreeWillExpand(TreePath path);
+
+    //Returns the path identified as the anchor.
+    TreePath getAnchorSelectionPath(void) const;
+
+    //Returns the path to the node that is closest to x,y.
+    TreePath getClosestPathForLocation(const UInt32& x, const UInt32& y) const;
+
+    //Returns the row to the node that is closest to x,y.
+    Int32 getClosestRowForLocation(const UInt32& x, const UInt32& y) const;
+
+    //Returns the path to the element that is currently being edited.
+    TreePath getEditingPath(void) const;
+
+    //Returns an Enumeration of the descendants of the path parent that are currently expanded.
+    //Enumeration getExpandedDescendants(TreePath parent) const;
+
+    //Returns the expandsSelectedPaths property.
+    bool getExpandsSelectedPaths(void) const;
+
+    //Returns the last path component in the first node of the current selection.
+    SharedFieldPtr getLastSelectedPathComponent(void) const;
+
+    //Returns the path identified as the lead.
+    TreePath getLeadSelectionPath(void) const;
+
+    //Returns the row index corresponding to the lead path.
+    Int32 getLeadSelectionRow(void) const;
+
+    //Returns the last selected row.
+    Int32 getMaxSelectionRow(void) const;
+
+    //Gets the first selected row.
+    Int32 getMinSelectionRow(void) const;
+
+    //Returns the TreeModel that is providing the data.
+    TreeModelPtr getModel(void) const;
+
+    //Returns the TreePath to the next tree element that begins with a prefix.
+    //TreePath getNextMatch(String prefix, const UInt32& startingRow, Position.Bias bias) const;
+
+    //Returns the Rectangle that the specified node will be drawn into.
+    //Rectangle getPathBounds(TreePath path) const;
+
+    //Returns the path for the node at the specified location.
+    TreePath getPathForLocation(const UInt32& x, const UInt32& y) const;
+
+    //Returns the path for the specified row.
+    TreePath getPathForRow(const UInt32& row) const;
+
+    //Returns the Rectangle that the node at the specified row is drawn in.
+    //Rectangle getRowBounds(const UInt32& row) const;
+
+    //Returns the number of rows that are currently being displayed.
+    Int32 getRowCount(void) const;
+
+    //Returns the row for the specified location.
+    Int32 getRowForLocation(const UInt32& x, const UInt32& y) const;
+
+    //Returns the row that displays the node identified by the specified path.
+    Int32 getRowForPath(TreePath path) const;
+
+    //Returns the number of nodes selected.
+    UInt32 getSelectionCount(void) const;
+
+    //Returns the model for selections.
+    TreeSelectionModelPtr getSelectionModel(void) const;
+
+    //Returns the path to the first selected node.
+    TreePath getSelectionPath(void) const;
+
+    //Returns the paths of all selected values.
+    std::vector<TreePath> getSelectionPaths(void) const;
+
+    //Returns all of the currently selected rows.
+    std::vector<UInt32> getSelectionRows(void) const;
+
+    //Returns the number of rows that are displayed in the display area.
+    Int32 getVisibleRowCount(void) const;
+
+    //Returns true if the node identified by the path has ever been expanded.
+    bool hasBeenExpanded(TreePath path) const;
+
+    //Returns true if the node at the specified display row is collapsed.
+    bool isCollapsed(const UInt32& row) const;
+
+    //Returns true if the value identified by path is currently collapsed, this will return false if any of the values in path are currently not being displayed.
+    bool isCollapsed(TreePath path) const;
+
+    //Returns true if the tree is being edited.
+    bool isEditing(void) const;
+
+    //Returns true if the node at the specified display row is currently expanded.
+    bool isExpanded(const UInt32& row) const;
+
+    //Returns true if the node identified by the path is currently expanded,
+    bool isExpanded(TreePath path) const;
+
+    //Returns true if the height of each display row is a fixed size.
+    bool isFixedRowHeight(void) const;
+
+    //Returns isEditable.
+    bool isPathEditable(TreePath path) const;
+
+    //Returns true if the item identified by the path is currently selected.
+    bool isPathSelected(TreePath path) const;
+
+    //Returns true if the node identified by row is selected.
+    bool isRowSelected(const UInt32& row) const;
+
+    //Returns true if the selection is currently empty.
+    bool isSelectionEmpty(void) const;
+
+    //Returns true if the value identified by path is currently viewable, which means it is either the root or all of its parents are expanded.
+    bool isVisible(TreePath path) const;
+
+    //Ensures that the node identified by path is currently viewable.
+    void makeVisible(TreePath path);
+
+    //Removes the nodes between index0 and index1, inclusive, from the selection.
+    void removeSelectionInterval(const UInt32& index0, const UInt32& index1);
+
+    //Removes the node identified by the specified path from the current selection.
+    void removeSelectionPath(TreePath path);
+
+    //Removes the nodes identified by the specified paths from the current selection.
+    void removeSelectionPaths(std::vector<TreePath> paths);
+
+    //Removes the row at the index row from the current selection.
+    void removeSelectionRow(const UInt32& row);
+
+    //Removes the rows that are selected at each of the specified rows.
+    void removeSelectionRows(std::vector<UInt32> rows);
+
+    //Removes a listener for TreeExpansion events.
+    //void removeTreeExpansionListener(TreeExpansionListener tel);
+
+    //Removes a TreeSelection listener.
+    //void removeTreeSelectionListener(TreeSelectionListener tsl);
+
+    //Removes a listener for TreeWillExpand events.
+    //void removeTreeWillExpandListener(TreeWillExpandListener tel);
+
+    //Makes sure all the path components in path are expanded (except for the last path component) and scrolls so that the node identified by the path is displayed.
+    void scrollPathToVisible(TreePath path);
+
+    //Scrolls the item identified by row until it is displayed.
+    void scrollRowToVisible(const UInt32& row);
+
+    //Sets the path identified as the anchor.
+    void setAnchorSelectionPath(TreePath newPath);
+
+    //Sets the dragEnabled property, which must be true to enable automatic drag handling (the first part of drag and drop) on this component.
+    void setDragEnabled(bool b);
+
+    //Configures the expandsSelectedPaths property.
+    void setExpandsSelectedPaths(bool newValue);
+
+    //Sets the path identifies as the lead.
+    void setLeadSelectionPath(TreePath newPath);
+
+    //Sets the TreeModel that will provide the data.
+    void setModel(TreeModelPtr newModel);
+
+    //Selects the nodes between index0 and index1, inclusive.
+    void setSelectionInterval(const UInt32& index0, const UInt32& index1);
+
+    //Sets the tree's selection model.
+    void setSelectionModel(TreeSelectionModelPtr selectionModel);
+
+    //Selects the node identified by the specified path.
+    void setSelectionPath(TreePath path);
+
+    //Selects the nodes identified by the specified array of paths.
+    void setSelectionPaths(std::vector<TreePath> paths);
+
+    //Selects the node at the specified row in the display.
+    void setSelectionRow(const UInt32& row);
+
+    //Selects the nodes corresponding to each of the specified rows in the display.
+    void setSelectionRows(std::vector<UInt32> rows);
+
+    //Sets the number of rows that are to be displayed.
+    void setVisibleRowCount(const UInt32& newCount);
+
+    //Selects the node identified by the specified path and initiates editing.
+    void startEditingAtPath(TreePath path);
+
+    //Ends the current editing session.
+    bool stopEditing(void);
+
+    //Sent when the tree has changed enough that we need to resize the bounds, but not enough that we need to remove the expanded node set (e.g nodes were expanded or collapsed, or nodes were inserted into the tree).
+    void treeDidChange(void);
+
+    //Scrollable Interface
+    //Returns the preferred size of the viewport for a view component.
+    virtual Vec2s getPreferredScrollableViewportSize(void);
+
+    //Components that display logical rows or columns should compute the scroll increment that will completely expose one block of rows or columns, depending on the value of orientation.
+    virtual Int32 getScrollableBlockIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+
+    //Return true if a viewport should always force the height of this Scrollable to match the height of the viewport.
+    virtual bool getScrollableTracksViewportHeight(void);
+
+    //Return true if a viewport should always force the width of this Scrollable to match the width of the viewport.
+    virtual bool getScrollableTracksViewportWidth(void);
+
+    //Components that display logical rows or columns should compute the scroll increment that will completely expose one new row or column, depending on the value of orientation.
+    virtual Int32 getScrollableUnitIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -102,7 +368,77 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     virtual ~Tree(void); 
 
     /*! \}                                                                 */
+
+    TreeModelPtr _Model;
+    TreeSelectionModelPtr _SelectionModel;
+
+
+    AbstractTreeLayoutCachePtr _TreeModelLayout;
     
+	class ModelListener : public TreeModelListener
+	{
+	public :
+		ModelListener(TreePtr TheTree);
+		
+	    virtual void treeNodesChanged(TreeModelEvent e);
+
+	    virtual void treeNodesInserted(TreeModelEvent e);
+
+	    virtual void treeNodesRemoved(TreeModelEvent e);
+
+	    virtual void treeStructureChanged(TreeModelEvent e);
+	protected :
+		TreePtr _Tree;
+	};
+
+	friend class ModelListener;
+
+	ModelListener _ModelListener;
+    
+	class SelectionListener : public TreeSelectionListener
+	{
+	public :
+		SelectionListener(TreePtr TheTree);
+		
+	    virtual void valueChanged(TreeSelectionEvent e);
+	protected :
+		TreePtr _Tree;
+	};
+
+	friend class SelectionListener;
+
+	SelectionListener _SelectionListener;
+
+    //Clears the cache of toggled tree paths.
+    void clearToggledPaths(void);
+
+    //Returns a TreeModel wrapping the specified object.
+    //static TreeModelPtr createTreeModel(Object value);
+
+    //Creates and returns an instance of TreeModelHandler.
+    //TreeModelListenerPtr createTreeModelListener(void);
+
+    //Notifies all listeners that have registered interest for notification on this event type.
+    //void fireValueChanged(TreeSelectionEvent e);
+
+    //Creates and returns a sample TreeModel.
+    static TreeModelPtr getDefaultTreeModel(void);
+
+    //Returns an Enumeration of TreePaths that have been expanded that are descendants of parent.
+    std::vector<TreePath> getDescendantToggledPaths(TreePath parent);
+
+    //Returns JTreePath instances representing the path between index0 and index1 (including index1).
+    std::vector<TreePath> getPathBetweenRows(const UInt32& index0, const UInt32& index1);
+
+    //Removes any paths in the selection that are descendants of path.
+    bool removeDescendantSelectedPaths(TreePath path, bool includePath);
+
+    //Removes any descendants of the TreePaths in toRemove that have been expanded.
+    void removeDescendantToggledPaths(std::vector<TreePath> toRemove);
+
+    //Sets the expanded state of this JTree.
+    void setExpandedState(TreePath path, bool state);
+
     /*==========================  PRIVATE  ================================*/
   private:
 

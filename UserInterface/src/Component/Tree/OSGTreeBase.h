@@ -76,7 +76,7 @@
 #include <OpenSG/OSGUInt32Fields.h> // ToggleClickCount type
 #include <OpenSG/OSGUInt32Fields.h> // VisibleRowCount type
 #include "Editors/OSGCellEditorFields.h" // CellEditor type
-#include "ComponentGenerators/OSGTreeComponentGeneratorFields.h" // CellGenerator type
+#include "ComponentGenerators/OSGComponentGeneratorFields.h" // CellGenerator type
 
 #include "OSGTreeFields.h"
 
@@ -158,7 +158,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
            SFUInt32            *getSFToggleClickCount(void);
            SFUInt32            *getSFVisibleRowCount(void);
            SFCellEditorPtr     *getSFCellEditor     (void);
-           SFTreeComponentGeneratorPtr *getSFCellGenerator  (void);
+           SFComponentGeneratorPtr *getSFCellGenerator  (void);
 
            bool                &getEditable       (void);
      const bool                &getEditable       (void) const;
@@ -178,8 +178,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
      const UInt32              &getVisibleRowCount(void) const;
            CellEditorPtr       &getCellEditor     (void);
      const CellEditorPtr       &getCellEditor     (void) const;
-           TreeComponentGeneratorPtr &getCellGenerator  (void);
-     const TreeComponentGeneratorPtr &getCellGenerator  (void) const;
+           ComponentGeneratorPtr &getCellGenerator  (void);
+     const ComponentGeneratorPtr &getCellGenerator  (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -195,7 +195,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
      void setToggleClickCount( const UInt32 &value );
      void setVisibleRowCount( const UInt32 &value );
      void setCellEditor     ( const CellEditorPtr &value );
-     void setCellGenerator  ( const TreeComponentGeneratorPtr &value );
+     void setCellGenerator  ( const ComponentGeneratorPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -247,7 +247,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
     SFUInt32            _sfToggleClickCount;
     SFUInt32            _sfVisibleRowCount;
     SFCellEditorPtr     _sfCellEditor;
-    SFTreeComponentGeneratorPtr   _sfCellGenerator;
+    SFComponentGeneratorPtr   _sfCellGenerator;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

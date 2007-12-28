@@ -42,6 +42,18 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+Tree::ModelListener::ModelListener(TreePtr TheTree) :
+_Tree(TheTree)
+{
+}
+
+inline
+Tree::SelectionListener::SelectionListener(TreePtr TheTree) :
+_Tree(TheTree)
+{
+}
+
 OSG_END_NAMESPACE
 
 #define OSGTREE_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

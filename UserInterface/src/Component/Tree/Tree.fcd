@@ -104,10 +104,10 @@ A UI Tree.
    </Field>
 	<Field
 		name="CellGenerator"
-		type="TreeComponentGeneratorPtr"
+		type="ComponentGeneratorPtr"
 		cardinality="single"
       visibility="external"
-      header="ComponentGenerators/OSGTreeComponentGeneratorFields.h"
+      header="ComponentGenerators/OSGComponentGeneratorFields.h"
 		defaultValue="NullFC"
 		access="public"
 	>

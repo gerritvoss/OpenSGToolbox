@@ -128,7 +128,7 @@ const OSG::BitVector TreeBase::MTInfluenceMask =
 /*! \var CellEditorPtr   TreeBase::_sfCellEditor
     
 */
-/*! \var TreeComponentGeneratorPtr TreeBase::_sfCellGenerator
+/*! \var ComponentGeneratorPtr TreeBase::_sfCellGenerator
     
 */
 
@@ -181,7 +181,7 @@ FieldDescription *TreeBase::_desc[] =
                      CellEditorFieldId, CellEditorFieldMask,
                      false,
                      (FieldAccessMethod) &TreeBase::getSFCellEditor),
-    new FieldDescription(SFTreeComponentGeneratorPtr::getClassType(), 
+    new FieldDescription(SFComponentGeneratorPtr::getClassType(), 
                      "CellGenerator", 
                      CellGeneratorFieldId, CellGeneratorFieldMask,
                      false,
@@ -270,7 +270,7 @@ TreeBase::TreeBase(void) :
     _sfToggleClickCount       (UInt32(2)), 
     _sfVisibleRowCount        (UInt32(10)), 
     _sfCellEditor             (CellEditorPtr(NullFC)), 
-    _sfCellGenerator          (TreeComponentGeneratorPtr(NullFC)), 
+    _sfCellGenerator          (ComponentGeneratorPtr(NullFC)), 
     Inherited() 
 {
 }
