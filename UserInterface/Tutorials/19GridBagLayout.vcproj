@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="19GridBagLayout"
 	ProjectGUID="{95FF4486-939F-41A2-98AD-830581B5B251}"
 	RootNamespace="05FlowLayout"

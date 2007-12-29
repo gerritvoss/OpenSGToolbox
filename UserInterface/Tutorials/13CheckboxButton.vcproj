@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="13CheckboxButton"
 	ProjectGUID="{FA6AD85A-5A29-4D3A-9AD6-9A5CC84BB307}"
 	Keyword="Win32Proj"

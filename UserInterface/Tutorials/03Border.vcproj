@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="03Border"
 	ProjectGUID="{69E057F2-1D93-44BB-8DD1-500AF3E740C0}"
 	Keyword="Win32Proj"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="15TabPanel"
 	ProjectGUID="{21C6EF91-E8D5-41AE-AAC1-E00F354CB5D4}"
 	Keyword="Win32Proj"

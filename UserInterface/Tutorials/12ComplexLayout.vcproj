@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="12ComplexLayout"
 	ProjectGUID="{BB72CA5A-1B61-4E61-8C92-6F5DAAAB23EC}"
 	RootNamespace="10Frame"

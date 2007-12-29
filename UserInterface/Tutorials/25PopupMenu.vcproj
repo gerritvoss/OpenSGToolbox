@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="25PopupMenu"
 	ProjectGUID="{A418E146-A8F6-4779-919C-890963FA783D}"
 	Keyword="Win32Proj"

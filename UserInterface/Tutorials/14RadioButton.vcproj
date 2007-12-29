@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="14RadioButton"
 	ProjectGUID="{71BD8B69-00CB-42D0-A400-4AB557827EFD}"
 	RootNamespace="14RadioButton"
