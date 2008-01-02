@@ -92,12 +92,15 @@ void ProgressBar::drawInternal(const GraphicsPtr Graphics) const
 		std::string StringToDraw;
 		if(getProgressString().compare("") == 0)
 		{
-			UInt32 Percent(static_cast<Int32>( osgfloor(getPercentComplete() * 100.0f) ));
+            if(!getIndeterminate())
+            {
+			    UInt32 Percent(static_cast<Int32>( osgfloor(getPercentComplete() * 100.0f) ));
 
-			std::stringstream TempSStream;
-			TempSStream << Percent;
+			    std::stringstream TempSStream;
+			    TempSStream << Percent;
 
-			StringToDraw = TempSStream.str() + std::string("%");
+			    StringToDraw = TempSStream.str() + std::string("%");
+            }
 		}
 		else
 		{
@@ -180,6 +183,34 @@ void ProgressBar::updateIndeterminateProgressBar(const Time& Elps)
 	updateProgressBarDrawObject();
 }
 
+void ProgressBar::startIndeterminate(void)
+{
+    beginEditCP(ProgressBarPtr(this), IndeterminateFieldMask);
+        setIndeterminate(true);
+    endEditCP(ProgressBarPtr(this), IndeterminateFieldMask);
+    _IndeterminateBarPosition = 0;
+	if(getParentFrame() != NullFC &&
+		getParentFrame()->getDrawingSurface() != NullFC &&
+		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+	{
+        getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_IndeterminateUpdateListener);
+	}
+}
+
+void ProgressBar::endIndeterminate(void)
+{
+    beginEditCP(ProgressBarPtr(this), IndeterminateFieldMask);
+        setIndeterminate(false);
+    endEditCP(ProgressBarPtr(this), IndeterminateFieldMask);
+	if(getParentFrame() != NullFC &&
+		getParentFrame()->getDrawingSurface() != NullFC &&
+		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+	{
+        getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_IndeterminateUpdateListener);
+	}
+    updateProgressBarDrawObject();
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -190,7 +221,8 @@ ProgressBar::ProgressBar(void) :
     Inherited(),
 	_Model(NULL),
 	_ModelChangeListener(ProgressBarPtr(this)),
-	_IndeterminateUpdateListener(ProgressBarPtr(this))
+	_IndeterminateUpdateListener(ProgressBarPtr(this)),
+    _IndeterminateBarPosition(0)
 {
 }
 
@@ -198,7 +230,8 @@ ProgressBar::ProgressBar(const ProgressBar &source) :
     Inherited(source),
 	_Model(NULL),
 	_ModelChangeListener(ProgressBarPtr(this)),
-	_IndeterminateUpdateListener(ProgressBarPtr(this))
+	_IndeterminateUpdateListener(ProgressBarPtr(this)),
+    _IndeterminateBarPosition(0)
 {
 }
 
@@ -215,21 +248,6 @@ void ProgressBar::changed(BitVector whichField, UInt32 origin)
 	if(whichField & SizeFieldMask)
 	{
 		updateProgressBarDrawObject();
-	}
-
-	if(whichField & IndeterminateFieldMask &&
-		getParentFrame() != NullFC &&
-		getParentFrame()->getDrawingSurface() != NullFC &&
-		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
-	{
-		if(getIndeterminate())
-		{
-			getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_IndeterminateUpdateListener);
-		}
-		else
-		{
-			getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_IndeterminateUpdateListener);
-		}
 	}
 }
 

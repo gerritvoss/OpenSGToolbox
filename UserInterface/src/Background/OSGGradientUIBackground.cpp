@@ -74,15 +74,15 @@ void GradientUIBackground::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void GradientUIBackground::draw(const GraphicsPtr g, const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32 Opacity) const
+void GradientUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32 Opacity) const
 {
 	if(getAlignment() == HORIZONTAL_ALIGNMENT)
 	{
-		g->drawQuad(TopLeft, Pnt2s(BottomRight.x(), TopLeft.y()), BottomRight, Pnt2s(TopLeft.x(), BottomRight.y()), getColorStart(), getColorEnd(), getColorEnd(), getColorStart(), Opacity);
+		TheGraphics->drawQuad(TopLeft, Pnt2s(BottomRight.x(), TopLeft.y()), BottomRight, Pnt2s(TopLeft.x(), BottomRight.y()), getColorStart(), getColorEnd(), getColorEnd(), getColorStart(), Opacity);
 	}
 	else
 	{
-		g->drawQuad(TopLeft, Pnt2s(BottomRight.x(), TopLeft.y()), BottomRight, Pnt2s(TopLeft.x(), BottomRight.y()), getColorStart(), getColorStart(), getColorEnd(), getColorEnd(), Opacity);
+		TheGraphics->drawQuad(TopLeft, Pnt2s(BottomRight.x(), TopLeft.y()), BottomRight, Pnt2s(TopLeft.x(), BottomRight.y()), getColorStart(), getColorStart(), getColorEnd(), getColorEnd(), Opacity);
 	}
 }
 

@@ -3100,8 +3100,8 @@ void WindowsLookAndFeel::init(void)
         //ProgressBar
         WindowsProgressBar->setOrientation(HORIZONTAL_ALIGNMENT);
         WindowsProgressBar->setIndeterminate(false);
-        WindowsProgressBar->setIndeterminateBarMoveRate(false);
-        WindowsProgressBar->setIndeterminateBarSize(false);
+        WindowsProgressBar->setIndeterminateBarMoveRate(0.5);
+        WindowsProgressBar->setIndeterminateBarSize(0.25);
         WindowsProgressBar->setEnableProgressString(false);
 		WindowsProgressBar->setProgressString(std::string(""));
         WindowsProgressBar->setVerticalAlignment(0.5);

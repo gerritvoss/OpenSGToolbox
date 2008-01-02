@@ -111,6 +111,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeLayoutCache : public TreeRowMa
 
 	//Returns the number of visible children for row.
 	virtual UInt32 getVisibleChildCount(const TreePath& path) const = 0;
+    
+	//Returns the Visible Paths
+    virtual std::vector<TreePath> getVisiblePaths(void) const;
+
+	//Returns the Expanded Paths
+    virtual std::vector<TreePath> getExpandedPaths(void) const;
 
 	//Returns an Enumerator that increments over the visible paths starting at the passed in location.
 	//virtual Enumeration getVisiblePathsFrom(const TreePath& path) const = 0;
@@ -130,6 +136,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeLayoutCache : public TreeRowMa
 	//Marks the path path expanded state to isExpanded.
 	virtual void setExpanded(const TreePath& path, bool isExpanded) = 0;
 
+	//Makes sure that all the nodes in path are expanded making the last node in the
+    //path visible
+	virtual void setVisible(const TreePath& path);
+
 	//Sets the TreeModel that will provide the data.
 	virtual void setModel(TreeModelPtr newModel);
 
@@ -145,13 +155,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeLayoutCache : public TreeRowMa
 	//Sets the TreeSelectionModel used to manage the selection to new LSM.
 	virtual void setSelectionModel(TreeSelectionModelPtr newLSM);
 
+	//Returns true if the height of each row is a fixed size.
+	virtual bool isFixedRowHeight(void) const;
+
   protected:
 	//Returns, by reference in placeIn, the size needed to represent value.
 	virtual void getNodeDimensions(Pnt2s& TopLeft, Pnt2s& BottomRight, SharedFieldPtr value, const UInt32& row, const UInt32& depth, bool expanded, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn);
 
-
-	//Returns true if the height of each row is a fixed size.
-	virtual bool isFixedRowHeight(void) const;
 
     //Object responsible for getting the size of a node.
     //AbstractLayoutCache.NodeDimensions nodeDimensions;

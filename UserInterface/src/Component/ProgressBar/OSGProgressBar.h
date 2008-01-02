@@ -116,6 +116,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBar : public ProgressBarBase
 	//Sets the progress bar's current value (stored in the progress bar's data model) to n
 	void setValue(const Int32& n);
 
+
+    void startIndeterminate(void);
+    void endIndeterminate(void);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 

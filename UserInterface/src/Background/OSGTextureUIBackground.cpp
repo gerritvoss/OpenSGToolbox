@@ -77,7 +77,7 @@ void TextureUIBackground::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void TextureUIBackground::draw(const GraphicsPtr g, const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32 Opacity) const
+void TextureUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32 Opacity) const
 {
 	glPushAttrib(GL_ENABLE_BIT | GL_TRANSFORM_BIT);
 	GLdouble Plane0[4], Plane1[4], Plane2[4], Plane3[4];
@@ -179,7 +179,7 @@ void TextureUIBackground::draw(const GraphicsPtr g, const Pnt2s& TopLeft, const 
 		  TexBottomLeft(0.0,1.0),
 		  TexBottomRight(1.0,1.0);*/
 
-	g->drawQuad(Pos, Pnt2s(Pos.x()+Size.x(), Pos.y()), Pos+Size, Pnt2s(Pos.x(), Pos.y()+Size.y()), Vec2f(0.0, 0.0), Vec2f(1.0, 0.0), Vec2f(1.0, 1.0), Vec2f(0.0, 1.0), getTexture(), Opacity);
+	TheGraphics->drawQuad(Pos, Pnt2s(Pos.x()+Size.x(), Pos.y()), Pos+Size, Pnt2s(Pos.x(), Pos.y()+Size.y()), Vec2f(0.0, 0.0), Vec2f(1.0, 0.0), Vec2f(1.0, 1.0), Vec2f(0.0, 1.0), getTexture(), Opacity);
 
 	//if(!WasClipPlane0Enabled) { glDisable(GL_CLIP_PLANE0); }
  //   if(!WasClipPlane1Enabled) { glDisable(GL_CLIP_PLANE1); }

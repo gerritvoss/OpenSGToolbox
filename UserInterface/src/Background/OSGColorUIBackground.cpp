@@ -74,9 +74,9 @@ void ColorUIBackground::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ColorUIBackground::draw(const GraphicsPtr g, const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32 Opacity) const
+void ColorUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32 Opacity) const
 {
-	g->drawRect(TopLeft, BottomRight, getColor(), Opacity);
+	TheGraphics->drawRect(TopLeft, BottomRight, getColor(), Opacity);
 }
 
 /*-------------------------------------------------------------------------*\

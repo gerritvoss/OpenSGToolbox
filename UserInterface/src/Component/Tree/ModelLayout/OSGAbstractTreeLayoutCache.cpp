@@ -168,6 +168,24 @@ void AbstractTreeLayoutCache::setSelectionModel(TreeSelectionModelPtr newLSM)
 	_TreeSelectionModel = newLSM;
 }
 
+void AbstractTreeLayoutCache::setVisible(const TreePath& path)
+{
+    for(UInt32 i(1) ; i<=path.getPathCount() ; ++i)
+    {
+        setExpanded(TreePath(path.getPath(), i), true);
+    }
+}
+
+std::vector<TreePath> AbstractTreeLayoutCache::getVisiblePaths(void) const
+{
+    return std::vector<TreePath>(_VisiblePathSet.begin(), _VisiblePathSet.end());
+}
+
+std::vector<TreePath> AbstractTreeLayoutCache::getExpandedPaths(void) const
+{
+    return std::vector<TreePath>(_ExpandedPathSet.begin(), _ExpandedPathSet.end());
+}
+
 void AbstractTreeLayoutCache::getNodeDimensions(Pnt2s& TopLeft, Pnt2s& BottomRight, SharedFieldPtr value, const UInt32& row, const UInt32& depth, bool expanded, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn)
 {
 	//TODO: Implement

@@ -78,7 +78,7 @@ void PatternUIBackground::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void PatternUIBackground::draw(const GraphicsPtr g, const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32 Opacity) const
+void PatternUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32 Opacity) const
 {
 	glPushAttrib(GL_ENABLE_BIT | GL_TRANSFORM_BIT);
 	GLdouble Plane0[4], Plane1[4], Plane2[4], Plane3[4];
@@ -142,7 +142,7 @@ void PatternUIBackground::draw(const GraphicsPtr g, const Pnt2s& TopLeft, const 
 	TopLeftTexCoords[1] = -getVerticalAlignment() * (RepeatVertical - 1.0f);
 	BottomRightTexCoords[1] = TopLeftTexCoords[1] + RepeatVertical;
 
-	g->drawQuad(TopLeft, Pnt2s(BottomRight.x(), TopLeft.y()),BottomRight, Pnt2s(TopLeft.x(), BottomRight.y()),
+	TheGraphics->drawQuad(TopLeft, Pnt2s(BottomRight.x(), TopLeft.y()),BottomRight, Pnt2s(TopLeft.x(), BottomRight.y()),
 		TopLeftTexCoords, Vec2f(BottomRightTexCoords.x(), TopLeftTexCoords.y()), BottomRightTexCoords, Vec2f(TopLeftTexCoords.x(), BottomRightTexCoords.y()),
 		getTexture(), Opacity);
 

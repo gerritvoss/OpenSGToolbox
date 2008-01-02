@@ -58,9 +58,6 @@ protected:
 	//Primarily provided for subclasses that represent paths in a different manner.
 	TreePath(void);
 
-	//Constructs a new TreePath with the identified path components of length length.
-	TreePath(std::vector<SharedFieldPtr> path, const UInt32& length);
-
 	//Constructs a new TreePath, which is the path identified by parent ending in lastElement.
 	TreePath(TreePath parent, SharedFieldPtr lastElement);
 
@@ -104,6 +101,9 @@ public:
 	//Constructs a path from an array of Objects, uniquely identifying the path from the root of the tree to a specific node, as returned by the tree's data model.
 	TreePath(std::vector<SharedFieldPtr> path);
 
+
+	//Constructs a new TreePath with the identified path components of length length.
+	TreePath(std::vector<SharedFieldPtr> path, const UInt32& length);
 };
 
 typedef TreePath* TreePathPtr;

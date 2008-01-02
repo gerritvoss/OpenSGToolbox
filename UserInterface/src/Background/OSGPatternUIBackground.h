@@ -78,7 +78,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternUIBackground : public PatternUIBack
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr g, const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32 Opacity) const;
+	virtual void draw(const GraphicsPtr TheGraphics, const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32 Opacity) const;
 
 	Vec2s getCorrectedPatternSize(void) const;
     /*=========================  PROTECTED  ===============================*/
