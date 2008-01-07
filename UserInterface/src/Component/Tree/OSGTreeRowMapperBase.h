@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Tree
+ **     class TreeRowMapper
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGTREEBASE_H_
-#define _OSGTREEBASE_H_
+#ifndef _OSGTREEROWMAPPERBASE_H_
+#define _OSGTREEROWMAPPERBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,70 +65,28 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include <OpenSG/OSGFieldContainer.h> // Parent
 
-#include <OpenSG/OSGBoolFields.h> // Editable type
-#include <OpenSG/OSGBoolFields.h> // ExpandsSelectedPaths type
-#include <OpenSG/OSGBoolFields.h> // InvokesStopCellEditing type
-#include <OpenSG/OSGBoolFields.h> // RootVisible type
-#include <OpenSG/OSGUInt32Fields.h> // RowHeight type
-#include <OpenSG/OSGBoolFields.h> // ScrollsOnExpand type
-#include <OpenSG/OSGBoolFields.h> // ShowsRootHandles type
-#include <OpenSG/OSGUInt32Fields.h> // ToggleClickCount type
-#include <OpenSG/OSGUInt32Fields.h> // VisibleRowCount type
-#include "Editors/OSGCellEditorFields.h" // CellEditor type
-#include "ComponentGenerators/OSGComponentGeneratorFields.h" // CellGenerator type
-#include "ModelLayout/OSGTreeModelLayoutFields.h" // ModelLayout type
 
-#include "OSGTreeFields.h"
+#include "OSGTreeRowMapperFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Tree;
+class TreeRowMapper;
 class BinaryDataHandler;
 
-//! \brief Tree Base Class.
+//! \brief TreeRowMapper Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
+class OSG_USERINTERFACELIB_DLLMAPPING TreeRowMapperBase : public FieldContainer
 {
   private:
 
-    typedef Container    Inherited;
+    typedef FieldContainer    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef TreePtr  Ptr;
-
-    enum
-    {
-        EditableFieldId               = Inherited::NextFieldId,
-        ExpandsSelectedPathsFieldId   = EditableFieldId               + 1,
-        InvokesStopCellEditingFieldId = ExpandsSelectedPathsFieldId   + 1,
-        RootVisibleFieldId            = InvokesStopCellEditingFieldId + 1,
-        RowHeightFieldId              = RootVisibleFieldId            + 1,
-        ScrollsOnExpandFieldId        = RowHeightFieldId              + 1,
-        ShowsRootHandlesFieldId       = ScrollsOnExpandFieldId        + 1,
-        ToggleClickCountFieldId       = ShowsRootHandlesFieldId       + 1,
-        VisibleRowCountFieldId        = ToggleClickCountFieldId       + 1,
-        CellEditorFieldId             = VisibleRowCountFieldId        + 1,
-        CellGeneratorFieldId          = CellEditorFieldId             + 1,
-        ModelLayoutFieldId            = CellGeneratorFieldId          + 1,
-        NextFieldId                   = ModelLayoutFieldId            + 1
-    };
-
-    static const OSG::BitVector EditableFieldMask;
-    static const OSG::BitVector ExpandsSelectedPathsFieldMask;
-    static const OSG::BitVector InvokesStopCellEditingFieldMask;
-    static const OSG::BitVector RootVisibleFieldMask;
-    static const OSG::BitVector RowHeightFieldMask;
-    static const OSG::BitVector ScrollsOnExpandFieldMask;
-    static const OSG::BitVector ShowsRootHandlesFieldMask;
-    static const OSG::BitVector ToggleClickCountFieldMask;
-    static const OSG::BitVector VisibleRowCountFieldMask;
-    static const OSG::BitVector CellEditorFieldMask;
-    static const OSG::BitVector CellGeneratorFieldMask;
-    static const OSG::BitVector ModelLayoutFieldMask;
+    typedef TreeRowMapperPtr  Ptr;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -152,67 +110,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFBool              *getSFEditable       (void);
-           SFBool              *getSFExpandsSelectedPaths(void);
-           SFBool              *getSFInvokesStopCellEditing(void);
-           SFBool              *getSFRootVisible    (void);
-           SFUInt32            *getSFRowHeight      (void);
-           SFBool              *getSFScrollsOnExpand(void);
-           SFBool              *getSFShowsRootHandles(void);
-           SFUInt32            *getSFToggleClickCount(void);
-           SFUInt32            *getSFVisibleRowCount(void);
-           SFCellEditorPtr     *getSFCellEditor     (void);
-           SFComponentGeneratorPtr *getSFCellGenerator  (void);
-           SFTreeModelLayoutPtr *getSFModelLayout    (void);
-
-           bool                &getEditable       (void);
-     const bool                &getEditable       (void) const;
-           bool                &getExpandsSelectedPaths(void);
-     const bool                &getExpandsSelectedPaths(void) const;
-           bool                &getInvokesStopCellEditing(void);
-     const bool                &getInvokesStopCellEditing(void) const;
-           bool                &getRootVisible    (void);
-     const bool                &getRootVisible    (void) const;
-           UInt32              &getRowHeight      (void);
-     const UInt32              &getRowHeight      (void) const;
-           bool                &getScrollsOnExpand(void);
-     const bool                &getScrollsOnExpand(void) const;
-           bool                &getShowsRootHandles(void);
-     const bool                &getShowsRootHandles(void) const;
-           UInt32              &getToggleClickCount(void);
-     const UInt32              &getToggleClickCount(void) const;
-           UInt32              &getVisibleRowCount(void);
-     const UInt32              &getVisibleRowCount(void) const;
-           CellEditorPtr       &getCellEditor     (void);
-     const CellEditorPtr       &getCellEditor     (void) const;
-           ComponentGeneratorPtr &getCellGenerator  (void);
-     const ComponentGeneratorPtr &getCellGenerator  (void) const;
-           TreeModelLayoutPtr  &getModelLayout    (void);
-     const TreeModelLayoutPtr  &getModelLayout    (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setEditable       ( const bool &value );
-     void setExpandsSelectedPaths( const bool &value );
-     void setInvokesStopCellEditing( const bool &value );
-     void setRootVisible    ( const bool &value );
-     void setRowHeight      ( const UInt32 &value );
-     void setScrollsOnExpand( const bool &value );
-     void setShowsRootHandles( const bool &value );
-     void setToggleClickCount( const UInt32 &value );
-     void setVisibleRowCount( const UInt32 &value );
-     void setCellEditor     ( const CellEditorPtr &value );
-     void setCellGenerator  ( const ComponentGeneratorPtr &value );
-     void setModelLayout    ( const TreeModelLayoutPtr &value );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -229,56 +126,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
 
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
-
-    static  TreePtr      create          (void); 
-    static  TreePtr      createEmpty     (void); 
-
-    /*! \}                                                                 */
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Copy                                   */
-    /*! \{                                                                 */
-
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
-
-    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
     /*---------------------------------------------------------------------*/
-    /*! \name                      Fields                                  */
-    /*! \{                                                                 */
-
-    SFBool              _sfEditable;
-    SFBool              _sfExpandsSelectedPaths;
-    SFBool              _sfInvokesStopCellEditing;
-    SFBool              _sfRootVisible;
-    SFUInt32            _sfRowHeight;
-    SFBool              _sfScrollsOnExpand;
-    SFBool              _sfShowsRootHandles;
-    SFUInt32            _sfToggleClickCount;
-    SFUInt32            _sfVisibleRowCount;
-    SFCellEditorPtr     _sfCellEditor;
-    SFComponentGeneratorPtr   _sfCellGenerator;
-    SFTreeModelLayoutPtr   _sfModelLayout;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    TreeBase(void);
-    TreeBase(const TreeBase &source);
+    TreeRowMapperBase(void);
+    TreeRowMapperBase(const TreeRowMapperBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TreeBase(void); 
+    virtual ~TreeRowMapperBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -286,13 +149,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      TreeBase *pOther,
+    void executeSyncImpl(      TreeRowMapperBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      TreeBase *pOther,
+    void executeSyncImpl(      TreeRowMapperBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -317,12 +180,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
 
     friend class FieldContainer;
 
-    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const TreeBase &source);
+    void operator =(const TreeRowMapperBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -330,17 +192,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
 //---------------------------------------------------------------------------
 
 
-typedef TreeBase *TreeBaseP;
+typedef TreeRowMapperBase *TreeRowMapperBaseP;
 
-typedef osgIF<TreeBase::isNodeCore,
-              CoredNodePtr<Tree>,
+typedef osgIF<TreeRowMapperBase::isNodeCore,
+              CoredNodePtr<TreeRowMapper>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet TreeNodePtr;
+              >::_IRet TreeRowMapperNodePtr;
 
-typedef RefPtr<TreePtr> TreeRefPtr;
+typedef RefPtr<TreeRowMapperPtr> TreeRowMapperRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGTREEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGTREEROWMAPPERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGTREEBASE_H_ */
+#endif /* _OSGTREEROWMAPPERBASE_H_ */

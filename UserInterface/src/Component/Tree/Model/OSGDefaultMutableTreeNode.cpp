@@ -82,7 +82,7 @@ bool DefaultMutableTreeNode::getAllowsChildren(void) const
 	return getAllowsChildrenInternal();
 }
 
-TreeNodePtr DefaultMutableTreeNode::getChildAt(const UInt32& childIndex) const
+ModelTreeNodePtr DefaultMutableTreeNode::getChildAt(const UInt32& childIndex) const
 {
 	if(childIndex > getChildrenInternal().size())
 	{
@@ -99,7 +99,7 @@ UInt32 DefaultMutableTreeNode::getChildCount(void) const
 	return getChildrenInternal().size();
 }
 
-Int32 DefaultMutableTreeNode::getIndex(TreeNodePtr node) const
+Int32 DefaultMutableTreeNode::getIndex(ModelTreeNodePtr node) const
 {
 	for(Int32 i(0) ; i<getChildrenInternal().size() ; ++i)
 	{
@@ -112,7 +112,7 @@ Int32 DefaultMutableTreeNode::getIndex(TreeNodePtr node) const
 	return -1;
 }
 
-TreeNodePtr DefaultMutableTreeNode::getParent(void) const
+ModelTreeNodePtr DefaultMutableTreeNode::getParent(void) const
 {
 	return getParentInternal();
 }
@@ -307,7 +307,7 @@ UInt32 DefaultMutableTreeNode::getLeafCount(void) const
 
 UInt32 DefaultMutableTreeNode::getDepth(void) const
 {
-	TreeNodePtr ParentNode(getParent());
+	ModelTreeNodePtr ParentNode(getParent());
 	UInt32 Depth(0);
 	while(ParentNode != NullFC)
 	{
@@ -452,7 +452,7 @@ DefaultMutableTreeNodePtr DefaultMutableTreeNode::getPreviousSibling(void) const
 
 MutableTreeNodePtr DefaultMutableTreeNode::getRoot(void) const
 {
-	TreeNodePtr ParentNode(getParent());
+	ModelTreeNodePtr ParentNode(getParent());
 	while(ParentNode != NullFC)
 	{
 		ParentNode = ParentNode->getParent();
@@ -634,8 +634,8 @@ void DefaultMutableTreeNode::breadthFirst(std::vector<DefaultMutableTreeNodePtr>
     Result.push_back(DefaultMutableTreeNodePtr(this));
 
     
-    std::vector<TreeNodePtr> CurrentDepthNodes;
-    std::vector<TreeNodePtr> NextDepthNodes(getChildren());
+    std::vector<ModelTreeNodePtr> CurrentDepthNodes;
+    std::vector<ModelTreeNodePtr> NextDepthNodes(getChildren());
     while(NextDepthNodes.size() != 0)
     {
         for(UInt32 i(0) ; i<NextDepthNodes.size() ; ++i)
@@ -645,7 +645,7 @@ void DefaultMutableTreeNode::breadthFirst(std::vector<DefaultMutableTreeNodePtr>
         
         CurrentDepthNodes = NextDepthNodes;
         NextDepthNodes.clear();
-        std::vector<TreeNodePtr> Children;
+        std::vector<ModelTreeNodePtr> Children;
         for(UInt32 i(0) ; i<CurrentDepthNodes.size() ; ++i)
         {
             Children = CurrentDepthNodes[i]->getChildren();

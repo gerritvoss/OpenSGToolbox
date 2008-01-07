@@ -42,43 +42,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-void DefaultTreeModel::setAsksAllowsChildren(bool newValue)
-{
-    _AskAllowsChilren = newValue;
-}
-
-
-inline
-void DefaultTreeModel::reload(void)
-{
-    nodeChanged(_Root);
-}
-
-inline
-void DefaultTreeModel::reload(ModelTreeNodePtr node)
-{
-    nodeChanged(node);
-}
-
-inline
-void DefaultTreeModel::nodesWereRemoved(ModelTreeNodePtr node, std::vector<UInt32> childIndices, std::vector<SharedFieldPtr> removedChildren)
-{
-    produceTreeNodesRemoved(node->getPath(), childIndices, removedChildren);
-}
-
-inline
-bool DefaultTreeModel::asksAllowsChildren(void)
-{
-    return _AskAllowsChilren;
-}
-
-inline
-std::vector<MutableTreeNodePtr> DefaultTreeModel::getPathToRoot(ModelTreeNodePtr aNode)
-{
-    return std::vector<MutableTreeNodePtr>();
-}
-
 OSG_END_NAMESPACE
 
+#define OSGVARIABLEHEIGHTTREEMODELLAYOUT_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

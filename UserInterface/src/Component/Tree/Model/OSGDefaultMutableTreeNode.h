@@ -85,16 +85,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableTreeNode : public DefaultMut
 	virtual bool getAllowsChildren(void) const;
 
 	//Returns the child TreeNode at index childIndex.
-	virtual TreeNodePtr getChildAt(const UInt32& childIndex) const;
+	virtual ModelTreeNodePtr getChildAt(const UInt32& childIndex) const;
 
 	//Returns the number of children TreeNodes the receiver contains.
 	virtual UInt32 getChildCount(void) const;
 
 	//Returns the index of node in the receivers children.
-	virtual Int32 getIndex(TreeNodePtr node) const;
+	virtual Int32 getIndex(ModelTreeNodePtr node) const;
 
 	//Returns the parent TreeNode of the receiver.
-	virtual TreeNodePtr getParent(void) const;
+	virtual ModelTreeNodePtr getParent(void) const;
 
 	//Returns true if the receiver is a leaf.
 	virtual bool isLeaf(void) const;

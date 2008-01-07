@@ -53,11 +53,12 @@ void display(void);
 void reshape(Vec2s Size);
 
 // 34 Tree Headers
-#include <OpenSG/UserInterface/OSGDefaultTreeModel.h>
-#include <OpenSG/UserInterface/OSGFixedHeightTreeLayoutCache.h>
-#include <OpenSG/UserInterface/OSGDefaultMutableTreeNode.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
+#include <OpenSG/UserInterface/OSGTree.h>
 #include <OpenSG/UserInterface/OSGUIBackgrounds.h>
+#include <OpenSG/UserInterface/OSGFlowLayout.h>
+#include <OpenSG/UserInterface/OSGDefaultTreeModel.h>
+#include <OpenSG/UserInterface/OSGFixedHeightTreeModelLayout.h>
+#include <OpenSG/UserInterface/OSGDefaultMutableTreeNode.h>
 
 // Create a class to allow for the use of the Escape
 // key to exit
@@ -128,6 +129,7 @@ int main(int argc, char **argv)
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
+    
     DefaultMutableTreeNodePtr ANode = DefaultMutableTreeNode::create() ;
     DefaultMutableTreeNodePtr BNode = DefaultMutableTreeNode::create() ;
     DefaultMutableTreeNodePtr CNode = DefaultMutableTreeNode::create() ;
@@ -171,8 +173,8 @@ int main(int argc, char **argv)
     TheTreeModel.setRoot(ANode);
 
     //TreeLayout
-    FixedHeightTreeLayoutCache TheTreeLayout;
-    TheTreeLayout.setModel(&TheTreeModel);
+    FixedHeightTreeModelLayoutPtr TheTreeLayout = FixedHeightTreeModelLayout::create();
+    TheTreeLayout->setModel(&TheTreeModel);
 
     std::string TempString;
 
@@ -207,46 +209,54 @@ int main(int argc, char **argv)
     std::cout << std::endl;
 
     //Layout Expansion
-    TheTreeLayout.setExpanded(ANode->getTreePath(), true);
+    TheTreeLayout->setExpanded(ANode->getTreePath(), true);
     
-    std::cout << "Row Count: " << TheTreeLayout.getRowCount() << std::endl;
-    for(UInt32 i(0) ; i<TheTreeLayout.getRowCount() ; ++i)
+    std::cout << "Row Count: " << TheTreeLayout->getRowCount() << std::endl;
+    for(UInt32 i(0) ; i<TheTreeLayout->getRowCount() ; ++i)
     {
-        TheTreeLayout.getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
+        TheTreeLayout->getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
         std::cout << TempString << " ";
     }
     std::cout << std::endl;
     
     TheTreeModel.insertNodeInto(JNode, ANode, ANode->getChildCount());
-    TheTreeLayout.setExpanded(ANode->getTreePath(), false);
-    TheTreeLayout.setExpanded(ANode->getTreePath(), true);
+    TheTreeLayout->setExpanded(ANode->getTreePath(), false);
+    TheTreeLayout->setExpanded(ANode->getTreePath(), true);
 
-    std::cout << "Row Count: " << TheTreeLayout.getRowCount() << std::endl;
-    for(UInt32 i(0) ; i<TheTreeLayout.getRowCount() ; ++i)
+    std::cout << "Row Count: " << TheTreeLayout->getRowCount() << std::endl;
+    for(UInt32 i(0) ; i<TheTreeLayout->getRowCount() ; ++i)
     {
-        TheTreeLayout.getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
+        TheTreeLayout->getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
         std::cout << TempString << " ";
     }
     std::cout << std::endl;
 
-    TheTreeLayout.setExpanded(BNode->getTreePath(), true);
-    std::cout << "Row Count: " << TheTreeLayout.getRowCount() << std::endl;
-    for(UInt32 i(0) ; i<TheTreeLayout.getRowCount() ; ++i)
+    TheTreeLayout->setExpanded(BNode->getTreePath(), true);
+    std::cout << "Row Count: " << TheTreeLayout->getRowCount() << std::endl;
+    for(UInt32 i(0) ; i<TheTreeLayout->getRowCount() ; ++i)
     {
-        TheTreeLayout.getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
+        TheTreeLayout->getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
         std::cout << TempString << " ";
     }
     std::cout << std::endl;
     
-    TheTreeLayout.setExpanded(DNode->getTreePath(), true);
-    std::cout << "Row Count: " << TheTreeLayout.getRowCount() << std::endl;
-    for(UInt32 i(0) ; i<TheTreeLayout.getRowCount() ; ++i)
+    TheTreeLayout->setExpanded(DNode->getTreePath(), true);
+    std::cout << "Row Count: " << TheTreeLayout->getRowCount() << std::endl;
+    for(UInt32 i(0) ; i<TheTreeLayout->getRowCount() ; ++i)
     {
-        TheTreeLayout.getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
+        TheTreeLayout->getPathForRow(i).getLastPathComponent()->getValueByStr(TempString);
         std::cout << TempString << " ";
     }
     std::cout << std::endl;
 
+    //Create the Tree
+    TreePtr TheTree = Tree::create();
+
+    beginEditCP(TheTree, Tree::PreferredSizeFieldMask);
+        TheTree->setPreferredSize(Vec2s(100, 300));
+    endEditCP(TheTree, Tree::PreferredSizeFieldMask);
+    TheTree->setModel(&TheTreeModel);
+    
     // Create Background to be used with the MainFrame
     ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
     beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
@@ -261,6 +271,7 @@ int main(int argc, char **argv)
        // when the view is rendered.
        MainFrame->setLayout(MainFrameLayout);
        MainFrame->setBackground(MainFrameBackground);
+       MainFrame->getChildren().addValue(TheTree);
     endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
 
     TutorialKeyListener TheKeyListener;

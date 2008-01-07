@@ -45,81 +45,81 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class MutableTreeNode!
+ **     class TreeRowMapper!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEMUTABLETREENODEINST
+#define OSG_COMPILETREEROWMAPPERINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGMutableTreeNodeBase.h"
-#include "OSGMutableTreeNode.h"
+#include "OSGTreeRowMapperBase.h"
+#include "OSGTreeRowMapper.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector MutableTreeNodeBase::MTInfluenceMask = 
+const OSG::BitVector TreeRowMapperBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 
-FieldContainerType MutableTreeNodeBase::_type(
-    "MutableTreeNode",
-    "ModelTreeNode",
+FieldContainerType TreeRowMapperBase::_type(
+    "TreeRowMapper",
+    "FieldContainer",
     NULL,
     NULL, 
-    MutableTreeNode::initMethod,
+    TreeRowMapper::initMethod,
     NULL,
     0);
 
-//OSG_FIELD_CONTAINER_DEF(MutableTreeNodeBase, MutableTreeNodePtr)
+//OSG_FIELD_CONTAINER_DEF(TreeRowMapperBase, TreeRowMapperPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &MutableTreeNodeBase::getType(void) 
+FieldContainerType &TreeRowMapperBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &MutableTreeNodeBase::getType(void) const 
+const FieldContainerType &TreeRowMapperBase::getType(void) const 
 {
     return _type;
 } 
 
 
-UInt32 MutableTreeNodeBase::getContainerSize(void) const 
+UInt32 TreeRowMapperBase::getContainerSize(void) const 
 { 
-    return sizeof(MutableTreeNode); 
+    return sizeof(TreeRowMapper); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void MutableTreeNodeBase::executeSync(      FieldContainer &other,
+void TreeRowMapperBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((MutableTreeNodeBase *) &other, whichField);
+    this->executeSyncImpl((TreeRowMapperBase *) &other, whichField);
 }
 #else
-void MutableTreeNodeBase::executeSync(      FieldContainer &other,
+void TreeRowMapperBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((MutableTreeNodeBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((TreeRowMapperBase *) &other, whichField, sInfo);
 }
-void MutableTreeNodeBase::execBeginEdit(const BitVector &whichField, 
+void TreeRowMapperBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void MutableTreeNodeBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void TreeRowMapperBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -132,7 +132,7 @@ void MutableTreeNodeBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-MutableTreeNodeBase::MutableTreeNodeBase(void) :
+TreeRowMapperBase::TreeRowMapperBase(void) :
     Inherited() 
 {
 }
@@ -141,20 +141,20 @@ MutableTreeNodeBase::MutableTreeNodeBase(void) :
 #pragma warning (default : 383)
 #endif
 
-MutableTreeNodeBase::MutableTreeNodeBase(const MutableTreeNodeBase &source) :
+TreeRowMapperBase::TreeRowMapperBase(const TreeRowMapperBase &source) :
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-MutableTreeNodeBase::~MutableTreeNodeBase(void)
+TreeRowMapperBase::~TreeRowMapperBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 MutableTreeNodeBase::getBinSize(const BitVector &whichField)
+UInt32 TreeRowMapperBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -162,7 +162,7 @@ UInt32 MutableTreeNodeBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void MutableTreeNodeBase::copyToBin(      BinaryDataHandler &pMem,
+void TreeRowMapperBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
@@ -170,7 +170,7 @@ void MutableTreeNodeBase::copyToBin(      BinaryDataHandler &pMem,
 
 }
 
-void MutableTreeNodeBase::copyFromBin(      BinaryDataHandler &pMem,
+void TreeRowMapperBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
@@ -179,7 +179,7 @@ void MutableTreeNodeBase::copyFromBin(      BinaryDataHandler &pMem,
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void MutableTreeNodeBase::executeSyncImpl(      MutableTreeNodeBase *pOther,
+void TreeRowMapperBase::executeSyncImpl(      TreeRowMapperBase *pOther,
                                         const BitVector         &whichField)
 {
 
@@ -188,7 +188,7 @@ void MutableTreeNodeBase::executeSyncImpl(      MutableTreeNodeBase *pOther,
 
 }
 #else
-void MutableTreeNodeBase::executeSyncImpl(      MutableTreeNodeBase *pOther,
+void TreeRowMapperBase::executeSyncImpl(      TreeRowMapperBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
@@ -199,7 +199,7 @@ void MutableTreeNodeBase::executeSyncImpl(      MutableTreeNodeBase *pOther,
 
 }
 
-void MutableTreeNodeBase::execBeginEditImpl (const BitVector &whichField, 
+void TreeRowMapperBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -218,11 +218,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<MutableTreeNodePtr>::_type("MutableTreeNodePtr", "ModelTreeNodePtr");
+DataType FieldDataTraits<TreeRowMapperPtr>::_type("TreeRowMapperPtr", "FieldContainerPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(MutableTreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(MutableTreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(TreeRowMapperPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(TreeRowMapperPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -239,10 +239,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(MutableTreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPIN
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGMUTABLETREENODEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMUTABLETREENODEBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGTREEROWMAPPERBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGTREEROWMAPPERBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGMUTABLETREENODEFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGTREEROWMAPPERFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

@@ -46,7 +46,7 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "Component/Tree/Model/OSGAbstractTreeModel.h"
-#include "Component/Tree/Model/OSGDefaultMutableTreeNode.h"
+#include "Component/Tree/Model/OSGDefaultMutableTreeNodeFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -83,31 +83,31 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeModel : public AbstractTreeMode
     bool asksAllowsChildren(void);
 
     //Builds the parents of node up to and including the root node, where the original node is the last element in the returned array.
-    std::vector<MutableTreeNodePtr> getPathToRoot(TreeNodePtr aNode);
+    std::vector<MutableTreeNodePtr> getPathToRoot(ModelTreeNodePtr aNode);
 
     //Invoked this to insert newChild at location index in parents children.
     void insertNodeInto(MutableTreeNodePtr newChild, MutableTreeNodePtr parent, const UInt32& index);
 
     //Invoke this method after you've changed how node is to be represented in the tree.
-    void nodeChanged(TreeNodePtr node);
+    void nodeChanged(ModelTreeNodePtr node);
 
     //Invoke this method after you've changed how the children identified by childIndicies are to be represented in the tree.
-    void nodesChanged(TreeNodePtr node, std::vector<UInt32> childIndices);
+    void nodesChanged(ModelTreeNodePtr node, std::vector<UInt32> childIndices);
 
     //Invoke this method if you've totally changed the children of node and its childrens children...
-    void nodeStructureChanged(TreeNodePtr node);
+    void nodeStructureChanged(ModelTreeNodePtr node);
 
     //Invoke this method after you've inserted some TreeNodes into node.
-    void nodesWereInserted(TreeNodePtr node, std::vector<UInt32> childIndices);
+    void nodesWereInserted(ModelTreeNodePtr node, std::vector<UInt32> childIndices);
 
     //Invoke this method after you've removed some TreeNodes from node.
-    void nodesWereRemoved(TreeNodePtr node, std::vector<UInt32> childIndices, std::vector<SharedFieldPtr> removedChildren);
+    void nodesWereRemoved(ModelTreeNodePtr node, std::vector<UInt32> childIndices, std::vector<SharedFieldPtr> removedChildren);
 
     //Invoke this method if you've modified the TreeNodes upon which this model depends.
     void reload(void);
 
     //Invoke this method if you've modified the TreeNodes upon which this model depends.
-    void reload(TreeNodePtr node);
+    void reload(ModelTreeNodePtr node);
 
     //Message this to remove node from its parent.
     void removeNodeFromParent(MutableTreeNodePtr node);
@@ -116,10 +116,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeModel : public AbstractTreeMode
     void setAsksAllowsChildren(bool newValue);
 
     //Sets the root to root.
-    void setRoot(TreeNodePtr root);
+    void setRoot(ModelTreeNodePtr root);
 
   protected:
-      TreeNodePtr _Root;
+      ModelTreeNodePtr _Root;
       //Determines how the isLeaf method figures out if a node is a leaf node. If true, a node is a leaf node if it does not allow children.
       bool _AskAllowsChilren;
 

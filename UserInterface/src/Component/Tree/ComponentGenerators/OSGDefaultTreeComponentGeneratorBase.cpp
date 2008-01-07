@@ -204,7 +204,7 @@ FieldContainerType DefaultTreeComponentGeneratorBase::_type(
     "DefaultTreeComponentGenerator",
     "TreeComponentGenerator",
     NULL,
-    NULL, 
+    (PrototypeCreateF) &DefaultTreeComponentGeneratorBase::createEmpty,
     DefaultTreeComponentGenerator::initMethod,
     _desc,
     sizeof(_desc));
@@ -223,6 +223,15 @@ const FieldContainerType &DefaultTreeComponentGeneratorBase::getType(void) const
     return _type;
 } 
 
+
+FieldContainerPtr DefaultTreeComponentGeneratorBase::shallowCopy(void) const 
+{ 
+    DefaultTreeComponentGeneratorPtr returnValue; 
+
+    newPtr(returnValue, dynamic_cast<const DefaultTreeComponentGenerator *>(this)); 
+
+    return returnValue; 
+}
 
 UInt32 DefaultTreeComponentGeneratorBase::getContainerSize(void) const 
 { 

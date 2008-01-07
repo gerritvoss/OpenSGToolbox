@@ -102,6 +102,12 @@
 
 #include "Component/ComboBox/OSGComboBox.h"
 #include "Component/ComboBox/Editors/OSGDefaultComboBoxEditor.h"
+
+#include "Component/Tree/ModelLayout/OSGFixedHeightTreeModelLayout.h"
+#include "Component/Tree/Editors/OSGDefaultTreeCellEditor.h"
+#include "Component/Tree/ComponentGenerators/OSGDefaultTreeComponentGenerator.h"
+#include "Component/Tree/OSGTree.h"
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -3500,7 +3506,113 @@ void WindowsLookAndFeel::init(void)
 	
     Table::getClassType().setPrototype(WindowsTable);
     
+	//************************** DefaultTreeEditor *****************************
 
+	//DefaultTreeCellEditor
+    DefaultTreeCellEditorPtr WindowsDefaultTreeCellEditor = DefaultTreeCellEditor::create();
+    beginEditCP(WindowsDefaultTreeCellEditor);
+		WindowsDefaultTreeCellEditor->setClickCountToStart(3);
+		WindowsDefaultTreeCellEditor->setDefaultEditor(WindowsTextField);
+		WindowsDefaultTreeCellEditor->setDefaultStringEditor(WindowsTextField);
+    endEditCP(WindowsDefaultTreeCellEditor);
+    
+    DefaultTreeCellEditor::getClassType().setPrototype(WindowsDefaultTreeCellEditor);
+    
+	//************************** DefaultTreeComponentGenerator *****************************
+
+    UIDrawObjectCanvasPtr WindowsExpandedDrawObject = UIDrawObjectCanvas::create();
+    
+    UIDrawObjectCanvasPtr WindowsNotExpandedDrawObjectPrototype = UIDrawObjectCanvas::create();
+    
+    UIDrawObjectCanvasPtr WindowsLeafDrawObjectPrototype = UIDrawObjectCanvas::create();
+    
+    UIDrawObjectCanvasPtr WindowsNonLeafDrawObjectPrototype = UIDrawObjectCanvas::create();
+    
+    UIDrawObjectCanvasPtr WindowsExpandedNonLeafDrawObjectPrototype = UIDrawObjectCanvas::create();
+
+    LabelPtr WindowsDefaultTreeComponentGeneratorNodeLabelPrototype = Label::create();
+
+    ColorUIBackgroundPtr WindowsDefaultTreeComponentGeneratorSelectedBackground = ColorUIBackground::create();
+
+    ColorUIBackgroundPtr WindowsDefaultTreeComponentGeneratorNonSelectedBackground = ColorUIBackground::create();
+
+    LineBorderPtr WindowsDefaultTreeComponentGeneratorSelectedBorder = LineBorder::create();
+    
+	//DefaultTreeComponentGenerator
+    DefaultTreeComponentGeneratorPtr WindowsDefaultTreeComponentGenerator = DefaultTreeComponentGenerator::create();
+    beginEditCP(WindowsDefaultTreeComponentGenerator);
+		WindowsDefaultTreeComponentGenerator->setExpandedDrawObjectPrototype(WindowsExpandedDrawObject);
+		WindowsDefaultTreeComponentGenerator->setNotExpandedDrawObjectPrototype(WindowsNotExpandedDrawObjectPrototype);
+		WindowsDefaultTreeComponentGenerator->setLeafDrawObjectPrototype(WindowsLeafDrawObjectPrototype);
+		WindowsDefaultTreeComponentGenerator->setNonLeafDrawObjectPrototype(WindowsNonLeafDrawObjectPrototype);
+		WindowsDefaultTreeComponentGenerator->setExpandedNonLeafDrawObjectPrototype(WindowsExpandedNonLeafDrawObjectPrototype);
+		WindowsDefaultTreeComponentGenerator->setNodeLabelPrototype(WindowsDefaultTreeComponentGeneratorNodeLabelPrototype);
+		WindowsDefaultTreeComponentGenerator->setSelectedBackground(WindowsDefaultTreeComponentGeneratorSelectedBackground);
+		WindowsDefaultTreeComponentGenerator->setNonSelectedBackground(WindowsDefaultTreeComponentGeneratorNonSelectedBackground);
+		WindowsDefaultTreeComponentGenerator->setSelectedBorder(WindowsDefaultTreeComponentGeneratorSelectedBorder);
+		WindowsDefaultTreeComponentGenerator->setSelectedTextColor(Color4f(1.0f,1.0f,1.0f,1.0f));
+		WindowsDefaultTreeComponentGenerator->setNonSelectedTextColor(Color4f(0.0f,0.0f,0.0f,1.0f));
+    endEditCP(WindowsDefaultTreeComponentGenerator);
+    
+    DefaultTreeComponentGenerator::getClassType().setPrototype(WindowsDefaultTreeComponentGenerator);
+
+	//************************** Tree *****************************
+	//Windows RotatedComponentBorder
+	LineBorderPtr WindowsTreeBorder = LineBorder::create();
+	beginEditCP(WindowsTreeBorder);
+		WindowsTreeBorder->setWidth(1);
+		WindowsTreeBorder->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
+	endEditCP(WindowsTreeBorder);
+
+	//Windows RotatedComponentBackground
+	ColorUIBackgroundPtr WindowsTreeBackground = ColorUIBackground::create();
+	beginEditCP(WindowsTreeBackground);
+		WindowsTreeBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
+	endEditCP(WindowsTreeBackground);
+
+	//Windows RotatedComponent
+	TreePtr WindowsTree = Tree::create();
+	beginEditCP(WindowsTree);
+		WindowsTree->setEnabled(true);
+		WindowsTree->setVisible(true);
+		
+		WindowsTree->setConstraints(NullFC);
+		//Sizes
+		WindowsTree->setMinSize(Vec2s(0,0));
+		WindowsTree->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsTree->setPreferredSize(Vec2s(100,100));
+
+		//Border
+		WindowsTree->setBorder(WindowsTreeBorder);
+		WindowsTree->setRolloverBorder(WindowsTreeBorder);
+		WindowsTree->setFocusedBorder(WindowsTreeBorder);
+		WindowsTree->setDisabledBorder(WindowsTreeBorder);
+		
+		//Background
+		WindowsTree->setBackground(WindowsTreeBackground);
+		WindowsTree->setRolloverBackground(WindowsTreeBackground);
+		WindowsTree->setFocusedBackground(WindowsTreeBackground);
+		WindowsTree->setDisabledBackground(WindowsTreeBackground);
+		
+		//Opacity
+		WindowsTree->setOpacity(1.0);
+
+        //Table Values
+		WindowsTree->setEditable(false);
+		WindowsTree->setExpandsSelectedPaths(true);
+		WindowsTree->setInvokesStopCellEditing(true);
+		WindowsTree->setRootVisible(false);
+		WindowsTree->setRowHeight(13);
+		WindowsTree->setScrollsOnExpand(false);
+		WindowsTree->setShowsRootHandles(true);
+		WindowsTree->setToggleClickCount(2);
+		WindowsTree->setVisibleRowCount(10);
+		WindowsTree->setCellEditor(WindowsDefaultTreeCellEditor);
+		WindowsTree->setCellGenerator(WindowsDefaultTreeComponentGenerator);
+		
+	endEditCP(WindowsTree);
+	
+    Tree::getClassType().setPrototype(WindowsTree);
 	//CompoundBackground and Empty Background don't require prototypes.
 
 
@@ -3533,6 +3645,7 @@ void WindowsLookAndFeel::init(void)
 		getPrototypes().addValue(WindowsSpinnerNumberEditor);
 		getPrototypes().addValue(WindowsSlider);
 		getPrototypes().addValue(WindowsComboBox);
+		getPrototypes().addValue(WindowsTree);
 	endEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);
 }
 /*-------------------------------------------------------------------------*\

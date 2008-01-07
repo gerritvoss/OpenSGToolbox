@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGTREEROWMAPPER_H_
-#define _OSGTREEROWMAPPER_H_
+#ifndef _OSGMODELTREENODE_H_
+#define _OSGMODELTREENODE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,21 +45,22 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGTreeRowMapperBase.h"
+#include "OSGModelTreeNodeBase.h"
 #include "Component/Tree/OSGTreePath.h"
+#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
 #include <vector>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TreeRowMapper class. See \ref 
-           PageUserInterfaceTreeRowMapper for a description.
+/*! \brief ModelTreeNode class. See \ref 
+           PageUserInterfaceModelTreeNode for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeRowMapper : public TreeRowMapperBase
+class OSG_USERINTERFACELIB_DLLMAPPING ModelTreeNode : public ModelTreeNodeBase
 {
   private:
 
-    typedef TreeRowMapperBase Inherited;
+    typedef ModelTreeNodeBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -80,28 +81,57 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeRowMapper : public TreeRowMapperBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    
-	//Returns the rows that the TreePath instances in path are being displayed at.
-	virtual std::vector<UInt32> getRowsForPaths(std::vector<TreePath> path) const = 0;
+	
+	//Returns the children of the receiver as a Vector.
+    virtual std::vector<ModelTreeNodePtr> getChildren(void) const;
 
+	//Returns true if the receiver allows children.
+	virtual bool getAllowsChildren(void) const = 0;
+
+	//Returns the child ModelTreeNode at index childIndex.
+	virtual ModelTreeNodePtr getChildAt(const UInt32& childIndex) const = 0;
+
+	//Returns the number of children ModelTreeNodes the receiver contains.
+	virtual UInt32 getChildCount(void) const = 0;
+
+	//Returns the index of node in the receivers children.
+	virtual Int32 getIndex(ModelTreeNodePtr node) const = 0;
+
+	//Returns the parent ModelTreeNode of the receiver.
+	virtual ModelTreeNodePtr getParent(void) const = 0;
+
+	//Returns true if the receiver is a leaf.
+	virtual bool isLeaf(void) const = 0;
+
+	//Resets the user object of the receiver to object.
+	virtual void setUserObject(SharedFieldPtr object) = 0;
+    
+	//Returns this node's user object.
+	virtual SharedFieldPtr getUserObject(void) const = 0;
+    
+    //Find the decendent node that uses object as it's UserObject
+    ModelTreeNodePtr getNodeFromUserObject(SharedFieldPtr object);
+
+    //Get the Path from the Root to this node
+    TreePath getPath(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in TreeRowMapperBase.
+    // Variables should all be in ModelTreeNodeBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    TreeRowMapper(void);
-    TreeRowMapper(const TreeRowMapper &source);
+    ModelTreeNode(void);
+    ModelTreeNode(const ModelTreeNode &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TreeRowMapper(void); 
+    virtual ~ModelTreeNode(void); 
 
     /*! \}                                                                 */
     
@@ -109,22 +139,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeRowMapper : public TreeRowMapperBase
   private:
 
     friend class FieldContainer;
-    friend class TreeRowMapperBase;
+    friend class ModelTreeNodeBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const TreeRowMapper &source);
+    void operator =(const ModelTreeNode &source);
 };
 
-typedef TreeRowMapper *TreeRowMapperP;
+typedef ModelTreeNode *ModelTreeNodeP;
 
 OSG_END_NAMESPACE
 
-#include "OSGTreeRowMapperBase.inl"
-#include "OSGTreeRowMapper.inl"
+#include "OSGModelTreeNodeBase.inl"
+#include "OSGModelTreeNode.inl"
 
-#define OSGTREEROWMAPPER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGMODELTREENODE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGTREEROWMAPPER_H_ */
+#endif /* _OSGMODELTREENODE_H_ */

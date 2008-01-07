@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="MutableTreeNode"
-	parent="ModelTreeNode"
+	name="TreeModelLayout"
+	parent="TreeRowMapper"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="abstract"
@@ -11,5 +11,5 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
-A UI Mutable Tree Node.
+A UI Tree Model Layout.
 </FieldContainer>

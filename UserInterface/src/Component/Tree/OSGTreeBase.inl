@@ -103,6 +103,13 @@ SFBool *TreeBase::getSFEditable(void)
     return &_sfEditable;
 }
 
+//! Get the Tree::_sfExpandsSelectedPaths field.
+inline
+SFBool *TreeBase::getSFExpandsSelectedPaths(void)
+{
+    return &_sfExpandsSelectedPaths;
+}
+
 //! Get the Tree::_sfInvokesStopCellEditing field.
 inline
 SFBool *TreeBase::getSFInvokesStopCellEditing(void)
@@ -166,6 +173,13 @@ SFComponentGeneratorPtr *TreeBase::getSFCellGenerator(void)
     return &_sfCellGenerator;
 }
 
+//! Get the Tree::_sfModelLayout field.
+inline
+SFTreeModelLayoutPtr *TreeBase::getSFModelLayout(void)
+{
+    return &_sfModelLayout;
+}
+
 
 //! Get the value of the Tree::_sfEditable field.
 inline
@@ -186,6 +200,27 @@ inline
 void TreeBase::setEditable(const bool &value)
 {
     _sfEditable.setValue(value);
+}
+
+//! Get the value of the Tree::_sfExpandsSelectedPaths field.
+inline
+bool &TreeBase::getExpandsSelectedPaths(void)
+{
+    return _sfExpandsSelectedPaths.getValue();
+}
+
+//! Get the value of the Tree::_sfExpandsSelectedPaths field.
+inline
+const bool &TreeBase::getExpandsSelectedPaths(void) const
+{
+    return _sfExpandsSelectedPaths.getValue();
+}
+
+//! Set the value of the Tree::_sfExpandsSelectedPaths field.
+inline
+void TreeBase::setExpandsSelectedPaths(const bool &value)
+{
+    _sfExpandsSelectedPaths.setValue(value);
 }
 
 //! Get the value of the Tree::_sfInvokesStopCellEditing field.
@@ -375,6 +410,27 @@ inline
 void TreeBase::setCellGenerator(const ComponentGeneratorPtr &value)
 {
     _sfCellGenerator.setValue(value);
+}
+
+//! Get the value of the Tree::_sfModelLayout field.
+inline
+TreeModelLayoutPtr &TreeBase::getModelLayout(void)
+{
+    return _sfModelLayout.getValue();
+}
+
+//! Get the value of the Tree::_sfModelLayout field.
+inline
+const TreeModelLayoutPtr &TreeBase::getModelLayout(void) const
+{
+    return _sfModelLayout.getValue();
+}
+
+//! Set the value of the Tree::_sfModelLayout field.
+inline
+void TreeBase::setModelLayout(const TreeModelLayoutPtr &value)
+{
+    _sfModelLayout.setValue(value);
 }
 
 

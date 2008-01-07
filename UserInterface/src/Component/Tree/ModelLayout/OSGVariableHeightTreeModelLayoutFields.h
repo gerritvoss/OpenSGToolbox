@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGMUTABLETREENODEFIELDS_H_
-#define _OSGMUTABLETREENODEFIELDS_H_
+#ifndef _OSGVARIABLEHEIGHTTREEMODELLAYOUTFIELDS_H_
+#define _OSGVARIABLEHEIGHTTREEMODELLAYOUTFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGModelTreeNodeFields.h"
+#include "OSGAbstractTreeModelLayoutFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class MutableTreeNode;
+class VariableHeightTreeModelLayout;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! MutableTreeNodePtr
+//! VariableHeightTreeModelLayoutPtr
 
-typedef FCPtr<ModelTreeNodePtr, MutableTreeNode> MutableTreeNodePtr;
+typedef FCPtr<AbstractTreeModelLayoutPtr, VariableHeightTreeModelLayout> VariableHeightTreeModelLayoutPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<ModelTreeNodePtr, MutableTreeNode> MutableTreeNodePtr;
 #endif
 
 template <>
-struct FieldDataTraits<MutableTreeNodePtr> : 
-    public FieldTraitsRecurseMapper<MutableTreeNodePtr, true>
+struct FieldDataTraits<VariableHeightTreeModelLayoutPtr> : 
+    public FieldTraitsRecurseMapper<VariableHeightTreeModelLayoutPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<MutableTreeNodePtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFMutableTreeNodePtr"; }
-    static const char *getMName(void) { return "MFMutableTreeNodePtr"; }
+    static const char *getSName(void) { return "SFVariableHeightTreeModelLayoutPtr"; }
+    static const char *getMName(void) { return "MFVariableHeightTreeModelLayoutPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<MutableTreeNodePtr, true>
+/*! \class  FieldTraitsRecurseMapper<VariableHeightTreeModelLayoutPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<MutableTreeNodePtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldSingle */
 
-typedef SField<MutableTreeNodePtr> SFMutableTreeNodePtr;
+typedef SField<VariableHeightTreeModelLayoutPtr> SFVariableHeightTreeModelLayoutPtr;
 #endif
 
-#ifndef OSG_COMPILEMUTABLETREENODEINST
-OSG_DLLEXPORT_DECL1(SField, MutableTreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEVARIABLEHEIGHTTREEMODELLAYOUTINST
+OSG_DLLEXPORT_DECL1(SField, VariableHeightTreeModelLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<MutableTreeNodePtr> MFMutableTreeNodePtr;
+typedef MField<VariableHeightTreeModelLayoutPtr> MFVariableHeightTreeModelLayoutPtr;
 #endif
 
-#ifndef OSG_COMPILEMUTABLETREENODEINST
-OSG_DLLEXPORT_DECL1(MField, MutableTreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEVARIABLEHEIGHTTREEMODELLAYOUTINST
+OSG_DLLEXPORT_DECL1(MField, VariableHeightTreeModelLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGMUTABLETREENODEFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGVARIABLEHEIGHTTREEMODELLAYOUTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGMUTABLETREENODEFIELDS_H_ */
+#endif /* _OSGVARIABLEHEIGHTTREEMODELLAYOUTFIELDS_H_ */

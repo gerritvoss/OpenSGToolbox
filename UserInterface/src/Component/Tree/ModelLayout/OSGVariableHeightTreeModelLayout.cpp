@@ -47,8 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGFixedHeightTreeLayoutCache.h"
-#include "Component/Tree/Selection/OSGTreeSelectionListener.h"
+#include "OSGVariableHeightTreeModelLayout.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -56,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::FixedHeightTreeLayoutCache
-A FixedHeightTreeLayoutCache. 
+/*! \class osg::VariableHeightTreeModelLayout
+A UI Variable Height Tree Model Layout. 
 */
 
 /***************************************************************************\
@@ -68,196 +67,138 @@ A FixedHeightTreeLayoutCache.
  *                           Class methods                                 *
 \***************************************************************************/
 
+void VariableHeightTreeModelLayout::initMethod (void)
+{
+}
+
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-void FixedHeightTreeLayoutCache::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight, TreePath path, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn) const
+void VariableHeightTreeModelLayout::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight, TreePath path, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn) const
 {
 	//TODO:Implement
 }
 
-bool FixedHeightTreeLayoutCache::isVisible(const TreePath& path) const
+bool VariableHeightTreeModelLayout::isVisible(const TreePath& path) const const
 {
-    return _VisiblePathSet.find(path) != _VisiblePathSet.end();
+	//TODO: Implement
+	return false;
 }
 
-TreePath FixedHeightTreeLayoutCache::getPathClosestTo(const UInt32& x, const UInt32& y) const
+TreePath VariableHeightTreeModelLayout::getPathClosestTo(const UInt32& x, const UInt32& y) const
 {
-    //Determine the row
-    UInt32 Row(y/getRowHeight());
-
-    //Get the Path for that row
-	return getPathForRow(Row);
+	//TODO:Implement
+	return TreePath(SharedFieldPtr());
 }
 
-TreePath FixedHeightTreeLayoutCache::getPathForRow(const UInt32& row) const
+TreePath VariableHeightTreeModelLayout::getPathForRow(const UInt32& row) const
 {
-    UInt32 RootVisibilityDependantRow(row);
-    if(!isRootVisible())
-    {
-        RootVisibilityDependantRow += 1;
-    }
-
-    UInt32 i(0);
-    TreePathSetConstItor VisiblePathSetItor(_VisiblePathSet.begin());
-    while(i<RootVisibilityDependantRow && VisiblePathSetItor != _VisiblePathSet.end())
-    {
-        ++i;
-        ++VisiblePathSetItor;
-    }
-    if(VisiblePathSetItor != _VisiblePathSet.end())
-    {
-        return (*VisiblePathSetItor);
-    }
-    else
-    {
-        return TreePath(SharedFieldPtr());
-    }
-
+	//TODO:Implement
+	return TreePath(SharedFieldPtr());
 }
 
-UInt32 FixedHeightTreeLayoutCache::getRowCount(void) const
+UInt32 VariableHeightTreeModelLayout::getPreferredHeight(void) const
 {
-    if(isRootVisible())
-    {
-        return _VisiblePathSet.size();
-    }
-    else
-    {
-        return _VisiblePathSet.size()-1;
-    }
+	//TODO: Implement
+	return 0;
 }
 
-Int32 FixedHeightTreeLayoutCache::getRowForPath(const TreePath& path) const
+UInt32 VariableHeightTreeModelLayout::getPreferredWidth(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 {
-    UInt32 i(0);
-    TreePathSetConstItor VisiblePathSetItor(_VisiblePathSet.begin());
-    while( VisiblePathSetItor != _VisiblePathSet.end() && path != (*VisiblePathSetItor))
-    {
-        ++i;
-        ++VisiblePathSetItor;
-    }
-
-    if(VisiblePathSetItor != _VisiblePathSet.end())
-    {
-        return i;
-    }
-    else
-    {
-        return -1;
-    }
+	//TODO: Implement
+	return 0;
 }
 
-UInt32 FixedHeightTreeLayoutCache::getVisibleChildCount(const TreePath& path) const
+UInt32 VariableHeightTreeModelLayout::getRowCount(void) const
 {
-    if(isVisible(path))
-    {
-        return _TreeModel->getChildCount(path.getLastPathComponent());
-    }
-    else
-    {
-        return 0;
-    }
+	//TODO: Implement
+	return 0;
 }
 
-void FixedHeightTreeLayoutCache::invalidatePathBounds(const TreePath& path)
+Int32 VariableHeightTreeModelLayout::getRowForPath(const TreePath& path) const
+{
+	//TODO: Implement
+	return 0;
+}
+
+UInt32 VariableHeightTreeModelLayout::getVisibleChildCount(const TreePath& path) const
+{
+	//TODO: Implement
+	return 0;
+}
+
+
+void VariableHeightTreeModelLayout::invalidatePathBounds(const TreePath& path)
 {
 	//TODO:Implement
 }
 
-void FixedHeightTreeLayoutCache::invalidateSizes(void)
+void VariableHeightTreeModelLayout::invalidateSizes(void)
 {
 	//TODO:Implement
 }
 
-bool FixedHeightTreeLayoutCache::isExpanded(const TreePath& path) const
+bool VariableHeightTreeModelLayout::isExpanded(const TreePath& path) const
 {
-	return _ExpandedPathSet.find(path) != _ExpandedPathSet.end();
+	//TODO: Implement
+	return false;
 }
 
-void FixedHeightTreeLayoutCache::setExpanded(const TreePath& path, bool isExpanded)
-{
-    if(isExpanded)
-    {
-        _ExpandedPathSet.insert(path);
-
-        if(isVisible(path))
-        {
-            //Insert all visible decendents of Path
-            std::vector<TreePath> VisibleDecendants;
-            getVisibleDecendants(path, VisibleDecendants);
-            for(UInt32 i(0) ; i<VisibleDecendants.size() ; ++i)
-            {
-                _VisiblePathSet.insert(VisibleDecendants[i]);
-            }
-        }
-    }
-    else
-    {
-        _ExpandedPathSet.erase(path);
-        
-        if(isVisible(path))
-        {
-            //Remove all visible decendents of Path
-            std::vector<TreePath> VisibleDecendants;
-            getVisibleDecendants(path, VisibleDecendants);
-            for(UInt32 i(0) ; i<VisibleDecendants.size() ; ++i)
-            {
-                _VisiblePathSet.erase(VisibleDecendants[i]);
-            }
-        }
-    }
-}
-
-void FixedHeightTreeLayoutCache::getVisibleDecendants(const TreePath& Path, std::vector<TreePath>& VisibleDecendants) const
-{
-    //Loop through all of the Children of the last node in Path
-    UInt32 NumChildren(_TreeModel->getChildCount(Path.getLastPathComponent()));
-    SharedFieldPtr Child;
-
-    for(UInt32 i(0) ; i<NumChildren ; ++i)
-    {
-        Child = _TreeModel->getChild(Path.getLastPathComponent(), i);
-
-        //Add This child to the Visible Decendants
-        VisibleDecendants.push_back(Path.pathByAddingChild(Child));
-
-        //If this child is expanded then add all of it's visible decendants
-        if(isExpanded(Path.pathByAddingChild(Child)))
-        {
-            getVisibleDecendants(Path.pathByAddingChild(Child), VisibleDecendants);
-        }
-    }
-}
-
-void FixedHeightTreeLayoutCache::setModel(TreeModelPtr newModel)
+void VariableHeightTreeModelLayout::setExpanded(const TreePath& path, bool isExpanded)
 {
 	//TODO:Implement
-    AbstractTreeLayoutCache::setModel(newModel);
 }
 
-void FixedHeightTreeLayoutCache::setRootVisible(bool rootVisible)
+void VariableHeightTreeModelLayout::setModel(TreeModelPtr newModel)
 {
 	//TODO:Implement
-    AbstractTreeLayoutCache::setRootVisible(rootVisible);
 }
 
-void FixedHeightTreeLayoutCache::setRowHeight(const UInt32& rowHeight)
+
+void VariableHeightTreeModelLayout::setRootVisible(bool rootVisible)
 {
 	//TODO:Implement
-    AbstractTreeLayoutCache::setRowHeight(rowHeight);
-
-    invalidateSizes();
 }
 
+void VariableHeightTreeModelLayout::setRowHeight(const UInt32& rowHeight)
+{
+	//TODO:Implement
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
+VariableHeightTreeModelLayout::VariableHeightTreeModelLayout(void) :
+    Inherited()
+{
+}
+
+VariableHeightTreeModelLayout::VariableHeightTreeModelLayout(const VariableHeightTreeModelLayout &source) :
+    Inherited(source)
+{
+}
+
+VariableHeightTreeModelLayout::~VariableHeightTreeModelLayout(void)
+{
+}
+
 /*----------------------------- class specific ----------------------------*/
+
+void VariableHeightTreeModelLayout::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void VariableHeightTreeModelLayout::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump VariableHeightTreeModelLayout NI" << std::endl;
+}
+
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
@@ -269,6 +210,15 @@ void FixedHeightTreeLayoutCache::setRowHeight(const UInt32& rowHeight)
 #ifdef OSG_LINUX_ICC
 #pragma warning( disable : 177 )
 #endif
+
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGVARIABLEHEIGHTTREEMODELLAYOUTBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGVARIABLEHEIGHTTREEMODELLAYOUTBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGVARIABLEHEIGHTTREEMODELLAYOUTFIELDS_HEADER_CVSID;
+}
 
 #ifdef __sgi
 #pragma reset woff 1174

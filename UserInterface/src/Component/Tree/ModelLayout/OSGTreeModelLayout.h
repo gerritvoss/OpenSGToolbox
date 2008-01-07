@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGABSTRACTTREELAYOUTCACHE_H_
-#define _OSGABSTRACTTREELAYOUTCACHE_H_
+#ifndef _OSGTREEMODELLAYOUT_H_
+#define _OSGTREEMODELLAYOUT_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,33 +45,44 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "Component/Tree/OSGTreeRowMapper.h"
+#include "OSGTreeModelLayoutBase.h"
 #include "Component/Tree/OSGTreePath.h"
 #include "Component/Tree/Model/OSGTreeModel.h"
 #include "Component/Tree/Model/OSGTreeModelListener.h"
 #include "Component/Tree/Selection/OSGTreeSelectionModel.h"
 #include <OpenSG/OSGVector.h>
 
-#include <set>
-
 OSG_BEGIN_NAMESPACE
 
-/*! \brief AbstractTreeLayoutCache class. See \ref 
-           PageUserInterfaceAbstractTreeLayoutCache for a description.
+/*! \brief TreeModelLayout class. See \ref 
+           PageUserInterfaceTreeModelLayout for a description.
 */
 
-class AbstractTreeLayoutCache;
-
-typedef AbstractTreeLayoutCache *AbstractTreeLayoutCachePtr;
-
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeLayoutCache : public TreeRowMapper
+class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBase
 {
+  private:
+
+    typedef TreeModelLayoutBase Inherited;
+
     /*==========================  PUBLIC  =================================*/
   public:
-    AbstractTreeLayoutCache(void);
 
-	//Returns the rows that the TreePath instances in path are being displayed at.
-	virtual std::vector<UInt32> getRowsForPaths(std::vector<TreePath> paths) const;
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
 
 	//Returns a rectangle giving the bounds needed to draw path.
 	virtual void getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight, TreePath path, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn) const = 0;
@@ -80,10 +91,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeLayoutCache : public TreeRowMa
 	virtual bool isVisible(const TreePath& path) const = 0;
 
 	//Returns the TreeModel that is providing the data.
-	virtual TreeModelPtr getModel(void) const;
+	virtual TreeModelPtr getModel(void) const = 0;
 
 	//Returns the object that renders nodes in the tree, and which is responsible for calculating the dimensions of individual nodes.
-	//virtual AbstractLayoutCache.NodeDimensions getNodeDimensions(void) const;
+	//virtual AbstractLayoutCache.NodeDimensions getNodeDimensions(void) const = 0;
 
 	//Returns the path to the node that is closest to x,y.
 	virtual TreePath getPathClosestTo(const UInt32& x, const UInt32& y) const = 0;
@@ -92,10 +103,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeLayoutCache : public TreeRowMa
 	virtual TreePath getPathForRow(const UInt32& row) const = 0;
 
 	//Returns the preferred height.
-	virtual UInt32 getPreferredHeight(void) const;
+	virtual UInt32 getPreferredHeight(void) const = 0;
 
 	//Returns the preferred width for the passed in region.
-	virtual UInt32 getPreferredWidth(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+	virtual UInt32 getPreferredWidth(Pnt2s& TopLeft, Pnt2s& BottomRight) const = 0;
 
 	//Number of rows being displayed.
 	virtual UInt32 getRowCount(void) const = 0;
@@ -104,19 +115,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeLayoutCache : public TreeRowMa
 	virtual Int32 getRowForPath(const TreePath& path) const = 0;
 
 	//Returns the height of each row.
-	virtual UInt32 getRowHeight(void) const;
+	virtual UInt32 getRowHeight(void) const = 0;
 
 	//Returns the model used to maintain the selection.
-	virtual TreeSelectionModelPtr getSelectionModel(void) const;
+	virtual TreeSelectionModelPtr getSelectionModel(void) const = 0;
 
 	//Returns the number of visible children for row.
 	virtual UInt32 getVisibleChildCount(const TreePath& path) const = 0;
     
 	//Returns the Visible Paths
-    virtual std::vector<TreePath> getVisiblePaths(void) const;
+    virtual std::vector<TreePath> getVisiblePaths(void) const = 0;
 
 	//Returns the Expanded Paths
-    virtual std::vector<TreePath> getExpandedPaths(void) const;
+    virtual std::vector<TreePath> getExpandedPaths(void) const = 0;
 
 	//Returns an Enumerator that increments over the visible paths starting at the passed in location.
 	//virtual Enumeration getVisiblePathsFrom(const TreePath& path) const = 0;
@@ -131,99 +142,73 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeLayoutCache : public TreeRowMa
 	virtual bool isExpanded(const TreePath& path) const = 0;
 
 	//Returns true if the root node of the tree is displayed.
-	virtual bool isRootVisible(void) const;
+	virtual bool isRootVisible(void) const = 0;
 
 	//Marks the path path expanded state to isExpanded.
 	virtual void setExpanded(const TreePath& path, bool isExpanded) = 0;
 
 	//Makes sure that all the nodes in path are expanded making the last node in the
     //path visible
-	virtual void setVisible(const TreePath& path);
+	virtual void setVisible(const TreePath& path) = 0;
 
 	//Sets the TreeModel that will provide the data.
-	virtual void setModel(TreeModelPtr newModel);
+	virtual void setModel(TreeModelPtr newModel) = 0;
 
 	//Sets the renderer that is responsible for drawing nodes in the tree and which is threfore responsible for calculating the dimensions of individual nodes.
-	//virtual void setNodeDimensions(AbstractLayoutCache.NodeDimensions nd);
+	//virtual void setNodeDimensions(AbstractLayoutCache.NodeDimensions nd) = 0;
 
 	//Determines whether or not the root node from the TreeModel is visible.
-	virtual void setRootVisible(bool rootVisible);
+	virtual void setRootVisible(bool rootVisible) = 0;
 
 	//Sets the height of each cell.
-	virtual void setRowHeight(const UInt32& rowHeight);
+	virtual void setRowHeight(const UInt32& rowHeight) = 0;
 
 	//Sets the TreeSelectionModel used to manage the selection to new LSM.
-	virtual void setSelectionModel(TreeSelectionModelPtr newLSM);
+	virtual void setSelectionModel(TreeSelectionModelPtr newLSM) = 0;
 
 	//Returns true if the height of each row is a fixed size.
-	virtual bool isFixedRowHeight(void) const;
-
+	virtual bool isFixedRowHeight(void) const = 0;
+    /*=========================  PROTECTED  ===============================*/
   protected:
-	//Returns, by reference in placeIn, the size needed to represent value.
-	virtual void getNodeDimensions(Pnt2s& TopLeft, Pnt2s& BottomRight, SharedFieldPtr value, const UInt32& row, const UInt32& depth, bool expanded, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn);
 
+    // Variables should all be in TreeModelLayoutBase.
 
-    //Object responsible for getting the size of a node.
-    //AbstractLayoutCache.NodeDimensions nodeDimensions;
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
 
-    //True if the root node is displayed, false if its children are the highest visible nodes.
-    bool _RootVisible;
+    TreeModelLayout(void);
+    TreeModelLayout(const TreeModelLayout &source);
 
-    //Height to use for each row.
-    Int32 _RowHeight;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
 
-    //Model providing information.
-    TreeModelPtr _TreeModel;
+    virtual ~TreeModelLayout(void); 
 
-    //Selection model.
-    TreeSelectionModelPtr _TreeSelectionModel;
-
-
-    struct TreePathPreorderLessThan
-    {
-    protected:
-        TreeModelPtr _TreeModel;
-
-        TreePathPreorderLessThan(void);
-    public:
-        TreePathPreorderLessThan(TreeModelPtr Model);
-
-        bool operator()(const TreePath& LeftPath,
-                        const TreePath& RightPath) const;
-    };
+    /*! \}                                                                 */
     
-    typedef std::set<TreePath, TreePathPreorderLessThan> TreePathSet;
-    typedef TreePathSet::iterator TreePathSetItor;
-    typedef TreePathSet::const_iterator TreePathSetConstItor;
-
-    TreePathSet _ExpandedPathSet;
-    TreePathSet _VisiblePathSet;
-    
-	class ModelListener : public TreeModelListener
-	{
-	public :
-		ModelListener(AbstractTreeLayoutCachePtr TheAbstractTreeLayoutCache);
-		
-        virtual void treeNodesChanged(TreeModelEvent e);
-        virtual void treeNodesInserted(TreeModelEvent e);
-        virtual void treeNodesRemoved(TreeModelEvent e);
-        virtual void treeStructureChanged(TreeModelEvent e);
-	protected :
-		AbstractTreeLayoutCachePtr _AbstractTreeLayoutCache;
-	};
-
-	friend class ModelListener;
-
-	ModelListener _ModelListener;
     /*==========================  PRIVATE  ================================*/
   private:
+
+    friend class FieldContainer;
+    friend class TreeModelLayoutBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const TreeModelLayout &source);
 };
 
+typedef TreeModelLayout *TreeModelLayoutP;
 
 OSG_END_NAMESPACE
 
-#include "OSGAbstractTreeLayoutCache.inl"
+#include "OSGTreeModelLayoutBase.inl"
+#include "OSGTreeModelLayout.inl"
 
-#define OSGABSTRACTTREELAYOUTCACHE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGTREEMODELLAYOUT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGABSTRACTTREELAYOUTCACHE_H_ */
+#endif /* _OSGTREEMODELLAYOUT_H_ */

@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class TreeNode
+ **     class ModelTreeNode
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGTREENODEBASE_H_
-#define _OSGTREENODEBASE_H_
+#ifndef _OSGMODELTREENODEBASE_H_
+#define _OSGMODELTREENODEBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -68,16 +68,16 @@
 #include <OpenSG/OSGFieldContainer.h> // Parent
 
 
-#include "OSGTreeNodeFields.h"
+#include "OSGModelTreeNodeFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class TreeNode;
+class ModelTreeNode;
 class BinaryDataHandler;
 
-//! \brief TreeNode Base Class.
+//! \brief ModelTreeNode Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeNodeBase : public FieldContainer
+class OSG_USERINTERFACELIB_DLLMAPPING ModelTreeNodeBase : public FieldContainer
 {
   private:
 
@@ -86,7 +86,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeNodeBase : public FieldContainer
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef TreeNodePtr  Ptr;
+    typedef ModelTreeNodePtr  Ptr;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -133,15 +133,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeNodeBase : public FieldContainer
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    TreeNodeBase(void);
-    TreeNodeBase(const TreeNodeBase &source);
+    ModelTreeNodeBase(void);
+    ModelTreeNodeBase(const ModelTreeNodeBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TreeNodeBase(void); 
+    virtual ~ModelTreeNodeBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -149,13 +149,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeNodeBase : public FieldContainer
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      TreeNodeBase *pOther,
+    void executeSyncImpl(      ModelTreeNodeBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      TreeNodeBase *pOther,
+    void executeSyncImpl(      ModelTreeNodeBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -184,7 +184,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeNodeBase : public FieldContainer
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const TreeNodeBase &source);
+    void operator =(const ModelTreeNodeBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -192,17 +192,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeNodeBase : public FieldContainer
 //---------------------------------------------------------------------------
 
 
-typedef TreeNodeBase *TreeNodeBaseP;
+typedef ModelTreeNodeBase *ModelTreeNodeBaseP;
 
-typedef osgIF<TreeNodeBase::isNodeCore,
-              CoredNodePtr<TreeNode>,
+typedef osgIF<ModelTreeNodeBase::isNodeCore,
+              CoredNodePtr<ModelTreeNode>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet TreeNodeNodePtr;
+              >::_IRet ModelTreeNodeNodePtr;
 
-typedef RefPtr<TreeNodePtr> TreeNodeRefPtr;
+typedef RefPtr<ModelTreeNodePtr> ModelTreeNodeRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGTREENODEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGMODELTREENODEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGTREENODEBASE_H_ */
+#endif /* _OSGMODELTREENODEBASE_H_ */

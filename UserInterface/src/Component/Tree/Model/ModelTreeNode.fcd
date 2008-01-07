@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="TreeNode"
+	name="ModelTreeNode"
 	parent="FieldContainer"
 	library="UserInterface"
 	pointerfieldtypes="both"
@@ -11,5 +11,5 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
-A UI Tree Node.
+A UI Model Tree Node.
 </FieldContainer>

@@ -67,6 +67,32 @@ OSG::UInt32 DefaultTreeComponentGeneratorBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! create a new instance of the class
+inline
+DefaultTreeComponentGeneratorPtr DefaultTreeComponentGeneratorBase::create(void) 
+{
+    DefaultTreeComponentGeneratorPtr fc; 
+
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = DefaultTreeComponentGeneratorPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    
+    return fc; 
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+inline
+DefaultTreeComponentGeneratorPtr DefaultTreeComponentGeneratorBase::createEmpty(void) 
+{ 
+    DefaultTreeComponentGeneratorPtr returnValue; 
+    
+    newPtr(returnValue); 
+
+    return returnValue; 
+}
+
 
 /*------------------------------ get -----------------------------------*/
 

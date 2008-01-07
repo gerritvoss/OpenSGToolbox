@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGTREEROWMAPPER_H_
-#define _OSGTREEROWMAPPER_H_
+#ifndef _OSGFIXEDHEIGHTTREEMODELLAYOUT_H_
+#define _OSGFIXEDHEIGHTTREEMODELLAYOUT_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,21 +45,19 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGTreeRowMapperBase.h"
-#include "Component/Tree/OSGTreePath.h"
-#include <vector>
+#include "OSGFixedHeightTreeModelLayoutBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TreeRowMapper class. See \ref 
-           PageUserInterfaceTreeRowMapper for a description.
+/*! \brief FixedHeightTreeModelLayout class. See \ref 
+           PageUserInterfaceFixedHeightTreeModelLayout for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeRowMapper : public TreeRowMapperBase
+class OSG_USERINTERFACELIB_DLLMAPPING FixedHeightTreeModelLayout : public FixedHeightTreeModelLayoutBase
 {
   private:
 
-    typedef TreeRowMapperBase Inherited;
+    typedef FixedHeightTreeModelLayoutBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -80,51 +78,95 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeRowMapper : public TreeRowMapperBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    
-	//Returns the rows that the TreePath instances in path are being displayed at.
-	virtual std::vector<UInt32> getRowsForPaths(std::vector<TreePath> path) const = 0;
+	//Returns a rectangle giving the bounds needed to draw path.
+	virtual void getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight, TreePath path, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn) const;
 
+	//Returns true if every node in the path is expanded
+	virtual bool isVisible(const TreePath& path) const;
+
+	//Returns the path to the node that is closest to x,y.
+	virtual TreePath getPathClosestTo(const UInt32& x, const UInt32& y) const;
+
+	//Returns the path for passed in row.
+	virtual TreePath getPathForRow(const UInt32& row) const;
+
+	//Number of rows being displayed.
+	virtual UInt32 getRowCount(void) const;
+
+	//Returns the row that the last item identified in path is visible at.
+	virtual Int32 getRowForPath(const TreePath& path) const;
+
+	//Returns the number of visible children for row.
+	virtual UInt32 getVisibleChildCount(const TreePath& path) const;
+
+	//Returns an Enumerator that increments over the visible paths starting at the passed in location.
+	//virtual Enumeration getVisiblePathsFrom(const TreePath& path) const;
+
+	//Instructs the LayoutCache that the bounds for path are invalid, and need to be updated.
+	virtual void invalidatePathBounds(const TreePath& path);
+
+	//Informs the TreeState that it needs to recalculate all the sizes it is referencing.
+	virtual void invalidateSizes(void);
+
+	//Returns true if the last node in this path is expanded
+	virtual bool isExpanded(const TreePath& path) const;
+
+	//Marks the path path expanded state to isExpanded.
+	virtual void setExpanded(const TreePath& path, bool isExpanded);
+    
+	//Sets the TreeModel that will provide the data.
+	virtual void setModel(TreeModelPtr newModel);
+	
+	//Determines whether or not the root node from the TreeModel is visible.
+	virtual void setRootVisible(bool rootVisible);
+
+	//Sets the height of each cell.
+	virtual void setRowHeight(const UInt32& rowHeight);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in TreeRowMapperBase.
+    // Variables should all be in FixedHeightTreeModelLayoutBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    TreeRowMapper(void);
-    TreeRowMapper(const TreeRowMapper &source);
+    FixedHeightTreeModelLayout(void);
+    FixedHeightTreeModelLayout(const FixedHeightTreeModelLayout &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TreeRowMapper(void); 
+    virtual ~FixedHeightTreeModelLayout(void); 
 
     /*! \}                                                                 */
+      
+    UInt32 getRowCount(const TreePath& Path) const;
+
+    void getVisibleDecendants(const TreePath& Path, std::vector<TreePath>& VisibleDecendants) const;
     
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class TreeRowMapperBase;
+    friend class FixedHeightTreeModelLayoutBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const TreeRowMapper &source);
+    void operator =(const FixedHeightTreeModelLayout &source);
 };
 
-typedef TreeRowMapper *TreeRowMapperP;
+typedef FixedHeightTreeModelLayout *FixedHeightTreeModelLayoutP;
 
 OSG_END_NAMESPACE
 
-#include "OSGTreeRowMapperBase.inl"
-#include "OSGTreeRowMapper.inl"
+#include "OSGFixedHeightTreeModelLayoutBase.inl"
+#include "OSGFixedHeightTreeModelLayout.inl"
 
-#define OSGTREEROWMAPPER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGFIXEDHEIGHTTREEMODELLAYOUT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGTREEROWMAPPER_H_ */
+#endif /* _OSGFIXEDHEIGHTTREEMODELLAYOUT_H_ */

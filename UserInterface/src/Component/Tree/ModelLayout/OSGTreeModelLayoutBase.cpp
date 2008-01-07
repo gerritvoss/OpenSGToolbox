@@ -45,81 +45,81 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class TreeNode!
+ **     class TreeModelLayout!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILETREENODEINST
+#define OSG_COMPILETREEMODELLAYOUTINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGTreeNodeBase.h"
-#include "OSGTreeNode.h"
+#include "OSGTreeModelLayoutBase.h"
+#include "OSGTreeModelLayout.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector TreeNodeBase::MTInfluenceMask = 
+const OSG::BitVector TreeModelLayoutBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 
-FieldContainerType TreeNodeBase::_type(
-    "TreeNode",
-    "FieldContainer",
+FieldContainerType TreeModelLayoutBase::_type(
+    "TreeModelLayout",
+    "TreeRowMapper",
     NULL,
     NULL, 
-    TreeNode::initMethod,
+    TreeModelLayout::initMethod,
     NULL,
     0);
 
-//OSG_FIELD_CONTAINER_DEF(TreeNodeBase, TreeNodePtr)
+//OSG_FIELD_CONTAINER_DEF(TreeModelLayoutBase, TreeModelLayoutPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TreeNodeBase::getType(void) 
+FieldContainerType &TreeModelLayoutBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &TreeNodeBase::getType(void) const 
+const FieldContainerType &TreeModelLayoutBase::getType(void) const 
 {
     return _type;
 } 
 
 
-UInt32 TreeNodeBase::getContainerSize(void) const 
+UInt32 TreeModelLayoutBase::getContainerSize(void) const 
 { 
-    return sizeof(TreeNode); 
+    return sizeof(TreeModelLayout); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void TreeNodeBase::executeSync(      FieldContainer &other,
+void TreeModelLayoutBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((TreeNodeBase *) &other, whichField);
+    this->executeSyncImpl((TreeModelLayoutBase *) &other, whichField);
 }
 #else
-void TreeNodeBase::executeSync(      FieldContainer &other,
+void TreeModelLayoutBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((TreeNodeBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((TreeModelLayoutBase *) &other, whichField, sInfo);
 }
-void TreeNodeBase::execBeginEdit(const BitVector &whichField, 
+void TreeModelLayoutBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void TreeNodeBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void TreeModelLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -132,7 +132,7 @@ void TreeNodeBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-TreeNodeBase::TreeNodeBase(void) :
+TreeModelLayoutBase::TreeModelLayoutBase(void) :
     Inherited() 
 {
 }
@@ -141,20 +141,20 @@ TreeNodeBase::TreeNodeBase(void) :
 #pragma warning (default : 383)
 #endif
 
-TreeNodeBase::TreeNodeBase(const TreeNodeBase &source) :
+TreeModelLayoutBase::TreeModelLayoutBase(const TreeModelLayoutBase &source) :
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-TreeNodeBase::~TreeNodeBase(void)
+TreeModelLayoutBase::~TreeModelLayoutBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TreeNodeBase::getBinSize(const BitVector &whichField)
+UInt32 TreeModelLayoutBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -162,7 +162,7 @@ UInt32 TreeNodeBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void TreeNodeBase::copyToBin(      BinaryDataHandler &pMem,
+void TreeModelLayoutBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
@@ -170,7 +170,7 @@ void TreeNodeBase::copyToBin(      BinaryDataHandler &pMem,
 
 }
 
-void TreeNodeBase::copyFromBin(      BinaryDataHandler &pMem,
+void TreeModelLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
@@ -179,7 +179,7 @@ void TreeNodeBase::copyFromBin(      BinaryDataHandler &pMem,
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void TreeNodeBase::executeSyncImpl(      TreeNodeBase *pOther,
+void TreeModelLayoutBase::executeSyncImpl(      TreeModelLayoutBase *pOther,
                                         const BitVector         &whichField)
 {
 
@@ -188,7 +188,7 @@ void TreeNodeBase::executeSyncImpl(      TreeNodeBase *pOther,
 
 }
 #else
-void TreeNodeBase::executeSyncImpl(      TreeNodeBase *pOther,
+void TreeModelLayoutBase::executeSyncImpl(      TreeModelLayoutBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
@@ -199,7 +199,7 @@ void TreeNodeBase::executeSyncImpl(      TreeNodeBase *pOther,
 
 }
 
-void TreeNodeBase::execBeginEditImpl (const BitVector &whichField, 
+void TreeModelLayoutBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -218,11 +218,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TreeNodePtr>::_type("TreeNodePtr", "FieldContainerPtr");
+DataType FieldDataTraits<TreeModelLayoutPtr>::_type("TreeModelLayoutPtr", "TreeRowMapperPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(TreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(TreeModelLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(TreeModelLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -239,10 +239,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(TreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTREENODEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTREENODEBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGTREEMODELLAYOUTBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGTREEMODELLAYOUTBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGTREENODEFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGTREEMODELLAYOUTFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

@@ -36,86 +36,103 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGFIXEDHEIGHTTREELAYOUTCACHE_H_
-#define _OSGFIXEDHEIGHTTREELAYOUTCACHE_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEUSERINTERFACELIB
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGAbstractTreeLayoutCache.h"
+#include "OSGTreeModelLayout.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief FixedHeightTreeLayoutCache class. See \ref 
-           PageUserInterfaceFixedHeightTreeLayoutCache for a description.
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class osg::TreeModelLayout
+A UI Tree Model Layout. 
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING FixedHeightTreeLayoutCache : public AbstractTreeLayoutCache
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void TreeModelLayout::initMethod (void)
 {
-    /*==========================  PUBLIC  =================================*/
-  public:
-	//Returns a rectangle giving the bounds needed to draw path.
-	virtual void getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight, TreePath path, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn) const;
-
-	//Returns true if every node in the path is expanded
-	virtual bool isVisible(const TreePath& path) const;
-
-	//Returns the path to the node that is closest to x,y.
-	virtual TreePath getPathClosestTo(const UInt32& x, const UInt32& y) const;
-
-	//Returns the path for passed in row.
-	virtual TreePath getPathForRow(const UInt32& row) const;
-
-	//Number of rows being displayed.
-	virtual UInt32 getRowCount(void) const;
-
-	//Returns the row that the last item identified in path is visible at.
-	virtual Int32 getRowForPath(const TreePath& path) const;
-
-	//Returns the number of visible children for row.
-	virtual UInt32 getVisibleChildCount(const TreePath& path) const;
-
-	//Returns an Enumerator that increments over the visible paths starting at the passed in location.
-	//virtual Enumeration getVisiblePathsFrom(const TreePath& path) const;
-
-	//Instructs the LayoutCache that the bounds for path are invalid, and need to be updated.
-	virtual void invalidatePathBounds(const TreePath& path);
-
-	//Informs the TreeState that it needs to recalculate all the sizes it is referencing.
-	virtual void invalidateSizes(void);
-
-	//Returns true if the last node in this path is expanded
-	virtual bool isExpanded(const TreePath& path) const;
-
-	//Marks the path path expanded state to isExpanded.
-	virtual void setExpanded(const TreePath& path, bool isExpanded);
-    
-	//Sets the TreeModel that will provide the data.
-	virtual void setModel(TreeModelPtr newModel);
-	
-	//Determines whether or not the root node from the TreeModel is visible.
-	virtual void setRootVisible(bool rootVisible);
-
-	//Sets the height of each cell.
-	virtual void setRowHeight(const UInt32& rowHeight);
+}
 
 
-  protected:
-    /*==========================  PRIVATE  ================================*/
-      
-    UInt32 FixedHeightTreeLayoutCache::getRowCount(const TreePath& Path) const;
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
 
-    void getVisibleDecendants(const TreePath& Path, std::vector<TreePath>& VisibleDecendants) const;
-  private:
-};
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
 
-typedef FixedHeightTreeLayoutCache *FixedHeightTreeLayoutCachePtr;
+/*----------------------- constructors & destructors ----------------------*/
+
+TreeModelLayout::TreeModelLayout(void) :
+    Inherited()
+{
+}
+
+TreeModelLayout::TreeModelLayout(const TreeModelLayout &source) :
+    Inherited(source)
+{
+}
+
+TreeModelLayout::~TreeModelLayout(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void TreeModelLayout::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void TreeModelLayout::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump TreeModelLayout NI" << std::endl;
+}
+
+
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
+
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
+
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
+
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGTREEMODELLAYOUTBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGTREEMODELLAYOUTBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGTREEMODELLAYOUTFIELDS_HEADER_CVSID;
+}
+
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
 
 OSG_END_NAMESPACE
 
-#define OSGFIXEDHEIGHTTREELAYOUTCACHE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
-#endif /* _OSGFIXEDHEIGHTTREELAYOUTCACHE_H_ */

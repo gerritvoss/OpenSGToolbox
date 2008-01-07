@@ -39,6 +39,8 @@
 //---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
+#include "Component/Tree/ModelLayout/OSGTreeModelLayout.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -57,7 +59,7 @@ void Tree::addSelectionPaths(const std::vector<TreePath>& paths)
 inline
 void Tree::addSelectionRow(const UInt32& row)
 {
-    addSelectionPath(_TreeModelLayout->getPathForRow(row));
+    addSelectionPath(getModelLayout()->getPathForRow(row));
 }
 
 inline
@@ -69,31 +71,31 @@ void Tree::clearSelection(void)
 inline
 void Tree::collapsePath(const TreePath& path)
 {
-    _TreeModelLayout->setExpanded(path, false);
+    getModelLayout()->setExpanded(path, false);
 }
 
 inline
 void Tree::collapseRow(const UInt32& row)
 {
-    _TreeModelLayout->setExpanded(_TreeModelLayout->getPathForRow(row), false);
+    getModelLayout()->setExpanded(getModelLayout()->getPathForRow(row), false);
 }
 
 inline
 void Tree::expandPath(const TreePath& path)
 {
-    _TreeModelLayout->setExpanded(path, true);
+    getModelLayout()->setExpanded(path, true);
 }
 
 inline
 void Tree::expandRow(const UInt32& row)
 {
-    _TreeModelLayout->setExpanded(_TreeModelLayout->getPathForRow(row), true);
+    getModelLayout()->setExpanded(getModelLayout()->getPathForRow(row), true);
 }
 
 inline
 SharedFieldPtr Tree::getLastSelectedPathComponent(void) const
 {
-    return _TreeModelLayout->getPathForRow(_SelectionModel->getMaxSelectionRow()).getLastPathComponent();
+    return getModelLayout()->getPathForRow(_SelectionModel->getMaxSelectionRow()).getLastPathComponent();
 }
 
 inline
@@ -129,19 +131,19 @@ TreeModelPtr Tree::getModel(void) const
 inline
 TreePath Tree::getPathForRow(const UInt32& row) const
 {
-    return _TreeModelLayout->getPathForRow(row);
+    return getModelLayout()->getPathForRow(row);
 }
 
 inline
 Int32 Tree::getRowCount(void) const
 {
-    return _TreeModelLayout->getRowCount();
+    return getModelLayout()->getRowCount();
 }
 
 inline
 Int32 Tree::getRowForPath(const TreePath& path) const
 {
-    return _TreeModelLayout->getRowForPath(path);
+    return getModelLayout()->getRowForPath(path);
 }
 
 inline
@@ -177,37 +179,37 @@ std::vector<UInt32> Tree::getSelectionRows(void) const
 inline
 bool Tree::hasBeenExpanded(const TreePath& path) const
 {
-    return _TreeModelLayout->isExpanded(path);
+    return getModelLayout()->isExpanded(path);
 }
 
 inline
 bool Tree::isCollapsed(const UInt32& row) const
 {
-    return !_TreeModelLayout->isExpanded(_TreeModelLayout->getPathForRow(row));
+    return !getModelLayout()->isExpanded(getModelLayout()->getPathForRow(row));
 }
 
 inline
 bool Tree::isCollapsed(const TreePath& path) const
 {
-    return !_TreeModelLayout->isExpanded(path);
+    return !getModelLayout()->isExpanded(path);
 }
 
 inline
 bool Tree::isExpanded(const UInt32& row) const
 {
-    return _TreeModelLayout->isExpanded(_TreeModelLayout->getPathForRow(row));
+    return getModelLayout()->isExpanded(getModelLayout()->getPathForRow(row));
 }
 
 inline
 bool Tree::isExpanded(const TreePath& path) const
 {
-    return _TreeModelLayout->isExpanded(path);
+    return getModelLayout()->isExpanded(path);
 }
 
 inline
 bool Tree::isFixedRowHeight(void) const
 {
-    return _TreeModelLayout->isFixedRowHeight();
+    return getModelLayout()->isFixedRowHeight();
 }
 
 inline
@@ -231,13 +233,13 @@ bool Tree::isSelectionEmpty(void) const
 inline
 bool Tree::isVisible(const TreePath& path) const
 {
-    return _TreeModelLayout->isVisible(path);
+    return getModelLayout()->isVisible(path);
 }
 
 inline
 void Tree::makeVisible(const TreePath& path)
 {
-    _TreeModelLayout->setVisible(path);
+    getModelLayout()->setVisible(path);
 }
 
 inline
@@ -255,13 +257,13 @@ void Tree::removeSelectionPaths(const std::vector<TreePath>& paths)
 inline
 void Tree::removeSelectionRow(const UInt32& row)
 {
-    _SelectionModel->removeSelectionPath(_TreeModelLayout->getPathForRow(row));
+    _SelectionModel->removeSelectionPath(getModelLayout()->getPathForRow(row));
 }
 
 inline
 void Tree::scrollPathToVisible(const TreePath& path)
 {
-    scrollRowToVisible(_TreeModelLayout->getRowForPath(path));
+    scrollRowToVisible(getModelLayout()->getRowForPath(path));
 }
 
 inline
@@ -279,7 +281,7 @@ void Tree::setSelectionPaths(const std::vector<TreePath>& paths)
 inline
 void Tree::setSelectionRow(const UInt32& row)
 {
-    _SelectionModel->setSelectionPath(_TreeModelLayout->getPathForRow(row));
+    _SelectionModel->setSelectionPath(getModelLayout()->getPathForRow(row));
 }
 
 inline

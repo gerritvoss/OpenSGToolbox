@@ -49,6 +49,7 @@
 
 #include "OSGDefaultTreeModel.h"
 #include "OSGTreeModelListener.h"
+#include "Component/Tree/Model/OSGDefaultMutableTreeNode.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -84,7 +85,7 @@ UInt32 DefaultTreeModel::getChildCount(SharedFieldPtr parent) const
 
 UInt32 DefaultTreeModel::getIndexOfChild(SharedFieldPtr parent, SharedFieldPtr child) const
 {
-    TreeNodePtr ParentNode(_Root->getNodeFromUserObject(parent));
+    ModelTreeNodePtr ParentNode(_Root->getNodeFromUserObject(parent));
     return ParentNode->getIndex(ParentNode->getNodeFromUserObject(child));
 }
 
@@ -122,24 +123,24 @@ void DefaultTreeModel::insertNodeInto(MutableTreeNodePtr newChild, MutableTreeNo
     nodesWereInserted(parent, Indices);
 }
 
-void DefaultTreeModel::nodeChanged(TreeNodePtr node)
+void DefaultTreeModel::nodeChanged(ModelTreeNodePtr node)
 {
     //TODO:Implement
 }
 
-void DefaultTreeModel::nodesChanged(TreeNodePtr node, std::vector<UInt32> childIndices)
+void DefaultTreeModel::nodesChanged(ModelTreeNodePtr node, std::vector<UInt32> childIndices)
 {
     //TODO:Implement
     //produceTreeNodesChanged();
 }
 
-void DefaultTreeModel::nodeStructureChanged(TreeNodePtr node)
+void DefaultTreeModel::nodeStructureChanged(ModelTreeNodePtr node)
 {
     //TODO:Implement
     //produceTreeStructureChanged();
 }
 
-void DefaultTreeModel::nodesWereInserted(TreeNodePtr node, std::vector<UInt32> childIndices)
+void DefaultTreeModel::nodesWereInserted(ModelTreeNodePtr node, std::vector<UInt32> childIndices)
 {
     std::vector<SharedFieldPtr> InstertedChildUserObjects;
 
@@ -156,7 +157,7 @@ void DefaultTreeModel::removeNodeFromParent(MutableTreeNodePtr node)
     //produceTreeStructureChanged();
 }
 
-void DefaultTreeModel::setRoot(TreeNodePtr root)
+void DefaultTreeModel::setRoot(ModelTreeNodePtr root)
 {
     _Root = root;
     nodeChanged(_Root);

@@ -45,81 +45,112 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class MutableTreeNode!
+ **     class AbstractTreeModelLayout!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEMUTABLETREENODEINST
+#define OSG_COMPILEABSTRACTTREEMODELLAYOUTINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGMutableTreeNodeBase.h"
-#include "OSGMutableTreeNode.h"
+#include "OSGAbstractTreeModelLayoutBase.h"
+#include "OSGAbstractTreeModelLayout.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector MutableTreeNodeBase::MTInfluenceMask = 
+const OSG::BitVector  AbstractTreeModelLayoutBase::RootVisibleInternalFieldMask = 
+    (TypeTraits<BitVector>::One << AbstractTreeModelLayoutBase::RootVisibleInternalFieldId);
+
+const OSG::BitVector  AbstractTreeModelLayoutBase::RowHeightInternalFieldMask = 
+    (TypeTraits<BitVector>::One << AbstractTreeModelLayoutBase::RowHeightInternalFieldId);
+
+const OSG::BitVector AbstractTreeModelLayoutBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
+// Field descriptions
 
-FieldContainerType MutableTreeNodeBase::_type(
-    "MutableTreeNode",
-    "ModelTreeNode",
+/*! \var bool            AbstractTreeModelLayoutBase::_sfRootVisibleInternal
+    Is the tree model root visible.
+*/
+/*! \var Int32           AbstractTreeModelLayoutBase::_sfRowHeightInternal
+    The Row Height.
+*/
+
+//! AbstractTreeModelLayout description
+
+FieldDescription *AbstractTreeModelLayoutBase::_desc[] = 
+{
+    new FieldDescription(SFBool::getClassType(), 
+                     "RootVisibleInternal", 
+                     RootVisibleInternalFieldId, RootVisibleInternalFieldMask,
+                     false,
+                     (FieldAccessMethod) &AbstractTreeModelLayoutBase::getSFRootVisibleInternal),
+    new FieldDescription(SFInt32::getClassType(), 
+                     "RowHeightInternal", 
+                     RowHeightInternalFieldId, RowHeightInternalFieldMask,
+                     false,
+                     (FieldAccessMethod) &AbstractTreeModelLayoutBase::getSFRowHeightInternal)
+};
+
+
+FieldContainerType AbstractTreeModelLayoutBase::_type(
+    "AbstractTreeModelLayout",
+    "TreeModelLayout",
     NULL,
     NULL, 
-    MutableTreeNode::initMethod,
-    NULL,
-    0);
+    AbstractTreeModelLayout::initMethod,
+    _desc,
+    sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(MutableTreeNodeBase, MutableTreeNodePtr)
+//OSG_FIELD_CONTAINER_DEF(AbstractTreeModelLayoutBase, AbstractTreeModelLayoutPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &MutableTreeNodeBase::getType(void) 
+FieldContainerType &AbstractTreeModelLayoutBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &MutableTreeNodeBase::getType(void) const 
+const FieldContainerType &AbstractTreeModelLayoutBase::getType(void) const 
 {
     return _type;
 } 
 
 
-UInt32 MutableTreeNodeBase::getContainerSize(void) const 
+UInt32 AbstractTreeModelLayoutBase::getContainerSize(void) const 
 { 
-    return sizeof(MutableTreeNode); 
+    return sizeof(AbstractTreeModelLayout); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void MutableTreeNodeBase::executeSync(      FieldContainer &other,
+void AbstractTreeModelLayoutBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((MutableTreeNodeBase *) &other, whichField);
+    this->executeSyncImpl((AbstractTreeModelLayoutBase *) &other, whichField);
 }
 #else
-void MutableTreeNodeBase::executeSync(      FieldContainer &other,
+void AbstractTreeModelLayoutBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((MutableTreeNodeBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((AbstractTreeModelLayoutBase *) &other, whichField, sInfo);
 }
-void MutableTreeNodeBase::execBeginEdit(const BitVector &whichField, 
+void AbstractTreeModelLayoutBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void MutableTreeNodeBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void AbstractTreeModelLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -132,7 +163,9 @@ void MutableTreeNodeBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-MutableTreeNodeBase::MutableTreeNodeBase(void) :
+AbstractTreeModelLayoutBase::AbstractTreeModelLayoutBase(void) :
+    _sfRootVisibleInternal    (bool(false)), 
+    _sfRowHeightInternal      (Int32(13)), 
     Inherited() 
 {
 }
@@ -141,65 +174,109 @@ MutableTreeNodeBase::MutableTreeNodeBase(void) :
 #pragma warning (default : 383)
 #endif
 
-MutableTreeNodeBase::MutableTreeNodeBase(const MutableTreeNodeBase &source) :
+AbstractTreeModelLayoutBase::AbstractTreeModelLayoutBase(const AbstractTreeModelLayoutBase &source) :
+    _sfRootVisibleInternal    (source._sfRootVisibleInternal    ), 
+    _sfRowHeightInternal      (source._sfRowHeightInternal      ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-MutableTreeNodeBase::~MutableTreeNodeBase(void)
+AbstractTreeModelLayoutBase::~AbstractTreeModelLayoutBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 MutableTreeNodeBase::getBinSize(const BitVector &whichField)
+UInt32 AbstractTreeModelLayoutBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
+
+    if(FieldBits::NoField != (RootVisibleInternalFieldMask & whichField))
+    {
+        returnValue += _sfRootVisibleInternal.getBinSize();
+    }
+
+    if(FieldBits::NoField != (RowHeightInternalFieldMask & whichField))
+    {
+        returnValue += _sfRowHeightInternal.getBinSize();
+    }
 
 
     return returnValue;
 }
 
-void MutableTreeNodeBase::copyToBin(      BinaryDataHandler &pMem,
+void AbstractTreeModelLayoutBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (RootVisibleInternalFieldMask & whichField))
+    {
+        _sfRootVisibleInternal.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RowHeightInternalFieldMask & whichField))
+    {
+        _sfRowHeightInternal.copyToBin(pMem);
+    }
+
 
 }
 
-void MutableTreeNodeBase::copyFromBin(      BinaryDataHandler &pMem,
+void AbstractTreeModelLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (RootVisibleInternalFieldMask & whichField))
+    {
+        _sfRootVisibleInternal.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RowHeightInternalFieldMask & whichField))
+    {
+        _sfRowHeightInternal.copyFromBin(pMem);
+    }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void MutableTreeNodeBase::executeSyncImpl(      MutableTreeNodeBase *pOther,
+void AbstractTreeModelLayoutBase::executeSyncImpl(      AbstractTreeModelLayoutBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (RootVisibleInternalFieldMask & whichField))
+        _sfRootVisibleInternal.syncWith(pOther->_sfRootVisibleInternal);
+
+    if(FieldBits::NoField != (RowHeightInternalFieldMask & whichField))
+        _sfRowHeightInternal.syncWith(pOther->_sfRowHeightInternal);
+
 
 }
 #else
-void MutableTreeNodeBase::executeSyncImpl(      MutableTreeNodeBase *pOther,
+void AbstractTreeModelLayoutBase::executeSyncImpl(      AbstractTreeModelLayoutBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
+    if(FieldBits::NoField != (RootVisibleInternalFieldMask & whichField))
+        _sfRootVisibleInternal.syncWith(pOther->_sfRootVisibleInternal);
+
+    if(FieldBits::NoField != (RowHeightInternalFieldMask & whichField))
+        _sfRowHeightInternal.syncWith(pOther->_sfRowHeightInternal);
+
 
 
 }
 
-void MutableTreeNodeBase::execBeginEditImpl (const BitVector &whichField, 
+void AbstractTreeModelLayoutBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -218,11 +295,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<MutableTreeNodePtr>::_type("MutableTreeNodePtr", "ModelTreeNodePtr");
+DataType FieldDataTraits<AbstractTreeModelLayoutPtr>::_type("AbstractTreeModelLayoutPtr", "TreeModelLayoutPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(MutableTreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(MutableTreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(AbstractTreeModelLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(AbstractTreeModelLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 /*------------------------------------------------------------------------*/
@@ -239,10 +316,10 @@ OSG_DLLEXPORT_MFIELD_DEF1(MutableTreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPIN
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGMUTABLETREENODEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMUTABLETREENODEBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGABSTRACTTREEMODELLAYOUTBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGABSTRACTTREEMODELLAYOUTBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGMUTABLETREENODEFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGABSTRACTTREEMODELLAYOUTFIELDS_HEADER_CVSID;
 }
 
 OSG_END_NAMESPACE

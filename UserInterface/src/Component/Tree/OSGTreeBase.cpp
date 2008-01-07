@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  TreeBase::EditableFieldMask = 
     (TypeTraits<BitVector>::One << TreeBase::EditableFieldId);
 
+const OSG::BitVector  TreeBase::ExpandsSelectedPathsFieldMask = 
+    (TypeTraits<BitVector>::One << TreeBase::ExpandsSelectedPathsFieldId);
+
 const OSG::BitVector  TreeBase::InvokesStopCellEditingFieldMask = 
     (TypeTraits<BitVector>::One << TreeBase::InvokesStopCellEditingFieldId);
 
@@ -94,6 +97,9 @@ const OSG::BitVector  TreeBase::CellEditorFieldMask =
 const OSG::BitVector  TreeBase::CellGeneratorFieldMask = 
     (TypeTraits<BitVector>::One << TreeBase::CellGeneratorFieldId);
 
+const OSG::BitVector  TreeBase::ModelLayoutFieldMask = 
+    (TypeTraits<BitVector>::One << TreeBase::ModelLayoutFieldId);
+
 const OSG::BitVector TreeBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -103,6 +109,9 @@ const OSG::BitVector TreeBase::MTInfluenceMask =
 
 /*! \var bool            TreeBase::_sfEditable
     Is the tree editable
+*/
+/*! \var bool            TreeBase::_sfExpandsSelectedPaths
+    True if selection changes result in the parent path being expanded
 */
 /*! \var bool            TreeBase::_sfInvokesStopCellEditing
     If true, when editing is to be stopped by way of selection changing, data in tree changing or other means stopCellEditing  is invoked, and changes are saved.
@@ -131,6 +140,9 @@ const OSG::BitVector TreeBase::MTInfluenceMask =
 /*! \var ComponentGeneratorPtr TreeBase::_sfCellGenerator
     
 */
+/*! \var TreeModelLayoutPtr TreeBase::_sfModelLayout
+    
+*/
 
 //! Tree description
 
@@ -141,6 +153,11 @@ FieldDescription *TreeBase::_desc[] =
                      EditableFieldId, EditableFieldMask,
                      false,
                      (FieldAccessMethod) &TreeBase::getSFEditable),
+    new FieldDescription(SFBool::getClassType(), 
+                     "ExpandsSelectedPaths", 
+                     ExpandsSelectedPathsFieldId, ExpandsSelectedPathsFieldMask,
+                     false,
+                     (FieldAccessMethod) &TreeBase::getSFExpandsSelectedPaths),
     new FieldDescription(SFBool::getClassType(), 
                      "InvokesStopCellEditing", 
                      InvokesStopCellEditingFieldId, InvokesStopCellEditingFieldMask,
@@ -185,7 +202,12 @@ FieldDescription *TreeBase::_desc[] =
                      "CellGenerator", 
                      CellGeneratorFieldId, CellGeneratorFieldMask,
                      false,
-                     (FieldAccessMethod) &TreeBase::getSFCellGenerator)
+                     (FieldAccessMethod) &TreeBase::getSFCellGenerator),
+    new FieldDescription(SFTreeModelLayoutPtr::getClassType(), 
+                     "ModelLayout", 
+                     ModelLayoutFieldId, ModelLayoutFieldMask,
+                     false,
+                     (FieldAccessMethod) &TreeBase::getSFModelLayout)
 };
 
 
@@ -262,6 +284,7 @@ void TreeBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 TreeBase::TreeBase(void) :
     _sfEditable               (bool(false)), 
+    _sfExpandsSelectedPaths   (bool(false)), 
     _sfInvokesStopCellEditing (bool(false)), 
     _sfRootVisible            (bool(false)), 
     _sfRowHeight              (UInt32(false)), 
@@ -271,6 +294,7 @@ TreeBase::TreeBase(void) :
     _sfVisibleRowCount        (UInt32(10)), 
     _sfCellEditor             (CellEditorPtr(NullFC)), 
     _sfCellGenerator          (ComponentGeneratorPtr(NullFC)), 
+    _sfModelLayout            (TreeModelLayoutPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -281,6 +305,7 @@ TreeBase::TreeBase(void) :
 
 TreeBase::TreeBase(const TreeBase &source) :
     _sfEditable               (source._sfEditable               ), 
+    _sfExpandsSelectedPaths   (source._sfExpandsSelectedPaths   ), 
     _sfInvokesStopCellEditing (source._sfInvokesStopCellEditing ), 
     _sfRootVisible            (source._sfRootVisible            ), 
     _sfRowHeight              (source._sfRowHeight              ), 
@@ -290,6 +315,7 @@ TreeBase::TreeBase(const TreeBase &source) :
     _sfVisibleRowCount        (source._sfVisibleRowCount        ), 
     _sfCellEditor             (source._sfCellEditor             ), 
     _sfCellGenerator          (source._sfCellGenerator          ), 
+    _sfModelLayout            (source._sfModelLayout            ), 
     Inherited                 (source)
 {
 }
@@ -309,6 +335,11 @@ UInt32 TreeBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (EditableFieldMask & whichField))
     {
         returnValue += _sfEditable.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ExpandsSelectedPathsFieldMask & whichField))
+    {
+        returnValue += _sfExpandsSelectedPaths.getBinSize();
     }
 
     if(FieldBits::NoField != (InvokesStopCellEditingFieldMask & whichField))
@@ -356,6 +387,11 @@ UInt32 TreeBase::getBinSize(const BitVector &whichField)
         returnValue += _sfCellGenerator.getBinSize();
     }
 
+    if(FieldBits::NoField != (ModelLayoutFieldMask & whichField))
+    {
+        returnValue += _sfModelLayout.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -368,6 +404,11 @@ void TreeBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (EditableFieldMask & whichField))
     {
         _sfEditable.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ExpandsSelectedPathsFieldMask & whichField))
+    {
+        _sfExpandsSelectedPaths.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (InvokesStopCellEditingFieldMask & whichField))
@@ -415,6 +456,11 @@ void TreeBase::copyToBin(      BinaryDataHandler &pMem,
         _sfCellGenerator.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (ModelLayoutFieldMask & whichField))
+    {
+        _sfModelLayout.copyToBin(pMem);
+    }
+
 
 }
 
@@ -426,6 +472,11 @@ void TreeBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (EditableFieldMask & whichField))
     {
         _sfEditable.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ExpandsSelectedPathsFieldMask & whichField))
+    {
+        _sfExpandsSelectedPaths.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (InvokesStopCellEditingFieldMask & whichField))
@@ -473,6 +524,11 @@ void TreeBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfCellGenerator.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ModelLayoutFieldMask & whichField))
+    {
+        _sfModelLayout.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -485,6 +541,9 @@ void TreeBase::executeSyncImpl(      TreeBase *pOther,
 
     if(FieldBits::NoField != (EditableFieldMask & whichField))
         _sfEditable.syncWith(pOther->_sfEditable);
+
+    if(FieldBits::NoField != (ExpandsSelectedPathsFieldMask & whichField))
+        _sfExpandsSelectedPaths.syncWith(pOther->_sfExpandsSelectedPaths);
 
     if(FieldBits::NoField != (InvokesStopCellEditingFieldMask & whichField))
         _sfInvokesStopCellEditing.syncWith(pOther->_sfInvokesStopCellEditing);
@@ -512,6 +571,9 @@ void TreeBase::executeSyncImpl(      TreeBase *pOther,
 
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
         _sfCellGenerator.syncWith(pOther->_sfCellGenerator);
+
+    if(FieldBits::NoField != (ModelLayoutFieldMask & whichField))
+        _sfModelLayout.syncWith(pOther->_sfModelLayout);
 
 
 }
@@ -526,6 +588,9 @@ void TreeBase::executeSyncImpl(      TreeBase *pOther,
     if(FieldBits::NoField != (EditableFieldMask & whichField))
         _sfEditable.syncWith(pOther->_sfEditable);
 
+    if(FieldBits::NoField != (ExpandsSelectedPathsFieldMask & whichField))
+        _sfExpandsSelectedPaths.syncWith(pOther->_sfExpandsSelectedPaths);
+
     if(FieldBits::NoField != (InvokesStopCellEditingFieldMask & whichField))
         _sfInvokesStopCellEditing.syncWith(pOther->_sfInvokesStopCellEditing);
 
@@ -552,6 +617,9 @@ void TreeBase::executeSyncImpl(      TreeBase *pOther,
 
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
         _sfCellGenerator.syncWith(pOther->_sfCellGenerator);
+
+    if(FieldBits::NoField != (ModelLayoutFieldMask & whichField))
+        _sfModelLayout.syncWith(pOther->_sfModelLayout);
 
 
 

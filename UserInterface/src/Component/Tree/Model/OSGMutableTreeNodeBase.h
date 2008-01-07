@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGTreeNode.h" // Parent
+#include "OSGModelTreeNode.h" // Parent
 
 
 #include "OSGMutableTreeNodeFields.h"
@@ -77,11 +77,11 @@ class BinaryDataHandler;
 
 //! \brief MutableTreeNode Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING MutableTreeNodeBase : public TreeNode
+class OSG_USERINTERFACELIB_DLLMAPPING MutableTreeNodeBase : public ModelTreeNode
 {
   private:
 
-    typedef TreeNode    Inherited;
+    typedef ModelTreeNode    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:

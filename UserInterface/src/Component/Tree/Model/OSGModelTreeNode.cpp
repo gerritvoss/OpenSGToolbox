@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGTreeNode.h"
+#include "OSGModelTreeNode.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,7 +55,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::TreeNode
+/*! \class osg::ModelTreeNode
 A UI Tree Node. 
 */
 
@@ -67,7 +67,7 @@ A UI Tree Node.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void TreeNode::initMethod (void)
+void ModelTreeNode::initMethod (void)
 {
 }
 
@@ -76,9 +76,9 @@ void TreeNode::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-std::vector<TreeNodePtr> TreeNode::getChildren(void) const
+std::vector<ModelTreeNodePtr> ModelTreeNode::getChildren(void) const
 {
-    std::vector<TreeNodePtr> Result;
+    std::vector<ModelTreeNodePtr> Result;
     for(UInt32 i(0) ; i<getChildCount() ; ++i)
     {
         Result.push_back(getChildAt(i));
@@ -87,15 +87,15 @@ std::vector<TreeNodePtr> TreeNode::getChildren(void) const
     return Result;
 }
 
-TreeNodePtr TreeNode::getNodeFromUserObject(SharedFieldPtr object)
+ModelTreeNodePtr ModelTreeNode::getNodeFromUserObject(SharedFieldPtr object)
 {
     if(object == getUserObject())
     {
-        return TreeNodePtr(this);
+        return ModelTreeNodePtr(this);
     }
     else
     {
-        TreeNodePtr Node;
+        ModelTreeNodePtr Node;
         for(UInt32 i(0) ; i<getChildCount() ; ++i)
         {
             Node = getChildAt(i)->getNodeFromUserObject(object);
@@ -107,11 +107,11 @@ TreeNodePtr TreeNode::getNodeFromUserObject(SharedFieldPtr object)
     }
 }
 
-TreePath TreeNode::getPath(void) const
+TreePath ModelTreeNode::getPath(void) const
 {
     std::vector<SharedFieldPtr> Path;
 
-    TreeNodePtr Node(this);
+    ModelTreeNodePtr Node(this);
     while(Node != NullFC)
     {
         Path.push_back(Node->getUserObject());
@@ -126,31 +126,31 @@ TreePath TreeNode::getPath(void) const
 
 /*----------------------- constructors & destructors ----------------------*/
 
-TreeNode::TreeNode(void) :
+ModelTreeNode::ModelTreeNode(void) :
     Inherited()
 {
 }
 
-TreeNode::TreeNode(const TreeNode &source) :
+ModelTreeNode::ModelTreeNode(const ModelTreeNode &source) :
     Inherited(source)
 {
 }
 
-TreeNode::~TreeNode(void)
+ModelTreeNode::~ModelTreeNode(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void TreeNode::changed(BitVector whichField, UInt32 origin)
+void ModelTreeNode::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void TreeNode::dump(      UInt32    , 
+void ModelTreeNode::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump TreeNode NI" << std::endl;
+    SLOG << "Dump ModelTreeNode NI" << std::endl;
 }
 
 
@@ -168,10 +168,10 @@ void TreeNode::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGTREENODEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTREENODEBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGMODELTREENODEBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGMODELTREENODEBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGTREENODEFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGMODELTREENODEFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

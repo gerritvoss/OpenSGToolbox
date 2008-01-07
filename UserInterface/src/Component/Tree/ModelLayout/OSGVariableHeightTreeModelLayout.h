@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGTREENODE_H_
-#define _OSGTREENODE_H_
+#ifndef _OSGVARIABLEHEIGHTTREEMODELLAYOUT_H_
+#define _OSGVARIABLEHEIGHTTREEMODELLAYOUT_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,22 +45,19 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGTreeNodeBase.h"
-#include "Component/Tree/OSGTreePath.h"
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
-#include <vector>
+#include "OSGVariableHeightTreeModelLayoutBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TreeNode class. See \ref 
-           PageUserInterfaceTreeNode for a description.
+/*! \brief VariableHeightTreeModelLayout class. See \ref 
+           PageUserInterfaceVariableHeightTreeModelLayout for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeNode : public TreeNodeBase
+class OSG_USERINTERFACELIB_DLLMAPPING VariableHeightTreeModelLayout : public VariableHeightTreeModelLayoutBase
 {
   private:
 
-    typedef TreeNodeBase Inherited;
+    typedef VariableHeightTreeModelLayoutBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -81,57 +78,78 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeNode : public TreeNodeBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+	//Returns a rectangle giving the bounds needed to draw path.
+	virtual void getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight, TreePath path, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn) const;
+
+	//Returns true if every node in the path is expanded
+	virtual bool isVisible(const TreePath& path) const const;
+
+	//Returns the path to the node that is closest to x,y.
+	virtual TreePath getPathClosestTo(const UInt32& x, const UInt32& y) const;
+
+	//Returns the path for passed in row.
+	virtual TreePath getPathForRow(const UInt32& row) const;
+
+	//Returns the preferred height.
+	virtual UInt32 getPreferredHeight(void) const;
+
+	//Returns the preferred width for the passed in region.
+	virtual UInt32 getPreferredWidth(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+
+	//Number of rows being displayed.
+	virtual UInt32 getRowCount(void) const;
+
+	//Returns the row that the last item identified in path is visible at.
+	virtual Int32 getRowForPath(const TreePath& path) const;
+
+	//Returns the number of visible children for row.
+	virtual UInt32 getVisibleChildCount(const TreePath& path) const;
+
+	//Returns an Enumerator that increments over the visible paths starting at the passed in location.
+	//virtual Enumeration getVisiblePathsFrom(const TreePath& path) const;
+
+	//Instructs the LayoutCache that the bounds for path are invalid, and need to be updated.
+	virtual void invalidatePathBounds(const TreePath& path);
+
+	//Informs the TreeState that it needs to recalculate all the sizes it is referencing.
+	virtual void invalidateSizes(void);
+
+	//Returns true if the last node in this path is expanded
+	virtual bool isExpanded(const TreePath& path) const;
+
+	//Marks the path path expanded state to isExpanded.
+	virtual void setExpanded(const TreePath& path, bool isExpanded);
+
+	//Sets the TreeModel that will provide the data.
+	virtual void setModel(TreeModelPtr newModel);
 	
-	//Returns the children of the receiver as a Vector.
-    virtual std::vector<TreeNodePtr> getChildren(void) const;
+	//Sets the renderer that is responsible for drawing nodes in the tree and which is threfore responsible for calculating the dimensions of individual nodes.
+	//virtual void setNodeDimensions(AbstractLayoutCache.NodeDimensions nd);
 
-	//Returns true if the receiver allows children.
-	virtual bool getAllowsChildren(void) const = 0;
+	//Determines whether or not the root node from the TreeModel is visible.
+	virtual void setRootVisible(bool rootVisible);
 
-	//Returns the child TreeNode at index childIndex.
-	virtual TreeNodePtr getChildAt(const UInt32& childIndex) const = 0;
+	//Sets the height of each cell.
+	virtual void setRowHeight(const UInt32& rowHeight);
 
-	//Returns the number of children TreeNodes the receiver contains.
-	virtual UInt32 getChildCount(void) const = 0;
-
-	//Returns the index of node in the receivers children.
-	virtual Int32 getIndex(TreeNodePtr node) const = 0;
-
-	//Returns the parent TreeNode of the receiver.
-	virtual TreeNodePtr getParent(void) const = 0;
-
-	//Returns true if the receiver is a leaf.
-	virtual bool isLeaf(void) const = 0;
-
-	//Resets the user object of the receiver to object.
-	virtual void setUserObject(SharedFieldPtr object) = 0;
-    
-	//Returns this node's user object.
-	virtual SharedFieldPtr getUserObject(void) const = 0;
-    
-    //Find the decendent node that uses object as it's UserObject
-    TreeNodePtr getNodeFromUserObject(SharedFieldPtr object);
-
-    //Get the Path from the Root to this node
-    TreePath getPath(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in TreeNodeBase.
+    // Variables should all be in VariableHeightTreeModelLayoutBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    TreeNode(void);
-    TreeNode(const TreeNode &source);
+    VariableHeightTreeModelLayout(void);
+    VariableHeightTreeModelLayout(const VariableHeightTreeModelLayout &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TreeNode(void); 
+    virtual ~VariableHeightTreeModelLayout(void); 
 
     /*! \}                                                                 */
     
@@ -139,22 +157,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeNode : public TreeNodeBase
   private:
 
     friend class FieldContainer;
-    friend class TreeNodeBase;
+    friend class VariableHeightTreeModelLayoutBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const TreeNode &source);
+    void operator =(const VariableHeightTreeModelLayout &source);
 };
 
-typedef TreeNode *TreeNodeP;
+typedef VariableHeightTreeModelLayout *VariableHeightTreeModelLayoutP;
 
 OSG_END_NAMESPACE
 
-#include "OSGTreeNodeBase.inl"
-#include "OSGTreeNode.inl"
+#include "OSGVariableHeightTreeModelLayoutBase.inl"
+#include "OSGVariableHeightTreeModelLayout.inl"
 
-#define OSGTREENODE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGVARIABLEHEIGHTTREEMODELLAYOUT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGTREENODE_H_ */
+#endif /* _OSGVARIABLEHEIGHTTREEMODELLAYOUT_H_ */

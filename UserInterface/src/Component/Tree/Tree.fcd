@@ -23,6 +23,16 @@ A UI Tree.
    Is the tree editable
    </Field>
 	<Field
+		name="ExpandsSelectedPaths"
+		type="bool"
+		cardinality="single"
+      visibility="external"
+		defaultValue="false"
+		access="public"
+	>
+   True if selection changes result in the parent path being expanded
+   </Field>
+	<Field
 		name="InvokesStopCellEditing"
 		type="bool"
 		cardinality="single"
@@ -108,6 +118,16 @@ A UI Tree.
 		cardinality="single"
       visibility="external"
       header="ComponentGenerators/OSGComponentGeneratorFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+   </Field>
+	<Field
+		name="ModelLayout"
+		type="TreeModelLayoutPtr"
+		cardinality="single"
+      visibility="external"
+      header="ModelLayout/OSGTreeModelLayoutFields.h"
 		defaultValue="NullFC"
 		access="public"
 	>

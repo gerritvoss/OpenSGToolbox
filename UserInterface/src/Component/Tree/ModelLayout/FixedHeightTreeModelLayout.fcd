@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="MutableTreeNode"
-	parent="ModelTreeNode"
+	name="FixedHeightTreeModelLayout"
+	parent="AbstractTreeModelLayout"
 	library="UserInterface"
 	pointerfieldtypes="both"
-	structure="abstract"
+	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
 	decoratable="false"
 	useLocalIncludes="true"
 >
-A UI Mutable Tree Node.
+A UI Fixed Height Tree Model Layout.
 </FieldContainer>

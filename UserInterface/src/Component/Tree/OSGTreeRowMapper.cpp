@@ -47,8 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGVariableHeightTreeLayoutCache.h"
-#include "Component/Tree/Selection/OSGTreeSelectionListener.h"
+#include "OSGTreeRowMapper.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -56,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::VariableHeightTreeLayoutCache
-A VariableHeightTreeLayoutCache. 
+/*! \class osg::TreeRowMapper
+A UI Tree Row Mapper. 
 */
 
 /***************************************************************************\
@@ -68,100 +67,14 @@ A VariableHeightTreeLayoutCache.
  *                           Class methods                                 *
 \***************************************************************************/
 
+void TreeRowMapper::initMethod (void)
+{
+}
+
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
-void VariableHeightTreeLayoutCache::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight, TreePath path, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn) const
-{
-	//TODO:Implement
-}
-
-bool VariableHeightTreeLayoutCache::isVisible(const TreePath& path) const const
-{
-	//TODO: Implement
-	return false;
-}
-
-TreePath VariableHeightTreeLayoutCache::getPathClosestTo(const UInt32& x, const UInt32& y) const
-{
-	//TODO:Implement
-	return TreePath(SharedFieldPtr());
-}
-
-TreePath VariableHeightTreeLayoutCache::getPathForRow(const UInt32& row) const
-{
-	//TODO:Implement
-	return TreePath(SharedFieldPtr());
-}
-
-UInt32 VariableHeightTreeLayoutCache::getPreferredHeight(void) const
-{
-	//TODO: Implement
-	return 0;
-}
-
-UInt32 VariableHeightTreeLayoutCache::getPreferredWidth(Pnt2s& TopLeft, Pnt2s& BottomRight) const
-{
-	//TODO: Implement
-	return 0;
-}
-
-UInt32 VariableHeightTreeLayoutCache::getRowCount(void) const
-{
-	//TODO: Implement
-	return 0;
-}
-
-Int32 VariableHeightTreeLayoutCache::getRowForPath(const TreePath& path) const
-{
-	//TODO: Implement
-	return 0;
-}
-
-UInt32 VariableHeightTreeLayoutCache::getVisibleChildCount(const TreePath& path) const
-{
-	//TODO: Implement
-	return 0;
-}
-
-
-void VariableHeightTreeLayoutCache::invalidatePathBounds(const TreePath& path)
-{
-	//TODO:Implement
-}
-
-void VariableHeightTreeLayoutCache::invalidateSizes(void)
-{
-	//TODO:Implement
-}
-
-bool VariableHeightTreeLayoutCache::isExpanded(const TreePath& path) const
-{
-	//TODO: Implement
-	return false;
-}
-
-void VariableHeightTreeLayoutCache::setExpanded(const TreePath& path, bool isExpanded)
-{
-	//TODO:Implement
-}
-
-void VariableHeightTreeLayoutCache::setModel(TreeModelPtr newModel)
-{
-	//TODO:Implement
-}
-
-
-void VariableHeightTreeLayoutCache::setRootVisible(bool rootVisible)
-{
-	//TODO:Implement
-}
-
-void VariableHeightTreeLayoutCache::setRowHeight(const UInt32& rowHeight)
-{
-	//TODO:Implement
-}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -169,7 +82,33 @@ void VariableHeightTreeLayoutCache::setRowHeight(const UInt32& rowHeight)
 
 /*----------------------- constructors & destructors ----------------------*/
 
+TreeRowMapper::TreeRowMapper(void) :
+    Inherited()
+{
+}
+
+TreeRowMapper::TreeRowMapper(const TreeRowMapper &source) :
+    Inherited(source)
+{
+}
+
+TreeRowMapper::~TreeRowMapper(void)
+{
+}
+
 /*----------------------------- class specific ----------------------------*/
+
+void TreeRowMapper::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void TreeRowMapper::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump TreeRowMapper NI" << std::endl;
+}
+
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
@@ -181,6 +120,15 @@ void VariableHeightTreeLayoutCache::setRowHeight(const UInt32& rowHeight)
 #ifdef OSG_LINUX_ICC
 #pragma warning( disable : 177 )
 #endif
+
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGTREEROWMAPPERBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGTREEROWMAPPERBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGTREEROWMAPPERFIELDS_HEADER_CVSID;
+}
 
 #ifdef __sgi
 #pragma reset woff 1174

@@ -48,7 +48,8 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGTree.h"
-//#include "Component/Tree/Model/OSGDefaultTreeModel.h"
+#include "Util/OSGUIDefines.h"
+#include "Component/Tree/ModelLayout/OSGTreeModelLayout.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -84,7 +85,7 @@ void Tree::addSelectionInterval(const UInt32& index0, const UInt32& index1)
     UInt32 MinIndex(osgMin(index0,index1)), MaxIndex(osgMax(index0,index1));
     for(UInt32 i(MinIndex) ; i<=MaxIndex ; ++i)
     {
-        Paths.push_back(_TreeModelLayout->getPathForRow(i));
+        Paths.push_back(getModelLayout()->getPathForRow(i));
     }
 
     addSelectionPaths(Paths);
@@ -96,7 +97,7 @@ void Tree::addSelectionRows(const std::vector<UInt32>& rows)
     std::vector<TreePath> Paths;
     for(std::vector<UInt32>::const_iterator Itor(rows.begin()) ; Itor!=rows.end() ; ++Itor)
     {
-        Paths.push_back(_TreeModelLayout->getPathForRow(*Itor));
+        Paths.push_back(getModelLayout()->getPathForRow(*Itor));
     }
 
     addSelectionPaths(Paths);
@@ -119,26 +120,19 @@ TreePath Tree::getAnchorSelectionPath(void) const
 TreePath Tree::getClosestPathForLocation(const UInt32& x, const UInt32& y) const
 {
     //TODO:Implement
-    return _TreeModelLayout->getPathClosestTo(x,y);
+    return getModelLayout()->getPathClosestTo(x,y);
 }
 
 Int32 Tree::getClosestRowForLocation(const UInt32& x, const UInt32& y) const
 {
     //TODO:Implement
-    return _TreeModelLayout->getRowForPath(getClosestPathForLocation(x,y));
+    return getModelLayout()->getRowForPath(getClosestPathForLocation(x,y));
 }
 
 TreePath Tree::getEditingPath(void) const
 {
     //TODO:Implement
     return TreePath(SharedFieldPtr());
-}
-
-
-bool Tree::getExpandsSelectedPaths(void) const
-{
-    //TODO:Implement
-    return false;
 }
 
 
@@ -180,7 +174,7 @@ void Tree::removeSelectionInterval(const UInt32& index0, const UInt32& index1)
     UInt32 MinIndex(osgMin(index0,index1)), MaxIndex(osgMax(index0,index1));
     for(UInt32 i(MinIndex) ; i<=MaxIndex ; ++i)
     {
-        Paths.push_back(_TreeModelLayout->getPathForRow(i));
+        Paths.push_back(getModelLayout()->getPathForRow(i));
     }
 
     removeSelectionPaths(Paths);
@@ -192,7 +186,7 @@ void Tree::removeSelectionRows(const std::vector<UInt32>& rows)
     std::vector<TreePath> Paths;
     for(std::vector<UInt32>::const_iterator Itor(rows.begin()) ; Itor!=rows.end() ; ++Itor)
     {
-        Paths.push_back(_TreeModelLayout->getPathForRow(*Itor));
+        Paths.push_back(getModelLayout()->getPathForRow(*Itor));
     }
 
     removeSelectionPaths(Paths);
@@ -216,14 +210,10 @@ void Tree::setDragEnabled(bool b)
     //TODO:Implement
 }
 
-void Tree::setExpandsSelectedPaths(bool newValue)
-{
-    //TODO:Implement
-}
-
 void Tree::setLeadSelectionPath(const TreePath& newPath)
 {
     //TODO:Implement
+    //_SelectionModel->set
 }
 
 void Tree::setModel(TreeModelPtr newModel)
@@ -246,7 +236,7 @@ void Tree::setSelectionInterval(const UInt32& index0, const UInt32& index1)
     UInt32 MinIndex(osgMin(index0,index1)), MaxIndex(osgMax(index0,index1));
     for(UInt32 i(MinIndex) ; i<=MaxIndex ; ++i)
     {
-        Paths.push_back(_TreeModelLayout->getPathForRow(i));
+        Paths.push_back(getModelLayout()->getPathForRow(i));
     }
 
     setSelectionPaths(Paths);
@@ -271,7 +261,7 @@ void Tree::setSelectionRows(const std::vector<UInt32>& rows)
     std::vector<TreePath> Paths;
     for(std::vector<UInt32>::const_iterator Itor(rows.begin()) ; Itor!=rows.end() ; ++Itor)
     {
-        Paths.push_back(_TreeModelLayout->getPathForRow(*Itor));
+        Paths.push_back(getModelLayout()->getPathForRow(*Itor));
     }
 
     setSelectionPaths(Paths);
@@ -306,8 +296,17 @@ Vec2s Tree::getPreferredScrollableViewportSize(void)
 
 Int32 Tree::getScrollableBlockIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
-    //TODO:Implement
-    return 0;
+    UInt16 MajorAxis;
+    if(orientation == VERTICAL_ALIGNMENT)
+    {
+        MajorAxis = 1;
+    }
+    else
+    {
+        MajorAxis = 0;
+    }
+    
+    return direction * (VisibleRectBottomRight[MajorAxis] - VisibleRectTopLeft[MajorAxis]);
 }
 
 bool Tree::getScrollableTracksViewportHeight(void)
@@ -328,10 +327,10 @@ Int32 Tree::getScrollableUnitIncrement(const Pnt2s& VisibleRectTopLeft, const Pn
 
 void Tree::clearToggledPaths(void)
 {
-    std::vector<TreePath> ExpandedPaths = _TreeModelLayout->getExpandedPaths();
+    std::vector<TreePath> ExpandedPaths = getModelLayout()->getExpandedPaths();
     for(std::vector<TreePath>::iterator Itor(ExpandedPaths.begin()) ; Itor != ExpandedPaths.end() ; ++Itor)
     {
-        _TreeModelLayout->setExpanded((*Itor), false);
+        getModelLayout()->setExpanded((*Itor), false);
     }
 }
 
@@ -346,7 +345,7 @@ TreeModelPtr Tree::getDefaultTreeModel(void)
 
 std::vector<TreePath> Tree::getDescendantToggledPaths(const TreePath& parent)
 {
-    std::vector<TreePath> ExpandedPaths = _TreeModelLayout->getExpandedPaths();
+    std::vector<TreePath> ExpandedPaths = getModelLayout()->getExpandedPaths();
     std::vector<TreePath> Result;
     
     for(std::vector<TreePath>::iterator Itor(ExpandedPaths.begin()) ; Itor != ExpandedPaths.end() ; ++Itor)
@@ -393,7 +392,7 @@ bool Tree::removeDescendantSelectedPaths(const TreePath& path, bool includePath)
 
 void Tree::removeDescendantToggledPaths(const std::vector<TreePath>& toRemove)
 {
-    std::vector<TreePath> ExpandedPaths = _TreeModelLayout->getExpandedPaths();
+    std::vector<TreePath> ExpandedPaths = getModelLayout()->getExpandedPaths();
     
     for(std::vector<TreePath>::const_iterator ToRemoveItor(toRemove.begin()) ; ToRemoveItor != toRemove.end() ; ++ToRemoveItor)
     {
@@ -401,7 +400,7 @@ void Tree::removeDescendantToggledPaths(const std::vector<TreePath>& toRemove)
         {
             if(ToRemoveItor->isDescendant(*ExpandedPathsItor))
             {
-                _TreeModelLayout->setExpanded(*ExpandedPathsItor, false);
+                getModelLayout()->setExpanded(*ExpandedPathsItor, false);
             }
         }
     }
@@ -409,8 +408,8 @@ void Tree::removeDescendantToggledPaths(const std::vector<TreePath>& toRemove)
 
 void Tree::setExpandedState(const TreePath& path, bool state)
 {
-    _TreeModelLayout->setVisible(path);
-    _TreeModelLayout->setExpanded(path, state);
+    getModelLayout()->setVisible(path);
+    getModelLayout()->setExpanded(path, state);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -423,7 +422,6 @@ Tree::Tree(void) :
     Inherited(),
         _Model(NULL),
         _SelectionModel(NULL),
-        _TreeModelLayout(NULL),
         _ModelListener(TreePtr(this)),
         _SelectionListener(TreePtr(this))
 {
@@ -433,7 +431,6 @@ Tree::Tree(const Tree &source) :
     Inherited(source),
         _Model(source._Model),
         _SelectionModel(source._SelectionModel),
-        _TreeModelLayout(NULL),
         _ModelListener(TreePtr(this)),
         _SelectionListener(TreePtr(this))
 {

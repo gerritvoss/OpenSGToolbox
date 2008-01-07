@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGTREENODEFIELDS_H_
-#define _OSGTREENODEFIELDS_H_
+#ifndef _OSGMODELTREENODEFIELDS_H_
+#define _OSGMODELTREENODEFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -64,12 +64,12 @@
 
 OSG_BEGIN_NAMESPACE
 
-class TreeNode;
+class ModelTreeNode;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! TreeNodePtr
+//! ModelTreeNodePtr
 
-typedef FCPtr<FieldContainerPtr, TreeNode> TreeNodePtr;
+typedef FCPtr<FieldContainerPtr, ModelTreeNode> ModelTreeNodePtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<FieldContainerPtr, TreeNode> TreeNodePtr;
 #endif
 
 template <>
-struct FieldDataTraits<TreeNodePtr> : 
-    public FieldTraitsRecurseMapper<TreeNodePtr, true>
+struct FieldDataTraits<ModelTreeNodePtr> : 
+    public FieldTraitsRecurseMapper<ModelTreeNodePtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<TreeNodePtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFTreeNodePtr"; }
-    static const char *getMName(void) { return "MFTreeNodePtr"; }
+    static const char *getSName(void) { return "SFModelTreeNodePtr"; }
+    static const char *getMName(void) { return "MFModelTreeNodePtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<TreeNodePtr, true>
+/*! \class  FieldTraitsRecurseMapper<ModelTreeNodePtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<TreeNodePtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldSingle */
 
-typedef SField<TreeNodePtr> SFTreeNodePtr;
+typedef SField<ModelTreeNodePtr> SFModelTreeNodePtr;
 #endif
 
-#ifndef OSG_COMPILETREENODEINST
-OSG_DLLEXPORT_DECL1(SField, TreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEMODELTREENODEINST
+OSG_DLLEXPORT_DECL1(SField, ModelTreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<TreeNodePtr> MFTreeNodePtr;
+typedef MField<ModelTreeNodePtr> MFModelTreeNodePtr;
 #endif
 
-#ifndef OSG_COMPILETREENODEINST
-OSG_DLLEXPORT_DECL1(MField, TreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEMODELTREENODEINST
+OSG_DLLEXPORT_DECL1(MField, ModelTreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGTREENODEFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGMODELTREENODEFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGTREENODEFIELDS_H_ */
+#endif /* _OSGMODELTREENODEFIELDS_H_ */

@@ -50,7 +50,6 @@
 #include "Component/Tree/Model/OSGTreeModelListener.h"
 #include "Component/Tree/Selection/OSGTreeSelectionModel.h"
 #include "Component/Tree/Selection/OSGTreeSelectionListener.h"
-#include "Component/Tree/ModelLayout/OSGAbstractTreeLayoutCache.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -154,9 +153,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
 
     //Returns an Enumeration of the descendants of the path parent that are currently expanded.
     //Enumeration getExpandedDescendants(TreePath parent) const;
-
-    //Returns the expandsSelectedPaths property.
-    bool getExpandsSelectedPaths(void) const;
 
     //Returns the last path component in the first node of the current selection.
     SharedFieldPtr getLastSelectedPathComponent(void) const;
@@ -293,9 +289,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     //Sets the dragEnabled property, which must be true to enable automatic drag handling (the first part of drag and drop) on this component.
     void setDragEnabled(bool b);
 
-    //Configures the expandsSelectedPaths property.
-    void setExpandsSelectedPaths(bool newValue);
-
     //Sets the path identifies as the lead.
     void setLeadSelectionPath(const TreePath& newPath);
 
@@ -371,9 +364,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
 
     TreeModelPtr _Model;
     TreeSelectionModelPtr _SelectionModel;
-
-
-    AbstractTreeLayoutCachePtr _TreeModelLayout;
     
 	class ModelListener : public TreeModelListener
 	{

@@ -222,6 +222,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGeneratorBase : public
 
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Construction                               */
+    /*! \{                                                                 */
+
+    static  DefaultTreeComponentGeneratorPtr      create          (void); 
+    static  DefaultTreeComponentGeneratorPtr      createEmpty     (void); 
+
+    /*! \}                                                                 */
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Copy                                   */
+    /*! \{                                                                 */
+
+    virtual FieldContainerPtr     shallowCopy     (void) const; 
+
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 

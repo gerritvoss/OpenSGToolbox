@@ -47,8 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGAbstractTreeLayoutCache.h"
-#include "Component/Tree/Selection/OSGTreeSelectionListener.h"
+#include "OSGAbstractTreeModelLayout.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -56,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::AbstractTreeLayoutCache
-A AbstractTreeLayoutCache. 
+/*! \class osg::AbstractTreeModelLayout
+A UI Abstract Tree Model Layout. 	
 */
 
 /***************************************************************************\
@@ -68,11 +67,16 @@ A AbstractTreeLayoutCache.
  *                           Class methods                                 *
 \***************************************************************************/
 
+void AbstractTreeModelLayout::initMethod (void)
+{
+}
+
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-std::vector<UInt32> AbstractTreeLayoutCache::getRowsForPaths(std::vector<TreePath> paths) const
+std::vector<UInt32> AbstractTreeModelLayout::getRowsForPaths(std::vector<TreePath> paths) const
 {
 	std::vector<UInt32> Result;
 	for(UInt32 i(0) ; i<paths.size() ; ++i)
@@ -82,14 +86,14 @@ std::vector<UInt32> AbstractTreeLayoutCache::getRowsForPaths(std::vector<TreePat
 	return Result;
 }
 
-TreeModelPtr AbstractTreeLayoutCache::getModel(void) const
+TreeModelPtr AbstractTreeModelLayout::getModel(void) const
 {
 	return _TreeModel;
 }
 
-//AbstractLayoutCache.NodeDimensions AbstractTreeLayoutCache::getNodeDimensions(void) const;
+//AbstractLayoutCache.NodeDimensions AbstractTreeModelLayout::getNodeDimensions(void) const;
 
-UInt32 AbstractTreeLayoutCache::getPreferredHeight(void) const
+UInt32 AbstractTreeModelLayout::getPreferredHeight(void) const
 {
 	if(isFixedRowHeight())
 	{
@@ -102,33 +106,33 @@ UInt32 AbstractTreeLayoutCache::getPreferredHeight(void) const
 	}
 }
 
-UInt32 AbstractTreeLayoutCache::getPreferredWidth(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+UInt32 AbstractTreeModelLayout::getPreferredWidth(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 {
 	//TODO: Implement
 	return 0;
 }
 
-UInt32 AbstractTreeLayoutCache::getRowHeight(void) const
+UInt32 AbstractTreeModelLayout::getRowHeight(void) const
 {
-	return _RowHeight;
+	return getRowHeightInternal();
 }
 
-TreeSelectionModelPtr AbstractTreeLayoutCache::getSelectionModel(void) const
+TreeSelectionModelPtr AbstractTreeModelLayout::getSelectionModel(void) const
 {
 	return _TreeSelectionModel;
 }
 
-bool AbstractTreeLayoutCache::isFixedRowHeight(void) const
+bool AbstractTreeModelLayout::isFixedRowHeight(void) const
 {
-	return _RowHeight > 0;
+	return getRowHeightInternal() > 0;
 }
 
-bool AbstractTreeLayoutCache::isRootVisible(void) const
+bool AbstractTreeModelLayout::isRootVisible(void) const
 {
-	return _RootVisible;
+	return getRootVisibleInternal();
 }
 
-void AbstractTreeLayoutCache::setModel(TreeModelPtr newModel)
+void AbstractTreeModelLayout::setModel(TreeModelPtr newModel)
 {
     if(_TreeModel != NULL)
     {
@@ -151,24 +155,28 @@ void AbstractTreeLayoutCache::setModel(TreeModelPtr newModel)
     _VisiblePathSet.insert(TreePath(_TreeModel->getRoot()));
 }
 
-//void AbstractTreeLayoutCache::setNodeDimensions(AbstractLayoutCache.NodeDimensions nd);
+//void AbstractTreeModelLayout::setNodeDimensions(AbstractLayoutCache.NodeDimensions nd);
 
-void AbstractTreeLayoutCache::setRootVisible(bool rootVisible)
+void AbstractTreeModelLayout::setRootVisible(bool rootVisible)
 {
-	_RootVisible = rootVisible;
+    beginEditCP(AbstractTreeModelLayoutPtr(this), RootVisibleInternalFieldMask);
+    setRootVisibleInternal(rootVisible);
+    endEditCP(AbstractTreeModelLayoutPtr(this), RootVisibleInternalFieldMask);
 }
 
-void AbstractTreeLayoutCache::setRowHeight(const UInt32& rowHeight)
+void AbstractTreeModelLayout::setRowHeight(const UInt32& rowHeight)
 {
-	_RowHeight = rowHeight;
+    beginEditCP(AbstractTreeModelLayoutPtr(this), RowHeightInternalFieldMask);
+    setRowHeightInternal(rowHeight);
+    endEditCP(AbstractTreeModelLayoutPtr(this), RowHeightInternalFieldMask);
 }
 
-void AbstractTreeLayoutCache::setSelectionModel(TreeSelectionModelPtr newLSM)
+void AbstractTreeModelLayout::setSelectionModel(TreeSelectionModelPtr newLSM)
 {
 	_TreeSelectionModel = newLSM;
 }
 
-void AbstractTreeLayoutCache::setVisible(const TreePath& path)
+void AbstractTreeModelLayout::setVisible(const TreePath& path)
 {
     for(UInt32 i(1) ; i<=path.getPathCount() ; ++i)
     {
@@ -176,17 +184,17 @@ void AbstractTreeLayoutCache::setVisible(const TreePath& path)
     }
 }
 
-std::vector<TreePath> AbstractTreeLayoutCache::getVisiblePaths(void) const
+std::vector<TreePath> AbstractTreeModelLayout::getVisiblePaths(void) const
 {
     return std::vector<TreePath>(_VisiblePathSet.begin(), _VisiblePathSet.end());
 }
 
-std::vector<TreePath> AbstractTreeLayoutCache::getExpandedPaths(void) const
+std::vector<TreePath> AbstractTreeModelLayout::getExpandedPaths(void) const
 {
     return std::vector<TreePath>(_ExpandedPathSet.begin(), _ExpandedPathSet.end());
 }
 
-void AbstractTreeLayoutCache::getNodeDimensions(Pnt2s& TopLeft, Pnt2s& BottomRight, SharedFieldPtr value, const UInt32& row, const UInt32& depth, bool expanded, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn)
+void AbstractTreeModelLayout::getNodeDimensions(Pnt2s& TopLeft, Pnt2s& BottomRight, SharedFieldPtr value, const UInt32& row, const UInt32& depth, bool expanded, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn)
 {
 	//TODO: Implement
 }
@@ -197,17 +205,44 @@ void AbstractTreeLayoutCache::getNodeDimensions(Pnt2s& TopLeft, Pnt2s& BottomRig
 
 /*----------------------- constructors & destructors ----------------------*/
 
-AbstractTreeLayoutCache::AbstractTreeLayoutCache(void) : _TreeModel(NULL),
-                                                        _TreeSelectionModel(NULL),
-                                                        _ExpandedPathSet(TreePathPreorderLessThan(NULL)),
-                                                        _VisiblePathSet(TreePathPreorderLessThan(NULL)),
-                                                        _ModelListener(this)
+AbstractTreeModelLayout::AbstractTreeModelLayout(void) :
+    Inherited(),
+    _TreeModel(NULL),
+    _TreeSelectionModel(NULL),
+    _ExpandedPathSet(TreePathPreorderLessThan(NULL)),
+    _VisiblePathSet(TreePathPreorderLessThan(NULL)),
+    _ModelListener(AbstractTreeModelLayoutPtr(this))
+{
+}
+
+AbstractTreeModelLayout::AbstractTreeModelLayout(const AbstractTreeModelLayout &source) :
+    Inherited(source),
+        _TreeModel(source._TreeModel),
+    _TreeSelectionModel(source._TreeSelectionModel),
+    _ExpandedPathSet(source._ExpandedPathSet),
+    _VisiblePathSet(source._VisiblePathSet),
+    _ModelListener(AbstractTreeModelLayoutPtr(this))
+{
+}
+
+AbstractTreeModelLayout::~AbstractTreeModelLayout(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-bool AbstractTreeLayoutCache::TreePathPreorderLessThan::operator()(const TreePath& LeftPath,
+void AbstractTreeModelLayout::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void AbstractTreeModelLayout::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump AbstractTreeModelLayout NI" << std::endl;
+}
+
+bool AbstractTreeModelLayout::TreePathPreorderLessThan::operator()(const TreePath& LeftPath,
                 const TreePath& RightPath) const
 {
     UInt32 LeftIndex(0), RightIndex(0);
@@ -238,17 +273,17 @@ bool AbstractTreeLayoutCache::TreePathPreorderLessThan::operator()(const TreePat
     }
 }
 
-AbstractTreeLayoutCache::TreePathPreorderLessThan::TreePathPreorderLessThan(void) :
+AbstractTreeModelLayout::TreePathPreorderLessThan::TreePathPreorderLessThan(void) :
 _TreeModel(NULL)
 {
 }
 
-AbstractTreeLayoutCache::TreePathPreorderLessThan::TreePathPreorderLessThan(TreeModelPtr Model) :
+AbstractTreeModelLayout::TreePathPreorderLessThan::TreePathPreorderLessThan(TreeModelPtr Model) :
 _TreeModel(Model)
 {
 }
 
-void AbstractTreeLayoutCache::ModelListener::treeNodesChanged(TreeModelEvent e)
+void AbstractTreeModelLayout::ModelListener::treeNodesChanged(TreeModelEvent e)
 {
     //This event inidicates changes that are not structural
     //So there are no changes to the Layout
@@ -256,38 +291,38 @@ void AbstractTreeLayoutCache::ModelListener::treeNodesChanged(TreeModelEvent e)
     //Do nothing
 }
 
-void AbstractTreeLayoutCache::ModelListener::treeNodesInserted(TreeModelEvent e)
+void AbstractTreeModelLayout::ModelListener::treeNodesInserted(TreeModelEvent e)
 {
     //If the Nodes are inserted into a node that is expanded then
     //they are visible.
-    if(_AbstractTreeLayoutCache->isVisible(e.getPath()) && _AbstractTreeLayoutCache->isExpanded(e.getPath()))
+    if(_AbstractTreeModelLayout->isVisible(e.getPath()) && _AbstractTreeModelLayout->isExpanded(e.getPath()))
     {
         //Add the newly inserted nodes into the visible set
-        _AbstractTreeLayoutCache->setExpanded(e.getPath(), true);
+        _AbstractTreeModelLayout->setExpanded(e.getPath(), true);
     }
 }
 
-void AbstractTreeLayoutCache::ModelListener::treeNodesRemoved(TreeModelEvent e)
+void AbstractTreeModelLayout::ModelListener::treeNodesRemoved(TreeModelEvent e)
 {
     //If the Nodes are remove into a node that is expanded then
     //they are no longer visible.
-    if(_AbstractTreeLayoutCache->isVisible(e.getPath()) && _AbstractTreeLayoutCache->isExpanded(e.getPath()))
+    if(_AbstractTreeModelLayout->isVisible(e.getPath()) && _AbstractTreeModelLayout->isExpanded(e.getPath()))
     {
         //Add the newly inserted nodes into the visible set
-        _AbstractTreeLayoutCache->setExpanded(e.getPath(), false);
-        _AbstractTreeLayoutCache->setExpanded(e.getPath(), true);
+        _AbstractTreeModelLayout->setExpanded(e.getPath(), false);
+        _AbstractTreeModelLayout->setExpanded(e.getPath(), true);
     }
 }
 
-void AbstractTreeLayoutCache::ModelListener::treeStructureChanged(TreeModelEvent e)
+void AbstractTreeModelLayout::ModelListener::treeStructureChanged(TreeModelEvent e)
 {
     //If the node that the changes are rooted at is expanded then
     //redo the visibility calculations on the parent node
-    if(_AbstractTreeLayoutCache->isVisible(e.getPath()) && _AbstractTreeLayoutCache->isExpanded(e.getPath()))
+    if(_AbstractTreeModelLayout->isVisible(e.getPath()) && _AbstractTreeModelLayout->isExpanded(e.getPath()))
     {
         //Add the newly inserted nodes into the visible set
-        _AbstractTreeLayoutCache->setExpanded(e.getPath(), false);
-        _AbstractTreeLayoutCache->setExpanded(e.getPath(), true);
+        _AbstractTreeModelLayout->setExpanded(e.getPath(), false);
+        _AbstractTreeModelLayout->setExpanded(e.getPath(), true);
     }
 }
 
@@ -301,6 +336,15 @@ void AbstractTreeLayoutCache::ModelListener::treeStructureChanged(TreeModelEvent
 #ifdef OSG_LINUX_ICC
 #pragma warning( disable : 177 )
 #endif
+
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGABSTRACTTREEMODELLAYOUTBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGABSTRACTTREEMODELLAYOUTBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGABSTRACTTREEMODELLAYOUTFIELDS_HEADER_CVSID;
+}
 
 #ifdef __sgi
 #pragma reset woff 1174

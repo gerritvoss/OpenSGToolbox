@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGMUTABLETREENODEFIELDS_H_
-#define _OSGMUTABLETREENODEFIELDS_H_
+#ifndef _OSGABSTRACTTREEMODELLAYOUTFIELDS_H_
+#define _OSGABSTRACTTREEMODELLAYOUTFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGModelTreeNodeFields.h"
+#include "OSGTreeModelLayoutFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class MutableTreeNode;
+class AbstractTreeModelLayout;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! MutableTreeNodePtr
+//! AbstractTreeModelLayoutPtr
 
-typedef FCPtr<ModelTreeNodePtr, MutableTreeNode> MutableTreeNodePtr;
+typedef FCPtr<TreeModelLayoutPtr, AbstractTreeModelLayout> AbstractTreeModelLayoutPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<ModelTreeNodePtr, MutableTreeNode> MutableTreeNodePtr;
 #endif
 
 template <>
-struct FieldDataTraits<MutableTreeNodePtr> : 
-    public FieldTraitsRecurseMapper<MutableTreeNodePtr, true>
+struct FieldDataTraits<AbstractTreeModelLayoutPtr> : 
+    public FieldTraitsRecurseMapper<AbstractTreeModelLayoutPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<MutableTreeNodePtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFMutableTreeNodePtr"; }
-    static const char *getMName(void) { return "MFMutableTreeNodePtr"; }
+    static const char *getSName(void) { return "SFAbstractTreeModelLayoutPtr"; }
+    static const char *getMName(void) { return "MFAbstractTreeModelLayoutPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<MutableTreeNodePtr, true>
+/*! \class  FieldTraitsRecurseMapper<AbstractTreeModelLayoutPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,25 +107,25 @@ struct FieldDataTraits<MutableTreeNodePtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldSingle */
 
-typedef SField<MutableTreeNodePtr> SFMutableTreeNodePtr;
+typedef SField<AbstractTreeModelLayoutPtr> SFAbstractTreeModelLayoutPtr;
 #endif
 
-#ifndef OSG_COMPILEMUTABLETREENODEINST
-OSG_DLLEXPORT_DECL1(SField, MutableTreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEABSTRACTTREEMODELLAYOUTINST
+OSG_DLLEXPORT_DECL1(SField, AbstractTreeModelLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<MutableTreeNodePtr> MFMutableTreeNodePtr;
+typedef MField<AbstractTreeModelLayoutPtr> MFAbstractTreeModelLayoutPtr;
 #endif
 
-#ifndef OSG_COMPILEMUTABLETREENODEINST
-OSG_DLLEXPORT_DECL1(MField, MutableTreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEABSTRACTTREEMODELLAYOUTINST
+OSG_DLLEXPORT_DECL1(MField, AbstractTreeModelLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#define OSGMUTABLETREENODEFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGABSTRACTTREEMODELLAYOUTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
-#endif /* _OSGMUTABLETREENODEFIELDS_H_ */
+#endif /* _OSGABSTRACTTREEMODELLAYOUTFIELDS_H_ */

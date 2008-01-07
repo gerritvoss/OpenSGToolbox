@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -44,88 +42,93 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
+ **     Do not change this file, changes should be done in the derived      **
+ **     class AbstractTreeModelLayout!
+ **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
-
-#ifndef _OSGMUTABLETREENODEFIELDS_H_
-#define _OSGMUTABLETREENODEFIELDS_H_
-#ifdef __sgi
-#pragma once
-#endif
-
 #include <OpenSG/OSGConfig.h>
-
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
-
-#include "OSGModelTreeNodeFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class MutableTreeNode;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! MutableTreeNodePtr
-
-typedef FCPtr<ModelTreeNodePtr, MutableTreeNode> MutableTreeNodePtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
- */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
-template <>
-struct FieldDataTraits<MutableTreeNodePtr> : 
-    public FieldTraitsRecurseMapper<MutableTreeNodePtr, true>
+//! access the type of the class
+inline
+OSG::FieldContainerType &AbstractTreeModelLayoutBase::getClassType(void)
 {
-    static DataType             _type;                       
+    return _type; 
+} 
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
-
-    static DataType   &getType (void) { return _type;        }
-
-    static const char *getSName(void) { return "SFMutableTreeNodePtr"; }
-    static const char *getMName(void) { return "MFMutableTreeNodePtr"; }
-};
-
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<MutableTreeNodePtr, true>
-    \hideinhierarchy
- */
-#endif
-
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+//! access the numerical type of the class
+inline
+OSG::UInt32 AbstractTreeModelLayoutBase::getClassTypeId(void) 
+{
+    return _type.getId(); 
+} 
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+/*------------------------------ get -----------------------------------*/
 
-typedef SField<MutableTreeNodePtr> SFMutableTreeNodePtr;
-#endif
+//! Get the AbstractTreeModelLayout::_sfRootVisibleInternal field.
+inline
+SFBool *AbstractTreeModelLayoutBase::getSFRootVisibleInternal(void)
+{
+    return &_sfRootVisibleInternal;
+}
 
-#ifndef OSG_COMPILEMUTABLETREENODEINST
-OSG_DLLEXPORT_DECL1(SField, MutableTreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+//! Get the AbstractTreeModelLayout::_sfRowHeightInternal field.
+inline
+SFInt32 *AbstractTreeModelLayoutBase::getSFRowHeightInternal(void)
+{
+    return &_sfRowHeightInternal;
+}
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<MutableTreeNodePtr> MFMutableTreeNodePtr;
-#endif
+//! Get the value of the AbstractTreeModelLayout::_sfRootVisibleInternal field.
+inline
+bool &AbstractTreeModelLayoutBase::getRootVisibleInternal(void)
+{
+    return _sfRootVisibleInternal.getValue();
+}
 
-#ifndef OSG_COMPILEMUTABLETREENODEINST
-OSG_DLLEXPORT_DECL1(MField, MutableTreeNodePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+//! Get the value of the AbstractTreeModelLayout::_sfRootVisibleInternal field.
+inline
+const bool &AbstractTreeModelLayoutBase::getRootVisibleInternal(void) const
+{
+    return _sfRootVisibleInternal.getValue();
+}
+
+//! Set the value of the AbstractTreeModelLayout::_sfRootVisibleInternal field.
+inline
+void AbstractTreeModelLayoutBase::setRootVisibleInternal(const bool &value)
+{
+    _sfRootVisibleInternal.setValue(value);
+}
+
+//! Get the value of the AbstractTreeModelLayout::_sfRowHeightInternal field.
+inline
+Int32 &AbstractTreeModelLayoutBase::getRowHeightInternal(void)
+{
+    return _sfRowHeightInternal.getValue();
+}
+
+//! Get the value of the AbstractTreeModelLayout::_sfRowHeightInternal field.
+inline
+const Int32 &AbstractTreeModelLayoutBase::getRowHeightInternal(void) const
+{
+    return _sfRowHeightInternal.getValue();
+}
+
+//! Set the value of the AbstractTreeModelLayout::_sfRowHeightInternal field.
+inline
+void AbstractTreeModelLayoutBase::setRowHeightInternal(const Int32 &value)
+{
+    _sfRowHeightInternal.setValue(value);
+}
+
 
 OSG_END_NAMESPACE
 
-#define OSGMUTABLETREENODEFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
+#define OSGABSTRACTTREEMODELLAYOUTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 
-#endif /* _OSGMUTABLETREENODEFIELDS_H_ */

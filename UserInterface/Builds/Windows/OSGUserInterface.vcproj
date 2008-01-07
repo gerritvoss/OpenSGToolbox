@@ -1818,7 +1818,31 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeRowMapper.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\Component\Tree\OSGTreeRowMapper.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeRowMapper.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeRowMapperBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeRowMapperBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeRowMapperBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Tree\OSGTreeRowMapperFields.h"
 						>
 					</File>
 					<Filter
@@ -1913,6 +1937,34 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGModelTreeNode.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGModelTreeNode.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGModelTreeNode.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGModelTreeNodeBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGModelTreeNodeBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGModelTreeNodeBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGModelTreeNodeFields.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\src\Component\Tree\Model\OSGMutableTreeNode.cpp"
 							>
 						</File>
@@ -1958,34 +2010,6 @@
 						</File>
 						<File
 							RelativePath="..\..\src\Component\Tree\Model\OSGTreeModelListener.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\src\Component\Tree\Model\OSGTreeNode.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\..\src\Component\Tree\Model\OSGTreeNode.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\src\Component\Tree\Model\OSGTreeNode.inl"
-							>
-						</File>
-						<File
-							RelativePath="..\..\src\Component\Tree\Model\OSGTreeNodeBase.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\..\src\Component\Tree\Model\OSGTreeNodeBase.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\src\Component\Tree\Model\OSGTreeNodeBase.inl"
-							>
-						</File>
-						<File
-							RelativePath="..\..\src\Component\Tree\Model\OSGTreeNodeFields.h"
 							>
 						</File>
 					</Filter>
@@ -2113,93 +2137,115 @@
 						Name="ModelLayout"
 						>
 						<File
-							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGAbstractTreeLayoutCache.cpp"
-							>
-							<FileConfiguration
-								Name="Debug|Win32"
-								>
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)\$(InputName)1.obj"
-									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-								/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="Release|Win32"
-								>
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)\$(InputName)1.obj"
-									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-								/>
-							</FileConfiguration>
-						</File>
-						<File
-							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGAbstractTreeLayoutCache.h"
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGAbstractTreeModelLayout.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGAbstractTreeLayoutCache.inl"
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGAbstractTreeModelLayout.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGFixedHeightTreeLayoutCache.cpp"
-							>
-							<FileConfiguration
-								Name="Debug|Win32"
-								>
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)\$(InputName)1.obj"
-									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-								/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="Release|Win32"
-								>
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)\$(InputName)1.obj"
-									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-								/>
-							</FileConfiguration>
-						</File>
-						<File
-							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGFixedHeightTreeLayoutCache.h"
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGAbstractTreeModelLayout.inl"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGFixedHeightTreeLayoutCache.inl"
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGAbstractTreeModelLayoutBase.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGVariableHeightTreeLayoutCache.cpp"
-							>
-							<FileConfiguration
-								Name="Debug|Win32"
-								>
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)\$(InputName)1.obj"
-									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-								/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="Release|Win32"
-								>
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)\$(InputName)1.obj"
-									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-								/>
-							</FileConfiguration>
-						</File>
-						<File
-							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGVariableHeightTreeLayoutCache.h"
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGAbstractTreeModelLayoutBase.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGVariableHeightTreeLayoutCache.inl"
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGAbstractTreeModelLayoutBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGAbstractTreeModelLayoutFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGFixedHeightTreeModelLayout.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGFixedHeightTreeModelLayout.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGFixedHeightTreeModelLayout.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGFixedHeightTreeModelLayoutBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGFixedHeightTreeModelLayoutBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGFixedHeightTreeModelLayoutBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGFixedHeightTreeModelLayoutFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGTreeModelLayout.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGTreeModelLayout.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGTreeModelLayout.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGTreeModelLayoutBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGTreeModelLayoutBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGTreeModelLayoutBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGTreeModelLayoutFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGVariableHeightTreeModelLayout.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGVariableHeightTreeModelLayout.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGVariableHeightTreeModelLayout.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGVariableHeightTreeModelLayoutBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGVariableHeightTreeModelLayoutBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGVariableHeightTreeModelLayoutBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGVariableHeightTreeModelLayoutFields.h"
 							>
 						</File>
 					</Filter>

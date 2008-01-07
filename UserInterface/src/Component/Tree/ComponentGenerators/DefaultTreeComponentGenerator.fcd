@@ -5,7 +5,7 @@
 	parent="TreeComponentGenerator"
 	library="UserInterface"
 	pointerfieldtypes="both"
-	structure="abstract"
+	structure="concrete"
 	systemcomponent="false"
 	parentsystemcomponent="false"
 	decoratable="false"
