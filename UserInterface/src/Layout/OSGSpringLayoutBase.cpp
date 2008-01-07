@@ -74,7 +74,7 @@ const OSG::BitVector SpringLayoutBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var SpringLayoutConstraintsPtr SpringLayoutBase::_mfConstraints
+/*! \var FieldContainerMap SpringLayoutBase::_sfConstraints
     
 */
 
@@ -82,11 +82,11 @@ const OSG::BitVector SpringLayoutBase::MTInfluenceMask =
 
 FieldDescription *SpringLayoutBase::_desc[] = 
 {
-    new FieldDescription(MFSpringLayoutConstraintsPtr::getClassType(), 
+    new FieldDescription(SFFieldContainerMap::getClassType(), 
                      "Constraints", 
                      ConstraintsFieldId, ConstraintsFieldMask,
                      false,
-                     (FieldAccessMethod) &SpringLayoutBase::getMFConstraints)
+                     (FieldAccessMethod) &SpringLayoutBase::getSFConstraints)
 };
 
 
@@ -152,7 +152,6 @@ void SpringLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
-    _mfConstraints.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -163,7 +162,7 @@ void SpringLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 SpringLayoutBase::SpringLayoutBase(void) :
-    _mfConstraints            (), 
+    _sfConstraints            (), 
     Inherited() 
 {
 }
@@ -173,7 +172,7 @@ SpringLayoutBase::SpringLayoutBase(void) :
 #endif
 
 SpringLayoutBase::SpringLayoutBase(const SpringLayoutBase &source) :
-    _mfConstraints            (source._mfConstraints            ), 
+    _sfConstraints            (source._sfConstraints            ), 
     Inherited                 (source)
 {
 }
@@ -192,7 +191,7 @@ UInt32 SpringLayoutBase::getBinSize(const BitVector &whichField)
 
     if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
     {
-        returnValue += _mfConstraints.getBinSize();
+        returnValue += _sfConstraints.getBinSize();
     }
 
 
@@ -206,7 +205,7 @@ void SpringLayoutBase::copyToBin(      BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
     {
-        _mfConstraints.copyToBin(pMem);
+        _sfConstraints.copyToBin(pMem);
     }
 
 
@@ -219,7 +218,7 @@ void SpringLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
     {
-        _mfConstraints.copyFromBin(pMem);
+        _sfConstraints.copyFromBin(pMem);
     }
 
 
@@ -233,7 +232,7 @@ void SpringLayoutBase::executeSyncImpl(      SpringLayoutBase *pOther,
     Inherited::executeSyncImpl(pOther, whichField);
 
     if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
-        _mfConstraints.syncWith(pOther->_mfConstraints);
+        _sfConstraints.syncWith(pOther->_sfConstraints);
 
 
 }
@@ -245,9 +244,9 @@ void SpringLayoutBase::executeSyncImpl(      SpringLayoutBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-
     if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
-        _mfConstraints.syncWith(pOther->_mfConstraints, sInfo);
+        _sfConstraints.syncWith(pOther->_sfConstraints);
+
 
 
 }
@@ -257,9 +256,6 @@ void SpringLayoutBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
-
-    if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
-        _mfConstraints.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

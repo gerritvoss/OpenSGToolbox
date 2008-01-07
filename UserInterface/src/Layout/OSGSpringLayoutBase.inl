@@ -96,35 +96,35 @@ SpringLayoutPtr SpringLayoutBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the SpringLayout::_mfConstraints field.
+//! Get the SpringLayout::_sfConstraints field.
 inline
-MFSpringLayoutConstraintsPtr *SpringLayoutBase::getMFConstraints(void)
+SFFieldContainerMap *SpringLayoutBase::getSFConstraints(void)
 {
-    return &_mfConstraints;
+    return &_sfConstraints;
 }
 
 
-
-//! Get the value of the \a index element the SpringLayout::_mfConstraints field.
+//! Get the value of the SpringLayout::_sfConstraints field.
 inline
-SpringLayoutConstraintsPtr &SpringLayoutBase::getConstraints(const UInt32 index)
+FieldContainerMap &SpringLayoutBase::getConstraints(void)
 {
-    return _mfConstraints[index];
+    return _sfConstraints.getValue();
 }
 
-//! Get the SpringLayout::_mfConstraints field.
+//! Get the value of the SpringLayout::_sfConstraints field.
 inline
-MFSpringLayoutConstraintsPtr &SpringLayoutBase::getConstraints(void)
+const FieldContainerMap &SpringLayoutBase::getConstraints(void) const
 {
-    return _mfConstraints;
+    return _sfConstraints.getValue();
 }
 
-//! Get the SpringLayout::_mfConstraints field.
+//! Set the value of the SpringLayout::_sfConstraints field.
 inline
-const MFSpringLayoutConstraintsPtr &SpringLayoutBase::getConstraints(void) const
+void SpringLayoutBase::setConstraints(const FieldContainerMap &value)
 {
-    return _mfConstraints;
+    _sfConstraints.setValue(value);
 }
+
 
 OSG_END_NAMESPACE
 

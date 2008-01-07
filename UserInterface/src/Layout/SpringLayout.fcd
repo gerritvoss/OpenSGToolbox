@@ -14,11 +14,11 @@
 A UI SpringLayout.
 	<Field
 		name="Constraints"
-		type="SpringLayoutConstraintsPtr"
-		cardinality="multi"
-      visibility="external"
-		header="Layout/OSGSpringLayoutConstraintsFields.h"
+		type="FieldContainerMap"
+		cardinality="single"
+		visibility="external"
 		access="public"
+		header="OpenSG/Toolbox/OSGFieldContainerMapType.h"
 	>
-   </Field>
+	</Field>
 </FieldContainer>

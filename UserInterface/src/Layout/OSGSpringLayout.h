@@ -48,6 +48,10 @@
 #include "OSGSpringLayoutBase.h"
 #include "Layout/Spring/OSGLayoutSpringFields.h"
 #include "Component/OSGComponentFields.h"
+#include "Component/Container/OSGContainerFields.h"
+#include "Layout/Spring/OSGLayoutSpringFields.h"
+#include "Layout/OSGSpringLayoutConstraintsFields.h"
+#include <set>
 
 OSG_BEGIN_NAMESPACE
 
@@ -82,9 +86,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayout : public SpringLayoutBase
     /*! \}                                                                 */
     virtual void updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
 
-    bool isCyclic(LayoutSpringPtr s) const;
+    bool isCyclic(LayoutSpringPtr TheSpring) const;
 
+    //Returns the constraints for the specified component.
     SpringLayoutConstraintsPtr getConstraints(ComponentPtr TheComponent);
+
+    //Returns the spring controlling the distance between the specified edge of the component and the top or left edge of its parent.
+    LayoutSpringPtr getConstraint(const UInt32 Edge, ComponentPtr TheComponent) const;
+
+    //Links edge e1 of component c1 to edge e2 of component c2, with a fixed distance between the edges.
+    void putConstraint(const UInt32 e1, ComponentPtr c1, const UInt32& pad, const UInt32 e2, ComponentPtr c2);
+
+    //Links edge e1 of component c1 to edge e2 of component c2.
+    void putConstraint(const UInt32 e1, ComponentPtr c1, LayoutSpringPtr s, const UInt32 e2, ComponentPtr c2);
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -118,6 +132,26 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayout : public SpringLayoutBase
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const SpringLayout &source);
+
+    LayoutSpringPtr getDecycledSpring(LayoutSpringPtr s);
+
+    void resetCyclicStatuses(void);
+
+    void setParent(ContainerPtr p);
+
+    SpringLayoutConstraintsPtr applyDefaults(ComponentPtr c, SpringLayoutConstraintsPtr& constraints);
+
+    //void applyDefaults(SpringLayoutConstraintsPtr constraints, const UInt32 name1,
+    //                       LayoutSpringPtr spring1, const UInt32 name2, LayoutSpringPtr spring2,
+    //                       List<String> history);
+    void putConstraint(const UInt32 e, ComponentPtr c, LayoutSpringPtr s);
+
+    typedef std::set<LayoutSpringPtr> LayoutSpringSet;
+
+    mutable LayoutSpringSet _CyclicSprings;
+    mutable LayoutSpringSet _AcyclicSprings;
+
+    LayoutSpringPtr _CyclicDummySpring;
 };
 
 typedef SpringLayout *SpringLayoutP;

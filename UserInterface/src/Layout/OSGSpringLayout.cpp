@@ -49,6 +49,13 @@
 
 #include "OSGSpringLayout.h"
 #include "Component/Container/OSGContainer.h"
+#include "Layout/Spring/OSGLayoutSpring.h"
+#include "Layout/OSGSpringLayoutConstraints.h"
+#include "Component/Container/OSGContainer.h"
+
+#include "Layout/Spring/OSGComponentWidthLayoutSpring.h"
+#include "Layout/Spring/OSGComponentHeightLayoutSpring.h"
+#include "Layout/Spring/OSGProxyLayoutSpring.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -85,32 +92,162 @@ void SpringLayout::updateLayout(const MFComponentPtr Components,const ComponentP
     //TODO: Implement
 }
 
-bool SpringLayout::isCyclic(LayoutSpringPtr s) const
+bool SpringLayout::isCyclic(LayoutSpringPtr TheSpring) const
 {
-    //TODO: Implement
-    return false;
+    if(TheSpring == NullFC)
+    {
+        return false;
+    }
+    if(_CyclicSprings.find(TheSpring) != _CyclicSprings.end())
+    {
+        return true;
+    }
+    if(_AcyclicSprings.find(TheSpring) != _AcyclicSprings.end())
+    {
+        return false;
+    }
+    _CyclicSprings.insert(TheSpring);
+    bool Result = TheSpring->isCyclic(SpringLayoutPtr(this));
+    if (!Result) {
+        _AcyclicSprings.insert(TheSpring);
+        _CyclicSprings.erase(TheSpring);
+    }
+    else {
+        SWARNING << "A " << TheSpring->getTypeName() << " is cyclic. " << std::endl;
+    }
+    return Result;
 }
 
 SpringLayoutConstraintsPtr SpringLayout::getConstraints(ComponentPtr TheComponent)
 {
-    //TODO: Implement
-    return NullFC;
+    FieldContainerMap::const_iterator SearchItor(Inherited::getConstraints().find(static_cast<FieldContainerMap::key_type>(TheComponent.getFieldContainerId())));
+
+    if(SearchItor == Inherited::getConstraints().end())
+    {
+        SpringLayoutConstraintsPtr NewConstraints = applyDefaults(TheComponent, SpringLayoutConstraintsBase::create());
+
+        beginEditCP(SpringLayoutPtr(this), ConstraintsFieldMask);
+            Inherited::getConstraints()[static_cast<FieldContainerMap::key_type>(TheComponent.getFieldContainerId())] = NewConstraints;
+        endEditCP(SpringLayoutPtr(this), ConstraintsFieldMask);
+
+        return NewConstraints;
+    }
+    else
+    {
+        return SpringLayoutConstraints::Ptr::dcast((*SearchItor).second);
+    }
+}
+
+LayoutSpringPtr SpringLayout::getConstraint(const UInt32 Edge, ComponentPtr TheComponent) const
+{
+    return ProxyLayoutSpring::create(Edge, TheComponent, SpringLayoutPtr(this));
+}
+
+void SpringLayout::putConstraint(const UInt32 e1, ComponentPtr c1, const UInt32& pad, const UInt32 e2, ComponentPtr c2)
+{
+    putConstraint(e1, c1, LayoutSpring::constant(pad), e2, c2);
+}
+
+void SpringLayout::putConstraint(const UInt32 e1, ComponentPtr c1, LayoutSpringPtr s, const UInt32 e2, ComponentPtr c2)
+{
+    putConstraint(e1, c1, LayoutSpring::sum(s, getConstraint(e2, c2)));
 }
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void SpringLayout::putConstraint(const UInt32 e, ComponentPtr c, LayoutSpringPtr s)
+{
+    if(s != NullFC)
+    {
+        getConstraints(c)->setConstraint(e,s);
+    }
+}
+
+LayoutSpringPtr SpringLayout::getDecycledSpring(LayoutSpringPtr s)
+{
+    if(isCyclic(s))
+    {
+        return _CyclicDummySpring;
+    }
+    else
+    {
+        return s;
+    }
+}
+
+void SpringLayout::resetCyclicStatuses(void)
+{
+    _CyclicSprings.clear();
+    _AcyclicSprings.clear();
+}
+
+void SpringLayout::setParent(ContainerPtr p)
+{
+    resetCyclicStatuses();
+
+    SpringLayoutConstraintsPtr constraints = getConstraints(p);
+
+    constraints->setWest(LayoutSpring::constant(0));
+    constraints->setNorth(LayoutSpring::constant(0));
+
+    LayoutSpringPtr Width = constraints->getWidth();
+    if(Width->getType() == ComponentWidthLayoutSpring::getClassType() &&
+        ComponentWidthLayoutSpring::Ptr::dcast(Width)->getComponent() == p)
+    {
+        constraints->setWidth(LayoutSpring::constant(0,0,TypeTraits<Int32>::getMax()));
+    }
+    
+    LayoutSpringPtr Height = constraints->getHeight();
+    if(Height->getType() == ComponentHeightLayoutSpring::getClassType() &&
+        ComponentHeightLayoutSpring::Ptr::dcast(Height)->getComponent() == p)
+    {
+        constraints->setHeight(LayoutSpring::constant(0,0,TypeTraits<Int32>::getMax()));
+    }
+}
+
+SpringLayoutConstraintsPtr SpringLayout::applyDefaults(ComponentPtr c, SpringLayoutConstraintsPtr& constraints)
+{
+    if(constraints == NullFC)
+    {
+        constraints = SpringLayoutConstraintsBase::create();
+    }
+
+    if(constraints->getComponent() == NullFC)
+    {
+        beginEditCP(constraints, SpringLayoutConstraints::ComponentFieldMask);
+            constraints->setComponent(c);
+        endEditCP(constraints, SpringLayoutConstraints::ComponentFieldMask);
+    }
+
+    if(constraints->isHorizontalDefined())
+    {
+        constraints->setWest(LayoutSpring::constant(0));
+        constraints->setWidth(LayoutSpring::width(c));
+    }
+    
+    if(constraints->isVerticalDefined())
+    {
+        constraints->setNorth(LayoutSpring::constant(0));
+        constraints->setHeight(LayoutSpring::height(c));
+    }
+
+    return constraints;
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 SpringLayout::SpringLayout(void) :
     Inherited()
 {
+    _CyclicDummySpring = LayoutSpring::constant(LayoutSpring::VALUE_NOT_SET);
 }
 
 SpringLayout::SpringLayout(const SpringLayout &source) :
     Inherited(source)
 {
+    _CyclicDummySpring = LayoutSpring::constant(LayoutSpring::VALUE_NOT_SET);
 }
 
 SpringLayout::~SpringLayout(void)

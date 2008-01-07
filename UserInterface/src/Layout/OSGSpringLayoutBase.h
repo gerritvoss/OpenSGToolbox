@@ -67,7 +67,7 @@
 
 #include "OSGLayout.h" // Parent
 
-#include "Layout/OSGSpringLayoutConstraintsFields.h" // Constraints type
+#include <OpenSG/Toolbox/OSGFieldContainerMapType.h> // Constraints type
 
 #include "OSGSpringLayoutFields.h"
 
@@ -122,17 +122,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutBase : public Layout
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFSpringLayoutConstraintsPtr *getMFConstraints    (void);
+           SFFieldContainerMap *getSFConstraints    (void);
 
-           SpringLayoutConstraintsPtr &getConstraints    (const UInt32 index);
-           MFSpringLayoutConstraintsPtr &getConstraints    (void);
-     const MFSpringLayoutConstraintsPtr &getConstraints    (void) const;
+           FieldContainerMap   &getConstraints    (void);
+     const FieldContainerMap   &getConstraints    (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setConstraints    ( const FieldContainerMap &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -175,7 +175,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutBase : public Layout
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFSpringLayoutConstraintsPtr   _mfConstraints;
+    SFFieldContainerMap   _sfConstraints;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -563,7 +563,7 @@ LayoutSpringPtr SpringLayoutConstraints::relativeBaselineToHeight(LayoutSpringPt
     return NullFC;
 }
 
-bool SpringLayoutConstraints::defined(const UInt32 Edge)
+bool SpringLayoutConstraints::defined(const UInt32 Edge) const
 {
     switch(Edge)
     {
@@ -599,6 +599,16 @@ bool SpringLayoutConstraints::defined(const UInt32 Edge)
     default:
         return false;
     }
+}
+
+bool SpringLayoutConstraints::isHorizontalDefined(void) const
+{
+    return defined(EAST_EDGE) || defined(WEST_EDGE) || defined(HORIZONTAL_CENTER_EDGE) || defined(WIDTH_EDGE);
+}
+
+bool SpringLayoutConstraints::isVerticalDefined(void) const
+{
+    return defined(NORTH_EDGE) || defined(SOUTH_EDGE) || defined(VERTICAL_CENTER_EDGE) || defined(HEIGHT_EDGE) || defined(BASELINE_EDGE);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

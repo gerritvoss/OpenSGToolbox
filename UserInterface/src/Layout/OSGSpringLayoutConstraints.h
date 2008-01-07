@@ -128,6 +128,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraints : public SpringLay
     
     void reset(void);
 
+    bool isHorizontalDefined(void) const;
+
+    bool isVerticalDefined(void) const;
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -175,7 +179,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraints : public SpringLay
 
     LayoutSpringPtr relativeBaselineToHeight(LayoutSpringPtr s);
     
-    bool defined(const UInt32 Edge);
+    bool defined(const UInt32 Edge) const;
 };
 
 typedef SpringLayoutConstraints *SpringLayoutConstraintsP;
