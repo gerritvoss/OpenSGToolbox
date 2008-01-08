@@ -146,7 +146,7 @@ bool VariableHeightTreeModelLayout::isExpanded(const TreePath& path) const
 	return false;
 }
 
-void VariableHeightTreeModelLayout::setExpanded(const TreePath& path, bool isExpanded)
+void VariableHeightTreeModelLayout::setExpanded(const TreePath& path, bool Expand)
 {
 	//TODO:Implement
 }

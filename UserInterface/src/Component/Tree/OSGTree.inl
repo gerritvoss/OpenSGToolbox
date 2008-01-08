@@ -44,6 +44,19 @@
 
 OSG_BEGIN_NAMESPACE
 
+
+inline
+void Tree::addTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener)
+{
+	getModelLayout()->addTreeModelLayoutListener(Listener);
+}
+
+inline
+void Tree::removeTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener)
+{
+	getModelLayout()->removeTreeModelLayoutListener(Listener);
+}
+
 inline
 void Tree::addSelectionPath(const TreePath& path)
 {
@@ -292,6 +305,12 @@ _Tree(TheTree)
 
 inline
 Tree::SelectionListener::SelectionListener(TreePtr TheTree) :
+_Tree(TheTree)
+{
+}
+
+inline
+Tree::ModelLayoutListener::ModelLayoutListener(TreePtr TheTree) :
 _Tree(TheTree)
 {
 }

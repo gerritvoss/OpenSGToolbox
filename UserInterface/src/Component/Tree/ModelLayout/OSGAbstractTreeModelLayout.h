@@ -81,6 +81,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
 
     /*! \}                                                                 */
 
+    virtual void addTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener);
+
+    virtual void removeTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener);
+
 	//Returns the rows that the TreePath instances in path are being displayed at.
 	virtual std::vector<UInt32> getRowsForPaths(std::vector<TreePath> paths) const;
 
@@ -132,6 +136,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
 
 	//Returns true if the height of each row is a fixed size.
 	virtual bool isFixedRowHeight(void) const;
+	
+	//Tells the ModelLayout to veto the expantion of the given TreePath
+	virtual void vetoPathExpantion(const TreePath& Path);
+
+	//Tells the ModelLayout to veto the collapse of the given TreePath
+	virtual void vetoPathCollapse(const TreePath& Path);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -203,6 +213,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
 
 	ModelListener _ModelListener;
 
+	typedef std::set<TreeModelLayoutListenerPtr> TreeModelLayoutListenerSet;
+    typedef TreeModelLayoutListenerSet::iterator TreeModelLayoutListenerSetItor;
+    typedef TreeModelLayoutListenerSet::const_iterator TreeModelLayoutListenerSetConstItor;
+	
+    TreeModelLayoutListenerSet       _TreeModelLayoutListeners;
+
+    void produceTreeCollapsed(const TreePath& Path);
+    void produceTreeExpanded(const TreePath& Path);
+    void produceTreeWillCollapse(const TreePath& Path);
+    void produceTreeWillExpand(const TreePath& Path);
+
+	bool _VetoPathExpantion;
+	bool _VetoPathCollapse;
     /*==========================  PRIVATE  ================================*/
   private:
 

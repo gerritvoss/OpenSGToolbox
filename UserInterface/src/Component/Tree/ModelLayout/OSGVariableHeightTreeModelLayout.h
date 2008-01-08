@@ -118,7 +118,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING VariableHeightTreeModelLayout : public Var
 	virtual bool isExpanded(const TreePath& path) const;
 
 	//Marks the path path expanded state to isExpanded.
-	virtual void setExpanded(const TreePath& path, bool isExpanded);
+	virtual void setExpanded(const TreePath& path, bool Expand);
 
 	//Sets the TreeModel that will provide the data.
 	virtual void setModel(TreeModelPtr newModel);

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG UserInterface UserInterface                    *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -50,6 +50,7 @@
 #include "Component/Tree/Model/OSGTreeModel.h"
 #include "Component/Tree/Model/OSGTreeModelListener.h"
 #include "Component/Tree/Selection/OSGTreeSelectionModel.h"
+#include "OSGTreeModelLayoutListener.h"
 #include <OpenSG/OSGVector.h>
 
 OSG_BEGIN_NAMESPACE
@@ -83,6 +84,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBa
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+    virtual void addTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener) = 0;
+
+    virtual void removeTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener) = 0;
 
 	//Returns a rectangle giving the bounds needed to draw path.
 	virtual void getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight, TreePath path, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn) const = 0;
@@ -145,7 +150,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBa
 	virtual bool isRootVisible(void) const = 0;
 
 	//Marks the path path expanded state to isExpanded.
-	virtual void setExpanded(const TreePath& path, bool isExpanded) = 0;
+	virtual void setExpanded(const TreePath& path, bool Expand) = 0;
 
 	//Makes sure that all the nodes in path are expanded making the last node in the
     //path visible
@@ -168,6 +173,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBa
 
 	//Returns true if the height of each row is a fixed size.
 	virtual bool isFixedRowHeight(void) const = 0;
+
+	//Tells the ModelLayout to veto the expantion of the given TreePath
+	virtual void vetoPathExpantion(const TreePath& Path) = 0;
+
+	//Tells the ModelLayout to veto the collapse of the given TreePath
+	virtual void vetoPathCollapse(const TreePath& Path) = 0;
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 

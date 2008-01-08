@@ -76,6 +76,15 @@ void AbstractTreeModelLayout::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void AbstractTreeModelLayout::removeTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener)
+{
+   TreeModelLayoutListenerSetItor EraseIter(_TreeModelLayoutListeners.find(Listener));
+   if(EraseIter != _TreeModelLayoutListeners.end())
+   {
+      _TreeModelLayoutListeners.erase(EraseIter);
+   }
+}
+
 std::vector<UInt32> AbstractTreeModelLayout::getRowsForPaths(std::vector<TreePath> paths) const
 {
 	std::vector<UInt32> Result;
@@ -194,10 +203,61 @@ std::vector<TreePath> AbstractTreeModelLayout::getExpandedPaths(void) const
     return std::vector<TreePath>(_ExpandedPathSet.begin(), _ExpandedPathSet.end());
 }
 
+void AbstractTreeModelLayout::vetoPathExpantion(const TreePath& Path)
+{
+	_VetoPathExpantion = true;
+}
+
+void AbstractTreeModelLayout::vetoPathCollapse(const TreePath& Path)
+{
+	_VetoPathCollapse = true;
+}
+
 void AbstractTreeModelLayout::getNodeDimensions(Pnt2s& TopLeft, Pnt2s& BottomRight, SharedFieldPtr value, const UInt32& row, const UInt32& depth, bool expanded, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn)
 {
 	//TODO: Implement
 }
+
+void AbstractTreeModelLayout::produceTreeCollapsed(const TreePath& Path)
+{
+	TreeModelLayoutEvent TheEvent(AbstractTreeModelLayoutPtr(this), getTimeStamp(), TreeModelLayoutEvent::TREE_COLLAPSED, Path);
+	TreeModelLayoutListenerSet Listeners(_TreeModelLayoutListeners);
+    for(TreeModelLayoutListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+		(*SetItor)->treeCollapsed(TheEvent);
+    }
+}
+
+void AbstractTreeModelLayout::produceTreeExpanded(const TreePath& Path)
+{
+	TreeModelLayoutEvent TheEvent(AbstractTreeModelLayoutPtr(this), getTimeStamp(), TreeModelLayoutEvent::TREE_EXPANDED, Path);
+	TreeModelLayoutListenerSet Listeners(_TreeModelLayoutListeners);
+    for(TreeModelLayoutListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+		(*SetItor)->treeExpanded(TheEvent);
+    }
+}
+
+void AbstractTreeModelLayout::produceTreeWillCollapse(const TreePath& Path)
+{
+	TreeModelLayoutEvent TheEvent(AbstractTreeModelLayoutPtr(this), getTimeStamp(), TreeModelLayoutEvent::TREE_WILL_COLLAPSE, Path);
+	TreeModelLayoutListenerSet Listeners(_TreeModelLayoutListeners);
+    for(TreeModelLayoutListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+		(*SetItor)->treeWillCollapse(TheEvent);
+    }
+}
+
+void AbstractTreeModelLayout::produceTreeWillExpand(const TreePath& Path)
+{
+	TreeModelLayoutEvent TheEvent(AbstractTreeModelLayoutPtr(this), getTimeStamp(), TreeModelLayoutEvent::TREE_WILL_EXPAND, Path);
+	TreeModelLayoutListenerSet Listeners(_TreeModelLayoutListeners);
+    for(TreeModelLayoutListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+		(*SetItor)->treeWillExpand(TheEvent);
+    }
+}
+
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -211,7 +271,9 @@ AbstractTreeModelLayout::AbstractTreeModelLayout(void) :
     _TreeSelectionModel(NULL),
     _ExpandedPathSet(TreePathPreorderLessThan(NULL)),
     _VisiblePathSet(TreePathPreorderLessThan(NULL)),
-    _ModelListener(AbstractTreeModelLayoutPtr(this))
+    _ModelListener(AbstractTreeModelLayoutPtr(this)),
+	_VetoPathExpantion(false),
+	_VetoPathCollapse(false)
 {
 }
 
@@ -221,7 +283,9 @@ AbstractTreeModelLayout::AbstractTreeModelLayout(const AbstractTreeModelLayout &
     _TreeSelectionModel(source._TreeSelectionModel),
     _ExpandedPathSet(source._ExpandedPathSet),
     _VisiblePathSet(source._VisiblePathSet),
-    _ModelListener(AbstractTreeModelLayoutPtr(this))
+    _ModelListener(AbstractTreeModelLayoutPtr(this)),
+	_VetoPathExpantion(false),
+	_VetoPathCollapse(false)
 {
 }
 

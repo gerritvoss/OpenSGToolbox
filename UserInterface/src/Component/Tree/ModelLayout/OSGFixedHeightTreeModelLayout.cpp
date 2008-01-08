@@ -180,37 +180,56 @@ bool FixedHeightTreeModelLayout::isExpanded(const TreePath& path) const
 	return _ExpandedPathSet.find(path) != _ExpandedPathSet.end();
 }
 
-void FixedHeightTreeModelLayout::setExpanded(const TreePath& path, bool isExpanded)
+void FixedHeightTreeModelLayout::setExpanded(const TreePath& path, bool Expand)
 {
-    if(isExpanded)
+    if(Expand)
     {
-        _ExpandedPathSet.insert(path);
+		_VetoPathExpantion = false;
 
-        if(isVisible(path))
-        {
-            //Insert all visible decendents of Path
-            std::vector<TreePath> VisibleDecendants;
-            getVisibleDecendants(path, VisibleDecendants);
-            for(UInt32 i(0) ; i<VisibleDecendants.size() ; ++i)
-            {
-                _VisiblePathSet.insert(VisibleDecendants[i]);
-            }
-        }
+		if(isExpanded(path))
+		{
+			produceTreeWillExpand(path);
+			if(!_VetoPathExpantion)
+			{
+				_ExpandedPathSet.insert(path);
+
+				if(isVisible(path))
+				{
+					//Insert all visible decendents of Path
+					std::vector<TreePath> VisibleDecendants;
+					getVisibleDecendants(path, VisibleDecendants);
+					for(UInt32 i(0) ; i<VisibleDecendants.size() ; ++i)
+					{
+						_VisiblePathSet.insert(VisibleDecendants[i]);
+					}
+				}
+				produceTreeExpanded(path);
+			}
+		}
     }
     else
     {
-        _ExpandedPathSet.erase(path);
-        
-        if(isVisible(path))
-        {
-            //Remove all visible decendents of Path
-            std::vector<TreePath> VisibleDecendants;
-            getVisibleDecendants(path, VisibleDecendants);
-            for(UInt32 i(0) ; i<VisibleDecendants.size() ; ++i)
-            {
-                _VisiblePathSet.erase(VisibleDecendants[i]);
-            }
-        }
+        _VetoPathCollapse = false;
+		if(!isExpanded(path))
+		{
+			produceTreeWillCollapse(path);
+			if(!_VetoPathCollapse)
+			{
+				_ExpandedPathSet.erase(path);
+		        
+				if(isVisible(path))
+				{
+					//Remove all visible decendents of Path
+					std::vector<TreePath> VisibleDecendants;
+					getVisibleDecendants(path, VisibleDecendants);
+					for(UInt32 i(0) ; i<VisibleDecendants.size() ; ++i)
+					{
+						_VisiblePathSet.erase(VisibleDecendants[i]);
+					}
+				}
+				produceTreeCollapsed(path);
+			}
+		}
     }
 }
 

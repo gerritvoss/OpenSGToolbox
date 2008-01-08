@@ -50,6 +50,7 @@
 #include "Component/Tree/Model/OSGTreeModelListener.h"
 #include "Component/Tree/Selection/OSGTreeSelectionModel.h"
 #include "Component/Tree/Selection/OSGTreeSelectionListener.h"
+#include "Component/Tree/ModelLayout/OSGTreeModelLayoutListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -82,6 +83,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    void addTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener);
+
+    void removeTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener);
+
     //Adds the paths between index0 and index1, inclusive, to the selection.
     void addSelectionInterval(const UInt32& index0, const UInt32& index1);
 
@@ -398,6 +403,31 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
 	friend class SelectionListener;
 
 	SelectionListener _SelectionListener;
+
+	class ModelLayoutListener : public TreeModelLayoutListener
+	{
+	public :
+		ModelLayoutListener(TreePtr TheTree);
+		
+		//Called whenever an item in the tree has been collapsed.
+		virtual void treeCollapsed(const TreeModelLayoutEvent& event);
+
+		//Called whenever an item in the tree has been expanded.
+		virtual void treeExpanded(const TreeModelLayoutEvent& event);
+
+		//Invoked whenever a node in the tree is about to be collapsed.
+		virtual void treeWillCollapse(const TreeModelLayoutEvent& event);
+
+		//Invoked whenever a node in the tree is about to be expanded.
+		virtual void treeWillExpand(const TreeModelLayoutEvent& event);
+
+	protected :
+		TreePtr _Tree;
+	};
+
+	friend class ModelLayoutListener;
+
+	ModelLayoutListener _ModelLayoutListener;
 
     //Clears the cache of toggled tree paths.
     void clearToggledPaths(void);

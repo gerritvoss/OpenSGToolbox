@@ -428,7 +428,8 @@ Tree::Tree(void) :
         _Model(NULL),
         _SelectionModel(NULL),
         _ModelListener(TreePtr(this)),
-        _SelectionListener(TreePtr(this))
+        _SelectionListener(TreePtr(this)),
+		_ModelLayoutListener(TreePtr(this))
 {
 }
 
@@ -437,7 +438,8 @@ Tree::Tree(const Tree &source) :
         _Model(source._Model),
         _SelectionModel(source._SelectionModel),
         _ModelListener(TreePtr(this)),
-        _SelectionListener(TreePtr(this))
+        _SelectionListener(TreePtr(this)),
+		_ModelLayoutListener(TreePtr(this))
 {
 }
 
@@ -456,6 +458,7 @@ void Tree::changed(BitVector whichField, UInt32 origin)
     {
         //Set the model used by the ModelLayout
         getModelLayout()->setModel(_Model);
+		getModelLayout()->addTreeModelLayoutListener(&_ModelLayoutListener);
     }
 }
 
@@ -486,6 +489,26 @@ void Tree::ModelListener::treeStructureChanged(TreeModelEvent e)
 }
 
 void Tree::SelectionListener::valueChanged(TreeSelectionEvent e)
+{
+    //TODO: Implement
+}
+
+void Tree::ModelLayoutListener::treeCollapsed(const TreeModelLayoutEvent& event)
+{
+    //TODO: Implement
+}
+
+void Tree::ModelLayoutListener::treeExpanded(const TreeModelLayoutEvent& event)
+{
+    //TODO: Implement
+}
+
+void Tree::ModelLayoutListener::treeWillCollapse(const TreeModelLayoutEvent& event)
+{
+    //TODO: Implement
+}
+
+void Tree::ModelLayoutListener::treeWillExpand(const TreeModelLayoutEvent& event)
 {
     //TODO: Implement
 }
