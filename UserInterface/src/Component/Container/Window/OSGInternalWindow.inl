@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -36,81 +34,15 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_TREE_PATH_H_
-#define _OSG_UI_TREE_PATH_H_
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
-#ifdef __sgi
-#pragma once
-#endif
- 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
-
-#include <vector>
 
 OSG_BEGIN_NAMESPACE
-	 
-class OSG_USERINTERFACELIB_DLLMAPPING TreePath
-{
-private:
-protected:
-	//Primarily provided for subclasses that represent paths in a different manner.
-	TreePath(void);
-
-	//Constructs a new TreePath, which is the path identified by parent ending in lastElement.
-	TreePath(TreePath parent, SharedFieldPtr lastElement);
-
-	std::vector<SharedFieldPtr> _Path;
-
-public:
-	//Tests two TreePaths for equality by checking each element of the paths for equality.
-	bool operator==(const TreePath& Right) const;
-
-	bool operator!=(const TreePath& Right) const;
-
-    bool operator<(const TreePath& RightPath) const;
-
-	//Returns the last component of this path.
-	SharedFieldPtr getLastPathComponent(void) const;
-
-	//Returns a path containing all the elements of this object, except the last path component.
-	TreePath getParentPath(void) const;
-
-	//Returns an ordered array of Objects containing the components of this TreePath.
-	std::vector<SharedFieldPtr> getPath(void) const;
-
-	//Returns the path component at the specified index.
-	SharedFieldPtr getPathComponent(const UInt32& Index) const;
-
-	//Returns the number of elements in the path.
-	UInt32 getPathCount(void) const;
-
-    //Returns the Depth of the Last Component in this Path
-    UInt32 getDepth(void) const;
-
-	//Returns true if aTreePath is a descendant of this TreePath.
-	bool isDescendant(TreePath aTreePath) const;
-
-	//Returns a new path containing all the elements of this object plus child.
-	TreePath pathByAddingChild(SharedFieldPtr child) const;
-
-	//Constructs a TreePath containing only a single element.
-	TreePath(SharedFieldPtr singlePath);
-
-	//Constructs a path from an array of Objects, uniquely identifying the path from the root of the tree to a specific node, as returned by the tree's data model.
-	TreePath(const std::vector<SharedFieldPtr>& path);
-
-
-	//Constructs a new TreePath with the identified path components of length length.
-	TreePath(const std::vector<SharedFieldPtr>& path, const UInt32& length);
-};
-
-typedef TreePath* TreePathPtr;
 
 OSG_END_NAMESPACE
 
-#include "OSGTreePath.inl"
-
-#endif /* _OSG_UI_TREE_PATH_H_ */
+#define OSGINTERNALWINDOW_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

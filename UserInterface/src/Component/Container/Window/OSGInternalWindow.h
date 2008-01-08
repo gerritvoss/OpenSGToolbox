@@ -36,81 +36,88 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_TREE_PATH_H_
-#define _OSG_UI_TREE_PATH_H_
-
+#ifndef _OSGINTERNALWINDOW_H_
+#define _OSGINTERNALWINDOW_H_
 #ifdef __sgi
 #pragma once
 #endif
- 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
 
-#include <vector>
+#include <OpenSG/OSGConfig.h>
+
+#include "OSGInternalWindowBase.h"
 
 OSG_BEGIN_NAMESPACE
-	 
-class OSG_USERINTERFACELIB_DLLMAPPING TreePath
+
+/*! \brief InternalWindow class. See \ref 
+           PageUserInterfaceInternalWindow for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 {
-private:
-protected:
-	//Primarily provided for subclasses that represent paths in a different manner.
-	TreePath(void);
+  private:
 
-	//Constructs a new TreePath, which is the path identified by parent ending in lastElement.
-	TreePath(TreePath parent, SharedFieldPtr lastElement);
+    typedef InternalWindowBase Inherited;
 
-	std::vector<SharedFieldPtr> _Path;
+    /*==========================  PUBLIC  =================================*/
+  public:
 
-public:
-	//Tests two TreePaths for equality by checking each element of the paths for equality.
-	bool operator==(const TreePath& Right) const;
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
 
-	bool operator!=(const TreePath& Right) const;
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
 
-    bool operator<(const TreePath& RightPath) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
 
-	//Returns the last component of this path.
-	SharedFieldPtr getLastPathComponent(void) const;
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
 
-	//Returns a path containing all the elements of this object, except the last path component.
-	TreePath getParentPath(void) const;
+    /*! \}                                                                 */
+    /*=========================  PROTECTED  ===============================*/
+  protected:
 
-	//Returns an ordered array of Objects containing the components of this TreePath.
-	std::vector<SharedFieldPtr> getPath(void) const;
+    // Variables should all be in InternalWindowBase.
 
-	//Returns the path component at the specified index.
-	SharedFieldPtr getPathComponent(const UInt32& Index) const;
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
 
-	//Returns the number of elements in the path.
-	UInt32 getPathCount(void) const;
+    InternalWindow(void);
+    InternalWindow(const InternalWindow &source);
 
-    //Returns the Depth of the Last Component in this Path
-    UInt32 getDepth(void) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
 
-	//Returns true if aTreePath is a descendant of this TreePath.
-	bool isDescendant(TreePath aTreePath) const;
+    virtual ~InternalWindow(void); 
 
-	//Returns a new path containing all the elements of this object plus child.
-	TreePath pathByAddingChild(SharedFieldPtr child) const;
+    /*! \}                                                                 */
+    
+    /*==========================  PRIVATE  ================================*/
+  private:
 
-	//Constructs a TreePath containing only a single element.
-	TreePath(SharedFieldPtr singlePath);
+    friend class FieldContainer;
+    friend class InternalWindowBase;
 
-	//Constructs a path from an array of Objects, uniquely identifying the path from the root of the tree to a specific node, as returned by the tree's data model.
-	TreePath(const std::vector<SharedFieldPtr>& path);
+    static void initMethod(void);
 
+    // prohibit default functions (move to 'public' if you need one)
 
-	//Constructs a new TreePath with the identified path components of length length.
-	TreePath(const std::vector<SharedFieldPtr>& path, const UInt32& length);
+    void operator =(const InternalWindow &source);
 };
 
-typedef TreePath* TreePathPtr;
+typedef InternalWindow *InternalWindowP;
 
 OSG_END_NAMESPACE
 
-#include "OSGTreePath.inl"
+#include "OSGInternalWindowBase.inl"
+#include "OSGInternalWindow.inl"
 
-#endif /* _OSG_UI_TREE_PATH_H_ */
+#define OSGINTERNALWINDOW_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
+#endif /* _OSGINTERNALWINDOW_H_ */

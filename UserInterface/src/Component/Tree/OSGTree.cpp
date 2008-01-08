@@ -223,6 +223,11 @@ void Tree::setModel(TreeModelPtr newModel)
         _Model->removeTreeModelListener(&_ModelListener);
     }
     _Model = newModel;
+    //Set the model used by the ModelLayout
+    if(getModelLayout() != NullFC)
+    {
+        getModelLayout()->setModel(_Model);
+    }
     if(_Model != NULL)
     {
         _Model->addTreeModelListener(&_ModelListener);
@@ -445,6 +450,13 @@ Tree::~Tree(void)
 void Tree::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if((whichField & ModelLayoutFieldMask) &&
+        getModelLayout() != NullFC)
+    {
+        //Set the model used by the ModelLayout
+        getModelLayout()->setModel(_Model);
+    }
 }
 
 void Tree::dump(      UInt32    , 

@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="InternalWindow"
+	parent="AbstractWindow"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI Internal Window.
+	<Field
+		name="FocusedComponent"
+		type="ComponentPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/OSGComponentFields.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="ActivePopupMenus"
+		type="PopupMenuPtr"
+		cardinality="multi"
+		visibility="internal"
+		header="Component/Menu/OSGPopupMenuFields.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ActiveToolTip"
+		type="ToolTipPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="Component/Misc/OSGToolTipFields.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="LockInput"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="false"
+	>
+    </Field>
+    <Field
+          name="MenuBar"
+          type="MenuBarPtr"
+          cardinality="single"
+          visibility="external"
+          access="public"
+          defaultValue="NullFC"
+		  header="Component/Menu/OSGMenuBarFields.h"
+          >
+	</Field>
+</FieldContainer>

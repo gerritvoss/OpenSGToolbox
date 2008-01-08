@@ -22,6 +22,15 @@ A UI DrawingSurface.
 	>
 	</Field>
 	<Field
+		name="InternalWindows"
+		type="InternalWindowPtr"
+		cardinality="multi"
+		visibility="external"
+		header="Component/Container/Window/OSGInternalWindowFields.h"
+		access="protected"
+	>
+	</Field>
+	<Field
 		name="EventProducer"
 		type="WindowEventProducerPtr"
 		cardinality="single"

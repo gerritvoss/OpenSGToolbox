@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGTreePath.h"
+#include "OSGInternalWindow.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::TreePath
-A TreePath. 
+/*! \class osg::InternalWindow
+A UI Internal Window. 	
 */
 
 /***************************************************************************\
@@ -67,41 +67,14 @@ A TreePath.
  *                           Class methods                                 *
 \***************************************************************************/
 
+void InternalWindow::initMethod (void)
+{
+}
+
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
-bool TreePath::isDescendant(TreePath aTreePath) const
-{
-    UInt32 i(0);
-    while(i<aTreePath._Path.size() && aTreePath._Path[i] != _Path.front() )
-    {
-         ++i;
-    }
-
-    if(i<aTreePath._Path.size() && _Path.size() <= aTreePath._Path.size() - i)
-    {
-        for(UInt32 j(0) ; j<_Path.size() ; ++j)
-        {
-             if(_Path[j] != aTreePath._Path[i+j])
-             {
-                 return false;
-             }
-        }
-        return true;
-    }
-    else
-    {
-	   return false;
-    }
-}
-
-TreePath TreePath::pathByAddingChild(SharedFieldPtr child) const
-{
-	std::vector<SharedFieldPtr> Path(_Path);
-	Path.push_back(child);
-	return TreePath(Path);
-}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -109,84 +82,33 @@ TreePath TreePath::pathByAddingChild(SharedFieldPtr child) const
 
 /*----------------------- constructors & destructors ----------------------*/
 
-TreePath::TreePath(SharedFieldPtr singlePath)
-{
-	_Path.push_back(singlePath);
-}
-
-TreePath::TreePath(const std::vector<SharedFieldPtr>& path) :
-    _Path(path)
+InternalWindow::InternalWindow(void) :
+    Inherited()
 {
 }
 
-TreePath::TreePath(void)
+InternalWindow::InternalWindow(const InternalWindow &source) :
+    Inherited(source)
 {
-}
-TreePath::TreePath(const std::vector<SharedFieldPtr>& path, const UInt32& length)
-{
-    if(path.size() > 0)
-    {
-        _Path = path;
-        _Path.pop_back();
-    }
 }
 
-TreePath::TreePath(TreePath parent, SharedFieldPtr lastElement)
+InternalWindow::~InternalWindow(void)
 {
-    std::vector<SharedFieldPtr>::iterator LastElementItor = std::find(parent._Path.begin(), parent._Path.end(), lastElement);
-    if(LastElementItor != parent._Path.end())
-    {
-         _Path.insert(_Path.end(), parent._Path.begin(), LastElementItor);
-    }
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-bool TreePath::operator==(const TreePath& Right) const
+void InternalWindow::changed(BitVector whichField, UInt32 origin)
 {
-    if(_Path.size() == Right._Path.size())
-    {
-        for(UInt32 i(0) ; i<_Path.size() ; ++i)
-        {
-             if(_Path[i] != Right._Path[i])
-             {
-                 return false;
-             }
-        }
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    Inherited::changed(whichField, origin);
 }
 
-bool TreePath::operator<(const TreePath& RightPath) const
+void InternalWindow::dump(      UInt32    , 
+                         const BitVector ) const
 {
-    if(_Path.size() != RightPath._Path.size())
-    {
-        return _Path.size() < RightPath._Path.size();
-    }
-    else if(_Path.size() == 0)
-    {
-        return false;
-    }
-    else
-    {
-        for(UInt32 i(0) ; i<_Path.size() ; ++i)
-        {
-            if(_Path[i] != RightPath._Path[i])
-            {
-                std::string MyString, RightString;
-                _Path.back()->getValueByStr(MyString);
-                RightPath._Path.back()->getValueByStr(RightString);
-
-                return MyString.compare(RightString) < 0;
-            }
-        }
-        return false;
-    }
+    SLOG << "Dump InternalWindow NI" << std::endl;
 }
+
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
@@ -198,6 +120,15 @@ bool TreePath::operator<(const TreePath& RightPath) const
 #ifdef OSG_LINUX_ICC
 #pragma warning( disable : 177 )
 #endif
+
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGINTERNALWINDOWBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGINTERNALWINDOWBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGINTERNALWINDOWFIELDS_HEADER_CVSID;
+}
 
 #ifdef __sgi
 #pragma reset woff 1174

@@ -10,8 +10,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Bui
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01Button", "01Button.vcproj", "{77623743-1948-4AC4-8227-7FF6072BD16F}"
 	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-	ProjectSection(ProjectDependencies) = postProject
 		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
 	EndProjectSection
 EndProject
@@ -192,16 +190,28 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "34Tree", "34Tree.vcproj", "
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "36SpringLayout", "36SpringLayout.vcproj", "{D3E60558-BBA7-4AAD-8041-AC27BE7B2A2F}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
 		Release = Release
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}.Debug.ActiveCfg = Debug|Win32
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}.Debug.Build.0 = Debug|Win32
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}.Release.ActiveCfg = Release|Win32
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}.Release.Build.0 = Release|Win32
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Debug.ActiveCfg = Debug|Win32
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Debug.Build.0 = Debug|Win32
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Release.ActiveCfg = Release|Win32
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393}.Release.Build.0 = Release|Win32
+		{77623743-1948-4AC4-8227-7FF6072BD16F}.Debug.ActiveCfg = Debug|Win32
+		{77623743-1948-4AC4-8227-7FF6072BD16F}.Debug.Build.0 = Debug|Win32
+		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release.ActiveCfg = Release|Win32
+		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release.Build.0 = Release|Win32
 		{4AA62C5C-D8B1-4954-8D66-BFC10AD5D1C7}.Debug.ActiveCfg = Debug|Win32
 		{4AA62C5C-D8B1-4954-8D66-BFC10AD5D1C7}.Debug.Build.0 = Debug|Win32
 		{4AA62C5C-D8B1-4954-8D66-BFC10AD5D1C7}.Release.ActiveCfg = Release|Win32
@@ -350,6 +360,10 @@ Global
 		{ECC247D1-1830-4A4A-BB7A-9D319FBDB984}.Debug.Build.0 = Debug|Win32
 		{ECC247D1-1830-4A4A-BB7A-9D319FBDB984}.Release.ActiveCfg = Release|Win32
 		{ECC247D1-1830-4A4A-BB7A-9D319FBDB984}.Release.Build.0 = Release|Win32
+		{D3E60558-BBA7-4AAD-8041-AC27BE7B2A2F}.Debug.ActiveCfg = Debug|Win32
+		{D3E60558-BBA7-4AAD-8041-AC27BE7B2A2F}.Debug.Build.0 = Debug|Win32
+		{D3E60558-BBA7-4AAD-8041-AC27BE7B2A2F}.Release.ActiveCfg = Release|Win32
+		{D3E60558-BBA7-4AAD-8041-AC27BE7B2A2F}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
