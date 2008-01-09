@@ -52,6 +52,8 @@
 #include "Component/Tree/ModelLayout/OSGTreeModelLayout.h"
 #include "Component/Container/OSGUIViewport.h"
 
+#include "Component/Tree/ComponentGenerators/OSGDefaultTreeComponentGenerator.h"
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -515,7 +517,7 @@ void Tree::updateRowsDrawn(void)
     if(NewBottomDrawnRow < _BottomDrawnRow)
     {
         //Remove all of the Drawn rows below NewBottomDrawnRow
-        for(Int32 i(NewBottomDrawnRow+1) ; i<=_BottomDrawnRow ; ++i)
+        for(Int32 i(osgMax(NewBottomDrawnRow+1, _TopDrawnRow)) ; i<=_BottomDrawnRow ; ++i)
         {
             _DrawnRows.pop_back();
         }
@@ -527,8 +529,7 @@ void Tree::updateRowsDrawn(void)
         //Insert all of the Drawn rows between NewTopDrawnRow and _TopDrawnRow
         for(Int32 i(NewTopDrawnRow) ; i<osgMin(_TopDrawnRow, NewBottomDrawnRow) ; ++i)
         {
-            insertDrawnRow(i);
-            //push_front
+            _DrawnRows.push_front(createRowComponent(i));
         }
     }
 
@@ -537,26 +538,49 @@ void Tree::updateRowsDrawn(void)
         //Insert all of the Drawn rows between _BottomDrawnRow and NewBottomDrawnRow
         for(Int32 i(osgMax(NewTopDrawnRow, _BottomDrawnRow+1)) ; i<=NewBottomDrawnRow ; ++i)
         {
-            insertDrawnRow(i);
-            //push_back
+            _DrawnRows.push_back(createRowComponent(i));
         }
     }
 
     _TopDrawnRow = NewTopDrawnRow;
     _BottomDrawnRow = NewBottomDrawnRow;
+
+    beginEditCP(TreePtr(this), ChildrenFieldMask);
+        getChildren().clear();
+        for(UInt32 i(0) ; i<_DrawnRows.size() ; ++i)
+        {
+            getChildren().push_back(_DrawnRows[i]);
+        }
+    endEditCP(TreePtr(this), ChildrenFieldMask);
 }
 
-void Tree::removeDrawnRow(const UInt32& Row)
+ComponentPtr Tree::createRowComponent(const UInt32& Row)
 {
-    if(Row >= 0)
+    if(getCellGenerator() != NullFC)
     {
+        TreePath NodePath(getModelLayout()->getPathForRow(Row));
+        bool Selected;
+
+        if(_SelectionModel != NULL)
+        {
+            Selected = _SelectionModel->isPathSelected(NodePath);
+        }
+        else
+        {
+            Selected = false;
+        }
+        if(getCellGenerator()->getType() == DefaultTreeComponentGenerator::getClassType())
+        {
+            return DefaultTreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), _Model->isLeaf(NodePath.getLastPathComponent()), Row, false);
+        }
+        else
+        {
+            return getCellGenerator()->getComponent(TreePtr(this),NodePath.getLastPathComponent(),Selected, false);
+        }
     }
-}
-
-void Tree::insertDrawnRow(const UInt32& Row)
-{
-    if(Row >= 0)
+    else
     {
+        return NullFC;
     }
 }
 
@@ -564,6 +588,18 @@ void Tree::updateDrawnRow(const UInt32& Row)
 {
     if(Row >= 0)
     {
+    }
+}
+
+void Tree::updateLayout(void)
+{
+    //Update the Position and Size of all the Drawn Rows
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        beginEditCP(getChildren(i), Component::PositionFieldMask | Component::SizeFieldMask);
+            getChildren(i)->setPosition(Pnt2s(0, getModelLayout()->getRowHeight()*(i+_TopDrawnRow)));
+            getChildren(i)->setSize(Vec2s(getSize().x(), getModelLayout()->getRowHeight()));
+        endEditCP(getChildren(i), Component::PositionFieldMask | Component::SizeFieldMask);
     }
 }
 

@@ -68,6 +68,16 @@ A UI Default Tree ComponentGenerator.
 	>
 	</Field>
 	<Field
+		name="NodePanelPrototype"
+		type="PanelPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Component/Container/OSGPanelFields.h"
+		access="public"
+	>
+	</Field>
+	<Field
 		name="SelectedBackground"
 		type="UIBackgroundPtr"
 		cardinality="single"

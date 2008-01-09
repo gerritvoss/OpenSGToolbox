@@ -348,6 +348,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
 
     //Components that display logical rows or columns should compute the scroll increment that will completely expose one new row or column, depending on the value of orientation.
     virtual Int32 getScrollableUnitIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+    
+    virtual void updateLayout(void);
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -488,8 +490,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     
     void updateRowsDrawn(void);
 
-    void removeDrawnRow(const UInt32& Row);
-    void insertDrawnRow(const UInt32& Row);
+    ComponentPtr createRowComponent(const UInt32& Row);
     void updateDrawnRow(const UInt32& Row);
 
     void getDrawnRows(Int32& Beginning, Int32& End) const;

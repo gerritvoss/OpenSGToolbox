@@ -78,6 +78,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGenerator : public Def
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+	virtual ComponentPtr getTreeComponent(TreePtr Parent, SharedFieldPtr Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -98,7 +100,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGenerator : public Def
     virtual ~DefaultTreeComponentGenerator(void); 
 
     /*! \}                                                                 */
-	virtual ComponentPtr getTreeComponent(TreePtr Parent, SharedFieldPtr Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus);
     
     /*==========================  PRIVATE  ================================*/
   private:

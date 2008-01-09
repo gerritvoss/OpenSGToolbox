@@ -104,6 +104,7 @@ ModelTreeNodePtr ModelTreeNode::getNodeFromUserObject(SharedFieldPtr object)
                 return Node;
             }
         }
+        return NullFC;
     }
 }
 
