@@ -89,7 +89,7 @@ bool FixedHeightTreeModelLayout::isVisible(const TreePath& path) const
 TreePath FixedHeightTreeModelLayout::getPathClosestTo(const UInt32& x, const UInt32& y) const
 {
     //Determine the row
-    UInt32 Row(y/getRowHeight());
+    UInt32 Row(osgMin<UInt32>(y/getRowHeight(),getRowCount()-1));
 
     //Get the Path for that row
 	return getPathForRow(Row);
@@ -97,15 +97,15 @@ TreePath FixedHeightTreeModelLayout::getPathClosestTo(const UInt32& x, const UIn
 
 TreePath FixedHeightTreeModelLayout::getPathForRow(const UInt32& row) const
 {
-    UInt32 RootVisibilityDependantRow(row);
-    if(!isRootVisible())
-    {
-        RootVisibilityDependantRow += 1;
-    }
+    //UInt32 RootVisibilityDependantRow(row);
+    //if(!isRootVisible())
+    //{
+    //    RootVisibilityDependantRow += 1;
+    //}
 
     UInt32 i(0);
     TreePathSetConstItor VisiblePathSetItor(_VisiblePathSet.begin());
-    while(i<RootVisibilityDependantRow && VisiblePathSetItor != _VisiblePathSet.end())
+    while(i<row && VisiblePathSetItor != _VisiblePathSet.end())
     {
         ++i;
         ++VisiblePathSetItor;
@@ -123,14 +123,7 @@ TreePath FixedHeightTreeModelLayout::getPathForRow(const UInt32& row) const
 
 UInt32 FixedHeightTreeModelLayout::getRowCount(void) const
 {
-    if(isRootVisible())
-    {
-        return _VisiblePathSet.size();
-    }
-    else
-    {
-        return _VisiblePathSet.size()-1;
-    }
+    return _VisiblePathSet.size();
 }
 
 Int32 FixedHeightTreeModelLayout::getRowForPath(const TreePath& path) const
@@ -186,7 +179,7 @@ void FixedHeightTreeModelLayout::setExpanded(const TreePath& path, bool Expand)
     {
 		_VetoPathExpantion = false;
 
-		if(isExpanded(path))
+		if(!isExpanded(path))
 		{
 			produceTreeWillExpand(path);
 			if(!_VetoPathExpantion)
@@ -210,7 +203,7 @@ void FixedHeightTreeModelLayout::setExpanded(const TreePath& path, bool Expand)
     else
     {
         _VetoPathCollapse = false;
-		if(!isExpanded(path))
+		if(isExpanded(path))
 		{
 			produceTreeWillCollapse(path);
 			if(!_VetoPathCollapse)

@@ -150,18 +150,26 @@ void AbstractTreeModelLayout::setModel(TreeModelPtr newModel)
 
     _TreeModel = newModel;
     
-    if(_TreeModel != NULL)
-    {
-        _TreeModel->addTreeModelListener(&_ModelListener);
-    }
-    
     _ExpandedPathSet.clear();
     _ExpandedPathSet.comp = TreePathPreorderLessThan(_TreeModel);
 
     _VisiblePathSet.clear();
     _VisiblePathSet.comp = TreePathPreorderLessThan(_TreeModel);
 
-    _VisiblePathSet.insert(TreePath(_TreeModel->getRoot()));
+    if(_TreeModel != NULL)
+    {
+        _TreeModel->addTreeModelListener(&_ModelListener);
+        _VisiblePathSet.insert(TreePath(_TreeModel->getRoot()));
+
+        TreePath RootPath(_TreeModel->getRoot());
+        setExpanded(RootPath, true);
+        if(isRootVisible())
+        {
+            _VisiblePathSet.insert(RootPath);
+        }
+    }
+    
+
 }
 
 //void AbstractTreeModelLayout::setNodeDimensions(AbstractLayoutCache.NodeDimensions nd);
@@ -169,7 +177,7 @@ void AbstractTreeModelLayout::setModel(TreeModelPtr newModel)
 void AbstractTreeModelLayout::setRootVisible(bool rootVisible)
 {
     beginEditCP(AbstractTreeModelLayoutPtr(this), RootVisibleInternalFieldMask);
-    setRootVisibleInternal(rootVisible);
+        setRootVisibleInternal(rootVisible);
     endEditCP(AbstractTreeModelLayoutPtr(this), RootVisibleInternalFieldMask);
 }
 
@@ -298,6 +306,14 @@ AbstractTreeModelLayout::~AbstractTreeModelLayout(void)
 void AbstractTreeModelLayout::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & RootVisibleInternalFieldMask)
+    {
+        if(getRootVisibleInternal())
+        {
+            _VisiblePathSet.insert(TreePath(_TreeModel->getRoot()));
+        }
+    }
 }
 
 void AbstractTreeModelLayout::dump(      UInt32    , 

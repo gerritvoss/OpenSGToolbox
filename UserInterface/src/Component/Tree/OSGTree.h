@@ -51,6 +51,9 @@
 #include "Component/Tree/Selection/OSGTreeSelectionModel.h"
 #include "Component/Tree/Selection/OSGTreeSelectionListener.h"
 #include "Component/Tree/ModelLayout/OSGTreeModelLayoutListener.h"
+#include "Component/Container/OSGUIViewportFields.h"
+
+#include <deque>
 
 OSG_BEGIN_NAMESPACE
 
@@ -458,6 +461,43 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
 
     //Sets the expanded state of this JTree.
     void setExpandedState(const TreePath& path, bool state);
+
+    bool isParentAViewport(void) const;
+
+    UIViewportPtr getParentViewport(void) const;
+
+    //Some non-structural properties of a path has changed.  So update
+    //how the row for this path is drawn
+    void updateChangedPath(const TreePath& Path);
+
+    //The structure of the tree and it's layout has changed so significantly
+    //that the entire drawn representation of the tree should be updated
+    void updateEntireTree(void);
+
+    //Updates the drawn representation of the tree in response to inserted rows
+    //These new rows may have been inserted through an Insertion event from the model
+    //or an expantion event from the ModelLayout
+    void updateInsertedRows(const UInt32& Begining, const UInt32& NumInsertedRows);
+    
+    //Updates the drawn representation of the tree in response to removed rows
+    //These rows may have been removed through a Removal event from the model
+    //or a collapse event from the ModelLayout
+    void updateRemovedRows(const UInt32& Begining, const UInt32& NumRemovedRows);
+
+    void updateRows(const UInt32& Begining, const UInt32& NumRows);
+    
+    void updateRowsDrawn(void);
+
+    void removeDrawnRow(const UInt32& Row);
+    void insertDrawnRow(const UInt32& Row);
+    void updateDrawnRow(const UInt32& Row);
+
+    void getDrawnRows(Int32& Beginning, Int32& End) const;
+    
+    Int32 _TopDrawnRow,
+          _BottomDrawnRow;
+
+    std::deque<ComponentPtr> _DrawnRows;
 
     /*==========================  PRIVATE  ================================*/
   private:

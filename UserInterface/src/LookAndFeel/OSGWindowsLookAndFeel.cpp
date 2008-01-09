@@ -3597,7 +3597,7 @@ void WindowsLookAndFeel::init(void)
 		//Opacity
 		WindowsTree->setOpacity(1.0);
 
-        //Table Values
+        //Tree Values
 		WindowsTree->setEditable(false);
 		WindowsTree->setExpandsSelectedPaths(true);
 		WindowsTree->setInvokesStopCellEditing(true);
@@ -3609,6 +3609,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsTree->setVisibleRowCount(10);
 		WindowsTree->setCellEditor(WindowsDefaultTreeCellEditor);
 		WindowsTree->setCellGenerator(WindowsDefaultTreeComponentGenerator);
+        WindowsTree->setModelLayout(FixedHeightTreeModelLayout::create());
 		
 	endEditCP(WindowsTree);
 	

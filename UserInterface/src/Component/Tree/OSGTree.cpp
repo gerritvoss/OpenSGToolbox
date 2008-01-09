@@ -50,6 +50,7 @@
 #include "OSGTree.h"
 #include "Util/OSGUIDefines.h"
 #include "Component/Tree/ModelLayout/OSGTreeModelLayout.h"
+#include "Component/Container/OSGUIViewport.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -120,13 +121,27 @@ TreePath Tree::getAnchorSelectionPath(void) const
 TreePath Tree::getClosestPathForLocation(const UInt32& x, const UInt32& y) const
 {
     //TODO:Implement
-    return getModelLayout()->getPathClosestTo(x,y);
+    if(getModelLayout() != NullFC)
+    {
+        return getModelLayout()->getPathClosestTo(x,y);
+    }
+    else
+    {
+        return TreePath(SharedFieldPtr());
+    }
 }
 
 Int32 Tree::getClosestRowForLocation(const UInt32& x, const UInt32& y) const
 {
+    if(getModelLayout() != NullFC)
+    {
+        return getModelLayout()->getRowForPath(getClosestPathForLocation(x,y));
+    }
+    else
+    {
+        return -1;
+    }
     //TODO:Implement
-    return getModelLayout()->getRowForPath(getClosestPathForLocation(x,y));
 }
 
 TreePath Tree::getEditingPath(void) const
@@ -139,14 +154,28 @@ TreePath Tree::getEditingPath(void) const
 
 TreePath Tree::getPathForLocation(const UInt32& x, const UInt32& y) const
 {
+    if(getModelLayout() != NullFC)
+    {
+        return getModelLayout()->getPathClosestTo(x,y);
+    }
+    else
+    {
+        return TreePath(SharedFieldPtr());
+    }
     //TODO:Implement
-    return TreePath(SharedFieldPtr());
 }
 
 Int32 Tree::getRowForLocation(const UInt32& x, const UInt32& y) const
 {
+    if(getModelLayout() != NullFC)
+    {
+        return getModelLayout()->getRowForPath(getClosestPathForLocation(x,y));
+    }
+    else
+    {
+        return -1;
+    }
     //TODO:Implement
-    return 0;
 }
 
 Int32 Tree::getVisibleRowCount(void) const
@@ -232,6 +261,8 @@ void Tree::setModel(TreeModelPtr newModel)
     {
         _Model->addTreeModelListener(&_ModelListener);
     }
+
+    updateEntireTree();
 }
 
 void Tree::setSelectionInterval(const UInt32& index0, const UInt32& index1)
@@ -417,6 +448,135 @@ void Tree::setExpandedState(const TreePath& path, bool state)
     getModelLayout()->setExpanded(path, state);
 }
 
+bool Tree::isParentAViewport(void) const
+{
+    return (getParentContainer() != NullFC) && (getParentContainer()->getType() == UIViewport::getClassType());
+}
+
+UIViewportPtr Tree::getParentViewport(void) const
+{
+    if(isParentAViewport())
+    {
+        return UIViewport::Ptr::dcast(getParentContainer());
+    }
+    else
+    {
+        return NullFC;
+    }
+}
+
+void Tree::updateChangedPath(const TreePath& Path)
+{
+    //TODO:Implement
+}
+
+void Tree::updateEntireTree(void)
+{
+    //TODO:Implement
+
+    //Remove the previous drawn rows
+
+    //Determine the drawn rows
+    getDrawnRows(_TopDrawnRow, _BottomDrawnRow);
+
+    //create the drawn components for these rows
+}
+
+void Tree::updateInsertedRows(const UInt32& Begining, const UInt32& NumInsertedRows)
+{
+    //TODO:Implement
+}
+
+void Tree::updateRemovedRows(const UInt32& Begining, const UInt32& NumRemovedRows)
+{
+    //TODO:Implement
+}
+
+void Tree::updateRows(const UInt32& Begining, const UInt32& NumRows)
+{
+    //TODO:Implement
+}
+
+void Tree::updateRowsDrawn(void)
+{
+    Int32 NewTopDrawnRow,
+          NewBottomDrawnRow;
+    getDrawnRows(NewTopDrawnRow, NewBottomDrawnRow);
+
+    if(NewTopDrawnRow > _TopDrawnRow)
+    {
+        //Remove all of the Drawn rows above NewTopDrawnRow
+        for(Int32 i(_TopDrawnRow) ; i<osgMin(NewTopDrawnRow, _BottomDrawnRow) ; ++i)
+        {
+            _DrawnRows.pop_front();
+        }
+    }
+
+    if(NewBottomDrawnRow < _BottomDrawnRow)
+    {
+        //Remove all of the Drawn rows below NewBottomDrawnRow
+        for(Int32 i(NewBottomDrawnRow+1) ; i<=_BottomDrawnRow ; ++i)
+        {
+            _DrawnRows.pop_back();
+        }
+    }
+
+
+    if(NewTopDrawnRow < _TopDrawnRow)
+    {
+        //Insert all of the Drawn rows between NewTopDrawnRow and _TopDrawnRow
+        for(Int32 i(NewTopDrawnRow) ; i<osgMin(_TopDrawnRow, NewBottomDrawnRow) ; ++i)
+        {
+            insertDrawnRow(i);
+            //push_front
+        }
+    }
+
+    if(NewBottomDrawnRow > _BottomDrawnRow)
+    {
+        //Insert all of the Drawn rows between _BottomDrawnRow and NewBottomDrawnRow
+        for(Int32 i(osgMax(NewTopDrawnRow, _BottomDrawnRow+1)) ; i<=NewBottomDrawnRow ; ++i)
+        {
+            insertDrawnRow(i);
+            //push_back
+        }
+    }
+
+    _TopDrawnRow = NewTopDrawnRow;
+    _BottomDrawnRow = NewBottomDrawnRow;
+}
+
+void Tree::removeDrawnRow(const UInt32& Row)
+{
+    if(Row >= 0)
+    {
+    }
+}
+
+void Tree::insertDrawnRow(const UInt32& Row)
+{
+    if(Row >= 0)
+    {
+    }
+}
+
+void Tree::updateDrawnRow(const UInt32& Row)
+{
+    if(Row >= 0)
+    {
+    }
+}
+
+void Tree::getDrawnRows(Int32& Beginning, Int32& End) const
+{
+    //Get My Clip Bounds
+    Pnt2s ClipTopLeft, ClipBottomRight;
+    getClipBounds(ClipTopLeft, ClipBottomRight);
+
+    Beginning = getRowForLocation(ClipTopLeft.x(), ClipTopLeft.y());
+    End = getRowForLocation(ClipBottomRight.x(), ClipBottomRight.y());
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -429,7 +589,9 @@ Tree::Tree(void) :
         _SelectionModel(NULL),
         _ModelListener(TreePtr(this)),
         _SelectionListener(TreePtr(this)),
-		_ModelLayoutListener(TreePtr(this))
+		_ModelLayoutListener(TreePtr(this)),
+        _TopDrawnRow(-1),
+        _BottomDrawnRow(-1)
 {
 }
 
@@ -439,7 +601,9 @@ Tree::Tree(const Tree &source) :
         _SelectionModel(source._SelectionModel),
         _ModelListener(TreePtr(this)),
         _SelectionListener(TreePtr(this)),
-		_ModelLayoutListener(TreePtr(this))
+		_ModelLayoutListener(TreePtr(this)),
+        _TopDrawnRow(-1),
+        _BottomDrawnRow(-1)
 {
 }
 
@@ -459,6 +623,13 @@ void Tree::changed(BitVector whichField, UInt32 origin)
         //Set the model used by the ModelLayout
         getModelLayout()->setModel(_Model);
 		getModelLayout()->addTreeModelLayoutListener(&_ModelLayoutListener);
+        updateEntireTree();
+    }
+    
+    if((whichField & Tree::ClipTopLeftFieldMask) ||
+       (whichField & Tree::ClipBottomRightFieldMask))
+    {
+        updateRowsDrawn();
     }
 }
 
