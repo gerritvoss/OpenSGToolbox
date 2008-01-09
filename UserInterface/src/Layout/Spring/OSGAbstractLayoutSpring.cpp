@@ -78,7 +78,14 @@ void AbstractLayoutSpring::initMethod (void)
 
 Int32 AbstractLayoutSpring::getValue(void) const
 {
-    return getSize();
+    if(getSize() == LayoutSpring::VALUE_NOT_SET)
+    {
+        return getPreferredValue();
+    }
+    else
+    {
+        return getSize();
+    }
 }
 
 void AbstractLayoutSpring::setValue(const Int32& value)
