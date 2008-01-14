@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGContainer.h" // Parent
+#include "Component/Container/OSGContainer.h" // Parent
 
 #include "UIDrawingSurface/OSGUIDrawingSurfaceFields.h" // DrawingSurface type
 #include <OpenSG/OSGBoolFields.h> // Closable type
