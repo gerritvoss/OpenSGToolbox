@@ -33,8 +33,11 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "Component/Container/Window/OSGInternalWindowFields.h"
+//#include "Component/Container/Window/OSGInternalWindowFields.h"
 #include "Component/Container/OSGContainerFields.h"
+
+#include "Component/Text/OSGLabel.h"
+#include "Event/OSGActionListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -42,15 +45,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogFactory
 {
 /*=========================  PUBLIC  ===============================*/
 public:
-    static InternalWindowPtr createMessageDialog(const std::string& Title, const std::string& Message, const std::string& ConfirmButtonText);
+//	static InternalWindowPtr createMessageDialog(const std::string& Title, const std::string& Message, const std::string& ConfirmButtonText = std::string("Ok"));
     
     static ContainerPtr createMessagePanel(const std::string& Message, const std::string& ConfirmButtonText);
+	
+//	static InternalWindowPtr createOptionDialog(const std::string& Title, const std::string& Message, const std::vector<std::string>& OptionButtonsText);
+    
+    static ContainerPtr createOptionPanel(const std::string& Message, const std::vector<std::string>& OptionButtonsText);
 
+	static void addButtonActionListener(const ActionListener& Listener, const int index);
+	
 private:
 
     DialogFactory(void);
-};
 
+	static LabelPtr DialogFactory::createTransparentLabel(const std::string& Message);
+
+};
 OSG_END_NAMESPACE
 
 #include "OSGDialogFactory.inl"

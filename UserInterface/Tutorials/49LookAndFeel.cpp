@@ -81,7 +81,6 @@ void reshape(Vec2s Size);
 #include <OpenSG/UserInterface/OSGDefaultComboBoxModel.h>
 #include <OpenSG/UserInterface/OSGDefaultComboBoxRenderer.h>
 
-
 RadioButtonGroup DeselectedRadioButtonGroup;
 RadioButtonGroup SelectedRadioButtonGroup;
 RadioButtonGroup DisabledSelectedRadioButtonGroup;
@@ -102,7 +101,22 @@ DefaultComboBoxRenderer noneditableComboBoxModelRenderer;
 
 
 
-class TutorialWindowListner;
+class TutorialWindowListener : public WindowAdapter
+{
+public:
+    virtual void windowClosing(const WindowEvent& e)
+    {
+        ExitApp = true;
+    }
+
+    virtual void windowClosed(const WindowEvent& e)
+    {
+        ExitApp = true;
+    }
+};
+
+
+	
 
 class StatePanelCreator
 {
@@ -111,33 +125,47 @@ public:
 
 	PanelPtr getPanel(void) const;
 
-protected:
-	PanelPtr _ThePanel;
-	ExampleButtonListener _ButtonListener;
 
-	//class ExampleButtonListener : public ActionListener
-	//{
-	//public:
-	//	void actionPreformed(ActionEvent Event);
-	//};
 
 	PanelPtr createStatePanel(void);
+protected:
+	PanelPtr _ThePanel;	
 
+		
+	class ButtonPressedListener : public ActionListener
+		{
+		public:
+
+		virtual void actionPerformed(const ActionEvent& e)
+			{
+				beginEditCP(inactiveButton, Button::TextFieldMask);
+					inactiveButton->Button::setText("Active");
+				endEditCP(inactiveButton, Button::TextFieldMask);
+				
+			}
+		};
+			
+	ButtonPressedListener _ButtonListener;
+
+
+	
+	
 
 private:
 };
-
-PanelPtr StatePanelCreator::getPanel(void) const
-{
-	return _ThePanel;
-}
 
 StatePanelCreator::StatePanelCreator(void)
 {
 	_ThePanel = createStatePanel();
 }
 
-PanelPtr createStatePanel(void);
+PanelPtr StatePanelCreator::getPanel(void) const
+{
+	return _ThePanel;
+}
+
+
+
 
 
 int main(int argc, char **argv)
@@ -192,7 +220,9 @@ int main(int argc, char **argv)
 
             Create TabPanel.  
     ******************************************************/
-    PanelPtr StatePanel = createStatePanel();
+    StatePanelCreator testing;
+	PanelPtr StatePanel = testing.getPanel();
+	//PanelPtr StatePanel = osg::Panel::create();
     TabPanelPtr MainTabPanel = osg::TabPanel::create();
     beginEditCP(MainTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask  | TabPanel::ConstraintsFieldMask);
         MainTabPanel->setPreferredSize(Vec2s(600,600));
@@ -263,7 +293,7 @@ int main(int argc, char **argv)
 }
 
 
-PanelPtr CreateStatePanel::createStatePanel(void)
+PanelPtr StatePanelCreator::createStatePanel(void)
 {
     /******************************************************
 
