@@ -605,6 +605,30 @@ void Button::setDisabledImage(const std::string& Path)
     setDisabledImage(LoadedImage);
 }
 
+
+
+
+
+  
+void Button::getTextBounds(Pnt2s& TextTopLeft, Pnt2s& TextBottomRight) const
+{
+      getFont()->getBounds(ButtonPtr(this)->getText(), TextTopLeft, TextBottomRight);
+}
+
+
+void Button::setPreferredSizeByContents(const int Insets)
+{
+	  Pnt2s TextTopLeft, TextBottomRight;   
+	  // Get the Font bounds
+	  getFont()->getBounds(ButtonPtr(this)->getText(), TextTopLeft, TextBottomRight);
+	  Pnt2s TopLeft, BottomRight;
+	  // Returns boundary required for Border
+      getInsideBorderBounds(TopLeft, BottomRight);
+	  Pnt2s InsetPnt(Insets, Insets);
+	  // Uses these sizes and size Button
+	  setPreferredSize(Vec2s(TextBottomRight - TextTopLeft  - BottomRight + TopLeft + Insets));
+
+	};
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
