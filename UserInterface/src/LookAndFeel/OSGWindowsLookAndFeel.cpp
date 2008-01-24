@@ -57,6 +57,7 @@
 #include "Component/Button/OSGToggleButton.h"
 #include "Component/Text/OSGLabel.h"
 #include "Component/Container/Window/OSGInternalWindow.h"
+#include "Component/Container/Window/Dialog/OSGDialogWindow.h"
 #include "Component/Container/Window/OSGTitlebar.h"
 #include "Component/Container/OSGPanel.h"
 #include "Component/Container/OSGSplitPanel.h"
@@ -934,6 +935,56 @@ void WindowsLookAndFeel::init(void)
 	
 	InternalWindow::getClassType().setPrototype(WindowsInternalWindow);
 	
+	//************************** DialogWindow *****************************
+	//Windows DialogWindow
+	DialogWindowPtr WindowsDialogWindow = DialogWindow::create();
+	beginEditCP(WindowsDialogWindow);
+		WindowsDialogWindow->setEnabled(true);
+		WindowsDialogWindow->setVisible(true);
+		
+		WindowsDialogWindow->setConstraints(NullFC);
+		//Sizes
+		WindowsDialogWindow->setMinSize(Vec2s(50,50));
+		WindowsDialogWindow->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsDialogWindow->setPreferredSize(Vec2s(280,140));
+
+		//Border
+		WindowsDialogWindow->setBorder(WindowsInternalWindowUnfocusedBorder);
+		WindowsDialogWindow->setRolloverBorder(WindowsInternalWindowUnfocusedBorder);
+		WindowsDialogWindow->setFocusedBorder(WindowsInternalWindowFocusedBorder);
+		WindowsDialogWindow->setDisabledBorder(WindowsInternalWindowUnfocusedBorder);
+		
+		//Background
+		WindowsDialogWindow->setBackground(WindowsInternalWindowBackground);
+		WindowsDialogWindow->setRolloverBackground(WindowsInternalWindowBackground);
+		WindowsDialogWindow->setFocusedBackground(WindowsInternalWindowBackground);
+		WindowsDialogWindow->setDisabledBackground(WindowsInternalWindowBackground);
+		
+		//Opacity
+		WindowsDialogWindow->setOpacity(1.0);
+
+		//AbstractWindow
+		WindowsDialogWindow->setDrawingSurface(NullFC);
+		WindowsDialogWindow->setClosable(true);
+		WindowsDialogWindow->setIconable(true);
+		WindowsDialogWindow->setMaximizable(false);
+		WindowsDialogWindow->setResizable(false);
+		WindowsDialogWindow->setTitle(std::string(""));
+		WindowsDialogWindow->setDesktopIcon(NullFC);
+		WindowsDialogWindow->setAllwaysOnTop(false);
+		WindowsDialogWindow->setDrawTitlebar(true);
+		WindowsDialogWindow->setDrawDecorations(true);
+		WindowsDialogWindow->setAlignmentInDrawingSurface(Vec2f(-1.0f,-1.0f));
+		WindowsDialogWindow->setScalingInDrawingSurface(Vec2f(-1.0f,-1.0f));
+		WindowsDialogWindow->setResizeModifyCursorWidth(4);
+
+		//DialogWindow
+		WindowsDialogWindow->setTitlebar(WindowsInternalWindowTitlebar);
+
+	endEditCP(WindowsDialogWindow);
+	
+	DialogWindow::getClassType().setPrototype(WindowsDialogWindow);
+
 	//************************** Panel *****************************
 	//Windows PanelBorder
 	/*LineBorderPtr WindowsPanelBorder = LineBorder::create();
@@ -4083,6 +4134,7 @@ void WindowsLookAndFeel::init(void)
 		getPrototypes().addValue(WindowsButton);
 		getPrototypes().addValue(WindowsLabel);
 		getPrototypes().addValue(WindowsInternalWindow);
+		getPrototypes().addValue(WindowsDialogWindow);
 		getPrototypes().addValue(WindowsPanel);
 		getPrototypes().addValue(WindowsSplitPanel);
 		getPrototypes().addValue(WindowsImageComponent);

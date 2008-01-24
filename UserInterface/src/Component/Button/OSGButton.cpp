@@ -616,7 +616,7 @@ void Button::getTextBounds(Pnt2s& TextTopLeft, Pnt2s& TextBottomRight) const
 }
 
 
-void Button::setPreferredSizeByContents(const int Insets)
+void Button::setPreferredSizeByContents(const UInt16 Insets)
 {
 	  Pnt2s TextTopLeft, TextBottomRight;   
 	  // Get the Font bounds
@@ -624,11 +624,17 @@ void Button::setPreferredSizeByContents(const int Insets)
 	  Pnt2s TopLeft, BottomRight;
 	  // Returns boundary required for Border
       getInsideBorderBounds(TopLeft, BottomRight);
-	  Pnt2s InsetPnt(Insets, Insets);
-	  // Uses these sizes and size Button
-	  setPreferredSize(Vec2s(TextBottomRight - TextTopLeft  - BottomRight + TopLeft + Insets));
 
-	};
+	  UInt16 Left, Right, Top, Bottom;
+	  getDrawnBorder()->getInsets(Left, Right, Top, Bottom);
+
+	  // Uses these sizes and size Button
+	  Vec2s PreferredSize = (TextBottomRight - TextTopLeft) + Vec2s(Left+Right+Insets, Top+Bottom+Insets);
+	  beginEditCP(ButtonPtr(this), Button::PreferredSizeFieldMask);
+		setPreferredSize(PreferredSize);
+	  endEditCP(ButtonPtr(this), Button::PreferredSizeFieldMask);
+
+};
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

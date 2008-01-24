@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DialogWindow"
+	parent="InternalWindow"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI Dialog Window.
+</FieldContainer>

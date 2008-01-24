@@ -36,29 +36,28 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGBUTTON_H_
-#define _OSGBUTTON_H_
+#ifndef _OSGDIALOGWINDOW_H_
+#define _OSGDIALOGWINDOW_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGTextureChunk.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGButtonBase.h"
-#include "Util/OSGUIDefines.h"
-#include "Event/OSGActionListener.h"
-#include <OpenSG/Input/OSGMouseAdapter.h>
-#include <OpenSG/Input/OSGUpdateListener.h>
+#include "OSGDialogWindowBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
+/*! \brief DialogWindow class. See \ref 
+           PageUserInterfaceDialogWindow for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING DialogWindow : public DialogWindowBase
 {
   private:
 
-    typedef ButtonBase Inherited;
+    typedef DialogWindowBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -79,120 +78,47 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-	virtual void mouseClicked(const MouseEvent& e);
-    virtual void mouseEntered(const MouseEvent& e);
-    virtual void mouseExited(const MouseEvent& e);
-    virtual void mousePressed(const MouseEvent& e);
-    virtual void mouseReleased(const MouseEvent& e);
-
-    void addActionListener(ActionListenerPtr Listener);
-    void removeActionListener(ActionListenerPtr Listener);
-
-    void addMousePressedActionListener(ActionListenerPtr Listener);
-    void removeMousePressedActionListener(ActionListenerPtr Listener);
-
-    void setTexture(TextureChunkPtr TheTexture);
-    void setActiveTexture(TextureChunkPtr TheTexture);
-    void setFocusedTexture(TextureChunkPtr TheTexture);
-    void setRolloverTexture(TextureChunkPtr TheTexture);
-    void setDisabledTexture(TextureChunkPtr TheTexture);
-
-    void setImage(ImagePtr TheImage);
-    void setActiveImage(ImagePtr TheImage);
-    void setFocusedImage(ImagePtr TheImage);
-    void setRolloverImage(ImagePtr TheImage);
-    void setDisabledImage(ImagePtr TheImage);
-    
-    void setImage(const std::string& Path);
-    void setActiveImage(const std::string& Path);
-    void setFocusedImage(const std::string& Path);
-    void setRolloverImage(const std::string& Path);
-    void setDisabledImage(const std::string& Path);
-
-	void getTextBounds(Pnt2s& TextTopLeft, Pnt2s& TextBottomRight) const;
-	void setPreferredSizeByContents(const UInt16 Insets);
-
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in ButtonBase.
+    // Variables should all be in DialogWindowBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Button(void);
-    Button(const Button &source);
+    DialogWindow(void);
+    DialogWindow(const DialogWindow &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Button(void); 
+    virtual ~DialogWindow(void); 
 
-    virtual void actionPreformed(const ActionEvent& e);
-    virtual void mousePressedActionPreformed(const ActionEvent& e);
-
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
-    virtual Color4f getDrawnTextColor(void) const;
-    virtual BorderPtr getDrawnBorder(void) const;
-    virtual UIBackgroundPtr getDrawnBackground(void) const;
-    virtual UIDrawObjectCanvasPtr getDrawnDrawObject(void) const;
-    
-	class ButtonArmedListener : public MouseAdapter,public UpdateListener
-	{
-	public :
-		ButtonArmedListener(ButtonPtr TheButton);
-		
-		virtual void mouseReleased(const MouseEvent& e);
-        virtual void update(const UpdateEvent& e);
-        void reset(void);
-	protected :
-		ButtonPtr _Button;
-	    Time _ActionFireElps;
-	};
-
-	friend class ButtonArmedListener;
-
-	ButtonArmedListener _ButtonArmedListener;
-    bool _Armed;
-    
-    static UIDrawObjectCanvasPtr createTexturedDrawObjectCanvas(TextureChunkPtr TheTexture);
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class ButtonBase;
+    friend class DialogWindowBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Button &source);
-	
-	
-	typedef std::set<ActionListenerPtr> ActionListenerSet;
-    typedef ActionListenerSet::iterator ActionListenerSetItor;
-    typedef ActionListenerSet::const_iterator ActionListenerSetConstItor;
-	
-    ActionListenerSet       _ActionListeners;
-    ActionListenerSet       _MousePressedActionListeners;
-	
-    virtual void produceActionPerformed(const ActionEvent& e);
-    virtual void produceMousePressedActionPerformed(const ActionEvent& e);
+    void operator =(const DialogWindow &source);
 };
 
-typedef Button *ButtonP;
+typedef DialogWindow *DialogWindowP;
 
 OSG_END_NAMESPACE
 
-#include "OSGButtonBase.inl"
-#include "OSGButton.inl"
+#include "OSGDialogWindowBase.inl"
+#include "OSGDialogWindow.inl"
 
-#define OSGBUTTON_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGDIALOGWINDOW_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGBUTTON_H_ */
+#endif /* _OSGDIALOGWINDOW_H_ */

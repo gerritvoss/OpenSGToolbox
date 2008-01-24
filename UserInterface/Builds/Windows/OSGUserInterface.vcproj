@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="OSGUserInterface"
 	ProjectGUID="{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}"
 	RootNamespace="OSGAnimation"
@@ -925,6 +925,34 @@
 							</File>
 							<File
 								RelativePath="..\..\src\Component\Container\Window\Dialog\OSGDialogFactory.inl"
+								>
+							</File>
+							<File
+								RelativePath="..\..\src\Component\Container\Window\Dialog\OSGDialogWindow.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\..\src\Component\Container\Window\Dialog\OSGDialogWindow.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\src\Component\Container\Window\Dialog\OSGDialogWindow.inl"
+								>
+							</File>
+							<File
+								RelativePath="..\..\src\Component\Container\Window\Dialog\OSGDialogWindowBase.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\..\src\Component\Container\Window\Dialog\OSGDialogWindowBase.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\src\Component\Container\Window\Dialog\OSGDialogWindowBase.inl"
+								>
+							</File>
+							<File
+								RelativePath="..\..\src\Component\Container\Window\Dialog\OSGDialogWindowFields.h"
 								>
 							</File>
 						</Filter>
