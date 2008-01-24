@@ -36,6 +36,7 @@
 
 // UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
+#include <OpenSG/UserInterface/OSGInternalWindow.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
@@ -80,6 +81,28 @@ public:
     }
 };
 
+
+// Create a class to allow for the use of the Ctrl+q
+class TutorialKeyListener : public KeyListener
+{
+public:
+
+   virtual void keyPressed(const KeyEvent& e)
+   {
+       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       {
+           ExitApp = true;
+       }
+   }
+
+   virtual void keyReleased(const KeyEvent& e)
+   {
+   }
+
+   virtual void keyTyped(const KeyEvent& e)
+   {
+   }
+};
 int main(int argc, char **argv)
 {
     // OSG init
@@ -95,6 +118,8 @@ int main(int argc, char **argv)
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialKeyListener TheKeyListener;
+    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
 
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
@@ -159,7 +184,7 @@ int main(int argc, char **argv)
             Panels.
 
     ******************************************************/
-    FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
+    FlowLayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
     FlowLayoutPtr ExamplePanel1Layout = osg::FlowLayout::create();
     FlowLayoutPtr ExamplePanel2Layout = osg::FlowLayout::create();
 
@@ -171,15 +196,15 @@ int main(int argc, char **argv)
     /******************************************************
             
             Create two Backgrounds to be used with
-            Panels and MainFrame.
+            Panels and MainInternalWindow.
 
     ******************************************************/
-    ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
+    ColorUIBackgroundPtr MainInternalWindowBackground = osg::ColorUIBackground::create();
     ColorUIBackgroundPtr ExamplePanelBackground = osg::ColorUIBackground::create();
 
-    beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
-        MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
+    beginEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    endEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
 
     beginEditCP(ExamplePanelBackground, ColorUIBackground::ColorFieldMask);
         ExamplePanelBackground->setColor(Color4f(0.0,0.0,0.0,1.0));
@@ -200,7 +225,7 @@ int main(int argc, char **argv)
 
     /******************************************************
 
-        Create MainFrame and two Panel Components and
+        Create MainInternalWindow and two Panel Components and
         edit their characteristics.
 
         -setPreferredSize(Vec2s): Determine the 
@@ -213,56 +238,59 @@ int main(int argc, char **argv)
 			Layout of the Container.
 
     ******************************************************/
-    FramePtr MainFrame = osg::Frame::create();
+    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
     PanelPtr ExamplePanel1 = osg::Panel::create();
     PanelPtr ExamplePanel2 = osg::Panel::create();
     
     // Edit Panel1, Panel2
-    beginEditCP(ExamplePanel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+    beginEditCP(ExamplePanel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel1->setPreferredSize(Vec2s(200, 200));
         ExamplePanel1->getChildren().addValue(ExampleButton1);
         ExamplePanel1->getChildren().addValue(ExampleButton2);
         ExamplePanel1->getChildren().addValue(ExampleButton3);
         ExamplePanel1->setLayout(ExamplePanel1Layout);
-        ExamplePanel1->setBackground(ExamplePanelBackground);
-        ExamplePanel1->setBorder(ExamplePanelBorder);
-    endEditCP(ExamplePanel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+        ExamplePanel1->setBackgrounds(ExamplePanelBackground);
+        ExamplePanel1->setBorders(ExamplePanelBorder);
+    endEditCP(ExamplePanel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
-    beginEditCP(ExamplePanel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+    beginEditCP(ExamplePanel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel2->setPreferredSize(Vec2s(200, 200));
         ExamplePanel2->getChildren().addValue(ExampleButton4);
         ExamplePanel2->getChildren().addValue(ExampleButton5);
         ExamplePanel2->getChildren().addValue(ExampleButton6);
         ExamplePanel2->setLayout(ExamplePanel2Layout);
-        ExamplePanel2->setBackground(ExamplePanelBackground);
-        ExamplePanel2->setBorder(ExamplePanelBorder);
-    endEditCP(ExamplePanel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundFieldMask | Panel::BorderFieldMask);
+        ExamplePanel2->setBackgrounds(ExamplePanelBackground);
+        ExamplePanel2->setBorders(ExamplePanelBorder);
+    endEditCP(ExamplePanel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
-    // Edit MainFrame
-    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-       MainFrame->getChildren().addValue(ExamplePanel1);
-       MainFrame->getChildren().addValue(ExamplePanel2);
-       MainFrame->setLayout(MainFrameLayout);
-       MainFrame->setBackground(MainFrameBackground);
-       MainFrame->setAllInsets(5);
-    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-
+    // Create The Main InternalWindow
+	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+       MainInternalWindow->getChildren().addValue(ExamplePanel1);
+       MainInternalWindow->getChildren().addValue(ExamplePanel2);
+       MainInternalWindow->setLayout(MainInternalWindowLayout);
+       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
+	   MainInternalWindow->setDrawTitlebar(false);
+	   MainInternalWindow->setResizable(false);
+	   MainInternalWindow->setAllInsets(5);
+    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+    
     // Create the Drawing Surface
     UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setRootFrame(MainFrame);
         TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
     
+	TutorialDrawingSurface->openWindow(MainInternalWindow);
+
     // Create the UI Foreground Object
     UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-        TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
-        TutorialUIForeground->setFrameBounds(Vec2f(0.5,0.5));
-    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;

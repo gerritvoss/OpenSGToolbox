@@ -49,7 +49,7 @@
 
 #include "OSGMenu.h"
 #include "LookAndFeel/OSGLookAndFeelManager.h"
-#include "Component/Container/OSGFrame.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include "OSGPopupMenu.h"
@@ -116,9 +116,9 @@ void Menu::setPopupVisible(bool Visible)
                 getInternalPopupMenu()->setPosition(ComponentToFrame(Pnt2s(0,0),MenuPtr(this)) + Vec2s(getSize().x(),0));
             }
         endEditCP(getInternalPopupMenu(), PopupMenu::PositionFieldMask);
-        beginEditCP(getParentFrame(), Frame::ActivePopupMenusFieldMask);
-            getParentFrame()->getActivePopupMenus().addValue(getInternalPopupMenu());
-        endEditCP(getParentFrame(), Frame::ActivePopupMenusFieldMask);
+        beginEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
+            getParentWindow()->getActivePopupMenus().addValue(getInternalPopupMenu());
+        endEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
     }
     else
     {
@@ -132,10 +132,10 @@ void Menu::addItem(MenuItemPtr Item)
     beginEditCP(MenuPtr(this), MenuItemsFieldMask);
         getMenuItems().push_back(Item);
     endEditCP(MenuPtr(this), MenuItemsFieldMask);
-    beginEditCP(Item, MenuItem::ParentMenuFieldMask | ParentFrameFieldMask);
+    beginEditCP(Item, MenuItem::ParentMenuFieldMask | ParentWindowFieldMask);
         Item->setParentMenu(MenuPtr(this));
-        Item->setParentFrame(getParentFrame());
-    endEditCP(Item, MenuItem::ParentMenuFieldMask | ParentFrameFieldMask);
+        Item->setParentWindow(getParentWindow());
+    endEditCP(Item, MenuItem::ParentMenuFieldMask | ParentWindowFieldMask);
 }
 
 void Menu::addItem(MenuItemPtr Item, const UInt32& Index)
@@ -148,20 +148,20 @@ void Menu::addItem(MenuItemPtr Item, const UInt32& Index)
         getMenuItems().insert(Itor, Item);
     endEditCP(MenuPtr(this), MenuItemsFieldMask);
 
-    beginEditCP(Item, MenuItem::ParentMenuFieldMask | ParentFrameFieldMask);
+    beginEditCP(Item, MenuItem::ParentMenuFieldMask | ParentWindowFieldMask);
         Item->setParentMenu(MenuPtr(this));
-        Item->setParentFrame(getParentFrame());
-    endEditCP(Item, MenuItem::ParentMenuFieldMask | ParentFrameFieldMask);
+        Item->setParentWindow(getParentWindow());
+    endEditCP(Item, MenuItem::ParentMenuFieldMask | ParentWindowFieldMask);
 }
 
 void Menu::removeItem(MenuItemPtr Item)
 {
     getInternalPopupMenu()->removeItem(Item);
 
-    beginEditCP(Item, MenuItem::ParentMenuFieldMask | ParentFrameFieldMask);
+    beginEditCP(Item, MenuItem::ParentMenuFieldMask | ParentWindowFieldMask);
         Item->setParentMenu(NullFC);
-        Item->setParentFrame(NullFC);
-    endEditCP(Item, MenuItem::ParentMenuFieldMask | ParentFrameFieldMask);
+        Item->setParentWindow(NullFC);
+    endEditCP(Item, MenuItem::ParentMenuFieldMask | ParentWindowFieldMask);
     
     MFMenuItemPtr::iterator FindResult = getMenuItems().find(Item);
     if(FindResult != getMenuItems().end())
@@ -176,10 +176,10 @@ void Menu::removeItem(const UInt32& Index)
 {
     MFMenuItemPtr::iterator Itor(getMenuItems().begin());
     for(UInt32 i(0) ; i<Index ; ++i){++Itor;}
-    beginEditCP((*Itor), MenuItem::ParentMenuFieldMask | ParentFrameFieldMask);
+    beginEditCP((*Itor), MenuItem::ParentMenuFieldMask | ParentWindowFieldMask);
         (*Itor)->setParentMenu(NullFC);
-        (*Itor)->setParentFrame(NullFC);
-    endEditCP((*Itor), MenuItem::ParentMenuFieldMask | ParentFrameFieldMask);
+        (*Itor)->setParentWindow(NullFC);
+    endEditCP((*Itor), MenuItem::ParentMenuFieldMask | ParentWindowFieldMask);
 
     beginEditCP(MenuPtr(this), MenuItemsFieldMask);
         getMenuItems().erase(Itor);
@@ -225,17 +225,17 @@ void Menu::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-    if(whichField & ParentFrameFieldMask)
+    if(whichField & ParentWindowFieldMask)
     {
-        beginEditCP(getInternalPopupMenu(), ParentFrameFieldMask);
-            getInternalPopupMenu()->setParentFrame(getParentFrame());
-        endEditCP(getInternalPopupMenu(), ParentFrameFieldMask);
+        beginEditCP(getInternalPopupMenu(), ParentWindowFieldMask);
+            getInternalPopupMenu()->setParentWindow(getParentWindow());
+        endEditCP(getInternalPopupMenu(), ParentWindowFieldMask);
 
         for(UInt32 i(0) ; i<getMenuItems().size() ; ++i)
         {
-            beginEditCP(getMenuItems().getValue(i), ParentFrameFieldMask);
-                getMenuItems().getValue(i)->setParentFrame(getParentFrame());
-            endEditCP(getMenuItems().getValue(i), ParentFrameFieldMask);
+            beginEditCP(getMenuItems().getValue(i), ParentWindowFieldMask);
+                getMenuItems().getValue(i)->setParentWindow(getParentWindow());
+            endEditCP(getMenuItems().getValue(i), ParentWindowFieldMask);
         }
     }
     
@@ -244,22 +244,22 @@ void Menu::changed(BitVector whichField, UInt32 origin)
         if(getSelected())
         {
             setPopupVisible(false);
-            if(getParentFrame() != NullFC &&
-            getParentFrame()->getDrawingSurface() != NullFC &&
-            getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+            if(getParentWindow() != NullFC &&
+            getParentWindow()->getDrawingSurface() != NullFC &&
+            getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
             {
                 _PopupUpdateListener.reset();
-                getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_PopupUpdateListener);
+                getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_PopupUpdateListener);
             }
         }
         else
         {
             setPopupVisible(false);
-            if(getParentFrame() != NullFC &&
-            getParentFrame()->getDrawingSurface() != NullFC &&
-            getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+            if(getParentWindow() != NullFC &&
+            getParentWindow()->getDrawingSurface() != NullFC &&
+            getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
             {
-                getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_PopupUpdateListener);
+                getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_PopupUpdateListener);
             }
         }
     }
@@ -297,7 +297,7 @@ void Menu::PopupUpdateListener::update(const UpdateEvent& e)
         //Tell the menu to popup the submenu
         _Menu->setPopupVisible(true);
         //Remove myself from the update
-		_Menu->getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+		_Menu->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
     }
 }
 /*------------------------------------------------------------------------*/

@@ -96,11 +96,18 @@ UIDrawingSurfacePtr UIDrawingSurfaceBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the UIDrawingSurface::_sfRootFrame field.
+//! Get the UIDrawingSurface::_mfInternalWindows field.
 inline
-SFFramePtr *UIDrawingSurfaceBase::getSFRootFrame(void)
+MFInternalWindowPtr *UIDrawingSurfaceBase::getMFInternalWindows(void)
 {
-    return &_sfRootFrame;
+    return &_mfInternalWindows;
+}
+
+//! Get the UIDrawingSurface::_sfFocusedWindow field.
+inline
+SFInternalWindowPtr *UIDrawingSurfaceBase::getSFFocusedWindow(void)
+{
+    return &_sfFocusedWindow;
 }
 
 //! Get the UIDrawingSurface::_sfEventProducer field.
@@ -124,26 +131,33 @@ SFUIDrawingSurfaceMouseTransformFunctorPtr *UIDrawingSurfaceBase::getSFMouseTran
     return &_sfMouseTransformFunctor;
 }
 
-
-//! Get the value of the UIDrawingSurface::_sfRootFrame field.
+//! Get the UIDrawingSurface::_sfSize field.
 inline
-FramePtr &UIDrawingSurfaceBase::getRootFrame(void)
+SFVec2s *UIDrawingSurfaceBase::getSFSize(void)
 {
-    return _sfRootFrame.getValue();
+    return &_sfSize;
 }
 
-//! Get the value of the UIDrawingSurface::_sfRootFrame field.
+
+//! Get the value of the UIDrawingSurface::_sfFocusedWindow field.
 inline
-const FramePtr &UIDrawingSurfaceBase::getRootFrame(void) const
+InternalWindowPtr &UIDrawingSurfaceBase::getFocusedWindow(void)
 {
-    return _sfRootFrame.getValue();
+    return _sfFocusedWindow.getValue();
 }
 
-//! Set the value of the UIDrawingSurface::_sfRootFrame field.
+//! Get the value of the UIDrawingSurface::_sfFocusedWindow field.
 inline
-void UIDrawingSurfaceBase::setRootFrame(const FramePtr &value)
+const InternalWindowPtr &UIDrawingSurfaceBase::getFocusedWindow(void) const
 {
-    _sfRootFrame.setValue(value);
+    return _sfFocusedWindow.getValue();
+}
+
+//! Set the value of the UIDrawingSurface::_sfFocusedWindow field.
+inline
+void UIDrawingSurfaceBase::setFocusedWindow(const InternalWindowPtr &value)
+{
+    _sfFocusedWindow.setValue(value);
 }
 
 //! Get the value of the UIDrawingSurface::_sfEventProducer field.
@@ -209,6 +223,48 @@ void UIDrawingSurfaceBase::setMouseTransformFunctor(const UIDrawingSurfaceMouseT
     _sfMouseTransformFunctor.setValue(value);
 }
 
+//! Get the value of the UIDrawingSurface::_sfSize field.
+inline
+Vec2s &UIDrawingSurfaceBase::getSize(void)
+{
+    return _sfSize.getValue();
+}
+
+//! Get the value of the UIDrawingSurface::_sfSize field.
+inline
+const Vec2s &UIDrawingSurfaceBase::getSize(void) const
+{
+    return _sfSize.getValue();
+}
+
+//! Set the value of the UIDrawingSurface::_sfSize field.
+inline
+void UIDrawingSurfaceBase::setSize(const Vec2s &value)
+{
+    _sfSize.setValue(value);
+}
+
+
+//! Get the value of the \a index element the UIDrawingSurface::_mfInternalWindows field.
+inline
+InternalWindowPtr &UIDrawingSurfaceBase::getInternalWindows(const UInt32 index)
+{
+    return _mfInternalWindows[index];
+}
+
+//! Get the UIDrawingSurface::_mfInternalWindows field.
+inline
+MFInternalWindowPtr &UIDrawingSurfaceBase::getInternalWindows(void)
+{
+    return _mfInternalWindows;
+}
+
+//! Get the UIDrawingSurface::_mfInternalWindows field.
+inline
+const MFInternalWindowPtr &UIDrawingSurfaceBase::getInternalWindows(void) const
+{
+    return _mfInternalWindows;
+}
 
 OSG_END_NAMESPACE
 

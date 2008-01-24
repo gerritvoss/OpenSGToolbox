@@ -73,11 +73,11 @@ const OSG::BitVector  InternalWindowBase::ActivePopupMenusFieldMask =
 const OSG::BitVector  InternalWindowBase::ActiveToolTipFieldMask = 
     (TypeTraits<BitVector>::One << InternalWindowBase::ActiveToolTipFieldId);
 
-const OSG::BitVector  InternalWindowBase::LockInputFieldMask = 
-    (TypeTraits<BitVector>::One << InternalWindowBase::LockInputFieldId);
-
 const OSG::BitVector  InternalWindowBase::MenuBarFieldMask = 
     (TypeTraits<BitVector>::One << InternalWindowBase::MenuBarFieldId);
+
+const OSG::BitVector  InternalWindowBase::TitlebarFieldMask = 
+    (TypeTraits<BitVector>::One << InternalWindowBase::TitlebarFieldId);
 
 const OSG::BitVector InternalWindowBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -95,10 +95,10 @@ const OSG::BitVector InternalWindowBase::MTInfluenceMask =
 /*! \var ToolTipPtr      InternalWindowBase::_sfActiveToolTip
     
 */
-/*! \var bool            InternalWindowBase::_sfLockInput
+/*! \var MenuBarPtr      InternalWindowBase::_sfMenuBar
     
 */
-/*! \var MenuBarPtr      InternalWindowBase::_sfMenuBar
+/*! \var TitlebarPtr     InternalWindowBase::_sfTitlebar
     
 */
 
@@ -121,16 +121,16 @@ FieldDescription *InternalWindowBase::_desc[] =
                      ActiveToolTipFieldId, ActiveToolTipFieldMask,
                      false,
                      (FieldAccessMethod) &InternalWindowBase::getSFActiveToolTip),
-    new FieldDescription(SFBool::getClassType(), 
-                     "LockInput", 
-                     LockInputFieldId, LockInputFieldMask,
-                     false,
-                     (FieldAccessMethod) &InternalWindowBase::getSFLockInput),
     new FieldDescription(SFMenuBarPtr::getClassType(), 
                      "MenuBar", 
                      MenuBarFieldId, MenuBarFieldMask,
                      false,
-                     (FieldAccessMethod) &InternalWindowBase::getSFMenuBar)
+                     (FieldAccessMethod) &InternalWindowBase::getSFMenuBar),
+    new FieldDescription(SFTitlebarPtr::getClassType(), 
+                     "Titlebar", 
+                     TitlebarFieldId, TitlebarFieldMask,
+                     false,
+                     (FieldAccessMethod) &InternalWindowBase::getSFTitlebar)
 };
 
 
@@ -210,8 +210,8 @@ InternalWindowBase::InternalWindowBase(void) :
     _sfFocusedComponent       (ComponentPtr(NullFC)), 
     _mfActivePopupMenus       (), 
     _sfActiveToolTip          (ToolTipPtr(NullFC)), 
-    _sfLockInput              (bool(false)), 
     _sfMenuBar                (MenuBarPtr(NullFC)), 
+    _sfTitlebar               (TitlebarPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -224,8 +224,8 @@ InternalWindowBase::InternalWindowBase(const InternalWindowBase &source) :
     _sfFocusedComponent       (source._sfFocusedComponent       ), 
     _mfActivePopupMenus       (source._mfActivePopupMenus       ), 
     _sfActiveToolTip          (source._sfActiveToolTip          ), 
-    _sfLockInput              (source._sfLockInput              ), 
     _sfMenuBar                (source._sfMenuBar                ), 
+    _sfTitlebar               (source._sfTitlebar               ), 
     Inherited                 (source)
 {
 }
@@ -257,14 +257,14 @@ UInt32 InternalWindowBase::getBinSize(const BitVector &whichField)
         returnValue += _sfActiveToolTip.getBinSize();
     }
 
-    if(FieldBits::NoField != (LockInputFieldMask & whichField))
-    {
-        returnValue += _sfLockInput.getBinSize();
-    }
-
     if(FieldBits::NoField != (MenuBarFieldMask & whichField))
     {
         returnValue += _sfMenuBar.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TitlebarFieldMask & whichField))
+    {
+        returnValue += _sfTitlebar.getBinSize();
     }
 
 
@@ -291,14 +291,14 @@ void InternalWindowBase::copyToBin(      BinaryDataHandler &pMem,
         _sfActiveToolTip.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (LockInputFieldMask & whichField))
-    {
-        _sfLockInput.copyToBin(pMem);
-    }
-
     if(FieldBits::NoField != (MenuBarFieldMask & whichField))
     {
         _sfMenuBar.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TitlebarFieldMask & whichField))
+    {
+        _sfTitlebar.copyToBin(pMem);
     }
 
 
@@ -324,14 +324,14 @@ void InternalWindowBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfActiveToolTip.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (LockInputFieldMask & whichField))
-    {
-        _sfLockInput.copyFromBin(pMem);
-    }
-
     if(FieldBits::NoField != (MenuBarFieldMask & whichField))
     {
         _sfMenuBar.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TitlebarFieldMask & whichField))
+    {
+        _sfTitlebar.copyFromBin(pMem);
     }
 
 
@@ -353,11 +353,11 @@ void InternalWindowBase::executeSyncImpl(      InternalWindowBase *pOther,
     if(FieldBits::NoField != (ActiveToolTipFieldMask & whichField))
         _sfActiveToolTip.syncWith(pOther->_sfActiveToolTip);
 
-    if(FieldBits::NoField != (LockInputFieldMask & whichField))
-        _sfLockInput.syncWith(pOther->_sfLockInput);
-
     if(FieldBits::NoField != (MenuBarFieldMask & whichField))
         _sfMenuBar.syncWith(pOther->_sfMenuBar);
+
+    if(FieldBits::NoField != (TitlebarFieldMask & whichField))
+        _sfTitlebar.syncWith(pOther->_sfTitlebar);
 
 
 }
@@ -375,11 +375,11 @@ void InternalWindowBase::executeSyncImpl(      InternalWindowBase *pOther,
     if(FieldBits::NoField != (ActiveToolTipFieldMask & whichField))
         _sfActiveToolTip.syncWith(pOther->_sfActiveToolTip);
 
-    if(FieldBits::NoField != (LockInputFieldMask & whichField))
-        _sfLockInput.syncWith(pOther->_sfLockInput);
-
     if(FieldBits::NoField != (MenuBarFieldMask & whichField))
         _sfMenuBar.syncWith(pOther->_sfMenuBar);
+
+    if(FieldBits::NoField != (TitlebarFieldMask & whichField))
+        _sfTitlebar.syncWith(pOther->_sfTitlebar);
 
 
     if(FieldBits::NoField != (ActivePopupMenusFieldMask & whichField))

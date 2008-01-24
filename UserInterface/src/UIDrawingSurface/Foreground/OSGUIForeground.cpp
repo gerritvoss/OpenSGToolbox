@@ -50,6 +50,7 @@
 #include "UIDrawingSurface/OSGUIDrawingSurface.h" // DrawingSurface type
 
 #include "UIDrawingSurface/Foreground/OSGUIForegroundMouseTransformFunctor.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 
 #include "OSGUIForeground.h"
 
@@ -81,8 +82,13 @@ void UIForeground::initMethod (void)
 \***************************************************************************/
 void UIForeground::draw( DrawActionBase * action, Viewport * port )
 {
-	//Update the Frames Bounds
-	updateFrameBounds(port);
+	if(getDrawingSurface()->getSize().x() != port->getPixelWidth() ||
+	   getDrawingSurface()->getSize().y() != port->getPixelHeight())
+	{
+		beginEditCP(getDrawingSurface(), UIDrawingSurface::SizeFieldMask);
+			getDrawingSurface()->setSize(Vec2s(port->getPixelWidth(), port->getPixelHeight()));
+		endEditCP(getDrawingSurface(), UIDrawingSurface::SizeFieldMask);
+	}
 
 	glPushMatrix();
     glLoadIdentity();
@@ -99,8 +105,11 @@ void UIForeground::draw( DrawActionBase * action, Viewport * port )
 	//Call The PreDraw on the Graphics
 	getDrawingSurface()->getGraphics()->preDraw();
 
-	//Draw The Component
-	getDrawingSurface()->getRootFrame()->draw(getDrawingSurface()->getGraphics());
+	//Draw all of the InternalWindows
+	for(UInt32 i(0) ; i<getDrawingSurface()->getInternalWindows().size() ; ++i)
+	{
+		getDrawingSurface()->getInternalWindows().getValue(i)->draw(getDrawingSurface()->getGraphics());
+	}
 
 	//Call the PostDraw on the Graphics
 	getDrawingSurface()->getGraphics()->postDraw();
@@ -111,75 +120,6 @@ void UIForeground::draw( DrawActionBase * action, Viewport * port )
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void UIForeground::updateFrameBounds(Viewport * port)
-{
-	Vec2s Size;
-	
-	//Horizontal Bound
-	if(getFrameBounds().x()<=1.0)
-	{
-		Size[0] = getFrameBounds()[0]*port->getPixelWidth();
-	}
-	else
-	{
-		Size[0] = getFrameBounds()[0];
-	}
-
-	//Vertical Bound
-	if(getFrameBounds().x()<=1.0)
-	{
-		Size[1] = getFrameBounds()[1]*port->getPixelHeight();
-	}
-	else
-	{
-		Size[1] = getFrameBounds()[1];
-	}
-	
-	//Translate to the Frames Position
-    //Calculate Alignment
-    Pnt2s AlignedPosition;
-    if(getVerticalAlignment() == VERTICAL_TOP)
-    {
-        //VerticalTop
-        AlignedPosition[1] = 0;
-    }
-    else if(getVerticalAlignment() == VERTICAL_BOTTOM)
-    {
-        //VerticalBottom
-        AlignedPosition[1] = port->getPixelHeight()-Size[1];
-    }
-    else if(getVerticalAlignment() == VERTICAL_CENTER)
-    {
-        //VerticalCenter
-        AlignedPosition[1] = 0.5*(port->getPixelHeight()-Size[1]);
-    }
-
-    if(getHorizontalAlignment() == HORIZONTAL_LEFT)
-    {
-        //HorizontalLeft
-        AlignedPosition[0] = 0;
-    }
-    else if(getHorizontalAlignment() == HORIZONTAL_RIGHT)
-    {
-        //HorizontalRight
-        AlignedPosition[0] = port->getPixelWidth()-Size[0];
-    }
-    else if(getHorizontalAlignment() == HORIZONTAL_CENTER)
-    {
-        //HorizontalCenter
-        AlignedPosition[0] = 0.5*(port->getPixelWidth()-Size[0]);
-    }
-	AlignedPosition += getFramePositionOffset();
-
-    if(getDrawingSurface()->getRootFrame()->getSize() != Size ||
-       getDrawingSurface()->getRootFrame()->getPosition() != AlignedPosition)
-    {
-        beginEditCP(getDrawingSurface()->getRootFrame(), Frame::SizeFieldMask | Frame::PositionFieldMask);
-		    getDrawingSurface()->getRootFrame()->setSize(Size);
-		    getDrawingSurface()->getRootFrame()->setPosition(AlignedPosition);
-	    endEditCP(getDrawingSurface()->getRootFrame(), Frame::SizeFieldMask | Frame::PositionFieldMask);
-    }
-}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

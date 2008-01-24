@@ -119,6 +119,20 @@ SFBool *AbstractWindowBase::getSFIsMaximized(void)
     return &_sfIsMaximized;
 }
 
+//! Get the AbstractWindow::_sfPreviousPosition field.
+inline
+SFVec2s *AbstractWindowBase::getSFPreviousPosition(void)
+{
+    return &_sfPreviousPosition;
+}
+
+//! Get the AbstractWindow::_sfPreviousSize field.
+inline
+SFVec2s *AbstractWindowBase::getSFPreviousSize(void)
+{
+    return &_sfPreviousSize;
+}
+
 //! Get the AbstractWindow::_sfResizable field.
 inline
 SFBool *AbstractWindowBase::getSFResizable(void)
@@ -147,11 +161,53 @@ SFUIDrawObjectCanvasPtr *AbstractWindowBase::getSFDesktopIcon(void)
     return &_sfDesktopIcon;
 }
 
-//! Get the AbstractWindow::_sfFrameIcon field.
+//! Get the AbstractWindow::_sfAllwaysOnTop field.
 inline
-SFUIDrawObjectCanvasPtr *AbstractWindowBase::getSFFrameIcon(void)
+SFBool *AbstractWindowBase::getSFAllwaysOnTop(void)
 {
-    return &_sfFrameIcon;
+    return &_sfAllwaysOnTop;
+}
+
+//! Get the AbstractWindow::_sfDrawTitlebar field.
+inline
+SFBool *AbstractWindowBase::getSFDrawTitlebar(void)
+{
+    return &_sfDrawTitlebar;
+}
+
+//! Get the AbstractWindow::_sfDrawDecorations field.
+inline
+SFBool *AbstractWindowBase::getSFDrawDecorations(void)
+{
+    return &_sfDrawDecorations;
+}
+
+//! Get the AbstractWindow::_sfLockInput field.
+inline
+SFBool *AbstractWindowBase::getSFLockInput(void)
+{
+    return &_sfLockInput;
+}
+
+//! Get the AbstractWindow::_sfAlignmentInDrawingSurface field.
+inline
+SFVec2f *AbstractWindowBase::getSFAlignmentInDrawingSurface(void)
+{
+    return &_sfAlignmentInDrawingSurface;
+}
+
+//! Get the AbstractWindow::_sfScalingInDrawingSurface field.
+inline
+SFVec2f *AbstractWindowBase::getSFScalingInDrawingSurface(void)
+{
+    return &_sfScalingInDrawingSurface;
+}
+
+//! Get the AbstractWindow::_sfResizeModifyCursorWidth field.
+inline
+SFUInt32 *AbstractWindowBase::getSFResizeModifyCursorWidth(void)
+{
+    return &_sfResizeModifyCursorWidth;
 }
 
 
@@ -302,6 +358,48 @@ void AbstractWindowBase::setIsMaximized(const bool &value)
     _sfIsMaximized.setValue(value);
 }
 
+//! Get the value of the AbstractWindow::_sfPreviousPosition field.
+inline
+Vec2s &AbstractWindowBase::getPreviousPosition(void)
+{
+    return _sfPreviousPosition.getValue();
+}
+
+//! Get the value of the AbstractWindow::_sfPreviousPosition field.
+inline
+const Vec2s &AbstractWindowBase::getPreviousPosition(void) const
+{
+    return _sfPreviousPosition.getValue();
+}
+
+//! Set the value of the AbstractWindow::_sfPreviousPosition field.
+inline
+void AbstractWindowBase::setPreviousPosition(const Vec2s &value)
+{
+    _sfPreviousPosition.setValue(value);
+}
+
+//! Get the value of the AbstractWindow::_sfPreviousSize field.
+inline
+Vec2s &AbstractWindowBase::getPreviousSize(void)
+{
+    return _sfPreviousSize.getValue();
+}
+
+//! Get the value of the AbstractWindow::_sfPreviousSize field.
+inline
+const Vec2s &AbstractWindowBase::getPreviousSize(void) const
+{
+    return _sfPreviousSize.getValue();
+}
+
+//! Set the value of the AbstractWindow::_sfPreviousSize field.
+inline
+void AbstractWindowBase::setPreviousSize(const Vec2s &value)
+{
+    _sfPreviousSize.setValue(value);
+}
+
 //! Get the value of the AbstractWindow::_sfResizable field.
 inline
 bool &AbstractWindowBase::getResizable(void)
@@ -386,25 +484,151 @@ void AbstractWindowBase::setDesktopIcon(const UIDrawObjectCanvasPtr &value)
     _sfDesktopIcon.setValue(value);
 }
 
-//! Get the value of the AbstractWindow::_sfFrameIcon field.
+//! Get the value of the AbstractWindow::_sfAllwaysOnTop field.
 inline
-UIDrawObjectCanvasPtr &AbstractWindowBase::getFrameIcon(void)
+bool &AbstractWindowBase::getAllwaysOnTop(void)
 {
-    return _sfFrameIcon.getValue();
+    return _sfAllwaysOnTop.getValue();
 }
 
-//! Get the value of the AbstractWindow::_sfFrameIcon field.
+//! Get the value of the AbstractWindow::_sfAllwaysOnTop field.
 inline
-const UIDrawObjectCanvasPtr &AbstractWindowBase::getFrameIcon(void) const
+const bool &AbstractWindowBase::getAllwaysOnTop(void) const
 {
-    return _sfFrameIcon.getValue();
+    return _sfAllwaysOnTop.getValue();
 }
 
-//! Set the value of the AbstractWindow::_sfFrameIcon field.
+//! Set the value of the AbstractWindow::_sfAllwaysOnTop field.
 inline
-void AbstractWindowBase::setFrameIcon(const UIDrawObjectCanvasPtr &value)
+void AbstractWindowBase::setAllwaysOnTop(const bool &value)
 {
-    _sfFrameIcon.setValue(value);
+    _sfAllwaysOnTop.setValue(value);
+}
+
+//! Get the value of the AbstractWindow::_sfDrawTitlebar field.
+inline
+bool &AbstractWindowBase::getDrawTitlebar(void)
+{
+    return _sfDrawTitlebar.getValue();
+}
+
+//! Get the value of the AbstractWindow::_sfDrawTitlebar field.
+inline
+const bool &AbstractWindowBase::getDrawTitlebar(void) const
+{
+    return _sfDrawTitlebar.getValue();
+}
+
+//! Set the value of the AbstractWindow::_sfDrawTitlebar field.
+inline
+void AbstractWindowBase::setDrawTitlebar(const bool &value)
+{
+    _sfDrawTitlebar.setValue(value);
+}
+
+//! Get the value of the AbstractWindow::_sfDrawDecorations field.
+inline
+bool &AbstractWindowBase::getDrawDecorations(void)
+{
+    return _sfDrawDecorations.getValue();
+}
+
+//! Get the value of the AbstractWindow::_sfDrawDecorations field.
+inline
+const bool &AbstractWindowBase::getDrawDecorations(void) const
+{
+    return _sfDrawDecorations.getValue();
+}
+
+//! Set the value of the AbstractWindow::_sfDrawDecorations field.
+inline
+void AbstractWindowBase::setDrawDecorations(const bool &value)
+{
+    _sfDrawDecorations.setValue(value);
+}
+
+//! Get the value of the AbstractWindow::_sfLockInput field.
+inline
+bool &AbstractWindowBase::getLockInput(void)
+{
+    return _sfLockInput.getValue();
+}
+
+//! Get the value of the AbstractWindow::_sfLockInput field.
+inline
+const bool &AbstractWindowBase::getLockInput(void) const
+{
+    return _sfLockInput.getValue();
+}
+
+//! Set the value of the AbstractWindow::_sfLockInput field.
+inline
+void AbstractWindowBase::setLockInput(const bool &value)
+{
+    _sfLockInput.setValue(value);
+}
+
+//! Get the value of the AbstractWindow::_sfAlignmentInDrawingSurface field.
+inline
+Vec2f &AbstractWindowBase::getAlignmentInDrawingSurface(void)
+{
+    return _sfAlignmentInDrawingSurface.getValue();
+}
+
+//! Get the value of the AbstractWindow::_sfAlignmentInDrawingSurface field.
+inline
+const Vec2f &AbstractWindowBase::getAlignmentInDrawingSurface(void) const
+{
+    return _sfAlignmentInDrawingSurface.getValue();
+}
+
+//! Set the value of the AbstractWindow::_sfAlignmentInDrawingSurface field.
+inline
+void AbstractWindowBase::setAlignmentInDrawingSurface(const Vec2f &value)
+{
+    _sfAlignmentInDrawingSurface.setValue(value);
+}
+
+//! Get the value of the AbstractWindow::_sfScalingInDrawingSurface field.
+inline
+Vec2f &AbstractWindowBase::getScalingInDrawingSurface(void)
+{
+    return _sfScalingInDrawingSurface.getValue();
+}
+
+//! Get the value of the AbstractWindow::_sfScalingInDrawingSurface field.
+inline
+const Vec2f &AbstractWindowBase::getScalingInDrawingSurface(void) const
+{
+    return _sfScalingInDrawingSurface.getValue();
+}
+
+//! Set the value of the AbstractWindow::_sfScalingInDrawingSurface field.
+inline
+void AbstractWindowBase::setScalingInDrawingSurface(const Vec2f &value)
+{
+    _sfScalingInDrawingSurface.setValue(value);
+}
+
+//! Get the value of the AbstractWindow::_sfResizeModifyCursorWidth field.
+inline
+UInt32 &AbstractWindowBase::getResizeModifyCursorWidth(void)
+{
+    return _sfResizeModifyCursorWidth.getValue();
+}
+
+//! Get the value of the AbstractWindow::_sfResizeModifyCursorWidth field.
+inline
+const UInt32 &AbstractWindowBase::getResizeModifyCursorWidth(void) const
+{
+    return _sfResizeModifyCursorWidth.getValue();
+}
+
+//! Set the value of the AbstractWindow::_sfResizeModifyCursorWidth field.
+inline
+void AbstractWindowBase::setResizeModifyCursorWidth(const UInt32 &value)
+{
+    _sfResizeModifyCursorWidth.setValue(value);
 }
 
 

@@ -714,34 +714,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Container\OSGFrame.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Container\OSGFrame.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Container\OSGFrame.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Container\OSGFrameBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Container\OSGFrameBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Container\OSGFrameBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Container\OSGFrameFields.h"
-						>
-					</File>
-					<File
 						RelativePath="..\..\src\Component\Container\OSGPanel.cpp"
 						>
 					</File>
@@ -856,6 +828,90 @@
 					<Filter
 						Name="Window"
 						>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGAbstractWindow.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGAbstractWindow.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGAbstractWindow.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGAbstractWindowBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGAbstractWindowBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGAbstractWindowBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGAbstractWindowFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGInternalWindow.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGInternalWindow.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGInternalWindow.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGInternalWindowBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGInternalWindowBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGInternalWindowBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGInternalWindowFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGTitlebar.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGTitlebar.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGTitlebar.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGTitlebarBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGTitlebarBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGTitlebarBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Container\Window\OSGTitlebarFields.h"
+							>
+						</File>
 						<Filter
 							Name="Dialog"
 							>
@@ -4084,6 +4140,34 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Border\OSGShadowBorderFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGWindowBorder.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGWindowBorder.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGWindowBorder.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGWindowBorderBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGWindowBorderBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGWindowBorderBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Border\OSGWindowBorderFields.h"
 					>
 				</File>
 			</Filter>

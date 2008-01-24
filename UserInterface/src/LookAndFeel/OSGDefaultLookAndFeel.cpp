@@ -54,7 +54,7 @@
 #include "Component/Button/OSGRadioButton.h"
 #include "Component/Button/OSGToggleButton.h"
 #include "Component/Text/OSGLabel.h"
-#include "Component/Container/OSGFrame.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 #include "Component/Container/OSGPanel.h"
 #include "Component/Container/OSGSplitPanel.h"
 #include "Component/Misc/OSGImageComponent.h"
@@ -287,42 +287,42 @@ void DefaultLookAndFeel::init(void)
 	
     Label::getClassType().setPrototype(DefaultLabel);
 	
-	//************************** Frame *****************************
-	//Default FrameBorder
-	EmptyBorderPtr DefaultFrameBorder = EmptyBorder::create();
-	beginEditCP(DefaultFrameBorder);
-		DefaultFrameBorder->setLeftWidth(0);
-		DefaultFrameBorder->setRightWidth(0);
-		DefaultFrameBorder->setTopWidth(0);
-		DefaultFrameBorder->setBottomWidth(0);
-	endEditCP(DefaultFrameBorder);
+	//************************** InternalWindow *****************************
+	//Default InternalWindowBorder
+	EmptyBorderPtr DefaultInternalWindowBorder = EmptyBorder::create();
+	beginEditCP(DefaultInternalWindowBorder);
+		DefaultInternalWindowBorder->setLeftWidth(0);
+		DefaultInternalWindowBorder->setRightWidth(0);
+		DefaultInternalWindowBorder->setTopWidth(0);
+		DefaultInternalWindowBorder->setBottomWidth(0);
+	endEditCP(DefaultInternalWindowBorder);
 
-	//Default FrameBackground
-	EmptyUIBackgroundPtr DefaultFrameBackground = EmptyUIBackground::create();
+	//Default InternalWindowBackground
+	EmptyUIBackgroundPtr DefaultInternalWindowBackground = EmptyUIBackground::create();
 
-	//Default Frame
-	FramePtr DefaultFrame = Frame::create();
-	beginEditCP(DefaultFrame);
-		DefaultFrame->setEnabled(true);
-		DefaultFrame->setVisible(true);
+	//Default InternalWindow
+	InternalWindowPtr DefaultInternalWindow = InternalWindow::create();
+	beginEditCP(DefaultInternalWindow);
+		DefaultInternalWindow->setEnabled(true);
+		DefaultInternalWindow->setVisible(true);
 		
-		DefaultFrame->setConstraints(NullFC);
+		DefaultInternalWindow->setConstraints(NullFC);
 		//Sizes
-		DefaultFrame->setMinSize(Vec2s(0,0));
-		DefaultFrame->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultFrame->setPreferredSize(Vec2s(100,100));
+		DefaultInternalWindow->setMinSize(Vec2s(0,0));
+		DefaultInternalWindow->setMaxSize(Vec2s(32767,32767)); //2^15
+		DefaultInternalWindow->setPreferredSize(Vec2s(100,100));
 
 		//Border
-		DefaultFrame->setBorder(DefaultFrameBorder);
+		DefaultInternalWindow->setBorder(DefaultInternalWindowBorder);
 		
 		//Background
-		DefaultFrame->setBackground(DefaultFrameBackground);
+		DefaultInternalWindow->setBackground(DefaultInternalWindowBackground);
 		
 		//Opacity
-		DefaultFrame->setOpacity(1.0);
-	endEditCP(DefaultFrame);
+		DefaultInternalWindow->setOpacity(1.0);
+	endEditCP(DefaultInternalWindow);
 	
-	Frame::getClassType().setPrototype(DefaultFrame);
+	InternalWindow::getClassType().setPrototype(DefaultInternalWindow);
 	
 	//************************** Panel *****************************
 	//Default PanelBorder
@@ -1936,7 +1936,7 @@ void DefaultLookAndFeel::init(void)
 	beginEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);
 		getPrototypes().addValue(DefaultButton);
 		getPrototypes().addValue(DefaultLabel);
-		getPrototypes().addValue(DefaultFrame);
+		getPrototypes().addValue(DefaultInternalWindow);
 		getPrototypes().addValue(DefaultPanel);
 		getPrototypes().addValue(DefaultSplitPanel);
 		getPrototypes().addValue(DefaultImageComponent);

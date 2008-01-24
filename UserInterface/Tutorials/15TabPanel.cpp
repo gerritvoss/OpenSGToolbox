@@ -34,6 +34,7 @@
 
 // UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
+#include <OpenSG/UserInterface/OSGInternalWindow.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
@@ -53,6 +54,7 @@ void reshape(Vec2s Size);
 // 15TabPanel Headers
 #include <sstream>
 #include <OpenSG/UserInterface/OSGButton.h>
+#include <OpenSG/UserInterface/OSGUIBackgrounds.h>
 #include <OpenSG/UserInterface/OSGBoxLayout.h>
 #include <OpenSG/UserInterface/OSGCardLayout.h>
 #include <OpenSG/UserInterface/OSGUIDefines.h>
@@ -71,6 +73,28 @@ public:
     {
         ExitApp = true;
     }
+};
+
+// Create a class to allow for the use of the Ctrl+q
+class TutorialKeyListener : public KeyListener
+{
+public:
+
+   virtual void keyPressed(const KeyEvent& e)
+   {
+       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       {
+           ExitApp = true;
+       }
+   }
+
+   virtual void keyReleased(const KeyEvent& e)
+   {
+   }
+
+   virtual void keyTyped(const KeyEvent& e)
+   {
+   }
 };
 
     /******************************************************
@@ -191,6 +215,8 @@ int main(int argc, char **argv)
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialKeyListener TheKeyListener;
+    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
 
     // Make Torus Node
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
@@ -409,9 +435,6 @@ int main(int argc, char **argv)
         ExampleTabPanel->setTabPlacement(PLACEMENT_SOUTH);
     endEditCP(ExampleTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
 
-    // Create The Main Frame
-    FramePtr MainFrame = osg::Frame::create();
-
     /******************************************************
 
             By using CardLayout, the TabPanel  
@@ -420,29 +443,41 @@ int main(int argc, char **argv)
 			with TabPanel).
 
     ******************************************************/
-    CardLayoutPtr MainFrameLayout = osg::CardLayout::create();
+    CardLayoutPtr MainInternalWindowLayout = osg::CardLayout::create();
 
-    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
-       MainFrame->setLayout(MainFrameLayout);
-       MainFrame->getChildren().addValue(ExampleTabPanel);
-    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+    // Create The Main InternalWindow
+    // Create Background to be used with the Main InternalWindow
+    ColorUIBackgroundPtr MainInternalWindowBackground = osg::ColorUIBackground::create();
+    beginEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    endEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+
+    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
+	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+       MainInternalWindow->getChildren().addValue(ExampleTabPanel);
+       MainInternalWindow->setLayout(MainInternalWindowLayout);
+       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.65f,0.65f));
+	   MainInternalWindow->setDrawTitlebar(false);
+	   MainInternalWindow->setResizable(false);
+    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
     // Create the Drawing Surface
     UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setRootFrame(MainFrame);
         TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
     
+	TutorialDrawingSurface->openWindow(MainInternalWindow);
+
     // Create the UI Foreground Object
     UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-        TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
-        TutorialUIForeground->setFrameBounds(Vec2f(0.65,0.65));
-    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
  
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;

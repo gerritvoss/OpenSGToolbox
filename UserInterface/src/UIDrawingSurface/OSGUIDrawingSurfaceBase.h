@@ -67,10 +67,12 @@
 
 #include <OpenSG/OSGFieldContainer.h> // Parent
 
-#include "Component/Container/OSGFrame.h" // RootFrame type
+#include "Component/Container/Window/OSGInternalWindowFields.h" // InternalWindows type
+#include "Component/Container/Window/OSGInternalWindowFields.h" // FocusedWindow type
 #include <OpenSG/Input/OSGWindowEventProducer.h> // EventProducer type
 #include "Graphics/OSGGraphics.h" // Graphics type
 #include "UIDrawingSurface/OSGUIDrawingSurfaceMouseTransformFunctorFields.h" // MouseTransformFunctor type
+#include <OpenSG/OSGVec2sFields.h> // Size type
 
 #include "OSGUIDrawingSurfaceFields.h"
 
@@ -94,17 +96,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurfaceBase : public FieldContain
 
     enum
     {
-        RootFrameFieldId             = Inherited::NextFieldId,
-        EventProducerFieldId         = RootFrameFieldId             + 1,
+        InternalWindowsFieldId       = Inherited::NextFieldId,
+        FocusedWindowFieldId         = InternalWindowsFieldId       + 1,
+        EventProducerFieldId         = FocusedWindowFieldId         + 1,
         GraphicsFieldId              = EventProducerFieldId         + 1,
         MouseTransformFunctorFieldId = GraphicsFieldId              + 1,
-        NextFieldId                  = MouseTransformFunctorFieldId + 1
+        SizeFieldId                  = MouseTransformFunctorFieldId + 1,
+        NextFieldId                  = SizeFieldId                  + 1
     };
 
-    static const OSG::BitVector RootFrameFieldMask;
+    static const OSG::BitVector InternalWindowsFieldMask;
+    static const OSG::BitVector FocusedWindowFieldMask;
     static const OSG::BitVector EventProducerFieldMask;
     static const OSG::BitVector GraphicsFieldMask;
     static const OSG::BitVector MouseTransformFunctorFieldMask;
+    static const OSG::BitVector SizeFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -131,29 +137,37 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurfaceBase : public FieldContain
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFFramePtr          *getSFRootFrame      (void);
+           MFInternalWindowPtr *getMFInternalWindows(void);
+           SFInternalWindowPtr *getSFFocusedWindow  (void);
            SFWindowEventProducerPtr *getSFEventProducer  (void);
            SFGraphicsPtr       *getSFGraphics       (void);
            SFUIDrawingSurfaceMouseTransformFunctorPtr *getSFMouseTransformFunctor(void);
+           SFVec2s             *getSFSize           (void);
 
-           FramePtr            &getRootFrame      (void);
-     const FramePtr            &getRootFrame      (void) const;
+           InternalWindowPtr   &getFocusedWindow  (void);
+     const InternalWindowPtr   &getFocusedWindow  (void) const;
            WindowEventProducerPtr &getEventProducer  (void);
      const WindowEventProducerPtr &getEventProducer  (void) const;
            GraphicsPtr         &getGraphics       (void);
      const GraphicsPtr         &getGraphics       (void) const;
            UIDrawingSurfaceMouseTransformFunctorPtr &getMouseTransformFunctor(void);
      const UIDrawingSurfaceMouseTransformFunctorPtr &getMouseTransformFunctor(void) const;
+           Vec2s               &getSize           (void);
+     const Vec2s               &getSize           (void) const;
+           InternalWindowPtr   &getInternalWindows(const UInt32 index);
+           MFInternalWindowPtr &getInternalWindows(void);
+     const MFInternalWindowPtr &getInternalWindows(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setRootFrame      ( const FramePtr &value );
+     void setFocusedWindow  ( const InternalWindowPtr &value );
      void setEventProducer  ( const WindowEventProducerPtr &value );
      void setGraphics       ( const GraphicsPtr &value );
      void setMouseTransformFunctor( const UIDrawingSurfaceMouseTransformFunctorPtr &value );
+     void setSize           ( const Vec2s &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -196,10 +210,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurfaceBase : public FieldContain
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFFramePtr          _sfRootFrame;
+    MFInternalWindowPtr   _mfInternalWindows;
+    SFInternalWindowPtr   _sfFocusedWindow;
     SFWindowEventProducerPtr   _sfEventProducer;
     SFGraphicsPtr       _sfGraphics;
     SFUIDrawingSurfaceMouseTransformFunctorPtr   _sfMouseTransformFunctor;
+    SFVec2s             _sfSize;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

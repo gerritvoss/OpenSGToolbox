@@ -33,6 +33,7 @@
 
 // UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
+#include <OpenSG/UserInterface/OSGInternalWindow.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
@@ -208,6 +209,28 @@ public:
     }
 };
 
+// Create a class to allow for the use of the Ctrl+q
+class TutorialKeyListener : public KeyListener
+{
+public:
+
+   virtual void keyPressed(const KeyEvent& e)
+   {
+       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       {
+           ExitApp = true;
+       }
+   }
+
+   virtual void keyReleased(const KeyEvent& e)
+   {
+   }
+
+   virtual void keyTyped(const KeyEvent& e)
+   {
+   }
+};
+
 class ExampleTableModel : public AbstractTableModel
 {
 private:
@@ -320,6 +343,8 @@ int main(int argc, char **argv)
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialKeyListener TheKeyListener;
+    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
 
 
     // Make Torus Node (creates Torus in background of scene)
@@ -367,40 +392,49 @@ int main(int argc, char **argv)
     PanelPtr SelectionOptionPanel = createSelectionOptionPanel();
 
     // Create MainFramelayout
-    FlowLayoutPtr MainFrameLayout = osg::FlowLayout::create();
-    beginEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
-        MainFrameLayout->setAlignment(HORIZONTAL_ALIGNMENT);
-        MainFrameLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-        MainFrameLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-    endEditCP(MainFrameLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+    FlowLayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
+    beginEditCP(MainInternalWindowLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+        MainInternalWindowLayout->setAlignment(HORIZONTAL_ALIGNMENT);
+        MainInternalWindowLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
+        MainInternalWindowLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
+    endEditCP(MainInternalWindowLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
         
 
-    // Create The Main Frame
-    FramePtr MainFrame = osg::Frame::create();
-    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
-       // Add things to the MainFrame
-       MainFrame->getChildren().addValue(TheScrollPanel);
-       MainFrame->getChildren().addValue(SelectionModePanel);
-       MainFrame->getChildren().addValue(SelectionOptionPanel);
-       MainFrame->setLayout(MainFrameLayout);
-    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask);
+    // Create The Main InternalWindow
+    // Create Background to be used with the Main InternalWindow
+    ColorUIBackgroundPtr MainInternalWindowBackground = osg::ColorUIBackground::create();
+    beginEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    endEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+
+    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
+	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+       MainInternalWindow->getChildren().addValue(TheScrollPanel);
+       MainInternalWindow->getChildren().addValue(SelectionModePanel);
+       MainInternalWindow->getChildren().addValue(SelectionOptionPanel);
+       MainInternalWindow->setLayout(MainInternalWindowLayout);
+       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.85f,0.85f));
+	   MainInternalWindow->setDrawTitlebar(false);
+	   MainInternalWindow->setResizable(false);
+    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
     //Create the Drawing Surface
     UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setRootFrame(MainFrame);
         TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
     
+	TutorialDrawingSurface->openWindow(MainInternalWindow);
+
     // Create the UI Foreground Object
     UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-        TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
-        TutorialUIForeground->setFrameBounds(Vec2f(1.0,1.0));
-    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;

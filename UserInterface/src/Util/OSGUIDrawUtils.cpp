@@ -1,7 +1,7 @@
 #include "OSGUIDrawUtils.h"
 #include "OSGUIDefines.h"
 
-#include "Component/Container/OSGFrame.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 #include "Component/Misc/OSGRotatedComponent.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include "UIDrawingSurface/OSGUIDrawingSurfaceMouseTransformFunctor.h"
@@ -148,12 +148,12 @@ Pnt2s DrawingSurfaceToViewport(const Pnt2s& DrawingSurfacePoint, const UIDrawing
 Pnt2s ViewportToComponent(const Pnt2s& ViewportPoint, const ComponentPtr Comp, const ViewportPtr TheViewport)
 {
     //Then get Viewport to component
-    return DrawingSurfaceToComponent(ViewportToDrawingSurface(ViewportPoint, Comp->getParentFrame()->getDrawingSurface(), TheViewport), Comp);
+    return DrawingSurfaceToComponent(ViewportToDrawingSurface(ViewportPoint, Comp->getParentWindow()->getDrawingSurface(), TheViewport), Comp);
 }
 
 Pnt2s ComponentToViewport(const Pnt2s& ComponentPoint, const ComponentPtr Comp, const ViewportPtr TheViewport)
 {
-    return DrawingSurfaceToViewport(ComponentToDrawingSurface(ComponentPoint, Comp), Comp->getParentFrame()->getDrawingSurface(), TheViewport);
+    return DrawingSurfaceToViewport(ComponentToDrawingSurface(ComponentPoint, Comp), Comp->getParentWindow()->getDrawingSurface(), TheViewport);
 }
 
 Pnt2s DrawingSurfaceToComponent(const Pnt2s& DrawingSurfacePoint, const ComponentPtr Comp)
@@ -206,7 +206,7 @@ Pnt2s ComponentToFrame(const Pnt2s& ComponentPoint, const ComponentPtr Comp)
 	Pnt2s Result(ComponentPoint);
 	ComponentPtr CompRecurse = Comp;
 	while(CompRecurse != NullFC &&
-          CompRecurse != Comp->getParentFrame())
+          CompRecurse != Comp->getParentWindow())
 	{
 		Result += Vec2s(CompRecurse->getPosition());
 		CompRecurse = CompRecurse->getParentContainer();

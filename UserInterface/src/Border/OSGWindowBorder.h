@@ -36,31 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGFRAME_H_
-#define _OSGFRAME_H_
+#ifndef _OSGWINDOWBORDER_H_
+#define _OSGWINDOWBORDER_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGFrameBase.h"
-#include <OpenSG/Input/OSGMouseAdapter.h>
-#include <OpenSG/Input/OSGMouseMotionAdapter.h>
-#include <OpenSG/Input/OSGKeyAdapter.h>
-
-#include "Event/OSGKeyAcceleratorListener.h"
-
-#include <map>
+#include "OSGWindowBorderBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
+/*! \brief WindowBorder class. See \ref 
+           PageUserInterfaceWindowBorder for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING WindowBorder : public WindowBorderBase
 {
   private:
 
-    typedef FrameBase Inherited;
+    typedef WindowBorderBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -81,103 +77,54 @@ class OSG_USERINTERFACELIB_DLLMAPPING Frame : public FrameBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	
-	//Key Events
-	virtual void keyPressed(const KeyEvent& e);
-	virtual void keyReleased(const KeyEvent& e);
-	virtual void keyTyped(const KeyEvent& e);
+	virtual void draw(const GraphicsPtr g, const Int16 x, const Int16 y , const UInt16 Width, const UInt16 Height, const Real32 Opacity) const;
+	virtual void activateInternalDrawConstraints(const GraphicsPtr g, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const;
+	virtual void deactivateInternalDrawConstraints(const GraphicsPtr g, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const;
+	virtual bool isContained(const Pnt2s& p, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const;
+	virtual void getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& Bottom) const;
 
-	//Mouse Events
-    virtual void mouseClicked(const MouseEvent& e);
-    virtual void mouseEntered(const MouseEvent& e);
-    virtual void mouseExited(const MouseEvent& e);
-    virtual void mousePressed(const MouseEvent& e);
-    virtual void mouseReleased(const MouseEvent& e);
-
-	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEvent& e);
-    virtual void mouseDragged(const MouseEvent& e);
-
-	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEvent& e);
-
-    virtual       FramePtr            &getParentFrame    (void);
-    virtual const FramePtr            &getParentFrame    (void) const;
-
-    void destroyPopupMenu(void);
-    
-    virtual void updateLayout(void);
-    virtual void getInsideInsetsBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
-    virtual void getMenuBarBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
-    virtual void getContentPaneBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
-
-    void addKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers, KeyAcceleratorListenerPtr Listener);
-    void removeKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers);
+	virtual void getTitlebarBounds(const Int16 x, const Int16 y , const UInt16 Width, const UInt16 Height, Pnt2s& TopLeft, Pnt2s& BottomRight);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in FrameBase.
+    // Variables should all be in WindowBorderBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Frame(void);
-    Frame(const Frame &source);
+    WindowBorder(void);
+    WindowBorder(const WindowBorder &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Frame(void); 
+    virtual ~WindowBorder(void); 
 
-	virtual void drawInternal(const GraphicsPtr TheGraphics) const;
     /*! \}                                                                 */
     
-	class PopupMenuInteractionListener : public MouseAdapter, public MouseMotionAdapter, public KeyAdapter
-	{
-	public :
-		PopupMenuInteractionListener(FramePtr TheFrame);
-		
-        virtual void mouseClicked(const MouseEvent& e);
-		virtual void mousePressed(const MouseEvent& e);
-        virtual void mouseReleased(const MouseEvent& e);
-		virtual void keyPressed(const KeyEvent& e);
-		virtual void mouseMoved(const MouseEvent& e);
-        virtual void mouseDragged(const MouseEvent& e);
-	protected :
-		FramePtr _Frame;
-	};
-
-	friend class PopupMenuInteractionListener;
-
-	PopupMenuInteractionListener _PopupMenuInteractionListener;
-
-    typedef std::map<UInt64, KeyAcceleratorListenerPtr> KeyAcceleratorMap;
-    typedef KeyAcceleratorMap::iterator KeyAcceleratorMapItor;
-    KeyAcceleratorMap _KeyAcceleratorMap;
-	
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class FrameBase;
+    friend class WindowBorderBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Frame &source);
+    void operator =(const WindowBorder &source);
 };
 
-typedef Frame *FrameP;
+typedef WindowBorder *WindowBorderP;
 
 OSG_END_NAMESPACE
 
-#include "OSGFrameBase.inl"
-#include "OSGFrame.inl"
+#include "OSGWindowBorderBase.inl"
+#include "OSGWindowBorder.inl"
 
-#define OSGFRAME_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGWINDOWBORDER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGFRAME_H_ */
+#endif /* _OSGWINDOWBORDER_H_ */

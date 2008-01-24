@@ -49,6 +49,7 @@
 
 #include "OSGLabelMenuItem.h"
 #include "Util/OSGUIDrawUtils.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 #include "LookAndFeel/OSGLookAndFeelManager.h"
 #include "Component/Menu/OSGMenu.h"
 
@@ -206,7 +207,7 @@ void LabelMenuItem::mouseReleased(const MouseEvent& e)
     if(getSelected() && getEnabled())
     {
 	   produceActionPerformed(ActionEvent(MenuItemPtr(this), e.getTimeStamp()));
-       getParentFrame()->destroyPopupMenu();
+       getParentWindow()->destroyPopupMenu();
        beginEditCP(MenuItemPtr(this), SelectedFieldMask);
           setSelected(false);
        endEditCP(MenuItemPtr(this), SelectedFieldMask);
@@ -274,20 +275,20 @@ void LabelMenuItem::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-    if((whichField & ParentFrameFieldMask) &&
-        getParentFrame() != NullFC &&
+    if((whichField & ParentWindowFieldMask) &&
+        getParentWindow() != NullFC &&
         getEnabled() && 
         getAcceleratorKey() != KeyEvent::KEY_NONE
         )
     {
-        getParentFrame()->addKeyAccelerator(static_cast<KeyEvent::Key>(getAcceleratorKey()), getAcceleratorModifiers(), &_LabelMenuItemKeyAcceleratorListener);
+        getParentWindow()->addKeyAccelerator(static_cast<KeyEvent::Key>(getAcceleratorKey()), getAcceleratorModifiers(), &_LabelMenuItemKeyAcceleratorListener);
     }
     if((whichField & EnabledFieldMask) &&
-        getParentFrame() != NullFC &&
+        getParentWindow() != NullFC &&
         !getEnabled() && 
         getAcceleratorKey() != KeyEvent::KEY_NONE)
     {
-        getParentFrame()->removeKeyAccelerator(static_cast<KeyEvent::Key>(getAcceleratorKey()), getAcceleratorModifiers());
+        getParentWindow()->removeKeyAccelerator(static_cast<KeyEvent::Key>(getAcceleratorKey()), getAcceleratorModifiers());
     }
 
     if(whichField & AcceleratorKeyFieldMask ||
@@ -381,7 +382,7 @@ void LabelMenuItem::LabelMenuItemKeyAcceleratorListener::acceleratorTyped(const 
         TopMenu->setDrawAsThoughSelected(true);
 
         _LabelMenuItem->_KeyAcceleratorMenuFlashUpdateListener.reset();
-        _LabelMenuItem->getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&(_LabelMenuItem->_KeyAcceleratorMenuFlashUpdateListener));
+        _LabelMenuItem->getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&(_LabelMenuItem->_KeyAcceleratorMenuFlashUpdateListener));
     }
     _LabelMenuItem->produceActionPerformed(ActionEvent(_LabelMenuItem, e.getTimeStamp()));
 }
@@ -396,7 +397,7 @@ void LabelMenuItem::KeyAcceleratorMenuFlashUpdateListener::update(const UpdateEv
         {
             TopMenu->setDrawAsThoughSelected(false);
         }
-		_LabelMenuItem->getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+		_LabelMenuItem->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
     }
 }
 

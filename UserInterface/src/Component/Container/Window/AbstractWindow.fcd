@@ -77,6 +77,24 @@ A UI Abstract Window.
 	>
 	</Field>
 	<Field
+		name="PreviousPosition"
+		type="Vec2s"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0,0"
+	>
+	</Field>
+	<Field
+		name="PreviousSize"
+		type="Vec2s"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0,0"
+	>
+	</Field>
+	<Field
 		name="Resizable"
 		type="bool"
 		cardinality="single"
@@ -113,12 +131,66 @@ A UI Abstract Window.
 	>
 	</Field>
 	<Field
-		name="FrameIcon"
-		type="UIDrawObjectCanvasPtr"
+		name="AllwaysOnTop"
+		type="bool"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
-		defaultValue="NullFC"
+		access="public"
+		defaultValue="false"
 	>
-	</Field>
+        </Field>
+	<Field
+		name="DrawTitlebar"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="false"
+	>
+        </Field>
+	<Field
+		name="DrawDecorations"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="true"
+	>
+        </Field>
+	<Field
+		name="LockInput"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="false"
+	>
+        </Field>
+	<Field
+		name="AlignmentInDrawingSurface"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="-1.0,-1.0"
+	>
+        </Field>
+	<Field
+		name="ScalingInDrawingSurface"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="-1.0,-1.0"
+	>
+        </Field>
+	<Field
+		name="ResizeModifyCursorWidth"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="3"
+	>
+        </Field>
 </FieldContainer>

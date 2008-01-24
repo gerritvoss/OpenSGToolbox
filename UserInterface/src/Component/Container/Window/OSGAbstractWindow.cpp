@@ -49,6 +49,9 @@
 
 #include "OSGAbstractWindow.h"
 
+#include "UIDrawingSurface/OSGUIDrawingSurface.h"
+#include "Util/OSGUIDrawUtils.h"
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -76,6 +79,93 @@ void AbstractWindow::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void AbstractWindow::updateContainerLayout(void)
+{
+    if(getParentContainer() != NullFC)
+    {
+		Inherited::updateContainerLayout();
+    }
+	else if(getSize() != getPreferredSize())
+	{
+		Vec2s Size(osgMax(osgMin(getPreferredSize().x(), getMaxSize().x()), getMinSize().x()),
+			       osgMax(osgMin(getPreferredSize().y(), getMaxSize().y()), getMinSize().y()));
+		beginEditCP(ComponentPtr(this), SizeFieldMask);
+			setSize(Size);
+		endEditCP(ComponentPtr(this), SizeFieldMask);
+	}
+}
+
+void AbstractWindow::updateClipBounds(void)
+{
+	Pnt2s TopLeft, BottomRight;
+	if( getDrawingSurface() == NullFC )
+	{
+		//If I have no parent container use my bounds
+		getBounds(TopLeft, BottomRight);
+	}
+	else
+	{
+		//Get the intersection of:
+		     //My Bounds
+		     //My Parent Containers Clip Bounds
+		     //My Parent Containers Inset Bounds
+        Pnt2s MyTopLeft,MyBottomRight;
+        getBounds(MyTopLeft,MyBottomRight);
+
+		//Get Parent Container's Clip Bounds
+		Pnt2s ContainerClipTopLeft(0,0), ContainerClipBottomRight(getDrawingSurface()->getSize());
+		
+        //Parent Container's Clip Bounds are in the Parent Container's Coordinate space
+        //We need to convert them to this Components Coordinate space
+        ContainerClipTopLeft -= Vec2s(getPosition());
+		ContainerClipBottomRight -= Vec2s(getPosition());
+
+		//Get the intersection of my bounds with my parent containers clip bounds
+		quadIntersection(MyTopLeft,MyBottomRight,
+			ContainerClipTopLeft,ContainerClipBottomRight,
+			TopLeft, BottomRight);
+	}
+	//The Clip Bounds calculated are in my Parent Containers coordinate space
+	//Translate these bounds into my own coordinate space
+	beginEditCP(ComponentPtr(this), Component::ClipTopLeftFieldMask | Component::ClipBottomRightFieldMask);
+		setClipTopLeft(TopLeft);
+		setClipBottomRight(BottomRight);
+	endEditCP(ComponentPtr(this), Component::ClipTopLeftFieldMask | Component::ClipBottomRightFieldMask);
+}
+
+BorderPtr AbstractWindow::getDrawnBorder(void) const
+{
+	if(getDrawDecorations())
+	{
+		return Inherited::getDrawnBorder();
+	}
+	else
+	{
+		return NullFC;
+	}
+}
+
+UIBackgroundPtr AbstractWindow::getDrawnBackground(void) const
+{
+	if(getDrawDecorations())
+	{
+		return Inherited::getDrawnBackground();
+	}
+	else
+	{
+		return NullFC;
+	}
+}
+
+void AbstractWindow::drawInternal(const GraphicsPtr TheGraphics) const
+{
+    Inherited::drawInternal(TheGraphics);
+        
+    //If I have an active TitleBar then draw it
+	if(getDrawDecorations() && getDrawTitlebar())
+	{
+	}
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

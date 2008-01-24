@@ -50,7 +50,7 @@
 #include "OSGComboBox.h"
 #include "OSGMutableComboBoxModel.h"
 #include "Component/Menu/OSGPopupMenu.h"
-#include "Component/Container/OSGFrame.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 #include "Component/Button/OSGToggleButton.h"
 #include "Component/ComboBox/Editors/OSGComboBoxEditor.h"
 #include "Component/Menu/OSGLabelMenuItem.h"
@@ -315,9 +315,9 @@ void ComboBox::showPopup(void)
 	   getComboListPopupMenu()->setSelection(_Model->getSelectedItemIndex());
     endEditCP(getComboListPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
     
-    beginEditCP(getParentFrame(), Frame::ActivePopupMenusFieldMask);
-        getParentFrame()->getActivePopupMenus().addValue(getComboListPopupMenu());
-    endEditCP(getParentFrame(), Frame::ActivePopupMenusFieldMask);
+    beginEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
+        getParentWindow()->getActivePopupMenus().addValue(getComboListPopupMenu());
+    endEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
 }
 
 void ComboBox::updateListFromModel(void)

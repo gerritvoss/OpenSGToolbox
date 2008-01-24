@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
-#include "Component/Container/OSGFrame.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include "Util/OSGUIDrawUtils.h"
 
@@ -209,8 +209,8 @@ void TableHeader::mousePressed(const MouseEvent& e)
             if(MousePosInComponent.x() >= CumulativeHeaderWidth - getResizingCursorDriftAllowance() &&
                MousePosInComponent.x() <= CumulativeHeaderWidth + _ColumnModel->getColumnMargin() + getResizingCursorDriftAllowance())
             {
-                getParentFrame()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_MarginDraggedListener));
-                getParentFrame()->getDrawingSurface()->getEventProducer()->addMouseListener(&(_MarginDraggedListener));
+                getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_MarginDraggedListener));
+                getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&(_MarginDraggedListener));
                 _ResizingColumn = i;
                 return;
             }
@@ -241,13 +241,13 @@ void TableHeader::checkMouseMargins(const MouseEvent& e)
             if(MousePosInComponent.x() >= CumulativeHeaderWidth - getResizingCursorDriftAllowance() &&
                MousePosInComponent.x() <= CumulativeHeaderWidth + _ColumnModel->getColumnMargin() + getResizingCursorDriftAllowance())
             {
-                getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_RESIZE_W_TO_E);
+                getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_RESIZE_W_TO_E);
                 return;
             }
             CumulativeHeaderWidth += _ColumnModel->getColumnMargin();
         }
     }
-    getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
+    getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -385,11 +385,11 @@ void TableHeader::MarginDraggedListener::mousePressed(const MouseEvent& e)
 
 void TableHeader::MarginDraggedListener::mouseReleased(const MouseEvent& e)
 {
-	if(_TableHeader->getParentFrame() != NullFC)
+	if(_TableHeader->getParentWindow() != NullFC)
 	{
         _TableHeader->_ResizingColumn = -1;
-		_TableHeader->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_TableHeader->_MarginDraggedListener));
-		_TableHeader->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_TableHeader->_MarginDraggedListener));
+		_TableHeader->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_TableHeader->_MarginDraggedListener));
+		_TableHeader->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_TableHeader->_MarginDraggedListener));
 	}
 }
 

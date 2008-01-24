@@ -26,6 +26,7 @@
 #include <OpenSG/Input/OSGMouseAdapter.h>
 
 // UserInterface Headers
+#include <OpenSG/UserInterface/OSGInternalWindow.h>
 #include <OpenSG/UserInterface/OSGUIForeground.h>
 #include <OpenSG/UserInterface/OSGUIBackgrounds.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
@@ -48,9 +49,9 @@
 // List header files
 #include <OpenSG/UserInterface/OSGList.h>
 #include <OpenSG/UserInterface/OSGAbstractListModel.h>
-#include <OpenSG/UserInterface/OSGDefaultListCellGenerator.h>
+#include <OpenSG/UserInterface/OSGDefaultListCellRenderer.h>
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
-#include <OpenSG/UserInterface/OSGListCellGenerator.h>
+#include <OpenSG/UserInterface/OSGListCellRenderer.h>
 #include <OpenSG/UserInterface/OSGListModel.h>
 
 #include <OpenSG/UserInterface/OSGScrollPanel.h>
@@ -90,6 +91,28 @@ public:
     }
 };
 
+// Create a class to allow for the use of the Ctrl+q
+class TutorialKeyListener : public KeyListener
+{
+public:
+
+   virtual void keyPressed(const KeyEvent& e)
+   {
+       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       {
+           ExitApp = true;
+       }
+   }
+
+   virtual void keyReleased(const KeyEvent& e)
+   {
+   }
+
+   virtual void keyTyped(const KeyEvent& e)
+   {
+   }
+};
+
 // Setup a listener to change the label's font
 // when a different item in the list is
 // selected
@@ -105,7 +128,7 @@ class OpenSGTypePanel
 {
 protected:
 	PanelPtr _MainPanel;
-	DefaultListCellGenerator _CellGenerator;
+	DefaultListCellRenderer _CellRenderer;
 	AbstractListModel _FieldTypeModel;
 	AbstractListModel _FieldContainerTypeModel;
 
@@ -136,10 +159,10 @@ protected:
 			FieldTypeList->setCellLayout(VERTICAL_ALIGNMENT);
 		endEditCP(FieldTypeList, Component::PreferredSizeFieldMask | List::CellLayoutFieldMask);
 
-		// Assign the Model, CellGenerator, and SelectionModel
+		// Assign the Model, CellRenderer, and SelectionModel
 		// to the List
 		FieldTypeList->setModel(&_FieldTypeModel);
-		FieldTypeList->setCellGenerator(&_CellGenerator);
+		FieldTypeList->setCellRenderer(&_CellRenderer);
 		// Creates and assigns a SelectionMode
 		ListSelectionModelPtr  FieldSelectionModel(new DefaultListSelectionModel);
 		FieldSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
@@ -244,10 +267,10 @@ protected:
 			FieldContainerTypeList->setCellLayout(VERTICAL_ALIGNMENT);
 		endEditCP(FieldContainerTypeList, Component::PreferredSizeFieldMask | List::CellLayoutFieldMask);
 
-		// Assign the Model, CellGenerator, and SelectionModel
+		// Assign the Model, CellRenderer, and SelectionModel
 		// to the List
 		FieldContainerTypeList->setModel(&_FieldContainerTypeModel);
-		FieldContainerTypeList->setCellGenerator(&_CellGenerator);
+		FieldContainerTypeList->setCellRenderer(&_CellRenderer);
 		// Creates and assigns a SelectionMode
 		ListSelectionModelPtr  FieldSelectionModel(new DefaultListSelectionModel);
 		FieldSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
@@ -436,6 +459,8 @@ int main(int argc, char **argv)
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
     TheWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialKeyListener TheKeyListener;
+    TheWindowEventProducer->addKeyListener(&TheKeyListener);
 
 
     // Make Torus Node
@@ -487,39 +512,41 @@ int main(int argc, char **argv)
 	endEditCP(TheOpenSGTypePanel.getPanel(), Component::ConstraintsFieldMask);
 
 
-	// Create The Main Frame
-	// Create Background to be used with the Main Frame
-	ColorUIBackgroundPtr mainBackground = osg::ColorUIBackground::create();
-	beginEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-		mainBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-	endEditCP(mainBackground, ColorUIBackground::ColorFieldMask);
-	FramePtr MainFrame = osg::Frame::create();
+    // Create The Main InternalWindow
+    // Create Background to be used with the Main InternalWindow
+    ColorUIBackgroundPtr MainInternalWindowBackground = osg::ColorUIBackground::create();
+    beginEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    endEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
 
-	BorderLayoutPtr MainFrameLayout = osg::BorderLayout::create();
+	BorderLayoutPtr MainInternalWindowLayout = osg::BorderLayout::create();
 
-	beginEditCP(MainFrame, Frame::ChildrenFieldMask);
-	   MainFrame->getChildren().addValue(TheOpenSGTypePanel.getPanel());
-	   MainFrame->setLayout(MainFrameLayout);
-	endEditCP  (MainFrame, Frame::ChildrenFieldMask);
+    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
+	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+	   MainInternalWindow->getChildren().addValue(TheOpenSGTypePanel.getPanel());
+	   MainInternalWindow->setLayout(MainInternalWindowLayout);
+       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
+	   MainInternalWindow->setDrawTitlebar(false);
+	   MainInternalWindow->setResizable(false);
+    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
 	//Create the Drawing Surface
-	UIDrawingSurfacePtr drawingSurface = UIDrawingSurface::create();
-	beginEditCP(drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
-		drawingSurface->setGraphics(graphics);
-		drawingSurface->setRootFrame(MainFrame);
-	    drawingSurface->setEventProducer(TheWindowEventProducer);
-    endEditCP  (drawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask|UIDrawingSurface::EventProducerFieldMask);
+	UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
+	beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask|UIDrawingSurface::EventProducerFieldMask);
+		TutorialDrawingSurface->setGraphics(graphics);
+	    TutorialDrawingSurface->setEventProducer(TheWindowEventProducer);
+    endEditCP  (TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask|UIDrawingSurface::EventProducerFieldMask);
 	
+	TutorialDrawingSurface->openWindow(MainInternalWindow);
+
 	// Create the UI Foreground Object
 	UIForegroundPtr foreground = osg::UIForeground::create();
 
-	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
-	    foreground->setDrawingSurface(drawingSurface);
-		foreground->setFramePositionOffset(Vec2s(0,0));
-		foreground->setFrameBounds(Vec2f(0.85,0.85));
-	   //Set the Event Producer for the DrawingSurface
-	   //This is needed in order to get Mouse/Keyboard/etc Input to the UI DrawingSurface
-    endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+	beginEditCP(foreground, UIForeground::DrawingSurfaceFieldMask);
+	    foreground->setDrawingSurface(TutorialDrawingSurface);
+    endEditCP  (foreground, UIForeground::DrawingSurfaceFieldMask);
  
     // create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;

@@ -227,12 +227,12 @@ A UI Component Interface.
 	>
 	</Field>
 	<Field
-		name="ParentFrame"
-		type="FramePtr"
+		name="ParentWindow"
+		type="InternalWindowPtr"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NullFC"
-		header="Component/Container/OSGFrameFields.h"
+		header="Component/Container/Window/OSGInternalWindowFields.h"
 		access="public"
 	>
 	</Field>

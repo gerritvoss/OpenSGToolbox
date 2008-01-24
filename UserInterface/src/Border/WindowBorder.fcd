@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="WindowBorder"
+	parent="Border"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+UI Window Border. A Compound Border made up of an inner border and outer border of any type.
+	<Field
+		name="InnerBorder"
+		type="BorderPtr"
+		cardinality="single"
+		visibility="external"
+		header="Border/OSGBorder.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="OuterBorder"
+		type="BorderPtr"
+		cardinality="single"
+		visibility="external"
+		header="Border/OSGBorder.h"
+		access="public"
+	>
+	</Field>
+        <Field
+          name="Titlebar"
+          type="ComponentPtr"
+          cardinality="single"
+          visibility="external"
+          access="public"
+          defaultValue="NullFC"
+          header="Component/OSGComponentFields.h"
+          >
+	</Field>
+</FieldContainer>

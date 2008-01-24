@@ -48,7 +48,7 @@
 
 #include "OSGComponent.h"
 #include "Component/Container/OSGContainer.h"
-#include "Component/Container/OSGFrame.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include "UIDrawingSurface/OSGUIDrawingSurfaceMouseTransformFunctor.h"
 #include "Component/Misc/OSGToolTip.h"
@@ -73,6 +73,18 @@ A UI Component Interface.
  *                           Class variables                               *
 \***************************************************************************/
 
+const OSG::BitVector  Component::BordersFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::BorderFieldId) |
+    (TypeTraits<BitVector>::One << ComponentBase::DisabledBorderFieldId) |
+    (TypeTraits<BitVector>::One << ComponentBase::FocusedBorderFieldId) |
+    (TypeTraits<BitVector>::One << ComponentBase::RolloverBorderFieldId);
+
+const OSG::BitVector  Component::BackgroundsFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::BackgroundFieldId) |
+    (TypeTraits<BitVector>::One << ComponentBase::DisabledBackgroundFieldId) |
+    (TypeTraits<BitVector>::One << ComponentBase::FocusedBackgroundFieldId) |
+    (TypeTraits<BitVector>::One << ComponentBase::RolloverBackgroundFieldId);
+
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
@@ -86,11 +98,38 @@ void Component::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void Component::setBorders(BorderPtr TheBorder)
+{
+	setBorder(TheBorder);
+	setDisabledBorder(TheBorder);
+	setFocusedBorder(TheBorder);
+	setRolloverBorder(TheBorder);
+}
+
+void Component::setBackgrounds(UIBackgroundPtr TheBackground)
+{
+	setBackground(TheBackground);
+	setDisabledBackground(TheBackground);
+	setFocusedBackground(TheBackground);
+	setRolloverBackground(TheBackground);
+}
+
 BorderPtr Component::getDrawnBorder(void) const
 {
 	if(getEnabled())
 	{
-        return getBorder();
+        if(getFocused())
+        {
+            return getFocusedBorder();
+        }
+        else if(_MouseInComponentLastMouse)
+        {
+            return getRolloverBorder();
+        }
+        else
+        {
+            return getBorder();
+        }
     }
     else
     {
@@ -102,7 +141,18 @@ UIBackgroundPtr Component::getDrawnBackground(void) const
 {
 	if(getEnabled())
 	{
-        return getBackground();
+        if(getFocused())
+        {
+            return getFocusedBackground();
+        }
+        else if(_MouseInComponentLastMouse)
+        {
+            return getRolloverBackground();
+        }
+        else
+        {
+            return getBackground();
+        }
     }
     else
     {
@@ -370,18 +420,17 @@ void Component::mousePressed(const MouseEvent& e)
 	produceMousePressed(e);
 
 	if(e.getButton() == MouseEvent::BUTTON3
-	&& getPopupMenu() != NullFC
-	&& getParentFrame() != NullFC)
+	&& getPopupMenu() != NullFC)
 	{
 	    beginEditCP(getPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
 	       getPopupMenu()->setInvoker(ComponentPtr(this));
 	       getPopupMenu()->setVisible(true);
-	       getPopupMenu()->setPosition(DrawingSurfaceToComponent(e.getLocation(),getParentFrame()));
+	       getPopupMenu()->setPosition(DrawingSurfaceToComponent(e.getLocation(),getParentWindow()));
 	    endEditCP(getPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
 	    
-        beginEditCP(getParentFrame(), Frame::ActivePopupMenusFieldMask);
-            getParentFrame()->getActivePopupMenus().addValue(getPopupMenu());
-        endEditCP(getParentFrame(), Frame::ActivePopupMenusFieldMask);
+        beginEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
+            getParentWindow()->getActivePopupMenus().addValue(getPopupMenu());
+        endEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
 	}
 }
 
@@ -621,28 +670,28 @@ bool Component::takeFocus(bool Temporary)
     else
     {
 		if(getFocused() &&
-		   getParentFrame() != NullFC &&
-		   getParentFrame()->getFocusedComponent() == ComponentPtr(this))
+		   getParentWindow() != NullFC &&
+		   getParentWindow()->getFocusedComponent() == ComponentPtr(this))
 		{
 			return true;
 		}
         beginEditCP(ComponentPtr(this), FocusedFieldMask);
            setFocused(true);
         endEditCP(ComponentPtr(this), FocusedFieldMask);
-		if(Temporary || getParentFrame() == NullFC)
+		if(Temporary || getParentWindow() == NullFC)
 		{
             focusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, NullFC));
 		}
 		else
 		{
-			if(getParentFrame()->getFocusedComponent() != NullFC)
+			if(getParentWindow()->getFocusedComponent() != NullFC)
 			{
-				getParentFrame()->getFocusedComponent()->giveFocus(ComponentPtr(this));
+				getParentWindow()->getFocusedComponent()->giveFocus(ComponentPtr(this));
 			}
-		    getParentFrame()->setFocusedComponent(ComponentPtr(this));
-            focusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, getParentFrame()->getFocusedComponent()));
-			//beginEditCP(getParentFrame(), Frame::FocusedComponentFieldMask);
-			//endEditCP(getParentFrame(), Frame::FocusedComponentFieldMask);
+		    getParentWindow()->setFocusedComponent(ComponentPtr(this));
+            focusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, getParentWindow()->getFocusedComponent()));
+			//beginEditCP(getParentWindow(), InternalWindow::FocusedComponentFieldMask);
+			//endEditCP(getParentWindow(), InternalWindow::FocusedComponentFieldMask);
 		}
 		return true;
     }
@@ -820,17 +869,17 @@ void Component::ComponentUpdater::update(const UpdateEvent& e)
 {
     _Component->_TimeSinceMouseEntered += e.getElapsedTime();
     if(_Component->_TimeSinceMouseEntered >= LookAndFeelManager::the()->getLookAndFeel()->getToolTipPopupTime() &&
-        _Component->getParentFrame() != NullFC &&
-        _Component->getParentFrame()->getActiveToolTip() == NullFC)
+        _Component->getParentWindow() != NullFC &&
+        _Component->getParentWindow()->getActiveToolTip() == NullFC)
     {
         ToolTipPtr TheToolTip = _Component->createToolTip();
         beginEditCP(TheToolTip, ToolTip::TippedComponentFieldMask | ToolTip::PositionFieldMask | ToolTip::TextFieldMask);
             TheToolTip->setTippedComponent(_Component);
-            if(_Component->getParentFrame() != NullFC &&
-               _Component->getParentFrame()->getDrawingSurface() != NullFC)
+            if(_Component->getParentWindow() != NullFC &&
+               _Component->getParentWindow()->getDrawingSurface() != NullFC)
             {
                 TheToolTip->setPosition(ComponentToFrame(_Component->getToolTipLocation(
-                    _Component->getParentFrame()->getDrawingSurface()->getMousePosition()), _Component));
+                    _Component->getParentWindow()->getDrawingSurface()->getMousePosition()), _Component));
             }
             else
             {
@@ -839,11 +888,11 @@ void Component::ComponentUpdater::update(const UpdateEvent& e)
             TheToolTip->setText(_Component->getToolTipText());
         endEditCP(TheToolTip, ToolTip::TippedComponentFieldMask | ToolTip::PositionFieldMask | ToolTip::TextFieldMask);
 
-        if(_Component->getParentFrame() != NullFC)
+        if(_Component->getParentWindow() != NullFC)
         {
-            beginEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
-                _Component->getParentFrame()->setActiveToolTip(TheToolTip);
-            endEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
+            beginEditCP(_Component->getParentWindow(), InternalWindow::ActiveToolTipFieldMask);
+                _Component->getParentWindow()->setActiveToolTip(TheToolTip);
+            endEditCP(_Component->getParentWindow(), InternalWindow::ActiveToolTipFieldMask);
         }
         
         _Component->addMouseListener(&(_Component->_DeactivateToolTipListener));
@@ -857,21 +906,21 @@ void Component::ActivateToolTipListener::mouseClicked(const MouseEvent& e)
 void Component::ActivateToolTipListener::mouseEntered(const MouseEvent& e)
 {
     _Component->_TimeSinceMouseEntered = 0.0f;
-	if( _Component->getParentFrame() != NullFC &&
-		_Component->getParentFrame()->getDrawingSurface() != NullFC &&
-		_Component->getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+	if( _Component->getParentWindow() != NullFC &&
+		_Component->getParentWindow()->getDrawingSurface() != NullFC &&
+		_Component->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
     {
-		_Component->getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&(_Component->_ComponentUpdater));
+		_Component->getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&(_Component->_ComponentUpdater));
 	}
 }
 
 void Component::ActivateToolTipListener::mouseExited(const MouseEvent& e)
 {
-    if( _Component->getParentFrame() != NullFC &&
-		_Component->getParentFrame()->getDrawingSurface() != NullFC &&
-		_Component->getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+    if( _Component->getParentWindow() != NullFC &&
+		_Component->getParentWindow()->getDrawingSurface() != NullFC &&
+		_Component->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
     {
-		_Component->getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&(_Component->_ComponentUpdater));
+		_Component->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&(_Component->_ComponentUpdater));
 	}
 }
 
@@ -886,11 +935,11 @@ void Component::ActivateToolTipListener::mouseReleased(const MouseEvent& e)
 void Component::DeactivateToolTipListener::mouseClicked(const MouseEvent& e)
 {
     _Component->_TimeSinceMouseEntered = 0.0f;
-    if(_Component->getParentFrame() != NullFC)
+    if(_Component->getParentWindow() != NullFC)
     {
-        beginEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
-                _Component->getParentFrame()->setActiveToolTip(NullFC);
-        endEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
+        beginEditCP(_Component->getParentWindow(), InternalWindow::ActiveToolTipFieldMask);
+                _Component->getParentWindow()->setActiveToolTip(NullFC);
+        endEditCP(_Component->getParentWindow(), InternalWindow::ActiveToolTipFieldMask);
     }
     _Component->removeMouseListener(this);
 }
@@ -902,11 +951,11 @@ void Component::DeactivateToolTipListener::mouseEntered(const MouseEvent& e)
 void Component::DeactivateToolTipListener::mouseExited(const MouseEvent& e)
 {
     _Component->_TimeSinceMouseEntered = 0.0f;
-    if(_Component->getParentFrame() != NullFC)
+    if(_Component->getParentWindow() != NullFC)
     {
-        beginEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
-                _Component->getParentFrame()->setActiveToolTip(NullFC);
-        endEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
+        beginEditCP(_Component->getParentWindow(), InternalWindow::ActiveToolTipFieldMask);
+                _Component->getParentWindow()->setActiveToolTip(NullFC);
+        endEditCP(_Component->getParentWindow(), InternalWindow::ActiveToolTipFieldMask);
     }
     _Component->removeMouseListener(this);
 
@@ -915,11 +964,11 @@ void Component::DeactivateToolTipListener::mouseExited(const MouseEvent& e)
 void Component::DeactivateToolTipListener::mousePressed(const MouseEvent& e)
 {
     _Component->_TimeSinceMouseEntered = 0.0f;
-    if(_Component->getParentFrame() != NullFC)
+    if(_Component->getParentWindow() != NullFC)
     {
-        beginEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
-                _Component->getParentFrame()->setActiveToolTip(NullFC);
-        endEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
+        beginEditCP(_Component->getParentWindow(), InternalWindow::ActiveToolTipFieldMask);
+                _Component->getParentWindow()->setActiveToolTip(NullFC);
+        endEditCP(_Component->getParentWindow(), InternalWindow::ActiveToolTipFieldMask);
     }
     _Component->removeMouseListener(this);
 }
@@ -927,11 +976,11 @@ void Component::DeactivateToolTipListener::mousePressed(const MouseEvent& e)
 void Component::DeactivateToolTipListener::mouseReleased(const MouseEvent& e)
 {
     _Component->_TimeSinceMouseEntered = 0.0f;
-    if(_Component->getParentFrame() != NullFC)
+    if(_Component->getParentWindow() != NullFC)
     {
-        beginEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
-                _Component->getParentFrame()->setActiveToolTip(NullFC);
-        endEditCP(_Component->getParentFrame(), Frame::ActiveToolTipFieldMask);
+        beginEditCP(_Component->getParentWindow(), InternalWindow::ActiveToolTipFieldMask);
+                _Component->getParentWindow()->setActiveToolTip(NullFC);
+        endEditCP(_Component->getParentWindow(), InternalWindow::ActiveToolTipFieldMask);
     }
     _Component->removeMouseListener(this);
 }

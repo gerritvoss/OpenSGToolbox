@@ -50,7 +50,7 @@
 #include "OSGMenuBar.h"
 #include "OSGDefaultSingleSelectionModel.h"
 
-#include "Component/Container/OSGFrame.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include "Util/OSGUIDrawUtils.h"
 
@@ -150,7 +150,7 @@ void MenuBar::updateClipBounds(void)
 
 		//Get Parent Container's Clip Bounds
 		Pnt2s ContainerClipTopLeft, ContainerClipBottomRight;
-		Frame::Ptr::dcast(getParentContainer())->getMenuBarBounds(ContainerClipTopLeft,ContainerClipBottomRight);
+		InternalWindow::Ptr::dcast(getParentContainer())->getMenuBarBounds(ContainerClipTopLeft,ContainerClipBottomRight);
 		
         //Parent Container's Clip Bounds are in the Parent Container's Coordinate space
         //We need to convert them to this Components Coordinate space
@@ -159,7 +159,7 @@ void MenuBar::updateClipBounds(void)
 
 		//Get Parent Container's MenuBar Bounds
 		Pnt2s ContainerInsetTopLeft, ContainerInsetBottomRight;
-		Frame::Ptr::dcast(getParentContainer())->getMenuBarBounds(ContainerInsetTopLeft, ContainerInsetBottomRight);
+		InternalWindow::Ptr::dcast(getParentContainer())->getMenuBarBounds(ContainerInsetTopLeft, ContainerInsetBottomRight);
 		
         //Parent Container's Inset Bounds are in the Parent Container's Coordinate space
         //We need to convert them to this Components Coordinate space
@@ -250,7 +250,7 @@ void MenuBar::mousePressed(const MouseEvent& e)
         if(getChildren().getValue(i)->isContained(e.getLocation(), true))
         {
             _SelectionModel->setSelectedIndex(i);
-            getParentFrame()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MenuSelectionListener);
+            getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MenuSelectionListener);
             break;
         }
         ++i;
@@ -291,9 +291,9 @@ void MenuBar::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-    if((whichField & ParentFrameFieldMask) && getParentFrame() != NullFC)
+    if((whichField & ParentWindowFieldMask) && getParentWindow() != NullFC)
     {
-        getParentFrame()->addKeyListener(&_MenuSelectionListener);
+        getParentWindow()->addKeyListener(&_MenuSelectionListener);
     }
 }
 
@@ -354,7 +354,7 @@ void MenuBar::MenuSelectionListener::mouseDragged(const MouseEvent& e)
 
 void MenuBar::MenuSelectionListener::popupMenuCanceled(const PopupMenuEvent& e)
 {
-    _MenuBar->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+    _MenuBar->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
     _MenuBar->_SelectionModel->clearSelection();
 }
 

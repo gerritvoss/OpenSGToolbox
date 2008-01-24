@@ -82,8 +82,8 @@ void UIDrawObjectCanvas::getDrawObjectBounds(Pnt2s& TopLeft, Pnt2s& BottomRight)
 		    TopLeft.setValues( osgMin(TopLeft.x(), TempTopLeft.x()),
 				               osgMin(TopLeft.y(), TempTopLeft.y()) );
 
-		    BottomRight.setValues(osgMax<UInt16>(BottomRight.x(), TempBottomRight.x()),
-		                          osgMax<UInt16>(BottomRight.y(), TempBottomRight.y()) );
+		    BottomRight.setValues(osgMax<Int16>(BottomRight.x(), TempBottomRight.x()),
+		                          osgMax<Int16>(BottomRight.y(), TempBottomRight.y()) );
 		}
 	}
 }
@@ -132,10 +132,9 @@ void UIDrawObjectCanvas::changed(BitVector whichField, UInt32 origin)
     {
 		Pnt2s TopLeft, BottomRight;
 		getDrawObjectBounds(TopLeft, BottomRight);
-		beginEditCP(UIDrawObjectCanvasPtr(this), SizeFieldMask|PositionFieldMask);
-			setPosition(TopLeft);
-			setSize(BottomRight - TopLeft);
-		endEditCP(UIDrawObjectCanvasPtr(this), SizeFieldMask|PositionFieldMask);
+		beginEditCP(UIDrawObjectCanvasPtr(this), PreferredSizeFieldMask);
+			setPreferredSize(BottomRight - TopLeft);
+		endEditCP(UIDrawObjectCanvasPtr(this), PreferredSizeFieldMask);
     }
 }
 

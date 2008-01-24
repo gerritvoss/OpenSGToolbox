@@ -56,7 +56,8 @@
 #include "Component/Button/OSGRadioButton.h"
 #include "Component/Button/OSGToggleButton.h"
 #include "Component/Text/OSGLabel.h"
-#include "Component/Container/OSGFrame.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
+#include "Component/Container/Window/OSGTitlebar.h"
 #include "Component/Container/OSGPanel.h"
 #include "Component/Container/OSGSplitPanel.h"
 #include "Component/Misc/OSGImageComponent.h"
@@ -158,6 +159,8 @@ Time WindowsLookAndFeel::getKeyAcceleratorMenuFlashTime(void) const
 }
 void WindowsLookAndFeel::init(void)
 {
+
+	Color4f WindowsXPMainColor(1.0,1.0,1.0,1.0);
 
 	/*******Borders********/
 	/*******Line Border********/
@@ -439,10 +442,10 @@ void WindowsLookAndFeel::init(void)
 		WindowsLabel->setPreferredSize(Vec2s(75,23));
 
 		//Border
-		WindowsLabel->setBorder(WindowsLabelBorder);
+		WindowsLabel->setBorders(WindowsLabelBorder);
 		
 		//Background
-		WindowsLabel->setBackground(WindowsLabelBackground);
+		WindowsLabel->setBackgrounds(WindowsLabelBackground);
 		
 		//Opacity
 		WindowsLabel->setOpacity(1.0);
@@ -462,46 +465,474 @@ void WindowsLookAndFeel::init(void)
 	
     Label::getClassType().setPrototype(WindowsLabel);
 	
-	//************************** Frame *****************************
-	//Windows FrameBorder
-	EmptyBorderPtr WindowsFrameBorder = EmptyBorder::create();
-	beginEditCP(WindowsFrameBorder);
-		WindowsFrameBorder->setLeftWidth(0);
-		WindowsFrameBorder->setRightWidth(0);
-		WindowsFrameBorder->setTopWidth(0);
-		WindowsFrameBorder->setBottomWidth(0);
-	endEditCP(WindowsFrameBorder);
+	//************************** InternalWindow *****************************
+	//Windows InternalWindow 
+	//Inside FocusedBorder
+	BevelBorderPtr WindowsInsideInternalWindowFocusedBorder = BevelBorder::create();
+	beginEditCP(WindowsInsideInternalWindowFocusedBorder);
+		WindowsInsideInternalWindowFocusedBorder->setRaised(true);
+		WindowsInsideInternalWindowFocusedBorder->setWidth(2);
+		WindowsInsideInternalWindowFocusedBorder->setHighlightInner(Color4f(0.4, 0.4, 0.49, 1.0));
+		WindowsInsideInternalWindowFocusedBorder->setHighlightOuter(Color4f(0.89, 0.89, 0.89, 1.0));
+		WindowsInsideInternalWindowFocusedBorder->setShadowInner(Color4f(0.4, 0.4, 0.49, 1.0));
+		WindowsInsideInternalWindowFocusedBorder->setShadowOuter(Color4f(0.89, 0.89, 0.89, 1.0));
+	endEditCP(WindowsInsideInternalWindowFocusedBorder);
+    
+	//Outside FocusedBorder
+	BevelBorderPtr WindowsOutsideInternalWindowFocusedBorder = BevelBorder::create();
+	beginEditCP(WindowsOutsideInternalWindowFocusedBorder);
+		WindowsOutsideInternalWindowFocusedBorder->setRaised(true);
+		WindowsOutsideInternalWindowFocusedBorder->setWidth(2);
+		WindowsOutsideInternalWindowFocusedBorder->setHighlightOuter(Color4f(0.4, 0.4, 0.49, 1.0));
+		WindowsOutsideInternalWindowFocusedBorder->setHighlightInner(Color4f(0.89, 0.89, 0.89, 1.0));
+		WindowsOutsideInternalWindowFocusedBorder->setShadowOuter(Color4f(0.4, 0.4, 0.49, 1.0));
+		WindowsOutsideInternalWindowFocusedBorder->setShadowInner(Color4f(0.89, 0.89, 0.89, 1.0));
+	endEditCP(WindowsOutsideInternalWindowFocusedBorder);
 
-	//Windows FrameBackground
-	ColorUIBackgroundPtr WindowsFrameBackground = ColorUIBackground::create();
+	//FocusedBorder
+	WindowBorderPtr WindowsInternalWindowFocusedBorder = WindowBorder::create();
+	beginEditCP(WindowsInternalWindowFocusedBorder);
+		WindowsInternalWindowFocusedBorder->setInnerBorder(WindowsInsideInternalWindowFocusedBorder);
+		WindowsInternalWindowFocusedBorder->setOuterBorder(WindowsOutsideInternalWindowFocusedBorder);
+	endEditCP(WindowsInternalWindowFocusedBorder);
 
-	beginEditCP(WindowsFrameBackground);
-		WindowsFrameBackground->setColor( Color4f(.9255,.9137,.8471, 1.0) );
-	endEditCP(WindowsFrameBackground);
+	//Inside UnfocusedBorder
+	BevelBorderPtr WindowsInsideInternalWindowUnfocusedBorder = BevelBorder::create();
+	beginEditCP(WindowsInsideInternalWindowUnfocusedBorder);
+		WindowsInsideInternalWindowUnfocusedBorder->setRaised(true);
+		WindowsInsideInternalWindowUnfocusedBorder->setWidth(2);
+		WindowsInsideInternalWindowUnfocusedBorder->setHighlightInner(Color4f(0.80, 0.80, 0.85, 1.0));
+		WindowsInsideInternalWindowUnfocusedBorder->setHighlightOuter(Color4f(0.99, 1.0, 0.99, 1.0));
+		WindowsInsideInternalWindowUnfocusedBorder->setShadowInner(Color4f(0.80, 0.80, 0.85, 1.0));
+		WindowsInsideInternalWindowUnfocusedBorder->setShadowOuter(Color4f(0.99, 1.0, 0.99, 1.0));
+	endEditCP(WindowsInsideInternalWindowUnfocusedBorder);
+    
+	//Outside UnfocusedBorder
+	BevelBorderPtr WindowsOutsideInternalWindowUnfocusedBorder = BevelBorder::create();
+	beginEditCP(WindowsOutsideInternalWindowUnfocusedBorder);
+		WindowsOutsideInternalWindowUnfocusedBorder->setRaised(true);
+		WindowsOutsideInternalWindowUnfocusedBorder->setWidth(2);
+		WindowsOutsideInternalWindowUnfocusedBorder->setHighlightOuter(Color4f(0.80, 0.80, 0.85, 1.0));
+		WindowsOutsideInternalWindowUnfocusedBorder->setHighlightInner(Color4f(0.99, 1.0, 0.99, 1.0));
+		WindowsOutsideInternalWindowUnfocusedBorder->setShadowOuter(Color4f(0.80, 0.80, 0.85, 1.0));
+		WindowsOutsideInternalWindowUnfocusedBorder->setShadowInner(Color4f(0.99, 1.0, 0.99, 1.0));
+	endEditCP(WindowsOutsideInternalWindowUnfocusedBorder);
 
-	//Windows Frame
-	FramePtr WindowsFrame = Frame::create();
-	beginEditCP(WindowsFrame);
-		WindowsFrame->setEnabled(true);
-		WindowsFrame->setVisible(true);
+	//UnfocusedBorder
+	WindowBorderPtr WindowsInternalWindowUnfocusedBorder = WindowBorder::create();
+	beginEditCP(WindowsInternalWindowUnfocusedBorder);
+		WindowsInternalWindowUnfocusedBorder->setInnerBorder(WindowsInsideInternalWindowUnfocusedBorder);
+		WindowsInternalWindowUnfocusedBorder->setOuterBorder(WindowsOutsideInternalWindowUnfocusedBorder);
+	endEditCP(WindowsInternalWindowUnfocusedBorder);	
+
+	//InternalWindow Background
+	ColorUIBackgroundPtr WindowsInternalWindowBackground = ColorUIBackground::create();
+	beginEditCP(WindowsInternalWindowBackground);
+		WindowsInternalWindowBackground->setColor( Color4f(.9255,.9137,.8471, 1.0) );
+	endEditCP(WindowsInternalWindowBackground);
+	
+	//Decoration Buttons
+	//Windows IconifyMaximizeButtonBorder
+	RoundedCornerLineBorderPtr WindowsIconifyMaximizeButtonBorder = RoundedCornerLineBorder::create();
+	beginEditCP(WindowsIconifyMaximizeButtonBorder);
+		WindowsIconifyMaximizeButtonBorder->setColor( Color4f(0.42, 0.46, 0.56 ,1.0) );
+		WindowsIconifyMaximizeButtonBorder->setWidth(1);
+        WindowsIconifyMaximizeButtonBorder->setCornerRadius(3);
+	endEditCP(WindowsIconifyMaximizeButtonBorder);
+
+	//Windows ActiveIconifyMaximizeButtonBorder
+	RoundedCornerLineBorderPtr ActiveWindowsIconifyMaximizeButtonBorder = RoundedCornerLineBorder::create();
+	beginEditCP(ActiveWindowsIconifyMaximizeButtonBorder);
+		ActiveWindowsIconifyMaximizeButtonBorder->setColor( Color4f(0.31, 0.35, 0.44 ,1.0) );
+		ActiveWindowsIconifyMaximizeButtonBorder->setWidth(1);
+        ActiveWindowsIconifyMaximizeButtonBorder->setCornerRadius(3);
+	endEditCP(ActiveWindowsIconifyMaximizeButtonBorder);
+
+	//Windows DisabledIconifyMaximizeButtonBorder
+	RoundedCornerLineBorderPtr DisabledWindowsIconifyMaximizeButtonBorder = RoundedCornerLineBorder::create();
+	beginEditCP(DisabledWindowsIconifyMaximizeButtonBorder);
+		DisabledWindowsIconifyMaximizeButtonBorder->setColor( Color4f(0.66, 0.68, 0.73 ,1.0) );
+		DisabledWindowsIconifyMaximizeButtonBorder->setWidth(1);
+        DisabledWindowsIconifyMaximizeButtonBorder->setCornerRadius(3);
+	endEditCP(DisabledWindowsIconifyMaximizeButtonBorder);
+
+	//Windows  IconifyMaximizeButtonBackground
+	GradientUIBackgroundPtr WindowsIconifyMaximizeButtonBackground = GradientUIBackground::create();
+	beginEditCP(WindowsIconifyMaximizeButtonBackground);
+		WindowsIconifyMaximizeButtonBackground->setColorStart(Color4f(1.0, 1.0, 1.0, 1.0));
+		WindowsIconifyMaximizeButtonBackground->setColorEnd(Color4f(0.52, 0.54, 0.69, 1.0));
+		WindowsIconifyMaximizeButtonBackground->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(WindowsIconifyMaximizeButtonBackground);
+
+	//Windows  ActiveIconifyMaximizeButtonBackground
+	GradientUIBackgroundPtr ActiveWindowsIconifyMaximizeButtonBackground = GradientUIBackground::create();
+	beginEditCP(ActiveWindowsIconifyMaximizeButtonBackground);
+		ActiveWindowsIconifyMaximizeButtonBackground->setColorStart(Color4f(0.55, 0.56, 0.68, 1.0));
+		ActiveWindowsIconifyMaximizeButtonBackground->setColorEnd(Color4f(1.0, 0.98, 1.0, 1.0));
+		ActiveWindowsIconifyMaximizeButtonBackground->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(ActiveWindowsIconifyMaximizeButtonBackground);
+	
+	//Windows  DisabledIconifyMaximizeButtonBackground
+	GradientUIBackgroundPtr WindowsDisabledIconifyMaximizeButtonBackground = GradientUIBackground::create();
+	beginEditCP(WindowsDisabledIconifyMaximizeButtonBackground);
+		WindowsDisabledIconifyMaximizeButtonBackground->setColorStart(Color4f(1.0, 1.0, 1.0, 1.0));
+		WindowsDisabledIconifyMaximizeButtonBackground->setColorEnd(Color4f(0.74, 0.75, 0.82, 1.0));
+		WindowsDisabledIconifyMaximizeButtonBackground->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(WindowsDisabledIconifyMaximizeButtonBackground);
+
+	//IconifyButton DrawObject
+	PolygonUIDrawObjectPtr WindowsIconifyButtonDrawObject1 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsIconifyButtonDrawObject1);
+		WindowsIconifyButtonDrawObject1->setColor(Color4f(1.0,1.0,1.0,1.0));
+		WindowsIconifyButtonDrawObject1->setOpacity(1.0);
+        WindowsIconifyButtonDrawObject1->getVerticies().addValue(Pnt2s(0,0));
+        WindowsIconifyButtonDrawObject1->getVerticies().addValue(Pnt2s(0,4));
+        WindowsIconifyButtonDrawObject1->getVerticies().addValue(Pnt2s(8,4));
+        WindowsIconifyButtonDrawObject1->getVerticies().addValue(Pnt2s(8,0));
+	endEditCP(WindowsIconifyButtonDrawObject1);
+	
+	PolygonUIDrawObjectPtr WindowsIconifyButtonDrawObject2 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsIconifyButtonDrawObject2);
+		WindowsIconifyButtonDrawObject2->setColor(Color4f(0.15,0.15,0.21,1.0));
+		WindowsIconifyButtonDrawObject2->setOpacity(1.0);
+        WindowsIconifyButtonDrawObject2->getVerticies().addValue(Pnt2s(1,0));
+        WindowsIconifyButtonDrawObject2->getVerticies().addValue(Pnt2s(1,1));
+        WindowsIconifyButtonDrawObject2->getVerticies().addValue(Pnt2s(8,1));
+        WindowsIconifyButtonDrawObject2->getVerticies().addValue(Pnt2s(8,0));
+	endEditCP(WindowsIconifyButtonDrawObject2);
+	
+	PolygonUIDrawObjectPtr WindowsIconifyButtonDrawObject3 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsIconifyButtonDrawObject3);
+		WindowsIconifyButtonDrawObject3->setColor(Color4f(0.15,0.15,0.21,1.0));
+		WindowsIconifyButtonDrawObject3->setOpacity(1.0);
+        WindowsIconifyButtonDrawObject3->getVerticies().addValue(Pnt2s(7,1));
+        WindowsIconifyButtonDrawObject3->getVerticies().addValue(Pnt2s(7,3));
+        WindowsIconifyButtonDrawObject3->getVerticies().addValue(Pnt2s(8,3));
+        WindowsIconifyButtonDrawObject3->getVerticies().addValue(Pnt2s(8,1));
+	endEditCP(WindowsIconifyButtonDrawObject3);
+	
+	PolygonUIDrawObjectPtr WindowsIconifyButtonDrawObject4 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsIconifyButtonDrawObject4);
+		WindowsIconifyButtonDrawObject4->setColor(Color4f(0.43,0.43,0.56,1.0));
+		WindowsIconifyButtonDrawObject4->setOpacity(1.0);
+        WindowsIconifyButtonDrawObject4->getVerticies().addValue(Pnt2s(1,1));
+        WindowsIconifyButtonDrawObject4->getVerticies().addValue(Pnt2s(1,3));
+        WindowsIconifyButtonDrawObject4->getVerticies().addValue(Pnt2s(7,3));
+        WindowsIconifyButtonDrawObject4->getVerticies().addValue(Pnt2s(7,1));
+	endEditCP(WindowsIconifyButtonDrawObject4);
+
+	UIDrawObjectCanvasPtr WindowsIconifyButtonCanvas = UIDrawObjectCanvas::create();
+	beginEditCP(WindowsIconifyButtonCanvas);
+	   WindowsIconifyButtonCanvas->getDrawObjects().addValue(WindowsIconifyButtonDrawObject1);
+	   WindowsIconifyButtonCanvas->getDrawObjects().addValue(WindowsIconifyButtonDrawObject2);
+	   WindowsIconifyButtonCanvas->getDrawObjects().addValue(WindowsIconifyButtonDrawObject3);
+	   WindowsIconifyButtonCanvas->getDrawObjects().addValue(WindowsIconifyButtonDrawObject4);
+	endEditCP(WindowsIconifyButtonCanvas);
+
+	//Iconify Button
+	ButtonPtr WindowsInternalWindowTitlebarIconifyButton = Button::create();
+	beginEditCP(WindowsInternalWindowTitlebarIconifyButton);
+		WindowsInternalWindowTitlebarIconifyButton->setPreferredSize(Pnt2s(21, 21));
 		
-		WindowsFrame->setConstraints(NullFC);
-		//Sizes
-		WindowsFrame->setMinSize(Vec2s(0,0));
-		WindowsFrame->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsFrame->setPreferredSize(Vec2s(100,100));
-
 		//Border
-		WindowsFrame->setBorder(WindowsFrameBorder);
+		WindowsInternalWindowTitlebarIconifyButton->setBorder(WindowsIconifyMaximizeButtonBorder);
+		WindowsInternalWindowTitlebarIconifyButton->setRolloverBorder(WindowsIconifyMaximizeButtonBorder);
+		WindowsInternalWindowTitlebarIconifyButton->setFocusedBorder(WindowsIconifyMaximizeButtonBorder);
+		WindowsInternalWindowTitlebarIconifyButton->setDisabledBorder(DisabledWindowsIconifyMaximizeButtonBorder);
+		WindowsInternalWindowTitlebarIconifyButton->setActiveBorder(ActiveWindowsIconifyMaximizeButtonBorder);
 		
 		//Background
-		WindowsFrame->setBackground(WindowsFrameBackground);
+		WindowsInternalWindowTitlebarIconifyButton->setBackground(WindowsIconifyMaximizeButtonBackground);
+		WindowsInternalWindowTitlebarIconifyButton->setRolloverBackground(WindowsIconifyMaximizeButtonBackground);
+		WindowsInternalWindowTitlebarIconifyButton->setFocusedBackground(WindowsIconifyMaximizeButtonBackground);
+		WindowsInternalWindowTitlebarIconifyButton->setDisabledBackground(WindowsDisabledIconifyMaximizeButtonBackground);
+		WindowsInternalWindowTitlebarIconifyButton->setActiveBackground(ActiveWindowsIconifyMaximizeButtonBackground);
+
+		//DrawObjects
+        WindowsInternalWindowTitlebarIconifyButton->setDrawObject(WindowsIconifyButtonCanvas);
+        WindowsInternalWindowTitlebarIconifyButton->setActiveDrawObject(WindowsIconifyButtonCanvas);
+        WindowsInternalWindowTitlebarIconifyButton->setFocusedDrawObject(WindowsIconifyButtonCanvas);
+        WindowsInternalWindowTitlebarIconifyButton->setRolloverDrawObject(WindowsIconifyButtonCanvas);
+        WindowsInternalWindowTitlebarIconifyButton->setDisabledDrawObject(WindowsIconifyButtonCanvas);
+
+        WindowsInternalWindowTitlebarIconifyButton->setActiveOffset(Vec2s(0,0));
+		WindowsInternalWindowTitlebarIconifyButton->setVerticalAlignment(0.85f);
+		WindowsInternalWindowTitlebarIconifyButton->setHorizontalAlignment(0.25f);
+	endEditCP(WindowsInternalWindowTitlebarIconifyButton);
+
+	//MaximizeButton
+	ButtonPtr WindowsInternalWindowTitlebarMaximizeButton = Button::create();
+	beginEditCP(WindowsInternalWindowTitlebarMaximizeButton);
+		WindowsInternalWindowTitlebarMaximizeButton->setPreferredSize(Pnt2s(21, 21));
+		
+		//Border
+		WindowsInternalWindowTitlebarMaximizeButton->setBorder(WindowsIconifyMaximizeButtonBorder);
+		WindowsInternalWindowTitlebarMaximizeButton->setRolloverBorder(WindowsIconifyMaximizeButtonBorder);
+		WindowsInternalWindowTitlebarMaximizeButton->setFocusedBorder(WindowsIconifyMaximizeButtonBorder);
+		WindowsInternalWindowTitlebarMaximizeButton->setDisabledBorder(DisabledWindowsIconifyMaximizeButtonBorder);
+		WindowsInternalWindowTitlebarMaximizeButton->setActiveBorder(ActiveWindowsIconifyMaximizeButtonBorder);
+		
+		//Background
+		WindowsInternalWindowTitlebarMaximizeButton->setBackground(WindowsIconifyMaximizeButtonBackground);
+		WindowsInternalWindowTitlebarMaximizeButton->setRolloverBackground(WindowsIconifyMaximizeButtonBackground);
+		WindowsInternalWindowTitlebarMaximizeButton->setFocusedBackground(WindowsIconifyMaximizeButtonBackground);
+		WindowsInternalWindowTitlebarMaximizeButton->setDisabledBackground(WindowsDisabledIconifyMaximizeButtonBackground);
+		WindowsInternalWindowTitlebarMaximizeButton->setActiveBackground(ActiveWindowsIconifyMaximizeButtonBackground);
+		
+        WindowsInternalWindowTitlebarMaximizeButton->setActiveOffset(Vec2s(0,0));
+	endEditCP(WindowsInternalWindowTitlebarMaximizeButton);
+
+	//Windows CloseButtonBorder
+	RoundedCornerLineBorderPtr WindowsCloseButtonBorder = RoundedCornerLineBorder::create();
+	beginEditCP(WindowsCloseButtonBorder);
+		WindowsCloseButtonBorder->setColor( Color4f(0.65, 0.22, 0.27 ,1.0) );
+		WindowsCloseButtonBorder->setWidth(1);
+        WindowsCloseButtonBorder->setCornerRadius(3);
+	endEditCP(WindowsCloseButtonBorder);
+	
+	//Windows ActiveCloseButtonBorder
+	RoundedCornerLineBorderPtr ActiveWindowsCloseButtonBorder = RoundedCornerLineBorder::create();
+	beginEditCP(ActiveWindowsCloseButtonBorder);
+		ActiveWindowsCloseButtonBorder->setColor( Color4f(0.75, 0.22, 0.27 ,1.0) );
+		ActiveWindowsCloseButtonBorder->setWidth(1);
+        ActiveWindowsCloseButtonBorder->setCornerRadius(3);
+	endEditCP(ActiveWindowsCloseButtonBorder);
+
+	//Windows DisabledCloseButtonBorder
+	RoundedCornerLineBorderPtr DisabledWindowsCloseButtonBorder = RoundedCornerLineBorder::create();
+	beginEditCP(DisabledWindowsCloseButtonBorder);
+		DisabledWindowsCloseButtonBorder->setColor( Color4f(0.76, 0.56, 0.58 ,1.0) );
+		DisabledWindowsCloseButtonBorder->setWidth(1);
+        DisabledWindowsCloseButtonBorder->setCornerRadius(3);
+	endEditCP(DisabledWindowsCloseButtonBorder);
+
+	//Windows  CloseButtonBackground
+	GradientUIBackgroundPtr WindowsCloseButtonBackground = GradientUIBackground::create();
+	beginEditCP(WindowsCloseButtonBackground);
+		WindowsCloseButtonBackground->setColorStart(Color4f(0.96, 0.56, 0.52, 1.0));
+		WindowsCloseButtonBackground->setColorEnd(Color4f(0.78, 0.33, 0.36, 1.0));
+		WindowsCloseButtonBackground->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(WindowsCloseButtonBackground);
+
+	//Windows  ActiveCloseButtonBackground
+	GradientUIBackgroundPtr ActiveWindowsCloseButtonBackground = GradientUIBackground::create();
+	beginEditCP(ActiveWindowsCloseButtonBackground);
+		ActiveWindowsCloseButtonBackground->setColorStart(Color4f(0.92, 0.41, 0.36, 1.0));
+		ActiveWindowsCloseButtonBackground->setColorEnd(Color4f(1.0, 0.64, 0.54, 1.0));
+		ActiveWindowsCloseButtonBackground->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(ActiveWindowsCloseButtonBackground);
+	
+	//Windows  DisabledCloseButtonBackground
+	GradientUIBackgroundPtr WindowsDisabledCloseButtonBackground = GradientUIBackground::create();
+	beginEditCP(WindowsDisabledCloseButtonBackground);
+		WindowsDisabledCloseButtonBackground->setColorStart(Color4f(0.94, 0.76, 0.75, 1.0));
+		WindowsDisabledCloseButtonBackground->setColorEnd(Color4f(0.83, 0.63, 0.64, 1.0));
+		WindowsDisabledCloseButtonBackground->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(WindowsDisabledCloseButtonBackground);
+
+	
+	PolygonUIDrawObjectPtr WindowsCloseButtonDrawObject1 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsCloseButtonDrawObject1);
+		WindowsCloseButtonDrawObject1->setColor(Color4f(0.35,0.11,0.19,1.0));
+		WindowsCloseButtonDrawObject1->setOpacity(1.0);
+        WindowsCloseButtonDrawObject1->getVerticies().addValue(Pnt2s(1,0));
+        WindowsCloseButtonDrawObject1->getVerticies().addValue(Pnt2s(11,11));
+        WindowsCloseButtonDrawObject1->getVerticies().addValue(Pnt2s(13,11));
+        WindowsCloseButtonDrawObject1->getVerticies().addValue(Pnt2s(3,0));
+	endEditCP(WindowsCloseButtonDrawObject1);
+	
+	PolygonUIDrawObjectPtr WindowsCloseButtonDrawObject2 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsCloseButtonDrawObject2);
+		WindowsCloseButtonDrawObject2->setColor(Color4f(0.35,0.11,0.19,1.0));
+		WindowsCloseButtonDrawObject2->setOpacity(1.0);
+        WindowsCloseButtonDrawObject2->getVerticies().addValue(Pnt2s(0,10));
+        WindowsCloseButtonDrawObject2->getVerticies().addValue(Pnt2s(2,10));
+        WindowsCloseButtonDrawObject2->getVerticies().addValue(Pnt2s(12,0));
+        WindowsCloseButtonDrawObject2->getVerticies().addValue(Pnt2s(10,0));
+	endEditCP(WindowsCloseButtonDrawObject2);
+
+	PolygonUIDrawObjectPtr WindowsCloseButtonDrawObject3 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsCloseButtonDrawObject3);
+		WindowsCloseButtonDrawObject3->setColor(Color4f(1.0,1.0,1.0,1.0));
+		WindowsCloseButtonDrawObject3->setOpacity(1.0);
+        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2s(1,1));
+        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2s(1,3));
+        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2s(10,12));
+        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2s(12,12));
+        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2s(12,10));
+        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2s(3,1));
+	endEditCP(WindowsCloseButtonDrawObject3);
+	
+	PolygonUIDrawObjectPtr WindowsCloseButtonDrawObject4 = PolygonUIDrawObject::create();
+	beginEditCP(WindowsCloseButtonDrawObject4);
+		WindowsCloseButtonDrawObject4->setColor(Color4f(1.0,1.0,1.0,1.0));
+		WindowsCloseButtonDrawObject4->setOpacity(1.0);
+        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2s(1,12));
+        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2s(3,12));
+        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2s(12,3));
+        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2s(12,1));
+        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2s(10,1));
+        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2s(1,10));
+	endEditCP(WindowsCloseButtonDrawObject4);
+
+	UIDrawObjectCanvasPtr WindowsCloseButtonCanvas = UIDrawObjectCanvas::create();
+	beginEditCP(WindowsCloseButtonCanvas);
+	   WindowsCloseButtonCanvas->getDrawObjects().addValue(WindowsCloseButtonDrawObject1);
+	   WindowsCloseButtonCanvas->getDrawObjects().addValue(WindowsCloseButtonDrawObject2);
+	   WindowsCloseButtonCanvas->getDrawObjects().addValue(WindowsCloseButtonDrawObject3);
+	   WindowsCloseButtonCanvas->getDrawObjects().addValue(WindowsCloseButtonDrawObject4);
+	endEditCP(WindowsCloseButtonCanvas);
+
+	//Windows CloseButton
+	ButtonPtr WindowsInternalWindowTitlebarCloseButton = Button::create();
+	beginEditCP(WindowsInternalWindowTitlebarCloseButton);
+		WindowsInternalWindowTitlebarCloseButton->setPreferredSize(Pnt2s(21, 21));
+
+		//Border
+		WindowsInternalWindowTitlebarCloseButton->setBorder(WindowsCloseButtonBorder);
+		WindowsInternalWindowTitlebarCloseButton->setRolloverBorder(WindowsCloseButtonBorder);
+		WindowsInternalWindowTitlebarCloseButton->setFocusedBorder(WindowsCloseButtonBorder);
+		WindowsInternalWindowTitlebarCloseButton->setDisabledBorder(DisabledWindowsCloseButtonBorder);
+		WindowsInternalWindowTitlebarCloseButton->setActiveBorder(ActiveWindowsCloseButtonBorder);
+		
+		//Background
+		WindowsInternalWindowTitlebarCloseButton->setBackground(WindowsCloseButtonBackground);
+		WindowsInternalWindowTitlebarCloseButton->setRolloverBackground(WindowsCloseButtonBackground);
+		WindowsInternalWindowTitlebarCloseButton->setFocusedBackground(WindowsCloseButtonBackground);
+		WindowsInternalWindowTitlebarCloseButton->setDisabledBackground(WindowsDisabledCloseButtonBackground);
+		WindowsInternalWindowTitlebarCloseButton->setActiveBackground(ActiveWindowsCloseButtonBackground);
+		
+		//DrawObjects
+        WindowsInternalWindowTitlebarCloseButton->setDrawObject(WindowsCloseButtonCanvas);
+        WindowsInternalWindowTitlebarCloseButton->setActiveDrawObject(WindowsCloseButtonCanvas);
+        WindowsInternalWindowTitlebarCloseButton->setFocusedDrawObject(WindowsCloseButtonCanvas);
+        WindowsInternalWindowTitlebarCloseButton->setRolloverDrawObject(WindowsCloseButtonCanvas);
+        WindowsInternalWindowTitlebarCloseButton->setDisabledDrawObject(WindowsCloseButtonCanvas);
+
+        WindowsInternalWindowTitlebarCloseButton->setActiveOffset(Vec2s(0,0));
+		WindowsInternalWindowTitlebarCloseButton->setVerticalAlignment(0.5f);
+		WindowsInternalWindowTitlebarCloseButton->setHorizontalAlignment(0.5f);
+	endEditCP(WindowsInternalWindowTitlebarCloseButton);
+
+	LabelPtr WindowsInternalWindowTitlebarTitleLabel = Label::create();
+	beginEditCP(WindowsInternalWindowTitlebarTitleLabel);
+		WindowsInternalWindowTitlebarTitleLabel->setPreferredSize(Pnt2s(23, 23));
+		//Border
+		WindowsInternalWindowTitlebarTitleLabel->setBorder(WindowsEmptyBorder);
+		WindowsInternalWindowTitlebarTitleLabel->setRolloverBorder(WindowsEmptyBorder);
+		WindowsInternalWindowTitlebarTitleLabel->setFocusedBorder(WindowsEmptyBorder);
+		WindowsInternalWindowTitlebarTitleLabel->setDisabledBorder(WindowsEmptyBorder);
+		
+		//Background
+		WindowsInternalWindowTitlebarTitleLabel->setBackground(WindowsEmptyBackground);
+		WindowsInternalWindowTitlebarTitleLabel->setRolloverBackground(WindowsEmptyBackground);
+		WindowsInternalWindowTitlebarTitleLabel->setFocusedBackground(WindowsEmptyBackground);
+		WindowsInternalWindowTitlebarTitleLabel->setDisabledBackground(WindowsEmptyBackground);
+	endEditCP(WindowsInternalWindowTitlebarTitleLabel);
+
+	//Titlebar background
+	GradientUIBackgroundPtr WIndowsInternalWindowTitlebarBackground = GradientUIBackground::create();
+	beginEditCP(WIndowsInternalWindowTitlebarBackground);
+		WIndowsInternalWindowTitlebarBackground->setColorStart(Color4f(0.64, 0.64, 0.75, 1.0));
+		WIndowsInternalWindowTitlebarBackground->setColorEnd(Color4f(0.89, 0.89, 0.89, 1.0));
+		WIndowsInternalWindowTitlebarBackground->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(WIndowsInternalWindowTitlebarBackground);
+	//Titlebar DisabledBackground
+	GradientUIBackgroundPtr WindowsInternalWindowTitlebarDisabledBackground = GradientUIBackground::create();
+	beginEditCP(WindowsInternalWindowTitlebarDisabledBackground);
+		WindowsInternalWindowTitlebarDisabledBackground->setColorStart(Color4f(0.84, 0.84, 0.89, 1.0));
+		WindowsInternalWindowTitlebarDisabledBackground->setColorEnd(Color4f(0.99, 1.0, 0.99, 1.0));
+		WindowsInternalWindowTitlebarDisabledBackground->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(WindowsInternalWindowTitlebarDisabledBackground);
+
+
+	//Titlebar
+	TitlebarPtr WindowsInternalWindowTitlebar = Titlebar::create();
+	beginEditCP(WindowsInternalWindowTitlebar);
+		WindowsInternalWindowTitlebar->setEnabled(true);
+		WindowsInternalWindowTitlebar->setVisible(true);
+		
+		WindowsInternalWindowTitlebar->setConstraints(NullFC);
+		//Sizes
+		WindowsInternalWindowTitlebar->setMinSize(Vec2s(0,0));
+		WindowsInternalWindowTitlebar->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsInternalWindowTitlebar->setPreferredSize(Vec2s(1, 23));
+
+		//Border
+		WindowsInternalWindowTitlebar->setBorder(WindowsEmptyBorder);
+		WindowsInternalWindowTitlebar->setRolloverBorder(WindowsEmptyBorder);
+		WindowsInternalWindowTitlebar->setFocusedBorder(WindowsEmptyBorder);
+		WindowsInternalWindowTitlebar->setDisabledBorder(WindowsEmptyBorder);
+		
+		//Background
+		WindowsInternalWindowTitlebar->setBackground(WIndowsInternalWindowTitlebarBackground);
+		WindowsInternalWindowTitlebar->setRolloverBackground(WIndowsInternalWindowTitlebarBackground);
+		WindowsInternalWindowTitlebar->setFocusedBackground(WIndowsInternalWindowTitlebarBackground);
+		WindowsInternalWindowTitlebar->setDisabledBackground(WindowsInternalWindowTitlebarDisabledBackground);
 		
 		//Opacity
-		WindowsFrame->setOpacity(1.0);
-	endEditCP(WindowsFrame);
+		WindowsInternalWindowTitlebar->setOpacity(1.0);
+
+		//InternalWindow
+		WindowsInternalWindowTitlebar->setIconifyButton(WindowsInternalWindowTitlebarIconifyButton);
+		WindowsInternalWindowTitlebar->setMaximizeButton(WindowsInternalWindowTitlebarMaximizeButton);
+		WindowsInternalWindowTitlebar->setCloseButton(WindowsInternalWindowTitlebarCloseButton);
+		WindowsInternalWindowTitlebar->setTitleLabel(WindowsInternalWindowTitlebarTitleLabel);
+		WindowsInternalWindowTitlebar->setFrameIcon(NullFC);
+		WindowsInternalWindowTitlebar->setDrawClose(true);
+		WindowsInternalWindowTitlebar->setDrawMaximize(true);
+		WindowsInternalWindowTitlebar->setDrawIconify(true);
+
+	endEditCP(WindowsInternalWindowTitlebar);
+
+	//Windows InternalWindow
+	InternalWindowPtr WindowsInternalWindow = InternalWindow::create();
+	beginEditCP(WindowsInternalWindow);
+		WindowsInternalWindow->setEnabled(true);
+		WindowsInternalWindow->setVisible(true);
+		
+		WindowsInternalWindow->setConstraints(NullFC);
+		//Sizes
+		WindowsInternalWindow->setMinSize(Vec2s(50,50));
+		WindowsInternalWindow->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsInternalWindow->setPreferredSize(Vec2s(100,100));
+
+		//Border
+		WindowsInternalWindow->setBorder(WindowsInternalWindowUnfocusedBorder);
+		WindowsInternalWindow->setRolloverBorder(WindowsInternalWindowUnfocusedBorder);
+		WindowsInternalWindow->setFocusedBorder(WindowsInternalWindowFocusedBorder);
+		WindowsInternalWindow->setDisabledBorder(WindowsInternalWindowUnfocusedBorder);
+		
+		//Background
+		WindowsInternalWindow->setBackground(WindowsInternalWindowBackground);
+		WindowsInternalWindow->setRolloverBackground(WindowsInternalWindowBackground);
+		WindowsInternalWindow->setFocusedBackground(WindowsInternalWindowBackground);
+		WindowsInternalWindow->setDisabledBackground(WindowsInternalWindowBackground);
+		
+		//Opacity
+		WindowsInternalWindow->setOpacity(1.0);
+
+		//AbstractWindow
+		WindowsInternalWindow->setDrawingSurface(NullFC);
+		WindowsInternalWindow->setClosable(true);
+		WindowsInternalWindow->setIconable(true);
+		WindowsInternalWindow->setMaximizable(true);
+		WindowsInternalWindow->setResizable(true);
+		WindowsInternalWindow->setTitle(std::string(""));
+		WindowsInternalWindow->setDesktopIcon(NullFC);
+		WindowsInternalWindow->setAllwaysOnTop(false);
+		WindowsInternalWindow->setDrawTitlebar(true);
+		WindowsInternalWindow->setDrawDecorations(true);
+		WindowsInternalWindow->setAlignmentInDrawingSurface(Vec2f(-1.0f,-1.0f));
+		WindowsInternalWindow->setScalingInDrawingSurface(Vec2f(-1.0f,-1.0f));
+		WindowsInternalWindow->setResizeModifyCursorWidth(4);
+
+		//InternalWindow
+		WindowsInternalWindow->setTitlebar(WindowsInternalWindowTitlebar);
+
+	endEditCP(WindowsInternalWindow);
 	
-	Frame::getClassType().setPrototype(WindowsFrame);
+	InternalWindow::getClassType().setPrototype(WindowsInternalWindow);
 	
 	//************************** Panel *****************************
 	//Windows PanelBorder
@@ -539,10 +970,10 @@ void WindowsLookAndFeel::init(void)
 		WindowsPanel->setPreferredSize(Vec2s(100,100));
 
 		//Border
-		WindowsPanel->setBorder(WindowsPanelBorder);
+		WindowsPanel->setBorders(WindowsPanelBorder);
 		
 		//Background
-		WindowsPanel->setBackground(WindowsPanelBackground);
+		WindowsPanel->setBackgrounds(WindowsPanelBackground);
 		
 		//Opacity
 		WindowsPanel->setOpacity(1.0);
@@ -595,10 +1026,10 @@ void WindowsLookAndFeel::init(void)
 		WindowsImageComponent->setSize(Vec2s(0,0));
 
 		//Border
-		WindowsImageComponent->setBorder(WindowsImageComponentBorder);
+		WindowsImageComponent->setBorders(WindowsImageComponentBorder);
 		
 		//Background
-		WindowsImageComponent->setBackground(WindowsImageComponentBackground);
+		WindowsImageComponent->setBackgrounds(WindowsImageComponentBackground);
 		
 		//Opacity
 		WindowsImageComponent->setOpacity(1.0);
@@ -1189,10 +1620,14 @@ void WindowsLookAndFeel::init(void)
 
 		//background
 		WindowsTextField->setBackground(WindowsTextFieldBackground);
+		WindowsTextField->setRolloverBackground(WindowsTextFieldBackground);
+		WindowsTextField->setFocusedBackground(WindowsTextFieldBackground);
 		WindowsTextField->setDisabledBackground(WindowsDisabledTextFieldBackground);
 
 		//Border
 		WindowsTextField->setBorder(WindowsTextFieldBorder);
+		WindowsTextField->setRolloverBorder(WindowsTextFieldBorder);
+		WindowsTextField->setFocusedBorder(WindowsTextFieldBorder);
 		WindowsTextField->setDisabledBorder(WindowsTextFieldBorder);
 
 		WindowsTextField->setHorizontalAlignment(0.0);
@@ -1240,10 +1675,14 @@ void WindowsLookAndFeel::init(void)
 
 		//background
 		WindowsPasswordField->setBackground(WindowsPasswordFieldBackground);
+		WindowsPasswordField->setRolloverBackground(WindowsPasswordFieldBackground);
+		WindowsPasswordField->setFocusedBackground(WindowsPasswordFieldBackground);
 		WindowsPasswordField->setDisabledBackground(WindowsDisabledPasswordFieldBackground);
 
 		//Border
 		WindowsPasswordField->setBorder(WindowsPasswordFieldBorder);
+		WindowsPasswordField->setRolloverBorder(WindowsPasswordFieldBorder);
+		WindowsPasswordField->setFocusedBorder(WindowsPasswordFieldBorder);
 		WindowsPasswordField->setDisabledBorder(WindowsPasswordFieldBorder);
 
 	endEditCP(WindowsPasswordField);
@@ -1286,10 +1725,14 @@ void WindowsLookAndFeel::init(void)
 
 		//background
 		WindowsTextArea->setBackground(WindowsTextAreaBackground);
+		WindowsTextArea->setRolloverBackground(WindowsTextAreaBackground);
+		WindowsTextArea->setFocusedBackground(WindowsTextAreaBackground);
 		WindowsTextArea->setDisabledBackground(WindowsDisabledTextAreaBackground);
 
 		//Border
 		WindowsTextArea->setBorder(WindowsTextAreaBorder);
+		WindowsTextArea->setRolloverBorder(WindowsTextAreaBorder);
+		WindowsTextArea->setFocusedBorder(WindowsTextAreaBorder);
 		WindowsTextArea->setDisabledBorder(WindowsTextAreaBorder);
 
 	endEditCP(WindowsTextArea);
@@ -1575,9 +2018,16 @@ void WindowsLookAndFeel::init(void)
 
 		//Border
 		WindowsPopupMenu->setBorder(WindowsPopupMenuBorder);
+        WindowsPopupMenu->setDisabledBorder(WindowsPopupMenuBorder);
+        WindowsPopupMenu->setFocusedBorder(WindowsPopupMenuBorder);
+        WindowsPopupMenu->setRolloverBorder(WindowsPopupMenuBorder);
+        
 		
 		//Background
-		WindowsPopupMenu->setBackground(WindowsPopupMenuBackground);
+        WindowsPopupMenu->setBackground(WindowsPopupMenuBackground);
+        WindowsPopupMenu->setDisabledBackground(WindowsPopupMenuBackground);
+        WindowsPopupMenu->setFocusedBackground(WindowsPopupMenuBackground);
+        WindowsPopupMenu->setRolloverBackground(WindowsPopupMenuBackground);
 		
 		//Opacity
 		WindowsPopupMenu->setOpacity(1.0);
@@ -1615,9 +2065,16 @@ void WindowsLookAndFeel::init(void)
 
 		//Border
 		WindowsMenuBar->setBorder(WindowsMenuBarBorder);
+        WindowsMenuBar->setDisabledBorder(WindowsMenuBarBorder);
+        WindowsMenuBar->setFocusedBorder(WindowsMenuBarBorder);
+        WindowsMenuBar->setRolloverBorder(WindowsMenuBarBorder);
+        
 		
 		//Background
-		WindowsMenuBar->setBackground(WindowsMenuBarBackground);
+        WindowsMenuBar->setBackground(WindowsMenuBarBackground);
+        WindowsMenuBar->setDisabledBackground(WindowsMenuBarBackground);
+        WindowsMenuBar->setFocusedBackground(WindowsMenuBarBackground);
+        WindowsMenuBar->setRolloverBackground(WindowsMenuBarBackground);
 		
 		//Opacity
 		WindowsMenuBar->setOpacity(1.0);
@@ -2808,19 +3265,19 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsSpinnerNextButtonDrawObject1);
 		WindowsSpinnerNextButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsSpinnerNextButtonDrawObject1->setOpacity(1.0);
-        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2s(1,4));
-        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2s(5,0));
-        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2s(5,2));
-        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2s(2,5));
+        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2s(0,4));
+        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2s(4,0));
+        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2s(4,2));
+        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2s(1,5));
 	endEditCP(WindowsSpinnerNextButtonDrawObject1);
 	PolygonUIDrawObjectPtr WindowsSpinnerNextButtonDrawObject2 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsSpinnerNextButtonDrawObject2);
 		WindowsSpinnerNextButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsSpinnerNextButtonDrawObject2->setOpacity(1.0);
-        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2s(5,0));
-        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2s(9,4));
-        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2s(8,5));
-        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2s(5,2));
+        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2s(4,0));
+        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2s(8,4));
+        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2s(7,5));
+        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2s(4,2));
 	endEditCP(WindowsSpinnerNextButtonDrawObject2);
     
 	UIDrawObjectCanvasPtr WindowsSpinnerNextButtonCanvas = UIDrawObjectCanvas::create();
@@ -2854,26 +3311,29 @@ void WindowsLookAndFeel::init(void)
         WindowsSpinnerNextButton->setFocusedDrawObject(WindowsSpinnerNextButtonCanvas);
         WindowsSpinnerNextButton->setRolloverDrawObject(WindowsSpinnerNextButtonCanvas);
         WindowsSpinnerNextButton->setDisabledDrawObject(WindowsSpinnerNextButtonCanvas);
-    beginEditCP(WindowsSpinnerNextButton);
+
+		WindowsSpinnerNextButton->setVerticalAlignment(0.5f);
+		WindowsSpinnerNextButton->setHorizontalAlignment(0.5f);
+    endEditCP(WindowsSpinnerNextButton);
 
     //Spinner Previous Draw Object
 	PolygonUIDrawObjectPtr WindowsSpinnerPreviousButtonDrawObject1 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsSpinnerPreviousButtonDrawObject1);
 		WindowsSpinnerPreviousButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsSpinnerPreviousButtonDrawObject1->setOpacity(1.0);
-        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2s(2,0));
-        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2s(5,3));
-        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2s(5,5));
-        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2s(1,1));
+        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2s(1,0));
+        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2s(4,3));
+        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2s(4,5));
+        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2s(0,1));
 	endEditCP(WindowsSpinnerPreviousButtonDrawObject1);
 	PolygonUIDrawObjectPtr WindowsSpinnerPreviousButtonDrawObject2 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsSpinnerPreviousButtonDrawObject2);
 		WindowsSpinnerPreviousButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsSpinnerPreviousButtonDrawObject2->setOpacity(1.0);
-        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2s(5,3));
-        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2s(8,0));
-        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2s(9,1));
-        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2s(5,5));
+        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2s(4,3));
+        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2s(7,0));
+        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2s(8,1));
+        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2s(4,5));
 	endEditCP(WindowsSpinnerPreviousButtonDrawObject2);
     
 	UIDrawObjectCanvasPtr WindowsSpinnerPreviousButtonCanvas = UIDrawObjectCanvas::create();
@@ -2907,7 +3367,9 @@ void WindowsLookAndFeel::init(void)
         WindowsSpinnerPreviousButton->setRolloverDrawObject(WindowsSpinnerPreviousButtonCanvas);
         WindowsSpinnerPreviousButton->setDisabledDrawObject(WindowsSpinnerPreviousButtonCanvas);
 
-    beginEditCP(WindowsSpinnerPreviousButton);
+		WindowsSpinnerPreviousButton->setVerticalAlignment(0.5f);
+		WindowsSpinnerPreviousButton->setHorizontalAlignment(0.5f);
+    endEditCP(WindowsSpinnerPreviousButton);
 
 	//Windows SpinnerBorder
 	EmptyBorderPtr WindowsSpinnerBorder = EmptyBorder::create();
@@ -3620,7 +4082,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);
 		getPrototypes().addValue(WindowsButton);
 		getPrototypes().addValue(WindowsLabel);
-		getPrototypes().addValue(WindowsFrame);
+		getPrototypes().addValue(WindowsInternalWindow);
 		getPrototypes().addValue(WindowsPanel);
 		getPrototypes().addValue(WindowsSplitPanel);
 		getPrototypes().addValue(WindowsImageComponent);

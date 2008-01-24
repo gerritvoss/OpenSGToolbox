@@ -50,7 +50,7 @@
 #include "OSGScrollBar.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
-#include "Component/Container/OSGFrame.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 
 #include "Util/OSGUIDrawUtils.h"
 
@@ -519,8 +519,8 @@ void ScrollBar::ScrollBarListener::mousePressed(const MouseEvent& e)
 	{
         _ScrollBar->_ScrollBarDraggedListener.setInitialMousePosition(ViewportToComponent(e.getLocation(), _ScrollBar, e.getViewport()));
         _ScrollBar->_ScrollBarDraggedListener.setInitialScrollBarPosition(_ScrollBar->getScrollBar()->getPosition());
-        _ScrollBar->getParentFrame()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_ScrollBar->_ScrollBarDraggedListener));
-        _ScrollBar->getParentFrame()->getDrawingSurface()->getEventProducer()->addMouseListener(&(_ScrollBar->_ScrollBarDraggedListener));
+        _ScrollBar->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_ScrollBar->_ScrollBarDraggedListener));
+        _ScrollBar->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&(_ScrollBar->_ScrollBarDraggedListener));
     }
 }
 
@@ -528,8 +528,8 @@ void ScrollBar::ScrollBarDraggedListener::mouseReleased(const MouseEvent& e)
 {
 	if(e.getButton() == e.BUTTON1)
 	{
-        _ScrollBar->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
-        _ScrollBar->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
+        _ScrollBar->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+        _ScrollBar->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
     }
 }
 
@@ -553,7 +553,7 @@ void ScrollBar::ScrollFieldListener::actionPerformed(const ActionEvent& e)
     if(_ScrollBar->getOrientation() == HORIZONTAL_ALIGNMENT ) AxisIndex = 0;
     else  AxisIndex = 1;
 
-    Pnt2s ComponentMousePosition(DrawingSurfaceToComponent(_ScrollBar->getParentFrame()->getDrawingSurface()->getMousePosition(), _ScrollBar));
+    Pnt2s ComponentMousePosition(DrawingSurfaceToComponent(_ScrollBar->getParentWindow()->getDrawingSurface()->getMousePosition(), _ScrollBar));
     //Is Mouse Major axis on the min or max side of the scroll bar
     if(ComponentMousePosition[AxisIndex] < _ScrollBar->getScrollBar()->getPosition()[AxisIndex])
     {

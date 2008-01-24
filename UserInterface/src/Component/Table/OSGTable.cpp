@@ -52,7 +52,7 @@
 #include "OSGTable.h"
 #include "Component/List/OSGDefaultListSelectionModel.h"
 #include "Component/Table/OSGDefaultTableColumnModel.h"
-#include "Component/Container/OSGFrame.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 
@@ -402,15 +402,15 @@ void Table::mousePressed(const MouseEvent& e)
 			if(!getChildren().getValue(i)->getType().isDerivedFrom(Container::getClassType()))
 			{
 				getChildren().getValue(i)->takeFocus();
-				if(getParentFrame() != NullFC &&
-				   getParentFrame()->getDrawingSurface() != NullFC &&
-				   getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+				if(getParentWindow() != NullFC &&
+				   getParentWindow()->getDrawingSurface() != NullFC &&
+				   getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 				{
-					if(getParentFrame()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+					if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
 					{
 						changeSelection(Row, Column, false, true);
 					}
-					else if(getParentFrame()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+					else if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 					{
 						changeSelection(Row, Column, true, true);
 					}
@@ -479,14 +479,14 @@ void Table::updateItem(const UInt32& index)
     if(PrevComponent->getFocused())
     {
         //getChildren().getValue(index)->takeFocus();
-        getParentFrame()->setFocusedComponent(getChildren().getValue(index));
+        getParentWindow()->setFocusedComponent(getChildren().getValue(index));
     }
 	getChildren().getValue(index)->addFocusListener(this);
 	getChildren().getValue(index)->setFocused(PrevComponent->getFocused());
 	getChildren().getValue(index)->setPosition(PrevComponent->getPosition());
 	getChildren().getValue(index)->setSize(PrevComponent->getSize());
 	getChildren().getValue(index)->setParentContainer(PrevComponent->getParentContainer());
-	getChildren().getValue(index)->setParentFrame(PrevComponent->getParentFrame());
+	getChildren().getValue(index)->setParentWindow(PrevComponent->getParentWindow());
 	getChildren().getValue(index)->updateClipBounds();
 }
 void Table::focusGained(const FocusEvent& e)

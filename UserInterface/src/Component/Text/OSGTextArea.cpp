@@ -50,7 +50,7 @@
 
 #include "OSGTextArea.h"
 
-#include "Component/Container/OSGFrame.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include <OpenSG/Input/OSGStringUtils.h>
@@ -144,22 +144,22 @@ void TextArea::drawInternal(const GraphicsPtr TheGraphics) const
 
 void TextArea::focusGained(const FocusEvent& e)
 {
-	if( getParentFrame() != NullFC &&
-		getParentFrame()->getDrawingSurface() != NullFC &&
-		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+	if( getParentWindow() != NullFC &&
+		getParentWindow()->getDrawingSurface() != NullFC &&
+		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
     {
-		getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_CaretUpdateListener);
+		getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_CaretUpdateListener);
 	}
 	Inherited::focusGained(e);
 }
 
 void TextArea::focusLost(const FocusEvent& e)
 {
-	if( getParentFrame() != NullFC &&
-		getParentFrame()->getDrawingSurface() != NullFC &&
-		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+	if( getParentWindow() != NullFC &&
+		getParentWindow()->getDrawingSurface() != NullFC &&
+		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
     {
-		getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_CaretUpdateListener);
+		getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_CaretUpdateListener);
 	}
 	Inherited::focusLost(e);
 }
@@ -379,8 +379,8 @@ void TextArea::keyTyped(const KeyEvent& e)//broken
 				setCaretPosition(findTextPosition(Pnt2s(_LineContents[LineSelector]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[LineSelector-1]._VerticalOffset)));
 			endEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
 		}
-		if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&&getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC 
-			&& getParentFrame()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+		if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC 
+			&& getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
 		{
 			if(OriginalPosition == _TextSelectionEnd && OriginalPosition != _TextSelectionStart)
 			{
@@ -417,8 +417,8 @@ void TextArea::keyTyped(const KeyEvent& e)//broken
 				setCaretPosition(findTextPosition(Pnt2s(_LineContents[LineSelector]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[LineSelector+1]._VerticalOffset)));
 			endEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
 		}
-		if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&&getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC 
-			&& getParentFrame()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+		if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC 
+			&& getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
 		{
 			if(OriginalPosition == _TextSelectionEnd)
 			{

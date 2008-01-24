@@ -2,9 +2,7 @@
  *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
@@ -89,7 +87,7 @@
 #include <OpenSG/OSGStringFields.h> // ToolTipText type
 #include <OpenSG/OSGReal32Fields.h> // Opacity type
 #include "Component/Container/OSGContainerFields.h" // ParentContainer type
-#include "Component/Container/OSGFrameFields.h" // ParentFrame type
+#include "Component/Container/Window/OSGInternalWindowFields.h" // ParentWindow type
 #include <OpenSG/OSGBoolFields.h> // Clipping type
 #include "Component/Menu/OSGPopupMenuFields.h" // PopupMenu type
 
@@ -138,8 +136,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
         ToolTipTextFieldId        = RolloverBackgroundFieldId + 1,
         OpacityFieldId            = ToolTipTextFieldId        + 1,
         ParentContainerFieldId    = OpacityFieldId            + 1,
-        ParentFrameFieldId        = ParentContainerFieldId    + 1,
-        ClippingFieldId           = ParentFrameFieldId        + 1,
+        ParentWindowFieldId       = ParentContainerFieldId    + 1,
+        ClippingFieldId           = ParentWindowFieldId       + 1,
         PopupMenuFieldId          = ClippingFieldId           + 1,
         NextFieldId               = PopupMenuFieldId          + 1
     };
@@ -167,7 +165,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     static const OSG::BitVector ToolTipTextFieldMask;
     static const OSG::BitVector OpacityFieldMask;
     static const OSG::BitVector ParentContainerFieldMask;
-    static const OSG::BitVector ParentFrameFieldMask;
+    static const OSG::BitVector ParentWindowFieldMask;
     static const OSG::BitVector ClippingFieldMask;
     static const OSG::BitVector PopupMenuFieldMask;
 
@@ -217,7 +215,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual       SFString            *getSFToolTipText    (void);
     virtual       SFReal32            *getSFOpacity        (void);
     virtual       SFContainerPtr      *getSFParentContainer(void);
-    virtual       SFFramePtr          *getSFParentFrame    (void);
+    virtual       SFInternalWindowPtr *getSFParentWindow   (void);
     virtual       SFBool              *getSFClipping       (void);
     virtual       SFPopupMenuPtr      *getSFPopupMenu      (void);
 
@@ -263,8 +261,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual const Real32              &getOpacity        (void) const;
     virtual       ContainerPtr        &getParentContainer(void);
     virtual const ContainerPtr        &getParentContainer(void) const;
-    virtual       FramePtr            &getParentFrame    (void);
-    virtual const FramePtr            &getParentFrame    (void) const;
+    virtual       InternalWindowPtr   &getParentWindow   (void);
+    virtual const InternalWindowPtr   &getParentWindow   (void) const;
     virtual       bool                &getClipping       (void);
     virtual const bool                &getClipping       (void) const;
     virtual       PopupMenuPtr        &getPopupMenu      (void);
@@ -296,7 +294,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual void setToolTipText    ( const std::string &value );
     virtual void setOpacity        ( const Real32 &value );
     virtual void setParentContainer( const ContainerPtr &value );
-    virtual void setParentFrame    ( const FramePtr &value );
+    virtual void setParentWindow   ( const InternalWindowPtr &value );
     virtual void setClipping       ( const bool &value );
     virtual void setPopupMenu      ( const PopupMenuPtr &value );
 
@@ -348,7 +346,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     SFString            _sfToolTipText;
     SFReal32            _sfOpacity;
     SFContainerPtr      _sfParentContainer;
-    SFFramePtr          _sfParentFrame;
+    SFInternalWindowPtr   _sfParentWindow;
     SFBool              _sfClipping;
     SFPopupMenuPtr      _sfPopupMenu;
 

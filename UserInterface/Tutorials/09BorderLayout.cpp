@@ -35,6 +35,7 @@
 
 // UserInterface Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
+#include <OpenSG/UserInterface/OSGInternalWindow.h>
 #include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
@@ -53,7 +54,6 @@ void reshape(Vec2s Size);
 
 // 09BorderLayout Headers
 #include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGFrame.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
 #include <OpenSG/UserInterface/OSGBorderLayout.h>
 #include <OpenSG/UserInterface/OSGBorderLayoutConstraints.h>
@@ -72,6 +72,28 @@ public:
     }
 };
 
+// Create a class to allow for the use of the Ctrl+q
+class TutorialKeyListener : public KeyListener
+{
+public:
+
+   virtual void keyPressed(const KeyEvent& e)
+   {
+       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       {
+           ExitApp = true;
+       }
+   }
+
+   virtual void keyReleased(const KeyEvent& e)
+   {
+   }
+
+   virtual void keyTyped(const KeyEvent& e)
+   {
+   }
+};
+
 int main(int argc, char **argv)
 {
     // OSG init
@@ -87,6 +109,8 @@ int main(int argc, char **argv)
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialKeyListener TheKeyListener;
+    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
 
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
@@ -134,12 +158,12 @@ int main(int argc, char **argv)
         restraints.
 
     ******************************************************/
-    BorderLayoutPtr MainFrameLayout = osg::BorderLayout::create();
+    BorderLayoutPtr MainInternalWindowLayout = osg::BorderLayout::create();
 
     // BorderLayout has no options to edit!   
-    beginEditCP(MainFrameLayout);
+    beginEditCP(MainInternalWindowLayout);
         // Nothing!
-    endEditCP(MainFrameLayout);
+    endEditCP(MainInternalWindowLayout);
 
 
     /******************************************************
@@ -221,41 +245,43 @@ int main(int argc, char **argv)
         ExampleButton5->setConstraints(ExampleButton5Constraints);
     endEditCP(ExampleButton5, Button::ConstraintsFieldMask);
     
-    // Create The Main Frame
-    // Create Background to be used with the Main Frame
-    ColorUIBackgroundPtr MainFrameBackground = osg::ColorUIBackground::create();
-    beginEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
-        MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
-    
-    FramePtr MainFrame = osg::Frame::create();
-    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-       MainFrame->getChildren().addValue(ExampleButton1);
-       MainFrame->getChildren().addValue(ExampleButton2);
-       MainFrame->getChildren().addValue(ExampleButton3);
-       MainFrame->getChildren().addValue(ExampleButton4);
-       MainFrame->getChildren().addValue(ExampleButton5);
-       // Add the Layout to the MainFrame
-       MainFrame->setLayout(MainFrameLayout);
-       MainFrame->setBackground(MainFrameBackground);
-    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+    // Create The Main InternalWindow
+    // Create Background to be used with the Main InternalWindow
+    ColorUIBackgroundPtr MainInternalWindowBackground = osg::ColorUIBackground::create();
+    beginEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
+        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+    endEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
 
-    // Create the Drawing Surface
+    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
+	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+       MainInternalWindow->getChildren().addValue(ExampleButton1);
+       MainInternalWindow->getChildren().addValue(ExampleButton2);
+       MainInternalWindow->getChildren().addValue(ExampleButton3);
+       MainInternalWindow->getChildren().addValue(ExampleButton4);
+       MainInternalWindow->getChildren().addValue(ExampleButton5);
+       MainInternalWindow->setLayout(MainInternalWindowLayout);
+       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
+	   MainInternalWindow->setDrawTitlebar(false);
+	   MainInternalWindow->setResizable(false);
+    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+
+	// Create the Drawing Surface
     UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setRootFrame(MainFrame);
         TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::RootFrameFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
     
+	TutorialDrawingSurface->openWindow(MainInternalWindow);
+
     // Create the UI Foreground Object
     UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-        TutorialUIForeground->setFramePositionOffset(Vec2s(0,0));
-        TutorialUIForeground->setFrameBounds(Vec2f(0.5,0.5));
-    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask | UIForeground::FramePositionOffsetFieldMask | UIForeground::FrameBoundsFieldMask);
+    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;

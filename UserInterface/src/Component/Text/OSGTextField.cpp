@@ -53,7 +53,7 @@
 #include "OSGTextField.h"
 
 
-#include "Component/Container/OSGFrame.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include <OpenSG/Input/OSGStringUtils.h>
@@ -379,22 +379,22 @@ void TextField::produceActionPerformed(const ActionEvent& e)
 
 void TextField::focusGained(const FocusEvent& e)
 {
-	if( getParentFrame() != NullFC &&
-		getParentFrame()->getDrawingSurface() != NullFC &&
-		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+	if( getParentWindow() != NullFC &&
+		getParentWindow()->getDrawingSurface() != NullFC &&
+		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
     {
-		getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_CaretUpdateListener);
+		getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_CaretUpdateListener);
 	}
 	Inherited::focusGained(e);
 }
 
 void TextField::focusLost(const FocusEvent& e)
 {
-	if( getParentFrame() != NullFC &&
-		getParentFrame()->getDrawingSurface() != NullFC &&
-		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+	if( getParentWindow() != NullFC &&
+		getParentWindow()->getDrawingSurface() != NullFC &&
+		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
     {
-		getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_CaretUpdateListener);
+		getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_CaretUpdateListener);
 	}
 	Inherited::focusLost(e);
 }
@@ -422,12 +422,12 @@ TextField::TextField(const TextField &source) :
 
 TextField::~TextField(void)
 {
-	if( getParentFrame() != NullFC &&
-		getParentFrame()->getDrawingSurface() != NullFC &&
-		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC && 
-		isContained(getParentFrame()->getDrawingSurface()->getEventProducer()->getMousePosition(), true) )
+	if( getParentWindow() != NullFC &&
+		getParentWindow()->getDrawingSurface() != NullFC &&
+		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC && 
+		isContained(getParentWindow()->getDrawingSurface()->getEventProducer()->getMousePosition(), true) )
     {
-		getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
+		getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
 	}
 }
 

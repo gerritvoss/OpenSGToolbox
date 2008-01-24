@@ -70,8 +70,8 @@
 #include "Component/OSGComponentFields.h" // FocusedComponent type
 #include "Component/Menu/OSGPopupMenuFields.h" // ActivePopupMenus type
 #include "Component/Misc/OSGToolTipFields.h" // ActiveToolTip type
-#include <OpenSG/OSGBoolFields.h> // LockInput type
 #include "Component/Menu/OSGMenuBarFields.h" // MenuBar type
+#include "Component/Container/Window/OSGTitlebarFields.h" // Titlebar type
 
 #include "OSGInternalWindowFields.h"
 
@@ -98,16 +98,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindowBase : public AbstractWindow
         FocusedComponentFieldId = Inherited::NextFieldId,
         ActivePopupMenusFieldId = FocusedComponentFieldId + 1,
         ActiveToolTipFieldId    = ActivePopupMenusFieldId + 1,
-        LockInputFieldId        = ActiveToolTipFieldId    + 1,
-        MenuBarFieldId          = LockInputFieldId        + 1,
-        NextFieldId             = MenuBarFieldId          + 1
+        MenuBarFieldId          = ActiveToolTipFieldId    + 1,
+        TitlebarFieldId         = MenuBarFieldId          + 1,
+        NextFieldId             = TitlebarFieldId         + 1
     };
 
     static const OSG::BitVector FocusedComponentFieldMask;
     static const OSG::BitVector ActivePopupMenusFieldMask;
     static const OSG::BitVector ActiveToolTipFieldMask;
-    static const OSG::BitVector LockInputFieldMask;
     static const OSG::BitVector MenuBarFieldMask;
+    static const OSG::BitVector TitlebarFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -137,17 +137,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindowBase : public AbstractWindow
            SFComponentPtr      *getSFFocusedComponent(void);
            MFPopupMenuPtr      *getMFActivePopupMenus(void);
            SFToolTipPtr        *getSFActiveToolTip  (void);
-           SFBool              *getSFLockInput      (void);
            SFMenuBarPtr        *getSFMenuBar        (void);
+           SFTitlebarPtr       *getSFTitlebar       (void);
 
            ComponentPtr        &getFocusedComponent(void);
      const ComponentPtr        &getFocusedComponent(void) const;
            ToolTipPtr          &getActiveToolTip  (void);
      const ToolTipPtr          &getActiveToolTip  (void) const;
-           bool                &getLockInput      (void);
-     const bool                &getLockInput      (void) const;
            MenuBarPtr          &getMenuBar        (void);
      const MenuBarPtr          &getMenuBar        (void) const;
+           TitlebarPtr         &getTitlebar       (void);
+     const TitlebarPtr         &getTitlebar       (void) const;
            PopupMenuPtr        &getActivePopupMenus(const UInt32 index);
            MFPopupMenuPtr      &getActivePopupMenus(void);
      const MFPopupMenuPtr      &getActivePopupMenus(void) const;
@@ -159,8 +159,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindowBase : public AbstractWindow
 
      void setFocusedComponent( const ComponentPtr &value );
      void setActiveToolTip  ( const ToolTipPtr &value );
-     void setLockInput      ( const bool &value );
      void setMenuBar        ( const MenuBarPtr &value );
+     void setTitlebar       ( const TitlebarPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -206,8 +206,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindowBase : public AbstractWindow
     SFComponentPtr      _sfFocusedComponent;
     MFPopupMenuPtr      _mfActivePopupMenus;
     SFToolTipPtr        _sfActiveToolTip;
-    SFBool              _sfLockInput;
     SFMenuBarPtr        _sfMenuBar;
+    SFTitlebarPtr       _sfTitlebar;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

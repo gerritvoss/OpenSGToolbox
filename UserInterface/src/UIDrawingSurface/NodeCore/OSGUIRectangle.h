@@ -107,7 +107,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangle : public UIRectangleBase
     /*! \}                                                                 */
     void    adjustVolume(Volume & volume);
     
-	void updateFrameBounds(void);
     /*==========================  PRIVATE  ================================*/
   private:
 

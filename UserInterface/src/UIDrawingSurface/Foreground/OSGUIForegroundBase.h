@@ -68,10 +68,6 @@
 #include <OpenSG/OSGForeground.h> // Parent
 
 #include "UIDrawingSurface/OSGUIDrawingSurfaceFields.h" // DrawingSurface type
-#include <OpenSG/OSGVec2sFields.h> // FramePositionOffset type
-#include <OpenSG/OSGVec2fFields.h> // FrameBounds type
-#include <OpenSG/OSGUInt32Fields.h> // VerticalAlignment type
-#include <OpenSG/OSGUInt32Fields.h> // HorizontalAlignment type
 #include "UIDrawingSurface/Foreground/OSGUIForegroundMouseTransformFunctorFields.h" // MouseTransformFunctor type
 
 #include "OSGUIForegroundFields.h"
@@ -97,19 +93,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIForegroundBase : public Foreground
     enum
     {
         DrawingSurfaceFieldId        = Inherited::NextFieldId,
-        FramePositionOffsetFieldId   = DrawingSurfaceFieldId        + 1,
-        FrameBoundsFieldId           = FramePositionOffsetFieldId   + 1,
-        VerticalAlignmentFieldId     = FrameBoundsFieldId           + 1,
-        HorizontalAlignmentFieldId   = VerticalAlignmentFieldId     + 1,
-        MouseTransformFunctorFieldId = HorizontalAlignmentFieldId   + 1,
+        MouseTransformFunctorFieldId = DrawingSurfaceFieldId        + 1,
         NextFieldId                  = MouseTransformFunctorFieldId + 1
     };
 
     static const OSG::BitVector DrawingSurfaceFieldMask;
-    static const OSG::BitVector FramePositionOffsetFieldMask;
-    static const OSG::BitVector FrameBoundsFieldMask;
-    static const OSG::BitVector VerticalAlignmentFieldMask;
-    static const OSG::BitVector HorizontalAlignmentFieldMask;
     static const OSG::BitVector MouseTransformFunctorFieldMask;
 
 
@@ -138,21 +126,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIForegroundBase : public Foreground
     /*! \{                                                                 */
 
            SFUIDrawingSurfacePtr *getSFDrawingSurface (void);
-           SFVec2s             *getSFFramePositionOffset(void);
-           SFVec2f             *getSFFrameBounds    (void);
-           SFUInt32            *getSFVerticalAlignment(void);
-           SFUInt32            *getSFHorizontalAlignment(void);
 
            UIDrawingSurfacePtr &getDrawingSurface (void);
      const UIDrawingSurfacePtr &getDrawingSurface (void) const;
-           Vec2s               &getFramePositionOffset(void);
-     const Vec2s               &getFramePositionOffset(void) const;
-           Vec2f               &getFrameBounds    (void);
-     const Vec2f               &getFrameBounds    (void) const;
-           UInt32              &getVerticalAlignment(void);
-     const UInt32              &getVerticalAlignment(void) const;
-           UInt32              &getHorizontalAlignment(void);
-     const UInt32              &getHorizontalAlignment(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -160,10 +136,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIForegroundBase : public Foreground
     /*! \{                                                                 */
 
      void setDrawingSurface ( const UIDrawingSurfacePtr &value );
-     void setFramePositionOffset( const Vec2s &value );
-     void setFrameBounds    ( const Vec2f &value );
-     void setVerticalAlignment( const UInt32 &value );
-     void setHorizontalAlignment( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -207,10 +179,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIForegroundBase : public Foreground
     /*! \{                                                                 */
 
     SFUIDrawingSurfacePtr   _sfDrawingSurface;
-    SFVec2s             _sfFramePositionOffset;
-    SFVec2f             _sfFrameBounds;
-    SFUInt32            _sfVerticalAlignment;
-    SFUInt32            _sfHorizontalAlignment;
     SFUIForegroundMouseTransformFunctorPtr   _sfMouseTransformFunctor;
 
     /*! \}                                                                 */

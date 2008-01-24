@@ -42,6 +42,84 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+InternalWindow::PopupMenuInteractionListener::PopupMenuInteractionListener(InternalWindowPtr TheInternalWindow) :
+_InternalWindow(TheInternalWindow)
+{
+}
+
+inline
+InternalWindow::TitlebarDraggedListener::TitlebarDraggedListener(InternalWindowPtr TheInternalWindow) :
+	_InternalWindow(TheInternalWindow)
+{
+}
+
+inline
+void InternalWindow::TitlebarDraggedListener::setWindowStartPosition(const Pnt2s& Pos)
+{
+	_WindowStartPosition = Pos;
+}
+
+inline
+void InternalWindow::TitlebarDraggedListener::setMouseStartPosition(const Pnt2s& Pos)
+{
+	_MouseStartPosition = Pos;
+}
+
+inline
+InternalWindow::BorderDraggedListener::BorderDraggedListener(InternalWindowPtr TheInternalWindow) :
+	_InternalWindow(TheInternalWindow)
+{
+}
+
+inline
+void InternalWindow::BorderDraggedListener::setWindowStartPosition(const Pnt2s& Pos)
+{
+	_WindowStartPosition = Pos;
+}
+
+inline
+void InternalWindow::BorderDraggedListener::setWindowStartSize(const Vec2s& Size)
+{
+	_WindowStartSize = Size;
+}
+
+inline
+void InternalWindow::BorderDraggedListener::setMouseStartPosition(const Pnt2s& Pos)
+{
+	_MouseStartPosition = Pos;
+}
+
+inline
+void InternalWindow::BorderDraggedListener::setBorderDragged(const WindowArea Value)
+{
+	_BorderDragged = Value;
+}
+
+inline
+InternalWindow::TitlebarStartDragListener::TitlebarStartDragListener(InternalWindowPtr TheInternalWindow) :
+	_InternalWindow(TheInternalWindow)
+{
+}
+	
+inline
+InternalWindow::CloseButtonListener::CloseButtonListener(InternalWindowPtr TheInternalWindow) :
+	_InternalWindow(TheInternalWindow)
+{
+}
+
+inline
+InternalWindow::MaximizeButtonListener::MaximizeButtonListener(InternalWindowPtr TheInternalWindow) :
+	_InternalWindow(TheInternalWindow)
+{
+}
+
+inline
+InternalWindow::IconifyButtonListener::IconifyButtonListener(InternalWindowPtr TheInternalWindow) :
+	_InternalWindow(TheInternalWindow)
+{
+}
+
 OSG_END_NAMESPACE
 
 #define OSGINTERNALWINDOW_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

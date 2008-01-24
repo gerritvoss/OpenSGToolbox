@@ -117,18 +117,18 @@ SFToolTipPtr *InternalWindowBase::getSFActiveToolTip(void)
     return &_sfActiveToolTip;
 }
 
-//! Get the InternalWindow::_sfLockInput field.
-inline
-SFBool *InternalWindowBase::getSFLockInput(void)
-{
-    return &_sfLockInput;
-}
-
 //! Get the InternalWindow::_sfMenuBar field.
 inline
 SFMenuBarPtr *InternalWindowBase::getSFMenuBar(void)
 {
     return &_sfMenuBar;
+}
+
+//! Get the InternalWindow::_sfTitlebar field.
+inline
+SFTitlebarPtr *InternalWindowBase::getSFTitlebar(void)
+{
+    return &_sfTitlebar;
 }
 
 
@@ -174,27 +174,6 @@ void InternalWindowBase::setActiveToolTip(const ToolTipPtr &value)
     _sfActiveToolTip.setValue(value);
 }
 
-//! Get the value of the InternalWindow::_sfLockInput field.
-inline
-bool &InternalWindowBase::getLockInput(void)
-{
-    return _sfLockInput.getValue();
-}
-
-//! Get the value of the InternalWindow::_sfLockInput field.
-inline
-const bool &InternalWindowBase::getLockInput(void) const
-{
-    return _sfLockInput.getValue();
-}
-
-//! Set the value of the InternalWindow::_sfLockInput field.
-inline
-void InternalWindowBase::setLockInput(const bool &value)
-{
-    _sfLockInput.setValue(value);
-}
-
 //! Get the value of the InternalWindow::_sfMenuBar field.
 inline
 MenuBarPtr &InternalWindowBase::getMenuBar(void)
@@ -214,6 +193,27 @@ inline
 void InternalWindowBase::setMenuBar(const MenuBarPtr &value)
 {
     _sfMenuBar.setValue(value);
+}
+
+//! Get the value of the InternalWindow::_sfTitlebar field.
+inline
+TitlebarPtr &InternalWindowBase::getTitlebar(void)
+{
+    return _sfTitlebar.getValue();
+}
+
+//! Get the value of the InternalWindow::_sfTitlebar field.
+inline
+const TitlebarPtr &InternalWindowBase::getTitlebar(void) const
+{
+    return _sfTitlebar.getValue();
+}
+
+//! Set the value of the InternalWindow::_sfTitlebar field.
+inline
+void InternalWindowBase::setTitlebar(const TitlebarPtr &value)
+{
+    _sfTitlebar.setValue(value);
 }
 
 

@@ -61,27 +61,12 @@
 #include "OSGUIForegroundBase.h"
 #include "OSGUIForeground.h"
 
-#include <Util/OSGUIDefines.h>            // VerticalAlignment default header
-#include <Util/OSGUIDefines.h>            // HorizontalAlignment default header
-
-#include "UIDrawingSurface/Foreground/OSGUIForegroundMouseTransformFunctor.h"
+#include <UIDrawingSurface/Foreground/OSGUIForegroundMouseTransformFunctor.h>   // MouseTransformFunctor default header
 
 OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  UIForegroundBase::DrawingSurfaceFieldMask = 
     (TypeTraits<BitVector>::One << UIForegroundBase::DrawingSurfaceFieldId);
-
-const OSG::BitVector  UIForegroundBase::FramePositionOffsetFieldMask = 
-    (TypeTraits<BitVector>::One << UIForegroundBase::FramePositionOffsetFieldId);
-
-const OSG::BitVector  UIForegroundBase::FrameBoundsFieldMask = 
-    (TypeTraits<BitVector>::One << UIForegroundBase::FrameBoundsFieldId);
-
-const OSG::BitVector  UIForegroundBase::VerticalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << UIForegroundBase::VerticalAlignmentFieldId);
-
-const OSG::BitVector  UIForegroundBase::HorizontalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << UIForegroundBase::HorizontalAlignmentFieldId);
 
 const OSG::BitVector  UIForegroundBase::MouseTransformFunctorFieldMask = 
     (TypeTraits<BitVector>::One << UIForegroundBase::MouseTransformFunctorFieldId);
@@ -94,18 +79,6 @@ const OSG::BitVector UIForegroundBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var UIDrawingSurfacePtr UIForegroundBase::_sfDrawingSurface
-    
-*/
-/*! \var Vec2s           UIForegroundBase::_sfFramePositionOffset
-    
-*/
-/*! \var Vec2f           UIForegroundBase::_sfFrameBounds
-    
-*/
-/*! \var UInt32          UIForegroundBase::_sfVerticalAlignment
-    
-*/
-/*! \var UInt32          UIForegroundBase::_sfHorizontalAlignment
     
 */
 /*! \var UIForegroundMouseTransformFunctorPtr UIForegroundBase::_sfMouseTransformFunctor
@@ -121,26 +94,6 @@ FieldDescription *UIForegroundBase::_desc[] =
                      DrawingSurfaceFieldId, DrawingSurfaceFieldMask,
                      false,
                      (FieldAccessMethod) &UIForegroundBase::getSFDrawingSurface),
-    new FieldDescription(SFVec2s::getClassType(), 
-                     "FramePositionOffset", 
-                     FramePositionOffsetFieldId, FramePositionOffsetFieldMask,
-                     false,
-                     (FieldAccessMethod) &UIForegroundBase::getSFFramePositionOffset),
-    new FieldDescription(SFVec2f::getClassType(), 
-                     "FrameBounds", 
-                     FrameBoundsFieldId, FrameBoundsFieldMask,
-                     false,
-                     (FieldAccessMethod) &UIForegroundBase::getSFFrameBounds),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "VerticalAlignment", 
-                     VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &UIForegroundBase::getSFVerticalAlignment),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "HorizontalAlignment", 
-                     HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &UIForegroundBase::getSFHorizontalAlignment),
     new FieldDescription(SFUIForegroundMouseTransformFunctorPtr::getClassType(), 
                      "MouseTransformFunctor", 
                      MouseTransformFunctorFieldId, MouseTransformFunctorFieldMask,
@@ -222,10 +175,6 @@ void UIForegroundBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 UIForegroundBase::UIForegroundBase(void) :
     _sfDrawingSurface         (), 
-    _sfFramePositionOffset    (), 
-    _sfFrameBounds            (), 
-    _sfVerticalAlignment      (UInt32(VERTICAL_CENTER)), 
-    _sfHorizontalAlignment    (UInt32(HORIZONTAL_CENTER)), 
     _sfMouseTransformFunctor  (UIForegroundMouseTransformFunctorPtr(UIForegroundMouseTransformFunctor::create())), 
     Inherited() 
 {
@@ -237,10 +186,6 @@ UIForegroundBase::UIForegroundBase(void) :
 
 UIForegroundBase::UIForegroundBase(const UIForegroundBase &source) :
     _sfDrawingSurface         (source._sfDrawingSurface         ), 
-    _sfFramePositionOffset    (source._sfFramePositionOffset    ), 
-    _sfFrameBounds            (source._sfFrameBounds            ), 
-    _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
-    _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
     _sfMouseTransformFunctor  (UIForegroundMouseTransformFunctorPtr(UIForegroundMouseTransformFunctor::create())), 
     Inherited                 (source)
 {
@@ -263,26 +208,6 @@ UInt32 UIForegroundBase::getBinSize(const BitVector &whichField)
         returnValue += _sfDrawingSurface.getBinSize();
     }
 
-    if(FieldBits::NoField != (FramePositionOffsetFieldMask & whichField))
-    {
-        returnValue += _sfFramePositionOffset.getBinSize();
-    }
-
-    if(FieldBits::NoField != (FrameBoundsFieldMask & whichField))
-    {
-        returnValue += _sfFrameBounds.getBinSize();
-    }
-
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-    {
-        returnValue += _sfVerticalAlignment.getBinSize();
-    }
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-    {
-        returnValue += _sfHorizontalAlignment.getBinSize();
-    }
-
     if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
     {
         returnValue += _sfMouseTransformFunctor.getBinSize();
@@ -300,26 +225,6 @@ void UIForegroundBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
     {
         _sfDrawingSurface.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (FramePositionOffsetFieldMask & whichField))
-    {
-        _sfFramePositionOffset.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (FrameBoundsFieldMask & whichField))
-    {
-        _sfFrameBounds.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-    {
-        _sfVerticalAlignment.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-    {
-        _sfHorizontalAlignment.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
@@ -340,26 +245,6 @@ void UIForegroundBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfDrawingSurface.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (FramePositionOffsetFieldMask & whichField))
-    {
-        _sfFramePositionOffset.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (FrameBoundsFieldMask & whichField))
-    {
-        _sfFrameBounds.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-    {
-        _sfVerticalAlignment.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-    {
-        _sfHorizontalAlignment.copyFromBin(pMem);
-    }
-
     if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
     {
         _sfMouseTransformFunctor.copyFromBin(pMem);
@@ -378,18 +263,6 @@ void UIForegroundBase::executeSyncImpl(      UIForegroundBase *pOther,
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
         _sfDrawingSurface.syncWith(pOther->_sfDrawingSurface);
 
-    if(FieldBits::NoField != (FramePositionOffsetFieldMask & whichField))
-        _sfFramePositionOffset.syncWith(pOther->_sfFramePositionOffset);
-
-    if(FieldBits::NoField != (FrameBoundsFieldMask & whichField))
-        _sfFrameBounds.syncWith(pOther->_sfFrameBounds);
-
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
-
     if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
         _sfMouseTransformFunctor.syncWith(pOther->_sfMouseTransformFunctor);
 
@@ -405,18 +278,6 @@ void UIForegroundBase::executeSyncImpl(      UIForegroundBase *pOther,
 
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
         _sfDrawingSurface.syncWith(pOther->_sfDrawingSurface);
-
-    if(FieldBits::NoField != (FramePositionOffsetFieldMask & whichField))
-        _sfFramePositionOffset.syncWith(pOther->_sfFramePositionOffset);
-
-    if(FieldBits::NoField != (FrameBoundsFieldMask & whichField))
-        _sfFrameBounds.syncWith(pOther->_sfFrameBounds);
-
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
 
     if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
         _sfMouseTransformFunctor.syncWith(pOther->_sfMouseTransformFunctor);

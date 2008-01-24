@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGProgressBar.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 #include "Util/OSGUIDrawUtils.h"
 #include <sstream>
 
@@ -189,11 +190,11 @@ void ProgressBar::startIndeterminate(void)
         setIndeterminate(true);
     endEditCP(ProgressBarPtr(this), IndeterminateFieldMask);
     _IndeterminateBarPosition = 0;
-	if(getParentFrame() != NullFC &&
-		getParentFrame()->getDrawingSurface() != NullFC &&
-		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+	if(getParentWindow() != NullFC &&
+		getParentWindow()->getDrawingSurface() != NullFC &&
+		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 	{
-        getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_IndeterminateUpdateListener);
+        getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_IndeterminateUpdateListener);
 	}
 }
 
@@ -202,11 +203,11 @@ void ProgressBar::endIndeterminate(void)
     beginEditCP(ProgressBarPtr(this), IndeterminateFieldMask);
         setIndeterminate(false);
     endEditCP(ProgressBarPtr(this), IndeterminateFieldMask);
-	if(getParentFrame() != NullFC &&
-		getParentFrame()->getDrawingSurface() != NullFC &&
-		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+	if(getParentWindow() != NullFC &&
+		getParentWindow()->getDrawingSurface() != NullFC &&
+		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 	{
-        getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_IndeterminateUpdateListener);
+        getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_IndeterminateUpdateListener);
 	}
     updateProgressBarDrawObject();
 }

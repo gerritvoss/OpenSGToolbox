@@ -90,9 +90,9 @@ ComponentPtr DefaultStringTableCellRenderer::getTableCellRendererComponent(Table
 	ColorUIBackgroundPtr tempBackground;
 	tempBackground = ColorUIBackground::create();
 
-	beginEditCP(TheLabel, Label::BackgroundFieldMask);
-		TheLabel->setBackground(tempBackground);
-	endEditCP(TheLabel, Label::BackgroundFieldMask);
+	beginEditCP(TheLabel, Label::BackgroundsFieldMask);
+		TheLabel->setBackgrounds(tempBackground);
+	endEditCP(TheLabel, Label::BackgroundsFieldMask);
 
 	beginEditCP(tempBackground, ColorUIBackground::ColorFieldMask);
 		if(isSelected){
@@ -107,9 +107,9 @@ ComponentPtr DefaultStringTableCellRenderer::getTableCellRendererComponent(Table
 		LineBorderPtr tempBorder;
 
 			tempBorder = LineBorder::create();
-			beginEditCP(TheLabel, Label::BorderFieldMask);
-				TheLabel->setBorder(tempBorder);
-			endEditCP(TheLabel, Label::BorderFieldMask);
+			beginEditCP(TheLabel, Label::BordersFieldMask);
+				TheLabel->setBorders(tempBorder);
+			endEditCP(TheLabel, Label::BordersFieldMask);
 
 		beginEditCP(tempBorder, LineBorder::ColorFieldMask);
 			tempBorder->setColor(Color4f(0.0, 0.0, 1.0, 1.0));
@@ -119,9 +119,9 @@ ComponentPtr DefaultStringTableCellRenderer::getTableCellRendererComponent(Table
 		EmptyBorderPtr tempBorder;
 
 			tempBorder = EmptyBorder::create();
-			beginEditCP(TheLabel, Label::BorderFieldMask);
-				TheLabel->setBorder(tempBorder);
-			endEditCP(TheLabel, Label::BorderFieldMask);
+			beginEditCP(TheLabel, Label::BordersFieldMask);
+				TheLabel->setBorders(tempBorder);
+			endEditCP(TheLabel, Label::BordersFieldMask);
 	}
 	return Component::Ptr::dcast(TheLabel);
 	

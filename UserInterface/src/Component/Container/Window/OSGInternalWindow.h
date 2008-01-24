@@ -43,8 +43,15 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGInternalWindowBase.h"
+
+#include <OpenSG/Input/OSGMouseAdapter.h>
+#include <OpenSG/Input/OSGMouseMotionAdapter.h>
+#include <OpenSG/Input/OSGKeyAdapter.h>
+#include "Event/OSGKeyAcceleratorListener.h"
+#include "Event/OSGActionListener.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,6 +84,57 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+	//Key Events
+	virtual void keyPressed(const KeyEvent& e);
+	virtual void keyReleased(const KeyEvent& e);
+	virtual void keyTyped(const KeyEvent& e);
+
+	//Mouse Events
+    virtual void mouseClicked(const MouseEvent& e);
+    virtual void mouseEntered(const MouseEvent& e);
+    virtual void mouseExited(const MouseEvent& e);
+    virtual void mousePressed(const MouseEvent& e);
+    virtual void mouseReleased(const MouseEvent& e);
+
+	//Mouse Motion Events
+    virtual void mouseMoved(const MouseEvent& e);
+    virtual void mouseDragged(const MouseEvent& e);
+
+	//Mouse Wheel Events
+    virtual void mouseWheelMoved(const MouseWheelEvent& e);
+    void destroyPopupMenu(void);
+    
+    virtual void updateLayout(void);
+    virtual void getInsideInsetsBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+    virtual void getMenuBarBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+    virtual void getTitlebarBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+    virtual void getContentPaneBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+
+
+    virtual       InternalWindowPtr            &getParentWindow    (void);
+    virtual const InternalWindowPtr            &getParentWindow    (void) const;
+	
+
+	bool giveFocus(ComponentPtr NewFocusedComponent, bool Temporary = false);
+	bool takeFocus(bool Temporary = false);
+
+    void addKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers, KeyAcceleratorListenerPtr Listener);
+    void removeKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers);
+
+	enum WindowArea{WINDOW_OUTSIDE=0, WINDOW_LEFT_BORDER, WINDOW_RIGHT_BORDER, WINDOW_TOP_BORDER, WINDOW_BOTTOM_BORDER, WINDOW_TOP_LEFT_BORDER, WINDOW_TOP_RIGHT_BORDER, WINDOW_BOTTOM_LEFT_BORDER, WINDOW_BOTTOM_RIGHT_BORDER, WINDOW_TITLE_BAR, WINDOW_MAIN_PANEL};
+	virtual WindowArea getCursurArea(const Pnt2s& DrawingSurfaceLocation) const;
+	
+    //Set the Window Iconify
+    void setIconify(bool Iconify);
+
+    //Get the Window Iconify
+    bool getIconify(void) const;
+
+	void setMaximize(bool Maximize);
+
+	bool getMaximize(void) const;
+
+	void close(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -98,6 +156,141 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 
     /*! \}                                                                 */
     
+	virtual void drawInternal(const GraphicsPtr TheGraphics) const;
+	
+	class PopupMenuInteractionListener : public MouseAdapter, public MouseMotionAdapter, public KeyAdapter
+	{
+	public :
+		PopupMenuInteractionListener(InternalWindowPtr TheInternalWindow);
+		
+        virtual void mouseClicked(const MouseEvent& e);
+		virtual void mousePressed(const MouseEvent& e);
+        virtual void mouseReleased(const MouseEvent& e);
+		virtual void keyPressed(const KeyEvent& e);
+		virtual void mouseMoved(const MouseEvent& e);
+        virtual void mouseDragged(const MouseEvent& e);
+	protected :
+		InternalWindowPtr _InternalWindow;
+	};
+
+	friend class PopupMenuInteractionListener;
+
+	PopupMenuInteractionListener _PopupMenuInteractionListener;
+
+    typedef std::map<UInt64, KeyAcceleratorListenerPtr> KeyAcceleratorMap;
+    typedef KeyAcceleratorMap::iterator KeyAcceleratorMapItor;
+    KeyAcceleratorMap _KeyAcceleratorMap;
+	
+	class TitlebarStartDragListener : public MouseAdapter
+	{
+	public :
+		TitlebarStartDragListener(InternalWindowPtr TheInternalWindow);
+		
+		virtual void mousePressed(const MouseEvent& e);
+	protected :
+		InternalWindowPtr _InternalWindow;
+	};
+
+	friend class TitlebarStartDragListener;
+
+	TitlebarStartDragListener _TitlebarStartDragListener;
+
+	class TitlebarDraggedListener : public MouseMotionAdapter, public MouseAdapter, public KeyAdapter
+	{
+	public :
+		TitlebarDraggedListener(InternalWindowPtr TheInternalWindow);
+		virtual void mouseDragged(const MouseEvent& e);
+		
+		virtual void mouseReleased(const MouseEvent& e);
+
+		virtual void keyPressed(const KeyEvent& e);
+
+		void setWindowStartPosition(const Pnt2s& Pos);
+		void setMouseStartPosition(const Pnt2s& Pos);
+	protected :
+		InternalWindowPtr _InternalWindow;
+
+		Pnt2s _WindowStartPosition;
+		Pnt2s _MouseStartPosition;
+	};
+
+	friend class TitlebarDraggedListener;
+
+	TitlebarDraggedListener _TitlebarDraggedListener;
+	
+	class BorderDraggedListener : public MouseMotionAdapter, public MouseAdapter, public KeyAdapter
+	{
+	public :
+		BorderDraggedListener(InternalWindowPtr TheInternalWindow);
+		virtual void mouseDragged(const MouseEvent& e);
+		
+		virtual void mouseReleased(const MouseEvent& e);
+		
+		virtual void keyPressed(const KeyEvent& e);
+
+		void setWindowStartPosition(const Pnt2s& Pos);
+		void setWindowStartSize(const Vec2s& Size);
+		void setMouseStartPosition(const Pnt2s& Pos);
+		void setBorderDragged(const WindowArea Value);
+	protected :
+		InternalWindowPtr _InternalWindow;
+
+		Pnt2s _WindowStartPosition;
+		Vec2s _WindowStartSize;
+		Pnt2s _MouseStartPosition;
+
+		WindowArea _BorderDragged;
+	};
+
+	friend class BorderDraggedListener;
+
+	BorderDraggedListener _BorderDraggedListener;
+	
+	//Titlebar Action Listeners
+	//CloseButton
+	class CloseButtonListener : public ActionListener
+	{
+	public :
+		CloseButtonListener(InternalWindowPtr TheInternalWindow);
+		
+		virtual void actionPerformed(const ActionEvent& e);
+	protected :
+		InternalWindowPtr _InternalWindow;
+	};
+
+	friend class CloseButtonListener;
+
+	CloseButtonListener _CloseButtonListener;
+	
+	//MaximizeButton
+	class MaximizeButtonListener : public ActionListener
+	{
+	public :
+		MaximizeButtonListener(InternalWindowPtr TheInternalWindow);
+		
+		virtual void actionPerformed(const ActionEvent& e);
+	protected :
+		InternalWindowPtr _InternalWindow;
+	};
+
+	friend class MaximizeButtonListener;
+
+	MaximizeButtonListener _MaximizeButtonListener;
+	
+	//IconifyButton
+	class IconifyButtonListener : public ActionListener
+	{
+	public :
+		IconifyButtonListener(InternalWindowPtr TheInternalWindow);
+		
+		virtual void actionPerformed(const ActionEvent& e);
+	protected :
+		InternalWindowPtr _InternalWindow;
+	};
+
+	friend class IconifyButtonListener;
+
+	IconifyButtonListener _IconifyButtonListener;
     /*==========================  PRIVATE  ================================*/
   private:
 

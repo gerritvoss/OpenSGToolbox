@@ -214,17 +214,15 @@ int main(int argc, char **argv)
         MainFrameBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
     endEditCP(MainFrameBackground, ColorUIBackground::ColorFieldMask);
     // Create The Main Frame
-    FramePtr MainFrame = osg::Frame::create();
-    LayoutPtr MainFrameLayout = osg::FlowLayout::create();
-    beginEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
-       // Assign the Button to the MainFrame so it will be displayed
-       // when the view is rendered.
-       MainFrame->getChildren().addValue(ExampleButton);
-	   
-       MainFrame->getChildren().addValue(TestingOption);
+    FramePtr MainFrame = osg::InternalWindow::create();
+    // CardLayout causes the TabPanel to occupy the entire
+    // MainFrame view (useful with TabPanel)
+    CardLayoutPtr MainFrameLayout = osg::CardLayout::create();
+
+    beginEditCP(MainFrame, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask  | Component::ConstraintsFieldMask);
        MainFrame->setLayout(MainFrameLayout);
-       MainFrame->setBackground(MainFrameBackground);
-    endEditCP(MainFrame, Frame::ChildrenFieldMask | Frame::LayoutFieldMask | Frame::BackgroundFieldMask);
+       MainFrame->getChildren().addValue(MainTabPanel);
+    endEditCP(MainFrame, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask  | Component::ConstraintsFieldMask);
 
     TutorialKeyListener TheKeyListener;
     MainFrame->addKeyListener(&TheKeyListener);

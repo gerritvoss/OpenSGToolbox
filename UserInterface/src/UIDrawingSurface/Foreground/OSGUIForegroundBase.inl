@@ -105,34 +105,6 @@ SFUIDrawingSurfacePtr *UIForegroundBase::getSFDrawingSurface(void)
     return &_sfDrawingSurface;
 }
 
-//! Get the UIForeground::_sfFramePositionOffset field.
-inline
-SFVec2s *UIForegroundBase::getSFFramePositionOffset(void)
-{
-    return &_sfFramePositionOffset;
-}
-
-//! Get the UIForeground::_sfFrameBounds field.
-inline
-SFVec2f *UIForegroundBase::getSFFrameBounds(void)
-{
-    return &_sfFrameBounds;
-}
-
-//! Get the UIForeground::_sfVerticalAlignment field.
-inline
-SFUInt32 *UIForegroundBase::getSFVerticalAlignment(void)
-{
-    return &_sfVerticalAlignment;
-}
-
-//! Get the UIForeground::_sfHorizontalAlignment field.
-inline
-SFUInt32 *UIForegroundBase::getSFHorizontalAlignment(void)
-{
-    return &_sfHorizontalAlignment;
-}
-
 //! Get the UIForeground::_sfMouseTransformFunctor field.
 inline
 SFUIForegroundMouseTransformFunctorPtr *UIForegroundBase::getSFMouseTransformFunctor(void)
@@ -164,90 +136,6 @@ void UIForegroundBase::setDrawingSurface(const UIDrawingSurfacePtr &value)
 	{
         getDrawingSurface()->setMouseTransformFunctor(getMouseTransformFunctor());
 	}
-}
-
-//! Get the value of the UIForeground::_sfFramePositionOffset field.
-inline
-Vec2s &UIForegroundBase::getFramePositionOffset(void)
-{
-    return _sfFramePositionOffset.getValue();
-}
-
-//! Get the value of the UIForeground::_sfFramePositionOffset field.
-inline
-const Vec2s &UIForegroundBase::getFramePositionOffset(void) const
-{
-    return _sfFramePositionOffset.getValue();
-}
-
-//! Set the value of the UIForeground::_sfFramePositionOffset field.
-inline
-void UIForegroundBase::setFramePositionOffset(const Vec2s &value)
-{
-    _sfFramePositionOffset.setValue(value);
-}
-
-//! Get the value of the UIForeground::_sfFrameBounds field.
-inline
-Vec2f &UIForegroundBase::getFrameBounds(void)
-{
-    return _sfFrameBounds.getValue();
-}
-
-//! Get the value of the UIForeground::_sfFrameBounds field.
-inline
-const Vec2f &UIForegroundBase::getFrameBounds(void) const
-{
-    return _sfFrameBounds.getValue();
-}
-
-//! Set the value of the UIForeground::_sfFrameBounds field.
-inline
-void UIForegroundBase::setFrameBounds(const Vec2f &value)
-{
-    _sfFrameBounds.setValue(value);
-}
-
-//! Get the value of the UIForeground::_sfVerticalAlignment field.
-inline
-UInt32 &UIForegroundBase::getVerticalAlignment(void)
-{
-    return _sfVerticalAlignment.getValue();
-}
-
-//! Get the value of the UIForeground::_sfVerticalAlignment field.
-inline
-const UInt32 &UIForegroundBase::getVerticalAlignment(void) const
-{
-    return _sfVerticalAlignment.getValue();
-}
-
-//! Set the value of the UIForeground::_sfVerticalAlignment field.
-inline
-void UIForegroundBase::setVerticalAlignment(const UInt32 &value)
-{
-    _sfVerticalAlignment.setValue(value);
-}
-
-//! Get the value of the UIForeground::_sfHorizontalAlignment field.
-inline
-UInt32 &UIForegroundBase::getHorizontalAlignment(void)
-{
-    return _sfHorizontalAlignment.getValue();
-}
-
-//! Get the value of the UIForeground::_sfHorizontalAlignment field.
-inline
-const UInt32 &UIForegroundBase::getHorizontalAlignment(void) const
-{
-    return _sfHorizontalAlignment.getValue();
-}
-
-//! Set the value of the UIForeground::_sfHorizontalAlignment field.
-inline
-void UIForegroundBase::setHorizontalAlignment(const UInt32 &value)
-{
-    _sfHorizontalAlignment.setValue(value);
 }
 
 //! Get the value of the UIForeground::_sfMouseTransformFunctor field.

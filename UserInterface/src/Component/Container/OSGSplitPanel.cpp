@@ -50,7 +50,7 @@
 #include "Util/OSGUIDefines.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
-#include "Component/Container/OSGFrame.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 
 #include "OSGSplitPanel.h"
 
@@ -282,15 +282,15 @@ void SplitPanel::DividerListener::mouseEntered(const MouseEvent& e)
 {
 	if (_SplitPanel->getExpandable())
 	{
-		if(_SplitPanel->getParentFrame() != NullFC && _SplitPanel->getParentFrame()->getDrawingSurface()!=NullFC&&_SplitPanel->getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+		if(_SplitPanel->getParentWindow() != NullFC && _SplitPanel->getParentWindow()->getDrawingSurface()!=NullFC&&_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 		{
 			if (_SplitPanel->getAlignment() == HORIZONTAL_ALIGNMENT)
 			{
-				_SplitPanel->getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_RESIZE_W_TO_E);
+				_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_RESIZE_W_TO_E);
 			}
 			else
 			{
-				_SplitPanel->getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_RESIZE_N_TO_S);
+				_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_RESIZE_N_TO_S);
 			}
 		}
 	}
@@ -299,9 +299,9 @@ void SplitPanel::DividerListener::mouseExited(const MouseEvent& e)
 {
 	if (_SplitPanel->getExpandable())
 	{
-		if(_SplitPanel->getParentFrame() != NullFC && _SplitPanel->getParentFrame()->getDrawingSurface()!= NullFC && _SplitPanel->getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+		if(_SplitPanel->getParentWindow() != NullFC && _SplitPanel->getParentWindow()->getDrawingSurface()!= NullFC && _SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 		{
-			_SplitPanel->getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
+			_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
 		}
 	}
 }
@@ -309,10 +309,10 @@ void SplitPanel::DividerListener::mousePressed(const MouseEvent& e)
 {
 	if (_SplitPanel->getExpandable())
 	{
-		if(_SplitPanel->getParentFrame() != NullFC)
+		if(_SplitPanel->getParentWindow() != NullFC)
 		{
-			_SplitPanel->getParentFrame()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
-            _SplitPanel->getParentFrame()->getDrawingSurface()->getEventProducer()->addMouseListener(&(_SplitPanel->_DividerDraggedListener));
+			_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
+            _SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&(_SplitPanel->_DividerDraggedListener));
 		}
 	}
 }
@@ -333,10 +333,10 @@ void SplitPanel::DividerDraggedListener::mouseEntered(const MouseEvent& e)
 }
 void SplitPanel::DividerDraggedListener::mouseExited(const MouseEvent& e)
 {
-	//if(_SplitPanel->getParentFrame() != NullFC)
+	//if(_SplitPanel->getParentWindow() != NullFC)
 	//{
-	//	_SplitPanel->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
-	//	_SplitPanel->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_SplitPanel->_DividerDraggedListener));
+	//	_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
+	//	_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_SplitPanel->_DividerDraggedListener));
 	//}
 }
 void SplitPanel::DividerDraggedListener::mousePressed(const MouseEvent& e)
@@ -344,10 +344,10 @@ void SplitPanel::DividerDraggedListener::mousePressed(const MouseEvent& e)
 }
 void SplitPanel::DividerDraggedListener::mouseReleased(const MouseEvent& e)
 {
-	if(_SplitPanel->getParentFrame() != NullFC)
+	if(_SplitPanel->getParentWindow() != NullFC)
 	{
-		_SplitPanel->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
-		_SplitPanel->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_SplitPanel->_DividerDraggedListener));
+		_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
+		_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_SplitPanel->_DividerDraggedListener));
 	}
 }
 void SplitPanel::DividerDraggedListener::mouseMoved(const MouseEvent& e)

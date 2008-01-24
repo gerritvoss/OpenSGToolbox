@@ -36,6 +36,9 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
+#include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
+
 #include "OSGBevelBorder.h"
 #include "OSGCompoundBorder.h"
 #include "OSGEmptyBorder.h"
@@ -45,3 +48,4 @@
 #include "OSGMultiColorMatteBorder.h"
 #include "OSGShadowBorder.h"
 #include "OSGRoundedCornerLineBorder.h"
+#include "OSGWindowBorder.h"

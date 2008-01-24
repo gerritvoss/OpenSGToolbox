@@ -41,16 +41,7 @@ A UI Internal Window.
 		defaultValue="NullFC"
 	>
 	</Field>
-	<Field
-		name="LockInput"
-		type="bool"
-		cardinality="single"
-		visibility="external"
-		access="public"
-		defaultValue="false"
-	>
-    </Field>
-    <Field
+        <Field
           name="MenuBar"
           type="MenuBarPtr"
           cardinality="single"
@@ -58,6 +49,16 @@ A UI Internal Window.
           access="public"
           defaultValue="NullFC"
 		  header="Component/Menu/OSGMenuBarFields.h"
+          >
+	</Field>
+        <Field
+          name="Titlebar"
+          type="TitlebarPtr"
+          cardinality="single"
+          visibility="external"
+          access="public"
+          defaultValue="NullFC"
+          header="Component/Container/Window/OSGTitlebarFields.h"
           >
 	</Field>
 </FieldContainer>

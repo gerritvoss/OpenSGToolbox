@@ -97,7 +97,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIForeground : public UIForegroundBase
 
     /*! \}                                                                 */
     
-	void updateFrameBounds(Viewport * port);
     /*==========================  PRIVATE  ================================*/
   private:
 

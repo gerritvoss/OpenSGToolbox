@@ -43,8 +43,13 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGAbstractWindowBase.h"
+
+#include <OpenSG/Input/OSGMouseAdapter.h>
+#include <OpenSG/Input/OSGMouseMotionAdapter.h>
+#include <OpenSG/Input/OSGKeyAdapter.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,6 +82,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindow : public AbstractWindowBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+	virtual bool isAlignableInDrawingSurface(void) const;
+	virtual bool isScalableInDrawingSurface(void) const;
+	
+    virtual void updateContainerLayout(void);
+	virtual void updateClipBounds(void);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -98,6 +110,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindow : public AbstractWindowBase
 
     /*! \}                                                                 */
     
+	virtual void drawInternal(const GraphicsPtr TheGraphics) const;
+    virtual BorderPtr getDrawnBorder(void) const;
+    virtual UIBackgroundPtr getDrawnBackground(void) const;
     /*==========================  PRIVATE  ================================*/
   private:
 

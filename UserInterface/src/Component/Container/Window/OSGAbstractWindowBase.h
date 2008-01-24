@@ -74,11 +74,19 @@
 #include <OpenSG/OSGBoolFields.h> // IsIcon type
 #include <OpenSG/OSGBoolFields.h> // Maximizable type
 #include <OpenSG/OSGBoolFields.h> // IsMaximized type
+#include <OpenSG/OSGVec2sFields.h> // PreviousPosition type
+#include <OpenSG/OSGVec2sFields.h> // PreviousSize type
 #include <OpenSG/OSGBoolFields.h> // Resizable type
 #include <OpenSG/OSGBoolFields.h> // IsSelected type
 #include <OpenSG/OSGStringFields.h> // Title type
 #include "Component/Misc/OSGUIDrawObjectCanvas.h" // DesktopIcon type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // FrameIcon type
+#include <OpenSG/OSGBoolFields.h> // AllwaysOnTop type
+#include <OpenSG/OSGBoolFields.h> // DrawTitlebar type
+#include <OpenSG/OSGBoolFields.h> // DrawDecorations type
+#include <OpenSG/OSGBoolFields.h> // LockInput type
+#include <OpenSG/OSGVec2fFields.h> // AlignmentInDrawingSurface type
+#include <OpenSG/OSGVec2fFields.h> // ScalingInDrawingSurface type
+#include <OpenSG/OSGUInt32Fields.h> // ResizeModifyCursorWidth type
 
 #include "OSGAbstractWindowFields.h"
 
@@ -102,19 +110,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
 
     enum
     {
-        DrawingSurfaceFieldId = Inherited::NextFieldId,
-        ClosableFieldId       = DrawingSurfaceFieldId + 1,
-        IsClosedFieldId       = ClosableFieldId       + 1,
-        IconableFieldId       = IsClosedFieldId       + 1,
-        IsIconFieldId         = IconableFieldId       + 1,
-        MaximizableFieldId    = IsIconFieldId         + 1,
-        IsMaximizedFieldId    = MaximizableFieldId    + 1,
-        ResizableFieldId      = IsMaximizedFieldId    + 1,
-        IsSelectedFieldId     = ResizableFieldId      + 1,
-        TitleFieldId          = IsSelectedFieldId     + 1,
-        DesktopIconFieldId    = TitleFieldId          + 1,
-        FrameIconFieldId      = DesktopIconFieldId    + 1,
-        NextFieldId           = FrameIconFieldId      + 1
+        DrawingSurfaceFieldId            = Inherited::NextFieldId,
+        ClosableFieldId                  = DrawingSurfaceFieldId            + 1,
+        IsClosedFieldId                  = ClosableFieldId                  + 1,
+        IconableFieldId                  = IsClosedFieldId                  + 1,
+        IsIconFieldId                    = IconableFieldId                  + 1,
+        MaximizableFieldId               = IsIconFieldId                    + 1,
+        IsMaximizedFieldId               = MaximizableFieldId               + 1,
+        PreviousPositionFieldId          = IsMaximizedFieldId               + 1,
+        PreviousSizeFieldId              = PreviousPositionFieldId          + 1,
+        ResizableFieldId                 = PreviousSizeFieldId              + 1,
+        IsSelectedFieldId                = ResizableFieldId                 + 1,
+        TitleFieldId                     = IsSelectedFieldId                + 1,
+        DesktopIconFieldId               = TitleFieldId                     + 1,
+        AllwaysOnTopFieldId              = DesktopIconFieldId               + 1,
+        DrawTitlebarFieldId              = AllwaysOnTopFieldId              + 1,
+        DrawDecorationsFieldId           = DrawTitlebarFieldId              + 1,
+        LockInputFieldId                 = DrawDecorationsFieldId           + 1,
+        AlignmentInDrawingSurfaceFieldId = LockInputFieldId                 + 1,
+        ScalingInDrawingSurfaceFieldId   = AlignmentInDrawingSurfaceFieldId + 1,
+        ResizeModifyCursorWidthFieldId   = ScalingInDrawingSurfaceFieldId   + 1,
+        NextFieldId                      = ResizeModifyCursorWidthFieldId   + 1
     };
 
     static const OSG::BitVector DrawingSurfaceFieldMask;
@@ -124,11 +140,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
     static const OSG::BitVector IsIconFieldMask;
     static const OSG::BitVector MaximizableFieldMask;
     static const OSG::BitVector IsMaximizedFieldMask;
+    static const OSG::BitVector PreviousPositionFieldMask;
+    static const OSG::BitVector PreviousSizeFieldMask;
     static const OSG::BitVector ResizableFieldMask;
     static const OSG::BitVector IsSelectedFieldMask;
     static const OSG::BitVector TitleFieldMask;
     static const OSG::BitVector DesktopIconFieldMask;
-    static const OSG::BitVector FrameIconFieldMask;
+    static const OSG::BitVector AllwaysOnTopFieldMask;
+    static const OSG::BitVector DrawTitlebarFieldMask;
+    static const OSG::BitVector DrawDecorationsFieldMask;
+    static const OSG::BitVector LockInputFieldMask;
+    static const OSG::BitVector AlignmentInDrawingSurfaceFieldMask;
+    static const OSG::BitVector ScalingInDrawingSurfaceFieldMask;
+    static const OSG::BitVector ResizeModifyCursorWidthFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -162,11 +186,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
            SFBool              *getSFIsIcon         (void);
            SFBool              *getSFMaximizable    (void);
            SFBool              *getSFIsMaximized    (void);
+           SFVec2s             *getSFPreviousPosition(void);
+           SFVec2s             *getSFPreviousSize   (void);
            SFBool              *getSFResizable      (void);
            SFBool              *getSFIsSelected     (void);
            SFString            *getSFTitle          (void);
            SFUIDrawObjectCanvasPtr *getSFDesktopIcon    (void);
-           SFUIDrawObjectCanvasPtr *getSFFrameIcon      (void);
+           SFBool              *getSFAllwaysOnTop   (void);
+           SFBool              *getSFDrawTitlebar   (void);
+           SFBool              *getSFDrawDecorations(void);
+           SFBool              *getSFLockInput      (void);
+           SFVec2f             *getSFAlignmentInDrawingSurface(void);
+           SFVec2f             *getSFScalingInDrawingSurface(void);
+           SFUInt32            *getSFResizeModifyCursorWidth(void);
 
            UIDrawingSurfacePtr &getDrawingSurface (void);
      const UIDrawingSurfacePtr &getDrawingSurface (void) const;
@@ -182,6 +214,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
      const bool                &getMaximizable    (void) const;
            bool                &getIsMaximized    (void);
      const bool                &getIsMaximized    (void) const;
+           Vec2s               &getPreviousPosition(void);
+     const Vec2s               &getPreviousPosition(void) const;
+           Vec2s               &getPreviousSize   (void);
+     const Vec2s               &getPreviousSize   (void) const;
            bool                &getResizable      (void);
      const bool                &getResizable      (void) const;
            bool                &getIsSelected     (void);
@@ -190,8 +226,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
      const std::string         &getTitle          (void) const;
            UIDrawObjectCanvasPtr &getDesktopIcon    (void);
      const UIDrawObjectCanvasPtr &getDesktopIcon    (void) const;
-           UIDrawObjectCanvasPtr &getFrameIcon      (void);
-     const UIDrawObjectCanvasPtr &getFrameIcon      (void) const;
+           bool                &getAllwaysOnTop   (void);
+     const bool                &getAllwaysOnTop   (void) const;
+           bool                &getDrawTitlebar   (void);
+     const bool                &getDrawTitlebar   (void) const;
+           bool                &getDrawDecorations(void);
+     const bool                &getDrawDecorations(void) const;
+           bool                &getLockInput      (void);
+     const bool                &getLockInput      (void) const;
+           Vec2f               &getAlignmentInDrawingSurface(void);
+     const Vec2f               &getAlignmentInDrawingSurface(void) const;
+           Vec2f               &getScalingInDrawingSurface(void);
+     const Vec2f               &getScalingInDrawingSurface(void) const;
+           UInt32              &getResizeModifyCursorWidth(void);
+     const UInt32              &getResizeModifyCursorWidth(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -205,11 +253,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
      void setIsIcon         ( const bool &value );
      void setMaximizable    ( const bool &value );
      void setIsMaximized    ( const bool &value );
+     void setPreviousPosition( const Vec2s &value );
+     void setPreviousSize   ( const Vec2s &value );
      void setResizable      ( const bool &value );
      void setIsSelected     ( const bool &value );
      void setTitle          ( const std::string &value );
      void setDesktopIcon    ( const UIDrawObjectCanvasPtr &value );
-     void setFrameIcon      ( const UIDrawObjectCanvasPtr &value );
+     void setAllwaysOnTop   ( const bool &value );
+     void setDrawTitlebar   ( const bool &value );
+     void setDrawDecorations( const bool &value );
+     void setLockInput      ( const bool &value );
+     void setAlignmentInDrawingSurface( const Vec2f &value );
+     void setScalingInDrawingSurface( const Vec2f &value );
+     void setResizeModifyCursorWidth( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -243,11 +299,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
     SFBool              _sfIsIcon;
     SFBool              _sfMaximizable;
     SFBool              _sfIsMaximized;
+    SFVec2s             _sfPreviousPosition;
+    SFVec2s             _sfPreviousSize;
     SFBool              _sfResizable;
     SFBool              _sfIsSelected;
     SFString            _sfTitle;
     SFUIDrawObjectCanvasPtr   _sfDesktopIcon;
-    SFUIDrawObjectCanvasPtr   _sfFrameIcon;
+    SFBool              _sfAllwaysOnTop;
+    SFBool              _sfDrawTitlebar;
+    SFBool              _sfDrawDecorations;
+    SFBool              _sfLockInput;
+    SFVec2f             _sfAlignmentInDrawingSurface;
+    SFVec2f             _sfScalingInDrawingSurface;
+    SFUInt32            _sfResizeModifyCursorWidth;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

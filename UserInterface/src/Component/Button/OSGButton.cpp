@@ -47,7 +47,7 @@
 
 #include "OSGButton.h"
 #include "Util/OSGUIDrawUtils.h"
-#include "Component/Container/OSGFrame.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include <OpenSG/OSGImageFileHandler.h>
@@ -323,14 +323,14 @@ void Button::mousePressed(const MouseEvent& e)
 			endEditCP(ButtonPtr(this), Button::ActiveFieldMask);
 			_Armed = true;
 	        
-			if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&& getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+			if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&& getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 			{
-				getParentFrame()->getDrawingSurface()->getEventProducer()->addMouseListener(&_ButtonArmedListener);
+				getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_ButtonArmedListener);
 				if(getEnableActionOnMouseDownTime())
 				{
 					produceMousePressedActionPerformed(ActionEvent(ButtonPtr(this), e.getTimeStamp()));
 					_ButtonArmedListener.reset();
-					getParentFrame()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_ButtonArmedListener);
+					getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_ButtonArmedListener);
 				}
 			}
 		}
@@ -658,6 +658,46 @@ Button::~Button(void)
 void Button::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+	if(whichField & DrawObjectFieldMask &&
+		getDrawObject() != NullFC)
+	{
+		beginEditCP(getDrawObject(), SizeFieldMask);
+			getDrawObject()->setSize(getDrawObject()->getPreferredSize());
+		endEditCP(getDrawObject(), SizeFieldMask);
+	}
+	
+	if(whichField & ActiveDrawObjectFieldMask &&
+		getActiveDrawObject() != NullFC)
+	{
+		beginEditCP(getActiveDrawObject(), SizeFieldMask);
+			getActiveDrawObject()->setSize(getActiveDrawObject()->getPreferredSize());
+		endEditCP(getActiveDrawObject(), SizeFieldMask);
+	}
+	
+	if(whichField & RolloverDrawObjectFieldMask &&
+		getRolloverDrawObject() != NullFC)
+	{
+		beginEditCP(getRolloverDrawObject(), SizeFieldMask);
+			getRolloverDrawObject()->setSize(getRolloverDrawObject()->getPreferredSize());
+		endEditCP(getRolloverDrawObject(), SizeFieldMask);
+	}
+	
+	if(whichField & DisabledDrawObjectFieldMask &&
+		getDisabledDrawObject() != NullFC)
+	{
+		beginEditCP(getDisabledDrawObject(), SizeFieldMask);
+			getDisabledDrawObject()->setSize(getDisabledDrawObject()->getPreferredSize());
+		endEditCP(getDisabledDrawObject(), SizeFieldMask);
+	}
+	
+	if(whichField & FocusedDrawObjectFieldMask &&
+		getFocusedDrawObject() != NullFC)
+	{
+		beginEditCP(getFocusedDrawObject(), SizeFieldMask);
+			getFocusedDrawObject()->setSize(getFocusedDrawObject()->getPreferredSize());
+		endEditCP(getFocusedDrawObject(), SizeFieldMask);
+	}
 }
 
 void Button::dump(      UInt32    , 
@@ -670,7 +710,7 @@ void Button::ButtonArmedListener::mouseReleased(const MouseEvent& e)
 {
 	if(e.getButton() == MouseEvent::BUTTON1)
 	{
-		Pnt2s MousePos = ViewportToDrawingSurface(e.getLocation(), _Button->getParentFrame()->getDrawingSurface(), e.getViewport());
+		Pnt2s MousePos = ViewportToDrawingSurface(e.getLocation(), _Button->getParentWindow()->getDrawingSurface(), e.getViewport());
         //If the Mouse is not within the button
         if(!_Button->isContained(MousePos))
         {
@@ -679,17 +719,17 @@ void Button::ButtonArmedListener::mouseReleased(const MouseEvent& e)
         }
 
 		//Remove myself from the listener
-        _Button->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
+        _Button->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
         if(_Button->getEnableActionOnMouseDownTime())
         {
-            _Button->getParentFrame()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+            _Button->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
         }
 	}
 }
 
 void Button::ButtonArmedListener::update(const UpdateEvent& e)
 {
-    if(_Button->isContained(_Button->getParentFrame()->getDrawingSurface()->getMousePosition()))
+    if(_Button->isContained(_Button->getParentWindow()->getDrawingSurface()->getMousePosition()))
     {
         _ActionFireElps += e.getElapsedTime();
     }

@@ -50,7 +50,7 @@
 #include "OSGPasswordField.h"
 #include "Util/OSGUIDrawUtils.h"
 
-#include "Component/Container/OSGFrame.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include <OpenSG/Input/OSGStringUtils.h>

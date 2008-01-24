@@ -133,8 +133,8 @@ const OSG::BitVector  ComponentBase::OpacityFieldMask =
 const OSG::BitVector  ComponentBase::ParentContainerFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::ParentContainerFieldId);
 
-const OSG::BitVector  ComponentBase::ParentFrameFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::ParentFrameFieldId);
+const OSG::BitVector  ComponentBase::ParentWindowFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentBase::ParentWindowFieldId);
 
 const OSG::BitVector  ComponentBase::ClippingFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::ClippingFieldId);
@@ -218,7 +218,7 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
 /*! \var ContainerPtr    ComponentBase::_sfParentContainer
     
 */
-/*! \var FramePtr        ComponentBase::_sfParentFrame
+/*! \var InternalWindowPtr ComponentBase::_sfParentWindow
     
 */
 /*! \var bool            ComponentBase::_sfClipping
@@ -347,11 +347,11 @@ FieldDescription *ComponentBase::_desc[] =
                      ParentContainerFieldId, ParentContainerFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFParentContainer),
-    new FieldDescription(SFFramePtr::getClassType(), 
-                     "ParentFrame", 
-                     ParentFrameFieldId, ParentFrameFieldMask,
+    new FieldDescription(SFInternalWindowPtr::getClassType(), 
+                     "ParentWindow", 
+                     ParentWindowFieldId, ParentWindowFieldMask,
                      false,
-                     (FieldAccessMethod) &ComponentBase::getSFParentFrame),
+                     (FieldAccessMethod) &ComponentBase::getSFParentWindow),
     new FieldDescription(SFBool::getClassType(), 
                      "Clipping", 
                      ClippingFieldId, ClippingFieldMask,
@@ -439,19 +439,19 @@ ComponentBase::ComponentBase(void) :
     _sfEnabled                (bool(true)), 
     _sfFocused                (bool(false)), 
     _sfConstraints            (), 
-    _sfBorder                 (NullFC), 
-    _sfBackground             (NullFC), 
-    _sfDisabledBorder         (NullFC), 
-    _sfDisabledBackground     (NullFC), 
+    _sfBorder                 (BorderPtr(NullFC)), 
+    _sfBackground             (UIBackgroundPtr(NullFC)), 
+    _sfDisabledBorder         (BorderPtr(NullFC)), 
+    _sfDisabledBackground     (UIBackgroundPtr(NullFC)), 
     _sfFocusable              (bool(true)), 
-    _sfFocusedBorder          (NullFC), 
-    _sfFocusedBackground      (NullFC), 
-    _sfRolloverBorder         (NullFC), 
-    _sfRolloverBackground     (NullFC), 
+    _sfFocusedBorder          (BorderPtr(NullFC)), 
+    _sfFocusedBackground      (UIBackgroundPtr(NullFC)), 
+    _sfRolloverBorder         (BorderPtr(NullFC)), 
+    _sfRolloverBackground     (UIBackgroundPtr(NullFC)), 
     _sfToolTipText            (), 
     _sfOpacity                (Real32(1.0)), 
     _sfParentContainer        (ContainerPtr(NullFC)), 
-    _sfParentFrame            (FramePtr(NullFC)), 
+    _sfParentWindow           (InternalWindowPtr(NullFC)), 
     _sfClipping               (bool(true)), 
     _sfPopupMenu              (PopupMenuPtr(NullFC)), 
     Inherited() 
@@ -486,7 +486,7 @@ ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfToolTipText            (source._sfToolTipText            ), 
     _sfOpacity                (source._sfOpacity                ), 
     _sfParentContainer        (source._sfParentContainer        ), 
-    _sfParentFrame            (source._sfParentFrame            ), 
+    _sfParentWindow           (source._sfParentWindow           ), 
     _sfClipping               (source._sfClipping               ), 
     _sfPopupMenu              (source._sfPopupMenu              ), 
     Inherited                 (source)
@@ -620,9 +620,9 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfParentContainer.getBinSize();
     }
 
-    if(FieldBits::NoField != (ParentFrameFieldMask & whichField))
+    if(FieldBits::NoField != (ParentWindowFieldMask & whichField))
     {
-        returnValue += _sfParentFrame.getBinSize();
+        returnValue += _sfParentWindow.getBinSize();
     }
 
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
@@ -759,9 +759,9 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
         _sfParentContainer.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ParentFrameFieldMask & whichField))
+    if(FieldBits::NoField != (ParentWindowFieldMask & whichField))
     {
-        _sfParentFrame.copyToBin(pMem);
+        _sfParentWindow.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
@@ -897,9 +897,9 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfParentContainer.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ParentFrameFieldMask & whichField))
+    if(FieldBits::NoField != (ParentWindowFieldMask & whichField))
     {
-        _sfParentFrame.copyFromBin(pMem);
+        _sfParentWindow.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
@@ -991,8 +991,8 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
         _sfParentContainer.syncWith(pOther->_sfParentContainer);
 
-    if(FieldBits::NoField != (ParentFrameFieldMask & whichField))
-        _sfParentFrame.syncWith(pOther->_sfParentFrame);
+    if(FieldBits::NoField != (ParentWindowFieldMask & whichField))
+        _sfParentWindow.syncWith(pOther->_sfParentWindow);
 
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
         _sfClipping.syncWith(pOther->_sfClipping);
@@ -1079,8 +1079,8 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
     if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
         _sfParentContainer.syncWith(pOther->_sfParentContainer);
 
-    if(FieldBits::NoField != (ParentFrameFieldMask & whichField))
-        _sfParentFrame.syncWith(pOther->_sfParentFrame);
+    if(FieldBits::NoField != (ParentWindowFieldMask & whichField))
+        _sfParentWindow.syncWith(pOther->_sfParentWindow);
 
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
         _sfClipping.syncWith(pOther->_sfClipping);
@@ -1242,9 +1242,9 @@ SFContainerPtr *ComponentBase::getSFParentContainer(void)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-SFFramePtr *ComponentBase::getSFParentFrame(void)
+SFInternalWindowPtr *ComponentBase::getSFParentWindow(void)
 {
-    return &_sfParentFrame;
+    return &_sfParentWindow;
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
@@ -1675,21 +1675,21 @@ void ComponentBase::setParentContainer(const ContainerPtr &value)
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-FramePtr &ComponentBase::getParentFrame(void)
+InternalWindowPtr &ComponentBase::getParentWindow(void)
 {
-    return _sfParentFrame.getValue();
+    return _sfParentWindow.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-const FramePtr &ComponentBase::getParentFrame(void) const
+const InternalWindowPtr &ComponentBase::getParentWindow(void) const
 {
-    return _sfParentFrame.getValue();
+    return _sfParentWindow.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setParentFrame(const FramePtr &value)
+void ComponentBase::setParentWindow(const InternalWindowPtr &value)
 {
-    _sfParentFrame.setValue(value);
+    _sfParentWindow.setValue(value);
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING

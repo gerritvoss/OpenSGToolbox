@@ -49,6 +49,7 @@
 
 #include "OSGRotatedComponent.h"
 #include "Util/OSGUIDrawUtils.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -346,11 +347,11 @@ void RotatedComponent::changed(BitVector whichField, UInt32 origin)
             getInternalComponent()->updateClipBounds();
 
 			//Check the Mouse
-			if( getParentFrame() != NullFC &&
-				getParentFrame()->getDrawingSurface() != NullFC &&
-				getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+			if( getParentWindow() != NullFC &&
+				getParentWindow()->getDrawingSurface() != NullFC &&
+				getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 			{
-				Pnt2s MouseLoc(getParentFrame()->getDrawingSurface()->getEventProducer()->getMousePosition());
+				Pnt2s MouseLoc(getParentWindow()->getDrawingSurface()->getEventProducer()->getMousePosition());
 				MouseEvent e(NullFC,getSystemTime(),MouseEvent::NO_BUTTON,0,MouseLoc, NullFC);
 				checkMouseEnterExit(e,e.getLocation(),getInternalComponent(),getInternalComponent()->isContained(MouseLoc, true),e.getViewport());
 			}

@@ -57,6 +57,7 @@
 
 #include "OSGUIRectangle.h"
 #include "UIDrawingSurface/NodeCore/OSGUIRectangleMouseTransformFunctor.h"   // MouseTransformFunctor default header
+#include "Component/Container/Window/OSGInternalWindow.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -103,8 +104,11 @@ Action::ResultE UIRectangle::drawPrimitives (DrawActionBase *action)
 	//Call The PreDraw on the Graphics
 	getDrawingSurface()->getGraphics()->preDraw();
 
-	//Draw The Component
-	getDrawingSurface()->getRootFrame()->draw(getDrawingSurface()->getGraphics());
+	//Draw all of the InternalWindows
+	for(UInt32 i(0) ; i<getDrawingSurface()->getInternalWindows().size() ; ++i)
+	{
+		getDrawingSurface()->getInternalWindows().getValue(i)->draw(getDrawingSurface()->getGraphics());
+	}
 
 	//Call the PostDraw on the Graphics
 	getDrawingSurface()->getGraphics()->postDraw();
@@ -158,27 +162,6 @@ void UIRectangle::adjustVolume(Volume & volume)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void UIRectangle::updateFrameBounds(void)
-{
-    if(getDrawingSurface() == NullFC)
-    {
-        return;
-    }
-	Vec2s Size(getWidth(),getHeight());
-	
-	//Translate to the Frames Position
-    //Calculate Alignment
-    Pnt2s AlignedPosition(0,0);
-
-    if(getDrawingSurface()->getRootFrame()->getSize() != Size ||
-       getDrawingSurface()->getRootFrame()->getPosition() != AlignedPosition)
-    {
-        beginEditCP(getDrawingSurface()->getRootFrame(), Frame::SizeFieldMask | Frame::PositionFieldMask);
-		    getDrawingSurface()->getRootFrame()->setSize(Size);
-		    getDrawingSurface()->getRootFrame()->setPosition(AlignedPosition);
-	    endEditCP(getDrawingSurface()->getRootFrame(), Frame::SizeFieldMask | Frame::PositionFieldMask);
-    }
-}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -232,13 +215,15 @@ void UIRectangle::changed(BitVector whichField, UInt32 origin)
         (whichField & DrawingSurfaceFieldMask) )
     {
 		invalidateVolume();
-        updateFrameBounds();
+		
+		if(getDrawingSurface()->getSize().x() != static_cast<Int16>(getWidth()) ||
+		   getDrawingSurface()->getSize().y() != static_cast<Int16>(getHeight()))
+		{
+			beginEditCP(getDrawingSurface(), UIDrawingSurface::SizeFieldMask);
+				getDrawingSurface()->setSize(Vec2s(static_cast<Int16>(getWidth()), static_cast<Int16>(getHeight())));
+			endEditCP(getDrawingSurface(), UIDrawingSurface::SizeFieldMask);
+		}
     }
-	
-	if( (whichField & DrawingSurfaceFieldMask) &&
-		getDrawingSurface() != NullFC)
-    {
-	}
 }
 
 void UIRectangle::dump(      UInt32    , 

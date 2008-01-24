@@ -89,13 +89,13 @@ ComponentPtr DefaultTableHeaderCellRenderer::getTableCellRendererComponent(Table
 	endEditCP(DefaultBorder);
 
 	LabelPtr TheLabel = Label::create();
-	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask | Label::BorderFieldMask);
+	beginEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask | Label::BordersFieldMask);
 		std::string tempString;
 		tempString = dynamic_cast<SFString*>(value.get())->getValue();
 		TheLabel->setText(tempString);
 		TheLabel->setPreferredSize(Vec2s(100,30));
-		TheLabel->setBorder(DefaultBorder);
-	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask | Label::BorderFieldMask);
+		TheLabel->setBorders(DefaultBorder);
+	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask | Label::BordersFieldMask);
 
 	return Component::Ptr::dcast(TheLabel);
 }

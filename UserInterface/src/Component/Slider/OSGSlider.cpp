@@ -52,7 +52,7 @@
 
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
-#include "Component/Container/OSGFrame.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 #include "Component/Text/OSGLabel.h"
 #include <sstream>
 
@@ -625,22 +625,22 @@ void Slider::KnobDraggedListener::mouseDragged(const MouseEvent& e)
 void Slider::KnobDraggedListener::mousePressed(const MouseEvent& e)
 {
     if(e.getButton() == e.BUTTON1 &&
-       _Slider->getParentFrame() != NullFC &&
-       _Slider->getParentFrame()->getDrawingSurface() != NullFC &&
-       _Slider->getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+       _Slider->getParentWindow() != NullFC &&
+       _Slider->getParentWindow()->getDrawingSurface() != NullFC &&
+       _Slider->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
     {
-        _Slider->getParentFrame()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(this);
+        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(this);
     }
 }
 
 void Slider::KnobDraggedListener::mouseReleased(const MouseEvent& e)
 {
     if(e.getButton() == e.BUTTON1 &&
-       _Slider->getParentFrame() != NullFC &&
-       _Slider->getParentFrame()->getDrawingSurface() != NullFC &&
-       _Slider->getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+       _Slider->getParentWindow() != NullFC &&
+       _Slider->getParentWindow()->getDrawingSurface() != NullFC &&
+       _Slider->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
     {
-        _Slider->getParentFrame()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
     }
 }
 

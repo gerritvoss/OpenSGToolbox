@@ -49,6 +49,7 @@
 
 #include "OSGEditableTextComponent.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 
 OSG_BEGIN_NAMESPACE
@@ -171,8 +172,8 @@ void EditableTextComponent::keyTyped(const KeyEvent& e)
 	
 	if(e.getKey()== e.KEY_RIGHT ||e.getKey()== e.KEY_KEYPAD_RIGHT)
 	{
-		if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&&getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC 
-			&& getParentFrame()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+		if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC 
+			&& getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
 		{
 			if(_TextSelectionEnd > _TextSelectionStart && _TextSelectionEnd < getText().size() && getCaretPosition()>_TextSelectionStart)
 			{
@@ -208,8 +209,8 @@ void EditableTextComponent::keyTyped(const KeyEvent& e)
 	if(e.getKey()== e.KEY_LEFT||e.getKey()== e.KEY_KEYPAD_LEFT)
 	{
 
-		if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&&getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC
-			&& getParentFrame()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+		if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC
+			&& getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
 		{
 			if(_TextSelectionEnd >_TextSelectionStart && _TextSelectionEnd <= getText().size() && getCaretPosition()>_TextSelectionStart && getCaretPosition()>0)
 			{
@@ -248,9 +249,9 @@ void EditableTextComponent::mouseEntered(const MouseEvent& e)
 {
 	if(getEnabled() && getEditable())
 	{
-		if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!=NullFC&&getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+		if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 		{
-			getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_I_BEAM);
+			getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_I_BEAM);
 		}
 	}
 	Inherited::mouseEntered(e);
@@ -259,9 +260,9 @@ void EditableTextComponent::mouseExited(const MouseEvent& e)
 {
 	if(getEnabled() && getEditable())
 	{
-		if(getParentFrame() != NullFC && getParentFrame()->getDrawingSurface()!= NullFC && getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC)
+		if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!= NullFC && getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 		{
-			getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
+			getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
 		}
 	}
 	Inherited::mouseExited(e);
@@ -269,12 +270,12 @@ void EditableTextComponent::mouseExited(const MouseEvent& e)
 
 void EditableTextComponent::focusLost(const FocusEvent& e)
 {
-	if( getParentFrame() != NullFC &&
-		getParentFrame()->getDrawingSurface() != NullFC &&
-		getParentFrame()->getDrawingSurface()->getEventProducer() != NullFC && 
-		isContained(getParentFrame()->getDrawingSurface()->getEventProducer()->getMousePosition(), true))
+	if( getParentWindow() != NullFC &&
+		getParentWindow()->getDrawingSurface() != NullFC &&
+		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC && 
+		isContained(getParentWindow()->getDrawingSurface()->getEventProducer()->getMousePosition(), true))
     {
-		getParentFrame()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
+		getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
 	}
 	Inherited::focusLost(e);
 }

@@ -13,21 +13,21 @@
 >
 A UI DrawingSurface.
 	<Field
-		name="RootFrame"
-		type="FramePtr"
-		cardinality="single"
-		visibility="external"
-		header="Component/Container/OSGFrame.h"
-		access="public"
-	>
-	</Field>
-	<Field
 		name="InternalWindows"
 		type="InternalWindowPtr"
 		cardinality="multi"
 		visibility="external"
 		header="Component/Container/Window/OSGInternalWindowFields.h"
-		access="protected"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="FocusedWindow"
+		type="InternalWindowPtr"
+		cardinality="single"
+		visibility="external"
+		header="Component/Container/Window/OSGInternalWindowFields.h"
+		access="public"
 	>
 	</Field>
 	<Field
@@ -55,6 +55,15 @@ A UI DrawingSurface.
 		visibility="external"
 		header="UIDrawingSurface/OSGUIDrawingSurfaceMouseTransformFunctorFields.h"
 		access="public"
+	>
+	</Field>
+	<Field
+		name="Size"
+		type="Vec2s"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0,0"
 	>
 	</Field>
 </FieldContainer>
