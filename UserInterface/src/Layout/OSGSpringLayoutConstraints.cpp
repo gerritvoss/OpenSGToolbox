@@ -142,6 +142,8 @@ void SpringLayoutConstraints::setWidth(LayoutSpringPtr width)
     beginEditCP(SpringLayoutConstraintsPtr(this), WidthSpringFieldMask);
         setWidthSpring(width);
     endEditCP(SpringLayoutConstraintsPtr(this), WidthSpringFieldMask);
+    
+    pushToHistory(WIDTH_EDGE, width, true);
 }
 
 LayoutSpringPtr SpringLayoutConstraints::getWidth(void)
@@ -172,6 +174,8 @@ void SpringLayoutConstraints::setHeight(LayoutSpringPtr height)
     beginEditCP(SpringLayoutConstraintsPtr(this), HeightSpringFieldMask);
         setHeightSpring(height);
     endEditCP(SpringLayoutConstraintsPtr(this), HeightSpringFieldMask);
+    
+    pushToHistory(HEIGHT_EDGE, height, false);
 }
 
 LayoutSpringPtr SpringLayoutConstraints::getHeight(void)
@@ -206,6 +210,8 @@ void SpringLayoutConstraints::setNorth(LayoutSpringPtr north)
     beginEditCP(SpringLayoutConstraintsPtr(this), NorthSpringFieldMask);
         setNorthSpring(north);
     endEditCP(SpringLayoutConstraintsPtr(this), NorthSpringFieldMask);
+    
+    pushToHistory(NORTH_EDGE, north, false);
 }
 
 LayoutSpringPtr SpringLayoutConstraints::getNorth(void)
@@ -248,6 +254,8 @@ void SpringLayoutConstraints::setEast(LayoutSpringPtr east)
     beginEditCP(SpringLayoutConstraintsPtr(this), EastSpringFieldMask);
         setEastSpring(east);
     endEditCP(SpringLayoutConstraintsPtr(this), EastSpringFieldMask);
+    
+    pushToHistory(EAST_EDGE, east, true);
 }
 
 LayoutSpringPtr SpringLayoutConstraints::getEast(void)
@@ -277,11 +285,61 @@ LayoutSpringPtr SpringLayoutConstraints::getEast(void)
     }
 }
 
+void SpringLayoutConstraints::pushToHistory(Edge TheEdge, LayoutSpringPtr Value, bool isHorizontal)
+{
+    std::deque<Edge>& History(isHorizontal ? _HorizontalHistory : _VerticalHistory);
+    bool valid(true);
+    
+    std::deque<Edge>::iterator SearchItor(std::find(History.begin(), History.end(), TheEdge));
+    if (SearchItor != History.end())
+    {
+        History.erase(SearchItor);
+        valid = false;
+    }
+    else if (History.size() == 2 && Value != NullFC)
+    {
+        History.pop_front();
+        valid = false;
+    }
+    if (Value != NullFC)
+    {
+        History.push_back(TheEdge);
+    }
+    if (!valid)
+    {
+        std::deque<Edge> All;
+        if(isHorizontal)
+        {
+            All.push_back(EAST_EDGE);
+            All.push_back(WEST_EDGE);
+            All.push_back(HORIZONTAL_CENTER_EDGE);
+            All.push_back(WIDTH_EDGE);
+        }
+        else
+        {
+            All.push_back(NORTH_EDGE);
+            All.push_back(SOUTH_EDGE);
+            All.push_back(VERTICAL_CENTER_EDGE);
+            All.push_back(BASELINE_EDGE);
+            All.push_back(HEIGHT_EDGE);
+        }
+        for (UInt32 i(0); i < All.size(); ++i)
+        {
+            if (std::find(History.begin(), History.end(), All[i]) == History.end())
+            {
+                setConstraint(All[i], NullFC);
+            }
+        }
+    }
+}
+
 void SpringLayoutConstraints::setSouth(LayoutSpringPtr south)
 {
     beginEditCP(SpringLayoutConstraintsPtr(this), SouthSpringFieldMask);
         setSouthSpring(south);
     endEditCP(SpringLayoutConstraintsPtr(this), SouthSpringFieldMask);
+    
+    pushToHistory(SOUTH_EDGE, south, false);
 }
 LayoutSpringPtr SpringLayoutConstraints::getSouth(void)
 {
@@ -323,6 +381,8 @@ void SpringLayoutConstraints::setWest(LayoutSpringPtr west)
     beginEditCP(SpringLayoutConstraintsPtr(this), WestSpringFieldMask);
         setWestSpring(west);
     endEditCP(SpringLayoutConstraintsPtr(this), WestSpringFieldMask);
+    
+    pushToHistory(WEST_EDGE, west, true);
 }
 
 LayoutSpringPtr SpringLayoutConstraints::getWest(void)
@@ -357,6 +417,8 @@ void SpringLayoutConstraints::setHorizontalCenter(LayoutSpringPtr horizontalCent
     beginEditCP(SpringLayoutConstraintsPtr(this), HorizontalCenterSpringFieldMask);
         setHorizontalCenterSpring(horizontalCenter);
     endEditCP(SpringLayoutConstraintsPtr(this), HorizontalCenterSpringFieldMask);
+    
+    pushToHistory(HORIZONTAL_CENTER_EDGE, horizontalCenter, true);
 }
 
 LayoutSpringPtr SpringLayoutConstraints::getHorizontalCenter(void)
@@ -376,6 +438,8 @@ void SpringLayoutConstraints::setVerticalCenter(LayoutSpringPtr verticalCenter)
     beginEditCP(SpringLayoutConstraintsPtr(this), VerticalCenterSpringFieldMask);
         setVerticalCenterSpring(verticalCenter);
     endEditCP(SpringLayoutConstraintsPtr(this), VerticalCenterSpringFieldMask);
+    
+    pushToHistory(VERTICAL_CENTER_EDGE, verticalCenter, false);
 }
 
 LayoutSpringPtr SpringLayoutConstraints::getVerticalCenter(void)
@@ -395,6 +459,8 @@ void SpringLayoutConstraints::setBaseline(LayoutSpringPtr baseline)
     beginEditCP(SpringLayoutConstraintsPtr(this), BaselineSpringFieldMask);
         setBaselineSpring(baseline);
     endEditCP(SpringLayoutConstraintsPtr(this), BaselineSpringFieldMask);
+    
+    pushToHistory(BASELINE_EDGE, baseline, false);
 }
 
 LayoutSpringPtr SpringLayoutConstraints::getBaseline(void)
@@ -601,15 +667,6 @@ bool SpringLayoutConstraints::defined(const UInt32 Edge) const
     }
 }
 
-bool SpringLayoutConstraints::isHorizontalDefined(void) const
-{
-    return defined(EAST_EDGE) || defined(WEST_EDGE) || defined(HORIZONTAL_CENTER_EDGE) || defined(WIDTH_EDGE);
-}
-
-bool SpringLayoutConstraints::isVerticalDefined(void) const
-{
-    return defined(NORTH_EDGE) || defined(SOUTH_EDGE) || defined(VERTICAL_CENTER_EDGE) || defined(HEIGHT_EDGE) || defined(BASELINE_EDGE);
-}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

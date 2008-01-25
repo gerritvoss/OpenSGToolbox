@@ -45,6 +45,7 @@
 #include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGButton.h>
 #include <OpenSG/UserInterface/OSGSpringLayout.h>
+#include <OpenSG/UserInterface/OSGSpringLayoutConstraints.h>
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -178,14 +179,13 @@ int main(int argc, char **argv)
         ExampleButton1->setPreferredSize(Vec2s(50,50));
         ExampleButton1->setMaxSize(Vec2s(50,50));
     endEditCP(ExampleButton1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
-
-    beginEditCP(ExampleButton2, Button::PreferredSizeFieldMask);
-         ExampleButton2->setPreferredSize(Vec2s(300,50));
-    endEditCP(ExampleButton2, Button::PreferredSizeFieldMask);
-        
-    beginEditCP(ExampleButton3, Button::PreferredSizeFieldMask);
-         ExampleButton3->setPreferredSize(Vec2s(50,300));
-    endEditCP(ExampleButton3, Button::PreferredSizeFieldMask);
+    
+    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
+    
+    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, ExampleButton1, 25, SpringLayoutConstraints::NORTH_EDGE, MainInternalWindow);
+    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ExampleButton1, 25, SpringLayoutConstraints::SOUTH_EDGE, MainInternalWindow);
+    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, ExampleButton1, 25, SpringLayoutConstraints::EAST_EDGE, MainInternalWindow);
+    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, ExampleButton1, 25, SpringLayoutConstraints::WEST_EDGE, MainInternalWindow);
 
 
     // Create The Main InternalWindow
@@ -195,14 +195,8 @@ int main(int argc, char **argv)
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
     endEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
 
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
        MainInternalWindow->getChildren().addValue(ExampleButton1);
-       MainInternalWindow->getChildren().addValue(ExampleButton2);
-       MainInternalWindow->getChildren().addValue(ExampleButton3);
-       MainInternalWindow->getChildren().addValue(ExampleButton4);
-       MainInternalWindow->getChildren().addValue(ExampleButton5);
-       MainInternalWindow->getChildren().addValue(ExampleButton6);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));

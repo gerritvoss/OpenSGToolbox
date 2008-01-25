@@ -82,7 +82,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING VariableHeightTreeModelLayout : public Var
 	virtual void getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight, TreePath path, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn) const;
 
 	//Returns true if every node in the path is expanded
-	virtual bool isVisible(const TreePath& path) const const;
+	virtual bool isVisible(const TreePath& path) const;
 
 	//Returns the path to the node that is closest to x,y.
 	virtual TreePath getPathClosestTo(const UInt32& x, const UInt32& y) const;

@@ -150,11 +150,13 @@ void AbstractTreeModelLayout::setModel(TreeModelPtr newModel)
 
     _TreeModel = newModel;
     
-    _ExpandedPathSet.clear();
-    _ExpandedPathSet.comp = TreePathPreorderLessThan(_TreeModel);
+    _ExpandedPathSet = TreePathSet(TreePathPreorderLessThan(_TreeModel));
+    //_ExpandedPathSet.clear();
+    //_ExpandedPathSet.comp = TreePathPreorderLessThan(_TreeModel);
 
-    _VisiblePathSet.clear();
-    _VisiblePathSet.comp = TreePathPreorderLessThan(_TreeModel);
+    _VisiblePathSet = TreePathSet(TreePathPreorderLessThan(_TreeModel));
+    //_VisiblePathSet.clear();
+    //_VisiblePathSet.comp = TreePathPreorderLessThan(_TreeModel);
 
     if(_TreeModel != NULL)
     {

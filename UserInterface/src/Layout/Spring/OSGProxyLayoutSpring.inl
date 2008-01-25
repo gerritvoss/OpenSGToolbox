@@ -46,7 +46,7 @@ OSG_BEGIN_NAMESPACE
 inline
 LayoutSpringPtr ProxyLayoutSpring::getConstraint(void) const
 {
-    return getLayout()->getConstraints(getComponent())->getConstraint(getEdge());
+    return getLayout()->getConstraint(getComponent())->getConstraint(getEdge());
 }
 
 OSG_END_NAMESPACE

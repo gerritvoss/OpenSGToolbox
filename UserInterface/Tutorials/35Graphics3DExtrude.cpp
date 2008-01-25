@@ -992,7 +992,7 @@ int main(int argc, char **argv)
 	beginEditCP(DoubleIncrementButton1, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
         DoubleIncrementButton1->setText("Increment by 2");
         DoubleIncrementButton1->setPreferredSize(Vec2s(100,50));
-        DoubleIncrementButton1->setSelected(TRUE);
+        DoubleIncrementButton1->setSelected(true);
     endEditCP(DoubleIncrementButton1, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
 	// Make a button listener and assign it to DoubleIncrementButton1
     DoubleIncrementButtonListener1 TheDoubleIncrementButtonListener1;
@@ -1011,7 +1011,7 @@ int main(int argc, char **argv)
 	beginEditCP(DoubleIncrementButton2, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
         DoubleIncrementButton2->setText("Increment by 4");
         DoubleIncrementButton2->setPreferredSize(Vec2s(100,50));
-        DoubleIncrementButton2->setSelected(TRUE);
+        DoubleIncrementButton2->setSelected(true);
     endEditCP(DoubleIncrementButton2, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
 	// Make a button listener and assign it to DoubleIncrementButton2
     DoubleIncrementButtonListener2 TheDoubleIncrementButtonListener2;
@@ -1030,7 +1030,7 @@ int main(int argc, char **argv)
 	beginEditCP(DoubleIncrementButton3, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
         DoubleIncrementButton3->setText("Increment by 6");
         DoubleIncrementButton3->setPreferredSize(Vec2s(100,50));
-        DoubleIncrementButton3->setSelected(TRUE);
+        DoubleIncrementButton3->setSelected(true);
     endEditCP(DoubleIncrementButton3, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
 	// Make a button listener and assign it to DoubleIncrementButton3
     DoubleIncrementButtonListener3 TheDoubleIncrementButtonListener3;

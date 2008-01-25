@@ -81,7 +81,7 @@ void VariableHeightTreeModelLayout::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight
 	//TODO:Implement
 }
 
-bool VariableHeightTreeModelLayout::isVisible(const TreePath& path) const const
+bool VariableHeightTreeModelLayout::isVisible(const TreePath& path) const
 {
 	//TODO: Implement
 	return false;

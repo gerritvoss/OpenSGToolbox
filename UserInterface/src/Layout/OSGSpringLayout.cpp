@@ -86,10 +86,37 @@ void SpringLayout::initMethod (void)
 
 void SpringLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
-	Pnt2s borderTopLeft, borderBottomRight;
-	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
+	Pnt2s ParentInsetsTopLeft, ParentInsetsBottomRight;
+	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(ParentInsetsTopLeft, ParentInsetsBottomRight);
+    
+    const_cast<SpringLayout*>(this)->setParent(Container::Ptr::dcast(ParentComponent));
+    
+    //getConstraint(ParentComponent).reset();
+    //for (UInt32 i(0) ; i < Components.size() ; i++) {
+        //getConstraint(Components.getValue(i)).reset();
+    //}
 
     //TODO: Implement
+    SpringLayoutConstraintsPtr MyBoundsConstraints = getConstraint(ParentComponent);
+    
+    getDecycledSpring(MyBoundsConstraints->getX())->setValue(0);
+    getDecycledSpring(MyBoundsConstraints->getY())->setValue(0);
+    getDecycledSpring(MyBoundsConstraints->getWidth())->setValue( ParentInsetsBottomRight.x() - ParentInsetsTopLeft.x() );
+    getDecycledSpring(MyBoundsConstraints->getHeight())->setValue( ParentInsetsBottomRight.y() - ParentInsetsTopLeft.y() );
+    
+    for (UInt32 i(0) ; i < Components.size() ; i++)
+    {
+        SpringLayoutConstraintsPtr TheConstraints = getConstraint( Components.getValue(i) );
+        UInt32 x = getDecycledSpring(TheConstraints->getX())->getValue();
+        UInt32 y = getDecycledSpring(TheConstraints->getY())->getValue();
+        UInt32 width = getDecycledSpring(TheConstraints->getWidth())->getValue();
+        UInt32 height = getDecycledSpring(TheConstraints->getHeight())->getValue();
+        
+        beginEditCP(Components.getValue(i), Component::PositionFieldMask | Component::SizeFieldMask);
+            Components.getValue(i)->setPosition(Pnt2s(x,y));
+            Components.getValue(i)->setSize(Vec2s(width, height));
+        endEditCP(Components.getValue(i), Component::PositionFieldMask | Component::SizeFieldMask);
+     }
 }
 
 bool SpringLayout::isCyclic(LayoutSpringPtr TheSpring) const
@@ -118,16 +145,16 @@ bool SpringLayout::isCyclic(LayoutSpringPtr TheSpring) const
     return Result;
 }
 
-SpringLayoutConstraintsPtr SpringLayout::getConstraints(ComponentPtr TheComponent)
+SpringLayoutConstraintsPtr SpringLayout::getConstraint(ComponentPtr TheComponent) const
 {
-    FieldContainerMap::const_iterator SearchItor(Inherited::getConstraints().find(static_cast<FieldContainerMap::key_type>(TheComponent.getFieldContainerId())));
+    FieldContainerMap::const_iterator SearchItor(getConstraints().find(static_cast<FieldContainerMap::key_type>(TheComponent.getFieldContainerId())));
 
-    if(SearchItor == Inherited::getConstraints().end())
+    if(SearchItor == getConstraints().end())
     {
         SpringLayoutConstraintsPtr NewConstraints = applyDefaults(TheComponent, SpringLayoutConstraintsBase::create());
 
         beginEditCP(SpringLayoutPtr(this), ConstraintsFieldMask);
-            Inherited::getConstraints()[static_cast<FieldContainerMap::key_type>(TheComponent.getFieldContainerId())] = NewConstraints;
+            const_cast<SpringLayout*>(this)->getConstraints()[static_cast<FieldContainerMap::key_type>(TheComponent.getFieldContainerId())] = NewConstraints;
         endEditCP(SpringLayoutPtr(this), ConstraintsFieldMask);
 
         return NewConstraints;
@@ -161,11 +188,11 @@ void SpringLayout::putConstraint(const UInt32 e, ComponentPtr c, LayoutSpringPtr
 {
     if(s != NullFC)
     {
-        getConstraints(c)->setConstraint(e,s);
+        getConstraint(c)->setConstraint(e,s);
     }
 }
 
-LayoutSpringPtr SpringLayout::getDecycledSpring(LayoutSpringPtr s)
+LayoutSpringPtr SpringLayout::getDecycledSpring(LayoutSpringPtr s) const
 {
     if(isCyclic(s))
     {
@@ -187,7 +214,7 @@ void SpringLayout::setParent(ContainerPtr p)
 {
     resetCyclicStatuses();
 
-    SpringLayoutConstraintsPtr constraints = getConstraints(p);
+    SpringLayoutConstraintsPtr constraints = getConstraint(p);
 
     constraints->setWest(LayoutSpring::constant(0));
     constraints->setNorth(LayoutSpring::constant(0));
@@ -207,7 +234,7 @@ void SpringLayout::setParent(ContainerPtr p)
     }
 }
 
-SpringLayoutConstraintsPtr SpringLayout::applyDefaults(ComponentPtr c, SpringLayoutConstraintsPtr& constraints)
+SpringLayoutConstraintsPtr SpringLayout::applyDefaults(ComponentPtr c, SpringLayoutConstraintsPtr constraints)
 {
     if(constraints == NullFC)
     {
@@ -221,16 +248,38 @@ SpringLayoutConstraintsPtr SpringLayout::applyDefaults(ComponentPtr c, SpringLay
         endEditCP(constraints, SpringLayoutConstraints::ComponentFieldMask);
     }
 
-    if(constraints->isHorizontalDefined())
+    if( constraints->getHorizontalHistory().size() == 0)
     {
         constraints->setWest(LayoutSpring::constant(0));
         constraints->setWidth(LayoutSpring::width(c));
     }
+    else if( constraints->getHorizontalHistory().size() == 1)
+    {
+        if(constraints->getWidthSpring() == NullFC)
+        {
+            constraints->setWidth(LayoutSpring::width(c));
+        }
+        else
+        {
+            constraints->setWest(LayoutSpring::constant(0));
+        }
+    }
     
-    if(constraints->isVerticalDefined())
+    if(constraints->getVerticalHistory().size() == 0)
     {
         constraints->setNorth(LayoutSpring::constant(0));
         constraints->setHeight(LayoutSpring::height(c));
+    }
+    else if( constraints->getVerticalHistory().size() == 1)
+    {
+        if(constraints->getHeightSpring() == NullFC)
+        {
+            constraints->setHeight(LayoutSpring::height(c));
+        }
+        else
+        {
+            constraints->setNorth(LayoutSpring::constant(0));
+        }
     }
 
     return constraints;

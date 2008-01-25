@@ -228,7 +228,7 @@ int main(int argc, char **argv)
 	beginEditCP(DoubleIncrementButton, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
         DoubleIncrementButton->setText("Increment by 2");
         DoubleIncrementButton->setPreferredSize(Vec2s(100, 50));
-        DoubleIncrementButton->setSelected(TRUE);
+        DoubleIncrementButton->setSelected(true);
     beginEditCP(DoubleIncrementButton, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
     DoubleIncrementButtonListener TheDoubleIncrementButtonListener;
     DoubleIncrementButton->addButtonSelectedListener(&TheDoubleIncrementButtonListener);

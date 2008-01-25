@@ -89,7 +89,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayout : public SpringLayoutBase
     bool isCyclic(LayoutSpringPtr TheSpring) const;
 
     //Returns the constraints for the specified component.
-    SpringLayoutConstraintsPtr getConstraints(ComponentPtr TheComponent);
+    SpringLayoutConstraintsPtr getConstraint(ComponentPtr TheComponent) const;
 
     //Returns the spring controlling the distance between the specified edge of the component and the top or left edge of its parent.
     LayoutSpringPtr getConstraint(const UInt32 Edge, ComponentPtr TheComponent) const;
@@ -133,13 +133,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayout : public SpringLayoutBase
 
     void operator =(const SpringLayout &source);
 
-    LayoutSpringPtr getDecycledSpring(LayoutSpringPtr s);
+    LayoutSpringPtr getDecycledSpring(LayoutSpringPtr s) const;
 
     void resetCyclicStatuses(void);
 
     void setParent(ContainerPtr p);
 
-    SpringLayoutConstraintsPtr applyDefaults(ComponentPtr c, SpringLayoutConstraintsPtr& constraints);
+    static SpringLayoutConstraintsPtr applyDefaults(ComponentPtr c, SpringLayoutConstraintsPtr constraints);
 
     //void applyDefaults(SpringLayoutConstraintsPtr constraints, const UInt32 name1,
     //                       LayoutSpringPtr spring1, const UInt32 name2, LayoutSpringPtr spring2,

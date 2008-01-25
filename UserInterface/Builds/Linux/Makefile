@@ -6,7 +6,7 @@ LIB_INCLUDE_DIR_NAME = UserInterface
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Border:$(srcdir)/Background:$(srcdir)/Event:$(srcdir)/Layout:$(srcdir)/Util:$(srcdir)/Component:$(srcdir)/Component/Button:$(srcdir)/Component/Spinner:$(srcdir)/Component/Spinner/Editors:$(srcdir)/Component/Menu:$(srcdir)/Component/Table:$(srcdir)/Component/Table/DefaultEditors:$(srcdir)/Component/Table/DefaultRenderers:$(srcdir)/Component/Scroll:$(srcdir)/Component/Slider:$(srcdir)/Component/ComboBox:$(srcdir)/Component/ComboBox/Renderers:$(srcdir)/Component/ComboBox/Editors:$(srcdir)/Component/Misc:$(srcdir)/Component/Tree:$(srcdir)/Component/Container:$(srcdir)/Component/List:$(srcdir)/Component/ProgressBar:$(srcdir)/Component/Text:$(srcdir)/Editors:$(srcdir)/LookAndFeel:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Text:
+VPATH = $(srcdir)/:$(srcdir)/Border:$(srcdir)/Background:$(srcdir)/Event:$(srcdir)/Layout:$(srcdir)/Layout/Spring:$(srcdir)/Util:$(srcdir)/Component:$(srcdir)/Component/Button:$(srcdir)/Component/Spinner:$(srcdir)/Component/Spinner/Editors:$(srcdir)/Component/Menu:$(srcdir)/Component/Table:$(srcdir)/Component/Table/DefaultEditors:$(srcdir)/Component/Table/DefaultRenderers:$(srcdir)/Component/Table/Editors:$(srcdir)/Component/Scroll:$(srcdir)/Component/Slider:$(srcdir)/Component/ComboBox:$(srcdir)/Component/ComboBox/Renderers:$(srcdir)/Component/ComboBox/Editors:$(srcdir)/Component/Misc:$(srcdir)/Component/Tree:$(srcdir)/Component/Tree/Selection:$(srcdir)/Component/Tree/Editors:$(srcdir)/Component/Tree/Model:$(srcdir)/Component/Tree/ComponentGenerators:$(srcdir)/Component/Tree/ModelLayout:$(srcdir)/Component/Container:$(srcdir)/Component/Container/Window:$(srcdir)/Component/Container/Window/Dialog:$(srcdir)/Component/List:$(srcdir)/Component/ProgressBar:$(srcdir)/Component/Text:$(srcdir)/Editors:$(srcdir)/LookAndFeel:$(srcdir)/ComponentGenerators:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Text:
 
 
 #.SUFFIX = .o .o
@@ -22,6 +22,8 @@ OBJECTS = OSGShadowBorder.o \
 	OSGCompoundBorder.o \
 	OSGRoundedCornerLineBorderBase.o \
 	OSGLineBorder.o \
+	OSGWindowBorder.o \
+	OSGWindowBorderBase.o \
 	OSGEmptyBorderBase.o \
 	OSGMatteBorder.o \
 	OSGBorderBase.o \
@@ -79,12 +81,14 @@ OBJECTS = OSGShadowBorder.o \
 	OSGBoxLayoutBase.o \
 	OSGCardLayoutConstraintsBase.o \
 	OSGFlowLayoutConstraintsBase.o \
+	OSGSpringLayoutConstraintsBase.o \
 	OSGOverlayLayoutBase.o \
 	OSGFlowLayout.o \
 	OSGOverlayLayoutConstraints.o \
 	OSGAbsoluteLayoutConstraintsBase.o \
 	OSGCardLayout.o \
 	OSGBorderLayoutBase.o \
+	OSGSpringLayout.o \
 	OSGAbsoluteLayoutConstraints.o \
 	OSGAbsoluteLayout.o \
 	OSGGridBagLayoutConstraintsBase.o \
@@ -95,6 +99,30 @@ OBJECTS = OSGShadowBorder.o \
 	OSGBorderLayoutConstraints.o \
 	OSGFlowLayoutConstraints.o \
 	OSGBoxLayoutConstraintsBase.o \
+	OSGSpringLayoutConstraints.o \
+	OSGSpringLayoutBase.o \
+	OSGSumLayoutSpringBase.o \
+	OSGCompoundLayoutSpring.o \
+	OSGStaticLayoutSpringBase.o \
+	OSGComponentWidthLayoutSpring.o \
+	OSGProxyLayoutSpringBase.o \
+	OSGComponentHeightLayoutSpring.o \
+	OSGLayoutSpring.o \
+	OSGScaleLayoutSpring.o \
+	OSGProxyLayoutSpring.o \
+	OSGStaticLayoutSpring.o \
+	OSGAbstractLayoutSpring.o \
+	OSGNegativeLayoutSpring.o \
+	OSGComponentWidthLayoutSpringBase.o \
+	OSGMaxLayoutSpring.o \
+	OSGAbstractLayoutSpringBase.o \
+	OSGComponentHeightLayoutSpringBase.o \
+	OSGSumLayoutSpring.o \
+	OSGLayoutSpringBase.o \
+	OSGNegativeLayoutSpringBase.o \
+	OSGCompoundLayoutSpringBase.o \
+	OSGMaxLayoutSpringBase.o \
+	OSGScaleLayoutSpringBase.o \
 	OSGLineUtils.o \
 	OSGUIDrawUtils.o \
 	OSGComponent.o \
@@ -143,7 +171,6 @@ OBJECTS = OSGShadowBorder.o \
 	OSGTableColumnBase.o \
 	OSGTable.o \
 	OSGTableHeader.o \
-	OSGDefaultTableCellEditor.o \
 	OSGDefaultBoolTableCellRenderer.o \
 	OSGDefaultInt32TableCellRenderer.o \
 	OSGDefaultStringTableCellRenderer.o \
@@ -152,6 +179,10 @@ OBJECTS = OSGShadowBorder.o \
 	OSGDefaultTableHeaderCellRenderer.o \
 	OSGDefaultReal32TableCellRenderer.o \
 	OSGDefaultUInt32TableCellRenderer.o \
+	OSGDefaultTableCellEditorBase.o \
+	OSGTableCellEditor.o \
+	OSGTableCellEditorBase.o \
+	OSGDefaultTableCellEditor.o \
 	OSGScrollBarBase.o \
 	OSGScrollBar.o \
 	OSGScrollPanel.o \
@@ -179,11 +210,40 @@ OBJECTS = OSGShadowBorder.o \
 	OSGCanvas.o \
 	OSGImageComponent.o \
 	OSGImageComponentBase.o \
-	OSGTreeModelEvent.o \
-	OSGAbstractTreeModel.o \
-	OSGTreeSelectionEvent.o \
+	OSGTreeRowMapper.o \
+	OSGTree.o \
+	OSGTreeBase.o \
 	OSGTreePath.o \
-	OSGFrameBase.o \
+	OSGTreeRowMapperBase.o \
+	OSGAbstractTreeSelectionModel.o \
+	OSGTreeSelectionEvent.o \
+	OSGDefaultTreeSelectionModel.o \
+	OSGDefaultTreeCellEditorBase.o \
+	OSGDefaultTreeCellEditor.o \
+	OSGTreeCellEditor.o \
+	OSGTreeCellEditorBase.o \
+	OSGTreeModelEvent.o \
+	OSGDefaultMutableTreeNodeBase.o \
+	OSGAbstractTreeModel.o \
+	OSGModelTreeNode.o \
+	OSGMutableTreeNode.o \
+	OSGMutableTreeNodeBase.o \
+	OSGDefaultMutableTreeNode.o \
+	OSGModelTreeNodeBase.o \
+	OSGDefaultTreeModel.o \
+	OSGTreeComponentGeneratorBase.o \
+	OSGDefaultTreeComponentGenerator.o \
+	OSGTreeComponentGenerator.o \
+	OSGDefaultTreeComponentGeneratorBase.o \
+	OSGVariableHeightTreeModelLayout.o \
+	OSGFixedHeightTreeModelLayout.o \
+	OSGTreeModelLayoutBase.o \
+	OSGVariableHeightTreeModelLayoutBase.o \
+	OSGAbstractTreeModelLayout.o \
+	OSGTreeModelLayoutEvent.o \
+	OSGAbstractTreeModelLayoutBase.o \
+	OSGFixedHeightTreeModelLayoutBase.o \
+	OSGTreeModelLayout.o \
 	OSGUIViewportBase.o \
 	OSGContainer.o \
 	OSGTabPanel.o \
@@ -193,8 +253,16 @@ OBJECTS = OSGShadowBorder.o \
 	OSGSplitPanelBase.o \
 	OSGPanel.o \
 	OSGContainerBase.o \
-	OSGFrame.o \
 	OSGUIViewport.o \
+	OSGAbstractWindowBase.o \
+	OSGAbstractWindow.o \
+	OSGInternalWindowBase.o \
+	OSGTitlebar.o \
+	OSGInternalWindow.o \
+	OSGTitlebarBase.o \
+	OSGDialogWindow.o \
+	OSGDialogWindowBase.o \
+	OSGDialogFactory.o \
 	OSGListBase.o \
 	OSGListDataEvent.o \
 	OSGListSelectionEvent.o \
@@ -208,12 +276,17 @@ OBJECTS = OSGShadowBorder.o \
 	OSGTextComponent.o \
 	OSGPasswordField.o \
 	OSGTextComponentBase.o \
+	OSGEditableTextComponent.o \
 	OSGPasswordFieldBase.o \
 	OSGTextArea.o \
 	OSGTextAreaBase.o \
+	OSGEditableTextComponentBase.o \
 	OSGLabel.o \
 	OSGTextField.o \
 	OSGTextFieldBase.o \
+	OSGCellEditor.o \
+	OSGCellEditorBase.o \
+	OSGAbstractCellEditorBase.o \
 	OSGAbstractCellEditor.o \
 	OSGLookAndFeelBase.o \
 	OSGDefaultLookAndFeelBase.o \
@@ -222,6 +295,8 @@ OBJECTS = OSGShadowBorder.o \
 	OSGWindowsLookAndFeelBase.o \
 	OSGLookAndFeel.o \
 	OSGWindowsLookAndFeel.o \
+	OSGComponentGeneratorBase.o \
+	OSGComponentGenerator.o \
 	OSGUIDrawingSurfaceMouseTransformFunctor.o \
 	OSGUIDrawingSurfaceMouseTransformFunctorBase.o \
 	OSGUIDrawingSurface.o \

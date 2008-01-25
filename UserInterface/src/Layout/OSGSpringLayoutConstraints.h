@@ -43,9 +43,12 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
 #include "OSGSpringLayoutConstraintsBase.h"
 #include "Layout/Spring/OSGLayoutSpringFields.h"
+
+#include <deque>
 
 OSG_BEGIN_NAMESPACE
 
@@ -127,10 +130,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraints : public SpringLay
     LayoutSpringPtr getConstraint(UInt32 Edge);
     
     void reset(void);
-
-    bool isHorizontalDefined(void) const;
-
-    bool isVerticalDefined(void) const;
+    
+    std::deque<Edge> getHorizontalHistory(void) const;
+    
+    std::deque<Edge> getVerticalHistory(void) const;
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -154,6 +157,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraints : public SpringLay
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/
+    
+    std::deque<Edge> _HorizontalHistory,
+                     _VerticalHistory;
   private:
 
     friend class FieldContainer;
@@ -180,6 +186,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraints : public SpringLay
     LayoutSpringPtr relativeBaselineToHeight(LayoutSpringPtr s);
     
     bool defined(const UInt32 Edge) const;
+    
+    void pushToHistory(Edge TheEdge, LayoutSpringPtr Value, bool isHorizontal);
 };
 
 typedef SpringLayoutConstraints *SpringLayoutConstraintsP;

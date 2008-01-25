@@ -60,7 +60,7 @@ private:
 
     DialogFactory(void);
 
-	static LabelPtr DialogFactory::createTransparentLabel(const std::string& Message);
+	static LabelPtr createTransparentLabel(const std::string& Message);
 
 };
 OSG_END_NAMESPACE
