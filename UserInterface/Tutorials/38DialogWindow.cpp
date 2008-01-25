@@ -98,8 +98,60 @@ public:
     }
 };
 
+class DialogWindowListener : public WindowAdapter
+{
+    virtual void windowClosing(const WindowEvent& e)
+    {
+		std::cout << "windowClosing" << std::endl;
+    }
+
+    virtual void windowClosed(const WindowEvent& e)
+    {
+		std::cout << "windowClosed" << std::endl;
+    }
+
+    virtual void windowOpened(const WindowEvent& e)
+    {
+		std::cout << "windowOpened" << std::endl;
+    }
+
+    virtual void windowIconified(const WindowEvent& e)
+    {
+		std::cout << "windowIconified" << std::endl;
+    }
+
+    virtual void windowDeiconified(const WindowEvent& e)
+    {
+		std::cout << "windowDeiconified" << std::endl;
+    }
+
+    virtual void windowActivated(const WindowEvent& e)
+    {
+		std::cout << "windowActivated" << std::endl;
+    }
+
+    virtual void windowDeactivated(const WindowEvent& e)
+    {
+		std::cout << "windowDeactivated" << std::endl;
+    }
+
+    virtual void windowEntered(const WindowEvent& e)
+    {
+		std::cout << "windowEntered" << std::endl;
+    }
+
+    virtual void windowExited(const WindowEvent& e)
+    {
+		std::cout << "windowExited" << std::endl;
+    }
+
+};
+
 class CreateMessageBoxButtonActionListener : public ActionListener
 {
+protected:
+	DialogWindowListener TheDialogWindowListener;
+
 public:
 
    virtual void actionPerformed(const ActionEvent& e)
@@ -112,6 +164,8 @@ public:
 			beginEditCP(TheDialog, DialogWindow::PositionFieldMask);
 				TheDialog->setPosition(CenteredPosition);
 			endEditCP(TheDialog, DialogWindow::PositionFieldMask);
+
+			TheDialog->addWindowListener(&TheDialogWindowListener);
 
 			Component::Ptr::dcast(e.getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
 		}

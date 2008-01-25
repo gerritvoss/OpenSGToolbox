@@ -134,7 +134,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 
 	bool getMaximize(void) const;
 
-	void close(void);
+	virtual void open(void);
+
+	virtual void close(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

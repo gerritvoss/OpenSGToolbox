@@ -51,6 +51,8 @@
 #include <OpenSG/Input/OSGMouseMotionAdapter.h>
 #include <OpenSG/Input/OSGKeyAdapter.h>
 
+#include <OpenSG/Input/OSGWindowListener.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief AbstractWindow class. See \ref 
@@ -83,12 +85,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindow : public AbstractWindowBase
 
     /*! \}                                                                 */
 
+    void addWindowListener(WindowListenerPtr Listener);
+    void removeWindowListener(WindowListenerPtr Listener);
+
 	virtual bool isAlignableInDrawingSurface(void) const;
 	virtual bool isScalableInDrawingSurface(void) const;
 	
     virtual void updateContainerLayout(void);
 	virtual void updateClipBounds(void);
+	
+    virtual void mouseEntered(const MouseEvent& e);
+    virtual void mouseExited(const MouseEvent& e);
 
+	//Focus Events
+	virtual void focusGained(const FocusEvent& e);
+	virtual void focusLost(const FocusEvent& e);
+
+	void vetoWindowClose(void);
+
+	virtual void open(void) = 0;
+
+	virtual void close(void) = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -113,6 +130,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindow : public AbstractWindowBase
 	virtual void drawInternal(const GraphicsPtr TheGraphics) const;
     virtual BorderPtr getDrawnBorder(void) const;
     virtual UIBackgroundPtr getDrawnBackground(void) const;
+	
+	typedef std::set<WindowListenerPtr> WindowListenerSet;
+    typedef WindowListenerSet::iterator WindowListenerSetItor;
+    typedef WindowListenerSet::const_iterator WindowListenerSetConstItor;
+	
+    WindowListenerSet       _WindowListeners;
+	
+    void produceWindowOpened(void);
+    void produceWindowClosing(void);
+    void produceWindowClosed(void);
+    void produceWindowIconified(void);
+    void produceWindowDeiconified(void);
+    void produceWindowActivated(void);
+    void produceWindowDeactivated(void);
+    void produceWindowEntered(void);
+    void produceWindowExited(void);
+
+	bool _VetoWindowClose;
     /*==========================  PRIVATE  ================================*/
   private:
 

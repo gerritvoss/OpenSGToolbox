@@ -94,6 +94,8 @@ void InternalWindow::setIconify(bool Iconify)
 		beginEditCP(InternalWindowPtr(this), IsIconFieldMask);
 			setIsIcon(Iconify);
 		endEditCP(InternalWindowPtr(this), IsIconFieldMask);
+
+		produceWindowIconified();
 	}
 	else if(!Iconify && getIsIcon())
 	{
@@ -101,6 +103,8 @@ void InternalWindow::setIconify(bool Iconify)
 		beginEditCP(InternalWindowPtr(this), IsIconFieldMask);
 			setIsIcon(Iconify);
 		endEditCP(InternalWindowPtr(this), IsIconFieldMask);
+
+		produceWindowDeiconified();
 	}
 }
 
@@ -140,11 +144,21 @@ bool InternalWindow::getMaximize(void) const
 	return getIsMaximized();
 }
 
+void InternalWindow::open(void)
+{
+	produceWindowOpened();
+}
+
 void InternalWindow::close(void)
 {
-	if(getDrawingSurface() != NullFC)
+	_VetoWindowClose = false;
+
+	produceWindowClosing();
+
+	if(!_VetoWindowClose && getDrawingSurface() != NullFC)
 	{
 		getDrawingSurface()->closeWindow(InternalWindowPtr(this));
+		produceWindowClosed();
 	}
 }
 

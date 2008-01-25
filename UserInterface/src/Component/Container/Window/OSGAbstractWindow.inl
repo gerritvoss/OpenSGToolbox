@@ -43,6 +43,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+void AbstractWindow::vetoWindowClose(void)
+{
+	_VetoWindowClose = true;
+}
+
+inline
 bool AbstractWindow::isAlignableInDrawingSurface(void) const
 {
 	return getAlignmentInDrawingSurface().x() >= 0.0f &&
@@ -60,6 +66,11 @@ bool AbstractWindow::isScalableInDrawingSurface(void) const
 		getScalingInDrawingSurface().y() <= 1.0f;
 }
 
+inline
+void AbstractWindow::addWindowListener(WindowListenerPtr Listener)
+{
+   _WindowListeners.insert(Listener);
+}
 OSG_END_NAMESPACE
 
 #define OSGABSTRACTWINDOW_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

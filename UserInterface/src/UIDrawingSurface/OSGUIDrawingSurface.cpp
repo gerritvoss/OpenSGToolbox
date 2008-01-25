@@ -102,6 +102,8 @@ void UIDrawingSurface::openWindow(InternalWindowPtr TheWindow, const Int32 Layer
 		{
 			getInternalWindows().back()->takeFocus();
 		}
+
+		TheWindow->open();
 	}
 	
 }

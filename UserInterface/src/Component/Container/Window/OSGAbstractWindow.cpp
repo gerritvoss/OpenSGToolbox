@@ -166,6 +166,122 @@ void AbstractWindow::drawInternal(const GraphicsPtr TheGraphics) const
 	{
 	}
 }
+
+
+void AbstractWindow::produceWindowOpened(void)
+{
+   WindowEvent TheEvent( AbstractWindowPtr(this), getSystemTime() );
+   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->windowOpened(TheEvent);
+   }
+}
+
+void AbstractWindow::produceWindowClosing(void)
+{
+   WindowEvent TheEvent( AbstractWindowPtr(this), getSystemTime() );
+   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->windowClosing(TheEvent);
+   }
+}
+
+void AbstractWindow::produceWindowClosed(void)
+{
+   WindowEvent TheEvent( AbstractWindowPtr(this), getSystemTime() );
+   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->windowClosed(TheEvent);
+   }
+}
+
+void AbstractWindow::produceWindowIconified(void)
+{
+   WindowEvent TheEvent( AbstractWindowPtr(this), getSystemTime() );
+   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->windowIconified(TheEvent);
+   }
+}
+
+void AbstractWindow::produceWindowDeiconified(void)
+{
+   WindowEvent TheEvent( AbstractWindowPtr(this), getSystemTime() );
+   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->windowDeiconified(TheEvent);
+   }
+}
+
+void AbstractWindow::produceWindowActivated(void)
+{
+   WindowEvent TheEvent( AbstractWindowPtr(this), getSystemTime() );
+   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->windowActivated(TheEvent);
+   }
+}
+
+void AbstractWindow::produceWindowDeactivated(void)
+{
+   WindowEvent TheEvent( AbstractWindowPtr(this), getSystemTime() );
+   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->windowDeactivated(TheEvent);
+   }
+}
+
+void AbstractWindow::produceWindowEntered(void)
+{
+   WindowEvent TheEvent( AbstractWindowPtr(this), getSystemTime() );
+   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->windowEntered(TheEvent);
+   }
+}
+
+void AbstractWindow::produceWindowExited(void)
+{
+   WindowEvent TheEvent( AbstractWindowPtr(this), getSystemTime() );
+   for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
+   {
+	   (*SetItor)->windowExited(TheEvent);
+   }
+}
+
+void AbstractWindow::removeWindowListener(WindowListenerPtr Listener)
+{
+   WindowListenerSetItor EraseIter(_WindowListeners.find(Listener));
+   if(EraseIter != _WindowListeners.end())
+   {
+      _WindowListeners.erase(EraseIter);
+   }
+}
+
+void AbstractWindow::focusGained(const FocusEvent& e)
+{
+	Inherited::focusGained(e);
+	produceWindowActivated();
+}
+
+void AbstractWindow::focusLost(const FocusEvent& e)
+{
+	Inherited::focusLost(e);
+	produceWindowDeactivated();
+}
+
+void AbstractWindow::mouseEntered(const MouseEvent& e)
+{
+	Inherited::mouseEntered(e);
+	produceWindowEntered();
+}
+
+void AbstractWindow::mouseExited(const MouseEvent& e)
+{
+	Inherited::mouseExited(e);
+	produceWindowExited();
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -173,12 +289,14 @@ void AbstractWindow::drawInternal(const GraphicsPtr TheGraphics) const
 /*----------------------- constructors & destructors ----------------------*/
 
 AbstractWindow::AbstractWindow(void) :
-    Inherited()
+    Inherited(),
+	_VetoWindowClose(false)
 {
 }
 
 AbstractWindow::AbstractWindow(const AbstractWindow &source) :
-    Inherited(source)
+    Inherited(source),
+	_VetoWindowClose(false)
 {
 }
 
