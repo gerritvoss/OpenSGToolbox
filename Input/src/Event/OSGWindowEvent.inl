@@ -8,16 +8,16 @@ const EventType &WindowEvent::getClassType(void)
     return _Type;
 }
 
-inline
+/*inline
 WindowPtr WindowEvent::getWindow(void) const
 {
 	return _Window;
-}
+}*/
 
 inline
-WindowEvent::WindowEvent(FieldContainerPtr Source, Time TimeStamp, WindowPtr TheWindow) :
-   Event(Source, TimeStamp),
-   _Window(TheWindow)
+WindowEvent::WindowEvent(FieldContainerPtr Source, Time TimeStamp) ://, WindowPtr TheWindow) :
+   Event(Source, TimeStamp)//,
+   //_Window(TheWindow)
 {
 }
 

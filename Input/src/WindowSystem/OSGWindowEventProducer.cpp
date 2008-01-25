@@ -372,7 +372,7 @@ void WindowEventProducer::produceKeyTyped(const KeyEvent::Key& TheKey, const UIn
 
 void WindowEventProducer::produceWindowOpened(void)
 {
-   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), getWindow() );
+   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime());
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowOpened(TheEvent);
@@ -381,7 +381,7 @@ void WindowEventProducer::produceWindowOpened(void)
 
 void WindowEventProducer::produceWindowClosing(void)
 {
-   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), getWindow() );
+   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime());
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowClosing(TheEvent);
@@ -390,7 +390,7 @@ void WindowEventProducer::produceWindowClosing(void)
 
 void WindowEventProducer::produceWindowClosed(void)
 {
-   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), getWindow() );
+   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime());
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowClosed(TheEvent);
@@ -399,7 +399,7 @@ void WindowEventProducer::produceWindowClosed(void)
 
 void WindowEventProducer::produceWindowIconified(void)
 {
-   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), getWindow() );
+   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime());
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowIconified(TheEvent);
@@ -408,7 +408,7 @@ void WindowEventProducer::produceWindowIconified(void)
 
 void WindowEventProducer::produceWindowDeiconified(void)
 {
-   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), getWindow() );
+   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime());
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowDeiconified(TheEvent);
@@ -417,7 +417,7 @@ void WindowEventProducer::produceWindowDeiconified(void)
 
 void WindowEventProducer::produceWindowActivated(void)
 {
-   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), getWindow() );
+   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime());
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowActivated(TheEvent);
@@ -426,7 +426,7 @@ void WindowEventProducer::produceWindowActivated(void)
 
 void WindowEventProducer::produceWindowDeactivated(void)
 {
-   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), getWindow() );
+   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime());
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowDeactivated(TheEvent);
@@ -435,7 +435,7 @@ void WindowEventProducer::produceWindowDeactivated(void)
 
 void WindowEventProducer::produceWindowEntered(void)
 {
-   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), getWindow() );
+   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime());
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowEntered(TheEvent);
@@ -444,7 +444,7 @@ void WindowEventProducer::produceWindowEntered(void)
 
 void WindowEventProducer::produceWindowExited(void)
 {
-   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), getWindow() );
+   WindowEvent TheEvent( WindowEventProducerPtr(this), getSystemTime());
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowExited(TheEvent);
