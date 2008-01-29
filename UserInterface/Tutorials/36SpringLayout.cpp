@@ -44,6 +44,7 @@
 #include <OpenSG/UserInterface/OSGUIBackgrounds.h>
 #include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGButton.h>
+#include <OpenSG/UserInterface/OSGLayoutSpring.h>
 #include <OpenSG/UserInterface/OSGSpringLayout.h>
 #include <OpenSG/UserInterface/OSGSpringLayoutConstraints.h>
 
@@ -175,17 +176,37 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
-	beginEditCP(ExampleButton1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
+	beginEditCP(ExampleButton1, Button::PreferredSizeFieldMask);
         ExampleButton1->setPreferredSize(Vec2s(50,50));
-        ExampleButton1->setMaxSize(Vec2s(50,50));
-    endEditCP(ExampleButton1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
+    endEditCP(ExampleButton1, Button::PreferredSizeFieldMask);
+
+	beginEditCP(ExampleButton2, Button::PreferredSizeFieldMask);
+        ExampleButton2->setPreferredSize(Vec2s(50,50));
+    endEditCP(ExampleButton2, Button::PreferredSizeFieldMask);
+
+	beginEditCP(ExampleButton3, Button::PreferredSizeFieldMask);
+        ExampleButton3->setPreferredSize(Vec2s(50,50));
+    endEditCP(ExampleButton3, Button::PreferredSizeFieldMask);
     
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-    
+
+	//Example Button 1    
     MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, ExampleButton1, 25, SpringLayoutConstraints::NORTH_EDGE, MainInternalWindow);
-    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ExampleButton1, 25, SpringLayoutConstraints::SOUTH_EDGE, MainInternalWindow);
-    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, ExampleButton1, 25, SpringLayoutConstraints::EAST_EDGE, MainInternalWindow);
+    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ExampleButton1, -25, SpringLayoutConstraints::NORTH_EDGE, ExampleButton2);
+    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, ExampleButton1, -25, SpringLayoutConstraints::EAST_EDGE, MainInternalWindow);
     MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, ExampleButton1, 25, SpringLayoutConstraints::WEST_EDGE, MainInternalWindow);
+
+	//Example Button 2
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, ExampleButton2, LayoutSpring::height(ExampleButton2));
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ExampleButton2, -25, SpringLayoutConstraints::SOUTH_EDGE, MainInternalWindow);
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, ExampleButton2, -5, SpringLayoutConstraints::HORIZONTAL_CENTER_EDGE, MainInternalWindow);
+    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, ExampleButton2, 25, SpringLayoutConstraints::WEST_EDGE, MainInternalWindow);
+
+	//Example Button 3
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, ExampleButton3, LayoutSpring::height(ExampleButton3));
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ExampleButton3, -25, SpringLayoutConstraints::SOUTH_EDGE, MainInternalWindow);
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, ExampleButton3, 5, SpringLayoutConstraints::HORIZONTAL_CENTER_EDGE, MainInternalWindow);
+    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, ExampleButton3, -25, SpringLayoutConstraints::EAST_EDGE, MainInternalWindow);
 
 
     // Create The Main InternalWindow
@@ -197,6 +218,8 @@ int main(int argc, char **argv)
 
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
        MainInternalWindow->getChildren().addValue(ExampleButton1);
+       MainInternalWindow->getChildren().addValue(ExampleButton2);
+       MainInternalWindow->getChildren().addValue(ExampleButton3);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));

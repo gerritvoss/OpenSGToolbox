@@ -112,12 +112,10 @@ Int32 CompoundLayoutSpring::getMaximumValue(void) const
 
 Int32 CompoundLayoutSpring::getValue(void) const
 {
-    if (getSize() == LayoutSpring::VALUE_NOT_SET)
-    {
-        beginEditCP(CompoundLayoutSpringPtr(this), SizeFieldMask);
-            const_cast<CompoundLayoutSpring*>(this)->setSize( operation(getSpring1()->getValue(), getSpring1()->getValue() ) );
-        endEditCP(CompoundLayoutSpringPtr(this), SizeFieldMask);
-    }
+    beginEditCP(CompoundLayoutSpringPtr(this), SizeFieldMask);
+        const_cast<CompoundLayoutSpring*>(this)->setSize( operation(getSpring1()->getValue(), getSpring2()->getValue() ) );
+    endEditCP(CompoundLayoutSpringPtr(this), SizeFieldMask);
+
     return getSize();
 }
 

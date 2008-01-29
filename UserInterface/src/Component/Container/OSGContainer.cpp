@@ -195,12 +195,14 @@ void Container::mouseReleased(const MouseEvent& e)
 void Container::mouseMoved(const MouseEvent& e)
 {
 	bool isContained;
-    for(Int32 i(0) ; i<getChildren().size() ; ++i)
+	bool isContainedAbove(false);
+    for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
         isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
-		if(isContained)
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained && !isContainedAbove,e.getViewport());
+		if(isContained && !isContainedAbove)
 		{
+			isContainedAbove = true;
 			getChildren().getValue(i)->mouseMoved(e);
 		}
     }
@@ -210,12 +212,14 @@ void Container::mouseMoved(const MouseEvent& e)
 void Container::mouseDragged(const MouseEvent& e)
 {
 	bool isContained;
-    for(Int32 i(0) ; i<getChildren().size() ; ++i)
+	bool isContainedAbove(false);
+    for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
         isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
-		if(isContained)
+		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained && !isContainedAbove,e.getViewport());
+		if(isContained && !isContainedAbove)
 		{
+			isContainedAbove = true;
 			getChildren().getValue(i)->mouseDragged(e);
 		}
     }
@@ -249,12 +253,12 @@ void Container::produceMouseEnterOnComponent(const MouseEvent& e, ComponentPtr C
 
 void Container::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, ComponentPtr Comp, bool isMouseContained, ViewportPtr TheViewport)
 {
-	//Check if mouse is inside of the frame
+	//Check if mouse is inside of this component
 	if(!isMouseContained)
 	{
 		if(Comp->getMouseContained())
 		{
-		    //Mouse has exited the frame
+		    //Mouse has exited the component
 			MouseEvent ExitedEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
 			produceMouseExitOnComponent(ExitedEvent, Comp);
 		}

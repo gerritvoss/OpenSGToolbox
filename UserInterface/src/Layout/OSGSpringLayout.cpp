@@ -99,8 +99,8 @@ void SpringLayout::updateLayout(const MFComponentPtr Components,const ComponentP
     //TODO: Implement
     SpringLayoutConstraintsPtr MyBoundsConstraints = getConstraint(ParentComponent);
     
-    getDecycledSpring(MyBoundsConstraints->getX())->setValue(0);
-    getDecycledSpring(MyBoundsConstraints->getY())->setValue(0);
+    getDecycledSpring(MyBoundsConstraints->getX())->setValue(ParentInsetsTopLeft.x());
+    getDecycledSpring(MyBoundsConstraints->getY())->setValue(ParentInsetsTopLeft.y());
     getDecycledSpring(MyBoundsConstraints->getWidth())->setValue( ParentInsetsBottomRight.x() - ParentInsetsTopLeft.x() );
     getDecycledSpring(MyBoundsConstraints->getHeight())->setValue( ParentInsetsBottomRight.y() - ParentInsetsTopLeft.y() );
     

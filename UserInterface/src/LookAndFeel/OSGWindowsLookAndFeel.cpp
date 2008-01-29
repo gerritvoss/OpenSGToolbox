@@ -936,6 +936,45 @@ void WindowsLookAndFeel::init(void)
 	InternalWindow::getClassType().setPrototype(WindowsInternalWindow);
 	
 	//************************** DialogWindow *****************************
+	//Titlebar
+	TitlebarPtr WindowsDialogWindowTitlebar = Titlebar::create();
+	beginEditCP(WindowsDialogWindowTitlebar);
+		WindowsDialogWindowTitlebar->setEnabled(true);
+		WindowsDialogWindowTitlebar->setVisible(true);
+		
+		WindowsDialogWindowTitlebar->setConstraints(NullFC);
+		//Sizes
+		WindowsDialogWindowTitlebar->setMinSize(Vec2s(0,0));
+		WindowsDialogWindowTitlebar->setMaxSize(Vec2s(32767,32767)); //2^15
+		WindowsDialogWindowTitlebar->setPreferredSize(Vec2s(1, 23));
+
+		//Border
+		WindowsDialogWindowTitlebar->setBorder(WindowsEmptyBorder);
+		WindowsDialogWindowTitlebar->setRolloverBorder(WindowsEmptyBorder);
+		WindowsDialogWindowTitlebar->setFocusedBorder(WindowsEmptyBorder);
+		WindowsDialogWindowTitlebar->setDisabledBorder(WindowsEmptyBorder);
+		
+		//Background
+		WindowsDialogWindowTitlebar->setBackground(WIndowsInternalWindowTitlebarBackground);
+		WindowsDialogWindowTitlebar->setRolloverBackground(WIndowsInternalWindowTitlebarBackground);
+		WindowsDialogWindowTitlebar->setFocusedBackground(WIndowsInternalWindowTitlebarBackground);
+		WindowsDialogWindowTitlebar->setDisabledBackground(WindowsInternalWindowTitlebarDisabledBackground);
+		
+		//Opacity
+		WindowsDialogWindowTitlebar->setOpacity(1.0);
+
+		//InternalWindow
+		WindowsDialogWindowTitlebar->setIconifyButton(WindowsInternalWindowTitlebarIconifyButton);
+		WindowsDialogWindowTitlebar->setMaximizeButton(WindowsInternalWindowTitlebarMaximizeButton);
+		WindowsDialogWindowTitlebar->setCloseButton(WindowsInternalWindowTitlebarCloseButton);
+		WindowsDialogWindowTitlebar->setTitleLabel(WindowsInternalWindowTitlebarTitleLabel);
+		WindowsDialogWindowTitlebar->setFrameIcon(NullFC);
+		WindowsDialogWindowTitlebar->setDrawClose(true);
+		WindowsDialogWindowTitlebar->setDrawMaximize(false);
+		WindowsDialogWindowTitlebar->setDrawIconify(false);
+
+	endEditCP(WindowsDialogWindowTitlebar);
+
 	//Windows DialogWindow
 	DialogWindowPtr WindowsDialogWindow = DialogWindow::create();
 	beginEditCP(WindowsDialogWindow);
@@ -966,7 +1005,7 @@ void WindowsLookAndFeel::init(void)
 		//AbstractWindow
 		WindowsDialogWindow->setDrawingSurface(NullFC);
 		WindowsDialogWindow->setClosable(true);
-		WindowsDialogWindow->setIconable(true);
+		WindowsDialogWindow->setIconable(false);
 		WindowsDialogWindow->setMaximizable(false);
 		WindowsDialogWindow->setResizable(false);
 		WindowsDialogWindow->setTitle(std::string(""));
@@ -979,7 +1018,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsDialogWindow->setResizeModifyCursorWidth(4);
 
 		//DialogWindow
-		WindowsDialogWindow->setTitlebar(WindowsInternalWindowTitlebar);
+		WindowsDialogWindow->setTitlebar(WindowsDialogWindowTitlebar);
 
 	endEditCP(WindowsDialogWindow);
 	

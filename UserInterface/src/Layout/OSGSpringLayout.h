@@ -100,6 +100,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayout : public SpringLayoutBase
     //Links edge e1 of component c1 to edge e2 of component c2.
     void putConstraint(const UInt32 e1, ComponentPtr c1, LayoutSpringPtr s, const UInt32 e2, ComponentPtr c2);
 
+    void putConstraint(const UInt32 e, ComponentPtr c, LayoutSpringPtr s);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -144,7 +145,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayout : public SpringLayoutBase
     //void applyDefaults(SpringLayoutConstraintsPtr constraints, const UInt32 name1,
     //                       LayoutSpringPtr spring1, const UInt32 name2, LayoutSpringPtr spring2,
     //                       List<String> history);
-    void putConstraint(const UInt32 e, ComponentPtr c, LayoutSpringPtr s);
 
     typedef std::set<LayoutSpringPtr> LayoutSpringSet;
 
