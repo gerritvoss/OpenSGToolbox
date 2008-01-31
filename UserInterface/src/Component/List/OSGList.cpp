@@ -497,8 +497,6 @@ void List::updateLayout(void)
             getChildren(i)->setSize(Size);
         endEditCP(getChildren(i), Component::PositionFieldMask | Component::SizeFieldMask);
     }
-
-	std::cout << "Number of Drawn Items: " << getChildren().size() << std::endl;
 }
 
 Vec2s List::getPreferredScrollableViewportSize(void)
@@ -639,7 +637,7 @@ Int32 List::getIndexClosestToLocation(const Pnt2s& Location) const
     }
 
     //Determine the index
-    UInt32 Index(osgMin<UInt32>(Location[MajorAxis]/getCellMajorAxisLength(),_Model->getSize()-1));
+    Int32 Index(osgMax(-1, osgMin<Int32>(Location[MajorAxis]/static_cast<Int32>(getCellMajorAxisLength()),_Model->getSize()-1)));
 
 	return Index;
 }
@@ -659,7 +657,7 @@ Int32 List::getIndexForLocation(const Pnt2s& Location) const
     }
 
     //Determine the index
-    UInt32 Index(Location[MajorAxis]/getCellMajorAxisLength());
+    Int32 Index(Location[MajorAxis]/static_cast<Int32>(getCellMajorAxisLength()));
 
 	if(Index < 0 || Index >= _Model->getSize())
 	{
