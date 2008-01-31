@@ -69,16 +69,16 @@ public:
    virtual void clearSelection(void) = 0;
    
    //Return the first index argument from the most recent call to setSelectionInterval(), addSelectionInterval() or removeSelectionInterval().
-   virtual UInt32 getAnchorSelectionIndex(void) const = 0;
+   virtual Int32 getAnchorSelectionIndex(void) const = 0;
    
    //Return the second index argument from the most recent call to setSelectionInterval(), addSelectionInterval() or removeSelectionInterval().
-   virtual UInt32 getLeadSelectionIndex(void) const = 0;
+   virtual Int32 getLeadSelectionIndex(void) const = 0;
    
    //Returns the last selected index or -1 if the selection is empty.
-   virtual UInt32 getMaxSelectionIndex(void) const = 0;
+   virtual Int32 getMaxSelectionIndex(void) const = 0;
    
    //Returns the first selected index or -1 if the selection is empty.
-   virtual UInt32 getMinSelectionIndex(void) const = 0;
+   virtual Int32 getMinSelectionIndex(void) const = 0;
    
    //Returns the current selection mode.
    virtual UInt32 getSelectionMode(void) const = 0;

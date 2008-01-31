@@ -217,10 +217,26 @@ void ScrollPanel::updateLayout(void)
     //Set the Viewports position and size
     if(getView() != NullFC)
     {
-        beginEditCP(getView(), UIViewport::SizeFieldMask | UIViewport::PositionFieldMask);
-            getView()->setPosition(Pnt2s(0,0));
-            getView()->setSize(ViewportSize);
-        endEditCP(getView(), UIViewport::SizeFieldMask | UIViewport::PositionFieldMask);
+		UInt32 FieldsToChange(0);
+		if(getView()->getPosition() != Pnt2s(0,0))
+		{
+			FieldsToChange |= UIViewport::PositionFieldMask;
+		}
+		if(getView()->getSize() != ViewportSize)
+		{
+			FieldsToChange |= UIViewport::SizeFieldMask;
+		}
+        beginEditCP(getView(), FieldsToChange);
+		
+			if(getView()->getPosition() != Pnt2s(0,0))
+			{
+				getView()->setPosition(Pnt2s(0,0));
+			}
+			if(getView()->getSize() != ViewportSize)
+			{
+				getView()->setSize(ViewportSize);
+			}
+        endEditCP(getView(), FieldsToChange);
     }
     
 

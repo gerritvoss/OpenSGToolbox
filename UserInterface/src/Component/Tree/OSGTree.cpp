@@ -569,13 +569,13 @@ ComponentPtr Tree::createRowComponent(const UInt32& Row)
         {
             Selected = false;
         }
-        if(getCellGenerator()->getType() == DefaultTreeComponentGenerator::getClassType())
+		if(getCellGenerator()->getType().isDerivedFrom(TreeComponentGenerator::getClassType()))
         {
-            return DefaultTreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), _Model->isLeaf(NodePath.getLastPathComponent()), Row, false);
+            return TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), _Model->isLeaf(NodePath.getLastPathComponent()), Row, false);
         }
         else
         {
-            return getCellGenerator()->getComponent(TreePtr(this),NodePath.getLastPathComponent(),Selected, false);
+            return getCellGenerator()->getComponent(TreePtr(this),NodePath.getLastPathComponent(), Row, 0,Selected, false);
         }
     }
     else

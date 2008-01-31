@@ -54,6 +54,7 @@
 #include "Component/Button/OSGToggleButton.h"
 #include "Component/ComboBox/Editors/OSGComboBoxEditor.h"
 #include "Component/Menu/OSGLabelMenuItem.h"
+#include "Component/ComboBox/ComponentGenerators/OSGComboBoxComponentGenerator.h"
 #include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
@@ -105,12 +106,12 @@ void ComboBox::updateLayout(void)
 	}
 
 	//Selected Item Component
-	if(!getEditable() && getRendererSelcetedItem() != NullFC)
+	if(!getEditable() && getComponentGeneratorSelectedItem() != NullFC)
 	{
-		beginEditCP(getRendererSelcetedItem(), PositionFieldMask | SizeFieldMask);
-			getRendererSelcetedItem()->setSize(Vec2s(BorderBottomRight.x() - BorderTopLeft.x() - getExpandButton()->getSize().x(), getExpandButton()->getSize().y()));
-			getRendererSelcetedItem()->setPosition(Pnt2s(BorderTopLeft.x(), getExpandButton()->getPosition().y()));
-		endEditCP(getRendererSelcetedItem(), PositionFieldMask | SizeFieldMask);
+		beginEditCP(getComponentGeneratorSelectedItem(), PositionFieldMask | SizeFieldMask);
+			getComponentGeneratorSelectedItem()->setSize(Vec2s(BorderBottomRight.x() - BorderTopLeft.x() - getExpandButton()->getSize().x(), getExpandButton()->getSize().y()));
+			getComponentGeneratorSelectedItem()->setPosition(Pnt2s(BorderTopLeft.x(), getExpandButton()->getPosition().y()));
+		endEditCP(getComponentGeneratorSelectedItem(), PositionFieldMask | SizeFieldMask);
 	}
 }
 
@@ -134,9 +135,9 @@ void ComboBox::actionPerformed(const ActionEvent& e)
 			getEditor()->selectAll();
 			getEditor()->getEditorComponent()->takeFocus();
 		}
-		if(!getEditable() && getRendererSelcetedItem() != NullFC)
+		if(!getEditable() && getComponentGeneratorSelectedItem() != NullFC)
 		{
-			getRendererSelcetedItem()->takeFocus();
+			getComponentGeneratorSelectedItem()->takeFocus();
 		}
 	}
 }
@@ -366,7 +367,7 @@ void ComboBox::updateSelectedItemComponent(void)
 	//Update the Selected Item Component
 	if( !getEditable() )
 	{
-		updateRendererSelcetedItem();
+		updateComponentGeneratorSelectedItem();
 	}
 }
 
@@ -412,7 +413,7 @@ void ComboBox::keyTyped(const KeyEvent& e)
 
 void ComboBox::mouseClicked(const MouseEvent& e)
 {
-	if(!getEditable() && !getExpandButton()->isContained(e.getLocation(), true))
+	if(getEnabled() && !getEditable() && !getExpandButton()->isContained(e.getLocation(), true))
 	{
 		beginEditCP(getExpandButton(), ToggleButton::SelectedFieldMask);
 			getExpandButton()->setSelected(true);
@@ -424,13 +425,20 @@ void ComboBox::mouseClicked(const MouseEvent& e)
 	}
 }
 
-void ComboBox::updateRendererSelcetedItem(void)
+void ComboBox::updateComponentGeneratorSelectedItem(void)
 {
-	if(!getEditable() && _CellRenderer != NULL)
+	if(!getEditable() && getCellGenerator() != NullFC && _Model != NULL)
 	{
-		beginEditCP(ComboBoxPtr(this), RendererSelcetedItemFieldMask);
-			setRendererSelcetedItem(_CellRenderer->getListCellRendererComponent(NullFC, _Model->getSelectedItem(), _Model->getSelectedItemIndex(), true, false));
-		endEditCP(ComboBoxPtr(this), RendererSelcetedItemFieldMask);
+		beginEditCP(ComboBoxPtr(this), ComponentGeneratorSelectedItemFieldMask);
+			if(getCellGenerator()->getType().isDerivedFrom(ComboBoxComponentGenerator::getClassType()))
+			{
+				setComponentGeneratorSelectedItem(ComboBoxComponentGenerator::Ptr::dcast(getCellGenerator())->getComboBoxComponent(ComboBoxPtr(this), _Model->getSelectedItem(), _Model->getSelectedItemIndex(), false, false));
+			}
+			else
+			{
+				setComponentGeneratorSelectedItem(getCellGenerator()->getComponent(ComboBoxPtr(this), _Model->getSelectedItem(), _Model->getSelectedItemIndex(), 0, false, false));
+			}
+		endEditCP(ComboBoxPtr(this), ComponentGeneratorSelectedItemFieldMask);
 	}
 }
 
@@ -466,7 +474,6 @@ void ComboBox::updateSelectionFromEditor(void)
 ComboBox::ComboBox(void) :
     Inherited(),
 		_Model(NULL),
-		_CellRenderer(NULL),
 		_ExpandButtonSelectedListener(ComboBoxPtr(this)),
 		_EditorListener(ComboBoxPtr(this))
 {
@@ -478,7 +485,6 @@ ComboBox::ComboBox(void) :
 ComboBox::ComboBox(const ComboBox &source) :
     Inherited(source),
 		_Model(source._Model),
-		_CellRenderer(source._CellRenderer),
 		_ExpandButtonSelectedListener(ComboBoxPtr(this)),
 		_EditorListener(ComboBoxPtr(this))
 {
@@ -512,7 +518,7 @@ void ComboBox::changed(BitVector whichField, UInt32 origin)
 
 	if( (whichField & EditableFieldMask))
 	{
-		updateRendererSelcetedItem();
+		updateComponentGeneratorSelectedItem();
 	}
 
 	if((whichField & ExpandButtonFieldMask) &&
@@ -525,7 +531,7 @@ void ComboBox::changed(BitVector whichField, UInt32 origin)
     if( (whichField & ExpandButtonFieldMask) ||
         (whichField & EditorFieldMask) ||
         (whichField & EditableFieldMask) ||
-        (whichField & RendererSelcetedItemFieldMask))
+        (whichField & ComponentGeneratorSelectedItemFieldMask))
     {
         beginEditCP(ComboBoxPtr(this), ChildrenFieldMask);
             getChildren().clear();
@@ -537,9 +543,9 @@ void ComboBox::changed(BitVector whichField, UInt32 origin)
 			{
 				getChildren().addValue(getEditor()->getEditorComponent());
 			}
-			if(!getEditable() && getRendererSelcetedItem() != NullFC)
+			if(!getEditable() && getComponentGeneratorSelectedItem() != NullFC)
 			{
-				getChildren().addValue(getRendererSelcetedItem());
+				getChildren().addValue(getComponentGeneratorSelectedItem());
 			}
         endEditCP(ComboBoxPtr(this), ChildrenFieldMask);
     }

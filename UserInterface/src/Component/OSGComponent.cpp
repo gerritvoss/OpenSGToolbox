@@ -59,6 +59,8 @@
 #include "Component/Misc/OSGRotatedComponent.h"
 #include "Util/OSGUIDefines.h"
 
+
+#include "Component/Container/OSGUIViewport.h"
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -747,6 +749,16 @@ Int32 Component::getScrollableUnitIncrement(const Pnt2s& VisibleRectTopLeft, con
     return direction * 5;
 }
 
+void Component::scrollToPoint(const Pnt2s& PointInComponent)
+{
+	if(getParentContainer() != NullFC &&
+		getParentContainer()->getType() == UIViewport::getClassType())
+	{
+		beginEditCP(getParentContainer(), UIViewport::ViewPositionFieldMask);
+			UIViewport::Ptr::dcast(getParentContainer())->setViewPosition(PointInComponent);
+		endEditCP(getParentContainer(), UIViewport::ViewPositionFieldMask);
+	}
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

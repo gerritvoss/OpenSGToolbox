@@ -96,18 +96,11 @@ ListPtr ListBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the List::_sfCellLayout field.
+//! Get the List::_sfCellOrientation field.
 inline
-SFUInt32 *ListBase::getSFCellLayout(void)
+SFUInt32 *ListBase::getSFCellOrientation(void)
 {
-    return &_sfCellLayout;
-}
-
-//! Get the List::_mfList field.
-inline
-MFComponentPtr *ListBase::getMFList(void)
-{
-    return &_mfList;
+    return &_sfCellOrientation;
 }
 
 //! Get the List::_sfCellMajorAxisLength field.
@@ -117,26 +110,40 @@ SFUInt32 *ListBase::getSFCellMajorAxisLength(void)
     return &_sfCellMajorAxisLength;
 }
 
-
-//! Get the value of the List::_sfCellLayout field.
+//! Get the List::_sfCellGenerator field.
 inline
-UInt32 &ListBase::getCellLayout(void)
+SFComponentGeneratorPtr *ListBase::getSFCellGenerator(void)
 {
-    return _sfCellLayout.getValue();
+    return &_sfCellGenerator;
 }
 
-//! Get the value of the List::_sfCellLayout field.
+//! Get the List::_sfAutoScrollToFocused field.
 inline
-const UInt32 &ListBase::getCellLayout(void) const
+SFBool *ListBase::getSFAutoScrollToFocused(void)
 {
-    return _sfCellLayout.getValue();
+    return &_sfAutoScrollToFocused;
 }
 
-//! Set the value of the List::_sfCellLayout field.
+
+//! Get the value of the List::_sfCellOrientation field.
 inline
-void ListBase::setCellLayout(const UInt32 &value)
+UInt32 &ListBase::getCellOrientation(void)
 {
-    _sfCellLayout.setValue(value);
+    return _sfCellOrientation.getValue();
+}
+
+//! Get the value of the List::_sfCellOrientation field.
+inline
+const UInt32 &ListBase::getCellOrientation(void) const
+{
+    return _sfCellOrientation.getValue();
+}
+
+//! Set the value of the List::_sfCellOrientation field.
+inline
+void ListBase::setCellOrientation(const UInt32 &value)
+{
+    _sfCellOrientation.setValue(value);
 }
 
 //! Get the value of the List::_sfCellMajorAxisLength field.
@@ -160,27 +167,48 @@ void ListBase::setCellMajorAxisLength(const UInt32 &value)
     _sfCellMajorAxisLength.setValue(value);
 }
 
-
-//! Get the value of the \a index element the List::_mfList field.
+//! Get the value of the List::_sfCellGenerator field.
 inline
-ComponentPtr &ListBase::getList(const UInt32 index)
+ComponentGeneratorPtr &ListBase::getCellGenerator(void)
 {
-    return _mfList[index];
+    return _sfCellGenerator.getValue();
 }
 
-//! Get the List::_mfList field.
+//! Get the value of the List::_sfCellGenerator field.
 inline
-MFComponentPtr &ListBase::getList(void)
+const ComponentGeneratorPtr &ListBase::getCellGenerator(void) const
 {
-    return _mfList;
+    return _sfCellGenerator.getValue();
 }
 
-//! Get the List::_mfList field.
+//! Set the value of the List::_sfCellGenerator field.
 inline
-const MFComponentPtr &ListBase::getList(void) const
+void ListBase::setCellGenerator(const ComponentGeneratorPtr &value)
 {
-    return _mfList;
+    _sfCellGenerator.setValue(value);
 }
+
+//! Get the value of the List::_sfAutoScrollToFocused field.
+inline
+bool &ListBase::getAutoScrollToFocused(void)
+{
+    return _sfAutoScrollToFocused.getValue();
+}
+
+//! Get the value of the List::_sfAutoScrollToFocused field.
+inline
+const bool &ListBase::getAutoScrollToFocused(void) const
+{
+    return _sfAutoScrollToFocused.getValue();
+}
+
+//! Set the value of the List::_sfAutoScrollToFocused field.
+inline
+void ListBase::setAutoScrollToFocused(const bool &value)
+{
+    _sfAutoScrollToFocused.setValue(value);
+}
+
 
 OSG_END_NAMESPACE
 

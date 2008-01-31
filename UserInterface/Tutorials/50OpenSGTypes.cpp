@@ -49,9 +49,7 @@
 // List header files
 #include <OpenSG/UserInterface/OSGList.h>
 #include <OpenSG/UserInterface/OSGAbstractListModel.h>
-#include <OpenSG/UserInterface/OSGDefaultListCellRenderer.h>
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
-#include <OpenSG/UserInterface/OSGListCellRenderer.h>
 #include <OpenSG/UserInterface/OSGListModel.h>
 
 #include <OpenSG/UserInterface/OSGScrollPanel.h>
@@ -128,7 +126,6 @@ class OpenSGTypePanel
 {
 protected:
 	PanelPtr _MainPanel;
-	DefaultListCellRenderer _CellRenderer;
 	AbstractListModel _FieldTypeModel;
 	AbstractListModel _FieldContainerTypeModel;
 
@@ -154,15 +151,14 @@ protected:
 
 		// Create FieldTypeList
 		ListPtr FieldTypeList = List::create();
-		beginEditCP(FieldTypeList, Component::PreferredSizeFieldMask | List::CellLayoutFieldMask);
+		beginEditCP(FieldTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask);
 			FieldTypeList->setPreferredSize( Vec2s (200, 300) );
-			FieldTypeList->setCellLayout(VERTICAL_ALIGNMENT);
-		endEditCP(FieldTypeList, Component::PreferredSizeFieldMask | List::CellLayoutFieldMask);
+			FieldTypeList->setCellOrientation(VERTICAL_ALIGNMENT);
+		endEditCP(FieldTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask);
 
-		// Assign the Model, CellRenderer, and SelectionModel
+		// Assign the Model, and SelectionModel
 		// to the List
 		FieldTypeList->setModel(&_FieldTypeModel);
-		FieldTypeList->setCellRenderer(&_CellRenderer);
 		// Creates and assigns a SelectionMode
 		ListSelectionModelPtr  FieldSelectionModel(new DefaultListSelectionModel);
 		FieldSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
@@ -262,15 +258,14 @@ protected:
 
 		// Create FieldContainerTypeList
 		ListPtr FieldContainerTypeList = List::create();
-		beginEditCP(FieldContainerTypeList, Component::PreferredSizeFieldMask | List::CellLayoutFieldMask);
+		beginEditCP(FieldContainerTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask);
 			FieldContainerTypeList->setPreferredSize( Vec2s (200, 300) );
-			FieldContainerTypeList->setCellLayout(VERTICAL_ALIGNMENT);
-		endEditCP(FieldContainerTypeList, Component::PreferredSizeFieldMask | List::CellLayoutFieldMask);
+			FieldContainerTypeList->setCellOrientation(VERTICAL_ALIGNMENT);
+		endEditCP(FieldContainerTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask);
 
-		// Assign the Model, CellRenderer, and SelectionModel
+		// Assign the Model, and SelectionModel
 		// to the List
 		FieldContainerTypeList->setModel(&_FieldContainerTypeModel);
-		FieldContainerTypeList->setCellRenderer(&_CellRenderer);
 		// Creates and assigns a SelectionMode
 		ListSelectionModelPtr  FieldSelectionModel(new DefaultListSelectionModel);
 		FieldSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);

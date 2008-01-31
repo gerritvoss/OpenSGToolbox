@@ -204,11 +204,6 @@ int main(int argc, char **argv)
 	
 	// Add its Model
 	ExampleUneditableComboBox->setModel(&ExampleComboBoxModel);
-	
-	// Create and add a DefaultComboBoxRenderer
-	DefaultComboBoxRenderer ExampleUneditableComboBoxRenderer;
-	ExampleUneditableComboBox->setRenderer(&ExampleUneditableComboBoxRenderer);
-
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow

@@ -33,11 +33,22 @@ A UI ComboBox
 	>
 	</Field>
 	<Field
-		name="RendererSelcetedItem"
+		name="CellGenerator"
+		type="ComponentGeneratorPtr"
+		cardinality="single"
+                visibility="external"
+                header="ComponentGenerators/OSGComponentGeneratorFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+        </Field>
+	<Field
+		name="ComponentGeneratorSelectedItem"
 		type="ComponentPtr"
 		cardinality="single"
 		visibility="external"
 		access="protected"
+                header="Component/OSGComponentFields.h"
 		defaultValue="NullFC"
 	>
 	</Field>

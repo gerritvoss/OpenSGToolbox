@@ -473,6 +473,12 @@ KeyEvent::Key Win32WindowEventProducer::determineKey(WPARAM key)
    case VK_END:
       OSGKey = KeyEvent::KEY_END;
       break;
+   case VK_PRIOR:
+      OSGKey = KeyEvent::KEY_PAGE_UP;
+      break;
+   case VK_NEXT:
+      OSGKey = KeyEvent::KEY_PAGE_DOWN;
+      break;
    case VK_HOME:
       OSGKey = KeyEvent::KEY_HOME;
       break;

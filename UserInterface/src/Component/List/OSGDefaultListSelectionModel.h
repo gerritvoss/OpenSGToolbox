@@ -67,13 +67,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public ListSel
    
    virtual void 	clearSelection(void);
    
-   virtual UInt32 	getAnchorSelectionIndex(void) const;
+   virtual Int32 	getAnchorSelectionIndex(void) const;
    
-   virtual UInt32 	getLeadSelectionIndex(void) const;
+   virtual Int32 	getLeadSelectionIndex(void) const;
    
-   virtual UInt32 	getMaxSelectionIndex(void) const;
+   virtual Int32 	getMaxSelectionIndex(void) const;
    
-   virtual UInt32 	getMinSelectionIndex(void) const;
+   virtual Int32 	getMinSelectionIndex(void) const;
    
    virtual UInt32 	getSelectionMode(void) const;
    
@@ -168,10 +168,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public ListSel
 	// These are used to help with setting the Selection Intervals
 
    SelectionMode _SelectionMode;
-   UInt32 	_AnchorSelectionIndex;
-   UInt32 	_LeadSelectionIndex;
-   UInt32 	_MaxSelectionIndex;
-   UInt32 	_MinSelectionIndex;
+   Int32 	_AnchorSelectionIndex;
+   Int32 	_LeadSelectionIndex;
+   Int32 	_MaxSelectionIndex;
+   Int32 	_MinSelectionIndex;
    bool 	_ValueIsAdjusting;
     
     /*==========================  PRIVATE  ================================*/

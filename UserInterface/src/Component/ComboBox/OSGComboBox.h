@@ -49,7 +49,6 @@
 
 #include <OpenSG/Input/OSGMouseAdapter.h>
 #include "Component/List/OSGListDataListener.h"
-#include "Component/List/OSGListCellRenderer.h"
 #include "Event/OSGPopupMenuListener.h"
 #include "Event/OSGActionListener.h"
 #include "Event/OSGButtonSelectedListener.h"
@@ -143,9 +142,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	//Returns the data model currently used by the JComboBox.
 	ComboBoxModelPtr getModel(void) const;
 
-	//Returns the renderer used to display the selected item in the JComboBox field.
-	ListCellRendererPtr getRenderer(void) const;
-
 	//Returns the first item in the list that matches the given item.
 	UInt32 getSelectedIndex(void) const;
 
@@ -191,9 +187,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	//Sets the visibility of the popup.
 	void setPopupVisible(bool v);
 
-	//Sets the renderer that paints the list items and the item selected from the list in the JComboBox field.
-	void setRenderer(ListCellRendererPtr aRenderer);
-
 	//Selects the item at index anIndex.
 	void setSelectedIndex(const UInt32& anIndex);
 
@@ -228,7 +221,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
     /*! \}                                                                 */
 	
     ComboBoxModelPtr _Model;
-    ListCellRendererPtr _CellRenderer;
 
 	//Factory method which sets the ActionEvent source's properties according to values from the Action instance.
 	void configurePropertiesFromAction(Action a);
@@ -288,7 +280,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 
 	void updateListFromModel(void);
 	void updateSelectedItemComponent(void);
-	void updateRendererSelcetedItem(void);
+	void updateComponentGeneratorSelectedItem(void);
 	void updateSelectionFromEditor(void);
 
     /*==========================  PRIVATE  ================================*/

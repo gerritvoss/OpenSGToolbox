@@ -64,6 +64,12 @@ A UI Button.
  *                           Class variables                               *
 \***************************************************************************/
 
+const OSG::BitVector  TextComponent::TextColorsFieldMask = 
+    (TypeTraits<BitVector>::One << TextComponentBase::TextColorFieldId) |
+    (TypeTraits<BitVector>::One << TextComponentBase::DisabledTextColorFieldId) |
+    (TypeTraits<BitVector>::One << TextComponentBase::FocusedTextColorFieldId) |
+    (TypeTraits<BitVector>::One << TextComponentBase::RolloverTextColorFieldId);
+
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
@@ -76,6 +82,14 @@ void TextComponent::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+void TextComponent::setTextColors(const Color4f& TheColor)
+{
+	setTextColor(TheColor);
+	setDisabledTextColor(TheColor);
+	setFocusedTextColor(TheColor);
+	setRolloverTextColor(TheColor);
+}
 
 void  TextComponent::produceTextValueChanged(const TextEvent& e)
 {

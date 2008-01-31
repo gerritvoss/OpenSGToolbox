@@ -93,19 +93,6 @@ void ComboBox::setSelectedItem(SharedFieldPtr anObject)
 }
 
 inline
-ListCellRendererPtr ComboBox::getRenderer(void) const
-{
-	return _CellRenderer;
-}
-
-inline
-void ComboBox::setRenderer(ListCellRendererPtr aRenderer)
-{
-	_CellRenderer = aRenderer;
-	updateRendererSelcetedItem();
-}
-
-inline
 void ComboBox::addPopupMenuListener(PopupMenuListenerPtr Listener)
 {
 	getComboListPopupMenu()->addPopupMenuListener(Listener);

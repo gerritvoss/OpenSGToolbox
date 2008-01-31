@@ -61,18 +61,21 @@
 #include "OSGListBase.h"
 #include "OSGList.h"
 
-#include <Util/OSGUIDefines.h>            // CellLayout default header
+#include <Util/OSGUIDefines.h>            // CellOrientation default header
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ListBase::CellLayoutFieldMask = 
-    (TypeTraits<BitVector>::One << ListBase::CellLayoutFieldId);
-
-const OSG::BitVector  ListBase::ListFieldMask = 
-    (TypeTraits<BitVector>::One << ListBase::ListFieldId);
+const OSG::BitVector  ListBase::CellOrientationFieldMask = 
+    (TypeTraits<BitVector>::One << ListBase::CellOrientationFieldId);
 
 const OSG::BitVector  ListBase::CellMajorAxisLengthFieldMask = 
     (TypeTraits<BitVector>::One << ListBase::CellMajorAxisLengthFieldId);
+
+const OSG::BitVector  ListBase::CellGeneratorFieldMask = 
+    (TypeTraits<BitVector>::One << ListBase::CellGeneratorFieldId);
+
+const OSG::BitVector  ListBase::AutoScrollToFocusedFieldMask = 
+    (TypeTraits<BitVector>::One << ListBase::AutoScrollToFocusedFieldId);
 
 const OSG::BitVector ListBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -81,13 +84,16 @@ const OSG::BitVector ListBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var UInt32          ListBase::_sfCellLayout
-    
-*/
-/*! \var ComponentPtr    ListBase::_mfList
+/*! \var UInt32          ListBase::_sfCellOrientation
     
 */
 /*! \var UInt32          ListBase::_sfCellMajorAxisLength
+    
+*/
+/*! \var ComponentGeneratorPtr ListBase::_sfCellGenerator
+    
+*/
+/*! \var bool            ListBase::_sfAutoScrollToFocused
     
 */
 
@@ -96,20 +102,25 @@ const OSG::BitVector ListBase::MTInfluenceMask =
 FieldDescription *ListBase::_desc[] = 
 {
     new FieldDescription(SFUInt32::getClassType(), 
-                     "CellLayout", 
-                     CellLayoutFieldId, CellLayoutFieldMask,
+                     "CellOrientation", 
+                     CellOrientationFieldId, CellOrientationFieldMask,
                      false,
-                     (FieldAccessMethod) &ListBase::getSFCellLayout),
-    new FieldDescription(MFComponentPtr::getClassType(), 
-                     "List", 
-                     ListFieldId, ListFieldMask,
-                     false,
-                     (FieldAccessMethod) &ListBase::getMFList),
+                     (FieldAccessMethod) &ListBase::getSFCellOrientation),
     new FieldDescription(SFUInt32::getClassType(), 
                      "CellMajorAxisLength", 
                      CellMajorAxisLengthFieldId, CellMajorAxisLengthFieldMask,
                      false,
-                     (FieldAccessMethod) &ListBase::getSFCellMajorAxisLength)
+                     (FieldAccessMethod) &ListBase::getSFCellMajorAxisLength),
+    new FieldDescription(SFComponentGeneratorPtr::getClassType(), 
+                     "CellGenerator", 
+                     CellGeneratorFieldId, CellGeneratorFieldMask,
+                     false,
+                     (FieldAccessMethod) &ListBase::getSFCellGenerator),
+    new FieldDescription(SFBool::getClassType(), 
+                     "AutoScrollToFocused", 
+                     AutoScrollToFocusedFieldId, AutoScrollToFocusedFieldMask,
+                     false,
+                     (FieldAccessMethod) &ListBase::getSFAutoScrollToFocused)
 };
 
 
@@ -175,7 +186,6 @@ void ListBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
-    _mfList.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -186,9 +196,10 @@ void ListBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ListBase::ListBase(void) :
-    _sfCellLayout             (UInt32(VERTICAL_ALIGNMENT)), 
-    _mfList                   (), 
+    _sfCellOrientation        (UInt32(VERTICAL_ALIGNMENT)), 
     _sfCellMajorAxisLength    (UInt32(50)), 
+    _sfCellGenerator          (ComponentGeneratorPtr(NullFC)), 
+    _sfAutoScrollToFocused    (bool(true)), 
     Inherited() 
 {
 }
@@ -198,9 +209,10 @@ ListBase::ListBase(void) :
 #endif
 
 ListBase::ListBase(const ListBase &source) :
-    _sfCellLayout             (source._sfCellLayout             ), 
-    _mfList                   (source._mfList                   ), 
+    _sfCellOrientation        (source._sfCellOrientation        ), 
     _sfCellMajorAxisLength    (source._sfCellMajorAxisLength    ), 
+    _sfCellGenerator          (source._sfCellGenerator          ), 
+    _sfAutoScrollToFocused    (source._sfAutoScrollToFocused    ), 
     Inherited                 (source)
 {
 }
@@ -217,19 +229,24 @@ UInt32 ListBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (CellLayoutFieldMask & whichField))
+    if(FieldBits::NoField != (CellOrientationFieldMask & whichField))
     {
-        returnValue += _sfCellLayout.getBinSize();
-    }
-
-    if(FieldBits::NoField != (ListFieldMask & whichField))
-    {
-        returnValue += _mfList.getBinSize();
+        returnValue += _sfCellOrientation.getBinSize();
     }
 
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
     {
         returnValue += _sfCellMajorAxisLength.getBinSize();
+    }
+
+    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
+    {
+        returnValue += _sfCellGenerator.getBinSize();
+    }
+
+    if(FieldBits::NoField != (AutoScrollToFocusedFieldMask & whichField))
+    {
+        returnValue += _sfAutoScrollToFocused.getBinSize();
     }
 
 
@@ -241,19 +258,24 @@ void ListBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (CellLayoutFieldMask & whichField))
+    if(FieldBits::NoField != (CellOrientationFieldMask & whichField))
     {
-        _sfCellLayout.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (ListFieldMask & whichField))
-    {
-        _mfList.copyToBin(pMem);
+        _sfCellOrientation.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
     {
         _sfCellMajorAxisLength.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
+    {
+        _sfCellGenerator.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (AutoScrollToFocusedFieldMask & whichField))
+    {
+        _sfAutoScrollToFocused.copyToBin(pMem);
     }
 
 
@@ -264,19 +286,24 @@ void ListBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (CellLayoutFieldMask & whichField))
+    if(FieldBits::NoField != (CellOrientationFieldMask & whichField))
     {
-        _sfCellLayout.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (ListFieldMask & whichField))
-    {
-        _mfList.copyFromBin(pMem);
+        _sfCellOrientation.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
     {
         _sfCellMajorAxisLength.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
+    {
+        _sfCellGenerator.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (AutoScrollToFocusedFieldMask & whichField))
+    {
+        _sfAutoScrollToFocused.copyFromBin(pMem);
     }
 
 
@@ -289,14 +316,17 @@ void ListBase::executeSyncImpl(      ListBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (CellLayoutFieldMask & whichField))
-        _sfCellLayout.syncWith(pOther->_sfCellLayout);
-
-    if(FieldBits::NoField != (ListFieldMask & whichField))
-        _mfList.syncWith(pOther->_mfList);
+    if(FieldBits::NoField != (CellOrientationFieldMask & whichField))
+        _sfCellOrientation.syncWith(pOther->_sfCellOrientation);
 
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
         _sfCellMajorAxisLength.syncWith(pOther->_sfCellMajorAxisLength);
+
+    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
+        _sfCellGenerator.syncWith(pOther->_sfCellGenerator);
+
+    if(FieldBits::NoField != (AutoScrollToFocusedFieldMask & whichField))
+        _sfAutoScrollToFocused.syncWith(pOther->_sfAutoScrollToFocused);
 
 
 }
@@ -308,15 +338,18 @@ void ListBase::executeSyncImpl(      ListBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (CellLayoutFieldMask & whichField))
-        _sfCellLayout.syncWith(pOther->_sfCellLayout);
+    if(FieldBits::NoField != (CellOrientationFieldMask & whichField))
+        _sfCellOrientation.syncWith(pOther->_sfCellOrientation);
 
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
         _sfCellMajorAxisLength.syncWith(pOther->_sfCellMajorAxisLength);
 
+    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
+        _sfCellGenerator.syncWith(pOther->_sfCellGenerator);
 
-    if(FieldBits::NoField != (ListFieldMask & whichField))
-        _mfList.syncWith(pOther->_mfList, sInfo);
+    if(FieldBits::NoField != (AutoScrollToFocusedFieldMask & whichField))
+        _sfAutoScrollToFocused.syncWith(pOther->_sfAutoScrollToFocused);
+
 
 
 }
@@ -326,9 +359,6 @@ void ListBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
-
-    if(FieldBits::NoField != (ListFieldMask & whichField))
-        _mfList.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

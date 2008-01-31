@@ -187,6 +187,8 @@ int main(int argc, char **argv)
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialKeyListener TheKeyListener;
+    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
 
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
@@ -243,8 +245,6 @@ int main(int argc, char **argv)
 	   MainInternalWindow->setTitle(std::string("Internal Window"));
     endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::PositionFieldMask | InternalWindow::PreferredSizeFieldMask | InternalWindow::TitleFieldMask);
 
-    TutorialKeyListener TheKeyListener;
-    MainInternalWindow->addKeyListener(&TheKeyListener);
 
     // Create the Drawing Surface
     UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();

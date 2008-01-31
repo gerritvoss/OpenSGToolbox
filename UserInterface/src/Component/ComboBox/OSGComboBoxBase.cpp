@@ -70,8 +70,11 @@ const OSG::BitVector  ComboBoxBase::ExpandButtonFieldMask =
 const OSG::BitVector  ComboBoxBase::EditorFieldMask = 
     (TypeTraits<BitVector>::One << ComboBoxBase::EditorFieldId);
 
-const OSG::BitVector  ComboBoxBase::RendererSelcetedItemFieldMask = 
-    (TypeTraits<BitVector>::One << ComboBoxBase::RendererSelcetedItemFieldId);
+const OSG::BitVector  ComboBoxBase::CellGeneratorFieldMask = 
+    (TypeTraits<BitVector>::One << ComboBoxBase::CellGeneratorFieldId);
+
+const OSG::BitVector  ComboBoxBase::ComponentGeneratorSelectedItemFieldMask = 
+    (TypeTraits<BitVector>::One << ComboBoxBase::ComponentGeneratorSelectedItemFieldId);
 
 const OSG::BitVector  ComboBoxBase::EditableFieldMask = 
     (TypeTraits<BitVector>::One << ComboBoxBase::EditableFieldId);
@@ -95,7 +98,10 @@ const OSG::BitVector ComboBoxBase::MTInfluenceMask =
 /*! \var ComboBoxEditorPtr ComboBoxBase::_sfEditor
     
 */
-/*! \var ComponentPtr    ComboBoxBase::_sfRendererSelcetedItem
+/*! \var ComponentGeneratorPtr ComboBoxBase::_sfCellGenerator
+    
+*/
+/*! \var ComponentPtr    ComboBoxBase::_sfComponentGeneratorSelectedItem
     
 */
 /*! \var bool            ComboBoxBase::_sfEditable
@@ -122,11 +128,16 @@ FieldDescription *ComboBoxBase::_desc[] =
                      EditorFieldId, EditorFieldMask,
                      false,
                      (FieldAccessMethod) &ComboBoxBase::getSFEditor),
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "RendererSelcetedItem", 
-                     RendererSelcetedItemFieldId, RendererSelcetedItemFieldMask,
+    new FieldDescription(SFComponentGeneratorPtr::getClassType(), 
+                     "CellGenerator", 
+                     CellGeneratorFieldId, CellGeneratorFieldMask,
                      false,
-                     (FieldAccessMethod) &ComboBoxBase::getSFRendererSelcetedItem),
+                     (FieldAccessMethod) &ComboBoxBase::getSFCellGenerator),
+    new FieldDescription(SFComponentPtr::getClassType(), 
+                     "ComponentGeneratorSelectedItem", 
+                     ComponentGeneratorSelectedItemFieldId, ComponentGeneratorSelectedItemFieldMask,
+                     false,
+                     (FieldAccessMethod) &ComboBoxBase::getSFComponentGeneratorSelectedItem),
     new FieldDescription(SFBool::getClassType(), 
                      "Editable", 
                      EditableFieldId, EditableFieldMask,
@@ -219,7 +230,8 @@ void ComboBoxBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 ComboBoxBase::ComboBoxBase(void) :
     _sfExpandButton           (ToggleButtonPtr(NullFC)), 
     _sfEditor                 (ComboBoxEditorPtr(NullFC)), 
-    _sfRendererSelcetedItem   (ComponentPtr(NullFC)), 
+    _sfCellGenerator          (ComponentGeneratorPtr(NullFC)), 
+    _sfComponentGeneratorSelectedItem(ComponentPtr(NullFC)), 
     _sfEditable               (bool(true)), 
     _sfMaxRowCount            (UInt32(5)), 
     _sfComboListPopupMenu     (PopupMenuPtr(NullFC)), 
@@ -234,7 +246,8 @@ ComboBoxBase::ComboBoxBase(void) :
 ComboBoxBase::ComboBoxBase(const ComboBoxBase &source) :
     _sfExpandButton           (source._sfExpandButton           ), 
     _sfEditor                 (source._sfEditor                 ), 
-    _sfRendererSelcetedItem   (source._sfRendererSelcetedItem   ), 
+    _sfCellGenerator          (source._sfCellGenerator          ), 
+    _sfComponentGeneratorSelectedItem(source._sfComponentGeneratorSelectedItem), 
     _sfEditable               (source._sfEditable               ), 
     _sfMaxRowCount            (source._sfMaxRowCount            ), 
     _sfComboListPopupMenu     (source._sfComboListPopupMenu     ), 
@@ -264,9 +277,14 @@ UInt32 ComboBoxBase::getBinSize(const BitVector &whichField)
         returnValue += _sfEditor.getBinSize();
     }
 
-    if(FieldBits::NoField != (RendererSelcetedItemFieldMask & whichField))
+    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
-        returnValue += _sfRendererSelcetedItem.getBinSize();
+        returnValue += _sfCellGenerator.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ComponentGeneratorSelectedItemFieldMask & whichField))
+    {
+        returnValue += _sfComponentGeneratorSelectedItem.getBinSize();
     }
 
     if(FieldBits::NoField != (EditableFieldMask & whichField))
@@ -303,9 +321,14 @@ void ComboBoxBase::copyToBin(      BinaryDataHandler &pMem,
         _sfEditor.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (RendererSelcetedItemFieldMask & whichField))
+    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
-        _sfRendererSelcetedItem.copyToBin(pMem);
+        _sfCellGenerator.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ComponentGeneratorSelectedItemFieldMask & whichField))
+    {
+        _sfComponentGeneratorSelectedItem.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (EditableFieldMask & whichField))
@@ -341,9 +364,14 @@ void ComboBoxBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfEditor.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (RendererSelcetedItemFieldMask & whichField))
+    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
-        _sfRendererSelcetedItem.copyFromBin(pMem);
+        _sfCellGenerator.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ComponentGeneratorSelectedItemFieldMask & whichField))
+    {
+        _sfComponentGeneratorSelectedItem.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (EditableFieldMask & whichField))
@@ -377,8 +405,11 @@ void ComboBoxBase::executeSyncImpl(      ComboBoxBase *pOther,
     if(FieldBits::NoField != (EditorFieldMask & whichField))
         _sfEditor.syncWith(pOther->_sfEditor);
 
-    if(FieldBits::NoField != (RendererSelcetedItemFieldMask & whichField))
-        _sfRendererSelcetedItem.syncWith(pOther->_sfRendererSelcetedItem);
+    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
+        _sfCellGenerator.syncWith(pOther->_sfCellGenerator);
+
+    if(FieldBits::NoField != (ComponentGeneratorSelectedItemFieldMask & whichField))
+        _sfComponentGeneratorSelectedItem.syncWith(pOther->_sfComponentGeneratorSelectedItem);
 
     if(FieldBits::NoField != (EditableFieldMask & whichField))
         _sfEditable.syncWith(pOther->_sfEditable);
@@ -405,8 +436,11 @@ void ComboBoxBase::executeSyncImpl(      ComboBoxBase *pOther,
     if(FieldBits::NoField != (EditorFieldMask & whichField))
         _sfEditor.syncWith(pOther->_sfEditor);
 
-    if(FieldBits::NoField != (RendererSelcetedItemFieldMask & whichField))
-        _sfRendererSelcetedItem.syncWith(pOther->_sfRendererSelcetedItem);
+    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
+        _sfCellGenerator.syncWith(pOther->_sfCellGenerator);
+
+    if(FieldBits::NoField != (ComponentGeneratorSelectedItemFieldMask & whichField))
+        _sfComponentGeneratorSelectedItem.syncWith(pOther->_sfComponentGeneratorSelectedItem);
 
     if(FieldBits::NoField != (EditableFieldMask & whichField))
         _sfEditable.syncWith(pOther->_sfEditable);

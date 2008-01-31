@@ -52,7 +52,8 @@
 #include "Util/OSGUIDefines.h"
 #include "OSGListSelectionModel.h"
 #include "OSGListModel.h"
-#include "OSGListCellRenderer.h"
+
+#include <deque>
 
 OSG_BEGIN_NAMESPACE
 
@@ -96,11 +97,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
     virtual void updateLayout(void);
 
     void setModel(ListModelPtr Model);
-    void setCellRenderer(ListCellRendererPtr CellRenderer);
     void setSelectionModel(ListSelectionModelPtr SelectionModel);
 
     ListModelPtr getModel(void) const;
-    ListCellRendererPtr getCellRenderer(void) const;
     ListSelectionModelPtr getSelectionModel(void) const;
 	
     virtual void mousePressed(const MouseEvent& e);
@@ -108,10 +107,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
 
     ComponentPtr getComponentAtPoint(const MouseEvent& e);
     SharedFieldPtr getValueAtPoint(const MouseEvent& e);
+
+    //Returns the row for the specified location.
+	//The Location should be in Component space
+    Int32 getIndexForLocation(const Pnt2s& Location) const;
+
+	
+    Int32 getIndexClosestToLocation(const Pnt2s& Location) const;
+
     ComponentPtr getComponentAtIndex(const UInt32& Index);
     SharedFieldPtr getValueAtIndex(const UInt32& Index);
     
-    //Scrollable Interface
+	
+	//Scrollable Interface
     //Returns the preferred size of the viewport for a view component.
     virtual Vec2s getPreferredScrollableViewportSize(void);
 
@@ -126,7 +134,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
 
     //Components that display logical rows or columns should compute the scroll increment that will completely expose one new row or column, depending on the value of orientation.
     virtual Int32 getScrollableUnitIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
-    /*=========================  PROTECTED  ===============================*/
+    
+	void scrollToIndex(const UInt32& Index);
+
+	void scrollToFocused(void);
+
+	void scrollToSelection(void);
+	/*=========================  PROTECTED  ===============================*/
   protected:
 
     // Variables should all be in ListBase.
@@ -148,10 +162,42 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
     /*! \}                                                                 */
 
     ListModelPtr _Model;
-    ListCellRendererPtr _CellRenderer;
     ListSelectionModelPtr _SelectionModel;
 
-	void updateItem(const UInt32& index);
+
+	void updateIndiciesDrawnFromModel(void);
+
+	//Updates the drawn Indices.  Called when the ClipBounds of the List
+	//changes
+    void updateIndicesDrawn(void);
+
+	//Determines the indicies of the Indices that will be seen
+	//taking the clip bounds into account
+    void getDrawnIndices(Int32& Beginning, Int32& End) const;
+
+	Int32 getListIndexFromDrawnIndex(const Int32& Index) const;
+
+	Int32 getDrawnIndexFromListIndex(const Int32& Index) const;
+	
+    void updatePreferredSize(void);
+
+	void focusIndex(const Int32& Index);
+	
+	//Creates the component for the given Index
+    ComponentPtr createIndexComponent(const UInt32& Index);
+
+	
+	void updateItem(const UInt32& Index);
+
+	void cleanItem(const UInt32& Index);
+
+	void initItem(const UInt32& Index);
+	
+    Int32 _TopDrawnIndex,
+          _BottomDrawnIndex;
+	Int32 _FocusedIndex;
+
+    std::deque<ComponentPtr> _DrawnIndices;
 
     /*==========================  PRIVATE  ================================*/
   private:

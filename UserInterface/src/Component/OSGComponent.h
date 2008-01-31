@@ -164,6 +164,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     //Components that display logical rows or columns should compute the scroll increment that will completely expose one new row or column, depending on the value of orientation.
     virtual Int32 getScrollableUnitIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
 
+	virtual void scrollToPoint(const Pnt2s& PointInComponent);
+
     static const OSG::BitVector BordersFieldMask;
 	virtual void setBorders(BorderPtr TheBorder);
 

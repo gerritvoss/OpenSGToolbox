@@ -69,9 +69,8 @@ void reshape(Vec2s Size);
 #include <OpenSG/UserInterface/OSGList.h>
 #include <OpenSG/UserInterface/OSGListSelectionListener.h>
 #include <OpenSG/UserInterface/OSGAbstractListModel.h>
-#include <OpenSG/UserInterface/OSGDefaultListCellRenderer.h>
+#include <OpenSG/UserInterface/OSGDefaultListComponentGenerator.h>
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
-#include <OpenSG/UserInterface/OSGListCellRenderer.h>
 #include <OpenSG/UserInterface/OSGListModel.h>
 
 
@@ -122,7 +121,7 @@ public:
 
     /******************************************************
 
-            Creates a ListCellRenderer class to 
+            Creates a ListComponentGenerator class to 
             create Labels for the List which contain
             the Font name in that particular Font.
 
@@ -132,13 +131,13 @@ public:
             Label's Font to be the Font contained
             within the Label.
 
-            The ListCellRenderer is what is
+            The ListComponentGenerator is what is
             used to create the Component
             values for the List.  The Default 
             is to simply create Label components
             which normally simply contain a text
             string.  In this case, the
-            DefaultListCellRenderer is 
+            DefaultListComponentGenerator is 
             modified slightly to give each
             Label component the Font which
             its text will display.
@@ -146,29 +145,29 @@ public:
 
     ******************************************************/
 
-class FontListCellRenderer : public DefaultListCellRenderer
+class FontListComponentGenerator : public DefaultListComponentGenerator
 {
     /*==========================  PUBLIC  =================================*/
   public:
-    virtual ComponentPtr getListCellRendererComponent(ListPtr FontList, SharedFieldPtr value, UInt32 index, bool isSelected, bool cellHasFocus)
+	virtual ComponentPtr getListComponent(ListPtr Parent, SharedFieldPtr Value, UInt32 Index, bool IsSelected, bool HasFocus)
     {
-        // Create using the DefaultListCellRenderer a
+        // Create using the DefaultListComponentGenerator a
         // Label (its default) with the Font name as its text
 
         LabelPtr ListComponentLabel = Label::Ptr::dcast(
-            DefaultListCellRenderer::getListCellRendererComponent(
-            FontList, value, index, isSelected, cellHasFocus)
+            DefaultListComponentGenerator::getListComponent(
+            Parent, Value, Index, IsSelected, HasFocus)
             );
 
         std::string FontFamilyString;
         // Converts the Fontname to correct type
-        if(value->getType() == SFString::getClassType())
+        if(Value->getType() == SFString::getClassType())
         {
-            FontFamilyString = dynamic_cast<SFString*>(value.get())->getValue();
+            FontFamilyString = dynamic_cast<SFString*>(Value.get())->getValue();
         }
         else
         {
-            // Gives a default value
+            // Gives a default Value
             FontFamilyString = "Times New Roman";
         }
         
@@ -185,11 +184,11 @@ class FontListCellRenderer : public DefaultListCellRenderer
         return ListComponentLabel;
     }
 
-    FontListCellRenderer(void)
+    FontListComponentGenerator(void)
     {
     }
 
-    virtual ~FontListCellRenderer(void)
+    virtual ~FontListComponentGenerator(void)
     {
     }
 };
@@ -404,17 +403,18 @@ int main(int argc, char **argv)
         ListModel.pushBack(SharedFieldPtr(new SFString((*FontMapItor).first)));
     }
 
-    // Creates CellRenderer
-    FontListCellRenderer CellRenderer;
+    // Creates ComponentGenerator
+    FontListComponentGenerator ComponentGenerator;
+	ComponentGeneratorPtr TheGenerator(ComponentGenerator);
 
     // Create the List of Fonts (see 18List for more information)
     FontList = List::create();
-    beginEditCP(FontList, List::PreferredSizeFieldMask | List::CellLayoutFieldMask);
+    beginEditCP(FontList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::CellGeneratorFieldMask);
         FontList->setPreferredSize(Vec2s(200, 300));
-        FontList->setCellLayout(VERTICAL_ALIGNMENT);
-    endEditCP(FontList, List::PreferredSizeFieldMask | List::CellLayoutFieldMask);
+        FontList->setCellOrientation(VERTICAL_ALIGNMENT);
+		FontList->setCellGenerator(TheGenerator);
+    endEditCP(FontList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::CellGeneratorFieldMask);
     FontList->setModel(&ListModel);
-    FontList->setCellRenderer(&CellRenderer);
     ListSelectionModelPtr SelectionModel(new DefaultListSelectionModel);
     SelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
     FontList->setSelectionModel(SelectionModel);

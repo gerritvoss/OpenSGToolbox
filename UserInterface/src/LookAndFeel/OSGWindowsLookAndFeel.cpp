@@ -93,6 +93,7 @@
 
 #include "Component/List/OSGList.h"
 #include "Component/List/OSGDefaultListSelectionModel.h"
+#include "Component/List/ComponentGenerators/OSGDefaultListComponentGenerator.h"
 
 #include "Component/Spinner/OSGSpinner.h"
 #include "Component/Spinner/Editors/OSGSpinnerDefaultEditor.h"
@@ -104,6 +105,7 @@
 
 #include "Component/ComboBox/OSGComboBox.h"
 #include "Component/ComboBox/Editors/OSGDefaultComboBoxEditor.h"
+#include "Component/ComboBox/ComponentGenerators/OSGDefaultComboBoxComponentGenerator.h"
 
 #include "Component/Tree/ModelLayout/OSGFixedHeightTreeModelLayout.h"
 #include "Component/Tree/Editors/OSGDefaultTreeCellEditor.h"
@@ -3315,6 +3317,44 @@ void WindowsLookAndFeel::init(void)
 	//Windows RotatedComponentBackground
 	EmptyUIBackgroundPtr WindowsListBackground = EmptyUIBackground::create();
 
+	//************************** DefaultListComponentGenerator *****************************
+	LabelPtr WindowsDefaultListComponentGeneratorComponentPrototype = Label::create();
+	beginEditCP(WindowsDefaultListComponentGeneratorComponentPrototype, Label::BordersFieldMask);
+		WindowsDefaultListComponentGeneratorComponentPrototype->setBorders(WindowsEmptyBorder);
+	endEditCP(WindowsDefaultListComponentGeneratorComponentPrototype, Label::BordersFieldMask);
+
+    ColorUIBackgroundPtr WindowsDefaultListComponentGeneratorSelectedBackground = ColorUIBackground::create();
+	beginEditCP(WindowsDefaultListComponentGeneratorSelectedBackground, ColorUIBackground::ColorFieldMask);
+		WindowsDefaultListComponentGeneratorSelectedBackground->setColor(Color4f(0.4f,0.4f,1.0f,1.0f));
+	endEditCP(WindowsDefaultListComponentGeneratorSelectedBackground, ColorUIBackground::ColorFieldMask);
+
+    UIBackgroundPtr WindowsDefaultListComponentGeneratorFocusedBackground = WindowsDefaultListComponentGeneratorComponentPrototype->getBackground();
+
+    BorderPtr WindowsDefaultListComponentGeneratorSelectedBorder = WindowsDefaultListComponentGeneratorComponentPrototype->getBorder();
+
+    LineBorderPtr WindowsDefaultListComponentGeneratorFocusedBorder = LineBorder::create();
+	beginEditCP(WindowsDefaultListComponentGeneratorFocusedBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+		WindowsDefaultListComponentGeneratorFocusedBorder->setWidth(1);
+		WindowsDefaultListComponentGeneratorFocusedBorder->setColor(Color4f(0.0f,0.0f,1.0f,1.0f));
+	endEditCP(WindowsDefaultListComponentGeneratorFocusedBorder, LineBorder::ColorFieldMask | LineBorder::WidthFieldMask);
+    
+	//DefaultListComponentGenerator
+    DefaultListComponentGeneratorPtr WindowsDefaultListComponentGenerator = DefaultListComponentGenerator::create();
+    beginEditCP(WindowsDefaultListComponentGenerator);
+		WindowsDefaultListComponentGenerator->setDrawObjectPrototype(WindowsDefaultListComponentGeneratorComponentPrototype);
+		WindowsDefaultListComponentGenerator->setSelectedBackground(WindowsDefaultListComponentGeneratorSelectedBackground);
+		WindowsDefaultListComponentGenerator->setFocusedBackground(WindowsDefaultListComponentGeneratorFocusedBackground);
+		WindowsDefaultListComponentGenerator->setSelectedBorder(WindowsDefaultListComponentGeneratorSelectedBorder);
+		WindowsDefaultListComponentGenerator->setFocusedBorder(WindowsDefaultListComponentGeneratorFocusedBorder);
+		WindowsDefaultListComponentGenerator->setSelectedTextColor(Color4f(1.0f,1.0f,1.0f,1.0f));
+		WindowsDefaultListComponentGenerator->setFocusedTextColor(Color4f(0.0f,0.0f,0.0f,1.0f));
+		WindowsDefaultListComponentGenerator->setFocusedBackgroundHasPriority(false);
+		WindowsDefaultListComponentGenerator->setFocusedBorderHasPriority(true);
+		WindowsDefaultListComponentGenerator->setFocusedTextColorHasPriority(false);
+    endEditCP(WindowsDefaultListComponentGenerator);
+    
+    DefaultListComponentGenerator::getClassType().setPrototype(WindowsDefaultListComponentGenerator);
+
 	//Windows List
 	ListPtr WindowsList = List::create();
 	beginEditCP(WindowsList);
@@ -3343,6 +3383,8 @@ void WindowsLookAndFeel::init(void)
 		WindowsList->setOpacity(1.0);
         
         WindowsList->setCellMajorAxisLength(25);
+		WindowsList->setCellGenerator(WindowsDefaultListComponentGenerator);
+		WindowsList->setAutoScrollToFocused(true);
 		
 	endEditCP(WindowsList);
 	
@@ -3921,6 +3963,39 @@ void WindowsLookAndFeel::init(void)
 		WindowsDefaultComboBoxEditor->setEditor(WindowsDefaultComboBoxTextField);
     endEditCP(WindowsDefaultComboBoxEditor);
 	
+	//************************** DefaultComboBoxComponentGenerator *****************************
+	LabelPtr WindowsDefaultComboBoxComponentGeneratorComponentPrototype = Label::create();
+	beginEditCP(WindowsDefaultComboBoxComponentGeneratorComponentPrototype, Label::BordersFieldMask);
+		WindowsDefaultComboBoxComponentGeneratorComponentPrototype->setBorders(WindowsEmptyBorder);
+	endEditCP(WindowsDefaultComboBoxComponentGeneratorComponentPrototype, Label::BordersFieldMask);
+
+    ColorUIBackgroundPtr WindowsDefaultComboBoxComponentGeneratorSelectedBackground = ColorUIBackground::create();
+	beginEditCP(WindowsDefaultComboBoxComponentGeneratorSelectedBackground, ColorUIBackground::ColorFieldMask);
+		WindowsDefaultComboBoxComponentGeneratorSelectedBackground->setColor(Color4f(0.4f,0.4f,1.0f,1.0f));
+	endEditCP(WindowsDefaultComboBoxComponentGeneratorSelectedBackground, ColorUIBackground::ColorFieldMask);
+
+    UIBackgroundPtr WindowsDefaultComboBoxComponentGeneratorFocusedBackground = WindowsDefaultComboBoxComponentGeneratorComponentPrototype->getBackground();
+
+    BorderPtr WindowsDefaultComboBoxComponentGeneratorSelectedBorder = WindowsDefaultComboBoxComponentGeneratorComponentPrototype->getBorder();
+
+    BorderPtr WindowsDefaultComboBoxComponentGeneratorFocusedBorder = WindowsDefaultComboBoxComponentGeneratorComponentPrototype->getBorder();
+    
+	//DefaultComboBoxComponentGenerator
+    DefaultComboBoxComponentGeneratorPtr WindowsDefaultComboBoxComponentGenerator = DefaultComboBoxComponentGenerator::create();
+    beginEditCP(WindowsDefaultComboBoxComponentGenerator);
+		WindowsDefaultComboBoxComponentGenerator->setDrawObjectPrototype(WindowsDefaultComboBoxComponentGeneratorComponentPrototype);
+		WindowsDefaultComboBoxComponentGenerator->setSelectedBackground(WindowsDefaultComboBoxComponentGeneratorSelectedBackground);
+		WindowsDefaultComboBoxComponentGenerator->setFocusedBackground(WindowsDefaultComboBoxComponentGeneratorFocusedBackground);
+		WindowsDefaultComboBoxComponentGenerator->setSelectedBorder(WindowsDefaultComboBoxComponentGeneratorSelectedBorder);
+		WindowsDefaultComboBoxComponentGenerator->setFocusedBorder(WindowsDefaultComboBoxComponentGeneratorFocusedBorder);
+		WindowsDefaultComboBoxComponentGenerator->setSelectedTextColor(Color4f(1.0f,1.0f,1.0f,1.0f));
+		WindowsDefaultComboBoxComponentGenerator->setFocusedTextColor(Color4f(0.0f,0.0f,0.0f,1.0f));
+		WindowsDefaultComboBoxComponentGenerator->setFocusedBackgroundHasPriority(false);
+		WindowsDefaultComboBoxComponentGenerator->setFocusedBorderHasPriority(true);
+		WindowsDefaultComboBoxComponentGenerator->setFocusedTextColorHasPriority(false);
+    endEditCP(WindowsDefaultComboBoxComponentGenerator);
+    
+    DefaultComboBoxComponentGenerator::getClassType().setPrototype(WindowsDefaultComboBoxComponentGenerator);
 
 	//ComboBox
     ComboBoxPtr WindowsComboBox = ComboBox::create();
@@ -3951,6 +4026,7 @@ void WindowsLookAndFeel::init(void)
         WindowsComboBox->setEditor(WindowsDefaultComboBoxEditor);
         WindowsComboBox->setEditable(true);
         WindowsComboBox->setMaxRowCount(5);
+		WindowsComboBox->setCellGenerator(WindowsDefaultComboBoxComponentGenerator);
     endEditCP(WindowsComboBox);
     
     ComboBox::getClassType().setPrototype(WindowsComboBox);
@@ -4122,7 +4198,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsTreeBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
 	endEditCP(WindowsTreeBackground);
 
-	//Windows RotatedComponent
+	//Windows WindowsTree
 	TreePtr WindowsTree = Tree::create();
 	beginEditCP(WindowsTree);
 		WindowsTree->setEnabled(true);

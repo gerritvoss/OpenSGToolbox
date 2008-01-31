@@ -78,15 +78,15 @@ void TreeComponentGenerator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr TreeComponentGenerator::getComponent(ComponentPtr Parent, SharedFieldPtr Value, bool IsSelected, bool HasFocus)
+ComponentPtr TreeComponentGenerator::getComponent(ComponentPtr Parent, SharedFieldPtr Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus)
 {
     if(Parent->getType().isDerivedFrom(Tree::getClassType()))
     {
-        return getTreeComponent(Tree::Ptr::dcast(Parent), Value, IsSelected, false, true, 0, HasFocus);
+        return getTreeComponent(Tree::Ptr::dcast(Parent), Value, IsSelected, false, true, PrimaryAxisIndex, HasFocus);
     }
     else
     {
-        return getTreeComponent(NullFC, Value, IsSelected, false, true, 0, HasFocus);
+        return getTreeComponent(NullFC, Value, IsSelected, false, true, PrimaryAxisIndex, HasFocus);
     }
 }
 

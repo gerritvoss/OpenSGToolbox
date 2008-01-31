@@ -67,9 +67,10 @@
 
 #include "Component/Container/OSGContainer.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // CellLayout type
-#include "Component/OSGComponent.h" // List type
+#include <OpenSG/OSGUInt32Fields.h> // CellOrientation type
 #include <OpenSG/OSGUInt32Fields.h> // CellMajorAxisLength type
+#include "ComponentGenerators/OSGComponentGeneratorFields.h" // CellGenerator type
+#include <OpenSG/OSGBoolFields.h> // AutoScrollToFocused type
 
 #include "OSGListFields.h"
 
@@ -93,15 +94,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
 
     enum
     {
-        CellLayoutFieldId          = Inherited::NextFieldId,
-        ListFieldId                = CellLayoutFieldId          + 1,
-        CellMajorAxisLengthFieldId = ListFieldId                + 1,
-        NextFieldId                = CellMajorAxisLengthFieldId + 1
+        CellOrientationFieldId     = Inherited::NextFieldId,
+        CellMajorAxisLengthFieldId = CellOrientationFieldId     + 1,
+        CellGeneratorFieldId       = CellMajorAxisLengthFieldId + 1,
+        AutoScrollToFocusedFieldId = CellGeneratorFieldId       + 1,
+        NextFieldId                = AutoScrollToFocusedFieldId + 1
     };
 
-    static const OSG::BitVector CellLayoutFieldMask;
-    static const OSG::BitVector ListFieldMask;
+    static const OSG::BitVector CellOrientationFieldMask;
     static const OSG::BitVector CellMajorAxisLengthFieldMask;
+    static const OSG::BitVector CellGeneratorFieldMask;
+    static const OSG::BitVector AutoScrollToFocusedFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -128,21 +131,29 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *getSFCellLayout     (void);
+           SFUInt32            *getSFCellOrientation(void);
            SFUInt32            *getSFCellMajorAxisLength(void);
+           SFComponentGeneratorPtr *getSFCellGenerator  (void);
+           SFBool              *getSFAutoScrollToFocused(void);
 
-           UInt32              &getCellLayout     (void);
-     const UInt32              &getCellLayout     (void) const;
+           UInt32              &getCellOrientation(void);
+     const UInt32              &getCellOrientation(void) const;
            UInt32              &getCellMajorAxisLength(void);
      const UInt32              &getCellMajorAxisLength(void) const;
+           ComponentGeneratorPtr &getCellGenerator  (void);
+     const ComponentGeneratorPtr &getCellGenerator  (void) const;
+           bool                &getAutoScrollToFocused(void);
+     const bool                &getAutoScrollToFocused(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setCellLayout     ( const UInt32 &value );
+     void setCellOrientation( const UInt32 &value );
      void setCellMajorAxisLength( const UInt32 &value );
+     void setCellGenerator  ( const ComponentGeneratorPtr &value );
+     void setAutoScrollToFocused( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -185,9 +196,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfCellLayout;
-    MFComponentPtr      _mfList;
+    SFUInt32            _sfCellOrientation;
     SFUInt32            _sfCellMajorAxisLength;
+    SFComponentGeneratorPtr   _sfCellGenerator;
+    SFBool              _sfAutoScrollToFocused;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -203,23 +215,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
     /*! \{                                                                 */
 
     virtual ~ListBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           MFComponentPtr      *getMFList           (void);
-
-           ComponentPtr        &getList           (UInt32 index);
-           MFComponentPtr      &getList           (void);
-     const MFComponentPtr      &getList           (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

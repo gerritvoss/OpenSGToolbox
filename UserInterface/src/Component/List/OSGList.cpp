@@ -50,6 +50,7 @@
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include "Util/OSGUIDrawUtils.h"
+#include "Component/List/ComponentGenerators/OSGListComponentGenerator.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -81,102 +82,104 @@ void List::initMethod (void)
 ComponentPtr List::getComponentAtPoint(const MouseEvent& e)
 {
     Pnt2s PointInComponent(ViewportToComponent(e.getLocation(), ListPtr(this), e.getViewport()));
-    UInt16 OrientationAxisIndex;
-    if(getCellLayout() == VERTICAL_ALIGNMENT)
-    {
-        OrientationAxisIndex = 1;
-    }
-    else
-    {
-        OrientationAxisIndex = 0;
-    }
 
-	Pnt2s BorderTopLeft, BorderBottomRight;
-	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
-    
-    UInt32 CumulativeDistance(BorderTopLeft[OrientationAxisIndex]);
+	Int32 Index(getIndexForLocation(PointInComponent));
 
-    if(PointInComponent[OrientationAxisIndex] <= CumulativeDistance)
-    {
-        return NullFC;
-    }
-
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
-    {
-        CumulativeDistance += getChildren()[i]->getSize()[OrientationAxisIndex];
-        if(PointInComponent[OrientationAxisIndex] <= CumulativeDistance)
-        {
-            return getChildren()[i];
-        }
-    }
-
-    return NullFC;
+	if(Index >= _TopDrawnIndex && Index <= _BottomDrawnIndex)
+	{
+		return getChildren().getValue(getDrawnIndexFromListIndex(Index));
+	}
+	else
+	{
+		return NullFC;
+	}
 }
 
 SharedFieldPtr List::getValueAtPoint(const MouseEvent& e)
 {
     Pnt2s PointInComponent(ViewportToComponent(e.getLocation(), ListPtr(this), e.getViewport()));
 
-    UInt16 OrientationAxisIndex;
-    if(getCellLayout() == VERTICAL_ALIGNMENT)
+	Int32 Index(getIndexForLocation(PointInComponent));
+	if(Index > 0 && Index < _Model->getSize())
+	{
+		return _Model->getElementAt(Index);
+	}
+	else
+	{
+		return SharedFieldPtr();
+	}
+
+}
+
+void List::updateItem(const UInt32& Index)
+{
+	if(Index < 0 || Index >= getChildren().size()) {return;}
+
+	cleanItem(Index);
+	_DrawnIndices[Index] = createIndexComponent(getListIndexFromDrawnIndex(Index));
+	initItem(Index);
+}
+
+void List::cleanItem(const UInt32& Index)
+{
+	if(Index < 0 || Index >= getChildren().size()) {return;}
+	_DrawnIndices[Index]->removeFocusListener(this);
+}
+
+void List::initItem(const UInt32& Index)
+{
+	Pnt2s InsetsTopLeft, InsetsBottomRight;
+	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+
+	if(Index < 0 || Index >= getChildren().size()) {return;}
+	if(getListIndexFromDrawnIndex(Index) == _FocusedIndex)
+	{
+		getParentWindow()->setFocusedComponent(_DrawnIndices[Index]);
+	}
+	_DrawnIndices[Index]->addFocusListener(this);
+	_DrawnIndices[Index]->setFocused(getListIndexFromDrawnIndex(Index) == _FocusedIndex);
+	
+    UInt16 OrientationMajorAxisIndex;
+    UInt16 OrientationMinorAxisIndex;
+    if(getCellOrientation() == VERTICAL_ALIGNMENT)
     {
-        OrientationAxisIndex = 1;
+        OrientationMajorAxisIndex = 1;
     }
     else
     {
-        OrientationAxisIndex = 0;
+        OrientationMajorAxisIndex = 0;
     }
+	OrientationMinorAxisIndex = (OrientationMajorAxisIndex +1) %2;
 
-	Pnt2s BorderTopLeft, BorderBottomRight;
-	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
-    
-    UInt32 CumulativeDistance(BorderTopLeft[OrientationAxisIndex]);
+    //Update the Position and Size of the Index
+	Pnt2s Pos;
+	Vec2s Size;
+	Pos[OrientationMajorAxisIndex] = getCellMajorAxisLength()*getListIndexFromDrawnIndex(Index);
+	Pos[OrientationMinorAxisIndex] = InsetsTopLeft[OrientationMinorAxisIndex];
 
-    if(PointInComponent[OrientationAxisIndex] <= CumulativeDistance)
-    {
-        return SharedFieldPtr();
-    }
+	Size[OrientationMajorAxisIndex] = getCellMajorAxisLength();
+	Size[OrientationMinorAxisIndex] = getSize()[OrientationMinorAxisIndex];
 
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
-    {
-        CumulativeDistance += getChildren()[i]->getSize()[OrientationAxisIndex];
-        if(PointInComponent[OrientationAxisIndex] <= CumulativeDistance)
-        {
-            return _Model->getElementAt(i);
-        }
-    }
+	beginEditCP(_DrawnIndices[Index], Component::PositionFieldMask | Component::SizeFieldMask | Component::ParentContainerFieldMask | Component::ParentWindowFieldMask);
+        _DrawnIndices[Index]->setPosition(Pos);
+        _DrawnIndices[Index]->setSize(Size);
+		_DrawnIndices[Index]->setParentContainer(ListPtr(this));
+		_DrawnIndices[Index]->setParentWindow(getParentWindow());
+    endEditCP(_DrawnIndices[Index], Component::PositionFieldMask | Component::SizeFieldMask | Component::ParentContainerFieldMask | Component::ParentWindowFieldMask);
 
-    return SharedFieldPtr();
+	//_DrawnIndices[Index]->updateClipBounds();
+
+	getChildren().setValue(_DrawnIndices[Index], Index);
 }
 
-void List::updateItem(const UInt32& index)
-{
-	//Transfer focus, enabled, Listeners
-	ComponentPtr PrevComponent = getChildren().getValue(index);
-	getChildren().getValue(index)->removeFocusListener(this);
-	getChildren().setValue(
-				getCellRenderer()->getListCellRendererComponent(ListPtr(this),getModel()->getElementAt(index),index,getSelectionModel()->isSelectedIndex(index),PrevComponent->getFocused())
-				,index);
-	if(PrevComponent->getFocused())
-	{
-		//getChildren().getValue(index)->takeFocus();
-		getParentWindow()->setFocusedComponent(getChildren().getValue(index));
-	}
-	getChildren().getValue(index)->addFocusListener(this);
-	getChildren().getValue(index)->setFocused(PrevComponent->getFocused());
-	getChildren().getValue(index)->setPosition(PrevComponent->getPosition());
-	getChildren().getValue(index)->setSize(PrevComponent->getSize());
-	getChildren().getValue(index)->setParentContainer(PrevComponent->getParentContainer());
-	getChildren().getValue(index)->setParentWindow(PrevComponent->getParentWindow());
-	getChildren().getValue(index)->updateClipBounds();
-}
+
 
 void List::selectionChanged(const ListSelectionEvent& e)
 {
 	beginEditCP(ListPtr(this), ChildrenFieldMask);
 		for(UInt32 i(e.getFirstIndex()) ; i<=e.getLastIndex() ; ++i)
 		{
-			updateItem(i);
+			updateItem(getDrawnIndexFromListIndex(i));
 		}
 	endEditCP(ListPtr(this), ChildrenFieldMask);
 }
@@ -217,6 +220,32 @@ void List::focusLost(const FocusEvent& e)
 	}
 }
 
+Int32 List::getListIndexFromDrawnIndex(const Int32& Index) const
+{
+	Int32 ListIndex = _TopDrawnIndex + Index;
+	if(Index < 0 || ListIndex > _BottomDrawnIndex)
+	{
+		return -1;
+	}
+	else
+	{
+		return ListIndex;
+	}
+}
+
+Int32 List::getDrawnIndexFromListIndex(const Int32& Index) const
+{
+	Int32 DrawnIndex = Index - _TopDrawnIndex;
+	if(Index < 0 || DrawnIndex > _BottomDrawnIndex)
+	{
+		return -1;
+	}
+	else
+	{
+		return DrawnIndex;
+	}
+}
+
 void List::mousePressed(const MouseEvent& e)
 {
 	bool isContained;
@@ -230,22 +259,22 @@ void List::mousePressed(const MouseEvent& e)
 			takeFocus(true);
 			if(!getChildren().getValue(i)->getType().isDerivedFrom(Container::getClassType()))
 			{
-				getChildren().getValue(i)->takeFocus();
+				focusIndex(getListIndexFromDrawnIndex(i));
 				if(getParentWindow() != NullFC &&
 				   getParentWindow()->getDrawingSurface() != NullFC &&
 				   getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 				{
 					if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
 					{
-						getSelectionModel()->setSelectionInterval(getSelectionModel()->getAnchorSelectionIndex(), i);
+						getSelectionModel()->setSelectionInterval(getSelectionModel()->getAnchorSelectionIndex(), getListIndexFromDrawnIndex(i));
 					}
 					else if(getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 					{
-						getSelectionModel()->removeSelectionInterval(i,i);// this toggles the interval
+						getSelectionModel()->removeSelectionInterval(getListIndexFromDrawnIndex(i),i);// this toggles the interval
 					}
 					else
 					{
-						getSelectionModel()->setSelectionInterval(i,i);
+						getSelectionModel()->setSelectionInterval(getListIndexFromDrawnIndex(i),getListIndexFromDrawnIndex(i));
 					}
 				}
 			}
@@ -268,76 +297,80 @@ void List::mousePressed(const MouseEvent& e)
 
 void List::keyTyped(const KeyEvent& e)
 {
-	bool noFocus = true;
-	if (e.getKey() == KeyEvent::KEY_UP || 
-        e.getKey() == KeyEvent::KEY_DOWN || 
-        e.getKey() == KeyEvent::KEY_RIGHT || 
-        e.getKey() == KeyEvent::KEY_LEFT || 
-        e.getKey() == KeyEvent::KEY_ENTER)
+	bool UpdateSelectionIndex(false);
+	Int32 ListIndex(0);
+	switch(e.getKey())
 	{
-		for(Int32 i(getChildren().size()-1) ; i>=0 && noFocus; --i)
+	case KeyEvent::KEY_UP:
+	case KeyEvent::KEY_DOWN:
+	case KeyEvent::KEY_RIGHT:
+	case KeyEvent::KEY_LEFT:
+		if ( (getCellOrientation() == VERTICAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_UP) ||
+			(getCellOrientation() == HORIZONTAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_LEFT))
 		{
-			if (getChildren().getValue(i)->getFocused())
-			{
-				noFocus = false; // this exits the loop
-				UInt32 index(0);
-                bool UpdateSelectionIndex(false);
-			    if ( (getCellLayout() == VERTICAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_UP) ||
-                    (getCellLayout() == HORIZONTAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_LEFT))
-			    {
-                    index = (i-1+getChildren().size()) % getChildren().size();
-                    UpdateSelectionIndex = true;
-			    }
-			    else if ((getCellLayout() == VERTICAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_DOWN) ||
-                    (getCellLayout() == HORIZONTAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_RIGHT))
-			    {
-                    index = (i+1) % getChildren().size();
-                    UpdateSelectionIndex = true;
-			    }
-                else if(e.getKey() == KeyEvent::KEY_ENTER)
-                {
-					if (e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
-					{
-						getSelectionModel()->removeSelectionInterval(i,i);// this toggles the interval
-					}
-					else
-					{
-						getSelectionModel()->setSelectionInterval(i, i);
-					}
-                }
-
-                if(UpdateSelectionIndex)
-                {
-					getChildren().getValue(index)->takeFocus();
-					getSelectionModel()->setLeadSelectionIndex(index);
-					if (e.getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
-					{
-						getSelectionModel()->setSelectionInterval(getSelectionModel()->getAnchorSelectionIndex(), index);
-					}
-					else
-					{
-						getSelectionModel()->setAnchorSelectionIndex(index);
-					}
-                }
-			}
-		}	
-		if (noFocus)
+			ListIndex = osgMax(_FocusedIndex-1,0);
+			UpdateSelectionIndex = true;
+		}
+		else if ((getCellOrientation() == VERTICAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_DOWN) ||
+			(getCellOrientation() == HORIZONTAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_RIGHT))
 		{
-			UInt32 index(0);
-			if ( (getCellLayout() == VERTICAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_UP) ||
-                (getCellLayout() == HORIZONTAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_LEFT))
-			{
-				index = getChildren().size() - 1;
-				getChildren().getValue(getChildren().size() - 1)->takeFocus();
-			}
-			else if ((getCellLayout() == VERTICAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_DOWN) ||
-                (getCellLayout() == HORIZONTAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_RIGHT))
-			{
-				getChildren().getValue(0)->takeFocus();
-			}
+			ListIndex = osgMin<Int32>((_FocusedIndex+1), _Model->getSize()-1);
+			UpdateSelectionIndex = true;
+		}
+		break;
+	case KeyEvent::KEY_ENTER:
+		if (e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+		{
+			getSelectionModel()->removeSelectionInterval(_FocusedIndex,_FocusedIndex);// this toggles the interval
+		}
+		else
+		{
+			getSelectionModel()->setSelectionInterval(_FocusedIndex, _FocusedIndex);
+		}
+		break;
+	case KeyEvent::KEY_HOME:
+		ListIndex = 0;
+		UpdateSelectionIndex = true;
+		break;
+	case KeyEvent::KEY_END:
+		ListIndex = _Model->getSize()-1;
+		UpdateSelectionIndex = true;
+		break;
+	case KeyEvent::KEY_PAGE_UP:
+		ListIndex = osgMax(_FocusedIndex-(_BottomDrawnIndex - _TopDrawnIndex),0);
+		UpdateSelectionIndex = true;
+		break;
+	case KeyEvent::KEY_PAGE_DOWN:
+		ListIndex = osgMin<Int32>(_FocusedIndex+(_BottomDrawnIndex - _TopDrawnIndex), _Model->getSize()-1);
+		UpdateSelectionIndex = true;
+		break;
+	}
+	
+	if(UpdateSelectionIndex)
+	{
+		focusIndex(ListIndex);
+		getSelectionModel()->setLeadSelectionIndex(ListIndex);
+		if (e.getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+		{
+			getSelectionModel()->setSelectionInterval(getSelectionModel()->getAnchorSelectionIndex(), ListIndex);
+		}
+		else
+		{
+			getSelectionModel()->setAnchorSelectionIndex(ListIndex);
 		}
 	}
+
 	Component::keyTyped(e);
+}
+
+void List::updateIndiciesDrawnFromModel(void)
+{
+	//Clear Drawn indicies from the old model
+	_DrawnIndices.clear();
+	_TopDrawnIndex = _BottomDrawnIndex = -1;
+
+	//Fill the drawn indicies with the new model
+	updateIndicesDrawn();
 }
 
 void List::contentsChanged(ListDataEvent e)
@@ -346,19 +379,20 @@ void List::contentsChanged(ListDataEvent e)
 	{
 		if(getModel()->getSize() != getChildren().size())
 		{
-			beginEditCP(ListPtr(this), ChildrenFieldMask);
+			updateIndiciesDrawnFromModel();
+			/*beginEditCP(ListPtr(this), ChildrenFieldMask);
 				for(UInt32 i(e.getIndex0()) ; i<getModel()->getSize() && i<=e.getIndex1() ; ++i )
 				{
 		            updateItem(i);
 				}
-			endEditCP(ListPtr(this), ChildrenFieldMask);
+			endEditCP(ListPtr(this), ChildrenFieldMask);*/
 		}
 		Pnt2s Position(0,0);
 		for(UInt32 i(0) ; i<getModel()->getSize() && i<=e.getIndex1() ; ++i )
 		{
 			beginEditCP(getChildren().getValue(i), PositionFieldMask | SizeFieldMask);
 			   getChildren().getValue(i)->setPosition(Position);
-               if(getCellLayout() == VERTICAL_ALIGNMENT)
+               if(getCellOrientation() == VERTICAL_ALIGNMENT)
                {
 			      getChildren().getValue(i)->setSize( Vec2s(getSize().x(), getCellMajorAxisLength()) );
                }
@@ -368,7 +402,7 @@ void List::contentsChanged(ListDataEvent e)
                }
 			endEditCP(getChildren().getValue(i), PositionFieldMask | SizeFieldMask);
 
-            if(getCellLayout() == VERTICAL_ALIGNMENT)
+            if(getCellOrientation() == VERTICAL_ALIGNMENT)
             {
 			    Position[1] += getChildren().getValue(i)->getSize()[1];
             }
@@ -410,6 +444,9 @@ void List::setModel(ListModelPtr Model)
 	{
 		_Model->addListDataListener(this);
 	}
+	
+	updateIndiciesDrawnFromModel();
+	updatePreferredSize();
 }
 
 
@@ -429,44 +466,39 @@ void List::setSelectionModel(ListSelectionModelPtr SelectionModel)
 
 void List::updateLayout(void)
 {
-    //Update Layout
-	if(getModel() != NULL)
-	{
-		if(getModel()->getSize() != getChildren().size())
-		{
-			beginEditCP(ListPtr(this), ChildrenFieldMask);
-				for(UInt32 i(0) ; i<getModel()->getSize() ; ++i )
-				{
-					getChildren().addValue(getCellRenderer()->getListCellRendererComponent(ListPtr(this),getModel()->getElementAt(i),i,getSelectionModel()->isSelectedIndex(i),false));
-					getChildren().getValue(i)->addFocusListener(this);
-				}
-			endEditCP(ListPtr(this), ChildrenFieldMask);
-		}
-		Pnt2s Position(0,0);
-		for(UInt32 i(0) ; i<getChildren().size() ; ++i )
-		{
-			beginEditCP(getChildren().getValue(i), PositionFieldMask | SizeFieldMask);
-			   getChildren().getValue(i)->setPosition(Position);
-               if(getCellLayout() == VERTICAL_ALIGNMENT)
-               {
-			      getChildren().getValue(i)->setSize( Vec2s(getSize().x(), getCellMajorAxisLength()) );
-               }
-               else
-               {
-                  getChildren().getValue(i)->setSize( Vec2s(getCellMajorAxisLength(), getSize().y()) );
-               }
-			endEditCP(getChildren().getValue(i), PositionFieldMask | SizeFieldMask);
+	Pnt2s InsetsTopLeft, InsetsBottomRight;
+	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 
-            if(getCellLayout() == VERTICAL_ALIGNMENT)
-            {
-			    Position[1] += getChildren().getValue(i)->getSize()[1];
-            }
-            else
-            {
-			    Position[0] += getChildren().getValue(i)->getSize()[0];
-            }
-		}
-	}
+    UInt16 OrientationMajorAxisIndex;
+    UInt16 OrientationMinorAxisIndex;
+    if(getCellOrientation() == VERTICAL_ALIGNMENT)
+    {
+        OrientationMajorAxisIndex = 1;
+    }
+    else
+    {
+        OrientationMajorAxisIndex = 0;
+    }
+	OrientationMinorAxisIndex = (OrientationMajorAxisIndex +1) %2;
+
+    //Update the Position and Size of all the Drawn Rows
+	Pnt2s Pos;
+	Vec2s Size;
+	for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+		Pos[OrientationMajorAxisIndex] = getCellMajorAxisLength()*(i+_TopDrawnIndex);
+		Pos[OrientationMinorAxisIndex] = InsetsTopLeft[OrientationMinorAxisIndex];
+
+		Size[OrientationMajorAxisIndex] = getCellMajorAxisLength();
+		Size[OrientationMinorAxisIndex] = getSize()[OrientationMinorAxisIndex];
+
+        beginEditCP(getChildren(i), Component::PositionFieldMask | Component::SizeFieldMask);
+            getChildren(i)->setPosition(Pos);
+            getChildren(i)->setSize(Size);
+        endEditCP(getChildren(i), Component::PositionFieldMask | Component::SizeFieldMask);
+    }
+
+	std::cout << "Number of Drawn Items: " << getChildren().size() << std::endl;
 }
 
 Vec2s List::getPreferredScrollableViewportSize(void)
@@ -491,17 +523,17 @@ Int32 List::getScrollableBlockIncrement(const Pnt2s& VisibleRectTopLeft, const P
 
 bool List::getScrollableTracksViewportHeight(void)
 {
-    return getCellLayout() != VERTICAL_ALIGNMENT;
+    return getCellOrientation() != VERTICAL_ALIGNMENT;
 }
 
 bool List::getScrollableTracksViewportWidth(void)
 {
-    return getCellLayout() == VERTICAL_ALIGNMENT;
+    return getCellOrientation() == VERTICAL_ALIGNMENT;
 }
 
 Int32 List::getScrollableUnitIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
-    if(orientation == getCellLayout())
+    if(orientation == getCellOrientation())
     {
         return getCellMajorAxisLength();
     }
@@ -511,6 +543,289 @@ Int32 List::getScrollableUnitIncrement(const Pnt2s& VisibleRectTopLeft, const Pn
     }
     
 }
+
+void List::updateIndicesDrawn(void)
+{
+    Int32 NewTopDrawnIndex,
+          NewBottomDrawnIndex;
+    Int32 OldTopDrawnIndex(_TopDrawnIndex),
+          OldBottomDrawnIndex(_BottomDrawnIndex);
+    getDrawnIndices(NewTopDrawnIndex, NewBottomDrawnIndex);
+    _TopDrawnIndex = NewTopDrawnIndex;
+    _BottomDrawnIndex = NewBottomDrawnIndex;
+
+    if(NewTopDrawnIndex > OldTopDrawnIndex  && _DrawnIndices.size() != 0 )
+    {
+        //Remove all of the Drawn Indices above NewTopDrawnIndex
+        for(Int32 i(OldTopDrawnIndex) ; i<osgMin(NewTopDrawnIndex, OldBottomDrawnIndex+1) ; ++i)
+        {
+			cleanItem(0);
+            _DrawnIndices.pop_front();
+        }
+    }
+
+    if(NewBottomDrawnIndex < OldBottomDrawnIndex && _DrawnIndices.size() != 0)
+    {
+        //Remove all of the Drawn Indices below NewBottomDrawnIndex
+        for(Int32 i(osgMax(NewBottomDrawnIndex+1, OldTopDrawnIndex)) ; i<=OldBottomDrawnIndex ; ++i)
+        {
+			cleanItem(_DrawnIndices.size()-1);
+            _DrawnIndices.pop_back();
+        }
+    }
+
+
+    if(NewTopDrawnIndex < OldTopDrawnIndex)
+    {
+        //Insert all of the Drawn Indices between NewTopDrawnIndex and OldTopDrawnIndex
+        for(Int32 i(osgMin(OldTopDrawnIndex-1, NewBottomDrawnIndex)) ; i>=NewTopDrawnIndex ; --i)
+        {
+            _DrawnIndices.push_front(createIndexComponent(i));
+        }
+        //for(Int32 i(osgMin(OldTopDrawnIndex-1, NewBottomDrawnIndex)) ; i>=NewTopDrawnIndex ; --i)
+        //{
+		//	initItem(i-NewTopDrawnIndex);
+        //}
+    }
+
+    if(NewBottomDrawnIndex > OldBottomDrawnIndex)
+    {
+        //Insert all of the Drawn Indices between OldBottomDrawnIndex and NewBottomDrawnIndex
+        for(Int32 i(osgMax(NewTopDrawnIndex, OldBottomDrawnIndex+1)) ; i<=NewBottomDrawnIndex ; ++i)
+        {
+            _DrawnIndices.push_back(createIndexComponent(i));
+        }
+        //for(Int32 i(osgMax(NewTopDrawnIndex, OldBottomDrawnIndex+1)) ; i<=NewBottomDrawnIndex ; ++i)
+        //{
+        //}
+    }
+
+
+    beginEditCP(ListPtr(this), ChildrenFieldMask);
+        getChildren().clear();
+        for(UInt32 i(0) ; i<_DrawnIndices.size() ; ++i)
+        {
+            getChildren().push_back(_DrawnIndices[i]);
+        }
+    endEditCP(ListPtr(this), ChildrenFieldMask);
+    for(UInt32 i(0) ; i<_DrawnIndices.size() ; ++i)
+    {
+		initItem(i);
+    }
+}
+
+void List::getDrawnIndices(Int32& Beginning, Int32& End) const
+{
+    //Get My Clip Bounds
+    Pnt2s ClipTopLeft, ClipBottomRight;
+    getClipBounds(ClipTopLeft, ClipBottomRight);
+
+    Beginning = getIndexClosestToLocation(ClipTopLeft);
+    End = getIndexClosestToLocation(ClipBottomRight);
+}
+
+Int32 List::getIndexClosestToLocation(const Pnt2s& Location) const
+{
+	if(_Model == NULL) {return -1;}
+
+    UInt16 MajorAxis;
+    if(getCellOrientation() == VERTICAL_ALIGNMENT)
+    {
+        MajorAxis = 1;
+    }
+    else
+    {
+        MajorAxis = 0;
+    }
+
+    //Determine the index
+    UInt32 Index(osgMin<UInt32>(Location[MajorAxis]/getCellMajorAxisLength(),_Model->getSize()-1));
+
+	return Index;
+}
+
+Int32 List::getIndexForLocation(const Pnt2s& Location) const
+{
+	if(_Model == NULL) {return -1;}
+
+    UInt16 MajorAxis;
+    if(getCellOrientation() == VERTICAL_ALIGNMENT)
+    {
+        MajorAxis = 1;
+    }
+    else
+    {
+        MajorAxis = 0;
+    }
+
+    //Determine the index
+    UInt32 Index(Location[MajorAxis]/getCellMajorAxisLength());
+
+	if(Index < 0 || Index >= _Model->getSize())
+	{
+		return -1;
+	}
+	else
+	{
+		return Index;
+	}
+
+}
+
+ComponentPtr List::createIndexComponent(const UInt32& Index)
+{
+    if(_Model != NULL && getCellGenerator() != NullFC)
+    {
+        bool Selected;
+
+        if(_SelectionModel != NULL)
+        {
+            Selected = _SelectionModel->isSelectedIndex(Index);
+        }
+        else
+        {
+            Selected = false;
+        }
+		if(getCellGenerator()->getType().isDerivedFrom(ListComponentGenerator::getClassType()))
+        {
+            return ListComponentGenerator::Ptr::dcast(getCellGenerator())->getListComponent(ListPtr(this), getModel()->getElementAt(Index), Index, Selected, Index == _FocusedIndex);
+        }
+        else
+        {
+            return getCellGenerator()->getComponent(ListPtr(this),getModel()->getElementAt(Index), Index, 0,Selected, Index == _FocusedIndex);
+        }
+    }
+    else
+    {
+        return NullFC;
+    }
+}
+
+void List::updatePreferredSize(void)
+{
+	UInt32 ListLength;
+	if(_Model != NULL)
+	{
+		ListLength = _Model->getSize();
+	}
+	else
+	{
+		ListLength = 0;
+	}
+    beginEditCP(ListPtr(this), PreferredSizeFieldMask);
+        if(getCellOrientation() == VERTICAL_ALIGNMENT)
+        {
+            setPreferredSize(Vec2s(getPreferredSize().x(), getCellMajorAxisLength()*ListLength));
+        }
+        else
+        {
+            setPreferredSize(Vec2s(getCellMajorAxisLength()*ListLength, getPreferredSize().y()));
+        }
+    endEditCP(ListPtr(this), PreferredSizeFieldMask);
+}
+
+void List::focusIndex(const Int32& Index)
+{
+	Int32 OldFocused(_FocusedIndex);
+	_FocusedIndex = Index;
+
+	//Unfocus the old index
+	if(OldFocused >= _TopDrawnIndex && OldFocused <= _BottomDrawnIndex )
+	{
+		takeFocus();
+	}
+
+
+	//Focus the new index
+	if(_FocusedIndex >= _TopDrawnIndex && _FocusedIndex <= _BottomDrawnIndex )
+	{
+		getChildren().getValue(getDrawnIndexFromListIndex(_FocusedIndex))->takeFocus();
+	}
+
+	if(getAutoScrollToFocused())
+	{
+		scrollToFocused();
+	}
+}
+
+void List::scrollToIndex(const UInt32& Index)
+{
+    UInt16 MajorAxis;
+    UInt16 MinorAxis;
+    if(getCellOrientation() == VERTICAL_ALIGNMENT)
+    {
+        MajorAxis = 1;
+    }
+    else
+    {
+        MajorAxis = 0;
+    }
+	MinorAxis = (MajorAxis+1)%2;
+
+	Pnt2s InsetsTopLeft, InsetsBottomRight;
+	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+
+	Pnt2s ClipTopLeft, ClipBottomRight;
+	getClipBounds(ClipTopLeft, ClipBottomRight);
+	
+	Pnt2s UnionTopLeft, UnionBottomRight;
+	//Get the intersection of my bounds with my parent containers clip bounds
+	quadIntersection(InsetsTopLeft, InsetsBottomRight,
+		ClipTopLeft, ClipBottomRight,
+		UnionTopLeft, UnionBottomRight);
+
+	//Check if any scrolling is needed
+	if(Index <= _TopDrawnIndex)
+	{
+		//Scroll Up so that this Index is The First Visible
+		Pnt2s Pos;
+		Pos[MajorAxis] = Index * getCellMajorAxisLength();
+		Pos[MinorAxis] = UnionTopLeft[MinorAxis];
+
+		scrollToPoint(Pos);
+	}
+	else if(Index >= _BottomDrawnIndex && _BottomDrawnIndex != -1)
+	{
+		UInt32 CorrectedIndex;
+		if(Index >= _Model->getSize())
+		{
+			CorrectedIndex = _Model->getSize()-1;
+		}
+		else
+		{
+			CorrectedIndex = Index;
+		}
+
+		//Scroll Down so that this Index is the last Visible
+		Pnt2s Pos;
+		Pos[MajorAxis] = (CorrectedIndex * getCellMajorAxisLength()) - (UnionBottomRight[MajorAxis]-UnionTopLeft[MajorAxis]) + getCellMajorAxisLength();
+		Pos[(MajorAxis+1)%2] = UnionTopLeft[MinorAxis];
+
+		scrollToPoint(Pos);
+	}
+}
+
+void List::scrollToFocused(void)
+{
+	if(_FocusedIndex >= 0)
+	{
+		scrollToIndex(static_cast<UInt32>(_FocusedIndex));
+	}
+}
+
+void List::scrollToSelection(void)
+{
+	if(_SelectionModel != NULL)
+	{
+		Int32 Index(_SelectionModel->getMinSelectionIndex());
+
+		if(Index >= 0)
+		{
+			scrollToIndex(static_cast<UInt32>(Index));
+		}
+	}
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -520,16 +835,20 @@ Int32 List::getScrollableUnitIncrement(const Pnt2s& VisibleRectTopLeft, const Pn
 List::List(void) :
     Inherited(),
 		_Model(NULL),
-		_CellRenderer(NULL),
-		_SelectionModel()
+		_SelectionModel(),
+        _TopDrawnIndex(-1),
+        _BottomDrawnIndex(-1),
+		_FocusedIndex(-1)
 {
 }
 
 List::List(const List &source) :
     Inherited(source),
 		_Model(source._Model),
-		_CellRenderer(source._CellRenderer),
-		_SelectionModel(source._SelectionModel)
+		_SelectionModel(source._SelectionModel),
+        _TopDrawnIndex(-1),
+        _BottomDrawnIndex(-1),
+		_FocusedIndex(-1)
 {
 }
 
@@ -543,20 +862,23 @@ void List::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-    if((whichField & ChildrenFieldMask) &&
-        getChildren().size() > 0)
+    if((whichField & CellMajorAxisLengthFieldMask) &&
+        _Model != NULL)
     {
-        beginEditCP(ListPtr(this), PreferredSizeFieldMask);
-            if(getCellLayout() == VERTICAL_ALIGNMENT)
-            {
-                setPreferredSize(Vec2s(getChildren().front()->getSize().x(), getCellMajorAxisLength()*getChildren().size()));
-            }
-            else
-            {
-                setPreferredSize(Vec2s(getCellMajorAxisLength()*getChildren().size(), getChildren().front()->getSize().y()));
-            }
-        endEditCP(ListPtr(this), PreferredSizeFieldMask);
+		updatePreferredSize();
     }
+	
+    if((whichField & List::ClipTopLeftFieldMask) ||
+       (whichField & List::ClipBottomRightFieldMask))
+    {
+        updateIndicesDrawn();
+    }
+
+	if((whichField & AutoScrollToFocusedFieldMask) &&
+		getAutoScrollToFocused())
+	{
+		scrollToFocused();
+	}
 }
 
 void List::dump(      UInt32    , 

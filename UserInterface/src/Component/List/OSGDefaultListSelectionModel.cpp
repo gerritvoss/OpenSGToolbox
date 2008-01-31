@@ -161,22 +161,22 @@ void 	DefaultListSelectionModel::clearSelection(void)
     produceSelectionChanged(ListSelectionEvent(NullFC, getSystemTime(), _MinSelectionIndex, _MaxSelectionIndex, _ValueIsAdjusting));
 }
 
-UInt32 	DefaultListSelectionModel::getAnchorSelectionIndex(void) const
+Int32 	DefaultListSelectionModel::getAnchorSelectionIndex(void) const
 {
    return _AnchorSelectionIndex;
 }
 
-UInt32 	DefaultListSelectionModel::getLeadSelectionIndex(void) const
+Int32 	DefaultListSelectionModel::getLeadSelectionIndex(void) const
 {
    return _LeadSelectionIndex;
 }
 
-UInt32 	DefaultListSelectionModel::getMaxSelectionIndex(void) const
+Int32 	DefaultListSelectionModel::getMaxSelectionIndex(void) const
 {
    return _MaxSelectionIndex;
 }
 
-UInt32 	DefaultListSelectionModel::getMinSelectionIndex(void) const
+Int32 	DefaultListSelectionModel::getMinSelectionIndex(void) const
 {
    return _MinSelectionIndex;
 }
@@ -506,7 +506,7 @@ void DefaultListSelectionModel::updateMinMax(void)
 	{
 		// in the event of _RangeSelectionList being empty, just set
 		// them both to zero
-		_MaxSelectionIndex = _MinSelectionIndex = 0;
+		_MaxSelectionIndex = _MinSelectionIndex = -1;
 	}
 }
 

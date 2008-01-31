@@ -69,6 +69,8 @@
 
 #include "Component/Button/OSGToggleButtonFields.h" // ExpandButton type
 #include "Component/ComboBox/Editors/OSGComboBoxEditorFields.h" // Editor type
+#include "ComponentGenerators/OSGComponentGeneratorFields.h" // CellGenerator type
+#include "Component/OSGComponentFields.h" // ComponentGeneratorSelectedItem type
 #include <OpenSG/OSGBoolFields.h> // Editable type
 #include <OpenSG/OSGUInt32Fields.h> // MaxRowCount type
 #include "Component/Menu/OSGPopupMenuFields.h" // ComboListPopupMenu type
@@ -95,18 +97,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
 
     enum
     {
-        ExpandButtonFieldId         = Inherited::NextFieldId,
-        EditorFieldId               = ExpandButtonFieldId         + 1,
-        RendererSelcetedItemFieldId = EditorFieldId               + 1,
-        EditableFieldId             = RendererSelcetedItemFieldId + 1,
-        MaxRowCountFieldId          = EditableFieldId             + 1,
-        ComboListPopupMenuFieldId   = MaxRowCountFieldId          + 1,
-        NextFieldId                 = ComboListPopupMenuFieldId   + 1
+        ExpandButtonFieldId                   = Inherited::NextFieldId,
+        EditorFieldId                         = ExpandButtonFieldId                   + 1,
+        CellGeneratorFieldId                  = EditorFieldId                         + 1,
+        ComponentGeneratorSelectedItemFieldId = CellGeneratorFieldId                  + 1,
+        EditableFieldId                       = ComponentGeneratorSelectedItemFieldId + 1,
+        MaxRowCountFieldId                    = EditableFieldId                       + 1,
+        ComboListPopupMenuFieldId             = MaxRowCountFieldId                    + 1,
+        NextFieldId                           = ComboListPopupMenuFieldId             + 1
     };
 
     static const OSG::BitVector ExpandButtonFieldMask;
     static const OSG::BitVector EditorFieldMask;
-    static const OSG::BitVector RendererSelcetedItemFieldMask;
+    static const OSG::BitVector CellGeneratorFieldMask;
+    static const OSG::BitVector ComponentGeneratorSelectedItemFieldMask;
     static const OSG::BitVector EditableFieldMask;
     static const OSG::BitVector MaxRowCountFieldMask;
     static const OSG::BitVector ComboListPopupMenuFieldMask;
@@ -138,6 +142,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
 
            SFToggleButtonPtr   *getSFExpandButton   (void);
            SFComboBoxEditorPtr *getSFEditor         (void);
+           SFComponentGeneratorPtr *getSFCellGenerator  (void);
            SFBool              *getSFEditable       (void);
            SFUInt32            *getSFMaxRowCount    (void);
 
@@ -145,6 +150,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
      const ToggleButtonPtr     &getExpandButton   (void) const;
            ComboBoxEditorPtr   &getEditor         (void);
      const ComboBoxEditorPtr   &getEditor         (void) const;
+           ComponentGeneratorPtr &getCellGenerator  (void);
+     const ComponentGeneratorPtr &getCellGenerator  (void) const;
            bool                &getEditable       (void);
      const bool                &getEditable       (void) const;
            UInt32              &getMaxRowCount    (void);
@@ -157,6 +164,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
 
      void setExpandButton   ( const ToggleButtonPtr &value );
      void setEditor         ( const ComboBoxEditorPtr &value );
+     void setCellGenerator  ( const ComponentGeneratorPtr &value );
      void setEditable       ( const bool &value );
      void setMaxRowCount    ( const UInt32 &value );
 
@@ -203,7 +211,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
 
     SFToggleButtonPtr   _sfExpandButton;
     SFComboBoxEditorPtr   _sfEditor;
-    SFComponentPtr      _sfRendererSelcetedItem;
+    SFComponentGeneratorPtr   _sfCellGenerator;
+    SFComponentPtr      _sfComponentGeneratorSelectedItem;
     SFBool              _sfEditable;
     SFUInt32            _sfMaxRowCount;
     SFPopupMenuPtr      _sfComboListPopupMenu;
@@ -228,11 +237,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFComponentPtr      *getSFRendererSelcetedItem(void);
+           SFComponentPtr      *getSFComponentGeneratorSelectedItem(void);
            SFPopupMenuPtr      *getSFComboListPopupMenu(void);
 
-           ComponentPtr        &getRendererSelcetedItem(void);
-     const ComponentPtr        &getRendererSelcetedItem(void) const;
+           ComponentPtr        &getComponentGeneratorSelectedItem(void);
+     const ComponentPtr        &getComponentGeneratorSelectedItem(void) const;
            PopupMenuPtr        &getComboListPopupMenu(void);
      const PopupMenuPtr        &getComboListPopupMenu(void) const;
 
@@ -241,7 +250,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setRendererSelcetedItem(const ComponentPtr &value);
+     void setComponentGeneratorSelectedItem(const ComponentPtr &value);
      void setComboListPopupMenu(const PopupMenuPtr &value);
 
     /*! \}                                                                 */

@@ -46,7 +46,6 @@
 // List header files
 #include <OpenSG/UserInterface/OSGList.h>
 #include <OpenSG/UserInterface/OSGAbstractListModel.h>
-#include <OpenSG/UserInterface/OSGDefaultListCellRenderer.h>
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
 
 // Activate the OpenSG namespace
@@ -713,11 +712,11 @@ int main(int argc, char **argv)
             values.  Then, use the .pushBack(&SFStringName)
             to add them to the List.
 
-            Next, create the CellRenderer and ListSelectionModel
+            Next, create the ListSelectionModel
             defaults.
 
             Finally, actually create the List.  Set
-            its Model, CellRenderer, and SelectionModel
+            its Model, and SelectionModel
             as shown below.  Finally, choose the
             type of display for the List (choices outlined
             below).
@@ -785,14 +784,11 @@ int main(int argc, char **argv)
     Model3.pushBack(SharedFieldPtr(new SFString("Washington DC")));
     Model3.pushBack(SharedFieldPtr(new SFString("Moscow")));
 
-    // Create ListCellRenderer and ListSelectionModel
+    // Create ListSelectionModel
     // (normally will be default).
     // Note that the DefaultListSelectionModel was
     // created at the top of this file before
     // the ActionListeners
-    DefaultListCellRenderer ExampleListCellRenderer1;
-	DefaultListCellRenderer ExampleListCellRenderer2;
-	DefaultListCellRenderer ExampleListCellRenderer3;
     //DefaultListSelectionModel SelectionModel;
 
 	
@@ -808,8 +804,8 @@ int main(int argc, char **argv)
     beginEditCP(list1);
         list1->setPreferredSize(Vec2s(200,300));
         list1->setBackgrounds(MainFrameBackground);
-        list1->setCellLayout(VERTICAL_ALIGNMENT);
-        //list->setCellLayout(HORIZONTAL_ALIGNMENT);
+        list1->setCellOrientation(VERTICAL_ALIGNMENT);
+        //list->setCellOrientation(HORIZONTAL_ALIGNMENT);
     endEditCP(list1);
 
 	// Create ListPtr
@@ -817,8 +813,8 @@ int main(int argc, char **argv)
     beginEditCP(list2);
         list2->setPreferredSize(Vec2s(200,300));
         list2->setBackgrounds(MainFrameBackground);
-        list2->setCellLayout(VERTICAL_ALIGNMENT);
-        //list->setCellLayout(HORIZONTAL_ALIGNMENT);
+        list2->setCellOrientation(VERTICAL_ALIGNMENT);
+        //list->setCellOrientation(HORIZONTAL_ALIGNMENT);
     endEditCP(list2);
 
 	// Create ListPtr
@@ -826,27 +822,24 @@ int main(int argc, char **argv)
     beginEditCP(list3);
         list3->setPreferredSize(Vec2s(200,300));
         list3->setBackgrounds(MainFrameBackground);
-        list3->setCellLayout(VERTICAL_ALIGNMENT);
-        //list->setCellLayout(HORIZONTAL_ALIGNMENT);
+        list3->setCellOrientation(VERTICAL_ALIGNMENT);
+        //list->setCellOrientation(HORIZONTAL_ALIGNMENT);
     endEditCP(list3);
 
-    // Assign the Model, CellRenderer, and SelectionModel
+    // Assign the Model, and SelectionModel
     // to the List
     list1->setModel(&Model1);
-    list1->setCellRenderer(&ExampleListCellRenderer1);
     list1->setSelectionModel(SelectionModel);
 
-	// Assign the Model, CellRenderer, and SelectionModel
+	// Assign the Model, and SelectionModel
     // to the List
     list2->setModel(&Model2);
-    list2->setCellRenderer(&ExampleListCellRenderer1);
     list2->setSelectionModel(SelectionModel);
 
 
-	// Assign the Model, CellRenderer, and SelectionModel
+	// Assign the Model, and SelectionModel
     // to the List
     list3->setModel(&Model3);
-    list3->setCellRenderer(&ExampleListCellRenderer1);
     list3->setSelectionModel(SelectionModel);
 
 

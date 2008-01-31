@@ -110,11 +110,18 @@ SFComboBoxEditorPtr *ComboBoxBase::getSFEditor(void)
     return &_sfEditor;
 }
 
-//! Get the ComboBox::_sfRendererSelcetedItem field.
+//! Get the ComboBox::_sfCellGenerator field.
 inline
-SFComponentPtr *ComboBoxBase::getSFRendererSelcetedItem(void)
+SFComponentGeneratorPtr *ComboBoxBase::getSFCellGenerator(void)
 {
-    return &_sfRendererSelcetedItem;
+    return &_sfCellGenerator;
+}
+
+//! Get the ComboBox::_sfComponentGeneratorSelectedItem field.
+inline
+SFComponentPtr *ComboBoxBase::getSFComponentGeneratorSelectedItem(void)
+{
+    return &_sfComponentGeneratorSelectedItem;
 }
 
 //! Get the ComboBox::_sfEditable field.
@@ -181,25 +188,46 @@ void ComboBoxBase::setEditor(const ComboBoxEditorPtr &value)
     _sfEditor.setValue(value);
 }
 
-//! Get the value of the ComboBox::_sfRendererSelcetedItem field.
+//! Get the value of the ComboBox::_sfCellGenerator field.
 inline
-ComponentPtr &ComboBoxBase::getRendererSelcetedItem(void)
+ComponentGeneratorPtr &ComboBoxBase::getCellGenerator(void)
 {
-    return _sfRendererSelcetedItem.getValue();
+    return _sfCellGenerator.getValue();
 }
 
-//! Get the value of the ComboBox::_sfRendererSelcetedItem field.
+//! Get the value of the ComboBox::_sfCellGenerator field.
 inline
-const ComponentPtr &ComboBoxBase::getRendererSelcetedItem(void) const
+const ComponentGeneratorPtr &ComboBoxBase::getCellGenerator(void) const
 {
-    return _sfRendererSelcetedItem.getValue();
+    return _sfCellGenerator.getValue();
 }
 
-//! Set the value of the ComboBox::_sfRendererSelcetedItem field.
+//! Set the value of the ComboBox::_sfCellGenerator field.
 inline
-void ComboBoxBase::setRendererSelcetedItem(const ComponentPtr &value)
+void ComboBoxBase::setCellGenerator(const ComponentGeneratorPtr &value)
 {
-    _sfRendererSelcetedItem.setValue(value);
+    _sfCellGenerator.setValue(value);
+}
+
+//! Get the value of the ComboBox::_sfComponentGeneratorSelectedItem field.
+inline
+ComponentPtr &ComboBoxBase::getComponentGeneratorSelectedItem(void)
+{
+    return _sfComponentGeneratorSelectedItem.getValue();
+}
+
+//! Get the value of the ComboBox::_sfComponentGeneratorSelectedItem field.
+inline
+const ComponentPtr &ComboBoxBase::getComponentGeneratorSelectedItem(void) const
+{
+    return _sfComponentGeneratorSelectedItem.getValue();
+}
+
+//! Set the value of the ComboBox::_sfComponentGeneratorSelectedItem field.
+inline
+void ComboBoxBase::setComponentGeneratorSelectedItem(const ComponentPtr &value)
+{
+    _sfComponentGeneratorSelectedItem.setValue(value);
 }
 
 //! Get the value of the ComboBox::_sfEditable field.

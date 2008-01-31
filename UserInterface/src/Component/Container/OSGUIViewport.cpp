@@ -149,10 +149,24 @@ void UIViewport::changed(BitVector whichField, UInt32 origin)
         endEditCP(UIViewportPtr(this), ChildrenFieldMask);
     }
 
-    if((whichField & ViewSizeFieldMask) ||
-        (whichField & ViewPositionFieldMask))
+    if((whichField & ViewSizeFieldMask) && getViewComponent() != NullFC)
     {
-        updateLayout();
+		Vec2s Size(getCorrectedViewSize());
+        
+		beginEditCP(getViewComponent(), Component::SizeFieldMask);
+			getViewComponent()->setSize(Size);
+		endEditCP(getViewComponent(), Component::SizeFieldMask);
+        
+		produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+    }
+
+    if((whichField & ViewPositionFieldMask) && getViewComponent() != NullFC)
+    {
+		beginEditCP(getViewComponent(), Component::PositionFieldMask);
+			getViewComponent()->setPosition(-getViewPosition());
+		endEditCP(getViewComponent(), Component::PositionFieldMask);
+        
+		produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
     }
 
     if((whichField & ViewSizeFieldMask) ||

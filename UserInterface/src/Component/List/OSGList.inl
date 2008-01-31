@@ -41,7 +41,6 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGListModel.h"
-#include "OSGListCellRenderer.h"
 #include "OSGListSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
@@ -73,21 +72,9 @@ SharedFieldPtr List::getValueAtIndex(const UInt32& Index)
 }
 
 inline
-void List::setCellRenderer(ListCellRendererPtr CellRenderer)
-{
-   _CellRenderer = CellRenderer;
-}
-
-inline
 ListModelPtr List::getModel(void) const
 {
    return _Model;
-}
-
-inline
-ListCellRendererPtr List::getCellRenderer(void) const
-{
-   return _CellRenderer;
 }
 
 inline

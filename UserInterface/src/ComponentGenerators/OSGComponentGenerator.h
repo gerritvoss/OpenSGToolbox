@@ -81,7 +81,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentGenerator : public ComponentGener
 
     /*! \}                                                                 */
     
-	virtual ComponentPtr getComponent(ComponentPtr Parent, SharedFieldPtr Value, bool IsSelected, bool HasFocus) = 0;
+	virtual ComponentPtr getComponent(ComponentPtr Parent, SharedFieldPtr Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus) = 0;
 
     /*=========================  PROTECTED  ===============================*/
   protected:

@@ -80,7 +80,6 @@ void reshape(Vec2s Size);
 #include <OpenSG/UserInterface/OSGGridLayout.h>
 #include <OpenSG/UserInterface/OSGComboBox.h>
 #include <OpenSG/UserInterface/OSGDefaultComboBoxModel.h>
-#include <OpenSG/UserInterface/OSGDefaultComboBoxRenderer.h>
 
 RadioButtonGroup DeselectedRadioButtonGroup;
 RadioButtonGroup SelectedRadioButtonGroup;
@@ -97,8 +96,6 @@ DefaultComboBoxModel editableComboBoxModel;
 DefaultComboBoxModel noneditableComboBoxModel;
 DefaultComboBoxModel disabledEditableComboBoxModel;
 DefaultComboBoxModel disabledNoneditableComboBoxModel;
-DefaultComboBoxRenderer disabledNoneditableComboBoxModelRenderer;
-DefaultComboBoxRenderer noneditableComboBoxModelRenderer;
 
 
 
@@ -124,12 +121,6 @@ public:
 	PanelPtr getPanel(void) const;
 
 protected:
-	PanelPtr _ThePanel;
-	//ExButtonListener _ButtonListener;
-
-
-	PanelPtr createStatePanel(void);
-protected:
 	PanelPtr _ThePanel;	
 
 		
@@ -139,9 +130,9 @@ protected:
 
 		virtual void actionPerformed(const ActionEvent& e)
 			{
-				beginEditCP(inactiveButton, Button::TextFieldMask);
-					inactiveButton->Button::setText("Active");
-				endEditCP(inactiveButton, Button::TextFieldMask);
+				//beginEditCP(inactiveButton, Button::TextFieldMask);
+				//	inactiveButton->Button::setText("Active");
+				//endEditCP(inactiveButton, Button::TextFieldMask);
 				
 			}
 		};
@@ -149,6 +140,7 @@ protected:
 	ButtonPressedListener _ButtonListener;
 
 
+	PanelPtr createStatePanel(void);
 	
 	
 
@@ -1064,12 +1056,6 @@ PanelPtr StatePanelCreator::createStatePanel(void)
 	noneditableComboBoxModel.addElement(SharedFieldPtr(new SFString("Noneditable")));
 
 	disabledNoneditableComboBox->setModel(&disabledNoneditableComboBoxModel);
-
-	// Create DefaultCellRenderers for noneditable ComboBoxes
-	noneditableComboBox->setRenderer(&disabledNoneditableComboBoxModelRenderer);
-
-	noneditableComboBox->setRenderer(&noneditableComboBoxModelRenderer);
-
 
     beginEditCP(editableComboBox, ComboBox::ConstraintsFieldMask);
         editableComboBox->setConstraints(Constraint0109);

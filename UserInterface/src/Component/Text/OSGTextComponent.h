@@ -89,6 +89,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponent : public TextComponentBase
 	virtual void setSelectionEnd(const UInt32& index);
 	virtual std::string getSelectedText(void)const;
 
+    static const OSG::BitVector TextColorsFieldMask;
+	virtual void setTextColors(const Color4f& TheColor);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

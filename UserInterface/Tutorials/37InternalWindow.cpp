@@ -112,6 +112,8 @@ int main(int argc, char **argv)
     //Add Window Listener
     TutorialWindowListener TheTutorialWindowListener;
     TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
+    TutorialKeyListener TheKeyListener;
+    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
 
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
@@ -263,9 +265,6 @@ int main(int argc, char **argv)
        MainInternalWindow->setPreferredSize(Vec2s(300,300));
 	   MainInternalWindow->setTitle(std::string("Internal Window 1"));
     endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::PositionFieldMask | InternalWindow::PreferredSizeFieldMask | InternalWindow::TitleFieldMask);
-
-    TutorialKeyListener TheKeyListener;
-    MainInternalWindow->addKeyListener(&TheKeyListener);
 
     // Create The Internal Window
     InternalWindowPtr MainInternalWindow2 = osg::InternalWindow::create();

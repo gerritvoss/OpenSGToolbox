@@ -82,7 +82,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeComponentGenerator : public TreeCompon
     
 	virtual ComponentPtr getTreeComponent(TreePtr Parent, SharedFieldPtr Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus) = 0;
     
-	virtual ComponentPtr getComponent(ComponentPtr Parent, SharedFieldPtr Value, bool IsSelected, bool HasFocus);
+	virtual ComponentPtr getComponent(ComponentPtr Parent, SharedFieldPtr Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
