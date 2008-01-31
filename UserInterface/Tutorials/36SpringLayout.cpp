@@ -178,36 +178,76 @@ int main(int argc, char **argv)
 
 	beginEditCP(ExampleButton1, Button::PreferredSizeFieldMask);
         ExampleButton1->setPreferredSize(Vec2s(50,50));
+		ExampleButton1->setText("Button 1");
     endEditCP(ExampleButton1, Button::PreferredSizeFieldMask);
 
 	beginEditCP(ExampleButton2, Button::PreferredSizeFieldMask);
         ExampleButton2->setPreferredSize(Vec2s(50,50));
+		ExampleButton2->setText("Button 2");
     endEditCP(ExampleButton2, Button::PreferredSizeFieldMask);
 
 	beginEditCP(ExampleButton3, Button::PreferredSizeFieldMask);
         ExampleButton3->setPreferredSize(Vec2s(50,50));
+		ExampleButton3->setText("Button 3");
     endEditCP(ExampleButton3, Button::PreferredSizeFieldMask);
+
+	beginEditCP(ExampleButton4, Button::PreferredSizeFieldMask);
+        ExampleButton4->setPreferredSize(Vec2s(50,50));
+		ExampleButton4->setText("Button 4");
+    endEditCP(ExampleButton4, Button::PreferredSizeFieldMask);
+
+	beginEditCP(ExampleButton5, Button::PreferredSizeFieldMask);
+        ExampleButton5->setPreferredSize(Vec2s(50,50));
+		ExampleButton5->setText("Button 5");
+    endEditCP(ExampleButton5, Button::PreferredSizeFieldMask);
+
+	beginEditCP(ExampleButton6, Button::PreferredSizeFieldMask);
+        ExampleButton6->setPreferredSize(Vec2s(50,50));
+		ExampleButton6->setText("Button 6");
+    endEditCP(ExampleButton6, Button::PreferredSizeFieldMask);
     
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 
+	// SpringLayoutConstraints Information
+	// It is possible to set the constraint for the Y_EDGE, X_EDGE, BASELINE_EDGE, NORTH_EDGE, SOUTH_EDGE, EAST_EDGE, WEST_EDGE, HEIGHT_EDGE, and/or WIDTH_EDGE of a component.
+	// It is possible to constrain a component's edge x pixels above, below, to the right of, or to the left of the edges other components, frames, and/or the MainInternalWindow.
+	// It is possible to constrain a component to the Y_EDGE, X_EDGE, BASELINE_EDGE, NORTH_EDGE, SOUTH_EDGE, EAST_EDGE, WEST_EDGE, HORIZONTAL_CENTER_EDGE, VERTICAL_CENTER_EDGE, HEIGHT_EDGE, and/or WIDTH_EDGE of whatever component to which it is constrained.
+	
 	//Example Button 1    
-    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, ExampleButton1, 25, SpringLayoutConstraints::NORTH_EDGE, MainInternalWindow);
-    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ExampleButton1, -25, SpringLayoutConstraints::NORTH_EDGE, ExampleButton2);
-    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, ExampleButton1, -25, SpringLayoutConstraints::EAST_EDGE, MainInternalWindow);
-    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, ExampleButton1, 25, SpringLayoutConstraints::WEST_EDGE, MainInternalWindow);
+    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, ExampleButton1, 25, SpringLayoutConstraints::NORTH_EDGE, MainInternalWindow);  // The North edge of ExampleButton1 is 25 pixels below the North edge of the MainInternalWindow.
+    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ExampleButton1, -5, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, MainInternalWindow);  // The South edge of ExampleButton1 is 5 pixels above the Vertical Center of the MainInternalWindow.
+    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, ExampleButton1, -25, SpringLayoutConstraints::EAST_EDGE, MainInternalWindow);  // The East edge of ExampleButton1 is 25 pixels to the left of the East edge of the MainInternalWindow.
+    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, ExampleButton1, 25, SpringLayoutConstraints::WEST_EDGE, MainInternalWindow);  // The West edge of ExampleButton1 is 25 pixels to the right of the West edge of the MainInternalWindow.
 
 	//Example Button 2
-	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, ExampleButton2, LayoutSpring::height(ExampleButton2));
-	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ExampleButton2, -25, SpringLayoutConstraints::SOUTH_EDGE, MainInternalWindow);
-	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, ExampleButton2, -5, SpringLayoutConstraints::HORIZONTAL_CENTER_EDGE, MainInternalWindow);
-    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, ExampleButton2, 25, SpringLayoutConstraints::WEST_EDGE, MainInternalWindow);
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, ExampleButton2, LayoutSpring::height(ExampleButton2));  // The Height edge of ExampleButton2 is set to the height of ExampleButton2.
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ExampleButton2, -25, SpringLayoutConstraints::SOUTH_EDGE, MainInternalWindow);  // The South edge of ExampleButton2 is 25 pixels above the South edge of the MainInternalWindow.
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, ExampleButton2, -5, SpringLayoutConstraints::HORIZONTAL_CENTER_EDGE, MainInternalWindow);  // The East edge of ExampleButton2 is 5 pixels to the left of the Horizontal Center of the MainInternalWindow.
+    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, ExampleButton2, 25, SpringLayoutConstraints::WEST_EDGE, MainInternalWindow);  // The West edge of ExampleButton2 is 25 pixels to the right of the West edge of the MainInternalWindow.
 
 	//Example Button 3
-	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, ExampleButton3, LayoutSpring::height(ExampleButton3));
-	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ExampleButton3, -25, SpringLayoutConstraints::SOUTH_EDGE, MainInternalWindow);
-	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, ExampleButton3, 5, SpringLayoutConstraints::HORIZONTAL_CENTER_EDGE, MainInternalWindow);
-    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, ExampleButton3, -25, SpringLayoutConstraints::EAST_EDGE, MainInternalWindow);
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, ExampleButton3, LayoutSpring::height(ExampleButton3));  // The Height edge of ExampleButton3 is set to the height of ExampleButton3.
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ExampleButton3, -25, SpringLayoutConstraints::SOUTH_EDGE, MainInternalWindow);  // The South edge of ExampleButton3 is 25 pixels above the South edge of the MainInternalWindow.
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, ExampleButton3, 5, SpringLayoutConstraints::HORIZONTAL_CENTER_EDGE, MainInternalWindow);  // The West edge of ExampleButton3 is 5 pixels to the right of the Horizontal Center of the MainInternalWindow.
+    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, ExampleButton3, -25, SpringLayoutConstraints::EAST_EDGE, MainInternalWindow);  // The East edge of ExampleButton3 is 25 pixels to the left of the East edge of the MainInternalWindow.
 
+	//Example Button 4
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, ExampleButton4, 25, SpringLayoutConstraints::SOUTH_EDGE, ExampleButton1);  // The North edge of ExampleButton4 is 25 pixels below the South edge of ExampleButton1.
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ExampleButton4, -25, SpringLayoutConstraints::NORTH_EDGE, ExampleButton2);  // The South edge of ExampleButton4 is 25 pixels above the North edge of ExampleButton2.
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, ExampleButton4, 25, SpringLayoutConstraints::WEST_EDGE, MainInternalWindow);  // The West edge of ExampleButton4 is 25 pixels to the right of the West edge of the MainInternalWindow.
+    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, ExampleButton4, -100, SpringLayoutConstraints::HORIZONTAL_CENTER_EDGE, MainInternalWindow);  // The East edge of ExampleButton4 is 100 pixels to the left of the Horizontal Center of the MainInternalWindow.
+	
+	//Example Button 5
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, ExampleButton5, 25, SpringLayoutConstraints::SOUTH_EDGE, ExampleButton1);  // The North edge of ExampleButton5 is 25 pixels below the South edge of ExampleButton1.
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::HEIGHT_EDGE, ExampleButton5, 0, SpringLayoutConstraints::HEIGHT_EDGE, ExampleButton4);  // The Height of ExampleButton5 is set to the Height of ExampleButton4.
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, ExampleButton5, 75, SpringLayoutConstraints::HORIZONTAL_CENTER_EDGE, MainInternalWindow);  // The East edge of ExampleButton5 is 75 pixels to the right of the Horizontal Center of the MainInternalWindow.
+    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, ExampleButton5, -75, SpringLayoutConstraints::HORIZONTAL_CENTER_EDGE, MainInternalWindow);  // The West edge of ExampleButton5 is 75 pixels to the left of the Horizontal Center of the MainInternalWindow.
+
+	//Example Button 6
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, ExampleButton6, 25, SpringLayoutConstraints::SOUTH_EDGE, ExampleButton1);  // The North edge of ExampleButton6 is 25 pixels below the South edge of ExampleButton1.
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ExampleButton6, -25, SpringLayoutConstraints::NORTH_EDGE, ExampleButton2);  // The South edge of ExampleButton6 is 25 pixels above the North edge of ExampleButton2.
+	MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, ExampleButton6, 100, SpringLayoutConstraints::HORIZONTAL_CENTER_EDGE, MainInternalWindow);  // The West edge of ExampleButton6 is 100 pixels to the right of the Horizontal Center of the MainInternalWindow.
+    MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, ExampleButton6, 0, SpringLayoutConstraints::WIDTH_EDGE, ExampleButton4);  // The Width of ExampleButton6 is set to the Width of ExampleButton4.
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
@@ -220,6 +260,9 @@ int main(int argc, char **argv)
        MainInternalWindow->getChildren().addValue(ExampleButton1);
        MainInternalWindow->getChildren().addValue(ExampleButton2);
        MainInternalWindow->getChildren().addValue(ExampleButton3);
+	   MainInternalWindow->getChildren().addValue(ExampleButton4);
+       MainInternalWindow->getChildren().addValue(ExampleButton5);
+       MainInternalWindow->getChildren().addValue(ExampleButton6);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
