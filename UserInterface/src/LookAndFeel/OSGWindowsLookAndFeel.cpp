@@ -635,7 +635,7 @@ void WindowsLookAndFeel::init(void)
 	//Iconify Button
 	ButtonPtr WindowsInternalWindowTitlebarIconifyButton = Button::create();
 	beginEditCP(WindowsInternalWindowTitlebarIconifyButton);
-		WindowsInternalWindowTitlebarIconifyButton->setPreferredSize(Pnt2s(21, 21));
+		WindowsInternalWindowTitlebarIconifyButton->setPreferredSize(Vec2s(21, 21));
 		
 		//Border
 		WindowsInternalWindowTitlebarIconifyButton->setBorder(WindowsIconifyMaximizeButtonBorder);
@@ -666,7 +666,7 @@ void WindowsLookAndFeel::init(void)
 	//MaximizeButton
 	ButtonPtr WindowsInternalWindowTitlebarMaximizeButton = Button::create();
 	beginEditCP(WindowsInternalWindowTitlebarMaximizeButton);
-		WindowsInternalWindowTitlebarMaximizeButton->setPreferredSize(Pnt2s(21, 21));
+		WindowsInternalWindowTitlebarMaximizeButton->setPreferredSize(Vec2s(21, 21));
 		
 		//Border
 		WindowsInternalWindowTitlebarMaximizeButton->setBorder(WindowsIconifyMaximizeButtonBorder);
@@ -789,7 +789,7 @@ void WindowsLookAndFeel::init(void)
 	//Windows CloseButton
 	ButtonPtr WindowsInternalWindowTitlebarCloseButton = Button::create();
 	beginEditCP(WindowsInternalWindowTitlebarCloseButton);
-		WindowsInternalWindowTitlebarCloseButton->setPreferredSize(Pnt2s(21, 21));
+		WindowsInternalWindowTitlebarCloseButton->setPreferredSize(Vec2s(21, 21));
 
 		//Border
 		WindowsInternalWindowTitlebarCloseButton->setBorder(WindowsCloseButtonBorder);
@@ -819,7 +819,7 @@ void WindowsLookAndFeel::init(void)
 
 	LabelPtr WindowsInternalWindowTitlebarTitleLabel = Label::create();
 	beginEditCP(WindowsInternalWindowTitlebarTitleLabel);
-		WindowsInternalWindowTitlebarTitleLabel->setPreferredSize(Pnt2s(23, 23));
+		WindowsInternalWindowTitlebarTitleLabel->setPreferredSize(Vec2s(23, 23));
 		//Border
 		WindowsInternalWindowTitlebarTitleLabel->setBorder(WindowsEmptyBorder);
 		WindowsInternalWindowTitlebarTitleLabel->setRolloverBorder(WindowsEmptyBorder);
@@ -4165,7 +4165,24 @@ void WindowsLookAndFeel::init(void)
     ColorUIBackgroundPtr WindowsDefaultTreeComponentGeneratorNonSelectedBackground = ColorUIBackground::create();
 
     LineBorderPtr WindowsDefaultTreeComponentGeneratorSelectedBorder = LineBorder::create();
+
+    PanelPtr WindowsDefaultTreeComponentGeneratorPanelPrototype = Panel::create();
+    beginEditCP(WindowsDefaultTreeComponentGeneratorPanelPrototype);
+		//Border
+		WindowsDefaultTreeComponentGeneratorPanelPrototype->setBorder(WindowsEmptyBorder);
+		WindowsDefaultTreeComponentGeneratorPanelPrototype->setRolloverBorder(WindowsEmptyBorder);
+		WindowsDefaultTreeComponentGeneratorPanelPrototype->setFocusedBorder(WindowsEmptyBorder);
+		WindowsDefaultTreeComponentGeneratorPanelPrototype->setDisabledBorder(WindowsEmptyBorder);
+		
+		//Background
+		WindowsDefaultTreeComponentGeneratorPanelPrototype->setBackground(WindowsEmptyBackground);
+		WindowsDefaultTreeComponentGeneratorPanelPrototype->setRolloverBackground(WindowsEmptyBackground);
+		WindowsDefaultTreeComponentGeneratorPanelPrototype->setFocusedBackground(WindowsEmptyBackground);
+		WindowsDefaultTreeComponentGeneratorPanelPrototype->setDisabledBackground(WindowsEmptyBackground);
+    endEditCP(WindowsDefaultTreeComponentGeneratorPanelPrototype);
     
+
+
 	//DefaultTreeComponentGenerator
     DefaultTreeComponentGeneratorPtr WindowsDefaultTreeComponentGenerator = DefaultTreeComponentGenerator::create();
     beginEditCP(WindowsDefaultTreeComponentGenerator);
@@ -4180,9 +4197,17 @@ void WindowsLookAndFeel::init(void)
 		WindowsDefaultTreeComponentGenerator->setSelectedBorder(WindowsDefaultTreeComponentGeneratorSelectedBorder);
 		WindowsDefaultTreeComponentGenerator->setSelectedTextColor(Color4f(1.0f,1.0f,1.0f,1.0f));
 		WindowsDefaultTreeComponentGenerator->setNonSelectedTextColor(Color4f(0.0f,0.0f,0.0f,1.0f));
+		WindowsDefaultTreeComponentGenerator->setNodePanelPrototype(WindowsDefaultTreeComponentGeneratorPanelPrototype);
     endEditCP(WindowsDefaultTreeComponentGenerator);
     
     DefaultTreeComponentGenerator::getClassType().setPrototype(WindowsDefaultTreeComponentGenerator);
+
+    //DefaultTreeLayout
+    TreeModelLayoutPtr WindowsDefaultTreeModelLayout = FixedHeightTreeModelLayout::create();
+    beginEditCP(WindowsDefaultTreeModelLayout);
+		WindowsDefaultTreeModelLayout->setRootVisible(false);
+        WindowsDefaultTreeModelLayout->setRowHeight(20);
+    beginEditCP(WindowsDefaultTreeModelLayout);
 
 	//************************** Tree *****************************
 	//Windows RotatedComponentBorder
@@ -4229,7 +4254,6 @@ void WindowsLookAndFeel::init(void)
 		WindowsTree->setEditable(false);
 		WindowsTree->setExpandsSelectedPaths(true);
 		WindowsTree->setInvokesStopCellEditing(true);
-		WindowsTree->setRootVisible(false);
 		WindowsTree->setRowHeight(13);
 		WindowsTree->setScrollsOnExpand(false);
 		WindowsTree->setShowsRootHandles(true);
@@ -4237,7 +4261,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsTree->setVisibleRowCount(10);
 		WindowsTree->setCellEditor(WindowsDefaultTreeCellEditor);
 		WindowsTree->setCellGenerator(WindowsDefaultTreeComponentGenerator);
-        WindowsTree->setModelLayout(FixedHeightTreeModelLayout::create());
+        WindowsTree->setModelLayout(WindowsDefaultTreeModelLayout);
 		
 	endEditCP(WindowsTree);
 	

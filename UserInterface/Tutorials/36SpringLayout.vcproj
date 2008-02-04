@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="36SpringLayout"
 	ProjectGUID="{D3E60558-BBA7-4AAD-8041-AC27BE7B2A2F}"
 	RootNamespace="36SpringLayout"

@@ -194,6 +194,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "36SpringLayout", "36SpringL
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "50OpenSGTypes", "50OpenSGTypes.vcproj", "{F8E56CE8-D4EE-4D26-B31C-5B82C25AD56C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -364,6 +368,10 @@ Global
 		{D3E60558-BBA7-4AAD-8041-AC27BE7B2A2F}.Debug.Build.0 = Debug|Win32
 		{D3E60558-BBA7-4AAD-8041-AC27BE7B2A2F}.Release.ActiveCfg = Release|Win32
 		{D3E60558-BBA7-4AAD-8041-AC27BE7B2A2F}.Release.Build.0 = Release|Win32
+		{F8E56CE8-D4EE-4D26-B31C-5B82C25AD56C}.Debug.ActiveCfg = Debug|Win32
+		{F8E56CE8-D4EE-4D26-B31C-5B82C25AD56C}.Debug.Build.0 = Debug|Win32
+		{F8E56CE8-D4EE-4D26-B31C-5B82C25AD56C}.Release.ActiveCfg = Release|Win32
+		{F8E56CE8-D4EE-4D26-B31C-5B82C25AD56C}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

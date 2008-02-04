@@ -112,11 +112,16 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 	bool firstOne = true;
 
 	for(UInt32 i=0 ; i<Components.size(); ++i)
+    {
+        beginEditCP(Components.getValue(i), Component::PositionFieldMask | Component::PositionFieldMask);
+    }
+
+	for(UInt32 i=0 ; i<Components.size(); ++i)
 	{
 		// set the component to its preferred size
-		beginEditCP(Components.getValue(i), Component::SizeFieldMask);
+		//beginEditCP(Components.getValue(i), Component::SizeFieldMask);
 			Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
-		endEditCP(Components.getValue(i), Component::SizeFieldMask);
+		//endEditCP(Components.getValue(i), Component::SizeFieldMask);
 
 		// if there is only one so far, then it can't draw it using cumMajorAxis
 		// because it hasn't been set yet
@@ -148,9 +153,9 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 					offsetX += offsetMajorAxis;
 				}
 
-				beginEditCP(Components.getValue(i), Component::PositionFieldMask);
+				//beginEditCP(Components.getValue(i), Component::PositionFieldMask);
 					Components.getValue(i)->setPosition(Pnt2s(offsetX, offsetY));
-				endEditCP(Components.getValue(i), Component::PositionFieldMask);
+				//endEditCP(Components.getValue(i), Component::PositionFieldMask);
 
 				// get to the next row
 				if (AxisIndex)
@@ -233,9 +238,9 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 					offsetY += offsetMinorAxis;
 				}
 
-				beginEditCP(Components.getValue(j), Component::PositionFieldMask);
+				//beginEditCP(Components.getValue(j), Component::PositionFieldMask);
 					Components.getValue(j)->setPosition(Pnt2s(offsetX, offsetY));
-				endEditCP(Components.getValue(j), Component::PositionFieldMask);
+				//endEditCP(Components.getValue(j), Component::PositionFieldMask);
 
 				// translate to next button
 				if (AxisIndex)
@@ -321,9 +326,9 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 				{
 					offsetY += offsetMinorAxis;
 				}
-				beginEditCP(Components.getValue(j), Component::PositionFieldMask);
+				//beginEditCP(Components.getValue(j), Component::PositionFieldMask);
 					Components.getValue(j)->setPosition(Pnt2s(offsetX, offsetY));
-				endEditCP(Components.getValue(j), Component::PositionFieldMask);
+				//endEditCP(Components.getValue(j), Component::PositionFieldMask);
 
 				if (AxisIndex)
 				{
@@ -360,11 +365,16 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 		{
 			offset = Components.getValue(i)->getPosition();
 			offset[(AxisIndex+1)%2] += displacement;
-			beginEditCP(Components.getValue(i), Component::PositionFieldMask);
+			//beginEditCP(Components.getValue(i), Component::PositionFieldMask);
 				Components.getValue(i)->setPosition(offset);
-			endEditCP(Components.getValue(i), Component::PositionFieldMask);
+			//endEditCP(Components.getValue(i), Component::PositionFieldMask);
 		}
 	}
+    
+	for(UInt32 i=0 ; i<Components.size(); ++i)
+    {
+        endEditCP(Components.getValue(i), Component::PositionFieldMask | Component::PositionFieldMask);
+    }
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

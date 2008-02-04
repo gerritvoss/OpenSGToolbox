@@ -530,7 +530,7 @@ public:
 		endEditCP(MainPanelLayout, GridBagLayout::ColumnsFieldMask | GridBagLayout::RowsFieldMask);
 
 		//Create Main Panel
-		_MainPanel = Panel::create();
+        _MainPanel = Panel::createEmpty();
 
 		beginEditCP(_MainPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
 			_MainPanel->getChildren().push_back(TypePanel);

@@ -74,7 +74,6 @@
 #include <OpenSG/OSGBoolFields.h> // IsIcon type
 #include <OpenSG/OSGBoolFields.h> // Maximizable type
 #include <OpenSG/OSGBoolFields.h> // IsMaximized type
-#include <OpenSG/OSGVec2sFields.h> // PreviousPosition type
 #include <OpenSG/OSGVec2sFields.h> // PreviousSize type
 #include <OpenSG/OSGBoolFields.h> // Resizable type
 #include <OpenSG/OSGBoolFields.h> // IsSelected type
@@ -186,7 +185,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
            SFBool              *getSFIsIcon         (void);
            SFBool              *getSFMaximizable    (void);
            SFBool              *getSFIsMaximized    (void);
-           SFVec2s             *getSFPreviousPosition(void);
+           SFPnt2s             *getSFPreviousPosition(void);
            SFVec2s             *getSFPreviousSize   (void);
            SFBool              *getSFResizable      (void);
            SFBool              *getSFIsSelected     (void);
@@ -214,8 +213,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
      const bool                &getMaximizable    (void) const;
            bool                &getIsMaximized    (void);
      const bool                &getIsMaximized    (void) const;
-           Vec2s               &getPreviousPosition(void);
-     const Vec2s               &getPreviousPosition(void) const;
+           Pnt2s               &getPreviousPosition(void);
+     const Pnt2s               &getPreviousPosition(void) const;
            Vec2s               &getPreviousSize   (void);
      const Vec2s               &getPreviousSize   (void) const;
            bool                &getResizable      (void);
@@ -253,7 +252,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
      void setIsIcon         ( const bool &value );
      void setMaximizable    ( const bool &value );
      void setIsMaximized    ( const bool &value );
-     void setPreviousPosition( const Vec2s &value );
+     void setPreviousPosition( const Pnt2s &value );
      void setPreviousSize   ( const Vec2s &value );
      void setResizable      ( const bool &value );
      void setIsSelected     ( const bool &value );
@@ -299,7 +298,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
     SFBool              _sfIsIcon;
     SFBool              _sfMaximizable;
     SFBool              _sfIsMaximized;
-    SFVec2s             _sfPreviousPosition;
+    SFPnt2s             _sfPreviousPosition;
     SFVec2s             _sfPreviousSize;
     SFBool              _sfResizable;
     SFBool              _sfIsSelected;

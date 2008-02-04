@@ -152,7 +152,7 @@ const OSG::BitVector AbstractWindowBase::MTInfluenceMask =
 /*! \var bool            AbstractWindowBase::_sfIsMaximized
     
 */
-/*! \var Vec2s           AbstractWindowBase::_sfPreviousPosition
+/*! \var Pnt2s           AbstractWindowBase::_sfPreviousPosition
     
 */
 /*! \var Vec2s           AbstractWindowBase::_sfPreviousSize
@@ -231,7 +231,7 @@ FieldDescription *AbstractWindowBase::_desc[] =
                      IsMaximizedFieldId, IsMaximizedFieldMask,
                      false,
                      (FieldAccessMethod) &AbstractWindowBase::getSFIsMaximized),
-    new FieldDescription(SFVec2s::getClassType(), 
+    new FieldDescription(SFPnt2s::getClassType(), 
                      "PreviousPosition", 
                      PreviousPositionFieldId, PreviousPositionFieldMask,
                      false,
@@ -364,12 +364,12 @@ void AbstractWindowBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 AbstractWindowBase::AbstractWindowBase(void) :
     _sfDrawingSurface         (UIDrawingSurfacePtr(NullFC)), 
     _sfClosable               (bool(true)), 
-    _sfIsClosed               (bool(false)), 
+    _sfIsClosed               (bool(true)), 
     _sfIconable               (bool(true)), 
     _sfIsIcon                 (bool(false)), 
     _sfMaximizable            (bool(true)), 
     _sfIsMaximized            (bool(false)), 
-    _sfPreviousPosition       (Vec2s(0,0)), 
+    _sfPreviousPosition       (Pnt2s(0,0)), 
     _sfPreviousSize           (Vec2s(0,0)), 
     _sfResizable              (bool(true)), 
     _sfIsSelected             (bool(false)), 

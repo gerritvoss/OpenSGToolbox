@@ -122,12 +122,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 	//Mouse Wheel Events
     virtual void mouseWheelMoved(const MouseWheelEvent& e);
 
-    ButtonPtr getMinButton(void);
-    ButtonPtr getMaxButton(void);
-    ButtonPtr getScrollField(void);
-    ButtonPtr getScrollBar(void);
+    ButtonPtr &getMinButton(void);
+    const ButtonPtr &getMinButton(void) const;
+
+    ButtonPtr &getMaxButton(void);
+    const ButtonPtr &getMaxButton(void) const;
+    ButtonPtr &getScrollField(void);
+    const ButtonPtr &getScrollField(void) const;
+    ButtonPtr &getScrollBar(void);
+    const ButtonPtr &getScrollBar(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
+
+    Pnt2s calculateScrollBarPosition(void) const;
+    Vec2s calculateScrollBarSize(void) const;
+
+    Int32 calculateValueFromPosition(const Pnt2s Position) const;
 
     // Variables should all be in ScrollBarBase.
 
@@ -251,7 +261,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 
 	ScrollFieldListener _ScrollFieldListener;
 
-    void setMajorAxisScrollBarPosition(const Int16& Pos);
+    void setMajorAxisScrollBarPosition(const Pnt2s& Pos);
     
     /*==========================  PRIVATE  ================================*/
   private:
