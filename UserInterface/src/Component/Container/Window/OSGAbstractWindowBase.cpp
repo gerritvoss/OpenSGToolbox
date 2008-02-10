@@ -152,10 +152,10 @@ const OSG::BitVector AbstractWindowBase::MTInfluenceMask =
 /*! \var bool            AbstractWindowBase::_sfIsMaximized
     
 */
-/*! \var Pnt2s           AbstractWindowBase::_sfPreviousPosition
+/*! \var Pnt2f           AbstractWindowBase::_sfPreviousPosition
     
 */
-/*! \var Vec2s           AbstractWindowBase::_sfPreviousSize
+/*! \var Vec2f           AbstractWindowBase::_sfPreviousSize
     
 */
 /*! \var bool            AbstractWindowBase::_sfResizable
@@ -231,12 +231,12 @@ FieldDescription *AbstractWindowBase::_desc[] =
                      IsMaximizedFieldId, IsMaximizedFieldMask,
                      false,
                      (FieldAccessMethod) &AbstractWindowBase::getSFIsMaximized),
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "PreviousPosition", 
                      PreviousPositionFieldId, PreviousPositionFieldMask,
                      false,
                      (FieldAccessMethod) &AbstractWindowBase::getSFPreviousPosition),
-    new FieldDescription(SFVec2s::getClassType(), 
+    new FieldDescription(SFVec2f::getClassType(), 
                      "PreviousSize", 
                      PreviousSizeFieldId, PreviousSizeFieldMask,
                      false,
@@ -369,8 +369,8 @@ AbstractWindowBase::AbstractWindowBase(void) :
     _sfIsIcon                 (bool(false)), 
     _sfMaximizable            (bool(true)), 
     _sfIsMaximized            (bool(false)), 
-    _sfPreviousPosition       (Pnt2s(0,0)), 
-    _sfPreviousSize           (Vec2s(0,0)), 
+    _sfPreviousPosition       (Pnt2f(0,0)), 
+    _sfPreviousSize           (Vec2f(0,0)), 
     _sfResizable              (bool(true)), 
     _sfIsSelected             (bool(false)), 
     _sfTitle                  (), 

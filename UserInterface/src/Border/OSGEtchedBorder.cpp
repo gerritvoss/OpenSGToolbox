@@ -74,12 +74,12 @@ void EtchedBorder::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void EtchedBorder::draw(const GraphicsPtr g, const Int16 x, const Int16 y , const UInt16 Width, const UInt16 Height, const Real32 Opacity) const
+void EtchedBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity) const
 {
-	Pnt2s TopLeft = Pnt2s(x, y);
-	Pnt2s BottomLeft = Pnt2s(x, y + Height);
-	Pnt2s TopRight = Pnt2s(x + Width, y);
-	Pnt2s BottomRight = Pnt2s(x + Width, y + Height);
+	Pnt2f TopLeft = Pnt2f(x, y);
+	Pnt2f BottomLeft = Pnt2f(x, y + Height);
+	Pnt2f TopRight = Pnt2f(x + Width, y);
+	Pnt2f BottomRight = Pnt2f(x + Width, y + Height);
 	Color4f TopColor, BottomColor;
 	if(getRaised())
 	{
@@ -93,21 +93,21 @@ void EtchedBorder::draw(const GraphicsPtr g, const Int16 x, const Int16 y , cons
 	}
 	//Top
 
-	g->drawRect(Pnt2s(x+getWidth(), y+getWidth()/2.0), Pnt2s(x+Width-getWidth(), y+getWidth()), BottomColor, Opacity);
-	g->drawRect(Pnt2s(x,y), Pnt2s(x+Width-getWidth(), y+getWidth()/2.0), TopColor, Opacity);
+	g->drawRect(Pnt2f(x+getWidth(), y+getWidth()/2.0), Pnt2f(x+Width-getWidth(), y+getWidth()), BottomColor, Opacity);
+	g->drawRect(Pnt2f(x,y), Pnt2f(x+Width-getWidth(), y+getWidth()/2.0), TopColor, Opacity);
 	//Left	
-	g->drawRect(Pnt2s(x, y+getWidth()/2.0), Pnt2s(x+getWidth()/2.0, y+Height-getWidth()), TopColor, Opacity);
-	g->drawRect(Pnt2s(x+getWidth()/2.0, y+getWidth()/2.0), Pnt2s(x+getWidth(), y+Height-getWidth()), BottomColor, Opacity);
+	g->drawRect(Pnt2f(x, y+getWidth()/2.0), Pnt2f(x+getWidth()/2.0, y+Height-getWidth()), TopColor, Opacity);
+	g->drawRect(Pnt2f(x+getWidth()/2.0, y+getWidth()/2.0), Pnt2f(x+getWidth(), y+Height-getWidth()), BottomColor, Opacity);
 	//Bottom
-	g->drawRect(Pnt2s(x, y+Height-getWidth()), Pnt2s(x+Width-getWidth(), y+Height-getWidth()/2.0), TopColor, Opacity);
-	g->drawRect(Pnt2s(x, y+Height-getWidth()/2.0), Pnt2s(x+Width-getWidth()/2.0, y+Height), BottomColor, Opacity);
+	g->drawRect(Pnt2f(x, y+Height-getWidth()), Pnt2f(x+Width-getWidth(), y+Height-getWidth()/2.0), TopColor, Opacity);
+	g->drawRect(Pnt2f(x, y+Height-getWidth()/2.0), Pnt2f(x+Width-getWidth()/2.0, y+Height), BottomColor, Opacity);
 	//Right
-	g->drawRect(Pnt2s(x+Width-getWidth(), y), Pnt2s(x+Width-getWidth()/2.0, y+Height-getWidth()/2.0), TopColor, Opacity);
-	g->drawRect(Pnt2s(x+Width-getWidth()/2.0, y), Pnt2s(x+Width, y+Height), BottomColor, Opacity);
+	g->drawRect(Pnt2f(x+Width-getWidth(), y), Pnt2f(x+Width-getWidth()/2.0, y+Height-getWidth()/2.0), TopColor, Opacity);
+	g->drawRect(Pnt2f(x+Width-getWidth()/2.0, y), Pnt2f(x+Width, y+Height), BottomColor, Opacity);
 
 }
 
-void EtchedBorder::getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& Bottom) const
+void EtchedBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bottom) const
 {
 	Left=Right=Top=Bottom=getWidth();
 }

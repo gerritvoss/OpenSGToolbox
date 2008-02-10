@@ -77,9 +77,9 @@ void WindowBorder::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void WindowBorder::draw(const GraphicsPtr g, const Int16 x, const Int16 y , const UInt16 Width, const UInt16 Height, const Real32 Opacity) const
+void WindowBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity) const
 {
-	UInt16 LeftIn, RightIn, BottomIn, UpperIn;
+	Real32 LeftIn, RightIn, BottomIn, UpperIn;
     getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
 	if(getTitlebar() != NullFC)
 	{
@@ -90,9 +90,9 @@ void WindowBorder::draw(const GraphicsPtr g, const Int16 x, const Int16 y , cons
 	getOuterBorder()->draw(g, x, y, Width, Height, Opacity);
 }
 
-void WindowBorder::getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& Bottom) const
+void WindowBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bottom) const
 {
-	UInt16 LeftIn, LeftIn2, RightIn, RightIn2, BottomIn, BottomIn2, UpperIn, UpperIn2;
+	Real32 LeftIn, LeftIn2, RightIn, RightIn2, BottomIn, BottomIn2, UpperIn, UpperIn2;
 	getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
 	getInnerBorder()->getInsets(LeftIn2, RightIn2,UpperIn2, BottomIn2) ;
 	Left = LeftIn+LeftIn2;
@@ -106,10 +106,10 @@ void WindowBorder::getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& Bot
 	}
 }
 
-void WindowBorder::activateInternalDrawConstraints(const GraphicsPtr g, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const
+void WindowBorder::activateInternalDrawConstraints(const GraphicsPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
     //getOuterBorder()->activateInternalDrawConstraints(g,x,y,Width,Height);
-	UInt16 LeftIn, RightIn, BottomIn, UpperIn;
+	Real32 LeftIn, RightIn, BottomIn, UpperIn;
 	getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
 	if(getTitlebar() != NullFC)
 	{
@@ -118,9 +118,9 @@ void WindowBorder::activateInternalDrawConstraints(const GraphicsPtr g, const In
     getInnerBorder()->activateInternalDrawConstraints(g,x+LeftIn, y+UpperIn, Width-LeftIn-RightIn, Height-UpperIn-BottomIn);
 }
 
-void WindowBorder::deactivateInternalDrawConstraints(const GraphicsPtr g, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const
+void WindowBorder::deactivateInternalDrawConstraints(const GraphicsPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
-	UInt16 LeftIn, RightIn, BottomIn, UpperIn;
+	Real32 LeftIn, RightIn, BottomIn, UpperIn;
 	getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
 	if(getTitlebar() != NullFC)
 	{
@@ -130,9 +130,9 @@ void WindowBorder::deactivateInternalDrawConstraints(const GraphicsPtr g, const 
     //getOuterBorder()->deactivateInternalDrawConstraints(g);
 }
 
-bool WindowBorder::isContained(const Pnt2s& p, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const
+bool WindowBorder::isContained(const Pnt2f& p, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
-	UInt16 LeftIn, RightIn, BottomIn, UpperIn;
+	Real32 LeftIn, RightIn, BottomIn, UpperIn;
 	getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
 	if(getTitlebar() != NullFC)
 	{
@@ -142,9 +142,9 @@ bool WindowBorder::isContained(const Pnt2s& p, const Int16& x, const Int16& y , 
             getOuterBorder()->isContained(p,x,y,Width,Height));
 }
 
-void WindowBorder::getTitlebarBounds(const Int16 x, const Int16 y , const UInt16 Width, const UInt16 Height, Pnt2s& TopLeft, Pnt2s& BottomRight)
+void WindowBorder::getTitlebarBounds(const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, Pnt2f& TopLeft, Pnt2f& BottomRight)
 {
-	UInt16 LeftIn, RightIn, BottomIn, UpperIn;
+	Real32 LeftIn, RightIn, BottomIn, UpperIn;
 	getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
 
 	TopLeft.setValues(x+LeftIn, y+UpperIn);

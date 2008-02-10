@@ -77,17 +77,17 @@ void GridLayout::initMethod (void)
 
 void GridLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
-	Pnt2s borderTopLeft, borderBottomRight;
+	Pnt2f borderTopLeft, borderBottomRight;
 	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
-	Vec2s borderSize(borderBottomRight-borderTopLeft);
+	Vec2f borderSize(borderBottomRight-borderTopLeft);
 
-	Int32 Xpos = 0;
-	Int32 Ypos = 0;
-	Int32 maxSizeX = 0;
-	Int32 maxSizeY = 0;
-	Int32 debug = 10;
+	Real32 Xpos = 0;
+	Real32 Ypos = 0;
+	Real32 maxSizeX = 0;
+	Real32 maxSizeY = 0;
+	Real32 debug = 10;
 	Int32 numComp = Components.getSize();
-	Int32 buttonXSize, buttonYSize;
+	Real32 buttonXSize, buttonYSize;
 
 	//set the size to the perfered sizes for the buttons
 	for(UInt16 i = 0; i<Components.size(); i++){
@@ -112,7 +112,7 @@ void GridLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 			else
 				buttonYSize = Components.getValue(i)->getMaxSize().y();
 			beginEditCP(Components.getValue(i), Component::SizeFieldMask);
-			   Components.getValue(i)->setSize(Vec2s(buttonXSize, buttonYSize));
+			   Components.getValue(i)->setSize(Vec2f(buttonXSize, buttonYSize));
 			endEditCP(Components.getValue(i), Component::SizeFieldMask);
 		}
 	}
@@ -125,7 +125,7 @@ void GridLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 			for(UInt16 j = 0; j < getColumns()&& numComp>0; j++){
 				debug = i*getColumns()+j;
 			    beginEditCP(Components.getValue(i), Component::PositionFieldMask);
-                   Components.getValue(i*getColumns()+j)->setPosition(borderTopLeft + Vec2s(Xpos, Ypos));
+                   Components.getValue(i*getColumns()+j)->setPosition(borderTopLeft + Vec2f(Xpos, Ypos));
 			    endEditCP(Components.getValue(i), Component::PositionFieldMask);
 				numComp--;
 				Xpos = Xpos + (maxSizeX+getHorizontalGap());

@@ -69,7 +69,7 @@
 
 #include <OpenSG/OSGTextureChunkFields.h> // Texture type
 #include <OpenSG/OSGUInt32Fields.h> // Scale type
-#include <OpenSG/OSGVec2sFields.h> // ScaleAbsoluteSize type
+#include <OpenSG/OSGVec2fFields.h> // ScaleAbsoluteSize type
 #include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
 #include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
 
@@ -136,7 +136,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
 
            SFTextureChunkPtr   *getSFTexture        (void);
            SFUInt32            *getSFScale          (void);
-           SFVec2s             *getSFScaleAbsoluteSize(void);
+           SFVec2f             *getSFScaleAbsoluteSize(void);
            SFReal32            *getSFVerticalAlignment(void);
            SFReal32            *getSFHorizontalAlignment(void);
 
@@ -144,8 +144,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
      const TextureChunkPtr     &getTexture        (void) const;
            UInt32              &getScale          (void);
      const UInt32              &getScale          (void) const;
-           Vec2s               &getScaleAbsoluteSize(void);
-     const Vec2s               &getScaleAbsoluteSize(void) const;
+           Vec2f               &getScaleAbsoluteSize(void);
+     const Vec2f               &getScaleAbsoluteSize(void) const;
            Real32              &getVerticalAlignment(void);
      const Real32              &getVerticalAlignment(void) const;
            Real32              &getHorizontalAlignment(void);
@@ -158,7 +158,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
 
      void setTexture        ( const TextureChunkPtr &value );
      void setScale          ( const UInt32 &value );
-     void setScaleAbsoluteSize( const Vec2s &value );
+     void setScaleAbsoluteSize( const Vec2f &value );
      void setVerticalAlignment( const Real32 &value );
      void setHorizontalAlignment( const Real32 &value );
 
@@ -205,7 +205,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
 
     SFTextureChunkPtr   _sfTexture;
     SFUInt32            _sfScale;
-    SFVec2s             _sfScaleAbsoluteSize;
+    SFVec2f             _sfScaleAbsoluteSize;
     SFReal32            _sfVerticalAlignment;
     SFReal32            _sfHorizontalAlignment;
 

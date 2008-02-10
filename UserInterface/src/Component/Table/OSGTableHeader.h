@@ -93,7 +93,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
     
     //Returns a pointer to the column that point lies in, or -1 if it lies out of bounds.
     //The point is assumed to be in TableHeader coordinate space
-    TableColumnPtr columnAtPoint(const Pnt2s& point) const;
+    TableColumnPtr columnAtPoint(const Pnt2f& point) const;
     
     //Returns the TableColumnModel that contains all column information of this table header.
     TableColumnModelPtr getColumnModel(void) const;
@@ -105,10 +105,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
     TableColumnPtr getDraggedColumn(void) const;
     
     //Returns the column's horizontal distance from its original position, if and only if, a drag is in process.
-    Int32 getDraggedDistance(void) const;
+    Real32 getDraggedDistance(void) const;
     
     //Returns the rectangle containing the header tile at column.
-    void getHeaderBounds(const UInt32 ColumnIndex, Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+    void getHeaderBounds(const UInt32 ColumnIndex, Pnt2f& TopLeft, Pnt2f& BottomRight) const;
     
     //Returns the resizing column.
     Int32 getResizingColumn(void) const;
@@ -123,7 +123,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
     void setDraggedColumn(TableColumnPtr aColumn);
     
     //Sets the header's draggedDistance to distance.
-    void setDraggedDistance(const Int32& distance);
+    void setDraggedDistance(const Real32& distance);
     
     //Sets the header's resizingColumn to aColumn.
     void setResizingColumn(Int32 aColumn);
@@ -159,7 +159,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
     TableColumnPtr _DraggedColumn;
     
     //The distance from its original position the column has been dragged.
-    Int32 _DraggedDistance;
+    Real32 _DraggedDistance;
     
     //The index of the column being resized.
     Int32 _ResizingColumn;

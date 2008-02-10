@@ -80,13 +80,13 @@ const OSG::BitVector UIViewportBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Pnt2s           UIViewportBase::_sfViewPosition
+/*! \var Pnt2f           UIViewportBase::_sfViewPosition
     
 */
 /*! \var ComponentPtr    UIViewportBase::_sfViewComponent
     
 */
-/*! \var Vec2s           UIViewportBase::_sfViewSize
+/*! \var Vec2f           UIViewportBase::_sfViewSize
     
 */
 
@@ -94,7 +94,7 @@ const OSG::BitVector UIViewportBase::MTInfluenceMask =
 
 FieldDescription *UIViewportBase::_desc[] = 
 {
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "ViewPosition", 
                      ViewPositionFieldId, ViewPositionFieldMask,
                      false,
@@ -104,7 +104,7 @@ FieldDescription *UIViewportBase::_desc[] =
                      ViewComponentFieldId, ViewComponentFieldMask,
                      false,
                      (FieldAccessMethod) &UIViewportBase::getSFViewComponent),
-    new FieldDescription(SFVec2s::getClassType(), 
+    new FieldDescription(SFVec2f::getClassType(), 
                      "ViewSize", 
                      ViewSizeFieldId, ViewSizeFieldMask,
                      false,
@@ -184,9 +184,9 @@ void UIViewportBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 UIViewportBase::UIViewportBase(void) :
-    _sfViewPosition           (Pnt2s(0,0)), 
+    _sfViewPosition           (Pnt2f(0,0)), 
     _sfViewComponent          (ComponentPtr(NullFC)), 
-    _sfViewSize               (Vec2s(-1,-1)), 
+    _sfViewSize               (Vec2f(-1,-1)), 
     Inherited() 
 {
 }

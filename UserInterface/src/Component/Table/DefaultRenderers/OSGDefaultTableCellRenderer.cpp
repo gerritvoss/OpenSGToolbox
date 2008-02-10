@@ -85,7 +85,7 @@ ComponentPtr DefaultTableCellRenderer::getTableCellRendererComponent(TablePtr ta
 		std::string tempString;
 	    value->getValueByStr(tempString);
 		TheLabel->setText(tempString);
-		TheLabel->setPreferredSize(Vec2s(100,30));
+		TheLabel->setPreferredSize(Vec2f(100,30));
 	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
 	ColorUIBackgroundPtr tempBackground;
 	tempBackground = ColorUIBackground::create();

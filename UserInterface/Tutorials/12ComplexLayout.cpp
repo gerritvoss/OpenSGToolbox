@@ -48,7 +48,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // 12ComplexLayout Headers
 #include <OpenSG/UserInterface/OSGButton.h>
@@ -212,65 +212,65 @@ int main(int argc, char **argv)
 
 
     beginEditCP(ExampleLabel1, Button::PreferredSizeFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
-        ExampleLabel1->setPreferredSize(Vec2s(800, 50));
+        ExampleLabel1->setPreferredSize(Vec2f(800, 50));
         ExampleLabel1->setBackground(ExampleLabel1CompoundBackground);
         ExampleLabel1->setBorder(ExampleLabel1Border);
     endEditCP(ExampleLabel1, Button::PreferredSizeFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
 
     beginEditCP(ExampleButton1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
-        ExampleButton1->setPreferredSize(Vec2s(800, 50));
-        ExampleButton1->setMaxSize(Vec2s(50, 50));
+        ExampleButton1->setPreferredSize(Vec2f(800, 50));
+        ExampleButton1->setMaxSize(Vec2f(50, 50));
         ExampleButton1->setText("Resize the Window to Show Diificulties with Using Just One Layout");
     endEditCP(ExampleButton1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
     beginEditCP(ExampleButton2, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
-        ExampleButton2->setPreferredSize(Vec2s(50, 50));
-        ExampleButton2->setMaxSize(Vec2s(50, 50));
+        ExampleButton2->setPreferredSize(Vec2f(50, 50));
+        ExampleButton2->setMaxSize(Vec2f(50, 50));
     endEditCP(ExampleButton2, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
     
     beginEditCP(ExampleButton3, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
-        ExampleButton3->setPreferredSize(Vec2s(50, 50));
-        ExampleButton3->setMaxSize(Vec2s(50, 50));
+        ExampleButton3->setPreferredSize(Vec2f(50, 50));
+        ExampleButton3->setMaxSize(Vec2f(50, 50));
     endEditCP(ExampleButton3, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
     beginEditCP(ExampleButton4, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
-        ExampleButton4->setPreferredSize(Vec2s(100, 50));
-        ExampleButton4->setMaxSize(Vec2s(100, 50));
+        ExampleButton4->setPreferredSize(Vec2f(100, 50));
+        ExampleButton4->setMaxSize(Vec2f(100, 50));
     endEditCP(ExampleButton4, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
     beginEditCP(ExampleButton5, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
-        ExampleButton5->setPreferredSize(Vec2s(100, 50));
-        ExampleButton5->setMaxSize(Vec2s(100, 50));
+        ExampleButton5->setPreferredSize(Vec2f(100, 50));
+        ExampleButton5->setMaxSize(Vec2f(100, 50));
     endEditCP(ExampleButton5, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
     beginEditCP(ExampleButton6, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
-        ExampleButton6->setPreferredSize(Vec2s(100, 50));
-        ExampleButton6->setMaxSize(Vec2s(100, 50));
+        ExampleButton6->setPreferredSize(Vec2f(100, 50));
+        ExampleButton6->setMaxSize(Vec2f(100, 50));
     endEditCP(ExampleButton6, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
     beginEditCP(ExampleButton7, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
-        ExampleButton7->setPreferredSize(Vec2s(100, 50));
-        ExampleButton7->setMaxSize(Vec2s(100, 50));
+        ExampleButton7->setPreferredSize(Vec2f(100, 50));
+        ExampleButton7->setMaxSize(Vec2f(100, 50));
     endEditCP(ExampleButton7, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
     beginEditCP(ExampleButton8, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
-        ExampleButton8->setPreferredSize(Vec2s(100, 50));
-        ExampleButton8->setMaxSize(Vec2s(100, 50));
+        ExampleButton8->setPreferredSize(Vec2f(100, 50));
+        ExampleButton8->setMaxSize(Vec2f(100, 50));
     endEditCP(ExampleButton8, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
     beginEditCP(ExampleButton9, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
-        ExampleButton9->setPreferredSize(Vec2s(100, 50));
-        ExampleButton9->setMaxSize(Vec2s(100, 50));
+        ExampleButton9->setPreferredSize(Vec2f(100, 50));
+        ExampleButton9->setMaxSize(Vec2f(100, 50));
     endEditCP(ExampleButton9, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
     beginEditCP(ExampleButton10, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
-        ExampleButton10->setPreferredSize(Vec2s(100, 50));
-        ExampleButton10->setMaxSize(Vec2s(100, 50));
+        ExampleButton10->setPreferredSize(Vec2f(100, 50));
+        ExampleButton10->setMaxSize(Vec2f(100, 50));
     endEditCP(ExampleButton10, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
     beginEditCP(ExampleButton11, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
-        ExampleButton11->setPreferredSize(Vec2s(100, 50));
-        ExampleButton11->setMaxSize(Vec2s(100, 50));
+        ExampleButton11->setPreferredSize(Vec2f(100, 50));
+        ExampleButton11->setMaxSize(Vec2f(100, 50));
     endEditCP(ExampleButton11, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
     /******************************************************
@@ -333,7 +333,7 @@ int main(int argc, char **argv)
     
     // Edit Panel1, Panel2
     beginEditCP(ExamplePanel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        ExamplePanel1->setPreferredSize(Vec2s(400, 400));
+        ExamplePanel1->setPreferredSize(Vec2f(400, 400));
         ExamplePanel1->getChildren().addValue(ExampleButton2);
         ExamplePanel1->getChildren().addValue(ExamplePanel3);
         ExamplePanel1->getChildren().addValue(ExamplePanel4);
@@ -343,7 +343,7 @@ int main(int argc, char **argv)
     endEditCP(ExamplePanel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
     beginEditCP(ExamplePanel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        ExamplePanel2->setPreferredSize(Vec2s(400, 400));
+        ExamplePanel2->setPreferredSize(Vec2f(400, 400));
         ExamplePanel2->getChildren().addValue(ExampleButton3);
         ExamplePanel2->getChildren().addValue(ExamplePanel5);
         ExamplePanel2->getChildren().addValue(ExamplePanel6);
@@ -356,7 +356,7 @@ int main(int argc, char **argv)
         ExamplePanel3->getChildren().addValue(ExampleButton4);
         ExamplePanel3->getChildren().addValue(ExampleButton5);
         ExamplePanel3->setLayout(ExamplePanel3Layout);
-        ExamplePanel3->setPreferredSize(Vec2s(125, 130));
+        ExamplePanel3->setPreferredSize(Vec2f(125, 130));
         ExamplePanel3->setBackgrounds(ExampleSmallPanelBackground);
     endEditCP(ExamplePanel3, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundsFieldMask);
     
@@ -364,7 +364,7 @@ int main(int argc, char **argv)
         ExamplePanel4->getChildren().addValue(ExampleButton6);
         ExamplePanel4->getChildren().addValue(ExampleButton7);
         ExamplePanel4->setLayout(ExamplePanel4Layout);
-        ExamplePanel4->setPreferredSize(Vec2s(125, 130));
+        ExamplePanel4->setPreferredSize(Vec2f(125, 130));
         ExamplePanel4->setBackgrounds(ExampleSmallPanelBackground);
     endEditCP(ExamplePanel4, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundsFieldMask);
         
@@ -372,7 +372,7 @@ int main(int argc, char **argv)
         ExamplePanel5->getChildren().addValue(ExampleButton8);
         ExamplePanel5->getChildren().addValue(ExampleButton9);
         ExamplePanel5->setLayout(ExamplePanel5Layout);
-        ExamplePanel5->setPreferredSize(Vec2s(125, 130));
+        ExamplePanel5->setPreferredSize(Vec2f(125, 130));
         ExamplePanel5->setBackgrounds(ExampleSmallPanelBackground);
     endEditCP(ExamplePanel5, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundsFieldMask);
         
@@ -380,7 +380,7 @@ int main(int argc, char **argv)
         ExamplePanel6->getChildren().addValue(ExampleButton10);
         ExamplePanel6->getChildren().addValue(ExampleButton11);
         ExamplePanel6->setLayout(ExamplePanel6Layout);
-        ExamplePanel6->setPreferredSize(Vec2s(125, 130));
+        ExamplePanel6->setPreferredSize(Vec2f(125, 130));
         ExamplePanel6->setBackgrounds(ExampleSmallPanelBackground);
     endEditCP(ExamplePanel6, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundsFieldMask);
 
@@ -439,8 +439,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(1100,900),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(1100,900),
                                         "OpenSG 12ComplexLayout Window");
 
     //Main Event Loop
@@ -463,7 +463,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

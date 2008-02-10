@@ -97,7 +97,7 @@ ToggleButton::~ToggleButton(void)
 
 void ToggleButton::drawInternal(const GraphicsPtr TheGraphics) const
 {
-   Pnt2s TopLeft, BottomRight;
+   Pnt2f TopLeft, BottomRight;
    getInsideBorderBounds(TopLeft, BottomRight);
    
    //If I have a DrawObject then Draw it
@@ -105,8 +105,8 @@ void ToggleButton::drawInternal(const GraphicsPtr TheGraphics) const
    if(DrawnDrawObject != NullFC)
    {
       //Calculate Alignment
-      Pnt2s AlignedPosition;
-      Pnt2s DrawObjectTopLeft, DrawObjectBottomRight;
+      Pnt2f AlignedPosition;
+      Pnt2f DrawObjectTopLeft, DrawObjectBottomRight;
       DrawnDrawObject->getBounds(DrawObjectTopLeft, DrawObjectBottomRight);
 
       AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (DrawObjectBottomRight - DrawObjectTopLeft),getVerticalAlignment(), getHorizontalAlignment());
@@ -130,8 +130,8 @@ void ToggleButton::drawInternal(const GraphicsPtr TheGraphics) const
    if(getText() != "" && getFont() != NullFC)
    {
       //Calculate Alignment
-      Pnt2s AlignedPosition;
-      Pnt2s TextTopLeft, TextBottomRight;
+      Pnt2f AlignedPosition;
+      Pnt2f TextTopLeft, TextBottomRight;
       getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
 
       AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),getVerticalAlignment(), getHorizontalAlignment());

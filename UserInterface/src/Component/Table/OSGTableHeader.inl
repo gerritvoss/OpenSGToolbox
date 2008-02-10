@@ -60,13 +60,13 @@ TableColumnPtr TableHeader::getDraggedColumn(void) const
 }
 
 inline
-Int32 TableHeader::getDraggedDistance(void) const
+Real32 TableHeader::getDraggedDistance(void) const
 {
     return _DraggedDistance;
 }
 
 inline
-void TableHeader::getHeaderBounds(const UInt32 ColumnIndex, Pnt2s& TopLeft, Pnt2s& BottomRight) const
+void TableHeader::getHeaderBounds(const UInt32 ColumnIndex, Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
     getColumnHeaders()[ColumnIndex]->getBounds(TopLeft, BottomRight);
 }
@@ -90,7 +90,7 @@ void TableHeader::setDraggedColumn(TableColumnPtr aColumn)
 }
 
 inline
-void TableHeader::setDraggedDistance(const Int32& distance)
+void TableHeader::setDraggedDistance(const Real32& distance)
 {
     _DraggedDistance = distance;
 }

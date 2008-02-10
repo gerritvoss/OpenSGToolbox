@@ -82,6 +82,9 @@ const OSG::BitVector  DefaultTreeComponentGeneratorBase::ExpandedNonLeafDrawObje
 const OSG::BitVector  DefaultTreeComponentGeneratorBase::NodeLabelPrototypeFieldMask = 
     (TypeTraits<BitVector>::One << DefaultTreeComponentGeneratorBase::NodeLabelPrototypeFieldId);
 
+const OSG::BitVector  DefaultTreeComponentGeneratorBase::NodePanelPrototypeFieldMask = 
+    (TypeTraits<BitVector>::One << DefaultTreeComponentGeneratorBase::NodePanelPrototypeFieldId);
+
 const OSG::BitVector  DefaultTreeComponentGeneratorBase::SelectedBackgroundFieldMask = 
     (TypeTraits<BitVector>::One << DefaultTreeComponentGeneratorBase::SelectedBackgroundFieldId);
 
@@ -120,6 +123,9 @@ const OSG::BitVector DefaultTreeComponentGeneratorBase::MTInfluenceMask =
     
 */
 /*! \var LabelPtr        DefaultTreeComponentGeneratorBase::_sfNodeLabelPrototype
+    
+*/
+/*! \var PanelPtr        DefaultTreeComponentGeneratorBase::_sfNodePanelPrototype
     
 */
 /*! \var UIBackgroundPtr DefaultTreeComponentGeneratorBase::_sfSelectedBackground
@@ -172,6 +178,11 @@ FieldDescription *DefaultTreeComponentGeneratorBase::_desc[] =
                      NodeLabelPrototypeFieldId, NodeLabelPrototypeFieldMask,
                      false,
                      (FieldAccessMethod) &DefaultTreeComponentGeneratorBase::getSFNodeLabelPrototype),
+    new FieldDescription(SFPanelPtr::getClassType(), 
+                     "NodePanelPrototype", 
+                     NodePanelPrototypeFieldId, NodePanelPrototypeFieldMask,
+                     false,
+                     (FieldAccessMethod) &DefaultTreeComponentGeneratorBase::getSFNodePanelPrototype),
     new FieldDescription(SFUIBackgroundPtr::getClassType(), 
                      "SelectedBackground", 
                      SelectedBackgroundFieldId, SelectedBackgroundFieldMask,
@@ -278,6 +289,7 @@ DefaultTreeComponentGeneratorBase::DefaultTreeComponentGeneratorBase(void) :
     _sfNonLeafDrawObjectPrototype(UIDrawObjectCanvasPtr(NullFC)), 
     _sfExpandedNonLeafDrawObjectPrototype(UIDrawObjectCanvasPtr(NullFC)), 
     _sfNodeLabelPrototype     (LabelPtr(NullFC)), 
+    _sfNodePanelPrototype     (PanelPtr(NullFC)), 
     _sfSelectedBackground     (UIBackgroundPtr(NullFC)), 
     _sfNonSelectedBackground  (UIBackgroundPtr(NullFC)), 
     _sfSelectedBorder         (BorderPtr(NullFC)), 
@@ -298,6 +310,7 @@ DefaultTreeComponentGeneratorBase::DefaultTreeComponentGeneratorBase(const Defau
     _sfNonLeafDrawObjectPrototype(source._sfNonLeafDrawObjectPrototype), 
     _sfExpandedNonLeafDrawObjectPrototype(source._sfExpandedNonLeafDrawObjectPrototype), 
     _sfNodeLabelPrototype     (source._sfNodeLabelPrototype     ), 
+    _sfNodePanelPrototype     (source._sfNodePanelPrototype     ), 
     _sfSelectedBackground     (source._sfSelectedBackground     ), 
     _sfNonSelectedBackground  (source._sfNonSelectedBackground  ), 
     _sfSelectedBorder         (source._sfSelectedBorder         ), 
@@ -347,6 +360,11 @@ UInt32 DefaultTreeComponentGeneratorBase::getBinSize(const BitVector &whichField
     if(FieldBits::NoField != (NodeLabelPrototypeFieldMask & whichField))
     {
         returnValue += _sfNodeLabelPrototype.getBinSize();
+    }
+
+    if(FieldBits::NoField != (NodePanelPrototypeFieldMask & whichField))
+    {
+        returnValue += _sfNodePanelPrototype.getBinSize();
     }
 
     if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
@@ -413,6 +431,11 @@ void DefaultTreeComponentGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
         _sfNodeLabelPrototype.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (NodePanelPrototypeFieldMask & whichField))
+    {
+        _sfNodePanelPrototype.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
     {
         _sfSelectedBackground.copyToBin(pMem);
@@ -476,6 +499,11 @@ void DefaultTreeComponentGeneratorBase::copyFromBin(      BinaryDataHandler &pMe
         _sfNodeLabelPrototype.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (NodePanelPrototypeFieldMask & whichField))
+    {
+        _sfNodePanelPrototype.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
     {
         _sfSelectedBackground.copyFromBin(pMem);
@@ -529,6 +557,9 @@ void DefaultTreeComponentGeneratorBase::executeSyncImpl(      DefaultTreeCompone
     if(FieldBits::NoField != (NodeLabelPrototypeFieldMask & whichField))
         _sfNodeLabelPrototype.syncWith(pOther->_sfNodeLabelPrototype);
 
+    if(FieldBits::NoField != (NodePanelPrototypeFieldMask & whichField))
+        _sfNodePanelPrototype.syncWith(pOther->_sfNodePanelPrototype);
+
     if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
         _sfSelectedBackground.syncWith(pOther->_sfSelectedBackground);
 
@@ -571,6 +602,9 @@ void DefaultTreeComponentGeneratorBase::executeSyncImpl(      DefaultTreeCompone
 
     if(FieldBits::NoField != (NodeLabelPrototypeFieldMask & whichField))
         _sfNodeLabelPrototype.syncWith(pOther->_sfNodeLabelPrototype);
+
+    if(FieldBits::NoField != (NodePanelPrototypeFieldMask & whichField))
+        _sfNodePanelPrototype.syncWith(pOther->_sfNodePanelPrototype);
 
     if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
         _sfSelectedBackground.syncWith(pOther->_sfSelectedBackground);

@@ -57,7 +57,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 #include "OSGPolygonUIDrawObjectBase.h"
 #include "OSGPolygonUIDrawObject.h"
 
@@ -80,7 +80,7 @@ const OSG::BitVector PolygonUIDrawObjectBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Pnt2s           PolygonUIDrawObjectBase::_mfVerticies
+/*! \var Pnt2f           PolygonUIDrawObjectBase::_mfVerticies
     
 */
 /*! \var Color4f         PolygonUIDrawObjectBase::_sfColor
@@ -94,7 +94,7 @@ const OSG::BitVector PolygonUIDrawObjectBase::MTInfluenceMask =
 
 FieldDescription *PolygonUIDrawObjectBase::_desc[] = 
 {
-    new FieldDescription(MFPnt2s::getClassType(), 
+    new FieldDescription(MFPnt2f::getClassType(), 
                      "Verticies", 
                      VerticiesFieldId, VerticiesFieldMask,
                      false,

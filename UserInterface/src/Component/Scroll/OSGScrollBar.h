@@ -134,10 +134,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    Pnt2s calculateScrollBarPosition(void) const;
-    Vec2s calculateScrollBarSize(void) const;
+    Pnt2f calculateScrollBarPosition(void) const;
+    Vec2f calculateScrollBarSize(void) const;
 
-    Int32 calculateValueFromPosition(const Pnt2s Position) const;
+    Int32 calculateValueFromPosition(const Pnt2f Position) const;
 
     // Variables should all be in ScrollBarBase.
 
@@ -235,12 +235,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
         
 		virtual void mouseDragged(const MouseEvent& e);
 
-        void setInitialMousePosition(const Pnt2s& Pos);
-        void setInitialScrollBarPosition(const Pnt2s& Pos);
+        void setInitialMousePosition(const Pnt2f& Pos);
+        void setInitialScrollBarPosition(const Pnt2f& Pos);
 	protected :
 		ScrollBarPtr _ScrollBar;
-        Pnt2s _InitialMousePosition;
-        Pnt2s _InitialScrollBarPosition;
+        Pnt2f _InitialMousePosition;
+        Pnt2f _InitialScrollBarPosition;
 	};
 
 	friend class ScrollBarDraggedListener;
@@ -261,7 +261,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 
 	ScrollFieldListener _ScrollFieldListener;
 
-    void setMajorAxisScrollBarPosition(const Pnt2s& Pos);
+    void setMajorAxisScrollBarPosition(const Pnt2f& Pos);
     
     /*==========================  PRIVATE  ================================*/
   private:

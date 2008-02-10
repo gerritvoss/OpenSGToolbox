@@ -55,13 +55,13 @@ InternalWindow::TitlebarDraggedListener::TitlebarDraggedListener(InternalWindowP
 }
 
 inline
-void InternalWindow::TitlebarDraggedListener::setWindowStartPosition(const Pnt2s& Pos)
+void InternalWindow::TitlebarDraggedListener::setWindowStartPosition(const Pnt2f& Pos)
 {
 	_WindowStartPosition = Pos;
 }
 
 inline
-void InternalWindow::TitlebarDraggedListener::setMouseStartPosition(const Pnt2s& Pos)
+void InternalWindow::TitlebarDraggedListener::setMouseStartPosition(const Pnt2f& Pos)
 {
 	_MouseStartPosition = Pos;
 }
@@ -73,19 +73,19 @@ InternalWindow::BorderDraggedListener::BorderDraggedListener(InternalWindowPtr T
 }
 
 inline
-void InternalWindow::BorderDraggedListener::setWindowStartPosition(const Pnt2s& Pos)
+void InternalWindow::BorderDraggedListener::setWindowStartPosition(const Pnt2f& Pos)
 {
 	_WindowStartPosition = Pos;
 }
 
 inline
-void InternalWindow::BorderDraggedListener::setWindowStartSize(const Vec2s& Size)
+void InternalWindow::BorderDraggedListener::setWindowStartSize(const Vec2f& Size)
 {
 	_WindowStartSize = Size;
 }
 
 inline
-void InternalWindow::BorderDraggedListener::setMouseStartPosition(const Pnt2s& Pos)
+void InternalWindow::BorderDraggedListener::setMouseStartPosition(const Pnt2f& Pos)
 {
 	_MouseStartPosition = Pos;
 }

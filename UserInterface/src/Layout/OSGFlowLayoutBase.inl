@@ -49,7 +49,7 @@
 \*****************************************************************************/
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -105,14 +105,14 @@ SFUInt32 *FlowLayoutBase::getSFAlignment(void)
 
 //! Get the FlowLayout::_sfHorizontalGap field.
 inline
-SFInt32 *FlowLayoutBase::getSFHorizontalGap(void)
+SFReal32 *FlowLayoutBase::getSFHorizontalGap(void)
 {
     return &_sfHorizontalGap;
 }
 
 //! Get the FlowLayout::_sfVerticalGap field.
 inline
-SFInt32 *FlowLayoutBase::getSFVerticalGap(void)
+SFReal32 *FlowLayoutBase::getSFVerticalGap(void)
 {
     return &_sfVerticalGap;
 }
@@ -162,42 +162,42 @@ void FlowLayoutBase::setAlignment(const UInt32 &value)
 
 //! Get the value of the FlowLayout::_sfHorizontalGap field.
 inline
-Int32 &FlowLayoutBase::getHorizontalGap(void)
+Real32 &FlowLayoutBase::getHorizontalGap(void)
 {
     return _sfHorizontalGap.getValue();
 }
 
 //! Get the value of the FlowLayout::_sfHorizontalGap field.
 inline
-const Int32 &FlowLayoutBase::getHorizontalGap(void) const
+const Real32 &FlowLayoutBase::getHorizontalGap(void) const
 {
     return _sfHorizontalGap.getValue();
 }
 
 //! Set the value of the FlowLayout::_sfHorizontalGap field.
 inline
-void FlowLayoutBase::setHorizontalGap(const Int32 &value)
+void FlowLayoutBase::setHorizontalGap(const Real32 &value)
 {
     _sfHorizontalGap.setValue(value);
 }
 
 //! Get the value of the FlowLayout::_sfVerticalGap field.
 inline
-Int32 &FlowLayoutBase::getVerticalGap(void)
+Real32 &FlowLayoutBase::getVerticalGap(void)
 {
     return _sfVerticalGap.getValue();
 }
 
 //! Get the value of the FlowLayout::_sfVerticalGap field.
 inline
-const Int32 &FlowLayoutBase::getVerticalGap(void) const
+const Real32 &FlowLayoutBase::getVerticalGap(void) const
 {
     return _sfVerticalGap.getValue();
 }
 
 //! Set the value of the FlowLayout::_sfVerticalGap field.
 inline
-void FlowLayoutBase::setVerticalGap(const Int32 &value)
+void FlowLayoutBase::setVerticalGap(const Real32 &value)
 {
     _sfVerticalGap.setValue(value);
 }

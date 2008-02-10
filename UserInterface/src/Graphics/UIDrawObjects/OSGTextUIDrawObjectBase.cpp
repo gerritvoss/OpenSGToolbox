@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -86,7 +86,7 @@ const OSG::BitVector TextUIDrawObjectBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Pnt2s           TextUIDrawObjectBase::_sfPosition
+/*! \var Pnt2f           TextUIDrawObjectBase::_sfPosition
     
 */
 /*! \var std::string     TextUIDrawObjectBase::_sfText
@@ -106,7 +106,7 @@ const OSG::BitVector TextUIDrawObjectBase::MTInfluenceMask =
 
 FieldDescription *TextUIDrawObjectBase::_desc[] = 
 {
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "Position", 
                      PositionFieldId, PositionFieldMask,
                      false,
@@ -206,7 +206,7 @@ void TextUIDrawObjectBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 TextUIDrawObjectBase::TextUIDrawObjectBase(void) :
-    _sfPosition               (Pnt2s(0,0)), 
+    _sfPosition               (Pnt2f(0,0)), 
     _sfText                   (), 
     _sfFont                   (), 
     _sfColor                  (Color4f(1.0,1.0,1.0,1.0)), 

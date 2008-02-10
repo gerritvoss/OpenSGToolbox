@@ -82,15 +82,15 @@ void LabelMenuItem::initMethod (void)
 
 void LabelMenuItem::drawInternal(const GraphicsPtr TheGraphics) const
 {
-   Pnt2s TopLeft, BottomRight;
+   Pnt2f TopLeft, BottomRight;
    getInsideBorderBounds(TopLeft, BottomRight);
 
    //If I have Text Then Draw it
    if(getText() != "" && getFont() != NullFC)
    {
       //Calculate Alignment
-      Pnt2s AlignedPosition;
-      Pnt2s TextTopLeft, TextBottomRight;
+      Pnt2f AlignedPosition;
+      Pnt2f TextTopLeft, TextBottomRight;
       getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
 
       AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),0.5, 0.0);
@@ -107,9 +107,9 @@ void LabelMenuItem::drawInternal(const GraphicsPtr TheGraphics) const
       //Draw the Accelerator Text
       if(getAcceleratorText().compare("") != 0)
       {
-          Pnt2s AcceleratorTextTopLeft, AcceleratorTextBottomRight;
+          Pnt2f AcceleratorTextTopLeft, AcceleratorTextBottomRight;
           getFont()->getBounds(getAcceleratorText(), AcceleratorTextTopLeft, AcceleratorTextBottomRight);
-          Pnt2s AcceleratorAlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (AcceleratorTextBottomRight - AcceleratorTextTopLeft),0.5, 1.0);
+          Pnt2f AcceleratorAlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (AcceleratorTextBottomRight - AcceleratorTextTopLeft),0.5, 1.0);
 
           TheGraphics->drawText(AcceleratorAlignedPosition, getAcceleratorText(), getFont(), getDrawnTextColor(), getOpacity());
       }
@@ -310,14 +310,14 @@ void LabelMenuItem::changed(BitVector whichField, UInt32 origin)
         AcceleratorText += KeyEvent::getStringFromKey(static_cast<KeyEvent::Key>(getAcceleratorKey()), KeyEvent::KEY_MODIFIER_CAPS_LOCK);
 
         //Set my preferred size
-        Pnt2s TextTopLeft, TextBottomRight;
+        Pnt2f TextTopLeft, TextBottomRight;
         getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
-        Pnt2s AcceleratorTextTopLeft, AcceleratorTextBottomRight;
+        Pnt2f AcceleratorTextTopLeft, AcceleratorTextBottomRight;
         getFont()->getBounds(AcceleratorText, AcceleratorTextTopLeft, AcceleratorTextBottomRight);
         
         beginEditCP(LabelMenuItemPtr(this), AcceleratorTextFieldMask | PreferredSizeFieldMask);
             setAcceleratorText(AcceleratorText);
-            setPreferredSize(Vec2s((TextBottomRight.x() - TextTopLeft.x()) + (AcceleratorTextBottomRight.x() - AcceleratorTextTopLeft.x()) + 50, getPreferredSize().y()));
+            setPreferredSize(Vec2f((TextBottomRight.x() - TextTopLeft.x()) + (AcceleratorTextBottomRight.x() - AcceleratorTextTopLeft.x()) + 50, getPreferredSize().y()));
         endEditCP(LabelMenuItemPtr(this), AcceleratorTextFieldMask | PreferredSizeFieldMask);
     }
     if(whichField & TextFieldMask ||

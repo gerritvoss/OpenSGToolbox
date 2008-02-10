@@ -237,14 +237,14 @@ void Win32WindowEventProducer::setCursor(void)
 	SetCursor(LoadCursor(NULL, c));
 }
 
-Pnt2s Win32WindowEventProducer::getMousePosition(void) const
+Pnt2f Win32WindowEventProducer::getMousePosition(void) const
 {
     DWORD MousePos = GetMessagePos();
 	LPPOINT ClientPoint = new POINT;
 	ClientPoint->x = LOWORD(MousePos);
 	ClientPoint->y = HIWORD(MousePos);
 
-    Pnt2s Result(0,0);
+    Pnt2f Result(0,0);
     if(ScreenToClient(WIN32Window::Ptr::dcast(getWindow())->getHwnd(), ClientPoint))
 	{
         Result.setValues(ClientPoint->x, ClientPoint->y);
@@ -649,8 +649,8 @@ WindowPtr Win32WindowEventProducer::createWindow(void)
     return WIN32Window::create();
 }
 
-void Win32WindowEventProducer::openWindow(const Pnt2s& ScreenPosition,
-                    const Vec2s& Size,
+void Win32WindowEventProducer::openWindow(const Pnt2f& ScreenPosition,
+                    const Vec2f& Size,
                     const std::string& WindowName)
 {
     if(_WindowEventLoopThread == NULL)
@@ -690,27 +690,27 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd, UINT uMsg,
     switch(uMsg)
     {       
         case WM_LBUTTONDOWN:
-            produceMousePressed(MouseEvent::BUTTON1, Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+            produceMousePressed(MouseEvent::BUTTON1, Pnt2f(LOWORD(lParam), HIWORD(lParam)));
             SetCapture(hwnd);
             break;
         case WM_MBUTTONDOWN:
-            produceMousePressed(MouseEvent::BUTTON2, Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+            produceMousePressed(MouseEvent::BUTTON2, Pnt2f(LOWORD(lParam), HIWORD(lParam)));
             SetCapture(hwnd);
             break;
         case WM_RBUTTONDOWN:
-            produceMousePressed(MouseEvent::BUTTON3, Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+            produceMousePressed(MouseEvent::BUTTON3, Pnt2f(LOWORD(lParam), HIWORD(lParam)));
             SetCapture(hwnd);
             break;   
         case WM_LBUTTONUP:
-            produceMouseReleased(MouseEvent::BUTTON1, Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+            produceMouseReleased(MouseEvent::BUTTON1, Pnt2f(LOWORD(lParam), HIWORD(lParam)));
             ReleaseCapture();
             break;              
         case WM_MBUTTONUP:
-            produceMouseReleased(MouseEvent::BUTTON2, Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+            produceMouseReleased(MouseEvent::BUTTON2, Pnt2f(LOWORD(lParam), HIWORD(lParam)));
             ReleaseCapture();
             break;
         case WM_RBUTTONUP:
-            produceMouseReleased(MouseEvent::BUTTON3, Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+            produceMouseReleased(MouseEvent::BUTTON3, Pnt2f(LOWORD(lParam), HIWORD(lParam)));
             ReleaseCapture();
             break;
         case WM_MOUSEWHEEL:
@@ -722,7 +722,7 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd, UINT uMsg,
 				ClientPoint->y = HIWORD(lParam);
 				if(ScreenToClient(hwnd, ClientPoint))
 				{
-					produceMouseWheelMoved(static_cast<short>(HIWORD(wParam))/WHEEL_DELTA, Pnt2s(ClientPoint->x,ClientPoint->y));
+					produceMouseWheelMoved(static_cast<short>(HIWORD(wParam))/WHEEL_DELTA, Pnt2f(ClientPoint->x,ClientPoint->y));
 				}
 				else
 				{
@@ -735,17 +735,17 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd, UINT uMsg,
             {
 			    if(wParam & MK_LBUTTON)
 			    {
-				    produceMouseDragged(MouseEvent::BUTTON1,Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+				    produceMouseDragged(MouseEvent::BUTTON1,Pnt2f(LOWORD(lParam), HIWORD(lParam)));
 			    }
 			    if(wParam & MK_MBUTTON)
 			    {
-				    produceMouseDragged(MouseEvent::BUTTON2,Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+				    produceMouseDragged(MouseEvent::BUTTON2,Pnt2f(LOWORD(lParam), HIWORD(lParam)));
 			    }
 			    if(wParam & MK_RBUTTON)
 			    {
-				    produceMouseDragged(MouseEvent::BUTTON3,Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+				    produceMouseDragged(MouseEvent::BUTTON3,Pnt2f(LOWORD(lParam), HIWORD(lParam)));
 			    }
-			    produceMouseMoved(Pnt2s(LOWORD(lParam), HIWORD(lParam)));
+			    produceMouseMoved(Pnt2f(LOWORD(lParam), HIWORD(lParam)));
                 
                 /*POINT point;
                 RECT rect;
@@ -788,7 +788,7 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd, UINT uMsg,
                                     
         case WM_SIZE:
             getWindow()->resize( LOWORD(lParam), HIWORD( lParam ) );
-            _ReshapeCallbackFunc(Vec2s(LOWORD(lParam), HIWORD( lParam )));
+            _ReshapeCallbackFunc(Vec2f(LOWORD(lParam), HIWORD( lParam )));
             break;
 
         case WM_CLOSE:
@@ -857,18 +857,18 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd, UINT uMsg,
     return 0;
 }
 //Set the Window Position
-void Win32WindowEventProducer::setPosition(Pnt2s Pos)
+void Win32WindowEventProducer::setPosition(Pnt2f Pos)
 {
     SetWindowPos(WIN32Window::Ptr::dcast(getWindow())->getHwnd(),HWND_NOTOPMOST, Pos.x(), Pos.y(), 0,0,
          SWP_NOSIZE | SWP_NOZORDER);
 }
 
 //Set the Window Position
-Pnt2s Win32WindowEventProducer::getPosition(void) const
+Pnt2f Win32WindowEventProducer::getPosition(void) const
 {
     RECT r;
     GetWindowRect(WIN32Window::Ptr::dcast(getWindow())->getHwnd(), &r);
-    return Pnt2s(r.left, r.top);
+    return Pnt2f(r.left, r.top);
 }
 
 //Set the Window size
@@ -879,11 +879,11 @@ void Win32WindowEventProducer::setSize(Vec2us Size)
 }
 
 //Get the Window size
-Vec2s Win32WindowEventProducer::getSize(void) const
+Vec2f Win32WindowEventProducer::getSize(void) const
 {
     RECT r;
     GetWindowRect(WIN32Window::Ptr::dcast(getWindow())->getHwnd(), &r);
-    return Vec2s(r.right-r.left, r.bottom-r.top);
+    return Vec2f(r.right-r.left, r.bottom-r.top);
 }
 
 //Focused
@@ -1042,8 +1042,8 @@ Win32WindowEventProducer::~Win32WindowEventProducer(void)
 /*----------------------------- class specific ----------------------------*/
 
 Win32WindowEventProducer::WindowEventLoopThreadArguments::WindowEventLoopThreadArguments(
-                       const Pnt2s& ScreenPosition,
-                       const Vec2s& Size,
+                       const Pnt2f& ScreenPosition,
+                       const Vec2f& Size,
                        const std::string& WindowName,
                        WIN32WindowPtr TheWindow,
                        Win32WindowEventProducerPtr TheEventProducer) :

@@ -14,7 +14,7 @@
 UI Line Border.
 	<Field
 		name="Width"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1"
@@ -32,7 +32,7 @@ UI Line Border.
 	</Field>
 	<Field
 		name="CornerRadius"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		defaultValue="3"

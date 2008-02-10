@@ -89,7 +89,7 @@ void TextArea::drawInternal(const GraphicsPtr TheGraphics) const
 		if(_LineContents[i]._StartPosition >= _TextSelectionEnd || _LineContents[i]._EndPosition <= _TextSelectionStart || _TextSelectionStart >= _TextSelectionEnd)
 		{
 
-			TheGraphics->drawText(Pnt2s(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset), _LineContents[i]._Contents, getFont(), TextColor, getOpacity());
+			TheGraphics->drawText(Pnt2f(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset), _LineContents[i]._Contents, getFont(), TextColor, getOpacity());
 		}
 
 
@@ -113,14 +113,14 @@ void TextArea::drawInternal(const GraphicsPtr TheGraphics) const
 				}
 			}
 			std::string drawnText = _LineContents[i]._Contents;
-			Pnt2s offset = Pnt2s(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset);
+			Pnt2f offset = Pnt2f(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset);
 			TheGraphics->drawText(offset,drawnText.substr(0, StartSelection), getFont(), TextColor, getOpacity());//draw before selection text
-			TheGraphics->drawRect(offset+Vec2s(getFont()->getBounds(drawnText.substr(0, StartSelection)).x(), 0), //draw selection rect
-				getFont()->getBounds(drawnText.substr(0, EndSelection))+Vec2s(offset),
+			TheGraphics->drawRect(offset+Vec2f(getFont()->getBounds(drawnText.substr(0, StartSelection)).x(), 0), //draw selection rect
+				getFont()->getBounds(drawnText.substr(0, EndSelection))+Vec2f(offset),
 				getSelectionBoxColor(), getOpacity());
-			TheGraphics->drawText(offset+Vec2s(getFont()->getBounds(drawnText.substr(0, StartSelection)).x(), 0), //draw selected text
+			TheGraphics->drawText(offset+Vec2f(getFont()->getBounds(drawnText.substr(0, StartSelection)).x(), 0), //draw selected text
 				drawnText.substr(StartSelection, EndSelection-StartSelection), getFont(), getSelectionTextColor(), getOpacity());
-			TheGraphics->drawText(offset+Vec2s(getFont()->getBounds(drawnText.substr(0, EndSelection)).x(), 0), //draw after selection text
+			TheGraphics->drawText(offset+Vec2f(getFont()->getBounds(drawnText.substr(0, EndSelection)).x(), 0), //draw after selection text
 				drawnText.substr(EndSelection, drawnText.size()-EndSelection), getFont(), TextColor, getOpacity());
 		}
 
@@ -129,10 +129,10 @@ void TextArea::drawInternal(const GraphicsPtr TheGraphics) const
 			 _CurrentCaretBlinkElps <= 0.5*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate() &&
 			 getFocused())
 		{
-			Pnt2s TempTopLeft, TempBottomRight;
+			Pnt2f TempTopLeft, TempBottomRight;
 			getFont()->getBounds(_LineContents[i]._Contents.substr(0, getCaretPosition()-_LineContents[i]._StartPosition), TempTopLeft, TempBottomRight);
-			TheGraphics->drawLine(Pnt2s(_LineContents[i]._LeftHorizontalOffset+TempBottomRight.x(), _LineContents[i]._VerticalOffset),
-				Pnt2s(_LineContents[i]._LeftHorizontalOffset+TempBottomRight.x(), _LineContents[i]._VerticalOffset+TempBottomRight.y()),
+			TheGraphics->drawLine(Pnt2f(_LineContents[i]._LeftHorizontalOffset+TempBottomRight.x(), _LineContents[i]._VerticalOffset),
+				Pnt2f(_LineContents[i]._LeftHorizontalOffset+TempBottomRight.x(), _LineContents[i]._VerticalOffset+TempBottomRight.y()),
 				.5, TextColor, getOpacity());
 		}
 	}
@@ -212,9 +212,9 @@ void TextArea::changed(BitVector whichField, UInt32 origin)
 	    {
 		    _LineContents.pop_back();
 	    }
-	    Pnt2s TopLeft, BottomRight, TempPos;
-	    Pnt2s TempTopLeft, TempBottomRight;
-	    Vec2s FullTextSize;
+	    Pnt2f TopLeft, BottomRight, TempPos;
+	    Pnt2f TempTopLeft, TempBottomRight;
+	    Vec2f FullTextSize;
 	    getInsideBorderBounds(TopLeft, BottomRight);
 	    std::string temptext;
 	    Int32 XPosition = 0;
@@ -327,7 +327,7 @@ void TextArea::changed(BitVector whichField, UInt32 origin)
 	    }
         
         //Update my PreferredSize based on text
-        Vec2s PreferredSize(getMinSize());
+        Vec2f PreferredSize(getMinSize());
 		getFont()->getBounds(_LineContents.back()._Contents, TempTopLeft, TempBottomRight);
         PreferredSize[1] = osgMax<UInt32>(getMinSize().y(), _LineContents.back()._VerticalOffset + TempBottomRight.y());
         if(getPreferredSize() != PreferredSize)
@@ -373,10 +373,10 @@ void TextArea::keyTyped(const KeyEvent& e)//broken
 		}
 		if(LineSelector > 0)
 		{
-			Pnt2s TempTopLeft, TempBottomRight;
+			Pnt2f TempTopLeft, TempBottomRight;
 			getFont()->getBounds(_LineContents[LineSelector]._Contents.substr(0, getCaretPosition()-_LineContents[LineSelector]._StartPosition),TempTopLeft, TempBottomRight);
 			beginEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
-				setCaretPosition(findTextPosition(Pnt2s(_LineContents[LineSelector]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[LineSelector-1]._VerticalOffset)));
+				setCaretPosition(findTextPosition(Pnt2f(_LineContents[LineSelector]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[LineSelector-1]._VerticalOffset)));
 			endEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
 		}
 		if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC 
@@ -411,10 +411,10 @@ void TextArea::keyTyped(const KeyEvent& e)//broken
 		}
 		if(LineSelector < _LineContents.size()-1)
 		{
-			Pnt2s TempTopLeft, TempBottomRight;
+			Pnt2f TempTopLeft, TempBottomRight;
 			getFont()->getBounds(_LineContents[LineSelector]._Contents.substr(0,getCaretPosition()-_LineContents[LineSelector]._StartPosition),TempTopLeft, TempBottomRight);
 			beginEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
-				setCaretPosition(findTextPosition(Pnt2s(_LineContents[LineSelector]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[LineSelector+1]._VerticalOffset)));
+				setCaretPosition(findTextPosition(Pnt2f(_LineContents[LineSelector]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[LineSelector+1]._VerticalOffset)));
 			endEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
 		}
 		if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC 
@@ -538,25 +538,25 @@ void TextArea::mouseDragged(const MouseEvent& e)
 
 
 
-Int32 TextArea::findTextPosition(osg::Pnt2s Input)
+Int32 TextArea::findTextPosition(osg::Pnt2f Input)
 {
 	Int32 output = 0;
 	Int32 row = 0;
 	Int32 column = 0;
-	Pnt2s TempTopLeft,  TempBottomRight, TempTopLeft1,  TempBottomRight1;
-	Pnt2s offset;
+	Pnt2f TempTopLeft,  TempBottomRight, TempTopLeft1,  TempBottomRight1;
+	Pnt2f offset;
 	//find row it belongs in
 	for(Int32 i = 0; i < _LineContents.size(); ++i)
 	{
 		getFont()->getBounds(_LineContents[i]._Contents, TempTopLeft, TempBottomRight);
-		offset = Pnt2s(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset);
+		offset = Pnt2f(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset);
 		if(Input.y() >= offset.y())
 		{
 			row = i;
 		}
 	}
 	//find column it belongs in
-	offset = Pnt2s(_LineContents[row]._LeftHorizontalOffset, _LineContents[row]._VerticalOffset);
+	offset = Pnt2f(_LineContents[row]._LeftHorizontalOffset, _LineContents[row]._VerticalOffset);
 	for(Int32 i = 1; i <= _LineContents[row]._Contents.size(); ++i)
 	{
 		getFont()->getBounds(_LineContents[row]._Contents.substr(0, i), TempTopLeft, TempBottomRight);

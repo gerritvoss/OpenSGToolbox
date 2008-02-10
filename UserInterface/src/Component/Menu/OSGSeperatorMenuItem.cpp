@@ -79,16 +79,16 @@ void SeperatorMenuItem::initMethod (void)
 
 void SeperatorMenuItem::drawInternal(const GraphicsPtr Graphics) const
 {
-   Pnt2s TopLeft, BottomRight;
+   Pnt2f TopLeft, BottomRight;
    getInsideBorderBounds(TopLeft, BottomRight);
    
     //Calculate Alignment
-    Pnt2s AlignedPosition;
-    Pnt2s LineTopLeft(0,0), LineBottomRight(1,1);
+    Pnt2f AlignedPosition;
+    Pnt2f LineTopLeft(0,0), LineBottomRight(1,1);
 
     AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (LineBottomRight - LineTopLeft),0.5, 0.0);
 
-    Graphics->drawRect(AlignedPosition, AlignedPosition + Vec2s(BottomRight.x() - TopLeft.x(),1), getColor(), getOpacity());
+    Graphics->drawRect(AlignedPosition, AlignedPosition + Vec2f(BottomRight.x() - TopLeft.x(),1), getColor(), getOpacity());
 }
 
 /*-------------------------------------------------------------------------*\

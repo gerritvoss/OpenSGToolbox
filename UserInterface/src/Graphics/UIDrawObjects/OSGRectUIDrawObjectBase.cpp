@@ -57,7 +57,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 #include "OSGRectUIDrawObjectBase.h"
 #include "OSGRectUIDrawObject.h"
 
@@ -83,10 +83,10 @@ const OSG::BitVector RectUIDrawObjectBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Pnt2s           RectUIDrawObjectBase::_sfTopLeft
+/*! \var Pnt2f           RectUIDrawObjectBase::_sfTopLeft
     
 */
-/*! \var Pnt2s           RectUIDrawObjectBase::_sfBottomRight
+/*! \var Pnt2f           RectUIDrawObjectBase::_sfBottomRight
     
 */
 /*! \var Color4f         RectUIDrawObjectBase::_sfColor
@@ -100,12 +100,12 @@ const OSG::BitVector RectUIDrawObjectBase::MTInfluenceMask =
 
 FieldDescription *RectUIDrawObjectBase::_desc[] = 
 {
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "TopLeft", 
                      TopLeftFieldId, TopLeftFieldMask,
                      false,
                      (FieldAccessMethod) &RectUIDrawObjectBase::getSFTopLeft),
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "BottomRight", 
                      BottomRightFieldId, BottomRightFieldMask,
                      false,
@@ -195,8 +195,8 @@ void RectUIDrawObjectBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 RectUIDrawObjectBase::RectUIDrawObjectBase(void) :
-    _sfTopLeft                (Pnt2s(0,0)), 
-    _sfBottomRight            (Pnt2s(0,0)), 
+    _sfTopLeft                (Pnt2f(0,0)), 
+    _sfBottomRight            (Pnt2f(0,0)), 
     _sfColor                  (Color4f(1.0,1.0,1.0,1.0)), 
     _sfOpacity                (Real32(1.0)), 
     Inherited() 

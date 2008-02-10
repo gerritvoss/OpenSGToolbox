@@ -51,7 +51,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // 01 Button Headers
 #include <OpenSG/UserInterface/OSGButton.h>
@@ -171,15 +171,15 @@ int main(int argc, char **argv)
             be used with any Component and 
             are not specific to Button.
 
-            -setMinSize(Vec2s): Determine the 
+            -setMinSize(Vec2f): Determine the 
                 Minimum    Size of the Component.
                 Some Layouts will automatically
                 resize Components; this prevents
                 the Size from going below a
                 certain value.
-            -setMaxSize(Vec2s): Determine the 
+            -setMaxSize(Vec2f): Determine the 
                 Maximum Size of the Component.
-            -setPreferredSize(Vec2s): Determine
+            -setPreferredSize(Vec2f): Determine
                 the Preferred Size of the Component.
                 This is what the Component will
                 be displayed at unless changed by
@@ -223,9 +223,9 @@ int main(int argc, char **argv)
     ******************************************************/
     beginEditCP(ExampleButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::ToolTipTextFieldMask | Button::TextFieldMask |
         Button::FontFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask | Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask);
-            ExampleButton->setMinSize(Vec2s(50, 25));
-            ExampleButton->setMaxSize(Vec2s(200, 100));
-            ExampleButton->setPreferredSize(Vec2s(100, 50));
+            ExampleButton->setMinSize(Vec2f(50, 25));
+            ExampleButton->setMaxSize(Vec2f(200, 100));
+            ExampleButton->setPreferredSize(Vec2f(100, 50));
             ExampleButton->setToolTipText("Button 1 ToolTip");
 
             ExampleButton->setText("Button 1");
@@ -330,8 +330,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(550,550),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(550,550),
                                         "OpenSG 01Button Window");
 
     while(!ExitApp)
@@ -355,7 +355,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

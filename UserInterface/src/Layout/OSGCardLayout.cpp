@@ -109,10 +109,10 @@ void CardLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 	  Draw the current "card" component centered in the parent component
 	  and set to the size of the parent component, or to its max size
 	*/
-	Pnt2s borderTopLeft, borderBottomRight;
+	Pnt2f borderTopLeft, borderBottomRight;
 	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
-	Vec2s borderSize(borderBottomRight-borderTopLeft);
-	Vec2s size(borderSize),offset;
+	Vec2f borderSize(borderBottomRight-borderTopLeft);
+	Vec2f size(borderSize),offset;
 	ComponentPtr curCard(Components.getValue(getCard()));
 
 	for(UInt32 i(0) ; i<Components.getSize() ; ++i)
@@ -120,7 +120,7 @@ void CardLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 		if(Components.getValue(i) != curCard)
 		{
 			beginEditCP(Components.getValue(i), Component::SizeFieldMask);
-				Components.getValue(i)->setSize(Vec2s(0,0));
+				Components.getValue(i)->setSize(Vec2f(0,0));
 			endEditCP(Components.getValue(i), Component::SizeFieldMask);
 		}
 	}
@@ -138,7 +138,7 @@ void CardLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 	offset[1] = (borderSize.y()-size.y())/2;
 
 	beginEditCP(curCard, Component::PositionFieldMask);	
-		curCard->setPosition(borderTopLeft + Vec2s(offset));
+		curCard->setPosition(borderTopLeft + Vec2f(offset));
 	endEditCP(curCard, Component::PositionFieldMask);
 
 }

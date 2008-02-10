@@ -82,7 +82,7 @@ void TableHeader::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-TableColumnPtr TableHeader::columnAtPoint(const Pnt2s& point) const
+TableColumnPtr TableHeader::columnAtPoint(const Pnt2f& point) const
 {
     Int32 ColumnIndex = getColumnModel()->getColumnIndexAtX(point.x());
     if(ColumnIndex == -1)
@@ -149,7 +149,7 @@ void TableHeader::updateColumnHeadersComponents(void)
 
 void TableHeader::updateLayout(void)
 {
-	Pnt2s BorderTopLeft, BorderBottomRight;
+	Pnt2f BorderTopLeft, BorderBottomRight;
 	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
 	
     UInt32 CumulativeWidth(0);
@@ -159,8 +159,8 @@ void TableHeader::updateLayout(void)
     for(UInt32 i(0) ; i<getColumnHeaders().size() ; ++i)
     {
         beginEditCP(getColumnHeaders()[i], PositionFieldMask | SizeFieldMask);
-            getColumnHeaders()[i]->setPosition( Pnt2s(BorderTopLeft.x() + CumulativeWidth, BorderTopLeft.y()) );
-            getColumnHeaders()[i]->setSize( Vec2s(_ColumnModel->getColumn(i)->getWidth(), getColumnHeaders()[i]->getPreferredSize().y()) );
+            getColumnHeaders()[i]->setPosition( Pnt2f(BorderTopLeft.x() + CumulativeWidth, BorderTopLeft.y()) );
+            getColumnHeaders()[i]->setSize( Vec2f(_ColumnModel->getColumn(i)->getWidth(), getColumnHeaders()[i]->getPreferredSize().y()) );
         endEditCP(getColumnHeaders()[i], PositionFieldMask | SizeFieldMask);
 
         Height = osgMax<UInt32>(Height, getColumnHeaders()[i]->getSize().y());
@@ -175,10 +175,10 @@ void TableHeader::updateLayout(void)
     
     //Use the Model to update the position and sizes of the Margins
     //Update My Preferred Size
-	Pnt2s TopLeft, BottomRight;
+	Pnt2f TopLeft, BottomRight;
 	getBounds(TopLeft, BottomRight);
 
-    Vec2s NewPreferredSize(CumulativeWidth + (BottomRight.x() - TopLeft.x() - BorderBottomRight.x() + BorderTopLeft.x()),
+    Vec2f NewPreferredSize(CumulativeWidth + (BottomRight.x() - TopLeft.x() - BorderBottomRight.x() + BorderTopLeft.x()),
                                Height + (BottomRight.y() - TopLeft.y() - BorderBottomRight.y() + BorderTopLeft.y()));
     if(NewPreferredSize != getPreferredSize())
     {
@@ -201,7 +201,7 @@ void TableHeader::mousePressed(const MouseEvent& e)
 {
     if(getResizingAllowed())
     {
-		Pnt2s MousePosInComponent = ViewportToComponent(e.getLocation(), TableHeaderPtr(this), e.getViewport());
+		Pnt2f MousePosInComponent = ViewportToComponent(e.getLocation(), TableHeaderPtr(this), e.getViewport());
         UInt32 CumulativeHeaderWidth(0);
         for(UInt32 i(0) ; i<getColumnHeaders().size() ; ++i)
         {
@@ -233,7 +233,7 @@ void TableHeader::checkMouseMargins(const MouseEvent& e)
 {
     if(isContainedClipBounds(e.getLocation(), TableHeaderPtr(this)))
     {
-		Pnt2s MousePosInComponent = ViewportToComponent(e.getLocation(), TableHeaderPtr(this), e.getViewport());
+		Pnt2f MousePosInComponent = ViewportToComponent(e.getLocation(), TableHeaderPtr(this), e.getViewport());
         UInt32 CumulativeHeaderWidth(0);
         for(UInt32 i(0) ; i<getColumnHeaders().size() ; ++i)
         {
@@ -339,11 +339,11 @@ void TableHeader::MarginDraggedListener::mouseDragged(const MouseEvent& e)
 {
 	if(e.getButton() == e.BUTTON1)
 	{
-		Pnt2s MousePosInComponent = ViewportToComponent(e.getLocation(), TableHeaderPtr(_TableHeader), e.getViewport());
+		Pnt2f MousePosInComponent = ViewportToComponent(e.getLocation(), TableHeaderPtr(_TableHeader), e.getViewport());
 
 
         TableColumnPtr TheColumn(_TableHeader->_ColumnModel->getColumn(_TableHeader->_ResizingColumn));
-        Int32 NewWidth(MousePosInComponent.x() - _TableHeader->getColumnHeaders()[_TableHeader->_ResizingColumn]->getPosition().x());
+        Real32 NewWidth(MousePosInComponent.x() - _TableHeader->getColumnHeaders()[_TableHeader->_ResizingColumn]->getPosition().x());
 
         if(NewWidth <= 0 || NewWidth < TheColumn->getMinWidth())
         {

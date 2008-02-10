@@ -51,7 +51,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 
 // 25PopupMenu Headers
@@ -251,7 +251,7 @@ int main(int argc, char **argv)
         // Add the PopupMenu to PopupMenuButton so that when right clicked,
         // the PopupMenu will appear
         PopupMenuButton->setPopupMenu(ExamplePopupMenu);
-        PopupMenuButton->setPreferredSize(Vec2s(200,100));
+        PopupMenuButton->setPreferredSize(Vec2f(200,100));
         PopupMenuButton->setFont(PopupMenuButtonFont);
     endEditCP(PopupMenuButton, Button::PopupMenuFieldMask | Button::TextFieldMask | Button::PreferredSizeFieldMask | Button::FontFieldMask);
 
@@ -307,8 +307,8 @@ int main(int argc, char **argv)
 
     // Show the whole Scene
     mgr->showAll();
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(550,550),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(550,550),
                                         "OpenSG 25PopupMenu Window");
 
     while(!ExitApp)
@@ -330,7 +330,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

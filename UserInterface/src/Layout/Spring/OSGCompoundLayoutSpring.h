@@ -78,19 +78,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING CompoundLayoutSpring : public CompoundLayo
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual Int32 operation(const Int32& Left, const Int32& Right) const = 0;
+    virtual Real32 operation(const Real32& Left, const Real32& Right) const = 0;
 
     //Returns the maximum value of this LayoutSpringPtr.
-    virtual Int32 getMinimumValue(void) const;
+    virtual Real32 getMinimumValue(void) const;
 
     //Returns the Preferred value of this LayoutSpringPtr.
-    virtual Int32 getPreferredValue(void) const;
+    virtual Real32 getPreferredValue(void) const;
 
     //Returns the minimum value of this LayoutSpringPtr.
-    virtual Int32 getMaximumValue(void) const;
+    virtual Real32 getMaximumValue(void) const;
 
     //Returns the current value of this LayoutSpringPtr.
-    virtual Int32 getValue(void) const;
+    virtual Real32 getValue(void) const;
 
     virtual bool isCyclic(SpringLayoutPtr l) const;
     /*=========================  PROTECTED  ===============================*/

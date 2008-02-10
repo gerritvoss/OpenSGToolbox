@@ -216,11 +216,11 @@ void UIRectangle::changed(BitVector whichField, UInt32 origin)
     {
 		invalidateVolume();
 		
-		if(getDrawingSurface()->getSize().x() != static_cast<Int16>(getWidth()) ||
-		   getDrawingSurface()->getSize().y() != static_cast<Int16>(getHeight()))
+		if(getDrawingSurface()->getSize().x() != static_cast<Real32>(getWidth()) ||
+		   getDrawingSurface()->getSize().y() != static_cast<Real32>(getHeight()))
 		{
 			beginEditCP(getDrawingSurface(), UIDrawingSurface::SizeFieldMask);
-				getDrawingSurface()->setSize(Vec2s(static_cast<Int16>(getWidth()), static_cast<Int16>(getHeight())));
+				getDrawingSurface()->setSize(Vec2f(static_cast<Real32>(getWidth()), static_cast<Real32>(getHeight())));
 			endEditCP(getDrawingSurface(), UIDrawingSurface::SizeFieldMask);
 		}
     }

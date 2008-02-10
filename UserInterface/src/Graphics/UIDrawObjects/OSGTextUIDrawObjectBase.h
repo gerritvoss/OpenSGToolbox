@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,7 +67,7 @@
 
 #include "OSGUIDrawObject.h" // Parent
 
-#include <OpenSG/OSGVec2sFields.h> // Position type
+#include <OpenSG/OSGPnt2fFields.h> // Position type
 #include <OpenSG/OSGStringFields.h> // Text type
 #include "Text/OSGUIFont.h" // Font type
 #include <OpenSG/OSGColor4fFields.h> // Color type
@@ -134,14 +134,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextUIDrawObjectBase : public UIDrawObject
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPnt2s             *getSFPosition       (void);
+           SFPnt2f             *getSFPosition       (void);
            SFString            *getSFText           (void);
            SFUIFontPtr         *getSFFont           (void);
            SFColor4f           *getSFColor          (void);
            SFReal32            *getSFOpacity        (void);
 
-           Pnt2s               &getPosition       (void);
-     const Pnt2s               &getPosition       (void) const;
+           Pnt2f               &getPosition       (void);
+     const Pnt2f               &getPosition       (void) const;
            std::string         &getText           (void);
      const std::string         &getText           (void) const;
            UIFontPtr           &getFont           (void);
@@ -156,7 +156,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextUIDrawObjectBase : public UIDrawObject
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setPosition       ( const Pnt2s &value );
+     void setPosition       ( const Pnt2f &value );
      void setText           ( const std::string &value );
      void setFont           ( const UIFontPtr &value );
      void setColor          ( const Color4f &value );
@@ -203,7 +203,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextUIDrawObjectBase : public UIDrawObject
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt2s             _sfPosition;
+    SFPnt2f             _sfPosition;
     SFString            _sfText;
     SFUIFontPtr         _sfFont;
     SFColor4f           _sfColor;

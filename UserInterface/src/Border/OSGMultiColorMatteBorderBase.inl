@@ -98,28 +98,28 @@ MultiColorMatteBorderPtr MultiColorMatteBorderBase::createEmpty(void)
 
 //! Get the MultiColorMatteBorder::_sfLeftWidth field.
 inline
-SFUInt32 *MultiColorMatteBorderBase::getSFLeftWidth(void)
+SFReal32 *MultiColorMatteBorderBase::getSFLeftWidth(void)
 {
     return &_sfLeftWidth;
 }
 
 //! Get the MultiColorMatteBorder::_sfRightWidth field.
 inline
-SFUInt32 *MultiColorMatteBorderBase::getSFRightWidth(void)
+SFReal32 *MultiColorMatteBorderBase::getSFRightWidth(void)
 {
     return &_sfRightWidth;
 }
 
 //! Get the MultiColorMatteBorder::_sfTopWidth field.
 inline
-SFUInt32 *MultiColorMatteBorderBase::getSFTopWidth(void)
+SFReal32 *MultiColorMatteBorderBase::getSFTopWidth(void)
 {
     return &_sfTopWidth;
 }
 
 //! Get the MultiColorMatteBorder::_sfBottomWidth field.
 inline
-SFUInt32 *MultiColorMatteBorderBase::getSFBottomWidth(void)
+SFReal32 *MultiColorMatteBorderBase::getSFBottomWidth(void)
 {
     return &_sfBottomWidth;
 }
@@ -183,84 +183,84 @@ SFColor4f *MultiColorMatteBorderBase::getSFBottomLineRightColor(void)
 
 //! Get the value of the MultiColorMatteBorder::_sfLeftWidth field.
 inline
-UInt32 &MultiColorMatteBorderBase::getLeftWidth(void)
+Real32 &MultiColorMatteBorderBase::getLeftWidth(void)
 {
     return _sfLeftWidth.getValue();
 }
 
 //! Get the value of the MultiColorMatteBorder::_sfLeftWidth field.
 inline
-const UInt32 &MultiColorMatteBorderBase::getLeftWidth(void) const
+const Real32 &MultiColorMatteBorderBase::getLeftWidth(void) const
 {
     return _sfLeftWidth.getValue();
 }
 
 //! Set the value of the MultiColorMatteBorder::_sfLeftWidth field.
 inline
-void MultiColorMatteBorderBase::setLeftWidth(const UInt32 &value)
+void MultiColorMatteBorderBase::setLeftWidth(const Real32 &value)
 {
     _sfLeftWidth.setValue(value);
 }
 
 //! Get the value of the MultiColorMatteBorder::_sfRightWidth field.
 inline
-UInt32 &MultiColorMatteBorderBase::getRightWidth(void)
+Real32 &MultiColorMatteBorderBase::getRightWidth(void)
 {
     return _sfRightWidth.getValue();
 }
 
 //! Get the value of the MultiColorMatteBorder::_sfRightWidth field.
 inline
-const UInt32 &MultiColorMatteBorderBase::getRightWidth(void) const
+const Real32 &MultiColorMatteBorderBase::getRightWidth(void) const
 {
     return _sfRightWidth.getValue();
 }
 
 //! Set the value of the MultiColorMatteBorder::_sfRightWidth field.
 inline
-void MultiColorMatteBorderBase::setRightWidth(const UInt32 &value)
+void MultiColorMatteBorderBase::setRightWidth(const Real32 &value)
 {
     _sfRightWidth.setValue(value);
 }
 
 //! Get the value of the MultiColorMatteBorder::_sfTopWidth field.
 inline
-UInt32 &MultiColorMatteBorderBase::getTopWidth(void)
+Real32 &MultiColorMatteBorderBase::getTopWidth(void)
 {
     return _sfTopWidth.getValue();
 }
 
 //! Get the value of the MultiColorMatteBorder::_sfTopWidth field.
 inline
-const UInt32 &MultiColorMatteBorderBase::getTopWidth(void) const
+const Real32 &MultiColorMatteBorderBase::getTopWidth(void) const
 {
     return _sfTopWidth.getValue();
 }
 
 //! Set the value of the MultiColorMatteBorder::_sfTopWidth field.
 inline
-void MultiColorMatteBorderBase::setTopWidth(const UInt32 &value)
+void MultiColorMatteBorderBase::setTopWidth(const Real32 &value)
 {
     _sfTopWidth.setValue(value);
 }
 
 //! Get the value of the MultiColorMatteBorder::_sfBottomWidth field.
 inline
-UInt32 &MultiColorMatteBorderBase::getBottomWidth(void)
+Real32 &MultiColorMatteBorderBase::getBottomWidth(void)
 {
     return _sfBottomWidth.getValue();
 }
 
 //! Get the value of the MultiColorMatteBorder::_sfBottomWidth field.
 inline
-const UInt32 &MultiColorMatteBorderBase::getBottomWidth(void) const
+const Real32 &MultiColorMatteBorderBase::getBottomWidth(void) const
 {
     return _sfBottomWidth.getValue();
 }
 
 //! Set the value of the MultiColorMatteBorder::_sfBottomWidth field.
 inline
-void MultiColorMatteBorderBase::setBottomWidth(const UInt32 &value)
+void MultiColorMatteBorderBase::setBottomWidth(const Real32 &value)
 {
     _sfBottomWidth.setValue(value);
 }

@@ -162,11 +162,11 @@ UIBackgroundPtr Component::getDrawnBackground(void) const
     }
 }
 
-bool Component::isContained(const Pnt2s& p, bool TestAgainstClipBounds) const
+bool Component::isContained(const Pnt2f& p, bool TestAgainstClipBounds) const
 {
-    Pnt2s PointInCompSpace(DrawingSurfaceToComponent(p,ComponentPtr(this)));
+    Pnt2f PointInCompSpace(DrawingSurfaceToComponent(p,ComponentPtr(this)));
     BorderPtr DrawnBorder(getDrawnBorder());
-    Pnt2s TopLeft, BottomRight;
+    Pnt2f TopLeft, BottomRight;
     if(TestAgainstClipBounds && getClipping())
     {
         TopLeft = getClipTopLeft();
@@ -175,7 +175,7 @@ bool Component::isContained(const Pnt2s& p, bool TestAgainstClipBounds) const
     else
     {
         TopLeft.setValues(0,0);
-        BottomRight = Pnt2s(getSize());
+        BottomRight = Pnt2f(getSize());
     }
     
     if(DrawnBorder == NullFC)
@@ -189,10 +189,10 @@ bool Component::isContained(const Pnt2s& p, bool TestAgainstClipBounds) const
     }
 }
 
-Pnt2s Component::getToolTipLocation(Pnt2s MousePosition)
+Pnt2f Component::getToolTipLocation(Pnt2f MousePosition)
 {
     //TODO:Implement
-    return DrawingSurfaceToComponent(MousePosition,ComponentPtr(this)) + Vec2s(5,20);
+    return DrawingSurfaceToComponent(MousePosition,ComponentPtr(this)) + Vec2f(5,20);
 }
 
 ToolTipPtr Component::createToolTip(void)
@@ -200,15 +200,15 @@ ToolTipPtr Component::createToolTip(void)
     return ToolTip::create();
 }
 
-void Component::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+void Component::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
-   TopLeft = Pnt2s(0,0);
-   BottomRight = Pnt2s(getSize());
+   TopLeft = Pnt2f(0,0);
+   BottomRight = Pnt2f(getSize());
 }
 
-void Component::getInsideBorderBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+void Component::getInsideBorderBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
-   UInt16 TopInset(0), LeftInset(0), BottomInset(0), RightInset(0);
+   Real32 TopInset(0), LeftInset(0), BottomInset(0), RightInset(0);
 
    if(getBorder() != NullFC)
    {
@@ -219,14 +219,14 @@ void Component::getInsideBorderBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
    BottomRight.setValues(TopLeft.x()+getSize().x()-(LeftInset + RightInset), TopLeft.y()+getSize().y()-(TopInset + BottomInset));
 }
 
-void Component::getBoundsRenderingSurfaceSpace(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+void Component::getBoundsRenderingSurfaceSpace(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
-    Pnt2s ParentContainerTopLeft(0,0),ParentContainerBottomRight(0,0);
+    Pnt2f ParentContainerTopLeft(0,0),ParentContainerBottomRight(0,0);
     if(getParentContainer() != NullFC)
     {
         Container::Ptr::dcast(getParentContainer())->getBoundsRenderingSurfaceSpace(ParentContainerTopLeft, ParentContainerBottomRight);
     }
-    TopLeft = ParentContainerTopLeft + Vec2s(getPosition());
+    TopLeft = ParentContainerTopLeft + Vec2f(getPosition());
     BottomRight = TopLeft + getSize();
 }
 
@@ -242,7 +242,7 @@ void Component::drawBorder(const GraphicsPtr TheGraphics, const BorderPtr Border
 void Component::drawBackground(const GraphicsPtr TheGraphics, const UIBackgroundPtr Background) const
 {
    //Draw the Background on the Inside of my border
-   Pnt2s TopLeft, BottomRight;
+   Pnt2f TopLeft, BottomRight;
    getInsideBorderBounds(TopLeft, BottomRight);
    if(Background != NullFC)
    {
@@ -263,7 +263,7 @@ bool Component::setupClipping(const GraphicsPtr Graphics) const
         //glClipPlane
         //Clip with the Intersection of this components RenderingSurface bounds
         //and its parents RenderingSurface bounds
-        Pnt2s ClipTopLeft,ClipBottomRight;
+        Pnt2f ClipTopLeft,ClipBottomRight;
 		getClipBounds(ClipTopLeft,ClipBottomRight);
         if(ClipBottomRight.x()-ClipTopLeft.x() <= 0 || ClipBottomRight.y()-ClipTopLeft.y()<= 0)
         {
@@ -348,7 +348,7 @@ void Component::draw(const GraphicsPtr TheGraphics) const
 
 void Component::updateClipBounds(void)
 {
-	Pnt2s TopLeft, BottomRight;
+	Pnt2f TopLeft, BottomRight;
 	if(getParentContainer() == NullFC ||
         getParentContainer()->getType() == RotatedComponent::getClassType())
 	{
@@ -361,29 +361,29 @@ void Component::updateClipBounds(void)
 		     //My Bounds
 		     //My Parent Containers Clip Bounds
 		     //My Parent Containers Inset Bounds
-        Pnt2s MyTopLeft,MyBottomRight;
+        Pnt2f MyTopLeft,MyBottomRight;
         getBounds(MyTopLeft,MyBottomRight);
 
 		//Update my Parent Container's Clip Bounds
 		//Container::Ptr::dcast(getParentContainer())->updateClipBounds();
 
 		//Get Parent Container's Clip Bounds
-		Pnt2s ContainerClipTopLeft, ContainerClipBottomRight;
+		Pnt2f ContainerClipTopLeft, ContainerClipBottomRight;
 		Container::Ptr::dcast(getParentContainer())->getClipBounds(ContainerClipTopLeft,ContainerClipBottomRight);
 		
         //Parent Container's Clip Bounds are in the Parent Container's Coordinate space
         //We need to convert them to this Components Coordinate space
-        ContainerClipTopLeft -= Vec2s(getPosition());
-		ContainerClipBottomRight -= Vec2s(getPosition());
+        ContainerClipTopLeft -= Vec2f(getPosition());
+		ContainerClipBottomRight -= Vec2f(getPosition());
 
 		//Get Parent Container's Inset Bounds
-		Pnt2s ContainerInsetTopLeft, ContainerInsetBottomRight;
+		Pnt2f ContainerInsetTopLeft, ContainerInsetBottomRight;
 		Container::Ptr::dcast(getParentContainer())->getInsideInsetsBounds(ContainerInsetTopLeft, ContainerInsetBottomRight);
 		
         //Parent Container's Inset Bounds are in the Parent Container's Coordinate space
         //We need to convert them to this Components Coordinate space
-        ContainerInsetTopLeft -= Vec2s(getPosition());
-		ContainerInsetBottomRight -= Vec2s(getPosition());
+        ContainerInsetTopLeft -= Vec2f(getPosition());
+		ContainerInsetBottomRight -= Vec2f(getPosition());
 
 		//Get the intersection of my bounds with my parent containers clip bounds
 		quadIntersection(MyTopLeft,MyBottomRight,
@@ -699,17 +699,17 @@ bool Component::takeFocus(bool Temporary)
     }
 }
 
-Int16 Component::getBaseline(const Int16& x, const Int16& y) const
+Real32 Component::getBaseline(const Real32& x, const Real32& y) const
 {
     return -1;
 }
 
-Vec2s Component::getPreferredScrollableViewportSize(void)
+Vec2f Component::getPreferredScrollableViewportSize(void)
 {
     return getPreferredSize();
 }
 
-Int32 Component::getScrollableBlockIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
+Int32 Component::getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
     UInt16 MajorAxis;
     if(orientation == VERTICAL_ALIGNMENT)
@@ -734,7 +734,7 @@ bool Component::getScrollableTracksViewportWidth(void)
     return false;
 }
 
-Int32 Component::getScrollableUnitIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
+Int32 Component::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
     UInt16 MajorAxis;
     if(orientation == VERTICAL_ALIGNMENT)
@@ -749,7 +749,7 @@ Int32 Component::getScrollableUnitIncrement(const Pnt2s& VisibleRectTopLeft, con
     return direction * 5;
 }
 
-void Component::scrollToPoint(const Pnt2s& PointInComponent)
+void Component::scrollToPoint(const Pnt2f& PointInComponent)
 {
 	if(getParentContainer() != NullFC &&
 		getParentContainer()->getType() == UIViewport::getClassType())
@@ -895,7 +895,7 @@ void Component::ComponentUpdater::update(const UpdateEvent& e)
             }
             else
             {
-                TheToolTip->setPosition(ComponentToFrame(_Component->getToolTipLocation(Pnt2s(0,0)),_Component));
+                TheToolTip->setPosition(ComponentToFrame(_Component->getToolTipLocation(Pnt2f(0,0)),_Component));
             }
             TheToolTip->setText(_Component->getToolTipText());
         endEditCP(TheToolTip, ToolTip::TippedComponentFieldMask | ToolTip::PositionFieldMask | ToolTip::TextFieldMask);

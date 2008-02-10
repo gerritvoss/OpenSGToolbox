@@ -98,21 +98,21 @@ StaticLayoutSpringPtr StaticLayoutSpringBase::createEmpty(void)
 
 //! Get the StaticLayoutSpring::_sfMinimum field.
 inline
-SFInt32 *StaticLayoutSpringBase::getSFMinimum(void)
+SFReal32 *StaticLayoutSpringBase::getSFMinimum(void)
 {
     return &_sfMinimum;
 }
 
 //! Get the StaticLayoutSpring::_sfMaximum field.
 inline
-SFInt32 *StaticLayoutSpringBase::getSFMaximum(void)
+SFReal32 *StaticLayoutSpringBase::getSFMaximum(void)
 {
     return &_sfMaximum;
 }
 
 //! Get the StaticLayoutSpring::_sfPreferred field.
 inline
-SFInt32 *StaticLayoutSpringBase::getSFPreferred(void)
+SFReal32 *StaticLayoutSpringBase::getSFPreferred(void)
 {
     return &_sfPreferred;
 }
@@ -120,63 +120,63 @@ SFInt32 *StaticLayoutSpringBase::getSFPreferred(void)
 
 //! Get the value of the StaticLayoutSpring::_sfMinimum field.
 inline
-Int32 &StaticLayoutSpringBase::getMinimum(void)
+Real32 &StaticLayoutSpringBase::getMinimum(void)
 {
     return _sfMinimum.getValue();
 }
 
 //! Get the value of the StaticLayoutSpring::_sfMinimum field.
 inline
-const Int32 &StaticLayoutSpringBase::getMinimum(void) const
+const Real32 &StaticLayoutSpringBase::getMinimum(void) const
 {
     return _sfMinimum.getValue();
 }
 
 //! Set the value of the StaticLayoutSpring::_sfMinimum field.
 inline
-void StaticLayoutSpringBase::setMinimum(const Int32 &value)
+void StaticLayoutSpringBase::setMinimum(const Real32 &value)
 {
     _sfMinimum.setValue(value);
 }
 
 //! Get the value of the StaticLayoutSpring::_sfMaximum field.
 inline
-Int32 &StaticLayoutSpringBase::getMaximum(void)
+Real32 &StaticLayoutSpringBase::getMaximum(void)
 {
     return _sfMaximum.getValue();
 }
 
 //! Get the value of the StaticLayoutSpring::_sfMaximum field.
 inline
-const Int32 &StaticLayoutSpringBase::getMaximum(void) const
+const Real32 &StaticLayoutSpringBase::getMaximum(void) const
 {
     return _sfMaximum.getValue();
 }
 
 //! Set the value of the StaticLayoutSpring::_sfMaximum field.
 inline
-void StaticLayoutSpringBase::setMaximum(const Int32 &value)
+void StaticLayoutSpringBase::setMaximum(const Real32 &value)
 {
     _sfMaximum.setValue(value);
 }
 
 //! Get the value of the StaticLayoutSpring::_sfPreferred field.
 inline
-Int32 &StaticLayoutSpringBase::getPreferred(void)
+Real32 &StaticLayoutSpringBase::getPreferred(void)
 {
     return _sfPreferred.getValue();
 }
 
 //! Get the value of the StaticLayoutSpring::_sfPreferred field.
 inline
-const Int32 &StaticLayoutSpringBase::getPreferred(void) const
+const Real32 &StaticLayoutSpringBase::getPreferred(void) const
 {
     return _sfPreferred.getValue();
 }
 
 //! Set the value of the StaticLayoutSpring::_sfPreferred field.
 inline
-void StaticLayoutSpringBase::setPreferred(const Int32 &value)
+void StaticLayoutSpringBase::setPreferred(const Real32 &value)
 {
     _sfPreferred.setValue(value);
 }

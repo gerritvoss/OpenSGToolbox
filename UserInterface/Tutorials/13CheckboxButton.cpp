@@ -51,7 +51,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // 12CheckboxButton Headers
 #include <OpenSG/UserInterface/OSGButton.h>
@@ -151,9 +151,9 @@ int main(int argc, char **argv)
     CheckboxButtonPtr ExampleCheckboxButton = osg::CheckboxButton::create();
     beginEditCP(ExampleCheckboxButton, CheckboxButton::MinSizeFieldMask | CheckboxButton::MaxSizeFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::SizeFieldMask |
         CheckboxButton::TextFieldMask | CheckboxButton::VerticalAlignmentFieldMask | CheckboxButton::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask);
-        ExampleCheckboxButton->setMinSize(Vec2s(50, 25));
-        ExampleCheckboxButton->setMaxSize(Vec2s(300, 100));
-        ExampleCheckboxButton->setPreferredSize(Vec2s(200, 50));
+        ExampleCheckboxButton->setMinSize(Vec2f(50, 25));
+        ExampleCheckboxButton->setMaxSize(Vec2f(300, 100));
+        ExampleCheckboxButton->setPreferredSize(Vec2f(200, 50));
         ExampleCheckboxButton->setEnabled(true);
         ExampleCheckboxButton->setText("Checkbox Button");
         ExampleCheckboxButton->setVerticalAlignment(0.5);
@@ -216,8 +216,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(550,550),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(550,550),
                                         "OpenSG 13CheckboxButton Window");
 
     //Main Event Loop
@@ -240,7 +240,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

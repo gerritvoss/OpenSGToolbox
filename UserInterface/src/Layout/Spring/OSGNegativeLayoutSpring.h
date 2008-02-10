@@ -86,19 +86,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING NegativeLayoutSpring : public NegativeLayo
     
     /*! \}                                                                 */
     //Returns the maximum value of this LayoutSpringPtr.
-    virtual Int32 getMinimumValue(void) const;
+    virtual Real32 getMinimumValue(void) const;
 
     //Returns the Preferred value of this LayoutSpringPtr.
-    virtual Int32 getPreferredValue(void) const;
+    virtual Real32 getPreferredValue(void) const;
 
     //Returns the minimum value of this LayoutSpringPtr.
-    virtual Int32 getMaximumValue(void) const;
+    virtual Real32 getMaximumValue(void) const;
 
     //Returns the current value of this LayoutSpringPtr.
-    virtual Int32 getValue(void) const;
+    virtual Real32 getValue(void) const;
 
     //Sets the current value of this LayoutSpringPtr.
-    virtual void setValue(const Int32& value);
+    virtual void setValue(const Real32& value);
     
     virtual bool isCyclic(SpringLayoutPtr l) const;
 

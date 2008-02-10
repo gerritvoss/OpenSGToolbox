@@ -70,7 +70,7 @@
 #include <OpenSG/OSGColor4fFields.h> // Highlight type
 #include <OpenSG/OSGColor4fFields.h> // Shadow type
 #include <OpenSG/OSGBoolFields.h> // Raised type
-#include <OpenSG/OSGUInt32Fields.h> // Width type
+#include <OpenSG/OSGReal32Fields.h> // Width type
 
 #include "OSGEtchedBorderFields.h"
 
@@ -134,7 +134,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING EtchedBorderBase : public Border
            SFColor4f           *getSFHighlight      (void);
            SFColor4f           *getSFShadow         (void);
            SFBool              *getSFRaised         (void);
-           SFUInt32            *getSFWidth          (void);
+           SFReal32            *getSFWidth          (void);
 
            Color4f             &getHighlight      (void);
      const Color4f             &getHighlight      (void) const;
@@ -142,8 +142,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING EtchedBorderBase : public Border
      const Color4f             &getShadow         (void) const;
            bool                &getRaised         (void);
      const bool                &getRaised         (void) const;
-           UInt32              &getWidth          (void);
-     const UInt32              &getWidth          (void) const;
+           Real32              &getWidth          (void);
+     const Real32              &getWidth          (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -153,7 +153,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING EtchedBorderBase : public Border
      void setHighlight      ( const Color4f &value );
      void setShadow         ( const Color4f &value );
      void setRaised         ( const bool &value );
-     void setWidth          ( const UInt32 &value );
+     void setWidth          ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -199,7 +199,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING EtchedBorderBase : public Border
     SFColor4f           _sfHighlight;
     SFColor4f           _sfShadow;
     SFBool              _sfRaised;
-    SFUInt32            _sfWidth;
+    SFReal32            _sfWidth;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

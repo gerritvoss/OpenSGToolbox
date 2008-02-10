@@ -112,7 +112,7 @@ SFUInt32 *TextureUIBackgroundBase::getSFScale(void)
 
 //! Get the TextureUIBackground::_sfScaleAbsoluteSize field.
 inline
-SFVec2s *TextureUIBackgroundBase::getSFScaleAbsoluteSize(void)
+SFVec2f *TextureUIBackgroundBase::getSFScaleAbsoluteSize(void)
 {
     return &_sfScaleAbsoluteSize;
 }
@@ -176,21 +176,21 @@ void TextureUIBackgroundBase::setScale(const UInt32 &value)
 
 //! Get the value of the TextureUIBackground::_sfScaleAbsoluteSize field.
 inline
-Vec2s &TextureUIBackgroundBase::getScaleAbsoluteSize(void)
+Vec2f &TextureUIBackgroundBase::getScaleAbsoluteSize(void)
 {
     return _sfScaleAbsoluteSize.getValue();
 }
 
 //! Get the value of the TextureUIBackground::_sfScaleAbsoluteSize field.
 inline
-const Vec2s &TextureUIBackgroundBase::getScaleAbsoluteSize(void) const
+const Vec2f &TextureUIBackgroundBase::getScaleAbsoluteSize(void) const
 {
     return _sfScaleAbsoluteSize.getValue();
 }
 
 //! Set the value of the TextureUIBackground::_sfScaleAbsoluteSize field.
 inline
-void TextureUIBackgroundBase::setScaleAbsoluteSize(const Vec2s &value)
+void TextureUIBackgroundBase::setScaleAbsoluteSize(const Vec2f &value)
 {
     _sfScaleAbsoluteSize.setValue(value);
 }

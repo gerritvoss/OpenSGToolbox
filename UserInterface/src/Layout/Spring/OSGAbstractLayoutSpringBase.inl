@@ -72,7 +72,7 @@ OSG::UInt32 AbstractLayoutSpringBase::getClassTypeId(void)
 
 //! Get the AbstractLayoutSpring::_sfSize field.
 inline
-SFInt32 *AbstractLayoutSpringBase::getSFSize(void)
+SFReal32 *AbstractLayoutSpringBase::getSFSize(void)
 {
     return &_sfSize;
 }
@@ -80,21 +80,21 @@ SFInt32 *AbstractLayoutSpringBase::getSFSize(void)
 
 //! Get the value of the AbstractLayoutSpring::_sfSize field.
 inline
-Int32 &AbstractLayoutSpringBase::getSize(void)
+Real32 &AbstractLayoutSpringBase::getSize(void)
 {
     return _sfSize.getValue();
 }
 
 //! Get the value of the AbstractLayoutSpring::_sfSize field.
 inline
-const Int32 &AbstractLayoutSpringBase::getSize(void) const
+const Real32 &AbstractLayoutSpringBase::getSize(void) const
 {
     return _sfSize.getValue();
 }
 
 //! Set the value of the AbstractLayoutSpring::_sfSize field.
 inline
-void AbstractLayoutSpringBase::setSize(const Int32 &value)
+void AbstractLayoutSpringBase::setSize(const Real32 &value)
 {
     _sfSize.setValue(value);
 }

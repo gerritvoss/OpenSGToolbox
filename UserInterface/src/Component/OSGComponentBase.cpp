@@ -149,25 +149,25 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Pnt2s           ComponentBase::_sfPosition
+/*! \var Pnt2f           ComponentBase::_sfPosition
     
 */
-/*! \var Pnt2s           ComponentBase::_sfClipTopLeft
+/*! \var Pnt2f           ComponentBase::_sfClipTopLeft
     
 */
-/*! \var Pnt2s           ComponentBase::_sfClipBottomRight
+/*! \var Pnt2f           ComponentBase::_sfClipBottomRight
     
 */
-/*! \var Vec2s           ComponentBase::_sfMinSize
+/*! \var Vec2f           ComponentBase::_sfMinSize
     
 */
-/*! \var Vec2s           ComponentBase::_sfMaxSize
+/*! \var Vec2f           ComponentBase::_sfMaxSize
     
 */
-/*! \var Vec2s           ComponentBase::_sfPreferredSize
+/*! \var Vec2f           ComponentBase::_sfPreferredSize
     
 */
-/*! \var Vec2s           ComponentBase::_sfSize
+/*! \var Vec2f           ComponentBase::_sfSize
     
 */
 /*! \var bool            ComponentBase::_sfVisible
@@ -232,37 +232,37 @@ const OSG::BitVector ComponentBase::MTInfluenceMask =
 
 FieldDescription *ComponentBase::_desc[] = 
 {
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "Position", 
                      PositionFieldId, PositionFieldMask,
                      true,
                      (FieldAccessMethod) &ComponentBase::getSFPosition),
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "ClipTopLeft", 
                      ClipTopLeftFieldId, ClipTopLeftFieldMask,
                      true,
                      (FieldAccessMethod) &ComponentBase::getSFClipTopLeft),
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "ClipBottomRight", 
                      ClipBottomRightFieldId, ClipBottomRightFieldMask,
                      true,
                      (FieldAccessMethod) &ComponentBase::getSFClipBottomRight),
-    new FieldDescription(SFVec2s::getClassType(), 
+    new FieldDescription(SFVec2f::getClassType(), 
                      "MinSize", 
                      MinSizeFieldId, MinSizeFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFMinSize),
-    new FieldDescription(SFVec2s::getClassType(), 
+    new FieldDescription(SFVec2f::getClassType(), 
                      "MaxSize", 
                      MaxSizeFieldId, MaxSizeFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFMaxSize),
-    new FieldDescription(SFVec2s::getClassType(), 
+    new FieldDescription(SFVec2f::getClassType(), 
                      "PreferredSize", 
                      PreferredSizeFieldId, PreferredSizeFieldMask,
                      false,
                      (FieldAccessMethod) &ComponentBase::getSFPreferredSize),
-    new FieldDescription(SFVec2s::getClassType(), 
+    new FieldDescription(SFVec2f::getClassType(), 
                      "Size", 
                      SizeFieldId, SizeFieldMask,
                      true,
@@ -428,12 +428,12 @@ void ComponentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ComponentBase::ComponentBase(void) :
-    _sfPosition               (Pnt2s(0,0)), 
-    _sfClipTopLeft            (Pnt2s(0,0)), 
-    _sfClipBottomRight        (Pnt2s(0,0)), 
-    _sfMinSize                (Vec2s(0,0)), 
-    _sfMaxSize                (Vec2s(32767,32767)), 
-    _sfPreferredSize          (Vec2s(1,1)), 
+    _sfPosition               (Pnt2f(0,0)), 
+    _sfClipTopLeft            (Pnt2f(0,0)), 
+    _sfClipBottomRight        (Pnt2f(0,0)), 
+    _sfMinSize                (Vec2f(0,0)), 
+    _sfMaxSize                (Vec2f(32767,32767)), 
+    _sfPreferredSize          (Vec2f(1,1)), 
     _sfSize                   (), 
     _sfVisible                (bool(true)), 
     _sfEnabled                (bool(true)), 
@@ -1104,43 +1104,43 @@ void ComponentBase::execBeginEditImpl (const BitVector &whichField,
 /*------------------------------ get -----------------------------------*/
 
 OSG_USERINTERFACELIB_DLLMAPPING
-SFPnt2s *ComponentBase::getSFPosition(void)
+SFPnt2f *ComponentBase::getSFPosition(void)
 {
     return &_sfPosition;
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-SFPnt2s *ComponentBase::getSFClipTopLeft(void)
+SFPnt2f *ComponentBase::getSFClipTopLeft(void)
 {
     return &_sfClipTopLeft;
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-SFPnt2s *ComponentBase::getSFClipBottomRight(void)
+SFPnt2f *ComponentBase::getSFClipBottomRight(void)
 {
     return &_sfClipBottomRight;
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-SFVec2s *ComponentBase::getSFMinSize(void)
+SFVec2f *ComponentBase::getSFMinSize(void)
 {
     return &_sfMinSize;
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-SFVec2s *ComponentBase::getSFMaxSize(void)
+SFVec2f *ComponentBase::getSFMaxSize(void)
 {
     return &_sfMaxSize;
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-SFVec2s *ComponentBase::getSFPreferredSize(void)
+SFVec2f *ComponentBase::getSFPreferredSize(void)
 {
     return &_sfPreferredSize;
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-SFVec2s *ComponentBase::getSFSize(void)
+SFVec2f *ComponentBase::getSFSize(void)
 {
     return &_sfSize;
 }
@@ -1261,127 +1261,127 @@ SFPopupMenuPtr *ComponentBase::getSFPopupMenu(void)
 
 
 OSG_USERINTERFACELIB_DLLMAPPING
-Pnt2s &ComponentBase::getPosition(void)
+Pnt2f &ComponentBase::getPosition(void)
 {
     return _sfPosition.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-const Pnt2s &ComponentBase::getPosition(void) const
+const Pnt2f &ComponentBase::getPosition(void) const
 {
     return _sfPosition.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setPosition(const Pnt2s &value)
+void ComponentBase::setPosition(const Pnt2f &value)
 {
     _sfPosition.setValue(value);
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-Pnt2s &ComponentBase::getClipTopLeft(void)
+Pnt2f &ComponentBase::getClipTopLeft(void)
 {
     return _sfClipTopLeft.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-const Pnt2s &ComponentBase::getClipTopLeft(void) const
+const Pnt2f &ComponentBase::getClipTopLeft(void) const
 {
     return _sfClipTopLeft.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setClipTopLeft(const Pnt2s &value)
+void ComponentBase::setClipTopLeft(const Pnt2f &value)
 {
     _sfClipTopLeft.setValue(value);
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-Pnt2s &ComponentBase::getClipBottomRight(void)
+Pnt2f &ComponentBase::getClipBottomRight(void)
 {
     return _sfClipBottomRight.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-const Pnt2s &ComponentBase::getClipBottomRight(void) const
+const Pnt2f &ComponentBase::getClipBottomRight(void) const
 {
     return _sfClipBottomRight.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setClipBottomRight(const Pnt2s &value)
+void ComponentBase::setClipBottomRight(const Pnt2f &value)
 {
     _sfClipBottomRight.setValue(value);
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-Vec2s &ComponentBase::getMinSize(void)
+Vec2f &ComponentBase::getMinSize(void)
 {
     return _sfMinSize.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-const Vec2s &ComponentBase::getMinSize(void) const
+const Vec2f &ComponentBase::getMinSize(void) const
 {
     return _sfMinSize.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setMinSize(const Vec2s &value)
+void ComponentBase::setMinSize(const Vec2f &value)
 {
     _sfMinSize.setValue(value);
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-Vec2s &ComponentBase::getMaxSize(void)
+Vec2f &ComponentBase::getMaxSize(void)
 {
     return _sfMaxSize.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-const Vec2s &ComponentBase::getMaxSize(void) const
+const Vec2f &ComponentBase::getMaxSize(void) const
 {
     return _sfMaxSize.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setMaxSize(const Vec2s &value)
+void ComponentBase::setMaxSize(const Vec2f &value)
 {
     _sfMaxSize.setValue(value);
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-Vec2s &ComponentBase::getPreferredSize(void)
+Vec2f &ComponentBase::getPreferredSize(void)
 {
     return _sfPreferredSize.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-const Vec2s &ComponentBase::getPreferredSize(void) const
+const Vec2f &ComponentBase::getPreferredSize(void) const
 {
     return _sfPreferredSize.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setPreferredSize(const Vec2s &value)
+void ComponentBase::setPreferredSize(const Vec2f &value)
 {
     _sfPreferredSize.setValue(value);
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-Vec2s &ComponentBase::getSize(void)
+Vec2f &ComponentBase::getSize(void)
 {
     return _sfSize.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-const Vec2s &ComponentBase::getSize(void) const
+const Vec2f &ComponentBase::getSize(void) const
 {
     return _sfSize.getValue();
 }
 
 OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setSize(const Vec2s &value)
+void ComponentBase::setSize(const Vec2f &value)
 {
     _sfSize.setValue(value);
 }

@@ -4,9 +4,9 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-bool isContainedBounds(const Pnt2s& Point, const ComponentPtr Comp)
+bool isContainedBounds(const Pnt2f& Point, const ComponentPtr Comp)
 {
-	Pnt2s CompTopLeft,CompBottomRight;
+	Pnt2f CompTopLeft,CompBottomRight;
 
 	Comp->getBounds(CompTopLeft, CompBottomRight);
 

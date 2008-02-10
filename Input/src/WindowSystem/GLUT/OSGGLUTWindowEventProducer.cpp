@@ -130,8 +130,8 @@ WindowPtr GLUTWindowEventProducer::createWindow(void)
     return GLUTWindow::create();
 }
 
-void GLUTWindowEventProducer::openWindow(const Pnt2s& ScreenPosition,
-                    const Vec2s& Size,
+void GLUTWindowEventProducer::openWindow(const Pnt2f& ScreenPosition,
+                    const Vec2f& Size,
                     const std::string& WindowName)
 {
     if(_WindowEventLoopThread == NULL)
@@ -176,7 +176,7 @@ void GLUTWindowEventProducer::GLUTWindowEventProducerDisplayFunction(void)
 
 void GLUTWindowEventProducer::GLUTWindowEventProducerReshapeFunction(int width,int height)
 {
-   _GLUTWindowToProducerMap[glutGetWindow()]->glutReshape(Vec2s(width,height));
+   _GLUTWindowToProducerMap[glutGetWindow()]->glutReshape(Vec2f(width,height));
 }
 
 void GLUTWindowEventProducer::GLUTWindowEventProducerOverlayDisplayFunction(void)
@@ -186,27 +186,27 @@ void GLUTWindowEventProducer::GLUTWindowEventProducerOverlayDisplayFunction(void
 
 void GLUTWindowEventProducer::GLUTWindowEventProducerKeyboardFunction(unsigned char key, int x,int y)
 {
-   _GLUTWindowToProducerMap[glutGetWindow()]->glutKeyboard(key,Pnt2s(x,y));
+   _GLUTWindowToProducerMap[glutGetWindow()]->glutKeyboard(key,Pnt2f(x,y));
 }
 
 void GLUTWindowEventProducer::GLUTWindowEventProducerKeyboardUpFunction(unsigned char key, int x,int y)
 {
-   _GLUTWindowToProducerMap[glutGetWindow()]->glutKeyboardUp(key,Pnt2s(x,y));
+   _GLUTWindowToProducerMap[glutGetWindow()]->glutKeyboardUp(key,Pnt2f(x,y));
 }
 
 void GLUTWindowEventProducer::GLUTWindowEventProducerMouseFunction(int button, int state, int x, int y)
 {
-   _GLUTWindowToProducerMap[glutGetWindow()]->glutMouse(button,state,Pnt2s(x,y));
+   _GLUTWindowToProducerMap[glutGetWindow()]->glutMouse(button,state,Pnt2f(x,y));
 }
 
 void GLUTWindowEventProducer::GLUTWindowEventProducerMotionFunction(int x, int y)
 {
-   _GLUTWindowToProducerMap[glutGetWindow()]->glutMotion(Pnt2s(x,y));
+   _GLUTWindowToProducerMap[glutGetWindow()]->glutMotion(Pnt2f(x,y));
 }
 
 void GLUTWindowEventProducer::GLUTWindowEventProducerPassiveMotionFunction(int x, int y)
 {
-   _GLUTWindowToProducerMap[glutGetWindow()]->glutPassiveMotion(Pnt2s(x,y));
+   _GLUTWindowToProducerMap[glutGetWindow()]->glutPassiveMotion(Pnt2f(x,y));
 }
 
 void GLUTWindowEventProducer::GLUTWindowEventProducerVisibilityFunction(int state)
@@ -221,11 +221,11 @@ void GLUTWindowEventProducer::GLUTWindowEventProducerEntryFunction(int state)
 
 void GLUTWindowEventProducer::GLUTWindowEventProducerSpecialFunction(int key, int x, int y)
 {
-   _GLUTWindowToProducerMap[glutGetWindow()]->glutSpecial(key,Pnt2s(x,y));
+   _GLUTWindowToProducerMap[glutGetWindow()]->glutSpecial(key,Pnt2f(x,y));
 }
 void GLUTWindowEventProducer::GLUTWindowEventProducerSpecialUpFunction(int key, int x, int y)
 {
-   _GLUTWindowToProducerMap[glutGetWindow()]->glutSpecialUp(key,Pnt2s(x,y));
+   _GLUTWindowToProducerMap[glutGetWindow()]->glutSpecialUp(key,Pnt2f(x,y));
 }
 
 void GLUTWindowEventProducer::GLUTWindowEventProducerIdleFunction(void)
@@ -260,10 +260,10 @@ void GLUTWindowEventProducer::setCursor(void)
 	//TODO:Implement
 }
 
-Pnt2s GLUTWindowEventProducer::getMousePosition(void) const
+Pnt2f GLUTWindowEventProducer::getMousePosition(void) const
 {
 	//TODO:Implement
-	return Pnt2s(0,0);
+	return Pnt2f(0,0);
 }
 
 void GLUTWindowEventProducer::glutIdle(void)
@@ -280,7 +280,7 @@ void GLUTWindowEventProducer::glutIdle(void)
    endEditCP(GLUTWindowEventProducerPtr(this), LastUpdateTimeFieldMask);*/
 }
 
-void GLUTWindowEventProducer::glutMouse(Int32 Button, Int32 State, Pnt2s MousePos)
+void GLUTWindowEventProducer::glutMouse(Int32 Button, Int32 State, Pnt2f MousePos)
 {
    MouseEvent::MouseButton OSGButton;
    switch(Button)
@@ -672,7 +672,7 @@ KeyEvent::Key GLUTWindowEventProducer::determineKey(UChar8 key)
 \***************************************************************************/
 
 //Set the Window Position
-void GLUTWindowEventProducer::setPosition(Pnt2s Pos)
+void GLUTWindowEventProducer::setPosition(Pnt2f Pos)
 {
    //Set the correct GLUT Window
    glutSetWindow( GLUTWindow::Ptr::dcast(getWindow())->getId() );
@@ -682,13 +682,13 @@ void GLUTWindowEventProducer::setPosition(Pnt2s Pos)
 }
 
 //Set the Window Position
-Pnt2s GLUTWindowEventProducer::getPosition(void) const
+Pnt2f GLUTWindowEventProducer::getPosition(void) const
 {
    //Set the correct GLUT Window
    glutSetWindow( GLUTWindow::Ptr::dcast(getWindow())->getId() );
 
    //Return the Window's position
-   return Pnt2s(glutGet(GLUT_WINDOW_X), glutGet(GLUT_WINDOW_Y));
+   return Pnt2f(glutGet(GLUT_WINDOW_X), glutGet(GLUT_WINDOW_Y));
 }
 
 //Set the Window size
@@ -705,13 +705,13 @@ void GLUTWindowEventProducer::setSize(Vec2us Size)
 }
 
 //Get the Window size
-Vec2s GLUTWindowEventProducer::getSize(void) const
+Vec2f GLUTWindowEventProducer::getSize(void) const
 {
    //Set the correct GLUT Window
    glutSetWindow( GLUTWindow::Ptr::dcast(getWindow())->getId() );
 
    //Return the Window's Size
-   return Vec2s(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+   return Vec2f(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
 }
 
 //Focused
@@ -812,7 +812,7 @@ void GLUTWindowEventProducer::setFullscreen(bool Fullscreen)
    else
    {
       //Reset Position and Size to Initial
-      setPosition(Pnt2s(glutGet( GLUT_INIT_WINDOW_X),glutGet( GLUT_INIT_WINDOW_Y)));
+      setPosition(Pnt2f(glutGet( GLUT_INIT_WINDOW_X),glutGet( GLUT_INIT_WINDOW_Y)));
       setSize(Vec2us(glutGet( GLUT_INIT_WINDOW_WIDTH),glutGet( GLUT_INIT_WINDOW_HEIGHT)));
    }
 }
@@ -918,8 +918,8 @@ GLUTWindowEventProducer::~GLUTWindowEventProducer(void)
 /*----------------------------- class specific ----------------------------*/
 
 GLUTWindowEventProducer::WindowEventLoopThreadArguments::WindowEventLoopThreadArguments(
-                       const Pnt2s& ScreenPosition,
-                       const Vec2s& Size,
+                       const Pnt2f& ScreenPosition,
+                       const Vec2f& Size,
                        const std::string& WindowName,
                        GLUTWindowPtr TheWindow,
                        GLUTWindowEventProducerPtr TheEventProducer,

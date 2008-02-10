@@ -76,7 +76,7 @@ void VariableHeightTreeModelLayout::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void VariableHeightTreeModelLayout::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight, TreePath path, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn) const
+void VariableHeightTreeModelLayout::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight, TreePath path, Pnt2f TopLeftPlaceIn, Pnt2f BottomRightPlaceIn) const
 {
 	//TODO:Implement
 }
@@ -105,7 +105,7 @@ UInt32 VariableHeightTreeModelLayout::getPreferredHeight(void) const
 	return 0;
 }
 
-UInt32 VariableHeightTreeModelLayout::getPreferredWidth(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+UInt32 VariableHeightTreeModelLayout::getPreferredWidth(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
 	//TODO: Implement
 	return 0;

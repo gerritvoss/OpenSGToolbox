@@ -133,7 +133,7 @@ SFUIDrawingSurfaceMouseTransformFunctorPtr *UIDrawingSurfaceBase::getSFMouseTran
 
 //! Get the UIDrawingSurface::_sfSize field.
 inline
-SFVec2s *UIDrawingSurfaceBase::getSFSize(void)
+SFVec2f *UIDrawingSurfaceBase::getSFSize(void)
 {
     return &_sfSize;
 }
@@ -225,21 +225,21 @@ void UIDrawingSurfaceBase::setMouseTransformFunctor(const UIDrawingSurfaceMouseT
 
 //! Get the value of the UIDrawingSurface::_sfSize field.
 inline
-Vec2s &UIDrawingSurfaceBase::getSize(void)
+Vec2f &UIDrawingSurfaceBase::getSize(void)
 {
     return _sfSize.getValue();
 }
 
 //! Get the value of the UIDrawingSurface::_sfSize field.
 inline
-const Vec2s &UIDrawingSurfaceBase::getSize(void) const
+const Vec2f &UIDrawingSurfaceBase::getSize(void) const
 {
     return _sfSize.getValue();
 }
 
 //! Set the value of the UIDrawingSurface::_sfSize field.
 inline
-void UIDrawingSurfaceBase::setSize(const Vec2s &value)
+void UIDrawingSurfaceBase::setSize(const Vec2f &value)
 {
     _sfSize.setValue(value);
 }

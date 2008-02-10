@@ -73,6 +73,7 @@
 #include "Component/Misc/OSGUIDrawObjectCanvas.h" // NonLeafDrawObjectPrototype type
 #include "Component/Misc/OSGUIDrawObjectCanvas.h" // ExpandedNonLeafDrawObjectPrototype type
 #include "Component/Text/OSGLabelFields.h" // NodeLabelPrototype type
+#include "Component/Container/OSGPanelFields.h" // NodePanelPrototype type
 #include "Background/OSGUIBackgroundFields.h" // SelectedBackground type
 #include "Background/OSGUIBackgroundFields.h" // NonSelectedBackground type
 #include "Border/OSGBorderFields.h" // SelectedBorder type
@@ -107,7 +108,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGeneratorBase : public
         NonLeafDrawObjectPrototypeFieldId         = LeafDrawObjectPrototypeFieldId            + 1,
         ExpandedNonLeafDrawObjectPrototypeFieldId = NonLeafDrawObjectPrototypeFieldId         + 1,
         NodeLabelPrototypeFieldId                 = ExpandedNonLeafDrawObjectPrototypeFieldId + 1,
-        SelectedBackgroundFieldId                 = NodeLabelPrototypeFieldId                 + 1,
+        NodePanelPrototypeFieldId                 = NodeLabelPrototypeFieldId                 + 1,
+        SelectedBackgroundFieldId                 = NodePanelPrototypeFieldId                 + 1,
         NonSelectedBackgroundFieldId              = SelectedBackgroundFieldId                 + 1,
         SelectedBorderFieldId                     = NonSelectedBackgroundFieldId              + 1,
         SelectedTextColorFieldId                  = SelectedBorderFieldId                     + 1,
@@ -121,6 +123,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGeneratorBase : public
     static const OSG::BitVector NonLeafDrawObjectPrototypeFieldMask;
     static const OSG::BitVector ExpandedNonLeafDrawObjectPrototypeFieldMask;
     static const OSG::BitVector NodeLabelPrototypeFieldMask;
+    static const OSG::BitVector NodePanelPrototypeFieldMask;
     static const OSG::BitVector SelectedBackgroundFieldMask;
     static const OSG::BitVector NonSelectedBackgroundFieldMask;
     static const OSG::BitVector SelectedBorderFieldMask;
@@ -158,6 +161,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGeneratorBase : public
            SFUIDrawObjectCanvasPtr *getSFNonLeafDrawObjectPrototype(void);
            SFUIDrawObjectCanvasPtr *getSFExpandedNonLeafDrawObjectPrototype(void);
            SFLabelPtr          *getSFNodeLabelPrototype(void);
+           SFPanelPtr          *getSFNodePanelPrototype(void);
            SFUIBackgroundPtr   *getSFSelectedBackground(void);
            SFUIBackgroundPtr   *getSFNonSelectedBackground(void);
            SFBorderPtr         *getSFSelectedBorder (void);
@@ -176,6 +180,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGeneratorBase : public
      const UIDrawObjectCanvasPtr &getExpandedNonLeafDrawObjectPrototype(void) const;
            LabelPtr            &getNodeLabelPrototype(void);
      const LabelPtr            &getNodeLabelPrototype(void) const;
+           PanelPtr            &getNodePanelPrototype(void);
+     const PanelPtr            &getNodePanelPrototype(void) const;
            UIBackgroundPtr     &getSelectedBackground(void);
      const UIBackgroundPtr     &getSelectedBackground(void) const;
            UIBackgroundPtr     &getNonSelectedBackground(void);
@@ -198,6 +204,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGeneratorBase : public
      void setNonLeafDrawObjectPrototype( const UIDrawObjectCanvasPtr &value );
      void setExpandedNonLeafDrawObjectPrototype( const UIDrawObjectCanvasPtr &value );
      void setNodeLabelPrototype( const LabelPtr &value );
+     void setNodePanelPrototype( const PanelPtr &value );
      void setSelectedBackground( const UIBackgroundPtr &value );
      void setNonSelectedBackground( const UIBackgroundPtr &value );
      void setSelectedBorder ( const BorderPtr &value );
@@ -251,6 +258,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGeneratorBase : public
     SFUIDrawObjectCanvasPtr   _sfNonLeafDrawObjectPrototype;
     SFUIDrawObjectCanvasPtr   _sfExpandedNonLeafDrawObjectPrototype;
     SFLabelPtr          _sfNodeLabelPrototype;
+    SFPanelPtr          _sfNodePanelPrototype;
     SFUIBackgroundPtr   _sfSelectedBackground;
     SFUIBackgroundPtr   _sfNonSelectedBackground;
     SFBorderPtr         _sfSelectedBorder;

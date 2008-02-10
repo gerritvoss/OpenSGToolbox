@@ -49,7 +49,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // 15TabPanel Headers
 #include <sstream>
@@ -356,7 +356,7 @@ int main(int argc, char **argv)
     // Create and edit Panel
     PanelPtr ExampleTabPanelPanel = osg::Panel::create();
     beginEditCP(ExampleTabPanelPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-        ExampleTabPanelPanel->setPreferredSize(Vec2s(180, 500));
+        ExampleTabPanelPanel->setPreferredSize(Vec2f(180, 500));
         ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton1);
         ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton2);
         ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton3);
@@ -423,7 +423,7 @@ int main(int argc, char **argv)
     ******************************************************/
     ExampleTabPanel = osg::TabPanel::create();
     beginEditCP(ExampleTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
-        ExampleTabPanel->setPreferredSize(Vec2s(350,350));
+        ExampleTabPanel->setPreferredSize(Vec2f(350,350));
         ExampleTabPanel->addTab(ExampleTabButton1, ExampleTabContentA);
         ExampleTabPanel->addTab(ExampleTabButton2, ExampleTabContentB);
         ExampleTabPanel->addTab(ExampleTabButton3, ExampleTabContentC);
@@ -495,8 +495,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(900,900),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(900,900),
                                         "OpenSG 15TabPanel Window");
 
     //Main Event Loop
@@ -519,7 +519,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

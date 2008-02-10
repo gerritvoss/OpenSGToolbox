@@ -107,16 +107,16 @@ const OSG::BitVector MultiColorMatteBorderBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var UInt32          MultiColorMatteBorderBase::_sfLeftWidth
+/*! \var Real32          MultiColorMatteBorderBase::_sfLeftWidth
     
 */
-/*! \var UInt32          MultiColorMatteBorderBase::_sfRightWidth
+/*! \var Real32          MultiColorMatteBorderBase::_sfRightWidth
     
 */
-/*! \var UInt32          MultiColorMatteBorderBase::_sfTopWidth
+/*! \var Real32          MultiColorMatteBorderBase::_sfTopWidth
     
 */
-/*! \var UInt32          MultiColorMatteBorderBase::_sfBottomWidth
+/*! \var Real32          MultiColorMatteBorderBase::_sfBottomWidth
     
 */
 /*! \var Color4f         MultiColorMatteBorderBase::_sfLeftLineTopColor
@@ -148,22 +148,22 @@ const OSG::BitVector MultiColorMatteBorderBase::MTInfluenceMask =
 
 FieldDescription *MultiColorMatteBorderBase::_desc[] = 
 {
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "LeftWidth", 
                      LeftWidthFieldId, LeftWidthFieldMask,
                      false,
                      (FieldAccessMethod) &MultiColorMatteBorderBase::getSFLeftWidth),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "RightWidth", 
                      RightWidthFieldId, RightWidthFieldMask,
                      false,
                      (FieldAccessMethod) &MultiColorMatteBorderBase::getSFRightWidth),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "TopWidth", 
                      TopWidthFieldId, TopWidthFieldMask,
                      false,
                      (FieldAccessMethod) &MultiColorMatteBorderBase::getSFTopWidth),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "BottomWidth", 
                      BottomWidthFieldId, BottomWidthFieldMask,
                      false,
@@ -283,10 +283,10 @@ void MultiColorMatteBorderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 MultiColorMatteBorderBase::MultiColorMatteBorderBase(void) :
-    _sfLeftWidth              (UInt32(1)), 
-    _sfRightWidth             (UInt32(1)), 
-    _sfTopWidth               (UInt32(1)), 
-    _sfBottomWidth            (UInt32(1)), 
+    _sfLeftWidth              (Real32(1)), 
+    _sfRightWidth             (Real32(1)), 
+    _sfTopWidth               (Real32(1)), 
+    _sfBottomWidth            (Real32(1)), 
     _sfLeftLineTopColor       (Color4f(0.0,0.0,0.0,1.0)), 
     _sfLeftLineBottomColor    (Color4f(0.0,0.0,0.0,1.0)), 
     _sfTopLineLeftColor       (Color4f(0.0,0.0,0.0,1.0)), 

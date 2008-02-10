@@ -78,7 +78,7 @@ A UI Abstract Window.
 	</Field>
 	<Field
 		name="PreviousPosition"
-		type="Pnt2s"
+		type="Pnt2f"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -87,7 +87,7 @@ A UI Abstract Window.
 	</Field>
 	<Field
 		name="PreviousSize"
-		type="Vec2s"
+		type="Vec2f"
 		cardinality="single"
 		visibility="external"
 		access="public"

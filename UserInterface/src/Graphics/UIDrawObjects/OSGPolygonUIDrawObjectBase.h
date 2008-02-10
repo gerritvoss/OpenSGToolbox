@@ -67,7 +67,7 @@
 
 #include "OSGUIDrawObject.h" // Parent
 
-#include <OpenSG/OSGVec2sFields.h> // Verticies type
+#include <OpenSG/OSGPnt2fFields.h> // Verticies type
 #include <OpenSG/OSGColor4fFields.h> // Color type
 #include <OpenSG/OSGReal32Fields.h> // Opacity type
 
@@ -128,7 +128,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PolygonUIDrawObjectBase : public UIDrawObj
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFPnt2s             *getMFVerticies      (void);
+           MFPnt2f             *getMFVerticies      (void);
            SFColor4f           *getSFColor          (void);
            SFReal32            *getSFOpacity        (void);
 
@@ -136,9 +136,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING PolygonUIDrawObjectBase : public UIDrawObj
      const Color4f             &getColor          (void) const;
            Real32              &getOpacity        (void);
      const Real32              &getOpacity        (void) const;
-           Pnt2s               &getVerticies      (const UInt32 index);
-           MFPnt2s             &getVerticies      (void);
-     const MFPnt2s             &getVerticies      (void) const;
+           Pnt2f               &getVerticies      (const UInt32 index);
+           MFPnt2f             &getVerticies      (void);
+     const MFPnt2f             &getVerticies      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -189,7 +189,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PolygonUIDrawObjectBase : public UIDrawObj
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFPnt2s             _mfVerticies;
+    MFPnt2f             _mfVerticies;
     SFColor4f           _sfColor;
     SFReal32            _sfOpacity;
 

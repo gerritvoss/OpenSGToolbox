@@ -110,8 +110,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     void setRolloverImage(const std::string& Path);
     void setDisabledImage(const std::string& Path);
 
-	void getTextBounds(Pnt2s& TextTopLeft, Pnt2s& TextBottomRight) const;
-	void setPreferredSizeByContents(const UInt16 Insets);
+	void getTextBounds(Pnt2f& TextTopLeft, Pnt2f& TextBottomRight) const;
+	void setPreferredSizeByContents(const Real32 Insets);
 
     /*=========================  PROTECTED  ===============================*/
   protected:

@@ -50,7 +50,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 
 // 27ScrollPanel Headers
@@ -166,8 +166,8 @@ int main(int argc, char **argv)
 
     beginEditCP(ScrollPanelUIViewport, UIViewport::ViewComponentFieldMask | UIViewport::ViewPositionFieldMask | UIViewport::PreferredSizeFieldMask);
         ScrollPanelUIViewport->setViewComponent(ExampleViewablePanel);
-        ScrollPanelUIViewport->setViewPosition(Pnt2s(150,150));
-        ScrollPanelUIViewport->setPreferredSize(Vec2s(100,100));
+        ScrollPanelUIViewport->setViewPosition(Pnt2f(150,150));
+        ScrollPanelUIViewport->setPreferredSize(Vec2f(100,100));
     endEditCP(ScrollPanelUIViewport, UIViewport::ViewComponentFieldMask | UIViewport::ViewPositionFieldMask | UIViewport::PreferredSizeFieldMask);
 
        /******************************************************
@@ -202,7 +202,7 @@ int main(int argc, char **argv)
     
 	ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();
     beginEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-        ExampleScrollPanel->setPreferredSize(Vec2s(100,150));
+        ExampleScrollPanel->setPreferredSize(Vec2f(100,150));
         ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     endEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
@@ -283,7 +283,7 @@ int main(int argc, char **argv)
     //ExampleScrollPanel->getHorizontalScrollBar()
     beginEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
         ExampleVerticalScrollBar->setOrientation(VERTICAL_ALIGNMENT);
-        ExampleVerticalScrollBar->setPreferredSize(Vec2s(20,200));
+        ExampleVerticalScrollBar->setPreferredSize(Vec2f(20,200));
         ExampleVerticalScrollBar->setEnabled(false);
         ExampleVerticalScrollBar->setUnitIncrement(10);
         ExampleVerticalScrollBar->setBlockIncrement(100);
@@ -293,7 +293,7 @@ int main(int argc, char **argv)
     ScrollBarPtr ExampleHorizontalScrollBar = ScrollBar::create();
     beginEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
         ExampleHorizontalScrollBar->setOrientation(HORIZONTAL_ALIGNMENT);
-        ExampleHorizontalScrollBar->setPreferredSize(Vec2s(400,20));
+        ExampleHorizontalScrollBar->setPreferredSize(Vec2f(400,20));
     endEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
     ExampleHorizontalScrollBar->setModel(&TheBoundedRangeModel);
     
@@ -366,8 +366,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(550,550),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(550,550),
                                         "OpenSG 27ScrollPanel Window");
 
     //Main Event Loop
@@ -414,7 +414,7 @@ PanelPtr createPanelWithButtons(void)
     PanelPtr ScrollPanelInsertPanel = osg::Panel::create();
     FlowLayoutPtr ScrollPanelInsertPanelLayout = osg::FlowLayout::create();
 	beginEditCP(ScrollPanelInsertPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-        ScrollPanelInsertPanel->setPreferredSize(Vec2s(100, 250 ));
+        ScrollPanelInsertPanel->setPreferredSize(Vec2f(100, 250 ));
         ScrollPanelInsertPanel->getChildren().addValue(PanelButton1);
         ScrollPanelInsertPanel->getChildren().addValue(PanelButton2);
         ScrollPanelInsertPanel->getChildren().addValue(PanelButton3);
@@ -437,7 +437,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

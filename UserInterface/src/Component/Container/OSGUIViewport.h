@@ -85,7 +85,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIViewport : public UIViewportBase
 	void addChangeListener(ChangeListenerPtr Listener);
 	void removeChangeListener(ChangeListenerPtr Listener);
     
-    Vec2s getCorrectedViewSize(void) const;
+    Vec2f getCorrectedViewSize(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

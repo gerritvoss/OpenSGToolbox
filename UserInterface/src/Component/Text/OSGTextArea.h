@@ -143,7 +143,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
     friend class FieldContainer;
     friend class TextAreaBase;
 
-	Int32 findTextPosition(Pnt2s Input);
+	Int32 findTextPosition(Pnt2f Input);
     static void initMethod(void);
 
 	std::vector<TextLine> _LineContents;

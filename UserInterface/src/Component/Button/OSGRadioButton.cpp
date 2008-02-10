@@ -77,20 +77,20 @@ void RadioButton::initMethod (void)
 
 void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
 {
-	Pnt2s TopLeft, BottomRight;
-	Vec2s drawObjectSize;
-	Pnt2s TempPos;
+	Pnt2f TopLeft, BottomRight;
+	Vec2f drawObjectSize;
+	Pnt2f TempPos;
 
-    Pnt2s InnerComponentsPosition(0,0);
-    Vec2s InnerComponentsSize(0,0);
+    Pnt2f InnerComponentsPosition(0,0);
+    Vec2f InnerComponentsSize(0,0);
 
     UInt32 DrawnComponentToTextGap(2);
 
 	getInsideBorderBounds(TopLeft, BottomRight);
 
-    Pnt2s TextTopLeft, TextBottomRight;
+    Pnt2f TextTopLeft, TextBottomRight;
     getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
-    Vec2s TextBounds( TextBottomRight - TextTopLeft);
+    Vec2f TextBounds( TextBottomRight - TextTopLeft);
 	if(TextBounds.x()>0)
     {
 	    InnerComponentsSize[0] += TextBounds.x();
@@ -99,8 +99,8 @@ void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
     UIDrawObjectCanvasPtr DrawnDrawObject = getDrawnDrawObject();
     if(DrawnDrawObject != NullFC)
     {
-	    Pnt2s drawObjectTopLeft;
-	    Pnt2s drawObjectBottomRight;
+	    Pnt2f drawObjectTopLeft;
+	    Pnt2f drawObjectBottomRight;
         DrawnDrawObject->getDrawObjectBounds(drawObjectTopLeft, drawObjectBottomRight);
         drawObjectSize = drawObjectBottomRight-drawObjectTopLeft;
 		
@@ -122,7 +122,7 @@ void RadioButton::drawInternal(const GraphicsPtr TheGraphics) const
         DrawnDrawObject->draw(TheGraphics);
     }
 
-    TheGraphics->drawText(calculateAlignment(InnerComponentsPosition + Vec2s(drawObjectSize.x()+ DrawnComponentToTextGap,0), InnerComponentsSize-Vec2s(drawObjectSize.x()+ DrawnComponentToTextGap,0),TextBounds,0.5,0.0 )
+    TheGraphics->drawText(calculateAlignment(InnerComponentsPosition + Vec2f(drawObjectSize.x()+ DrawnComponentToTextGap,0), InnerComponentsSize-Vec2f(drawObjectSize.x()+ DrawnComponentToTextGap,0),TextBounds,0.5,0.0 )
         ,   getText(), getFont(), getDrawnTextColor(), getOpacity());
 
 }

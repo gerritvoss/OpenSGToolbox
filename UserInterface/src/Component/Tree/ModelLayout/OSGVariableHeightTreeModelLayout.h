@@ -79,7 +79,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING VariableHeightTreeModelLayout : public Var
 
     /*! \}                                                                 */
 	//Returns a rectangle giving the bounds needed to draw path.
-	virtual void getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight, TreePath path, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn) const;
+	virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight, TreePath path, Pnt2f TopLeftPlaceIn, Pnt2f BottomRightPlaceIn) const;
 
 	//Returns true if every node in the path is expanded
 	virtual bool isVisible(const TreePath& path) const;
@@ -94,7 +94,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING VariableHeightTreeModelLayout : public Var
 	virtual UInt32 getPreferredHeight(void) const;
 
 	//Returns the preferred width for the passed in region.
-	virtual UInt32 getPreferredWidth(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+	virtual UInt32 getPreferredWidth(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
 
 	//Number of rows being displayed.
 	virtual UInt32 getRowCount(void) const;

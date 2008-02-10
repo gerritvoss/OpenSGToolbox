@@ -49,7 +49,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 
 // 21ExampleInterface Headers
@@ -451,7 +451,7 @@ int main(int argc, char **argv)
         LeftPanelLabel1->setBackgrounds(GreyBackground);
         LeftPanelLabel1->setFont(LeftPanelLabel1Font);
         LeftPanelLabel1->setText("OSG Gui");
-        LeftPanelLabel1->setPreferredSize(Vec2s(300, 100));
+        LeftPanelLabel1->setPreferredSize(Vec2f(300, 100));
 		LeftPanelLabel1->setHorizontalAlignment(.5);
 	endEditCP(LeftPanelLabel1, Label::BordersFieldMask | Label::BackgroundsFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::PreferredSizeFieldMask | Label::HorizontalAlignmentFieldMask);
 
@@ -487,7 +487,7 @@ int main(int argc, char **argv)
 
     // LeftPanel stuff
     beginEditCP(LeftPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        LeftPanel->setPreferredSize(Vec2s(400, 500));
+        LeftPanel->setPreferredSize(Vec2f(400, 500));
         LeftPanel->getChildren().addValue(LeftPanelLabel1);
         LeftPanel->getChildren().addValue(createLeftPanelButtonPanel());
         LeftPanel->getChildren().addValue(createLeftPanelRadioTextPanel());
@@ -498,7 +498,7 @@ int main(int argc, char **argv)
 
     //RightPanel stuff
     beginEditCP(RightPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        RightPanel->setPreferredSize(Vec2s(200, 620));
+        RightPanel->setPreferredSize(Vec2f(200, 620));
         RightPanel->getChildren().addValue(createRightPanelButtonPanel());
         RightPanel->getChildren().addValue(createRightPanelCheckPanel());
         RightPanel->setLayout(RightPanelLayout);
@@ -560,8 +560,8 @@ int main(int argc, char **argv)
     mgr->showAll();
 
     // Set up Window
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(550,550),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(550,550),
                                         "OpenSG 21ExampleInterface Window");
 
     while(!ExitApp)
@@ -586,7 +586,7 @@ ComponentPtr createLeftPanelButtonPanel(void)
         LeftPanelButtonPanelLabel->setTextColor(Color4f(1.0,1.0,1.0,1.0));
         LeftPanelButtonPanelLabel->setRolloverTextColor(Color4f(1.0,1.0,1.0,1.0));
         LeftPanelButtonPanelLabel->setBackground(createComplexBackground());
-        LeftPanelButtonPanelLabel->setPreferredSize(Vec2s(100, 50));
+        LeftPanelButtonPanelLabel->setPreferredSize(Vec2f(100, 50));
         LeftPanelButtonPanelLabel->setText("Various Options");
 		LeftPanelButtonPanelLabel->setHorizontalAlignment(.5);
 	endEditCP(LeftPanelButtonPanelLabel, Label::TextColorFieldMask | Label::BackgroundFieldMask | Label::PreferredSizeFieldMask | Label::TextFieldMask | Label::HorizontalAlignmentFieldMask);
@@ -601,32 +601,32 @@ ComponentPtr createLeftPanelButtonPanel(void)
 
     beginEditCP(LeftPanelButton1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         LeftPanelButton1->setText("This");
-        LeftPanelButton1->setPreferredSize(Vec2s(100,50));
+        LeftPanelButton1->setPreferredSize(Vec2f(100,50));
     endEditCP(LeftPanelButton1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
     
     beginEditCP(LeftPanelButton2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         LeftPanelButton2->setText("is");
-        LeftPanelButton2->setPreferredSize(Vec2s(100,50));
+        LeftPanelButton2->setPreferredSize(Vec2f(100,50));
     endEditCP(LeftPanelButton2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 
     beginEditCP(LeftPanelButton3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         LeftPanelButton3->setText("an");
-        LeftPanelButton3->setPreferredSize(Vec2s(100,50));
+        LeftPanelButton3->setPreferredSize(Vec2f(100,50));
     endEditCP(LeftPanelButton3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 
     beginEditCP(LeftPanelButton4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         LeftPanelButton4->setText("example");
-        LeftPanelButton4->setPreferredSize(Vec2s(100,50));
+        LeftPanelButton4->setPreferredSize(Vec2f(100,50));
     endEditCP(LeftPanelButton4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 
     beginEditCP(LeftPanelButton5, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         LeftPanelButton5->setText("user");
-        LeftPanelButton5->setPreferredSize(Vec2s(100,50));
+        LeftPanelButton5->setPreferredSize(Vec2f(100,50));
     endEditCP(LeftPanelButton5, Button::TextFieldMask, Component::PreferredSizeFieldMask);
     
     beginEditCP(LeftPanelButton6, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         LeftPanelButton6->setText("interface.");
-        LeftPanelButton6->setPreferredSize(Vec2s(100,50));
+        LeftPanelButton6->setPreferredSize(Vec2f(100,50));
     endEditCP(LeftPanelButton6, Button::TextFieldMask, Component::PreferredSizeFieldMask);
     
 
@@ -652,7 +652,7 @@ ComponentPtr createLeftPanelButtonPanel(void)
     // Create and edit Panel
     PanelPtr LeftPanelButtonPanel = osg::Panel::create();
     beginEditCP(LeftPanelButtonPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        LeftPanelButtonPanel->setPreferredSize(Vec2s(180, 500));
+        LeftPanelButtonPanel->setPreferredSize(Vec2f(180, 500));
         LeftPanelButtonPanel->getChildren().addValue(LeftPanelButtonPanelLabel);
         LeftPanelButtonPanel->getChildren().addValue(LeftPanelButton1);
         LeftPanelButtonPanel->getChildren().addValue(LeftPanelButton2);
@@ -683,7 +683,7 @@ ComponentPtr createLeftPanelRadioTextPanel(void)
     beginEditCP(RadioButton1, RadioButton::VerticalAlignmentFieldMask | RadioButton::HorizontalAlignmentFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
         RadioButton1->setVerticalAlignment(0.5);
         RadioButton1->setHorizontalAlignment(0.0);
-        RadioButton1->setPreferredSize(Vec2s(100, 40));
+        RadioButton1->setPreferredSize(Vec2f(100, 40));
         RadioButton1->setText("Black Text");
         RadioButton1->setToolTipText("Set TextArea text black");
     endEditCP(RadioButton1, RadioButton::VerticalAlignmentFieldMask | RadioButton::HorizontalAlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
@@ -692,7 +692,7 @@ ComponentPtr createLeftPanelRadioTextPanel(void)
     beginEditCP(RadioButton2, RadioButton::VerticalAlignmentFieldMask | RadioButton::HorizontalAlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
         RadioButton2->setVerticalAlignment(0.5);
         RadioButton2->setHorizontalAlignment(0.0);
-        RadioButton2->setPreferredSize(Vec2s(100, 40));
+        RadioButton2->setPreferredSize(Vec2f(100, 40));
         RadioButton2->setText("Red Text");
         RadioButton2->setToolTipText("Set TextArea text red");
     endEditCP(RadioButton2, RadioButton::VerticalAlignmentFieldMask | RadioButton::HorizontalAlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
@@ -701,7 +701,7 @@ ComponentPtr createLeftPanelRadioTextPanel(void)
     beginEditCP(RadioButton3, RadioButton::VerticalAlignmentFieldMask | RadioButton::HorizontalAlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
         RadioButton3->setVerticalAlignment(0.5);
         RadioButton3->setHorizontalAlignment(0.0);
-        RadioButton3->setPreferredSize(Vec2s(100, 40));
+        RadioButton3->setPreferredSize(Vec2f(100, 40));
         RadioButton3->setText("Green Text");
         RadioButton3->setToolTipText("Set TextArea text green");
     endEditCP(RadioButton3, RadioButton::VerticalAlignmentFieldMask | RadioButton::HorizontalAlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
@@ -710,7 +710,7 @@ ComponentPtr createLeftPanelRadioTextPanel(void)
     beginEditCP(RadioButton4, RadioButton::VerticalAlignmentFieldMask | RadioButton::HorizontalAlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
         RadioButton4->setVerticalAlignment(0.5);
         RadioButton4->setHorizontalAlignment(0.0);
-        RadioButton4->setPreferredSize(Vec2s(100, 40));
+        RadioButton4->setPreferredSize(Vec2f(100, 40));
         RadioButton4->setText("Blue Text");
         RadioButton4->setToolTipText("Set TextArea text blue");
     endEditCP(RadioButton4, RadioButton::VerticalAlignmentFieldMask | RadioButton::HorizontalAlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
@@ -725,7 +725,7 @@ ComponentPtr createLeftPanelRadioTextPanel(void)
     // Create TextArea
     LeftPanelTextArea = osg::TextArea::create();
     beginEditCP(LeftPanelTextArea, TextArea::PreferredSizeFieldMask);
-        LeftPanelTextArea->setPreferredSize(Vec2s(125, 200));
+        LeftPanelTextArea->setPreferredSize(Vec2f(125, 200));
     endEditCP(LeftPanelTextArea, TextArea::PreferredSizeFieldMask);
 
     // Create Panel and its Background/Border to label TextField
@@ -733,7 +733,7 @@ ComponentPtr createLeftPanelRadioTextPanel(void)
     EmptyUIBackgroundPtr LeftPanelTextFieldLabelBackground = osg::EmptyUIBackground::create();
     EmptyBorderPtr LeftPanelTextFieldLabelBorder = osg::EmptyBorder::create();
     beginEditCP(LeftPanelTextFieldLabel, Label::PreferredSizeFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask | Label::TextFieldMask);
-        LeftPanelTextFieldLabel->setPreferredSize(Vec2s(100, 25));
+        LeftPanelTextFieldLabel->setPreferredSize(Vec2f(100, 25));
         LeftPanelTextFieldLabel->setBorders(LeftPanelTextFieldLabelBorder);
         LeftPanelTextFieldLabel->setBackgrounds(LeftPanelTextFieldLabelBackground);
         LeftPanelTextFieldLabel->setText("Text Field");
@@ -742,7 +742,7 @@ ComponentPtr createLeftPanelRadioTextPanel(void)
     // Create TextField
     TextFieldPtr LeftPanelTextField = osg::TextField::create();
     beginEditCP(LeftPanelTextField, Component::PreferredSizeFieldMask);
-        LeftPanelTextField->setPreferredSize(Vec2s(125, 22));
+        LeftPanelTextField->setPreferredSize(Vec2f(125, 22));
     endEditCP(LeftPanelTextField, Component::PreferredSizeFieldMask);
 
     
@@ -769,7 +769,7 @@ ComponentPtr createLeftPanelRadioTextPanel(void)
 
     beginEditCP(LeftPanelRadioTextPanelRadioPanel, Component::BordersFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundsFieldMask | Container::LayoutFieldMask | Container::ChildrenFieldMask);
         LeftPanelRadioTextPanelRadioPanel->setBorders(LeftPanelRadioTextPanelRadioPanelBorder);
-        LeftPanelRadioTextPanelRadioPanel->setPreferredSize(Vec2s(125, 200));
+        LeftPanelRadioTextPanelRadioPanel->setPreferredSize(Vec2f(125, 200));
         LeftPanelRadioTextPanelRadioPanel->setLayout(LeftPanelRadioTextPanelRadioPanelLayout);
         LeftPanelRadioTextPanelRadioPanel->setBackgrounds(LeftPanelRadioTextPanelBackground);
         LeftPanelRadioTextPanelRadioPanel->getChildren().addValue(RadioButton1);
@@ -788,7 +788,7 @@ ComponentPtr createLeftPanelRadioTextPanel(void)
     // Create and edit Panel
     PanelPtr LeftPanelRadioTextPanel = osg::Panel::create();
     beginEditCP(LeftPanelRadioTextPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        LeftPanelRadioTextPanel->setPreferredSize(Vec2s(180, 500));
+        LeftPanelRadioTextPanel->setPreferredSize(Vec2f(180, 500));
         LeftPanelRadioTextPanel->getChildren().addValue(LeftPanelRadioTextPanelRadioPanel);
         LeftPanelRadioTextPanel->getChildren().addValue(LeftPanelTextArea);
         LeftPanelRadioTextPanel->getChildren().addValue(LeftPanelTextFieldLabel);
@@ -810,22 +810,22 @@ ComponentPtr createRightPanelButtonPanel(void)
 
     beginEditCP(RightPanelButton1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelButton1->setText("These");
-        RightPanelButton1->setPreferredSize(Vec2s(100,50));
+        RightPanelButton1->setPreferredSize(Vec2f(100,50));
     endEditCP(RightPanelButton1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
     
     beginEditCP(RightPanelButton2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelButton2->setText("are");
-        RightPanelButton2->setPreferredSize(Vec2s(100,50));
+        RightPanelButton2->setPreferredSize(Vec2f(100,50));
     endEditCP(RightPanelButton2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 
     beginEditCP(RightPanelButton3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelButton3->setText("toggle");
-        RightPanelButton3->setPreferredSize(Vec2s(100,50));
+        RightPanelButton3->setPreferredSize(Vec2f(100,50));
     endEditCP(RightPanelButton3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 
     beginEditCP(RightPanelButton4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelButton4->setText("buttons");
-        RightPanelButton4->setPreferredSize(Vec2s(100,50));
+        RightPanelButton4->setPreferredSize(Vec2f(100,50));
     endEditCP(RightPanelButton4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
 
 
@@ -851,7 +851,7 @@ ComponentPtr createRightPanelButtonPanel(void)
     // Create and edit Panel
     PanelPtr RightPanelButtonPanel = osg::Panel::create();
     beginEditCP(RightPanelButtonPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        RightPanelButtonPanel->setPreferredSize(Vec2s(200, 300));
+        RightPanelButtonPanel->setPreferredSize(Vec2f(200, 300));
         RightPanelButtonPanel->getChildren().addValue(RightPanelButton1);
         RightPanelButtonPanel->getChildren().addValue(RightPanelButton2);
         RightPanelButtonPanel->getChildren().addValue(RightPanelButton3);
@@ -874,7 +874,7 @@ ComponentPtr createRightPanelCheckPanel(void)
 
     beginEditCP(RightPanelCheck1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelCheck1->setText("Show Torus");
-        RightPanelCheck1->setPreferredSize(Vec2s(125,50));
+        RightPanelCheck1->setPreferredSize(Vec2f(125,50));
         RightPanelCheck1->setHorizontalAlignment(0.0);
     endEditCP(RightPanelCheck1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
@@ -882,7 +882,7 @@ ComponentPtr createRightPanelCheckPanel(void)
     
     beginEditCP(RightPanelCheck2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelCheck2->setText("Show Box");
-        RightPanelCheck2->setPreferredSize(Vec2s(125,50));
+        RightPanelCheck2->setPreferredSize(Vec2f(125,50));
         RightPanelCheck2->setHorizontalAlignment(0.0);
     endEditCP(RightPanelCheck2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
@@ -890,7 +890,7 @@ ComponentPtr createRightPanelCheckPanel(void)
 
     beginEditCP(RightPanelCheck3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelCheck3->setText("Show Sphere");
-        RightPanelCheck3->setPreferredSize(Vec2s(125,50));
+        RightPanelCheck3->setPreferredSize(Vec2f(125,50));
         RightPanelCheck3->setHorizontalAlignment(0.0);
     endEditCP(RightPanelCheck3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
@@ -898,7 +898,7 @@ ComponentPtr createRightPanelCheckPanel(void)
 
     beginEditCP(RightPanelCheck4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         RightPanelCheck4->setText("Show Cone");
-        RightPanelCheck4->setPreferredSize(Vec2s(125,50));
+        RightPanelCheck4->setPreferredSize(Vec2f(125,50));
         RightPanelCheck4->setHorizontalAlignment(0.0);
     endEditCP(RightPanelCheck4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
@@ -927,7 +927,7 @@ ComponentPtr createRightPanelCheckPanel(void)
     // Create and edit Panel
     PanelPtr RightPanelCheckPanel = osg::Panel::create();
     beginEditCP(RightPanelCheckPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        RightPanelCheckPanel->setPreferredSize(Vec2s(200, 300));
+        RightPanelCheckPanel->setPreferredSize(Vec2f(200, 300));
         RightPanelCheckPanel->getChildren().addValue(RightPanelCheck1);
         RightPanelCheckPanel->getChildren().addValue(RightPanelCheck2);
         RightPanelCheckPanel->getChildren().addValue(RightPanelCheck3);
@@ -1141,7 +1141,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

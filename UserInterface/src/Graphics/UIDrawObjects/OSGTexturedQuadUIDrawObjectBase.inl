@@ -98,28 +98,28 @@ TexturedQuadUIDrawObjectPtr TexturedQuadUIDrawObjectBase::createEmpty(void)
 
 //! Get the TexturedQuadUIDrawObject::_sfPoint1 field.
 inline
-SFPnt2s *TexturedQuadUIDrawObjectBase::getSFPoint1(void)
+SFPnt2f *TexturedQuadUIDrawObjectBase::getSFPoint1(void)
 {
     return &_sfPoint1;
 }
 
 //! Get the TexturedQuadUIDrawObject::_sfPoint2 field.
 inline
-SFPnt2s *TexturedQuadUIDrawObjectBase::getSFPoint2(void)
+SFPnt2f *TexturedQuadUIDrawObjectBase::getSFPoint2(void)
 {
     return &_sfPoint2;
 }
 
 //! Get the TexturedQuadUIDrawObject::_sfPoint3 field.
 inline
-SFPnt2s *TexturedQuadUIDrawObjectBase::getSFPoint3(void)
+SFPnt2f *TexturedQuadUIDrawObjectBase::getSFPoint3(void)
 {
     return &_sfPoint3;
 }
 
 //! Get the TexturedQuadUIDrawObject::_sfPoint4 field.
 inline
-SFPnt2s *TexturedQuadUIDrawObjectBase::getSFPoint4(void)
+SFPnt2f *TexturedQuadUIDrawObjectBase::getSFPoint4(void)
 {
     return &_sfPoint4;
 }
@@ -169,84 +169,84 @@ SFReal32 *TexturedQuadUIDrawObjectBase::getSFOpacity(void)
 
 //! Get the value of the TexturedQuadUIDrawObject::_sfPoint1 field.
 inline
-Pnt2s &TexturedQuadUIDrawObjectBase::getPoint1(void)
+Pnt2f &TexturedQuadUIDrawObjectBase::getPoint1(void)
 {
     return _sfPoint1.getValue();
 }
 
 //! Get the value of the TexturedQuadUIDrawObject::_sfPoint1 field.
 inline
-const Pnt2s &TexturedQuadUIDrawObjectBase::getPoint1(void) const
+const Pnt2f &TexturedQuadUIDrawObjectBase::getPoint1(void) const
 {
     return _sfPoint1.getValue();
 }
 
 //! Set the value of the TexturedQuadUIDrawObject::_sfPoint1 field.
 inline
-void TexturedQuadUIDrawObjectBase::setPoint1(const Pnt2s &value)
+void TexturedQuadUIDrawObjectBase::setPoint1(const Pnt2f &value)
 {
     _sfPoint1.setValue(value);
 }
 
 //! Get the value of the TexturedQuadUIDrawObject::_sfPoint2 field.
 inline
-Pnt2s &TexturedQuadUIDrawObjectBase::getPoint2(void)
+Pnt2f &TexturedQuadUIDrawObjectBase::getPoint2(void)
 {
     return _sfPoint2.getValue();
 }
 
 //! Get the value of the TexturedQuadUIDrawObject::_sfPoint2 field.
 inline
-const Pnt2s &TexturedQuadUIDrawObjectBase::getPoint2(void) const
+const Pnt2f &TexturedQuadUIDrawObjectBase::getPoint2(void) const
 {
     return _sfPoint2.getValue();
 }
 
 //! Set the value of the TexturedQuadUIDrawObject::_sfPoint2 field.
 inline
-void TexturedQuadUIDrawObjectBase::setPoint2(const Pnt2s &value)
+void TexturedQuadUIDrawObjectBase::setPoint2(const Pnt2f &value)
 {
     _sfPoint2.setValue(value);
 }
 
 //! Get the value of the TexturedQuadUIDrawObject::_sfPoint3 field.
 inline
-Pnt2s &TexturedQuadUIDrawObjectBase::getPoint3(void)
+Pnt2f &TexturedQuadUIDrawObjectBase::getPoint3(void)
 {
     return _sfPoint3.getValue();
 }
 
 //! Get the value of the TexturedQuadUIDrawObject::_sfPoint3 field.
 inline
-const Pnt2s &TexturedQuadUIDrawObjectBase::getPoint3(void) const
+const Pnt2f &TexturedQuadUIDrawObjectBase::getPoint3(void) const
 {
     return _sfPoint3.getValue();
 }
 
 //! Set the value of the TexturedQuadUIDrawObject::_sfPoint3 field.
 inline
-void TexturedQuadUIDrawObjectBase::setPoint3(const Pnt2s &value)
+void TexturedQuadUIDrawObjectBase::setPoint3(const Pnt2f &value)
 {
     _sfPoint3.setValue(value);
 }
 
 //! Get the value of the TexturedQuadUIDrawObject::_sfPoint4 field.
 inline
-Pnt2s &TexturedQuadUIDrawObjectBase::getPoint4(void)
+Pnt2f &TexturedQuadUIDrawObjectBase::getPoint4(void)
 {
     return _sfPoint4.getValue();
 }
 
 //! Get the value of the TexturedQuadUIDrawObject::_sfPoint4 field.
 inline
-const Pnt2s &TexturedQuadUIDrawObjectBase::getPoint4(void) const
+const Pnt2f &TexturedQuadUIDrawObjectBase::getPoint4(void) const
 {
     return _sfPoint4.getValue();
 }
 
 //! Set the value of the TexturedQuadUIDrawObject::_sfPoint4 field.
 inline
-void TexturedQuadUIDrawObjectBase::setPoint4(const Pnt2s &value)
+void TexturedQuadUIDrawObjectBase::setPoint4(const Pnt2f &value)
 {
     _sfPoint4.setValue(value);
 }

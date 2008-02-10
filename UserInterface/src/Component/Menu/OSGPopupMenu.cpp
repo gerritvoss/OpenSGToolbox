@@ -79,8 +79,8 @@ void PopupMenu::initMethod (void)
 void PopupMenu::updateLayout(void)
 {
 	//Determine the Max Preferred Width of my MenuItems
-	UInt16 MaxWidth(0);
-	UInt16 TotalHeight(0);
+	Real32 MaxWidth(0);
+	Real32 TotalHeight(0);
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
         if(MaxWidth < getChildren().getValue(i)->getPreferredSize().x())
@@ -92,14 +92,14 @@ void PopupMenu::updateLayout(void)
 	TotalHeight += getChildren().size()-1;
 
     //Set My preferred Size
-	Pnt2s TopLeft, BottomRight;
-	Pnt2s InsetsTopLeft, InsetsBottomRight;
+	Pnt2f TopLeft, BottomRight;
+	Pnt2f InsetsTopLeft, InsetsBottomRight;
 	getBounds(TopLeft, BottomRight);
 	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 
-	Vec2s InsetSize( (BottomRight-TopLeft) - (InsetsBottomRight-InsetsTopLeft) );
+	Vec2f InsetSize( (BottomRight-TopLeft) - (InsetsBottomRight-InsetsTopLeft) );
     beginEditCP(PopupMenuPtr(this), PreferredSizeFieldMask);
-        setPreferredSize(Vec2s(MaxWidth+InsetSize.x(), TotalHeight+InsetSize.y()));
+        setPreferredSize(Vec2f(MaxWidth+InsetSize.x(), TotalHeight+InsetSize.y()));
         //Sneakily set my size
         setSize(getPreferredSize());
     endEditCP(PopupMenuPtr(this), PreferredSizeFieldMask);
@@ -107,12 +107,12 @@ void PopupMenu::updateLayout(void)
 	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 	
 	//Now position and size the Items
-	UInt16 TopOffset(InsetsTopLeft.y());
+	Real32 TopOffset(InsetsTopLeft.y());
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
         beginEditCP(getChildren().getValue(i), SizeFieldMask | PositionFieldMask);
-            getChildren().getValue(i)->setSize(Vec2s(MaxWidth, getChildren().getValue(i)->getPreferredSize().y()));
-            getChildren().getValue(i)->setPosition(Pnt2s(InsetsTopLeft.x(), TopOffset));
+            getChildren().getValue(i)->setSize(Vec2f(MaxWidth, getChildren().getValue(i)->getPreferredSize().y()));
+            getChildren().getValue(i)->setPosition(Pnt2f(InsetsTopLeft.x(), TopOffset));
         endEditCP(getChildren().getValue(i), SizeFieldMask | PositionFieldMask);
 
         TopOffset += getChildren().getValue(i)->getPreferredSize().y() +1;
@@ -121,7 +121,7 @@ void PopupMenu::updateLayout(void)
 
 void PopupMenu::updateClipBounds(void)
 {
-	Pnt2s TopLeft, BottomRight;
+	Pnt2f TopLeft, BottomRight;
 	
     //Treat myself as having no Parent
 	getBounds(TopLeft, BottomRight);

@@ -81,7 +81,7 @@
 #include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
 #include <OpenSG/OSGBoolFields.h> // EnableActionOnMouseDownTime type
 #include <OpenSG/OSGTimeFields.h> // ActionOnMouseDownRate type
-#include <OpenSG/OSGVec2sFields.h> // ActiveOffset type
+#include <OpenSG/OSGVec2fFields.h> // ActiveOffset type
 #include "Component/Misc/OSGUIDrawObjectCanvas.h" // DrawObject type
 #include "Component/Misc/OSGUIDrawObjectCanvas.h" // ActiveDrawObject type
 #include "Component/Misc/OSGUIDrawObjectCanvas.h" // FocusedDrawObject type
@@ -193,7 +193,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
            SFReal32            *getSFHorizontalAlignment(void);
            SFBool              *getSFEnableActionOnMouseDownTime(void);
            SFTime              *getSFActionOnMouseDownRate(void);
-           SFVec2s             *getSFActiveOffset   (void);
+           SFVec2f             *getSFActiveOffset   (void);
            SFUIDrawObjectCanvasPtr *getSFDrawObject     (void);
            SFUIDrawObjectCanvasPtr *getSFActiveDrawObject(void);
            SFUIDrawObjectCanvasPtr *getSFFocusedDrawObject(void);
@@ -228,8 +228,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
      const bool                &getEnableActionOnMouseDownTime(void) const;
            Time                &getActionOnMouseDownRate(void);
      const Time                &getActionOnMouseDownRate(void) const;
-           Vec2s               &getActiveOffset   (void);
-     const Vec2s               &getActiveOffset   (void) const;
+           Vec2f               &getActiveOffset   (void);
+     const Vec2f               &getActiveOffset   (void) const;
            UIDrawObjectCanvasPtr &getDrawObject     (void);
      const UIDrawObjectCanvasPtr &getDrawObject     (void) const;
            UIDrawObjectCanvasPtr &getActiveDrawObject(void);
@@ -260,7 +260,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
      void setHorizontalAlignment( const Real32 &value );
      void setEnableActionOnMouseDownTime( const bool &value );
      void setActionOnMouseDownRate( const Time &value );
-     void setActiveOffset   ( const Vec2s &value );
+     void setActiveOffset   ( const Vec2f &value );
      void setDrawObject     ( const UIDrawObjectCanvasPtr &value );
      void setActiveDrawObject( const UIDrawObjectCanvasPtr &value );
      void setFocusedDrawObject( const UIDrawObjectCanvasPtr &value );
@@ -322,7 +322,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     SFReal32            _sfHorizontalAlignment;
     SFBool              _sfEnableActionOnMouseDownTime;
     SFTime              _sfActionOnMouseDownRate;
-    SFVec2s             _sfActiveOffset;
+    SFVec2f             _sfActiveOffset;
     SFUIDrawObjectCanvasPtr   _sfDrawObject;
     SFUIDrawObjectCanvasPtr   _sfActiveDrawObject;
     SFUIDrawObjectCanvasPtr   _sfFocusedDrawObject;

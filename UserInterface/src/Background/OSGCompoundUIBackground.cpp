@@ -74,7 +74,7 @@ void CompoundUIBackground::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void CompoundUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32 Opacity) const
+void CompoundUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const
 {
 	for(UInt32 i(0) ; i<getBackgrounds().size(); ++i)
 	{

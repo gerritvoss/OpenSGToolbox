@@ -57,6 +57,13 @@ class OSG_TOOLBOXLIB_DLLMAPPING AirplaneCamera : public AirplaneCameraBase
 
     /*==========================  PUBLIC  =================================*/
   public:
+    /**
+     * This function sets up the viewing matrix
+	 * @brief Set the viewing matrix
+     * @param result This is set to the new view matrix
+	 * @param[in] width The sidth in pixels of the viewport
+	 * @param[in] height The height in pixels of the viewport
+     */
     virtual void getViewing              (Matrix        &result, 
                                            UInt32 width, UInt32 height);
     /*---------------------------------------------------------------------*/

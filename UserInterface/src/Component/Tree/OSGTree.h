@@ -335,10 +335,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
 
     //Scrollable Interface
     //Returns the preferred size of the viewport for a view component.
-    virtual Vec2s getPreferredScrollableViewportSize(void);
+    virtual Vec2f getPreferredScrollableViewportSize(void);
 
     //Components that display logical rows or columns should compute the scroll increment that will completely expose one block of rows or columns, depending on the value of orientation.
-    virtual Int32 getScrollableBlockIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+    virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
 
     //Return true if a viewport should always force the height of this Scrollable to match the height of the viewport.
     virtual bool getScrollableTracksViewportHeight(void);
@@ -347,7 +347,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     virtual bool getScrollableTracksViewportWidth(void);
 
     //Components that display logical rows or columns should compute the scroll increment that will completely expose one new row or column, depending on the value of orientation.
-    virtual Int32 getScrollableUnitIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+    virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
     
     virtual void updateLayout(void);
 

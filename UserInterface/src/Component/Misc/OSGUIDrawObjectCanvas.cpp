@@ -69,11 +69,11 @@ void UIDrawObjectCanvas::initMethod (void)
 {
 }
 
-void UIDrawObjectCanvas::getDrawObjectBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+void UIDrawObjectCanvas::getDrawObjectBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
 	if(getDrawObjects().size() > 0)
 	{
-		Pnt2s TempTopLeft, TempBottomRight;
+		Pnt2f TempTopLeft, TempBottomRight;
 		getDrawObjects().getValue(0)->getBounds(TopLeft, BottomRight);
 		//Determine Top Left And Bottom Right
 		for(UInt32 i(0) ; i<getDrawObjects().size(); ++i)
@@ -82,8 +82,8 @@ void UIDrawObjectCanvas::getDrawObjectBounds(Pnt2s& TopLeft, Pnt2s& BottomRight)
 		    TopLeft.setValues( osgMin(TopLeft.x(), TempTopLeft.x()),
 				               osgMin(TopLeft.y(), TempTopLeft.y()) );
 
-		    BottomRight.setValues(osgMax<Int16>(BottomRight.x(), TempBottomRight.x()),
-		                          osgMax<Int16>(BottomRight.y(), TempBottomRight.y()) );
+		    BottomRight.setValues(osgMax<Real32>(BottomRight.x(), TempBottomRight.x()),
+		                          osgMax<Real32>(BottomRight.y(), TempBottomRight.y()) );
 		}
 	}
 }
@@ -130,7 +130,7 @@ void UIDrawObjectCanvas::changed(BitVector whichField, UInt32 origin)
 	
 	if( (whichField & DrawObjectsFieldMask) )
     {
-		Pnt2s TopLeft, BottomRight;
+		Pnt2f TopLeft, BottomRight;
 		getDrawObjectBounds(TopLeft, BottomRight);
 		beginEditCP(UIDrawObjectCanvasPtr(this), PreferredSizeFieldMask);
 			setPreferredSize(BottomRight - TopLeft);

@@ -87,19 +87,19 @@ ComponentWidthLayoutSpringPtr ComponentWidthLayoutSpring::create (ComponentPtr T
  *                           Instance methods                              *
 \***************************************************************************/
 
-Int32 ComponentWidthLayoutSpring::getMinimumValue(void) const
+Real32 ComponentWidthLayoutSpring::getMinimumValue(void) const
 {
     return getComponent()->getMinSize().x();
 }
 
-Int32 ComponentWidthLayoutSpring::getPreferredValue(void) const
+Real32 ComponentWidthLayoutSpring::getPreferredValue(void) const
 {
     return getComponent()->getPreferredSize().x();
 }
 
-Int32 ComponentWidthLayoutSpring::getMaximumValue(void) const
+Real32 ComponentWidthLayoutSpring::getMaximumValue(void) const
 {
-    return osgMin<Int32>(TypeTraits< Int32 >::getMax(), getComponent()->getMaxSize().x());
+    return osgMin<Real32>(TypeTraits< Real32 >::getMax(), getComponent()->getMaxSize().x());
 }
 
 

@@ -98,7 +98,7 @@ RoundedCornerLineBorderPtr RoundedCornerLineBorderBase::createEmpty(void)
 
 //! Get the RoundedCornerLineBorder::_sfWidth field.
 inline
-SFUInt32 *RoundedCornerLineBorderBase::getSFWidth(void)
+SFReal32 *RoundedCornerLineBorderBase::getSFWidth(void)
 {
     return &_sfWidth;
 }
@@ -112,7 +112,7 @@ SFColor4f *RoundedCornerLineBorderBase::getSFColor(void)
 
 //! Get the RoundedCornerLineBorder::_sfCornerRadius field.
 inline
-SFUInt32 *RoundedCornerLineBorderBase::getSFCornerRadius(void)
+SFReal32 *RoundedCornerLineBorderBase::getSFCornerRadius(void)
 {
     return &_sfCornerRadius;
 }
@@ -120,21 +120,21 @@ SFUInt32 *RoundedCornerLineBorderBase::getSFCornerRadius(void)
 
 //! Get the value of the RoundedCornerLineBorder::_sfWidth field.
 inline
-UInt32 &RoundedCornerLineBorderBase::getWidth(void)
+Real32 &RoundedCornerLineBorderBase::getWidth(void)
 {
     return _sfWidth.getValue();
 }
 
 //! Get the value of the RoundedCornerLineBorder::_sfWidth field.
 inline
-const UInt32 &RoundedCornerLineBorderBase::getWidth(void) const
+const Real32 &RoundedCornerLineBorderBase::getWidth(void) const
 {
     return _sfWidth.getValue();
 }
 
 //! Set the value of the RoundedCornerLineBorder::_sfWidth field.
 inline
-void RoundedCornerLineBorderBase::setWidth(const UInt32 &value)
+void RoundedCornerLineBorderBase::setWidth(const Real32 &value)
 {
     _sfWidth.setValue(value);
 }
@@ -162,21 +162,21 @@ void RoundedCornerLineBorderBase::setColor(const Color4f &value)
 
 //! Get the value of the RoundedCornerLineBorder::_sfCornerRadius field.
 inline
-UInt32 &RoundedCornerLineBorderBase::getCornerRadius(void)
+Real32 &RoundedCornerLineBorderBase::getCornerRadius(void)
 {
     return _sfCornerRadius.getValue();
 }
 
 //! Get the value of the RoundedCornerLineBorder::_sfCornerRadius field.
 inline
-const UInt32 &RoundedCornerLineBorderBase::getCornerRadius(void) const
+const Real32 &RoundedCornerLineBorderBase::getCornerRadius(void) const
 {
     return _sfCornerRadius.getValue();
 }
 
 //! Set the value of the RoundedCornerLineBorder::_sfCornerRadius field.
 inline
-void RoundedCornerLineBorderBase::setCornerRadius(const UInt32 &value)
+void RoundedCornerLineBorderBase::setCornerRadius(const Real32 &value)
 {
     _sfCornerRadius.setValue(value);
 }

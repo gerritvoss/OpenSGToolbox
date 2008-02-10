@@ -99,7 +99,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTip : public ToolTipBase
     /*! \}                                                                 */
 	virtual void drawInternal(const GraphicsPtr TheGraphics) const;
 
-    virtual Vec2s calculatePreferredSize(void) const;
+    virtual Vec2f calculatePreferredSize(void) const;
     
     /*==========================  PRIVATE  ================================*/
   private:

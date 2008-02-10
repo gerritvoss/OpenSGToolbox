@@ -81,14 +81,14 @@ class OSG_INPUTLIB_DLLMAPPING GLUTWindowEventProducer : public GLUTWindowEventPr
     static void GLUTWindowEventProducerMenuStatusFunction(int status, int x, int y);
 
     void glutDisplay(void);
-    void glutReshape(Vec2s Size);
-    void glutKeyboard(UChar8 key, Pnt2s MousePos);
-    void glutKeyboardUp(UChar8 key, Pnt2s MousePos);
-    void glutSpecial(UChar8 key, Pnt2s MousePos);
-    void glutSpecialUp(UChar8 key, Pnt2s MousePos);
-    void glutMouse(Int32 Button, Int32 State, Pnt2s MousePos);
-    void glutMotion(Pnt2s MousePos);
-    void glutPassiveMotion(Pnt2s MousePos);
+    void glutReshape(Vec2f Size);
+    void glutKeyboard(UChar8 key, Pnt2f MousePos);
+    void glutKeyboardUp(UChar8 key, Pnt2f MousePos);
+    void glutSpecial(UChar8 key, Pnt2f MousePos);
+    void glutSpecialUp(UChar8 key, Pnt2f MousePos);
+    void glutMouse(Int32 Button, Int32 State, Pnt2f MousePos);
+    void glutMotion(Pnt2f MousePos);
+    void glutPassiveMotion(Pnt2f MousePos);
     void glutEntry(Int32 State);
     void glutIdle(void);
 
@@ -116,16 +116,16 @@ class OSG_INPUTLIB_DLLMAPPING GLUTWindowEventProducer : public GLUTWindowEventPr
 
     /*! \}                                                                 */
     //Set the Window Position
-    virtual void setPosition(Pnt2s Pos);
+    virtual void setPosition(Pnt2f Pos);
 
     //Set the Window Position
-    virtual Pnt2s getPosition(void) const;
+    virtual Pnt2f getPosition(void) const;
 
     //Set the Window size
     virtual void setSize(Vec2us Size);
 
     //Get the Window size
-    virtual Vec2s getSize(void) const;
+    virtual Vec2f getSize(void) const;
 
     //Focused
     //Set the Window Focus
@@ -174,14 +174,14 @@ class OSG_INPUTLIB_DLLMAPPING GLUTWindowEventProducer : public GLUTWindowEventPr
     virtual bool attachWindow(void);
 
 	virtual UInt32 getKeyModifiers(void) const;
-	virtual Pnt2s getMousePosition(void) const;
+	virtual Pnt2f getMousePosition(void) const;
 	
 	virtual std::string getClipboard(void) const;
 
 	virtual void putClipboard(const std::string Value);
 
-    virtual void openWindow(const Pnt2s& ScreenPosition,
-                       const Vec2s& Size,
+    virtual void openWindow(const Pnt2f& ScreenPosition,
+                       const Vec2f& Size,
                        const std::string& WindowName);
     
     virtual void closeWindow(void);
@@ -214,15 +214,15 @@ class OSG_INPUTLIB_DLLMAPPING GLUTWindowEventProducer : public GLUTWindowEventPr
     
     struct WindowEventLoopThreadArguments
     {
-        WindowEventLoopThreadArguments(const Pnt2s& ScreenPosition,
-                       const Vec2s& Size,
+        WindowEventLoopThreadArguments(const Pnt2f& ScreenPosition,
+                       const Vec2f& Size,
                        const std::string& WindowName,
                        GLUTWindowPtr TheWindow,
                        GLUTWindowEventProducerPtr TheEventProducer,
                        Barrier *syncBarrier);
 
-        Pnt2s _ScreenPosition;
-        Vec2s _Size;
+        Pnt2f _ScreenPosition;
+        Vec2f _Size;
         std::string _WindowName;
         GLUTWindowPtr _Window;
         GLUTWindowEventProducerPtr _EventProducer;

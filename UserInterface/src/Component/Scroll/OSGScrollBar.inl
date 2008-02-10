@@ -167,13 +167,13 @@ ScrollBar::ScrollFieldListener::ScrollFieldListener(ScrollBarPtr TheScrollBar) :
 }
 
 inline
-void ScrollBar::ScrollBarDraggedListener::setInitialMousePosition(const Pnt2s& Pos)
+void ScrollBar::ScrollBarDraggedListener::setInitialMousePosition(const Pnt2f& Pos)
 {
     _InitialMousePosition = Pos;
 }
 
 inline
-void ScrollBar::ScrollBarDraggedListener::setInitialScrollBarPosition(const Pnt2s& Pos)
+void ScrollBar::ScrollBarDraggedListener::setInitialScrollBarPosition(const Pnt2f& Pos)
 {
     _InitialScrollBarPosition = Pos;
 }

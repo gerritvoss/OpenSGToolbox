@@ -79,9 +79,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIForegroundMouseTransformFunctor : public
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual bool viewportToRenderingSurface(const Pnt2s& ViewportPoint,
+	virtual bool viewportToRenderingSurface(const Pnt2f& ViewportPoint,
 		                                    ViewportPtr TheViewport,
-		                                        Pnt2s& Result) const;
+		                                        Pnt2f& Result) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

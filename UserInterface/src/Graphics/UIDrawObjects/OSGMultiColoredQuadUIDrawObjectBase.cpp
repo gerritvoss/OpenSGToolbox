@@ -98,16 +98,16 @@ const OSG::BitVector MultiColoredQuadUIDrawObjectBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Pnt2s           MultiColoredQuadUIDrawObjectBase::_sfPoint1
+/*! \var Pnt2f           MultiColoredQuadUIDrawObjectBase::_sfPoint1
     
 */
-/*! \var Pnt2s           MultiColoredQuadUIDrawObjectBase::_sfPoint2
+/*! \var Pnt2f           MultiColoredQuadUIDrawObjectBase::_sfPoint2
     
 */
-/*! \var Pnt2s           MultiColoredQuadUIDrawObjectBase::_sfPoint3
+/*! \var Pnt2f           MultiColoredQuadUIDrawObjectBase::_sfPoint3
     
 */
-/*! \var Pnt2s           MultiColoredQuadUIDrawObjectBase::_sfPoint4
+/*! \var Pnt2f           MultiColoredQuadUIDrawObjectBase::_sfPoint4
     
 */
 /*! \var Color4f         MultiColoredQuadUIDrawObjectBase::_sfColor1
@@ -130,22 +130,22 @@ const OSG::BitVector MultiColoredQuadUIDrawObjectBase::MTInfluenceMask =
 
 FieldDescription *MultiColoredQuadUIDrawObjectBase::_desc[] = 
 {
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "Point1", 
                      Point1FieldId, Point1FieldMask,
                      false,
                      (FieldAccessMethod) &MultiColoredQuadUIDrawObjectBase::getSFPoint1),
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "Point2", 
                      Point2FieldId, Point2FieldMask,
                      false,
                      (FieldAccessMethod) &MultiColoredQuadUIDrawObjectBase::getSFPoint2),
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "Point3", 
                      Point3FieldId, Point3FieldMask,
                      false,
                      (FieldAccessMethod) &MultiColoredQuadUIDrawObjectBase::getSFPoint3),
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "Point4", 
                      Point4FieldId, Point4FieldMask,
                      false,
@@ -250,10 +250,10 @@ void MultiColoredQuadUIDrawObjectBase::onDestroyAspect(UInt32 uiId, UInt32 uiAsp
 #endif
 
 MultiColoredQuadUIDrawObjectBase::MultiColoredQuadUIDrawObjectBase(void) :
-    _sfPoint1                 (Pnt2s(0,0)), 
-    _sfPoint2                 (Pnt2s(0,1)), 
-    _sfPoint3                 (Pnt2s(1,1)), 
-    _sfPoint4                 (Pnt2s(1,0)), 
+    _sfPoint1                 (Pnt2f(0,0)), 
+    _sfPoint2                 (Pnt2f(0,1)), 
+    _sfPoint3                 (Pnt2f(1,1)), 
+    _sfPoint4                 (Pnt2f(1,0)), 
     _sfColor1                 (Color4f(1.0,1.0,1.0,1.0)), 
     _sfColor2                 (Color4f(1.0,1.0,1.0,1.0)), 
     _sfColor3                 (Color4f(1.0,1.0,1.0,1.0)), 

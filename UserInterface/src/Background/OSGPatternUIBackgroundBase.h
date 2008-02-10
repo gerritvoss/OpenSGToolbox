@@ -68,7 +68,7 @@
 #include "OSGUIBackground.h" // Parent
 
 #include <OpenSG/OSGTextureChunkFields.h> // Texture type
-#include <OpenSG/OSGVec2sFields.h> // PatternSize type
+#include <OpenSG/OSGVec2fFields.h> // PatternSize type
 #include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
 #include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
 #include <OpenSG/OSGUInt32Fields.h> // HorizontalRepeat type
@@ -150,7 +150,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternUIBackgroundBase : public UIBackgro
     /*! \{                                                                 */
 
            SFTextureChunkPtr   *getSFTexture        (void);
-           SFVec2s             *getSFPatternSize    (void);
+           SFVec2f             *getSFPatternSize    (void);
            SFReal32            *getSFVerticalAlignment(void);
            SFReal32            *getSFHorizontalAlignment(void);
            SFUInt32            *getSFHorizontalRepeat(void);
@@ -160,8 +160,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternUIBackgroundBase : public UIBackgro
 
            TextureChunkPtr     &getTexture        (void);
      const TextureChunkPtr     &getTexture        (void) const;
-           Vec2s               &getPatternSize    (void);
-     const Vec2s               &getPatternSize    (void) const;
+           Vec2f               &getPatternSize    (void);
+     const Vec2f               &getPatternSize    (void) const;
            Real32              &getVerticalAlignment(void);
      const Real32              &getVerticalAlignment(void) const;
            Real32              &getHorizontalAlignment(void);
@@ -181,7 +181,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternUIBackgroundBase : public UIBackgro
     /*! \{                                                                 */
 
      void setTexture        ( const TextureChunkPtr &value );
-     void setPatternSize    ( const Vec2s &value );
+     void setPatternSize    ( const Vec2f &value );
      void setVerticalAlignment( const Real32 &value );
      void setHorizontalAlignment( const Real32 &value );
      void setHorizontalRepeat( const UInt32 &value );
@@ -231,7 +231,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternUIBackgroundBase : public UIBackgro
     /*! \{                                                                 */
 
     SFTextureChunkPtr   _sfTexture;
-    SFVec2s             _sfPatternSize;
+    SFVec2f             _sfPatternSize;
     SFReal32            _sfVerticalAlignment;
     SFReal32            _sfHorizontalAlignment;
     SFUInt32            _sfHorizontalRepeat;

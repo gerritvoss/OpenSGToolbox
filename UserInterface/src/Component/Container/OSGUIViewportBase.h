@@ -68,7 +68,7 @@
 #include "OSGContainer.h" // Parent
 
 #include "Component/OSGComponentFields.h" // ViewComponent type
-#include <OpenSG/OSGVec2sFields.h> // ViewSize type
+#include <OpenSG/OSGVec2fFields.h> // ViewSize type
 
 #include "OSGUIViewportFields.h"
 
@@ -127,25 +127,25 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIViewportBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPnt2s             *getSFViewPosition   (void);
+           SFPnt2f             *getSFViewPosition   (void);
            SFComponentPtr      *getSFViewComponent  (void);
-           SFVec2s             *getSFViewSize       (void);
+           SFVec2f             *getSFViewSize       (void);
 
-           Pnt2s               &getViewPosition   (void);
-     const Pnt2s               &getViewPosition   (void) const;
+           Pnt2f               &getViewPosition   (void);
+     const Pnt2f               &getViewPosition   (void) const;
            ComponentPtr        &getViewComponent  (void);
      const ComponentPtr        &getViewComponent  (void) const;
-           Vec2s               &getViewSize       (void);
-     const Vec2s               &getViewSize       (void) const;
+           Vec2f               &getViewSize       (void);
+     const Vec2f               &getViewSize       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setViewPosition   ( const Pnt2s &value );
+     void setViewPosition   ( const Pnt2f &value );
      void setViewComponent  ( const ComponentPtr &value );
-     void setViewSize       ( const Vec2s &value );
+     void setViewSize       ( const Vec2f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -188,9 +188,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIViewportBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt2s             _sfViewPosition;
+    SFPnt2f             _sfViewPosition;
     SFComponentPtr      _sfViewComponent;
-    SFVec2s             _sfViewSize;
+    SFVec2f             _sfViewSize;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

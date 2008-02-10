@@ -90,7 +90,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBa
     virtual void removeTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener) = 0;
 
 	//Returns a rectangle giving the bounds needed to draw path.
-	virtual void getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight, TreePath path, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn) const = 0;
+	virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight, TreePath path, Pnt2f TopLeftPlaceIn, Pnt2f BottomRightPlaceIn) const = 0;
 
 	//Returns true if every node in the path is expanded
 	virtual bool isVisible(const TreePath& path) const = 0;
@@ -111,7 +111,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBa
 	virtual UInt32 getPreferredHeight(void) const = 0;
 
 	//Returns the preferred width for the passed in region.
-	virtual UInt32 getPreferredWidth(Pnt2s& TopLeft, Pnt2s& BottomRight) const = 0;
+	virtual UInt32 getPreferredWidth(Pnt2f& TopLeft, Pnt2f& BottomRight) const = 0;
 
 	//Number of rows being displayed.
 	virtual UInt32 getRowCount(void) const = 0;

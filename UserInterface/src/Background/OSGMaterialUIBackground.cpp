@@ -74,9 +74,9 @@ void MaterialUIBackground::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void MaterialUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32 Opacity) const
+void MaterialUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const
 {
-	TheGraphics->drawQuad(TopLeft, Pnt2s(BottomRight.x(), TopLeft.y()), BottomRight, Pnt2s(TopLeft.x(), BottomRight.y()), Vec2f(0.0, 0.0), Vec2f(1.0, 0.0), Vec2f(1.0, 1.0), Vec2f(0.0, 1.0), getMaterial(), Opacity);
+	TheGraphics->drawQuad(TopLeft, Pnt2f(BottomRight.x(), TopLeft.y()), BottomRight, Pnt2f(TopLeft.x(), BottomRight.y()), Vec2f(0.0, 0.0), Vec2f(1.0, 0.0), Vec2f(1.0, 1.0), Vec2f(0.0, 1.0), getMaterial(), Opacity);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

@@ -74,22 +74,22 @@ void MatteBorder::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void MatteBorder::draw(const GraphicsPtr g, const Int16 x, const Int16 y , const UInt16 Width, const UInt16 Height, const Real32 Opacity) const
+void MatteBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity) const
 {
 	//x, y is upper left point
 	
 	//Top
-	g->drawRect(Pnt2s(x,y), Pnt2s(x+Width, y+getTopWidth()), getColor(), Opacity);
+	g->drawRect(Pnt2f(x,y), Pnt2f(x+Width, y+getTopWidth()), getColor(), Opacity);
 	//Left
-	g->drawRect(Pnt2s(x,y+getTopWidth()), Pnt2s(x+getLeftWidth(), y+getTopWidth()+Height-getBottomWidth()), getColor(), Opacity);
+	g->drawRect(Pnt2f(x,y+getTopWidth()), Pnt2f(x+getLeftWidth(), y+getTopWidth()+Height-getBottomWidth()), getColor(), Opacity);
 	//Right
-	g->drawRect(Pnt2s(x+Width-getRightWidth(), y+getTopWidth()), Pnt2s(x+Width, y+getTopWidth()+Height-getBottomWidth()), getColor(), Opacity);
+	g->drawRect(Pnt2f(x+Width-getRightWidth(), y+getTopWidth()), Pnt2f(x+Width, y+getTopWidth()+Height-getBottomWidth()), getColor(), Opacity);
 	//Bottom
-	g->drawRect(Pnt2s(x, y+Height-getBottomWidth()), Pnt2s(x+Width, y+Height), getColor(), Opacity);
+	g->drawRect(Pnt2f(x, y+Height-getBottomWidth()), Pnt2f(x+Width, y+Height), getColor(), Opacity);
 
 }
 
-void MatteBorder::getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& Bottom) const
+void MatteBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bottom) const
 {
 	Left = getLeftWidth();
 	Right = getRightWidth();

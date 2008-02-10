@@ -51,7 +51,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // 30RotatedComponent Headers
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
@@ -319,8 +319,8 @@ int main(int argc, char **argv)
 
     // Show the whole Scene
     mgr->showAll();
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(550,550),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(550,550),
                                         "OpenSG 30RotatedComponent Window");
 
     while(!ExitApp)
@@ -350,7 +350,7 @@ ComponentPtr createPanel(void)
         panel1->getChildren().addValue(button3);
         panel1->getChildren().addValue(button4);
         panel1->setLayout(panel1Layout);
-        panel1->setPreferredSize(Vec2s(100, 220));
+        panel1->setPreferredSize(Vec2f(100, 220));
     endEditCP(panel1, Container::ChildrenFieldMask | Container::LayoutFieldMask | Component::PreferredSizeFieldMask);
     beginEditCP(button1, Button::TextFieldMask);
             button1->setText("This");
@@ -377,7 +377,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

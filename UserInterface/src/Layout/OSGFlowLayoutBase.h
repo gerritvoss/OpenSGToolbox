@@ -68,8 +68,8 @@
 #include "OSGLayout.h" // Parent
 
 #include <OpenSG/OSGUInt32Fields.h> // Alignment type
-#include <OpenSG/OSGInt32Fields.h> // HorizontalGap type
-#include <OpenSG/OSGInt32Fields.h> // VerticalGap type
+#include <OpenSG/OSGReal32Fields.h> // HorizontalGap type
+#include <OpenSG/OSGReal32Fields.h> // VerticalGap type
 #include <OpenSG/OSGUInt32Fields.h> // MajorAxisAlignment type
 #include <OpenSG/OSGUInt32Fields.h> // MinorAxisAlignment type
 #include <OpenSG/OSGUInt32Fields.h> // ComponentAlignment type
@@ -138,18 +138,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING FlowLayoutBase : public Layout
     /*! \{                                                                 */
 
            SFUInt32            *getSFAlignment      (void);
-           SFInt32             *getSFHorizontalGap  (void);
-           SFInt32             *getSFVerticalGap    (void);
+           SFReal32            *getSFHorizontalGap  (void);
+           SFReal32            *getSFVerticalGap    (void);
            SFUInt32            *getSFMajorAxisAlignment(void);
            SFUInt32            *getSFMinorAxisAlignment(void);
            SFUInt32            *getSFComponentAlignment(void);
 
            UInt32              &getAlignment      (void);
      const UInt32              &getAlignment      (void) const;
-           Int32               &getHorizontalGap  (void);
-     const Int32               &getHorizontalGap  (void) const;
-           Int32               &getVerticalGap    (void);
-     const Int32               &getVerticalGap    (void) const;
+           Real32              &getHorizontalGap  (void);
+     const Real32              &getHorizontalGap  (void) const;
+           Real32              &getVerticalGap    (void);
+     const Real32              &getVerticalGap    (void) const;
            UInt32              &getMajorAxisAlignment(void);
      const UInt32              &getMajorAxisAlignment(void) const;
            UInt32              &getMinorAxisAlignment(void);
@@ -163,8 +163,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FlowLayoutBase : public Layout
     /*! \{                                                                 */
 
      void setAlignment      ( const UInt32 &value );
-     void setHorizontalGap  ( const Int32 &value );
-     void setVerticalGap    ( const Int32 &value );
+     void setHorizontalGap  ( const Real32 &value );
+     void setVerticalGap    ( const Real32 &value );
      void setMajorAxisAlignment( const UInt32 &value );
      void setMinorAxisAlignment( const UInt32 &value );
      void setComponentAlignment( const UInt32 &value );
@@ -211,8 +211,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FlowLayoutBase : public Layout
     /*! \{                                                                 */
 
     SFUInt32            _sfAlignment;
-    SFInt32             _sfHorizontalGap;
-    SFInt32             _sfVerticalGap;
+    SFReal32            _sfHorizontalGap;
+    SFReal32            _sfVerticalGap;
     SFUInt32            _sfMajorAxisAlignment;
     SFUInt32            _sfMinorAxisAlignment;
     SFUInt32            _sfComponentAlignment;

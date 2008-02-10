@@ -49,7 +49,7 @@
 \*****************************************************************************/
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -98,21 +98,21 @@ ArcUIDrawObjectPtr ArcUIDrawObjectBase::createEmpty(void)
 
 //! Get the ArcUIDrawObject::_sfCenter field.
 inline
-SFPnt2s *ArcUIDrawObjectBase::getSFCenter(void)
+SFPnt2f *ArcUIDrawObjectBase::getSFCenter(void)
 {
     return &_sfCenter;
 }
 
 //! Get the ArcUIDrawObject::_sfWidth field.
 inline
-SFInt16 *ArcUIDrawObjectBase::getSFWidth(void)
+SFReal32 *ArcUIDrawObjectBase::getSFWidth(void)
 {
     return &_sfWidth;
 }
 
 //! Get the ArcUIDrawObject::_sfHeight field.
 inline
-SFInt16 *ArcUIDrawObjectBase::getSFHeight(void)
+SFReal32 *ArcUIDrawObjectBase::getSFHeight(void)
 {
     return &_sfHeight;
 }
@@ -162,63 +162,63 @@ SFReal32 *ArcUIDrawObjectBase::getSFOpacity(void)
 
 //! Get the value of the ArcUIDrawObject::_sfCenter field.
 inline
-Pnt2s &ArcUIDrawObjectBase::getCenter(void)
+Pnt2f &ArcUIDrawObjectBase::getCenter(void)
 {
     return _sfCenter.getValue();
 }
 
 //! Get the value of the ArcUIDrawObject::_sfCenter field.
 inline
-const Pnt2s &ArcUIDrawObjectBase::getCenter(void) const
+const Pnt2f &ArcUIDrawObjectBase::getCenter(void) const
 {
     return _sfCenter.getValue();
 }
 
 //! Set the value of the ArcUIDrawObject::_sfCenter field.
 inline
-void ArcUIDrawObjectBase::setCenter(const Pnt2s &value)
+void ArcUIDrawObjectBase::setCenter(const Pnt2f &value)
 {
     _sfCenter.setValue(value);
 }
 
 //! Get the value of the ArcUIDrawObject::_sfWidth field.
 inline
-Int16 &ArcUIDrawObjectBase::getWidth(void)
+Real32 &ArcUIDrawObjectBase::getWidth(void)
 {
     return _sfWidth.getValue();
 }
 
 //! Get the value of the ArcUIDrawObject::_sfWidth field.
 inline
-const Int16 &ArcUIDrawObjectBase::getWidth(void) const
+const Real32 &ArcUIDrawObjectBase::getWidth(void) const
 {
     return _sfWidth.getValue();
 }
 
 //! Set the value of the ArcUIDrawObject::_sfWidth field.
 inline
-void ArcUIDrawObjectBase::setWidth(const Int16 &value)
+void ArcUIDrawObjectBase::setWidth(const Real32 &value)
 {
     _sfWidth.setValue(value);
 }
 
 //! Get the value of the ArcUIDrawObject::_sfHeight field.
 inline
-Int16 &ArcUIDrawObjectBase::getHeight(void)
+Real32 &ArcUIDrawObjectBase::getHeight(void)
 {
     return _sfHeight.getValue();
 }
 
 //! Get the value of the ArcUIDrawObject::_sfHeight field.
 inline
-const Int16 &ArcUIDrawObjectBase::getHeight(void) const
+const Real32 &ArcUIDrawObjectBase::getHeight(void) const
 {
     return _sfHeight.getValue();
 }
 
 //! Set the value of the ArcUIDrawObject::_sfHeight field.
 inline
-void ArcUIDrawObjectBase::setHeight(const Int16 &value)
+void ArcUIDrawObjectBase::setHeight(const Real32 &value)
 {
     _sfHeight.setValue(value);
 }

@@ -14,7 +14,7 @@
 A UI PolygonUIDrawObject.
 	<Field
 		name="Verticies"
-		type="Pnt2s"
+		type="Pnt2f"
 		cardinality="multi"
 		visibility="external"
 		access="public"

@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -100,28 +98,28 @@ MultiColoredQuadUIDrawObjectPtr MultiColoredQuadUIDrawObjectBase::createEmpty(vo
 
 //! Get the MultiColoredQuadUIDrawObject::_sfPoint1 field.
 inline
-SFPnt2s *MultiColoredQuadUIDrawObjectBase::getSFPoint1(void)
+SFPnt2f *MultiColoredQuadUIDrawObjectBase::getSFPoint1(void)
 {
     return &_sfPoint1;
 }
 
 //! Get the MultiColoredQuadUIDrawObject::_sfPoint2 field.
 inline
-SFPnt2s *MultiColoredQuadUIDrawObjectBase::getSFPoint2(void)
+SFPnt2f *MultiColoredQuadUIDrawObjectBase::getSFPoint2(void)
 {
     return &_sfPoint2;
 }
 
 //! Get the MultiColoredQuadUIDrawObject::_sfPoint3 field.
 inline
-SFPnt2s *MultiColoredQuadUIDrawObjectBase::getSFPoint3(void)
+SFPnt2f *MultiColoredQuadUIDrawObjectBase::getSFPoint3(void)
 {
     return &_sfPoint3;
 }
 
 //! Get the MultiColoredQuadUIDrawObject::_sfPoint4 field.
 inline
-SFPnt2s *MultiColoredQuadUIDrawObjectBase::getSFPoint4(void)
+SFPnt2f *MultiColoredQuadUIDrawObjectBase::getSFPoint4(void)
 {
     return &_sfPoint4;
 }
@@ -164,84 +162,84 @@ SFReal32 *MultiColoredQuadUIDrawObjectBase::getSFOpacity(void)
 
 //! Get the value of the MultiColoredQuadUIDrawObject::_sfPoint1 field.
 inline
-Pnt2s &MultiColoredQuadUIDrawObjectBase::getPoint1(void)
+Pnt2f &MultiColoredQuadUIDrawObjectBase::getPoint1(void)
 {
     return _sfPoint1.getValue();
 }
 
 //! Get the value of the MultiColoredQuadUIDrawObject::_sfPoint1 field.
 inline
-const Pnt2s &MultiColoredQuadUIDrawObjectBase::getPoint1(void) const
+const Pnt2f &MultiColoredQuadUIDrawObjectBase::getPoint1(void) const
 {
     return _sfPoint1.getValue();
 }
 
 //! Set the value of the MultiColoredQuadUIDrawObject::_sfPoint1 field.
 inline
-void MultiColoredQuadUIDrawObjectBase::setPoint1(const Pnt2s &value)
+void MultiColoredQuadUIDrawObjectBase::setPoint1(const Pnt2f &value)
 {
     _sfPoint1.setValue(value);
 }
 
 //! Get the value of the MultiColoredQuadUIDrawObject::_sfPoint2 field.
 inline
-Pnt2s &MultiColoredQuadUIDrawObjectBase::getPoint2(void)
+Pnt2f &MultiColoredQuadUIDrawObjectBase::getPoint2(void)
 {
     return _sfPoint2.getValue();
 }
 
 //! Get the value of the MultiColoredQuadUIDrawObject::_sfPoint2 field.
 inline
-const Pnt2s &MultiColoredQuadUIDrawObjectBase::getPoint2(void) const
+const Pnt2f &MultiColoredQuadUIDrawObjectBase::getPoint2(void) const
 {
     return _sfPoint2.getValue();
 }
 
 //! Set the value of the MultiColoredQuadUIDrawObject::_sfPoint2 field.
 inline
-void MultiColoredQuadUIDrawObjectBase::setPoint2(const Pnt2s &value)
+void MultiColoredQuadUIDrawObjectBase::setPoint2(const Pnt2f &value)
 {
     _sfPoint2.setValue(value);
 }
 
 //! Get the value of the MultiColoredQuadUIDrawObject::_sfPoint3 field.
 inline
-Pnt2s &MultiColoredQuadUIDrawObjectBase::getPoint3(void)
+Pnt2f &MultiColoredQuadUIDrawObjectBase::getPoint3(void)
 {
     return _sfPoint3.getValue();
 }
 
 //! Get the value of the MultiColoredQuadUIDrawObject::_sfPoint3 field.
 inline
-const Pnt2s &MultiColoredQuadUIDrawObjectBase::getPoint3(void) const
+const Pnt2f &MultiColoredQuadUIDrawObjectBase::getPoint3(void) const
 {
     return _sfPoint3.getValue();
 }
 
 //! Set the value of the MultiColoredQuadUIDrawObject::_sfPoint3 field.
 inline
-void MultiColoredQuadUIDrawObjectBase::setPoint3(const Pnt2s &value)
+void MultiColoredQuadUIDrawObjectBase::setPoint3(const Pnt2f &value)
 {
     _sfPoint3.setValue(value);
 }
 
 //! Get the value of the MultiColoredQuadUIDrawObject::_sfPoint4 field.
 inline
-Pnt2s &MultiColoredQuadUIDrawObjectBase::getPoint4(void)
+Pnt2f &MultiColoredQuadUIDrawObjectBase::getPoint4(void)
 {
     return _sfPoint4.getValue();
 }
 
 //! Get the value of the MultiColoredQuadUIDrawObject::_sfPoint4 field.
 inline
-const Pnt2s &MultiColoredQuadUIDrawObjectBase::getPoint4(void) const
+const Pnt2f &MultiColoredQuadUIDrawObjectBase::getPoint4(void) const
 {
     return _sfPoint4.getValue();
 }
 
 //! Set the value of the MultiColoredQuadUIDrawObject::_sfPoint4 field.
 inline
-void MultiColoredQuadUIDrawObjectBase::setPoint4(const Pnt2s &value)
+void MultiColoredQuadUIDrawObjectBase::setPoint4(const Pnt2f &value)
 {
     _sfPoint4.setValue(value);
 }

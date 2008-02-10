@@ -14,7 +14,7 @@
 A UI DiscDrawObject.
 	<Field
 		name="Center"
-		type="Pnt2s"
+		type="Pnt2f"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -23,7 +23,7 @@ A UI DiscDrawObject.
 	</Field>
 	<Field
 		name="Width"
-		type="Int16"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -32,7 +32,7 @@ A UI DiscDrawObject.
 	</Field>
 	<Field
 		name="Height"
-		type="Int16"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		access="public"

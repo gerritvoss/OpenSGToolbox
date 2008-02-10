@@ -94,19 +94,19 @@ void SplitPanel::drawInternal(const GraphicsPtr Graphics) const
 
 void SplitPanel::updateLayout(void)
 {
-	Pnt2s TopLeft, BottomRight;
+	Pnt2f TopLeft, BottomRight;
 	getInsideBorderBounds(TopLeft, BottomRight);
-	Vec2s BorderSize(BottomRight - TopLeft);
+	Vec2f BorderSize(BottomRight - TopLeft);
 
 	UInt32 AxisIndex(0);
 	if(getAlignment() != HORIZONTAL_ALIGNMENT ) AxisIndex = 1;
 
-	Vec2s minSize(0,0);
-	Vec2s maxSize(0,0);
-	Vec2s divSize(0,0);
-	Pnt2s minPos(0,0);
-	Pnt2s maxPos(0,0);
-	Pnt2s divPos(0,0);
+	Vec2f minSize(0,0);
+	Vec2f maxSize(0,0);
+	Vec2f divSize(0,0);
+	Pnt2f minPos(0,0);
+	Pnt2f maxPos(0,0);
+	Pnt2f divPos(0,0);
 
 	if (getDividerPosition() < 0.0)
 		setDividerPosition(0.5);
@@ -360,15 +360,15 @@ void SplitPanel::DividerDraggedListener::mouseDragged(const MouseEvent& e)
 
 	if(e.getButton() == e.BUTTON1)
 	{
-		Pnt2s temp = ViewportToComponent(e.getLocation(), _SplitPanel, e.getViewport());
+		Pnt2f temp = ViewportToComponent(e.getLocation(), _SplitPanel, e.getViewport());
 		beginEditCP(_SplitPanel, DividerPositionFieldMask);
 			if (_SplitPanel->getDividerPosition() <= 1.0)
 			{
 				if (temp[AxisIndex] >= 0) // this ensures it stays as a percentage position
 				{
-					Pnt2s TopLeft, BottomRight;
+					Pnt2f TopLeft, BottomRight;
 					_SplitPanel->getInsideBorderBounds(TopLeft, BottomRight);
-					Vec2s BorderSize(BottomRight - TopLeft);
+					Vec2f BorderSize(BottomRight - TopLeft);
 					_SplitPanel->setDividerPosition((Real32)temp[AxisIndex]/(Real32)BorderSize[AxisIndex]);
 				}
 			}

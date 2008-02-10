@@ -52,7 +52,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // Include Border header files
 #include <OpenSG/UserInterface/OSGBorders.h>
@@ -418,7 +418,7 @@ int main(int argc, char **argv)
     ButtonPtr ExampleShadowBorderButton = osg::Button::create();
     
     beginEditCP(ExampleBevelBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
-        ExampleBevelBorderButton->setPreferredSize(Vec2s(100,50));
+        ExampleBevelBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleBevelBorderButton->setText("Bevel Border");
         ExampleBevelBorderButton->setBorder(ExampleBevelBorder);
         ExampleBevelBorderButton->setActiveBorder(ExampleBevelBorder);
@@ -426,7 +426,7 @@ int main(int argc, char **argv)
     endEditCP(ExampleBevelBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
     
     beginEditCP(ExampleCompoundBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
-        ExampleCompoundBorderButton->setPreferredSize(Vec2s(100,50));
+        ExampleCompoundBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleCompoundBorderButton->setText("Compound Border");
         ExampleCompoundBorderButton->setBorder(ExampleCompoundBorder);
         ExampleCompoundBorderButton->setActiveBorder(ExampleCompoundBorder);
@@ -434,7 +434,7 @@ int main(int argc, char **argv)
     endEditCP(ExampleCompoundBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
 
     beginEditCP(ExampleEmptyBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
-        ExampleEmptyBorderButton->setPreferredSize(Vec2s(100,50));
+        ExampleEmptyBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleEmptyBorderButton->setText("Empty Border");
         ExampleEmptyBorderButton->setBorder(ExampleEmptyBorder);
         ExampleEmptyBorderButton->setActiveBorder(ExampleEmptyBorder);
@@ -442,7 +442,7 @@ int main(int argc, char **argv)
     endEditCP(ExampleEmptyBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
     
     beginEditCP(ExampleEtchedBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
-        ExampleEtchedBorderButton->setPreferredSize(Vec2s(100,50));
+        ExampleEtchedBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleEtchedBorderButton->setText("Etched Border");
         ExampleEtchedBorderButton->setBorder(ExampleEtchedBorder);
         ExampleEtchedBorderButton->setActiveBorder(ExampleEtchedBorder);
@@ -450,7 +450,7 @@ int main(int argc, char **argv)
     endEditCP(ExampleEtchedBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
 
     beginEditCP(ExampleLineBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
-        ExampleLineBorderButton->setPreferredSize(Vec2s(100,50));
+        ExampleLineBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleLineBorderButton->setText("Line Border");
         ExampleLineBorderButton->setBorder(ExampleLineBorder);
         ExampleLineBorderButton->setActiveBorder(ExampleLineBorder);
@@ -458,7 +458,7 @@ int main(int argc, char **argv)
     endEditCP(ExampleLineBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
 
     beginEditCP(ExampleMatteBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::RolloverBorderFieldMask);
-        ExampleMatteBorderButton->setPreferredSize(Vec2s(100,50));
+        ExampleMatteBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleMatteBorderButton->setText("Matte Border");
         ExampleMatteBorderButton->setBorder(ExampleMatteBorder);
         ExampleMatteBorderButton->setRolloverBorder(ExampleMatteBorder);
@@ -468,7 +468,7 @@ int main(int argc, char **argv)
    endEditCP(ExampleMatteBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::RolloverBorderFieldMask);
     
     beginEditCP(ExampleMultiColorMatteBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
-        ExampleMultiColorMatteBorderButton->setPreferredSize(Vec2s(100,50));
+        ExampleMultiColorMatteBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleMultiColorMatteBorderButton->setText("Multi-Color Matte Border");
         ExampleMultiColorMatteBorderButton->setBorder(ExampleMultiColorMatteBorder);
         ExampleMultiColorMatteBorderButton->setActiveBorder(ExampleMultiColorMatteBorder);
@@ -476,7 +476,7 @@ int main(int argc, char **argv)
     endEditCP(ExampleMultiColorMatteBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
 
     beginEditCP(ExampleoundedCornerLineBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
-        ExampleoundedCornerLineBorderButton->setPreferredSize(Vec2s(100,50));
+        ExampleoundedCornerLineBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleoundedCornerLineBorderButton->setText("Rounded Border");
         ExampleoundedCornerLineBorderButton->setBorder(ExampleRoundedCornerLineBorder);
         ExampleoundedCornerLineBorderButton->setActiveBorder(ExampleRoundedCornerLineBorder);
@@ -484,7 +484,7 @@ int main(int argc, char **argv)
     endEditCP(ExampleoundedCornerLineBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
 
     beginEditCP(ExampleShadowBorderButton, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::BorderFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBorderFieldMask);
-        ExampleShadowBorderButton->setPreferredSize(Vec2s(100,50));
+        ExampleShadowBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleShadowBorderButton->setText("Shadow Border");
         ExampleShadowBorderButton->setBorder(ExampleShadowBorder);
         ExampleShadowBorderButton->setActiveBorder(ExampleShadowBorder);
@@ -551,8 +551,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(900,900),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(900,900),
                                         "OpenSG 03Border Window");
 
     //Main Event Loop
@@ -575,7 +575,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

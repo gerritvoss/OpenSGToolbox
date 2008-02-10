@@ -177,9 +177,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraints : public SpringLay
 
     LayoutSpringPtr scale(LayoutSpringPtr s, Real32 factor);
     
-    Int32 getBaselineFromHeight(const Int32& height) const;
+    Real32 getBaselineFromHeight(const Real32& height) const;
 
-    Int32 getHeightFromBaseLine(const Int32& baseline) const;
+    Real32 getHeightFromBaseLine(const Real32& baseline) const;
 
     LayoutSpringPtr heightToRelativeBaseline(LayoutSpringPtr s);
 

@@ -87,27 +87,27 @@ NegativeLayoutSpringPtr NegativeLayoutSpring::create(LayoutSpringPtr TheSpring)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Int32 NegativeLayoutSpring::getMinimumValue(void) const
+Real32 NegativeLayoutSpring::getMinimumValue(void) const
 {
     return -getSpring()->getMaximumValue();
 }
 
-Int32 NegativeLayoutSpring::getPreferredValue(void) const
+Real32 NegativeLayoutSpring::getPreferredValue(void) const
 {
     return -getSpring()->getPreferredValue();
 }
 
-Int32 NegativeLayoutSpring::getMaximumValue(void) const
+Real32 NegativeLayoutSpring::getMaximumValue(void) const
 {
     return -getSpring()->getMinimumValue();
 }
 
-Int32 NegativeLayoutSpring::getValue(void) const
+Real32 NegativeLayoutSpring::getValue(void) const
 {
     return -getSpring()->getValue();
 }
 
-void NegativeLayoutSpring::setValue(const Int32& value)
+void NegativeLayoutSpring::setValue(const Real32& value)
 {
     if(value == LayoutSpring::VALUE_NOT_SET)
     {

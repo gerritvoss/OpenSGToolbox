@@ -82,9 +82,9 @@ void TextUIDrawObject::draw(const GraphicsPtr Graphics) const
 	Graphics->drawText(getPosition(), getText(), getFont(), getColor(), getOpacity());
 }
 
-void TextUIDrawObject::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+void TextUIDrawObject::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
-   Pnt2s TextTopLeft, TextBottomRight;
+   Pnt2f TextTopLeft, TextBottomRight;
    getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
    TopLeft = getPosition();
    BottomRight = TopLeft + (TextBottomRight - TextTopLeft);

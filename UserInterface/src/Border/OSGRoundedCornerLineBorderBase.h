@@ -67,9 +67,9 @@
 
 #include "OSGBorder.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // Width type
+#include <OpenSG/OSGReal32Fields.h> // Width type
 #include <OpenSG/OSGColor4fFields.h> // Color type
-#include <OpenSG/OSGUInt32Fields.h> // CornerRadius type
+#include <OpenSG/OSGReal32Fields.h> // CornerRadius type
 
 #include "OSGRoundedCornerLineBorderFields.h"
 
@@ -128,25 +128,25 @@ class OSG_USERINTERFACELIB_DLLMAPPING RoundedCornerLineBorderBase : public Borde
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *getSFWidth          (void);
+           SFReal32            *getSFWidth          (void);
            SFColor4f           *getSFColor          (void);
-           SFUInt32            *getSFCornerRadius   (void);
+           SFReal32            *getSFCornerRadius   (void);
 
-           UInt32              &getWidth          (void);
-     const UInt32              &getWidth          (void) const;
+           Real32              &getWidth          (void);
+     const Real32              &getWidth          (void) const;
            Color4f             &getColor          (void);
      const Color4f             &getColor          (void) const;
-           UInt32              &getCornerRadius   (void);
-     const UInt32              &getCornerRadius   (void) const;
+           Real32              &getCornerRadius   (void);
+     const Real32              &getCornerRadius   (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setWidth          ( const UInt32 &value );
+     void setWidth          ( const Real32 &value );
      void setColor          ( const Color4f &value );
-     void setCornerRadius   ( const UInt32 &value );
+     void setCornerRadius   ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -189,9 +189,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING RoundedCornerLineBorderBase : public Borde
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfWidth;
+    SFReal32            _sfWidth;
     SFColor4f           _sfColor;
-    SFUInt32            _sfCornerRadius;
+    SFReal32            _sfCornerRadius;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

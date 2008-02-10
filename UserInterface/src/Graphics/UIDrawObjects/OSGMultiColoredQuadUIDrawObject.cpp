@@ -83,7 +83,7 @@ void MultiColoredQuadUIDrawObject::draw(const GraphicsPtr Graphics) const
                        getOpacity());
 }
 
-void MultiColoredQuadUIDrawObject::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+void MultiColoredQuadUIDrawObject::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
    TopLeft.setValues(
        osgMin(osgMin(osgMin(getPoint1().x(), getPoint2().x()),getPoint3().x()),getPoint4().x()),

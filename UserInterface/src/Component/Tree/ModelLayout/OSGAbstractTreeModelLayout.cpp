@@ -115,7 +115,7 @@ UInt32 AbstractTreeModelLayout::getPreferredHeight(void) const
 	}
 }
 
-UInt32 AbstractTreeModelLayout::getPreferredWidth(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+UInt32 AbstractTreeModelLayout::getPreferredWidth(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
 	//TODO: Implement
 	return 0;
@@ -223,7 +223,7 @@ void AbstractTreeModelLayout::vetoPathCollapse(const TreePath& Path)
 	_VetoPathCollapse = true;
 }
 
-void AbstractTreeModelLayout::getNodeDimensions(Pnt2s& TopLeft, Pnt2s& BottomRight, SharedFieldPtr value, const UInt32& row, const UInt32& depth, bool expanded, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn)
+void AbstractTreeModelLayout::getNodeDimensions(Pnt2f& TopLeft, Pnt2f& BottomRight, SharedFieldPtr value, const UInt32& row, const UInt32& depth, bool expanded, Pnt2f TopLeftPlaceIn, Pnt2f BottomRightPlaceIn)
 {
 	//TODO: Implement
 }

@@ -109,11 +109,11 @@ void Menu::setPopupVisible(bool Visible)
         beginEditCP(getInternalPopupMenu(), PopupMenu::PositionFieldMask);
             if(getTopLevelMenu())
             {
-                getInternalPopupMenu()->setPosition(ComponentToFrame(Pnt2s(0,0),MenuPtr(this)) + Vec2s(0,getSize().y()));        
+                getInternalPopupMenu()->setPosition(ComponentToFrame(Pnt2f(0,0),MenuPtr(this)) + Vec2f(0,getSize().y()));        
             }
             else
             {
-                getInternalPopupMenu()->setPosition(ComponentToFrame(Pnt2s(0,0),MenuPtr(this)) + Vec2s(getSize().x(),0));
+                getInternalPopupMenu()->setPosition(ComponentToFrame(Pnt2f(0,0),MenuPtr(this)) + Vec2f(getSize().x(),0));
             }
         endEditCP(getInternalPopupMenu(), PopupMenu::PositionFieldMask);
         beginEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
@@ -267,12 +267,12 @@ void Menu::changed(BitVector whichField, UInt32 origin)
     if(whichField & SizeFieldMask)
     {
         //Calculate Alignment
-        Pnt2s TopLeft, BottomRight;
+        Pnt2f TopLeft, BottomRight;
         getInsideBorderBounds(TopLeft, BottomRight);
-        Pnt2s ExpandTopLeft, ExpandBottomRight;
+        Pnt2f ExpandTopLeft, ExpandBottomRight;
         getExpandDrawObject()->getBounds(ExpandTopLeft, ExpandBottomRight);
 
-        Pnt2s AlignedPosition;
+        Pnt2f AlignedPosition;
         AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (ExpandBottomRight - ExpandTopLeft),0.5, 1.0);
 
         beginEditCP(getExpandDrawObject(), PositionFieldMask);

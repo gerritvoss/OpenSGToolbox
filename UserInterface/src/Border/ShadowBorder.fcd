@@ -14,7 +14,7 @@
 UI Shadow Border.
 	<Field
 		name="TopOffset"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0"
@@ -23,7 +23,7 @@ UI Shadow Border.
 	</Field>
 	<Field
 		name="BottomOffset"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		defaultValue="5"
@@ -32,7 +32,7 @@ UI Shadow Border.
 	</Field>
 	<Field
 		name="LeftOffset"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0"
@@ -41,7 +41,7 @@ UI Shadow Border.
 	</Field>
 	<Field
 		name="RightOffset"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		defaultValue="5"
@@ -78,7 +78,7 @@ UI Shadow Border.
 	</Field>
 	<Field
 		name="CornerRadius"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		defaultValue="3"
@@ -87,7 +87,7 @@ UI Shadow Border.
 	</Field>
 	<Field
 		name="InternalToEdgeColorLength"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		defaultValue="3"

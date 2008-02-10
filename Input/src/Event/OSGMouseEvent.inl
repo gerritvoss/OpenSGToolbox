@@ -24,40 +24,40 @@ UInt16 MouseEvent::getClickCount(void) const
 
 
 inline
-Pnt2s MouseEvent::getLocationOnScreen(void) const
+Pnt2f MouseEvent::getLocationOnScreen(void) const
 {
    assert(false && "MouseEvent::getLocationOnScreen(void) Not Implemented");
    return _Location; 
 }
 
 inline
-Pnt2s MouseEvent::getLocation(void) const
+Pnt2f MouseEvent::getLocation(void) const
 {
    return _Location; 
 }
 
 
 inline
-Int16 MouseEvent::getX(void) const
+Real32 MouseEvent::getX(void) const
 {
    return _Location.x(); 
 }
 
 inline
-Int16 MouseEvent::getXOnScreen(void) const
+Real32 MouseEvent::getXOnScreen(void) const
 {
    assert(false && "MouseEvent::getXOnScreen(void) Not Implemented");
    return _Location.x();
 }
 
 inline
-Int16 MouseEvent::getY(void) const
+Real32 MouseEvent::getY(void) const
 {
    return _Location.y();
 }
 
 inline
-Int16 MouseEvent::getYOnScreen(void) const
+Real32 MouseEvent::getYOnScreen(void) const
 {
    assert(false && "MouseEvent::getYOnScreen(void) Not Implemented");
    return _Location.y();
@@ -70,7 +70,7 @@ ViewportPtr MouseEvent::getViewport(void) const
 }
 
 inline
-MouseEvent::MouseEvent(FieldContainerPtr Source, Time TimeStamp, MouseButton Button, UInt16 ClickCount, Pnt2s Location, ViewportPtr TheViewport) 
+MouseEvent::MouseEvent(FieldContainerPtr Source, Time TimeStamp, MouseButton Button, UInt16 ClickCount, Pnt2f Location, ViewportPtr TheViewport) 
 : Event(Source, TimeStamp), _Button(Button), _ClickCount(ClickCount), _Location(Location),
    _Viewport(TheViewport)
 {}

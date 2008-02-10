@@ -452,8 +452,8 @@ void 	DefaultListSelectionModel::setSelectionInterval(UInt32 index0, UInt32 inde
 				break;
 		}
 		// update indices
-		_AnchorSelectionIndex = range.StartIndex;
-		_LeadSelectionIndex = range.EndIndex;
+		_AnchorSelectionIndex = index0;
+		_LeadSelectionIndex = index1;
         if(ShouldProduceSelectionChangeEvent)
         {
             produceSelectionChanged(TheListSelectionEvent);

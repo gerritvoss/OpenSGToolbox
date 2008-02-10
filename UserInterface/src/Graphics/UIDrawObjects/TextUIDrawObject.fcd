@@ -14,7 +14,7 @@
 A UI TextUIDrawObject.
 	<Field
 		name="Position"
-		type="Pnt2s"
+		type="Pnt2f"
 		cardinality="single"
 		visibility="external"
 		access="public"

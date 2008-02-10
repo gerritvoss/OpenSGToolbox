@@ -81,7 +81,7 @@ void List::initMethod (void)
 
 ComponentPtr List::getComponentAtPoint(const MouseEvent& e)
 {
-    Pnt2s PointInComponent(ViewportToComponent(e.getLocation(), ListPtr(this), e.getViewport()));
+    Pnt2f PointInComponent(ViewportToComponent(e.getLocation(), ListPtr(this), e.getViewport()));
 
 	Int32 Index(getIndexForLocation(PointInComponent));
 
@@ -97,7 +97,7 @@ ComponentPtr List::getComponentAtPoint(const MouseEvent& e)
 
 SharedFieldPtr List::getValueAtPoint(const MouseEvent& e)
 {
-    Pnt2s PointInComponent(ViewportToComponent(e.getLocation(), ListPtr(this), e.getViewport()));
+    Pnt2f PointInComponent(ViewportToComponent(e.getLocation(), ListPtr(this), e.getViewport()));
 
 	Int32 Index(getIndexForLocation(PointInComponent));
 	if(Index > 0 && Index < _Model->getSize())
@@ -128,7 +128,7 @@ void List::cleanItem(const UInt32& Index)
 
 void List::initItem(const UInt32& Index)
 {
-	Pnt2s InsetsTopLeft, InsetsBottomRight;
+	Pnt2f InsetsTopLeft, InsetsBottomRight;
 	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 
 	if(Index < 0 || Index >= getChildren().size()) {return;}
@@ -152,8 +152,8 @@ void List::initItem(const UInt32& Index)
 	OrientationMinorAxisIndex = (OrientationMajorAxisIndex +1) %2;
 
     //Update the Position and Size of the Index
-	Pnt2s Pos;
-	Vec2s Size;
+	Pnt2f Pos;
+	Vec2f Size;
 	Pos[OrientationMajorAxisIndex] = getCellMajorAxisLength()*getListIndexFromDrawnIndex(Index);
 	Pos[OrientationMinorAxisIndex] = InsetsTopLeft[OrientationMinorAxisIndex];
 
@@ -387,18 +387,18 @@ void List::contentsChanged(ListDataEvent e)
 				}
 			endEditCP(ListPtr(this), ChildrenFieldMask);*/
 		}
-		Pnt2s Position(0,0);
+		Pnt2f Position(0,0);
 		for(UInt32 i(0) ; i<getModel()->getSize() && i<=e.getIndex1() ; ++i )
 		{
 			beginEditCP(getChildren().getValue(i), PositionFieldMask | SizeFieldMask);
 			   getChildren().getValue(i)->setPosition(Position);
                if(getCellOrientation() == VERTICAL_ALIGNMENT)
                {
-			      getChildren().getValue(i)->setSize( Vec2s(getSize().x(), getCellMajorAxisLength()) );
+			      getChildren().getValue(i)->setSize( Vec2f(getSize().x(), getCellMajorAxisLength()) );
                }
                else
                {
-                  getChildren().getValue(i)->setSize( Vec2s(getCellMajorAxisLength(), getSize().y()) );
+                  getChildren().getValue(i)->setSize( Vec2f(getCellMajorAxisLength(), getSize().y()) );
                }
 			endEditCP(getChildren().getValue(i), PositionFieldMask | SizeFieldMask);
 
@@ -466,7 +466,7 @@ void List::setSelectionModel(ListSelectionModelPtr SelectionModel)
 
 void List::updateLayout(void)
 {
-	Pnt2s InsetsTopLeft, InsetsBottomRight;
+	Pnt2f InsetsTopLeft, InsetsBottomRight;
 	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 
     UInt16 OrientationMajorAxisIndex;
@@ -482,8 +482,8 @@ void List::updateLayout(void)
 	OrientationMinorAxisIndex = (OrientationMajorAxisIndex +1) %2;
 
     //Update the Position and Size of all the Drawn Rows
-	Pnt2s Pos;
-	Vec2s Size;
+	Pnt2f Pos;
+	Vec2f Size;
 	for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
 		Pos[OrientationMajorAxisIndex] = getCellMajorAxisLength()*(i+_TopDrawnIndex);
@@ -499,12 +499,12 @@ void List::updateLayout(void)
     }
 }
 
-Vec2s List::getPreferredScrollableViewportSize(void)
+Vec2f List::getPreferredScrollableViewportSize(void)
 {
     return getPreferredSize();
 }
 
-Int32 List::getScrollableBlockIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
+Int32 List::getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
     UInt16 MajorAxis;
     if(orientation == VERTICAL_ALIGNMENT)
@@ -529,7 +529,7 @@ bool List::getScrollableTracksViewportWidth(void)
     return getCellOrientation() == VERTICAL_ALIGNMENT;
 }
 
-Int32 List::getScrollableUnitIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
+Int32 List::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
     if(orientation == getCellOrientation())
     {
@@ -580,10 +580,6 @@ void List::updateIndicesDrawn(void)
         {
             _DrawnIndices.push_front(createIndexComponent(i));
         }
-        //for(Int32 i(osgMin(OldTopDrawnIndex-1, NewBottomDrawnIndex)) ; i>=NewTopDrawnIndex ; --i)
-        //{
-		//	initItem(i-NewTopDrawnIndex);
-        //}
     }
 
     if(NewBottomDrawnIndex > OldBottomDrawnIndex)
@@ -593,9 +589,6 @@ void List::updateIndicesDrawn(void)
         {
             _DrawnIndices.push_back(createIndexComponent(i));
         }
-        //for(Int32 i(osgMax(NewTopDrawnIndex, OldBottomDrawnIndex+1)) ; i<=NewBottomDrawnIndex ; ++i)
-        //{
-        //}
     }
 
 
@@ -615,14 +608,14 @@ void List::updateIndicesDrawn(void)
 void List::getDrawnIndices(Int32& Beginning, Int32& End) const
 {
     //Get My Clip Bounds
-    Pnt2s ClipTopLeft, ClipBottomRight;
+    Pnt2f ClipTopLeft, ClipBottomRight;
     getClipBounds(ClipTopLeft, ClipBottomRight);
 
     Beginning = getIndexClosestToLocation(ClipTopLeft);
     End = getIndexClosestToLocation(ClipBottomRight);
 }
 
-Int32 List::getIndexClosestToLocation(const Pnt2s& Location) const
+Int32 List::getIndexClosestToLocation(const Pnt2f& Location) const
 {
 	if(_Model == NULL) {return -1;}
 
@@ -642,7 +635,7 @@ Int32 List::getIndexClosestToLocation(const Pnt2s& Location) const
 	return Index;
 }
 
-Int32 List::getIndexForLocation(const Pnt2s& Location) const
+Int32 List::getIndexForLocation(const Pnt2f& Location) const
 {
 	if(_Model == NULL) {return -1;}
 
@@ -713,11 +706,11 @@ void List::updatePreferredSize(void)
     beginEditCP(ListPtr(this), PreferredSizeFieldMask);
         if(getCellOrientation() == VERTICAL_ALIGNMENT)
         {
-            setPreferredSize(Vec2s(getPreferredSize().x(), getCellMajorAxisLength()*ListLength));
+            setPreferredSize(Vec2f(getPreferredSize().x(), getCellMajorAxisLength()*ListLength));
         }
         else
         {
-            setPreferredSize(Vec2s(getCellMajorAxisLength()*ListLength, getPreferredSize().y()));
+            setPreferredSize(Vec2f(getCellMajorAxisLength()*ListLength, getPreferredSize().y()));
         }
     endEditCP(ListPtr(this), PreferredSizeFieldMask);
 }
@@ -760,13 +753,13 @@ void List::scrollToIndex(const UInt32& Index)
     }
 	MinorAxis = (MajorAxis+1)%2;
 
-	Pnt2s InsetsTopLeft, InsetsBottomRight;
+	Pnt2f InsetsTopLeft, InsetsBottomRight;
 	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 
-	Pnt2s ClipTopLeft, ClipBottomRight;
+	Pnt2f ClipTopLeft, ClipBottomRight;
 	getClipBounds(ClipTopLeft, ClipBottomRight);
 	
-	Pnt2s UnionTopLeft, UnionBottomRight;
+	Pnt2f UnionTopLeft, UnionBottomRight;
 	//Get the intersection of my bounds with my parent containers clip bounds
 	quadIntersection(InsetsTopLeft, InsetsBottomRight,
 		ClipTopLeft, ClipBottomRight,
@@ -776,7 +769,7 @@ void List::scrollToIndex(const UInt32& Index)
 	if(Index <= _TopDrawnIndex)
 	{
 		//Scroll Up so that this Index is The First Visible
-		Pnt2s Pos;
+		Pnt2f Pos;
 		Pos[MajorAxis] = Index * getCellMajorAxisLength();
 		Pos[MinorAxis] = UnionTopLeft[MinorAxis];
 
@@ -795,7 +788,7 @@ void List::scrollToIndex(const UInt32& Index)
 		}
 
 		//Scroll Down so that this Index is the last Visible
-		Pnt2s Pos;
+		Pnt2f Pos;
 		Pos[MajorAxis] = (CorrectedIndex * getCellMajorAxisLength()) - (UnionBottomRight[MajorAxis]-UnionTopLeft[MajorAxis]) + getCellMajorAxisLength();
 		Pos[(MajorAxis+1)%2] = UnionTopLeft[MinorAxis];
 

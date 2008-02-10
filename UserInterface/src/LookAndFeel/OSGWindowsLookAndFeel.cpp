@@ -381,9 +381,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsButton->setConstraints(NullFC);
 		//Sizes
-		WindowsButton->setMinSize(Vec2s(0,0));
-		WindowsButton->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsButton->setPreferredSize(Vec2s(75,23));
+		WindowsButton->setMinSize(Vec2f(0,0));
+		WindowsButton->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsButton->setPreferredSize(Vec2f(75,23));
 
 		//Border
 		WindowsButton->setBorder(WindowsButtonBorder);
@@ -413,7 +413,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsButton->setDisabledTextColor(WindowsDisabledTextColor);
         
-        WindowsButton->setActiveOffset(Vec2s(2,2));
+        WindowsButton->setActiveOffset(Vec2f(2,2));
 	endEditCP(WindowsButton);
 
 	Button::getClassType().setPrototype(WindowsButton);
@@ -440,9 +440,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsLabel->setConstraints(NullFC);
 		//Sizes
-		WindowsLabel->setMinSize(Vec2s(0,0));
-		WindowsLabel->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsLabel->setPreferredSize(Vec2s(75,23));
+		WindowsLabel->setMinSize(Vec2f(0,0));
+		WindowsLabel->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsLabel->setPreferredSize(Vec2f(75,23));
 
 		//Border
 		WindowsLabel->setBorders(WindowsLabelBorder);
@@ -588,40 +588,40 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsIconifyButtonDrawObject1);
 		WindowsIconifyButtonDrawObject1->setColor(Color4f(1.0,1.0,1.0,1.0));
 		WindowsIconifyButtonDrawObject1->setOpacity(1.0);
-        WindowsIconifyButtonDrawObject1->getVerticies().addValue(Pnt2s(0,0));
-        WindowsIconifyButtonDrawObject1->getVerticies().addValue(Pnt2s(0,4));
-        WindowsIconifyButtonDrawObject1->getVerticies().addValue(Pnt2s(8,4));
-        WindowsIconifyButtonDrawObject1->getVerticies().addValue(Pnt2s(8,0));
+        WindowsIconifyButtonDrawObject1->getVerticies().addValue(Pnt2f(0,0));
+        WindowsIconifyButtonDrawObject1->getVerticies().addValue(Pnt2f(0,4));
+        WindowsIconifyButtonDrawObject1->getVerticies().addValue(Pnt2f(8,4));
+        WindowsIconifyButtonDrawObject1->getVerticies().addValue(Pnt2f(8,0));
 	endEditCP(WindowsIconifyButtonDrawObject1);
 	
 	PolygonUIDrawObjectPtr WindowsIconifyButtonDrawObject2 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsIconifyButtonDrawObject2);
 		WindowsIconifyButtonDrawObject2->setColor(Color4f(0.15,0.15,0.21,1.0));
 		WindowsIconifyButtonDrawObject2->setOpacity(1.0);
-        WindowsIconifyButtonDrawObject2->getVerticies().addValue(Pnt2s(1,0));
-        WindowsIconifyButtonDrawObject2->getVerticies().addValue(Pnt2s(1,1));
-        WindowsIconifyButtonDrawObject2->getVerticies().addValue(Pnt2s(8,1));
-        WindowsIconifyButtonDrawObject2->getVerticies().addValue(Pnt2s(8,0));
+        WindowsIconifyButtonDrawObject2->getVerticies().addValue(Pnt2f(1,0));
+        WindowsIconifyButtonDrawObject2->getVerticies().addValue(Pnt2f(1,1));
+        WindowsIconifyButtonDrawObject2->getVerticies().addValue(Pnt2f(8,1));
+        WindowsIconifyButtonDrawObject2->getVerticies().addValue(Pnt2f(8,0));
 	endEditCP(WindowsIconifyButtonDrawObject2);
 	
 	PolygonUIDrawObjectPtr WindowsIconifyButtonDrawObject3 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsIconifyButtonDrawObject3);
 		WindowsIconifyButtonDrawObject3->setColor(Color4f(0.15,0.15,0.21,1.0));
 		WindowsIconifyButtonDrawObject3->setOpacity(1.0);
-        WindowsIconifyButtonDrawObject3->getVerticies().addValue(Pnt2s(7,1));
-        WindowsIconifyButtonDrawObject3->getVerticies().addValue(Pnt2s(7,3));
-        WindowsIconifyButtonDrawObject3->getVerticies().addValue(Pnt2s(8,3));
-        WindowsIconifyButtonDrawObject3->getVerticies().addValue(Pnt2s(8,1));
+        WindowsIconifyButtonDrawObject3->getVerticies().addValue(Pnt2f(7,1));
+        WindowsIconifyButtonDrawObject3->getVerticies().addValue(Pnt2f(7,3));
+        WindowsIconifyButtonDrawObject3->getVerticies().addValue(Pnt2f(8,3));
+        WindowsIconifyButtonDrawObject3->getVerticies().addValue(Pnt2f(8,1));
 	endEditCP(WindowsIconifyButtonDrawObject3);
 	
 	PolygonUIDrawObjectPtr WindowsIconifyButtonDrawObject4 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsIconifyButtonDrawObject4);
 		WindowsIconifyButtonDrawObject4->setColor(Color4f(0.43,0.43,0.56,1.0));
 		WindowsIconifyButtonDrawObject4->setOpacity(1.0);
-        WindowsIconifyButtonDrawObject4->getVerticies().addValue(Pnt2s(1,1));
-        WindowsIconifyButtonDrawObject4->getVerticies().addValue(Pnt2s(1,3));
-        WindowsIconifyButtonDrawObject4->getVerticies().addValue(Pnt2s(7,3));
-        WindowsIconifyButtonDrawObject4->getVerticies().addValue(Pnt2s(7,1));
+        WindowsIconifyButtonDrawObject4->getVerticies().addValue(Pnt2f(1,1));
+        WindowsIconifyButtonDrawObject4->getVerticies().addValue(Pnt2f(1,3));
+        WindowsIconifyButtonDrawObject4->getVerticies().addValue(Pnt2f(7,3));
+        WindowsIconifyButtonDrawObject4->getVerticies().addValue(Pnt2f(7,1));
 	endEditCP(WindowsIconifyButtonDrawObject4);
 
 	UIDrawObjectCanvasPtr WindowsIconifyButtonCanvas = UIDrawObjectCanvas::create();
@@ -635,7 +635,7 @@ void WindowsLookAndFeel::init(void)
 	//Iconify Button
 	ButtonPtr WindowsInternalWindowTitlebarIconifyButton = Button::create();
 	beginEditCP(WindowsInternalWindowTitlebarIconifyButton);
-		WindowsInternalWindowTitlebarIconifyButton->setPreferredSize(Vec2s(21, 21));
+		WindowsInternalWindowTitlebarIconifyButton->setPreferredSize(Vec2f(21, 21));
 		
 		//Border
 		WindowsInternalWindowTitlebarIconifyButton->setBorder(WindowsIconifyMaximizeButtonBorder);
@@ -658,7 +658,7 @@ void WindowsLookAndFeel::init(void)
         WindowsInternalWindowTitlebarIconifyButton->setRolloverDrawObject(WindowsIconifyButtonCanvas);
         WindowsInternalWindowTitlebarIconifyButton->setDisabledDrawObject(WindowsIconifyButtonCanvas);
 
-        WindowsInternalWindowTitlebarIconifyButton->setActiveOffset(Vec2s(0,0));
+        WindowsInternalWindowTitlebarIconifyButton->setActiveOffset(Vec2f(0,0));
 		WindowsInternalWindowTitlebarIconifyButton->setVerticalAlignment(0.85f);
 		WindowsInternalWindowTitlebarIconifyButton->setHorizontalAlignment(0.25f);
 	endEditCP(WindowsInternalWindowTitlebarIconifyButton);
@@ -666,7 +666,7 @@ void WindowsLookAndFeel::init(void)
 	//MaximizeButton
 	ButtonPtr WindowsInternalWindowTitlebarMaximizeButton = Button::create();
 	beginEditCP(WindowsInternalWindowTitlebarMaximizeButton);
-		WindowsInternalWindowTitlebarMaximizeButton->setPreferredSize(Vec2s(21, 21));
+		WindowsInternalWindowTitlebarMaximizeButton->setPreferredSize(Vec2f(21, 21));
 		
 		//Border
 		WindowsInternalWindowTitlebarMaximizeButton->setBorder(WindowsIconifyMaximizeButtonBorder);
@@ -682,7 +682,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsInternalWindowTitlebarMaximizeButton->setDisabledBackground(WindowsDisabledIconifyMaximizeButtonBackground);
 		WindowsInternalWindowTitlebarMaximizeButton->setActiveBackground(ActiveWindowsIconifyMaximizeButtonBackground);
 		
-        WindowsInternalWindowTitlebarMaximizeButton->setActiveOffset(Vec2s(0,0));
+        WindowsInternalWindowTitlebarMaximizeButton->setActiveOffset(Vec2f(0,0));
 	endEditCP(WindowsInternalWindowTitlebarMaximizeButton);
 
 	//Windows CloseButtonBorder
@@ -738,44 +738,44 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsCloseButtonDrawObject1);
 		WindowsCloseButtonDrawObject1->setColor(Color4f(0.35,0.11,0.19,1.0));
 		WindowsCloseButtonDrawObject1->setOpacity(1.0);
-        WindowsCloseButtonDrawObject1->getVerticies().addValue(Pnt2s(1,0));
-        WindowsCloseButtonDrawObject1->getVerticies().addValue(Pnt2s(11,11));
-        WindowsCloseButtonDrawObject1->getVerticies().addValue(Pnt2s(13,11));
-        WindowsCloseButtonDrawObject1->getVerticies().addValue(Pnt2s(3,0));
+        WindowsCloseButtonDrawObject1->getVerticies().addValue(Pnt2f(1,0));
+        WindowsCloseButtonDrawObject1->getVerticies().addValue(Pnt2f(11,11));
+        WindowsCloseButtonDrawObject1->getVerticies().addValue(Pnt2f(13,11));
+        WindowsCloseButtonDrawObject1->getVerticies().addValue(Pnt2f(3,0));
 	endEditCP(WindowsCloseButtonDrawObject1);
 	
 	PolygonUIDrawObjectPtr WindowsCloseButtonDrawObject2 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsCloseButtonDrawObject2);
 		WindowsCloseButtonDrawObject2->setColor(Color4f(0.35,0.11,0.19,1.0));
 		WindowsCloseButtonDrawObject2->setOpacity(1.0);
-        WindowsCloseButtonDrawObject2->getVerticies().addValue(Pnt2s(0,10));
-        WindowsCloseButtonDrawObject2->getVerticies().addValue(Pnt2s(2,10));
-        WindowsCloseButtonDrawObject2->getVerticies().addValue(Pnt2s(12,0));
-        WindowsCloseButtonDrawObject2->getVerticies().addValue(Pnt2s(10,0));
+        WindowsCloseButtonDrawObject2->getVerticies().addValue(Pnt2f(0,10));
+        WindowsCloseButtonDrawObject2->getVerticies().addValue(Pnt2f(2,10));
+        WindowsCloseButtonDrawObject2->getVerticies().addValue(Pnt2f(12,0));
+        WindowsCloseButtonDrawObject2->getVerticies().addValue(Pnt2f(10,0));
 	endEditCP(WindowsCloseButtonDrawObject2);
 
 	PolygonUIDrawObjectPtr WindowsCloseButtonDrawObject3 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsCloseButtonDrawObject3);
 		WindowsCloseButtonDrawObject3->setColor(Color4f(1.0,1.0,1.0,1.0));
 		WindowsCloseButtonDrawObject3->setOpacity(1.0);
-        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2s(1,1));
-        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2s(1,3));
-        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2s(10,12));
-        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2s(12,12));
-        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2s(12,10));
-        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2s(3,1));
+        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2f(1,1));
+        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2f(1,3));
+        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2f(10,12));
+        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2f(12,12));
+        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2f(12,10));
+        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2f(3,1));
 	endEditCP(WindowsCloseButtonDrawObject3);
 	
 	PolygonUIDrawObjectPtr WindowsCloseButtonDrawObject4 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsCloseButtonDrawObject4);
 		WindowsCloseButtonDrawObject4->setColor(Color4f(1.0,1.0,1.0,1.0));
 		WindowsCloseButtonDrawObject4->setOpacity(1.0);
-        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2s(1,12));
-        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2s(3,12));
-        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2s(12,3));
-        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2s(12,1));
-        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2s(10,1));
-        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2s(1,10));
+        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2f(1,12));
+        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2f(3,12));
+        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2f(12,3));
+        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2f(12,1));
+        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2f(10,1));
+        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2f(1,10));
 	endEditCP(WindowsCloseButtonDrawObject4);
 
 	UIDrawObjectCanvasPtr WindowsCloseButtonCanvas = UIDrawObjectCanvas::create();
@@ -789,7 +789,7 @@ void WindowsLookAndFeel::init(void)
 	//Windows CloseButton
 	ButtonPtr WindowsInternalWindowTitlebarCloseButton = Button::create();
 	beginEditCP(WindowsInternalWindowTitlebarCloseButton);
-		WindowsInternalWindowTitlebarCloseButton->setPreferredSize(Vec2s(21, 21));
+		WindowsInternalWindowTitlebarCloseButton->setPreferredSize(Vec2f(21, 21));
 
 		//Border
 		WindowsInternalWindowTitlebarCloseButton->setBorder(WindowsCloseButtonBorder);
@@ -812,14 +812,15 @@ void WindowsLookAndFeel::init(void)
         WindowsInternalWindowTitlebarCloseButton->setRolloverDrawObject(WindowsCloseButtonCanvas);
         WindowsInternalWindowTitlebarCloseButton->setDisabledDrawObject(WindowsCloseButtonCanvas);
 
-        WindowsInternalWindowTitlebarCloseButton->setActiveOffset(Vec2s(0,0));
+        WindowsInternalWindowTitlebarCloseButton->setActiveOffset(Vec2f(0,0));
 		WindowsInternalWindowTitlebarCloseButton->setVerticalAlignment(0.5f);
 		WindowsInternalWindowTitlebarCloseButton->setHorizontalAlignment(0.5f);
 	endEditCP(WindowsInternalWindowTitlebarCloseButton);
 
 	LabelPtr WindowsInternalWindowTitlebarTitleLabel = Label::create();
 	beginEditCP(WindowsInternalWindowTitlebarTitleLabel);
-		WindowsInternalWindowTitlebarTitleLabel->setPreferredSize(Vec2s(23, 23));
+		WindowsInternalWindowTitlebarTitleLabel->setPreferredSize(Vec2f(23, 23));
+
 		//Border
 		WindowsInternalWindowTitlebarTitleLabel->setBorder(WindowsEmptyBorder);
 		WindowsInternalWindowTitlebarTitleLabel->setRolloverBorder(WindowsEmptyBorder);
@@ -857,9 +858,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsInternalWindowTitlebar->setConstraints(NullFC);
 		//Sizes
-		WindowsInternalWindowTitlebar->setMinSize(Vec2s(0,0));
-		WindowsInternalWindowTitlebar->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsInternalWindowTitlebar->setPreferredSize(Vec2s(1, 23));
+		WindowsInternalWindowTitlebar->setMinSize(Vec2f(0,0));
+		WindowsInternalWindowTitlebar->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsInternalWindowTitlebar->setPreferredSize(Vec2f(1, 23));
 
 		//Border
 		WindowsInternalWindowTitlebar->setBorder(WindowsEmptyBorder);
@@ -896,9 +897,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsInternalWindow->setConstraints(NullFC);
 		//Sizes
-		WindowsInternalWindow->setMinSize(Vec2s(50,50));
-		WindowsInternalWindow->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsInternalWindow->setPreferredSize(Vec2s(100,100));
+		WindowsInternalWindow->setMinSize(Vec2f(50,50));
+		WindowsInternalWindow->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsInternalWindow->setPreferredSize(Vec2f(100,100));
 
 		//Border
 		WindowsInternalWindow->setBorder(WindowsInternalWindowUnfocusedBorder);
@@ -946,9 +947,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsDialogWindowTitlebar->setConstraints(NullFC);
 		//Sizes
-		WindowsDialogWindowTitlebar->setMinSize(Vec2s(0,0));
-		WindowsDialogWindowTitlebar->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsDialogWindowTitlebar->setPreferredSize(Vec2s(1, 23));
+		WindowsDialogWindowTitlebar->setMinSize(Vec2f(0,0));
+		WindowsDialogWindowTitlebar->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsDialogWindowTitlebar->setPreferredSize(Vec2f(1, 23));
 
 		//Border
 		WindowsDialogWindowTitlebar->setBorder(WindowsEmptyBorder);
@@ -985,9 +986,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsDialogWindow->setConstraints(NullFC);
 		//Sizes
-		WindowsDialogWindow->setMinSize(Vec2s(50,50));
-		WindowsDialogWindow->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsDialogWindow->setPreferredSize(Vec2s(280,140));
+		WindowsDialogWindow->setMinSize(Vec2f(50,50));
+		WindowsDialogWindow->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsDialogWindow->setPreferredSize(Vec2f(280,140));
 
 		//Border
 		WindowsDialogWindow->setBorder(WindowsInternalWindowUnfocusedBorder);
@@ -1057,9 +1058,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsPanel->setConstraints(NullFC);
 		//Sizes
-		WindowsPanel->setMinSize(Vec2s(0,0));
-		WindowsPanel->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsPanel->setPreferredSize(Vec2s(100,100));
+		WindowsPanel->setMinSize(Vec2f(0,0));
+		WindowsPanel->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsPanel->setPreferredSize(Vec2f(100,100));
 
 		//Border
 		WindowsPanel->setBorders(WindowsPanelBorder);
@@ -1112,10 +1113,10 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsImageComponent->setConstraints(NullFC);
 		//Sizes
-		WindowsImageComponent->setMinSize(Vec2s(0,0));
-		WindowsImageComponent->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsImageComponent->setPreferredSize(Vec2s(100,100));
-		WindowsImageComponent->setSize(Vec2s(0,0));
+		WindowsImageComponent->setMinSize(Vec2f(0,0));
+		WindowsImageComponent->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsImageComponent->setPreferredSize(Vec2f(100,100));
+		WindowsImageComponent->setSize(Vec2f(0,0));
 
 		//Border
 		WindowsImageComponent->setBorders(WindowsImageComponentBorder);
@@ -1148,10 +1149,10 @@ void WindowsLookAndFeel::init(void)
     //Normal Background
 	MultiColoredQuadUIDrawObjectPtr CheckboxBackground = MultiColoredQuadUIDrawObject::create();
 	beginEditCP(CheckboxBackground);
-        CheckboxBackground->setPoint1(Pnt2s(1,1));
-        CheckboxBackground->setPoint2(Pnt2s(12,1));
-        CheckboxBackground->setPoint3(Pnt2s(12,12));
-        CheckboxBackground->setPoint4(Pnt2s(1,12));
+        CheckboxBackground->setPoint1(Pnt2f(1,1));
+        CheckboxBackground->setPoint2(Pnt2f(12,1));
+        CheckboxBackground->setPoint3(Pnt2f(12,12));
+        CheckboxBackground->setPoint4(Pnt2f(1,12));
 		CheckboxBackground->setColor1(Color4f(.86,.86,.84,1.0));
 		CheckboxBackground->setColor2(Color4f(.95,.95,.94,1.0));
 		CheckboxBackground->setColor3(Color4f(1.0,1.0,1.0,1.0));
@@ -1162,8 +1163,8 @@ void WindowsLookAndFeel::init(void)
     //Normal Border
 	RectUIDrawObjectPtr CheckboxBackgroundBorder = RectUIDrawObject::create();
 	beginEditCP(CheckboxBackgroundBorder);
-		CheckboxBackgroundBorder->setTopLeft(Pnt2s(0,0));
-		CheckboxBackgroundBorder->setBottomRight(Pnt2s(13,13));
+		CheckboxBackgroundBorder->setTopLeft(Pnt2f(0,0));
+		CheckboxBackgroundBorder->setBottomRight(Pnt2f(13,13));
 		CheckboxBackgroundBorder->setColor(Color4f(.110,.318,.502,1.0));
 		CheckboxBackgroundBorder->setOpacity(1.0);
 	endEditCP(CheckboxBackgroundBorder);
@@ -1171,10 +1172,10 @@ void WindowsLookAndFeel::init(void)
     //Active Background
 	MultiColoredQuadUIDrawObjectPtr CheckboxActiveBackground = MultiColoredQuadUIDrawObject::create();
 	beginEditCP(CheckboxActiveBackground);
-        CheckboxActiveBackground->setPoint1(Pnt2s(1,1));
-        CheckboxActiveBackground->setPoint2(Pnt2s(12,1));
-        CheckboxActiveBackground->setPoint3(Pnt2s(12,12));
-        CheckboxActiveBackground->setPoint4(Pnt2s(1,12));
+        CheckboxActiveBackground->setPoint1(Pnt2f(1,1));
+        CheckboxActiveBackground->setPoint2(Pnt2f(12,1));
+        CheckboxActiveBackground->setPoint3(Pnt2f(12,12));
+        CheckboxActiveBackground->setPoint4(Pnt2f(1,12));
 		CheckboxActiveBackground->setColor1(Color4f(.69,.69,.65,1.0));
 		CheckboxActiveBackground->setColor2(Color4f(.95,.94,.87,1.0));
 		CheckboxActiveBackground->setColor3(Color4f(1.0,1.0,1.0,1.0));
@@ -1185,8 +1186,8 @@ void WindowsLookAndFeel::init(void)
     //Disabled Background
 	RectUIDrawObjectPtr CheckboxDisabledBackground = RectUIDrawObject::create();
 	beginEditCP(CheckboxDisabledBackground);
-		CheckboxDisabledBackground->setTopLeft(Pnt2s(1,1));
-		CheckboxDisabledBackground->setBottomRight(Pnt2s(12,12));
+		CheckboxDisabledBackground->setTopLeft(Pnt2f(1,1));
+		CheckboxDisabledBackground->setBottomRight(Pnt2f(12,12));
 		CheckboxDisabledBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 		CheckboxDisabledBackground->setOpacity(1.0);
 	endEditCP(CheckboxDisabledBackground);
@@ -1194,8 +1195,8 @@ void WindowsLookAndFeel::init(void)
     //Disabled Border
 	RectUIDrawObjectPtr CheckboxDisabledBackgroundBorder = RectUIDrawObject::create();
 	beginEditCP(CheckboxDisabledBackgroundBorder);
-		CheckboxDisabledBackgroundBorder->setTopLeft(Pnt2s(0,0));
-		CheckboxDisabledBackgroundBorder->setBottomRight(Pnt2s(13,13));
+		CheckboxDisabledBackgroundBorder->setTopLeft(Pnt2f(0,0));
+		CheckboxDisabledBackgroundBorder->setBottomRight(Pnt2f(13,13));
 		CheckboxDisabledBackgroundBorder->setColor(Color4f(.79,.78,.73,1.0));
 		CheckboxDisabledBackgroundBorder->setOpacity(1.0);
 	endEditCP(CheckboxDisabledBackgroundBorder);
@@ -1204,10 +1205,10 @@ void WindowsLookAndFeel::init(void)
     Color4f CheckmarkColor(0.13,0.63,0.13,1.0);
 	MultiColoredQuadUIDrawObjectPtr CheckboxCheckQuad1 = MultiColoredQuadUIDrawObject::create();
 	beginEditCP(CheckboxCheckQuad1);
-        CheckboxCheckQuad1->setPoint1(Pnt2s(3,4));
-        CheckboxCheckQuad1->setPoint2(Pnt2s(6,7));
-        CheckboxCheckQuad1->setPoint3(Pnt2s(6,10));
-        CheckboxCheckQuad1->setPoint4(Pnt2s(3,7));
+        CheckboxCheckQuad1->setPoint1(Pnt2f(3,4));
+        CheckboxCheckQuad1->setPoint2(Pnt2f(6,7));
+        CheckboxCheckQuad1->setPoint3(Pnt2f(6,10));
+        CheckboxCheckQuad1->setPoint4(Pnt2f(3,7));
 		CheckboxCheckQuad1->setColor1(CheckmarkColor);
 		CheckboxCheckQuad1->setColor2(CheckmarkColor);
 		CheckboxCheckQuad1->setColor3(CheckmarkColor);
@@ -1217,10 +1218,10 @@ void WindowsLookAndFeel::init(void)
 
 	MultiColoredQuadUIDrawObjectPtr CheckboxCheckQuad2 = MultiColoredQuadUIDrawObject::create();
 	beginEditCP(CheckboxCheckQuad2);
-        CheckboxCheckQuad2->setPoint1(Pnt2s(6,7));
-        CheckboxCheckQuad2->setPoint2(Pnt2s(10,3));
-        CheckboxCheckQuad2->setPoint3(Pnt2s(10,6));
-        CheckboxCheckQuad2->setPoint4(Pnt2s(6,10));
+        CheckboxCheckQuad2->setPoint1(Pnt2f(6,7));
+        CheckboxCheckQuad2->setPoint2(Pnt2f(10,3));
+        CheckboxCheckQuad2->setPoint3(Pnt2f(10,6));
+        CheckboxCheckQuad2->setPoint4(Pnt2f(6,10));
 		CheckboxCheckQuad2->setColor1(CheckmarkColor);
 		CheckboxCheckQuad2->setColor2(CheckmarkColor);
 		CheckboxCheckQuad2->setColor3(CheckmarkColor);
@@ -1232,10 +1233,10 @@ void WindowsLookAndFeel::init(void)
     Color4f CheckmarkDisabledColor(0.79,0.78,0.73,1.0);
 	MultiColoredQuadUIDrawObjectPtr CheckboxDisabledCheckQuad1 = MultiColoredQuadUIDrawObject::create();
 	beginEditCP(CheckboxDisabledCheckQuad1);
-        CheckboxDisabledCheckQuad1->setPoint1(Pnt2s(3,4));
-        CheckboxDisabledCheckQuad1->setPoint2(Pnt2s(6,7));
-        CheckboxDisabledCheckQuad1->setPoint3(Pnt2s(6,10));
-        CheckboxDisabledCheckQuad1->setPoint4(Pnt2s(3,7));
+        CheckboxDisabledCheckQuad1->setPoint1(Pnt2f(3,4));
+        CheckboxDisabledCheckQuad1->setPoint2(Pnt2f(6,7));
+        CheckboxDisabledCheckQuad1->setPoint3(Pnt2f(6,10));
+        CheckboxDisabledCheckQuad1->setPoint4(Pnt2f(3,7));
 		CheckboxDisabledCheckQuad1->setColor1(CheckmarkDisabledColor);
 		CheckboxDisabledCheckQuad1->setColor2(CheckmarkDisabledColor);
 		CheckboxDisabledCheckQuad1->setColor3(CheckmarkDisabledColor);
@@ -1245,10 +1246,10 @@ void WindowsLookAndFeel::init(void)
 
 	MultiColoredQuadUIDrawObjectPtr CheckboxDisabledCheckQuad2 = MultiColoredQuadUIDrawObject::create();
 	beginEditCP(CheckboxDisabledCheckQuad2);
-        CheckboxDisabledCheckQuad2->setPoint1(Pnt2s(6,7));
-        CheckboxDisabledCheckQuad2->setPoint2(Pnt2s(10,3));
-        CheckboxDisabledCheckQuad2->setPoint3(Pnt2s(10,6));
-        CheckboxDisabledCheckQuad2->setPoint4(Pnt2s(6,10));
+        CheckboxDisabledCheckQuad2->setPoint1(Pnt2f(6,7));
+        CheckboxDisabledCheckQuad2->setPoint2(Pnt2f(10,3));
+        CheckboxDisabledCheckQuad2->setPoint3(Pnt2f(10,6));
+        CheckboxDisabledCheckQuad2->setPoint4(Pnt2f(6,10));
 		CheckboxDisabledCheckQuad2->setColor1(CheckmarkDisabledColor);
 		CheckboxDisabledCheckQuad2->setColor2(CheckmarkDisabledColor);
 		CheckboxDisabledCheckQuad2->setColor3(CheckmarkDisabledColor);
@@ -1290,10 +1291,10 @@ void WindowsLookAndFeel::init(void)
     //Rollover Border
 	MultiColoredQuadUIDrawObjectPtr RolloverCheckboxBorder = MultiColoredQuadUIDrawObject::create();
 	beginEditCP(RolloverCheckboxBorder);
-        RolloverCheckboxBorder->setPoint1(Pnt2s(1,1));
-        RolloverCheckboxBorder->setPoint2(Pnt2s(12,1));
-        RolloverCheckboxBorder->setPoint3(Pnt2s(12,12));
-        RolloverCheckboxBorder->setPoint4(Pnt2s(1,12));
+        RolloverCheckboxBorder->setPoint1(Pnt2f(1,1));
+        RolloverCheckboxBorder->setPoint2(Pnt2f(12,1));
+        RolloverCheckboxBorder->setPoint3(Pnt2f(12,12));
+        RolloverCheckboxBorder->setPoint4(Pnt2f(1,12));
 		RolloverCheckboxBorder->setColor1(Color4f(1.0,.94,.81,1.0));
 		RolloverCheckboxBorder->setColor2(Color4f(.98,.78,.39,1.0));
 		RolloverCheckboxBorder->setColor3(Color4f(0.97,0.70,0.19,1.0));
@@ -1303,8 +1304,8 @@ void WindowsLookAndFeel::init(void)
 
 	RectUIDrawObjectPtr RolloverCheckboxBackground = RectUIDrawObject::create();
 	beginEditCP(RolloverCheckboxBackground);
-		RolloverCheckboxBackground->setTopLeft(Pnt2s(3,3));
-		RolloverCheckboxBackground->setBottomRight(Pnt2s(10,10));
+		RolloverCheckboxBackground->setTopLeft(Pnt2f(3,3));
+		RolloverCheckboxBackground->setBottomRight(Pnt2f(10,10));
 		RolloverCheckboxBackground->setColor(Color4f(0.91,.91,.89,1.0));
 		RolloverCheckboxBackground->setOpacity(1.0);
 	endEditCP(RolloverCheckboxBackground);
@@ -1353,10 +1354,10 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsCheckboxButton->setConstraints(NullFC);
 		//Sizes
-		WindowsCheckboxButton->setMinSize(Vec2s(0,0));
-		WindowsCheckboxButton->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsCheckboxButton->setPreferredSize(Vec2s(75,23));
-		WindowsCheckboxButton->setSize(Vec2s(0,0));
+		WindowsCheckboxButton->setMinSize(Vec2f(0,0));
+		WindowsCheckboxButton->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsCheckboxButton->setPreferredSize(Vec2f(75,23));
+		WindowsCheckboxButton->setSize(Vec2f(0,0));
 
         //Draw Objects
 		WindowsCheckboxButton->setCheckboxDrawObject(WindowsCheckboxDrawObject);
@@ -1396,7 +1397,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsCheckboxButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsCheckboxButton->setDisabledTextColor(WindowsDisabledTextColor);
         
-        WindowsCheckboxButton->setActiveOffset(Vec2s(0,0));
+        WindowsCheckboxButton->setActiveOffset(Vec2f(0,0));
 	endEditCP(WindowsCheckboxButton);
 
 	CheckboxButton::getClassType().setPrototype(WindowsCheckboxButton);
@@ -1411,7 +1412,7 @@ void WindowsLookAndFeel::init(void)
 	UIDrawObjectCanvasPtr WindowsDisabledRadioDrawObject = UIDrawObjectCanvas::create();
 	UIDrawObjectCanvasPtr WindowsDisabledSelectedRadioDrawObject = UIDrawObjectCanvas::create();
 
-    Pnt2s RadioUIDrawObjectsCenter(6,6);
+    Pnt2f RadioUIDrawObjectsCenter(6,6);
 	DiscUIDrawObjectPtr RadioBackground = DiscUIDrawObject::create();
 	beginEditCP(RadioBackground);
 		RadioBackground->setWidth(6);
@@ -1579,9 +1580,9 @@ void WindowsLookAndFeel::init(void)
 		WindowsRadioButton->setConstraints(NullFC);
 
 		//sizes
-		WindowsRadioButton->setMinSize(Vec2s(0, 0));
-		WindowsRadioButton->setMaxSize(Vec2s(32767,32767));
-		WindowsRadioButton->setPreferredSize(Vec2s(75,23));
+		WindowsRadioButton->setMinSize(Vec2f(0, 0));
+		WindowsRadioButton->setMaxSize(Vec2f(32767,32767));
+		WindowsRadioButton->setPreferredSize(Vec2f(75,23));
 
 		//draw objects
 		WindowsRadioButton->setRadioDrawObject(WindowsRadioDrawObject);
@@ -1623,7 +1624,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsRadioButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsRadioButton->setDisabledTextColor(WindowsDisabledTextColor);
 
-        WindowsRadioButton->setActiveOffset(Vec2s(0,0));
+        WindowsRadioButton->setActiveOffset(Vec2f(0,0));
 	endEditCP(WindowsRadioButton);
 	
 	RadioButton::getClassType().setPrototype(WindowsRadioButton);
@@ -1637,9 +1638,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsToggleButton->setConstraints(NullFC);
 		//Sizes
-		WindowsToggleButton->setMinSize(Vec2s(0,0));
-		WindowsToggleButton->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsToggleButton->setPreferredSize(Vec2s(75,23));
+		WindowsToggleButton->setMinSize(Vec2f(0,0));
+		WindowsToggleButton->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsToggleButton->setPreferredSize(Vec2f(75,23));
 
 		//Border
 		WindowsToggleButton->setBorder(WindowsButtonBorder);
@@ -1669,7 +1670,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsToggleButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
 		WindowsToggleButton->setDisabledTextColor(WindowsDisabledTextColor);
         
-        WindowsToggleButton->setActiveOffset(Vec2s(2,2));
+        WindowsToggleButton->setActiveOffset(Vec2f(2,2));
 	endEditCP(WindowsToggleButton);
 
 	ToggleButton::getClassType().setPrototype(WindowsToggleButton);
@@ -1695,9 +1696,9 @@ void WindowsLookAndFeel::init(void)
 	TextFieldPtr WindowsTextField = TextField::create();
 	beginEditCP(WindowsTextField);
 		//size
-		WindowsTextField->setMinSize(Vec2s(0, 0));
-		WindowsTextField->setMaxSize(Vec2s(32767,32767));
-		WindowsTextField->setPreferredSize(Vec2s(75,23));
+		WindowsTextField->setMinSize(Vec2f(0, 0));
+		WindowsTextField->setMaxSize(Vec2f(32767,32767));
+		WindowsTextField->setPreferredSize(Vec2f(75,23));
 
 		//font
 		WindowsTextField->setFont(WindowsFont);
@@ -1750,9 +1751,9 @@ void WindowsLookAndFeel::init(void)
 	PasswordFieldPtr WindowsPasswordField = PasswordField::create();
 	beginEditCP(WindowsPasswordField);
 		//size
-		WindowsPasswordField->setMinSize(Vec2s(0, 0));
-		WindowsPasswordField->setMaxSize(Vec2s(32767,32767));
-		WindowsPasswordField->setPreferredSize(Vec2s(75,23));
+		WindowsPasswordField->setMinSize(Vec2f(0, 0));
+		WindowsPasswordField->setMaxSize(Vec2f(32767,32767));
+		WindowsPasswordField->setPreferredSize(Vec2f(75,23));
 
 		//font
 		WindowsPasswordField->setFont(WindowsFont);
@@ -1801,9 +1802,9 @@ void WindowsLookAndFeel::init(void)
 	TextAreaPtr WindowsTextArea = TextArea::create();
 	beginEditCP(WindowsTextArea);
 		//size
-		WindowsTextArea->setMinSize(Vec2s(0, 0));
-		WindowsTextArea->setMaxSize(Vec2s(32767,32767));
-		WindowsTextArea->setPreferredSize(Vec2s(100, 25));
+		WindowsTextArea->setMinSize(Vec2f(0, 0));
+		WindowsTextArea->setMaxSize(Vec2f(32767,32767));
+		WindowsTextArea->setPreferredSize(Vec2f(100, 25));
 
 		//font
 		WindowsTextArea->setFont(WindowsFont);
@@ -1868,9 +1869,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsToolTip->setConstraints(NullFC);
 		//Sizes
-		WindowsToolTip->setMinSize(Vec2s(0,0));
-		WindowsToolTip->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsToolTip->setPreferredSize(Vec2s(75,23));
+		WindowsToolTip->setMinSize(Vec2f(0,0));
+		WindowsToolTip->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsToolTip->setPreferredSize(Vec2f(75,23));
 
 		//Border
 		WindowsToolTip->setBorder(WindowsToolTipBorder);
@@ -1918,9 +1919,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsLabelMenuItem->setConstraints(NullFC);
 		//Sizes
-		WindowsLabelMenuItem->setMinSize(Vec2s(0,0));
-		WindowsLabelMenuItem->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsLabelMenuItem->setPreferredSize(Vec2s(100,17));
+		WindowsLabelMenuItem->setMinSize(Vec2f(0,0));
+		WindowsLabelMenuItem->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsLabelMenuItem->setPreferredSize(Vec2f(100,17));
 
 		//Border
 		WindowsLabelMenuItem->setBorder(WindowsLabelMenuItemBorder);
@@ -1967,9 +1968,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsSeperatorMenuItem->setConstraints(NullFC);
 		//Sizes
-		WindowsSeperatorMenuItem->setMinSize(Vec2s(0,0));
-		WindowsSeperatorMenuItem->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsSeperatorMenuItem->setPreferredSize(Vec2s(100,7));
+		WindowsSeperatorMenuItem->setMinSize(Vec2f(0,0));
+		WindowsSeperatorMenuItem->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsSeperatorMenuItem->setPreferredSize(Vec2f(100,7));
 
 		//Border
 		WindowsSeperatorMenuItem->setBorder(WindowsSeperatorMenuItemBorder);
@@ -2012,9 +2013,9 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(MenuExpandablePolygon);
 		MenuExpandablePolygon->setColor(Color4f(0.0,0.0,0.0,1.0));
 		MenuExpandablePolygon->setOpacity(1.0);
-        MenuExpandablePolygon->getVerticies().addValue(Pnt2s(0,0));
-        MenuExpandablePolygon->getVerticies().addValue(Pnt2s(0,7));
-        MenuExpandablePolygon->getVerticies().addValue(Pnt2s(4,4));
+        MenuExpandablePolygon->getVerticies().addValue(Pnt2f(0,0));
+        MenuExpandablePolygon->getVerticies().addValue(Pnt2f(0,7));
+        MenuExpandablePolygon->getVerticies().addValue(Pnt2f(4,4));
 	endEditCP(MenuExpandablePolygon);
 
 	UIDrawObjectCanvasPtr defaultMenuDrawObject = UIDrawObjectCanvas::create();
@@ -2030,9 +2031,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsMenu->setConstraints(NullFC);
 		//Sizes
-		WindowsMenu->setMinSize(Vec2s(0,0));
-		WindowsMenu->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsMenu->setPreferredSize(Vec2s(100,17));
+		WindowsMenu->setMinSize(Vec2f(0,0));
+		WindowsMenu->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsMenu->setPreferredSize(Vec2f(100,17));
 
 		//Border
 		WindowsMenu->setBorder(WindowsMenuBorder);
@@ -2104,9 +2105,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsPopupMenu->setConstraints(NullFC);
 		//Sizes
-		WindowsPopupMenu->setMinSize(Vec2s(0,0));
-		WindowsPopupMenu->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsPopupMenu->setPreferredSize(Vec2s(100,50));
+		WindowsPopupMenu->setMinSize(Vec2f(0,0));
+		WindowsPopupMenu->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsPopupMenu->setPreferredSize(Vec2f(100,50));
 
 		//Border
 		WindowsPopupMenu->setBorder(WindowsPopupMenuBorder);
@@ -2151,9 +2152,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsMenuBar->setConstraints(NullFC);
 		//Sizes
-		WindowsMenuBar->setMinSize(Vec2s(0,0));
-		WindowsMenuBar->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsMenuBar->setPreferredSize(Vec2s(100,50));
+		WindowsMenuBar->setMinSize(Vec2f(0,0));
+		WindowsMenuBar->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsMenuBar->setPreferredSize(Vec2f(100,50));
 
 		//Border
 		WindowsMenuBar->setBorder(WindowsMenuBarBorder);
@@ -2210,19 +2211,19 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsScrollBarVerticalMinButtonDrawObject1);
 		WindowsScrollBarVerticalMinButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsScrollBarVerticalMinButtonDrawObject1->setOpacity(1.0);
-        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().addValue(Pnt2s(1,4));
-        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().addValue(Pnt2s(5,0));
-        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().addValue(Pnt2s(5,2));
-        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().addValue(Pnt2s(2,5));
+        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().addValue(Pnt2f(0,4));
+        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().addValue(Pnt2f(4,0));
+        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().addValue(Pnt2f(4,2));
+        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().addValue(Pnt2f(1,5));
 	endEditCP(WindowsScrollBarVerticalMinButtonDrawObject1);
 	PolygonUIDrawObjectPtr WindowsScrollBarVerticalMinButtonDrawObject2 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsScrollBarVerticalMinButtonDrawObject2);
 		WindowsScrollBarVerticalMinButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsScrollBarVerticalMinButtonDrawObject2->setOpacity(1.0);
-        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().addValue(Pnt2s(5,0));
-        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().addValue(Pnt2s(9,4));
-        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().addValue(Pnt2s(8,5));
-        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().addValue(Pnt2s(5,2));
+        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().addValue(Pnt2f(4,0));
+        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().addValue(Pnt2f(8,4));
+        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().addValue(Pnt2f(7,5));
+        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().addValue(Pnt2f(4,2));
 	endEditCP(WindowsScrollBarVerticalMinButtonDrawObject2);
 
 	UIDrawObjectCanvasPtr WindowsScrollBarVerticalMinButtonCanvas = UIDrawObjectCanvas::create();
@@ -2266,7 +2267,7 @@ void WindowsLookAndFeel::init(void)
 
 	ButtonPtr WindowsScrollBarVerticalMinButton = Button::create();
     beginEditCP(WindowsScrollBarVerticalMinButton);
-        WindowsScrollBarVerticalMinButton->setPreferredSize(Vec2s(17,17));
+        WindowsScrollBarVerticalMinButton->setPreferredSize(Vec2f(17,17));
         WindowsScrollBarVerticalMinButton->setEnableActionOnMouseDownTime(true);
         WindowsScrollBarVerticalMinButton->setActionOnMouseDownRate(0.1);
 
@@ -2288,7 +2289,7 @@ void WindowsLookAndFeel::init(void)
         WindowsScrollBarVerticalMinButton->setFocusedBackground(WindowsScrollBarButtonBackground);
         WindowsScrollBarVerticalMinButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
 
-        WindowsScrollBarVerticalMinButton->setActiveOffset(Vec2s(0,0));
+        WindowsScrollBarVerticalMinButton->setActiveOffset(Vec2f(0,0));
     endEditCP(WindowsScrollBarVerticalMinButton);
 
     //Vertical Max Draw Object
@@ -2296,19 +2297,19 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsScrollBarVerticalMaxButtonDrawObject1);
 		WindowsScrollBarVerticalMaxButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsScrollBarVerticalMaxButtonDrawObject1->setOpacity(1.0);
-        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().addValue(Pnt2s(2,0));
-        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().addValue(Pnt2s(5,3));
-        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().addValue(Pnt2s(5,5));
-        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().addValue(Pnt2s(1,1));
+        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().addValue(Pnt2f(1,0));
+        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().addValue(Pnt2f(4,3));
+        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().addValue(Pnt2f(4,5));
+        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().addValue(Pnt2f(0,1));
 	endEditCP(WindowsScrollBarVerticalMaxButtonDrawObject1);
 	PolygonUIDrawObjectPtr WindowsScrollBarVerticalMaxButtonDrawObject2 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsScrollBarVerticalMaxButtonDrawObject2);
 		WindowsScrollBarVerticalMaxButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsScrollBarVerticalMaxButtonDrawObject2->setOpacity(1.0);
-        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().addValue(Pnt2s(5,3));
-        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().addValue(Pnt2s(8,0));
-        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().addValue(Pnt2s(9,1));
-        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().addValue(Pnt2s(5,5));
+        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().addValue(Pnt2f(4,3));
+        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().addValue(Pnt2f(7,0));
+        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().addValue(Pnt2f(8,1));
+        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().addValue(Pnt2f(4,5));
 	endEditCP(WindowsScrollBarVerticalMaxButtonDrawObject2);
 
 	UIDrawObjectCanvasPtr WindowsScrollBarVerticalMaxButtonCanvas = UIDrawObjectCanvas::create();
@@ -2319,7 +2320,7 @@ void WindowsLookAndFeel::init(void)
     //Vertical Max Button
 	ButtonPtr WindowsScrollBarVerticalMaxButton = Button::create();
     beginEditCP(WindowsScrollBarVerticalMaxButton);
-        WindowsScrollBarVerticalMaxButton->setPreferredSize(Vec2s(17,17));
+        WindowsScrollBarVerticalMaxButton->setPreferredSize(Vec2f(17,17));
         WindowsScrollBarVerticalMaxButton->setEnableActionOnMouseDownTime(true);
         WindowsScrollBarVerticalMaxButton->setActionOnMouseDownRate(0.1);
         
@@ -2341,7 +2342,7 @@ void WindowsLookAndFeel::init(void)
         WindowsScrollBarVerticalMaxButton->setFocusedBackground(WindowsScrollBarButtonBackground);
         WindowsScrollBarVerticalMaxButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
 
-        WindowsScrollBarVerticalMaxButton->setActiveOffset(Vec2s(0,0));
+        WindowsScrollBarVerticalMaxButton->setActiveOffset(Vec2f(0,0));
     endEditCP(WindowsScrollBarVerticalMaxButton);
 
     //Horizontal Min Draw Object
@@ -2349,19 +2350,19 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsScrollBarHorizontalMinButtonDrawObject1);
 		WindowsScrollBarHorizontalMinButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsScrollBarHorizontalMinButtonDrawObject1->setOpacity(1.0);
-        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().addValue(Pnt2s(0,4));
-        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().addValue(Pnt2s(4,0));
-        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().addValue(Pnt2s(5,1));
-        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().addValue(Pnt2s(2,4));
+        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().addValue(Pnt2f(0,4));
+        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().addValue(Pnt2f(4,0));
+        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().addValue(Pnt2f(5,1));
+        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().addValue(Pnt2f(2,4));
 	endEditCP(WindowsScrollBarHorizontalMinButtonDrawObject1);
 	PolygonUIDrawObjectPtr WindowsScrollBarHorizontalMinButtonDrawObject2 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsScrollBarHorizontalMinButtonDrawObject2);
 		WindowsScrollBarHorizontalMinButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsScrollBarHorizontalMinButtonDrawObject2->setOpacity(1.0);
-        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().addValue(Pnt2s(0,4));
-        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().addValue(Pnt2s(2,4));
-        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().addValue(Pnt2s(5,7));
-        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().addValue(Pnt2s(4,8));
+        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().addValue(Pnt2f(0,4));
+        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().addValue(Pnt2f(2,4));
+        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().addValue(Pnt2f(5,7));
+        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().addValue(Pnt2f(4,8));
 	endEditCP(WindowsScrollBarHorizontalMinButtonDrawObject2);
     
 	UIDrawObjectCanvasPtr WindowsScrollBarHorizontalMinButtonCanvas = UIDrawObjectCanvas::create();
@@ -2373,7 +2374,7 @@ void WindowsLookAndFeel::init(void)
     //Horizontal Min Button
 	ButtonPtr WindowsScrollBarHorizontalMinButton = Button::create();
     beginEditCP(WindowsScrollBarHorizontalMinButton);
-        WindowsScrollBarHorizontalMinButton->setPreferredSize(Vec2s(17,17));
+        WindowsScrollBarHorizontalMinButton->setPreferredSize(Vec2f(17,17));
         WindowsScrollBarHorizontalMinButton->setEnableActionOnMouseDownTime(true);
         WindowsScrollBarHorizontalMinButton->setActionOnMouseDownRate(0.1);
 
@@ -2395,7 +2396,7 @@ void WindowsLookAndFeel::init(void)
         WindowsScrollBarHorizontalMinButton->setFocusedBackground(WindowsScrollBarButtonBackground);
         WindowsScrollBarHorizontalMinButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
 
-        WindowsScrollBarHorizontalMinButton->setActiveOffset(Vec2s(0,0));
+        WindowsScrollBarHorizontalMinButton->setActiveOffset(Vec2f(0,0));
     endEditCP(WindowsScrollBarHorizontalMinButton);
 
     //Horizontal Max Draw Object
@@ -2403,19 +2404,19 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsScrollBarHorizontalMaxButtonDrawObject1);
 		WindowsScrollBarHorizontalMaxButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsScrollBarHorizontalMaxButtonDrawObject1->setOpacity(1.0);
-        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().addValue(Pnt2s(0,1));
-        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().addValue(Pnt2s(1,0));
-        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().addValue(Pnt2s(5,4));
-        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().addValue(Pnt2s(3,4));
+        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().addValue(Pnt2f(0,1));
+        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().addValue(Pnt2f(1,0));
+        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().addValue(Pnt2f(5,4));
+        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().addValue(Pnt2f(3,4));
 	endEditCP(WindowsScrollBarHorizontalMaxButtonDrawObject1);
 	PolygonUIDrawObjectPtr WindowsScrollBarHorizontalMaxButtonDrawObject2 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsScrollBarHorizontalMaxButtonDrawObject2);
 		WindowsScrollBarHorizontalMaxButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsScrollBarHorizontalMaxButtonDrawObject2->setOpacity(1.0);
-        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().addValue(Pnt2s(3,4));
-        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().addValue(Pnt2s(5,4));
-        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().addValue(Pnt2s(1,8));
-        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().addValue(Pnt2s(0,7));
+        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().addValue(Pnt2f(3,4));
+        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().addValue(Pnt2f(5,4));
+        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().addValue(Pnt2f(1,8));
+        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().addValue(Pnt2f(0,7));
 	endEditCP(WindowsScrollBarHorizontalMaxButtonDrawObject2);
     
 	UIDrawObjectCanvasPtr WindowsScrollBarHorizontalMaxButtonCanvas = UIDrawObjectCanvas::create();
@@ -2426,7 +2427,7 @@ void WindowsLookAndFeel::init(void)
     //Horizontal Max Button
 	ButtonPtr WindowsScrollBarHorizontalMaxButton = Button::create();
     beginEditCP(WindowsScrollBarHorizontalMaxButton);
-        WindowsScrollBarHorizontalMaxButton->setPreferredSize(Vec2s(17,17));
+        WindowsScrollBarHorizontalMaxButton->setPreferredSize(Vec2f(17,17));
         WindowsScrollBarHorizontalMaxButton->setEnableActionOnMouseDownTime(true);
         WindowsScrollBarHorizontalMaxButton->setActionOnMouseDownRate(0.1);
         
@@ -2448,7 +2449,7 @@ void WindowsLookAndFeel::init(void)
         WindowsScrollBarHorizontalMaxButton->setFocusedBackground(WindowsScrollBarButtonBackground);
         WindowsScrollBarHorizontalMaxButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
 
-        WindowsScrollBarHorizontalMaxButton->setActiveOffset(Vec2s(0,0));
+        WindowsScrollBarHorizontalMaxButton->setActiveOffset(Vec2f(0,0));
     endEditCP(WindowsScrollBarHorizontalMaxButton);
 
     //Vertical Scroll Field
@@ -2489,7 +2490,7 @@ void WindowsLookAndFeel::init(void)
 
 	ButtonPtr WindowsVerticalScrollFieldButton = Button::create();
     beginEditCP(WindowsVerticalScrollFieldButton, Button::PreferredSizeFieldMask | Button::EnableActionOnMouseDownTimeFieldMask | Button::ActionOnMouseDownRateFieldMask);
-        WindowsVerticalScrollFieldButton->setPreferredSize(Vec2s(17,17));
+        WindowsVerticalScrollFieldButton->setPreferredSize(Vec2f(17,17));
         WindowsVerticalScrollFieldButton->setEnableActionOnMouseDownTime(true);
         WindowsVerticalScrollFieldButton->setActionOnMouseDownRate(0.2);
         
@@ -2565,57 +2566,57 @@ void WindowsLookAndFeel::init(void)
     //Vertical Scroll Bar Center Ridges
     RectUIDrawObjectPtr VerticalWhiteRidge1 = RectUIDrawObject::create();
 	beginEditCP(VerticalWhiteRidge1);
-       VerticalWhiteRidge1->setTopLeft(Pnt2s(0,0));
-       VerticalWhiteRidge1->setBottomRight(Pnt2s(6,1));
+       VerticalWhiteRidge1->setTopLeft(Pnt2f(0,0));
+       VerticalWhiteRidge1->setBottomRight(Pnt2f(6,1));
        VerticalWhiteRidge1->setColor(Color4f(0.93,0.96,1.0,1.0));
 	endEditCP(VerticalWhiteRidge1);
 
     RectUIDrawObjectPtr VerticalWhiteRidge2 = RectUIDrawObject::create();
 	beginEditCP(VerticalWhiteRidge2);
-       VerticalWhiteRidge2->setTopLeft(Pnt2s(0,2));
-       VerticalWhiteRidge2->setBottomRight(Pnt2s(6,3));
+       VerticalWhiteRidge2->setTopLeft(Pnt2f(0,2));
+       VerticalWhiteRidge2->setBottomRight(Pnt2f(6,3));
        VerticalWhiteRidge2->setColor(Color4f(0.93,0.96,1.0,1.0));
 	endEditCP(VerticalWhiteRidge2);
     
     RectUIDrawObjectPtr VerticalWhiteRidge3 = RectUIDrawObject::create();
 	beginEditCP(VerticalWhiteRidge3);
-       VerticalWhiteRidge3->setTopLeft(Pnt2s(0,4));
-       VerticalWhiteRidge3->setBottomRight(Pnt2s(6,5));
+       VerticalWhiteRidge3->setTopLeft(Pnt2f(0,4));
+       VerticalWhiteRidge3->setBottomRight(Pnt2f(6,5));
        VerticalWhiteRidge3->setColor(Color4f(0.93,0.96,1.0,1.0));
 	endEditCP(VerticalWhiteRidge3);
 
     RectUIDrawObjectPtr VerticalWhiteRidge4 = RectUIDrawObject::create();
 	beginEditCP(VerticalWhiteRidge4);
-       VerticalWhiteRidge4->setTopLeft(Pnt2s(0,6));
-       VerticalWhiteRidge4->setBottomRight(Pnt2s(6,7));
+       VerticalWhiteRidge4->setTopLeft(Pnt2f(0,6));
+       VerticalWhiteRidge4->setBottomRight(Pnt2f(6,7));
        VerticalWhiteRidge4->setColor(Color4f(0.93,0.96,1.0,1.0));
 	endEditCP(VerticalWhiteRidge4);
     
     RectUIDrawObjectPtr VerticalBlueRidge1 = RectUIDrawObject::create();
 	beginEditCP(VerticalBlueRidge1);
-       VerticalBlueRidge1->setTopLeft(Pnt2s(1,1));
-       VerticalBlueRidge1->setBottomRight(Pnt2s(7,2));
+       VerticalBlueRidge1->setTopLeft(Pnt2f(1,1));
+       VerticalBlueRidge1->setBottomRight(Pnt2f(7,2));
        VerticalBlueRidge1->setColor(Color4f(0.55,0.69,0.97,1.0));
 	endEditCP(VerticalBlueRidge1);
 
     RectUIDrawObjectPtr VerticalBlueRidge2 = RectUIDrawObject::create();
 	beginEditCP(VerticalBlueRidge2);
-       VerticalBlueRidge2->setTopLeft(Pnt2s(1,3));
-       VerticalBlueRidge2->setBottomRight(Pnt2s(7,4));
+       VerticalBlueRidge2->setTopLeft(Pnt2f(1,3));
+       VerticalBlueRidge2->setBottomRight(Pnt2f(7,4));
        VerticalBlueRidge2->setColor(Color4f(0.55,0.69,0.97,1.0));
 	endEditCP(VerticalBlueRidge2);
     
     RectUIDrawObjectPtr VerticalBlueRidge3 = RectUIDrawObject::create();
 	beginEditCP(VerticalBlueRidge3);
-       VerticalBlueRidge3->setTopLeft(Pnt2s(1,5));
-       VerticalBlueRidge3->setBottomRight(Pnt2s(7,6));
+       VerticalBlueRidge3->setTopLeft(Pnt2f(1,5));
+       VerticalBlueRidge3->setBottomRight(Pnt2f(7,6));
        VerticalBlueRidge3->setColor(Color4f(0.55,0.69,0.97,1.0));
 	endEditCP(VerticalBlueRidge3);
 
     RectUIDrawObjectPtr VerticalBlueRidge4 = RectUIDrawObject::create();
 	beginEditCP(VerticalBlueRidge4);
-       VerticalBlueRidge4->setTopLeft(Pnt2s(1,7));
-       VerticalBlueRidge4->setBottomRight(Pnt2s(7,8));
+       VerticalBlueRidge4->setTopLeft(Pnt2f(1,7));
+       VerticalBlueRidge4->setBottomRight(Pnt2f(7,8));
        VerticalBlueRidge4->setColor(Color4f(0.55,0.69,0.97,1.0));
 	endEditCP(VerticalBlueRidge4);
 
@@ -2634,57 +2635,57 @@ void WindowsLookAndFeel::init(void)
     //Vertical Active Scroll Bar Center Ridges
     RectUIDrawObjectPtr VerticalActiveWhiteRidge1 = RectUIDrawObject::create();
 	beginEditCP(VerticalActiveWhiteRidge1);
-       VerticalActiveWhiteRidge1->setTopLeft(Pnt2s(0,0));
-       VerticalActiveWhiteRidge1->setBottomRight(Pnt2s(6,1));
+       VerticalActiveWhiteRidge1->setTopLeft(Pnt2f(0,0));
+       VerticalActiveWhiteRidge1->setBottomRight(Pnt2f(6,1));
        VerticalActiveWhiteRidge1->setColor(Color4f(0.81,0.87,0.99,1.0));
 	endEditCP(VerticalActiveWhiteRidge1);
 
     RectUIDrawObjectPtr VerticalActiveWhiteRidge2 = RectUIDrawObject::create();
 	beginEditCP(VerticalActiveWhiteRidge2);
-       VerticalActiveWhiteRidge2->setTopLeft(Pnt2s(0,2));
-       VerticalActiveWhiteRidge2->setBottomRight(Pnt2s(6,3));
+       VerticalActiveWhiteRidge2->setTopLeft(Pnt2f(0,2));
+       VerticalActiveWhiteRidge2->setBottomRight(Pnt2f(6,3));
        VerticalActiveWhiteRidge2->setColor(Color4f(0.81,0.87,0.99,1.0));
 	endEditCP(VerticalActiveWhiteRidge2);
     
     RectUIDrawObjectPtr VerticalActiveWhiteRidge3 = RectUIDrawObject::create();
 	beginEditCP(VerticalActiveWhiteRidge3);
-       VerticalActiveWhiteRidge3->setTopLeft(Pnt2s(0,4));
-       VerticalActiveWhiteRidge3->setBottomRight(Pnt2s(6,5));
+       VerticalActiveWhiteRidge3->setTopLeft(Pnt2f(0,4));
+       VerticalActiveWhiteRidge3->setBottomRight(Pnt2f(6,5));
        VerticalActiveWhiteRidge3->setColor(Color4f(0.81,0.87,0.99,1.0));
 	endEditCP(VerticalActiveWhiteRidge3);
 
     RectUIDrawObjectPtr VerticalActiveWhiteRidge4 = RectUIDrawObject::create();
 	beginEditCP(VerticalActiveWhiteRidge4);
-       VerticalActiveWhiteRidge4->setTopLeft(Pnt2s(0,6));
-       VerticalActiveWhiteRidge4->setBottomRight(Pnt2s(6,7));
+       VerticalActiveWhiteRidge4->setTopLeft(Pnt2f(0,6));
+       VerticalActiveWhiteRidge4->setBottomRight(Pnt2f(6,7));
        VerticalActiveWhiteRidge4->setColor(Color4f(0.81,0.87,0.99,1.0));
 	endEditCP(VerticalActiveWhiteRidge4);
     
     RectUIDrawObjectPtr VerticalActiveBlueRidge1 = RectUIDrawObject::create();
 	beginEditCP(VerticalActiveBlueRidge1);
-       VerticalActiveBlueRidge1->setTopLeft(Pnt2s(1,1));
-       VerticalActiveBlueRidge1->setBottomRight(Pnt2s(7,2));
+       VerticalActiveBlueRidge1->setTopLeft(Pnt2f(1,1));
+       VerticalActiveBlueRidge1->setBottomRight(Pnt2f(7,2));
        VerticalActiveBlueRidge1->setColor(Color4f(0.51,0.62,0.85,1.0));
 	endEditCP(VerticalActiveBlueRidge1);
 
     RectUIDrawObjectPtr VerticalActiveBlueRidge2 = RectUIDrawObject::create();
 	beginEditCP(VerticalActiveBlueRidge2);
-       VerticalActiveBlueRidge2->setTopLeft(Pnt2s(1,3));
-       VerticalActiveBlueRidge2->setBottomRight(Pnt2s(7,4));
+       VerticalActiveBlueRidge2->setTopLeft(Pnt2f(1,3));
+       VerticalActiveBlueRidge2->setBottomRight(Pnt2f(7,4));
        VerticalActiveBlueRidge2->setColor(Color4f(0.51,0.62,0.85,1.0));
 	endEditCP(VerticalActiveBlueRidge2);
     
     RectUIDrawObjectPtr VerticalActiveBlueRidge3 = RectUIDrawObject::create();
 	beginEditCP(VerticalActiveBlueRidge3);
-       VerticalActiveBlueRidge3->setTopLeft(Pnt2s(1,5));
-       VerticalActiveBlueRidge3->setBottomRight(Pnt2s(7,6));
+       VerticalActiveBlueRidge3->setTopLeft(Pnt2f(1,5));
+       VerticalActiveBlueRidge3->setBottomRight(Pnt2f(7,6));
        VerticalActiveBlueRidge3->setColor(Color4f(0.51,0.62,0.85,1.0));
 	endEditCP(VerticalActiveBlueRidge3);
 
     RectUIDrawObjectPtr VerticalActiveBlueRidge4 = RectUIDrawObject::create();
 	beginEditCP(VerticalActiveBlueRidge4);
-       VerticalActiveBlueRidge4->setTopLeft(Pnt2s(1,7));
-       VerticalActiveBlueRidge4->setBottomRight(Pnt2s(7,8));
+       VerticalActiveBlueRidge4->setTopLeft(Pnt2f(1,7));
+       VerticalActiveBlueRidge4->setBottomRight(Pnt2f(7,8));
        VerticalActiveBlueRidge4->setColor(Color4f(0.51,0.62,0.85,1.0));
 	endEditCP(VerticalActiveBlueRidge4);
 
@@ -2703,57 +2704,57 @@ void WindowsLookAndFeel::init(void)
     //Vertical Rollover Scroll Bar Center Ridges
     RectUIDrawObjectPtr VerticalRolloverWhiteRidge1 = RectUIDrawObject::create();
 	beginEditCP(VerticalRolloverWhiteRidge1);
-       VerticalRolloverWhiteRidge1->setTopLeft(Pnt2s(0,0));
-       VerticalRolloverWhiteRidge1->setBottomRight(Pnt2s(6,1));
+       VerticalRolloverWhiteRidge1->setTopLeft(Pnt2f(0,0));
+       VerticalRolloverWhiteRidge1->setBottomRight(Pnt2f(6,1));
        VerticalRolloverWhiteRidge1->setColor(Color4f(0.99,0.99,1.0,1.0));
 	endEditCP(VerticalRolloverWhiteRidge1);
 
     RectUIDrawObjectPtr VerticalRolloverWhiteRidge2 = RectUIDrawObject::create();
 	beginEditCP(VerticalRolloverWhiteRidge2);
-       VerticalRolloverWhiteRidge2->setTopLeft(Pnt2s(0,2));
-       VerticalRolloverWhiteRidge2->setBottomRight(Pnt2s(6,3));
+       VerticalRolloverWhiteRidge2->setTopLeft(Pnt2f(0,2));
+       VerticalRolloverWhiteRidge2->setBottomRight(Pnt2f(6,3));
        VerticalRolloverWhiteRidge2->setColor(Color4f(0.99,0.99,1.0,1.0));
 	endEditCP(VerticalRolloverWhiteRidge2);
     
     RectUIDrawObjectPtr VerticalRolloverWhiteRidge3 = RectUIDrawObject::create();
 	beginEditCP(VerticalRolloverWhiteRidge3);
-       VerticalRolloverWhiteRidge3->setTopLeft(Pnt2s(0,4));
-       VerticalRolloverWhiteRidge3->setBottomRight(Pnt2s(6,5));
+       VerticalRolloverWhiteRidge3->setTopLeft(Pnt2f(0,4));
+       VerticalRolloverWhiteRidge3->setBottomRight(Pnt2f(6,5));
        VerticalRolloverWhiteRidge3->setColor(Color4f(0.99,0.99,1.0,1.0));
 	endEditCP(VerticalRolloverWhiteRidge3);
 
     RectUIDrawObjectPtr VerticalRolloverWhiteRidge4 = RectUIDrawObject::create();
 	beginEditCP(VerticalRolloverWhiteRidge4);
-       VerticalRolloverWhiteRidge4->setTopLeft(Pnt2s(0,6));
-       VerticalRolloverWhiteRidge4->setBottomRight(Pnt2s(6,7));
+       VerticalRolloverWhiteRidge4->setTopLeft(Pnt2f(0,6));
+       VerticalRolloverWhiteRidge4->setBottomRight(Pnt2f(6,7));
        VerticalRolloverWhiteRidge4->setColor(Color4f(0.99,0.99,1.0,1.0));
 	endEditCP(VerticalRolloverWhiteRidge4);
     
     RectUIDrawObjectPtr VerticalRolloverBlueRidge1 = RectUIDrawObject::create();
 	beginEditCP(VerticalRolloverBlueRidge1);
-       VerticalRolloverBlueRidge1->setTopLeft(Pnt2s(1,1));
-       VerticalRolloverBlueRidge1->setBottomRight(Pnt2s(7,2));
+       VerticalRolloverBlueRidge1->setTopLeft(Pnt2f(1,1));
+       VerticalRolloverBlueRidge1->setBottomRight(Pnt2f(7,2));
        VerticalRolloverBlueRidge1->setColor(Color4f(0.61,0.77,1.0,1.0));
 	endEditCP(VerticalRolloverBlueRidge1);
 
     RectUIDrawObjectPtr VerticalRolloverBlueRidge2 = RectUIDrawObject::create();
 	beginEditCP(VerticalRolloverBlueRidge2);
-       VerticalRolloverBlueRidge2->setTopLeft(Pnt2s(1,3));
-       VerticalRolloverBlueRidge2->setBottomRight(Pnt2s(7,4));
+       VerticalRolloverBlueRidge2->setTopLeft(Pnt2f(1,3));
+       VerticalRolloverBlueRidge2->setBottomRight(Pnt2f(7,4));
        VerticalRolloverBlueRidge2->setColor(Color4f(0.61,0.77,1.0,1.0));
 	endEditCP(VerticalRolloverBlueRidge2);
     
     RectUIDrawObjectPtr VerticalRolloverBlueRidge3 = RectUIDrawObject::create();
 	beginEditCP(VerticalRolloverBlueRidge3);
-       VerticalRolloverBlueRidge3->setTopLeft(Pnt2s(1,5));
-       VerticalRolloverBlueRidge3->setBottomRight(Pnt2s(7,6));
+       VerticalRolloverBlueRidge3->setTopLeft(Pnt2f(1,5));
+       VerticalRolloverBlueRidge3->setBottomRight(Pnt2f(7,6));
        VerticalRolloverBlueRidge3->setColor(Color4f(0.61,0.77,1.0,1.0));
 	endEditCP(VerticalRolloverBlueRidge3);
 
     RectUIDrawObjectPtr VerticalRolloverBlueRidge4 = RectUIDrawObject::create();
 	beginEditCP(VerticalRolloverBlueRidge4);
-       VerticalRolloverBlueRidge4->setTopLeft(Pnt2s(1,7));
-       VerticalRolloverBlueRidge4->setBottomRight(Pnt2s(7,8));
+       VerticalRolloverBlueRidge4->setTopLeft(Pnt2f(1,7));
+       VerticalRolloverBlueRidge4->setBottomRight(Pnt2f(7,8));
        VerticalRolloverBlueRidge4->setColor(Color4f(0.61,0.77,1.0,1.0));
 	endEditCP(VerticalRolloverBlueRidge4);
 
@@ -2785,7 +2786,7 @@ void WindowsLookAndFeel::init(void)
 
         WindowsVerticalScrollBarDrawObject->setVerticalAlignment(0.5);
         WindowsVerticalScrollBarDrawObject->setHorizontalAlignment(0.5);
-        WindowsVerticalScrollBarDrawObject->setActiveOffset(Vec2s(0,0));
+        WindowsVerticalScrollBarDrawObject->setActiveOffset(Vec2f(0,0));
 
         WindowsVerticalScrollBarDrawObject->setDrawObject(WindowsVerticalScrollBarRidges);
         WindowsVerticalScrollBarDrawObject->setActiveDrawObject(WindowsVerticalActiveScrollBarRidges);
@@ -2832,7 +2833,7 @@ void WindowsLookAndFeel::init(void)
 
 	ButtonPtr WindowsHorizontalScrollFieldButton = Button::create();
     beginEditCP(WindowsHorizontalScrollFieldButton, Button::PreferredSizeFieldMask | Button::EnableActionOnMouseDownTimeFieldMask | Button::ActionOnMouseDownRateFieldMask);
-        WindowsHorizontalScrollFieldButton->setPreferredSize(Vec2s(17,17));
+        WindowsHorizontalScrollFieldButton->setPreferredSize(Vec2f(17,17));
         WindowsHorizontalScrollFieldButton->setEnableActionOnMouseDownTime(true);
         WindowsHorizontalScrollFieldButton->setActionOnMouseDownRate(0.2);
         
@@ -2901,57 +2902,57 @@ void WindowsLookAndFeel::init(void)
     //Horizontal Scroll Bar Center Ridges
     RectUIDrawObjectPtr HorizontalWhiteRidge1 = RectUIDrawObject::create();
 	beginEditCP(HorizontalWhiteRidge1);
-       HorizontalWhiteRidge1->setTopLeft(Pnt2s(0,0));
-       HorizontalWhiteRidge1->setBottomRight(Pnt2s(1,6));
+       HorizontalWhiteRidge1->setTopLeft(Pnt2f(0,0));
+       HorizontalWhiteRidge1->setBottomRight(Pnt2f(1,6));
        HorizontalWhiteRidge1->setColor(Color4f(0.93,0.96,1.0,1.0));
 	endEditCP(HorizontalWhiteRidge1);
 
     RectUIDrawObjectPtr HorizontalWhiteRidge2 = RectUIDrawObject::create();
 	beginEditCP(HorizontalWhiteRidge2);
-       HorizontalWhiteRidge2->setTopLeft(Pnt2s(2,0));
-       HorizontalWhiteRidge2->setBottomRight(Pnt2s(3,6));
+       HorizontalWhiteRidge2->setTopLeft(Pnt2f(2,0));
+       HorizontalWhiteRidge2->setBottomRight(Pnt2f(3,6));
        HorizontalWhiteRidge2->setColor(Color4f(0.93,0.96,1.0,1.0));
 	endEditCP(HorizontalWhiteRidge2);
     
     RectUIDrawObjectPtr HorizontalWhiteRidge3 = RectUIDrawObject::create();
 	beginEditCP(HorizontalWhiteRidge3);
-       HorizontalWhiteRidge3->setTopLeft(Pnt2s(4,0));
-       HorizontalWhiteRidge3->setBottomRight(Pnt2s(5,6));
+       HorizontalWhiteRidge3->setTopLeft(Pnt2f(4,0));
+       HorizontalWhiteRidge3->setBottomRight(Pnt2f(5,6));
        HorizontalWhiteRidge3->setColor(Color4f(0.93,0.96,1.0,1.0));
 	endEditCP(HorizontalWhiteRidge3);
 
     RectUIDrawObjectPtr HorizontalWhiteRidge4 = RectUIDrawObject::create();
 	beginEditCP(HorizontalWhiteRidge4);
-       HorizontalWhiteRidge4->setTopLeft(Pnt2s(6,0));
-       HorizontalWhiteRidge4->setBottomRight(Pnt2s(7,6));
+       HorizontalWhiteRidge4->setTopLeft(Pnt2f(6,0));
+       HorizontalWhiteRidge4->setBottomRight(Pnt2f(7,6));
        HorizontalWhiteRidge4->setColor(Color4f(0.93,0.96,1.0,1.0));
 	endEditCP(HorizontalWhiteRidge4);
     
     RectUIDrawObjectPtr HorizontalBlueRidge1 = RectUIDrawObject::create();
 	beginEditCP(HorizontalBlueRidge1);
-       HorizontalBlueRidge1->setTopLeft(Pnt2s(1,1));
-       HorizontalBlueRidge1->setBottomRight(Pnt2s(2,7));
+       HorizontalBlueRidge1->setTopLeft(Pnt2f(1,1));
+       HorizontalBlueRidge1->setBottomRight(Pnt2f(2,7));
        HorizontalBlueRidge1->setColor(Color4f(0.55,0.69,0.97,1.0));
 	endEditCP(HorizontalBlueRidge1);
 
     RectUIDrawObjectPtr HorizontalBlueRidge2 = RectUIDrawObject::create();
 	beginEditCP(HorizontalBlueRidge2);
-       HorizontalBlueRidge2->setTopLeft(Pnt2s(3,1));
-       HorizontalBlueRidge2->setBottomRight(Pnt2s(4,7));
+       HorizontalBlueRidge2->setTopLeft(Pnt2f(3,1));
+       HorizontalBlueRidge2->setBottomRight(Pnt2f(4,7));
        HorizontalBlueRidge2->setColor(Color4f(0.55,0.69,0.97,1.0));
 	endEditCP(HorizontalBlueRidge2);
     
     RectUIDrawObjectPtr HorizontalBlueRidge3 = RectUIDrawObject::create();
 	beginEditCP(HorizontalBlueRidge3);
-       HorizontalBlueRidge3->setTopLeft(Pnt2s(5,1));
-       HorizontalBlueRidge3->setBottomRight(Pnt2s(6,7));
+       HorizontalBlueRidge3->setTopLeft(Pnt2f(5,1));
+       HorizontalBlueRidge3->setBottomRight(Pnt2f(6,7));
        HorizontalBlueRidge3->setColor(Color4f(0.55,0.69,0.97,1.0));
 	endEditCP(HorizontalBlueRidge3);
 
     RectUIDrawObjectPtr HorizontalBlueRidge4 = RectUIDrawObject::create();
 	beginEditCP(HorizontalBlueRidge4);
-       HorizontalBlueRidge4->setTopLeft(Pnt2s(7,1));
-       HorizontalBlueRidge4->setBottomRight(Pnt2s(8,7));
+       HorizontalBlueRidge4->setTopLeft(Pnt2f(7,1));
+       HorizontalBlueRidge4->setBottomRight(Pnt2f(8,7));
        HorizontalBlueRidge4->setColor(Color4f(0.55,0.69,0.97,1.0));
 	endEditCP(HorizontalBlueRidge4);
 
@@ -2970,57 +2971,57 @@ void WindowsLookAndFeel::init(void)
     //Horizontal Active Scroll Bar Center Ridges
     RectUIDrawObjectPtr HorizontalActiveWhiteRidge1 = RectUIDrawObject::create();
 	beginEditCP(HorizontalActiveWhiteRidge1);
-       HorizontalActiveWhiteRidge1->setTopLeft(Pnt2s(0,0));
-       HorizontalActiveWhiteRidge1->setBottomRight(Pnt2s(1,6));
+       HorizontalActiveWhiteRidge1->setTopLeft(Pnt2f(0,0));
+       HorizontalActiveWhiteRidge1->setBottomRight(Pnt2f(1,6));
        HorizontalActiveWhiteRidge1->setColor(Color4f(0.81,0.87,0.99,1.0));
 	endEditCP(HorizontalActiveWhiteRidge1);
 
     RectUIDrawObjectPtr HorizontalActiveWhiteRidge2 = RectUIDrawObject::create();
 	beginEditCP(HorizontalActiveWhiteRidge2);
-       HorizontalActiveWhiteRidge2->setTopLeft(Pnt2s(2,0));
-       HorizontalActiveWhiteRidge2->setBottomRight(Pnt2s(3,6));
+       HorizontalActiveWhiteRidge2->setTopLeft(Pnt2f(2,0));
+       HorizontalActiveWhiteRidge2->setBottomRight(Pnt2f(3,6));
        HorizontalActiveWhiteRidge2->setColor(Color4f(0.81,0.87,0.99,1.0));
 	endEditCP(HorizontalActiveWhiteRidge2);
     
     RectUIDrawObjectPtr HorizontalActiveWhiteRidge3 = RectUIDrawObject::create();
 	beginEditCP(HorizontalActiveWhiteRidge3);
-       HorizontalActiveWhiteRidge3->setTopLeft(Pnt2s(4,0));
-       HorizontalActiveWhiteRidge3->setBottomRight(Pnt2s(5,6));
+       HorizontalActiveWhiteRidge3->setTopLeft(Pnt2f(4,0));
+       HorizontalActiveWhiteRidge3->setBottomRight(Pnt2f(5,6));
        HorizontalActiveWhiteRidge3->setColor(Color4f(0.81,0.87,0.99,1.0));
 	endEditCP(HorizontalActiveWhiteRidge3);
 
     RectUIDrawObjectPtr HorizontalActiveWhiteRidge4 = RectUIDrawObject::create();
 	beginEditCP(HorizontalActiveWhiteRidge4);
-       HorizontalActiveWhiteRidge4->setTopLeft(Pnt2s(6,0));
-       HorizontalActiveWhiteRidge4->setBottomRight(Pnt2s(7,6));
+       HorizontalActiveWhiteRidge4->setTopLeft(Pnt2f(6,0));
+       HorizontalActiveWhiteRidge4->setBottomRight(Pnt2f(7,6));
        HorizontalActiveWhiteRidge4->setColor(Color4f(0.81,0.87,0.99,1.0));
 	endEditCP(HorizontalActiveWhiteRidge4);
     
     RectUIDrawObjectPtr HorizontalActiveBlueRidge1 = RectUIDrawObject::create();
 	beginEditCP(HorizontalActiveBlueRidge1);
-       HorizontalActiveBlueRidge1->setTopLeft(Pnt2s(1,1));
-       HorizontalActiveBlueRidge1->setBottomRight(Pnt2s(2,7));
+       HorizontalActiveBlueRidge1->setTopLeft(Pnt2f(1,1));
+       HorizontalActiveBlueRidge1->setBottomRight(Pnt2f(2,7));
        HorizontalActiveBlueRidge1->setColor(Color4f(0.51,0.62,0.85,1.0));
 	endEditCP(HorizontalActiveBlueRidge1);
 
     RectUIDrawObjectPtr HorizontalActiveBlueRidge2 = RectUIDrawObject::create();
 	beginEditCP(HorizontalActiveBlueRidge2);
-       HorizontalActiveBlueRidge2->setTopLeft(Pnt2s(3,1));
-       HorizontalActiveBlueRidge2->setBottomRight(Pnt2s(4,7));
+       HorizontalActiveBlueRidge2->setTopLeft(Pnt2f(3,1));
+       HorizontalActiveBlueRidge2->setBottomRight(Pnt2f(4,7));
        HorizontalActiveBlueRidge2->setColor(Color4f(0.51,0.62,0.85,1.0));
 	endEditCP(HorizontalActiveBlueRidge2);
     
     RectUIDrawObjectPtr HorizontalActiveBlueRidge3 = RectUIDrawObject::create();
 	beginEditCP(HorizontalActiveBlueRidge3);
-       HorizontalActiveBlueRidge3->setTopLeft(Pnt2s(5,1));
-       HorizontalActiveBlueRidge3->setBottomRight(Pnt2s(6,7));
+       HorizontalActiveBlueRidge3->setTopLeft(Pnt2f(5,1));
+       HorizontalActiveBlueRidge3->setBottomRight(Pnt2f(6,7));
        HorizontalActiveBlueRidge3->setColor(Color4f(0.51,0.62,0.85,1.0));
 	endEditCP(HorizontalActiveBlueRidge3);
 
     RectUIDrawObjectPtr HorizontalActiveBlueRidge4 = RectUIDrawObject::create();
 	beginEditCP(HorizontalActiveBlueRidge4);
-       HorizontalActiveBlueRidge4->setTopLeft(Pnt2s(7,1));
-       HorizontalActiveBlueRidge4->setBottomRight(Pnt2s(8,7));
+       HorizontalActiveBlueRidge4->setTopLeft(Pnt2f(7,1));
+       HorizontalActiveBlueRidge4->setBottomRight(Pnt2f(8,7));
        HorizontalActiveBlueRidge4->setColor(Color4f(0.51,0.62,0.85,1.0));
 	endEditCP(HorizontalActiveBlueRidge4);
 
@@ -3039,57 +3040,57 @@ void WindowsLookAndFeel::init(void)
     //Horizontal Rollover Scroll Bar Center Ridges
     RectUIDrawObjectPtr HorizontalRolloverWhiteRidge1 = RectUIDrawObject::create();
 	beginEditCP(HorizontalRolloverWhiteRidge1);
-       HorizontalRolloverWhiteRidge1->setTopLeft(Pnt2s(0,0));
-       HorizontalRolloverWhiteRidge1->setBottomRight(Pnt2s(1,6));
+       HorizontalRolloverWhiteRidge1->setTopLeft(Pnt2f(0,0));
+       HorizontalRolloverWhiteRidge1->setBottomRight(Pnt2f(1,6));
        HorizontalRolloverWhiteRidge1->setColor(Color4f(0.99,0.99,1.0,1.0));
 	endEditCP(HorizontalRolloverWhiteRidge1);
 
     RectUIDrawObjectPtr HorizontalRolloverWhiteRidge2 = RectUIDrawObject::create();
 	beginEditCP(HorizontalRolloverWhiteRidge2);
-       HorizontalRolloverWhiteRidge2->setTopLeft(Pnt2s(2,0));
-       HorizontalRolloverWhiteRidge2->setBottomRight(Pnt2s(3,6));
+       HorizontalRolloverWhiteRidge2->setTopLeft(Pnt2f(2,0));
+       HorizontalRolloverWhiteRidge2->setBottomRight(Pnt2f(3,6));
        HorizontalRolloverWhiteRidge2->setColor(Color4f(0.99,0.99,1.0,1.0));
 	endEditCP(HorizontalRolloverWhiteRidge2);
     
     RectUIDrawObjectPtr HorizontalRolloverWhiteRidge3 = RectUIDrawObject::create();
 	beginEditCP(HorizontalRolloverWhiteRidge3);
-       HorizontalRolloverWhiteRidge3->setTopLeft(Pnt2s(4,0));
-       HorizontalRolloverWhiteRidge3->setBottomRight(Pnt2s(5,6));
+       HorizontalRolloverWhiteRidge3->setTopLeft(Pnt2f(4,0));
+       HorizontalRolloverWhiteRidge3->setBottomRight(Pnt2f(5,6));
        HorizontalRolloverWhiteRidge3->setColor(Color4f(0.99,0.99,1.0,1.0));
 	endEditCP(HorizontalRolloverWhiteRidge3);
 
     RectUIDrawObjectPtr HorizontalRolloverWhiteRidge4 = RectUIDrawObject::create();
 	beginEditCP(HorizontalRolloverWhiteRidge4);
-       HorizontalRolloverWhiteRidge4->setTopLeft(Pnt2s(6,0));
-       HorizontalRolloverWhiteRidge4->setBottomRight(Pnt2s(7,6));
+       HorizontalRolloverWhiteRidge4->setTopLeft(Pnt2f(6,0));
+       HorizontalRolloverWhiteRidge4->setBottomRight(Pnt2f(7,6));
        HorizontalRolloverWhiteRidge4->setColor(Color4f(0.99,0.99,1.0,1.0));
 	endEditCP(HorizontalRolloverWhiteRidge4);
     
     RectUIDrawObjectPtr HorizontalRolloverBlueRidge1 = RectUIDrawObject::create();
 	beginEditCP(HorizontalRolloverBlueRidge1);
-       HorizontalRolloverBlueRidge1->setTopLeft(Pnt2s(1,1));
-       HorizontalRolloverBlueRidge1->setBottomRight(Pnt2s(2,7));
+       HorizontalRolloverBlueRidge1->setTopLeft(Pnt2f(1,1));
+       HorizontalRolloverBlueRidge1->setBottomRight(Pnt2f(2,7));
        HorizontalRolloverBlueRidge1->setColor(Color4f(0.61,0.77,1.0,1.0));
 	endEditCP(HorizontalRolloverBlueRidge1);
 
     RectUIDrawObjectPtr HorizontalRolloverBlueRidge2 = RectUIDrawObject::create();
 	beginEditCP(HorizontalRolloverBlueRidge2);
-       HorizontalRolloverBlueRidge2->setTopLeft(Pnt2s(3,1));
-       HorizontalRolloverBlueRidge2->setBottomRight(Pnt2s(4,7));
+       HorizontalRolloverBlueRidge2->setTopLeft(Pnt2f(3,1));
+       HorizontalRolloverBlueRidge2->setBottomRight(Pnt2f(4,7));
        HorizontalRolloverBlueRidge2->setColor(Color4f(0.61,0.77,1.0,1.0));
 	endEditCP(HorizontalRolloverBlueRidge2);
     
     RectUIDrawObjectPtr HorizontalRolloverBlueRidge3 = RectUIDrawObject::create();
 	beginEditCP(HorizontalRolloverBlueRidge3);
-       HorizontalRolloverBlueRidge3->setTopLeft(Pnt2s(5,1));
-       HorizontalRolloverBlueRidge3->setBottomRight(Pnt2s(6,7));
+       HorizontalRolloverBlueRidge3->setTopLeft(Pnt2f(5,1));
+       HorizontalRolloverBlueRidge3->setBottomRight(Pnt2f(6,7));
        HorizontalRolloverBlueRidge3->setColor(Color4f(0.61,0.77,1.0,1.0));
 	endEditCP(HorizontalRolloverBlueRidge3);
 
     RectUIDrawObjectPtr HorizontalRolloverBlueRidge4 = RectUIDrawObject::create();
 	beginEditCP(HorizontalRolloverBlueRidge4);
-       HorizontalRolloverBlueRidge4->setTopLeft(Pnt2s(7,1));
-       HorizontalRolloverBlueRidge4->setBottomRight(Pnt2s(8,7));
+       HorizontalRolloverBlueRidge4->setTopLeft(Pnt2f(7,1));
+       HorizontalRolloverBlueRidge4->setBottomRight(Pnt2f(8,7));
        HorizontalRolloverBlueRidge4->setColor(Color4f(0.61,0.77,1.0,1.0));
 	endEditCP(HorizontalRolloverBlueRidge4);
 
@@ -3121,7 +3122,7 @@ void WindowsLookAndFeel::init(void)
         
         WindowsHorizontalScrollBarDrawObject->setVerticalAlignment(0.5);
         WindowsHorizontalScrollBarDrawObject->setHorizontalAlignment(0.5);
-        WindowsHorizontalScrollBarDrawObject->setActiveOffset(Vec2s(0,0));
+        WindowsHorizontalScrollBarDrawObject->setActiveOffset(Vec2f(0,0));
 
         WindowsHorizontalScrollBarDrawObject->setDrawObject(WindowsHorizontalScrollBarRidges);
         WindowsHorizontalScrollBarDrawObject->setActiveDrawObject(WindowsHorizontalActiveScrollBarRidges);
@@ -3138,9 +3139,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsScrollBar->setConstraints(NullFC);
 		//Sizes
-		WindowsScrollBar->setMinSize(Vec2s(0,0));
-		WindowsScrollBar->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsScrollBar->setPreferredSize(Vec2s(17,100));
+		WindowsScrollBar->setMinSize(Vec2f(0,0));
+		WindowsScrollBar->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsScrollBar->setPreferredSize(Vec2f(17,100));
 
 		//Border
 		WindowsScrollBar->setBorder(WindowsScrollBarBorder);
@@ -3187,14 +3188,14 @@ void WindowsLookAndFeel::init(void)
 	//Vertical ScrollBar
 	ScrollBarPtr WindowsScrollPanelVerticalScrollBar = ScrollBar::create();
     beginEditCP(WindowsScrollPanelVerticalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
-		WindowsScrollPanelVerticalScrollBar->setPreferredSize(Vec2s(17,100));
+		WindowsScrollPanelVerticalScrollBar->setPreferredSize(Vec2f(17,100));
         WindowsScrollPanelVerticalScrollBar->setOrientation(VERTICAL_ALIGNMENT);
     beginEditCP(WindowsScrollPanelVerticalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
 
 	//Horizontal ScrollBar
 	ScrollBarPtr WindowsScrollPanelHorizontalScrollBar = ScrollBar::create();
     beginEditCP(WindowsScrollPanelHorizontalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
-		WindowsScrollPanelHorizontalScrollBar->setPreferredSize(Vec2s(100,17));
+		WindowsScrollPanelHorizontalScrollBar->setPreferredSize(Vec2f(100,17));
         WindowsScrollPanelHorizontalScrollBar->setOrientation(HORIZONTAL_ALIGNMENT);
     beginEditCP(WindowsScrollPanelHorizontalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
 
@@ -3207,9 +3208,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsScrollPanel->setConstraints(NullFC);
 		//Sizes
-		WindowsScrollPanel->setMinSize(Vec2s(0,0));
-		WindowsScrollPanel->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsScrollPanel->setPreferredSize(Vec2s(100,100));
+		WindowsScrollPanel->setMinSize(Vec2f(0,0));
+		WindowsScrollPanel->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsScrollPanel->setPreferredSize(Vec2f(100,100));
 
 		//Border
 		WindowsScrollPanel->setBorder(WindowsScrollPanelBorder);
@@ -3258,9 +3259,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsUIViewport->setConstraints(NullFC);
 		//Sizes
-		WindowsUIViewport->setMinSize(Vec2s(0,0));
-		WindowsUIViewport->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsUIViewport->setPreferredSize(Vec2s(100,100));
+		WindowsUIViewport->setMinSize(Vec2f(0,0));
+		WindowsUIViewport->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsUIViewport->setPreferredSize(Vec2f(100,100));
 
 		//Border
 		WindowsUIViewport->setBorder(WindowsUIViewportBorder);
@@ -3289,9 +3290,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsRotatedComponent->setConstraints(NullFC);
 		//Sizes
-		WindowsRotatedComponent->setMinSize(Vec2s(0,0));
-		WindowsRotatedComponent->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsRotatedComponent->setPreferredSize(Vec2s(100,100));
+		WindowsRotatedComponent->setMinSize(Vec2f(0,0));
+		WindowsRotatedComponent->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsRotatedComponent->setPreferredSize(Vec2f(100,100));
 
 		//Border
 		WindowsRotatedComponent->setBorder(WindowsRotatedComponentBorder);
@@ -3363,9 +3364,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsList->setConstraints(NullFC);
 		//Sizes
-		WindowsList->setMinSize(Vec2s(0,0));
-		WindowsList->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsList->setPreferredSize(Vec2s(100,100));
+		WindowsList->setMinSize(Vec2f(0,0));
+		WindowsList->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsList->setPreferredSize(Vec2f(100,100));
 
 		//Border
 		WindowsList->setBorder(WindowsListBorder);
@@ -3397,19 +3398,19 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsSpinnerNextButtonDrawObject1);
 		WindowsSpinnerNextButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsSpinnerNextButtonDrawObject1->setOpacity(1.0);
-        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2s(0,4));
-        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2s(4,0));
-        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2s(4,2));
-        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2s(1,5));
+        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2f(0,4));
+        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2f(4,0));
+        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2f(4,2));
+        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2f(1,5));
 	endEditCP(WindowsSpinnerNextButtonDrawObject1);
 	PolygonUIDrawObjectPtr WindowsSpinnerNextButtonDrawObject2 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsSpinnerNextButtonDrawObject2);
 		WindowsSpinnerNextButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsSpinnerNextButtonDrawObject2->setOpacity(1.0);
-        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2s(4,0));
-        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2s(8,4));
-        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2s(7,5));
-        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2s(4,2));
+        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2f(4,0));
+        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2f(8,4));
+        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2f(7,5));
+        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2f(4,2));
 	endEditCP(WindowsSpinnerNextButtonDrawObject2);
     
 	UIDrawObjectCanvasPtr WindowsSpinnerNextButtonCanvas = UIDrawObjectCanvas::create();
@@ -3420,7 +3421,7 @@ void WindowsLookAndFeel::init(void)
 
     ButtonPtr WindowsSpinnerNextButton = Button::create();
     beginEditCP(WindowsSpinnerNextButton);
-        WindowsSpinnerNextButton->setPreferredSize(Vec2s(17,17));
+        WindowsSpinnerNextButton->setPreferredSize(Vec2f(17,17));
         WindowsSpinnerNextButton->setEnableActionOnMouseDownTime(true);
         WindowsSpinnerNextButton->setActionOnMouseDownRate(0.2);
         
@@ -3437,7 +3438,7 @@ void WindowsLookAndFeel::init(void)
         WindowsSpinnerNextButton->setFocusedBackground(WindowsScrollBarButtonBackground);
         WindowsSpinnerNextButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
 
-        WindowsSpinnerNextButton->setActiveOffset(Vec2s(0,0));
+        WindowsSpinnerNextButton->setActiveOffset(Vec2f(0,0));
         WindowsSpinnerNextButton->setDrawObject(WindowsSpinnerNextButtonCanvas);
         WindowsSpinnerNextButton->setActiveDrawObject(WindowsSpinnerNextButtonCanvas);
         WindowsSpinnerNextButton->setFocusedDrawObject(WindowsSpinnerNextButtonCanvas);
@@ -3453,19 +3454,19 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsSpinnerPreviousButtonDrawObject1);
 		WindowsSpinnerPreviousButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsSpinnerPreviousButtonDrawObject1->setOpacity(1.0);
-        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2s(1,0));
-        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2s(4,3));
-        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2s(4,5));
-        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2s(0,1));
+        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2f(1,0));
+        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2f(4,3));
+        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2f(4,5));
+        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2f(0,1));
 	endEditCP(WindowsSpinnerPreviousButtonDrawObject1);
 	PolygonUIDrawObjectPtr WindowsSpinnerPreviousButtonDrawObject2 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsSpinnerPreviousButtonDrawObject2);
 		WindowsSpinnerPreviousButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsSpinnerPreviousButtonDrawObject2->setOpacity(1.0);
-        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2s(4,3));
-        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2s(7,0));
-        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2s(8,1));
-        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2s(4,5));
+        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2f(4,3));
+        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2f(7,0));
+        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2f(8,1));
+        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2f(4,5));
 	endEditCP(WindowsSpinnerPreviousButtonDrawObject2);
     
 	UIDrawObjectCanvasPtr WindowsSpinnerPreviousButtonCanvas = UIDrawObjectCanvas::create();
@@ -3475,7 +3476,7 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsSpinnerPreviousButtonCanvas);
     ButtonPtr WindowsSpinnerPreviousButton = Button::create();
     beginEditCP(WindowsSpinnerPreviousButton);
-        WindowsSpinnerPreviousButton->setPreferredSize(Vec2s(17,17));
+        WindowsSpinnerPreviousButton->setPreferredSize(Vec2f(17,17));
         WindowsSpinnerPreviousButton->setEnableActionOnMouseDownTime(true);
         WindowsSpinnerPreviousButton->setActionOnMouseDownRate(0.2);
 		//Border
@@ -3491,7 +3492,7 @@ void WindowsLookAndFeel::init(void)
         WindowsSpinnerPreviousButton->setFocusedBackground(WindowsScrollBarButtonBackground);
         WindowsSpinnerPreviousButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
 
-        WindowsSpinnerPreviousButton->setActiveOffset(Vec2s(0,0));
+        WindowsSpinnerPreviousButton->setActiveOffset(Vec2f(0,0));
 
         WindowsSpinnerPreviousButton->setDrawObject(WindowsSpinnerPreviousButtonCanvas);
         WindowsSpinnerPreviousButton->setActiveDrawObject(WindowsSpinnerPreviousButtonCanvas);
@@ -3513,9 +3514,9 @@ void WindowsLookAndFeel::init(void)
     beginEditCP(WindowsSpinner);
 		WindowsSpinner->setConstraints(NullFC);
 		//Sizes
-		WindowsSpinner->setMinSize(Vec2s(0,0));
-		WindowsSpinner->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsSpinner->setPreferredSize(Vec2s(50,23));
+		WindowsSpinner->setMinSize(Vec2f(0,0));
+		WindowsSpinner->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsSpinner->setPreferredSize(Vec2f(50,23));
 
 		//Border
 		WindowsSpinner->setBorder(WindowsTextFieldBorder);
@@ -3563,9 +3564,9 @@ void WindowsLookAndFeel::init(void)
     beginEditCP(WindowsSpinnerDefaultEditor);
 		WindowsSpinnerDefaultEditor->setConstraints(NullFC);
 		//Sizes
-		WindowsSpinnerDefaultEditor->setMinSize(Vec2s(0,0));
-		WindowsSpinnerDefaultEditor->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsSpinnerDefaultEditor->setPreferredSize(Vec2s(200,100));
+		WindowsSpinnerDefaultEditor->setMinSize(Vec2f(0,0));
+		WindowsSpinnerDefaultEditor->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsSpinnerDefaultEditor->setPreferredSize(Vec2f(200,100));
 
 		//Border
 		WindowsSpinnerDefaultEditor->setBorder(WindowsEmptyBorder);
@@ -3611,9 +3612,9 @@ void WindowsLookAndFeel::init(void)
     beginEditCP(WindowsSpinnerNumberEditor);
 		WindowsSpinnerNumberEditor->setConstraints(NullFC);
 		//Sizes
-		WindowsSpinnerNumberEditor->setMinSize(Vec2s(0,0));
-		WindowsSpinnerNumberEditor->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsSpinnerNumberEditor->setPreferredSize(Vec2s(200,100));
+		WindowsSpinnerNumberEditor->setMinSize(Vec2f(0,0));
+		WindowsSpinnerNumberEditor->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsSpinnerNumberEditor->setPreferredSize(Vec2f(200,100));
 
 		//Border
 		WindowsSpinnerNumberEditor->setBorder(WindowsEmptyBorder);
@@ -3678,9 +3679,9 @@ void WindowsLookAndFeel::init(void)
     beginEditCP(WindowsProgressBar);
 		WindowsProgressBar->setConstraints(NullFC);
 		//Sizes
-		WindowsProgressBar->setMinSize(Vec2s(0,0));
-		WindowsProgressBar->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsProgressBar->setPreferredSize(Vec2s(200,27));
+		WindowsProgressBar->setMinSize(Vec2f(0,0));
+		WindowsProgressBar->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsProgressBar->setPreferredSize(Vec2f(200,27));
 
 		//Border
 		WindowsProgressBar->setBorder(WindowsProgressBarBorder);
@@ -3743,7 +3744,7 @@ void WindowsLookAndFeel::init(void)
 
     ButtonPtr WindowsSliderKnobButton = Button::create();
     beginEditCP(WindowsSliderKnobButton);
-        WindowsSliderKnobButton->setPreferredSize(Vec2s(21,11));
+        WindowsSliderKnobButton->setPreferredSize(Vec2f(21,11));
         
 		//Border
 		WindowsSliderKnobButton->setBorder(WindowsSliderKnobButtonBorder);
@@ -3759,7 +3760,7 @@ void WindowsLookAndFeel::init(void)
         WindowsSliderKnobButton->setFocusedBackground(WindowsSliderBackground);
         WindowsSliderKnobButton->setRolloverBackground(WindowsSliderBackground);
 
-        WindowsSliderKnobButton->setActiveOffset(Vec2s(0,0));
+        WindowsSliderKnobButton->setActiveOffset(Vec2f(0,0));
     beginEditCP(WindowsSliderKnobButton);
     
     LabelPtr WindowsSliderPrototypeLabel = Label::create();
@@ -3814,7 +3815,7 @@ void WindowsLookAndFeel::init(void)
 	//Slider DrawObjectCanvas
 	UIDrawObjectCanvasPtr WindowsSliderTrackCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(WindowsSliderTrackCanvas);
-		WindowsSliderTrackCanvas->setPreferredSize(Vec2s(5,5));
+		WindowsSliderTrackCanvas->setPreferredSize(Vec2f(5,5));
 		//Border
 		WindowsSliderTrackCanvas->setBorder(SliderTrackDrawObjectBorder);
 		WindowsSliderTrackCanvas->setRolloverBorder(SliderTrackDrawObjectBorder);
@@ -3831,16 +3832,16 @@ void WindowsLookAndFeel::init(void)
 	//Slider Major Tick Marks
     RectUIDrawObjectPtr WindowsSliderMajorTickMarks = RectUIDrawObject::create();
 	beginEditCP(WindowsSliderMajorTickMarks);
-       WindowsSliderMajorTickMarks->setTopLeft(Pnt2s(0,0));
-       WindowsSliderMajorTickMarks->setBottomRight(Pnt2s(7,1));
+       WindowsSliderMajorTickMarks->setTopLeft(Pnt2f(0,0));
+       WindowsSliderMajorTickMarks->setBottomRight(Pnt2f(7,1));
        WindowsSliderMajorTickMarks->setColor(Color4f(0.63,0.63,0.57,1.0));
 	endEditCP(WindowsSliderMajorTickMarks);
 	
 	//Slider Minor Tick Marks
     RectUIDrawObjectPtr WindowsSliderMinorTickMarks = RectUIDrawObject::create();
 	beginEditCP(WindowsSliderMinorTickMarks);
-       WindowsSliderMinorTickMarks->setTopLeft(Pnt2s(0,0));
-       WindowsSliderMinorTickMarks->setBottomRight(Pnt2s(4,1));
+       WindowsSliderMinorTickMarks->setTopLeft(Pnt2f(0,0));
+       WindowsSliderMinorTickMarks->setBottomRight(Pnt2f(4,1));
        WindowsSliderMinorTickMarks->setColor(Color4f(0.63,0.63,0.57,1.0));
 	endEditCP(WindowsSliderMinorTickMarks);
 
@@ -3850,9 +3851,9 @@ void WindowsLookAndFeel::init(void)
     beginEditCP(WindowsSlider);
 		WindowsSlider->setConstraints(NullFC);
 		//Sizes
-		WindowsSlider->setMinSize(Vec2s(0,0));
-		WindowsSlider->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsSlider->setPreferredSize(Vec2s(200,27));
+		WindowsSlider->setMinSize(Vec2f(0,0));
+		WindowsSlider->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsSlider->setPreferredSize(Vec2f(200,27));
 
 		//Border
 		WindowsSlider->setBorder(WindowsSliderBorder);
@@ -3901,7 +3902,7 @@ void WindowsLookAndFeel::init(void)
     //Vertical Max Button
 	ToggleButtonPtr WindowsComboBoxExpandButton = ToggleButton::create();
     beginEditCP(WindowsComboBoxExpandButton);
-        WindowsComboBoxExpandButton->setPreferredSize(Vec2s(17,17));
+        WindowsComboBoxExpandButton->setPreferredSize(Vec2f(17,17));
         
         WindowsComboBoxExpandButton->setDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
         WindowsComboBoxExpandButton->setActiveDrawObject(WindowsScrollBarVerticalMaxButtonCanvas);
@@ -3921,7 +3922,7 @@ void WindowsLookAndFeel::init(void)
         WindowsComboBoxExpandButton->setFocusedBackground(WindowsScrollBarButtonBackground);
         WindowsComboBoxExpandButton->setRolloverBackground(WindowsScrollBarRolloverButtonBackground);
 
-        WindowsComboBoxExpandButton->setActiveOffset(Vec2s(0,0));
+        WindowsComboBoxExpandButton->setActiveOffset(Vec2f(0,0));
     endEditCP(WindowsComboBoxExpandButton);
 
 	//Windows ComboBoxBorder
@@ -4002,9 +4003,9 @@ void WindowsLookAndFeel::init(void)
     beginEditCP(WindowsComboBox);
 		WindowsComboBox->setConstraints(NullFC);
 		//Sizes
-		WindowsComboBox->setMinSize(Vec2s(0,0));
-		WindowsComboBox->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsComboBox->setPreferredSize(Vec2s(75,23));
+		WindowsComboBox->setMinSize(Vec2f(0,0));
+		WindowsComboBox->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsComboBox->setPreferredSize(Vec2f(75,23));
 
 		//Border
 		WindowsComboBox->setBorder(WindowsTextFieldBorder);
@@ -4046,9 +4047,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsTableHeader->setConstraints(NullFC);
 		//Sizes
-		WindowsTableHeader->setMinSize(Vec2s(0,0));
-		WindowsTableHeader->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsTableHeader->setPreferredSize(Vec2s(100,100));
+		WindowsTableHeader->setMinSize(Vec2f(0,0));
+		WindowsTableHeader->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsTableHeader->setPreferredSize(Vec2f(100,100));
 
 		//Border
 		WindowsTableHeader->setBorder(WindowsTableHeaderBorder);
@@ -4093,9 +4094,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsTable->setConstraints(NullFC);
 		//Sizes
-		WindowsTable->setMinSize(Vec2s(0,0));
-		WindowsTable->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsTable->setPreferredSize(Vec2s(100,100));
+		WindowsTable->setMinSize(Vec2f(0,0));
+		WindowsTable->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsTable->setPreferredSize(Vec2f(100,100));
 
 		//Border
 		WindowsTable->setBorder(WindowsTableBorder);
@@ -4231,9 +4232,9 @@ void WindowsLookAndFeel::init(void)
 		
 		WindowsTree->setConstraints(NullFC);
 		//Sizes
-		WindowsTree->setMinSize(Vec2s(0,0));
-		WindowsTree->setMaxSize(Vec2s(32767,32767)); //2^15
-		WindowsTree->setPreferredSize(Vec2s(100,100));
+		WindowsTree->setMinSize(Vec2f(0,0));
+		WindowsTree->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsTree->setPreferredSize(Vec2f(100,100));
 
 		//Border
 		WindowsTree->setBorder(WindowsTreeBorder);

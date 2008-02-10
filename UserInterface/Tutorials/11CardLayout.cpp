@@ -48,7 +48,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // 11CardLayout Headers
 #include <OpenSG/UserInterface/OSGButton.h>
@@ -419,8 +419,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(900,900),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(900,900),
                                         "OpenSG 11CardLayout Window");
 
     //Main Event Loop
@@ -443,7 +443,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

@@ -67,7 +67,10 @@
 
 #include "OSGUIDrawObject.h" // Parent
 
-#include <OpenSG/OSGVec2sFields.h> // Point1 type
+#include <OpenSG/OSGPnt2fFields.h> // Point1 type
+#include <OpenSG/OSGPnt2fFields.h> // Point2 type
+#include <OpenSG/OSGPnt2fFields.h> // Point3 type
+#include <OpenSG/OSGPnt2fFields.h> // Point4 type
 #include <OpenSG/OSGColor4fFields.h> // Color1 type
 #include <OpenSG/OSGColor4fFields.h> // Color2 type
 #include <OpenSG/OSGColor4fFields.h> // Color3 type
@@ -143,24 +146,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING MultiColoredQuadUIDrawObjectBase : public 
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPnt2s             *getSFPoint1         (void);
-           SFPnt2s             *getSFPoint2         (void);
-           SFPnt2s             *getSFPoint3         (void);
-           SFPnt2s             *getSFPoint4         (void);
+           SFPnt2f             *getSFPoint1         (void);
+           SFPnt2f             *getSFPoint2         (void);
+           SFPnt2f             *getSFPoint3         (void);
+           SFPnt2f             *getSFPoint4         (void);
            SFColor4f           *getSFColor1         (void);
            SFColor4f           *getSFColor2         (void);
            SFColor4f           *getSFColor3         (void);
            SFColor4f           *getSFColor4         (void);
            SFReal32            *getSFOpacity        (void);
 
-           Pnt2s               &getPoint1         (void);
-     const Pnt2s               &getPoint1         (void) const;
-           Pnt2s               &getPoint2         (void);
-     const Pnt2s               &getPoint2         (void) const;
-           Pnt2s               &getPoint3         (void);
-     const Pnt2s               &getPoint3         (void) const;
-           Pnt2s               &getPoint4         (void);
-     const Pnt2s               &getPoint4         (void) const;
+           Pnt2f               &getPoint1         (void);
+     const Pnt2f               &getPoint1         (void) const;
+           Pnt2f               &getPoint2         (void);
+     const Pnt2f               &getPoint2         (void) const;
+           Pnt2f               &getPoint3         (void);
+     const Pnt2f               &getPoint3         (void) const;
+           Pnt2f               &getPoint4         (void);
+     const Pnt2f               &getPoint4         (void) const;
            Color4f             &getColor1         (void);
      const Color4f             &getColor1         (void) const;
            Color4f             &getColor2         (void);
@@ -177,10 +180,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING MultiColoredQuadUIDrawObjectBase : public 
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setPoint1         ( const Pnt2s &value );
-     void setPoint2         ( const Pnt2s &value );
-     void setPoint3         ( const Pnt2s &value );
-     void setPoint4         ( const Pnt2s &value );
+     void setPoint1         ( const Pnt2f &value );
+     void setPoint2         ( const Pnt2f &value );
+     void setPoint3         ( const Pnt2f &value );
+     void setPoint4         ( const Pnt2f &value );
      void setColor1         ( const Color4f &value );
      void setColor2         ( const Color4f &value );
      void setColor3         ( const Color4f &value );
@@ -228,10 +231,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING MultiColoredQuadUIDrawObjectBase : public 
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt2s             _sfPoint1;
-    SFPnt2s             _sfPoint2;
-    SFPnt2s             _sfPoint3;
-    SFPnt2s             _sfPoint4;
+    SFPnt2f             _sfPoint1;
+    SFPnt2f             _sfPoint2;
+    SFPnt2f             _sfPoint3;
+    SFPnt2f             _sfPoint4;
     SFColor4f           _sfColor1;
     SFColor4f           _sfColor2;
     SFColor4f           _sfColor3;

@@ -84,8 +84,8 @@ void MenuBar::initMethod (void)
 void MenuBar::updateLayout(void)
 {
 	//Determine the Max Preferred Height of my MenuItems
-	UInt16 MaxHeight(0);
-	UInt16 TotalWidth(0);
+	Real32 MaxHeight(0);
+	Real32 TotalWidth(0);
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
         if(MaxHeight < getChildren().getValue(i)->getPreferredSize().y())
@@ -96,14 +96,14 @@ void MenuBar::updateLayout(void)
 	}
 
     //Set My preferred Size
-	Pnt2s TopLeft, BottomRight;
-	Pnt2s InsetsTopLeft, InsetsBottomRight;
+	Pnt2f TopLeft, BottomRight;
+	Pnt2f InsetsTopLeft, InsetsBottomRight;
 	getBounds(TopLeft, BottomRight);
 	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 
-	Vec2s InsetSize( (BottomRight-TopLeft) - (InsetsBottomRight-InsetsTopLeft) );
+	Vec2f InsetSize( (BottomRight-TopLeft) - (InsetsBottomRight-InsetsTopLeft) );
 
-    Vec2s NewSize( TotalWidth+InsetSize.x(), MaxHeight+InsetSize.y());
+    Vec2f NewSize( TotalWidth+InsetSize.x(), MaxHeight+InsetSize.y());
     if(getPreferredSize() != NewSize)
     {
         beginEditCP(MenuBarPtr(this), PreferredSizeFieldMask);
@@ -116,12 +116,12 @@ void MenuBar::updateLayout(void)
 	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 	
 	//Now position and size the Items
-	UInt16 LeftOffset(InsetsTopLeft.x());
+	Real32 LeftOffset(InsetsTopLeft.x());
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
         beginEditCP(getChildren().getValue(i), SizeFieldMask | PositionFieldMask);
-            getChildren().getValue(i)->setSize(Vec2s(getChildren().getValue(i)->getPreferredSize().x(), MaxHeight));
-            getChildren().getValue(i)->setPosition(Pnt2s(LeftOffset, InsetsTopLeft.y()));
+            getChildren().getValue(i)->setSize(Vec2f(getChildren().getValue(i)->getPreferredSize().x(), MaxHeight));
+            getChildren().getValue(i)->setPosition(Pnt2f(LeftOffset, InsetsTopLeft.y()));
         endEditCP(getChildren().getValue(i), SizeFieldMask | PositionFieldMask);
 
         LeftOffset += getChildren().getValue(i)->getPreferredSize().x();
@@ -130,7 +130,7 @@ void MenuBar::updateLayout(void)
 
 void MenuBar::updateClipBounds(void)
 {
-	Pnt2s TopLeft, BottomRight;
+	Pnt2f TopLeft, BottomRight;
 	if(getParentContainer() == NullFC)
 	{
 		//If I have no parent container use my bounds
@@ -142,29 +142,29 @@ void MenuBar::updateClipBounds(void)
 		     //My Bounds
 		     //My Parent Containers Clip Bounds
 		     //My Parent Containers Inset Bounds
-        Pnt2s MyTopLeft,MyBottomRight;
+        Pnt2f MyTopLeft,MyBottomRight;
         getBounds(MyTopLeft,MyBottomRight);
 
 		//Update my Parent Container's Clip Bounds
 		//Container::Ptr::dcast(getParentContainer())->updateClipBounds();
 
 		//Get Parent Container's Clip Bounds
-		Pnt2s ContainerClipTopLeft, ContainerClipBottomRight;
+		Pnt2f ContainerClipTopLeft, ContainerClipBottomRight;
 		InternalWindow::Ptr::dcast(getParentContainer())->getMenuBarBounds(ContainerClipTopLeft,ContainerClipBottomRight);
 		
         //Parent Container's Clip Bounds are in the Parent Container's Coordinate space
         //We need to convert them to this Components Coordinate space
-        ContainerClipTopLeft -= Vec2s(getPosition());
-		ContainerClipBottomRight -= Vec2s(getPosition());
+        ContainerClipTopLeft -= Vec2f(getPosition());
+		ContainerClipBottomRight -= Vec2f(getPosition());
 
 		//Get Parent Container's MenuBar Bounds
-		Pnt2s ContainerInsetTopLeft, ContainerInsetBottomRight;
+		Pnt2f ContainerInsetTopLeft, ContainerInsetBottomRight;
 		InternalWindow::Ptr::dcast(getParentContainer())->getMenuBarBounds(ContainerInsetTopLeft, ContainerInsetBottomRight);
 		
         //Parent Container's Inset Bounds are in the Parent Container's Coordinate space
         //We need to convert them to this Components Coordinate space
-        ContainerInsetTopLeft -= Vec2s(getPosition());
-		ContainerInsetBottomRight -= Vec2s(getPosition());
+        ContainerInsetTopLeft -= Vec2f(getPosition());
+		ContainerInsetBottomRight -= Vec2f(getPosition());
 
 		//Get the intersection of my bounds with my parent containers clip bounds
 		quadIntersection(MyTopLeft,MyBottomRight,

@@ -49,7 +49,7 @@
 \*****************************************************************************/
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -98,7 +98,7 @@ PolygonUIDrawObjectPtr PolygonUIDrawObjectBase::createEmpty(void)
 
 //! Get the PolygonUIDrawObject::_mfVerticies field.
 inline
-MFPnt2s *PolygonUIDrawObjectBase::getMFVerticies(void)
+MFPnt2f *PolygonUIDrawObjectBase::getMFVerticies(void)
 {
     return &_mfVerticies;
 }
@@ -163,21 +163,21 @@ void PolygonUIDrawObjectBase::setOpacity(const Real32 &value)
 
 //! Get the value of the \a index element the PolygonUIDrawObject::_mfVerticies field.
 inline
-Pnt2s &PolygonUIDrawObjectBase::getVerticies(const UInt32 index)
+Pnt2f &PolygonUIDrawObjectBase::getVerticies(const UInt32 index)
 {
     return _mfVerticies[index];
 }
 
 //! Get the PolygonUIDrawObject::_mfVerticies field.
 inline
-MFPnt2s &PolygonUIDrawObjectBase::getVerticies(void)
+MFPnt2f &PolygonUIDrawObjectBase::getVerticies(void)
 {
     return _mfVerticies;
 }
 
 //! Get the PolygonUIDrawObject::_mfVerticies field.
 inline
-const MFPnt2s &PolygonUIDrawObjectBase::getVerticies(void) const
+const MFPnt2f &PolygonUIDrawObjectBase::getVerticies(void) const
 {
     return _mfVerticies;
 }

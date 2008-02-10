@@ -74,7 +74,7 @@ void EmptyUIBackground::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void EmptyUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32 Opacity) const
+void EmptyUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const
 {
 	//Do Nothing
 	//Empty Background

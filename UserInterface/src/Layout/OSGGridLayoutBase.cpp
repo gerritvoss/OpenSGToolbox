@@ -89,10 +89,10 @@ const OSG::BitVector GridLayoutBase::MTInfluenceMask =
 /*! \var UInt32          GridLayoutBase::_sfColumns
     
 */
-/*! \var Int32           GridLayoutBase::_sfHorizontalGap
+/*! \var Real32          GridLayoutBase::_sfHorizontalGap
     
 */
-/*! \var Int32           GridLayoutBase::_sfVerticalGap
+/*! \var Real32          GridLayoutBase::_sfVerticalGap
     
 */
 
@@ -110,12 +110,12 @@ FieldDescription *GridLayoutBase::_desc[] =
                      ColumnsFieldId, ColumnsFieldMask,
                      false,
                      (FieldAccessMethod) &GridLayoutBase::getSFColumns),
-    new FieldDescription(SFInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "HorizontalGap", 
                      HorizontalGapFieldId, HorizontalGapFieldMask,
                      false,
                      (FieldAccessMethod) &GridLayoutBase::getSFHorizontalGap),
-    new FieldDescription(SFInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "VerticalGap", 
                      VerticalGapFieldId, VerticalGapFieldMask,
                      false,
@@ -197,8 +197,8 @@ void GridLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 GridLayoutBase::GridLayoutBase(void) :
     _sfRows                   (UInt32(2)), 
     _sfColumns                (UInt32(2)), 
-    _sfHorizontalGap          (Int32(10)), 
-    _sfVerticalGap            (Int32(10)), 
+    _sfHorizontalGap          (Real32(10)), 
+    _sfVerticalGap            (Real32(10)), 
     Inherited() 
 {
 }

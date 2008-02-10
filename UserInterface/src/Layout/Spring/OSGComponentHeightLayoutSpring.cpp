@@ -88,19 +88,19 @@ ComponentHeightLayoutSpringPtr ComponentHeightLayoutSpring::create (ComponentPtr
  *                           Instance methods                              *
 \***************************************************************************/
 
-Int32 ComponentHeightLayoutSpring::getMinimumValue(void) const
+Real32 ComponentHeightLayoutSpring::getMinimumValue(void) const
 {
     return getComponent()->getMinSize().y();
 }
 
-Int32 ComponentHeightLayoutSpring::getPreferredValue(void) const
+Real32 ComponentHeightLayoutSpring::getPreferredValue(void) const
 {
     return getComponent()->getPreferredSize().y();
 }
 
-Int32 ComponentHeightLayoutSpring::getMaximumValue(void) const
+Real32 ComponentHeightLayoutSpring::getMaximumValue(void) const
 {
-    return osgMin<Int32>(TypeTraits< Int32 >::getMax(), getComponent()->getMaxSize().y());
+    return osgMin<Real32>(TypeTraits< Real32 >::getMax(), getComponent()->getMaxSize().y());
 }
 
 /*-------------------------------------------------------------------------*\

@@ -88,12 +88,12 @@ MaxLayoutSpringPtr MaxLayoutSpring::create(LayoutSpringPtr TheSpring1, LayoutSpr
  *                           Instance methods                              *
 \***************************************************************************/
 
-Int32 MaxLayoutSpring::operation(const Int32& Left, const Int32& Right) const
+Real32 MaxLayoutSpring::operation(const Real32& Left, const Real32& Right) const
 {
     return osgMax(Left, Right);
 }
 
-void MaxLayoutSpring::setNonClearValue(const Int32& value)
+void MaxLayoutSpring::setNonClearValue(const Real32& value)
 {
     Inherited::setNonClearValue(value);
     

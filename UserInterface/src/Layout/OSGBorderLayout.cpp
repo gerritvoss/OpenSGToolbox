@@ -80,16 +80,16 @@ void BorderLayout::initMethod (void)
 
 void BorderLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
-	Pnt2s borderTopLeft, borderBottomRight;
+	Pnt2f borderTopLeft, borderBottomRight;
 	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
-	Vec2s borderSize(borderBottomRight-borderTopLeft);
+	Vec2f borderSize(borderBottomRight-borderTopLeft);
 
-	Int32 NorthHeight(0);
-	Int32 SouthHeight(0);
-	Int32 WestWidth(0);
-	Int32 EastWidth(0);
-	Vec2s size;
-	Vec2s offset;
+	Real32 NorthHeight(0);
+	Real32 SouthHeight(0);
+	Real32 WestWidth(0);
+	Real32 EastWidth(0);
+	Vec2f size;
+	Vec2f offset;
 
 	// the first pass through gets some crucial dimensions to determine
 	// the sizes of the buttons
@@ -216,8 +216,8 @@ void BorderLayout::updateLayout(const MFComponentPtr Components,const ComponentP
 				if (size[0] >= Components.getValue(i)->getMinSize().x() && size[1] > Components.getValue(i)->getMinSize().y())
 					Components.getValue(i)->setSize(size);
 				else
-					Components.getValue(i)->setSize(Vec2s(0,0));
-				Components.getValue(i)->setPosition(borderTopLeft + Vec2s(offset));
+					Components.getValue(i)->setSize(Vec2f(0,0));
+				Components.getValue(i)->setPosition(borderTopLeft + Vec2f(offset));
 			endEditCP(Components.getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
 		}
 	}

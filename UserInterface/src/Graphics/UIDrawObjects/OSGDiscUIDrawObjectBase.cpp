@@ -98,13 +98,13 @@ const OSG::BitVector DiscUIDrawObjectBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Pnt2s           DiscUIDrawObjectBase::_sfCenter
+/*! \var Pnt2f           DiscUIDrawObjectBase::_sfCenter
     
 */
-/*! \var Int16           DiscUIDrawObjectBase::_sfWidth
+/*! \var Real32          DiscUIDrawObjectBase::_sfWidth
     
 */
-/*! \var Int16           DiscUIDrawObjectBase::_sfHeight
+/*! \var Real32          DiscUIDrawObjectBase::_sfHeight
     
 */
 /*! \var Real32          DiscUIDrawObjectBase::_sfStartAngleRad
@@ -130,17 +130,17 @@ const OSG::BitVector DiscUIDrawObjectBase::MTInfluenceMask =
 
 FieldDescription *DiscUIDrawObjectBase::_desc[] = 
 {
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "Center", 
                      CenterFieldId, CenterFieldMask,
                      false,
                      (FieldAccessMethod) &DiscUIDrawObjectBase::getSFCenter),
-    new FieldDescription(SFInt16::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "Width", 
                      WidthFieldId, WidthFieldMask,
                      false,
                      (FieldAccessMethod) &DiscUIDrawObjectBase::getSFWidth),
-    new FieldDescription(SFInt16::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "Height", 
                      HeightFieldId, HeightFieldMask,
                      false,
@@ -250,9 +250,9 @@ void DiscUIDrawObjectBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 DiscUIDrawObjectBase::DiscUIDrawObjectBase(void) :
-    _sfCenter                 (Pnt2s(0,0)), 
-    _sfWidth                  (Int16(1)), 
-    _sfHeight                 (Int16(1)), 
+    _sfCenter                 (Pnt2f(0,0)), 
+    _sfWidth                  (Real32(1)), 
+    _sfHeight                 (Real32(1)), 
     _sfStartAngleRad          (Real32(0.0)), 
     _sfEndAngleRad            (Real32(6.283185307)), 
     _sfSubDivisions           (UInt16(24)), 

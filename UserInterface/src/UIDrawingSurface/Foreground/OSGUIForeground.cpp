@@ -86,7 +86,7 @@ void UIForeground::draw( DrawActionBase * action, Viewport * port )
 	   getDrawingSurface()->getSize().y() != port->getPixelHeight())
 	{
 		beginEditCP(getDrawingSurface(), UIDrawingSurface::SizeFieldMask);
-			getDrawingSurface()->setSize(Vec2s(port->getPixelWidth(), port->getPixelHeight()));
+			getDrawingSurface()->setSize(Vec2f(port->getPixelWidth(), port->getPixelHeight()));
 		endEditCP(getDrawingSurface(), UIDrawingSurface::SizeFieldMask);
 	}
 

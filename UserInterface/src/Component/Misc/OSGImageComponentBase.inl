@@ -112,7 +112,7 @@ SFUInt32 *ImageComponentBase::getSFScale(void)
 
 //! Get the ImageComponent::_sfScaleAbsoluteSize field.
 inline
-SFVec2s *ImageComponentBase::getSFScaleAbsoluteSize(void)
+SFVec2f *ImageComponentBase::getSFScaleAbsoluteSize(void)
 {
     return &_sfScaleAbsoluteSize;
 }
@@ -176,21 +176,21 @@ void ImageComponentBase::setScale(const UInt32 &value)
 
 //! Get the value of the ImageComponent::_sfScaleAbsoluteSize field.
 inline
-Vec2s &ImageComponentBase::getScaleAbsoluteSize(void)
+Vec2f &ImageComponentBase::getScaleAbsoluteSize(void)
 {
     return _sfScaleAbsoluteSize.getValue();
 }
 
 //! Get the value of the ImageComponent::_sfScaleAbsoluteSize field.
 inline
-const Vec2s &ImageComponentBase::getScaleAbsoluteSize(void) const
+const Vec2f &ImageComponentBase::getScaleAbsoluteSize(void) const
 {
     return _sfScaleAbsoluteSize.getValue();
 }
 
 //! Set the value of the ImageComponent::_sfScaleAbsoluteSize field.
 inline
-void ImageComponentBase::setScaleAbsoluteSize(const Vec2s &value)
+void ImageComponentBase::setScaleAbsoluteSize(const Vec2f &value)
 {
     _sfScaleAbsoluteSize.setValue(value);
 }

@@ -14,7 +14,7 @@
 UI MultiColor Matte Border. Creates a matte-look border using a different color for each side. (The difference between this border and a line border is that you can specify the individual border dimensions as well as colors.)
 	<Field
 		name="LeftWidth"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1"
@@ -23,7 +23,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	</Field>
 	<Field
 		name="RightWidth"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1"
@@ -32,7 +32,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	</Field>
 	<Field
 		name="TopWidth"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1"
@@ -41,7 +41,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	</Field>
 	<Field
 		name="BottomWidth"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1"

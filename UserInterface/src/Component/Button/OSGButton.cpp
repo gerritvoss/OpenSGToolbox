@@ -81,14 +81,14 @@ UIDrawObjectCanvasPtr Button::createTexturedDrawObjectCanvas(TextureChunkPtr The
     UIDrawObjectCanvasPtr DrawObjectCanvas = UIDrawObjectCanvas::create();
     TexturedQuadUIDrawObjectPtr TextureDrawObject = TexturedQuadUIDrawObject::create();
 
-    Vec2s ImageSize;
+    Vec2f ImageSize;
     ImageSize.setValues(TheTexture->getImage()->getWidth(), TheTexture->getImage()->getHeight());
     
     beginEditCP(TextureDrawObject);
-        TextureDrawObject->setPoint1(Pnt2s(0,0));
-        TextureDrawObject->setPoint2(Pnt2s(ImageSize.x(),0));
-        TextureDrawObject->setPoint3(Pnt2s(ImageSize.x(),ImageSize.y()));
-        TextureDrawObject->setPoint4(Pnt2s(0,ImageSize.y()));
+        TextureDrawObject->setPoint1(Pnt2f(0,0));
+        TextureDrawObject->setPoint2(Pnt2f(ImageSize.x(),0));
+        TextureDrawObject->setPoint3(Pnt2f(ImageSize.x(),ImageSize.y()));
+        TextureDrawObject->setPoint4(Pnt2f(0,ImageSize.y()));
         
         TextureDrawObject->setTexCoord1(Vec2f(0.0,1.0));
         TextureDrawObject->setTexCoord2(Vec2f(1.0,1.0));
@@ -219,7 +219,7 @@ UIDrawObjectCanvasPtr Button::getDrawnDrawObject(void) const
 }
 void Button::drawInternal(const GraphicsPtr TheGraphics) const
 {
-   Pnt2s TopLeft, BottomRight;
+   Pnt2f TopLeft, BottomRight;
    getInsideBorderBounds(TopLeft, BottomRight);
    
    //If I have a DrawObject then Draw it
@@ -227,8 +227,8 @@ void Button::drawInternal(const GraphicsPtr TheGraphics) const
    if(DrawnDrawObject != NullFC)
    {
       //Calculate Alignment
-      Pnt2s AlignedPosition;
-      Pnt2s DrawObjectTopLeft, DrawObjectBottomRight;
+      Pnt2f AlignedPosition;
+      Pnt2f DrawObjectTopLeft, DrawObjectBottomRight;
       DrawnDrawObject->getBounds(DrawObjectTopLeft, DrawObjectBottomRight);
 
       AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (DrawObjectBottomRight - DrawObjectTopLeft),getVerticalAlignment(), getHorizontalAlignment());
@@ -252,8 +252,8 @@ void Button::drawInternal(const GraphicsPtr TheGraphics) const
    if(getText() != "" && getFont() != NullFC)
    {
       //Calculate Alignment
-      Pnt2s AlignedPosition;
-      Pnt2s TextTopLeft, TextBottomRight;
+      Pnt2f AlignedPosition;
+      Pnt2f TextTopLeft, TextBottomRight;
       getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
 
       AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),getVerticalAlignment(), getHorizontalAlignment());
@@ -610,26 +610,26 @@ void Button::setDisabledImage(const std::string& Path)
 
 
   
-void Button::getTextBounds(Pnt2s& TextTopLeft, Pnt2s& TextBottomRight) const
+void Button::getTextBounds(Pnt2f& TextTopLeft, Pnt2f& TextBottomRight) const
 {
       getFont()->getBounds(ButtonPtr(this)->getText(), TextTopLeft, TextBottomRight);
 }
 
 
-void Button::setPreferredSizeByContents(const UInt16 Insets)
+void Button::setPreferredSizeByContents(const Real32 Insets)
 {
-	  Pnt2s TextTopLeft, TextBottomRight;   
+	  Pnt2f TextTopLeft, TextBottomRight;   
 	  // Get the Font bounds
 	  getFont()->getBounds(ButtonPtr(this)->getText(), TextTopLeft, TextBottomRight);
-	  Pnt2s TopLeft, BottomRight;
+	  Pnt2f TopLeft, BottomRight;
 	  // Returns boundary required for Border
       getInsideBorderBounds(TopLeft, BottomRight);
 
-	  UInt16 Left, Right, Top, Bottom;
+	  Real32 Left, Right, Top, Bottom;
 	  getDrawnBorder()->getInsets(Left, Right, Top, Bottom);
 
 	  // Uses these sizes and size Button
-	  Vec2s PreferredSize = (TextBottomRight - TextTopLeft) + Vec2s(Left+Right+Insets, Top+Bottom+Insets);
+	  Vec2f PreferredSize = (TextBottomRight - TextTopLeft) + Vec2f(Left+Right+Insets, Top+Bottom+Insets);
 	  beginEditCP(ButtonPtr(this), Button::PreferredSizeFieldMask);
 		setPreferredSize(PreferredSize);
 	  endEditCP(ButtonPtr(this), Button::PreferredSizeFieldMask);
@@ -716,7 +716,7 @@ void Button::ButtonArmedListener::mouseReleased(const MouseEvent& e)
 {
 	if(e.getButton() == MouseEvent::BUTTON1)
 	{
-		Pnt2s MousePos = ViewportToDrawingSurface(e.getLocation(), _Button->getParentWindow()->getDrawingSurface(), e.getViewport());
+		Pnt2f MousePos = ViewportToDrawingSurface(e.getLocation(), _Button->getParentWindow()->getDrawingSurface(), e.getViewport());
         //If the Mouse is not within the button
         if(!_Button->isContained(MousePos))
         {

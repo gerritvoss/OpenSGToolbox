@@ -71,7 +71,7 @@ void StaticLayoutSpring::initMethod (void)
 {
 }
 
-StaticLayoutSpringPtr StaticLayoutSpring::create (const Int32& Preferred)
+StaticLayoutSpringPtr StaticLayoutSpring::create (const Real32& Preferred)
 {
     StaticLayoutSpringPtr NewSpring = createEmpty();
 
@@ -82,7 +82,7 @@ StaticLayoutSpringPtr StaticLayoutSpring::create (const Int32& Preferred)
     return NewSpring;
 }
 
-StaticLayoutSpringPtr StaticLayoutSpring::create (const Int32& Minimum, const Int32& Preferred, const Int32& Maximum)
+StaticLayoutSpringPtr StaticLayoutSpring::create (const Real32& Minimum, const Real32& Preferred, const Real32& Maximum)
 {
     StaticLayoutSpringPtr NewSpring = createEmpty();
 
@@ -99,17 +99,17 @@ StaticLayoutSpringPtr StaticLayoutSpring::create (const Int32& Minimum, const In
  *                           Instance methods                              *
 \***************************************************************************/
 
-Int32 StaticLayoutSpring::getMinimumValue(void) const
+Real32 StaticLayoutSpring::getMinimumValue(void) const
 {
     return getMinimum();
 }
 
-Int32 StaticLayoutSpring::getPreferredValue(void) const
+Real32 StaticLayoutSpring::getPreferredValue(void) const
 {
     return getPreferred();
 }
 
-Int32 StaticLayoutSpring::getMaximumValue(void) const
+Real32 StaticLayoutSpring::getMaximumValue(void) const
 {
     return getMaximum();
 }

@@ -77,7 +77,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TexturedQuadUIDrawObject : public Textured
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 	virtual void draw(const GraphicsPtr Graphics) const;
-    virtual void getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+    virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/

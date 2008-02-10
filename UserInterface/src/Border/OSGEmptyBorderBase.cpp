@@ -83,16 +83,16 @@ const OSG::BitVector EmptyBorderBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var UInt32          EmptyBorderBase::_sfLeftWidth
+/*! \var Real32          EmptyBorderBase::_sfLeftWidth
     
 */
-/*! \var UInt32          EmptyBorderBase::_sfRightWidth
+/*! \var Real32          EmptyBorderBase::_sfRightWidth
     
 */
-/*! \var UInt32          EmptyBorderBase::_sfTopWidth
+/*! \var Real32          EmptyBorderBase::_sfTopWidth
     
 */
-/*! \var UInt32          EmptyBorderBase::_sfBottomWidth
+/*! \var Real32          EmptyBorderBase::_sfBottomWidth
     
 */
 
@@ -100,22 +100,22 @@ const OSG::BitVector EmptyBorderBase::MTInfluenceMask =
 
 FieldDescription *EmptyBorderBase::_desc[] = 
 {
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "LeftWidth", 
                      LeftWidthFieldId, LeftWidthFieldMask,
                      false,
                      (FieldAccessMethod) &EmptyBorderBase::getSFLeftWidth),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "RightWidth", 
                      RightWidthFieldId, RightWidthFieldMask,
                      false,
                      (FieldAccessMethod) &EmptyBorderBase::getSFRightWidth),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "TopWidth", 
                      TopWidthFieldId, TopWidthFieldMask,
                      false,
                      (FieldAccessMethod) &EmptyBorderBase::getSFTopWidth),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "BottomWidth", 
                      BottomWidthFieldId, BottomWidthFieldMask,
                      false,
@@ -195,10 +195,10 @@ void EmptyBorderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 EmptyBorderBase::EmptyBorderBase(void) :
-    _sfLeftWidth              (UInt32(0)), 
-    _sfRightWidth             (UInt32(0)), 
-    _sfTopWidth               (UInt32(0)), 
-    _sfBottomWidth            (UInt32(0)), 
+    _sfLeftWidth              (Real32(0)), 
+    _sfRightWidth             (Real32(0)), 
+    _sfTopWidth               (Real32(0)), 
+    _sfBottomWidth            (Real32(0)), 
     Inherited() 
 {
 }

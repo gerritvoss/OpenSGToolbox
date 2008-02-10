@@ -60,7 +60,7 @@ bool ExitApp = false;
 
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // Create a class to allow for the use of the Escape
 // key to exit
@@ -258,8 +258,8 @@ int main(int argc, char **argv)
 
     // Show the whole scene
     mgr->showAll();
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(750,750),
+    TheWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(750,750),
                                         "OpenSG 33ComboBox Window");
 
     while(!ExitApp)
@@ -281,7 +281,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

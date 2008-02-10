@@ -67,7 +67,7 @@
 
 #include "OSGLayoutConstraints.h" // Parent
 
-#include <OpenSG/OSGVec2sFields.h> // Position type
+#include <OpenSG/OSGVec2fFields.h> // Position type
 
 #include "OSGAbsoluteLayoutConstraintsFields.h"
 
@@ -122,17 +122,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbsoluteLayoutConstraintsBase : public Lay
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPnt2s             *getSFPosition       (void);
+           SFPnt2f             *getSFPosition       (void);
 
-           Pnt2s               &getPosition       (void);
-     const Pnt2s               &getPosition       (void) const;
+           Pnt2f               &getPosition       (void);
+     const Pnt2f               &getPosition       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setPosition       ( const Pnt2s &value );
+     void setPosition       ( const Pnt2f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -175,7 +175,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbsoluteLayoutConstraintsBase : public Lay
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt2s             _sfPosition;
+    SFPnt2f             _sfPosition;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

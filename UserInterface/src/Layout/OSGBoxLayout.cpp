@@ -106,15 +106,15 @@ void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr 
 	UInt32 AxisIndex(0);
 	if(getAlignment() != HORIZONTAL_ALIGNMENT ) AxisIndex = 1;
 
-	Pnt2s borderTopLeft, borderBottomRight;
+	Pnt2f borderTopLeft, borderBottomRight;
 	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
-	Vec2s borderSize(borderBottomRight-borderTopLeft);
+	Vec2f borderSize(borderBottomRight-borderTopLeft);
 	UInt32 MajorAxis(borderSize[AxisIndex]);
 	UInt32 totalMajorAxis(0);
 	UInt32 largestMinorAxis(0);
 	UInt32 spacing(0);
-	Vec2s size;
-	Vec2s offset(0,0);
+	Vec2f size;
+	Vec2f offset(0,0);
 
 	/*!
 	  This first sweep through the components sets each component to its

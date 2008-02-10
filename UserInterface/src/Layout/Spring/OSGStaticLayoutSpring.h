@@ -84,19 +84,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING StaticLayoutSpring : public StaticLayoutSp
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  StaticLayoutSpringPtr      create          (const Int32& Preferred); 
-    static  StaticLayoutSpringPtr      create          (const Int32& Minimum, const Int32& Preferred, const Int32& Maximum); 
+    static  StaticLayoutSpringPtr      create          (const Real32& Preferred); 
+    static  StaticLayoutSpringPtr      create          (const Real32& Minimum, const Real32& Preferred, const Real32& Maximum); 
     
     /*! \}                                                                 */
 
     //Returns the maximum value of this LayoutSpringPtr.
-    virtual Int32 getMinimumValue(void) const;
+    virtual Real32 getMinimumValue(void) const;
 
     //Returns the Preferred value of this LayoutSpringPtr.
-    virtual Int32 getPreferredValue(void) const;
+    virtual Real32 getPreferredValue(void) const;
 
     //Returns the minimum value of this LayoutSpringPtr.
-    virtual Int32 getMaximumValue(void) const;
+    virtual Real32 getMaximumValue(void) const;
 
     /*=========================  PROTECTED  ===============================*/
   protected:

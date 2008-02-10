@@ -79,7 +79,7 @@ void LineUIDrawObject::draw(const GraphicsPtr Graphics) const
 	Graphics->drawLine(getTopLeft(), getBottomRight(), getWidth(), getColor(), getOpacity());
 }
 
-void LineUIDrawObject::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+void LineUIDrawObject::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
 	TopLeft = getTopLeft();
 	BottomRight = getBottomRight();

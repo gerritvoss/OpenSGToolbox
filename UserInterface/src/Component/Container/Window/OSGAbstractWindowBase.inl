@@ -121,14 +121,14 @@ SFBool *AbstractWindowBase::getSFIsMaximized(void)
 
 //! Get the AbstractWindow::_sfPreviousPosition field.
 inline
-SFPnt2s *AbstractWindowBase::getSFPreviousPosition(void)
+SFPnt2f *AbstractWindowBase::getSFPreviousPosition(void)
 {
     return &_sfPreviousPosition;
 }
 
 //! Get the AbstractWindow::_sfPreviousSize field.
 inline
-SFVec2s *AbstractWindowBase::getSFPreviousSize(void)
+SFVec2f *AbstractWindowBase::getSFPreviousSize(void)
 {
     return &_sfPreviousSize;
 }
@@ -360,42 +360,42 @@ void AbstractWindowBase::setIsMaximized(const bool &value)
 
 //! Get the value of the AbstractWindow::_sfPreviousPosition field.
 inline
-Pnt2s &AbstractWindowBase::getPreviousPosition(void)
+Pnt2f &AbstractWindowBase::getPreviousPosition(void)
 {
     return _sfPreviousPosition.getValue();
 }
 
 //! Get the value of the AbstractWindow::_sfPreviousPosition field.
 inline
-const Pnt2s &AbstractWindowBase::getPreviousPosition(void) const
+const Pnt2f &AbstractWindowBase::getPreviousPosition(void) const
 {
     return _sfPreviousPosition.getValue();
 }
 
 //! Set the value of the AbstractWindow::_sfPreviousPosition field.
 inline
-void AbstractWindowBase::setPreviousPosition(const Pnt2s &value)
+void AbstractWindowBase::setPreviousPosition(const Pnt2f &value)
 {
     _sfPreviousPosition.setValue(value);
 }
 
 //! Get the value of the AbstractWindow::_sfPreviousSize field.
 inline
-Vec2s &AbstractWindowBase::getPreviousSize(void)
+Vec2f &AbstractWindowBase::getPreviousSize(void)
 {
     return _sfPreviousSize.getValue();
 }
 
 //! Get the value of the AbstractWindow::_sfPreviousSize field.
 inline
-const Vec2s &AbstractWindowBase::getPreviousSize(void) const
+const Vec2f &AbstractWindowBase::getPreviousSize(void) const
 {
     return _sfPreviousSize.getValue();
 }
 
 //! Set the value of the AbstractWindow::_sfPreviousSize field.
 inline
-void AbstractWindowBase::setPreviousSize(const Vec2s &value)
+void AbstractWindowBase::setPreviousSize(const Vec2f &value)
 {
     _sfPreviousSize.setValue(value);
 }

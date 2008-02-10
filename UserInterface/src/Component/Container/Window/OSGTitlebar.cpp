@@ -104,12 +104,12 @@ std::string Titlebar::getTitle(void) const
 
 void Titlebar::updateLayout(void)
 {
-	Pnt2s InsetsTopLeft, InsetsBottomRight;
+	Pnt2f InsetsTopLeft, InsetsBottomRight;
 	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
-	Vec2s InsetsSize(InsetsBottomRight - InsetsTopLeft);
+	Vec2f InsetsSize(InsetsBottomRight - InsetsTopLeft);
 
-	Pnt2s FrameIconPos;
-	Vec2s FrameIconSize;
+	Pnt2f FrameIconPos;
+	Vec2f FrameIconSize;
 	if(getFrameIcon() != NullFC)
 	{
 		FrameIconPos = InsetsTopLeft;
@@ -119,41 +119,41 @@ void Titlebar::updateLayout(void)
 			getFrameIcon()->setSize(FrameIconSize);
 		endEditCP(getFrameIcon(), Component::PositionFieldMask | Component::SizeFieldMask);
 	}
-	Pnt2s CloseButtonPos(InsetsBottomRight.x(), InsetsTopLeft.y()+1);
-	Vec2s CloseButtonSize;
+	Pnt2f CloseButtonPos(InsetsBottomRight.x(), InsetsTopLeft.y()+1);
+	Vec2f CloseButtonSize;
 	if(getDrawClose() && getCloseButton() != NullFC)
 	{
 		CloseButtonSize.setValues(getCloseButton()->getPreferredSize().x(), InsetsSize.y()-2);
-		CloseButtonPos -= Vec2s(CloseButtonSize.x(),0) + Vec2s(3,0);
+		CloseButtonPos -= Vec2f(CloseButtonSize.x(),0) + Vec2f(3,0);
 		beginEditCP(getCloseButton(), Component::PositionFieldMask | Component::SizeFieldMask);
 			getCloseButton()->setPosition(CloseButtonPos);
 			getCloseButton()->setSize(CloseButtonSize);
 		endEditCP(getCloseButton(), Component::PositionFieldMask | Component::SizeFieldMask);
 	}
-	Pnt2s MaximizeButtonPos(CloseButtonPos);
-	Vec2s MaximizeButtonSize;
+	Pnt2f MaximizeButtonPos(CloseButtonPos);
+	Vec2f MaximizeButtonSize;
 	if(getDrawMaximize() && getMaximizeButton() != NullFC)
 	{
 		MaximizeButtonSize.setValues(getMaximizeButton()->getPreferredSize().x(), InsetsSize.y()-2);
-		MaximizeButtonPos -= Vec2s(MaximizeButtonSize.x(),0) + Vec2s(3,0);
+		MaximizeButtonPos -= Vec2f(MaximizeButtonSize.x(),0) + Vec2f(3,0);
 		beginEditCP(getMaximizeButton(), Component::PositionFieldMask | Component::SizeFieldMask);
 			getMaximizeButton()->setPosition(MaximizeButtonPos);
 			getMaximizeButton()->setSize(MaximizeButtonSize);
 		endEditCP(getMaximizeButton(), Component::PositionFieldMask | Component::SizeFieldMask);
 	}
-	Pnt2s IconifyButtonPos(MaximizeButtonPos);
-	Vec2s IconifyButtonSize;
+	Pnt2f IconifyButtonPos(MaximizeButtonPos);
+	Vec2f IconifyButtonSize;
 	if(getDrawIconify() && getIconifyButton() != NullFC)
 	{
 		IconifyButtonSize.setValues(getIconifyButton()->getPreferredSize().x(), InsetsSize.y()-2);
-		IconifyButtonPos -= Vec2s(IconifyButtonSize.x(),0) + Vec2s(3,0);
+		IconifyButtonPos -= Vec2f(IconifyButtonSize.x(),0) + Vec2f(3,0);
 		beginEditCP(getIconifyButton(), Component::PositionFieldMask | Component::SizeFieldMask);
 			getIconifyButton()->setPosition(IconifyButtonPos);
 			getIconifyButton()->setSize(IconifyButtonSize);
 		endEditCP(getIconifyButton(), Component::PositionFieldMask | Component::SizeFieldMask);
 	}
-	Pnt2s TitleLabelPos(FrameIconPos + FrameIconSize);
-	Vec2s TitleLabelSize;
+	Pnt2f TitleLabelPos(FrameIconPos + FrameIconSize);
+	Vec2f TitleLabelSize;
 	if(getTitleLabel() != NullFC)
 	{
 		TitleLabelSize.setValues(IconifyButtonPos.x()-1-FrameIconPos.x()-FrameIconSize.x(), InsetsSize.y());
@@ -166,7 +166,7 @@ void Titlebar::updateLayout(void)
 
 void Titlebar::updateClipBounds(void)
 {
-	Pnt2s TopLeft, BottomRight;
+	Pnt2f TopLeft, BottomRight;
 	if(getParentContainer() == NullFC)
 	{
 		//If I have no parent container use my bounds
@@ -178,29 +178,29 @@ void Titlebar::updateClipBounds(void)
 		     //My Bounds
 		     //My Parent Containers Clip Bounds
 		     //My Parent Containers Inset Bounds
-        Pnt2s MyTopLeft,MyBottomRight;
+        Pnt2f MyTopLeft,MyBottomRight;
         getBounds(MyTopLeft,MyBottomRight);
 
 		//Update my Parent Container's Clip Bounds
 		//Container::Ptr::dcast(getParentContainer())->updateClipBounds();
 
 		//Get Parent Container's Clip Bounds
-		Pnt2s ContainerClipTopLeft, ContainerClipBottomRight;
+		Pnt2f ContainerClipTopLeft, ContainerClipBottomRight;
 		InternalWindow::Ptr::dcast(getParentWindow())->getClipBounds(ContainerClipTopLeft,ContainerClipBottomRight);
 		
         //Parent Container's Clip Bounds are in the Parent Container's Coordinate space
         //We need to convert them to this Components Coordinate space
-        ContainerClipTopLeft -= Vec2s(getPosition());
-		ContainerClipBottomRight -= Vec2s(getPosition());
+        ContainerClipTopLeft -= Vec2f(getPosition());
+		ContainerClipBottomRight -= Vec2f(getPosition());
 
 		//Get Parent Container's Titlebar Bounds
-		Pnt2s ContainerInsetTopLeft, ContainerInsetBottomRight;
+		Pnt2f ContainerInsetTopLeft, ContainerInsetBottomRight;
 		InternalWindow::Ptr::dcast(getParentWindow())->getTitlebarBounds(ContainerInsetTopLeft, ContainerInsetBottomRight);
 		
         //Parent Container's Inset Bounds are in the Parent Container's Coordinate space
         //We need to convert them to this Components Coordinate space
-        ContainerInsetTopLeft -= Vec2s(getPosition());
-		ContainerInsetBottomRight -= Vec2s(getPosition());
+        ContainerInsetTopLeft -= Vec2f(getPosition());
+		ContainerInsetBottomRight -= Vec2f(getPosition());
 
 		//Get the intersection of my bounds with my parent containers clip bounds
 		quadIntersection(MyTopLeft,MyBottomRight,

@@ -85,7 +85,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SumLayoutSpring : public SumLayoutSpringBa
     static  SumLayoutSpringPtr create (LayoutSpringPtr TheSpring1, LayoutSpringPtr TheSpring2); 
     
     /*! \}                                                                 */
-    virtual Int32 operation(const Int32& Left, const Int32& Right) const;
+    virtual Real32 operation(const Real32& Left, const Real32& Right) const;
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -107,7 +107,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SumLayoutSpring : public SumLayoutSpringBa
     virtual ~SumLayoutSpring(void); 
 
     /*! \}                                                                 */
-    virtual void setNonClearValue(const Int32& value);
+    virtual void setNonClearValue(const Real32& value);
     
     /*==========================  PRIVATE  ================================*/
   private:

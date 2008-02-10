@@ -74,7 +74,7 @@ const OSG::BitVector AbsoluteLayoutConstraintsBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Pnt2s           AbsoluteLayoutConstraintsBase::_sfPosition
+/*! \var Pnt2f           AbsoluteLayoutConstraintsBase::_sfPosition
     
 */
 
@@ -82,7 +82,7 @@ const OSG::BitVector AbsoluteLayoutConstraintsBase::MTInfluenceMask =
 
 FieldDescription *AbsoluteLayoutConstraintsBase::_desc[] = 
 {
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "Position", 
                      PositionFieldId, PositionFieldMask,
                      false,
@@ -162,7 +162,7 @@ void AbsoluteLayoutConstraintsBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect
 #endif
 
 AbsoluteLayoutConstraintsBase::AbsoluteLayoutConstraintsBase(void) :
-    _sfPosition               (Pnt2s(0,0)), 
+    _sfPosition               (Pnt2f(0,0)), 
     Inherited() 
 {
 }

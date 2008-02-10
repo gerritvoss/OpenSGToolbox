@@ -58,7 +58,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // Create the WindowEvent 
 WindowEventProducerPtr TutorialWindowEventProducer;
@@ -177,32 +177,32 @@ int main(int argc, char **argv)
     ******************************************************/
 
 	beginEditCP(ExampleButton1, Button::PreferredSizeFieldMask);
-        ExampleButton1->setPreferredSize(Vec2s(50,50));
+        ExampleButton1->setPreferredSize(Vec2f(50,50));
 		ExampleButton1->setText("Button 1");
     endEditCP(ExampleButton1, Button::PreferredSizeFieldMask);
 
 	beginEditCP(ExampleButton2, Button::PreferredSizeFieldMask);
-        ExampleButton2->setPreferredSize(Vec2s(50,50));
+        ExampleButton2->setPreferredSize(Vec2f(50,50));
 		ExampleButton2->setText("Button 2");
     endEditCP(ExampleButton2, Button::PreferredSizeFieldMask);
 
 	beginEditCP(ExampleButton3, Button::PreferredSizeFieldMask);
-        ExampleButton3->setPreferredSize(Vec2s(50,50));
+        ExampleButton3->setPreferredSize(Vec2f(50,50));
 		ExampleButton3->setText("Button 3");
     endEditCP(ExampleButton3, Button::PreferredSizeFieldMask);
 
 	beginEditCP(ExampleButton4, Button::PreferredSizeFieldMask);
-        ExampleButton4->setPreferredSize(Vec2s(50,50));
+        ExampleButton4->setPreferredSize(Vec2f(50,50));
 		ExampleButton4->setText("Button 4");
     endEditCP(ExampleButton4, Button::PreferredSizeFieldMask);
 
 	beginEditCP(ExampleButton5, Button::PreferredSizeFieldMask);
-        ExampleButton5->setPreferredSize(Vec2s(50,50));
+        ExampleButton5->setPreferredSize(Vec2f(50,50));
 		ExampleButton5->setText("Button 5");
     endEditCP(ExampleButton5, Button::PreferredSizeFieldMask);
 
 	beginEditCP(ExampleButton6, Button::PreferredSizeFieldMask);
-        ExampleButton6->setPreferredSize(Vec2s(50,50));
+        ExampleButton6->setPreferredSize(Vec2f(50,50));
 		ExampleButton6->setText("Button 6");
     endEditCP(ExampleButton6, Button::PreferredSizeFieldMask);
     
@@ -303,8 +303,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(900,900),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(900,900),
                                         "OpenSG 36SpringLayout Window");
 
     //Main Event Loop
@@ -327,7 +327,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

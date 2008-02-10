@@ -87,13 +87,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentWidthLayoutSpring : public Compon
     /*! \}                                                                 */
 
     //Returns the maximum value of this LayoutSpringPtr.
-    virtual Int32 getMinimumValue(void) const;
+    virtual Real32 getMinimumValue(void) const;
 
     //Returns the Preferred value of this LayoutSpringPtr.
-    virtual Int32 getPreferredValue(void) const;
+    virtual Real32 getPreferredValue(void) const;
 
     //Returns the minimum value of this LayoutSpringPtr.
-    virtual Int32 getMaximumValue(void) const;
+    virtual Real32 getMaximumValue(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

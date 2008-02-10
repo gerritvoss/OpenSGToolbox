@@ -79,10 +79,10 @@ void ArcUIDrawObject::draw(const GraphicsPtr Graphics) const
 	Graphics->drawArc(getCenter(),getWidth(),getHeight(), getStartAngleRad(), getEndAngleRad(), getLineWidth(), getSubDivisions(), getColor(),getOpacity());
 }
 
-void ArcUIDrawObject::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+void ArcUIDrawObject::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
-	TopLeft = Pnt2s(getCenter().x()-getWidth(), getCenter().y()-getHeight());
-	BottomRight = Pnt2s(getCenter().x()+getWidth(), getCenter().y()+getHeight());
+	TopLeft = Pnt2f(getCenter().x()-getWidth(), getCenter().y()-getHeight());
+	BottomRight = Pnt2f(getCenter().x()+getWidth(), getCenter().y()+getHeight());
 }
 
 /*-------------------------------------------------------------------------*\

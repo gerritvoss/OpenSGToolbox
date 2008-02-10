@@ -101,16 +101,16 @@ const OSG::BitVector TexturedQuadUIDrawObjectBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Pnt2s           TexturedQuadUIDrawObjectBase::_sfPoint1
+/*! \var Pnt2f           TexturedQuadUIDrawObjectBase::_sfPoint1
     
 */
-/*! \var Pnt2s           TexturedQuadUIDrawObjectBase::_sfPoint2
+/*! \var Pnt2f           TexturedQuadUIDrawObjectBase::_sfPoint2
     
 */
-/*! \var Pnt2s           TexturedQuadUIDrawObjectBase::_sfPoint3
+/*! \var Pnt2f           TexturedQuadUIDrawObjectBase::_sfPoint3
     
 */
-/*! \var Pnt2s           TexturedQuadUIDrawObjectBase::_sfPoint4
+/*! \var Pnt2f           TexturedQuadUIDrawObjectBase::_sfPoint4
     
 */
 /*! \var Vec2f           TexturedQuadUIDrawObjectBase::_sfTexCoord1
@@ -136,22 +136,22 @@ const OSG::BitVector TexturedQuadUIDrawObjectBase::MTInfluenceMask =
 
 FieldDescription *TexturedQuadUIDrawObjectBase::_desc[] = 
 {
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "Point1", 
                      Point1FieldId, Point1FieldMask,
                      false,
                      (FieldAccessMethod) &TexturedQuadUIDrawObjectBase::getSFPoint1),
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "Point2", 
                      Point2FieldId, Point2FieldMask,
                      false,
                      (FieldAccessMethod) &TexturedQuadUIDrawObjectBase::getSFPoint2),
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "Point3", 
                      Point3FieldId, Point3FieldMask,
                      false,
                      (FieldAccessMethod) &TexturedQuadUIDrawObjectBase::getSFPoint3),
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "Point4", 
                      Point4FieldId, Point4FieldMask,
                      false,
@@ -261,10 +261,10 @@ void TexturedQuadUIDrawObjectBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 TexturedQuadUIDrawObjectBase::TexturedQuadUIDrawObjectBase(void) :
-    _sfPoint1                 (Pnt2s(0,0)), 
-    _sfPoint2                 (Pnt2s(0,1)), 
-    _sfPoint3                 (Pnt2s(1,1)), 
-    _sfPoint4                 (Pnt2s(1,0)), 
+    _sfPoint1                 (Pnt2f(0,0)), 
+    _sfPoint2                 (Pnt2f(0,1)), 
+    _sfPoint3                 (Pnt2f(1,1)), 
+    _sfPoint4                 (Pnt2f(1,0)), 
     _sfTexCoord1              (Vec2f(0.0,0.0)), 
     _sfTexCoord2              (Vec2f(0.0,1.0)), 
     _sfTexCoord3              (Vec2f(1.0,1.0)), 

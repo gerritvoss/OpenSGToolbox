@@ -85,8 +85,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIFont : public UIFontBase
     void layout(const std::string &utf8Text, const TextLayoutParam &param, TextLayoutResult &result);
     const TextTXFGlyph& getTXFGlyph(TextGlyph::Index glyphIndex);
 
-	void getBounds(const std::string& Text, Pnt2s& TopLeft, Pnt2s& BottomRight);
-	Vec2s getBounds(const std::string& Text);
+	void getBounds(const std::string& Text, Pnt2f& TopLeft, Pnt2f& BottomRight);
+	Vec2f getBounds(const std::string& Text);
    
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/

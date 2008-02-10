@@ -114,7 +114,7 @@ protected:
 typedef NumberSpinnerModel<Int8> Int8SpinnerModel;
 typedef boost::intrusive_ptr<Int8SpinnerModel> Int8SpinnerModelPtr;
 
-typedef NumberSpinnerModel<Int16> Int16SpinnerModel;
+typedef NumberSpinnerModel<Real32> Int16SpinnerModel;
 typedef boost::intrusive_ptr<Int16SpinnerModel> Int16SpinnerModelPtr;
 
 typedef NumberSpinnerModel<Int32> Int32SpinnerModel;

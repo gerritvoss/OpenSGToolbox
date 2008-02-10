@@ -75,7 +75,7 @@ const OSG::BitVector AbstractLayoutSpringBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Int32           AbstractLayoutSpringBase::_sfSize
+/*! \var Real32          AbstractLayoutSpringBase::_sfSize
     
 */
 
@@ -83,7 +83,7 @@ const OSG::BitVector AbstractLayoutSpringBase::MTInfluenceMask =
 
 FieldDescription *AbstractLayoutSpringBase::_desc[] = 
 {
-    new FieldDescription(SFInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "Size", 
                      SizeFieldId, SizeFieldMask,
                      false,
@@ -154,7 +154,7 @@ void AbstractLayoutSpringBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 AbstractLayoutSpringBase::AbstractLayoutSpringBase(void) :
-    _sfSize                   (Int32(LayoutSpring::VALUE_NOT_SET)), 
+    _sfSize                   (Real32(LayoutSpring::VALUE_NOT_SET)), 
     Inherited() 
 {
 }

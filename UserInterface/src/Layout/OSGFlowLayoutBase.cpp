@@ -57,7 +57,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 #include "OSGFlowLayoutBase.h"
 #include "OSGFlowLayout.h"
 
@@ -96,10 +96,10 @@ const OSG::BitVector FlowLayoutBase::MTInfluenceMask =
 /*! \var UInt32          FlowLayoutBase::_sfAlignment
     
 */
-/*! \var Int32           FlowLayoutBase::_sfHorizontalGap
+/*! \var Real32          FlowLayoutBase::_sfHorizontalGap
     
 */
-/*! \var Int32           FlowLayoutBase::_sfVerticalGap
+/*! \var Real32          FlowLayoutBase::_sfVerticalGap
     
 */
 /*! \var UInt32          FlowLayoutBase::_sfMajorAxisAlignment
@@ -121,12 +121,12 @@ FieldDescription *FlowLayoutBase::_desc[] =
                      AlignmentFieldId, AlignmentFieldMask,
                      false,
                      (FieldAccessMethod) &FlowLayoutBase::getSFAlignment),
-    new FieldDescription(SFInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "HorizontalGap", 
                      HorizontalGapFieldId, HorizontalGapFieldMask,
                      false,
                      (FieldAccessMethod) &FlowLayoutBase::getSFHorizontalGap),
-    new FieldDescription(SFInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "VerticalGap", 
                      VerticalGapFieldId, VerticalGapFieldMask,
                      false,
@@ -222,8 +222,8 @@ void FlowLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 FlowLayoutBase::FlowLayoutBase(void) :
     _sfAlignment              (UInt32(HORIZONTAL_ALIGNMENT)), 
-    _sfHorizontalGap          (Int32(10)), 
-    _sfVerticalGap            (Int32(10)), 
+    _sfHorizontalGap          (Real32(10)), 
+    _sfVerticalGap            (Real32(10)), 
     _sfMajorAxisAlignment     (UInt32(AXIS_CENTER_ALIGNMENT)), 
     _sfMinorAxisAlignment     (UInt32(AXIS_CENTER_ALIGNMENT)), 
     _sfComponentAlignment     (UInt32(AXIS_CENTER_ALIGNMENT)), 

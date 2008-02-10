@@ -81,14 +81,14 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
 {
    
    //Get Border Insets
-   Pnt2s TopLeft, BottomRight;
+   Pnt2f TopLeft, BottomRight;
    getInsideBorderBounds(TopLeft, BottomRight);
-   Vec2s ComponentSize(BottomRight-TopLeft);
+   Vec2f ComponentSize(BottomRight-TopLeft);
 
    //Render the Image
    //Draw a quad on top of the background according to the alignment and scaling
    //Figure out Scaling
-   Vec2s Size(0.0,0.0);
+   Vec2f Size(0.0,0.0);
    switch(getScale())
    {
    case SCALE_NONE:
@@ -104,15 +104,15 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
 	   Real32 AspectComponent = ComponentSize.x()/ComponentSize.y();
 	   Real32 AspectImage = getTexture()->getImage()->getWidth()/getTexture()->getImage()->getHeight();
 
-	   Vec2s vector(0,0);
+	   Vec2f vector(0,0);
 	   if (AspectComponent < AspectImage)
 	   {
 		   vector[0] = ComponentSize.x();
-		   vector[1] = (Int16)((Real32)ComponentSize.x()/AspectImage);
+		   vector[1] = (Real32)((Real32)ComponentSize.x()/AspectImage);
 	   }
 	   else
 	   {
-		   vector[0] = (Int16)((Real32)ComponentSize.y()*AspectImage);
+		   vector[0] = (Real32)((Real32)ComponentSize.y()*AspectImage);
 		   vector[1] = ComponentSize.y();
 	   }
 	   Size.setValue(vector);
@@ -124,15 +124,15 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
 	   Real32 AspectComponent = ComponentSize.x()/ComponentSize.y();
 	   Real32 AspectImage = getTexture()->getImage()->getWidth()/getTexture()->getImage()->getHeight();
 
-	   Vec2s vector(0,0);
+	   Vec2f vector(0,0);
 	   if (AspectComponent > AspectImage)
 	   {
 		   vector[0] = ComponentSize.x();
-		   vector[1] = (Int16)((Real32)ComponentSize.x()/AspectImage);
+		   vector[1] = (Real32)((Real32)ComponentSize.x()/AspectImage);
 	   }
 	   else
 	   {
-		   vector[0] = (Int16)((Real32)ComponentSize.y()*AspectImage);
+		   vector[0] = (Real32)((Real32)ComponentSize.y()*AspectImage);
 		   vector[1] = ComponentSize.y();
 	   }
 	   Size.setValue(vector);
@@ -146,7 +146,7 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
    }
 
    //Figure out Position
-   Pnt2s Pos( calculateAlignment(TopLeft,ComponentSize, Size, getVerticalAlignment(), getHorizontalAlignment()) );
+   Pnt2f Pos( calculateAlignment(TopLeft,ComponentSize, Size, getVerticalAlignment(), getHorizontalAlignment()) );
 
    Vec2f TexTopLeft(0.0,0.0),
 	     TexTopRight(1.0,0.0),
@@ -190,7 +190,7 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
    }*/
 
    //Draw the Image as a quad
-   TheGraphics->drawQuad(Pos,Pnt2s(Pos[0]+Size[0],Pos[1]),Pos+Size,Pnt2s(Pos[0],Pos[1]+Size[1]),TexTopLeft,TexTopRight, TexBottomRight, TexBottomLeft, getTexture(), getOpacity() );
+   TheGraphics->drawQuad(Pos,Pnt2f(Pos[0]+Size[0],Pos[1]),Pos+Size,Pnt2f(Pos[0],Pos[1]+Size[1]),TexTopLeft,TexTopRight, TexBottomRight, TexBottomLeft, getTexture(), getOpacity() );
 }
 
 void ImageComponent::setImage(ImagePtr Image)

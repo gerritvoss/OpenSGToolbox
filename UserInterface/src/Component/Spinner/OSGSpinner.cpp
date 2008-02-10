@@ -91,8 +91,8 @@ void Spinner::updateLayout(void)
         if(getNextButton() != NullFC)
         {
             beginEditCP(getNextButton(), PositionFieldMask | SizeFieldMask);
-                getNextButton()->setSize(Vec2s(getNextButton()->getPreferredSize().x(), getSize().y()/2));
-                getNextButton()->setPosition(Pnt2s(getSize().x() - getNextButton()->getSize().x(), 0));
+                getNextButton()->setSize(Vec2f(getNextButton()->getPreferredSize().x(), getSize().y()/2));
+                getNextButton()->setPosition(Pnt2f(getSize().x() - getNextButton()->getSize().x(), 0));
             endEditCP(getNextButton(), PositionFieldMask | SizeFieldMask);
         }
 
@@ -100,8 +100,8 @@ void Spinner::updateLayout(void)
         if(getPreviousButton() != NullFC)
         {
             beginEditCP(getPreviousButton(), PositionFieldMask | SizeFieldMask);
-                getPreviousButton()->setSize(Vec2s(getPreviousButton()->getPreferredSize().x(), getSize().y()/2));
-                getPreviousButton()->setPosition(Pnt2s(getSize().x() - getPreviousButton()->getSize().x(), getSize().y()/2));
+                getPreviousButton()->setSize(Vec2f(getPreviousButton()->getPreferredSize().x(), getSize().y()/2));
+                getPreviousButton()->setPosition(Pnt2f(getSize().x() - getPreviousButton()->getSize().x(), getSize().y()/2));
             endEditCP(getPreviousButton(), PositionFieldMask | SizeFieldMask);
         }
         
@@ -109,8 +109,8 @@ void Spinner::updateLayout(void)
         if(getEditor() != NullFC)
         {
             beginEditCP(getEditor(), PositionFieldMask | SizeFieldMask);
-                getEditor()->setSize(Vec2s(getSize().x() - getNextButton()->getSize().x() - getEditorToButtonOffset(), getSize().y()));
-                getEditor()->setPosition(Pnt2s(0,0));
+                getEditor()->setSize(Vec2f(getSize().x() - getNextButton()->getSize().x() - getEditorToButtonOffset(), getSize().y()));
+                getEditor()->setPosition(Pnt2f(0,0));
             endEditCP(getEditor(), PositionFieldMask | SizeFieldMask);
         }
         
@@ -121,8 +121,8 @@ void Spinner::updateLayout(void)
         if(getNextButton() != NullFC)
         {
             beginEditCP(getNextButton(), PositionFieldMask | SizeFieldMask);
-                getNextButton()->setSize(Vec2s(getSize().x()/2, getNextButton()->getPreferredSize().y()));
-                getNextButton()->setPosition(Pnt2s(0, getSize().y() - getNextButton()->getSize().y()));
+                getNextButton()->setSize(Vec2f(getSize().x()/2, getNextButton()->getPreferredSize().y()));
+                getNextButton()->setPosition(Pnt2f(0, getSize().y() - getNextButton()->getSize().y()));
             endEditCP(getNextButton(), PositionFieldMask | SizeFieldMask);
         }
 
@@ -130,8 +130,8 @@ void Spinner::updateLayout(void)
         if(getPreviousButton() != NullFC)
         {
             beginEditCP(getPreviousButton(), PositionFieldMask | SizeFieldMask);
-                getPreviousButton()->setSize(Vec2s(getSize().x()/2, getPreviousButton()->getPreferredSize().y()));
-                getPreviousButton()->setPosition(Pnt2s(getSize().x()/2, getSize().y() - getPreviousButton()->getSize().y()));
+                getPreviousButton()->setSize(Vec2f(getSize().x()/2, getPreviousButton()->getPreferredSize().y()));
+                getPreviousButton()->setPosition(Pnt2f(getSize().x()/2, getSize().y() - getPreviousButton()->getSize().y()));
             endEditCP(getPreviousButton(), PositionFieldMask | SizeFieldMask);
         }
         
@@ -139,8 +139,8 @@ void Spinner::updateLayout(void)
         if(getEditor() != NullFC)
         {
             beginEditCP(getEditor(), PositionFieldMask | SizeFieldMask);
-                getEditor()->setSize(Vec2s(getSize().x(), getSize().y() - getNextButton()->getSize().y() - getEditorToButtonOffset()));
-                getEditor()->setPosition(Pnt2s(0,0));
+                getEditor()->setSize(Vec2f(getSize().x(), getSize().y() - getNextButton()->getSize().y() - getEditorToButtonOffset()));
+                getEditor()->setPosition(Pnt2f(0,0));
             endEditCP(getEditor(), PositionFieldMask | SizeFieldMask);
         }
     }

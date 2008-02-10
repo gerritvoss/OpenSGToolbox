@@ -67,9 +67,9 @@
 
 #include "OSGAbstractLayoutSpring.h" // Parent
 
-#include <OpenSG/OSGInt32Fields.h> // Minimum type
-#include <OpenSG/OSGInt32Fields.h> // Maximum type
-#include <OpenSG/OSGInt32Fields.h> // Preferred type
+#include <OpenSG/OSGReal32Fields.h> // Minimum type
+#include <OpenSG/OSGReal32Fields.h> // Maximum type
+#include <OpenSG/OSGReal32Fields.h> // Preferred type
 
 #include "OSGStaticLayoutSpringFields.h"
 
@@ -128,25 +128,25 @@ class OSG_USERINTERFACELIB_DLLMAPPING StaticLayoutSpringBase : public AbstractLa
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFInt32             *getSFMinimum        (void);
-           SFInt32             *getSFMaximum        (void);
-           SFInt32             *getSFPreferred      (void);
+           SFReal32            *getSFMinimum        (void);
+           SFReal32            *getSFMaximum        (void);
+           SFReal32            *getSFPreferred      (void);
 
-           Int32               &getMinimum        (void);
-     const Int32               &getMinimum        (void) const;
-           Int32               &getMaximum        (void);
-     const Int32               &getMaximum        (void) const;
-           Int32               &getPreferred      (void);
-     const Int32               &getPreferred      (void) const;
+           Real32              &getMinimum        (void);
+     const Real32              &getMinimum        (void) const;
+           Real32              &getMaximum        (void);
+     const Real32              &getMaximum        (void) const;
+           Real32              &getPreferred      (void);
+     const Real32              &getPreferred      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setMinimum        ( const Int32 &value );
-     void setMaximum        ( const Int32 &value );
-     void setPreferred      ( const Int32 &value );
+     void setMinimum        ( const Real32 &value );
+     void setMaximum        ( const Real32 &value );
+     void setPreferred      ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -189,9 +189,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING StaticLayoutSpringBase : public AbstractLa
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFInt32             _sfMinimum;
-    SFInt32             _sfMaximum;
-    SFInt32             _sfPreferred;
+    SFReal32            _sfMinimum;
+    SFReal32            _sfMaximum;
+    SFReal32            _sfPreferred;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

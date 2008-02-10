@@ -80,13 +80,13 @@ const OSG::BitVector RoundedCornerLineBorderBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var UInt32          RoundedCornerLineBorderBase::_sfWidth
+/*! \var Real32          RoundedCornerLineBorderBase::_sfWidth
     
 */
 /*! \var Color4f         RoundedCornerLineBorderBase::_sfColor
     
 */
-/*! \var UInt32          RoundedCornerLineBorderBase::_sfCornerRadius
+/*! \var Real32          RoundedCornerLineBorderBase::_sfCornerRadius
     
 */
 
@@ -94,7 +94,7 @@ const OSG::BitVector RoundedCornerLineBorderBase::MTInfluenceMask =
 
 FieldDescription *RoundedCornerLineBorderBase::_desc[] = 
 {
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "Width", 
                      WidthFieldId, WidthFieldMask,
                      false,
@@ -104,7 +104,7 @@ FieldDescription *RoundedCornerLineBorderBase::_desc[] =
                      ColorFieldId, ColorFieldMask,
                      false,
                      (FieldAccessMethod) &RoundedCornerLineBorderBase::getSFColor),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "CornerRadius", 
                      CornerRadiusFieldId, CornerRadiusFieldMask,
                      false,
@@ -184,9 +184,9 @@ void RoundedCornerLineBorderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 RoundedCornerLineBorderBase::RoundedCornerLineBorderBase(void) :
-    _sfWidth                  (UInt32(1)), 
+    _sfWidth                  (Real32(1)), 
     _sfColor                  (Color4f(0.0,0.0,0.0,1.0)), 
-    _sfCornerRadius           (UInt32(3)), 
+    _sfCornerRadius           (Real32(3)), 
     Inherited() 
 {
 }

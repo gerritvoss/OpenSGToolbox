@@ -48,7 +48,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // 18List Headers
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
@@ -229,21 +229,21 @@ int main(int argc, char **argv)
 
     beginEditCP(SingleSelectionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
         SingleSelectionButton->setText("Single Selection");
-        SingleSelectionButton->setPreferredSize(Vec2s(160, 50));
+        SingleSelectionButton->setPreferredSize(Vec2f(160, 50));
     endEditCP(SingleSelectionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
         SingleSelectionButtonSelectedListener TheSingleSelectionButtonSelectedListener;
         SingleSelectionButton->addButtonSelectedListener(&TheSingleSelectionButtonSelectedListener);
     
     beginEditCP(SingleIntervalSelectionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
         SingleIntervalSelectionButton->setText("Single Interval Selection");
-        SingleIntervalSelectionButton->setPreferredSize(Vec2s(160, 50));
+        SingleIntervalSelectionButton->setPreferredSize(Vec2f(160, 50));
     endEditCP(SingleIntervalSelectionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
         SingleIntervalSelectionButtonSelectedListener TheSingleIntervalSelectionButtonSelectedListener;
         SingleIntervalSelectionButton->addButtonSelectedListener(&TheSingleIntervalSelectionButtonSelectedListener);
     
     beginEditCP(MultipleIntervalSelectionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
         MultipleIntervalSelectionButton->setText("Multiple Interval Selection");
-        MultipleIntervalSelectionButton->setPreferredSize(Vec2s(160, 50));
+        MultipleIntervalSelectionButton->setPreferredSize(Vec2f(160, 50));
     endEditCP(MultipleIntervalSelectionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
         MultipleIntervalSelectionButtonSelectedListener TheMultipleIntervalSelectionButtonSelectedListener;
         MultipleIntervalSelectionButton->addButtonSelectedListener(&TheMultipleIntervalSelectionButtonSelectedListener);
@@ -326,7 +326,7 @@ int main(int argc, char **argv)
     ******************************************************/    
     ListPtr ExampleList = List::create();
 	beginEditCP(ExampleList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask);
-        ExampleList->setPreferredSize(Vec2s(200, 300));
+        ExampleList->setPreferredSize(Vec2f(200, 300));
         ExampleList->setCellOrientation(VERTICAL_ALIGNMENT);
         //ExampleList->setCellOrientation(HORIZONTAL_ALIGNMENT);
     endEditCP(ExampleList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask);
@@ -359,7 +359,7 @@ int main(int argc, char **argv)
     // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
     ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();
     beginEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-        ExampleScrollPanel->setPreferredSize(Vec2s(200,300));
+        ExampleScrollPanel->setPreferredSize(Vec2f(200,300));
         ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     endEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
@@ -426,8 +426,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(900,900),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(900,900),
                                         "OpenSG 18List Window");
 
     //Main Event Loop
@@ -450,7 +450,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

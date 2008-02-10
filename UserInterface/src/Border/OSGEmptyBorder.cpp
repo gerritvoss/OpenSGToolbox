@@ -75,13 +75,13 @@ void EmptyBorder::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void EmptyBorder::draw(const GraphicsPtr g, const Int16 x, const Int16 y , const UInt16 Width, const UInt16 Height, const Real32 Opacity) const
+void EmptyBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity) const
 {
    //Do nothing
    //This is an empty border
 }
 
-void EmptyBorder::getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& Bottom) const
+void EmptyBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bottom) const
 {
    Left = getLeftWidth();
    Right = getRightWidth();

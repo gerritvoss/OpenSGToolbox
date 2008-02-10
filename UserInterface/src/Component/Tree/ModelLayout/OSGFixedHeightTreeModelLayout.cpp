@@ -76,7 +76,7 @@ void FixedHeightTreeModelLayout::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void FixedHeightTreeModelLayout::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight, TreePath path, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn) const
+void FixedHeightTreeModelLayout::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight, TreePath path, Pnt2f TopLeftPlaceIn, Pnt2f BottomRightPlaceIn) const
 {
 	//TODO:Implement
 }

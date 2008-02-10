@@ -196,7 +196,7 @@ SFTime *ButtonBase::getSFActionOnMouseDownRate(void)
 
 //! Get the Button::_sfActiveOffset field.
 inline
-SFVec2s *ButtonBase::getSFActiveOffset(void)
+SFVec2f *ButtonBase::getSFActiveOffset(void)
 {
     return &_sfActiveOffset;
 }
@@ -533,21 +533,21 @@ void ButtonBase::setActionOnMouseDownRate(const Time &value)
 
 //! Get the value of the Button::_sfActiveOffset field.
 inline
-Vec2s &ButtonBase::getActiveOffset(void)
+Vec2f &ButtonBase::getActiveOffset(void)
 {
     return _sfActiveOffset.getValue();
 }
 
 //! Get the value of the Button::_sfActiveOffset field.
 inline
-const Vec2s &ButtonBase::getActiveOffset(void) const
+const Vec2f &ButtonBase::getActiveOffset(void) const
 {
     return _sfActiveOffset.getValue();
 }
 
 //! Set the value of the Button::_sfActiveOffset field.
 inline
-void ButtonBase::setActiveOffset(const Vec2s &value)
+void ButtonBase::setActiveOffset(const Vec2f &value)
 {
     _sfActiveOffset.setValue(value);
 }

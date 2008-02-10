@@ -63,7 +63,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LayoutSpring : public LayoutSpringBase
 
     /*==========================  PUBLIC  =================================*/
   public:
-    static Int32 VALUE_NOT_SET;
+    static Real32 VALUE_NOT_SET;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -83,19 +83,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING LayoutSpring : public LayoutSpringBase
     /*! \}                                                                 */
 
     //Returns the maximum value of this LayoutSpringPtr.
-    virtual Int32 getMinimumValue(void) const = 0;
+    virtual Real32 getMinimumValue(void) const = 0;
 
     //Returns the Preferred value of this LayoutSpringPtr.
-    virtual Int32 getPreferredValue(void) const = 0;
+    virtual Real32 getPreferredValue(void) const = 0;
 
     //Returns the minimum value of this LayoutSpringPtr.
-    virtual Int32 getMaximumValue(void) const = 0;
+    virtual Real32 getMaximumValue(void) const = 0;
 
     //Returns the current value of this LayoutSpringPtr.
-    virtual Int32 getValue(void) const = 0;
+    virtual Real32 getValue(void) const = 0;
 
     //Sets the current value of this LayoutSpringPtr.
-    virtual void setValue(const Int32& value) = 0;
+    virtual void setValue(const Real32& value) = 0;
 
     Real32 getStrain(void) const;
 
@@ -104,10 +104,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING LayoutSpring : public LayoutSpringBase
     virtual bool isCyclic(SpringLayoutPtr l) const;
 
     //Returns a strut -- a spring whose minimum, preferred, and maximum values each have the value pref.
-    static LayoutSpringPtr constant(const Int32& pref);
+    static LayoutSpringPtr constant(const Real32& pref);
 
     //Returns a spring whose minimum, preferred, and maximum values have the values: min, pref, and max respectively.
-    static LayoutSpringPtr constant(const Int32& min, const Int32& pref, const Int32& max);
+    static LayoutSpringPtr constant(const Real32& min, const Real32& pref, const Real32& max);
 
     //Returns -s: a spring running in the opposite direction to s.
     static LayoutSpringPtr minus(LayoutSpringPtr s);

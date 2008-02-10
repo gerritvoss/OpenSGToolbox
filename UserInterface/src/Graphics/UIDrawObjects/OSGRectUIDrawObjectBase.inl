@@ -49,7 +49,7 @@
 \*****************************************************************************/
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -98,14 +98,14 @@ RectUIDrawObjectPtr RectUIDrawObjectBase::createEmpty(void)
 
 //! Get the RectUIDrawObject::_sfTopLeft field.
 inline
-SFPnt2s *RectUIDrawObjectBase::getSFTopLeft(void)
+SFPnt2f *RectUIDrawObjectBase::getSFTopLeft(void)
 {
     return &_sfTopLeft;
 }
 
 //! Get the RectUIDrawObject::_sfBottomRight field.
 inline
-SFPnt2s *RectUIDrawObjectBase::getSFBottomRight(void)
+SFPnt2f *RectUIDrawObjectBase::getSFBottomRight(void)
 {
     return &_sfBottomRight;
 }
@@ -127,42 +127,42 @@ SFReal32 *RectUIDrawObjectBase::getSFOpacity(void)
 
 //! Get the value of the RectUIDrawObject::_sfTopLeft field.
 inline
-Pnt2s &RectUIDrawObjectBase::getTopLeft(void)
+Pnt2f &RectUIDrawObjectBase::getTopLeft(void)
 {
     return _sfTopLeft.getValue();
 }
 
 //! Get the value of the RectUIDrawObject::_sfTopLeft field.
 inline
-const Pnt2s &RectUIDrawObjectBase::getTopLeft(void) const
+const Pnt2f &RectUIDrawObjectBase::getTopLeft(void) const
 {
     return _sfTopLeft.getValue();
 }
 
 //! Set the value of the RectUIDrawObject::_sfTopLeft field.
 inline
-void RectUIDrawObjectBase::setTopLeft(const Pnt2s &value)
+void RectUIDrawObjectBase::setTopLeft(const Pnt2f &value)
 {
     _sfTopLeft.setValue(value);
 }
 
 //! Get the value of the RectUIDrawObject::_sfBottomRight field.
 inline
-Pnt2s &RectUIDrawObjectBase::getBottomRight(void)
+Pnt2f &RectUIDrawObjectBase::getBottomRight(void)
 {
     return _sfBottomRight.getValue();
 }
 
 //! Get the value of the RectUIDrawObject::_sfBottomRight field.
 inline
-const Pnt2s &RectUIDrawObjectBase::getBottomRight(void) const
+const Pnt2f &RectUIDrawObjectBase::getBottomRight(void) const
 {
     return _sfBottomRight.getValue();
 }
 
 //! Set the value of the RectUIDrawObject::_sfBottomRight field.
 inline
-void RectUIDrawObjectBase::setBottomRight(const Pnt2s &value)
+void RectUIDrawObjectBase::setBottomRight(const Pnt2f &value)
 {
     _sfBottomRight.setValue(value);
 }

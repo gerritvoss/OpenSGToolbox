@@ -119,7 +119,7 @@ MFReal32 *GridBagLayoutBase::getMFColumnWeights(void)
 
 //! Get the GridBagLayout::_mfColumnWidths field.
 inline
-MFUInt16 *GridBagLayoutBase::getMFColumnWidths(void)
+MFReal32 *GridBagLayoutBase::getMFColumnWidths(void)
 {
     return &_mfColumnWidths;
 }
@@ -133,7 +133,7 @@ MFReal32 *GridBagLayoutBase::getMFRowWeights(void)
 
 //! Get the GridBagLayout::_mfRowHeights field.
 inline
-MFUInt16 *GridBagLayoutBase::getMFRowHeights(void)
+MFReal32 *GridBagLayoutBase::getMFRowHeights(void)
 {
     return &_mfRowHeights;
 }
@@ -158,19 +158,6 @@ inline
 void GridBagLayoutBase::setRows(const UInt32 &value)
 {
     _sfRows.setValue(value);
-	// force the rows mf to be the same number as the value
-	while (_mfRowWeights.size() > value)
-		_mfRowWeights.erase(_mfRowWeights.end());
-	if (_mfRowWeights.size() < value)
-	{
-		Real32 ratio = 1.0 / (_mfRowWeights.size() - value);
-		while (_mfRowWeights.size() < value)
-			_mfRowWeights.addValue(ratio);
-	}
-	while (_mfRowHeights.size() > value)
-		_mfRowHeights.erase(_mfRowHeights.end());
-	while (_mfRowHeights.size() < value)
-		_mfRowHeights.addValue(0);
 }
 
 //! Get the value of the GridBagLayout::_sfColumns field.
@@ -192,19 +179,6 @@ inline
 void GridBagLayoutBase::setColumns(const UInt32 &value)
 {
     _sfColumns.setValue(value);
-	// force the columns mf to be the same number as the value
-	while (_mfColumnWeights.size() > value)
-		_mfColumnWeights.erase(_mfColumnWeights.end());
-	if (_mfColumnWeights.size() < value)
-	{
-		Real32 ratio = 1.0 / (_mfColumnWeights.size() - value);
-		while (_mfColumnWeights.size() < value)
-			_mfColumnWeights.addValue(ratio);
-	}
-	while (_mfColumnWidths.size() > value)
-		_mfColumnWidths.erase(_mfColumnWidths.end());
-	while (_mfColumnWidths.size() < value)
-		_mfColumnWidths.addValue(0);
 }
 
 
@@ -231,21 +205,21 @@ const MFReal32 &GridBagLayoutBase::getColumnWeights(void) const
 
 //! Get the value of the \a index element the GridBagLayout::_mfColumnWidths field.
 inline
-UInt16 &GridBagLayoutBase::getColumnWidths(const UInt32 index)
+Real32 &GridBagLayoutBase::getColumnWidths(const UInt32 index)
 {
     return _mfColumnWidths[index];
 }
 
 //! Get the GridBagLayout::_mfColumnWidths field.
 inline
-MFUInt16 &GridBagLayoutBase::getColumnWidths(void)
+MFReal32 &GridBagLayoutBase::getColumnWidths(void)
 {
     return _mfColumnWidths;
 }
 
 //! Get the GridBagLayout::_mfColumnWidths field.
 inline
-const MFUInt16 &GridBagLayoutBase::getColumnWidths(void) const
+const MFReal32 &GridBagLayoutBase::getColumnWidths(void) const
 {
     return _mfColumnWidths;
 }
@@ -273,21 +247,21 @@ const MFReal32 &GridBagLayoutBase::getRowWeights(void) const
 
 //! Get the value of the \a index element the GridBagLayout::_mfRowHeights field.
 inline
-UInt16 &GridBagLayoutBase::getRowHeights(const UInt32 index)
+Real32 &GridBagLayoutBase::getRowHeights(const UInt32 index)
 {
     return _mfRowHeights[index];
 }
 
 //! Get the GridBagLayout::_mfRowHeights field.
 inline
-MFUInt16 &GridBagLayoutBase::getRowHeights(void)
+MFReal32 &GridBagLayoutBase::getRowHeights(void)
 {
     return _mfRowHeights;
 }
 
 //! Get the GridBagLayout::_mfRowHeights field.
 inline
-const MFUInt16 &GridBagLayoutBase::getRowHeights(void) const
+const MFReal32 &GridBagLayoutBase::getRowHeights(void) const
 {
     return _mfRowHeights;
 }

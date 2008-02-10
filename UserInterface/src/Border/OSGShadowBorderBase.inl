@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -98,28 +98,28 @@ ShadowBorderPtr ShadowBorderBase::createEmpty(void)
 
 //! Get the ShadowBorder::_sfTopOffset field.
 inline
-SFUInt32 *ShadowBorderBase::getSFTopOffset(void)
+SFReal32 *ShadowBorderBase::getSFTopOffset(void)
 {
     return &_sfTopOffset;
 }
 
 //! Get the ShadowBorder::_sfBottomOffset field.
 inline
-SFUInt32 *ShadowBorderBase::getSFBottomOffset(void)
+SFReal32 *ShadowBorderBase::getSFBottomOffset(void)
 {
     return &_sfBottomOffset;
 }
 
 //! Get the ShadowBorder::_sfLeftOffset field.
 inline
-SFUInt32 *ShadowBorderBase::getSFLeftOffset(void)
+SFReal32 *ShadowBorderBase::getSFLeftOffset(void)
 {
     return &_sfLeftOffset;
 }
 
 //! Get the ShadowBorder::_sfRightOffset field.
 inline
-SFUInt32 *ShadowBorderBase::getSFRightOffset(void)
+SFReal32 *ShadowBorderBase::getSFRightOffset(void)
 {
     return &_sfRightOffset;
 }
@@ -147,14 +147,14 @@ SFBorderPtr *ShadowBorderBase::getSFInsideBorder(void)
 
 //! Get the ShadowBorder::_sfCornerRadius field.
 inline
-SFUInt32 *ShadowBorderBase::getSFCornerRadius(void)
+SFReal32 *ShadowBorderBase::getSFCornerRadius(void)
 {
     return &_sfCornerRadius;
 }
 
 //! Get the ShadowBorder::_sfInternalToEdgeColorLength field.
 inline
-SFUInt32 *ShadowBorderBase::getSFInternalToEdgeColorLength(void)
+SFReal32 *ShadowBorderBase::getSFInternalToEdgeColorLength(void)
 {
     return &_sfInternalToEdgeColorLength;
 }
@@ -162,84 +162,84 @@ SFUInt32 *ShadowBorderBase::getSFInternalToEdgeColorLength(void)
 
 //! Get the value of the ShadowBorder::_sfTopOffset field.
 inline
-UInt32 &ShadowBorderBase::getTopOffset(void)
+Real32 &ShadowBorderBase::getTopOffset(void)
 {
     return _sfTopOffset.getValue();
 }
 
 //! Get the value of the ShadowBorder::_sfTopOffset field.
 inline
-const UInt32 &ShadowBorderBase::getTopOffset(void) const
+const Real32 &ShadowBorderBase::getTopOffset(void) const
 {
     return _sfTopOffset.getValue();
 }
 
 //! Set the value of the ShadowBorder::_sfTopOffset field.
 inline
-void ShadowBorderBase::setTopOffset(const UInt32 &value)
+void ShadowBorderBase::setTopOffset(const Real32 &value)
 {
     _sfTopOffset.setValue(value);
 }
 
 //! Get the value of the ShadowBorder::_sfBottomOffset field.
 inline
-UInt32 &ShadowBorderBase::getBottomOffset(void)
+Real32 &ShadowBorderBase::getBottomOffset(void)
 {
     return _sfBottomOffset.getValue();
 }
 
 //! Get the value of the ShadowBorder::_sfBottomOffset field.
 inline
-const UInt32 &ShadowBorderBase::getBottomOffset(void) const
+const Real32 &ShadowBorderBase::getBottomOffset(void) const
 {
     return _sfBottomOffset.getValue();
 }
 
 //! Set the value of the ShadowBorder::_sfBottomOffset field.
 inline
-void ShadowBorderBase::setBottomOffset(const UInt32 &value)
+void ShadowBorderBase::setBottomOffset(const Real32 &value)
 {
     _sfBottomOffset.setValue(value);
 }
 
 //! Get the value of the ShadowBorder::_sfLeftOffset field.
 inline
-UInt32 &ShadowBorderBase::getLeftOffset(void)
+Real32 &ShadowBorderBase::getLeftOffset(void)
 {
     return _sfLeftOffset.getValue();
 }
 
 //! Get the value of the ShadowBorder::_sfLeftOffset field.
 inline
-const UInt32 &ShadowBorderBase::getLeftOffset(void) const
+const Real32 &ShadowBorderBase::getLeftOffset(void) const
 {
     return _sfLeftOffset.getValue();
 }
 
 //! Set the value of the ShadowBorder::_sfLeftOffset field.
 inline
-void ShadowBorderBase::setLeftOffset(const UInt32 &value)
+void ShadowBorderBase::setLeftOffset(const Real32 &value)
 {
     _sfLeftOffset.setValue(value);
 }
 
 //! Get the value of the ShadowBorder::_sfRightOffset field.
 inline
-UInt32 &ShadowBorderBase::getRightOffset(void)
+Real32 &ShadowBorderBase::getRightOffset(void)
 {
     return _sfRightOffset.getValue();
 }
 
 //! Get the value of the ShadowBorder::_sfRightOffset field.
 inline
-const UInt32 &ShadowBorderBase::getRightOffset(void) const
+const Real32 &ShadowBorderBase::getRightOffset(void) const
 {
     return _sfRightOffset.getValue();
 }
 
 //! Set the value of the ShadowBorder::_sfRightOffset field.
 inline
-void ShadowBorderBase::setRightOffset(const UInt32 &value)
+void ShadowBorderBase::setRightOffset(const Real32 &value)
 {
     _sfRightOffset.setValue(value);
 }
@@ -309,42 +309,42 @@ void ShadowBorderBase::setInsideBorder(const BorderPtr &value)
 
 //! Get the value of the ShadowBorder::_sfCornerRadius field.
 inline
-UInt32 &ShadowBorderBase::getCornerRadius(void)
+Real32 &ShadowBorderBase::getCornerRadius(void)
 {
     return _sfCornerRadius.getValue();
 }
 
 //! Get the value of the ShadowBorder::_sfCornerRadius field.
 inline
-const UInt32 &ShadowBorderBase::getCornerRadius(void) const
+const Real32 &ShadowBorderBase::getCornerRadius(void) const
 {
     return _sfCornerRadius.getValue();
 }
 
 //! Set the value of the ShadowBorder::_sfCornerRadius field.
 inline
-void ShadowBorderBase::setCornerRadius(const UInt32 &value)
+void ShadowBorderBase::setCornerRadius(const Real32 &value)
 {
     _sfCornerRadius.setValue(value);
 }
 
 //! Get the value of the ShadowBorder::_sfInternalToEdgeColorLength field.
 inline
-UInt32 &ShadowBorderBase::getInternalToEdgeColorLength(void)
+Real32 &ShadowBorderBase::getInternalToEdgeColorLength(void)
 {
     return _sfInternalToEdgeColorLength.getValue();
 }
 
 //! Get the value of the ShadowBorder::_sfInternalToEdgeColorLength field.
 inline
-const UInt32 &ShadowBorderBase::getInternalToEdgeColorLength(void) const
+const Real32 &ShadowBorderBase::getInternalToEdgeColorLength(void) const
 {
     return _sfInternalToEdgeColorLength.getValue();
 }
 
 //! Set the value of the ShadowBorder::_sfInternalToEdgeColorLength field.
 inline
-void ShadowBorderBase::setInternalToEdgeColorLength(const UInt32 &value)
+void ShadowBorderBase::setInternalToEdgeColorLength(const Real32 &value)
 {
     _sfInternalToEdgeColorLength.setValue(value);
 }

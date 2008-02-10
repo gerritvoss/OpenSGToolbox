@@ -107,7 +107,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurface : public UIDrawingSurface
 	virtual void keyReleased(const KeyEvent& e);
 	virtual void keyTyped(const KeyEvent& e);
 
-    virtual Pnt2s getMousePosition(void) const;
+    virtual Pnt2f getMousePosition(void) const;
 
 	virtual UInt32 getNumWindowLayers(void) const;
 	virtual Int32 getWindowLayer(InternalWindowPtr TheWindow) const;
@@ -149,7 +149,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurface : public UIDrawingSurface
 
     static void initMethod(void);
 
-	void checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, ViewportPtr TheViewport);
+	void checkMouseEnterExit(const Event& e, const Pnt2f& MouseLocation, ViewportPtr TheViewport);
 
     // prohibit default functions (move to 'public' if you need one)
 

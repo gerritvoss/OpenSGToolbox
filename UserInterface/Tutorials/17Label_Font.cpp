@@ -48,7 +48,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // 17Label_Font Headers
 #include <OpenSG/UserInterface/OSGUIBackgrounds.h>
@@ -81,7 +81,7 @@ ListPtr FontList;
 
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 class TutorialWindowListener : public WindowAdapter
 {
@@ -374,7 +374,7 @@ int main(int argc, char **argv)
         //ExampleLabel->setActiveTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
         ExampleLabel->setVerticalAlignment(0.5);
         ExampleLabel->setHorizontalAlignment(0.5);
-        ExampleLabel->setPreferredSize(Vec2s(200, 50));
+        ExampleLabel->setPreferredSize(Vec2f(200, 50));
         ExampleLabel->setTextSelectable(true);
     endEditCP(ExampleLabel, Label::BackgroundsFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::VerticalAlignmentFieldMask | Label::HorizontalAlignmentFieldMask | Label::PreferredSizeFieldMask | Label::TextSelectableFieldMask);
     
@@ -410,7 +410,7 @@ int main(int argc, char **argv)
     // Create the List of Fonts (see 18List for more information)
     FontList = List::create();
     beginEditCP(FontList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::CellGeneratorFieldMask);
-        FontList->setPreferredSize(Vec2s(200, 300));
+        FontList->setPreferredSize(Vec2f(200, 300));
         FontList->setCellOrientation(VERTICAL_ALIGNMENT);
 		FontList->setCellGenerator(TheGenerator);
     endEditCP(FontList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::CellGeneratorFieldMask);
@@ -425,7 +425,7 @@ int main(int argc, char **argv)
     //ScrollPanel
     ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();
     beginEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-        ExampleScrollPanel->setPreferredSize(Vec2s(200,300));
+        ExampleScrollPanel->setPreferredSize(Vec2f(200,300));
         ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     endEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
@@ -484,8 +484,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(900,900),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(900,900),
                                         "OpenSG 17Label/Font Window");
 
     //Main Event Loop
@@ -508,7 +508,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

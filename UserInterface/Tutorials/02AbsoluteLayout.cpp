@@ -49,7 +49,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // Include AbsoluteLayout and AbsoluteLayoutConstraints header files
 #include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
@@ -152,7 +152,7 @@ int main(int argc, char **argv)
 
         Edit the AbsoluteLayoutConstraints.
 
-        -setPositition(Pnt2s): Determine the location
+        -setPositition(Pnt2f): Determine the location
             the Constraints represent within the 
             AbsoluteLayout, referenced from the 
             upper left hand corner of the Layout's
@@ -178,18 +178,18 @@ int main(int argc, char **argv)
     ******************************************************/
   
    beginEditCP(ExampleButtonConstraints1, AbsoluteLayoutConstraints::PositionFieldMask);
-        ExampleButtonConstraints1->setPosition(Pnt2s(0,150));
+        ExampleButtonConstraints1->setPosition(Pnt2f(0,150));
    endEditCP(ExampleButtonConstraints1, AbsoluteLayoutConstraints::PositionFieldMask);
 
    beginEditCP(ExampleButtonConstraints2, AbsoluteLayoutConstraints::PositionFieldMask);
-        ExampleButtonConstraints2->setPosition(Pnt2s(200,200));
+        ExampleButtonConstraints2->setPosition(Pnt2f(200,200));
    endEditCP(ExampleButtonConstraints2, AbsoluteLayoutConstraints::PositionFieldMask);
     
    // Note that this will cause the ExampleButton's position to overlap with Button2
    // when the program is run; the AbsoluteLayoutConstraints will overlap
    // if the specified coordinates overlap
    beginEditCP(ExampleButtonConstraints3, AbsoluteLayoutConstraints::PositionFieldMask);
-        ExampleButtonConstraints3->setPosition(Pnt2s(150,220));
+        ExampleButtonConstraints3->setPosition(Pnt2f(150,220));
    endEditCP(ExampleButtonConstraints3, AbsoluteLayoutConstraints::PositionFieldMask);
 
     /******************************************************
@@ -214,19 +214,19 @@ int main(int argc, char **argv)
     ******************************************************/
 
    beginEditCP(ExampleButton1, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
-        ExampleButton1->setPreferredSize(Vec2s(100,50));
+        ExampleButton1->setPreferredSize(Vec2f(100,50));
         ExampleButton1->setText("Button 1");
         ExampleButton1->setConstraints(ExampleButtonConstraints1);
    endEditCP(ExampleButton1, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 
     beginEditCP(ExampleButton2, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
-        ExampleButton2->setPreferredSize(Vec2s(100,50));
+        ExampleButton2->setPreferredSize(Vec2f(100,50));
         ExampleButton2->setText("Button 2");
         ExampleButton2->setConstraints(ExampleButtonConstraints2);
     endEditCP(ExampleButton2, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 
     beginEditCP(ExampleButton3, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
-        ExampleButton3->setPreferredSize(Vec2s(100,50));
+        ExampleButton3->setPreferredSize(Vec2f(100,50));
         ExampleButton3->setText("Button 3");
         ExampleButton3->setConstraints(ExampleButtonConstraints3);
     endEditCP(ExampleButton3, Button::PreferredSizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
@@ -286,8 +286,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(550,550),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(550,550),
                                         "OpenSG 02AbsoluteLayout Window");
 
     //Main Event Loop
@@ -311,7 +311,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

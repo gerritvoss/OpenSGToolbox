@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -144,28 +144,28 @@ void RoundedCornerLineBorder::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void RoundedCornerLineBorder::draw(const GraphicsPtr g, const Int16 x, const Int16 y , const UInt16 Width, const UInt16 Height, const Real32 Opacity) const
+void RoundedCornerLineBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity) const
 {
 	//draw corners
-	g->drawComplexDisc(Pnt2s(x+getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius(), 3.14159265, 4.71238898, 10, getColor(), getColor(), Opacity);
-	g->drawComplexDisc(Pnt2s(x+getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius(), 1.57079633, 3.14159265, 10, getColor(), getColor(), Opacity);
-	g->drawComplexDisc(Pnt2s(x+Width-getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius(), 0, 1.57079633, 10, getColor(), getColor(), Opacity);
-	g->drawComplexDisc(Pnt2s(x+Width-getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius(), 4.71238898,6.28318531, 10, getColor(), getColor(), Opacity);
+	g->drawComplexDisc(Pnt2f(x+getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius(), 3.14159265, 4.71238898, 10, getColor(), getColor(), Opacity);
+	g->drawComplexDisc(Pnt2f(x+getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius(), 1.57079633, 3.14159265, 10, getColor(), getColor(), Opacity);
+	g->drawComplexDisc(Pnt2f(x+Width-getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius(), 0, 1.57079633, 10, getColor(), getColor(), Opacity);
+	g->drawComplexDisc(Pnt2f(x+Width-getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius(), 4.71238898,6.28318531, 10, getColor(), getColor(), Opacity);
 
 	//draw sides
-	g->drawRect(Pnt2s(x, y+getCornerRadius()), Pnt2s(x+getWidth(), y+Height-getCornerRadius()), getColor(), Opacity);
-	g->drawRect(Pnt2s(x+getCornerRadius(), y), Pnt2s(x+Width-getCornerRadius(), y+getWidth()), getColor(), Opacity);
-	g->drawRect(Pnt2s(x+Width-getWidth(), y+getCornerRadius()), Pnt2s(x+Width, y+Height-getCornerRadius()), getColor(), Opacity);
-	g->drawRect(Pnt2s(x+getCornerRadius(), y+Height-getWidth()), Pnt2s(x+Width-getCornerRadius(), y+Height), getColor(), Opacity);
+	g->drawRect(Pnt2f(x, y+getCornerRadius()), Pnt2f(x+getWidth(), y+Height-getCornerRadius()), getColor(), Opacity);
+	g->drawRect(Pnt2f(x+getCornerRadius(), y), Pnt2f(x+Width-getCornerRadius(), y+getWidth()), getColor(), Opacity);
+	g->drawRect(Pnt2f(x+Width-getWidth(), y+getCornerRadius()), Pnt2f(x+Width, y+Height-getCornerRadius()), getColor(), Opacity);
+	g->drawRect(Pnt2f(x+getCornerRadius(), y+Height-getWidth()), Pnt2f(x+Width-getCornerRadius(), y+Height), getColor(), Opacity);
 }
 
-void RoundedCornerLineBorder::getInsets(UInt16& Left, UInt16& Right,UInt16& Top,UInt16& Bottom) const
+void RoundedCornerLineBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bottom) const
 {
 	//TODO:Implement
 	Left=Right=Top=Bottom = getWidth(); //wrong, but what else are you supposed to do?
 }
 
-void RoundedCornerLineBorder::activateInternalDrawConstraints(const GraphicsPtr g, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const
+void RoundedCornerLineBorder::activateInternalDrawConstraints(const GraphicsPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
 	GLenum DepthTextEnabled = glIsEnabled(GL_DEPTH_TEST);
 	glDisable(GL_DEPTH_TEST);
@@ -187,10 +187,10 @@ void RoundedCornerLineBorder::activateInternalDrawConstraints(const GraphicsPtr 
        glVertex2s(x+Width-getCornerRadius()+1,y-1);
     glEnd();
 
-    g->drawDisc(Pnt2s(x+getCornerRadius(), y+getCornerRadius()),              getCornerRadius()-getWidth()+1, getCornerRadius()-getWidth()+1, 3.14159265, 4.71238898, 10, getColor(), getColor(), 1.0);
-	g->drawDisc(Pnt2s(x+getCornerRadius(), y+Height-getCornerRadius()),       getCornerRadius()-getWidth()+1, getCornerRadius()-getWidth()+1, 1.57079633, 3.14159265, 10, getColor(), getColor(), 1.0);
-	g->drawDisc(Pnt2s(x+Width-getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth()+1, getCornerRadius()-getWidth()+1, 0, 1.57079633, 10, getColor(), getColor(), 1.0);
-	g->drawDisc(Pnt2s(x+Width-getCornerRadius(), y+getCornerRadius()),        getCornerRadius()-getWidth()+1, getCornerRadius()-getWidth()+1, 4.71238898,6.28318531, 10, getColor(), getColor(), 1.0);
+    g->drawDisc(Pnt2f(x+getCornerRadius(), y+getCornerRadius()),              getCornerRadius()-getWidth()+1, getCornerRadius()-getWidth()+1, 3.14159265, 4.71238898, 10, getColor(), getColor(), 1.0);
+	g->drawDisc(Pnt2f(x+getCornerRadius(), y+Height-getCornerRadius()),       getCornerRadius()-getWidth()+1, getCornerRadius()-getWidth()+1, 1.57079633, 3.14159265, 10, getColor(), getColor(), 1.0);
+	g->drawDisc(Pnt2f(x+Width-getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth()+1, getCornerRadius()-getWidth()+1, 0, 1.57079633, 10, getColor(), getColor(), 1.0);
+	g->drawDisc(Pnt2f(x+Width-getCornerRadius(), y+getCornerRadius()),        getCornerRadius()-getWidth()+1, getCornerRadius()-getWidth()+1, 4.71238898,6.28318531, 10, getColor(), getColor(), 1.0);
 
     //Unset drawing to the stencil buffer
     getStenciledAreaSetup()->deactivate(g->getDrawAction());
@@ -207,32 +207,32 @@ void RoundedCornerLineBorder::activateInternalDrawConstraints(const GraphicsPtr 
 		endEditCP(Graphics3DExtrude::Ptr::dcast(g), Graphics3DExtrude::ExtrudeLengthFieldMask);
 		//Front Side
 		//draw corners
-		g->drawComplexDisc(Pnt2s(x+getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 3.14159265, 4.71238898, 10, getColor(), getColor(), 1.0);
-		g->drawComplexDisc(Pnt2s(x+getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 1.57079633, 3.14159265, 10, getColor(), getColor(), 1.0);
-		g->drawComplexDisc(Pnt2s(x+Width-getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 0, 1.57079633, 10, getColor(), getColor(), 1.0);
-		g->drawComplexDisc(Pnt2s(x+Width-getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 4.71238898,6.28318531, 10, getColor(), getColor(), 1.0);
+		g->drawComplexDisc(Pnt2f(x+getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 3.14159265, 4.71238898, 10, getColor(), getColor(), 1.0);
+		g->drawComplexDisc(Pnt2f(x+getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 1.57079633, 3.14159265, 10, getColor(), getColor(), 1.0);
+		g->drawComplexDisc(Pnt2f(x+Width-getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 0, 1.57079633, 10, getColor(), getColor(), 1.0);
+		g->drawComplexDisc(Pnt2f(x+Width-getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 4.71238898,6.28318531, 10, getColor(), getColor(), 1.0);
 
 		//draw sides
-		g->drawRect(Pnt2s(x-1, y+getCornerRadius()), Pnt2s(x+getWidth(), y+Height-getCornerRadius()), getColor(), 1.0);
-		g->drawRect(Pnt2s(x+getCornerRadius(), y-1), Pnt2s(x+Width-getCornerRadius(), y+getWidth()), getColor(), 1.0);
-		g->drawRect(Pnt2s(x+Width-getWidth(), y+getCornerRadius()), Pnt2s(x+Width+1, y+Height-getCornerRadius()), getColor(), 1.0);
-		g->drawRect(Pnt2s(x+getCornerRadius(), y+Height-getWidth()), Pnt2s(x+Width-getCornerRadius(), y+Height+1), getColor(), 1.0);
+		g->drawRect(Pnt2f(x-1, y+getCornerRadius()), Pnt2f(x+getWidth(), y+Height-getCornerRadius()), getColor(), 1.0);
+		g->drawRect(Pnt2f(x+getCornerRadius(), y-1), Pnt2f(x+Width-getCornerRadius(), y+getWidth()), getColor(), 1.0);
+		g->drawRect(Pnt2f(x+Width-getWidth(), y+getCornerRadius()), Pnt2f(x+Width+1, y+Height-getCornerRadius()), getColor(), 1.0);
+		g->drawRect(Pnt2f(x+getCornerRadius(), y+Height-getWidth()), Pnt2f(x+Width-getCornerRadius(), y+Height+1), getColor(), 1.0);
 
 		//Back Side
 		/*glPushMatrix();
 			glTranslatef(0.0f,0.0f,ExtrudeLength);
 			
 			//draw corners
-			g->drawComplexDisc(Pnt2s(x+getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 3.14159265, 4.71238898, 10, getColor(), getColor(), 1.0);
-			g->drawComplexDisc(Pnt2s(x+getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 1.57079633, 3.14159265, 10, getColor(), getColor(), 1.0);
-			g->drawComplexDisc(Pnt2s(x+Width-getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 0, 1.57079633, 10, getColor(), getColor(), 1.0);
-			g->drawComplexDisc(Pnt2s(x+Width-getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 4.71238898,6.28318531, 10, getColor(), getColor(), 1.0);
+			g->drawComplexDisc(Pnt2f(x+getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 3.14159265, 4.71238898, 10, getColor(), getColor(), 1.0);
+			g->drawComplexDisc(Pnt2f(x+getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 1.57079633, 3.14159265, 10, getColor(), getColor(), 1.0);
+			g->drawComplexDisc(Pnt2f(x+Width-getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 0, 1.57079633, 10, getColor(), getColor(), 1.0);
+			g->drawComplexDisc(Pnt2f(x+Width-getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 4.71238898,6.28318531, 10, getColor(), getColor(), 1.0);
 
 			//draw sides
-			g->drawRect(Pnt2s(x-1, y+getCornerRadius()), Pnt2s(x+getWidth(), y+Height-getCornerRadius()), getColor(), 1.0);
-			g->drawRect(Pnt2s(x+getCornerRadius(), y-1), Pnt2s(x+Width-getCornerRadius(), y+getWidth()), getColor(), 1.0);
-			g->drawRect(Pnt2s(x+Width-getWidth(), y+getCornerRadius()), Pnt2s(x+Width+1, y+Height-getCornerRadius()), getColor(), 1.0);
-			g->drawRect(Pnt2s(x+getCornerRadius(), y+Height-getWidth()), Pnt2s(x+Width-getCornerRadius(), y+Height+1), getColor(), 1.0);
+			g->drawRect(Pnt2f(x-1, y+getCornerRadius()), Pnt2f(x+getWidth(), y+Height-getCornerRadius()), getColor(), 1.0);
+			g->drawRect(Pnt2f(x+getCornerRadius(), y-1), Pnt2f(x+Width-getCornerRadius(), y+getWidth()), getColor(), 1.0);
+			g->drawRect(Pnt2f(x+Width-getWidth(), y+getCornerRadius()), Pnt2f(x+Width+1, y+Height-getCornerRadius()), getColor(), 1.0);
+			g->drawRect(Pnt2f(x+getCornerRadius(), y+Height-getWidth()), Pnt2f(x+Width-getCornerRadius(), y+Height+1), getColor(), 1.0);
 		glPopMatrix();*/
 
 		
@@ -243,16 +243,16 @@ void RoundedCornerLineBorder::activateInternalDrawConstraints(const GraphicsPtr 
 	else
 	{
 		//draw corners
-		g->drawComplexDisc(Pnt2s(x+getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 3.14159265, 4.71238898, 10, getColor(), getColor(), 1.0);
-		g->drawComplexDisc(Pnt2s(x+getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 1.57079633, 3.14159265, 10, getColor(), getColor(), 1.0);
-		g->drawComplexDisc(Pnt2s(x+Width-getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 0, 1.57079633, 10, getColor(), getColor(), 1.0);
-		g->drawComplexDisc(Pnt2s(x+Width-getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 4.71238898,6.28318531, 10, getColor(), getColor(), 1.0);
+		g->drawComplexDisc(Pnt2f(x+getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 3.14159265, 4.71238898, 10, getColor(), getColor(), 1.0);
+		g->drawComplexDisc(Pnt2f(x+getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 1.57079633, 3.14159265, 10, getColor(), getColor(), 1.0);
+		g->drawComplexDisc(Pnt2f(x+Width-getCornerRadius(), y+Height-getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 0, 1.57079633, 10, getColor(), getColor(), 1.0);
+		g->drawComplexDisc(Pnt2f(x+Width-getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius()+1, 4.71238898,6.28318531, 10, getColor(), getColor(), 1.0);
 
 		//draw sides
-		g->drawRect(Pnt2s(x-1, y+getCornerRadius()), Pnt2s(x+getWidth(), y+Height-getCornerRadius()), getColor(), 1.0);
-		g->drawRect(Pnt2s(x+getCornerRadius(), y-1), Pnt2s(x+Width-getCornerRadius(), y+getWidth()), getColor(), 1.0);
-		g->drawRect(Pnt2s(x+Width-getWidth(), y+getCornerRadius()), Pnt2s(x+Width+1, y+Height-getCornerRadius()), getColor(), 1.0);
-		g->drawRect(Pnt2s(x+getCornerRadius(), y+Height-getWidth()), Pnt2s(x+Width-getCornerRadius(), y+Height+1), getColor(), 1.0);
+		g->drawRect(Pnt2f(x-1, y+getCornerRadius()), Pnt2f(x+getWidth(), y+Height-getCornerRadius()), getColor(), 1.0);
+		g->drawRect(Pnt2f(x+getCornerRadius(), y-1), Pnt2f(x+Width-getCornerRadius(), y+getWidth()), getColor(), 1.0);
+		g->drawRect(Pnt2f(x+Width-getWidth(), y+getCornerRadius()), Pnt2f(x+Width+1, y+Height-getCornerRadius()), getColor(), 1.0);
+		g->drawRect(Pnt2f(x+getCornerRadius(), y+Height-getWidth()), Pnt2f(x+Width-getCornerRadius(), y+Height+1), getColor(), 1.0);
 	}
 
     //Unset drawing to the stencil buffer
@@ -267,7 +267,7 @@ void RoundedCornerLineBorder::activateInternalDrawConstraints(const GraphicsPtr 
 	if(DepthTextEnabled) {glEnable(GL_DEPTH_TEST);}
 }
 
-void RoundedCornerLineBorder::deactivateInternalDrawConstraints(const GraphicsPtr g, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const
+void RoundedCornerLineBorder::deactivateInternalDrawConstraints(const GraphicsPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
     //Unset testing against the stencil stencil buffer
     getStenciledAreaTest()->deactivate(g->getDrawAction());
@@ -292,35 +292,35 @@ void RoundedCornerLineBorder::deactivateInternalDrawConstraints(const GraphicsPt
     getColorMask()->deactivate(g->getDrawAction());
 }
 
-bool RoundedCornerLineBorder::isContained(const Pnt2s& p, const Int16& x, const Int16& y , const UInt16& Width, const UInt16& Height) const
+bool RoundedCornerLineBorder::isContained(const Pnt2f& p, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
     bool AreCornersContained(true);
     //TopLeft Corner
     if(p.x() >= x && p.x() <= x+getCornerRadius() &&
             p.y() >= y && p.y() <= y+getCornerRadius())
     {
-        Real32 Length = p.dist(Pnt2s(x+getCornerRadius(),y+getCornerRadius()));
+        Real32 Length = p.dist(Pnt2f(x+getCornerRadius(),y+getCornerRadius()));
         AreCornersContained = AreCornersContained && Length <= getCornerRadius();
     }
     //BottomLeft Corner
     if(p.x() >= x && p.x() <= x+getCornerRadius() &&
             p.y() >= y+Height-getCornerRadius() && p.y() <= y+Height)
     {
-        Real32 Length = p.dist(Pnt2s(x+getCornerRadius(),y+Height-getCornerRadius()));
+        Real32 Length = p.dist(Pnt2f(x+getCornerRadius(),y+Height-getCornerRadius()));
         AreCornersContained = AreCornersContained && Length <= getCornerRadius();
     }
     //TopRight Corner
     if(p.x() >= x+Width-getCornerRadius() && p.x() <= x+Width &&
             p.y() >= y && p.y() <= y+getCornerRadius())
     {
-        Real32 Length = p.dist(Pnt2s(x+Width-getCornerRadius(),y+getCornerRadius()));
+        Real32 Length = p.dist(Pnt2f(x+Width-getCornerRadius(),y+getCornerRadius()));
         AreCornersContained = AreCornersContained && Length <= getCornerRadius();
     }
     //BottomRight Corner
     if(p.x() >= x+Width-getCornerRadius() && p.x() <= x+Width &&
             p.y() >= y+Height-getCornerRadius() && p.y() <= y+Height)
     {
-        Real32 Length = p.dist(Pnt2s(x+Width-getCornerRadius(),y+Height-getCornerRadius()));
+        Real32 Length = p.dist(Pnt2f(x+Width-getCornerRadius(),y+Height-getCornerRadius()));
         AreCornersContained = AreCornersContained && Length <= getCornerRadius();
     }
     return AreCornersContained &&

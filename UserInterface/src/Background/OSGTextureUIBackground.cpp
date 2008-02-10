@@ -77,7 +77,7 @@ void TextureUIBackground::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void TextureUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32 Opacity) const
+void TextureUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const
 {
 	glPushAttrib(GL_ENABLE_BIT | GL_TRANSFORM_BIT);
 	GLdouble Plane0[4], Plane1[4], Plane2[4], Plane3[4];
@@ -113,9 +113,9 @@ void TextureUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2s& TopLe
     glClipPlane(GL_CLIP_PLANE2,TopPlaneEquation.getValues());
     glClipPlane(GL_CLIP_PLANE3,BottomPlaneEquation.getValues());
 
-	Vec2s BackgroundSize (BottomRight - TopLeft);
+	Vec2f BackgroundSize (BottomRight - TopLeft);
 
-	Vec2s Size(0.0,0.0);
+	Vec2f Size(0.0,0.0);
 	switch(getScale())
 	{
 	case SCALE_NONE:
@@ -131,15 +131,15 @@ void TextureUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2s& TopLe
 	   Real32 AspectBackground = BackgroundSize.x()/BackgroundSize.y();
 	   Real32 AspectImage = getTexture()->getImage()->getWidth()/getTexture()->getImage()->getHeight();
 
-	   Vec2s vector(0,0);
+	   Vec2f vector(0,0);
 	   if (AspectBackground < AspectImage)
 	   {
 		   vector[0] = BackgroundSize.x();
-		   vector[1] = (Int16)((Real32)BackgroundSize.x()/AspectImage);
+		   vector[1] = ((Real32)BackgroundSize.x()/AspectImage);
 	   }
 	   else
 	   {
-		   vector[0] = (Int16)((Real32)BackgroundSize.y()*AspectImage);
+		   vector[0] = ((Real32)BackgroundSize.y()*AspectImage);
 		   vector[1] = BackgroundSize.y();
 	   }
 	   Size.setValue(vector);
@@ -151,15 +151,15 @@ void TextureUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2s& TopLe
 	   Real32 AspectBackground = BackgroundSize.x()/BackgroundSize.y();
 	   Real32 AspectImage = getTexture()->getImage()->getWidth()/getTexture()->getImage()->getHeight();
 
-	   Vec2s vector(0,0);
+	   Vec2f vector(0,0);
 	   if (AspectBackground > AspectImage)
 	   {
 		   vector[0] = BackgroundSize.x();
-		   vector[1] = (Int16)((Real32)BackgroundSize.x()/AspectImage);
+		   vector[1] = ((Real32)BackgroundSize.x()/AspectImage);
 	   }
 	   else
 	   {
-		   vector[0] = (Int16)((Real32)BackgroundSize.y()*AspectImage);
+		   vector[0] = ((Real32)BackgroundSize.y()*AspectImage);
 		   vector[1] = BackgroundSize.y();
 	   }
 	   Size.setValue(vector);
@@ -172,14 +172,14 @@ void TextureUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2s& TopLe
 	   break;
 	}
 
-	Pnt2s Pos( calculateAlignment(TopLeft,BackgroundSize, Size, getVerticalAlignment(), getHorizontalAlignment()) );
+	Pnt2f Pos( calculateAlignment(TopLeft,BackgroundSize, Size, getVerticalAlignment(), getHorizontalAlignment()) );
 
 	/*Vec2f TexTopLeft(0.0,0.0),
 	      TexTopRight(1.0,0.0),
 		  TexBottomLeft(0.0,1.0),
 		  TexBottomRight(1.0,1.0);*/
 
-	TheGraphics->drawQuad(Pos, Pnt2s(Pos.x()+Size.x(), Pos.y()), Pos+Size, Pnt2s(Pos.x(), Pos.y()+Size.y()), Vec2f(0.0, 0.0), Vec2f(1.0, 0.0), Vec2f(1.0, 1.0), Vec2f(0.0, 1.0), getTexture(), Opacity);
+	TheGraphics->drawQuad(Pos, Pnt2f(Pos.x()+Size.x(), Pos.y()), Pos+Size, Pnt2f(Pos.x(), Pos.y()+Size.y()), Vec2f(0.0, 0.0), Vec2f(1.0, 0.0), Vec2f(1.0, 1.0), Vec2f(0.0, 1.0), getTexture(), Opacity);
 
 	//if(!WasClipPlane0Enabled) { glDisable(GL_CLIP_PLANE0); }
  //   if(!WasClipPlane1Enabled) { glDisable(GL_CLIP_PLANE1); }

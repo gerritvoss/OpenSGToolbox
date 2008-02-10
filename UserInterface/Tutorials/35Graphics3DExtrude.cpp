@@ -58,7 +58,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 ListSelectionModelPtr SelectionModel(new DefaultListSelectionModel());
 
@@ -616,67 +616,67 @@ int main(int argc, char **argv)
 
 	//Define each button and give them each a name
 	beginEditCP(button1, Button::PreferredSizeFieldMask |  Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
-        button1->setPreferredSize(Vec2s(100,50));
-        button1->setSize(Vec2s(100,50));
+        button1->setPreferredSize(Vec2f(100,50));
+        button1->setSize(Vec2f(100,50));
         button1->setText("Button 1");
         button1->setTextColor(Color4f(0.0,0.0,0.0,1.0));
         button1->setFont(sampleFont);
     endEditCP(button1, Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 
     beginEditCP(button2, Button::PreferredSizeFieldMask |  Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
-        button2->setPreferredSize(Vec2s(100,50));
-        button2->setSize(Vec2s(100,50));
+        button2->setPreferredSize(Vec2f(100,50));
+        button2->setSize(Vec2f(100,50));
         button2->setText("Button 2");
         button2->setFont(sampleFont);
     endEditCP(button2, Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 
     beginEditCP(button3,  Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::ConstraintsFieldMask);
-        button3->setPreferredSize(Vec2s(100,50));
-        button3->setSize(Vec2s(100,50));
+        button3->setPreferredSize(Vec2f(100,50));
+        button3->setSize(Vec2f(100,50));
         button3->setText("Button 3");
         button3->setFont(sampleFont);
     endEditCP(button3,  Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::ConstraintsFieldMask);
 
     beginEditCP(button4, Button::PreferredSizeFieldMask |  Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
-        button4->setPreferredSize(Vec2s(100,50));
-        button4->setSize(Vec2s(100,50));
+        button4->setPreferredSize(Vec2f(100,50));
+        button4->setSize(Vec2f(100,50));
         button4->setText("Button 4");
         button4->setTextColor(Color4f(0.0,0.0,0.0,1.0));
         button4->setFont(sampleFont);
     endEditCP(button4, Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 
     beginEditCP(button5, Button::PreferredSizeFieldMask |  Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
-        button5->setPreferredSize(Vec2s(100,50));
-        button5->setSize(Vec2s(100,50));
+        button5->setPreferredSize(Vec2f(100,50));
+        button5->setSize(Vec2f(100,50));
         button5->setText("Button 5");
         button5->setFont(sampleFont);
     endEditCP(button5, Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 
     beginEditCP(button6,  Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::ConstraintsFieldMask);
-        button6->setPreferredSize(Vec2s(100,50));
-        button6->setSize(Vec2s(100,50));
+        button6->setPreferredSize(Vec2f(100,50));
+        button6->setSize(Vec2f(100,50));
         button6->setText("Button 6");
         button6->setFont(sampleFont);
     endEditCP(button6,  Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::ConstraintsFieldMask);
 
 	beginEditCP(button7, Button::PreferredSizeFieldMask |  Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
-        button7->setPreferredSize(Vec2s(100,50));
-        button7->setSize(Vec2s(100,50));
+        button7->setPreferredSize(Vec2f(100,50));
+        button7->setSize(Vec2f(100,50));
         button7->setText("Button 7");
         button7->setTextColor(Color4f(0.0,0.0,0.0,1.0));
         button7->setFont(sampleFont);
     endEditCP(button7, Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 
     beginEditCP(button8, Button::PreferredSizeFieldMask |  Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
-        button8->setPreferredSize(Vec2s(100,50));
-        button8->setSize(Vec2s(100,50));
+        button8->setPreferredSize(Vec2f(100,50));
+        button8->setSize(Vec2f(100,50));
         button8->setText("Button 8");
         button8->setFont(sampleFont);
     endEditCP(button8, Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask);
 
     beginEditCP(button9,  Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::ConstraintsFieldMask);
-        button9->setPreferredSize(Vec2s(100,50));
-        button9->setSize(Vec2s(100,50));
+        button9->setPreferredSize(Vec2f(100,50));
+        button9->setSize(Vec2f(100,50));
         button9->setText("Button 9");
         button9->setFont(sampleFont);
     endEditCP(button9,  Button::PreferredSizeFieldMask | Button::SizeFieldMask | Button::ConstraintsFieldMask);
@@ -802,7 +802,7 @@ int main(int argc, char **argv)
 	// Create ListPtr
     ListPtr list1 = List::create();
     beginEditCP(list1);
-        list1->setPreferredSize(Vec2s(200,300));
+        list1->setPreferredSize(Vec2f(200,300));
         list1->setBackgrounds(MainFrameBackground);
         list1->setCellOrientation(VERTICAL_ALIGNMENT);
         //list->setCellOrientation(HORIZONTAL_ALIGNMENT);
@@ -811,7 +811,7 @@ int main(int argc, char **argv)
 	// Create ListPtr
     ListPtr list2 = List::create();
     beginEditCP(list2);
-        list2->setPreferredSize(Vec2s(200,300));
+        list2->setPreferredSize(Vec2f(200,300));
         list2->setBackgrounds(MainFrameBackground);
         list2->setCellOrientation(VERTICAL_ALIGNMENT);
         //list->setCellOrientation(HORIZONTAL_ALIGNMENT);
@@ -820,7 +820,7 @@ int main(int argc, char **argv)
 	// Create ListPtr
     ListPtr list3 = List::create();
     beginEditCP(list3);
-        list3->setPreferredSize(Vec2s(200,300));
+        list3->setPreferredSize(Vec2f(200,300));
         list3->setBackgrounds(MainFrameBackground);
         list3->setCellOrientation(VERTICAL_ALIGNMENT);
         //list->setCellOrientation(HORIZONTAL_ALIGNMENT);
@@ -867,7 +867,7 @@ int main(int argc, char **argv)
     //ScrollPanel
     ScrollPanelPtr TheScrollPanel1 = ScrollPanel::create();
     beginEditCP(TheScrollPanel1, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-        TheScrollPanel1->setPreferredSize(Vec2s(100,300));
+        TheScrollPanel1->setPreferredSize(Vec2f(100,300));
         TheScrollPanel1->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         //TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     endEditCP(TheScrollPanel1, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
@@ -876,7 +876,7 @@ int main(int argc, char **argv)
 	//ScrollPanel
     ScrollPanelPtr TheScrollPanel2 = ScrollPanel::create();
     beginEditCP(TheScrollPanel2, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-        TheScrollPanel2->setPreferredSize(Vec2s(100,300));
+        TheScrollPanel2->setPreferredSize(Vec2f(100,300));
         TheScrollPanel2->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         //TheScrollPanel2->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     endEditCP(TheScrollPanel2, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
@@ -885,7 +885,7 @@ int main(int argc, char **argv)
 	//ScrollPanel
     ScrollPanelPtr TheScrollPanel3 = ScrollPanel::create();
     beginEditCP(TheScrollPanel1, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-        TheScrollPanel3->setPreferredSize(Vec2s(100,300));
+        TheScrollPanel3->setPreferredSize(Vec2f(100,300));
         TheScrollPanel3->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         //TheScrollPanel3->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     endEditCP(TheScrollPanel3, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
@@ -975,7 +975,7 @@ int main(int argc, char **argv)
 	// Edit SingleIncrementButton1 and assign it text
 	beginEditCP(SingleIncrementButton1, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask);
         SingleIncrementButton1->setText("Increment by 1");
-        SingleIncrementButton1->setPreferredSize(Vec2s(100,50));
+        SingleIncrementButton1->setPreferredSize(Vec2f(100,50));
     endEditCP(SingleIncrementButton1, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask);
 	// Make a button listener and assign it to SingleIncrementButton1
     SingleIncrementButtonListener1 TheSingleIncrementButtonListener1;
@@ -984,7 +984,7 @@ int main(int argc, char **argv)
 	// Edit DoubleIncrementButton1, make it pre-selected, and assign it text
 	beginEditCP(DoubleIncrementButton1, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
         DoubleIncrementButton1->setText("Increment by 2");
-        DoubleIncrementButton1->setPreferredSize(Vec2s(100,50));
+        DoubleIncrementButton1->setPreferredSize(Vec2f(100,50));
         DoubleIncrementButton1->setSelected(true);
     endEditCP(DoubleIncrementButton1, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
 	// Make a button listener and assign it to DoubleIncrementButton1
@@ -994,7 +994,7 @@ int main(int argc, char **argv)
 	// Edit SingleIncrementButton2 and assign it text
 	beginEditCP(SingleIncrementButton2, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask);
         SingleIncrementButton2->setText("Increment by 3");
-        SingleIncrementButton2->setPreferredSize(Vec2s(100,50));
+        SingleIncrementButton2->setPreferredSize(Vec2f(100,50));
     endEditCP(SingleIncrementButton2, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask);
 	// Make a button listener and assign it to SingleIncrementButton2
     SingleIncrementButtonListener2 TheSingleIncrementButtonListener2;
@@ -1003,7 +1003,7 @@ int main(int argc, char **argv)
 	// Edit DoubleIncrementButton2, make it pre-selected, and assign it text
 	beginEditCP(DoubleIncrementButton2, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
         DoubleIncrementButton2->setText("Increment by 4");
-        DoubleIncrementButton2->setPreferredSize(Vec2s(100,50));
+        DoubleIncrementButton2->setPreferredSize(Vec2f(100,50));
         DoubleIncrementButton2->setSelected(true);
     endEditCP(DoubleIncrementButton2, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
 	// Make a button listener and assign it to DoubleIncrementButton2
@@ -1013,7 +1013,7 @@ int main(int argc, char **argv)
 	// Edit SingleIncrementButton3 and assign it text
 	beginEditCP(SingleIncrementButton3, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask);
         SingleIncrementButton3->setText("Increment by 5");
-        SingleIncrementButton3->setPreferredSize(Vec2s(100,50));
+        SingleIncrementButton3->setPreferredSize(Vec2f(100,50));
     endEditCP(SingleIncrementButton1, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask);
 	// Make a button listener and assign it to SingleIncrementButton3
     SingleIncrementButtonListener3 TheSingleIncrementButtonListener3;
@@ -1022,7 +1022,7 @@ int main(int argc, char **argv)
 	// Edit DoubleIncrementButton3, make it pre-selected, and assign it text
 	beginEditCP(DoubleIncrementButton3, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
         DoubleIncrementButton3->setText("Increment by 6");
-        DoubleIncrementButton3->setPreferredSize(Vec2s(100,50));
+        DoubleIncrementButton3->setPreferredSize(Vec2f(100,50));
         DoubleIncrementButton3->setSelected(true);
     endEditCP(DoubleIncrementButton3, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
 	// Make a button listener and assign it to DoubleIncrementButton3
@@ -1052,7 +1052,7 @@ int main(int argc, char **argv)
 
 	beginEditCP(Check1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         Check1->setText("Show Torus");
-        Check1->setPreferredSize(Vec2s(125,50));
+        Check1->setPreferredSize(Vec2f(125,50));
         Check1->setHorizontalAlignment(0.0);
     endEditCP(Check1, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
@@ -1060,7 +1060,7 @@ int main(int argc, char **argv)
     
     beginEditCP(Check2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         Check2->setText("Show Box");
-        Check2->setPreferredSize(Vec2s(125,50));
+        Check2->setPreferredSize(Vec2f(125,50));
         Check2->setHorizontalAlignment(0.0);
     endEditCP(Check2, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
@@ -1068,7 +1068,7 @@ int main(int argc, char **argv)
 
     beginEditCP(Check3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         Check3->setText("Show Sphere");
-        Check3->setPreferredSize(Vec2s(125,50));
+        Check3->setPreferredSize(Vec2f(125,50));
         Check3->setHorizontalAlignment(0.0);
     endEditCP(Check3, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
@@ -1076,7 +1076,7 @@ int main(int argc, char **argv)
 
     beginEditCP(Check4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         Check4->setText("Show Cone");
-        Check4->setPreferredSize(Vec2s(125,50));
+        Check4->setPreferredSize(Vec2f(125,50));
         Check4->setHorizontalAlignment(0.0);
     endEditCP(Check4, Button::TextFieldMask, Component::PreferredSizeFieldMask);
         // Add Listener
@@ -1119,7 +1119,7 @@ int main(int argc, char **argv)
 	
 	// Edit the panels and add buttons, lists, check boxes, labels, radio buttons, spinners, and even other panels to each as desired.
 	beginEditCP(ExamplePanel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        ExamplePanel1->setPreferredSize(Vec2s(425,175));
+        ExamplePanel1->setPreferredSize(Vec2f(425,175));
         ExamplePanel1->getChildren().addValue(button1);
 		ExamplePanel1->getChildren().addValue(button2);
 		ExamplePanel1->getChildren().addValue(button3);
@@ -1129,7 +1129,7 @@ int main(int argc, char **argv)
     endEditCP(ExamplePanel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
     beginEditCP(ExamplePanel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        ExamplePanel2->setPreferredSize(Vec2s(425,375));
+        ExamplePanel2->setPreferredSize(Vec2f(425,375));
         ExamplePanel2->getChildren().addValue(TheLabel1);
 		ExamplePanel2->getChildren().addValue(TheScrollPanel1);
         ExamplePanel2->setLayout(ExamplePanel2Layout);
@@ -1138,7 +1138,7 @@ int main(int argc, char **argv)
     endEditCP(ExamplePanel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
 	beginEditCP(ExamplePanel3, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        ExamplePanel3->setPreferredSize(Vec2s(425,125));
+        ExamplePanel3->setPreferredSize(Vec2f(425,125));
         ExamplePanel3->getChildren().addValue(SingleIncrementButton1);
 		ExamplePanel3->getChildren().addValue(DoubleIncrementButton1);
 		ExamplePanel3->getChildren().addValue(ExampleSpinner1);
@@ -1148,7 +1148,7 @@ int main(int argc, char **argv)
     endEditCP(ExamplePanel3, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
 	beginEditCP(ExamplePanel4, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        ExamplePanel4->setPreferredSize(Vec2s(425,175));
+        ExamplePanel4->setPreferredSize(Vec2f(425,175));
         ExamplePanel4->getChildren().addValue(button4);
 		ExamplePanel4->getChildren().addValue(button5);
 		ExamplePanel4->getChildren().addValue(button6);
@@ -1158,7 +1158,7 @@ int main(int argc, char **argv)
     endEditCP(ExamplePanel4, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
     beginEditCP(ExamplePanel5, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        ExamplePanel5->setPreferredSize(Vec2s(425,375));
+        ExamplePanel5->setPreferredSize(Vec2f(425,375));
         ExamplePanel5->getChildren().addValue(TheLabel2);
 		ExamplePanel5->getChildren().addValue(TheScrollPanel2);
         ExamplePanel5->setLayout(ExamplePanel2Layout);
@@ -1167,7 +1167,7 @@ int main(int argc, char **argv)
     endEditCP(ExamplePanel5, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
 	beginEditCP(ExamplePanel6, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        ExamplePanel6->setPreferredSize(Vec2s(425,125));
+        ExamplePanel6->setPreferredSize(Vec2f(425,125));
         ExamplePanel6->getChildren().addValue(SingleIncrementButton2);
 		ExamplePanel6->getChildren().addValue(DoubleIncrementButton2);
 		ExamplePanel6->getChildren().addValue(ExampleSpinner2);
@@ -1177,7 +1177,7 @@ int main(int argc, char **argv)
     endEditCP(ExamplePanel6, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
 	beginEditCP(ExamplePanel7, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        ExamplePanel7->setPreferredSize(Vec2s(425,175));
+        ExamplePanel7->setPreferredSize(Vec2f(425,175));
         ExamplePanel7->getChildren().addValue(button7);
 		ExamplePanel7->getChildren().addValue(button8);
 		ExamplePanel7->getChildren().addValue(button9);
@@ -1187,7 +1187,7 @@ int main(int argc, char **argv)
     endEditCP(ExamplePanel7, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
     beginEditCP(ExamplePanel8, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        ExamplePanel8->setPreferredSize(Vec2s(425,375));
+        ExamplePanel8->setPreferredSize(Vec2f(425,375));
         ExamplePanel8->getChildren().addValue(TheLabel3);
 		ExamplePanel8->getChildren().addValue(TheScrollPanel3);
         ExamplePanel8->setLayout(ExamplePanel2Layout);
@@ -1196,7 +1196,7 @@ int main(int argc, char **argv)
     endEditCP(ExamplePanel8, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
 	beginEditCP(ExamplePanel9, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        ExamplePanel9->setPreferredSize(Vec2s(425,125));
+        ExamplePanel9->setPreferredSize(Vec2f(425,125));
         ExamplePanel9->getChildren().addValue(SingleIncrementButton3);
 		ExamplePanel9->getChildren().addValue(DoubleIncrementButton3);
 		ExamplePanel9->getChildren().addValue(ExampleSpinner3);
@@ -1206,7 +1206,7 @@ int main(int argc, char **argv)
     endEditCP(ExamplePanel9, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
 	beginEditCP(ExamplePanel10, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        ExamplePanel10->setPreferredSize(Vec2s(425,675));
+        ExamplePanel10->setPreferredSize(Vec2f(425,675));
 		ExamplePanel10->getChildren().addValue(ExamplePanel1);
 		ExamplePanel10->getChildren().addValue(ExamplePanel2);
 		ExamplePanel10->getChildren().addValue(ExamplePanel3);
@@ -1216,7 +1216,7 @@ int main(int argc, char **argv)
     endEditCP(ExamplePanel10, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
     beginEditCP(ExamplePanel11, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        ExamplePanel11->setPreferredSize(Vec2s(425,675));
+        ExamplePanel11->setPreferredSize(Vec2f(425,675));
 		ExamplePanel11->getChildren().addValue(ExamplePanel5);
 		ExamplePanel11->getChildren().addValue(ExamplePanel6);
 		ExamplePanel11->getChildren().addValue(ExamplePanel4);
@@ -1226,7 +1226,7 @@ int main(int argc, char **argv)
     endEditCP(ExamplePanel11, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
 	beginEditCP(ExamplePanel12, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        ExamplePanel12->setPreferredSize(Vec2s(425,675));
+        ExamplePanel12->setPreferredSize(Vec2f(425,675));
 		ExamplePanel12->getChildren().addValue(ExamplePanel9);
 		ExamplePanel12->getChildren().addValue(ExamplePanel7);
 		ExamplePanel12->getChildren().addValue(ExamplePanel8);
@@ -1236,7 +1236,7 @@ int main(int argc, char **argv)
     endEditCP(ExamplePanel12, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
 	beginEditCP(ExamplePanel13, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        ExamplePanel13->setPreferredSize(Vec2s(1300,700));
+        ExamplePanel13->setPreferredSize(Vec2f(1300,700));
 		ExamplePanel13->getChildren().addValue(ExamplePanel10);
 		ExamplePanel13->getChildren().addValue(ExamplePanel11);
 		ExamplePanel13->getChildren().addValue(ExamplePanel12);
@@ -1246,7 +1246,7 @@ int main(int argc, char **argv)
     endEditCP(ExamplePanel13, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
 	beginEditCP(ExamplePanel14, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        ExamplePanel14->setPreferredSize(Vec2s(1300,200));
+        ExamplePanel14->setPreferredSize(Vec2f(1300,200));
 		ExamplePanel14->getChildren().addValue(Check1);
 		ExamplePanel14->getChildren().addValue(Check2);
 		ExamplePanel14->getChildren().addValue(Check3);
@@ -1309,8 +1309,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(950,750),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(950,750),
                                         "OpenSG 35Graphics3DExtrude Window");
 
     //Main Event Loop
@@ -1333,7 +1333,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

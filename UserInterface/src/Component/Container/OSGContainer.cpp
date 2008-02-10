@@ -77,7 +77,7 @@ void Container::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Container::getInsideInsetsBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+void Container::getInsideInsetsBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
    getInsideBorderBounds(TopLeft, BottomRight);
 
@@ -251,7 +251,7 @@ void Container::produceMouseEnterOnComponent(const MouseEvent& e, ComponentPtr C
 	Comp->mouseEntered(e);
 }
 
-void Container::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, ComponentPtr Comp, bool isMouseContained, ViewportPtr TheViewport)
+void Container::checkMouseEnterExit(const Event& e, const Pnt2f& MouseLocation, ComponentPtr Comp, bool isMouseContained, ViewportPtr TheViewport)
 {
 	//Check if mouse is inside of this component
 	if(!isMouseContained)

@@ -94,11 +94,11 @@ void ScrollBar::updateLayout(void)
     }
     MinorAxis = (MajorAxis+1)%2;
 
-	Pnt2s TopLeft, BottomRight;
+	Pnt2f TopLeft, BottomRight;
 	getInsideInsetsBounds(TopLeft, BottomRight);
 
-    Pnt2s Position;
-    Vec2s Size;
+    Pnt2f Position;
+    Vec2f Size;
 
     //Min Button
     Size[MajorAxis] = getMinButton()->getPreferredSize()[MajorAxis];
@@ -138,9 +138,9 @@ void ScrollBar::updateLayout(void)
     updateScrollBarLayout();
 }
 
-Pnt2s ScrollBar::calculateScrollBarPosition(void) const
+Pnt2f ScrollBar::calculateScrollBarPosition(void) const
 {
-    Pnt2s Position;
+    Pnt2f Position;
 
     UInt16 MajorAxis, MinorAxis;
     if(getOrientation() == VERTICAL_ALIGNMENT)
@@ -160,7 +160,7 @@ Pnt2s ScrollBar::calculateScrollBarPosition(void) const
     return Position;
 }
 
-Int32 ScrollBar::calculateValueFromPosition(const Pnt2s Position) const
+Int32 ScrollBar::calculateValueFromPosition(const Pnt2f Position) const
 {
     Int32 Value;
 
@@ -175,15 +175,15 @@ Int32 ScrollBar::calculateValueFromPosition(const Pnt2s Position) const
     }
     MinorAxis = (MajorAxis+1)%2;
 
-    Value = static_cast<Real32>(Position[MajorAxis] - getScrollField()->getPosition()[MajorAxis])/static_cast<Real32>(getScrollField()->getSize()[MajorAxis] - getScrollBar()->getSize()[MajorAxis])*static_cast<Real32>(getMaximum() - getMinimum() - getExtent()) + getMinimum();
+    Value = (Position[MajorAxis] - getScrollField()->getPosition()[MajorAxis])/(getScrollField()->getSize()[MajorAxis] - getScrollBar()->getSize()[MajorAxis])*static_cast<Real32>(getMaximum() - getMinimum() - getExtent()) + getMinimum();
 
     return Value;
 
 }
 
-Vec2s ScrollBar::calculateScrollBarSize(void) const
+Vec2f ScrollBar::calculateScrollBarSize(void) const
 {
-    Vec2s Size;
+    Vec2f Size;
 
     UInt16 MajorAxis, MinorAxis;
     if(getOrientation() == VERTICAL_ALIGNMENT)
@@ -196,7 +196,7 @@ Vec2s ScrollBar::calculateScrollBarSize(void) const
     }
     MinorAxis = (MajorAxis+1)%2;
 
-    Size[MajorAxis] = osgMax<UInt32>( getScrollBarMinLength(),(static_cast<Real32>(getExtent())/static_cast<Real32>(getMaximum() - getMinimum())) * (getScrollField()->getSize()[MajorAxis]));
+    Size[MajorAxis] = osgMax<Real32>( getScrollBarMinLength(),(static_cast<Real32>(getExtent())/static_cast<Real32>(getMaximum() - getMinimum())) * (getScrollField()->getSize()[MajorAxis]));
     Size[MinorAxis] = getScrollField()->getSize()[MinorAxis];
 
     return Size;
@@ -287,7 +287,7 @@ void ScrollBar::scrollBlock(const Int32 Blocks)
     }
 }
 
-void ScrollBar::setMajorAxisScrollBarPosition(const Pnt2s& Pos)
+void ScrollBar::setMajorAxisScrollBarPosition(const Pnt2f& Pos)
 {
     
     UInt16 MajorAxis, MinorAxis;
@@ -627,7 +627,7 @@ void ScrollBar::ScrollBarDraggedListener::mouseReleased(const MouseEvent& e)
 
 void ScrollBar::ScrollBarDraggedListener::mouseDragged(const MouseEvent& e)
 {
-    Pnt2s ComponentMousePosition(ViewportToComponent(e.getLocation(), _ScrollBar, e.getViewport()));
+    Pnt2f ComponentMousePosition(ViewportToComponent(e.getLocation(), _ScrollBar, e.getViewport()));
 
     _ScrollBar->setMajorAxisScrollBarPosition(_InitialScrollBarPosition + (ComponentMousePosition - _InitialMousePosition));
     //std::cout << "Diff "<< _InitialMousePosition[AxisIndex] - ComponentMousePosition[AxisIndex] << std::endl;
@@ -640,7 +640,7 @@ void ScrollBar::ScrollFieldListener::actionPerformed(const ActionEvent& e)
     if(_ScrollBar->getOrientation() == HORIZONTAL_ALIGNMENT ) AxisIndex = 0;
     else  AxisIndex = 1;
 
-    Pnt2s ComponentMousePosition(DrawingSurfaceToComponent(_ScrollBar->getParentWindow()->getDrawingSurface()->getMousePosition(), _ScrollBar));
+    Pnt2f ComponentMousePosition(DrawingSurfaceToComponent(_ScrollBar->getParentWindow()->getDrawingSurface()->getMousePosition(), _ScrollBar));
     //Is Mouse Major axis on the min or max side of the scroll bar
     if(ComponentMousePosition[AxisIndex] < _ScrollBar->getScrollBar()->getPosition()[AxisIndex])
     {

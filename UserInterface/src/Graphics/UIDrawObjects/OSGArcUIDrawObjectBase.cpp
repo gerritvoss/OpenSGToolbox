@@ -57,7 +57,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 #include "OSGArcUIDrawObjectBase.h"
 #include "OSGArcUIDrawObject.h"
 
@@ -98,13 +98,13 @@ const OSG::BitVector ArcUIDrawObjectBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Pnt2s           ArcUIDrawObjectBase::_sfCenter
+/*! \var Pnt2f           ArcUIDrawObjectBase::_sfCenter
     
 */
-/*! \var Int16           ArcUIDrawObjectBase::_sfWidth
+/*! \var Real32          ArcUIDrawObjectBase::_sfWidth
     
 */
-/*! \var Int16           ArcUIDrawObjectBase::_sfHeight
+/*! \var Real32          ArcUIDrawObjectBase::_sfHeight
     
 */
 /*! \var Real32          ArcUIDrawObjectBase::_sfStartAngleRad
@@ -130,17 +130,17 @@ const OSG::BitVector ArcUIDrawObjectBase::MTInfluenceMask =
 
 FieldDescription *ArcUIDrawObjectBase::_desc[] = 
 {
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "Center", 
                      CenterFieldId, CenterFieldMask,
                      false,
                      (FieldAccessMethod) &ArcUIDrawObjectBase::getSFCenter),
-    new FieldDescription(SFInt16::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "Width", 
                      WidthFieldId, WidthFieldMask,
                      false,
                      (FieldAccessMethod) &ArcUIDrawObjectBase::getSFWidth),
-    new FieldDescription(SFInt16::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "Height", 
                      HeightFieldId, HeightFieldMask,
                      false,
@@ -250,9 +250,9 @@ void ArcUIDrawObjectBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ArcUIDrawObjectBase::ArcUIDrawObjectBase(void) :
-    _sfCenter                 (Pnt2s(0,0)), 
-    _sfWidth                  (Int16(1)), 
-    _sfHeight                 (Int16(1)), 
+    _sfCenter                 (Pnt2f(0,0)), 
+    _sfWidth                  (Real32(1)), 
+    _sfHeight                 (Real32(1)), 
     _sfStartAngleRad          (Real32(0.0)), 
     _sfEndAngleRad            (Real32(6.283185307)), 
     _sfSubDivisions           (UInt16(24)), 

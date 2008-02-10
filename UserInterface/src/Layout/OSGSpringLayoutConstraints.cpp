@@ -606,12 +606,12 @@ LayoutSpringPtr SpringLayoutConstraints::scale(LayoutSpringPtr s, Real32 factor)
     return LayoutSpring::scale(s,factor);
 }
 
-Int32 SpringLayoutConstraints::getBaselineFromHeight(const Int32& height) const
+Real32 SpringLayoutConstraints::getBaselineFromHeight(const Real32& height) const
 {
     return getComponent()->getBaseline(getComponent()->getPreferredSize().x(), height);
 }
 
-Int32 SpringLayoutConstraints::getHeightFromBaseLine(const Int32& baseline) const
+Real32 SpringLayoutConstraints::getHeightFromBaseLine(const Real32& baseline) const
 {
     //TODO: Implement
     return 0;

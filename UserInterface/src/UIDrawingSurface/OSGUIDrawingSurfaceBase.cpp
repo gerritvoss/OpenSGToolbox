@@ -104,7 +104,7 @@ const OSG::BitVector UIDrawingSurfaceBase::MTInfluenceMask =
 /*! \var UIDrawingSurfaceMouseTransformFunctorPtr UIDrawingSurfaceBase::_sfMouseTransformFunctor
     
 */
-/*! \var Vec2s           UIDrawingSurfaceBase::_sfSize
+/*! \var Vec2f           UIDrawingSurfaceBase::_sfSize
     
 */
 
@@ -137,7 +137,7 @@ FieldDescription *UIDrawingSurfaceBase::_desc[] =
                      MouseTransformFunctorFieldId, MouseTransformFunctorFieldMask,
                      false,
                      (FieldAccessMethod) &UIDrawingSurfaceBase::getSFMouseTransformFunctor),
-    new FieldDescription(SFVec2s::getClassType(), 
+    new FieldDescription(SFVec2f::getClassType(), 
                      "Size", 
                      SizeFieldId, SizeFieldMask,
                      false,
@@ -223,7 +223,7 @@ UIDrawingSurfaceBase::UIDrawingSurfaceBase(void) :
     _sfEventProducer          (), 
     _sfGraphics               (), 
     _sfMouseTransformFunctor  (), 
-    _sfSize                   (Vec2s(0,0)), 
+    _sfSize                   (Vec2f(0,0)), 
     Inherited() 
 {
 }

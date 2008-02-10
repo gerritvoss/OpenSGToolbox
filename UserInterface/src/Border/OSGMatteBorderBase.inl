@@ -98,28 +98,28 @@ MatteBorderPtr MatteBorderBase::createEmpty(void)
 
 //! Get the MatteBorder::_sfLeftWidth field.
 inline
-SFUInt32 *MatteBorderBase::getSFLeftWidth(void)
+SFReal32 *MatteBorderBase::getSFLeftWidth(void)
 {
     return &_sfLeftWidth;
 }
 
 //! Get the MatteBorder::_sfRightWidth field.
 inline
-SFUInt32 *MatteBorderBase::getSFRightWidth(void)
+SFReal32 *MatteBorderBase::getSFRightWidth(void)
 {
     return &_sfRightWidth;
 }
 
 //! Get the MatteBorder::_sfTopWidth field.
 inline
-SFUInt32 *MatteBorderBase::getSFTopWidth(void)
+SFReal32 *MatteBorderBase::getSFTopWidth(void)
 {
     return &_sfTopWidth;
 }
 
 //! Get the MatteBorder::_sfBottomWidth field.
 inline
-SFUInt32 *MatteBorderBase::getSFBottomWidth(void)
+SFReal32 *MatteBorderBase::getSFBottomWidth(void)
 {
     return &_sfBottomWidth;
 }
@@ -141,84 +141,84 @@ SFMaterialPtr *MatteBorderBase::getSFMaterial(void)
 
 //! Get the value of the MatteBorder::_sfLeftWidth field.
 inline
-UInt32 &MatteBorderBase::getLeftWidth(void)
+Real32 &MatteBorderBase::getLeftWidth(void)
 {
     return _sfLeftWidth.getValue();
 }
 
 //! Get the value of the MatteBorder::_sfLeftWidth field.
 inline
-const UInt32 &MatteBorderBase::getLeftWidth(void) const
+const Real32 &MatteBorderBase::getLeftWidth(void) const
 {
     return _sfLeftWidth.getValue();
 }
 
 //! Set the value of the MatteBorder::_sfLeftWidth field.
 inline
-void MatteBorderBase::setLeftWidth(const UInt32 &value)
+void MatteBorderBase::setLeftWidth(const Real32 &value)
 {
     _sfLeftWidth.setValue(value);
 }
 
 //! Get the value of the MatteBorder::_sfRightWidth field.
 inline
-UInt32 &MatteBorderBase::getRightWidth(void)
+Real32 &MatteBorderBase::getRightWidth(void)
 {
     return _sfRightWidth.getValue();
 }
 
 //! Get the value of the MatteBorder::_sfRightWidth field.
 inline
-const UInt32 &MatteBorderBase::getRightWidth(void) const
+const Real32 &MatteBorderBase::getRightWidth(void) const
 {
     return _sfRightWidth.getValue();
 }
 
 //! Set the value of the MatteBorder::_sfRightWidth field.
 inline
-void MatteBorderBase::setRightWidth(const UInt32 &value)
+void MatteBorderBase::setRightWidth(const Real32 &value)
 {
     _sfRightWidth.setValue(value);
 }
 
 //! Get the value of the MatteBorder::_sfTopWidth field.
 inline
-UInt32 &MatteBorderBase::getTopWidth(void)
+Real32 &MatteBorderBase::getTopWidth(void)
 {
     return _sfTopWidth.getValue();
 }
 
 //! Get the value of the MatteBorder::_sfTopWidth field.
 inline
-const UInt32 &MatteBorderBase::getTopWidth(void) const
+const Real32 &MatteBorderBase::getTopWidth(void) const
 {
     return _sfTopWidth.getValue();
 }
 
 //! Set the value of the MatteBorder::_sfTopWidth field.
 inline
-void MatteBorderBase::setTopWidth(const UInt32 &value)
+void MatteBorderBase::setTopWidth(const Real32 &value)
 {
     _sfTopWidth.setValue(value);
 }
 
 //! Get the value of the MatteBorder::_sfBottomWidth field.
 inline
-UInt32 &MatteBorderBase::getBottomWidth(void)
+Real32 &MatteBorderBase::getBottomWidth(void)
 {
     return _sfBottomWidth.getValue();
 }
 
 //! Get the value of the MatteBorder::_sfBottomWidth field.
 inline
-const UInt32 &MatteBorderBase::getBottomWidth(void) const
+const Real32 &MatteBorderBase::getBottomWidth(void) const
 {
     return _sfBottomWidth.getValue();
 }
 
 //! Set the value of the MatteBorder::_sfBottomWidth field.
 inline
-void MatteBorderBase::setBottomWidth(const UInt32 &value)
+void MatteBorderBase::setBottomWidth(const Real32 &value)
 {
     _sfBottomWidth.setValue(value);
 }

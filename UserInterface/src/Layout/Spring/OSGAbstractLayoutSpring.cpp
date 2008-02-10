@@ -76,7 +76,7 @@ void AbstractLayoutSpring::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Int32 AbstractLayoutSpring::getValue(void) const
+Real32 AbstractLayoutSpring::getValue(void) const
 {
     if(getSize() == LayoutSpring::VALUE_NOT_SET)
     {
@@ -88,7 +88,7 @@ Int32 AbstractLayoutSpring::getValue(void) const
     }
 }
 
-void AbstractLayoutSpring::setValue(const Int32& value)
+void AbstractLayoutSpring::setValue(const Real32& value)
 {
     if (getValue() == value)
     {
@@ -111,7 +111,7 @@ void AbstractLayoutSpring::clear(void)
     endEditCP(AbstractLayoutSpringPtr(this), SizeFieldMask);
 }
 
-void AbstractLayoutSpring::setNonClearValue(const Int32& value)
+void AbstractLayoutSpring::setNonClearValue(const Real32& value)
 {
     beginEditCP(AbstractLayoutSpringPtr(this), SizeFieldMask);
         setSize(value);

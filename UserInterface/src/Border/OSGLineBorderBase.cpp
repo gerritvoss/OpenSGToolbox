@@ -80,7 +80,7 @@ const OSG::BitVector LineBorderBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var UInt32          LineBorderBase::_sfWidth
+/*! \var Real32          LineBorderBase::_sfWidth
     
 */
 /*! \var Color4f         LineBorderBase::_sfColor
@@ -94,7 +94,7 @@ const OSG::BitVector LineBorderBase::MTInfluenceMask =
 
 FieldDescription *LineBorderBase::_desc[] = 
 {
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "Width", 
                      WidthFieldId, WidthFieldMask,
                      false,
@@ -184,7 +184,7 @@ void LineBorderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 LineBorderBase::LineBorderBase(void) :
-    _sfWidth                  (UInt32(1)), 
+    _sfWidth                  (Real32(1)), 
     _sfColor                  (Color4f(0.0,0.0,0.0,1.0)), 
     _sfMaterial               (), 
     Inherited() 

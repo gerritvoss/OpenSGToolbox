@@ -93,7 +93,7 @@ ComponentPtr DefaultTableHeaderCellRenderer::getTableCellRendererComponent(Table
 		std::string tempString;
 		tempString = dynamic_cast<SFString*>(value.get())->getValue();
 		TheLabel->setText(tempString);
-		TheLabel->setPreferredSize(Vec2s(100,30));
+		TheLabel->setPreferredSize(Vec2f(100,30));
 		TheLabel->setBorders(DefaultBorder);
 	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask | Label::BordersFieldMask);
 

@@ -49,7 +49,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // 14RadioButton Headers
 #include <OpenSG/UserInterface/OSGButton.h>
@@ -154,21 +154,21 @@ int main(int argc, char **argv)
     beginEditCP(ExampleRadioButton1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
         ExampleRadioButton1->setVerticalAlignment(0.5);
         ExampleRadioButton1->setHorizontalAlignment(0.0);
-        ExampleRadioButton1->setPreferredSize(Vec2s(100, 50));
+        ExampleRadioButton1->setPreferredSize(Vec2f(100, 50));
         ExampleRadioButton1->setText("Option 1");
     endEditCP(ExampleRadioButton1, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
 
     beginEditCP(ExampleRadioButton2,Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
         ExampleRadioButton2->setVerticalAlignment(0.5);
         ExampleRadioButton2->setHorizontalAlignment(0.0);
-        ExampleRadioButton2->setPreferredSize(Vec2s(100, 50));
+        ExampleRadioButton2->setPreferredSize(Vec2f(100, 50));
         ExampleRadioButton2->setText("Option 2");
     endEditCP(ExampleRadioButton2, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
 
     beginEditCP(ExampleRadioButton3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
         ExampleRadioButton3->setVerticalAlignment(0.5);
         ExampleRadioButton3->setHorizontalAlignment(0.0);
-        ExampleRadioButton3->setPreferredSize(Vec2s(100, 50));
+        ExampleRadioButton3->setPreferredSize(Vec2f(100, 50));
         ExampleRadioButton3->setText("Option 3");
     endEditCP(ExampleRadioButton3, Button::VerticalAlignmentFieldMask | Button::HorizontalAlignmentFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
 
@@ -249,8 +249,8 @@ int main(int argc, char **argv)
 
     // Show the whole Scene
     mgr->showAll();
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(900,900),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(900,900),
                                         "OpenSG 14RadioButton Window");
 
     //Main Event Loop
@@ -273,7 +273,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

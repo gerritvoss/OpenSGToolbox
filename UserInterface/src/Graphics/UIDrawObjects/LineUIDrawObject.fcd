@@ -14,7 +14,7 @@
 A UI DrawObject.
 	<Field
 		name="TopLeft"
-		type="Pnt2s"
+		type="Pnt2f"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -23,7 +23,7 @@ A UI DrawObject.
 	</Field>
 	<Field
 		name="BottomRight"
-		type="Pnt2s"
+		type="Pnt2f"
 		cardinality="single"
 		visibility="external"
 		access="public"

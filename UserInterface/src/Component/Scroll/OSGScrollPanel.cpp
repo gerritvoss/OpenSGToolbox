@@ -175,50 +175,50 @@ void ScrollPanel::updateLayout(void)
         endEditCP(getHorizontalScrollBar(), ScrollBar::VisibleFieldMask);
     }
 
-	Pnt2s TopLeft, BottomRight;
+	Pnt2f TopLeft, BottomRight;
 	getInsideInsetsBounds(TopLeft, BottomRight);
 
-    Vec2s ViewportSize(BottomRight - TopLeft);
+    Vec2f ViewportSize(BottomRight - TopLeft);
 
     //Set the ScrollBar Position and Sizes
     if(VerticalScrollbarShown && HorizontalScrollbarShown)
     {
         //Vertical
         beginEditCP(getVerticalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
-            getVerticalScrollBar()->setSize(Vec2s(getVerticalScrollBar()->getPreferredSize().x(), (BottomRight.y() - TopLeft.y() - getHorizontalScrollBar()->getPreferredSize().y()) ));
-            getVerticalScrollBar()->setPosition(Pnt2s(BottomRight.x() - getVerticalScrollBar()->getSize().x(), TopLeft.y()));
+            getVerticalScrollBar()->setSize(Vec2f(getVerticalScrollBar()->getPreferredSize().x(), (BottomRight.y() - TopLeft.y() - getHorizontalScrollBar()->getPreferredSize().y()) ));
+            getVerticalScrollBar()->setPosition(Pnt2f(BottomRight.x() - getVerticalScrollBar()->getSize().x(), TopLeft.y()));
         endEditCP(getVerticalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
 
         //Horizontal
         beginEditCP(getHorizontalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
-            getHorizontalScrollBar()->setSize(Vec2s((BottomRight.x() - TopLeft.x() - getVerticalScrollBar()->getPreferredSize().x()), getHorizontalScrollBar()->getPreferredSize().y()) );
-            getHorizontalScrollBar()->setPosition(Pnt2s(TopLeft.x(), BottomRight.y() - getHorizontalScrollBar()->getSize().y()));
+            getHorizontalScrollBar()->setSize(Vec2f((BottomRight.x() - TopLeft.x() - getVerticalScrollBar()->getPreferredSize().x()), getHorizontalScrollBar()->getPreferredSize().y()) );
+            getHorizontalScrollBar()->setPosition(Pnt2f(TopLeft.x(), BottomRight.y() - getHorizontalScrollBar()->getSize().y()));
         endEditCP(getHorizontalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
 
-        ViewportSize = ViewportSize - Vec2s(getVerticalScrollBar()->getSize().x(), getHorizontalScrollBar()->getSize().y());
+        ViewportSize = ViewportSize - Vec2f(getVerticalScrollBar()->getSize().x(), getHorizontalScrollBar()->getSize().y());
     }
     else if(VerticalScrollbarShown)
     {
         beginEditCP(getVerticalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
-            getVerticalScrollBar()->setSize(Vec2s(getVerticalScrollBar()->getPreferredSize().x(), (BottomRight.y() - TopLeft.y()) ));
+            getVerticalScrollBar()->setSize(Vec2f(getVerticalScrollBar()->getPreferredSize().x(), (BottomRight.y() - TopLeft.y()) ));
             getVerticalScrollBar()->setPosition(BottomRight-getVerticalScrollBar()->getSize());
         endEditCP(getVerticalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
-        ViewportSize = ViewportSize - Vec2s(getVerticalScrollBar()->getSize().x(), 0);
+        ViewportSize = ViewportSize - Vec2f(getVerticalScrollBar()->getSize().x(), 0);
     }
     else if(HorizontalScrollbarShown)
     {
         beginEditCP(getHorizontalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
-            getHorizontalScrollBar()->setSize(Vec2s((BottomRight.x() - TopLeft.x()), getHorizontalScrollBar()->getPreferredSize().y()) );
+            getHorizontalScrollBar()->setSize(Vec2f((BottomRight.x() - TopLeft.x()), getHorizontalScrollBar()->getPreferredSize().y()) );
             getHorizontalScrollBar()->setPosition(BottomRight-getHorizontalScrollBar()->getSize());
         endEditCP(getHorizontalScrollBar(), ScrollBar::SizeFieldMask | ScrollBar::PositionFieldMask);
-        ViewportSize = ViewportSize - Vec2s(0, getHorizontalScrollBar()->getSize().y());
+        ViewportSize = ViewportSize - Vec2f(0, getHorizontalScrollBar()->getSize().y());
     }
 
     //Set the Viewports position and size
     if(getView() != NullFC)
     {
 		UInt32 FieldsToChange(0);
-		if(getView()->getPosition() != Pnt2s(0,0))
+		if(getView()->getPosition() != Pnt2f(0,0))
 		{
 			FieldsToChange |= UIViewport::PositionFieldMask;
 		}
@@ -228,9 +228,9 @@ void ScrollPanel::updateLayout(void)
 		}
         beginEditCP(getView(), FieldsToChange);
 		
-			if(getView()->getPosition() != Pnt2s(0,0))
+			if(getView()->getPosition() != Pnt2f(0,0))
 			{
-				getView()->setPosition(Pnt2s(0,0));
+				getView()->setPosition(Pnt2f(0,0));
 			}
 			if(getView()->getSize() != ViewportSize)
 			{
@@ -244,7 +244,7 @@ void ScrollPanel::updateLayout(void)
     if(getVerticalResizePolicy() == RESIZE_TO_VIEW ||
         getHorizontalResizePolicy() == RESIZE_TO_VIEW)
     {
-        Vec2s Size(getPreferredSize());
+        Vec2f Size(getPreferredSize());
         if(getVerticalResizePolicy() == RESIZE_TO_VIEW)
         {
             Size[1] = getView()->getViewComponent()->getPreferredSize()[1];
@@ -397,7 +397,7 @@ void ScrollPanel::ViewportRangeModelChangeListener::stateChanged(const ChangeEve
 {
     beginEditCP(_ScrollPanel->getView(), UIViewport::ViewPositionFieldMask);
         _ScrollPanel->getView()->setViewPosition(
-            Pnt2s(_ScrollPanel->_ViewportHorizontalRangeModel.getValue(), _ScrollPanel->_ViewportVerticalRangeModel.getValue()) );
+            Pnt2f(_ScrollPanel->_ViewportHorizontalRangeModel.getValue(), _ScrollPanel->_ViewportVerticalRangeModel.getValue()) );
     endEditCP(_ScrollPanel->getView(), UIViewport::ViewPositionFieldMask);
 
     _ScrollPanel->updateLayout();

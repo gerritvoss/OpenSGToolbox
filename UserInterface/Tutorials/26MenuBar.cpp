@@ -50,7 +50,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // 26MenuBar Headers
 #include <OpenSG/UserInterface/OSGUIForeground.h>
@@ -320,12 +320,12 @@ int main(int argc, char **argv)
 
     beginEditCP(ExampleLabel1, Label::TextFieldMask | Label::PreferredSizeFieldMask);
         ExampleLabel1->setText("Look up in the corner!");
-        ExampleLabel1->setPreferredSize(Vec2s(150, 25));    
+        ExampleLabel1->setPreferredSize(Vec2f(150, 25));    
     endEditCP(ExampleLabel1, Label::TextFieldMask | Label::PreferredSizeFieldMask);
 
     beginEditCP(ExampleLabel2, Label::TextFieldMask | Label::PreferredSizeFieldMask);
         ExampleLabel2->setText("Hit Control + Z");
-        ExampleLabel2->setPreferredSize(Vec2s(150, 25));    
+        ExampleLabel2->setPreferredSize(Vec2f(150, 25));    
     endEditCP(ExampleLabel2, Label::TextFieldMask | Label::PreferredSizeFieldMask);
     
 	// Create The Main InternalWindow
@@ -382,8 +382,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(550,550),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(550,550),
                                         "OpenSG 26MenuBar Window");
 
     while(!ExitApp)
@@ -405,7 +405,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,15 +67,15 @@
 
 #include "OSGBorder.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // TopOffset type
-#include <OpenSG/OSGUInt32Fields.h> // BottomOffset type
-#include <OpenSG/OSGUInt32Fields.h> // LeftOffset type
-#include <OpenSG/OSGUInt32Fields.h> // RightOffset type
+#include <OpenSG/OSGReal32Fields.h> // TopOffset type
+#include <OpenSG/OSGReal32Fields.h> // BottomOffset type
+#include <OpenSG/OSGReal32Fields.h> // LeftOffset type
+#include <OpenSG/OSGReal32Fields.h> // RightOffset type
 #include <OpenSG/OSGColor4fFields.h> // InternalColor type
 #include <OpenSG/OSGColor4fFields.h> // EdgeColor type
 #include "OSGBorder.h" // InsideBorder type
-#include <OpenSG/OSGUInt32Fields.h> // CornerRadius type
-#include <OpenSG/OSGUInt32Fields.h> // InternalToEdgeColorLength type
+#include <OpenSG/OSGReal32Fields.h> // CornerRadius type
+#include <OpenSG/OSGReal32Fields.h> // InternalToEdgeColorLength type
 
 #include "OSGShadowBorderFields.h"
 
@@ -146,49 +146,49 @@ class OSG_USERINTERFACELIB_DLLMAPPING ShadowBorderBase : public Border
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *getSFTopOffset      (void);
-           SFUInt32            *getSFBottomOffset   (void);
-           SFUInt32            *getSFLeftOffset     (void);
-           SFUInt32            *getSFRightOffset    (void);
+           SFReal32            *getSFTopOffset      (void);
+           SFReal32            *getSFBottomOffset   (void);
+           SFReal32            *getSFLeftOffset     (void);
+           SFReal32            *getSFRightOffset    (void);
            SFColor4f           *getSFInternalColor  (void);
            SFColor4f           *getSFEdgeColor      (void);
            SFBorderPtr         *getSFInsideBorder   (void);
-           SFUInt32            *getSFCornerRadius   (void);
-           SFUInt32            *getSFInternalToEdgeColorLength(void);
+           SFReal32            *getSFCornerRadius   (void);
+           SFReal32            *getSFInternalToEdgeColorLength(void);
 
-           UInt32              &getTopOffset      (void);
-     const UInt32              &getTopOffset      (void) const;
-           UInt32              &getBottomOffset   (void);
-     const UInt32              &getBottomOffset   (void) const;
-           UInt32              &getLeftOffset     (void);
-     const UInt32              &getLeftOffset     (void) const;
-           UInt32              &getRightOffset    (void);
-     const UInt32              &getRightOffset    (void) const;
+           Real32              &getTopOffset      (void);
+     const Real32              &getTopOffset      (void) const;
+           Real32              &getBottomOffset   (void);
+     const Real32              &getBottomOffset   (void) const;
+           Real32              &getLeftOffset     (void);
+     const Real32              &getLeftOffset     (void) const;
+           Real32              &getRightOffset    (void);
+     const Real32              &getRightOffset    (void) const;
            Color4f             &getInternalColor  (void);
      const Color4f             &getInternalColor  (void) const;
            Color4f             &getEdgeColor      (void);
      const Color4f             &getEdgeColor      (void) const;
            BorderPtr           &getInsideBorder   (void);
      const BorderPtr           &getInsideBorder   (void) const;
-           UInt32              &getCornerRadius   (void);
-     const UInt32              &getCornerRadius   (void) const;
-           UInt32              &getInternalToEdgeColorLength(void);
-     const UInt32              &getInternalToEdgeColorLength(void) const;
+           Real32              &getCornerRadius   (void);
+     const Real32              &getCornerRadius   (void) const;
+           Real32              &getInternalToEdgeColorLength(void);
+     const Real32              &getInternalToEdgeColorLength(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setTopOffset      ( const UInt32 &value );
-     void setBottomOffset   ( const UInt32 &value );
-     void setLeftOffset     ( const UInt32 &value );
-     void setRightOffset    ( const UInt32 &value );
+     void setTopOffset      ( const Real32 &value );
+     void setBottomOffset   ( const Real32 &value );
+     void setLeftOffset     ( const Real32 &value );
+     void setRightOffset    ( const Real32 &value );
      void setInternalColor  ( const Color4f &value );
      void setEdgeColor      ( const Color4f &value );
      void setInsideBorder   ( const BorderPtr &value );
-     void setCornerRadius   ( const UInt32 &value );
-     void setInternalToEdgeColorLength( const UInt32 &value );
+     void setCornerRadius   ( const Real32 &value );
+     void setInternalToEdgeColorLength( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -231,15 +231,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING ShadowBorderBase : public Border
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfTopOffset;
-    SFUInt32            _sfBottomOffset;
-    SFUInt32            _sfLeftOffset;
-    SFUInt32            _sfRightOffset;
+    SFReal32            _sfTopOffset;
+    SFReal32            _sfBottomOffset;
+    SFReal32            _sfLeftOffset;
+    SFReal32            _sfRightOffset;
     SFColor4f           _sfInternalColor;
     SFColor4f           _sfEdgeColor;
     SFBorderPtr         _sfInsideBorder;
-    SFUInt32            _sfCornerRadius;
-    SFUInt32            _sfInternalToEdgeColorLength;
+    SFReal32            _sfCornerRadius;
+    SFReal32            _sfInternalToEdgeColorLength;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

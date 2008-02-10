@@ -98,28 +98,28 @@ EmptyBorderPtr EmptyBorderBase::createEmpty(void)
 
 //! Get the EmptyBorder::_sfLeftWidth field.
 inline
-SFUInt32 *EmptyBorderBase::getSFLeftWidth(void)
+SFReal32 *EmptyBorderBase::getSFLeftWidth(void)
 {
     return &_sfLeftWidth;
 }
 
 //! Get the EmptyBorder::_sfRightWidth field.
 inline
-SFUInt32 *EmptyBorderBase::getSFRightWidth(void)
+SFReal32 *EmptyBorderBase::getSFRightWidth(void)
 {
     return &_sfRightWidth;
 }
 
 //! Get the EmptyBorder::_sfTopWidth field.
 inline
-SFUInt32 *EmptyBorderBase::getSFTopWidth(void)
+SFReal32 *EmptyBorderBase::getSFTopWidth(void)
 {
     return &_sfTopWidth;
 }
 
 //! Get the EmptyBorder::_sfBottomWidth field.
 inline
-SFUInt32 *EmptyBorderBase::getSFBottomWidth(void)
+SFReal32 *EmptyBorderBase::getSFBottomWidth(void)
 {
     return &_sfBottomWidth;
 }
@@ -127,84 +127,84 @@ SFUInt32 *EmptyBorderBase::getSFBottomWidth(void)
 
 //! Get the value of the EmptyBorder::_sfLeftWidth field.
 inline
-UInt32 &EmptyBorderBase::getLeftWidth(void)
+Real32 &EmptyBorderBase::getLeftWidth(void)
 {
     return _sfLeftWidth.getValue();
 }
 
 //! Get the value of the EmptyBorder::_sfLeftWidth field.
 inline
-const UInt32 &EmptyBorderBase::getLeftWidth(void) const
+const Real32 &EmptyBorderBase::getLeftWidth(void) const
 {
     return _sfLeftWidth.getValue();
 }
 
 //! Set the value of the EmptyBorder::_sfLeftWidth field.
 inline
-void EmptyBorderBase::setLeftWidth(const UInt32 &value)
+void EmptyBorderBase::setLeftWidth(const Real32 &value)
 {
     _sfLeftWidth.setValue(value);
 }
 
 //! Get the value of the EmptyBorder::_sfRightWidth field.
 inline
-UInt32 &EmptyBorderBase::getRightWidth(void)
+Real32 &EmptyBorderBase::getRightWidth(void)
 {
     return _sfRightWidth.getValue();
 }
 
 //! Get the value of the EmptyBorder::_sfRightWidth field.
 inline
-const UInt32 &EmptyBorderBase::getRightWidth(void) const
+const Real32 &EmptyBorderBase::getRightWidth(void) const
 {
     return _sfRightWidth.getValue();
 }
 
 //! Set the value of the EmptyBorder::_sfRightWidth field.
 inline
-void EmptyBorderBase::setRightWidth(const UInt32 &value)
+void EmptyBorderBase::setRightWidth(const Real32 &value)
 {
     _sfRightWidth.setValue(value);
 }
 
 //! Get the value of the EmptyBorder::_sfTopWidth field.
 inline
-UInt32 &EmptyBorderBase::getTopWidth(void)
+Real32 &EmptyBorderBase::getTopWidth(void)
 {
     return _sfTopWidth.getValue();
 }
 
 //! Get the value of the EmptyBorder::_sfTopWidth field.
 inline
-const UInt32 &EmptyBorderBase::getTopWidth(void) const
+const Real32 &EmptyBorderBase::getTopWidth(void) const
 {
     return _sfTopWidth.getValue();
 }
 
 //! Set the value of the EmptyBorder::_sfTopWidth field.
 inline
-void EmptyBorderBase::setTopWidth(const UInt32 &value)
+void EmptyBorderBase::setTopWidth(const Real32 &value)
 {
     _sfTopWidth.setValue(value);
 }
 
 //! Get the value of the EmptyBorder::_sfBottomWidth field.
 inline
-UInt32 &EmptyBorderBase::getBottomWidth(void)
+Real32 &EmptyBorderBase::getBottomWidth(void)
 {
     return _sfBottomWidth.getValue();
 }
 
 //! Get the value of the EmptyBorder::_sfBottomWidth field.
 inline
-const UInt32 &EmptyBorderBase::getBottomWidth(void) const
+const Real32 &EmptyBorderBase::getBottomWidth(void) const
 {
     return _sfBottomWidth.getValue();
 }
 
 //! Set the value of the EmptyBorder::_sfBottomWidth field.
 inline
-void EmptyBorderBase::setBottomWidth(const UInt32 &value)
+void EmptyBorderBase::setBottomWidth(const Real32 &value)
 {
     _sfBottomWidth.setValue(value);
 }

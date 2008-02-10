@@ -49,16 +49,16 @@ class OSG_INPUTLIB_DLLMAPPING MouseEvent : public Event
     MouseButton getButton(void) const;
     UInt16 getClickCount(void) const;
     
-    Pnt2s getLocationOnScreen(void) const;
-    Pnt2s getLocation(void) const;
+    Pnt2f getLocationOnScreen(void) const;
+    Pnt2f getLocation(void) const;
     
-    Int16 getX(void) const;
-    Int16 getXOnScreen(void) const;
-    Int16 getY(void) const;
-    Int16 getYOnScreen(void) const;
+    Real32 getX(void) const;
+    Real32 getXOnScreen(void) const;
+    Real32 getY(void) const;
+    Real32 getYOnScreen(void) const;
     ViewportPtr getViewport(void) const;
     
-    MouseEvent(FieldContainerPtr Source, Time TimeStamp, MouseButton Button, UInt16 ClickCount, Pnt2s Location, ViewportPtr TheViewport);
+    MouseEvent(FieldContainerPtr Source, Time TimeStamp, MouseButton Button, UInt16 ClickCount, Pnt2f Location, ViewportPtr TheViewport);
     
     virtual const EventType &getType(void) const;
     
@@ -67,7 +67,7 @@ class OSG_INPUTLIB_DLLMAPPING MouseEvent : public Event
   protected:
     MouseButton _Button;
     UInt16      _ClickCount;
-    Pnt2s       _Location;
+    Pnt2f       _Location;
     ViewportPtr _Viewport;
     
   private:

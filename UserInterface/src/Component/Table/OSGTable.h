@@ -144,7 +144,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     virtual void columnAdded(const TableColumnModelEvent& e);
 
     //Returns the index of the column that point lies in, or -1 if the result is not in the range [0,  getColumnCount(void)-1].
-    Int32 columnAtPoint(const Pnt2s& point);
+    Int32 columnAtPoint(const Pnt2f& point);
 
     //Invoked when a column is moved due to a margin change.
     virtual void columnMarginChanged(const ChangeEvent& e);
@@ -285,7 +285,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     void removeRowSelectionInterval(const UInt32& index0, const UInt32& index1);
 
     //Returns the index of the row that point lies in, or -1 if the result is not in the range [0, getRowCount(void)-1].
-    Int32 rowAtPoint(const Pnt2s& point);
+    Int32 rowAtPoint(const Pnt2f& point);
 
     //Selects all rows, columns, and cells in the table.
     void selectAll(void);

@@ -110,10 +110,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
 
     //Returns the row for the specified location.
 	//The Location should be in Component space
-    Int32 getIndexForLocation(const Pnt2s& Location) const;
+    Int32 getIndexForLocation(const Pnt2f& Location) const;
 
 	
-    Int32 getIndexClosestToLocation(const Pnt2s& Location) const;
+    Int32 getIndexClosestToLocation(const Pnt2f& Location) const;
 
     ComponentPtr getComponentAtIndex(const UInt32& Index);
     SharedFieldPtr getValueAtIndex(const UInt32& Index);
@@ -121,10 +121,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
 	
 	//Scrollable Interface
     //Returns the preferred size of the viewport for a view component.
-    virtual Vec2s getPreferredScrollableViewportSize(void);
+    virtual Vec2f getPreferredScrollableViewportSize(void);
 
     //Components that display logical rows or columns should compute the scroll increment that will completely expose one block of rows or columns, depending on the value of orientation.
-    virtual Int32 getScrollableBlockIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+    virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
 
     //Return true if a viewport should always force the height of this Scrollable to match the height of the viewport.
     virtual bool getScrollableTracksViewportHeight(void);
@@ -133,7 +133,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
     virtual bool getScrollableTracksViewportWidth(void);
 
     //Components that display logical rows or columns should compute the scroll increment that will completely expose one new row or column, depending on the value of orientation.
-    virtual Int32 getScrollableUnitIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+    virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
     
 	void scrollToIndex(const UInt32& Index);
 

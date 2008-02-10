@@ -528,7 +528,7 @@ void Table::drawInternal(const GraphicsPtr TheGraphics) const
 {
     if(getShowVerticalLines() || getShowHorizontalLines())
     {
-	    Pnt2s BorderTopLeft, BorderBottomRight;
+	    Pnt2f BorderTopLeft, BorderBottomRight;
 	    getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
 
         if(getShowVerticalLines())
@@ -537,8 +537,8 @@ void Table::drawInternal(const GraphicsPtr TheGraphics) const
             for(UInt32 i(0) ; i<_ColumnModel->getColumnCount() ; ++i)
             {
                 CumulativeColumnWidth += _ColumnModel->getColumn(i)->getWidth();
-                TheGraphics->drawRect(Pnt2s(CumulativeColumnWidth, BorderTopLeft.y()),
-                                    Pnt2s(CumulativeColumnWidth+_ColumnModel->getColumnMargin(), BorderBottomRight.y()),
+                TheGraphics->drawRect(Pnt2f(CumulativeColumnWidth, BorderTopLeft.y()),
+                                    Pnt2f(CumulativeColumnWidth+_ColumnModel->getColumnMargin(), BorderBottomRight.y()),
                                     getGridColor(), getOpacity());
                 CumulativeColumnWidth += _ColumnModel->getColumnMargin();
             }
@@ -549,8 +549,8 @@ void Table::drawInternal(const GraphicsPtr TheGraphics) const
             UInt32 CumulativeColumnHeight(getHeader()->getPosition().y() + getHeader()->getSize().y());
             for(UInt32 i(0) ; i<_Model->getRowCount() ; ++i)
             {
-                TheGraphics->drawRect(Pnt2s(BorderTopLeft.x(), CumulativeColumnHeight),
-                                    Pnt2s(BorderBottomRight.x(), CumulativeColumnHeight + getRowMargin()),
+                TheGraphics->drawRect(Pnt2f(BorderTopLeft.x(), CumulativeColumnHeight),
+                                    Pnt2f(BorderBottomRight.x(), CumulativeColumnHeight + getRowMargin()),
                                     getGridColor(), getOpacity());
                 CumulativeColumnHeight += getRowMargin();
                 CumulativeColumnHeight += getRowHeight();
@@ -566,7 +566,7 @@ void Table::drawInternal(const GraphicsPtr TheGraphics) const
 void Table::updateLayout(void)
 {
     if(getChildren().size() == 0){ return; }
-	Pnt2s BorderTopLeft, BorderBottomRight;
+	Pnt2f BorderTopLeft, BorderBottomRight;
 	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
 	
 
@@ -593,9 +593,9 @@ void Table::updateLayout(void)
             CellIndex = Row*_Model->getColumnCount() + Column;
             beginEditCP(getChildren()[CellIndex], PositionFieldMask | SizeFieldMask);
                 
-                getChildren()[CellIndex]->setPosition(Pnt2s(CumulativeWidth, CumulativeHeight));
+                getChildren()[CellIndex]->setPosition(Pnt2f(CumulativeWidth, CumulativeHeight));
 
-                getChildren()[CellIndex]->setSize(Vec2s(
+                getChildren()[CellIndex]->setSize(Vec2f(
                     _ColumnModel->getColumn(Column)->getWidth(),
                     getRowHeight()));
 
@@ -608,10 +608,10 @@ void Table::updateLayout(void)
     }
     
     //Update My Preferred Size
-	Pnt2s TopLeft, BottomRight;
+	Pnt2f TopLeft, BottomRight;
 	getBounds(TopLeft, BottomRight);
 
-    Vec2s NewPreferredSize(_ColumnModel->getTotalColumnWidth() + (BottomRight.x() - TopLeft.x() - BorderBottomRight.x() + BorderTopLeft.x()),
+    Vec2f NewPreferredSize(_ColumnModel->getTotalColumnWidth() + (BottomRight.x() - TopLeft.x() - BorderBottomRight.x() + BorderTopLeft.x()),
                                CumulativeHeight + (BottomRight.y() - TopLeft.y() - BorderBottomRight.y() + BorderTopLeft.y()));
     if(NewPreferredSize != getPreferredSize())
     {
@@ -917,9 +917,9 @@ std::vector<UInt32> Table::getSelectedRows(void) const
     }
 }
 
-Int32 Table::rowAtPoint(const Pnt2s& point)
+Int32 Table::rowAtPoint(const Pnt2f& point)
 {
-	Pnt2s BorderTopLeft, BorderBottomRight;
+	Pnt2f BorderTopLeft, BorderBottomRight;
 	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
     
     UInt32 CumulativeHeight(BorderTopLeft.y() +

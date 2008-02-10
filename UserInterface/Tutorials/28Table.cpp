@@ -48,7 +48,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 
 // 28Table Headers
@@ -367,7 +367,7 @@ int main(int argc, char **argv)
     table = Table::create();
     table->setModel(TableModelPtr(new ExampleTableModel()));
     beginEditCP(table, Table::PreferredSizeFieldMask);
-        table->setPreferredSize(Vec2s(500, 500));
+        table->setPreferredSize(Vec2f(500, 500));
     endEditCP(table, Table::PreferredSizeFieldMask);
     table->updateLayout();
 
@@ -380,7 +380,7 @@ int main(int argc, char **argv)
     ******************************************************/
     ScrollPanelPtr TheScrollPanel = ScrollPanel::create();
     beginEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-        TheScrollPanel->setPreferredSize(Vec2s(402,200));
+        TheScrollPanel->setPreferredSize(Vec2f(402,200));
         TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     endEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
     TheScrollPanel->setViewComponent(table);
@@ -452,8 +452,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(900,900),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(900,900),
                                         "OpenSG 27Table Window");
 
     //Main Event Loop
@@ -486,7 +486,7 @@ PanelPtr createSelectionModePanel(void)
     beginEditCP(SingleSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask | RadioButton::HorizontalAlignmentFieldMask);
         SingleSelectionButton->setText("Single Selection");
         SingleSelectionButton->setSelected(true);
-        SingleSelectionButton->setPreferredSize(Vec2s(180,30));
+        SingleSelectionButton->setPreferredSize(Vec2f(180,30));
         SingleSelectionButton->setHorizontalAlignment(0.0);
     endEditCP(SingleSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask | RadioButton::HorizontalAlignmentFieldMask);
     SingleSelectionButton->addButtonSelectedListener(&TheSingleSelectionListener);
@@ -494,7 +494,7 @@ PanelPtr createSelectionModePanel(void)
     RadioButtonPtr SingleIntervalSelectionButton = RadioButton::create();
     beginEditCP(SingleIntervalSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::HorizontalAlignmentFieldMask);
         SingleIntervalSelectionButton->setText("Single Interval Selection");
-        SingleIntervalSelectionButton->setPreferredSize(Vec2s(180,30));
+        SingleIntervalSelectionButton->setPreferredSize(Vec2f(180,30));
         SingleIntervalSelectionButton->setHorizontalAlignment(0.0);
     endEditCP(SingleIntervalSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::HorizontalAlignmentFieldMask);
     SingleIntervalSelectionButton->addButtonSelectedListener(&TheSingleIntervalSelectionListener);
@@ -502,7 +502,7 @@ PanelPtr createSelectionModePanel(void)
     RadioButtonPtr MultipleIntervalSelectionButton = RadioButton::create();
     beginEditCP(MultipleIntervalSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::HorizontalAlignmentFieldMask);
         MultipleIntervalSelectionButton->setText("Multiple Interval Selection");
-        MultipleIntervalSelectionButton->setPreferredSize(Vec2s(180,30));
+        MultipleIntervalSelectionButton->setPreferredSize(Vec2f(180,30));
         MultipleIntervalSelectionButton->setHorizontalAlignment(0.0);
     endEditCP(MultipleIntervalSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::HorizontalAlignmentFieldMask);
     MultipleIntervalSelectionButton->addButtonSelectedListener(&TheMultipleIntervalSelectionListener);
@@ -527,7 +527,7 @@ PanelPtr createSelectionModePanel(void)
         ThePanel->getChildren().push_back(SingleIntervalSelectionButton);
         ThePanel->getChildren().push_back(MultipleIntervalSelectionButton);
         ThePanel->setLayout(PanelLayout);
-        ThePanel->setPreferredSize(Vec2s(300, 200));
+        ThePanel->setPreferredSize(Vec2f(300, 200));
     endEditCP(ThePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask);
     return ThePanel;
 }
@@ -549,7 +549,7 @@ PanelPtr createSelectionOptionPanel(void)
     RowSelectionButton = CheckboxButton::create();
     beginEditCP(RowSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask );
         RowSelectionButton->setText("Row Selection");
-        RowSelectionButton->setPreferredSize(Vec2s(180,30));
+        RowSelectionButton->setPreferredSize(Vec2f(180,30));
         RowSelectionButton->setHorizontalAlignment(0.0);
         RowSelectionButton->setSelected(true);
     endEditCP(RowSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask );
@@ -558,7 +558,7 @@ PanelPtr createSelectionOptionPanel(void)
     ColumnSelectionButton = CheckboxButton::create();
     beginEditCP(ColumnSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::SelectedFieldMask | CheckboxButton::HorizontalAlignmentFieldMask);
         ColumnSelectionButton->setText("Column Selection");
-        ColumnSelectionButton->setPreferredSize(Vec2s(180,30));
+        ColumnSelectionButton->setPreferredSize(Vec2f(180,30));
         ColumnSelectionButton->setHorizontalAlignment(0.0);
         ColumnSelectionButton->setSelected(true);
     endEditCP(ColumnSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::SelectedFieldMask | CheckboxButton::HorizontalAlignmentFieldMask);
@@ -568,7 +568,7 @@ PanelPtr createSelectionOptionPanel(void)
     CellSelectionButton = CheckboxButton::create();
     beginEditCP(CellSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask);
         CellSelectionButton->setText("Cell Selection");
-        CellSelectionButton->setPreferredSize(Vec2s(180,30));
+        CellSelectionButton->setPreferredSize(Vec2f(180,30));
         CellSelectionButton->setHorizontalAlignment(0.0);
         CellSelectionButton->setSelected(false);
     endEditCP(CellSelectionButton, CheckboxButton::TextFieldMask | CheckboxButton::PreferredSizeFieldMask | CheckboxButton::HorizontalAlignmentFieldMask | CheckboxButton::SelectedFieldMask);
@@ -590,7 +590,7 @@ PanelPtr createSelectionOptionPanel(void)
         ThePanel->getChildren().push_back(ColumnSelectionButton);
         ThePanel->getChildren().push_back(CellSelectionButton);
         ThePanel->setLayout(PanelLayout);
-        ThePanel->setPreferredSize(Vec2s(300, 200));
+        ThePanel->setPreferredSize(Vec2f(300, 200));
     endEditCP(ThePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask);
     return ThePanel;
 }
@@ -604,7 +604,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

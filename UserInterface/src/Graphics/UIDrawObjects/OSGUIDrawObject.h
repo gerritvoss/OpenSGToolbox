@@ -80,7 +80,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawObject : public UIDrawObjectBase
     /*! \}                                                                 */
 
 	virtual void draw(const GraphicsPtr Graphics) const = 0;
-    virtual void getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const = 0;
+    virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

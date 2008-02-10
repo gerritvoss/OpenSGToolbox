@@ -86,7 +86,7 @@ void SpringLayout::initMethod (void)
 
 void SpringLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
-	Pnt2s ParentInsetsTopLeft, ParentInsetsBottomRight;
+	Pnt2f ParentInsetsTopLeft, ParentInsetsBottomRight;
 	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(ParentInsetsTopLeft, ParentInsetsBottomRight);
     
     const_cast<SpringLayout*>(this)->setParent(Container::Ptr::dcast(ParentComponent));
@@ -107,14 +107,14 @@ void SpringLayout::updateLayout(const MFComponentPtr Components,const ComponentP
     for (UInt32 i(0) ; i < Components.size() ; i++)
     {
         SpringLayoutConstraintsPtr TheConstraints = getConstraint( Components.getValue(i) );
-        UInt32 x = getDecycledSpring(TheConstraints->getX())->getValue();
-        UInt32 y = getDecycledSpring(TheConstraints->getY())->getValue();
-        UInt32 width = getDecycledSpring(TheConstraints->getWidth())->getValue();
-        UInt32 height = getDecycledSpring(TheConstraints->getHeight())->getValue();
+        Real32 x = getDecycledSpring(TheConstraints->getX())->getValue();
+        Real32 y = getDecycledSpring(TheConstraints->getY())->getValue();
+        Real32 width = getDecycledSpring(TheConstraints->getWidth())->getValue();
+        Real32 height = getDecycledSpring(TheConstraints->getHeight())->getValue();
         
         beginEditCP(Components.getValue(i), Component::PositionFieldMask | Component::SizeFieldMask);
-            Components.getValue(i)->setPosition(Pnt2s(x,y));
-            Components.getValue(i)->setSize(Vec2s(width, height));
+            Components.getValue(i)->setPosition(Pnt2f(x,y));
+            Components.getValue(i)->setSize(Vec2f(width, height));
         endEditCP(Components.getValue(i), Component::PositionFieldMask | Component::SizeFieldMask);
      }
 }
@@ -170,7 +170,7 @@ LayoutSpringPtr SpringLayout::getConstraint(const UInt32 Edge, ComponentPtr TheC
     return ProxyLayoutSpring::create(Edge, TheComponent, SpringLayoutPtr(this));
 }
 
-void SpringLayout::putConstraint(const UInt32 e1, ComponentPtr c1, const UInt32& pad, const UInt32 e2, ComponentPtr c2)
+void SpringLayout::putConstraint(const UInt32 e1, ComponentPtr c1, const Real32& pad, const UInt32 e2, ComponentPtr c2)
 {
     putConstraint(e1, c1, LayoutSpring::constant(pad), e2, c2);
 }
@@ -223,14 +223,14 @@ void SpringLayout::setParent(ContainerPtr p)
     if(Width->getType() == ComponentWidthLayoutSpring::getClassType() &&
         ComponentWidthLayoutSpring::Ptr::dcast(Width)->getComponent() == p)
     {
-        constraints->setWidth(LayoutSpring::constant(0,0,TypeTraits<Int32>::getMax()));
+        constraints->setWidth(LayoutSpring::constant(0,0,TypeTraits<Real32>::getMax()));
     }
     
     LayoutSpringPtr Height = constraints->getHeight();
     if(Height->getType() == ComponentHeightLayoutSpring::getClassType() &&
         ComponentHeightLayoutSpring::Ptr::dcast(Height)->getComponent() == p)
     {
-        constraints->setHeight(LayoutSpring::constant(0,0,TypeTraits<Int32>::getMax()));
+        constraints->setHeight(LayoutSpring::constant(0,0,TypeTraits<Real32>::getMax()));
     }
 }
 

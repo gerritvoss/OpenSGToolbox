@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -98,7 +98,7 @@ TextUIDrawObjectPtr TextUIDrawObjectBase::createEmpty(void)
 
 //! Get the TextUIDrawObject::_sfPosition field.
 inline
-SFPnt2s *TextUIDrawObjectBase::getSFPosition(void)
+SFPnt2f *TextUIDrawObjectBase::getSFPosition(void)
 {
     return &_sfPosition;
 }
@@ -134,21 +134,21 @@ SFReal32 *TextUIDrawObjectBase::getSFOpacity(void)
 
 //! Get the value of the TextUIDrawObject::_sfPosition field.
 inline
-Pnt2s &TextUIDrawObjectBase::getPosition(void)
+Pnt2f &TextUIDrawObjectBase::getPosition(void)
 {
     return _sfPosition.getValue();
 }
 
 //! Get the value of the TextUIDrawObject::_sfPosition field.
 inline
-const Pnt2s &TextUIDrawObjectBase::getPosition(void) const
+const Pnt2f &TextUIDrawObjectBase::getPosition(void) const
 {
     return _sfPosition.getValue();
 }
 
 //! Set the value of the TextUIDrawObject::_sfPosition field.
 inline
-void TextUIDrawObjectBase::setPosition(const Pnt2s &value)
+void TextUIDrawObjectBase::setPosition(const Pnt2f &value)
 {
     _sfPosition.setValue(value);
 }

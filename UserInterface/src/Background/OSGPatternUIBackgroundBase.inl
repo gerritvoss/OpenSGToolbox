@@ -105,7 +105,7 @@ SFTextureChunkPtr *PatternUIBackgroundBase::getSFTexture(void)
 
 //! Get the PatternUIBackground::_sfPatternSize field.
 inline
-SFVec2s *PatternUIBackgroundBase::getSFPatternSize(void)
+SFVec2f *PatternUIBackgroundBase::getSFPatternSize(void)
 {
     return &_sfPatternSize;
 }
@@ -190,21 +190,21 @@ void PatternUIBackgroundBase::setTexture(const TextureChunkPtr &value)
 
 //! Get the value of the PatternUIBackground::_sfPatternSize field.
 inline
-Vec2s &PatternUIBackgroundBase::getPatternSize(void)
+Vec2f &PatternUIBackgroundBase::getPatternSize(void)
 {
     return _sfPatternSize.getValue();
 }
 
 //! Get the value of the PatternUIBackground::_sfPatternSize field.
 inline
-const Vec2s &PatternUIBackgroundBase::getPatternSize(void) const
+const Vec2f &PatternUIBackgroundBase::getPatternSize(void) const
 {
     return _sfPatternSize.getValue();
 }
 
 //! Set the value of the PatternUIBackground::_sfPatternSize field.
 inline
-void PatternUIBackgroundBase::setPatternSize(const Vec2s &value)
+void PatternUIBackgroundBase::setPatternSize(const Vec2f &value)
 {
     _sfPatternSize.setValue(value);
 }

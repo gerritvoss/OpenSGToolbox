@@ -121,7 +121,7 @@ void InternalWindow::setMaximize(bool Maximize)
 			setIsMaximized(Maximize);
 			setPreviousSize(getSize());
 			setPreviousPosition(getPosition());
-			setPosition(Pnt2s(0,0));
+			setPosition(Pnt2f(0,0));
 			setPreferredSize(getDrawingSurface()->getSize());
 		endEditCP(InternalWindowPtr(this), IsMaximizedFieldMask | PreviousSizeFieldMask | PreviousPositionFieldMask | PreferredSizeFieldMask | PositionFieldMask);
 	}
@@ -129,8 +129,8 @@ void InternalWindow::setMaximize(bool Maximize)
 	{
 		beginEditCP(InternalWindowPtr(this), IsMaximizedFieldMask | PreviousSizeFieldMask | PreviousPositionFieldMask | PreferredSizeFieldMask | PositionFieldMask);
 			setIsMaximized(Maximize);
-			Vec2s TempSize(getPreviousSize());
-			Pnt2s TempPos(getPreviousPosition());
+			Vec2f TempSize(getPreviousSize());
+			Pnt2f TempPos(getPreviousPosition());
 			setPreviousSize(getSize());
 			setPreviousPosition(getPosition());
 			setPreferredSize(TempSize);
@@ -500,7 +500,7 @@ void InternalWindow::mouseReleased(const MouseEvent& e)
     }
 }
 
-void InternalWindow::getTitlebarBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+void InternalWindow::getTitlebarBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
 	if(getDrawDecorations() && getDrawTitlebar() && getDrawnBorder()->getType().isDerivedFrom(WindowBorder::getClassType()))
 	{
@@ -513,9 +513,9 @@ void InternalWindow::getTitlebarBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
 	}
 }
 
-InternalWindow::WindowArea InternalWindow::getCursurArea(const Pnt2s& DrawingSurfaceLocation) const
+InternalWindow::WindowArea InternalWindow::getCursurArea(const Pnt2f& DrawingSurfaceLocation) const
 {
-	Pnt2s LocationInWindow(DrawingSurfaceToComponent(DrawingSurfaceLocation, InternalWindowPtr(this)));
+	Pnt2f LocationInWindow(DrawingSurfaceToComponent(DrawingSurfaceLocation, InternalWindowPtr(this)));
 	if(LocationInWindow.x() < 0 ||
 	   LocationInWindow.x() > getSize().x() ||
 	   LocationInWindow.y() < 0 ||
@@ -527,7 +527,7 @@ InternalWindow::WindowArea InternalWindow::getCursurArea(const Pnt2s& DrawingSur
 	{
 		if(getDrawDecorations())
 		{
-			Pnt2s TitlebarTopLeft, TitlebarBottomRight;
+			Pnt2f TitlebarTopLeft, TitlebarBottomRight;
 			getTitlebarBounds(TitlebarTopLeft, TitlebarBottomRight);
 			//Borders
 			if(LocationInWindow.x() < getResizeModifyCursorWidth() || 
@@ -776,10 +776,10 @@ void InternalWindow::destroyPopupMenu(void)
     }
 }
 
-void InternalWindow::getMenuBarBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+void InternalWindow::getMenuBarBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
     //Get Insets Bounds
-    Pnt2s InsetsTopLeft, InsetsBottomRight;
+    Pnt2f InsetsTopLeft, InsetsBottomRight;
     Container::getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 
     TopLeft = InsetsTopLeft;
@@ -789,16 +789,16 @@ void InternalWindow::getMenuBarBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
     }
     else
     {
-        Pnt2s MenuBarTopLeft, MenuBarBottomRight;
+        Pnt2f MenuBarTopLeft, MenuBarBottomRight;
         getMenuBar()->getBounds(MenuBarTopLeft, MenuBarBottomRight);
-        BottomRight = TopLeft + Vec2s((InsetsBottomRight.x() - InsetsTopLeft.x()), (MenuBarBottomRight.y() - MenuBarTopLeft.y()));
+        BottomRight = TopLeft + Vec2f((InsetsBottomRight.x() - InsetsTopLeft.x()), (MenuBarBottomRight.y() - MenuBarTopLeft.y()));
     }
 }
 
-void InternalWindow::getContentPaneBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+void InternalWindow::getContentPaneBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
     //Get Insets Bounds
-    Pnt2s InsetsTopLeft, InsetsBottomRight;
+    Pnt2f InsetsTopLeft, InsetsBottomRight;
     Container::getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 
     BottomRight = InsetsBottomRight;
@@ -808,13 +808,13 @@ void InternalWindow::getContentPaneBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) co
     }
     else
     {
-        Pnt2s MenuBarTopLeft, MenuBarBottomRight;
+        Pnt2f MenuBarTopLeft, MenuBarBottomRight;
         getMenuBar()->getBounds(MenuBarTopLeft, MenuBarBottomRight);
-        TopLeft = InsetsTopLeft + Vec2s(0, (MenuBarBottomRight.y() - MenuBarTopLeft.y()));
+        TopLeft = InsetsTopLeft + Vec2f(0, (MenuBarBottomRight.y() - MenuBarTopLeft.y()));
     }
 }
 
-void InternalWindow::getInsideInsetsBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+void InternalWindow::getInsideInsetsBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
     getContentPaneBounds(TopLeft, BottomRight);
 }
@@ -824,23 +824,23 @@ void InternalWindow::updateLayout(void)
     //If I have a MenuBar Update it's layout
     if(getMenuBar() != NullFC)
     {
-        Pnt2s MenuTopLeft, MenuBottomRight;
+        Pnt2f MenuTopLeft, MenuBottomRight;
         getMenuBar()->updateLayout();
         getMenuBarBounds(MenuTopLeft, MenuBottomRight);
         beginEditCP(getMenuBar(), MenuBar::PositionFieldMask | MenuBar::SizeFieldMask);
 			getMenuBar()->setPosition(MenuTopLeft);
-			getMenuBar()->setSize(Vec2s( MenuBottomRight.x() - MenuTopLeft.x(), getMenuBar()->getPreferredSize().y()));
+			getMenuBar()->setSize(Vec2f( MenuBottomRight.x() - MenuTopLeft.x(), getMenuBar()->getPreferredSize().y()));
         endEditCP(getMenuBar(), MenuBar::PositionFieldMask | MenuBar::SizeFieldMask);
     }
 
     //If I have a Titlebar then update it's layout
     if(getDrawDecorations() && getDrawTitlebar() && getTitlebar() != NullFC)
     {
-		Pnt2s TitlebarTopLeft, TitlebarBottomRight;
+		Pnt2f TitlebarTopLeft, TitlebarBottomRight;
 		getTitlebarBounds(TitlebarTopLeft, TitlebarBottomRight);
 		beginEditCP(getTitlebar(), Titlebar::PositionFieldMask | Titlebar::SizeFieldMask);
 			getTitlebar()->setPosition(TitlebarTopLeft);
-			getTitlebar()->setSize(Vec2s( TitlebarBottomRight.x() - TitlebarTopLeft.x(), getTitlebar()->getPreferredSize().y()));
+			getTitlebar()->setSize(Vec2f( TitlebarBottomRight.x() - TitlebarTopLeft.x(), getTitlebar()->getPreferredSize().y()));
 		endEditCP(getTitlebar(), Titlebar::PositionFieldMask | Titlebar::SizeFieldMask);
     }
 
@@ -1187,10 +1187,10 @@ void InternalWindow::BorderDraggedListener::mouseReleased(const MouseEvent& e)
 
 void InternalWindow::BorderDraggedListener::mouseDragged(const MouseEvent& e)
 {
-	Vec2s Size;
+	Vec2f Size;
 	bool PositionChange;
-	Pnt2s Position;
-	Pnt2s BottomRight(_InternalWindow->getPosition() + _InternalWindow->getSize());
+	Pnt2f Position;
+	Pnt2f BottomRight(_InternalWindow->getPosition() + _InternalWindow->getSize());
 	switch(_BorderDragged)
 	{
 	case WINDOW_LEFT_BORDER:

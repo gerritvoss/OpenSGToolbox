@@ -122,7 +122,7 @@ void WindowEventProducer::removeWindowListener(WindowListenerPtr Listener)
 }
 
 inline
-WindowEventProducer::Click::Click(Time TimeStamp, Pnt2s Location) :
+WindowEventProducer::Click::Click(Time TimeStamp, Pnt2f Location) :
 _TimeStamp(TimeStamp),
 _Location(Location)
 {

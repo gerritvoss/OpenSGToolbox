@@ -92,7 +92,7 @@ const OSG::BitVector EtchedBorderBase::MTInfluenceMask =
 /*! \var bool            EtchedBorderBase::_sfRaised
     
 */
-/*! \var UInt32          EtchedBorderBase::_sfWidth
+/*! \var Real32          EtchedBorderBase::_sfWidth
     
 */
 
@@ -115,7 +115,7 @@ FieldDescription *EtchedBorderBase::_desc[] =
                      RaisedFieldId, RaisedFieldMask,
                      false,
                      (FieldAccessMethod) &EtchedBorderBase::getSFRaised),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "Width", 
                      WidthFieldId, WidthFieldMask,
                      false,
@@ -198,7 +198,7 @@ EtchedBorderBase::EtchedBorderBase(void) :
     _sfHighlight              (), 
     _sfShadow                 (), 
     _sfRaised                 (bool(true)), 
-    _sfWidth                  (UInt32(1)), 
+    _sfWidth                  (Real32(1)), 
     Inherited() 
 {
 }

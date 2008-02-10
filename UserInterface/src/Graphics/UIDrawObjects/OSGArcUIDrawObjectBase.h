@@ -67,9 +67,9 @@
 
 #include "OSGUIDrawObject.h" // Parent
 
-#include <OpenSG/OSGVec2sFields.h> // Center type
-#include <OpenSG/OSGInt16Fields.h> // Width type
-#include <OpenSG/OSGInt16Fields.h> // Height type
+#include <OpenSG/OSGPnt2fFields.h> // Center type
+#include <OpenSG/OSGReal32Fields.h> // Width type
+#include <OpenSG/OSGReal32Fields.h> // Height type
 #include <OpenSG/OSGReal32Fields.h> // StartAngleRad type
 #include <OpenSG/OSGReal32Fields.h> // EndAngleRad type
 #include <OpenSG/OSGUInt16Fields.h> // SubDivisions type
@@ -146,9 +146,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ArcUIDrawObjectBase : public UIDrawObject
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPnt2s             *getSFCenter         (void);
-           SFInt16             *getSFWidth          (void);
-           SFInt16             *getSFHeight         (void);
+           SFPnt2f             *getSFCenter         (void);
+           SFReal32            *getSFWidth          (void);
+           SFReal32            *getSFHeight         (void);
            SFReal32            *getSFStartAngleRad  (void);
            SFReal32            *getSFEndAngleRad    (void);
            SFUInt16            *getSFSubDivisions   (void);
@@ -156,12 +156,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING ArcUIDrawObjectBase : public UIDrawObject
            SFReal32            *getSFLineWidth      (void);
            SFReal32            *getSFOpacity        (void);
 
-           Pnt2s               &getCenter         (void);
-     const Pnt2s               &getCenter         (void) const;
-           Int16               &getWidth          (void);
-     const Int16               &getWidth          (void) const;
-           Int16               &getHeight         (void);
-     const Int16               &getHeight         (void) const;
+           Pnt2f               &getCenter         (void);
+     const Pnt2f               &getCenter         (void) const;
+           Real32              &getWidth          (void);
+     const Real32              &getWidth          (void) const;
+           Real32              &getHeight         (void);
+     const Real32              &getHeight         (void) const;
            Real32              &getStartAngleRad  (void);
      const Real32              &getStartAngleRad  (void) const;
            Real32              &getEndAngleRad    (void);
@@ -180,9 +180,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ArcUIDrawObjectBase : public UIDrawObject
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setCenter         ( const Pnt2s &value );
-     void setWidth          ( const Int16 &value );
-     void setHeight         ( const Int16 &value );
+     void setCenter         ( const Pnt2f &value );
+     void setWidth          ( const Real32 &value );
+     void setHeight         ( const Real32 &value );
      void setStartAngleRad  ( const Real32 &value );
      void setEndAngleRad    ( const Real32 &value );
      void setSubDivisions   ( const UInt16 &value );
@@ -231,9 +231,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ArcUIDrawObjectBase : public UIDrawObject
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt2s             _sfCenter;
-    SFInt16             _sfWidth;
-    SFInt16             _sfHeight;
+    SFPnt2f             _sfCenter;
+    SFReal32            _sfWidth;
+    SFReal32            _sfHeight;
     SFReal32            _sfStartAngleRad;
     SFReal32            _sfEndAngleRad;
     SFUInt16            _sfSubDivisions;

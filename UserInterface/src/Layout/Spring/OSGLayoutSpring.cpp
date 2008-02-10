@@ -70,7 +70,7 @@ A UI LayoutSpring.
  *                           Class variables                               *
 \***************************************************************************/
 
-Int32 LayoutSpring::VALUE_NOT_SET = TypeTraits< Int32 >::getMin();
+Real32 LayoutSpring::VALUE_NOT_SET = TypeTraits< Real32 >::getMin();
 
 /***************************************************************************\
  *                           Class methods                                 *
@@ -93,7 +93,7 @@ Real32 LayoutSpring::getStrain(void) const
 
 void LayoutSpring::setStrain(Real32 strain)
 {
-    setValue(getPreferredValue() + static_cast<Int32>(strain * range(strain < 0)));
+    setValue(getPreferredValue() + static_cast<Real32>(strain * range(strain < 0)));
 }
 
 bool LayoutSpring::isCyclic(SpringLayoutPtr l) const
@@ -113,12 +113,12 @@ Real32 LayoutSpring::range(bool contract) const
     }
 }
 
-LayoutSpringPtr LayoutSpring::constant(const Int32& pref)
+LayoutSpringPtr LayoutSpring::constant(const Real32& pref)
 {
     return StaticLayoutSpring::create(pref);
 }
 
-LayoutSpringPtr LayoutSpring::constant(const Int32& min, const Int32& pref, const Int32& max)
+LayoutSpringPtr LayoutSpring::constant(const Real32& min, const Real32& pref, const Real32& max)
 {
     return StaticLayoutSpring::create(min, pref, max);
 }

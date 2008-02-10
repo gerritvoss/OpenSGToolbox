@@ -55,7 +55,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // 04UIBackground Headers
 #include <OpenSG/UserInterface/OSGUIBackgrounds.h>
@@ -286,7 +286,7 @@ int main(int argc, char **argv)
 			-setTexture(TextureName): Determine
 				which Texture will be used to 
 				create the Background.
-			-setPatternSize(Vec2s):
+			-setPatternSize(Vec2f):
 			-setVerticalAlignment():
 			-setHorizontalAlignment():
 			-setHorizontalRepeat():
@@ -307,7 +307,7 @@ int main(int argc, char **argv)
    beginEditCP(ExamplePatternUIBackground, PatternUIBackground::TextureFieldMask | PatternUIBackground::PatternSizeFieldMask | PatternUIBackground::VerticalAlignmentFieldMask | PatternUIBackground::HorizontalAlignmentFieldMask | PatternUIBackground::HorizontalRepeatFieldId | 
         PatternUIBackground::VerticalRepeatFieldMask | PatternUIBackground::HorizontalRepeatValueFieldMask | PatternUIBackground::VerticalRepeatValueFieldMask);
         ExamplePatternUIBackground->setTexture(UIBackgroundPatternChunk);
-        ExamplePatternUIBackground->setPatternSize(Vec2s(50,50));
+        ExamplePatternUIBackground->setPatternSize(Vec2f(50,50));
         ExamplePatternUIBackground->setVerticalAlignment(0.5);
         ExamplePatternUIBackground->setHorizontalAlignment(0.0);
         ExamplePatternUIBackground->setHorizontalRepeat(PatternUIBackground::PATTERN_REPEAT_BY_POINT);
@@ -338,7 +338,7 @@ int main(int argc, char **argv)
         ExampleColorUIBackgroundButton->setBackground(ExampleColorUIBackground);
         ExampleColorUIBackgroundButton->setActiveBackground(ExampleColorUIBackground);
         ExampleColorUIBackgroundButton->setRolloverBackground(ExampleColorUIBackground);
-        ExampleColorUIBackgroundButton->setPreferredSize(Vec2s(150,50));
+        ExampleColorUIBackgroundButton->setPreferredSize(Vec2f(150,50));
     endEditCP(ExampleColorUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
 
     beginEditCP(ExampleCompoundUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
@@ -346,7 +346,7 @@ int main(int argc, char **argv)
         ExampleCompoundUIBackgroundButton->setBackground(ExampleCompoundUIBackground);
         ExampleCompoundUIBackgroundButton->setActiveBackground(ExampleCompoundUIBackground);
         ExampleCompoundUIBackgroundButton->setRolloverBackground(ExampleCompoundUIBackground);
-        ExampleCompoundUIBackgroundButton->setPreferredSize(Vec2s(150,50));
+        ExampleCompoundUIBackgroundButton->setPreferredSize(Vec2f(150,50));
     endEditCP(ExampleCompoundUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
 
     beginEditCP(ExampleEmptyUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
@@ -354,7 +354,7 @@ int main(int argc, char **argv)
         ExampleEmptyUIBackgroundButton->setBackground(ExampleEmptyUIBackground);
         ExampleEmptyUIBackgroundButton->setActiveBackground(ExampleEmptyUIBackground);
         ExampleEmptyUIBackgroundButton->setRolloverBackground(ExampleEmptyUIBackground);
-        ExampleEmptyUIBackgroundButton->setPreferredSize(Vec2s(150,50));
+        ExampleEmptyUIBackgroundButton->setPreferredSize(Vec2f(150,50));
     endEditCP(ExampleEmptyUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
 
     beginEditCP(ExampleGradientUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
@@ -362,7 +362,7 @@ int main(int argc, char **argv)
         ExampleGradientUIBackgroundButton->setBackground(ExampleGradientUIBackground);
         ExampleGradientUIBackgroundButton->setActiveBackground(ExampleGradientUIBackground);
         ExampleGradientUIBackgroundButton->setRolloverBackground(ExampleGradientUIBackground);
-        ExampleGradientUIBackgroundButton->setPreferredSize(Vec2s(150,50));
+        ExampleGradientUIBackgroundButton->setPreferredSize(Vec2f(150,50));
     endEditCP(ExampleGradientUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
     
     beginEditCP(ExampleMaterialUIBackgroundButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask |  Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask);
@@ -370,7 +370,7 @@ int main(int argc, char **argv)
         ExampleMaterialUIBackgroundButton->setBackground(ExampleMaterialUIBackground);
         ExampleMaterialUIBackgroundButton->setActiveBackground(ExampleMaterialUIBackground);
         ExampleMaterialUIBackgroundButton->setRolloverBackground(ExampleMaterialUIBackground);
-        ExampleMaterialUIBackgroundButton->setPreferredSize(Vec2s(150,50));
+        ExampleMaterialUIBackgroundButton->setPreferredSize(Vec2f(150,50));
         ExampleMaterialUIBackgroundButton->setTextColor(Color4f(1.0,1.0,1.0,1.0));
         ExampleMaterialUIBackgroundButton->setRolloverTextColor(Color4f(1.0,1.0,1.0,1.0));
         ExampleMaterialUIBackgroundButton->setActiveTextColor(Color4f(1.0,1.0,1.0,1.0));
@@ -381,7 +381,7 @@ int main(int argc, char **argv)
         ExampleTextureUIBackgroundButton->setBackground(ExampleTextureUIBackground);
         ExampleTextureUIBackgroundButton->setActiveBackground(ExampleTextureUIBackground);
         ExampleTextureUIBackgroundButton->setRolloverBackground(ExampleTextureUIBackground);
-        ExampleTextureUIBackgroundButton->setPreferredSize(Vec2s(150,50));
+        ExampleTextureUIBackgroundButton->setPreferredSize(Vec2f(150,50));
         ExampleTextureUIBackgroundButton->setTextColor(Color4f(0.0,1.0,0.0,1.0));
         ExampleTextureUIBackgroundButton->setRolloverTextColor(Color4f(0.0,1.0,0.0,1.0));
         ExampleTextureUIBackgroundButton->setActiveTextColor(Color4f(0.0,1.0,0.0,1.0));
@@ -392,7 +392,7 @@ int main(int argc, char **argv)
         ExamplePatternUIBackgroundButton->setBackground(ExamplePatternUIBackground);
         ExamplePatternUIBackgroundButton->setActiveBackground(ExamplePatternUIBackground);
         ExamplePatternUIBackgroundButton->setRolloverBackground(ExamplePatternUIBackground);
-        ExamplePatternUIBackgroundButton->setPreferredSize(Vec2s(150,50));
+        ExamplePatternUIBackgroundButton->setPreferredSize(Vec2f(150,50));
         ExamplePatternUIBackgroundButton->setTextColor(Color4f(0.0,1.0,0.0,1.0));
         ExamplePatternUIBackgroundButton->setRolloverTextColor(Color4f(0.0,1.0,0.0,1.0));
         ExamplePatternUIBackgroundButton->setActiveTextColor(Color4f(0.0,1.0,0.0,1.0));
@@ -469,8 +469,8 @@ int main(int argc, char **argv)
 
     // Show the whole Scene
     mgr->showAll();
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(900,900),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(900,900),
                                         "OpenSG 04UIBackground Window");
 
     //Main Event Loop
@@ -493,7 +493,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

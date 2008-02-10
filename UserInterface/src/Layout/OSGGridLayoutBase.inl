@@ -112,14 +112,14 @@ SFUInt32 *GridLayoutBase::getSFColumns(void)
 
 //! Get the GridLayout::_sfHorizontalGap field.
 inline
-SFInt32 *GridLayoutBase::getSFHorizontalGap(void)
+SFReal32 *GridLayoutBase::getSFHorizontalGap(void)
 {
     return &_sfHorizontalGap;
 }
 
 //! Get the GridLayout::_sfVerticalGap field.
 inline
-SFInt32 *GridLayoutBase::getSFVerticalGap(void)
+SFReal32 *GridLayoutBase::getSFVerticalGap(void)
 {
     return &_sfVerticalGap;
 }
@@ -169,42 +169,42 @@ void GridLayoutBase::setColumns(const UInt32 &value)
 
 //! Get the value of the GridLayout::_sfHorizontalGap field.
 inline
-Int32 &GridLayoutBase::getHorizontalGap(void)
+Real32 &GridLayoutBase::getHorizontalGap(void)
 {
     return _sfHorizontalGap.getValue();
 }
 
 //! Get the value of the GridLayout::_sfHorizontalGap field.
 inline
-const Int32 &GridLayoutBase::getHorizontalGap(void) const
+const Real32 &GridLayoutBase::getHorizontalGap(void) const
 {
     return _sfHorizontalGap.getValue();
 }
 
 //! Set the value of the GridLayout::_sfHorizontalGap field.
 inline
-void GridLayoutBase::setHorizontalGap(const Int32 &value)
+void GridLayoutBase::setHorizontalGap(const Real32 &value)
 {
     _sfHorizontalGap.setValue(value);
 }
 
 //! Get the value of the GridLayout::_sfVerticalGap field.
 inline
-Int32 &GridLayoutBase::getVerticalGap(void)
+Real32 &GridLayoutBase::getVerticalGap(void)
 {
     return _sfVerticalGap.getValue();
 }
 
 //! Get the value of the GridLayout::_sfVerticalGap field.
 inline
-const Int32 &GridLayoutBase::getVerticalGap(void) const
+const Real32 &GridLayoutBase::getVerticalGap(void) const
 {
     return _sfVerticalGap.getValue();
 }
 
 //! Set the value of the GridLayout::_sfVerticalGap field.
 inline
-void GridLayoutBase::setVerticalGap(const Int32 &value)
+void GridLayoutBase::setVerticalGap(const Real32 &value)
 {
     _sfVerticalGap.setValue(value);
 }

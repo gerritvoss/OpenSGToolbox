@@ -98,13 +98,13 @@ const OSG::BitVector GridBagLayoutBase::MTInfluenceMask =
 /*! \var Real32          GridBagLayoutBase::_mfColumnWeights
     This field holds the overrides to the column weights
 */
-/*! \var UInt16          GridBagLayoutBase::_mfColumnWidths
+/*! \var Real32          GridBagLayoutBase::_mfColumnWidths
     This field holds the overrides to the column minimum widths
 */
 /*! \var Real32          GridBagLayoutBase::_mfRowWeights
     This field holds the overrides to the row weights
 */
-/*! \var UInt16          GridBagLayoutBase::_mfRowHeights
+/*! \var Real32          GridBagLayoutBase::_mfRowHeights
     This field holds the overrides to the row minimum Heights
 */
 
@@ -127,7 +127,7 @@ FieldDescription *GridBagLayoutBase::_desc[] =
                      ColumnWeightsFieldId, ColumnWeightsFieldMask,
                      false,
                      (FieldAccessMethod) &GridBagLayoutBase::getMFColumnWeights),
-    new FieldDescription(MFUInt16::getClassType(), 
+    new FieldDescription(MFReal32::getClassType(), 
                      "ColumnWidths", 
                      ColumnWidthsFieldId, ColumnWidthsFieldMask,
                      false,
@@ -137,7 +137,7 @@ FieldDescription *GridBagLayoutBase::_desc[] =
                      RowWeightsFieldId, RowWeightsFieldMask,
                      false,
                      (FieldAccessMethod) &GridBagLayoutBase::getMFRowWeights),
-    new FieldDescription(MFUInt16::getClassType(), 
+    new FieldDescription(MFReal32::getClassType(), 
                      "RowHeights", 
                      RowHeightsFieldId, RowHeightsFieldMask,
                      false,

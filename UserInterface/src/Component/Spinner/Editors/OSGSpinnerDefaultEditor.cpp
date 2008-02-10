@@ -82,7 +82,7 @@ void SpinnerDefaultEditor::updateLayout(void)
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
         beginEditCP(getChildren()[i], PositionFieldMask | SizeFieldMask);
-            getChildren()[i]->setPosition(Pnt2s(0,0));
+            getChildren()[i]->setPosition(Pnt2f(0,0));
             getChildren()[i]->setSize(getSize());
         endEditCP(getChildren()[i], PositionFieldMask | SizeFieldMask);
     }

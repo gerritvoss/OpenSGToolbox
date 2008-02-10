@@ -90,27 +90,27 @@ ProxyLayoutSpringPtr ProxyLayoutSpring::create (const UInt32& Edge, ComponentPtr
  *                           Instance methods                              *
 \***************************************************************************/
 
-Int32 ProxyLayoutSpring::getMinimumValue(void) const
+Real32 ProxyLayoutSpring::getMinimumValue(void) const
 {
     return getConstraint()->getMinimumValue();
 }
 
-Int32 ProxyLayoutSpring::getPreferredValue(void) const
+Real32 ProxyLayoutSpring::getPreferredValue(void) const
 {
     return getConstraint()->getPreferredValue();
 }
 
-Int32 ProxyLayoutSpring::getMaximumValue(void) const
+Real32 ProxyLayoutSpring::getMaximumValue(void) const
 {
     return getConstraint()->getMaximumValue();
 }
 
-Int32 ProxyLayoutSpring::getValue(void) const
+Real32 ProxyLayoutSpring::getValue(void) const
 {
     return getConstraint()->getValue();
 }
 
-void ProxyLayoutSpring::setValue(const Int32& value)
+void ProxyLayoutSpring::setValue(const Real32& value)
 {
     return getConstraint()->setValue(value);
 }

@@ -98,21 +98,21 @@ DiscUIDrawObjectPtr DiscUIDrawObjectBase::createEmpty(void)
 
 //! Get the DiscUIDrawObject::_sfCenter field.
 inline
-SFPnt2s *DiscUIDrawObjectBase::getSFCenter(void)
+SFPnt2f *DiscUIDrawObjectBase::getSFCenter(void)
 {
     return &_sfCenter;
 }
 
 //! Get the DiscUIDrawObject::_sfWidth field.
 inline
-SFInt16 *DiscUIDrawObjectBase::getSFWidth(void)
+SFReal32 *DiscUIDrawObjectBase::getSFWidth(void)
 {
     return &_sfWidth;
 }
 
 //! Get the DiscUIDrawObject::_sfHeight field.
 inline
-SFInt16 *DiscUIDrawObjectBase::getSFHeight(void)
+SFReal32 *DiscUIDrawObjectBase::getSFHeight(void)
 {
     return &_sfHeight;
 }
@@ -162,63 +162,63 @@ SFReal32 *DiscUIDrawObjectBase::getSFOpacity(void)
 
 //! Get the value of the DiscUIDrawObject::_sfCenter field.
 inline
-Pnt2s &DiscUIDrawObjectBase::getCenter(void)
+Pnt2f &DiscUIDrawObjectBase::getCenter(void)
 {
     return _sfCenter.getValue();
 }
 
 //! Get the value of the DiscUIDrawObject::_sfCenter field.
 inline
-const Pnt2s &DiscUIDrawObjectBase::getCenter(void) const
+const Pnt2f &DiscUIDrawObjectBase::getCenter(void) const
 {
     return _sfCenter.getValue();
 }
 
 //! Set the value of the DiscUIDrawObject::_sfCenter field.
 inline
-void DiscUIDrawObjectBase::setCenter(const Pnt2s &value)
+void DiscUIDrawObjectBase::setCenter(const Pnt2f &value)
 {
     _sfCenter.setValue(value);
 }
 
 //! Get the value of the DiscUIDrawObject::_sfWidth field.
 inline
-Int16 &DiscUIDrawObjectBase::getWidth(void)
+Real32 &DiscUIDrawObjectBase::getWidth(void)
 {
     return _sfWidth.getValue();
 }
 
 //! Get the value of the DiscUIDrawObject::_sfWidth field.
 inline
-const Int16 &DiscUIDrawObjectBase::getWidth(void) const
+const Real32 &DiscUIDrawObjectBase::getWidth(void) const
 {
     return _sfWidth.getValue();
 }
 
 //! Set the value of the DiscUIDrawObject::_sfWidth field.
 inline
-void DiscUIDrawObjectBase::setWidth(const Int16 &value)
+void DiscUIDrawObjectBase::setWidth(const Real32 &value)
 {
     _sfWidth.setValue(value);
 }
 
 //! Get the value of the DiscUIDrawObject::_sfHeight field.
 inline
-Int16 &DiscUIDrawObjectBase::getHeight(void)
+Real32 &DiscUIDrawObjectBase::getHeight(void)
 {
     return _sfHeight.getValue();
 }
 
 //! Get the value of the DiscUIDrawObject::_sfHeight field.
 inline
-const Int16 &DiscUIDrawObjectBase::getHeight(void) const
+const Real32 &DiscUIDrawObjectBase::getHeight(void) const
 {
     return _sfHeight.getValue();
 }
 
 //! Set the value of the DiscUIDrawObject::_sfHeight field.
 inline
-void DiscUIDrawObjectBase::setHeight(const Int16 &value)
+void DiscUIDrawObjectBase::setHeight(const Real32 &value)
 {
     _sfHeight.setValue(value);
 }

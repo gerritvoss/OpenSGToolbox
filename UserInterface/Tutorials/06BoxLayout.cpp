@@ -49,7 +49,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // 06BoxLayout Headers
 #include <OpenSG/UserInterface/OSGButton.h>
@@ -185,8 +185,8 @@ int main(int argc, char **argv)
 			setting a MaxSize, even though other
 			Buttons within the Layout will be resized,
 			ExampleButton1 cannot be larger than
-			Vec2s(50,50).  The default size for
-			all Buttons is Vec2s(100,50) [see
+			Vec2f(50,50).  The default size for
+			all Buttons is Vec2f(100,50) [see
 			DefaultLookAndFeel.cpp], but because
 			ExampleButton2 is larger, each of
 			the other Buttons will be resized
@@ -200,12 +200,12 @@ int main(int argc, char **argv)
     ******************************************************/
     
     beginEditCP(ExampleButton1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
-        ExampleButton1->setPreferredSize(Vec2s(50,50));
-        ExampleButton1->setMaxSize(Vec2s(50, 50));
+        ExampleButton1->setPreferredSize(Vec2f(50,50));
+        ExampleButton1->setMaxSize(Vec2f(50, 50));
     endEditCP(ExampleButton1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask);
 
     beginEditCP(ExampleButton2, Button::PreferredSizeFieldMask);
-        ExampleButton2->setPreferredSize(Vec2s(200,100));
+        ExampleButton2->setPreferredSize(Vec2f(200,100));
     endEditCP(ExampleButton2, Button::PreferredSizeFieldMask);
 
     // Create The Main InternalWindow
@@ -260,8 +260,8 @@ int main(int argc, char **argv)
 
     // Show the whole Scene
     mgr->showAll();
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(900,900),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(900,900),
                                         "OpenSG 06BoxLayout Window");
 
     //Main Event Loop
@@ -284,7 +284,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

@@ -93,7 +93,7 @@ const OSG::BitVector TextureUIBackgroundBase::MTInfluenceMask =
 /*! \var UInt32          TextureUIBackgroundBase::_sfScale
     
 */
-/*! \var Vec2s           TextureUIBackgroundBase::_sfScaleAbsoluteSize
+/*! \var Vec2f           TextureUIBackgroundBase::_sfScaleAbsoluteSize
     
 */
 /*! \var Real32          TextureUIBackgroundBase::_sfVerticalAlignment
@@ -117,7 +117,7 @@ FieldDescription *TextureUIBackgroundBase::_desc[] =
                      ScaleFieldId, ScaleFieldMask,
                      false,
                      (FieldAccessMethod) &TextureUIBackgroundBase::getSFScale),
-    new FieldDescription(SFVec2s::getClassType(), 
+    new FieldDescription(SFVec2f::getClassType(), 
                      "ScaleAbsoluteSize", 
                      ScaleAbsoluteSizeFieldId, ScaleAbsoluteSizeFieldMask,
                      false,
@@ -209,7 +209,7 @@ void TextureUIBackgroundBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 TextureUIBackgroundBase::TextureUIBackgroundBase(void) :
     _sfTexture                (), 
     _sfScale                  (UInt32(SCALE_STRETCH)), 
-    _sfScaleAbsoluteSize      (Vec2s(1,1)), 
+    _sfScaleAbsoluteSize      (Vec2f(1,1)), 
     _sfVerticalAlignment      (Real32(0.5)), 
     _sfHorizontalAlignment    (Real32(0.5)), 
     Inherited() 

@@ -77,7 +77,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawObjectCanvas : public UIDrawObjectCa
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void getDrawObjectBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+	virtual void getDrawObjectBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

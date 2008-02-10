@@ -80,10 +80,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractLayoutSpring : public AbstractLayo
     /*! \}                                                                 */
     
     //Returns the current value of this LayoutSpringPtr.
-    virtual Int32 getValue(void) const;
+    virtual Real32 getValue(void) const;
 
     //Sets the current value of this LayoutSpringPtr.
-    virtual void setValue(const Int32& value);
+    virtual void setValue(const Real32& value);
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -107,7 +107,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractLayoutSpring : public AbstractLayo
     /*! \}                                                                 */
     
     virtual void clear(void);
-    virtual void setNonClearValue(const Int32& value);
+    virtual void setNonClearValue(const Real32& value);
     
     /*==========================  PRIVATE  ================================*/
   private:

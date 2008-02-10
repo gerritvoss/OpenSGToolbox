@@ -77,7 +77,7 @@ void CompoundLayoutSpring::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Int32 CompoundLayoutSpring::getMinimumValue(void) const
+Real32 CompoundLayoutSpring::getMinimumValue(void) const
 {
     if (getMinimum() == LayoutSpring::VALUE_NOT_SET)
     {
@@ -88,7 +88,7 @@ Int32 CompoundLayoutSpring::getMinimumValue(void) const
     return getMinimum();
 }
 
-Int32 CompoundLayoutSpring::getPreferredValue(void) const
+Real32 CompoundLayoutSpring::getPreferredValue(void) const
 {
     if (getPreferred() == LayoutSpring::VALUE_NOT_SET)
     {
@@ -99,7 +99,7 @@ Int32 CompoundLayoutSpring::getPreferredValue(void) const
     return getPreferred();
 }
 
-Int32 CompoundLayoutSpring::getMaximumValue(void) const
+Real32 CompoundLayoutSpring::getMaximumValue(void) const
 {
     if (getMaximum() == LayoutSpring::VALUE_NOT_SET)
     {
@@ -110,7 +110,7 @@ Int32 CompoundLayoutSpring::getMaximumValue(void) const
     return getMaximum();
 }
 
-Int32 CompoundLayoutSpring::getValue(void) const
+Real32 CompoundLayoutSpring::getValue(void) const
 {
     beginEditCP(CompoundLayoutSpringPtr(this), SizeFieldMask);
         const_cast<CompoundLayoutSpring*>(this)->setSize( operation(getSpring1()->getValue(), getSpring2()->getValue() ) );

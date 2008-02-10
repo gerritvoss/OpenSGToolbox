@@ -77,9 +77,9 @@ void OverlayLayout::initMethod (void)
 
 void OverlayLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
-	Pnt2s borderTopLeft, borderBottomRight;
+	Pnt2f borderTopLeft, borderBottomRight;
 	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
-	Vec2s borderSize(borderBottomRight-borderTopLeft);
+	Vec2f borderSize(borderBottomRight-borderTopLeft);
 
 	int maxX = 0;
 	int maxY = 0;
@@ -97,7 +97,7 @@ void OverlayLayout::updateLayout(const MFComponentPtr Components,const Component
 		//Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
 		beginEditCP(Components.getValue(i), Component::PositionFieldMask);
 		Components.getValue(i)->setPosition(borderTopLeft + 
-            Vec2s((maxX-Components.getValue(i)->getSize().x())/2.0,
+            Vec2f((maxX-Components.getValue(i)->getSize().x())/2.0,
 			(maxY-Components.getValue(i)->getSize().y())/2.0));
 		endEditCP(Components.getValue(i), Component::PositionFieldMask);
 	}

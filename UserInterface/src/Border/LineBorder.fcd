@@ -14,7 +14,7 @@
 UI Line Border.
 	<Field
 		name="Width"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1"

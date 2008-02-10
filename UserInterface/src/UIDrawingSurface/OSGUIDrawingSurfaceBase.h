@@ -72,7 +72,7 @@
 #include <OpenSG/Input/OSGWindowEventProducer.h> // EventProducer type
 #include "Graphics/OSGGraphics.h" // Graphics type
 #include "UIDrawingSurface/OSGUIDrawingSurfaceMouseTransformFunctorFields.h" // MouseTransformFunctor type
-#include <OpenSG/OSGVec2sFields.h> // Size type
+#include <OpenSG/OSGVec2fFields.h> // Size type
 
 #include "OSGUIDrawingSurfaceFields.h"
 
@@ -142,7 +142,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurfaceBase : public FieldContain
            SFWindowEventProducerPtr *getSFEventProducer  (void);
            SFGraphicsPtr       *getSFGraphics       (void);
            SFUIDrawingSurfaceMouseTransformFunctorPtr *getSFMouseTransformFunctor(void);
-           SFVec2s             *getSFSize           (void);
+           SFVec2f             *getSFSize           (void);
 
            InternalWindowPtr   &getFocusedWindow  (void);
      const InternalWindowPtr   &getFocusedWindow  (void) const;
@@ -152,8 +152,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurfaceBase : public FieldContain
      const GraphicsPtr         &getGraphics       (void) const;
            UIDrawingSurfaceMouseTransformFunctorPtr &getMouseTransformFunctor(void);
      const UIDrawingSurfaceMouseTransformFunctorPtr &getMouseTransformFunctor(void) const;
-           Vec2s               &getSize           (void);
-     const Vec2s               &getSize           (void) const;
+           Vec2f               &getSize           (void);
+     const Vec2f               &getSize           (void) const;
            InternalWindowPtr   &getInternalWindows(const UInt32 index);
            MFInternalWindowPtr &getInternalWindows(void);
      const MFInternalWindowPtr &getInternalWindows(void) const;
@@ -167,7 +167,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurfaceBase : public FieldContain
      void setEventProducer  ( const WindowEventProducerPtr &value );
      void setGraphics       ( const GraphicsPtr &value );
      void setMouseTransformFunctor( const UIDrawingSurfaceMouseTransformFunctorPtr &value );
-     void setSize           ( const Vec2s &value );
+     void setSize           ( const Vec2f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -215,7 +215,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurfaceBase : public FieldContain
     SFWindowEventProducerPtr   _sfEventProducer;
     SFGraphicsPtr       _sfGraphics;
     SFUIDrawingSurfaceMouseTransformFunctorPtr   _sfMouseTransformFunctor;
-    SFVec2s             _sfSize;
+    SFVec2f             _sfSize;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -92,7 +92,7 @@ const OSG::BitVector BevelBorderBase::MTInfluenceMask =
 /*! \var Color4f         BevelBorderBase::_sfHighlightInner
     
 */
-/*! \var UInt32          BevelBorderBase::_sfWidth
+/*! \var Real32          BevelBorderBase::_sfWidth
     
 */
 /*! \var Color4f         BevelBorderBase::_sfHighlightOuter
@@ -117,7 +117,7 @@ FieldDescription *BevelBorderBase::_desc[] =
                      HighlightInnerFieldId, HighlightInnerFieldMask,
                      false,
                      (FieldAccessMethod) &BevelBorderBase::getSFHighlightInner),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "Width", 
                      WidthFieldId, WidthFieldMask,
                      false,
@@ -218,7 +218,7 @@ void BevelBorderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 BevelBorderBase::BevelBorderBase(void) :
     _sfHighlightInner         (), 
-    _sfWidth                  (UInt32(1)), 
+    _sfWidth                  (Real32(1)), 
     _sfHighlightOuter         (), 
     _sfShadowInner            (), 
     _sfShadowOuter            (), 

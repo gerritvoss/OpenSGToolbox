@@ -154,11 +154,11 @@ void Slider::updateLayout(void)
 	//Update the Track
 	if(getDrawTrack() && getTrackDrawObject() != NullFC)
 	{
-		Pnt2s BorderTopLeft, BorderBottomRight;
+		Pnt2f BorderTopLeft, BorderBottomRight;
 		getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
 
-	   Vec2s Size(getTrackDrawObject()->getPreferredSize());
-	   Pnt2s AlignedPosition;
+	   Vec2f Size(getTrackDrawObject()->getPreferredSize());
+	   Pnt2f AlignedPosition;
 	   Size[MajorAxis] = getTrackLength();
 	   
        AlignedPosition = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Size, 0.5, 0.5);
@@ -172,7 +172,7 @@ void Slider::updateLayout(void)
 	//Update the MinorTickMarks
 	if(getDrawMinorTicks() && _Model != NULL)
 	{
-		Pnt2s MinorTickTopLeft, MinorTickBottomRight;
+		Pnt2f MinorTickTopLeft, MinorTickBottomRight;
 		getDrawObjectBounds(getMinorTickDrawObjects(), MinorTickTopLeft, MinorTickBottomRight);
 		
 	    Vec2f Alignment;
@@ -197,7 +197,7 @@ void Slider::updateLayout(void)
 	//Update the MajorTickMarks
 	if(getDrawMajorTicks() && _Model != NULL)
 	{
-		Pnt2s MajorTickTopLeft, MajorTickBottomRight;
+		Pnt2f MajorTickTopLeft, MajorTickBottomRight;
 		getDrawObjectBounds(getMajorTickDrawObjects(), MajorTickTopLeft, MajorTickBottomRight);
 		
 	    Vec2f Alignment;
@@ -220,7 +220,7 @@ void Slider::updateLayout(void)
 	if(getDrawLabels() && _Model != NULL)
 	{
 		Vec2f Alignment;
-		Pnt2s Pos;
+		Pnt2f Pos;
 		FieldContainerMap::iterator Itor;
 		for(Itor = getLabelMap().begin() ; Itor != getLabelMap().end() ; ++Itor)
 		{
@@ -238,7 +238,7 @@ void Slider::updateLayout(void)
 
 void Slider::updateSliderTrack(void)
 {
-	Pnt2s BorderTopLeft, BorderBottomRight;
+	Pnt2f BorderTopLeft, BorderBottomRight;
 	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
 	
     UInt16 MajorAxis, MinorAxis;
@@ -265,10 +265,10 @@ void Slider::updateSliderTrack(void)
 	//Update the Knob position
 	if(getKnobButton() != NullFC && _Model != NULL)
 	{
-	   Vec2s Size;
+	   Vec2f Size;
 	   Size[MinorAxis] = getKnobButton()->getPreferredSize().x();
 	   Size[MajorAxis] = getKnobButton()->getPreferredSize().y();
-	   Pnt2s AlignedPosition;
+	   Pnt2f AlignedPosition;
 	   //Size[MajorAxis] = getSize()[MajorAxis] - 2;
 	   Vec2f Alignment(0.5,0.5);
 	   Alignment[MajorAxis] = static_cast<Real32>(getValue() - getMinimum())/static_cast<Real32>(getMaximum() - getMinimum());
@@ -283,36 +283,36 @@ void Slider::updateSliderTrack(void)
 
 }
 
-Pnt2s Slider::getSliderTrackTopLeft(void) const
+Pnt2f Slider::getSliderTrackTopLeft(void) const
 {
-	Pnt2s BorderTopLeft, BorderBottomRight;
+	Pnt2f BorderTopLeft, BorderBottomRight;
 	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
 
-	Pnt2s Pos;
+	Pnt2f Pos;
 	
     if(getOrientation() == VERTICAL_ALIGNMENT)
     {
-		Pos = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Vec2s(0,0), 0.0, 0.5);
+		Pos = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Vec2f(0,0), 0.0, 0.5);
 		Pos[1] += getTrackInset();
     }
     else
     {
-		Pos = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Vec2s(0,0), 0.5, 0.0);
+		Pos = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Vec2f(0,0), 0.5, 0.0);
 		Pos[0] += getTrackInset();
     }
 
 	return Pos;
 }
 
-Vec2s Slider::getSliderTrackSize(void) const
+Vec2f Slider::getSliderTrackSize(void) const
 {
     if(getOrientation() == VERTICAL_ALIGNMENT)
     {
-		return Vec2s(0, getTrackLength());
+		return Vec2f(0, getTrackLength());
     }
     else
     {
-		return Vec2s(getTrackLength(), 0);
+		return Vec2f(getTrackLength(), 0);
     }
 }
 
@@ -408,9 +408,9 @@ void Slider::setValue(Int32 n)
     
 }
 
-Pnt2s Slider::calculateSliderAlignment(const Pnt2s& Position1, const Vec2s& Size1, const Vec2s& Size2, const Real32& VAlign, const Real32& HAlign)
+Pnt2f Slider::calculateSliderAlignment(const Pnt2f& Position1, const Vec2f& Size1, const Vec2f& Size2, const Real32& VAlign, const Real32& HAlign)
 {
-	Vec2s CorrectedSize2(Size2);
+	Vec2f CorrectedSize2(Size2);
 
 	if(getOrientation() != VERTICAL_ALIGNMENT)
 	{
@@ -433,7 +433,7 @@ Pnt2s Slider::calculateSliderAlignment(const Pnt2s& Position1, const Vec2s& Size
 		}
 	}
 	
-	Pnt2s AlignedPosition;
+	Pnt2f AlignedPosition;
 
 	AlignedPosition[0] = Position1[0]-CorrectedSize2[0]/2+CorrectedHAlign*(Size1[0]);
 	AlignedPosition[1] = Position1[1]-CorrectedSize2[1]/2+CorrectedVAlign*(Size1[1]);
@@ -597,9 +597,9 @@ void Slider::KnobDraggedListener::mouseDragged(const MouseEvent& e)
 {
 	if(e.getButton() == e.BUTTON1)
 	{
-		Pnt2s MousePosInComponent = ViewportToComponent(e.getLocation(), _Slider, e.getViewport());
+		Pnt2f MousePosInComponent = ViewportToComponent(e.getLocation(), _Slider, e.getViewport());
 		
-        Pnt2s BorderTopLeft, BorderBottomRight;
+        Pnt2f BorderTopLeft, BorderBottomRight;
         _Slider->getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
         
         UInt16 MajorAxis, MinorAxis;

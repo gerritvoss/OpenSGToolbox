@@ -87,12 +87,12 @@ SumLayoutSpringPtr SumLayoutSpring::create(LayoutSpringPtr TheSpring1, LayoutSpr
  *                           Instance methods                              *
 \***************************************************************************/
 
-Int32 SumLayoutSpring::operation(const Int32& Left, const Int32& Right) const
+Real32 SumLayoutSpring::operation(const Real32& Left, const Real32& Right) const
 {
     return Left + Right;
 }
 
-void SumLayoutSpring::setNonClearValue(const Int32& value)
+void SumLayoutSpring::setNonClearValue(const Real32& value)
 {
     Inherited::setNonClearValue(value);
     

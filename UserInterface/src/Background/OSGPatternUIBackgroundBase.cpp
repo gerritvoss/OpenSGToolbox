@@ -104,7 +104,7 @@ const OSG::BitVector PatternUIBackgroundBase::MTInfluenceMask =
 /*! \var TextureChunkPtr PatternUIBackgroundBase::_sfTexture
     
 */
-/*! \var Vec2s           PatternUIBackgroundBase::_sfPatternSize
+/*! \var Vec2f           PatternUIBackgroundBase::_sfPatternSize
     
 */
 /*! \var Real32          PatternUIBackgroundBase::_sfVerticalAlignment
@@ -141,7 +141,7 @@ FieldDescription *PatternUIBackgroundBase::_desc[] =
                      TextureFieldId, TextureFieldMask,
                      false,
                      (FieldAccessMethod) &PatternUIBackgroundBase::getSFTexture),
-    new FieldDescription(SFVec2s::getClassType(), 
+    new FieldDescription(SFVec2f::getClassType(), 
                      "PatternSize", 
                      PatternSizeFieldId, PatternSizeFieldMask,
                      false,
@@ -262,7 +262,7 @@ void PatternUIBackgroundBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 PatternUIBackgroundBase::PatternUIBackgroundBase(void) :
     _sfTexture                (), 
-    _sfPatternSize            (Vec2s(-1,-1)), 
+    _sfPatternSize            (Vec2f(-1,-1)), 
     _sfVerticalAlignment      (Real32(0.5)), 
     _sfHorizontalAlignment    (Real32(0.5)), 
     _sfHorizontalRepeat       (UInt32(PatternUIBackground::PATTERN_REPEAT_BY_POINT)), 

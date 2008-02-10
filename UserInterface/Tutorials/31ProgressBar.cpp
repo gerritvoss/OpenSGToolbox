@@ -61,7 +61,7 @@ bool ExitApp = false;
 
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 class TutorialWindowListener : public WindowAdapter
 {
@@ -385,7 +385,7 @@ int main(int argc, char **argv)
 	// Modify ToggleButton
 	beginEditCP(ProgressControlToggleButton, ToggleButton::TextColorFieldMask | ToggleButton::PreferredSizeFieldMask);
 		ProgressControlToggleButton->setText("Start Incrementing");
-		ProgressControlToggleButton->setPreferredSize(Vec2s(150,50));
+		ProgressControlToggleButton->setPreferredSize(Vec2f(150,50));
 	endEditCP(ProgressControlToggleButton, ToggleButton::TextColorFieldMask | ToggleButton::PreferredSizeFieldMask);
 
 	// Create a "reset" Button
@@ -393,7 +393,7 @@ int main(int argc, char **argv)
 
 	beginEditCP(ProgressBarResetButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
 		ProgressBarResetButton->setText("Reset ProgressBar");
-		ProgressBarResetButton->setPreferredSize(Vec2s(150,50));
+		ProgressBarResetButton->setPreferredSize(Vec2f(150,50));
 	endEditCP(ProgressBarResetButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
 
 	ResetProgressBarActionListener TheResetProgressBarActionListener(ExampleProgressBar, ProgressControlToggleButton);
@@ -454,8 +454,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(550,550),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(550,550),
                                         "OpenSG 31ProgressBar Window");
 
     while(!ExitApp)
@@ -478,7 +478,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

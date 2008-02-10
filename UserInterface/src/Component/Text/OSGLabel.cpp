@@ -78,8 +78,8 @@ void Label::initMethod (void)
 
 void Label::drawInternal(const GraphicsPtr TheGraphics) const
 {
-    Pnt2s TopLeft, BottomRight;
-    Pnt2s TempPos;
+    Pnt2f TopLeft, BottomRight;
+    Pnt2f TempPos;
     getInsideBorderBounds(TopLeft, BottomRight);
     TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, getFont()->getBounds(getText()), getVerticalAlignment(), getHorizontalAlignment());
     
@@ -98,37 +98,37 @@ void Label::drawInternal(const GraphicsPtr TheGraphics) const
 		    TheGraphics->drawText(TempPos, getText().substr(0, _TextSelectionStart), getFont(), TextColor, getOpacity());
 
 		    //Draw Selection
-            Pnt2s TextTopLeft, TextBottomRight;
+            Pnt2f TextTopLeft, TextBottomRight;
             getFont()->getBounds(getText().substr(0, _TextSelectionStart), TextTopLeft, TextBottomRight);
 
-		    TheGraphics->drawQuad(TempPos + Vec2s(TextBottomRight.x(),0),
-			    TempPos + Vec2s(getFont()->getBounds(getText().substr(0, _TextSelectionEnd)).x(), 0),
-			    TempPos + Vec2s(getFont()->getBounds(getText().substr(0, _TextSelectionEnd))),
-			    TempPos + Vec2s(TextBottomRight),
+		    TheGraphics->drawQuad(TempPos + Vec2f(TextBottomRight.x(),0),
+			    TempPos + Vec2f(getFont()->getBounds(getText().substr(0, _TextSelectionEnd)).x(), 0),
+			    TempPos + Vec2f(getFont()->getBounds(getText().substr(0, _TextSelectionEnd))),
+			    TempPos + Vec2f(TextBottomRight),
 			    getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(), getOpacity());
 
             //Draw Selected Text
-		    TheGraphics->drawText(TempPos + Vec2s(TextBottomRight.x(), 0), 
+		    TheGraphics->drawText(TempPos + Vec2f(TextBottomRight.x(), 0), 
 			    getText().substr(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart), getFont(), getSelectionTextColor(), getOpacity());
 
 		    //Draw Text After selection
             getFont()->getBounds(getText().substr(0, _TextSelectionEnd), TextTopLeft, TextBottomRight);
-		    TheGraphics->drawText(TempPos + Vec2s(TextBottomRight.x(), 0),
+		    TheGraphics->drawText(TempPos + Vec2f(TextBottomRight.x(), 0),
 			    getText().substr(_TextSelectionEnd, getText().size()-_TextSelectionEnd), getFont(), TextColor, getOpacity());
 	    }
     }
 }
 
-void Label::calculateTextBounds(const UInt32 StartIndex, const UInt32 EndIndex, Pnt2s& TopLeft, Pnt2s& BottomRight)
+void Label::calculateTextBounds(const UInt32 StartIndex, const UInt32 EndIndex, Pnt2f& TopLeft, Pnt2f& BottomRight)
 {
-    Pnt2s ComponentTopLeft, ComponentBottomRight;
+    Pnt2f ComponentTopLeft, ComponentBottomRight;
     getInsideBorderBounds(ComponentTopLeft, ComponentBottomRight);
 
-    Pnt2s AlignmentOffset = calculateAlignment(ComponentTopLeft, ComponentBottomRight-ComponentTopLeft, getFont()->getBounds(getText()), getVerticalAlignment(), getHorizontalAlignment());
+    Pnt2f AlignmentOffset = calculateAlignment(ComponentTopLeft, ComponentBottomRight-ComponentTopLeft, getFont()->getBounds(getText()), getVerticalAlignment(), getHorizontalAlignment());
 
 	getFont()->getBounds(getText().substr(StartIndex, EndIndex), TopLeft, BottomRight);
-	TopLeft = TopLeft + Vec2s(AlignmentOffset);
-	BottomRight = BottomRight + Vec2s(AlignmentOffset);
+	TopLeft = TopLeft + Vec2f(AlignmentOffset);
+	BottomRight = BottomRight + Vec2f(AlignmentOffset);
 }
 
 void Label::mouseClicked(const MouseEvent& e)
@@ -143,16 +143,16 @@ void Label::mouseClicked(const MouseEvent& e)
 
 		    if(e.getClickCount() == 2)
 		    {
-			    Pnt2s TopLeftText, BottomRightText, TempPos;
-			    Pnt2s TopLeftText1, BottomRightText1;
-			    Pnt2s TopLeft, BottomRight;
+			    Pnt2f TopLeftText, BottomRightText, TempPos;
+			    Pnt2f TopLeftText1, BottomRightText1;
+			    Pnt2f TopLeft, BottomRight;
 			    getFont()->getBounds(getText(), TopLeftText, BottomRightText);
 			    getInsideBorderBounds(TopLeft, BottomRight);
                 TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText-TopLeftText, getVerticalAlignment(), getHorizontalAlignment());
 
 			    //set caret position to proper place
 			    //if the mouse is to the left of the text, set it to the begining.
-			    Pnt2s temp = DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this));
+			    Pnt2f temp = DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this));
 			    if(DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this)).x() <= TempPos.x())
 			    {
 				    Position = 0;
@@ -213,9 +213,9 @@ void Label::mousePressed(const MouseEvent& e)
 {
     if(getTextSelectable())
     {
-	    Pnt2s TopLeftText, BottomRightText, TempPos;
-	    Pnt2s TopLeftText1, BottomRightText1;
-	    Pnt2s TopLeft, BottomRight;
+	    Pnt2f TopLeftText, BottomRightText, TempPos;
+	    Pnt2f TopLeftText1, BottomRightText1;
+	    Pnt2f TopLeft, BottomRight;
 	    getFont()->getBounds(getText(), TopLeftText, BottomRightText);
         getInsideBorderBounds(TopLeft, BottomRight);
         TempPos = calculateAlignment(TopLeft, BottomRight-TopLeft, BottomRightText-TopLeftText, getVerticalAlignment(), getHorizontalAlignment());
@@ -223,7 +223,7 @@ void Label::mousePressed(const MouseEvent& e)
 	    {
 		    //set caret position to proper place
 		    //if the mouse is to the left of the text, set it to the begining.
-		    Pnt2s temp = DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this));
+		    Pnt2f temp = DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this));
 		    if(DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this)).x() <= TempPos.x())
 		    {
 			    setCaretPosition(0);
@@ -266,9 +266,9 @@ void Label::mouseDragged(const MouseEvent& e)
 {
     if(getTextSelectable())
     {
-	    Pnt2s TopLeftText, BottomRightText, TempPos;
-	    Pnt2s TopLeftText1, BottomRightText1;
-	    Pnt2s TopLeft, BottomRight;
+	    Pnt2f TopLeftText, BottomRightText, TempPos;
+	    Pnt2f TopLeftText1, BottomRightText1;
+	    Pnt2f TopLeft, BottomRight;
 	    Int32 OriginalPosition = getCaretPosition();
 	    getFont()->getBounds(getText(), TopLeftText, BottomRightText);
         getInsideBorderBounds(TopLeft, BottomRight);
@@ -277,7 +277,7 @@ void Label::mouseDragged(const MouseEvent& e)
 	    {
 		    //set caret position to proper place
 		    //if the mouse is to the left of the text, set it to the begining.
-		    Pnt2s temp = DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this));
+		    Pnt2f temp = DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this));
 		    if(DrawingSurfaceToComponent(e.getLocation(), LabelPtr(this)).x() <= TempPos.x())
 		    {
 			    setCaretPosition(0);

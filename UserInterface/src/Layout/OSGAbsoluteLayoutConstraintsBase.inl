@@ -98,7 +98,7 @@ AbsoluteLayoutConstraintsPtr AbsoluteLayoutConstraintsBase::createEmpty(void)
 
 //! Get the AbsoluteLayoutConstraints::_sfPosition field.
 inline
-SFPnt2s *AbsoluteLayoutConstraintsBase::getSFPosition(void)
+SFPnt2f *AbsoluteLayoutConstraintsBase::getSFPosition(void)
 {
     return &_sfPosition;
 }
@@ -106,21 +106,21 @@ SFPnt2s *AbsoluteLayoutConstraintsBase::getSFPosition(void)
 
 //! Get the value of the AbsoluteLayoutConstraints::_sfPosition field.
 inline
-Pnt2s &AbsoluteLayoutConstraintsBase::getPosition(void)
+Pnt2f &AbsoluteLayoutConstraintsBase::getPosition(void)
 {
     return _sfPosition.getValue();
 }
 
 //! Get the value of the AbsoluteLayoutConstraints::_sfPosition field.
 inline
-const Pnt2s &AbsoluteLayoutConstraintsBase::getPosition(void) const
+const Pnt2f &AbsoluteLayoutConstraintsBase::getPosition(void) const
 {
     return _sfPosition.getValue();
 }
 
 //! Set the value of the AbsoluteLayoutConstraints::_sfPosition field.
 inline
-void AbsoluteLayoutConstraintsBase::setPosition(const Pnt2s &value)
+void AbsoluteLayoutConstraintsBase::setPosition(const Pnt2f &value)
 {
     _sfPosition.setValue(value);
 }

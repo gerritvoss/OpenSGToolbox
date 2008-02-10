@@ -105,10 +105,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
     void destroyPopupMenu(void);
     
     virtual void updateLayout(void);
-    virtual void getInsideInsetsBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
-    virtual void getMenuBarBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
-    virtual void getTitlebarBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
-    virtual void getContentPaneBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+    virtual void getInsideInsetsBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
+    virtual void getMenuBarBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
+    virtual void getTitlebarBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
+    virtual void getContentPaneBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
 
 
     virtual       InternalWindowPtr            &getParentWindow    (void);
@@ -122,7 +122,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
     void removeKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers);
 
 	enum WindowArea{WINDOW_OUTSIDE=0, WINDOW_LEFT_BORDER, WINDOW_RIGHT_BORDER, WINDOW_TOP_BORDER, WINDOW_BOTTOM_BORDER, WINDOW_TOP_LEFT_BORDER, WINDOW_TOP_RIGHT_BORDER, WINDOW_BOTTOM_LEFT_BORDER, WINDOW_BOTTOM_RIGHT_BORDER, WINDOW_TITLE_BAR, WINDOW_MAIN_PANEL};
-	virtual WindowArea getCursurArea(const Pnt2s& DrawingSurfaceLocation) const;
+	virtual WindowArea getCursurArea(const Pnt2f& DrawingSurfaceLocation) const;
 	
     //Set the Window Iconify
     void setIconify(bool Iconify);
@@ -207,13 +207,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 
 		virtual void keyPressed(const KeyEvent& e);
 
-		void setWindowStartPosition(const Pnt2s& Pos);
-		void setMouseStartPosition(const Pnt2s& Pos);
+		void setWindowStartPosition(const Pnt2f& Pos);
+		void setMouseStartPosition(const Pnt2f& Pos);
 	protected :
 		InternalWindowPtr _InternalWindow;
 
-		Pnt2s _WindowStartPosition;
-		Pnt2s _MouseStartPosition;
+		Pnt2f _WindowStartPosition;
+		Pnt2f _MouseStartPosition;
 	};
 
 	friend class TitlebarDraggedListener;
@@ -230,16 +230,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 		
 		virtual void keyPressed(const KeyEvent& e);
 
-		void setWindowStartPosition(const Pnt2s& Pos);
-		void setWindowStartSize(const Vec2s& Size);
-		void setMouseStartPosition(const Pnt2s& Pos);
+		void setWindowStartPosition(const Pnt2f& Pos);
+		void setWindowStartSize(const Vec2f& Size);
+		void setMouseStartPosition(const Pnt2f& Pos);
 		void setBorderDragged(const WindowArea Value);
 	protected :
 		InternalWindowPtr _InternalWindow;
 
-		Pnt2s _WindowStartPosition;
-		Vec2s _WindowStartSize;
-		Pnt2s _MouseStartPosition;
+		Pnt2f _WindowStartPosition;
+		Vec2f _WindowStartSize;
+		Pnt2f _MouseStartPosition;
 
 		WindowArea _BorderDragged;
 	};

@@ -32,7 +32,7 @@ A UI GridLayout.
 	</Field>
 	<Field
 		name="HorizontalGap"
-		type="Int32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		defaultValue="10"
@@ -41,7 +41,7 @@ A UI GridLayout.
 	</Field>
 	<Field
 		name="VerticalGap"
-		type="Int32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		defaultValue="10"

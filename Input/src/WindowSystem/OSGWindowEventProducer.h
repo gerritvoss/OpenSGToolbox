@@ -130,16 +130,16 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     struct Click
     {
        Time _TimeStamp;
-       Pnt2s _Location;
+       Pnt2f _Location;
 
-       Click(Time TimeStamp, Pnt2s Location);
+       Click(Time TimeStamp, Pnt2f Location);
     };
     typedef std::vector<Click> ClickVector;
     typedef ClickVector::iterator ClickVectorIter;
     typedef ClickVector::const_iterator ClickVectorConstIter;
 
     typedef std::map<MouseEvent::MouseButton, ClickVector> ButtonClickCountMap;
-    typedef std::map<MouseEvent::MouseButton, Pnt2s> ButtonClickMap;
+    typedef std::map<MouseEvent::MouseButton, Pnt2f> ButtonClickMap;
 
     ButtonClickCountMap _ButtonClickCountMap;
     ButtonClickMap _ButtonClickMap;
@@ -147,7 +147,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     Thread* _WindowEventLoopThread;
 
     typedef void (*DisplayCallbackFunc)(void);
-    typedef void (*ReshapeCallbackFunc)(Vec2s);
+    typedef void (*ReshapeCallbackFunc)(Vec2f);
 
     DisplayCallbackFunc _DisplayCallbackFunc;
     ReshapeCallbackFunc _ReshapeCallbackFunc;
@@ -188,15 +188,15 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     void removeUpdateListener(UpdateListenerPtr Listener);
 
     //Set the Window Position
-    virtual void setPosition(Pnt2s Pos) = 0;
+    virtual void setPosition(Pnt2f Pos) = 0;
     //Set the Window Position
-    virtual Pnt2s getPosition(void) const = 0;
+    virtual Pnt2f getPosition(void) const = 0;
 
     //Set the Window size
     virtual void setSize(Vec2us Size) = 0;
 
     //Get the Window size
-    virtual Vec2s getSize(void) const = 0;
+    virtual Vec2f getSize(void) const = 0;
 
     //Focused
     //Set the Window Focus
@@ -256,9 +256,9 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
 
 	virtual UInt32 getKeyModifiers(void) const = 0;
     
-	virtual Pnt2s getMousePosition(void) const = 0;
+	virtual Pnt2f getMousePosition(void) const = 0;
 
-	ViewportPtr windowToViewport(const Pnt2s& WindowPoint, Pnt2s& ViewportPoint);
+	ViewportPtr windowToViewport(const Pnt2f& WindowPoint, Pnt2f& ViewportPoint);
 
 	virtual std::string getClipboard(void) const = 0;
 
@@ -266,8 +266,8 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
 
     virtual WindowPtr initWindow(void);
 
-    virtual void openWindow(const Pnt2s& ScreenPosition,
-                       const Vec2s& Size,
+    virtual void openWindow(const Pnt2f& ScreenPosition,
+                       const Vec2f& Size,
                        const std::string& WindowName) = 0;
     
     virtual void closeWindow(void) = 0;
@@ -295,19 +295,19 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
 
     /*! \}                                                                 */
     
-    void updateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2s& Location);
-    void validateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2s& Location);
+    void updateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2f& Location);
+    void validateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2f& Location);
 
-    void produceMouseClicked(const MouseEvent::MouseButton& Button, const Pnt2s& Location);
-    void produceMouseEntered(const Pnt2s& Location);
-    void produceMouseExited(const Pnt2s& Location);
-    void produceMousePressed(const MouseEvent::MouseButton& Button, const Pnt2s& Location);
-    void produceMouseReleased(const MouseEvent::MouseButton& Button, const Pnt2s& Location);
+    void produceMouseClicked(const MouseEvent::MouseButton& Button, const Pnt2f& Location);
+    void produceMouseEntered(const Pnt2f& Location);
+    void produceMouseExited(const Pnt2f& Location);
+    void produceMousePressed(const MouseEvent::MouseButton& Button, const Pnt2f& Location);
+    void produceMouseReleased(const MouseEvent::MouseButton& Button, const Pnt2f& Location);
 
-    void produceMouseWheelMoved(const Int32& WheelRotation, const Pnt2s& Location, const MouseWheelEvent::ScrollType& TheScrollType = MouseWheelEvent::UNIT_SCROLL);
+    void produceMouseWheelMoved(const Int32& WheelRotation, const Pnt2f& Location, const MouseWheelEvent::ScrollType& TheScrollType = MouseWheelEvent::UNIT_SCROLL);
 
-    void produceMouseMoved(const Pnt2s& Location);
-    void produceMouseDragged(const MouseEvent::MouseButton& Button, const Pnt2s& Location);
+    void produceMouseMoved(const Pnt2f& Location);
+    void produceMouseDragged(const MouseEvent::MouseButton& Button, const Pnt2f& Location);
 
     void produceKeyPressed(const KeyEvent::Key& TheKey, const UInt32& Modifiers);
     void produceKeyReleased(const KeyEvent::Key& TheKey, const UInt32& Modifiers);

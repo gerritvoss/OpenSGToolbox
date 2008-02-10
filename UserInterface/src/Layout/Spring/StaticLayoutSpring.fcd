@@ -14,7 +14,7 @@
 A UI Static LayoutSpring.
 	<Field
 		name="Minimum"
-		type="Int32"
+		type="Real32"
 		cardinality="single"
       visibility="external"
 		defaultValue="LayoutSpring::VALUE_NOT_SET"
@@ -24,7 +24,7 @@ A UI Static LayoutSpring.
    </Field>
 	<Field
 		name="Maximum"
-		type="Int32"
+		type="Real32"
 		cardinality="single"
       visibility="external"
 		defaultValue="LayoutSpring::VALUE_NOT_SET"
@@ -34,7 +34,7 @@ A UI Static LayoutSpring.
    </Field>
 	<Field
 		name="Preferred"
-		type="Int32"
+		type="Real32"
 		cardinality="single"
       visibility="external"
 		defaultValue="LayoutSpring::VALUE_NOT_SET"

@@ -22,7 +22,7 @@ UI Bevel Border.
 	</Field>
 	<Field
 		name="Width"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1"

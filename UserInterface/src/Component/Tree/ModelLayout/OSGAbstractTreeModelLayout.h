@@ -98,7 +98,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
 	virtual UInt32 getPreferredHeight(void) const;
 
 	//Returns the preferred width for the passed in region.
-	virtual UInt32 getPreferredWidth(Pnt2s& TopLeft, Pnt2s& BottomRight) const;
+	virtual UInt32 getPreferredWidth(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
 
 	//Returns the height of each row.
 	virtual UInt32 getRowHeight(void) const;
@@ -163,7 +163,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
 
     /*! \}                                                                 */
     //Returns, by reference in placeIn, the size needed to represent value.
-	virtual void getNodeDimensions(Pnt2s& TopLeft, Pnt2s& BottomRight, SharedFieldPtr value, const UInt32& row, const UInt32& depth, bool expanded, Pnt2s TopLeftPlaceIn, Pnt2s BottomRightPlaceIn);
+	virtual void getNodeDimensions(Pnt2f& TopLeft, Pnt2f& BottomRight, SharedFieldPtr value, const UInt32& row, const UInt32& depth, bool expanded, Pnt2f TopLeftPlaceIn, Pnt2f BottomRightPlaceIn);
 
 
     //Object responsible for getting the size of a node.

@@ -93,7 +93,7 @@ const OSG::BitVector ImageComponentBase::MTInfluenceMask =
 /*! \var UInt32          ImageComponentBase::_sfScale
     
 */
-/*! \var Vec2s           ImageComponentBase::_sfScaleAbsoluteSize
+/*! \var Vec2f           ImageComponentBase::_sfScaleAbsoluteSize
     
 */
 /*! \var Real32          ImageComponentBase::_sfVerticalAlignment
@@ -117,7 +117,7 @@ FieldDescription *ImageComponentBase::_desc[] =
                      ScaleFieldId, ScaleFieldMask,
                      false,
                      (FieldAccessMethod) &ImageComponentBase::getSFScale),
-    new FieldDescription(SFVec2s::getClassType(), 
+    new FieldDescription(SFVec2f::getClassType(), 
                      "ScaleAbsoluteSize", 
                      ScaleAbsoluteSizeFieldId, ScaleAbsoluteSizeFieldMask,
                      false,
@@ -209,7 +209,7 @@ void ImageComponentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 ImageComponentBase::ImageComponentBase(void) :
     _sfTexture                (), 
     _sfScale                  (UInt32(SCALE_NONE)), 
-    _sfScaleAbsoluteSize      (Vec2s(1,1)), 
+    _sfScaleAbsoluteSize      (Vec2f(1,1)), 
     _sfVerticalAlignment      (Real32(0.5)), 
     _sfHorizontalAlignment    (Real32(0.5)), 
     Inherited() 

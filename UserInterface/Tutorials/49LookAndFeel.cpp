@@ -50,7 +50,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // 49LookAndFeel Headers
 #include <OpenSG/UserInterface/OSGButton.h>
@@ -240,7 +240,7 @@ int main(int argc, char **argv)
 	PanelPtr StatePanel = TheStatePanelCreator.getPanel();
     TabPanelPtr MainTabPanel = osg::TabPanel::create();
     beginEditCP(MainTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask  | TabPanel::ConstraintsFieldMask);
-        MainTabPanel->setPreferredSize(Vec2s(600,600));
+        MainTabPanel->setPreferredSize(Vec2f(600,600));
         MainTabPanel->addTab(StateTabPanelTab, StatePanel);
         MainTabPanel->setActiveTab(0);
         MainTabPanel->setTabAlignment(AXIS_CENTER_ALIGNMENT);
@@ -300,8 +300,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(900,900),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(900,900),
                                         "OpenSG 49LookAndFeel Window");
 
     //Main Event Loop
@@ -716,14 +716,14 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         inactiveButton->setActive(false);
         inactiveButton->setText("Inactive");
         inactiveButton->setConstraints(Constraint0101);
-        inactiveButton->setMaxSize(Vec2s(75, 23));
+        inactiveButton->setMaxSize(Vec2f(75, 23));
     endEditCP(inactiveButton, Button::ActiveFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask);
     
     beginEditCP(activeButton, Button::TextFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask);
         activeButton->setText("RolledOver");
 		activeButton->setBorder(activeButton->getRolloverBorder());
         activeButton->setConstraints(Constraint0201);
-        activeButton->setMaxSize(Vec2s(75, 23));
+        activeButton->setMaxSize(Vec2f(75, 23));
     endEditCP(activeButton, Button::TextFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask);
 
     beginEditCP(disabledInactiveButton, Button::ActiveFieldMask | Button::EnabledFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask);
@@ -731,14 +731,14 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         disabledInactiveButton->setEnabled(false);
         disabledInactiveButton->setText("Disabled/Inactive");
         disabledInactiveButton->setConstraints(Constraint0301);
-        disabledInactiveButton->setMaxSize(Vec2s(90, 23));
+        disabledInactiveButton->setMaxSize(Vec2f(90, 23));
     endEditCP(disabledInactiveButton, Button::ActiveFieldMask | Button::EnabledFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask);
     
     beginEditCP(disabledActiveButton, Button::EnabledFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask);
         disabledActiveButton->setEnabled(false);
         disabledActiveButton->setText("Disabled");
         disabledActiveButton->setConstraints(Constraint0401);
-        disabledActiveButton->setMaxSize(Vec2s(90, 23));
+        disabledActiveButton->setMaxSize(Vec2f(90, 23));
     endEditCP(disabledActiveButton, Button::EnabledFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask);
     
     /******************************************************
@@ -752,14 +752,14 @@ PanelPtr StatePanelCreator::createStatePanel(void)
     beginEditCP(nonSelectedToggleButton, ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
         nonSelectedToggleButton->setText("NonSelected");
         nonSelectedToggleButton->setConstraints(Constraint0102);
-        nonSelectedToggleButton->setMaxSize(Vec2s(75, 23));
+        nonSelectedToggleButton->setMaxSize(Vec2f(75, 23));
     endEditCP(nonSelectedToggleButton, ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
 
     beginEditCP(selectedToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
         selectedToggleButton->setSelected(true);
         selectedToggleButton->setText("Selected");
         selectedToggleButton->setConstraints(Constraint0202);
-        selectedToggleButton->setMaxSize(Vec2s(75, 23));
+        selectedToggleButton->setMaxSize(Vec2f(75, 23));
     endEditCP(selectedToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
     
     beginEditCP(disabledSelectedToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::EnabledFieldMask | ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
@@ -767,7 +767,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         disabledSelectedToggleButton->setEnabled(false);
         disabledSelectedToggleButton->setText("Disabled/Selected");
         disabledSelectedToggleButton->setConstraints(Constraint0302);
-        disabledSelectedToggleButton->setMaxSize(Vec2s(90, 23));
+        disabledSelectedToggleButton->setMaxSize(Vec2f(90, 23));
     endEditCP(disabledSelectedToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::EnabledFieldMask | ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
     
     beginEditCP(disabledNonselectedToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::EnabledFieldMask | ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
@@ -775,7 +775,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         disabledNonselectedToggleButton->setEnabled(false);
         disabledNonselectedToggleButton->setText("Disabled");
         disabledNonselectedToggleButton->setConstraints(Constraint0402);
-        disabledNonselectedToggleButton->setMaxSize(Vec2s(90, 23));
+        disabledNonselectedToggleButton->setMaxSize(Vec2f(90, 23));
     endEditCP(disabledNonselectedToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::EnabledFieldMask | ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
 
     /******************************************************
@@ -796,14 +796,14 @@ PanelPtr StatePanelCreator::createStatePanel(void)
     beginEditCP(deselectedRadioButton, RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
         deselectedRadioButton->setText("Deselected");
         deselectedRadioButton->setConstraints(Constraint0103);
-        deselectedRadioButton->setMaxSize(Vec2s(75, 23));
+        deselectedRadioButton->setMaxSize(Vec2f(75, 23));
     endEditCP(deselectedRadioButton, RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
 
     beginEditCP(selectedRadioButton, RadioButton::SelectedFieldMask | RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
         selectedRadioButton->setSelected(true);
         selectedRadioButton->setText("Selected");
         selectedRadioButton->setConstraints(Constraint0203);
-        selectedRadioButton->setMaxSize(Vec2s(75, 23));
+        selectedRadioButton->setMaxSize(Vec2f(75, 23));
     endEditCP(selectedRadioButton, RadioButton::SelectedFieldMask | RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
 
     beginEditCP(disabledDeselectedRadioButton, RadioButton::EnabledFieldMask | RadioButton::SelectedFieldMask | RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
@@ -811,7 +811,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         disabledDeselectedRadioButton->setSelected(false);
         disabledDeselectedRadioButton->setText("Disabled");
         disabledDeselectedRadioButton->setConstraints(Constraint0303);
-        disabledDeselectedRadioButton->setMaxSize(Vec2s(75, 23));
+        disabledDeselectedRadioButton->setMaxSize(Vec2f(75, 23));
     endEditCP(disabledDeselectedRadioButton, RadioButton::EnabledFieldMask | RadioButton::SelectedFieldMask | RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
     
     beginEditCP(disabledSelectedRadioButton, RadioButton::EnabledFieldMask | RadioButton::SelectedFieldMask | RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
@@ -819,7 +819,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         disabledSelectedRadioButton->setSelected(true);
         disabledSelectedRadioButton->setText("Disabled/Selected");
         disabledSelectedRadioButton->setConstraints(Constraint0403);
-        disabledSelectedRadioButton->setMaxSize(Vec2s(110, 23));
+        disabledSelectedRadioButton->setMaxSize(Vec2f(110, 23));
     endEditCP(disabledSelectedRadioButton, RadioButton::EnabledFieldMask | RadioButton::SelectedFieldMask | RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
     
     
@@ -834,14 +834,14 @@ PanelPtr StatePanelCreator::createStatePanel(void)
     beginEditCP(deselectedCheckboxButton, CheckboxButton::TextFieldMask | CheckboxButton::ConstraintsFieldMask | CheckboxButton::MaxSizeFieldMask);
         deselectedCheckboxButton->setText("Deselected");
         deselectedCheckboxButton->setConstraints(Constraint0104);
-        deselectedCheckboxButton->setMaxSize(Vec2s(75, 23));
+        deselectedCheckboxButton->setMaxSize(Vec2f(75, 23));
     endEditCP(deselectedCheckboxButton, CheckboxButton::TextFieldMask | CheckboxButton::ConstraintsFieldMask | CheckboxButton::MaxSizeFieldMask);
 
     beginEditCP(selectedCheckboxButton, CheckboxButton::SelectedFieldMask | CheckboxButton::TextFieldMask | CheckboxButton::ConstraintsFieldMask | CheckboxButton::MaxSizeFieldMask);
         selectedCheckboxButton->setSelected(true);
         selectedCheckboxButton->setText("Selected");
         selectedCheckboxButton->setConstraints(Constraint0204);
-        selectedCheckboxButton->setMaxSize(Vec2s(75, 23));
+        selectedCheckboxButton->setMaxSize(Vec2f(75, 23));
     endEditCP(selectedCheckboxButton, CheckboxButton::SelectedFieldMask | CheckboxButton::TextFieldMask | CheckboxButton::ConstraintsFieldMask | CheckboxButton::MaxSizeFieldMask);
 
     beginEditCP(disabledDeselectedCheckboxButton, CheckboxButton::SelectedFieldMask | CheckboxButton::EnabledFieldMask | CheckboxButton::TextFieldMask | CheckboxButton::ConstraintsFieldMask | CheckboxButton::MaxSizeFieldMask);
@@ -849,7 +849,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         disabledDeselectedCheckboxButton->setEnabled(false);
         disabledDeselectedCheckboxButton->setText("Disabled");
         disabledDeselectedCheckboxButton->setConstraints(Constraint0304);
-        disabledDeselectedCheckboxButton->setMaxSize(Vec2s(75, 23));
+        disabledDeselectedCheckboxButton->setMaxSize(Vec2f(75, 23));
     endEditCP(disabledDeselectedCheckboxButton, CheckboxButton::SelectedFieldMask | CheckboxButton::EnabledFieldMask | CheckboxButton::TextFieldMask | CheckboxButton::ConstraintsFieldMask | CheckboxButton::MaxSizeFieldMask);
 
     beginEditCP(disabledSelectedCheckboxButton, CheckboxButton::SelectedFieldMask | CheckboxButton::EnabledFieldMask | CheckboxButton::TextFieldMask | CheckboxButton::ConstraintsFieldMask | CheckboxButton::MaxSizeFieldMask);
@@ -857,7 +857,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         disabledSelectedCheckboxButton->setEnabled(false);
         disabledSelectedCheckboxButton->setText("Disabled/Selected");
         disabledSelectedCheckboxButton->setConstraints(Constraint0404);
-        disabledSelectedCheckboxButton->setMaxSize(Vec2s(110, 23));
+        disabledSelectedCheckboxButton->setMaxSize(Vec2f(110, 23));
     endEditCP(disabledSelectedCheckboxButton, CheckboxButton::SelectedFieldMask | CheckboxButton::EnabledFieldMask | CheckboxButton::TextFieldMask | CheckboxButton::ConstraintsFieldMask | CheckboxButton::MaxSizeFieldMask);
     /******************************************************
                         TextFields
@@ -870,21 +870,21 @@ PanelPtr StatePanelCreator::createStatePanel(void)
     beginEditCP(editableTextField, TextField::TextFieldMask | TextField::ConstraintsFieldMask | TextField::MaxSizeFieldMask);
         editableTextField->setText("Editable");
         editableTextField->setConstraints(Constraint0105);
-        editableTextField->setMaxSize(Vec2s(75, 23));
+        editableTextField->setMaxSize(Vec2f(75, 23));
     endEditCP(editableTextField, TextField::TextFieldMask | TextField::ConstraintsFieldMask | TextField::MaxSizeFieldMask);
 
     beginEditCP(noneditableTextField, TextField::EditableFieldMask | TextField::TextFieldMask | TextField::ConstraintsFieldMask | TextField::MaxSizeFieldMask);
         noneditableTextField->setEditable(false);
         noneditableTextField->setText("Noneditable");
         noneditableTextField->setConstraints(Constraint0205);
-        noneditableTextField->setMaxSize(Vec2s(75, 23));
+        noneditableTextField->setMaxSize(Vec2f(75, 23));
     endEditCP(noneditableTextField, TextField::EditableFieldMask | TextField::TextFieldMask | TextField::ConstraintsFieldMask | TextField::MaxSizeFieldMask);
     
     beginEditCP(disabledEditableTextField, TextField::EnabledFieldMask | TextField::TextFieldMask | TextField::ConstraintsFieldMask | TextField::MaxSizeFieldMask);
         disabledEditableTextField->setEnabled(false);
         disabledEditableTextField->setText("Disabled");
         disabledEditableTextField->setConstraints(Constraint0305);
-        disabledEditableTextField->setMaxSize(Vec2s(75, 23));
+        disabledEditableTextField->setMaxSize(Vec2f(75, 23));
     endEditCP(disabledEditableTextField, TextField::EnabledFieldMask | TextField::TextFieldMask | TextField::ConstraintsFieldMask | TextField::MaxSizeFieldMask);
     
     beginEditCP(disabledNoneditableTextField, TextField::EditableFieldMask | TextField::EnabledFieldMask | TextField::TextFieldMask | TextField::ConstraintsFieldMask | TextField::MaxSizeFieldMask);
@@ -892,7 +892,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         disabledNoneditableTextField->setEnabled(false);
         disabledNoneditableTextField->setText("Disabled/Noneditable");
         disabledNoneditableTextField->setConstraints(Constraint0405);
-        disabledNoneditableTextField->setMaxSize(Vec2s(90, 23));
+        disabledNoneditableTextField->setMaxSize(Vec2f(90, 23));
     endEditCP(disabledNoneditableTextField, TextField::EditableFieldMask | TextField::EnabledFieldMask | TextField::TextFieldMask | TextField::ConstraintsFieldMask | TextField::MaxSizeFieldMask);
     /******************************************************
                         TextAreas
@@ -905,21 +905,21 @@ PanelPtr StatePanelCreator::createStatePanel(void)
     beginEditCP(editableTextArea, TextArea::TextFieldMask | TextArea::ConstraintsFieldMask);
         editableTextArea->setText("Editable");
         editableTextArea->setConstraints(Constraint0106);
-		editableTextArea->setMaxSize(Vec2s(100,50));
+		editableTextArea->setMaxSize(Vec2f(100,50));
     endEditCP(editableTextArea, TextArea::TextFieldMask | TextArea::ConstraintsFieldMask);
 
     beginEditCP(noneditableTextArea, TextArea::EditableFieldMask | TextArea::TextFieldMask | TextArea::ConstraintsFieldMask | TextArea::MaxSizeFieldMask);
         noneditableTextArea->setEditable(false);
         noneditableTextArea->setText("Uneditable");
         noneditableTextArea->setConstraints(Constraint0206);
-		noneditableTextArea->setMaxSize(Vec2s(100,50));
+		noneditableTextArea->setMaxSize(Vec2f(100,50));
     endEditCP(noneditableTextArea, TextArea::EditableFieldMask | TextArea::TextFieldMask | TextArea::ConstraintsFieldMask | TextArea::MaxSizeFieldMask);
     
     beginEditCP(disabledEditableTextArea, TextArea::EnabledFieldMask | TextArea::TextFieldMask | TextArea::ConstraintsFieldMask | TextArea::MaxSizeFieldMask);
         disabledEditableTextArea->setEnabled(false);
         disabledEditableTextArea->setText("Disabled");
         disabledEditableTextArea->setConstraints(Constraint0306);
-		disabledEditableTextArea->setMaxSize(Vec2s(100,50));
+		disabledEditableTextArea->setMaxSize(Vec2f(100,50));
     endEditCP(disabledEditableTextArea, TextArea::EnabledFieldMask | TextArea::TextFieldMask | TextArea::ConstraintsFieldMask | TextArea::MaxSizeFieldMask);
     
     beginEditCP(disabledNoneditableTextArea, TextArea::EditableFieldMask | TextArea::EnabledFieldMask | TextArea::TextFieldMask | TextArea::ConstraintsFieldMask | TextArea::MaxSizeFieldMask);
@@ -927,7 +927,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         disabledNoneditableTextArea->setEnabled(false);
         disabledNoneditableTextArea->setText("Disabled");
         disabledNoneditableTextArea->setConstraints(Constraint0406);
-		disabledNoneditableTextArea->setMaxSize(Vec2s(100,50));
+		disabledNoneditableTextArea->setMaxSize(Vec2f(100,50));
     endEditCP(disabledNoneditableTextArea, TextArea::EditableFieldMask | TextArea::EnabledFieldMask | TextArea::TextFieldMask | TextArea::ConstraintsFieldMask | TextArea::MaxSizeFieldMask);
 
     /******************************************************
@@ -941,21 +941,21 @@ PanelPtr StatePanelCreator::createStatePanel(void)
     beginEditCP(editablePasswordField, PasswordField::TextFieldMask | PasswordField::ConstraintsFieldMask | PasswordField::MaxSizeFieldMask);
         editablePasswordField->setText("editable");
         editablePasswordField->setConstraints(Constraint0107);
-		editablePasswordField->setMaxSize(Vec2s(75,23));
+		editablePasswordField->setMaxSize(Vec2f(75,23));
     endEditCP(editablePasswordField, PasswordField::TextFieldMask | PasswordField::ConstraintsFieldMask | PasswordField::MaxSizeFieldMask);
 
     beginEditCP(nonEditablePasswordField, PasswordField::EditableFieldMask | PasswordField::TextFieldMask | PasswordField::ConstraintsFieldMask | PasswordField::MaxSizeFieldMask);
         nonEditablePasswordField->setEditable(false);
         nonEditablePasswordField->setText("editable");
         nonEditablePasswordField->setConstraints(Constraint0207);
-		nonEditablePasswordField->setMaxSize(Vec2s(75,23));
+		nonEditablePasswordField->setMaxSize(Vec2f(75,23));
     endEditCP(nonEditablePasswordField, PasswordField::EditableFieldMask | PasswordField::TextFieldMask | PasswordField::ConstraintsFieldMask | PasswordField::MaxSizeFieldMask);
     
     beginEditCP(disabledInactivePasswordField, PasswordField::EnabledFieldMask | PasswordField::TextFieldMask | PasswordField::ConstraintsFieldMask | PasswordField::MaxSizeFieldMask);
         disabledInactivePasswordField->setEnabled(false);
         disabledInactivePasswordField->setText("editable");
         disabledInactivePasswordField->setConstraints(Constraint0307);
-		disabledInactivePasswordField->setMaxSize(Vec2s(75,23));
+		disabledInactivePasswordField->setMaxSize(Vec2f(75,23));
     endEditCP(disabledInactivePasswordField, PasswordField::EnabledFieldMask | PasswordField::TextFieldMask | PasswordField::ConstraintsFieldMask | PasswordField::MaxSizeFieldMask);
     
     beginEditCP(disabledActivePasswordField, PasswordField::EditableFieldMask | PasswordField::EnabledFieldMask | PasswordField::TextFieldMask | PasswordField::ConstraintsFieldMask | PasswordField::MaxSizeFieldMask);
@@ -963,7 +963,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         disabledActivePasswordField->setEnabled(false);
         disabledActivePasswordField->setText("editable");
         disabledActivePasswordField->setConstraints(Constraint0407);
-		disabledActivePasswordField->setMaxSize(Vec2s(75,23));
+		disabledActivePasswordField->setMaxSize(Vec2f(75,23));
     endEditCP(disabledActivePasswordField, PasswordField::EditableFieldMask | PasswordField::EnabledFieldMask | PasswordField::TextFieldMask | PasswordField::ConstraintsFieldMask | PasswordField::MaxSizeFieldMask);
 
     /******************************************************
@@ -997,25 +997,25 @@ PanelPtr StatePanelCreator::createStatePanel(void)
 
     beginEditCP(activeSpinner, Spinner::ConstraintsFieldMask | Spinner::MaxSizeFieldMask);
         activeSpinner->setConstraints(Constraint0108);
-        activeSpinner->setMaxSize(Vec2s(50,25));
+        activeSpinner->setMaxSize(Vec2f(50,25));
     endEditCP(activeSpinner, Spinner::ConstraintsFieldMask | Spinner::MaxSizeFieldMask);
 
     beginEditCP(inactiveSpinner, Spinner::ConstraintsFieldMask | Spinner::MaxSizeFieldMask);
         inactiveSpinner->setConstraints(Constraint0208);
-        inactiveSpinner->setMaxSize(Vec2s(50,25));
+        inactiveSpinner->setMaxSize(Vec2f(50,25));
     endEditCP(inactiveSpinner, Spinner::ConstraintsFieldMask | Spinner::MaxSizeFieldMask);
     inactiveSpinner->setEditable(false);
 
     beginEditCP(disabledActiveSpinner, Spinner::ConstraintsFieldMask | Spinner::EnabledFieldMask | Spinner::MaxSizeFieldMask);
         disabledActiveSpinner->setConstraints(Constraint0308);
         disabledActiveSpinner->setEnabled(false);
-        disabledActiveSpinner->setMaxSize(Vec2s(50,25));
+        disabledActiveSpinner->setMaxSize(Vec2f(50,25));
     endEditCP(disabledActiveSpinner, Spinner::ConstraintsFieldMask | Spinner::EnabledFieldMask | Spinner::MaxSizeFieldMask);
 
     beginEditCP(disabledInactiveSpinner, Spinner::ConstraintsFieldMask | Component::EnabledFieldMask | Spinner::MaxSizeFieldMask);
         disabledInactiveSpinner->setConstraints(Constraint0408);
         disabledInactiveSpinner->setEnabled(false);
-        disabledInactiveSpinner->setMaxSize(Vec2s(50,25));
+        disabledInactiveSpinner->setMaxSize(Vec2f(50,25));
     endEditCP(disabledInactiveSpinner, Spinner::ConstraintsFieldMask | Component::EnabledFieldMask | Spinner::MaxSizeFieldMask);
     disabledInactiveSpinner->setEditable(false);
 
@@ -1059,14 +1059,14 @@ PanelPtr StatePanelCreator::createStatePanel(void)
 
     beginEditCP(editableComboBox, ComboBox::ConstraintsFieldMask);
         editableComboBox->setConstraints(Constraint0109);
-		editableComboBox->setMaxSize(Vec2s(75, 23));
+		editableComboBox->setMaxSize(Vec2f(75, 23));
     endEditCP(editableComboBox, ComboBox::ConstraintsFieldMask);
 	editableComboBox->setSelectedIndex(0);
 
     beginEditCP(noneditableComboBox, ComboBox::EditableFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask);
         noneditableComboBox->setEditable(false);
         noneditableComboBox->setConstraints(Constraint0209);
-		noneditableComboBox->setMaxSize(Vec2s(75, 23));
+		noneditableComboBox->setMaxSize(Vec2f(75, 23));
     endEditCP(noneditableComboBox, ComboBox::EditableFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask);
 	noneditableComboBox->setSelectedIndex(0);
 
@@ -1074,7 +1074,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
     beginEditCP(disabledEditableComboBox, ComboBox::EnabledFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask);
         disabledEditableComboBox->setEnabled(false);
         disabledEditableComboBox->setConstraints(Constraint0309);
-		disabledEditableComboBox->setMaxSize(Vec2s(75, 23));
+		disabledEditableComboBox->setMaxSize(Vec2f(75, 23));
     endEditCP(disabledEditableComboBox, ComboBox::EnabledFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask);
 	
 	disabledNoneditableComboBox->setSelectedIndex(0);
@@ -1082,7 +1082,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         disabledNoneditableComboBox->setEditable(false);
         disabledNoneditableComboBox->setEnabled(false);
         disabledNoneditableComboBox->setConstraints(Constraint0409);
-		disabledNoneditableComboBox->setMaxSize(Vec2s(75, 23));
+		disabledNoneditableComboBox->setMaxSize(Vec2f(75, 23));
     endEditCP(disabledNoneditableComboBox, ComboBox::EditableFieldMask | ComboBox::EnabledFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask);
 	
 
@@ -1228,7 +1228,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         statePanel->getChildren().addValue(disabledEditableComboBox);
         statePanel->getChildren().addValue(disabledNoneditableComboBox);
         statePanel->setLayout(statePanelLayout);
-        statePanel->setPreferredSize(Vec2s(500,800));
+        statePanel->setPreferredSize(Vec2f(500,800));
     beginEditCP(statePanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask  | Panel::PreferredSizeFieldMask);
 
     return statePanel;
@@ -1245,7 +1245,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

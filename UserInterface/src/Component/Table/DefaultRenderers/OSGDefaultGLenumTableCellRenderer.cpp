@@ -87,7 +87,7 @@ ComponentPtr DefaultGLenumTableCellRenderer::getTableCellRendererComponent(Table
 		std::string tempString;
 		tempString = toString(dynamic_cast<SFGLenum*>(value.get())->getValue());
 		TheLabel->setText(tempString);
-		TheLabel->setPreferredSize(Vec2s(100,30));
+		TheLabel->setPreferredSize(Vec2f(100,30));
 	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
 	ColorUIBackgroundPtr tempBackground;
 	tempBackground = ColorUIBackground::create();

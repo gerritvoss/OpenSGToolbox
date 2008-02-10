@@ -49,7 +49,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // 05FlowLayout Headers
 #include <OpenSG/UserInterface/OSGButton.h>
@@ -141,11 +141,11 @@ int main(int argc, char **argv)
     ButtonPtr ExampleButton6 = osg::Button::create();
 
     beginEditCP(ExampleButton1, Button::PreferredSizeFieldMask);
-        ExampleButton1->setPreferredSize(Vec2s(200, 50));
+        ExampleButton1->setPreferredSize(Vec2f(200, 50));
     endEditCP(ExampleButton1, Button::PreferredSizeFieldMask);
 
     beginEditCP(ExampleButton4, Button::PreferredSizeFieldMask);
-        ExampleButton4->setPreferredSize(Vec2s(50, 50));
+        ExampleButton4->setPreferredSize(Vec2f(50, 50));
     endEditCP(ExampleButton4, Button::PreferredSizeFieldMask);
 
     /******************************************************
@@ -264,8 +264,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(900,900),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(900,900),
                                         "OpenSG 05FlowLayout Window");
 
     //Main Event Loop
@@ -288,7 +288,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

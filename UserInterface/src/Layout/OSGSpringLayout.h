@@ -95,7 +95,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayout : public SpringLayoutBase
     LayoutSpringPtr getConstraint(const UInt32 Edge, ComponentPtr TheComponent) const;
 
     //Links edge e1 of component c1 to edge e2 of component c2, with a fixed distance between the edges.
-    void putConstraint(const UInt32 e1, ComponentPtr c1, const UInt32& pad, const UInt32 e2, ComponentPtr c2);
+    void putConstraint(const UInt32 e1, ComponentPtr c1, const Real32& pad, const UInt32 e2, ComponentPtr c2);
 
     //Links edge e1 of component c1 to edge e2 of component c2.
     void putConstraint(const UInt32 e1, ComponentPtr c1, LayoutSpringPtr s, const UInt32 e2, ComponentPtr c2);

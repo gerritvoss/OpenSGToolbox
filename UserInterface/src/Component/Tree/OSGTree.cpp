@@ -326,13 +326,13 @@ void Tree::treeDidChange(void)
     //TODO:Implement
 }
 
-Vec2s Tree::getPreferredScrollableViewportSize(void)
+Vec2f Tree::getPreferredScrollableViewportSize(void)
 {
     //TODO:Implement
-    return Vec2s();
+    return Vec2f();
 }
 
-Int32 Tree::getScrollableBlockIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
+Int32 Tree::getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
     UInt16 MajorAxis;
     if(orientation == VERTICAL_ALIGNMENT)
@@ -357,7 +357,7 @@ bool Tree::getScrollableTracksViewportWidth(void)
     return true;
 }
 
-Int32 Tree::getScrollableUnitIncrement(const Pnt2s& VisibleRectTopLeft, const Pnt2s& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
+Int32 Tree::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
     //TODO:Implement
     return 0;
@@ -597,8 +597,8 @@ void Tree::updateLayout(void)
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
         beginEditCP(getChildren(i), Component::PositionFieldMask | Component::SizeFieldMask);
-            getChildren(i)->setPosition(Pnt2s(0, getModelLayout()->getRowHeight()*(i+_TopDrawnRow)));
-            getChildren(i)->setSize(Vec2s(getSize().x(), getModelLayout()->getRowHeight()));
+            getChildren(i)->setPosition(Pnt2f(0, getModelLayout()->getRowHeight()*(i+_TopDrawnRow)));
+            getChildren(i)->setSize(Vec2f(getSize().x(), getModelLayout()->getRowHeight()));
         endEditCP(getChildren(i), Component::PositionFieldMask | Component::SizeFieldMask);
     }
 }
@@ -606,7 +606,7 @@ void Tree::updateLayout(void)
 void Tree::getDrawnRows(Int32& Beginning, Int32& End) const
 {
     //Get My Clip Bounds
-    Pnt2s ClipTopLeft, ClipBottomRight;
+    Pnt2f ClipTopLeft, ClipBottomRight;
     getClipBounds(ClipTopLeft, ClipBottomRight);
 
     Beginning = getRowForLocation(ClipTopLeft.x(), ClipTopLeft.y());

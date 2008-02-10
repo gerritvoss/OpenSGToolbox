@@ -49,10 +49,10 @@ class OSG_INPUTLIB_DLLMAPPING MouseWheelEvent : public Event
     Int32 getScrollAmount(void) const;
     Int32 getUnitsToScroll(void) const;
     ScrollType getScrollType(void) const;
-    Pnt2s getLocation(void) const;
+    Pnt2f getLocation(void) const;
     ViewportPtr getViewport(void) const;
     
-    MouseWheelEvent(FieldContainerPtr Source, Time TimeStamp, Int32 WheelRotation, ScrollType TheScrollType, Pnt2s Location, ViewportPtr TheViewport);
+    MouseWheelEvent(FieldContainerPtr Source, Time TimeStamp, Int32 WheelRotation, ScrollType TheScrollType, Pnt2f Location, ViewportPtr TheViewport);
     
     virtual const EventType &getType(void) const;
     
@@ -61,7 +61,7 @@ class OSG_INPUTLIB_DLLMAPPING MouseWheelEvent : public Event
   protected:
     ScrollType _ScrollType;
     Int32      _WheelRotation;
-    Pnt2s       _Location;
+    Pnt2f       _Location;
     ViewportPtr _Viewport;
     
   private:

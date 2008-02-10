@@ -87,7 +87,7 @@ void AbstractWindow::updateContainerLayout(void)
     }
 	else if(getSize() != getPreferredSize())
 	{
-		Vec2s Size(osgMax(osgMin(getPreferredSize().x(), getMaxSize().x()), getMinSize().x()),
+		Vec2f Size(osgMax(osgMin(getPreferredSize().x(), getMaxSize().x()), getMinSize().x()),
 			       osgMax(osgMin(getPreferredSize().y(), getMaxSize().y()), getMinSize().y()));
 		beginEditCP(ComponentPtr(this), SizeFieldMask);
 			setSize(Size);
@@ -97,7 +97,7 @@ void AbstractWindow::updateContainerLayout(void)
 
 void AbstractWindow::updateClipBounds(void)
 {
-	Pnt2s TopLeft, BottomRight;
+	Pnt2f TopLeft, BottomRight;
 	if( getDrawingSurface() == NullFC )
 	{
 		//If I have no parent container use my bounds
@@ -109,16 +109,16 @@ void AbstractWindow::updateClipBounds(void)
 		     //My Bounds
 		     //My Parent Containers Clip Bounds
 		     //My Parent Containers Inset Bounds
-        Pnt2s MyTopLeft,MyBottomRight;
+        Pnt2f MyTopLeft,MyBottomRight;
         getBounds(MyTopLeft,MyBottomRight);
 
 		//Get Parent Container's Clip Bounds
-		Pnt2s ContainerClipTopLeft(0,0), ContainerClipBottomRight(getDrawingSurface()->getSize());
+		Pnt2f ContainerClipTopLeft(0,0), ContainerClipBottomRight(getDrawingSurface()->getSize());
 		
         //Parent Container's Clip Bounds are in the Parent Container's Coordinate space
         //We need to convert them to this Components Coordinate space
-        ContainerClipTopLeft -= Vec2s(getPosition());
-		ContainerClipBottomRight -= Vec2s(getPosition());
+        ContainerClipTopLeft -= Vec2f(getPosition());
+		ContainerClipBottomRight -= Vec2f(getPosition());
 
 		//Get the intersection of my bounds with my parent containers clip bounds
 		quadIntersection(MyTopLeft,MyBottomRight,

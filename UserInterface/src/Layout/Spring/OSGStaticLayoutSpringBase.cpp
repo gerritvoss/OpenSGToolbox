@@ -83,13 +83,13 @@ const OSG::BitVector StaticLayoutSpringBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Int32           StaticLayoutSpringBase::_sfMinimum
+/*! \var Real32          StaticLayoutSpringBase::_sfMinimum
     
 */
-/*! \var Int32           StaticLayoutSpringBase::_sfMaximum
+/*! \var Real32          StaticLayoutSpringBase::_sfMaximum
     
 */
-/*! \var Int32           StaticLayoutSpringBase::_sfPreferred
+/*! \var Real32          StaticLayoutSpringBase::_sfPreferred
     
 */
 
@@ -97,17 +97,17 @@ const OSG::BitVector StaticLayoutSpringBase::MTInfluenceMask =
 
 FieldDescription *StaticLayoutSpringBase::_desc[] = 
 {
-    new FieldDescription(SFInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "Minimum", 
                      MinimumFieldId, MinimumFieldMask,
                      false,
                      (FieldAccessMethod) &StaticLayoutSpringBase::getSFMinimum),
-    new FieldDescription(SFInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "Maximum", 
                      MaximumFieldId, MaximumFieldMask,
                      false,
                      (FieldAccessMethod) &StaticLayoutSpringBase::getSFMaximum),
-    new FieldDescription(SFInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "Preferred", 
                      PreferredFieldId, PreferredFieldMask,
                      false,
@@ -187,9 +187,9 @@ void StaticLayoutSpringBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 StaticLayoutSpringBase::StaticLayoutSpringBase(void) :
-    _sfMinimum                (Int32(LayoutSpring::VALUE_NOT_SET)), 
-    _sfMaximum                (Int32(LayoutSpring::VALUE_NOT_SET)), 
-    _sfPreferred              (Int32(LayoutSpring::VALUE_NOT_SET)), 
+    _sfMinimum                (Real32(LayoutSpring::VALUE_NOT_SET)), 
+    _sfMaximum                (Real32(LayoutSpring::VALUE_NOT_SET)), 
+    _sfPreferred              (Real32(LayoutSpring::VALUE_NOT_SET)), 
     Inherited() 
 {
 }

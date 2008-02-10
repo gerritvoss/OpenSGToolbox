@@ -63,7 +63,7 @@ bool ExitApp = false;
 
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // Create a class to allow for the use of the Escape
 // key to exit
@@ -165,7 +165,7 @@ int main(int argc, char **argv)
         TheSliderVertical->getLabelMap()[TheBoundedRangeModel.getMaximum()] = TempLabel;
 
 
-        TheSliderVertical->setPreferredSize(Vec2s(100, 300));
+        TheSliderVertical->setPreferredSize(Vec2f(100, 300));
         TheSliderVertical->setSnapToTicks(true);
         TheSliderVertical->setMajorTickSpacing(10);
         TheSliderVertical->setMinorTickSpacing(5);
@@ -177,7 +177,7 @@ int main(int argc, char **argv)
     
     SliderPtr TheSliderHorizontal = Slider::create();
     beginEditCP(TheSliderHorizontal, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
-        TheSliderHorizontal->setPreferredSize(Vec2s(300, 100));
+        TheSliderHorizontal->setPreferredSize(Vec2f(300, 100));
         TheSliderHorizontal->setSnapToTicks(false);
         TheSliderHorizontal->setMajorTickSpacing(10);
         TheSliderHorizontal->setMinorTickSpacing(5);
@@ -247,8 +247,8 @@ int main(int argc, char **argv)
 
     // Show the whole Scene
     mgr->showAll();
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(750,750),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(750,750),
                                         "OpenSG 32Slider Window");
 
     while(!ExitApp)
@@ -271,7 +271,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

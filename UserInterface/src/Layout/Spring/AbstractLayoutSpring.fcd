@@ -14,7 +14,7 @@
 A UI AbstractLayoutSpring.
 	<Field
 		name="Size"
-		type="Int32"
+		type="Real32"
 		cardinality="single"
       visibility="external"
 		defaultValue="LayoutSpring::VALUE_NOT_SET"

@@ -89,16 +89,16 @@ const OSG::BitVector MatteBorderBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var UInt32          MatteBorderBase::_sfLeftWidth
+/*! \var Real32          MatteBorderBase::_sfLeftWidth
     
 */
-/*! \var UInt32          MatteBorderBase::_sfRightWidth
+/*! \var Real32          MatteBorderBase::_sfRightWidth
     
 */
-/*! \var UInt32          MatteBorderBase::_sfTopWidth
+/*! \var Real32          MatteBorderBase::_sfTopWidth
     
 */
-/*! \var UInt32          MatteBorderBase::_sfBottomWidth
+/*! \var Real32          MatteBorderBase::_sfBottomWidth
     
 */
 /*! \var Color4f         MatteBorderBase::_sfColor
@@ -112,22 +112,22 @@ const OSG::BitVector MatteBorderBase::MTInfluenceMask =
 
 FieldDescription *MatteBorderBase::_desc[] = 
 {
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "LeftWidth", 
                      LeftWidthFieldId, LeftWidthFieldMask,
                      false,
                      (FieldAccessMethod) &MatteBorderBase::getSFLeftWidth),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "RightWidth", 
                      RightWidthFieldId, RightWidthFieldMask,
                      false,
                      (FieldAccessMethod) &MatteBorderBase::getSFRightWidth),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "TopWidth", 
                      TopWidthFieldId, TopWidthFieldMask,
                      false,
                      (FieldAccessMethod) &MatteBorderBase::getSFTopWidth),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "BottomWidth", 
                      BottomWidthFieldId, BottomWidthFieldMask,
                      false,
@@ -217,10 +217,10 @@ void MatteBorderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 MatteBorderBase::MatteBorderBase(void) :
-    _sfLeftWidth              (UInt32(1)), 
-    _sfRightWidth             (UInt32(1)), 
-    _sfTopWidth               (UInt32(1)), 
-    _sfBottomWidth            (UInt32(1)), 
+    _sfLeftWidth              (Real32(1)), 
+    _sfRightWidth             (Real32(1)), 
+    _sfTopWidth               (Real32(1)), 
+    _sfBottomWidth            (Real32(1)), 
     _sfColor                  (Color4f(0.0,0.0,0.0,1.0)), 
     _sfMaterial               (), 
     Inherited() 

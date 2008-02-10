@@ -87,7 +87,7 @@ ScaleLayoutSpringPtr ScaleLayoutSpring::create(LayoutSpringPtr TheSpring, Real32
  *                           Instance methods                              *
 \***************************************************************************/
 
-Int32 ScaleLayoutSpring::getMinimumValue(void) const
+Real32 ScaleLayoutSpring::getMinimumValue(void) const
 {
     if(getFactor() < 0.0f)
     {
@@ -95,16 +95,16 @@ Int32 ScaleLayoutSpring::getMinimumValue(void) const
     }
     else
     {
-        return static_cast<Int32>(osgfloor<Real32>(getFactor() * static_cast<Real32>(getSpring()->getMinimumValue())));
+        return static_cast<Real32>(osgfloor<Real32>(getFactor() * static_cast<Real32>(getSpring()->getMinimumValue())));
     }
 }
 
-Int32 ScaleLayoutSpring::getPreferredValue(void) const
+Real32 ScaleLayoutSpring::getPreferredValue(void) const
 {
-    return static_cast<Int32>(osgfloor<Real32>(getFactor() * static_cast<Real32>(getSpring()->getPreferredValue())));
+    return static_cast<Real32>(osgfloor<Real32>(getFactor() * static_cast<Real32>(getSpring()->getPreferredValue())));
 }
 
-Int32 ScaleLayoutSpring::getMaximumValue(void) const
+Real32 ScaleLayoutSpring::getMaximumValue(void) const
 {
     if(getFactor() < 0.0f)
     {
@@ -112,16 +112,16 @@ Int32 ScaleLayoutSpring::getMaximumValue(void) const
     }
     else
     {
-        return static_cast<Int32>(osgfloor<Real32>(getFactor() * static_cast<Real32>(getSpring()->getMaximumValue())));
+        return static_cast<Real32>(osgfloor<Real32>(getFactor() * static_cast<Real32>(getSpring()->getMaximumValue())));
     }
 }
 
-Int32 ScaleLayoutSpring::getValue(void) const
+Real32 ScaleLayoutSpring::getValue(void) const
 {
-    return static_cast<Int32>(osgfloor<Real32>(getFactor() * static_cast<Real32>(getSpring()->getValue())));
+    return static_cast<Real32>(osgfloor<Real32>(getFactor() * static_cast<Real32>(getSpring()->getValue())));
 }
 
-void ScaleLayoutSpring::setValue(const Int32& value)
+void ScaleLayoutSpring::setValue(const Real32& value)
 {
     if(value == LayoutSpring::VALUE_NOT_SET)
     {

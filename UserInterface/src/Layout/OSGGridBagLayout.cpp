@@ -79,23 +79,23 @@ void GridBagLayout::initMethod (void)
 
 void GridBagLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
-    Pnt2s ParentInsetsTopLeft, ParentInsetBottomRight;
+    Pnt2f ParentInsetsTopLeft, ParentInsetBottomRight;
     Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(ParentInsetsTopLeft, ParentInsetBottomRight);
 	
-	Vec2s borderSize(ParentInsetBottomRight - ParentInsetsTopLeft);
+	Vec2f borderSize(ParentInsetBottomRight - ParentInsetsTopLeft);
 
-	std::vector<UInt16> widths;
-	std::vector<UInt16> posX;
-	std::vector<UInt16> heights;
-	std::vector<UInt16> posY;
+	std::vector<Real32> widths;
+	std::vector<Real32> posX;
+	std::vector<Real32> heights;
+	std::vector<Real32> posY;
 	std::vector<Real32> columnWeights;
 	std::vector<Real32> rowWeights;
 	Real32 cumColumnWeights(0.0);
 	Real32 cumRowWeights(0.0);
 
-	Pnt2s offset(ParentInsetsTopLeft);
-	Vec2s cellSize(0,0);
-	Vec2s size(0,0);
+	Pnt2f offset(ParentInsetsTopLeft);
+	Vec2f cellSize(0,0);
+	Vec2f size(0,0);
 	Real32 weight(0.0);
 	UInt32 i;
 	GridBagLayoutConstraintsPtr constraints;
@@ -124,14 +124,16 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 				columnWeights[i] *= ratio;
 			// then add in equally spaced weights
 			ratio = (1.0 - (Real32)columnWeights.size()/(Real32)getColumns()) / (getColumns() - columnWeights.size());
-			for (i = 0; i < getColumns() - columnWeights.size(); ++i)
+			UInt32 NumToAdd(getColumns() - columnWeights.size());
+			for (i = 0; i < NumToAdd; ++i)
 				columnWeights.push_back(ratio);
 		}
 		else
 		{
 			// fill in equally spaced weights
-			Real32 ratio( (1.0 - cumColumnWeights) / (getColumns() - columnWeights.size()) );
-			for (i = 0; i < getColumns() - columnWeights.size(); ++i)
+			Real32 ratio( (1.0 - cumColumnWeights) / static_cast<Real32>(getColumns() - columnWeights.size()) );
+			UInt32 NumToAdd(getColumns() - columnWeights.size());
+			for (i = 0; i < NumToAdd; ++i)
 				columnWeights.push_back(ratio);
 		}
 	}
@@ -152,14 +154,16 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 				rowWeights[i] *= ratio;
 			// then add in equally spaced weights
 			ratio = (1.0 - (Real32)rowWeights.size()/(Real32)getRows()) / (getRows() - rowWeights.size());
-			for (i = 0; i < getRows() - rowWeights.size(); ++i)
+			UInt32 NumToAdd(getRows() - rowWeights.size());
+			for (i = 0; i < NumToAdd; ++i)
 				rowWeights.push_back(ratio);
 		}
 		else
 		{
 			// fill in equally spaced weights
-			Real32 ratio( (1.0 - cumRowWeights) / (getRows() - rowWeights.size()) );
-			for (i = 0; i < getRows() - rowWeights.size(); ++i)
+			Real32 ratio( (1.0 - cumRowWeights) / static_cast<Real32>(getRows() - rowWeights.size()) );
+			UInt32 NumToAdd(getRows() - rowWeights.size());
+			for (i = 0; i < NumToAdd; ++i)
 				rowWeights.push_back(ratio);
 		}
 	}
@@ -176,7 +180,7 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 	for (i = 1; i < getColumns(); ++i)
 	{
 		weight+=columnWeights[i-1];
-		posX.push_back((UInt16)(weight*borderSize[0]));
+		posX.push_back((Real32)(weight*borderSize[0]));
 		widths.push_back(posX[i]-posX[i-1]);
 	}
 	// i increments again before this statement, so it
@@ -188,7 +192,7 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 	for (i = 1; i < getRows(); ++i)
 	{
 		weight+=rowWeights[i-1];
-		posY.push_back((UInt16)(weight*borderSize[1]));
+		posY.push_back((Real32)(weight*borderSize[1]));
 		heights.push_back(posY[i]-posY[i-1]);
 	}
 	heights.push_back(borderSize[1]-posY[i-1]);
@@ -251,8 +255,8 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 			if (size[0] >= Components.getValue(i)->getMinSize().x() && size[1] > Components.getValue(i)->getMinSize().y())
 				Components.getValue(i)->setSize(size);
 			else
-				Components.getValue(i)->setSize(Vec2s(0,0));
-			Components.getValue(i)->setPosition(Pnt2s(offset));
+				Components.getValue(i)->setSize(Vec2f(0,0));
+			Components.getValue(i)->setPosition(Pnt2f(offset));
 		endEditCP(Components.getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
 	}
 }

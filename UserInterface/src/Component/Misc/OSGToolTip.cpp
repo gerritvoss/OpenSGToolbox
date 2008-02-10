@@ -79,32 +79,32 @@ void ToolTip::initMethod (void)
 
 void ToolTip::drawInternal(const GraphicsPtr TheGraphics) const
 {
-   Pnt2s TopLeft, BottomRight;
+   Pnt2f TopLeft, BottomRight;
    getInsideBorderBounds(TopLeft, BottomRight);
 
-   Pnt2s TextTopLeft, TextBottomRight;
+   Pnt2f TextTopLeft, TextBottomRight;
    getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
    TheGraphics->drawText(
        calculateAlignment(TopLeft, BottomRight-TopLeft, (TextBottomRight-TextTopLeft), getVerticalAlignment(), getHorizontalAlignment())
        , getText(), getFont(), getTextColor(), getOpacity());
 }
 
-Vec2s ToolTip::calculatePreferredSize(void) const
+Vec2f ToolTip::calculatePreferredSize(void) const
 {
     if(getFont() == NullFC)
     {
         return getPreferredSize();
     }
 
-    UInt16 Top(0),Bottom(0),Left(0),Right(0);
+    Real32 Top(0),Bottom(0),Left(0),Right(0);
     if(getDrawnBorder() != NullFC)
     {
         getDrawnBorder()->getInsets(Left, Right, Top, Bottom);
     }
 
-    Pnt2s TextTopLeft, TextBottomRight;
+    Pnt2f TextTopLeft, TextBottomRight;
     getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
-    return TextBottomRight - TextTopLeft + Vec2s(Left+Right+2, Top+Bottom+2);
+    return TextBottomRight - TextTopLeft + Vec2f(Left+Right+2, Top+Bottom+2);
 }
 
 /*-------------------------------------------------------------------------*\

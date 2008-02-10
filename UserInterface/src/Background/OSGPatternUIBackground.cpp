@@ -78,7 +78,7 @@ void PatternUIBackground::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void PatternUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32 Opacity) const
+void PatternUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const
 {
 	glPushAttrib(GL_ENABLE_BIT | GL_TRANSFORM_BIT);
 	GLdouble Plane0[4], Plane1[4], Plane2[4], Plane3[4];
@@ -105,7 +105,7 @@ void PatternUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2s& TopLe
     glClipPlane(GL_CLIP_PLANE2,TopPlaneEquation.getValues());
     glClipPlane(GL_CLIP_PLANE3,BottomPlaneEquation.getValues());
 
-	Vec2s BackgroundSize (BottomRight - TopLeft);
+	Vec2f BackgroundSize (BottomRight - TopLeft);
 	Vec2f TopLeftTexCoords(0.0f,0.0f);
 	Vec2f BottomRightTexCoords(1.0f,1.0f);
 
@@ -142,16 +142,16 @@ void PatternUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2s& TopLe
 	TopLeftTexCoords[1] = -getVerticalAlignment() * (RepeatVertical - 1.0f);
 	BottomRightTexCoords[1] = TopLeftTexCoords[1] + RepeatVertical;
 
-	TheGraphics->drawQuad(TopLeft, Pnt2s(BottomRight.x(), TopLeft.y()),BottomRight, Pnt2s(TopLeft.x(), BottomRight.y()),
+	TheGraphics->drawQuad(TopLeft, Pnt2f(BottomRight.x(), TopLeft.y()),BottomRight, Pnt2f(TopLeft.x(), BottomRight.y()),
 		TopLeftTexCoords, Vec2f(BottomRightTexCoords.x(), TopLeftTexCoords.y()), BottomRightTexCoords, Vec2f(TopLeftTexCoords.x(), BottomRightTexCoords.y()),
 		getTexture(), Opacity);
 
 	glPopAttrib();
 }
 
-Vec2s PatternUIBackground::getCorrectedPatternSize(void) const
+Vec2f PatternUIBackground::getCorrectedPatternSize(void) const
 {
-	Vec2s PatternSize(getPatternSize());
+	Vec2f PatternSize(getPatternSize());
 	if(PatternSize.x() == -1 &&
 		getTexture() != NullFC &&
         getTexture()->getImage() != NullFC)

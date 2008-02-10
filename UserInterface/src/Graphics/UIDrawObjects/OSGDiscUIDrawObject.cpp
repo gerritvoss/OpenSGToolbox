@@ -79,10 +79,10 @@ void DiscUIDrawObject::draw(const GraphicsPtr Graphics) const
 	Graphics->drawDisc(getCenter(), getWidth(), getHeight(), getStartAngleRad(), getEndAngleRad(), getSubDivisions(), getCenterColor(), getOuterColor(), getOpacity());
 }
 
-void DiscUIDrawObject::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+void DiscUIDrawObject::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
-	TopLeft = Pnt2s(getCenter().x()-getWidth(), getCenter().y()-getHeight());
-	BottomRight = Pnt2s(getCenter().x()+getWidth(), getCenter().y()+getHeight());
+	TopLeft = Pnt2f(getCenter().x()-getWidth(), getCenter().y()-getHeight());
+	BottomRight = Pnt2f(getCenter().x()+getWidth(), getCenter().y()+getHeight());
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

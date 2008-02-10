@@ -49,7 +49,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // 22TextArea Headers
 #include <OpenSG/UserInterface/OSGUIBackgrounds.h>
@@ -185,8 +185,8 @@ int main(int argc, char **argv)
     beginEditCP(ExampleTextArea, TextArea::MinSizeFieldMask | TextArea::MaxSizeFieldMask | TextArea::PreferredSizeFieldMask | TextArea::MinSizeFieldMask 
         | TextArea::TextColorFieldMask | TextArea::FontFieldMask 
         | TextArea::SelectionBoxColorFieldMask | TextArea::SelectionTextColorFieldMask);
-        ExampleTextArea->setPreferredSize(Vec2s(300, 200));
-        ExampleTextArea->setMinSize(Vec2s(300, 200));
+        ExampleTextArea->setPreferredSize(Vec2f(300, 200));
+        ExampleTextArea->setMinSize(Vec2f(300, 200));
         ExampleTextArea->setTextColor(Color4f(0.0, 0.0, 0.0, 1.0));
         ExampleTextArea->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
         ExampleTextArea->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
@@ -204,7 +204,7 @@ int main(int argc, char **argv)
     // Create a ScrollPanel
     ScrollPanelPtr TextAreaScrollPanel = ScrollPanel::create();
     beginEditCP(TextAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
-        TextAreaScrollPanel->setPreferredSize(Vec2s(200,200));
+        TextAreaScrollPanel->setPreferredSize(Vec2f(200,200));
         TextAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     endEditCP(TextAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
     // Add the TextArea to the ScrollPanel so it is displayed
@@ -264,8 +264,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(750,750),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(750,750),
                                         "OpenSG 22TextArea Window");
 
     //Main Event Loop
@@ -289,7 +289,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

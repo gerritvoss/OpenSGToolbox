@@ -73,7 +73,7 @@ std::map<std::string, UIFontPtr> FontMap;
 
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 class TutorialWindowListener : public WindowAdapter
 {
@@ -133,7 +133,7 @@ protected:
 	PanelPtr createTypePanel(void)
 	{
 		//Put all the FieldTypes into the model
-		for (UInt32 i(1); i <= 1311/*TypeFactory::the()->getNumTypes()*/ ; ++i)
+		for (UInt32 i(1); i <= TypeFactory::the()->getNumTypes() ; ++i)
 		{
 			TypeBase* TheType;
 			TheType = TypeFactory::the()->findType(i);
@@ -146,7 +146,7 @@ protected:
 		// Create TypeList
 		ListPtr TypeList = List::create();
 		beginEditCP(TypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask);
-			TypeList->setPreferredSize( Vec2s (200, 300) );
+			TypeList->setPreferredSize( Vec2f (200, 300) );
 			TypeList->setCellOrientation(VERTICAL_ALIGNMENT);
 		endEditCP(TypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask);
 
@@ -171,7 +171,7 @@ protected:
 		//TypeListScrollPanel
 		ScrollPanelPtr TypeListScrollPanel = ScrollPanel::create();
 		beginEditCP(TypeListScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask | Component::ConstraintsFieldMask);
-			TypeListScrollPanel->setPreferredSize(Vec2s(200,300));
+			TypeListScrollPanel->setPreferredSize(Vec2f(200,300));
 			TypeListScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
 			//TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
 			TypeListScrollPanel->setConstraints(TypeListScrollPanelConstraints);
@@ -254,7 +254,7 @@ protected:
 		// Create FieldTypeList
 		ListPtr FieldTypeList = List::create();
 		beginEditCP(FieldTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask);
-			FieldTypeList->setPreferredSize( Vec2s (200, 300) );
+			FieldTypeList->setPreferredSize( Vec2f (200, 300) );
 			FieldTypeList->setCellOrientation(VERTICAL_ALIGNMENT);
 		endEditCP(FieldTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask);
 
@@ -279,7 +279,7 @@ protected:
 		//FieldTypeListScrollPanel
 		ScrollPanelPtr FieldTypeListScrollPanel = ScrollPanel::create();
 		beginEditCP(FieldTypeListScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask | Component::ConstraintsFieldMask);
-			FieldTypeListScrollPanel->setPreferredSize(Vec2s(200,300));
+			FieldTypeListScrollPanel->setPreferredSize(Vec2f(200,300));
 			FieldTypeListScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
 			//TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
 			FieldTypeListScrollPanel->setConstraints(FieldTypeListScrollPanelConstraints);
@@ -362,7 +362,7 @@ protected:
 		// Create FieldContainerTypeList
 		ListPtr FieldContainerTypeList = List::create();
 		beginEditCP(FieldContainerTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask);
-			FieldContainerTypeList->setPreferredSize( Vec2s (200, 300) );
+			FieldContainerTypeList->setPreferredSize( Vec2f (200, 300) );
 			FieldContainerTypeList->setCellOrientation(VERTICAL_ALIGNMENT);
 		endEditCP(FieldContainerTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask);
 
@@ -387,7 +387,7 @@ protected:
 		//FieldContainerTypeListScrollPanel
 		ScrollPanelPtr FieldContainerTypeListScrollPanel = ScrollPanel::create();
 		beginEditCP(FieldContainerTypeListScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask | ScrollPanel::ConstraintsFieldMask);
-			FieldContainerTypeListScrollPanel->setPreferredSize(Vec2s(200,300));
+			FieldContainerTypeListScrollPanel->setPreferredSize(Vec2f(200,300));
 			FieldContainerTypeListScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
 			//TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
 			FieldContainerTypeListScrollPanel->setConstraints(FieldContainerTypeListScrollPanelConstraints);
@@ -662,8 +662,8 @@ int main(int argc, char **argv)
     // show the whole scene
     mgr->showAll();
 
-    TheWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(1700,1000),
+    TheWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(1700,1000),
                                         "OpenSG 50OpenSGTypes Window");
 
     //Main Event Loop
@@ -684,7 +684,7 @@ void display(void)
 }
 
 // react to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

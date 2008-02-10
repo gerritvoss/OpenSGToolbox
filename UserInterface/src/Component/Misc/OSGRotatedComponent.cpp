@@ -93,13 +93,13 @@ void RotatedComponent::drawInternal(const GraphicsPtr TheGraphics) const
 
 void RotatedComponent::updateLayout(void)
 {
-    Pnt2s TopLeft, BottomRight;
+    Pnt2f TopLeft, BottomRight;
     getInsideInsetsBounds(TopLeft, BottomRight);
     
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
         beginEditCP(getChildren().getValue(i),PositionFieldMask | SizeFieldMask);
-            getChildren().getValue(i)->setPosition(Pnt2s(0,0));
+            getChildren().getValue(i)->setPosition(Pnt2f(0,0));
             getChildren().getValue(i)->setSize(getChildren().getValue(i)->getPreferredSize());
         endEditCP(getChildren().getValue(i),PositionFieldMask | SizeFieldMask);
     }
@@ -237,12 +237,12 @@ void RotatedComponent::mouseWheelMoved(const MouseWheelEvent& e)
 	Component::mouseWheelMoved(e);
 }
 
-Pnt2s RotatedComponent::getLocalToInternalComponent(const Pnt2s& LocalPoint) const
+Pnt2f RotatedComponent::getLocalToInternalComponent(const Pnt2f& LocalPoint) const
 {
-    Pnt2s Result(LocalPoint);
-    Result = Result - Vec2s(static_cast<Real32>(getSize().x())/2.0,static_cast<Real32>(getSize().y())/2.0);
+    Pnt2f Result(LocalPoint);
+    Result = Result - Vec2f(static_cast<Real32>(getSize().x())/2.0,static_cast<Real32>(getSize().y())/2.0);
     Result.setValues( Result[0]*osgcos(getAngle()) - Result[1]*osgsin(getAngle()), Result[0]*osgsin(getAngle()) + Result[1]*osgcos(getAngle()));
-    Result = Result + Vec2s(static_cast<Real32>(getInternalComponent()->getSize().x())/2.0,static_cast<Real32>(getInternalComponent()->getSize().y())/2.0);
+    Result = Result + Vec2f(static_cast<Real32>(getInternalComponent()->getSize().x())/2.0,static_cast<Real32>(getInternalComponent()->getSize().y())/2.0);
     return Result;
 }
 
@@ -289,16 +289,16 @@ void RotatedComponent::changed(BitVector whichField, UInt32 origin)
     {
         if(getInternalComponent() != NullFC)
         {
-            Vec2s Size;
+            Vec2f Size;
             switch (static_cast<ResizePolicy>(getResizePolicy()))
             {
             case RESIZE_TO_MIN:
                 {
                     //Treat TopLeft as 0,0
                     //Get the Rotated Bounds of the Internal Component
-                    Pnt2s p1,p2,p3,p4;
+                    Pnt2f p1,p2,p3,p4;
 
-                    Pnt2s ComponentCenter(static_cast<Real32>(getInternalComponent()->getSize().x())/2.0, static_cast<Real32>(getInternalComponent()->getSize().y())/2.0);
+                    Pnt2f ComponentCenter(static_cast<Real32>(getInternalComponent()->getSize().x())/2.0, static_cast<Real32>(getInternalComponent()->getSize().y())/2.0);
 
                     p1 = -ComponentCenter;
                     p2.setValues(ComponentCenter.x(),-ComponentCenter.y());
@@ -312,18 +312,18 @@ void RotatedComponent::changed(BitVector whichField, UInt32 origin)
                     p4 = Rotate(p4, -getAngle());
 
                     //Get their min and max
-                    Pnt2s Min(osgMin(osgMin(osgMin(p1.x(),p2.x()),p3.x()),p4.x()),
+                    Pnt2f Min(osgMin(osgMin(osgMin(p1.x(),p2.x()),p3.x()),p4.x()),
                               osgMin(osgMin(osgMin(p1.y(),p2.y()),p3.y()),p4.y()));
-                    Pnt2s Max(osgMax(osgMax(osgMax(p1.x(),p2.x()),p3.x()),p4.x()),
+                    Pnt2f Max(osgMax(osgMax(osgMax(p1.x(),p2.x()),p3.x()),p4.x()),
                               osgMax(osgMax(osgMax(p1.y(),p2.y()),p3.y()),p4.y()));
                     
-	                Pnt2s BorderTopLeft, BorderBottomRight;
+	                Pnt2f BorderTopLeft, BorderBottomRight;
 	                getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
-	                Pnt2s TopLeft, BottomRight;
+	                Pnt2f TopLeft, BottomRight;
 	                getBounds(TopLeft, BottomRight);
                     
                     beginEditCP(RotatedComponentPtr(this), PreferredSizeFieldMask);
-                        setPreferredSize(Vec2s(Max.x() - Min.x() + (BorderTopLeft.x() - TopLeft.x()) + (BottomRight.x() - BorderBottomRight.x()),
+                        setPreferredSize(Vec2f(Max.x() - Min.x() + (BorderTopLeft.x() - TopLeft.x()) + (BottomRight.x() - BorderBottomRight.x()),
                                                Max.y() - Min.y() + (BorderTopLeft.y() - TopLeft.y()) + (BottomRight.y() - BorderBottomRight.y())));
                     endEditCP(RotatedComponentPtr(this), PreferredSizeFieldMask);
                     break;
@@ -331,12 +331,12 @@ void RotatedComponent::changed(BitVector whichField, UInt32 origin)
             case RESIZE_TO_MAX:
                 {
                     //Get the Internal Components Center
-                    Pnt2s ComponentCenter(static_cast<Real32>(getInternalComponent()->getSize().x())/2.0, static_cast<Real32>(getInternalComponent()->getSize().y())/2.0);
+                    Pnt2f ComponentCenter(static_cast<Real32>(getInternalComponent()->getSize().x())/2.0, static_cast<Real32>(getInternalComponent()->getSize().y())/2.0);
                     //Get the distance from the Center to one of the TopLeft Corner
-                    Int16 Length = 2*ComponentCenter.dist(Pnt2s(0,0));
+                    Real32 Length = 2*ComponentCenter.dist(Pnt2f(0,0));
                     
                     beginEditCP(RotatedComponentPtr(this), PreferredSizeFieldMask);
-                        setPreferredSize(Vec2s(Length,Length));
+                        setPreferredSize(Vec2f(Length,Length));
                     endEditCP(RotatedComponentPtr(this), PreferredSizeFieldMask);
                     break;
                 }
@@ -351,7 +351,7 @@ void RotatedComponent::changed(BitVector whichField, UInt32 origin)
 				getParentWindow()->getDrawingSurface() != NullFC &&
 				getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 			{
-				Pnt2s MouseLoc(getParentWindow()->getDrawingSurface()->getEventProducer()->getMousePosition());
+				Pnt2f MouseLoc(getParentWindow()->getDrawingSurface()->getEventProducer()->getMousePosition());
 				MouseEvent e(NullFC,getSystemTime(),MouseEvent::NO_BUTTON,0,MouseLoc, NullFC);
 				checkMouseEnterExit(e,e.getLocation(),getInternalComponent(),getInternalComponent()->isContained(MouseLoc, true),e.getViewport());
 			}

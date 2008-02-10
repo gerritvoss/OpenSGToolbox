@@ -178,7 +178,7 @@ void Graphics3DExtrude::postDraw()
    glPopAttrib();
 }
 
-void Graphics3DExtrude::drawRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Color4f& Color, const Real32& Opacity) const
+void Graphics3DExtrude::drawRect(const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Color4f& Color, const Real32& Opacity) const
 {
    Real32 Alpha(Color.alpha() * Opacity * getOpacity());
 	if(Alpha < 1.0 || getEnablePolygonAntiAliasing())
@@ -240,7 +240,7 @@ void Graphics3DExtrude::drawRect(const Pnt2s& TopLeft, const Pnt2s& BottomRight,
 	}
 }
 
-void Graphics3DExtrude::drawQuad(const Pnt2s& p1, const Pnt2s& p2, const Pnt2s& p3, const Pnt2s& p4, 
+void Graphics3DExtrude::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, const Pnt2f& p4, 
 						const Color4f& c1, const Color4f& c2, const Color4f& c3, const Color4f& c4,
 						const Real32& Opacity) const
 {
@@ -326,7 +326,7 @@ void Graphics3DExtrude::drawQuad(const Pnt2s& p1, const Pnt2s& p2, const Pnt2s& 
 	}
 }
 
-void Graphics3DExtrude::drawQuad(const Pnt2s& p1, const Pnt2s& p2, const Pnt2s& p3, const Pnt2s& p4, 
+void Graphics3DExtrude::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, const Pnt2f& p4, 
 						const Vec2f& t1, const Vec2f& t2, const Vec2f& t3, const Vec2f& t4,
 						const TextureChunkPtr Texture,
 						const Real32& Opacity) const
@@ -347,13 +347,13 @@ void Graphics3DExtrude::drawQuad(const Pnt2s& p1, const Pnt2s& p2, const Pnt2s& 
 	glBegin(GL_QUADS);
 	   glColor4f(1.0, 1.0, 1.0, Alpha );
 	   glTexCoord2fv(t1.getValues());
-	   glVertex2sv(p1.getValues());
+	   glVertex2fv(p1.getValues());
 	   glTexCoord2fv(t2.getValues());
-	   glVertex2sv(p2.getValues());
+	   glVertex2fv(p2.getValues());
 	   glTexCoord2fv(t3.getValues());
-	   glVertex2sv(p3.getValues());
+	   glVertex2fv(p3.getValues());
 	   glTexCoord2fv(t4.getValues());
-	   glVertex2sv(p4.getValues());
+	   glVertex2fv(p4.getValues());
 	glEnd();
 	
 	if(Texture != NullFC)
@@ -367,7 +367,7 @@ void Graphics3DExtrude::drawQuad(const Pnt2s& p1, const Pnt2s& p2, const Pnt2s& 
 	}
 }
 
-void Graphics3DExtrude::drawQuad(const Pnt2s& p1, const Pnt2s& p2, const Pnt2s& p3, const Pnt2s& p4, 
+void Graphics3DExtrude::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, const Pnt2f& p4, 
 						const Vec2f& t1, const Vec2f& t2, const Vec2f& t3, const Vec2f& t4,
 						const MaterialPtr Material,
 						const Real32& Opacity) const
@@ -393,13 +393,13 @@ void Graphics3DExtrude::drawQuad(const Pnt2s& p1, const Pnt2s& p2, const Pnt2s& 
 	glBegin(GL_QUADS);
 	   glColor4f(1.0, 1.0, 1.0, Alpha );
 	   glTexCoord2fv(t1.getValues());
-	   glVertex2sv(p1.getValues());
+	   glVertex2fv(p1.getValues());
 	   glTexCoord2fv(t2.getValues());
-	   glVertex2sv(p2.getValues());
+	   glVertex2fv(p2.getValues());
 	   glTexCoord2fv(t3.getValues());
-	   glVertex2sv(p3.getValues());
+	   glVertex2fv(p3.getValues());
 	   glTexCoord2fv(t4.getValues());
-	   glVertex2sv(p4.getValues());
+	   glVertex2fv(p4.getValues());
 	glEnd();
 	
 	if(state != NullFC)
@@ -414,7 +414,7 @@ void Graphics3DExtrude::drawQuad(const Pnt2s& p1, const Pnt2s& p2, const Pnt2s& 
 	}
 }
 
-void Graphics3DExtrude::drawLine(const Pnt2s& TopLeft, const Pnt2s& BottomRight, const Real32& Width, const Color4f& Color, const Real32& Opacity) const
+void Graphics3DExtrude::drawLine(const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32& Width, const Color4f& Color, const Real32& Opacity) const
 {
 	GLfloat previousLineWidth;
 	glGetFloatv(GL_LINE_WIDTH, &previousLineWidth);
@@ -428,8 +428,8 @@ void Graphics3DExtrude::drawLine(const Pnt2s& TopLeft, const Pnt2s& BottomRight,
 	glLineWidth(Width);
 	glBegin(GL_LINES);
       glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
-		glVertex2sv(TopLeft.getValues());
-		glVertex2sv(BottomRight.getValues());
+		glVertex2fv(TopLeft.getValues());
+		glVertex2fv(BottomRight.getValues());
 	glEnd();
 	if(Alpha < 1.0)
 	{
@@ -438,7 +438,7 @@ void Graphics3DExtrude::drawLine(const Pnt2s& TopLeft, const Pnt2s& BottomRight,
 	glLineWidth(previousLineWidth);
 }
 
-void Graphics3DExtrude::drawPolygon(const MFPnt2s Verticies, const Color4f& Color, const Real32& Opacity) const
+void Graphics3DExtrude::drawPolygon(const MFPnt2f Verticies, const Color4f& Color, const Real32& Opacity) const
 {
    Real32 Alpha(Color.alpha() * Opacity * getOpacity());
 	if(Alpha < 1.0)
@@ -452,7 +452,7 @@ void Graphics3DExtrude::drawPolygon(const MFPnt2s Verticies, const Color4f& Colo
       glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
 	   for(UInt32 i=0 ; i<Verticies.size() ; ++i)
 	   {
-	      glVertex2sv(Verticies.getValue(i).getValues());
+	      glVertex2fv(Verticies.getValue(i).getValues());
 	   }
 	glEnd();
 	
@@ -462,7 +462,7 @@ void Graphics3DExtrude::drawPolygon(const MFPnt2s Verticies, const Color4f& Colo
 	}
 }
 
-void Graphics3DExtrude::drawDisc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& CenterColor, const Color4f& OuterColor, const Real32& Opacity) const
+void Graphics3DExtrude::drawDisc(const Pnt2f& Center, const Real32& Width, const Real32& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& CenterColor, const Color4f& OuterColor, const Real32& Opacity) const
 {
 	Real32 angleNow = StartAngleRad;
 	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(static_cast<Real32>(SubDivisions));
@@ -480,7 +480,7 @@ void Graphics3DExtrude::drawDisc(const Pnt2s& Center, const Int16& Width, const 
 	glBegin(GL_TRIANGLE_FAN);
 	  glNormal3f(0.0,0.0,1.0);
       glColor4f(CenterColor.red(), CenterColor.green(), CenterColor.blue(), CenterColor.alpha() * Opacity * getOpacity() );
-      glVertex2sv(Center.getValues());
+      glVertex2fv(Center.getValues());
       glColor4f(OuterColor.red(), OuterColor.green(), OuterColor.blue(), OuterColor.alpha() * Opacity * getOpacity() );
       for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
       {
@@ -523,7 +523,7 @@ void Graphics3DExtrude::drawDisc(const Pnt2s& Center, const Int16& Width, const 
         glDisable(GL_BLEND);
     }
 }
-void Graphics3DExtrude::drawComplexDisc(const Pnt2s& Center, const Int16& InnerRadius, const Int16& OuterRadius, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& CenterColor, const Color4f& OuterColor, const Real32& Opacity) const
+void Graphics3DExtrude::drawComplexDisc(const Pnt2f& Center, const Real32& InnerRadius, const Real32& OuterRadius, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& CenterColor, const Color4f& OuterColor, const Real32& Opacity) const
 {	
 	Real32 angleNow = StartAngleRad;
 	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(static_cast<Real32>(SubDivisions));
@@ -603,7 +603,7 @@ void Graphics3DExtrude::drawComplexDisc(const Pnt2s& Center, const Int16& InnerR
     }
 }
 
-void Graphics3DExtrude::drawArc(const Pnt2s& Center, const Int16& Width, const Int16& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const Real32& LineWidth, const UInt16& SubDivisions, const Color4f& Color, const Real32& Opacity) const
+void Graphics3DExtrude::drawArc(const Pnt2f& Center, const Real32& Width, const Real32& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const Real32& LineWidth, const UInt16& SubDivisions, const Color4f& Color, const Real32& Opacity) const
 {
 	GLfloat previousLineWidth;
 	glGetFloatv(GL_LINE_WIDTH, &previousLineWidth);
@@ -626,7 +626,7 @@ void Graphics3DExtrude::drawArc(const Pnt2s& Center, const Int16& Width, const I
       for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
       {
 			glVertex2f( static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgcos(angleNow ),static_cast<Real32>(Center.y()) +static_cast<Real32>(Height)*osgsin(angleNow));
-			//glVertex2s(Center.x() + Width*osgcos(angleNow + angleDiff), Center.y() + Height*osgsin(angleNow+angleDiff));
+			//glVertex2f(Center.x() + Width*osgcos(angleNow + angleDiff), Center.y() + Height*osgsin(angleNow+angleDiff));
 			angleNow += angleDiff;
 		}
 	glEnd();
@@ -639,23 +639,23 @@ void Graphics3DExtrude::drawArc(const Pnt2s& Center, const Int16& Width, const I
    glLineWidth(previousLineWidth);
 }
 
-void Graphics3DExtrude::drawTextUnderline(const Pnt2s& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const
+void Graphics3DExtrude::drawTextUnderline(const Pnt2f& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const
 {
-    Pnt2s TextTopLeft, TextBottomRight;
+    Pnt2f TextTopLeft, TextBottomRight;
     TheFont->getBounds(Text, TextTopLeft, TextBottomRight);
     
-    Pnt2s CharacterTopLeft, CharacterBottomRight;
+    Pnt2f CharacterTopLeft, CharacterBottomRight;
     TheFont->getBounds("A", CharacterTopLeft, CharacterBottomRight);
     
     //Line Start Point
-    Pnt2s LineStart(Position.x() + TextTopLeft.x(), Position.y() + CharacterBottomRight.y()-1);
+    Pnt2f LineStart(Position.x() + TextTopLeft.x(), Position.y() + CharacterBottomRight.y()-1);
     //Line End Point
-    Pnt2s LineEnd(LineStart + Vec2s(TextBottomRight.x()-TextTopLeft.x(),1));
+    Pnt2f LineEnd(LineStart + Vec2f(TextBottomRight.x()-TextTopLeft.x(),1));
 
     drawRect(LineStart, LineEnd, Color, Opacity);
 }
 
-void Graphics3DExtrude::drawText(const Pnt2s& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const
+void Graphics3DExtrude::drawText(const Pnt2f& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const
 {
    TextLayoutParam layoutParam;
    layoutParam.spacing = 1.1;

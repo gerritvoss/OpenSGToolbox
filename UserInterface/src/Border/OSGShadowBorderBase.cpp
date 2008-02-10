@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -98,16 +98,16 @@ const OSG::BitVector ShadowBorderBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var UInt32          ShadowBorderBase::_sfTopOffset
+/*! \var Real32          ShadowBorderBase::_sfTopOffset
     
 */
-/*! \var UInt32          ShadowBorderBase::_sfBottomOffset
+/*! \var Real32          ShadowBorderBase::_sfBottomOffset
     
 */
-/*! \var UInt32          ShadowBorderBase::_sfLeftOffset
+/*! \var Real32          ShadowBorderBase::_sfLeftOffset
     
 */
-/*! \var UInt32          ShadowBorderBase::_sfRightOffset
+/*! \var Real32          ShadowBorderBase::_sfRightOffset
     
 */
 /*! \var Color4f         ShadowBorderBase::_sfInternalColor
@@ -119,10 +119,10 @@ const OSG::BitVector ShadowBorderBase::MTInfluenceMask =
 /*! \var BorderPtr       ShadowBorderBase::_sfInsideBorder
     
 */
-/*! \var UInt32          ShadowBorderBase::_sfCornerRadius
+/*! \var Real32          ShadowBorderBase::_sfCornerRadius
     
 */
-/*! \var UInt32          ShadowBorderBase::_sfInternalToEdgeColorLength
+/*! \var Real32          ShadowBorderBase::_sfInternalToEdgeColorLength
     
 */
 
@@ -130,22 +130,22 @@ const OSG::BitVector ShadowBorderBase::MTInfluenceMask =
 
 FieldDescription *ShadowBorderBase::_desc[] = 
 {
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "TopOffset", 
                      TopOffsetFieldId, TopOffsetFieldMask,
                      false,
                      (FieldAccessMethod) &ShadowBorderBase::getSFTopOffset),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "BottomOffset", 
                      BottomOffsetFieldId, BottomOffsetFieldMask,
                      false,
                      (FieldAccessMethod) &ShadowBorderBase::getSFBottomOffset),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "LeftOffset", 
                      LeftOffsetFieldId, LeftOffsetFieldMask,
                      false,
                      (FieldAccessMethod) &ShadowBorderBase::getSFLeftOffset),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "RightOffset", 
                      RightOffsetFieldId, RightOffsetFieldMask,
                      false,
@@ -165,12 +165,12 @@ FieldDescription *ShadowBorderBase::_desc[] =
                      InsideBorderFieldId, InsideBorderFieldMask,
                      false,
                      (FieldAccessMethod) &ShadowBorderBase::getSFInsideBorder),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "CornerRadius", 
                      CornerRadiusFieldId, CornerRadiusFieldMask,
                      false,
                      (FieldAccessMethod) &ShadowBorderBase::getSFCornerRadius),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "InternalToEdgeColorLength", 
                      InternalToEdgeColorLengthFieldId, InternalToEdgeColorLengthFieldMask,
                      false,
@@ -250,15 +250,15 @@ void ShadowBorderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ShadowBorderBase::ShadowBorderBase(void) :
-    _sfTopOffset              (UInt32(0)), 
-    _sfBottomOffset           (UInt32(5)), 
-    _sfLeftOffset             (UInt32(0)), 
-    _sfRightOffset            (UInt32(5)), 
+    _sfTopOffset              (Real32(0)), 
+    _sfBottomOffset           (Real32(5)), 
+    _sfLeftOffset             (Real32(0)), 
+    _sfRightOffset            (Real32(5)), 
     _sfInternalColor          (Color4f(0.0,0.0,0.0,1.0)), 
     _sfEdgeColor              (Color4f(0.0,0.0,0.0,1.0)), 
     _sfInsideBorder           (BorderPtr(NullFC)), 
-    _sfCornerRadius           (UInt32(3)), 
-    _sfInternalToEdgeColorLength(UInt32(3)), 
+    _sfCornerRadius           (Real32(3)), 
+    _sfInternalToEdgeColorLength(Real32(3)), 
     Inherited() 
 {
 }

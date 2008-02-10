@@ -204,9 +204,9 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultButton->setConstraints(NullFC);
 		//Sizes
-		DefaultButton->setMinSize(Vec2s(0,0));
-		DefaultButton->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultButton->setPreferredSize(Vec2s(100,50));
+		DefaultButton->setMinSize(Vec2f(0,0));
+		DefaultButton->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultButton->setPreferredSize(Vec2f(100,50));
 
 		//Border
 		DefaultButton->setBorder(DefaultButtonBorder);
@@ -236,7 +236,7 @@ void DefaultLookAndFeel::init(void)
 		DefaultButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultButton->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
 
-        DefaultButton->setActiveOffset(Vec2s(2,2));
+        DefaultButton->setActiveOffset(Vec2f(2,2));
 	endEditCP(DefaultButton);
 
 	Button::getClassType().setPrototype(DefaultButton);
@@ -263,9 +263,9 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultLabel->setConstraints(NullFC);
 		//Sizes
-		DefaultLabel->setMinSize(Vec2s(0,0));
-		DefaultLabel->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultLabel->setPreferredSize(Vec2s(100,30));
+		DefaultLabel->setMinSize(Vec2f(0,0));
+		DefaultLabel->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultLabel->setPreferredSize(Vec2f(100,30));
 
 		//Border
 		DefaultLabel->setBorder(DefaultLabelBorder);
@@ -308,9 +308,9 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultInternalWindow->setConstraints(NullFC);
 		//Sizes
-		DefaultInternalWindow->setMinSize(Vec2s(0,0));
-		DefaultInternalWindow->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultInternalWindow->setPreferredSize(Vec2s(100,100));
+		DefaultInternalWindow->setMinSize(Vec2f(0,0));
+		DefaultInternalWindow->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultInternalWindow->setPreferredSize(Vec2f(100,100));
 
 		//Border
 		DefaultInternalWindow->setBorder(DefaultInternalWindowBorder);
@@ -355,9 +355,9 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultPanel->setConstraints(NullFC);
 		//Sizes
-		DefaultPanel->setMinSize(Vec2s(0,0));
-		DefaultPanel->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultPanel->setPreferredSize(Vec2s(100,100));
+		DefaultPanel->setMinSize(Vec2f(0,0));
+		DefaultPanel->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultPanel->setPreferredSize(Vec2f(100,100));
 
 		//Border
 		DefaultPanel->setBorder(DefaultPanelBorder);
@@ -422,9 +422,9 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultUIViewport->setConstraints(NullFC);
 		//Sizes
-		DefaultUIViewport->setMinSize(Vec2s(0,0));
-		DefaultUIViewport->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultUIViewport->setPreferredSize(Vec2s(100,100));
+		DefaultUIViewport->setMinSize(Vec2f(0,0));
+		DefaultUIViewport->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultUIViewport->setPreferredSize(Vec2f(100,100));
 
 		//Border
 		DefaultUIViewport->setBorder(DefaultUIViewportBorder);
@@ -453,10 +453,10 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultImageComponent->setConstraints(NullFC);
 		//Sizes
-		DefaultImageComponent->setMinSize(Vec2s(0,0));
-		DefaultImageComponent->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultImageComponent->setPreferredSize(Vec2s(100,100));
-		DefaultImageComponent->setSize(Vec2s(0,0));
+		DefaultImageComponent->setMinSize(Vec2f(0,0));
+		DefaultImageComponent->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultImageComponent->setPreferredSize(Vec2f(100,100));
+		DefaultImageComponent->setSize(Vec2f(0,0));
 
 		//Border
 		DefaultImageComponent->setBorder(DefaultImageComponentBorder);
@@ -484,32 +484,32 @@ void DefaultLookAndFeel::init(void)
 
 	RectUIDrawObjectPtr CheckboxBackground = RectUIDrawObject::create();
 	beginEditCP(CheckboxBackground);
-		CheckboxBackground->setTopLeft(Pnt2s(1,1));
-		CheckboxBackground->setBottomRight(Pnt2s(25,25));
+		CheckboxBackground->setTopLeft(Pnt2f(1,1));
+		CheckboxBackground->setBottomRight(Pnt2f(25,25));
 		CheckboxBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
 		CheckboxBackground->setOpacity(1.0);
 	endEditCP(CheckboxBackground);
 
 	RectUIDrawObjectPtr CheckboxBackgroundBorder = RectUIDrawObject::create();
 	beginEditCP(CheckboxBackgroundBorder);
-		CheckboxBackgroundBorder->setTopLeft(Pnt2s(0,0));
-		CheckboxBackgroundBorder->setBottomRight(Pnt2s(26,26));
+		CheckboxBackgroundBorder->setTopLeft(Pnt2f(0,0));
+		CheckboxBackgroundBorder->setBottomRight(Pnt2f(26,26));
 		CheckboxBackgroundBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
 		CheckboxBackgroundBorder->setOpacity(1.0);
 	endEditCP(CheckboxBackgroundBorder);
 
 	RectUIDrawObjectPtr CheckboxActiveBorder = RectUIDrawObject::create();
 	beginEditCP(CheckboxActiveBorder);
-		CheckboxActiveBorder->setTopLeft(Pnt2s(1,1));
-		CheckboxActiveBorder->setBottomRight(Pnt2s(25, 25));
+		CheckboxActiveBorder->setTopLeft(Pnt2f(1,1));
+		CheckboxActiveBorder->setBottomRight(Pnt2f(25, 25));
 		CheckboxActiveBorder->setColor(Color4f(0.0, 1.0, 0.0, 1.0));
 		CheckboxActiveBorder->setOpacity(1.0);
 	endEditCP(CheckboxActiveBorder);
 
 	LineUIDrawObjectPtr CheckboxLine1 = LineUIDrawObject::create();
 	beginEditCP(CheckboxLine1);
-		CheckboxLine1->setTopLeft(Pnt2s(1,1));
-		CheckboxLine1->setBottomRight(Pnt2s(25,25));
+		CheckboxLine1->setTopLeft(Pnt2f(1,1));
+		CheckboxLine1->setBottomRight(Pnt2f(25,25));
 		CheckboxLine1->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
 		CheckboxLine1->setOpacity(1.0);
 		CheckboxLine1->setWidth(4);
@@ -517,8 +517,8 @@ void DefaultLookAndFeel::init(void)
 
 	LineUIDrawObjectPtr CheckboxLine2 = LineUIDrawObject::create();
 	beginEditCP(CheckboxLine2);
-		CheckboxLine2->setTopLeft(Pnt2s(1,25));
-		CheckboxLine2->setBottomRight(Pnt2s(25,1));
+		CheckboxLine2->setTopLeft(Pnt2f(1,25));
+		CheckboxLine2->setBottomRight(Pnt2f(25,1));
 		CheckboxLine2->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
 		CheckboxLine2->setOpacity(1.0);
 		CheckboxLine2->setWidth(4);
@@ -565,10 +565,10 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultCheckboxButton->setConstraints(NullFC);
 		//Sizes
-		DefaultCheckboxButton->setMinSize(Vec2s(0,0));
-		DefaultCheckboxButton->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultCheckboxButton->setPreferredSize(Vec2s(100,30));
-		DefaultCheckboxButton->setSize(Vec2s(0,0));
+		DefaultCheckboxButton->setMinSize(Vec2f(0,0));
+		DefaultCheckboxButton->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultCheckboxButton->setPreferredSize(Vec2f(100,30));
+		DefaultCheckboxButton->setSize(Vec2f(0,0));
 		DefaultCheckboxButton->setDrawObject(defaultCheckboxDrawObject);
 
         //Draw Objects
@@ -603,7 +603,7 @@ void DefaultLookAndFeel::init(void)
 		DefaultCheckboxButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultCheckboxButton->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
         
-        DefaultCheckboxButton->setActiveOffset(Vec2s(0,0));
+        DefaultCheckboxButton->setActiveOffset(Vec2f(0,0));
 	endEditCP(DefaultCheckboxButton);
 
 	CheckboxButton::getClassType().setPrototype(DefaultCheckboxButton);
@@ -615,7 +615,7 @@ void DefaultLookAndFeel::init(void)
 	UIDrawObjectCanvasPtr defaultActiveSelectedRadioDrawObject = UIDrawObjectCanvas::create();
 
 	DiscUIDrawObjectPtr RadioBackground = DiscUIDrawObject::create();
-    Pnt2s DefaultRadioCenter(10,10);
+    Pnt2f DefaultRadioCenter(10,10);
 	beginEditCP(RadioBackground);
 		RadioBackground->setWidth(10);
 		RadioBackground->setHeight(10);
@@ -704,9 +704,9 @@ void DefaultLookAndFeel::init(void)
 		DefaultRadioButton->setConstraints(NullFC);
 
 		//sizes
-		DefaultRadioButton->setMinSize(Vec2s(0, 0));
-		DefaultRadioButton->setMaxSize(Vec2s(32767,32767));
-		DefaultRadioButton->setPreferredSize(Vec2s(100, 30));
+		DefaultRadioButton->setMinSize(Vec2f(0, 0));
+		DefaultRadioButton->setMaxSize(Vec2f(32767,32767));
+		DefaultRadioButton->setPreferredSize(Vec2f(100, 30));
 
 		//draw objects
 		DefaultRadioButton->setRadioDrawObject(defaultRadioDrawObject);
@@ -742,7 +742,7 @@ void DefaultLookAndFeel::init(void)
 		DefaultRadioButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultRadioButton->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
         
-        DefaultRadioButton->setActiveOffset(Vec2s(0,0));
+        DefaultRadioButton->setActiveOffset(Vec2f(0,0));
 	endEditCP(DefaultRadioButton);
 	
 	RadioButton::getClassType().setPrototype(DefaultRadioButton);
@@ -756,9 +756,9 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultToggleButton->setConstraints(NullFC);
 		//Sizes
-		DefaultToggleButton->setMinSize(Vec2s(0,0));
-		DefaultToggleButton->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultToggleButton->setPreferredSize(Vec2s(100,50));
+		DefaultToggleButton->setMinSize(Vec2f(0,0));
+		DefaultToggleButton->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultToggleButton->setPreferredSize(Vec2f(100,50));
 
 		//Border
 		DefaultToggleButton->setBorder(DefaultButtonBorder);
@@ -784,7 +784,7 @@ void DefaultLookAndFeel::init(void)
 		DefaultToggleButton->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultToggleButton->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
         
-        DefaultToggleButton->setActiveOffset(Vec2s(2,2));
+        DefaultToggleButton->setActiveOffset(Vec2f(2,2));
 	endEditCP(DefaultToggleButton);
 
 	ToggleButton::getClassType().setPrototype(DefaultToggleButton);
@@ -813,9 +813,9 @@ void DefaultLookAndFeel::init(void)
 	TextFieldPtr DefaultTextField = TextField::create();
 	beginEditCP(DefaultTextField);
 		//size
-		DefaultTextField->setMinSize(Vec2s(0, 0));
-		DefaultTextField->setMaxSize(Vec2s(32767,32767));
-		DefaultTextField->setPreferredSize(Vec2s(100, 25));
+		DefaultTextField->setMinSize(Vec2f(0, 0));
+		DefaultTextField->setMaxSize(Vec2f(32767,32767));
+		DefaultTextField->setPreferredSize(Vec2f(100, 25));
 
 		//font
 		DefaultTextField->setFont(DefaultFont);
@@ -862,9 +862,9 @@ void DefaultLookAndFeel::init(void)
 	PasswordFieldPtr DefaultPasswordField = PasswordField::create();
 	beginEditCP(DefaultPasswordField);
 		//size
-		DefaultPasswordField->setMinSize(Vec2s(0, 0));
-		DefaultPasswordField->setMaxSize(Vec2s(32767,32767));
-		DefaultPasswordField->setPreferredSize(Vec2s(100, 25));
+		DefaultPasswordField->setMinSize(Vec2f(0, 0));
+		DefaultPasswordField->setMaxSize(Vec2f(32767,32767));
+		DefaultPasswordField->setPreferredSize(Vec2f(100, 25));
 		DefaultPasswordField->setEchoChar("*");
 
 		//font
@@ -910,9 +910,9 @@ void DefaultLookAndFeel::init(void)
 	TextAreaPtr DefaultTextArea = TextArea::create();
 	beginEditCP(DefaultTextArea);
 		//size
-		DefaultTextArea->setMinSize(Vec2s(0, 0));
-		DefaultTextArea->setMaxSize(Vec2s(32767,32767));
-		DefaultTextArea->setPreferredSize(Vec2s(100, 25));
+		DefaultTextArea->setMinSize(Vec2f(0, 0));
+		DefaultTextArea->setMaxSize(Vec2f(32767,32767));
+		DefaultTextArea->setPreferredSize(Vec2f(100, 25));
 
 		//font
 		DefaultTextArea->setFont(DefaultFont);
@@ -971,9 +971,9 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultToolTip->setConstraints(NullFC);
 		//Sizes
-		DefaultToolTip->setMinSize(Vec2s(0,0));
-		DefaultToolTip->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultToolTip->setPreferredSize(Vec2s(100,50));
+		DefaultToolTip->setMinSize(Vec2f(0,0));
+		DefaultToolTip->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultToolTip->setPreferredSize(Vec2f(100,50));
 
 		//Border
 		DefaultToolTip->setBorder(DefaultToolTipBorder);
@@ -1021,9 +1021,9 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultLabelMenuItem->setConstraints(NullFC);
 		//Sizes
-		DefaultLabelMenuItem->setMinSize(Vec2s(0,0));
-		DefaultLabelMenuItem->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultLabelMenuItem->setPreferredSize(Vec2s(100,25));
+		DefaultLabelMenuItem->setMinSize(Vec2f(0,0));
+		DefaultLabelMenuItem->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultLabelMenuItem->setPreferredSize(Vec2f(100,25));
 
 		//Border
 		DefaultLabelMenuItem->setBorder(DefaultLabelMenuItemBorder);
@@ -1070,9 +1070,9 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultSeperatorMenuItem->setConstraints(NullFC);
 		//Sizes
-		DefaultSeperatorMenuItem->setMinSize(Vec2s(0,0));
-		DefaultSeperatorMenuItem->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultSeperatorMenuItem->setPreferredSize(Vec2s(100,10));
+		DefaultSeperatorMenuItem->setMinSize(Vec2f(0,0));
+		DefaultSeperatorMenuItem->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultSeperatorMenuItem->setPreferredSize(Vec2f(100,10));
 
 		//Border
 		DefaultSeperatorMenuItem->setBorder(DefaultSeperatorMenuItemBorder);
@@ -1115,9 +1115,9 @@ void DefaultLookAndFeel::init(void)
 	beginEditCP(MenuExpandablePolygon);
 		MenuExpandablePolygon->setColor(Color4f(0.0,0.0,0.0,1.0));
 		MenuExpandablePolygon->setOpacity(1.0);
-        MenuExpandablePolygon->getVerticies().addValue(Pnt2s(0,0));
-        MenuExpandablePolygon->getVerticies().addValue(Pnt2s(0,7));
-        MenuExpandablePolygon->getVerticies().addValue(Pnt2s(4,4));
+        MenuExpandablePolygon->getVerticies().addValue(Pnt2f(0,0));
+        MenuExpandablePolygon->getVerticies().addValue(Pnt2f(0,7));
+        MenuExpandablePolygon->getVerticies().addValue(Pnt2f(4,4));
 	endEditCP(MenuExpandablePolygon);
 
 	UIDrawObjectCanvasPtr defaultMenuDrawObject = UIDrawObjectCanvas::create();
@@ -1133,9 +1133,9 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultMenu->setConstraints(NullFC);
 		//Sizes
-		DefaultMenu->setMinSize(Vec2s(0,0));
-		DefaultMenu->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultMenu->setPreferredSize(Vec2s(100,25));
+		DefaultMenu->setMinSize(Vec2f(0,0));
+		DefaultMenu->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultMenu->setPreferredSize(Vec2f(100,25));
 
 		//Border
 		DefaultMenu->setBorder(DefaultMenuBorder);
@@ -1205,9 +1205,9 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultPopupMenu->setConstraints(NullFC);
 		//Sizes
-		DefaultPopupMenu->setMinSize(Vec2s(0,0));
-		DefaultPopupMenu->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultPopupMenu->setPreferredSize(Vec2s(100,50));
+		DefaultPopupMenu->setMinSize(Vec2f(0,0));
+		DefaultPopupMenu->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultPopupMenu->setPreferredSize(Vec2f(100,50));
 
 		//Border
 		DefaultPopupMenu->setBorder(DefaultPopupMenuBorder);
@@ -1242,9 +1242,9 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultMenuBar->setConstraints(NullFC);
 		//Sizes
-		DefaultMenuBar->setMinSize(Vec2s(0,0));
-		DefaultMenuBar->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultMenuBar->setPreferredSize(Vec2s(100,50));
+		DefaultMenuBar->setMinSize(Vec2f(0,0));
+		DefaultMenuBar->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultMenuBar->setPreferredSize(Vec2f(100,50));
 
 		//Border
 		DefaultMenuBar->setBorder(DefaultMenuBarBorder);
@@ -1273,9 +1273,9 @@ void DefaultLookAndFeel::init(void)
 	beginEditCP(DefaultScrollBarVerticalMinButtonDrawObject);
 		DefaultScrollBarVerticalMinButtonDrawObject->setColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultScrollBarVerticalMinButtonDrawObject->setOpacity(1.0);
-        DefaultScrollBarVerticalMinButtonDrawObject->getVerticies().addValue(Pnt2s(0,4));
-        DefaultScrollBarVerticalMinButtonDrawObject->getVerticies().addValue(Pnt2s(7,4));
-        DefaultScrollBarVerticalMinButtonDrawObject->getVerticies().addValue(Pnt2s(4,0));
+        DefaultScrollBarVerticalMinButtonDrawObject->getVerticies().addValue(Pnt2f(0,4));
+        DefaultScrollBarVerticalMinButtonDrawObject->getVerticies().addValue(Pnt2f(7,4));
+        DefaultScrollBarVerticalMinButtonDrawObject->getVerticies().addValue(Pnt2f(4,0));
 	endEditCP(DefaultScrollBarVerticalMinButtonDrawObject);
 
 	UIDrawObjectCanvasPtr DefaultScrollBarVerticalMinButtonCanvas = UIDrawObjectCanvas::create();
@@ -1287,7 +1287,7 @@ void DefaultLookAndFeel::init(void)
 	ButtonPtr DefaultScrollBarVerticalMinButton = Button::create();
     beginEditCP(DefaultScrollBarVerticalMinButton, Button::PreferredSizeFieldMask | Button::EnableActionOnMouseDownTimeFieldMask | Button::ActionOnMouseDownRateFieldMask
         | Button::DrawObjectFieldMask | Button::ActiveDrawObjectFieldMask | Button::FocusedDrawObjectFieldMask | Button::RolloverDrawObjectFieldMask | Button::DisabledDrawObjectFieldMask);
-        DefaultScrollBarVerticalMinButton->setPreferredSize(Vec2s(20,20));
+        DefaultScrollBarVerticalMinButton->setPreferredSize(Vec2f(20,20));
         DefaultScrollBarVerticalMinButton->setEnableActionOnMouseDownTime(true);
         DefaultScrollBarVerticalMinButton->setActionOnMouseDownRate(0.1);
 
@@ -1304,9 +1304,9 @@ void DefaultLookAndFeel::init(void)
 	beginEditCP(DefaultScrollBarVerticalMaxButtonDrawObject);
 		DefaultScrollBarVerticalMaxButtonDrawObject->setColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultScrollBarVerticalMaxButtonDrawObject->setOpacity(1.0);
-        DefaultScrollBarVerticalMaxButtonDrawObject->getVerticies().addValue(Pnt2s(0,0));
-        DefaultScrollBarVerticalMaxButtonDrawObject->getVerticies().addValue(Pnt2s(7,0));
-        DefaultScrollBarVerticalMaxButtonDrawObject->getVerticies().addValue(Pnt2s(4,4));
+        DefaultScrollBarVerticalMaxButtonDrawObject->getVerticies().addValue(Pnt2f(0,0));
+        DefaultScrollBarVerticalMaxButtonDrawObject->getVerticies().addValue(Pnt2f(7,0));
+        DefaultScrollBarVerticalMaxButtonDrawObject->getVerticies().addValue(Pnt2f(4,4));
 	endEditCP(DefaultScrollBarVerticalMaxButtonDrawObject);
 
 	UIDrawObjectCanvasPtr DefaultScrollBarVerticalMaxButtonCanvas = UIDrawObjectCanvas::create();
@@ -1317,7 +1317,7 @@ void DefaultLookAndFeel::init(void)
 	ButtonPtr DefaultScrollBarVerticalMaxButton = Button::create();
     beginEditCP(DefaultScrollBarVerticalMaxButton, Button::PreferredSizeFieldMask | Button::EnableActionOnMouseDownTimeFieldMask | Button::ActionOnMouseDownRateFieldMask
         | Button::DrawObjectFieldMask | Button::ActiveDrawObjectFieldMask | Button::FocusedDrawObjectFieldMask | Button::RolloverDrawObjectFieldMask | Button::DisabledDrawObjectFieldMask);
-        DefaultScrollBarVerticalMaxButton->setPreferredSize(Vec2s(20,20));
+        DefaultScrollBarVerticalMaxButton->setPreferredSize(Vec2f(20,20));
         DefaultScrollBarVerticalMaxButton->setEnableActionOnMouseDownTime(true);
         DefaultScrollBarVerticalMaxButton->setActionOnMouseDownRate(0.1);
         
@@ -1334,9 +1334,9 @@ void DefaultLookAndFeel::init(void)
 	beginEditCP(DefaultScrollBarHorizontalMinButtonDrawObject);
 		DefaultScrollBarHorizontalMinButtonDrawObject->setColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultScrollBarHorizontalMinButtonDrawObject->setOpacity(1.0);
-        DefaultScrollBarHorizontalMinButtonDrawObject->getVerticies().addValue(Pnt2s(4,0));
-        DefaultScrollBarHorizontalMinButtonDrawObject->getVerticies().addValue(Pnt2s(4,7));
-        DefaultScrollBarHorizontalMinButtonDrawObject->getVerticies().addValue(Pnt2s(0,4));
+        DefaultScrollBarHorizontalMinButtonDrawObject->getVerticies().addValue(Pnt2f(4,0));
+        DefaultScrollBarHorizontalMinButtonDrawObject->getVerticies().addValue(Pnt2f(4,7));
+        DefaultScrollBarHorizontalMinButtonDrawObject->getVerticies().addValue(Pnt2f(0,4));
 	endEditCP(DefaultScrollBarHorizontalMinButtonDrawObject);
 
 	UIDrawObjectCanvasPtr DefaultScrollBarHorizontalMinButtonCanvas = UIDrawObjectCanvas::create();
@@ -1348,7 +1348,7 @@ void DefaultLookAndFeel::init(void)
 	ButtonPtr DefaultScrollBarHorizontalMinButton = Button::create();
     beginEditCP(DefaultScrollBarHorizontalMinButton, Button::PreferredSizeFieldMask | Button::EnableActionOnMouseDownTimeFieldMask | Button::ActionOnMouseDownRateFieldMask
         | Button::DrawObjectFieldMask | Button::ActiveDrawObjectFieldMask | Button::FocusedDrawObjectFieldMask | Button::RolloverDrawObjectFieldMask | Button::DisabledDrawObjectFieldMask);
-        DefaultScrollBarHorizontalMinButton->setPreferredSize(Vec2s(20,20));
+        DefaultScrollBarHorizontalMinButton->setPreferredSize(Vec2f(20,20));
         DefaultScrollBarHorizontalMinButton->setEnableActionOnMouseDownTime(true);
         DefaultScrollBarHorizontalMinButton->setActionOnMouseDownRate(0.1);
 
@@ -1365,9 +1365,9 @@ void DefaultLookAndFeel::init(void)
 	beginEditCP(DefaultScrollBarHorizontalMaxButtonDrawObject);
 		DefaultScrollBarHorizontalMaxButtonDrawObject->setColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultScrollBarHorizontalMaxButtonDrawObject->setOpacity(1.0);
-        DefaultScrollBarHorizontalMaxButtonDrawObject->getVerticies().addValue(Pnt2s(0,0));
-        DefaultScrollBarHorizontalMaxButtonDrawObject->getVerticies().addValue(Pnt2s(0,7));
-        DefaultScrollBarHorizontalMaxButtonDrawObject->getVerticies().addValue(Pnt2s(4,4));
+        DefaultScrollBarHorizontalMaxButtonDrawObject->getVerticies().addValue(Pnt2f(0,0));
+        DefaultScrollBarHorizontalMaxButtonDrawObject->getVerticies().addValue(Pnt2f(0,7));
+        DefaultScrollBarHorizontalMaxButtonDrawObject->getVerticies().addValue(Pnt2f(4,4));
 	endEditCP(DefaultScrollBarHorizontalMaxButtonDrawObject);
 
 	UIDrawObjectCanvasPtr DefaultScrollBarHorizontalMaxButtonCanvas = UIDrawObjectCanvas::create();
@@ -1378,7 +1378,7 @@ void DefaultLookAndFeel::init(void)
 	ButtonPtr DefaultScrollBarHorizontalMaxButton = Button::create();
     beginEditCP(DefaultScrollBarHorizontalMaxButton, Button::PreferredSizeFieldMask | Button::EnableActionOnMouseDownTimeFieldMask | Button::ActionOnMouseDownRateFieldMask
         | Button::DrawObjectFieldMask | Button::ActiveDrawObjectFieldMask | Button::FocusedDrawObjectFieldMask | Button::RolloverDrawObjectFieldMask | Button::DisabledDrawObjectFieldMask);
-        DefaultScrollBarHorizontalMaxButton->setPreferredSize(Vec2s(20,20));
+        DefaultScrollBarHorizontalMaxButton->setPreferredSize(Vec2f(20,20));
         DefaultScrollBarHorizontalMaxButton->setEnableActionOnMouseDownTime(true);
         DefaultScrollBarHorizontalMaxButton->setActionOnMouseDownRate(0.1);
         
@@ -1427,7 +1427,7 @@ void DefaultLookAndFeel::init(void)
 
 	ButtonPtr DefaultScrollFieldButton = Button::create();
     beginEditCP(DefaultScrollFieldButton, Button::PreferredSizeFieldMask | Button::EnableActionOnMouseDownTimeFieldMask | Button::ActionOnMouseDownRateFieldMask);
-        DefaultScrollFieldButton->setPreferredSize(Vec2s(20,20));
+        DefaultScrollFieldButton->setPreferredSize(Vec2f(20,20));
         DefaultScrollFieldButton->setEnableActionOnMouseDownTime(true);
         DefaultScrollFieldButton->setActionOnMouseDownRate(0.2);
         
@@ -1531,9 +1531,9 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultScrollBar->setConstraints(NullFC);
 		//Sizes
-		DefaultScrollBar->setMinSize(Vec2s(0,0));
-		DefaultScrollBar->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultScrollBar->setPreferredSize(Vec2s(20,100));
+		DefaultScrollBar->setMinSize(Vec2f(0,0));
+		DefaultScrollBar->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultScrollBar->setPreferredSize(Vec2f(20,100));
 
 		//Border
 		DefaultScrollBar->setBorder(DefaultScrollBarBorder);
@@ -1580,14 +1580,14 @@ void DefaultLookAndFeel::init(void)
 	//Vertical ScrollBar
 	ScrollBarPtr DefaultScrollPanelVerticalScrollBar = ScrollBar::create();
     beginEditCP(DefaultScrollPanelVerticalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
-		DefaultScrollPanelVerticalScrollBar->setPreferredSize(Vec2s(20,100));
+		DefaultScrollPanelVerticalScrollBar->setPreferredSize(Vec2f(20,100));
         DefaultScrollPanelVerticalScrollBar->setOrientation(VERTICAL_ALIGNMENT);
     beginEditCP(DefaultScrollPanelVerticalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
 
 	//Horizontal ScrollBar
 	ScrollBarPtr DefaultScrollPanelHorizontalScrollBar = ScrollBar::create();
     beginEditCP(DefaultScrollPanelHorizontalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
-		DefaultScrollPanelHorizontalScrollBar->setPreferredSize(Vec2s(100,20));
+		DefaultScrollPanelHorizontalScrollBar->setPreferredSize(Vec2f(100,20));
         DefaultScrollPanelHorizontalScrollBar->setOrientation(HORIZONTAL_ALIGNMENT);
     beginEditCP(DefaultScrollPanelHorizontalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
 
@@ -1600,9 +1600,9 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultScrollPanel->setConstraints(NullFC);
 		//Sizes
-		DefaultScrollPanel->setMinSize(Vec2s(0,0));
-		DefaultScrollPanel->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultScrollPanel->setPreferredSize(Vec2s(100,100));
+		DefaultScrollPanel->setMinSize(Vec2f(0,0));
+		DefaultScrollPanel->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultScrollPanel->setPreferredSize(Vec2f(100,100));
 
 		//Border
 		DefaultScrollPanel->setBorder(DefaultScrollPanelBorder);
@@ -1645,9 +1645,9 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultRotatedComponent->setConstraints(NullFC);
 		//Sizes
-		DefaultRotatedComponent->setMinSize(Vec2s(0,0));
-		DefaultRotatedComponent->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultRotatedComponent->setPreferredSize(Vec2s(100,100));
+		DefaultRotatedComponent->setMinSize(Vec2f(0,0));
+		DefaultRotatedComponent->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultRotatedComponent->setPreferredSize(Vec2f(100,100));
 
 		//Border
 		DefaultRotatedComponent->setBorder(DefaultRotatedComponentBorder);
@@ -1802,9 +1802,9 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultList->setConstraints(NullFC);
 		//Sizes
-		DefaultList->setMinSize(Vec2s(0,0));
-		DefaultList->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultList->setPreferredSize(Vec2s(100,100));
+		DefaultList->setMinSize(Vec2f(0,0));
+		DefaultList->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultList->setPreferredSize(Vec2f(100,100));
 
 		//Border
 		DefaultList->setBorder(DefaultListBorder);
@@ -1842,9 +1842,9 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultTableHeader->setConstraints(NullFC);
 		//Sizes
-		DefaultTableHeader->setMinSize(Vec2s(0,0));
-		DefaultTableHeader->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultTableHeader->setPreferredSize(Vec2s(100,100));
+		DefaultTableHeader->setMinSize(Vec2f(0,0));
+		DefaultTableHeader->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultTableHeader->setPreferredSize(Vec2f(100,100));
 
 		//Border
 		DefaultTableHeader->setBorder(DefaultTableHeaderBorder);
@@ -1889,9 +1889,9 @@ void DefaultLookAndFeel::init(void)
 		
 		DefaultTable->setConstraints(NullFC);
 		//Sizes
-		DefaultTable->setMinSize(Vec2s(0,0));
-		DefaultTable->setMaxSize(Vec2s(32767,32767)); //2^15
-		DefaultTable->setPreferredSize(Vec2s(100,100));
+		DefaultTable->setMinSize(Vec2f(0,0));
+		DefaultTable->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultTable->setPreferredSize(Vec2f(100,100));
 
 		//Border
 		DefaultTable->setBorder(DefaultTableBorder);

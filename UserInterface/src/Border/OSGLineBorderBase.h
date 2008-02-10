@@ -67,7 +67,7 @@
 
 #include "OSGBorder.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // Width type
+#include <OpenSG/OSGReal32Fields.h> // Width type
 #include <OpenSG/OSGColor4fFields.h> // Color type
 #include <OpenSG/OSGMaterialFields.h> // Material type
 
@@ -128,12 +128,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING LineBorderBase : public Border
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *getSFWidth          (void);
+           SFReal32            *getSFWidth          (void);
            SFColor4f           *getSFColor          (void);
            SFMaterialPtr       *getSFMaterial       (void);
 
-           UInt32              &getWidth          (void);
-     const UInt32              &getWidth          (void) const;
+           Real32              &getWidth          (void);
+     const Real32              &getWidth          (void) const;
            Color4f             &getColor          (void);
      const Color4f             &getColor          (void) const;
            MaterialPtr         &getMaterial       (void);
@@ -144,7 +144,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LineBorderBase : public Border
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setWidth          ( const UInt32 &value );
+     void setWidth          ( const Real32 &value );
      void setColor          ( const Color4f &value );
      void setMaterial       ( const MaterialPtr &value );
 
@@ -189,7 +189,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LineBorderBase : public Border
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfWidth;
+    SFReal32            _sfWidth;
     SFColor4f           _sfColor;
     SFMaterialPtr       _sfMaterial;
 

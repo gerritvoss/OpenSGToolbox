@@ -119,7 +119,7 @@ SFBool *EtchedBorderBase::getSFRaised(void)
 
 //! Get the EtchedBorder::_sfWidth field.
 inline
-SFUInt32 *EtchedBorderBase::getSFWidth(void)
+SFReal32 *EtchedBorderBase::getSFWidth(void)
 {
     return &_sfWidth;
 }
@@ -190,21 +190,21 @@ void EtchedBorderBase::setRaised(const bool &value)
 
 //! Get the value of the EtchedBorder::_sfWidth field.
 inline
-UInt32 &EtchedBorderBase::getWidth(void)
+Real32 &EtchedBorderBase::getWidth(void)
 {
     return _sfWidth.getValue();
 }
 
 //! Get the value of the EtchedBorder::_sfWidth field.
 inline
-const UInt32 &EtchedBorderBase::getWidth(void) const
+const Real32 &EtchedBorderBase::getWidth(void) const
 {
     return _sfWidth.getValue();
 }
 
 //! Set the value of the EtchedBorder::_sfWidth field.
 inline
-void EtchedBorderBase::setWidth(const UInt32 &value)
+void EtchedBorderBase::setWidth(const Real32 &value)
 {
     _sfWidth.setValue(value);
 }

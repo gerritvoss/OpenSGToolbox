@@ -86,7 +86,7 @@ void ComboBox::initMethod (void)
 
 void ComboBox::updateLayout(void)
 {
-	Pnt2s BorderTopLeft, BorderBottomRight;
+	Pnt2f BorderTopLeft, BorderBottomRight;
 	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
 
 	//Place the Expand button on the Left
@@ -100,8 +100,8 @@ void ComboBox::updateLayout(void)
 	if(getEditable() && getEditor() != NullFC && getEditor()->getEditorComponent() != NullFC)
 	{
 		beginEditCP(getEditor()->getEditorComponent(), PositionFieldMask | SizeFieldMask);
-			getEditor()->getEditorComponent()->setSize(Vec2s(BorderBottomRight.x() - BorderTopLeft.x() - getExpandButton()->getSize().x(), getExpandButton()->getSize().y()));
-			getEditor()->getEditorComponent()->setPosition(Pnt2s(BorderTopLeft.x(), getExpandButton()->getPosition().y()));
+			getEditor()->getEditorComponent()->setSize(Vec2f(BorderBottomRight.x() - BorderTopLeft.x() - getExpandButton()->getSize().x(), getExpandButton()->getSize().y()));
+			getEditor()->getEditorComponent()->setPosition(Pnt2f(BorderTopLeft.x(), getExpandButton()->getPosition().y()));
 		endEditCP(getEditor()->getEditorComponent(), PositionFieldMask | SizeFieldMask);
 	}
 
@@ -109,8 +109,8 @@ void ComboBox::updateLayout(void)
 	if(!getEditable() && getComponentGeneratorSelectedItem() != NullFC)
 	{
 		beginEditCP(getComponentGeneratorSelectedItem(), PositionFieldMask | SizeFieldMask);
-			getComponentGeneratorSelectedItem()->setSize(Vec2s(BorderBottomRight.x() - BorderTopLeft.x() - getExpandButton()->getSize().x(), getExpandButton()->getSize().y()));
-			getComponentGeneratorSelectedItem()->setPosition(Pnt2s(BorderTopLeft.x(), getExpandButton()->getPosition().y()));
+			getComponentGeneratorSelectedItem()->setSize(Vec2f(BorderBottomRight.x() - BorderTopLeft.x() - getExpandButton()->getSize().x(), getExpandButton()->getSize().y()));
+			getComponentGeneratorSelectedItem()->setPosition(Pnt2f(BorderTopLeft.x(), getExpandButton()->getPosition().y()));
 		endEditCP(getComponentGeneratorSelectedItem(), PositionFieldMask | SizeFieldMask);
 	}
 }
@@ -306,13 +306,13 @@ void ComboBox::setPopupVisible(bool v)
 
 void ComboBox::showPopup(void)
 {
-	Pnt2s BorderTopLeft, BorderBottomRight;
+	Pnt2f BorderTopLeft, BorderBottomRight;
 	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
 
     beginEditCP(getComboListPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
        getComboListPopupMenu()->setInvoker(ComponentPtr(this));
        getComboListPopupMenu()->setVisible(true);
-       getComboListPopupMenu()->setPosition(ComponentToFrame(BorderTopLeft + Vec2s(0,BorderBottomRight.y()), ComponentPtr(this)));
+       getComboListPopupMenu()->setPosition(ComponentToFrame(BorderTopLeft + Vec2f(0,BorderBottomRight.y()), ComponentPtr(this)));
 	   getComboListPopupMenu()->setSelection(_Model->getSelectedItemIndex());
     endEditCP(getComboListPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
     

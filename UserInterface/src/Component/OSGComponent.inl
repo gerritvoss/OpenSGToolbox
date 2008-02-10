@@ -43,7 +43,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void Component::getClipBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+void Component::getClipBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
 	TopLeft = getClipTopLeft();
 	BottomRight = getClipBottomRight();

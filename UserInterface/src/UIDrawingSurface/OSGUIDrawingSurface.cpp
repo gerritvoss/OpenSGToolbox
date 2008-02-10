@@ -253,18 +253,18 @@ void UIDrawingSurface::moveWindowToBottom(InternalWindowPtr TheWindow)
 	}
 }
 
-Pnt2s UIDrawingSurface::getMousePosition(void) const
+Pnt2f UIDrawingSurface::getMousePosition(void) const
 {
-    Pnt2s ViewportPoint(0,0);
+    Pnt2f ViewportPoint(0,0);
     ViewportPtr TheViewport( getEventProducer()->windowToViewport(getEventProducer()->getMousePosition(),ViewportPoint) );
-    Pnt2s Result(0,0);
+    Pnt2f Result(0,0);
     getMouseTransformFunctor()->viewportToRenderingSurface( ViewportPoint,TheViewport, Result);
     return Result;
 }
 
 void UIDrawingSurface::mouseClicked(const MouseEvent& e)
 {
-	Pnt2s ResultMouseLoc;
+	Pnt2f ResultMouseLoc;
 	if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
     {
 	    MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
@@ -285,7 +285,7 @@ void UIDrawingSurface::mouseClicked(const MouseEvent& e)
 
 void UIDrawingSurface::mouseEntered(const MouseEvent& e)
 {
-	Pnt2s ResultMouseLoc;
+	Pnt2f ResultMouseLoc;
 	if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
     {
 		MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
@@ -297,7 +297,7 @@ void UIDrawingSurface::mouseEntered(const MouseEvent& e)
 
 void UIDrawingSurface::mouseExited(const MouseEvent& e)
 {
-	Pnt2s ResultMouseLoc;
+	Pnt2f ResultMouseLoc;
 	if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
     {
 		MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
@@ -309,7 +309,7 @@ void UIDrawingSurface::mouseExited(const MouseEvent& e)
 
 void UIDrawingSurface::mousePressed(const MouseEvent& e)
 {
-	Pnt2s ResultMouseLoc;
+	Pnt2f ResultMouseLoc;
 	if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
     {
 	    MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
@@ -334,7 +334,7 @@ void UIDrawingSurface::mousePressed(const MouseEvent& e)
 
 void UIDrawingSurface::mouseReleased(const MouseEvent& e)
 {
-	Pnt2s ResultMouseLoc;
+	Pnt2f ResultMouseLoc;
 	if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
     {
 	    MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
@@ -356,7 +356,7 @@ void UIDrawingSurface::mouseReleased(const MouseEvent& e)
 
 void UIDrawingSurface::mouseMoved(const MouseEvent& e)
 {
-	Pnt2s ResultMouseLoc;
+	Pnt2f ResultMouseLoc;
 	if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
     {
 	    MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
@@ -377,7 +377,7 @@ void UIDrawingSurface::mouseMoved(const MouseEvent& e)
 
 void UIDrawingSurface::mouseDragged(const MouseEvent& e)
 {
-	Pnt2s ResultMouseLoc;
+	Pnt2f ResultMouseLoc;
 	if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
     {
 	    MouseEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getButton(), e.getClickCount(),
@@ -398,7 +398,7 @@ void UIDrawingSurface::mouseDragged(const MouseEvent& e)
 
 void UIDrawingSurface::mouseWheelMoved(const MouseWheelEvent& e)
 {
-	Pnt2s ResultMouseLoc;
+	Pnt2f ResultMouseLoc;
 	if(getMouseTransformFunctor()->viewportToRenderingSurface(e.getLocation(),e.getViewport(), ResultMouseLoc))
     {
 		MouseWheelEvent TransformedMouseEvent(e.getSource(), e.getTimeStamp(), e.getWheelRotation(), e.getScrollType(),
@@ -441,7 +441,7 @@ void UIDrawingSurface::keyTyped(const KeyEvent& e)
 	}
 }
 
-void UIDrawingSurface::checkMouseEnterExit(const Event& e, const Pnt2s& MouseLocation, ViewportPtr TheViewport)
+void UIDrawingSurface::checkMouseEnterExit(const Event& e, const Pnt2f& MouseLocation, ViewportPtr TheViewport)
 {
 	for(UInt32 i(0) ; i<getInternalWindows().size() ; ++i)
 	{
@@ -524,8 +524,8 @@ void UIDrawingSurface::changed(BitVector whichField, UInt32 origin)
 
 	if(whichField & SizeFieldMask)
 	{
-		Vec2s Size;
-		Pnt2s Position;
+		Vec2f Size;
+		Pnt2f Position;
 		bool isSizeDifferent(false);
 		bool isPositionDifferent(false);
 		for(UInt32 i(0) ; i<getInternalWindows().size() ; ++i)
@@ -551,7 +551,7 @@ void UIDrawingSurface::changed(BitVector whichField, UInt32 origin)
 			if(getInternalWindows().getValue(i)->isAlignableInDrawingSurface())
 			{
 				//Update Alignment
-				Position = calculateAlignment(Pnt2s(0,0), getSize(), Size, getInternalWindows().getValue(i)->getAlignmentInDrawingSurface().y(), getInternalWindows().getValue(i)->getAlignmentInDrawingSurface().x());
+				Position = calculateAlignment(Pnt2f(0,0), getSize(), Size, getInternalWindows().getValue(i)->getAlignmentInDrawingSurface().y(), getInternalWindows().getValue(i)->getAlignmentInDrawingSurface().x());
 
 				isPositionDifferent = (getInternalWindows().getValue(i)->getPosition().x() != Position.x() ||
 									   getInternalWindows().getValue(i)->getPosition().y() != Position.y());

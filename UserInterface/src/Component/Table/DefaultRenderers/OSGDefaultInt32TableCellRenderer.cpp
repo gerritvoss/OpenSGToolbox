@@ -85,7 +85,7 @@ ComponentPtr DefaultInt32TableCellRenderer::getTableCellRendererComponent(TableP
 		std::string tempString;
 		dynamic_cast<SFInt32*>(value.get())->getValueByStr(tempString);
 		TheLabel->setText(tempString);
-		TheLabel->setPreferredSize(Vec2s(100,30));
+		TheLabel->setPreferredSize(Vec2f(100,30));
 	endEditCP(TheLabel, Label::TextFieldMask | Label::PreferredSizeFieldMask);
 	ColorUIBackgroundPtr tempBackground;
 	tempBackground = ColorUIBackground::create();

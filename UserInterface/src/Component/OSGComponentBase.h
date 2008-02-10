@@ -67,10 +67,10 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
-#include <OpenSG/OSGVec2sFields.h> // MinSize type
-#include <OpenSG/OSGVec2sFields.h> // MaxSize type
-#include <OpenSG/OSGVec2sFields.h> // PreferredSize type
-#include <OpenSG/OSGVec2sFields.h> // Size type
+#include <OpenSG/OSGVec2fFields.h> // MinSize type
+#include <OpenSG/OSGVec2fFields.h> // MaxSize type
+#include <OpenSG/OSGVec2fFields.h> // PreferredSize type
+#include <OpenSG/OSGVec2fFields.h> // Size type
 #include <OpenSG/OSGBoolFields.h> // Visible type
 #include <OpenSG/OSGBoolFields.h> // Enabled type
 #include <OpenSG/OSGBoolFields.h> // Focused type
@@ -194,11 +194,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-    virtual       SFPnt2s             *getSFPosition       (void);
-    virtual       SFVec2s             *getSFMinSize        (void);
-    virtual       SFVec2s             *getSFMaxSize        (void);
-    virtual       SFVec2s             *getSFPreferredSize  (void);
-    virtual       SFVec2s             *getSFSize           (void);
+    virtual       SFPnt2f             *getSFPosition       (void);
+    virtual       SFVec2f             *getSFMinSize        (void);
+    virtual       SFVec2f             *getSFMaxSize        (void);
+    virtual       SFVec2f             *getSFPreferredSize  (void);
+    virtual       SFVec2f             *getSFSize           (void);
     virtual       SFBool              *getSFVisible        (void);
     virtual       SFBool              *getSFEnabled        (void);
     virtual       SFBool              *getSFFocused        (void);
@@ -219,16 +219,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual       SFBool              *getSFClipping       (void);
     virtual       SFPopupMenuPtr      *getSFPopupMenu      (void);
 
-    virtual       Pnt2s               &getPosition       (void);
-    virtual const Pnt2s               &getPosition       (void) const;
-    virtual       Vec2s               &getMinSize        (void);
-    virtual const Vec2s               &getMinSize        (void) const;
-    virtual       Vec2s               &getMaxSize        (void);
-    virtual const Vec2s               &getMaxSize        (void) const;
-    virtual       Vec2s               &getPreferredSize  (void);
-    virtual const Vec2s               &getPreferredSize  (void) const;
-    virtual       Vec2s               &getSize           (void);
-    virtual const Vec2s               &getSize           (void) const;
+    virtual       Pnt2f               &getPosition       (void);
+    virtual const Pnt2f               &getPosition       (void) const;
+    virtual       Vec2f               &getMinSize        (void);
+    virtual const Vec2f               &getMinSize        (void) const;
+    virtual       Vec2f               &getMaxSize        (void);
+    virtual const Vec2f               &getMaxSize        (void) const;
+    virtual       Vec2f               &getPreferredSize  (void);
+    virtual const Vec2f               &getPreferredSize  (void) const;
+    virtual       Vec2f               &getSize           (void);
+    virtual const Vec2f               &getSize           (void) const;
     virtual       bool                &getVisible        (void);
     virtual const bool                &getVisible        (void) const;
     virtual       bool                &getEnabled        (void);
@@ -273,11 +273,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-    virtual void setPosition       ( const Pnt2s &value );
-    virtual void setMinSize        ( const Vec2s &value );
-    virtual void setMaxSize        ( const Vec2s &value );
-    virtual void setPreferredSize  ( const Vec2s &value );
-    virtual void setSize           ( const Vec2s &value );
+    virtual void setPosition       ( const Pnt2f &value );
+    virtual void setMinSize        ( const Vec2f &value );
+    virtual void setMaxSize        ( const Vec2f &value );
+    virtual void setPreferredSize  ( const Vec2f &value );
+    virtual void setSize           ( const Vec2f &value );
     virtual void setVisible        ( const bool &value );
     virtual void setEnabled        ( const bool &value );
     virtual void setFocused        ( const bool &value );
@@ -323,13 +323,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt2s             _sfPosition;
-    SFPnt2s             _sfClipTopLeft;
-    SFPnt2s             _sfClipBottomRight;
-    SFVec2s             _sfMinSize;
-    SFVec2s             _sfMaxSize;
-    SFVec2s             _sfPreferredSize;
-    SFVec2s             _sfSize;
+    SFPnt2f             _sfPosition;
+    SFPnt2f             _sfClipTopLeft;
+    SFPnt2f             _sfClipBottomRight;
+    SFVec2f             _sfMinSize;
+    SFVec2f             _sfMaxSize;
+    SFVec2f             _sfPreferredSize;
+    SFVec2f             _sfSize;
     SFBool              _sfVisible;
     SFBool              _sfEnabled;
     SFBool              _sfFocused;
@@ -370,21 +370,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-    virtual       SFPnt2s             *getSFClipTopLeft    (void);
-    virtual       SFPnt2s             *getSFClipBottomRight(void);
+    virtual       SFPnt2f             *getSFClipTopLeft    (void);
+    virtual       SFPnt2f             *getSFClipBottomRight(void);
 
-    virtual       Pnt2s               &getClipTopLeft    (void);
-    virtual const Pnt2s               &getClipTopLeft    (void) const;
-    virtual       Pnt2s               &getClipBottomRight(void);
-    virtual const Pnt2s               &getClipBottomRight(void) const;
+    virtual       Pnt2f               &getClipTopLeft    (void);
+    virtual const Pnt2f               &getClipTopLeft    (void) const;
+    virtual       Pnt2f               &getClipBottomRight(void);
+    virtual const Pnt2f               &getClipBottomRight(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-    virtual void setClipTopLeft    (const Pnt2s &value);
-    virtual void setClipBottomRight(const Pnt2s &value);
+    virtual void setClipTopLeft    (const Pnt2f &value);
+    virtual void setClipBottomRight(const Pnt2f &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -51,43 +51,43 @@ void GLUTWindowEventProducer::glutDisplay(void)
 }
 
 inline
-void GLUTWindowEventProducer::glutReshape(Vec2s Size)
+void GLUTWindowEventProducer::glutReshape(Vec2f Size)
 {
    _ReshapeCallbackFunc(Size);
 }
 
 inline
-void GLUTWindowEventProducer::glutKeyboardUp(UChar8 key, Pnt2s MousePos)
+void GLUTWindowEventProducer::glutKeyboardUp(UChar8 key, Pnt2f MousePos)
 {
    produceKeyReleased(determineKey(key),0);
 }
 
 inline
-void GLUTWindowEventProducer::glutKeyboard(UChar8 key, Pnt2s MousePos)
+void GLUTWindowEventProducer::glutKeyboard(UChar8 key, Pnt2f MousePos)
 {
    produceKeyPressed(determineKey(key),0);
 }
 
 inline
-void GLUTWindowEventProducer::glutSpecialUp(UChar8 key,Pnt2s MousePos)
+void GLUTWindowEventProducer::glutSpecialUp(UChar8 key,Pnt2f MousePos)
 {
    produceKeyReleased(determineSpecialKey(key),0);
 }
 
 inline
-void GLUTWindowEventProducer::glutSpecial(UChar8 key,Pnt2s MousePos)
+void GLUTWindowEventProducer::glutSpecial(UChar8 key,Pnt2f MousePos)
 {
    produceKeyPressed(determineSpecialKey(key),0);
 }
 
 inline
-void GLUTWindowEventProducer::glutMotion(Pnt2s MousePos)
+void GLUTWindowEventProducer::glutMotion(Pnt2f MousePos)
 {
     produceMouseDragged(MouseEvent::NO_BUTTON,MousePos);
 }
 
 inline
-void GLUTWindowEventProducer::glutPassiveMotion(Pnt2s MousePos)
+void GLUTWindowEventProducer::glutPassiveMotion(Pnt2f MousePos)
 {
    produceMouseMoved(MousePos);
 }

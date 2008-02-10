@@ -67,10 +67,10 @@
 
 #include "OSGBorder.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // LeftWidth type
-#include <OpenSG/OSGUInt32Fields.h> // RightWidth type
-#include <OpenSG/OSGUInt32Fields.h> // TopWidth type
-#include <OpenSG/OSGUInt32Fields.h> // BottomWidth type
+#include <OpenSG/OSGReal32Fields.h> // LeftWidth type
+#include <OpenSG/OSGReal32Fields.h> // RightWidth type
+#include <OpenSG/OSGReal32Fields.h> // TopWidth type
+#include <OpenSG/OSGReal32Fields.h> // BottomWidth type
 #include <OpenSG/OSGColor4fFields.h> // Color type
 #include <OpenSG/OSGMaterialFields.h> // Material type
 
@@ -137,21 +137,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING MatteBorderBase : public Border
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *getSFLeftWidth      (void);
-           SFUInt32            *getSFRightWidth     (void);
-           SFUInt32            *getSFTopWidth       (void);
-           SFUInt32            *getSFBottomWidth    (void);
+           SFReal32            *getSFLeftWidth      (void);
+           SFReal32            *getSFRightWidth     (void);
+           SFReal32            *getSFTopWidth       (void);
+           SFReal32            *getSFBottomWidth    (void);
            SFColor4f           *getSFColor          (void);
            SFMaterialPtr       *getSFMaterial       (void);
 
-           UInt32              &getLeftWidth      (void);
-     const UInt32              &getLeftWidth      (void) const;
-           UInt32              &getRightWidth     (void);
-     const UInt32              &getRightWidth     (void) const;
-           UInt32              &getTopWidth       (void);
-     const UInt32              &getTopWidth       (void) const;
-           UInt32              &getBottomWidth    (void);
-     const UInt32              &getBottomWidth    (void) const;
+           Real32              &getLeftWidth      (void);
+     const Real32              &getLeftWidth      (void) const;
+           Real32              &getRightWidth     (void);
+     const Real32              &getRightWidth     (void) const;
+           Real32              &getTopWidth       (void);
+     const Real32              &getTopWidth       (void) const;
+           Real32              &getBottomWidth    (void);
+     const Real32              &getBottomWidth    (void) const;
            Color4f             &getColor          (void);
      const Color4f             &getColor          (void) const;
            MaterialPtr         &getMaterial       (void);
@@ -162,10 +162,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING MatteBorderBase : public Border
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setLeftWidth      ( const UInt32 &value );
-     void setRightWidth     ( const UInt32 &value );
-     void setTopWidth       ( const UInt32 &value );
-     void setBottomWidth    ( const UInt32 &value );
+     void setLeftWidth      ( const Real32 &value );
+     void setRightWidth     ( const Real32 &value );
+     void setTopWidth       ( const Real32 &value );
+     void setBottomWidth    ( const Real32 &value );
      void setColor          ( const Color4f &value );
      void setMaterial       ( const MaterialPtr &value );
 
@@ -210,10 +210,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING MatteBorderBase : public Border
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfLeftWidth;
-    SFUInt32            _sfRightWidth;
-    SFUInt32            _sfTopWidth;
-    SFUInt32            _sfBottomWidth;
+    SFReal32            _sfLeftWidth;
+    SFReal32            _sfRightWidth;
+    SFReal32            _sfTopWidth;
+    SFReal32            _sfBottomWidth;
     SFColor4f           _sfColor;
     SFMaterialPtr       _sfMaterial;
 

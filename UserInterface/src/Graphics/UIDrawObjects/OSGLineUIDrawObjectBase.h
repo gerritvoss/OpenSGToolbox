@@ -67,8 +67,8 @@
 
 #include "OSGUIDrawObject.h" // Parent
 
-#include <OpenSG/OSGVec2sFields.h> // TopLeft type
-#include <OpenSG/OSGVec2sFields.h> // BottomRight type
+#include <OpenSG/OSGPnt2fFields.h> // TopLeft type
+#include <OpenSG/OSGPnt2fFields.h> // BottomRight type
 #include <OpenSG/OSGReal32Fields.h> // Width type
 #include <OpenSG/OSGColor4fFields.h> // Color type
 #include <OpenSG/OSGReal32Fields.h> // Opacity type
@@ -134,16 +134,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING LineUIDrawObjectBase : public UIDrawObject
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPnt2s             *getSFTopLeft        (void);
-           SFPnt2s             *getSFBottomRight    (void);
+           SFPnt2f             *getSFTopLeft        (void);
+           SFPnt2f             *getSFBottomRight    (void);
            SFReal32            *getSFWidth          (void);
            SFColor4f           *getSFColor          (void);
            SFReal32            *getSFOpacity        (void);
 
-           Pnt2s               &getTopLeft        (void);
-     const Pnt2s               &getTopLeft        (void) const;
-           Pnt2s               &getBottomRight    (void);
-     const Pnt2s               &getBottomRight    (void) const;
+           Pnt2f               &getTopLeft        (void);
+     const Pnt2f               &getTopLeft        (void) const;
+           Pnt2f               &getBottomRight    (void);
+     const Pnt2f               &getBottomRight    (void) const;
            Real32              &getWidth          (void);
      const Real32              &getWidth          (void) const;
            Color4f             &getColor          (void);
@@ -156,8 +156,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING LineUIDrawObjectBase : public UIDrawObject
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setTopLeft        ( const Pnt2s &value );
-     void setBottomRight    ( const Pnt2s &value );
+     void setTopLeft        ( const Pnt2f &value );
+     void setBottomRight    ( const Pnt2f &value );
      void setWidth          ( const Real32 &value );
      void setColor          ( const Color4f &value );
      void setOpacity        ( const Real32 &value );
@@ -203,8 +203,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING LineUIDrawObjectBase : public UIDrawObject
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt2s             _sfTopLeft;
-    SFPnt2s             _sfBottomRight;
+    SFPnt2f             _sfTopLeft;
+    SFPnt2f             _sfBottomRight;
     SFReal32            _sfWidth;
     SFColor4f           _sfColor;
     SFReal32            _sfOpacity;

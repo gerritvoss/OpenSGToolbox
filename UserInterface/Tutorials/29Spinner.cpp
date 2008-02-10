@@ -51,7 +51,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 
 // 29Spinner Headers
@@ -220,14 +220,14 @@ int main(int argc, char **argv)
     RadioButtonPtr DoubleIncrementButton = RadioButton::create();
     beginEditCP(SingleIncrementButton, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask);
         SingleIncrementButton->setText("Increment by 1");
-        SingleIncrementButton->setPreferredSize(Vec2s(100, 50));
+        SingleIncrementButton->setPreferredSize(Vec2f(100, 50));
     beginEditCP(SingleIncrementButton, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask);
     SingleIncrementButtonListener TheSingleIncrementButtonListener;
     SingleIncrementButton->addButtonSelectedListener(&TheSingleIncrementButtonListener);
 
 	beginEditCP(DoubleIncrementButton, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
         DoubleIncrementButton->setText("Increment by 2");
-        DoubleIncrementButton->setPreferredSize(Vec2s(100, 50));
+        DoubleIncrementButton->setPreferredSize(Vec2f(100, 50));
         DoubleIncrementButton->setSelected(true);
     beginEditCP(DoubleIncrementButton, RadioButton::TextColorFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::SelectedFieldMask);
     DoubleIncrementButtonListener TheDoubleIncrementButtonListener;
@@ -291,8 +291,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(550,550),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(550,550),
                                         "OpenSG 29Spinner Window");
 
     while(!ExitApp)
@@ -314,7 +314,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

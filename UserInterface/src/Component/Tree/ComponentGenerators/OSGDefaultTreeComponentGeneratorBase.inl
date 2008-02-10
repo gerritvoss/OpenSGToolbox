@@ -138,6 +138,13 @@ SFLabelPtr *DefaultTreeComponentGeneratorBase::getSFNodeLabelPrototype(void)
     return &_sfNodeLabelPrototype;
 }
 
+//! Get the DefaultTreeComponentGenerator::_sfNodePanelPrototype field.
+inline
+SFPanelPtr *DefaultTreeComponentGeneratorBase::getSFNodePanelPrototype(void)
+{
+    return &_sfNodePanelPrototype;
+}
+
 //! Get the DefaultTreeComponentGenerator::_sfSelectedBackground field.
 inline
 SFUIBackgroundPtr *DefaultTreeComponentGeneratorBase::getSFSelectedBackground(void)
@@ -298,6 +305,27 @@ inline
 void DefaultTreeComponentGeneratorBase::setNodeLabelPrototype(const LabelPtr &value)
 {
     _sfNodeLabelPrototype.setValue(value);
+}
+
+//! Get the value of the DefaultTreeComponentGenerator::_sfNodePanelPrototype field.
+inline
+PanelPtr &DefaultTreeComponentGeneratorBase::getNodePanelPrototype(void)
+{
+    return _sfNodePanelPrototype.getValue();
+}
+
+//! Get the value of the DefaultTreeComponentGenerator::_sfNodePanelPrototype field.
+inline
+const PanelPtr &DefaultTreeComponentGeneratorBase::getNodePanelPrototype(void) const
+{
+    return _sfNodePanelPrototype.getValue();
+}
+
+//! Set the value of the DefaultTreeComponentGenerator::_sfNodePanelPrototype field.
+inline
+void DefaultTreeComponentGeneratorBase::setNodePanelPrototype(const PanelPtr &value)
+{
+    _sfNodePanelPrototype.setValue(value);
 }
 
 //! Get the value of the DefaultTreeComponentGenerator::_sfSelectedBackground field.

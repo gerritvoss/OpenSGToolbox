@@ -97,7 +97,7 @@ ComponentPtr DefaultTableCellEditor::getTableCellEditorComponent(TablePtr table,
 			value->getValueByStr(tempString);
 		}
 		TheTextField->setText(tempString);
-		TheTextField->setPreferredSize(Vec2s(100,30));
+		TheTextField->setPreferredSize(Vec2f(100,30));
 		TheTextField->setHorizontalAlignment(0.5);
 		TheTextField->selectAll();
 		TheTextField->setCaretPosition(TheTextField->getText().size());

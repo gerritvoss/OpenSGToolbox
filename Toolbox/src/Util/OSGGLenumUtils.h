@@ -10,6 +10,11 @@
 
 OSG_BEGIN_NAMESPACE
 
+/**
+ * This function creates a string representation of a GLenum
+ * @param[in] value A GLenum
+ * @return The string representation of the the GLenum
+ */
 std::string OSG_TOOLBOXLIB_DLLMAPPING toString(const GLenum& value);
 
 OSG_END_NAMESPACE

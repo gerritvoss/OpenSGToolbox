@@ -218,8 +218,8 @@ void TabPanel::insertTab(const UInt32 TabIndex, const ComponentPtr Tab, const Co
 
 void TabPanel::updateLayout(void)
 {
-	Pnt2s borderOffset;
-	Vec2s borderSize;
+	Pnt2f borderOffset;
+	Vec2f borderSize;
 	getInsideInsetsBounds(borderOffset, borderSize);
 
 	UInt16 AxisIndex(0);
@@ -227,8 +227,8 @@ void TabPanel::updateLayout(void)
 		AxisIndex=1;
 	UInt32 largestMinorAxis(0);
 	UInt32 cumMajorAxis(0);
-	Pnt2s alignOffset(0,0);
-	Pnt2s offset(0,0);
+	Pnt2f alignOffset(0,0);
+	Pnt2f offset(0,0);
 	
 	// first layout all of the tabs
 	// naturally the alignments and such is necessary
@@ -255,7 +255,7 @@ void TabPanel::updateLayout(void)
 			offset[(AxisIndex+1)%2] += largestMinorAxis - getTabs().getValue(i)->getPreferredSize()[(AxisIndex+1)%2];
 		beginEditCP(getTabs().getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
 			getTabs().getValue(i)->setSize(getTabs().getValue(i)->getPreferredSize());
-			getTabs().getValue(i)->setPosition(alignOffset + Vec2s(offset));
+			getTabs().getValue(i)->setPosition(alignOffset + Vec2f(offset));
 		endEditCP(getTabs().getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
 		offset[AxisIndex] += getTabs().getValue(i)->getSize()[AxisIndex];
 		if ( (getTabPlacement() == PLACEMENT_NORTH || getTabPlacement() == PLACEMENT_WEST) && getTabs().getValue(i)->getPreferredSize()[(AxisIndex+1)%2] < largestMinorAxis)

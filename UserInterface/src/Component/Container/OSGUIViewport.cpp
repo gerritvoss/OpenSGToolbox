@@ -80,7 +80,7 @@ void UIViewport::updateLayout(void)
 {
     if(getViewComponent() != NullFC)
     {
-        Vec2s Size(getCorrectedViewSize());
+        Vec2f Size(getCorrectedViewSize());
         
         beginEditCP(getViewComponent(), Component::SizeFieldMask | Component::PositionFieldMask);
             getViewComponent()->setSize(Size);
@@ -100,9 +100,9 @@ void UIViewport::produceStateChanged(const ChangeEvent& e)
     }
 }
 
-Vec2s UIViewport::getCorrectedViewSize(void) const
+Vec2f UIViewport::getCorrectedViewSize(void) const
 {
-    if(getViewSize() != Vec2s(-1,-1))
+    if(getViewSize() != Vec2f(-1,-1))
     {
         return getViewSize();
     }
@@ -151,7 +151,7 @@ void UIViewport::changed(BitVector whichField, UInt32 origin)
 
     if((whichField & ViewSizeFieldMask) && getViewComponent() != NullFC)
     {
-		Vec2s Size(getCorrectedViewSize());
+		Vec2f Size(getCorrectedViewSize());
         
 		beginEditCP(getViewComponent(), Component::SizeFieldMask);
 			getViewComponent()->setSize(Size);
@@ -180,7 +180,7 @@ void UIViewport::changed(BitVector whichField, UInt32 origin)
        getViewComponent() != NullFC &&
        (getViewComponent()->getScrollableTracksViewportHeight() || getViewComponent()->getScrollableTracksViewportWidth()))
     {
-        Vec2s Size(getViewComponent()->getPreferredSize());
+        Vec2f Size(getViewComponent()->getPreferredSize());
         
         if(getViewComponent()->getScrollableTracksViewportHeight())
         {

@@ -41,7 +41,7 @@ A UI GridBagLayout.
 	</Field>
 	<Field
 		name="ColumnWidths"
-		type="UInt16"
+		type="Real32"
 		cardinality="multi"
 		visibility="external"
 		access="public"
@@ -59,7 +59,7 @@ A UI GridBagLayout.
 	</Field>
 	<Field
 		name="RowHeights"
-		type="UInt16"
+		type="Real32"
 		cardinality="multi"
 		visibility="external"
 		access="public"

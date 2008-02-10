@@ -146,13 +146,13 @@ const OSG::BitVector SliderBase::MTInfluenceMask =
 /*! \var UInt32          SliderBase::_sfMajorTickSpacing
     
 */
-/*! \var Pnt2s           SliderBase::_mfMajorTickPositions
+/*! \var Pnt2f           SliderBase::_mfMajorTickPositions
     
 */
 /*! \var UInt32          SliderBase::_sfMinorTickSpacing
     
 */
-/*! \var Pnt2s           SliderBase::_mfMinorTickPositions
+/*! \var Pnt2f           SliderBase::_mfMinorTickPositions
     
 */
 /*! \var bool            SliderBase::_sfSnapToTicks
@@ -223,7 +223,7 @@ FieldDescription *SliderBase::_desc[] =
                      MajorTickSpacingFieldId, MajorTickSpacingFieldMask,
                      false,
                      (FieldAccessMethod) &SliderBase::getSFMajorTickSpacing),
-    new FieldDescription(MFPnt2s::getClassType(), 
+    new FieldDescription(MFPnt2f::getClassType(), 
                      "MajorTickPositions", 
                      MajorTickPositionsFieldId, MajorTickPositionsFieldMask,
                      true,
@@ -233,7 +233,7 @@ FieldDescription *SliderBase::_desc[] =
                      MinorTickSpacingFieldId, MinorTickSpacingFieldMask,
                      false,
                      (FieldAccessMethod) &SliderBase::getSFMinorTickSpacing),
-    new FieldDescription(MFPnt2s::getClassType(), 
+    new FieldDescription(MFPnt2f::getClassType(), 
                      "MinorTickPositions", 
                      MinorTickPositionsFieldId, MinorTickPositionsFieldMask,
                      true,

@@ -120,7 +120,7 @@ void UIFont::initText(void)
     addRefP(_face);
 }
 
-void UIFont::getBounds(const std::string& Text, Pnt2s& TopLeft, Pnt2s& BottomRight)
+void UIFont::getBounds(const std::string& Text, Pnt2f& TopLeft, Pnt2f& BottomRight)
 {
    TextLayoutParam layoutParam;
    layoutParam.spacing = 1.1;
@@ -131,16 +131,16 @@ void UIFont::getBounds(const std::string& Text, Pnt2s& TopLeft, Pnt2s& BottomRig
    layout(Text, layoutParam, layoutResult);
 
    //Vec2f BottomLeft, TopRight;
-   Vec2s size = Vec2s(layoutResult.textBounds.x()*getSize(),layoutResult.textBounds.y()*getSize());
+   Vec2f size = Vec2f(layoutResult.textBounds.x()*getSize(),layoutResult.textBounds.y()*getSize());
   // _face->calculateBoundingBox(layoutResult,BottomLeft, TopRight);
 
    TopLeft.setValues(0, 0);
    BottomRight.setValue(size);
 }
 
-Vec2s UIFont::getBounds(const std::string& Text)
+Vec2f UIFont::getBounds(const std::string& Text)
 {
-   Pnt2s TopLeft, BottomRight;
+   Pnt2f TopLeft, BottomRight;
    getBounds(Text, TopLeft, BottomRight);
    return (BottomRight-TopLeft);
 }

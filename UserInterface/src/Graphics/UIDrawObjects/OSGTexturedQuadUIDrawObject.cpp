@@ -84,7 +84,7 @@ void TexturedQuadUIDrawObject::draw(const GraphicsPtr Graphics) const
                        getOpacity());
 }
 
-void TexturedQuadUIDrawObject::getBounds(Pnt2s& TopLeft, Pnt2s& BottomRight) const
+void TexturedQuadUIDrawObject::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
    TopLeft.setValues(
        osgMin(osgMin(osgMin(getPoint1().x(), getPoint2().x()),getPoint3().x()),getPoint4().x()),

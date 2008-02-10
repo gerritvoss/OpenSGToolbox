@@ -263,7 +263,7 @@ void Table::setValueAt(SharedFieldPtr aValue, const UInt32& row, const UInt32& c
 }
 
 inline
-Int32 Table::columnAtPoint(const Pnt2s& point)
+Int32 Table::columnAtPoint(const Pnt2f& point)
 {
     return _ColumnModel->getColumnIndexAtX(point.x());
 }

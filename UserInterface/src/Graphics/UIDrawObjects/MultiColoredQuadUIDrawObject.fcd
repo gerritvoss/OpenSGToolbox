@@ -14,7 +14,7 @@
 A UI MultiColoredQuadUIDrawObject.
 	<Field
 		name="Point1"
-		type="Pnt2s"
+		type="Pnt2f"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -23,7 +23,7 @@ A UI MultiColoredQuadUIDrawObject.
 	</Field>
 	<Field
 		name="Point2"
-		type="Pnt2s"
+		type="Pnt2f"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -32,7 +32,7 @@ A UI MultiColoredQuadUIDrawObject.
 	</Field>
 	<Field
 		name="Point3"
-		type="Pnt2s"
+		type="Pnt2f"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -41,7 +41,7 @@ A UI MultiColoredQuadUIDrawObject.
 	</Field>
 	<Field
 		name="Point4"
-		type="Pnt2s"
+		type="Pnt2f"
 		cardinality="single"
 		visibility="external"
 		access="public"

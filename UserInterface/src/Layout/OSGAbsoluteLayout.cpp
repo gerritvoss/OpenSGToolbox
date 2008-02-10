@@ -78,7 +78,7 @@ void AbsoluteLayout::initMethod (void)
 
 void AbsoluteLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
-	Pnt2s ParentInsetsTopLeft, ParentInsetBottomRight;
+	Pnt2f ParentInsetsTopLeft, ParentInsetBottomRight;
     Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(ParentInsetsTopLeft, ParentInsetBottomRight);
 	for(UInt32 i = 0 ; i<Components.size(); ++i)
 	{
@@ -88,9 +88,9 @@ void AbsoluteLayout::updateLayout(const MFComponentPtr Components,const Componen
 			if(Components.getValue(i)->getConstraints() != NullFC)
 			{
 				//Get the Components Position
-				Pnt2s pos = AbsoluteLayoutConstraintsPtr::dcast(Components.getValue(i)->getConstraints())->getPosition();
+				Pnt2f pos = AbsoluteLayoutConstraintsPtr::dcast(Components.getValue(i)->getConstraints())->getPosition();
 				
-				Components.getValue(i)->setPosition(ParentInsetsTopLeft + Vec2s(pos));
+				Components.getValue(i)->setPosition(ParentInsetsTopLeft + Vec2f(pos));
 			}
 			else
 			{

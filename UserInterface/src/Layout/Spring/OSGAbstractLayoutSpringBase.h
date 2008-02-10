@@ -67,7 +67,7 @@
 
 #include "OSGLayoutSpring.h" // Parent
 
-#include <OpenSG/OSGInt32Fields.h> // Size type
+#include <OpenSG/OSGReal32Fields.h> // Size type
 
 #include "OSGAbstractLayoutSpringFields.h"
 
@@ -122,17 +122,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractLayoutSpringBase : public LayoutSp
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFInt32             *getSFSize           (void);
+           SFReal32            *getSFSize           (void);
 
-           Int32               &getSize           (void);
-     const Int32               &getSize           (void) const;
+           Real32              &getSize           (void);
+     const Real32              &getSize           (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setSize           ( const Int32 &value );
+     void setSize           ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -159,7 +159,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractLayoutSpringBase : public LayoutSp
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFInt32             _sfSize;
+    SFReal32            _sfSize;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

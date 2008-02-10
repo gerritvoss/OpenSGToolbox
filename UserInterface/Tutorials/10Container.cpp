@@ -51,7 +51,7 @@ bool ExitApp = false;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
-void reshape(Vec2s Size);
+void reshape(Vec2f Size);
 
 // 10Container Headers
 #include <OpenSG/UserInterface/OSGButton.h>
@@ -228,7 +228,7 @@ int main(int argc, char **argv)
         Create MainInternalWindow and two Panel Components and
         edit their characteristics.
 
-        -setPreferredSize(Vec2s): Determine the 
+        -setPreferredSize(Vec2f): Determine the 
 			size of the Panel.
         -getChildren().addValue(ComponentName):
 			Adds a Component to the
@@ -244,7 +244,7 @@ int main(int argc, char **argv)
     
     // Edit Panel1, Panel2
     beginEditCP(ExamplePanel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        ExamplePanel1->setPreferredSize(Vec2s(200, 200));
+        ExamplePanel1->setPreferredSize(Vec2f(200, 200));
         ExamplePanel1->getChildren().addValue(ExampleButton1);
         ExamplePanel1->getChildren().addValue(ExampleButton2);
         ExamplePanel1->getChildren().addValue(ExampleButton3);
@@ -254,7 +254,7 @@ int main(int argc, char **argv)
     endEditCP(ExamplePanel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
     beginEditCP(ExamplePanel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
-        ExamplePanel2->setPreferredSize(Vec2s(200, 200));
+        ExamplePanel2->setPreferredSize(Vec2f(200, 200));
         ExamplePanel2->getChildren().addValue(ExampleButton4);
         ExamplePanel2->getChildren().addValue(ExampleButton5);
         ExamplePanel2->getChildren().addValue(ExampleButton6);
@@ -308,8 +308,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-    TutorialWindowEventProducer->openWindow(Pnt2s(50,50),
-                                        Vec2s(900,900),
+    TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
+                                        Vec2f(900,900),
                                         "OpenSG 10Container Window");
 
     //Main Event Loop
@@ -332,7 +332,7 @@ void display(void)
 }
 
 // React to size changes
-void reshape(Vec2s Size)
+void reshape(Vec2f Size)
 {
     mgr->resize(Size.x(), Size.y());
 }

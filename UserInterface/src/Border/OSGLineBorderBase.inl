@@ -98,7 +98,7 @@ LineBorderPtr LineBorderBase::createEmpty(void)
 
 //! Get the LineBorder::_sfWidth field.
 inline
-SFUInt32 *LineBorderBase::getSFWidth(void)
+SFReal32 *LineBorderBase::getSFWidth(void)
 {
     return &_sfWidth;
 }
@@ -120,21 +120,21 @@ SFMaterialPtr *LineBorderBase::getSFMaterial(void)
 
 //! Get the value of the LineBorder::_sfWidth field.
 inline
-UInt32 &LineBorderBase::getWidth(void)
+Real32 &LineBorderBase::getWidth(void)
 {
     return _sfWidth.getValue();
 }
 
 //! Get the value of the LineBorder::_sfWidth field.
 inline
-const UInt32 &LineBorderBase::getWidth(void) const
+const Real32 &LineBorderBase::getWidth(void) const
 {
     return _sfWidth.getValue();
 }
 
 //! Set the value of the LineBorder::_sfWidth field.
 inline
-void LineBorderBase::setWidth(const UInt32 &value)
+void LineBorderBase::setWidth(const Real32 &value)
 {
     _sfWidth.setValue(value);
 }

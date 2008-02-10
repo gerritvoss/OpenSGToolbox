@@ -57,7 +57,7 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 #include "OSGLineUIDrawObjectBase.h"
 #include "OSGLineUIDrawObject.h"
 
@@ -86,10 +86,10 @@ const OSG::BitVector LineUIDrawObjectBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Pnt2s           LineUIDrawObjectBase::_sfTopLeft
+/*! \var Pnt2f           LineUIDrawObjectBase::_sfTopLeft
     
 */
-/*! \var Pnt2s           LineUIDrawObjectBase::_sfBottomRight
+/*! \var Pnt2f           LineUIDrawObjectBase::_sfBottomRight
     
 */
 /*! \var Real32          LineUIDrawObjectBase::_sfWidth
@@ -106,12 +106,12 @@ const OSG::BitVector LineUIDrawObjectBase::MTInfluenceMask =
 
 FieldDescription *LineUIDrawObjectBase::_desc[] = 
 {
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "TopLeft", 
                      TopLeftFieldId, TopLeftFieldMask,
                      false,
                      (FieldAccessMethod) &LineUIDrawObjectBase::getSFTopLeft),
-    new FieldDescription(SFPnt2s::getClassType(), 
+    new FieldDescription(SFPnt2f::getClassType(), 
                      "BottomRight", 
                      BottomRightFieldId, BottomRightFieldMask,
                      false,
@@ -206,8 +206,8 @@ void LineUIDrawObjectBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 LineUIDrawObjectBase::LineUIDrawObjectBase(void) :
-    _sfTopLeft                (Pnt2s(0,0)), 
-    _sfBottomRight            (Pnt2s(0,0)), 
+    _sfTopLeft                (Pnt2f(0,0)), 
+    _sfBottomRight            (Pnt2f(0,0)), 
     _sfWidth                  (Real32(1)), 
     _sfColor                  (Color4f(1.0,1.0,1.0,1.0)), 
     _sfOpacity                (Real32(1.0)), 

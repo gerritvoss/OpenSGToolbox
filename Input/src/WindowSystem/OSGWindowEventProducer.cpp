@@ -119,16 +119,16 @@ WindowEventProducer::WindowEventProducer(void) :
    _ButtonClickCountMap[MouseEvent::BUTTON9] = ClickVector();
    _ButtonClickCountMap[MouseEvent::BUTTON10] = ClickVector();
    
-   _ButtonClickMap[MouseEvent::BUTTON1] = Pnt2s(0,0);
-   _ButtonClickMap[MouseEvent::BUTTON2] = Pnt2s(0,0);
-   _ButtonClickMap[MouseEvent::BUTTON3] = Pnt2s(0,0);
-   _ButtonClickMap[MouseEvent::BUTTON4] = Pnt2s(0,0);
-   _ButtonClickMap[MouseEvent::BUTTON5] = Pnt2s(0,0);
-   _ButtonClickMap[MouseEvent::BUTTON6] = Pnt2s(0,0);
-   _ButtonClickMap[MouseEvent::BUTTON7] = Pnt2s(0,0);
-   _ButtonClickMap[MouseEvent::BUTTON8] = Pnt2s(0,0);
-   _ButtonClickMap[MouseEvent::BUTTON9] = Pnt2s(0,0);
-   _ButtonClickMap[MouseEvent::BUTTON10] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON1] = Pnt2f(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON2] = Pnt2f(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON3] = Pnt2f(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON4] = Pnt2f(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON5] = Pnt2f(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON6] = Pnt2f(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON7] = Pnt2f(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON8] = Pnt2f(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON9] = Pnt2f(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON10] = Pnt2f(0,0);
 }
 
 WindowEventProducer::WindowEventProducer(const WindowEventProducer &source) :
@@ -148,16 +148,16 @@ WindowEventProducer::WindowEventProducer(const WindowEventProducer &source) :
    _ButtonClickCountMap[MouseEvent::BUTTON9] = ClickVector();
    _ButtonClickCountMap[MouseEvent::BUTTON10] = ClickVector();
    
-   _ButtonClickMap[MouseEvent::BUTTON1] = Pnt2s(0,0);
-   _ButtonClickMap[MouseEvent::BUTTON2] = Pnt2s(0,0);
-   _ButtonClickMap[MouseEvent::BUTTON3] = Pnt2s(0,0);
-   _ButtonClickMap[MouseEvent::BUTTON4] = Pnt2s(0,0);
-   _ButtonClickMap[MouseEvent::BUTTON5] = Pnt2s(0,0);
-   _ButtonClickMap[MouseEvent::BUTTON6] = Pnt2s(0,0);
-   _ButtonClickMap[MouseEvent::BUTTON7] = Pnt2s(0,0);
-   _ButtonClickMap[MouseEvent::BUTTON8] = Pnt2s(0,0);
-   _ButtonClickMap[MouseEvent::BUTTON9] = Pnt2s(0,0);
-   _ButtonClickMap[MouseEvent::BUTTON10] = Pnt2s(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON1] = Pnt2f(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON2] = Pnt2f(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON3] = Pnt2f(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON4] = Pnt2f(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON5] = Pnt2f(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON6] = Pnt2f(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON7] = Pnt2f(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON8] = Pnt2f(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON9] = Pnt2f(0,0);
+   _ButtonClickMap[MouseEvent::BUTTON10] = Pnt2f(0,0);
 }
 
 WindowEventProducer::~WindowEventProducer(void)
@@ -183,7 +183,7 @@ void WindowEventProducer::dump(      UInt32    ,
     SLOG << "Dump WindowEventProducer NI" << std::endl;
 }
 
-ViewportPtr WindowEventProducer::windowToViewport(const Pnt2s& WindowPoint, Pnt2s& ViewportPoint)
+ViewportPtr WindowEventProducer::windowToViewport(const Pnt2f& WindowPoint, Pnt2f& ViewportPoint)
 {
 	ViewportPtr ThePort;
 	for(UInt32 i(0) ; i<getWindow()->getPort().size() ; ++i)
@@ -203,11 +203,11 @@ ViewportPtr WindowEventProducer::windowToViewport(const Pnt2s& WindowPoint, Pnt2
 	return NullFC;
 }
 
-void WindowEventProducer::produceMouseClicked(const MouseEvent::MouseButton& Button, const Pnt2s& Location)
+void WindowEventProducer::produceMouseClicked(const MouseEvent::MouseButton& Button, const Pnt2f& Location)
 {
    Time t(getSystemTime());
    updateClickCount(Button, t, Location);
-   Pnt2s ViewportLocation;
+   Pnt2f ViewportLocation;
    ViewportPtr ResultViewport;
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
@@ -222,9 +222,9 @@ void WindowEventProducer::produceMouseClicked(const MouseEvent::MouseButton& But
    }
 }
 
-void WindowEventProducer::produceMouseEntered(const Pnt2s& Location)
+void WindowEventProducer::produceMouseEntered(const Pnt2f& Location)
 {
-   Pnt2s ViewportLocation;
+   Pnt2f ViewportLocation;
    ViewportPtr ResultViewport;
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
@@ -238,9 +238,9 @@ void WindowEventProducer::produceMouseEntered(const Pnt2s& Location)
    }
 }
 
-void WindowEventProducer::produceMouseExited(const Pnt2s& Location)
+void WindowEventProducer::produceMouseExited(const Pnt2f& Location)
 {
-   Pnt2s ViewportLocation;
+   Pnt2f ViewportLocation;
    ViewportPtr ResultViewport;
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
@@ -254,12 +254,12 @@ void WindowEventProducer::produceMouseExited(const Pnt2s& Location)
    }
 }
 
-void WindowEventProducer::produceMousePressed(const MouseEvent::MouseButton& Button, const Pnt2s& Location)
+void WindowEventProducer::produceMousePressed(const MouseEvent::MouseButton& Button, const Pnt2f& Location)
 {
 	_ButtonClickMap[Button] = Location;
 	TimeStamp t(getSystemTime());
 	validateClickCount(Button, t, Location);
-   Pnt2s ViewportLocation;
+   Pnt2f ViewportLocation;
    ViewportPtr ResultViewport;
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
@@ -273,11 +273,11 @@ void WindowEventProducer::produceMousePressed(const MouseEvent::MouseButton& But
    }
 }
 
-void WindowEventProducer::produceMouseReleased(const MouseEvent::MouseButton& Button, const Pnt2s& Location)
+void WindowEventProducer::produceMouseReleased(const MouseEvent::MouseButton& Button, const Pnt2f& Location)
 {
 	TimeStamp t(getSystemTime());
 	validateClickCount(Button, t, Location);
-   Pnt2s ViewportLocation;
+   Pnt2f ViewportLocation;
    ViewportPtr ResultViewport;
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
@@ -296,9 +296,9 @@ void WindowEventProducer::produceMouseReleased(const MouseEvent::MouseButton& Bu
 }
 
 
-void WindowEventProducer::produceMouseWheelMoved(const Int32& WheelRotation, const Pnt2s& Location, const MouseWheelEvent::ScrollType& TheScrollType)
+void WindowEventProducer::produceMouseWheelMoved(const Int32& WheelRotation, const Pnt2f& Location, const MouseWheelEvent::ScrollType& TheScrollType)
 {
-   Pnt2s ViewportLocation;
+   Pnt2f ViewportLocation;
    ViewportPtr ResultViewport;
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
@@ -311,9 +311,9 @@ void WindowEventProducer::produceMouseWheelMoved(const Int32& WheelRotation, con
    }
 }
 
-void WindowEventProducer::produceMouseMoved(const Pnt2s& Location)
+void WindowEventProducer::produceMouseMoved(const Pnt2f& Location)
 {
-   Pnt2s ViewportLocation;
+   Pnt2f ViewportLocation;
    ViewportPtr ResultViewport;
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
@@ -326,9 +326,9 @@ void WindowEventProducer::produceMouseMoved(const Pnt2s& Location)
    }
 }
 
-void WindowEventProducer::produceMouseDragged(const MouseEvent::MouseButton& Button, const Pnt2s& Location)
+void WindowEventProducer::produceMouseDragged(const MouseEvent::MouseButton& Button, const Pnt2f& Location)
 {
-   Pnt2s ViewportLocation;
+   Pnt2f ViewportLocation;
    ViewportPtr ResultViewport;
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
@@ -462,7 +462,7 @@ void WindowEventProducer::produceUpdate(const Time& ElapsedTime)
 }
 
 
-void WindowEventProducer::validateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2s& Location)
+void WindowEventProducer::validateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2f& Location)
 {
    //Get the vector of Clicks for this Button
    ClickVector& TheClickVector( _ButtonClickCountMap[Button] );
@@ -480,7 +480,7 @@ void WindowEventProducer::validateClickCount(const MouseEvent::MouseButton& Butt
    }
 }
 
-void WindowEventProducer::updateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2s& Location)
+void WindowEventProducer::updateClickCount(const MouseEvent::MouseButton& Button, const Time& TimeStamp, const Pnt2f& Location)
 {
    validateClickCount(Button, TimeStamp, Location);
 
