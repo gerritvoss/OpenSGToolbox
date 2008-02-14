@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_DEFINES_H_
-#define _OSG_UI_DEFINES_H_
+#ifndef _OSG_UI_BOUNDED_RANGE_SPINNER_MODEL_H_
+#define _OSG_UI_BOUNDED_RANGE_SPINNER_MODEL_H_
 
 #ifdef __sgi
 #pragma once
@@ -46,24 +46,98 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#define OSG_UI_BEGIN_NAMESPACE namespace OSG { namespace ui
-#define OSG_UI_END_NAMESPACE } }
-
-#define OSG_UI_USING_NAMESPACE namespace OSG {} namespace ui using namespace OSG::ui;
-
+#include "Component/Scroll/OSGBoundedRangeModel.h"
+#include "Component/Spinner/OSGNumberSpinnerModel.h"
+#include <set>
 
 OSG_BEGIN_NAMESPACE
 
-enum HorizontalAlignment {HORIZONTAL_CENTER=0, HORIZONTAL_LEFT, HORIZONTAL_RIGHT};
-enum VerticalAlignment {VERTICAL_CENTER=0, VERTICAL_TOP, VERTICAL_BOTTOM};
+class BoundedRangeSpinnerModel;
 
-enum Alignment {HORIZONTAL_ALIGNMENT=0, VERTICAL_ALIGNMENT=1};
-enum AxisAlignment {AXIS_MIN_ALIGNMENT=0, AXIS_CENTER_ALIGNMENT, AXIS_MAX_ALIGNMENT};
-enum GridBagFill {FILL_BOTH=0, FILL_VERTICAL, FILL_HORIZONTAL, FILL_NONE};
-enum Scale {SCALE_NONE=0, SCALE_STRETCH, SCALE_MIN_AXIS, SCALE_MAX_AXIS, SCALE_ABSOLUTE};
-	 
+typedef boost::intrusive_ptr<BoundedRangeSpinnerModel> BoundedRangeSpinnerModelPtr;
+
+class OSG_USERINTERFACELIB_DLLMAPPING BoundedRangeSpinnerModel : public IntrusivePtrImplBase
+{
+private:
+protected:
+	BoundedRangeModelPtr _TheBoundedRangeModel;
+	Int32SpinnerModelPtr _TheSpinnerModel;
+
+	typedef std::set<ChangeListenerPtr> ChangeListenerSet;
+    typedef ChangeListenerSet::iterator ChangeListenerSetItor;
+    typedef ChangeListenerSet::const_iterator ChangeListenerSetConstItor;
+	ChangeListenerSet _ChangeListeners;
+
+	void produceStateChanged(void);
+	
+	//BoundedRangeModel Listener
+	class BoundedRangeModelChangeListener : public ChangeListener
+	{
+	public :
+		BoundedRangeModelChangeListener(BoundedRangeSpinnerModel* TheBoundedRangeSpinnerModel);
+		
+		virtual void stateChanged(const ChangeEvent& e);
+	private:
+		BoundedRangeSpinnerModel* _BoundedRangeSpinnerModel;
+	};
+
+	friend class BoundedRangeModelChangeListener;
+
+	BoundedRangeModelChangeListener _BoundedRangeModelChangeListener;
+	
+	//SpinnerModel Listener
+	class SpinnerModelChangeListener : public ChangeListener
+	{
+	public :
+		SpinnerModelChangeListener(BoundedRangeSpinnerModel* TheBoundedRangeSpinnerModel);
+		
+		virtual void stateChanged(const ChangeEvent& e);
+	private:
+		BoundedRangeSpinnerModel* _BoundedRangeSpinnerModel;
+	};
+
+	friend class SpinnerModelChangeListener;
+
+	SpinnerModelChangeListener _SpinnerModelChangeListener;
+
+	void attachListenersToModels(void);
+
+	void dettachListenersFromModels(void);
+public:
+    //Returns the model's maximum.
+    virtual Int32 getMaximum(void) const;
+    
+    //Returns the minimum acceptable value.
+    virtual Int32 getMinimum(void) const;
+    
+    //Returns the model's current value.
+    virtual Int32 getValue(void) const;
+    
+    //Sets the model's maximum to newMaximum.
+    virtual void setMaximum(Int32 newMaximum);
+    
+    //Sets the model's minimum to newMinimum.
+    virtual void setMinimum(Int32 newMinimum);
+    
+    //Sets the model's current value to newValue if newValue satisfies the model's constraints.
+    virtual void setValue(Int32 newValue);
+    
+	virtual void addChangeListener(ChangeListenerPtr Listener);
+	virtual void removeChangeListener(ChangeListenerPtr Listener);
+
+	BoundedRangeModelPtr getBoundedRangeModel(void);
+
+	SpinnerModelPtr getSpinnerModel(void);
+
+    BoundedRangeSpinnerModel(void);
+    BoundedRangeSpinnerModel(const BoundedRangeSpinnerModel &source);
+    ~BoundedRangeSpinnerModel(void);
+};
+
+
 OSG_END_NAMESPACE
 
-#endif /* _OSG_UI_DEFINES_H_ */
+#include "OSGBoundedRangeSpinnerModel.inl"
 
+#endif /* _OSG_UI_BOUNDED_RANGE_SPINNER_MODEL_H_ */
 

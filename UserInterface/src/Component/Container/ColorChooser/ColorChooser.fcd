@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="ColorChooser"
+	parent="Panel"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI ColorChooser.
+        <Field
+          name="InternalChooserPanels"
+          type="AbstractColorChooserPanelPtr"
+          cardinality="multi"
+          visibility="external"
+          access="protected"
+          header="Component/Container/ColorChooser/OSGAbstractColorChooserPanelFields.h"
+          >
+	</Field>
+        <Field
+          name="PreviewPanel"
+          type="ComponentPtr"
+          cardinality="single"
+          visibility="external"
+          access="public"
+          defaultValue="NullFC"
+          header="Component/OSGComponentFields.h"
+          >
+	</Field>
+</FieldContainer>

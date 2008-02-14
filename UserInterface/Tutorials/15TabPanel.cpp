@@ -54,9 +54,10 @@ void reshape(Vec2f Size);
 // 15TabPanel Headers
 #include <sstream>
 #include <OpenSG/UserInterface/OSGButton.h>
+#include <OpenSG/UserInterface/OSGLabel.h>
 #include <OpenSG/UserInterface/OSGUIBackgrounds.h>
 #include <OpenSG/UserInterface/OSGBoxLayout.h>
-#include <OpenSG/UserInterface/OSGCardLayout.h>
+#include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGUIDefines.h>
 #include <OpenSG/UserInterface/OSGPanel.h>
 #include <OpenSG/UserInterface/OSGTabPanel.h>
@@ -128,12 +129,14 @@ public:
             
     ******************************************************/
 
-        ButtonPtr AddedTabButton = Button::create();
+        LabelPtr AddedTabLabel = Label::create();
         ButtonPtr AddedTabContent = Button::create();
 
-        beginEditCP(AddedTabButton, Button::TextFieldMask);
-            AddedTabButton->setText("Tab7");
-        endEditCP(AddedTabButton, Button::TextFieldMask);
+		beginEditCP(AddedTabLabel, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
+            AddedTabLabel->setText("Tab7");
+            AddedTabLabel->setBorders(NullFC);
+            AddedTabLabel->setBackgrounds(NullFC);
+        endEditCP(AddedTabLabel, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
 
         beginEditCP(AddedTabContent, Button::TextFieldMask);
             AddedTabContent->setText("This is where the new Tab content hangs out");
@@ -144,7 +147,7 @@ public:
         if( ExampleTabPanel->getTabs().getSize() == 6) 
 		{
             beginEditCP(ExampleTabPanel, TabPanel::TabsFieldMask);
-                ExampleTabPanel->addTab(AddedTabButton, AddedTabContent);
+                ExampleTabPanel->addTab(AddedTabLabel, AddedTabContent);
             endEditCP(ExampleTabPanel, TabPanel::TabsFieldMask);
         
 			// Change the text on the Tabs
@@ -246,12 +249,12 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
-    ButtonPtr ExampleTabButton1 = osg::Button::create();
-    ButtonPtr ExampleTabButton2 = osg::Button::create();
-    ButtonPtr ExampleTabButton3 = osg::Button::create();
-    ButtonPtr ExampleTabButton4 = osg::Button::create();
-    ButtonPtr ExampleTabButton5 = osg::Button::create();
-    ButtonPtr ExampleTabButton6 = osg::Button::create();
+    LabelPtr ExampleTabLabel1 = osg::Label::create();
+    LabelPtr ExampleTabLabel2 = osg::Label::create();
+    LabelPtr ExampleTabLabel3 = osg::Label::create();
+    LabelPtr ExampleTabLabel4 = osg::Label::create();
+    LabelPtr ExampleTabLabel5 = osg::Label::create();
+    LabelPtr ExampleTabLabel6 = osg::Label::create();
     ExampleTabContentA = osg::Button::create();
     ExampleTabContentB = osg::Button::create();
     ButtonPtr ExampleTabContentC = osg::Button::create();
@@ -259,29 +262,41 @@ int main(int argc, char **argv)
     ButtonPtr ExampleTabContentE = osg::Button::create();
     ButtonPtr ExampleTabContentF = osg::Button::create();
 
-    beginEditCP(ExampleTabButton1, Button::TextFieldMask);
-        ExampleTabButton1->setText("Tab1");
-    endEditCP(ExampleTabButton1, Button::TextFieldMask);
+    beginEditCP(ExampleTabLabel1, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
+        ExampleTabLabel1->setText("Tab1");
+        ExampleTabLabel1->setBorders(NullFC);
+        ExampleTabLabel1->setBackgrounds(NullFC);
+    endEditCP(ExampleTabLabel1, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
     
-    beginEditCP(ExampleTabButton2, Button::TextFieldMask);
-        ExampleTabButton2->setText("Tab2");
-    endEditCP(ExampleTabButton2, Button::TextFieldMask);
+    beginEditCP(ExampleTabLabel2, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
+        ExampleTabLabel2->setText("Tab2");
+        ExampleTabLabel2->setBorders(NullFC);
+        ExampleTabLabel2->setBackgrounds(NullFC);
+    endEditCP(ExampleTabLabel2, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
         
-    beginEditCP(ExampleTabButton3, Button::TextFieldMask);
-        ExampleTabButton3->setText("Tab3");
-    endEditCP(ExampleTabButton3, Button::TextFieldMask);
+    beginEditCP(ExampleTabLabel3, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
+        ExampleTabLabel3->setText("Tab3");
+        ExampleTabLabel3->setBorders(NullFC);
+        ExampleTabLabel3->setBackgrounds(NullFC);
+    endEditCP(ExampleTabLabel3, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
         
-    beginEditCP(ExampleTabButton4, Button::TextFieldMask);
-        ExampleTabButton4->setText("Tab4");
-    endEditCP(ExampleTabButton4, Button::TextFieldMask);
+    beginEditCP(ExampleTabLabel4, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
+        ExampleTabLabel4->setText("Tab4");
+        ExampleTabLabel4->setBorders(NullFC);
+        ExampleTabLabel4->setBackgrounds(NullFC);
+    endEditCP(ExampleTabLabel4, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
         
-    beginEditCP(ExampleTabButton5, Button::TextFieldMask);
-        ExampleTabButton5->setText("Tab5");
-    endEditCP(ExampleTabButton5, Button::TextFieldMask);
+    beginEditCP(ExampleTabLabel5, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
+        ExampleTabLabel5->setText("Tab5");
+        ExampleTabLabel5->setBorders(NullFC);
+        ExampleTabLabel5->setBackgrounds(NullFC);
+    endEditCP(ExampleTabLabel5, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
         
-    beginEditCP(ExampleTabButton6, Button::TextFieldMask);
-        ExampleTabButton6->setText("Tab6");
-    endEditCP(ExampleTabButton6, Button::TextFieldMask);
+    beginEditCP(ExampleTabLabel6, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
+        ExampleTabLabel6->setText("Tab6");
+        ExampleTabLabel6->setBorders(NullFC);
+        ExampleTabLabel6->setBackgrounds(NullFC);
+    endEditCP(ExampleTabLabel6, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
     
     beginEditCP(ExampleTabContentA, Button::TextFieldMask);
         ExampleTabContentA->setText("Add another Tab");
@@ -355,7 +370,7 @@ int main(int argc, char **argv)
 
     // Create and edit Panel
     PanelPtr ExampleTabPanelPanel = osg::Panel::create();
-    beginEditCP(ExampleTabPanelPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+	beginEditCP(ExampleTabPanelPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BordersFieldMask | Panel::BackgroundsFieldMask);
         ExampleTabPanelPanel->setPreferredSize(Vec2f(180, 500));
         ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton1);
         ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton2);
@@ -363,8 +378,10 @@ int main(int argc, char **argv)
         ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton4);
         ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton5);
         ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton6);
+		ExampleTabPanelPanel->setBorders(NullFC);
+		ExampleTabPanelPanel->setBackgrounds(NullFC);
         ExampleTabPanelPanel->setLayout(TabPanelLayout);
-    endEditCP(ExampleTabPanelPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+    endEditCP(ExampleTabPanelPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BordersFieldMask | Panel::BackgroundsFieldMask);
 
     /******************************************************
 
@@ -423,16 +440,16 @@ int main(int argc, char **argv)
     ******************************************************/
     ExampleTabPanel = osg::TabPanel::create();
     beginEditCP(ExampleTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
-        ExampleTabPanel->setPreferredSize(Vec2f(350,350));
-        ExampleTabPanel->addTab(ExampleTabButton1, ExampleTabContentA);
-        ExampleTabPanel->addTab(ExampleTabButton2, ExampleTabContentB);
-        ExampleTabPanel->addTab(ExampleTabButton3, ExampleTabContentC);
-        ExampleTabPanel->addTab(ExampleTabButton4, ExampleTabPanelPanel);
-        ExampleTabPanel->addTab(ExampleTabButton5, ExampleTabContentD);
-        ExampleTabPanel->addTab(ExampleTabButton6, ExampleTabContentE);
+        ExampleTabPanel->setPreferredSize(Vec2f(600,600));
+        ExampleTabPanel->addTab(ExampleTabLabel1, ExampleTabContentA);
+        ExampleTabPanel->addTab(ExampleTabLabel2, ExampleTabContentB);
+        ExampleTabPanel->addTab(ExampleTabLabel3, ExampleTabContentC);
+        ExampleTabPanel->addTab(ExampleTabLabel4, ExampleTabPanelPanel);
+        ExampleTabPanel->addTab(ExampleTabLabel5, ExampleTabContentD);
+        ExampleTabPanel->addTab(ExampleTabLabel6, ExampleTabContentE);
         ExampleTabPanel->setActiveTab(3);
-        ExampleTabPanel->setTabAlignment(AXIS_CENTER_ALIGNMENT);
-        ExampleTabPanel->setTabPlacement(PLACEMENT_SOUTH);
+        ExampleTabPanel->setTabAlignment(0.5f);
+        ExampleTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
     endEditCP(ExampleTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
 
     /******************************************************
@@ -443,7 +460,7 @@ int main(int argc, char **argv)
 			with TabPanel).
 
     ******************************************************/
-    CardLayoutPtr MainInternalWindowLayout = osg::CardLayout::create();
+    LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
@@ -458,7 +475,7 @@ int main(int argc, char **argv)
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.65f,0.65f));
+	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.85f,0.85f));
 	   MainInternalWindow->setDrawTitlebar(false);
 	   MainInternalWindow->setResizable(false);
     endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);

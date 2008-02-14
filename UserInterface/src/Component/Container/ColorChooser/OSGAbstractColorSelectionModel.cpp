@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGDefaultBoundedRangeModel.h"
+#include "OSGAbstractColorSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::DefaultChangeModel
-A DefaultChangeModel. 
+/*! \class osg::AbstractColorSelectionModel
+A AbstractColorSelectionModel. 
 */
 
 /***************************************************************************\
@@ -67,139 +67,55 @@ A DefaultChangeModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-
-void DefaultBoundedRangeModel::setExtent(UInt32 newExtent)
-{
-    bool isStateChange(_Extent != newExtent);
-    _Extent= newExtent;
-    if(_Value + static_cast<Int32>(_Extent) > _Maximum)
-    {
-        _Value = _Maximum - _Extent;
-    }
-    if(isStateChange)
-    {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
-    }
-}
-
-void DefaultBoundedRangeModel::setMaximum(Int32 newMaximum)
-{
-    bool isStateChange(_Maximum != newMaximum);
-    _Maximum= newMaximum;
-    if(_Value + static_cast<Int32>(_Extent) > _Maximum)
-    {
-        _Value = _Maximum - _Extent;
-    }
-    if(isStateChange)
-    {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
-    }
-}
-
-void DefaultBoundedRangeModel::setMinimum(Int32 newMinimum)
-{
-    bool isStateChange(_Minimum != newMinimum);
-    _Minimum= newMinimum;
-    if(_Value < _Minimum)
-    {
-        _Value = _Minimum;
-    }
-    if(isStateChange)
-    {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
-    }
-}
-
-void DefaultBoundedRangeModel::setRangeProperties(Int32 value, UInt32 extent, Int32 min, Int32 max, bool adjusting)
-{
-    bool isStateChange(_Extent != extent ||
-                       _Maximum != max ||
-                       _Minimum != min ||
-                       _Value != value ||
-                       _ValueIsAdjusting != adjusting);
-    _Extent= extent;
-    _Maximum= max;
-    _Minimum= min;
-    _ValueIsAdjusting = adjusting;
-    if(value + static_cast<Int32>(_Extent) > _Maximum && _Extent < _Maximum - _Minimum)
-    {
-        _Value = _Maximum - _Extent;
-    }
-    else if(value < _Minimum)
-    {
-        _Value = _Minimum;
-    }
-    else
-    {
-        _Value= value;
-    }
-
-    if(isStateChange)
-    {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
-    }
-}
-
-void DefaultBoundedRangeModel::setValue(Int32 newValue)
-{
-    bool isStateChange(_Value != newValue);
-    if(newValue + static_cast<Int32>(_Extent) > _Maximum)
-    {
-        _Value = _Maximum - _Extent;
-    }
-    else if(newValue < _Minimum)
-    {
-        _Value = _Minimum;
-    }
-    else
-    {
-        _Value= newValue;
-    }
-    if(isStateChange)
-    {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
-    }
-}
-
-void DefaultBoundedRangeModel::setValueIsAdjusting(bool b)
-{
-    bool isStateChange(_ValueIsAdjusting != b);
-    _ValueIsAdjusting = b;
-    if(isStateChange)
-    {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
-    }
-}
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-void DefaultBoundedRangeModel::produceStateChanged(const ChangeEvent& e)
+void AbstractColorSelectionModel::addChangeListener(ChangeListenerPtr Listener)
 {
-   ChangeListenerSet ModelListenerSet(_ChangeListeners);
-   for(ChangeListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
+   _ChangeListeners.insert(Listener);
+}
+
+void AbstractColorSelectionModel::removeChangeListener(ChangeListenerPtr Listener)
+{
+   ChangeListenerSetItor EraseIter(_ChangeListeners.find(Listener));
+   if(EraseIter != _ChangeListeners.end())
    {
-	   (*SetItor)->stateChanged(e);
+      _ChangeListeners.erase(EraseIter);
    }
 }
+
+void AbstractColorSelectionModel::produceStateChanged(const ChangeEvent& e)
+{
+    ChangeListenerSet ListenerSet(_ChangeListeners);
+    for(ChangeListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
+    {
+	    (*SetItor)->stateChanged(e);
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-DefaultBoundedRangeModel::DefaultBoundedRangeModel(void) :
-_Extent(0),
-_Maximum(0),
-_Minimum(0),
-_Value(0),
-_ValueIsAdjusting(false)
-{
-}
+/*----------------------------- class specific ----------------------------*/
 
-DefaultBoundedRangeModel::~DefaultBoundedRangeModel(void)
-{
-}
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
+
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
+
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
+
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
 
 OSG_END_NAMESPACE
 

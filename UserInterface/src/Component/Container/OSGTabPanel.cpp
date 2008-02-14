@@ -46,8 +46,9 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 #include "OSGTabPanel.h"
-#include "Util/OSGUIDefines.h"
 #include "Util/OSGUIDrawUtils.h"
+#include "Border/OSGBorder.h"
+#include "Background/OSGUIBackground.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -76,16 +77,190 @@ void TabPanel::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void TabPanel::calculateTabBorderLengths(BorderPtr TheBorder, Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const
+{
+	if(TheBorder != NullFC)
+	{
+		TheBorder->getInsets(Left, Right,Top, Bottom);
+	}
+	else
+	{
+		Left = Right = Top = Bottom = 0.0f;
+	}
+	switch(getTabPlacement())
+	{
+	case PLACEMENT_SOUTH:
+		Top = 0.0f;
+		break;
+	case PLACEMENT_EAST:
+		Left = 0.0f;
+		break;
+	case PLACEMENT_NORTH:
+		Bottom = 0.0f;
+		break;
+	case PLACEMENT_WEST:
+		Right = 0.0f;
+		break;
+	}
+
+	Left += getTabBorderInsets().x();
+	Right += getTabBorderInsets().x();
+	Top += getTabBorderInsets().y();
+	Bottom += getTabBorderInsets().y();
+}
+
+void TabPanel::calculateContentBorderLengths(BorderPtr TheBorder, Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const
+{
+	if(TheBorder != NullFC)
+	{
+		TheBorder->getInsets(Left, Right,Top, Bottom);
+	}
+	else
+	{
+		Left = Right = Top = Bottom = 0.0f;
+	}
+
+	Left += getContentBorderInsets().x();
+	Right += getContentBorderInsets().x();
+	Top += getContentBorderInsets().y();
+	Bottom += getContentBorderInsets().y();
+}
+
+void TabPanel::calculateMaxTabBorderLengths(Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const
+{
+	std::vector<BorderPtr> Borders;
+	Borders.push_back(getTabBorder());
+	Borders.push_back(getTabActiveBorder());
+	Borders.push_back(getTabDisabledBorder());
+	Borders.push_back(getTabRolloverBorder());
+	Borders.push_back(getTabFocusedBorder());
+
+	Left = Right = Top = Bottom = 0.0f;
+	Real32 BorderLeft, BorderRight, BorderTop, BorderBottom;
+	for(UInt32 i(0) ; i<Borders.size() ; ++i)
+	{
+		if(Borders[i] != NullFC)
+		{
+			Borders[i]->getInsets(BorderLeft, BorderRight, BorderTop, BorderBottom);
+			Left = osgMax(Left, BorderLeft);
+			Right = osgMax(Right, BorderRight);
+			Top = osgMax(Top, BorderTop);
+			Bottom = osgMax(Bottom, BorderBottom);
+		}
+	}
+
+	switch(getTabPlacement())
+	{
+	case PLACEMENT_SOUTH:
+		Top = 0.0f;
+		break;
+	case PLACEMENT_EAST:
+		Left = 0.0f;
+		break;
+	case PLACEMENT_NORTH:
+		Bottom = 0.0f;
+		break;
+	case PLACEMENT_WEST:
+		Right = 0.0f;
+		break;
+	}
+
+	Left += getTabBorderInsets().x();
+	Right += getTabBorderInsets().x();
+	Top += getTabBorderInsets().y();
+	Bottom += getTabBorderInsets().y();
+}
+
 void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 {
-	// draw the tabs
+	//Draw the Tab Borders
+	//Setup the Clip Planes
+	Real32 TabBorderLeftWidth, TabBorderRightWidth,TabBorderTopWidth, TabBorderBottomWidth;
+
+	Pnt2f TabPosition, TabBorderPosition;
+	Vec2f TabSize, TabBorderSize;
+	BorderPtr DrawnTabBorder;
+	UIBackgroundPtr DrawnTabBackground;
 	for (UInt32 i = 0; i < getTabs().size(); ++i)
 	{
+		TabPosition = getTabs().getValue(i)->getPosition();
+		TabSize = getTabs().getValue(i)->getSize();
+
+		DrawnTabBorder = getDrawnTabBorder(i);
+		DrawnTabBackground = getDrawnTabBackground(i);
+		
+		calculateTabBorderLengths(DrawnTabBorder, TabBorderLeftWidth, TabBorderRightWidth,TabBorderTopWidth, TabBorderBottomWidth);
+		
+		TabBorderPosition.setValues(TabPosition.x() - TabBorderLeftWidth, TabPosition.y() - TabBorderTopWidth);
+		TabBorderSize.setValues(TabSize.x() + TabBorderLeftWidth + TabBorderRightWidth,
+			                    TabSize.y() + TabBorderTopWidth + TabBorderBottomWidth);
+
+		if(DrawnTabBorder != NullFC)
+		{
+			DrawnTabBorder->draw(Graphics,
+								 TabBorderPosition.x(), TabBorderPosition.y(),
+								 TabBorderSize.x(), TabBorderSize.y(),
+								 getOpacity());
+			DrawnTabBorder->activateInternalDrawConstraints(Graphics,
+			                 TabBorderPosition.x(), TabBorderPosition.y(),
+							 TabBorderSize.x(), TabBorderSize.y());
+		}
+
+		if(DrawnTabBackground != NullFC)
+		{
+			DrawnTabBackground->draw(Graphics, TabPosition - getTabBorderInsets(), TabPosition + TabSize + getTabBorderInsets(), getOpacity());
+		}
+
+		//Draw the tab component
 		getTabs().getValue(i)->draw(Graphics);
+		
+		setupClipping(Graphics);
+
+		if(DrawnTabBorder != NullFC)
+		{
+			DrawnTabBorder->deactivateInternalDrawConstraints(Graphics,
+			                 TabBorderPosition.x(), TabBorderPosition.y(),
+							 TabBorderSize.x(), TabBorderSize.y());
+		}
 	}
 	
-	// draw the active tab component
-	getTabContents().getValue(getActiveTab())->draw(Graphics);
+	//Draw the Content of the active tab
+	if(getTabContents().size() > 0)
+	{
+		ComponentPtr ContentComponent(getTabContents().getValue(getActiveTab()));
+
+		BorderPtr DrawnContentBorder = getDrawnContentBorder();
+		UIBackgroundPtr DrawnContentBackground = getDrawnContentBackground();
+		
+		Real32 ContentBorderLeftWidth, ContentBorderRightWidth,ContentBorderTopWidth, ContentBorderBottomWidth;
+		calculateContentBorderLengths(DrawnContentBorder, ContentBorderLeftWidth, ContentBorderRightWidth,ContentBorderTopWidth, ContentBorderBottomWidth);
+
+		Pnt2f ContentBorderPosition(ContentComponent->getPosition() - Vec2f(ContentBorderLeftWidth,ContentBorderTopWidth));
+		Vec2f ContentBorderSize(ContentComponent->getSize() + Vec2f(ContentBorderLeftWidth+ContentBorderRightWidth,ContentBorderTopWidth+ContentBorderBottomWidth));
+		if(DrawnContentBorder != NullFC)
+		{
+			DrawnContentBorder->draw(Graphics,
+								 ContentBorderPosition.x(), ContentBorderPosition.y(),
+								 ContentBorderSize.x(), ContentBorderSize.y(),
+								 getOpacity());
+			DrawnContentBorder->activateInternalDrawConstraints(Graphics,
+			                 ContentBorderPosition.x(), ContentBorderPosition.y(),
+							 ContentBorderSize.x(), ContentBorderSize.y());
+		}
+		if(DrawnContentBackground != NullFC)
+		{
+			DrawnContentBackground->draw(Graphics, ContentComponent->getPosition() - getContentBorderInsets(), ContentComponent->getPosition() + ContentComponent->getSize() + getContentBorderInsets(), getOpacity());
+		}
+
+		ContentComponent->draw(Graphics);
+		
+		if(DrawnContentBorder != NullFC)
+		{
+			DrawnContentBorder->deactivateInternalDrawConstraints(Graphics,
+			                 ContentBorderPosition.x(), ContentBorderPosition.y(),
+							 ContentBorderSize.x(), ContentBorderSize.y());
+		}
+	}
 }
 
 void TabPanel::focusGained(const FocusEvent& e)
@@ -174,6 +349,20 @@ void TabPanel::removeTab(const UInt32 TabIndex)
 	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
 }
 
+void TabPanel::removeAllTabs(void)
+{
+	for(UInt32 i(0) ; i<getTabs().size() ; ++i)
+	{
+		getTabs().getValue(i)->removeFocusListener(this);
+	}
+
+	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
+		getChildren().clear();
+		getTabs().clear();
+		getTabContents().clear();
+	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
+}
+
 void TabPanel::insertTab(const ComponentPtr TabInsert, const ComponentPtr Tab, const ComponentPtr TabContent)
 {
 	Tab->addFocusListener(this);
@@ -218,18 +407,22 @@ void TabPanel::insertTab(const UInt32 TabIndex, const ComponentPtr Tab, const Co
 
 void TabPanel::updateLayout(void)
 {
-	Pnt2f borderOffset;
-	Vec2f borderSize;
-	getInsideInsetsBounds(borderOffset, borderSize);
+	Pnt2f InsideInsetsTopLeft,InsideInsetsBottomRight;
+	getInsideInsetsBounds(InsideInsetsTopLeft,InsideInsetsBottomRight);
 
 	UInt16 AxisIndex(0);
 	if (getTabPlacement() == PLACEMENT_EAST || getTabPlacement() == PLACEMENT_WEST)
+	{
 		AxisIndex=1;
-	UInt32 largestMinorAxis(0);
-	UInt32 cumMajorAxis(0);
-	Pnt2f alignOffset(0,0);
-	Pnt2f offset(0,0);
+	}
+	Real32 largestMinorAxis(0.0f);
+	Real32 cumMajorAxis(0.0f);
+	Pnt2f alignOffset(0.0f,0.0f);
+	Vec2f offset(0.0f,0.0f);
 	
+	Vec2f TabBorderTopLeftWidth, TabBorderBottomRightWidth;
+	calculateMaxTabBorderLengths(TabBorderTopLeftWidth[0], TabBorderBottomRightWidth[0],TabBorderTopLeftWidth[1], TabBorderBottomRightWidth[1]);
+
 	// first layout all of the tabs
 	// naturally the alignments and such is necessary
 	// on the first sweep, get the maximum size and cumLength
@@ -237,40 +430,63 @@ void TabPanel::updateLayout(void)
 	{
 		cumMajorAxis += getTabs().getValue(i)->getPreferredSize()[AxisIndex];
 		if (getTabs().getValue(i)->getPreferredSize()[(AxisIndex+1)%2] > largestMinorAxis)
+		{
 			largestMinorAxis = getTabs().getValue(i)->getPreferredSize()[(AxisIndex+1)%2];
+		}
 	}
+	cumMajorAxis += static_cast<Real32>(getTabs().size()) * (TabBorderTopLeftWidth[AxisIndex] + TabBorderBottomRightWidth[AxisIndex]);
+	largestMinorAxis += (TabBorderTopLeftWidth[(AxisIndex+1)%2] + TabBorderBottomRightWidth[(AxisIndex+1)%2]);
+		            
+
 	// set up the alignment and offset
-	if (getTabAlignment() == AXIS_CENTER_ALIGNMENT)
-		alignOffset[AxisIndex] = (borderSize[AxisIndex] - cumMajorAxis)/2;
-	else if (getTabAlignment() == AXIS_MAX_ALIGNMENT)
-		alignOffset[AxisIndex] = borderSize[AxisIndex] - cumMajorAxis;
-	if (getTabPlacement() == PLACEMENT_EAST || getTabPlacement() == PLACEMENT_SOUTH)
-		alignOffset[(AxisIndex+1)%2] = borderSize[(AxisIndex+1)%2] - largestMinorAxis;
-	offset = borderOffset;
+	Vec2f TabSize;
+	TabSize[AxisIndex] = cumMajorAxis;
+	TabSize[(AxisIndex+1)%2] = largestMinorAxis;
+	Vec2f Alignment;
+	Alignment[(AxisIndex+1)%2] = getTabAlignment();
+	switch(getTabPlacement())
+	{
+	case PLACEMENT_SOUTH:
+	case PLACEMENT_EAST:
+		Alignment[AxisIndex] = 1.0;
+		break;
+	case PLACEMENT_NORTH:
+	case PLACEMENT_WEST:
+		Alignment[AxisIndex] = 0.0;
+		break;
+	}
+	alignOffset = calculateAlignment(InsideInsetsTopLeft, (InsideInsetsBottomRight-InsideInsetsTopLeft),TabSize,Alignment.x(),Alignment.y());
+	offset = Vec2f(InsideInsetsTopLeft);
+	offset[(AxisIndex+1)%2] += TabBorderTopLeftWidth[(AxisIndex+1)%2];
 
 	// set sizes and positions of all tabs
 	for (UInt32 i=0; i < getTabs().size(); ++i)
 	{
-		if ( (getTabPlacement() == PLACEMENT_NORTH || getTabPlacement() == PLACEMENT_WEST) && getTabs().getValue(i)->getPreferredSize()[(AxisIndex+1)%2] < largestMinorAxis)
-			offset[(AxisIndex+1)%2] += largestMinorAxis - getTabs().getValue(i)->getPreferredSize()[(AxisIndex+1)%2];
+		offset[AxisIndex] += TabBorderTopLeftWidth[AxisIndex];
 		beginEditCP(getTabs().getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
 			getTabs().getValue(i)->setSize(getTabs().getValue(i)->getPreferredSize());
-			getTabs().getValue(i)->setPosition(alignOffset + Vec2f(offset));
+			getTabs().getValue(i)->setPosition(alignOffset + offset);
 		endEditCP(getTabs().getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
-		offset[AxisIndex] += getTabs().getValue(i)->getSize()[AxisIndex];
-		if ( (getTabPlacement() == PLACEMENT_NORTH || getTabPlacement() == PLACEMENT_WEST) && getTabs().getValue(i)->getPreferredSize()[(AxisIndex+1)%2] < largestMinorAxis)
-			offset[(AxisIndex+1)%2] -= largestMinorAxis - getTabs().getValue(i)->getPreferredSize()[(AxisIndex+1)%2];
+		offset[AxisIndex] += getTabs().getValue(i)->getSize()[AxisIndex] + TabBorderBottomRightWidth[AxisIndex];
 	}
 
-	// now set size and position of the active tab's contents
-	offset = borderOffset;
-	if (getTabPlacement() == PLACEMENT_NORTH || getTabPlacement() == PLACEMENT_WEST)
-		offset[(AxisIndex+1)%2] += largestMinorAxis;
-	borderSize[(AxisIndex+1)%2] -= largestMinorAxis;
-	beginEditCP(getTabs().getValue(getActiveTab()), Component::SizeFieldMask|Component::PositionFieldMask);
-		getTabContents().getValue(getActiveTab())->setSize(borderSize);
-		getTabContents().getValue(getActiveTab())->setPosition(offset);
-	endEditCP(getTabContents().getValue(getActiveTab()), Component::SizeFieldMask|Component::PositionFieldMask);
+	if(getTabContents().size() > 0)
+	{
+		Vec2f ContentBorderTopLeftWidth, ContentBorderBottomRightWidth;
+		calculateContentBorderLengths(getContentBorder(), ContentBorderTopLeftWidth[0], ContentBorderBottomRightWidth[0],ContentBorderTopLeftWidth[1], ContentBorderBottomRightWidth[1]);
+		// now set size and position of the active tab's contents
+		offset = InsideInsetsTopLeft;
+		if (getTabPlacement() == PLACEMENT_NORTH || getTabPlacement() == PLACEMENT_WEST)
+		{
+			offset[(AxisIndex+1)%2] += largestMinorAxis;
+		}
+		Vec2s ContentsSize(InsideInsetsBottomRight-InsideInsetsTopLeft);
+		ContentsSize[(AxisIndex+1)%2] -= TabSize[(AxisIndex+1)%2];
+		beginEditCP(getTabContents().getValue(getActiveTab()), Component::SizeFieldMask|Component::PositionFieldMask);
+			getTabContents().getValue(getActiveTab())->setSize(ContentsSize);
+			getTabContents().getValue(getActiveTab())->setPosition(offset + ContentBorderTopLeftWidth);
+		endEditCP(getTabContents().getValue(getActiveTab()), Component::SizeFieldMask|Component::PositionFieldMask);
+	}
 }
 
 void TabPanel::mouseClicked(const MouseEvent& e)
@@ -481,6 +697,97 @@ void TabPanel::mouseWheelMoved(const MouseWheelEvent& e)
 	Component::mouseWheelMoved(e);
 }
 
+BorderPtr TabPanel::getDrawnTabBorder(const UInt32& Index) const
+{
+    if(getEnabled())
+    {
+        if(Index == getActiveTab())
+        {
+            return getTabActiveBorder();
+        }
+        else if(Index == _MouseInTabLastMouse)
+        {
+            return getTabRolloverBorder();
+        }
+		else if(getTabs().getValue(Index)->getFocused())
+        {
+            return getTabFocusedBorder();
+        }
+        else
+        {
+            return getTabBorder();
+        }
+    }
+    else
+    {
+        return getTabDisabledBorder();
+    }
+}
+
+UIBackgroundPtr TabPanel::getDrawnTabBackground(const UInt32& Index) const
+{
+    if(getEnabled())
+    {
+        if(Index == getActiveTab())
+        {
+            return getTabActiveBackground();
+        }
+        else if(Index == _MouseInTabLastMouse)
+        {
+            return getTabRolloverBackground();
+        }
+		else if(getTabs().getValue(Index)->getFocused())
+        {
+            return getTabFocusedBackground();
+        }
+        else
+        {
+            return getTabBackground();
+        }
+    }
+    else
+    {
+        return getTabDisabledBackground();
+    }
+}
+
+BorderPtr TabPanel::getDrawnContentBorder(void) const
+{
+    if(getEnabled())
+    {
+        if(false) //TODO: Implement
+        {
+            return getContentRolloverBorder();
+        }
+        else
+        {
+            return getContentBorder();
+        }
+    }
+    else
+    {
+        return getContentDisabledBorder();
+    }
+}
+
+UIBackgroundPtr TabPanel::getDrawnContentBackground(void) const
+{
+    if(getEnabled())
+    {
+        if(false) //TODO: Implement
+        {
+            return getContentRolloverBackground();
+        }
+        else
+        {
+            return getContentBackground();
+        }
+    }
+    else
+    {
+        return getContentDisabledBackground();
+    }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -488,12 +795,14 @@ void TabPanel::mouseWheelMoved(const MouseWheelEvent& e)
 /*----------------------- constructors & destructors ----------------------*/
 
 TabPanel::TabPanel(void) :
-    Inherited()
+    Inherited(),
+		_MouseInTabLastMouse(-1)
 {
 }
 
 TabPanel::TabPanel(const TabPanel &source) :
-    Inherited(source)
+    Inherited(source),
+		_MouseInTabLastMouse(-1)
 {
 }
 

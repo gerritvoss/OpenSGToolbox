@@ -82,6 +82,60 @@ const OSG::BitVector  TabPanelBase::TabAlignmentFieldMask =
 const OSG::BitVector  TabPanelBase::TabRotationFieldMask = 
     (TypeTraits<BitVector>::One << TabPanelBase::TabRotationFieldId);
 
+const OSG::BitVector  TabPanelBase::TabBorderInsetsFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::TabBorderInsetsFieldId);
+
+const OSG::BitVector  TabPanelBase::TabBorderFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::TabBorderFieldId);
+
+const OSG::BitVector  TabPanelBase::TabBackgroundFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::TabBackgroundFieldId);
+
+const OSG::BitVector  TabPanelBase::TabDisabledBorderFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::TabDisabledBorderFieldId);
+
+const OSG::BitVector  TabPanelBase::TabDisabledBackgroundFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::TabDisabledBackgroundFieldId);
+
+const OSG::BitVector  TabPanelBase::TabFocusedBorderFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::TabFocusedBorderFieldId);
+
+const OSG::BitVector  TabPanelBase::TabFocusedBackgroundFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::TabFocusedBackgroundFieldId);
+
+const OSG::BitVector  TabPanelBase::TabRolloverBorderFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::TabRolloverBorderFieldId);
+
+const OSG::BitVector  TabPanelBase::TabRolloverBackgroundFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::TabRolloverBackgroundFieldId);
+
+const OSG::BitVector  TabPanelBase::TabActiveBorderFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::TabActiveBorderFieldId);
+
+const OSG::BitVector  TabPanelBase::TabActiveBackgroundFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::TabActiveBackgroundFieldId);
+
+const OSG::BitVector  TabPanelBase::ContentBorderInsetsFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::ContentBorderInsetsFieldId);
+
+const OSG::BitVector  TabPanelBase::ContentBorderFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::ContentBorderFieldId);
+
+const OSG::BitVector  TabPanelBase::ContentBackgroundFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::ContentBackgroundFieldId);
+
+const OSG::BitVector  TabPanelBase::ContentDisabledBorderFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::ContentDisabledBorderFieldId);
+
+const OSG::BitVector  TabPanelBase::ContentDisabledBackgroundFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::ContentDisabledBackgroundFieldId);
+
+const OSG::BitVector  TabPanelBase::ContentRolloverBorderFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::ContentRolloverBorderFieldId);
+
+const OSG::BitVector  TabPanelBase::ContentRolloverBackgroundFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::ContentRolloverBackgroundFieldId);
+
 const OSG::BitVector TabPanelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -101,10 +155,64 @@ const OSG::BitVector TabPanelBase::MTInfluenceMask =
 /*! \var UInt32          TabPanelBase::_sfTabPlacement
     
 */
-/*! \var UInt32          TabPanelBase::_sfTabAlignment
+/*! \var Real32          TabPanelBase::_sfTabAlignment
     
 */
 /*! \var UInt32          TabPanelBase::_sfTabRotation
+    
+*/
+/*! \var Vec2f           TabPanelBase::_sfTabBorderInsets
+    
+*/
+/*! \var BorderPtr       TabPanelBase::_sfTabBorder
+    
+*/
+/*! \var UIBackgroundPtr TabPanelBase::_sfTabBackground
+    
+*/
+/*! \var BorderPtr       TabPanelBase::_sfTabDisabledBorder
+    
+*/
+/*! \var UIBackgroundPtr TabPanelBase::_sfTabDisabledBackground
+    
+*/
+/*! \var BorderPtr       TabPanelBase::_sfTabFocusedBorder
+    
+*/
+/*! \var UIBackgroundPtr TabPanelBase::_sfTabFocusedBackground
+    
+*/
+/*! \var BorderPtr       TabPanelBase::_sfTabRolloverBorder
+    
+*/
+/*! \var UIBackgroundPtr TabPanelBase::_sfTabRolloverBackground
+    
+*/
+/*! \var BorderPtr       TabPanelBase::_sfTabActiveBorder
+    
+*/
+/*! \var UIBackgroundPtr TabPanelBase::_sfTabActiveBackground
+    
+*/
+/*! \var Vec2f           TabPanelBase::_sfContentBorderInsets
+    
+*/
+/*! \var BorderPtr       TabPanelBase::_sfContentBorder
+    
+*/
+/*! \var UIBackgroundPtr TabPanelBase::_sfContentBackground
+    
+*/
+/*! \var BorderPtr       TabPanelBase::_sfContentDisabledBorder
+    
+*/
+/*! \var UIBackgroundPtr TabPanelBase::_sfContentDisabledBackground
+    
+*/
+/*! \var BorderPtr       TabPanelBase::_sfContentRolloverBorder
+    
+*/
+/*! \var UIBackgroundPtr TabPanelBase::_sfContentRolloverBackground
     
 */
 
@@ -132,7 +240,7 @@ FieldDescription *TabPanelBase::_desc[] =
                      TabPlacementFieldId, TabPlacementFieldMask,
                      false,
                      (FieldAccessMethod) &TabPanelBase::getSFTabPlacement),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "TabAlignment", 
                      TabAlignmentFieldId, TabAlignmentFieldMask,
                      false,
@@ -141,7 +249,97 @@ FieldDescription *TabPanelBase::_desc[] =
                      "TabRotation", 
                      TabRotationFieldId, TabRotationFieldMask,
                      false,
-                     (FieldAccessMethod) &TabPanelBase::getSFTabRotation)
+                     (FieldAccessMethod) &TabPanelBase::getSFTabRotation),
+    new FieldDescription(SFVec2f::getClassType(), 
+                     "TabBorderInsets", 
+                     TabBorderInsetsFieldId, TabBorderInsetsFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFTabBorderInsets),
+    new FieldDescription(SFBorderPtr::getClassType(), 
+                     "TabBorder", 
+                     TabBorderFieldId, TabBorderFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFTabBorder),
+    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+                     "TabBackground", 
+                     TabBackgroundFieldId, TabBackgroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFTabBackground),
+    new FieldDescription(SFBorderPtr::getClassType(), 
+                     "TabDisabledBorder", 
+                     TabDisabledBorderFieldId, TabDisabledBorderFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFTabDisabledBorder),
+    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+                     "TabDisabledBackground", 
+                     TabDisabledBackgroundFieldId, TabDisabledBackgroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFTabDisabledBackground),
+    new FieldDescription(SFBorderPtr::getClassType(), 
+                     "TabFocusedBorder", 
+                     TabFocusedBorderFieldId, TabFocusedBorderFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFTabFocusedBorder),
+    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+                     "TabFocusedBackground", 
+                     TabFocusedBackgroundFieldId, TabFocusedBackgroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFTabFocusedBackground),
+    new FieldDescription(SFBorderPtr::getClassType(), 
+                     "TabRolloverBorder", 
+                     TabRolloverBorderFieldId, TabRolloverBorderFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFTabRolloverBorder),
+    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+                     "TabRolloverBackground", 
+                     TabRolloverBackgroundFieldId, TabRolloverBackgroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFTabRolloverBackground),
+    new FieldDescription(SFBorderPtr::getClassType(), 
+                     "TabActiveBorder", 
+                     TabActiveBorderFieldId, TabActiveBorderFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFTabActiveBorder),
+    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+                     "TabActiveBackground", 
+                     TabActiveBackgroundFieldId, TabActiveBackgroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFTabActiveBackground),
+    new FieldDescription(SFVec2f::getClassType(), 
+                     "ContentBorderInsets", 
+                     ContentBorderInsetsFieldId, ContentBorderInsetsFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFContentBorderInsets),
+    new FieldDescription(SFBorderPtr::getClassType(), 
+                     "ContentBorder", 
+                     ContentBorderFieldId, ContentBorderFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFContentBorder),
+    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+                     "ContentBackground", 
+                     ContentBackgroundFieldId, ContentBackgroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFContentBackground),
+    new FieldDescription(SFBorderPtr::getClassType(), 
+                     "ContentDisabledBorder", 
+                     ContentDisabledBorderFieldId, ContentDisabledBorderFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFContentDisabledBorder),
+    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+                     "ContentDisabledBackground", 
+                     ContentDisabledBackgroundFieldId, ContentDisabledBackgroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFContentDisabledBackground),
+    new FieldDescription(SFBorderPtr::getClassType(), 
+                     "ContentRolloverBorder", 
+                     ContentRolloverBorderFieldId, ContentRolloverBorderFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFContentRolloverBorder),
+    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
+                     "ContentRolloverBackground", 
+                     ContentRolloverBackgroundFieldId, ContentRolloverBackgroundFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFContentRolloverBackground)
 };
 
 
@@ -223,8 +421,26 @@ TabPanelBase::TabPanelBase(void) :
     _mfTabContents            (), 
     _sfActiveTab              (UInt32(0)), 
     _sfTabPlacement           (UInt32(0)), 
-    _sfTabAlignment           (UInt32(0)), 
+    _sfTabAlignment           (Real32(0.5f)), 
     _sfTabRotation            (UInt32(0)), 
+    _sfTabBorderInsets        (Vec2f(0.0f,0.0f)), 
+    _sfTabBorder              (BorderPtr(NullFC)), 
+    _sfTabBackground          (UIBackgroundPtr(NullFC)), 
+    _sfTabDisabledBorder      (BorderPtr(NullFC)), 
+    _sfTabDisabledBackground  (UIBackgroundPtr(NullFC)), 
+    _sfTabFocusedBorder       (BorderPtr(NullFC)), 
+    _sfTabFocusedBackground   (UIBackgroundPtr(NullFC)), 
+    _sfTabRolloverBorder      (BorderPtr(NullFC)), 
+    _sfTabRolloverBackground  (UIBackgroundPtr(NullFC)), 
+    _sfTabActiveBorder        (BorderPtr(NullFC)), 
+    _sfTabActiveBackground    (UIBackgroundPtr(NullFC)), 
+    _sfContentBorderInsets    (Vec2f(0.0f,0.0f)), 
+    _sfContentBorder          (BorderPtr(NullFC)), 
+    _sfContentBackground      (UIBackgroundPtr(NullFC)), 
+    _sfContentDisabledBorder  (BorderPtr(NullFC)), 
+    _sfContentDisabledBackground(UIBackgroundPtr(NullFC)), 
+    _sfContentRolloverBorder  (BorderPtr(NullFC)), 
+    _sfContentRolloverBackground(UIBackgroundPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -240,6 +456,24 @@ TabPanelBase::TabPanelBase(const TabPanelBase &source) :
     _sfTabPlacement           (source._sfTabPlacement           ), 
     _sfTabAlignment           (source._sfTabAlignment           ), 
     _sfTabRotation            (source._sfTabRotation            ), 
+    _sfTabBorderInsets        (source._sfTabBorderInsets        ), 
+    _sfTabBorder              (source._sfTabBorder              ), 
+    _sfTabBackground          (source._sfTabBackground          ), 
+    _sfTabDisabledBorder      (source._sfTabDisabledBorder      ), 
+    _sfTabDisabledBackground  (source._sfTabDisabledBackground  ), 
+    _sfTabFocusedBorder       (source._sfTabFocusedBorder       ), 
+    _sfTabFocusedBackground   (source._sfTabFocusedBackground   ), 
+    _sfTabRolloverBorder      (source._sfTabRolloverBorder      ), 
+    _sfTabRolloverBackground  (source._sfTabRolloverBackground  ), 
+    _sfTabActiveBorder        (source._sfTabActiveBorder        ), 
+    _sfTabActiveBackground    (source._sfTabActiveBackground    ), 
+    _sfContentBorderInsets    (source._sfContentBorderInsets    ), 
+    _sfContentBorder          (source._sfContentBorder          ), 
+    _sfContentBackground      (source._sfContentBackground      ), 
+    _sfContentDisabledBorder  (source._sfContentDisabledBorder  ), 
+    _sfContentDisabledBackground(source._sfContentDisabledBackground), 
+    _sfContentRolloverBorder  (source._sfContentRolloverBorder  ), 
+    _sfContentRolloverBackground(source._sfContentRolloverBackground), 
     Inherited                 (source)
 {
 }
@@ -286,6 +520,96 @@ UInt32 TabPanelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfTabRotation.getBinSize();
     }
 
+    if(FieldBits::NoField != (TabBorderInsetsFieldMask & whichField))
+    {
+        returnValue += _sfTabBorderInsets.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TabBorderFieldMask & whichField))
+    {
+        returnValue += _sfTabBorder.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TabBackgroundFieldMask & whichField))
+    {
+        returnValue += _sfTabBackground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TabDisabledBorderFieldMask & whichField))
+    {
+        returnValue += _sfTabDisabledBorder.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TabDisabledBackgroundFieldMask & whichField))
+    {
+        returnValue += _sfTabDisabledBackground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TabFocusedBorderFieldMask & whichField))
+    {
+        returnValue += _sfTabFocusedBorder.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TabFocusedBackgroundFieldMask & whichField))
+    {
+        returnValue += _sfTabFocusedBackground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TabRolloverBorderFieldMask & whichField))
+    {
+        returnValue += _sfTabRolloverBorder.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TabRolloverBackgroundFieldMask & whichField))
+    {
+        returnValue += _sfTabRolloverBackground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TabActiveBorderFieldMask & whichField))
+    {
+        returnValue += _sfTabActiveBorder.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TabActiveBackgroundFieldMask & whichField))
+    {
+        returnValue += _sfTabActiveBackground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ContentBorderInsetsFieldMask & whichField))
+    {
+        returnValue += _sfContentBorderInsets.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ContentBorderFieldMask & whichField))
+    {
+        returnValue += _sfContentBorder.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ContentBackgroundFieldMask & whichField))
+    {
+        returnValue += _sfContentBackground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ContentDisabledBorderFieldMask & whichField))
+    {
+        returnValue += _sfContentDisabledBorder.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ContentDisabledBackgroundFieldMask & whichField))
+    {
+        returnValue += _sfContentDisabledBackground.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ContentRolloverBorderFieldMask & whichField))
+    {
+        returnValue += _sfContentRolloverBorder.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ContentRolloverBackgroundFieldMask & whichField))
+    {
+        returnValue += _sfContentRolloverBackground.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -323,6 +647,96 @@ void TabPanelBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (TabRotationFieldMask & whichField))
     {
         _sfTabRotation.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabBorderInsetsFieldMask & whichField))
+    {
+        _sfTabBorderInsets.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabBorderFieldMask & whichField))
+    {
+        _sfTabBorder.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabBackgroundFieldMask & whichField))
+    {
+        _sfTabBackground.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabDisabledBorderFieldMask & whichField))
+    {
+        _sfTabDisabledBorder.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabDisabledBackgroundFieldMask & whichField))
+    {
+        _sfTabDisabledBackground.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabFocusedBorderFieldMask & whichField))
+    {
+        _sfTabFocusedBorder.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabFocusedBackgroundFieldMask & whichField))
+    {
+        _sfTabFocusedBackground.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabRolloverBorderFieldMask & whichField))
+    {
+        _sfTabRolloverBorder.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabRolloverBackgroundFieldMask & whichField))
+    {
+        _sfTabRolloverBackground.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabActiveBorderFieldMask & whichField))
+    {
+        _sfTabActiveBorder.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabActiveBackgroundFieldMask & whichField))
+    {
+        _sfTabActiveBackground.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ContentBorderInsetsFieldMask & whichField))
+    {
+        _sfContentBorderInsets.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ContentBorderFieldMask & whichField))
+    {
+        _sfContentBorder.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ContentBackgroundFieldMask & whichField))
+    {
+        _sfContentBackground.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ContentDisabledBorderFieldMask & whichField))
+    {
+        _sfContentDisabledBorder.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ContentDisabledBackgroundFieldMask & whichField))
+    {
+        _sfContentDisabledBackground.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ContentRolloverBorderFieldMask & whichField))
+    {
+        _sfContentRolloverBorder.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ContentRolloverBackgroundFieldMask & whichField))
+    {
+        _sfContentRolloverBackground.copyToBin(pMem);
     }
 
 
@@ -363,6 +777,96 @@ void TabPanelBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfTabRotation.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (TabBorderInsetsFieldMask & whichField))
+    {
+        _sfTabBorderInsets.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabBorderFieldMask & whichField))
+    {
+        _sfTabBorder.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabBackgroundFieldMask & whichField))
+    {
+        _sfTabBackground.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabDisabledBorderFieldMask & whichField))
+    {
+        _sfTabDisabledBorder.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabDisabledBackgroundFieldMask & whichField))
+    {
+        _sfTabDisabledBackground.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabFocusedBorderFieldMask & whichField))
+    {
+        _sfTabFocusedBorder.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabFocusedBackgroundFieldMask & whichField))
+    {
+        _sfTabFocusedBackground.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabRolloverBorderFieldMask & whichField))
+    {
+        _sfTabRolloverBorder.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabRolloverBackgroundFieldMask & whichField))
+    {
+        _sfTabRolloverBackground.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabActiveBorderFieldMask & whichField))
+    {
+        _sfTabActiveBorder.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TabActiveBackgroundFieldMask & whichField))
+    {
+        _sfTabActiveBackground.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ContentBorderInsetsFieldMask & whichField))
+    {
+        _sfContentBorderInsets.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ContentBorderFieldMask & whichField))
+    {
+        _sfContentBorder.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ContentBackgroundFieldMask & whichField))
+    {
+        _sfContentBackground.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ContentDisabledBorderFieldMask & whichField))
+    {
+        _sfContentDisabledBorder.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ContentDisabledBackgroundFieldMask & whichField))
+    {
+        _sfContentDisabledBackground.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ContentRolloverBorderFieldMask & whichField))
+    {
+        _sfContentRolloverBorder.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ContentRolloverBackgroundFieldMask & whichField))
+    {
+        _sfContentRolloverBackground.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -391,6 +895,60 @@ void TabPanelBase::executeSyncImpl(      TabPanelBase *pOther,
     if(FieldBits::NoField != (TabRotationFieldMask & whichField))
         _sfTabRotation.syncWith(pOther->_sfTabRotation);
 
+    if(FieldBits::NoField != (TabBorderInsetsFieldMask & whichField))
+        _sfTabBorderInsets.syncWith(pOther->_sfTabBorderInsets);
+
+    if(FieldBits::NoField != (TabBorderFieldMask & whichField))
+        _sfTabBorder.syncWith(pOther->_sfTabBorder);
+
+    if(FieldBits::NoField != (TabBackgroundFieldMask & whichField))
+        _sfTabBackground.syncWith(pOther->_sfTabBackground);
+
+    if(FieldBits::NoField != (TabDisabledBorderFieldMask & whichField))
+        _sfTabDisabledBorder.syncWith(pOther->_sfTabDisabledBorder);
+
+    if(FieldBits::NoField != (TabDisabledBackgroundFieldMask & whichField))
+        _sfTabDisabledBackground.syncWith(pOther->_sfTabDisabledBackground);
+
+    if(FieldBits::NoField != (TabFocusedBorderFieldMask & whichField))
+        _sfTabFocusedBorder.syncWith(pOther->_sfTabFocusedBorder);
+
+    if(FieldBits::NoField != (TabFocusedBackgroundFieldMask & whichField))
+        _sfTabFocusedBackground.syncWith(pOther->_sfTabFocusedBackground);
+
+    if(FieldBits::NoField != (TabRolloverBorderFieldMask & whichField))
+        _sfTabRolloverBorder.syncWith(pOther->_sfTabRolloverBorder);
+
+    if(FieldBits::NoField != (TabRolloverBackgroundFieldMask & whichField))
+        _sfTabRolloverBackground.syncWith(pOther->_sfTabRolloverBackground);
+
+    if(FieldBits::NoField != (TabActiveBorderFieldMask & whichField))
+        _sfTabActiveBorder.syncWith(pOther->_sfTabActiveBorder);
+
+    if(FieldBits::NoField != (TabActiveBackgroundFieldMask & whichField))
+        _sfTabActiveBackground.syncWith(pOther->_sfTabActiveBackground);
+
+    if(FieldBits::NoField != (ContentBorderInsetsFieldMask & whichField))
+        _sfContentBorderInsets.syncWith(pOther->_sfContentBorderInsets);
+
+    if(FieldBits::NoField != (ContentBorderFieldMask & whichField))
+        _sfContentBorder.syncWith(pOther->_sfContentBorder);
+
+    if(FieldBits::NoField != (ContentBackgroundFieldMask & whichField))
+        _sfContentBackground.syncWith(pOther->_sfContentBackground);
+
+    if(FieldBits::NoField != (ContentDisabledBorderFieldMask & whichField))
+        _sfContentDisabledBorder.syncWith(pOther->_sfContentDisabledBorder);
+
+    if(FieldBits::NoField != (ContentDisabledBackgroundFieldMask & whichField))
+        _sfContentDisabledBackground.syncWith(pOther->_sfContentDisabledBackground);
+
+    if(FieldBits::NoField != (ContentRolloverBorderFieldMask & whichField))
+        _sfContentRolloverBorder.syncWith(pOther->_sfContentRolloverBorder);
+
+    if(FieldBits::NoField != (ContentRolloverBackgroundFieldMask & whichField))
+        _sfContentRolloverBackground.syncWith(pOther->_sfContentRolloverBackground);
+
 
 }
 #else
@@ -412,6 +970,60 @@ void TabPanelBase::executeSyncImpl(      TabPanelBase *pOther,
 
     if(FieldBits::NoField != (TabRotationFieldMask & whichField))
         _sfTabRotation.syncWith(pOther->_sfTabRotation);
+
+    if(FieldBits::NoField != (TabBorderInsetsFieldMask & whichField))
+        _sfTabBorderInsets.syncWith(pOther->_sfTabBorderInsets);
+
+    if(FieldBits::NoField != (TabBorderFieldMask & whichField))
+        _sfTabBorder.syncWith(pOther->_sfTabBorder);
+
+    if(FieldBits::NoField != (TabBackgroundFieldMask & whichField))
+        _sfTabBackground.syncWith(pOther->_sfTabBackground);
+
+    if(FieldBits::NoField != (TabDisabledBorderFieldMask & whichField))
+        _sfTabDisabledBorder.syncWith(pOther->_sfTabDisabledBorder);
+
+    if(FieldBits::NoField != (TabDisabledBackgroundFieldMask & whichField))
+        _sfTabDisabledBackground.syncWith(pOther->_sfTabDisabledBackground);
+
+    if(FieldBits::NoField != (TabFocusedBorderFieldMask & whichField))
+        _sfTabFocusedBorder.syncWith(pOther->_sfTabFocusedBorder);
+
+    if(FieldBits::NoField != (TabFocusedBackgroundFieldMask & whichField))
+        _sfTabFocusedBackground.syncWith(pOther->_sfTabFocusedBackground);
+
+    if(FieldBits::NoField != (TabRolloverBorderFieldMask & whichField))
+        _sfTabRolloverBorder.syncWith(pOther->_sfTabRolloverBorder);
+
+    if(FieldBits::NoField != (TabRolloverBackgroundFieldMask & whichField))
+        _sfTabRolloverBackground.syncWith(pOther->_sfTabRolloverBackground);
+
+    if(FieldBits::NoField != (TabActiveBorderFieldMask & whichField))
+        _sfTabActiveBorder.syncWith(pOther->_sfTabActiveBorder);
+
+    if(FieldBits::NoField != (TabActiveBackgroundFieldMask & whichField))
+        _sfTabActiveBackground.syncWith(pOther->_sfTabActiveBackground);
+
+    if(FieldBits::NoField != (ContentBorderInsetsFieldMask & whichField))
+        _sfContentBorderInsets.syncWith(pOther->_sfContentBorderInsets);
+
+    if(FieldBits::NoField != (ContentBorderFieldMask & whichField))
+        _sfContentBorder.syncWith(pOther->_sfContentBorder);
+
+    if(FieldBits::NoField != (ContentBackgroundFieldMask & whichField))
+        _sfContentBackground.syncWith(pOther->_sfContentBackground);
+
+    if(FieldBits::NoField != (ContentDisabledBorderFieldMask & whichField))
+        _sfContentDisabledBorder.syncWith(pOther->_sfContentDisabledBorder);
+
+    if(FieldBits::NoField != (ContentDisabledBackgroundFieldMask & whichField))
+        _sfContentDisabledBackground.syncWith(pOther->_sfContentDisabledBackground);
+
+    if(FieldBits::NoField != (ContentRolloverBorderFieldMask & whichField))
+        _sfContentRolloverBorder.syncWith(pOther->_sfContentRolloverBorder);
+
+    if(FieldBits::NoField != (ContentRolloverBackgroundFieldMask & whichField))
+        _sfContentRolloverBackground.syncWith(pOther->_sfContentRolloverBackground);
 
 
     if(FieldBits::NoField != (TabsFieldMask & whichField))

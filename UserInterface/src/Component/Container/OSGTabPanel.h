@@ -61,6 +61,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase, public Foc
 
     /*==========================  PUBLIC  =================================*/
   public:
+	enum TabRotation {CLOCKWISE_0=0, CLOCKWISE_90=1, CLOCKWISE_180=2, CLOCKWISE_270=3};
+	enum TabPlacement {PLACEMENT_NORTH=0, PLACEMENT_EAST, PLACEMENT_SOUTH, PLACEMENT_WEST};
 
 	virtual void focusGained(const FocusEvent& e);
 	virtual void focusLost(const FocusEvent& e);
@@ -85,6 +87,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase, public Foc
 	virtual void addTab(const ComponentPtr Tab, const ComponentPtr TabContent);
 	virtual void removeTab(const ComponentPtr Tab);
 	virtual void removeTab(const UInt32 TabIndex);
+	virtual void removeAllTabs(void);
 	virtual void insertTab(const ComponentPtr TabInsert, const ComponentPtr Tab, const ComponentPtr TabContent);
 	virtual void insertTab(const UInt32 TabIndex, const ComponentPtr Tab, const ComponentPtr TabContent);
     /*=========================  PROTECTED  ===============================*/
@@ -122,6 +125,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase, public Foc
 
 	//Mouse Wheel Events
     virtual void mouseWheelMoved(const MouseWheelEvent& e);
+
+	void calculateTabBorderLengths(BorderPtr TheBorder, Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const;
+	void calculateMaxTabBorderLengths(Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const;
+
+	void calculateContentBorderLengths(BorderPtr TheBorder, Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const;
+
+    virtual BorderPtr getDrawnTabBorder(const UInt32& Index) const;
+    virtual UIBackgroundPtr getDrawnTabBackground(const UInt32& Index) const;
+    virtual BorderPtr getDrawnContentBorder(void) const;
+    virtual UIBackgroundPtr getDrawnContentBackground(void) const;
+
+	Int32 _MouseInTabLastMouse;
     /*==========================  PRIVATE  ================================*/
   private:
 

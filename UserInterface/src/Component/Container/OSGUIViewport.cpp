@@ -76,6 +76,15 @@ void UIViewport::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void UIViewport::removeChangeListener(ChangeListenerPtr Listener)
+{
+   ChangeListenerSetItor EraseIter(_ChangeListeners.find(Listener));
+   if(EraseIter != _ChangeListeners.end())
+   {
+      _ChangeListeners.erase(EraseIter);
+   }
+}
+
 void UIViewport::updateLayout(void)
 {
     if(getViewComponent() != NullFC)

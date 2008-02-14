@@ -39,6 +39,8 @@
 //---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGSFSysTypes.h>
+#include "OSGUserInterfaceDef.h"
 
 OSG_BEGIN_NAMESPACE
 

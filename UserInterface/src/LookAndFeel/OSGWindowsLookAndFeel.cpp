@@ -61,6 +61,7 @@
 #include "Component/Container/Window/OSGTitlebar.h"
 #include "Component/Container/OSGPanel.h"
 #include "Component/Container/OSGSplitPanel.h"
+#include "Component/Container/OSGTabPanel.h"
 #include "Component/Misc/OSGImageComponent.h"
 #include "Util/OSGUIDefines.h"
 #include "Graphics/UIDrawObjects/OSGRectUIDrawObject.h"
@@ -111,6 +112,10 @@
 #include "Component/Tree/Editors/OSGDefaultTreeCellEditor.h"
 #include "Component/Tree/ComponentGenerators/OSGDefaultTreeComponentGenerator.h"
 #include "Component/Tree/OSGTree.h"
+
+#include "Component/Container/ColorChooser/OSGColorChooser.h"
+#include "Component/Container/ColorChooser/OSGRGBColorChooserPanel.h"
+#include "Component/Container/ColorChooser/OSGHSVColorChooserPanel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -1097,6 +1102,96 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsSplitPanel);
 
 	SplitPanel::getClassType().setPrototype(WindowsSplitPanel);
+	
+	//************************** TabPanel *****************************
+	RoundedCornerLineBorderPtr WindowsTabPanelTabBorder = RoundedCornerLineBorder::create();
+	beginEditCP(WindowsTabPanelTabBorder);
+		WindowsTabPanelTabBorder->setColor( Color4f(0.57, 0.61, 0.61 ,1.0) );
+		WindowsTabPanelTabBorder->setWidth(1);
+        WindowsTabPanelTabBorder->setCornerRadius(3);
+	endEditCP(WindowsTabPanelTabBorder);
+	
+	MatteBorderPtr WindowsTabPanelInsideActiveTabBorder = MatteBorder::create();
+	beginEditCP(WindowsTabPanelInsideActiveTabBorder);
+		WindowsTabPanelInsideActiveTabBorder->setLeftWidth(0);
+		WindowsTabPanelInsideActiveTabBorder->setRightWidth(0);
+		WindowsTabPanelInsideActiveTabBorder->setTopWidth(3);
+		WindowsTabPanelInsideActiveTabBorder->setBottomWidth(0);
+		WindowsTabPanelInsideActiveTabBorder->setColor(Color4f(1.0, 0.78, 0.24, 1.0));
+	endEditCP(WindowsTabPanelInsideActiveTabBorder);
+
+	CompoundBorderPtr WindowsTabPanelActiveTabBorder = CompoundBorder::create();
+	beginEditCP(WindowsTabPanelActiveTabBorder);
+        WindowsTabPanelActiveTabBorder->setInnerBorder(WindowsTabPanelInsideActiveTabBorder);
+        WindowsTabPanelActiveTabBorder->setOuterBorder(WindowsTabPanelTabBorder);
+	endEditCP(WindowsTabPanelActiveTabBorder);
+
+	GradientUIBackgroundPtr WindowsTabPanelTabBackground = GradientUIBackground::create();
+	beginEditCP(WindowsTabPanelTabBackground);
+		WindowsTabPanelTabBackground->setColorStart(Color4f(1.0,1.0,1.0,1.0));
+		WindowsTabPanelTabBackground->setColorEnd(Color4f(0.75,0.75,0.85,1.0));
+		WindowsTabPanelTabBackground->setAlignment(VERTICAL_ALIGNMENT);
+	endEditCP(WindowsTabPanelTabBackground);
+	
+	ColorUIBackgroundPtr WindowsTabPanelTabActiveBackground = ColorUIBackground::create();
+	beginEditCP(WindowsTabPanelTabActiveBackground);
+		WindowsTabPanelTabActiveBackground->setColor(Color4f(0.99, 0.99, 1.0, 1.0));
+	endEditCP(WindowsTabPanelTabActiveBackground);
+
+	LineBorderPtr WindowsTabPanelContentBorder = LineBorder::create();
+	beginEditCP(WindowsTabPanelContentBorder);
+		WindowsTabPanelContentBorder->setWidth(1);
+		WindowsTabPanelContentBorder->setColor(Color4f(0.57, 0.61, 0.61 ,1.0));
+	endEditCP(WindowsTabPanelContentBorder);
+	//Windows TabPanel
+	TabPanelPtr WindowsTabPanel = TabPanel::create();
+	beginEditCP(WindowsTabPanel);
+		WindowsTabPanel->setEnabled(true);
+		WindowsTabPanel->setVisible(true);
+		
+		WindowsTabPanel->setConstraints(NullFC);
+		//Sizes
+		WindowsTabPanel->setMinSize(Vec2f(0,0));
+		WindowsTabPanel->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsTabPanel->setPreferredSize(Vec2f(100,100));
+
+		//Border
+		WindowsTabPanel->setBorders(WindowsEmptyBorder);
+		
+		//Background
+		WindowsTabPanel->setBackgrounds(WindowsEmptyBackground);
+		
+		//Opacity
+		WindowsTabPanel->setOpacity(1.0);
+
+		//TabPanel
+		WindowsTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
+		WindowsTabPanel->setTabAlignment(0.0f);
+		WindowsTabPanel->setTabRotation(TabPanel::CLOCKWISE_0);
+		WindowsTabPanel->setTabBorderInsets(Vec2s(0.0f,0.0f));
+		
+		WindowsTabPanel->setTabBorder(WindowsTabPanelTabBorder);
+		WindowsTabPanel->setTabActiveBorder(WindowsTabPanelActiveTabBorder);
+		WindowsTabPanel->setTabDisabledBorder(WindowsTabPanelTabBorder);
+		WindowsTabPanel->setTabRolloverBorder(WindowsTabPanelActiveTabBorder);
+		WindowsTabPanel->setTabFocusedBorder(WindowsTabPanelTabBorder);
+		
+		WindowsTabPanel->setTabBackground(WindowsTabPanelTabBackground);
+		WindowsTabPanel->setTabActiveBackground(WindowsTabPanelTabActiveBackground);
+		WindowsTabPanel->setTabDisabledBackground(WindowsTabPanelTabBackground);
+		WindowsTabPanel->setTabRolloverBackground(WindowsTabPanelTabBackground);
+		WindowsTabPanel->setTabFocusedBackground(WindowsTabPanelTabBackground);
+		
+		WindowsTabPanel->setContentBorder(WindowsTabPanelContentBorder);
+		WindowsTabPanel->setContentDisabledBorder(WindowsTabPanelContentBorder);
+		WindowsTabPanel->setContentRolloverBorder(WindowsTabPanelContentBorder);
+		
+		WindowsTabPanel->setContentBackground(WindowsTabPanelTabActiveBackground);
+		WindowsTabPanel->setContentDisabledBackground(WindowsTabPanelTabActiveBackground);
+		WindowsTabPanel->setContentRolloverBackground(WindowsTabPanelTabActiveBackground);
+	endEditCP(WindowsTabPanel);
+
+	TabPanel::getClassType().setPrototype(WindowsTabPanel);
 
 	//************************** ImageComponent *****************************
 	//Windows ImageComponentBorder
@@ -4267,7 +4362,106 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(WindowsTree);
 	
     Tree::getClassType().setPrototype(WindowsTree);
-	//CompoundBackground and Empty Background don't require prototypes.
+	
+	
+	//************************** RGBColorChooserPanel *****************************
+	RGBColorChooserPanelPtr WindowsRGBColorChooserPanel = RGBColorChooserPanel::create();
+	beginEditCP(WindowsRGBColorChooserPanel);
+		WindowsRGBColorChooserPanel->setEnabled(true);
+		WindowsRGBColorChooserPanel->setVisible(true);
+		
+		WindowsRGBColorChooserPanel->setConstraints(NullFC);
+
+		//Sizes
+		WindowsRGBColorChooserPanel->setMinSize(Vec2f(0,0));
+		WindowsRGBColorChooserPanel->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsRGBColorChooserPanel->setPreferredSize(Vec2f(100,100));
+		
+		//Border
+		WindowsRGBColorChooserPanel->setBorder(WindowsEmptyBorder);
+		WindowsRGBColorChooserPanel->setRolloverBorder(WindowsEmptyBorder);
+		WindowsRGBColorChooserPanel->setFocusedBorder(WindowsEmptyBorder);
+		WindowsRGBColorChooserPanel->setDisabledBorder(WindowsEmptyBorder);
+		
+		//Background
+		WindowsRGBColorChooserPanel->setBackground(WindowsEmptyBackground);
+		WindowsRGBColorChooserPanel->setRolloverBackground(WindowsEmptyBackground);
+		WindowsRGBColorChooserPanel->setFocusedBackground(WindowsEmptyBackground);
+		WindowsRGBColorChooserPanel->setDisabledBackground(WindowsEmptyBackground);
+		
+		//Opacity
+		WindowsRGBColorChooserPanel->setOpacity(1.0);
+
+		WindowsRGBColorChooserPanel->setIncludeAlpha(true);
+	endEditCP(WindowsRGBColorChooserPanel);
+
+	//************************** HSVColorChooserPanel *****************************
+	HSVColorChooserPanelPtr WindowsHSVColorChooserPanel = HSVColorChooserPanel::create();
+	beginEditCP(WindowsHSVColorChooserPanel);
+		WindowsHSVColorChooserPanel->setEnabled(true);
+		WindowsHSVColorChooserPanel->setVisible(true);
+		
+		WindowsHSVColorChooserPanel->setConstraints(NullFC);
+
+		//Sizes
+		WindowsHSVColorChooserPanel->setMinSize(Vec2f(0,0));
+		WindowsHSVColorChooserPanel->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsHSVColorChooserPanel->setPreferredSize(Vec2f(100,100));
+		
+		//Border
+		WindowsHSVColorChooserPanel->setBorder(WindowsEmptyBorder);
+		WindowsHSVColorChooserPanel->setRolloverBorder(WindowsEmptyBorder);
+		WindowsHSVColorChooserPanel->setFocusedBorder(WindowsEmptyBorder);
+		WindowsHSVColorChooserPanel->setDisabledBorder(WindowsEmptyBorder);
+		
+		//Background
+		WindowsHSVColorChooserPanel->setBackground(WindowsEmptyBackground);
+		WindowsHSVColorChooserPanel->setRolloverBackground(WindowsEmptyBackground);
+		WindowsHSVColorChooserPanel->setFocusedBackground(WindowsEmptyBackground);
+		WindowsHSVColorChooserPanel->setDisabledBackground(WindowsEmptyBackground);
+		
+		//Opacity
+		WindowsHSVColorChooserPanel->setOpacity(1.0);
+
+		WindowsHSVColorChooserPanel->setIncludeAlpha(true);
+	endEditCP(WindowsHSVColorChooserPanel);
+
+	//************************** ColorChooser *****************************
+
+	//Windows WindowsColorChooser
+	ColorChooserPtr WindowsColorChooser = ColorChooser::create();
+	beginEditCP(WindowsColorChooser);
+		WindowsColorChooser->setEnabled(true);
+		WindowsColorChooser->setVisible(true);
+		
+		WindowsColorChooser->setConstraints(NullFC);
+		//Sizes
+		WindowsColorChooser->setMinSize(Vec2f(0,0));
+		WindowsColorChooser->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsColorChooser->setPreferredSize(Vec2f(300,300));
+
+		//Border
+		WindowsColorChooser->setBorder(WindowsEmptyBorder);
+		WindowsColorChooser->setRolloverBorder(WindowsEmptyBorder);
+		WindowsColorChooser->setFocusedBorder(WindowsEmptyBorder);
+		WindowsColorChooser->setDisabledBorder(WindowsEmptyBorder);
+		
+		//Background
+		WindowsColorChooser->setBackground(WindowsEmptyBackground);
+		WindowsColorChooser->setRolloverBackground(WindowsEmptyBackground);
+		WindowsColorChooser->setFocusedBackground(WindowsEmptyBackground);
+		WindowsColorChooser->setDisabledBackground(WindowsEmptyBackground);
+		
+		//Opacity
+		WindowsColorChooser->setOpacity(1.0);
+
+        //ColorChooser Values
+		WindowsColorChooser->addChooserPanel(WindowsRGBColorChooserPanel);
+		WindowsColorChooser->addChooserPanel(WindowsHSVColorChooserPanel);
+		WindowsColorChooser->setPreviewPanel(NullFC);
+	endEditCP(WindowsColorChooser);
+	
+    ColorChooser::getClassType().setPrototype(WindowsColorChooser);
 
 
 	beginEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);

@@ -40,12 +40,37 @@
 #include "Component/Text/OSGLabel.h"
 #include "Event/OSGActionListener.h"
 
+#include <vector>
+#include <deque>
+#include <map>
+
 OSG_BEGIN_NAMESPACE
 
 class OSG_USERINTERFACELIB_DLLMAPPING DialogFactory
 {
 /*=========================  PUBLIC  ===============================*/
 public:
+	typedef std::deque<Color4f> ColorDeque;
+	typedef std::vector<std::string> StringVector;
+	
+	typedef std::map<std::string, ColorDeque> ColorHistoryMap;
+	typedef ColorHistoryMap::iterator ColorHistoryMapItor;
+	typedef ColorHistoryMap::const_iterator ColorHistoryMapConstItor;
+
+	void createColorHistory(const std::string& HistoryName);
+
+	void removeColorHistory(const std::string& HistoryName);
+
+	void pushToColorHistory(const std::string& HistoryName, const Color4f& TheColor);
+	
+	void popFromColorHistory(const std::string& HistoryName);
+
+	void clearColorHistory(const std::string& HistoryName);
+
+	ColorDeque getColorHistory(const std::string& HistoryName) const;
+
+	StringVector getColorHistories(void) const;
+
 	static DialogWindowPtr createMessageDialog(const std::string& Title, const std::string& Message, const std::string& ConfirmButtonText = std::string("Ok"));
     
     static ContainerPtr createMessagePanel(const std::string& Message, const std::string& ConfirmButtonText);
@@ -56,12 +81,20 @@ public:
 
 	static void addButtonActionListener(const ActionListener& Listener, const int index);
 	
+	DialogWindowPtr createColorDialog(const std::string& Title, const Color4f& TheColor, const std::string& HistoryName);
+
+    ContainerPtr createColorPanel(const Color4f& TheColor, const std::string& HistoryName);
+	
+    static DialogFactory* the(void);
 private:
 
     DialogFactory(void);
 
 	static LabelPtr createTransparentLabel(const std::string& Message);
 
+    static DialogFactory* _the;
+
+	ColorHistoryMap _ColorHistory;
 };
 OSG_END_NAMESPACE
 

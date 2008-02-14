@@ -47,7 +47,8 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGDefaultBoundedRangeModel.h"
+#include "OSGBoundedRangeSpinnerModel.h"
+#include "Component/Scroll/OSGDefaultBoundedRangeModel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -67,120 +68,92 @@ A DefaultChangeModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-
-void DefaultBoundedRangeModel::setExtent(UInt32 newExtent)
-{
-    bool isStateChange(_Extent != newExtent);
-    _Extent= newExtent;
-    if(_Value + static_cast<Int32>(_Extent) > _Maximum)
-    {
-        _Value = _Maximum - _Extent;
-    }
-    if(isStateChange)
-    {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
-    }
-}
-
-void DefaultBoundedRangeModel::setMaximum(Int32 newMaximum)
-{
-    bool isStateChange(_Maximum != newMaximum);
-    _Maximum= newMaximum;
-    if(_Value + static_cast<Int32>(_Extent) > _Maximum)
-    {
-        _Value = _Maximum - _Extent;
-    }
-    if(isStateChange)
-    {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
-    }
-}
-
-void DefaultBoundedRangeModel::setMinimum(Int32 newMinimum)
-{
-    bool isStateChange(_Minimum != newMinimum);
-    _Minimum= newMinimum;
-    if(_Value < _Minimum)
-    {
-        _Value = _Minimum;
-    }
-    if(isStateChange)
-    {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
-    }
-}
-
-void DefaultBoundedRangeModel::setRangeProperties(Int32 value, UInt32 extent, Int32 min, Int32 max, bool adjusting)
-{
-    bool isStateChange(_Extent != extent ||
-                       _Maximum != max ||
-                       _Minimum != min ||
-                       _Value != value ||
-                       _ValueIsAdjusting != adjusting);
-    _Extent= extent;
-    _Maximum= max;
-    _Minimum= min;
-    _ValueIsAdjusting = adjusting;
-    if(value + static_cast<Int32>(_Extent) > _Maximum && _Extent < _Maximum - _Minimum)
-    {
-        _Value = _Maximum - _Extent;
-    }
-    else if(value < _Minimum)
-    {
-        _Value = _Minimum;
-    }
-    else
-    {
-        _Value= value;
-    }
-
-    if(isStateChange)
-    {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
-    }
-}
-
-void DefaultBoundedRangeModel::setValue(Int32 newValue)
-{
-    bool isStateChange(_Value != newValue);
-    if(newValue + static_cast<Int32>(_Extent) > _Maximum)
-    {
-        _Value = _Maximum - _Extent;
-    }
-    else if(newValue < _Minimum)
-    {
-        _Value = _Minimum;
-    }
-    else
-    {
-        _Value= newValue;
-    }
-    if(isStateChange)
-    {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
-    }
-}
-
-void DefaultBoundedRangeModel::setValueIsAdjusting(bool b)
-{
-    bool isStateChange(_ValueIsAdjusting != b);
-    _ValueIsAdjusting = b;
-    if(isStateChange)
-    {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
-    }
-}
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-void DefaultBoundedRangeModel::produceStateChanged(const ChangeEvent& e)
+
+Int32 BoundedRangeSpinnerModel::getMaximum(void) const
 {
+	return _TheBoundedRangeModel->getMaximum();
+}
+
+Int32 BoundedRangeSpinnerModel::getMinimum(void) const
+{
+	return _TheBoundedRangeModel->getMinimum();
+}
+
+Int32 BoundedRangeSpinnerModel::getValue(void) const
+{
+	return _TheBoundedRangeModel->getValue();
+}
+
+void BoundedRangeSpinnerModel::setMaximum(Int32 newMaximum)
+{
+	dettachListenersFromModels();
+
+	_TheBoundedRangeModel->setMaximum(newMaximum);
+	_TheSpinnerModel->setMaximum(newMaximum);
+
+	attachListenersToModels();
+}
+
+void BoundedRangeSpinnerModel::setMinimum(Int32 newMinimum)
+{
+	dettachListenersFromModels();
+
+	_TheBoundedRangeModel->setMinimum(newMinimum);
+	_TheSpinnerModel->setMinimum(newMinimum);
+
+	attachListenersToModels();
+}
+
+void BoundedRangeSpinnerModel::setValue(Int32 newValue)
+{
+	dettachListenersFromModels();
+
+	_TheBoundedRangeModel->setValue(newValue);
+	_TheSpinnerModel->setValue(SharedFieldPtr(new SFInt32(newValue)));
+
+	attachListenersToModels();
+
+	produceStateChanged();
+}
+
+void BoundedRangeSpinnerModel::addChangeListener(ChangeListenerPtr l)
+{
+   _ChangeListeners.insert(l);
+}
+
+void BoundedRangeSpinnerModel::removeChangeListener(ChangeListenerPtr l)
+{
+   ChangeListenerSetItor EraseIter(_ChangeListeners.find(l));
+   if(EraseIter != _ChangeListeners.end())
+   {
+      _ChangeListeners.erase(EraseIter);
+   }
+}
+
+void BoundedRangeSpinnerModel::produceStateChanged(void)
+{
+   ChangeEvent TheEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED);
    ChangeListenerSet ModelListenerSet(_ChangeListeners);
    for(ChangeListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
-	   (*SetItor)->stateChanged(e);
+      (*SetItor)->stateChanged(TheEvent);
    }
+}
+
+void BoundedRangeSpinnerModel::attachListenersToModels(void)
+{
+	_TheBoundedRangeModel->addChangeListener(&_BoundedRangeModelChangeListener);
+	_TheSpinnerModel->addChangeListener(&_SpinnerModelChangeListener);
+}
+
+void BoundedRangeSpinnerModel::dettachListenersFromModels(void)
+{
+	_TheBoundedRangeModel->removeChangeListener(&_BoundedRangeModelChangeListener);
+	_TheSpinnerModel->removeChangeListener(&_SpinnerModelChangeListener);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -188,18 +161,66 @@ void DefaultBoundedRangeModel::produceStateChanged(const ChangeEvent& e)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-DefaultBoundedRangeModel::DefaultBoundedRangeModel(void) :
-_Extent(0),
-_Maximum(0),
-_Minimum(0),
-_Value(0),
-_ValueIsAdjusting(false)
+BoundedRangeSpinnerModel::BoundedRangeSpinnerModel(void) :
+	_BoundedRangeModelChangeListener(this),
+	_SpinnerModelChangeListener(this)
 {
+	_TheBoundedRangeModel = new DefaultBoundedRangeModel();
+	_TheBoundedRangeModel->setExtent(0);
+	
+	_TheSpinnerModel = new Int32SpinnerModel();
+	_TheSpinnerModel->setStepSize(1);
+
+	attachListenersToModels();
+}
+	
+BoundedRangeSpinnerModel::BoundedRangeSpinnerModel(const BoundedRangeSpinnerModel &source) :
+	_BoundedRangeModelChangeListener(this),
+	_SpinnerModelChangeListener(this)
+{
+	_TheBoundedRangeModel = new DefaultBoundedRangeModel();
+	_TheBoundedRangeModel->setExtent(source._TheBoundedRangeModel->getExtent());
+	
+	_TheSpinnerModel = new Int32SpinnerModel();
+	_TheSpinnerModel->setStepSize(source._TheSpinnerModel->getStepSize());
+
+	attachListenersToModels();
+
+	setMinimum(source.getMinimum());
+	setMaximum(source.getMaximum());
+	setValue(source.getValue());
+}
+	
+BoundedRangeSpinnerModel::~BoundedRangeSpinnerModel(void)
+{
+	dettachListenersFromModels();
+
+	delete _TheBoundedRangeModel;
 }
 
-DefaultBoundedRangeModel::~DefaultBoundedRangeModel(void)
+
+void BoundedRangeSpinnerModel::BoundedRangeModelChangeListener::stateChanged(const ChangeEvent& e)
 {
+	_BoundedRangeSpinnerModel->dettachListenersFromModels();
+
+	_BoundedRangeSpinnerModel->_TheSpinnerModel->setMinimum(_BoundedRangeSpinnerModel->_TheBoundedRangeModel->getMinimum());
+	_BoundedRangeSpinnerModel->_TheSpinnerModel->setMaximum(_BoundedRangeSpinnerModel->_TheBoundedRangeModel->getMaximum());
+	_BoundedRangeSpinnerModel->_TheSpinnerModel->setValue(SharedFieldPtr(new SFInt32(_BoundedRangeSpinnerModel->_TheBoundedRangeModel->getValue())));
+
+	_BoundedRangeSpinnerModel->attachListenersToModels();
+	_BoundedRangeSpinnerModel->produceStateChanged();
 }
 
+void BoundedRangeSpinnerModel::SpinnerModelChangeListener::stateChanged(const ChangeEvent& e)
+{
+	_BoundedRangeSpinnerModel->dettachListenersFromModels();
+
+	_BoundedRangeSpinnerModel->_TheBoundedRangeModel->setMinimum(_BoundedRangeSpinnerModel->_TheSpinnerModel->getMinimum());
+	_BoundedRangeSpinnerModel->_TheBoundedRangeModel->setMaximum(_BoundedRangeSpinnerModel->_TheSpinnerModel->getMaximum());
+	_BoundedRangeSpinnerModel->_TheBoundedRangeModel->setValue(_BoundedRangeSpinnerModel->_TheSpinnerModel->getNumber());
+
+	_BoundedRangeSpinnerModel->attachListenersToModels();
+	_BoundedRangeSpinnerModel->produceStateChanged();
+}
 OSG_END_NAMESPACE
 

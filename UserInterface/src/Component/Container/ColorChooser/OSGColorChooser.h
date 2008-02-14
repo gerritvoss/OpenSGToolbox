@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGSLIDER_H_
-#define _OSGSLIDER_H_
+#ifndef _OSGCOLORCHOOSER_H_
+#define _OSGCOLORCHOOSER_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,25 +45,24 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGSliderBase.h"
-#include "Component/Scroll/OSGBoundedRangeModel.h"
-#include "Event/OSGChangeListener.h"
-
-#include <OpenSG/Input/OSGMouseAdapter.h>
-#include <OpenSG/Input/OSGKeyAdapter.h>
-#include <OpenSG/Input/OSGMouseMotionAdapter.h>
+#include "OSGColorChooserBase.h"
+#include "OSGColorSelectionModel.h"
+#include "OSGAbstractColorChooserPanelFields.h"
+#include "Component/Container/OSGTabPanelFields.h"
+#include "Component/Text/OSGLabelFields.h"
+#include "Background/OSGColorUIBackgroundFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Slider class. See \ref 
-           PageUserInterfaceSlider for a description.
+/*! \brief ColorChooser class. See \ref 
+           PageUserInterfaceColorChooser for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
+class OSG_USERINTERFACELIB_DLLMAPPING ColorChooser : public ColorChooserBase
 {
   private:
 
-    typedef SliderBase Inherited;
+    typedef ColorChooserBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -84,146 +83,99 @@ class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	
+	typedef std::vector<AbstractColorChooserPanelPtr> ColorChooserPanelVector;
+
     virtual void updateLayout(void);
 
-    //Adds a listener to the list that is notified each time a change to the model occurs.
-    void addChangeListener(ChangeListenerPtr l);
+	//Adds a color chooser panel to the color chooser.
+	void addChooserPanel(AbstractColorChooserPanelPtr panel);
 
-    //Removes a ChangeListener from this spinner.
-    void removeChangeListener(ChangeListenerPtr l);
+	//Returns the specified color panels.
+	ColorChooserPanelVector getChooserPanels(void) const;
 
-	//Creates a hashtable that will draw text labels starting at the slider minimum using the increment specified.
-	FieldContainerMap createStandardLabels(UInt32 increment);
+	//Gets the current color value from the color chooser.
+	Color4f getColor(void) const;
 
-	//Creates a hashtable that will draw text labels starting at the start point specified using the increment specified.
-	FieldContainerMap createStandardLabels(UInt32 increment, Int32 start);
+	//Returns the data model that handles color selections.
+	ColorSelectionModelPtr getSelectionModel(void);
 
-	//Returns the "extent" -- the range of values "covered" by the knob.
-	UInt32 getExtent(void) const;
+	//Removes the Color4f Panel specified.
+	AbstractColorChooserPanelPtr removeChooserPanel(AbstractColorChooserPanelPtr panel);
 
-	//Returns the maximum value supported by the slider.
-	Int32 getMaximum(void) const;
+	//Specifies the Color4f Panels used to choose a color value.
+	void setChooserPanels(ColorChooserPanelVector panels);
 
-	//Returns the minimum value supported by the slider.
-	Int32 getMinimum(void) const;
+	//Sets the current color of the color chooser to the specified color.
+	void setColor(const Color4f& color);
 
-	//Returns data model that handles the sliders three fundamental properties: minimum, maximum, value.
-    BoundedRangeModel* getModel(void) const;
-
-	//Returns the sliders value.
-	Int32 getValue(void) const;
-
-	//True if the slider knob is being dragged.
-	bool getValueIsAdjusting(void) const;
-
-	//Sets the size of the range "covered" by the knob.
-	void setExtent(UInt32 extent);
-
-	//Sets the models maximum property.
-	void setMaximum(Int32 maximum);
-
-	//Sets the models minimum property.
-	void setMinimum(Int32 minimum);
-
-	//Sets the model that handles the sliders three fundamental properties: minimum, maximum, value.
-    void setModel(BoundedRangeModel* Model);
-
-	//Sets the sliders current value.
-	void setValue(Int32 n);
-
-	//Sets the models valueIsAdjusting property.
-	void setValueIsAdjusting(bool b);
+	//Sets the model containing the selected color.
+	void setSelectionModel(ColorSelectionModelPtr newModel);
 
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in SliderBase.
+    // Variables should all be in ColorChooserBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Slider(void);
-    Slider(const Slider &source);
+    ColorChooser(void);
+    ColorChooser(const ColorChooser &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Slider(void); 
+    virtual ~ColorChooser(void); 
 
     /*! \}                                                                 */
-    BoundedRangeModel* _Model;
-    
-    //Listener for getting change updates of the BoundedRangeModel
-	class BoundedRangeModelChangeListener : public ChangeListener
-	{
-	public:
-		BoundedRangeModelChangeListener(SliderPtr TheSlider);
-        virtual void stateChanged(const ChangeEvent& e);
-	private:
-		SliderPtr _Slider;
-	};
-
-	friend class BoundedRangeModelChangeListener;
-
-	BoundedRangeModelChangeListener _BoundedRangeModelChangeListener;
+    ColorSelectionModelPtr _SelectionModel;
 	
-	class KnobDraggedListener : public MouseMotionAdapter, public MouseAdapter, public KeyAdapter
+	class ColorSelectedChangeListener : public ChangeListener
 	{
 	public :
-		KnobDraggedListener(SliderPtr TheSlider);
-		virtual void mouseDragged(const MouseEvent& e);
+		ColorSelectedChangeListener(ColorChooserPtr TheColorChooser);
 		
-		virtual void mousePressed(const MouseEvent& e);
-		virtual void mouseReleased(const MouseEvent& e);
-		
-		virtual void keyTyped(const KeyEvent& e);
-
-	protected :
-		SliderPtr _Slider;
-		Int32 _InitialValue;
+		virtual void stateChanged(const ChangeEvent& e);
+	private:
+		ColorChooserPtr _ColorChooser;
 	};
 
-	friend class _KnobDraggedListener;
+	friend class ColorSelectedChangeListener;
 
-	KnobDraggedListener _KnobDraggedListener;
+	ColorSelectedChangeListener _ColorSelectedChangeListener;
 
-	void updateSliderTrack(void);
+	TabPanelPtr _LayoutTabPanel;
 
-	UInt32 getTrackLength(void) const;
-	Int32 getTrackMin(void) const;
-	Int32 getTrackMax(void) const;
+	void updateChoosers(void);
+    void updateChildren(void);
 
-	Pnt2f calculateSliderAlignment(const Pnt2f& Position1, const Vec2f& Size1, const Vec2f& Size2, const Real32& VAlign, const Real32& HAlign);
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
+	void createDefaultPanel(void);
 
-	Pnt2f getSliderTrackTopLeft(void) const;
-	Vec2f getSliderTrackSize(void) const;
-
-	bool _UsingDefaultLabels;
+	LabelPtr _DefaultPreviewPanel;
+	ColorUIBackgroundPtr _DefaultPreviewPanelBackground;
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class SliderBase;
+    friend class ColorChooserBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Slider &source);
+    void operator =(const ColorChooser &source);
 };
 
-typedef Slider *SliderP;
+typedef ColorChooser *ColorChooserP;
 
 OSG_END_NAMESPACE
 
-#include "OSGSliderBase.inl"
-#include "OSGSlider.inl"
+#include "OSGColorChooserBase.inl"
+#include "OSGColorChooser.inl"
 
-#define OSGSLIDER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGCOLORCHOOSER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGSLIDER_H_ */
+#endif /* _OSGCOLORCHOOSER_H_ */

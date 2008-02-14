@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -36,34 +34,37 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_DEFINES_H_
-#define _OSG_UI_DEFINES_H_
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
-#ifdef __sgi
-#pragma once
-#endif
- 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
-#define OSG_UI_BEGIN_NAMESPACE namespace OSG { namespace ui
-#define OSG_UI_END_NAMESPACE } }
-
-#define OSG_UI_USING_NAMESPACE namespace OSG {} namespace ui using namespace OSG::ui;
-
 
 OSG_BEGIN_NAMESPACE
 
-enum HorizontalAlignment {HORIZONTAL_CENTER=0, HORIZONTAL_LEFT, HORIZONTAL_RIGHT};
-enum VerticalAlignment {VERTICAL_CENTER=0, VERTICAL_TOP, VERTICAL_BOTTOM};
+inline
+BoundedRangeModelPtr BoundedRangeSpinnerModel::getBoundedRangeModel(void)
+{
+	return _TheBoundedRangeModel;
+}
 
-enum Alignment {HORIZONTAL_ALIGNMENT=0, VERTICAL_ALIGNMENT=1};
-enum AxisAlignment {AXIS_MIN_ALIGNMENT=0, AXIS_CENTER_ALIGNMENT, AXIS_MAX_ALIGNMENT};
-enum GridBagFill {FILL_BOTH=0, FILL_VERTICAL, FILL_HORIZONTAL, FILL_NONE};
-enum Scale {SCALE_NONE=0, SCALE_STRETCH, SCALE_MIN_AXIS, SCALE_MAX_AXIS, SCALE_ABSOLUTE};
-	 
+inline
+SpinnerModelPtr BoundedRangeSpinnerModel::getSpinnerModel(void)
+{
+	return _TheSpinnerModel;
+}
+
+inline
+BoundedRangeSpinnerModel::BoundedRangeModelChangeListener::BoundedRangeModelChangeListener(BoundedRangeSpinnerModel* TheBoundedRangeSpinnerModel) :
+	_BoundedRangeSpinnerModel(TheBoundedRangeSpinnerModel)
+{
+}
+	
+inline
+BoundedRangeSpinnerModel::SpinnerModelChangeListener::SpinnerModelChangeListener(BoundedRangeSpinnerModel* TheBoundedRangeSpinnerModel) :
+	_BoundedRangeSpinnerModel(TheBoundedRangeSpinnerModel)
+{
+}
 OSG_END_NAMESPACE
-
-#endif /* _OSG_UI_DEFINES_H_ */
 
 

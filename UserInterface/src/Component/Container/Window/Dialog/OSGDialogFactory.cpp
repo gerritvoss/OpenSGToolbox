@@ -7,17 +7,30 @@
 #include "Component/Container/OSGPanel.h"
 #include "Layout/OSGFlowLayout.h"
 #include "Component/Text/OSGLabel.h"
-#include "Component/Text/OSGLabel.h"
 #include "Border/OSGEmptyBorder.h"
 #include "Background/OSGEmptyUIBackground.h"
 #include "OSGDialogWindow.h"
 #include "Event/OSGActionListener.h"
 
+#include "Component/Spinner/OSGSpinner.h"
 
 #include "Layout/OSGBorderLayout.h"
 #include "Layout/OSGBorderLayoutConstraints.h"
 
 OSG_BEGIN_NAMESPACE
+
+
+DialogFactory *DialogFactory::_the = NULL;
+
+DialogFactory* DialogFactory::the(void)
+{
+   if(_the == NULL)
+   {
+      _the = new DialogFactory();
+   }
+ 
+   return _the;
+}
 
 DialogWindowPtr DialogFactory::createMessageDialog(const std::string& Title, const std::string& Message, const std::string& ConfirmButtonText)
 {
@@ -183,5 +196,136 @@ ContainerPtr DialogFactory::createOptionPanel(const std::string& Message, const 
 }
 
 
+void DialogFactory::createColorHistory(const std::string& HistoryName)
+{
+	ColorHistoryMapItor FindItor(_ColorHistory.find(HistoryName));
+	if(FindItor == _ColorHistory.end())
+	{
+		_ColorHistory[HistoryName] = ColorHistoryMap::mapped_type();
+	}
+}
+
+void DialogFactory::removeColorHistory(const std::string& HistoryName)
+{
+	ColorHistoryMapItor FindItor(_ColorHistory.find(HistoryName));
+	if(FindItor != _ColorHistory.end())
+	{
+		_ColorHistory.erase(FindItor);
+	}
+}
+
+void DialogFactory::pushToColorHistory(const std::string& HistoryName, const Color4f& TheColor)
+{
+	ColorHistoryMapItor FindItor(_ColorHistory.find(HistoryName));
+	if(FindItor != _ColorHistory.end())
+	{
+		(*FindItor).second.push_back(TheColor);
+	}
+}
+
+void DialogFactory::popFromColorHistory(const std::string& HistoryName)
+{
+	ColorHistoryMapItor FindItor(_ColorHistory.find(HistoryName));
+	if(FindItor != _ColorHistory.end())
+	{
+		(*FindItor).second.pop_front();
+	}
+}
+
+void DialogFactory::clearColorHistory(const std::string& HistoryName)
+{
+	ColorHistoryMapItor FindItor(_ColorHistory.find(HistoryName));
+	if(FindItor != _ColorHistory.end())
+	{
+		(*FindItor).second.clear();
+	}
+}
+
+DialogFactory::ColorDeque DialogFactory::getColorHistory(const std::string& HistoryName) const
+{
+	ColorHistoryMapConstItor FindItor(_ColorHistory.find(HistoryName));
+	if(FindItor != _ColorHistory.end())
+	{
+		return FindItor->second;
+	}
+	else
+	{
+		return ColorHistoryMap::mapped_type();
+	}
+}
+
+DialogFactory::StringVector DialogFactory::getColorHistories(void) const
+{
+	StringVector Histories;
+
+	for(ColorHistoryMapConstItor Itor(_ColorHistory.begin()) ; Itor != _ColorHistory.end() ; ++Itor)
+	{
+		Histories.push_back(Itor->first);
+	}
+
+	return Histories;
+}
+
+DialogWindowPtr DialogFactory::createColorDialog(const std::string& Title, const Color4f& TheColor, const std::string& HistoryName)
+{
+	//Internals Container
+	ContainerPtr InternalsContainer(createColorPanel(TheColor, HistoryName));
+
+	//Internals Layout and constriants
+	BorderLayoutConstraintsPtr InternalsContainerConstraints = BorderLayoutConstraints::create();
+	beginEditCP(InternalsContainerConstraints, BorderLayoutConstraints::RegionFieldMask);
+		InternalsContainerConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+	endEditCP(InternalsContainerConstraints, BorderLayoutConstraints::RegionFieldMask);
+
+	beginEditCP(InternalsContainer, Container::ConstraintsFieldMask);
+		InternalsContainer->setConstraints(InternalsContainerConstraints);
+	endEditCP(InternalsContainer, Container::ConstraintsFieldMask);
+
+	BorderLayoutPtr DialogLayout = BorderLayout::create();
+
+	//Create the Dialog box
+	DialogWindowPtr TheDialog = DialogWindow::create();
+	beginEditCP(TheDialog, DialogWindow::LayoutFieldMask | DialogWindow::ChildrenFieldMask | DialogWindow::TitleFieldMask  | DialogWindow::PreferredSizeFieldMask);
+		TheDialog->setLayout(DialogLayout);
+		TheDialog->getChildren().addValue(InternalsContainer);
+		TheDialog->setTitle(Title);
+		TheDialog->setPreferredSize(Vec2s(300.0f,400.0f));
+	endEditCP(TheDialog, DialogWindow::LayoutFieldMask | DialogWindow::ChildrenFieldMask | DialogWindow::TitleFieldMask | DialogWindow::PreferredSizeFieldMask);
+
+	return TheDialog;
+}
+
+ContainerPtr DialogFactory::createColorPanel(const Color4f& TheColor, const std::string& HistoryName)
+{
+	PanelPtr MainColorPanel = osg::Panel::create();
+
+	LayoutPtr MainColorPanelLayout = FlowLayout::create();
+
+	//Channel Spinners
+
+	LabelPtr RedChannelLabel = Label::create();
+	beginEditCP(RedChannelLabel, Label::TextFieldMask);
+		RedChannelLabel->setText("Red");
+	endEditCP(RedChannelLabel, Label::TextFieldMask);
+
+	LabelPtr GreenChannelLabel = Label::create();
+	beginEditCP(GreenChannelLabel, Label::TextFieldMask);
+		GreenChannelLabel->setText("Green");
+	endEditCP(GreenChannelLabel, Label::TextFieldMask);
+
+	LabelPtr BlueChannelLabel = Label::create();
+	beginEditCP(BlueChannelLabel, Label::TextFieldMask);
+		BlueChannelLabel->setText("Blue");
+	endEditCP(BlueChannelLabel, Label::TextFieldMask);
+
+	beginEditCP(MainColorPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+		MainColorPanel->setLayout(MainColorPanelLayout);
+		MainColorPanel->getChildren().addValue(RedChannelLabel);
+		MainColorPanel->getChildren().addValue(GreenChannelLabel);
+		MainColorPanel->getChildren().addValue(BlueChannelLabel);
+	endEditCP(MainColorPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+
+	return MainColorPanel;
+}
 
 OSG_END_NAMESPACE

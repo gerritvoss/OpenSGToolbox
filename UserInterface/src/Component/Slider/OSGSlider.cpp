@@ -629,7 +629,11 @@ void Slider::KnobDraggedListener::mousePressed(const MouseEvent& e)
        _Slider->getParentWindow()->getDrawingSurface() != NullFC &&
        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
     {
+		_InitialValue = _Slider->getValue();
+        _Slider->getKnobButton()->removeMouseListener(this);
+        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(this);
         _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(this);
+        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(this);
     }
 }
 
@@ -641,7 +645,22 @@ void Slider::KnobDraggedListener::mouseReleased(const MouseEvent& e)
        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
     {
         _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+        _Slider->getKnobButton()->addMouseListener(this);
+        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
+        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
     }
+}
+
+void Slider::KnobDraggedListener::keyTyped(const KeyEvent& e)
+{
+	if(e.getKey() == KeyEvent::KEY_ESCAPE)
+	{
+		_Slider->setValue(_InitialValue);
+        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+        _Slider->getKnobButton()->addMouseListener(this);
+        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
+        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
+	}
 }
 
 /*------------------------------------------------------------------------*/

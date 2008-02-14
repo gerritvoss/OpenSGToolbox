@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGSLIDER_H_
-#define _OSGSLIDER_H_
+#ifndef _OSGABSTRACTCOLORCHOOSERPANEL_H_
+#define _OSGABSTRACTCOLORCHOOSERPANEL_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,25 +45,21 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGSliderBase.h"
-#include "Component/Scroll/OSGBoundedRangeModel.h"
-#include "Event/OSGChangeListener.h"
-
-#include <OpenSG/Input/OSGMouseAdapter.h>
-#include <OpenSG/Input/OSGKeyAdapter.h>
-#include <OpenSG/Input/OSGMouseMotionAdapter.h>
+#include "OSGAbstractColorChooserPanelBase.h"
+#include "OSGColorChooserFields.h"
+#include "OSGColorSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Slider class. See \ref 
-           PageUserInterfaceSlider for a description.
+/*! \brief AbstractColorChooserPanel class. See \ref 
+           PageUserInterfaceAbstractColorChooserPanel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
+class OSG_USERINTERFACELIB_DLLMAPPING AbstractColorChooserPanel : public AbstractColorChooserPanelBase
 {
   private:
 
-    typedef SliderBase Inherited;
+    typedef AbstractColorChooserPanelBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -84,146 +80,76 @@ class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	
-    virtual void updateLayout(void);
 
-    //Adds a listener to the list that is notified each time a change to the model occurs.
-    void addChangeListener(ChangeListenerPtr l);
+	//Returns the model that the chooser panel is editing.
+	ColorSelectionModelPtr getColorSelectionModel(void);
 
-    //Removes a ChangeListener from this spinner.
-    void removeChangeListener(ChangeListenerPtr l);
+	//Returns the large display icon for the panel.
+	//virtual Icon getLargeDisplayIcon(void) const = 0;
 
-	//Creates a hashtable that will draw text labels starting at the slider minimum using the increment specified.
-	FieldContainerMap createStandardLabels(UInt32 increment);
+	//Returns the small display icon for the panel.
+	//virtual Icon getSmallDisplayIcon(void) const = 0;
 
-	//Creates a hashtable that will draw text labels starting at the start point specified using the increment specified.
-	FieldContainerMap createStandardLabels(UInt32 increment, Int32 start);
+	virtual std::string getDisplayText(void) const = 0;
 
-	//Returns the "extent" -- the range of values "covered" by the knob.
-	UInt32 getExtent(void) const;
+	//Invoked when the panel is added to the chooser.
+	virtual void installChooserPanel(ColorChooserPtr enclosingChooser);
 
-	//Returns the maximum value supported by the slider.
-	Int32 getMaximum(void) const;
+	//Draws the panel.
+	//virtual void paint(Graphics g);
 
-	//Returns the minimum value supported by the slider.
-	Int32 getMinimum(void) const;
+	//Invoked when the panel is removed from the chooser.
+	virtual void uninstallChooserPanel(ColorChooserPtr enclosingChooser);
 
-	//Returns data model that handles the sliders three fundamental properties: minimum, maximum, value.
-    BoundedRangeModel* getModel(void) const;
-
-	//Returns the sliders value.
-	Int32 getValue(void) const;
-
-	//True if the slider knob is being dragged.
-	bool getValueIsAdjusting(void) const;
-
-	//Sets the size of the range "covered" by the knob.
-	void setExtent(UInt32 extent);
-
-	//Sets the models maximum property.
-	void setMaximum(Int32 maximum);
-
-	//Sets the models minimum property.
-	void setMinimum(Int32 minimum);
-
-	//Sets the model that handles the sliders three fundamental properties: minimum, maximum, value.
-    void setModel(BoundedRangeModel* Model);
-
-	//Sets the sliders current value.
-	void setValue(Int32 n);
-
-	//Sets the models valueIsAdjusting property.
-	void setValueIsAdjusting(bool b);
+	//Invoked automatically when the model's state changes.
+	virtual void updateChooser(void) = 0;
 
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in SliderBase.
+    // Variables should all be in AbstractColorChooserPanelBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Slider(void);
-    Slider(const Slider &source);
+    AbstractColorChooserPanel(void);
+    AbstractColorChooserPanel(const AbstractColorChooserPanel &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Slider(void); 
+    virtual ~AbstractColorChooserPanel(void); 
 
     /*! \}                                                                 */
-    BoundedRangeModel* _Model;
     
-    //Listener for getting change updates of the BoundedRangeModel
-	class BoundedRangeModelChangeListener : public ChangeListener
-	{
-	public:
-		BoundedRangeModelChangeListener(SliderPtr TheSlider);
-        virtual void stateChanged(const ChangeEvent& e);
-	private:
-		SliderPtr _Slider;
-	};
+	//Builds a new chooser panel.
+	virtual void buildChooser(void) = 0;
 
-	friend class BoundedRangeModelChangeListener;
-
-	BoundedRangeModelChangeListener _BoundedRangeModelChangeListener;
-	
-	class KnobDraggedListener : public MouseMotionAdapter, public MouseAdapter, public KeyAdapter
-	{
-	public :
-		KnobDraggedListener(SliderPtr TheSlider);
-		virtual void mouseDragged(const MouseEvent& e);
-		
-		virtual void mousePressed(const MouseEvent& e);
-		virtual void mouseReleased(const MouseEvent& e);
-		
-		virtual void keyTyped(const KeyEvent& e);
-
-	protected :
-		SliderPtr _Slider;
-		Int32 _InitialValue;
-	};
-
-	friend class _KnobDraggedListener;
-
-	KnobDraggedListener _KnobDraggedListener;
-
-	void updateSliderTrack(void);
-
-	UInt32 getTrackLength(void) const;
-	Int32 getTrackMin(void) const;
-	Int32 getTrackMax(void) const;
-
-	Pnt2f calculateSliderAlignment(const Pnt2f& Position1, const Vec2f& Size1, const Vec2f& Size2, const Real32& VAlign, const Real32& HAlign);
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
-
-	Pnt2f getSliderTrackTopLeft(void) const;
-	Vec2f getSliderTrackSize(void) const;
-
-	bool _UsingDefaultLabels;
+	//Returns the color that is currently selected.
+	Color4f getColorFromModel(void) const;
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class SliderBase;
+    friend class AbstractColorChooserPanelBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Slider &source);
+    void operator =(const AbstractColorChooserPanel &source);
 };
 
-typedef Slider *SliderP;
+typedef AbstractColorChooserPanel *AbstractColorChooserPanelP;
 
 OSG_END_NAMESPACE
 
-#include "OSGSliderBase.inl"
-#include "OSGSlider.inl"
+#include "OSGAbstractColorChooserPanelBase.inl"
+#include "OSGAbstractColorChooserPanel.inl"
 
-#define OSGSLIDER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGABSTRACTCOLORCHOOSERPANEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGSLIDER_H_ */
+#endif /* _OSGABSTRACTCOLORCHOOSERPANEL_H_ */
