@@ -1135,7 +1135,7 @@ void WindowsLookAndFeel::init(void)
 	
 	ColorUIBackgroundPtr WindowsTabPanelTabActiveBackground = ColorUIBackground::create();
 	beginEditCP(WindowsTabPanelTabActiveBackground);
-		WindowsTabPanelTabActiveBackground->setColor(Color4f(0.99, 0.99, 1.0, 1.0));
+		WindowsTabPanelTabActiveBackground->setColor(Color4f(0.9569,0.9529,0.9373,1.0));
 	endEditCP(WindowsTabPanelTabActiveBackground);
 
 	LineBorderPtr WindowsTabPanelContentBorder = LineBorder::create();

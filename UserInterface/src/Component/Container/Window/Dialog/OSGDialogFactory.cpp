@@ -17,6 +17,10 @@
 #include "Layout/OSGBorderLayout.h"
 #include "Layout/OSGBorderLayoutConstraints.h"
 
+#include "Component/Container/ColorChooser/OSGColorChooser.h"
+#include "Layout/OSGBorderLayout.h"
+#include "Layout/OSGBorderLayoutConstraints.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -285,45 +289,67 @@ DialogWindowPtr DialogFactory::createColorDialog(const std::string& Title, const
 
 	//Create the Dialog box
 	DialogWindowPtr TheDialog = DialogWindow::create();
-	beginEditCP(TheDialog, DialogWindow::LayoutFieldMask | DialogWindow::ChildrenFieldMask | DialogWindow::TitleFieldMask  | DialogWindow::PreferredSizeFieldMask);
+	beginEditCP(TheDialog, DialogWindow::LayoutFieldMask | DialogWindow::ChildrenFieldMask | DialogWindow::TitleFieldMask  | DialogWindow::PreferredSizeFieldMask  | DialogWindow::ResizableFieldMask);
 		TheDialog->setLayout(DialogLayout);
 		TheDialog->getChildren().addValue(InternalsContainer);
 		TheDialog->setTitle(Title);
-		TheDialog->setPreferredSize(Vec2s(300.0f,400.0f));
-	endEditCP(TheDialog, DialogWindow::LayoutFieldMask | DialogWindow::ChildrenFieldMask | DialogWindow::TitleFieldMask | DialogWindow::PreferredSizeFieldMask);
+		TheDialog->setPreferredSize(Vec2s(300.0f,300.0f));
+		TheDialog->setResizable(true);
+	endEditCP(TheDialog, DialogWindow::LayoutFieldMask | DialogWindow::ChildrenFieldMask | DialogWindow::TitleFieldMask | DialogWindow::PreferredSizeFieldMask | DialogWindow::ResizableFieldMask);
 
 	return TheDialog;
 }
 
 ContainerPtr DialogFactory::createColorPanel(const Color4f& TheColor, const std::string& HistoryName)
 {
+
+	ButtonPtr ConfirmButton = osg::Button::create();
+	beginEditCP(ConfirmButton, Button::TextFieldMask);
+		ConfirmButton->setText("Ok");
+	endEditCP(ConfirmButton, Button::TextFieldMask);
+	
+	ButtonPtr CancelButton = osg::Button::create();
+	beginEditCP(CancelButton, Button::TextFieldMask);
+		CancelButton->setText("Cancel");
+	endEditCP(CancelButton, Button::TextFieldMask);
+
+	//Layout Constraints
+    BorderLayoutConstraintsPtr ButtonPanelConstraints = osg::BorderLayoutConstraints::create();
+    beginEditCP(ButtonPanelConstraints, BorderLayoutConstraints::RegionFieldMask);
+        ButtonPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_SOUTH);
+    endEditCP(ButtonPanelConstraints, BorderLayoutConstraints::RegionFieldMask);
+
+    BorderLayoutConstraintsPtr TheColorChooserPanelConstraints = osg::BorderLayoutConstraints::create();
+    beginEditCP(TheColorChooserPanelConstraints, BorderLayoutConstraints::RegionFieldMask);
+        TheColorChooserPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+    endEditCP(TheColorChooserPanelConstraints, BorderLayoutConstraints::RegionFieldMask);
+
+	//ButtonPanel
+	PanelPtr ButtonPanel = osg::Panel::createEmpty();
+	LayoutPtr ButtonPanelLayout = FlowLayout::create();
+	beginEditCP(ButtonPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::ConstraintsFieldMask | Panel::PreferredSizeFieldMask);
+		ButtonPanel->setLayout(ButtonPanelLayout);
+		ButtonPanel->getChildren().addValue(ConfirmButton);
+		ButtonPanel->getChildren().addValue(CancelButton);
+        ButtonPanel->setConstraints(ButtonPanelConstraints);
+        ButtonPanel->setPreferredSize(Vec2f(200, 50));
+	endEditCP(ButtonPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::ConstraintsFieldMask | Panel::PreferredSizeFieldMask);
+
+	//ColorPanel
+	ColorChooserPtr TheColorChooserPanel = ColorChooser::create();
+	beginEditCP(TheColorChooserPanel, ColorChooser::ConstraintsFieldMask);
+        TheColorChooserPanel->setConstraints(TheColorChooserPanelConstraints);
+	endEditCP(TheColorChooserPanel, ColorChooser::ConstraintsFieldMask);
+
+	//Main Panel
 	PanelPtr MainColorPanel = osg::Panel::create();
-
-	LayoutPtr MainColorPanelLayout = FlowLayout::create();
-
-	//Channel Spinners
-
-	LabelPtr RedChannelLabel = Label::create();
-	beginEditCP(RedChannelLabel, Label::TextFieldMask);
-		RedChannelLabel->setText("Red");
-	endEditCP(RedChannelLabel, Label::TextFieldMask);
-
-	LabelPtr GreenChannelLabel = Label::create();
-	beginEditCP(GreenChannelLabel, Label::TextFieldMask);
-		GreenChannelLabel->setText("Green");
-	endEditCP(GreenChannelLabel, Label::TextFieldMask);
-
-	LabelPtr BlueChannelLabel = Label::create();
-	beginEditCP(BlueChannelLabel, Label::TextFieldMask);
-		BlueChannelLabel->setText("Blue");
-	endEditCP(BlueChannelLabel, Label::TextFieldMask);
-
-	beginEditCP(MainColorPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+    BorderLayoutPtr MainColorPanelLayout = osg::BorderLayout::create();
+	beginEditCP(MainColorPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BordersFieldMask);
 		MainColorPanel->setLayout(MainColorPanelLayout);
-		MainColorPanel->getChildren().addValue(RedChannelLabel);
-		MainColorPanel->getChildren().addValue(GreenChannelLabel);
-		MainColorPanel->getChildren().addValue(BlueChannelLabel);
-	endEditCP(MainColorPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+		MainColorPanel->getChildren().addValue(TheColorChooserPanel);
+		MainColorPanel->getChildren().addValue(ButtonPanel);
+		MainColorPanel->setBorders(NullFC);
+	endEditCP(MainColorPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BordersFieldMask);
 
 	return MainColorPanel;
 }

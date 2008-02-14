@@ -172,6 +172,27 @@ public:
     }
 };
 
+class CreateColorDialogButtonActionListener : public ActionListener
+{
+
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+    {
+		if(e.getSource()->getType().isDerivedFrom(Component::getClassType()))
+		{
+			DialogWindowPtr TheDialog = DialogFactory::the()->createColorDialog(std::string("Choose a color ..."), Color4f(1.0,0.0,0.0,1.0), std::string("38DialogWindow"));
+
+			Pnt2f CenteredPosition = calculateAlignment(Component::Ptr::dcast(e.getSource())->getParentWindow()->getPosition(), Component::Ptr::dcast(e.getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+			beginEditCP(TheDialog, DialogWindow::PositionFieldMask);
+				TheDialog->setPosition(CenteredPosition);
+			endEditCP(TheDialog, DialogWindow::PositionFieldMask);
+
+			Component::Ptr::dcast(e.getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
+		}
+    }
+};
+
 int main(int argc, char **argv)
 {
     // OSG init
@@ -224,6 +245,18 @@ int main(int argc, char **argv)
             
     CreateMessageBoxButtonActionListener TheExampleButtonActionListener;
     ExampleButton->addActionListener(&TheExampleButtonActionListener);
+	
+    ButtonPtr ColorDialogButton = osg::Button::create();
+
+    beginEditCP(ColorDialogButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
+            ColorDialogButton->setMinSize(Vec2f(50, 25));
+            ColorDialogButton->setMaxSize(Vec2f(200, 100));
+            ColorDialogButton->setPreferredSize(Vec2f(150, 50));
+            ColorDialogButton->setText("Create Color Dialog");
+    endEditCP(ColorDialogButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
+            
+    CreateColorDialogButtonActionListener TheColorDialogButtonActionListener;
+    ColorDialogButton->addActionListener(&TheColorDialogButtonActionListener);
 
     // Create Background to be used with the MainInternalWindow
     ColorUIBackgroundPtr MainInternalWindowBackground = osg::ColorUIBackground::create();
@@ -234,16 +267,18 @@ int main(int argc, char **argv)
     // Create The Internal Window
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
     LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::PositionFieldMask | InternalWindow::PreferredSizeFieldMask | InternalWindow::TitleFieldMask);
+	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
        // Assign the Button to the MainInternalWindow so it will be displayed
        // when the view is rendered.
        MainInternalWindow->getChildren().addValue(ExampleButton);
+       MainInternalWindow->getChildren().addValue(ColorDialogButton);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-       MainInternalWindow->setPosition(Pnt2f(50,50));
-       MainInternalWindow->setPreferredSize(Vec2f(300,300));
-	   MainInternalWindow->setTitle(std::string("Internal Window"));
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::PositionFieldMask | InternalWindow::PreferredSizeFieldMask | InternalWindow::TitleFieldMask);
+	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.65f,0.65f));
+	   MainInternalWindow->setDrawTitlebar(false);
+	   MainInternalWindow->setResizable(false);
+    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
 
     // Create the Drawing Surface
@@ -277,7 +312,7 @@ int main(int argc, char **argv)
     mgr->showAll();
 
     TutorialWindowEventProducer->openWindow(Pnt2f(50,50),
-                                        Vec2f(550,550),
+                                        Vec2f(650,650),
                                         "OpenSG 38DialogWindow Window");
 
     while(!ExitApp)
