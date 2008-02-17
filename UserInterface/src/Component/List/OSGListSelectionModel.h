@@ -118,6 +118,9 @@ public:
    
    //This property is true if upcoming changes to the value of the model should be considered a single event.
    virtual void setValueIsAdjusting(bool valueIsAdjusting) = 0;
+
+   virtual void incrementValuesAboveIndex(const UInt32& index, const UInt32& NumberToIncrement) = 0;
+   virtual void decrementValuesAboveIndex(const UInt32& index, const UInt32& NumberToDecrement) = 0;
    
 };
 

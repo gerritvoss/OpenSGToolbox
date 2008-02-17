@@ -10,13 +10,13 @@ const EventType &ListSelectionEvent::getClassType(void)
 }
 
 inline
-UInt32 	ListSelectionEvent::getFirstIndex() const
+Int32 	ListSelectionEvent::getFirstIndex() const
 {
    return _FirstIndex;
 }
 
 inline
-UInt32 	ListSelectionEvent::getLastIndex() const
+Int32 	ListSelectionEvent::getLastIndex() const
 {
    return _LastIndex;
 }
@@ -28,7 +28,7 @@ bool 	ListSelectionEvent::getValueIsAdjusting() const
 }
 
 inline
-ListSelectionEvent::ListSelectionEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 FirstIndex, UInt32 LastIndex, bool ValueIsAdjusting)
+ListSelectionEvent::ListSelectionEvent(FieldContainerPtr Source, Time TimeStamp, Int32 FirstIndex, Int32 LastIndex, bool ValueIsAdjusting)
  : Event(Source, TimeStamp),
    _FirstIndex(FirstIndex),
    _LastIndex(LastIndex),

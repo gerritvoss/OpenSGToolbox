@@ -79,7 +79,16 @@ UInt32 AbstractListModel::getSize(void)
 
 SharedFieldPtr AbstractListModel::getElementAt(UInt32 index)
 {
-   return _FieldList[index];
+	if(index < _FieldList.size())
+	{
+		FieldListItor SearchItor(_FieldList.begin());
+		for(UInt32 i(0) ; i<index ; ++i) {++SearchItor;}
+		return (*SearchItor);
+	}
+	else
+	{
+		return SharedFieldPtr();
+	}
 }
 
 
@@ -99,7 +108,7 @@ void AbstractListModel::removeListDataListener(ListDataListenerPtr l)
  
 void AbstractListModel::pushBack(SharedFieldPtr f){
 	_FieldList.push_back(f);
-	produceListDataIntervalAdded(_FieldList.size()-1,_FieldList.size());
+	produceListDataIntervalAdded(_FieldList.size()-1,_FieldList.size()-1);
 }
 
 void AbstractListModel::popBack(void){
@@ -107,6 +116,43 @@ void AbstractListModel::popBack(void){
 	produceListDataIntervalRemoved(_FieldList.size(),_FieldList.size());
 }
 
+void AbstractListModel::pushFront(SharedFieldPtr f)
+{
+	_FieldList.push_front(f);
+	produceListDataIntervalAdded(0,0);
+}
+
+void AbstractListModel::popFront(void)
+{
+	_FieldList.pop_front();
+	produceListDataIntervalRemoved(0,0);
+}
+
+void AbstractListModel::insert(UInt32 Index, SharedFieldPtr f)
+{
+	if(Index < _FieldList.size())
+	{
+		FieldListItor SearchItor(_FieldList.begin());
+		for(UInt32 i(0) ; i<Index ; ++i) {++SearchItor;}
+		_FieldList.insert(SearchItor, f);
+		produceListDataIntervalAdded(Index,Index);
+	}
+	else
+	{
+		pushBack(f);
+	}
+}
+
+void AbstractListModel::erase(UInt32 Index)
+{
+	if(Index < _FieldList.size())
+	{
+		FieldListItor SearchItor(_FieldList.begin());
+		for(UInt32 i(0) ; i<Index ; ++i) {++SearchItor;}
+		_FieldList.erase(SearchItor);
+		produceListDataIntervalRemoved(Index,Index);
+	}
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

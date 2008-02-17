@@ -100,6 +100,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public ListSel
    virtual void 	setSelectionMode(UInt32 selectionMode);
    
    virtual void 	setValueIsAdjusting(bool valueIsAdjusting);
+
+   virtual void incrementValuesAboveIndex(const UInt32& index, const UInt32& NumberToIncrement);
+
+   virtual void decrementValuesAboveIndex(const UInt32& index, const UInt32& NumberToDecrement);
    
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */

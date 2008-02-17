@@ -182,6 +182,35 @@ public:
 
 };
 
+// Create ListModel   
+ListPtr ExampleList;
+AbstractListModel ExampleListModel;
+
+class AddItemButtonSelectedListener : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+    {
+        std::cout << "Add Item Action" << std::endl;
+		UInt32 SelectedItemIndex(ExampleList->getSelectionModel()->getMinSelectionIndex());
+		ExampleListModel.insert(SelectedItemIndex, SharedFieldPtr(new SFString("Added")));
+    }
+
+};
+
+class RemoveItemButtonSelectedListener : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+    {
+        std::cout << "Remove Item Action" << std::endl;
+		UInt32 SelectedItemIndex(ExampleList->getSelectionModel()->getMinSelectionIndex());
+		ExampleListModel.erase(SelectedItemIndex);
+    }
+
+};
 
 int main(int argc, char **argv)
 {
@@ -248,6 +277,19 @@ int main(int argc, char **argv)
         MultipleIntervalSelectionButtonSelectedListener TheMultipleIntervalSelectionButtonSelectedListener;
         MultipleIntervalSelectionButton->addButtonSelectedListener(&TheMultipleIntervalSelectionButtonSelectedListener);
 
+    ButtonPtr AddItemButton = osg::Button::create();
+    beginEditCP(AddItemButton, Button::TextFieldMask);
+		AddItemButton->setText("Add Item");
+    endEditCP(AddItemButton, Button::TextFieldMask);
+    AddItemButtonSelectedListener TheAddItemButtonSelectedListener;
+    AddItemButton->addActionListener(&TheAddItemButtonSelectedListener);
+
+    ButtonPtr RemoveItemButton = osg::Button::create();
+    beginEditCP(RemoveItemButton, Button::TextFieldMask);
+		RemoveItemButton->setText("Remove Item");
+    endEditCP(RemoveItemButton, Button::TextFieldMask);
+    RemoveItemButtonSelectedListener TheRemoveItemButtonSelectedListener;
+    RemoveItemButton->addActionListener(&TheRemoveItemButtonSelectedListener);
 
     /******************************************************
 
@@ -280,8 +322,6 @@ int main(int argc, char **argv)
             below).
 
     ******************************************************/
-    // Create ListModel 
-    AbstractListModel ExampleListModel;
 
     // Add data to it
     ExampleListModel.pushBack(SharedFieldPtr(new SFString("Red")));
@@ -324,7 +364,7 @@ int main(int argc, char **argv)
 				and HORIZONTAL_ALIGNMENT arguments.
 
     ******************************************************/    
-    ListPtr ExampleList = List::create();
+    ExampleList = List::create();
 	beginEditCP(ExampleList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask);
         ExampleList->setPreferredSize(Vec2f(200, 300));
         ExampleList->setCellOrientation(VERTICAL_ALIGNMENT);
@@ -386,6 +426,8 @@ int main(int argc, char **argv)
        MainInternalWindow->getChildren().addValue(SingleIntervalSelectionButton);
        MainInternalWindow->getChildren().addValue(MultipleIntervalSelectionButton);
        MainInternalWindow->getChildren().addValue(ExampleScrollPanel);
+       MainInternalWindow->getChildren().addValue(AddItemButton);
+       MainInternalWindow->getChildren().addValue(RemoveItemButton);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));

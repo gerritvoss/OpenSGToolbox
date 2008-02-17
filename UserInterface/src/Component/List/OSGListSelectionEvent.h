@@ -42,20 +42,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListSelectionEvent : public Event
     /*=========================  PUBLIC  ===============================*/
   public:
    //Returns the index of the first row whose selection may have changed.
-   UInt32 	getFirstIndex() const;
+   Int32 	getFirstIndex() const;
    //Returns the index of the last row whose selection may have changed.
-   UInt32 	getLastIndex() const;
+   Int32 	getLastIndex() const;
    //Returns true if this is one of multiple change events
    bool 	getValueIsAdjusting() const;
     
-    ListSelectionEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 FirstIndex, UInt32 LastIndex, bool ValueIsAdjusting);
+    ListSelectionEvent(FieldContainerPtr Source, Time TimeStamp, Int32 FirstIndex, Int32 LastIndex, bool ValueIsAdjusting);
     
     virtual const EventType &getType(void) const;
     
     static const EventType &getClassType(void);
   protected:
-     UInt32 _FirstIndex;
-     UInt32 _LastIndex;
+     Int32 _FirstIndex;
+     Int32 _LastIndex;
      bool _ValueIsAdjusting;
   private:
      static EventType _Type;

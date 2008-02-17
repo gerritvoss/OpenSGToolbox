@@ -177,7 +177,7 @@ void List::initItem(const UInt32& Index)
 void List::selectionChanged(const ListSelectionEvent& e)
 {
 	beginEditCP(ListPtr(this), ChildrenFieldMask);
-		for(UInt32 i(e.getFirstIndex()) ; i<=e.getLastIndex() ; ++i)
+		for(Int32 i(e.getFirstIndex()) ; i<=e.getLastIndex() ; ++i)
 		{
 			updateItem(getDrawnIndexFromListIndex(i));
 		}
@@ -416,14 +416,159 @@ void List::contentsChanged(ListDataEvent e)
 
 void List::intervalAdded(ListDataEvent e)
 {
-	//TODO: Implement
-	updateLayout();
+	UInt32 NumInserted(e.getIndex1() - e.getIndex0() + 1);
+
+	getSelectionModel()->incrementValuesAboveIndex(e.getIndex0(), NumInserted);
+
+	if(e.getIndex0() <= _FocusedIndex)
+	{
+		_FocusedIndex += NumInserted;
+	}
+
+	if(e.getIndex0() <= _BottomDrawnIndex)
+	{
+		//Pop from the back the number of items inserted
+		for(UInt32 i(0) ; i<NumInserted ; ++i)
+		{
+			cleanItem(_DrawnIndices.size()-1);
+			_DrawnIndices.pop_back();
+		}
+		if(e.getIndex0() <= _TopDrawnIndex)
+		{
+			//Push To the front the number of items inserted
+			for(UInt32 i(1) ; i<=NumInserted ; ++i)
+			{
+				_DrawnIndices.push_front(createIndexComponent(_TopDrawnIndex + (NumInserted-i)));
+			}
+		}
+		else
+		{
+			//Pop off the Items that will slide down
+			std::deque<ComponentPtr> SlideDownList;
+			UInt32 NumToSlideDown(_BottomDrawnIndex-e.getIndex0()-NumInserted+1);
+			for(UInt32 i(0) ; i<NumToSlideDown ; ++i)
+			{
+				SlideDownList.push_front(_DrawnIndices.back());
+				_DrawnIndices.pop_back();
+			}
+
+			//Push the new Items
+			for(UInt32 i(0) ; i<NumInserted ; ++i)
+			{
+				_DrawnIndices.push_back(createIndexComponent(e.getIndex0() + i));
+			}
+			//Push the slid Items
+			for(UInt32 i(0) ; i<NumToSlideDown ; ++i)
+			{
+				_DrawnIndices.push_back(SlideDownList[i]);
+			}
+		}
+		beginEditCP(ListPtr(this), ChildrenFieldMask);
+			getChildren().clear();
+			for(UInt32 i(0) ; i<_DrawnIndices.size() ; ++i)
+			{
+				getChildren().push_back(_DrawnIndices[i]);
+			}
+		endEditCP(ListPtr(this), ChildrenFieldMask);
+		for(UInt32 i(0) ; i<_DrawnIndices.size() ; ++i)
+		{
+			initItem(i);
+		}
+	}
+	
+	updatePreferredSize();
 }
 
 void List::intervalRemoved(ListDataEvent e)
 {
-	//TODO: Implement
-	updateLayout();
+	UInt32 NumRemoved(e.getIndex1() - e.getIndex0() + 1);
+	//The Selected Items
+	getSelectionModel()->decrementValuesAboveIndex(e.getIndex0(), NumRemoved);
+
+	if(e.getIndex0() < _FocusedIndex)
+	{
+		_FocusedIndex -= NumRemoved;
+	}
+
+    Int32 NewTopDrawnIndex,
+          NewBottomDrawnIndex;
+    Int32 OldTopDrawnIndex(_TopDrawnIndex),
+          OldBottomDrawnIndex(_BottomDrawnIndex);
+    getDrawnIndices(NewTopDrawnIndex, NewBottomDrawnIndex);
+    _TopDrawnIndex = NewTopDrawnIndex;
+    _BottomDrawnIndex = NewBottomDrawnIndex;
+
+	if(e.getIndex0() <= _BottomDrawnIndex)
+	{
+		//Push to the back the number of items removed
+		UInt32 NumToPush;
+		if(OldBottomDrawnIndex==NewBottomDrawnIndex)
+		{
+			NumToPush = NumRemoved;
+		}
+		else
+		{
+			NumToPush = OldBottomDrawnIndex-NewBottomDrawnIndex;
+		}
+		for(UInt32 i(0) ; i<NumToPush ; ++i)
+		{
+			_DrawnIndices.push_back(createIndexComponent(NewBottomDrawnIndex - (NumToPush-i)+1));
+		}
+
+		if(e.getIndex0() <= _TopDrawnIndex)
+		{
+			//Pop From the front the number of items removed
+			for(UInt32 i(1) ; i<=NumRemoved ; ++i)
+			{
+				cleanItem(0);
+				_DrawnIndices.pop_front();
+			}
+		}
+		else
+		{
+			//Pop off the Items that will slide up
+			std::deque<ComponentPtr> SlideUpList;
+			UInt32 NumToSlideUp(NewBottomDrawnIndex-e.getIndex1()+NumRemoved);
+			for(UInt32 i(0) ; i<NumToSlideUp ; ++i)
+			{
+				SlideUpList.push_front(_DrawnIndices.back());
+				_DrawnIndices.pop_back();
+			}
+
+			//Pop off the removed Items
+			//Pop From the back the number of items removed
+			for(UInt32 i(1) ; i<=NumRemoved ; ++i)
+			{
+				cleanItem(_DrawnIndices.size()-1);
+				_DrawnIndices.pop_back();
+			}
+
+			//Push the slid Items
+			for(UInt32 i(0) ; i<NumToSlideUp ; ++i)
+			{
+				_DrawnIndices.push_back(SlideUpList[i]);
+			}
+		}
+		
+		for(UInt32 i(e.getIndex0()) ; i<=e.getIndex1() ; ++i)
+		{
+			updateItem(i);
+		}
+
+		beginEditCP(ListPtr(this), ChildrenFieldMask);
+			getChildren().clear();
+			for(UInt32 i(0) ; i<_DrawnIndices.size() ; ++i)
+			{
+				getChildren().push_back(_DrawnIndices[i]);
+			}
+		endEditCP(ListPtr(this), ChildrenFieldMask);
+		for(UInt32 i(0) ; i<_DrawnIndices.size() ; ++i)
+		{
+			initItem(i);
+		}
+	}
+	
+	updatePreferredSize();
 }
 
 void List::setModel(ListModelPtr Model)
