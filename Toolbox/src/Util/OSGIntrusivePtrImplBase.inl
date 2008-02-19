@@ -19,4 +19,14 @@ IntrusivePtrImplBase::IntrusivePtrImplBase(void) : _ReferenceCount(0)
 {
 }
 
+inline
+IntrusivePtrImplBase::IntrusivePtrImplBase(const IntrusivePtrImplBase& source) : _ReferenceCount(0)
+{
+}
+
+inline
+void IntrusivePtrImplBase::operator =(const IntrusivePtrImplBase& source)
+{
+}
+
 OSG_END_NAMESPACE

@@ -30,6 +30,9 @@ class OSG_TOOLBOXLIB_DLLMAPPING IntrusivePtrImplBase
 
         IntrusivePtrImplBase(void);
 
+        IntrusivePtrImplBase(const IntrusivePtrImplBase& source);
+        void operator =(const IntrusivePtrImplBase& source);
+
         virtual ~IntrusivePtrImplBase(void);
 
         friend void ::boost::intrusive_ptr_add_ref(IntrusivePtrImplBase * p);
