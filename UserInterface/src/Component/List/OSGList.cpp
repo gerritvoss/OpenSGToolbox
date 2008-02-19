@@ -498,15 +498,15 @@ void List::intervalRemoved(ListDataEvent e)
     _TopDrawnIndex = NewTopDrawnIndex;
     _BottomDrawnIndex = NewBottomDrawnIndex;
 
-	if(e.getIndex0() <= _BottomDrawnIndex)
+	if(e.getIndex0() <= OldBottomDrawnIndex)
 	{
 		//Push to the back the number of items removed
-		UInt32 NumToPush;
+		UInt32 NumToPush(0);
 		if(OldBottomDrawnIndex==NewBottomDrawnIndex)
 		{
 			NumToPush = NumRemoved;
 		}
-		else
+		else if(NewBottomDrawnIndex >= 0)
 		{
 			NumToPush = OldBottomDrawnIndex-NewBottomDrawnIndex;
 		}
@@ -515,7 +515,7 @@ void List::intervalRemoved(ListDataEvent e)
 			_DrawnIndices.push_back(createIndexComponent(NewBottomDrawnIndex - (NumToPush-i)+1));
 		}
 
-		if(e.getIndex0() <= _TopDrawnIndex)
+		if(e.getIndex0() <= OldTopDrawnIndex)
 		{
 			//Pop From the front the number of items removed
 			for(UInt32 i(1) ; i<=NumRemoved ; ++i)
@@ -550,9 +550,12 @@ void List::intervalRemoved(ListDataEvent e)
 			}
 		}
 		
-		for(UInt32 i(e.getIndex0()) ; i<=e.getIndex1() ; ++i)
+		if(NewBottomDrawnIndex >= 0)
 		{
-			updateItem(i);
+			for(Int32 i(e.getIndex0()) ; i<=e.getIndex1() ; ++i)
+			{
+				updateItem(i);
+			}
 		}
 
 		beginEditCP(ListPtr(this), ChildrenFieldMask);

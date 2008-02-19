@@ -62,7 +62,6 @@ void reshape(Vec2f Size);
 // List header files
 #include <OpenSG/UserInterface/OSGList.h>
 #include <OpenSG/UserInterface/OSGAbstractListModel.h>
-#include <OpenSG/UserInterface/OSGDefaultListCellRenderer.h>
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
 
 

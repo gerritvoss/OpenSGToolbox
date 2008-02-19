@@ -24,8 +24,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OSG_UI_LIST_DATA_EVENT_H_
-#define _OSG_UI_LIST_DATA_EVENT_H_
+#ifndef _OSG_UI_UNDOABLE_EDIT_EVENT_H_
+#define _OSG_UI_UNDOABLE_EDIT_EVENT_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -34,35 +34,23 @@
 #include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/Input/OSGEvent.h>
-#include "OSGListModel.h"
+#include "OSGUndoableEdit.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING ListDataEvent : public Event
+class OSG_USERINTERFACELIB_DLLMAPPING UndoableEditEvent : public Event
 {
     /*=========================  PUBLIC  ===============================*/
   public:
-      enum EventEnum {CONTENTS_CHANGED, INTERVAL_ADDED, INTERVAL_REMOVED};
-
-      //Returns the lower index of the range.
-      Int32 	getIndex0(void) const;
-      //Returns the upper index of the range.
-      Int32 	getIndex1(void) const;
-      //Returns the event type.
-      EventEnum 	getEventEnum(void) const;
-      //Returns the event type.
-      ListModelPtr 	getModel(void) const;
+    UndoableEditPtr getUndoableEdit(void) const;
     
-    ListDataEvent(FieldContainerPtr Source, Time TimeStamp, Int32 Index0, Int32 Index1, EventEnum Type, ListModelPtr Model);
+    UndoableEditEvent(FieldContainerPtr Source, Time TimeStamp, UndoableEditPtr UndoableEdit);
     
     virtual const EventType &getType(void) const;
     
     static const EventType &getClassType(void);
   protected:
-     Int32 _Index0;
-     Int32 _Index1;
-     EventEnum _EventEnum;
-	 ListModelPtr _Model;
+     UndoableEditPtr _UndoableEdit;
   private:
      static EventType _Type;
     
@@ -70,6 +58,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListDataEvent : public Event
 
 OSG_END_NAMESPACE
 
-#include "OSGListDataEvent.inl"
+#include "OSGUndoableEditEvent.inl"
 
-#endif /* _OSG_UI_LIST_DATA_EVENT_H_ */
+#endif /* _OSG_UI_UNDOABLE_EDIT_EVENT_H_ */

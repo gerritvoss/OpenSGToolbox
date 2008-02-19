@@ -46,9 +46,9 @@
 #define OSG_COMPILEUSERINTERFACELIB
 
 #include <OpenSG/OSGConfig.h>
+#include <assert.h>
 
-#include "OSGAbstractListModel.h"
-#include "OSGListDataListener.h"
+#include "OSGCompoundUndoableEdit.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -56,8 +56,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::AbstractListModel
-A AbstractListModel. 
+/*! \class osg::CompoundUndoableEdit
+A CompoundUndoableEdit. 
 */
 
 /***************************************************************************\
@@ -72,95 +72,128 @@ A AbstractListModel.
  *                           Instance methods                              *
 \***************************************************************************/
 
-UInt32 AbstractListModel::getSize(void)
+bool CompoundUndoableEdit::addEdit(const UndoableEditPtr anEdit)
 {
-	return _FieldList.size();
-}
-
-SharedFieldPtr AbstractListModel::getElementAt(UInt32 index)
-{
-	if(index < _FieldList.size())
+	if(_IsInProgress)
 	{
-		FieldListItor SearchItor(_FieldList.begin());
-		for(UInt32 i(0) ; i<index ; ++i) {++SearchItor;}
-		return (*SearchItor);
+		if(_Edits.size() != 0)
+		{
+			if(!_Edits.back()->addEdit(anEdit))
+			{
+				if(anEdit->replaceEdit(_Edits.back()))
+				{
+					_Edits.pop_back();
+				}
+				_Edits.push_back(anEdit);
+			}
+		}
+		else
+		{
+			_Edits.push_back(anEdit);
+		}
+		return true;
 	}
 	else
 	{
-		return SharedFieldPtr();
+		return false;
 	}
 }
 
-
-void AbstractListModel::addListDataListener(ListDataListenerPtr l)
+bool CompoundUndoableEdit::canRedo(void) const
 {
-    _DataListeners.insert(l);
+	return Inherited::canRedo() && !_IsInProgress;
 }
 
-void AbstractListModel::removeListDataListener(ListDataListenerPtr l)
+bool CompoundUndoableEdit::canUndo(void) const
 {
-   ListDataListenerSetIter EraseIter(_DataListeners.find(l));
-   if(EraseIter != _DataListeners.end())
-   {
-      _DataListeners.erase(EraseIter);
-   }
-}
- 
-void AbstractListModel::pushBack(SharedFieldPtr f)
-{
-	_FieldList.push_back(f);
-	produceListDataIntervalAdded(_FieldList.size()-1,_FieldList.size()-1);
+	return Inherited::canUndo() && !_IsInProgress;
 }
 
-void AbstractListModel::clear(void)
+void CompoundUndoableEdit::die(void)
 {
-	UInt32 Size(_FieldList.size());
-	_FieldList.clear();
-	produceListDataIntervalRemoved(0,Size-1);
-}
-
-void AbstractListModel::popBack(void)
-{
-	_FieldList.pop_back();
-	produceListDataIntervalRemoved(_FieldList.size(),_FieldList.size());
-}
-
-void AbstractListModel::pushFront(SharedFieldPtr f)
-{
-	_FieldList.push_front(f);
-	produceListDataIntervalAdded(0,0);
-}
-
-void AbstractListModel::popFront(void)
-{
-	_FieldList.pop_front();
-	produceListDataIntervalRemoved(0,0);
-}
-
-void AbstractListModel::insert(UInt32 Index, SharedFieldPtr f)
-{
-	if(Index < _FieldList.size())
+	for(EditVector::reverse_iterator Itor(_Edits.rbegin()) ; Itor != _Edits.rend() ; ++Itor)
 	{
-		FieldListItor SearchItor(_FieldList.begin());
-		for(UInt32 i(0) ; i<Index ; ++i) {++SearchItor;}
-		_FieldList.insert(SearchItor, f);
-		produceListDataIntervalAdded(Index,Index);
+		(*Itor)->die();
+	}
+}
+
+std::string CompoundUndoableEdit::getPresentationName(void) const
+{
+	if(_Edits.size() != 0)
+	{
+		return _Edits.back()->getPresentationName();
 	}
 	else
 	{
-		pushBack(f);
+		return Inherited::getPresentationName();
 	}
 }
 
-void AbstractListModel::erase(UInt32 Index)
+std::string CompoundUndoableEdit::getRedoPresentationName(void) const
 {
-	if(Index < _FieldList.size())
+	if(_Edits.size() != 0)
 	{
-		FieldListItor SearchItor(_FieldList.begin());
-		for(UInt32 i(0) ; i<Index ; ++i) {++SearchItor;}
-		_FieldList.erase(SearchItor);
-		produceListDataIntervalRemoved(Index,Index);
+		return _Edits.back()->getRedoPresentationName();
 	}
+	else
+	{
+		return Inherited::getPresentationName();
+	}
+}
+
+std::string CompoundUndoableEdit::getUndoPresentationName(void) const
+{
+	if(_Edits.size() != 0)
+	{
+		return _Edits.back()->getUndoPresentationName();
+	}
+	else
+	{
+		return Inherited::getPresentationName();
+	}
+}
+
+bool CompoundUndoableEdit::isSignificant(void) const
+{
+	for(EditVector::const_iterator Itor(_Edits.begin()) ; Itor != _Edits.end() ; ++Itor)
+	{
+		if((*Itor)->isSignificant())
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void CompoundUndoableEdit::redo(void)
+{
+	for(EditVector::reverse_iterator Itor(_Edits.rbegin()) ; Itor != _Edits.rend() ; ++Itor)
+	{
+		(*Itor)->redo();
+	}
+}
+
+void CompoundUndoableEdit::undo(void)
+{
+	for(EditVector::reverse_iterator Itor(_Edits.rbegin()) ; Itor != _Edits.rend() ; ++Itor)
+	{
+		(*Itor)->undo();
+	}
+}
+
+bool CompoundUndoableEdit::isInProgress(void) const
+{
+	return _IsInProgress;
+}
+
+void CompoundUndoableEdit::end(void)
+{
+	_IsInProgress = false;
+}
+
+UndoableEditPtr CompoundUndoableEdit::lastEdit(void)
+{
+	return _Edits.back();
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -168,46 +201,34 @@ void AbstractListModel::erase(UInt32 Index)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-AbstractListModel::AbstractListModel(void)
+CompoundUndoableEdit::CompoundUndoableEdit(void) : Inherited(),
+				_IsInProgress(true)
 {
 }
 
-AbstractListModel::~AbstractListModel(void)
+CompoundUndoableEdit::CompoundUndoableEdit(const CompoundUndoableEdit& source) : Inherited(source),
+												_IsInProgress(source._IsInProgress),
+												_Edits(source._Edits)
 {
 }
 
+void CompoundUndoableEdit::operator=(const CompoundUndoableEdit& source)
+{
+	Inherited::operator=(source);
+	_IsInProgress = source._IsInProgress;
+	_Edits = source._Edits;
+}
+
+CompoundUndoableEdit::~CompoundUndoableEdit(void)
+{
+}
+
+CompoundUndoableEditPtr CompoundUndoableEdit::create(void)
+{
+	return CompoundUndoableEditPtr(new CompoundUndoableEdit());
+}
 
 /*----------------------------- class specific ----------------------------*/
-
-void AbstractListModel::produceListDataContentsChanged(void)
-{
-	ListDataEvent e(NullFC, getSystemTime(), 0, _FieldList.size()-1, ListDataEvent::CONTENTS_CHANGED, this);
-   ListDataListenerSet DataListenerSet(_DataListeners);
-   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-   {
-		(*SetItor)->contentsChanged(e);
-   }
-}
-
-void AbstractListModel::produceListDataIntervalAdded(UInt32 index0, UInt32 index1)
-{
-	ListDataEvent e(NullFC, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_ADDED, this);
-   ListDataListenerSet DataListenerSet(_DataListeners);
-   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-   {
-		(*SetItor)->intervalAdded(e);
-   }
-}
-
-void AbstractListModel::produceListDataIntervalRemoved(UInt32 index0, UInt32 index1)
-{
-	ListDataEvent e(NullFC, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_REMOVED, this);
-   ListDataListenerSet DataListenerSet(_DataListeners);
-   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-   {
-		(*SetItor)->intervalRemoved(e);
-   }
-}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

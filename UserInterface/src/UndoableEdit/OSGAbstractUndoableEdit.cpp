@@ -47,8 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGAbstractListModel.h"
-#include "OSGListDataListener.h"
+#include "OSGAbstractUndoableEdit.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -56,8 +55,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::AbstractListModel
-A AbstractListModel. 
+/*! \class osg::AbstractUndoableEdit
+A AbstractUndoableEdit. 
 */
 
 /***************************************************************************\
@@ -72,94 +71,72 @@ A AbstractListModel.
  *                           Instance methods                              *
 \***************************************************************************/
 
-UInt32 AbstractListModel::getSize(void)
+bool AbstractUndoableEdit::addEdit(const UndoableEditPtr anEdit)
 {
-	return _FieldList.size();
+	return false;
 }
 
-SharedFieldPtr AbstractListModel::getElementAt(UInt32 index)
+bool AbstractUndoableEdit::canRedo(void) const
 {
-	if(index < _FieldList.size())
+	return _Alive && !_HasBeenDone;
+}
+
+bool AbstractUndoableEdit::canUndo(void) const
+{
+	return _Alive && _HasBeenDone;
+}
+
+void AbstractUndoableEdit::die(void)
+{
+	_Alive = false;
+}
+
+std::string AbstractUndoableEdit::getPresentationName(void) const
+{
+	return std::string("");
+}
+
+std::string AbstractUndoableEdit::getRedoPresentationName(void) const
+{
+	return std::string("Redo ") + getPresentationName();
+}
+
+std::string AbstractUndoableEdit::getUndoPresentationName(void) const
+{
+	return std::string("Undo ") + getPresentationName();
+}
+
+bool AbstractUndoableEdit::isSignificant(void) const
+{
+	return true;
+}
+
+void AbstractUndoableEdit::redo(void)
+{
+	if(canRedo())
 	{
-		FieldListItor SearchItor(_FieldList.begin());
-		for(UInt32 i(0) ; i<index ; ++i) {++SearchItor;}
-		return (*SearchItor);
+		_HasBeenDone = true;
 	}
 	else
 	{
-		return SharedFieldPtr();
+		throw CannotRedoException();
 	}
 }
 
-
-void AbstractListModel::addListDataListener(ListDataListenerPtr l)
+bool AbstractUndoableEdit::replaceEdit(const UndoableEditPtr anEdit) const
 {
-    _DataListeners.insert(l);
+	return false;
 }
 
-void AbstractListModel::removeListDataListener(ListDataListenerPtr l)
+void AbstractUndoableEdit::undo(void)
 {
-   ListDataListenerSetIter EraseIter(_DataListeners.find(l));
-   if(EraseIter != _DataListeners.end())
-   {
-      _DataListeners.erase(EraseIter);
-   }
-}
- 
-void AbstractListModel::pushBack(SharedFieldPtr f)
-{
-	_FieldList.push_back(f);
-	produceListDataIntervalAdded(_FieldList.size()-1,_FieldList.size()-1);
-}
-
-void AbstractListModel::clear(void)
-{
-	UInt32 Size(_FieldList.size());
-	_FieldList.clear();
-	produceListDataIntervalRemoved(0,Size-1);
-}
-
-void AbstractListModel::popBack(void)
-{
-	_FieldList.pop_back();
-	produceListDataIntervalRemoved(_FieldList.size(),_FieldList.size());
-}
-
-void AbstractListModel::pushFront(SharedFieldPtr f)
-{
-	_FieldList.push_front(f);
-	produceListDataIntervalAdded(0,0);
-}
-
-void AbstractListModel::popFront(void)
-{
-	_FieldList.pop_front();
-	produceListDataIntervalRemoved(0,0);
-}
-
-void AbstractListModel::insert(UInt32 Index, SharedFieldPtr f)
-{
-	if(Index < _FieldList.size())
+	if(canUndo())
 	{
-		FieldListItor SearchItor(_FieldList.begin());
-		for(UInt32 i(0) ; i<Index ; ++i) {++SearchItor;}
-		_FieldList.insert(SearchItor, f);
-		produceListDataIntervalAdded(Index,Index);
+		_HasBeenDone = false;
 	}
 	else
 	{
-		pushBack(f);
-	}
-}
-
-void AbstractListModel::erase(UInt32 Index)
-{
-	if(Index < _FieldList.size())
-	{
-		FieldListItor SearchItor(_FieldList.begin());
-		for(UInt32 i(0) ; i<Index ; ++i) {++SearchItor;}
-		_FieldList.erase(SearchItor);
-		produceListDataIntervalRemoved(Index,Index);
+		throw CannotUndoException();
 	}
 }
 /*-------------------------------------------------------------------------*\
@@ -168,46 +145,29 @@ void AbstractListModel::erase(UInt32 Index)
 
 /*----------------------- constructors & destructors ----------------------*/
 
-AbstractListModel::AbstractListModel(void)
+AbstractUndoableEdit::AbstractUndoableEdit(void) : Inherited(),
+				_Alive(true),
+				_HasBeenDone(false)
 {
 }
 
-AbstractListModel::~AbstractListModel(void)
+AbstractUndoableEdit::AbstractUndoableEdit(const AbstractUndoableEdit& source) : Inherited(source),
+				_Alive(source._Alive),
+				_HasBeenDone(source._HasBeenDone)
 {
 }
 
+void AbstractUndoableEdit::operator=(const AbstractUndoableEdit& source)
+{
+	Inherited::operator=(source);
+	_Alive = source._Alive;
+	_HasBeenDone = source._HasBeenDone;
+}
 
+AbstractUndoableEdit::~AbstractUndoableEdit(void)
+{
+}
 /*----------------------------- class specific ----------------------------*/
-
-void AbstractListModel::produceListDataContentsChanged(void)
-{
-	ListDataEvent e(NullFC, getSystemTime(), 0, _FieldList.size()-1, ListDataEvent::CONTENTS_CHANGED, this);
-   ListDataListenerSet DataListenerSet(_DataListeners);
-   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-   {
-		(*SetItor)->contentsChanged(e);
-   }
-}
-
-void AbstractListModel::produceListDataIntervalAdded(UInt32 index0, UInt32 index1)
-{
-	ListDataEvent e(NullFC, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_ADDED, this);
-   ListDataListenerSet DataListenerSet(_DataListeners);
-   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-   {
-		(*SetItor)->intervalAdded(e);
-   }
-}
-
-void AbstractListModel::produceListDataIntervalRemoved(UInt32 index0, UInt32 index1)
-{
-	ListDataEvent e(NullFC, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_REMOVED, this);
-   ListDataListenerSet DataListenerSet(_DataListeners);
-   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-   {
-		(*SetItor)->intervalRemoved(e);
-   }
-}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

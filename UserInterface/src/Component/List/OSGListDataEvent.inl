@@ -10,19 +10,19 @@ const EventType &ListDataEvent::getClassType(void)
 }
 
 inline
-UInt32 	ListDataEvent::getIndex0(void) const
+Int32 	ListDataEvent::getIndex0(void) const
 {
    return _Index0;
 }
 
 inline
-UInt32 	ListDataEvent::getIndex1(void) const
+Int32 	ListDataEvent::getIndex1(void) const
 {
    return _Index1;
 }
 
 inline
-ListDataEvent::EventEnum 	ListDataEvent::getEventEnum(void) const
+ListDataEvent::EventEnum ListDataEvent::getEventEnum(void) const
 {
    return _EventEnum;
 }
@@ -34,7 +34,7 @@ ListModelPtr ListDataEvent::getModel(void) const
 }
 
 inline
-ListDataEvent::ListDataEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 Index0, UInt32 Index1, EventEnum Type, ListModelPtr Model)
+ListDataEvent::ListDataEvent(FieldContainerPtr Source, Time TimeStamp, Int32 Index0, Int32 Index1, EventEnum Type, ListModelPtr Model)
  : Event(Source, TimeStamp),
    _Index0(Index0),
    _Index1(Index1),

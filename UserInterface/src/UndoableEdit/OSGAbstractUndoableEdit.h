@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGABSTRACTLISTMODEL_H_
-#define _OSGABSTRACTLISTMODEL_H_
+#ifndef _OSGABSTRACTUNDOABLEEDIT_H_
+#define _OSGABSTRACTUNDOABLEEDIT_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,67 +45,82 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGListModel.h"
-#include <set>
-#include <list>
+#include "OSGUndoableEdit.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief AbstractListModel class. See \ref 
-           PageUserInterfaceAbstractListModel for a description.
+/*! \brief AbstractUndoableEdit class. See \ref 
+           PageUserInterfaceAbstractUndoableEdit for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractListModel : public ListModel
+class AbstractUndoableEdit;
+typedef boost::intrusive_ptr<AbstractUndoableEdit> AbstractUndoableEditPtr;
+
+class OSG_USERINTERFACELIB_DLLMAPPING AbstractUndoableEdit : public UndoableEdit
 {
     /*==========================  PUBLIC  =================================*/
   public:
-    typedef std::list<SharedFieldPtr> FieldList;
-	typedef FieldList::iterator FieldListItor;
-    typedef FieldList::const_iterator FieldListConstItor;
+	  typedef UndoableEdit Inherited;
+    typedef AbstractUndoableEditPtr  Ptr;
+    typedef AbstractUndoableEdit  Self;
 
-	virtual UInt32 getSize(void);
-	virtual SharedFieldPtr getElementAt(UInt32 index);
+	//This UndoableEdit should absorb anEdit if it can.
+	virtual bool addEdit(const UndoableEditPtr anEdit);
 
-	virtual void addListDataListener(ListDataListenerPtr l);
-	virtual void removeListDataListener(ListDataListenerPtr l);
+	//True if it is still possible to redo this operation.
+	virtual bool canRedo(void) const;
 
-	void pushBack(SharedFieldPtr f);
-	void popBack(void);
+	//True if it is still possible to undo this operation.
+	virtual bool canUndo(void) const;
 
-	void pushFront(SharedFieldPtr f);
-	void popFront(void);
+	//May be sent to inform an edit that it should no longer be used.
+	virtual void die(void);
 
-	void insert(UInt32 Index, SharedFieldPtr f);
+	//Provides a localized, human readable description of this edit suitable for use in, say, a change log.
+	virtual std::string getPresentationName(void) const;
+
+	//Provides a localized, human readable description of the redoable form of this edit, e.g.
+	virtual std::string getRedoPresentationName(void) const;
+
+	//Provides a localized, human readable description of the undoable form of this edit, e.g.
+	virtual std::string getUndoPresentationName(void) const;
+
+	//Returns false if this edit is insignificant--for example one that maintains the user's selection, but does not change any model state.
+	virtual bool isSignificant(void) const;
+
+	//Re-apply the edit, assuming that it has been undone.
+	virtual void redo(void);
+
+	//Returns true if this UndoableEdit should replace anEdit.
+	virtual bool replaceEdit(const UndoableEditPtr anEdit) const;
+
+	//Undo the edit that was made.
+	virtual void undo(void);
 	
-	void erase(UInt32 Index);
-	void clear(void);
+	virtual ~AbstractUndoableEdit(void);
 
-    AbstractListModel(void);
-    virtual ~AbstractListModel(void); 
+	template <class InTypeT> inline
+	static Ptr dcast(InTypeT oIn)
+	{
+		return Ptr(dynamic_cast<typename Self *>(oIn.get()));
+	}
   protected:
+	bool _Alive;
+	bool _HasBeenDone;
 
-	FieldList _FieldList;
+	AbstractUndoableEdit(void);
 
+	AbstractUndoableEdit(const AbstractUndoableEdit& source);
+
+    void operator =(const AbstractUndoableEdit& source);
     /*==========================  PRIVATE  ================================*/
   private:
-	typedef std::set<ListDataListenerPtr> ListDataListenerSet;
-	typedef ListDataListenerSet::iterator ListDataListenerSetIter;
-	typedef ListDataListenerSet::const_iterator ListDataListenerSetConstIter;
-	ListDataListenerSet _DataListeners;
-
-	void produceListDataContentsChanged(void);
-	void produceListDataIntervalAdded(UInt32 index0, UInt32 index1);
-	void produceListDataIntervalRemoved(UInt32 index0, UInt32 index1);
-
-    void operator =(const AbstractListModel &source);
 };
-
-typedef AbstractListModel *AbstractListModelPtr;
 
 OSG_END_NAMESPACE
 
-#include "OSGAbstractListModel.inl"
+#include "OSGAbstractUndoableEdit.inl"
 
-#define OSGABSTRACTLISTMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGABSTRACTUNDOABLEEDIT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGABSTRACTLISTMODEL_H_ */
+#endif /* _OSGABSTRACTUNDOABLEEDIT_H_ */
