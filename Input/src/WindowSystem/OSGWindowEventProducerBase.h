@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                          OpenSG ToolBox Input                             *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -69,6 +69,8 @@
 
 #include <OpenSG/OSGWindowFields.h> // Window type
 #include <OpenSG/OSGBoolFields.h> // Enabled type
+#include <OpenSG/OSGBoolFields.h> // UseCallbackForDraw type
+#include <OpenSG/OSGBoolFields.h> // UseCallbackForReshape type
 #include <OpenSG/OSGTimeFields.h> // LastUpdateTime type
 #include <OpenSG/OSGImageFields.h> // Icon type
 
@@ -94,15 +96,19 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
 
     enum
     {
-        WindowFieldId         = Inherited::NextFieldId,
-        EnabledFieldId        = WindowFieldId         + 1,
-        LastUpdateTimeFieldId = EnabledFieldId        + 1,
-        IconFieldId           = LastUpdateTimeFieldId + 1,
-        NextFieldId           = IconFieldId           + 1
+        WindowFieldId                = Inherited::NextFieldId,
+        EnabledFieldId               = WindowFieldId                + 1,
+        UseCallbackForDrawFieldId    = EnabledFieldId               + 1,
+        UseCallbackForReshapeFieldId = UseCallbackForDrawFieldId    + 1,
+        LastUpdateTimeFieldId        = UseCallbackForReshapeFieldId + 1,
+        IconFieldId                  = LastUpdateTimeFieldId        + 1,
+        NextFieldId                  = IconFieldId                  + 1
     };
 
     static const OSG::BitVector WindowFieldMask;
     static const OSG::BitVector EnabledFieldMask;
+    static const OSG::BitVector UseCallbackForDrawFieldMask;
+    static const OSG::BitVector UseCallbackForReshapeFieldMask;
     static const OSG::BitVector LastUpdateTimeFieldMask;
     static const OSG::BitVector IconFieldMask;
 
@@ -133,6 +139,8 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
 
            SFWindowPtr         *getSFWindow         (void);
            SFBool              *getSFEnabled        (void);
+           SFBool              *getSFUseCallbackForDraw(void);
+           SFBool              *getSFUseCallbackForReshape(void);
            SFTime              *getSFLastUpdateTime (void);
            SFImagePtr          *getSFIcon           (void);
 
@@ -140,6 +148,10 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
      const WindowPtr           &getWindow         (void) const;
            bool                &getEnabled        (void);
      const bool                &getEnabled        (void) const;
+           bool                &getUseCallbackForDraw(void);
+     const bool                &getUseCallbackForDraw(void) const;
+           bool                &getUseCallbackForReshape(void);
+     const bool                &getUseCallbackForReshape(void) const;
            Time                &getLastUpdateTime (void);
      const Time                &getLastUpdateTime (void) const;
            ImagePtr            &getIcon           (void);
@@ -152,6 +164,8 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
 
      void setWindow         ( const WindowPtr &value );
      void setEnabled        ( const bool &value );
+     void setUseCallbackForDraw( const bool &value );
+     void setUseCallbackForReshape( const bool &value );
      void setLastUpdateTime ( const Time &value );
      void setIcon           ( const ImagePtr &value );
 
@@ -182,6 +196,8 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
 
     SFWindowPtr         _sfWindow;
     SFBool              _sfEnabled;
+    SFBool              _sfUseCallbackForDraw;
+    SFBool              _sfUseCallbackForReshape;
     SFTime              _sfLastUpdateTime;
     SFImagePtr          _sfIcon;
 

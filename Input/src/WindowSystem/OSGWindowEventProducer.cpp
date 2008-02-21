@@ -83,6 +83,8 @@ WindowPtr WindowEventProducer::initWindow(void)
         setWindow(createWindow());
     endEditCP(WindowEventProducerPtr(this), WindowEventProducer::WindowFieldMask);
 
+	_RenderAction = RenderAction::create();
+
     return getWindow();
 }
 

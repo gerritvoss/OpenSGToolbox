@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                          OpenSG Toolbox Input                             *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   Authors: David Kabala                                                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -49,6 +49,7 @@
 #include <vector>
 #include <map>
 #include <OpenSG/OSGThread.h>
+#include <OpenSG/OSGRenderAction.h>
 
 #include "OSGWindowEventProducerBase.h"
 
@@ -151,6 +152,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
 
     DisplayCallbackFunc _DisplayCallbackFunc;
     ReshapeCallbackFunc _ReshapeCallbackFunc;
+	RenderAction *      _RenderAction;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -274,6 +276,9 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
 
 	CursorType getCursorType(void) const;
 	void setCursorType(CursorType Type); 
+
+	RenderAction * getRenderAction(void);
+	void setRenderAction(RenderAction *action);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -292,6 +297,9 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     /*! \{                                                                 */
 
     virtual ~WindowEventProducer(void); 
+
+    void internalDraw(void);
+    void internalReshape(Vec2f size);
 
     /*! \}                                                                 */
     

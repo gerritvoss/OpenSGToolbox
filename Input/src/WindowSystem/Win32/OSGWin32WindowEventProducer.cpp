@@ -193,6 +193,23 @@ std::string Win32WindowEventProducer::getClipboard(void) const
 void Win32WindowEventProducer::putClipboard(const std::string Value)
 {
 	//TODO:Implement
+	if(OpenClipboard(WIN32Window::Ptr::dcast(getWindow())->getHwnd()))
+	{
+		if(EmptyClipboard())
+		{
+			HGLOBAL hglbCopy = GlobalAlloc(GMEM_MOVEABLE, (Value.size() + 1) * sizeof(char));
+			if(hglbCopy != NULL)
+			{
+				LPTSTR  lptstrCopy;
+				//lptstrCopy = GlobalLock(hglbCopy); 
+				//memcpy(lptstrCopy, &pbox->atchLabel[ich1],  cch * sizeof(TCHAR)); 
+				//lptstrCopy[Value.size()] = (char) 0;    // null character 
+				//GlobalUnlock(hglbCopy);
+				SetClipboardData(CF_TEXT, hglbCopy);
+			}
+		}
+		CloseClipboard();
+	}
 }
 
 void Win32WindowEventProducer::setCursor(void)
@@ -788,7 +805,7 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd, UINT uMsg,
                                     
         case WM_SIZE:
             getWindow()->resize( LOWORD(lParam), HIWORD( lParam ) );
-            _ReshapeCallbackFunc(Vec2f(LOWORD(lParam), HIWORD( lParam )));
+            internalReshape(Vec2f(LOWORD(lParam), HIWORD( lParam )));
             break;
 
         case WM_CLOSE:
@@ -797,7 +814,7 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd, UINT uMsg,
             break;
             
         case WIN32_DRAW_MESSAGE:
-            _DisplayCallbackFunc();
+            internalDraw();
             break;
 
         case WIN32_UPDATE_MESSAGE:

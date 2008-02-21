@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                          OpenSG ToolBox Input                             *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -70,6 +70,12 @@ const OSG::BitVector  WindowEventProducerBase::WindowFieldMask =
 const OSG::BitVector  WindowEventProducerBase::EnabledFieldMask = 
     (TypeTraits<BitVector>::One << WindowEventProducerBase::EnabledFieldId);
 
+const OSG::BitVector  WindowEventProducerBase::UseCallbackForDrawFieldMask = 
+    (TypeTraits<BitVector>::One << WindowEventProducerBase::UseCallbackForDrawFieldId);
+
+const OSG::BitVector  WindowEventProducerBase::UseCallbackForReshapeFieldMask = 
+    (TypeTraits<BitVector>::One << WindowEventProducerBase::UseCallbackForReshapeFieldId);
+
 const OSG::BitVector  WindowEventProducerBase::LastUpdateTimeFieldMask = 
     (TypeTraits<BitVector>::One << WindowEventProducerBase::LastUpdateTimeFieldId);
 
@@ -87,6 +93,12 @@ const OSG::BitVector WindowEventProducerBase::MTInfluenceMask =
     
 */
 /*! \var bool            WindowEventProducerBase::_sfEnabled
+    
+*/
+/*! \var bool            WindowEventProducerBase::_sfUseCallbackForDraw
+    
+*/
+/*! \var bool            WindowEventProducerBase::_sfUseCallbackForReshape
     
 */
 /*! \var Time            WindowEventProducerBase::_sfLastUpdateTime
@@ -110,6 +122,16 @@ FieldDescription *WindowEventProducerBase::_desc[] =
                      EnabledFieldId, EnabledFieldMask,
                      false,
                      (FieldAccessMethod) &WindowEventProducerBase::getSFEnabled),
+    new FieldDescription(SFBool::getClassType(), 
+                     "UseCallbackForDraw", 
+                     UseCallbackForDrawFieldId, UseCallbackForDrawFieldMask,
+                     false,
+                     (FieldAccessMethod) &WindowEventProducerBase::getSFUseCallbackForDraw),
+    new FieldDescription(SFBool::getClassType(), 
+                     "UseCallbackForReshape", 
+                     UseCallbackForReshapeFieldId, UseCallbackForReshapeFieldMask,
+                     false,
+                     (FieldAccessMethod) &WindowEventProducerBase::getSFUseCallbackForReshape),
     new FieldDescription(SFTime::getClassType(), 
                      "LastUpdateTime", 
                      LastUpdateTimeFieldId, LastUpdateTimeFieldMask,
@@ -188,6 +210,8 @@ void WindowEventProducerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 WindowEventProducerBase::WindowEventProducerBase(void) :
     _sfWindow                 (), 
     _sfEnabled                (), 
+    _sfUseCallbackForDraw     (bool(false)), 
+    _sfUseCallbackForReshape  (bool(false)), 
     _sfLastUpdateTime         (Time(-1.0)), 
     _sfIcon                   (ImagePtr(NullFC)), 
     Inherited() 
@@ -201,6 +225,8 @@ WindowEventProducerBase::WindowEventProducerBase(void) :
 WindowEventProducerBase::WindowEventProducerBase(const WindowEventProducerBase &source) :
     _sfWindow                 (source._sfWindow                 ), 
     _sfEnabled                (source._sfEnabled                ), 
+    _sfUseCallbackForDraw     (source._sfUseCallbackForDraw     ), 
+    _sfUseCallbackForReshape  (source._sfUseCallbackForReshape  ), 
     _sfLastUpdateTime         (source._sfLastUpdateTime         ), 
     _sfIcon                   (source._sfIcon                   ), 
     Inherited                 (source)
@@ -227,6 +253,16 @@ UInt32 WindowEventProducerBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (EnabledFieldMask & whichField))
     {
         returnValue += _sfEnabled.getBinSize();
+    }
+
+    if(FieldBits::NoField != (UseCallbackForDrawFieldMask & whichField))
+    {
+        returnValue += _sfUseCallbackForDraw.getBinSize();
+    }
+
+    if(FieldBits::NoField != (UseCallbackForReshapeFieldMask & whichField))
+    {
+        returnValue += _sfUseCallbackForReshape.getBinSize();
     }
 
     if(FieldBits::NoField != (LastUpdateTimeFieldMask & whichField))
@@ -258,6 +294,16 @@ void WindowEventProducerBase::copyToBin(      BinaryDataHandler &pMem,
         _sfEnabled.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (UseCallbackForDrawFieldMask & whichField))
+    {
+        _sfUseCallbackForDraw.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (UseCallbackForReshapeFieldMask & whichField))
+    {
+        _sfUseCallbackForReshape.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (LastUpdateTimeFieldMask & whichField))
     {
         _sfLastUpdateTime.copyToBin(pMem);
@@ -286,6 +332,16 @@ void WindowEventProducerBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfEnabled.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (UseCallbackForDrawFieldMask & whichField))
+    {
+        _sfUseCallbackForDraw.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (UseCallbackForReshapeFieldMask & whichField))
+    {
+        _sfUseCallbackForReshape.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (LastUpdateTimeFieldMask & whichField))
     {
         _sfLastUpdateTime.copyFromBin(pMem);
@@ -312,6 +368,12 @@ void WindowEventProducerBase::executeSyncImpl(      WindowEventProducerBase *pOt
     if(FieldBits::NoField != (EnabledFieldMask & whichField))
         _sfEnabled.syncWith(pOther->_sfEnabled);
 
+    if(FieldBits::NoField != (UseCallbackForDrawFieldMask & whichField))
+        _sfUseCallbackForDraw.syncWith(pOther->_sfUseCallbackForDraw);
+
+    if(FieldBits::NoField != (UseCallbackForReshapeFieldMask & whichField))
+        _sfUseCallbackForReshape.syncWith(pOther->_sfUseCallbackForReshape);
+
     if(FieldBits::NoField != (LastUpdateTimeFieldMask & whichField))
         _sfLastUpdateTime.syncWith(pOther->_sfLastUpdateTime);
 
@@ -333,6 +395,12 @@ void WindowEventProducerBase::executeSyncImpl(      WindowEventProducerBase *pOt
 
     if(FieldBits::NoField != (EnabledFieldMask & whichField))
         _sfEnabled.syncWith(pOther->_sfEnabled);
+
+    if(FieldBits::NoField != (UseCallbackForDrawFieldMask & whichField))
+        _sfUseCallbackForDraw.syncWith(pOther->_sfUseCallbackForDraw);
+
+    if(FieldBits::NoField != (UseCallbackForReshapeFieldMask & whichField))
+        _sfUseCallbackForReshape.syncWith(pOther->_sfUseCallbackForReshape);
 
     if(FieldBits::NoField != (LastUpdateTimeFieldMask & whichField))
         _sfLastUpdateTime.syncWith(pOther->_sfLastUpdateTime);

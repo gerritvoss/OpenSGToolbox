@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                          OpenSG ToolBox Input                             *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -84,6 +84,20 @@ SFBool *WindowEventProducerBase::getSFEnabled(void)
     return &_sfEnabled;
 }
 
+//! Get the WindowEventProducer::_sfUseCallbackForDraw field.
+inline
+SFBool *WindowEventProducerBase::getSFUseCallbackForDraw(void)
+{
+    return &_sfUseCallbackForDraw;
+}
+
+//! Get the WindowEventProducer::_sfUseCallbackForReshape field.
+inline
+SFBool *WindowEventProducerBase::getSFUseCallbackForReshape(void)
+{
+    return &_sfUseCallbackForReshape;
+}
+
 //! Get the WindowEventProducer::_sfLastUpdateTime field.
 inline
 SFTime *WindowEventProducerBase::getSFLastUpdateTime(void)
@@ -139,6 +153,48 @@ inline
 void WindowEventProducerBase::setEnabled(const bool &value)
 {
     _sfEnabled.setValue(value);
+}
+
+//! Get the value of the WindowEventProducer::_sfUseCallbackForDraw field.
+inline
+bool &WindowEventProducerBase::getUseCallbackForDraw(void)
+{
+    return _sfUseCallbackForDraw.getValue();
+}
+
+//! Get the value of the WindowEventProducer::_sfUseCallbackForDraw field.
+inline
+const bool &WindowEventProducerBase::getUseCallbackForDraw(void) const
+{
+    return _sfUseCallbackForDraw.getValue();
+}
+
+//! Set the value of the WindowEventProducer::_sfUseCallbackForDraw field.
+inline
+void WindowEventProducerBase::setUseCallbackForDraw(const bool &value)
+{
+    _sfUseCallbackForDraw.setValue(value);
+}
+
+//! Get the value of the WindowEventProducer::_sfUseCallbackForReshape field.
+inline
+bool &WindowEventProducerBase::getUseCallbackForReshape(void)
+{
+    return _sfUseCallbackForReshape.getValue();
+}
+
+//! Get the value of the WindowEventProducer::_sfUseCallbackForReshape field.
+inline
+const bool &WindowEventProducerBase::getUseCallbackForReshape(void) const
+{
+    return _sfUseCallbackForReshape.getValue();
+}
+
+//! Set the value of the WindowEventProducer::_sfUseCallbackForReshape field.
+inline
+void WindowEventProducerBase::setUseCallbackForReshape(const bool &value)
+{
+    _sfUseCallbackForReshape.setValue(value);
 }
 
 //! Get the value of the WindowEventProducer::_sfLastUpdateTime field.

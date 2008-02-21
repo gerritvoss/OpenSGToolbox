@@ -7,9 +7,46 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+RenderAction * WindowEventProducer::getRenderAction(void)
+{
+	return _RenderAction;
+}
+
+inline
+void WindowEventProducer::setRenderAction(RenderAction *action)
+{
+	_RenderAction = action;
+}
+
+inline
+void WindowEventProducer::internalDraw(void)
+{
+	if(getUseCallbackForDraw())
+	{
+		_DisplayCallbackFunc();
+	}
+	else
+	{
+		getWindow()->render(_RenderAction);
+	}
+}
+
+inline
+void WindowEventProducer::internalReshape(Vec2f size)
+{
+	if(getUseCallbackForReshape())
+	{
+		_ReshapeCallbackFunc(size);
+	}
+	else
+	{
+		getWindow()->resize(size.x(), size.y());
+	}
+}
+
+inline
 void WindowEventProducer::draw(void)
 {
-   _DisplayCallbackFunc();
 }
 
 inline

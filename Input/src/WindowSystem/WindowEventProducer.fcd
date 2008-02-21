@@ -29,6 +29,24 @@ WindowEventProducer is the base class for all Window specific Event producers. I
 	>
 	</Field>
 	<Field
+		name="UseCallbackForDraw"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="false"
+	>
+	</Field>
+	<Field
+		name="UseCallbackForReshape"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="false"
+	>
+	</Field>
+	<Field
 		name="LastUpdateTime"
 		type="Time"
 		cardinality="single"

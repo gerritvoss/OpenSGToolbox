@@ -199,7 +199,7 @@ void XWindowEventProducer::WindowEventLoopThread(void* args)
         
         if(EventProducer->_IsDrawPending)
         {
-            EventProducer->_DisplayCallbackFunc();
+            EventProducer->internalDraw();
             EventProducer->_IsDrawPending = false;
         }
         else
@@ -856,8 +856,8 @@ void XWindowEventProducer::handleEvent(XEvent& Event)
             {
                getWindow()->resize( Event.xconfigure.width,
                             Event.xconfigure.height );
-               _ReshapeCallbackFunc(Vec2s(Event.xconfigure.width, Event.xconfigure.height));
-               _DisplayCallbackFunc();
+               internalReshape(Vec2s(Event.xconfigure.width, Event.xconfigure.height));
+               internalDraw();
             }
             break;
             
@@ -883,7 +883,7 @@ void XWindowEventProducer::handleEvent(XEvent& Event)
             produceWindowDeactivated();
             break;
          case Expose:
-            _DisplayCallbackFunc();
+            internalDraw();
             break;
         case ClientMessage:
         {

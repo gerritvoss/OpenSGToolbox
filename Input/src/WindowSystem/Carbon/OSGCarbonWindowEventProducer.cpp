@@ -293,7 +293,7 @@ void CarbonWindowEventProducer::WindowEventLoopThread(void* args)
             SendEventToEventTarget (theEvent, theTarget);        
             ReleaseEvent(theEvent);
         }
-        Arguments->_EventProducer->_DisplayCallbackFunc();
+        Arguments->_EventProducer->internalDraw();
     }
     
     Arguments->_EventProducer->produceWindowClosed();
@@ -486,7 +486,7 @@ OSStatus CarbonWindowEventProducer::handleWindowEvent(EventHandlerCallRef nextHa
 
     // Draw the contents of the window
     case kEventWindowDrawContent:
-        _DisplayCallbackFunc();
+        internalDraw();
         return noErr;
 
     case kEventWindowBoundsChanged:
@@ -508,7 +508,7 @@ OSStatus CarbonWindowEventProducer::handleWindowEvent(EventHandlerCallRef nextHa
                 GLsizei width = bounds.right - bounds.left;
                 GLsizei height = bounds.bottom - bounds.top;
 				getWindow()->resize(width, height );
-				_ReshapeCallbackFunc(Vec2s(width, height));
+				internalReshape(Vec2s(width, height));
             }
 
             return noErr;
