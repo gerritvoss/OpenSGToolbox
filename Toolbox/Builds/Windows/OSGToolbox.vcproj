@@ -3,143 +3,206 @@
 	ProjectType="Visual C++"
 	Version="7.10"
 	Name="OSGToolbox"
-	ProjectGUID="{77623743-1948-4AC4-8227-7FF6072BD16F}"
+	ProjectGUID="{82609F8B-FDBB-4A72-B925-A5B4007272B5}"
 	RootNamespace="OSGAnimation"
-	Keyword="Win32Proj">
+	Keyword="Win32Proj"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="2"
-			CharacterSet="0">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+				CommandLine=""
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="Installing Includes"
+				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Toolbox&#x0D;&#x0A;"
+				Outputs="include"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="..\..\..\External\Boost;&quot;$(OPENSG)\..\include&quot;;..\..\src"
+				AdditionalIncludeDirectories="$(BOOST_DIR);&quot;$(OPENSG)\..\include&quot;;..\..\src"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILETOOLBOXLIB"
-				StringPooling="TRUE"
-				MinimalRebuild="TRUE"
+				StringPooling="true"
+				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				BufferSecurityCheck="FALSE"
-				EnableFunctionLevelLinking="TRUE"
-				RuntimeTypeInfo="TRUE"
+				BufferSecurityCheck="false"
+				EnableFunctionLevelLinking="true"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(OutDir)/"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
 				DisableSpecificWarnings="4244;4251;4275;4290;4231;4267"
-				ForcedIncludeFiles="WinSock2.h;windows.h"/>
+				ForcedIncludeFiles="WinSock2.h;windows.h"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"
-				Description="Installing Includes"
-				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Toolbox
-"
-				Outputs="include"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGWindowGLUTD.lib OSGWindowWIN32D.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
-				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(OPENSG)&quot;"
-				GenerateDebugInformation="TRUE"
+				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="&quot;$(OPENSG)&quot;;$(BOOST_DIR)\lib"
+				GenerateDebugInformation="true"
 				ProgramDatabaseFile="&quot;$(TargetDir)\$(ProjectName)D.pdb&quot;"
 				SubSystem="1"
 				ImportLibrary="&quot;$(TargetDir)\$(ProjectName)D.lib&quot;"
-				TargetMachine="1"/>
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="2"
-			CharacterSet="0">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Input&#x0D;&#x0A;"
+				Outputs="include"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\..\External\Boost;&quot;$(OPENSG)\..\include&quot;;..\..\src"
+				AdditionalIncludeDirectories="$(BOOST_DIR);&quot;$(OPENSG)\..\include&quot;;..\..\src"
 				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILETOOLBOXLIB"
-				StringPooling="TRUE"
-				MinimalRebuild="FALSE"
+				StringPooling="true"
+				MinimalRebuild="false"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="FALSE"
-				EnableFunctionLevelLinking="TRUE"
-				RuntimeTypeInfo="TRUE"
+				BufferSecurityCheck="false"
+				EnableFunctionLevelLinking="true"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(IntDir)/"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 				DisableSpecificWarnings="4244;4251;4275;4290;4231;4267"
-				ForcedIncludeFiles="WinSock2.h;windows.h"/>
+				ForcedIncludeFiles="WinSock2.h;windows.h"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"
-				CommandLine="..\..\..\Builds\Common\CopyIncludes.bat &quot;$(TargetDir)\..&quot; Input
-"
-				Outputs="include"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGWindowGLUT.lib OSGWindowWIN32.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(OPENSG)&quot;"
-				IgnoreAllDefaultLibraries="FALSE"
-				GenerateDebugInformation="FALSE"
+				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="&quot;$(OPENSG)&quot;;$(BOOST_DIR)"
+				IgnoreAllDefaultLibraries="false"
+				GenerateDebugInformation="false"
 				ProgramDatabaseFile=""
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				ImportLibrary="&quot;$(TargetDir)\$(ProjectName).lib&quot;"
-				TargetMachine="1"/>
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -147,135 +210,182 @@
 	<Files>
 		<Filter
 			Name="Source Files"
-			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl">
+			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
+			>
 			<File
-				RelativePath="..\..\src\OSGToolboxDef.h">
+				RelativePath="..\..\src\OSGToolboxDef.h"
+				>
 			</File>
 			<Filter
 				Name="Util"
-				Filter="">
+				>
 				<File
-					RelativePath="..\..\src\Util\OSGColorOperations.h">
+					RelativePath="..\..\src\Util\OSGColorOperations.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGGLenumUtils.cpp">
+					RelativePath="..\..\src\Util\OSGGLenumUtils.cpp"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGGLenumUtils.h">
+					RelativePath="..\..\src\Util\OSGGLenumUtils.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGIntrusivePtrImplBase.cpp">
+					RelativePath="..\..\src\Util\OSGIntrusivePtrImplBase.cpp"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGIntrusivePtrImplBase.h">
+					RelativePath="..\..\src\Util\OSGIntrusivePtrImplBase.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGIntrusivePtrImplBase.inl">
+					RelativePath="..\..\src\Util\OSGIntrusivePtrImplBase.inl"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGPntOperations.h">
+					RelativePath="..\..\src\Util\OSGPntOperations.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGQuatOperations.h">
+					RelativePath="..\..\src\Util\OSGQuatOperations.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGRandomPoolManager.cpp">
+					RelativePath="..\..\src\Util\OSGRandomPoolManager.cpp"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGRandomPoolManager.h">
+					RelativePath="..\..\src\Util\OSGRandomPoolManager.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGRandomPoolManager.inl">
+					RelativePath="..\..\src\Util\OSGRandomPoolManager.inl"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGSharedFieldPtr.h">
+					RelativePath="..\..\src\Util\OSGSharedFieldPtr.h"
+					>
 				</File>
 			</Filter>
 			<Filter
 				Name="Cameras"
-				Filter="">
+				>
 				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCamera.cpp">
+					RelativePath="..\..\src\Cameras\OSGAirplaneCamera.cpp"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCamera.h">
+					RelativePath="..\..\src\Cameras\OSGAirplaneCamera.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCamera.inl">
+					RelativePath="..\..\src\Cameras\OSGAirplaneCamera.inl"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.cpp">
+					RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.cpp"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.h">
+					RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.inl">
+					RelativePath="..\..\src\Cameras\OSGAirplaneCameraBase.inl"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGAirplaneCameraFields.h">
+					RelativePath="..\..\src\Cameras\OSGAirplaneCameraFields.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCamera.cpp">
+					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCamera.cpp"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCamera.h">
+					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCamera.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCamera.inl">
+					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCamera.inl"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCameraBase.cpp">
+					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCameraBase.cpp"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCameraBase.h">
+					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCameraBase.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCameraBase.inl">
+					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCameraBase.inl"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCameraFields.h">
+					RelativePath="..\..\src\Cameras\OSGMatrixBeaconCameraFields.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCamera.cpp">
+					RelativePath="..\..\src\Cameras\OSGRubberBandCamera.cpp"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCamera.h">
+					RelativePath="..\..\src\Cameras\OSGRubberBandCamera.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCamera.inl">
+					RelativePath="..\..\src\Cameras\OSGRubberBandCamera.inl"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.cpp">
+					RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.cpp"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.h">
+					RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.inl">
+					RelativePath="..\..\src\Cameras\OSGRubberBandCameraBase.inl"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Cameras\OSGRubberBandCameraFields.h">
+					RelativePath="..\..\src\Cameras\OSGRubberBandCameraFields.h"
+					>
 				</File>
 			</Filter>
 			<Filter
 				Name="FileIO"
-				Filter="">
+				>
 			</Filter>
 			<Filter
 				Name="Types"
-				Filter="">
+				>
 				<File
-					RelativePath="..\..\src\Types\OSGFieldContainerMapType.cpp">
+					RelativePath="..\..\src\Types\OSGFieldContainerMapType.cpp"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Types\OSGFieldContainerMapType.h">
+					RelativePath="..\..\src\Types\OSGFieldContainerMapType.h"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Types\OSGStringMapType.cpp">
+					RelativePath="..\..\src\Types\OSGPathType.cpp"
+					>
 				</File>
 				<File
-					RelativePath="..\..\src\Types\OSGStringMapType.h">
+					RelativePath="..\..\src\Types\OSGPathType.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Types\OSGStringMapType.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Types\OSGStringMapType.h"
+					>
 				</File>
 			</Filter>
 		</Filter>
