@@ -187,6 +187,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "38DialogWindow", "38DialogW
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "39ColorChooser", "39ColorChooser.vcproj", "{5C725BA1-806F-42E5-BA5D-55ED68D663D5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "40UndoableCommand", "40UndoableCommand.vcproj", "{205E55B2-4845-4938-A54F-9D5D8F919685}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -373,6 +375,10 @@ Global
 		{5C725BA1-806F-42E5-BA5D-55ED68D663D5}.Debug|Win32.Build.0 = Debug|Win32
 		{5C725BA1-806F-42E5-BA5D-55ED68D663D5}.Release|Win32.ActiveCfg = Release|Win32
 		{5C725BA1-806F-42E5-BA5D-55ED68D663D5}.Release|Win32.Build.0 = Release|Win32
+		{205E55B2-4845-4938-A54F-9D5D8F919685}.Debug|Win32.ActiveCfg = Debug|Win32
+		{205E55B2-4845-4938-A54F-9D5D8F919685}.Debug|Win32.Build.0 = Debug|Win32
+		{205E55B2-4845-4938-A54F-9D5D8F919685}.Release|Win32.ActiveCfg = Release|Win32
+		{205E55B2-4845-4938-A54F-9D5D8F919685}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

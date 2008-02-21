@@ -117,6 +117,7 @@
 #include "Component/Container/ColorChooser/OSGRGBColorChooserPanel.h"
 #include "Component/Container/ColorChooser/OSGHSVColorChooserPanel.h"
 
+#include "Component/Container/Toolbar/OSGToolbar.h"
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -1079,6 +1080,30 @@ void WindowsLookAndFeel::init(void)
 	
 	Panel::getClassType().setPrototype(WindowsPanel);
 	
+	//************************** Toolbar *****************************
+	//Windows Toolbar
+	ToolbarPtr WindowsToolbar = Toolbar::create();
+	beginEditCP(WindowsToolbar);
+		WindowsToolbar->setEnabled(true);
+		WindowsToolbar->setVisible(true);
+		
+		WindowsToolbar->setConstraints(NullFC);
+		//Sizes
+		WindowsToolbar->setMinSize(Vec2f(0,0));
+		WindowsToolbar->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsToolbar->setPreferredSize(Vec2f(100,100));
+
+		//Border
+		WindowsToolbar->setBorders(WindowsEmptyBorder);
+		
+		//Background
+		WindowsToolbar->setBackgrounds(WindowsPanelBackground);
+		
+		//Opacity
+		WindowsToolbar->setOpacity(1.0);
+	endEditCP(WindowsToolbar);
+	
+	Toolbar::getClassType().setPrototype(WindowsToolbar);
 	//************************** SplitPanel *****************************
 	//The only default value set will be the divider
 
@@ -4495,6 +4520,7 @@ void WindowsLookAndFeel::init(void)
 		getPrototypes().addValue(WindowsSlider);
 		getPrototypes().addValue(WindowsComboBox);
 		getPrototypes().addValue(WindowsTree);
+		getPrototypes().addValue(WindowsToolbar);
 	endEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);
 }
 /*-------------------------------------------------------------------------*\

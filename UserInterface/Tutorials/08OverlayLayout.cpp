@@ -101,6 +101,11 @@ int main(int argc, char **argv)
     // Set up Window
     WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
     WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+
+	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
+		TutorialWindowEventProducer->setUseCallbackForDraw(true);
+		TutorialWindowEventProducer->setUseCallbackForReshape(true);
+	endEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
     
     TutorialWindowEventProducer->setDisplayCallback(display);
     TutorialWindowEventProducer->setReshapeCallback(reshape);
