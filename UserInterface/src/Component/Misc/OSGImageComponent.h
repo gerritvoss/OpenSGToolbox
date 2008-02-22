@@ -59,6 +59,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponent : public ImageComponentBase
 
     /*==========================  PUBLIC  =================================*/
   public:
+	enum Scale{SCALE_NONE=0, SCALE_STRETCH, SCALE_MIN_AXIS, SCALE_MAX_AXIS, SCALE_ABSOLUTE};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -78,11 +79,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponent : public ImageComponentBase
     /*! \}                                                                 */
 
 	void setImage(ImagePtr Image);
-
 	void setImage(const char *fileName, const char *mimeType = 0);
+	
+	void setRolloverImage(ImagePtr Image);
+	void setRolloverImage(const char *fileName, const char *mimeType = 0);
+
+	void setDisabledImage(ImagePtr Image);
+	void setDisabledImage(const char *fileName, const char *mimeType = 0);
+	
+	void setFocusedImage(ImagePtr Image);
+	void setFocusedImage(const char *fileName, const char *mimeType = 0);
     /*=========================  PROTECTED  ===============================*/
   protected:
-    TextureChunkPtr createTexture(void);
+    TextureChunkPtr createTexture(ImagePtr Image);
 
     // Variables should all be in ImageComponentBase.
 
@@ -102,6 +111,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponent : public ImageComponentBase
 
     /*! \}                                                                 */
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
+    virtual TextureChunkPtr getDrawnTexture(void) const;
     
     /*==========================  PRIVATE  ================================*/
   private:

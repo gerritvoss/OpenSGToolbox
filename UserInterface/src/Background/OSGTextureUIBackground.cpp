@@ -45,7 +45,6 @@
 
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGTextureChunk.h>
-#include "Util/OSGUIDefines.h"
 #include "Util/OSGUIDrawUtils.h"
 
 #include "OSGTextureUIBackground.h"

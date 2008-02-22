@@ -17,6 +17,34 @@ A UI Button.
 		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
+		defaultValue="NullFC"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="RolloverTexture"
+		type="TextureChunkPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="DisabledTexture"
+		type="TextureChunkPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="FocusedTexture"
+		type="TextureChunkPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
 		access="public"
 	>
 	</Field>
@@ -25,17 +53,16 @@ A UI Button.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="SCALE_NONE"
-		defaultHeader="Util/OSGUIDefines.h"
+		defaultValue="ImageComponent::SCALE_NONE"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="ScaleAbsoluteSize"
-		type="Vec2s"
+		type="Vec2f"
 		cardinality="single"
 		visibility="external"
-		defaultValue="1,1"
+		defaultValue="1.0f,1.0f"
 		access="public"
 	>
 	</Field>

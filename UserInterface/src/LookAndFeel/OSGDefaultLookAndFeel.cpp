@@ -468,7 +468,7 @@ void DefaultLookAndFeel::init(void)
 		DefaultImageComponent->setOpacity(1.0);
 
 		//Image Alignment
-		DefaultImageComponent->setScale(SCALE_NONE);
+		DefaultImageComponent->setScale(ImageComponent::SCALE_NONE);
 		DefaultImageComponent->setVerticalAlignment(0.5);
 		DefaultImageComponent->setHorizontalAlignment(0.5);
 	endEditCP(DefaultImageComponent);

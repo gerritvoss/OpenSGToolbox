@@ -47,7 +47,6 @@
 #include <OpenSG/OSGImageFileHandler.h>
 
 #include "OSGImageComponent.h"
-#include "Util/OSGUIDefines.h"
 #include "Util/OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
@@ -85,6 +84,12 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
    getInsideBorderBounds(TopLeft, BottomRight);
    Vec2f ComponentSize(BottomRight-TopLeft);
 
+   TextureChunkPtr DrawnTexture = getDrawnTexture();
+   if(DrawnTexture == NullFC)
+   {
+	   return;
+   }
+
    //Render the Image
    //Draw a quad on top of the background according to the alignment and scaling
    //Figure out Scaling
@@ -93,7 +98,7 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
    {
    case SCALE_NONE:
 	   //Size in pixels Should be the Image size in pixels
-	   Size.setValues(getTexture()->getImage()->getWidth(), getTexture()->getImage()->getHeight());
+	   Size.setValues(DrawnTexture->getImage()->getWidth(), DrawnTexture->getImage()->getHeight());
 	   break;
    case SCALE_STRETCH:
 	   Size.setValue(ComponentSize);
@@ -102,7 +107,7 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
 	   {
 	   //Figure out the aspect ratio of this Component
 	   Real32 AspectComponent = ComponentSize.x()/ComponentSize.y();
-	   Real32 AspectImage = getTexture()->getImage()->getWidth()/getTexture()->getImage()->getHeight();
+	   Real32 AspectImage = DrawnTexture->getImage()->getWidth()/DrawnTexture->getImage()->getHeight();
 
 	   Vec2f vector(0,0);
 	   if (AspectComponent < AspectImage)
@@ -122,7 +127,7 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
 	   {
 	   //Figure out the aspect ratio of this Component
 	   Real32 AspectComponent = ComponentSize.x()/ComponentSize.y();
-	   Real32 AspectImage = getTexture()->getImage()->getWidth()/getTexture()->getImage()->getHeight();
+	   Real32 AspectImage = DrawnTexture->getImage()->getWidth()/DrawnTexture->getImage()->getHeight();
 
 	   Vec2f vector(0,0);
 	   if (AspectComponent > AspectImage)
@@ -190,7 +195,41 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
    }*/
 
    //Draw the Image as a quad
-   TheGraphics->drawQuad(Pos,Pnt2f(Pos[0]+Size[0],Pos[1]),Pos+Size,Pnt2f(Pos[0],Pos[1]+Size[1]),TexTopLeft,TexTopRight, TexBottomRight, TexBottomLeft, getTexture(), getOpacity() );
+   TheGraphics->drawQuad(Pos,Pnt2f(Pos[0]+Size[0],Pos[1]),Pos+Size,Pnt2f(Pos[0],Pos[1]+Size[1]),TexTopLeft,TexTopRight, TexBottomRight, TexBottomLeft, DrawnTexture, getOpacity() );
+}
+
+
+TextureChunkPtr ImageComponent::getDrawnTexture(void) const
+{
+	TextureChunkPtr ReturnedTexture;
+	if(getEnabled())
+	{
+        if(getFocused())
+        {
+            ReturnedTexture = getFocusedTexture();
+        }
+        else if(_MouseInComponentLastMouse)
+        {
+            ReturnedTexture = getRolloverTexture();
+        }
+        else
+        {
+            return getTexture();
+        }
+    }
+    else
+    {
+        ReturnedTexture = getDisabledTexture();
+    }
+
+	if(ReturnedTexture == NullFC)
+	{
+		return getTexture();
+	}
+	else
+	{
+		return ReturnedTexture;
+	}
 }
 
 void ImageComponent::setImage(ImagePtr Image)
@@ -198,38 +237,76 @@ void ImageComponent::setImage(ImagePtr Image)
 	if(getTexture() == NullFC)
 	{
 		beginEditCP(ImageComponentPtr(this), TextureFieldMask);
-			setTexture(createTexture());
+			setTexture(createTexture(Image));
 		endEditCP(ImageComponentPtr(this), TextureFieldMask);
 	}
-	beginEditCP(getTexture(), TextureChunk::ImageFieldMask);
-		getTexture()->setImage(Image);
-	endEditCP(getTexture(), TextureChunk::ImageFieldMask);
-}
-
-void ImageComponent::setImage(const char *fileName, const char *mimeType)
-{
-	if(getTexture() == NullFC)
+	else
 	{
-		beginEditCP(ImageComponentPtr(this), TextureFieldMask);
-			setTexture(createTexture());
-		endEditCP(ImageComponentPtr(this), TextureFieldMask);
+		beginEditCP(getTexture(), TextureChunk::ImageFieldMask);
+			getTexture()->setImage(Image);
+		endEditCP(getTexture(), TextureChunk::ImageFieldMask);
 	}
-   ImagePtr LoadedImage = ImageFileHandler::the().read(fileName, mimeType);
-	beginEditCP(getTexture(), TextureChunk::ImageFieldMask);
-		getTexture()->setImage(LoadedImage);
-	endEditCP(getTexture(), TextureChunk::ImageFieldMask);
 }
 
-TextureChunkPtr ImageComponent::createTexture(void)
+void ImageComponent::setRolloverImage(ImagePtr Image)
+{
+	if(getRolloverTexture() == NullFC)
+	{
+		beginEditCP(ImageComponentPtr(this), RolloverTextureFieldMask);
+			setRolloverTexture(createTexture(Image));
+		endEditCP(ImageComponentPtr(this), RolloverTextureFieldMask);
+	}
+	else
+	{
+		beginEditCP(getRolloverTexture(), TextureChunk::ImageFieldMask);
+			getRolloverTexture()->setImage(Image);
+		endEditCP(getRolloverTexture(), TextureChunk::ImageFieldMask);
+	}
+}
+
+void ImageComponent::setDisabledImage(ImagePtr Image)
+{
+	if(getDisabledTexture() == NullFC)
+	{
+		beginEditCP(ImageComponentPtr(this), DisabledTextureFieldMask);
+			setDisabledTexture(createTexture(Image));
+		endEditCP(ImageComponentPtr(this), DisabledTextureFieldMask);
+	}
+	else
+	{
+		beginEditCP(getDisabledTexture(), TextureChunk::ImageFieldMask);
+			getDisabledTexture()->setImage(Image);
+		endEditCP(getDisabledTexture(), TextureChunk::ImageFieldMask);
+	}
+}
+
+void ImageComponent::setFocusedImage(ImagePtr Image)
+{
+	if(getFocusedTexture() == NullFC)
+	{
+		beginEditCP(ImageComponentPtr(this), FocusedTextureFieldMask);
+			setFocusedTexture(createTexture(Image));
+		endEditCP(ImageComponentPtr(this), FocusedTextureFieldMask);
+	}
+	else
+	{
+		beginEditCP(getFocusedTexture(), TextureChunk::ImageFieldMask);
+			getFocusedTexture()->setImage(Image);
+		endEditCP(getFocusedTexture(), TextureChunk::ImageFieldMask);
+	}
+}
+
+TextureChunkPtr ImageComponent::createTexture(ImagePtr Image)
 {
 	TextureChunkPtr TexChunk = TextureChunk::create();
-	beginEditCP(TexChunk, TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::EnvModeFieldMask);
+	beginEditCP(TexChunk, TextureChunk::ImageFieldMask | TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::EnvModeFieldMask);
 		TexChunk->setMinFilter(GL_LINEAR_MIPMAP_LINEAR);
 		TexChunk->setMagFilter(GL_LINEAR);
 		TexChunk->setWrapS(GL_CLAMP);
 		TexChunk->setWrapT(GL_CLAMP);
 		TexChunk->setEnvMode(GL_MODULATE);
-	endEditCP(TexChunk, TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::EnvModeFieldMask);
+		TexChunk->setImage(Image);
+	endEditCP(TexChunk, TextureChunk::ImageFieldMask | TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::EnvModeFieldMask);
 	return TexChunk;
 }
 /*-------------------------------------------------------------------------*\

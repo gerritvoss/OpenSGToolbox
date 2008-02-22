@@ -61,8 +61,6 @@
 #include "OSGTextureUIBackgroundBase.h"
 #include "OSGTextureUIBackground.h"
 
-#include <Util/OSGUIDefines.h>            // Scale default header
-
 OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  TextureUIBackgroundBase::TextureFieldMask = 
@@ -208,7 +206,7 @@ void TextureUIBackgroundBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 TextureUIBackgroundBase::TextureUIBackgroundBase(void) :
     _sfTexture                (), 
-    _sfScale                  (UInt32(SCALE_STRETCH)), 
+	_sfScale                  (UInt32(TextureUIBackground::SCALE_STRETCH)), 
     _sfScaleAbsoluteSize      (Vec2f(1,1)), 
     _sfVerticalAlignment      (Real32(0.5)), 
     _sfHorizontalAlignment    (Real32(0.5)), 

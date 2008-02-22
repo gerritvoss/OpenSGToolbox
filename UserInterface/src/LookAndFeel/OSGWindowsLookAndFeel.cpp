@@ -425,17 +425,10 @@ void WindowsLookAndFeel::init(void)
 	Button::getClassType().setPrototype(WindowsButton);
 
 	//************************** Label*****************************
-	//Windows LabelBorder
-	LineBorderPtr WindowsLabelBorder = LineBorder::create();
-	beginEditCP(WindowsLabelBorder);
-		WindowsLabelBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
-		WindowsLabelBorder->setWidth(1);
-	endEditCP(WindowsLabelBorder);
-
 	//Windows LabelBackground
 	ColorUIBackgroundPtr WindowsLabelBackground = ColorUIBackground::create();
 	beginEditCP(WindowsLabelBackground);
-		WindowsLabelBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+		WindowsLabelBackground->setColor(Color4f(0.9569,0.9529,0.9373,1.0));
 	endEditCP(WindowsLabelBackground);
 
 	//Windows Label
@@ -451,7 +444,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsLabel->setPreferredSize(Vec2f(75,23));
 
 		//Border
-		WindowsLabel->setBorders(WindowsLabelBorder);
+		WindowsLabel->setBorders(WindowsEmptyBorder);
 		
 		//Background
 		WindowsLabel->setBackgrounds(WindowsLabelBackground);
@@ -1248,7 +1241,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsImageComponent->setOpacity(1.0);
 
 		//Image Alignment
-		WindowsImageComponent->setScale(SCALE_NONE);
+		WindowsImageComponent->setScale(ImageComponent::SCALE_NONE);
 		WindowsImageComponent->setVerticalAlignment(0.5);
 		WindowsImageComponent->setHorizontalAlignment(0.5);
 	endEditCP(WindowsImageComponent);

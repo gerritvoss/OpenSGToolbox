@@ -57,6 +57,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextureUIBackground : public TextureUIBack
 
     /*==========================  PUBLIC  =================================*/
   public:
+	enum Scale{SCALE_NONE=0, SCALE_STRETCH, SCALE_MIN_AXIS, SCALE_MAX_AXIS, SCALE_ABSOLUTE};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

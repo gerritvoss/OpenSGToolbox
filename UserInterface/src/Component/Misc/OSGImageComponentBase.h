@@ -68,6 +68,9 @@
 #include "Component/OSGComponent.h" // Parent
 
 #include <OpenSG/OSGTextureChunkFields.h> // Texture type
+#include <OpenSG/OSGTextureChunkFields.h> // RolloverTexture type
+#include <OpenSG/OSGTextureChunkFields.h> // DisabledTexture type
+#include <OpenSG/OSGTextureChunkFields.h> // FocusedTexture type
 #include <OpenSG/OSGUInt32Fields.h> // Scale type
 #include <OpenSG/OSGVec2fFields.h> // ScaleAbsoluteSize type
 #include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
@@ -96,7 +99,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
     enum
     {
         TextureFieldId             = Inherited::NextFieldId,
-        ScaleFieldId               = TextureFieldId             + 1,
+        RolloverTextureFieldId     = TextureFieldId             + 1,
+        DisabledTextureFieldId     = RolloverTextureFieldId     + 1,
+        FocusedTextureFieldId      = DisabledTextureFieldId     + 1,
+        ScaleFieldId               = FocusedTextureFieldId      + 1,
         ScaleAbsoluteSizeFieldId   = ScaleFieldId               + 1,
         VerticalAlignmentFieldId   = ScaleAbsoluteSizeFieldId   + 1,
         HorizontalAlignmentFieldId = VerticalAlignmentFieldId   + 1,
@@ -104,6 +110,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
     };
 
     static const OSG::BitVector TextureFieldMask;
+    static const OSG::BitVector RolloverTextureFieldMask;
+    static const OSG::BitVector DisabledTextureFieldMask;
+    static const OSG::BitVector FocusedTextureFieldMask;
     static const OSG::BitVector ScaleFieldMask;
     static const OSG::BitVector ScaleAbsoluteSizeFieldMask;
     static const OSG::BitVector VerticalAlignmentFieldMask;
@@ -135,6 +144,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
     /*! \{                                                                 */
 
            SFTextureChunkPtr   *getSFTexture        (void);
+           SFTextureChunkPtr   *getSFRolloverTexture(void);
+           SFTextureChunkPtr   *getSFDisabledTexture(void);
+           SFTextureChunkPtr   *getSFFocusedTexture (void);
            SFUInt32            *getSFScale          (void);
            SFVec2f             *getSFScaleAbsoluteSize(void);
            SFReal32            *getSFVerticalAlignment(void);
@@ -142,6 +154,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
 
            TextureChunkPtr     &getTexture        (void);
      const TextureChunkPtr     &getTexture        (void) const;
+           TextureChunkPtr     &getRolloverTexture(void);
+     const TextureChunkPtr     &getRolloverTexture(void) const;
+           TextureChunkPtr     &getDisabledTexture(void);
+     const TextureChunkPtr     &getDisabledTexture(void) const;
+           TextureChunkPtr     &getFocusedTexture (void);
+     const TextureChunkPtr     &getFocusedTexture (void) const;
            UInt32              &getScale          (void);
      const UInt32              &getScale          (void) const;
            Vec2f               &getScaleAbsoluteSize(void);
@@ -157,6 +175,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
     /*! \{                                                                 */
 
      void setTexture        ( const TextureChunkPtr &value );
+     void setRolloverTexture( const TextureChunkPtr &value );
+     void setDisabledTexture( const TextureChunkPtr &value );
+     void setFocusedTexture ( const TextureChunkPtr &value );
      void setScale          ( const UInt32 &value );
      void setScaleAbsoluteSize( const Vec2f &value );
      void setVerticalAlignment( const Real32 &value );
@@ -204,6 +225,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
     /*! \{                                                                 */
 
     SFTextureChunkPtr   _sfTexture;
+    SFTextureChunkPtr   _sfRolloverTexture;
+    SFTextureChunkPtr   _sfDisabledTexture;
+    SFTextureChunkPtr   _sfFocusedTexture;
     SFUInt32            _sfScale;
     SFVec2f             _sfScaleAbsoluteSize;
     SFReal32            _sfVerticalAlignment;

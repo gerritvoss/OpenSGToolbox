@@ -39,8 +39,33 @@
 //---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGImageFileHandler.h>
 
 OSG_BEGIN_NAMESPACE
+
+inline
+void ImageComponent::setImage(const char *fileName, const char *mimeType)
+{
+	setImage(ImageFileHandler::the().read(fileName, mimeType));
+}
+
+inline
+void ImageComponent::setRolloverImage(const char *fileName, const char *mimeType)
+{
+	setRolloverImage(ImageFileHandler::the().read(fileName, mimeType));
+}
+
+inline
+void ImageComponent::setDisabledImage(const char *fileName, const char *mimeType)
+{
+	setDisabledImage(ImageFileHandler::the().read(fileName, mimeType));
+}
+
+inline
+void ImageComponent::setFocusedImage(const char *fileName, const char *mimeType)
+{
+	setFocusedImage(ImageFileHandler::the().read(fileName, mimeType));
+}
 
 OSG_END_NAMESPACE
 

@@ -61,12 +61,20 @@
 #include "OSGImageComponentBase.h"
 #include "OSGImageComponent.h"
 
-#include <Util/OSGUIDefines.h>            // Scale default header
 
 OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  ImageComponentBase::TextureFieldMask = 
     (TypeTraits<BitVector>::One << ImageComponentBase::TextureFieldId);
+
+const OSG::BitVector  ImageComponentBase::RolloverTextureFieldMask = 
+    (TypeTraits<BitVector>::One << ImageComponentBase::RolloverTextureFieldId);
+
+const OSG::BitVector  ImageComponentBase::DisabledTextureFieldMask = 
+    (TypeTraits<BitVector>::One << ImageComponentBase::DisabledTextureFieldId);
+
+const OSG::BitVector  ImageComponentBase::FocusedTextureFieldMask = 
+    (TypeTraits<BitVector>::One << ImageComponentBase::FocusedTextureFieldId);
 
 const OSG::BitVector  ImageComponentBase::ScaleFieldMask = 
     (TypeTraits<BitVector>::One << ImageComponentBase::ScaleFieldId);
@@ -88,6 +96,15 @@ const OSG::BitVector ImageComponentBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var TextureChunkPtr ImageComponentBase::_sfTexture
+    
+*/
+/*! \var TextureChunkPtr ImageComponentBase::_sfRolloverTexture
+    
+*/
+/*! \var TextureChunkPtr ImageComponentBase::_sfDisabledTexture
+    
+*/
+/*! \var TextureChunkPtr ImageComponentBase::_sfFocusedTexture
     
 */
 /*! \var UInt32          ImageComponentBase::_sfScale
@@ -112,6 +129,21 @@ FieldDescription *ImageComponentBase::_desc[] =
                      TextureFieldId, TextureFieldMask,
                      false,
                      (FieldAccessMethod) &ImageComponentBase::getSFTexture),
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
+                     "RolloverTexture", 
+                     RolloverTextureFieldId, RolloverTextureFieldMask,
+                     false,
+                     (FieldAccessMethod) &ImageComponentBase::getSFRolloverTexture),
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
+                     "DisabledTexture", 
+                     DisabledTextureFieldId, DisabledTextureFieldMask,
+                     false,
+                     (FieldAccessMethod) &ImageComponentBase::getSFDisabledTexture),
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
+                     "FocusedTexture", 
+                     FocusedTextureFieldId, FocusedTextureFieldMask,
+                     false,
+                     (FieldAccessMethod) &ImageComponentBase::getSFFocusedTexture),
     new FieldDescription(SFUInt32::getClassType(), 
                      "Scale", 
                      ScaleFieldId, ScaleFieldMask,
@@ -207,9 +239,12 @@ void ImageComponentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ImageComponentBase::ImageComponentBase(void) :
-    _sfTexture                (), 
-    _sfScale                  (UInt32(SCALE_NONE)), 
-    _sfScaleAbsoluteSize      (Vec2f(1,1)), 
+    _sfTexture                (TextureChunkPtr(NullFC)), 
+    _sfRolloverTexture        (TextureChunkPtr(NullFC)), 
+    _sfDisabledTexture        (TextureChunkPtr(NullFC)), 
+    _sfFocusedTexture         (TextureChunkPtr(NullFC)), 
+    _sfScale                  (UInt32(ImageComponent::SCALE_NONE)), 
+    _sfScaleAbsoluteSize      (Vec2f(1.0f,1.0f)), 
     _sfVerticalAlignment      (Real32(0.5)), 
     _sfHorizontalAlignment    (Real32(0.5)), 
     Inherited() 
@@ -222,6 +257,9 @@ ImageComponentBase::ImageComponentBase(void) :
 
 ImageComponentBase::ImageComponentBase(const ImageComponentBase &source) :
     _sfTexture                (source._sfTexture                ), 
+    _sfRolloverTexture        (source._sfRolloverTexture        ), 
+    _sfDisabledTexture        (source._sfDisabledTexture        ), 
+    _sfFocusedTexture         (source._sfFocusedTexture         ), 
     _sfScale                  (source._sfScale                  ), 
     _sfScaleAbsoluteSize      (source._sfScaleAbsoluteSize      ), 
     _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
@@ -245,6 +283,21 @@ UInt32 ImageComponentBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (TextureFieldMask & whichField))
     {
         returnValue += _sfTexture.getBinSize();
+    }
+
+    if(FieldBits::NoField != (RolloverTextureFieldMask & whichField))
+    {
+        returnValue += _sfRolloverTexture.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DisabledTextureFieldMask & whichField))
+    {
+        returnValue += _sfDisabledTexture.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FocusedTextureFieldMask & whichField))
+    {
+        returnValue += _sfFocusedTexture.getBinSize();
     }
 
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
@@ -281,6 +334,21 @@ void ImageComponentBase::copyToBin(      BinaryDataHandler &pMem,
         _sfTexture.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (RolloverTextureFieldMask & whichField))
+    {
+        _sfRolloverTexture.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledTextureFieldMask & whichField))
+    {
+        _sfDisabledTexture.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedTextureFieldMask & whichField))
+    {
+        _sfFocusedTexture.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
     {
         _sfScale.copyToBin(pMem);
@@ -312,6 +380,21 @@ void ImageComponentBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (TextureFieldMask & whichField))
     {
         _sfTexture.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RolloverTextureFieldMask & whichField))
+    {
+        _sfRolloverTexture.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DisabledTextureFieldMask & whichField))
+    {
+        _sfDisabledTexture.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FocusedTextureFieldMask & whichField))
+    {
+        _sfFocusedTexture.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
@@ -347,6 +430,15 @@ void ImageComponentBase::executeSyncImpl(      ImageComponentBase *pOther,
     if(FieldBits::NoField != (TextureFieldMask & whichField))
         _sfTexture.syncWith(pOther->_sfTexture);
 
+    if(FieldBits::NoField != (RolloverTextureFieldMask & whichField))
+        _sfRolloverTexture.syncWith(pOther->_sfRolloverTexture);
+
+    if(FieldBits::NoField != (DisabledTextureFieldMask & whichField))
+        _sfDisabledTexture.syncWith(pOther->_sfDisabledTexture);
+
+    if(FieldBits::NoField != (FocusedTextureFieldMask & whichField))
+        _sfFocusedTexture.syncWith(pOther->_sfFocusedTexture);
+
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
         _sfScale.syncWith(pOther->_sfScale);
 
@@ -371,6 +463,15 @@ void ImageComponentBase::executeSyncImpl(      ImageComponentBase *pOther,
 
     if(FieldBits::NoField != (TextureFieldMask & whichField))
         _sfTexture.syncWith(pOther->_sfTexture);
+
+    if(FieldBits::NoField != (RolloverTextureFieldMask & whichField))
+        _sfRolloverTexture.syncWith(pOther->_sfRolloverTexture);
+
+    if(FieldBits::NoField != (DisabledTextureFieldMask & whichField))
+        _sfDisabledTexture.syncWith(pOther->_sfDisabledTexture);
+
+    if(FieldBits::NoField != (FocusedTextureFieldMask & whichField))
+        _sfFocusedTexture.syncWith(pOther->_sfFocusedTexture);
 
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
         _sfScale.syncWith(pOther->_sfScale);

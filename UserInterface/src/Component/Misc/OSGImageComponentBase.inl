@@ -103,6 +103,27 @@ SFTextureChunkPtr *ImageComponentBase::getSFTexture(void)
     return &_sfTexture;
 }
 
+//! Get the ImageComponent::_sfRolloverTexture field.
+inline
+SFTextureChunkPtr *ImageComponentBase::getSFRolloverTexture(void)
+{
+    return &_sfRolloverTexture;
+}
+
+//! Get the ImageComponent::_sfDisabledTexture field.
+inline
+SFTextureChunkPtr *ImageComponentBase::getSFDisabledTexture(void)
+{
+    return &_sfDisabledTexture;
+}
+
+//! Get the ImageComponent::_sfFocusedTexture field.
+inline
+SFTextureChunkPtr *ImageComponentBase::getSFFocusedTexture(void)
+{
+    return &_sfFocusedTexture;
+}
+
 //! Get the ImageComponent::_sfScale field.
 inline
 SFUInt32 *ImageComponentBase::getSFScale(void)
@@ -151,6 +172,69 @@ inline
 void ImageComponentBase::setTexture(const TextureChunkPtr &value)
 {
     _sfTexture.setValue(value);
+}
+
+//! Get the value of the ImageComponent::_sfRolloverTexture field.
+inline
+TextureChunkPtr &ImageComponentBase::getRolloverTexture(void)
+{
+    return _sfRolloverTexture.getValue();
+}
+
+//! Get the value of the ImageComponent::_sfRolloverTexture field.
+inline
+const TextureChunkPtr &ImageComponentBase::getRolloverTexture(void) const
+{
+    return _sfRolloverTexture.getValue();
+}
+
+//! Set the value of the ImageComponent::_sfRolloverTexture field.
+inline
+void ImageComponentBase::setRolloverTexture(const TextureChunkPtr &value)
+{
+    _sfRolloverTexture.setValue(value);
+}
+
+//! Get the value of the ImageComponent::_sfDisabledTexture field.
+inline
+TextureChunkPtr &ImageComponentBase::getDisabledTexture(void)
+{
+    return _sfDisabledTexture.getValue();
+}
+
+//! Get the value of the ImageComponent::_sfDisabledTexture field.
+inline
+const TextureChunkPtr &ImageComponentBase::getDisabledTexture(void) const
+{
+    return _sfDisabledTexture.getValue();
+}
+
+//! Set the value of the ImageComponent::_sfDisabledTexture field.
+inline
+void ImageComponentBase::setDisabledTexture(const TextureChunkPtr &value)
+{
+    _sfDisabledTexture.setValue(value);
+}
+
+//! Get the value of the ImageComponent::_sfFocusedTexture field.
+inline
+TextureChunkPtr &ImageComponentBase::getFocusedTexture(void)
+{
+    return _sfFocusedTexture.getValue();
+}
+
+//! Get the value of the ImageComponent::_sfFocusedTexture field.
+inline
+const TextureChunkPtr &ImageComponentBase::getFocusedTexture(void) const
+{
+    return _sfFocusedTexture.getValue();
+}
+
+//! Set the value of the ImageComponent::_sfFocusedTexture field.
+inline
+void ImageComponentBase::setFocusedTexture(const TextureChunkPtr &value)
+{
+    _sfFocusedTexture.setValue(value);
 }
 
 //! Get the value of the ImageComponent::_sfScale field.
