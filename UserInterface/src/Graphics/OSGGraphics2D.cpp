@@ -209,13 +209,13 @@ void Graphics2D::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, con
 	
 	glBegin(GL_QUADS);
 	   glColor4f(1.0, 1.0, 1.0, Alpha );
-	   glTexCoord2fv(t1.getValues());
-	   glVertex2fv(p1.getValues());
-	   glTexCoord2fv(t2.getValues());
-	   glVertex2fv(p2.getValues());
-	   glTexCoord2fv(t3.getValues());
-	   glVertex2fv(p3.getValues());
 	   glTexCoord2fv(t4.getValues());
+	   glVertex2fv(p1.getValues());
+	   glTexCoord2fv(t3.getValues());
+	   glVertex2fv(p2.getValues());
+	   glTexCoord2fv(t2.getValues());
+	   glVertex2fv(p3.getValues());
+	   glTexCoord2fv(t1.getValues());
 	   glVertex2fv(p4.getValues());
 	glEnd();
 	

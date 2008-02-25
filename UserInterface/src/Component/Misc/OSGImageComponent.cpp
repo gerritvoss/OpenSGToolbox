@@ -44,7 +44,6 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGImageFileHandler.h>
 
 #include "OSGImageComponent.h"
 #include "Util/OSGUIDrawUtils.h"
@@ -195,7 +194,12 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
    }*/
 
    //Draw the Image as a quad
-   TheGraphics->drawQuad(Pos,Pnt2f(Pos[0]+Size[0],Pos[1]),Pos+Size,Pnt2f(Pos[0],Pos[1]+Size[1]),TexTopLeft,TexTopRight, TexBottomRight, TexBottomLeft, DrawnTexture, getOpacity() );
+   TheGraphics->drawQuad(Pos,
+	                     Pnt2f(Pos[0]+Size[0],Pos[1]),
+						 Pos+Size,Pnt2f(Pos[0],
+						 Pos[1]+Size[1]),
+						 TexTopLeft,TexTopRight, 
+						 TexBottomRight, TexBottomLeft, DrawnTexture, getOpacity() );
 }
 
 

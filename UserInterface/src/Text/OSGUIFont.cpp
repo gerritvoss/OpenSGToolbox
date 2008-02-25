@@ -104,6 +104,8 @@ void UIFont::initText(void)
             getTexture()->setWrapT(GL_CLAMP);
             getTexture()->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
             getTexture()->setMagFilter(GL_LINEAR);
+            //getTexture()->setMinFilter(GL_NEAREST);
+            //getTexture()->setMagFilter(GL_NEAREST);
             getTexture()->setEnvMode(GL_MODULATE);
       }
       endEditCP(getTexture());
