@@ -35,6 +35,12 @@
 #include "OSGToolboxDef.h"
 
 #include "OSGFCFileType.h"
+#include "OSGFCFileHandler.h"
+
+//This is needed so that the Shared Ptr included in the OSG library is not used
+//because it is already defined in the boost library
+#define BOOST_SMART_PTR_HPP
+#include <OpenSG/OSGXmlpp.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -53,16 +59,46 @@ class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
  
      /*---------------------------------------------------------------------*/
      virtual FCPtrStore read(std::istream &is,
-		                     const std::string& fileNameOrExtension) const;
+		                     const std::string& FileNameOrExtension) const;
  
      /*---------------------------------------------------------------------*/
      virtual bool write(const FCPtrStore &Containers, std::ostream &os,
-                        const std::string& fileNameOrExtension) const;
+                        const std::string& FileNameOrExtension) const;
  
      /*=========================  PROTECTED  ===============================*/
    protected:
-	   typedef FCFileType Inherited;
-	   static       XMLFCFileType*  _the;
+	 struct FCIdMapper;
+	 friend class FCIdMapper;
+
+	 struct FCInfoStruct
+	 {
+		UInt32            _NewId;
+		FieldContainerPtr _Ptr;
+		bool              _Read;
+		FCInfoStruct();
+	 };
+
+	 typedef std::map<UInt32, FCInfoStruct> IDLookupMap;
+
+	 struct FCIdMapper : public FieldContainerMapper
+	 {
+	 public:
+		const IDLookupMap *_PtrMap;
+		FCIdMapper(IDLookupMap *m);
+
+		virtual UInt32 map(UInt32 uiId);
+	 };
+
+	 typedef FCFileType Inherited;
+	 static       XMLFCFileType*  _the;
+
+     FCPtrStore getAllDependantFCs(FCPtrStore Containers, FCPtrStore IgnoreContainers =FCPtrStore()) const;
+     bool isFieldAFieldContainerPtr(const Field* TheField) const;
+
+	 IDLookupMap createFieldContainers(xmlpp::xmlnodelist::iterator Begin, xmlpp::xmlnodelist::iterator End, xmlpp::xmlcontextptr Context,
+	                     const std::string& FileNameOrExtension) const;
+	 void printXMLError(const xmlpp::xmlerror& Error, xmlpp::xmlcontextptr Context,
+	                     const std::string& FileNameOrExtension) const;
  
      /*---------------------------------------------------------------------*/
      XMLFCFileType(void);

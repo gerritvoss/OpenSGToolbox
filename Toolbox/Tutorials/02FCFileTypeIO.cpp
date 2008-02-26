@@ -15,6 +15,8 @@
 #include <OpenSG/OSGPerspectiveCamera.h>
 #include <OpenSG/OSGGradientBackground.h>
 #include <OpenSG/OSGPolygonForeground.h>
+#include <OpenSG/OSGNode.h>
+#include <OpenSG/OSGViewport.h>
 
 #include <OpenSG/Toolbox/OSGFCFileHandler.h>
 
@@ -30,9 +32,16 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
     
 	//Create some Field Containers
+	NodePtr ChildNode1 = Node::create();
+	NodePtr ChildNode2 = Node::create();
+	NodePtr CameraBeaconNode = Node::create();
+	CameraBeaconNode->addChild(ChildNode1);
+	CameraBeaconNode->addChild(ChildNode2);
+
+
 	PerspectiveCameraPtr ThePerspectiveCamera = PerspectiveCamera::create();
 	beginEditCP(ThePerspectiveCamera);
-		//ThePerspectiveCamera->setBeacon(CameraBeaconNode);
+		ThePerspectiveCamera->setBeacon(CameraBeaconNode);
 		ThePerspectiveCamera->setFov   (deg2rad(60.f));
 		ThePerspectiveCamera->setNear  (0.1f);
 		ThePerspectiveCamera->setFar   (10000.f);
@@ -46,10 +55,14 @@ int main(int argc, char **argv)
 	PolygonForegroundPtr ThePolygonForeground = PolygonForeground::create();
 	ThePolygonForeground->getPositions().addValue(Pnt2f(0.0f,1.0f));
 
+	ViewportPtr TheViewport = Viewport::create();
+	TheViewport->setRoot(CameraBeaconNode);
+	TheViewport->setCamera(ThePerspectiveCamera);
+	TheViewport->setBackground(TheGradientBackground);
+	TheViewport->getForegrounds().addValue(ThePolygonForeground);
+
 	FCFileType::FCPtrStore Containers;
-	Containers.insert(ThePerspectiveCamera);
-	Containers.insert(TheGradientBackground);
-	Containers.insert(ThePolygonForeground);
+	Containers.insert(TheViewport);
 
 	//Save the Field Containers to a binary file
 	//FCFileHandler::the()->write(Containers,Path("./TestFieldContainers.fcb"));
