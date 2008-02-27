@@ -353,10 +353,10 @@ void XMLFCFileType::printXMLError(const xmlpp::xmlerror& Error, xmlpp::xmlcontex
 }
 
 bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStream,
-                    const std::string& FileNameOrExtension) const
+                    const std::string& FileNameOrExtension, const FCTypeVector& IgnoreTypes) const
 {
 
-	FCPtrStore AllContainers(getAllDependantFCs(Containers));
+	FCPtrStore AllContainers(getAllDependantFCs(Containers, FCPtrStore(), IgnoreTypes));
 	OutputStream << "<?xml version=\"1.0\"?>" << std::endl << std::endl;
 	OutputStream << "<OSGFieldContainers>" << std::endl;
 
@@ -385,7 +385,8 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 				if(TheField->getCardinality() == FieldType::SINGLE_FIELD)
 				{
 					OutputStream << "\t\t" << Desc->getCName() << "=\"";
-					if(static_cast<SFFieldContainerPtr *>(TheField)->getValue() == NullFC)
+					if(static_cast<SFFieldContainerPtr *>(TheField)->getValue() == NullFC ||
+						std::find(IgnoreTypes.begin(), IgnoreTypes.end(), static_cast<SFFieldContainerPtr *>(TheField)->getValue()->getTypeId()) != IgnoreTypes.end())
 					{
 						OutputStream << TypeTraits<UInt32>::putToString(0);
 					}
@@ -397,23 +398,24 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 				}
 				else if(TheField->getCardinality() == FieldType::MULTI_FIELD)
 				{
-					OutputStream << "\t\t" << Desc->getCName() << "=\"" ;
-					for(UInt32 Index(0) ; Index<TheField->getSize() ; ++Index)
-					{
-						if(Index!=0)
+						OutputStream << "\t\t" << Desc->getCName() << "=\"" ;
+						for(UInt32 Index(0) ; Index<TheField->getSize() ; ++Index)
 						{
-							OutputStream << ";";
+							if(Index!=0)
+							{
+								OutputStream << ";";
+							}
+							if(static_cast<MFFieldContainerPtr *>(TheField)->getValue(Index) == NullFC ||
+								std::find(IgnoreTypes.begin(), IgnoreTypes.end(), static_cast<MFFieldContainerPtr *>(TheField)->getValue(Index)->getTypeId()) != IgnoreTypes.end())
+							{
+								OutputStream << TypeTraits<UInt32>::putToString(0);
+							}
+							else
+							{
+								OutputStream << TypeTraits<UInt32>::putToString(static_cast<MFFieldContainerPtr *>(TheField)->getValue(Index).getFieldContainerId());
+							}
 						}
-						if(static_cast<MFFieldContainerPtr *>(TheField)->getValue(Index) == NullFC)
-						{
-							OutputStream << TypeTraits<UInt32>::putToString(0);
-						}
-						else
-						{
-							OutputStream << TypeTraits<UInt32>::putToString(static_cast<MFFieldContainerPtr *>(TheField)->getValue(Index).getFieldContainerId());
-						}
-					}
-					OutputStream << "\"" << std::endl;
+						OutputStream << "\"" << std::endl;
 				}
 			}
 			else
@@ -452,7 +454,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 	return true;
 }
 
-XMLFCFileType::FCPtrStore XMLFCFileType::getAllDependantFCs(FCPtrStore Containers, FCPtrStore IgnoreContainers) const
+XMLFCFileType::FCPtrStore XMLFCFileType::getAllDependantFCs(FCPtrStore Containers, FCPtrStore IgnoreContainers, const FCTypeVector& IgnoreTypes) const
 {
 	FCPtrStore AllContainers(Containers);
 	FCPtrStore NewIgnores(IgnoreContainers);
@@ -466,46 +468,57 @@ XMLFCFileType::FCPtrStore XMLFCFileType::getAllDependantFCs(FCPtrStore Container
 	std::set_difference(AllContainers.begin(),AllContainers.end(), IgnoreContainers.begin(), IgnoreContainers.end(), std::inserter(ContainersDifference, ContainersDifference.begin()));
 	for(FCPtrStore::iterator ContainersItor(ContainersDifference.begin()) ; ContainersItor != ContainersDifference.end() ; ++ContainersItor)
 	{
+		if(std::find(IgnoreTypes.begin(), IgnoreTypes.end(), (*ContainersItor)->getType().getId()) != IgnoreTypes.end())
+		{
+			continue;
+		}
+
 		//Loop through all of the fields of the Container
 		NumFields = (*ContainersItor)->getType().getNumFieldDescs();
 		for(UInt32 i(1) ; i<NumFields+1 ; ++i)
 		{
 			TheFieldDesc = (*ContainersItor)->getType().getFieldDescription(i);
-			TheField = (*ContainersItor)->getField(i);
+			TheField = (*ContainersItor)->getField(TheFieldDesc->getFieldId());
 
-			//Determine if the Field is a Field Container Ptr
-			if(isFieldAFieldContainerPtr(TheField))
+			if(!TheFieldDesc->isInternal())
 			{
-				//Determine the cardinality of the field
-				if(TheField->getCardinality() == FieldType::SINGLE_FIELD)
+				//Determine if the Field is a Field Container Ptr
+				if(isFieldAFieldContainerPtr(TheField))
 				{
-					//If the Ptr is NOT NullFC and is NOT in the Containers already
-					if(static_cast<SFFieldContainerPtr *>(TheField)->getValue() != NullFC &&
-						AllContainers.find(static_cast<SFFieldContainerPtr *>(TheField)->getValue()) == AllContainers.end() &&
-						IgnoreContainers.find(static_cast<SFFieldContainerPtr *>(TheField)->getValue()) == IgnoreContainers.end())
+					//Determine the cardinality of the field
+					if(TheField->getCardinality() == FieldType::SINGLE_FIELD)
 					{
-						FCPtrStore TheContainer;
-						TheContainer.insert(static_cast<SFFieldContainerPtr *>(TheField)->getValue());
-						FCPtrStore NewContainers(getAllDependantFCs(TheContainer, AllContainers));
-
-						AllContainers.insert(NewContainers.begin(), NewContainers.end());
-						IgnoreContainers.insert(NewContainers.begin(), NewContainers.end());
-					}
-				}
-				else
-				{
-					for(UInt32 i(0) ; i<TheField->getSize() ; ++i)
-					{
-						if(static_cast<MFFieldContainerPtr *>(TheField)->getValue(i) != NullFC &&
-							AllContainers.find(static_cast<MFFieldContainerPtr *>(TheField)->getValue(i)) == AllContainers.end() &&
-							IgnoreContainers.find(static_cast<MFFieldContainerPtr *>(TheField)->getValue(i)) == IgnoreContainers.end())
+						//If the Ptr is NOT NullFC and is NOT in the Containers already
+						if(static_cast<SFFieldContainerPtr *>(TheField)->getValue() != NullFC &&
+							AllContainers.find(static_cast<SFFieldContainerPtr *>(TheField)->getValue()) == AllContainers.end() &&
+							IgnoreContainers.find(static_cast<SFFieldContainerPtr *>(TheField)->getValue()) == IgnoreContainers.end() && 
+							std::find(IgnoreTypes.begin(), IgnoreTypes.end(), static_cast<SFFieldContainerPtr *>(TheField)->getValue()->getTypeId()) == IgnoreTypes.end())
 						{
 							FCPtrStore TheContainer;
-							TheContainer.insert(static_cast<MFFieldContainerPtr *>(TheField)->getValue(i));
-							FCPtrStore NewContainers(getAllDependantFCs(TheContainer, AllContainers));
+							
+							TheContainer.insert(static_cast<SFFieldContainerPtr *>(TheField)->getValue());
+							FCPtrStore NewContainers(getAllDependantFCs(TheContainer, AllContainers, IgnoreTypes));
 
 							AllContainers.insert(NewContainers.begin(), NewContainers.end());
 							IgnoreContainers.insert(NewContainers.begin(), NewContainers.end());
+						}
+					}
+					else
+					{
+						for(UInt32 i(0) ; i<TheField->getSize() ; ++i)
+						{
+							if(static_cast<MFFieldContainerPtr *>(TheField)->getValue(i) != NullFC &&
+								AllContainers.find(static_cast<MFFieldContainerPtr *>(TheField)->getValue(i)) == AllContainers.end() &&
+								IgnoreContainers.find(static_cast<MFFieldContainerPtr *>(TheField)->getValue(i)) == IgnoreContainers.end() && 
+								std::find(IgnoreTypes.begin(), IgnoreTypes.end(), static_cast<MFFieldContainerPtr *>(TheField)->getValue(i)->getTypeId()) == IgnoreTypes.end())
+							{
+								FCPtrStore TheContainer;
+								TheContainer.insert(static_cast<MFFieldContainerPtr *>(TheField)->getValue(i));
+								FCPtrStore NewContainers(getAllDependantFCs(TheContainer, AllContainers, IgnoreTypes));
+
+								AllContainers.insert(NewContainers.begin(), NewContainers.end());
+								IgnoreContainers.insert(NewContainers.begin(), NewContainers.end());
+							}
 						}
 					}
 				}

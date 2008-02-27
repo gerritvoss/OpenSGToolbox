@@ -50,6 +50,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING FCFileType
  
      typedef std::set<FieldContainerPtr> FCPtrStore;
 	 typedef std::vector<std::string> ExtensionVector;
+     typedef std::vector<UInt32> FCTypeVector;
      /*---------------------------------------------------------------------*/
 	 virtual std::string getName(void) const = 0;
  
@@ -82,7 +83,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING FCFileType
  
      /*---------------------------------------------------------------------*/
      virtual bool write(const FCPtrStore &Containers, std::ostream &os,
-                        const std::string& fileNameOrExtension) const;
+                        const std::string& fileNameOrExtension, const FCTypeVector& IgnoreTypes) const;
  
      /*=========================  PROTECTED  ===============================*/
    protected:

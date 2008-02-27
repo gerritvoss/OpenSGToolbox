@@ -63,12 +63,12 @@ class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
  
      /*---------------------------------------------------------------------*/
      virtual bool write(const FCPtrStore &Containers, std::ostream &os,
-                        const std::string& FileNameOrExtension) const;
+                        const std::string& FileNameOrExtension, const FCTypeVector& IgnoreTypes) const;
  
      /*=========================  PROTECTED  ===============================*/
    protected:
 	 struct FCIdMapper;
-	 friend class FCIdMapper;
+	 friend struct FCIdMapper;
 
 	 struct FCInfoStruct
 	 {
@@ -92,7 +92,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
 	 typedef FCFileType Inherited;
 	 static       XMLFCFileType*  _the;
 
-     FCPtrStore getAllDependantFCs(FCPtrStore Containers, FCPtrStore IgnoreContainers =FCPtrStore()) const;
+     FCPtrStore getAllDependantFCs(FCPtrStore Containers, FCPtrStore IgnoreContainers, const FCTypeVector& IgnoreTypes) const;
      bool isFieldAFieldContainerPtr(const Field* TheField) const;
 
 	 IDLookupMap createFieldContainers(xmlpp::xmlnodelist::iterator Begin, xmlpp::xmlnodelist::iterator End, xmlpp::xmlcontextptr Context,

@@ -79,7 +79,7 @@ A FCFileType.
 }
 
  bool FCFileType::write(const FCPtrStore &Containers, std::ostream &os,
-                    const std::string& fileNameOrExtension) const
+                    const std::string& fileNameOrExtension, const FCTypeVector& IgnoreTypes) const
  {
 	FWARNING (("STREAM INTERFACE NOT IMPLEMENTED!\n"));
 

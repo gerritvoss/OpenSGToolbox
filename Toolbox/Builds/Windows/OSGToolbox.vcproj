@@ -360,6 +360,18 @@
 				Name="FileIO"
 				>
 				<File
+					RelativePath="..\..\src\FileIO\OSGBinFCFileType.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\FileIO\OSGBinFCFileType.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\FileIO\OSGBinFCFileType.inl"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\FileIO\OSGFCFileHandler.cpp"
 					>
 				</File>

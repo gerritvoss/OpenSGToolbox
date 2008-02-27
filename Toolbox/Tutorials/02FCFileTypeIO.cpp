@@ -67,14 +67,16 @@ int main(int argc, char **argv)
 	//Save the Field Containers to a binary file
 	//FCFileHandler::the()->write(Containers,Path("./TestFieldContainers.fcb"));
 
+	FCFileType::FCTypeVector IgnoreTypes;
+	IgnoreTypes.push_back(Node::getClassType().getId());
 	//Save the Field Containers to a xml file
-	FCFileHandler::the()->write(Containers,Path("./TestFieldContainers.xml"));
+	FCFileHandler::the()->write(Containers,Path("./TestFieldContainers.xml"),IgnoreTypes);
 
 
 	FCFileType::FCPtrStore NewContainers;
 	NewContainers = FCFileHandler::the()->read(Path("./TestFieldContainers.xml"));
 
-	FCFileHandler::the()->write(NewContainers,Path("./TestFieldContainers2.xml"));
+	FCFileHandler::the()->write(NewContainers,Path("./TestFieldContainers2.xml"),IgnoreTypes);
     // OSG exit
     osgExit();
 

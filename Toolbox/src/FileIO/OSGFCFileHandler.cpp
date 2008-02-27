@@ -262,7 +262,7 @@ std::vector<const std::string> FCFileHandler::getSuffixList(UInt32 flags) const
 	 return Result;
  }
 
-bool FCFileHandler::write(const FCPtrStore Containers, std::ostream &OutputStream, const std::string& Extension, bool Compress)
+bool FCFileHandler::write(const FCPtrStore Containers, std::ostream &OutputStream, const std::string& Extension, const FCFileType::FCTypeVector& IgnoreTypes, bool Compress)
 {
 	 //Get the FileType for this extension
 	 FCFileTypeP TheFileType(getFileType(Extension, FCFileType::OSG_WRITE_SUPPORTED));
@@ -281,11 +281,11 @@ bool FCFileHandler::write(const FCPtrStore Containers, std::ostream &OutputStrea
 		 else
 		 {
 		 }
-		 return TheFileType->write(Containers, OutputStream, Extension);
+		 return TheFileType->write(Containers, OutputStream, Extension, IgnoreTypes);
 	 }
 }
 
-bool FCFileHandler::write(const FCPtrStore Containers, const Path& FilePath, bool Compress)
+bool FCFileHandler::write(const FCPtrStore Containers, const Path& FilePath, const FCFileType::FCTypeVector& IgnoreTypes, bool Compress)
 {
 	 //Determine the file extension
 	 std::string Extension(boost::filesystem::extension(FilePath));
@@ -313,7 +313,7 @@ bool FCFileHandler::write(const FCPtrStore Containers, const Path& FilePath, boo
 		 else
 		 {
 			 bool Result;
-			 Result = write(Containers, OutputStream, Extension, Compress);
+			 Result = write(Containers, OutputStream, Extension, IgnoreTypes, Compress);
 			 OutputStream.close();
 			 return Result;
 		 }
