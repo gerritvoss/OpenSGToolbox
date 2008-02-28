@@ -64,10 +64,41 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  ToolbarBase::FloatableFieldMask = 
+    (TypeTraits<BitVector>::One << ToolbarBase::FloatableFieldId);
+
+const OSG::BitVector  ToolbarBase::FloatingTitleFieldMask = 
+    (TypeTraits<BitVector>::One << ToolbarBase::FloatingTitleFieldId);
+
 const OSG::BitVector ToolbarBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+// Field descriptions
+
+/*! \var bool            ToolbarBase::_sfFloatable
+    
+*/
+/*! \var std::string     ToolbarBase::_sfFloatingTitle
+    
+*/
+
+//! Toolbar description
+
+FieldDescription *ToolbarBase::_desc[] = 
+{
+    new FieldDescription(SFBool::getClassType(), 
+                     "Floatable", 
+                     FloatableFieldId, FloatableFieldMask,
+                     false,
+                     (FieldAccessMethod) &ToolbarBase::getSFFloatable),
+    new FieldDescription(SFString::getClassType(), 
+                     "FloatingTitle", 
+                     FloatingTitleFieldId, FloatingTitleFieldMask,
+                     false,
+                     (FieldAccessMethod) &ToolbarBase::getSFFloatingTitle)
+};
 
 
 FieldContainerType ToolbarBase::_type(
@@ -76,8 +107,8 @@ FieldContainerType ToolbarBase::_type(
     NULL,
     (PrototypeCreateF) &ToolbarBase::createEmpty,
     Toolbar::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //OSG_FIELD_CONTAINER_DEF(ToolbarBase, ToolbarPtr)
 
@@ -142,6 +173,8 @@ void ToolbarBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ToolbarBase::ToolbarBase(void) :
+    _sfFloatable              (bool(false)), 
+    _sfFloatingTitle          (), 
     Inherited() 
 {
 }
@@ -151,6 +184,8 @@ ToolbarBase::ToolbarBase(void) :
 #endif
 
 ToolbarBase::ToolbarBase(const ToolbarBase &source) :
+    _sfFloatable              (source._sfFloatable              ), 
+    _sfFloatingTitle          (source._sfFloatingTitle          ), 
     Inherited                 (source)
 {
 }
@@ -167,6 +202,16 @@ UInt32 ToolbarBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (FloatableFieldMask & whichField))
+    {
+        returnValue += _sfFloatable.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FloatingTitleFieldMask & whichField))
+    {
+        returnValue += _sfFloatingTitle.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -176,6 +221,16 @@ void ToolbarBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (FloatableFieldMask & whichField))
+    {
+        _sfFloatable.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FloatingTitleFieldMask & whichField))
+    {
+        _sfFloatingTitle.copyToBin(pMem);
+    }
+
 
 }
 
@@ -183,6 +238,16 @@ void ToolbarBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (FloatableFieldMask & whichField))
+    {
+        _sfFloatable.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FloatingTitleFieldMask & whichField))
+    {
+        _sfFloatingTitle.copyFromBin(pMem);
+    }
 
 
 }
@@ -194,6 +259,12 @@ void ToolbarBase::executeSyncImpl(      ToolbarBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (FloatableFieldMask & whichField))
+        _sfFloatable.syncWith(pOther->_sfFloatable);
+
+    if(FieldBits::NoField != (FloatingTitleFieldMask & whichField))
+        _sfFloatingTitle.syncWith(pOther->_sfFloatingTitle);
+
 
 }
 #else
@@ -203,6 +274,12 @@ void ToolbarBase::executeSyncImpl(      ToolbarBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (FloatableFieldMask & whichField))
+        _sfFloatable.syncWith(pOther->_sfFloatable);
+
+    if(FieldBits::NoField != (FloatingTitleFieldMask & whichField))
+        _sfFloatingTitle.syncWith(pOther->_sfFloatingTitle);
 
 
 

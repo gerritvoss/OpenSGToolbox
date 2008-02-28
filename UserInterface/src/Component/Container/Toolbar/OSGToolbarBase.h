@@ -67,6 +67,8 @@
 
 #include "Component/Container/OSGPanel.h" // Parent
 
+#include <OpenSG/OSGBoolFields.h> // Floatable type
+#include <OpenSG/OSGStringFields.h> // FloatingTitle type
 
 #include "OSGToolbarFields.h"
 
@@ -88,6 +90,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolbarBase : public Panel
 
     typedef ToolbarPtr  Ptr;
 
+    enum
+    {
+        FloatableFieldId     = Inherited::NextFieldId,
+        FloatingTitleFieldId = FloatableFieldId     + 1,
+        NextFieldId          = FloatingTitleFieldId + 1
+    };
+
+    static const OSG::BitVector FloatableFieldMask;
+    static const OSG::BitVector FloatingTitleFieldMask;
+
 
     static const OSG::BitVector MTInfluenceMask;
 
@@ -107,6 +119,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolbarBase : public Panel
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFBool              *getSFFloatable      (void);
+           SFString            *getSFFloatingTitle  (void);
+
+           bool                &getFloatable      (void);
+     const bool                &getFloatable      (void) const;
+           std::string         &getFloatingTitle  (void);
+     const std::string         &getFloatingTitle  (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setFloatable      ( const bool &value );
+     void setFloatingTitle  ( const std::string &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -145,6 +178,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolbarBase : public Panel
     /*=========================  PROTECTED  ===============================*/
   protected:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFBool              _sfFloatable;
+    SFString            _sfFloatingTitle;
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -196,6 +237,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolbarBase : public Panel
 
     friend class FieldContainer;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

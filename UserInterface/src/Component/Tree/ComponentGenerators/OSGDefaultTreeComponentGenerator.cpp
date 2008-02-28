@@ -87,11 +87,11 @@ ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, Sha
 {
     //Setup the layout
     BoxLayoutPtr TheLayout = BoxLayout::create();
-    beginEditCP(TheLayout, BoxLayout::AlignmentFieldMask | BoxLayout::ComponentAlignmentFieldMask | BoxLayout::MinorAxisAlignmentFieldMask);
-        TheLayout->setAlignment(HORIZONTAL_ALIGNMENT);
-        TheLayout->setComponentAlignment(AXIS_MIN_ALIGNMENT);
-        TheLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-    endEditCP(TheLayout, BoxLayout::AlignmentFieldMask | BoxLayout::ComponentAlignmentFieldMask | BoxLayout::MinorAxisAlignmentFieldMask);
+    beginEditCP(TheLayout, BoxLayout::OrientationFieldMask | BoxLayout::ComponentAlignmentFieldMask | BoxLayout::MinorAxisAlignmentFieldMask);
+		TheLayout->setOrientation(BoxLayout::HORIZONTAL_ORIENTATION);
+        TheLayout->setComponentAlignment(0.0f);
+        TheLayout->setMinorAxisAlignment(0.5f);
+    endEditCP(TheLayout, BoxLayout::OrientationFieldMask | BoxLayout::ComponentAlignmentFieldMask | BoxLayout::MinorAxisAlignmentFieldMask);
 
     //Get the text for the label
     std::string LabelText("");

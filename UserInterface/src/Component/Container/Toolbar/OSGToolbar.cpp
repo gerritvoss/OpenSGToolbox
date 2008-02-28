@@ -76,10 +76,37 @@ void Toolbar::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void Toolbar::setOrientation(BoxLayout::Orientation TheOrientation)
+{
+	beginEditCP(BoxLayout::Ptr::dcast(getLayout()), BoxLayout::OrientationFieldMask);
+		BoxLayout::Ptr::dcast(getLayout())->setOrientation(TheOrientation);
+	endEditCP(BoxLayout::Ptr::dcast(getLayout()), BoxLayout::OrientationFieldMask);
+}
+
+BoxLayout::Orientation Toolbar::getOrientation(void) const
+{
+	return BoxLayout::Orientation(BoxLayout::Ptr::dcast(getLayout())->getOrientation());
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+BoxLayoutPtr Toolbar::createDefaultLayout(void) const
+{
+	BoxLayoutPtr TheLayout = BoxLayout::create();
+
+	beginEditCP(TheLayout);
+		TheLayout->setOrientation(BoxLayout::HORIZONTAL_ORIENTATION);
+		TheLayout->setMajorAxisAlignment(0.0f);
+		TheLayout->setMinorAxisAlignment(0.0f);
+		TheLayout->setComponentAlignment(0.0f);
+		TheLayout->setMajorAxisMinimumGap(2);
+		TheLayout->setMajorAxisMaximumGap(2);
+	endEditCP(TheLayout);
+
+	return TheLayout;
+}
 /*----------------------- constructors & destructors ----------------------*/
 
 Toolbar::Toolbar(void) :
@@ -90,6 +117,9 @@ Toolbar::Toolbar(void) :
 Toolbar::Toolbar(const Toolbar &source) :
     Inherited(source)
 {
+	beginEditCP(ToolbarPtr(this), Toolbar::LayoutFieldMask);
+		setLayout(createDefaultLayout());
+	endEditCP(ToolbarPtr(this), Toolbar::LayoutFieldMask);
 }
 
 Toolbar::~Toolbar(void)

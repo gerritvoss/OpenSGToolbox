@@ -76,13 +76,22 @@ void Button::initMethod (void)
 {
 }
 
-UIDrawObjectCanvasPtr Button::createTexturedDrawObjectCanvas(TextureChunkPtr TheTexture)
+UIDrawObjectCanvasPtr Button::createTexturedDrawObjectCanvas(TextureChunkPtr TheTexture, Vec2f Size)
 {
     UIDrawObjectCanvasPtr DrawObjectCanvas = UIDrawObjectCanvas::create();
     TexturedQuadUIDrawObjectPtr TextureDrawObject = TexturedQuadUIDrawObject::create();
 
     Vec2f ImageSize;
     ImageSize.setValues(TheTexture->getImage()->getWidth(), TheTexture->getImage()->getHeight());
+
+	if(Size.x() > 0.0f)
+	{
+		ImageSize[0] = Size.x();
+	}
+	if(Size.y() > 0.0f)
+	{
+		ImageSize[1] = Size.y();
+	}
     
     beginEditCP(TextureDrawObject);
         TextureDrawObject->setPoint1(Pnt2f(0,0));
@@ -373,7 +382,7 @@ void Button::produceMousePressedActionPerformed(const ActionEvent& e)
     }
 }
 
-void Button::setTexture(TextureChunkPtr TheTexture)
+void Button::setTexture(TextureChunkPtr TheTexture, Vec2f Size)
 {
     UIDrawObjectCanvasPtr DrawObjectCanvas;
     if(TheTexture == NullFC)
@@ -382,7 +391,7 @@ void Button::setTexture(TextureChunkPtr TheTexture)
     }
     else
     {
-        DrawObjectCanvas = createTexturedDrawObjectCanvas(TheTexture);
+        DrawObjectCanvas = createTexturedDrawObjectCanvas(TheTexture, Size);
     }
 
     beginEditCP(ButtonPtr(this), DrawObjectFieldMask);
@@ -391,7 +400,7 @@ void Button::setTexture(TextureChunkPtr TheTexture)
 
 }
 
-void Button::setActiveTexture(TextureChunkPtr TheTexture)
+void Button::setActiveTexture(TextureChunkPtr TheTexture, Vec2f Size)
 {
     UIDrawObjectCanvasPtr DrawObjectCanvas;
     if(TheTexture == NullFC)
@@ -400,7 +409,7 @@ void Button::setActiveTexture(TextureChunkPtr TheTexture)
     }
     else
     {
-        DrawObjectCanvas = createTexturedDrawObjectCanvas(TheTexture);
+        DrawObjectCanvas = createTexturedDrawObjectCanvas(TheTexture, Size);
     }
 
     beginEditCP(ButtonPtr(this), ActiveDrawObjectFieldMask);
@@ -408,7 +417,7 @@ void Button::setActiveTexture(TextureChunkPtr TheTexture)
     endEditCP(ButtonPtr(this), ActiveDrawObjectFieldMask);
 }
 
-void Button::setFocusedTexture(TextureChunkPtr TheTexture)
+void Button::setFocusedTexture(TextureChunkPtr TheTexture, Vec2f Size)
 {
     UIDrawObjectCanvasPtr DrawObjectCanvas;
     if(TheTexture == NullFC)
@@ -417,7 +426,7 @@ void Button::setFocusedTexture(TextureChunkPtr TheTexture)
     }
     else
     {
-        DrawObjectCanvas = createTexturedDrawObjectCanvas(TheTexture);
+        DrawObjectCanvas = createTexturedDrawObjectCanvas(TheTexture, Size);
     }
 
     beginEditCP(ButtonPtr(this), FocusedDrawObjectFieldMask);
@@ -425,7 +434,7 @@ void Button::setFocusedTexture(TextureChunkPtr TheTexture)
     endEditCP(ButtonPtr(this), FocusedDrawObjectFieldMask);
 }
 
-void Button::setRolloverTexture(TextureChunkPtr TheTexture)
+void Button::setRolloverTexture(TextureChunkPtr TheTexture, Vec2f Size)
 {
     UIDrawObjectCanvasPtr DrawObjectCanvas;
     if(TheTexture == NullFC)
@@ -434,7 +443,7 @@ void Button::setRolloverTexture(TextureChunkPtr TheTexture)
     }
     else
     {
-        DrawObjectCanvas = createTexturedDrawObjectCanvas(TheTexture);
+        DrawObjectCanvas = createTexturedDrawObjectCanvas(TheTexture, Size);
     }
 
     beginEditCP(ButtonPtr(this), RolloverDrawObjectFieldMask);
@@ -442,7 +451,7 @@ void Button::setRolloverTexture(TextureChunkPtr TheTexture)
     endEditCP(ButtonPtr(this), RolloverDrawObjectFieldMask);
 }
 
-void Button::setDisabledTexture(TextureChunkPtr TheTexture)
+void Button::setDisabledTexture(TextureChunkPtr TheTexture, Vec2f Size)
 {
     UIDrawObjectCanvasPtr DrawObjectCanvas;
     if(TheTexture == NullFC)
@@ -451,7 +460,7 @@ void Button::setDisabledTexture(TextureChunkPtr TheTexture)
     }
     else
     {
-        DrawObjectCanvas = createTexturedDrawObjectCanvas(TheTexture);
+        DrawObjectCanvas = createTexturedDrawObjectCanvas(TheTexture, Size);
     }
 
     beginEditCP(ButtonPtr(this), DisabledDrawObjectFieldMask);
@@ -459,7 +468,7 @@ void Button::setDisabledTexture(TextureChunkPtr TheTexture)
     endEditCP(ButtonPtr(this), DisabledDrawObjectFieldMask);
 }
 
-void Button::setImage(ImagePtr TheImage)
+void Button::setImage(ImagePtr TheImage, Vec2f Size)
 {
     TextureChunkPtr TextureChunk;
     if(TheImage == NullFC)
@@ -479,10 +488,10 @@ void Button::setImage(ImagePtr TheImage)
         endEditCP(TextureChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::EnvModeFieldMask);
     }
 
-    setTexture(TextureChunk);
+    setTexture(TextureChunk, Size);
 }
 
-void Button::setActiveImage(ImagePtr TheImage)
+void Button::setActiveImage(ImagePtr TheImage, Vec2f Size)
 {
     TextureChunkPtr TextureChunk;
     if(TheImage == NullFC)
@@ -502,10 +511,10 @@ void Button::setActiveImage(ImagePtr TheImage)
         endEditCP(TextureChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::EnvModeFieldMask);
     }
 
-    setActiveTexture(TextureChunk);
+    setActiveTexture(TextureChunk, Size);
 }
 
-void Button::setFocusedImage(ImagePtr TheImage)
+void Button::setFocusedImage(ImagePtr TheImage, Vec2f Size)
 {
     TextureChunkPtr TextureChunk;
     if(TheImage == NullFC)
@@ -525,10 +534,10 @@ void Button::setFocusedImage(ImagePtr TheImage)
         endEditCP(TextureChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::EnvModeFieldMask);
     }
 
-    setFocusedTexture(TextureChunk);
+    setFocusedTexture(TextureChunk, Size);
 }
 
-void Button::setRolloverImage(ImagePtr TheImage)
+void Button::setRolloverImage(ImagePtr TheImage, Vec2f Size)
 {
     TextureChunkPtr TextureChunk;
     if(TheImage == NullFC)
@@ -548,10 +557,10 @@ void Button::setRolloverImage(ImagePtr TheImage)
         endEditCP(TextureChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::EnvModeFieldMask);
     }
 
-    setRolloverTexture(TextureChunk);
+    setRolloverTexture(TextureChunk, Size);
 }
 
-void Button::setDisabledImage(ImagePtr TheImage)
+void Button::setDisabledImage(ImagePtr TheImage, Vec2f Size)
 {
     TextureChunkPtr TextureChunk;
     if(TheImage == NullFC)
@@ -571,38 +580,38 @@ void Button::setDisabledImage(ImagePtr TheImage)
         endEditCP(TextureChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask | TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask | TextureChunk::EnvModeFieldMask);
     }
 
-    setDisabledTexture(TextureChunk);
+    setDisabledTexture(TextureChunk, Size);
 }
 
 
-void Button::setImage(const std::string& Path)
+void Button::setImage(const std::string& Path, Vec2f Size)
 {
     ImagePtr LoadedImage = ImageFileHandler::the().read(Path.c_str());
-    setImage(LoadedImage);
+    setImage(LoadedImage, Size);
 }
 
-void Button::setActiveImage(const std::string& Path)
+void Button::setActiveImage(const std::string& Path, Vec2f Size)
 {
     ImagePtr LoadedImage = ImageFileHandler::the().read(Path.c_str());
-    setActiveImage(LoadedImage);
+    setActiveImage(LoadedImage, Size);
 }
 
-void Button::setFocusedImage(const std::string& Path)
+void Button::setFocusedImage(const std::string& Path, Vec2f Size)
 {
     ImagePtr LoadedImage = ImageFileHandler::the().read(Path.c_str());
-    setFocusedImage(LoadedImage);
+    setFocusedImage(LoadedImage, Size);
 }
 
-void Button::setRolloverImage(const std::string& Path)
+void Button::setRolloverImage(const std::string& Path, Vec2f Size)
 {
     ImagePtr LoadedImage = ImageFileHandler::the().read(Path.c_str());
-    setRolloverImage(LoadedImage);
+    setRolloverImage(LoadedImage, Size);
 }
 
-void Button::setDisabledImage(const std::string& Path)
+void Button::setDisabledImage(const std::string& Path, Vec2f Size)
 {
     ImagePtr LoadedImage = ImageFileHandler::the().read(Path.c_str());
-    setDisabledImage(LoadedImage);
+    setDisabledImage(LoadedImage, Size);
 }
 
 

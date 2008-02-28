@@ -46,6 +46,7 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGToolbarBase.h"
+#include "Layout/OSGBoxLayout.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,6 +79,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING Toolbar : public ToolbarBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+	void setOrientation(BoxLayout::Orientation TheOrientation);
+	BoxLayout::Orientation getOrientation(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -98,6 +102,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Toolbar : public ToolbarBase
     virtual ~Toolbar(void); 
 
     /*! \}                                                                 */
+	BoxLayoutPtr createDefaultLayout(void) const;
     
     /*==========================  PRIVATE  ================================*/
   private:

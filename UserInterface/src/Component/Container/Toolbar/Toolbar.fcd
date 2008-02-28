@@ -12,4 +12,22 @@
 	useLocalIncludes="true"
 >
 A UI Toolbar.
+	<Field
+		name="Floatable"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="false"
+	>
+	</Field>
+	<Field
+		name="FloatingTitle"
+		type="std::string"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue=""
+	>
+	</Field>
 </FieldContainer>

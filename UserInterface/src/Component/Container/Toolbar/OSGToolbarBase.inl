@@ -96,6 +96,62 @@ ToolbarPtr ToolbarBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the Toolbar::_sfFloatable field.
+inline
+SFBool *ToolbarBase::getSFFloatable(void)
+{
+    return &_sfFloatable;
+}
+
+//! Get the Toolbar::_sfFloatingTitle field.
+inline
+SFString *ToolbarBase::getSFFloatingTitle(void)
+{
+    return &_sfFloatingTitle;
+}
+
+
+//! Get the value of the Toolbar::_sfFloatable field.
+inline
+bool &ToolbarBase::getFloatable(void)
+{
+    return _sfFloatable.getValue();
+}
+
+//! Get the value of the Toolbar::_sfFloatable field.
+inline
+const bool &ToolbarBase::getFloatable(void) const
+{
+    return _sfFloatable.getValue();
+}
+
+//! Set the value of the Toolbar::_sfFloatable field.
+inline
+void ToolbarBase::setFloatable(const bool &value)
+{
+    _sfFloatable.setValue(value);
+}
+
+//! Get the value of the Toolbar::_sfFloatingTitle field.
+inline
+std::string &ToolbarBase::getFloatingTitle(void)
+{
+    return _sfFloatingTitle.getValue();
+}
+
+//! Get the value of the Toolbar::_sfFloatingTitle field.
+inline
+const std::string &ToolbarBase::getFloatingTitle(void) const
+{
+    return _sfFloatingTitle.getValue();
+}
+
+//! Set the value of the Toolbar::_sfFloatingTitle field.
+inline
+void ToolbarBase::setFloatingTitle(const std::string &value)
+{
+    _sfFloatingTitle.setValue(value);
+}
 
 
 OSG_END_NAMESPACE

@@ -92,23 +92,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     void addMousePressedActionListener(ActionListenerPtr Listener);
     void removeMousePressedActionListener(ActionListenerPtr Listener);
 
-    void setTexture(TextureChunkPtr TheTexture);
-    void setActiveTexture(TextureChunkPtr TheTexture);
-    void setFocusedTexture(TextureChunkPtr TheTexture);
-    void setRolloverTexture(TextureChunkPtr TheTexture);
-    void setDisabledTexture(TextureChunkPtr TheTexture);
+    void setTexture(TextureChunkPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setActiveTexture(TextureChunkPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setFocusedTexture(TextureChunkPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setRolloverTexture(TextureChunkPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setDisabledTexture(TextureChunkPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
 
-    void setImage(ImagePtr TheImage);
-    void setActiveImage(ImagePtr TheImage);
-    void setFocusedImage(ImagePtr TheImage);
-    void setRolloverImage(ImagePtr TheImage);
-    void setDisabledImage(ImagePtr TheImage);
+    void setImage(ImagePtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setActiveImage(ImagePtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setFocusedImage(ImagePtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setRolloverImage(ImagePtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setDisabledImage(ImagePtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
     
-    void setImage(const std::string& Path);
-    void setActiveImage(const std::string& Path);
-    void setFocusedImage(const std::string& Path);
-    void setRolloverImage(const std::string& Path);
-    void setDisabledImage(const std::string& Path);
+    void setImage(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setActiveImage(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setFocusedImage(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setRolloverImage(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setDisabledImage(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
 
 	void getTextBounds(Pnt2f& TextTopLeft, Pnt2f& TextBottomRight) const;
 	void setPreferredSizeByContents(const Real32 Insets);
@@ -159,7 +159,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
 	ButtonArmedListener _ButtonArmedListener;
     bool _Armed;
     
-    static UIDrawObjectCanvasPtr createTexturedDrawObjectCanvas(TextureChunkPtr TheTexture);
+    static UIDrawObjectCanvasPtr createTexturedDrawObjectCanvas(TextureChunkPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/
