@@ -197,11 +197,11 @@ int main(int argc, char **argv)
 
     FlowLayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
 
-    beginEditCP(MainInternalWindowLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
-        MainInternalWindowLayout->setAlignment(VERTICAL_ALIGNMENT);
-        MainInternalWindowLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-        MainInternalWindowLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-    endEditCP(MainInternalWindowLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+    beginEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+        MainInternalWindowLayout->setOrientation(FlowLayout::VERTICAL_ORIENTATION);
+        MainInternalWindowLayout->setMajorAxisAlignment(0.5f);
+        MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
+    endEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
     
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow

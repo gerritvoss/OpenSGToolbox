@@ -248,8 +248,8 @@ int main(int argc, char **argv)
         MainTabPanel->setPreferredSize(Vec2f(600,600));
         MainTabPanel->addTab(StateTabPanelTab, StatePanel);
         MainTabPanel->setActiveTab(0);
-        MainTabPanel->setTabAlignment(AXIS_CENTER_ALIGNMENT);
-        MainTabPanel->setTabPlacement(PLACEMENT_NORTH);
+        MainTabPanel->setTabAlignment(0.5f);
+        MainTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
     endEditCP(MainTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask  | TabPanel::ConstraintsFieldMask);
 
 

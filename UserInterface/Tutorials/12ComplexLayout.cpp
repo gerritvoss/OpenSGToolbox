@@ -291,34 +291,34 @@ int main(int argc, char **argv)
     BoxLayoutPtr ExamplePanel5Layout = osg::BoxLayout::create();
     BoxLayoutPtr ExamplePanel6Layout = osg::BoxLayout::create();
 
-    beginEditCP(ExamplePanel1Layout, BoxLayout::AlignmentFieldMask);
-        ExamplePanel1Layout->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(ExamplePanel1Layout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(ExamplePanel1Layout, BoxLayout::OrientationFieldMask);
+	ExamplePanel1Layout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
+    endEditCP(ExamplePanel1Layout, BoxLayout::OrientationFieldMask);
 
-    beginEditCP(ExamplePanel2Layout, BoxLayout::AlignmentFieldMask);
-        ExamplePanel2Layout->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(ExamplePanel2Layout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(ExamplePanel2Layout, BoxLayout::OrientationFieldMask);
+        ExamplePanel2Layout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
+    endEditCP(ExamplePanel2Layout, BoxLayout::OrientationFieldMask);
 
-    beginEditCP(ExamplePanel3Layout, BoxLayout::AlignmentFieldMask);
-        ExamplePanel3Layout->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(ExamplePanel3Layout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(ExamplePanel3Layout, BoxLayout::OrientationFieldMask);
+        ExamplePanel3Layout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
+    endEditCP(ExamplePanel3Layout, BoxLayout::OrientationFieldMask);
 
-    beginEditCP(ExamplePanel4Layout, BoxLayout::AlignmentFieldMask);
-        ExamplePanel4Layout->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(ExamplePanel4Layout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(ExamplePanel4Layout, BoxLayout::OrientationFieldMask);
+        ExamplePanel4Layout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
+    endEditCP(ExamplePanel4Layout, BoxLayout::OrientationFieldMask);
 
-    beginEditCP(ExamplePanel5Layout, BoxLayout::AlignmentFieldMask);
-        ExamplePanel5Layout->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(ExamplePanel5Layout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(ExamplePanel5Layout, BoxLayout::OrientationFieldMask);
+        ExamplePanel5Layout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
+    endEditCP(ExamplePanel5Layout, BoxLayout::OrientationFieldMask);
 
-    beginEditCP(ExamplePanel6Layout, BoxLayout::AlignmentFieldMask);
-        ExamplePanel6Layout->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(ExamplePanel6Layout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(ExamplePanel6Layout, BoxLayout::OrientationFieldMask);
+        ExamplePanel6Layout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
+    endEditCP(ExamplePanel6Layout, BoxLayout::OrientationFieldMask);
 
-    beginEditCP(MainInternalWindowLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
-        MainInternalWindowLayout->setAlignment(HORIZONTAL_ALIGNMENT);
-        MainInternalWindowLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-    endEditCP(MainInternalWindowLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+    beginEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+	MainInternalWindowLayout->setOrientation(BoxLayout::HORIZONTAL_ORIENTATION);
+        MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
+    endEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
 
 
 

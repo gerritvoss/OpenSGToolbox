@@ -44,9 +44,9 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 #include "OSGBoxLayout.h"
-#include "Util/OSGUIDefines.h"
+#include "OSGUserInterfaceDef.h"
+#include "Util/OSGUIDrawUtils.h"
 #include "Component/Container/OSGContainer.h"
 
 OSG_BEGIN_NAMESPACE
@@ -104,15 +104,15 @@ void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr 
 	  each of the objects.
     */
 	UInt32 AxisIndex(0);
-	if(getAlignment() != HORIZONTAL_ALIGNMENT ) AxisIndex = 1;
+	if(getOrientation() != HORIZONTAL_ORIENTATION ) AxisIndex = 1;
 
 	Pnt2f borderTopLeft, borderBottomRight;
 	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
 	Vec2f borderSize(borderBottomRight-borderTopLeft);
-	UInt32 MajorAxis(borderSize[AxisIndex]);
-	UInt32 totalMajorAxis(0);
-	UInt32 largestMinorAxis(0);
-	UInt32 spacing(0);
+	Real32 MajorAxis(borderSize[AxisIndex]);
+	Real32 totalMajorAxis(0);
+	Real32 largestMinorAxis(0);
+	Real32 spacing(0);
 	Vec2f size;
 	Vec2f offset(0,0);
 
@@ -133,17 +133,30 @@ void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr 
 		spacing = (MajorAxis-totalMajorAxis)/(Components.size()+1);
 		// in the case where there isn't equal spacing between each button,
 		// translate more the first time to center the components
-		borderTopLeft[AxisIndex] += (MajorAxis - (spacing*(Components.size()+1)+totalMajorAxis))/2 + spacing;
+		if(spacing < getMajorAxisMinimumGap())
+		{
+			spacing = getMajorAxisMinimumGap();
+		}
+		if(spacing > getMajorAxisMaximumGap())
+		{
+			spacing = getMajorAxisMaximumGap();
+		}
+		borderTopLeft[AxisIndex] += (MajorAxis - (spacing*(Components.size()+1)+totalMajorAxis))*getMajorAxisAlignment() + spacing;
+	}
+	else
+	{
+		spacing = getMajorAxisMinimumGap();
 	}
 
-	// set up the MinorAxisAlignment by adding it to the borderTopLeft
-	if (getMinorAxisAlignment() == AXIS_CENTER_ALIGNMENT)
+
+	if(getOrientation() == HORIZONTAL_ORIENTATION)
 	{
-		borderTopLeft[(AxisIndex+1)%2] += (borderSize[(AxisIndex+1)%2] - largestMinorAxis)/2;
-	} else if (getMinorAxisAlignment() == AXIS_MAX_ALIGNMENT)
+		borderTopLeft = calculateAlignment(borderTopLeft, borderSize, Vec2f(0.0f,largestMinorAxis), getMinorAxisAlignment(), 0.0f);
+	}
+	else
 	{
-		borderTopLeft[(AxisIndex+1)%2] += borderSize[(AxisIndex+1)%2] - largestMinorAxis;
-	} // in the case of a min alignment, do nothing
+		borderTopLeft = calculateAlignment(borderTopLeft, borderSize, Vec2f(largestMinorAxis,0.0f), 0.0f, getMinorAxisAlignment());
+	}
 
 	/*!
 	  This second sweep through the components sets each component to the
@@ -168,15 +181,13 @@ void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr 
 				size[(AxisIndex+1)%2] = Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2];
 
 				// find how far to set offset to make this button properly aligned
-				if (getComponentAlignment() == AXIS_MIN_ALIGNMENT)
+				if(getOrientation() == HORIZONTAL_ORIENTATION)
 				{
-					offset[(AxisIndex+1)%2] = 0;
-				} else if (getComponentAlignment() == AXIS_CENTER_ALIGNMENT)
+					offset = calculateAlignment(Pnt2s(0,0), Vec2f(0.0f, largestMinorAxis), Vec2f(0.0f,Components.getValue(i)->getMaxSize().y()), getComponentAlignment(), 0.0f);
+				}
+				else
 				{
-					offset[(AxisIndex+1)%2] = (largestMinorAxis - Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2])/2;
-				} else 
-				{
-					offset[(AxisIndex+1)%2] = largestMinorAxis - Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2];
+					offset = calculateAlignment(Pnt2s(0,0), Vec2f(largestMinorAxis,0.0f), Vec2f(Components.getValue(i)->getMaxSize().x(),0.0f), 0.0f, getComponentAlignment());
 				}
 			}
 		}

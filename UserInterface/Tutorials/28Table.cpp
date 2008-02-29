@@ -398,11 +398,11 @@ int main(int argc, char **argv)
 
     // Create MainFramelayout
     FlowLayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
-    beginEditCP(MainInternalWindowLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
-        MainInternalWindowLayout->setAlignment(HORIZONTAL_ALIGNMENT);
-        MainInternalWindowLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-        MainInternalWindowLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-    endEditCP(MainInternalWindowLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+    beginEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+	MainInternalWindowLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
+        MainInternalWindowLayout->setMajorAxisAlignment(0.5f);
+        MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
+    endEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
         
 
     // Create The Main InternalWindow
@@ -518,10 +518,10 @@ PanelPtr createSelectionModePanel(void)
 
     //Box Layout
     BoxLayoutPtr PanelLayout = BoxLayout::create();
-    beginEditCP(PanelLayout, BoxLayout::MinorAxisAlignmentFieldMask | BoxLayout::AlignmentFieldMask);
-        PanelLayout->setAlignment(VERTICAL_ALIGNMENT);
-        PanelLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-    endEditCP(PanelLayout, BoxLayout::MinorAxisAlignmentFieldMask | BoxLayout::AlignmentFieldMask);
+    beginEditCP(PanelLayout, BoxLayout::MinorAxisAlignmentFieldMask | BoxLayout::OrientationFieldMask);
+        PanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
+        PanelLayout->setMinorAxisAlignment(0.5f);
+    endEditCP(PanelLayout, BoxLayout::MinorAxisAlignmentFieldMask | BoxLayout::OrientationFieldMask);
 
 
     //The Panel
@@ -581,10 +581,10 @@ PanelPtr createSelectionOptionPanel(void)
 
     //Box Layout
     BoxLayoutPtr PanelLayout = BoxLayout::create();
-    beginEditCP(PanelLayout, BoxLayout::MinorAxisAlignmentFieldMask | BoxLayout::AlignmentFieldMask);
-        PanelLayout->setAlignment(VERTICAL_ALIGNMENT);
-        PanelLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-    endEditCP(PanelLayout, BoxLayout::MinorAxisAlignmentFieldMask | BoxLayout::AlignmentFieldMask);
+    beginEditCP(PanelLayout, BoxLayout::MinorAxisAlignmentFieldMask | BoxLayout::OrientationFieldMask);
+        PanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
+        PanelLayout->setMinorAxisAlignment(0.5f);
+    endEditCP(PanelLayout, BoxLayout::MinorAxisAlignmentFieldMask | BoxLayout::OrientationFieldMask);
 
 
     //The Panel

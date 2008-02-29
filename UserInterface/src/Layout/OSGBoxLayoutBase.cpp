@@ -57,24 +57,30 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
 #include "OSGBoxLayoutBase.h"
 #include "OSGBoxLayout.h"
 
-#include <Util/OSGUIDefines.h>            // Alignment default header
-#include <Util/OSGUIDefines.h>            // MinorAxisAlignment default header
-#include <Util/OSGUIDefines.h>            // ComponentAlignment default header
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  BoxLayoutBase::AlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << BoxLayoutBase::AlignmentFieldId);
+const OSG::BitVector  BoxLayoutBase::OrientationFieldMask = 
+    (TypeTraits<BitVector>::One << BoxLayoutBase::OrientationFieldId);
+
+const OSG::BitVector  BoxLayoutBase::MajorAxisAlignmentFieldMask = 
+    (TypeTraits<BitVector>::One << BoxLayoutBase::MajorAxisAlignmentFieldId);
 
 const OSG::BitVector  BoxLayoutBase::MinorAxisAlignmentFieldMask = 
     (TypeTraits<BitVector>::One << BoxLayoutBase::MinorAxisAlignmentFieldId);
 
 const OSG::BitVector  BoxLayoutBase::ComponentAlignmentFieldMask = 
     (TypeTraits<BitVector>::One << BoxLayoutBase::ComponentAlignmentFieldId);
+
+const OSG::BitVector  BoxLayoutBase::MajorAxisMinimumGapFieldMask = 
+    (TypeTraits<BitVector>::One << BoxLayoutBase::MajorAxisMinimumGapFieldId);
+
+const OSG::BitVector  BoxLayoutBase::MajorAxisMaximumGapFieldMask = 
+    (TypeTraits<BitVector>::One << BoxLayoutBase::MajorAxisMaximumGapFieldId);
 
 const OSG::BitVector BoxLayoutBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -83,13 +89,22 @@ const OSG::BitVector BoxLayoutBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var UInt32          BoxLayoutBase::_sfAlignment
+/*! \var UInt32          BoxLayoutBase::_sfOrientation
     
 */
-/*! \var UInt32          BoxLayoutBase::_sfMinorAxisAlignment
+/*! \var Real32          BoxLayoutBase::_sfMajorAxisAlignment
     
 */
-/*! \var UInt32          BoxLayoutBase::_sfComponentAlignment
+/*! \var Real32          BoxLayoutBase::_sfMinorAxisAlignment
+    
+*/
+/*! \var Real32          BoxLayoutBase::_sfComponentAlignment
+    
+*/
+/*! \var Real32          BoxLayoutBase::_sfMajorAxisMinimumGap
+    
+*/
+/*! \var Real32          BoxLayoutBase::_sfMajorAxisMaximumGap
     
 */
 
@@ -98,20 +113,35 @@ const OSG::BitVector BoxLayoutBase::MTInfluenceMask =
 FieldDescription *BoxLayoutBase::_desc[] = 
 {
     new FieldDescription(SFUInt32::getClassType(), 
-                     "Alignment", 
-                     AlignmentFieldId, AlignmentFieldMask,
+                     "Orientation", 
+                     OrientationFieldId, OrientationFieldMask,
                      false,
-                     (FieldAccessMethod) &BoxLayoutBase::getSFAlignment),
-    new FieldDescription(SFUInt32::getClassType(), 
+                     (FieldAccessMethod) &BoxLayoutBase::getSFOrientation),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "MajorAxisAlignment", 
+                     MajorAxisAlignmentFieldId, MajorAxisAlignmentFieldMask,
+                     false,
+                     (FieldAccessMethod) &BoxLayoutBase::getSFMajorAxisAlignment),
+    new FieldDescription(SFReal32::getClassType(), 
                      "MinorAxisAlignment", 
                      MinorAxisAlignmentFieldId, MinorAxisAlignmentFieldMask,
                      false,
                      (FieldAccessMethod) &BoxLayoutBase::getSFMinorAxisAlignment),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "ComponentAlignment", 
                      ComponentAlignmentFieldId, ComponentAlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &BoxLayoutBase::getSFComponentAlignment)
+                     (FieldAccessMethod) &BoxLayoutBase::getSFComponentAlignment),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "MajorAxisMinimumGap", 
+                     MajorAxisMinimumGapFieldId, MajorAxisMinimumGapFieldMask,
+                     false,
+                     (FieldAccessMethod) &BoxLayoutBase::getSFMajorAxisMinimumGap),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "MajorAxisMaximumGap", 
+                     MajorAxisMaximumGapFieldId, MajorAxisMaximumGapFieldMask,
+                     false,
+                     (FieldAccessMethod) &BoxLayoutBase::getSFMajorAxisMaximumGap)
 };
 
 
@@ -187,9 +217,12 @@ void BoxLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 BoxLayoutBase::BoxLayoutBase(void) :
-    _sfAlignment              (UInt32(HORIZONTAL_ALIGNMENT)), 
-    _sfMinorAxisAlignment     (UInt32(AXIS_CENTER_ALIGNMENT)), 
-    _sfComponentAlignment     (UInt32(AXIS_CENTER_ALIGNMENT)), 
+    _sfOrientation            (UInt32(BoxLayout::HORIZONTAL_ORIENTATION)), 
+    _sfMajorAxisAlignment     (Real32(0.5f)), 
+    _sfMinorAxisAlignment     (Real32(0.5f)), 
+    _sfComponentAlignment     (Real32(0.5f)), 
+    _sfMajorAxisMinimumGap    (Real32(2.0f)), 
+    _sfMajorAxisMaximumGap    (Real32(100000000.0f)), 
     Inherited() 
 {
 }
@@ -199,9 +232,12 @@ BoxLayoutBase::BoxLayoutBase(void) :
 #endif
 
 BoxLayoutBase::BoxLayoutBase(const BoxLayoutBase &source) :
-    _sfAlignment              (source._sfAlignment              ), 
+    _sfOrientation            (source._sfOrientation            ), 
+    _sfMajorAxisAlignment     (source._sfMajorAxisAlignment     ), 
     _sfMinorAxisAlignment     (source._sfMinorAxisAlignment     ), 
     _sfComponentAlignment     (source._sfComponentAlignment     ), 
+    _sfMajorAxisMinimumGap    (source._sfMajorAxisMinimumGap    ), 
+    _sfMajorAxisMaximumGap    (source._sfMajorAxisMaximumGap    ), 
     Inherited                 (source)
 {
 }
@@ -218,9 +254,14 @@ UInt32 BoxLayoutBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
-        returnValue += _sfAlignment.getBinSize();
+        returnValue += _sfOrientation.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
+    {
+        returnValue += _sfMajorAxisAlignment.getBinSize();
     }
 
     if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
@@ -233,6 +274,16 @@ UInt32 BoxLayoutBase::getBinSize(const BitVector &whichField)
         returnValue += _sfComponentAlignment.getBinSize();
     }
 
+    if(FieldBits::NoField != (MajorAxisMinimumGapFieldMask & whichField))
+    {
+        returnValue += _sfMajorAxisMinimumGap.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MajorAxisMaximumGapFieldMask & whichField))
+    {
+        returnValue += _sfMajorAxisMaximumGap.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -242,9 +293,14 @@ void BoxLayoutBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
-        _sfAlignment.copyToBin(pMem);
+        _sfOrientation.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
+    {
+        _sfMajorAxisAlignment.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
@@ -257,6 +313,16 @@ void BoxLayoutBase::copyToBin(      BinaryDataHandler &pMem,
         _sfComponentAlignment.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (MajorAxisMinimumGapFieldMask & whichField))
+    {
+        _sfMajorAxisMinimumGap.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MajorAxisMaximumGapFieldMask & whichField))
+    {
+        _sfMajorAxisMaximumGap.copyToBin(pMem);
+    }
+
 
 }
 
@@ -265,9 +331,14 @@ void BoxLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
-        _sfAlignment.copyFromBin(pMem);
+        _sfOrientation.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
+    {
+        _sfMajorAxisAlignment.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
@@ -280,6 +351,16 @@ void BoxLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfComponentAlignment.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (MajorAxisMinimumGapFieldMask & whichField))
+    {
+        _sfMajorAxisMinimumGap.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MajorAxisMaximumGapFieldMask & whichField))
+    {
+        _sfMajorAxisMaximumGap.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -290,14 +371,23 @@ void BoxLayoutBase::executeSyncImpl(      BoxLayoutBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
+        _sfOrientation.syncWith(pOther->_sfOrientation);
+
+    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
+        _sfMajorAxisAlignment.syncWith(pOther->_sfMajorAxisAlignment);
 
     if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
         _sfMinorAxisAlignment.syncWith(pOther->_sfMinorAxisAlignment);
 
     if(FieldBits::NoField != (ComponentAlignmentFieldMask & whichField))
         _sfComponentAlignment.syncWith(pOther->_sfComponentAlignment);
+
+    if(FieldBits::NoField != (MajorAxisMinimumGapFieldMask & whichField))
+        _sfMajorAxisMinimumGap.syncWith(pOther->_sfMajorAxisMinimumGap);
+
+    if(FieldBits::NoField != (MajorAxisMaximumGapFieldMask & whichField))
+        _sfMajorAxisMaximumGap.syncWith(pOther->_sfMajorAxisMaximumGap);
 
 
 }
@@ -309,14 +399,23 @@ void BoxLayoutBase::executeSyncImpl(      BoxLayoutBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
+        _sfOrientation.syncWith(pOther->_sfOrientation);
+
+    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
+        _sfMajorAxisAlignment.syncWith(pOther->_sfMajorAxisAlignment);
 
     if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
         _sfMinorAxisAlignment.syncWith(pOther->_sfMinorAxisAlignment);
 
     if(FieldBits::NoField != (ComponentAlignmentFieldMask & whichField))
         _sfComponentAlignment.syncWith(pOther->_sfComponentAlignment);
+
+    if(FieldBits::NoField != (MajorAxisMinimumGapFieldMask & whichField))
+        _sfMajorAxisMinimumGap.syncWith(pOther->_sfMajorAxisMinimumGap);
+
+    if(FieldBits::NoField != (MajorAxisMaximumGapFieldMask & whichField))
+        _sfMajorAxisMaximumGap.syncWith(pOther->_sfMajorAxisMaximumGap);
 
 
 

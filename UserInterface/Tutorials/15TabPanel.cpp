@@ -369,9 +369,9 @@ int main(int argc, char **argv)
 
     // Create and edit Panel Layout
     BoxLayoutPtr TabPanelLayout = osg::BoxLayout::create();
-    beginEditCP(TabPanelLayout, BoxLayout::AlignmentFieldMask);
-        TabPanelLayout->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(TabPanelLayout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(TabPanelLayout, BoxLayout::OrientationFieldMask);
+        TabPanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
+    endEditCP(TabPanelLayout, BoxLayout::OrientationFieldMask);
 
     // Create and edit Panel
     PanelPtr ExampleTabPanelPanel = osg::Panel::create();

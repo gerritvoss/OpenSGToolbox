@@ -13,32 +13,56 @@
 >
 A UI BoxLayout.
 	<Field
-		name="Alignment"
+		name="Orientation"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="HORIZONTAL_ALIGNMENT"
-		defaultHeader="Util/OSGUIDefines.h"
+		defaultValue="BoxLayout::HORIZONTAL_ORIENTATION"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="MajorAxisAlignment"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.5f"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="MinorAxisAlignment"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="AXIS_CENTER_ALIGNMENT"
-		defaultHeader="Util/OSGUIDefines.h"
+		defaultValue="0.5f"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="ComponentAlignment"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="AXIS_CENTER_ALIGNMENT"
-		defaultHeader="Util/OSGUIDefines.h"
+		defaultValue="0.5f"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="MajorAxisMinimumGap"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="2.0f"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="MajorAxisMaximumGap"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="100000000.0f"
 		access="public"
 	>
 	</Field>

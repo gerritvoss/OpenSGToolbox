@@ -193,9 +193,9 @@ int main(int argc, char **argv)
     FlowLayoutPtr ExamplePanel1Layout = osg::FlowLayout::create();
     FlowLayoutPtr ExamplePanel2Layout = osg::FlowLayout::create();
 
-    beginEditCP(ExamplePanel1Layout, FlowLayout::AlignmentFieldMask);
-        ExamplePanel1Layout->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(ExamplePanel1Layout, FlowLayout::AlignmentFieldMask);
+    beginEditCP(ExamplePanel1Layout, FlowLayout::OrientationFieldMask);
+        ExamplePanel1Layout->setOrientation(FlowLayout::VERTICAL_ORIENTATION);
+    endEditCP(ExamplePanel1Layout, FlowLayout::OrientationFieldMask);
 
 
     /******************************************************

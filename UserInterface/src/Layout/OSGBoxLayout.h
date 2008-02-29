@@ -58,6 +58,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING BoxLayout : public BoxLayoutBase
 
     /*==========================  PUBLIC  =================================*/
   public:
+	enum Orientation {HORIZONTAL_ORIENTATION=0, VERTICAL_ORIENTATION=1};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

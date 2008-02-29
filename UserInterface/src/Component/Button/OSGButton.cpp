@@ -99,10 +99,10 @@ UIDrawObjectCanvasPtr Button::createTexturedDrawObjectCanvas(TextureChunkPtr The
         TextureDrawObject->setPoint3(Pnt2f(ImageSize.x(),ImageSize.y()));
         TextureDrawObject->setPoint4(Pnt2f(0,ImageSize.y()));
         
-        TextureDrawObject->setTexCoord1(Vec2f(0.0,1.0));
-        TextureDrawObject->setTexCoord2(Vec2f(1.0,1.0));
-        TextureDrawObject->setTexCoord3(Vec2f(1.0,0.0));
-        TextureDrawObject->setTexCoord4(Vec2f(0.0,0.0));
+        TextureDrawObject->setTexCoord1(Vec2f(0.0,0.0));
+        TextureDrawObject->setTexCoord2(Vec2f(1.0,0.0));
+        TextureDrawObject->setTexCoord3(Vec2f(1.0,1.0));
+        TextureDrawObject->setTexCoord4(Vec2f(0.0,1.0));
 
         TextureDrawObject->setTexture(TheTexture);
 

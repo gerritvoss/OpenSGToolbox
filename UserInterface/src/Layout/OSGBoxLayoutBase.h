@@ -67,9 +67,12 @@
 
 #include "OSGLayout.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // Alignment type
-#include <OpenSG/OSGUInt32Fields.h> // MinorAxisAlignment type
-#include <OpenSG/OSGUInt32Fields.h> // ComponentAlignment type
+#include <OpenSG/OSGUInt32Fields.h> // Orientation type
+#include <OpenSG/OSGReal32Fields.h> // MajorAxisAlignment type
+#include <OpenSG/OSGReal32Fields.h> // MinorAxisAlignment type
+#include <OpenSG/OSGReal32Fields.h> // ComponentAlignment type
+#include <OpenSG/OSGReal32Fields.h> // MajorAxisMinimumGap type
+#include <OpenSG/OSGReal32Fields.h> // MajorAxisMaximumGap type
 
 #include "OSGBoxLayoutFields.h"
 
@@ -93,15 +96,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING BoxLayoutBase : public Layout
 
     enum
     {
-        AlignmentFieldId          = Inherited::NextFieldId,
-        MinorAxisAlignmentFieldId = AlignmentFieldId          + 1,
-        ComponentAlignmentFieldId = MinorAxisAlignmentFieldId + 1,
-        NextFieldId               = ComponentAlignmentFieldId + 1
+        OrientationFieldId         = Inherited::NextFieldId,
+        MajorAxisAlignmentFieldId  = OrientationFieldId         + 1,
+        MinorAxisAlignmentFieldId  = MajorAxisAlignmentFieldId  + 1,
+        ComponentAlignmentFieldId  = MinorAxisAlignmentFieldId  + 1,
+        MajorAxisMinimumGapFieldId = ComponentAlignmentFieldId  + 1,
+        MajorAxisMaximumGapFieldId = MajorAxisMinimumGapFieldId + 1,
+        NextFieldId                = MajorAxisMaximumGapFieldId + 1
     };
 
-    static const OSG::BitVector AlignmentFieldMask;
+    static const OSG::BitVector OrientationFieldMask;
+    static const OSG::BitVector MajorAxisAlignmentFieldMask;
     static const OSG::BitVector MinorAxisAlignmentFieldMask;
     static const OSG::BitVector ComponentAlignmentFieldMask;
+    static const OSG::BitVector MajorAxisMinimumGapFieldMask;
+    static const OSG::BitVector MajorAxisMaximumGapFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -128,25 +137,37 @@ class OSG_USERINTERFACELIB_DLLMAPPING BoxLayoutBase : public Layout
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *getSFAlignment      (void);
-           SFUInt32            *getSFMinorAxisAlignment(void);
-           SFUInt32            *getSFComponentAlignment(void);
+           SFUInt32            *getSFOrientation    (void);
+           SFReal32            *getSFMajorAxisAlignment(void);
+           SFReal32            *getSFMinorAxisAlignment(void);
+           SFReal32            *getSFComponentAlignment(void);
+           SFReal32            *getSFMajorAxisMinimumGap(void);
+           SFReal32            *getSFMajorAxisMaximumGap(void);
 
-           UInt32              &getAlignment      (void);
-     const UInt32              &getAlignment      (void) const;
-           UInt32              &getMinorAxisAlignment(void);
-     const UInt32              &getMinorAxisAlignment(void) const;
-           UInt32              &getComponentAlignment(void);
-     const UInt32              &getComponentAlignment(void) const;
+           UInt32              &getOrientation    (void);
+     const UInt32              &getOrientation    (void) const;
+           Real32              &getMajorAxisAlignment(void);
+     const Real32              &getMajorAxisAlignment(void) const;
+           Real32              &getMinorAxisAlignment(void);
+     const Real32              &getMinorAxisAlignment(void) const;
+           Real32              &getComponentAlignment(void);
+     const Real32              &getComponentAlignment(void) const;
+           Real32              &getMajorAxisMinimumGap(void);
+     const Real32              &getMajorAxisMinimumGap(void) const;
+           Real32              &getMajorAxisMaximumGap(void);
+     const Real32              &getMajorAxisMaximumGap(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setAlignment      ( const UInt32 &value );
-     void setMinorAxisAlignment( const UInt32 &value );
-     void setComponentAlignment( const UInt32 &value );
+     void setOrientation    ( const UInt32 &value );
+     void setMajorAxisAlignment( const Real32 &value );
+     void setMinorAxisAlignment( const Real32 &value );
+     void setComponentAlignment( const Real32 &value );
+     void setMajorAxisMinimumGap( const Real32 &value );
+     void setMajorAxisMaximumGap( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -189,9 +210,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING BoxLayoutBase : public Layout
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfAlignment;
-    SFUInt32            _sfMinorAxisAlignment;
-    SFUInt32            _sfComponentAlignment;
+    SFUInt32            _sfOrientation;
+    SFReal32            _sfMajorAxisAlignment;
+    SFReal32            _sfMinorAxisAlignment;
+    SFReal32            _sfComponentAlignment;
+    SFReal32            _sfMajorAxisMinimumGap;
+    SFReal32            _sfMajorAxisMaximumGap;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

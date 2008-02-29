@@ -67,12 +67,12 @@
 
 #include "OSGLayout.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // Alignment type
+#include <OpenSG/OSGUInt32Fields.h> // Orientation type
 #include <OpenSG/OSGReal32Fields.h> // HorizontalGap type
 #include <OpenSG/OSGReal32Fields.h> // VerticalGap type
-#include <OpenSG/OSGUInt32Fields.h> // MajorAxisAlignment type
-#include <OpenSG/OSGUInt32Fields.h> // MinorAxisAlignment type
-#include <OpenSG/OSGUInt32Fields.h> // ComponentAlignment type
+#include <OpenSG/OSGReal32Fields.h> // MajorAxisAlignment type
+#include <OpenSG/OSGReal32Fields.h> // MinorAxisAlignment type
+#include <OpenSG/OSGReal32Fields.h> // ComponentAlignment type
 
 #include "OSGFlowLayoutFields.h"
 
@@ -96,8 +96,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FlowLayoutBase : public Layout
 
     enum
     {
-        AlignmentFieldId          = Inherited::NextFieldId,
-        HorizontalGapFieldId      = AlignmentFieldId          + 1,
+        OrientationFieldId        = Inherited::NextFieldId,
+        HorizontalGapFieldId      = OrientationFieldId        + 1,
         VerticalGapFieldId        = HorizontalGapFieldId      + 1,
         MajorAxisAlignmentFieldId = VerticalGapFieldId        + 1,
         MinorAxisAlignmentFieldId = MajorAxisAlignmentFieldId + 1,
@@ -105,7 +105,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FlowLayoutBase : public Layout
         NextFieldId               = ComponentAlignmentFieldId + 1
     };
 
-    static const OSG::BitVector AlignmentFieldMask;
+    static const OSG::BitVector OrientationFieldMask;
     static const OSG::BitVector HorizontalGapFieldMask;
     static const OSG::BitVector VerticalGapFieldMask;
     static const OSG::BitVector MajorAxisAlignmentFieldMask;
@@ -137,37 +137,37 @@ class OSG_USERINTERFACELIB_DLLMAPPING FlowLayoutBase : public Layout
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *getSFAlignment      (void);
+           SFUInt32            *getSFOrientation    (void);
            SFReal32            *getSFHorizontalGap  (void);
            SFReal32            *getSFVerticalGap    (void);
-           SFUInt32            *getSFMajorAxisAlignment(void);
-           SFUInt32            *getSFMinorAxisAlignment(void);
-           SFUInt32            *getSFComponentAlignment(void);
+           SFReal32            *getSFMajorAxisAlignment(void);
+           SFReal32            *getSFMinorAxisAlignment(void);
+           SFReal32            *getSFComponentAlignment(void);
 
-           UInt32              &getAlignment      (void);
-     const UInt32              &getAlignment      (void) const;
+           UInt32              &getOrientation    (void);
+     const UInt32              &getOrientation    (void) const;
            Real32              &getHorizontalGap  (void);
      const Real32              &getHorizontalGap  (void) const;
            Real32              &getVerticalGap    (void);
      const Real32              &getVerticalGap    (void) const;
-           UInt32              &getMajorAxisAlignment(void);
-     const UInt32              &getMajorAxisAlignment(void) const;
-           UInt32              &getMinorAxisAlignment(void);
-     const UInt32              &getMinorAxisAlignment(void) const;
-           UInt32              &getComponentAlignment(void);
-     const UInt32              &getComponentAlignment(void) const;
+           Real32              &getMajorAxisAlignment(void);
+     const Real32              &getMajorAxisAlignment(void) const;
+           Real32              &getMinorAxisAlignment(void);
+     const Real32              &getMinorAxisAlignment(void) const;
+           Real32              &getComponentAlignment(void);
+     const Real32              &getComponentAlignment(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setAlignment      ( const UInt32 &value );
+     void setOrientation    ( const UInt32 &value );
      void setHorizontalGap  ( const Real32 &value );
      void setVerticalGap    ( const Real32 &value );
-     void setMajorAxisAlignment( const UInt32 &value );
-     void setMinorAxisAlignment( const UInt32 &value );
-     void setComponentAlignment( const UInt32 &value );
+     void setMajorAxisAlignment( const Real32 &value );
+     void setMinorAxisAlignment( const Real32 &value );
+     void setComponentAlignment( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -210,12 +210,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING FlowLayoutBase : public Layout
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfAlignment;
+    SFUInt32            _sfOrientation;
     SFReal32            _sfHorizontalGap;
     SFReal32            _sfVerticalGap;
-    SFUInt32            _sfMajorAxisAlignment;
-    SFUInt32            _sfMinorAxisAlignment;
-    SFUInt32            _sfComponentAlignment;
+    SFReal32            _sfMajorAxisAlignment;
+    SFReal32            _sfMinorAxisAlignment;
+    SFReal32            _sfComponentAlignment;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

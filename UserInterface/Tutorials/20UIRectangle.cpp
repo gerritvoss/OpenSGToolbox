@@ -543,9 +543,9 @@ InternalWindowPtr createMainInternalWindow(void)
 
     // Create and edit Panel Layout
     BoxLayoutPtr TabPanelLayout = osg::BoxLayout::create();
-    beginEditCP(TabPanelLayout, BoxLayout::AlignmentFieldMask);
-        TabPanelLayout->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(TabPanelLayout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(TabPanelLayout, BoxLayout::OrientationFieldMask);
+        TabPanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
+    endEditCP(TabPanelLayout, BoxLayout::OrientationFieldMask);
 
     // Create and edit Panel
     PanelPtr ExampleTabPanelPanel = osg::Panel::create();
@@ -570,8 +570,8 @@ InternalWindowPtr createMainInternalWindow(void)
         ExampleTabPanel->addTab(ExampleTabButton5, ExampleTabContentD);
         ExampleTabPanel->addTab(ExampleTabButton6, ExampleTabContentE);
         ExampleTabPanel->setActiveTab(3);
-        ExampleTabPanel->setTabAlignment(AXIS_CENTER_ALIGNMENT);
-        ExampleTabPanel->setTabPlacement(PLACEMENT_SOUTH);
+        ExampleTabPanel->setTabAlignment(0.5f);
+        ExampleTabPanel->setTabPlacement(TabPanel::PLACEMENT_SOUTH);
     endEditCP(ExampleTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
 
 	

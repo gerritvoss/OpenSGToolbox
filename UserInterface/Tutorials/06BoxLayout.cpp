@@ -177,10 +177,10 @@ int main(int argc, char **argv)
 
     BoxLayoutPtr MainInternalWindowLayout = osg::BoxLayout::create();
 
-    beginEditCP(MainInternalWindowLayout, BoxLayout::AlignmentFieldMask);
-        MainInternalWindowLayout->setAlignment(VERTICAL_ALIGNMENT);
+    beginEditCP(MainInternalWindowLayout, BoxLayout::OrientationFieldMask);
+	MainInternalWindowLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
         // MainInternalWindowLayout->setAlignment(HORIZONTAL_ALIGNMENT);
-    endEditCP(MainInternalWindowLayout, BoxLayout::AlignmentFieldMask); 
+    endEditCP(MainInternalWindowLayout, BoxLayout::OrientationFieldMask); 
     
     /******************************************************
             

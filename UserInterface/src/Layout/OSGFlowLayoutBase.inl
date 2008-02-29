@@ -96,11 +96,11 @@ FlowLayoutPtr FlowLayoutBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the FlowLayout::_sfAlignment field.
+//! Get the FlowLayout::_sfOrientation field.
 inline
-SFUInt32 *FlowLayoutBase::getSFAlignment(void)
+SFUInt32 *FlowLayoutBase::getSFOrientation(void)
 {
-    return &_sfAlignment;
+    return &_sfOrientation;
 }
 
 //! Get the FlowLayout::_sfHorizontalGap field.
@@ -119,45 +119,45 @@ SFReal32 *FlowLayoutBase::getSFVerticalGap(void)
 
 //! Get the FlowLayout::_sfMajorAxisAlignment field.
 inline
-SFUInt32 *FlowLayoutBase::getSFMajorAxisAlignment(void)
+SFReal32 *FlowLayoutBase::getSFMajorAxisAlignment(void)
 {
     return &_sfMajorAxisAlignment;
 }
 
 //! Get the FlowLayout::_sfMinorAxisAlignment field.
 inline
-SFUInt32 *FlowLayoutBase::getSFMinorAxisAlignment(void)
+SFReal32 *FlowLayoutBase::getSFMinorAxisAlignment(void)
 {
     return &_sfMinorAxisAlignment;
 }
 
 //! Get the FlowLayout::_sfComponentAlignment field.
 inline
-SFUInt32 *FlowLayoutBase::getSFComponentAlignment(void)
+SFReal32 *FlowLayoutBase::getSFComponentAlignment(void)
 {
     return &_sfComponentAlignment;
 }
 
 
-//! Get the value of the FlowLayout::_sfAlignment field.
+//! Get the value of the FlowLayout::_sfOrientation field.
 inline
-UInt32 &FlowLayoutBase::getAlignment(void)
+UInt32 &FlowLayoutBase::getOrientation(void)
 {
-    return _sfAlignment.getValue();
+    return _sfOrientation.getValue();
 }
 
-//! Get the value of the FlowLayout::_sfAlignment field.
+//! Get the value of the FlowLayout::_sfOrientation field.
 inline
-const UInt32 &FlowLayoutBase::getAlignment(void) const
+const UInt32 &FlowLayoutBase::getOrientation(void) const
 {
-    return _sfAlignment.getValue();
+    return _sfOrientation.getValue();
 }
 
-//! Set the value of the FlowLayout::_sfAlignment field.
+//! Set the value of the FlowLayout::_sfOrientation field.
 inline
-void FlowLayoutBase::setAlignment(const UInt32 &value)
+void FlowLayoutBase::setOrientation(const UInt32 &value)
 {
-    _sfAlignment.setValue(value);
+    _sfOrientation.setValue(value);
 }
 
 //! Get the value of the FlowLayout::_sfHorizontalGap field.
@@ -204,63 +204,63 @@ void FlowLayoutBase::setVerticalGap(const Real32 &value)
 
 //! Get the value of the FlowLayout::_sfMajorAxisAlignment field.
 inline
-UInt32 &FlowLayoutBase::getMajorAxisAlignment(void)
+Real32 &FlowLayoutBase::getMajorAxisAlignment(void)
 {
     return _sfMajorAxisAlignment.getValue();
 }
 
 //! Get the value of the FlowLayout::_sfMajorAxisAlignment field.
 inline
-const UInt32 &FlowLayoutBase::getMajorAxisAlignment(void) const
+const Real32 &FlowLayoutBase::getMajorAxisAlignment(void) const
 {
     return _sfMajorAxisAlignment.getValue();
 }
 
 //! Set the value of the FlowLayout::_sfMajorAxisAlignment field.
 inline
-void FlowLayoutBase::setMajorAxisAlignment(const UInt32 &value)
+void FlowLayoutBase::setMajorAxisAlignment(const Real32 &value)
 {
     _sfMajorAxisAlignment.setValue(value);
 }
 
 //! Get the value of the FlowLayout::_sfMinorAxisAlignment field.
 inline
-UInt32 &FlowLayoutBase::getMinorAxisAlignment(void)
+Real32 &FlowLayoutBase::getMinorAxisAlignment(void)
 {
     return _sfMinorAxisAlignment.getValue();
 }
 
 //! Get the value of the FlowLayout::_sfMinorAxisAlignment field.
 inline
-const UInt32 &FlowLayoutBase::getMinorAxisAlignment(void) const
+const Real32 &FlowLayoutBase::getMinorAxisAlignment(void) const
 {
     return _sfMinorAxisAlignment.getValue();
 }
 
 //! Set the value of the FlowLayout::_sfMinorAxisAlignment field.
 inline
-void FlowLayoutBase::setMinorAxisAlignment(const UInt32 &value)
+void FlowLayoutBase::setMinorAxisAlignment(const Real32 &value)
 {
     _sfMinorAxisAlignment.setValue(value);
 }
 
 //! Get the value of the FlowLayout::_sfComponentAlignment field.
 inline
-UInt32 &FlowLayoutBase::getComponentAlignment(void)
+Real32 &FlowLayoutBase::getComponentAlignment(void)
 {
     return _sfComponentAlignment.getValue();
 }
 
 //! Get the value of the FlowLayout::_sfComponentAlignment field.
 inline
-const UInt32 &FlowLayoutBase::getComponentAlignment(void) const
+const Real32 &FlowLayoutBase::getComponentAlignment(void) const
 {
     return _sfComponentAlignment.getValue();
 }
 
 //! Set the value of the FlowLayout::_sfComponentAlignment field.
 inline
-void FlowLayoutBase::setComponentAlignment(const UInt32 &value)
+void FlowLayoutBase::setComponentAlignment(const Real32 &value)
 {
     _sfComponentAlignment.setValue(value);
 }

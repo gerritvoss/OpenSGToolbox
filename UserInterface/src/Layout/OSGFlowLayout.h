@@ -58,6 +58,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING FlowLayout : public FlowLayoutBase
 
     /*==========================  PUBLIC  =================================*/
   public:
+	enum Orientation {HORIZONTAL_ORIENTATION=0, VERTICAL_ORIENTATION=1};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

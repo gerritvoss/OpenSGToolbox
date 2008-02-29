@@ -13,12 +13,11 @@
 >
 A UI FlowLayout.
 	<Field
-		name="Alignment"
+		name="Orientation"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="HORIZONTAL_ALIGNMENT"
-		defaultHeader="Util/OSGUIDefines.h"
+		defaultValue="FlowLayout::HORIZONTAL_ORIENTATION"
 		access="public"
 	>
 	</Field>
@@ -42,31 +41,28 @@ A UI FlowLayout.
 	</Field>
 	<Field
 		name="MajorAxisAlignment"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="AXIS_CENTER_ALIGNMENT"
-		defaultHeader="Util/OSGUIDefines.h"
+		defaultValue="0.5f"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="MinorAxisAlignment"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="AXIS_CENTER_ALIGNMENT"
-		defaultHeader="Util/OSGUIDefines.h"
+		defaultValue="0.5f"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="ComponentAlignment"
-		type="UInt32"
+		type="Real32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="AXIS_CENTER_ALIGNMENT"
-		defaultHeader="Util/OSGUIDefines.h"
+		defaultValue="0.5f"
 		access="public"
 	>
 	</Field>

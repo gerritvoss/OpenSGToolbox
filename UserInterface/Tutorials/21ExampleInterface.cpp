@@ -468,18 +468,18 @@ int main(int argc, char **argv)
     BoxLayoutPtr MainInternalWindowLayout = osg::BoxLayout::create();
     FlowLayoutPtr LeftPanelLayout = osg::FlowLayout::create();
     BoxLayoutPtr RightPanelLayout = osg::BoxLayout::create();
-    beginEditCP(MainInternalWindowLayout, BoxLayout::AlignmentFieldMask);
-        MainInternalWindowLayout->setAlignment(HORIZONTAL_ALIGNMENT);
-    endEditCP(MainInternalWindowLayout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(MainInternalWindowLayout, BoxLayout::OrientationFieldMask);
+        MainInternalWindowLayout->setOrientation(BoxLayout::HORIZONTAL_ORIENTATION);
+    endEditCP(MainInternalWindowLayout, BoxLayout::OrientationFieldMask);
 
-	beginEditCP(LeftPanelLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
-        LeftPanelLayout->setAlignment(HORIZONTAL_ALIGNMENT);
-        LeftPanelLayout->setMinorAxisAlignment(AXIS_MAX_ALIGNMENT);
-    endEditCP(LeftPanelLayout, FlowLayout::AlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+	beginEditCP(LeftPanelLayout, FlowLayout::OrientationFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+        LeftPanelLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
+        LeftPanelLayout->setMinorAxisAlignment(1.0f);
+    endEditCP(LeftPanelLayout, FlowLayout::OrientationFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
 
-    beginEditCP(RightPanelLayout, BoxLayout::AlignmentFieldMask);
-        RightPanelLayout->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(RightPanelLayout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(RightPanelLayout, BoxLayout::OrientationFieldMask);
+        RightPanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
+    endEditCP(RightPanelLayout, BoxLayout::OrientationFieldMask);
     
 
     /******************************************************
@@ -637,9 +637,9 @@ ComponentPtr createLeftPanelButtonPanel(void)
 
     // Create and edit Panel layout
     BoxLayoutPtr LeftPanelButtonPanelLayout = osg::BoxLayout::create();
-    beginEditCP(LeftPanelButtonPanelLayout, BoxLayout::AlignmentFieldMask);
-        LeftPanelButtonPanelLayout->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(LeftPanelButtonPanelLayout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(LeftPanelButtonPanelLayout, BoxLayout::OrientationFieldMask);
+        LeftPanelButtonPanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
+    endEditCP(LeftPanelButtonPanelLayout, BoxLayout::OrientationFieldMask);
 
     // Create an edit Panel Background
     ColorUIBackgroundPtr LeftPanelButtonPanelBackground = osg::ColorUIBackground::create();
@@ -842,9 +842,9 @@ ComponentPtr createRightPanelButtonPanel(void)
 
     // Create and edit Panel layout
     BoxLayoutPtr RightPanelButtonPanelLayout = osg::BoxLayout::create();
-    beginEditCP(RightPanelButtonPanelLayout, BoxLayout::AlignmentFieldMask);
-        RightPanelButtonPanelLayout->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(RightPanelButtonPanelLayout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(RightPanelButtonPanelLayout, BoxLayout::OrientationFieldMask);
+        RightPanelButtonPanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
+    endEditCP(RightPanelButtonPanelLayout, BoxLayout::OrientationFieldMask);
 
     // Create Panel Border
     LineBorderPtr PanelBorder2 = osg::LineBorder::create();
@@ -917,10 +917,10 @@ ComponentPtr createRightPanelCheckPanel(void)
 
     // Create and edit Panel layout
     BoxLayoutPtr RightPanelCheckPanelLayout = osg::BoxLayout::create();
-    beginEditCP(RightPanelCheckPanelLayout, BoxLayout::AlignmentFieldMask);
-        RightPanelCheckPanelLayout->setAlignment(VERTICAL_ALIGNMENT);
-        RightPanelCheckPanelLayout->setMinorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-    endEditCP(RightPanelCheckPanelLayout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(RightPanelCheckPanelLayout, BoxLayout::OrientationFieldMask);
+        RightPanelCheckPanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
+        RightPanelCheckPanelLayout->setMinorAxisAlignment(0.5f);
+    endEditCP(RightPanelCheckPanelLayout, BoxLayout::OrientationFieldMask);
 
     // Create Panel Border
     LineBorderPtr PanelBorder3 = osg::LineBorder::create();

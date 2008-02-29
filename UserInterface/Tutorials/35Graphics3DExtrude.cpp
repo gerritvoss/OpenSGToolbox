@@ -1098,13 +1098,13 @@ int main(int argc, char **argv)
     BoxLayoutPtr ExamplePanel2Layout = osg::BoxLayout::create();
 	BoxLayoutPtr ExamplePanel3Layout = osg::BoxLayout::create();
 
-    beginEditCP(ExamplePanel2Layout, BoxLayout::AlignmentFieldMask);
-        ExamplePanel2Layout->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(ExamplePanel2Layout, BoxLayout::AlignmentFieldMask);
+    beginEditCP(ExamplePanel2Layout, BoxLayout::OrientationFieldMask);
+	ExamplePanel2Layout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
+    endEditCP(ExamplePanel2Layout, BoxLayout::OrientationFieldMask);
 
-	beginEditCP(ExamplePanel3Layout, BoxLayout::AlignmentFieldMask);
-        ExamplePanel3Layout->setAlignment(HORIZONTAL_ALIGNMENT);
-    endEditCP(ExamplePanel3Layout, BoxLayout::AlignmentFieldMask);
+	beginEditCP(ExamplePanel3Layout, BoxLayout::OrientationFieldMask);
+        ExamplePanel3Layout->setOrientation(BoxLayout::HORIZONTAL_ORIENTATION);
+    endEditCP(ExamplePanel3Layout, BoxLayout::OrientationFieldMask);
 
 	// Create several panels that will be assigned layouts, borders, and backgrounds and will have objects added to them
 	PanelPtr ExamplePanel1 = osg::Panel::create();

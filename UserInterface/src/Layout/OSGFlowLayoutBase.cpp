@@ -61,15 +61,11 @@
 #include "OSGFlowLayoutBase.h"
 #include "OSGFlowLayout.h"
 
-#include <Util/OSGUIDefines.h>            // Alignment default header
-#include <Util/OSGUIDefines.h>            // MajorAxisAlignment default header
-#include <Util/OSGUIDefines.h>            // MinorAxisAlignment default header
-#include <Util/OSGUIDefines.h>            // ComponentAlignment default header
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  FlowLayoutBase::AlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << FlowLayoutBase::AlignmentFieldId);
+const OSG::BitVector  FlowLayoutBase::OrientationFieldMask = 
+    (TypeTraits<BitVector>::One << FlowLayoutBase::OrientationFieldId);
 
 const OSG::BitVector  FlowLayoutBase::HorizontalGapFieldMask = 
     (TypeTraits<BitVector>::One << FlowLayoutBase::HorizontalGapFieldId);
@@ -93,7 +89,7 @@ const OSG::BitVector FlowLayoutBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var UInt32          FlowLayoutBase::_sfAlignment
+/*! \var UInt32          FlowLayoutBase::_sfOrientation
     
 */
 /*! \var Real32          FlowLayoutBase::_sfHorizontalGap
@@ -102,13 +98,13 @@ const OSG::BitVector FlowLayoutBase::MTInfluenceMask =
 /*! \var Real32          FlowLayoutBase::_sfVerticalGap
     
 */
-/*! \var UInt32          FlowLayoutBase::_sfMajorAxisAlignment
+/*! \var Real32          FlowLayoutBase::_sfMajorAxisAlignment
     
 */
-/*! \var UInt32          FlowLayoutBase::_sfMinorAxisAlignment
+/*! \var Real32          FlowLayoutBase::_sfMinorAxisAlignment
     
 */
-/*! \var UInt32          FlowLayoutBase::_sfComponentAlignment
+/*! \var Real32          FlowLayoutBase::_sfComponentAlignment
     
 */
 
@@ -117,10 +113,10 @@ const OSG::BitVector FlowLayoutBase::MTInfluenceMask =
 FieldDescription *FlowLayoutBase::_desc[] = 
 {
     new FieldDescription(SFUInt32::getClassType(), 
-                     "Alignment", 
-                     AlignmentFieldId, AlignmentFieldMask,
+                     "Orientation", 
+                     OrientationFieldId, OrientationFieldMask,
                      false,
-                     (FieldAccessMethod) &FlowLayoutBase::getSFAlignment),
+                     (FieldAccessMethod) &FlowLayoutBase::getSFOrientation),
     new FieldDescription(SFReal32::getClassType(), 
                      "HorizontalGap", 
                      HorizontalGapFieldId, HorizontalGapFieldMask,
@@ -131,17 +127,17 @@ FieldDescription *FlowLayoutBase::_desc[] =
                      VerticalGapFieldId, VerticalGapFieldMask,
                      false,
                      (FieldAccessMethod) &FlowLayoutBase::getSFVerticalGap),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "MajorAxisAlignment", 
                      MajorAxisAlignmentFieldId, MajorAxisAlignmentFieldMask,
                      false,
                      (FieldAccessMethod) &FlowLayoutBase::getSFMajorAxisAlignment),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "MinorAxisAlignment", 
                      MinorAxisAlignmentFieldId, MinorAxisAlignmentFieldMask,
                      false,
                      (FieldAccessMethod) &FlowLayoutBase::getSFMinorAxisAlignment),
-    new FieldDescription(SFUInt32::getClassType(), 
+    new FieldDescription(SFReal32::getClassType(), 
                      "ComponentAlignment", 
                      ComponentAlignmentFieldId, ComponentAlignmentFieldMask,
                      false,
@@ -221,12 +217,12 @@ void FlowLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 FlowLayoutBase::FlowLayoutBase(void) :
-    _sfAlignment              (UInt32(HORIZONTAL_ALIGNMENT)), 
+    _sfOrientation            (UInt32(FlowLayout::HORIZONTAL_ORIENTATION)), 
     _sfHorizontalGap          (Real32(10)), 
     _sfVerticalGap            (Real32(10)), 
-    _sfMajorAxisAlignment     (UInt32(AXIS_CENTER_ALIGNMENT)), 
-    _sfMinorAxisAlignment     (UInt32(AXIS_CENTER_ALIGNMENT)), 
-    _sfComponentAlignment     (UInt32(AXIS_CENTER_ALIGNMENT)), 
+    _sfMajorAxisAlignment     (Real32(0.5f)), 
+    _sfMinorAxisAlignment     (Real32(0.5f)), 
+    _sfComponentAlignment     (Real32(0.5f)), 
     Inherited() 
 {
 }
@@ -236,7 +232,7 @@ FlowLayoutBase::FlowLayoutBase(void) :
 #endif
 
 FlowLayoutBase::FlowLayoutBase(const FlowLayoutBase &source) :
-    _sfAlignment              (source._sfAlignment              ), 
+    _sfOrientation            (source._sfOrientation            ), 
     _sfHorizontalGap          (source._sfHorizontalGap          ), 
     _sfVerticalGap            (source._sfVerticalGap            ), 
     _sfMajorAxisAlignment     (source._sfMajorAxisAlignment     ), 
@@ -258,9 +254,9 @@ UInt32 FlowLayoutBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
-        returnValue += _sfAlignment.getBinSize();
+        returnValue += _sfOrientation.getBinSize();
     }
 
     if(FieldBits::NoField != (HorizontalGapFieldMask & whichField))
@@ -297,9 +293,9 @@ void FlowLayoutBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
-        _sfAlignment.copyToBin(pMem);
+        _sfOrientation.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (HorizontalGapFieldMask & whichField))
@@ -335,9 +331,9 @@ void FlowLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
-        _sfAlignment.copyFromBin(pMem);
+        _sfOrientation.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (HorizontalGapFieldMask & whichField))
@@ -375,8 +371,8 @@ void FlowLayoutBase::executeSyncImpl(      FlowLayoutBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
+        _sfOrientation.syncWith(pOther->_sfOrientation);
 
     if(FieldBits::NoField != (HorizontalGapFieldMask & whichField))
         _sfHorizontalGap.syncWith(pOther->_sfHorizontalGap);
@@ -403,8 +399,8 @@ void FlowLayoutBase::executeSyncImpl(      FlowLayoutBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
+        _sfOrientation.syncWith(pOther->_sfOrientation);
 
     if(FieldBits::NoField != (HorizontalGapFieldMask & whichField))
         _sfHorizontalGap.syncWith(pOther->_sfHorizontalGap);

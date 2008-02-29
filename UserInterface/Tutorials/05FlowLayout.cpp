@@ -203,13 +203,13 @@ int main(int argc, char **argv)
 
     ******************************************************/
     FlowLayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
-    beginEditCP(MainInternalWindowLayout, FlowLayout::HorizontalGapFieldMask | FlowLayout::VerticalGapFieldMask | FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
-        MainInternalWindowLayout->setHorizontalGap(3);
-        MainInternalWindowLayout->setVerticalGap(3);
-        MainInternalWindowLayout->setAlignment(VERTICAL_ALIGNMENT);
-        MainInternalWindowLayout->setMajorAxisAlignment(AXIS_CENTER_ALIGNMENT);
-        MainInternalWindowLayout->setMinorAxisAlignment(AXIS_MAX_ALIGNMENT);
-    endEditCP(MainInternalWindowLayout, FlowLayout::HorizontalGapFieldMask | FlowLayout::VerticalGapFieldMask | FlowLayout::AlignmentFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+    beginEditCP(MainInternalWindowLayout, FlowLayout::HorizontalGapFieldMask | FlowLayout::VerticalGapFieldMask | FlowLayout::OrientationFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+        MainInternalWindowLayout->setHorizontalGap(3.0f);
+        MainInternalWindowLayout->setVerticalGap(3.0f);
+		MainInternalWindowLayout->setOrientation(FlowLayout::VERTICAL_ORIENTATION);
+        MainInternalWindowLayout->setMajorAxisAlignment(0.5f);
+        MainInternalWindowLayout->setMinorAxisAlignment(1.0f);
+    endEditCP(MainInternalWindowLayout, FlowLayout::HorizontalGapFieldMask | FlowLayout::VerticalGapFieldMask | FlowLayout::OrientationFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
     
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
