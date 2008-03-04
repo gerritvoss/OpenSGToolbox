@@ -274,7 +274,7 @@ int main(int argc, char **argv)
     // Create The Internal Window
     InternalWindowPtr MainInternalWindow2 = osg::InternalWindow::create();
     LayoutPtr MainInternalWindowLayout2 = osg::FlowLayout::create();
-	beginEditCP(MainInternalWindow2, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::PositionFieldMask | InternalWindow::PreferredSizeFieldMask | InternalWindow::TitleFieldMask);
+	beginEditCP(MainInternalWindow2, InternalWindow::AllwaysOnTopFieldMask | InternalWindow::IconableFieldMask | InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::PositionFieldMask | InternalWindow::PreferredSizeFieldMask | InternalWindow::TitleFieldMask);
        // Assign the Button to the MainInternalWindow so it will be displayed
        // when the view is rendered.
        MainInternalWindow2->getChildren().addValue(ExampleToggleButton);
@@ -283,7 +283,9 @@ int main(int argc, char **argv)
        MainInternalWindow2->setPosition(Pnt2f(150,150));
        MainInternalWindow2->setPreferredSize(Vec2f(300,300));
 	   MainInternalWindow2->setTitle(std::string("Internal Window 2"));
-    endEditCP(MainInternalWindow2, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::PositionFieldMask | InternalWindow::PreferredSizeFieldMask | InternalWindow::TitleFieldMask);
+	   MainInternalWindow2->setIconable(false);
+	   MainInternalWindow2->setAllwaysOnTop(true);
+    endEditCP(MainInternalWindow2, InternalWindow::AllwaysOnTopFieldMask | InternalWindow::IconableFieldMask | InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::PositionFieldMask | InternalWindow::PreferredSizeFieldMask | InternalWindow::TitleFieldMask);
 
     // Create the Drawing Surface
     UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();

@@ -1022,6 +1022,28 @@ void InternalWindow::changed(BitVector whichField, UInt32 origin)
 			getTitlebar()->getIconifyButton()->addActionListener(&_IconifyButtonListener);
 		}
 	}
+
+	if( (whichField & IconableFieldMask) &&
+		getTitlebar() != NullFC)
+	{
+		beginEditCP(getTitlebar(), Titlebar::DrawIconifyFieldMask);
+			getTitlebar()->setDrawIconify(getIconable());
+		endEditCP(getTitlebar(), Titlebar::DrawIconifyFieldMask);
+	}
+	if( (whichField & MaximizableFieldMask) &&
+		getTitlebar() != NullFC)
+	{
+		beginEditCP(getTitlebar(), Titlebar::DrawMaximizeFieldMask);
+			getTitlebar()->setDrawMaximize(getMaximizable());
+		endEditCP(getTitlebar(), Titlebar::DrawMaximizeFieldMask);
+	}
+	if( (whichField & ClosableFieldMask) &&
+		getTitlebar() != NullFC)
+	{
+		beginEditCP(getTitlebar(), Titlebar::DrawCloseFieldMask);
+			getTitlebar()->setDrawClose(getClosable());
+		endEditCP(getTitlebar(), Titlebar::DrawCloseFieldMask);
+	}
 }
 
 void InternalWindow::dump(      UInt32    , 

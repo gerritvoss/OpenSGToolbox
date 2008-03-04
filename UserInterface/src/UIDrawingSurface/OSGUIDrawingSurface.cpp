@@ -221,7 +221,21 @@ void UIDrawingSurface::moveWindowToTop(InternalWindowPtr TheWindow)
 		InternalWindowPtr SwapWindow(*RemovalItor);
 		getInternalWindows().erase(RemovalItor);
 
-		getInternalWindows().push_back(SwapWindow);
+		MFInternalWindowPtr::iterator InsertItor(getInternalWindows().begin());
+		if(TheWindow->getAllwaysOnTop())
+		{
+			InsertItor = getInternalWindows().end();
+		}
+		else
+		{
+			while(InsertItor != getInternalWindows().end() &&
+				  !(*InsertItor)->getAllwaysOnTop())
+			{
+				++InsertItor;
+			}
+		}
+
+		MFInternalWindowPtr::iterator NewPosition = getInternalWindows().insert(InsertItor,SwapWindow);
 
 		if(getFocusedWindow() != NullFC)
 		{
@@ -496,7 +510,7 @@ void UIDrawingSurface::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 	
-	if( (whichField & EventProducerFieldMask) )
+	/*if( (whichField & EventProducerFieldMask) )
     {
 		//Remove Listeners from old EventProducer
 		//Add Listeners to the EventProducer
@@ -507,7 +521,7 @@ void UIDrawingSurface::changed(BitVector whichField, UInt32 origin)
 			getEventProducer()->addMouseWheelListener(this);
 			getEventProducer()->addKeyListener(this);
 		}
-	}
+	}*/
 	
 	if( (whichField & InternalWindowsFieldMask) )
 	{

@@ -291,7 +291,8 @@ void LabelMenuItem::changed(BitVector whichField, UInt32 origin)
         getParentWindow()->removeKeyAccelerator(static_cast<KeyEvent::Key>(getAcceleratorKey()), getAcceleratorModifiers());
     }
 
-    if(whichField & AcceleratorKeyFieldMask ||
+    if(whichField & TextFieldMask ||
+	   whichField & AcceleratorKeyFieldMask ||
        whichField & AcceleratorModifiersFieldMask)
     {
         std::string AcceleratorText("");
@@ -315,9 +316,20 @@ void LabelMenuItem::changed(BitVector whichField, UInt32 origin)
         Pnt2f AcceleratorTextTopLeft, AcceleratorTextBottomRight;
         getFont()->getBounds(AcceleratorText, AcceleratorTextTopLeft, AcceleratorTextBottomRight);
         
+		Vec2f RequestedSize((TextBottomRight.x() - TextTopLeft.x()) + (AcceleratorTextBottomRight.x() - AcceleratorTextTopLeft.x()), getPreferredSize().y());
+
+		if(!AcceleratorText.empty())
+		{
+			RequestedSize[0] += 50.0f;
+		}
+		else
+		{
+			RequestedSize[0] += 25.0f;
+		}
+
         beginEditCP(LabelMenuItemPtr(this), AcceleratorTextFieldMask | PreferredSizeFieldMask);
             setAcceleratorText(AcceleratorText);
-            setPreferredSize(Vec2f((TextBottomRight.x() - TextTopLeft.x()) + (AcceleratorTextBottomRight.x() - AcceleratorTextTopLeft.x()) + 50, getPreferredSize().y()));
+            setPreferredSize(RequestedSize);
         endEditCP(LabelMenuItemPtr(this), AcceleratorTextFieldMask | PreferredSizeFieldMask);
     }
     if(whichField & TextFieldMask ||

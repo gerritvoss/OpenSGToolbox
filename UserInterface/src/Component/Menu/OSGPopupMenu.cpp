@@ -88,8 +88,11 @@ void PopupMenu::updateLayout(void)
             MaxWidth = getChildren().getValue(i)->getPreferredSize().x();
 	    }
 	    TotalHeight += getChildren().getValue(i)->getPreferredSize().y();
+		if(i!=0)
+		{
+			TotalHeight += 1.0f;
+		}
 	}
-	TotalHeight += getChildren().size()-1;
 
     //Set My preferred Size
 	Pnt2f TopLeft, BottomRight;
