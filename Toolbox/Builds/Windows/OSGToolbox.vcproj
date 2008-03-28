@@ -220,6 +220,14 @@
 				Name="Util"
 				>
 				<File
+					RelativePath="..\..\src\Util\OSGCameraUtils.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Util\OSGCameraUtils.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Util\OSGColorOperations.h"
 					>
 				</File>
@@ -359,18 +367,6 @@
 			<Filter
 				Name="FileIO"
 				>
-				<File
-					RelativePath="..\..\src\FileIO\OSGBinFCFileType.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\FileIO\OSGBinFCFileType.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\FileIO\OSGBinFCFileType.inl"
-					>
-				</File>
 				<File
 					RelativePath="..\..\src\FileIO\OSGFCFileHandler.cpp"
 					>

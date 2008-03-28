@@ -41,6 +41,7 @@
 //because it is already defined in the boost library
 #define BOOST_SMART_PTR_HPP
 #include <OpenSG/OSGXmlpp.h>
+#include <OpenSG/OSGBinaryDataHandler.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -88,6 +89,26 @@ class OSG_TOOLBOXLIB_DLLMAPPING BinFCFileType : public FCFileType
 
 		virtual UInt32 map(UInt32 uiId);
 	 };
+
+    class BinaryFileHandler : public BinaryDataHandler
+    {
+      public:
+        BinaryFileHandler(std::istream *is);
+        BinaryFileHandler(std::ostream *os);
+        virtual ~BinaryFileHandler();
+
+        void read (MemoryHandle mem, UInt32 size);
+		void write(MemoryHandle mem, UInt32 size);
+
+      private:
+
+        std::vector<UInt8>  _Memory;
+        std::istream *_InputStream;
+        std::ostream *_OutputStream;
+		
+		BinaryFileHandler(const BinaryFileHandler &source);
+        void operator =(const BinaryFileHandler &source);
+    };
 
 	 typedef FCFileType Inherited;
 	 static       BinFCFileType*  _the;

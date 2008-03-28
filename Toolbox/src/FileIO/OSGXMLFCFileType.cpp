@@ -213,18 +213,18 @@ std::string XMLFCFileType::getName(void) const
 										FCInfoSearch = TheIDLookupMap.find(FCId);
 										if(FCId == 0)
 										{
-											static_cast<MFFieldContainerPtr *>(TheField)->addValue(NullFC);
+											static_cast<MFFieldContainerPtr *>(TheField)->push_back(NullFC);
 										}
 										else if(FCInfoSearch == TheIDLookupMap.end())
 										{
 											SWARNING <<
 												"ERROR in XMLFCFileType::read(): Could not find Container referenced with Id: " << FCId <<
 												std::endl;
-											static_cast<MFFieldContainerPtr *>(TheField)->addValue(NullFC);
+											static_cast<MFFieldContainerPtr *>(TheField)->push_back(NullFC);
 										}
 										else
 										{
-											static_cast<MFFieldContainerPtr *>(TheField)->addValue(FCInfoSearch->second._Ptr);
+											static_cast<MFFieldContainerPtr *>(TheField)->push_back(FCInfoSearch->second._Ptr);
 										}
 									}
 								}
@@ -405,14 +405,14 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 							{
 								OutputStream << ";";
 							}
-							if(static_cast<MFFieldContainerPtr *>(TheField)->getValue(Index) == NullFC ||
-								std::find(IgnoreTypes.begin(), IgnoreTypes.end(), static_cast<MFFieldContainerPtr *>(TheField)->getValue(Index)->getTypeId()) != IgnoreTypes.end())
+							if(static_cast<MFFieldContainerPtr *>(TheField)->operator[](Index) == NullFC ||
+								std::find(IgnoreTypes.begin(), IgnoreTypes.end(), static_cast<MFFieldContainerPtr *>(TheField)->operator[](Index)->getTypeId()) != IgnoreTypes.end())
 							{
 								OutputStream << TypeTraits<UInt32>::putToString(0);
 							}
 							else
 							{
-								OutputStream << TypeTraits<UInt32>::putToString(static_cast<MFFieldContainerPtr *>(TheField)->getValue(Index).getFieldContainerId());
+								OutputStream << TypeTraits<UInt32>::putToString(static_cast<MFFieldContainerPtr *>(TheField)->operator[](Index).getFieldContainerId());
 							}
 						}
 						OutputStream << "\"" << std::endl;
@@ -507,13 +507,13 @@ XMLFCFileType::FCPtrStore XMLFCFileType::getAllDependantFCs(FCPtrStore Container
 					{
 						for(UInt32 i(0) ; i<TheField->getSize() ; ++i)
 						{
-							if(static_cast<MFFieldContainerPtr *>(TheField)->getValue(i) != NullFC &&
-								AllContainers.find(static_cast<MFFieldContainerPtr *>(TheField)->getValue(i)) == AllContainers.end() &&
-								IgnoreContainers.find(static_cast<MFFieldContainerPtr *>(TheField)->getValue(i)) == IgnoreContainers.end() && 
-								std::find(IgnoreTypes.begin(), IgnoreTypes.end(), static_cast<MFFieldContainerPtr *>(TheField)->getValue(i)->getTypeId()) == IgnoreTypes.end())
+							if(static_cast<MFFieldContainerPtr *>(TheField)->operator[](i) != NullFC &&
+								AllContainers.find(static_cast<MFFieldContainerPtr *>(TheField)->operator[](i)) == AllContainers.end() &&
+								IgnoreContainers.find(static_cast<MFFieldContainerPtr *>(TheField)->operator[](i)) == IgnoreContainers.end() && 
+								std::find(IgnoreTypes.begin(), IgnoreTypes.end(), static_cast<MFFieldContainerPtr *>(TheField)->operator[](i)->getTypeId()) == IgnoreTypes.end())
 							{
 								FCPtrStore TheContainer;
-								TheContainer.insert(static_cast<MFFieldContainerPtr *>(TheField)->getValue(i));
+								TheContainer.insert(static_cast<MFFieldContainerPtr *>(TheField)->operator[](i));
 								FCPtrStore NewContainers(getAllDependantFCs(TheContainer, AllContainers, IgnoreTypes));
 
 								AllContainers.insert(NewContainers.begin(), NewContainers.end());

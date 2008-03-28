@@ -328,5 +328,41 @@ UInt32 BinFCFileType::FCIdMapper::map(UInt32 uiId)
     return id;
 }
 
+BinFCFileType::BinaryFileHandler::BinaryFileHandler(std::istream *is) : _InputStream(is), _OutputStream(NULL)
+{
+	_Memory.resize(10000);
+    readBufAdd(&_Memory[0], _Memory.size());
+}
+
+BinFCFileType::BinaryFileHandler::BinaryFileHandler(std::ostream *os) : _InputStream(NULL), _OutputStream(os)
+{
+	_Memory.resize(10000);
+    writeBufAdd(&_Memory[0], _Memory.size());
+}
+
+BinFCFileType::BinaryFileHandler::~BinaryFileHandler()
+{
+}
+
+void BinFCFileType::BinaryFileHandler::read (MemoryHandle mem, UInt32 size)
+{
+	_InputStream->read((char *) mem, size);
+}
+
+void BinFCFileType::BinaryFileHandler::write(MemoryHandle mem, UInt32 size)
+{
+	_OutputStream->write((const char *) mem, size);
+}
+
+BinFCFileType::BinaryFileHandler::BinaryFileHandler(const BinaryFileHandler &source) :
+_InputStream(source._InputStream),
+		_OutputStream(source._OutputStream)
+{
+}
+
+void BinFCFileType::BinaryFileHandler::operator =(const BinaryFileHandler &source)
+{
+}
+
 OSG_END_NAMESPACE
 
