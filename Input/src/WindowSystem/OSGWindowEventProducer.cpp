@@ -190,7 +190,7 @@ ViewportPtr WindowEventProducer::windowToViewport(const Pnt2f& WindowPoint, Pnt2
 	ViewportPtr ThePort;
 	for(UInt32 i(0) ; i<getWindow()->getPort().size() ; ++i)
 	{
-		ThePort = getWindow()->getPort().getValue(i);
+		ThePort = getWindow()->getPort()[i];
 		//if(WindowPoint.x() >= ThePort->getPixelLeft() &&
 		//   WindowPoint.x() <= ThePort->getPixelRight() &&
 		//   WindowPoint.y() <= ThePort->getPixelTop() &&
