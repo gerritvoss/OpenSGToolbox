@@ -83,20 +83,20 @@ void AbsoluteLayout::updateLayout(const MFComponentPtr Components,const Componen
 	for(UInt32 i = 0 ; i<Components.size(); ++i)
 	{
 		//Calculate the Components Size
-		beginEditCP(Components.getValue(i), Component::PositionFieldMask|Component::SizeFieldMask);
-			Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
-			if(Components.getValue(i)->getConstraints() != NullFC)
+		beginEditCP(Components[i], Component::PositionFieldMask|Component::SizeFieldMask);
+			Components[i]->setSize(Components[i]->getPreferredSize());
+			if(Components[i]->getConstraints() != NullFC)
 			{
 				//Get the Components Position
-				Pnt2f pos = AbsoluteLayoutConstraintsPtr::dcast(Components.getValue(i)->getConstraints())->getPosition();
+				Pnt2f pos = AbsoluteLayoutConstraintsPtr::dcast(Components[i]->getConstraints())->getPosition();
 				
-				Components.getValue(i)->setPosition(ParentInsetsTopLeft + Vec2f(pos));
+				Components[i]->setPosition(ParentInsetsTopLeft + Vec2f(pos));
 			}
 			else
 			{
-			   Components.getValue(i)->setPosition(ParentInsetsTopLeft);
+			   Components[i]->setPosition(ParentInsetsTopLeft);
 			}
-		endEditCP(Components.getValue(i), Component::PositionFieldMask|Component::SizeFieldMask);
+		endEditCP(Components[i], Component::PositionFieldMask|Component::SizeFieldMask);
 	}
 }
 

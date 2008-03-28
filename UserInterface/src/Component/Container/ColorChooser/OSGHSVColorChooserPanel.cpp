@@ -395,20 +395,20 @@ void HSVColorChooserPanel::buildChooser(void)
 
 	beginEditCP(HSVColorChooserPanelPtr(this) , HSVColorChooserPanel::ChildrenFieldMask | HSVColorChooserPanel::LayoutFieldMask);
 		getChildren().clear();
-		getChildren().addValue(HueLabel);
-		getChildren().addValue(_HueSlider);
-		getChildren().addValue(_HueSpinner);
-		getChildren().addValue(SaturationLabel);
-		getChildren().addValue(_SaturationSlider);
-		getChildren().addValue(_SaturationSpinner);
-		getChildren().addValue(ValueLabel);
-		getChildren().addValue(_ValueSlider);
-		getChildren().addValue(_ValueSpinner);
+		getChildren().push_back(HueLabel);
+		getChildren().push_back(_HueSlider);
+		getChildren().push_back(_HueSpinner);
+		getChildren().push_back(SaturationLabel);
+		getChildren().push_back(_SaturationSlider);
+		getChildren().push_back(_SaturationSpinner);
+		getChildren().push_back(ValueLabel);
+		getChildren().push_back(_ValueSlider);
+		getChildren().push_back(_ValueSpinner);
 		if(getIncludeAlpha())
 		{
-			getChildren().addValue(AlphaLabel);
-		    getChildren().addValue(_AlphaSlider);
-			getChildren().addValue(_AlphaSpinner);
+			getChildren().push_back(AlphaLabel);
+		    getChildren().push_back(_AlphaSlider);
+			getChildren().push_back(_AlphaSpinner);
 		}
 		setLayout(HSVPanelLayout);
 	endEditCP(HSVColorChooserPanelPtr(this) , HSVColorChooserPanel::ChildrenFieldMask | HSVColorChooserPanel::LayoutFieldMask);

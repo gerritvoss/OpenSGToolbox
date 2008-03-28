@@ -107,7 +107,7 @@ Action::ResultE UIRectangle::drawPrimitives (DrawActionBase *action)
 	//Draw all of the InternalWindows
 	for(UInt32 i(0) ; i<getDrawingSurface()->getInternalWindows().size() ; ++i)
 	{
-		getDrawingSurface()->getInternalWindows().getValue(i)->draw(getDrawingSurface()->getGraphics());
+		getDrawingSurface()->getInternalWindows()[i]->draw(getDrawingSurface()->getGraphics());
 	}
 
 	//Call the PostDraw on the Graphics

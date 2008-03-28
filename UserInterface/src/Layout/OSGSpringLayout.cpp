@@ -93,7 +93,7 @@ void SpringLayout::updateLayout(const MFComponentPtr Components,const ComponentP
     
     //getConstraint(ParentComponent).reset();
     //for (UInt32 i(0) ; i < Components.size() ; i++) {
-        //getConstraint(Components.getValue(i)).reset();
+        //getConstraint(Components[i]).reset();
     //}
 
     //TODO: Implement
@@ -106,16 +106,16 @@ void SpringLayout::updateLayout(const MFComponentPtr Components,const ComponentP
     
     for (UInt32 i(0) ; i < Components.size() ; i++)
     {
-        SpringLayoutConstraintsPtr TheConstraints = getConstraint( Components.getValue(i) );
+        SpringLayoutConstraintsPtr TheConstraints = getConstraint( Components[i] );
         Real32 x = getDecycledSpring(TheConstraints->getX())->getValue();
         Real32 y = getDecycledSpring(TheConstraints->getY())->getValue();
         Real32 width = getDecycledSpring(TheConstraints->getWidth())->getValue();
         Real32 height = getDecycledSpring(TheConstraints->getHeight())->getValue();
         
-        beginEditCP(Components.getValue(i), Component::PositionFieldMask | Component::SizeFieldMask);
-            Components.getValue(i)->setPosition(Pnt2f(x,y));
-            Components.getValue(i)->setSize(Vec2f(width, height));
-        endEditCP(Components.getValue(i), Component::PositionFieldMask | Component::SizeFieldMask);
+        beginEditCP(Components[i], Component::PositionFieldMask | Component::SizeFieldMask);
+            Components[i]->setPosition(Pnt2f(x,y));
+            Components[i]->setSize(Vec2f(width, height));
+        endEditCP(Components[i], Component::PositionFieldMask | Component::SizeFieldMask);
      }
 }
 

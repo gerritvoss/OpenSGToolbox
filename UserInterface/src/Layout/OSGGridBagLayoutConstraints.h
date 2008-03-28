@@ -57,6 +57,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutConstraints : public GridBagL
 
     /*==========================  PUBLIC  =================================*/
   public:
+	enum GridBagFill {FILL_BOTH=0, FILL_VERTICAL, FILL_HORIZONTAL, FILL_NONE};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

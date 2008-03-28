@@ -235,7 +235,7 @@ int main(int argc, char **argv)
 
         -setPreferredSize(Vec2f): Determine the 
 			size of the Panel.
-        -getChildren().addValue(ComponentName):
+        -getChildren().push_back(ComponentName):
 			Adds a Component to the
 			Container as a Child (meaning it 
 			will be displayed within it).
@@ -250,9 +250,9 @@ int main(int argc, char **argv)
     // Edit Panel1, Panel2
     beginEditCP(ExamplePanel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel1->setPreferredSize(Vec2f(200, 200));
-        ExamplePanel1->getChildren().addValue(ExampleButton1);
-        ExamplePanel1->getChildren().addValue(ExampleButton2);
-        ExamplePanel1->getChildren().addValue(ExampleButton3);
+        ExamplePanel1->getChildren().push_back(ExampleButton1);
+        ExamplePanel1->getChildren().push_back(ExampleButton2);
+        ExamplePanel1->getChildren().push_back(ExampleButton3);
         ExamplePanel1->setLayout(ExamplePanel1Layout);
         ExamplePanel1->setBackgrounds(ExamplePanelBackground);
         ExamplePanel1->setBorders(ExamplePanelBorder);
@@ -260,9 +260,9 @@ int main(int argc, char **argv)
 
     beginEditCP(ExamplePanel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel2->setPreferredSize(Vec2f(200, 200));
-        ExamplePanel2->getChildren().addValue(ExampleButton4);
-        ExamplePanel2->getChildren().addValue(ExampleButton5);
-        ExamplePanel2->getChildren().addValue(ExampleButton6);
+        ExamplePanel2->getChildren().push_back(ExampleButton4);
+        ExamplePanel2->getChildren().push_back(ExampleButton5);
+        ExamplePanel2->getChildren().push_back(ExampleButton6);
         ExamplePanel2->setLayout(ExamplePanel2Layout);
         ExamplePanel2->setBackgrounds(ExamplePanelBackground);
         ExamplePanel2->setBorders(ExamplePanelBorder);
@@ -270,8 +270,8 @@ int main(int argc, char **argv)
 
     // Create The Main InternalWindow
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().addValue(ExamplePanel1);
-       MainInternalWindow->getChildren().addValue(ExamplePanel2);
+       MainInternalWindow->getChildren().push_back(ExamplePanel1);
+       MainInternalWindow->getChildren().push_back(ExamplePanel2);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
@@ -307,7 +307,7 @@ int main(int argc, char **argv)
     // Add the UI Foreground Object to the Scene
     ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
     // Show the whole Scene

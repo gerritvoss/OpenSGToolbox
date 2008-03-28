@@ -216,8 +216,8 @@ int main(int argc, char **argv)
 
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().addValue(ExampleComboBox);
-       MainInternalWindow->getChildren().addValue(ExampleUneditableComboBox);
+       MainInternalWindow->getChildren().push_back(ExampleComboBox);
+       MainInternalWindow->getChildren().push_back(ExampleUneditableComboBox);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
@@ -253,7 +253,7 @@ int main(int argc, char **argv)
 	// Add the UI Foreground Object to the Scene
 	ViewportPtr viewport = mgr->getWindow()->getPort(0);
     beginEditCP(viewport, Viewport::ForegroundsFieldMask);
-		viewport->getForegrounds().addValue(foreground);
+		viewport->getForegrounds().push_back(foreground);
     beginEditCP(viewport, Viewport::ForegroundsFieldMask);
 
     // Show the whole scene

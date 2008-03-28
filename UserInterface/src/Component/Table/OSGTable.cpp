@@ -148,7 +148,7 @@ bool Table::getFocusedCell(UInt32& Row, UInt32& Column) const
     {
         for(Column = 0 ; Column<_Model->getColumnCount(); ++Column)
         {
-            if(getChildren().getValue(Row*_Model->getColumnCount() + Column)->getFocused())
+            if(getChildren()[Row*_Model->getColumnCount() + Column]->getFocused())
             {
                 return true;
             }
@@ -168,7 +168,7 @@ void Table::keyTyped(const KeyEvent& e)
 	{
 		for(Int32 i(getChildren().size()-2) ; i>=0 && noFocus; --i)
 		{
-			if (getChildren().getValue(i)->getFocused())
+			if (getChildren()[i]->getFocused())
 			{
 				noFocus = false; // this exits the loop
 				Int32 index(0);
@@ -220,7 +220,7 @@ void Table::keyTyped(const KeyEvent& e)
                 default:
                     break;
                 }
-				getChildren().getValue(index)->takeFocus();
+				getChildren()[index]->takeFocus();
                 UInt32 Row(index/_ColumnModel->getColumnCount()),
                     Column(index%_ColumnModel->getColumnCount());
 				if (e.getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
@@ -244,15 +244,15 @@ void Table::mouseClicked(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
 		if(isContained)
 		{
             if(i != getChildren().size()-1)
             {
 	            checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
             }
-			getChildren().getValue(i)->mouseClicked(e);
+			getChildren()[i]->mouseClicked(e);
 			break;
 		}
     }
@@ -264,15 +264,15 @@ void Table::mouseReleased(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
 		if(isContained)
 		{
             if(i != getChildren().size()-1)
             {
 	            checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
             }
-			getChildren().getValue(i)->mouseReleased(e);
+			getChildren()[i]->mouseReleased(e);
 			break;
 		}
     }
@@ -284,15 +284,15 @@ void Table::mouseMoved(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
 		if(isContained)
 		{
             if(i != getChildren().size()-1)
             {
 	            checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
             }
-			getChildren().getValue(i)->mouseMoved(e);
+			getChildren()[i]->mouseMoved(e);
 		}
     }
 	Component::mouseMoved(e);
@@ -303,15 +303,15 @@ void Table::mouseDragged(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
 		if(isContained)
 		{
             if(i != getChildren().size()-1)
             {
 	            checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
             }
-			getChildren().getValue(i)->mouseDragged(e);
+			getChildren()[i]->mouseDragged(e);
 		}
     }
 	Component::mouseDragged(e);
@@ -322,15 +322,15 @@ void Table::mouseWheelMoved(const MouseWheelEvent& e)
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
 		if(isContained)
 		{
             if(i != getChildren().size()-1)
             {
 	            checkCellEdit(e, i/_ColumnModel->getColumnCount(), i%_ColumnModel->getColumnCount());
             }
-			getChildren().getValue(i)->mouseWheelMoved(e);
+			getChildren()[i]->mouseWheelMoved(e);
         }
     }
 	Component::mouseWheelMoved(e);
@@ -339,7 +339,7 @@ void Table::mouseWheelMoved(const MouseWheelEvent& e)
 void Table::produceMouseExitOnComponent(const MouseEvent& e, ComponentPtr Comp)
 {
     UInt32 i(0);
-    while(i<getChildren().size()-1 && getChildren().getValue(i) != Comp)
+    while(i<getChildren().size()-1 && getChildren()[i] != Comp)
     {
         ++i;
     }
@@ -353,7 +353,7 @@ void Table::produceMouseExitOnComponent(const MouseEvent& e, ComponentPtr Comp)
 void Table::produceMouseEnterOnComponent(const MouseEvent& e, ComponentPtr Comp)
 {
     UInt32 i(0);
-    while(i<getChildren().size()-1 && getChildren().getValue(i) != Comp)
+    while(i<getChildren().size()-1 && getChildren()[i] != Comp)
     {
         ++i;
     }
@@ -378,19 +378,19 @@ void Table::mousePressed(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
 
         //Table Header
         if(isContained && i==getChildren().size()-1)
 	    {
 		    //Give myself temporary focus
 		    takeFocus(true);
-		    if(!getChildren().getValue(i)->getType().isDerivedFrom(Container::getClassType()))
+		    if(!getChildren()[i]->getType().isDerivedFrom(Container::getClassType()))
 		    {
-			    getChildren().getValue(i)->takeFocus();
+			    getChildren()[i]->takeFocus();
 		    }
-		    getChildren().getValue(i)->mousePressed(e);
+		    getChildren()[i]->mousePressed(e);
             break;
 	    }
 		else if(isContained)
@@ -399,9 +399,9 @@ void Table::mousePressed(const MouseEvent& e)
                 Column(i%_ColumnModel->getColumnCount());
 			//Give myself temporary focus
 			takeFocus(true);
-			if(!getChildren().getValue(i)->getType().isDerivedFrom(Container::getClassType()))
+			if(!getChildren()[i]->getType().isDerivedFrom(Container::getClassType()))
 			{
-				getChildren().getValue(i)->takeFocus();
+				getChildren()[i]->takeFocus();
 				if(getParentWindow() != NullFC &&
 				   getParentWindow()->getDrawingSurface() != NullFC &&
 				   getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
@@ -421,7 +421,7 @@ void Table::mousePressed(const MouseEvent& e)
 				}
 			}
 	        checkCellEdit(e, Row, Column);
-			getChildren().getValue(i)->mousePressed(e);
+			getChildren()[i]->mousePressed(e);
 			break;
 		}
     }
@@ -461,33 +461,32 @@ void Table::updateItem(const UInt32& index)
            Column(index%_ColumnModel->getColumnCount());
 
 	//Transfer focus, enabled, Listeners
-	ComponentPtr PrevComponent = getChildren().getValue(index);
-	getChildren().getValue(index)->removeFocusListener(this);
+	ComponentPtr PrevComponent = getChildren()[index];
+	getChildren()[index]->removeFocusListener(this);
 	
     //Check if this cell is being Edited
     if(isEditing() && Row == _EditingRow && Column == _EditingColumn)
     {
-        getChildren().setValue(_EditingComponent, index);
+        getChildren()[index] = _EditingComponent;
     }
     else //Non-Editing Cell
     {
         SharedFieldPtr CellValue = _Model->getValueAt(Row, Column);
     
-        getChildren().setValue(getCellRenderer(Row, Column)->getTableCellRendererComponent(TablePtr(this), CellValue, isSelected(Row, Column), PrevComponent->getFocused(), Row, Column)
-                    ,index);
+        getChildren()[index] = getCellRenderer(Row, Column)->getTableCellRendererComponent(TablePtr(this), CellValue, isSelected(Row, Column), PrevComponent->getFocused(), Row, Column);
     }
     if(PrevComponent->getFocused())
     {
-        //getChildren().getValue(index)->takeFocus();
-        getParentWindow()->setFocusedComponent(getChildren().getValue(index));
+        //getChildren()[index]->takeFocus();
+        getParentWindow()->setFocusedComponent(getChildren()[index]);
     }
-	getChildren().getValue(index)->addFocusListener(this);
-	getChildren().getValue(index)->setFocused(PrevComponent->getFocused());
-	getChildren().getValue(index)->setPosition(PrevComponent->getPosition());
-	getChildren().getValue(index)->setSize(PrevComponent->getSize());
-	getChildren().getValue(index)->setParentContainer(PrevComponent->getParentContainer());
-	getChildren().getValue(index)->setParentWindow(PrevComponent->getParentWindow());
-	getChildren().getValue(index)->updateClipBounds();
+	getChildren()[index]->addFocusListener(this);
+	getChildren()[index]->setFocused(PrevComponent->getFocused());
+	getChildren()[index]->setPosition(PrevComponent->getPosition());
+	getChildren()[index]->setSize(PrevComponent->getSize());
+	getChildren()[index]->setParentContainer(PrevComponent->getParentContainer());
+	getChildren()[index]->setParentWindow(PrevComponent->getParentWindow());
+	getChildren()[index]->updateClipBounds();
 }
 void Table::focusGained(const FocusEvent& e)
 {
@@ -498,7 +497,7 @@ void Table::focusGained(const FocusEvent& e)
 		UInt32 index(0);
 		for( ; index< getChildren().size(); ++index)
 		{
-			if((*Child) == getChildren().getValue(index))
+			if((*Child) == getChildren()[index])
 			{
 				break;
 			}
@@ -516,7 +515,7 @@ void Table::focusLost(const FocusEvent& e)
 		UInt32 index(0);
 		for( ; index< getChildren().size(); ++index)
 		{
-			if((*Child) == getChildren().getValue(index))
+			if((*Child) == getChildren()[index])
 			{
 				break;
 			}
@@ -647,7 +646,7 @@ void Table::updateTableComponents(void)
     //Remove focus Listeners
     for(UInt32 i(0) ; i+1< getChildren().size() ; ++i)
     {
-        getChildren().getValue(i)->removeFocusListener(this);
+        getChildren()[i]->removeFocusListener(this);
     }
 
     beginEditCP(TablePtr(this) , ChildrenFieldMask);
@@ -657,7 +656,7 @@ void Table::updateTableComponents(void)
         for(UInt32 i(0); i<getTable().size() ; ++i)
         {
             getChildren().push_back(getTable()[i]);
-			getChildren().getValue(i)->addFocusListener(this);
+			getChildren()[i]->addFocusListener(this);
         }
 
         getChildren().push_back(getHeader());

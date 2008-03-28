@@ -124,6 +124,15 @@ bool UIRectangleMouseTransformFunctor::viewportToRenderingSurface(const Pnt2f& V
 		getParent()->getHeight() - l.getPosition().y() - t*l.getDirection().y() + getParent()->getPoint().y());
 	return true;
 }
+
+bool UIRectangleMouseTransformFunctor::renderingSurfaceToViewport(const Pnt2f& RenderingSurfacePoint,
+	                                    ViewportPtr TheViewport,
+	                                        Pnt2f& Result) const
+{
+	Result = RenderingSurfacePoint;
+	return true;
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

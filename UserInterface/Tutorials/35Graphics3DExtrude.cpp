@@ -1125,9 +1125,9 @@ int main(int argc, char **argv)
 	// Edit the panels and add buttons, lists, check boxes, labels, radio buttons, spinners, and even other panels to each as desired.
 	beginEditCP(ExamplePanel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel1->setPreferredSize(Vec2f(425,175));
-        ExamplePanel1->getChildren().addValue(button1);
-		ExamplePanel1->getChildren().addValue(button2);
-		ExamplePanel1->getChildren().addValue(button3);
+        ExamplePanel1->getChildren().push_back(button1);
+		ExamplePanel1->getChildren().push_back(button2);
+		ExamplePanel1->getChildren().push_back(button3);
         ExamplePanel1->setLayout(MainInternalWindowLayout);
         ExamplePanel1->setBackgrounds(MainBackground);
         ExamplePanel1->setBorders(MainFrameLineBorder);
@@ -1135,8 +1135,8 @@ int main(int argc, char **argv)
 
     beginEditCP(ExamplePanel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel2->setPreferredSize(Vec2f(425,375));
-        ExamplePanel2->getChildren().addValue(TheLabel1);
-		ExamplePanel2->getChildren().addValue(TheScrollPanel1);
+        ExamplePanel2->getChildren().push_back(TheLabel1);
+		ExamplePanel2->getChildren().push_back(TheScrollPanel1);
         ExamplePanel2->setLayout(ExamplePanel2Layout);
         ExamplePanel2->setBackgrounds(MainBackground);
         ExamplePanel2->setBorders(MainFrameLineBorder);
@@ -1144,9 +1144,9 @@ int main(int argc, char **argv)
 
 	beginEditCP(ExamplePanel3, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel3->setPreferredSize(Vec2f(425,125));
-        ExamplePanel3->getChildren().addValue(SingleIncrementButton1);
-		ExamplePanel3->getChildren().addValue(DoubleIncrementButton1);
-		ExamplePanel3->getChildren().addValue(ExampleSpinner1);
+        ExamplePanel3->getChildren().push_back(SingleIncrementButton1);
+		ExamplePanel3->getChildren().push_back(DoubleIncrementButton1);
+		ExamplePanel3->getChildren().push_back(ExampleSpinner1);
         ExamplePanel3->setLayout(MainInternalWindowLayout);
         ExamplePanel3->setBackgrounds(MainBackground);
         ExamplePanel3->setBorders(MainFrameLineBorder);
@@ -1154,9 +1154,9 @@ int main(int argc, char **argv)
 
 	beginEditCP(ExamplePanel4, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel4->setPreferredSize(Vec2f(425,175));
-        ExamplePanel4->getChildren().addValue(button4);
-		ExamplePanel4->getChildren().addValue(button5);
-		ExamplePanel4->getChildren().addValue(button6);
+        ExamplePanel4->getChildren().push_back(button4);
+		ExamplePanel4->getChildren().push_back(button5);
+		ExamplePanel4->getChildren().push_back(button6);
         ExamplePanel4->setLayout(MainInternalWindowLayout);
         ExamplePanel4->setBackgrounds(MainBackground);
         ExamplePanel4->setBorders(MainFrameLineBorder);
@@ -1164,8 +1164,8 @@ int main(int argc, char **argv)
 
     beginEditCP(ExamplePanel5, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel5->setPreferredSize(Vec2f(425,375));
-        ExamplePanel5->getChildren().addValue(TheLabel2);
-		ExamplePanel5->getChildren().addValue(TheScrollPanel2);
+        ExamplePanel5->getChildren().push_back(TheLabel2);
+		ExamplePanel5->getChildren().push_back(TheScrollPanel2);
         ExamplePanel5->setLayout(ExamplePanel2Layout);
         ExamplePanel5->setBackgrounds(MainBackground);
         ExamplePanel5->setBorders(MainFrameLineBorder);
@@ -1173,9 +1173,9 @@ int main(int argc, char **argv)
 
 	beginEditCP(ExamplePanel6, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel6->setPreferredSize(Vec2f(425,125));
-        ExamplePanel6->getChildren().addValue(SingleIncrementButton2);
-		ExamplePanel6->getChildren().addValue(DoubleIncrementButton2);
-		ExamplePanel6->getChildren().addValue(ExampleSpinner2);
+        ExamplePanel6->getChildren().push_back(SingleIncrementButton2);
+		ExamplePanel6->getChildren().push_back(DoubleIncrementButton2);
+		ExamplePanel6->getChildren().push_back(ExampleSpinner2);
         ExamplePanel6->setLayout(MainInternalWindowLayout);
         ExamplePanel6->setBackgrounds(MainBackground);
         ExamplePanel6->setBorders(MainFrameLineBorder);
@@ -1183,9 +1183,9 @@ int main(int argc, char **argv)
 
 	beginEditCP(ExamplePanel7, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel7->setPreferredSize(Vec2f(425,175));
-        ExamplePanel7->getChildren().addValue(button7);
-		ExamplePanel7->getChildren().addValue(button8);
-		ExamplePanel7->getChildren().addValue(button9);
+        ExamplePanel7->getChildren().push_back(button7);
+		ExamplePanel7->getChildren().push_back(button8);
+		ExamplePanel7->getChildren().push_back(button9);
         ExamplePanel7->setLayout(MainInternalWindowLayout);
         ExamplePanel7->setBackgrounds(MainBackground);
         ExamplePanel7->setBorders(MainFrameLineBorder);
@@ -1193,8 +1193,8 @@ int main(int argc, char **argv)
 
     beginEditCP(ExamplePanel8, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel8->setPreferredSize(Vec2f(425,375));
-        ExamplePanel8->getChildren().addValue(TheLabel3);
-		ExamplePanel8->getChildren().addValue(TheScrollPanel3);
+        ExamplePanel8->getChildren().push_back(TheLabel3);
+		ExamplePanel8->getChildren().push_back(TheScrollPanel3);
         ExamplePanel8->setLayout(ExamplePanel2Layout);
         ExamplePanel8->setBackgrounds(MainBackground);
         ExamplePanel8->setBorders(MainFrameLineBorder);
@@ -1202,9 +1202,9 @@ int main(int argc, char **argv)
 
 	beginEditCP(ExamplePanel9, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel9->setPreferredSize(Vec2f(425,125));
-        ExamplePanel9->getChildren().addValue(SingleIncrementButton3);
-		ExamplePanel9->getChildren().addValue(DoubleIncrementButton3);
-		ExamplePanel9->getChildren().addValue(ExampleSpinner3);
+        ExamplePanel9->getChildren().push_back(SingleIncrementButton3);
+		ExamplePanel9->getChildren().push_back(DoubleIncrementButton3);
+		ExamplePanel9->getChildren().push_back(ExampleSpinner3);
         ExamplePanel9->setLayout(MainInternalWindowLayout);
         ExamplePanel9->setBackgrounds(MainBackground);
         ExamplePanel9->setBorders(MainFrameLineBorder);
@@ -1212,9 +1212,9 @@ int main(int argc, char **argv)
 
 	beginEditCP(ExamplePanel10, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel10->setPreferredSize(Vec2f(425,675));
-		ExamplePanel10->getChildren().addValue(ExamplePanel1);
-		ExamplePanel10->getChildren().addValue(ExamplePanel2);
-		ExamplePanel10->getChildren().addValue(ExamplePanel3);
+		ExamplePanel10->getChildren().push_back(ExamplePanel1);
+		ExamplePanel10->getChildren().push_back(ExamplePanel2);
+		ExamplePanel10->getChildren().push_back(ExamplePanel3);
         ExamplePanel10->setLayout(MainInternalWindowLayout);
         ExamplePanel10->setBackgrounds(MainBackground);
         ExamplePanel10->setBorders(MainFrameLineBorder);
@@ -1222,9 +1222,9 @@ int main(int argc, char **argv)
 
     beginEditCP(ExamplePanel11, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel11->setPreferredSize(Vec2f(425,675));
-		ExamplePanel11->getChildren().addValue(ExamplePanel5);
-		ExamplePanel11->getChildren().addValue(ExamplePanel6);
-		ExamplePanel11->getChildren().addValue(ExamplePanel4);
+		ExamplePanel11->getChildren().push_back(ExamplePanel5);
+		ExamplePanel11->getChildren().push_back(ExamplePanel6);
+		ExamplePanel11->getChildren().push_back(ExamplePanel4);
         ExamplePanel11->setLayout(MainInternalWindowLayout);
         ExamplePanel11->setBackgrounds(MainBackground);
         ExamplePanel11->setBorders(MainFrameLineBorder);
@@ -1232,9 +1232,9 @@ int main(int argc, char **argv)
 
 	beginEditCP(ExamplePanel12, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel12->setPreferredSize(Vec2f(425,675));
-		ExamplePanel12->getChildren().addValue(ExamplePanel9);
-		ExamplePanel12->getChildren().addValue(ExamplePanel7);
-		ExamplePanel12->getChildren().addValue(ExamplePanel8);
+		ExamplePanel12->getChildren().push_back(ExamplePanel9);
+		ExamplePanel12->getChildren().push_back(ExamplePanel7);
+		ExamplePanel12->getChildren().push_back(ExamplePanel8);
         ExamplePanel12->setLayout(MainInternalWindowLayout);
         ExamplePanel12->setBackgrounds(MainBackground);
         ExamplePanel12->setBorders(MainFrameLineBorder);
@@ -1242,9 +1242,9 @@ int main(int argc, char **argv)
 
 	beginEditCP(ExamplePanel13, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel13->setPreferredSize(Vec2f(1300,700));
-		ExamplePanel13->getChildren().addValue(ExamplePanel10);
-		ExamplePanel13->getChildren().addValue(ExamplePanel11);
-		ExamplePanel13->getChildren().addValue(ExamplePanel12);
+		ExamplePanel13->getChildren().push_back(ExamplePanel10);
+		ExamplePanel13->getChildren().push_back(ExamplePanel11);
+		ExamplePanel13->getChildren().push_back(ExamplePanel12);
         ExamplePanel13->setLayout(ExamplePanel3Layout);
         ExamplePanel13->setBackgrounds(MainBackground);
         ExamplePanel13->setBorders(MainFrameLineBorder);
@@ -1252,10 +1252,10 @@ int main(int argc, char **argv)
 
 	beginEditCP(ExamplePanel14, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel14->setPreferredSize(Vec2f(1300,200));
-		ExamplePanel14->getChildren().addValue(Check1);
-		ExamplePanel14->getChildren().addValue(Check2);
-		ExamplePanel14->getChildren().addValue(Check3);
-		ExamplePanel14->getChildren().addValue(Check4);
+		ExamplePanel14->getChildren().push_back(Check1);
+		ExamplePanel14->getChildren().push_back(Check2);
+		ExamplePanel14->getChildren().push_back(Check3);
+		ExamplePanel14->getChildren().push_back(Check4);
         ExamplePanel14->setLayout(ExamplePanel3Layout);
         ExamplePanel14->setBackgrounds(MainBackground);
         ExamplePanel14->setBorders(MainFrameLineBorder);
@@ -1265,8 +1265,8 @@ int main(int argc, char **argv)
 
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::BordersFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().addValue(ExamplePanel13);
-       MainInternalWindow->getChildren().addValue(ExamplePanel14);
+       MainInternalWindow->getChildren().push_back(ExamplePanel13);
+       MainInternalWindow->getChildren().push_back(ExamplePanel14);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainBackground);
        MainInternalWindow->setBorders(MainFrameLineBorder);

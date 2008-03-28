@@ -405,20 +405,20 @@ void RGBColorChooserPanel::buildChooser(void)
 
 	beginEditCP(RGBColorChooserPanelPtr(this) , RGBColorChooserPanel::ChildrenFieldMask | RGBColorChooserPanel::LayoutFieldMask);
 		getChildren().clear();
-		getChildren().addValue(RedLabel);
-		getChildren().addValue(_RedSlider);
-		getChildren().addValue(_RedSpinner);
-		getChildren().addValue(GreenLabel);
-		getChildren().addValue(_GreenSlider);
-		getChildren().addValue(_GreenSpinner);
-		getChildren().addValue(BlueLabel);
-		getChildren().addValue(_BlueSlider);
-		getChildren().addValue(_BlueSpinner);
+		getChildren().push_back(RedLabel);
+		getChildren().push_back(_RedSlider);
+		getChildren().push_back(_RedSpinner);
+		getChildren().push_back(GreenLabel);
+		getChildren().push_back(_GreenSlider);
+		getChildren().push_back(_GreenSpinner);
+		getChildren().push_back(BlueLabel);
+		getChildren().push_back(_BlueSlider);
+		getChildren().push_back(_BlueSpinner);
 		if(getIncludeAlpha())
 		{
-			getChildren().addValue(AlphaLabel);
-		    getChildren().addValue(_AlphaSlider);
-			getChildren().addValue(_AlphaSpinner);
+			getChildren().push_back(AlphaLabel);
+		    getChildren().push_back(_AlphaSlider);
+			getChildren().push_back(_AlphaSpinner);
 		}
 		setLayout(RGBPanelLayout);
 	endEditCP(RGBColorChooserPanelPtr(this) , RGBColorChooserPanel::ChildrenFieldMask | RGBColorChooserPanel::LayoutFieldMask);

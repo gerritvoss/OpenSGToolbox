@@ -226,7 +226,7 @@ int main(int argc, char **argv)
 
     beginEditCP(MainFrame, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask  | Component::ConstraintsFieldMask);
        MainFrame->setLayout(MainFrameLayout);
-       MainFrame->getChildren().addValue(MainTabPanel);
+       MainFrame->getChildren().push_back(MainTabPanel);
     endEditCP(MainFrame, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask  | Component::ConstraintsFieldMask);
 
     TutorialKeyListener TheKeyListener;
@@ -258,7 +258,7 @@ int main(int argc, char **argv)
     // Add the UI Foreground Object to the Scene
     ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
     // Show the whole Scene

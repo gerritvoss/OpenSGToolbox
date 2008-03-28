@@ -44,7 +44,6 @@
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
-#include "Util/OSGUIDefines.h"
 
 #include "OSGGridBagLayout.h"
 #include "OSGGridBagLayoutConstraints.h"
@@ -104,12 +103,12 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 	// the blanks evenly.
 	for (i = 0; i < getColumnWeights().size(); ++i)
 	{
-		columnWeights.push_back(getColumnWeights().getValue(i));
+		columnWeights.push_back(getColumnWeights()[i]);
 		cumColumnWeights += columnWeights[i];
 	}
 	for (i = 0; i < getRowWeights().size(); ++i)
 	{
-		rowWeights.push_back(getRowWeights().getValue(i));
+		rowWeights.push_back(getRowWeights()[i]);
 		cumRowWeights += rowWeights[i];
 	}
 
@@ -180,22 +179,36 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 	for (i = 1; i < getColumns(); ++i)
 	{
 		weight+=columnWeights[i-1];
-		posX.push_back((Real32)(weight*borderSize[0]));
-		widths.push_back(posX[i]-posX[i-1]);
+		Real32 Width;
+		Width = osgMin(columnWeights[i-1] * borderSize.x(), borderSize.x() - posX.back());
+		if(i-1<getColumnWidths().size())
+		{
+			Width = osgMax(Width, getColumnWidths()[i-1]);
+		}
+		widths.push_back(Width);
+		posX.push_back(posX.back() + widths.back());
 	}
 	// i increments again before this statement, so it
 	// still must be i-1
-	widths.push_back(borderSize[0]-posX[i-1]);
+	widths.push_back(borderSize.x()-posX.back());
 
 	weight = 0.0;
 	posY.push_back(0);
 	for (i = 1; i < getRows(); ++i)
 	{
 		weight+=rowWeights[i-1];
-		posY.push_back((Real32)(weight*borderSize[1]));
-		heights.push_back(posY[i]-posY[i-1]);
+		Real32 Height;
+		Height = osgMin(rowWeights[i-1] * borderSize.y(), borderSize.y() - posY.back());
+		if(i-1<getRowHeights().size())
+		{
+			Height = osgMax(Height, getRowHeights()[i-1]);
+		}
+		heights.push_back(Height);
+		posY.push_back(posY.back() + heights.back());
 	}
-	heights.push_back(borderSize[1]-posY[i-1]);
+	// i increments again before this statement, so it
+	// still must be i-1
+	heights.push_back(borderSize.y()-posY.back());
 
 	// now go through each component and place them on the grid
 	for (i = 0; i < Components.size(); ++i)
@@ -203,8 +216,8 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 		// begin by resetting offset to borderoffset and size to 0
 		offset = ParentInsetsTopLeft;
 		cellSize[0] = cellSize[1] = 0;
-		size = Components.getValue(i)->getPreferredSize();
-		constraints = GridBagLayoutConstraintsPtr::dcast(Components.getValue(i)->getConstraints());
+		size = Components[i]->getPreferredSize();
+		constraints = GridBagLayoutConstraintsPtr::dcast(Components[i]->getConstraints());
 		if(constraints != NullFC)
 		{
 			// find the offsets for the cell, including the padding
@@ -224,22 +237,22 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 			cellSize[1] -= constraints->getPadTop() + constraints->getPadBottom();
 
 			// set the size of the component by the size of the cell/cells if it set to fill
-			if ( (constraints->getFill() == FILL_BOTH || constraints->getFill() == FILL_HORIZONTAL) && constraints->getWeightX() > 0.0)
+			if ( (constraints->getFill() == GridBagLayoutConstraints::FILL_BOTH || constraints->getFill() == GridBagLayoutConstraints::FILL_HORIZONTAL) && constraints->getWeightX() > 0.0)
 				size[0] = cellSize[0] * constraints->getWeightX();
-			if ( (constraints->getFill() == FILL_BOTH || constraints->getFill() == FILL_VERTICAL) && constraints->getWeightY() > 0.0)
+			if ( (constraints->getFill() == GridBagLayoutConstraints::FILL_BOTH || constraints->getFill() == GridBagLayoutConstraints::FILL_VERTICAL) && constraints->getWeightY() > 0.0)
 				size[1] = cellSize[1] * constraints->getWeightY();
 
 			// check to see if it is bigger than the maximum size
-			if (size[0] > Components.getValue(i)->getMaxSize()[0])
-				size[0] = Components.getValue(i)->getMaxSize()[0];
-			if (size[1] > Components.getValue(i)->getMaxSize()[1])
-				size[1] = Components.getValue(i)->getMaxSize()[1];
+			if (size[0] > Components[i]->getMaxSize()[0])
+				size[0] = Components[i]->getMaxSize()[0];
+			if (size[1] > Components[i]->getMaxSize()[1])
+				size[1] = Components[i]->getMaxSize()[1];
 
 			// check to see if it is smaller than the minimum size
-			if (size[0] < Components.getValue(i)->getMinSize()[0]+constraints->getInternalPadX())
-				size[0] = Components.getValue(i)->getMinSize()[0]+constraints->getInternalPadX();
-			if (size[1] < Components.getValue(i)->getMinSize()[1]+constraints->getInternalPadY())
-				size[1] = Components.getValue(i)->getMinSize()[1]+constraints->getInternalPadY();
+			if (size[0] < Components[i]->getMinSize()[0]+constraints->getInternalPadX())
+				size[0] = Components[i]->getMinSize()[0]+constraints->getInternalPadX();
+			if (size[1] < Components[i]->getMinSize()[1]+constraints->getInternalPadY())
+				size[1] = Components[i]->getMinSize()[1]+constraints->getInternalPadY();
 
 			// check to see if it is too big for the cell
 			if (size[0] > cellSize[0])
@@ -251,13 +264,13 @@ void GridBagLayout::updateLayout(const MFComponentPtr Components,const Component
 			offset[0] += (cellSize[0] - size[0]) * constraints->getHorizontalAlignment();
 			offset[1] += (cellSize[1] - size[1]) * constraints->getVerticalAlignment();
 		}
-		beginEditCP(Components.getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
-			if (size[0] >= Components.getValue(i)->getMinSize().x() && size[1] > Components.getValue(i)->getMinSize().y())
-				Components.getValue(i)->setSize(size);
+		beginEditCP(Components[i], Component::SizeFieldMask|Component::PositionFieldMask);
+			if (size[0] >= Components[i]->getMinSize().x() && size[1] > Components[i]->getMinSize().y())
+				Components[i]->setSize(size);
 			else
-				Components.getValue(i)->setSize(Vec2f(0,0));
-			Components.getValue(i)->setPosition(Pnt2f(offset));
-		endEditCP(Components.getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
+				Components[i]->setSize(Vec2f(0,0));
+			Components[i]->setPosition(Pnt2f(offset));
+		endEditCP(Components[i], Component::SizeFieldMask|Component::PositionFieldMask);
 	}
 }
 

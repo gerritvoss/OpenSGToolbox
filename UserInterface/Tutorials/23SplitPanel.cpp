@@ -182,15 +182,15 @@ int main(int argc, char **argv)
     endEditCP(PanelFlowLayout, FlowLayout::HorizontalGapFieldMask | FlowLayout::VerticalGapFieldMask);
 
     beginEditCP(ExampleSplitPanelPanel1, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-        ExampleSplitPanelPanel1->getChildren().addValue(ExampleButton1);
-        ExampleSplitPanelPanel1->getChildren().addValue(ExampleButton2);
-        ExampleSplitPanelPanel1->getChildren().addValue(ExampleButton3);
+        ExampleSplitPanelPanel1->getChildren().push_back(ExampleButton1);
+        ExampleSplitPanelPanel1->getChildren().push_back(ExampleButton2);
+        ExampleSplitPanelPanel1->getChildren().push_back(ExampleButton3);
         ExampleSplitPanelPanel1->setLayout(PanelFlowLayout);
     endEditCP(ExampleSplitPanelPanel1, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
     beginEditCP(ExampleSplitPanelPanel2, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-        ExampleSplitPanelPanel2->getChildren().addValue(ExampleButton4);
-        ExampleSplitPanelPanel2->getChildren().addValue(ExampleButton5);
-        ExampleSplitPanelPanel2->getChildren().addValue(ExampleButton6);
+        ExampleSplitPanelPanel2->getChildren().push_back(ExampleButton4);
+        ExampleSplitPanelPanel2->getChildren().push_back(ExampleButton5);
+        ExampleSplitPanelPanel2->getChildren().push_back(ExampleButton6);
         ExampleSplitPanelPanel2->setLayout(PanelFlowLayout);
     endEditCP(ExampleSplitPanelPanel2, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
 
@@ -274,7 +274,7 @@ int main(int argc, char **argv)
 
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().addValue(ExampleSplitPanel);
+       MainInternalWindow->getChildren().push_back(ExampleSplitPanel);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
@@ -310,7 +310,7 @@ int main(int argc, char **argv)
     // Add the UI Foreground Object to the Scene
     ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
     // Show the whole Scene

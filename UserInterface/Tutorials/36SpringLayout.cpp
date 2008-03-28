@@ -262,12 +262,12 @@ int main(int argc, char **argv)
     endEditCP(MainInternalWindowBackground, ColorUIBackground::ColorFieldMask);
 
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().addValue(ExampleButton1);
-       MainInternalWindow->getChildren().addValue(ExampleButton2);
-       MainInternalWindow->getChildren().addValue(ExampleButton3);
-	   MainInternalWindow->getChildren().addValue(ExampleButton4);
-       MainInternalWindow->getChildren().addValue(ExampleButton5);
-       MainInternalWindow->getChildren().addValue(ExampleButton6);
+       MainInternalWindow->getChildren().push_back(ExampleButton1);
+       MainInternalWindow->getChildren().push_back(ExampleButton2);
+       MainInternalWindow->getChildren().push_back(ExampleButton3);
+	   MainInternalWindow->getChildren().push_back(ExampleButton4);
+       MainInternalWindow->getChildren().push_back(ExampleButton5);
+       MainInternalWindow->getChildren().push_back(ExampleButton6);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
@@ -302,7 +302,7 @@ int main(int argc, char **argv)
     // Add the UI Foreground Object to the Scene
     ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
     // Show the whole Scene

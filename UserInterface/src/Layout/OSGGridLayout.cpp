@@ -91,42 +91,42 @@ void GridLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 
 	//set the size to the perfered sizes for the buttons
 	for(UInt16 i = 0; i<Components.size(); i++){
-		if (Components.getValue(i) != NullFC) 
+		if (Components[i] != NullFC) 
 		{
-			if(Components.getValue(i)->getPreferredSize().x()>maxSizeX)
-				maxSizeX = Components.getValue(i)->getPreferredSize().x();
-			if(Components.getValue(i)->getPreferredSize().y()>maxSizeY)
-				maxSizeY = Components.getValue(i)->getPreferredSize().y();
+			if(Components[i]->getPreferredSize().x()>maxSizeX)
+				maxSizeX = Components[i]->getPreferredSize().x();
+			if(Components[i]->getPreferredSize().y()>maxSizeY)
+				maxSizeY = Components[i]->getPreferredSize().y();
 		}
 	}
 	//set the  size of the button
 	for(UInt16 i = 0; i < Components.size(); i++){
-		if (Components.getValue(i) != NullFC) 
+		if (Components[i] != NullFC) 
 		{
-			if(maxSizeX < Components.getValue(i)->getMaxSize().x())
+			if(maxSizeX < Components[i]->getMaxSize().x())
 				buttonXSize = maxSizeX;
 			else
-				buttonXSize = Components.getValue(i)->getMaxSize().x();
-			if(maxSizeY<Components.getValue(i)->getMaxSize().y())
+				buttonXSize = Components[i]->getMaxSize().x();
+			if(maxSizeY<Components[i]->getMaxSize().y())
 				buttonYSize = maxSizeY;
 			else
-				buttonYSize = Components.getValue(i)->getMaxSize().y();
-			beginEditCP(Components.getValue(i), Component::SizeFieldMask);
-			   Components.getValue(i)->setSize(Vec2f(buttonXSize, buttonYSize));
-			endEditCP(Components.getValue(i), Component::SizeFieldMask);
+				buttonYSize = Components[i]->getMaxSize().y();
+			beginEditCP(Components[i], Component::SizeFieldMask);
+			   Components[i]->setSize(Vec2f(buttonXSize, buttonYSize));
+			endEditCP(Components[i], Component::SizeFieldMask);
 		}
 	}
 
 
 	//position each button
 	for(UInt16 i = 0; i <= getRows()&& numComp>=0; i++){
-		if (Components.getValue(i) != NullFC) 
+		if (Components[i] != NullFC) 
 		{
 			for(UInt16 j = 0; j < getColumns()&& numComp>0; j++){
 				debug = i*getColumns()+j;
-			    beginEditCP(Components.getValue(i), Component::PositionFieldMask);
-                   Components.getValue(i*getColumns()+j)->setPosition(borderTopLeft + Vec2f(Xpos, Ypos));
-			    endEditCP(Components.getValue(i), Component::PositionFieldMask);
+			    beginEditCP(Components[i], Component::PositionFieldMask);
+                   Components[i*getColumns()+j]->setPosition(borderTopLeft + Vec2f(Xpos, Ypos));
+			    endEditCP(Components[i], Component::PositionFieldMask);
 				numComp--;
 				Xpos = Xpos + (maxSizeX+getHorizontalGap());
 			}

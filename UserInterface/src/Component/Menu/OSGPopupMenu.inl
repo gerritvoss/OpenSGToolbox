@@ -47,7 +47,7 @@ OSG_BEGIN_NAMESPACE
 inline
 MenuItemPtr PopupMenu::getItem(const UInt32& Index)
 {
-    return MenuItem::Ptr::dcast(getChildren().getValue(Index));
+    return MenuItem::Ptr::dcast(getChildren()[Index]);
 }
 
 inline

@@ -328,9 +328,9 @@ int main(int argc, char **argv)
 
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().addValue(ExampleHorizontalScrollBar);
-       MainInternalWindow->getChildren().addValue(ExampleVerticalScrollBar);
-       MainInternalWindow->getChildren().addValue(ExampleScrollPanel);
+       MainInternalWindow->getChildren().push_back(ExampleHorizontalScrollBar);
+       MainInternalWindow->getChildren().push_back(ExampleVerticalScrollBar);
+       MainInternalWindow->getChildren().push_back(ExampleScrollPanel);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
@@ -365,7 +365,7 @@ int main(int argc, char **argv)
     // Add the UI Foreground Object to the Scene
     ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
     // Show the whole Scene
@@ -420,12 +420,12 @@ PanelPtr createPanelWithButtons(void)
     FlowLayoutPtr ScrollPanelInsertPanelLayout = osg::FlowLayout::create();
 	beginEditCP(ScrollPanelInsertPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
         ScrollPanelInsertPanel->setPreferredSize(Vec2f(100, 250 ));
-        ScrollPanelInsertPanel->getChildren().addValue(PanelButton1);
-        ScrollPanelInsertPanel->getChildren().addValue(PanelButton2);
-        ScrollPanelInsertPanel->getChildren().addValue(PanelButton3);
-        ScrollPanelInsertPanel->getChildren().addValue(PanelButton4);
-        ScrollPanelInsertPanel->getChildren().addValue(PanelButton5);
-        ScrollPanelInsertPanel->getChildren().addValue(PanelButton6);
+        ScrollPanelInsertPanel->getChildren().push_back(PanelButton1);
+        ScrollPanelInsertPanel->getChildren().push_back(PanelButton2);
+        ScrollPanelInsertPanel->getChildren().push_back(PanelButton3);
+        ScrollPanelInsertPanel->getChildren().push_back(PanelButton4);
+        ScrollPanelInsertPanel->getChildren().push_back(PanelButton5);
+        ScrollPanelInsertPanel->getChildren().push_back(PanelButton6);
         ScrollPanelInsertPanel->setLayout(ScrollPanelInsertPanelLayout);
     endEditCP(ScrollPanelInsertPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
 

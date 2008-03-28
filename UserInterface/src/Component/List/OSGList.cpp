@@ -87,7 +87,7 @@ ComponentPtr List::getComponentAtPoint(const MouseEvent& e)
 
 	if(Index >= _TopDrawnIndex && Index <= _BottomDrawnIndex)
 	{
-		return getChildren().getValue(getDrawnIndexFromListIndex(Index));
+		return getChildren()[getDrawnIndexFromListIndex(Index)];
 	}
 	else
 	{
@@ -169,7 +169,7 @@ void List::initItem(const UInt32& Index)
 
 	//_DrawnIndices[Index]->updateClipBounds();
 
-	getChildren().setValue(_DrawnIndices[Index], Index);
+	getChildren()[Index] = _DrawnIndices[Index];
 }
 
 
@@ -193,7 +193,7 @@ void List::focusGained(const FocusEvent& e)
 		UInt32 index(0);
 		for( ; index< getChildren().size(); ++index)
 		{
-			if((*Child) == getChildren().getValue(index))
+			if((*Child) == getChildren()[index])
 			{
 				break;
 			}
@@ -211,7 +211,7 @@ void List::focusLost(const FocusEvent& e)
 		UInt32 index(0);
 		for( ; index< getChildren().size(); ++index)
 		{
-			if((*Child) == getChildren().getValue(index))
+			if((*Child) == getChildren()[index])
 			{
 				break;
 			}
@@ -251,13 +251,13 @@ void List::mousePressed(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
 		if(isContained)
 		{
 			//Give myself temporary focus
 			takeFocus(true);
-			if(!getChildren().getValue(i)->getType().isDerivedFrom(Container::getClassType()))
+			if(!getChildren()[i]->getType().isDerivedFrom(Container::getClassType()))
 			{
 				focusIndex(getListIndexFromDrawnIndex(i));
 				if(getParentWindow() != NullFC &&
@@ -278,7 +278,7 @@ void List::mousePressed(const MouseEvent& e)
 					}
 				}
 			}
-			getChildren().getValue(i)->mousePressed(e);
+			getChildren()[i]->mousePressed(e);
 			break;
 		}
     }
@@ -390,25 +390,25 @@ void List::contentsChanged(ListDataEvent e)
 		Pnt2f Position(0,0);
 		for(UInt32 i(0) ; i<getModel()->getSize() && i<=e.getIndex1() ; ++i )
 		{
-			beginEditCP(getChildren().getValue(i), PositionFieldMask | SizeFieldMask);
-			   getChildren().getValue(i)->setPosition(Position);
+			beginEditCP(getChildren()[i], PositionFieldMask | SizeFieldMask);
+			   getChildren()[i]->setPosition(Position);
                if(getCellOrientation() == VERTICAL_ALIGNMENT)
                {
-			      getChildren().getValue(i)->setSize( Vec2f(getSize().x(), getCellMajorAxisLength()) );
+			      getChildren()[i]->setSize( Vec2f(getSize().x(), getCellMajorAxisLength()) );
                }
                else
                {
-                  getChildren().getValue(i)->setSize( Vec2f(getCellMajorAxisLength(), getSize().y()) );
+                  getChildren()[i]->setSize( Vec2f(getCellMajorAxisLength(), getSize().y()) );
                }
-			endEditCP(getChildren().getValue(i), PositionFieldMask | SizeFieldMask);
+			endEditCP(getChildren()[i], PositionFieldMask | SizeFieldMask);
 
             if(getCellOrientation() == VERTICAL_ALIGNMENT)
             {
-			    Position[1] += getChildren().getValue(i)->getSize()[1];
+			    Position[1] += getChildren()[i]->getSize()[1];
             }
             else
             {
-			    Position[0] += getChildren().getValue(i)->getSize()[0];
+			    Position[0] += getChildren()[i]->getSize()[0];
             }
 		}
 	}
@@ -878,7 +878,7 @@ void List::focusIndex(const Int32& Index)
 	//Focus the new index
 	if(_FocusedIndex >= _TopDrawnIndex && _FocusedIndex <= _BottomDrawnIndex )
 	{
-		getChildren().getValue(getDrawnIndexFromListIndex(_FocusedIndex))->takeFocus();
+		getChildren()[getDrawnIndexFromListIndex(_FocusedIndex)]->takeFocus();
 	}
 
 	if(getAutoScrollToFocused())

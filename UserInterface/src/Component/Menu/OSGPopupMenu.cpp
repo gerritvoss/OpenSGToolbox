@@ -83,11 +83,11 @@ void PopupMenu::updateLayout(void)
 	Real32 TotalHeight(0);
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-        if(MaxWidth < getChildren().getValue(i)->getPreferredSize().x())
+        if(MaxWidth < getChildren()[i]->getPreferredSize().x())
         {
-            MaxWidth = getChildren().getValue(i)->getPreferredSize().x();
+            MaxWidth = getChildren()[i]->getPreferredSize().x();
 	    }
-	    TotalHeight += getChildren().getValue(i)->getPreferredSize().y();
+	    TotalHeight += getChildren()[i]->getPreferredSize().y();
 		if(i!=0)
 		{
 			TotalHeight += 1.0f;
@@ -113,12 +113,12 @@ void PopupMenu::updateLayout(void)
 	Real32 TopOffset(InsetsTopLeft.y());
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-        beginEditCP(getChildren().getValue(i), SizeFieldMask | PositionFieldMask);
-            getChildren().getValue(i)->setSize(Vec2f(MaxWidth, getChildren().getValue(i)->getPreferredSize().y()));
-            getChildren().getValue(i)->setPosition(Pnt2f(InsetsTopLeft.x(), TopOffset));
-        endEditCP(getChildren().getValue(i), SizeFieldMask | PositionFieldMask);
+        beginEditCP(getChildren()[i], SizeFieldMask | PositionFieldMask);
+            getChildren()[i]->setSize(Vec2f(MaxWidth, getChildren()[i]->getPreferredSize().y()));
+            getChildren()[i]->setPosition(Pnt2f(InsetsTopLeft.x(), TopOffset));
+        endEditCP(getChildren()[i], SizeFieldMask | PositionFieldMask);
 
-        TopOffset += getChildren().getValue(i)->getPreferredSize().y() +1;
+        TopOffset += getChildren()[i]->getPreferredSize().y() +1;
     }
 }
 
@@ -189,7 +189,7 @@ void PopupMenu::removeAllItems(void)
 void PopupMenu::mouseMoved(const MouseEvent& e)
 {
     UInt32 i(0);
-    while (i<getChildren().size() && !getChildren().getValue(i)->isContained(e.getLocation(), true))
+    while (i<getChildren().size() && !getChildren()[i]->isContained(e.getLocation(), true))
     {
         ++i;
     }
@@ -205,7 +205,7 @@ void PopupMenu::mouseMoved(const MouseEvent& e)
 void PopupMenu::mouseDragged(const MouseEvent& e)
 {
     UInt32 i(0);
-    while (i<getChildren().size() && !getChildren().getValue(i)->isContained(e.getLocation(), true))
+    while (i<getChildren().size() && !getChildren()[i]->isContained(e.getLocation(), true))
     {
         ++i;
     }
@@ -338,18 +338,18 @@ void PopupMenu::MenuSelectionListener::stateChanged(const ChangeEvent& e)
     for(UInt32 i(0) ; i<_PopupMenu->getChildren().size() ; ++i)
     {
         if(i == _PopupMenu->_SelectionModel->getSelectedIndex() &&
-           !MenuItem::Ptr::dcast(_PopupMenu->getChildren().getValue(i))->getSelected())
+           !MenuItem::Ptr::dcast(_PopupMenu->getChildren()[i])->getSelected())
         {
-            beginEditCP(_PopupMenu->getChildren().getValue(i), MenuItem::SelectedFieldMask);
-                MenuItem::Ptr::dcast(_PopupMenu->getChildren().getValue(i))->setSelected(true);
-            endEditCP(_PopupMenu->getChildren().getValue(i), MenuItem::SelectedFieldMask);
+            beginEditCP(_PopupMenu->getChildren()[i], MenuItem::SelectedFieldMask);
+                MenuItem::Ptr::dcast(_PopupMenu->getChildren()[i])->setSelected(true);
+            endEditCP(_PopupMenu->getChildren()[i], MenuItem::SelectedFieldMask);
         }
         if(i != _PopupMenu->_SelectionModel->getSelectedIndex() &&
-           MenuItem::Ptr::dcast(_PopupMenu->getChildren().getValue(i))->getSelected())
+           MenuItem::Ptr::dcast(_PopupMenu->getChildren()[i])->getSelected())
         {
-            beginEditCP(_PopupMenu->getChildren().getValue(i), MenuItem::SelectedFieldMask);
-                MenuItem::Ptr::dcast(_PopupMenu->getChildren().getValue(i))->setSelected(false);
-            endEditCP(_PopupMenu->getChildren().getValue(i), MenuItem::SelectedFieldMask);
+            beginEditCP(_PopupMenu->getChildren()[i], MenuItem::SelectedFieldMask);
+                MenuItem::Ptr::dcast(_PopupMenu->getChildren()[i])->setSelected(false);
+            endEditCP(_PopupMenu->getChildren()[i], MenuItem::SelectedFieldMask);
         }
     }
 }

@@ -181,7 +181,7 @@ void SplitPanelBase::setMinComponent(const ComponentPtr &value)
 	if (_sfMinComponent.getValue() != NullFC)
 		getChildren().erase(getChildren().find(_sfMinComponent.getValue()));
     _sfMinComponent.setValue(value);
-	getChildren().addValue(value);
+	getChildren().push_back(value);
 }
 
 //! Get the value of the SplitPanel::_sfMaxComponent field.
@@ -205,7 +205,7 @@ void SplitPanelBase::setMaxComponent(const ComponentPtr &value)
 	if (_sfMaxComponent.getValue() != NullFC)
 		getChildren().erase(getChildren().find(_sfMaxComponent.getValue()));
     _sfMaxComponent.setValue(value);
-	getChildren().addValue(value);
+	getChildren().push_back(value);
 }
 
 //! Get the value of the SplitPanel::_sfDividerSize field.

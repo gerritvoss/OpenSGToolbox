@@ -113,15 +113,15 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 
 	for(UInt32 i=0 ; i<Components.size(); ++i)
     {
-        beginEditCP(Components.getValue(i), Component::PositionFieldMask | Component::SizeFieldMask);
+        beginEditCP(Components[i], Component::PositionFieldMask | Component::SizeFieldMask);
     }
 
 	for(UInt32 i=0 ; i<Components.size(); ++i)
 	{
 		// set the component to its preferred size
-		//beginEditCP(Components.getValue(i), Component::SizeFieldMask);
-			Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
-		//endEditCP(Components.getValue(i), Component::SizeFieldMask);
+		//beginEditCP(Components[i], Component::SizeFieldMask);
+			Components[i]->setSize(Components[i]->getPreferredSize());
+		//endEditCP(Components[i], Component::SizeFieldMask);
 
 		// if there is only one so far, then it can't draw it using cumMajorAxis
 		// because it hasn't been set yet
@@ -130,10 +130,10 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 			firstOne = false;
 			// if this is the last component or it is already too big for the
 			// container, draw it centered on its line
-			if (i == Components.size() || Components.getValue(i)->getSize()[AxisIndex] >= totalMajorAxis)
+			if (i == Components.size() || Components[i]->getSize()[AxisIndex] >= totalMajorAxis)
 			{
 				// find how far to translate to make it properly aligned
-				offsetMajorAxis = getMajorAxisAlignment()*(totalMajorAxis - Components.getValue(i)->getSize()[AxisIndex]);
+				offsetMajorAxis = getMajorAxisAlignment()*(totalMajorAxis - Components[i]->getSize()[AxisIndex]);
 
 				if (AxisIndex)
 				{
@@ -144,23 +144,23 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 					offsetX += offsetMajorAxis;
 				}
 
-				//beginEditCP(Components.getValue(i), Component::PositionFieldMask);
-					Components.getValue(i)->setPosition(Pnt2f(offsetX, offsetY));
-				//endEditCP(Components.getValue(i), Component::PositionFieldMask);
+				//beginEditCP(Components[i], Component::PositionFieldMask);
+					Components[i]->setPosition(Pnt2f(offsetX, offsetY));
+				//endEditCP(Components[i], Component::PositionFieldMask);
 
 				// get to the next row
 				if (AxisIndex)
 				{
-					offsetX += Components.getValue(i)->getSize()[(AxisIndex+1)%2]+gap[(AxisIndex+1)%2];
+					offsetX += Components[i]->getSize()[(AxisIndex+1)%2]+gap[(AxisIndex+1)%2];
 					offsetY += -offsetMajorAxis;
 				}
 				else
 				{
 					offsetX += -offsetMajorAxis;
-					offsetY += Components.getValue(i)->getSize()[(AxisIndex+1)%2]+gap[(AxisIndex+1)%2];
+					offsetY += Components[i]->getSize()[(AxisIndex+1)%2]+gap[(AxisIndex+1)%2];
 				}
 				// update cumMinorAxis, other values should still be at 0
-                cumMinorAxis += Components.getValue(i)->getSize()[(AxisIndex+1)%2];
+                cumMinorAxis += Components[i]->getSize()[(AxisIndex+1)%2];
                 if(i < Components.size()-1)
                 {
 				    cumMinorAxis += gap[(AxisIndex+1)%2];
@@ -173,12 +173,12 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 			else
 			{
 				// update the maxMinorAxis
-				maxMinorAxis = Components.getValue(i)->getSize()[(AxisIndex+1)%2];
+				maxMinorAxis = Components[i]->getSize()[(AxisIndex+1)%2];
 				// update cumMajorAxis
-				cumMajorAxis += Components.getValue(i)->getSize()[AxisIndex];
+				cumMajorAxis += Components[i]->getSize()[AxisIndex];
 			}
 		}
-		else if (cumMajorAxis + Components.getValue(i)->getSize()[AxisIndex] + gap[AxisIndex]*(i-prevComponent) > totalMajorAxis) // this one draws up to i
+		else if (cumMajorAxis + Components[i]->getSize()[AxisIndex] + gap[AxisIndex]*(i-prevComponent) > totalMajorAxis) // this one draws up to i
 		{
 			// The numGaps is one less than the number of components being drawn, but it
 			// is actually translates once for each component, so it must be compensated
@@ -199,7 +199,7 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 			for (int j = prevComponent; j < i; j++)
 			{
 				// find how far to translate to make this button properly aligned
-				offsetMinorAxis = (maxMinorAxis-Components.getValue(j)->getSize()[(AxisIndex+1)%2])*getComponentAlignment();
+				offsetMinorAxis = (maxMinorAxis-Components[j]->getSize()[(AxisIndex+1)%2])*getComponentAlignment();
 
 				// translate to make it properly aligned
 				if (AxisIndex)
@@ -211,19 +211,19 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 					offsetY += offsetMinorAxis;
 				}
 
-				//beginEditCP(Components.getValue(j), Component::PositionFieldMask);
-					Components.getValue(j)->setPosition(Pnt2f(offsetX, offsetY));
-				//endEditCP(Components.getValue(j), Component::PositionFieldMask);
+				//beginEditCP(Components[j], Component::PositionFieldMask);
+					Components[j]->setPosition(Pnt2f(offsetX, offsetY));
+				//endEditCP(Components[j], Component::PositionFieldMask);
 
 				// translate to next button
 				if (AxisIndex)
 				{
 					offsetX+=-(Real64)offsetMinorAxis;
-					offsetY+= Components.getValue(j)->getSize()[AxisIndex] + gap[AxisIndex];
+					offsetY+= Components[j]->getSize()[AxisIndex] + gap[AxisIndex];
 				}
 				else
 				{
-					offsetX+=Components.getValue(j)->getSize()[AxisIndex] + gap[AxisIndex];
+					offsetX+=Components[j]->getSize()[AxisIndex] + gap[AxisIndex];
 					offsetY+= -offsetMinorAxis;
 				}
 			}
@@ -240,17 +240,17 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 			}
 				
 			cumMinorAxis += maxMinorAxis + gap[(AxisIndex+1)%2];
-			maxMinorAxis = Components.getValue(i)->getSize()[(AxisIndex+1)%2];
+			maxMinorAxis = Components[i]->getSize()[(AxisIndex+1)%2];
 			prevComponent = i;
-			cumMajorAxis = Components.getValue(i)->getSize()[AxisIndex];
+			cumMajorAxis = Components[i]->getSize()[AxisIndex];
 		}
 		else
 		{
 			// update the maxMinorAxis
-			if (Components.getValue(i)->getSize()[(AxisIndex+1)%2] > maxMinorAxis)
-				maxMinorAxis = Components.getValue(i)->getSize()[(AxisIndex+1)%2];
+			if (Components[i]->getSize()[(AxisIndex+1)%2] > maxMinorAxis)
+				maxMinorAxis = Components[i]->getSize()[(AxisIndex+1)%2];
 			// update cumMajorAxis
-			cumMajorAxis += Components.getValue(i)->getSize()[AxisIndex];
+			cumMajorAxis += Components[i]->getSize()[AxisIndex];
 		}
 		if (i+1 == Components.size() && !firstOne) // if on the last one, draw the last buttons
 		{
@@ -270,7 +270,7 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 			for (int j = prevComponent; j < i+1; j++)
 			{
 				// find how far to translate to make this button properly aligned
-				offsetMinorAxis = (maxMinorAxis-Components.getValue(j)->getSize()[(AxisIndex+1)%2])*getComponentAlignment();
+				offsetMinorAxis = (maxMinorAxis-Components[j]->getSize()[(AxisIndex+1)%2])*getComponentAlignment();
 
 				// translate to make it properly aligned
 				if (AxisIndex)
@@ -281,18 +281,18 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 				{
 					offsetY += offsetMinorAxis;
 				}
-				//beginEditCP(Components.getValue(j), Component::PositionFieldMask);
-					Components.getValue(j)->setPosition(Pnt2f(offsetX, offsetY));
-				//endEditCP(Components.getValue(j), Component::PositionFieldMask);
+				//beginEditCP(Components[j], Component::PositionFieldMask);
+					Components[j]->setPosition(Pnt2f(offsetX, offsetY));
+				//endEditCP(Components[j], Component::PositionFieldMask);
 
 				if (AxisIndex)
 				{
 					offsetX += -(Real64)offsetMinorAxis;
-					offsetY += Components.getValue(j)->getSize()[AxisIndex] + gap[AxisIndex];
+					offsetY += Components[j]->getSize()[AxisIndex] + gap[AxisIndex];
 				}
 				else
 				{
-					offsetX += Components.getValue(j)->getSize()[AxisIndex] + gap[AxisIndex];
+					offsetX += Components[j]->getSize()[AxisIndex] + gap[AxisIndex];
 					offsetY+= -(Real64)offsetMinorAxis;
 				}
 			}
@@ -316,16 +316,16 @@ void FlowLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 	displacement *= getMinorAxisAlignment(); 
 	for (UInt32 i = 0; i < Components.size(); ++i)
 	{
-		offset = Components.getValue(i)->getPosition();
+		offset = Components[i]->getPosition();
 		offset[(AxisIndex+1)%2] += displacement;
-		//beginEditCP(Components.getValue(i), Component::PositionFieldMask);
-			Components.getValue(i)->setPosition(offset);
-		//endEditCP(Components.getValue(i), Component::PositionFieldMask);
+		//beginEditCP(Components[i], Component::PositionFieldMask);
+			Components[i]->setPosition(offset);
+		//endEditCP(Components[i], Component::PositionFieldMask);
 	}
     
 	for(UInt32 i=0 ; i<Components.size(); ++i)
     {
-        endEditCP(Components.getValue(i), Component::PositionFieldMask | Component::SizeFieldMask);
+        endEditCP(Components[i], Component::PositionFieldMask | Component::SizeFieldMask);
     }
 }
 /*-------------------------------------------------------------------------*\

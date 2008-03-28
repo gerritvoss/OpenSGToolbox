@@ -83,16 +83,16 @@ void PolygonUIDrawObject::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
 	if(getVerticies().size() > 0)
 	{
-		TopLeft = getVerticies().getValue(0);
+		TopLeft = getVerticies()[0];
 		BottomRight = TopLeft;
 		//Determine Top Left And Bottom Right
 		for(UInt32 i(0) ; i<getVerticies().size(); ++i)
 		{
-		    TopLeft.setValues( osgMin(TopLeft.x(), getVerticies().getValue(i).x()),
-				               osgMin(TopLeft.y(), getVerticies().getValue(i).y()) );
+		    TopLeft.setValues( osgMin(TopLeft.x(), getVerticies()[i].x()),
+				               osgMin(TopLeft.y(), getVerticies()[i].y()) );
 
-		    BottomRight.setValues(osgMax<Real32>(BottomRight.x(), getVerticies().getValue(i).x()),
-		                          osgMax<Real32>(BottomRight.y(), getVerticies().getValue(i).y()) );
+		    BottomRight.setValues(osgMax<Real32>(BottomRight.x(), getVerticies()[i].x()),
+		                          osgMax<Real32>(BottomRight.y(), getVerticies()[i].y()) );
 		}
 	}
 }

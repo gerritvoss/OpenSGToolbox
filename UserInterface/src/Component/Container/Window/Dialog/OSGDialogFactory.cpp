@@ -57,7 +57,7 @@ DialogWindowPtr DialogFactory::createMessageDialog(const std::string& Title, con
 	DialogWindowPtr TheDialog = DialogWindow::create();
 	beginEditCP(TheDialog, DialogWindow::LayoutFieldMask | DialogWindow::ChildrenFieldMask | DialogWindow::TitleFieldMask);
 		TheDialog->setLayout(DialogLayout);
-		TheDialog->getChildren().addValue(InternalsContainer);
+		TheDialog->getChildren().push_back(InternalsContainer);
 		TheDialog->setTitle(Title);
 	endEditCP(TheDialog, DialogWindow::LayoutFieldMask | DialogWindow::ChildrenFieldMask | DialogWindow::TitleFieldMask);
 
@@ -107,7 +107,7 @@ ContainerPtr DialogFactory::createMessagePanel(const std::string& Message, const
 	LabelPtr MessagePanelText = osg::DialogFactory::createTransparentLabel(Message);
 
 	beginEditCP(MessagePanelTop, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-		MessagePanelTop->getChildren().addValue(MessagePanelText);
+		MessagePanelTop->getChildren().push_back(MessagePanelText);
 		MessagePanelTop->setLayout(MessagePanelTopLayout);
 	endEditCP(MessagePanelTop, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
 	
@@ -115,7 +115,7 @@ ContainerPtr DialogFactory::createMessagePanel(const std::string& Message, const
 	PanelPtr MessagePanelBottom = osg::Panel::create();
 	FlowLayoutPtr MessagePanelBottomLayout = osg::FlowLayout::create();
 	beginEditCP(MessagePanelBottom, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
-		MessagePanelBottom->getChildren().addValue(ConfirmationButton);
+		MessagePanelBottom->getChildren().push_back(ConfirmationButton);
 		MessagePanelBottom->setLayout(MessagePanelBottomLayout);
 	endEditCP(MessagePanelBottom, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
 	 
@@ -152,7 +152,7 @@ ContainerPtr DialogFactory::createOptionPanel(const std::string& Message, const 
 
 	beginEditCP(MessagePanelTop, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
 		MessagePanelTop->setLayout(MessagePanelTopLayout);
-//		MessagePanelTop->getChildren().addValue(MessagePanelText);
+//		MessagePanelTop->getChildren().push_back(MessagePanelText);
 	endEditCP(MessagePanelTop, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
 	
 
@@ -180,7 +180,7 @@ ContainerPtr DialogFactory::createOptionPanel(const std::string& Message, const 
 		MessagePanelBottom->setLayout(MessagePanelBottomLayout);
 		for (int i=0; i<NumberOfButtons; i++)
 		{	
-			MessagePanelBottom->getChildren().addValue(OptionButtons[i]);
+			MessagePanelBottom->getChildren().push_back(OptionButtons[i]);
 		}
 	endEditCP(MessagePanelBottom, Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
 
@@ -291,7 +291,7 @@ DialogWindowPtr DialogFactory::createColorDialog(const std::string& Title, const
 	DialogWindowPtr TheDialog = DialogWindow::create();
 	beginEditCP(TheDialog, DialogWindow::LayoutFieldMask | DialogWindow::ChildrenFieldMask | DialogWindow::TitleFieldMask  | DialogWindow::PreferredSizeFieldMask  | DialogWindow::ResizableFieldMask);
 		TheDialog->setLayout(DialogLayout);
-		TheDialog->getChildren().addValue(InternalsContainer);
+		TheDialog->getChildren().push_back(InternalsContainer);
 		TheDialog->setTitle(Title);
 		TheDialog->setPreferredSize(Vec2s(300.0f,300.0f));
 		TheDialog->setResizable(true);
@@ -329,8 +329,8 @@ ContainerPtr DialogFactory::createColorPanel(const Color4f& TheColor, const std:
 	LayoutPtr ButtonPanelLayout = FlowLayout::create();
 	beginEditCP(ButtonPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::ConstraintsFieldMask | Panel::PreferredSizeFieldMask);
 		ButtonPanel->setLayout(ButtonPanelLayout);
-		ButtonPanel->getChildren().addValue(ConfirmButton);
-		ButtonPanel->getChildren().addValue(CancelButton);
+		ButtonPanel->getChildren().push_back(ConfirmButton);
+		ButtonPanel->getChildren().push_back(CancelButton);
         ButtonPanel->setConstraints(ButtonPanelConstraints);
         ButtonPanel->setPreferredSize(Vec2f(200, 50));
 	endEditCP(ButtonPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::ConstraintsFieldMask | Panel::PreferredSizeFieldMask);
@@ -346,8 +346,8 @@ ContainerPtr DialogFactory::createColorPanel(const Color4f& TheColor, const std:
     BorderLayoutPtr MainColorPanelLayout = osg::BorderLayout::create();
 	beginEditCP(MainColorPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BordersFieldMask);
 		MainColorPanel->setLayout(MainColorPanelLayout);
-		MainColorPanel->getChildren().addValue(TheColorChooserPanel);
-		MainColorPanel->getChildren().addValue(ButtonPanel);
+		MainColorPanel->getChildren().push_back(TheColorChooserPanel);
+		MainColorPanel->getChildren().push_back(ButtonPanel);
 		MainColorPanel->setBorders(NullFC);
 	endEditCP(MainColorPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BordersFieldMask);
 

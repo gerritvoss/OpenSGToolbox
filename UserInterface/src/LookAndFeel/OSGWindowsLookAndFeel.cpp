@@ -530,7 +530,7 @@ void WindowsLookAndFeel::init(void)
 	//InternalWindow Background
 	ColorUIBackgroundPtr WindowsInternalWindowBackground = ColorUIBackground::create();
 	beginEditCP(WindowsInternalWindowBackground);
-		WindowsInternalWindowBackground->setColor( Color4f(.9255,.9137,.8471, 1.0) );
+		WindowsInternalWindowBackground->setColor( Color4f(0.9569,0.9529,0.9373,1.0) );
 	endEditCP(WindowsInternalWindowBackground);
 	
 	//Decoration Buttons
@@ -587,48 +587,48 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsIconifyButtonDrawObject1);
 		WindowsIconifyButtonDrawObject1->setColor(Color4f(1.0,1.0,1.0,1.0));
 		WindowsIconifyButtonDrawObject1->setOpacity(1.0);
-        WindowsIconifyButtonDrawObject1->getVerticies().addValue(Pnt2f(0,0));
-        WindowsIconifyButtonDrawObject1->getVerticies().addValue(Pnt2f(0,4));
-        WindowsIconifyButtonDrawObject1->getVerticies().addValue(Pnt2f(8,4));
-        WindowsIconifyButtonDrawObject1->getVerticies().addValue(Pnt2f(8,0));
+        WindowsIconifyButtonDrawObject1->getVerticies().push_back(Pnt2f(0,0));
+        WindowsIconifyButtonDrawObject1->getVerticies().push_back(Pnt2f(0,4));
+        WindowsIconifyButtonDrawObject1->getVerticies().push_back(Pnt2f(8,4));
+        WindowsIconifyButtonDrawObject1->getVerticies().push_back(Pnt2f(8,0));
 	endEditCP(WindowsIconifyButtonDrawObject1);
 	
 	PolygonUIDrawObjectPtr WindowsIconifyButtonDrawObject2 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsIconifyButtonDrawObject2);
 		WindowsIconifyButtonDrawObject2->setColor(Color4f(0.15,0.15,0.21,1.0));
 		WindowsIconifyButtonDrawObject2->setOpacity(1.0);
-        WindowsIconifyButtonDrawObject2->getVerticies().addValue(Pnt2f(1,0));
-        WindowsIconifyButtonDrawObject2->getVerticies().addValue(Pnt2f(1,1));
-        WindowsIconifyButtonDrawObject2->getVerticies().addValue(Pnt2f(8,1));
-        WindowsIconifyButtonDrawObject2->getVerticies().addValue(Pnt2f(8,0));
+        WindowsIconifyButtonDrawObject2->getVerticies().push_back(Pnt2f(1,0));
+        WindowsIconifyButtonDrawObject2->getVerticies().push_back(Pnt2f(1,1));
+        WindowsIconifyButtonDrawObject2->getVerticies().push_back(Pnt2f(8,1));
+        WindowsIconifyButtonDrawObject2->getVerticies().push_back(Pnt2f(8,0));
 	endEditCP(WindowsIconifyButtonDrawObject2);
 	
 	PolygonUIDrawObjectPtr WindowsIconifyButtonDrawObject3 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsIconifyButtonDrawObject3);
 		WindowsIconifyButtonDrawObject3->setColor(Color4f(0.15,0.15,0.21,1.0));
 		WindowsIconifyButtonDrawObject3->setOpacity(1.0);
-        WindowsIconifyButtonDrawObject3->getVerticies().addValue(Pnt2f(7,1));
-        WindowsIconifyButtonDrawObject3->getVerticies().addValue(Pnt2f(7,3));
-        WindowsIconifyButtonDrawObject3->getVerticies().addValue(Pnt2f(8,3));
-        WindowsIconifyButtonDrawObject3->getVerticies().addValue(Pnt2f(8,1));
+        WindowsIconifyButtonDrawObject3->getVerticies().push_back(Pnt2f(7,1));
+        WindowsIconifyButtonDrawObject3->getVerticies().push_back(Pnt2f(7,3));
+        WindowsIconifyButtonDrawObject3->getVerticies().push_back(Pnt2f(8,3));
+        WindowsIconifyButtonDrawObject3->getVerticies().push_back(Pnt2f(8,1));
 	endEditCP(WindowsIconifyButtonDrawObject3);
 	
 	PolygonUIDrawObjectPtr WindowsIconifyButtonDrawObject4 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsIconifyButtonDrawObject4);
 		WindowsIconifyButtonDrawObject4->setColor(Color4f(0.43,0.43,0.56,1.0));
 		WindowsIconifyButtonDrawObject4->setOpacity(1.0);
-        WindowsIconifyButtonDrawObject4->getVerticies().addValue(Pnt2f(1,1));
-        WindowsIconifyButtonDrawObject4->getVerticies().addValue(Pnt2f(1,3));
-        WindowsIconifyButtonDrawObject4->getVerticies().addValue(Pnt2f(7,3));
-        WindowsIconifyButtonDrawObject4->getVerticies().addValue(Pnt2f(7,1));
+        WindowsIconifyButtonDrawObject4->getVerticies().push_back(Pnt2f(1,1));
+        WindowsIconifyButtonDrawObject4->getVerticies().push_back(Pnt2f(1,3));
+        WindowsIconifyButtonDrawObject4->getVerticies().push_back(Pnt2f(7,3));
+        WindowsIconifyButtonDrawObject4->getVerticies().push_back(Pnt2f(7,1));
 	endEditCP(WindowsIconifyButtonDrawObject4);
 
 	UIDrawObjectCanvasPtr WindowsIconifyButtonCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(WindowsIconifyButtonCanvas);
-	   WindowsIconifyButtonCanvas->getDrawObjects().addValue(WindowsIconifyButtonDrawObject1);
-	   WindowsIconifyButtonCanvas->getDrawObjects().addValue(WindowsIconifyButtonDrawObject2);
-	   WindowsIconifyButtonCanvas->getDrawObjects().addValue(WindowsIconifyButtonDrawObject3);
-	   WindowsIconifyButtonCanvas->getDrawObjects().addValue(WindowsIconifyButtonDrawObject4);
+	   WindowsIconifyButtonCanvas->getDrawObjects().push_back(WindowsIconifyButtonDrawObject1);
+	   WindowsIconifyButtonCanvas->getDrawObjects().push_back(WindowsIconifyButtonDrawObject2);
+	   WindowsIconifyButtonCanvas->getDrawObjects().push_back(WindowsIconifyButtonDrawObject3);
+	   WindowsIconifyButtonCanvas->getDrawObjects().push_back(WindowsIconifyButtonDrawObject4);
 	endEditCP(WindowsIconifyButtonCanvas);
 
 	//Iconify Button
@@ -737,52 +737,52 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsCloseButtonDrawObject1);
 		WindowsCloseButtonDrawObject1->setColor(Color4f(0.35,0.11,0.19,1.0));
 		WindowsCloseButtonDrawObject1->setOpacity(1.0);
-        WindowsCloseButtonDrawObject1->getVerticies().addValue(Pnt2f(1,0));
-        WindowsCloseButtonDrawObject1->getVerticies().addValue(Pnt2f(11,11));
-        WindowsCloseButtonDrawObject1->getVerticies().addValue(Pnt2f(13,11));
-        WindowsCloseButtonDrawObject1->getVerticies().addValue(Pnt2f(3,0));
+        WindowsCloseButtonDrawObject1->getVerticies().push_back(Pnt2f(1,0));
+        WindowsCloseButtonDrawObject1->getVerticies().push_back(Pnt2f(11,11));
+        WindowsCloseButtonDrawObject1->getVerticies().push_back(Pnt2f(13,11));
+        WindowsCloseButtonDrawObject1->getVerticies().push_back(Pnt2f(3,0));
 	endEditCP(WindowsCloseButtonDrawObject1);
 	
 	PolygonUIDrawObjectPtr WindowsCloseButtonDrawObject2 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsCloseButtonDrawObject2);
 		WindowsCloseButtonDrawObject2->setColor(Color4f(0.35,0.11,0.19,1.0));
 		WindowsCloseButtonDrawObject2->setOpacity(1.0);
-        WindowsCloseButtonDrawObject2->getVerticies().addValue(Pnt2f(0,10));
-        WindowsCloseButtonDrawObject2->getVerticies().addValue(Pnt2f(2,10));
-        WindowsCloseButtonDrawObject2->getVerticies().addValue(Pnt2f(12,0));
-        WindowsCloseButtonDrawObject2->getVerticies().addValue(Pnt2f(10,0));
+        WindowsCloseButtonDrawObject2->getVerticies().push_back(Pnt2f(0,10));
+        WindowsCloseButtonDrawObject2->getVerticies().push_back(Pnt2f(2,10));
+        WindowsCloseButtonDrawObject2->getVerticies().push_back(Pnt2f(12,0));
+        WindowsCloseButtonDrawObject2->getVerticies().push_back(Pnt2f(10,0));
 	endEditCP(WindowsCloseButtonDrawObject2);
 
 	PolygonUIDrawObjectPtr WindowsCloseButtonDrawObject3 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsCloseButtonDrawObject3);
 		WindowsCloseButtonDrawObject3->setColor(Color4f(1.0,1.0,1.0,1.0));
 		WindowsCloseButtonDrawObject3->setOpacity(1.0);
-        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2f(1,1));
-        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2f(1,3));
-        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2f(10,12));
-        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2f(12,12));
-        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2f(12,10));
-        WindowsCloseButtonDrawObject3->getVerticies().addValue(Pnt2f(3,1));
+        WindowsCloseButtonDrawObject3->getVerticies().push_back(Pnt2f(1,1));
+        WindowsCloseButtonDrawObject3->getVerticies().push_back(Pnt2f(1,3));
+        WindowsCloseButtonDrawObject3->getVerticies().push_back(Pnt2f(10,12));
+        WindowsCloseButtonDrawObject3->getVerticies().push_back(Pnt2f(12,12));
+        WindowsCloseButtonDrawObject3->getVerticies().push_back(Pnt2f(12,10));
+        WindowsCloseButtonDrawObject3->getVerticies().push_back(Pnt2f(3,1));
 	endEditCP(WindowsCloseButtonDrawObject3);
 	
 	PolygonUIDrawObjectPtr WindowsCloseButtonDrawObject4 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsCloseButtonDrawObject4);
 		WindowsCloseButtonDrawObject4->setColor(Color4f(1.0,1.0,1.0,1.0));
 		WindowsCloseButtonDrawObject4->setOpacity(1.0);
-        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2f(1,12));
-        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2f(3,12));
-        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2f(12,3));
-        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2f(12,1));
-        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2f(10,1));
-        WindowsCloseButtonDrawObject4->getVerticies().addValue(Pnt2f(1,10));
+        WindowsCloseButtonDrawObject4->getVerticies().push_back(Pnt2f(1,12));
+        WindowsCloseButtonDrawObject4->getVerticies().push_back(Pnt2f(3,12));
+        WindowsCloseButtonDrawObject4->getVerticies().push_back(Pnt2f(12,3));
+        WindowsCloseButtonDrawObject4->getVerticies().push_back(Pnt2f(12,1));
+        WindowsCloseButtonDrawObject4->getVerticies().push_back(Pnt2f(10,1));
+        WindowsCloseButtonDrawObject4->getVerticies().push_back(Pnt2f(1,10));
 	endEditCP(WindowsCloseButtonDrawObject4);
 
 	UIDrawObjectCanvasPtr WindowsCloseButtonCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(WindowsCloseButtonCanvas);
-	   WindowsCloseButtonCanvas->getDrawObjects().addValue(WindowsCloseButtonDrawObject1);
-	   WindowsCloseButtonCanvas->getDrawObjects().addValue(WindowsCloseButtonDrawObject2);
-	   WindowsCloseButtonCanvas->getDrawObjects().addValue(WindowsCloseButtonDrawObject3);
-	   WindowsCloseButtonCanvas->getDrawObjects().addValue(WindowsCloseButtonDrawObject4);
+	   WindowsCloseButtonCanvas->getDrawObjects().push_back(WindowsCloseButtonDrawObject1);
+	   WindowsCloseButtonCanvas->getDrawObjects().push_back(WindowsCloseButtonDrawObject2);
+	   WindowsCloseButtonCanvas->getDrawObjects().push_back(WindowsCloseButtonDrawObject3);
+	   WindowsCloseButtonCanvas->getDrawObjects().push_back(WindowsCloseButtonDrawObject4);
 	endEditCP(WindowsCloseButtonCanvas);
 
 	//Windows CloseButton
@@ -1372,32 +1372,32 @@ void WindowsLookAndFeel::init(void)
 
     //Normal
 	beginEditCP(WindowsCheckboxDrawObject);
-	   WindowsCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
-	   WindowsCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
+	   WindowsCheckboxDrawObject->getDrawObjects().push_back(CheckboxBackgroundBorder);
+	   WindowsCheckboxDrawObject->getDrawObjects().push_back(CheckboxBackground);
 	endEditCP(WindowsCheckboxDrawObject);
 
     //Normal Selected
 	beginEditCP(WindowsSelectedCheckboxDrawObject);
-		WindowsSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
-		WindowsSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
-		WindowsSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxCheckQuad1);
-		WindowsSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxCheckQuad2);
+		WindowsSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxBackgroundBorder);
+		WindowsSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxBackground);
+		WindowsSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxCheckQuad1);
+		WindowsSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxCheckQuad2);
 	endEditCP(WindowsSelectedCheckboxDrawObject);
 
     //Active Selected
 	beginEditCP(WindowsActiveSelectedCheckboxDrawObject);
-	 	WindowsActiveSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
-		WindowsActiveSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
-		WindowsActiveSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxActiveBackground);
+	 	WindowsActiveSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxBackgroundBorder);
+		WindowsActiveSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxBackground);
+		WindowsActiveSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxActiveBackground);
 	endEditCP(WindowsActiveSelectedCheckboxDrawObject);
 
     //Active Non-selected
 	beginEditCP(WindowsActiveCheckboxDrawObject);
-		WindowsActiveCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
-		WindowsActiveCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
-		WindowsActiveCheckboxDrawObject->getDrawObjects().addValue(CheckboxActiveBackground);
-		WindowsActiveCheckboxDrawObject->getDrawObjects().addValue(CheckboxCheckQuad1);
-		WindowsActiveCheckboxDrawObject->getDrawObjects().addValue(CheckboxCheckQuad2);
+		WindowsActiveCheckboxDrawObject->getDrawObjects().push_back(CheckboxBackgroundBorder);
+		WindowsActiveCheckboxDrawObject->getDrawObjects().push_back(CheckboxBackground);
+		WindowsActiveCheckboxDrawObject->getDrawObjects().push_back(CheckboxActiveBackground);
+		WindowsActiveCheckboxDrawObject->getDrawObjects().push_back(CheckboxCheckQuad1);
+		WindowsActiveCheckboxDrawObject->getDrawObjects().push_back(CheckboxCheckQuad2);
 	endEditCP(WindowsActiveCheckboxDrawObject);
 
 
@@ -1425,33 +1425,33 @@ void WindowsLookAndFeel::init(void)
 
     //Rollover Selected
 	beginEditCP(WindowsRolloverSelectedCheckboxDrawObject);
-		WindowsRolloverSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
-		WindowsRolloverSelectedCheckboxDrawObject->getDrawObjects().addValue(RolloverCheckboxBorder);
-		WindowsRolloverSelectedCheckboxDrawObject->getDrawObjects().addValue(RolloverCheckboxBackground);
-		WindowsRolloverSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxCheckQuad1);
-		WindowsRolloverSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxCheckQuad2);
+		WindowsRolloverSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxBackgroundBorder);
+		WindowsRolloverSelectedCheckboxDrawObject->getDrawObjects().push_back(RolloverCheckboxBorder);
+		WindowsRolloverSelectedCheckboxDrawObject->getDrawObjects().push_back(RolloverCheckboxBackground);
+		WindowsRolloverSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxCheckQuad1);
+		WindowsRolloverSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxCheckQuad2);
 	endEditCP(WindowsRolloverSelectedCheckboxDrawObject);
 
     //Rollover Non-selected
 	beginEditCP(WindowsRolloverCheckboxDrawObject);
-		WindowsRolloverCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
-		WindowsRolloverCheckboxDrawObject->getDrawObjects().addValue(RolloverCheckboxBorder);
-		WindowsRolloverCheckboxDrawObject->getDrawObjects().addValue(RolloverCheckboxBackground);
+		WindowsRolloverCheckboxDrawObject->getDrawObjects().push_back(CheckboxBackgroundBorder);
+		WindowsRolloverCheckboxDrawObject->getDrawObjects().push_back(RolloverCheckboxBorder);
+		WindowsRolloverCheckboxDrawObject->getDrawObjects().push_back(RolloverCheckboxBackground);
 	endEditCP(WindowsRolloverCheckboxDrawObject);
 
     //Disabled Selected
 	beginEditCP(WindowsDisabledSelectedCheckboxDrawObject);
-		WindowsDisabledSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxDisabledBackgroundBorder);
-		WindowsDisabledSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxDisabledBackground);
-		WindowsDisabledSelectedCheckboxDrawObject->getDrawObjects().addValue(RolloverCheckboxBackground);
-		WindowsDisabledSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxDisabledCheckQuad1);
-		WindowsDisabledSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxDisabledCheckQuad2);
+		WindowsDisabledSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxDisabledBackgroundBorder);
+		WindowsDisabledSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxDisabledBackground);
+		WindowsDisabledSelectedCheckboxDrawObject->getDrawObjects().push_back(RolloverCheckboxBackground);
+		WindowsDisabledSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxDisabledCheckQuad1);
+		WindowsDisabledSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxDisabledCheckQuad2);
 	endEditCP(WindowsDisabledSelectedCheckboxDrawObject);
 
     //Disabled Non-selected
 	beginEditCP(WindowsDisabledCheckboxDrawObject);
-		WindowsDisabledCheckboxDrawObject->getDrawObjects().addValue(CheckboxDisabledBackgroundBorder);
-		WindowsDisabledCheckboxDrawObject->getDrawObjects().addValue(CheckboxDisabledBackground);
+		WindowsDisabledCheckboxDrawObject->getDrawObjects().push_back(CheckboxDisabledBackgroundBorder);
+		WindowsDisabledCheckboxDrawObject->getDrawObjects().push_back(CheckboxDisabledBackground);
 	endEditCP(WindowsDisabledCheckboxDrawObject);
 
     //Border
@@ -1633,53 +1633,53 @@ void WindowsLookAndFeel::init(void)
 	endEditCP(RadioRolloverBorder);
 
 	beginEditCP(WindowsRadioDrawObject);
-		WindowsRadioDrawObject->getDrawObjects().addValue(RadioBackground);
-		WindowsRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
+		WindowsRadioDrawObject->getDrawObjects().push_back(RadioBackground);
+		WindowsRadioDrawObject->getDrawObjects().push_back(RadioBackgroundBorder);
 	endEditCP(WindowsRadioDrawObject);
 
 	beginEditCP(WindowsSelectedRadioDrawObject);
-		WindowsSelectedRadioDrawObject->getDrawObjects().addValue(RadioBackground);
-		WindowsSelectedRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
-		WindowsSelectedRadioDrawObject->getDrawObjects().addValue(RadioSelected);
+		WindowsSelectedRadioDrawObject->getDrawObjects().push_back(RadioBackground);
+		WindowsSelectedRadioDrawObject->getDrawObjects().push_back(RadioBackgroundBorder);
+		WindowsSelectedRadioDrawObject->getDrawObjects().push_back(RadioSelected);
 	endEditCP(WindowsSelectedRadioDrawObject);
 
 	beginEditCP(WindowsActiveRadioDrawObject);
-		WindowsActiveRadioDrawObject->getDrawObjects().addValue(RadioActiveBackground);
-		WindowsActiveRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
-		WindowsActiveRadioDrawObject->getDrawObjects().addValue(RadioSelected);
+		WindowsActiveRadioDrawObject->getDrawObjects().push_back(RadioActiveBackground);
+		WindowsActiveRadioDrawObject->getDrawObjects().push_back(RadioBackgroundBorder);
+		WindowsActiveRadioDrawObject->getDrawObjects().push_back(RadioSelected);
 	endEditCP(WindowsActiveRadioDrawObject);
 
 	beginEditCP(WindowsActiveSelectedRadioDrawObject);
-		WindowsActiveSelectedRadioDrawObject->getDrawObjects().addValue(RadioActiveBackground);
-		WindowsActiveSelectedRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
+		WindowsActiveSelectedRadioDrawObject->getDrawObjects().push_back(RadioActiveBackground);
+		WindowsActiveSelectedRadioDrawObject->getDrawObjects().push_back(RadioBackgroundBorder);
 	endEditCP(WindowsActiveSelectedRadioDrawObject);
     
     //Rollover Not Selected
 	beginEditCP(WindowsRolloverRadioDrawObject);
-		WindowsRolloverRadioDrawObject->getDrawObjects().addValue(RadioBackground);
-		WindowsRolloverRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
-		WindowsRolloverRadioDrawObject->getDrawObjects().addValue(RadioRolloverBorder);
+		WindowsRolloverRadioDrawObject->getDrawObjects().push_back(RadioBackground);
+		WindowsRolloverRadioDrawObject->getDrawObjects().push_back(RadioBackgroundBorder);
+		WindowsRolloverRadioDrawObject->getDrawObjects().push_back(RadioRolloverBorder);
 	endEditCP(WindowsRolloverRadioDrawObject);
 
     //Rollover Selected
 	beginEditCP(WindowsRolloverSelectedRadioDrawObject);
-		WindowsRolloverSelectedRadioDrawObject->getDrawObjects().addValue(RadioBackground);
-		WindowsRolloverSelectedRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
-		WindowsRolloverSelectedRadioDrawObject->getDrawObjects().addValue(RadioRolloverBorder);
-		WindowsRolloverSelectedRadioDrawObject->getDrawObjects().addValue(RadioSelected);
+		WindowsRolloverSelectedRadioDrawObject->getDrawObjects().push_back(RadioBackground);
+		WindowsRolloverSelectedRadioDrawObject->getDrawObjects().push_back(RadioBackgroundBorder);
+		WindowsRolloverSelectedRadioDrawObject->getDrawObjects().push_back(RadioRolloverBorder);
+		WindowsRolloverSelectedRadioDrawObject->getDrawObjects().push_back(RadioSelected);
 	endEditCP(WindowsRolloverSelectedRadioDrawObject);
     
     //Disabled Not Selected
 	beginEditCP(WindowsDisabledRadioDrawObject);
-		WindowsDisabledRadioDrawObject->getDrawObjects().addValue(RadioDisabledBackground);
-		WindowsDisabledRadioDrawObject->getDrawObjects().addValue(RadioDisabledBackgroundBorder);
+		WindowsDisabledRadioDrawObject->getDrawObjects().push_back(RadioDisabledBackground);
+		WindowsDisabledRadioDrawObject->getDrawObjects().push_back(RadioDisabledBackgroundBorder);
 	endEditCP(WindowsDisabledRadioDrawObject);
 
     //Disabled Selected
 	beginEditCP(WindowsDisabledSelectedRadioDrawObject);
-		WindowsDisabledSelectedRadioDrawObject->getDrawObjects().addValue(RadioDisabledBackground);
-		WindowsDisabledSelectedRadioDrawObject->getDrawObjects().addValue(RadioDisabledBackgroundBorder);
-		WindowsDisabledSelectedRadioDrawObject->getDrawObjects().addValue(RadioDisabledSelected);
+		WindowsDisabledSelectedRadioDrawObject->getDrawObjects().push_back(RadioDisabledBackground);
+		WindowsDisabledSelectedRadioDrawObject->getDrawObjects().push_back(RadioDisabledBackgroundBorder);
+		WindowsDisabledSelectedRadioDrawObject->getDrawObjects().push_back(RadioDisabledSelected);
 	endEditCP(WindowsDisabledSelectedRadioDrawObject);
 		
 	EmptyBorderPtr WindowsRadioButtonBorder = EmptyBorder::create();
@@ -2126,14 +2126,14 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(MenuExpandablePolygon);
 		MenuExpandablePolygon->setColor(Color4f(0.0,0.0,0.0,1.0));
 		MenuExpandablePolygon->setOpacity(1.0);
-        MenuExpandablePolygon->getVerticies().addValue(Pnt2f(0,0));
-        MenuExpandablePolygon->getVerticies().addValue(Pnt2f(0,7));
-        MenuExpandablePolygon->getVerticies().addValue(Pnt2f(4,4));
+        MenuExpandablePolygon->getVerticies().push_back(Pnt2f(0,0));
+        MenuExpandablePolygon->getVerticies().push_back(Pnt2f(0,7));
+        MenuExpandablePolygon->getVerticies().push_back(Pnt2f(4,4));
 	endEditCP(MenuExpandablePolygon);
 
 	UIDrawObjectCanvasPtr defaultMenuDrawObject = UIDrawObjectCanvas::create();
 	beginEditCP(defaultMenuDrawObject);
-	   defaultMenuDrawObject->getDrawObjects().addValue(MenuExpandablePolygon);
+	   defaultMenuDrawObject->getDrawObjects().push_back(MenuExpandablePolygon);
 	endEditCP(defaultMenuDrawObject);
 
 	//Windows Menu
@@ -2324,25 +2324,25 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsScrollBarVerticalMinButtonDrawObject1);
 		WindowsScrollBarVerticalMinButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsScrollBarVerticalMinButtonDrawObject1->setOpacity(1.0);
-        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().addValue(Pnt2f(0,4));
-        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().addValue(Pnt2f(4,0));
-        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().addValue(Pnt2f(4,2));
-        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().addValue(Pnt2f(1,5));
+        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().push_back(Pnt2f(0,4));
+        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().push_back(Pnt2f(4,0));
+        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().push_back(Pnt2f(4,2));
+        WindowsScrollBarVerticalMinButtonDrawObject1->getVerticies().push_back(Pnt2f(1,5));
 	endEditCP(WindowsScrollBarVerticalMinButtonDrawObject1);
 	PolygonUIDrawObjectPtr WindowsScrollBarVerticalMinButtonDrawObject2 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsScrollBarVerticalMinButtonDrawObject2);
 		WindowsScrollBarVerticalMinButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsScrollBarVerticalMinButtonDrawObject2->setOpacity(1.0);
-        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().addValue(Pnt2f(4,0));
-        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().addValue(Pnt2f(8,4));
-        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().addValue(Pnt2f(7,5));
-        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().addValue(Pnt2f(4,2));
+        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().push_back(Pnt2f(4,0));
+        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().push_back(Pnt2f(8,4));
+        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().push_back(Pnt2f(7,5));
+        WindowsScrollBarVerticalMinButtonDrawObject2->getVerticies().push_back(Pnt2f(4,2));
 	endEditCP(WindowsScrollBarVerticalMinButtonDrawObject2);
 
 	UIDrawObjectCanvasPtr WindowsScrollBarVerticalMinButtonCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(WindowsScrollBarVerticalMinButtonCanvas);
-	   WindowsScrollBarVerticalMinButtonCanvas->getDrawObjects().addValue(WindowsScrollBarVerticalMinButtonDrawObject1);
-	   WindowsScrollBarVerticalMinButtonCanvas->getDrawObjects().addValue(WindowsScrollBarVerticalMinButtonDrawObject2);
+	   WindowsScrollBarVerticalMinButtonCanvas->getDrawObjects().push_back(WindowsScrollBarVerticalMinButtonDrawObject1);
+	   WindowsScrollBarVerticalMinButtonCanvas->getDrawObjects().push_back(WindowsScrollBarVerticalMinButtonDrawObject2);
 	endEditCP(WindowsScrollBarVerticalMinButtonCanvas);
 
     //Vertical Min Button
@@ -2410,25 +2410,25 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsScrollBarVerticalMaxButtonDrawObject1);
 		WindowsScrollBarVerticalMaxButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsScrollBarVerticalMaxButtonDrawObject1->setOpacity(1.0);
-        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().addValue(Pnt2f(1,0));
-        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().addValue(Pnt2f(4,3));
-        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().addValue(Pnt2f(4,5));
-        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().addValue(Pnt2f(0,1));
+        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().push_back(Pnt2f(1,0));
+        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().push_back(Pnt2f(4,3));
+        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().push_back(Pnt2f(4,5));
+        WindowsScrollBarVerticalMaxButtonDrawObject1->getVerticies().push_back(Pnt2f(0,1));
 	endEditCP(WindowsScrollBarVerticalMaxButtonDrawObject1);
 	PolygonUIDrawObjectPtr WindowsScrollBarVerticalMaxButtonDrawObject2 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsScrollBarVerticalMaxButtonDrawObject2);
 		WindowsScrollBarVerticalMaxButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsScrollBarVerticalMaxButtonDrawObject2->setOpacity(1.0);
-        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().addValue(Pnt2f(4,3));
-        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().addValue(Pnt2f(7,0));
-        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().addValue(Pnt2f(8,1));
-        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().addValue(Pnt2f(4,5));
+        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().push_back(Pnt2f(4,3));
+        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().push_back(Pnt2f(7,0));
+        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().push_back(Pnt2f(8,1));
+        WindowsScrollBarVerticalMaxButtonDrawObject2->getVerticies().push_back(Pnt2f(4,5));
 	endEditCP(WindowsScrollBarVerticalMaxButtonDrawObject2);
 
 	UIDrawObjectCanvasPtr WindowsScrollBarVerticalMaxButtonCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(WindowsScrollBarVerticalMaxButtonCanvas);
-	   WindowsScrollBarVerticalMaxButtonCanvas->getDrawObjects().addValue(WindowsScrollBarVerticalMaxButtonDrawObject1);
-	   WindowsScrollBarVerticalMaxButtonCanvas->getDrawObjects().addValue(WindowsScrollBarVerticalMaxButtonDrawObject2);
+	   WindowsScrollBarVerticalMaxButtonCanvas->getDrawObjects().push_back(WindowsScrollBarVerticalMaxButtonDrawObject1);
+	   WindowsScrollBarVerticalMaxButtonCanvas->getDrawObjects().push_back(WindowsScrollBarVerticalMaxButtonDrawObject2);
 	endEditCP(WindowsScrollBarVerticalMaxButtonCanvas);
     //Vertical Max Button
 	ButtonPtr WindowsScrollBarVerticalMaxButton = Button::create();
@@ -2463,25 +2463,25 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsScrollBarHorizontalMinButtonDrawObject1);
 		WindowsScrollBarHorizontalMinButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsScrollBarHorizontalMinButtonDrawObject1->setOpacity(1.0);
-        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().addValue(Pnt2f(0,4));
-        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().addValue(Pnt2f(4,0));
-        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().addValue(Pnt2f(5,1));
-        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().addValue(Pnt2f(2,4));
+        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().push_back(Pnt2f(0,4));
+        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().push_back(Pnt2f(4,0));
+        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().push_back(Pnt2f(5,1));
+        WindowsScrollBarHorizontalMinButtonDrawObject1->getVerticies().push_back(Pnt2f(2,4));
 	endEditCP(WindowsScrollBarHorizontalMinButtonDrawObject1);
 	PolygonUIDrawObjectPtr WindowsScrollBarHorizontalMinButtonDrawObject2 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsScrollBarHorizontalMinButtonDrawObject2);
 		WindowsScrollBarHorizontalMinButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsScrollBarHorizontalMinButtonDrawObject2->setOpacity(1.0);
-        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().addValue(Pnt2f(0,4));
-        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().addValue(Pnt2f(2,4));
-        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().addValue(Pnt2f(5,7));
-        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().addValue(Pnt2f(4,8));
+        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().push_back(Pnt2f(0,4));
+        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().push_back(Pnt2f(2,4));
+        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().push_back(Pnt2f(5,7));
+        WindowsScrollBarHorizontalMinButtonDrawObject2->getVerticies().push_back(Pnt2f(4,8));
 	endEditCP(WindowsScrollBarHorizontalMinButtonDrawObject2);
     
 	UIDrawObjectCanvasPtr WindowsScrollBarHorizontalMinButtonCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(WindowsScrollBarHorizontalMinButtonCanvas);
-	   WindowsScrollBarHorizontalMinButtonCanvas->getDrawObjects().addValue(WindowsScrollBarHorizontalMinButtonDrawObject1);
-	   WindowsScrollBarHorizontalMinButtonCanvas->getDrawObjects().addValue(WindowsScrollBarHorizontalMinButtonDrawObject2);
+	   WindowsScrollBarHorizontalMinButtonCanvas->getDrawObjects().push_back(WindowsScrollBarHorizontalMinButtonDrawObject1);
+	   WindowsScrollBarHorizontalMinButtonCanvas->getDrawObjects().push_back(WindowsScrollBarHorizontalMinButtonDrawObject2);
 	endEditCP(WindowsScrollBarHorizontalMinButtonCanvas);
 
     //Horizontal Min Button
@@ -2517,25 +2517,25 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsScrollBarHorizontalMaxButtonDrawObject1);
 		WindowsScrollBarHorizontalMaxButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsScrollBarHorizontalMaxButtonDrawObject1->setOpacity(1.0);
-        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().addValue(Pnt2f(0,1));
-        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().addValue(Pnt2f(1,0));
-        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().addValue(Pnt2f(5,4));
-        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().addValue(Pnt2f(3,4));
+        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().push_back(Pnt2f(0,1));
+        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().push_back(Pnt2f(1,0));
+        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().push_back(Pnt2f(5,4));
+        WindowsScrollBarHorizontalMaxButtonDrawObject1->getVerticies().push_back(Pnt2f(3,4));
 	endEditCP(WindowsScrollBarHorizontalMaxButtonDrawObject1);
 	PolygonUIDrawObjectPtr WindowsScrollBarHorizontalMaxButtonDrawObject2 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsScrollBarHorizontalMaxButtonDrawObject2);
 		WindowsScrollBarHorizontalMaxButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsScrollBarHorizontalMaxButtonDrawObject2->setOpacity(1.0);
-        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().addValue(Pnt2f(3,4));
-        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().addValue(Pnt2f(5,4));
-        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().addValue(Pnt2f(1,8));
-        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().addValue(Pnt2f(0,7));
+        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().push_back(Pnt2f(3,4));
+        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().push_back(Pnt2f(5,4));
+        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().push_back(Pnt2f(1,8));
+        WindowsScrollBarHorizontalMaxButtonDrawObject2->getVerticies().push_back(Pnt2f(0,7));
 	endEditCP(WindowsScrollBarHorizontalMaxButtonDrawObject2);
     
 	UIDrawObjectCanvasPtr WindowsScrollBarHorizontalMaxButtonCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(WindowsScrollBarHorizontalMaxButtonCanvas);
-	   WindowsScrollBarHorizontalMaxButtonCanvas->getDrawObjects().addValue(WindowsScrollBarHorizontalMaxButtonDrawObject1);
-	   WindowsScrollBarHorizontalMaxButtonCanvas->getDrawObjects().addValue(WindowsScrollBarHorizontalMaxButtonDrawObject2);
+	   WindowsScrollBarHorizontalMaxButtonCanvas->getDrawObjects().push_back(WindowsScrollBarHorizontalMaxButtonDrawObject1);
+	   WindowsScrollBarHorizontalMaxButtonCanvas->getDrawObjects().push_back(WindowsScrollBarHorizontalMaxButtonDrawObject2);
 	endEditCP(WindowsScrollBarHorizontalMaxButtonCanvas);
     //Horizontal Max Button
 	ButtonPtr WindowsScrollBarHorizontalMaxButton = Button::create();
@@ -3511,25 +3511,25 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsSpinnerNextButtonDrawObject1);
 		WindowsSpinnerNextButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsSpinnerNextButtonDrawObject1->setOpacity(1.0);
-        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2f(0,4));
-        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2f(4,0));
-        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2f(4,2));
-        WindowsSpinnerNextButtonDrawObject1->getVerticies().addValue(Pnt2f(1,5));
+        WindowsSpinnerNextButtonDrawObject1->getVerticies().push_back(Pnt2f(0,4));
+        WindowsSpinnerNextButtonDrawObject1->getVerticies().push_back(Pnt2f(4,0));
+        WindowsSpinnerNextButtonDrawObject1->getVerticies().push_back(Pnt2f(4,2));
+        WindowsSpinnerNextButtonDrawObject1->getVerticies().push_back(Pnt2f(1,5));
 	endEditCP(WindowsSpinnerNextButtonDrawObject1);
 	PolygonUIDrawObjectPtr WindowsSpinnerNextButtonDrawObject2 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsSpinnerNextButtonDrawObject2);
 		WindowsSpinnerNextButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsSpinnerNextButtonDrawObject2->setOpacity(1.0);
-        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2f(4,0));
-        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2f(8,4));
-        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2f(7,5));
-        WindowsSpinnerNextButtonDrawObject2->getVerticies().addValue(Pnt2f(4,2));
+        WindowsSpinnerNextButtonDrawObject2->getVerticies().push_back(Pnt2f(4,0));
+        WindowsSpinnerNextButtonDrawObject2->getVerticies().push_back(Pnt2f(8,4));
+        WindowsSpinnerNextButtonDrawObject2->getVerticies().push_back(Pnt2f(7,5));
+        WindowsSpinnerNextButtonDrawObject2->getVerticies().push_back(Pnt2f(4,2));
 	endEditCP(WindowsSpinnerNextButtonDrawObject2);
     
 	UIDrawObjectCanvasPtr WindowsSpinnerNextButtonCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(WindowsSpinnerNextButtonCanvas);
-	   WindowsSpinnerNextButtonCanvas->getDrawObjects().addValue(WindowsSpinnerNextButtonDrawObject1);
-	   WindowsSpinnerNextButtonCanvas->getDrawObjects().addValue(WindowsSpinnerNextButtonDrawObject2);
+	   WindowsSpinnerNextButtonCanvas->getDrawObjects().push_back(WindowsSpinnerNextButtonDrawObject1);
+	   WindowsSpinnerNextButtonCanvas->getDrawObjects().push_back(WindowsSpinnerNextButtonDrawObject2);
 	endEditCP(WindowsSpinnerNextButtonCanvas);
 
     ButtonPtr WindowsSpinnerNextButton = Button::create();
@@ -3567,25 +3567,25 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsSpinnerPreviousButtonDrawObject1);
 		WindowsSpinnerPreviousButtonDrawObject1->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsSpinnerPreviousButtonDrawObject1->setOpacity(1.0);
-        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2f(1,0));
-        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2f(4,3));
-        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2f(4,5));
-        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().addValue(Pnt2f(0,1));
+        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().push_back(Pnt2f(1,0));
+        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().push_back(Pnt2f(4,3));
+        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().push_back(Pnt2f(4,5));
+        WindowsSpinnerPreviousButtonDrawObject1->getVerticies().push_back(Pnt2f(0,1));
 	endEditCP(WindowsSpinnerPreviousButtonDrawObject1);
 	PolygonUIDrawObjectPtr WindowsSpinnerPreviousButtonDrawObject2 = PolygonUIDrawObject::create();
 	beginEditCP(WindowsSpinnerPreviousButtonDrawObject2);
 		WindowsSpinnerPreviousButtonDrawObject2->setColor(Color4f(0.3,0.38,0.52,1.0));
 		WindowsSpinnerPreviousButtonDrawObject2->setOpacity(1.0);
-        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2f(4,3));
-        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2f(7,0));
-        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2f(8,1));
-        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().addValue(Pnt2f(4,5));
+        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().push_back(Pnt2f(4,3));
+        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().push_back(Pnt2f(7,0));
+        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().push_back(Pnt2f(8,1));
+        WindowsSpinnerPreviousButtonDrawObject2->getVerticies().push_back(Pnt2f(4,5));
 	endEditCP(WindowsSpinnerPreviousButtonDrawObject2);
     
 	UIDrawObjectCanvasPtr WindowsSpinnerPreviousButtonCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(WindowsSpinnerPreviousButtonCanvas);
-	   WindowsSpinnerPreviousButtonCanvas->getDrawObjects().addValue(WindowsSpinnerPreviousButtonDrawObject1);
-	   WindowsSpinnerPreviousButtonCanvas->getDrawObjects().addValue(WindowsSpinnerPreviousButtonDrawObject2);
+	   WindowsSpinnerPreviousButtonCanvas->getDrawObjects().push_back(WindowsSpinnerPreviousButtonDrawObject1);
+	   WindowsSpinnerPreviousButtonCanvas->getDrawObjects().push_back(WindowsSpinnerPreviousButtonDrawObject2);
 	endEditCP(WindowsSpinnerPreviousButtonCanvas);
     ButtonPtr WindowsSpinnerPreviousButton = Button::create();
     beginEditCP(WindowsSpinnerPreviousButton);
@@ -4483,37 +4483,37 @@ void WindowsLookAndFeel::init(void)
 
 
 	beginEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);
-		getPrototypes().addValue(WindowsButton);
-		getPrototypes().addValue(WindowsLabel);
-		getPrototypes().addValue(WindowsInternalWindow);
-		getPrototypes().addValue(WindowsDialogWindow);
-		getPrototypes().addValue(WindowsPanel);
-		getPrototypes().addValue(WindowsSplitPanel);
-		getPrototypes().addValue(WindowsImageComponent);
-		getPrototypes().addValue(WindowsCheckboxButton);
-		getPrototypes().addValue(WindowsRadioButton);
-		getPrototypes().addValue(WindowsToggleButton);
-		getPrototypes().addValue(WindowsTextField);
-		getPrototypes().addValue(WindowsPasswordField);
-		getPrototypes().addValue(WindowsToolTip);
-		getPrototypes().addValue(WindowsLabelMenuItem);
-		getPrototypes().addValue(WindowsSeperatorMenuItem);
-		getPrototypes().addValue(WindowsMenu);
-		getPrototypes().addValue(WindowsPopupMenu);
-		getPrototypes().addValue(WindowsMenuBar);
-		getPrototypes().addValue(WindowsRotatedComponent);
-		getPrototypes().addValue(WindowsScrollBar);
-		getPrototypes().addValue(WindowsScrollPanel);
-		getPrototypes().addValue(WindowsUIViewport);
-		getPrototypes().addValue(WindowsList);
-		getPrototypes().addValue(WindowsTableHeader);
-		getPrototypes().addValue(WindowsTable);
-		getPrototypes().addValue(WindowsSpinnerDefaultEditor);
-		getPrototypes().addValue(WindowsSpinnerNumberEditor);
-		getPrototypes().addValue(WindowsSlider);
-		getPrototypes().addValue(WindowsComboBox);
-		getPrototypes().addValue(WindowsTree);
-		getPrototypes().addValue(WindowsToolbar);
+		getPrototypes().push_back(WindowsButton);
+		getPrototypes().push_back(WindowsLabel);
+		getPrototypes().push_back(WindowsInternalWindow);
+		getPrototypes().push_back(WindowsDialogWindow);
+		getPrototypes().push_back(WindowsPanel);
+		getPrototypes().push_back(WindowsSplitPanel);
+		getPrototypes().push_back(WindowsImageComponent);
+		getPrototypes().push_back(WindowsCheckboxButton);
+		getPrototypes().push_back(WindowsRadioButton);
+		getPrototypes().push_back(WindowsToggleButton);
+		getPrototypes().push_back(WindowsTextField);
+		getPrototypes().push_back(WindowsPasswordField);
+		getPrototypes().push_back(WindowsToolTip);
+		getPrototypes().push_back(WindowsLabelMenuItem);
+		getPrototypes().push_back(WindowsSeperatorMenuItem);
+		getPrototypes().push_back(WindowsMenu);
+		getPrototypes().push_back(WindowsPopupMenu);
+		getPrototypes().push_back(WindowsMenuBar);
+		getPrototypes().push_back(WindowsRotatedComponent);
+		getPrototypes().push_back(WindowsScrollBar);
+		getPrototypes().push_back(WindowsScrollPanel);
+		getPrototypes().push_back(WindowsUIViewport);
+		getPrototypes().push_back(WindowsList);
+		getPrototypes().push_back(WindowsTableHeader);
+		getPrototypes().push_back(WindowsTable);
+		getPrototypes().push_back(WindowsSpinnerDefaultEditor);
+		getPrototypes().push_back(WindowsSpinnerNumberEditor);
+		getPrototypes().push_back(WindowsSlider);
+		getPrototypes().push_back(WindowsComboBox);
+		getPrototypes().push_back(WindowsTree);
+		getPrototypes().push_back(WindowsToolbar);
 	endEditCP(WindowsLookAndFeelPtr(this), WindowsLookAndFeel::PrototypesFieldMask);
 }
 /*-------------------------------------------------------------------------*\

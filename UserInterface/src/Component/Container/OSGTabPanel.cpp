@@ -183,8 +183,8 @@ void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 	UIBackgroundPtr DrawnTabBackground;
 	for (UInt32 i = 0; i < getTabs().size(); ++i)
 	{
-		TabPosition = getTabs().getValue(i)->getPosition();
-		TabSize = getTabs().getValue(i)->getSize();
+		TabPosition = getTabs()[i]->getPosition();
+		TabSize = getTabs()[i]->getSize();
 
 		DrawnTabBorder = getDrawnTabBorder(i);
 		DrawnTabBackground = getDrawnTabBackground(i);
@@ -212,7 +212,7 @@ void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 		}
 
 		//Draw the tab component
-		getTabs().getValue(i)->draw(Graphics);
+		getTabs()[i]->draw(Graphics);
 		
 		setupClipping(Graphics);
 
@@ -227,7 +227,7 @@ void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 	//Draw the Content of the active tab
 	if(getTabContents().size() > 0)
 	{
-		ComponentPtr ContentComponent(getTabContents().getValue(getActiveTab()));
+		ComponentPtr ContentComponent(getTabContents()[getActiveTab()]);
 
 		BorderPtr DrawnContentBorder = getDrawnContentBorder();
 		UIBackgroundPtr DrawnContentBackground = getDrawnContentBackground();
@@ -270,7 +270,7 @@ void TabPanel::focusGained(const FocusEvent& e)
 
 	for (UInt32 i = 0; i < getTabs().size(); ++i)
 	{
-		if(getTabs().find(Tab) == getTabs().find(getTabs().getValue(i)))
+		if(getTabs().find(Tab) == getTabs().find(getTabs()[i]))
 			index = i;
 	}
 	if (index != -1)
@@ -295,10 +295,10 @@ void TabPanel::addTab(const ComponentPtr Tab, const ComponentPtr TabContent)
 	Tab->addFocusListener(this);
 
 	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
-		getTabs().addValue(Tab);
-		getTabContents().addValue(TabContent);
-		getChildren().addValue(Tab);
-		getChildren().addValue(TabContent);
+		getTabs().push_back(Tab);
+		getTabContents().push_back(TabContent);
+		getChildren().push_back(Tab);
+		getChildren().push_back(TabContent);
 	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
 }
 
@@ -313,39 +313,39 @@ void TabPanel::removeTab(const ComponentPtr Tab)
 		{	// so it isn't in tabs
 			for (UInt32 i = 0; i < getTabContents().size(); ++i)
 			{
-				if(getTabContents().find(Tab) == getTabContents().find(getTabContents().getValue(i)))
+				if(getTabContents().find(Tab) == getTabContents().find(getTabContents()[i]))
 					index = i;
 			}
 			getTabContents().erase(getTabContents().find(Tab));
 			// also erase the the tab from the components list
-			getTabs().getValue(index)->removeFocusListener(this);
-			getChildren().erase(getChildren().find(getTabs().getValue(index)));
-			getTabs().erase(getTabs().find(getTabs().getValue(index)));
+			getTabs()[index]->removeFocusListener(this);
+			getChildren().erase(getChildren().find(getTabs()[index]));
+			getTabs().erase(getTabs().find(getTabs()[index]));
 		}
 		else
 		{
 			for (UInt32 i = 0; i < getTabs().size(); ++i)
 			{
-				if(getTabs().find(Tab) == getTabs().find(getTabs().getValue(i)))
+				if(getTabs().find(Tab) == getTabs().find(getTabs()[i]))
 					index = i;
 			}
 			Tab->removeFocusListener(this);
 			getTabs().erase(getTabs().find(Tab));
 			// also erase the the tab from the components list
-			getChildren().erase(getChildren().find(getTabContents().getValue(index))); 
-			getTabContents().erase(getTabContents().find(getTabContents().getValue(index)));
+			getChildren().erase(getChildren().find(getTabContents()[index])); 
+			getTabContents().erase(getTabContents().find(getTabContents()[index]));
 		}
 	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
 }
 
 void TabPanel::removeTab(const UInt32 TabIndex)
 {
-	getTabs().getValue(TabIndex)->removeFocusListener(this);
+	getTabs()[TabIndex]->removeFocusListener(this);
 	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
-		getChildren().erase(getChildren().find(getTabs().getValue(TabIndex))); // an incredibly ridiculous function call
-		getChildren().erase(getChildren().find(getTabContents().getValue(TabIndex)));
-		getTabs().erase(getTabs().find(getTabs().getValue(TabIndex))); // an incredibly ridiculous function call
-		getTabContents().erase(getTabContents().find(getTabContents().getValue(TabIndex)));
+		getChildren().erase(getChildren().find(getTabs()[TabIndex])); // an incredibly ridiculous function call
+		getChildren().erase(getChildren().find(getTabContents()[TabIndex]));
+		getTabs().erase(getTabs().find(getTabs()[TabIndex])); // an incredibly ridiculous function call
+		getTabContents().erase(getTabContents().find(getTabContents()[TabIndex]));
 	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
 }
 
@@ -353,7 +353,7 @@ void TabPanel::removeAllTabs(void)
 {
 	for(UInt32 i(0) ; i<getTabs().size() ; ++i)
 	{
-		getTabs().getValue(i)->removeFocusListener(this);
+		getTabs()[i]->removeFocusListener(this);
 	}
 
 	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
@@ -368,28 +368,28 @@ void TabPanel::insertTab(const ComponentPtr TabInsert, const ComponentPtr Tab, c
 	Tab->addFocusListener(this);
 	UInt32 index(0);
 	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask | ChildrenFieldMask);
-		getChildren().addValue(Tab);
-		getChildren().addValue(TabContent);
+		getChildren().push_back(Tab);
+		getChildren().push_back(TabContent);
 		// check if the component is a tab or tabcontent, then insert accordingly
 		if (getTabs().end() == getTabs().find(TabInsert))
 		{
 			for (UInt32 i = 0; i < getTabContents().size(); ++i)
 			{
-				if(getTabContents().find(TabInsert) == getTabContents().find(getTabContents().getValue(i)))
+				if(getTabContents().find(TabInsert) == getTabContents().find(getTabContents()[i]))
 					index = i;
 			}
 			getTabContents().insert(getTabContents().find(TabInsert), TabContent);
-			getTabs().insert(getTabs().find(getTabs().getValue(index)), Tab);
+			getTabs().insert(getTabs().find(getTabs()[index]), Tab);
 		}
 		else
 		{
 			for (UInt32 i = 0; i < getTabs().size(); ++i)
 			{
-				if(getTabs().find(TabInsert) == getTabs().find(getTabs().getValue(i)))
+				if(getTabs().find(TabInsert) == getTabs().find(getTabs()[i]))
 					index = i;
 			}
 			getTabs().insert(getTabs().find(TabInsert), Tab);
-			getTabContents().insert(getTabContents().find(getTabContents().getValue(index)), TabContent);
+			getTabContents().insert(getTabContents().find(getTabContents()[index]), TabContent);
 		}
 		endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
 }
@@ -398,10 +398,10 @@ void TabPanel::insertTab(const UInt32 TabIndex, const ComponentPtr Tab, const Co
 {
 	Tab->addFocusListener(this);
 	beginEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask | ChildrenFieldMask);
-		getChildren().addValue(Tab);
-		getChildren().addValue(TabContent);
-		getTabs().insert(getTabs().find(getTabs().getValue(TabIndex)), Tab); // an incredibly ridiculous function call
-		getTabContents().insert(getTabContents().find(getTabContents().getValue(TabIndex)), TabContent);
+		getChildren().push_back(Tab);
+		getChildren().push_back(TabContent);
+		getTabs().insert(getTabs().find(getTabs()[TabIndex]), Tab); // an incredibly ridiculous function call
+		getTabContents().insert(getTabContents().find(getTabContents()[TabIndex]), TabContent);
 	endEditCP(TabPanelPtr(this), TabsFieldMask | TabContentsFieldMask| ChildrenFieldMask);
 }
 
@@ -428,10 +428,10 @@ void TabPanel::updateLayout(void)
 	// on the first sweep, get the maximum size and cumLength
 	for (UInt32 i=0; i < getTabs().size(); ++i)
 	{
-		cumMajorAxis += getTabs().getValue(i)->getPreferredSize()[AxisIndex];
-		if (getTabs().getValue(i)->getPreferredSize()[(AxisIndex+1)%2] > largestMinorAxis)
+		cumMajorAxis += getTabs()[i]->getPreferredSize()[AxisIndex];
+		if (getTabs()[i]->getPreferredSize()[(AxisIndex+1)%2] > largestMinorAxis)
 		{
-			largestMinorAxis = getTabs().getValue(i)->getPreferredSize()[(AxisIndex+1)%2];
+			largestMinorAxis = getTabs()[i]->getPreferredSize()[(AxisIndex+1)%2];
 		}
 	}
 	cumMajorAxis += static_cast<Real32>(getTabs().size()) * (TabBorderTopLeftWidth[AxisIndex] + TabBorderBottomRightWidth[AxisIndex]);
@@ -463,11 +463,11 @@ void TabPanel::updateLayout(void)
 	for (UInt32 i=0; i < getTabs().size(); ++i)
 	{
 		offset[AxisIndex] += TabBorderTopLeftWidth[AxisIndex];
-		beginEditCP(getTabs().getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
-			getTabs().getValue(i)->setSize(getTabs().getValue(i)->getPreferredSize());
-			getTabs().getValue(i)->setPosition(alignOffset + offset);
-		endEditCP(getTabs().getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
-		offset[AxisIndex] += getTabs().getValue(i)->getSize()[AxisIndex] + TabBorderBottomRightWidth[AxisIndex];
+		beginEditCP(getTabs()[i], Component::SizeFieldMask|Component::PositionFieldMask);
+			getTabs()[i]->setSize(getTabs()[i]->getPreferredSize());
+			getTabs()[i]->setPosition(alignOffset + offset);
+		endEditCP(getTabs()[i], Component::SizeFieldMask|Component::PositionFieldMask);
+		offset[AxisIndex] += getTabs()[i]->getSize()[AxisIndex] + TabBorderBottomRightWidth[AxisIndex];
 	}
 
 	if(getTabContents().size() > 0)
@@ -482,10 +482,10 @@ void TabPanel::updateLayout(void)
 		}
 		Vec2s ContentsSize(InsideInsetsBottomRight-InsideInsetsTopLeft);
 		ContentsSize[(AxisIndex+1)%2] -= TabSize[(AxisIndex+1)%2];
-		beginEditCP(getTabContents().getValue(getActiveTab()), Component::SizeFieldMask|Component::PositionFieldMask);
-			getTabContents().getValue(getActiveTab())->setSize(ContentsSize);
-			getTabContents().getValue(getActiveTab())->setPosition(offset + ContentBorderTopLeftWidth);
-		endEditCP(getTabContents().getValue(getActiveTab()), Component::SizeFieldMask|Component::PositionFieldMask);
+		beginEditCP(getTabContents()[getActiveTab()], Component::SizeFieldMask|Component::PositionFieldMask);
+			getTabContents()[getActiveTab()]->setSize(ContentsSize);
+			getTabContents()[getActiveTab()]->setPosition(offset + ContentBorderTopLeftWidth);
+		endEditCP(getTabContents()[getActiveTab()], Component::SizeFieldMask|Component::PositionFieldMask);
 	}
 }
 
@@ -494,19 +494,19 @@ void TabPanel::mouseClicked(const MouseEvent& e)
 	bool isContained;
     for(UInt32 i(0) ; i<getTabs().size() ; ++i)
     {
-		isContained = isContainedClipBounds(e.getLocation(), getTabs().getValue(i));
-		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained,e.getViewport());
+		isContained = isContainedClipBounds(e.getLocation(), getTabs()[i]);
+		checkMouseEnterExit(e,e.getLocation(),getTabs()[i],isContained,e.getViewport());
 		if(isContained)
 		{
-			getTabs().getValue(i)->mouseClicked(e);
+			getTabs()[i]->mouseClicked(e);
 		}
     }
 
-	isContained = isContainedClipBounds(e.getLocation(), getTabContents().getValue(getActiveTab()));
-	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained,e.getViewport());
+	isContained = isContainedClipBounds(e.getLocation(), getTabContents()[getActiveTab()]);
+	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getActiveTab()],isContained,e.getViewport());
 	if(isContained)
 	{
-		getTabContents().getValue(getActiveTab())->mouseClicked(e);
+		getTabContents()[getActiveTab()]->mouseClicked(e);
 	}
 
 	Component::mouseClicked(e);
@@ -517,19 +517,19 @@ void TabPanel::mouseEntered(const MouseEvent& e)
 	bool isContained;
     for(UInt32 i(0) ; i<getTabs().size() ; ++i)
     {
-        isContained = getTabs().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained,e.getViewport());
+        isContained = getTabs()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getTabs()[i],isContained,e.getViewport());
 		if(isContained)
 		{
-			getTabs().getValue(i)->mouseDragged(e);
+			getTabs()[i]->mouseDragged(e);
 		}
     }
 
-    isContained = getTabContents().getValue(getActiveTab())->isContained(e.getLocation(), true);
-	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained,e.getViewport());
+    isContained = getTabContents()[getActiveTab()]->isContained(e.getLocation(), true);
+	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getActiveTab()],isContained,e.getViewport());
 	if(isContained)
 	{
-		getTabContents().getValue(getActiveTab())->mouseDragged(e);
+		getTabContents()[getActiveTab()]->mouseDragged(e);
 	}
 
 	Component::mouseEntered(e);
@@ -540,19 +540,19 @@ void TabPanel::mouseExited(const MouseEvent& e)
 	bool isContained;
     for(UInt32 i(0) ; i<getTabs().size() ; ++i)
     {
-        isContained = getTabs().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained,e.getViewport());
+        isContained = getTabs()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getTabs()[i],isContained,e.getViewport());
 		if(isContained)
 		{
-			getTabs().getValue(i)->mouseDragged(e);
+			getTabs()[i]->mouseDragged(e);
 		}
     }
 
-    isContained = getTabContents().getValue(getActiveTab())->isContained(e.getLocation(), true);
-	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained,e.getViewport());
+    isContained = getTabContents()[getActiveTab()]->isContained(e.getLocation(), true);
+	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getActiveTab()],isContained,e.getViewport());
 	if(isContained)
 	{
-		getTabContents().getValue(getActiveTab())->mouseDragged(e);
+		getTabContents()[getActiveTab()]->mouseDragged(e);
 	}
 
 	Component::mouseExited(e);
@@ -563,17 +563,17 @@ void TabPanel::mousePressed(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(getTabs().size()-1) ; i>=0 ; --i)
     {   // going backwards through through elements, so only top button is pressed
-        isContained = getTabs().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained,e.getViewport());
+        isContained = getTabs()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getTabs()[i],isContained,e.getViewport());
 		if(isContained)
 		{
 			//Give myself temporary focus
 			takeFocus(true);
-			if(!getTabs().getValue(i)->getType().isDerivedFrom(Container::getClassType()))
+			if(!getTabs()[i]->getType().isDerivedFrom(Container::getClassType()))
 			{
-				getTabs().getValue(i)->takeFocus();
+				getTabs()[i]->takeFocus();
 			}
-			getTabs().getValue(i)->mousePressed(e);
+			getTabs()[i]->mousePressed(e);
 			break;
 		}
     }
@@ -589,17 +589,17 @@ void TabPanel::mousePressed(const MouseEvent& e)
 	}
 
 	// now do it for the content tab
-    isContained = getTabContents().getValue(getActiveTab())->isContained(e.getLocation(), true);
-	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained,e.getViewport());
+    isContained = getTabContents()[getActiveTab()]->isContained(e.getLocation(), true);
+	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getActiveTab()],isContained,e.getViewport());
 	if(isContained)
 	{
 		//Give myself temporary focus
 		takeFocus(true);
-		if(!getTabContents().getValue(getActiveTab())->getType().isDerivedFrom(Container::getClassType()))
+		if(!getTabContents()[getActiveTab()]->getType().isDerivedFrom(Container::getClassType()))
 		{
-			getTabContents().getValue(getActiveTab())->takeFocus();
+			getTabContents()[getActiveTab()]->takeFocus();
 		}
-		getTabContents().getValue(getActiveTab())->mousePressed(e);
+		getTabContents()[getActiveTab()]->mousePressed(e);
 
 		giveFocus(NullFC, false);
 	}
@@ -617,19 +617,19 @@ void TabPanel::mouseReleased(const MouseEvent& e)
 	bool isContained;
     for(UInt32 i(0) ; i<getTabs().size() ; ++i)
     {
-        isContained = getTabs().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained,e.getViewport());
+        isContained = getTabs()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getTabs()[i],isContained,e.getViewport());
 		if(isContained)
 		{
-			getTabs().getValue(i)->mouseReleased(e);
+			getTabs()[i]->mouseReleased(e);
 		}
     }
 
-    isContained = getTabContents().getValue(getActiveTab())->isContained(e.getLocation(), true);
-	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained,e.getViewport());
+    isContained = getTabContents()[getActiveTab()]->isContained(e.getLocation(), true);
+	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getActiveTab()],isContained,e.getViewport());
 	if(isContained)
 	{
-		getTabContents().getValue(getActiveTab())->mouseReleased(e);
+		getTabContents()[getActiveTab()]->mouseReleased(e);
 	}
 
 	Component::mouseReleased(e);
@@ -641,19 +641,19 @@ void TabPanel::mouseMoved(const MouseEvent& e)
 	bool isContained;
     for(UInt32 i(0) ; i<getTabs().size() ; ++i)
     {
-        isContained = getTabs().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained,e.getViewport());
+        isContained = getTabs()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getTabs()[i],isContained,e.getViewport());
 		if(isContained)
 		{
-			getTabs().getValue(i)->mouseMoved(e);
+			getTabs()[i]->mouseMoved(e);
 		}
     }
 
-    isContained = getTabContents().getValue(getActiveTab())->isContained(e.getLocation(), true);
-	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained,e.getViewport());
+    isContained = getTabContents()[getActiveTab()]->isContained(e.getLocation(), true);
+	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getActiveTab()],isContained,e.getViewport());
 	if(isContained)
 	{
-		getTabContents().getValue(getActiveTab())->mouseMoved(e);
+		getTabContents()[getActiveTab()]->mouseMoved(e);
 	}
 
 	Component::mouseMoved(e);
@@ -664,19 +664,19 @@ void TabPanel::mouseDragged(const MouseEvent& e)
 	bool isContained;
     for(UInt32 i(0) ; i<getTabs().size() ; ++i)
     {
-        isContained = getTabs().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained,e.getViewport());
+        isContained = getTabs()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getTabs()[i],isContained,e.getViewport());
 		if(isContained)
 		{
-			getTabs().getValue(i)->mouseDragged(e);
+			getTabs()[i]->mouseDragged(e);
 		}
     }
 
-    isContained = getTabContents().getValue(getActiveTab())->isContained(e.getLocation(), true);
-	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained,e.getViewport());
+    isContained = getTabContents()[getActiveTab()]->isContained(e.getLocation(), true);
+	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getActiveTab()],isContained,e.getViewport());
 	if(isContained)
 	{
-		getTabContents().getValue(getActiveTab())->mouseDragged(e);
+		getTabContents()[getActiveTab()]->mouseDragged(e);
 	}
 
 	Component::mouseDragged(e);
@@ -687,12 +687,12 @@ void TabPanel::mouseWheelMoved(const MouseWheelEvent& e)
 	bool isContained;
     for(UInt32 i(0) ; i<getTabs().size() ; ++i)
     {
-        isContained = getTabs().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getTabs().getValue(i),isContained,e.getViewport());
+        isContained = getTabs()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getTabs()[i],isContained,e.getViewport());
     }
 
-    isContained = getTabContents().getValue(getActiveTab())->isContained(e.getLocation(), true);
-	checkMouseEnterExit(e,e.getLocation(),getTabContents().getValue(getActiveTab()),isContained,e.getViewport());
+    isContained = getTabContents()[getActiveTab()]->isContained(e.getLocation(), true);
+	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getActiveTab()],isContained,e.getViewport());
 
 	Component::mouseWheelMoved(e);
 }
@@ -709,7 +709,7 @@ BorderPtr TabPanel::getDrawnTabBorder(const UInt32& Index) const
         {
             return getTabRolloverBorder();
         }
-		else if(getTabs().getValue(Index)->getFocused())
+		else if(getTabs()[Index]->getFocused())
         {
             return getTabFocusedBorder();
         }
@@ -736,7 +736,7 @@ UIBackgroundPtr TabPanel::getDrawnTabBackground(const UInt32& Index) const
         {
             return getTabRolloverBackground();
         }
-		else if(getTabs().getValue(Index)->getFocused())
+		else if(getTabs()[Index]->getFocused())
         {
             return getTabFocusedBackground();
         }

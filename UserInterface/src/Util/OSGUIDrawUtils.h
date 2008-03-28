@@ -32,8 +32,10 @@ bool OSG_USERINTERFACELIB_DLLMAPPING isContainedClipBounds(const Pnt2f& Point, c
 bool OSG_USERINTERFACELIB_DLLMAPPING isContainedBounds(const Pnt2f& Point, const Pnt2f& TopLeft, const Pnt2f& BottomRight);
 
 Pnt2f OSG_USERINTERFACELIB_DLLMAPPING DrawingSurfaceToComponent(const Pnt2f& DrawingSurfacePoint, const ComponentPtr Comp);
+Pnt2f OSG_USERINTERFACELIB_DLLMAPPING ViewportToWindow(const Pnt2f& ViewportPoint, const ViewportPtr TheViewport);
 Pnt2f OSG_USERINTERFACELIB_DLLMAPPING ViewportToComponent(const Pnt2f& ViewportPoint, const ComponentPtr Comp, const ViewportPtr TheViewport);
 Pnt2f OSG_USERINTERFACELIB_DLLMAPPING ComponentToViewport(const Pnt2f& ComponentPoint, const ComponentPtr Comp, const ViewportPtr TheViewport);
+Pnt2f OSG_USERINTERFACELIB_DLLMAPPING ComponentToWindow(const Pnt2f& ComponentPoint, const ComponentPtr Comp, const ViewportPtr TheViewport);
 Pnt2f OSG_USERINTERFACELIB_DLLMAPPING ViewportToDrawingSurface(const Pnt2f& ViewportPoint, const UIDrawingSurfacePtr DrawingSurface, const ViewportPtr TheViewport);
 Pnt2f OSG_USERINTERFACELIB_DLLMAPPING DrawingSurfaceToViewport(const Pnt2f& DrawingSurfacePoint, const UIDrawingSurfacePtr DrawingSurface, const ViewportPtr TheViewport);
 Pnt2f OSG_USERINTERFACELIB_DLLMAPPING ComponentToDrawingSurface(const Pnt2f& ComponentPoint, const ComponentPtr Comp);

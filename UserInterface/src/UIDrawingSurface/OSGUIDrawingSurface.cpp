@@ -135,7 +135,7 @@ InternalWindowPtr UIDrawingSurface::getWindowAtLayer(const UInt32& Layer) const
 {
 	if(Layer < getInternalWindows().size())
 	{
-		return getInternalWindows().getValue(Layer);
+		return getInternalWindows()[Layer];
 	}
 	else
 	{
@@ -147,7 +147,7 @@ Int32 UIDrawingSurface::getWindowLayer(InternalWindowPtr TheWindow) const
 {
 	UInt32 i(0);
 	while(i<getInternalWindows().size() &&
-		  getInternalWindows().getValue(i) != TheWindow)
+		  getInternalWindows()[i] != TheWindow)
 	{
 		++i;
 	}
@@ -288,9 +288,9 @@ void UIDrawingSurface::mouseClicked(const MouseEvent& e)
 		
 		for(Int32 i(getInternalWindows().size()-1) ; i>=0 ; --i)
 		{
-			if(isContainedClipBounds(TransformedMouseEvent.getLocation(), getInternalWindows().getValue(i)))
+			if(isContainedClipBounds(TransformedMouseEvent.getLocation(), getInternalWindows()[i]))
 			{
-				getInternalWindows().getValue(i)->mouseClicked(TransformedMouseEvent);
+				getInternalWindows()[i]->mouseClicked(TransformedMouseEvent);
 				break;
 			}
 		}
@@ -333,11 +333,11 @@ void UIDrawingSurface::mousePressed(const MouseEvent& e)
 		
 		for(Int32 i(getInternalWindows().size()-1) ; i>=0 ; --i)
 		{
-			if(isContainedClipBounds(TransformedMouseEvent.getLocation(), getInternalWindows().getValue(i)))
+			if(isContainedClipBounds(TransformedMouseEvent.getLocation(), getInternalWindows()[i]))
 			{
-				if(getInternalWindows().getValue(i) != getFocusedWindow())
+				if(getInternalWindows()[i] != getFocusedWindow())
 				{
-					moveWindowToTop(getInternalWindows().getValue(i));
+					moveWindowToTop(getInternalWindows()[i]);
 				}
 				getInternalWindows().back()->mousePressed(TransformedMouseEvent);
 				break;
@@ -358,9 +358,9 @@ void UIDrawingSurface::mouseReleased(const MouseEvent& e)
 		
 		for(Int32 i(getInternalWindows().size()-1) ; i>=0 ; --i)
 		{
-			if(isContainedClipBounds(TransformedMouseEvent.getLocation(), getInternalWindows().getValue(i)))
+			if(isContainedClipBounds(TransformedMouseEvent.getLocation(), getInternalWindows()[i]))
 			{
-				getInternalWindows().getValue(i)->mouseReleased(TransformedMouseEvent);
+				getInternalWindows()[i]->mouseReleased(TransformedMouseEvent);
 				break;
 			}
 		}
@@ -380,9 +380,9 @@ void UIDrawingSurface::mouseMoved(const MouseEvent& e)
 		
 		for(Int32 i(getInternalWindows().size()-1) ; i>=0 ; --i)
 		{
-			if(isContainedClipBounds(TransformedMouseEvent.getLocation(), getInternalWindows().getValue(i)))
+			if(isContainedClipBounds(TransformedMouseEvent.getLocation(), getInternalWindows()[i]))
 			{
-				getInternalWindows().getValue(i)->mouseMoved(TransformedMouseEvent);
+				getInternalWindows()[i]->mouseMoved(TransformedMouseEvent);
 				break;
 			}
 		}
@@ -401,9 +401,9 @@ void UIDrawingSurface::mouseDragged(const MouseEvent& e)
 		
 		for(Int32 i(getInternalWindows().size()-1) ; i>=0 ; --i)
 		{
-			if(isContainedClipBounds(TransformedMouseEvent.getLocation(), getInternalWindows().getValue(i)))
+			if(isContainedClipBounds(TransformedMouseEvent.getLocation(), getInternalWindows()[i]))
 			{
-				getInternalWindows().getValue(i)->mouseDragged(TransformedMouseEvent);
+				getInternalWindows()[i]->mouseDragged(TransformedMouseEvent);
 				break;
 			}
 		}
@@ -422,9 +422,9 @@ void UIDrawingSurface::mouseWheelMoved(const MouseWheelEvent& e)
 		
 		for(Int32 i(getInternalWindows().size()-1) ; i>=0 ; --i)
 		{
-			if(isContainedClipBounds(TransformedMouseEvent.getLocation(), getInternalWindows().getValue(i)))
+			if(isContainedClipBounds(TransformedMouseEvent.getLocation(), getInternalWindows()[i]))
 			{
-				getInternalWindows().getValue(i)->mouseWheelMoved(TransformedMouseEvent);
+				getInternalWindows()[i]->mouseWheelMoved(TransformedMouseEvent);
 				break;
 			}
 		}
@@ -459,26 +459,26 @@ void UIDrawingSurface::checkMouseEnterExit(const Event& e, const Pnt2f& MouseLoc
 {
 	for(UInt32 i(0) ; i<getInternalWindows().size() ; ++i)
 	{
-		if(getInternalWindows().getValue(i)->getMouseContained())
+		if(getInternalWindows()[i]->getMouseContained())
 		{
 			//Check if mouse is outside of the frame
-			if(!isContainedClipBounds(MouseLocation, getInternalWindows().getValue(i)))
+			if(!isContainedClipBounds(MouseLocation, getInternalWindows()[i]))
 			{
 				//Mouse has exited the frame
-				getInternalWindows().getValue(i)->setMouseContained(false);
+				getInternalWindows()[i]->setMouseContained(false);
 				MouseEvent ExitedEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
-				getInternalWindows().getValue(i)->mouseExited(ExitedEvent);
+				getInternalWindows()[i]->mouseExited(ExitedEvent);
 			}
 		}
 		else
 		{
 			//Check if mouse is inside of the frame
-			if(isContainedClipBounds(MouseLocation, getInternalWindows().getValue(i)))
+			if(isContainedClipBounds(MouseLocation, getInternalWindows()[i]))
 			{
 				//Mouse has entered the frame
-			    getInternalWindows().getValue(i)->setMouseContained(true);
+			    getInternalWindows()[i]->setMouseContained(true);
 				MouseEvent EnteredEvent(e.getSource(), e.getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation, TheViewport);
-				getInternalWindows().getValue(i)->mouseEntered(EnteredEvent);
+				getInternalWindows()[i]->mouseEntered(EnteredEvent);
 			}
 		}
 	}
@@ -527,11 +527,11 @@ void UIDrawingSurface::changed(BitVector whichField, UInt32 origin)
 	{
 		for(UInt32 i(0) ; i<getInternalWindows().size() ; ++i)
 		{
-			if(getInternalWindows().getValue(i)->getDrawingSurface() != UIDrawingSurfacePtr(this))
+			if(getInternalWindows()[i]->getDrawingSurface() != UIDrawingSurfacePtr(this))
 			{
-				beginEditCP(getInternalWindows().getValue(i), InternalWindow::DrawingSurfaceFieldMask);
-					getInternalWindows().getValue(i)->setDrawingSurface(UIDrawingSurfacePtr(this));
-				endEditCP(getInternalWindows().getValue(i), InternalWindow::DrawingSurfaceFieldMask);
+				beginEditCP(getInternalWindows()[i], InternalWindow::DrawingSurfaceFieldMask);
+					getInternalWindows()[i]->setDrawingSurface(UIDrawingSurfacePtr(this));
+				endEditCP(getInternalWindows()[i], InternalWindow::DrawingSurfaceFieldMask);
 			}
 		}
 	}
@@ -545,30 +545,30 @@ void UIDrawingSurface::changed(BitVector whichField, UInt32 origin)
 		for(UInt32 i(0) ; i<getInternalWindows().size() ; ++i)
 		{
 
-			if(getInternalWindows().getValue(i)->isScalableInDrawingSurface())
+			if(getInternalWindows()[i]->isScalableInDrawingSurface())
 			{
 				//Update Scaling
-				Size.setValues(getInternalWindows().getValue(i)->getScalingInDrawingSurface().x() * static_cast<Real32>(getSize().x()),
-					         getInternalWindows().getValue(i)->getScalingInDrawingSurface().y() * static_cast<Real32>(getSize().y()));
+				Size.setValues(getInternalWindows()[i]->getScalingInDrawingSurface().x() * static_cast<Real32>(getSize().x()),
+					         getInternalWindows()[i]->getScalingInDrawingSurface().y() * static_cast<Real32>(getSize().y()));
 			}
 			else
 			{
-				Size = getInternalWindows().getValue(i)->getPreferredSize();
+				Size = getInternalWindows()[i]->getPreferredSize();
 			}
 
-			Size.setValues(osgMax(osgMin(Size.x(), getInternalWindows().getValue(i)->getMaxSize().x()), getInternalWindows().getValue(i)->getMinSize().x()),
-				           osgMax(osgMin(Size.y(), getInternalWindows().getValue(i)->getMaxSize().y()), getInternalWindows().getValue(i)->getMinSize().y()));
+			Size.setValues(osgMax(osgMin(Size.x(), getInternalWindows()[i]->getMaxSize().x()), getInternalWindows()[i]->getMinSize().x()),
+				           osgMax(osgMin(Size.y(), getInternalWindows()[i]->getMaxSize().y()), getInternalWindows()[i]->getMinSize().y()));
 
-			isSizeDifferent = (getInternalWindows().getValue(i)->getSize().x() != Size.x() ||
-				               getInternalWindows().getValue(i)->getSize().y() != Size.y());
+			isSizeDifferent = (getInternalWindows()[i]->getSize().x() != Size.x() ||
+				               getInternalWindows()[i]->getSize().y() != Size.y());
 
-			if(getInternalWindows().getValue(i)->isAlignableInDrawingSurface())
+			if(getInternalWindows()[i]->isAlignableInDrawingSurface())
 			{
 				//Update Alignment
-				Position = calculateAlignment(Pnt2f(0,0), getSize(), Size, getInternalWindows().getValue(i)->getAlignmentInDrawingSurface().y(), getInternalWindows().getValue(i)->getAlignmentInDrawingSurface().x());
+				Position = calculateAlignment(Pnt2f(0,0), getSize(), Size, getInternalWindows()[i]->getAlignmentInDrawingSurface().y(), getInternalWindows()[i]->getAlignmentInDrawingSurface().x());
 
-				isPositionDifferent = (getInternalWindows().getValue(i)->getPosition().x() != Position.x() ||
-									   getInternalWindows().getValue(i)->getPosition().y() != Position.y());
+				isPositionDifferent = (getInternalWindows()[i]->getPosition().x() != Position.x() ||
+									   getInternalWindows()[i]->getPosition().y() != Position.y());
 			}
 
 
@@ -583,16 +583,16 @@ void UIDrawingSurface::changed(BitVector whichField, UInt32 origin)
 			}
 			if(isSizeDifferent | isPositionDifferent)
 			{
-				beginEditCP(getInternalWindows().getValue(i), FieldsToChangeMask);
+				beginEditCP(getInternalWindows()[i], FieldsToChangeMask);
 					if(isSizeDifferent)
 					{
-						getInternalWindows().getValue(i)->setSize(Size);
+						getInternalWindows()[i]->setSize(Size);
 					}
 					if(isPositionDifferent)
 					{
-						getInternalWindows().getValue(i)->setPosition(Position);
+						getInternalWindows()[i]->setPosition(Position);
 					}
-				endEditCP(getInternalWindows().getValue(i), FieldsToChangeMask);
+				endEditCP(getInternalWindows()[i], FieldsToChangeMask);
 			}
 		}
 	}

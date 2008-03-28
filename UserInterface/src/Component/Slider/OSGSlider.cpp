@@ -101,7 +101,7 @@ void Slider::drawInternal(const GraphicsPtr TheGraphics) const
 				//Draw the Draw Objects
 				for(UInt32 j(0) ; j<getMajorTickDrawObjects().size(); ++j)
 				{
-					getMajorTickDrawObjects().getValue(j)->draw(TheGraphics);
+					getMajorTickDrawObjects()[j]->draw(TheGraphics);
 				}
 
 			glPopMatrix();
@@ -124,7 +124,7 @@ void Slider::drawInternal(const GraphicsPtr TheGraphics) const
 				//Draw the Draw Objects
 				for(UInt32 j(0) ; j<getMinorTickDrawObjects().size(); ++j)
 				{
-					getMinorTickDrawObjects().getValue(j)->draw(TheGraphics);
+					getMinorTickDrawObjects()[j]->draw(TheGraphics);
 				}
 
 			glPopMatrix();

@@ -317,7 +317,7 @@ void ComboBox::showPopup(void)
     endEditCP(getComboListPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
     
     beginEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
-        getParentWindow()->getActivePopupMenus().addValue(getComboListPopupMenu());
+        getParentWindow()->getActivePopupMenus().push_back(getComboListPopupMenu());
     endEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
 }
 
@@ -537,15 +537,15 @@ void ComboBox::changed(BitVector whichField, UInt32 origin)
             getChildren().clear();
 			if(getExpandButton() != NullFC)
 			{
-				getChildren().addValue(getExpandButton());
+				getChildren().push_back(getExpandButton());
 			}
 			if(getEditable() && getEditor() != NullFC && getEditor()->getEditorComponent() != NullFC)
 			{
-				getChildren().addValue(getEditor()->getEditorComponent());
+				getChildren().push_back(getEditor()->getEditorComponent());
 			}
 			if(!getEditable() && getComponentGeneratorSelectedItem() != NullFC)
 			{
-				getChildren().addValue(getComponentGeneratorSelectedItem());
+				getChildren().push_back(getComponentGeneratorSelectedItem());
 			}
         endEditCP(ComboBoxPtr(this), ChildrenFieldMask);
     }

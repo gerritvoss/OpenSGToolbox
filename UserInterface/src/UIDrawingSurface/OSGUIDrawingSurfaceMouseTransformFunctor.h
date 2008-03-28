@@ -83,6 +83,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurfaceMouseTransformFunctor : pu
 	virtual bool viewportToRenderingSurface(const Pnt2f& ViewportPoint,
 		                                    ViewportPtr TheViewport,
 		                                        Pnt2f& Result) const = 0;
+	virtual bool renderingSurfaceToViewport(const Pnt2f& RenderingSurfacePoint,
+		                                    ViewportPtr TheViewport,
+		                                        Pnt2f& Result) const = 0;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

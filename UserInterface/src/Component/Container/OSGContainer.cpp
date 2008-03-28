@@ -102,7 +102,7 @@ void Container::drawInternal(const GraphicsPtr TheGraphics) const
     //Render all of my Child Components
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-        getChildren().getValue(i)->draw(TheGraphics);
+        getChildren()[i]->draw(TheGraphics);
     }
 }
 void Container::mouseClicked(const MouseEvent& e)
@@ -110,11 +110,11 @@ void Container::mouseClicked(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
 		if(isContained)
 		{
-			getChildren().getValue(i)->mouseClicked(e);
+			getChildren()[i]->mouseClicked(e);
 			break;
 		}
     }
@@ -126,8 +126,8 @@ void Container::mouseEntered(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
     }
 	Component::mouseEntered(e);
 }
@@ -137,8 +137,8 @@ void Container::mouseExited(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
     }
 	Component::mouseExited(e);
 }
@@ -148,17 +148,17 @@ void Container::mousePressed(const MouseEvent& e)
 	bool isContained(false);
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
 		if(isContained)
 		{
 			//Give myself temporary focus
 			takeFocus(true);
-			if(!getChildren().getValue(i)->getType().isDerivedFrom(Container::getClassType()))
+			if(!getChildren()[i]->getType().isDerivedFrom(Container::getClassType()))
 			{
-				getChildren().getValue(i)->takeFocus();
+				getChildren()[i]->takeFocus();
 			}
-			getChildren().getValue(i)->mousePressed(e);
+			getChildren()[i]->mousePressed(e);
 			break;
 		}
     }
@@ -180,11 +180,11 @@ void Container::mouseReleased(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
 		if(isContained)
 		{
-			getChildren().getValue(i)->mouseReleased(e);
+			getChildren()[i]->mouseReleased(e);
 			break;
 		}
     }
@@ -198,12 +198,12 @@ void Container::mouseMoved(const MouseEvent& e)
 	bool isContainedAbove(false);
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained && !isContainedAbove,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained && !isContainedAbove,e.getViewport());
 		if(isContained && !isContainedAbove)
 		{
 			isContainedAbove = true;
-			getChildren().getValue(i)->mouseMoved(e);
+			getChildren()[i]->mouseMoved(e);
 		}
     }
 	Component::mouseMoved(e);
@@ -215,12 +215,12 @@ void Container::mouseDragged(const MouseEvent& e)
 	bool isContainedAbove(false);
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained && !isContainedAbove,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained && !isContainedAbove,e.getViewport());
 		if(isContained && !isContainedAbove)
 		{
 			isContainedAbove = true;
-			getChildren().getValue(i)->mouseDragged(e);
+			getChildren()[i]->mouseDragged(e);
 		}
     }
 	Component::mouseDragged(e);
@@ -231,11 +231,11 @@ void Container::mouseWheelMoved(const MouseWheelEvent& e)
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
 		if(isContained)
 		{
-			getChildren().getValue(i)->mouseWheelMoved(e);
+			getChildren()[i]->mouseWheelMoved(e);
         }
     }
 	Component::mouseWheelMoved(e);
@@ -307,10 +307,10 @@ void Container::changed(BitVector whichField, UInt32 origin)
         //Set All of my children's parent to me
         for(UInt32 i(0) ; i<getChildren().size() ; ++i)
         {
-            beginEditCP(getChildren().getValue(i), ParentContainerFieldMask | ParentWindowFieldMask);
-               getChildren().getValue(i)->setParentContainer(ContainerPtr(this));
-               getChildren().getValue(i)->setParentWindow(getParentWindow());
-            endEditCP(getChildren().getValue(i), ParentContainerFieldMask | ParentWindowFieldMask);
+            beginEditCP(getChildren()[i], ParentContainerFieldMask | ParentWindowFieldMask);
+               getChildren()[i]->setParentContainer(ContainerPtr(this));
+               getChildren()[i]->setParentWindow(getParentWindow());
+            endEditCP(getChildren()[i], ParentContainerFieldMask | ParentWindowFieldMask);
         }
     }
     if( (whichField & LayoutFieldMask) &&
@@ -327,7 +327,7 @@ void Container::changed(BitVector whichField, UInt32 origin)
         //Set All of my children's parent to me
         for(UInt32 i(0) ; i<getChildren().size() ; ++i)
         {
-			getChildren().getValue(i)->updateClipBounds();
+			getChildren()[i]->updateClipBounds();
         }
 	}
 

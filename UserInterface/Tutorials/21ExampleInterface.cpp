@@ -493,9 +493,9 @@ int main(int argc, char **argv)
     // LeftPanel stuff
     beginEditCP(LeftPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         LeftPanel->setPreferredSize(Vec2f(400, 500));
-        LeftPanel->getChildren().addValue(LeftPanelLabel1);
-        LeftPanel->getChildren().addValue(createLeftPanelButtonPanel());
-        LeftPanel->getChildren().addValue(createLeftPanelRadioTextPanel());
+        LeftPanel->getChildren().push_back(LeftPanelLabel1);
+        LeftPanel->getChildren().push_back(createLeftPanelButtonPanel());
+        LeftPanel->getChildren().push_back(createLeftPanelRadioTextPanel());
         LeftPanel->setLayout(LeftPanelLayout);
         LeftPanel->setBackgrounds(GreyBackground);
         LeftPanel->setBorders(Panel1Border);
@@ -504,8 +504,8 @@ int main(int argc, char **argv)
     //RightPanel stuff
     beginEditCP(RightPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         RightPanel->setPreferredSize(Vec2f(200, 620));
-        RightPanel->getChildren().addValue(createRightPanelButtonPanel());
-        RightPanel->getChildren().addValue(createRightPanelCheckPanel());
+        RightPanel->getChildren().push_back(createRightPanelButtonPanel());
+        RightPanel->getChildren().push_back(createRightPanelCheckPanel());
         RightPanel->setLayout(RightPanelLayout);
         RightPanel->setBackgrounds(GreyBackground);
         RightPanel->setBorders(Panel2Border);
@@ -514,8 +514,8 @@ int main(int argc, char **argv)
     // Create The Main InternalWindow
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::BordersFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().addValue(LeftPanel);
-       MainInternalWindow->getChildren().addValue(RightPanel);
+       MainInternalWindow->getChildren().push_back(LeftPanel);
+       MainInternalWindow->getChildren().push_back(RightPanel);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(GreyBackground);
        MainInternalWindow->setBorders(PanelBorder);
@@ -658,13 +658,13 @@ ComponentPtr createLeftPanelButtonPanel(void)
     PanelPtr LeftPanelButtonPanel = osg::Panel::create();
     beginEditCP(LeftPanelButtonPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         LeftPanelButtonPanel->setPreferredSize(Vec2f(180, 500));
-        LeftPanelButtonPanel->getChildren().addValue(LeftPanelButtonPanelLabel);
-        LeftPanelButtonPanel->getChildren().addValue(LeftPanelButton1);
-        LeftPanelButtonPanel->getChildren().addValue(LeftPanelButton2);
-        LeftPanelButtonPanel->getChildren().addValue(LeftPanelButton3);
-        LeftPanelButtonPanel->getChildren().addValue(LeftPanelButton4);
-        LeftPanelButtonPanel->getChildren().addValue(LeftPanelButton5);
-        LeftPanelButtonPanel->getChildren().addValue(LeftPanelButton6);
+        LeftPanelButtonPanel->getChildren().push_back(LeftPanelButtonPanelLabel);
+        LeftPanelButtonPanel->getChildren().push_back(LeftPanelButton1);
+        LeftPanelButtonPanel->getChildren().push_back(LeftPanelButton2);
+        LeftPanelButtonPanel->getChildren().push_back(LeftPanelButton3);
+        LeftPanelButtonPanel->getChildren().push_back(LeftPanelButton4);
+        LeftPanelButtonPanel->getChildren().push_back(LeftPanelButton5);
+        LeftPanelButtonPanel->getChildren().push_back(LeftPanelButton6);
         LeftPanelButtonPanel->setLayout(LeftPanelButtonPanelLayout);
         LeftPanelButtonPanel->setBackgrounds(LeftPanelButtonPanelBackground);
         LeftPanelButtonPanel->setBorders(LeftPanelBorder);
@@ -777,10 +777,10 @@ ComponentPtr createLeftPanelRadioTextPanel(void)
         LeftPanelRadioTextPanelRadioPanel->setPreferredSize(Vec2f(125, 200));
         LeftPanelRadioTextPanelRadioPanel->setLayout(LeftPanelRadioTextPanelRadioPanelLayout);
         LeftPanelRadioTextPanelRadioPanel->setBackgrounds(LeftPanelRadioTextPanelBackground);
-        LeftPanelRadioTextPanelRadioPanel->getChildren().addValue(RadioButton1);
-        LeftPanelRadioTextPanelRadioPanel->getChildren().addValue(RadioButton2);
-        LeftPanelRadioTextPanelRadioPanel->getChildren().addValue(RadioButton3);
-        LeftPanelRadioTextPanelRadioPanel->getChildren().addValue(RadioButton4);
+        LeftPanelRadioTextPanelRadioPanel->getChildren().push_back(RadioButton1);
+        LeftPanelRadioTextPanelRadioPanel->getChildren().push_back(RadioButton2);
+        LeftPanelRadioTextPanelRadioPanel->getChildren().push_back(RadioButton3);
+        LeftPanelRadioTextPanelRadioPanel->getChildren().push_back(RadioButton4);
     endEditCP(LeftPanelRadioTextPanelRadioPanel, Component::BordersFieldMask | Component::PreferredSizeFieldMask | Component::BackgroundsFieldMask | Container::LayoutFieldMask | Container::ChildrenFieldMask);
 
     // Create Panel Border
@@ -794,10 +794,10 @@ ComponentPtr createLeftPanelRadioTextPanel(void)
     PanelPtr LeftPanelRadioTextPanel = osg::Panel::create();
     beginEditCP(LeftPanelRadioTextPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         LeftPanelRadioTextPanel->setPreferredSize(Vec2f(180, 500));
-        LeftPanelRadioTextPanel->getChildren().addValue(LeftPanelRadioTextPanelRadioPanel);
-        LeftPanelRadioTextPanel->getChildren().addValue(LeftPanelTextArea);
-        LeftPanelRadioTextPanel->getChildren().addValue(LeftPanelTextFieldLabel);
-        LeftPanelRadioTextPanel->getChildren().addValue(LeftPanelTextField);
+        LeftPanelRadioTextPanel->getChildren().push_back(LeftPanelRadioTextPanelRadioPanel);
+        LeftPanelRadioTextPanel->getChildren().push_back(LeftPanelTextArea);
+        LeftPanelRadioTextPanel->getChildren().push_back(LeftPanelTextFieldLabel);
+        LeftPanelRadioTextPanel->getChildren().push_back(LeftPanelTextField);
         LeftPanelRadioTextPanel->setLayout(LeftPanelRadioTextPanelLayout);
         LeftPanelRadioTextPanel->setBackgrounds(LeftPanelRadioTextPanelBackground);
         LeftPanelRadioTextPanel->setBorders(PanelBorder1);
@@ -857,10 +857,10 @@ ComponentPtr createRightPanelButtonPanel(void)
     PanelPtr RightPanelButtonPanel = osg::Panel::create();
     beginEditCP(RightPanelButtonPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         RightPanelButtonPanel->setPreferredSize(Vec2f(200, 300));
-        RightPanelButtonPanel->getChildren().addValue(RightPanelButton1);
-        RightPanelButtonPanel->getChildren().addValue(RightPanelButton2);
-        RightPanelButtonPanel->getChildren().addValue(RightPanelButton3);
-        RightPanelButtonPanel->getChildren().addValue(RightPanelButton4);
+        RightPanelButtonPanel->getChildren().push_back(RightPanelButton1);
+        RightPanelButtonPanel->getChildren().push_back(RightPanelButton2);
+        RightPanelButtonPanel->getChildren().push_back(RightPanelButton3);
+        RightPanelButtonPanel->getChildren().push_back(RightPanelButton4);
         RightPanelButtonPanel->setLayout(RightPanelButtonPanelLayout);
         RightPanelButtonPanel->setBackgrounds(RightPanelButtonPanelBackground);
         RightPanelButtonPanel->setBorders(PanelBorder2);
@@ -933,10 +933,10 @@ ComponentPtr createRightPanelCheckPanel(void)
     PanelPtr RightPanelCheckPanel = osg::Panel::create();
     beginEditCP(RightPanelCheckPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         RightPanelCheckPanel->setPreferredSize(Vec2f(200, 300));
-        RightPanelCheckPanel->getChildren().addValue(RightPanelCheck1);
-        RightPanelCheckPanel->getChildren().addValue(RightPanelCheck2);
-        RightPanelCheckPanel->getChildren().addValue(RightPanelCheck3);
-        RightPanelCheckPanel->getChildren().addValue(RightPanelCheck4);
+        RightPanelCheckPanel->getChildren().push_back(RightPanelCheck1);
+        RightPanelCheckPanel->getChildren().push_back(RightPanelCheck2);
+        RightPanelCheckPanel->getChildren().push_back(RightPanelCheck3);
+        RightPanelCheckPanel->getChildren().push_back(RightPanelCheck4);
         RightPanelCheckPanel->setLayout(RightPanelCheckPanelLayout);
         RightPanelCheckPanel->setBackgrounds(RightPanelCheckPanelBackground);
         RightPanelCheckPanel->setBorders(PanelBorder3);
@@ -979,18 +979,18 @@ UIBackgroundPtr createComplexBackground(void)
     endEditCP(ComplexBackgroundGradient3, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
 
     beginEditCP(ComplexBackgroundCompound1, CompoundUIBackground::BackgroundsFieldMask);
-        ComplexBackgroundCompound1->getBackgrounds().addValue(ComplexBackgroundBase);
-        ComplexBackgroundCompound1->getBackgrounds().addValue(ComplexBackgroundGradient1);
+        ComplexBackgroundCompound1->getBackgrounds().push_back(ComplexBackgroundBase);
+        ComplexBackgroundCompound1->getBackgrounds().push_back(ComplexBackgroundGradient1);
     endEditCP(ComplexBackgroundCompound1, CompoundUIBackground::BackgroundsFieldMask);
 
     beginEditCP(ComplexBackgroundCompound2, CompoundUIBackground::BackgroundsFieldMask);
-        ComplexBackgroundCompound2->getBackgrounds().addValue(ComplexBackgroundGradient2);
-        ComplexBackgroundCompound2->getBackgrounds().addValue(ComplexBackgroundGradient3);
+        ComplexBackgroundCompound2->getBackgrounds().push_back(ComplexBackgroundGradient2);
+        ComplexBackgroundCompound2->getBackgrounds().push_back(ComplexBackgroundGradient3);
     endEditCP(ComplexBackgroundCompound2, CompoundUIBackground::BackgroundsFieldMask);
 
     beginEditCP(ComplexBackground, CompoundUIBackground::BackgroundsFieldMask);
-        ComplexBackground->getBackgrounds().addValue(ComplexBackgroundCompound1);
-        ComplexBackground->getBackgrounds().addValue(ComplexBackgroundCompound2);
+        ComplexBackground->getBackgrounds().push_back(ComplexBackgroundCompound1);
+        ComplexBackground->getBackgrounds().push_back(ComplexBackgroundCompound2);
     endEditCP(ComplexBackground, CompoundUIBackground::BackgroundsFieldMask);
 
     return ComplexBackground;

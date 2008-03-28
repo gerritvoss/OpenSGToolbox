@@ -83,6 +83,14 @@ bool UIForegroundMouseTransformFunctor::viewportToRenderingSurface(const Pnt2f& 
 	Result = ViewportPoint;
 	return true;
 }
+
+bool UIForegroundMouseTransformFunctor::renderingSurfaceToViewport(const Pnt2f& RenderingSurfacePoint,
+	                                    ViewportPtr TheViewport,
+	                                        Pnt2f& Result) const
+{
+	Result = RenderingSurfacePoint;
+	return true;
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

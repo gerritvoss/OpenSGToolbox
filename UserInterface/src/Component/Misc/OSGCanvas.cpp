@@ -81,11 +81,11 @@ void Canvas::drawInternal(const GraphicsPtr TheGraphics) const
    getInsideBorderBounds(TopLeft, BottomRight);
 
 	/*MFPnt2f polygon;
-	polygon.addValue(Pnt2f(120,120));
-	polygon.addValue(Pnt2f(120,0));
-	polygon.addValue(Pnt2f(180,120));
-	polygon.addValue(Pnt2f(170,230));
-	polygon.addValue(Pnt2f(130,180));
+	polygon.push_back(Pnt2f(120,120));
+	polygon.push_back(Pnt2f(120,0));
+	polygon.push_back(Pnt2f(180,120));
+	polygon.push_back(Pnt2f(170,230));
+	polygon.push_back(Pnt2f(130,180));
 
 	TheGraphics->drawPolygon( polygon, Color4f(0.0f,1.0f,1.0f,0.5));*/
 

@@ -179,8 +179,8 @@ int main(int argc, char **argv)
     endEditCP(ExampleLabel1GradientBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
     
     beginEditCP(ExampleLabel1CompoundBackground, CompoundUIBackground::BackgroundsFieldMask);
-        ExampleLabel1CompoundBackground->getBackgrounds().addValue(ExampleLabel1ColorBackground);
-        ExampleLabel1CompoundBackground->getBackgrounds().addValue(ExampleLabel1GradientBackground);
+        ExampleLabel1CompoundBackground->getBackgrounds().push_back(ExampleLabel1ColorBackground);
+        ExampleLabel1CompoundBackground->getBackgrounds().push_back(ExampleLabel1GradientBackground);
     endEditCP(ExampleLabel1CompoundBackground, CompoundUIBackground::BackgroundsFieldMask);
 
     /******************************************************
@@ -339,9 +339,9 @@ int main(int argc, char **argv)
     // Edit Panel1, Panel2
     beginEditCP(ExamplePanel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel1->setPreferredSize(Vec2f(400, 400));
-        ExamplePanel1->getChildren().addValue(ExampleButton2);
-        ExamplePanel1->getChildren().addValue(ExamplePanel3);
-        ExamplePanel1->getChildren().addValue(ExamplePanel4);
+        ExamplePanel1->getChildren().push_back(ExampleButton2);
+        ExamplePanel1->getChildren().push_back(ExamplePanel3);
+        ExamplePanel1->getChildren().push_back(ExamplePanel4);
         ExamplePanel1->setLayout(ExamplePanel1Layout);
         ExamplePanel1->setBackgrounds(ExamplePanelBackground);
         ExamplePanel1->setBorders(ExamplePanelBorder);
@@ -349,41 +349,41 @@ int main(int argc, char **argv)
 
     beginEditCP(ExamplePanel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel2->setPreferredSize(Vec2f(400, 400));
-        ExamplePanel2->getChildren().addValue(ExampleButton3);
-        ExamplePanel2->getChildren().addValue(ExamplePanel5);
-        ExamplePanel2->getChildren().addValue(ExamplePanel6);
+        ExamplePanel2->getChildren().push_back(ExampleButton3);
+        ExamplePanel2->getChildren().push_back(ExamplePanel5);
+        ExamplePanel2->getChildren().push_back(ExamplePanel6);
         ExamplePanel2->setLayout(ExamplePanel2Layout);
         ExamplePanel2->setBackgrounds(ExamplePanelBackground);
         ExamplePanel2->setBorders(ExamplePanelBorder);
     endEditCP(ExamplePanel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
     
     beginEditCP(ExamplePanel3, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundsFieldMask);
-        ExamplePanel3->getChildren().addValue(ExampleButton4);
-        ExamplePanel3->getChildren().addValue(ExampleButton5);
+        ExamplePanel3->getChildren().push_back(ExampleButton4);
+        ExamplePanel3->getChildren().push_back(ExampleButton5);
         ExamplePanel3->setLayout(ExamplePanel3Layout);
         ExamplePanel3->setPreferredSize(Vec2f(125, 130));
         ExamplePanel3->setBackgrounds(ExampleSmallPanelBackground);
     endEditCP(ExamplePanel3, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundsFieldMask);
     
     beginEditCP(ExamplePanel4, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundsFieldMask);
-        ExamplePanel4->getChildren().addValue(ExampleButton6);
-        ExamplePanel4->getChildren().addValue(ExampleButton7);
+        ExamplePanel4->getChildren().push_back(ExampleButton6);
+        ExamplePanel4->getChildren().push_back(ExampleButton7);
         ExamplePanel4->setLayout(ExamplePanel4Layout);
         ExamplePanel4->setPreferredSize(Vec2f(125, 130));
         ExamplePanel4->setBackgrounds(ExampleSmallPanelBackground);
     endEditCP(ExamplePanel4, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundsFieldMask);
         
     beginEditCP(ExamplePanel5, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundsFieldMask);
-        ExamplePanel5->getChildren().addValue(ExampleButton8);
-        ExamplePanel5->getChildren().addValue(ExampleButton9);
+        ExamplePanel5->getChildren().push_back(ExampleButton8);
+        ExamplePanel5->getChildren().push_back(ExampleButton9);
         ExamplePanel5->setLayout(ExamplePanel5Layout);
         ExamplePanel5->setPreferredSize(Vec2f(125, 130));
         ExamplePanel5->setBackgrounds(ExampleSmallPanelBackground);
     endEditCP(ExamplePanel5, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundsFieldMask);
         
     beginEditCP(ExamplePanel6, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundsFieldMask);
-        ExamplePanel6->getChildren().addValue(ExampleButton10);
-        ExamplePanel6->getChildren().addValue(ExampleButton11);
+        ExamplePanel6->getChildren().push_back(ExampleButton10);
+        ExamplePanel6->getChildren().push_back(ExampleButton11);
         ExamplePanel6->setLayout(ExamplePanel6Layout);
         ExamplePanel6->setPreferredSize(Vec2f(125, 130));
         ExamplePanel6->setBackgrounds(ExampleSmallPanelBackground);
@@ -400,10 +400,10 @@ int main(int argc, char **argv)
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
        MainInternalWindow->setBorder(ExamplePanelBorder);
-       MainInternalWindow->getChildren().addValue(ExampleLabel1);
-       MainInternalWindow->getChildren().addValue(ExampleButton1);
-       MainInternalWindow->getChildren().addValue(ExamplePanel1);
-       MainInternalWindow->getChildren().addValue(ExamplePanel2);
+       MainInternalWindow->getChildren().push_back(ExampleLabel1);
+       MainInternalWindow->getChildren().push_back(ExampleButton1);
+       MainInternalWindow->getChildren().push_back(ExamplePanel1);
+       MainInternalWindow->getChildren().push_back(ExamplePanel2);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
@@ -438,7 +438,7 @@ int main(int argc, char **argv)
     // Add the UI Foreground Object to the Scene
     ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
     // Show the whole Scene

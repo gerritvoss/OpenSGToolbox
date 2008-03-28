@@ -84,22 +84,22 @@ void OverlayLayout::updateLayout(const MFComponentPtr Components,const Component
 	int maxX = 0;
 	int maxY = 0;
 	for(UInt32 i = 0; i < Components.size(); i++){
-		beginEditCP(Components.getValue(i), Component::SizeFieldMask);
-		   Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
-		endEditCP(Components.getValue(i), Component::SizeFieldMask);
-		if(Components.getValue(i)->getSize().x()>maxX)
-			maxX = Components.getValue(i)->getSize().x();
-		if(Components.getValue(i)->getSize().y()>maxY)
-			maxY = Components.getValue(i)->getSize().y();
+		beginEditCP(Components[i], Component::SizeFieldMask);
+		   Components[i]->setSize(Components[i]->getPreferredSize());
+		endEditCP(Components[i], Component::SizeFieldMask);
+		if(Components[i]->getSize().x()>maxX)
+			maxX = Components[i]->getSize().x();
+		if(Components[i]->getSize().y()>maxY)
+			maxY = Components[i]->getSize().y();
 	}
 	//overlay layout simply draws all the components on top of each other, with the reference point for all the components being the same
 	for(UInt32 i = 0; i <Components.size(); i++){
-		//Components.getValue(i)->setSize(Components.getValue(i)->getPreferredSize());
-		beginEditCP(Components.getValue(i), Component::PositionFieldMask);
-		Components.getValue(i)->setPosition(borderTopLeft + 
-            Vec2f((maxX-Components.getValue(i)->getSize().x())/2.0,
-			(maxY-Components.getValue(i)->getSize().y())/2.0));
-		endEditCP(Components.getValue(i), Component::PositionFieldMask);
+		//Components[i]->setSize(Components[i]->getPreferredSize());
+		beginEditCP(Components[i], Component::PositionFieldMask);
+		Components[i]->setPosition(borderTopLeft + 
+            Vec2f((maxX-Components[i]->getSize().x())/2.0,
+			(maxY-Components[i]->getSize().y())/2.0));
+		endEditCP(Components[i], Component::PositionFieldMask);
 	}
 }
 

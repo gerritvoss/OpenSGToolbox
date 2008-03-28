@@ -124,9 +124,9 @@ void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr 
 	for(UInt32 i=0 ; i<Components.size() ; ++i)
 	{	// set the component to its preferred size
 		// get sum of all components
-		totalMajorAxis += Components.getValue(i)->getPreferredSize()[AxisIndex];
-		if (Components.getValue(i)->getPreferredSize()[(AxisIndex+1)%2] > largestMinorAxis)
-			largestMinorAxis = Components.getValue(i)->getPreferredSize()[(AxisIndex+1)%2];
+		totalMajorAxis += Components[i]->getPreferredSize()[AxisIndex];
+		if (Components[i]->getPreferredSize()[(AxisIndex+1)%2] > largestMinorAxis)
+			largestMinorAxis = Components[i]->getPreferredSize()[(AxisIndex+1)%2];
 	}
 	if(MajorAxis > totalMajorAxis)
 	{
@@ -168,40 +168,40 @@ void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr 
 		// for use in keeping them vertically centered
 		offset[(AxisIndex+1)%2] = 0;
 		// change the component's height only if necessary
-		if (largestMinorAxis > Components.getValue(i)->getPreferredSize()[(AxisIndex+1)%2])
+		if (largestMinorAxis > Components[i]->getPreferredSize()[(AxisIndex+1)%2])
 		{	
-			if (largestMinorAxis <= Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2])
+			if (largestMinorAxis <= Components[i]->getMaxSize()[(AxisIndex+1)%2])
 			{	// for when the max height is larger than the largestMinorAxis
-				size[AxisIndex] = Components.getValue(i)->getPreferredSize()[AxisIndex];
+				size[AxisIndex] = Components[i]->getPreferredSize()[AxisIndex];
 				size[(AxisIndex+1)%2] = largestMinorAxis;
 			}
 			else
 			{	// in this case, max out the button to its max height
-				size[AxisIndex] = Components.getValue(i)->getPreferredSize()[AxisIndex];
-				size[(AxisIndex+1)%2] = Components.getValue(i)->getMaxSize()[(AxisIndex+1)%2];
+				size[AxisIndex] = Components[i]->getPreferredSize()[AxisIndex];
+				size[(AxisIndex+1)%2] = Components[i]->getMaxSize()[(AxisIndex+1)%2];
 
 				// find how far to set offset to make this button properly aligned
 				if(getOrientation() == HORIZONTAL_ORIENTATION)
 				{
-					offset = calculateAlignment(Pnt2s(0,0), Vec2f(0.0f, largestMinorAxis), Vec2f(0.0f,Components.getValue(i)->getMaxSize().y()), getComponentAlignment(), 0.0f);
+					offset = calculateAlignment(Pnt2s(0,0), Vec2f(0.0f, largestMinorAxis), Vec2f(0.0f,Components[i]->getMaxSize().y()), getComponentAlignment(), 0.0f);
 				}
 				else
 				{
-					offset = calculateAlignment(Pnt2s(0,0), Vec2f(largestMinorAxis,0.0f), Vec2f(Components.getValue(i)->getMaxSize().x(),0.0f), 0.0f, getComponentAlignment());
+					offset = calculateAlignment(Pnt2s(0,0), Vec2f(largestMinorAxis,0.0f), Vec2f(Components[i]->getMaxSize().x(),0.0f), 0.0f, getComponentAlignment());
 				}
 			}
 		}
 		else
 		{
-			size = Components.getValue(i)->getPreferredSize();
+			size = Components[i]->getPreferredSize();
 		}
-		beginEditCP(Components.getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
-			Components.getValue(i)->setSize(size);
-			Components.getValue(i)->setPosition(borderTopLeft + offset);
-		endEditCP(Components.getValue(i), Component::SizeFieldMask|Component::PositionFieldMask);
+		beginEditCP(Components[i], Component::SizeFieldMask|Component::PositionFieldMask);
+			Components[i]->setSize(size);
+			Components[i]->setPosition(borderTopLeft + offset);
+		endEditCP(Components[i], Component::SizeFieldMask|Component::PositionFieldMask);
 
 		// now set offset for the next button
-		offset[AxisIndex] += spacing + Components.getValue(i)->getPreferredSize()[AxisIndex];
+		offset[AxisIndex] += spacing + Components[i]->getPreferredSize()[AxisIndex];
 	}
 }
 /*-------------------------------------------------------------------------*\

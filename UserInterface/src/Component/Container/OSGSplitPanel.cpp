@@ -220,7 +220,7 @@ void SplitPanel::setDividerDrawObject(const UIDrawObjectCanvasPtr &value)
 		getDividerDrawObject()->removeMouseListener(&_DividerListener);
 	}
     _sfDividerDrawObject.setValue(value);
-	getChildren().addValue(value);
+	getChildren().push_back(value);
 	value->addMouseListener(&_DividerListener);
 }
 

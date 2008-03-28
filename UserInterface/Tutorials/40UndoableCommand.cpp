@@ -612,16 +612,16 @@ int main(int argc, char **argv)
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
     LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().addValue(BorderRedButton);
-       MainInternalWindow->getChildren().addValue(BorderGreenButton);
-       MainInternalWindow->getChildren().addValue(BorderBlueButton);
-       MainInternalWindow->getChildren().addValue(BackgroundRedButton);
-       MainInternalWindow->getChildren().addValue(BackgroundGreenButton);
-       MainInternalWindow->getChildren().addValue(BackgroundBlueButton);
-       MainInternalWindow->getChildren().addValue(ChangableLabel);
-       MainInternalWindow->getChildren().addValue(UndoRedoScrollPanel);
-       MainInternalWindow->getChildren().addValue(UndoButton);
-       MainInternalWindow->getChildren().addValue(RedoButton);
+       MainInternalWindow->getChildren().push_back(BorderRedButton);
+       MainInternalWindow->getChildren().push_back(BorderGreenButton);
+       MainInternalWindow->getChildren().push_back(BorderBlueButton);
+       MainInternalWindow->getChildren().push_back(BackgroundRedButton);
+       MainInternalWindow->getChildren().push_back(BackgroundGreenButton);
+       MainInternalWindow->getChildren().push_back(BackgroundBlueButton);
+       MainInternalWindow->getChildren().push_back(ChangableLabel);
+       MainInternalWindow->getChildren().push_back(UndoRedoScrollPanel);
+       MainInternalWindow->getChildren().push_back(UndoButton);
+       MainInternalWindow->getChildren().push_back(RedoButton);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
@@ -656,7 +656,7 @@ int main(int argc, char **argv)
     // Add the UI Foreground Object to the Scene
     ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
     // Show the whole Scene

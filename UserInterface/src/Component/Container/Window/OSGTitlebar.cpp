@@ -284,23 +284,23 @@ void Titlebar::changed(BitVector whichField, UInt32 origin)
 			getChildren().clear();
 			if(getFrameIcon() != NullFC)
 			{
-				getChildren().addValue(getFrameIcon());
+				getChildren().push_back(getFrameIcon());
 			}
 			if(getTitleLabel() != NullFC)
 			{
-				getChildren().addValue(getTitleLabel());
+				getChildren().push_back(getTitleLabel());
 			}
 			if(getDrawIconify() && getIconifyButton() != NullFC)
 			{
-				getChildren().addValue(getIconifyButton());
+				getChildren().push_back(getIconifyButton());
 			}
 			if(getDrawMaximize() && getMaximizeButton() != NullFC)
 			{
-				getChildren().addValue(getMaximizeButton());
+				getChildren().push_back(getMaximizeButton());
 			}
 			if(getDrawClose() && getCloseButton() != NullFC)
 			{
-				getChildren().addValue(getCloseButton());
+				getChildren().push_back(getCloseButton());
 			}
 		endEditCP(TitlebarPtr(this), Titlebar::ChildrenFieldMask);
 	}

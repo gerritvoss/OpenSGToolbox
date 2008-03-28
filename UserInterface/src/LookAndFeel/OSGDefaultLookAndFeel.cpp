@@ -525,29 +525,29 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(CheckboxLine2);
 
 	beginEditCP(defaultCheckboxDrawObject);
-	   defaultCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
-	   defaultCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
+	   defaultCheckboxDrawObject->getDrawObjects().push_back(CheckboxBackgroundBorder);
+	   defaultCheckboxDrawObject->getDrawObjects().push_back(CheckboxBackground);
 	endEditCP(defaultCheckboxDrawObject);
 
 	beginEditCP(defaultSelectedCheckboxDrawObject);
-		defaultSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
-		defaultSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
-		defaultSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine1);
-		defaultSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine2);
+		defaultSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxBackgroundBorder);
+		defaultSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxBackground);
+		defaultSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxLine1);
+		defaultSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxLine2);
 	endEditCP(defaultSelectedCheckboxDrawObject);
 
 	beginEditCP(defaultActiveSelectedCheckboxDrawObject);
-		defaultActiveSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
-		defaultActiveSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
-		defaultActiveSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxActiveBorder);
-		defaultActiveSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine1);
-		defaultActiveSelectedCheckboxDrawObject->getDrawObjects().addValue(CheckboxLine2);
+		defaultActiveSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxBackgroundBorder);
+		defaultActiveSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxBackground);
+		defaultActiveSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxActiveBorder);
+		defaultActiveSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxLine1);
+		defaultActiveSelectedCheckboxDrawObject->getDrawObjects().push_back(CheckboxLine2);
 	endEditCP(defaultActiveSelectedCheckboxDrawObject);
 
 	beginEditCP(defaultActiveCheckboxDrawObject);
-	 	defaultActiveCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackgroundBorder);
-		defaultActiveCheckboxDrawObject->getDrawObjects().addValue(CheckboxBackground);
-		defaultActiveCheckboxDrawObject->getDrawObjects().addValue(CheckboxActiveBorder);
+	 	defaultActiveCheckboxDrawObject->getDrawObjects().push_back(CheckboxBackgroundBorder);
+		defaultActiveCheckboxDrawObject->getDrawObjects().push_back(CheckboxBackground);
+		defaultActiveCheckboxDrawObject->getDrawObjects().push_back(CheckboxActiveBorder);
 	endEditCP(defaultActiveCheckboxDrawObject);
 
 	EmptyBorderPtr DefaultCheckboxButtonBorder = EmptyBorder::create();
@@ -667,27 +667,27 @@ void DefaultLookAndFeel::init(void)
 	endEditCP(RadioActiveBorder);
 
 	beginEditCP(defaultRadioDrawObject);
-		defaultRadioDrawObject->getDrawObjects().addValue(RadioBackground);
-		defaultRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
+		defaultRadioDrawObject->getDrawObjects().push_back(RadioBackground);
+		defaultRadioDrawObject->getDrawObjects().push_back(RadioBackgroundBorder);
 	endEditCP(defaultRadioDrawObject);
 
 	beginEditCP(defaultSelectedRadioDrawObject);
-		defaultSelectedRadioDrawObject->getDrawObjects().addValue(RadioBackground);
-		defaultSelectedRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
-		defaultSelectedRadioDrawObject->getDrawObjects().addValue(RadioSelected);
+		defaultSelectedRadioDrawObject->getDrawObjects().push_back(RadioBackground);
+		defaultSelectedRadioDrawObject->getDrawObjects().push_back(RadioBackgroundBorder);
+		defaultSelectedRadioDrawObject->getDrawObjects().push_back(RadioSelected);
 	endEditCP(defaultSelectedRadioDrawObject);
 
 	beginEditCP(defaultActiveRadioDrawObject);
-		defaultActiveRadioDrawObject->getDrawObjects().addValue(RadioBackground);
-		defaultActiveRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
-		defaultActiveRadioDrawObject->getDrawObjects().addValue(RadioActiveBorder);
+		defaultActiveRadioDrawObject->getDrawObjects().push_back(RadioBackground);
+		defaultActiveRadioDrawObject->getDrawObjects().push_back(RadioBackgroundBorder);
+		defaultActiveRadioDrawObject->getDrawObjects().push_back(RadioActiveBorder);
 	endEditCP(defaultActiveRadioDrawObject);
 
 	beginEditCP(defaultActiveSelectedRadioDrawObject);
-		defaultActiveSelectedRadioDrawObject->getDrawObjects().addValue(RadioBackground);
-		defaultActiveSelectedRadioDrawObject->getDrawObjects().addValue(RadioBackgroundBorder);
-		defaultActiveSelectedRadioDrawObject->getDrawObjects().addValue(RadioSelected);
-		defaultActiveSelectedRadioDrawObject->getDrawObjects().addValue(RadioActiveBorder);
+		defaultActiveSelectedRadioDrawObject->getDrawObjects().push_back(RadioBackground);
+		defaultActiveSelectedRadioDrawObject->getDrawObjects().push_back(RadioBackgroundBorder);
+		defaultActiveSelectedRadioDrawObject->getDrawObjects().push_back(RadioSelected);
+		defaultActiveSelectedRadioDrawObject->getDrawObjects().push_back(RadioActiveBorder);
 	endEditCP(defaultActiveSelectedRadioDrawObject);
 		
 	EmptyBorderPtr DefaultRadioButtonBorder = EmptyBorder::create();
@@ -1115,14 +1115,14 @@ void DefaultLookAndFeel::init(void)
 	beginEditCP(MenuExpandablePolygon);
 		MenuExpandablePolygon->setColor(Color4f(0.0,0.0,0.0,1.0));
 		MenuExpandablePolygon->setOpacity(1.0);
-        MenuExpandablePolygon->getVerticies().addValue(Pnt2f(0,0));
-        MenuExpandablePolygon->getVerticies().addValue(Pnt2f(0,7));
-        MenuExpandablePolygon->getVerticies().addValue(Pnt2f(4,4));
+        MenuExpandablePolygon->getVerticies().push_back(Pnt2f(0,0));
+        MenuExpandablePolygon->getVerticies().push_back(Pnt2f(0,7));
+        MenuExpandablePolygon->getVerticies().push_back(Pnt2f(4,4));
 	endEditCP(MenuExpandablePolygon);
 
 	UIDrawObjectCanvasPtr defaultMenuDrawObject = UIDrawObjectCanvas::create();
 	beginEditCP(defaultMenuDrawObject);
-	   defaultMenuDrawObject->getDrawObjects().addValue(MenuExpandablePolygon);
+	   defaultMenuDrawObject->getDrawObjects().push_back(MenuExpandablePolygon);
 	endEditCP(defaultMenuDrawObject);
 
 	//Default Menu
@@ -1273,14 +1273,14 @@ void DefaultLookAndFeel::init(void)
 	beginEditCP(DefaultScrollBarVerticalMinButtonDrawObject);
 		DefaultScrollBarVerticalMinButtonDrawObject->setColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultScrollBarVerticalMinButtonDrawObject->setOpacity(1.0);
-        DefaultScrollBarVerticalMinButtonDrawObject->getVerticies().addValue(Pnt2f(0,4));
-        DefaultScrollBarVerticalMinButtonDrawObject->getVerticies().addValue(Pnt2f(7,4));
-        DefaultScrollBarVerticalMinButtonDrawObject->getVerticies().addValue(Pnt2f(4,0));
+        DefaultScrollBarVerticalMinButtonDrawObject->getVerticies().push_back(Pnt2f(0,4));
+        DefaultScrollBarVerticalMinButtonDrawObject->getVerticies().push_back(Pnt2f(7,4));
+        DefaultScrollBarVerticalMinButtonDrawObject->getVerticies().push_back(Pnt2f(4,0));
 	endEditCP(DefaultScrollBarVerticalMinButtonDrawObject);
 
 	UIDrawObjectCanvasPtr DefaultScrollBarVerticalMinButtonCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(DefaultScrollBarVerticalMinButtonCanvas);
-	   DefaultScrollBarVerticalMinButtonCanvas->getDrawObjects().addValue(DefaultScrollBarVerticalMinButtonDrawObject);
+	   DefaultScrollBarVerticalMinButtonCanvas->getDrawObjects().push_back(DefaultScrollBarVerticalMinButtonDrawObject);
 	endEditCP(DefaultScrollBarVerticalMinButtonCanvas);
 
     //Vertical Min Button
@@ -1304,14 +1304,14 @@ void DefaultLookAndFeel::init(void)
 	beginEditCP(DefaultScrollBarVerticalMaxButtonDrawObject);
 		DefaultScrollBarVerticalMaxButtonDrawObject->setColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultScrollBarVerticalMaxButtonDrawObject->setOpacity(1.0);
-        DefaultScrollBarVerticalMaxButtonDrawObject->getVerticies().addValue(Pnt2f(0,0));
-        DefaultScrollBarVerticalMaxButtonDrawObject->getVerticies().addValue(Pnt2f(7,0));
-        DefaultScrollBarVerticalMaxButtonDrawObject->getVerticies().addValue(Pnt2f(4,4));
+        DefaultScrollBarVerticalMaxButtonDrawObject->getVerticies().push_back(Pnt2f(0,0));
+        DefaultScrollBarVerticalMaxButtonDrawObject->getVerticies().push_back(Pnt2f(7,0));
+        DefaultScrollBarVerticalMaxButtonDrawObject->getVerticies().push_back(Pnt2f(4,4));
 	endEditCP(DefaultScrollBarVerticalMaxButtonDrawObject);
 
 	UIDrawObjectCanvasPtr DefaultScrollBarVerticalMaxButtonCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(DefaultScrollBarVerticalMaxButtonCanvas);
-	   DefaultScrollBarVerticalMaxButtonCanvas->getDrawObjects().addValue(DefaultScrollBarVerticalMaxButtonDrawObject);
+	   DefaultScrollBarVerticalMaxButtonCanvas->getDrawObjects().push_back(DefaultScrollBarVerticalMaxButtonDrawObject);
 	endEditCP(DefaultScrollBarVerticalMaxButtonCanvas);
     //Vertical Max Button
 	ButtonPtr DefaultScrollBarVerticalMaxButton = Button::create();
@@ -1334,14 +1334,14 @@ void DefaultLookAndFeel::init(void)
 	beginEditCP(DefaultScrollBarHorizontalMinButtonDrawObject);
 		DefaultScrollBarHorizontalMinButtonDrawObject->setColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultScrollBarHorizontalMinButtonDrawObject->setOpacity(1.0);
-        DefaultScrollBarHorizontalMinButtonDrawObject->getVerticies().addValue(Pnt2f(4,0));
-        DefaultScrollBarHorizontalMinButtonDrawObject->getVerticies().addValue(Pnt2f(4,7));
-        DefaultScrollBarHorizontalMinButtonDrawObject->getVerticies().addValue(Pnt2f(0,4));
+        DefaultScrollBarHorizontalMinButtonDrawObject->getVerticies().push_back(Pnt2f(4,0));
+        DefaultScrollBarHorizontalMinButtonDrawObject->getVerticies().push_back(Pnt2f(4,7));
+        DefaultScrollBarHorizontalMinButtonDrawObject->getVerticies().push_back(Pnt2f(0,4));
 	endEditCP(DefaultScrollBarHorizontalMinButtonDrawObject);
 
 	UIDrawObjectCanvasPtr DefaultScrollBarHorizontalMinButtonCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(DefaultScrollBarHorizontalMinButtonCanvas);
-	   DefaultScrollBarHorizontalMinButtonCanvas->getDrawObjects().addValue(DefaultScrollBarHorizontalMinButtonDrawObject);
+	   DefaultScrollBarHorizontalMinButtonCanvas->getDrawObjects().push_back(DefaultScrollBarHorizontalMinButtonDrawObject);
 	endEditCP(DefaultScrollBarHorizontalMinButtonCanvas);
 
     //Horizontal Min Button
@@ -1365,14 +1365,14 @@ void DefaultLookAndFeel::init(void)
 	beginEditCP(DefaultScrollBarHorizontalMaxButtonDrawObject);
 		DefaultScrollBarHorizontalMaxButtonDrawObject->setColor(Color4f(0.0,0.0,0.0,1.0));
 		DefaultScrollBarHorizontalMaxButtonDrawObject->setOpacity(1.0);
-        DefaultScrollBarHorizontalMaxButtonDrawObject->getVerticies().addValue(Pnt2f(0,0));
-        DefaultScrollBarHorizontalMaxButtonDrawObject->getVerticies().addValue(Pnt2f(0,7));
-        DefaultScrollBarHorizontalMaxButtonDrawObject->getVerticies().addValue(Pnt2f(4,4));
+        DefaultScrollBarHorizontalMaxButtonDrawObject->getVerticies().push_back(Pnt2f(0,0));
+        DefaultScrollBarHorizontalMaxButtonDrawObject->getVerticies().push_back(Pnt2f(0,7));
+        DefaultScrollBarHorizontalMaxButtonDrawObject->getVerticies().push_back(Pnt2f(4,4));
 	endEditCP(DefaultScrollBarHorizontalMaxButtonDrawObject);
 
 	UIDrawObjectCanvasPtr DefaultScrollBarHorizontalMaxButtonCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(DefaultScrollBarHorizontalMaxButtonCanvas);
-	   DefaultScrollBarHorizontalMaxButtonCanvas->getDrawObjects().addValue(DefaultScrollBarHorizontalMaxButtonDrawObject);
+	   DefaultScrollBarHorizontalMaxButtonCanvas->getDrawObjects().push_back(DefaultScrollBarHorizontalMaxButtonDrawObject);
 	endEditCP(DefaultScrollBarHorizontalMaxButtonCanvas);
     //Horizontal Max Button
 	ButtonPtr DefaultScrollBarHorizontalMaxButton = Button::create();
@@ -1934,31 +1934,31 @@ void DefaultLookAndFeel::init(void)
 
 
 	beginEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);
-		getPrototypes().addValue(DefaultButton);
-		getPrototypes().addValue(DefaultLabel);
-		getPrototypes().addValue(DefaultInternalWindow);
-		getPrototypes().addValue(DefaultPanel);
-		getPrototypes().addValue(DefaultSplitPanel);
-		getPrototypes().addValue(DefaultImageComponent);
-		getPrototypes().addValue(DefaultCheckboxButton);
-		getPrototypes().addValue(DefaultRadioButton);
-		getPrototypes().addValue(DefaultToggleButton);
-		getPrototypes().addValue(DefaultTextField);
-		getPrototypes().addValue(DefaultPasswordField);
-		getPrototypes().addValue(DefaultTextArea);
-		getPrototypes().addValue(DefaultToolTip);
-		getPrototypes().addValue(DefaultLabelMenuItem);
-		getPrototypes().addValue(DefaultSeperatorMenuItem);
-		getPrototypes().addValue(DefaultMenu);
-		getPrototypes().addValue(DefaultPopupMenu);
-		getPrototypes().addValue(DefaultMenuBar);
-		getPrototypes().addValue(DefaultScrollBar);
-		getPrototypes().addValue(DefaultScrollPanel);
-		getPrototypes().addValue(DefaultRotatedComponent);
-		getPrototypes().addValue(DefaultUIViewport);
-		getPrototypes().addValue(DefaultList);
-		getPrototypes().addValue(DefaultTableHeader);
-		getPrototypes().addValue(DefaultTable);
+		getPrototypes().push_back(DefaultButton);
+		getPrototypes().push_back(DefaultLabel);
+		getPrototypes().push_back(DefaultInternalWindow);
+		getPrototypes().push_back(DefaultPanel);
+		getPrototypes().push_back(DefaultSplitPanel);
+		getPrototypes().push_back(DefaultImageComponent);
+		getPrototypes().push_back(DefaultCheckboxButton);
+		getPrototypes().push_back(DefaultRadioButton);
+		getPrototypes().push_back(DefaultToggleButton);
+		getPrototypes().push_back(DefaultTextField);
+		getPrototypes().push_back(DefaultPasswordField);
+		getPrototypes().push_back(DefaultTextArea);
+		getPrototypes().push_back(DefaultToolTip);
+		getPrototypes().push_back(DefaultLabelMenuItem);
+		getPrototypes().push_back(DefaultSeperatorMenuItem);
+		getPrototypes().push_back(DefaultMenu);
+		getPrototypes().push_back(DefaultPopupMenu);
+		getPrototypes().push_back(DefaultMenuBar);
+		getPrototypes().push_back(DefaultScrollBar);
+		getPrototypes().push_back(DefaultScrollPanel);
+		getPrototypes().push_back(DefaultRotatedComponent);
+		getPrototypes().push_back(DefaultUIViewport);
+		getPrototypes().push_back(DefaultList);
+		getPrototypes().push_back(DefaultTableHeader);
+		getPrototypes().push_back(DefaultTable);
 	endEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);
 }
 /*-------------------------------------------------------------------------*\

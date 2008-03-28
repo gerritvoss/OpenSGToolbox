@@ -78,7 +78,7 @@ void CompoundUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopL
 {
 	for(UInt32 i(0) ; i<getBackgrounds().size(); ++i)
 	{
-		getBackgrounds().getValue(i)->draw(TheGraphics, TopLeft, BottomRight, Opacity);
+		getBackgrounds()[i]->draw(TheGraphics, TopLeft, BottomRight, Opacity);
 	}
 }
 

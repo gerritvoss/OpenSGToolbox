@@ -88,11 +88,11 @@ void MenuBar::updateLayout(void)
 	Real32 TotalWidth(0);
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-        if(MaxHeight < getChildren().getValue(i)->getPreferredSize().y())
+        if(MaxHeight < getChildren()[i]->getPreferredSize().y())
         {
-            MaxHeight = getChildren().getValue(i)->getPreferredSize().y();
+            MaxHeight = getChildren()[i]->getPreferredSize().y();
 	    }
-	    TotalWidth += getChildren().getValue(i)->getPreferredSize().x();
+	    TotalWidth += getChildren()[i]->getPreferredSize().x();
 	}
 
     //Set My preferred Size
@@ -119,12 +119,12 @@ void MenuBar::updateLayout(void)
 	Real32 LeftOffset(InsetsTopLeft.x());
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-        beginEditCP(getChildren().getValue(i), SizeFieldMask | PositionFieldMask);
-            getChildren().getValue(i)->setSize(Vec2f(getChildren().getValue(i)->getPreferredSize().x(), MaxHeight));
-            getChildren().getValue(i)->setPosition(Pnt2f(LeftOffset, InsetsTopLeft.y()));
-        endEditCP(getChildren().getValue(i), SizeFieldMask | PositionFieldMask);
+        beginEditCP(getChildren()[i], SizeFieldMask | PositionFieldMask);
+            getChildren()[i]->setSize(Vec2f(getChildren()[i]->getPreferredSize().x(), MaxHeight));
+            getChildren()[i]->setPosition(Pnt2f(LeftOffset, InsetsTopLeft.y()));
+        endEditCP(getChildren()[i], SizeFieldMask | PositionFieldMask);
 
-        LeftOffset += getChildren().getValue(i)->getPreferredSize().x();
+        LeftOffset += getChildren()[i]->getPreferredSize().x();
     }
 }
 
@@ -247,7 +247,7 @@ void MenuBar::mousePressed(const MouseEvent& e)
     UInt32 i(0);
     while (i<getChildren().size())
     {
-        if(getChildren().getValue(i)->isContained(e.getLocation(), true))
+        if(getChildren()[i]->isContained(e.getLocation(), true))
         {
             _SelectionModel->setSelectedIndex(i);
             getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MenuSelectionListener);
@@ -308,18 +308,18 @@ void MenuBar::MenuSelectionListener::stateChanged(const ChangeEvent& e)
     for(UInt32 i(0) ; i<_MenuBar->getChildren().size() ; ++i)
     {
         if(i == _MenuBar->_SelectionModel->getSelectedIndex() &&
-           !Menu::Ptr::dcast(_MenuBar->getChildren().getValue(i))->getSelected())
+           !Menu::Ptr::dcast(_MenuBar->getChildren()[i])->getSelected())
         {
-            beginEditCP(_MenuBar->getChildren().getValue(i), Menu::SelectedFieldMask);
-                Menu::Ptr::dcast(_MenuBar->getChildren().getValue(i))->setSelected(true);
-            endEditCP(_MenuBar->getChildren().getValue(i), Menu::SelectedFieldMask);
+            beginEditCP(_MenuBar->getChildren()[i], Menu::SelectedFieldMask);
+                Menu::Ptr::dcast(_MenuBar->getChildren()[i])->setSelected(true);
+            endEditCP(_MenuBar->getChildren()[i], Menu::SelectedFieldMask);
         }
         if(i != _MenuBar->_SelectionModel->getSelectedIndex() &&
-           Menu::Ptr::dcast(_MenuBar->getChildren().getValue(i))->getSelected())
+           Menu::Ptr::dcast(_MenuBar->getChildren()[i])->getSelected())
         {
-            beginEditCP(_MenuBar->getChildren().getValue(i), Menu::SelectedFieldMask);
-                Menu::Ptr::dcast(_MenuBar->getChildren().getValue(i))->setSelected(false);
-            endEditCP(_MenuBar->getChildren().getValue(i), Menu::SelectedFieldMask);
+            beginEditCP(_MenuBar->getChildren()[i], Menu::SelectedFieldMask);
+                Menu::Ptr::dcast(_MenuBar->getChildren()[i])->setSelected(false);
+            endEditCP(_MenuBar->getChildren()[i], Menu::SelectedFieldMask);
         }
     }
 }
@@ -329,7 +329,7 @@ void MenuBar::MenuSelectionListener::mouseMoved(const MouseEvent& e)
     UInt32 i(0);
     while (i<_MenuBar->getChildren().size())
     {
-        if(_MenuBar->getChildren().getValue(i)->isContained(e.getLocation(), true))
+        if(_MenuBar->getChildren()[i]->isContained(e.getLocation(), true))
         {
             _MenuBar->_SelectionModel->setSelectedIndex(i);
             break;
@@ -343,7 +343,7 @@ void MenuBar::MenuSelectionListener::mouseDragged(const MouseEvent& e)
     UInt32 i(0);
     while (i<_MenuBar->getChildren().size())
     {
-        if(_MenuBar->getChildren().getValue(i)->isContained(e.getLocation(), true))
+        if(_MenuBar->getChildren()[i]->isContained(e.getLocation(), true))
         {
             _MenuBar->_SelectionModel->setSelectedIndex(i);
             break;
@@ -379,8 +379,8 @@ void MenuBar::MenuSelectionListener::keyTyped(const KeyEvent& e)
     {
         for(UInt32 i(0) ; i<_MenuBar->getChildren().size() ; ++i)
         {
-            if(_MenuBar->getChildren().getValue(i)->getClassType() == LabelMenuItem::getClassType() &&
-                LabelMenuItem::Ptr::dcast(_MenuBar->getChildren().getValue(i))->getMnemonicKey() == e.getKey() )
+            if(_MenuBar->getChildren()[i]->getClassType() == LabelMenuItem::getClassType() &&
+                LabelMenuItem::Ptr::dcast(_MenuBar->getChildren()[i])->getMnemonicKey() == e.getKey() )
             {
                 std::cout << e.getKeyChar() << std::endl;
             }

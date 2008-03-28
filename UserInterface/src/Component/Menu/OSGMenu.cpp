@@ -117,7 +117,7 @@ void Menu::setPopupVisible(bool Visible)
             }
         endEditCP(getInternalPopupMenu(), PopupMenu::PositionFieldMask);
         beginEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
-            getParentWindow()->getActivePopupMenus().addValue(getInternalPopupMenu());
+            getParentWindow()->getActivePopupMenus().push_back(getInternalPopupMenu());
         endEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
     }
     else
@@ -233,9 +233,9 @@ void Menu::changed(BitVector whichField, UInt32 origin)
 
         for(UInt32 i(0) ; i<getMenuItems().size() ; ++i)
         {
-            beginEditCP(getMenuItems().getValue(i), ParentWindowFieldMask);
-                getMenuItems().getValue(i)->setParentWindow(getParentWindow());
-            endEditCP(getMenuItems().getValue(i), ParentWindowFieldMask);
+            beginEditCP(getMenuItems()[i], ParentWindowFieldMask);
+                getMenuItems()[i]->setParentWindow(getParentWindow());
+            endEditCP(getMenuItems()[i], ParentWindowFieldMask);
         }
     }
     

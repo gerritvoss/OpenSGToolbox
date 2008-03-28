@@ -377,12 +377,12 @@ int main(int argc, char **argv)
     PanelPtr ExampleTabPanelPanel = osg::Panel::create();
 	beginEditCP(ExampleTabPanelPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BordersFieldMask | Panel::BackgroundsFieldMask);
         ExampleTabPanelPanel->setPreferredSize(Vec2f(180, 500));
-        ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton1);
-        ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton2);
-        ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton3);
-        ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton4);
-        ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton5);
-        ExampleTabPanelPanel->getChildren().addValue(ExampleTabPanelButton6);
+        ExampleTabPanelPanel->getChildren().push_back(ExampleTabPanelButton1);
+        ExampleTabPanelPanel->getChildren().push_back(ExampleTabPanelButton2);
+        ExampleTabPanelPanel->getChildren().push_back(ExampleTabPanelButton3);
+        ExampleTabPanelPanel->getChildren().push_back(ExampleTabPanelButton4);
+        ExampleTabPanelPanel->getChildren().push_back(ExampleTabPanelButton5);
+        ExampleTabPanelPanel->getChildren().push_back(ExampleTabPanelButton6);
 		ExampleTabPanelPanel->setBorders(NullFC);
 		ExampleTabPanelPanel->setBackgrounds(NullFC);
         ExampleTabPanelPanel->setLayout(TabPanelLayout);
@@ -476,7 +476,7 @@ int main(int argc, char **argv)
 
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().addValue(ExampleTabPanel);
+       MainInternalWindow->getChildren().push_back(ExampleTabPanel);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
@@ -511,7 +511,7 @@ int main(int argc, char **argv)
     // Add the UI Foreground Object to the Scene
     ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
     // Show the whole Scene

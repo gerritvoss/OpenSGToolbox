@@ -186,15 +186,15 @@ int main(int argc, char **argv)
 			first, and the ExampleGradientUIBackground
 			rendered on top of it.  
 
-			-getBackgrounds().addValue(BackgroundName):
+			-getBackgrounds().push_back(BackgroundName):
 				Adds a Background to the 
 				CompoundBackground.
 
     ******************************************************/
 
     beginEditCP(ExampleCompoundUIBackground, CompoundUIBackground::BackgroundsFieldMask);
-        ExampleCompoundUIBackground->getBackgrounds().addValue(ExampleTextureUIBackground);
-        ExampleCompoundUIBackground->getBackgrounds().addValue(ExampleGradientUIBackground);
+        ExampleCompoundUIBackground->getBackgrounds().push_back(ExampleTextureUIBackground);
+        ExampleCompoundUIBackground->getBackgrounds().push_back(ExampleGradientUIBackground);
     endEditCP(ExampleCompoundUIBackground, CompoundUIBackground::BackgroundsFieldMask);
 	
     /******************************************************
@@ -427,13 +427,13 @@ int main(int argc, char **argv)
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
-       MainInternalWindow->getChildren().addValue(ExampleColorUIBackgroundButton);
-       MainInternalWindow->getChildren().addValue(ExampleCompoundUIBackgroundButton);
-       MainInternalWindow->getChildren().addValue(ExampleEmptyUIBackgroundButton);
-       MainInternalWindow->getChildren().addValue(ExampleGradientUIBackgroundButton);
-       MainInternalWindow->getChildren().addValue(ExampleMaterialUIBackgroundButton);
-       MainInternalWindow->getChildren().addValue(ExampleTextureUIBackgroundButton);
-       MainInternalWindow->getChildren().addValue(ExamplePatternUIBackgroundButton);
+       MainInternalWindow->getChildren().push_back(ExampleColorUIBackgroundButton);
+       MainInternalWindow->getChildren().push_back(ExampleCompoundUIBackgroundButton);
+       MainInternalWindow->getChildren().push_back(ExampleEmptyUIBackgroundButton);
+       MainInternalWindow->getChildren().push_back(ExampleGradientUIBackgroundButton);
+       MainInternalWindow->getChildren().push_back(ExampleMaterialUIBackgroundButton);
+       MainInternalWindow->getChildren().push_back(ExampleTextureUIBackgroundButton);
+       MainInternalWindow->getChildren().push_back(ExamplePatternUIBackgroundButton);
 	   MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
@@ -469,7 +469,7 @@ int main(int argc, char **argv)
     // Add the UI Foreground Object to the Scene
     ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
     // Show the whole Scene

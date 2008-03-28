@@ -45,7 +45,7 @@ OSG_BEGIN_NAMESPACE
 inline
 MenuPtr MenuBar::getMenu(const UInt32& Index)
 {
-    return Menu::Ptr::dcast(getChildren().getValue(Index));
+    return Menu::Ptr::dcast(getChildren()[Index]);
 }
 
 inline

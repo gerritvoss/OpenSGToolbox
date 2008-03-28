@@ -98,10 +98,10 @@ void RotatedComponent::updateLayout(void)
     
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-        beginEditCP(getChildren().getValue(i),PositionFieldMask | SizeFieldMask);
-            getChildren().getValue(i)->setPosition(Pnt2f(0,0));
-            getChildren().getValue(i)->setSize(getChildren().getValue(i)->getPreferredSize());
-        endEditCP(getChildren().getValue(i),PositionFieldMask | SizeFieldMask);
+        beginEditCP(getChildren()[i],PositionFieldMask | SizeFieldMask);
+            getChildren()[i]->setPosition(Pnt2f(0,0));
+            getChildren()[i]->setSize(getChildren()[i]->getPreferredSize());
+        endEditCP(getChildren()[i],PositionFieldMask | SizeFieldMask);
     }
 }
 
@@ -110,11 +110,11 @@ void RotatedComponent::mouseClicked(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
 		if(isContained)
 		{
-			getChildren().getValue(i)->mouseClicked(e);
+			getChildren()[i]->mouseClicked(e);
 			break;
 		}
     }
@@ -126,8 +126,8 @@ void RotatedComponent::mouseEntered(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
     }
 	Component::mouseEntered(e);
 }
@@ -137,8 +137,8 @@ void RotatedComponent::mouseExited(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
     }
 	Component::mouseExited(e);
 }
@@ -148,17 +148,17 @@ void RotatedComponent::mousePressed(const MouseEvent& e)
 	bool isContained(false);
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
 		if(isContained)
 		{
 			//Give myself temporary focus
 			takeFocus(true);
-			if(!getChildren().getValue(i)->getType().isDerivedFrom(Container::getClassType()))
+			if(!getChildren()[i]->getType().isDerivedFrom(Container::getClassType()))
 			{
-				getChildren().getValue(i)->takeFocus();
+				getChildren()[i]->takeFocus();
 			}
-			getChildren().getValue(i)->mousePressed(e);
+			getChildren()[i]->mousePressed(e);
 			break;
 		}
     }
@@ -180,11 +180,11 @@ void RotatedComponent::mouseReleased(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
 		if(isContained)
 		{
-			getChildren().getValue(i)->mouseReleased(e);
+			getChildren()[i]->mouseReleased(e);
 			break;
 		}
     }
@@ -197,11 +197,11 @@ void RotatedComponent::mouseMoved(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
 		if(isContained)
 		{
-			getChildren().getValue(i)->mouseMoved(e);
+			getChildren()[i]->mouseMoved(e);
 		}
     }
 	Component::mouseMoved(e);
@@ -212,11 +212,11 @@ void RotatedComponent::mouseDragged(const MouseEvent& e)
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
 		if(isContained)
 		{
-			getChildren().getValue(i)->mouseDragged(e);
+			getChildren()[i]->mouseDragged(e);
 		}
     }
 	Component::mouseDragged(e);
@@ -227,11 +227,11 @@ void RotatedComponent::mouseWheelMoved(const MouseWheelEvent& e)
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-        isContained = getChildren().getValue(i)->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren().getValue(i),isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e.getLocation(), true);
+		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
 		if(isContained)
 		{
-			getChildren().getValue(i)->mouseWheelMoved(e);
+			getChildren()[i]->mouseWheelMoved(e);
         }
     }
 	Component::mouseWheelMoved(e);

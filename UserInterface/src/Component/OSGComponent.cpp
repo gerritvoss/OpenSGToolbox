@@ -431,7 +431,7 @@ void Component::mousePressed(const MouseEvent& e)
 	    endEditCP(getPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
 	    
         beginEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
-            getParentWindow()->getActivePopupMenus().addValue(getPopupMenu());
+            getParentWindow()->getActivePopupMenus().push_back(getPopupMenu());
         endEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
 	}
 }

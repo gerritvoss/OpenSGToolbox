@@ -130,7 +130,7 @@ void ColorChooser::addChooserPanel(AbstractColorChooserPanelPtr panel)
 		panel->installChooserPanel(ColorChooserPtr(this));
 
 		beginEditCP(ColorChooserPtr(this), InternalChooserPanelsFieldMask);
-			getInternalChooserPanels().addValue(panel);
+			getInternalChooserPanels().push_back(panel);
 		endEditCP(ColorChooserPtr(this), InternalChooserPanelsFieldMask);
 	}
 }
@@ -141,7 +141,7 @@ ColorChooser::ColorChooserPanelVector ColorChooser::getChooserPanels(void) const
 
 	for(UInt32 i(0) ; i<getInternalChooserPanels().size() ; ++i)
 	{
-		Result.push_back(getInternalChooserPanels().getValue(i));
+		Result.push_back(getInternalChooserPanels()[i]);
 	}
 
 	return Result;
@@ -196,9 +196,9 @@ void ColorChooser::setChooserPanels(ColorChooserPanelVector panels)
 	ColorChooserPanelVector RemovalVector;
 	for(UInt32 i(0) ; i<getInternalChooserPanels().size() ; ++i)
 	{
-		if(std::find(panels.begin(), panels.end(), getInternalChooserPanels().getValue(i)) == panels.end())
+		if(std::find(panels.begin(), panels.end(), getInternalChooserPanels()[i]) == panels.end())
 		{
-			RemovalVector.push_back(getInternalChooserPanels().getValue(i));
+			RemovalVector.push_back(getInternalChooserPanels()[i]);
 		}
 	}
 	for(UInt32 i(0) ; i<RemovalVector.size() ; ++i)
@@ -237,7 +237,7 @@ void ColorChooser::updateChoosers(void)
 
 	for(UInt32 i(0) ; i<getInternalChooserPanels().size() ; ++i)
 	{
-		getInternalChooserPanels().getValue(i)->updateChooser();
+		getInternalChooserPanels()[i]->updateChooser();
 	}
 }
 
@@ -270,12 +270,12 @@ void ColorChooser::updateChildren(void)
 		{
 			TabLabel = Label::create();
 			beginEditCP(TabLabel, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
-				TabLabel->setText(getInternalChooserPanels().getValue(i)->getDisplayText());
+				TabLabel->setText(getInternalChooserPanels()[i]->getDisplayText());
 				TabLabel->setBorders(NullFC);
 				TabLabel->setBackgrounds(NullFC);
 			endEditCP(TabLabel, Label::TextFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
 
-			_LayoutTabPanel->addTab(TabLabel, getInternalChooserPanels().getValue(i));
+			_LayoutTabPanel->addTab(TabLabel, getInternalChooserPanels()[i]);
 		}
 
 		beginEditCP(ColorChooserPtr(this), ColorChooser::ChildrenFieldMask);
@@ -340,7 +340,7 @@ ColorChooser::ColorChooser(const ColorChooser &source) :
 	createDefaultPanel();
 	for(UInt32 i(0) ; i<getInternalChooserPanels().size() ; ++i)
 	{
-		getInternalChooserPanels()[i] = AbstractColorChooserPanel::Ptr::dcast(getInternalChooserPanels().getValue(i)->shallowCopy());
+		getInternalChooserPanels()[i] = AbstractColorChooserPanel::Ptr::dcast(getInternalChooserPanels()[i]->shallowCopy());
 		getInternalChooserPanels()[i]->installChooserPanel(ColorChooserPtr(this));
 	}
 	

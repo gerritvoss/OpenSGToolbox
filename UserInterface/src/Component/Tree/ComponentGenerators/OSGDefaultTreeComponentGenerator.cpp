@@ -127,7 +127,7 @@ ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, Sha
     PanelPtr ThePanel = Panel::create();
     beginEditCP(ThePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
         ThePanel->setLayout(TheLayout);
-        ThePanel->getChildren().addValue(TheLabel);
+        ThePanel->getChildren().push_back(TheLabel);
     endEditCP(ThePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
 
     //TODO: Implement

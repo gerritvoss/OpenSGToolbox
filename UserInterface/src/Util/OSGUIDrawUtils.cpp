@@ -78,8 +78,12 @@ Pnt2f ViewportToDrawingSurface(const Pnt2f& ViewportPoint, const UIDrawingSurfac
 
 Pnt2f DrawingSurfaceToViewport(const Pnt2f& DrawingSurfacePoint, const UIDrawingSurfacePtr DrawingSurface, const ViewportPtr TheViewport)
 {
-    //TODO:Implement
-    return Pnt2f(0,0);
+    //Get Window to Drawing Surface
+    Pnt2f ViewportPoint;
+	DrawingSurface->getMouseTransformFunctor()->renderingSurfaceToViewport(DrawingSurfacePoint, TheViewport, ViewportPoint);
+
+    //Then get DrawingSurface to component
+    return ViewportPoint;
 }
 
 Pnt2f ViewportToComponent(const Pnt2f& ViewportPoint, const ComponentPtr Comp, const ViewportPtr TheViewport)
@@ -88,9 +92,19 @@ Pnt2f ViewportToComponent(const Pnt2f& ViewportPoint, const ComponentPtr Comp, c
     return DrawingSurfaceToComponent(ViewportToDrawingSurface(ViewportPoint, Comp->getParentWindow()->getDrawingSurface(), TheViewport), Comp);
 }
 
+Pnt2f ViewportToWindow(const Pnt2f& ViewportPoint, const ViewportPtr TheViewport)
+{
+    return Pnt2f(ViewportPoint.x() + TheViewport->getPixelLeft(), (TheViewport->getPixelTop() - TheViewport->getPixelBottom()) - ViewportPoint.y());
+}
+
 Pnt2f ComponentToViewport(const Pnt2f& ComponentPoint, const ComponentPtr Comp, const ViewportPtr TheViewport)
 {
     return DrawingSurfaceToViewport(ComponentToDrawingSurface(ComponentPoint, Comp), Comp->getParentWindow()->getDrawingSurface(), TheViewport);
+}
+
+Pnt2f ComponentToWindow(const Pnt2f& ComponentPoint, const ComponentPtr Comp, const ViewportPtr TheViewport)
+{
+	return ViewportToWindow(ComponentToViewport(ComponentPoint, Comp, TheViewport), TheViewport);
 }
 
 Pnt2f DrawingSurfaceToComponent(const Pnt2f& DrawingSurfacePoint, const ComponentPtr Comp)
@@ -162,11 +176,11 @@ void getDrawObjectBounds(MFUIDrawObjectPtr DrawObjects, Pnt2f& TopLeft, Pnt2f& B
 	if(DrawObjects.size() > 0)
 	{
 		Pnt2f TempTopLeft, TempBottomRight;
-		DrawObjects.getValue(0)->getBounds(TopLeft, BottomRight);
+		DrawObjects[0]->getBounds(TopLeft, BottomRight);
 		//Determine Top Left And Bottom Right
 		for(UInt32 i(0) ; i<DrawObjects.size(); ++i)
 		{
-			DrawObjects.getValue(i)->getBounds(TempTopLeft, TempBottomRight);
+			DrawObjects[i]->getBounds(TempTopLeft, TempBottomRight);
 		    TopLeft.setValues( osgMin(TopLeft.x(), TempTopLeft.x()),
 				               osgMin(TopLeft.y(), TempTopLeft.y()) );
 

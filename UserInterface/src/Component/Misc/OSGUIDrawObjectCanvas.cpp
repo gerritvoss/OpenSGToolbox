@@ -74,11 +74,11 @@ void UIDrawObjectCanvas::getDrawObjectBounds(Pnt2f& TopLeft, Pnt2f& BottomRight)
 	if(getDrawObjects().size() > 0)
 	{
 		Pnt2f TempTopLeft, TempBottomRight;
-		getDrawObjects().getValue(0)->getBounds(TopLeft, BottomRight);
+		getDrawObjects()[0]->getBounds(TopLeft, BottomRight);
 		//Determine Top Left And Bottom Right
 		for(UInt32 i(0) ; i<getDrawObjects().size(); ++i)
 		{
-			getDrawObjects().getValue(i)->getBounds(TempTopLeft, TempBottomRight);
+			getDrawObjects()[i]->getBounds(TempTopLeft, TempBottomRight);
 		    TopLeft.setValues( osgMin(TopLeft.x(), TempTopLeft.x()),
 				               osgMin(TopLeft.y(), TempTopLeft.y()) );
 
@@ -96,7 +96,7 @@ void UIDrawObjectCanvas::drawInternal(const GraphicsPtr Graphics) const
 {
 	for(UInt32 i(0) ; i<getDrawObjects().size(); ++i)
 	{
-		getDrawObjects().getValue(i)->draw(Graphics);
+		getDrawObjects()[i]->draw(Graphics);
 	}
 }
 

@@ -97,7 +97,7 @@ MaterialPtr Graphics3DExtrude::createDefaultMaterial(void)
 	ChunkMaterialPtr TheMaterial = ChunkMaterial::create();
 
 	beginEditCP(TheMaterial, ChunkMaterial::ChunksFieldMask);
-		TheMaterial->getChunks().addValue(TheMaterialChunk);
+		TheMaterial->getChunks().push_back(TheMaterialChunk);
 	endEditCP(TheMaterial, ChunkMaterial::ChunksFieldMask);
 
 	return TheMaterial;
@@ -452,7 +452,7 @@ void Graphics3DExtrude::drawPolygon(const MFPnt2f Verticies, const Color4f& Colo
       glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
 	   for(UInt32 i=0 ; i<Verticies.size() ; ++i)
 	   {
-	      glVertex2fv(Verticies.getValue(i).getValues());
+	      glVertex2fv(Verticies[i].getValues());
 	   }
 	glEnd();
 	

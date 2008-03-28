@@ -263,7 +263,7 @@ int main(int argc, char **argv)
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::PositionFieldMask | InternalWindow::PreferredSizeFieldMask | InternalWindow::TitleFieldMask);
        // Assign the Button to the MainInternalWindow so it will be displayed
        // when the view is rendered.
-       MainInternalWindow->getChildren().addValue(ExampleButton);
+       MainInternalWindow->getChildren().push_back(ExampleButton);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
        MainInternalWindow->setPosition(Pnt2f(50,50));
@@ -277,7 +277,7 @@ int main(int argc, char **argv)
 	beginEditCP(MainInternalWindow2, InternalWindow::AllwaysOnTopFieldMask | InternalWindow::IconableFieldMask | InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::PositionFieldMask | InternalWindow::PreferredSizeFieldMask | InternalWindow::TitleFieldMask);
        // Assign the Button to the MainInternalWindow so it will be displayed
        // when the view is rendered.
-       MainInternalWindow2->getChildren().addValue(ExampleToggleButton);
+       MainInternalWindow2->getChildren().push_back(ExampleToggleButton);
        MainInternalWindow2->setLayout(MainInternalWindowLayout2);
        MainInternalWindow2->setBackgrounds(MainInternalWindowBackground);
        MainInternalWindow2->setPosition(Pnt2f(150,150));
@@ -312,7 +312,7 @@ int main(int argc, char **argv)
     // Add the UI Foreground Object to the Scene
     ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().addValue(TutorialUIForeground);
+        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
     beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
 
     // Show the whole Scene
