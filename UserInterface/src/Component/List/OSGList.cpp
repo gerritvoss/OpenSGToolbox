@@ -257,8 +257,8 @@ void List::mousePressed(const MouseEvent& e)
 		{
 			//Give myself temporary focus
 			takeFocus(true);
-			if(!getChildren()[i]->getType().isDerivedFrom(Container::getClassType()))
-			{
+			//if(!getChildren()[i]->getType().isDerivedFrom(Container::getClassType()))
+			//{
 				focusIndex(getListIndexFromDrawnIndex(i));
 				if(getParentWindow() != NullFC &&
 				   getParentWindow()->getDrawingSurface() != NullFC &&
@@ -277,7 +277,7 @@ void List::mousePressed(const MouseEvent& e)
 						getSelectionModel()->setSelectionInterval(getListIndexFromDrawnIndex(i),getListIndexFromDrawnIndex(i));
 					}
 				}
-			}
+			//}
 			getChildren()[i]->mousePressed(e);
 			break;
 		}
@@ -375,42 +375,10 @@ void List::updateIndiciesDrawnFromModel(void)
 
 void List::contentsChanged(ListDataEvent e)
 {
-	if(getModel() != NULL)
+	if(getModel() != NULL &&
+		getModel()->getSize() != getChildren().size())
 	{
-		if(getModel()->getSize() != getChildren().size())
-		{
-			updateIndiciesDrawnFromModel();
-			/*beginEditCP(ListPtr(this), ChildrenFieldMask);
-				for(UInt32 i(e.getIndex0()) ; i<getModel()->getSize() && i<=e.getIndex1() ; ++i )
-				{
-		            updateItem(i);
-				}
-			endEditCP(ListPtr(this), ChildrenFieldMask);*/
-		}
-		Pnt2f Position(0,0);
-		for(UInt32 i(0) ; i<getModel()->getSize() && i<=e.getIndex1() ; ++i )
-		{
-			beginEditCP(getChildren()[i], PositionFieldMask | SizeFieldMask);
-			   getChildren()[i]->setPosition(Position);
-               if(getCellOrientation() == VERTICAL_ALIGNMENT)
-               {
-			      getChildren()[i]->setSize( Vec2f(getSize().x(), getCellMajorAxisLength()) );
-               }
-               else
-               {
-                  getChildren()[i]->setSize( Vec2f(getCellMajorAxisLength(), getSize().y()) );
-               }
-			endEditCP(getChildren()[i], PositionFieldMask | SizeFieldMask);
-
-            if(getCellOrientation() == VERTICAL_ALIGNMENT)
-            {
-			    Position[1] += getChildren()[i]->getSize()[1];
-            }
-            else
-            {
-			    Position[0] += getChildren()[i]->getSize()[0];
-            }
-		}
+		updateIndiciesDrawnFromModel();
 	}
 }
 
