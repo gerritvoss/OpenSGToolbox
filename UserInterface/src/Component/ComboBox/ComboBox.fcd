@@ -33,6 +33,16 @@ A UI ComboBox
 	>
 	</Field>
 	<Field
+		name="Model"
+		type="ComboBoxModelPtr"
+		cardinality="single"
+                visibility="external"
+                header="Models/OSGComboBoxModelFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+        </Field>
+	<Field
 		name="CellGenerator"
 		type="ComponentGeneratorPtr"
 		cardinality="single"

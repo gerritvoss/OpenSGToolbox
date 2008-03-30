@@ -48,7 +48,7 @@
 
 // List header files
 #include <OpenSG/UserInterface/OSGList.h>
-#include <OpenSG/UserInterface/OSGAbstractListModel.h>
+#include <OpenSG/UserInterface/OSGDefaultListModel.h>
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
 #include <OpenSG/UserInterface/OSGListModel.h>
 
@@ -126,13 +126,14 @@ class OpenSGTypePanel
 {
 protected:
 	PanelPtr _MainPanel;
-	AbstractListModel _TypeModel;
-	AbstractListModel _FieldTypeModel;
-	AbstractListModel _FieldContainerTypeModel;
+	DefaultListModelPtr _TypeModel;
+	DefaultListModelPtr _FieldTypeModel;
+	DefaultListModelPtr _FieldContainerTypeModel;
 
 	PanelPtr createTypePanel(void)
 	{
 		//Put all the FieldTypes into the model
+		_TypeModel = DefaultListModel::create();
 		for (UInt32 i(1); i <= TypeFactory::the()->getNumTypes() ; ++i)
 		{
 			TypeBase* TheType;
@@ -140,19 +141,19 @@ protected:
 			if(TheType != NULL)
 			{
 				// Add all available Fonts to it
-				_TypeModel.pushBack(SharedFieldPtr(new SFString(TheType->getCName())));
+				_TypeModel->pushBack(SharedFieldPtr(new SFString(TheType->getCName())));
 			}
 		}
 		// Create TypeList
 		ListPtr TypeList = List::create();
-		beginEditCP(TypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask);
+		beginEditCP(TypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
 			TypeList->setPreferredSize( Vec2f (200, 300) );
 			TypeList->setCellOrientation(VERTICAL_ALIGNMENT);
-		endEditCP(TypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask);
+			TypeList->setModel(_TypeModel);
+		endEditCP(TypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
 
 		// Assign the Model, and SelectionModel
 		// to the List
-		TypeList->setModel(&_TypeModel);
 		// Creates and assigns a SelectionMode
 		ListSelectionModelPtr  FieldSelectionModel(new DefaultListSelectionModel);
 		FieldSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
@@ -164,7 +165,7 @@ protected:
 			TypeListScrollPanelConstraints->setGridY(0);
 			TypeListScrollPanelConstraints->setGridHeight(1);
 			TypeListScrollPanelConstraints->setGridWidth(2);
-			TypeListScrollPanelConstraints->setFill(FILL_HORIZONTAL);
+			TypeListScrollPanelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
 			TypeListScrollPanelConstraints->setVerticalAlignment(1.0);
 		endEditCP(TypeListScrollPanelConstraints);
 
@@ -185,7 +186,7 @@ protected:
 			NumTypesLabelConstraints->setGridY(1);
 			NumTypesLabelConstraints->setGridHeight(1);
 			NumTypesLabelConstraints->setGridWidth(1);
-			NumTypesLabelConstraints->setFill(FILL_HORIZONTAL);
+			NumTypesLabelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
 			NumTypesLabelConstraints->setWeightX(1.0);
 			NumTypesLabelConstraints->setVerticalAlignment(0.0);
 		endEditCP(NumTypesLabelConstraints);
@@ -203,7 +204,7 @@ protected:
 			NumTypesValueLabelConstraints->setGridY(1);
 			NumTypesValueLabelConstraints->setGridHeight(1);
 			NumTypesValueLabelConstraints->setGridWidth(1);
-			NumTypesValueLabelConstraints->setFill(FILL_HORIZONTAL);
+			NumTypesValueLabelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
 			NumTypesValueLabelConstraints->setWeightX(1.0);
 			NumTypesValueLabelConstraints->setVerticalAlignment(0.0);
 		endEditCP(NumTypesValueLabelConstraints);
@@ -238,6 +239,7 @@ protected:
 	PanelPtr createFieldTypePanel(void)
 	{
 		//Put all the FieldTypes into the model
+		_FieldTypeModel = DefaultListModel::create();
 		UInt32 NumTypesFound(0);
 		for (UInt32 i(0); NumTypesFound < FieldFactory::the().getNFieldTypes() ; ++i)
 		{
@@ -246,21 +248,21 @@ protected:
 			if(TheType != NULL)
 			{
 				// Add all available Fonts to it
-				_FieldTypeModel.pushBack(SharedFieldPtr(new SFString(TheType->getCName())));
+				_FieldTypeModel->pushBack(SharedFieldPtr(new SFString(TheType->getCName())));
 				++NumTypesFound;
 			}
 		}
 
 		// Create FieldTypeList
 		ListPtr FieldTypeList = List::create();
-		beginEditCP(FieldTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask);
+		beginEditCP(FieldTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
 			FieldTypeList->setPreferredSize( Vec2f (200, 300) );
 			FieldTypeList->setCellOrientation(VERTICAL_ALIGNMENT);
-		endEditCP(FieldTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask);
+			FieldTypeList->setModel(_FieldTypeModel);
+		endEditCP(FieldTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
 
 		// Assign the Model, and SelectionModel
 		// to the List
-		FieldTypeList->setModel(&_FieldTypeModel);
 		// Creates and assigns a SelectionMode
 		ListSelectionModelPtr  FieldSelectionModel(new DefaultListSelectionModel);
 		FieldSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
@@ -272,7 +274,7 @@ protected:
 			FieldTypeListScrollPanelConstraints->setGridY(0);
 			FieldTypeListScrollPanelConstraints->setGridHeight(1);
 			FieldTypeListScrollPanelConstraints->setGridWidth(2);
-			FieldTypeListScrollPanelConstraints->setFill(FILL_HORIZONTAL);
+			FieldTypeListScrollPanelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
 			FieldTypeListScrollPanelConstraints->setVerticalAlignment(1.0);
 		endEditCP(FieldTypeListScrollPanelConstraints);
 
@@ -293,7 +295,7 @@ protected:
 			NumFieldTypesLabelConstraints->setGridY(1);
 			NumFieldTypesLabelConstraints->setGridHeight(1);
 			NumFieldTypesLabelConstraints->setGridWidth(1);
-			NumFieldTypesLabelConstraints->setFill(FILL_HORIZONTAL);
+			NumFieldTypesLabelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
 			NumFieldTypesLabelConstraints->setWeightX(1.0);
 			NumFieldTypesLabelConstraints->setVerticalAlignment(0.0);
 		endEditCP(NumFieldTypesLabelConstraints);
@@ -311,7 +313,7 @@ protected:
 			NumFieldTypesValueLabelConstraints->setGridY(1);
 			NumFieldTypesValueLabelConstraints->setGridHeight(1);
 			NumFieldTypesValueLabelConstraints->setGridWidth(1);
-			NumFieldTypesValueLabelConstraints->setFill(FILL_HORIZONTAL);
+			NumFieldTypesValueLabelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
 			NumFieldTypesValueLabelConstraints->setWeightX(1.0);
 			NumFieldTypesValueLabelConstraints->setVerticalAlignment(0.0);
 		endEditCP(NumFieldTypesValueLabelConstraints);
@@ -346,6 +348,7 @@ protected:
 	PanelPtr createFieldContainerTypePanel(void)
 	{
 		//Put all the FieldContainerTypes into the model
+		_FieldContainerTypeModel = DefaultListModel::create();
 		UInt32 NumTypesFound(0);
 		for (UInt32 i(0); NumTypesFound < FieldContainerFactory::the()->getNumTypes() ; ++i)
 		{
@@ -354,21 +357,21 @@ protected:
 			if(TheType != NULL)
 			{
 				// Add all available Fonts to it
-				_FieldContainerTypeModel.pushBack(SharedFieldPtr(new SFString(TheType->getCName())));
+				_FieldContainerTypeModel->pushBack(SharedFieldPtr(new SFString(TheType->getCName())));
 				++NumTypesFound;
 			}
 		}
 
 		// Create FieldContainerTypeList
 		ListPtr FieldContainerTypeList = List::create();
-		beginEditCP(FieldContainerTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask);
+		beginEditCP(FieldContainerTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
 			FieldContainerTypeList->setPreferredSize( Vec2f (200, 300) );
 			FieldContainerTypeList->setCellOrientation(VERTICAL_ALIGNMENT);
-		endEditCP(FieldContainerTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask);
+			FieldContainerTypeList->setModel(_FieldContainerTypeModel);
+		endEditCP(FieldContainerTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
 
 		// Assign the Model, and SelectionModel
 		// to the List
-		FieldContainerTypeList->setModel(&_FieldContainerTypeModel);
 		// Creates and assigns a SelectionMode
 		ListSelectionModelPtr  FieldSelectionModel(new DefaultListSelectionModel);
 		FieldSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
@@ -380,7 +383,7 @@ protected:
 			FieldContainerTypeListScrollPanelConstraints->setGridY(0);
 			FieldContainerTypeListScrollPanelConstraints->setGridHeight(1);
 			FieldContainerTypeListScrollPanelConstraints->setGridWidth(2);
-			FieldContainerTypeListScrollPanelConstraints->setFill(FILL_NONE);
+			FieldContainerTypeListScrollPanelConstraints->setFill(GridBagLayoutConstraints::FILL_NONE);
 			FieldContainerTypeListScrollPanelConstraints->setVerticalAlignment(1.0);
 		endEditCP(FieldContainerTypeListScrollPanelConstraints);
 
@@ -401,7 +404,7 @@ protected:
 			NumFCTypesLabelConstraints->setGridY(1);
 			NumFCTypesLabelConstraints->setGridHeight(1);
 			NumFCTypesLabelConstraints->setGridWidth(1);
-			NumFCTypesLabelConstraints->setFill(FILL_HORIZONTAL);
+			NumFCTypesLabelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
 			NumFCTypesLabelConstraints->setWeightX(1.0);
 			NumFCTypesLabelConstraints->setVerticalAlignment(0.0);
 		endEditCP(NumFCTypesLabelConstraints);
@@ -419,7 +422,7 @@ protected:
 			NumFCTypesValueLabelConstraints->setGridY(1);
 			NumFCTypesValueLabelConstraints->setGridHeight(1);
 			NumFCTypesValueLabelConstraints->setGridWidth(1);
-			NumFCTypesValueLabelConstraints->setFill(FILL_HORIZONTAL);
+			NumFCTypesValueLabelConstraints->setFill(GridBagLayoutConstraints::FILL_HORIZONTAL);
 			NumFCTypesValueLabelConstraints->setWeightX(1.0);
 			NumFCTypesValueLabelConstraints->setVerticalAlignment(0.0);
 		endEditCP(NumFCTypesValueLabelConstraints);
@@ -465,7 +468,7 @@ public:
 			TypePanelConstraints->setGridY(0);
 			TypePanelConstraints->setGridHeight(1);
 			TypePanelConstraints->setGridWidth(1);
-			TypePanelConstraints->setFill(FILL_BOTH);
+			TypePanelConstraints->setFill(GridBagLayoutConstraints::FILL_BOTH);
 			TypePanelConstraints->setWeightX(1.0);
 			TypePanelConstraints->setWeightY(1.0);
 			TypePanelConstraints->setPadBottom(2);
@@ -486,7 +489,7 @@ public:
 			FieldTypePanelConstraints->setGridY(0);
 			FieldTypePanelConstraints->setGridHeight(1);
 			FieldTypePanelConstraints->setGridWidth(1);
-			FieldTypePanelConstraints->setFill(FILL_BOTH);
+			FieldTypePanelConstraints->setFill(GridBagLayoutConstraints::FILL_BOTH);
 			FieldTypePanelConstraints->setWeightX(1.0);
 			FieldTypePanelConstraints->setWeightY(1.0);
 			FieldTypePanelConstraints->setPadBottom(2);
@@ -506,7 +509,7 @@ public:
 			FieldContainerTypePanelConstraints->setGridY(0);
 			FieldContainerTypePanelConstraints->setGridHeight(1);
 			FieldContainerTypePanelConstraints->setGridWidth(1);
-			FieldContainerTypePanelConstraints->setFill(FILL_BOTH);
+			FieldContainerTypePanelConstraints->setFill(GridBagLayoutConstraints::FILL_BOTH);
 			FieldContainerTypePanelConstraints->setWeightX(1.0);
 			FieldContainerTypePanelConstraints->setWeightY(1.0);
 			FieldContainerTypePanelConstraints->setPadBottom(2);

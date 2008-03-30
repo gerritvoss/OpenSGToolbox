@@ -34,7 +34,7 @@
 #include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/Input/OSGEvent.h>
-#include "OSGListModel.h"
+#include "Component/List/Models/OSGListModelFields.h"
 
 OSG_BEGIN_NAMESPACE
 

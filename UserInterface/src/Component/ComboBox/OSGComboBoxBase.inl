@@ -49,6 +49,9 @@
 \*****************************************************************************/
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
+
+#include "Models/OSGComboBoxModel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -108,6 +111,13 @@ inline
 SFComboBoxEditorPtr *ComboBoxBase::getSFEditor(void)
 {
     return &_sfEditor;
+}
+
+//! Get the ComboBox::_sfModel field.
+inline
+SFComboBoxModelPtr *ComboBoxBase::getSFModel(void)
+{
+    return &_sfModel;
 }
 
 //! Get the ComboBox::_sfCellGenerator field.
@@ -186,6 +196,33 @@ inline
 void ComboBoxBase::setEditor(const ComboBoxEditorPtr &value)
 {
     _sfEditor.setValue(value);
+}
+
+//! Get the value of the ComboBox::_sfModel field.
+inline
+ComboBoxModelPtr &ComboBoxBase::getModel(void)
+{
+    return _sfModel.getValue();
+}
+
+//! Get the value of the ComboBox::_sfModel field.
+inline
+const ComboBoxModelPtr &ComboBoxBase::getModel(void) const
+{
+    return _sfModel.getValue();
+}
+
+//! Set the value of the ComboBox::_sfModel field.
+inline
+void ComboBoxBase::setModel(const ComboBoxModelPtr &value)
+{
+	if(getModel() != NULL)
+	{
+		getModel()->removeListDataListener(dynamic_cast<ComboBox*>(this));
+		getModel()->removeSelectionListener(dynamic_cast<ComboBox*>(this));
+	}
+
+    _sfModel.setValue(value);
 }
 
 //! Get the value of the ComboBox::_sfCellGenerator field.

@@ -1946,14 +1946,6 @@
 					Name="ComboBox"
 					>
 					<File
-						RelativePath="..\..\src\Component\ComboBox\OSGAbstractComboBoxModel.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\ComboBox\OSGAbstractComboBoxModel.h"
-						>
-					</File>
-					<File
 						RelativePath="..\..\src\Component\ComboBox\OSGComboBox.cpp"
 						>
 					</File>
@@ -1982,10 +1974,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Component\ComboBox\OSGComboBoxModel.h"
-						>
-					</File>
-					<File
 						RelativePath="..\..\src\Component\ComboBox\OSGComboBoxSelectionEvent.cpp"
 						>
 					</File>
@@ -1999,18 +1987,6 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Component\ComboBox\OSGComboBoxSelectionListener.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\ComboBox\OSGDefaultComboBoxModel.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\ComboBox\OSGDefaultComboBoxModel.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\ComboBox\OSGMutableComboBoxModel.h"
 						>
 					</File>
 					<Filter
@@ -2130,6 +2106,168 @@
 						</File>
 						<File
 							RelativePath="..\..\src\Component\ComboBox\ComponentGenerators\OSGDefaultComboBoxComponentGeneratorFields.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Models"
+						>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGAbstractComboBoxModel.cpp"
+							>
+							<FileConfiguration
+								Name="Debug|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGAbstractComboBoxModel.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGAbstractComboBoxModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGAbstractComboBoxModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGAbstractComboBoxModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGAbstractComboBoxModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGAbstractComboBoxModelFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGAbstractMutableComboBoxModel.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGAbstractMutableComboBoxModel.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGAbstractMutableComboBoxModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGAbstractMutableComboBoxModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGAbstractMutableComboBoxModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGAbstractMutableComboBoxModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGAbstractMutableComboBoxModelFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGComboBoxModel.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGComboBoxModel.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGComboBoxModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGComboBoxModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGComboBoxModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGComboBoxModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGComboBoxModelFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGDefaultMutableComboBoxModel.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGDefaultMutableComboBoxModel.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGDefaultMutableComboBoxModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGDefaultMutableComboBoxModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGDefaultMutableComboBoxModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGDefaultMutableComboBoxModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGDefaultMutableComboBoxModelFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGMutableComboBoxModel.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGMutableComboBoxModel.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGMutableComboBoxModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGMutableComboBoxModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGMutableComboBoxModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGMutableComboBoxModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\ComboBox\Models\OSGMutableComboBoxModelFields.h"
 							>
 						</File>
 					</Filter>
@@ -2630,18 +2768,6 @@
 					Name="List"
 					>
 					<File
-						RelativePath="..\..\src\Component\List\OSGAbstractListModel.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGAbstractListModel.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGAbstractListModel.inl"
-						>
-					</File>
-					<File
 						RelativePath="..\..\src\Component\List\OSGDefaultListSelectionModel.cpp"
 						>
 					</File>
@@ -2695,10 +2821,6 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Component\List\OSGListFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\List\OSGListModel.h"
 						>
 					</File>
 					<File
@@ -2778,6 +2900,94 @@
 						</File>
 						<File
 							RelativePath="..\..\src\Component\List\ComponentGenerators\OSGListComponentGeneratorFields.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Models"
+						>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGAbstractListModel.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGAbstractListModel.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGAbstractListModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGAbstractListModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGAbstractListModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGAbstractListModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGAbstractListModelFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGDefaultListModel.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGDefaultListModel.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGDefaultListModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGDefaultListModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGDefaultListModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGDefaultListModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGDefaultListModelFields.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGListModel.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGListModel.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGListModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGListModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGListModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGListModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\List\Models\OSGListModelFields.h"
 							>
 						</File>
 					</Filter>

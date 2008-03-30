@@ -79,7 +79,7 @@ void reshape(Vec2f Size);
 #include <sstream>
 #include <OpenSG/UserInterface/OSGGridLayout.h>
 #include <OpenSG/UserInterface/OSGComboBox.h>
-#include <OpenSG/UserInterface/OSGDefaultComboBoxModel.h>
+#include <OpenSG/UserInterface/OSGDefaultMutableComboBoxModel.h>
 
 RadioButtonGroup DeselectedRadioButtonGroup;
 RadioButtonGroup SelectedRadioButtonGroup;
@@ -92,10 +92,10 @@ Int32SpinnerModelPtr disabledActiveSpinnerModel(new Int32SpinnerModel());
 
 
 
-DefaultComboBoxModel editableComboBoxModel;
-DefaultComboBoxModel noneditableComboBoxModel;
-DefaultComboBoxModel disabledEditableComboBoxModel;
-DefaultComboBoxModel disabledNoneditableComboBoxModel;
+DefaultMutableComboBoxModelPtr editableComboBoxModel;
+DefaultMutableComboBoxModelPtr noneditableComboBoxModel;
+DefaultMutableComboBoxModelPtr disabledEditableComboBoxModel;
+DefaultMutableComboBoxModelPtr disabledNoneditableComboBoxModel;
 
 
 
@@ -1034,62 +1034,65 @@ PanelPtr StatePanelCreator::createStatePanel(void)
     ComboBoxPtr disabledNoneditableComboBox = osg::ComboBox::create();
 
 	// Create Models
-	editableComboBoxModel.addElement(SharedFieldPtr(new SFString("Editable")));
-	editableComboBoxModel.addElement(SharedFieldPtr(new SFString("These")));
-	editableComboBoxModel.addElement(SharedFieldPtr(new SFString("Can")));
-	editableComboBoxModel.addElement(SharedFieldPtr(new SFString("Be")));
-	editableComboBoxModel.addElement(SharedFieldPtr(new SFString("Typed")));
-	editableComboBoxModel.addElement(SharedFieldPtr(new SFString("Over")));
+	editableComboBoxModel = DefaultMutableComboBoxModel::create();
+	editableComboBoxModel->addElement(SharedFieldPtr(new SFString("Editable")));
+	editableComboBoxModel->addElement(SharedFieldPtr(new SFString("These")));
+	editableComboBoxModel->addElement(SharedFieldPtr(new SFString("Can")));
+	editableComboBoxModel->addElement(SharedFieldPtr(new SFString("Be")));
+	editableComboBoxModel->addElement(SharedFieldPtr(new SFString("Typed")));
+	editableComboBoxModel->addElement(SharedFieldPtr(new SFString("Over")));
 	
-	editableComboBox->setModel(&editableComboBoxModel);
 
-	noneditableComboBoxModel.addElement(SharedFieldPtr(new SFString("Noneditable")));
-	noneditableComboBoxModel.addElement(SharedFieldPtr(new SFString("These")));
-	noneditableComboBoxModel.addElement(SharedFieldPtr(new SFString("Can")));
-	noneditableComboBoxModel.addElement(SharedFieldPtr(new SFString("NOT")));
-	noneditableComboBoxModel.addElement(SharedFieldPtr(new SFString("Be")));
-	noneditableComboBoxModel.addElement(SharedFieldPtr(new SFString("Typed")));
-	noneditableComboBoxModel.addElement(SharedFieldPtr(new SFString("Over")));
+	noneditableComboBoxModel = DefaultMutableComboBoxModel::create();
+	noneditableComboBoxModel->addElement(SharedFieldPtr(new SFString("Noneditable")));
+	noneditableComboBoxModel->addElement(SharedFieldPtr(new SFString("These")));
+	noneditableComboBoxModel->addElement(SharedFieldPtr(new SFString("Can")));
+	noneditableComboBoxModel->addElement(SharedFieldPtr(new SFString("NOT")));
+	noneditableComboBoxModel->addElement(SharedFieldPtr(new SFString("Be")));
+	noneditableComboBoxModel->addElement(SharedFieldPtr(new SFString("Typed")));
+	noneditableComboBoxModel->addElement(SharedFieldPtr(new SFString("Over")));
 
-	noneditableComboBox->setModel(&noneditableComboBoxModel);
 
 	// Create simple Models for disabled ComboBoxes
-	editableComboBoxModel.addElement(SharedFieldPtr(new SFString("Editable")));
+	disabledEditableComboBoxModel = DefaultMutableComboBoxModel::create();
+	disabledEditableComboBoxModel->addElement(SharedFieldPtr(new SFString("Editable")));
 
-	disabledEditableComboBox->setModel(&disabledEditableComboBoxModel);
 
-	noneditableComboBoxModel.addElement(SharedFieldPtr(new SFString("Noneditable")));
+	disabledNoneditableComboBoxModel = DefaultMutableComboBoxModel::create();
+	disabledNoneditableComboBoxModel->addElement(SharedFieldPtr(new SFString("Noneditable")));
 
-	disabledNoneditableComboBox->setModel(&disabledNoneditableComboBoxModel);
 
-    beginEditCP(editableComboBox, ComboBox::ConstraintsFieldMask);
+    beginEditCP(editableComboBox, ComboBox::ConstraintsFieldMask | ComboBox::ModelFieldMask);
         editableComboBox->setConstraints(Constraint0109);
 		editableComboBox->setMaxSize(Vec2f(75, 23));
-    endEditCP(editableComboBox, ComboBox::ConstraintsFieldMask);
+		editableComboBox->setModel(editableComboBoxModel);
+    endEditCP(editableComboBox, ComboBox::ConstraintsFieldMask | ComboBox::ModelFieldMask);
 	editableComboBox->setSelectedIndex(0);
 
-    beginEditCP(noneditableComboBox, ComboBox::EditableFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask);
+    beginEditCP(noneditableComboBox, ComboBox::EditableFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask | ComboBox::ModelFieldMask);
         noneditableComboBox->setEditable(false);
         noneditableComboBox->setConstraints(Constraint0209);
 		noneditableComboBox->setMaxSize(Vec2f(75, 23));
-    endEditCP(noneditableComboBox, ComboBox::EditableFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask);
+		noneditableComboBox->setModel(noneditableComboBoxModel);
+    endEditCP(noneditableComboBox, ComboBox::EditableFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask | ComboBox::ModelFieldMask);
 	noneditableComboBox->setSelectedIndex(0);
 
-	//disabledEditableComboBox->setSelectedIndex(0);
-    beginEditCP(disabledEditableComboBox, ComboBox::EnabledFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask);
+    beginEditCP(disabledEditableComboBox, ComboBox::EnabledFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask | ComboBox::ModelFieldMask);
         disabledEditableComboBox->setEnabled(false);
         disabledEditableComboBox->setConstraints(Constraint0309);
 		disabledEditableComboBox->setMaxSize(Vec2f(75, 23));
-    endEditCP(disabledEditableComboBox, ComboBox::EnabledFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask);
-	
-	disabledNoneditableComboBox->setSelectedIndex(0);
-    beginEditCP(disabledNoneditableComboBox, ComboBox::EditableFieldMask | ComboBox::EnabledFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask);
+		disabledEditableComboBox->setModel(disabledEditableComboBoxModel);
+    endEditCP(disabledEditableComboBox, ComboBox::EnabledFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask | ComboBox::ModelFieldMask);
+	disabledEditableComboBox->setSelectedIndex(0);
+
+    beginEditCP(disabledNoneditableComboBox, ComboBox::EditableFieldMask | ComboBox::EnabledFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask | ComboBox::ModelFieldMask);
         disabledNoneditableComboBox->setEditable(false);
         disabledNoneditableComboBox->setEnabled(false);
         disabledNoneditableComboBox->setConstraints(Constraint0409);
 		disabledNoneditableComboBox->setMaxSize(Vec2f(75, 23));
-    endEditCP(disabledNoneditableComboBox, ComboBox::EditableFieldMask | ComboBox::EnabledFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask);
-	
+		disabledNoneditableComboBox->setModel(disabledNoneditableComboBoxModel);
+    endEditCP(disabledNoneditableComboBox, ComboBox::EditableFieldMask | ComboBox::EnabledFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask | ComboBox::ModelFieldMask);
+	disabledNoneditableComboBox->setSelectedIndex(0);
 
     /******************************************************
                         Labels

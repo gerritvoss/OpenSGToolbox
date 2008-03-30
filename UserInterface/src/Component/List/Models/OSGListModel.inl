@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -36,43 +34,15 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_MUTABLE_COMBOBOX_MODEL_H_
-#define _OSG_UI_MUTABLE_COMBOBOX_MODEL_H_
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
-#ifdef __sgi
-#pragma once
-#endif
- 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include "OSGComboBoxModel.h"
 
 OSG_BEGIN_NAMESPACE
-	 
-class OSG_USERINTERFACELIB_DLLMAPPING MutableComboBoxModel : public ComboBoxModel
-{
-private:
-protected:
-public:
-	//Adds an item at the end of the model.
-	virtual void addElement(SharedFieldPtr obj) = 0;
-
-	//Adds an item at a specific index.
-	virtual void insertElementAt(SharedFieldPtr obj, const UInt32& index) = 0;
-
-	//Removes an item from the model.
-	virtual void removeElement(SharedFieldPtr obj) = 0;
-
-	//Removes an item at a specific index.
-	virtual void removeElementAt(const UInt32& index) = 0;
-
-	//Removes all elements
-	virtual void removeAllElements(void) = 0;
-};
-
-typedef MutableComboBoxModel* MutableComboBoxModelPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSG_UI_MUTABLE_COMBOBOX_MODEL_H_ */
+#define OSGLISTMODEL_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

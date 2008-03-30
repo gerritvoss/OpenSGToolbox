@@ -48,7 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGComboBox.h"
-#include "OSGMutableComboBoxModel.h"
+#include "Models/OSGMutableComboBoxModel.h"
 #include "Component/Menu/OSGPopupMenu.h"
 #include "Component/Container/Window/OSGInternalWindow.h"
 #include "Component/Button/OSGToggleButton.h"
@@ -129,7 +129,7 @@ void ComboBox::actionPerformed(const ActionEvent& e)
 
 	if(i < getComboListPopupMenu()->getNumItems())
 	{
-		_Model->setSelectedItem(i);
+		getModel()->setSelectedItem(i);
 		if(getEditable() && getEditor() != NullFC && getEditor()->getEditorComponent() != NullFC)
 		{
 			getEditor()->selectAll();
@@ -177,9 +177,9 @@ void ComboBox::removeActionListener(ActionListenerPtr Listener)
 
 void ComboBox::addItem(SharedFieldPtr anObject)
 {
-	if(_Model != NULL && dynamic_cast<MutableComboBoxModelPtr>(_Model))
+	if(getModel() != NullFC && getModel()->getType().isDerivedFrom(MutableComboBoxModel::getClassType()))
 	{
-		dynamic_cast<MutableComboBoxModelPtr>(_Model)->addElement(anObject);
+		MutableComboBoxModel::Ptr::dcast(getModel())->addElement(anObject);
 	}
 }
 
@@ -196,33 +196,33 @@ std::string ComboBox::getActionCommand(void) const
 
 void ComboBox::insertItemAt(SharedFieldPtr anObject, const UInt32& index)
 {
-	if(_Model != NULL && dynamic_cast<MutableComboBoxModelPtr>(_Model))
+	if(getModel() != NullFC && getModel()->getType().isDerivedFrom(MutableComboBoxModel::getClassType()))
 	{
-		dynamic_cast<MutableComboBoxModelPtr>(_Model)->insertElementAt(anObject, index);
+		MutableComboBoxModel::Ptr::dcast(getModel())->insertElementAt(anObject, index);
 	}
 }
 
 void ComboBox::removeAllItems(void)
 {
-	if(_Model != NULL && dynamic_cast<MutableComboBoxModelPtr>(_Model))
+	if(getModel() != NullFC && getModel()->getType().isDerivedFrom(MutableComboBoxModel::getClassType()))
 	{
-		dynamic_cast<MutableComboBoxModelPtr>(_Model)->removeAllElements();
+		MutableComboBoxModel::Ptr::dcast(getModel())->removeAllElements();
 	}
 }
 
 void ComboBox::removeItem(SharedFieldPtr anObject)
 {
-	if(_Model != NULL && dynamic_cast<MutableComboBoxModelPtr>(_Model))
+	if(getModel() != NullFC && getModel()->getType().isDerivedFrom(MutableComboBoxModel::getClassType()))
 	{
-		dynamic_cast<MutableComboBoxModelPtr>(_Model)->removeElement(anObject);
+		MutableComboBoxModel::Ptr::dcast(getModel())->removeElement(anObject);
 	}
 }
 
 void ComboBox::removeItemAt(const UInt32& anIndex)
 {
-	if(_Model != NULL && dynamic_cast<MutableComboBoxModelPtr>(_Model))
+	if(getModel() != NullFC && getModel()->getType().isDerivedFrom(MutableComboBoxModel::getClassType()))
 	{
-		dynamic_cast<MutableComboBoxModelPtr>(_Model)->removeElementAt(anIndex);
+		MutableComboBoxModel::Ptr::dcast(getModel())->removeElementAt(anIndex);
 	}
 }
 
@@ -233,10 +233,10 @@ bool ComboBox::selectWithKey(KeyEvent::Key TheKey)
     std::string TheText;
 
     bool ExitLoop(false);
-	while(i<_Model->getSize()  && !ExitLoop)
+	while(i<getModel()->getSize()  && !ExitLoop)
 	{
 		//Get The first character of this item
-		ModelElement = _Model->getElementAt((_Model->getSelectedItemIndex() + i) % _Model->getSize());
+		ModelElement = getModel()->getElementAt((getModel()->getSelectedItemIndex() + i) % getModel()->getSize());
 
         if(ModelElement->getType() == SFString::getClassType())
         {
@@ -262,7 +262,7 @@ bool ComboBox::selectWithKey(KeyEvent::Key TheKey)
 
 	if(ExitLoop)
 	{
-	    _Model->setSelectedItem((_Model->getSelectedItemIndex() + i) % _Model->getSize());
+	    getModel()->setSelectedItem((getModel()->getSelectedItemIndex() + i) % getModel()->getSize());
 	}
 
 	return false;
@@ -271,25 +271,6 @@ bool ComboBox::selectWithKey(KeyEvent::Key TheKey)
 void ComboBox::setActionCommand(std::string aCommand)
 {
 	//TODO:Implement
-}
-
-
-void ComboBox::setModel(ComboBoxModelPtr aModel)
-{
-	if(_Model != NULL)
-	{
-		_Model->removeListDataListener(this);
-		_Model->removeSelectionListener(this);
-	}
-
-	_Model = aModel;
-
-	if(_Model != NULL)
-	{
-		_Model->addListDataListener(this);
-		_Model->addSelectionListener(this);
-		updateListFromModel();
-	}
 }
 
 void ComboBox::setPopupVisible(bool v)
@@ -313,7 +294,7 @@ void ComboBox::showPopup(void)
        getComboListPopupMenu()->setInvoker(ComponentPtr(this));
        getComboListPopupMenu()->setVisible(true);
        getComboListPopupMenu()->setPosition(ComponentToFrame(BorderTopLeft + Vec2f(0,BorderBottomRight.y()), ComponentPtr(this)));
-	   getComboListPopupMenu()->setSelection(_Model->getSelectedItemIndex());
+	   getComboListPopupMenu()->setSelection(getModel()->getSelectedItemIndex());
     endEditCP(getComboListPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
     
     beginEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
@@ -333,16 +314,16 @@ void ComboBox::updateListFromModel(void)
 	
     LabelMenuItemPtr Item;
 	std::string TheText;
-	for(UInt32 i(0) ; i<_Model->getSize() ; ++i)
+	for(UInt32 i(0) ; i<getModel()->getSize() ; ++i)
 	{
 		Item = LabelMenuItem::create();
-		if(_Model->getElementAt(i)->getType() == SFString::getClassType())
+		if(getModel()->getElementAt(i)->getType() == SFString::getClassType())
 		{
-            TheText = dynamic_cast<SFString*>(_Model->getElementAt(i).get())->getValue();
+            TheText = dynamic_cast<SFString*>(getModel()->getElementAt(i).get())->getValue();
 		}
 		else
 		{
-			_Model->getElementAt(i)->getValueByStr(TheText);
+			getModel()->getElementAt(i)->getValueByStr(TheText);
 		}
 		beginEditCP(Item, LabelMenuItem::TextFieldMask);
 			Item->setText(TheText);
@@ -359,9 +340,9 @@ void ComboBox::updateListFromModel(void)
 void ComboBox::updateSelectedItemComponent(void)
 {
 	//Update the Editor
-	if(getEditable() && getEditor() != NullFC && _Model->getSelectedItemIndex() >=0 )
+	if(getEditable() && getEditor() != NullFC && getModel()->getSelectedItemIndex() >=0 )
 	{
-		getEditor()->setItem(_Model->getElementAt(_Model->getSelectedItemIndex()));
+		getEditor()->setItem(getModel()->getElementAt(getModel()->getSelectedItemIndex()));
 	}
 
 	//Update the Selected Item Component
@@ -389,16 +370,16 @@ void ComboBox::keyTyped(const KeyEvent& e)
 {
 	if(e.getKey() == KeyEvent::KEY_UP)
 	{
-		if(_Model->getSelectedItemIndex() > 0)
+		if(getModel()->getSelectedItemIndex() > 0)
 		{
-			_Model->setSelectedItem(_Model->getSelectedItemIndex() - 1);
+			getModel()->setSelectedItem(getModel()->getSelectedItemIndex() - 1);
 		}
 	}
 	else if(e.getKey() == KeyEvent::KEY_DOWN)
 	{
-		if(_Model->getSelectedItemIndex() < _Model->getSize()-1)
+		if(getModel()->getSelectedItemIndex() < getModel()->getSize()-1)
 		{
-			_Model->setSelectedItem(_Model->getSelectedItemIndex() + 1);
+			getModel()->setSelectedItem(getModel()->getSelectedItemIndex() + 1);
 		}
 	}
 	else if(!getEditable() && e.getKeyChar() != 0)
@@ -427,16 +408,16 @@ void ComboBox::mouseClicked(const MouseEvent& e)
 
 void ComboBox::updateComponentGeneratorSelectedItem(void)
 {
-	if(!getEditable() && getCellGenerator() != NullFC && _Model != NULL)
+	if(!getEditable() && getCellGenerator() != NullFC && getModel() != NullFC)
 	{
 		beginEditCP(ComboBoxPtr(this), ComponentGeneratorSelectedItemFieldMask);
 			if(getCellGenerator()->getType().isDerivedFrom(ComboBoxComponentGenerator::getClassType()))
 			{
-				setComponentGeneratorSelectedItem(ComboBoxComponentGenerator::Ptr::dcast(getCellGenerator())->getComboBoxComponent(ComboBoxPtr(this), _Model->getSelectedItem(), _Model->getSelectedItemIndex(), false, false));
+				setComponentGeneratorSelectedItem(ComboBoxComponentGenerator::Ptr::dcast(getCellGenerator())->getComboBoxComponent(ComboBoxPtr(this), getModel()->getSelectedItem(), getModel()->getSelectedItemIndex(), false, false));
 			}
 			else
 			{
-				setComponentGeneratorSelectedItem(getCellGenerator()->getComponent(ComboBoxPtr(this), _Model->getSelectedItem(), _Model->getSelectedItemIndex(), 0, false, false));
+				setComponentGeneratorSelectedItem(getCellGenerator()->getComponent(ComboBoxPtr(this), getModel()->getSelectedItem(), getModel()->getSelectedItemIndex(), 0, false, false));
 			}
 		endEditCP(ComboBoxPtr(this), ComponentGeneratorSelectedItemFieldMask);
 	}
@@ -451,15 +432,15 @@ void ComboBox::updateSelectionFromEditor(void)
 	    std::string EditorString;
 	    std::string ModelItemString;
 	    bool ExitLoop(false);
-        for(UInt32 i(0) ; i<_Model->getSize() && !ExitLoop ; ++i)
+        for(UInt32 i(0) ; i<getModel()->getSize() && !ExitLoop ; ++i)
         {
             EditorItem->getValueByStr(EditorString);
-            _Model->getElementAt(i)->getValueByStr(ModelItemString);
+            getModel()->getElementAt(i)->getValueByStr(ModelItemString);
             if(EditorString.compare(ModelItemString) == 0)
             {
                 ExitLoop = true;
 
-                _Model->setSelectedItem(i);
+                getModel()->setSelectedItem(i);
             }
         }
     }
@@ -473,7 +454,6 @@ void ComboBox::updateSelectionFromEditor(void)
 
 ComboBox::ComboBox(void) :
     Inherited(),
-		_Model(NULL),
 		_ExpandButtonSelectedListener(ComboBoxPtr(this)),
 		_EditorListener(ComboBoxPtr(this))
 {
@@ -484,7 +464,6 @@ ComboBox::ComboBox(void) :
 
 ComboBox::ComboBox(const ComboBox &source) :
     Inherited(source),
-		_Model(source._Model),
 		_ExpandButtonSelectedListener(ComboBoxPtr(this)),
 		_EditorListener(ComboBoxPtr(this))
 {
@@ -554,6 +533,16 @@ void ComboBox::changed(BitVector whichField, UInt32 origin)
     {
         getEditor()->addActionListener(&_EditorListener);
     }
+
+	if(whichField & ModelFieldMask)
+	{
+		if(getModel() != NullFC)
+		{
+			getModel()->addListDataListener(this);
+			getModel()->addSelectionListener(this);
+			updateListFromModel();
+		}
+	}
 }
 
 void ComboBox::dump(      UInt32    , 

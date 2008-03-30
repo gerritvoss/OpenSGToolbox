@@ -69,6 +69,7 @@
 
 #include "Component/Button/OSGToggleButtonFields.h" // ExpandButton type
 #include "Component/ComboBox/Editors/OSGComboBoxEditorFields.h" // Editor type
+#include "Models/OSGComboBoxModelFields.h" // Model type
 #include "ComponentGenerators/OSGComponentGeneratorFields.h" // CellGenerator type
 #include "Component/OSGComponentFields.h" // ComponentGeneratorSelectedItem type
 #include <OpenSG/OSGBoolFields.h> // Editable type
@@ -99,7 +100,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
     {
         ExpandButtonFieldId                   = Inherited::NextFieldId,
         EditorFieldId                         = ExpandButtonFieldId                   + 1,
-        CellGeneratorFieldId                  = EditorFieldId                         + 1,
+        ModelFieldId                          = EditorFieldId                         + 1,
+        CellGeneratorFieldId                  = ModelFieldId                          + 1,
         ComponentGeneratorSelectedItemFieldId = CellGeneratorFieldId                  + 1,
         EditableFieldId                       = ComponentGeneratorSelectedItemFieldId + 1,
         MaxRowCountFieldId                    = EditableFieldId                       + 1,
@@ -109,6 +111,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
 
     static const OSG::BitVector ExpandButtonFieldMask;
     static const OSG::BitVector EditorFieldMask;
+    static const OSG::BitVector ModelFieldMask;
     static const OSG::BitVector CellGeneratorFieldMask;
     static const OSG::BitVector ComponentGeneratorSelectedItemFieldMask;
     static const OSG::BitVector EditableFieldMask;
@@ -142,6 +145,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
 
            SFToggleButtonPtr   *getSFExpandButton   (void);
            SFComboBoxEditorPtr *getSFEditor         (void);
+           SFComboBoxModelPtr  *getSFModel          (void);
            SFComponentGeneratorPtr *getSFCellGenerator  (void);
            SFBool              *getSFEditable       (void);
            SFUInt32            *getSFMaxRowCount    (void);
@@ -150,6 +154,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
      const ToggleButtonPtr     &getExpandButton   (void) const;
            ComboBoxEditorPtr   &getEditor         (void);
      const ComboBoxEditorPtr   &getEditor         (void) const;
+           ComboBoxModelPtr    &getModel          (void);
+     const ComboBoxModelPtr    &getModel          (void) const;
            ComponentGeneratorPtr &getCellGenerator  (void);
      const ComponentGeneratorPtr &getCellGenerator  (void) const;
            bool                &getEditable       (void);
@@ -164,6 +170,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
 
      void setExpandButton   ( const ToggleButtonPtr &value );
      void setEditor         ( const ComboBoxEditorPtr &value );
+     void setModel          ( const ComboBoxModelPtr &value );
      void setCellGenerator  ( const ComponentGeneratorPtr &value );
      void setEditable       ( const bool &value );
      void setMaxRowCount    ( const UInt32 &value );
@@ -211,6 +218,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
 
     SFToggleButtonPtr   _sfExpandButton;
     SFComboBoxEditorPtr   _sfEditor;
+    SFComboBoxModelPtr   _sfModel;
     SFComponentGeneratorPtr   _sfCellGenerator;
     SFComponentPtr      _sfComponentGeneratorSelectedItem;
     SFBool              _sfEditable;

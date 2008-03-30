@@ -49,7 +49,9 @@
 \*****************************************************************************/
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 
+#include "Models/OSGListModel.h" // Model type
 OSG_BEGIN_NAMESPACE
 
 
@@ -110,6 +112,13 @@ SFUInt32 *ListBase::getSFCellMajorAxisLength(void)
     return &_sfCellMajorAxisLength;
 }
 
+//! Get the List::_sfModel field.
+inline
+SFListModelPtr *ListBase::getSFModel(void)
+{
+    return &_sfModel;
+}
+
 //! Get the List::_sfCellGenerator field.
 inline
 SFComponentGeneratorPtr *ListBase::getSFCellGenerator(void)
@@ -165,6 +174,32 @@ inline
 void ListBase::setCellMajorAxisLength(const UInt32 &value)
 {
     _sfCellMajorAxisLength.setValue(value);
+}
+
+//! Get the value of the List::_sfModel field.
+inline
+ListModelPtr &ListBase::getModel(void)
+{
+    return _sfModel.getValue();
+}
+
+//! Get the value of the List::_sfModel field.
+inline
+const ListModelPtr &ListBase::getModel(void) const
+{
+    return _sfModel.getValue();
+}
+
+//! Set the value of the List::_sfModel field.
+inline
+void ListBase::setModel(const ListModelPtr &value)
+{
+	if(getModel() != NULL)
+	{
+		getModel()->removeListDataListener(dynamic_cast<List*>(this));
+	}
+
+    _sfModel.setValue(value);
 }
 
 //! Get the value of the List::_sfCellGenerator field.

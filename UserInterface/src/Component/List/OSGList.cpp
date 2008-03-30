@@ -100,9 +100,9 @@ SharedFieldPtr List::getValueAtPoint(const MouseEvent& e)
     Pnt2f PointInComponent(ViewportToComponent(e.getLocation(), ListPtr(this), e.getViewport()));
 
 	Int32 Index(getIndexForLocation(PointInComponent));
-	if(Index > 0 && Index < _Model->getSize())
+	if(Index > 0 && Index < getModel()->getSize())
 	{
-		return _Model->getElementAt(Index);
+		return getModel()->getElementAt(Index);
 	}
 	else
 	{
@@ -314,7 +314,7 @@ void List::keyTyped(const KeyEvent& e)
 		else if ((getCellOrientation() == VERTICAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_DOWN) ||
 			(getCellOrientation() == HORIZONTAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_RIGHT))
 		{
-			ListIndex = osgMin<Int32>((_FocusedIndex+1), _Model->getSize()-1);
+			ListIndex = osgMin<Int32>((_FocusedIndex+1), getModel()->getSize()-1);
 			UpdateSelectionIndex = true;
 		}
 		break;
@@ -333,7 +333,7 @@ void List::keyTyped(const KeyEvent& e)
 		UpdateSelectionIndex = true;
 		break;
 	case KeyEvent::KEY_END:
-		ListIndex = _Model->getSize()-1;
+		ListIndex = getModel()->getSize()-1;
 		UpdateSelectionIndex = true;
 		break;
 	case KeyEvent::KEY_PAGE_UP:
@@ -341,7 +341,7 @@ void List::keyTyped(const KeyEvent& e)
 		UpdateSelectionIndex = true;
 		break;
 	case KeyEvent::KEY_PAGE_DOWN:
-		ListIndex = osgMin<Int32>(_FocusedIndex+(_BottomDrawnIndex - _TopDrawnIndex), _Model->getSize()-1);
+		ListIndex = osgMin<Int32>(_FocusedIndex+(_BottomDrawnIndex - _TopDrawnIndex), getModel()->getSize()-1);
 		UpdateSelectionIndex = true;
 		break;
 	}
@@ -542,30 +542,6 @@ void List::intervalRemoved(ListDataEvent e)
 	updatePreferredSize();
 }
 
-void List::setModel(ListModelPtr Model)
-{
-	beginEditCP(ListPtr(this), ChildrenFieldMask);
-		getChildren().clear();
-	endEditCP(ListPtr(this), ChildrenFieldMask);
-	//Should through a ListDataEvent of removeInterval
-
-	if(_Model != NULL)
-	{
-		_Model->removeListDataListener(this);
-	}
-
-	_Model = Model;
-
-	if(_Model != NULL)
-	{
-		_Model->addListDataListener(this);
-	}
-	
-	updateIndiciesDrawnFromModel();
-	updatePreferredSize();
-}
-
-
 void List::setSelectionModel(ListSelectionModelPtr SelectionModel)
 {
 	if(_SelectionModel != NULL)
@@ -733,7 +709,7 @@ void List::getDrawnIndices(Int32& Beginning, Int32& End) const
 
 Int32 List::getIndexClosestToLocation(const Pnt2f& Location) const
 {
-	if(_Model == NULL) {return -1;}
+	if(getModel() == NULL) {return -1;}
 
     UInt16 MajorAxis;
     if(getCellOrientation() == VERTICAL_ALIGNMENT)
@@ -746,14 +722,14 @@ Int32 List::getIndexClosestToLocation(const Pnt2f& Location) const
     }
 
     //Determine the index
-    Int32 Index(osgMax(-1, osgMin<Int32>(Location[MajorAxis]/static_cast<Int32>(getCellMajorAxisLength()),_Model->getSize()-1)));
+    Int32 Index(osgMax(-1, osgMin<Int32>(Location[MajorAxis]/static_cast<Int32>(getCellMajorAxisLength()),getModel()->getSize()-1)));
 
 	return Index;
 }
 
 Int32 List::getIndexForLocation(const Pnt2f& Location) const
 {
-	if(_Model == NULL) {return -1;}
+	if(getModel() == NULL) {return -1;}
 
     UInt16 MajorAxis;
     if(getCellOrientation() == VERTICAL_ALIGNMENT)
@@ -768,7 +744,7 @@ Int32 List::getIndexForLocation(const Pnt2f& Location) const
     //Determine the index
     Int32 Index(Location[MajorAxis]/static_cast<Int32>(getCellMajorAxisLength()));
 
-	if(Index < 0 || Index >= _Model->getSize())
+	if(Index < 0 || Index >= getModel()->getSize())
 	{
 		return -1;
 	}
@@ -781,7 +757,7 @@ Int32 List::getIndexForLocation(const Pnt2f& Location) const
 
 ComponentPtr List::createIndexComponent(const UInt32& Index)
 {
-    if(_Model != NULL && getCellGenerator() != NullFC)
+    if(getModel() != NULL && getCellGenerator() != NullFC)
     {
         bool Selected;
 
@@ -811,9 +787,9 @@ ComponentPtr List::createIndexComponent(const UInt32& Index)
 void List::updatePreferredSize(void)
 {
 	UInt32 ListLength;
-	if(_Model != NULL)
+	if(getModel() != NULL)
 	{
-		ListLength = _Model->getSize();
+		ListLength = getModel()->getSize();
 	}
 	else
 	{
@@ -894,9 +870,9 @@ void List::scrollToIndex(const UInt32& Index)
 	else if(Index >= _BottomDrawnIndex && _BottomDrawnIndex != -1)
 	{
 		UInt32 CorrectedIndex;
-		if(Index >= _Model->getSize())
+		if(Index >= getModel()->getSize())
 		{
-			CorrectedIndex = _Model->getSize()-1;
+			CorrectedIndex = getModel()->getSize()-1;
 		}
 		else
 		{
@@ -933,6 +909,29 @@ void List::scrollToSelection(void)
 	}
 }
 
+ComponentPtr List::getComponentAtIndex(const UInt32& Index)
+{
+	if(getModel() != NULL && Index < getModel()->getSize())
+	{
+		return getChildren()[Index];
+	}
+	else
+	{
+		return NullFC;
+	}
+}
+
+SharedFieldPtr List::getValueAtIndex(const UInt32& Index)
+{
+	if(getModel() != NULL && Index < getModel()->getSize())
+	{
+		return getModel()->getElementAt(Index);
+	}
+	else
+	{
+		return SharedFieldPtr();
+	}
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -941,7 +940,6 @@ void List::scrollToSelection(void)
 
 List::List(void) :
     Inherited(),
-		_Model(NULL),
 		_SelectionModel(),
         _TopDrawnIndex(-1),
         _BottomDrawnIndex(-1),
@@ -951,7 +949,6 @@ List::List(void) :
 
 List::List(const List &source) :
     Inherited(source),
-		_Model(source._Model),
 		_SelectionModel(source._SelectionModel),
         _TopDrawnIndex(-1),
         _BottomDrawnIndex(-1),
@@ -970,7 +967,7 @@ void List::changed(BitVector whichField, UInt32 origin)
     Inherited::changed(whichField, origin);
 
     if((whichField & CellMajorAxisLengthFieldMask) &&
-        _Model != NULL)
+        getModel() != NULL)
     {
 		updatePreferredSize();
     }
@@ -985,6 +982,21 @@ void List::changed(BitVector whichField, UInt32 origin)
 		getAutoScrollToFocused())
 	{
 		scrollToFocused();
+	}
+
+	if(whichField & ModelFieldMask)
+	{
+		beginEditCP(ListPtr(this), ChildrenFieldMask);
+			getChildren().clear();
+		endEditCP(ListPtr(this), ChildrenFieldMask);
+
+		if(getModel() != NULL)
+		{
+			getModel()->addListDataListener(this);
+		}
+		
+		updateIndiciesDrawnFromModel();
+		updatePreferredSize();
 	}
 }
 

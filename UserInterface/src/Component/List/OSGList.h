@@ -51,7 +51,7 @@
 #include "OSGListSelectionListener.h"
 #include "Util/OSGUIDefines.h"
 #include "OSGListSelectionModel.h"
-#include "OSGListModel.h"
+#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
 
 #include <deque>
 
@@ -96,10 +96,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
    
     virtual void updateLayout(void);
 
-    void setModel(ListModelPtr Model);
     void setSelectionModel(ListSelectionModelPtr SelectionModel);
 
-    ListModelPtr getModel(void) const;
     ListSelectionModelPtr getSelectionModel(void) const;
 	
     virtual void mousePressed(const MouseEvent& e);

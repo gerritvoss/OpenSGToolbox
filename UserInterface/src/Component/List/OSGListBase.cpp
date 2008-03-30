@@ -71,6 +71,9 @@ const OSG::BitVector  ListBase::CellOrientationFieldMask =
 const OSG::BitVector  ListBase::CellMajorAxisLengthFieldMask = 
     (TypeTraits<BitVector>::One << ListBase::CellMajorAxisLengthFieldId);
 
+const OSG::BitVector  ListBase::ModelFieldMask = 
+    (TypeTraits<BitVector>::One << ListBase::ModelFieldId);
+
 const OSG::BitVector  ListBase::CellGeneratorFieldMask = 
     (TypeTraits<BitVector>::One << ListBase::CellGeneratorFieldId);
 
@@ -88,6 +91,9 @@ const OSG::BitVector ListBase::MTInfluenceMask =
     
 */
 /*! \var UInt32          ListBase::_sfCellMajorAxisLength
+    
+*/
+/*! \var ListModelPtr    ListBase::_sfModel
     
 */
 /*! \var ComponentGeneratorPtr ListBase::_sfCellGenerator
@@ -111,6 +117,11 @@ FieldDescription *ListBase::_desc[] =
                      CellMajorAxisLengthFieldId, CellMajorAxisLengthFieldMask,
                      false,
                      (FieldAccessMethod) &ListBase::getSFCellMajorAxisLength),
+    new FieldDescription(SFListModelPtr::getClassType(), 
+                     "Model", 
+                     ModelFieldId, ModelFieldMask,
+                     false,
+                     (FieldAccessMethod) &ListBase::getSFModel),
     new FieldDescription(SFComponentGeneratorPtr::getClassType(), 
                      "CellGenerator", 
                      CellGeneratorFieldId, CellGeneratorFieldMask,
@@ -198,6 +209,7 @@ void ListBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 ListBase::ListBase(void) :
     _sfCellOrientation        (UInt32(VERTICAL_ALIGNMENT)), 
     _sfCellMajorAxisLength    (UInt32(50)), 
+    _sfModel                  (ListModelPtr(NullFC)), 
     _sfCellGenerator          (ComponentGeneratorPtr(NullFC)), 
     _sfAutoScrollToFocused    (bool(true)), 
     Inherited() 
@@ -211,6 +223,7 @@ ListBase::ListBase(void) :
 ListBase::ListBase(const ListBase &source) :
     _sfCellOrientation        (source._sfCellOrientation        ), 
     _sfCellMajorAxisLength    (source._sfCellMajorAxisLength    ), 
+    _sfModel                  (source._sfModel                  ), 
     _sfCellGenerator          (source._sfCellGenerator          ), 
     _sfAutoScrollToFocused    (source._sfAutoScrollToFocused    ), 
     Inherited                 (source)
@@ -237,6 +250,11 @@ UInt32 ListBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
     {
         returnValue += _sfCellMajorAxisLength.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+    {
+        returnValue += _sfModel.getBinSize();
     }
 
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
@@ -268,6 +286,11 @@ void ListBase::copyToBin(      BinaryDataHandler &pMem,
         _sfCellMajorAxisLength.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+    {
+        _sfModel.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
         _sfCellGenerator.copyToBin(pMem);
@@ -296,6 +319,11 @@ void ListBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfCellMajorAxisLength.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+    {
+        _sfModel.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
         _sfCellGenerator.copyFromBin(pMem);
@@ -322,6 +350,9 @@ void ListBase::executeSyncImpl(      ListBase *pOther,
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
         _sfCellMajorAxisLength.syncWith(pOther->_sfCellMajorAxisLength);
 
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+        _sfModel.syncWith(pOther->_sfModel);
+
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
         _sfCellGenerator.syncWith(pOther->_sfCellGenerator);
 
@@ -343,6 +374,9 @@ void ListBase::executeSyncImpl(      ListBase *pOther,
 
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
         _sfCellMajorAxisLength.syncWith(pOther->_sfCellMajorAxisLength);
+
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+        _sfModel.syncWith(pOther->_sfModel);
 
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
         _sfCellGenerator.syncWith(pOther->_sfCellGenerator);

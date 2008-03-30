@@ -69,6 +69,7 @@
 
 #include <OpenSG/OSGUInt32Fields.h> // CellOrientation type
 #include <OpenSG/OSGUInt32Fields.h> // CellMajorAxisLength type
+#include "Models/OSGListModelFields.h" // Model type
 #include "ComponentGenerators/OSGComponentGeneratorFields.h" // CellGenerator type
 #include <OpenSG/OSGBoolFields.h> // AutoScrollToFocused type
 
@@ -96,13 +97,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
     {
         CellOrientationFieldId     = Inherited::NextFieldId,
         CellMajorAxisLengthFieldId = CellOrientationFieldId     + 1,
-        CellGeneratorFieldId       = CellMajorAxisLengthFieldId + 1,
+        ModelFieldId               = CellMajorAxisLengthFieldId + 1,
+        CellGeneratorFieldId       = ModelFieldId               + 1,
         AutoScrollToFocusedFieldId = CellGeneratorFieldId       + 1,
         NextFieldId                = AutoScrollToFocusedFieldId + 1
     };
 
     static const OSG::BitVector CellOrientationFieldMask;
     static const OSG::BitVector CellMajorAxisLengthFieldMask;
+    static const OSG::BitVector ModelFieldMask;
     static const OSG::BitVector CellGeneratorFieldMask;
     static const OSG::BitVector AutoScrollToFocusedFieldMask;
 
@@ -133,6 +136,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
 
            SFUInt32            *getSFCellOrientation(void);
            SFUInt32            *getSFCellMajorAxisLength(void);
+           SFListModelPtr      *getSFModel          (void);
            SFComponentGeneratorPtr *getSFCellGenerator  (void);
            SFBool              *getSFAutoScrollToFocused(void);
 
@@ -140,6 +144,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
      const UInt32              &getCellOrientation(void) const;
            UInt32              &getCellMajorAxisLength(void);
      const UInt32              &getCellMajorAxisLength(void) const;
+           ListModelPtr        &getModel          (void);
+     const ListModelPtr        &getModel          (void) const;
            ComponentGeneratorPtr &getCellGenerator  (void);
      const ComponentGeneratorPtr &getCellGenerator  (void) const;
            bool                &getAutoScrollToFocused(void);
@@ -152,6 +158,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
 
      void setCellOrientation( const UInt32 &value );
      void setCellMajorAxisLength( const UInt32 &value );
+     void setModel          ( const ListModelPtr &value );
      void setCellGenerator  ( const ComponentGeneratorPtr &value );
      void setAutoScrollToFocused( const bool &value );
 
@@ -198,6 +205,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
 
     SFUInt32            _sfCellOrientation;
     SFUInt32            _sfCellMajorAxisLength;
+    SFListModelPtr      _sfModel;
     SFComponentGeneratorPtr   _sfCellGenerator;
     SFBool              _sfAutoScrollToFocused;
 

@@ -52,7 +52,8 @@
 #include "Event/OSGPopupMenuListener.h"
 #include "Event/OSGActionListener.h"
 #include "Event/OSGButtonSelectedListener.h"
-#include "OSGComboBoxModel.h"
+#include "OSGComboBoxSelectionListener.h"
+#include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -139,9 +140,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	//Returns the list's key-selection manager.
 	//JComboBox.KeySelectionManager getKeySelectionManager(void) const;
 
-	//Returns the data model currently used by the JComboBox.
-	ComboBoxModelPtr getModel(void) const;
-
 	//Returns the first item in the list that matches the given item.
 	UInt32 getSelectedIndex(void) const;
 
@@ -181,9 +179,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	//Sets the object that translates a keyboard character into a list selection.
 	//void setKeySelectionManager(JComboBox.KeySelectionManager aManager);
 
-	//Sets the data model that the JComboBox uses to obtain the list of items.
-	void setModel(ComboBoxModelPtr aModel);
-
 	//Sets the visibility of the popup.
 	void setPopupVisible(bool v);
 
@@ -219,8 +214,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
     virtual ~ComboBox(void); 
 
     /*! \}                                                                 */
-	
-    ComboBoxModelPtr _Model;
 
 	//Factory method which sets the ActionEvent source's properties according to values from the Action instance.
 	void configurePropertiesFromAction(Action a);

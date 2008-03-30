@@ -61,7 +61,7 @@ void reshape(Vec2f Size);
 
 // List header files
 #include <OpenSG/UserInterface/OSGList.h>
-#include <OpenSG/UserInterface/OSGAbstractListModel.h>
+#include <OpenSG/UserInterface/OSGDefaultListModel.h>
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
 
 
@@ -183,7 +183,7 @@ public:
 
 // Create ListModel   
 ListPtr ExampleList;
-AbstractListModel ExampleListModel;
+DefaultListModelPtr ExampleListModel;
 
 class AddItemButtonSelectedListener : public ActionListener
 {
@@ -193,7 +193,7 @@ public:
     {
         std::cout << "Add Item Action" << std::endl;
 		UInt32 SelectedItemIndex(ExampleList->getSelectionModel()->getMinSelectionIndex());
-		ExampleListModel.insert(SelectedItemIndex, SharedFieldPtr(new SFString("Added")));
+		ExampleListModel->insert(SelectedItemIndex, SharedFieldPtr(new SFString("Added")));
     }
 
 };
@@ -206,7 +206,7 @@ public:
     {
         std::cout << "Remove Item Action" << std::endl;
 		UInt32 SelectedItemIndex(ExampleList->getSelectionModel()->getMinSelectionIndex());
-		ExampleListModel.erase(SelectedItemIndex);
+		ExampleListModel->erase(SelectedItemIndex);
     }
 
 };
@@ -328,21 +328,22 @@ int main(int argc, char **argv)
     ******************************************************/
 
     // Add data to it
-    ExampleListModel.pushBack(SharedFieldPtr(new SFString("Red")));
-    ExampleListModel.pushBack(SharedFieldPtr(new SFString("Green")));
-    ExampleListModel.pushBack(SharedFieldPtr(new SFString("Blue")));
-    ExampleListModel.pushBack(SharedFieldPtr(new SFString("Orange")));
-    ExampleListModel.pushBack(SharedFieldPtr(new SFString("Purple")));
-    ExampleListModel.pushBack(SharedFieldPtr(new SFString("Yellow")));
-    ExampleListModel.pushBack(SharedFieldPtr(new SFString("White")));
-    ExampleListModel.pushBack(SharedFieldPtr(new SFString("Black")));
-    ExampleListModel.pushBack(SharedFieldPtr(new SFString("Gray")));
-    ExampleListModel.pushBack(SharedFieldPtr(new SFString("Brown")));
-    ExampleListModel.pushBack(SharedFieldPtr(new SFString("Indigo")));
-    ExampleListModel.pushBack(SharedFieldPtr(new SFString("Pink")));
-    ExampleListModel.pushBack(SharedFieldPtr(new SFString("Violet")));
-    ExampleListModel.pushBack(SharedFieldPtr(new SFString("Mauve")));
-    ExampleListModel.pushBack(SharedFieldPtr(new SFString("Peach")));
+	ExampleListModel = DefaultListModel::create();
+    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Red")));
+    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Green")));
+    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Blue")));
+    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Orange")));
+    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Purple")));
+    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Yellow")));
+    ExampleListModel->pushBack(SharedFieldPtr(new SFString("White")));
+    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Black")));
+    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Gray")));
+    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Brown")));
+    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Indigo")));
+    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Pink")));
+    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Violet")));
+    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Mauve")));
+    ExampleListModel->pushBack(SharedFieldPtr(new SFString("Peach")));
 
     /******************************************************
 
@@ -369,13 +370,13 @@ int main(int argc, char **argv)
 
     ******************************************************/    
     ExampleList = List::create();
-	beginEditCP(ExampleList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask);
+	beginEditCP(ExampleList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
         ExampleList->setPreferredSize(Vec2f(200, 300));
         ExampleList->setCellOrientation(VERTICAL_ALIGNMENT);
         //ExampleList->setCellOrientation(HORIZONTAL_ALIGNMENT);
-    endEditCP(ExampleList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask);
+		ExampleList->setModel(ExampleListModel);
+    endEditCP(ExampleList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
 
-    ExampleList->setModel(&ExampleListModel);
     ExampleList->setSelectionModel(ExampleListSelectionModel);
 
 

@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGDefaultComboBoxModel.h"
+#include "OSGAbstractComboBoxModel.h"
 #include "Component/List/OSGListDataListener.h"
 
 OSG_BEGIN_NAMESPACE
@@ -56,8 +56,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::DefaultComboBoxModel
-A DefaultComboBoxModel. 
+/*! \class osg::AbstractComboBoxModel
+A UI AbstractComboBoxModel. 
 */
 
 /***************************************************************************\
@@ -68,16 +68,21 @@ A DefaultComboBoxModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
+void AbstractComboBoxModel::initMethod (void)
+{
+}
+
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-void DefaultComboBoxModel::addListDataListener(ListDataListenerPtr l)
+void AbstractComboBoxModel::addListDataListener(ListDataListenerPtr l)
 {
     _DataListeners.insert(l);
 }
 
-void DefaultComboBoxModel::removeListDataListener(ListDataListenerPtr l)
+void AbstractComboBoxModel::removeListDataListener(ListDataListenerPtr l)
 {
    ListDataListenerSetIter EraseIter(_DataListeners.find(l));
    if(EraseIter != _DataListeners.end())
@@ -86,12 +91,42 @@ void DefaultComboBoxModel::removeListDataListener(ListDataListenerPtr l)
    }
 }
 
-void DefaultComboBoxModel::addSelectionListener(ComboBoxSelectionListenerPtr l)
+void AbstractComboBoxModel::produceListDataContentsChanged(FieldContainerPtr Source, UInt32 index0, UInt32 index1)
+{
+	ListDataEvent e(Source, getSystemTime(), index0, index1, ListDataEvent::CONTENTS_CHANGED, AbstractComboBoxModelPtr(this));
+   ListDataListenerSet DataListenerSet(_DataListeners);
+   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
+   {
+		(*SetItor)->contentsChanged(e);
+   }
+}
+
+void AbstractComboBoxModel::produceListDataIntervalAdded(FieldContainerPtr Source, UInt32 index0, UInt32 index1)
+{
+	ListDataEvent e(Source, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_ADDED, AbstractComboBoxModelPtr(this));
+   ListDataListenerSet DataListenerSet(_DataListeners);
+   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
+   {
+		(*SetItor)->intervalAdded(e);
+   }
+}
+
+void AbstractComboBoxModel::produceListDataIntervalRemoved(FieldContainerPtr Source, UInt32 index0, UInt32 index1)
+{
+	ListDataEvent e(Source, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_REMOVED, AbstractComboBoxModelPtr(this));
+   ListDataListenerSet DataListenerSet(_DataListeners);
+   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
+   {
+		(*SetItor)->intervalRemoved(e);
+   }
+}
+
+void AbstractComboBoxModel::addSelectionListener(ComboBoxSelectionListenerPtr l)
 {
     _SelectionListeners.insert(l);
 }
 
-void DefaultComboBoxModel::removeSelectionListener(ComboBoxSelectionListenerPtr l)
+void AbstractComboBoxModel::removeSelectionListener(ComboBoxSelectionListenerPtr l)
 {
    ComboBoxSelectionListenerSetIter EraseIter(_SelectionListeners.find(l));
    if(EraseIter != _SelectionListeners.end())
@@ -100,156 +135,9 @@ void DefaultComboBoxModel::removeSelectionListener(ComboBoxSelectionListenerPtr 
    }
 }
 
-UInt32 DefaultComboBoxModel::getSize(void)
+void AbstractComboBoxModel::produceSelectionChanged(FieldContainerPtr Source, const Int32& CurrentIndex, const Int32& PreviousIndex)
 {
-	return _FieldList.size();
-}
-
-SharedFieldPtr DefaultComboBoxModel::getElementAt(UInt32 index)
-{
-   return _FieldList[index];
-}
-
-SharedFieldPtr DefaultComboBoxModel::getSelectedItem(void) const
-{
-	if(_SelectedIndex < 0 ||
-	   _SelectedIndex >= _FieldList.size())
-	{
-		return SharedFieldPtr();
-	}
-	else
-	{
-		return _FieldList[_SelectedIndex];
-	}
-}
-
-Int32 DefaultComboBoxModel::getSelectedItemIndex(void) const
-{
-	return _SelectedIndex;
-}
-
-void DefaultComboBoxModel::setSelectedItem(const Int32& index)
-{
-	if(getSize() != 0)
-	{
-		Int32 PreviousIndex(_SelectedIndex);
-		_SelectedIndex = index;
-
-		if(_SelectedIndex != PreviousIndex)
-		{
-			produceSelectionChanged(_SelectedIndex, PreviousIndex);
-		}
-	}
-}
-
-void DefaultComboBoxModel::setSelectedItem(SharedFieldPtr anObject)
-{
-	if(getSize() != 0)
-	{
-		Int32 PreviousIndex(_SelectedIndex);
-
-		UInt32 index(0);
-		while(index < _FieldList.size() && _FieldList[index] != anObject)
-		{
-			++index;
-		}
-
-		if(index < _FieldList.size())
-		{
-			_SelectedIndex = index;
-		}
-		else
-		{
-			_SelectedIndex = -1;
-		}
-
-		if(_SelectedIndex != PreviousIndex)
-		{
-			produceSelectionChanged(_SelectedIndex, PreviousIndex);
-		}
-	}
-}
-
-void DefaultComboBoxModel::addElement(SharedFieldPtr anObject)
-{
-	_FieldList.push_back(anObject);
-}
-
-void DefaultComboBoxModel::insertElementAt(SharedFieldPtr anObject, const UInt32& index)
-{
-	if(index < _FieldList.size())
-	{
-		std::vector<SharedFieldPtr>::iterator InsertItor(_FieldList.begin());
-		for(UInt32 i(0); i<index ; ++i ) ++InsertItor;
-
-		_FieldList.insert(InsertItor, anObject);
-	}
-	else
-	{
-		_FieldList.push_back(anObject);
-	}
-}
-
-void DefaultComboBoxModel::removeAllElements(void)
-{
-	_FieldList.clear();
-}
-
-void DefaultComboBoxModel::removeElement(SharedFieldPtr anObject)
-{
-	std::vector<SharedFieldPtr>::iterator SearchItor(std::find(_FieldList.begin(), _FieldList.end(), anObject));
-
-	if(SearchItor != _FieldList.end())
-	{
-		_FieldList.erase(SearchItor);
-	}
-}
-
-void DefaultComboBoxModel::removeElementAt(const UInt32& index)
-{
-	if(index < _FieldList.size())
-	{
-		std::vector<SharedFieldPtr>::iterator RemoveItor(_FieldList.begin());
-		for(UInt32 i(0); i<index ; ++i ) ++RemoveItor;
-
-		_FieldList.erase(RemoveItor);
-	}
-}
-
-void DefaultComboBoxModel::produceListDataContentsChanged(void)
-{
-	ListDataEvent e(NullFC, getSystemTime(), 0, getSize()-1, ListDataEvent::CONTENTS_CHANGED, this);
-   ListDataListenerSet DataListenerSet(_DataListeners);
-   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-   {
-		(*SetItor)->contentsChanged(e);
-   }
-}
-
-void DefaultComboBoxModel::produceListDataIntervalAdded(UInt32 index0, UInt32 index1)
-{
-	ListDataEvent e(NullFC, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_ADDED, this);
-   ListDataListenerSet DataListenerSet(_DataListeners);
-   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-   {
-		(*SetItor)->intervalAdded(e);
-   }
-}
-
-void DefaultComboBoxModel::produceListDataIntervalRemoved(UInt32 index0, UInt32 index1)
-{
-	ListDataEvent e(NullFC, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_REMOVED, this);
-   ListDataListenerSet DataListenerSet(_DataListeners);
-   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-   {
-		(*SetItor)->intervalRemoved(e);
-   }
-}
-
-
-void DefaultComboBoxModel::produceSelectionChanged(const Int32& CurrentIndex, const Int32& PreviousIndex)
-{
-	ComboBoxSelectionEvent e(NullFC, getSystemTime(), CurrentIndex, PreviousIndex);
+	ComboBoxSelectionEvent e(Source, getSystemTime(), CurrentIndex, PreviousIndex);
 	ComboBoxSelectionListenerSet SelectionListenerSet(_SelectionListeners);
 	for(ComboBoxSelectionListenerSetConstIter SetItor(SelectionListenerSet.begin()) ; SetItor != SelectionListenerSet.end() ; ++SetItor)
 	{
@@ -262,10 +150,34 @@ void DefaultComboBoxModel::produceSelectionChanged(const Int32& CurrentIndex, co
 
 /*----------------------- constructors & destructors ----------------------*/
 
-DefaultComboBoxModel::DefaultComboBoxModel() : _SelectedIndex(-1)
+AbstractComboBoxModel::AbstractComboBoxModel(void) :
+    Inherited()
 {
 }
+
+AbstractComboBoxModel::AbstractComboBoxModel(const AbstractComboBoxModel &source) :
+    Inherited(source)
+{
+}
+
+AbstractComboBoxModel::~AbstractComboBoxModel(void)
+{
+}
+
 /*----------------------------- class specific ----------------------------*/
+
+void AbstractComboBoxModel::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void AbstractComboBoxModel::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump AbstractComboBoxModel NI" << std::endl;
+}
+
+
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
 
@@ -276,6 +188,15 @@ DefaultComboBoxModel::DefaultComboBoxModel() : _SelectedIndex(-1)
 #ifdef OSG_LINUX_ICC
 #pragma warning( disable : 177 )
 #endif
+
+namespace
+{
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGABSTRACTCOMBOBOXMODELBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGABSTRACTCOMBOBOXMODELBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGABSTRACTCOMBOBOXMODELFIELDS_HEADER_CVSID;
+}
 
 #ifdef __sgi
 #pragma reset woff 1174

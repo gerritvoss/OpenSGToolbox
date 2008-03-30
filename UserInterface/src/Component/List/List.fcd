@@ -32,6 +32,16 @@ A UI List.
 	>
 	</Field>
 	<Field
+		name="Model"
+		type="ListModelPtr"
+		cardinality="single"
+                visibility="external"
+                header="Models/OSGListModelFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+        </Field>
+	<Field
 		name="CellGenerator"
 		type="ComponentGeneratorPtr"
 		cardinality="single"

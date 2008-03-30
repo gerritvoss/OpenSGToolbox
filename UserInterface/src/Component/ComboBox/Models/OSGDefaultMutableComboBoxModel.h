@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDEFAULTCOMBOBOXMODEL_H_
-#define _OSGDEFAULTCOMBOBOXMODEL_H_
+#ifndef _OSGDEFAULTMUTABLECOMBOBOXMODEL_H_
+#define _OSGDEFAULTMUTABLECOMBOBOXMODEL_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,31 +45,44 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGMutableComboBoxModel.h"
+#include "OSGDefaultMutableComboBoxModelBase.h"
 #include <vector>
-#include <set>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DefaultComboBoxModel class. See \ref 
-           PageUserInterfaceDefaultComboBoxModel for a description.
+/*! \brief DefaultMutableComboBoxModel class. See \ref 
+           PageUserInterfaceDefaultMutableComboBoxModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxModel : public MutableComboBoxModel
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultMutableComboBoxModel : public DefaultMutableComboBoxModelBase
 {
+  private:
+
+    typedef DefaultMutableComboBoxModelBase Inherited;
+
     /*==========================  PUBLIC  =================================*/
   public:
-	virtual void addListDataListener(ListDataListenerPtr l);
-	
-	virtual void removeListDataListener(ListDataListenerPtr l);
 
-	virtual void addSelectionListener(ComboBoxSelectionListenerPtr l);
-	
-	virtual void removeSelectionListener(ComboBoxSelectionListenerPtr l);
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
 
-	virtual UInt32 getSize(void);
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
 
-	virtual SharedFieldPtr getElementAt(UInt32 index);
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
+	virtual UInt32 getSize(void) const;
+
+	virtual SharedFieldPtr getElementAt(UInt32 index) const;
 
 	//Returns the selected item
 	virtual SharedFieldPtr getSelectedItem(void) const;
@@ -97,36 +110,49 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxModel : public MutableCombo
 
 	//Removes an item at a specific index.
 	void removeElementAt(const UInt32& index);
-
-	DefaultComboBoxModel();
+    /*=========================  PROTECTED  ===============================*/
   protected:
+
+    // Variables should all be in DefaultMutableComboBoxModelBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    DefaultMutableComboBoxModel(void);
+    DefaultMutableComboBoxModel(const DefaultMutableComboBoxModel &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~DefaultMutableComboBoxModel(void); 
+
+    /*! \}                                                                 */
 	std::vector<SharedFieldPtr> _FieldList;
 	Int32 _SelectedIndex;
-
-	typedef std::set<ListDataListenerPtr> ListDataListenerSet;
-	typedef ListDataListenerSet::iterator ListDataListenerSetIter;
-	typedef ListDataListenerSet::const_iterator ListDataListenerSetConstIter;
-	ListDataListenerSet _DataListeners;
-
-	void produceListDataContentsChanged(void);
-	void produceListDataIntervalAdded(UInt32 index0, UInt32 index1);
-	void produceListDataIntervalRemoved(UInt32 index0, UInt32 index1);
-
-	typedef std::set<ComboBoxSelectionListenerPtr> ComboBoxSelectionListenerSet;
-	typedef ComboBoxSelectionListenerSet::iterator ComboBoxSelectionListenerSetIter;
-	typedef ComboBoxSelectionListenerSet::const_iterator ComboBoxSelectionListenerSetConstIter;
-	ComboBoxSelectionListenerSet _SelectionListeners;
-
-	void produceSelectionChanged(const Int32& CurrentIndex, const Int32& PreviousIndex);
-
+    
     /*==========================  PRIVATE  ================================*/
   private:
+
+    friend class FieldContainer;
+    friend class DefaultMutableComboBoxModelBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const DefaultMutableComboBoxModel &source);
 };
 
-typedef DefaultComboBoxModel *DefaultComboBoxModelPtr;
+typedef DefaultMutableComboBoxModel *DefaultMutableComboBoxModelP;
 
 OSG_END_NAMESPACE
 
-#define OSGDEFAULTCOMBOBOXMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#include "OSGDefaultMutableComboBoxModelBase.inl"
+#include "OSGDefaultMutableComboBoxModel.inl"
 
-#endif /* _OSGDEFAULTCOMBOBOXMODEL_H_ */
+#define OSGDEFAULTMUTABLECOMBOBOXMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+
+#endif /* _OSGDEFAULTMUTABLECOMBOBOXMODEL_H_ */

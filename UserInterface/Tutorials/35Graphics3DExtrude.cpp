@@ -45,7 +45,7 @@
 
 // List header files
 #include <OpenSG/UserInterface/OSGList.h>
-#include <OpenSG/UserInterface/OSGAbstractListModel.h>
+#include <OpenSG/UserInterface/OSGDefaultListModel.h>
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
 
 // Activate the OpenSG namespace
@@ -730,64 +730,64 @@ int main(int argc, char **argv)
 
     ******************************************************/
     // Create ListModel Component to add things to
-    AbstractListModel Model1;
+	DefaultListModelPtr Model1 = DefaultListModel::create();
 
     // Add values to it
-    Model1.pushBack(SharedFieldPtr(new SFString("Red")));
-    Model1.pushBack(SharedFieldPtr(new SFString("Green")));
-    Model1.pushBack(SharedFieldPtr(new SFString("Blue")));
-    Model1.pushBack(SharedFieldPtr(new SFString("Orange")));
-    Model1.pushBack(SharedFieldPtr(new SFString("Purple")));
-    Model1.pushBack(SharedFieldPtr(new SFString("Yellow")));
-    Model1.pushBack(SharedFieldPtr(new SFString("White")));
-    Model1.pushBack(SharedFieldPtr(new SFString("Black")));
-    Model1.pushBack(SharedFieldPtr(new SFString("Gray")));
-    Model1.pushBack(SharedFieldPtr(new SFString("Brown")));
-    Model1.pushBack(SharedFieldPtr(new SFString("Indigo")));
-    Model1.pushBack(SharedFieldPtr(new SFString("Pink")));
-    Model1.pushBack(SharedFieldPtr(new SFString("Violet")));
-    Model1.pushBack(SharedFieldPtr(new SFString("Mauve")));
-    Model1.pushBack(SharedFieldPtr(new SFString("Peach")));
+    Model1->pushBack(SharedFieldPtr(new SFString("Red")));
+    Model1->pushBack(SharedFieldPtr(new SFString("Green")));
+    Model1->pushBack(SharedFieldPtr(new SFString("Blue")));
+    Model1->pushBack(SharedFieldPtr(new SFString("Orange")));
+    Model1->pushBack(SharedFieldPtr(new SFString("Purple")));
+    Model1->pushBack(SharedFieldPtr(new SFString("Yellow")));
+    Model1->pushBack(SharedFieldPtr(new SFString("White")));
+    Model1->pushBack(SharedFieldPtr(new SFString("Black")));
+    Model1->pushBack(SharedFieldPtr(new SFString("Gray")));
+    Model1->pushBack(SharedFieldPtr(new SFString("Brown")));
+    Model1->pushBack(SharedFieldPtr(new SFString("Indigo")));
+    Model1->pushBack(SharedFieldPtr(new SFString("Pink")));
+    Model1->pushBack(SharedFieldPtr(new SFString("Violet")));
+    Model1->pushBack(SharedFieldPtr(new SFString("Mauve")));
+    Model1->pushBack(SharedFieldPtr(new SFString("Peach")));
 
 	// Create ListModel Component to add things to
-    AbstractListModel Model2;
+	DefaultListModelPtr Model2 = DefaultListModel::create();
 
     // Add values to it
-    Model2.pushBack(SharedFieldPtr(new SFString("Taco Pizza")));
-    Model2.pushBack(SharedFieldPtr(new SFString("Spaghetti")));
-    Model2.pushBack(SharedFieldPtr(new SFString("Chicken Fingers")));
-    Model2.pushBack(SharedFieldPtr(new SFString("Buffalo Wings")));
-    Model2.pushBack(SharedFieldPtr(new SFString("Cheesesticks")));
-    Model2.pushBack(SharedFieldPtr(new SFString("Bloomin' Onion")));
-    Model2.pushBack(SharedFieldPtr(new SFString("French Fries")));
-    Model2.pushBack(SharedFieldPtr(new SFString("Cheeseburger")));
-    Model2.pushBack(SharedFieldPtr(new SFString("Onion Rings")));
-    Model2.pushBack(SharedFieldPtr(new SFString("Curly Fries")));
-    Model2.pushBack(SharedFieldPtr(new SFString("Chocolate Milkshake")));
-    Model2.pushBack(SharedFieldPtr(new SFString("All-Meat Pizza")));
-    Model2.pushBack(SharedFieldPtr(new SFString("Supreme Pizza")));
-    Model2.pushBack(SharedFieldPtr(new SFString("Veggie Pizza")));
-    Model2.pushBack(SharedFieldPtr(new SFString("Cheese Pizza")));
+    Model2->pushBack(SharedFieldPtr(new SFString("Taco Pizza")));
+    Model2->pushBack(SharedFieldPtr(new SFString("Spaghetti")));
+    Model2->pushBack(SharedFieldPtr(new SFString("Chicken Fingers")));
+    Model2->pushBack(SharedFieldPtr(new SFString("Buffalo Wings")));
+    Model2->pushBack(SharedFieldPtr(new SFString("Cheesesticks")));
+    Model2->pushBack(SharedFieldPtr(new SFString("Bloomin' Onion")));
+    Model2->pushBack(SharedFieldPtr(new SFString("French Fries")));
+    Model2->pushBack(SharedFieldPtr(new SFString("Cheeseburger")));
+    Model2->pushBack(SharedFieldPtr(new SFString("Onion Rings")));
+    Model2->pushBack(SharedFieldPtr(new SFString("Curly Fries")));
+    Model2->pushBack(SharedFieldPtr(new SFString("Chocolate Milkshake")));
+    Model2->pushBack(SharedFieldPtr(new SFString("All-Meat Pizza")));
+    Model2->pushBack(SharedFieldPtr(new SFString("Supreme Pizza")));
+    Model2->pushBack(SharedFieldPtr(new SFString("Veggie Pizza")));
+    Model2->pushBack(SharedFieldPtr(new SFString("Cheese Pizza")));
 
 	// Create ListModel Component to add things to
-    AbstractListModel Model3;
+	DefaultListModelPtr Model3 = DefaultListModel::create();
 
     // Add values to it
-    Model3.pushBack(SharedFieldPtr(new SFString("London")));
-    Model3.pushBack(SharedFieldPtr(new SFString("Paris")));
-    Model3.pushBack(SharedFieldPtr(new SFString("Amsterdam")));
-    Model3.pushBack(SharedFieldPtr(new SFString("Manama")));
-    Model3.pushBack(SharedFieldPtr(new SFString("Dubai")));
-    Model3.pushBack(SharedFieldPtr(new SFString("Madrid")));
-    Model3.pushBack(SharedFieldPtr(new SFString("Berlin")));
-    Model3.pushBack(SharedFieldPtr(new SFString("Beijing")));
-    Model3.pushBack(SharedFieldPtr(new SFString("Seoul")));
-    Model3.pushBack(SharedFieldPtr(new SFString("Oslow")));
-    Model3.pushBack(SharedFieldPtr(new SFString("Beirut")));
-    Model3.pushBack(SharedFieldPtr(new SFString("Baghdad")));
-    Model3.pushBack(SharedFieldPtr(new SFString("Mexico City")));
-    Model3.pushBack(SharedFieldPtr(new SFString("Washington DC")));
-    Model3.pushBack(SharedFieldPtr(new SFString("Moscow")));
+    Model3->pushBack(SharedFieldPtr(new SFString("London")));
+    Model3->pushBack(SharedFieldPtr(new SFString("Paris")));
+    Model3->pushBack(SharedFieldPtr(new SFString("Amsterdam")));
+    Model3->pushBack(SharedFieldPtr(new SFString("Manama")));
+    Model3->pushBack(SharedFieldPtr(new SFString("Dubai")));
+    Model3->pushBack(SharedFieldPtr(new SFString("Madrid")));
+    Model3->pushBack(SharedFieldPtr(new SFString("Berlin")));
+    Model3->pushBack(SharedFieldPtr(new SFString("Beijing")));
+    Model3->pushBack(SharedFieldPtr(new SFString("Seoul")));
+    Model3->pushBack(SharedFieldPtr(new SFString("Oslow")));
+    Model3->pushBack(SharedFieldPtr(new SFString("Beirut")));
+    Model3->pushBack(SharedFieldPtr(new SFString("Baghdad")));
+    Model3->pushBack(SharedFieldPtr(new SFString("Mexico City")));
+    Model3->pushBack(SharedFieldPtr(new SFString("Washington DC")));
+    Model3->pushBack(SharedFieldPtr(new SFString("Moscow")));
 
     // Create ListSelectionModel
     // (normally will be default).
@@ -811,6 +811,7 @@ int main(int argc, char **argv)
         list1->setBackgrounds(MainFrameBackground);
         list1->setCellOrientation(VERTICAL_ALIGNMENT);
         //list->setCellOrientation(HORIZONTAL_ALIGNMENT);
+		list1->setModel(Model1);
     endEditCP(list1);
 
 	// Create ListPtr
@@ -820,6 +821,7 @@ int main(int argc, char **argv)
         list2->setBackgrounds(MainFrameBackground);
         list2->setCellOrientation(VERTICAL_ALIGNMENT);
         //list->setCellOrientation(HORIZONTAL_ALIGNMENT);
+		list2->setModel(Model2);
     endEditCP(list2);
 
 	// Create ListPtr
@@ -829,22 +831,20 @@ int main(int argc, char **argv)
         list3->setBackgrounds(MainFrameBackground);
         list3->setCellOrientation(VERTICAL_ALIGNMENT);
         //list->setCellOrientation(HORIZONTAL_ALIGNMENT);
+		list3->setModel(Model3);
     endEditCP(list3);
 
     // Assign the Model, and SelectionModel
     // to the List
-    list1->setModel(&Model1);
     list1->setSelectionModel(SelectionModel);
 
 	// Assign the Model, and SelectionModel
     // to the List
-    list2->setModel(&Model2);
     list2->setSelectionModel(SelectionModel);
 
 
 	// Assign the Model, and SelectionModel
     // to the List
-    list3->setModel(&Model3);
     list3->setSelectionModel(SelectionModel);
 
 

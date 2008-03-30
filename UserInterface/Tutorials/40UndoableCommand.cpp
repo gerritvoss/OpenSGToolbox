@@ -60,7 +60,7 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGBorders.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGList.h>
-#include <OpenSG/UserInterface/OSGAbstractListModel.h>
+#include <OpenSG/UserInterface/OSGDefaultListModel.h>
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
 #include <OpenSG/UserInterface/OSGScrollPanel.h>
 
@@ -356,7 +356,7 @@ public:
 
 ListPtr UndoRedoList;
 UndoManagerPtr TheUndoManager;
-AbstractListModel UndoRedoListModel;
+DefaultListModelPtr UndoRedoListModel;
 ButtonPtr UndoButton;
 ButtonPtr RedoButton;
 
@@ -398,17 +398,17 @@ public:
 
 	virtual void stateChanged(const ChangeEvent& e)
 	{
-		UndoRedoListModel.clear();
+		UndoRedoListModel->clear();
 
 		UInt32 UndoCount(TheUndoManager->numberOfUndos());
 		for(UInt32 i(0) ; i<UndoCount ; ++i)
 		{
-			UndoRedoListModel.pushFront(SharedFieldPtr(new SFString(TheUndoManager->editToBeUndone(i)->getUndoPresentationName())));
+			UndoRedoListModel->pushFront(SharedFieldPtr(new SFString(TheUndoManager->editToBeUndone(i)->getUndoPresentationName())));
 		}
 		UInt32 RedoCount(TheUndoManager->numberOfRedos());
 		for(UInt32 i(0) ; i<RedoCount ; ++i)
 		{
-			UndoRedoListModel.pushBack(SharedFieldPtr(new SFString(TheUndoManager->editToBeRedone(i)->getRedoPresentationName())));
+			UndoRedoListModel->pushBack(SharedFieldPtr(new SFString(TheUndoManager->editToBeRedone(i)->getRedoPresentationName())));
 		}
 
 		if((UndoCount == 0 && UndoButton->getEnabled()) ||
@@ -563,16 +563,17 @@ int main(int argc, char **argv)
     BackgroundBlueButton->addActionListener(&TheSetBlueBackgroundColorActionListener);
 
 	//UndoList
-    UndoRedoListModel.pushBack(SharedFieldPtr(new SFString("Top")));
+	UndoRedoListModel = DefaultListModel::create();
+    UndoRedoListModel->pushBack(SharedFieldPtr(new SFString("Top")));
 	ListSelectionModelPtr UndoRedoListSelectionModel(new DefaultListSelectionModel());
 
 	UndoRedoList = List::create();
-	beginEditCP(UndoRedoList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask);
+	beginEditCP(UndoRedoList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
         UndoRedoList->setPreferredSize(Vec2f(200, 300));
         UndoRedoList->setCellOrientation(VERTICAL_ALIGNMENT);
-    endEditCP(UndoRedoList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask);
+		UndoRedoList->setModel(UndoRedoListModel);
+    endEditCP(UndoRedoList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
 
-    UndoRedoList->setModel(&UndoRedoListModel);
     UndoRedoList->setSelectionModel(UndoRedoListSelectionModel);
 
     UndoRedoListListener TheUndoRedoListListener;

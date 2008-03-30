@@ -45,8 +45,7 @@
 #include <OpenSG/UserInterface/OSGUIBackgrounds.h>
 
 #include <OpenSG/UserInterface/OSGComboBox.h>
-#include <OpenSG/UserInterface/OSGDefaultComboBoxModel.h>
-#include <OpenSG/UserInterface/OSGDefaultComboBoxRenderer.h>
+#include <OpenSG/UserInterface/OSGDefaultMutableComboBoxModel.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -137,22 +136,22 @@ int main(int argc, char **argv)
    
 	/******************************************************
             
-			Create the DefaultComboBoxModel and
+			Create the DefaultMutableComboBoxModel and
 			add Elements to it (several Colors
 			in this case).  These will be the data
 			values shown in the ComboBox.
 
     ******************************************************/   
 
-	DefaultComboBoxModel ExampleComboBoxModel;
-	ExampleComboBoxModel.addElement(SharedFieldPtr(new SFString("Red")));
-	ExampleComboBoxModel.addElement(SharedFieldPtr(new SFString("Green")));
-	ExampleComboBoxModel.addElement(SharedFieldPtr(new SFString("Blue")));
-	ExampleComboBoxModel.addElement(SharedFieldPtr(new SFString("Brown")));
-	ExampleComboBoxModel.addElement(SharedFieldPtr(new SFString("Yellow")));
-	ExampleComboBoxModel.addElement(SharedFieldPtr(new SFString("Orange")));
-	ExampleComboBoxModel.addElement(SharedFieldPtr(new SFString("Violet")));
-	ExampleComboBoxModel.addElement(SharedFieldPtr(new SFString("Black")));
+	DefaultMutableComboBoxModelPtr ExampleComboBoxModel = DefaultMutableComboBoxModel::create();
+	ExampleComboBoxModel->addElement(SharedFieldPtr(new SFString("Red")));
+	ExampleComboBoxModel->addElement(SharedFieldPtr(new SFString("Green")));
+	ExampleComboBoxModel->addElement(SharedFieldPtr(new SFString("Blue")));
+	ExampleComboBoxModel->addElement(SharedFieldPtr(new SFString("Brown")));
+	ExampleComboBoxModel->addElement(SharedFieldPtr(new SFString("Yellow")));
+	ExampleComboBoxModel->addElement(SharedFieldPtr(new SFString("Orange")));
+	ExampleComboBoxModel->addElement(SharedFieldPtr(new SFString("Violet")));
+	ExampleComboBoxModel->addElement(SharedFieldPtr(new SFString("Black")));
 
 	/******************************************************
             
@@ -165,8 +164,11 @@ int main(int argc, char **argv)
 	//Create the ComboBox
 	ComboBoxPtr ExampleComboBox = ComboBox::create();
 
-	// Set the Model created above to the ComboBox
-    ExampleComboBox->setModel(&ExampleComboBoxModel);
+	beginEditCP(ExampleComboBox, ComboBox::ModelFieldMask);
+		// Set the Model created above to the ComboBox
+		ExampleComboBox->setModel(ExampleComboBoxModel);
+	endEditCP(ExampleComboBox, ComboBox::ModelFieldMask);
+
 	// Determine where the ComboBox starts
 	ExampleComboBox->setSelectedIndex(0);
    
@@ -198,12 +200,10 @@ int main(int argc, char **argv)
 	ComboBoxPtr ExampleUneditableComboBox = ComboBox::create();
 
 	// Set it to be uneditable
-	beginEditCP(ExampleUneditableComboBox, ComboBox::EditableFieldMask);
+	beginEditCP(ExampleUneditableComboBox, ComboBox::EditableFieldMask | ComboBox::ModelFieldMask);
 		ExampleUneditableComboBox->setEditable(false);
-	endEditCP(ExampleUneditableComboBox, ComboBox::EditableFieldMask);
-	
-	// Add its Model
-	ExampleUneditableComboBox->setModel(&ExampleComboBoxModel);
+		ExampleUneditableComboBox->setModel(ExampleComboBoxModel);
+	endEditCP(ExampleUneditableComboBox, ComboBox::EditableFieldMask | ComboBox::ModelFieldMask);
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow

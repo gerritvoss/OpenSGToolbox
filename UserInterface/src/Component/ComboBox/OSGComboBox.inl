@@ -42,36 +42,31 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "Component/Menu/OSGPopupMenu.h"
+#include "Models/OSGComboBoxModel.h"
 OSG_BEGIN_NAMESPACE
 
 inline
 UInt32 ComboBox::getSelectedIndex(void) const
 {
-	return _Model->getSelectedItemIndex();
+	return getModel()->getSelectedItemIndex();
 }
 
 inline
 SharedFieldPtr ComboBox::getSelectedItem(void) const
 {
-	return _Model->getSelectedItem();
-}
-
-inline
-ComboBoxModelPtr ComboBox::getModel(void) const
-{
-	return _Model;
+	return getModel()->getSelectedItem();
 }
 
 inline
 SharedFieldPtr ComboBox::getItemAt(const UInt32& index) const
 {
-	return _Model->getElementAt(index);
+	return getModel()->getElementAt(index);
 }
 
 inline
 UInt32 ComboBox::getItemCount(void) const
 {
-	return _Model->getSize();
+	return getModel()->getSize();
 }
 
 inline
@@ -83,13 +78,13 @@ void ComboBox::addActionListener(ActionListenerPtr Listener)
 inline
 void ComboBox::setSelectedIndex(const UInt32& anIndex)
 {
-	_Model->setSelectedItem(anIndex);
+	getModel()->setSelectedItem(anIndex);
 }
 
 inline
 void ComboBox::setSelectedItem(SharedFieldPtr anObject)
 {
-	_Model->setSelectedItem(anObject);
+	getModel()->setSelectedItem(anObject);
 }
 
 inline

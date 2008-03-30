@@ -40,42 +40,9 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGListModel.h"
 #include "OSGListSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
-
-inline
-ComponentPtr List::getComponentAtIndex(const UInt32& Index)
-{
-	if(_Model != NULL && Index < _Model->getSize())
-	{
-		return getChildren()[Index];
-	}
-	else
-	{
-		return NullFC;
-	}
-}
-
-inline
-SharedFieldPtr List::getValueAtIndex(const UInt32& Index)
-{
-	if(_Model != NULL && Index < _Model->getSize())
-	{
-		return _Model->getElementAt(Index);
-	}
-	else
-	{
-		return SharedFieldPtr();
-	}
-}
-
-inline
-ListModelPtr List::getModel(void) const
-{
-   return _Model;
-}
 
 inline
 ListSelectionModelPtr List::getSelectionModel(void) const
