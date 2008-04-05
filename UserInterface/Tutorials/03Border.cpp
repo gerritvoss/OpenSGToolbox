@@ -1,14 +1,46 @@
-// OpenSG Tutorial Example: Creating a Border
-//
-// This tutorial explains how to implement the 
-// Borders offered by the OSG User Interface 
-// library and how to modify their features.
-//
-// Note the difference when clicking on ExampleMatteBorderButton
-// as compared with the other Buttons.
-// 
-// Includes: BevelBorder, CompoundBorder, EmptyBorder
-// EtchedBorder, LineBorder, MatteBorder
+/*************************************************
+Welcome to the 03Border tutorial.  In this
+tutorial, you will see how to use the 
+different Borders available and add them
+to components.  The following Borders are
+introduced:
+	
+	BevelBorder
+	CompoundBorder
+	EmptyBorder
+	EtchedBorder
+	LineBorder
+	MatteBorder
+	MultiColorMatteBorder
+    RoundedCornerLineBorder
+	ShadowBorder
+
+Borders are used to quite simply give 
+borders to components.  They can be added to 
+components which are displayed for visual,
+aesthetic, or interactive effect.  The 
+different styles can be seen by running
+this Tutorial.
+
+The following all are shown and explained
+within this tutorial (note the specific
+requirements of each Border are not listed
+here):
+
+All Borders (where applicable):
+	Creating Border
+    Setting Color
+	Setting Width
+	Specifying style
+	Adding Borders to components
+
+These tutorials contain potentially relevant
+information:
+
+
+
+*************************************************/
+
 
 // GLUT is used for window handling
 #include <OpenSG/OSGGLUT.h>
@@ -263,7 +295,7 @@ int main(int argc, char **argv)
     
 	/******************************************************
 
-        The LineBorder is simply a ExampleLineBorder Border.
+        The LineBorder is simply a plain Line Border.
 
 		-setWidth(int): Determines Width of	
 			the Border in pixels.
@@ -359,7 +391,7 @@ int main(int argc, char **argv)
     
 	/******************************************************
 
-        The RoundedCornerLineBorder is  a LineBorder
+        The RoundedCornerLineBorder is a LineBorder
 		with rounded corners.
 
 		-setWidth(int): Determines Width of	
@@ -394,9 +426,6 @@ int main(int argc, char **argv)
 		ShadowBorder::RightOffsetFieldMask | ShadowBorder::InternalColorFieldMask | ShadowBorder::EdgeColorFieldMask | ShadowBorder::InsideBorderFieldMask | 
 		ShadowBorder::CornerRadiusFieldMask | ShadowBorder::InternalToEdgeColorLengthFieldMask );
 
-
-
-    
     /******************************************************
 
         Create Button Components to display each 

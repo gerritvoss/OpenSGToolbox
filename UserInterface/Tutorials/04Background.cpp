@@ -1,3 +1,46 @@
+/*************************************************
+Welcome to the 04Background tutorial.  In this
+tutorial, you will see how to use the 
+different Backgrounds available and add them
+to components.  The following Backgrounds
+are introduced:
+
+    ColorUIBackground
+    CompoundUIBackground
+	EmptyUIBackground
+    GradientUIBackground
+    MaterialUIBackground
+    TextureUIBackground
+    PatternUIBackground
+
+Backgrounds are used simply to provide a background
+for various components.  Using combinations, very
+complex possibilities exist.  As with 03Border, the 
+easiest way to understand the base differences
+is to simply run this tutorial.
+
+The following all are shown and explained
+within this tutorial (note the specific
+requirements of each Border are not listed
+here):
+
+All Backgrounds:
+    Creating Background
+	Setting Color
+	Specifying style
+	Adding Backgrounds to components
+
+
+These tutorials contain potentially relevant
+information:
+
+
+
+*************************************************/
+
+
+
+
 // OpenSG Tutorial Example: Creating a UIBackground
 //
 // This tutorial explains how to implement the 

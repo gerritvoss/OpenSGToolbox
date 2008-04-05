@@ -1,12 +1,48 @@
-// OpenSG Tutorial Example: Creating a Button Component
-//
-// This tutorial explains how to edit the basic features of
-// a Button and a ToggleButtoncreated in the OSG User 
-// Interface library.
-// 
-// Includes: Button PreferredSize, MaximumSize, MinimumSize, Font,
-// Text,and adding a Button to a Scene.  Also note that clicking
-// the Button causes it to appear pressed
+/*************************************************
+Welcome to the 01Button tutorial.  In this tutorial, 
+you will see examples of how to create the following 
+OGS User Interface components:
+	
+	ActionListener
+	Button
+	ToggleButton
+	
+Buttons are often used to create interactivity
+within the interface (via clicking, etc).  This
+tutorial details how to create simple Buttons and
+modify their basic features.  The ActionListener
+class is used to create the desired result when
+actions are preformed (again, clicking, etc).  A
+ToggleButton remains pressed, hence "Toggle."
+
+The following all are shown and explained
+within this tutorial for:
+
+Button/ToggleButton
+    Setting Sizes (Max/Min, and display size)
+	Setting Tool Tip Text
+	Setting the displayed Text
+	Setting the Font
+	Setting the Font Color
+	Setting the Active/Rollover text color
+		(Active = pressed, Rollover = mousedover)
+	Setting the Text alignment
+
+ToggleButton
+	Setting to "selected"
+
+These tutorials contain potentially relevant
+information:
+	02AbsoluteLayout: Assigning constraints to
+		Buttons
+	03Border: Setting Active Borders
+	04Background: Setting Active Backgrounds
+	06BoxLayout: Showing Max/Min Size effects
+
+
+
+*************************************************/
+
 
 
 // GLUT is used for window handling
@@ -177,7 +213,7 @@ int main(int argc, char **argv)
             are not specific to Button.
 
             -setMinSize(Vec2f): Determine the 
-                Minimum    Size of the Component.
+                Minimum Size of the Component.
                 Some Layouts will automatically
                 resize Components; this prevents
                 the Size from going below a

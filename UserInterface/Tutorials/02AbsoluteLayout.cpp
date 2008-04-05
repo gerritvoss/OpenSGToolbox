@@ -1,3 +1,34 @@
+/*************************************************
+Welcome to the 02AbsoluteLayout tutorial.  This 
+tutorial details how to use the AbsoluteLayout
+to place components within a frame.  The following
+components are introduced:
+	
+	AbsoluteLayout
+	AbsoluteLayoutConstraints
+
+The AbsoluteLayout is used when a user wants an
+interface in which components are precisely
+located regardless of window size.  Components
+are placed absolutely by pixel location, which
+do not change when windows are resized.
+
+The following all are shown and explained
+within this tutorial:
+    Creating AbsoluteLayout
+	Creating Constraints
+	Defining Constraints
+	Adding Contrainst to components
+	Creating a frame using AbsoluteLayout
+
+These tutorials contain potentially relevant
+information:
+
+
+
+*************************************************/
+
+
 // OpenSG Tutorial Example: Using the AbsoluteLayout
 //
 // This tutorial explains how to place ExampleButtons within a 

@@ -1,3 +1,36 @@
+/*************************************************
+Welcome to the 06BoxLayout tutorial.  This 
+tutorial details how to use the BoxLayout
+to place components within a frame.  The following
+components are introduced:
+	
+	BoxLayout
+
+BoxLayout takes all components added to it and
+creates a single row (or column).  It also
+resizes the components to be uniform in
+width/height (depending on orientation).  
+It is useful when creating simple Panels of
+Buttons for example, as it provides a Layout
+which gives a good appearance yet remaining
+simple.
+
+The following all are shown and explained
+within this tutorial:
+    Creating BoxLayout
+	Setting Alignments of Layout
+	Explanation/Examples on automatic resizing
+
+
+These tutorials contain potentially relevant
+information:
+
+
+
+*************************************************/
+	
+
+
 // OpenSG Tutorial Example: Using the Box Layout
 //        to place Components 
 //

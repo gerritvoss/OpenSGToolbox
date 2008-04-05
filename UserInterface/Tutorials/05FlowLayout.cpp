@@ -1,11 +1,35 @@
-// OpenSG Tutorial Example: Using the Flow Layout
-//        to place Components 
-//
-// This tutorial explains how to place Buttons within a 
-// frame utilizing the Flow Layout command to 
-// manage the layout through the OSG User Interface library.
-// 
-// Includes: placing multiple ExampleButtons using Flow Layout
+/*************************************************
+Welcome to the 05FlowLayout tutorial.  This 
+tutorial details how to use the FlowLayout
+to place components within a frame.  The following
+components are introduced:
+	
+	FlowLayout
+
+FlowLayout causes all components to be 
+placed in a single row, or multiple rows
+depending on window size.  This arrangment
+dynamically can change by window resizing, or 
+components within the layout changing size.
+For components of vastly different sizes,
+FlowLayout often struggles, but for 
+similarily sized components, is a very
+effective and simple layout.
+
+The following all are shown and explained
+within this tutorial:
+    Creating FlowLayout
+	Setting Vertical/Horizontal Gaps
+	Setting Alignments of Layout
+
+
+These tutorials contain potentially relevant
+information:
+
+
+
+*************************************************/
+	
 
 // GLUT is used for window handling
 #include <OpenSG/OSGGLUT.h>

@@ -1,3 +1,30 @@
+/*************************************************
+Welcome to the 07GridLayout tutorial.  This 
+tutorial details how to use the GridLayout
+to place components within a frame.  The following
+components are introduced:
+	
+	GridLayout
+
+GridLayout provides a simple way to put components
+into a grid layout. It allows you to make an X
+by Y 
+
+The following all are shown and explained
+within this tutorial:
+    Creating BoxLayout
+	Setting Alignments of Layout
+	Explanation/Examples on automatic resizing
+
+
+These tutorials contain potentially relevant
+information:
+
+
+
+*************************************************/
+
+
 // OpenSG Tutorial Example: Using the Grid Layout
 //        to place Components 
 //
