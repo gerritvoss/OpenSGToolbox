@@ -368,6 +368,11 @@ void MenuBar::MenuSelectionListener::popupMenuWillBecomeVisible(const PopupMenuE
     //Do Nothing
 }
 
+void MenuBar::MenuSelectionListener::popupMenuContentsChanged(const PopupMenuEvent& e)
+{
+    //Do Nothing
+}
+
 void MenuBar::MenuSelectionListener::keyTyped(const KeyEvent& e)
 {
     //UInt32 RelevantModifiers = (e.getModifiers() & KeyEvent::KEY_MODIFIER_ALT) |

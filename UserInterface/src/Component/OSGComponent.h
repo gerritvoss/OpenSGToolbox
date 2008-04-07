@@ -96,6 +96,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     virtual void getBoundsRenderingSurfaceSpace(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
     virtual void updateContainerLayout(void);
 	virtual void updateClipBounds(void);
+	virtual Vec2f getRequestedSize(void) const;
+	virtual Vec2f getContentRequestedSize(void) const;
+	virtual Vec2f getBorderingLength(void) const;
 	
 	//Mouse Events
     virtual void mouseClicked(const MouseEvent& e);

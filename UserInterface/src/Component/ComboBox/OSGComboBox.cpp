@@ -49,7 +49,7 @@
 
 #include "OSGComboBox.h"
 #include "Models/OSGMutableComboBoxModel.h"
-#include "Component/Menu/OSGPopupMenu.h"
+#include "Component/Menu/OSGListGeneratedPopupMenu.h"
 #include "Component/Container/Window/OSGInternalWindow.h"
 #include "Component/Button/OSGToggleButton.h"
 #include "Component/ComboBox/Editors/OSGComboBoxEditor.h"
@@ -305,33 +305,10 @@ void ComboBox::showPopup(void)
 void ComboBox::updateListFromModel(void)
 {
 	//Update the PopupMenu
-	for(UInt32 i(0) ; i<getComboListPopupMenu()->getNumItems() ; ++i)
-	{
-		LabelMenuItem::Ptr::dcast(getComboListPopupMenu()->getItem(i))->removeActionListener(this);
-	}
-	getComboListPopupMenu()->removeAllItems();
-
-	
-    LabelMenuItemPtr Item;
-	std::string TheText;
-	for(UInt32 i(0) ; i<getModel()->getSize() ; ++i)
-	{
-		Item = LabelMenuItem::create();
-		if(getModel()->getElementAt(i)->getType() == SFString::getClassType())
-		{
-            TheText = dynamic_cast<SFString*>(getModel()->getElementAt(i).get())->getValue();
-		}
-		else
-		{
-			getModel()->getElementAt(i)->getValueByStr(TheText);
-		}
-		beginEditCP(Item, LabelMenuItem::TextFieldMask);
-			Item->setText(TheText);
-		endEditCP(Item, LabelMenuItem::TextFieldMask);
-		Item->addActionListener(this);
-
-		getComboListPopupMenu()->addItem(Item);
-	}
+	//for(UInt32 i(0) ; i<getComboListPopupMenu()->getNumItems() ; ++i)
+	//{
+	//	LabelMenuItem::Ptr::dcast(getComboListPopupMenu()->getItem(i))->removeActionListener(this);
+	//}
 
 	//Update the Selected Item Component
 	updateSelectedItemComponent();
@@ -446,6 +423,14 @@ void ComboBox::updateSelectionFromEditor(void)
     }
 }
 
+void ComboBox::attachMenuItems(void)
+{
+	for(UInt32 i(0) ; i<getComboListPopupMenu()->getNumItems() ; ++i)
+	{
+		getComboListPopupMenu()->getItem(i)->addActionListener(this);
+	}
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -458,7 +443,7 @@ ComboBox::ComboBox(void) :
 		_EditorListener(ComboBoxPtr(this))
 {
 	beginEditCP(ComboBoxPtr(this), ComboListPopupMenuFieldMask);
-		setComboListPopupMenu(PopupMenu::create());
+		setComboListPopupMenu(ListGeneratedPopupMenu::create());
 	endEditCP(ComboBoxPtr(this), ComboListPopupMenuFieldMask);
 }
 
@@ -468,7 +453,7 @@ ComboBox::ComboBox(const ComboBox &source) :
 		_EditorListener(ComboBoxPtr(this))
 {
 	beginEditCP(ComboBoxPtr(this), ComboListPopupMenuFieldMask);
-		setComboListPopupMenu(PopupMenu::create());
+		setComboListPopupMenu(ListGeneratedPopupMenu::create());
 	endEditCP(ComboBoxPtr(this), ComboListPopupMenuFieldMask);
 	
     if(getExpandButton() != NullFC)
@@ -538,10 +523,23 @@ void ComboBox::changed(BitVector whichField, UInt32 origin)
 	{
 		if(getModel() != NullFC)
 		{
+			beginEditCP(getComboListPopupMenu(), ListGeneratedPopupMenu::ModelFieldMask);
+				getComboListPopupMenu()->setModel(getModel());
+			endEditCP(getComboListPopupMenu(), ListGeneratedPopupMenu::ModelFieldMask);
+
 			getModel()->addListDataListener(this);
 			getModel()->addSelectionListener(this);
 			updateListFromModel();
 		}
+	}
+
+	if(((whichField & CellGeneratorFieldMask) ||
+		(whichField & ComboListPopupMenuFieldMask)) &&
+		getCellGenerator() != NullFC)
+	{
+		beginEditCP(getComboListPopupMenu(), ListGeneratedPopupMenu::CellGeneratorFieldMask);
+			getComboListPopupMenu()->setCellGenerator(getCellGenerator());
+		endEditCP(getComboListPopupMenu(), ListGeneratedPopupMenu::CellGeneratorFieldMask);
 	}
 }
 
@@ -588,6 +586,11 @@ void ComboBox::ExpandButtonSelectedListener::popupMenuWillBecomeVisible(const Po
 			_ComboBox->getExpandButton()->setSelected(true);
 		endEditCP(_ComboBox->getExpandButton(), ToggleButton::SelectedFieldMask);
 	}
+}
+
+void ComboBox::ExpandButtonSelectedListener::popupMenuContentsChanged(const PopupMenuEvent& e)
+{
+	_ComboBox->attachMenuItems();
 }
 
 void ComboBox::EditorListener::actionPerformed(const ActionEvent& e)

@@ -116,7 +116,7 @@ const OSG::BitVector ComboBoxBase::MTInfluenceMask =
 /*! \var UInt32          ComboBoxBase::_sfMaxRowCount
     
 */
-/*! \var PopupMenuPtr    ComboBoxBase::_sfComboListPopupMenu
+/*! \var ListGeneratedPopupMenuPtr ComboBoxBase::_sfComboListPopupMenu
     
 */
 
@@ -159,7 +159,7 @@ FieldDescription *ComboBoxBase::_desc[] =
                      MaxRowCountFieldId, MaxRowCountFieldMask,
                      false,
                      (FieldAccessMethod) &ComboBoxBase::getSFMaxRowCount),
-    new FieldDescription(SFPopupMenuPtr::getClassType(), 
+    new FieldDescription(SFListGeneratedPopupMenuPtr::getClassType(), 
                      "ComboListPopupMenu", 
                      ComboListPopupMenuFieldId, ComboListPopupMenuFieldMask,
                      false,
@@ -246,7 +246,7 @@ ComboBoxBase::ComboBoxBase(void) :
     _sfComponentGeneratorSelectedItem(ComponentPtr(NullFC)), 
     _sfEditable               (bool(true)), 
     _sfMaxRowCount            (UInt32(5)), 
-    _sfComboListPopupMenu     (PopupMenuPtr(NullFC)), 
+    _sfComboListPopupMenu     (ListGeneratedPopupMenuPtr(NullFC)), 
     Inherited() 
 {
 }

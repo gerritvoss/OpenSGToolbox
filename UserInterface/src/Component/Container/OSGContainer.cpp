@@ -77,6 +77,46 @@ void Container::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+
+Vec2f Container::getContentRequestedSize(void) const
+{
+	Pnt2f Minimum(0.0f,0.0f), Maximum(0.0f,0.0f);
+
+	if(getChildren().size() > 0)
+	{
+		Pnt2f ChildTopLeft, ChildBottomRight;
+
+		getChildren()[0]->getBounds(ChildTopLeft, ChildBottomRight);
+		Minimum[0] = osgMin(ChildTopLeft.x(), ChildBottomRight.x());
+		Minimum[1] = osgMin(ChildTopLeft.y(), ChildBottomRight.y());
+		Maximum[0] = osgMax(ChildTopLeft.x(), ChildBottomRight.x());
+		Maximum[1] = osgMax(ChildTopLeft.y(), ChildBottomRight.y());
+
+		for(UInt32 i(1) ; i<getChildren().size() ; ++i)
+		{
+			getChildren()[0]->getBounds(ChildTopLeft, ChildBottomRight);
+			
+			Minimum[0] = osgMin(osgMin(ChildTopLeft.x(), ChildBottomRight.x()), Minimum.x());
+			Minimum[1] = osgMin(osgMin(ChildTopLeft.y(), ChildBottomRight.y()), Minimum.y());
+			Maximum[0] = osgMax(osgMax(ChildTopLeft.x(), ChildBottomRight.x()), Maximum.x());
+			Maximum[1] = osgMax(osgMax(ChildTopLeft.y(), ChildBottomRight.y()), Maximum.y());
+		}
+	}
+
+	return Maximum - Minimum;
+}
+
+Vec2f Container::getBorderingLength(void) const
+{
+	Pnt2f BoundsTopLeft, BoundsBottomRight;
+	Pnt2f InsideInsetsTopLeft, InsideInsetsBottomRight;
+	
+	getBounds(BoundsTopLeft, BoundsBottomRight);
+	getInsideBorderBounds(InsideInsetsTopLeft, InsideInsetsBottomRight);
+	
+	return (BoundsBottomRight - BoundsTopLeft) - (InsideInsetsBottomRight - InsideInsetsTopLeft);
+}
+
 void Container::getInsideInsetsBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
    getInsideBorderBounds(TopLeft, BottomRight);

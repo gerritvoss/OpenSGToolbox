@@ -83,7 +83,10 @@ void GLViewport::initMethod (void)
 \***************************************************************************/
 void GLViewport::drawInternal(const GraphicsPtr Graphics) const
 {
-	if(getPort() != NullFC)
+	if(getPort() != NullFC &&
+		getPort()->getRoot() != NullFC &&
+		getPort()->getBackground() != NullFC &&
+		getPort()->getCamera() != NullFC)
 	{
 		Pnt2f InsideInsetTopLeft, InsideInsetBottomRight;
 		getInsideBorderBounds(InsideInsetTopLeft,InsideInsetBottomRight);

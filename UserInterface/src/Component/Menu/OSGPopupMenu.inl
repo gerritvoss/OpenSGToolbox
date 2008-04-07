@@ -45,18 +45,6 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-MenuItemPtr PopupMenu::getItem(const UInt32& Index)
-{
-    return MenuItem::Ptr::dcast(getChildren()[Index]);
-}
-
-inline
-UInt32 PopupMenu::getNumItems(void) const
-{
-    return getChildren().size();
-}
-
-inline
 void PopupMenu::addPopupMenuListener(PopupMenuListenerPtr Listener)
 {
    _PopupMenuListeners.insert(Listener);

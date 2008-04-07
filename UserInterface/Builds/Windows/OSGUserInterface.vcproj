@@ -498,6 +498,34 @@
 					Name="Menu"
 					>
 					<File
+						RelativePath="..\..\src\Component\Menu\OSGComponentMenuItem.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGComponentMenuItem.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGComponentMenuItem.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGComponentMenuItemBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGComponentMenuItemBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGComponentMenuItemBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGComponentMenuItemFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\Component\Menu\OSGDefaultSingleSelectionModel.cpp"
 						>
 					</File>
@@ -535,6 +563,34 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItemFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGListGeneratedPopupMenu.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGListGeneratedPopupMenu.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGListGeneratedPopupMenu.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGListGeneratedPopupMenuBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGListGeneratedPopupMenuBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGListGeneratedPopupMenuBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Menu\OSGListGeneratedPopupMenuFields.h"
 						>
 					</File>
 					<File
@@ -1712,6 +1768,10 @@
 							RelativePath="..\..\src\Component\Table\Editors\OSGTableCellEditorFields.h"
 							>
 						</File>
+					</Filter>
+					<Filter
+						Name="Models"
+						>
 					</Filter>
 				</Filter>
 				<Filter

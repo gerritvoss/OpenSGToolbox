@@ -81,13 +81,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-    void addItem(MenuItemPtr Item);
-    void addItem(MenuItemPtr Item, const UInt32& Index);
-    void removeItem(MenuItemPtr Item);
-    void removeItem(const UInt32& Index);
-    void removeAllItems(void);
-    MenuItemPtr getItem(const UInt32& Index);
-    UInt32 getNumItems(void) const;
+    virtual void addItem(MenuItemPtr Item);
+    virtual void addItem(MenuItemPtr Item, const UInt32& Index);
+    virtual void removeItem(MenuItemPtr Item);
+    virtual void removeItem(const UInt32& Index);
+    virtual void removeAllItems(void);
+    virtual MenuItemPtr getItem(const UInt32& Index);
+    virtual UInt32 getNumItems(void) const;
     
 	virtual void updateClipBounds(void);
     
@@ -147,6 +147,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
     void producePopupMenuWillBecomeVisible(const PopupMenuEvent& e);
     void producePopupMenuWillBecomeInvisible(const PopupMenuEvent& e);
     void producePopupMenuCanceled(const PopupMenuEvent& e);
+    void producePopupMenuContentsChanged(const PopupMenuEvent& e);
     /*==========================  PRIVATE  ================================*/
   private:
 

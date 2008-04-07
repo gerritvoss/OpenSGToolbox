@@ -47,7 +47,11 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGDefaultMutableComboBoxModel.h"
+#include "OSGListGeneratedPopupMenu.h"
+#include "OSGLabelMenuItem.h"
+#include "OSGComponentMenuItem.h"
+#include "Component/List/Models/OSGListModel.h" // Model type
+#include "ComponentGenerators/OSGComponentGenerator.h" // CellGenerator type
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,8 +59,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::DefaultMutableComboBoxModel
-A UI DefaultMutableComboBoxModel. 
+/*! \class osg::ListGeneratedPopupMenu
+A UI List Generated PopupMenu. 	
 */
 
 /***************************************************************************\
@@ -67,7 +71,7 @@ A UI DefaultMutableComboBoxModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DefaultMutableComboBoxModel::initMethod (void)
+void ListGeneratedPopupMenu::initMethod (void)
 {
 }
 
@@ -77,166 +81,168 @@ void DefaultMutableComboBoxModel::initMethod (void)
 \***************************************************************************/
 
 
-UInt32 DefaultMutableComboBoxModel::getSize(void) const
+void ListGeneratedPopupMenu::addItem(MenuItemPtr Item)
 {
-	return _FieldList.size();
+	//Do Nothing
 }
 
-SharedFieldPtr DefaultMutableComboBoxModel::getElementAt(UInt32 index) const
+void ListGeneratedPopupMenu::addItem(MenuItemPtr Item, const UInt32& Index)
 {
-   return _FieldList[index];
+	//Do Nothing
 }
 
-SharedFieldPtr DefaultMutableComboBoxModel::getSelectedItem(void) const
+void ListGeneratedPopupMenu::removeItem(MenuItemPtr Item)
 {
-	if(_SelectedIndex < 0 ||
-	   _SelectedIndex >= _FieldList.size())
+	//Do Nothing
+}
+
+void ListGeneratedPopupMenu::removeItem(const UInt32& Index)
+{
+	//Do Nothing
+}
+
+void ListGeneratedPopupMenu::removeAllItems(void)
+{
+	//Do Nothing
+}
+
+MenuItemPtr ListGeneratedPopupMenu::getItem(const UInt32& Index)
+{
+	if(getModel() != NullFC && Index < getChildren().size())
 	{
-		return SharedFieldPtr();
+		return MenuItem::Ptr::dcast(getChildren()[Index]);
 	}
 	else
 	{
-		return _FieldList[_SelectedIndex];
+		return NullFC;
 	}
 }
 
-Int32 DefaultMutableComboBoxModel::getSelectedItemIndex(void) const
+UInt32 ListGeneratedPopupMenu::getNumItems(void) const
 {
-	return _SelectedIndex;
-}
-
-void DefaultMutableComboBoxModel::setSelectedItem(const Int32& index)
-{
-	if(getSize() != 0)
+	if(getModel() != NullFC)
 	{
-		Int32 PreviousIndex(_SelectedIndex);
-		_SelectedIndex = index;
-
-		if(_SelectedIndex != PreviousIndex)
-		{
-			produceSelectionChanged(DefaultMutableComboBoxModelPtr(this), _SelectedIndex, PreviousIndex);
-		}
-	}
-}
-
-void DefaultMutableComboBoxModel::setSelectedItem(SharedFieldPtr anObject)
-{
-	if(getSize() != 0)
-	{
-		Int32 PreviousIndex(_SelectedIndex);
-
-		UInt32 index(0);
-		while(index < _FieldList.size() && _FieldList[index] != anObject)
-		{
-			++index;
-		}
-
-		if(index < _FieldList.size())
-		{
-			_SelectedIndex = index;
-		}
-		else
-		{
-			_SelectedIndex = -1;
-		}
-
-		if(_SelectedIndex != PreviousIndex)
-		{
-			produceSelectionChanged(DefaultMutableComboBoxModelPtr(this), _SelectedIndex, PreviousIndex);
-		}
-	}
-}
-
-void DefaultMutableComboBoxModel::addElement(SharedFieldPtr anObject)
-{
-	_FieldList.push_back(anObject);
-	produceListDataIntervalAdded(DefaultMutableComboBoxModelPtr(this),_FieldList.size()-1,_FieldList.size()-1);
-}
-
-void DefaultMutableComboBoxModel::insertElementAt(SharedFieldPtr anObject, const UInt32& index)
-{
-	if(index < _FieldList.size())
-	{
-		std::vector<SharedFieldPtr>::iterator InsertItor(_FieldList.begin());
-		for(UInt32 i(0); i<index ; ++i ) ++InsertItor;
-
-		_FieldList.insert(InsertItor, anObject);
-		produceListDataIntervalAdded(DefaultMutableComboBoxModelPtr(this),index,index);
+		return getModel()->getSize();
 	}
 	else
 	{
-		addElement(anObject);
+		return 0;
 	}
 }
 
-void DefaultMutableComboBoxModel::removeAllElements(void)
+void ListGeneratedPopupMenu::updateMenuItems(void)
 {
-	UInt32 Size(_FieldList.size());
-	_FieldList.clear();
-	produceListDataIntervalRemoved(DefaultMutableComboBoxModelPtr(this),0,Size-1);
+    beginEditCP(ListGeneratedPopupMenuPtr(this), ChildrenFieldMask);
+        getChildren().clear();
+
+		if(getModel() != NullFC)// && )
+		{
+			MenuItemPtr Item;
+			for(Int32 i(0) ; i<getModel()->getSize() ; ++i)
+			{
+				if(getCellGenerator() != NullFC)
+				{
+					Item = ComponentMenuItem::create();
+					ComponentPtr TheComponent = getCellGenerator()->getComponent(ListGeneratedPopupMenuPtr(this), getModel()->getElementAt(i), i, 0, false, false);
+
+					beginEditCP(TheComponent, Component::BackgroundsFieldMask);
+						TheComponent->setBackgrounds(NullFC);
+					endEditCP(TheComponent, Component::BackgroundsFieldMask);
+
+					
+					beginEditCP(Item, ComponentMenuItem::ComponentFieldMask);
+						ComponentMenuItem::Ptr::dcast(Item)->setComponent(TheComponent);
+					endEditCP(Item, ComponentMenuItem::ComponentFieldMask);
+				}
+				else
+				{
+					//Generate the Menu Item
+					Item = LabelMenuItem::create();
+					std::string TheText;
+					if(getModel()->getElementAt(i)->getType() == SFString::getClassType())
+					{
+						TheText = dynamic_cast<SFString*>(getModel()->getElementAt(i).get())->getValue();
+					}
+					else
+					{
+						getModel()->getElementAt(i)->getValueByStr(TheText);
+					}
+					beginEditCP(Item, LabelMenuItem::TextFieldMask);
+						LabelMenuItem::Ptr::dcast(Item)->setText(TheText);
+					endEditCP(Item, LabelMenuItem::TextFieldMask);
+				}
+				getChildren().push_back(Item);
+			}
+		}
+    endEditCP(ListGeneratedPopupMenuPtr(this), ChildrenFieldMask);
+	producePopupMenuContentsChanged(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
 }
 
-void DefaultMutableComboBoxModel::removeElement(SharedFieldPtr anObject)
-{
-	std::vector<SharedFieldPtr>::iterator SearchItor(std::find(_FieldList.begin(), _FieldList.end(), anObject));
 
-	if(SearchItor != _FieldList.end())
-	{
-		UInt32 Index(SearchItor - _FieldList.begin());
-		_FieldList.erase(SearchItor);
-		produceListDataIntervalRemoved(DefaultMutableComboBoxModelPtr(this),Index,Index);
-	}
-
-
-}
-
-void DefaultMutableComboBoxModel::removeElementAt(const UInt32& index)
-{
-	if(index < _FieldList.size())
-	{
-		std::vector<SharedFieldPtr>::iterator RemoveItor(_FieldList.begin());
-		for(UInt32 i(0); i<index ; ++i ) ++RemoveItor;
-
-		_FieldList.erase(RemoveItor);
-		produceListDataIntervalRemoved(DefaultMutableComboBoxModelPtr(this),index,index);
-	}
-}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-DefaultMutableComboBoxModel::DefaultMutableComboBoxModel(void) :
+ListGeneratedPopupMenu::ListGeneratedPopupMenu(void) :
     Inherited(),
-		_SelectedIndex(-1)
+		_ModelListener(ListGeneratedPopupMenuPtr(this))
 {
 }
 
-DefaultMutableComboBoxModel::DefaultMutableComboBoxModel(const DefaultMutableComboBoxModel &source) :
+ListGeneratedPopupMenu::ListGeneratedPopupMenu(const ListGeneratedPopupMenu &source) :
     Inherited(source),
-		_SelectedIndex(source._SelectedIndex)
+		_ModelListener(ListGeneratedPopupMenuPtr(this))
 {
 }
 
-DefaultMutableComboBoxModel::~DefaultMutableComboBoxModel(void)
+ListGeneratedPopupMenu::~ListGeneratedPopupMenu(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void DefaultMutableComboBoxModel::changed(BitVector whichField, UInt32 origin)
+void ListGeneratedPopupMenu::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+	
+	if(whichField & ModelFieldMask)
+	{
+		if(getModel() != NullFC)
+		{
+			getModel()->addListDataListener(&_ModelListener);
+		}
+	}
+
+	if((whichField & ModelFieldMask) ||
+	   (whichField & CellGeneratorFieldMask))
+	{
+		updateMenuItems();
+	}
 }
 
-void DefaultMutableComboBoxModel::dump(      UInt32    , 
+void ListGeneratedPopupMenu::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump DefaultMutableComboBoxModel NI" << std::endl;
+    SLOG << "Dump ListGeneratedPopupMenu NI" << std::endl;
 }
 
 
+void ListGeneratedPopupMenu::ModelListener::contentsChanged(ListDataEvent e)
+{
+	_ListGeneratedPopupMenu->updateMenuItems();
+}
+
+void ListGeneratedPopupMenu::ModelListener::intervalAdded(ListDataEvent e)
+{
+	_ListGeneratedPopupMenu->updateMenuItems();
+}
+
+void ListGeneratedPopupMenu::ModelListener::intervalRemoved(ListDataEvent e)
+{
+	_ListGeneratedPopupMenu->updateMenuItems();
+}
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
 
@@ -251,10 +257,10 @@ void DefaultMutableComboBoxModel::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTMUTABLECOMBOBOXMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTMUTABLECOMBOBOXMODELBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGLISTGENERATEDPOPUPMENUBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGLISTGENERATEDPOPUPMENUBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTMUTABLECOMBOBOXMODELFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGLISTGENERATEDPOPUPMENUFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

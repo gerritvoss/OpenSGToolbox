@@ -87,6 +87,14 @@ void TextField::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+Vec2f TextField::getContentRequestedSize(void) const
+{
+    Pnt2f TextTopLeft, TextBottomRight;
+    getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+
+	return (TextBottomRight - TextTopLeft) + Vec2f(2.0,2.0);
+}
+
 std::string TextField::getDrawnText(void) const
 {
 	return getText();

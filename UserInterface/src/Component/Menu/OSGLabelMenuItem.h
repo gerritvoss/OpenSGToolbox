@@ -46,7 +46,6 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGLabelMenuItemBase.h"
-#include "Event/OSGActionListener.h"
 #include "Event/OSGKeyAcceleratorListener.h"
 #include "Component/Menu/OSGMenuFields.h"
 
@@ -80,10 +79,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItem : public LabelMenuItemBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
+	Vec2f getContentRequestedSize(void) const;
+
     virtual void mouseReleased(const MouseEvent& e);
     
-    void addActionListener(ActionListenerPtr Listener);
-    void removeActionListener(ActionListenerPtr Listener);
     void setDrawAsThoughSelected(bool Selected);
     bool getDrawAsThoughSelected(void) const;
     
@@ -112,8 +111,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItem : public LabelMenuItemBase
 	virtual Color4f getDrawnTextColor(void) const;
     virtual BorderPtr getDrawnBorder(void) const;
     virtual UIBackgroundPtr getDrawnBackground(void) const;
-    
-    virtual void actionPreformed(const ActionEvent& e);
     
 	class LabelMenuItemKeyAcceleratorListener : public KeyAcceleratorListener
 	{
@@ -160,13 +157,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING LabelMenuItem : public LabelMenuItemBase
     void operator =(const LabelMenuItem &source);
     
     
-	typedef std::set<ActionListenerPtr> ActionListenerSet;
-    typedef ActionListenerSet::iterator ActionListenerSetItor;
-    typedef ActionListenerSet::const_iterator ActionListenerSetConstItor;
-	
-    ActionListenerSet       _ActionListeners;
-	
-    virtual void produceActionPerformed(const ActionEvent& e);
 };
 
 typedef LabelMenuItem *LabelMenuItemP;

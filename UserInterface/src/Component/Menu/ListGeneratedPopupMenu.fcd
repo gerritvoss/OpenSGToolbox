@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="ListGeneratedPopupMenu"
+	parent="PopupMenu"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI List Generated PopupMenu.
+	<Field
+		name="Model"
+		type="ListModelPtr"
+		cardinality="single"
+                visibility="external"
+                header="Component/List/Models/OSGListModelFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+        </Field>
+	<Field
+		name="CellGenerator"
+		type="ComponentGeneratorPtr"
+		cardinality="single"
+                visibility="external"
+                header="ComponentGenerators/OSGComponentGeneratorFields.h"
+		defaultValue="NullFC"
+		access="public"
+	>
+        </Field>
+</FieldContainer>

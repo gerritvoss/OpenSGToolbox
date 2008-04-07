@@ -49,9 +49,6 @@
 \*****************************************************************************/
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
-#include "Models/OSGComboBoxModel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -150,7 +147,7 @@ SFUInt32 *ComboBoxBase::getSFMaxRowCount(void)
 
 //! Get the ComboBox::_sfComboListPopupMenu field.
 inline
-SFPopupMenuPtr *ComboBoxBase::getSFComboListPopupMenu(void)
+SFListGeneratedPopupMenuPtr *ComboBoxBase::getSFComboListPopupMenu(void)
 {
     return &_sfComboListPopupMenu;
 }
@@ -216,12 +213,6 @@ const ComboBoxModelPtr &ComboBoxBase::getModel(void) const
 inline
 void ComboBoxBase::setModel(const ComboBoxModelPtr &value)
 {
-	if(getModel() != NULL)
-	{
-		getModel()->removeListDataListener(dynamic_cast<ComboBox*>(this));
-		getModel()->removeSelectionListener(dynamic_cast<ComboBox*>(this));
-	}
-
     _sfModel.setValue(value);
 }
 
@@ -311,21 +302,21 @@ void ComboBoxBase::setMaxRowCount(const UInt32 &value)
 
 //! Get the value of the ComboBox::_sfComboListPopupMenu field.
 inline
-PopupMenuPtr &ComboBoxBase::getComboListPopupMenu(void)
+ListGeneratedPopupMenuPtr &ComboBoxBase::getComboListPopupMenu(void)
 {
     return _sfComboListPopupMenu.getValue();
 }
 
 //! Get the value of the ComboBox::_sfComboListPopupMenu field.
 inline
-const PopupMenuPtr &ComboBoxBase::getComboListPopupMenu(void) const
+const ListGeneratedPopupMenuPtr &ComboBoxBase::getComboListPopupMenu(void) const
 {
     return _sfComboListPopupMenu.getValue();
 }
 
 //! Set the value of the ComboBox::_sfComboListPopupMenu field.
 inline
-void ComboBoxBase::setComboListPopupMenu(const PopupMenuPtr &value)
+void ComboBoxBase::setComboListPopupMenu(const ListGeneratedPopupMenuPtr &value)
 {
     _sfComboListPopupMenu.setValue(value);
 }

@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGLabelMenuItem.h"
+#include "OSGComponentMenuItem.h"
 #include "Util/OSGUIDrawUtils.h"
 #include "Component/Container/Window/OSGInternalWindow.h"
 #include "LookAndFeel/OSGLookAndFeelManager.h"
@@ -59,8 +59,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::LabelMenuItem
-A UI LabelMenuItem. 	
+/*! \class osg::ComponentMenuItem
+A UI ComponentMenuItem. 	
 */
 
 /***************************************************************************\
@@ -71,7 +71,7 @@ A UI LabelMenuItem.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void LabelMenuItem::initMethod (void)
+void ComponentMenuItem::initMethod (void)
 {
 }
 
@@ -80,71 +80,15 @@ void LabelMenuItem::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void LabelMenuItem::drawInternal(const GraphicsPtr TheGraphics) const
+void ComponentMenuItem::drawInternal(const GraphicsPtr TheGraphics) const
 {
-   Pnt2f TopLeft, BottomRight;
-   getInsideBorderBounds(TopLeft, BottomRight);
-
-   //If I have Text Then Draw it
-   if(getText() != "" && getFont() != NullFC)
-   {
-      //Calculate Alignment
-      Pnt2f AlignedPosition;
-      Pnt2f TextTopLeft, TextBottomRight;
-      getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
-
-      AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),0.5, 0.0);
-
-	  //Draw the Text
-      TheGraphics->drawText(AlignedPosition, getText(), getFont(), getDrawnTextColor(), getOpacity());
-
-      //Draw the Mnemonic Underline
-      if(getMnemonicTextPosition() != -1)
-      {
-          TheGraphics->drawTextUnderline(AlignedPosition, getText().substr(getMnemonicTextPosition(),1), getFont(), getDrawnTextColor(), getOpacity());
-      }
-      
-      //Draw the Accelerator Text
-      if(getAcceleratorText().compare("") != 0)
-      {
-          Pnt2f AcceleratorTextTopLeft, AcceleratorTextBottomRight;
-          getFont()->getBounds(getAcceleratorText(), AcceleratorTextTopLeft, AcceleratorTextBottomRight);
-          Pnt2f AcceleratorAlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (AcceleratorTextBottomRight - AcceleratorTextTopLeft),0.5, 1.0);
-
-          TheGraphics->drawText(AcceleratorAlignedPosition, getAcceleratorText(), getFont(), getDrawnTextColor(), getOpacity());
-      }
-
-   }
+	if(getComponent() != NullFC)
+	{
+		getComponent()->draw(TheGraphics);
+	}
 }
 
-Color4f LabelMenuItem::getDrawnTextColor(void) const
-{
-    if(getEnabled())
-    {
-        //if(getFocused())
-        //{
-        //    return getFocusedTextColor();
-        //}
-        if(getSelected() || _DrawAsThoughSelected)
-        {
-            return getSelectedTextColor();
-        }
-        if(_MouseInComponentLastMouse)
-        {
-            return getRolloverTextColor();
-        }
-        else
-        {
-            return getTextColor();
-        }
-    }
-    else
-    {
-        return getDisabledTextColor();
-    }
-}
-
-BorderPtr LabelMenuItem::getDrawnBorder(void) const
+BorderPtr ComponentMenuItem::getDrawnBorder(void) const
 {
     if(getEnabled())
     {
@@ -171,7 +115,7 @@ BorderPtr LabelMenuItem::getDrawnBorder(void) const
     }
 }
 
-UIBackgroundPtr LabelMenuItem::getDrawnBackground(void) const
+UIBackgroundPtr ComponentMenuItem::getDrawnBackground(void) const
 {
     if(getEnabled())
     {
@@ -198,7 +142,11 @@ UIBackgroundPtr LabelMenuItem::getDrawnBackground(void) const
     }
 }
 
-void LabelMenuItem::mouseReleased(const MouseEvent& e)
+void ComponentMenuItem::actionPreformed(const ActionEvent& e)
+{
+}
+
+void ComponentMenuItem::mouseReleased(const MouseEvent& e)
 {
     if(getSelected() && getEnabled())
     {
@@ -212,7 +160,7 @@ void LabelMenuItem::mouseReleased(const MouseEvent& e)
     MenuItem::mouseReleased(e);
 }
 
-MenuPtr LabelMenuItem::getTopLevelMenu(void) const
+MenuPtr ComponentMenuItem::getTopLevelMenu(void) const
 {
     MenuPtr c(getParentMenu());
     while(c != NullFC)
@@ -226,71 +174,102 @@ MenuPtr LabelMenuItem::getTopLevelMenu(void) const
     return NullFC;
 }
 
-void LabelMenuItem::activate(void)
+void ComponentMenuItem::activate(void)
 {
-    produceActionPerformed(ActionEvent(LabelMenuItemPtr(this), getSystemTime()));
+    produceActionPerformed(ActionEvent(ComponentMenuItemPtr(this), getSystemTime()));
 }
 
-Vec2f LabelMenuItem::getContentRequestedSize(void) const
+Vec2f ComponentMenuItem::getContentRequestedSize(void) const
 {
-    Pnt2f TextTopLeft, TextBottomRight;
-    getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
-    Pnt2f AcceleratorTextTopLeft, AcceleratorTextBottomRight;
-    getFont()->getBounds(getAcceleratorText(), AcceleratorTextTopLeft, AcceleratorTextBottomRight);
-    
-	Vec2f RequestedSize((TextBottomRight.x() - TextTopLeft.x()) + (AcceleratorTextBottomRight.x() - AcceleratorTextTopLeft.x()), getPreferredSize().y());
-
-	if(!getAcceleratorText().empty())
+	if(getComponent() != NullFC)
 	{
-		RequestedSize[0] += 50.0f;
+		Vec2f ComponentRequestedSize(0.0,0.0);
+		if(getComponent() != NullFC)
+		{
+			ComponentRequestedSize = getComponent()->getRequestedSize();
+		}
+
+        Pnt2f AcceleratorTextTopLeft, AcceleratorTextBottomRight;
+        getFont()->getBounds(getAcceleratorText(), AcceleratorTextTopLeft, AcceleratorTextBottomRight);
+        
+		Vec2f RequestedSize((ComponentRequestedSize.x()) + (AcceleratorTextBottomRight.x() - AcceleratorTextTopLeft.x()), osgMax(getPreferredSize().y(), ComponentRequestedSize.y()));
+
+		if(!getAcceleratorText().empty())
+		{
+			RequestedSize[0] += 50.0f;
+		}
+		else
+		{
+			RequestedSize[0] += 25.0f;
+		}
+
+		return RequestedSize;
 	}
 	else
 	{
-		RequestedSize[0] += 25.0f;
+		return Inherited::getContentRequestedSize();
 	}
-
-	return RequestedSize;
 }
+
+void ComponentMenuItem::updateComponentBounds(void)
+{
+	if(getComponent() != NullFC)
+	{
+		Pnt2f InsideBorderTopLeft, InsideBorderBottomRight;
+		getInsideBorderBounds(InsideBorderTopLeft, InsideBorderBottomRight);
+
+		beginEditCP(getComponent(), Component::PositionFieldMask | Component::SizeFieldMask);
+			getComponent()->setPosition(InsideBorderTopLeft);
+			getComponent()->setSize(InsideBorderBottomRight - InsideBorderTopLeft);
+		endEditCP(getComponent(), Component::PositionFieldMask | Component::SizeFieldMask);
+	}
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-LabelMenuItem::LabelMenuItem(void) :
+ComponentMenuItem::ComponentMenuItem(void) :
     Inherited(),
-    _LabelMenuItemKeyAcceleratorListener(LabelMenuItemPtr(this)),
-    _KeyAcceleratorMenuFlashUpdateListener(LabelMenuItemPtr(this)),
+    _ComponentMenuItemKeyAcceleratorListener(ComponentMenuItemPtr(this)),
+    _KeyAcceleratorMenuFlashUpdateListener(ComponentMenuItemPtr(this)),
     _DrawAsThoughSelected(false)
 {
 }
 
-LabelMenuItem::LabelMenuItem(const LabelMenuItem &source) :
+ComponentMenuItem::ComponentMenuItem(const ComponentMenuItem &source) :
     Inherited(source),
-    _LabelMenuItemKeyAcceleratorListener(LabelMenuItemPtr(this)),
-    _KeyAcceleratorMenuFlashUpdateListener(LabelMenuItemPtr(this)),
+    _ComponentMenuItemKeyAcceleratorListener(ComponentMenuItemPtr(this)),
+    _KeyAcceleratorMenuFlashUpdateListener(ComponentMenuItemPtr(this)),
     _DrawAsThoughSelected(false)
 {
 }
 
-LabelMenuItem::~LabelMenuItem(void)
+ComponentMenuItem::~ComponentMenuItem(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-
-void LabelMenuItem::changed(BitVector whichField, UInt32 origin)
+void ComponentMenuItem::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
+	if((whichField & SizeFieldMask) ||
+		(whichField & ComponentFieldMask))
+	{
+		updateComponentBounds();
+	}
+	
     if((whichField & ParentWindowFieldMask) &&
         getParentWindow() != NullFC &&
         getEnabled() && 
         getAcceleratorKey() != KeyEvent::KEY_NONE
         )
     {
-        getParentWindow()->addKeyAccelerator(static_cast<KeyEvent::Key>(getAcceleratorKey()), getAcceleratorModifiers(), &_LabelMenuItemKeyAcceleratorListener);
+        getParentWindow()->addKeyAccelerator(static_cast<KeyEvent::Key>(getAcceleratorKey()), getAcceleratorModifiers(), &_ComponentMenuItemKeyAcceleratorListener);
     }
     if((whichField & EnabledFieldMask) &&
         getParentWindow() != NullFC &&
@@ -300,8 +279,8 @@ void LabelMenuItem::changed(BitVector whichField, UInt32 origin)
         getParentWindow()->removeKeyAccelerator(static_cast<KeyEvent::Key>(getAcceleratorKey()), getAcceleratorModifiers());
     }
 
-    if(whichField & TextFieldMask ||
-	   whichField & AcceleratorKeyFieldMask ||
+    if(whichField & ComponentFieldMask ||
+		whichField & AcceleratorKeyFieldMask ||
        whichField & AcceleratorModifiersFieldMask)
     {
         std::string AcceleratorText("");
@@ -320,104 +299,45 @@ void LabelMenuItem::changed(BitVector whichField, UInt32 origin)
         AcceleratorText += KeyEvent::getStringFromKey(static_cast<KeyEvent::Key>(getAcceleratorKey()), KeyEvent::KEY_MODIFIER_CAPS_LOCK);
 
         //Set my preferred size
-        Pnt2f TextTopLeft, TextBottomRight;
-        getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
-        Pnt2f AcceleratorTextTopLeft, AcceleratorTextBottomRight;
-        getFont()->getBounds(AcceleratorText, AcceleratorTextTopLeft, AcceleratorTextBottomRight);
-        
-		Vec2f RequestedSize((TextBottomRight.x() - TextTopLeft.x()) + (AcceleratorTextBottomRight.x() - AcceleratorTextTopLeft.x()), getPreferredSize().y());
 
-		if(!AcceleratorText.empty())
-		{
-			RequestedSize[0] += 50.0f;
-		}
-		else
-		{
-			RequestedSize[0] += 25.0f;
-		}
-
-        beginEditCP(LabelMenuItemPtr(this), AcceleratorTextFieldMask);
+        beginEditCP(ComponentMenuItemPtr(this), AcceleratorTextFieldMask);
             setAcceleratorText(AcceleratorText);
-        endEditCP(LabelMenuItemPtr(this), AcceleratorTextFieldMask);
+        endEditCP(ComponentMenuItemPtr(this), AcceleratorTextFieldMask);
     }
-    if(whichField & TextFieldMask ||
-       whichField & MnemonicKeyFieldMask)
-    {
-        Int32 Pos(-1);
-        if(getMnemonicKey() != KeyEvent::KEY_NONE &&
-           getText() != "")
-        {
-            //Get the Character representation of the key
-            UChar8 MnemonicCharLower(KeyEvent::getCharFromKey(static_cast<KeyEvent::Key>(getMnemonicKey()),0));
-            UChar8 MnemonicCharUpper(KeyEvent::getCharFromKey(static_cast<KeyEvent::Key>(getMnemonicKey()),KeyEvent::KEY_MODIFIER_CAPS_LOCK));
-            
-            //Find the first occurance of this character in the text case-insensitive
-            std::string::size_type MnemonicCharLowerPos;
-            std::string::size_type MnemonicCharUpperPos;
-            MnemonicCharLowerPos = getText().find_first_of(MnemonicCharLower);
-            MnemonicCharUpperPos = getText().find_first_of(MnemonicCharUpper);
 
-            if(MnemonicCharLowerPos == std::string::npos)
-            {
-                if(MnemonicCharUpperPos == std::string::npos)
-                {
-                    Pos = -1;
-                }
-                else
-                {
-                    Pos = MnemonicCharUpperPos;
-                }
-            }
-            else
-            {
-                if(MnemonicCharUpperPos == std::string::npos)
-                {
-                    Pos = MnemonicCharLowerPos;
-                }
-                else
-                {
-                    Pos = osgMin(MnemonicCharLowerPos, MnemonicCharUpperPos);
-                }
-            }
-        }
-        
-        beginEditCP(LabelMenuItemPtr(this), MnemonicTextPositionFieldMask);
-            setMnemonicTextPosition(Pos);
-        endEditCP(LabelMenuItemPtr(this), MnemonicTextPositionFieldMask);
-    }
 }
 
-void LabelMenuItem::dump(      UInt32    , 
+void ComponentMenuItem::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump LabelMenuItem NI" << std::endl;
+    SLOG << "Dump ComponentMenuItem NI" << std::endl;
 }
 
-void LabelMenuItem::LabelMenuItemKeyAcceleratorListener::acceleratorTyped(const KeyAcceleratorEvent& e)
+void ComponentMenuItem::ComponentMenuItemKeyAcceleratorListener::acceleratorTyped(const KeyAcceleratorEvent& e)
 {
     //Set TopLevelMenu
-    MenuPtr TopMenu(_LabelMenuItem->getTopLevelMenu());
+    MenuPtr TopMenu(_ComponentMenuItem->getTopLevelMenu());
     if(TopMenu != NullFC)
     {
         TopMenu->setDrawAsThoughSelected(true);
 
-        _LabelMenuItem->_KeyAcceleratorMenuFlashUpdateListener.reset();
-        _LabelMenuItem->getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&(_LabelMenuItem->_KeyAcceleratorMenuFlashUpdateListener));
+        _ComponentMenuItem->_KeyAcceleratorMenuFlashUpdateListener.reset();
+        _ComponentMenuItem->getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&(_ComponentMenuItem->_KeyAcceleratorMenuFlashUpdateListener));
     }
-    _LabelMenuItem->produceActionPerformed(ActionEvent(_LabelMenuItem, e.getTimeStamp()));
+    _ComponentMenuItem->produceActionPerformed(ActionEvent(_ComponentMenuItem, e.getTimeStamp()));
 }
 
-void LabelMenuItem::KeyAcceleratorMenuFlashUpdateListener::update(const UpdateEvent& e)
+void ComponentMenuItem::KeyAcceleratorMenuFlashUpdateListener::update(const UpdateEvent& e)
 {
     _FlashElps += e.getElapsedTime();
     if(_FlashElps > LookAndFeelManager::the()->getLookAndFeel()->getKeyAcceleratorMenuFlashTime())
     {
-        MenuPtr TopMenu(_LabelMenuItem->getTopLevelMenu());
+        MenuPtr TopMenu(_ComponentMenuItem->getTopLevelMenu());
         if(TopMenu != NullFC)
         {
             TopMenu->setDrawAsThoughSelected(false);
         }
-		_LabelMenuItem->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+		_ComponentMenuItem->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
     }
 }
 
@@ -436,10 +356,10 @@ void LabelMenuItem::KeyAcceleratorMenuFlashUpdateListener::update(const UpdateEv
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGLABELMENUITEMBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLABELMENUITEMBASE_INLINE_CVSID;
+    static Char8 cvsid_hpp       [] = OSGCOMPONENTMENUITEMBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGCOMPONENTMENUITEMBASE_INLINE_CVSID;
 
-    static Char8 cvsid_fields_hpp[] = OSGLABELMENUITEMFIELDS_HEADER_CVSID;
+    static Char8 cvsid_fields_hpp[] = OSGCOMPONENTMENUITEMFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi

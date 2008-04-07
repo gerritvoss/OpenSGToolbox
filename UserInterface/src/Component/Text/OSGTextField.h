@@ -83,6 +83,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}*/
+	Vec2f getContentRequestedSize(void) const;
 
 	virtual void keyTyped(const KeyEvent& e);
 

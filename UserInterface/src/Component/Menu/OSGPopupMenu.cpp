@@ -83,11 +83,11 @@ void PopupMenu::updateLayout(void)
 	Real32 TotalHeight(0);
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-        if(MaxWidth < getChildren()[i]->getPreferredSize().x())
+        if(MaxWidth < getChildren()[i]->getRequestedSize().x())
         {
-            MaxWidth = getChildren()[i]->getPreferredSize().x();
+            MaxWidth = getChildren()[i]->getRequestedSize().x();
 	    }
-	    TotalHeight += getChildren()[i]->getPreferredSize().y();
+	    TotalHeight += getChildren()[i]->getRequestedSize().y();
 		if(i!=0)
 		{
 			TotalHeight += 1.0f;
@@ -114,11 +114,11 @@ void PopupMenu::updateLayout(void)
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
         beginEditCP(getChildren()[i], SizeFieldMask | PositionFieldMask);
-            getChildren()[i]->setSize(Vec2f(MaxWidth, getChildren()[i]->getPreferredSize().y()));
+            getChildren()[i]->setSize(Vec2f(MaxWidth, getChildren()[i]->getRequestedSize().y()));
             getChildren()[i]->setPosition(Pnt2f(InsetsTopLeft.x(), TopOffset));
         endEditCP(getChildren()[i], SizeFieldMask | PositionFieldMask);
 
-        TopOffset += getChildren()[i]->getPreferredSize().y() +1;
+        TopOffset += getChildren()[i]->getRequestedSize().y() +1;
     }
 }
 
@@ -142,6 +142,7 @@ void PopupMenu::addItem(MenuItemPtr Item)
     beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
         getChildren().push_back(Item);
     endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
+	producePopupMenuContentsChanged(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
 }
 
 void PopupMenu::addItem(MenuItemPtr Item, const UInt32& Index)
@@ -153,6 +154,7 @@ void PopupMenu::addItem(MenuItemPtr Item, const UInt32& Index)
         beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
             getChildren().insert(Itor, Item);
         endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
+	producePopupMenuContentsChanged(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
     }
 }
 
@@ -164,6 +166,7 @@ void PopupMenu::removeItem(MenuItemPtr Item)
         beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
             getChildren().erase(FindResult);
         endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
+	producePopupMenuContentsChanged(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
     }
 }
 
@@ -176,6 +179,7 @@ void PopupMenu::removeItem(const UInt32& Index)
         beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
             getChildren().erase(Itor);
         endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
+	producePopupMenuContentsChanged(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
     }
 }
 
@@ -184,6 +188,7 @@ void PopupMenu::removeAllItems(void)
     beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
         getChildren().clear();
     endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
+	producePopupMenuContentsChanged(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
 }
 
 void PopupMenu::mouseMoved(const MouseEvent& e)
@@ -255,6 +260,16 @@ void PopupMenu::setSelection(const Int32& Index)
 	}
 }
 
+
+MenuItemPtr PopupMenu::getItem(const UInt32& Index)
+{
+    return MenuItem::Ptr::dcast(getChildren()[Index]);
+}
+
+UInt32 PopupMenu::getNumItems(void) const
+{
+    return getChildren().size();
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -306,6 +321,15 @@ void  PopupMenu::producePopupMenuCanceled(const PopupMenuEvent& e)
     for(PopupMenuListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
     {
         (*SetItor)->popupMenuCanceled(e);
+    }
+}
+    
+void PopupMenu::producePopupMenuContentsChanged(const PopupMenuEvent& e)
+{
+	PopupMenuListenerSet ListenerSet(_PopupMenuListeners);
+    for(PopupMenuListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->popupMenuContentsChanged(e);
     }
 }
 /*----------------------------- class specific ----------------------------*/

@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class ComboBox
+ **     class ComponentMenuItem
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGCOMBOBOXBASE_H_
-#define _OSGCOMBOBOXBASE_H_
+#ifndef _OSGCOMPONENTMENUITEMBASE_H_
+#define _OSGCOMPONENTMENUITEMBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,58 +65,55 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "OSGMenuItem.h" // Parent
 
-#include "Component/Button/OSGToggleButtonFields.h" // ExpandButton type
-#include "Component/ComboBox/Editors/OSGComboBoxEditorFields.h" // Editor type
-#include "Models/OSGComboBoxModelFields.h" // Model type
-#include "ComponentGenerators/OSGComponentGeneratorFields.h" // CellGenerator type
-#include "Component/OSGComponentFields.h" // ComponentGeneratorSelectedItem type
-#include <OpenSG/OSGBoolFields.h> // Editable type
-#include <OpenSG/OSGUInt32Fields.h> // MaxRowCount type
-#include "Component/Menu/OSGListGeneratedPopupMenuFields.h" // ComboListPopupMenu type
+#include "Component/OSGComponentFields.h" // Component type
+#include "Text/OSGUIFont.h" // Font type
+#include <OpenSG/OSGUInt32Fields.h> // AcceleratorModifiers type
+#include <OpenSG/OSGUInt32Fields.h> // AcceleratorKey type
+#include "Border/OSGBorder.h" // SelectedBorder type
+#include "Background/OSGUIBackground.h" // SelectedBackground type
+#include <OpenSG/OSGStringFields.h> // AcceleratorText type
 
-#include "OSGComboBoxFields.h"
+#include "OSGComponentMenuItemFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class ComboBox;
+class ComponentMenuItem;
 class BinaryDataHandler;
 
-//! \brief ComboBox Base Class.
+//! \brief ComponentMenuItem Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
+class OSG_USERINTERFACELIB_DLLMAPPING ComponentMenuItemBase : public MenuItem
 {
   private:
 
-    typedef Container    Inherited;
+    typedef MenuItem    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ComboBoxPtr  Ptr;
+    typedef ComponentMenuItemPtr  Ptr;
 
     enum
     {
-        ExpandButtonFieldId                   = Inherited::NextFieldId,
-        EditorFieldId                         = ExpandButtonFieldId                   + 1,
-        ModelFieldId                          = EditorFieldId                         + 1,
-        CellGeneratorFieldId                  = ModelFieldId                          + 1,
-        ComponentGeneratorSelectedItemFieldId = CellGeneratorFieldId                  + 1,
-        EditableFieldId                       = ComponentGeneratorSelectedItemFieldId + 1,
-        MaxRowCountFieldId                    = EditableFieldId                       + 1,
-        ComboListPopupMenuFieldId             = MaxRowCountFieldId                    + 1,
-        NextFieldId                           = ComboListPopupMenuFieldId             + 1
+        ComponentFieldId            = Inherited::NextFieldId,
+        FontFieldId                 = ComponentFieldId            + 1,
+        AcceleratorModifiersFieldId = FontFieldId                 + 1,
+        AcceleratorKeyFieldId       = AcceleratorModifiersFieldId + 1,
+        SelectedBorderFieldId       = AcceleratorKeyFieldId       + 1,
+        SelectedBackgroundFieldId   = SelectedBorderFieldId       + 1,
+        AcceleratorTextFieldId      = SelectedBackgroundFieldId   + 1,
+        NextFieldId                 = AcceleratorTextFieldId      + 1
     };
 
-    static const OSG::BitVector ExpandButtonFieldMask;
-    static const OSG::BitVector EditorFieldMask;
-    static const OSG::BitVector ModelFieldMask;
-    static const OSG::BitVector CellGeneratorFieldMask;
-    static const OSG::BitVector ComponentGeneratorSelectedItemFieldMask;
-    static const OSG::BitVector EditableFieldMask;
-    static const OSG::BitVector MaxRowCountFieldMask;
-    static const OSG::BitVector ComboListPopupMenuFieldMask;
+    static const OSG::BitVector ComponentFieldMask;
+    static const OSG::BitVector FontFieldMask;
+    static const OSG::BitVector AcceleratorModifiersFieldMask;
+    static const OSG::BitVector AcceleratorKeyFieldMask;
+    static const OSG::BitVector SelectedBorderFieldMask;
+    static const OSG::BitVector SelectedBackgroundFieldMask;
+    static const OSG::BitVector AcceleratorTextFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -143,37 +140,37 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFToggleButtonPtr   *getSFExpandButton   (void);
-           SFComboBoxEditorPtr *getSFEditor         (void);
-           SFComboBoxModelPtr  *getSFModel          (void);
-           SFComponentGeneratorPtr *getSFCellGenerator  (void);
-           SFBool              *getSFEditable       (void);
-           SFUInt32            *getSFMaxRowCount    (void);
+           SFComponentPtr      *getSFComponent      (void);
+           SFUIFontPtr         *getSFFont           (void);
+           SFUInt32            *getSFAcceleratorModifiers(void);
+           SFUInt32            *getSFAcceleratorKey (void);
+           SFBorderPtr         *getSFSelectedBorder (void);
+           SFUIBackgroundPtr   *getSFSelectedBackground(void);
 
-           ToggleButtonPtr     &getExpandButton   (void);
-     const ToggleButtonPtr     &getExpandButton   (void) const;
-           ComboBoxEditorPtr   &getEditor         (void);
-     const ComboBoxEditorPtr   &getEditor         (void) const;
-           ComboBoxModelPtr    &getModel          (void);
-     const ComboBoxModelPtr    &getModel          (void) const;
-           ComponentGeneratorPtr &getCellGenerator  (void);
-     const ComponentGeneratorPtr &getCellGenerator  (void) const;
-           bool                &getEditable       (void);
-     const bool                &getEditable       (void) const;
-           UInt32              &getMaxRowCount    (void);
-     const UInt32              &getMaxRowCount    (void) const;
+           ComponentPtr        &getComponent      (void);
+     const ComponentPtr        &getComponent      (void) const;
+           UIFontPtr           &getFont           (void);
+     const UIFontPtr           &getFont           (void) const;
+           UInt32              &getAcceleratorModifiers(void);
+     const UInt32              &getAcceleratorModifiers(void) const;
+           UInt32              &getAcceleratorKey (void);
+     const UInt32              &getAcceleratorKey (void) const;
+           BorderPtr           &getSelectedBorder (void);
+     const BorderPtr           &getSelectedBorder (void) const;
+           UIBackgroundPtr     &getSelectedBackground(void);
+     const UIBackgroundPtr     &getSelectedBackground(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setExpandButton   ( const ToggleButtonPtr &value );
-     void setEditor         ( const ComboBoxEditorPtr &value );
-     void setModel          ( const ComboBoxModelPtr &value );
-     void setCellGenerator  ( const ComponentGeneratorPtr &value );
-     void setEditable       ( const bool &value );
-     void setMaxRowCount    ( const UInt32 &value );
+     void setComponent      ( const ComponentPtr &value );
+     void setFont           ( const UIFontPtr &value );
+     void setAcceleratorModifiers( const UInt32 &value );
+     void setAcceleratorKey ( const UInt32 &value );
+     void setSelectedBorder ( const BorderPtr &value );
+     void setSelectedBackground( const UIBackgroundPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -197,8 +194,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ComboBoxPtr      create          (void); 
-    static  ComboBoxPtr      createEmpty     (void); 
+    static  ComponentMenuItemPtr      create          (void); 
+    static  ComponentMenuItemPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -216,50 +213,45 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFToggleButtonPtr   _sfExpandButton;
-    SFComboBoxEditorPtr   _sfEditor;
-    SFComboBoxModelPtr   _sfModel;
-    SFComponentGeneratorPtr   _sfCellGenerator;
-    SFComponentPtr      _sfComponentGeneratorSelectedItem;
-    SFBool              _sfEditable;
-    SFUInt32            _sfMaxRowCount;
-    SFListGeneratedPopupMenuPtr   _sfComboListPopupMenu;
+    SFComponentPtr      _sfComponent;
+    SFUIFontPtr         _sfFont;
+    SFUInt32            _sfAcceleratorModifiers;
+    SFUInt32            _sfAcceleratorKey;
+    SFBorderPtr         _sfSelectedBorder;
+    SFUIBackgroundPtr   _sfSelectedBackground;
+    SFString            _sfAcceleratorText;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ComboBoxBase(void);
-    ComboBoxBase(const ComboBoxBase &source);
+    ComponentMenuItemBase(void);
+    ComponentMenuItemBase(const ComponentMenuItemBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ComboBoxBase(void); 
+    virtual ~ComponentMenuItemBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFComponentPtr      *getSFComponentGeneratorSelectedItem(void);
-           SFListGeneratedPopupMenuPtr *getSFComboListPopupMenu(void);
+           SFString            *getSFAcceleratorText(void);
 
-           ComponentPtr        &getComponentGeneratorSelectedItem(void);
-     const ComponentPtr        &getComponentGeneratorSelectedItem(void) const;
-           ListGeneratedPopupMenuPtr &getComboListPopupMenu(void);
-     const ListGeneratedPopupMenuPtr &getComboListPopupMenu(void) const;
+           std::string         &getAcceleratorText(void);
+     const std::string         &getAcceleratorText(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setComponentGeneratorSelectedItem(const ComponentPtr &value);
-     void setComboListPopupMenu(const ListGeneratedPopupMenuPtr &value);
+     void setAcceleratorText(const std::string &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -267,13 +259,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ComboBoxBase *pOther,
+    void executeSyncImpl(      ComponentMenuItemBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      ComboBoxBase *pOther,
+    void executeSyncImpl(      ComponentMenuItemBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -303,7 +295,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ComboBoxBase &source);
+    void operator =(const ComponentMenuItemBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -311,17 +303,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
 //---------------------------------------------------------------------------
 
 
-typedef ComboBoxBase *ComboBoxBaseP;
+typedef ComponentMenuItemBase *ComponentMenuItemBaseP;
 
-typedef osgIF<ComboBoxBase::isNodeCore,
-              CoredNodePtr<ComboBox>,
+typedef osgIF<ComponentMenuItemBase::isNodeCore,
+              CoredNodePtr<ComponentMenuItem>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ComboBoxNodePtr;
+              >::_IRet ComponentMenuItemNodePtr;
 
-typedef RefPtr<ComboBoxPtr> ComboBoxRefPtr;
+typedef RefPtr<ComponentMenuItemPtr> ComponentMenuItemRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGCOMBOBOXBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGCOMPONENTMENUITEMBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGCOMBOBOXBASE_H_ */
+#endif /* _OSGCOMPONENTMENUITEMBASE_H_ */

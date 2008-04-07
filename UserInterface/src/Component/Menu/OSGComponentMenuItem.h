@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGMENUBAR_H_
-#define _OSGMENUBAR_H_
+#ifndef _OSGCOMPONENTMENUITEM_H_
+#define _OSGCOMPONENTMENUITEM_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,23 +45,22 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGMenuBarBase.h"
-#include "OSGMenu.h"
+#include "OSGComponentMenuItemBase.h"
+#include "Event/OSGKeyAcceleratorListener.h"
+#include "Component/Menu/OSGMenuFields.h"
 
-#include "Event/OSGPopupMenuListener.h"
-#include <OpenSG/Input/OSGKeyAdapter.h>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief MenuBar class. See \ref 
-           PageUserInterfaceMenuBar for a description.
+/*! \brief ComponentMenuItem class. See \ref 
+           PageUserInterfaceComponentMenuItem for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING MenuBar : public MenuBarBase
+class OSG_USERINTERFACELIB_DLLMAPPING ComponentMenuItem : public ComponentMenuItemBase
 {
   private:
 
-    typedef MenuBarBase Inherited;
+    typedef ComponentMenuItemBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -81,83 +80,95 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBar : public MenuBarBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-    void addMenu(MenuPtr Menu);
-    void addMenu(MenuPtr Menu, const UInt32& Index);
-    void removeMenu(MenuPtr Menu);
-    void removeMenu(const UInt32& Index);
-    MenuPtr getMenu(const UInt32& Index);
-    UInt32 getNumMenus(void) const;
-    
-    virtual void mousePressed(const MouseEvent& e);
-    
-    virtual void updateLayout(void);
-	virtual void updateClipBounds(void);
     /*! \}                                                                 */
+
+	Vec2f getContentRequestedSize(void) const;
+
+    virtual void mouseReleased(const MouseEvent& e);
+    
+    void setDrawAsThoughSelected(bool Selected);
+    bool getDrawAsThoughSelected(void) const;
+    
+    virtual void activate(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in MenuBarBase.
+    // Variables should all be in ComponentMenuItemBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    MenuBar(void);
-    MenuBar(const MenuBar &source);
+    ComponentMenuItem(void);
+    ComponentMenuItem(const ComponentMenuItem &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MenuBar(void); 
+    virtual ~ComponentMenuItem(void); 
+
+    /*! \}                                                                 */
+	virtual void drawInternal(const GraphicsPtr Graphics) const;
+    virtual BorderPtr getDrawnBorder(void) const;
+    virtual UIBackgroundPtr getDrawnBackground(void) const;
     
-	class MenuSelectionListener : public ChangeListener, 
-                                  public MouseMotionListener, 
-                                  public PopupMenuListener,
-                                  public KeyAdapter
+    virtual void actionPreformed(const ActionEvent& e);
+    
+	class ComponentMenuItemKeyAcceleratorListener : public KeyAcceleratorListener
 	{
 	public:
-		MenuSelectionListener(MenuBarPtr ThePopupMenu);
-        virtual void stateChanged(const ChangeEvent& e);
-        virtual void mouseMoved(const MouseEvent& e);
-        virtual void mouseDragged(const MouseEvent& e);
-        virtual void popupMenuCanceled(const PopupMenuEvent& e);
-        virtual void popupMenuWillBecomeInvisible(const PopupMenuEvent& e);
-        virtual void popupMenuWillBecomeVisible(const PopupMenuEvent& e);
-		virtual void popupMenuContentsChanged(const PopupMenuEvent& e);
-        virtual void keyTyped(const KeyEvent& e);
+		ComponentMenuItemKeyAcceleratorListener(ComponentMenuItemPtr TheComponentMenuItem);
+        virtual void acceleratorTyped(const KeyAcceleratorEvent& e);
 	private:
-		MenuBarPtr _MenuBar;
+		ComponentMenuItemPtr _ComponentMenuItem;
 	};
 
-	friend class MenuSelectionListener;
+	friend class ComponentMenuItemKeyAcceleratorListener;
 
-	MenuSelectionListener _MenuSelectionListener;
-    /*! \}                                                                 */
+	ComponentMenuItemKeyAcceleratorListener _ComponentMenuItemKeyAcceleratorListener;
+    
+	class KeyAcceleratorMenuFlashUpdateListener : public UpdateListener
+	{
+	public:
+		KeyAcceleratorMenuFlashUpdateListener(ComponentMenuItemPtr TheComponentMenuItem);
+        virtual void update(const UpdateEvent& e);
+        void reset(void);
+	private:
+		ComponentMenuItemPtr _ComponentMenuItem;
+	    Time _FlashElps;
+	};
+
+	friend class KeyAcceleratorMenuFlashUpdateListener;
+
+	KeyAcceleratorMenuFlashUpdateListener _KeyAcceleratorMenuFlashUpdateListener;
+
+    MenuPtr getTopLevelMenu(void) const;
+    bool _DrawAsThoughSelected;
+
+	void updateComponentBounds(void);
     
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class MenuBarBase;
+    friend class ComponentMenuItemBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const MenuBar &source);
-    
-    SingleSelectionModelPtr _SelectionModel;
+    void operator =(const ComponentMenuItem &source);
 };
 
-typedef MenuBar *MenuBarP;
+typedef ComponentMenuItem *ComponentMenuItemP;
 
 OSG_END_NAMESPACE
 
-#include "OSGMenuBarBase.inl"
-#include "OSGMenuBar.inl"
+#include "OSGComponentMenuItemBase.inl"
+#include "OSGComponentMenuItem.inl"
 
-#define OSGMENUBAR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGCOMPONENTMENUITEM_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGMENUBAR_H_ */
+#endif /* _OSGCOMPONENTMENUITEM_H_ */

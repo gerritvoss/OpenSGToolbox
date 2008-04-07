@@ -248,6 +248,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 		virtual void popupMenuCanceled(const PopupMenuEvent& e);
 		virtual void popupMenuWillBecomeInvisible(const PopupMenuEvent& e);
 		virtual void popupMenuWillBecomeVisible(const PopupMenuEvent& e);
+		virtual void popupMenuContentsChanged(const PopupMenuEvent& e);
 	private:
 		ComboBoxPtr _ComboBox;
 	};
@@ -275,6 +276,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	void updateSelectedItemComponent(void);
 	void updateComponentGeneratorSelectedItem(void);
 	void updateSelectionFromEditor(void);
+
+	void attachMenuItems(void);
 
     /*==========================  PRIVATE  ================================*/
   private:

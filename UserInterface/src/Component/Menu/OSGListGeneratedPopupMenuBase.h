@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class ComboBox
+ **     class ListGeneratedPopupMenu
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGCOMBOBOXBASE_H_
-#define _OSGCOMBOBOXBASE_H_
+#ifndef _OSGLISTGENERATEDPOPUPMENUBASE_H_
+#define _OSGLISTGENERATEDPOPUPMENUBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,58 +65,40 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "OSGPopupMenu.h" // Parent
 
-#include "Component/Button/OSGToggleButtonFields.h" // ExpandButton type
-#include "Component/ComboBox/Editors/OSGComboBoxEditorFields.h" // Editor type
-#include "Models/OSGComboBoxModelFields.h" // Model type
+#include "Component/List/Models/OSGListModelFields.h" // Model type
 #include "ComponentGenerators/OSGComponentGeneratorFields.h" // CellGenerator type
-#include "Component/OSGComponentFields.h" // ComponentGeneratorSelectedItem type
-#include <OpenSG/OSGBoolFields.h> // Editable type
-#include <OpenSG/OSGUInt32Fields.h> // MaxRowCount type
-#include "Component/Menu/OSGListGeneratedPopupMenuFields.h" // ComboListPopupMenu type
 
-#include "OSGComboBoxFields.h"
+#include "OSGListGeneratedPopupMenuFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class ComboBox;
+class ListGeneratedPopupMenu;
 class BinaryDataHandler;
 
-//! \brief ComboBox Base Class.
+//! \brief ListGeneratedPopupMenu Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
+class OSG_USERINTERFACELIB_DLLMAPPING ListGeneratedPopupMenuBase : public PopupMenu
 {
   private:
 
-    typedef Container    Inherited;
+    typedef PopupMenu    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ComboBoxPtr  Ptr;
+    typedef ListGeneratedPopupMenuPtr  Ptr;
 
     enum
     {
-        ExpandButtonFieldId                   = Inherited::NextFieldId,
-        EditorFieldId                         = ExpandButtonFieldId                   + 1,
-        ModelFieldId                          = EditorFieldId                         + 1,
-        CellGeneratorFieldId                  = ModelFieldId                          + 1,
-        ComponentGeneratorSelectedItemFieldId = CellGeneratorFieldId                  + 1,
-        EditableFieldId                       = ComponentGeneratorSelectedItemFieldId + 1,
-        MaxRowCountFieldId                    = EditableFieldId                       + 1,
-        ComboListPopupMenuFieldId             = MaxRowCountFieldId                    + 1,
-        NextFieldId                           = ComboListPopupMenuFieldId             + 1
+        ModelFieldId         = Inherited::NextFieldId,
+        CellGeneratorFieldId = ModelFieldId         + 1,
+        NextFieldId          = CellGeneratorFieldId + 1
     };
 
-    static const OSG::BitVector ExpandButtonFieldMask;
-    static const OSG::BitVector EditorFieldMask;
     static const OSG::BitVector ModelFieldMask;
     static const OSG::BitVector CellGeneratorFieldMask;
-    static const OSG::BitVector ComponentGeneratorSelectedItemFieldMask;
-    static const OSG::BitVector EditableFieldMask;
-    static const OSG::BitVector MaxRowCountFieldMask;
-    static const OSG::BitVector ComboListPopupMenuFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -143,37 +125,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFToggleButtonPtr   *getSFExpandButton   (void);
-           SFComboBoxEditorPtr *getSFEditor         (void);
-           SFComboBoxModelPtr  *getSFModel          (void);
+           SFListModelPtr      *getSFModel          (void);
            SFComponentGeneratorPtr *getSFCellGenerator  (void);
-           SFBool              *getSFEditable       (void);
-           SFUInt32            *getSFMaxRowCount    (void);
 
-           ToggleButtonPtr     &getExpandButton   (void);
-     const ToggleButtonPtr     &getExpandButton   (void) const;
-           ComboBoxEditorPtr   &getEditor         (void);
-     const ComboBoxEditorPtr   &getEditor         (void) const;
-           ComboBoxModelPtr    &getModel          (void);
-     const ComboBoxModelPtr    &getModel          (void) const;
+           ListModelPtr        &getModel          (void);
+     const ListModelPtr        &getModel          (void) const;
            ComponentGeneratorPtr &getCellGenerator  (void);
      const ComponentGeneratorPtr &getCellGenerator  (void) const;
-           bool                &getEditable       (void);
-     const bool                &getEditable       (void) const;
-           UInt32              &getMaxRowCount    (void);
-     const UInt32              &getMaxRowCount    (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setExpandButton   ( const ToggleButtonPtr &value );
-     void setEditor         ( const ComboBoxEditorPtr &value );
-     void setModel          ( const ComboBoxModelPtr &value );
+     void setModel          ( const ListModelPtr &value );
      void setCellGenerator  ( const ComponentGeneratorPtr &value );
-     void setEditable       ( const bool &value );
-     void setMaxRowCount    ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -197,8 +163,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ComboBoxPtr      create          (void); 
-    static  ComboBoxPtr      createEmpty     (void); 
+    static  ListGeneratedPopupMenuPtr      create          (void); 
+    static  ListGeneratedPopupMenuPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -216,50 +182,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFToggleButtonPtr   _sfExpandButton;
-    SFComboBoxEditorPtr   _sfEditor;
-    SFComboBoxModelPtr   _sfModel;
+    SFListModelPtr      _sfModel;
     SFComponentGeneratorPtr   _sfCellGenerator;
-    SFComponentPtr      _sfComponentGeneratorSelectedItem;
-    SFBool              _sfEditable;
-    SFUInt32            _sfMaxRowCount;
-    SFListGeneratedPopupMenuPtr   _sfComboListPopupMenu;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ComboBoxBase(void);
-    ComboBoxBase(const ComboBoxBase &source);
+    ListGeneratedPopupMenuBase(void);
+    ListGeneratedPopupMenuBase(const ListGeneratedPopupMenuBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ComboBoxBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFComponentPtr      *getSFComponentGeneratorSelectedItem(void);
-           SFListGeneratedPopupMenuPtr *getSFComboListPopupMenu(void);
-
-           ComponentPtr        &getComponentGeneratorSelectedItem(void);
-     const ComponentPtr        &getComponentGeneratorSelectedItem(void) const;
-           ListGeneratedPopupMenuPtr &getComboListPopupMenu(void);
-     const ListGeneratedPopupMenuPtr &getComboListPopupMenu(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setComponentGeneratorSelectedItem(const ComponentPtr &value);
-     void setComboListPopupMenu(const ListGeneratedPopupMenuPtr &value);
+    virtual ~ListGeneratedPopupMenuBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -267,13 +206,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ComboBoxBase *pOther,
+    void executeSyncImpl(      ListGeneratedPopupMenuBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      ComboBoxBase *pOther,
+    void executeSyncImpl(      ListGeneratedPopupMenuBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -303,7 +242,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ComboBoxBase &source);
+    void operator =(const ListGeneratedPopupMenuBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -311,17 +250,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
 //---------------------------------------------------------------------------
 
 
-typedef ComboBoxBase *ComboBoxBaseP;
+typedef ListGeneratedPopupMenuBase *ListGeneratedPopupMenuBaseP;
 
-typedef osgIF<ComboBoxBase::isNodeCore,
-              CoredNodePtr<ComboBox>,
+typedef osgIF<ListGeneratedPopupMenuBase::isNodeCore,
+              CoredNodePtr<ListGeneratedPopupMenu>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ComboBoxNodePtr;
+              >::_IRet ListGeneratedPopupMenuNodePtr;
 
-typedef RefPtr<ComboBoxPtr> ComboBoxRefPtr;
+typedef RefPtr<ListGeneratedPopupMenuPtr> ListGeneratedPopupMenuRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGCOMBOBOXBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
+#define OSGLISTGENERATEDPOPUPMENUBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
-#endif /* _OSGCOMBOBOXBASE_H_ */
+#endif /* _OSGLISTGENERATEDPOPUPMENUBASE_H_ */

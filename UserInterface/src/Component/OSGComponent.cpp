@@ -100,6 +100,27 @@ void Component::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+Vec2f Component::getRequestedSize(void) const
+{
+	return getBorderingLength() + getContentRequestedSize();
+}
+
+Vec2f Component::getContentRequestedSize(void) const
+{
+	return Vec2f(0.0,0.0);
+}
+
+Vec2f Component::getBorderingLength(void) const
+{
+	Pnt2f BoundsTopLeft, BoundsBottomRight;
+	Pnt2f InsideBorderTopLeft, InsideBorderBottomRight;
+	
+	getBounds(BoundsTopLeft, BoundsBottomRight);
+	getInsideBorderBounds(InsideBorderTopLeft, InsideBorderBottomRight);
+	
+	return (BoundsBottomRight - BoundsTopLeft) - (InsideBorderBottomRight - InsideBorderTopLeft);
+}
+
 void Component::setBorders(BorderPtr TheBorder)
 {
 	setBorder(TheBorder);

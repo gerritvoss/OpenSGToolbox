@@ -43,22 +43,6 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void LabelMenuItem::addActionListener(ActionListenerPtr Listener)
-{
-   _ActionListeners.insert(Listener);
-}
-
-inline
-void LabelMenuItem::removeActionListener(ActionListenerPtr Listener)
-{
-   ActionListenerSetItor EraseIter(_ActionListeners.find(Listener));
-   if(EraseIter != _ActionListeners.end())
-   {
-      _ActionListeners.erase(EraseIter);
-   }
-}
-
-inline
 LabelMenuItem::LabelMenuItemKeyAcceleratorListener::LabelMenuItemKeyAcceleratorListener(LabelMenuItemPtr TheLabelMenuItem) :
 									_LabelMenuItem(TheLabelMenuItem)
 {

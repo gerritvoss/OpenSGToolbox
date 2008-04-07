@@ -76,6 +76,14 @@ void Label::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+Vec2f Label::getContentRequestedSize(void) const
+{
+    Pnt2f TextTopLeft, TextBottomRight;
+    getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+
+	return (TextBottomRight - TextTopLeft) + Vec2f(2.0,2.0);
+}
+
 void Label::drawInternal(const GraphicsPtr TheGraphics) const
 {
     Pnt2f TopLeft, BottomRight;

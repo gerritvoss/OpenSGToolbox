@@ -83,6 +83,19 @@ void MenuItem::activate(void)
 {
     //Do nothing
 }
+
+void MenuItem::actionPreformed(const ActionEvent& e)
+{
+}
+
+void MenuItem::produceActionPerformed(const ActionEvent& e)
+{
+    actionPreformed(e);
+    for(ActionListenerSetConstItor SetItor(_ActionListeners.begin()) ; SetItor != _ActionListeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->actionPerformed(e);
+    }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

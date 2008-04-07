@@ -82,11 +82,11 @@ A UI ComboBox
 	</Field>
 	<Field
 		name="ComboListPopupMenu"
-		type="PopupMenuPtr"
+		type="ListGeneratedPopupMenuPtr"
 		cardinality="single"
 		visibility="external"
 		access="protected"
-		header="Component/Menu/OSGPopupMenuFields.h"
+		header="Component/Menu/OSGListGeneratedPopupMenuFields.h"
 		defaultValue="NullFC"
 	>
 	</Field>

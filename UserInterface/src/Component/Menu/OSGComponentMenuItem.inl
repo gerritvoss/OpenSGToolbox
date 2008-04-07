@@ -39,91 +39,42 @@
 //---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "Component/Menu/OSGListGeneratedPopupMenu.h"
-#include "Models/OSGComboBoxModel.h"
 OSG_BEGIN_NAMESPACE
 
 inline
-UInt32 ComboBox::getSelectedIndex(void) const
-{
-	return getModel()->getSelectedItemIndex();
-}
-
-inline
-SharedFieldPtr ComboBox::getSelectedItem(void) const
-{
-	return getModel()->getSelectedItem();
-}
-
-inline
-SharedFieldPtr ComboBox::getItemAt(const UInt32& index) const
-{
-	return getModel()->getElementAt(index);
-}
-
-inline
-UInt32 ComboBox::getItemCount(void) const
-{
-	return getModel()->getSize();
-}
-
-inline
-void ComboBox::addActionListener(ActionListenerPtr Listener)
-{
-   _ActionListeners.insert(Listener);
-}
-
-inline
-void ComboBox::setSelectedIndex(const UInt32& anIndex)
-{
-	getModel()->setSelectedItem(anIndex);
-}
-
-inline
-void ComboBox::setSelectedItem(SharedFieldPtr anObject)
-{
-	getModel()->setSelectedItem(anObject);
-}
-
-inline
-void ComboBox::addPopupMenuListener(PopupMenuListenerPtr Listener)
-{
-	getComboListPopupMenu()->addPopupMenuListener(Listener);
-}
-
-inline
-void ComboBox::removePopupMenuListener(PopupMenuListenerPtr Listener)
-{
-	getComboListPopupMenu()->removePopupMenuListener(Listener);
-}
-
-inline
-bool ComboBox::isPopupVisible(void) const
-{
-	return getComboListPopupMenu()->getVisible();
-}
-
-inline
-void ComboBox::hidePopup(void)
-{
-	getComboListPopupMenu()->clearSelection();
-}
-
-inline
-ComboBox::ExpandButtonSelectedListener::ExpandButtonSelectedListener(ComboBoxPtr TheComboBox) :
-   _ComboBox(TheComboBox)
+ComponentMenuItem::ComponentMenuItemKeyAcceleratorListener::ComponentMenuItemKeyAcceleratorListener(ComponentMenuItemPtr TheComponentMenuItem) :
+									_ComponentMenuItem(TheComponentMenuItem)
 {
 }
 
 inline
-ComboBox::EditorListener::EditorListener(ComboBoxPtr TheComboBox) :
-   _ComboBox(TheComboBox)
+ComponentMenuItem::KeyAcceleratorMenuFlashUpdateListener::KeyAcceleratorMenuFlashUpdateListener(ComponentMenuItemPtr TheComponentMenuItem) :
+									_ComponentMenuItem(TheComponentMenuItem),
+									_FlashElps(0.0)
 {
+}
+
+inline
+void ComponentMenuItem::KeyAcceleratorMenuFlashUpdateListener::reset(void)
+{
+    _FlashElps = 0.0;
+}
+
+
+inline
+void ComponentMenuItem::setDrawAsThoughSelected(bool Selected)
+{
+    _DrawAsThoughSelected = Selected;
+}
+
+inline
+bool ComponentMenuItem::getDrawAsThoughSelected(void) const
+{
+    return _DrawAsThoughSelected;
 }
 
 OSG_END_NAMESPACE
 
-#define OSGCOMBOBOX_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+#define OSGCOMPONENTMENUITEM_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

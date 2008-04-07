@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGMENUBAR_H_
-#define _OSGMENUBAR_H_
+#ifndef _OSGLISTGENERATEDPOPUPMENU_H_
+#define _OSGLISTGENERATEDPOPUPMENU_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,23 +45,20 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGMenuBarBase.h"
-#include "OSGMenu.h"
-
-#include "Event/OSGPopupMenuListener.h"
-#include <OpenSG/Input/OSGKeyAdapter.h>
+#include "OSGListGeneratedPopupMenuBase.h"
+#include "Component/List/OSGListDataListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief MenuBar class. See \ref 
-           PageUserInterfaceMenuBar for a description.
+/*! \brief ListGeneratedPopupMenu class. See \ref 
+           PageUserInterfaceListGeneratedPopupMenu for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING MenuBar : public MenuBarBase
+class OSG_USERINTERFACELIB_DLLMAPPING ListGeneratedPopupMenu : public ListGeneratedPopupMenuBase
 {
   private:
 
-    typedef MenuBarBase Inherited;
+    typedef ListGeneratedPopupMenuBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -81,83 +78,76 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBar : public MenuBarBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-    void addMenu(MenuPtr Menu);
-    void addMenu(MenuPtr Menu, const UInt32& Index);
-    void removeMenu(MenuPtr Menu);
-    void removeMenu(const UInt32& Index);
-    MenuPtr getMenu(const UInt32& Index);
-    UInt32 getNumMenus(void) const;
-    
-    virtual void mousePressed(const MouseEvent& e);
-    
-    virtual void updateLayout(void);
-	virtual void updateClipBounds(void);
     /*! \}                                                                 */
+
+    virtual void addItem(MenuItemPtr Item);
+    virtual void addItem(MenuItemPtr Item, const UInt32& Index);
+    virtual void removeItem(MenuItemPtr Item);
+    virtual void removeItem(const UInt32& Index);
+    virtual void removeAllItems(void);
+    virtual MenuItemPtr getItem(const UInt32& Index);
+    virtual UInt32 getNumItems(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in MenuBarBase.
+    // Variables should all be in ListGeneratedPopupMenuBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    MenuBar(void);
-    MenuBar(const MenuBar &source);
+    ListGeneratedPopupMenu(void);
+    ListGeneratedPopupMenu(const ListGeneratedPopupMenu &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MenuBar(void); 
+    virtual ~ListGeneratedPopupMenu(void); 
+
+    /*! \}                                                                 */
+	void updateMenuItems(void);
     
-	class MenuSelectionListener : public ChangeListener, 
-                                  public MouseMotionListener, 
-                                  public PopupMenuListener,
-                                  public KeyAdapter
+	class ModelListener : public ListDataListener
 	{
-	public:
-		MenuSelectionListener(MenuBarPtr ThePopupMenu);
-        virtual void stateChanged(const ChangeEvent& e);
-        virtual void mouseMoved(const MouseEvent& e);
-        virtual void mouseDragged(const MouseEvent& e);
-        virtual void popupMenuCanceled(const PopupMenuEvent& e);
-        virtual void popupMenuWillBecomeInvisible(const PopupMenuEvent& e);
-        virtual void popupMenuWillBecomeVisible(const PopupMenuEvent& e);
-		virtual void popupMenuContentsChanged(const PopupMenuEvent& e);
-        virtual void keyTyped(const KeyEvent& e);
-	private:
-		MenuBarPtr _MenuBar;
+	public :
+		ModelListener(ListGeneratedPopupMenuPtr TheListGeneratedPopupMenu);
+		
+		//Sent when the contents of the list has changed in a way that's too complex to characterize with the previous methods.
+		virtual void contentsChanged(ListDataEvent e);
+		//Sent after the indices in the index0,index1 interval have been inserted in the data model.
+		virtual void intervalAdded(ListDataEvent e);
+		//Sent after the indices in the index0,index1 interval have been removed from the data model.
+		virtual void intervalRemoved(ListDataEvent e);
+	protected :
+		ListGeneratedPopupMenuPtr _ListGeneratedPopupMenu;
 	};
 
-	friend class MenuSelectionListener;
+	friend class ModelListener;
 
-	MenuSelectionListener _MenuSelectionListener;
-    /*! \}                                                                 */
+	ModelListener _ModelListener;
     
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class MenuBarBase;
+    friend class ListGeneratedPopupMenuBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const MenuBar &source);
-    
-    SingleSelectionModelPtr _SelectionModel;
+    void operator =(const ListGeneratedPopupMenu &source);
 };
 
-typedef MenuBar *MenuBarP;
+typedef ListGeneratedPopupMenu *ListGeneratedPopupMenuP;
 
 OSG_END_NAMESPACE
 
-#include "OSGMenuBarBase.inl"
-#include "OSGMenuBar.inl"
+#include "OSGListGeneratedPopupMenuBase.inl"
+#include "OSGListGeneratedPopupMenu.inl"
 
-#define OSGMENUBAR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGLISTGENERATEDPOPUPMENU_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGMENUBAR_H_ */
+#endif /* _OSGLISTGENERATEDPOPUPMENU_H_ */
