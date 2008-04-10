@@ -50,6 +50,8 @@
 #include <OpenSG/OSGFieldContainerFactory.h>
 #include <OpenSG/OSGSFFieldContainerPtr.h>
 #include <OpenSG/OSGMFFieldContainerPtr.h>
+#include <OpenSG/OSGAttachmentContainer.h>
+#include <OpenSG/OSGSimpleAttachments.h>
 
 #include "OSGXMLFCFileType.h"
 
@@ -169,6 +171,14 @@ std::string XMLFCFileType::getName(void) const
 						std::endl;
 				}
 				NewFieldContainer = FCInfoIter->second._Ptr;
+				if(NewFieldContainer->getType().isDerivedFrom(AttachmentContainer::getClassType()))
+				{
+					SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring("name"));
+					if(SearchItor != (*NodeListItor)->get_attrmap().end())
+					{
+						setName(AttachmentContainerPtr::dcast(NewFieldContainer),SearchItor->second.c_str());
+					}
+				}
 				if(NewFieldContainer != NullFC)
 				{
 					for(AttributeIterator = attr.begin(); AttributeIterator != attr.end(); AttributeIterator++)
@@ -364,6 +374,15 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 	{
 		OutputStream << "\t<" << (*FCItor)->getType().getCName() << std::endl;
 		OutputStream << "\t\tfieldcontainerid=\"" << TypeTraits<UInt32>::putToString(FieldContainerPtr(*FCItor).getFieldContainerId()) << "\"" << std::endl;
+
+		if((*FCItor)->getType().isDerivedFrom(AttachmentContainer::getClassType()))
+		{
+			const Char8* Name(osg::getName(AttachmentContainerPtr::dcast(*FCItor)));
+			if(Name != NULL)
+			{
+				OutputStream << "\t\tname=\"" << Name << "\"" << std::endl;
+			}
+		}
 
 		//Write all of the Fields
 		FieldContainerType& TheFCType((*FCItor)->getType());
