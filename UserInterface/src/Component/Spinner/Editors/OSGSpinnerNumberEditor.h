@@ -80,6 +80,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerNumberEditor : public SpinnerNumber
     /*! \}                                                                 */
     //Pushes the currently edited value to the SpinnerModel.
     virtual void commitEdit(void);
+
+    virtual void stateChanged(const ChangeEvent& e);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

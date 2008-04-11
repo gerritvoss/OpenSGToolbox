@@ -105,6 +105,32 @@ void SpinnerNumberEditor::commitEdit(void)
 	}
 }
 
+#include <sstream>
+void SpinnerNumberEditor::stateChanged(const ChangeEvent& e)
+{
+	if(getSpinner()->getModel()->getValue()->getType() == SFReal32::getClassType())
+	{
+		//Update the Value of the TextField
+		beginEditCP(getTextField(), TextField::TextFieldMask);
+			std::stringstream TheSStream;
+			Real32 Value(dynamic_cast<SFReal32*>(getSpinner()->getModel()->getValue().get())->getValue());
+			TheSStream << Value;
+			if(Value == Real32(0.0))
+			{
+				getTextField()->setText("0.0");
+			}
+			else
+			{
+				getTextField()->setText(TheSStream.str());
+			}
+		endEditCP(getTextField(), TextField::TextFieldMask);
+	}
+	else
+	{
+		Inherited::stateChanged(e);
+	}
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

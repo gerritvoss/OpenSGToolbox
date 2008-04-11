@@ -417,7 +417,10 @@ void LabelMenuItem::KeyAcceleratorMenuFlashUpdateListener::update(const UpdateEv
         {
             TopMenu->setDrawAsThoughSelected(false);
         }
-		_LabelMenuItem->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+		if(_LabelMenuItem->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+		{
+			_LabelMenuItem->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+		}
     }
 }
 

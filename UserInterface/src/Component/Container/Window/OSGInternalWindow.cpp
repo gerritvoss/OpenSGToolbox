@@ -770,9 +770,12 @@ void InternalWindow::destroyPopupMenu(void)
         endEditCP(InternalWindowPtr(this), ActivePopupMenusFieldMask | LockInputFieldMask);
 
 	    //Remove the listener
-        getDrawingSurface()->getEventProducer()->removeMouseListener(&_PopupMenuInteractionListener);
-        getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&_PopupMenuInteractionListener);
-        getDrawingSurface()->getEventProducer()->removeKeyListener(&_PopupMenuInteractionListener);
+		if(getDrawingSurface()->getEventProducer() != NullFC)
+		{
+			getDrawingSurface()->getEventProducer()->removeMouseListener(&_PopupMenuInteractionListener);
+			getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&_PopupMenuInteractionListener);
+			getDrawingSurface()->getEventProducer()->removeKeyListener(&_PopupMenuInteractionListener);
+		}
     }
 }
 

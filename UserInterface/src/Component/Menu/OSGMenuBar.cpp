@@ -354,7 +354,11 @@ void MenuBar::MenuSelectionListener::mouseDragged(const MouseEvent& e)
 
 void MenuBar::MenuSelectionListener::popupMenuCanceled(const PopupMenuEvent& e)
 {
-    _MenuBar->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+	if(_MenuBar->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+	{
+		_MenuBar->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+	}
+    
     _MenuBar->_SelectionModel->clearSelection();
 }
 
