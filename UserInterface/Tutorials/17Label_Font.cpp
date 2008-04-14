@@ -68,7 +68,7 @@ void reshape(Vec2f Size);
 // List header files
 #include <OpenSG/UserInterface/OSGList.h>
 #include <OpenSG/UserInterface/OSGListSelectionListener.h>
-#include <OpenSG/UserInterface/OSGAbstractListModel.h>
+#include <OpenSG/UserInterface/OSGDefaultListModel.h>
 #include <OpenSG/UserInterface/OSGDefaultListComponentGenerator.h>
 #include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
 #include <OpenSG/UserInterface/OSGListModel.h>
@@ -149,13 +149,19 @@ class FontListComponentGenerator : public DefaultListComponentGenerator
 {
     /*==========================  PUBLIC  =================================*/
   public:
+    typedef          DefaultListComponentGenerator Inherited;
+    typedef          FontListComponentGenerator Self;
+	typedef          FCPtr<Inherited::Ptr,  Self      > PtrType;
+
+	OSG_FIELD_CONTAINER_DECL(PtrType)
+	
 	virtual ComponentPtr getListComponent(ListPtr Parent, SharedFieldPtr Value, UInt32 Index, bool IsSelected, bool HasFocus)
     {
         // Create using the DefaultListComponentGenerator a
         // Label (its default) with the Font name as its text
 
         LabelPtr ListComponentLabel = Label::Ptr::dcast(
-            DefaultListComponentGenerator::getListComponent(
+			Inherited::Ptr::dcast(Inherited::getClassType().getPrototype())->getListComponent(
             Parent, Value, Index, IsSelected, HasFocus)
             );
 
@@ -184,14 +190,41 @@ class FontListComponentGenerator : public DefaultListComponentGenerator
         return ListComponentLabel;
     }
 
-    FontListComponentGenerator(void)
+protected:
+
+	static FieldContainerType  _type;
+
+	FontListComponentGenerator(void) : Inherited()
+    {
+    }
+
+	FontListComponentGenerator(const FontListComponentGenerator& source) : Inherited(source)
     {
     }
 
     virtual ~FontListComponentGenerator(void)
     {
     }
+private:
+	friend class FieldContainer;
+
+    FontListComponentGenerator &operator =(const FontListComponentGenerator &source)
+	{
+		return *this;
+	}
 };
+
+FieldContainerType FontListComponentGenerator::_type("FontListComponentGenerator",
+                                     "DefaultListComponentGenerator",
+                                      NULL,
+                                      (PrototypeCreateF) &FontListComponentGenerator::createEmpty,
+                                      NULL,
+									  NULL,
+                                      0);
+
+OSG_FIELD_CONTAINER_INL_DEF(FontListComponentGenerator::Self, FontListComponentGenerator::PtrType)
+OSG_FIELD_CONTAINER_DEF(FontListComponentGenerator::Self, FontListComponentGenerator::PtrType)
+typedef FontListComponentGenerator::PtrType FontListComponentGeneratorPtr;
 
 // Setup a FontListener to change the label's font
 // when a different item in the FontList is
@@ -398,28 +431,27 @@ int main(int argc, char **argv)
 
     ******************************************************/
     // Create ListModel Component
-    AbstractListModel ListModel;
+	DefaultListModelPtr ListModel = DefaultListModel::create();
 
     // Display all Fonts available
     std::map<std::string, UIFontPtr>::iterator FontMapItor;
     for (FontMapItor = FontMap.begin(); FontMapItor != FontMap.end() ; ++FontMapItor)
     {
         // Add the Fonts to the List
-        ListModel.pushBack(SharedFieldPtr(new SFString((*FontMapItor).first)));
+        ListModel->pushBack(SharedFieldPtr(new SFString((*FontMapItor).first)));
     }
 
     // Creates ComponentGenerator
-    FontListComponentGenerator ComponentGenerator;
-	ComponentGeneratorPtr TheGenerator(ComponentGenerator);
+	FontListComponentGeneratorPtr TheGenerator = FontListComponentGenerator::create();
 
     // Create the List of Fonts (see 18List for more information)
     FontList = List::create();
-    beginEditCP(FontList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::CellGeneratorFieldMask);
+    beginEditCP(FontList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::CellGeneratorFieldMask | List::ModelFieldMask);
         FontList->setPreferredSize(Vec2f(200, 300));
         FontList->setCellOrientation(VERTICAL_ALIGNMENT);
 		FontList->setCellGenerator(TheGenerator);
-    endEditCP(FontList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::CellGeneratorFieldMask);
-    FontList->setModel(&ListModel);
+		FontList->setModel(ListModel);
+    endEditCP(FontList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::CellGeneratorFieldMask | List::ModelFieldMask);
     ListSelectionModelPtr SelectionModel(new DefaultListSelectionModel);
     SelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
     FontList->setSelectionModel(SelectionModel);
