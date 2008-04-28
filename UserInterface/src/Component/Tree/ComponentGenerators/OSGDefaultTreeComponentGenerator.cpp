@@ -124,7 +124,7 @@ ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, Sha
 
 
     //Create the panel, set its children and layout
-    PanelPtr ThePanel = Panel::create();
+    PanelPtr ThePanel = Panel::Ptr::dcast(getNodePanelPrototype()->shallowCopy());
     beginEditCP(ThePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
         ThePanel->setLayout(TheLayout);
         ThePanel->getChildren().push_back(TheLabel);

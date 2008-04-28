@@ -118,6 +118,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeModel : public AbstractTreeMode
     //Sets the root to root.
     void setRoot(ModelTreeNodePtr root);
 
+    //Get the ModelTreeNodePtr to the Root Node
+    ModelTreeNodePtr getRootNode(void) const;
+
   protected:
       ModelTreeNodePtr _Root;
       //Determines how the isLeaf method figures out if a node is a leaf node. If true, a node is a leaf node if it does not allow children.

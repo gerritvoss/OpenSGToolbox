@@ -183,11 +183,11 @@ void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr 
 				// find how far to set offset to make this button properly aligned
 				if(getOrientation() == HORIZONTAL_ORIENTATION)
 				{
-					offset = calculateAlignment(Pnt2s(0,0), Vec2f(0.0f, largestMinorAxis), Vec2f(0.0f,Components[i]->getMaxSize().y()), getComponentAlignment(), 0.0f);
+					offset = Vec2f(calculateAlignment(Pnt2f(0,0), Vec2f(0.0f, largestMinorAxis), Vec2f(0.0f,Components[i]->getMaxSize().y()), getComponentAlignment(), 0.0f));
 				}
 				else
 				{
-					offset = calculateAlignment(Pnt2s(0,0), Vec2f(largestMinorAxis,0.0f), Vec2f(Components[i]->getMaxSize().x(),0.0f), 0.0f, getComponentAlignment());
+					offset = Vec2f(calculateAlignment(Pnt2f(0,0), Vec2f(largestMinorAxis,0.0f), Vec2f(Components[i]->getMaxSize().x(),0.0f), 0.0f, getComponentAlignment()));
 				}
 			}
 		}

@@ -1188,7 +1188,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
 		WindowsTabPanel->setTabAlignment(0.0f);
 		WindowsTabPanel->setTabRotation(TabPanel::CLOCKWISE_0);
-		WindowsTabPanel->setTabBorderInsets(Vec2s(0.0f,0.0f));
+		WindowsTabPanel->setTabBorderInsets(Vec2f(0.0f,0.0f));
 		
 		WindowsTabPanel->setTabBorder(WindowsTabPanelTabBorder);
 		WindowsTabPanel->setTabActiveBorder(WindowsTabPanelActiveTabBorder);

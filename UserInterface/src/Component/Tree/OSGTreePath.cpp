@@ -188,6 +188,26 @@ bool TreePath::operator<(const TreePath& RightPath) const
     }
 }
 
+TreePath TreePath::getHighestDepthAncestor(const TreePath& aTreePath) const
+{
+    UInt32 Index(0);
+    
+    while( Index < getDepth() &&
+           Index < aTreePath.getDepth() &&
+           TreePath(_Path, Index) == TreePath(aTreePath._Path, Index) )
+    {
+        ++Index;
+    }
+
+    if(Index > 0)
+    {
+        return TreePath(_Path, Index);
+    }
+    else
+    {
+        return TreePath();
+    }
+}
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
 

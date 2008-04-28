@@ -153,14 +153,27 @@ void DefaultTreeModel::nodesWereInserted(ModelTreeNodePtr node, std::vector<UInt
 
 void DefaultTreeModel::removeNodeFromParent(MutableTreeNodePtr node)
 {
+    ModelTreeNodePtr Parent = node->getParent();
+
+    std::vector<UInt32> ChildIndicies;
+    ChildIndicies.push_back(Parent->getIndex(node));
+    
+    std::vector<SharedFieldPtr> Children;
+    Children.push_back(node->getUserObject());
+
     node->removeFromParent();
-    //produceTreeStructureChanged();
+    produceTreeNodesRemoved(Parent->getPath(), ChildIndicies, Children);
 }
 
 void DefaultTreeModel::setRoot(ModelTreeNodePtr root)
 {
     _Root = root;
     nodeChanged(_Root);
+}
+
+ModelTreeNodePtr DefaultTreeModel::getRootNode(void) const
+{
+    return _Root;
 }
 
 /*-------------------------------------------------------------------------*\

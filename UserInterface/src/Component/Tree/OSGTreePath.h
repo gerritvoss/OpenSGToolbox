@@ -76,6 +76,9 @@ public:
 
 	//Returns a path containing all the elements of this object, except the last path component.
 	TreePath getParentPath(void) const;
+    
+	//Returns a path containing the highest depth ancestor of this path and the given path
+	TreePath getHighestDepthAncestor(const TreePath& aTreePath) const;
 
 	//Returns an ordered array of Objects containing the components of this TreePath.
 	std::vector<SharedFieldPtr> getPath(void) const;

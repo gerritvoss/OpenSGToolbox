@@ -7,6 +7,12 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\Builds\Windows\OSGToolbox.vcproj", "{77623743-1948-4AC4-8227-7FF6072BD16F}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02FCFileTypeIO", "02FCFileTypeIO.vcproj", "{D3723E7B-717E-4E11-9548-77565177B477}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
@@ -22,6 +28,10 @@ Global
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Debug.Build.0 = Debug|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release.ActiveCfg = Release|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release.Build.0 = Release|Win32
+		{D3723E7B-717E-4E11-9548-77565177B477}.Debug.ActiveCfg = Debug|Win32
+		{D3723E7B-717E-4E11-9548-77565177B477}.Debug.Build.0 = Debug|Win32
+		{D3723E7B-717E-4E11-9548-77565177B477}.Release.ActiveCfg = Release|Win32
+		{D3723E7B-717E-4E11-9548-77565177B477}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

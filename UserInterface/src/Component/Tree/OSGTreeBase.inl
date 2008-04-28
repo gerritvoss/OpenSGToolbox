@@ -117,13 +117,6 @@ SFBool *TreeBase::getSFInvokesStopCellEditing(void)
     return &_sfInvokesStopCellEditing;
 }
 
-//! Get the Tree::_sfRootVisible field.
-inline
-SFBool *TreeBase::getSFRootVisible(void)
-{
-    return &_sfRootVisible;
-}
-
 //! Get the Tree::_sfRowHeight field.
 inline
 SFUInt32 *TreeBase::getSFRowHeight(void)
@@ -242,27 +235,6 @@ inline
 void TreeBase::setInvokesStopCellEditing(const bool &value)
 {
     _sfInvokesStopCellEditing.setValue(value);
-}
-
-//! Get the value of the Tree::_sfRootVisible field.
-inline
-bool &TreeBase::getRootVisible(void)
-{
-    return _sfRootVisible.getValue();
-}
-
-//! Get the value of the Tree::_sfRootVisible field.
-inline
-const bool &TreeBase::getRootVisible(void) const
-{
-    return _sfRootVisible.getValue();
-}
-
-//! Set the value of the Tree::_sfRootVisible field.
-inline
-void TreeBase::setRootVisible(const bool &value)
-{
-    _sfRootVisible.setValue(value);
 }
 
 //! Get the value of the Tree::_sfRowHeight field.

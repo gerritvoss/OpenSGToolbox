@@ -43,16 +43,6 @@ A UI Tree.
    If true, when editing is to be stopped by way of selection changing, data in tree changing or other means stopCellEditing  is invoked, and changes are saved.
    </Field>
 	<Field
-		name="RootVisible"
-		type="bool"
-		cardinality="single"
-      visibility="external"
-		defaultValue="false"
-		access="public"
-	>
-   True if the root node is displayed, false if its children are the highest visible nodes
-   </Field>
-	<Field
 		name="RowHeight"
 		type="UInt32"
 		cardinality="single"

@@ -475,12 +475,12 @@ void TabPanel::updateLayout(void)
 		Vec2f ContentBorderTopLeftWidth, ContentBorderBottomRightWidth;
 		calculateContentBorderLengths(getContentBorder(), ContentBorderTopLeftWidth[0], ContentBorderBottomRightWidth[0],ContentBorderTopLeftWidth[1], ContentBorderBottomRightWidth[1]);
 		// now set size and position of the active tab's contents
-		offset = InsideInsetsTopLeft;
+		offset = Vec2f(InsideInsetsTopLeft);
 		if (getTabPlacement() == PLACEMENT_NORTH || getTabPlacement() == PLACEMENT_WEST)
 		{
 			offset[(AxisIndex+1)%2] += largestMinorAxis;
 		}
-		Vec2s ContentsSize(InsideInsetsBottomRight-InsideInsetsTopLeft);
+		Vec2f ContentsSize(InsideInsetsBottomRight-InsideInsetsTopLeft);
 		ContentsSize[(AxisIndex+1)%2] -= TabSize[(AxisIndex+1)%2];
 		beginEditCP(getTabContents()[getActiveTab()], Component::SizeFieldMask|Component::PositionFieldMask);
 			getTabContents()[getActiveTab()]->setSize(ContentsSize);

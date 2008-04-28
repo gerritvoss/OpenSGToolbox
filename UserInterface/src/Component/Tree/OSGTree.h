@@ -221,6 +221,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
 
     //Returns the number of rows that are displayed in the display area.
     Int32 getVisibleRowCount(void) const;
+    
+    bool getRootVisible(void) const;
 
     //Returns true if the node identified by the path has ever been expanded.
     bool hasBeenExpanded(const TreePath& path) const;
@@ -326,6 +328,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
 
     //Selects the node identified by the specified path and initiates editing.
     void startEditingAtPath(const TreePath& path);
+
+    void setRootVisible(bool Visible);
 
     //Ends the current editing session.
     bool stopEditing(void);
@@ -492,6 +496,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
 
     ComponentPtr createRowComponent(const UInt32& Row);
     void updateDrawnRow(const UInt32& Row);
+    void updatePreferredSize(void);
 
     void getDrawnRows(Int32& Beginning, Int32& End) const;
     

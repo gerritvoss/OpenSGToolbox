@@ -293,7 +293,7 @@ DialogWindowPtr DialogFactory::createColorDialog(const std::string& Title, const
 		TheDialog->setLayout(DialogLayout);
 		TheDialog->getChildren().push_back(InternalsContainer);
 		TheDialog->setTitle(Title);
-		TheDialog->setPreferredSize(Vec2s(300.0f,300.0f));
+		TheDialog->setPreferredSize(Vec2f(300.0f,300.0f));
 		TheDialog->setResizable(true);
 	endEditCP(TheDialog, DialogWindow::LayoutFieldMask | DialogWindow::ChildrenFieldMask | DialogWindow::TitleFieldMask | DialogWindow::PreferredSizeFieldMask | DialogWindow::ResizableFieldMask);
 

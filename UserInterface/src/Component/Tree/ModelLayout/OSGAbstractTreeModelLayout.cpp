@@ -161,7 +161,6 @@ void AbstractTreeModelLayout::setModel(TreeModelPtr newModel)
     if(_TreeModel != NULL)
     {
         _TreeModel->addTreeModelListener(&_ModelListener);
-        _VisiblePathSet.insert(TreePath(_TreeModel->getRoot()));
 
         TreePath RootPath(_TreeModel->getRoot());
         setExpanded(RootPath, true);
@@ -269,6 +268,108 @@ void AbstractTreeModelLayout::produceTreeWillExpand(const TreePath& Path)
 }
 
 
+bool AbstractTreeModelLayout::areChildrenVisible(const TreePath& path) const
+{
+    if(isRootVisible() ||
+       (!isRootVisible() && path != TreePath(_TreeModel->getRoot())))
+    {
+        return isVisible(path) && isExpanded(path);
+    }
+    else
+    {
+        return isExpanded(path);
+    }
+}
+
+void AbstractTreeModelLayout::insertVisiblePath(const TreePath& Path)
+{
+    _VisiblePathSet.insert(Path);
+	//Insert all visible decendents of Path
+	std::vector<TreePath> VisibleDecendants;
+	getVisibleDecendants(Path, VisibleDecendants);
+	for(UInt32 i(0) ; i<VisibleDecendants.size() ; ++i)
+	{
+		_VisiblePathSet.insert(VisibleDecendants[i]);
+	}
+}
+
+void AbstractTreeModelLayout::removeVisiblePath(const TreePath& Path)
+{
+    std::string TempString;
+    std::cout << "removeVisiblePath: Path: ";
+    for(UInt32 i(0) ; i<Path.getPath().size() ; ++i)
+    {
+        Path.getPath()[i]->getValueByStr(TempString);
+        std::cout << TempString << " - ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "removeVisiblePath: VisibleSet: ";
+    for(TreePathSetItor i(_VisiblePathSet.begin()) ; i!=_VisiblePathSet.end() ; ++i)
+    {
+        i->getLastPathComponent()->getValueByStr(TempString);
+        std::cout << TempString << ", ";
+    }
+    std::cout << std::endl;
+
+    TreePathPreorderLessThan temp(_TreeModel);
+    std::cout << temp.operator ()(Path,Path) << " : " << temp.operator ()(Path,Path) << std::endl;
+
+    _VisiblePathSet.erase(_VisiblePathSet.find(Path));
+	//Remove all visible decendents of Path
+    TreePathSetItor VisibleSetItor(_VisiblePathSet.begin());
+    while(VisibleSetItor != _VisiblePathSet.end())
+    {
+        if((*VisibleSetItor).isDescendant(Path))
+        {
+            VisibleSetItor = _VisiblePathSet.erase(VisibleSetItor);
+        }
+        else
+        {
+            ++VisibleSetItor;
+        }
+    }
+}
+void AbstractTreeModelLayout::removeExpandedPath(const TreePath& Path)
+{
+    _ExpandedPathSet.erase(Path);
+	//Remove all visible decendents of Path
+    TreePathSetItor ExpandedSetItor(_ExpandedPathSet.begin());
+    while(ExpandedSetItor != _ExpandedPathSet.end())
+    {
+        if((*ExpandedSetItor).isDescendant(Path))
+        {
+            ExpandedSetItor = _ExpandedPathSet.erase(ExpandedSetItor);
+        }
+        else
+        {
+            ++ExpandedSetItor;
+        }
+    }
+}
+
+void AbstractTreeModelLayout::getVisibleDecendants(const TreePath& Path, std::vector<TreePath>& VisibleDecendants) const
+{
+    //Loop through all of the Children of the last node in Path
+    UInt32 NumChildren(_TreeModel->getChildCount(Path.getLastPathComponent()));
+    SharedFieldPtr Child;
+
+    for(UInt32 i(0) ; i<NumChildren ; ++i)
+    {
+        Child = _TreeModel->getChild(Path.getLastPathComponent(), i);
+
+        //Add This child to the Visible Decendants
+        VisibleDecendants.push_back(Path.pathByAddingChild(Child));
+
+        //If this child is expanded then add all of it's visible decendants
+        if(isExpanded(Path.pathByAddingChild(Child)))
+        {
+            getVisibleDecendants(Path.pathByAddingChild(Child), VisibleDecendants);
+        }
+    }
+}
+
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -327,7 +428,26 @@ void AbstractTreeModelLayout::dump(      UInt32    ,
 bool AbstractTreeModelLayout::TreePathPreorderLessThan::operator()(const TreePath& LeftPath,
                 const TreePath& RightPath) const
 {
-    UInt32 LeftIndex(0), RightIndex(0);
+    if(LeftPath.getDepth() != RightPath.getDepth())
+    {
+        if(LeftPath.isDescendant(RightPath)){return true;}
+        else if(RightPath.isDescendant(LeftPath)){return false;}
+    }
+
+    TreePath CommonAncestor(LeftPath.getHighestDepthAncestor(RightPath));
+
+    if(CommonAncestor.getPathCount() == 0)
+    {
+        return false;
+    }
+
+    UInt32 LeftNextDownAncestorIndex(_TreeModel->getIndexOfChild(CommonAncestor.getLastPathComponent(),LeftPath.getPathComponent(CommonAncestor.getDepth() + 1)));
+    UInt32 RightNextDownAncestorIndex(_TreeModel->getIndexOfChild(CommonAncestor.getLastPathComponent(),RightPath.getPathComponent(CommonAncestor.getDepth() + 1)));
+
+    return LeftNextDownAncestorIndex < RightNextDownAncestorIndex;
+
+
+    /*UInt32 LeftIndex(0), RightIndex(0);
     UInt32 LeftPathCount(LeftPath.getPathCount()), RightPathCount(RightPath.getPathCount());
     while(LeftIndex < LeftPathCount &&
           RightIndex < RightPathCount &&
@@ -352,7 +472,7 @@ bool AbstractTreeModelLayout::TreePathPreorderLessThan::operator()(const TreePat
                RightChildIndex(_TreeModel->getIndexOfChild(RightPath.getPathComponent(RightIndex-1), RightPath.getPathComponent(RightIndex)));
 
         return LeftChildIndex < RightChildIndex;
-    }
+    }*/
 }
 
 AbstractTreeModelLayout::TreePathPreorderLessThan::TreePathPreorderLessThan(void) :
@@ -377,10 +497,12 @@ void AbstractTreeModelLayout::ModelListener::treeNodesInserted(TreeModelEvent e)
 {
     //If the Nodes are inserted into a node that is expanded then
     //they are visible.
-    if(_AbstractTreeModelLayout->isVisible(e.getPath()) && _AbstractTreeModelLayout->isExpanded(e.getPath()))
+    if(_AbstractTreeModelLayout->areChildrenVisible(e.getPath()))
     {
-        //Add the newly inserted nodes into the visible set
-        _AbstractTreeModelLayout->setExpanded(e.getPath(), true);
+        for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
+        {
+            _AbstractTreeModelLayout->insertVisiblePath( e.getTreePath().pathByAddingChild(e.getChildren()[i]) );
+        }
     }
 }
 
@@ -388,11 +510,14 @@ void AbstractTreeModelLayout::ModelListener::treeNodesRemoved(TreeModelEvent e)
 {
     //If the Nodes are remove into a node that is expanded then
     //they are no longer visible.
-    if(_AbstractTreeModelLayout->isVisible(e.getPath()) && _AbstractTreeModelLayout->isExpanded(e.getPath()))
+    if(_AbstractTreeModelLayout->areChildrenVisible(e.getPath()))
     {
-        //Add the newly inserted nodes into the visible set
-        _AbstractTreeModelLayout->setExpanded(e.getPath(), false);
-        _AbstractTreeModelLayout->setExpanded(e.getPath(), true);
+        //remove the nodes from the visible set
+        for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
+        {
+            _AbstractTreeModelLayout->removeVisiblePath( e.getTreePath().pathByAddingChild(e.getChildren()[i]) );
+            _AbstractTreeModelLayout->removeExpandedPath( e.getTreePath().pathByAddingChild(e.getChildren()[i]) );
+        }
     }
 }
 
@@ -400,7 +525,7 @@ void AbstractTreeModelLayout::ModelListener::treeStructureChanged(TreeModelEvent
 {
     //If the node that the changes are rooted at is expanded then
     //redo the visibility calculations on the parent node
-    if(_AbstractTreeModelLayout->isVisible(e.getPath()) && _AbstractTreeModelLayout->isExpanded(e.getPath()))
+    if(_AbstractTreeModelLayout->areChildrenVisible(e.getPath()))
     {
         //Add the newly inserted nodes into the visible set
         _AbstractTreeModelLayout->setExpanded(e.getPath(), false);

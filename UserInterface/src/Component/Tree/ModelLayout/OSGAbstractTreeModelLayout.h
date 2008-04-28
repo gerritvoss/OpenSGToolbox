@@ -87,6 +87,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
 
 	//Returns the rows that the TreePath instances in path are being displayed at.
 	virtual std::vector<UInt32> getRowsForPaths(std::vector<TreePath> paths) const;
+    
+    //Returns true if the children of the path are visible
+	virtual bool areChildrenVisible(const TreePath& path) const;
 
 	//Returns the TreeModel that is providing the data.
 	virtual TreeModelPtr getModel(void) const;
@@ -226,6 +229,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
 
 	bool _VetoPathExpantion;
 	bool _VetoPathCollapse;
+
+    void insertVisiblePath(const TreePath& Path);
+    void removeVisiblePath(const TreePath& Path);
+    void removeExpandedPath(const TreePath& Path);
+    void getVisibleDecendants(const TreePath& Path, std::vector<TreePath>& VisibleDecendants) const;
     /*==========================  PRIVATE  ================================*/
   private:
 

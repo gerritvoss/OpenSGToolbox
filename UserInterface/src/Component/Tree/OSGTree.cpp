@@ -265,6 +265,7 @@ void Tree::setModel(TreeModelPtr newModel)
     }
 
     updateEntireTree();
+    updatePreferredSize();
 }
 
 void Tree::setSelectionInterval(const UInt32& index0, const UInt32& index1)
@@ -359,8 +360,14 @@ bool Tree::getScrollableTracksViewportWidth(void)
 
 Int32 Tree::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
-    //TODO:Implement
-    return 0;
+    if(orientation == VERTICAL_ALIGNMENT && getModelLayout() != NullFC)
+    {
+        return getModelLayout()->getRowHeight();
+    }
+    else
+    {
+        return Inherited::getScrollableUnitIncrement(VisibleRectTopLeft, VisibleRectBottomRight, orientation,direction);
+    }
 }
 
 void Tree::clearToggledPaths(void)
@@ -486,7 +493,58 @@ void Tree::updateEntireTree(void)
 
 void Tree::updateInsertedRows(const UInt32& Begining, const UInt32& NumInsertedRows)
 {
-    //TODO:Implement
+    Int32 NewTopDrawnRow,
+          NewBottomDrawnRow;
+    getDrawnRows(NewTopDrawnRow, NewBottomDrawnRow);
+
+    if(Begining <= _TopDrawnRow)
+    {
+        for(Int32 i(NumInsertedRows-1) ; i>=0 ; --i)
+        {
+            _DrawnRows.push_front(createRowComponent(NewTopDrawnRow+i));
+        }
+        Int32 NumToPop(NewBottomDrawnRow - NewTopDrawnRow - _DrawnRows.size());
+        for(Int32 i(0) ; i<NumToPop ; ++i)
+        {
+            _DrawnRows.pop_back();
+        }
+    }
+    else if(Begining <= NewBottomDrawnRow)
+    {
+        std::vector<ComponentPtr> RowsPushedDown;
+        Int32 NumToPop(_BottomDrawnRow - Begining + 1);
+        for(Int32 i(0) ; i<NumToPop ; ++i)
+        {
+            RowsPushedDown.push_back(_DrawnRows.back());
+            _DrawnRows.pop_back();
+        }
+        for(Int32 i(0) ; i<NumInsertedRows ; ++i)
+        {
+            _DrawnRows.push_back(createRowComponent(Begining+i));
+        }
+        for(Int32 i(RowsPushedDown.size()-1) ; i>=0 ; --i)
+        {
+            _DrawnRows.push_back(RowsPushedDown[i]);
+        }
+        NumToPop = NewBottomDrawnRow - NewTopDrawnRow - _DrawnRows.size();
+        for(Int32 i(0) ; i<NumToPop ; ++i)
+        {
+            _DrawnRows.pop_back();
+        }
+    }
+
+    _TopDrawnRow = NewTopDrawnRow;
+    _BottomDrawnRow = NewBottomDrawnRow;
+
+    beginEditCP(TreePtr(this), ChildrenFieldMask);
+        getChildren().clear();
+        for(UInt32 i(0) ; i<_DrawnRows.size() ; ++i)
+        {
+            getChildren().push_back(_DrawnRows[i]);
+        }
+    endEditCP(TreePtr(this), ChildrenFieldMask);
+
+    updateLayout();
 }
 
 void Tree::updateRemovedRows(const UInt32& Begining, const UInt32& NumRemovedRows)
@@ -511,6 +569,7 @@ void Tree::updateRowsDrawn(void)
         for(Int32 i(_TopDrawnRow) ; i<osgMin(NewTopDrawnRow, _BottomDrawnRow) ; ++i)
         {
             _DrawnRows.pop_front();
+            std::cout << "Front Popped" << std::endl;
         }
     }
 
@@ -520,6 +579,7 @@ void Tree::updateRowsDrawn(void)
         for(Int32 i(osgMax(NewBottomDrawnRow+1, _TopDrawnRow)) ; i<=_BottomDrawnRow ; ++i)
         {
             _DrawnRows.pop_back();
+            std::cout << "Back Popped" << std::endl;
         }
     }
 
@@ -527,18 +587,26 @@ void Tree::updateRowsDrawn(void)
     if(NewTopDrawnRow < _TopDrawnRow)
     {
         //Insert all of the Drawn rows between NewTopDrawnRow and _TopDrawnRow
-        for(Int32 i(NewTopDrawnRow) ; i<osgMin(_TopDrawnRow, NewBottomDrawnRow) ; ++i)
+        if(_TopDrawnRow != -1 || NewBottomDrawnRow != -1)
         {
-            _DrawnRows.push_front(createRowComponent(i));
+            for(Int32 i(osgMin(_TopDrawnRow-1, NewBottomDrawnRow)) ; i>=NewTopDrawnRow ; --i)
+            {
+                _DrawnRows.push_front(createRowComponent(i));
+                std::cout << "Front Pushed" << std::endl;
+            }
         }
     }
 
     if(NewBottomDrawnRow > _BottomDrawnRow)
     {
-        //Insert all of the Drawn rows between _BottomDrawnRow and NewBottomDrawnRow
-        for(Int32 i(osgMax(NewTopDrawnRow, _BottomDrawnRow+1)) ; i<=NewBottomDrawnRow ; ++i)
+        if(NewTopDrawnRow != -1 || _BottomDrawnRow != -1)
         {
-            _DrawnRows.push_back(createRowComponent(i));
+            //Insert all of the Drawn rows between _BottomDrawnRow and NewBottomDrawnRow
+            for(Int32 i(osgMax(NewTopDrawnRow, _BottomDrawnRow+1)) ; i<=NewBottomDrawnRow ; ++i)
+            {
+                _DrawnRows.push_back(createRowComponent(i));
+                std::cout << "Back Pushed" << std::endl;
+            }
         }
     }
 
@@ -613,6 +681,20 @@ void Tree::getDrawnRows(Int32& Beginning, Int32& End) const
     End = getRowForLocation(ClipBottomRight.x(), ClipBottomRight.y());
 }
 
+void Tree::updatePreferredSize(void)
+{
+    beginEditCP(TreePtr(this), PreferredSizeFieldMask);
+        if(getModelLayout() != NullFC)
+        {
+            setPreferredSize(Vec2f(getPreferredSize().x(), getModelLayout()->getRowCount()* getModelLayout()->getRowHeight()));
+        }
+        else
+        {
+            setPreferredSize(Vec2f(0,0));
+        }
+    endEditCP(TreePtr(this), PreferredSizeFieldMask);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -660,6 +742,7 @@ void Tree::changed(BitVector whichField, UInt32 origin)
         getModelLayout()->setModel(_Model);
 		getModelLayout()->addTreeModelLayoutListener(&_ModelLayoutListener);
         updateEntireTree();
+        updatePreferredSize();
     }
     
     if((whichField & Tree::ClipTopLeftFieldMask) ||
@@ -682,17 +765,28 @@ void Tree::ModelListener::treeNodesChanged(TreeModelEvent e)
 
 void Tree::ModelListener::treeNodesInserted(TreeModelEvent e)
 {
-    //TODO: Implement
+    Int32 InsertedRow(-1);
+    for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
+    {
+        InsertedRow = _Tree->getModelLayout()->getRowForPath(e.getTreePath().pathByAddingChild(e.getChildren()[i]));
+        if(InsertedRow != -1)
+        {
+            _Tree->updateInsertedRows(InsertedRow, 1);
+        }
+    }
+    _Tree->updatePreferredSize();
 }
 
 void Tree::ModelListener::treeNodesRemoved(TreeModelEvent e)
 {
     //TODO: Implement
+    _Tree->updatePreferredSize();
 }
 
 void Tree::ModelListener::treeStructureChanged(TreeModelEvent e)
 {
     //TODO: Implement
+    _Tree->updatePreferredSize();
 }
 
 void Tree::SelectionListener::valueChanged(TreeSelectionEvent e)
@@ -703,11 +797,13 @@ void Tree::SelectionListener::valueChanged(TreeSelectionEvent e)
 void Tree::ModelLayoutListener::treeCollapsed(const TreeModelLayoutEvent& event)
 {
     //TODO: Implement
+    _Tree->updatePreferredSize();
 }
 
 void Tree::ModelLayoutListener::treeExpanded(const TreeModelLayoutEvent& event)
 {
     //TODO: Implement
+    _Tree->updatePreferredSize();
 }
 
 void Tree::ModelLayoutListener::treeWillCollapse(const TreeModelLayoutEvent& event)

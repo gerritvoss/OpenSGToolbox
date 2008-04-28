@@ -70,7 +70,6 @@
 #include <OpenSG/OSGBoolFields.h> // Editable type
 #include <OpenSG/OSGBoolFields.h> // ExpandsSelectedPaths type
 #include <OpenSG/OSGBoolFields.h> // InvokesStopCellEditing type
-#include <OpenSG/OSGBoolFields.h> // RootVisible type
 #include <OpenSG/OSGUInt32Fields.h> // RowHeight type
 #include <OpenSG/OSGBoolFields.h> // ScrollsOnExpand type
 #include <OpenSG/OSGBoolFields.h> // ShowsRootHandles type
@@ -105,8 +104,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
         EditableFieldId               = Inherited::NextFieldId,
         ExpandsSelectedPathsFieldId   = EditableFieldId               + 1,
         InvokesStopCellEditingFieldId = ExpandsSelectedPathsFieldId   + 1,
-        RootVisibleFieldId            = InvokesStopCellEditingFieldId + 1,
-        RowHeightFieldId              = RootVisibleFieldId            + 1,
+        RowHeightFieldId              = InvokesStopCellEditingFieldId + 1,
         ScrollsOnExpandFieldId        = RowHeightFieldId              + 1,
         ShowsRootHandlesFieldId       = ScrollsOnExpandFieldId        + 1,
         ToggleClickCountFieldId       = ShowsRootHandlesFieldId       + 1,
@@ -120,7 +118,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
     static const OSG::BitVector EditableFieldMask;
     static const OSG::BitVector ExpandsSelectedPathsFieldMask;
     static const OSG::BitVector InvokesStopCellEditingFieldMask;
-    static const OSG::BitVector RootVisibleFieldMask;
     static const OSG::BitVector RowHeightFieldMask;
     static const OSG::BitVector ScrollsOnExpandFieldMask;
     static const OSG::BitVector ShowsRootHandlesFieldMask;
@@ -158,7 +155,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
            SFBool              *getSFEditable       (void);
            SFBool              *getSFExpandsSelectedPaths(void);
            SFBool              *getSFInvokesStopCellEditing(void);
-           SFBool              *getSFRootVisible    (void);
            SFUInt32            *getSFRowHeight      (void);
            SFBool              *getSFScrollsOnExpand(void);
            SFBool              *getSFShowsRootHandles(void);
@@ -174,8 +170,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
      const bool                &getExpandsSelectedPaths(void) const;
            bool                &getInvokesStopCellEditing(void);
      const bool                &getInvokesStopCellEditing(void) const;
-           bool                &getRootVisible    (void);
-     const bool                &getRootVisible    (void) const;
            UInt32              &getRowHeight      (void);
      const UInt32              &getRowHeight      (void) const;
            bool                &getScrollsOnExpand(void);
@@ -201,7 +195,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
      void setEditable       ( const bool &value );
      void setExpandsSelectedPaths( const bool &value );
      void setInvokesStopCellEditing( const bool &value );
-     void setRootVisible    ( const bool &value );
      void setRowHeight      ( const UInt32 &value );
      void setScrollsOnExpand( const bool &value );
      void setShowsRootHandles( const bool &value );
@@ -255,7 +248,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
     SFBool              _sfEditable;
     SFBool              _sfExpandsSelectedPaths;
     SFBool              _sfInvokesStopCellEditing;
-    SFBool              _sfRootVisible;
     SFUInt32            _sfRowHeight;
     SFBool              _sfScrollsOnExpand;
     SFBool              _sfShowsRootHandles;

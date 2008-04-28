@@ -61,6 +61,9 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGFixedHeightTreeModelLayout.h>
 #include <OpenSG/UserInterface/OSGDefaultMutableTreeNode.h>
 
+#include <OpenSG/UserInterface/OSGButton.h>
+#include <OpenSG/UserInterface/OSGScrollPanel.h>
+
 // Create a class to allow for the use of the Escape
 // key to exit
 class TutorialKeyListener : public KeyListener
@@ -95,6 +98,32 @@ public:
     virtual void windowClosed(const WindowEvent& e)
     {
         ExitApp = true;
+    }
+};
+
+DefaultTreeModel TheTreeModel;
+FixedHeightTreeModelLayoutPtr TheTreeLayout;
+
+class CreateNodeButtonActionListener : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+    {
+        DefaultMutableTreeNodePtr NewNode = DefaultMutableTreeNode::create() ;
+        NewNode->setUserObject(SharedFieldPtr(new SFString("New Node")));
+
+        TheTreeModel.insertNodeInto(NewNode,MutableTreeNode::Ptr::dcast(TheTreeModel.getRootNode()),3);
+    }
+};
+
+class RemoveNodeButtonActionListener : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+    {
+        TheTreeModel.removeNodeFromParent(MutableTreeNode::Ptr::dcast(TheTreeModel.getRootNode()->getChildAt(0)));
     }
 };
 
@@ -177,11 +206,10 @@ int main(int argc, char **argv)
     DNode->insert(INode);
 
     //Tree Model
-    DefaultTreeModel TheTreeModel;
     TheTreeModel.setRoot(ANode);
 
     //TreeLayout
-    FixedHeightTreeModelLayoutPtr TheTreeLayout = FixedHeightTreeModelLayout::create();
+    TheTreeLayout = FixedHeightTreeModelLayout::create();
     TheTreeLayout->setModel(&TheTreeModel);
 
     std::string TempString;
@@ -264,6 +292,33 @@ int main(int argc, char **argv)
         TheTree->setPreferredSize(Vec2f(100, 300));
     endEditCP(TheTree, Tree::PreferredSizeFieldMask);
     TheTree->setModel(&TheTreeModel);
+    TheTree->expandPath(BNode->getTreePath());
+
+    // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
+    ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();
+    beginEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+        ExampleScrollPanel->setPreferredSize(Vec2s(200,300));
+        ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+    endEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+    ExampleScrollPanel->setViewComponent(TheTree);
+
+    //Create Node Button
+    ButtonPtr CreateNodeButton = Button::create();
+
+    beginEditCP(CreateNodeButton, Button::TextFieldMask);
+        CreateNodeButton->setText("Create Node");
+    endEditCP(CreateNodeButton, Button::TextFieldMask);
+    CreateNodeButtonActionListener CreateNodeButtonListener;
+    CreateNodeButton->addActionListener(&CreateNodeButtonListener);
+    
+    //Remove Node Button
+    ButtonPtr RemoveNodeButton = Button::create();
+    beginEditCP(RemoveNodeButton, Button::TextFieldMask);
+        RemoveNodeButton->setText("Remove Node");
+    endEditCP(RemoveNodeButton, Button::TextFieldMask);
+    RemoveNodeButtonActionListener RemoveNodeButtonListener;
+    RemoveNodeButton->addActionListener(&RemoveNodeButtonListener);
     
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow

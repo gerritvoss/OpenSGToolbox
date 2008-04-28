@@ -298,6 +298,18 @@ void Tree::setSelectionRow(const UInt32& row)
 }
 
 inline
+bool Tree::getRootVisible(void) const
+{
+    return getModelLayout()->isRootVisible();
+}
+
+inline
+void Tree::setRootVisible(bool Visible)
+{
+    getModelLayout()->setRootVisible(Visible);
+}
+
+inline
 Tree::ModelListener::ModelListener(TreePtr TheTree) :
 _Tree(TheTree)
 {

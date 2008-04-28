@@ -144,8 +144,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING FixedHeightTreeModelLayout : public FixedH
     /*! \}                                                                 */
       
     UInt32 getRowCount(const TreePath& Path) const;
-
-    void getVisibleDecendants(const TreePath& Path, std::vector<TreePath>& VisibleDecendants) const;
     
     /*==========================  PRIVATE  ================================*/
   private:

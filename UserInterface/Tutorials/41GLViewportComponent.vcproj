@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="41GLViewportComponent"
 	ProjectGUID="{493D6BED-CB9A-4123-8FD1-9836CDF1DA4D}"
 	Keyword="Win32Proj"

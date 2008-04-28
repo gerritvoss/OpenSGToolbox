@@ -95,6 +95,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayout : public TreeModelLayoutBa
 	//Returns true if every node in the path is expanded
 	virtual bool isVisible(const TreePath& path) const = 0;
 
+    //Returns true if the children of the path are visible
+	virtual bool areChildrenVisible(const TreePath& path) const = 0;
+
 	//Returns the TreeModel that is providing the data.
 	virtual TreeModelPtr getModel(void) const = 0;
 

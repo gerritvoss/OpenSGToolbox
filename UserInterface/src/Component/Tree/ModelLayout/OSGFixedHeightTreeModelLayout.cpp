@@ -186,7 +186,7 @@ void FixedHeightTreeModelLayout::setExpanded(const TreePath& path, bool Expand)
 			{
 				_ExpandedPathSet.insert(path);
 
-				if(isVisible(path))
+                if(isVisible(path) || TreePath(_TreeModel->getRoot()) == path)
 				{
 					//Insert all visible decendents of Path
 					std::vector<TreePath> VisibleDecendants;
@@ -210,7 +210,7 @@ void FixedHeightTreeModelLayout::setExpanded(const TreePath& path, bool Expand)
 			{
 				_ExpandedPathSet.erase(path);
 		        
-				if(isVisible(path))
+				if(isVisible(path) || TreePath(_TreeModel->getRoot()) == path)
 				{
 					//Remove all visible decendents of Path
 					std::vector<TreePath> VisibleDecendants;
@@ -223,27 +223,6 @@ void FixedHeightTreeModelLayout::setExpanded(const TreePath& path, bool Expand)
 				produceTreeCollapsed(path);
 			}
 		}
-    }
-}
-
-void FixedHeightTreeModelLayout::getVisibleDecendants(const TreePath& Path, std::vector<TreePath>& VisibleDecendants) const
-{
-    //Loop through all of the Children of the last node in Path
-    UInt32 NumChildren(_TreeModel->getChildCount(Path.getLastPathComponent()));
-    SharedFieldPtr Child;
-
-    for(UInt32 i(0) ; i<NumChildren ; ++i)
-    {
-        Child = _TreeModel->getChild(Path.getLastPathComponent(), i);
-
-        //Add This child to the Visible Decendants
-        VisibleDecendants.push_back(Path.pathByAddingChild(Child));
-
-        //If this child is expanded then add all of it's visible decendants
-        if(isExpanded(Path.pathByAddingChild(Child)))
-        {
-            getVisibleDecendants(Path.pathByAddingChild(Child), VisibleDecendants);
-        }
     }
 }
 

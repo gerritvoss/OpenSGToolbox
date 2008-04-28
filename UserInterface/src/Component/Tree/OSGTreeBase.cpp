@@ -73,9 +73,6 @@ const OSG::BitVector  TreeBase::ExpandsSelectedPathsFieldMask =
 const OSG::BitVector  TreeBase::InvokesStopCellEditingFieldMask = 
     (TypeTraits<BitVector>::One << TreeBase::InvokesStopCellEditingFieldId);
 
-const OSG::BitVector  TreeBase::RootVisibleFieldMask = 
-    (TypeTraits<BitVector>::One << TreeBase::RootVisibleFieldId);
-
 const OSG::BitVector  TreeBase::RowHeightFieldMask = 
     (TypeTraits<BitVector>::One << TreeBase::RowHeightFieldId);
 
@@ -115,9 +112,6 @@ const OSG::BitVector TreeBase::MTInfluenceMask =
 */
 /*! \var bool            TreeBase::_sfInvokesStopCellEditing
     If true, when editing is to be stopped by way of selection changing, data in tree changing or other means stopCellEditing  is invoked, and changes are saved.
-*/
-/*! \var bool            TreeBase::_sfRootVisible
-    True if the root node is displayed, false if its children are the highest visible nodes
 */
 /*! \var UInt32          TreeBase::_sfRowHeight
     Height to use for each display row.
@@ -163,11 +157,6 @@ FieldDescription *TreeBase::_desc[] =
                      InvokesStopCellEditingFieldId, InvokesStopCellEditingFieldMask,
                      false,
                      (FieldAccessMethod) &TreeBase::getSFInvokesStopCellEditing),
-    new FieldDescription(SFBool::getClassType(), 
-                     "RootVisible", 
-                     RootVisibleFieldId, RootVisibleFieldMask,
-                     false,
-                     (FieldAccessMethod) &TreeBase::getSFRootVisible),
     new FieldDescription(SFUInt32::getClassType(), 
                      "RowHeight", 
                      RowHeightFieldId, RowHeightFieldMask,
@@ -286,7 +275,6 @@ TreeBase::TreeBase(void) :
     _sfEditable               (bool(false)), 
     _sfExpandsSelectedPaths   (bool(false)), 
     _sfInvokesStopCellEditing (bool(false)), 
-    _sfRootVisible            (bool(false)), 
     _sfRowHeight              (UInt32(false)), 
     _sfScrollsOnExpand        (bool(true)), 
     _sfShowsRootHandles       (bool(true)), 
@@ -307,7 +295,6 @@ TreeBase::TreeBase(const TreeBase &source) :
     _sfEditable               (source._sfEditable               ), 
     _sfExpandsSelectedPaths   (source._sfExpandsSelectedPaths   ), 
     _sfInvokesStopCellEditing (source._sfInvokesStopCellEditing ), 
-    _sfRootVisible            (source._sfRootVisible            ), 
     _sfRowHeight              (source._sfRowHeight              ), 
     _sfScrollsOnExpand        (source._sfScrollsOnExpand        ), 
     _sfShowsRootHandles       (source._sfShowsRootHandles       ), 
@@ -345,11 +332,6 @@ UInt32 TreeBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (InvokesStopCellEditingFieldMask & whichField))
     {
         returnValue += _sfInvokesStopCellEditing.getBinSize();
-    }
-
-    if(FieldBits::NoField != (RootVisibleFieldMask & whichField))
-    {
-        returnValue += _sfRootVisible.getBinSize();
     }
 
     if(FieldBits::NoField != (RowHeightFieldMask & whichField))
@@ -416,11 +398,6 @@ void TreeBase::copyToBin(      BinaryDataHandler &pMem,
         _sfInvokesStopCellEditing.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (RootVisibleFieldMask & whichField))
-    {
-        _sfRootVisible.copyToBin(pMem);
-    }
-
     if(FieldBits::NoField != (RowHeightFieldMask & whichField))
     {
         _sfRowHeight.copyToBin(pMem);
@@ -484,11 +461,6 @@ void TreeBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfInvokesStopCellEditing.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (RootVisibleFieldMask & whichField))
-    {
-        _sfRootVisible.copyFromBin(pMem);
-    }
-
     if(FieldBits::NoField != (RowHeightFieldMask & whichField))
     {
         _sfRowHeight.copyFromBin(pMem);
@@ -548,9 +520,6 @@ void TreeBase::executeSyncImpl(      TreeBase *pOther,
     if(FieldBits::NoField != (InvokesStopCellEditingFieldMask & whichField))
         _sfInvokesStopCellEditing.syncWith(pOther->_sfInvokesStopCellEditing);
 
-    if(FieldBits::NoField != (RootVisibleFieldMask & whichField))
-        _sfRootVisible.syncWith(pOther->_sfRootVisible);
-
     if(FieldBits::NoField != (RowHeightFieldMask & whichField))
         _sfRowHeight.syncWith(pOther->_sfRowHeight);
 
@@ -593,9 +562,6 @@ void TreeBase::executeSyncImpl(      TreeBase *pOther,
 
     if(FieldBits::NoField != (InvokesStopCellEditingFieldMask & whichField))
         _sfInvokesStopCellEditing.syncWith(pOther->_sfInvokesStopCellEditing);
-
-    if(FieldBits::NoField != (RootVisibleFieldMask & whichField))
-        _sfRootVisible.syncWith(pOther->_sfRootVisible);
 
     if(FieldBits::NoField != (RowHeightFieldMask & whichField))
         _sfRowHeight.syncWith(pOther->_sfRowHeight);
