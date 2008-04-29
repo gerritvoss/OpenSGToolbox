@@ -75,7 +75,7 @@ public:
 	template <class InTypeT> inline
 	static Ptr dcast(InTypeT oIn)
 	{
-		return Ptr(dynamic_cast<typename Self *>(oIn.get()));
+		return Ptr(dynamic_cast<Self *>(oIn.get()));
 	}
 };
 

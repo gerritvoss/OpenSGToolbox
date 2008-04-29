@@ -145,7 +145,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UndoManager : public CompoundUndoableEdit,
 	template <class InTypeT> inline
 	static Ptr dcast(InTypeT oIn)
 	{
-		return Ptr(dynamic_cast<typename Self *>(oIn.get()));
+		return Ptr(dynamic_cast<Self *>(oIn.get()));
 	}
   protected:
 	Int32 _IndexOfNextAdd;

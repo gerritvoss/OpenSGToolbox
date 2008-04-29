@@ -4594,8 +4594,8 @@ void WindowsLookAndFeel::init(void)
 		WindowsColorChooser->setOpacity(1.0);
 
         //ColorChooser Values
-		WindowsColorChooser->addChooserPanel(WindowsRGBColorChooserPanel);
-		WindowsColorChooser->addChooserPanel(WindowsHSVColorChooserPanel);
+		//WindowsColorChooser->addChooserPanel(WindowsRGBColorChooserPanel);
+		//WindowsColorChooser->addChooserPanel(WindowsHSVColorChooserPanel);
 		WindowsColorChooser->setPreviewPanel(NullFC);
 	endEditCP(WindowsColorChooser);
 	

@@ -18,7 +18,8 @@ void CommandManager::produceCommandExecuted(CommandPtr TheCommand)
 	if(_UndoManager != NULL && 
 		TheCommand->getType().isDerivedFrom(UndoableCommand::getClassType()))
 	{
-		_UndoManager->undoableEditHappened(UndoableEditEvent(e.getSource(), e.getTimeStamp(), UndoableCommand::dcast(TheCommand)));
+        UndoableEditEvent Event(e.getSource(), e.getTimeStamp(), UndoableCommand::dcast(TheCommand));
+		_UndoManager->undoableEditHappened(Event);
 	}
 }
 

@@ -6,7 +6,7 @@ LIB_INCLUDE_DIR_NAME = UserInterface
 srcdir = ../../../src
 installdir = ../../../../Builds/Linux
 commondir = ../../../../Builds/Common
-VPATH = $(srcdir)/:$(srcdir)/Border:$(srcdir)/Background:$(srcdir)/Event:$(srcdir)/Layout:$(srcdir)/Layout/Spring:$(srcdir)/Util:$(srcdir)/Component:$(srcdir)/Component/Button:$(srcdir)/Component/Spinner:$(srcdir)/Component/Spinner/Editors:$(srcdir)/Component/Menu:$(srcdir)/Component/Table:$(srcdir)/Component/Table/DefaultEditors:$(srcdir)/Component/Table/DefaultRenderers:$(srcdir)/Component/Table/Editors:$(srcdir)/Component/Scroll:$(srcdir)/Component/Slider:$(srcdir)/Component/ComboBox:$(srcdir)/Component/ComboBox/Renderers:$(srcdir)/Component/ComboBox/Editors:$(srcdir)/Component/Misc:$(srcdir)/Component/Tree:$(srcdir)/Component/Tree/Selection:$(srcdir)/Component/Tree/Editors:$(srcdir)/Component/Tree/Model:$(srcdir)/Component/Tree/ComponentGenerators:$(srcdir)/Component/Tree/ModelLayout:$(srcdir)/Component/Container:$(srcdir)/Component/Container/Window:$(srcdir)/Component/Container/Window/Dialog:$(srcdir)/Component/List:$(srcdir)/Component/ProgressBar:$(srcdir)/Component/Text:$(srcdir)/Editors:$(srcdir)/LookAndFeel:$(srcdir)/ComponentGenerators:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Text:
+VPATH = $(srcdir)/:$(srcdir)/Border:$(srcdir)/Background:$(srcdir)/Event:$(srcdir)/Layout:$(srcdir)/Layout/Spring:$(srcdir)/Util:$(srcdir)/Component:$(srcdir)/Component/Button:$(srcdir)/Component/Spinner:$(srcdir)/Component/Spinner/Editors:$(srcdir)/Component/Menu:$(srcdir)/Component/Table:$(srcdir)/Component/Table/DefaultEditors:$(srcdir)/Component/Table/DefaultRenderers:$(srcdir)/Component/Table/Editors:$(srcdir)/Component/Scroll:$(srcdir)/Component/Slider:$(srcdir)/Component/ComboBox:$(srcdir)/Component/ComboBox/Models:$(srcdir)/Component/ComboBox/Editors:$(srcdir)/Component/ComboBox/ComponentGenerators:$(srcdir)/Component/Misc:$(srcdir)/Component/Tree:$(srcdir)/Component/Tree/Selection:$(srcdir)/Component/Tree/Editors:$(srcdir)/Component/Tree/Model:$(srcdir)/Component/Tree/ComponentGenerators:$(srcdir)/Component/Tree/ModelLayout:$(srcdir)/Component/Container:$(srcdir)/Component/Container/Window:$(srcdir)/Component/Container/Window/Dialog:$(srcdir)/Component/Container/ColorChooser:$(srcdir)/Component/Container/Toolbar:$(srcdir)/Component/List:$(srcdir)/Component/List/Models:$(srcdir)/Component/List/ComponentGenerators:$(srcdir)/Component/ProgressBar:$(srcdir)/Component/Text:$(srcdir)/UndoableEdit:$(srcdir)/Editors:$(srcdir)/LookAndFeel:$(srcdir)/ComponentGenerators:$(srcdir)/UIDrawingSurface:$(srcdir)/UIDrawingSurface/Foreground:$(srcdir)/UIDrawingSurface/NodeCore:$(srcdir)/Graphics:$(srcdir)/Graphics/UIDrawObjects:$(srcdir)/Text:
 
 
 #.SUFFIX = .o .o
@@ -137,6 +137,7 @@ OBJECTS = OSGShadowBorder.o \
 	OSGRadioButton.o \
 	OSGToggleButtonBase.o \
 	OSGSpinnerBase.o \
+	OSGBoundedRangeSpinnerModel.o \
 	OSGAbstractSpinnerModel.o \
 	OSGSpinner.o \
 	OSGListSpinnerModel.o \
@@ -157,10 +158,14 @@ OBJECTS = OSGShadowBorder.o \
 	OSGDefaultSingleSelectionModel.o \
 	OSGLabelMenuItem.o \
 	OSGMenuItem.o \
+	OSGListGeneratedPopupMenu.o \
+	OSGComponentMenuItemBase.o \
 	OSGLabelMenuItemBase.o \
 	OSGMenu.o \
 	OSGSeperatorMenuItemBase.o \
+	OSGComponentMenuItem.o \
 	OSGPopupMenuBase.o \
+	OSGListGeneratedPopupMenuBase.o \
 	OSGAbstractTableModel.o \
 	OSGTableModelEvent.o \
 	OSGTableBase.o \
@@ -191,23 +196,36 @@ OBJECTS = OSGShadowBorder.o \
 	OSGSlider.o \
 	OSGSliderBase.o \
 	OSGComboBoxSelectionEvent.o \
-	OSGDefaultComboBoxModel.o \
-	OSGAbstractComboBoxModel.o \
 	OSGComboBoxBase.o \
 	OSGComboBox.o \
-	OSGDefaultComboBoxRenderer.o \
+	OSGDefaultMutableComboBoxModel.o \
+	OSGMutableComboBoxModel.o \
+	OSGAbstractMutableComboBoxModel.o \
+	OSGComboBoxModelBase.o \
+	OSGAbstractMutableComboBoxModelBase.o \
+	OSGMutableComboBoxModelBase.o \
+	OSGComboBoxModel.o \
+	OSGAbstractComboBoxModel.o \
+	OSGAbstractComboBoxModelBase.o \
+	OSGDefaultMutableComboBoxModelBase.o \
 	OSGComboBoxEditorBase.o \
 	OSGComboBoxEditor.o \
 	OSGDefaultComboBoxEditor.o \
 	OSGDefaultComboBoxEditorBase.o \
+	OSGDefaultComboBoxComponentGeneratorBase.o \
+	OSGComboBoxComponentGenerator.o \
+	OSGComboBoxComponentGeneratorBase.o \
+	OSGDefaultComboBoxComponentGenerator.o \
 	OSGToolTip.o \
 	OSGCanvasBase.o \
 	OSGRotatedComponent.o \
 	OSGUIDrawObjectCanvas.o \
 	OSGRotatedComponentBase.o \
+	OSGGLViewportBase.o \
 	OSGUIDrawObjectCanvasBase.o \
 	OSGToolTipBase.o \
 	OSGCanvas.o \
+	OSGGLViewport.o \
 	OSGImageComponent.o \
 	OSGImageComponentBase.o \
 	OSGTreeRowMapper.o \
@@ -263,13 +281,33 @@ OBJECTS = OSGShadowBorder.o \
 	OSGDialogWindow.o \
 	OSGDialogWindowBase.o \
 	OSGDialogFactory.o \
+	OSGColorChooser.o \
+	OSGAbstractColorChooserPanelBase.o \
+	OSGHSVColorChooserPanel.o \
+	OSGRGBColorChooserPanel.o \
+	OSGAbstractColorChooserPanel.o \
+	OSGDefaultColorSelectionModel.o \
+	OSGRGBColorChooserPanelBase.o \
+	OSGHSVColorChooserPanelBase.o \
+	OSGAbstractColorSelectionModel.o \
+	OSGColorChooserBase.o \
+	OSGToolbar.o \
+	OSGToolbarBase.o \
 	OSGListBase.o \
 	OSGListDataEvent.o \
 	OSGListSelectionEvent.o \
-	OSGDefaultListCellRenderer.o \
-	OSGAbstractListModel.o \
 	OSGDefaultListSelectionModel.o \
 	OSGList.o \
+	OSGDefaultListModelBase.o \
+	OSGListModelBase.o \
+	OSGAbstractListModel.o \
+	OSGListModel.o \
+	OSGAbstractListModelBase.o \
+	OSGDefaultListModel.o \
+	OSGListComponentGeneratorBase.o \
+	OSGListComponentGenerator.o \
+	OSGDefaultListComponentGenerator.o \
+	OSGDefaultListComponentGeneratorBase.o \
 	OSGProgressBar.o \
 	OSGProgressBarBase.o \
 	OSGLabelBase.o \
@@ -284,6 +322,17 @@ OBJECTS = OSGShadowBorder.o \
 	OSGLabel.o \
 	OSGTextField.o \
 	OSGTextFieldBase.o \
+	OSGAbstractUndoableEdit.o \
+	OSGUndoManager.o \
+	OSGCommandFactory.o \
+	OSGUndoableEditEvent.o \
+	OSGCommandType.o \
+	OSGCommandManager.o \
+	OSGCommandEvent.o \
+	OSGUndoableCommand.o \
+	OSGCompoundUndoableEdit.o \
+	OSGCommand.o \
+	OSGUndoableEdit.o \
 	OSGCellEditor.o \
 	OSGCellEditorBase.o \
 	OSGAbstractCellEditorBase.o \

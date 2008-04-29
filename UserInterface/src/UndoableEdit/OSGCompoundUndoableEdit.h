@@ -108,7 +108,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING CompoundUndoableEdit : public AbstractUndo
 	template <class InTypeT> inline
 	static Ptr dcast(InTypeT oIn)
 	{
-		return Ptr(dynamic_cast<typename Self *>(oIn.get()));
+		return Ptr(dynamic_cast<Self *>(oIn.get()));
 	}
   protected:
 	  typedef std::deque<UndoableEditPtr> EditVector;
