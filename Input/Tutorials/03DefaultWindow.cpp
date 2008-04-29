@@ -107,7 +107,7 @@ public:
                 TheWindowEventProducer->closeWindow();
                 break;
             case KeyEvent::KEY_P:
-                TheWindowEventProducer->setPosition(Pnt2s(500,500));
+                TheWindowEventProducer->setPosition(Pnt2s(50,50));
                 break;
             case KeyEvent::KEY_R:
                 TheWindowEventProducer->setSize(Vec2us(300,300));
@@ -247,7 +247,7 @@ int main(int argc, char **argv)
     mgr->showAll();
 
     TheWindowEventProducer->openWindow(Pnt2s(50,50),
-                        Vec2s(250,250),
+                        Vec2s(500,500),
                         "Default Window");
 
     while(!ExitMainLoop)

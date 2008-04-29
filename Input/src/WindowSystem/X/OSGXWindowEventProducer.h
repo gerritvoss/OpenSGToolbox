@@ -85,15 +85,15 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
                       const BitVector  bvFlags ) const;
 
     //Set the Window Position
-    virtual void setPosition(Pnt2s Pos);
+    virtual void setPosition(Pnt2f Pos);
     //Set the Window Position
-    virtual Pnt2s getPosition(void) const;
+    virtual Pnt2f getPosition(void) const;
 
     //Set the Window size
     virtual void setSize(Vec2us Size);
 
     //Get the Window size
-    virtual Vec2s getSize(void) const;
+    virtual Vec2f getSize(void) const;
 
     //Focused
     //Set the Window Focus
@@ -141,7 +141,7 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
     
 	 virtual UInt32 getKeyModifiers(void) const;
     
-	 virtual Pnt2s getMousePosition(void) const;
+	 virtual Pnt2f getMousePosition(void) const;
     
 	 virtual std::string getClipboard(void) const;
 
@@ -151,8 +151,8 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
     
     virtual bool attachWindow(void);
 
-    virtual void openWindow(const Pnt2s& ScreenPosition,
-                       const Vec2s& Size,
+    virtual void openWindow(const Pnt2f& ScreenPosition,
+                       const Vec2f& Size,
                        const std::string& WindowName);
     
     virtual void closeWindow(void);
@@ -185,21 +185,21 @@ class OSG_INPUTLIB_DLLMAPPING XWindowEventProducer : public XWindowEventProducer
     
     struct WindowEventLoopThreadArguments
     {
-        WindowEventLoopThreadArguments(const Pnt2s& ScreenPosition,
-                       const Vec2s& Size,
+        WindowEventLoopThreadArguments(const Pnt2f& ScreenPosition,
+                       const Vec2f& Size,
                        const std::string& WindowName,
                        XWindowPtr TheWindow,
                        XWindowEventProducerPtr TheEventProducer);
 
-        Pnt2s _ScreenPosition;
-        Vec2s _Size;
+        Pnt2f _ScreenPosition;
+        Vec2f _Size;
         std::string _WindowName;
         XWindowPtr _Window;
         XWindowEventProducerPtr _EventProducer;
     };
     
     unsigned int _LastKeyboardMouseButtonMask;
-    Pnt2s _LastMousePosition;
+    Pnt2f _LastMousePosition;
     bool _IsDrawPending;
     /*! \}                                                                 */
     

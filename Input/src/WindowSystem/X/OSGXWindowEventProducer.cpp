@@ -506,12 +506,12 @@ KeyEvent::Key XWindowEventProducer::determineKey(const KeySym& XKeySym)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void XWindowEventProducer::setPosition(Pnt2s Pos)
+void XWindowEventProducer::setPosition(Pnt2f Pos)
 {
     XMoveWindow(XWindow::Ptr::dcast(getWindow())->getDisplay(),XWindow::Ptr::dcast(getWindow())->getWindow(),Pos.x(), Pos.y());
 }
 
-Pnt2s XWindowEventProducer::getPosition(void) const
+Pnt2f XWindowEventProducer::getPosition(void) const
 {
     ::Window *RootWindow;
     int x,y;
@@ -523,7 +523,7 @@ Pnt2s XWindowEventProducer::getPosition(void) const
             &BorderWidth,
             &Depth);
     
-   return Pnt2s(x,y);
+   return Pnt2f(x,y);
 }
 
 void XWindowEventProducer::setSize(Vec2us Size)
@@ -531,7 +531,7 @@ void XWindowEventProducer::setSize(Vec2us Size)
     XResizeWindow(XWindow::Ptr::dcast(getWindow())->getDisplay(),XWindow::Ptr::dcast(getWindow())->getWindow(),Size.x(), Size.y());
 }
 
-Vec2s XWindowEventProducer::getSize(void) const
+Vec2f XWindowEventProducer::getSize(void) const
 {
     ::Window *RootWindow;
     int x,y;
@@ -543,7 +543,7 @@ Vec2s XWindowEventProducer::getSize(void) const
             &BorderWidth,
             &Depth);
     
-   return Vec2s(Width,Height);
+   return Vec2f(Width,Height);
 }
 
 void XWindowEventProducer::setFocused(bool Focused)
@@ -613,7 +613,7 @@ UInt32 XWindowEventProducer::getKeyModifiers(void) const
     return determineKeyModifiers(_LastKeyboardMouseButtonMask);
 }
 
-Pnt2s XWindowEventProducer::getMousePosition(void) const
+Pnt2f XWindowEventProducer::getMousePosition(void) const
 {   
     return _LastMousePosition;
 }
@@ -693,8 +693,8 @@ WindowPtr XWindowEventProducer::createWindow(void)
     return XWindow::create();
 }
 
-void XWindowEventProducer::openWindow(const Pnt2s& ScreenPosition,
-                    const Vec2s& Size,
+void XWindowEventProducer::openWindow(const Pnt2f& ScreenPosition,
+                    const Vec2f& Size,
                     const std::string& WindowName)
 {
     if(_WindowEventLoopThread == NULL)
@@ -741,26 +741,26 @@ void XWindowEventProducer::handleEvent(XEvent& Event)
                 _LastMousePosition.setValues(Event.xbutton.x, Event.xbutton.y);
                 if(Event.xmotion.state & Button1MotionMask)
                 {
-                    produceMouseDragged(MouseEvent::BUTTON1,Pnt2s(Event.xmotion.x, Event.xmotion.y));
+                    produceMouseDragged(MouseEvent::BUTTON1,Pnt2f(Event.xmotion.x, Event.xmotion.y));
                 }
                 if(Event.xmotion.state & Button2MotionMask)
                 {
-                    produceMouseDragged(MouseEvent::BUTTON2,Pnt2s(Event.xmotion.x, Event.xmotion.y));
+                    produceMouseDragged(MouseEvent::BUTTON2,Pnt2f(Event.xmotion.x, Event.xmotion.y));
                 }
                 if(Event.xmotion.state & Button3MotionMask)
                 {
-                    produceMouseDragged(MouseEvent::BUTTON3,Pnt2s(Event.xmotion.x, Event.xmotion.y));
+                    produceMouseDragged(MouseEvent::BUTTON3,Pnt2f(Event.xmotion.x, Event.xmotion.y));
                 }
                 if(Event.xmotion.state & Button4MotionMask)
                 {
-                    produceMouseDragged(MouseEvent::BUTTON4,Pnt2s(Event.xmotion.x, Event.xmotion.y));
+                    produceMouseDragged(MouseEvent::BUTTON4,Pnt2f(Event.xmotion.x, Event.xmotion.y));
                 }
                 if(Event.xmotion.state & Button5MotionMask)
                 {
-                    produceMouseDragged(MouseEvent::BUTTON5,Pnt2s(Event.xmotion.x, Event.xmotion.y));
+                    produceMouseDragged(MouseEvent::BUTTON5,Pnt2f(Event.xmotion.x, Event.xmotion.y));
                 }
                 
-                produceMouseMoved(Pnt2s(Event.xmotion.x, Event.xmotion.y));
+                produceMouseMoved(Pnt2f(Event.xmotion.x, Event.xmotion.y));
                 break;
             }
          case ButtonPress:
@@ -780,10 +780,10 @@ void XWindowEventProducer::handleEvent(XEvent& Event)
                   OSGButton = MouseEvent::BUTTON3;
                   break;
                case   4:
-				  produceMouseWheelMoved(1, Pnt2s(Event.xbutton.x, Event.xbutton.y));
+				  produceMouseWheelMoved(1, Pnt2f(Event.xbutton.x, Event.xbutton.y));
                   break;
                case   5:
-				  produceMouseWheelMoved(-1, Pnt2s(Event.xbutton.x, Event.xbutton.y));
+				  produceMouseWheelMoved(-1, Pnt2f(Event.xbutton.x, Event.xbutton.y));
                   break;
                case   6:
                   OSGButton = MouseEvent::BUTTON6;
@@ -806,7 +806,7 @@ void XWindowEventProducer::handleEvent(XEvent& Event)
                }
                if(OSGButton != MouseEvent::NO_BUTTON)
                {
-                   produceMousePressed(OSGButton, Pnt2s(Event.xbutton.x, Event.xbutton.y));
+                   produceMousePressed(OSGButton, Pnt2f(Event.xbutton.x, Event.xbutton.y));
                }
                break;
             }
@@ -847,7 +847,7 @@ void XWindowEventProducer::handleEvent(XEvent& Event)
               }
                if(OSGButton != MouseEvent::NO_BUTTON)
                {
-                   produceMouseReleased(OSGButton, Pnt2s(Event.xbutton.x, Event.xbutton.y));
+                   produceMouseReleased(OSGButton, Pnt2f(Event.xbutton.x, Event.xbutton.y));
                }
               break;
             }
@@ -973,8 +973,8 @@ XWindowEventProducer::~XWindowEventProducer(void)
 /*----------------------------- class specific ----------------------------*/
 
 XWindowEventProducer::WindowEventLoopThreadArguments::WindowEventLoopThreadArguments(
-                       const Pnt2s& ScreenPosition,
-                       const Vec2s& Size,
+                       const Pnt2f& ScreenPosition,
+                       const Vec2f& Size,
                        const std::string& WindowName,
                        XWindowPtr TheWindow,
                        XWindowEventProducerPtr TheEventProducer) :
