@@ -46,7 +46,8 @@
 
 #include "OSGFCFileHandler.h"
 #include <fstream>
-#include <boost/filesystem.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/convenience.hpp>
 #include <boost/algorithm/string.hpp>
 
 OSG_BEGIN_NAMESPACE
@@ -164,9 +165,9 @@ FCFileTypeP FCFileHandler::getFileType(const std::string& FileExtension, UInt32 
 	}
 }
 
-std::vector<const std::string> FCFileHandler::getSuffixList(UInt32 flags) const
+std::vector<std::string> FCFileHandler::getSuffixList(UInt32 flags) const
 {
-	std::vector<const std::string> FileTypesResult;
+	std::vector<std::string> FileTypesResult;
 
 	for(FileTypeMap::const_iterator MapItor(_SuffixTypeMap.begin()) ; MapItor != _SuffixTypeMap.end() ; ++MapItor)
 	{
@@ -174,7 +175,7 @@ std::vector<const std::string> FCFileHandler::getSuffixList(UInt32 flags) const
 		{
 			if((*VecItor)->getFlags() & flags)
 			{
-				const std::vector<std::string>& Suffixes((*VecItor)->getSuffixList());
+				std::vector<std::string> Suffixes((*VecItor)->getSuffixList());
 				for(std::vector<std::string>::const_iterator SuffixItor(Suffixes.begin()) ; SuffixItor<Suffixes.end() ; ++SuffixItor)
 				{
 					FileTypesResult.push_back(*SuffixItor);

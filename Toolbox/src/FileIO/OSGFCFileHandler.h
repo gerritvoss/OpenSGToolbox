@@ -61,7 +61,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING FCFileHandler
 	 virtual FCFileTypeP getFileType(const std::string& FileExtension, UInt32 Flags = FCFileType::OSG_READ_SUPPORTED |
                                               FCFileType::OSG_WRITE_SUPPORTED);
  
-	 virtual std::vector<const std::string> getSuffixList(UInt32 flags = FCFileType::OSG_READ_SUPPORTED |
+	 virtual std::vector<std::string> getSuffixList(UInt32 flags = FCFileType::OSG_READ_SUPPORTED |
                                               FCFileType::OSG_WRITE_SUPPORTED) const;
  
      /*---------------------------------------------------------------------*/

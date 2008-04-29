@@ -18,10 +18,12 @@
 #include <OpenSG/OSGMField.h>
 
 #include <boost/filesystem/path.hpp>
+#include <boost/filesystem/exception.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-typedef boost::filesystem::basic_path<std::string, boost::filesystem::path_traits> Path;
+typedef boost::filesystem::path Path;
+//typedef boost::filesystem::basic_path<std::string, boost::filesystem::path_traits> Path;
 
 // The FieldDataTraits class contains the methods needed to implement
 // the features a Field data element needs to have
@@ -61,7 +63,7 @@ struct FieldDataTraits<Path> :
     static void putToString(const Path   &inVal,
                                   std::string &outVal)
     {
-		FieldDataTraits<Path::string_type>::putToString(inVal.string(), outVal);
+		FieldDataTraits<std::string>::putToString(inVal.string(), outVal);
     }
     
     // Setup outVal from the contents of inVal
@@ -71,7 +73,7 @@ struct FieldDataTraits<Path> :
                               const Char8     *&inVal)
     {
 		std::string PathString("");
-		if( FieldDataTraits<Path::string_type>::getFromString(PathString, inVal) )
+		if( FieldDataTraits<std::string>::getFromString(PathString, inVal) )
 		{
 			try
 			{
@@ -100,7 +102,7 @@ struct FieldDataTraits<Path> :
     // one for an array of objects
     static UInt32 getBinSize(const Path & obj)
     {
-		return FieldDataTraits<Path::string_type>::getBinSize(obj.string());
+		return FieldDataTraits<std::string>::getBinSize(obj.string());
     }
 
     static UInt32 getBinSize (const Path *obj, UInt32 num)
@@ -110,7 +112,7 @@ struct FieldDataTraits<Path> :
 		UInt32 SizeSum(0);
     	for(UInt32 i = 0; i < num; ++i)
         {
-            SizeSum += FieldDataTraits<Path::string_type>::getBinSize(obj[i].string());
+            SizeSum += FieldDataTraits<std::string>::getBinSize(obj[i].string());
         }
         return SizeSum;
     }
@@ -123,7 +125,7 @@ struct FieldDataTraits<Path> :
     static void copyToBin(      BinaryDataHandler &bdh, 
                           const Path         &obj)
     {
-		FieldDataTraits<Path::string_type>::copyToBin(bdh, obj.string());
+		FieldDataTraits<std::string>::copyToBin(bdh, obj.string());
     }
 
     static void copyToBin(      BinaryDataHandler &bdh,
@@ -146,7 +148,7 @@ struct FieldDataTraits<Path> :
                             Path         &obj)
     {
 		std::string PathString("");
-		FieldDataTraits<Path::string_type>::copyFromBin(bdh, PathString);
+		FieldDataTraits<std::string>::copyFromBin(bdh, PathString);
 		try
 		{
 			obj = PathString;
