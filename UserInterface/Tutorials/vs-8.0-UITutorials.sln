@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
+# Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGUserInterface", "..\Builds\Windows\OSGUserInterface.vcproj", "{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393} = {61151B1E-8A6D-465E-8C71-7E1578BA2393}
@@ -99,11 +99,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "19GridBagLayout", "19GridBa
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "20UIRectangle", "20UIRectangle.vcproj", "{E27C0CBF-59D6-41CD-B0F0-FDA426B5706E}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XXTesting", "XXTesting.vcproj", "{101B4E61-3D86-4512-A4D8-1A0D2FF2BB9D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA} = {A174CC91-1700-4B4F-B193-1E7FAB4C59CA}
 	EndProjectSection
@@ -281,10 +276,6 @@ Global
 		{E27C0CBF-59D6-41CD-B0F0-FDA426B5706E}.Debug|Win32.Build.0 = Debug|Win32
 		{E27C0CBF-59D6-41CD-B0F0-FDA426B5706E}.Release|Win32.ActiveCfg = Release|Win32
 		{E27C0CBF-59D6-41CD-B0F0-FDA426B5706E}.Release|Win32.Build.0 = Release|Win32
-		{101B4E61-3D86-4512-A4D8-1A0D2FF2BB9D}.Debug|Win32.ActiveCfg = Debug|Win32
-		{101B4E61-3D86-4512-A4D8-1A0D2FF2BB9D}.Debug|Win32.Build.0 = Debug|Win32
-		{101B4E61-3D86-4512-A4D8-1A0D2FF2BB9D}.Release|Win32.ActiveCfg = Release|Win32
-		{101B4E61-3D86-4512-A4D8-1A0D2FF2BB9D}.Release|Win32.Build.0 = Release|Win32
 		{B9976D79-B504-4BA2-A90F-12C54DD18DE5}.Debug|Win32.ActiveCfg = Debug|Win32
 		{B9976D79-B504-4BA2-A90F-12C54DD18DE5}.Debug|Win32.Build.0 = Debug|Win32
 		{B9976D79-B504-4BA2-A90F-12C54DD18DE5}.Release|Win32.ActiveCfg = Release|Win32
