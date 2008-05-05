@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGTOOLBAR_H_
-#define _OSGTOOLBAR_H_
+#ifndef _OSGSEPARATOR_H_
+#define _OSGSEPARATOR_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -45,23 +45,23 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "OSGToolbarBase.h"
-#include "Layout/OSGBoxLayout.h"
+#include "OSGSeparatorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Toolbar class. See \ref 
-           PageUserInterfaceToolbar for a description.
+/*! \brief Separator class. See \ref 
+           PageUserInterfaceSeparator for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING Toolbar : public ToolbarBase
+class OSG_USERINTERFACELIB_DLLMAPPING Separator : public SeparatorBase
 {
   private:
 
-    typedef ToolbarBase Inherited;
+    typedef SeparatorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
+     enum Orientation{VERTICAL_ORIENTATION = 0, HORIZONTAL_ORIENTATION};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -79,62 +79,48 @@ class OSG_USERINTERFACELIB_DLLMAPPING Toolbar : public ToolbarBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-	void setOrientation(BoxLayout::Orientation TheOrientation);
-	BoxLayout::Orientation getOrientation(void) const;
-
-    void addTool(ComponentPtr TheTool);
-    void removeTool(ComponentPtr TheTool);
-    void removeTool(const UInt32&  Index);
-    void removeAllTools(void);
-    UInt32 getNumTools(void) const;
-
-    void addSeparator(void);
-    void removeSeparator(const UInt32&  Index);
-    void removeAllSeparators(void);
-    UInt32 getNumSeparators(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in ToolbarBase.
+    // Variables should all be in SeparatorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Toolbar(void);
-    Toolbar(const Toolbar &source);
+    Separator(void);
+    Separator(const Separator &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Toolbar(void); 
+    virtual ~Separator(void); 
 
     /*! \}                                                                 */
-	BoxLayoutPtr createDefaultLayout(void) const;
+	virtual void drawInternal(const GraphicsPtr Graphics) const;
     
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class ToolbarBase;
+    friend class SeparatorBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Toolbar &source);
+    void operator =(const Separator &source);
 };
 
-typedef Toolbar *ToolbarP;
+typedef Separator *SeparatorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGToolbarBase.inl"
-#include "OSGToolbar.inl"
+#include "OSGSeparatorBase.inl"
+#include "OSGSeparator.inl"
 
-#define OSGTOOLBAR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#define OSGSEPARATOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
-#endif /* _OSGTOOLBAR_H_ */
+#endif /* _OSGSEPARATOR_H_ */

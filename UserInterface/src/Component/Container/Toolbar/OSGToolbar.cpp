@@ -48,6 +48,8 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGToolbar.h"
+#include "Component/Misc/OSGSeparator.h"
+#include <deque>
 
 OSG_BEGIN_NAMESPACE
 
@@ -81,11 +83,162 @@ void Toolbar::setOrientation(BoxLayout::Orientation TheOrientation)
 	beginEditCP(BoxLayout::Ptr::dcast(getLayout()), BoxLayout::OrientationFieldMask);
 		BoxLayout::Ptr::dcast(getLayout())->setOrientation(TheOrientation);
 	endEditCP(BoxLayout::Ptr::dcast(getLayout()), BoxLayout::OrientationFieldMask);
+    
+    Separator::Orientation Or;
+    if(TheOrientation == BoxLayout::VERTICAL_ORIENTATION)
+    {
+        Or = Separator::VERTICAL_ORIENTATION;
+    }
+    else
+    {
+        Or = Separator::HORIZONTAL_ORIENTATION;
+    }
+
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        if(getChildren().getValue(i)->getType() == Separator::getClassType())
+        {
+            beginEditCP(getChildren().getValue(i), Separator::OrientationFieldMask);
+                Separator::Ptr::dcast(getChildren().getValue(i))->setOrientation(Or);
+            endEditCP(getChildren().getValue(i), Separator::OrientationFieldMask);
+        }
+    }
 }
 
 BoxLayout::Orientation Toolbar::getOrientation(void) const
 {
 	return BoxLayout::Orientation(BoxLayout::Ptr::dcast(getLayout())->getOrientation());
+}
+
+void Toolbar::addTool(ComponentPtr TheTool)
+{
+    beginEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+        getChildren().push_back(TheTool);
+    endEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+}
+
+void Toolbar::removeTool(ComponentPtr TheTool)
+{
+    MFComponentPtr::iterator RemoveItor(getChildren().find(TheTool));
+    if(RemoveItor != getChildren().end())
+    {
+        beginEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+            getChildren().erase(RemoveItor);
+        endEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+    }
+}
+
+void Toolbar::removeTool(const UInt32&  Index)
+{
+    if(Index < getNumTools())
+    {
+        MFComponentPtr::iterator RemoveItor(getChildren().begin());
+        UInt32 ToolCount(0);
+        for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+        {
+            if(getChildren().getValue(i)->getType() != Separator::getClassType())
+            {
+                ++ToolCount;
+            }
+            if(ToolCount == Index)
+            {
+                break;
+            }
+            ++RemoveItor;
+        }
+
+        beginEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+            getChildren().erase(RemoveItor);
+        endEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+    }
+}
+
+void Toolbar::removeAllTools(void)
+{
+    std::deque<UInt32> RemoveIndecies;
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        if(getChildren().getValue(i)->getType() != Separator::getClassType())
+        {
+            RemoveIndecies.push_front(i);
+        }
+    }
+    for(UInt32 i(0) ; i<RemoveIndecies.size() ; ++i)
+    {
+        removeTool(RemoveIndecies[i]);
+    }
+}
+
+void Toolbar::addSeparator(void)
+{
+    SeparatorPtr TheSeparator = Separator::create();
+    beginEditCP(TheSeparator, Separator::OrientationFieldMask);
+    if(getOrientation() == BoxLayout::VERTICAL_ORIENTATION)
+    {
+        TheSeparator->setOrientation(Separator::VERTICAL_ORIENTATION);
+    }
+    else
+    {
+        TheSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
+    }
+
+    beginEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+        getChildren().push_back(TheSeparator);
+    endEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+}
+
+void Toolbar::removeSeparator(const UInt32&  Index)
+{
+    if(Index < getNumSeparators())
+    {
+        MFComponentPtr::iterator RemoveItor(getChildren().begin());
+        UInt32 SeparatorCount(0);
+        for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+        {
+            if(getChildren().getValue(i)->getType() == Separator::getClassType())
+            {
+                ++SeparatorCount;
+            }
+            if(SeparatorCount == Index)
+            {
+                break;
+            }
+            ++RemoveItor;
+        }
+
+        beginEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+            getChildren().erase(RemoveItor);
+        endEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+    }
+}
+
+void Toolbar::removeAllSeparators(void)
+{
+    std::deque<UInt32> RemoveIndecies;
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        if(getChildren().getValue(i)->getType() == Separator::getClassType())
+        {
+            RemoveIndecies.push_front(i);
+        }
+    }
+    for(UInt32 i(0) ; i<RemoveIndecies.size() ; ++i)
+    {
+        removeSeparator(RemoveIndecies[i]);
+    }
+}
+
+UInt32 Toolbar::getNumSeparators(void) const
+{
+    UInt32 NumSeparators(0);
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        if(getChildren().getValue(i)->getType() == Separator::getClassType())
+        {
+            ++NumSeparators;
+        }
+    }
+    return NumSeparators;
 }
 
 /*-------------------------------------------------------------------------*\

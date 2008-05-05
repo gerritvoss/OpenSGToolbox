@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="OSGUserInterface"
 	ProjectGUID="{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}"
 	RootNamespace="OSGAnimation"
@@ -1299,6 +1299,34 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Component\Misc\OSGRotatedComponentFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGSeparator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGSeparator.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGSeparator.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGSeparatorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGSeparatorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGSeparatorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Misc\OSGSeparatorFields.h"
 						>
 					</File>
 					<File

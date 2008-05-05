@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="Separator"
+	parent="Component"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI Separator.
+	<Field
+		name="Orientation"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultHeader="Component/Misc/OSGSeparator.h"
+		defaultValue="Separator::VERTICAL_ORIENTATION"
+	>
+	</Field>
+	<Field
+		name="SeparatorSize"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0f"
+	>
+	</Field>
+	<Field
+		name="Color"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="Color4f(0.0f,0.0f,0.0f,1.0f)"
+	>
+	</Field>
+</FieldContainer>

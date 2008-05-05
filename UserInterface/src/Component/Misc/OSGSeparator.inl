@@ -42,13 +42,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-UInt32 Toolbar::getNumTools(void) const
-{
-    return getChildren().size() - getNumSeparators();
-}
-
 OSG_END_NAMESPACE
 
-#define OSGTOOLBAR_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+#define OSGSEPARATOR_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

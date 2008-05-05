@@ -75,6 +75,7 @@
 #include "Component/Text/OSGPasswordField.h"
 #include "Component/Text/OSGTextArea.h"
 #include "Component/Misc/OSGToolTip.h"
+#include "Component/Misc/OSGSeparator.h"
 
 #include "Component/Menu/OSGLabelMenuItem.h"
 #include "Component/Menu/OSGComponentMenuItem.h"
@@ -3870,6 +3871,38 @@ void WindowsLookAndFeel::init(void)
 
     SpinnerNumberEditor::getClassType().setPrototype(WindowsSpinnerNumberEditor);
 	
+	//************************** Separator *****************************
+	//Windows SeparatorBorder
+	EmptyBorderPtr WindowsSeparatorBorder = EmptyBorder::create();
+
+	//Windows SeparatorBackground
+	EmptyUIBackgroundPtr WindowsSeparatorBackground = EmptyUIBackground::create();
+
+    SeparatorPtr WindowsSeparator = Separator::create();
+    beginEditCP(WindowsSeparator);
+		WindowsSeparator->setConstraints(NullFC);
+		//Sizes
+		WindowsSeparator->setMinSize(Vec2f(0,0));
+		WindowsSeparator->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsSeparator->setPreferredSize(Vec2f(25,25));
+
+		//Border
+		WindowsSeparator->setBorders(WindowsSeparatorBorder);
+		
+		//Background
+		WindowsSeparator->setBackgrounds(WindowsSeparatorBackground);
+		
+		//Opacity
+		WindowsSeparator->setOpacity(1.0);
+
+        //Separator
+        WindowsSeparator->setOrientation(Separator::VERTICAL_ORIENTATION);
+        WindowsSeparator->setSeparatorSize(1.0f);
+        WindowsSeparator->setColor(Color4f(0.3,0.38,0.52,1.0));
+    endEditCP(WindowsSeparator);
+    
+    Separator::getClassType().setPrototype(WindowsSeparator);
+
 	//************************** ProgressBar *****************************
 	//Windows ProgressBarBorder
 	RoundedCornerLineBorderPtr WindowsProgressBarBorder = RoundedCornerLineBorder::create();
