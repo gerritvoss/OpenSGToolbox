@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="OSGUserInterface"
 	ProjectGUID="{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}"
 	RootNamespace="OSGAnimation"
@@ -538,34 +538,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItem.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItem.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItem.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItemBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItemBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItemBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Menu\OSGLabelMenuItemFields.h"
-						>
-					</File>
-					<File
 						RelativePath="..\..\src\Component\Menu\OSGListGeneratedPopupMenu.cpp"
 						>
 					</File>
@@ -703,34 +675,6 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Component\Menu\OSGPopupMenuFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItem.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItem.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItem.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItemBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItemBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItemBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Menu\OSGSeperatorMenuItemFields.h"
 						>
 					</File>
 					<File

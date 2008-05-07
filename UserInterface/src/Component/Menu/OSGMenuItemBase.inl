@@ -96,13 +96,6 @@ MenuItemPtr MenuItemBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the MenuItem::_sfSelected field.
-inline
-SFBool *MenuItemBase::getSFSelected(void)
-{
-    return &_sfSelected;
-}
-
 //! Get the MenuItem::_sfParentMenu field.
 inline
 SFMenuPtr *MenuItemBase::getSFParentMenu(void)
@@ -110,27 +103,41 @@ SFMenuPtr *MenuItemBase::getSFParentMenu(void)
     return &_sfParentMenu;
 }
 
-
-//! Get the value of the MenuItem::_sfSelected field.
+//! Get the MenuItem::_sfAcceleratorModifiers field.
 inline
-bool &MenuItemBase::getSelected(void)
+SFUInt32 *MenuItemBase::getSFAcceleratorModifiers(void)
 {
-    return _sfSelected.getValue();
+    return &_sfAcceleratorModifiers;
 }
 
-//! Get the value of the MenuItem::_sfSelected field.
+//! Get the MenuItem::_sfAcceleratorKey field.
 inline
-const bool &MenuItemBase::getSelected(void) const
+SFUInt32 *MenuItemBase::getSFAcceleratorKey(void)
 {
-    return _sfSelected.getValue();
+    return &_sfAcceleratorKey;
 }
 
-//! Set the value of the MenuItem::_sfSelected field.
+//! Get the MenuItem::_sfMnemonicKey field.
 inline
-void MenuItemBase::setSelected(const bool &value)
+SFUInt32 *MenuItemBase::getSFMnemonicKey(void)
 {
-    _sfSelected.setValue(value);
+    return &_sfMnemonicKey;
 }
+
+//! Get the MenuItem::_sfAcceleratorText field.
+inline
+SFString *MenuItemBase::getSFAcceleratorText(void)
+{
+    return &_sfAcceleratorText;
+}
+
+//! Get the MenuItem::_sfMnemonicTextPosition field.
+inline
+SFInt32 *MenuItemBase::getSFMnemonicTextPosition(void)
+{
+    return &_sfMnemonicTextPosition;
+}
+
 
 //! Get the value of the MenuItem::_sfParentMenu field.
 inline
@@ -151,6 +158,111 @@ inline
 void MenuItemBase::setParentMenu(const MenuPtr &value)
 {
     _sfParentMenu.setValue(value);
+}
+
+//! Get the value of the MenuItem::_sfAcceleratorModifiers field.
+inline
+UInt32 &MenuItemBase::getAcceleratorModifiers(void)
+{
+    return _sfAcceleratorModifiers.getValue();
+}
+
+//! Get the value of the MenuItem::_sfAcceleratorModifiers field.
+inline
+const UInt32 &MenuItemBase::getAcceleratorModifiers(void) const
+{
+    return _sfAcceleratorModifiers.getValue();
+}
+
+//! Set the value of the MenuItem::_sfAcceleratorModifiers field.
+inline
+void MenuItemBase::setAcceleratorModifiers(const UInt32 &value)
+{
+    _sfAcceleratorModifiers.setValue(value);
+}
+
+//! Get the value of the MenuItem::_sfAcceleratorKey field.
+inline
+UInt32 &MenuItemBase::getAcceleratorKey(void)
+{
+    return _sfAcceleratorKey.getValue();
+}
+
+//! Get the value of the MenuItem::_sfAcceleratorKey field.
+inline
+const UInt32 &MenuItemBase::getAcceleratorKey(void) const
+{
+    return _sfAcceleratorKey.getValue();
+}
+
+//! Set the value of the MenuItem::_sfAcceleratorKey field.
+inline
+void MenuItemBase::setAcceleratorKey(const UInt32 &value)
+{
+    _sfAcceleratorKey.setValue(value);
+}
+
+//! Get the value of the MenuItem::_sfMnemonicKey field.
+inline
+UInt32 &MenuItemBase::getMnemonicKey(void)
+{
+    return _sfMnemonicKey.getValue();
+}
+
+//! Get the value of the MenuItem::_sfMnemonicKey field.
+inline
+const UInt32 &MenuItemBase::getMnemonicKey(void) const
+{
+    return _sfMnemonicKey.getValue();
+}
+
+//! Set the value of the MenuItem::_sfMnemonicKey field.
+inline
+void MenuItemBase::setMnemonicKey(const UInt32 &value)
+{
+    _sfMnemonicKey.setValue(value);
+}
+
+//! Get the value of the MenuItem::_sfAcceleratorText field.
+inline
+std::string &MenuItemBase::getAcceleratorText(void)
+{
+    return _sfAcceleratorText.getValue();
+}
+
+//! Get the value of the MenuItem::_sfAcceleratorText field.
+inline
+const std::string &MenuItemBase::getAcceleratorText(void) const
+{
+    return _sfAcceleratorText.getValue();
+}
+
+//! Set the value of the MenuItem::_sfAcceleratorText field.
+inline
+void MenuItemBase::setAcceleratorText(const std::string &value)
+{
+    _sfAcceleratorText.setValue(value);
+}
+
+//! Get the value of the MenuItem::_sfMnemonicTextPosition field.
+inline
+Int32 &MenuItemBase::getMnemonicTextPosition(void)
+{
+    return _sfMnemonicTextPosition.getValue();
+}
+
+//! Get the value of the MenuItem::_sfMnemonicTextPosition field.
+inline
+const Int32 &MenuItemBase::getMnemonicTextPosition(void) const
+{
+    return _sfMnemonicTextPosition.getValue();
+}
+
+//! Set the value of the MenuItem::_sfMnemonicTextPosition field.
+inline
+void MenuItemBase::setMnemonicTextPosition(const Int32 &value)
+{
+    _sfMnemonicTextPosition.setValue(value);
 }
 
 

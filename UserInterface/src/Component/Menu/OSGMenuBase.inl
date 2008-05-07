@@ -96,13 +96,6 @@ MenuPtr MenuBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Menu::_sfButton field.
-inline
-SFToggleButtonPtr *MenuBase::getSFButton(void)
-{
-    return &_sfButton;
-}
-
 //! Get the Menu::_sfInternalPopupMenu field.
 inline
 SFPopupMenuPtr *MenuBase::getSFInternalPopupMenu(void)
@@ -138,27 +131,6 @@ MFMenuItemPtr *MenuBase::getMFMenuItems(void)
     return &_mfMenuItems;
 }
 
-
-//! Get the value of the Menu::_sfButton field.
-inline
-ToggleButtonPtr &MenuBase::getButton(void)
-{
-    return _sfButton.getValue();
-}
-
-//! Get the value of the Menu::_sfButton field.
-inline
-const ToggleButtonPtr &MenuBase::getButton(void) const
-{
-    return _sfButton.getValue();
-}
-
-//! Set the value of the Menu::_sfButton field.
-inline
-void MenuBase::setButton(const ToggleButtonPtr &value)
-{
-    _sfButton.setValue(value);
-}
 
 //! Get the value of the Menu::_sfInternalPopupMenu field.
 inline

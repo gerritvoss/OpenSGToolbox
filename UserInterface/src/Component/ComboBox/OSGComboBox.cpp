@@ -53,7 +53,7 @@
 #include "Component/Container/Window/OSGInternalWindow.h"
 #include "Component/Button/OSGToggleButton.h"
 #include "Component/ComboBox/Editors/OSGComboBoxEditor.h"
-#include "Component/Menu/OSGLabelMenuItem.h"
+#include "Component/Menu/OSGMenuItem.h"
 #include "Component/ComboBox/ComponentGenerators/OSGComboBoxComponentGenerator.h"
 #include "Util/OSGUIDrawUtils.h"
 
@@ -307,7 +307,7 @@ void ComboBox::updateListFromModel(void)
 	//Update the PopupMenu
 	//for(UInt32 i(0) ; i<getComboListPopupMenu()->getNumItems() ; ++i)
 	//{
-	//	LabelMenuItem::Ptr::dcast(getComboListPopupMenu()->getItem(i))->removeActionListener(this);
+	//	MenuItem::Ptr::dcast(getComboListPopupMenu()->getItem(i))->removeActionListener(this);
 	//}
 
 	//Update the Selected Item Component

@@ -61,30 +61,11 @@
 #include "OSGComponentMenuItemBase.h"
 #include "OSGComponentMenuItem.h"
 
-#include <OpenSG/Input/OSGKeyEvent.h>     // AcceleratorKey default header
 
 OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  ComponentMenuItemBase::ComponentFieldMask = 
     (TypeTraits<BitVector>::One << ComponentMenuItemBase::ComponentFieldId);
-
-const OSG::BitVector  ComponentMenuItemBase::FontFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentMenuItemBase::FontFieldId);
-
-const OSG::BitVector  ComponentMenuItemBase::AcceleratorModifiersFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentMenuItemBase::AcceleratorModifiersFieldId);
-
-const OSG::BitVector  ComponentMenuItemBase::AcceleratorKeyFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentMenuItemBase::AcceleratorKeyFieldId);
-
-const OSG::BitVector  ComponentMenuItemBase::SelectedBorderFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentMenuItemBase::SelectedBorderFieldId);
-
-const OSG::BitVector  ComponentMenuItemBase::SelectedBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentMenuItemBase::SelectedBackgroundFieldId);
-
-const OSG::BitVector  ComponentMenuItemBase::AcceleratorTextFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentMenuItemBase::AcceleratorTextFieldId);
 
 const OSG::BitVector ComponentMenuItemBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -96,24 +77,6 @@ const OSG::BitVector ComponentMenuItemBase::MTInfluenceMask =
 /*! \var ComponentPtr    ComponentMenuItemBase::_sfComponent
     
 */
-/*! \var UIFontPtr       ComponentMenuItemBase::_sfFont
-    
-*/
-/*! \var UInt32          ComponentMenuItemBase::_sfAcceleratorModifiers
-    
-*/
-/*! \var UInt32          ComponentMenuItemBase::_sfAcceleratorKey
-    
-*/
-/*! \var BorderPtr       ComponentMenuItemBase::_sfSelectedBorder
-    
-*/
-/*! \var UIBackgroundPtr ComponentMenuItemBase::_sfSelectedBackground
-    
-*/
-/*! \var std::string     ComponentMenuItemBase::_sfAcceleratorText
-    
-*/
 
 //! ComponentMenuItem description
 
@@ -123,37 +86,7 @@ FieldDescription *ComponentMenuItemBase::_desc[] =
                      "Component", 
                      ComponentFieldId, ComponentFieldMask,
                      false,
-                     (FieldAccessMethod) &ComponentMenuItemBase::getSFComponent),
-    new FieldDescription(SFUIFontPtr::getClassType(), 
-                     "Font", 
-                     FontFieldId, FontFieldMask,
-                     false,
-                     (FieldAccessMethod) &ComponentMenuItemBase::getSFFont),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "AcceleratorModifiers", 
-                     AcceleratorModifiersFieldId, AcceleratorModifiersFieldMask,
-                     false,
-                     (FieldAccessMethod) &ComponentMenuItemBase::getSFAcceleratorModifiers),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "AcceleratorKey", 
-                     AcceleratorKeyFieldId, AcceleratorKeyFieldMask,
-                     false,
-                     (FieldAccessMethod) &ComponentMenuItemBase::getSFAcceleratorKey),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "SelectedBorder", 
-                     SelectedBorderFieldId, SelectedBorderFieldMask,
-                     false,
-                     (FieldAccessMethod) &ComponentMenuItemBase::getSFSelectedBorder),
-    new FieldDescription(SFUIBackgroundPtr::getClassType(), 
-                     "SelectedBackground", 
-                     SelectedBackgroundFieldId, SelectedBackgroundFieldMask,
-                     false,
-                     (FieldAccessMethod) &ComponentMenuItemBase::getSFSelectedBackground),
-    new FieldDescription(SFString::getClassType(), 
-                     "AcceleratorText", 
-                     AcceleratorTextFieldId, AcceleratorTextFieldMask,
-                     false,
-                     (FieldAccessMethod) &ComponentMenuItemBase::getSFAcceleratorText)
+                     (FieldAccessMethod) &ComponentMenuItemBase::getSFComponent)
 };
 
 
@@ -230,12 +163,6 @@ void ComponentMenuItemBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 ComponentMenuItemBase::ComponentMenuItemBase(void) :
     _sfComponent              (ComponentPtr(NullFC)), 
-    _sfFont                   (), 
-    _sfAcceleratorModifiers   (UInt32(0)), 
-    _sfAcceleratorKey         (UInt32(KeyEvent::KEY_NONE)), 
-    _sfSelectedBorder         (BorderPtr(NullFC)), 
-    _sfSelectedBackground     (UIBackgroundPtr(NullFC)), 
-    _sfAcceleratorText        (), 
     Inherited() 
 {
 }
@@ -246,12 +173,6 @@ ComponentMenuItemBase::ComponentMenuItemBase(void) :
 
 ComponentMenuItemBase::ComponentMenuItemBase(const ComponentMenuItemBase &source) :
     _sfComponent              (source._sfComponent              ), 
-    _sfFont                   (source._sfFont                   ), 
-    _sfAcceleratorModifiers   (source._sfAcceleratorModifiers   ), 
-    _sfAcceleratorKey         (source._sfAcceleratorKey         ), 
-    _sfSelectedBorder         (source._sfSelectedBorder         ), 
-    _sfSelectedBackground     (source._sfSelectedBackground     ), 
-    _sfAcceleratorText        (source._sfAcceleratorText        ), 
     Inherited                 (source)
 {
 }
@@ -273,36 +194,6 @@ UInt32 ComponentMenuItemBase::getBinSize(const BitVector &whichField)
         returnValue += _sfComponent.getBinSize();
     }
 
-    if(FieldBits::NoField != (FontFieldMask & whichField))
-    {
-        returnValue += _sfFont.getBinSize();
-    }
-
-    if(FieldBits::NoField != (AcceleratorModifiersFieldMask & whichField))
-    {
-        returnValue += _sfAcceleratorModifiers.getBinSize();
-    }
-
-    if(FieldBits::NoField != (AcceleratorKeyFieldMask & whichField))
-    {
-        returnValue += _sfAcceleratorKey.getBinSize();
-    }
-
-    if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
-    {
-        returnValue += _sfSelectedBorder.getBinSize();
-    }
-
-    if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
-    {
-        returnValue += _sfSelectedBackground.getBinSize();
-    }
-
-    if(FieldBits::NoField != (AcceleratorTextFieldMask & whichField))
-    {
-        returnValue += _sfAcceleratorText.getBinSize();
-    }
-
 
     return returnValue;
 }
@@ -315,36 +206,6 @@ void ComponentMenuItemBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ComponentFieldMask & whichField))
     {
         _sfComponent.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (FontFieldMask & whichField))
-    {
-        _sfFont.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (AcceleratorModifiersFieldMask & whichField))
-    {
-        _sfAcceleratorModifiers.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (AcceleratorKeyFieldMask & whichField))
-    {
-        _sfAcceleratorKey.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
-    {
-        _sfSelectedBorder.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
-    {
-        _sfSelectedBackground.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (AcceleratorTextFieldMask & whichField))
-    {
-        _sfAcceleratorText.copyToBin(pMem);
     }
 
 
@@ -360,36 +221,6 @@ void ComponentMenuItemBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfComponent.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (FontFieldMask & whichField))
-    {
-        _sfFont.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (AcceleratorModifiersFieldMask & whichField))
-    {
-        _sfAcceleratorModifiers.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (AcceleratorKeyFieldMask & whichField))
-    {
-        _sfAcceleratorKey.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
-    {
-        _sfSelectedBorder.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
-    {
-        _sfSelectedBackground.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (AcceleratorTextFieldMask & whichField))
-    {
-        _sfAcceleratorText.copyFromBin(pMem);
-    }
-
 
 }
 
@@ -403,24 +234,6 @@ void ComponentMenuItemBase::executeSyncImpl(      ComponentMenuItemBase *pOther,
     if(FieldBits::NoField != (ComponentFieldMask & whichField))
         _sfComponent.syncWith(pOther->_sfComponent);
 
-    if(FieldBits::NoField != (FontFieldMask & whichField))
-        _sfFont.syncWith(pOther->_sfFont);
-
-    if(FieldBits::NoField != (AcceleratorModifiersFieldMask & whichField))
-        _sfAcceleratorModifiers.syncWith(pOther->_sfAcceleratorModifiers);
-
-    if(FieldBits::NoField != (AcceleratorKeyFieldMask & whichField))
-        _sfAcceleratorKey.syncWith(pOther->_sfAcceleratorKey);
-
-    if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
-        _sfSelectedBorder.syncWith(pOther->_sfSelectedBorder);
-
-    if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
-        _sfSelectedBackground.syncWith(pOther->_sfSelectedBackground);
-
-    if(FieldBits::NoField != (AcceleratorTextFieldMask & whichField))
-        _sfAcceleratorText.syncWith(pOther->_sfAcceleratorText);
-
 
 }
 #else
@@ -433,24 +246,6 @@ void ComponentMenuItemBase::executeSyncImpl(      ComponentMenuItemBase *pOther,
 
     if(FieldBits::NoField != (ComponentFieldMask & whichField))
         _sfComponent.syncWith(pOther->_sfComponent);
-
-    if(FieldBits::NoField != (FontFieldMask & whichField))
-        _sfFont.syncWith(pOther->_sfFont);
-
-    if(FieldBits::NoField != (AcceleratorModifiersFieldMask & whichField))
-        _sfAcceleratorModifiers.syncWith(pOther->_sfAcceleratorModifiers);
-
-    if(FieldBits::NoField != (AcceleratorKeyFieldMask & whichField))
-        _sfAcceleratorKey.syncWith(pOther->_sfAcceleratorKey);
-
-    if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
-        _sfSelectedBorder.syncWith(pOther->_sfSelectedBorder);
-
-    if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
-        _sfSelectedBackground.syncWith(pOther->_sfSelectedBackground);
-
-    if(FieldBits::NoField != (AcceleratorTextFieldMask & whichField))
-        _sfAcceleratorText.syncWith(pOther->_sfAcceleratorText);
 
 
 

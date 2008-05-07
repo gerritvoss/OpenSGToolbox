@@ -58,6 +58,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
 
     /*==========================  PUBLIC  =================================*/
   public:
+    enum
+    {
+        SelectedFieldId                      = Inherited::ActiveFieldId,
+        SelectedBorderFieldId                = Inherited::ActiveBorderFieldId,
+        SelectedBackgroundFieldId            = Inherited::ActiveBackgroundFieldId,
+        SelectedTextColorFieldId             = Inherited::ActiveTextColorFieldId,
+        SelectedDrawObjectFieldId            = Inherited::ActiveDrawObjectFieldId
+    };
+
+    static const OSG::BitVector SelectedFieldMask;
+    static const OSG::BitVector SelectedBorderFieldMask;
+    static const OSG::BitVector SelectedBackgroundFieldMask;
+    static const OSG::BitVector SelectedTextColorFieldMask;
+    static const OSG::BitVector SelectedDrawObjectFieldMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -78,6 +92,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
 
     void addButtonSelectedListener(ButtonSelectedListenerPtr Listener);
     void removeButtonSelectedListener(ButtonSelectedListenerPtr Listener);
+
+    void setSelectedBorder   ( const BorderPtr &value );
+    void setSelectedBackground( const UIBackgroundPtr &value );
+    void setSelectedTextColor( const Color4f &value );
+    void setSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
+    void setSelectedImage(ImagePtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setSelectedTexture(TextureChunkPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setSelectedImage(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    
+           BorderPtr           &getSelectedBorder   (void);
+     const BorderPtr           &getSelectedBorder   (void) const;
+           UIBackgroundPtr     &getSelectedBackground(void);
+     const UIBackgroundPtr     &getSelectedBackground(void) const;
+           Color4f             &getSelectedTextColor(void);
+     const Color4f             &getSelectedTextColor(void) const;
+           UIDrawObjectCanvasPtr &getSelectedDrawObject(void);
+     const UIDrawObjectCanvasPtr &getSelectedDrawObject(void) const;
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -110,9 +141,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
     void produceButtonSelected(const ButtonSelectedEvent& e);
     void produceButtonDeselected(const ButtonSelectedEvent& e);
     
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
     virtual BorderPtr getDrawnBorder(void) const;
     virtual UIBackgroundPtr getDrawnBackground(void) const;
+    virtual Color4f getDrawnTextColor(void) const;
+    virtual Vec2f getDrawnOffset(void) const;
     /*==========================  PRIVATE  ================================*/
   private:
 

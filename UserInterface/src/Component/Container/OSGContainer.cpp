@@ -316,6 +316,14 @@ void Container::checkMouseEnterExit(const Event& e, const Pnt2f& MouseLocation, 
 	}
 }
 
+void Container::removeMousePresenceOnComponents(void)
+{
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        getChildren()[i]->setMouseContained(false);
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

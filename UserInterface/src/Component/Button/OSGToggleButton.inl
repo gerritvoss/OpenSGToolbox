@@ -43,6 +43,96 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+void ToggleButton::setSelectedBorder   ( const BorderPtr &value )
+{
+    setActiveBorder(value);
+}
+
+inline
+void ToggleButton::setSelectedBackground( const UIBackgroundPtr &value )
+{
+    setActiveBackground(value);
+}
+
+inline
+void ToggleButton::setSelectedTextColor( const Color4f &value )
+{
+    setActiveTextColor(value);
+}
+
+inline
+void ToggleButton::setSelectedDrawObject( const UIDrawObjectCanvasPtr &value )
+{
+    setActiveDrawObject(value);
+}
+
+inline
+void ToggleButton::setSelectedImage(ImagePtr TheImage, Vec2f Size)
+{
+    setActiveImage(TheImage, Size);
+}
+
+inline
+void ToggleButton::setSelectedTexture(TextureChunkPtr TheTexture, Vec2f Size)
+{
+    setActiveTexture(TheTexture, Size);
+}
+
+inline
+void ToggleButton::setSelectedImage(const std::string& Path, Vec2f Size)
+{
+    setActiveImage(Path, Size);
+}
+
+inline
+BorderPtr &ToggleButton::getSelectedBorder(void)
+{
+    return getActiveBorder();
+}
+
+inline
+const BorderPtr &ToggleButton::getSelectedBorder(void) const
+{
+    return getActiveBorder();
+}
+
+inline
+UIBackgroundPtr &ToggleButton::getSelectedBackground(void)
+{
+    return getActiveBackground();
+}
+
+inline
+const UIBackgroundPtr &ToggleButton::getSelectedBackground(void) const
+{
+    return getActiveBackground();
+}
+
+inline
+Color4f &ToggleButton::getSelectedTextColor(void)
+{
+    return getActiveTextColor();
+}
+
+inline
+const Color4f &ToggleButton::getSelectedTextColor(void) const
+{
+    return getActiveTextColor();
+}
+
+inline
+UIDrawObjectCanvasPtr &ToggleButton::getSelectedDrawObject(void)
+{
+    return getActiveDrawObject();
+}
+
+inline
+const UIDrawObjectCanvasPtr &ToggleButton::getSelectedDrawObject(void) const
+{
+    return getActiveDrawObject();
+}
+
+inline
 void ToggleButton::addButtonSelectedListener(ButtonSelectedListenerPtr Listener)
 {
    _ButtonSelectedListeners.insert(Listener);

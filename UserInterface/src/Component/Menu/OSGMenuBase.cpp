@@ -64,9 +64,6 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  MenuBase::ButtonFieldMask = 
-    (TypeTraits<BitVector>::One << MenuBase::ButtonFieldId);
-
 const OSG::BitVector  MenuBase::InternalPopupMenuFieldMask = 
     (TypeTraits<BitVector>::One << MenuBase::InternalPopupMenuFieldId);
 
@@ -89,9 +86,6 @@ const OSG::BitVector MenuBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var ToggleButtonPtr MenuBase::_sfButton
-    
-*/
 /*! \var PopupMenuPtr    MenuBase::_sfInternalPopupMenu
     
 */
@@ -112,11 +106,6 @@ const OSG::BitVector MenuBase::MTInfluenceMask =
 
 FieldDescription *MenuBase::_desc[] = 
 {
-    new FieldDescription(SFToggleButtonPtr::getClassType(), 
-                     "Button", 
-                     ButtonFieldId, ButtonFieldMask,
-                     false,
-                     (FieldAccessMethod) &MenuBase::getSFButton),
     new FieldDescription(SFPopupMenuPtr::getClassType(), 
                      "InternalPopupMenu", 
                      InternalPopupMenuFieldId, InternalPopupMenuFieldMask,
@@ -147,7 +136,7 @@ FieldDescription *MenuBase::_desc[] =
 
 FieldContainerType MenuBase::_type(
     "Menu",
-    "LabelMenuItem",
+    "MenuItem",
     NULL,
     (PrototypeCreateF) &MenuBase::createEmpty,
     Menu::initMethod,
@@ -218,7 +207,6 @@ void MenuBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 MenuBase::MenuBase(void) :
-    _sfButton                 (ToggleButtonPtr(NullFC)), 
     _sfInternalPopupMenu      (), 
     _sfSubMenuDelay           (Real32(0.5)), 
     _sfTopLevelMenu           (bool(false)), 
@@ -233,7 +221,6 @@ MenuBase::MenuBase(void) :
 #endif
 
 MenuBase::MenuBase(const MenuBase &source) :
-    _sfButton                 (source._sfButton                 ), 
     _sfInternalPopupMenu      (source._sfInternalPopupMenu      ), 
     _sfSubMenuDelay           (source._sfSubMenuDelay           ), 
     _sfTopLevelMenu           (source._sfTopLevelMenu           ), 
@@ -254,11 +241,6 @@ MenuBase::~MenuBase(void)
 UInt32 MenuBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
-
-    if(FieldBits::NoField != (ButtonFieldMask & whichField))
-    {
-        returnValue += _sfButton.getBinSize();
-    }
 
     if(FieldBits::NoField != (InternalPopupMenuFieldMask & whichField))
     {
@@ -294,11 +276,6 @@ void MenuBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ButtonFieldMask & whichField))
-    {
-        _sfButton.copyToBin(pMem);
-    }
-
     if(FieldBits::NoField != (InternalPopupMenuFieldMask & whichField))
     {
         _sfInternalPopupMenu.copyToBin(pMem);
@@ -331,11 +308,6 @@ void MenuBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
-
-    if(FieldBits::NoField != (ButtonFieldMask & whichField))
-    {
-        _sfButton.copyFromBin(pMem);
-    }
 
     if(FieldBits::NoField != (InternalPopupMenuFieldMask & whichField))
     {
@@ -372,9 +344,6 @@ void MenuBase::executeSyncImpl(      MenuBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (ButtonFieldMask & whichField))
-        _sfButton.syncWith(pOther->_sfButton);
-
     if(FieldBits::NoField != (InternalPopupMenuFieldMask & whichField))
         _sfInternalPopupMenu.syncWith(pOther->_sfInternalPopupMenu);
 
@@ -399,9 +368,6 @@ void MenuBase::executeSyncImpl(      MenuBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ButtonFieldMask & whichField))
-        _sfButton.syncWith(pOther->_sfButton);
 
     if(FieldBits::NoField != (InternalPopupMenuFieldMask & whichField))
         _sfInternalPopupMenu.syncWith(pOther->_sfInternalPopupMenu);
@@ -444,7 +410,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<MenuPtr>::_type("MenuPtr", "LabelMenuItemPtr");
+DataType FieldDataTraits<MenuPtr>::_type("MenuPtr", "MenuItemPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(MenuPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);

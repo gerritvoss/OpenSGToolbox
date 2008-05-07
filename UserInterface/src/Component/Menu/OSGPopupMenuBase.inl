@@ -110,6 +110,13 @@ SFComponentPtr *PopupMenuBase::getSFInvoker(void)
     return &_sfInvoker;
 }
 
+//! Get the PopupMenu::_sfDefaultSeparator field.
+inline
+SFSeparatorPtr *PopupMenuBase::getSFDefaultSeparator(void)
+{
+    return &_sfDefaultSeparator;
+}
+
 
 //! Get the value of the PopupMenu::_sfSubMenuDelay field.
 inline
@@ -151,6 +158,27 @@ inline
 void PopupMenuBase::setInvoker(const ComponentPtr &value)
 {
     _sfInvoker.setValue(value);
+}
+
+//! Get the value of the PopupMenu::_sfDefaultSeparator field.
+inline
+SeparatorPtr &PopupMenuBase::getDefaultSeparator(void)
+{
+    return _sfDefaultSeparator.getValue();
+}
+
+//! Get the value of the PopupMenu::_sfDefaultSeparator field.
+inline
+const SeparatorPtr &PopupMenuBase::getDefaultSeparator(void) const
+{
+    return _sfDefaultSeparator.getValue();
+}
+
+//! Set the value of the PopupMenu::_sfDefaultSeparator field.
+inline
+void PopupMenuBase::setDefaultSeparator(const SeparatorPtr &value)
+{
+    _sfDefaultSeparator.setValue(value);
 }
 
 

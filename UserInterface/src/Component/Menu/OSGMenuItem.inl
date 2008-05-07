@@ -42,21 +42,42 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+MenuItem::MenuItemKeyAcceleratorListener::MenuItemKeyAcceleratorListener(MenuItemPtr TheMenuItem) :
+									_MenuItem(TheMenuItem)
+{
+}
+
+inline
+MenuItem::KeyAcceleratorMenuFlashUpdateListener::KeyAcceleratorMenuFlashUpdateListener(MenuItemPtr TheMenuItem) :
+									_MenuItem(TheMenuItem),
+									_FlashElps(0.0)
+{
+}
+
+inline
+void MenuItem::KeyAcceleratorMenuFlashUpdateListener::reset(void)
+{
+    _FlashElps = 0.0;
+}
+
+
+inline
+void MenuItem::setDrawAsThoughSelected(bool Selected)
+{
+    _DrawAsThoughSelected = Selected;
+}
+
+inline
+bool MenuItem::getDrawAsThoughSelected(void) const
+{
+    return _DrawAsThoughSelected;
+}
 
 inline
 void MenuItem::addActionListener(ActionListenerPtr Listener)
 {
    _ActionListeners.insert(Listener);
-}
-
-inline
-void MenuItem::removeActionListener(ActionListenerPtr Listener)
-{
-   ActionListenerSetItor EraseIter(_ActionListeners.find(Listener));
-   if(EraseIter != _ActionListeners.end())
-   {
-      _ActionListeners.erase(EraseIter);
-   }
 }
 
 OSG_END_NAMESPACE

@@ -68,12 +68,6 @@
 #include "OSGMenuItem.h" // Parent
 
 #include "Component/OSGComponentFields.h" // Component type
-#include "Text/OSGUIFont.h" // Font type
-#include <OpenSG/OSGUInt32Fields.h> // AcceleratorModifiers type
-#include <OpenSG/OSGUInt32Fields.h> // AcceleratorKey type
-#include "Border/OSGBorder.h" // SelectedBorder type
-#include "Background/OSGUIBackground.h" // SelectedBackground type
-#include <OpenSG/OSGStringFields.h> // AcceleratorText type
 
 #include "OSGComponentMenuItemFields.h"
 
@@ -97,23 +91,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentMenuItemBase : public MenuItem
 
     enum
     {
-        ComponentFieldId            = Inherited::NextFieldId,
-        FontFieldId                 = ComponentFieldId            + 1,
-        AcceleratorModifiersFieldId = FontFieldId                 + 1,
-        AcceleratorKeyFieldId       = AcceleratorModifiersFieldId + 1,
-        SelectedBorderFieldId       = AcceleratorKeyFieldId       + 1,
-        SelectedBackgroundFieldId   = SelectedBorderFieldId       + 1,
-        AcceleratorTextFieldId      = SelectedBackgroundFieldId   + 1,
-        NextFieldId                 = AcceleratorTextFieldId      + 1
+        ComponentFieldId = Inherited::NextFieldId,
+        NextFieldId      = ComponentFieldId + 1
     };
 
     static const OSG::BitVector ComponentFieldMask;
-    static const OSG::BitVector FontFieldMask;
-    static const OSG::BitVector AcceleratorModifiersFieldMask;
-    static const OSG::BitVector AcceleratorKeyFieldMask;
-    static const OSG::BitVector SelectedBorderFieldMask;
-    static const OSG::BitVector SelectedBackgroundFieldMask;
-    static const OSG::BitVector AcceleratorTextFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -141,24 +123,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentMenuItemBase : public MenuItem
     /*! \{                                                                 */
 
            SFComponentPtr      *getSFComponent      (void);
-           SFUIFontPtr         *getSFFont           (void);
-           SFUInt32            *getSFAcceleratorModifiers(void);
-           SFUInt32            *getSFAcceleratorKey (void);
-           SFBorderPtr         *getSFSelectedBorder (void);
-           SFUIBackgroundPtr   *getSFSelectedBackground(void);
 
            ComponentPtr        &getComponent      (void);
      const ComponentPtr        &getComponent      (void) const;
-           UIFontPtr           &getFont           (void);
-     const UIFontPtr           &getFont           (void) const;
-           UInt32              &getAcceleratorModifiers(void);
-     const UInt32              &getAcceleratorModifiers(void) const;
-           UInt32              &getAcceleratorKey (void);
-     const UInt32              &getAcceleratorKey (void) const;
-           BorderPtr           &getSelectedBorder (void);
-     const BorderPtr           &getSelectedBorder (void) const;
-           UIBackgroundPtr     &getSelectedBackground(void);
-     const UIBackgroundPtr     &getSelectedBackground(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -166,11 +133,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentMenuItemBase : public MenuItem
     /*! \{                                                                 */
 
      void setComponent      ( const ComponentPtr &value );
-     void setFont           ( const UIFontPtr &value );
-     void setAcceleratorModifiers( const UInt32 &value );
-     void setAcceleratorKey ( const UInt32 &value );
-     void setSelectedBorder ( const BorderPtr &value );
-     void setSelectedBackground( const UIBackgroundPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -214,12 +176,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentMenuItemBase : public MenuItem
     /*! \{                                                                 */
 
     SFComponentPtr      _sfComponent;
-    SFUIFontPtr         _sfFont;
-    SFUInt32            _sfAcceleratorModifiers;
-    SFUInt32            _sfAcceleratorKey;
-    SFBorderPtr         _sfSelectedBorder;
-    SFUIBackgroundPtr   _sfSelectedBackground;
-    SFString            _sfAcceleratorText;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -235,23 +191,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentMenuItemBase : public MenuItem
     /*! \{                                                                 */
 
     virtual ~ComponentMenuItemBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFString            *getSFAcceleratorText(void);
-
-           std::string         &getAcceleratorText(void);
-     const std::string         &getAcceleratorText(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setAcceleratorText(const std::string &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

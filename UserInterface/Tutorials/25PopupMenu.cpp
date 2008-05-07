@@ -62,8 +62,7 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
 #include <OpenSG/UserInterface/OSGPopupMenu.h>
 #include <OpenSG/UserInterface/OSGMenu.h>
-#include <OpenSG/UserInterface/OSGLabelMenuItem.h>
-#include <OpenSG/UserInterface/OSGSeperatorMenuItem.h>
+#include <OpenSG/UserInterface/OSGMenuItem.h>
 #include <OpenSG/UserInterface/OSGColorUIBackground.h>
 
 
@@ -147,30 +146,29 @@ int main(int argc, char **argv)
             
                 Create PopupMenu Components
         
-        -LabelMenuItem: These are items that are contained
+        -MenuItem: These are items that are contained
             within a Menu; they are the things you click
             on to cause something to occur
         -SeperatorMenuItem:  These place a seperator 
             line between items in a Menu
         -Menu: These are sub-menus within another Menu;
-            LabelMenuItems and SeperatorMenuItems
+            MenuItems and SeperatorMenuItems
             are added to a Menu
 
     ******************************************************/
 
-    LabelMenuItemPtr MenuItem1 = LabelMenuItem::create();
-    LabelMenuItemPtr MenuItem2 = LabelMenuItem::create();
-    LabelMenuItemPtr MenuItem3 = LabelMenuItem::create();
-    LabelMenuItemPtr MenuItem4 = LabelMenuItem::create();
-    LabelMenuItemPtr SubMenuItem1 = LabelMenuItem::create();
-    LabelMenuItemPtr SubMenuItem2 = LabelMenuItem::create();
-    LabelMenuItemPtr SubMenuItem3 = LabelMenuItem::create();
-    SeperatorMenuItemPtr ExampleSeperator = SeperatorMenuItem::create();
+    MenuItemPtr MenuItem1 = MenuItem::create();
+    MenuItemPtr MenuItem2 = MenuItem::create();
+    MenuItemPtr MenuItem3 = MenuItem::create();
+    MenuItemPtr MenuItem4 = MenuItem::create();
+    MenuItemPtr SubMenuItem1 = MenuItem::create();
+    MenuItemPtr SubMenuItem2 = MenuItem::create();
+    MenuItemPtr SubMenuItem3 = MenuItem::create();
     MenuPtr ExampleSubMenu = Menu::create();
     
     /******************************************************
             
-            Edit the LabelMenuItems
+            Edit the MenuItems
 
             -setText("TEXT"): Sets the text on the 
                 item to be TEXT
@@ -179,40 +177,40 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
-    beginEditCP(MenuItem1, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask);
+    beginEditCP(MenuItem1, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask);
         MenuItem1->setText("Menu Item 1");
-    endEditCP(MenuItem1, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask);
+    endEditCP(MenuItem1, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask);
     
-    beginEditCP(MenuItem2, LabelMenuItem::TextFieldMask);
+    beginEditCP(MenuItem2, MenuItem::TextFieldMask);
         MenuItem2->setText("Menu Item 2");
-    endEditCP(MenuItem2, LabelMenuItem::TextFieldMask);
+    endEditCP(MenuItem2, MenuItem::TextFieldMask);
     
-    beginEditCP(MenuItem3, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask);
+    beginEditCP(MenuItem3, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask);
         MenuItem3->setText("Menu Item 3");
-    endEditCP(MenuItem3, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask);
+    endEditCP(MenuItem3, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask);
     
-    beginEditCP(MenuItem4, LabelMenuItem::TextFieldMask | LabelMenuItem::EnabledFieldMask);
+    beginEditCP(MenuItem4, MenuItem::TextFieldMask | MenuItem::EnabledFieldMask);
         MenuItem4->setText("Menu Item 4");
         MenuItem4->setEnabled(false);
-    endEditCP(MenuItem4, LabelMenuItem::TextFieldMask | LabelMenuItem::EnabledFieldMask);
+    endEditCP(MenuItem4, MenuItem::TextFieldMask | MenuItem::EnabledFieldMask);
     
-    beginEditCP(SubMenuItem1, LabelMenuItem::TextFieldMask);
+    beginEditCP(SubMenuItem1, MenuItem::TextFieldMask);
         SubMenuItem1->setText("SubMenu Item 1");
-    endEditCP(SubMenuItem1, LabelMenuItem::TextFieldMask);
+    endEditCP(SubMenuItem1, MenuItem::TextFieldMask);
     
-    beginEditCP(SubMenuItem2, LabelMenuItem::TextFieldMask);
+    beginEditCP(SubMenuItem2, MenuItem::TextFieldMask);
         SubMenuItem2->setText("SubMenu Item 2");
-    endEditCP(SubMenuItem2, LabelMenuItem::TextFieldMask);
+    endEditCP(SubMenuItem2, MenuItem::TextFieldMask);
     
-    beginEditCP(SubMenuItem3, LabelMenuItem::TextFieldMask);
+    beginEditCP(SubMenuItem3, MenuItem::TextFieldMask);
         SubMenuItem3->setText("SubMenu Item 3");
-    endEditCP(SubMenuItem3, LabelMenuItem::TextFieldMask);
+    endEditCP(SubMenuItem3, MenuItem::TextFieldMask);
     
-    beginEditCP(ExampleSubMenu, LabelMenuItem::TextFieldMask);
+    beginEditCP(ExampleSubMenu, MenuItem::TextFieldMask);
         ExampleSubMenu->setText("Sub Menu");
-    endEditCP(ExampleSubMenu, LabelMenuItem::TextFieldMask);
+    endEditCP(ExampleSubMenu, MenuItem::TextFieldMask);
 
-    // This adds three LabelMenuItems to the Menu,
+    // This adds three MenuItems to the Menu,
     // creating a submenu.  Note this does not
     // involve begin/endEditCPs to do
 
@@ -240,7 +238,7 @@ int main(int argc, char **argv)
     ExamplePopupMenu->addItem(MenuItem1);
     ExamplePopupMenu->addItem(MenuItem2);
     ExamplePopupMenu->addItem(MenuItem3);
-    ExamplePopupMenu->addItem(ExampleSeperator);
+    ExamplePopupMenu->addSeparator();
     ExamplePopupMenu->addItem(ExampleSubMenu);
     ExamplePopupMenu->addItem(MenuItem4);
     

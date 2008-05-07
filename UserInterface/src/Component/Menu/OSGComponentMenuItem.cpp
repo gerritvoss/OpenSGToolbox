@@ -88,97 +88,6 @@ void ComponentMenuItem::drawInternal(const GraphicsPtr TheGraphics) const
 	}
 }
 
-BorderPtr ComponentMenuItem::getDrawnBorder(void) const
-{
-    if(getEnabled())
-    {
-        //if(getFocused())
-        //{
-        //    return getFocusedTextColor();
-        //}
-        if(getSelected() || _DrawAsThoughSelected)
-        {
-            return getSelectedBorder();
-        }
-        else if(_MouseInComponentLastMouse)
-        {
-            return getRolloverBorder();
-        }
-        else
-        {
-            return getBorder();
-        }
-    }
-    else
-    {
-        return getDisabledBorder();
-    }
-}
-
-UIBackgroundPtr ComponentMenuItem::getDrawnBackground(void) const
-{
-    if(getEnabled())
-    {
-        //if(getFocused())
-        //{
-        //    return getFocusedTextColor();
-        //}
-        if(getSelected() || _DrawAsThoughSelected)
-        {
-            return getSelectedBackground();
-        }
-        else if(_MouseInComponentLastMouse)
-        {
-            return getRolloverBackground();
-        }
-        else
-        {
-            return getBackground();
-        }
-    }
-    else
-    {
-        return getDisabledBackground();
-    }
-}
-
-void ComponentMenuItem::actionPreformed(const ActionEvent& e)
-{
-}
-
-void ComponentMenuItem::mouseReleased(const MouseEvent& e)
-{
-    if(getSelected() && getEnabled())
-    {
-	   produceActionPerformed(ActionEvent(MenuItemPtr(this), e.getTimeStamp()));
-       getParentWindow()->destroyPopupMenu();
-       beginEditCP(MenuItemPtr(this), SelectedFieldMask);
-          setSelected(false);
-       endEditCP(MenuItemPtr(this), SelectedFieldMask);
-    }
-    
-    MenuItem::mouseReleased(e);
-}
-
-MenuPtr ComponentMenuItem::getTopLevelMenu(void) const
-{
-    MenuPtr c(getParentMenu());
-    while(c != NullFC)
-    {
-        if(c->getTopLevelMenu())
-        {
-            return c;
-        }
-        c = c->getParentMenu();
-    }
-    return NullFC;
-}
-
-void ComponentMenuItem::activate(void)
-{
-    produceActionPerformed(ActionEvent(ComponentMenuItemPtr(this), getSystemTime()));
-}
-
 Vec2f ComponentMenuItem::getContentRequestedSize(void) const
 {
 	if(getComponent() != NullFC)
@@ -232,18 +141,12 @@ void ComponentMenuItem::updateComponentBounds(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 ComponentMenuItem::ComponentMenuItem(void) :
-    Inherited(),
-    _ComponentMenuItemKeyAcceleratorListener(ComponentMenuItemPtr(this)),
-    _KeyAcceleratorMenuFlashUpdateListener(ComponentMenuItemPtr(this)),
-    _DrawAsThoughSelected(false)
+    Inherited()
 {
 }
 
 ComponentMenuItem::ComponentMenuItem(const ComponentMenuItem &source) :
-    Inherited(source),
-    _ComponentMenuItemKeyAcceleratorListener(ComponentMenuItemPtr(this)),
-    _KeyAcceleratorMenuFlashUpdateListener(ComponentMenuItemPtr(this)),
-    _DrawAsThoughSelected(false)
+    Inherited(source)
 {
 }
 
@@ -262,22 +165,6 @@ void ComponentMenuItem::changed(BitVector whichField, UInt32 origin)
 	{
 		updateComponentBounds();
 	}
-	
-    if((whichField & ParentWindowFieldMask) &&
-        getParentWindow() != NullFC &&
-        getEnabled() && 
-        getAcceleratorKey() != KeyEvent::KEY_NONE
-        )
-    {
-        getParentWindow()->addKeyAccelerator(static_cast<KeyEvent::Key>(getAcceleratorKey()), getAcceleratorModifiers(), &_ComponentMenuItemKeyAcceleratorListener);
-    }
-    if((whichField & EnabledFieldMask) &&
-        getParentWindow() != NullFC &&
-        !getEnabled() && 
-        getAcceleratorKey() != KeyEvent::KEY_NONE)
-    {
-        getParentWindow()->removeKeyAccelerator(static_cast<KeyEvent::Key>(getAcceleratorKey()), getAcceleratorModifiers());
-    }
 
     if(whichField & ComponentFieldMask ||
 		whichField & AcceleratorKeyFieldMask ||
@@ -312,35 +199,6 @@ void ComponentMenuItem::dump(      UInt32    ,
 {
     SLOG << "Dump ComponentMenuItem NI" << std::endl;
 }
-
-void ComponentMenuItem::ComponentMenuItemKeyAcceleratorListener::acceleratorTyped(const KeyAcceleratorEvent& e)
-{
-    //Set TopLevelMenu
-    MenuPtr TopMenu(_ComponentMenuItem->getTopLevelMenu());
-    if(TopMenu != NullFC)
-    {
-        TopMenu->setDrawAsThoughSelected(true);
-
-        _ComponentMenuItem->_KeyAcceleratorMenuFlashUpdateListener.reset();
-        _ComponentMenuItem->getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&(_ComponentMenuItem->_KeyAcceleratorMenuFlashUpdateListener));
-    }
-    _ComponentMenuItem->produceActionPerformed(ActionEvent(_ComponentMenuItem, e.getTimeStamp()));
-}
-
-void ComponentMenuItem::KeyAcceleratorMenuFlashUpdateListener::update(const UpdateEvent& e)
-{
-    _FlashElps += e.getElapsedTime();
-    if(_FlashElps > LookAndFeelManager::the()->getLookAndFeel()->getKeyAcceleratorMenuFlashTime())
-    {
-        MenuPtr TopMenu(_ComponentMenuItem->getTopLevelMenu());
-        if(TopMenu != NullFC)
-        {
-            TopMenu->setDrawAsThoughSelected(false);
-        }
-		_ComponentMenuItem->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
-    }
-}
-
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

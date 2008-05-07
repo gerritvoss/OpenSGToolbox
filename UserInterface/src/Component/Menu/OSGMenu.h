@@ -47,6 +47,7 @@
 
 #include "OSGMenuBase.h"
 #include <OpenSG/Input/OSGUpdateListener.h>
+#include "Component/Misc/OSGSeparatorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -85,6 +86,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING Menu : public MenuBase
     void removeItem(const UInt32& Index);
     MenuItemPtr getItem(const UInt32& Index);
     UInt32 getNumItems(void) const;
+
+    void addSeparator(void);
+    void addSeparator(SeparatorPtr TheSeparator);
+    void removeSeparator(const UInt32&  Index);
+    void removeSeparator(SeparatorPtr TheSeparator);
+    void removeAllSeparators(void);
+    UInt32 getNumSeparators(void) const;
 
     //virtual void mouseEntered(const MouseEvent& e);
     //virtual void mouseExited(const MouseEvent& e);

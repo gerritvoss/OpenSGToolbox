@@ -31,4 +31,14 @@ A UI PopupMenu.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="DefaultSeparator"
+		type="SeparatorPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Component/Misc/OSGSeparatorFields.h"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

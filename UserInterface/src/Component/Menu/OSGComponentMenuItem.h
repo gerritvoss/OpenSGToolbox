@@ -83,13 +83,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentMenuItem : public ComponentMenuIt
     /*! \}                                                                 */
 
 	Vec2f getContentRequestedSize(void) const;
-
-    virtual void mouseReleased(const MouseEvent& e);
-    
-    void setDrawAsThoughSelected(bool Selected);
-    bool getDrawAsThoughSelected(void) const;
-    
-    virtual void activate(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -111,41 +104,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentMenuItem : public ComponentMenuIt
 
     /*! \}                                                                 */
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
-    virtual BorderPtr getDrawnBorder(void) const;
-    virtual UIBackgroundPtr getDrawnBackground(void) const;
-    
-    virtual void actionPreformed(const ActionEvent& e);
-    
-	class ComponentMenuItemKeyAcceleratorListener : public KeyAcceleratorListener
-	{
-	public:
-		ComponentMenuItemKeyAcceleratorListener(ComponentMenuItemPtr TheComponentMenuItem);
-        virtual void acceleratorTyped(const KeyAcceleratorEvent& e);
-	private:
-		ComponentMenuItemPtr _ComponentMenuItem;
-	};
-
-	friend class ComponentMenuItemKeyAcceleratorListener;
-
-	ComponentMenuItemKeyAcceleratorListener _ComponentMenuItemKeyAcceleratorListener;
-    
-	class KeyAcceleratorMenuFlashUpdateListener : public UpdateListener
-	{
-	public:
-		KeyAcceleratorMenuFlashUpdateListener(ComponentMenuItemPtr TheComponentMenuItem);
-        virtual void update(const UpdateEvent& e);
-        void reset(void);
-	private:
-		ComponentMenuItemPtr _ComponentMenuItem;
-	    Time _FlashElps;
-	};
-
-	friend class KeyAcceleratorMenuFlashUpdateListener;
-
-	KeyAcceleratorMenuFlashUpdateListener _KeyAcceleratorMenuFlashUpdateListener;
-
-    MenuPtr getTopLevelMenu(void) const;
-    bool _DrawAsThoughSelected;
 
 	void updateComponentBounds(void);
     

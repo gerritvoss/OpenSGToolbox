@@ -77,6 +77,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Separator : public SeparatorBase
 
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
+	virtual Vec2f getContentRequestedSize(void) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/

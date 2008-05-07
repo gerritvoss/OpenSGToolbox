@@ -50,6 +50,7 @@
 #include "OSGSingleSelectionModel.h"
 #include "Event/OSGChangeListener.h"
 #include "Event/OSGPopupMenuListener.h"
+#include "Component/Misc/OSGSeparatorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -88,6 +89,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
     virtual void removeAllItems(void);
     virtual MenuItemPtr getItem(const UInt32& Index);
     virtual UInt32 getNumItems(void) const;
+
+    void addSeparator(void);
+    void addSeparator(SeparatorPtr TheSeparator);
+    void removeSeparator(const UInt32&  Index);
+    void removeSeparator(SeparatorPtr TheSeparator);
+    void removeAllSeparators(void);
+    UInt32 getNumSeparators(void) const;
     
 	virtual void updateClipBounds(void);
     
@@ -148,6 +156,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
     void producePopupMenuWillBecomeInvisible(const PopupMenuEvent& e);
     void producePopupMenuCanceled(const PopupMenuEvent& e);
     void producePopupMenuContentsChanged(const PopupMenuEvent& e);
+    
+    void updateSeparatorSizes(void);
     /*==========================  PRIVATE  ================================*/
   private:
 

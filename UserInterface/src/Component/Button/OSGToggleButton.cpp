@@ -62,6 +62,21 @@ A UI Button.
  *                           Class variables                               *
 \***************************************************************************/
 
+const OSG::BitVector  ToggleButton::SelectedFieldMask = 
+    (TypeTraits<BitVector>::One << ToggleButton::SelectedFieldId);
+
+const OSG::BitVector  ToggleButton::SelectedBorderFieldMask = 
+    (TypeTraits<BitVector>::One << ToggleButton::SelectedBorderFieldId);
+
+const OSG::BitVector  ToggleButton::SelectedBackgroundFieldMask = 
+    (TypeTraits<BitVector>::One << ToggleButton::SelectedBackgroundFieldId);
+
+const OSG::BitVector  ToggleButton::SelectedTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << ToggleButton::SelectedTextColorFieldId);
+
+const OSG::BitVector  ToggleButton::SelectedDrawObjectFieldMask = 
+    (TypeTraits<BitVector>::One << ToggleButton::SelectedDrawObjectFieldId);
+
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
@@ -95,96 +110,53 @@ ToggleButton::~ToggleButton(void)
 {
 }
 
-void ToggleButton::drawInternal(const GraphicsPtr TheGraphics) const
-{
-   Pnt2f TopLeft, BottomRight;
-   getInsideBorderBounds(TopLeft, BottomRight);
-   
-   //If I have a DrawObject then Draw it
-   UIDrawObjectCanvasPtr DrawnDrawObject = getDrawnDrawObject();
-   if(DrawnDrawObject != NullFC)
-   {
-      //Calculate Alignment
-      Pnt2f AlignedPosition;
-      Pnt2f DrawObjectTopLeft, DrawObjectBottomRight;
-      DrawnDrawObject->getBounds(DrawObjectTopLeft, DrawObjectBottomRight);
-
-      AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (DrawObjectBottomRight - DrawObjectTopLeft),getVerticalAlignment(), getHorizontalAlignment());
-
-      //If active then translate the Text by the Active Offset
-      if(getActive())
-      {
-          AlignedPosition = AlignedPosition + getActiveOffset();
-      }
-
-	  //Draw the DrawnDrawObject
-        beginEditCP(DrawnDrawObject, PositionFieldMask);
-            DrawnDrawObject->setPosition( AlignedPosition );
-        endEditCP(DrawnDrawObject, PositionFieldMask);
-
-        DrawnDrawObject->draw(TheGraphics);
-
-   }
-
-   //If I have Text Then Draw it
-   if(getText() != "" && getFont() != NullFC)
-   {
-      //Calculate Alignment
-      Pnt2f AlignedPosition;
-      Pnt2f TextTopLeft, TextBottomRight;
-      getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
-
-      AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),getVerticalAlignment(), getHorizontalAlignment());
-
-      //If active then translate the Text by the Active Offset
-      if(getSelected() || getActive())
-      {
-          AlignedPosition = AlignedPosition + getActiveOffset();
-      }
-
-	  //Draw the Text
-      TheGraphics->drawText(AlignedPosition, getText(), getFont(), getDrawnTextColor(), getOpacity());
-   }
-}
-
 BorderPtr ToggleButton::getDrawnBorder(void) const
 {
-	if(getSelected() || getActive())
+	if(getSelected())
 	{
 		return getActiveBorder();
 	}
 	else
 	{
-	    if(getEnabled())
-	    {
-            return getBorder();
-        }
-        else
-        {
-            return getDisabledBorder();
-        }
+        return Inherited::getDrawnBorder();
+    }
+}
+
+Vec2f ToggleButton::getDrawnOffset(void) const
+{
+    if(getActive() || getSelected())
+    {
+        return getActiveOffset();
+    }
+    else
+    {
+        return Vec2f(0.0f,0.0f);
     }
 }
 
 UIBackgroundPtr ToggleButton::getDrawnBackground(void) const
 {
-	if(getSelected() || getActive())
+	if(getSelected())
 	{
 		return getActiveBackground();
 	}
 	else
 	{
-	    if(getEnabled())
-	    {
-            return getBackground();
-        }
-        else
-        {
-            return getDisabledBackground();
-        }
+        return Inherited::getDrawnBackground();
     }
 }
 
+Color4f ToggleButton::getDrawnTextColor(void) const
+{
+	if(getSelected())
+	{
+		return getActiveTextColor();
+	}
+	else
+	{
+        return Inherited::getDrawnTextColor();
+    }
+}
 void  ToggleButton::produceButtonSelected(const ButtonSelectedEvent& e)
 {
    for(ButtonSelectedListenerSetConstItor SetItor(_ButtonSelectedListeners.begin()) ; SetItor != _ButtonSelectedListeners.end() ; ++SetItor)

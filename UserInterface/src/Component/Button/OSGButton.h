@@ -135,11 +135,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     virtual void actionPreformed(const ActionEvent& e);
     virtual void mousePressedActionPreformed(const ActionEvent& e);
 
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
+	virtual void drawInternal(const GraphicsPtr TheGraphics) const;
+	virtual void drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight) const;
     virtual Color4f getDrawnTextColor(void) const;
     virtual BorderPtr getDrawnBorder(void) const;
     virtual UIBackgroundPtr getDrawnBackground(void) const;
     virtual UIDrawObjectCanvasPtr getDrawnDrawObject(void) const;
+    virtual Vec2f getDrawnOffset(void) const;
     
 	class ButtonArmedListener : public MouseAdapter,public UpdateListener
 	{

@@ -88,6 +88,12 @@ void UIDrawObjectCanvas::getDrawObjectBounds(Pnt2f& TopLeft, Pnt2f& BottomRight)
 	}
 }
 
+Vec2f UIDrawObjectCanvas::getContentRequestedSize(void) const
+{
+    Pnt2f TopLeft, BottomRight;
+    getDrawObjectBounds(TopLeft, BottomRight);
+    return Vec2f(BottomRight - TopLeft);
+}
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/

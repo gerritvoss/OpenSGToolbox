@@ -42,38 +42,6 @@
 
 OSG_BEGIN_NAMESPACE
 
-inline
-ComponentMenuItem::ComponentMenuItemKeyAcceleratorListener::ComponentMenuItemKeyAcceleratorListener(ComponentMenuItemPtr TheComponentMenuItem) :
-									_ComponentMenuItem(TheComponentMenuItem)
-{
-}
-
-inline
-ComponentMenuItem::KeyAcceleratorMenuFlashUpdateListener::KeyAcceleratorMenuFlashUpdateListener(ComponentMenuItemPtr TheComponentMenuItem) :
-									_ComponentMenuItem(TheComponentMenuItem),
-									_FlashElps(0.0)
-{
-}
-
-inline
-void ComponentMenuItem::KeyAcceleratorMenuFlashUpdateListener::reset(void)
-{
-    _FlashElps = 0.0;
-}
-
-
-inline
-void ComponentMenuItem::setDrawAsThoughSelected(bool Selected)
-{
-    _DrawAsThoughSelected = Selected;
-}
-
-inline
-bool ComponentMenuItem::getDrawAsThoughSelected(void) const
-{
-    return _DrawAsThoughSelected;
-}
-
 OSG_END_NAMESPACE
 
 #define OSGCOMPONENTMENUITEM_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

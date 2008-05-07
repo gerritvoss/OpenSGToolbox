@@ -47,6 +47,7 @@
 
 #include "OSGToolbarBase.h"
 #include "Layout/OSGBoxLayout.h"
+#include "Component/Misc/OSGSeparatorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -90,7 +91,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING Toolbar : public ToolbarBase
     UInt32 getNumTools(void) const;
 
     void addSeparator(void);
+    void addSeparator(SeparatorPtr TheSeparator);
     void removeSeparator(const UInt32&  Index);
+    void removeSeparator(SeparatorPtr TheSeparator);
     void removeAllSeparators(void);
     UInt32 getNumSeparators(void) const;
     /*=========================  PROTECTED  ===============================*/
@@ -114,6 +117,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Toolbar : public ToolbarBase
 
     /*! \}                                                                 */
 	BoxLayoutPtr createDefaultLayout(void) const;
+
+    void updateSeparatorSizes(void);
     
     /*==========================  PRIVATE  ================================*/
   private:

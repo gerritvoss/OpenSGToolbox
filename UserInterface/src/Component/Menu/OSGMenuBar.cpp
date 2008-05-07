@@ -388,8 +388,7 @@ void MenuBar::MenuSelectionListener::keyTyped(const KeyEvent& e)
     {
         for(UInt32 i(0) ; i<_MenuBar->getChildren().size() ; ++i)
         {
-            if(_MenuBar->getChildren()[i]->getClassType() == LabelMenuItem::getClassType() &&
-                LabelMenuItem::Ptr::dcast(_MenuBar->getChildren()[i])->getMnemonicKey() == e.getKey() )
+            if(MenuItem::Ptr::dcast(_MenuBar->getChildren()[i])->getMnemonicKey() == e.getKey() )
             {
                 std::cout << e.getKeyChar() << std::endl;
             }

@@ -84,7 +84,7 @@ void Menu::initMethod (void)
 
 void Menu::drawInternal(const GraphicsPtr Graphics) const
 {
-    LabelMenuItem::drawInternal(Graphics);
+    Inherited::drawInternal(Graphics);
 
     if(getExpandDrawObject() != NullFC && !getTopLevelMenu())
     {
@@ -125,6 +125,37 @@ void Menu::setPopupVisible(bool Visible)
         getInternalPopupMenu()->clearSelection();
     }
 }
+
+void Menu::addSeparator(void)
+{
+    getInternalPopupMenu()->addSeparator();
+}
+
+void Menu::addSeparator(SeparatorPtr TheSeparator)
+{
+    getInternalPopupMenu()->addSeparator(TheSeparator);
+}
+
+void Menu::removeSeparator(const UInt32&  Index)
+{
+    getInternalPopupMenu()->removeSeparator(Index);
+}
+
+void Menu::removeSeparator(SeparatorPtr TheSeparator)
+{
+    getInternalPopupMenu()->removeSeparator(TheSeparator);
+}
+
+void Menu::removeAllSeparators(void)
+{
+    getInternalPopupMenu()->removeAllSeparators();
+}
+
+UInt32 Menu::getNumSeparators(void) const
+{
+    return getInternalPopupMenu()->getNumSeparators();
+}
+
 
 void Menu::addItem(MenuItemPtr Item)
 {
@@ -264,8 +295,19 @@ void Menu::changed(BitVector whichField, UInt32 origin)
         }
     }
 
+    if(whichField & ExpandDrawObjectFieldMask)
+    {
+        beginEditCP(getExpandDrawObject(), UIDrawObjectCanvas::SizeFieldMask);
+            getExpandDrawObject()->setSize(getExpandDrawObject()->getRequestedSize());
+        endEditCP(getExpandDrawObject(), UIDrawObjectCanvas::SizeFieldMask);
+    }
+
     if(whichField & SizeFieldMask)
     {
+        beginEditCP(getExpandDrawObject(), UIDrawObjectCanvas::SizeFieldMask);
+            getExpandDrawObject()->setSize(getExpandDrawObject()->getRequestedSize());
+        endEditCP(getExpandDrawObject(), UIDrawObjectCanvas::SizeFieldMask);
+
         //Calculate Alignment
         Pnt2f TopLeft, BottomRight;
         getInsideBorderBounds(TopLeft, BottomRight);
@@ -279,7 +321,6 @@ void Menu::changed(BitVector whichField, UInt32 origin)
             getExpandDrawObject()->setPosition(AlignedPosition);
         endEditCP(getExpandDrawObject(), PositionFieldMask);
     }
-
 }
 
 void Menu::dump(      UInt32    , 

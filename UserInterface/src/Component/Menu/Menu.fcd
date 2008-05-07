@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="Menu"
-	parent="LabelMenuItem"
+	parent="MenuItem"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -12,16 +12,6 @@
 	useLocalIncludes="true"
 >
 A UI Menu.
-	<Field
-		name="Button"
-		type="ToggleButtonPtr"
-		cardinality="single"
-		visibility="external"
-		header="Component/Button/OSGToggleButtonFields.h"
-		access="public"
-		defaultValue="NullFC"
-	>
-	</Field>
 	<Field
 		name="InternalPopupMenu"
 		type="PopupMenuPtr"

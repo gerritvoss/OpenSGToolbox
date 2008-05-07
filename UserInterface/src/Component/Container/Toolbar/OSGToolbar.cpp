@@ -87,11 +87,11 @@ void Toolbar::setOrientation(BoxLayout::Orientation TheOrientation)
     Separator::Orientation Or;
     if(TheOrientation == BoxLayout::VERTICAL_ORIENTATION)
     {
-        Or = Separator::VERTICAL_ORIENTATION;
+        Or = Separator::HORIZONTAL_ORIENTATION;
     }
     else
     {
-        Or = Separator::HORIZONTAL_ORIENTATION;
+        Or = Separator::VERTICAL_ORIENTATION;
     }
 
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
@@ -103,6 +103,8 @@ void Toolbar::setOrientation(BoxLayout::Orientation TheOrientation)
             endEditCP(getChildren().getValue(i), Separator::OrientationFieldMask);
         }
     }
+
+    updateSeparatorSizes();
 }
 
 BoxLayout::Orientation Toolbar::getOrientation(void) const
@@ -112,6 +114,11 @@ BoxLayout::Orientation Toolbar::getOrientation(void) const
 
 void Toolbar::addTool(ComponentPtr TheTool)
 {
+    if(TheTool->getType() == Separator::getClassType())
+    {
+        addSeparator(Separator::Ptr::dcast(TheTool));
+    }
+
     beginEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
         getChildren().push_back(TheTool);
     endEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
@@ -175,12 +182,31 @@ void Toolbar::addSeparator(void)
     beginEditCP(TheSeparator, Separator::OrientationFieldMask);
     if(getOrientation() == BoxLayout::VERTICAL_ORIENTATION)
     {
-        TheSeparator->setOrientation(Separator::VERTICAL_ORIENTATION);
+        TheSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
     }
     else
     {
+        TheSeparator->setOrientation(Separator::VERTICAL_ORIENTATION);
+    }
+    endEditCP(TheSeparator, Separator::OrientationFieldMask);
+
+    beginEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+        getChildren().push_back(TheSeparator);
+    endEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+}
+
+void Toolbar::addSeparator(SeparatorPtr TheSeparator)
+{
+    beginEditCP(TheSeparator, Separator::OrientationFieldMask);
+    if(getOrientation() == BoxLayout::VERTICAL_ORIENTATION)
+    {
         TheSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
     }
+    else
+    {
+        TheSeparator->setOrientation(Separator::VERTICAL_ORIENTATION);
+    }
+    endEditCP(TheSeparator, Separator::OrientationFieldMask);
 
     beginEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
         getChildren().push_back(TheSeparator);
@@ -206,6 +232,17 @@ void Toolbar::removeSeparator(const UInt32&  Index)
             ++RemoveItor;
         }
 
+        beginEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+            getChildren().erase(RemoveItor);
+        endEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
+    }
+}
+
+void Toolbar::removeSeparator(SeparatorPtr TheSeparator)
+{
+    MFComponentPtr::iterator RemoveItor(getChildren().find(TheSeparator));
+    if(RemoveItor != getChildren().end())
+    {
         beginEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
             getChildren().erase(RemoveItor);
         endEditCP(ToolbarPtr(this), Toolbar::ChildrenFieldMask);
@@ -239,6 +276,30 @@ UInt32 Toolbar::getNumSeparators(void) const
         }
     }
     return NumSeparators;
+}
+
+void Toolbar::updateSeparatorSizes(void)
+{
+    Pnt2f InsideInsetsTopLeft, InsideInsetsBottomRight;
+    getInsideInsetsBounds(InsideInsetsTopLeft, InsideInsetsBottomRight);
+    Vec2f InsideInsetsSize(InsideInsetsBottomRight - InsideInsetsTopLeft);
+
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        if(getChildren().getValue(i)->getType() == Separator::getClassType())
+        {
+            beginEditCP(getChildren().getValue(i), Separator::PreferredSizeFieldMask);
+            if(getOrientation() == BoxLayout::HORIZONTAL_ORIENTATION)
+            {
+                Separator::Ptr::dcast(getChildren().getValue(i))->setPreferredSize(Vec2f(getChildren().getValue(i)->getRequestedSize().x(), InsideInsetsSize.y()));
+            }
+            else
+            {
+                Separator::Ptr::dcast(getChildren().getValue(i))->setPreferredSize(Vec2f(InsideInsetsSize.x(), getChildren().getValue(i)->getRequestedSize().y()));
+            }
+            endEditCP(getChildren().getValue(i), Separator::PreferredSizeFieldMask);
+        }
+    }
 }
 
 /*-------------------------------------------------------------------------*\
@@ -284,6 +345,11 @@ Toolbar::~Toolbar(void)
 void Toolbar::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & SizeFieldMask)
+    {
+        updateSeparatorSizes();
+    }
 }
 
 void Toolbar::dump(      UInt32    , 

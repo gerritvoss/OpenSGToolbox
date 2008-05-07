@@ -48,7 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGListGeneratedPopupMenu.h"
-#include "OSGLabelMenuItem.h"
+#include "OSGMenuItem.h"
 #include "OSGComponentMenuItem.h"
 #include "Component/List/Models/OSGListModel.h" // Model type
 #include "ComponentGenerators/OSGComponentGenerator.h" // CellGenerator type
@@ -157,7 +157,7 @@ void ListGeneratedPopupMenu::updateMenuItems(void)
 				else
 				{
 					//Generate the Menu Item
-					Item = LabelMenuItem::create();
+					Item = MenuItem::create();
 					std::string TheText;
 					if(getModel()->getElementAt(i)->getType() == SFString::getClassType())
 					{
@@ -167,9 +167,9 @@ void ListGeneratedPopupMenu::updateMenuItems(void)
 					{
 						getModel()->getElementAt(i)->getValueByStr(TheText);
 					}
-					beginEditCP(Item, LabelMenuItem::TextFieldMask);
-						LabelMenuItem::Ptr::dcast(Item)->setText(TheText);
-					endEditCP(Item, LabelMenuItem::TextFieldMask);
+					beginEditCP(Item, MenuItem::TextFieldMask);
+						MenuItem::Ptr::dcast(Item)->setText(TheText);
+					endEditCP(Item, MenuItem::TextFieldMask);
 				}
 				getChildren().push_back(Item);
 			}

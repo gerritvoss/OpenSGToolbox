@@ -88,16 +88,21 @@ void Separator::drawInternal(const GraphicsPtr Graphics) const
 
     if(getOrientation() == Separator::VERTICAL_ORIENTATION)
     {
-        AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (LineBottomRight - LineTopLeft),0.5, 0.0);
-
-        Graphics->drawRect(AlignedPosition, AlignedPosition + Vec2f(BottomRight.x() - TopLeft.x(),getSeparatorSize()), getColor(), getOpacity());
-    }
-    else
-    {
         AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (LineBottomRight - LineTopLeft),0.0, 0.5);
 
         Graphics->drawRect(AlignedPosition, AlignedPosition + Vec2f(getSeparatorSize(),BottomRight.y() - TopLeft.y()), getColor(), getOpacity());
     }
+    else
+    {
+        AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (LineBottomRight - LineTopLeft),0.5, 0.0);
+
+        Graphics->drawRect(AlignedPosition, AlignedPosition + Vec2f(BottomRight.x() - TopLeft.x(),getSeparatorSize()), getColor(), getOpacity());
+    }
+}
+
+Vec2f Separator::getContentRequestedSize(void) const
+{
+    return Vec2f(getSeparatorSize(), getSeparatorSize());
 }
 
 /*-------------------------------------------------------------------------*\

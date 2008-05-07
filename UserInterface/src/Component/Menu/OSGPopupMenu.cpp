@@ -46,10 +46,12 @@
 #define OSG_COMPILEUSERINTERFACELIB
 
 #include <OpenSG/OSGConfig.h>
+#include <deque>
 
 #include "OSGPopupMenu.h"
 #include "Component/Container/OSGContainer.h"
 #include "OSGDefaultSingleSelectionModel.h"
+#include "Component/Misc/OSGSeparator.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -149,12 +151,28 @@ void PopupMenu::addItem(MenuItemPtr Item, const UInt32& Index)
 {
     if(Index < getChildren().size())
     {
-        MFComponentPtr::iterator Itor(getChildren().begin());
-        for(UInt32 i(0) ; i<Index ; ++i){++Itor;}
-        beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
-            getChildren().insert(Itor, Item);
-        endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
-	producePopupMenuContentsChanged(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
+        MFComponentPtr::iterator InsertItor(getChildren().begin());
+        UInt32 ItemCount(0);
+        for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+        {
+            if(getChildren().getValue(i)->getType() != Separator::getClassType())
+            {
+                ++ItemCount;
+            }
+            if(ItemCount == Index)
+            {
+                break;
+            }
+            ++InsertItor;
+        }
+
+        if(InsertItor != getChildren().end())
+        {
+            beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
+                getChildren().insert(InsertItor, Item);
+            endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
+	        producePopupMenuContentsChanged(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
+        }
     }
 }
 
@@ -166,7 +184,7 @@ void PopupMenu::removeItem(MenuItemPtr Item)
         beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
             getChildren().erase(FindResult);
         endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
-	producePopupMenuContentsChanged(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
+	    producePopupMenuContentsChanged(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
     }
 }
 
@@ -174,23 +192,159 @@ void PopupMenu::removeItem(const UInt32& Index)
 {
     if(Index < getChildren().size())
     {
-        MFComponentPtr::iterator Itor(getChildren().begin());
-        for(UInt32 i(0) ; i<Index ; ++i){++Itor;}
-        beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
-            getChildren().erase(Itor);
-        endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
-	producePopupMenuContentsChanged(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
+        MFComponentPtr::iterator RemoveItor(getChildren().begin());
+        UInt32 ItemCount(0);
+        for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+        {
+            if(getChildren().getValue(i)->getType() != Separator::getClassType())
+            {
+                ++ItemCount;
+            }
+            if(ItemCount == Index)
+            {
+                break;
+            }
+            ++RemoveItor;
+        }
+        if(RemoveItor != getChildren().end())
+        {
+            beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
+                getChildren().erase(RemoveItor);
+            endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
+	        producePopupMenuContentsChanged(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
+        }
     }
 }
 
 void PopupMenu::removeAllItems(void)
 {
-    beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
-        getChildren().clear();
-    endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
-	producePopupMenuContentsChanged(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
+    std::deque<UInt32> RemoveIndecies;
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        if(getChildren().getValue(i)->getType() != Separator::getClassType())
+        {
+            RemoveIndecies.push_front(i);
+        }
+    }
+    for(UInt32 i(0) ; i<RemoveIndecies.size() ; ++i)
+    {
+        removeItem(RemoveIndecies[i]);
+    }
 }
 
+
+void PopupMenu::addSeparator(void)
+{
+    SeparatorPtr TheSeparator;
+    if(getDefaultSeparator() != NullFC)
+    {
+        TheSeparator = Separator::Ptr::dcast(getDefaultSeparator()->shallowCopy());
+    }
+    else
+    {
+        TheSeparator = Separator::create();
+    }
+    beginEditCP(TheSeparator, Separator::OrientationFieldMask);
+        TheSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
+    endEditCP(TheSeparator, Separator::OrientationFieldMask);
+
+    beginEditCP(PopupMenuPtr(this), PopupMenu::ChildrenFieldMask);
+        getChildren().push_back(TheSeparator);
+    endEditCP(PopupMenuPtr(this), PopupMenu::ChildrenFieldMask);
+}
+
+void PopupMenu::addSeparator(SeparatorPtr TheSeparator)
+{
+    beginEditCP(TheSeparator, Separator::OrientationFieldMask);
+        TheSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
+    endEditCP(TheSeparator, Separator::OrientationFieldMask);
+
+    beginEditCP(PopupMenuPtr(this), PopupMenu::ChildrenFieldMask);
+        getChildren().push_back(TheSeparator);
+    endEditCP(PopupMenuPtr(this), PopupMenu::ChildrenFieldMask);
+}
+
+void PopupMenu::removeSeparator(const UInt32&  Index)
+{
+    if(Index < getNumSeparators())
+    {
+        MFComponentPtr::iterator RemoveItor(getChildren().begin());
+        UInt32 SeparatorCount(0);
+        for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+        {
+            if(getChildren().getValue(i)->getType() == Separator::getClassType())
+            {
+                ++SeparatorCount;
+            }
+            if(SeparatorCount == Index)
+            {
+                break;
+            }
+            ++RemoveItor;
+        }
+
+        beginEditCP(PopupMenuPtr(this), PopupMenu::ChildrenFieldMask);
+            getChildren().erase(RemoveItor);
+        endEditCP(PopupMenuPtr(this), PopupMenu::ChildrenFieldMask);
+    }
+}
+
+void PopupMenu::removeSeparator(SeparatorPtr TheSeparator)
+{
+    MFComponentPtr::iterator RemoveItor(getChildren().find(TheSeparator));
+    if(RemoveItor != getChildren().end())
+    {
+        beginEditCP(PopupMenuPtr(this), PopupMenu::ChildrenFieldMask);
+            getChildren().erase(RemoveItor);
+        endEditCP(PopupMenuPtr(this), PopupMenu::ChildrenFieldMask);
+    }
+}
+
+void PopupMenu::removeAllSeparators(void)
+{
+    std::deque<UInt32> RemoveIndecies;
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        if(getChildren().getValue(i)->getType() == Separator::getClassType())
+        {
+            RemoveIndecies.push_front(i);
+        }
+    }
+    for(UInt32 i(0) ; i<RemoveIndecies.size() ; ++i)
+    {
+        removeSeparator(RemoveIndecies[i]);
+    }
+}
+
+UInt32 PopupMenu::getNumSeparators(void) const
+{
+    UInt32 NumSeparators(0);
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        if(getChildren().getValue(i)->getType() == Separator::getClassType())
+        {
+            ++NumSeparators;
+        }
+    }
+    return NumSeparators;
+}
+
+void PopupMenu::updateSeparatorSizes(void)
+{
+    Pnt2f InsideInsetsTopLeft, InsideInsetsBottomRight;
+    getInsideInsetsBounds(InsideInsetsTopLeft, InsideInsetsBottomRight);
+    Vec2f InsideInsetsSize(InsideInsetsBottomRight - InsideInsetsTopLeft);
+
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        if(getChildren().getValue(i)->getType() == Separator::getClassType())
+        {
+            beginEditCP(getChildren().getValue(i), Separator::PreferredSizeFieldMask);
+                Separator::Ptr::dcast(getChildren().getValue(i))->setPreferredSize(Vec2f(InsideInsetsSize.x(), getChildren().getValue(i)->getRequestedSize().y()));
+            endEditCP(getChildren().getValue(i), Separator::PreferredSizeFieldMask);
+        }
+    }
+}
 void PopupMenu::mouseMoved(const MouseEvent& e)
 {
     UInt32 i(0);
@@ -201,7 +355,10 @@ void PopupMenu::mouseMoved(const MouseEvent& e)
 	
 	if(i<getChildren().size() && _SelectionModel->getSelectedIndex() != i)
 	{
-		_SelectionModel->setSelectedIndex(i);
+        if(_SelectionModel->getSelectedIndex() != i)
+        {
+		    _SelectionModel->setSelectedIndex(i);
+        }
 	}
 
     Container::mouseMoved(e);
@@ -238,7 +395,6 @@ void PopupMenu::cancel(void)
         beginEditCP(PopupMenuPtr(this), VisibleFieldMask);
             setVisible(false);
         endEditCP(PopupMenuPtr(this), VisibleFieldMask);
-        _SelectionModel->clearSelection();
         producePopupMenuCanceled(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
     }
 }
@@ -263,12 +419,33 @@ void PopupMenu::setSelection(const Int32& Index)
 
 MenuItemPtr PopupMenu::getItem(const UInt32& Index)
 {
-    return MenuItem::Ptr::dcast(getChildren()[Index]);
+    if(Index < getChildren().size())
+    {
+        MFComponentPtr::iterator FindItor(getChildren().begin());
+        UInt32 ItemCount(0);
+        for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+        {
+            if(getChildren().getValue(i)->getType() != Separator::getClassType())
+            {
+                ++ItemCount;
+            }
+            if(ItemCount == Index)
+            {
+                break;
+            }
+            ++FindItor;
+        }
+        if(FindItor != getChildren().end())
+        {
+            return MenuItem::Ptr::dcast(*FindItor);
+        }
+    }
+    return NullFC;
 }
 
 UInt32 PopupMenu::getNumItems(void) const
 {
-    return getChildren().size();
+    return getChildren().size() - getNumSeparators();
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -347,7 +524,14 @@ void PopupMenu::changed(BitVector whichField, UInt32 origin)
         else
         {
             producePopupMenuWillBecomeInvisible(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
+            _SelectionModel->clearSelection();
+            removeMousePresenceOnComponents();
         }
+    }
+
+    if(whichField & SizeFieldMask)
+    {
+        updateSeparatorSizes();
     }
 }
 
@@ -362,6 +546,7 @@ void PopupMenu::MenuSelectionListener::stateChanged(const ChangeEvent& e)
     for(UInt32 i(0) ; i<_PopupMenu->getChildren().size() ; ++i)
     {
         if(i == _PopupMenu->_SelectionModel->getSelectedIndex() &&
+            _PopupMenu->getChildren()[i]->getType().isDerivedFrom(MenuItem::getClassType()) &&
            !MenuItem::Ptr::dcast(_PopupMenu->getChildren()[i])->getSelected())
         {
             beginEditCP(_PopupMenu->getChildren()[i], MenuItem::SelectedFieldMask);
@@ -369,6 +554,7 @@ void PopupMenu::MenuSelectionListener::stateChanged(const ChangeEvent& e)
             endEditCP(_PopupMenu->getChildren()[i], MenuItem::SelectedFieldMask);
         }
         if(i != _PopupMenu->_SelectionModel->getSelectedIndex() &&
+            _PopupMenu->getChildren()[i]->getType().isDerivedFrom(MenuItem::getClassType()) &&
            MenuItem::Ptr::dcast(_PopupMenu->getChildren()[i])->getSelected())
         {
             beginEditCP(_PopupMenu->getChildren()[i], MenuItem::SelectedFieldMask);

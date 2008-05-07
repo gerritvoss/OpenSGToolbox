@@ -65,10 +65,14 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/OSGComponent.h" // Parent
+#include "Component/Button/OSGToggleButton.h" // Parent
 
-#include <OpenSG/OSGBoolFields.h> // Selected type
 #include "Component/Menu/OSGMenuFields.h" // ParentMenu type
+#include <OpenSG/OSGUInt32Fields.h> // AcceleratorModifiers type
+#include <OpenSG/OSGUInt32Fields.h> // AcceleratorKey type
+#include <OpenSG/OSGUInt32Fields.h> // MnemonicKey type
+#include <OpenSG/OSGStringFields.h> // AcceleratorText type
+#include <OpenSG/OSGInt32Fields.h> // MnemonicTextPosition type
 
 #include "OSGMenuItemFields.h"
 
@@ -79,11 +83,11 @@ class BinaryDataHandler;
 
 //! \brief MenuItem Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
+class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public ToggleButton
 {
   private:
 
-    typedef Component    Inherited;
+    typedef ToggleButton    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -92,13 +96,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
 
     enum
     {
-        SelectedFieldId   = Inherited::NextFieldId,
-        ParentMenuFieldId = SelectedFieldId   + 1,
-        NextFieldId       = ParentMenuFieldId + 1
+        ParentMenuFieldId           = Inherited::NextFieldId,
+        AcceleratorModifiersFieldId = ParentMenuFieldId           + 1,
+        AcceleratorKeyFieldId       = AcceleratorModifiersFieldId + 1,
+        MnemonicKeyFieldId          = AcceleratorKeyFieldId       + 1,
+        AcceleratorTextFieldId      = MnemonicKeyFieldId          + 1,
+        MnemonicTextPositionFieldId = AcceleratorTextFieldId      + 1,
+        NextFieldId                 = MnemonicTextPositionFieldId + 1
     };
 
-    static const OSG::BitVector SelectedFieldMask;
     static const OSG::BitVector ParentMenuFieldMask;
+    static const OSG::BitVector AcceleratorModifiersFieldMask;
+    static const OSG::BitVector AcceleratorKeyFieldMask;
+    static const OSG::BitVector MnemonicKeyFieldMask;
+    static const OSG::BitVector AcceleratorTextFieldMask;
+    static const OSG::BitVector MnemonicTextPositionFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -125,21 +137,29 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFBool              *getSFSelected       (void);
            SFMenuPtr           *getSFParentMenu     (void);
+           SFUInt32            *getSFAcceleratorModifiers(void);
+           SFUInt32            *getSFAcceleratorKey (void);
+           SFUInt32            *getSFMnemonicKey    (void);
 
-           bool                &getSelected       (void);
-     const bool                &getSelected       (void) const;
            MenuPtr             &getParentMenu     (void);
      const MenuPtr             &getParentMenu     (void) const;
+           UInt32              &getAcceleratorModifiers(void);
+     const UInt32              &getAcceleratorModifiers(void) const;
+           UInt32              &getAcceleratorKey (void);
+     const UInt32              &getAcceleratorKey (void) const;
+           UInt32              &getMnemonicKey    (void);
+     const UInt32              &getMnemonicKey    (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setSelected       ( const bool &value );
      void setParentMenu     ( const MenuPtr &value );
+     void setAcceleratorModifiers( const UInt32 &value );
+     void setAcceleratorKey ( const UInt32 &value );
+     void setMnemonicKey    ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -182,8 +202,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFBool              _sfSelected;
     SFMenuPtr           _sfParentMenu;
+    SFUInt32            _sfAcceleratorModifiers;
+    SFUInt32            _sfAcceleratorKey;
+    SFUInt32            _sfMnemonicKey;
+    SFString            _sfAcceleratorText;
+    SFInt32             _sfMnemonicTextPosition;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -199,6 +223,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public Component
     /*! \{                                                                 */
 
     virtual ~MenuItemBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFString            *getSFAcceleratorText(void);
+           SFInt32             *getSFMnemonicTextPosition(void);
+
+           std::string         &getAcceleratorText(void);
+     const std::string         &getAcceleratorText(void) const;
+           Int32               &getMnemonicTextPosition(void);
+     const Int32               &getMnemonicTextPosition(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setAcceleratorText(const std::string &value);
+     void setMnemonicTextPosition(const Int32 &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

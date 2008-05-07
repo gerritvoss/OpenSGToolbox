@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "Component/OSGComponentFields.h"
+#include "Component/Button/OSGToggleButtonFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class MenuItem;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! MenuItemPtr
 
-typedef FCPtr<ComponentPtr, MenuItem> MenuItemPtr;
+typedef FCPtr<ToggleButtonPtr, MenuItem> MenuItemPtr;
 
 #endif
 

@@ -48,6 +48,10 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGMenuItem.h"
+#include "Util/OSGUIDrawUtils.h"
+#include "Component/Container/Window/OSGInternalWindow.h"
+#include "LookAndFeel/OSGLookAndFeelManager.h"
+#include "Component/Menu/OSGMenu.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -71,17 +75,96 @@ void MenuItem::initMethod (void)
 {
 }
 
-void MenuItem::drawInternal(const GraphicsPtr Graphics) const
-{
-}
-
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
+void MenuItem::drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight) const
+{
+   //If I have Text Then Draw it
+   if(getText() != "" && getFont() != NullFC)
+   {
+      //Calculate Alignment
+      Pnt2f AlignedPosition;
+      Pnt2f TextTopLeft, TextBottomRight;
+      getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+
+      AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),0.5, 0.0);
+
+	  //Draw the Text
+      TheGraphics->drawText(AlignedPosition, getText(), getFont(), getDrawnTextColor(), getOpacity());
+
+      //Draw the Mnemonic Underline
+      if(getMnemonicTextPosition() != -1)
+      {
+          TheGraphics->drawTextUnderline(AlignedPosition, getText().substr(getMnemonicTextPosition(),1), getFont(), getDrawnTextColor(), getOpacity());
+      }
+      
+      //Draw the Accelerator Text
+      if(getAcceleratorText().compare("") != 0)
+      {
+          Pnt2f AcceleratorTextTopLeft, AcceleratorTextBottomRight;
+          getFont()->getBounds(getAcceleratorText(), AcceleratorTextTopLeft, AcceleratorTextBottomRight);
+          Pnt2f AcceleratorAlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (AcceleratorTextBottomRight - AcceleratorTextTopLeft),0.5, 1.0);
+
+          TheGraphics->drawText(AcceleratorAlignedPosition, getAcceleratorText(), getFont(), getDrawnTextColor(), getOpacity());
+      }
+
+   }
+}
+
+void MenuItem::mouseReleased(const MouseEvent& e)
+{
+    if(getSelected() && getEnabled())
+    {
+	   produceActionPerformed(ActionEvent(MenuItemPtr(this), e.getTimeStamp()));
+       getParentWindow()->destroyPopupMenu();
+       beginEditCP(MenuItemPtr(this), SelectedFieldMask);
+          setSelected(false);
+       endEditCP(MenuItemPtr(this), SelectedFieldMask);
+    }
+    
+    Inherited::mouseReleased(e);
+}
+
+MenuPtr MenuItem::getTopLevelMenu(void) const
+{
+    MenuPtr c(getParentMenu());
+    while(c != NullFC)
+    {
+        if(c->getTopLevelMenu())
+        {
+            return c;
+        }
+        c = c->getParentMenu();
+    }
+    return NullFC;
+}
+
 void MenuItem::activate(void)
 {
-    //Do nothing
+    produceActionPerformed(ActionEvent(MenuItemPtr(this), getSystemTime()));
+}
+
+Vec2f MenuItem::getContentRequestedSize(void) const
+{
+    Pnt2f TextTopLeft, TextBottomRight;
+    getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+    Pnt2f AcceleratorTextTopLeft, AcceleratorTextBottomRight;
+    getFont()->getBounds(getAcceleratorText(), AcceleratorTextTopLeft, AcceleratorTextBottomRight);
+    
+	Vec2f RequestedSize((TextBottomRight.x() - TextTopLeft.x()) + (AcceleratorTextBottomRight.x() - AcceleratorTextTopLeft.x()), getPreferredSize().y());
+
+	if(!getAcceleratorText().empty())
+	{
+		RequestedSize[0] += 50.0f;
+	}
+	else
+	{
+		RequestedSize[0] += 25.0f;
+	}
+
+	return RequestedSize;
 }
 
 void MenuItem::actionPreformed(const ActionEvent& e)
@@ -96,6 +179,15 @@ void MenuItem::produceActionPerformed(const ActionEvent& e)
 	    (*SetItor)->actionPerformed(e);
     }
 }
+
+void MenuItem::removeActionListener(ActionListenerPtr Listener)
+{
+   ActionListenerSetItor EraseIter(_ActionListeners.find(Listener));
+   if(EraseIter != _ActionListeners.end())
+   {
+      _ActionListeners.erase(EraseIter);
+   }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -103,12 +195,18 @@ void MenuItem::produceActionPerformed(const ActionEvent& e)
 /*----------------------- constructors & destructors ----------------------*/
 
 MenuItem::MenuItem(void) :
-    Inherited()
+    Inherited(),
+    _MenuItemKeyAcceleratorListener(MenuItemPtr(this)),
+    _KeyAcceleratorMenuFlashUpdateListener(MenuItemPtr(this)),
+    _DrawAsThoughSelected(false)
 {
 }
 
 MenuItem::MenuItem(const MenuItem &source) :
-    Inherited(source)
+    Inherited(source),
+    _MenuItemKeyAcceleratorListener(MenuItemPtr(this)),
+    _KeyAcceleratorMenuFlashUpdateListener(MenuItemPtr(this)),
+    _DrawAsThoughSelected(false)
 {
 }
 
@@ -121,6 +219,107 @@ MenuItem::~MenuItem(void)
 void MenuItem::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+    if((whichField & ParentWindowFieldMask) &&
+        getParentWindow() != NullFC &&
+        getEnabled() && 
+        getAcceleratorKey() != KeyEvent::KEY_NONE
+        )
+    {
+        getParentWindow()->addKeyAccelerator(static_cast<KeyEvent::Key>(getAcceleratorKey()), getAcceleratorModifiers(), &_MenuItemKeyAcceleratorListener);
+    }
+    if((whichField & EnabledFieldMask) &&
+        getParentWindow() != NullFC &&
+        !getEnabled() && 
+        getAcceleratorKey() != KeyEvent::KEY_NONE)
+    {
+        getParentWindow()->removeKeyAccelerator(static_cast<KeyEvent::Key>(getAcceleratorKey()), getAcceleratorModifiers());
+    }
+
+    if(whichField & TextFieldMask ||
+	   whichField & AcceleratorKeyFieldMask ||
+       whichField & AcceleratorModifiersFieldMask)
+    {
+        std::string AcceleratorText("");
+        if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        {
+            AcceleratorText += KeyEvent::getStringFromKey(KeyEvent::KEY_CONTROL, 0) + "+";
+        }
+        if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_ALT)
+        {
+            AcceleratorText += KeyEvent::getStringFromKey(KeyEvent::KEY_ALT, 0) + "+";
+        }
+        if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+        {
+            AcceleratorText += KeyEvent::getStringFromKey(KeyEvent::KEY_SHIFT, 0) + "+";
+        }
+        AcceleratorText += KeyEvent::getStringFromKey(static_cast<KeyEvent::Key>(getAcceleratorKey()), KeyEvent::KEY_MODIFIER_CAPS_LOCK);
+
+        //Set my preferred size
+        Pnt2f TextTopLeft, TextBottomRight;
+        getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
+        Pnt2f AcceleratorTextTopLeft, AcceleratorTextBottomRight;
+        getFont()->getBounds(AcceleratorText, AcceleratorTextTopLeft, AcceleratorTextBottomRight);
+        
+		Vec2f RequestedSize((TextBottomRight.x() - TextTopLeft.x()) + (AcceleratorTextBottomRight.x() - AcceleratorTextTopLeft.x()), getPreferredSize().y());
+
+		if(!AcceleratorText.empty())
+		{
+			RequestedSize[0] += 50.0f;
+		}
+		else
+		{
+			RequestedSize[0] += 25.0f;
+		}
+
+        beginEditCP(MenuItemPtr(this), AcceleratorTextFieldMask);
+            setAcceleratorText(AcceleratorText);
+        endEditCP(MenuItemPtr(this), AcceleratorTextFieldMask);
+    }
+    if(whichField & TextFieldMask ||
+       whichField & MnemonicKeyFieldMask)
+    {
+        Int32 Pos(-1);
+        if(getMnemonicKey() != KeyEvent::KEY_NONE &&
+           getText() != "")
+        {
+            //Get the Character representation of the key
+            UChar8 MnemonicCharLower(KeyEvent::getCharFromKey(static_cast<KeyEvent::Key>(getMnemonicKey()),0));
+            UChar8 MnemonicCharUpper(KeyEvent::getCharFromKey(static_cast<KeyEvent::Key>(getMnemonicKey()),KeyEvent::KEY_MODIFIER_CAPS_LOCK));
+            
+            //Find the first occurance of this character in the text case-insensitive
+            std::string::size_type MnemonicCharLowerPos;
+            std::string::size_type MnemonicCharUpperPos;
+            MnemonicCharLowerPos = getText().find_first_of(MnemonicCharLower);
+            MnemonicCharUpperPos = getText().find_first_of(MnemonicCharUpper);
+
+            if(MnemonicCharLowerPos == std::string::npos)
+            {
+                if(MnemonicCharUpperPos == std::string::npos)
+                {
+                    Pos = -1;
+                }
+                else
+                {
+                    Pos = MnemonicCharUpperPos;
+                }
+            }
+            else
+            {
+                if(MnemonicCharUpperPos == std::string::npos)
+                {
+                    Pos = MnemonicCharLowerPos;
+                }
+                else
+                {
+                    Pos = osgMin(MnemonicCharLowerPos, MnemonicCharUpperPos);
+                }
+            }
+        }
+        
+        beginEditCP(MenuItemPtr(this), MnemonicTextPositionFieldMask);
+            setMnemonicTextPosition(Pos);
+        endEditCP(MenuItemPtr(this), MnemonicTextPositionFieldMask);
+    }
 }
 
 void MenuItem::dump(      UInt32    , 
@@ -132,7 +331,33 @@ void MenuItem::dump(      UInt32    ,
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
+void MenuItem::MenuItemKeyAcceleratorListener::acceleratorTyped(const KeyAcceleratorEvent& e)
+{
+    //Set TopLevelMenu
+    MenuPtr TopMenu(_MenuItem->getTopLevelMenu());
+    if(TopMenu != NullFC)
+    {
+        TopMenu->setDrawAsThoughSelected(true);
 
+        _MenuItem->_KeyAcceleratorMenuFlashUpdateListener.reset();
+        _MenuItem->getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&(_MenuItem->_KeyAcceleratorMenuFlashUpdateListener));
+    }
+    _MenuItem->produceActionPerformed(ActionEvent(_MenuItem, e.getTimeStamp()));
+}
+
+void MenuItem::KeyAcceleratorMenuFlashUpdateListener::update(const UpdateEvent& e)
+{
+    _FlashElps += e.getElapsedTime();
+    if(_FlashElps > LookAndFeelManager::the()->getLookAndFeel()->getKeyAcceleratorMenuFlashTime())
+    {
+        MenuPtr TopMenu(_MenuItem->getTopLevelMenu());
+        if(TopMenu != NullFC)
+        {
+            TopMenu->setDrawAsThoughSelected(false);
+        }
+		_MenuItem->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+    }
+}
 #ifdef OSG_SGI_CC
 #pragma set woff 1174
 #endif

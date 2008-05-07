@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="MenuItem"
-	parent="Component"
+	parent="ToggleButton"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -13,15 +13,6 @@
 >
     A UI MenuItem.
     <Field
-          name="Selected"
-          type="bool"
-          cardinality="single"
-          visibility="external"
-          defaultValue="false"
-          access="public"
-          >
-    </Field>
-    <Field
           name="ParentMenu"
           type="MenuPtr"
           cardinality="single"
@@ -31,4 +22,50 @@
           access="public"
           >
     </Field>
+	<Field
+		name="AcceleratorModifiers"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="AcceleratorKey"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+        defaultValue="KeyEvent::KEY_NONE"
+		defaultHeader="OpenSG/Input/OSGKeyEvent.h"
+		access="public"
+	>
+    </Field>
+    <Field
+          name="MnemonicKey"
+          type="UInt32"
+          cardinality="single"
+          visibility="external"
+          defaultValue="KeyEvent::KEY_NONE"
+          defaultHeader="OpenSG/Input/OSGKeyEvent.h"
+          access="public"
+          >
+	</Field>
+	<Field
+		name="AcceleratorText"
+		type="std::string"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+	>
+    </Field>
+    <Field
+          name="MnemonicTextPosition"
+          type="Int32"
+          cardinality="single"
+          visibility="external"
+          defaultValue="-1"
+          access="protected"
+          >
+	</Field>
 </FieldContainer>

@@ -70,6 +70,9 @@ const OSG::BitVector  PopupMenuBase::SubMenuDelayFieldMask =
 const OSG::BitVector  PopupMenuBase::InvokerFieldMask = 
     (TypeTraits<BitVector>::One << PopupMenuBase::InvokerFieldId);
 
+const OSG::BitVector  PopupMenuBase::DefaultSeparatorFieldMask = 
+    (TypeTraits<BitVector>::One << PopupMenuBase::DefaultSeparatorFieldId);
+
 const OSG::BitVector PopupMenuBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -81,6 +84,9 @@ const OSG::BitVector PopupMenuBase::MTInfluenceMask =
     
 */
 /*! \var ComponentPtr    PopupMenuBase::_sfInvoker
+    
+*/
+/*! \var SeparatorPtr    PopupMenuBase::_sfDefaultSeparator
     
 */
 
@@ -97,7 +103,12 @@ FieldDescription *PopupMenuBase::_desc[] =
                      "Invoker", 
                      InvokerFieldId, InvokerFieldMask,
                      false,
-                     (FieldAccessMethod) &PopupMenuBase::getSFInvoker)
+                     (FieldAccessMethod) &PopupMenuBase::getSFInvoker),
+    new FieldDescription(SFSeparatorPtr::getClassType(), 
+                     "DefaultSeparator", 
+                     DefaultSeparatorFieldId, DefaultSeparatorFieldMask,
+                     false,
+                     (FieldAccessMethod) &PopupMenuBase::getSFDefaultSeparator)
 };
 
 
@@ -175,6 +186,7 @@ void PopupMenuBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 PopupMenuBase::PopupMenuBase(void) :
     _sfSubMenuDelay           (Real32(0.5)), 
     _sfInvoker                (ComponentPtr(NullFC)), 
+    _sfDefaultSeparator       (SeparatorPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -186,6 +198,7 @@ PopupMenuBase::PopupMenuBase(void) :
 PopupMenuBase::PopupMenuBase(const PopupMenuBase &source) :
     _sfSubMenuDelay           (source._sfSubMenuDelay           ), 
     _sfInvoker                (source._sfInvoker                ), 
+    _sfDefaultSeparator       (source._sfDefaultSeparator       ), 
     Inherited                 (source)
 {
 }
@@ -212,6 +225,11 @@ UInt32 PopupMenuBase::getBinSize(const BitVector &whichField)
         returnValue += _sfInvoker.getBinSize();
     }
 
+    if(FieldBits::NoField != (DefaultSeparatorFieldMask & whichField))
+    {
+        returnValue += _sfDefaultSeparator.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -229,6 +247,11 @@ void PopupMenuBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (InvokerFieldMask & whichField))
     {
         _sfInvoker.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DefaultSeparatorFieldMask & whichField))
+    {
+        _sfDefaultSeparator.copyToBin(pMem);
     }
 
 
@@ -249,6 +272,11 @@ void PopupMenuBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfInvoker.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (DefaultSeparatorFieldMask & whichField))
+    {
+        _sfDefaultSeparator.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -265,6 +293,9 @@ void PopupMenuBase::executeSyncImpl(      PopupMenuBase *pOther,
     if(FieldBits::NoField != (InvokerFieldMask & whichField))
         _sfInvoker.syncWith(pOther->_sfInvoker);
 
+    if(FieldBits::NoField != (DefaultSeparatorFieldMask & whichField))
+        _sfDefaultSeparator.syncWith(pOther->_sfDefaultSeparator);
+
 
 }
 #else
@@ -280,6 +311,9 @@ void PopupMenuBase::executeSyncImpl(      PopupMenuBase *pOther,
 
     if(FieldBits::NoField != (InvokerFieldMask & whichField))
         _sfInvoker.syncWith(pOther->_sfInvoker);
+
+    if(FieldBits::NoField != (DefaultSeparatorFieldMask & whichField))
+        _sfDefaultSeparator.syncWith(pOther->_sfDefaultSeparator);
 
 
 

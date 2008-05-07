@@ -70,9 +70,8 @@
 #include "Component/Text/OSGTextArea.h"
 #include "Component/Misc/OSGToolTip.h"
 
-#include "Component/Menu/OSGLabelMenuItem.h"
+#include "Component/Menu/OSGMenuItem.h"
 #include "Component/Menu/OSGMenu.h"
-#include "Component/Menu/OSGSeperatorMenuItem.h"
 #include "Component/Menu/OSGPopupMenu.h"
 #include "Component/Menu/OSGMenuBar.h"
 
@@ -994,101 +993,66 @@ void DefaultLookAndFeel::init(void)
 	
     ToolTip::getClassType().setPrototype(DefaultToolTip);
     
-	//************************** LabelMenuItem*****************************
-	//Default LabelMenuItemBorder
-	EmptyBorderPtr DefaultLabelMenuItemBorder = EmptyBorder::create();
+	//************************** MenuItem*****************************
+	//Default MenuItemBorder
+	EmptyBorderPtr DefaultMenuItemBorder = EmptyBorder::create();
 
-	//Default LabelMenuItemBackground
-	ColorUIBackgroundPtr DefaultLabelMenuItemBackground = ColorUIBackground::create();
-	beginEditCP(DefaultLabelMenuItemBackground);
-		DefaultLabelMenuItemBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
-	endEditCP(DefaultLabelMenuItemBackground);
+	//Default MenuItemBackground
+	ColorUIBackgroundPtr DefaultMenuItemBackground = ColorUIBackground::create();
+	beginEditCP(DefaultMenuItemBackground);
+		DefaultMenuItemBackground->setColor(Color4f(1.0,1.0,1.0,1.0));
+	endEditCP(DefaultMenuItemBackground);
 	
-	//Default LabelMenuItemBorder
-	EmptyBorderPtr DefaultLabelMenuItemSelectedBorder = EmptyBorder::create();
+	//Default MenuItemBorder
+	EmptyBorderPtr DefaultMenuItemSelectedBorder = EmptyBorder::create();
 
-	//Default LabelMenuItemBackground
-	ColorUIBackgroundPtr DefaultLabelMenuItemSelectedBackground = ColorUIBackground::create();
-	beginEditCP(DefaultLabelMenuItemSelectedBackground);
-		DefaultLabelMenuItemSelectedBackground->setColor(Color4f(0.3,0.3,1.0,1.0));
-	endEditCP(DefaultLabelMenuItemSelectedBackground);
+	//Default MenuItemBackground
+	ColorUIBackgroundPtr DefaultMenuItemSelectedBackground = ColorUIBackground::create();
+	beginEditCP(DefaultMenuItemSelectedBackground);
+		DefaultMenuItemSelectedBackground->setColor(Color4f(0.3,0.3,1.0,1.0));
+	endEditCP(DefaultMenuItemSelectedBackground);
 
-	//Default LabelMenuItem
-	LabelMenuItemPtr DefaultLabelMenuItem = LabelMenuItem::create();
-	beginEditCP(DefaultLabelMenuItem);
-		DefaultLabelMenuItem->setEnabled(true);
-		DefaultLabelMenuItem->setVisible(true);
+	//Default MenuItem
+	MenuItemPtr DefaultMenuItem = MenuItem::create();
+	beginEditCP(DefaultMenuItem);
+		DefaultMenuItem->setEnabled(true);
+		DefaultMenuItem->setVisible(true);
 		
-		DefaultLabelMenuItem->setConstraints(NullFC);
+		DefaultMenuItem->setConstraints(NullFC);
 		//Sizes
-		DefaultLabelMenuItem->setMinSize(Vec2f(0,0));
-		DefaultLabelMenuItem->setMaxSize(Vec2f(32767,32767)); //2^15
-		DefaultLabelMenuItem->setPreferredSize(Vec2f(100,25));
+		DefaultMenuItem->setMinSize(Vec2f(0,0));
+		DefaultMenuItem->setMaxSize(Vec2f(32767,32767)); //2^15
+		DefaultMenuItem->setPreferredSize(Vec2f(100,25));
 
 		//Border
-		DefaultLabelMenuItem->setBorder(DefaultLabelMenuItemBorder);
+		DefaultMenuItem->setBorder(DefaultMenuItemBorder);
 		
 		//Background
-		DefaultLabelMenuItem->setBackground(DefaultLabelMenuItemBackground);
+		DefaultMenuItem->setBackground(DefaultMenuItemBackground);
 		
 		//Opacity
-		DefaultLabelMenuItem->setOpacity(1.0);
+		DefaultMenuItem->setOpacity(1.0);
 
         //Accelerators
-        DefaultLabelMenuItem->setAcceleratorModifiers(0);
-        DefaultLabelMenuItem->setAcceleratorKey(KeyEvent::KEY_NONE);
+        DefaultMenuItem->setAcceleratorModifiers(0);
+        DefaultMenuItem->setAcceleratorKey(KeyEvent::KEY_NONE);
 
         //Selected
-        DefaultLabelMenuItem->setSelected(false);
-        DefaultLabelMenuItem->setSelectedBorder(DefaultLabelMenuItemSelectedBorder);
-        DefaultLabelMenuItem->setSelectedBackground(DefaultLabelMenuItemSelectedBackground);
+        DefaultMenuItem->setSelected(false);
+        DefaultMenuItem->setSelectedBorder(DefaultMenuItemSelectedBorder);
+        DefaultMenuItem->setSelectedBackground(DefaultMenuItemSelectedBackground);
         
 		//Text
-		DefaultLabelMenuItem->setText("");
-		DefaultLabelMenuItem->setFont(DefaultFont);
-		DefaultLabelMenuItem->setTextColor(Color4f(0.0,0.0,0.0,1.0));
-		DefaultLabelMenuItem->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
-		DefaultLabelMenuItem->setSelectedTextColor(Color4f(0.0,0.0,0.0,1.0));
-		DefaultLabelMenuItem->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
-		DefaultLabelMenuItem->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
-	endEditCP(DefaultLabelMenuItem);
+		DefaultMenuItem->setText("");
+		DefaultMenuItem->setFont(DefaultFont);
+		DefaultMenuItem->setTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultMenuItem->setFocusedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultMenuItem->setSelectedTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultMenuItem->setRolloverTextColor(Color4f(0.0,0.0,0.0,1.0));
+		DefaultMenuItem->setDisabledTextColor(Color4f(0.4,0.4,0.4,1.0));
+	endEditCP(DefaultMenuItem);
 	
-    LabelMenuItem::getClassType().setPrototype(DefaultLabelMenuItem);
-    
-	//************************** SeperatorMenuItem*****************************
-	//Default SeperatorMenuItemBorder
-	EmptyBorderPtr DefaultSeperatorMenuItemBorder = EmptyBorder::create();
-
-	//Default SeperatorMenuItemBackground
-	EmptyUIBackgroundPtr DefaultSeperatorMenuItemBackground = EmptyUIBackground::create();
-
-	//Default SeperatorMenuItem
-	SeperatorMenuItemPtr DefaultSeperatorMenuItem = SeperatorMenuItem::create();
-	beginEditCP(DefaultSeperatorMenuItem);
-		DefaultSeperatorMenuItem->setEnabled(true);
-		DefaultSeperatorMenuItem->setVisible(true);
-		
-		DefaultSeperatorMenuItem->setConstraints(NullFC);
-		//Sizes
-		DefaultSeperatorMenuItem->setMinSize(Vec2f(0,0));
-		DefaultSeperatorMenuItem->setMaxSize(Vec2f(32767,32767)); //2^15
-		DefaultSeperatorMenuItem->setPreferredSize(Vec2f(100,10));
-
-		//Border
-		DefaultSeperatorMenuItem->setBorder(DefaultSeperatorMenuItemBorder);
-		
-		//Background
-		DefaultSeperatorMenuItem->setBackground(DefaultSeperatorMenuItemBackground);
-		
-		//Opacity
-		DefaultSeperatorMenuItem->setOpacity(1.0);
-
-        //Seperator Color
-        DefaultSeperatorMenuItem->setColor(Color4f(0.5,0.5,0.5,1.0));
-
-	endEditCP(DefaultSeperatorMenuItem);
-	
-    SeperatorMenuItem::getClassType().setPrototype(DefaultSeperatorMenuItem);
+    MenuItem::getClassType().setPrototype(DefaultMenuItem);
     
 	//************************** Menu*****************************
 	//Default MenuBorder
@@ -1947,8 +1911,7 @@ void DefaultLookAndFeel::init(void)
 		getPrototypes().push_back(DefaultPasswordField);
 		getPrototypes().push_back(DefaultTextArea);
 		getPrototypes().push_back(DefaultToolTip);
-		getPrototypes().push_back(DefaultLabelMenuItem);
-		getPrototypes().push_back(DefaultSeperatorMenuItem);
+		getPrototypes().push_back(DefaultMenuItem);
 		getPrototypes().push_back(DefaultMenu);
 		getPrototypes().push_back(DefaultPopupMenu);
 		getPrototypes().push_back(DefaultMenuBar);

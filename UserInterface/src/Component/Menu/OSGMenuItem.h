@@ -47,6 +47,8 @@
 
 #include "OSGMenuItemBase.h"
 #include "Event/OSGActionListener.h"
+#include "Event/OSGKeyAcceleratorListener.h"
+#include "Component/Menu/OSGMenuFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -83,6 +85,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
     virtual void activate(void);
     void addActionListener(ActionListenerPtr Listener);
     void removeActionListener(ActionListenerPtr Listener);
+
+	Vec2f getContentRequestedSize(void) const;
+
+    virtual void mouseReleased(const MouseEvent& e);
+    
+    void setDrawAsThoughSelected(bool Selected);
+    bool getDrawAsThoughSelected(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -102,11 +111,42 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
 
     virtual ~MenuItem(void); 
 
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
+	virtual void drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight) const;
     
     virtual void actionPreformed(const ActionEvent& e);
 	
     virtual void produceActionPerformed(const ActionEvent& e);
+    
+	class MenuItemKeyAcceleratorListener : public KeyAcceleratorListener
+	{
+	public:
+		MenuItemKeyAcceleratorListener(MenuItemPtr TheMenuItem);
+        virtual void acceleratorTyped(const KeyAcceleratorEvent& e);
+	private:
+		MenuItemPtr _MenuItem;
+	};
+
+	friend class MenuItemKeyAcceleratorListener;
+
+	MenuItemKeyAcceleratorListener _MenuItemKeyAcceleratorListener;
+    
+	class KeyAcceleratorMenuFlashUpdateListener : public UpdateListener
+	{
+	public:
+		KeyAcceleratorMenuFlashUpdateListener(MenuItemPtr TheMenuItem);
+        virtual void update(const UpdateEvent& e);
+        void reset(void);
+	private:
+		MenuItemPtr _MenuItem;
+	    Time _FlashElps;
+	};
+
+	friend class KeyAcceleratorMenuFlashUpdateListener;
+
+	KeyAcceleratorMenuFlashUpdateListener _KeyAcceleratorMenuFlashUpdateListener;
+
+    MenuPtr getTopLevelMenu(void) const;
+    bool _DrawAsThoughSelected;
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/

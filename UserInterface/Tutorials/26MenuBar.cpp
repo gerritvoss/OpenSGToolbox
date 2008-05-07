@@ -64,8 +64,7 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGUIBackgrounds.h>
 #include <OpenSG/UserInterface/OSGBorders.h>
 #include <OpenSG/UserInterface/OSGMenu.h>
-#include <OpenSG/UserInterface/OSGLabelMenuItem.h>
-#include <OpenSG/UserInterface/OSGSeperatorMenuItem.h>
+#include <OpenSG/UserInterface/OSGMenuItem.h>
 #include <OpenSG/UserInterface/OSGMenuBar.h>
 
 
@@ -174,7 +173,7 @@ int main(int argc, char **argv)
 				above, both Control and Q are specified).
 
             Note: These shortcuts will be shown in the list
-                with the LabelMenuItem they are attached to.
+                with the MenuItem they are attached to.
 
             -setMnemonicKey(KeyEvent::KEY_****): sets the key
                 "****" to be underlined within the Menu
@@ -184,54 +183,53 @@ int main(int argc, char **argv)
     ******************************************************/
 
     // Creates MenuItems as in 25PopupMenu
-    LabelMenuItemPtr NewMenuItem = LabelMenuItem::create();
-    LabelMenuItemPtr OpenMenuItem = LabelMenuItem::create();
-    LabelMenuItemPtr CloseMenuItem = LabelMenuItem::create();
-    SeperatorMenuItemPtr FileMenuSeperator = SeperatorMenuItem::create();
-    LabelMenuItemPtr ExitMenuItem = LabelMenuItem::create();
-    LabelMenuItemPtr UndoMenuItem = LabelMenuItem::create();
-    LabelMenuItemPtr RedoMenuItem = LabelMenuItem::create();
+    MenuItemPtr NewMenuItem = MenuItem::create();
+    MenuItemPtr OpenMenuItem = MenuItem::create();
+    MenuItemPtr CloseMenuItem = MenuItem::create();
+    MenuItemPtr ExitMenuItem = MenuItem::create();
+    MenuItemPtr UndoMenuItem = MenuItem::create();
+    MenuItemPtr RedoMenuItem = MenuItem::create();
 
     //Edits MenuItems
-    beginEditCP(NewMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
+    beginEditCP(NewMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
         NewMenuItem->setText("New ...");
         NewMenuItem->setAcceleratorKey(KeyEvent::KEY_N);
         NewMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
         NewMenuItem->setMnemonicKey(KeyEvent::KEY_N);
-    endEditCP(NewMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
+    endEditCP(NewMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
     
-    beginEditCP(OpenMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
+    beginEditCP(OpenMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
         OpenMenuItem->setText("Open ...");
         OpenMenuItem->setAcceleratorKey(KeyEvent::KEY_P);
         OpenMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
         OpenMenuItem->setMnemonicKey(KeyEvent::KEY_P);
-    endEditCP(OpenMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
+    endEditCP(OpenMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
     
-    beginEditCP(CloseMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
+    beginEditCP(CloseMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
         CloseMenuItem->setText("Close ...");
         CloseMenuItem->setAcceleratorKey(KeyEvent::KEY_W);
         CloseMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
         CloseMenuItem->setMnemonicKey(KeyEvent::KEY_C);
-    endEditCP(CloseMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
+    endEditCP(CloseMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
     
-    beginEditCP(ExitMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
+    beginEditCP(ExitMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
         ExitMenuItem->setText("Quit");
         ExitMenuItem->setAcceleratorKey(KeyEvent::KEY_Q);
         ExitMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
         ExitMenuItem->setMnemonicKey(KeyEvent::KEY_Q);
-    endEditCP(ExitMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
+    endEditCP(ExitMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
 
-    beginEditCP(UndoMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
+    beginEditCP(UndoMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
         UndoMenuItem->setText("Undo");
         UndoMenuItem->setAcceleratorKey(KeyEvent::KEY_Z);
         UndoMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
         UndoMenuItem->setMnemonicKey(KeyEvent::KEY_U);
-    endEditCP(UndoMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::AcceleratorKeyFieldMask | LabelMenuItem::AcceleratorModifiersFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
-    beginEditCP(RedoMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::MnemonicKeyFieldMask | LabelMenuItem::EnabledFieldMask);
+    endEditCP(UndoMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
+    beginEditCP(RedoMenuItem, MenuItem::TextFieldMask | MenuItem::MnemonicKeyFieldMask | MenuItem::EnabledFieldMask);
         RedoMenuItem->setText("Redo");
         RedoMenuItem->setEnabled(false);
         RedoMenuItem->setMnemonicKey(KeyEvent::KEY_R);
-    endEditCP(RedoMenuItem, LabelMenuItem::TextFieldMask | LabelMenuItem::MnemonicKeyFieldMask | LabelMenuItem::EnabledFieldMask);
+    endEditCP(RedoMenuItem, MenuItem::TextFieldMask | MenuItem::MnemonicKeyFieldMask | MenuItem::EnabledFieldMask);
     
     // Create an ActionListener and assign it to ExitMenuItem
     // This is defined above, and will cause the program to quit
@@ -255,14 +253,14 @@ int main(int argc, char **argv)
     FileMenu->addItem(NewMenuItem);
     FileMenu->addItem(OpenMenuItem);
     FileMenu->addItem(CloseMenuItem);
-    FileMenu->addItem(FileMenuSeperator);
+    FileMenu->addSeparator();
     FileMenu->addItem(ExitMenuItem);
 
     // Labels the File Menu
-    beginEditCP(FileMenu, LabelMenuItem::TextFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
+    beginEditCP(FileMenu, MenuItem::TextFieldMask | MenuItem::MnemonicKeyFieldMask);
         FileMenu->setText("File");
         FileMenu->setMnemonicKey(KeyEvent::KEY_F);
-    endEditCP(FileMenu, LabelMenuItem::TextFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
+    endEditCP(FileMenu, MenuItem::TextFieldMask | MenuItem::MnemonicKeyFieldMask);
     
     // Creates an Edit menu and adds its MenuItems
     MenuPtr EditMenu = Menu::create();
@@ -270,10 +268,10 @@ int main(int argc, char **argv)
     EditMenu->addItem(RedoMenuItem);
 
     // Labels the Edit Menu
-    beginEditCP(EditMenu, LabelMenuItem::TextFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
+    beginEditCP(EditMenu, MenuItem::TextFieldMask | MenuItem::MnemonicKeyFieldMask);
         EditMenu->setText("Edit");
         EditMenu->setMnemonicKey(KeyEvent::KEY_E);
-    endEditCP(EditMenu, LabelMenuItem::TextFieldMask | LabelMenuItem::MnemonicKeyFieldMask);
+    endEditCP(EditMenu, MenuItem::TextFieldMask | MenuItem::MnemonicKeyFieldMask);
     
     /******************************************************
             
@@ -307,17 +305,17 @@ int main(int argc, char **argv)
     MainMenuBar->addMenu(EditMenu);
 
     // Adds Backgrounds to Menus and MenuBar
-    beginEditCP(FileMenu, LabelMenuItem::BackgroundFieldMask);
+    beginEditCP(FileMenu, MenuItem::BackgroundFieldMask);
         FileMenu->setBackground(EmptyMenuBarBackground);
-    beginEditCP(FileMenu, LabelMenuItem::BackgroundFieldMask);
+    beginEditCP(FileMenu, MenuItem::BackgroundFieldMask);
 
-    beginEditCP(EditMenu, LabelMenuItem::BackgroundFieldMask);
+    beginEditCP(EditMenu, MenuItem::BackgroundFieldMask);
         EditMenu->setBackground(EmptyMenuBarBackground);
-    beginEditCP(EditMenu, LabelMenuItem::BackgroundFieldMask);
+    beginEditCP(EditMenu, MenuItem::BackgroundFieldMask);
 
-    beginEditCP(MainMenuBar, LabelMenuItem::BackgroundFieldMask);
+    beginEditCP(MainMenuBar, MenuItem::BackgroundFieldMask);
         MainMenuBar->setBackground(ColorMenuBarBackground);
-    beginEditCP(MainMenuBar, LabelMenuItem::BackgroundFieldMask);
+    beginEditCP(MainMenuBar, MenuItem::BackgroundFieldMask);
     
     // Create two Labels
     LabelPtr ExampleLabel1 = osg::Label::create();

@@ -226,6 +226,7 @@ UIDrawObjectCanvasPtr Button::getDrawnDrawObject(void) const
         return getDisabledDrawObject();
     }
 }
+
 void Button::drawInternal(const GraphicsPtr TheGraphics) const
 {
    Pnt2f TopLeft, BottomRight;
@@ -243,10 +244,7 @@ void Button::drawInternal(const GraphicsPtr TheGraphics) const
       AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (DrawObjectBottomRight - DrawObjectTopLeft),getVerticalAlignment(), getHorizontalAlignment());
 
       //If active then translate the Text by the Active Offset
-      if(getActive())
-      {
-          AlignedPosition = AlignedPosition + getActiveOffset();
-      }
+      AlignedPosition = AlignedPosition + getDrawnOffset();
 
 	  //Draw the DrawnDrawObject
         beginEditCP(DrawnDrawObject, PositionFieldMask);
@@ -256,7 +254,11 @@ void Button::drawInternal(const GraphicsPtr TheGraphics) const
         DrawnDrawObject->draw(TheGraphics);
 
    }
+   Button::drawText(TheGraphics, TopLeft, BottomRight);
+}
 
+void Button::drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight) const
+{
    //If I have Text Then Draw it
    if(getText() != "" && getFont() != NullFC)
    {
@@ -268,15 +270,23 @@ void Button::drawInternal(const GraphicsPtr TheGraphics) const
       AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),getVerticalAlignment(), getHorizontalAlignment());
 
       //If active then translate the Text by the Active Offset
-      if(getActive())
-      {
-          AlignedPosition = AlignedPosition + getActiveOffset();
-      }
+      AlignedPosition = AlignedPosition + getDrawnOffset();
 
 	  //Draw the Text
       TheGraphics->drawText(AlignedPosition, getText(), getFont(), getDrawnTextColor(), getOpacity());
    }
+}
 
+Vec2f Button::getDrawnOffset(void) const
+{
+    if(getActive())
+    {
+        return getActiveOffset();
+    }
+    else
+    {
+        return Vec2f(0.0f,0.0f);
+    }
 }
 
 void Button::actionPreformed(const ActionEvent& e)
