@@ -38,7 +38,7 @@ bool  lerp(  const GeoPositionsPtr BaseValues,const MFGeoPositionDifferenceSetPt
       //The animation has reached the end of its cycles
       //Set the result to the last Difference Set
       UInt32 LastDiffSetIndex = 0;
-      GeoPositionDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(DifferenceSets.getSize()-1);
+      GeoPositionDifferenceSetPtr LastDiffSet = DifferenceSets[DifferenceSets.getSize()-1];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
@@ -56,7 +56,7 @@ bool  lerp(  const GeoPositionsPtr BaseValues,const MFGeoPositionDifferenceSetPt
    {
       //Interpolate between BaseValues and the first Difference Set
       UInt32 FirstDiffSetIndex = 0;
-      GeoPositionDifferenceSetPtr FirstDiffSet = DifferenceSets.getValue(0);
+      GeoPositionDifferenceSetPtr FirstDiffSet = DifferenceSets[0];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( FirstDiffSet->getIndices()->getValue(FirstDiffSetIndex)== i )
@@ -79,7 +79,7 @@ bool  lerp(  const GeoPositionsPtr BaseValues,const MFGeoPositionDifferenceSetPt
    {
       //Interpolate between the Last Difference Set and the BaseValues
       UInt32 LastDiffSetIndex = 0;
-      GeoPositionDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(DifferenceSets.getSize()-1);
+      GeoPositionDifferenceSetPtr LastDiffSet = DifferenceSets[DifferenceSets.getSize()-1];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
@@ -102,9 +102,9 @@ bool  lerp(  const GeoPositionsPtr BaseValues,const MFGeoPositionDifferenceSetPt
    {
       //Interpolate between two Difference Sets
       UInt32 NextDiffSetIndex = 0;
-      GeoPositionDifferenceSetPtr NextDiffSet = DifferenceSets.getValue(NextKeyframeIndex-1);
+      GeoPositionDifferenceSetPtr NextDiffSet = DifferenceSets[NextKeyframeIndex-1];
       UInt32 LastDiffSetIndex = 0;
-      GeoPositionDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(LastKeyframeIndex-1);
+      GeoPositionDifferenceSetPtr LastDiffSet = DifferenceSets[LastKeyframeIndex-1];
       
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
@@ -177,7 +177,7 @@ bool  step(  const GeoPositionsPtr BaseValues,const MFGeoPositionDifferenceSetPt
       //The animation has reached the end of its cycles
       //Set the result to the last Difference Set
       UInt32 LastDiffSetIndex = 0;
-      GeoPositionDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(DifferenceSets.getSize()-1);
+      GeoPositionDifferenceSetPtr LastDiffSet = DifferenceSets[DifferenceSets.getSize()-1];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
@@ -205,7 +205,7 @@ bool  step(  const GeoPositionsPtr BaseValues,const MFGeoPositionDifferenceSetPt
       //Interpolate between the Last Difference Set and the BaseValues
       //For a Step interpolatin this should be all the Last Difference Set
       UInt32 LastDiffSetIndex = 0;
-      GeoPositionDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(DifferenceSets.getSize()-1);
+      GeoPositionDifferenceSetPtr LastDiffSet = DifferenceSets[DifferenceSets.getSize()-1];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
@@ -223,9 +223,9 @@ bool  step(  const GeoPositionsPtr BaseValues,const MFGeoPositionDifferenceSetPt
    {
       //Interpolate between two Difference Sets
       UInt32 NextDiffSetIndex = 0;
-      GeoPositionDifferenceSetPtr NextDiffSet = DifferenceSets.getValue(NextKeyframeIndex-1);
+      GeoPositionDifferenceSetPtr NextDiffSet = DifferenceSets[NextKeyframeIndex-1];
       UInt32 LastDiffSetIndex = 0;
-      GeoPositionDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(LastKeyframeIndex-1);
+      GeoPositionDifferenceSetPtr LastDiffSet = DifferenceSets[LastKeyframeIndex-1];
       
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
@@ -285,7 +285,7 @@ bool  lerp(  const GeoNormalsPtr BaseValues,const MFGeoNormalDifferenceSetPtr Di
       //The animation has reached the end of its cycles
       //Set the result to the last Difference Set
       UInt32 LastDiffSetIndex = 0;
-      GeoNormalDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(DifferenceSets.getSize()-1);
+      GeoNormalDifferenceSetPtr LastDiffSet = DifferenceSets[DifferenceSets.getSize()-1];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
@@ -303,7 +303,7 @@ bool  lerp(  const GeoNormalsPtr BaseValues,const MFGeoNormalDifferenceSetPtr Di
    {
       //Interpolate between BaseValues and the first Difference Set
       UInt32 FirstDiffSetIndex = 0;
-      GeoNormalDifferenceSetPtr FirstDiffSet = DifferenceSets.getValue(0);
+      GeoNormalDifferenceSetPtr FirstDiffSet = DifferenceSets[0];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( FirstDiffSet->getIndices()->getValue(FirstDiffSetIndex)== i )
@@ -324,7 +324,7 @@ bool  lerp(  const GeoNormalsPtr BaseValues,const MFGeoNormalDifferenceSetPtr Di
    {
       //Interpolate between the Last Difference Set and the BaseValues
       UInt32 LastDiffSetIndex = 0;
-      GeoNormalDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(DifferenceSets.getSize()-1);
+      GeoNormalDifferenceSetPtr LastDiffSet = DifferenceSets[DifferenceSets.getSize()-1];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
@@ -345,9 +345,9 @@ bool  lerp(  const GeoNormalsPtr BaseValues,const MFGeoNormalDifferenceSetPtr Di
    {
       //Interpolate between two Difference Sets
       UInt32 NextDiffSetIndex = 0;
-      GeoNormalDifferenceSetPtr NextDiffSet = DifferenceSets.getValue(NextKeyframeIndex-1);
+      GeoNormalDifferenceSetPtr NextDiffSet = DifferenceSets[NextKeyframeIndex-1];
       UInt32 LastDiffSetIndex = 0;
-      GeoNormalDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(LastKeyframeIndex-1);
+      GeoNormalDifferenceSetPtr LastDiffSet = DifferenceSets[LastKeyframeIndex-1];
       
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
@@ -415,7 +415,7 @@ bool  step(  const GeoNormalsPtr BaseValues,const MFGeoNormalDifferenceSetPtr Di
       //The animation has reached the end of its cycles
       //Set the result to the last Difference Set
       UInt32 LastDiffSetIndex = 0;
-      GeoNormalDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(DifferenceSets.getSize()-1);
+      GeoNormalDifferenceSetPtr LastDiffSet = DifferenceSets[DifferenceSets.getSize()-1];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
@@ -443,7 +443,7 @@ bool  step(  const GeoNormalsPtr BaseValues,const MFGeoNormalDifferenceSetPtr Di
       //Interpolate between the Last Difference Set and the BaseValues
       //For a Step interpolatin this should be all the Last Difference Set
       UInt32 LastDiffSetIndex = 0;
-      GeoNormalDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(DifferenceSets.getSize()-1);
+      GeoNormalDifferenceSetPtr LastDiffSet = DifferenceSets[DifferenceSets.getSize()-1];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
@@ -461,9 +461,9 @@ bool  step(  const GeoNormalsPtr BaseValues,const MFGeoNormalDifferenceSetPtr Di
    {
       //Interpolate between two Difference Sets
       UInt32 NextDiffSetIndex = 0;
-      GeoNormalDifferenceSetPtr NextDiffSet = DifferenceSets.getValue(NextKeyframeIndex-1);
+      GeoNormalDifferenceSetPtr NextDiffSet = DifferenceSets[NextKeyframeIndex-1];
       UInt32 LastDiffSetIndex = 0;
-      GeoNormalDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(LastKeyframeIndex-1);
+      GeoNormalDifferenceSetPtr LastDiffSet = DifferenceSets[LastKeyframeIndex-1];
       
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
@@ -523,7 +523,7 @@ bool  lerp(  const GeoColorsPtr BaseValues,const MFGeoColorDifferenceSetPtr Diff
       //The animation has reached the end of its cycles
       //Set the result to the last Difference Set
       UInt32 LastDiffSetIndex = 0;
-      GeoColorDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(DifferenceSets.getSize()-1);
+      GeoColorDifferenceSetPtr LastDiffSet = DifferenceSets[DifferenceSets.getSize()-1];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
@@ -541,7 +541,7 @@ bool  lerp(  const GeoColorsPtr BaseValues,const MFGeoColorDifferenceSetPtr Diff
    {
       //Interpolate between BaseValues and the first Difference Set
       UInt32 FirstDiffSetIndex = 0;
-      GeoColorDifferenceSetPtr FirstDiffSet = DifferenceSets.getValue(0);
+      GeoColorDifferenceSetPtr FirstDiffSet = DifferenceSets[0];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( FirstDiffSet->getIndices()->getValue(FirstDiffSetIndex)== i )
@@ -562,7 +562,7 @@ bool  lerp(  const GeoColorsPtr BaseValues,const MFGeoColorDifferenceSetPtr Diff
    {
       //Interpolate between the Last Difference Set and the BaseValues
       UInt32 LastDiffSetIndex = 0;
-      GeoColorDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(DifferenceSets.getSize()-1);
+      GeoColorDifferenceSetPtr LastDiffSet = DifferenceSets[DifferenceSets.getSize()-1];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
@@ -583,9 +583,9 @@ bool  lerp(  const GeoColorsPtr BaseValues,const MFGeoColorDifferenceSetPtr Diff
    {
       //Interpolate between two Difference Sets
       UInt32 NextDiffSetIndex = 0;
-      GeoColorDifferenceSetPtr NextDiffSet = DifferenceSets.getValue(NextKeyframeIndex-1);
+      GeoColorDifferenceSetPtr NextDiffSet = DifferenceSets[NextKeyframeIndex-1];
       UInt32 LastDiffSetIndex = 0;
-      GeoColorDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(LastKeyframeIndex-1);
+      GeoColorDifferenceSetPtr LastDiffSet = DifferenceSets[LastKeyframeIndex-1];
       
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
@@ -653,7 +653,7 @@ bool  step(  const GeoColorsPtr BaseValues,const MFGeoColorDifferenceSetPtr Diff
       //The animation has reached the end of its cycles
       //Set the result to the last Difference Set
       UInt32 LastDiffSetIndex = 0;
-      GeoColorDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(DifferenceSets.getSize()-1);
+      GeoColorDifferenceSetPtr LastDiffSet = DifferenceSets[DifferenceSets.getSize()-1];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
@@ -681,7 +681,7 @@ bool  step(  const GeoColorsPtr BaseValues,const MFGeoColorDifferenceSetPtr Diff
       //Interpolate between the Last Difference Set and the BaseValues
       //For a Step interpolatin this should be all the Last Difference Set
       UInt32 LastDiffSetIndex = 0;
-      GeoColorDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(DifferenceSets.getSize()-1);
+      GeoColorDifferenceSetPtr LastDiffSet = DifferenceSets[DifferenceSets.getSize()-1];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
@@ -699,9 +699,9 @@ bool  step(  const GeoColorsPtr BaseValues,const MFGeoColorDifferenceSetPtr Diff
    {
       //Interpolate between two Difference Sets
       UInt32 NextDiffSetIndex = 0;
-      GeoColorDifferenceSetPtr NextDiffSet = DifferenceSets.getValue(NextKeyframeIndex-1);
+      GeoColorDifferenceSetPtr NextDiffSet = DifferenceSets[NextKeyframeIndex-1];
       UInt32 LastDiffSetIndex = 0;
-      GeoColorDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(LastKeyframeIndex-1);
+      GeoColorDifferenceSetPtr LastDiffSet = DifferenceSets[LastKeyframeIndex-1];
       
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
@@ -761,7 +761,7 @@ bool  lerp(  const GeoTexCoordsPtr BaseValues,const MFGeoTexCoordDifferenceSetPt
       //The animation has reached the end of its cycles
       //Set the result to the last Difference Set
       UInt32 LastDiffSetIndex = 0;
-      GeoTexCoordDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(DifferenceSets.getSize()-1);
+      GeoTexCoordDifferenceSetPtr LastDiffSet = DifferenceSets[DifferenceSets.getSize()-1];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
@@ -779,7 +779,7 @@ bool  lerp(  const GeoTexCoordsPtr BaseValues,const MFGeoTexCoordDifferenceSetPt
    {
       //Interpolate between BaseValues and the first Difference Set
       UInt32 FirstDiffSetIndex = 0;
-      GeoTexCoordDifferenceSetPtr FirstDiffSet = DifferenceSets.getValue(0);
+      GeoTexCoordDifferenceSetPtr FirstDiffSet = DifferenceSets[0];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( FirstDiffSet->getIndices()->getValue(FirstDiffSetIndex)== i )
@@ -800,7 +800,7 @@ bool  lerp(  const GeoTexCoordsPtr BaseValues,const MFGeoTexCoordDifferenceSetPt
    {
       //Interpolate between the Last Difference Set and the BaseValues
       UInt32 LastDiffSetIndex = 0;
-      GeoTexCoordDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(DifferenceSets.getSize()-1);
+      GeoTexCoordDifferenceSetPtr LastDiffSet = DifferenceSets[DifferenceSets.getSize()-1];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
@@ -821,9 +821,9 @@ bool  lerp(  const GeoTexCoordsPtr BaseValues,const MFGeoTexCoordDifferenceSetPt
    {
       //Interpolate between two Difference Sets
       UInt32 NextDiffSetIndex = 0;
-      GeoTexCoordDifferenceSetPtr NextDiffSet = DifferenceSets.getValue(NextKeyframeIndex-1);
+      GeoTexCoordDifferenceSetPtr NextDiffSet = DifferenceSets[NextKeyframeIndex-1];
       UInt32 LastDiffSetIndex = 0;
-      GeoTexCoordDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(LastKeyframeIndex-1);
+      GeoTexCoordDifferenceSetPtr LastDiffSet = DifferenceSets[LastKeyframeIndex-1];
       
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
@@ -891,7 +891,7 @@ bool  step(  const GeoTexCoordsPtr BaseValues,const MFGeoTexCoordDifferenceSetPt
       //The animation has reached the end of its cycles
       //Set the result to the last Difference Set
       UInt32 LastDiffSetIndex = 0;
-      GeoTexCoordDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(DifferenceSets.getSize()-1);
+      GeoTexCoordDifferenceSetPtr LastDiffSet = DifferenceSets[DifferenceSets.getSize()-1];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
@@ -919,7 +919,7 @@ bool  step(  const GeoTexCoordsPtr BaseValues,const MFGeoTexCoordDifferenceSetPt
       //Interpolate between the Last Difference Set and the BaseValues
       //For a Step interpolatin this should be all the Last Difference Set
       UInt32 LastDiffSetIndex = 0;
-      GeoTexCoordDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(DifferenceSets.getSize()-1);
+      GeoTexCoordDifferenceSetPtr LastDiffSet = DifferenceSets[DifferenceSets.getSize()-1];
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {
          if( LastDiffSet->getIndices()->getValue(LastDiffSetIndex)== i )
@@ -937,9 +937,9 @@ bool  step(  const GeoTexCoordsPtr BaseValues,const MFGeoTexCoordDifferenceSetPt
    {
       //Interpolate between two Difference Sets
       UInt32 NextDiffSetIndex = 0;
-      GeoTexCoordDifferenceSetPtr NextDiffSet = DifferenceSets.getValue(NextKeyframeIndex-1);
+      GeoTexCoordDifferenceSetPtr NextDiffSet = DifferenceSets[NextKeyframeIndex-1];
       UInt32 LastDiffSetIndex = 0;
-      GeoTexCoordDifferenceSetPtr LastDiffSet = DifferenceSets.getValue(LastKeyframeIndex-1);
+      GeoTexCoordDifferenceSetPtr LastDiffSet = DifferenceSets[LastKeyframeIndex-1];
       
       for(UInt32 i=0 ; i<Value->getSize() ; ++i)
       {

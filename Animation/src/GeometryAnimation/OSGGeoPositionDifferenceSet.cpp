@@ -84,7 +84,7 @@ GeoPositionDifferenceSetPtr GeoPositionDifferenceSet::create(const GeoPositionsP
 
    //Loop through each position of BasePositions and ToPositions
    beginEditCP(Result);
-   Result->getIndices()->addValue( -1 );
+   Result->getIndices()->push_back( -1 );
    for(UInt32 i=0 ; i<BasePositions->getSize() ; ++i)
    {
       //If Position i of ToPositions is different from BasePositions
@@ -94,7 +94,7 @@ GeoPositionDifferenceSetPtr GeoPositionDifferenceSet::create(const GeoPositionsP
          addValueAsBaseType(Result->getPositions(), ToPositions, i);
             if(Result->getIndices()->getValue(0) != -1)
             {
-               Result->getIndices()->addValue( i );
+               Result->getIndices()->push_back( i );
             }
             else
             {

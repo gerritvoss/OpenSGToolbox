@@ -75,7 +75,10 @@ void BlendGeometry::initMethod (void)
 {
    DrawAction::registerEnterDefault(getClassType(),
       osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, MaterialDrawablePtr,
-            CNodePtr, Action *>(&MaterialDrawable::drawActionHandler));
+            CNodePtr, Action *>(&MaterialDrawable::drawActionEnterHandler));
+   DrawAction::registerLeaveDefault(getClassType(),
+      osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, MaterialDrawablePtr,
+            CNodePtr, Action *>(&MaterialDrawable::drawActionLeaveHandler));
 
    IntersectAction::registerEnterDefault(getClassType(),
       osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, GeometryPtr,
@@ -91,7 +94,10 @@ void BlendGeometry::initMethod (void)
 
    RenderAction::registerEnterDefault(getClassType(),
       osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, MaterialDrawablePtr,
-            CNodePtr, Action *>(&MaterialDrawable::renderActionHandler));
+            CNodePtr, Action *>(&MaterialDrawable::renderActionEnterHandler));
+   RenderAction::registerLeaveDefault(getClassType(),
+      osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, MaterialDrawablePtr,
+            CNodePtr, Action *>(&MaterialDrawable::renderActionLeaveHandler));
 }
 
 BlendGeometryPtr BlendGeometry::create (const GeometryPtr Geo)
@@ -158,10 +164,10 @@ void BlendGeometry::recalculatePositions(void)
          if(BlendAmount != 0.0)
          {
             //Blend each DiffSet that has an alternet Position
-            Index = getGeoPositionDifferenceSets().getValue(j)->getIndices()->getValue(CurDiffSetIndicies[j]);
+            Index = getGeoPositionDifferenceSets()[j]->getIndices()->getValue(CurDiffSetIndicies[j]);
             if( Index == i )
             {
-               Result = Result + ( BlendAmount * (getGeoPositionDifferenceSets().getValue(j)->getPositions()->getValue(CurDiffSetIndicies[j]) - getBasePositions()->getValue(i)) );
+               Result = Result + ( BlendAmount * (getGeoPositionDifferenceSets()[j]->getPositions()->getValue(CurDiffSetIndicies[j]) - getBasePositions()->getValue(i)) );
                ++CurDiffSetIndicies[j];
             }
          }
@@ -202,10 +208,10 @@ void BlendGeometry::recalculateNormals(void)
          if(BlendAmount != 0.0)
          {
             //Blend each DiffSet that has an alternet Normal
-            Index = getGeoNormalDifferenceSets().getValue(j)->getIndices()->getValue(CurDiffSetIndicies[j]);
+            Index = getGeoNormalDifferenceSets()[j]->getIndices()->getValue(CurDiffSetIndicies[j]);
             if( Index == i )
             {
-               Rotation.setValue(getBaseNormals()->getValue(i), getGeoNormalDifferenceSets().getValue(j)->getNormals()->getValue(CurDiffSetIndicies[j]));
+               Rotation.setValue(getBaseNormals()->getValue(i), getGeoNormalDifferenceSets()[j]->getNormals()->getValue(CurDiffSetIndicies[j]));
                //Scale the angle to t, which is our lerp amount
                Rotation.scaleAngle(BlendAmount);
 

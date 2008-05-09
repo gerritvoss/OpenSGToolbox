@@ -84,7 +84,7 @@ GeoTexCoordDifferenceSetPtr GeoTexCoordDifferenceSet::create(const GeoTexCoordsP
 
    //Loop through each position of BaseTexCoords and ToTexCoords
    beginEditCP(Result);
-   Result->getIndices()->addValue( -1 );
+   Result->getIndices()->push_back( -1 );
    for(UInt32 i=0 ; i<BaseTexCoords->getSize() ; ++i)
    {
       //If TexCoord i of ToTexCoords is different from BaseTexCoords
@@ -94,7 +94,7 @@ GeoTexCoordDifferenceSetPtr GeoTexCoordDifferenceSet::create(const GeoTexCoordsP
          addValueAsBaseType(Result->getTexCoords(), ToTexCoords, i);
             if(Result->getIndices()->getValue(0) != -1)
             {
-               Result->getIndices()->addValue( i );
+               Result->getIndices()->push_back( i );
             }
             else
             {

@@ -319,17 +319,17 @@ void setupBlendGeometry(void)
    osg::BlendGeometryPtr TheBlendGeometry = osg::BlendGeometry::create(BaseGeometryCore);
    beginEditCP(TheBlendGeometry, osg::BlendGeometry::GeoPositionDifferenceSetsFieldMask |
                                  osg::BlendGeometry::GeoNormalDifferenceSetsFieldMask);
-      TheBlendGeometry->getBlendAmounts().addValue(1.0);
-      TheBlendGeometry->getBlendAmounts().addValue(1.0);
-      TheBlendGeometry->getBlendAmounts().addValue(1.0);
+      TheBlendGeometry->getBlendAmounts().push_back(1.0);
+      TheBlendGeometry->getBlendAmounts().push_back(1.0);
+      TheBlendGeometry->getBlendAmounts().push_back(1.0);
 
-      TheBlendGeometry->getGeoPositionDifferenceSets().addValue(XDeformGeometryDiffSet);
-      TheBlendGeometry->getGeoPositionDifferenceSets().addValue(YDeformGeometryDiffSet);
-      TheBlendGeometry->getGeoPositionDifferenceSets().addValue(ZDeformGeometryDiffSet);
+      TheBlendGeometry->getGeoPositionDifferenceSets().push_back(XDeformGeometryDiffSet);
+      TheBlendGeometry->getGeoPositionDifferenceSets().push_back(YDeformGeometryDiffSet);
+      TheBlendGeometry->getGeoPositionDifferenceSets().push_back(ZDeformGeometryDiffSet);
       
-      TheBlendGeometry->getGeoNormalDifferenceSets().addValue(XDeformGeometryNormalDiffSet);
-      TheBlendGeometry->getGeoNormalDifferenceSets().addValue(YDeformGeometryNormalDiffSet);
-      TheBlendGeometry->getGeoNormalDifferenceSets().addValue(ZDeformGeometryNormalDiffSet);
+      TheBlendGeometry->getGeoNormalDifferenceSets().push_back(XDeformGeometryNormalDiffSet);
+      TheBlendGeometry->getGeoNormalDifferenceSets().push_back(YDeformGeometryNormalDiffSet);
+      TheBlendGeometry->getGeoNormalDifferenceSets().push_back(ZDeformGeometryNormalDiffSet);
    endEditCP(TheBlendGeometry);
    
    NodePtr BlendGeometryNode = osg::Node::create();
@@ -401,10 +401,10 @@ void setupGeometryAnimation(void)
    osg::beginEditCP(osg::KeyframeSequenceGeoPositionsPtr::Ptr::dcast(KeyframeSequence));
       osg::KeyframeSequenceGeoPositionsPtr::Ptr::dcast(KeyframeSequence)->setBaseValues(BaseGeometryCoreCopy->getPositions());
       //Add Difference Sets
-      osg::KeyframeSequenceGeoPositionsPtr::Ptr::dcast(KeyframeSequence)->getKeyframeDifferenceSets().addValue(XDeformGeometryDiffSet);
-      osg::KeyframeSequenceGeoPositionsPtr::Ptr::dcast(KeyframeSequence)->getKeyframeDifferenceSets().addValue(YDeformGeometryDiffSet);
-      osg::KeyframeSequenceGeoPositionsPtr::Ptr::dcast(KeyframeSequence)->getKeyframeDifferenceSets().addValue(ZDeformGeometryDiffSet);
-      osg::KeyframeSequenceGeoPositionsPtr::Ptr::dcast(KeyframeSequence)->getKeyframeDifferenceSets().addValue(NoDeformGeometryDiffSet);
+      osg::KeyframeSequenceGeoPositionsPtr::Ptr::dcast(KeyframeSequence)->getKeyframeDifferenceSets().push_back(XDeformGeometryDiffSet);
+      osg::KeyframeSequenceGeoPositionsPtr::Ptr::dcast(KeyframeSequence)->getKeyframeDifferenceSets().push_back(YDeformGeometryDiffSet);
+      osg::KeyframeSequenceGeoPositionsPtr::Ptr::dcast(KeyframeSequence)->getKeyframeDifferenceSets().push_back(ZDeformGeometryDiffSet);
+      osg::KeyframeSequenceGeoPositionsPtr::Ptr::dcast(KeyframeSequence)->getKeyframeDifferenceSets().push_back(NoDeformGeometryDiffSet);
    osg::endEditCP(osg::KeyframeSequenceGeoPositionsPtr::Ptr::dcast(KeyframeSequence));
 
    //Positions Animator
@@ -441,10 +441,10 @@ void setupGeometryAnimation(void)
    osg::beginEditCP(osg::KeyframeSequenceGeoNormalsPtr::Ptr::dcast(KeyframeSequenceNormal));
       osg::KeyframeSequenceGeoNormalsPtr::Ptr::dcast(KeyframeSequenceNormal)->setBaseValues(BaseGeometryCoreCopy->getNormals());
       //Add Difference Sets
-      osg::KeyframeSequenceGeoNormalsPtr::Ptr::dcast(KeyframeSequenceNormal)->getKeyframeDifferenceSets().addValue(XDeformGeometryNormalDiffSet);
-      osg::KeyframeSequenceGeoNormalsPtr::Ptr::dcast(KeyframeSequenceNormal)->getKeyframeDifferenceSets().addValue(YDeformGeometryNormalDiffSet);
-      osg::KeyframeSequenceGeoNormalsPtr::Ptr::dcast(KeyframeSequenceNormal)->getKeyframeDifferenceSets().addValue(ZDeformGeometryNormalDiffSet);
-      osg::KeyframeSequenceGeoNormalsPtr::Ptr::dcast(KeyframeSequenceNormal)->getKeyframeDifferenceSets().addValue(NoDeformGeometryNormalDiffSet);
+      osg::KeyframeSequenceGeoNormalsPtr::Ptr::dcast(KeyframeSequenceNormal)->getKeyframeDifferenceSets().push_back(XDeformGeometryNormalDiffSet);
+      osg::KeyframeSequenceGeoNormalsPtr::Ptr::dcast(KeyframeSequenceNormal)->getKeyframeDifferenceSets().push_back(YDeformGeometryNormalDiffSet);
+      osg::KeyframeSequenceGeoNormalsPtr::Ptr::dcast(KeyframeSequenceNormal)->getKeyframeDifferenceSets().push_back(ZDeformGeometryNormalDiffSet);
+      osg::KeyframeSequenceGeoNormalsPtr::Ptr::dcast(KeyframeSequenceNormal)->getKeyframeDifferenceSets().push_back(NoDeformGeometryNormalDiffSet);
    osg::endEditCP(osg::KeyframeSequenceGeoNormalsPtr::Ptr::dcast(KeyframeSequenceNormal));
 
    //Normals Animator

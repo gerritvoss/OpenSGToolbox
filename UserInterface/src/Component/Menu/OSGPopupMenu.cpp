@@ -155,7 +155,7 @@ void PopupMenu::addItem(MenuItemPtr Item, const UInt32& Index)
         UInt32 ItemCount(0);
         for(UInt32 i(0) ; i<getChildren().size() ; ++i)
         {
-            if(getChildren().getValue(i)->getType() != Separator::getClassType())
+            if(getChildren()[i]->getType() != Separator::getClassType())
             {
                 ++ItemCount;
             }
@@ -196,7 +196,7 @@ void PopupMenu::removeItem(const UInt32& Index)
         UInt32 ItemCount(0);
         for(UInt32 i(0) ; i<getChildren().size() ; ++i)
         {
-            if(getChildren().getValue(i)->getType() != Separator::getClassType())
+            if(getChildren()[i]->getType() != Separator::getClassType())
             {
                 ++ItemCount;
             }
@@ -221,7 +221,7 @@ void PopupMenu::removeAllItems(void)
     std::deque<UInt32> RemoveIndecies;
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-        if(getChildren().getValue(i)->getType() != Separator::getClassType())
+        if(getChildren()[i]->getType() != Separator::getClassType())
         {
             RemoveIndecies.push_front(i);
         }
@@ -272,7 +272,7 @@ void PopupMenu::removeSeparator(const UInt32&  Index)
         UInt32 SeparatorCount(0);
         for(UInt32 i(0) ; i<getChildren().size() ; ++i)
         {
-            if(getChildren().getValue(i)->getType() == Separator::getClassType())
+            if(getChildren()[i]->getType() == Separator::getClassType())
             {
                 ++SeparatorCount;
             }
@@ -305,7 +305,7 @@ void PopupMenu::removeAllSeparators(void)
     std::deque<UInt32> RemoveIndecies;
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-        if(getChildren().getValue(i)->getType() == Separator::getClassType())
+        if(getChildren()[i]->getType() == Separator::getClassType())
         {
             RemoveIndecies.push_front(i);
         }
@@ -321,7 +321,7 @@ UInt32 PopupMenu::getNumSeparators(void) const
     UInt32 NumSeparators(0);
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-        if(getChildren().getValue(i)->getType() == Separator::getClassType())
+        if(getChildren()[i]->getType() == Separator::getClassType())
         {
             ++NumSeparators;
         }
@@ -337,11 +337,11 @@ void PopupMenu::updateSeparatorSizes(void)
 
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-        if(getChildren().getValue(i)->getType() == Separator::getClassType())
+        if(getChildren()[i]->getType() == Separator::getClassType())
         {
-            beginEditCP(getChildren().getValue(i), Separator::PreferredSizeFieldMask);
-                Separator::Ptr::dcast(getChildren().getValue(i))->setPreferredSize(Vec2f(InsideInsetsSize.x(), getChildren().getValue(i)->getRequestedSize().y()));
-            endEditCP(getChildren().getValue(i), Separator::PreferredSizeFieldMask);
+            beginEditCP(getChildren()[i], Separator::PreferredSizeFieldMask);
+                Separator::Ptr::dcast(getChildren()[i])->setPreferredSize(Vec2f(InsideInsetsSize.x(), getChildren()[i]->getRequestedSize().y()));
+            endEditCP(getChildren()[i], Separator::PreferredSizeFieldMask);
         }
     }
 }
@@ -425,7 +425,7 @@ MenuItemPtr PopupMenu::getItem(const UInt32& Index)
         UInt32 ItemCount(0);
         for(UInt32 i(0) ; i<getChildren().size() ; ++i)
         {
-            if(getChildren().getValue(i)->getType() != Separator::getClassType())
+            if(getChildren()[i]->getType() != Separator::getClassType())
             {
                 ++ItemCount;
             }

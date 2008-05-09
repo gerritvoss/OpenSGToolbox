@@ -96,11 +96,11 @@ void Toolbar::setOrientation(BoxLayout::Orientation TheOrientation)
 
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-        if(getChildren().getValue(i)->getType() == Separator::getClassType())
+        if(getChildren()[i]->getType() == Separator::getClassType())
         {
-            beginEditCP(getChildren().getValue(i), Separator::OrientationFieldMask);
-                Separator::Ptr::dcast(getChildren().getValue(i))->setOrientation(Or);
-            endEditCP(getChildren().getValue(i), Separator::OrientationFieldMask);
+            beginEditCP(getChildren()[i], Separator::OrientationFieldMask);
+                Separator::Ptr::dcast(getChildren()[i])->setOrientation(Or);
+            endEditCP(getChildren()[i], Separator::OrientationFieldMask);
         }
     }
 
@@ -143,7 +143,7 @@ void Toolbar::removeTool(const UInt32&  Index)
         UInt32 ToolCount(0);
         for(UInt32 i(0) ; i<getChildren().size() ; ++i)
         {
-            if(getChildren().getValue(i)->getType() != Separator::getClassType())
+            if(getChildren()[i]->getType() != Separator::getClassType())
             {
                 ++ToolCount;
             }
@@ -165,7 +165,7 @@ void Toolbar::removeAllTools(void)
     std::deque<UInt32> RemoveIndecies;
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-        if(getChildren().getValue(i)->getType() != Separator::getClassType())
+        if(getChildren()[i]->getType() != Separator::getClassType())
         {
             RemoveIndecies.push_front(i);
         }
@@ -221,7 +221,7 @@ void Toolbar::removeSeparator(const UInt32&  Index)
         UInt32 SeparatorCount(0);
         for(UInt32 i(0) ; i<getChildren().size() ; ++i)
         {
-            if(getChildren().getValue(i)->getType() == Separator::getClassType())
+            if(getChildren()[i]->getType() == Separator::getClassType())
             {
                 ++SeparatorCount;
             }
@@ -254,7 +254,7 @@ void Toolbar::removeAllSeparators(void)
     std::deque<UInt32> RemoveIndecies;
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-        if(getChildren().getValue(i)->getType() == Separator::getClassType())
+        if(getChildren()[i]->getType() == Separator::getClassType())
         {
             RemoveIndecies.push_front(i);
         }
@@ -270,7 +270,7 @@ UInt32 Toolbar::getNumSeparators(void) const
     UInt32 NumSeparators(0);
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-        if(getChildren().getValue(i)->getType() == Separator::getClassType())
+        if(getChildren()[i]->getType() == Separator::getClassType())
         {
             ++NumSeparators;
         }
@@ -286,18 +286,18 @@ void Toolbar::updateSeparatorSizes(void)
 
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-        if(getChildren().getValue(i)->getType() == Separator::getClassType())
+        if(getChildren()[i]->getType() == Separator::getClassType())
         {
-            beginEditCP(getChildren().getValue(i), Separator::PreferredSizeFieldMask);
+            beginEditCP(getChildren()[i], Separator::PreferredSizeFieldMask);
             if(getOrientation() == BoxLayout::HORIZONTAL_ORIENTATION)
             {
-                Separator::Ptr::dcast(getChildren().getValue(i))->setPreferredSize(Vec2f(getChildren().getValue(i)->getRequestedSize().x(), InsideInsetsSize.y()));
+                Separator::Ptr::dcast(getChildren()[i])->setPreferredSize(Vec2f(getChildren()[i]->getRequestedSize().x(), InsideInsetsSize.y()));
             }
             else
             {
-                Separator::Ptr::dcast(getChildren().getValue(i))->setPreferredSize(Vec2f(InsideInsetsSize.x(), getChildren().getValue(i)->getRequestedSize().y()));
+                Separator::Ptr::dcast(getChildren()[i])->setPreferredSize(Vec2f(InsideInsetsSize.x(), getChildren()[i]->getRequestedSize().y()));
             }
-            endEditCP(getChildren().getValue(i), Separator::PreferredSizeFieldMask);
+            endEditCP(getChildren()[i], Separator::PreferredSizeFieldMask);
         }
     }
 }

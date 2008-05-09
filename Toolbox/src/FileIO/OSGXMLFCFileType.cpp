@@ -47,6 +47,7 @@
 
 
 #include <OpenSG/OSGField.h>
+#include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGFieldContainerFactory.h>
 #include <OpenSG/OSGSFFieldContainerPtr.h>
 #include <OpenSG/OSGMFFieldContainerPtr.h>
@@ -179,8 +180,10 @@ std::string XMLFCFileType::getName(void) const
 						setName(AttachmentContainerPtr::dcast(NewFieldContainer),SearchItor->second.c_str());
 					}
 				}
+
 				if(NewFieldContainer != NullFC)
 				{
+                    BitVector ChangedFields = 0;
 					for(AttributeIterator = attr.begin(); AttributeIterator != attr.end(); AttributeIterator++)
 					{
 						Desc = NewFieldContainer->getType().findFieldDescription(AttributeIterator->first.c_str());
@@ -188,6 +191,7 @@ std::string XMLFCFileType::getName(void) const
 						{
 							FieldValue = AttributeIterator->second;
 							TheField = NewFieldContainer->getField(Desc->getFieldId());
+                            ChangedFields = ChangedFields | Desc->getFieldMask();
 							if(isFieldAFieldContainerPtr(TheField))
 							{
 								UInt32 FCId;
@@ -258,6 +262,7 @@ std::string XMLFCFileType::getName(void) const
 							}
 						}
 					}
+                    changedCP(NewFieldContainer, ChangedFields);
 					Result.insert(NewFieldContainer);
 					FCInfoIter->second._Read = true;
 				}
@@ -395,7 +400,14 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 			Desc = TheFCType.getFieldDescription(i);
 			if(Desc->isInternal())
 			{
-				continue;
+		        if((*FCItor)->getType().isDerivedFrom(Node::getClassType()) &&
+                    Desc == Node::getClassType().getFieldDescription(i))
+		        {
+                }
+                else
+                {
+				    continue;
+                }
 			}
 
 			TheField = (*FCItor)->getField(i);

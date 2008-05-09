@@ -484,6 +484,23 @@ void UIDrawingSurface::checkMouseEnterExit(const Event& e, const Pnt2f& MouseLoc
 	}
 }
 
+void UIDrawingSurface::detachFromEventProducer(void)
+{
+    //for(UInt32 i(0) ; i<getInternalWindows().size() ; ++i)
+    //{
+    //    getInternalWindows()[i]->detatch();
+    //}
+
+    if(getEventProducer() != NullFC)
+    {
+        getEventProducer()->detatchAllListeners();
+    }
+
+    beginEditCP(UIDrawingSurfacePtr(this), EventProducerFieldMask);
+        setEventProducer(NullFC);
+    endEditCP(UIDrawingSurfacePtr(this), EventProducerFieldMask);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

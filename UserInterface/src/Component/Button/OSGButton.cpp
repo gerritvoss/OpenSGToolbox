@@ -744,10 +744,15 @@ void Button::ButtonArmedListener::mouseReleased(const MouseEvent& e)
         }
 
 		//Remove myself from the listener
-        _Button->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
-        if(_Button->getEnableActionOnMouseDownTime())
+        if(_Button->getParentWindow() != NullFC &&
+            _Button->getParentWindow()->getDrawingSurface() != NullFC &&
+            _Button->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
         {
-            _Button->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+            _Button->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
+            if(_Button->getEnableActionOnMouseDownTime())
+            {
+                _Button->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+            }
         }
 	}
 }

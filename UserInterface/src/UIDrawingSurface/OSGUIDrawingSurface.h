@@ -88,6 +88,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurface : public UIDrawingSurface
 
     /*! \}                                                                 */
 
+
+    void detachFromEventProducer(void);
+
 	//Mouse Events
     virtual void mouseClicked(const MouseEvent& e);
     virtual void mouseEntered(const MouseEvent& e);

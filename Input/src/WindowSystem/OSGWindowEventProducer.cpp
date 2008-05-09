@@ -205,6 +205,15 @@ ViewportPtr WindowEventProducer::windowToViewport(const Pnt2f& WindowPoint, Pnt2
 	return NullFC;
 }
 
+void WindowEventProducer::detatchAllListeners(void)
+{
+    _MouseListeners.clear();
+    _MouseMotionListeners.clear();
+    _MouseWheelListeners.clear();
+    _KeyListeners.clear();
+    _WindowListeners.clear();
+}
+
 void WindowEventProducer::produceMouseClicked(const MouseEvent::MouseButton& Button, const Pnt2f& Location)
 {
    Time t(getSystemTime());

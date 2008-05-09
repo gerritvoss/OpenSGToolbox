@@ -780,6 +780,21 @@ void Component::scrollToPoint(const Pnt2f& PointInComponent)
 		endEditCP(getParentContainer(), UIViewport::ViewPositionFieldMask);
 	}
 }
+
+/*void Component::detatch(void)
+{
+    if(getParentWindow() != NullFC && 
+        getParentWindow()->getDrawingSurface() != NullFC && 
+        getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+    {
+        getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&(_ComponentUpdater));
+    }
+    
+    beginEditCP(ComponentPtr(this), ParentWindowFieldMask);
+        setParentWindow(NullFC);
+    endEditCP(ComponentPtr(this), ParentWindowFieldMask);
+}*/
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

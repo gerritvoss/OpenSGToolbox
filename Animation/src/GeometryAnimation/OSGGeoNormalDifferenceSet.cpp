@@ -84,7 +84,7 @@ GeoNormalDifferenceSetPtr GeoNormalDifferenceSet::create(const GeoNormalsPtr Bas
 
    //Loop through each position of BaseNormals and ToNormals
    beginEditCP(Result);
-   Result->getIndices()->addValue( -1 );
+   Result->getIndices()->push_back( -1 );
    for(UInt32 i=0 ; i<BaseNormals->getSize() ; ++i)
    {
       //If Normal i of ToNormals is different from BaseNormals
@@ -94,7 +94,7 @@ GeoNormalDifferenceSetPtr GeoNormalDifferenceSet::create(const GeoNormalsPtr Bas
          addValueAsBaseType(Result->getNormals(), ToNormals, i);
          if(Result->getIndices()->getValue(0) != -1)
          {
-            Result->getIndices()->addValue( i );
+            Result->getIndices()->push_back( i );
          }
          else
          {

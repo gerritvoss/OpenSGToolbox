@@ -174,6 +174,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 
     static const OSG::BitVector BackgroundsFieldMask;
 	virtual void setBackgrounds(UIBackgroundPtr TheBackground);
+
+    //virtual void detatch(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

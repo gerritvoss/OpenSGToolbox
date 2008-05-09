@@ -84,7 +84,7 @@ GeoColorDifferenceSetPtr GeoColorDifferenceSet::create(const GeoColorsPtr BaseCo
 
    //Loop through each position of BaseColors and ToColors
    beginEditCP(Result);
-   Result->getIndices()->addValue( -1 );
+   Result->getIndices()->push_back( -1 );
    for(UInt32 i=0 ; i<BaseColors->getSize() ; ++i)
    {
       //If Color i of ToColors is different from BaseColors
@@ -94,7 +94,7 @@ GeoColorDifferenceSetPtr GeoColorDifferenceSet::create(const GeoColorsPtr BaseCo
          addValueAsBaseType(Result->getColors(), ToColors, i);
          if(Result->getIndices()->getValue(0) != -1)
          {
-            Result->getIndices()->addValue( i );
+            Result->getIndices()->push_back( i );
          }
          else
          {

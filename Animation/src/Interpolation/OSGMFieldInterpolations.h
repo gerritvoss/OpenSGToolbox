@@ -30,9 +30,9 @@ void MFieldLinearInterpFunc(const osg::Field& FromMField,
                                const osg::UInt32 ResultIndex,
                                const osg::Real32 t)
 {
-   static_cast<FieldTypeT&>(ResultMField).setValue(
-      static_cast<const FieldTypeT&>(FromMField).getValue(FromIndex) + ( (static_cast<const FieldTypeT&>(ToMField).getValue(ToIndex) - static_cast<const FieldTypeT&>(FromMField).getValue(FromIndex)) * t ),
-      ResultIndex);  
+   static_cast<FieldTypeT&>(ResultMField)[
+      static_cast<const FieldTypeT&>(FromMField)[FromIndex] + ( (static_cast<const FieldTypeT&>(ToMField)[ToIndex] - static_cast<const FieldTypeT&>(FromMField)[FromIndex]) * t ),
+      ResultIndex];  
 }
 
 //Linear For Surface Normals
@@ -47,13 +47,13 @@ void MFieldLinearNormalInterpFunc(const osg::Field& FromMField,
 {
    //Create the Quaternion Representing int rotation from
    //Vec From to Vec To
-   QuaternionBase<typename FieldTypeT::StoredType::ValueType> Rotation(static_cast<const FieldTypeT&>(FromMField).getValue(FromIndex), static_cast<const FieldTypeT&>(ToMField).getValue(ToIndex));
+   QuaternionBase<typename FieldTypeT::StoredType::ValueType> Rotation(static_cast<const FieldTypeT&>(FromMField)[FromIndex], static_cast<const FieldTypeT&>(ToMField)[ToIndex]);
 
    //Scale the angle to t, which is our lerp amount
    Rotation.scaleAngle(t);
 
    //Rotate the Resulting Vector by the Quaternion
-   Rotation.multVec(static_cast<const FieldTypeT&>(FromMField).getValue(FromIndex),static_cast<FieldTypeT&>(ResultMField).getValue(ResultIndex));
+   Rotation.multVec(static_cast<const FieldTypeT&>(FromMField)[FromIndex],static_cast<FieldTypeT&>(ResultMField)[ResultIndex]);
 }
 
 //Step
@@ -66,9 +66,9 @@ void MFieldStepInterpFunc(const osg::Field& FromMField,
                                const osg::UInt32 ResultIndex,
                                const osg::Real32 t)
 {
-   static_cast<FieldTypeT&>(ResultMField).setValue(
-      static_cast<const FieldTypeT&>(FromMField).getValue(FromIndex),
-      ResultIndex);
+   static_cast<FieldTypeT&>(ResultMField)[
+      static_cast<const FieldTypeT&>(FromMField)[FromIndex],
+      ResultIndex];
 }
 OSG_END_NAMESPACE
 

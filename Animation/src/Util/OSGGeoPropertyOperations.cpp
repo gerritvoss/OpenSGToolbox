@@ -32,19 +32,19 @@ void osg::addValueAsBaseType(osg::GeoColorsPtr Dst, const osg::GeoColorsPtr Src,
    {
       if( strcmp( Dst->getTypeName(), osg::GeoColors3fPropertyDesc::getTypeName()) == 0 )
       {
-         GeoColors3fPtr::dcast(Dst)->getField().addValue( GeoColors3fPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoColors3fPtr::dcast(Dst)->getField().push_back( GeoColors3fPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoColors4fPropertyDesc::getTypeName()) == 0 )
       {
-         GeoColors4fPtr::dcast(Dst)->getField().addValue( GeoColors4fPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoColors4fPtr::dcast(Dst)->getField().push_back( GeoColors4fPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoColors3ubPropertyDesc::getTypeName()) == 0 )
       {
-         GeoColors3ubPtr::dcast(Dst)->getField().addValue( GeoColors3ubPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoColors3ubPtr::dcast(Dst)->getField().push_back( GeoColors3ubPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoColors4ubPropertyDesc::getTypeName()) == 0 )
       {
-         GeoColors4ubPtr::dcast(Dst)->getField().addValue( GeoColors4ubPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoColors4ubPtr::dcast(Dst)->getField().push_back( GeoColors4ubPtr::dcast(Src)->getField()[SrcIndex] );
       }
    }
 }
@@ -101,15 +101,15 @@ void osg::addValueAsBaseType(osg::GeoNormalsPtr Dst, const osg::GeoNormalsPtr Sr
    {
       if( strcmp( Dst->getTypeName(), osg::GeoNormals3bPropertyDesc::getTypeName()) == 0 )
       {
-         GeoNormals3bPtr::dcast(Dst)->getField().addValue( GeoNormals3bPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoNormals3bPtr::dcast(Dst)->getField().push_back( GeoNormals3bPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoNormals3fPropertyDesc::getTypeName()) == 0 )
       {
-         GeoNormals3fPtr::dcast(Dst)->getField().addValue( GeoNormals3fPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoNormals3fPtr::dcast(Dst)->getField().push_back( GeoNormals3fPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoNormals3sPropertyDesc::getTypeName()) == 0 )
       {
-         GeoNormals3sPtr::dcast(Dst)->getField().addValue( GeoNormals3sPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoNormals3sPtr::dcast(Dst)->getField().push_back( GeoNormals3sPtr::dcast(Src)->getField()[SrcIndex] );
       }
    }
 }
@@ -186,39 +186,39 @@ void osg::addValueAsBaseType(osg::GeoPositionsPtr Dst, const osg::GeoPositionsPt
    {
       if( strcmp( Dst->getTypeName(), osg::GeoPositions2sPropertyDesc::getTypeName()) == 0 )
       {
-         GeoPositions2sPtr::dcast(Dst)->getField().addValue( GeoPositions2sPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoPositions2sPtr::dcast(Dst)->getField().push_back( GeoPositions2sPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoPositions2fPropertyDesc::getTypeName()) == 0 )
       {
-         GeoPositions2fPtr::dcast(Dst)->getField().addValue( GeoPositions2fPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoPositions2fPtr::dcast(Dst)->getField().push_back( GeoPositions2fPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoPositions2dPropertyDesc::getTypeName()) == 0 )
       {
-         GeoPositions2dPtr::dcast(Dst)->getField().addValue( GeoPositions2dPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoPositions2dPtr::dcast(Dst)->getField().push_back( GeoPositions2dPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoPositions3sPropertyDesc::getTypeName()) == 0 )
       {
-         GeoPositions3sPtr::dcast(Dst)->getField().addValue( GeoPositions3sPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoPositions3sPtr::dcast(Dst)->getField().push_back( GeoPositions3sPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoPositions3fPropertyDesc::getTypeName()) == 0 )
       {
-         GeoPositions3fPtr::dcast(Dst)->getField().addValue( GeoPositions3fPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoPositions3fPtr::dcast(Dst)->getField().push_back( GeoPositions3fPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoPositions3dPropertyDesc::getTypeName()) == 0 )
       {
-         GeoPositions3dPtr::dcast(Dst)->getField().addValue( GeoPositions3dPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoPositions3dPtr::dcast(Dst)->getField().push_back( GeoPositions3dPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoPositions4sPropertyDesc::getTypeName()) == 0 )
       {
-         GeoPositions4sPtr::dcast(Dst)->getField().addValue( GeoPositions4sPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoPositions4sPtr::dcast(Dst)->getField().push_back( GeoPositions4sPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoPositions4fPropertyDesc::getTypeName()) == 0 )
       {
-         GeoPositions4fPtr::dcast(Dst)->getField().addValue( GeoPositions4fPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoPositions4fPtr::dcast(Dst)->getField().push_back( GeoPositions4fPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoPositions4dPropertyDesc::getTypeName()) == 0 )
       {
-         GeoPositions4dPtr::dcast(Dst)->getField().addValue( GeoPositions4dPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoPositions4dPtr::dcast(Dst)->getField().push_back( GeoPositions4dPtr::dcast(Src)->getField()[SrcIndex] );
       }
    }
 }
@@ -314,35 +314,35 @@ void osg::addValueAsBaseType(osg::GeoTexCoordsPtr Dst, const osg::GeoTexCoordsPt
    {
       if( strcmp( Dst->getTypeName(), osg::GeoTexCoords1fPropertyDesc::getTypeName()) == 0 )
       {
-         GeoTexCoords1fPtr::dcast(Dst)->getField().addValue( GeoTexCoords1fPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoTexCoords1fPtr::dcast(Dst)->getField().push_back( GeoTexCoords1fPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoTexCoords1dPropertyDesc::getTypeName()) == 0 )
       {
-         GeoTexCoords1dPtr::dcast(Dst)->getField().addValue( GeoTexCoords1dPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoTexCoords1dPtr::dcast(Dst)->getField().push_back( GeoTexCoords1dPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoTexCoords2fPropertyDesc::getTypeName()) == 0 )
       {
-         GeoTexCoords2fPtr::dcast(Dst)->getField().addValue( GeoTexCoords2fPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoTexCoords2fPtr::dcast(Dst)->getField().push_back( GeoTexCoords2fPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoTexCoords2dPropertyDesc::getTypeName()) == 0 )
       {
-         GeoTexCoords2dPtr::dcast(Dst)->getField().addValue( GeoTexCoords2dPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoTexCoords2dPtr::dcast(Dst)->getField().push_back( GeoTexCoords2dPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoTexCoords3fPropertyDesc::getTypeName()) == 0 )
       {
-         GeoTexCoords3fPtr::dcast(Dst)->getField().addValue( GeoTexCoords3fPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoTexCoords3fPtr::dcast(Dst)->getField().push_back( GeoTexCoords3fPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoTexCoords3dPropertyDesc::getTypeName()) == 0 )
       {
-         GeoTexCoords3dPtr::dcast(Dst)->getField().addValue( GeoTexCoords3dPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoTexCoords3dPtr::dcast(Dst)->getField().push_back( GeoTexCoords3dPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoTexCoords4fPropertyDesc::getTypeName()) == 0 )
       {
-         GeoTexCoords4fPtr::dcast(Dst)->getField().addValue( GeoTexCoords4fPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoTexCoords4fPtr::dcast(Dst)->getField().push_back( GeoTexCoords4fPtr::dcast(Src)->getField()[SrcIndex] );
       }
       else if( strcmp( Dst->getTypeName(), osg::GeoTexCoords4dPropertyDesc::getTypeName()) == 0 )
       {
-         GeoTexCoords4dPtr::dcast(Dst)->getField().addValue( GeoTexCoords4dPtr::dcast(Src)->getField().getValue(SrcIndex) );
+         GeoTexCoords4dPtr::dcast(Dst)->getField().push_back( GeoTexCoords4dPtr::dcast(Src)->getField()[SrcIndex] );
       }
    }
 }

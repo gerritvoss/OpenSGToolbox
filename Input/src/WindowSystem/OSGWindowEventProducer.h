@@ -189,6 +189,8 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     void removeWindowListener(WindowListenerPtr Listener);
     void removeUpdateListener(UpdateListenerPtr Listener);
 
+    void detatchAllListeners(void);
+
     //Set the Window Position
     virtual void setPosition(Pnt2f Pos) = 0;
     //Set the Window Position
