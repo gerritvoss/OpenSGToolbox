@@ -43,15 +43,12 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-DefaultSingleSelectionModel::DefaultSingleSelectionModel() : _SelectedIndex(-1)
+void DefaultSingleSelectionModel::addSelectionListener(SelectionListenerPtr Listener)
 {
-}
-
-inline
-DefaultSingleSelectionModel::~DefaultSingleSelectionModel(void)
-{
+   _SelectionListeners.insert(Listener);
 }
 
 OSG_END_NAMESPACE
 
+#define OSGDEFAULTSINGLESELECTIONMODEL_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

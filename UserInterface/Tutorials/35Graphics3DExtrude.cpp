@@ -809,8 +809,8 @@ int main(int argc, char **argv)
     beginEditCP(list1);
         list1->setPreferredSize(Vec2f(200,300));
         list1->setBackgrounds(MainFrameBackground);
-        list1->setCellOrientation(VERTICAL_ALIGNMENT);
-        //list->setCellOrientation(HORIZONTAL_ALIGNMENT);
+        list1->setOrientation(List::VERTICAL_ORIENTATION);
+        //list->setOrientation(List::HORIZONTAL_ORIENTATION);
 		list1->setModel(Model1);
     endEditCP(list1);
 
@@ -819,8 +819,8 @@ int main(int argc, char **argv)
     beginEditCP(list2);
         list2->setPreferredSize(Vec2f(200,300));
         list2->setBackgrounds(MainFrameBackground);
-        list2->setCellOrientation(VERTICAL_ALIGNMENT);
-        //list->setCellOrientation(HORIZONTAL_ALIGNMENT);
+        list2->setOrientation(List::VERTICAL_ORIENTATION);
+        //list->setOrientation(List::HORIZONTAL_ORIENTATION);
 		list2->setModel(Model2);
     endEditCP(list2);
 
@@ -829,8 +829,8 @@ int main(int argc, char **argv)
     beginEditCP(list3);
         list3->setPreferredSize(Vec2f(200,300));
         list3->setBackgrounds(MainFrameBackground);
-        list3->setCellOrientation(VERTICAL_ALIGNMENT);
-        //list->setCellOrientation(HORIZONTAL_ALIGNMENT);
+        list3->setOrientation(List::VERTICAL_ORIENTATION);
+        //list->setOrientation(List::HORIZONTAL_ORIENTATION);
 		list3->setModel(Model3);
     endEditCP(list3);
 

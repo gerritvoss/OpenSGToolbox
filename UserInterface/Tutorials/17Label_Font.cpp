@@ -446,12 +446,12 @@ int main(int argc, char **argv)
 
     // Create the List of Fonts (see 18List for more information)
     FontList = List::create();
-    beginEditCP(FontList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::CellGeneratorFieldMask | List::ModelFieldMask);
+    beginEditCP(FontList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::CellGeneratorFieldMask | List::ModelFieldMask);
         FontList->setPreferredSize(Vec2f(200, 300));
-        FontList->setCellOrientation(VERTICAL_ALIGNMENT);
+        FontList->setOrientation(List::VERTICAL_ORIENTATION);
 		FontList->setCellGenerator(TheGenerator);
 		FontList->setModel(ListModel);
-    endEditCP(FontList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::CellGeneratorFieldMask | List::ModelFieldMask);
+    endEditCP(FontList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::CellGeneratorFieldMask | List::ModelFieldMask);
     ListSelectionModelPtr SelectionModel(new DefaultListSelectionModel);
     SelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
     FontList->setSelectionModel(SelectionModel);

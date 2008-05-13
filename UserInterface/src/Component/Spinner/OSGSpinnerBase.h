@@ -70,7 +70,7 @@
 #include "Component/Button/OSGButton.h" // NextButton type
 #include "Component/Button/OSGButton.h" // PreviousButton type
 #include "Component/OSGComponentFields.h" // Editor type
-#include "Util/OSGUIDefines.h" // Orientation type
+#include <OpenSG/OSGUInt32Fields.h> // Orientation type
 #include <OpenSG/OSGUInt32Fields.h> // EditorToButtonOffset type
 
 #include "OSGSpinnerFields.h"

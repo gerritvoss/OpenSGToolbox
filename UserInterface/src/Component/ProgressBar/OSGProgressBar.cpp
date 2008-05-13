@@ -140,11 +140,11 @@ void ProgressBar::updateProgressBarDrawObject(void)
 		beginEditCP(getProgressBarDrawObject() , SizeFieldMask | PositionFieldMask);
 			switch(getOrientation())
 			{
-			case HORIZONTAL_ALIGNMENT:
+			case ProgressBar::HORIZONTAL_ORIENTATION:
 				getProgressBarDrawObject()->setSize(Vec2f((BottomRight.x() - TopLeft.x())*getIndeterminateBarSize(),BottomRight.y() - TopLeft.y()));
 				getProgressBarDrawObject()->setPosition(Pnt2f(Pos*(BottomRight.x() - TopLeft.x())*(1.0-getIndeterminateBarSize()), TopLeft.y()));
 				break;
-			case VERTICAL_ALIGNMENT:
+			case ProgressBar::VERTICAL_ORIENTATION:
 			default:
 				getProgressBarDrawObject()->setSize(Vec2f(BottomRight.x() - TopLeft.x(), (BottomRight.y() - TopLeft.y())*getIndeterminateBarSize()));
 				getProgressBarDrawObject()->setPosition(Pnt2f(TopLeft.x(), Pos*(BottomRight.y() - TopLeft.y())*(1.0-getIndeterminateBarSize())));
@@ -162,10 +162,10 @@ void ProgressBar::updateProgressBarDrawObject(void)
 		getProgressBarDrawObject()->setPosition(TopLeft);
 		switch(getOrientation())
 		{
-		case HORIZONTAL_ALIGNMENT:
+		case ProgressBar::HORIZONTAL_ORIENTATION:
 			getProgressBarDrawObject()->setSize(Vec2f((BottomRight.x() - TopLeft.x())*Percent,BottomRight.y() - TopLeft.y()));
 			break;
-		case VERTICAL_ALIGNMENT:
+		case ProgressBar::VERTICAL_ORIENTATION:
 		default:
 			getProgressBarDrawObject()->setSize(Vec2f(BottomRight.x() - TopLeft.x(),(BottomRight.y() - TopLeft.y())*Percent));
 			break;

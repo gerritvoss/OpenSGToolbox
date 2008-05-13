@@ -48,11 +48,11 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGTree.h"
-#include "Util/OSGUIDefines.h"
 #include "Component/Tree/ModelLayout/OSGTreeModelLayout.h"
 #include "Component/Container/OSGUIViewport.h"
 
 #include "Component/Tree/ComponentGenerators/OSGDefaultTreeComponentGenerator.h"
+#include "Component/Scroll/OSGScrollBar.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -336,7 +336,7 @@ Vec2f Tree::getPreferredScrollableViewportSize(void)
 Int32 Tree::getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
     UInt16 MajorAxis;
-    if(orientation == VERTICAL_ALIGNMENT)
+    if(orientation == ScrollBar::VERTICAL_ORIENTATION)
     {
         MajorAxis = 1;
     }
@@ -360,7 +360,7 @@ bool Tree::getScrollableTracksViewportWidth(void)
 
 Int32 Tree::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
-    if(orientation == VERTICAL_ALIGNMENT && getModelLayout() != NullFC)
+    if(orientation == ScrollBar::VERTICAL_ORIENTATION && getModelLayout() != NullFC)
     {
         return getModelLayout()->getRowHeight();
     }

@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  MenuBarBase::MenuDelayFieldMask = 
     (TypeTraits<BitVector>::One << MenuBarBase::MenuDelayFieldId);
 
+const OSG::BitVector  MenuBarBase::SelectionModelFieldMask = 
+    (TypeTraits<BitVector>::One << MenuBarBase::SelectionModelFieldId);
+
 const OSG::BitVector MenuBarBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +78,9 @@ const OSG::BitVector MenuBarBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var Real32          MenuBarBase::_sfMenuDelay
+    
+*/
+/*! \var SingleSelectionModelPtr MenuBarBase::_sfSelectionModel
     
 */
 
@@ -86,7 +92,12 @@ FieldDescription *MenuBarBase::_desc[] =
                      "MenuDelay", 
                      MenuDelayFieldId, MenuDelayFieldMask,
                      false,
-                     (FieldAccessMethod) &MenuBarBase::getSFMenuDelay)
+                     (FieldAccessMethod) &MenuBarBase::getSFMenuDelay),
+    new FieldDescription(SFSingleSelectionModelPtr::getClassType(), 
+                     "SelectionModel", 
+                     SelectionModelFieldId, SelectionModelFieldMask,
+                     false,
+                     (FieldAccessMethod) &MenuBarBase::getSFSelectionModel)
 };
 
 
@@ -163,6 +174,7 @@ void MenuBarBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 MenuBarBase::MenuBarBase(void) :
     _sfMenuDelay              (Real32(0.5)), 
+    _sfSelectionModel         (SingleSelectionModelPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -173,6 +185,7 @@ MenuBarBase::MenuBarBase(void) :
 
 MenuBarBase::MenuBarBase(const MenuBarBase &source) :
     _sfMenuDelay              (source._sfMenuDelay              ), 
+    _sfSelectionModel         (source._sfSelectionModel         ), 
     Inherited                 (source)
 {
 }
@@ -194,6 +207,11 @@ UInt32 MenuBarBase::getBinSize(const BitVector &whichField)
         returnValue += _sfMenuDelay.getBinSize();
     }
 
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+    {
+        returnValue += _sfSelectionModel.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -206,6 +224,11 @@ void MenuBarBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (MenuDelayFieldMask & whichField))
     {
         _sfMenuDelay.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+    {
+        _sfSelectionModel.copyToBin(pMem);
     }
 
 
@@ -221,6 +244,11 @@ void MenuBarBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfMenuDelay.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+    {
+        _sfSelectionModel.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -234,6 +262,9 @@ void MenuBarBase::executeSyncImpl(      MenuBarBase *pOther,
     if(FieldBits::NoField != (MenuDelayFieldMask & whichField))
         _sfMenuDelay.syncWith(pOther->_sfMenuDelay);
 
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+        _sfSelectionModel.syncWith(pOther->_sfSelectionModel);
+
 
 }
 #else
@@ -246,6 +277,9 @@ void MenuBarBase::executeSyncImpl(      MenuBarBase *pOther,
 
     if(FieldBits::NoField != (MenuDelayFieldMask & whichField))
         _sfMenuDelay.syncWith(pOther->_sfMenuDelay);
+
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+        _sfSelectionModel.syncWith(pOther->_sfSelectionModel);
 
 
 

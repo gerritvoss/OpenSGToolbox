@@ -47,7 +47,6 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGButtonBase.h"
-#include "Util/OSGUIDefines.h"
 #include "Event/OSGActionListener.h"
 #include <OpenSG/Input/OSGMouseAdapter.h>
 #include <OpenSG/Input/OSGUpdateListener.h>

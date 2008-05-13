@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -36,50 +34,15 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_SINGLE_SELECTION_MODEL_H_
-#define _OSG_UI_SINGLE_SELECTION_MODEL_H_
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
-#ifdef __sgi
-#pragma once
-#endif
- 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include "Event/OSGChangeListener.h"
-#include <OpenSG/OSGFieldContainerPtr.h>
 
 OSG_BEGIN_NAMESPACE
-	 
-class OSG_USERINTERFACELIB_DLLMAPPING SingleSelectionModel
-{
-private:
-protected:
-public:
-
-    //Adds listener as a listener to changes in the model.
-    virtual void addChangeListener(ChangeListenerPtr listener) = 0;
-
-    //Clears the selection (to -1).
-    virtual void clearSelection(void) = 0;
-    
-    //Returns the model's selection.
-    virtual Int32 getSelectedIndex(void) = 0;
-    
-    //Returns true if the selection model currently has a selected value.
-    virtual bool isSelected(void) = 0;
-    
-    //Removes listener as a listener to changes in the model.
-    virtual void removeChangeListener(ChangeListenerPtr listener) = 0;
-    
-    //Sets the model's selected index to index.
-    virtual void setSelectedIndex(Int32 index) = 0;
-   
-};
-
-typedef SingleSelectionModel* SingleSelectionModelPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSG_UI_SINGLE_SELECTION_MODEL_H_ */
-
+#define OSGSINGLESELECTIONMODEL_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

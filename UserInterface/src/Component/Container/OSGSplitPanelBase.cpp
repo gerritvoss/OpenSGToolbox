@@ -61,7 +61,6 @@
 #include "OSGSplitPanelBase.h"
 #include "OSGSplitPanel.h"
 
-#include <Util/OSGUIDefines.h>            // Alignment default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -89,8 +88,8 @@ const OSG::BitVector  SplitPanelBase::DividerDrawObjectFieldMask =
 const OSG::BitVector  SplitPanelBase::ExpandableFieldMask = 
     (TypeTraits<BitVector>::One << SplitPanelBase::ExpandableFieldId);
 
-const OSG::BitVector  SplitPanelBase::AlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << SplitPanelBase::AlignmentFieldId);
+const OSG::BitVector  SplitPanelBase::OrientationFieldMask = 
+    (TypeTraits<BitVector>::One << SplitPanelBase::OrientationFieldId);
 
 const OSG::BitVector SplitPanelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -123,7 +122,7 @@ const OSG::BitVector SplitPanelBase::MTInfluenceMask =
 /*! \var bool            SplitPanelBase::_sfExpandable
     
 */
-/*! \var UInt32          SplitPanelBase::_sfAlignment
+/*! \var UInt32          SplitPanelBase::_sfOrientation
     
 */
 
@@ -172,10 +171,10 @@ FieldDescription *SplitPanelBase::_desc[] =
                      false,
                      (FieldAccessMethod) &SplitPanelBase::getSFExpandable),
     new FieldDescription(SFUInt32::getClassType(), 
-                     "Alignment", 
-                     AlignmentFieldId, AlignmentFieldMask,
+                     "Orientation", 
+                     OrientationFieldId, OrientationFieldMask,
                      false,
-                     (FieldAccessMethod) &SplitPanelBase::getSFAlignment)
+                     (FieldAccessMethod) &SplitPanelBase::getSFOrientation)
 };
 
 
@@ -259,7 +258,7 @@ SplitPanelBase::SplitPanelBase(void) :
     _sfMaxDividerPosition     (Real32(1.0)), 
     _sfDividerDrawObject      (UIDrawObjectCanvasPtr(NullFC)), 
     _sfExpandable             (bool(true)), 
-    _sfAlignment              (UInt32(HORIZONTAL_ALIGNMENT)), 
+    _sfOrientation            (UInt32(SplitPanel::HORIZONTAL_ORIENTATION)), 
     Inherited() 
 {
 }
@@ -277,7 +276,7 @@ SplitPanelBase::SplitPanelBase(const SplitPanelBase &source) :
     _sfMaxDividerPosition     (source._sfMaxDividerPosition     ), 
     _sfDividerDrawObject      (source._sfDividerDrawObject      ), 
     _sfExpandable             (source._sfExpandable             ), 
-    _sfAlignment              (source._sfAlignment              ), 
+    _sfOrientation            (source._sfOrientation            ), 
     Inherited                 (source)
 {
 }
@@ -334,9 +333,9 @@ UInt32 SplitPanelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfExpandable.getBinSize();
     }
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
-        returnValue += _sfAlignment.getBinSize();
+        returnValue += _sfOrientation.getBinSize();
     }
 
 
@@ -388,9 +387,9 @@ void SplitPanelBase::copyToBin(      BinaryDataHandler &pMem,
         _sfExpandable.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
-        _sfAlignment.copyToBin(pMem);
+        _sfOrientation.copyToBin(pMem);
     }
 
 
@@ -441,9 +440,9 @@ void SplitPanelBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfExpandable.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
-        _sfAlignment.copyFromBin(pMem);
+        _sfOrientation.copyFromBin(pMem);
     }
 
 
@@ -480,8 +479,8 @@ void SplitPanelBase::executeSyncImpl(      SplitPanelBase *pOther,
     if(FieldBits::NoField != (ExpandableFieldMask & whichField))
         _sfExpandable.syncWith(pOther->_sfExpandable);
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
+        _sfOrientation.syncWith(pOther->_sfOrientation);
 
 
 }
@@ -517,8 +516,8 @@ void SplitPanelBase::executeSyncImpl(      SplitPanelBase *pOther,
     if(FieldBits::NoField != (ExpandableFieldMask & whichField))
         _sfExpandable.syncWith(pOther->_sfExpandable);
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
+        _sfOrientation.syncWith(pOther->_sfOrientation);
 
 
 

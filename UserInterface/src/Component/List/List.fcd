@@ -13,12 +13,11 @@
 >
 A UI List.
 	<Field
-		name="CellOrientation"
+		name="Orientation"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="VERTICAL_ALIGNMENT"
-		defaultHeader="Util/OSGUIDefines.h"
+		defaultValue="List::VERTICAL_ORIENTATION"
 		access="public"
 	>
 	</Field>

@@ -110,13 +110,6 @@ MFComponentPtr *TabPanelBase::getMFTabContents(void)
     return &_mfTabContents;
 }
 
-//! Get the TabPanel::_sfActiveTab field.
-inline
-SFUInt32 *TabPanelBase::getSFActiveTab(void)
-{
-    return &_sfActiveTab;
-}
-
 //! Get the TabPanel::_sfTabPlacement field.
 inline
 SFUInt32 *TabPanelBase::getSFTabPlacement(void)
@@ -264,27 +257,13 @@ SFUIBackgroundPtr *TabPanelBase::getSFContentRolloverBackground(void)
     return &_sfContentRolloverBackground;
 }
 
-
-//! Get the value of the TabPanel::_sfActiveTab field.
+//! Get the TabPanel::_sfSelectionModel field.
 inline
-UInt32 &TabPanelBase::getActiveTab(void)
+SFSingleSelectionModelPtr *TabPanelBase::getSFSelectionModel(void)
 {
-    return _sfActiveTab.getValue();
+    return &_sfSelectionModel;
 }
 
-//! Get the value of the TabPanel::_sfActiveTab field.
-inline
-const UInt32 &TabPanelBase::getActiveTab(void) const
-{
-    return _sfActiveTab.getValue();
-}
-
-//! Set the value of the TabPanel::_sfActiveTab field.
-inline
-void TabPanelBase::setActiveTab(const UInt32 &value)
-{
-    _sfActiveTab.setValue(value);
-}
 
 //! Get the value of the TabPanel::_sfTabPlacement field.
 inline
@@ -725,6 +704,27 @@ inline
 void TabPanelBase::setContentRolloverBackground(const UIBackgroundPtr &value)
 {
     _sfContentRolloverBackground.setValue(value);
+}
+
+//! Get the value of the TabPanel::_sfSelectionModel field.
+inline
+SingleSelectionModelPtr &TabPanelBase::getSelectionModel(void)
+{
+    return _sfSelectionModel.getValue();
+}
+
+//! Get the value of the TabPanel::_sfSelectionModel field.
+inline
+const SingleSelectionModelPtr &TabPanelBase::getSelectionModel(void) const
+{
+    return _sfSelectionModel.getValue();
+}
+
+//! Set the value of the TabPanel::_sfSelectionModel field.
+inline
+void TabPanelBase::setSelectionModel(const SingleSelectionModelPtr &value)
+{
+    _sfSelectionModel.setValue(value);
 }
 
 

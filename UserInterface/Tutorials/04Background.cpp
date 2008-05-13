@@ -106,8 +106,6 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGLineBorder.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-// Include UIDefines- used for HORITONAL_ALIGNMENT and VERTICAL_ALIGNMENT
-#include <OpenSG/UserInterface/OSGUIDefines.h>
 // Include UIBackground header files
 #include <OpenSG/OSGChunkMaterial.h>
 #include <OpenSG/OSGMaterialChunk.h>
@@ -260,18 +258,18 @@ int main(int argc, char **argv)
 				starting Color for the gradient.
 			-setColorEnd(Color4f): Determines the
 				ending Color for the gradient.
-			-setAlignmnet(ENUM): Determines the
+			-setOrientation(ENUM): Determines the
 				gradient alignment.  Takes 
-				HORIZONTAL_ALIGNMENT or 
-				VERTICAL_ALIGNMENT arguments.
+				HORIZONTAL_ORIENTATION or 
+				VERTICAL_ORIENTATION arguments.
 
     ******************************************************/
 
-    beginEditCP(ExampleGradientUIBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
+    beginEditCP(ExampleGradientUIBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::OrientationFieldMask);
          ExampleGradientUIBackground->setColorStart(Color4f(1.0, 0.0, 0.0, 1.0));
          ExampleGradientUIBackground->setColorEnd(Color4f(0.0, 0.0, 1.0, 0.5));
-         ExampleGradientUIBackground->setAlignment(HORIZONTAL_ALIGNMENT);
-    endEditCP(ExampleGradientUIBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
+         ExampleGradientUIBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
+    endEditCP(ExampleGradientUIBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::OrientationFieldMask);
 		
     /******************************************************
 

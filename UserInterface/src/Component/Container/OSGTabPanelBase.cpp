@@ -70,9 +70,6 @@ const OSG::BitVector  TabPanelBase::TabsFieldMask =
 const OSG::BitVector  TabPanelBase::TabContentsFieldMask = 
     (TypeTraits<BitVector>::One << TabPanelBase::TabContentsFieldId);
 
-const OSG::BitVector  TabPanelBase::ActiveTabFieldMask = 
-    (TypeTraits<BitVector>::One << TabPanelBase::ActiveTabFieldId);
-
 const OSG::BitVector  TabPanelBase::TabPlacementFieldMask = 
     (TypeTraits<BitVector>::One << TabPanelBase::TabPlacementFieldId);
 
@@ -136,6 +133,9 @@ const OSG::BitVector  TabPanelBase::ContentRolloverBorderFieldMask =
 const OSG::BitVector  TabPanelBase::ContentRolloverBackgroundFieldMask = 
     (TypeTraits<BitVector>::One << TabPanelBase::ContentRolloverBackgroundFieldId);
 
+const OSG::BitVector  TabPanelBase::SelectionModelFieldMask = 
+    (TypeTraits<BitVector>::One << TabPanelBase::SelectionModelFieldId);
+
 const OSG::BitVector TabPanelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -147,9 +147,6 @@ const OSG::BitVector TabPanelBase::MTInfluenceMask =
     
 */
 /*! \var ComponentPtr    TabPanelBase::_mfTabContents
-    
-*/
-/*! \var UInt32          TabPanelBase::_sfActiveTab
     
 */
 /*! \var UInt32          TabPanelBase::_sfTabPlacement
@@ -215,6 +212,9 @@ const OSG::BitVector TabPanelBase::MTInfluenceMask =
 /*! \var UIBackgroundPtr TabPanelBase::_sfContentRolloverBackground
     
 */
+/*! \var SingleSelectionModelPtr TabPanelBase::_sfSelectionModel
+    
+*/
 
 //! TabPanel description
 
@@ -230,11 +230,6 @@ FieldDescription *TabPanelBase::_desc[] =
                      TabContentsFieldId, TabContentsFieldMask,
                      false,
                      (FieldAccessMethod) &TabPanelBase::getMFTabContents),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "ActiveTab", 
-                     ActiveTabFieldId, ActiveTabFieldMask,
-                     false,
-                     (FieldAccessMethod) &TabPanelBase::getSFActiveTab),
     new FieldDescription(SFUInt32::getClassType(), 
                      "TabPlacement", 
                      TabPlacementFieldId, TabPlacementFieldMask,
@@ -339,7 +334,12 @@ FieldDescription *TabPanelBase::_desc[] =
                      "ContentRolloverBackground", 
                      ContentRolloverBackgroundFieldId, ContentRolloverBackgroundFieldMask,
                      false,
-                     (FieldAccessMethod) &TabPanelBase::getSFContentRolloverBackground)
+                     (FieldAccessMethod) &TabPanelBase::getSFContentRolloverBackground),
+    new FieldDescription(SFSingleSelectionModelPtr::getClassType(), 
+                     "SelectionModel", 
+                     SelectionModelFieldId, SelectionModelFieldMask,
+                     false,
+                     (FieldAccessMethod) &TabPanelBase::getSFSelectionModel)
 };
 
 
@@ -419,7 +419,6 @@ void TabPanelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 TabPanelBase::TabPanelBase(void) :
     _mfTabs                   (), 
     _mfTabContents            (), 
-    _sfActiveTab              (UInt32(0)), 
     _sfTabPlacement           (UInt32(0)), 
     _sfTabAlignment           (Real32(0.5f)), 
     _sfTabRotation            (UInt32(0)), 
@@ -441,6 +440,7 @@ TabPanelBase::TabPanelBase(void) :
     _sfContentDisabledBackground(UIBackgroundPtr(NullFC)), 
     _sfContentRolloverBorder  (BorderPtr(NullFC)), 
     _sfContentRolloverBackground(UIBackgroundPtr(NullFC)), 
+    _sfSelectionModel         (SingleSelectionModelPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -452,7 +452,6 @@ TabPanelBase::TabPanelBase(void) :
 TabPanelBase::TabPanelBase(const TabPanelBase &source) :
     _mfTabs                   (source._mfTabs                   ), 
     _mfTabContents            (source._mfTabContents            ), 
-    _sfActiveTab              (source._sfActiveTab              ), 
     _sfTabPlacement           (source._sfTabPlacement           ), 
     _sfTabAlignment           (source._sfTabAlignment           ), 
     _sfTabRotation            (source._sfTabRotation            ), 
@@ -474,6 +473,7 @@ TabPanelBase::TabPanelBase(const TabPanelBase &source) :
     _sfContentDisabledBackground(source._sfContentDisabledBackground), 
     _sfContentRolloverBorder  (source._sfContentRolloverBorder  ), 
     _sfContentRolloverBackground(source._sfContentRolloverBackground), 
+    _sfSelectionModel         (source._sfSelectionModel         ), 
     Inherited                 (source)
 {
 }
@@ -498,11 +498,6 @@ UInt32 TabPanelBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (TabContentsFieldMask & whichField))
     {
         returnValue += _mfTabContents.getBinSize();
-    }
-
-    if(FieldBits::NoField != (ActiveTabFieldMask & whichField))
-    {
-        returnValue += _sfActiveTab.getBinSize();
     }
 
     if(FieldBits::NoField != (TabPlacementFieldMask & whichField))
@@ -610,6 +605,11 @@ UInt32 TabPanelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfContentRolloverBackground.getBinSize();
     }
 
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+    {
+        returnValue += _sfSelectionModel.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -627,11 +627,6 @@ void TabPanelBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (TabContentsFieldMask & whichField))
     {
         _mfTabContents.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (ActiveTabFieldMask & whichField))
-    {
-        _sfActiveTab.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (TabPlacementFieldMask & whichField))
@@ -739,6 +734,11 @@ void TabPanelBase::copyToBin(      BinaryDataHandler &pMem,
         _sfContentRolloverBackground.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+    {
+        _sfSelectionModel.copyToBin(pMem);
+    }
+
 
 }
 
@@ -755,11 +755,6 @@ void TabPanelBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (TabContentsFieldMask & whichField))
     {
         _mfTabContents.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (ActiveTabFieldMask & whichField))
-    {
-        _sfActiveTab.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (TabPlacementFieldMask & whichField))
@@ -867,6 +862,11 @@ void TabPanelBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfContentRolloverBackground.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+    {
+        _sfSelectionModel.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -883,9 +883,6 @@ void TabPanelBase::executeSyncImpl(      TabPanelBase *pOther,
     if(FieldBits::NoField != (TabContentsFieldMask & whichField))
         _mfTabContents.syncWith(pOther->_mfTabContents);
 
-    if(FieldBits::NoField != (ActiveTabFieldMask & whichField))
-        _sfActiveTab.syncWith(pOther->_sfActiveTab);
-
     if(FieldBits::NoField != (TabPlacementFieldMask & whichField))
         _sfTabPlacement.syncWith(pOther->_sfTabPlacement);
 
@@ -948,6 +945,9 @@ void TabPanelBase::executeSyncImpl(      TabPanelBase *pOther,
 
     if(FieldBits::NoField != (ContentRolloverBackgroundFieldMask & whichField))
         _sfContentRolloverBackground.syncWith(pOther->_sfContentRolloverBackground);
+
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+        _sfSelectionModel.syncWith(pOther->_sfSelectionModel);
 
 
 }
@@ -959,9 +959,6 @@ void TabPanelBase::executeSyncImpl(      TabPanelBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (ActiveTabFieldMask & whichField))
-        _sfActiveTab.syncWith(pOther->_sfActiveTab);
-
     if(FieldBits::NoField != (TabPlacementFieldMask & whichField))
         _sfTabPlacement.syncWith(pOther->_sfTabPlacement);
 
@@ -1024,6 +1021,9 @@ void TabPanelBase::executeSyncImpl(      TabPanelBase *pOther,
 
     if(FieldBits::NoField != (ContentRolloverBackgroundFieldMask & whichField))
         _sfContentRolloverBackground.syncWith(pOther->_sfContentRolloverBackground);
+
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+        _sfSelectionModel.syncWith(pOther->_sfSelectionModel);
 
 
     if(FieldBits::NoField != (TabsFieldMask & whichField))

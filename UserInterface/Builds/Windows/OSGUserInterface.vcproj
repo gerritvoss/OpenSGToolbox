@@ -526,18 +526,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Component\Menu\OSGDefaultSingleSelectionModel.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Menu\OSGDefaultSingleSelectionModel.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Menu\OSGDefaultSingleSelectionModel.inl"
-						>
-					</File>
-					<File
 						RelativePath="..\..\src\Component\Menu\OSGListGeneratedPopupMenu.cpp"
 						>
 					</File>
@@ -675,10 +663,6 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Component\Menu\OSGPopupMenuFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Component\Menu\OSGSingleSelectionModel.h"
 						>
 					</File>
 				</Filter>
@@ -4853,14 +4837,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Util\OSGUIDefines.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Util\OSGUIDefines.inl"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\Util\OSGUIDrawUtils.cpp"
 					>
 				</File>
@@ -5532,6 +5508,86 @@
 					RelativePath="..\..\src\UndoableEdit\OSGUndoManager.inl"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="Models"
+				>
+				<Filter
+					Name="SelectionModels"
+					>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGDefaultSingleSelectionModel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGDefaultSingleSelectionModel.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGDefaultSingleSelectionModel.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGDefaultSingleSelectionModelBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGDefaultSingleSelectionModelBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGDefaultSingleSelectionModelBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGDefaultSingleSelectionModelFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGSelectionEvent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGSelectionEvent.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGSelectionEvent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGSelectionListener.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGSingleSelectionModel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGSingleSelectionModel.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGSingleSelectionModel.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGSingleSelectionModelBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGSingleSelectionModelBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGSingleSelectionModelBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGSingleSelectionModelFields.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>

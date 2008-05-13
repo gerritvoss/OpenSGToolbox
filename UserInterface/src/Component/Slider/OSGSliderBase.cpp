@@ -146,13 +146,13 @@ const OSG::BitVector SliderBase::MTInfluenceMask =
 /*! \var UInt32          SliderBase::_sfMajorTickSpacing
     
 */
-/*! \var Pnt2f           SliderBase::_mfMajorTickPositions
+/*! \var Pnt2s           SliderBase::_mfMajorTickPositions
     
 */
 /*! \var UInt32          SliderBase::_sfMinorTickSpacing
     
 */
-/*! \var Pnt2f           SliderBase::_mfMinorTickPositions
+/*! \var Pnt2s           SliderBase::_mfMinorTickPositions
     
 */
 /*! \var bool            SliderBase::_sfSnapToTicks
@@ -223,7 +223,7 @@ FieldDescription *SliderBase::_desc[] =
                      MajorTickSpacingFieldId, MajorTickSpacingFieldMask,
                      false,
                      (FieldAccessMethod) &SliderBase::getSFMajorTickSpacing),
-    new FieldDescription(MFPnt2f::getClassType(), 
+    new FieldDescription(MFPnt2s::getClassType(), 
                      "MajorTickPositions", 
                      MajorTickPositionsFieldId, MajorTickPositionsFieldMask,
                      true,
@@ -233,7 +233,7 @@ FieldDescription *SliderBase::_desc[] =
                      MinorTickSpacingFieldId, MinorTickSpacingFieldMask,
                      false,
                      (FieldAccessMethod) &SliderBase::getSFMinorTickSpacing),
-    new FieldDescription(MFPnt2f::getClassType(), 
+    new FieldDescription(MFPnt2s::getClassType(), 
                      "MinorTickPositions", 
                      MinorTickPositionsFieldId, MinorTickPositionsFieldMask,
                      true,
@@ -398,7 +398,7 @@ void SliderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 SliderBase::SliderBase(void) :
     _sfKnobButton             (ButtonPtr(NullFC)), 
-    _sfOrientation            (UInt32(VERTICAL_ALIGNMENT)), 
+    _sfOrientation            (UInt32(Slider::VERTICAL_ORIENTATION)), 
     _sfMajorTickSpacing       (UInt32(1)), 
     _mfMajorTickPositions     (), 
     _sfMinorTickSpacing       (UInt32(1)), 

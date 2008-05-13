@@ -31,15 +31,6 @@ A UI Tab Panel.
 	>
 	</Field>
 	<Field
-		name="ActiveTab"
-		type="UInt32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-		defaultValue="0"
-	>
-	</Field>
-	<Field
 		name="TabPlacement"
 		type="UInt32"
 		cardinality="single"
@@ -241,6 +232,16 @@ A UI Tab Panel.
 		visibility="external"
 		defaultValue="NullFC"
 		header="Background/OSGUIBackground.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="SelectionModel"
+		type="SingleSelectionModelPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Models/SelectionModels/OSGSingleSelectionModelFields.h"
 		access="public"
 	>
 	</Field>

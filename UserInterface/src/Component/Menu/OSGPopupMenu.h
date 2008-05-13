@@ -47,10 +47,8 @@
 
 #include "OSGPopupMenuBase.h"
 #include "OSGMenuItemFields.h"
-#include "OSGSingleSelectionModel.h"
-#include "Event/OSGChangeListener.h"
+#include "Models/SelectionModels/OSGSelectionListener.h"
 #include "Event/OSGPopupMenuListener.h"
-#include "Component/Misc/OSGSeparatorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -134,11 +132,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
     
     virtual void updateLayout(void);
     
-	class MenuSelectionListener : public ChangeListener
+	class MenuSelectionListener : public SelectionListener
 	{
 	public:
 		MenuSelectionListener(PopupMenuPtr ThePopupMenu);
-        void stateChanged(const ChangeEvent& e);
+        virtual void selectionChanged(const SelectionEvent& e);
 	private:
 		PopupMenuPtr _PopupMenu;
 	};
@@ -169,8 +167,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const PopupMenu &source);
-    
-    SingleSelectionModelPtr _SelectionModel;
 };
 
 typedef PopupMenu *PopupMenuP;

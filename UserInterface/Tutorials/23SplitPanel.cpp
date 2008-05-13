@@ -211,14 +211,14 @@ int main(int argc, char **argv)
 			up to two Components to the SplitPanel.  Note
 			that if you do not add both an empty Panel
 			will be added automatically.
-		-setAlignment(ENUM): Determines the alignment
+		-setOrientation(ENUM): Determines the alignment
             of the split aspect.  The default is
             Horizontal with an east/west split. The 
             minComponent set previously is the west or 
 			north Component of the Panel (depending 
 			on the alignment) and the max is the east
-			or west Component.  Takes VERTICAL_ALIGNMENT
-            and HORIZONTAL_ALIGNMENT arguments.
+			or west Component.  Takes VERTICAL_ORIENTATION
+            and HORIZONTAL_ORIENTATION arguments.
         -setDividerPosition("smart" REAL): Determines the initial 
             location of the divider.  Note that this REAL is
             a percentage if between 0.0 and 1.0 (inclusive) 
@@ -245,12 +245,12 @@ int main(int argc, char **argv)
     
     SplitPanelPtr ExampleSplitPanel = osg::SplitPanel::create();
 
-	beginEditCP(ExampleSplitPanel, SplitPanel::ConstraintsFieldMask | SplitPanel::MinComponentFieldMask | SplitPanel::MaxComponentFieldMask | SplitPanel::AlignmentFieldMask | SplitPanel::DividerPositionFieldMask | 
+	beginEditCP(ExampleSplitPanel, SplitPanel::ConstraintsFieldMask | SplitPanel::MinComponentFieldMask | SplitPanel::MaxComponentFieldMask | SplitPanel::OrientationFieldMask | SplitPanel::DividerPositionFieldMask | 
 		SplitPanel::DividerSizeFieldMask | SplitPanel::ExpandableFieldMask | SplitPanel::MaxDividerPositionFieldMask | SplitPanel::MinDividerPositionFieldMask);
         ExampleSplitPanel->setConstraints(ExampleSplitPanelConstraints);
         ExampleSplitPanel->setMinComponent(ExampleSplitPanelPanel1);
         ExampleSplitPanel->setMaxComponent(ExampleSplitPanelPanel2);
-        // ExampleSplitPanel->setAlignment(VERTICAL_ALIGNMENT);
+        // ExampleSplitPanel->setOrientation(SplitPanel::VERTICAL_ORIENTATION);
         // ExampleSplitPanel->setDividerPosition(.25); // this is a percentage
         ExampleSplitPanel->setDividerPosition(300); // this is an absolute (300 > 1.0) 
         // location from the left/top
@@ -262,7 +262,7 @@ int main(int argc, char **argv)
         // also, if you want to change the way the divider looks, you can always set a
         // DrawObjectCanvas in place of the default divider
         // ExampleSplitPanel->setDividerDrawObject(drawObjectName);
-    endEditCP(ExampleSplitPanel, SplitPanel::ConstraintsFieldMask | SplitPanel::MinComponentFieldMask | SplitPanel::MaxComponentFieldMask | SplitPanel::AlignmentFieldMask | SplitPanel::DividerPositionFieldMask | 
+    endEditCP(ExampleSplitPanel, SplitPanel::ConstraintsFieldMask | SplitPanel::MinComponentFieldMask | SplitPanel::MaxComponentFieldMask | SplitPanel::OrientationFieldMask | SplitPanel::DividerPositionFieldMask | 
 		SplitPanel::DividerSizeFieldMask | SplitPanel::ExpandableFieldMask | SplitPanel::MaxDividerPositionFieldMask | SplitPanel::MinDividerPositionFieldMask);
     
     // Create The Main InternalWindow

@@ -67,7 +67,7 @@
 
 #include "Component/Container/OSGContainer.h" // Parent
 
-#include "Util/OSGUIDefines.h" // Orientation type
+#include <OpenSG/OSGUInt32Fields.h> // Orientation type
 #include <OpenSG/OSGUInt32Fields.h> // UnitIncrement type
 #include <OpenSG/OSGUInt32Fields.h> // BlockIncrement type
 #include "Component/Button/OSGButton.h" // VerticalMinButton type

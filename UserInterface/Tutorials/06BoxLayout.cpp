@@ -201,9 +201,9 @@ int main(int argc, char **argv)
         Note that if the Frame is too small, the objects will 
         appear out of the Frame background.
 
-		-setAlignment(ENUM): Determine alignment of
-			Layout.  Takes VERTICAL_ALIGNMENT and
-			HORIZONTAL_ALIGNMENT arguments.
+		-setOrientation(ENUM): Determine alignment of
+			Layout.  Takes VERTICAL_ORIENTATION and
+			HORIZONTAL_ORIENTATION arguments.
 
 
     ******************************************************/
@@ -212,7 +212,7 @@ int main(int argc, char **argv)
 
     beginEditCP(MainInternalWindowLayout, BoxLayout::OrientationFieldMask);
 	MainInternalWindowLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
-        // MainInternalWindowLayout->setAlignment(HORIZONTAL_ALIGNMENT);
+        // MainInternalWindowLayout->setOrientation(HORIZONTAL_ORIENTATION);
     endEditCP(MainInternalWindowLayout, BoxLayout::OrientationFieldMask); 
     
     /******************************************************

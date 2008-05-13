@@ -47,7 +47,6 @@
 
 #include "Util/OSGUIDrawUtils.h"
 #include <OpenSG/OSGConfig.h>
-#include "Util/OSGUIDefines.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include "Component/Container/Window/OSGInternalWindow.h"
@@ -99,7 +98,7 @@ void SplitPanel::updateLayout(void)
 	Vec2f BorderSize(BottomRight - TopLeft);
 
 	UInt32 AxisIndex(0);
-	if(getAlignment() != HORIZONTAL_ALIGNMENT ) AxisIndex = 1;
+	if(getOrientation() != SplitPanel::HORIZONTAL_ORIENTATION ) AxisIndex = 1;
 
 	Vec2f minSize(0,0);
 	Vec2f maxSize(0,0);
@@ -259,7 +258,7 @@ void SplitPanel::changed(BitVector whichField, UInt32 origin)
     Inherited::changed(whichField, origin);
 
 	if( (whichField & DividerSizeFieldMask) || (whichField & DividerPositionFieldMask) ||
-		(whichField & AlignmentFieldMask) )
+		(whichField & OrientationFieldMask) )
     {
 		updateLayout();
 	}
@@ -284,7 +283,7 @@ void SplitPanel::DividerListener::mouseEntered(const MouseEvent& e)
 	{
 		if(_SplitPanel->getParentWindow() != NullFC && _SplitPanel->getParentWindow()->getDrawingSurface()!=NullFC&&_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 		{
-			if (_SplitPanel->getAlignment() == HORIZONTAL_ALIGNMENT)
+			if (_SplitPanel->getOrientation() == SplitPanel::HORIZONTAL_ORIENTATION)
 			{
 				_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_RESIZE_W_TO_E);
 			}
@@ -356,7 +355,7 @@ void SplitPanel::DividerDraggedListener::mouseMoved(const MouseEvent& e)
 void SplitPanel::DividerDraggedListener::mouseDragged(const MouseEvent& e)
 {
 	UInt32 AxisIndex(0);
-	if(_SplitPanel->getAlignment() != HORIZONTAL_ALIGNMENT ) AxisIndex = 1;
+	if(_SplitPanel->getOrientation() != SplitPanel::HORIZONTAL_ORIENTATION ) AxisIndex = 1;
 
 	if(e.getButton() == e.BUTTON1)
 	{

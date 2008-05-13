@@ -88,13 +88,12 @@ A UI Split Panel.
 	>
 	</Field>
 	<Field
-		name="Alignment"
+		name="Orientation"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultHeader="Util/OSGUIDefines.h"
-		defaultValue="HORIZONTAL_ALIGNMENT"
+		defaultValue="SplitPanel::HORIZONTAL_ORIENTATION"
 	>
 	</Field>
 </FieldContainer>

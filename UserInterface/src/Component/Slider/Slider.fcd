@@ -28,8 +28,7 @@ A UI Spinner.
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Util/OSGUIDefines.h"
-		defaultValue="VERTICAL_ALIGNMENT"
+		defaultValue="Slider::VERTICAL_ORIENTATION"
 	>
 	</Field>
 	<Field

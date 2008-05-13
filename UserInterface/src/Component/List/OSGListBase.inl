@@ -49,9 +49,7 @@
 \*****************************************************************************/
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "Models/OSGListModel.h" // Model type
 OSG_BEGIN_NAMESPACE
 
 
@@ -98,11 +96,11 @@ ListPtr ListBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the List::_sfCellOrientation field.
+//! Get the List::_sfOrientation field.
 inline
-SFUInt32 *ListBase::getSFCellOrientation(void)
+SFUInt32 *ListBase::getSFOrientation(void)
 {
-    return &_sfCellOrientation;
+    return &_sfOrientation;
 }
 
 //! Get the List::_sfCellMajorAxisLength field.
@@ -134,25 +132,25 @@ SFBool *ListBase::getSFAutoScrollToFocused(void)
 }
 
 
-//! Get the value of the List::_sfCellOrientation field.
+//! Get the value of the List::_sfOrientation field.
 inline
-UInt32 &ListBase::getCellOrientation(void)
+UInt32 &ListBase::getOrientation(void)
 {
-    return _sfCellOrientation.getValue();
+    return _sfOrientation.getValue();
 }
 
-//! Get the value of the List::_sfCellOrientation field.
+//! Get the value of the List::_sfOrientation field.
 inline
-const UInt32 &ListBase::getCellOrientation(void) const
+const UInt32 &ListBase::getOrientation(void) const
 {
-    return _sfCellOrientation.getValue();
+    return _sfOrientation.getValue();
 }
 
-//! Set the value of the List::_sfCellOrientation field.
+//! Set the value of the List::_sfOrientation field.
 inline
-void ListBase::setCellOrientation(const UInt32 &value)
+void ListBase::setOrientation(const UInt32 &value)
 {
-    _sfCellOrientation.setValue(value);
+    _sfOrientation.setValue(value);
 }
 
 //! Get the value of the List::_sfCellMajorAxisLength field.
@@ -194,11 +192,6 @@ const ListModelPtr &ListBase::getModel(void) const
 inline
 void ListBase::setModel(const ListModelPtr &value)
 {
-	if(getModel() != NULL)
-	{
-		getModel()->removeListDataListener(dynamic_cast<List*>(this));
-	}
-
     _sfModel.setValue(value);
 }
 

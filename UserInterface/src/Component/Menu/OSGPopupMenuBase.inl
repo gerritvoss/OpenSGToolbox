@@ -117,6 +117,13 @@ SFSeparatorPtr *PopupMenuBase::getSFDefaultSeparator(void)
     return &_sfDefaultSeparator;
 }
 
+//! Get the PopupMenu::_sfSelectionModel field.
+inline
+SFSingleSelectionModelPtr *PopupMenuBase::getSFSelectionModel(void)
+{
+    return &_sfSelectionModel;
+}
+
 
 //! Get the value of the PopupMenu::_sfSubMenuDelay field.
 inline
@@ -179,6 +186,27 @@ inline
 void PopupMenuBase::setDefaultSeparator(const SeparatorPtr &value)
 {
     _sfDefaultSeparator.setValue(value);
+}
+
+//! Get the value of the PopupMenu::_sfSelectionModel field.
+inline
+SingleSelectionModelPtr &PopupMenuBase::getSelectionModel(void)
+{
+    return _sfSelectionModel.getValue();
+}
+
+//! Get the value of the PopupMenu::_sfSelectionModel field.
+inline
+const SingleSelectionModelPtr &PopupMenuBase::getSelectionModel(void) const
+{
+    return _sfSelectionModel.getValue();
+}
+
+//! Set the value of the PopupMenu::_sfSelectionModel field.
+inline
+void PopupMenuBase::setSelectionModel(const SingleSelectionModelPtr &value)
+{
+    _sfSelectionModel.setValue(value);
 }
 
 

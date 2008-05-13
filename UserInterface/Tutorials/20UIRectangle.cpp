@@ -561,7 +561,7 @@ InternalWindowPtr createMainInternalWindow(void)
     endEditCP(ExampleTabPanelPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
 
     ExampleTabPanel = osg::TabPanel::create();
-    beginEditCP(ExampleTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
+    beginEditCP(ExampleTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
         ExampleTabPanel->setPreferredSize(Vec2f(350,350));
         ExampleTabPanel->addTab(ExampleTabButton1, ExampleTabContentA);
         ExampleTabPanel->addTab(ExampleTabButton2, ExampleTabContentB);
@@ -569,11 +569,10 @@ InternalWindowPtr createMainInternalWindow(void)
         ExampleTabPanel->addTab(ExampleTabButton4, ExampleTabPanelPanel);
         ExampleTabPanel->addTab(ExampleTabButton5, ExampleTabContentD);
         ExampleTabPanel->addTab(ExampleTabButton6, ExampleTabContentE);
-        ExampleTabPanel->setActiveTab(3);
         ExampleTabPanel->setTabAlignment(0.5f);
         ExampleTabPanel->setTabPlacement(TabPanel::PLACEMENT_SOUTH);
-    endEditCP(ExampleTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
-
+    endEditCP(ExampleTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
+    ExampleTabPanel->setSelectedIndex(3);
 	
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow

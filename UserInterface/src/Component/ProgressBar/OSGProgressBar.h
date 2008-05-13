@@ -65,6 +65,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBar : public ProgressBarBase
 
     /*==========================  PUBLIC  =================================*/
   public:
+      enum Orientation{VERTICAL_ORIENTATION=0, HORIZONTAL_ORIENTATION};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

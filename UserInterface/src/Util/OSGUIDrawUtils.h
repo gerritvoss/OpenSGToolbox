@@ -46,5 +46,5 @@ void OSG_USERINTERFACELIB_DLLMAPPING getDrawObjectBounds(MFUIDrawObjectPtr DrawO
 
 OSG_END_NAMESPACE
 
-#include "OSGUIDefines.inl"
+//#include "OSGUIDefines.inl"
 #endif /* _OSG_UI_DRAW_UTILS_H_ */

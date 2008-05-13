@@ -174,7 +174,7 @@ int main(int argc, char **argv)
         TheSliderVertical->setSnapToTicks(true);
         TheSliderVertical->setMajorTickSpacing(10);
         TheSliderVertical->setMinorTickSpacing(5);
-        TheSliderVertical->setOrientation(VERTICAL_ALIGNMENT);
+        TheSliderVertical->setOrientation(Slider::VERTICAL_ORIENTATION);
         TheSliderVertical->setInverted(true);
         TheSliderVertical->setDrawLabels(true);
     endEditCP(TheSliderVertical, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);
@@ -186,7 +186,7 @@ int main(int argc, char **argv)
         TheSliderHorizontal->setSnapToTicks(false);
         TheSliderHorizontal->setMajorTickSpacing(10);
         TheSliderHorizontal->setMinorTickSpacing(5);
-        TheSliderHorizontal->setOrientation(HORIZONTAL_ALIGNMENT);
+        TheSliderHorizontal->setOrientation(Slider::HORIZONTAL_ORIENTATION);
         TheSliderHorizontal->setInverted(false);
         TheSliderHorizontal->setDrawLabels(true);
     endEditCP(TheSliderHorizontal, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask);

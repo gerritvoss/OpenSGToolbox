@@ -103,6 +103,13 @@ SFReal32 *MenuBarBase::getSFMenuDelay(void)
     return &_sfMenuDelay;
 }
 
+//! Get the MenuBar::_sfSelectionModel field.
+inline
+SFSingleSelectionModelPtr *MenuBarBase::getSFSelectionModel(void)
+{
+    return &_sfSelectionModel;
+}
+
 
 //! Get the value of the MenuBar::_sfMenuDelay field.
 inline
@@ -123,6 +130,27 @@ inline
 void MenuBarBase::setMenuDelay(const Real32 &value)
 {
     _sfMenuDelay.setValue(value);
+}
+
+//! Get the value of the MenuBar::_sfSelectionModel field.
+inline
+SingleSelectionModelPtr &MenuBarBase::getSelectionModel(void)
+{
+    return _sfSelectionModel.getValue();
+}
+
+//! Get the value of the MenuBar::_sfSelectionModel field.
+inline
+const SingleSelectionModelPtr &MenuBarBase::getSelectionModel(void) const
+{
+    return _sfSelectionModel.getValue();
+}
+
+//! Set the value of the MenuBar::_sfSelectionModel field.
+inline
+void MenuBarBase::setSelectionModel(const SingleSelectionModelPtr &value)
+{
+    _sfSelectionModel.setValue(value);
 }
 
 

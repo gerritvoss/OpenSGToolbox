@@ -73,6 +73,9 @@ const OSG::BitVector  PopupMenuBase::InvokerFieldMask =
 const OSG::BitVector  PopupMenuBase::DefaultSeparatorFieldMask = 
     (TypeTraits<BitVector>::One << PopupMenuBase::DefaultSeparatorFieldId);
 
+const OSG::BitVector  PopupMenuBase::SelectionModelFieldMask = 
+    (TypeTraits<BitVector>::One << PopupMenuBase::SelectionModelFieldId);
+
 const OSG::BitVector PopupMenuBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -87,6 +90,9 @@ const OSG::BitVector PopupMenuBase::MTInfluenceMask =
     
 */
 /*! \var SeparatorPtr    PopupMenuBase::_sfDefaultSeparator
+    
+*/
+/*! \var SingleSelectionModelPtr PopupMenuBase::_sfSelectionModel
     
 */
 
@@ -108,7 +114,12 @@ FieldDescription *PopupMenuBase::_desc[] =
                      "DefaultSeparator", 
                      DefaultSeparatorFieldId, DefaultSeparatorFieldMask,
                      false,
-                     (FieldAccessMethod) &PopupMenuBase::getSFDefaultSeparator)
+                     (FieldAccessMethod) &PopupMenuBase::getSFDefaultSeparator),
+    new FieldDescription(SFSingleSelectionModelPtr::getClassType(), 
+                     "SelectionModel", 
+                     SelectionModelFieldId, SelectionModelFieldMask,
+                     false,
+                     (FieldAccessMethod) &PopupMenuBase::getSFSelectionModel)
 };
 
 
@@ -187,6 +198,7 @@ PopupMenuBase::PopupMenuBase(void) :
     _sfSubMenuDelay           (Real32(0.5)), 
     _sfInvoker                (ComponentPtr(NullFC)), 
     _sfDefaultSeparator       (SeparatorPtr(NullFC)), 
+    _sfSelectionModel         (SingleSelectionModelPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -199,6 +211,7 @@ PopupMenuBase::PopupMenuBase(const PopupMenuBase &source) :
     _sfSubMenuDelay           (source._sfSubMenuDelay           ), 
     _sfInvoker                (source._sfInvoker                ), 
     _sfDefaultSeparator       (source._sfDefaultSeparator       ), 
+    _sfSelectionModel         (source._sfSelectionModel         ), 
     Inherited                 (source)
 {
 }
@@ -230,6 +243,11 @@ UInt32 PopupMenuBase::getBinSize(const BitVector &whichField)
         returnValue += _sfDefaultSeparator.getBinSize();
     }
 
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+    {
+        returnValue += _sfSelectionModel.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -252,6 +270,11 @@ void PopupMenuBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (DefaultSeparatorFieldMask & whichField))
     {
         _sfDefaultSeparator.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+    {
+        _sfSelectionModel.copyToBin(pMem);
     }
 
 
@@ -277,6 +300,11 @@ void PopupMenuBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfDefaultSeparator.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+    {
+        _sfSelectionModel.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -296,6 +324,9 @@ void PopupMenuBase::executeSyncImpl(      PopupMenuBase *pOther,
     if(FieldBits::NoField != (DefaultSeparatorFieldMask & whichField))
         _sfDefaultSeparator.syncWith(pOther->_sfDefaultSeparator);
 
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+        _sfSelectionModel.syncWith(pOther->_sfSelectionModel);
+
 
 }
 #else
@@ -314,6 +345,9 @@ void PopupMenuBase::executeSyncImpl(      PopupMenuBase *pOther,
 
     if(FieldBits::NoField != (DefaultSeparatorFieldMask & whichField))
         _sfDefaultSeparator.syncWith(pOther->_sfDefaultSeparator);
+
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+        _sfSelectionModel.syncWith(pOther->_sfSelectionModel);
 
 
 

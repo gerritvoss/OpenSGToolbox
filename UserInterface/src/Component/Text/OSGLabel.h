@@ -46,7 +46,6 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGLabelBase.h"
-#include "Util/OSGUIDefines.h"
 
 OSG_BEGIN_NAMESPACE
 

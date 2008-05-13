@@ -93,7 +93,7 @@ void Slider::drawInternal(const GraphicsPtr TheGraphics) const
 		{
 			glPushMatrix();
 				glTranslatef(getMajorTickPositions()[i].x(), getMajorTickPositions()[i].y(), 0.0f);
-				if(getOrientation() != VERTICAL_ALIGNMENT)
+				if(getOrientation() != VERTICAL_ORIENTATION)
 				{
 					glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
 				}
@@ -116,7 +116,7 @@ void Slider::drawInternal(const GraphicsPtr TheGraphics) const
 		{
 			glPushMatrix();
 				glTranslatef(getMinorTickPositions()[i].x(), getMinorTickPositions()[i].y(), 0.0f);
-				if(getOrientation() != VERTICAL_ALIGNMENT)
+				if(getOrientation() != VERTICAL_ORIENTATION)
 				{
 					glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
 				}
@@ -139,7 +139,7 @@ void Slider::updateLayout(void)
 {
 	
     UInt16 MajorAxis, MinorAxis;
-    if(getOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == VERTICAL_ORIENTATION)
     {
         MajorAxis = 1;
     }
@@ -242,7 +242,7 @@ void Slider::updateSliderTrack(void)
 	getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
 	
     UInt16 MajorAxis, MinorAxis;
-    if(getOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == VERTICAL_ORIENTATION)
     {
         MajorAxis = 1;
     }
@@ -290,7 +290,7 @@ Pnt2f Slider::getSliderTrackTopLeft(void) const
 
 	Pnt2f Pos;
 	
-    if(getOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == VERTICAL_ORIENTATION)
     {
 		Pos = calculateAlignment(BorderTopLeft, (BorderBottomRight-BorderTopLeft), Vec2f(0,0), 0.0, 0.5);
 		Pos[1] += getTrackInset();
@@ -306,7 +306,7 @@ Pnt2f Slider::getSliderTrackTopLeft(void) const
 
 Vec2f Slider::getSliderTrackSize(void) const
 {
-    if(getOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == VERTICAL_ORIENTATION)
     {
 		return Vec2f(0, getTrackLength());
     }
@@ -361,7 +361,7 @@ void Slider::setModel(BoundedRangeModel* Model)
 
 UInt32 Slider::getTrackLength(void) const
 {
-    if(getOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == VERTICAL_ORIENTATION)
     {
         return getSize().y() - 2 * getTrackInset();
     }
@@ -412,7 +412,7 @@ Pnt2f Slider::calculateSliderAlignment(const Pnt2f& Position1, const Vec2f& Size
 {
 	Vec2f CorrectedSize2(Size2);
 
-	if(getOrientation() != VERTICAL_ALIGNMENT)
+	if(getOrientation() != VERTICAL_ORIENTATION)
 	{
 		CorrectedSize2[0] = Size2.y();
 		CorrectedSize2[1] = Size2.x();
@@ -423,7 +423,7 @@ Pnt2f Slider::calculateSliderAlignment(const Pnt2f& Position1, const Vec2f& Size
 
 	if(getInverted())
 	{
-		if(getOrientation() == VERTICAL_ALIGNMENT)
+		if(getOrientation() == VERTICAL_ORIENTATION)
 		{
 			CorrectedVAlign = (1.0-VAlign);
 		}
@@ -603,7 +603,7 @@ void Slider::KnobDraggedListener::mouseDragged(const MouseEvent& e)
         _Slider->getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
         
         UInt16 MajorAxis, MinorAxis;
-        if(_Slider->getOrientation() == VERTICAL_ALIGNMENT)
+        if(_Slider->getOrientation() == VERTICAL_ORIENTATION)
         {
             MajorAxis = 1;
         }

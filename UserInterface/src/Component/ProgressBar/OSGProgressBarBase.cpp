@@ -281,7 +281,7 @@ ProgressBarBase::ProgressBarBase(void) :
     _sfHorizontalAlignment    (Real32(0.5)), 
     _sfFont                   (), 
     _sfTextColor              (), 
-    _sfOrientation            (UInt32(VERTICAL_ALIGNMENT)), 
+    _sfOrientation            (UInt32(ProgressBar::VERTICAL_ORIENTATION)), 
     _sfProgressBarDrawObject  (), 
     Inherited() 
 {

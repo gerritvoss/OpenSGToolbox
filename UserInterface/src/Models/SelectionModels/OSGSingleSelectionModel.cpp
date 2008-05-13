@@ -47,59 +47,92 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGDefaultSingleSelectionModel.h"
+#include "OSGSingleSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-void DefaultSingleSelectionModel::addChangeListener(ChangeListenerPtr Listener)
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class osg::SingleSelectionModel
+A UI SingleSelectionModel. 
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void SingleSelectionModel::initMethod (void)
 {
-   _ChangeListeners.insert(Listener);
 }
 
-void DefaultSingleSelectionModel::removeChangeListener(ChangeListenerPtr Listener)
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+SingleSelectionModel::SingleSelectionModel(void) :
+    Inherited()
 {
-   ChangeListenerSetItor EraseIter(_ChangeListeners.find(Listener));
-   if(EraseIter != _ChangeListeners.end())
-   {
-      _ChangeListeners.erase(EraseIter);
-   }
+}
+
+SingleSelectionModel::SingleSelectionModel(const SingleSelectionModel &source) :
+    Inherited(source)
+{
+}
+
+SingleSelectionModel::~SingleSelectionModel(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void SingleSelectionModel::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void SingleSelectionModel::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump SingleSelectionModel NI" << std::endl;
 }
 
 
-void DefaultSingleSelectionModel::clearSelection(void)
+/*------------------------------------------------------------------------*/
+/*                              cvs id's                                  */
+
+#ifdef OSG_SGI_CC
+#pragma set woff 1174
+#endif
+
+#ifdef OSG_LINUX_ICC
+#pragma warning( disable : 177 )
+#endif
+
+namespace
 {
-    if(_SelectedIndex != -1)
-    {
-        _SelectedIndex = -1;
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
-    }
+    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
+    static Char8 cvsid_hpp       [] = OSGSINGLESELECTIONMODELBASE_HEADER_CVSID;
+    static Char8 cvsid_inl       [] = OSGSINGLESELECTIONMODELBASE_INLINE_CVSID;
+
+    static Char8 cvsid_fields_hpp[] = OSGSINGLESELECTIONMODELFIELDS_HEADER_CVSID;
 }
 
-Int32 DefaultSingleSelectionModel::getSelectedIndex(void)
-{
-    return _SelectedIndex;
-}
+#ifdef __sgi
+#pragma reset woff 1174
+#endif
 
-bool DefaultSingleSelectionModel::isSelected(void)
-{
-    return _SelectedIndex != -1;
-}
-
-void DefaultSingleSelectionModel::setSelectedIndex(Int32 index)
-{
-    if(_SelectedIndex != index)
-    {
-        _SelectedIndex = index;
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
-    }
-}
-
-void DefaultSingleSelectionModel::produceStateChanged(const ChangeEvent& e)
-{
-   for(ChangeListenerSetConstItor SetItor(_ChangeListeners.begin()) ; SetItor != _ChangeListeners.end() ; ++SetItor)
-   {
-	   (*SetItor)->stateChanged(e);
-   }
-}
 OSG_END_NAMESPACE
 

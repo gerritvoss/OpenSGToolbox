@@ -568,11 +568,11 @@ int main(int argc, char **argv)
 	ListSelectionModelPtr UndoRedoListSelectionModel(new DefaultListSelectionModel());
 
 	UndoRedoList = List::create();
-	beginEditCP(UndoRedoList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
+	beginEditCP(UndoRedoList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
         UndoRedoList->setPreferredSize(Vec2f(200, 300));
-        UndoRedoList->setCellOrientation(VERTICAL_ALIGNMENT);
+        UndoRedoList->setOrientation(List::VERTICAL_ORIENTATION);
 		UndoRedoList->setModel(UndoRedoListModel);
-    endEditCP(UndoRedoList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
+    endEditCP(UndoRedoList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
 
     UndoRedoList->setSelectionModel(UndoRedoListSelectionModel);
 

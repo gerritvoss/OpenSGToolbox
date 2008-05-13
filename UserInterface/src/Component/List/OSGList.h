@@ -49,7 +49,6 @@
 #include "Event/OSGFocusListener.h"
 #include "OSGListDataListener.h"
 #include "OSGListSelectionListener.h"
-#include "Util/OSGUIDefines.h"
 #include "OSGListSelectionModel.h"
 #include <OpenSG/Toolbox/OSGSharedFieldPtr.h>
 
@@ -65,6 +64,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
 
     /*==========================  PUBLIC  =================================*/
   public:
+      enum Orientation{VERTICAL_ORIENTATION=0, HORIZONTAL_ORIENTATION};
 
 	//Focus Events
 	virtual void focusGained(const FocusEvent& e);

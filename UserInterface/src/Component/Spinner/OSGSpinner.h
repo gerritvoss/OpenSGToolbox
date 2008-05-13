@@ -63,6 +63,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Spinner : public SpinnerBase
 
     /*==========================  PUBLIC  =================================*/
   public:
+      enum Orientation{VERTICAL_ORIENTATION=0, HORIZONTAL_ORIENTATION};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

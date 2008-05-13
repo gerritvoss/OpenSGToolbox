@@ -58,7 +58,6 @@
 #include "Component/Container/OSGPanel.h"
 #include "Component/Container/OSGSplitPanel.h"
 #include "Component/Misc/OSGImageComponent.h"
-#include "Util/OSGUIDefines.h"
 #include "Graphics/UIDrawObjects/OSGRectUIDrawObject.h"
 #include "Graphics/UIDrawObjects/OSGPolygonUIDrawObject.h"
 #include "Graphics/UIDrawObjects/OSGArcUIDrawObject.h"
@@ -394,8 +393,12 @@ void DefaultLookAndFeel::init(void)
 	//Default SplitPanel
 	SplitPanelPtr DefaultSplitPanel = SplitPanel::create();
 	beginEditCP(DefaultSplitPanel);
+
 		DefaultSplitPanel->setDividerDrawObject(DefaultDividerDrawObject);
 		DefaultSplitPanel->setDividerSize(5);
+		DefaultSplitPanel->setDividerPosition(100);
+		DefaultSplitPanel->setExpandable(true);
+		DefaultSplitPanel->setOrientation(SplitPanel::HORIZONTAL_ORIENTATION);
 	endEditCP(DefaultSplitPanel);
 
 	SplitPanel::getClassType().setPrototype(DefaultSplitPanel);
@@ -1545,14 +1548,14 @@ void DefaultLookAndFeel::init(void)
 	ScrollBarPtr DefaultScrollPanelVerticalScrollBar = ScrollBar::create();
     beginEditCP(DefaultScrollPanelVerticalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
 		DefaultScrollPanelVerticalScrollBar->setPreferredSize(Vec2f(20,100));
-        DefaultScrollPanelVerticalScrollBar->setOrientation(VERTICAL_ALIGNMENT);
+        DefaultScrollPanelVerticalScrollBar->setOrientation(ScrollBar::VERTICAL_ORIENTATION);
     beginEditCP(DefaultScrollPanelVerticalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
 
 	//Horizontal ScrollBar
 	ScrollBarPtr DefaultScrollPanelHorizontalScrollBar = ScrollBar::create();
     beginEditCP(DefaultScrollPanelHorizontalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
 		DefaultScrollPanelHorizontalScrollBar->setPreferredSize(Vec2f(100,20));
-        DefaultScrollPanelHorizontalScrollBar->setOrientation(HORIZONTAL_ALIGNMENT);
+        DefaultScrollPanelHorizontalScrollBar->setOrientation(ScrollBar::HORIZONTAL_ORIENTATION);
     beginEditCP(DefaultScrollPanelHorizontalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
 
 
@@ -1729,7 +1732,7 @@ void DefaultLookAndFeel::init(void)
 	beginEditCP(DefaultGradientBackground);
 		DefaultGradientBackground->setColorStart(Color4f(1.0, 1.0, 1.0, 1.0));
 		DefaultGradientBackground->setColorEnd(Color4f(1.0, 1.0, 1.0, 1.0));
-		DefaultGradientBackground->setAlignment(HORIZONTAL_ALIGNMENT);
+        DefaultGradientBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
 	endEditCP(DefaultGradientBackground);
 
 	GradientUIBackground::getClassType().setPrototype(DefaultGradientBackground);

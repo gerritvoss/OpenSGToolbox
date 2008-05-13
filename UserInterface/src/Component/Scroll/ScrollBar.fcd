@@ -18,8 +18,7 @@ A UI ScrollBar.
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Util/OSGUIDefines.h"
-		defaultValue="VERTICAL_ALIGNMENT"
+		defaultValue="ScrollBar::VERTICAL_ORIENTATION"
 	>
 	</Field>
 	<Field

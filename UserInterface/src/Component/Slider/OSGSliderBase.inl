@@ -119,7 +119,7 @@ SFUInt32 *SliderBase::getSFMajorTickSpacing(void)
 
 //! Get the Slider::_mfMajorTickPositions field.
 inline
-MFPnt2f *SliderBase::getMFMajorTickPositions(void)
+MFPnt2s *SliderBase::getMFMajorTickPositions(void)
 {
     return &_mfMajorTickPositions;
 }
@@ -133,7 +133,7 @@ SFUInt32 *SliderBase::getSFMinorTickSpacing(void)
 
 //! Get the Slider::_mfMinorTickPositions field.
 inline
-MFPnt2f *SliderBase::getMFMinorTickPositions(void)
+MFPnt2s *SliderBase::getMFMinorTickPositions(void)
 {
     return &_mfMinorTickPositions;
 }
@@ -632,42 +632,42 @@ void SliderBase::setTrackToLabelOffset(const Int32 &value)
 
 //! Get the value of the \a index element the Slider::_mfMajorTickPositions field.
 inline
-Pnt2f &SliderBase::getMajorTickPositions(const UInt32 index)
+Pnt2s &SliderBase::getMajorTickPositions(const UInt32 index)
 {
     return _mfMajorTickPositions[index];
 }
 
 //! Get the Slider::_mfMajorTickPositions field.
 inline
-MFPnt2f &SliderBase::getMajorTickPositions(void)
+MFPnt2s &SliderBase::getMajorTickPositions(void)
 {
     return _mfMajorTickPositions;
 }
 
 //! Get the Slider::_mfMajorTickPositions field.
 inline
-const MFPnt2f &SliderBase::getMajorTickPositions(void) const
+const MFPnt2s &SliderBase::getMajorTickPositions(void) const
 {
     return _mfMajorTickPositions;
 }
 
 //! Get the value of the \a index element the Slider::_mfMinorTickPositions field.
 inline
-Pnt2f &SliderBase::getMinorTickPositions(const UInt32 index)
+Pnt2s &SliderBase::getMinorTickPositions(const UInt32 index)
 {
     return _mfMinorTickPositions[index];
 }
 
 //! Get the Slider::_mfMinorTickPositions field.
 inline
-MFPnt2f &SliderBase::getMinorTickPositions(void)
+MFPnt2s &SliderBase::getMinorTickPositions(void)
 {
     return _mfMinorTickPositions;
 }
 
 //! Get the Slider::_mfMinorTickPositions field.
 inline
-const MFPnt2f &SliderBase::getMinorTickPositions(void) const
+const MFPnt2s &SliderBase::getMinorTickPositions(void) const
 {
     return _mfMinorTickPositions;
 }

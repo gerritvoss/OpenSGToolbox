@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGContainer.h" // Parent
+#include "Component/Container/OSGContainer.h" // Parent
 
 #include "Component/OSGComponent.h" // MinComponent type
 #include "Component/OSGComponent.h" // MaxComponent type
@@ -75,7 +75,7 @@
 #include <OpenSG/OSGReal32Fields.h> // MaxDividerPosition type
 #include "Component/Misc/OSGUIDrawObjectCanvas.h" // DividerDrawObject type
 #include <OpenSG/OSGBoolFields.h> // Expandable type
-#include <OpenSG/OSGUInt32Fields.h> // Alignment type
+#include <OpenSG/OSGUInt32Fields.h> // Orientation type
 
 #include "OSGSplitPanelFields.h"
 
@@ -107,8 +107,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanelBase : public Container
         MaxDividerPositionFieldId = MinDividerPositionFieldId + 1,
         DividerDrawObjectFieldId  = MaxDividerPositionFieldId + 1,
         ExpandableFieldId         = DividerDrawObjectFieldId  + 1,
-        AlignmentFieldId          = ExpandableFieldId         + 1,
-        NextFieldId               = AlignmentFieldId          + 1
+        OrientationFieldId        = ExpandableFieldId         + 1,
+        NextFieldId               = OrientationFieldId        + 1
     };
 
     static const OSG::BitVector MinComponentFieldMask;
@@ -119,7 +119,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanelBase : public Container
     static const OSG::BitVector MaxDividerPositionFieldMask;
     static const OSG::BitVector DividerDrawObjectFieldMask;
     static const OSG::BitVector ExpandableFieldMask;
-    static const OSG::BitVector AlignmentFieldMask;
+    static const OSG::BitVector OrientationFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -154,7 +154,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanelBase : public Container
            SFReal32            *getSFMaxDividerPosition(void);
            SFUIDrawObjectCanvasPtr *getSFDividerDrawObject(void);
            SFBool              *getSFExpandable     (void);
-           SFUInt32            *getSFAlignment      (void);
+           SFUInt32            *getSFOrientation    (void);
 
            ComponentPtr        &getMinComponent   (void);
      const ComponentPtr        &getMinComponent   (void) const;
@@ -172,8 +172,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanelBase : public Container
      const UIDrawObjectCanvasPtr &getDividerDrawObject(void) const;
            bool                &getExpandable     (void);
      const bool                &getExpandable     (void) const;
-           UInt32              &getAlignment      (void);
-     const UInt32              &getAlignment      (void) const;
+           UInt32              &getOrientation    (void);
+     const UInt32              &getOrientation    (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -186,9 +186,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanelBase : public Container
      void setDividerPosition( const Real32 &value );
      void setMinDividerPosition( const Real32 &value );
      void setMaxDividerPosition( const Real32 &value );
-     virtual void setDividerDrawObject( const UIDrawObjectCanvasPtr &value );
+     void setDividerDrawObject( const UIDrawObjectCanvasPtr &value );
      void setExpandable     ( const bool &value );
-     void setAlignment      ( const UInt32 &value );
+     void setOrientation    ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -239,7 +239,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanelBase : public Container
     SFReal32            _sfMaxDividerPosition;
     SFUIDrawObjectCanvasPtr   _sfDividerDrawObject;
     SFBool              _sfExpandable;
-    SFUInt32            _sfAlignment;
+    SFUInt32            _sfOrientation;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

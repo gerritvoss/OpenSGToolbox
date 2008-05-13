@@ -21,4 +21,14 @@ A UI MenuBar.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="SelectionModel"
+		type="SingleSelectionModelPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		header="Models/SelectionModels/OSGSingleSelectionModelFields.h"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

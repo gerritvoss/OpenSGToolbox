@@ -85,7 +85,7 @@ void Spinner::initMethod (void)
 
 void Spinner::updateLayout(void)
 {
-    if(getOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == Spinner::VERTICAL_ORIENTATION)
     {
         //Next Button
         if(getNextButton() != NullFC)

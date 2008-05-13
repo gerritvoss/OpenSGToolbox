@@ -61,12 +61,11 @@
 #include "OSGListBase.h"
 #include "OSGList.h"
 
-#include <Util/OSGUIDefines.h>            // CellOrientation default header
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ListBase::CellOrientationFieldMask = 
-    (TypeTraits<BitVector>::One << ListBase::CellOrientationFieldId);
+const OSG::BitVector  ListBase::OrientationFieldMask = 
+    (TypeTraits<BitVector>::One << ListBase::OrientationFieldId);
 
 const OSG::BitVector  ListBase::CellMajorAxisLengthFieldMask = 
     (TypeTraits<BitVector>::One << ListBase::CellMajorAxisLengthFieldId);
@@ -87,7 +86,7 @@ const OSG::BitVector ListBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var UInt32          ListBase::_sfCellOrientation
+/*! \var UInt32          ListBase::_sfOrientation
     
 */
 /*! \var UInt32          ListBase::_sfCellMajorAxisLength
@@ -108,10 +107,10 @@ const OSG::BitVector ListBase::MTInfluenceMask =
 FieldDescription *ListBase::_desc[] = 
 {
     new FieldDescription(SFUInt32::getClassType(), 
-                     "CellOrientation", 
-                     CellOrientationFieldId, CellOrientationFieldMask,
+                     "Orientation", 
+                     OrientationFieldId, OrientationFieldMask,
                      false,
-                     (FieldAccessMethod) &ListBase::getSFCellOrientation),
+                     (FieldAccessMethod) &ListBase::getSFOrientation),
     new FieldDescription(SFUInt32::getClassType(), 
                      "CellMajorAxisLength", 
                      CellMajorAxisLengthFieldId, CellMajorAxisLengthFieldMask,
@@ -207,7 +206,7 @@ void ListBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ListBase::ListBase(void) :
-    _sfCellOrientation        (UInt32(VERTICAL_ALIGNMENT)), 
+    _sfOrientation            (UInt32(List::VERTICAL_ORIENTATION)), 
     _sfCellMajorAxisLength    (UInt32(50)), 
     _sfModel                  (ListModelPtr(NullFC)), 
     _sfCellGenerator          (ComponentGeneratorPtr(NullFC)), 
@@ -221,7 +220,7 @@ ListBase::ListBase(void) :
 #endif
 
 ListBase::ListBase(const ListBase &source) :
-    _sfCellOrientation        (source._sfCellOrientation        ), 
+    _sfOrientation            (source._sfOrientation            ), 
     _sfCellMajorAxisLength    (source._sfCellMajorAxisLength    ), 
     _sfModel                  (source._sfModel                  ), 
     _sfCellGenerator          (source._sfCellGenerator          ), 
@@ -242,9 +241,9 @@ UInt32 ListBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (CellOrientationFieldMask & whichField))
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
-        returnValue += _sfCellOrientation.getBinSize();
+        returnValue += _sfOrientation.getBinSize();
     }
 
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
@@ -276,9 +275,9 @@ void ListBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (CellOrientationFieldMask & whichField))
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
-        _sfCellOrientation.copyToBin(pMem);
+        _sfOrientation.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
@@ -309,9 +308,9 @@ void ListBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (CellOrientationFieldMask & whichField))
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
-        _sfCellOrientation.copyFromBin(pMem);
+        _sfOrientation.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
@@ -344,8 +343,8 @@ void ListBase::executeSyncImpl(      ListBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (CellOrientationFieldMask & whichField))
-        _sfCellOrientation.syncWith(pOther->_sfCellOrientation);
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
+        _sfOrientation.syncWith(pOther->_sfOrientation);
 
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
         _sfCellMajorAxisLength.syncWith(pOther->_sfCellMajorAxisLength);
@@ -369,8 +368,8 @@ void ListBase::executeSyncImpl(      ListBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (CellOrientationFieldMask & whichField))
-        _sfCellOrientation.syncWith(pOther->_sfCellOrientation);
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
+        _sfOrientation.syncWith(pOther->_sfOrientation);
 
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
         _sfCellMajorAxisLength.syncWith(pOther->_sfCellMajorAxisLength);

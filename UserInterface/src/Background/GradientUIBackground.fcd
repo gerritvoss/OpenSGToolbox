@@ -31,12 +31,11 @@ UI Gradient Background.
 	>
 	</Field>
 	<Field
-		name="Alignment"
+		name="Orientation"
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="VERTICAL_ALIGNMENT"
-		defaultHeader="Util/OSGUIDefines.h"
+		defaultValue="GradientUIBackground::VERTICAL_ORIENTATION"
 		access="public"
 	>
 	</Field>

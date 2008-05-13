@@ -42,6 +42,12 @@
 #include "OSGUserInterfaceDef.h"
 OSG_BEGIN_NAMESPACE
 
+inline
+TabPanel::TabSelectionListener::TabSelectionListener(TabPanelPtr TheTabPanel) :
+									_TabPanel(TheTabPanel)
+{
+}
+
 OSG_END_NAMESPACE
 
 #define OSGTABPANEL_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"

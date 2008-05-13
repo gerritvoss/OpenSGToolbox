@@ -121,15 +121,15 @@ ContainerPtr DialogFactory::createMessagePanel(const std::string& Message, const
 	 
 	// Create SplitPanel itself
     SplitPanelPtr MessageSplitPanel = osg::SplitPanel::create();
-	beginEditCP(MessageSplitPanel, SplitPanel::MinComponentFieldMask | SplitPanel::MaxComponentFieldMask | SplitPanel::DividerPositionFieldMask | SplitPanel::AlignmentFieldMask |
+	beginEditCP(MessageSplitPanel, SplitPanel::MinComponentFieldMask | SplitPanel::MaxComponentFieldMask | SplitPanel::DividerPositionFieldMask | SplitPanel::OrientationFieldMask |
 		SplitPanel::DividerSizeFieldMask | SplitPanel::ExpandableFieldMask);
         MessageSplitPanel->setMinComponent(MessagePanelTop);
         MessageSplitPanel->setMaxComponent(MessagePanelBottom);
-		MessageSplitPanel->setAlignment(VERTICAL_ALIGNMENT);
+        MessageSplitPanel->setOrientation(SplitPanel::VERTICAL_ORIENTATION);
         MessageSplitPanel->setDividerPosition(.5); 
         MessageSplitPanel->setDividerSize(0);
         MessageSplitPanel->setExpandable(false);
-		endEditCP(MessageSplitPanel, SplitPanel::MinComponentFieldMask | SplitPanel::MaxComponentFieldMask | SplitPanel::DividerPositionFieldMask | SplitPanel::AlignmentFieldMask |
+		endEditCP(MessageSplitPanel, SplitPanel::MinComponentFieldMask | SplitPanel::MaxComponentFieldMask | SplitPanel::DividerPositionFieldMask | SplitPanel::OrientationFieldMask |
 		SplitPanel::DividerSizeFieldMask | SplitPanel::ExpandableFieldMask);
 
 	return MessageSplitPanel;

@@ -152,11 +152,11 @@ SFBool *SplitPanelBase::getSFExpandable(void)
     return &_sfExpandable;
 }
 
-//! Get the SplitPanel::_sfAlignment field.
+//! Get the SplitPanel::_sfOrientation field.
 inline
-SFUInt32 *SplitPanelBase::getSFAlignment(void)
+SFUInt32 *SplitPanelBase::getSFOrientation(void)
 {
-    return &_sfAlignment;
+    return &_sfOrientation;
 }
 
 
@@ -178,10 +178,7 @@ const ComponentPtr &SplitPanelBase::getMinComponent(void) const
 inline
 void SplitPanelBase::setMinComponent(const ComponentPtr &value)
 {
-	if (_sfMinComponent.getValue() != NullFC)
-		getChildren().erase(getChildren().find(_sfMinComponent.getValue()));
     _sfMinComponent.setValue(value);
-	getChildren().push_back(value);
 }
 
 //! Get the value of the SplitPanel::_sfMaxComponent field.
@@ -202,10 +199,7 @@ const ComponentPtr &SplitPanelBase::getMaxComponent(void) const
 inline
 void SplitPanelBase::setMaxComponent(const ComponentPtr &value)
 {
-	if (_sfMaxComponent.getValue() != NullFC)
-		getChildren().erase(getChildren().find(_sfMaxComponent.getValue()));
     _sfMaxComponent.setValue(value);
-	getChildren().push_back(value);
 }
 
 //! Get the value of the SplitPanel::_sfDividerSize field.
@@ -310,7 +304,7 @@ const UIDrawObjectCanvasPtr &SplitPanelBase::getDividerDrawObject(void) const
 inline
 void SplitPanelBase::setDividerDrawObject(const UIDrawObjectCanvasPtr &value)
 {
-	_sfDividerDrawObject.setValue(value);
+    _sfDividerDrawObject.setValue(value);
 }
 
 //! Get the value of the SplitPanel::_sfExpandable field.
@@ -334,25 +328,25 @@ void SplitPanelBase::setExpandable(const bool &value)
     _sfExpandable.setValue(value);
 }
 
-//! Get the value of the SplitPanel::_sfAlignment field.
+//! Get the value of the SplitPanel::_sfOrientation field.
 inline
-UInt32 &SplitPanelBase::getAlignment(void)
+UInt32 &SplitPanelBase::getOrientation(void)
 {
-    return _sfAlignment.getValue();
+    return _sfOrientation.getValue();
 }
 
-//! Get the value of the SplitPanel::_sfAlignment field.
+//! Get the value of the SplitPanel::_sfOrientation field.
 inline
-const UInt32 &SplitPanelBase::getAlignment(void) const
+const UInt32 &SplitPanelBase::getOrientation(void) const
 {
-    return _sfAlignment.getValue();
+    return _sfOrientation.getValue();
 }
 
-//! Set the value of the SplitPanel::_sfAlignment field.
+//! Set the value of the SplitPanel::_sfOrientation field.
 inline
-void SplitPanelBase::setAlignment(const UInt32 &value)
+void SplitPanelBase::setOrientation(const UInt32 &value)
 {
-    _sfAlignment.setValue(value);
+    _sfOrientation.setValue(value);
 }
 
 

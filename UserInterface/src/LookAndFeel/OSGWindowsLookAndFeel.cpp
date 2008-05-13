@@ -63,7 +63,6 @@
 #include "Component/Container/OSGSplitPanel.h"
 #include "Component/Container/OSGTabPanel.h"
 #include "Component/Misc/OSGImageComponent.h"
-#include "Util/OSGUIDefines.h"
 #include "Graphics/UIDrawObjects/OSGRectUIDrawObject.h"
 #include "Graphics/UIDrawObjects/OSGMultiColoredQuadUIDrawObject.h"
 #include "Graphics/UIDrawObjects/OSGArcUIDrawObject.h"
@@ -83,6 +82,7 @@
 #include "Component/Menu/OSGPopupMenu.h"
 #include "Component/Menu/OSGListGeneratedPopupMenu.h"
 #include "Component/Menu/OSGMenuBar.h"
+#include "Models/SelectionModels/OSGDefaultSingleSelectionModel.h"
 
 #include "Component/Misc/OSGRotatedComponent.h"
 
@@ -261,7 +261,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsGradientBackground);
 		WindowsGradientBackground->setColorStart(Color4f(1.0, 1.0, 1.0, 1.0));
 		WindowsGradientBackground->setColorEnd(Color4f(1.0, 1.0, 1.0, 1.0));
-		WindowsGradientBackground->setAlignment(HORIZONTAL_ALIGNMENT);
+        WindowsGradientBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
 	endEditCP(WindowsGradientBackground);
 
 	GradientUIBackground::getClassType().setPrototype(WindowsGradientBackground);
@@ -356,7 +356,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsButtonBackground);
 		WindowsButtonBackground->setColorStart(Color4f(.988, .988, .984, 1.0));
 		WindowsButtonBackground->setColorEnd(Color4f(.941, .941, .918, 1.0));
-		WindowsButtonBackground->setAlignment(VERTICAL_ALIGNMENT);
+		WindowsButtonBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
 	endEditCP(WindowsButtonBackground);
 	
 	//Windows Disabled ButtonBackground
@@ -370,7 +370,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsActiveButtonBackground);
 		WindowsActiveButtonBackground->setColorStart(Color4f(.90, .89, .87, 1.0));
 		WindowsActiveButtonBackground->setColorEnd(Color4f(.89, .89, .85, 1.0));
-		WindowsActiveButtonBackground->setAlignment(VERTICAL_ALIGNMENT);
+		WindowsActiveButtonBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
 	endEditCP(WindowsActiveButtonBackground);
     
 	//Windows Rollover ButtonBackground
@@ -378,7 +378,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsRolloverButtonBackground);
 		WindowsRolloverButtonBackground->setColorStart(Color4f(.99, .99, .98, 1.0));
 		WindowsRolloverButtonBackground->setColorEnd(Color4f(.93, .92, .90, 1.0));
-		WindowsRolloverButtonBackground->setAlignment(VERTICAL_ALIGNMENT);
+		WindowsRolloverButtonBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
 	endEditCP(WindowsRolloverButtonBackground);
 
 	//Windows Button
@@ -565,7 +565,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsIconifyMaximizeButtonBackground);
 		WindowsIconifyMaximizeButtonBackground->setColorStart(Color4f(1.0, 1.0, 1.0, 1.0));
 		WindowsIconifyMaximizeButtonBackground->setColorEnd(Color4f(0.52, 0.54, 0.69, 1.0));
-		WindowsIconifyMaximizeButtonBackground->setAlignment(VERTICAL_ALIGNMENT);
+		WindowsIconifyMaximizeButtonBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
 	endEditCP(WindowsIconifyMaximizeButtonBackground);
 
 	//Windows  ActiveIconifyMaximizeButtonBackground
@@ -573,7 +573,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(ActiveWindowsIconifyMaximizeButtonBackground);
 		ActiveWindowsIconifyMaximizeButtonBackground->setColorStart(Color4f(0.55, 0.56, 0.68, 1.0));
 		ActiveWindowsIconifyMaximizeButtonBackground->setColorEnd(Color4f(1.0, 0.98, 1.0, 1.0));
-		ActiveWindowsIconifyMaximizeButtonBackground->setAlignment(VERTICAL_ALIGNMENT);
+		ActiveWindowsIconifyMaximizeButtonBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
 	endEditCP(ActiveWindowsIconifyMaximizeButtonBackground);
 	
 	//Windows  DisabledIconifyMaximizeButtonBackground
@@ -581,7 +581,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsDisabledIconifyMaximizeButtonBackground);
 		WindowsDisabledIconifyMaximizeButtonBackground->setColorStart(Color4f(1.0, 1.0, 1.0, 1.0));
 		WindowsDisabledIconifyMaximizeButtonBackground->setColorEnd(Color4f(0.74, 0.75, 0.82, 1.0));
-		WindowsDisabledIconifyMaximizeButtonBackground->setAlignment(VERTICAL_ALIGNMENT);
+		WindowsDisabledIconifyMaximizeButtonBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
 	endEditCP(WindowsDisabledIconifyMaximizeButtonBackground);
 
 	//IconifyButton DrawObject
@@ -715,7 +715,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsCloseButtonBackground);
 		WindowsCloseButtonBackground->setColorStart(Color4f(0.96, 0.56, 0.52, 1.0));
 		WindowsCloseButtonBackground->setColorEnd(Color4f(0.78, 0.33, 0.36, 1.0));
-		WindowsCloseButtonBackground->setAlignment(VERTICAL_ALIGNMENT);
+		WindowsCloseButtonBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
 	endEditCP(WindowsCloseButtonBackground);
 
 	//Windows  ActiveCloseButtonBackground
@@ -723,7 +723,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(ActiveWindowsCloseButtonBackground);
 		ActiveWindowsCloseButtonBackground->setColorStart(Color4f(0.92, 0.41, 0.36, 1.0));
 		ActiveWindowsCloseButtonBackground->setColorEnd(Color4f(1.0, 0.64, 0.54, 1.0));
-		ActiveWindowsCloseButtonBackground->setAlignment(VERTICAL_ALIGNMENT);
+		ActiveWindowsCloseButtonBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
 	endEditCP(ActiveWindowsCloseButtonBackground);
 	
 	//Windows  DisabledCloseButtonBackground
@@ -731,7 +731,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsDisabledCloseButtonBackground);
 		WindowsDisabledCloseButtonBackground->setColorStart(Color4f(0.94, 0.76, 0.75, 1.0));
 		WindowsDisabledCloseButtonBackground->setColorEnd(Color4f(0.83, 0.63, 0.64, 1.0));
-		WindowsDisabledCloseButtonBackground->setAlignment(VERTICAL_ALIGNMENT);
+		WindowsDisabledCloseButtonBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
 	endEditCP(WindowsDisabledCloseButtonBackground);
 
 	
@@ -840,14 +840,14 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WIndowsInternalWindowTitlebarBackground);
 		WIndowsInternalWindowTitlebarBackground->setColorStart(Color4f(0.64, 0.64, 0.75, 1.0));
 		WIndowsInternalWindowTitlebarBackground->setColorEnd(Color4f(0.89, 0.89, 0.89, 1.0));
-		WIndowsInternalWindowTitlebarBackground->setAlignment(VERTICAL_ALIGNMENT);
+		WIndowsInternalWindowTitlebarBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
 	endEditCP(WIndowsInternalWindowTitlebarBackground);
 	//Titlebar DisabledBackground
 	GradientUIBackgroundPtr WindowsInternalWindowTitlebarDisabledBackground = GradientUIBackground::create();
 	beginEditCP(WindowsInternalWindowTitlebarDisabledBackground);
 		WindowsInternalWindowTitlebarDisabledBackground->setColorStart(Color4f(0.84, 0.84, 0.89, 1.0));
 		WindowsInternalWindowTitlebarDisabledBackground->setColorEnd(Color4f(0.99, 1.0, 0.99, 1.0));
-		WindowsInternalWindowTitlebarDisabledBackground->setAlignment(VERTICAL_ALIGNMENT);
+		WindowsInternalWindowTitlebarDisabledBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
 	endEditCP(WindowsInternalWindowTitlebarDisabledBackground);
 
 
@@ -1117,8 +1117,29 @@ void WindowsLookAndFeel::init(void)
 	//Windows SplitPanel
 	SplitPanelPtr WindowsSplitPanel = SplitPanel::create();
 	beginEditCP(WindowsSplitPanel);
+		WindowsSplitPanel->setEnabled(true);
+		WindowsSplitPanel->setVisible(true);
+		
+		WindowsSplitPanel->setConstraints(NullFC);
+		//Sizes
+		WindowsSplitPanel->setMinSize(Vec2f(0,0));
+		WindowsSplitPanel->setMaxSize(Vec2f(32767,32767)); //2^15
+		WindowsSplitPanel->setPreferredSize(Vec2f(100,100));
+
+		//Border
+		WindowsSplitPanel->setBorders(WindowsEmptyBorder);
+		
+		//Background
+		WindowsSplitPanel->setBackgrounds(WindowsEmptyBackground);
+		
+		//Opacity
+		WindowsSplitPanel->setOpacity(1.0);
+
 		WindowsSplitPanel->setDividerDrawObject(WindowsDividerDrawObject);
 		WindowsSplitPanel->setDividerSize(5);
+		WindowsSplitPanel->setDividerPosition(100);
+		WindowsSplitPanel->setExpandable(true);
+		WindowsSplitPanel->setOrientation(SplitPanel::HORIZONTAL_ORIENTATION);
 	endEditCP(WindowsSplitPanel);
 
 	SplitPanel::getClassType().setPrototype(WindowsSplitPanel);
@@ -1150,7 +1171,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsTabPanelTabBackground);
 		WindowsTabPanelTabBackground->setColorStart(Color4f(1.0,1.0,1.0,1.0));
 		WindowsTabPanelTabBackground->setColorEnd(Color4f(0.75,0.75,0.85,1.0));
-		WindowsTabPanelTabBackground->setAlignment(VERTICAL_ALIGNMENT);
+		WindowsTabPanelTabBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
 	endEditCP(WindowsTabPanelTabBackground);
 	
 	ColorUIBackgroundPtr WindowsTabPanelTabActiveBackground = ColorUIBackground::create();
@@ -1209,6 +1230,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsTabPanel->setContentBackground(WindowsTabPanelTabActiveBackground);
 		WindowsTabPanel->setContentDisabledBackground(WindowsTabPanelTabActiveBackground);
 		WindowsTabPanel->setContentRolloverBackground(WindowsTabPanelTabActiveBackground);
+        WindowsTabPanel->setSelectionModel(DefaultSingleSelectionModel::create());
 	endEditCP(WindowsTabPanel);
 
 	TabPanel::getClassType().setPrototype(WindowsTabPanel);
@@ -2290,6 +2312,7 @@ void WindowsLookAndFeel::init(void)
         WindowsPopupMenu->setAllInsets(2);
         
         WindowsPopupMenu->setDefaultSeparator(WindowsPopupMenuDefaultSeparator);
+        WindowsPopupMenu->setSelectionModel(DefaultSingleSelectionModel::create());
 	endEditCP(WindowsPopupMenu);
 	
     PopupMenu::getClassType().setPrototype(WindowsPopupMenu);
@@ -2354,6 +2377,7 @@ void WindowsLookAndFeel::init(void)
 
         //Insets
         WindowsListGeneratedPopupMenu->setAllInsets(2);
+        WindowsListGeneratedPopupMenu->setSelectionModel(DefaultSingleSelectionModel::create());
 	endEditCP(WindowsListGeneratedPopupMenu);
 	
     ListGeneratedPopupMenu::getClassType().setPrototype(WindowsListGeneratedPopupMenu);
@@ -2397,6 +2421,7 @@ void WindowsLookAndFeel::init(void)
 
         //SubMenu delay in seconds
         WindowsMenuBar->setMenuDelay(getSubMenuPopupTime());
+        WindowsMenuBar->setSelectionModel(DefaultSingleSelectionModel::create());
 	endEditCP(WindowsMenuBar);
 	
     MenuBar::getClassType().setPrototype(WindowsMenuBar);
@@ -2702,7 +2727,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsVerticalScrollFieldBackground);
 		WindowsVerticalScrollFieldBackground->setColorStart(Color4f(0.95,0.95,0.93,1.0));
 		WindowsVerticalScrollFieldBackground->setColorEnd(Color4f(1.0,1.0,0.98,1.0));
-		WindowsVerticalScrollFieldBackground->setAlignment(HORIZONTAL_ALIGNMENT);
+		WindowsVerticalScrollFieldBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
 	endEditCP(WindowsVerticalScrollFieldBackground);
 	
 	//Vertical Scroll Field Disabled Background
@@ -2761,7 +2786,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsVerticalScrollBarDrawObjectBackground);
 		WindowsVerticalScrollBarDrawObjectBackground->setColorStart(Color4f(0.79,0.85,0.99,1.0));
 		WindowsVerticalScrollBarDrawObjectBackground->setColorEnd(Color4f(0.73,0.8,0.98,1.0));
-		WindowsVerticalScrollBarDrawObjectBackground->setAlignment(HORIZONTAL_ALIGNMENT);
+		WindowsVerticalScrollBarDrawObjectBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
 	endEditCP(WindowsVerticalScrollBarDrawObjectBackground);
 	
 	//Vertical Scroll Bar Disabled Background
@@ -2775,7 +2800,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsRolloverVerticalScrollBarDrawObjectBackground);
 		WindowsRolloverVerticalScrollBarDrawObjectBackground->setColorStart(Color4f(0.84,0.91,1.0,1.0));
 		WindowsRolloverVerticalScrollBarDrawObjectBackground->setColorEnd(Color4f(0.80,0.88,1.0,1.0));
-		WindowsRolloverVerticalScrollBarDrawObjectBackground->setAlignment(HORIZONTAL_ALIGNMENT);
+		WindowsRolloverVerticalScrollBarDrawObjectBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
 	endEditCP(WindowsRolloverVerticalScrollBarDrawObjectBackground);
 
 	//Vertical Scroll Bar Active Background
@@ -2783,7 +2808,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsActiveVerticalScrollBarDrawObjectBackground);
 		WindowsActiveVerticalScrollBarDrawObjectBackground->setColorStart(Color4f(0.84,0.91,1.0,1.0));
 		WindowsActiveVerticalScrollBarDrawObjectBackground->setColorEnd(Color4f(0.80,0.88,1.0,1.0));
-		WindowsActiveVerticalScrollBarDrawObjectBackground->setAlignment(VERTICAL_ALIGNMENT);
+		WindowsActiveVerticalScrollBarDrawObjectBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
 	endEditCP(WindowsActiveVerticalScrollBarDrawObjectBackground);
 
     //Vertical Scroll Bar Center Ridges
@@ -3045,7 +3070,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsHorizontalScrollFieldBackground);
 		WindowsHorizontalScrollFieldBackground->setColorStart(Color4f(0.95,0.95,0.93,1.0));
 		WindowsHorizontalScrollFieldBackground->setColorEnd(Color4f(1.0,1.0,0.98,1.0));
-		WindowsHorizontalScrollFieldBackground->setAlignment(VERTICAL_ALIGNMENT);
+		WindowsHorizontalScrollFieldBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
 	endEditCP(WindowsHorizontalScrollFieldBackground);
 	
 	//Horizontal Scroll Field Disabled Background
@@ -3097,7 +3122,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsHorizontalScrollBarDrawObjectBackground);
 		WindowsHorizontalScrollBarDrawObjectBackground->setColorStart(Color4f(0.79,0.85,0.99,1.0));
 		WindowsHorizontalScrollBarDrawObjectBackground->setColorEnd(Color4f(0.73,0.8,0.98,1.0));
-		WindowsHorizontalScrollBarDrawObjectBackground->setAlignment(VERTICAL_ALIGNMENT);
+		WindowsHorizontalScrollBarDrawObjectBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
 	endEditCP(WindowsHorizontalScrollBarDrawObjectBackground);
 	
 	//Horizontal Scroll Bar Disabled Background
@@ -3111,7 +3136,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsRolloverHorizontalScrollBarDrawObjectBackground);
 		WindowsRolloverHorizontalScrollBarDrawObjectBackground->setColorStart(Color4f(0.84,0.91,1.0,1.0));
 		WindowsRolloverHorizontalScrollBarDrawObjectBackground->setColorEnd(Color4f(0.80,0.88,1.0,1.0));
-		WindowsRolloverHorizontalScrollBarDrawObjectBackground->setAlignment(VERTICAL_ALIGNMENT);
+		WindowsRolloverHorizontalScrollBarDrawObjectBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
 	endEditCP(WindowsRolloverHorizontalScrollBarDrawObjectBackground);
 
 	//Horizontal Scroll Bar Active Background
@@ -3119,7 +3144,7 @@ void WindowsLookAndFeel::init(void)
 	beginEditCP(WindowsActiveHorizontalScrollBarDrawObjectBackground);
 		WindowsActiveHorizontalScrollBarDrawObjectBackground->setColorStart(Color4f(0.84,0.91,1.0,1.0));
 		WindowsActiveHorizontalScrollBarDrawObjectBackground->setColorEnd(Color4f(0.80,0.88,1.0,1.0));
-		WindowsActiveHorizontalScrollBarDrawObjectBackground->setAlignment(VERTICAL_ALIGNMENT);
+		WindowsActiveHorizontalScrollBarDrawObjectBackground->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
 	endEditCP(WindowsActiveHorizontalScrollBarDrawObjectBackground);
 
     //Horizontal Scroll Bar Center Ridges
@@ -3412,14 +3437,14 @@ void WindowsLookAndFeel::init(void)
 	ScrollBarPtr WindowsScrollPanelVerticalScrollBar = ScrollBar::create();
     beginEditCP(WindowsScrollPanelVerticalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
 		WindowsScrollPanelVerticalScrollBar->setPreferredSize(Vec2f(17,100));
-        WindowsScrollPanelVerticalScrollBar->setOrientation(VERTICAL_ALIGNMENT);
+        WindowsScrollPanelVerticalScrollBar->setOrientation(ScrollBar::VERTICAL_ORIENTATION);
     beginEditCP(WindowsScrollPanelVerticalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
 
 	//Horizontal ScrollBar
 	ScrollBarPtr WindowsScrollPanelHorizontalScrollBar = ScrollBar::create();
     beginEditCP(WindowsScrollPanelHorizontalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
 		WindowsScrollPanelHorizontalScrollBar->setPreferredSize(Vec2f(100,17));
-        WindowsScrollPanelHorizontalScrollBar->setOrientation(HORIZONTAL_ALIGNMENT);
+        WindowsScrollPanelHorizontalScrollBar->setOrientation(ScrollBar::HORIZONTAL_ORIENTATION);
     beginEditCP(WindowsScrollPanelHorizontalScrollBar, ScrollBar::PreferredSizeFieldMask | ScrollBar::OrientationFieldMask);
 
 
@@ -3954,7 +3979,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsProgressBar->setOpacity(1.0);
 
         //ProgressBar
-        WindowsProgressBar->setOrientation(HORIZONTAL_ALIGNMENT);
+        WindowsProgressBar->setOrientation(ProgressBar::HORIZONTAL_ORIENTATION);
         WindowsProgressBar->setIndeterminate(false);
         WindowsProgressBar->setIndeterminateBarMoveRate(0.5);
         WindowsProgressBar->setIndeterminateBarSize(0.25);
@@ -4126,7 +4151,7 @@ void WindowsLookAndFeel::init(void)
 		WindowsSlider->setOpacity(1.0);
 
         //Slider
-        WindowsSlider->setOrientation(VERTICAL_ALIGNMENT);
+        WindowsSlider->setOrientation(Slider::VERTICAL_ORIENTATION);
         WindowsSlider->setKnobButton(WindowsSliderKnobButton);
         WindowsSlider->setMajorTickSpacing(25);
         WindowsSlider->setMinorTickSpacing(5);

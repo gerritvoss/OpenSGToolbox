@@ -68,6 +68,7 @@
 #include "Component/Container/OSGContainer.h" // Parent
 
 #include <OpenSG/OSGReal32Fields.h> // MenuDelay type
+#include "Models/SelectionModels/OSGSingleSelectionModelFields.h" // SelectionModel type
 
 #include "OSGMenuBarFields.h"
 
@@ -91,11 +92,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBarBase : public Container
 
     enum
     {
-        MenuDelayFieldId = Inherited::NextFieldId,
-        NextFieldId      = MenuDelayFieldId + 1
+        MenuDelayFieldId      = Inherited::NextFieldId,
+        SelectionModelFieldId = MenuDelayFieldId      + 1,
+        NextFieldId           = SelectionModelFieldId + 1
     };
 
     static const OSG::BitVector MenuDelayFieldMask;
+    static const OSG::BitVector SelectionModelFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -123,9 +126,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBarBase : public Container
     /*! \{                                                                 */
 
            SFReal32            *getSFMenuDelay      (void);
+           SFSingleSelectionModelPtr *getSFSelectionModel (void);
 
            Real32              &getMenuDelay      (void);
      const Real32              &getMenuDelay      (void) const;
+           SingleSelectionModelPtr &getSelectionModel (void);
+     const SingleSelectionModelPtr &getSelectionModel (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -133,6 +139,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBarBase : public Container
     /*! \{                                                                 */
 
      void setMenuDelay      ( const Real32 &value );
+     void setSelectionModel ( const SingleSelectionModelPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,6 +183,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBarBase : public Container
     /*! \{                                                                 */
 
     SFReal32            _sfMenuDelay;
+    SFSingleSelectionModelPtr   _sfSelectionModel;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

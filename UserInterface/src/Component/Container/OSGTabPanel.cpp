@@ -49,6 +49,7 @@
 #include "Util/OSGUIDrawUtils.h"
 #include "Border/OSGBorder.h"
 #include "Background/OSGUIBackground.h"
+#include "Models/SelectionModels/OSGSingleSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -225,9 +226,10 @@ void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 	}
 	
 	//Draw the Content of the active tab
-	if(getTabContents().size() > 0)
+	if(getTabContents().size() > 0 &&
+       getSelectedIndex() != -1)
 	{
-		ComponentPtr ContentComponent(getTabContents()[getActiveTab()]);
+		ComponentPtr ContentComponent(getTabContents()[getSelectedIndex()]);
 
 		BorderPtr DrawnContentBorder = getDrawnContentBorder();
 		UIBackgroundPtr DrawnContentBackground = getDrawnContentBackground();
@@ -275,10 +277,41 @@ void TabPanel::focusGained(const FocusEvent& e)
 	}
 	if (index != -1)
 	{
-		beginEditCP(TabPanelPtr(this), ActiveTabFieldMask);
-			setActiveTab(index);
-		endEditCP(TabPanelPtr(this), ActiveTabFieldMask);
+        setSelectedIndex(index);
 	}
+}
+
+ComponentPtr TabPanel::getSelectedComponent(void) const
+{
+    Int32 Index(getSelectedIndex());
+    if(Index != -1)
+    {
+        return getTabContents()[Index];
+    }
+    else
+    {
+        return NullFC;
+    }
+}
+
+Int32 TabPanel::getSelectedIndex(void) const
+{
+    if(getSelectionModel() != NullFC)
+    {
+        return getSelectionModel()->getSelectedIndex();
+    }
+    else
+    {
+        return -1;
+    }
+}
+
+void TabPanel::setSelectedIndex(const Int32& Index)
+{
+    if(getSelectionModel() != NullFC)
+    {
+        getSelectionModel()->setSelectedIndex(Index);
+    }
 }
 
 void TabPanel::focusLost(const FocusEvent& e)
@@ -470,7 +503,7 @@ void TabPanel::updateLayout(void)
 		offset[AxisIndex] += getTabs()[i]->getSize()[AxisIndex] + TabBorderBottomRightWidth[AxisIndex];
 	}
 
-	if(getTabContents().size() > 0)
+	if(getTabContents().size() > 0 && getSelectedIndex() != -1)
 	{
 		Vec2f ContentBorderTopLeftWidth, ContentBorderBottomRightWidth;
 		calculateContentBorderLengths(getContentBorder(), ContentBorderTopLeftWidth[0], ContentBorderBottomRightWidth[0],ContentBorderTopLeftWidth[1], ContentBorderBottomRightWidth[1]);
@@ -482,10 +515,10 @@ void TabPanel::updateLayout(void)
 		}
 		Vec2f ContentsSize(InsideInsetsBottomRight-InsideInsetsTopLeft);
 		ContentsSize[(AxisIndex+1)%2] -= TabSize[(AxisIndex+1)%2];
-		beginEditCP(getTabContents()[getActiveTab()], Component::SizeFieldMask|Component::PositionFieldMask);
-			getTabContents()[getActiveTab()]->setSize(ContentsSize);
-			getTabContents()[getActiveTab()]->setPosition(offset + ContentBorderTopLeftWidth);
-		endEditCP(getTabContents()[getActiveTab()], Component::SizeFieldMask|Component::PositionFieldMask);
+		beginEditCP(getTabContents()[getSelectedIndex()], Component::SizeFieldMask|Component::PositionFieldMask);
+			getTabContents()[getSelectedIndex()]->setSize(ContentsSize);
+			getTabContents()[getSelectedIndex()]->setPosition(offset + ContentBorderTopLeftWidth);
+		endEditCP(getTabContents()[getSelectedIndex()], Component::SizeFieldMask|Component::PositionFieldMask);
 	}
 }
 
@@ -502,11 +535,11 @@ void TabPanel::mouseClicked(const MouseEvent& e)
 		}
     }
 
-	isContained = isContainedClipBounds(e.getLocation(), getTabContents()[getActiveTab()]);
-	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getActiveTab()],isContained,e.getViewport());
+	isContained = isContainedClipBounds(e.getLocation(), getTabContents()[getSelectedIndex()]);
+	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getSelectedIndex()],isContained,e.getViewport());
 	if(isContained)
 	{
-		getTabContents()[getActiveTab()]->mouseClicked(e);
+		getTabContents()[getSelectedIndex()]->mouseClicked(e);
 	}
 
 	Component::mouseClicked(e);
@@ -525,11 +558,11 @@ void TabPanel::mouseEntered(const MouseEvent& e)
 		}
     }
 
-    isContained = getTabContents()[getActiveTab()]->isContained(e.getLocation(), true);
-	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getActiveTab()],isContained,e.getViewport());
+    isContained = getTabContents()[getSelectedIndex()]->isContained(e.getLocation(), true);
+	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getSelectedIndex()],isContained,e.getViewport());
 	if(isContained)
 	{
-		getTabContents()[getActiveTab()]->mouseDragged(e);
+		getTabContents()[getSelectedIndex()]->mouseDragged(e);
 	}
 
 	Component::mouseEntered(e);
@@ -548,11 +581,11 @@ void TabPanel::mouseExited(const MouseEvent& e)
 		}
     }
 
-    isContained = getTabContents()[getActiveTab()]->isContained(e.getLocation(), true);
-	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getActiveTab()],isContained,e.getViewport());
+    isContained = getTabContents()[getSelectedIndex()]->isContained(e.getLocation(), true);
+	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getSelectedIndex()],isContained,e.getViewport());
 	if(isContained)
 	{
-		getTabContents()[getActiveTab()]->mouseDragged(e);
+		getTabContents()[getSelectedIndex()]->mouseDragged(e);
 	}
 
 	Component::mouseExited(e);
@@ -589,17 +622,17 @@ void TabPanel::mousePressed(const MouseEvent& e)
 	}
 
 	// now do it for the content tab
-    isContained = getTabContents()[getActiveTab()]->isContained(e.getLocation(), true);
-	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getActiveTab()],isContained,e.getViewport());
+    isContained = getTabContents()[getSelectedIndex()]->isContained(e.getLocation(), true);
+	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getSelectedIndex()],isContained,e.getViewport());
 	if(isContained)
 	{
 		//Give myself temporary focus
 		takeFocus(true);
-		if(!getTabContents()[getActiveTab()]->getType().isDerivedFrom(Container::getClassType()))
+		if(!getTabContents()[getSelectedIndex()]->getType().isDerivedFrom(Container::getClassType()))
 		{
-			getTabContents()[getActiveTab()]->takeFocus();
+			getTabContents()[getSelectedIndex()]->takeFocus();
 		}
-		getTabContents()[getActiveTab()]->mousePressed(e);
+		getTabContents()[getSelectedIndex()]->mousePressed(e);
 
 		giveFocus(NullFC, false);
 	}
@@ -625,11 +658,11 @@ void TabPanel::mouseReleased(const MouseEvent& e)
 		}
     }
 
-    isContained = getTabContents()[getActiveTab()]->isContained(e.getLocation(), true);
-	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getActiveTab()],isContained,e.getViewport());
+    isContained = getTabContents()[getSelectedIndex()]->isContained(e.getLocation(), true);
+	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getSelectedIndex()],isContained,e.getViewport());
 	if(isContained)
 	{
-		getTabContents()[getActiveTab()]->mouseReleased(e);
+		getTabContents()[getSelectedIndex()]->mouseReleased(e);
 	}
 
 	Component::mouseReleased(e);
@@ -649,11 +682,11 @@ void TabPanel::mouseMoved(const MouseEvent& e)
 		}
     }
 
-    isContained = getTabContents()[getActiveTab()]->isContained(e.getLocation(), true);
-	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getActiveTab()],isContained,e.getViewport());
+    isContained = getTabContents()[getSelectedIndex()]->isContained(e.getLocation(), true);
+	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getSelectedIndex()],isContained,e.getViewport());
 	if(isContained)
 	{
-		getTabContents()[getActiveTab()]->mouseMoved(e);
+		getTabContents()[getSelectedIndex()]->mouseMoved(e);
 	}
 
 	Component::mouseMoved(e);
@@ -672,11 +705,11 @@ void TabPanel::mouseDragged(const MouseEvent& e)
 		}
     }
 
-    isContained = getTabContents()[getActiveTab()]->isContained(e.getLocation(), true);
-	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getActiveTab()],isContained,e.getViewport());
+    isContained = getTabContents()[getSelectedIndex()]->isContained(e.getLocation(), true);
+	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getSelectedIndex()],isContained,e.getViewport());
 	if(isContained)
 	{
-		getTabContents()[getActiveTab()]->mouseDragged(e);
+		getTabContents()[getSelectedIndex()]->mouseDragged(e);
 	}
 
 	Component::mouseDragged(e);
@@ -691,8 +724,8 @@ void TabPanel::mouseWheelMoved(const MouseWheelEvent& e)
 		checkMouseEnterExit(e,e.getLocation(),getTabs()[i],isContained,e.getViewport());
     }
 
-    isContained = getTabContents()[getActiveTab()]->isContained(e.getLocation(), true);
-	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getActiveTab()],isContained,e.getViewport());
+    isContained = getTabContents()[getSelectedIndex()]->isContained(e.getLocation(), true);
+	checkMouseEnterExit(e,e.getLocation(),getTabContents()[getSelectedIndex()],isContained,e.getViewport());
 
 	Component::mouseWheelMoved(e);
 }
@@ -701,7 +734,7 @@ BorderPtr TabPanel::getDrawnTabBorder(const UInt32& Index) const
 {
     if(getEnabled())
     {
-        if(Index == getActiveTab())
+        if(Index == getSelectedIndex())
         {
             return getTabActiveBorder();
         }
@@ -728,7 +761,7 @@ UIBackgroundPtr TabPanel::getDrawnTabBackground(const UInt32& Index) const
 {
     if(getEnabled())
     {
-        if(Index == getActiveTab())
+        if(Index == getSelectedIndex())
         {
             return getTabActiveBackground();
         }
@@ -788,6 +821,22 @@ UIBackgroundPtr TabPanel::getDrawnContentBackground(void) const
         return getContentDisabledBackground();
     }
 }
+
+void TabPanel::addSelectionListener(SelectionListenerPtr listener)
+{
+    if(getSelectionModel() != NullFC)
+    {
+        getSelectionModel()->addSelectionListener(listener);
+    }
+}
+
+void TabPanel::removeSelectionListener(SelectionListenerPtr listener)
+{
+    if(getSelectionModel() != NullFC)
+    {
+        getSelectionModel()->removeSelectionListener(listener);
+    }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -796,14 +845,22 @@ UIBackgroundPtr TabPanel::getDrawnContentBackground(void) const
 
 TabPanel::TabPanel(void) :
     Inherited(),
-		_MouseInTabLastMouse(-1)
+		_MouseInTabLastMouse(-1),
+    _TabSelectionListener(TabPanelPtr(this))
 {
 }
 
 TabPanel::TabPanel(const TabPanel &source) :
     Inherited(source),
-		_MouseInTabLastMouse(-1)
+		_MouseInTabLastMouse(-1),
+    _TabSelectionListener(TabPanelPtr(this))
 {
+    if(getSelectionModel() != NullFC)
+    {
+        beginEditCP(TabPanelPtr(this), TabPanel::SelectionModelFieldMask);
+            setSelectionModel(SingleSelectionModel::Ptr::dcast(getSelectionModel()->shallowCopy()));
+        endEditCP(TabPanelPtr(this), TabPanel::SelectionModelFieldMask);
+    }
 }
 
 TabPanel::~TabPanel(void)
@@ -816,11 +873,15 @@ void TabPanel::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-    if( (whichField & TabsFieldMask) || (whichField & TabContentsFieldMask) ||
-		(whichField & ActiveTabFieldMask) )
+    if( (whichField & TabsFieldMask) || (whichField & TabContentsFieldMask))
     {
 		updateLayout();
 	}
+
+    if(whichField & TabPanel::SelectionModelFieldMask && getSelectionModel() != NullFC)
+    {
+        getSelectionModel()->addSelectionListener(&_TabSelectionListener);
+    }
 }
 
 void TabPanel::dump(      UInt32    , 
@@ -829,6 +890,10 @@ void TabPanel::dump(      UInt32    ,
     SLOG << "Dump TabPanel NI" << std::endl;
 }
 
+void TabPanel::TabSelectionListener::selectionChanged(const SelectionEvent& e)
+{
+    _TabPanel->updateLayout();
+}
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

@@ -69,7 +69,6 @@
 
 #include "Component/OSGComponent.h" // Tabs type
 #include "Component/OSGComponent.h" // TabContents type
-#include <OpenSG/OSGUInt32Fields.h> // ActiveTab type
 #include <OpenSG/OSGUInt32Fields.h> // TabPlacement type
 #include <OpenSG/OSGReal32Fields.h> // TabAlignment type
 #include <OpenSG/OSGUInt32Fields.h> // TabRotation type
@@ -91,6 +90,7 @@
 #include "Background/OSGUIBackground.h" // ContentDisabledBackground type
 #include "Border/OSGBorder.h" // ContentRolloverBorder type
 #include "Background/OSGUIBackground.h" // ContentRolloverBackground type
+#include "Models/SelectionModels/OSGSingleSelectionModelFields.h" // SelectionModel type
 
 #include "OSGTabPanelFields.h"
 
@@ -116,8 +116,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Container
     {
         TabsFieldId                      = Inherited::NextFieldId,
         TabContentsFieldId               = TabsFieldId                      + 1,
-        ActiveTabFieldId                 = TabContentsFieldId               + 1,
-        TabPlacementFieldId              = ActiveTabFieldId                 + 1,
+        TabPlacementFieldId              = TabContentsFieldId               + 1,
         TabAlignmentFieldId              = TabPlacementFieldId              + 1,
         TabRotationFieldId               = TabAlignmentFieldId              + 1,
         TabBorderInsetsFieldId           = TabRotationFieldId               + 1,
@@ -138,12 +137,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Container
         ContentDisabledBackgroundFieldId = ContentDisabledBorderFieldId     + 1,
         ContentRolloverBorderFieldId     = ContentDisabledBackgroundFieldId + 1,
         ContentRolloverBackgroundFieldId = ContentRolloverBorderFieldId     + 1,
-        NextFieldId                      = ContentRolloverBackgroundFieldId + 1
+        SelectionModelFieldId            = ContentRolloverBackgroundFieldId + 1,
+        NextFieldId                      = SelectionModelFieldId            + 1
     };
 
     static const OSG::BitVector TabsFieldMask;
     static const OSG::BitVector TabContentsFieldMask;
-    static const OSG::BitVector ActiveTabFieldMask;
     static const OSG::BitVector TabPlacementFieldMask;
     static const OSG::BitVector TabAlignmentFieldMask;
     static const OSG::BitVector TabRotationFieldMask;
@@ -165,6 +164,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Container
     static const OSG::BitVector ContentDisabledBackgroundFieldMask;
     static const OSG::BitVector ContentRolloverBorderFieldMask;
     static const OSG::BitVector ContentRolloverBackgroundFieldMask;
+    static const OSG::BitVector SelectionModelFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -193,7 +193,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Container
 
            MFComponentPtr      *getMFTabs           (void);
            MFComponentPtr      *getMFTabContents    (void);
-           SFUInt32            *getSFActiveTab      (void);
            SFUInt32            *getSFTabPlacement   (void);
            SFReal32            *getSFTabAlignment   (void);
            SFUInt32            *getSFTabRotation    (void);
@@ -215,9 +214,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Container
            SFUIBackgroundPtr   *getSFContentDisabledBackground(void);
            SFBorderPtr         *getSFContentRolloverBorder(void);
            SFUIBackgroundPtr   *getSFContentRolloverBackground(void);
+           SFSingleSelectionModelPtr *getSFSelectionModel (void);
 
-           UInt32              &getActiveTab      (void);
-     const UInt32              &getActiveTab      (void) const;
            UInt32              &getTabPlacement   (void);
      const UInt32              &getTabPlacement   (void) const;
            Real32              &getTabAlignment   (void);
@@ -260,6 +258,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Container
      const BorderPtr           &getContentRolloverBorder(void) const;
            UIBackgroundPtr     &getContentRolloverBackground(void);
      const UIBackgroundPtr     &getContentRolloverBackground(void) const;
+           SingleSelectionModelPtr &getSelectionModel (void);
+     const SingleSelectionModelPtr &getSelectionModel (void) const;
            ComponentPtr        &getTabs           (const UInt32 index);
            MFComponentPtr      &getTabs           (void);
      const MFComponentPtr      &getTabs           (void) const;
@@ -272,7 +272,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Container
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setActiveTab      ( const UInt32 &value );
      void setTabPlacement   ( const UInt32 &value );
      void setTabAlignment   ( const Real32 &value );
      void setTabRotation    ( const UInt32 &value );
@@ -294,6 +293,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Container
      void setContentDisabledBackground( const UIBackgroundPtr &value );
      void setContentRolloverBorder( const BorderPtr &value );
      void setContentRolloverBackground( const UIBackgroundPtr &value );
+     void setSelectionModel ( const SingleSelectionModelPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -338,7 +338,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Container
 
     MFComponentPtr      _mfTabs;
     MFComponentPtr      _mfTabContents;
-    SFUInt32            _sfActiveTab;
     SFUInt32            _sfTabPlacement;
     SFReal32            _sfTabAlignment;
     SFUInt32            _sfTabRotation;
@@ -360,6 +359,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Container
     SFUIBackgroundPtr   _sfContentDisabledBackground;
     SFBorderPtr         _sfContentRolloverBorder;
     SFUIBackgroundPtr   _sfContentRolloverBackground;
+    SFSingleSelectionModelPtr   _sfSelectionModel;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

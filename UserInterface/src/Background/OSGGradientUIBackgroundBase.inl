@@ -110,11 +110,11 @@ SFColor4f *GradientUIBackgroundBase::getSFColorEnd(void)
     return &_sfColorEnd;
 }
 
-//! Get the GradientUIBackground::_sfAlignment field.
+//! Get the GradientUIBackground::_sfOrientation field.
 inline
-SFUInt32 *GradientUIBackgroundBase::getSFAlignment(void)
+SFUInt32 *GradientUIBackgroundBase::getSFOrientation(void)
 {
-    return &_sfAlignment;
+    return &_sfOrientation;
 }
 
 
@@ -160,25 +160,25 @@ void GradientUIBackgroundBase::setColorEnd(const Color4f &value)
     _sfColorEnd.setValue(value);
 }
 
-//! Get the value of the GradientUIBackground::_sfAlignment field.
+//! Get the value of the GradientUIBackground::_sfOrientation field.
 inline
-UInt32 &GradientUIBackgroundBase::getAlignment(void)
+UInt32 &GradientUIBackgroundBase::getOrientation(void)
 {
-    return _sfAlignment.getValue();
+    return _sfOrientation.getValue();
 }
 
-//! Get the value of the GradientUIBackground::_sfAlignment field.
+//! Get the value of the GradientUIBackground::_sfOrientation field.
 inline
-const UInt32 &GradientUIBackgroundBase::getAlignment(void) const
+const UInt32 &GradientUIBackgroundBase::getOrientation(void) const
 {
-    return _sfAlignment.getValue();
+    return _sfOrientation.getValue();
 }
 
-//! Set the value of the GradientUIBackground::_sfAlignment field.
+//! Set the value of the GradientUIBackground::_sfOrientation field.
 inline
-void GradientUIBackgroundBase::setAlignment(const UInt32 &value)
+void GradientUIBackgroundBase::setOrientation(const UInt32 &value)
 {
-    _sfAlignment.setValue(value);
+    _sfOrientation.setValue(value);
 }
 
 

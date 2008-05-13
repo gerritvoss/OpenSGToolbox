@@ -63,6 +63,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanel : public SplitPanelBase
 
     /*==========================  PUBLIC  =================================*/
   public:
+      enum Orientation{VERTICAL_ORIENTATION=0, HORIZONTAL_ORIENTATION};
 
 	virtual void setDividerDrawObject( const UIDrawObjectCanvasPtr &value );
     /*---------------------------------------------------------------------*/

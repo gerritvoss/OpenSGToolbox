@@ -172,11 +172,11 @@ int main(int argc, char **argv)
         ExampleLabel1ColorBackground->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
     endEditCP(ExampleLabel1ColorBackground, ColorUIBackground::ColorFieldMask);
     
-    beginEditCP(ExampleLabel1GradientBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
+    beginEditCP(ExampleLabel1GradientBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::OrientationFieldMask);
         ExampleLabel1GradientBackground->setColorStart(Color4f(1.0, 0.0, 1.0, 0.8));
         ExampleLabel1GradientBackground->setColorEnd(Color4f(0.0, 0.0, 1.0, 0.3));
-        ExampleLabel1GradientBackground->setAlignment(HORIZONTAL_ALIGNMENT);
-    endEditCP(ExampleLabel1GradientBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
+        ExampleLabel1GradientBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
+    endEditCP(ExampleLabel1GradientBackground, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::OrientationFieldMask);
     
     beginEditCP(ExampleLabel1CompoundBackground, CompoundUIBackground::BackgroundsFieldMask);
         ExampleLabel1CompoundBackground->getBackgrounds().push_back(ExampleLabel1ColorBackground);

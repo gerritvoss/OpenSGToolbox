@@ -76,7 +76,7 @@
 #include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
 #include "Text/OSGUIFont.h" // Font type
 #include <OpenSG/OSGColor4fFields.h> // TextColor type
-#include "Util/OSGUIDefines.h" // Orientation type
+#include <OpenSG/OSGUInt32Fields.h> // Orientation type
 #include "Component/Misc/OSGUIDrawObjectCanvas.h" // ProgressBarDrawObject type
 
 #include "OSGProgressBarFields.h"

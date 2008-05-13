@@ -48,8 +48,7 @@ A UI Spinner.
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Util/OSGUIDefines.h"
-		defaultValue="VERTICAL_ALIGNMENT"
+		defaultValue="Spinner::VERTICAL_ORIENTATION"
 	>
 	</Field>
 	<Field

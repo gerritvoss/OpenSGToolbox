@@ -55,9 +55,9 @@
 #include "Util/OSGUIDrawUtils.h"
 #include "LookAndFeel/OSGLookAndFeelManager.h"
 #include "Component/Menu/OSGPopupMenu.h"
+#include "Component/Scroll/OSGScrollBar.h"
 
 #include "Component/Misc/OSGRotatedComponent.h"
-#include "Util/OSGUIDefines.h"
 
 
 #include "Component/Container/OSGUIViewport.h"
@@ -733,7 +733,7 @@ Vec2f Component::getPreferredScrollableViewportSize(void)
 Int32 Component::getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
     UInt16 MajorAxis;
-    if(orientation == VERTICAL_ALIGNMENT)
+    if(orientation == ScrollBar::VERTICAL_ORIENTATION)
     {
         MajorAxis = 1;
     }
@@ -758,7 +758,7 @@ bool Component::getScrollableTracksViewportWidth(void)
 Int32 Component::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
     UInt16 MajorAxis;
-    if(orientation == VERTICAL_ALIGNMENT)
+    if(orientation == ScrollBar::VERTICAL_ORIENTATION)
     {
         MajorAxis = 1;
     }
@@ -780,20 +780,6 @@ void Component::scrollToPoint(const Pnt2f& PointInComponent)
 		endEditCP(getParentContainer(), UIViewport::ViewPositionFieldMask);
 	}
 }
-
-/*void Component::detatch(void)
-{
-    if(getParentWindow() != NullFC && 
-        getParentWindow()->getDrawingSurface() != NullFC && 
-        getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
-    {
-        getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&(_ComponentUpdater));
-    }
-    
-    beginEditCP(ComponentPtr(this), ParentWindowFieldMask);
-        setParentWindow(NullFC);
-    endEditCP(ComponentPtr(this), ParentWindowFieldMask);
-}*/
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

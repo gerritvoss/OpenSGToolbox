@@ -76,7 +76,7 @@ void GradientUIBackground::initMethod (void)
 
 void GradientUIBackground::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const
 {
-	if(getAlignment() == HORIZONTAL_ALIGNMENT)
+	if(getOrientation() == GradientUIBackground::HORIZONTAL_ORIENTATION)
 	{
 		TheGraphics->drawQuad(TopLeft, Pnt2f(BottomRight.x(), TopLeft.y()), BottomRight, Pnt2f(TopLeft.x(), BottomRight.y()), getColorStart(), getColorEnd(), getColorEnd(), getColorStart(), Opacity);
 	}

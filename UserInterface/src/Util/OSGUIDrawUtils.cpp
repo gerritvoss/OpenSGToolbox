@@ -1,5 +1,4 @@
 #include "OSGUIDrawUtils.h"
-#include "OSGUIDefines.h"
 
 #include "Component/Container/Window/OSGInternalWindow.h"
 #include "Component/Misc/OSGRotatedComponent.h"

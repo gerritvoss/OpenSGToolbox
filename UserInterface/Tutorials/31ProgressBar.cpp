@@ -342,8 +342,8 @@ int main(int argc, char **argv)
 				displays the bar, false does not.
 			-setOrientation(ENUM): Determine the 
 				orientation of the ProgressBar.
-				Takes HORIZONTAL_ALIGNMENT and
-				VERTICAL_ALIGNMENT arguments.
+				Takes HORIZONTAL_ORIENTATION and
+				VERTICAL_ORIENTATION arguments.
 				This orientation is the direction
 				that the "bar" moves.
 			-setIndeterminateBarMoveRate(Real32):
@@ -368,7 +368,7 @@ int main(int argc, char **argv)
 	beginEditCP(ExampleProgressBar, ProgressBar::EnableProgressStringFieldMask | ProgressBar::IndeterminateFieldMask | ProgressBar::OrientationFieldMask | ProgressBar::ProgressStringFieldMask);
         ExampleProgressBar->setEnableProgressString(true);
         ExampleProgressBar->setIndeterminate(false);
-		ExampleProgressBar->setOrientation(HORIZONTAL_ALIGNMENT);
+        ExampleProgressBar->setOrientation(ProgressBar::HORIZONTAL_ORIENTATION);
         // ExampleProgressBar->setIndeterminateBarMoveRate(0.0);
         // ExampleProgressBar->setIndeterminateBarSize(2.0);
 		// ExampleProgressBar->setProgressString("Loading...");

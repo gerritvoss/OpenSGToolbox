@@ -444,7 +444,7 @@ int main(int argc, char **argv)
 
     ******************************************************/
     ExampleTabPanel = osg::TabPanel::create();
-    beginEditCP(ExampleTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
+    beginEditCP(ExampleTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
         ExampleTabPanel->setPreferredSize(Vec2f(600,600));
         ExampleTabPanel->addTab(ExampleTabLabel1, ExampleTabContentA);
         ExampleTabPanel->addTab(ExampleTabLabel2, ExampleTabContentB);
@@ -452,11 +452,10 @@ int main(int argc, char **argv)
         ExampleTabPanel->addTab(ExampleTabLabel4, ExampleTabPanelPanel);
         ExampleTabPanel->addTab(ExampleTabLabel5, ExampleTabContentD);
         ExampleTabPanel->addTab(ExampleTabLabel6, ExampleTabContentE);
-        ExampleTabPanel->setActiveTab(3);
         ExampleTabPanel->setTabAlignment(0.5f);
         ExampleTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
-    endEditCP(ExampleTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
-
+    endEditCP(ExampleTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
+    ExampleTabPanel->setSelectedIndex(3);
     /******************************************************
 
             By using CardLayout, the TabPanel  

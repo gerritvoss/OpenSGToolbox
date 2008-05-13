@@ -50,8 +50,9 @@
 
 #include "OSGPopupMenu.h"
 #include "Component/Container/OSGContainer.h"
-#include "OSGDefaultSingleSelectionModel.h"
+#include "Models/SelectionModels/OSGDefaultSingleSelectionModel.h"
 #include "Component/Misc/OSGSeparator.h"
+#include "Models/SelectionModels/OSGSingleSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -353,11 +354,11 @@ void PopupMenu::mouseMoved(const MouseEvent& e)
         ++i;
     }
 	
-	if(i<getChildren().size() && _SelectionModel->getSelectedIndex() != i)
+	if(i<getChildren().size() && getSelectionModel()->getSelectedIndex() != i)
 	{
-        if(_SelectionModel->getSelectedIndex() != i)
+        if(getSelectionModel()->getSelectedIndex() != i)
         {
-		    _SelectionModel->setSelectedIndex(i);
+		    getSelectionModel()->setSelectedIndex(i);
         }
 	}
 
@@ -372,9 +373,9 @@ void PopupMenu::mouseDragged(const MouseEvent& e)
         ++i;
     }
 	
-	if(i<getChildren().size() && _SelectionModel->getSelectedIndex() != i)
+	if(i<getChildren().size() && getSelectionModel()->getSelectedIndex() != i)
 	{
-		_SelectionModel->setSelectedIndex(i);
+		getSelectionModel()->setSelectedIndex(i);
 	}
     Container::mouseDragged(e);
 }
@@ -401,14 +402,20 @@ void PopupMenu::cancel(void)
 
 void PopupMenu::clearSelection(void)
 {
-    _SelectionModel->clearSelection();
+    if(getSelectionModel() != NullFC)
+    {
+        getSelectionModel()->clearSelection();
+    }
 }
 
 void PopupMenu::setSelection(const Int32& Index)
 {
 	if(Index >= 0 && Index < getNumItems())
 	{
-		_SelectionModel->setSelectedIndex(Index);
+        if(getSelectionModel() != NullFC)
+        {
+		    getSelectionModel()->setSelectedIndex(Index);
+        }
 	}
 	else
 	{
@@ -457,21 +464,22 @@ PopupMenu::PopupMenu(void) :
     Inherited(),
     _MenuSelectionListener(PopupMenuPtr(this))
 {
-    _SelectionModel = new DefaultSingleSelectionModel();
-    _SelectionModel->addChangeListener(&_MenuSelectionListener);
 }
 
 PopupMenu::PopupMenu(const PopupMenu &source) :
     Inherited(source),
     _MenuSelectionListener(PopupMenuPtr(this))
 {
-    _SelectionModel = new DefaultSingleSelectionModel();
-    _SelectionModel->addChangeListener(&_MenuSelectionListener);
+    if(getSelectionModel() != NullFC)
+    {
+        beginEditCP(PopupMenuPtr(this), PopupMenu::SelectionModelFieldMask);
+            setSelectionModel(SingleSelectionModel::Ptr::dcast(getSelectionModel()->shallowCopy()));
+        endEditCP(PopupMenuPtr(this), PopupMenu::SelectionModelFieldMask);
+    }
 }
 
 PopupMenu::~PopupMenu(void)
 {
-    delete _SelectionModel;
 }
 
 void  PopupMenu::producePopupMenuWillBecomeVisible(const PopupMenuEvent& e)
@@ -524,7 +532,10 @@ void PopupMenu::changed(BitVector whichField, UInt32 origin)
         else
         {
             producePopupMenuWillBecomeInvisible(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
-            _SelectionModel->clearSelection();
+            if(getSelectionModel() != NullFC)
+            {
+                getSelectionModel()->clearSelection();
+            }
             removeMousePresenceOnComponents();
         }
     }
@@ -532,6 +543,11 @@ void PopupMenu::changed(BitVector whichField, UInt32 origin)
     if(whichField & SizeFieldMask)
     {
         updateSeparatorSizes();
+    }
+
+    if(whichField & SelectionModelFieldMask && getSelectionModel() != NullFC)
+    {
+        getSelectionModel()->addSelectionListener(&_MenuSelectionListener);
     }
 }
 
@@ -541,25 +557,27 @@ void PopupMenu::dump(      UInt32    ,
     SLOG << "Dump PopupMenu NI" << std::endl;
 }
 
-void PopupMenu::MenuSelectionListener::stateChanged(const ChangeEvent& e)
+void PopupMenu::MenuSelectionListener::selectionChanged(const SelectionEvent& e)
 {
-    for(UInt32 i(0) ; i<_PopupMenu->getChildren().size() ; ++i)
+    for(UInt32 i(0) ; i<e.getPreviouslySelectedIndicies().size() ; ++i)
     {
-        if(i == _PopupMenu->_SelectionModel->getSelectedIndex() &&
-            _PopupMenu->getChildren()[i]->getType().isDerivedFrom(MenuItem::getClassType()) &&
-           !MenuItem::Ptr::dcast(_PopupMenu->getChildren()[i])->getSelected())
+        if(_PopupMenu->getChildren()[e.getPreviouslySelectedIndicies()[i]]->getType().isDerivedFrom(MenuItem::getClassType()) &&
+           MenuItem::Ptr::dcast(_PopupMenu->getChildren()[e.getPreviouslySelectedIndicies()[i]])->getSelected())
         {
-            beginEditCP(_PopupMenu->getChildren()[i], MenuItem::SelectedFieldMask);
-                MenuItem::Ptr::dcast(_PopupMenu->getChildren()[i])->setSelected(true);
-            endEditCP(_PopupMenu->getChildren()[i], MenuItem::SelectedFieldMask);
+            beginEditCP(_PopupMenu->getChildren()[e.getPreviouslySelectedIndicies()[i]], MenuItem::SelectedFieldMask);
+                MenuItem::Ptr::dcast(_PopupMenu->getChildren()[e.getPreviouslySelectedIndicies()[i]])->setSelected(false);
+            endEditCP(_PopupMenu->getChildren()[e.getPreviouslySelectedIndicies()[i]], MenuItem::SelectedFieldMask);
         }
-        if(i != _PopupMenu->_SelectionModel->getSelectedIndex() &&
-            _PopupMenu->getChildren()[i]->getType().isDerivedFrom(MenuItem::getClassType()) &&
-           MenuItem::Ptr::dcast(_PopupMenu->getChildren()[i])->getSelected())
+    }
+
+    for(UInt32 i(0) ; i<e.getSelectedIndicies().size() ; ++i)
+    {
+        if(_PopupMenu->getChildren()[e.getSelectedIndicies()[i]]->getType().isDerivedFrom(MenuItem::getClassType()) &&
+           !MenuItem::Ptr::dcast(_PopupMenu->getChildren()[e.getSelectedIndicies()[i]])->getSelected())
         {
-            beginEditCP(_PopupMenu->getChildren()[i], MenuItem::SelectedFieldMask);
-                MenuItem::Ptr::dcast(_PopupMenu->getChildren()[i])->setSelected(false);
-            endEditCP(_PopupMenu->getChildren()[i], MenuItem::SelectedFieldMask);
+            beginEditCP(_PopupMenu->getChildren()[e.getSelectedIndicies()[i]], MenuItem::SelectedFieldMask);
+                MenuItem::Ptr::dcast(_PopupMenu->getChildren()[e.getSelectedIndicies()[i]])->setSelected(true);
+            endEditCP(_PopupMenu->getChildren()[e.getSelectedIndicies()[i]], MenuItem::SelectedFieldMask);
         }
     }
 }

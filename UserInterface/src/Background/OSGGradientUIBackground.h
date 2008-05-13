@@ -46,7 +46,6 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGGradientUIBackgroundBase.h"
-#include "Util/OSGUIDefines.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -58,6 +57,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING GradientUIBackground : public GradientUIBa
 
     /*==========================  PUBLIC  =================================*/
   public:
+      enum Orientation{VERTICAL_ORIENTATION=0, HORIZONTAL_ORIENTATION};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

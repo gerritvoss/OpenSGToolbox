@@ -209,7 +209,7 @@ SpinnerBase::SpinnerBase(void) :
     _sfNextButton             (ButtonPtr(NullFC)), 
     _sfPreviousButton         (ButtonPtr(NullFC)), 
     _sfEditor                 (ComponentPtr(NullFC)), 
-    _sfOrientation            (UInt32(VERTICAL_ALIGNMENT)), 
+    _sfOrientation            (UInt32(Spinner::VERTICAL_ORIENTATION)), 
     _sfEditorToButtonOffset   (UInt32(1)), 
     Inherited() 
 {

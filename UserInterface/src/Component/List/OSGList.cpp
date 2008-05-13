@@ -51,6 +51,7 @@
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include "Util/OSGUIDrawUtils.h"
 #include "Component/List/ComponentGenerators/OSGListComponentGenerator.h"
+#include "Component/List/Models/OSGListModel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -141,7 +142,7 @@ void List::initItem(const UInt32& Index)
 	
     UInt16 OrientationMajorAxisIndex;
     UInt16 OrientationMinorAxisIndex;
-    if(getCellOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == List::VERTICAL_ORIENTATION)
     {
         OrientationMajorAxisIndex = 1;
     }
@@ -305,14 +306,14 @@ void List::keyTyped(const KeyEvent& e)
 	case KeyEvent::KEY_DOWN:
 	case KeyEvent::KEY_RIGHT:
 	case KeyEvent::KEY_LEFT:
-		if ( (getCellOrientation() == VERTICAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_UP) ||
-			(getCellOrientation() == HORIZONTAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_LEFT))
+		if ( (getOrientation() == List::VERTICAL_ORIENTATION && e.getKey() == KeyEvent::KEY_UP) ||
+			(getOrientation() == List::HORIZONTAL_ORIENTATION && e.getKey() == KeyEvent::KEY_LEFT))
 		{
 			ListIndex = osgMax(_FocusedIndex-1,0);
 			UpdateSelectionIndex = true;
 		}
-		else if ((getCellOrientation() == VERTICAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_DOWN) ||
-			(getCellOrientation() == HORIZONTAL_ALIGNMENT && e.getKey() == KeyEvent::KEY_RIGHT))
+		else if ((getOrientation() == List::VERTICAL_ORIENTATION && e.getKey() == KeyEvent::KEY_DOWN) ||
+			(getOrientation() == List::HORIZONTAL_ORIENTATION && e.getKey() == KeyEvent::KEY_RIGHT))
 		{
 			ListIndex = osgMin<Int32>((_FocusedIndex+1), getModel()->getSize()-1);
 			UpdateSelectionIndex = true;
@@ -563,7 +564,7 @@ void List::updateLayout(void)
 
     UInt16 OrientationMajorAxisIndex;
     UInt16 OrientationMinorAxisIndex;
-    if(getCellOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == List::VERTICAL_ORIENTATION)
     {
         OrientationMajorAxisIndex = 1;
     }
@@ -599,7 +600,7 @@ Vec2f List::getPreferredScrollableViewportSize(void)
 Int32 List::getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
     UInt16 MajorAxis;
-    if(orientation == VERTICAL_ALIGNMENT)
+    if(orientation == List::VERTICAL_ORIENTATION)
     {
         MajorAxis = 1;
     }
@@ -613,17 +614,17 @@ Int32 List::getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const P
 
 bool List::getScrollableTracksViewportHeight(void)
 {
-    return getCellOrientation() != VERTICAL_ALIGNMENT;
+    return getOrientation() != List::VERTICAL_ORIENTATION;
 }
 
 bool List::getScrollableTracksViewportWidth(void)
 {
-    return getCellOrientation() == VERTICAL_ALIGNMENT;
+    return getOrientation() == List::VERTICAL_ORIENTATION;
 }
 
 Int32 List::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
-    if(orientation == getCellOrientation())
+    if(orientation == getOrientation())
     {
         return getCellMajorAxisLength();
     }
@@ -712,7 +713,7 @@ Int32 List::getIndexClosestToLocation(const Pnt2f& Location) const
 	if(getModel() == NULL) {return -1;}
 
     UInt16 MajorAxis;
-    if(getCellOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == List::VERTICAL_ORIENTATION)
     {
         MajorAxis = 1;
     }
@@ -732,7 +733,7 @@ Int32 List::getIndexForLocation(const Pnt2f& Location) const
 	if(getModel() == NULL) {return -1;}
 
     UInt16 MajorAxis;
-    if(getCellOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == List::VERTICAL_ORIENTATION)
     {
         MajorAxis = 1;
     }
@@ -796,7 +797,7 @@ void List::updatePreferredSize(void)
 		ListLength = 0;
 	}
     beginEditCP(ListPtr(this), PreferredSizeFieldMask);
-        if(getCellOrientation() == VERTICAL_ALIGNMENT)
+        if(getOrientation() == List::VERTICAL_ORIENTATION)
         {
             setPreferredSize(Vec2f(getPreferredSize().x(), getCellMajorAxisLength()*ListLength));
         }
@@ -835,7 +836,7 @@ void List::scrollToIndex(const UInt32& Index)
 {
     UInt16 MajorAxis;
     UInt16 MinorAxis;
-    if(getCellOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == List::VERTICAL_ORIENTATION)
     {
         MajorAxis = 1;
     }

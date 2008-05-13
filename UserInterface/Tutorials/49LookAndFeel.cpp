@@ -244,14 +244,14 @@ int main(int argc, char **argv)
 	StatePanelCreator TheStatePanelCreator;
 	PanelPtr StatePanel = TheStatePanelCreator.getPanel();
     TabPanelPtr MainTabPanel = osg::TabPanel::create();
-    beginEditCP(MainTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask  | TabPanel::ConstraintsFieldMask);
+    beginEditCP(MainTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask  | TabPanel::ConstraintsFieldMask);
         MainTabPanel->setPreferredSize(Vec2f(600,600));
         MainTabPanel->addTab(StateTabPanelTab, StatePanel);
-        MainTabPanel->setActiveTab(0);
         MainTabPanel->setTabAlignment(0.5f);
         MainTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
-    endEditCP(MainTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::ActiveTabFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask  | TabPanel::ConstraintsFieldMask);
+    endEditCP(MainTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask  | TabPanel::ConstraintsFieldMask);
 
+    MainTabPanel->setSelectedIndex(0);
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow

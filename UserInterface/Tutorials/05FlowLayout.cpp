@@ -206,10 +206,10 @@ int main(int argc, char **argv)
 		-setVerticalGap(int): Determine the Vertical
 			gap in pixels between Components in 
 			FlowLayout.
-		-setAlignment(ENUM): Determine whether the
+		-setOrientation(ENUM): Determine whether the
 			Layout is arranged Vertically or
-			Horizontally.  Takes HORIZONTAL_ALIGNMENT
-			or VERTICAL_ALIGNMENT arguments.
+			Horizontally.  Takes HORIZONTAL_ORIENTATION
+			or VERTICAL_ORIENTATION arguments.
 		-setMajorAxisAlignment(ENUM): Determines
 			the alignment of the entire Layout 
 			within its Container.  See below.

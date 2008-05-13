@@ -283,7 +283,7 @@ void ScrollBarBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ScrollBarBase::ScrollBarBase(void) :
-    _sfOrientation            (UInt32(VERTICAL_ALIGNMENT)), 
+    _sfOrientation            (UInt32(ScrollBar::VERTICAL_ORIENTATION)), 
     _sfUnitIncrement          (UInt32(1)), 
     _sfBlockIncrement         (UInt32(2)), 
     _sfVerticalMinButton      (ButtonPtr(NullFC)), 

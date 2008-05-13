@@ -247,8 +247,8 @@ int main(int argc, char **argv)
 
 			-setOrientation(ENUM): Determine
                 the orientation of the ScrollBar.
-				Takes VERTICAL_ALIGNMENT
-                and HORIZONTAL_ALIGNMENT arguments.
+				Takes VERTICAL_ORIENTATION
+                and HORIZONTAL_ORIENTATION arguments.
             -setUnitIncrement(int): Determines how
                 much the Scoller moves per click
                 on its end arrows.  References to the
@@ -287,7 +287,7 @@ int main(int argc, char **argv)
     ScrollBarPtr ExampleVerticalScrollBar = ScrollBar::create();
     //ExampleScrollPanel->getHorizontalScrollBar()
     beginEditCP(ExampleVerticalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
-        ExampleVerticalScrollBar->setOrientation(VERTICAL_ALIGNMENT);
+        ExampleVerticalScrollBar->setOrientation(ScrollBar::VERTICAL_ORIENTATION);
         ExampleVerticalScrollBar->setPreferredSize(Vec2f(20,200));
         ExampleVerticalScrollBar->setEnabled(false);
         ExampleVerticalScrollBar->setUnitIncrement(10);
@@ -297,7 +297,7 @@ int main(int argc, char **argv)
 
     ScrollBarPtr ExampleHorizontalScrollBar = ScrollBar::create();
     beginEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
-        ExampleHorizontalScrollBar->setOrientation(HORIZONTAL_ALIGNMENT);
+        ExampleHorizontalScrollBar->setOrientation(ScrollBar::HORIZONTAL_ORIENTATION);
         ExampleHorizontalScrollBar->setPreferredSize(Vec2f(400,20));
     endEditCP(ExampleHorizontalScrollBar, ScrollBar::OrientationFieldMask | ScrollBar::PreferredSizeFieldMask);
     ExampleHorizontalScrollBar->setModel(&TheBoundedRangeModel);

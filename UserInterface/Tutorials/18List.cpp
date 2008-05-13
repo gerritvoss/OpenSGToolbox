@@ -363,19 +363,19 @@ int main(int argc, char **argv)
             Create List itself and assign its 
 			Model, CellRenderer, and SelectionModel
 			to it.
-			-setCellOrientation(ENUM): Determine the
+			-setOrientation(ENUM): Determine the
 				Layout of the cells (Horizontal
-				or Vertical).  Takes VERTICAL_ALIGNMENT
-				and HORIZONTAL_ALIGNMENT arguments.
+				or Vertical).  Takes List::VERTICAL_ORIENTATION
+				and List::HORIZONTAL_ORIENTATION arguments.
 
     ******************************************************/    
     ExampleList = List::create();
-	beginEditCP(ExampleList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
+	beginEditCP(ExampleList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
         ExampleList->setPreferredSize(Vec2f(200, 300));
-        ExampleList->setCellOrientation(VERTICAL_ALIGNMENT);
-        //ExampleList->setCellOrientation(HORIZONTAL_ALIGNMENT);
+        ExampleList->setOrientation(List::VERTICAL_ORIENTATION);
+        //ExampleList->setOrientation(List::HORIZONTAL_ORIENTATION);
 		ExampleList->setModel(ExampleListModel);
-    endEditCP(ExampleList, List::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
+    endEditCP(ExampleList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
 
     ExampleList->setSelectionModel(ExampleListSelectionModel);
 

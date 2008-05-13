@@ -112,14 +112,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBar : public MenuBarBase
 
     virtual ~MenuBar(void); 
     
-	class MenuSelectionListener : public ChangeListener, 
+	class MenuSelectionListener : public SelectionListener, 
                                   public MouseMotionListener, 
                                   public PopupMenuListener,
                                   public KeyAdapter
 	{
 	public:
 		MenuSelectionListener(MenuBarPtr ThePopupMenu);
-        virtual void stateChanged(const ChangeEvent& e);
+        virtual void selectionChanged(const SelectionEvent& e);
         virtual void mouseMoved(const MouseEvent& e);
         virtual void mouseDragged(const MouseEvent& e);
         virtual void popupMenuCanceled(const PopupMenuEvent& e);
@@ -147,8 +147,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBar : public MenuBarBase
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const MenuBar &source);
-    
-    SingleSelectionModelPtr _SelectionModel;
 };
 
 typedef MenuBar *MenuBarP;

@@ -40,7 +40,9 @@
 //---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
 #include "OSGMenuItem.h"
+#include "Models/SelectionModels/OSGSingleSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -53,7 +55,7 @@ void PopupMenu::addPopupMenuListener(PopupMenuListenerPtr Listener)
 inline
 Int32 PopupMenu::getSelectionIndex(void) const
 {
-    return _SelectionModel->getSelectedIndex();
+    return getSelectionModel()->getSelectedIndex();
 }
 
 inline

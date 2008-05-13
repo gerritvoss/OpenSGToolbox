@@ -69,7 +69,7 @@
 
 #include <OpenSG/OSGColor4fFields.h> // ColorStart type
 #include <OpenSG/OSGColor4fFields.h> // ColorEnd type
-#include <OpenSG/OSGUInt32Fields.h> // Alignment type
+#include <OpenSG/OSGUInt32Fields.h> // Orientation type
 
 #include "OSGGradientUIBackgroundFields.h"
 
@@ -93,15 +93,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING GradientUIBackgroundBase : public UIBackgr
 
     enum
     {
-        ColorStartFieldId = Inherited::NextFieldId,
-        ColorEndFieldId   = ColorStartFieldId + 1,
-        AlignmentFieldId  = ColorEndFieldId   + 1,
-        NextFieldId       = AlignmentFieldId  + 1
+        ColorStartFieldId  = Inherited::NextFieldId,
+        ColorEndFieldId    = ColorStartFieldId  + 1,
+        OrientationFieldId = ColorEndFieldId    + 1,
+        NextFieldId        = OrientationFieldId + 1
     };
 
     static const OSG::BitVector ColorStartFieldMask;
     static const OSG::BitVector ColorEndFieldMask;
-    static const OSG::BitVector AlignmentFieldMask;
+    static const OSG::BitVector OrientationFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -130,14 +130,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING GradientUIBackgroundBase : public UIBackgr
 
            SFColor4f           *getSFColorStart     (void);
            SFColor4f           *getSFColorEnd       (void);
-           SFUInt32            *getSFAlignment      (void);
+           SFUInt32            *getSFOrientation    (void);
 
            Color4f             &getColorStart     (void);
      const Color4f             &getColorStart     (void) const;
            Color4f             &getColorEnd       (void);
      const Color4f             &getColorEnd       (void) const;
-           UInt32              &getAlignment      (void);
-     const UInt32              &getAlignment      (void) const;
+           UInt32              &getOrientation    (void);
+     const UInt32              &getOrientation    (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -146,7 +146,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING GradientUIBackgroundBase : public UIBackgr
 
      void setColorStart     ( const Color4f &value );
      void setColorEnd       ( const Color4f &value );
-     void setAlignment      ( const UInt32 &value );
+     void setOrientation    ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -191,7 +191,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING GradientUIBackgroundBase : public UIBackgr
 
     SFColor4f           _sfColorStart;
     SFColor4f           _sfColorEnd;
-    SFUInt32            _sfAlignment;
+    SFUInt32            _sfOrientation;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

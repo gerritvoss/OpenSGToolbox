@@ -67,7 +67,7 @@
 
 #include "Component/Container/OSGContainer.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // CellOrientation type
+#include <OpenSG/OSGUInt32Fields.h> // Orientation type
 #include <OpenSG/OSGUInt32Fields.h> // CellMajorAxisLength type
 #include "Models/OSGListModelFields.h" // Model type
 #include "ComponentGenerators/OSGComponentGeneratorFields.h" // CellGenerator type
@@ -95,15 +95,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
 
     enum
     {
-        CellOrientationFieldId     = Inherited::NextFieldId,
-        CellMajorAxisLengthFieldId = CellOrientationFieldId     + 1,
+        OrientationFieldId         = Inherited::NextFieldId,
+        CellMajorAxisLengthFieldId = OrientationFieldId         + 1,
         ModelFieldId               = CellMajorAxisLengthFieldId + 1,
         CellGeneratorFieldId       = ModelFieldId               + 1,
         AutoScrollToFocusedFieldId = CellGeneratorFieldId       + 1,
         NextFieldId                = AutoScrollToFocusedFieldId + 1
     };
 
-    static const OSG::BitVector CellOrientationFieldMask;
+    static const OSG::BitVector OrientationFieldMask;
     static const OSG::BitVector CellMajorAxisLengthFieldMask;
     static const OSG::BitVector ModelFieldMask;
     static const OSG::BitVector CellGeneratorFieldMask;
@@ -134,14 +134,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *getSFCellOrientation(void);
+           SFUInt32            *getSFOrientation    (void);
            SFUInt32            *getSFCellMajorAxisLength(void);
            SFListModelPtr      *getSFModel          (void);
            SFComponentGeneratorPtr *getSFCellGenerator  (void);
            SFBool              *getSFAutoScrollToFocused(void);
 
-           UInt32              &getCellOrientation(void);
-     const UInt32              &getCellOrientation(void) const;
+           UInt32              &getOrientation    (void);
+     const UInt32              &getOrientation    (void) const;
            UInt32              &getCellMajorAxisLength(void);
      const UInt32              &getCellMajorAxisLength(void) const;
            ListModelPtr        &getModel          (void);
@@ -156,7 +156,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setCellOrientation( const UInt32 &value );
+     void setOrientation    ( const UInt32 &value );
      void setCellMajorAxisLength( const UInt32 &value );
      void setModel          ( const ListModelPtr &value );
      void setCellGenerator  ( const ComponentGeneratorPtr &value );
@@ -203,7 +203,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfCellOrientation;
+    SFUInt32            _sfOrientation;
     SFUInt32            _sfCellMajorAxisLength;
     SFListModelPtr      _sfModel;
     SFComponentGeneratorPtr   _sfCellGenerator;

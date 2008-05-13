@@ -70,6 +70,7 @@
 #include <OpenSG/OSGReal32Fields.h> // SubMenuDelay type
 #include "Component/OSGComponentFields.h" // Invoker type
 #include "Component/Misc/OSGSeparatorFields.h" // DefaultSeparator type
+#include "Models/SelectionModels/OSGSingleSelectionModelFields.h" // SelectionModel type
 
 #include "OSGPopupMenuFields.h"
 
@@ -96,12 +97,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Container
         SubMenuDelayFieldId     = Inherited::NextFieldId,
         InvokerFieldId          = SubMenuDelayFieldId     + 1,
         DefaultSeparatorFieldId = InvokerFieldId          + 1,
-        NextFieldId             = DefaultSeparatorFieldId + 1
+        SelectionModelFieldId   = DefaultSeparatorFieldId + 1,
+        NextFieldId             = SelectionModelFieldId   + 1
     };
 
     static const OSG::BitVector SubMenuDelayFieldMask;
     static const OSG::BitVector InvokerFieldMask;
     static const OSG::BitVector DefaultSeparatorFieldMask;
+    static const OSG::BitVector SelectionModelFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -131,6 +134,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Container
            SFReal32            *getSFSubMenuDelay   (void);
            SFComponentPtr      *getSFInvoker        (void);
            SFSeparatorPtr      *getSFDefaultSeparator(void);
+           SFSingleSelectionModelPtr *getSFSelectionModel (void);
 
            Real32              &getSubMenuDelay   (void);
      const Real32              &getSubMenuDelay   (void) const;
@@ -138,6 +142,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Container
      const ComponentPtr        &getInvoker        (void) const;
            SeparatorPtr        &getDefaultSeparator(void);
      const SeparatorPtr        &getDefaultSeparator(void) const;
+           SingleSelectionModelPtr &getSelectionModel (void);
+     const SingleSelectionModelPtr &getSelectionModel (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -147,6 +153,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Container
      void setSubMenuDelay   ( const Real32 &value );
      void setInvoker        ( const ComponentPtr &value );
      void setDefaultSeparator( const SeparatorPtr &value );
+     void setSelectionModel ( const SingleSelectionModelPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -192,6 +199,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Container
     SFReal32            _sfSubMenuDelay;
     SFComponentPtr      _sfInvoker;
     SFSeparatorPtr      _sfDefaultSeparator;
+    SFSingleSelectionModelPtr   _sfSelectionModel;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

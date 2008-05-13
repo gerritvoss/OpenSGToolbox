@@ -960,23 +960,23 @@ UIBackgroundPtr createComplexBackground(void)
         ComplexBackgroundBase->setColor(Color4f(0.0, 0.0, .25, 1.0));
     endEditCP(ComplexBackgroundBase, ColorUIBackground::ColorFieldMask);
 
-    beginEditCP(ComplexBackgroundGradient1, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
+    beginEditCP(ComplexBackgroundGradient1, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::OrientationFieldMask);
         ComplexBackgroundGradient1->setColorStart(Color4f(1.0, 0.0, 0.0, 0.5));
         ComplexBackgroundGradient1->setColorEnd(Color4f(0.5, 0.0, 0.0, 0.3));
-        ComplexBackgroundGradient1->setAlignment(HORIZONTAL_ALIGNMENT);
-    endEditCP(ComplexBackgroundGradient1, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
+        ComplexBackgroundGradient1->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
+    endEditCP(ComplexBackgroundGradient1, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::OrientationFieldMask);
 
-    beginEditCP(ComplexBackgroundGradient2, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
+    beginEditCP(ComplexBackgroundGradient2, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::OrientationFieldMask);
         ComplexBackgroundGradient2->setColorStart(Color4f(.6, 0.0, 0.3, 1.0));
         ComplexBackgroundGradient2->setColorEnd(Color4f(.2, 0.0, 0.3, 0.5));
-        ComplexBackgroundGradient2->setAlignment(VERTICAL_ALIGNMENT);
-    endEditCP(ComplexBackgroundGradient2, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
+        ComplexBackgroundGradient2->setOrientation(GradientUIBackground::VERTICAL_ORIENTATION);
+    endEditCP(ComplexBackgroundGradient2, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::OrientationFieldMask);
 
-    beginEditCP(ComplexBackgroundGradient3, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
+    beginEditCP(ComplexBackgroundGradient3, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::OrientationFieldMask);
         ComplexBackgroundGradient3->setColorStart(Color4f(0.0, 0.0, 0.2, 0.2));
         ComplexBackgroundGradient3->setColorEnd(Color4f(0.0, 0.0, 0.2, 0.3));
-        ComplexBackgroundGradient3->setAlignment(HORIZONTAL_ALIGNMENT);
-    endEditCP(ComplexBackgroundGradient3, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::AlignmentFieldMask);
+        ComplexBackgroundGradient3->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
+    endEditCP(ComplexBackgroundGradient3, GradientUIBackground::ColorStartFieldMask | GradientUIBackground::ColorEndFieldMask | GradientUIBackground::OrientationFieldMask);
 
     beginEditCP(ComplexBackgroundCompound1, CompoundUIBackground::BackgroundsFieldMask);
         ComplexBackgroundCompound1->getBackgrounds().push_back(ComplexBackgroundBase);

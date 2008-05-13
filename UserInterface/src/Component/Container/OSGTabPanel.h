@@ -46,6 +46,7 @@
 #include "OSGUserInterfaceDef.h"
 #include "OSGTabPanelBase.h"
 #include "Event/OSGFocusListener.h"
+#include "Models/SelectionModels/OSGSingleSelectionModel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -90,6 +91,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase, public Foc
 	virtual void removeAllTabs(void);
 	virtual void insertTab(const ComponentPtr TabInsert, const ComponentPtr Tab, const ComponentPtr TabContent);
 	virtual void insertTab(const UInt32 TabIndex, const ComponentPtr Tab, const ComponentPtr TabContent);
+    
+    //Returns the currently selected component for this tabpanel.
+    ComponentPtr getSelectedComponent(void) const;
+
+    //Returns the currently selected index for this tabpanel.
+    Int32 getSelectedIndex(void) const;
+    //Returns the currently selected index for this tabpanel.
+    void setSelectedIndex(const Int32& Index);
+
+    //Adds listener as a listener to changes in the model.
+    void addSelectionListener(SelectionListenerPtr listener);
+    //Removes listener as a listener to changes in the model.
+    void removeSelectionListener(SelectionListenerPtr listener);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -137,6 +151,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase, public Foc
     virtual UIBackgroundPtr getDrawnContentBackground(void) const;
 
 	Int32 _MouseInTabLastMouse;
+    
+	class TabSelectionListener : public SelectionListener
+	{
+	public:
+		TabSelectionListener(TabPanelPtr TheTabPanel);
+        virtual void selectionChanged(const SelectionEvent& e);
+	private:
+		TabPanelPtr _TabPanel;
+	};
+
+	friend class TabSelectionListener;
+
+	TabSelectionListener _TabSelectionListener;
     /*==========================  PRIVATE  ================================*/
   private:
 

@@ -193,9 +193,9 @@ void RGBColorChooserPanel::buildChooser(void)
 
 	//Sliders
 	_RedSliderTrackBackground = GradientUIBackground::create();
-	beginEditCP(_RedSliderTrackBackground, GradientUIBackground::AlignmentFieldMask);
-		_RedSliderTrackBackground->setAlignment(HORIZONTAL_ALIGNMENT);
-	endEditCP(_RedSliderTrackBackground, GradientUIBackground::AlignmentFieldMask);
+	beginEditCP(_RedSliderTrackBackground, GradientUIBackground::OrientationFieldMask);
+		_RedSliderTrackBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
+	endEditCP(_RedSliderTrackBackground, GradientUIBackground::OrientationFieldMask);
 	
 	UIDrawObjectCanvasPtr RedSliderTrackCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(RedSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);
@@ -209,16 +209,16 @@ void RGBColorChooserPanel::buildChooser(void)
 		_RedSlider->setDrawLabels(false);
 		_RedSlider->setDrawMajorTicks(false);
 		_RedSlider->setDrawMinorTicks(false);
-		_RedSlider->setOrientation(HORIZONTAL_ALIGNMENT);
+		_RedSlider->setOrientation(Slider::HORIZONTAL_ORIENTATION);
 		_RedSlider->setTrackDrawObject(RedSliderTrackCanvas);
 	endEditCP(_RedSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
 	_RedSlider->setModel(_RedModel->getBoundedRangeModel());
 	
 	//Green
 	_GreenSliderTrackBackground = GradientUIBackground::create();
-	beginEditCP(_GreenSliderTrackBackground, GradientUIBackground::AlignmentFieldMask);
-		_GreenSliderTrackBackground->setAlignment(HORIZONTAL_ALIGNMENT);
-	endEditCP(_GreenSliderTrackBackground, GradientUIBackground::AlignmentFieldMask);
+	beginEditCP(_GreenSliderTrackBackground, GradientUIBackground::OrientationFieldMask);
+		_GreenSliderTrackBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
+	endEditCP(_GreenSliderTrackBackground, GradientUIBackground::OrientationFieldMask);
 	
 	UIDrawObjectCanvasPtr GreenSliderTrackCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(GreenSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);
@@ -232,16 +232,16 @@ void RGBColorChooserPanel::buildChooser(void)
 		_GreenSlider->setDrawLabels(false);
 		_GreenSlider->setDrawMajorTicks(false);
 		_GreenSlider->setDrawMinorTicks(false);
-		_GreenSlider->setOrientation(HORIZONTAL_ALIGNMENT);
+		_GreenSlider->setOrientation(Slider::HORIZONTAL_ORIENTATION);;
 		_GreenSlider->setTrackDrawObject(GreenSliderTrackCanvas);
 	endEditCP(_GreenSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
 	_GreenSlider->setModel(_GreenModel->getBoundedRangeModel());
 	
 	//Blue
 	_BlueSliderTrackBackground = GradientUIBackground::create();
-	beginEditCP(_BlueSliderTrackBackground, GradientUIBackground::AlignmentFieldMask);
-		_BlueSliderTrackBackground->setAlignment(HORIZONTAL_ALIGNMENT);
-	endEditCP(_BlueSliderTrackBackground, GradientUIBackground::AlignmentFieldMask);
+	beginEditCP(_BlueSliderTrackBackground, GradientUIBackground::OrientationFieldMask);
+		_BlueSliderTrackBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
+	endEditCP(_BlueSliderTrackBackground, GradientUIBackground::OrientationFieldMask);
 	
 	UIDrawObjectCanvasPtr BlueSliderTrackCanvas = UIDrawObjectCanvas::create();
 	beginEditCP(BlueSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);
@@ -255,7 +255,7 @@ void RGBColorChooserPanel::buildChooser(void)
 		_BlueSlider->setDrawLabels(false);
 		_BlueSlider->setDrawMajorTicks(false);
 		_BlueSlider->setDrawMinorTicks(false);
-		_BlueSlider->setOrientation(HORIZONTAL_ALIGNMENT);
+		_BlueSlider->setOrientation(Slider::HORIZONTAL_ORIENTATION);;
 		_BlueSlider->setTrackDrawObject(BlueSliderTrackCanvas);
 	endEditCP(_BlueSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
 	_BlueSlider->setModel(_BlueModel->getBoundedRangeModel());
@@ -263,9 +263,9 @@ void RGBColorChooserPanel::buildChooser(void)
 	if(getIncludeAlpha())
 	{
 		_AlphaSliderTrackBackground = GradientUIBackground::create();
-		beginEditCP(_AlphaSliderTrackBackground, GradientUIBackground::AlignmentFieldMask);
-			_AlphaSliderTrackBackground->setAlignment(HORIZONTAL_ALIGNMENT);
-		endEditCP(_AlphaSliderTrackBackground, GradientUIBackground::AlignmentFieldMask);
+		beginEditCP(_AlphaSliderTrackBackground, GradientUIBackground::OrientationFieldMask);
+			_AlphaSliderTrackBackground->setOrientation(GradientUIBackground::HORIZONTAL_ORIENTATION);
+		endEditCP(_AlphaSliderTrackBackground, GradientUIBackground::OrientationFieldMask);
 		
 		UIDrawObjectCanvasPtr AlphaSliderTrackCanvas = UIDrawObjectCanvas::create();
 		beginEditCP(AlphaSliderTrackCanvas, UIDrawObjectCanvas::PreferredSizeFieldMask | UIDrawObjectCanvas::BordersFieldMask | UIDrawObjectCanvas::BackgroundsFieldMask);
@@ -279,7 +279,7 @@ void RGBColorChooserPanel::buildChooser(void)
 			_AlphaSlider->setDrawLabels(false);
 			_AlphaSlider->setDrawMajorTicks(false);
 			_AlphaSlider->setDrawMinorTicks(false);
-			_AlphaSlider->setOrientation(HORIZONTAL_ALIGNMENT);
+			_AlphaSlider->setOrientation(Slider::HORIZONTAL_ORIENTATION);;
 			_AlphaSlider->setTrackDrawObject(AlphaSliderTrackCanvas);
 		endEditCP(_AlphaSlider, Slider::DrawLabelsFieldMask | Slider::DrawMajorTicksFieldId | Slider::DrawMinorTicksFieldMask | Slider::OrientationFieldMask | Slider::TrackDrawObjectFieldMask);
 		_AlphaSlider->setModel(_AlphaModel->getBoundedRangeModel());

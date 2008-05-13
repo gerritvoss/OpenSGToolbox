@@ -48,7 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGMenuBar.h"
-#include "OSGDefaultSingleSelectionModel.h"
+#include "Models/SelectionModels/OSGDefaultSingleSelectionModel.h"
 
 #include "Component/Container/Window/OSGInternalWindow.h"
 #include "UIDrawingSurface/OSGUIDrawingSurface.h"
@@ -249,7 +249,7 @@ void MenuBar::mousePressed(const MouseEvent& e)
     {
         if(getChildren()[i]->isContained(e.getLocation(), true))
         {
-            _SelectionModel->setSelectedIndex(i);
+            getSelectionModel()->setSelectedIndex(i);
             getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MenuSelectionListener);
             break;
         }
@@ -268,21 +268,22 @@ MenuBar::MenuBar(void) :
     Inherited(),
     _MenuSelectionListener(MenuBarPtr(this))
 {
-    _SelectionModel = new DefaultSingleSelectionModel();
-    _SelectionModel->addChangeListener(&_MenuSelectionListener);
 }
 
 MenuBar::MenuBar(const MenuBar &source) :
     Inherited(source),
     _MenuSelectionListener(MenuBarPtr(this))
 {
-    _SelectionModel = new DefaultSingleSelectionModel();
-    _SelectionModel->addChangeListener(&_MenuSelectionListener);
+    if(getSelectionModel() != NullFC)
+    {
+        beginEditCP(MenuBarPtr(this), MenuBar::SelectionModelFieldMask);
+            setSelectionModel(SingleSelectionModel::Ptr::dcast(getSelectionModel()->shallowCopy()));
+        endEditCP(MenuBarPtr(this), MenuBar::SelectionModelFieldMask);
+    }
 }
 
 MenuBar::~MenuBar(void)
 {
-    delete _SelectionModel;
 }
 
 /*----------------------------- class specific ----------------------------*/
@@ -295,6 +296,11 @@ void MenuBar::changed(BitVector whichField, UInt32 origin)
     {
         getParentWindow()->addKeyListener(&_MenuSelectionListener);
     }
+
+    if(whichField & SelectionModelFieldMask && getSelectionModel() != NullFC)
+    {
+        getSelectionModel()->addSelectionListener(&_MenuSelectionListener);
+    }
 }
 
 void MenuBar::dump(      UInt32    , 
@@ -303,23 +309,25 @@ void MenuBar::dump(      UInt32    ,
     SLOG << "Dump MenuBar NI" << std::endl;
 }
 
-void MenuBar::MenuSelectionListener::stateChanged(const ChangeEvent& e)
+void MenuBar::MenuSelectionListener::selectionChanged(const SelectionEvent& e)
 {
-    for(UInt32 i(0) ; i<_MenuBar->getChildren().size() ; ++i)
+    for(UInt32 i(0) ; i<e.getPreviouslySelectedIndicies().size() ; ++i)
     {
-        if(i == _MenuBar->_SelectionModel->getSelectedIndex() &&
-           !Menu::Ptr::dcast(_MenuBar->getChildren()[i])->getSelected())
+        if(MenuItem::Ptr::dcast(_MenuBar->getChildren()[e.getPreviouslySelectedIndicies()[i]])->getSelected())
         {
-            beginEditCP(_MenuBar->getChildren()[i], Menu::SelectedFieldMask);
-                Menu::Ptr::dcast(_MenuBar->getChildren()[i])->setSelected(true);
-            endEditCP(_MenuBar->getChildren()[i], Menu::SelectedFieldMask);
+            beginEditCP(_MenuBar->getChildren()[e.getPreviouslySelectedIndicies()[i]], MenuItem::SelectedFieldMask);
+                MenuItem::Ptr::dcast(_MenuBar->getChildren()[e.getPreviouslySelectedIndicies()[i]])->setSelected(false);
+            endEditCP(_MenuBar->getChildren()[e.getPreviouslySelectedIndicies()[i]], MenuItem::SelectedFieldMask);
         }
-        if(i != _MenuBar->_SelectionModel->getSelectedIndex() &&
-           Menu::Ptr::dcast(_MenuBar->getChildren()[i])->getSelected())
+    }
+
+    for(UInt32 i(0) ; i<e.getSelectedIndicies().size() ; ++i)
+    {
+        if(!MenuItem::Ptr::dcast(_MenuBar->getChildren()[e.getSelectedIndicies()[i]])->getSelected())
         {
-            beginEditCP(_MenuBar->getChildren()[i], Menu::SelectedFieldMask);
-                Menu::Ptr::dcast(_MenuBar->getChildren()[i])->setSelected(false);
-            endEditCP(_MenuBar->getChildren()[i], Menu::SelectedFieldMask);
+            beginEditCP(_MenuBar->getChildren()[e.getSelectedIndicies()[i]], MenuItem::SelectedFieldMask);
+                MenuItem::Ptr::dcast(_MenuBar->getChildren()[e.getSelectedIndicies()[i]])->setSelected(true);
+            endEditCP(_MenuBar->getChildren()[e.getSelectedIndicies()[i]], MenuItem::SelectedFieldMask);
         }
     }
 }
@@ -331,7 +339,7 @@ void MenuBar::MenuSelectionListener::mouseMoved(const MouseEvent& e)
     {
         if(_MenuBar->getChildren()[i]->isContained(e.getLocation(), true))
         {
-            _MenuBar->_SelectionModel->setSelectedIndex(i);
+            _MenuBar->getSelectionModel()->setSelectedIndex(i);
             break;
         }
         ++i;
@@ -345,7 +353,7 @@ void MenuBar::MenuSelectionListener::mouseDragged(const MouseEvent& e)
     {
         if(_MenuBar->getChildren()[i]->isContained(e.getLocation(), true))
         {
-            _MenuBar->_SelectionModel->setSelectedIndex(i);
+            _MenuBar->getSelectionModel()->setSelectedIndex(i);
             break;
         }
         ++i;
@@ -359,7 +367,7 @@ void MenuBar::MenuSelectionListener::popupMenuCanceled(const PopupMenuEvent& e)
 		_MenuBar->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
 	}
     
-    _MenuBar->_SelectionModel->clearSelection();
+    _MenuBar->getSelectionModel()->clearSelection();
 }
 
 void MenuBar::MenuSelectionListener::popupMenuWillBecomeInvisible(const PopupMenuEvent& e)

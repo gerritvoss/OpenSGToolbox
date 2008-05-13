@@ -146,11 +146,11 @@ protected:
 		}
 		// Create TypeList
 		ListPtr TypeList = List::create();
-		beginEditCP(TypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
+		beginEditCP(TypeList, Component::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
 			TypeList->setPreferredSize( Vec2f (200, 300) );
-			TypeList->setCellOrientation(VERTICAL_ALIGNMENT);
+			TypeList->setOrientation(List::VERTICAL_ORIENTATION);
 			TypeList->setModel(_TypeModel);
-		endEditCP(TypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
+		endEditCP(TypeList, Component::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
 
 		// Assign the Model, and SelectionModel
 		// to the List
@@ -255,11 +255,11 @@ protected:
 
 		// Create FieldTypeList
 		ListPtr FieldTypeList = List::create();
-		beginEditCP(FieldTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
+		beginEditCP(FieldTypeList, Component::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
 			FieldTypeList->setPreferredSize( Vec2f (200, 300) );
-			FieldTypeList->setCellOrientation(VERTICAL_ALIGNMENT);
+			FieldTypeList->setOrientation(List::VERTICAL_ORIENTATION);
 			FieldTypeList->setModel(_FieldTypeModel);
-		endEditCP(FieldTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
+		endEditCP(FieldTypeList, Component::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
 
 		// Assign the Model, and SelectionModel
 		// to the List
@@ -364,11 +364,11 @@ protected:
 
 		// Create FieldContainerTypeList
 		ListPtr FieldContainerTypeList = List::create();
-		beginEditCP(FieldContainerTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
+		beginEditCP(FieldContainerTypeList, Component::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
 			FieldContainerTypeList->setPreferredSize( Vec2f (200, 300) );
-			FieldContainerTypeList->setCellOrientation(VERTICAL_ALIGNMENT);
+			FieldContainerTypeList->setOrientation(List::VERTICAL_ORIENTATION);
 			FieldContainerTypeList->setModel(_FieldContainerTypeModel);
-		endEditCP(FieldContainerTypeList, Component::PreferredSizeFieldMask | List::CellOrientationFieldMask | List::ModelFieldMask);
+		endEditCP(FieldContainerTypeList, Component::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
 
 		// Assign the Model, and SelectionModel
 		// to the List

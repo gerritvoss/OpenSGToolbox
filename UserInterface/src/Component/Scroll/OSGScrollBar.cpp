@@ -84,7 +84,7 @@ void ScrollBar::initMethod (void)
 void ScrollBar::updateLayout(void)
 {
     UInt16 MajorAxis, MinorAxis;
-    if(getOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
         MajorAxis = 1;
     }
@@ -143,7 +143,7 @@ Pnt2f ScrollBar::calculateScrollBarPosition(void) const
     Pnt2f Position;
 
     UInt16 MajorAxis, MinorAxis;
-    if(getOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
         MajorAxis = 1;
     }
@@ -165,7 +165,7 @@ Int32 ScrollBar::calculateValueFromPosition(const Pnt2f Position) const
     Int32 Value;
 
     UInt16 MajorAxis, MinorAxis;
-    if(getOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
         MajorAxis = 1;
     }
@@ -186,7 +186,7 @@ Vec2f ScrollBar::calculateScrollBarSize(void) const
     Vec2f Size;
 
     UInt16 MajorAxis, MinorAxis;
-    if(getOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
         MajorAxis = 1;
     }
@@ -291,7 +291,7 @@ void ScrollBar::setMajorAxisScrollBarPosition(const Pnt2f& Pos)
 {
     
     UInt16 MajorAxis, MinorAxis;
-    if(getOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
         MajorAxis = 1;
     }
@@ -330,7 +330,7 @@ void ScrollBar::mouseWheelMoved(const MouseWheelEvent& e)
 
 ButtonPtr &ScrollBar::getMinButton(void)
 {
-    if(getOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
         return getVerticalMinButton();
     }
@@ -342,7 +342,7 @@ ButtonPtr &ScrollBar::getMinButton(void)
 
 const ButtonPtr &ScrollBar::getMinButton(void) const
 {
-    if(getOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
         return getVerticalMinButton();
     }
@@ -354,7 +354,7 @@ const ButtonPtr &ScrollBar::getMinButton(void) const
 
 ButtonPtr &ScrollBar::getMaxButton(void)
 {
-    if(getOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
         return getVerticalMaxButton();
     }
@@ -366,7 +366,7 @@ ButtonPtr &ScrollBar::getMaxButton(void)
 
 const ButtonPtr &ScrollBar::getMaxButton(void) const
 {
-    if(getOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
         return getVerticalMaxButton();
     }
@@ -378,7 +378,7 @@ const ButtonPtr &ScrollBar::getMaxButton(void) const
 
 ButtonPtr &ScrollBar::getScrollField(void)
 {
-    if(getOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
         return getVerticalScrollField();
     }
@@ -390,7 +390,7 @@ ButtonPtr &ScrollBar::getScrollField(void)
 
 const ButtonPtr &ScrollBar::getScrollField(void) const
 {
-    if(getOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
         return getVerticalScrollField();
     }
@@ -402,7 +402,7 @@ const ButtonPtr &ScrollBar::getScrollField(void) const
 
 ButtonPtr &ScrollBar::getScrollBar(void)
 {
-    if(getOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
         return getVerticalScrollBar();
     }
@@ -414,7 +414,7 @@ ButtonPtr &ScrollBar::getScrollBar(void)
 
 const ButtonPtr &ScrollBar::getScrollBar(void) const
 {
-    if(getOrientation() == VERTICAL_ALIGNMENT)
+    if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
         return getVerticalScrollBar();
     }
@@ -518,7 +518,7 @@ void ScrollBar::changed(BitVector whichField, UInt32 origin)
     {
         beginEditCP(ScrollBarPtr(this), ChildrenFieldMask);
             getChildren().clear();
-            if(getOrientation() == VERTICAL_ALIGNMENT)
+            if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
             {
                 if(getVerticalScrollField() != NullFC) {getChildren().push_back(getVerticalScrollField());}
                 if(getVerticalScrollBar() != NullFC) {getChildren().push_back(getVerticalScrollBar());}
@@ -637,7 +637,7 @@ void ScrollBar::ScrollBarDraggedListener::mouseDragged(const MouseEvent& e)
 void ScrollBar::ScrollFieldListener::actionPerformed(const ActionEvent& e)
 {
 	UInt32 AxisIndex(0);
-    if(_ScrollBar->getOrientation() == HORIZONTAL_ALIGNMENT ) AxisIndex = 0;
+    if(_ScrollBar->getOrientation() == ScrollBar::HORIZONTAL_ORIENTATION ) AxisIndex = 0;
     else  AxisIndex = 1;
 
     Pnt2f ComponentMousePosition(DrawingSurfaceToComponent(_ScrollBar->getParentWindow()->getDrawingSurface()->getMousePosition(), _ScrollBar));

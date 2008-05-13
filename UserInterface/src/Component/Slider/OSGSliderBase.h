@@ -68,11 +68,10 @@
 #include "Component/Container/OSGContainer.h" // Parent
 
 #include "Component/Button/OSGButton.h" // KnobButton type
-#include "Util/OSGUIDefines.h" // Orientation type
+#include <OpenSG/OSGUInt32Fields.h> // Orientation type
 #include <OpenSG/OSGUInt32Fields.h> // MajorTickSpacing type
-#include <OpenSG/OSGVec2fFields.h> // MajorTickPositions type
+#include <OpenSG/OSGVec2sFields.h> // MajorTickPositions type
 #include <OpenSG/OSGUInt32Fields.h> // MinorTickSpacing type
-#include <OpenSG/OSGVec2fFields.h> // MinorTickPositions type
 #include <OpenSG/OSGBoolFields.h> // SnapToTicks type
 #include <OpenSG/OSGBoolFields.h> // DrawMajorTicks type
 #include <OpenSG/OSGBoolFields.h> // DrawTrack type
@@ -317,9 +316,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
     SFButtonPtr         _sfKnobButton;
     SFUInt32            _sfOrientation;
     SFUInt32            _sfMajorTickSpacing;
-    MFPnt2f             _mfMajorTickPositions;
+    MFPnt2s             _mfMajorTickPositions;
     SFUInt32            _sfMinorTickSpacing;
-    MFPnt2f             _mfMinorTickPositions;
+    MFPnt2s             _mfMinorTickPositions;
     SFBool              _sfSnapToTicks;
     SFBool              _sfDrawMajorTicks;
     SFBool              _sfDrawTrack;
@@ -357,15 +356,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING SliderBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFPnt2f             *getMFMajorTickPositions(void);
-           MFPnt2f             *getMFMinorTickPositions(void);
+           MFPnt2s             *getMFMajorTickPositions(void);
+           MFPnt2s             *getMFMinorTickPositions(void);
 
-           Pnt2f               &getMajorTickPositions(UInt32 index);
-           MFPnt2f             &getMajorTickPositions(void);
-     const MFPnt2f             &getMajorTickPositions(void) const;
-           Pnt2f               &getMinorTickPositions(UInt32 index);
-           MFPnt2f             &getMinorTickPositions(void);
-     const MFPnt2f             &getMinorTickPositions(void) const;
+           Pnt2s               &getMajorTickPositions(UInt32 index);
+           MFPnt2s             &getMajorTickPositions(void);
+     const MFPnt2s             &getMajorTickPositions(void) const;
+           Pnt2s               &getMinorTickPositions(UInt32 index);
+           MFPnt2s             &getMinorTickPositions(void);
+     const MFPnt2s             &getMinorTickPositions(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

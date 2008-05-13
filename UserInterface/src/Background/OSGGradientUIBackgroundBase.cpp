@@ -61,7 +61,6 @@
 #include "OSGGradientUIBackgroundBase.h"
 #include "OSGGradientUIBackground.h"
 
-#include <Util/OSGUIDefines.h>            // Alignment default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -71,8 +70,8 @@ const OSG::BitVector  GradientUIBackgroundBase::ColorStartFieldMask =
 const OSG::BitVector  GradientUIBackgroundBase::ColorEndFieldMask = 
     (TypeTraits<BitVector>::One << GradientUIBackgroundBase::ColorEndFieldId);
 
-const OSG::BitVector  GradientUIBackgroundBase::AlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << GradientUIBackgroundBase::AlignmentFieldId);
+const OSG::BitVector  GradientUIBackgroundBase::OrientationFieldMask = 
+    (TypeTraits<BitVector>::One << GradientUIBackgroundBase::OrientationFieldId);
 
 const OSG::BitVector GradientUIBackgroundBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -87,7 +86,7 @@ const OSG::BitVector GradientUIBackgroundBase::MTInfluenceMask =
 /*! \var Color4f         GradientUIBackgroundBase::_sfColorEnd
     
 */
-/*! \var UInt32          GradientUIBackgroundBase::_sfAlignment
+/*! \var UInt32          GradientUIBackgroundBase::_sfOrientation
     
 */
 
@@ -106,10 +105,10 @@ FieldDescription *GradientUIBackgroundBase::_desc[] =
                      false,
                      (FieldAccessMethod) &GradientUIBackgroundBase::getSFColorEnd),
     new FieldDescription(SFUInt32::getClassType(), 
-                     "Alignment", 
-                     AlignmentFieldId, AlignmentFieldMask,
+                     "Orientation", 
+                     OrientationFieldId, OrientationFieldMask,
                      false,
-                     (FieldAccessMethod) &GradientUIBackgroundBase::getSFAlignment)
+                     (FieldAccessMethod) &GradientUIBackgroundBase::getSFOrientation)
 };
 
 
@@ -187,7 +186,7 @@ void GradientUIBackgroundBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 GradientUIBackgroundBase::GradientUIBackgroundBase(void) :
     _sfColorStart             (Color4f(1.0,1.0,1.0,1.0)), 
     _sfColorEnd               (Color4f(0.0,0.0,0.0,1.0)), 
-    _sfAlignment              (UInt32(VERTICAL_ALIGNMENT)), 
+    _sfOrientation            (UInt32(GradientUIBackground::VERTICAL_ORIENTATION)), 
     Inherited() 
 {
 }
@@ -199,7 +198,7 @@ GradientUIBackgroundBase::GradientUIBackgroundBase(void) :
 GradientUIBackgroundBase::GradientUIBackgroundBase(const GradientUIBackgroundBase &source) :
     _sfColorStart             (source._sfColorStart             ), 
     _sfColorEnd               (source._sfColorEnd               ), 
-    _sfAlignment              (source._sfAlignment              ), 
+    _sfOrientation            (source._sfOrientation            ), 
     Inherited                 (source)
 {
 }
@@ -226,9 +225,9 @@ UInt32 GradientUIBackgroundBase::getBinSize(const BitVector &whichField)
         returnValue += _sfColorEnd.getBinSize();
     }
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
-        returnValue += _sfAlignment.getBinSize();
+        returnValue += _sfOrientation.getBinSize();
     }
 
 
@@ -250,9 +249,9 @@ void GradientUIBackgroundBase::copyToBin(      BinaryDataHandler &pMem,
         _sfColorEnd.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
-        _sfAlignment.copyToBin(pMem);
+        _sfOrientation.copyToBin(pMem);
     }
 
 
@@ -273,9 +272,9 @@ void GradientUIBackgroundBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfColorEnd.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
     {
-        _sfAlignment.copyFromBin(pMem);
+        _sfOrientation.copyFromBin(pMem);
     }
 
 
@@ -294,8 +293,8 @@ void GradientUIBackgroundBase::executeSyncImpl(      GradientUIBackgroundBase *p
     if(FieldBits::NoField != (ColorEndFieldMask & whichField))
         _sfColorEnd.syncWith(pOther->_sfColorEnd);
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
+        _sfOrientation.syncWith(pOther->_sfOrientation);
 
 
 }
@@ -313,8 +312,8 @@ void GradientUIBackgroundBase::executeSyncImpl(      GradientUIBackgroundBase *p
     if(FieldBits::NoField != (ColorEndFieldMask & whichField))
         _sfColorEnd.syncWith(pOther->_sfColorEnd);
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
+        _sfOrientation.syncWith(pOther->_sfOrientation);
 
 
 
